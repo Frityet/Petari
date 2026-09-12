@@ -1,28 +1,28 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/MapObj/BlackHole.hpp"
-#include "Game/Player/MarioHang.hpp"
-#include "Game/Player/RushEndInfo.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioAnimator.hpp"
 #include "Game/Player/MarioConst.hpp"
+#include "Game/Player/MarioHang.hpp"
 #include "Game/Player/MarioState.hpp"
 #include "Game/Player/MarioSwim.hpp"
-#include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Player/RushEndInfo.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/MapUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include <cstring>
 
 bool MarioActor::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     bool wasCarrying = getCarrySensor() != nullptr;
-    if (mPlayerMode == 6) {
+    if (mPlayerMode == PlayerMode_Teresa) {
         if (msg == ACTMES_ENEMY_ATTACK_HEATBEAM) {
-            setPlayerMode(0, true);
+            setPlayerMode(PlayerMode_Normal, true);
             return true;
         }
         return false;
     }
-    if (mPlayerMode == 3 && msg == ACTMES_ENEMY_ATTACK_FREEZE) {
+    if (mPlayerMode == PlayerMode_Ice && msg == ACTMES_ENEMY_ATTACK_FREEZE) {
         msg = ACTMES_ENEMY_ATTACK;
     }
     if (_934) {
@@ -38,7 +38,7 @@ bool MarioActor::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* p
         return false;
     }
     if (msg == ACTMES_ENEMY_ATTACK_EXTRA_DAMAGE) {
-        if (mPlayerMode == 1) {
+        if (mPlayerMode == PlayerMode_Invincible) {
             return false;
         }
         decLife(0);
@@ -97,7 +97,7 @@ bool MarioActor::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* p
         u8 mode;
         selectAutoBind(pSender->mHost->mName, &mode);
         if (mode == 2) {
-            setPlayerMode(0, true);
+            setPlayerMode(PlayerMode_Normal, true);
         }
         if (wasCarrying) {
             tryCounterJetAttack(pSender);
@@ -116,7 +116,7 @@ bool MarioActor::tryAttackMsg(u32 msg, const HitSensor* pSensor, bool* myBool) {
 
     switch (msg) {
     case ACTMES_ENEMY_ATTACK_FLIP_VERYWEAK:
-        if (mMario->getMovementStates()._1 && !isAnimationRun(nullptr)) {
+        if (getMovementStates()._1 && !isAnimationRun(nullptr)) {
             changeAnimation("ノーダメージ", nullptr);
         }
 
@@ -382,7 +382,7 @@ bool MarioActor::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiv
         if (isDamaging()) {
             return false;
         }
-        if (mPlayerMode == 0 || mPlayerMode == 1) {
+        if (mPlayerMode == PlayerMode_Normal || mPlayerMode == PlayerMode_Invincible) {
             _B94 = 2;
             changeAnimationUpper("ハンマー投げ回転中");
             return true;

@@ -8,13 +8,13 @@
 #include "Game/Util/MtxUtil.hpp"
 
 void Mario::startRabbitMode() {
-    if (!isStatusActive(0x17)) {
+    if (!isStatusActive(MarioStatus_Rabbit)) {
         changeStatus(mRabbit);
     }
 }
 
 void Mario::endRabbitMode() {
-    if (isStatusActive(0x17)) {
+    if (isStatusActive(MarioStatus_Rabbit)) {
         closeStatus(mRabbit);
     }
 }
@@ -125,10 +125,10 @@ void MarioRabbit::impact() {
     else if (!MR::isNearZero(getStickP())) {
         switch (mJumpAnimationIndex) {
         case 0:
-            changeAnimationNonStop("ホッパージャンプA");
+            changeAnimationNonStop("ホッパー移動A");
             break;
         case 1:
-            changeAnimationNonStop("ホッパージャンプB");
+            changeAnimationNonStop("ホッパー移動B");
             break;
         }
 
@@ -137,10 +137,10 @@ void MarioRabbit::impact() {
     else {
         switch (mJumpAnimationIndex) {
         case 0:
-            changeAnimationNonStop("ホッパー移動A");
+            changeAnimationNonStop("ホッパージャンプA");
             break;
         case 1:
-            changeAnimationNonStop("ホッパー移動B");
+            changeAnimationNonStop("ホッパージャンプB");
             break;
         }
     }

@@ -9,14 +9,14 @@ public:
     MarioRecovery(MarioActor*);
 
     virtual bool start();
-    virtual bool update();
     virtual bool close();
+    virtual bool update();
 
     bool calcFirstVector();
     void updateJump();
 
-    /* 0x11 */ bool _11;
-    /* 0x12 */ bool _12;
+    /* 0x11 */ u8 _11;
+    /* 0x12 */ u8 _12;
     /* 0x14 */ u16 _14;
     /* 0x16 */ u16 _16;
     /* 0x18 */ u16 _18;

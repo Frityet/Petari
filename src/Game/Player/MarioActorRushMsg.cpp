@@ -58,7 +58,7 @@ void MarioActor::checkPriorRushTarget() {
 
         u32 v = 0;
         switch (_7E4[idx]->mType) {
-        case ACTMES_FORCE_KILL:
+        case ATYPE_COCO_NUT_BIND:
             v = 10;
             break;
         }
@@ -198,14 +198,13 @@ HitSensor* MarioActor::getNearestJumpTarget() const {
     return pTarget;
 }
 
-
 HitSensor* MarioActor::getHighPriorityTarget() const {
     if (_930 == 0) {
         return nullptr;
     }
 
     for (s32 idx = 0; idx < _930; idx++) {
-        if (_7E4[idx]->isType(ACTMES_FAILURE)) {
+        if (_7E4[idx]->isType(ATYPE_POWER_STAR_BIND)) {
             return _7E4[idx];
         }
 
@@ -213,15 +212,15 @@ HitSensor* MarioActor::getHighPriorityTarget() const {
             continue;
         }
 
-        if (_7E4[idx]->isType(ACTMES_GROUP_HIDE)) {
+        if (_7E4[idx]->isType(ATYPE_QUESTION_COIN_BIND)) {
             return _7E4[idx];
         }
 
-        if (_7E4[idx]->isType(ACTMES_TO_ENEMY_ATTACK_TRAMPLE)) {
+        if (_7E4[idx]->isType(ATYPE_PRIOR_BINDER)) {
             return _7E4[idx];
         }
 
-        if (_7E4[idx]->isType(ACTMES_GROUP_LOD_LOW)) {
+        if (_7E4[idx]->isType(ATYPE_SCENARIO_STARTER_BIND)) {
             return _7E4[idx];
         }
     }
@@ -239,7 +238,7 @@ HitSensor* MarioActor::getRescueTarget() const {
     }
 
     for (s32 idx = 0; idx < _930; idx++) {
-        if (_7E4[idx]->isType(ACTMES_GROUP_MOVE_START)) {
+        if (_7E4[idx]->isType(ATYPE_G_CAPTURE_BIND)) {
             return _7E4[idx];
         }
 
@@ -273,7 +272,7 @@ bool MarioActor::tryStartRush(bool isAuto) {
                 return false;
             }
             if (autoBind == 2) {
-                setPlayerMode(0, true);
+                setPlayerMode(PlayerMode_Normal, true);
             }
         }
         if (pTarget == _928 && selectRebindTimer(pTarget) && _37C - _92C < 120) {
@@ -296,7 +295,6 @@ bool MarioActor::tryStartRush(bool isAuto) {
         return accepted;
     }
 }
-
 
 bool MarioActor::tryJumpRush() {
     if (mHealth == 0) {
@@ -345,7 +343,7 @@ bool MarioActor::tryJumpRush() {
             beginRush();
 
             if (b && autoBind == 2) {
-                setPlayerMode(0, true);
+                setPlayerMode(PlayerMode_Normal, true);
             }
         }
 
@@ -398,7 +396,7 @@ void MarioActor::tryRushInRush() {
     if (_934) {
         _924 = target;
 
-        if (mPlayerMode == 4 && selectHideFlyMeter(target)) {
+        if (mPlayerMode == PlayerMode_Bee && selectHideFlyMeter(target)) {
             MR::getGameSceneLayoutHolder()->changeLifeMeterModeGround();
         }
     } else {

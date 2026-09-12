@@ -1,9 +1,12 @@
-#include "Game/Player/MarioBlown.hpp"
 #include "Game/LiveActor/Nerve.hpp"
+#include "Game/Player/MarioBlown.hpp"
+#include "Game/Player/FireMarioBall.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioConst.hpp"
+#include "Game/Player/MarioState.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "revolution/types.h"
 
 bool Mario::blown(const TVec3f& rVec) {
     if (getCurrentStatus() == MarioStatus_Blown) {
@@ -19,19 +22,20 @@ bool Mario::blown(const TVec3f& rVec) {
     }
 
     stopWalk();
-    MR::vecKillElement(rVec, mBlown->mActor->_240, &mBlown->_18);
+
+    mBlown->vecKillActor240(rVec);
+
     mMovementStates._2C = true;
-    _430 = 3;
     mMovementStates._A = false;
+    _430 = 3;
+
     return true;
 }
 
-MarioBlown::MarioBlown(MarioActor* pActor) : MarioState(pActor, MarioStatus_Blown) {
-    _12 = 0;
-    _14 = 0;
-    _18.set(0.0f, 0.0f, 0.0f);
-    _24 = 0;
-    _25 = 0;
+MarioBlown::MarioBlown(MarioActor* pActor) : MarioState(pActor, MarioStatus_Blown), mTimer(), _14() {
+    _18.zero();
+    _24 = false;
+    _25 = false;
 }
 
 bool MarioBlown::close() {
@@ -39,7 +43,7 @@ bool MarioBlown::close() {
         getPlayer()->stopJump();
     }
 
-    stopAnimation("壁ヒット", static_cast<const char*>(nullptr));
+    stopAnimation("壁ヒット");
 
     if (_25) {
         stopAnimation("壁ヒット着地", "基本");
@@ -56,22 +60,22 @@ bool MarioBlown::close() {
 }
 
 bool MarioBlown::start() {
-    _12 = 0;
+    mTimer = 0;
     _14 = 0;
     _24 = false;
     _25 = false;
 
     changeAnimation("壁ヒット", "基本");
-    playSound("声壁体当たり", -1);
-    playSound("壁衝突", -1);
+    playSound("声壁体当たり");
+    playSound("壁衝突");
+
     playEffectTrans("壁ヒット", getPlayer()->getWallPos());
 
     getPlayer()->mMovementStates._1 = false;
     getPlayer()->mMovementStates.jumping = true;
     getPlayer()->mMovementStates._B = false;
 
-    TVec3f jump = -mActor->_240 * mActor->mConst->getTable()->mJumpHeightBlown;
-    _18 += jump;
+    _18 += -mActor->_240 * mActor->getConst().getTable()->mJumpHeightBlown;
     getPlayer()->setJumpVec(_18);
     addVelocity(_18);
     getPlayer()->lockGroundCheck(this, true);
@@ -79,71 +83,63 @@ bool MarioBlown::start() {
 }
 
 bool MarioBlown::update() {
-    ++_12;
+    mTimer++;
 
-    if (getPlayerMode() == 6) {
+    if (getPlayerMode() == PlayerMode_Teresa) {
         return false;
     }
 
     switch (_14) {
     case 0:
-    case 2: {
+    case 2:
         addVelocity(_18);
-        _18 += mActor->_240 * mActor->mConst->getTable()->mGravityBlown;
-
-        if (_12 > 120) {
-            changeAnimation("中ダメージ空中", static_cast<const char*>(nullptr));
+        _18 += mActor->_240 * mActor->getConst().getTable()->mGravityBlown;
+        if (mTimer > 120) {
+            changeAnimation("中ダメージ空中", static_cast< const char* >(nullptr));
         }
 
-        if (_12 > 60) {
-            TVec3f lastMove;
-            f32 gravityMove = MR::vecKillElement(mActor->getLastMove(), mActor->_240, &lastMove);
-            if (MR::isNearZero(gravityMove, 0.001f)) {
+        if (mTimer > 60) {
+            TVec3f killed;
+            if (MR::isNearZero(MR::vecKillElement(mActor->getLastMove(), mActor->_240, &killed))) {
                 return false;
             }
         }
 
-        if (!getPlayer()->mMovementStates._1 && !MR::isNearZero(getPlayer()->mVerticalSpeed, 0.001f)) {
-            break;
+        if (getPlayer()->getMovementStates()._1 || MR::isNearZero(getPlayer()->mVerticalSpeed)) {
+            getPlayer()->mMovementStates.jumping = false;
+            getPlayer()->mMovementStates._D = true;
+
+            if (getPlayer()->damagePolygonCheck(getPlayer()->getGroundPolygon())) {
+                getPlayer()->_1C._16 = true;
+                _24 = true;
+                return false;
+            }
+
+            if (_14 != 2 || mTimer >= 3) {
+                playSound("吹っ飛び倒れ");
+                changeAnimation("壁ヒット着地", static_cast< const char* >(nullptr));
+                playEffect("共通壁ヒット着地");
+                MR::vecKillElement(_18, mActor->_240, &_18);
+            }
+
+            _14 = 1;
+            mTimer = 0;
         }
-
-        getPlayer()->mMovementStates.jumping = false;
-        getPlayer()->mMovementStates._D = true;
-
-        if (getPlayer()->damagePolygonCheck(getPlayer()->getGroundPolygon())) {
-            getPlayer()->_1C._16 = true;
-            _24 = true;
-            return false;
-        }
-
-        if (_14 != 2 || _12 >= 3) {
-            playSound("吹っ飛び倒れ", -1);
-            changeAnimation("壁ヒット着地", static_cast<const char*>(nullptr));
-            playEffect("共通壁ヒット着地");
-            MR::vecKillElement(_18, mActor->_240, &_18);
-        }
-
-        _14 = 1;
-        _12 = 0;
         break;
-    }
-
     case 1:
-        if (!getPlayer()->mMovementStates._1 && !MR::isNearZero(getPlayer()->mVerticalSpeed, 0.001f)) {
+        if (!getPlayer()->getMovementStates()._1 && !MR::isNearZero(getPlayer()->mVerticalSpeed)) {
             _25 = true;
             return false;
         }
 
         addVelocity(_18);
-        _18.x *= 0.95f;
-        _18.y *= 0.95f;
-        _18.z *= 0.95f;
+        _18.mult(0.95f);
 
         if (!isAnimationRun("壁ヒット着地")) {
             return false;
         }
 
-        if (_12 > 15 && checkTrgA()) {
+        if (mTimer > 15 && checkTrgA()) {
             getPlayer()->stopJump();
             getPlayer()->tryJump();
             _24 = true;
@@ -152,25 +148,13 @@ bool MarioBlown::update() {
         break;
     }
 
-    f32 gravitySpeed = MR::vecKillElement(_18, mActor->_240, &_18);
+    f32 dot = vecKillActor240(_18);
+
     if (_18.length() > 10.0f) {
-        _18.x *= 0.5f;
-        _18.y *= 0.5f;
-        _18.z *= 0.5f;
+        _18.mult(0.5f);
     }
 
-    f32 gravityAccel;
-    if (gravitySpeed < 0.0f) {
-        gravityAccel = 0.0f;
-    }
-    else if (gravitySpeed > 40.0f) {
-        gravityAccel = 40.0f;
-    }
-    else {
-        gravityAccel = gravitySpeed;
-    }
-
-    _18 += mActor->_240 * gravityAccel;
+    _18 += mActor->_240 * MR::clamp(dot, 0.0f, 40.0f);
     getPlayer()->setJumpVec(_18);
     return true;
 }

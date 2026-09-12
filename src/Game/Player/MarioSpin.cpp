@@ -1,13 +1,9 @@
 #include "Game/LiveActor/HitSensor.hpp"
-#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioConst.hpp"
 #include "Game/Util/MathUtil.hpp"
-
-static const f32 sOne = 1.0f;
-static const f32 sZero = 0.0f;
 
 void Mario::checkTornado() {
     if (mMovementStates._1) {
@@ -16,76 +12,64 @@ void Mario::checkTornado() {
 }
 
 void Mario::resetTornado() {
-    _530 = sZero;
+    _530 = 0.0f;
     _534 = 0;
-    _538 = sZero;
+    _538 = 0.0f;
     mMovementStates._F = false;
     _544 = 0;
-    mYAngleOffset = sZero;
-    _3F0 = sOne;
+    mYAngleOffset = 0.0f;
+    _3F0 = 1.0f;
 }
 
 void Mario::calcTornadoTilt() {
-    u32 tornado = mMovementStates._F;
-    u32 special = 0;
-
-    if (getPlayerMode() == 4 && mMovementStates.jumping && mMovementStates._11) {
-        special = true;
-    }
-
-    special = (tornado | special) != 0;
-
-    if (!isStickOn() || !special) {
-        _548 *= mActor->mConst->getTable()->mTornadoTiltCancel;
-
-        bool blended;
-        if (special) {
-            blended = MR::vecBlendSphere(_54C, mHeadVec, &_54C, mActor->mConst->getTable()->mTornadoTiltSpeed);
-        } else {
-            blended = MR::vecBlendSphere(_54C, mHeadVec, &_54C, mActor->mConst->getTable()->mTornadoTiltOffSpeed);
+    bool flying = false;
+    bool spinning = mMovementStates._F;
+    if (getPlayerMode() == PlayerMode_Bee) {
+        if (mMovementStates.jumping && mMovementStates._11) {
+            flying = true;
         }
-
+    }
+    bool tilted = flying | spinning;
+    if (!isStickOn() || !tilted) {
+        _548 *= mActor->getConst().getTable()->mTornadoTiltCancel;
+        bool blended;
+        if (tilted) {
+            blended = MR::vecBlendSphere(_54C, mHeadVec, &_54C, mActor->getConst().getTable()->mTornadoTiltSpeed);
+        } else {
+            blended = MR::vecBlendSphere(_54C, mHeadVec, &_54C, mActor->getConst().getTable()->mTornadoTiltOffSpeed);
+        }
         if (!blended) {
             _54C = mHeadVec;
         }
-
-        return;
-    }
-
-    TVec3f tilt = getWorldPadDir() * mActor->mConst->getTable()->mTornadoTiltAngle
-        + mHeadVec * (sOne - mActor->mConst->getTable()->mTornadoTiltAngle);
-    MR::normalize(&tilt);
-
-    const bool blended = MR::vecBlendSphere(_54C, tilt, &_54C, mActor->mConst->getTable()->mTornadoTiltSpeed);
-    MR::normalize(&_54C);
-
-    const f32 padDot = __fabsf(getWorldPadDir().dot(mFrontVec));
-    const f32 near = mActor->mConst->getTable()->mTornadoTiltNear;
-    _548 = _548 * near + padDot * (sOne - near);
-
-    if (!blended) {
-        _54C = tilt;
+    } else {
+        TVec3f tilt(getWorldPadDir() * mActor->getConst().getTable()->mTornadoTiltAngle +
+                    mHeadVec * (1.0f - mActor->getConst().getTable()->mTornadoTiltAngle));
+        MR::normalize(&tilt);
+        bool blended = MR::vecBlendSphere(_54C, tilt, &_54C, mActor->getConst().getTable()->mTornadoTiltSpeed);
+        MR::normalize(&_54C);
+        f32 alignment = __fabsf(getWorldPadDir().dot(mFrontVec));
+        _548 = _548 * mActor->getConst().getTable()->mTornadoTiltNear + alignment * (1.0f - mActor->getConst().getTable()->mTornadoTiltNear);
+        if (!blended) {
+            _54C = tilt;
+        }
     }
 }
 
-void Mario::reflectWallOnSpinning(const TVec3f& rFront, u16 timer) {
-    setFrontVecKeepUp(rFront);
-    _3F8 = timer;
+void Mario::reflectWallOnSpinning(const TVec3f& normal, u16 time) {
+    setFrontVecKeepUp(normal);
+    _3F8 = time;
     _328 = mFrontVec;
     doSpinWallEffect();
 }
 
 void Mario::forceStopTornado() {
     if (mMovementStates._F) {
-        _40A = mActor->mConst->getTable()->mTornadoRestartTime;
+        _40A = mActor->getConst().getTable()->mTornadoRestartTime;
     }
-
     resetTornado();
-
     if (mMovementStates.jumping) {
         cancelTornadoJump();
     }
-
     mDrawStates._8 = true;
 }
 
@@ -94,49 +78,25 @@ void Mario::startRotationTask(u32 flags) {
 }
 
 void Mario::doSpinWallEffect() {
-    if (mMovementStates._8 && mFrontWallTriangle->mSensor->isType(0x55)) {
-        return;
+    if ((!mMovementStates._8 || !mFrontWallTriangle->mSensor->isType(0x55)) && (!mMovementStates._19 || !mBackWallTriangle->mSensor->isType(0x55)) &&
+        (!mMovementStates._1A || !mSideWallTriangle->mSensor->isType(0x55))) {
+        playSound("壁反射");
+        playSound("声スピンキャンセル");
+        playEffect("壁スパーク");
     }
-
-    if (mMovementStates._19 && mBackWallTriangle->mSensor->isType(0x55)) {
-        return;
-    }
-
-    if (mMovementStates._1A && mSideWallTriangle->mSensor->isType(0x55)) {
-        return;
-    }
-
-    playSound("壁反射", -1);
-    playSound("声スピンキャンセル", -1);
-    playEffect("壁スパーク");
 }
 
 bool Mario::taskOnRotation(u32 flags) {
     if (flags & 4) {
         if (!isAnimationRun("ヘリコプタージャンプ")) {
-            mYAngleOffset = sZero;
+            mYAngleOffset = 0.0f;
             return false;
         }
-
         if (isRising()) {
-            mYAngleOffset += mActor->mConst->getTable()->mTrampleBegomaRotRise;
+            mYAngleOffset += mActor->getConst().getTable()->mTrampleBegomaRotRise;
         } else {
-            mYAngleOffset += mActor->mConst->getTable()->mTrampleBegomaRotFall;
+            mYAngleOffset += mActor->getConst().getTable()->mTrampleBegomaRotFall;
         }
     }
-
     return true;
 }
-
-namespace NrvMarioActor {
-    INIT_NERVE(MarioActorNrvWait);
-    INIT_NERVE(MarioActorNrvGameOver);
-    INIT_NERVE(MarioActorNrvGameOverAbyss);
-    INIT_NERVE(MarioActorNrvGameOverAbyss2);
-    INIT_NERVE(MarioActorNrvGameOverFire);
-    INIT_NERVE(MarioActorNrvGameOverBlackHole);
-    INIT_NERVE(MarioActorNrvGameOverNonStop);
-    INIT_NERVE(MarioActorNrvGameOverSink);
-    INIT_NERVE(MarioActorNrvTimeWait);
-    INIT_NERVE(MarioActorNrvNoRush);
-};  // namespace NrvMarioActor

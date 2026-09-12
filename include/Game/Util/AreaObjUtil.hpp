@@ -10,10 +10,13 @@ class AreaCubeBoundingBox;
 class WaterInfo;
 
 namespace MR {
+    void calcSpherePos(TVec3f*, const AreaObj*);
+    f32 getSphereRadius(const AreaObj*);
     AreaObjMgr* getAreaObjManager(const char*);
     AreaObj* getAreaObj(const char*, const TVec3f&);
     bool isInAreaObj(const char*, const TVec3f&);
     s32 getAreaObjArg(const AreaObj*, s32);
+    void tryToUpdatePlayerRestartIdInfo(const TVec3f&);
 
     bool calcAreaMoveVelocity(TVec3f*, const TVec3f&);
 

@@ -1,6 +1,4 @@
 #include "Game/Player/MarioWait.hpp"
-#include "Game/Animation/XanimePlayer.hpp"
-#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioAnimator.hpp"
@@ -9,102 +7,89 @@
 #include "Game/Util/MathUtil.hpp"
 
 void MarioAnimator::controlWaitAnimation() {
-    if (_78 != 0) {
-        --_78;
+    if (_78) {
+        _78--;
         return;
     }
 
-    Mario* pPlayer = getPlayer();
     TVec3f side;
-    side.cross(getFrontVec(), pPlayer->_368);
+    Mario* player = getPlayer();
+    side.cross(getFrontVec(), player->_368);
     MR::normalizeOrZero(&side);
-    if (MR::isNearZero(side, 0.001f)) {
+    if (MR::isNearZero(side)) {
         return;
     }
 
     TVec3f front;
     front.cross(getPlayer()->_368, side);
     MR::normalizeOrZero(&front);
-
-    f32 sideAngle = side.dot(getPlayer()->getAirGravityVec());
-    f32 frontAngle = front.dot(getPlayer()->getAirGravityVec());
-    f32 blendWeight[4];
-    blendWeight[0] = 0.0f;
-    blendWeight[1] = 0.0f;
-    blendWeight[2] = 0.0f;
-    blendWeight[3] = 0.0f;
-    f32 sideOffset = 0.0f;
-    f32 frontOffset = 0.0f;
-
+    f32 sideSlope = side.dot(getPlayer()->getAirGravityVec());
+    f32 frontSlope = front.dot(getPlayer()->getAirGravityVec());
+    f32 weights[4];
+    weights[3] = 0.0f;
+    weights[2] = 0.0f;
+    weights[1] = 0.0f;
+    weights[0] = 0.0f;
+    f32 sideBias = 0.0f;
+    f32 frontBias = 0.0f;
     if (_16 == 1) {
-        sideOffset = 0.1f;
+        sideBias = 0.1f;
     } else if (_16 == 2) {
-        frontOffset = 0.1f;
+        frontBias = 0.1f;
     }
 
-    if (sideOffset + __fabsf(sideAngle) > frontOffset + __fabsf(frontAngle)) {
-        f32 blend = 1.5707964f - marioAcos(__fabsf(sideAngle));
-        if (blend >= 0.7853982f) {
-            blend = 0.7853982f;
+    f32 frontMagnitude = __fabsf(frontSlope);
+    f32 sideMagnitude = __fabsf(sideSlope);
+    if (frontBias + frontMagnitude < sideBias + sideMagnitude) {
+        f32 angle = 1.5707964f - marioAcos(sideMagnitude);
+        if (angle >= 0.7853982f) {
+            angle = 0.7853982f;
         }
-
-        blend /= 0.7853982f;
-        blendWeight[2] = blend;
-        blendWeight[3] = 1.0f - blend;
-
-        if (sideAngle < 0.0f) {
+        weights[2] = angle / 0.7853982f;
+        weights[3] = 1.0f - weights[2];
+        if (sideSlope < 0.0f) {
             mXanimePlayer->changeTrackAnimation(2, "坂右ウエイト");
         } else {
             mXanimePlayer->changeTrackAnimation(2, "坂左ウエイト");
         }
-
         if (getPlayer()->_10._F) {
-            forceSetBlendWeight(blendWeight);
+            forceSetBlendWeight(weights);
             getPlayer()->_10._F = false;
         } else {
-            setBlendWeight(blendWeight, mActor->mConst->getTable()->mSlopeAnimBlendRatio);
+            setBlendWeight(weights, mActor->getConst().getTable()->mSlopeAnimBlendRatio);
         }
-
         _16 = 1;
     } else {
-        f32 blend = 1.5707964f - marioAcos(__fabsf(frontAngle));
-        if (blend >= 0.7853982f) {
-            blend = 0.7853982f;
+        f32 angle = 1.5707964f - marioAcos(frontMagnitude);
+        if (angle >= 0.7853982f) {
+            angle = 0.7853982f;
         }
-
-        blend /= 0.7853982f;
-        blendWeight[2] = blend;
-        blendWeight[3] = 1.0f - blend;
-
-        if (frontAngle < 0.0f) {
+        weights[2] = angle / 0.7853982f;
+        weights[3] = 1.0f - weights[2];
+        if (frontSlope < 0.0f) {
             mXanimePlayer->changeTrackAnimation(2, "坂前ウエイト");
         } else {
             mXanimePlayer->changeTrackAnimation(2, "坂後ウエイト");
         }
-
         if (getPlayer()->_10._F) {
-            forceSetBlendWeight(blendWeight);
+            forceSetBlendWeight(weights);
             getPlayer()->_10._F = false;
         } else {
-            setBlendWeight(blendWeight, mActor->mConst->getTable()->mSlopeAnimBlendRatio);
+            setBlendWeight(weights, mActor->getConst().getTable()->mSlopeAnimBlendRatio);
         }
-
         _16 = 2;
     }
-
     _78 = 4;
 }
 
 void MarioAnimator::stopWaitAnimation() {
-    if (getPlayerMode() == 1 && getPlayer()->mWalkSpeed >= 1.5f) {
+    if (getPlayerMode() == PlayerMode_Invincible && getPlayer()->mWalkSpeed >= 1.5f) {
         return;
     }
-
-    if (_78 != 0) {
-        --_78;
+    if (_78) {
+        _78--;
         return;
     }
-
     if (isAnimationRun("基本")) {
         mXanimePlayer->changeTrackAnimation(2, "ラン");
     }
@@ -115,96 +100,78 @@ bool MarioWait::checkStart() {
         _16 = 0;
         return false;
     }
-
     if (getPlayer()->isStatusActive(MarioStatus_Wait)) {
         return false;
     }
-
-    bool isActorBusy = false;
-    if (mActor->_482 || mActor->_481) {
-        isActorBusy = true;
-    }
-
-    if (isActorBusy) {
+    bool damaged = mActor->_482 || mActor->_481;
+    if (damaged) {
         _16 = 0;
         return false;
     }
 
-    bool isInvalid = false;
+    bool cancel = false;
     switch (getPlayer()->_960) {
     case 27:
     case 28:
-        isInvalid = true;
+        cancel = true;
         break;
     }
-
     if (getStickP() != 0.0f || checkLvlA() || checkLvlZ() || mActor->isRequestRush()) {
-        isInvalid = true;
-    } else if (getPlayer()->mMovementStates.jumping && getPlayerMode() != 6) {
-        isInvalid = true;
+        cancel = true;
+    } else if (getPlayer()->mMovementStates.jumping && getPlayerMode() != PlayerMode_Teresa) {
+        cancel = true;
     } else if (getPlayer()->isStatusActive(MarioStatus_Swim)) {
-        isInvalid = true;
+        cancel = true;
     } else if (getPlayer()->isStatusActive(MarioStatus_Hang)) {
-        isInvalid = true;
+        cancel = true;
     } else if (getPlayer()->isStatusActive(MarioStatus_Sukekiyo)) {
-        isInvalid = true;
+        cancel = true;
     } else if (getPlayer()->isStatusActive(MarioStatus_Bury)) {
-        isInvalid = true;
-    } else if (getPlayerMode() == 5 || isStatusActiveID(MarioStatus_Foo)) {
-        isInvalid = true;
+        cancel = true;
+    } else if (getPlayerMode() == PlayerMode_Hopper || isStatusActiveID(MarioStatus_Foo)) {
+        cancel = true;
     } else if (getPlayer()->isStatusActive(MarioStatus_FpView)) {
-        isInvalid = true;
+        cancel = true;
     } else if (getPlayer()->isStatusActive(MarioStatus_Magic)) {
-        isInvalid = true;
+        cancel = true;
     } else if (getPlayer()->isStatusActive(MarioStatus_Talk)) {
-        isInvalid = true;
+        cancel = true;
     }
-
     if (mActor->mBeeWallWalk) {
-        isInvalid = true;
+        cancel = true;
     }
-
     if (getPlayer()->_1C._5) {
-        isInvalid = true;
+        cancel = true;
     }
-
     if (getPlayer()->mMovementStates._23) {
-        isInvalid = true;
+        cancel = true;
     }
-
     if (getPlayer()->mMovementStates._A) {
-        isInvalid = true;
+        cancel = true;
     }
-
     if (getPlayer()->mDrawStates.mIsUnderwater) {
-        isInvalid = true;
+        cancel = true;
     }
-
-    if (!MR::isNearZero(getPlayer()->_184, 0.001f)) {
-        isInvalid = true;
+    if (!MR::isNearZero(getPlayer()->_184)) {
+        cancel = true;
     }
-
-    if (MR::isNearZero(getPlayer()->mWalkSpeed, 0.001f)) {
-        ++_16;
+    if (MR::isNearZero(getPlayer()->mWalkSpeed)) {
+        _16++;
     } else {
-        isInvalid = true;
+        cancel = true;
     }
-
-    if (isInvalid) {
+    if (cancel) {
         _16 = 0;
         return false;
     }
-
     if (_16 == 1800) {
-        if (MR::getAreaObj("NonSleepCube", getTrans()) != nullptr) {
+        if (MR::getAreaObj("NonSleepCube", getTrans())) {
             _12 = 1;
             return true;
         }
-
         _12 = 0;
         return true;
     }
-
     return false;
 }
 
@@ -214,10 +181,9 @@ bool MarioWait::start() {
         changeAnimation("特殊ウエイト1A", static_cast< const char* >(nullptr));
         break;
     case 1:
-        changeAnimation("特殊ウエイト1B", static_cast< const char* >(nullptr));
+        changeAnimation("戦闘ウエイト", static_cast< const char* >(nullptr));
         break;
     }
-
     _16 = 0;
     _14 = 0;
     return true;
@@ -225,52 +191,46 @@ bool MarioWait::start() {
 
 bool MarioWait::update() {
     if (getStickP() != 0.0f || checkLvlA() || checkLvlZ() || mActor->isRequestJump2P()) {
-        stopAnimation(static_cast< const char* >(nullptr), static_cast< const char* >(nullptr));
+        stopAnimation(nullptr, static_cast< const char* >(nullptr));
         getPlayer()->mainMove();
         return false;
     }
 
-    bool isInvalid = false;
+    bool cancel = false;
     if (mActor->isRequestRush()) {
-        isInvalid = true;
+        cancel = true;
     }
     if (getPlayer()->isStatusActive(MarioStatus_FpView)) {
-        isInvalid = true;
+        cancel = true;
     }
-
     if (getPlayer()->_1C._5) {
-        isInvalid = true;
+        cancel = true;
     }
-
-    if (getPlayerMode() != 6 && !getPlayer()->mMovementStates._1) {
-        isInvalid = true;
+    if (getPlayerMode() != PlayerMode_Teresa && !getPlayer()->mMovementStates._1) {
+        cancel = true;
     }
-
-    if (!MR::isNearZero(getPlayer()->_184, 0.001f)) {
-        isInvalid = true;
+    if (!MR::isNearZero(getPlayer()->_184)) {
+        cancel = true;
     }
-
-    if (isInvalid) {
-        stopAnimation(static_cast< const char* >(nullptr), static_cast< const char* >(nullptr));
+    if (cancel) {
+        stopAnimation(nullptr, static_cast< const char* >(nullptr));
         return false;
     }
 
-    ++_16;
-
+    _16++;
     switch (_12) {
     case 0:
         switch (_14) {
         case 0:
-            if (mActor->_468 == 0) {
-                u16 waitTimer = 1800;
+            if (!mActor->_468) {
+                u32 duration = 1800;
                 if (isPlayerModeTeresa()) {
-                    waitTimer = 210;
+                    duration = 210;
                 }
-
-                if (_16 == waitTimer) {
+                if (_16 == duration) {
                     _16 = 0;
-                    ++_14;
-                    changeAnimation("戦闘ウエイト", static_cast< const char* >(nullptr));
+                    _14++;
+                    changeAnimation("特殊ウエイト1B", static_cast< const char* >(nullptr));
                 }
             }
             break;
@@ -278,8 +238,9 @@ bool MarioWait::update() {
             break;
         }
         break;
+    case 1:
+        break;
     }
-
     return true;
 }
 
@@ -303,7 +264,6 @@ void Mario::checkSpecialWaitAnimation() {
 
 void Mario::resetSleepTimer() {
     mWait->_16 = 0;
-
     if (isStatusActive(MarioStatus_Wait)) {
         closeStatus(mWait);
     }
@@ -312,15 +272,16 @@ void Mario::resetSleepTimer() {
 MarioWait::MarioWait(MarioActor* pActor) : MarioState(pActor, MarioStatus_Wait), _12(0), _14(0), _16(0) {
 }
 
-namespace NrvMarioActor {
-    INIT_NERVE(MarioActorNrvWait);
-    INIT_NERVE(MarioActorNrvGameOver);
-    INIT_NERVE(MarioActorNrvGameOverAbyss);
-    INIT_NERVE(MarioActorNrvGameOverAbyss2);
-    INIT_NERVE(MarioActorNrvGameOverFire);
-    INIT_NERVE(MarioActorNrvGameOverBlackHole);
-    INIT_NERVE(MarioActorNrvGameOverNonStop);
-    INIT_NERVE(MarioActorNrvGameOverSink);
-    INIT_NERVE(MarioActorNrvTimeWait);
-    INIT_NERVE(MarioActorNrvNoRush);
-};  // namespace NrvMarioActor
+void MarioState::hitPoly(u8, const TVec3f&, HitSensor*) {
+}
+
+bool MarioState::keep() {
+    return true;
+}
+
+bool MarioState::notice() {
+    return false;
+}
+
+void MarioState::init() {
+}

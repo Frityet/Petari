@@ -84,9 +84,8 @@ void MarioModule::changeAnimation(const char* pAnim1, const char* pAnim2) {
 void MarioModule::changeAnimationNonStop(const char* pAnim) {
     if (!mActor->_B90) {
         if (pAnim) {
-            changeAnimation(pAnim, (const char*)nullptr);
+            changeAnimation(pAnim, static_cast< const char* >(nullptr));
         }
-
         XanimeFrameCtrl* pFrameCtrl = mActor->mMarioAnim->mXanimePlayer->_20;
         if (pFrameCtrl->getAttribute() == 0) {
             pFrameCtrl->setAttribute(1);
@@ -97,9 +96,8 @@ void MarioModule::changeAnimationNonStop(const char* pAnim) {
 void MarioModule::changeAnimationWithAttr(const char* pAnim, u32 attribute) {
     if (!mActor->_B90) {
         if (pAnim) {
-            changeAnimation(pAnim, (const char*)nullptr);
+            changeAnimation(pAnim, static_cast< const char* >(nullptr));
         }
-
         mActor->mMarioAnim->mXanimePlayer->_20->setAttribute(attribute);
     }
 }
@@ -197,34 +195,31 @@ f32 MarioModule::getAnimationFrame() const {
     return mActor->mMarioAnim->getFrame();
 }
 
-// regswap
 void MarioModule::changeAnimation(const char* pAnim, u32 index) {
     if (!mActor->_B90) {
-        changeAnimation(pAnim, (char*)nullptr);
-        mActor->mMario->_A6C[index] = 1;
+        changeAnimation(pAnim, static_cast< const char* >(nullptr));
+        getPlayer()->_A6C[index] = 1;
     }
 }
 
-// regswap again (see above)
 bool MarioModule::isAnimationRun(const char* pAnim, u32 index) {
-    if (mActor->mMario->_A6C[index] == 0) {
+    if (getPlayer()->_A6C[index] == 0) {
         return false;
     }
 
     bool isAnimRun = isAnimationRun(pAnim);
 
     if (!isAnimRun) {
-        mActor->mMario->_A6C[index] = 0;
+        getPlayer()->_A6C[index] = 0;
     }
 
     return isAnimRun;
 }
 
-// regwap again
 void MarioModule::stopAnimation(const char* pAnim, u32 index) {
-    if (!mActor->_B90 && mActor->mMario->_A6C[index]) {
-        stopAnimation(pAnim, (char*)nullptr);
-        mActor->mMario->_A6C[index] = 0;
+    if (!mActor->_B90 && mActor->getMario()->_A6C[index]) {
+        stopAnimation(pAnim, static_cast< const char* >(nullptr));
+        getPlayer()->_A6C[index] = 0;
     }
 }
 
@@ -287,7 +282,8 @@ void MarioModule::addVelocity(const TVec3f& rAdd) {
 }
 
 void MarioModule::addVelocity(const TVec3f& rAdd, f32 scale) {
-    MR::vecScaleAdd(&mActor->mMario->mVelocity, &rAdd, scale);
+    TVec3f& velocity = mActor->mMario->mVelocity;
+    velocity.scaleAdd(scale, rAdd);
 }
 
 void MarioModule::addVelocityAfter(const TVec3f& rAdd) {
@@ -306,10 +302,9 @@ void MarioModule::addTrans(const TVec3f& rShift, const char* pName) {
     mActor->mMario->addTrans(rShift, pName);
 }
 
-// regswap
-f32 MarioModule::cutGravityElementFromJumpVec(bool a1) {
-    if (a1) {
-        return MR::vecKillElement(mActor->mMario->mJumpVec, mActor->_240, &mActor->mMario->mJumpVec);
+f32 MarioModule::cutGravityElementFromJumpVec(bool useActorGravity) {
+    if (useActorGravity) {
+        return MR::vecKillElement(mActor->getMario()->mJumpVec, mActor->_240, &mActor->getMario()->mJumpVec);
     } else {
         TVec3f* pJumpVec = &mActor->mMario->mJumpVec;
         return MR::vecKillElement(*pJumpVec, mActor->getGravityVec(), pJumpVec);
@@ -600,7 +595,7 @@ bool MarioModule::isInputDisable() const {
     if (mActor->mMario->isStatusActive(MarioStatus_FpView)) {
         return true;
     }
-    if (isAnimationRun("ハード着地")) {  // "Hard landing"
+    if (isAnimationRun("ハード着地")) {
         return true;
     }
     if (isAnimationRun("中ダメージ着地")) {

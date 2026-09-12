@@ -67,6 +67,12 @@ public:
     f32 calcRingAcc();
     void hitPunch(const TVec3f& rPunchDir);
     f32 getSurface() const;
+    f32 getWaterEdgeDist() const NO_INLINE {
+        if (isOnWaterSurface()) {
+            return -1.0f;
+        }
+        return mDistanceToWaterSurface;
+    }
     bool tryJetAttack(HitSensor*);
     void dropJet(bool);
     void updateOxygenWatch();

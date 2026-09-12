@@ -84,7 +84,7 @@ bool Mario::doSideStep() {
         return false;
     }
 
-    if (getPlayerMode() == 5) {
+    if (getPlayerMode() == PlayerMode_Hopper) {
         return false;
     }
 
@@ -115,7 +115,7 @@ bool Mario::doSideStep() {
         return false;
     }
 
-    if (!MR::isSameMtx(*pWall->getBaseMtx(), *pWall->getPrevBaseMtx())) {
+    if (!MR::isSameMtx(pWall->getBaseMtx()->toMtxPtr(), pWall->getPrevBaseMtx()->toMtxPtr())) {
         return false;
     }
 

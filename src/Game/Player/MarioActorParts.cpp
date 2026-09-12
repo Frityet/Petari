@@ -1,16 +1,13 @@
-#include "Game/Animation/XanimeCore.hpp"
-#include "Game/Map/HitInfo.hpp"
-#include "Game/Player/MarioAnimator.hpp"
-#include "Game/Util/ActorSensorUtil.hpp"
-#include "Game/Util/FixedPosition.hpp"
-#include "Game/Util/MapUtil.hpp"
-#include "Game/Util/ModelUtil.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
+#include "Game/Animation/XanimeCore.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
+#include "Game/Map/HitInfo.hpp"
 #include "Game/MapObj/CollectCounter.hpp"
 #include "Game/MapObj/IceStep.hpp"
 #include "Game/Player/FireMarioBall.hpp"
 #include "Game/Player/JetTurtleShadow.hpp"
 #include "Game/Player/MarioActor.hpp"
+#include "Game/Player/MarioAnimator.hpp"
 #include "Game/Player/MarioConst.hpp"
 #include "Game/Player/MarioNullBck.hpp"
 #include "Game/Player/MarioParts.hpp"
@@ -18,11 +15,15 @@
 #include "Game/Player/MarioSwim.hpp"
 #include "Game/Player/TornadoMario.hpp"
 #include "Game/Screen/GameSceneLayoutHolder.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/FixedPosition.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LightUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ModelUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 
 void MarioActor::init2D() {
@@ -57,7 +58,7 @@ void MarioActor::initParts() {
 }
 
 void MarioActor::updateBeeWingAnimation() {
-    if (mPlayerMode != 4) {
+    if (mPlayerMode != PlayerMode_Bee) {
         getJointCtrl("HandR")->setLocalScale(1.0f);
         getJointCtrl("HandL")->setLocalScale(1.0f);
 

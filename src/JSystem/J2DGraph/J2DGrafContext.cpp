@@ -149,3 +149,7 @@ J2DGrafType J2DGrafContext::getGrafType() const {
 void J2DGrafContext::place(f32 x, f32 y, f32 width, f32 height) {
     place(TBox2f(x, y, x + width, y + height));
 }
+
+void J2DGrafContext::setColor(JUtility::TColor c) {
+    setColor(c, c, c, c);
+}

@@ -7,8 +7,9 @@
 #include "Game/Player/MarioSwim.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
-#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MapUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include <cstring>
 
 void MarioActor::memorizeSensorThrow(HitSensor* pSensor) {
     _428[_468] = pSensor;
@@ -51,7 +52,7 @@ bool MarioActor::tryThrow() {
         return false;
     }
 
-    HitSensor* pSensor = _428[_468];  // This is supposed to be _424 but that doesn't make sense
+    HitSensor* pSensor = _428[_468 - 1];
 
     if (releaseThrowMemoSensor()) {
         mMario->mSwim->resetJet();
@@ -214,7 +215,7 @@ void MarioActor::flushCoinPull() {
     }
 }
 
-bool MarioActor::tryCoinPullOne(HitSensor* pSensor) {
+bool MarioActor::tryCoinPullOne(HitSensor* pSensor) NO_INLINE {
     tryPullTrans(&pSensor->mHost->mVelocity, pSensor->mPosition);
 
     return pSensor->receiveMessage(ACTMES_ITEM_PULL, getSensor("body"));
@@ -396,7 +397,7 @@ void MarioActor::tryTornadoPull(HitSensor* pSensor) {
     switch (type) {
     case ATYPE_COIN:
     case ATYPE_STAR_PIECE: {
-        if (mPlayerMode != 7 && !mMario->isSwimming()) {
+        if (mPlayerMode != PlayerMode_Foo && !mMario->isSwimming()) {
             return;
         }
         TVec3f center(_2A0);

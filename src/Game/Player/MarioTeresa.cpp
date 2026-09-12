@@ -18,58 +18,14 @@
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 
-namespace {
-    struct TeresaGroupInfoRaw {
-        const char* mName;
-        f32 mRate;
-        u32 _8;
-        f32 mStart;
-        f32 mEnd;
-        f32 mLoop;
-        u32 mAttribute;
-        u8 mBckTableVariant;
-        u8 _1D[3];
-        void* _20[4];
-        f32 mWeights[4];
-        XanimeOfsInfo** _40;
-        u32 mHash;
-        const char* mBckName;
-    };
-
-    struct TeresaBckTable2Raw {
-        const char* mName;
-        XanimeBckTableEntry mEntries[2];
-    };
-
-    const char* const cTeresaBase = "基本";
-    const char* const cTeresaBlink = "blink";
-    const char* const cTeresaSleep = "sleep";
-    const char* const cTeresaSleepEffect = "Sleep";
-    const char* const cTeresaWait = "wait";
-    const char* const cTeresaSpin = "spin";
-    const char* const cTeresaFall = "fall";
-    const char* const cTeresaRun = "run";
-    const char* const cTeresaFly = "fly";
-
-    XanimePlayer* getTeresaXanimePlayer(const MarioActor* pActor) {
-        return reinterpret_cast< XanimePlayer* >(pActor->_9B8);
-    }
-
-    XanimeResourceTable* getTeresaResourceTable(const MarioActor* pActor) {
-        return reinterpret_cast< XanimeResourceTable* >(pActor->_9BC);
-    }
-}
-
-TeresaGroupInfoRaw teresaAnimeTable[2] = {
-    {cTeresaBase, 1.0f, 0x10, 0.0f, 0.0f, 0.0f, 0, 0, {0, 0, 0}, {nullptr, nullptr, nullptr, nullptr},
-     {0.0f, 0.0f, 0.0f, 0.0f}, nullptr, 0, nullptr},
-    {"", 0.0f, 0, 0.0f, 0.0f, 0.0f, 0, 0, {0, 0, 0}, {nullptr, nullptr, nullptr, nullptr},
-     {0.0f, 0.0f, 0.0f, 0.0f}, nullptr, 0, nullptr},
+XanimeGroupInfo teresaAnimeTable[] = {
+    {{"基本"}, 1.0f, 16},
+    {{""}},
 };
 
-TeresaBckTable2Raw teresaAnime2[2] = {
-    {cTeresaBase, {{cTeresaWait, 1.0f}, {cTeresaRun, 0.0f}}},
-    {"", {{"", 0.0f}, {nullptr, 0.0f}}},
+XanimeBckTable2 teresaAnime2[] = {
+    {{"基本"}, {{"wait", 1.0f}, {"run", 0.0f}}},
+    {{""}, {{"", 0.0f}, {nullptr, 0.0f}}},
 };
 
 void Mario::startTeresaMode() {
@@ -157,7 +113,7 @@ bool MarioTeresa::update() {
         return false;
     }
 
-    if (getPlayer()->isStatusActive(MarioStatus_13) || mActor->_EA4) {
+    if (getPlayer()->isStatusActive(MarioStatus_Recovery) || mActor->_EA4) {
         return true;
     }
 
@@ -447,13 +403,11 @@ void MarioTeresa::doTeresaReflection(const TVec3f& rNormal, bool emitEffect) {
 
 void MarioActor::initTeresaMarioAnimation() {
     _9B0 = 0.0f;
-    _9BC = reinterpret_cast< u32 >(
-        new XanimeResourceTable(MR::getResourceHolder(_9A4), reinterpret_cast< XanimeGroupInfo* >(teresaAnimeTable), nullptr, nullptr,
-                                nullptr, reinterpret_cast< XanimeBckTable2* >(teresaAnime2), nullptr, nullptr, nullptr));
-    _9B8 = reinterpret_cast< u32 >(new XanimePlayer(MR::getJ3DModel(_9A4), getTeresaResourceTable(this)));
-    getTeresaXanimePlayer(this)->setDefaultAnimation("基本");
-    getTeresaXanimePlayer(this)->changeAnimation("基本");
-    _9A4->mModelManager->mXanimePlayer = getTeresaXanimePlayer(this);
+    _9BC = new XanimeResourceTable(MR::getResourceHolder(_9A4), teresaAnimeTable, nullptr, nullptr, nullptr, teresaAnime2, nullptr, nullptr, nullptr);
+    _9B8 = new XanimePlayer(MR::getJ3DModel(_9A4), _9BC);
+    _9B8->setDefaultAnimation("基本");
+    _9B8->changeAnimation("基本");
+    _9A4->mModelManager->mXanimePlayer = _9B8;
 }
 
 void Mario::startTeresaDisappear() {
@@ -616,11 +570,11 @@ void MarioActor::runTeresaBaseAnimation() {
         return;
     }
 
-    if (getTeresaXanimePlayer(this)->isRun("基本")) {
+    if (_9B8->isRun("基本")) {
         return;
     }
 
-    getTeresaXanimePlayer(this)->changeAnimation("基本");
+    _9B8->changeAnimation("基本");
     _9B4 = MR::getRandom(60L, 180L);
     MR::startBtp(_9A4, "blink");
 }
@@ -685,7 +639,7 @@ void MarioActor::updateTeresaAnimation() {
             if (!MR::isBckPlaying(_9A4, "fly") && !MR::isBckPlaying(_9A4, "spin")) {
                 changeTeresaAnimation("fly", 16);
             }
-        } else if (MR::isBckPlaying(_9A4, "fly") || getTeresaXanimePlayer(this)->isRun("基本")) {
+        } else if (MR::isBckPlaying(_9A4, "fly") || _9B8->isRun("基本")) {
             const TVec3f& rGravity = getGravityVec();
             if (getLastMove().dot(rGravity) >= 1.0f) {
                 changeTeresaAnimation("fall", 16);
@@ -702,11 +656,11 @@ void MarioActor::updateTeresaAnimation() {
             }
         }
 
-        if (getTeresaXanimePlayer(this)->isRun("基本")) {
+        if (_9B8->isRun("基本")) {
             _9B0 = mMario->mJumpVec.length() / 10.0f;
             _9B0 = MR::clamp(_9B0, 0.0f, 1.0f);
-            getTeresaXanimePlayer(this)->changeTrackWeight(0, 1.0f - _9B0);
-            getTeresaXanimePlayer(this)->changeTrackWeight(1, _9B0);
+            _9B8->changeTrackWeight(0, 1.0f - _9B0);
+            _9B8->changeTrackWeight(1, _9B0);
         }
     }
 

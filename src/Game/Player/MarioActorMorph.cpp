@@ -266,7 +266,7 @@ void MarioActor::setPlayerMode(u16 playerMode, bool myBool) {
         break;
     }
 
-    if (mPlayerMode == 0) {
+    if (mPlayerMode == PlayerMode_Normal) {
         if (mTransforming) {
             MR::endDemo(this, "マリオ変身");
             mTransforming = false;
@@ -312,13 +312,13 @@ void MarioActor::setPlayerMode(u16 playerMode, bool myBool) {
 
 void MarioActor::resetPlayerModeOnDamage() {
     if (isActionOk("ダメージ解除")) {
-        setPlayerMode(0, true);
+        setPlayerMode(PlayerMode_Normal, true);
     }
 }
 
 void MarioActor::resetPlayerModeOnNoDamage() {
     if (isActionOk("ノーダメージ解除")) {
-        setPlayerMode(0, true);
+        setPlayerMode(PlayerMode_Normal, true);
     }
 }
 
@@ -333,7 +333,7 @@ void MarioActor::updatePlayerMode() {
         return;
     }
 
-    setPlayerMode(0, true);
+    setPlayerMode(PlayerMode_Normal, true);
 }
 
 struct myStruct {
@@ -345,7 +345,7 @@ static myStruct cMorphStringTable[] = {{"DieBlackHole", 0, 0, 0, "DieBlackHoleBe
 
 void MarioActor::touchSensor(HitSensor* pSensor) {
     switch (pSensor->mType) {
-    case ACTMES_GROUP_ATTACK:
+    case ATYPE_WATER_PRESSURE_BULLET_BIND:
         if (MR::isExistMapCollision(_2A0, pSensor->mPosition - _2A0)) {
             return;
         }
@@ -375,7 +375,7 @@ const char* MarioActor::changeMorphString(const char* pName) const {
             break;
         }
         if (item->_24 == hash) {
-            if (item->_0[mPlayerMode] == nullptr || mPlayerMode == 0) {
+            if (item->_0[mPlayerMode] == nullptr || mPlayerMode == PlayerMode_Normal) {
                 if (gIsLuigi && item->_0[8] != nullptr) {
                     return item->_0[8];
                 }

@@ -118,7 +118,7 @@ void MarioActor::initMember() {
     _3C4.zero();
     _3D0 = 0;
     _3D2 = 0;
-    mPlayerMode = 0;
+    mPlayerMode = PlayerMode_Normal;
     _3D6 = 0;
     _3D8 = 0;
     _3DA = 0;
@@ -299,8 +299,8 @@ void MarioActor::initMember() {
     _B74 = 0;
     mEyeRes = nullptr;
     _B7C = 0;
-    _B80[0] = 0;
-    _B80[1] = 0;
+    mMaskTextures[0] = 0;
+    mMaskTextures[1] = 0;
     _B88 = 0;
     mNullAnimation = nullptr;
     _B90 = 0;

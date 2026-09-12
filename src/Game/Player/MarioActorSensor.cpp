@@ -1,5 +1,6 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/MapObj/CollectCounter.hpp"
+#include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioAnimator.hpp"
 #include "Game/Player/MarioConst.hpp"
@@ -13,8 +14,7 @@
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
-
-extern "C" int strcmp(const char*, const char*);
+#include <cstring>
 
 void MarioActor::setupSensors() {
     initHitSensor(4);
@@ -48,67 +48,57 @@ void MarioActor::setupSensors() {
     MR::initStarPointerTarget(this, 80.0f, TVec3f(0.0f, 80.0f, 0.0f));
 }
 
-void MarioActor::updateHitSensor(HitSensor* pSensor) {
-    switch (pSensor->mType) {
+void MarioActor::updateHitSensor(HitSensor* sensor) {
+    switch (sensor->mType) {
     case ATYPE_PLAYER:
-        if (mMario->isStatusActive(5)) {
-            getRealPos("Spine1", &pSensor->mPosition);
-            pSensor->mRadius = 60.0f;
+        if (mMario->isStatusActive(MarioStatus_Hang)) {
+            getRealPos("Spine1", &sensor->mPosition);
+            sensor->mRadius = 60.0f;
             return;
         }
-
-        pSensor->mPosition.set< f32 >(_2A0);
-
+        sensor->mPosition.set(_2A0);
         if (mMario->mMovementStates._B && !mMario->mMovementStates._1) {
-            pSensor->mPosition.add(mMario->mJumpVec);
+            sensor->mPosition.add(mMario->mJumpVec);
         }
-
-        pSensor->mRadius = 100.0f;
+        sensor->mRadius = 100.0f;
         return;
     case ATYPE_PUSH:
-        pSensor->setType(ATYPE_EYE);
+        sensor->setType(ATYPE_EYE);
         return;
     case ATYPE_EYE:
-        if (pSensor == getSensor("ex-eye")) {
+        if (sensor == getSensor("ex-eye")) {
             updateScouter();
             return;
         }
-
-        pSensor->mPosition.set< f32 >(_2A0);
-
         f32 radius = 600.0f;
-
-        if (mMario->mMovementStates._2F) {
+        sensor->mPosition.set(_2A0);
+        if (mMario->mMovementStates._F) {
             radius = 1000.0f;
         }
-
-        if (_468 != 0 || mMario->isSwimming()) {
+        if (_468) {
             radius = 2000.0f;
         }
-
-        pSensor->mRadius = radius;
+        if (mMario->isSwimming()) {
+            radius = 2000.0f;
+        }
+        sensor->mRadius = radius;
         _3E5 = false;
         _3E6 = false;
-
         if (strcmp(mMarioAnim->mXanimePlayer->getCurrentBckName(), "spin2nd") == 0) {
             _3E5 = true;
             _3E6 = true;
-
             if (_944 <= 2) {
-                if (_944 == 0) {
+                if (!_944) {
                     _945 = 0;
                     _974 = 0;
                 }
-
                 _944 = 2;
             }
         }
-
         if (!mMario->isAnimationTerminate(nullptr)) {
             if (mMario->_430 == 8 && isJumping()) {
                 _3E5 = true;
             }
-
             if (isAnimationRun("地上ひねり")) {
                 _3E5 = true;
             }
@@ -154,183 +144,152 @@ void MarioActor::updateHitSensor(HitSensor* pSensor) {
             if (isAnimationRun("ハンマー投げリリース")) {
                 _3E5 = true;
             }
-
             if (mMario->isSwimming() && mMario->mSwim->check7Aand7C()) {
                 _3E5 = true;
             }
-
-            if (mMario->isStatusActive(0x18) && mMario->mFoo->_4C != 0) {
+            if (mMario->isStatusActive(MarioStatus_Foo) && mMario->mFoo->_4C) {
                 _3E5 = true;
             }
-
             if (_3E5) {
                 _3E6 = true;
             }
         }
-
-        if (pSensor->mValidByHost && pSensor->mValidBySystem) {
+        if (sensor->isValid()) {
             attackOrPushPolygons();
         }
-
-        if (_424 != nullptr) {
+        if (_424) {
             tryTornadoPull(_424);
         }
+        return;
     }
 }
 
-void MarioActor::doTrampleJump(HitSensor* pSensor) {
-    if (mMario->mMovementStates._1A) {
+void MarioActor::doTrampleJump(HitSensor* sensor) {
+    if (mMario->_1C._6) {
         return;
     }
-
-    if (mMario->isStatusActive(1)) {
+    if (mMario->isStatusActive(MarioStatus_Wall)) {
         mMario->closeStatus(mMario->mWall);
     }
-
-    mMario->_402 = mConst->getTable()->mTrampleBegomaOpenTime;
+    mMario->_402 = getConst().getTable()->mAirWalkTimeTornado;
     mMario->mMovementStates._2B = false;
-
-    if (pSensor->mType == ACTMES_TAKEN) {
+    switch (sensor->mType) {
+    case 0x1F:
         _988 = 0;
-        MarioConstTable* table = mConst->getTable();
-        trampleJump(table->mTrampleBegoma, table->mTrampleLong);
+        trampleJump(getConst().getTable()->mTrampleBegoma, getConst().getTable()->mTrampleLong);
         changeAnimationNonStop("ヘリコプタージャンプ");
-        mMario->startPadVib(2);
+        mMario->startPadVib(2UL);
         playSound("ヘリコプタージャンプ", -1);
         mMario->startRotationTask(4);
-        mMario->_430 = 0xB;
-        return;
+        mMario->_430 = 11;
+        break;
+    default:
+        if (strcmp(sensor->mHost->mName, "砲弾") == 0) {
+            mMario->playSoundTrampleCombo(_989);
+            _989++;
+            if (_989 > 1 && _989 < 5) {
+                _1B8->setCount(_989);
+            }
+            if (_989 == 5) {
+                _1B8->kill();
+                _989 = 0;
+                MR::requestOneUp();
+                MR::incPlayerLeft();
+            }
+        }
+        if (strcmp(sensor->mHost->mName, "全滅用クリボー") == 0) {
+            mMario->playSoundTrampleCombo(_989);
+            _989++;
+            if (_989 > 1 && _989 < 8) {
+                _1B8->setCount(_989);
+            }
+            if (_989 >= 8) {
+                _1B8->kill();
+                MR::requestOneUp();
+                MR::incPlayerLeft();
+            }
+        }
+        trampleJump(getConst().getTable()->mTrampleNormal, getConst().getTable()->mTrampleLong);
+        break;
     }
-
-    if (strcmp(pSensor->mHost->mName, "砲弾") == 0) {
-        mMario->playSoundTrampleCombo(_989);
-        _989++;
-
-        if (_989 > 1 && _989 < 5) {
-            _1B8->setCount(_989);
-        }
-
-        if (_989 == 5) {
-            _1B8->kill();
-            _989 = 0;
-            MR::requestOneUp();
-            MR::incPlayerLeft();
-        }
-    }
-
-    if (strcmp(pSensor->mHost->mName, "全滅用クリボー") == 0) {
-        mMario->playSoundTrampleCombo(_989);
-        _989++;
-
-        if (_989 > 1 && _989 < 8) {
-            _1B8->setCount(_989);
-        }
-
-        if (_989 >= 8) {
-            _1B8->kill();
-            MR::requestOneUp();
-            MR::incPlayerLeft();
-        }
-    }
-
-    MarioConstTable* table = mConst->getTable();
-    trampleJump(table->mTrampleNormal, table->mTrampleLong);
 }
 
-void MarioActor::trampleJump(f32 ySpeed, f32 ySpeedLvlA) {
-    if (mMario->isStatusActive(0x18)) {
+void MarioActor::trampleJump(f32 normal, f32 extra) {
+    if (mMario->isStatusActive(MarioStatus_Foo)) {
         return;
     }
-
-    TVec3f jumpVec(mMario->mJumpVec);
-    MR::vecKillElement(jumpVec, getGravityVec(), &jumpVec);
-
-    TVec3f gravity = -getGravityVec();
-    gravity *= ySpeed;
-    jumpVec.add(gravity);
-
-    if (_988 == 2) {
+    TVec3f velocity(mMario->mJumpVec);
+    MR::vecKillElement(velocity, getGravityVec(), &velocity);
+    velocity.add(-getGravityVec() * normal);
+    switch (_988) {
+    case 2:
         if (mMario->checkLvlA()) {
-            jumpVec *= 1.2f;
+            velocity *= 1.2f;
         } else {
-            jumpVec *= 1.5f;
+            velocity *= 1.5f;
         }
+        break;
     }
-
     if (mMario->checkLvlA()) {
-        TVec3f gravityLvlA = -getGravityVec();
-        gravityLvlA *= ySpeedLvlA;
-        jumpVec.add(gravityLvlA);
+        velocity.add(-getGravityVec() * extra);
     }
-
-    mMario->tryForceFreeJump(jumpVec);
+    mMario->tryForceFreeJump(velocity);
     mMario->popTask(&Mario::taskOnHipDropSlide);
-
-    if (mPlayerMode != 5) {
+    if (mPlayerMode != PlayerMode_Hopper) {
         if (!mMario->mMovementStates._A) {
             _988++;
-
             if (_988 == 1) {
-                changeAnimation("地上ひねり", nullptr);
+                changeAnimation("ジャンプふみ1", nullptr);
             } else if (_988 == 2) {
-                changeAnimation("サマーソルト", nullptr);
+                changeAnimation("ジャンプふみ2", nullptr);
             } else if (_988 >= 3) {
-                changeAnimation("水泳スピン", nullptr);
+                changeAnimation("ジャンプふみ3", nullptr);
                 _988 = 0;
             }
         }
     } else {
         stopAnimation(nullptr);
-
-        if (mMario->mRabbit->mJumpAnimationIndex == 0) {
-            changeAnimation("ハチスピン空中", nullptr);
-        } else if (mMario->mRabbit->mJumpAnimationIndex == 1) {
-            changeAnimation("ファイアスピン空中", nullptr);
+        switch (mMario->mRabbit->mJumpAnimationIndex) {
+        case 0:
+            changeAnimation("ホッパーふみジャンプA", nullptr);
+            break;
+        case 1:
+            changeAnimation("ホッパーふみジャンプB", nullptr);
+            break;
         }
     }
-
-    playSound("ジャンプ", -1);
-    playEffect("踏み");
-    mMario->startPadVib(0ul);
+    playSound("声踏み", -1);
+    playEffect("ふみつぶし");
+    mMario->startPadVib(0UL);
     mMario->mMovementStates._2F = false;
     mMario->mMovementStates._22 = false;
     mMario->mMovementStates._3E = 0;
 }
 
-void MarioActor::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
+void MarioActor::attackSensor(HitSensor* own, HitSensor* other) {
     if (!isEnableNerveChange()) {
         return;
     }
-
-    if (pSender->mType == ATYPE_PLAYER) {
-        if (!_934) {
-            return;
+    if (own->mType == ATYPE_PLAYER) {
+        if (_934 && !getSensor("eye")->isValid()) {
+            addRushSensor(other, false);
         }
-
-        if (getSensor("eye")->isValid()) {
-            return;
+    } else {
+        if (own == getSensor("eye")) {
+            if (MR::isDead(other->mHost)) {
+                return;
+            }
+            if (_934) {
+                attackOrPushSensorInRush(other, (other->mPosition - own->mPosition).length());
+            } else if (isDamaging()) {
+                attackOrPushSensorInDamage(other, (other->mPosition - own->mPosition).length());
+            } else {
+                attackOrPushSensor(other, (other->mPosition - own->mPosition).length());
+            }
         }
-
-        addRushSensor(pReceiver, false);
-        return;
-    }
-
-    if (pSender == getSensor("eye")) {
-        if (MR::isDead(pReceiver->mHost)) {
-            return;
+        if (own == getSensor("ex-eye")) {
+            recordScoutingObject(other);
         }
-
-        if (_934) {
-            attackOrPushSensorInRush(pReceiver, (pReceiver->mPosition - pSender->mPosition).length());
-        } else if (isDamaging()) {
-            attackOrPushSensorInDamage(pReceiver, (pReceiver->mPosition - pSender->mPosition).length());
-        } else {
-            attackOrPushSensor(pReceiver, (pReceiver->mPosition - pSender->mPosition).length());
-        }
-    }
-
-    if (pSender == getSensor("ex-eye")) {
-        recordScoutingObject(pReceiver);
     }
 }
 
@@ -344,113 +303,80 @@ void MarioActor::resetSensorCount() {
     _46C = 0;
 }
 
-void MarioActor::recordScoutingObject(HitSensor* pSensor) {
-    if (pSensor == _424) {
+void MarioActor::recordScoutingObject(HitSensor* sensor) {
+    if (sensor == _424) {
         return;
     }
-
-    if (!MR::isSensorEnemy(pSensor) && !MR::isSensorMapObj(pSensor) && !MR::isSensorRide(pSensor)) {
+    if (!MR::isSensorEnemy(sensor) && !MR::isSensorMapObj(sensor) && !MR::isSensorRide(sensor)) {
         return;
     }
-
-    HitSensor* scouter = getSensor("ex-eye");
-    TVec3f sensorDiff = pSensor->mPosition - scouter->mPosition;
-
-    if (MR::diffAngleAbsHorizontal(sensorDiff, mMario->mFrontVec, _240) >= 1.5707964f) {
+    if (MR::diffAngleAbsHorizontal(sensor->mPosition - getSensor("ex-eye")->mPosition, mMario->mFrontVec, _240) >= 1.5707964f) {
         return;
     }
-
-    _9D4 = pSensor;
-    _9D8 = scouter->mPosition;
+    _9D4 = sensor;
+    _9D8 = getSensor("ex-eye")->mPosition;
     _9CC = _9D0;
     _9D0 = 60.0f;
 }
 
 void MarioActor::updateScouter() {
-    HitSensor* previousTarget = _F24;
+    HitSensor* previous = _F24;
     _F24 = nullptr;
-
-    if (_468 != 0) {
-        if (_9D4 != nullptr && MR::isExistInAttributeGroupSearchTurtle(_9D4->mHost)) {
+    if (_468) {
+        if (_9D4 && MR::isExistInAttributeGroupSearchTurtle(_9D4->mHost)) {
             if (MR::isSensorEnemy(_9D4)) {
-                _F28 = 0x10;
+                _F28 = 16;
             } else {
                 _F28 = 2;
             }
-
             _F24 = _9D4;
-        } else if (_F28 != 0) {
-            _F24 = previousTarget;
+        } else if (_F28) {
+            _F24 = previous;
             _F28--;
         }
     }
-
     _9D0 += 80.0f;
-
     if (_9D0 < 100.0f) {
         _9D0 = 100.0f;
     }
-
     if (_9D0 > _9CC) {
         _9D4 = nullptr;
     }
-
-    f32 maxDist = 1000.0f;
-
-    if (mMario->isStatusActive(0x18)) {
-        maxDist = 2400.0f;
+    f32 maximum = 1000.0f;
+    if (mMario->isStatusActive(MarioStatus_Foo)) {
+        maximum = 2400.0f;
     }
-
-    if (_468 != 0) {
-        maxDist = 3000.0f;
+    if (_468) {
+        maximum = 3000.0f;
     }
-
-    if (_9D0 > maxDist) {
+    if (_9D0 > maximum) {
         _9D0 = 60.0f;
     }
-
-    TVec3f scouterPos;
-
+    TVec3f position;
     if (mMario->isSwimming()) {
-        TVec3f offset(mUpVec);
-        offset *= _9D0;
-        TVec3f position(_2A0);
-        position.add(offset);
-        scouterPos = position;
+        position = _2A0 + mUpVec * _9D0;
     } else {
-        TVec3f offset(mMario->mFrontVec);
-        offset *= _9D0;
-        TVec3f position(_2A0);
-        position.add(offset);
-        scouterPos = position;
+        position = _2A0 + mMario->mFrontVec * _9D0;
     }
-
-    getSensor("ex-eye")->mPosition = scouterPos;
-
+    getSensor("ex-eye")->mPosition = position;
     f32 radius = 100.0f;
-
     if (_9D0 >= 300.0f) {
-        f32 sin = JMath::sSinCosTable.table[0xE3].a1;
-        f32 cos = JMACosRadian(0.08726647f);
-        radius = 100.0f + (_9D0 - 300.0f) * (sin / cos);
+        radius = 100.0f + (_9D0 - 300.0f) * MR::tanDegree(5.0f);
     }
-
     if (_9D0 < 200.0f) {
         radius = 40.0f;
     }
-
     getSensor("ex-eye")->mRadius = radius;
 }
 
 void MarioActor::initScouter() {
     _9CC = 0.0f;
     _9D0 = 60.0f;
-    _9D4 = nullptr;
-    _9D8.z = 0.0f;
-    _9D8.y = 0.0f;
-    _9D8.x = 0.0f;
-    HitSensor* scouter = getSensor("ex-eye");
-    scouter->mRadius = 100.0f;
+    _9D4 = 0;
+    _9D8.set2(0.0f);
+
+    HitSensor* sensor = getSensor("ex-eye");
+    sensor->mRadius = 100.0f;
     getSensor("ex-eye")->validate();
 }
 
@@ -458,16 +384,3 @@ void MarioActor::initForJump() {
     _988 = 0;
     _989 = 0;
 }
-
-namespace NrvMarioActor {
-    INIT_NERVE(MarioActorNrvWait);
-    INIT_NERVE(MarioActorNrvGameOver);
-    INIT_NERVE(MarioActorNrvGameOverAbyss);
-    INIT_NERVE(MarioActorNrvGameOverAbyss2);
-    INIT_NERVE(MarioActorNrvGameOverFire);
-    INIT_NERVE(MarioActorNrvGameOverBlackHole);
-    INIT_NERVE(MarioActorNrvGameOverNonStop);
-    INIT_NERVE(MarioActorNrvGameOverSink);
-    INIT_NERVE(MarioActorNrvTimeWait);
-    INIT_NERVE(MarioActorNrvNoRush);
-};  // namespace NrvMarioActor

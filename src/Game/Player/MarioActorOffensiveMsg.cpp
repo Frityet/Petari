@@ -4,6 +4,7 @@
 #include "Game/Player/MarioAnimator.hpp"
 #include "Game/Player/MarioConst.hpp"
 #include "Game/Player/MarioMessenger.hpp"
+#include "Game/Player/MarioState.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/GravityUtil.hpp"
@@ -85,7 +86,7 @@ void MarioActor::attackOrPushSensor(HitSensor* pSensor, f32 distance) {
         }
 
         bool isTouch = false;
-        if (mPlayerMode == 6) {
+        if (mPlayerMode == PlayerMode_Teresa) {
             TVec3f diff = _2A0 - pSensor->mPosition;
             f32 length = diff.length();
             if (length < pSensor->mRadius + mConst->getTable()->mTeresaBodyRadius) {
@@ -102,7 +103,7 @@ void MarioActor::attackOrPushSensor(HitSensor* pSensor, f32 distance) {
                     touchSensor(pSensor);
                 }
                 if (MR::isSensorEnemy(pSensor)) {
-                    setPlayerMode(0, true);
+                    setPlayerMode(PlayerMode_Normal, true);
                 }
             }
         } else {
@@ -160,7 +161,7 @@ void MarioActor::attackOrPushSensor(HitSensor* pSensor, f32 distance) {
         tryAddClapCoin(pSensor);
     }
     trySetLockOnTarget(pSensor);
-    if (mPlayerMode == 4 && distance < 100.0f + sensorRadius) {
+    if (mPlayerMode == PlayerMode_Bee && distance < 100.0f + sensorRadius) {
         mMario->tryBeeStick(pSensor);
     }
     if (isUnderTarget(pSensor) && !selectNotHomingSensor(pSensor)) {
@@ -235,7 +236,9 @@ void MarioActor::attackOrPushSensorInDamage(HitSensor* pReceiver, f32 radius) {
 void MarioActor::attackOrPushSensorInRush(HitSensor* pSensor, f32 radius) {
     f32 sensorRadius = pSensor->mRadius;
     if (radius < sensorRadius + mSensorRadiusAttack) {
-        if (cylinderPushCheck(pSensor->mPosition - _2A0, sensorRadius, 20.0f + _4B0, _4B4)) {
+        f32 height = _4B4;
+        f32 width = 20.0f + _4B0;
+        if (cylinderPushCheck(pSensor->mPosition - _2A0, sensorRadius, width, height)) {
             if (tryGetItem(pSensor)) {
                 return;
             }
@@ -254,7 +257,7 @@ void MarioActor::attackOrPushSensorInRush(HitSensor* pSensor, f32 radius) {
 }
 
 void MarioActor::tryAddClapCoin(HitSensor* pSensor) {
-    if (_7DC != 64 && pSensor->isType(ACTMES_ENEMY_ATTACK_FLIP_VERYWEAK)) {
+    if (_7DC != 64 && pSensor->isType(ATYPE_STAR_PIECE)) {
         _6DC[_7DC] = pSensor;
         _7DC++;
     }
@@ -286,7 +289,7 @@ bool MarioActor::isUnderTarget(HitSensor* pSensor) {
 
 bool MarioActor::tryHipDropAttack(HitSensor* pSensor) {
     if (isUnderTarget(pSensor) && cylinderHorizontalCheck(pSensor)) {
-        if (pSensor->isType(ACTMES_TAKEN)) {
+        if (pSensor->isType(ATYPE_PLAYER_AUTO_JUMP)) {
             return tryTrampleAttack(pSensor);
         }
 
@@ -313,7 +316,7 @@ bool MarioActor::checkAndTryTrampleAttack(HitSensor* pSensor, f32 distance, bool
         if (tryTrampleAttack(pSensor)) {
             isTrampled = true;
         }
-        if (mPlayerMode == 1) {
+        if (mPlayerMode == PlayerMode_Invincible) {
             if (MR::sendArbitraryMsg(ACTMES_INVINCIBLE_ATTACK, pSensor, getSensor("body"))) {
                 mMario->startPadVib(2);
                 printHitMark(pSensor);
@@ -329,7 +332,7 @@ bool MarioActor::tryTrampleAttack(HitSensor* pSensor) {
         return false;
     }
 
-    if (mMario->isStatusActive(4)) {
+    if (mMario->isStatusActive(MarioStatus_Blown)) {
         return false;
     }
 
@@ -639,7 +642,7 @@ bool MarioActor::sendMsgUpperPunch(HitSensor* pSensor) {
         return false;
     }
 
-    if (pSensor != nullptr && !MR::isDead(pSensor->mHost) && pSensor->receiveMessage(MR::MovementType_SensorHitChecker, getSensor("body"))) {
+    if (pSensor != nullptr && !MR::isDead(pSensor->mHost) && pSensor->receiveMessage(ACTMES_PLAYER_UPPER_PUNCH, getSensor("body"))) {
         playSound("声蹴り", -1);
 
         if (!mMario->isSwimming()) {

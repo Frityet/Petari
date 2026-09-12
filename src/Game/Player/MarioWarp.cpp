@@ -8,6 +8,10 @@
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 
+namespace JGeometry {
+    TVec3< f32 > TVec3< f32 >::operator*(f32) const NO_INLINE;
+}
+
 bool Mario::doObjWarp(LiveActor* pActor) {
     if (getPlayer()->getMovementStates().debugMode) {
         return false;
@@ -188,7 +192,7 @@ void Mario::doCubeWarp() {
             return;
         }
 
-        AreaObj* pPairCube = pWarpCubeMgr->getPairCube(pWarpCube);
+        WarpCube* pPairCube = pWarpCubeMgr->getPairCube(pWarpCube);
         if (pPairCube == nullptr) {
             return;
         }
@@ -487,9 +491,8 @@ bool MarioWarp::close() {
     switch (_45) {
     case 0: {
         playSound("声中ジャンプ");
-        MarioConstTable* table = mActor->mConst->getTable();
-        TVec3f jump(_2C * table->mWarpPodJumpY + _38 * table->mWarpPodJumpX);
-        getPlayer()->tryForcePowerJump(jump, false);
+        const MarioConstTable* table = mActor->getConst().getTable();
+        getPlayer()->tryForcePowerJump(_2C * table->mWarpPodJumpY + _38 * table->mWarpPodJumpX, false);
         break;
     }
     case 3:

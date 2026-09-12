@@ -5,10 +5,9 @@
 #include "Game/Player/MarioShadow.hpp"
 #include "Game/Player/MarioState.hpp"
 #include "Game/Util/MathUtil.hpp"
-#include <revolution/mtx.h>
 
 void Mario::beeMarioOnGround() {
-    if (getPlayerMode() == 4 && !mDrawStates._C && mMovementStates._1 && !mMovementStates._23 && !isStatusActive(MarioStatus_Slider)) {
+    if (getPlayerMode() == PlayerMode_Bee && !mDrawStates._C && mMovementStates._1 && !mMovementStates._23 && !isStatusActive(MarioStatus_Slider)) {
         getPlayer()->incAirWalkTimer();
         getPlayer()->incAirWalkTimer();
         getPlayer()->incAirWalkTimer();
@@ -16,25 +15,24 @@ void Mario::beeMarioOnGround() {
     }
 }
 
-void MarioActor::entryWallWalkMode(const TVec3f& rPosition, const TVec3f& rNormal) {
-    if (mBeeWallWalk == 0 && _9F2 == 0) {
+void MarioActor::entryWallWalkMode(const TVec3f& position, const TVec3f& normal) {
+    if (mBeeWallWalk) {
+        return;
+    }
+    if (!_9F2) {
         mBeeWallWalk = 5;
-
-        TVec3f gravity(-rNormal);
+        TVec3f gravity(-normal);
         _240 = gravity;
-        mPosition = rPosition;
-
-        mMario->setTrans(rPosition, nullptr);
+        mPosition = position;
+        mMario->setTrans(position, nullptr);
         mMario->stopJump();
-        mMario->stopAnimation(nullptr);
+        mMario->stopAnimation(nullptr, static_cast< const char* >(nullptr));
         mMario->stopWalk();
-
-        TVec3f oldHead(mMario->mHeadVec);
+        TVec3f front(mMario->mHeadVec);
         mMario->setGravityVec(gravity);
         mMario->setHeadVec(-gravity);
-        mMario->setFrontVecKeepUp(oldHead, static_cast< u32 >(1));
+        mMario->setFrontVecKeepUp(front, 1UL);
         setBlendMtxTimer(2);
-
         _38C = 5;
         mMario->mMovementStates._38 = false;
         _214->_305 = true;
@@ -42,214 +40,163 @@ void MarioActor::entryWallWalkMode(const TVec3f& rPosition, const TVec3f& rNorma
 }
 
 bool Mario::beeMarioOnAir() {
-    if (_774 != 0) {
+    if (_774) {
         _774--;
-
-        if (_774 == 0) {
+        if (!_774) {
             mMovementStates._2F = false;
         }
     }
 
-    if (getPlayerMode() == 4) {
-        if (_3BC == 1 && _402 != 0) {
+    if (getPlayerMode() == PlayerMode_Bee) {
+        if (_3BC == 1 && _402) {
             _402--;
         }
-
         if (isAnimationRun("ハチ壁ジャンプ") && isAnimationTerminate(nullptr)) {
             if (checkLvlA()) {
                 changeAnimation("ハチ飛行中", "落下");
             } else {
                 changeAnimation("ハチ飛行中無入力", "落下");
             }
-
             changeAnimationInterpoleFrame(30);
         }
     }
 
-    if (getPlayerMode() == 4) {
-        TVec3f horizontalVelocity;
-        if (MR::vecKillElement(mJumpVec, getAirGravityVec(), &horizontalVelocity) > -5.0f || _76C != 0) {
-            if (_774 == 0) {
-                const f32 gravitySpeed = cutGravityElementFromJumpVec(true);
-                const f32 horizontalSpeed = mJumpVec.length();
+    if (getPlayerMode() == PlayerMode_Bee) {
+        TVec3f horizontal;
+        if (MR::vecKillElement(mJumpVec, getAirGravityVec(), &horizontal) > -5.0f || _76C) {
+            if (!_774) {
+                f32 verticalSpeed = cutGravityElementFromJumpVec(true);
+                f32 speed = mJumpVec.length();
                 MR::normalizeOrZero(&mJumpVec);
-
-                if (!MR::vecBlendSphere(mJumpVec, mFrontVec, &mJumpVec, mActor->mConst->getTable()->mBeeSpeedRotateRatio)) {
-                    TMtx34f rotation;
+                if (!MR::vecBlendSphere(mJumpVec, mFrontVec, &mJumpVec, mActor->getConst().getTable()->mBeeSpeedRotateRatio)) {
+                    Mtx rotation;
                     PSMTXRotAxisRad(rotation, &mHeadVec, 0.1f);
                     PSMTXMultVecSR(rotation, &mJumpVec, &mJumpVec);
                 }
-
-                mJumpVec.setLength(horizontalSpeed);
-
-                TVec3f gravityVelocity(getAirGravityVec());
-                gravityVelocity.scale(gravitySpeed);
-                mJumpVec += gravityVelocity;
+                mJumpVec.setLength(speed);
+                mJumpVec += getAirGravityVec() * verticalSpeed;
             }
 
-            if (!mMovementStates._11 && _402 != 0) {
+            if (!mMovementStates._11 && _402) {
                 _406 = 16;
-
                 if (_76C < 30) {
                     _76C = 30;
                     _770 = 0.0f;
                 }
-
                 mMovementStates._12 = true;
                 _4B0 = mPosition;
                 mMovementStates._11 = true;
             }
 
-            s16 airWalkInhibitTime = static_cast< s16 >(mActor->mConst->getTable()->mBeeAirWalkInhibitTime);
-            s16 gravityPowerTime = static_cast< s16 >(mActor->mConst->getTable()->mBeeGravityPowerTime);
-
-            TVec3f horizontalJump;
-            MR::vecKillElement(mJumpVec, getAirGravityVec(), &horizontalJump);
-            if (horizontalJump.length() < 5.0f) {
-                airWalkInhibitTime = static_cast< s16 >(mActor->mConst->getTable()->mBeeAirWalkInhibitTimeV);
-                gravityPowerTime = static_cast< s16 >(mActor->mConst->getTable()->mBeeGravityPowerTimeV);
+            s16 inhibitTime = mActor->getConst().getTable()->mBeeAirWalkInhibitTime;
+            s16 powerTime = mActor->getConst().getTable()->mBeeGravityPowerTime;
+            TVec3f horizontalVelocity;
+            MR::vecKillElement(mJumpVec, getAirGravityVec(), &horizontalVelocity);
+            if (horizontalVelocity.length() < 5.0f) {
+                inhibitTime = mActor->getConst().getTable()->mBeeAirWalkInhibitTimeV;
+                powerTime = mActor->getConst().getTable()->mBeeGravityPowerTimeV;
             }
 
-            if (checkLvlA() && _402 != 0 && _3BC > airWalkInhibitTime) {
-                playSound("ハチ飛行中", -1);
-
-                if (!MR::isNearZero(mStickPos.z, 0.001f)) {
-                    setFrontVecKeepUp(getWorldPadDir(), mActor->mConst->getTable()->mBeeAirWalkTurnSpd);
+            if (checkLvlA() && _402 && _3BC > inhibitTime) {
+                playSound("ハチ飛行中");
+                if (!MR::isNearZero(mStickPos.z)) {
+                    setFrontVecKeepUp(getWorldPadDir(), mActor->getConst().getTable()->mBeeAirWalkTurnSpd);
                 }
-
-                const u16 previousAirWalkTime = _402;
-                if (_402 != 0) {
-                    if (!mMovementStates._F && _402 > mActor->mConst->getTable()->mAirWalkTime) {
-                        _402 = mActor->mConst->getTable()->mAirWalkTime;
+                u16 previousTime = _402;
+                if (_402) {
+                    if (!mMovementStates._F && _402 > mActor->getConst().getTable()->mAirWalkTime) {
+                        _402 = mActor->getConst().getTable()->mAirWalkTime;
                     }
-
                     _402--;
                 }
-
-                if (_402 == 0) {
-                    if (previousAirWalkTime != 0) {
-                        playSound("ハチ体力切れ", -1);
+                if (!_402) {
+                    if (previousTime) {
+                        playSound("ハチ体力切れ");
                     }
-
                     mMovementStates._11 = false;
                     stopAnimation("ハチ飛行中", static_cast< const char* >(nullptr));
                 } else {
                     if (!mMovementStates._F) {
-                        if (!isAnimationRun("ハチ壁ジャンプ") && !isAnimationRun("ハチセブン空中")) {
+                        if (!isAnimationRun("ハチ壁ジャンプ") && !isAnimationRun("ハチスピン空中")) {
                             changeAnimation("ハチ飛行中", "落下");
                         }
-
                         cancelSquatMode();
-                        playSound("空中ふんばり", -1);
-
-                        if (static_cast< s32 >(_402) < static_cast< s32 >(static_cast< u32 >(mActor->mConst->getTable()->mAirWalkTime) >> 1)) {
+                        playSound("空中ふんばり");
+                        if (_402 < mActor->getConst().getTable()->mAirWalkTime / 2) {
                             getAnimator()->setSpeed(1.5f);
                         }
-
                         if (_430 == 4) {
                             setFrontVecKeepUp(-_220);
                             _430 = 0;
                         }
-
                         if (_430 == 5) {
                             _430 = 0;
                         }
                     }
 
-                    s16 gravityTimer = static_cast< s16 >(_408);
-                    if (gravityTimer > gravityPowerTime) {
-                        gravityTimer = gravityPowerTime;
+                    s16 time = static_cast< s16 >(_408);
+                    if (time > powerTime) {
+                        time = powerTime;
                     }
-
-                    const f32 gravityRatio = static_cast< f32 >(gravityTimer) / static_cast< f32 >(gravityPowerTime);
-                    const f32 randomReduction = 0.9f * (gravityRatio * gravityRatio);
-                    const f32 random = MR::getRandom() - randomReduction;
-                    const f32 verticalAcceleration =
-                        15.0f * random * mActor->mConst->getTable()->mBeeFlyRandomFactor - mActor->mConst->getTable()->mBeeFlyConstantFactor;
-
-                    f32 gravityElement = cutGravityElementFromJumpVec(true);
-                    TVec3f jumpDirection(mJumpVec);
-                    f32 accelerationRatio = 1.0f;
-                    if (!MR::isNearZero(mStickPos.z, 0.001f)) {
-                        jumpDirection.dot(getWorldPadDir());
+                    f32 ratio = static_cast< f32 >(time) / powerTime;
+                    f32 reduction = 0.9f * (ratio * ratio);
+                    f32 acceleration = 15.0f * (MR::getRandom() - reduction);
+                    acceleration =
+                        acceleration * mActor->getConst().getTable()->mBeeFlyRandomFactor - mActor->getConst().getTable()->mBeeFlyConstantFactor;
+                    f32 verticalSpeed = cutGravityElementFromJumpVec(true);
+                    TVec3f velocity(mJumpVec);
+                    f32 factor = 1.0f;
+                    if (!MR::isNearZero(mStickPos.z)) {
+                        velocity.dot(getWorldPadDir());
                     }
-
-                    if (accelerationRatio < 0.0f) {
-                        accelerationRatio *= mActor->mConst->getTable()->mBeeUpAccelRatio;
+                    if (factor < 0.0f) {
+                        factor *= mActor->getConst().getTable()->mBeeUpAccelRatio;
                     }
-
-                    _770 += verticalAcceleration * mActor->mConst->getTable()->mBeeAccelRatio * accelerationRatio;
+                    _770 += factor * (acceleration * mActor->getConst().getTable()->mBeeAccelRatio);
                     if (_770 > 0.0f) {
-                        _770 *= mActor->mConst->getTable()->mBeeUpDownKiller;
+                        _770 *= mActor->getConst().getTable()->mBeeUpDownKiller;
                     }
-
-                    if (_774 == 0) {
+                    if (!_774) {
                         if (!getPlayer()->_1C._5) {
-                            if (_770 < -mActor->mConst->getTable()->mBeeUpSpeedMax) {
-                                _770 = -mActor->mConst->getTable()->mBeeUpSpeedMax;
+                            if (_770 < -mActor->getConst().getTable()->mBeeUpSpeedMax) {
+                                _770 = -mActor->getConst().getTable()->mBeeUpSpeedMax;
                             }
                         } else if (_770 < -0.5f) {
                             _770 = -0.5f;
                         }
                     }
-
                     addVelocity(*getGravityVec(), _770);
-
-                    if (!getPlayer()->_1C._5 && gravityElement > 0.0f) {
-                        gravityElement *= mActor->mConst->getTable()->mBeePushRiseGravityEraser;
+                    if (!getPlayer()->_1C._5 && verticalSpeed > 0.0f) {
+                        verticalSpeed *= mActor->getConst().getTable()->mBeePushRiseGravityEraser;
                     }
-
-                    TVec3f gravityVelocity(getAirGravityVec());
-                    gravityVelocity.scale(gravityElement);
-                    mJumpVec += gravityVelocity;
-
+                    mJumpVec += getAirGravityVec() * verticalSpeed;
                     _408++;
                     if (_408 > 120) {
                         _408 = 120;
                     }
-
                     _4B0 = mPosition;
                     return true;
                 }
             } else {
                 if (!isAnimationRun("ハチジャンプ") && !isAnimationRun("ハチ壁ジャンプ")) {
                     stopAnimation("ハチ飛行中", static_cast< const char* >(nullptr));
-
                     if (!isAnimationRun(nullptr) || isAnimationTerminate(nullptr)) {
                         changeAnimation("ハチ飛行中無入力", static_cast< const char* >(nullptr));
                     }
                 }
-
-                if (_408 != 0) {
+                if (_408) {
                     _408--;
                 }
-
-                if (_770 < mActor->mConst->getTable()->mBeeFreeDropMaxSpd) {
-                    _770 += mActor->mConst->getTable()->mBeeFreeDropAcc;
+                if (_770 < mActor->getConst().getTable()->mBeeFreeDropMaxSpd) {
+                    _770 += mActor->getConst().getTable()->mBeeFreeDropAcc;
                 }
-
-                f32 gravityRatio = 1.0f;
-                addVelocity(*getGravityVec(), _770 * gravityRatio);
-
-                if (!MR::isNearZero(mStickPos.z, 0.001f)) {
-                    setFrontVecKeepUp(getWorldPadDir(), mActor->mConst->getTable()->mBeeAirWalkTurnSpd);
+                f32 factor = 1.0f;
+                addVelocity(*getGravityVec(), _770 * factor);
+                if (!MR::isNearZero(mStickPos.z)) {
+                    setFrontVecKeepUp(getWorldPadDir(), mActor->getConst().getTable()->mBeeAirWalkTurnSpd);
                 }
             }
         }
     }
-
     return false;
 }
-
-namespace NrvMarioActor {
-    INIT_NERVE(MarioActorNrvWait);
-    INIT_NERVE(MarioActorNrvGameOver);
-    INIT_NERVE(MarioActorNrvGameOverAbyss);
-    INIT_NERVE(MarioActorNrvGameOverAbyss2);
-    INIT_NERVE(MarioActorNrvGameOverFire);
-    INIT_NERVE(MarioActorNrvGameOverBlackHole);
-    INIT_NERVE(MarioActorNrvGameOverNonStop);
-    INIT_NERVE(MarioActorNrvGameOverSink);
-    INIT_NERVE(MarioActorNrvTimeWait);
-    INIT_NERVE(MarioActorNrvNoRush);
-};  // namespace NrvMarioActor

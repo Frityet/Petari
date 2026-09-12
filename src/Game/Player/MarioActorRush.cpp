@@ -3,14 +3,14 @@
 #include "Game/MapObj/CollectCounter.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioAnimator.hpp"
-#include "Game/Player/MarioDamage.hpp"
 #include "Game/Player/MarioConst.hpp"
-#include "Game/Player/RushEndInfo.hpp"
-#include "Game/Screen/GameSceneLayoutHolder.hpp"
+#include "Game/Player/MarioDamage.hpp"
 #include "Game/Player/MarioModule.hpp"
 #include "Game/Player/MarioParts.hpp"
 #include "Game/Player/MarioSwim.hpp"
 #include "Game/Player/MarioWait.hpp"
+#include "Game/Player/RushEndInfo.hpp"
+#include "Game/Screen/GameSceneLayoutHolder.hpp"
 #include "Game/Util.hpp"
 
 void MarioActor::settingRush() {
@@ -55,8 +55,7 @@ bool MarioActor::isLandEffectRushSensor(const HitSensor* pSensor) const {
 }
 
 void MarioActor::resetCondition() {
-    bool v2 = false;
-    TVec3f v8;
+    bool inWater = false;
 
     if (_EA5) {
         MR::extractMtxTrans(_EA8.mMtx, &mPosition);
@@ -64,7 +63,7 @@ void MarioActor::resetCondition() {
     }
 
     if (mMario->mSwim->checkWaterCube(true)) {
-        v2 = true;
+        inWater = true;
     }
 
     mMario->stopAnimationUpper(nullptr, nullptr);
@@ -81,11 +80,11 @@ void MarioActor::resetCondition() {
     mMario->mSwim->mColdWaterDamageInterval = 0;
     mMario->_1C._3 = 0;
 
-    if (mMario->isStatusActive(MarioStatus_Swim) && v2) {
+    if (mMario->isStatusActive(MarioStatus_Swim) && inWater) {
         if (!_468) {
             mMario->mSwim->resetJet();
         }
-    } else if (mMario->isStatusActive(MarioStatus_Teresa) && mPlayerMode == 6) {
+    } else if (mMario->isStatusActive(MarioStatus_Teresa) && mPlayerMode == PlayerMode_Teresa) {
         if (mMario->isStatusActive(MarioStatus_Wait)) {
             mMario->closeStatus(mMario->mWait);
         }
@@ -95,8 +94,6 @@ void MarioActor::resetCondition() {
         mMario->closeStatus(nullptr);
     }
 
-    // reset mMovementstates and _10
-    // exept for mMovementStates._1F
     bool was1F = mMario->mMovementStates._1F;
     mMario->mMovementStates_LOW_WORD = 0;
     mMario->mMovementStates_HIGH_WORD = 0;
@@ -106,7 +103,7 @@ void MarioActor::resetCondition() {
 
     resetPadSwing();
 
-    if (mMario->isStatusActive(MarioStatus_Swim) && v2) {
+    if (mMario->isStatusActive(MarioStatus_Swim) && inWater) {
         if (_468) {
             mMario->changeAnimation("水泳ジェット", "水泳ジェット");
         } else {
@@ -159,7 +156,7 @@ void MarioActor::beginRush() {
     stopEffect("共通壁手擦り");
     stopEffect("スピンライト");
     bool isSpinCatch = selectSpinCatchInRush(_924->mHost->mName);
-    if (mPlayerMode == 4 && selectHideFlyMeter(_924)) {
+    if (mPlayerMode == PlayerMode_Bee && selectHideFlyMeter(_924)) {
         MR::getGameSceneLayoutHolder()->changeLifeMeterModeGround();
     }
     if (isFixJumpRushSensor(_924) || isSpinCatch) {
@@ -177,7 +174,7 @@ void MarioActor::beginRush() {
         }
         switch (_924->mType) {
         case ATYPE_POWER_STAR_BIND:
-            setPlayerMode(0, false);
+            setPlayerMode(PlayerMode_Normal, false);
             resetFog();
             break;
         }
@@ -211,7 +208,7 @@ void MarioActor::endRush(const RushEndInfo* pInfo) {
         isJump = true;
         mMario->initJumpParam();
         mMario->mMovementStates._21 = true;
-        if (mPlayerMode == 4) {
+        if (mPlayerMode == PlayerMode_Bee) {
             mMario->_774 = 60;
         }
         mMario->tryForceFreeJump(pInfo->_8);
@@ -228,7 +225,7 @@ void MarioActor::endRush(const RushEndInfo* pInfo) {
         break;
     case 3:
         isJump = true;
-        if (mPlayerMode == 4) {
+        if (mPlayerMode == PlayerMode_Bee) {
             mMario->_774 = 60;
         }
         mMario->tryForcePowerJump(pInfo->_8, false);
@@ -365,10 +362,10 @@ void MarioActor::endRush(const RushEndInfo* pInfo) {
     _924 = nullptr;
     mMario->_10.turning = true;
     updateGravityVec(true, false);
-    if (mPlayerMode == 5) {
+    if (mPlayerMode == PlayerMode_Hopper) {
         mMario->startRabbitMode();
     }
-    if (mPlayerMode == 4) {
+    if (mPlayerMode == PlayerMode_Bee) {
         MR::getGameSceneLayoutHolder()->changeLifeMeterModeBee();
     }
     if (isJump) {
@@ -386,7 +383,6 @@ void MarioActor::endRush(const RushEndInfo* pInfo) {
         mMario->_1C._8 = true;
     }
 }
-
 
 bool MarioActor::takeSensor(HitSensor* pSensor) {
     if (_424) {

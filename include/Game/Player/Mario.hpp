@@ -150,14 +150,14 @@ public:
     void updateWallFloorCode();
     void saveLastSafetyTrans();
     void setNotSafetyTimer();
-    TVec3f* getLastSafetyTrans(TVec3f*) const;
+    const TVec3f* getLastSafetyTrans(TVec3f*) const;
     bool checkCurrentFloorCodeSevere(u32) const;
     bool isCurrentFloorSink() const;
     bool isCurrentFloorSand() const;
     bool isCurrentShadowFloorDangerAction() const;
-    bool checkBaseTransPoint();
-    bool checkHeadPoint();
-    const TVec3f* calcShadowPos();
+    void checkBaseTransPoint();
+    void checkHeadPoint();
+    void calcShadowPos();
     bool updateBinderInfo();
     bool isThroughWall(const Triangle*) const;
     bool checkGround();
@@ -823,7 +823,7 @@ public:
     // NOT FAKE
 
     /* 0x564 */ s32 _564;
-    /* 0x568 */ AreaObj* _568;
+    /* 0x568 */ CubeCameraArea* _568;
     /* 0x56C */ AreaObj* _56C;
     /* 0x570 */ u8 _570;
     /* 0x574 */ void* _574;
@@ -861,8 +861,7 @@ public:
     /* 0x6AD */ u8 _6AD;
     /* 0x6B0 */ TVec3f _6B0;
     /* 0x6BC */ TVec3f _6BC;
-    /* 0x6C8 */ f32 _6C8;
-    /* 0x6CC */ f32 _6CC;
+    /* 0x6C8 */ TVec2f _6C8;
     /* 0x6D0 */ TVec3f _6D0;
     /* 0x6DC */ TVec3f _6DC;
     /* 0x6E8 */ TVec3f _6E8;

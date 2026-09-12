@@ -15,6 +15,7 @@ public:
 
     void setVec(const TVec3f&);
     void setVecSize(f32, f32);
+
     void stopHead(const TVec3f&);
 
     inline void setStrings(const char* pChar1, const char* pChar2) {
@@ -23,7 +24,7 @@ public:
     }
 
     /* 0x11 */ u8 _11;
-    /* 0x12 */ u8 _12;
+    /* 0x12 */ bool _12;
     /* 0x14 */ u16 _14;
     /* 0x16 */ u16 _16;
     /* 0x18 */ u16 _18;

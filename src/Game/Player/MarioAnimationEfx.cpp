@@ -1,23 +1,10 @@
-#include "Game/Player/MarioAnimator.hpp"
 #include "Game/Animation/XanimeResource.hpp"
 #include "Game/Player/MarioActor.hpp"
+#include "Game/Player/MarioAnimator.hpp"
 #include "Game/Util/HashUtil.hpp"
 
-namespace NrvMarioActor {
-INIT_NERVE(MarioActorNrvWait);
-INIT_NERVE(MarioActorNrvGameOver);
-INIT_NERVE(MarioActorNrvGameOverAbyss);
-INIT_NERVE(MarioActorNrvGameOverAbyss2);
-INIT_NERVE(MarioActorNrvGameOverFire);
-INIT_NERVE(MarioActorNrvGameOverBlackHole);
-INIT_NERVE(MarioActorNrvGameOverNonStop);
-INIT_NERVE(MarioActorNrvGameOverSink);
-INIT_NERVE(MarioActorNrvTimeWait);
-INIT_NERVE(MarioActorNrvNoRush);
-}  // namespace NrvMarioActor
-
-struct MarioCallbackInfo {
-    const char* mName;
+struct MarioAnimationCallback {
+    const char* mAnimation;
     s32 mType;
     void (MarioAnimator::*mEntry)();
     void (MarioAnimator::*mUpdate)();
@@ -25,7 +12,7 @@ struct MarioCallbackInfo {
     u32 _2C;
 };
 
-MarioCallbackInfo marioCallbackTable[] = {
+MarioAnimationCallback marioCallbackTable[] = {
     {"空中ひねり", 0, &MarioAnimator::spinEntry, &MarioAnimator::spinUpdate, &MarioAnimator::spinClose, 0},
     {"地上ひねり", 0, &MarioAnimator::spinEntry, nullptr, &MarioAnimator::spinClose, 0},
     {"アイスひねり", 1, &MarioAnimator::spinEntry, nullptr, &MarioAnimator::spinClose, 0},
@@ -47,82 +34,63 @@ MarioCallbackInfo marioCallbackTable[] = {
 };
 
 void MarioAnimator::initCallbackTable() {
-    u32 num = 0;
-    MarioCallbackInfo* info = marioCallbackTable;
-    while (true) {
-        if (!info->mName[0]) {
+    u32 count = 0;
+    MarioAnimationCallback* callback = marioCallbackTable;
+    for (;; count++, callback++) {
+        if (!*callback->mAnimation) {
             break;
         }
-
-        num++;
-        info++;
     }
-
-    _120 = new HashSortTable(num);
-
-    info = marioCallbackTable;
-    for (u32 i = 0; i < num; i++) {
-        _120->add(info->mName, i, false);
-        info++;
+    mCallbackTable = new HashSortTable(count);
+    callback = marioCallbackTable;
+    for (u32 i = 0; i < count; callback++, i++) {
+        mCallbackTable->add(callback->mAnimation, i, false);
     }
-
-    _120->sort();
-    _11C = -1;
-    _10F = 0;
+    mCallbackTable->sort();
+    mCallbackId = -1;
+    mCallbackEnded = false;
 }
 
-void MarioAnimator::entryCallback(const char* pName) {
-    _10F = 0;
+void MarioAnimator::entryCallback(const char* name) {
+    mCallbackEnded = false;
     closeCallback();
-
-    HashSortTable::Value callbackIdx;
-    if (_120->search(pName, &callbackIdx)) {
-        _11C = callbackIdx;
-
-        if (marioCallbackTable[callbackIdx].mEntry) {
-            (this->*marioCallbackTable[callbackIdx].mEntry)();
+    u32 index;
+    if (mCallbackTable->search(name, &index)) {
+        mCallbackId = index;
+        if (marioCallbackTable[mCallbackId].mEntry != nullptr) {
+            (this->*marioCallbackTable[mCallbackId].mEntry)();
         }
     }
 }
 
 void MarioAnimator::runningCallback() {
-    if (_11C == -1) {
+    if (mCallbackId == -1) {
         return;
     }
-
-    _10F = 1;
-
+    mCallbackEnded = true;
     if (isAnimationStop() || isAnimationTerminate(nullptr)) {
         closeCallback();
         return;
     }
-
-    _10F = 0;
-
-    if (!isAnimationRun(marioCallbackTable[_11C].mName)) {
+    mCallbackEnded = false;
+    if (!isAnimationRun(marioCallbackTable[mCallbackId].mAnimation)) {
         closeCallback();
         return;
     }
-
-    if (marioCallbackTable[_11C].mUpdate) {
-        (this->*marioCallbackTable[_11C].mUpdate)();
+    if (marioCallbackTable[mCallbackId].mUpdate != nullptr) {
+        (this->*marioCallbackTable[mCallbackId].mUpdate)();
     }
 }
 
 void MarioAnimator::closeCallback() {
-    if (_11C == -1) {
-        return;
+    if (mCallbackId != -1 && marioCallbackTable[mCallbackId].mClose != nullptr) {
+        (this->*marioCallbackTable[mCallbackId].mClose)();
     }
-
-    if (marioCallbackTable[_11C].mClose) {
-        (this->*marioCallbackTable[_11C].mClose)();
-    }
-
-    _11C = -1;
+    mCallbackId = -1;
 }
 
 void MarioAnimator::spinEntry() {
-    switch (marioCallbackTable[_11C].mType) {
+    switch (marioCallbackTable[mCallbackId].mType) {
     case 0:
         playEffect("スピンライト");
         break;
@@ -149,7 +117,7 @@ void MarioAnimator::spinUpdate() {
 }
 
 void MarioAnimator::spinClose() {
-    switch (marioCallbackTable[_11C].mType) {
+    switch (marioCallbackTable[mCallbackId].mType) {
     case 0:
         stopEffect("スピンライト");
         break;
@@ -170,83 +138,51 @@ void MarioAnimator::spinClose() {
 }
 
 void MarioAnimator::stageInCheck() {
-    if ((s32)getFrame() == 0x32) {
-        Mario* pPlayer = getPlayer();
-        playEffectRT("属性ステージイン", pPlayer->_368, getTrans());
+    if (static_cast< s32 >(getFrame()) == 50) {
+        Mario* player = getPlayer();
+        playEffectRT("属性ステージイン", player->_368, getTrans());
     }
 }
 
 void MarioAnimator::throwCheck() {
-    if (mActor->_38C) {
-        return;
+    if (mActor->_38C == 0 && getStickP() != 0.0f && !getPlayer()->mMovementStates.jumping) {
+        stopAnimation(nullptr);
     }
-
-    if (getStickP() == 0.0f) {
-        return;
-    }
-
-    if (getPlayer()->mMovementStates.jumping) {
-        return;
-    }
-
-    stopAnimation(static_cast< const char* >(nullptr), static_cast< const char* >(nullptr));
 }
 
 void MarioAnimator::throwEntry() {
-    MarioCallbackInfo& info = marioCallbackTable[_11C];
-    s32 type = info.mType;
-    if (type == 1) {
-        goto effect_fire_throw;
-    } else if (type >= 1) {
-        return;
-    } else if (type < 0) {
-        return;
+    switch (marioCallbackTable[mCallbackId].mType) {
+    case 0:
+        playEffect("こうら投げ");
+        break;
+    case 1:
+        playEffect("ファイアボール投げ");
+        break;
     }
-
-effect_shell_throw:
-    playEffect("こうら投げ");
-    return;
-
-effect_fire_throw:
-    playEffect("ファイアボール投げ");
 }
 
 void MarioAnimator::throwClose() {
-    MarioCallbackInfo& info = marioCallbackTable[_11C];
-    s32 type = info.mType;
-    if (type == 1) {
-        goto effect_fire_throw;
-    } else if (type >= 1) {
-        return;
-    } else if (type < 0) {
-        return;
+    switch (marioCallbackTable[mCallbackId].mType) {
+    case 0:
+        stopEffect("こうら投げ");
+        break;
+    case 1:
+        stopEffect("ファイアボール投げ");
+        break;
     }
-
-effect_shell_throw:
-    stopEffect("こうら投げ");
-    return;
-
-effect_fire_throw:
-    stopEffect("ファイアボール投げ");
 }
 
 void MarioAnimator::squatSpinCheck() {
-    if (getPlayer()->mMovementStates._A) {
-        return;
-    }
-
-    if (getFrame() <= 40.0f) {
-        stopAnimation(static_cast< const char* >(nullptr), static_cast< const char* >(nullptr));
+    if (!getPlayer()->mMovementStates._A && getFrame() >= 40.0f) {
+        stopAnimation(nullptr);
     }
 }
 
 void MarioAnimator::walkinClose() {
-    if (!_10F) {
-        return;
+    if (mCallbackEnded) {
+        stopAnimation(nullptr);
+        getPlayer()->changeAnimationInterpoleFrame(16);
     }
-
-    stopAnimation(static_cast< const char* >(nullptr), static_cast< const char* >(nullptr));
-    getPlayer()->changeAnimationInterpoleFrame(0x10);
 }
 
 XanimeSwapTable luigiAnimeSwapTable[] = {

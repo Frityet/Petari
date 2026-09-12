@@ -1,66 +1,42 @@
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Player/MarioFoo.hpp"
-#include "Game/AreaObj/AreaObj.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/MapObj/DashRing.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioAnimator.hpp"
 #include "Game/Player/MarioConst.hpp"
-#include "Game/System/ResourceHolder.hpp"
 #include "Game/Util/AreaObjUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
-#include "Game/Util/Color.hpp"
 #include "Game/Util/DirectDraw.hpp"
 #include "Game/Util/DirectDrawUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ModelUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 #include <JSystem/JUtility/JUTTexture.hpp>
-#include <revolution/gx.h>
-#include <revolution/mtx.h>
-
-namespace MR {
-    ResTIMG* getTexture(ResourceHolder*, const char*);
-    void calcSpherePos(TVec3f*, const AreaObj*);
-    f32 getSphereRadius(const AreaObj*);
-    void rotAxisVecRad(const TVec3f&, const TVec3f&, TVec3f*, f32);
-};  // namespace MR
-
-namespace NrvMarioActor {
-    INIT_NERVE(MarioActorNrvWait);
-    INIT_NERVE(MarioActorNrvGameOver);
-    INIT_NERVE(MarioActorNrvGameOverAbyss);
-    INIT_NERVE(MarioActorNrvGameOverAbyss2);
-    INIT_NERVE(MarioActorNrvGameOverFire);
-    INIT_NERVE(MarioActorNrvGameOverBlackHole);
-    INIT_NERVE(MarioActorNrvGameOverNonStop);
-    INIT_NERVE(MarioActorNrvGameOverSink);
-    INIT_NERVE(MarioActorNrvTimeWait);
-    INIT_NERVE(MarioActorNrvNoRush);
-};  // namespace NrvMarioActor
 
 namespace {
     f32 cTurnMotionSpeed = 5.0f;
     f32 cWidth = 70.0f;
     f32 cLimitAngleSink = JGeometry::TUtil< f32 >::PI() / 1.0001f;
-    f32 cNeutralAngleWait = JGeometry::TUtil< f32 >::PI() * 0.5f - JGeometry::TUtil< f32 >::PI() / 6.0f;
+    f32 cNeutralAngleWait = 0.5f * JGeometry::TUtil< f32 >::PI() - JGeometry::TUtil< f32 >::PI() / 6.0f;
     f32 cLimitAngleWait = JGeometry::TUtil< f32 >::PI() / 1.0001f;
     f32 cUpperAngleWait = JGeometry::TUtil< f32 >::PI() / 100.0f;
-};  // namespace
+}  // namespace
 
 void Mario::tryStartFoo() {
-    AreaObj* pArea = MR::getAreaObj("CelestrialSphere", getTrans());
-    if (pArea != nullptr || mFoo->_48 == nullptr) {
+    if (MR::getAreaObj("CelestrialSphere", getTrans()) || !mFoo->_48) {
         changeStatus(mFoo);
-        MarioActor* pActor = mActor;
-        MarioFoo* pFoo = mFoo;
-        pFoo->_28 = pActor->mConst->getTable()->mSwimFrontMaxSpeed;
-        pFoo->_AC = 20;
+        MarioFoo* foo = mFoo;
+        foo->_28 = mActor->getConst().getTable()->mSwimFrontMaxSpeed;
+        foo->_AC = 20;
     }
 }
 
-MarioFoo::MarioFoo(MarioActor* pActor) : MarioState(pActor, MarioStatus_Foo) {
-    _11 = false;
-    _12 = false;
+MarioFoo::MarioFoo(MarioActor* actor) : MarioState(actor, MarioStatus_Foo) {
+    _11 = 0;
+    _12 = 0;
     _14 = 0;
     _18 = 0;
     _1A = 0;
@@ -77,7 +53,7 @@ MarioFoo::MarioFoo(MarioActor* pActor) : MarioState(pActor, MarioStatus_Foo) {
     _4E = 0;
     _50 = 0;
     _54 = 0.0f;
-    _58 = false;
+    _58 = 0;
     _59 = 0;
     _5A = 0;
     _5C = 0.0f;
@@ -92,7 +68,7 @@ MarioFoo::MarioFoo(MarioActor* pActor) : MarioState(pActor, MarioStatus_Foo) {
     _6B4 = 0;
     _6B8 = nullptr;
     _AC = 0;
-    _AE = false;
+    _AE = 0;
 
     for (u32 i = 0; i < 64; i++) {
         _B0[i].zero();
@@ -110,7 +86,7 @@ bool MarioFoo::start() {
     _28 = 0.0f;
     _4C = 30;
     _A8 = 0;
-    _11 = false;
+    _11 = 0;
     _6B0 = 0;
     _6B4 = 0;
     _4E = 0;
@@ -123,97 +99,78 @@ bool MarioFoo::start() {
     _70 = 0.0f;
     _74 = 0.0f;
     _14 = 0;
-    _2C = JGeometry::TUtil< f32 >::PI() / 6.0f;
+    _2C = 0.5235988f;
     _30 = getFrontVec();
     MR::normalize(&_30);
+
     stopAnimationUpper(nullptr, nullptr);
     getPlayer()->mMovementStates._1 = false;
     getPlayer()->mMovementStates._A = false;
     _18 = 0;
-
     if (checkLvlA()) {
-        _12 = true;
+        _12 = 1;
     }
-
     changeAnimation("フーファイター飛行開始", "フーファイター飛行");
     startPadVib(2);
     _48 = MR::getAreaObj("CelestrialSphere", getTrans());
     _AC = 0;
-    _AE = false;
+    _AE = 0;
     return true;
 }
 
 bool MarioFoo::update() {
     _14++;
-
     if (checkTrgZ()) {
-        playSound("声尻ドロップ", -1);
-        playSound("フーブレーキ", -1);
-        _11 = true;
+        playSound("声尻ドロップ");
+        playSound("フーブレーキ");
+        _11 = 1;
         _59 = 3;
     }
-
     if (!checkLvlA()) {
-        _12 = false;
+        _12 = 0;
     }
-
     if (_11) {
         return false;
     }
 
     _3C = -getGravityVec();
     jet();
-
     if (getPlayer()->_1C._9) {
-        if (_6B0 != 0) {
+        if (_6B0) {
             _6B0--;
         }
     } else {
         _B0[_6B4] = getTrans();
-
-        TVec3f handLeft;
-        TVec3f handRight;
-        mActor->getRealPos("HandL", &handLeft);
-        mActor->getRealPos("HandR", &handRight);
-
-        TVec3f handDelta = handRight - handLeft;
+        TVec3f leftHand;
+        TVec3f rightHand;
         TVec3f handDirection;
-        handDirection = handDelta;
+        mActor->getRealPos("HandL", &leftHand);
+        mActor->getRealPos("HandR", &rightHand);
+        handDirection = rightHand - leftHand;
         MR::normalizeOrZero(&handDirection);
         _3B0[_6B4] = handDirection;
-
         if (_6B0 < 64) {
             _6B0++;
         }
-
-        _6B4 = (_6B4 + 1) & 0x3F;
+        _6B4 = (_6B4 + 1) % 64;
     }
 
-    const f32 speedStopRatio = 1.0f
-        - MR::clamp(_28 / mActor->mConst->getTable()->mSwimFrontMaxSpeed, 0.0f, 1.0f);
-
-    _20 = _20 * mActor->mConst->getTable()->mSwimRotXIne
-        + getStickY() * (1.0f - mActor->mConst->getTable()->mSwimRotXIne);
-    _24 = _24 * mActor->mConst->getTable()->mSwimRotZIne
-        + getStickX() * (1.0f - mActor->mConst->getTable()->mSwimRotZIne);
-
-    if (_1C == 0 && _18 != 0) {
-        _2C += speedStopRatio * (_20 * mActor->mConst->getTable()->mSwimRotSpeedX);
+    f32 speedRatio = 1.0f - MR::clamp(_28 / mActor->getConst().getTable()->mSwimFrontMaxSpeed, 0.0f, 1.0f);
+    _20 = _20 * mActor->getConst().getTable()->mSwimRotXIne + getStickY() * (1.0f - mActor->getConst().getTable()->mSwimRotXIne);
+    _24 = _24 * mActor->getConst().getTable()->mSwimRotZIne + getStickX() * (1.0f - mActor->getConst().getTable()->mSwimRotZIne);
+    if (!_1C && _18) {
+        _2C += speedRatio * (_20 * mActor->getConst().getTable()->mSwimRotSpeedX);
     }
-
-    if (!checkLvlA() && !checkLvlZ() && _18 == 0 && _28 < cTurnMotionSpeed) {
-        if (_2C > JGeometry::TUtil< f32 >::PI() * 0.5f) {
-        } else if (getStickY() > 0.0f) {
-            if (JGeometry::TUtil< f32 >::PI() / 6.0f
-                    + getStickY() * (JGeometry::TUtil< f32 >::PI() / 6.0f)
-                > _2C) {
+    if (!checkLvlA() && !checkLvlZ() && !_18 && _28 < cTurnMotionSpeed) {
+        if (!(_2C > 1.5707964f)) {
+            if (getStickY() > 0.0f) {
+                if (0.5235988f + 0.5235988f * getStickY() > _2C) {
+                }
             }
         }
-
-        if (_60 == 0) {
+        if (!_60) {
             _1C++;
         }
-
         if (_1C >= 120) {
             _1C = 120;
         }
@@ -223,133 +180,108 @@ bool MarioFoo::update() {
 
     f32 targetAngle;
     if (MR::isNearZero(getStickY(), 0.1f)) {
-        f32 waitRatio = static_cast< f32 >(_1C) / 120.0f;
-        if (waitRatio > 1.0f) {
-            waitRatio = 1.0f;
+        f32 ratio = _1C / 120.0f;
+        if (ratio > 1.0f) {
+            ratio = 1.0f;
         }
-
-        targetAngle = _2C + waitRatio * (cNeutralAngleWait - _2C);
-    } else if (getStickY() > 0.0f) {
-        f32 lowerRatio = 0.0f;
-        f32 waitRatio = static_cast< f32 >(_1C) / 120.0f;
-
-        if (_28 < 2.0f) {
-            lowerRatio = 1.0f;
-        } else if (_28 <= 10.0f) {
-            lowerRatio = 1.0f - (_28 - 2.0f) * 0.125f;
+        targetAngle = _2C + ratio * (cNeutralAngleWait - _2C);
+    } else {
+        if (getStickY() > 0.0f) {
+            f32 slowRatio = 0.0f;
+            f32 ratio = _1C / 120.0f;
+            if (_28 < 2.0f) {
+                slowRatio = 1.0f;
+            } else if (_28 > 10.0f) {
+                slowRatio = 0.0f;
+            } else {
+                slowRatio = 1.0f - (_28 - 2.0f) / 8.0f;
+            }
+            if (ratio < slowRatio) {
+                ratio = slowRatio;
+            }
+            ratio = MR::clamp(ratio, 0.0f, 1.0f);
+            f32 limit = ratio * cLimitAngleWait + (1.0f - ratio) * cLimitAngleSink;
+            if (getPlayer()->mVerticalSpeed < 100.0f) {
+                limit = cNeutralAngleWait;
+            }
+            targetAngle = cNeutralAngleWait + (limit - cNeutralAngleWait) * getStickY();
+        } else if (getStickY() < 0.0f) {
+            targetAngle = cNeutralAngleWait + (cUpperAngleWait - cNeutralAngleWait) * -getStickY();
         }
-
-        if (waitRatio < lowerRatio) {
-            waitRatio = lowerRatio;
-        }
-
-        waitRatio = MR::clamp(waitRatio, 0.0f, 1.0f);
-        f32 limitAngle = waitRatio * cLimitAngleWait + (1.0f - waitRatio) * cLimitAngleSink;
-        if (getPlayer()->mVerticalSpeed < 100.0f) {
-            limitAngle = cNeutralAngleWait;
-        }
-
-        targetAngle = cNeutralAngleWait + (limitAngle - cNeutralAngleWait) * getStickY();
-    } else if (getStickY() < 0.0f) {
-        targetAngle = cNeutralAngleWait + (cUpperAngleWait - cNeutralAngleWait) * -getStickY();
     }
 
-    f32 angleRatio = 0.05f;
+    f32 blend = 0.05f;
     if (_28 > 5.0f) {
-        angleRatio = 0.05f - 0.05f * (5.0f / _28);
-        if (angleRatio < 0.0f) {
-            angleRatio = 0.0f;
+        blend = 0.05f - 0.05f * (5.0f / _28);
+        if (blend < 0.0f) {
+            blend = 0.0f;
         }
     }
-
-    angleRatio *= mActor->mConst->getTable()->mSwimXJetRotRatio;
+    blend *= mActor->getConst().getTable()->mSwimXJetRotRatio;
     if (getStickP() == 0.0f) {
         targetAngle = cLimitAngleSink;
-        angleRatio *= 0.5f;
+        blend *= 0.5f;
     }
-
     if (getPlayer()->_1C._9) {
-        targetAngle = JGeometry::TUtil< f32 >::PI() / 3.0f;
+        targetAngle = 1.0471976f;
         if (getStickY() > 0.1f) {
-            const f32 ratio = 1.1f * (getStickY() - 0.1f);
-            targetAngle = cLimitAngleSink * ratio + (JGeometry::TUtil< f32 >::PI() / 3.0f) * (1.0f - ratio);
+            f32 ratio = 1.1f * (getStickY() - 0.1f);
+            targetAngle = cLimitAngleSink * ratio + targetAngle * (1.0f - ratio);
         } else if (getStickY() < -0.1f) {
-            const f32 ratio = 1.1f * (-getStickY() - 0.1f);
-            targetAngle = cUpperAngleWait * ratio + (JGeometry::TUtil< f32 >::PI() / 3.0f) * (1.0f - ratio);
+            f32 ratio = 1.1f * (-getStickY() - 0.1f);
+            targetAngle = cUpperAngleWait * ratio + targetAngle * (1.0f - ratio);
         }
-
-        angleRatio = 0.01f;
+        blend = 0.01f;
     }
-
-    _2C = _2C * (1.0f - angleRatio) + targetAngle * angleRatio;
-
-    bool stopWaitAnimation = true;
-    if (_1C != 0 && _60 == 0 && getStickY() > 0.0f) {
-        const f32 realAngle = JGeometry::TUtil< f32 >::PI() / mActor->mConst->getTable()->mSwimTiltReal;
-        const f32 targetRealAngle = JGeometry::TUtil< f32 >::PI() / 6.0f
-            + getStickY() * (realAngle - JGeometry::TUtil< f32 >::PI() / 6.0f);
-
-        if (_2C < targetRealAngle) {
-            _2C = _2C * mActor->mConst->getTable()->mSwimTiltSpd
-                + targetRealAngle * (1.0f - mActor->mConst->getTable()->mSwimTiltSpd);
+    _2C = _2C * (1.0f - blend) + targetAngle * blend;
+    bool stopTurn = true;
+    if (_1C && !_60 && getStickY() > 0.0f) {
+        f32 angle = 3.1415927f / mActor->getConst().getTable()->mSwimTiltReal;
+        targetAngle = 0.5235988f + (angle - 0.5235988f) * getStickY();
+        if (_2C < targetAngle) {
+            f32 ratio = mActor->getConst().getTable()->mSwimTiltSpd;
+            _2C = _2C * ratio + targetAngle * (1.0f - ratio);
         } else {
-            _2C = _2C * (1.0f - angleRatio) + targetRealAngle * angleRatio;
+            _2C = _2C * (1.0f - blend) + targetAngle * blend;
         }
-
-        stopWaitAnimation = false;
+        stopTurn = false;
     }
-
-    if (stopWaitAnimation) {
-        stopAnimation("水泳ターン下", static_cast< const char* >(nullptr));
+    if (stopTurn) {
+        stopAnimation("水泳ターン下");
     }
-
     _2C = MR::clamp(_2C, cUpperAngleWait, cLimitAngleSink);
 
-    const f32 yawRatio = speedStopRatio + mActor->mConst->getTable()->mSwimRotSpeedZStop;
-    TVec3f rotationAxis = -_3C;
-    MR::rotAxisVecRad(_30, rotationAxis, &_30,
-        yawRatio * (_24 * mActor->mConst->getTable()->mSwimRotSpeedZ));
+    f32 turnRatio = speedRatio + mActor->getConst().getTable()->mSwimRotSpeedZStop;
+    MR::rotAxisVecRad(_30, -_3C, &_30, turnRatio * (_24 * mActor->getConst().getTable()->mSwimRotSpeedZ));
     MR::vecKillElement(_30, _3C, &_30);
     MR::normalize(&_30);
-
     TVec3f side;
-    side.cross(_3C, _30);
+    PSVECCrossProduct(&_3C, &_30, &side);
     MR::normalize(&side);
     getPlayer()->setSideVec(side);
-
-    TVec3f pitchedFront;
-    MR::rotAxisVecRad(_30, side, &pitchedFront, _2C);
-    TVec3f previousHead(getPlayer()->mHeadVec);
-    TVec3f currentFront(getFrontVec());
+    TVec3f front;
+    MR::rotAxisVecRad(_30, side, &front, _2C);
+    TVec3f head(getPlayer()->mHeadVec);
+    TVec3f oldFront(getFrontVec());
     TVec3f blendedFront;
-    MR::vecBlendSphere(currentFront, pitchedFront, &blendedFront, 0.1f);
+    MR::vecBlendSphere(oldFront, front, &blendedFront, 0.1f);
     getPlayer()->setFrontVecKeepSide(blendedFront);
-
     spin();
 
-    TVec3f forward;
-    forward = getPlayer()->_1FC;
-    TVec3f velocity(forward);
-    velocity.scale(_28);
-    const f32 gravityElement = MR::vecKillElement(velocity, _3C, &velocity);
-
-    f32 timerRatio;
+    TVec3f direction;
+    direction = getPlayer()->_1FC;
+    TVec3f velocity = direction * _28;
+    f32 vertical = MR::vecKillElement(velocity, _3C, &velocity);
+    f32 ratio;
     if (_1A > 25) {
-        timerRatio = static_cast< f32 >(50 - _1A) / 25.0f;
+        ratio = (50 - _1A) / 25.0f;
     } else {
-        timerRatio = static_cast< f32 >(_1A) / 25.0f;
+        ratio = _1A / 25.0f;
     }
-
-    const f32 verticalRatio = timerRatio
-        + (1.0f - timerRatio) * mActor->mConst->getTable()->mSwimSpdYratio;
-    TVec3f gravityVelocity(_3C);
-    gravityVelocity.scale(gravityElement);
-    TVec3f verticalVelocity(gravityVelocity);
-    verticalVelocity.scale(verticalRatio);
-    velocity += verticalVelocity;
+    f32 verticalRatio = ratio + (1.0f - ratio) * mActor->getConst().getTable()->mSwimSpdYratio;
+    velocity += _3C * vertical * verticalRatio;
     addVelocity(velocity);
-
-    if (_60 != 0) {
+    if (_60) {
         _60--;
         addVelocity(_64);
         if (_60 < 120) {
@@ -358,31 +290,26 @@ bool MarioFoo::update() {
             _64.z *= 0.98f;
         }
     }
-
-    if (_18 != 0) {
+    if (_18) {
         _18--;
     }
-
-    if (_1A != 0) {
+    if (_1A) {
         _1A--;
     }
-
     updateTilt();
 
-    if (_48 != nullptr) {
-        TVec3f spherePosition;
-        MR::calcSpherePos(&spherePosition, _48);
-        const f32 sphereRadius = MR::getSphereRadius(_48);
-        TVec3f offset = getTrans() - spherePosition;
-
-        if (_1E == 0 && offset.length() > sphereRadius) {
+    if (_48) {
+        TVec3f center;
+        MR::calcSpherePos(&center, _48);
+        f32 radius = MR::getSphereRadius(_48);
+        TVec3f distance = getTrans() - center;
+        if (!_1E && distance.length() > radius) {
             _1E = 30;
-            hitWall(-offset, nullptr);
-        } else if (_1E != 0) {
+            hitWall(-distance, nullptr);
+        } else if (_1E) {
             _1E--;
         }
     }
-
     return true;
 }
 
@@ -390,7 +317,6 @@ bool MarioFoo::notice() {
     if (getNoticedStatus() == MarioStatus_FpView) {
         return true;
     }
-
     return getNoticedStatus() == MarioStatus_Swim;
 }
 
@@ -403,7 +329,8 @@ bool MarioFoo::close() {
     playEffect("フーマリオ解除右");
     stopAnimationUpper(nullptr, nullptr);
     setYangleOffset(0.0f);
-    setJointGlobalMtx(getAnimator()->getUpperJointID(), nullptr);
+    u16 upperJoint = getAnimator()->getUpperJointID();
+    setJointGlobalMtx(upperJoint, nullptr);
 
     switch (_59) {
     case 0:
@@ -417,19 +344,17 @@ bool MarioFoo::close() {
         break;
     case 3:
         changeAnimation("フーファイター解除", static_cast< const char* >(nullptr));
-        TVec3f zeroVelocity(0.0f, 0.0f, 0.0f);
-        getPlayer()->mJumpVec = zeroVelocity;
+        getPlayer()->mJumpVec = TVec3f(0.0f, 0.0f, 0.0f);
         getPlayer()->_10._21 = true;
         break;
     }
-
     if (getPlayer()->mMovementStates.jumping) {
         changeAnimation(nullptr, "落下");
     } else {
         changeAnimation(nullptr, "基本");
     }
-
-    getPlayer()->_4B0 = getPlayer()->mPosition;
+    Mario* player = getPlayer();
+    player->_4B0 = player->mPosition;
     getPlayer()->forceSetHeadVecKeepSide(-getGravityVec());
     changeAnimationInterpoleFrame(6);
     mActor->setBlendMtxTimer(4);
@@ -446,144 +371,130 @@ const TVec3f& MarioFoo::getGravityVec() const {
 }
 
 void MarioFoo::jet() {
-    f32 ringAcc = calcRingAcc();
-    f32 targetSpeed;
-    if (ringAcc != 1.0f) {
-        targetSpeed = ringAcc * mActor->mConst->getTable()->mSwimFrontMaxSpeed;
+    f32 acceleration = calcRingAcc();
+    f32 speed;
+    if (acceleration != 1.0f) {
+        speed = acceleration * mActor->getConst().getTable()->mSwimFrontMaxSpeed;
     } else {
-        targetSpeed = mActor->mConst->getTable()->mSwimFrontJetSpeed;
+        speed = mActor->getConst().getTable()->mSwimFrontJetSpeed;
     }
-
-    f32 acceleration = 1.02f;
-    f32 deceleration = 0.98f;
+    f32 speedUp = 1.02f;
+    f32 slowDown = 0.98f;
     if (checkLvlA() && !_12) {
-        targetSpeed = 0.0f;
-        deceleration = 0.9f;
+        speed = 0.0f;
+        slowDown = 0.9f;
         _AC++;
-
         if (!isAnimationRun("フーファイタースピン")) {
             changeAnimation("フーファイター静止", static_cast< const char* >(nullptr));
         }
-
         playEffect("フーマリオブレーキ左");
         playEffect("フーマリオブレーキ右");
         stopEffect("フーマリオグロー左");
         stopEffect("フーマリオグロー右");
         if (!_AE) {
-            playSound("フーブレーキ", -1);
+            playSound("フーブレーキ");
         }
-
-        _AE = true;
+        _AE = 1;
         getPlayer()->_1C._9 = true;
     } else if (_14 < 8) {
-        _AE = true;
         _AC++;
+        _AE = 1;
         _28 = 0.0f;
-    } else if (_AC != 0) {
+    } else if (_AC) {
         if (_AC < 8) {
             _AC = 0;
-            _AE = false;
+            _AE = 0;
         } else {
             if (_AE) {
                 playEffect("共通ひこうきブースト");
-                playSound("フー加速", -1);
-                _AE = false;
-
+                playSound("フー加速");
+                _AE = 0;
                 if (isAnimationRun("フーファイター静止")) {
                     changeAnimation("フーファイター飛行再開", static_cast< const char* >(nullptr));
                 }
             }
-
             if (_AC > 20) {
                 _AC = 20;
             }
-
-            acceleration = 1.2f;
-            targetSpeed *= 2.0f;
             _AC--;
+            speed *= 2.0f;
+            speedUp = 1.2f;
         }
-
-        stopAnimation("フーファイター静止", static_cast< const char* >(nullptr));
+        stopAnimation("フーファイター静止");
         playEffect("フーマリオグロー左");
         playEffect("フーマリオグロー右");
         stopEffect("フーマリオブレーキ左");
         stopEffect("フーマリオブレーキ右");
     }
 
-    f32 soundLevel = 50.0f * (1.0f + getStickY());
+    f32 soundSpeed = 50.0f * (1.0f + getStickY());
     if (!_AE) {
-        playSound("フー飛行中", static_cast< s32 >(soundLevel));
+        playSound("フー飛行中", soundSpeed);
     }
-    playSound("フー滞空中", static_cast< s32 >(soundLevel));
-
-    if (_28 < targetSpeed) {
+    playSound("フー滞空中", soundSpeed);
+    if (_28 < speed) {
         if (_28 < 1.0f) {
             _28 = 1.0f;
         }
-
-        _28 *= acceleration;
-        if (_4E != 0) {
+        _28 *= speedUp;
+        if (_4E) {
             _28 *= 1.5f;
         }
-    } else if (_28 > targetSpeed) {
-        _28 *= deceleration;
+    } else if (_28 > speed) {
+        _28 *= slowDown;
     } else {
-        _28 = targetSpeed;
+        _28 = speed;
     }
 }
 
 void MarioFoo::updateTilt() {
-    f32 roll = getStickX() * JGeometry::TUtil< f32 >::PI() / 5.0f;
-    f32 blendRatio = 0.1f;
-    f32 pitch = 0.0f;
-
-    if (_1C == 0) {
-        pitch = getStickY() * JGeometry::TUtil< f32 >::PI() / 12.0f;
+    f32 sideTilt;
+    f32 blend = 0.1f;
+    sideTilt = getStickX() * 3.1415927f / 5.0f;
+    f32 frontTilt = 0.0f;
+    if (!_1C) {
+        frontTilt = 3.1415927f * getStickY() / 12.0f;
         if (getStickY() > 0.0f && _2C <= 2.0943952f) {
-            pitch = getStickY() * JGeometry::TUtil< f32 >::PI() * 0.125f;
+            frontTilt = 3.1415927f * getStickY() / 8.0f;
         }
     } else if (getStickY() < 0.0f) {
-        pitch = getStickY() * JGeometry::TUtil< f32 >::PI() / mActor->mConst->getTable()->mSwimTiltZup;
+        frontTilt = 3.1415927f * getStickY() / mActor->getConst().getTable()->mSwimTiltZup;
     } else if (getStickY() > 0.0f) {
-        pitch = getStickY() * JGeometry::TUtil< f32 >::PI() / mActor->mConst->getTable()->mSwimTiltZdown;
-    } else if (_1C != 0) {
-        f32 ratio = static_cast< f32 >(_1C) / 120.0f;
+        frontTilt = 3.1415927f * getStickY() / mActor->getConst().getTable()->mSwimTiltZdown;
+    } else if (_1C) {
+        f32 ratio = _1C / 120.0f;
         if (ratio > 1.0f) {
             ratio = 1.0f;
         }
-        pitch -= ratio * 0.31415927f;
+        frontTilt -= 0.31415927f * ratio;
     } else {
-        pitch = 0.0f;
+        frontTilt = 0.0f;
     }
-
-    _70 = blendRatio * roll + (1.0f - blendRatio) * _70;
-    _74 = 0.1f * pitch + 0.9f * _74;
-
-    Mtx rollMtx;
-    Mtx pitchMtx;
-    PSMTXRotRad(rollMtx, 'X', _70);
-    PSMTXRotRad(pitchMtx, 'Z', _74);
-    PSMTXConcat(rollMtx, pitchMtx, _78);
-    setJointGlobalMtx(getAnimator()->getUpperJointID(), _78);
+    _70 = blend * sideTilt + (1.0f - blend) * _70;
+    _74 = 0.1f * frontTilt + 0.9f * _74;
+    TMtx34f sideMtx;
+    TMtx34f frontMtx;
+    PSMTXRotRad(sideMtx, 'X', _70);
+    PSMTXRotRad(frontMtx, 'Z', _74);
+    PSMTXConcat(sideMtx, frontMtx, _78);
+    u16 upperJoint = getAnimator()->getUpperJointID();
+    setJointGlobalMtx(upperJoint, _78);
 }
 
-void MarioFoo::hitWall(const TVec3f& rNormal, HitSensor* pSensor) {
-    if (sendPunch(pSensor, false) == 1) {
-        return;
-    }
-
-    _11 = true;
-    if (MR::diffAngleAbs(rNormal, -getGravityVec()) <= 0.7853982f) {
-        if (MR::diffAngleAbs(rNormal, -getPlayer()->_1FC) <= 0.7853982f) {
-            _59 = 0;
+void MarioFoo::hitWall(const TVec3f& normal, HitSensor* sensor) {
+    if (sendPunch(sensor, false) != true) {
+        _11 = 1;
+        if (MR::diffAngleAbs(normal, -getGravityVec()) <= 0.7853982f) {
+            if (MR::diffAngleAbs(normal, -getPlayer()->_1FC) <= 0.7853982f) {
+                _59 = 0;
+            } else {
+                _59 = 1;
+            }
         } else {
-            _59 = 1;
+            _59 = 2;
         }
-    } else {
-        _59 = 2;
+        playSound("フーブレーキ");
     }
-
-    playSound("フーブレーキ", -1);
 }
 
 f32 MarioFoo::getStickY() const {
@@ -591,95 +502,95 @@ f32 MarioFoo::getStickY() const {
 }
 
 void MarioFoo::spin() {
-    if (_60 == 0) {
-        if (mActor->isRequestSpin() && _4C == 0) {
+    if (!_60) {
+        if (mActor->isRequestSpin() && !_4C) {
             _4C = 20;
             if (!isAnimationRun("フーファイタースピン") && !checkLvlA()) {
-                playSound("声スピン", -1);
-                playSound("スピンジャンプ", -1);
+                playSound("声スピン");
+                playSound("スピンジャンプ");
             }
-
             changeAnimation("フーファイタースピン", static_cast< const char* >(nullptr));
-            if (mActor->_944 == 0) {
-                mActor->_945 = 0;
-                mActor->_974 = 0;
+            MarioActor* actor = mActor;
+            if (!actor->_944) {
+                actor->_945 = 0;
+                actor->_974 = 0;
             }
-
-            mActor->_944 = 30;
+            actor->_944 = 30;
             mActor->_946 = 60;
         }
-
-        if (_4C != 0) {
+        if (_4C) {
             _4C--;
         }
     }
 }
 
-bool MarioFoo::passRing(const HitSensor* pSensor) {
-    const TVec3f& ringPosition = pSensor->mPosition;
-
-    if (_4E == 0) {
-        _50 = mActor->mConst->getTable()->mSwimRingDashChargeTime;
+bool MarioFoo::passRing(const HitSensor* sensor) {
+    const TVec3f& center = sensor->mPosition;
+    if (!_4E) {
+        _50 = mActor->getConst().getTable()->mSwimRingDashChargeTime;
         changeAnimation("リングダッシュ準備", static_cast< const char* >(nullptr));
     }
-
-    if (_50 != 0) {
-        getPlayer()->push((ringPosition - getTrans()) * 0.25f);
+    if (_50) {
+        getPlayer()->push((center - getTrans()) * 0.25f);
     }
-
-    DashRing* pRing = static_cast< DashRing* >(pSensor->mHost);
-    _5A = pRing->mMaxDuration;
-    _5C = pRing->mSpeedScale;
-    _4E = pRing->mBoostTime;
+    const DashRing* ring = static_cast< const DashRing* >(sensor->mHost);
+    _5A = ring->mMaxDuration;
+    _5C = ring->mSpeedScale;
+    _4E = ring->mBoostTime;
     return true;
 }
 
 f32 MarioFoo::calcRingAcc() {
-    if (_4E != 0) {
-        if (_50 != 0) {
+    if (_4E) {
+        if (_50) {
             _50--;
             if (_50 == 1) {
-                MarioActor* pActor = mActor;
-                const MarioConstTable* pTable = pActor->mConst->getTable();
-                pActor->_1AA = pTable->mStarPieceFogTime;
-                pActor->_1AC = 1.0f;
-                pActor->_1B0.set(0xFF, 0xFF, 0xFF, 0);
-                pActor->_1B5 = false;
+                MarioActor* actor = mActor;
+                actor->_1AA = actor->getConst().getTable()->mStarPieceFogTime;
+                actor->_1AC = 1.0f;
+                actor->_1B0.set(255, 255, 255, 0);
+                actor->_1B5 = false;
             }
-
-            if (_50 == 0) {
+            if (!_50) {
                 startPadVib(3);
                 changeAnimation("リングダッシュ", static_cast< const char* >(nullptr));
             }
-
             return 1.0f;
         }
-
         _54 += 0.5f;
         if (_54 > 30.0f) {
             _54 = 30.0f;
         }
-
-        f32 result = _5C;
+        f32 acceleration = _5C;
         if (_4E < _5A) {
             f32 ratio = static_cast< f32 >(_4E) / static_cast< f32 >(_5A);
-            result = (1.0f - ratio) + _5C * ratio;
+            acceleration = (1.0f - ratio) + acceleration * ratio;
         }
-
         _4E--;
-        return result;
+        return acceleration;
     }
-
     if (_54 > 0.0f) {
         _54 -= 0.5f;
     } else {
         _54 = 0.0f;
     }
-
     return 1.0f;
 }
 
 void MarioFoo::draw3D() const {
+    TVec3f leftNear;
+    TVec3f leftFar;
+    TVec3f rightFar;
+    TVec3f rightNear;
+    TVec3f outerLeft;
+    TVec3f innerLeft;
+    TVec3f outerRight;
+    TVec3f innerRight;
+    TVec3f nextOuterLeft;
+    TVec3f nextInnerLeft;
+    TVec3f nextOuterRight;
+    TVec3f nextInnerRight;
+
     if (getPlayer()->_1C._9) {
         TDDraw::setup(1, 1, 0);
         MR::ddSetVtxFormat(2);
@@ -690,167 +601,142 @@ void MarioFoo::draw3D() const {
         GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_2, GX_TRUE, GX_TEVPREV);
         GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
         _6B8->load(GX_TEXMAP0);
+        GXSetTevColor(GX_TEVREG0, Color8(255, 32, 32, 128));
+        GXSetTevColor(GX_TEVREG1, Color8(255, 64, 64, 255));
 
-        Color8 color1(255, 32, 32, 128);
-        GXSetTevColor(GX_TEVREG0, color1);
-        Color8 color2(255, 64, 64, 255);
-        GXSetTevColor(GX_TEVREG1, color2);
-
-        TVec3f up(getPlayer()->_1FC);
-        up.scale(50.0f);
-        TVec3f center(mActor->_2A0);
-        center += up;
-
-        TVec3f negativeUp = -getPlayer()->_1FC;
+        TVec3f center = mActor->_2A0 + getPlayer()->_1FC * 50.0f;
+        TVec3f back = -getPlayer()->_1FC;
         TVec3f side(getPlayer()->mSideVec);
-        TVec3f normal;
-        normal.cross(negativeUp, side);
-        MR::normalizeOrZero(&normal);
-        TVec3f back = -normal;
-        const f32 fade = static_cast< f32 >(64 - _6B0) * 0.015625f;
+        TVec3f up;
+        PSVECCrossProduct(&back, &side, &up);
+        MR::normalizeOrZero(&up);
+        TVec3f front = -back;
+        f32 length = (64 - _6B0) / 64.0f;
 
-        TVec3f leftOuter;
-        leftOuter = center - side * 70.0f;
-        TVec3f leftOuterBack;
-        leftOuterBack = center - side * 70.0f + back * 2000.0f * fade;
-        TVec3f leftInnerBack;
-        leftInnerBack = center - side * 50.0f + back * 2000.0f * fade;
-        TVec3f leftInner;
-        leftInner = center - side * 50.0f;
-
+        leftNear = center - side * 70.0f;
+        leftFar = center - side * 70.0f + front * 2000.0f * length;
+        rightFar = center - side * 50.0f + front * 2000.0f * length;
+        rightNear = center - side * 50.0f;
         GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-        MR::ddSendVtxData(leftOuter, TVec2f(0.0f, 0.0f));
-        MR::ddSendVtxData(leftOuterBack, TVec2f(0.5f, 0.0f));
-        MR::ddSendVtxData(leftInnerBack, TVec2f(0.5f, 1.0f));
-        MR::ddSendVtxData(leftInner, TVec2f(0.0f, 1.0f));
+        MR::ddSendVtxData(leftNear, TVec2f(0.0f, 0.0f));
+        MR::ddSendVtxData(leftFar, TVec2f(0.5f, 0.0f));
+        MR::ddSendVtxData(rightFar, TVec2f(0.5f, 1.0f));
+        MR::ddSendVtxData(rightNear, TVec2f(0.0f, 1.0f));
+        GXEnd();
 
-        TVec3f rightOuter;
-        rightOuter = center + side * 70.0f;
-        TVec3f rightOuterBack;
-        rightOuterBack = center + side * 70.0f + back * 2000.0f * fade;
-        TVec3f rightInnerBack;
-        rightInnerBack = center + side * 50.0f + back * 2000.0f * fade;
-        TVec3f rightInner;
-        rightInner = center + side * 50.0f;
-
+        leftNear = center + side * 70.0f;
+        leftFar = center + side * 70.0f + front * 2000.0f * length;
+        rightFar = center + side * 50.0f + front * 2000.0f * length;
+        rightNear = center + side * 50.0f;
         GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-        MR::ddSendVtxData(rightOuter, TVec2f(0.0f, 0.0f));
-        MR::ddSendVtxData(rightOuterBack, TVec2f(0.5f, 0.0f));
-        MR::ddSendVtxData(rightInnerBack, TVec2f(0.5f, 1.0f));
-        MR::ddSendVtxData(rightInner, TVec2f(0.0f, 1.0f));
+        MR::ddSendVtxData(leftNear, TVec2f(0.0f, 0.0f));
+        MR::ddSendVtxData(leftFar, TVec2f(0.5f, 0.0f));
+        MR::ddSendVtxData(rightFar, TVec2f(0.5f, 1.0f));
+        MR::ddSendVtxData(rightNear, TVec2f(0.0f, 1.0f));
+        GXEnd();
     }
 
-    Color8 color2(255, 64, 64, 255);
-    GXSetTevColor(GX_TEVREG1, color2);
+    GXSetTevColor(GX_TEVREG1, Color8(255, 64, 64, 255));
+    if (_6B0) {
+        TDDraw::setup(1, 1, 0);
+        MR::ddSetVtxFormat(2);
+        MR::ddLightingOff();
+        GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C0, GX_CC_C1, GX_CC_TEXA, GX_CC_ZERO);
+        GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+        GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_TEXA, GX_CA_A0, GX_CA_ZERO);
+        GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_2, GX_TRUE, GX_TEVPREV);
+        GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
+        _6B8->load(GX_TEXMAP0);
 
-    if (_6B0 == 0) {
-        return;
-    }
-
-    TDDraw::setup(1, 1, 0);
-    MR::ddSetVtxFormat(2);
-    MR::ddLightingOff();
-    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C0, GX_CC_C1, GX_CC_TEXA, GX_CC_ZERO);
-    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
-    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_TEXA, GX_CA_A0, GX_CA_ZERO);
-    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_2, GX_TRUE, GX_TEVPREV);
-    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
-    _6B8->load(GX_TEXMAP0);
-
-    const u32 pointCount = _6B0;
-    const u32 halfCount = pointCount >> 1;
-    TVec3f previousLeftOuter;
-    TVec3f previousLeftInner;
-    TVec3f previousRightOuter;
-    TVec3f previousRightInner;
-    TVec3f previousPosition;
-    TVec2f previousTexLeft;
-    TVec2f previousTexRight;
-
-    for (u32 i = 0; i < pointCount; i++) {
-        s32 alpha;
-        if (i > halfCount) {
-            alpha = static_cast< s32 >(255.0f * (static_cast< f32 >(pointCount - i) / static_cast< f32 >(pointCount)));
-        } else {
-            alpha = static_cast< s32 >(255.0f * (static_cast< f32 >(i) / static_cast< f32 >(pointCount)));
-        }
-
-        Color8 color1(255, 0, 0, static_cast< u8 >(alpha));
-        GXSetTevColor(GX_TEVREG0, color1);
-
-        const u32 pointIndex = (_6B4 + 127 - i) & 0x3F;
-        if (i == 0) {
-            const TVec3f* pPosition = &_B0[pointIndex];
-            u32 j = 1;
-            for (; j < pointCount; j++) {
-                TVec3f delta = _B0[(_6B4 + 127 - j) & 0x3F] - *pPosition;
-                TVec3f cameraDirection = MR::getCamZdir();
-                TVec3f projected;
-                MR::vecKillElement(delta, cameraDirection, &projected);
-                if (!MR::normalizeOrZero(&projected)) {
-                    cameraDirection = MR::getCamZdir();
-                    TVec3f offset;
-                    offset.cross(projected, cameraDirection);
-                    offset.scale(10.0f);
-
-                    const TVec3f* pDirection = &_3B0[pointIndex];
-                    previousLeftOuter = *pPosition + offset - *pDirection * cWidth;
-                    previousLeftInner = *pPosition - offset - *pDirection * cWidth;
-                    previousRightOuter = *pPosition + offset + *pDirection * cWidth;
-                    previousRightInner = *pPosition - offset + *pDirection * cWidth;
+        u32 count = _6B0;
+        u32 midpoint = count / 2;
+        TVec3f previous;
+        TVec2f leftUV;
+        TVec2f rightUV;
+        TVec2f nextLeftUV;
+        TVec2f nextRightUV;
+        for (u32 i = 0; i < count; i++) {
+            s32 alpha;
+            if (i > midpoint) {
+                alpha = 255.0f * (static_cast< f32 >(count - i) / static_cast< f32 >(count));
+            } else {
+                alpha = 255.0f * (static_cast< f32 >(i) / static_cast< f32 >(count));
+            }
+            GXSetTevColor(GX_TEVREG0, Color8(255, 0, 0, alpha));
+            u32 index = (_6B4 + 127 - i) % 64;
+            if (i == 0) {
+                u32 j;
+                for (j = 1; j < count; j++) {
+                    TVec3f direction = _B0[(_6B4 + 127 - j) % 64] - _B0[index];
+                    TVec3f horizontal;
+                    MR::vecKillElement(direction, MR::getCamZdir(), &horizontal);
+                    if (!MR::normalizeOrZero(&horizontal)) {
+                        TVec3f width;
+                        width.cross(horizontal, MR::getCamZdir());
+                        width.scale(10.0f);
+                        outerLeft = _B0[index] + width - _3B0[index] * cWidth;
+                        innerLeft = _B0[index] - width - _3B0[index] * cWidth;
+                        outerRight = _B0[index] + width + _3B0[index] * cWidth;
+                        innerRight = _B0[index] - width + _3B0[index] * cWidth;
+                        break;
+                    }
+                }
+                if (j >= count) {
                     break;
                 }
-            }
+                previous = _B0[index];
+                leftUV.set(0.0f, 0.0f);
+                rightUV.set(1.0f, 0.0f);
+            } else {
+                f32 textureY = static_cast< f32 >(i + 1) / static_cast< f32 >(count);
+                nextLeftUV.set(0.0f, textureY);
+                nextRightUV.set(1.0f, textureY);
+                TVec3f direction = _B0[index] - previous;
+                TVec3f width(_3B0[index]);
+                width.setLength(10.0f);
+                nextOuterLeft = _B0[index] + width - _3B0[index] * cWidth;
+                nextInnerLeft = _B0[index] - width - _3B0[index] * cWidth;
+                GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+                MR::ddSendVtxData(outerLeft, leftUV);
+                MR::ddSendVtxData(nextOuterLeft, nextLeftUV);
+                MR::ddSendVtxData(nextInnerLeft, nextRightUV);
+                MR::ddSendVtxData(innerLeft, rightUV);
+                GXEnd();
 
-            if (j >= pointCount) {
-                return;
-            }
+                nextOuterRight = _B0[index] + width + _3B0[index] * cWidth;
+                nextInnerRight = _B0[index] - width + _3B0[index] * cWidth;
+                GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+                MR::ddSendVtxData(outerRight, leftUV);
+                MR::ddSendVtxData(nextOuterRight, nextLeftUV);
+                MR::ddSendVtxData(nextInnerRight, nextRightUV);
+                MR::ddSendVtxData(innerRight, rightUV);
+                GXEnd();
 
-            previousPosition = *pPosition;
-            previousTexLeft.set(0.0f, 0.0f);
-            previousTexRight.set(1.0f, 0.0f);
-            continue;
+                outerLeft = nextOuterLeft;
+                leftUV = nextLeftUV;
+                innerLeft = nextInnerLeft;
+                rightUV = nextRightUV;
+                outerRight = nextOuterRight;
+                innerRight = nextInnerRight;
+                previous = _B0[index];
+            }
         }
-
-        const TVec3f* pPosition = &_B0[pointIndex];
-        const TVec3f* pDirection = &_3B0[pointIndex];
-        TVec2f texLeft(0.0f, static_cast< f32 >(i + 1) / static_cast< f32 >(pointCount));
-        TVec2f texRight(1.0f, texLeft.y);
-
-        TVec3f delta = *pPosition - previousPosition;
-        TVec3f offset(*pDirection);
-        offset.setLength(10.0f);
-
-        TVec3f leftOuter;
-        leftOuter = *pPosition + offset - *pDirection * cWidth;
-        TVec3f leftInner;
-        leftInner = *pPosition - offset - *pDirection * cWidth;
-        GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-        MR::ddSendVtxData(previousLeftOuter, previousTexLeft);
-        MR::ddSendVtxData(leftOuter, texLeft);
-        MR::ddSendVtxData(leftInner, texRight);
-        MR::ddSendVtxData(previousLeftInner, previousTexRight);
-
-        TVec3f rightOuter;
-        rightOuter = *pPosition + offset + *pDirection * cWidth;
-        TVec3f rightInner;
-        rightInner = *pPosition - offset + *pDirection * cWidth;
-        GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-        MR::ddSendVtxData(previousRightOuter, previousTexLeft);
-        MR::ddSendVtxData(rightOuter, texLeft);
-        MR::ddSendVtxData(rightInner, texRight);
-        MR::ddSendVtxData(previousRightInner, previousTexRight);
-
-        previousLeftOuter = leftOuter;
-        previousTexLeft = texLeft;
-        previousLeftInner = leftInner;
-        previousTexRight = texRight;
-        previousRightOuter = rightOuter;
-        previousRightInner = rightInner;
-        previousPosition = *pPosition;
     }
 }
 
 f32 MarioFoo::getBlurOffset() const {
     return _54;
 }
+
+namespace NrvMarioActor {
+    INIT_NERVE(MarioActorNrvWait);
+    INIT_NERVE(MarioActorNrvGameOver);
+    INIT_NERVE(MarioActorNrvGameOverAbyss);
+    INIT_NERVE(MarioActorNrvGameOverAbyss2);
+    INIT_NERVE(MarioActorNrvGameOverFire);
+    INIT_NERVE(MarioActorNrvGameOverBlackHole);
+    INIT_NERVE(MarioActorNrvGameOverNonStop);
+    INIT_NERVE(MarioActorNrvGameOverSink);
+    INIT_NERVE(MarioActorNrvTimeWait);
+    INIT_NERVE(MarioActorNrvNoRush);
+};  // namespace NrvMarioActor

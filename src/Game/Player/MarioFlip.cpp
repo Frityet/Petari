@@ -70,26 +70,22 @@ bool MarioFlip::update() {
     if (_12 == 0) {
         changeAnimationNonStop("はねとばされ");
     }
-    ++_12;
-
+    _12++;
     TVec3f velocity(_18);
     TVec3f direction(_18);
     MR::normalizeOrZero(&direction);
-
-    f32 ratio;
+    f32 control;
     if (_12 < 30) {
-        ratio = static_cast< f32 >(_12) / 30.0f;
+        control = static_cast< f32 >(_12) / 30.0f;
     } else {
-        ratio = 1.0f;
+        control = 1.0f;
     }
-
-    TVec3f horizontal;
-    f32 along = MR::vecKillElement(getWorldPadDir(), direction, &horizontal);
+    TVec3f lateral;
+    f32 along = MR::vecKillElement(getWorldPadDir(), direction, &lateral);
     if (along <= 0.0f) {
-        _18 += direction * mActor->mConst->getTable()->mFlipFriction3 * along * ratio;
+        _18 += direction * mActor->mConst->getTable()->mFlipFriction3 * along * control;
     }
-    _18 += horizontal * mActor->mConst->getTable()->mFlipFriction3;
-
+    _18 += lateral * mActor->mConst->getTable()->mFlipFriction3;
     switch (_14) {
     case 0:
         _24 += _28;
@@ -98,7 +94,7 @@ bool MarioFlip::update() {
         addVelocity(velocity);
         _18.scale(mActor->mConst->getTable()->mFlipFriction1);
         if (_12 == mActor->mConst->getTable()->mFlipTimer1) {
-            ++_14;
+            _14++;
         }
         break;
     case 1:
@@ -111,7 +107,7 @@ bool MarioFlip::update() {
         addVelocity(velocity);
         _18.scale(mActor->mConst->getTable()->mFlipFriction2);
         if (_12 == mActor->mConst->getTable()->mFlipTimer1 + mActor->mConst->getTable()->mFlipTimer2) {
-            ++_14;
+            _14++;
         }
         break;
     case 2:
@@ -122,7 +118,7 @@ bool MarioFlip::update() {
         _24 += _28;
         if (MR::isAngleBetween(_24, -0.1f, 0.1f)) {
             changeAnimation("はねとばされ終了", static_cast< const char* >(nullptr));
-            ++_14;
+            _14++;
         }
         break;
     case 3:
@@ -132,25 +128,22 @@ bool MarioFlip::update() {
         }
         break;
     }
-
     _24 = MR::normalizeAngleAbs(_24);
     setYangleOffset(_24);
-
     if (getPlayer()->mMovementStates._8 || getPlayer()->mMovementStates._1A || getPlayer()->mMovementStates._19) {
         TVec3f normal(getPlayer()->getWallNorm());
-        TVec3f horizontal;
-        f32 speed = MR::vecKillElement(_18, normal, &horizontal);
-        if (speed < 0.0f) {
-            stopAnimation(static_cast< const char* >(nullptr), static_cast< const char* >(nullptr));
+        TVec3f tangent;
+        f32 incoming = MR::vecKillElement(_18, normal, &tangent);
+        if (incoming < 0.0f) {
+            stopAnimation(nullptr, static_cast< const char* >(nullptr));
             changeAnimationNonStop("はねとばされ");
             playEffectTrans("壁ヒット", getPlayer()->getWallPos());
-            _18 = horizontal + normal * -speed * 1.2f;
+            _18 = tangent + normal * -incoming * 1.2f;
             addVelocity(_18, 2.0f);
             _28 *= 1.2f;
             getPlayer()->setFrontVecKeepUp(-_18);
         }
     }
-
     if (_14 >= 1 && checkTrgA()) {
         getPlayer()->tryJump();
         return false;

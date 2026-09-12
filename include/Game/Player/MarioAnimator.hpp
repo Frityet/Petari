@@ -4,6 +4,7 @@
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioModule.hpp"
 
+class HashSortTable;
 class MarioActor;
 class XanimeResourceTable;
 class XanimePlayer;
@@ -110,11 +111,11 @@ public:
     bool _10C;
     bool _10D;
     bool mUpperDefaultSet;  // 0x10E
-    u8 _10F;
+    /* 0x10F */ bool mCallbackEnded;
     f32 _110;
     const char* mCurrBck;  // 0x114
     f32 _118;
 
-    s32 _11C;
-    HashSortTable* _120;
+    /* 0x11C */ s32 mCallbackId;
+    /* 0x120 */ HashSortTable* mCallbackTable;
 };

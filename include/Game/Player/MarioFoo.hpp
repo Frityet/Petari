@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Game/Player/MarioState.hpp"
+#include <JSystem/JGeometry/TMatrix.hpp>
 
 class MarioActor;
 class AreaObj;
-class HitSensor;
 class JUTTexture;
 
 class MarioFoo : public MarioState {
@@ -28,8 +28,8 @@ public:
     void spin();
     f32 calcRingAcc();
 
-    /* 0x11 */ bool _11;
-    /* 0x12 */ bool _12;
+    /* 0x11 */ u8 _11;
+    /* 0x12 */ u8 _12;
     /* 0x14 */ u32 _14;
     /* 0x18 */ u16 _18;
     /* 0x1A */ u16 _1A;
@@ -46,7 +46,7 @@ public:
     /* 0x4E */ u16 _4E;
     /* 0x50 */ u16 _50;
     /* 0x54 */ f32 _54;
-    /* 0x58 */ bool _58;
+    /* 0x58 */ u8 _58;
     /* 0x59 */ u8 _59;
     /* 0x5A */ u16 _5A;
     /* 0x5C */ f32 _5C;
@@ -54,11 +54,11 @@ public:
     /* 0x64 */ TVec3f _64;
     /* 0x70 */ f32 _70;
     /* 0x74 */ f32 _74;
-    /* 0x78 */ Mtx _78;
+    /* 0x78 */ TMtx34f _78;
     /* 0xA8 */ u16 _A8;
     /* 0xAA */ u16 _AA;
     /* 0xAC */ u16 _AC;
-    /* 0xAE */ bool _AE;
+    /* 0xAE */ u8 _AE;
     /* 0xB0 */ TVec3f _B0[64];
     /* 0x3B0 */ TVec3f _3B0[64];
     /* 0x6B0 */ u32 _6B0;
