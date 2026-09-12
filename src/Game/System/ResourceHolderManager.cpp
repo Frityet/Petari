@@ -46,9 +46,10 @@ LayoutHolder* ResourceHolderManager::createAndAddLayoutHolderStationed(const cha
 }
 
 LayoutHolder* ResourceHolderManager::createAndAddLayoutHolderRawData(const char* pParam1) {
+    FuncPtrC create = &ResourceHolderManager::createLayoutHolder;
     CreateResourceHolderArgs args = CreateResourceHolderArgs();
 
-    // TODO: Pointer-to-member-function call. Might be an inlined functor?
+    (this->*create)(pParam1, &args);
 
     return add(pParam1, args)->mLayoutHolder;
 }
@@ -76,26 +77,25 @@ void ResourceHolderManager::removeIfIsEqualHeap(JKRHeap* pHeap) {
         pIter->mResourceHolder = nullptr;
     }
 
-    for (ResourceHolderManagerName2Resource* pIter = mResourceArray.begin(); pIter != mResourceArray.end(); pIter++) {
-        if (pIter->mHeap != nullptr) {
-            continue;
+    for (ResourceHolderManagerName2Resource* pIter = mResourceArray.begin(); pIter != mResourceArray.end();) {
+        if (pIter->mHeap == nullptr) {
+            pIter = mResourceArray.erase(pIter);
+        } else {
+            pIter++;
         }
-
-        // FIXME: Supposed inline of MR::Vector::erase.
-        mResourceArray.erase(pIter);
     }
 }
 
 void ResourceHolderManager::startCreateResourceHolderOnMainThread(const char* pParam1, CreateResourceHolderArgs* pArgs) {
     MR::FunctorV2M< ResourceHolderManager*, FuncPtrC, const char*, CreateResourceHolderArgs* > func =
-        MR::Functor(SingletonHolder< ResourceHolderManager >::get(), createResourceHolder, pParam1, pArgs);
+        MR::Functor(SingletonHolder< ResourceHolderManager >::get(), &ResourceHolderManager::createResourceHolder, pParam1, pArgs);
 
     MR::startFunctionAsyncExecuteOnMainThread(func, pParam1);
 }
 
 void ResourceHolderManager::startCreateLayoutHolderOnMainThread(const char* pParam1, CreateResourceHolderArgs* pArgs) {
     MR::FunctorV2M< ResourceHolderManager*, FuncPtrC, const char*, CreateResourceHolderArgs* > func =
-        MR::Functor(SingletonHolder< ResourceHolderManager >::get(), createLayoutHolder, pParam1, pArgs);
+        MR::Functor(SingletonHolder< ResourceHolderManager >::get(), &ResourceHolderManager::createLayoutHolder, pParam1, pArgs);
 
     MR::startFunctionAsyncExecuteOnMainThread(func, pParam1);
 }

@@ -5,10 +5,13 @@
 #include "Game/Scene/SceneNameObjMovementController.hpp"
 #include "Game/Scene/ScenePlayingResult.hpp"
 #include "Game/Scene/StageDataHolder.hpp"
+#include "Game/Scene/StageFileLoader.hpp"
 #include "Game/System/GalaxyStatusAccessor.hpp"
 #include "Game/System/GameDataFunction.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemSceneController.hpp"
+#include "Game/System/PlacedHiddenStarScenarioTable.hpp"
+#include "Game/Util/FileUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/JMapIdInfo.hpp"
 #include "Game/Util/JMapLinkInfo.hpp"
@@ -106,7 +109,7 @@ namespace MR {
     }
 
     bool isStageKoopaVs1() {
-        return isEqualStageName("KoopaBattleVs3Galaxy");
+        return isEqualStageName("KoopaBattleVs1Galaxy");
     }
 
     bool isStageKoopaVs2() {
@@ -180,7 +183,12 @@ namespace MR {
     const JMapIdInfo& getInitializeStartIdInfo() {
         return cInitializeStartIdInfo;
     }
-    // getStageArchive
+    JKRMemArchive* getStageArchive(const char* pStageName) {
+        char name[256];
+        StageFileLoader::makeStageArchiveName(name, sizeof(name), pStageName);
+        return receiveArchive(name);
+    }
+
     s32 getGeneralPosNum() {
         return getStageDataHolder()->getGeneralPosNum();
     }
@@ -192,9 +200,19 @@ namespace MR {
         getJMapInfoRotate(iter, pRot);
         *ppLinkInfo = new JMapLinkInfo(iter, false);
     }
-    // getChildObjNum
-    // getChildObjName
-    // initChildObj
+    s32 getChildObjNum(const JMapInfoIter& rIter) {
+        return getStageDataHolder()->findPlacedStageDataHolder(rIter)->getChildObjNum(rIter);
+    }
+
+    void getChildObjName(const char** ppName, const JMapInfoIter& rIter, int index) {
+        JMapInfoIter iter = getStageDataHolder()->findPlacedStageDataHolder(rIter)->getChildObjInfoFromDataIndex(rIter, index);
+        getObjectName(ppName, iter);
+    }
+
+    void initChildObj(NameObj* pObj, const JMapInfoIter& rIter, int index) {
+        JMapInfoIter iter = getStageDataHolder()->findPlacedStageDataHolder(rIter)->getChildObjInfoFromDataIndex(rIter, index);
+        pObj->init(iter);
+    }
 
     const char* getAppearPowerStarObjName(s32 scenarioNo) {
         return makeCurrentGalaxyStatusAccessor().getAppearPowerStarObjName(scenarioNo);
@@ -216,9 +234,40 @@ namespace MR {
         return makeCurrentGalaxyStatusAccessor().getZoneName(zoneId);
     }
 
-    // getPlacedHiddenStarScenarioNo
-    // getRailInfo
-    // getNextLinkRailInfo
+    s32 getPlacedHiddenStarScenarioNo(const char* pStageName, s32 starId) {
+        GalaxyStatusAccessor accessor = makeGalaxyStatusAccessor(pStageName);
+        s32 scenarioNo = getPlacedHiddenStarScenarioNoFromTable(pStageName, starId);
+        if (scenarioNo > 0) {
+            return scenarioNo;
+        }
+
+        u32 starMask = 1 << (starId - 1);
+        for (s32 i = 1; i <= accessor.getNormalScenarioNum(); i++) {
+            if (accessor.getActivePowerStarId(i) & starMask) {
+                return i;
+            }
+        }
+
+        return 1;
+    }
+
+    void getRailInfo(JMapInfoIter* pIter, const JMapInfo** ppInfo, const JMapInfoIter& rIter) {
+        s32 railId = -1;
+        getRailId(rIter, &railId);
+        getRailInfoFromRailId(pIter, ppInfo, getStageDataHolder()->findPlacedStageDataHolder(rIter), railId);
+    }
+
+    bool getNextLinkRailInfo(JMapInfoIter* pIter, const JMapInfo** ppInfo, const JMapInfoIter& rIter) {
+        s32 railId;
+        getNextLinkRailID(rIter, &railId);
+        if (railId == -1) {
+            return false;
+        }
+
+        getRailInfoFromRailId(pIter, ppInfo, getStageDataHolder()->findPlacedStageDataHolder(rIter), railId);
+        return true;
+    }
+
     s32 getCurrentStartCameraId() {
         return getStageDataHolder()->getCurrentStartCameraId();
     }
@@ -284,11 +333,30 @@ namespace MR {
         return GameDataFunction::calcCurrentPowerStarNum();
     }
 
-    // isPlacementLocalStage
-    // getPlacedZoneId
-    // getZonePlacementMtx
-    // getZonePlacementMtx
-    // getJapaneseObjectName
+    bool isPlacementLocalStage() {
+        return getStageDataHolder()->mStageDataHolderCount > 0;
+    }
+
+    s32 getPlacedZoneId(const JMapInfoIter& rIter) {
+        return getStageDataHolder()->findPlacedStageDataHolder(rIter)->mZoneID;
+    }
+
+    TPos3f* getZonePlacementMtx(const JMapInfoIter& rIter) {
+        return reinterpret_cast< TPos3f* >(const_cast< StageDataHolder* >(getStageDataHolder()->findPlacedStageDataHolder(rIter))->mPlacementMtx);
+    }
+
+    TPos3f* getZonePlacementMtx(s32 zoneId) {
+        return reinterpret_cast< TPos3f* >(getStageDataHolder()->getStageDataHolderFromZoneId(zoneId)->mPlacementMtx);
+    }
+
+    const char* getJapaneseObjectName(const char* pName) {
+        const char* pJapaneseName = getStageDataHolder()->getJapaneseObjectName(pName);
+        if (pJapaneseName != nullptr) {
+            return pJapaneseName;
+        }
+
+        return pName;
+    }
 
     void setCurrentPlacementZoneId(s32 zoneId) {
         getPlacementStateChecker()->setCurrentPlacementZoneId(zoneId);

@@ -27,6 +27,9 @@ public:
     s32 getGeneralPosNum() const;
     JMapInfoIter getGeneralPosInfoFromDataIndex(int) const;
 
+    s32 getChildObjNum(const JMapInfoIter&) const;
+    JMapInfoIter getChildObjInfoFromDataIndex(const JMapInfoIter&, int) const;
+
     JMapInfoIter makeMarioJMapInfoIter(const JMapIdInfo&) const;
 
     const StageDataHolder* findPlacedStageDataHolder(const JMapInfoIter&) const;
