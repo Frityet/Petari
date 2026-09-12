@@ -138,23 +138,6 @@ namespace MR {
         return container;
     }
 
-    bool isInWater(const TVec3f &) {
-        aurora::throw_host_exception<std::logic_error>(
-            "water-volume queries are unavailable until real WaterArea and WaterAreaHolder scene data are installed.");
-    }
-
-    bool isInDeath(const TVec3f &rPos) {
-        return MR::getAreaObjContainer()->getManager("DeathArea")->find_in(rPos) != nullptr;
-    }
-
-    bool isInDarkMatter(const TVec3f &rPos) {
-        auto *container = MR::getAreaObjContainer();
-        auto *cube_manager = container->getManager("DarkMatterCube");
-        auto *cylinder_manager = container->getManager("DarkMatterCylinder");
-        return cube_manager->find_in(rPos) != nullptr ||
-               cylinder_manager->find_in(rPos) != nullptr;
-    }
-
     void getDivideMercatorRailPosition(DivideMercatorRailPosInfo *, const LiveActor *, u32, f32, u32) {
         aurora::throw_host_exception<std::logic_error>(
             "Mercator rail division is unavailable because the retail transformation routine has not been decompiled.");

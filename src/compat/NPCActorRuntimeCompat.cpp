@@ -195,22 +195,6 @@ namespace MR {
         return turnQuatAxis(destination, source, current, target, maximumRadians);
     }
 
-    bool faceToVector(TQuat4f* quaternion, TVec3f target, f32 maximumDegrees) {
-        if (quaternion == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("Facing requires a quaternion.");
-        }
-        auto up = TVec3f{};
-        quaternion->getYDir(up);
-        target = normalized(target, "Facing target");
-        if (vecKillElement(target, up, &target) > 0.95F) {
-            return false;
-        }
-        auto current = TVec3f{};
-        quaternion->getZDir(current);
-        return turnQuatAxis(quaternion, *quaternion, current, target,
-                            maximumDegrees * (std::numbers::pi_v<float> / 180.0F));
-    }
-
     void calcGravity(LiveActor* pActor) {
         TVec3f gravity;
         calcGravityVector(pActor, pActor->mPosition, &gravity, nullptr, 0);

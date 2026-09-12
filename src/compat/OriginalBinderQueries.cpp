@@ -9,29 +9,6 @@
 #include "Game/Util/MathUtil.hpp"
 
 namespace MR {
-    bool reboundVelocityFromCollision(LiveActor* pActor, f32 a2, f32 a3, f32 a4) {
-        if (!isBinded(pActor)) {
-            return false;
-        }
-        TVec3f bindedReactnVec = *getBindedFixReactionVector(pActor);
-        if (isNearZero(bindedReactnVec)) {
-            return false;
-        }
-        normalize(&bindedReactnVec);
-        f32 f31 = bindedReactnVec.dot(pActor->mVelocity);
-        if (f31 < -a3) {
-            pActor->mVelocity.sub(bindedReactnVec * f31);
-            pActor->mVelocity.scale(a4);
-            pActor->mVelocity.sub(bindedReactnVec * f31 * a2);
-            return true;
-        }
-        if (f31 < 0.0f) {
-            pActor->mVelocity.sub(bindedReactnVec * f31);
-            return false;
-        }
-        return false;
-    }
-
     f32 calcHitPowerToWall(const LiveActor* pActor) {
         if (!isBindedWall(pActor)) {
             return 0.0f;

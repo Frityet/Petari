@@ -21,13 +21,3 @@ NameObj* NameObjFinder::find(const char* name) {
         aurora::throw_host_exception<std::logic_error>("Name lookup requires the actual scene NameObjHolder");
     return registry->holder().find(name);
 }
-
-namespace MR {
-    NameObjGroup* joinToNameObjGroup(NameObj* object, const char* group_name) {
-        auto* group = static_cast<NameObjGroup*>(NameObjFinder::find(group_name));
-        if (!group)
-            aurora::throw_host_exception<std::logic_error>("Joining a NameObj group requires its scene-owned group to be created first");
-        group->registerObj(object);
-        return group;
-    }
-}

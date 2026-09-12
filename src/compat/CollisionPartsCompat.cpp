@@ -229,12 +229,3 @@ namespace smgpc::compat {
         }
     }
 }
-
-namespace MR {
-    ResourceHolder* createAndAddResourceHolder(const char* archive_name) {
-        if (!archive_name) aurora::throw_host_exception<std::invalid_argument>("ResourceHolder requires an exact archive name.");
-        auto* service = smgpc::compat::ResourceHolderService::active();
-        if (!service) aurora::throw_host_exception<std::logic_error>("ResourceHolder requires an active runtime owner.");
-        return service->create_and_add(archive_name);
-    }
-}

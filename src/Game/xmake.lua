@@ -66,7 +66,6 @@ target("smg-pc-game")
     remove_files("Util/GravityUtil.cpp")
     remove_files("Util/DemoUtil.cpp")
     remove_files("Util/EventUtil.cpp")
-    remove_files("Util/ActorMovementUtil.cpp")
     remove_files("Util/ActorShadowUtil.cpp")
     remove_files("Util/LiveActorUtil.cpp")
     remove_files("Util/LayoutUtil.cpp")
@@ -93,7 +92,7 @@ target("smg-pc-game")
     remove_files("../compat/MslPrintfCompat.cpp")
     -- Original paired-single helpers make fused and rounded operations explicit.
     add_files("../compat/GameMathCompat.cpp", {cxxflags = "-ffp-contract=off"})
-    add_files({"../compat/OriginalActorMovement.cpp", "../compat/OriginalMapQueries.cpp",
+    add_files({"Util/ActorMovementUtil.cpp", "../compat/OriginalMapQueries.cpp",
                "../compat/OriginalCollisionPartsCompat.cpp", "../compat/OriginalJMathSqrt.cpp"},
               {cxxflags = "-ffp-contract=off"})
     add_files("../JSystem/J2DGraph/**.cpp", {cxxflags = "-ffp-contract=off"})

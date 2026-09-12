@@ -1,0 +1,157 @@
+[
+  {
+    "path": "src/Game/Util/ObjUtil.cpp",
+    "exists": true,
+    "sha256": "828bd079bc7bdb73a2cfd83ac7ffd7a44f7433d00560a30ec41adb852b9165ed"
+  },
+  {
+    "path": "src/Game/Util/ObjUtil.hpp",
+    "exists": true,
+    "sha256": "4611e53915d52b3225db8ef6587f5e5aba6d3f38baa4105ac23807581a2178c6"
+  },
+  {
+    "path": "src/Game/Util/ActorMovementUtil.cpp",
+    "exists": true,
+    "sha256": "90ba2839babeaa64c48ecd652b8cf8657cade5b9e4cfddaebe904e4a618540c5"
+  },
+  {
+    "path": "src/Game/LiveActor/ClippingJudge.hpp",
+    "exists": true,
+    "sha256": "bcfcdd8fa9c8424dea0d9a4e7635619d75cee12e2c3cc250518521e9e9e3d338"
+  },
+  {
+    "path": "src/Game/MapObj/BenefitItemLifeUp.hpp",
+    "exists": true,
+    "sha256": "1f075baf2371fc45587a0769a39c160e67505b781d9ce7e386f95d0e675354b3"
+  },
+  {
+    "path": "src/Game/MapObj/BenefitItemObj.hpp",
+    "exists": true,
+    "sha256": "25a46b50e6e4e818f2400c7e7bfb1f3fc670c4473534c82eb9664eb0245af3e9"
+  },
+  {
+    "path": "src/JSystem/JGeometry/THex.hpp",
+    "exists": true,
+    "sha256": "1f0a3124265cbc59dde0e115d94aba7fed67da60b3ed8fd7e079b1dad03c08e2"
+  },
+  {
+    "path": "src/JSystem/JGeometry/TPartition3.hpp",
+    "exists": true,
+    "sha256": "cf8d356e0fb56a480dd764c27b318018dc2a08f51af45c2dc57a1fc4a3d37ee7"
+  },
+  {
+    "path": "src/compat/AreaObjRuntimeCompat.cpp",
+    "exists": true,
+    "sha256": "84c7393d0f31b70f66e7b69f43bc2fddbb09fca55f2544456cf0b996b074bb72"
+  },
+  {
+    "path": "src/compat/CollisionPartsCompat.cpp",
+    "exists": true,
+    "sha256": "77b99e9b5a9399d58a0de71ce8f35854e68d5a30c8e205fe877982dd97436678"
+  },
+  {
+    "path": "src/compat/StorySequencePlatformCompat.cpp",
+    "exists": true,
+    "sha256": "ef09fb0f030bc830bb286d629e510b077db3d4d54f3d01e6eb000062b778fff4"
+  },
+  {
+    "path": "src/compat/NameObjExecuteCompat.cpp",
+    "exists": true,
+    "sha256": "ac792450b7ae8eff2fa4c80dee0244d3b189fdedc8007a4a5814d0ef8afdb272"
+  },
+  {
+    "path": "src/compat/SceneConnectionCompat.cpp",
+    "exists": true,
+    "sha256": "9d641c7de67a872f7924a5243cfa6206756e47700fce25df2d101843395e849e"
+  },
+  {
+    "path": "src/compat/SceneNameObjUtilCompat.cpp",
+    "exists": true,
+    "sha256": "e457d8abd0c4a16f26c5fe1e3726a27f4ede56db141f6ff1af76bf488f80d15a"
+  },
+  {
+    "path": "src/compat/OriginalNamePosUtil.cpp",
+    "exists": true,
+    "sha256": "9ec75bd91038dbee64eadfababe29e7887630136be93d5c9833ce18768b740eb"
+  },
+  {
+    "path": "src/compat/GameRuntimeCompat.cpp",
+    "exists": true,
+    "sha256": "e29172ac17013a17b1ce0ebbb470dbe1c465b73d7f01bf22c26dd1c9f141db72"
+  },
+  {
+    "path": "src/compat/GameActorPhysicsCompat.cpp",
+    "exists": true,
+    "sha256": "a2ea771ce7356fb49c6889fc4f475589a8fc90f522469cec17c586aa132e9121"
+  },
+  {
+    "path": "src/compat/OriginalBinderQueries.cpp",
+    "exists": true,
+    "sha256": "761199f47eafe37982b9f2f7fa7749bb5904b27175b0e29e93f395994a18a521"
+  },
+  {
+    "path": "src/compat/OriginalCameraTargetActor.cpp",
+    "exists": true,
+    "sha256": "7dcd7591f812fc9eca423a9eab88ef7335bce96466f8c93df2c3479808030514"
+  },
+  {
+    "path": "src/compat/LodCtrlRuntimeCompat.cpp",
+    "exists": true,
+    "sha256": "678469913a79c798b9dc0d528ee72c28ec0d7aa80d023e436ecc76fc28e65dcc"
+  },
+  {
+    "path": "src/compat/OriginalCsvReader.cpp",
+    "exists": false,
+    "sha256": null
+  },
+  {
+    "path": "src/compat/OriginalPreDrawRegistration.cpp",
+    "exists": false,
+    "sha256": null
+  },
+  {
+    "path": "src/compat/OriginalArchiveResourceQueries.cpp",
+    "exists": false,
+    "sha256": null
+  },
+  {
+    "path": "src/compat/OriginalSceneConnections.cpp",
+    "exists": false,
+    "sha256": null
+  },
+  {
+    "path": "src/compat/OriginalActorMovement.cpp",
+    "exists": false,
+    "sha256": null
+  },
+  {
+    "path": "src/compat/OriginalSensorGeometry.cpp",
+    "exists": false,
+    "sha256": null
+  },
+  {
+    "path": "src/compat/MarioCameraAccessCompat.cpp",
+    "exists": false,
+    "sha256": null
+  },
+  {
+    "path": "src/compat/MtxCompat.cpp",
+    "exists": true,
+    "sha256": "fa17f5c48de4b37e4a7972caf2229c5d5704ddcf683f7e3fafe46fea3135dc2f"
+  },
+  {
+    "path": "src/compat/NPCActorRuntimeCompat.cpp",
+    "exists": true,
+    "sha256": "b6c744bf3eb6bd0b227ccb267f4c25ecd33389c63bbfad5a25734dfd5e97f3cd"
+  },
+  {
+    "path": "src/Game/NPC/StageStateKeeper.hpp",
+    "exists": true,
+    "sha256": "1d8ff6b6cdfc7e1bc984d5aaa98956ad9866fd4f08fe6215f9a9d372c8e2fa5a"
+  },
+  {
+    "path": "src/Game/xmake.lua",
+    "exists": true,
+    "sha256": "25c0da4d57b4f591df2d18e9c5214bc20d0bb2996f1c57f0fc1cb7bd0033adfc"
+  }
+]

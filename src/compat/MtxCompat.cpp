@@ -132,11 +132,6 @@ namespace MR {
         pMatrix[2][3] = tz;
     }
 
-    void makeMtxTransRotateY(MtxPtr pMatrix, const LiveActor *pActor) {
-        makeMtxTransRotateY(pMatrix, pActor->mPosition.x, pActor->mPosition.y,
-                            pActor->mPosition.z, pActor->mRotation.y);
-    }
-
     void makeMtxTR(MtxPtr pMatrix, f32 tx, f32 ty, f32 tz, f32 rx, f32 ry, f32 rz) {
         const auto sinX = std::sin(rx * cDegreesToRadians);
         const auto sinY = std::sin(ry * cDegreesToRadians);
@@ -163,12 +158,6 @@ namespace MR {
         makeMtxTR(pMatrix, rTranslation.x, rTranslation.y, rTranslation.z, rRotation.x, rRotation.y, rRotation.z);
     }
 
-    void makeMtxTR(MtxPtr pMatrix, const LiveActor *pActor) {
-        if (pActor != nullptr) {
-            makeMtxTR(pMatrix, pActor->mPosition, pActor->mRotation);
-        }
-    }
-
     void makeMtxTRS(MtxPtr pMatrix, f32 tx, f32 ty, f32 tz, f32 rx, f32 ry, f32 rz, f32 sx, f32 sy, f32 sz) {
         makeMtxTR(pMatrix, tx, ty, tz, rx, ry, rz);
         pMatrix[0][0] *= sx;
@@ -185,12 +174,6 @@ namespace MR {
     void makeMtxTRS(MtxPtr pMatrix, const TVec3f &rTranslation, const TVec3f &rRotation, const TVec3f &rScale) {
         makeMtxTRS(pMatrix, rTranslation.x, rTranslation.y, rTranslation.z, rRotation.x, rRotation.y, rRotation.z, rScale.x,
                    rScale.y, rScale.z);
-    }
-
-    void makeMtxTRS(MtxPtr pMatrix, const LiveActor *pActor) {
-        if (pActor != nullptr) {
-            makeMtxTRS(pMatrix, pActor->mPosition, pActor->mRotation, pActor->mScale);
-        }
     }
 
     void preScaleMtx(MtxPtr pMatrix, f32 scale) {

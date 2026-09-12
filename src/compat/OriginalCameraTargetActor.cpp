@@ -78,23 +78,3 @@ CubeCameraArea* CameraTargetActor::getCubeCameraArea() const {
 Triangle* CameraTargetActor::getGroundTriangle() const {
     return nullptr;
 }
-
-// ActorMovementUtil.cpp is excluded from the PC Game library.
-// Preserve its three original raw matrix-axis readers here.
-namespace MR {
-    void calcFrontVec(TVec3f* pFrontVec, const LiveActor* pActor) {
-        MtxPtr mtx = pActor->getBaseMtx();
-        pFrontVec->set(mtx[0][2], mtx[1][2], mtx[2][2]);
-    }
-
-    void calcUpVec(TVec3f* pUpVec, const LiveActor* pActor) {
-        MtxPtr mtx = pActor->getBaseMtx();
-        pUpVec->set(mtx[0][1], mtx[1][1], mtx[2][1]);
-    }
-
-    void calcSideVec(TVec3f* pSideVec, const LiveActor* pActor) {
-        MtxPtr mtx = pActor->getBaseMtx();
-        pSideVec->set(mtx[0][0], mtx[1][0], mtx[2][0]);
-    }
-
-}  // namespace MR

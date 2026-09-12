@@ -69,17 +69,6 @@ namespace MR {
         pDestination->mScale.set(pSource->mScale);
     }
 
-    f32 calcDistanceToPlayer(const LiveActor* pActor) {
-        if (pActor == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("Player distance requires a LiveActor.");
-        }
-        const auto* player_position = MR::getPlayerPos();
-        if (player_position == nullptr) {
-            return std::numeric_limits<f32>::max();
-        }
-        return pActor->mPosition.distance(*player_position);
-    }
-
 
 
     void hideModelAndOnCalcAnim(LiveActor* pActor) {

@@ -1,0 +1,9 @@
+# Original object and actor utility publication
+
+This bounded checkpoint activates complete original ObjUtil and ActorMovementUtil, deletes seven duplicate providers, and removes their copies from fourteen retained providers. Original ObjUtil CSV recoveries were already published reference-first in decomp f6c2928d3. ActorMovementUtil is unchanged from reference. The native variadic include and canonical StageStateKeeper/type headers are compilation dependencies.
+
+Sixteen translation units were rebuilt in a temporary export of parent 2c8182e51 and Aurora c02c589, with only this publication set overlaid. All pass. Four overlapping providers were staged from HEAD with only this cohort's exact method removals: StorySequencePlatformCompat, OriginalNamePosUtil, GameActorPhysicsCompat, and SceneNameObjUtilCompat. Scene-state, screen, and Talk migrations remain separate. The user's existing LiveActor and build-flag edits are excluded.
+
+A fresh probe built the unchanged HEAD OriginalResourceHolderTests fixture and this exact original ObjUtil object. Linked against the current shared support archives, it passes retained JMap/CSV behavior (variadic tables, strings, absent fields, float/vector/color conversion, masked bool, byte truncation, retained source teardown). Binary SHA256: 875cec2daf3a1e36378f19045a8d112824c87f9e064fe3d4953dc630bdf19429. This is a bounded runtime proof, not a clean-HEAD whole-game link or Gateway gameplay proof.
+
+Original resource-manager and process owners, clipping/benefit/star helpers and remaining shared actor math are still required. These changes remove duplicate and synthetic decisions; they do not invent absent owners. Detailed source recovery, displaced methods, unresolved symbols and earlier probes are documented in the parent directory. The archive contains original method match summaries, source/compile audits and the fresh bounded runtime receipt.

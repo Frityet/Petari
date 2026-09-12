@@ -1,5 +1,3 @@
-#include <aurora/allocation.hpp>
-#include "resource/TextEncoding.hpp"
 #include <aurora/exception.hpp>
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
@@ -11,22 +9,8 @@
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "runtime/RuntimeContext.hpp"
 
 #include <stdexcept>
-
-namespace {
-    // These stable Game names outlive every owner that borrows their bytes.
-    std::string encode_owner_name(std::string_view name) {
-        aurora::allocation::HostAllocationScope host;
-        return smgpc::resource::encode_cp932(name);
-    }
-
-    const std::string cVeryStrongLongRumbleName = encode_owner_name("最強【長】");
-    const std::string cStrongRumbleName = encode_owner_name("最強");
-    const std::string cWeakRumbleName = encode_owner_name("微弱");
-    const std::string cDefaultHitRumbleName = encode_owner_name("強");
-}  // namespace
 
 namespace MR {
     void setClippingFar50m(LiveActor* pActor) {
@@ -83,81 +67,4 @@ namespace MR {
         }
     }
 
-    bool tryRumblePad(const void* pSource, const char* pPatternName, s32 channel) {
-        if (pPatternName == nullptr) {
-            return false;
-        }
-
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr) {
-            return runtime->rumble().try_request_pattern(pSource, pPatternName, channel);
-        }
-
-        return false;
-    }
-
-    bool tryRumblePadVeryStrongLong(const void* pSource, s32 channel) {
-        return tryRumblePad(pSource, cVeryStrongLongRumbleName.c_str(), channel);
-    }
-
-    bool tryRumblePadVeryStrong(const void* pSource, s32 channel) {
-        return tryRumblePad(pSource, cVeryStrongLongRumbleName.c_str(), channel);
-    }
-
-    bool tryRumblePadStrong(const void* pSource, s32 channel) {
-        return tryRumblePad(pSource, cStrongRumbleName.c_str(), channel);
-    }
-
-    bool tryRumblePadMiddle(const void* pSource, s32 channel) {
-        return tryRumblePad(pSource, cStrongRumbleName.c_str(), channel);
-    }
-
-    bool tryRumblePadWeak(const void* pSource, s32 channel) {
-        return tryRumblePad(pSource, cWeakRumbleName.c_str(), channel);
-    }
-
-    bool tryRumblePadVeryWeak(const void* pSource, s32 channel) {
-        return tryRumblePad(pSource, cWeakRumbleName.c_str(), channel);
-    }
-
-    bool tryRumbleDefaultHit(const void* pSource, s32 channel) {
-        return tryRumblePad(pSource, cDefaultHitRumbleName.c_str(), channel);
-    }
-
-    namespace {
-        smgpc::runtime::CameraSystemService& cameraSystemForShake() {
-            auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-            if (runtime == nullptr) {
-                aurora::throw_host_exception<std::logic_error>("Camera shake requires an active camera runtime.");
-            }
-            return runtime->camera_system();
-        }
-    }
-
-    void shakeCameraVeryStrong() {
-        cameraSystemForShake().request_very_strong_shake();
-    }
-
-    void shakeCameraStrong() {
-        cameraSystemForShake().request_strong_shake();
-    }
-
-    void shakeCameraNormalStrong() {
-        cameraSystemForShake().request_normal_strong_shake();
-    }
-
-    void shakeCameraNormal() {
-        cameraSystemForShake().request_normal_shake();
-    }
-
-    void shakeCameraNormalWeak() {
-        cameraSystemForShake().request_normal_weak_shake();
-    }
-
-    void shakeCameraWeak() {
-        cameraSystemForShake().request_weak_shake();
-    }
-
-    void shakeCameraVeryWeak() {
-        cameraSystemForShake().request_very_weak_shake();
-    }
 }  // namespace MR

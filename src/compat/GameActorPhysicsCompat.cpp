@@ -121,144 +121,13 @@ namespace {
         smgpc::compat::replace_actor_shadow_runtime_state(actor, std::move(shadow));
     }
 
-    TVec3f &require_vector(TVec3f *vector) {
-        if (vector == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("Actor utility requires an output vector.");
-        }
-        return *vector;
-    }
-
-    const TVec3f &require_player_position() {
-        const auto *position = MR::getPlayerPos();
-        if (position == nullptr) {
-            aurora::throw_host_exception<std::logic_error>("Player position is unavailable.");
-        }
-        return *position;
-    }
-
 }  // namespace
 
 namespace MR {
-    void resetPosition(LiveActor *pActor) {
-        MR::clearHitSensors(pActor);
-        if (pActor->mBinder != nullptr) pActor->mBinder->clear();
-        if (MR::isCalcGravity(pActor)) MR::calcGravity(pActor);
-        MR::calcAnimDirect(pActor);
-        if (pActor->mCollisionParts != nullptr) MR::resetAllCollisionMtx(pActor);
-        MR::requestCalcActorShadowAppear(pActor);
-    }
-
-    void resetPosition(LiveActor *pActor, const TVec3f &rPosition) {
-        require_actor(pActor).mPosition.set(rPosition);
-        resetPosition(pActor);
-    }
-
-    void resetPosition(LiveActor *, const char *) {
-        aurora::throw_host_exception<std::logic_error>("Named-position reset is unavailable without NamePosHolder.");
-    }
-
-    bool isInDeath(const LiveActor *pActor, const TVec3f &rOffset) {
-        (void)require_actor(pActor);
-        (void)rOffset;
-        aurora::throw_host_exception<std::logic_error>("DeathArea queries are unavailable without parsed AreaObj ownership.");
-    }
-
-    void calcActorAxisY(TVec3f *pOut, const LiveActor *pActor) {
-        auto &output = require_vector(pOut);
-        const auto &actor = require_actor(pActor);
-        Mtx matrix{};
-        MR::makeMtxTR(matrix, &actor);
-        output.set(matrix[0][1], matrix[1][1], matrix[2][1]);
-    }
-
-    bool isNearPlayer(const LiveActor* pActor, f32 dist) {
-        return (MR::isPlayerHidden() ? false : MR::isNearPlayerAnyTime(pActor, dist));
-    }
-
-    bool isNearPlayerAnyTime(const LiveActor* pActor, f32 dist) {
-        f32 sqr = pActor->mPosition.squared(*MR::getPlayerPos());
-        return sqr < (dist * dist);
-    }
-
-    void calcVecToPlayerH(TVec3f *pOut, const LiveActor *pActor, const TVec3f *pUp) {
-        auto &output = require_vector(pOut);
-        const auto &actor = require_actor(pActor);
-        output.set(require_player_position() - actor.mPosition);
-        MR::vecKillElement(output, pUp != nullptr ? *pUp : actor.mGravity, &output);
-        MR::normalizeOrZero(&output);
-    }
-
-    void attenuateVelocity(LiveActor *pActor, f32 scalar) {
-        require_actor(pActor).mVelocity.scale(scalar);
-    }
-
-    void addVelocityMoveToDirection(LiveActor *pActor, const TVec3f &rDirection, f32 speed) {
-        auto &actor = require_actor(pActor);
-        auto direction = rDirection;
-        MR::vecKillElement(direction, actor.mGravity, &direction);
-        if (!MR::normalizeOrZero(&direction)) {
-            direction.scale(speed);
-            if (MR::isOnGround(&actor)) {
-                MR::vecKillElement(direction, *MR::getGroundNormal(&actor), &direction);
-            }
-            actor.mVelocity.add(direction);
-        }
-    }
-
-    void addVelocityJump(LiveActor *pActor, f32 speed) {
-        auto &actor = require_actor(pActor);
-        actor.mVelocity.add(actor.mGravity * -speed);
-    }
-
-    void addVelocityToGravity(LiveActor *pActor, f32 acceleration) {
-        auto &actor = require_actor(pActor);
-        actor.mVelocity.add(actor.mGravity * acceleration);
-    }
-
-    void addVelocityToGravityOrGround(LiveActor *pActor, f32 acceleration) {
-        auto &actor = require_actor(pActor);
-        if (MR::isBindedGround(&actor)) {
-            actor.mVelocity.add(*MR::getGroundNormal(&actor) * -acceleration);
-        } else {
-            addVelocityToGravity(&actor, acceleration);
-        }
-    }
-
-    void turnDirectionDegree(const LiveActor *pActor, TVec3f *pDirection, const TVec3f &rTargetDirection, f32 degree) {
-        const auto &actor = require_actor(pActor);
-        auto &direction = require_vector(pDirection);
-        auto current = direction;
-        auto target = rTargetDirection;
-        MR::vecKillElement(current, actor.mGravity, &current);
-        MR::vecKillElement(target, actor.mGravity, &target);
-        if (MR::normalizeOrZero(&current) || MR::normalizeOrZero(&target)) {
-            return;
-        }
-        const auto cosine = MR::clamp(current.dot(target), -1.0F, 1.0F);
-        const auto angle = std::acos(cosine) * (180.0F / 3.14159265358979323846F);
-        if (angle <= degree) {
-            direction.set(target);
-            return;
-        }
-        const auto cross = current.cross(target);
-        const auto signed_degree = cross.dot(actor.mGravity) > 0.0F ? degree : -degree;
-        MR::rotateVecDegree(&direction, current, actor.mGravity, signed_degree);
-        MR::normalizeOrZero(&direction);
-    }
-
-    void turnDirectionToPlayerDegree(const LiveActor *pActor, TVec3f *pDirection, f32 degree) {
-        const auto &actor = require_actor(pActor);
-        turnDirectionDegree(&actor, pDirection, require_player_position() - actor.mPosition, degree);
-    }
-
     f32 calcNerveValue(const LiveActor *pActor, s32 stepMax, f32 valueStart, f32 valueEnd) {
         const auto &actor = require_actor(pActor);
         const auto rate = stepMax <= 0 ? 1.0F : MR::clamp(static_cast<f32>(actor.getNerveStep()) / static_cast<f32>(stepMax), 0.0F, 1.0F);
         return valueStart + ((valueEnd - valueStart) * rate);
-    }
-
-    void zeroVelocity(LiveActor *pActor) {
-        require_actor(pActor).mVelocity.zero();
     }
 
     MirrorActor *tryCreateMirrorActor(LiveActor *pActor, const char *) {
@@ -393,10 +262,6 @@ namespace MR {
 
     void incPurpleCoin() {
         throw_scene_playing_result_unavailable();
-    }
-
-    void declarePowerStarCoin100() {
-        aurora::throw_host_exception<std::logic_error>("EventPowerStar declaration is unavailable.");
     }
 
     void createPurpleCoinCounter() {

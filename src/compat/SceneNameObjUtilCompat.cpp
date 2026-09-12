@@ -42,14 +42,6 @@ namespace MR {
         scene_objects().syncWithFlags();
     }
 
-    void stopScene(s32 frame) {
-        MR::getSceneObj<StopSceneController>(SceneObj_StopSceneController)->requestStopScene(frame);
-    }
-
-    void stopSceneForDefaultHit(s32 frame) {
-        MR::getSceneObj<StopSceneController>(SceneObj_StopSceneController)->requestStopSceneDelay(frame, 2);
-    }
-
     void requestEffectStopSceneStart() {
         Effect::requestMovementOffAllLoopEmitters();
     }
