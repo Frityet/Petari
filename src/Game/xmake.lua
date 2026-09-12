@@ -32,6 +32,8 @@ target("smg-pc-game")
             cxxflags = "-include " .. path.join(os.projectdir(), "src/JSystem/JMath/JMATrigonometric.hpp")
         }
     })
+    -- WiiConnect24 is unavailable on the native host; no IOS mail worker exists.
+    remove_files("NWC24/NWC24SendThread.cpp")
     remove_files("AudioLib/AudBgm.cpp")
     remove_files("AudioLib/AudBgmKeeper.cpp")
     remove_files("AudioLib/AudBgmMgr.cpp")
@@ -156,5 +158,6 @@ target("smg-pc-game")
         "aurora-mtx",
         "aurora-os",
         "aurora-pad",
-        "aurora-vi"
+        "aurora-vi",
+        "aurora-thp"
     }

@@ -10,6 +10,7 @@
 #include "Game/Map/CollisionDirector.hpp"
 #include "Game/Map/SunshadeMapHolder.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
+#include "Game/LiveActor/ShadowVolumeDrawer.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/MessageHolderOwnership.hpp"
@@ -619,6 +620,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new SceneWipeHolder();
     case SceneObj_GameSceneLayoutHolder:
         return new GameSceneLayoutHolder();
+    case SceneObj_ShadowVolumeDrawInit:
+        return new ShadowVolumeDrawInit();
     case SceneObj_ShadowControllerHolder:
         return new ShadowControllerHolder();
     case SceneObj_AudBgmConductor:

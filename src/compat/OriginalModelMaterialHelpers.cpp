@@ -48,3 +48,9 @@ bool isNormalTexMtx(J3DMaterial* pMaterial) {
     }
 
 }
+
+namespace MR {
+    void initDLMakerMatColor0(LiveActor* pActor, const char* pMatName, const J3DGXColor* pColor) {
+        pActor->mModelManager->mDisplayListMaker->addMatColorCtrl(pMatName, 0, pColor);
+    }
+}

@@ -2,6 +2,7 @@
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
+#include "Game/LiveActor/ShadowVolumeSphere.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -20,6 +21,7 @@ namespace smgpc::compat {
         std::string group_name_raw;
         ActorShadowPositionBinding position_binding;
         std::unique_ptr<ShadowController> controller;
+        std::unique_ptr<ShadowDrawer> drawer;
 
         ~Entry() {
             if (controller) owner->remove_from_holder(controller.get());
@@ -120,6 +122,16 @@ namespace smgpc::compat {
         else controller.offVisibleSyncHost();
         if (definition.valid) controller.validate();
         else controller.invalidate();
+        if (definition.kind == ActorShadowControllerKind::VolumeSphere) {
+            JkrAllocationScope game(_domain);
+            auto sphere = std::make_unique<ShadowVolumeSphere>();
+            sphere->setRadius(definition.radius);
+            sphere->setStartDrawShepeOffset(definition.volume_start_offset);
+            sphere->setEndDrawShepeOffset(definition.volume_end_offset);
+            if (definition.volume_cut_drop_length) sphere->onCutDropShadow();
+            controller.setShadowDrawer(sphere.get());
+            entry->drawer = std::move(sphere);
+        }
         _list->addController(&controller);
         _entries.push_back(std::move(entry));
     }

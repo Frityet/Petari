@@ -1,3 +1,8 @@
+#include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
+#include "JSystem/J3DGraphAnimator/J3DJoint.hpp"
+#include "JSystem/J3DGraphBase/J3DMaterial.hpp"
+#include "JSystem/J3DGraphBase/J3DShape.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 // Original DrawUtil GX state for all clip and shadow volume draws.
 #include "Game/Util/DrawUtil.hpp"
 #include "Game/Util/Color.hpp"
@@ -24,3 +29,17 @@ namespace MR {
     }
 
 }  // namespace MR
+
+namespace MR {
+    void drawSimpleModel(J3DModelData* pModelData) {
+        J3DMaterial* pMaterial = pModelData->getJointNodePointer(0)->mMesh;
+        j3dSys.setVtxPos(pModelData->mVertexData.mVtxPosArray);
+        j3dSys.setVtxNrm(pModelData->mVertexData.mVtxNrmArray);
+        j3dSys.setVtxCol(pModelData->mVertexData.mVtxColorArray[0]);
+
+        while (pMaterial != nullptr) {
+            pMaterial->mShape->simpleDraw();
+            pMaterial = pMaterial->mNext;
+        }
+    }
+}

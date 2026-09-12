@@ -1,0 +1,12 @@
+{
+  "command": [
+    "build/macosx/arm64/debug/smg-pc",
+    "--original",
+    "--disc",
+    "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--max-frames",
+    "240"
+  ],
+  "returncode": -6,
+  "duration": 1.36924409866333
+}

@@ -141,8 +141,8 @@ void __THPHuffDecodeDCTCompY(THPFileInfo *, THPCoeff *);
 void __THPHuffDecodeDCTCompU(THPFileInfo *, THPCoeff *);
 void __THPHuffDecodeDCTCompV(THPFileInfo *, THPCoeff *);
 
-s32 THPVideoDecode(void *file, void *tileY, void *tileU, void *tileV, void *work);
-u32 THPAudioDecode(s16 *, u8 *, s32);
+s32 THPVideoDecode(const void *file, void *tileY, void *tileU, void *tileV, void *work);
+u32 THPAudioDecode(s16 *, const u8 *, s32);
 
 BOOL THPInit(void);
 

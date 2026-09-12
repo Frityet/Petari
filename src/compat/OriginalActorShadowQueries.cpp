@@ -1,3 +1,4 @@
+#include "Game/LiveActor/ShadowVolumeSphere.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/ActorShadowLocalUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
@@ -86,5 +87,23 @@ namespace MR {
         }
 
         return FLOAT_MAX;
+    }
+}
+
+namespace MR {
+    void onCalcShadowDropGravity(LiveActor* pActor, const char* pName) {
+        ActorShadow::getShadowController(pActor, pName)->onCalcDropGravity();
+    }
+}
+
+namespace ActorShadow {
+    ShadowVolumeSphere* getShadowVolumeSphere(const LiveActor* pActor, const char* pName) {
+        return static_cast<ShadowVolumeSphere*>(pActor->mShadowControllerList->getController(pName)->getShadowDrawer());
+    }
+}
+
+namespace MR {
+    void setShadowVolumeSphereRadius(LiveActor* pActor, const char* pName, f32 radius) {
+        ActorShadow::getShadowVolumeSphere(pActor, pName)->setRadius(radius);
     }
 }

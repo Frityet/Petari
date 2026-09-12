@@ -889,3 +889,62 @@ namespace MR {
         return turnQuat(pDst, rSrc, zDir, rTo, angle);
     }
 }  // namespace MR
+
+namespace MR {
+    bool calcReflectionVector(TVec3f* pDir, const TVec3f& rNorm, f32 rate, f32 cosAngleMin) {
+        f32 dot = rNorm.dot(*pDir);
+        if (dot < -cosAngleMin) {
+            pDir->sub(rNorm * dot * (rate + 1.0f));
+            return true;
+        }
+
+        if (dot < 0.0f) {
+            pDir->sub(rNorm * dot);
+            return false;
+        }
+
+        return false;
+    }
+    void calcParabolicFunctionParam(f32* pAccel, f32* pVel, f32 max, f32 end) {
+        f32 discrim = max * (max - end);
+
+        if (discrim <= 0.0f) {
+            *pAccel = -max;
+            *pVel = end + max;
+            return;
+        }
+
+        if (MR::abs(end) < 0.0001f) {
+            *pAccel = max * -4.0f;
+            *pVel = max * 4.0f;
+            return;
+        }
+
+        f32 discRoot = JMASqrt(discrim);
+
+        f32 t1 = (max + discRoot) / end;
+        f32 t2 = (max - discRoot) / end;
+
+        f32 t;
+        if (0.0f <= t1 && t1 <= 1.0f) {
+            t = t1;
+        } else if (0.0f <= t2 && t2 <= 1.0f) {
+            t = t2;
+        } else {
+            t = 1.0f;
+        }
+
+        f32 a = -max / (t * t);
+        *pAccel = a;
+        *pVel = -2.0f * t * a;
+    }
+    f32 getScaleWithReactionValueZeroToOne(f32 x, f32 rate, f32 amplitude) {
+        if (x < 0.5f) {
+            return getEaseOutValue(x * 2.0f, 0.0f, 1.0f, 1.0f);
+        } else {
+            // reaction oscillation, TODO: inline?
+            f32 t = (x - 0.5f) * 2.0f;
+            return 1.0f + (1.0f - JMACosRadian(pi() * rate * t)) * (1.0f - t) * amplitude;
+        }
+    }
+}

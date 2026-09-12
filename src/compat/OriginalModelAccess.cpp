@@ -1,3 +1,5 @@
+#include "Game/Util/ObjUtil.hpp"
+#include <cstdio>
 #include "Game/Util/StringUtil.hpp"
 #include "Game/Util/ModelUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
@@ -195,3 +197,11 @@ namespace MR {
         return false;
     }
 } // namespace MR
+
+namespace MR {
+    J3DModelData* getJ3DModelData(const char* pName) {
+        char buff[0x100];
+        snprintf(buff, sizeof(buff), "%s.arc", pName);
+        return static_cast< J3DModelData* >(createAndAddResourceHolder(buff)->mModelResTable->getRes(pName));
+    }
+}

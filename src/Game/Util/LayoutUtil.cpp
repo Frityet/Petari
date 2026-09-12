@@ -599,3 +599,13 @@ namespace MR {
         pPane->mAlpha = clamped * 255;
     }
 }
+
+namespace MR {
+    void setEffectRate(LayoutActor* pActor, const char* pName, f32 rate) {
+        getEffect(pActor, pName)->setRate(rate, -1);
+    }
+
+    void setEffectDirectionalSpeed(LayoutActor* pActor, const char* pName, f32 speed) {
+        getEffect(pActor, pName)->setDirectionalSpeed(speed, -1);
+    }
+}
