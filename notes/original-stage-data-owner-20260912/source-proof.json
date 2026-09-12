@@ -1,0 +1,480 @@
+{
+  "root_head": "7e7198681fbec98d159e63e30e60dbc539a64578",
+  "reference_head": "17583cbd72ce407815fd46209d9878eed0b8dd5c",
+  "paths": [
+    {
+      "path": "decomp/src/Game/Scene/StageDataHolder.cpp",
+      "sha256": "0cd22b8442adca1394313425e4d9e2c88372ebfa7745fecd1b9f5dcdeb85c0be"
+    },
+    {
+      "path": "decomp/include/Game/Scene/PlacementInfoOrdered.hpp",
+      "sha256": "5e46d99ae7f2bfbdebbe3cd73a7919673dcaf683e107723809d4de7e9f34e2f4"
+    },
+    {
+      "path": "decomp/src/Game/Scene/PlacementInfoOrdered.cpp",
+      "sha256": "f1d0be7283591e0cd6ad5cdceff9b8127aab5eb780b88b207a52776166deae21"
+    },
+    {
+      "path": "decomp/include/Game/Util/BothDirList.hpp",
+      "sha256": "9d888a317b7b0f01356a6251d298e547edb6547c9cbc6f7a6855bf8d039a71a1"
+    },
+    {
+      "path": "decomp/src/Game/Util/BothDirList.cpp",
+      "sha256": "12c25bc04416cb1a135feb22d0b9a1ec1b2ec14d396ee5b1c4388d468c4a249b"
+    },
+    {
+      "path": "src/Game/Scene/StageDataHolder.cpp",
+      "sha256": "893ab2c5040587f35b86d231ce4f12102286a09ad4d65265b2545f8a25138bef"
+    },
+    {
+      "path": "src/Game/Scene/StageDataHolder.hpp",
+      "sha256": "91e23c8030e23465530c1fc402640aa5da6df1aa0e08ef23d21dce44f1596cf1"
+    },
+    {
+      "path": "src/Game/Scene/PlacementInfoOrdered.cpp",
+      "sha256": "f1d0be7283591e0cd6ad5cdceff9b8127aab5eb780b88b207a52776166deae21"
+    },
+    {
+      "path": "src/Game/Scene/PlacementInfoOrdered.hpp",
+      "sha256": "5e46d99ae7f2bfbdebbe3cd73a7919673dcaf683e107723809d4de7e9f34e2f4"
+    },
+    {
+      "path": "src/Game/Scene/StageResourceLoader.hpp",
+      "sha256": "6b1813e70c4ebad9bc7872647d46e1574ab8adfc50250c46353278ac168ecfa4"
+    },
+    {
+      "path": "src/Game/NameObj/ModelChangableObjFactory.hpp",
+      "sha256": "3312be051171375d257ec94aa1caade84ccbb3ecad8ace127e8402b5a7ec03f8"
+    },
+    {
+      "path": "src/Game/Map/PlanetMapCreator.hpp",
+      "sha256": "639e1d05db9c1427e764cee38e7402d07a6fe4c6d7be5759b17fc5f9d38e5606"
+    }
+  ],
+  "compilation": {
+    "StageDataHolder-reference": {
+      "exit": 0,
+      "compiler": "GC/3.0a3/mwcceppc.exe",
+      "object_sha256": "004c4e1f6eeea86eb33e8cea8392b6baf21ff5d81c80242ff3d8c0f2de3c43b2",
+      "command_file": "notes/original-stage-data-owner-20260912/StageDataHolder-reference-command.json",
+      "log_file": "notes/original-stage-data-owner-20260912/StageDataHolder-reference.log",
+      "undefined_list_constructor": false
+    },
+    "StageDataHolder-native": {
+      "exit": 0,
+      "compiler": "/opt/homebrew/opt/llvm/bin/clang++",
+      "object_sha256": "47e0357811e2a8e5709760cd27965388774d50be23ed0ce1df1a0634f99b96c8",
+      "command_file": "notes/original-stage-data-owner-20260912/StageDataHolder-native-command.json",
+      "log_file": "notes/original-stage-data-owner-20260912/StageDataHolder-native.log"
+    },
+    "PlacementInfoOrdered-reference": {
+      "exit": 0,
+      "compiler": "GC/3.0a3/mwcceppc.exe",
+      "object_sha256": "59330b39ade4c6859212806b40f2322e953d64012b0b8540d7f563dae5fed374",
+      "command_file": "notes/original-stage-data-owner-20260912/PlacementInfoOrdered-reference-command.json",
+      "log_file": "notes/original-stage-data-owner-20260912/PlacementInfoOrdered-reference.log",
+      "undefined_list_constructor": false
+    },
+    "PlacementInfoOrdered-native": {
+      "exit": 0,
+      "compiler": "/opt/homebrew/opt/llvm/bin/clang++",
+      "object_sha256": "8348f27bed32dc1a4580b65f353754ca4a16bb6a8cbf6cc41432f324bfd43993",
+      "command_file": "notes/original-stage-data-owner-20260912/PlacementInfoOrdered-native-command.json",
+      "log_file": "notes/original-stage-data-owner-20260912/PlacementInfoOrdered-native.log"
+    },
+    "BothDirList-reference": {
+      "exit": 0,
+      "compiler": "GC/3.0a3/mwcceppc.exe",
+      "object_sha256": "ce6e491e6c9f0c32bf1d81b362243da0b50b949c9da28c3c7c24ebffa16e64d2",
+      "command_file": "notes/original-stage-data-owner-20260912/BothDirList-reference-command.json",
+      "log_file": "notes/original-stage-data-owner-20260912/BothDirList-reference.log",
+      "undefined_list_constructor": false
+    }
+  },
+  "retail_comparison": {
+    "StageDataHolder": {
+      "text_match": 95.275795,
+      "methods": [
+        {
+          "name": "isPrioPlacementObjInfo__29@unnamed@StageDataHolder_cpp@FPCc",
+          "demangled": "@unnamed@StageDataHolder_cpp@::isPrioPlacementObjInfo(const char*)",
+          "size": "144",
+          "match_percent": 99.583336
+        },
+        {
+          "name": "calcPlacementInfoNum__29@unnamed@StageDataHolder_cpp@FPiPiRCQ22MR26AssignableArray<8JMapInfo>",
+          "demangled": "@unnamed@StageDataHolder_cpp@::calcPlacementInfoNum(int*, int*, const MR::AssignableArray<JMapInfo>&)",
+          "size": "200",
+          "match_percent": 100.0
+        },
+        {
+          "name": "attachJmpInfoToPlacementInfoOrdered__29@unnamed@StageDataHolder_cpp@FP20PlacementInfoOrderedP20PlacementInfoOrderedP20PlacementInfoOrderedRCQ22MR26AssignableArray<8JMapInfo>",
+          "demangled": "@unnamed@StageDataHolder_cpp@::attachJmpInfoToPlacementInfoOrdered(PlacementInfoOrdered*, PlacementInfoOrdered*, PlacementInfoOrdered*, const MR::AssignableArray<JMapInfo>&)",
+          "size": "152",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__ct__15StageDataHolderFPCcib",
+          "demangled": "StageDataHolder::StageDataHolder(const char*, int, bool)",
+          "size": "236",
+          "match_percent": 100.0
+        },
+        {
+          "name": "init__15StageDataHolderFRC12JMapInfoIter",
+          "demangled": "StageDataHolder::init(const JMapInfoIter&)",
+          "size": "144",
+          "match_percent": 100.0
+        },
+        {
+          "name": "initAfterScenarioSelected__15StageDataHolderFv",
+          "demangled": "StageDataHolder::initAfterScenarioSelected()",
+          "size": "408",
+          "match_percent": 99.55882
+        },
+        {
+          "name": "requestFileLoadCommon__15StageDataHolderFv",
+          "demangled": "StageDataHolder::requestFileLoadCommon()",
+          "size": "68",
+          "match_percent": 100.0
+        },
+        {
+          "name": "requestFileLoadScenario__15StageDataHolderFv",
+          "demangled": "StageDataHolder::requestFileLoadScenario()",
+          "size": "76",
+          "match_percent": 100.0
+        },
+        {
+          "name": "initPlacement__15StageDataHolderFv",
+          "demangled": "StageDataHolder::initPlacement()",
+          "size": "100",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getCommonPathPointInfo__15StageDataHolderCFPPC8JMapInfoi",
+          "demangled": "StageDataHolder::getCommonPathPointInfo(const JMapInfo**, int) const",
+          "size": "116",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getCommonPathPointInfoFromRailDataIndex__15StageDataHolderCFPPC8JMapInfoi",
+          "demangled": "StageDataHolder::getCommonPathPointInfoFromRailDataIndex(const JMapInfo**, int) const",
+          "size": "140",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getCommonPathInfoElementNum__15StageDataHolderCFv",
+          "demangled": "StageDataHolder::getCommonPathInfoElementNum() const",
+          "size": "68",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getStartPosNum__15StageDataHolderCFv",
+          "demangled": "StageDataHolder::getStartPosNum() const",
+          "size": "164",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getCurrentStartZoneId__15StageDataHolderCFv",
+          "demangled": "StageDataHolder::getCurrentStartZoneId() const",
+          "size": "68",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getCurrentStartCameraId__15StageDataHolderCFv",
+          "demangled": "StageDataHolder::getCurrentStartCameraId() const",
+          "size": "76",
+          "match_percent": 99.47369
+        },
+        {
+          "name": "getStartCameraIdInfoFromStartDataIndex__15StageDataHolderCFP10JMapIdInfoi",
+          "demangled": "StageDataHolder::getStartCameraIdInfoFromStartDataIndex(JMapIdInfo*, int) const",
+          "size": "96",
+          "match_percent": 99.583336
+        },
+        {
+          "name": "getGeneralPosNum__15StageDataHolderCFv",
+          "demangled": "StageDataHolder::getGeneralPosNum() const",
+          "size": "172",
+          "match_percent": 97.441864
+        },
+        {
+          "name": "getGeneralPosInfoFromDataIndex__15StageDataHolderCFi",
+          "demangled": "StageDataHolder::getGeneralPosInfoFromDataIndex(int) const",
+          "size": "260",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getChildObjNum__15StageDataHolderCFRC12JMapInfoIter",
+          "demangled": "StageDataHolder::getChildObjNum(const JMapInfoIter&) const",
+          "size": "204",
+          "match_percent": 95.882355
+        },
+        {
+          "name": "getChildObjInfoFromDataIndex__15StageDataHolderCFRC12JMapInfoIteri",
+          "demangled": "StageDataHolder::getChildObjInfoFromDataIndex(const JMapInfoIter&, int) const",
+          "size": "244",
+          "match_percent": 96.55738
+        },
+        {
+          "name": "findPlacedStageDataHolder__15StageDataHolderCFRC12JMapInfoIter",
+          "demangled": "StageDataHolder::findPlacedStageDataHolder(const JMapInfoIter&) const",
+          "size": "176",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getStageDataHolderFromZoneId__15StageDataHolderCFi",
+          "demangled": "StageDataHolder::getStageDataHolderFromZoneId(int) const",
+          "size": "72",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getStageDataHolderFromZoneId__15StageDataHolderFi",
+          "demangled": "StageDataHolder::getStageDataHolderFromZoneId(int)",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isPlacedZone__15StageDataHolderCFi",
+          "demangled": "StageDataHolder::isPlacedZone(int) const",
+          "size": "80",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getJapaneseObjectName__15StageDataHolderCFPCc",
+          "demangled": "StageDataHolder::getJapaneseObjectName(const char*) const",
+          "size": "152",
+          "match_percent": 0.7631579
+        },
+        {
+          "name": "getStageArchiveResource__15StageDataHolderFPCc",
+          "demangled": "StageDataHolder::getStageArchiveResource(const char*)",
+          "size": "32",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getStageArchiveResourceSize__15StageDataHolderFPv",
+          "demangled": "StageDataHolder::getStageArchiveResourceSize(void*)",
+          "size": "20",
+          "match_percent": 100.0
+        },
+        {
+          "name": "initPlacementMario__15StageDataHolderFv",
+          "demangled": "StageDataHolder::initPlacementMario()",
+          "size": "132",
+          "match_percent": 99.545456
+        },
+        {
+          "name": "makeMarioJMapInfoIter__15StageDataHolderCFRC10JMapIdInfo",
+          "demangled": "StageDataHolder::makeMarioJMapInfoIter(const JMapIdInfo&) const",
+          "size": "216",
+          "match_percent": 99.81481
+        },
+        {
+          "name": "makeCurrentMarioJMapInfoIter__15StageDataHolderCFv",
+          "demangled": "StageDataHolder::makeCurrentMarioJMapInfoIter() const",
+          "size": "212",
+          "match_percent": 100.0
+        },
+        {
+          "name": "initJmpInfo__15StageDataHolderFPQ22MR26AssignableArray<8JMapInfo>PCc",
+          "demangled": "StageDataHolder::initJmpInfo(MR::AssignableArray<JMapInfo>*, const char*)",
+          "size": "168",
+          "match_percent": 100.0
+        },
+        {
+          "name": "initAllLayerJmpInfo__15StageDataHolderFPQ22MR26AssignableArray<8JMapInfo>PCc",
+          "demangled": "StageDataHolder::initAllLayerJmpInfo(MR::AssignableArray<JMapInfo>*, const char*)",
+          "size": "388",
+          "match_percent": 95.30928
+        },
+        {
+          "name": "initAllLayerJmpInfo__15StageDataHolderFPQ22MR26AssignableArray<8JMapInfo>PCcPCc",
+          "demangled": "StageDataHolder::initAllLayerJmpInfo(MR::AssignableArray<JMapInfo>*, const char*, const char*)",
+          "size": "124",
+          "match_percent": 82.548386
+        },
+        {
+          "name": "initLayerJmpInfo__15StageDataHolderFPQ22MR26AssignableArray<8JMapInfo>PCcPCcUl",
+          "demangled": "StageDataHolder::initLayerJmpInfo(MR::AssignableArray<JMapInfo>*, const char*, const char*, unsigned long)",
+          "size": "480",
+          "match_percent": 99.75
+        },
+        {
+          "name": "attachJmpInfoToArray__15StageDataHolderFP8JMapInfoPCc",
+          "demangled": "StageDataHolder::attachJmpInfoToArray(JMapInfo*, const char*)",
+          "size": "256",
+          "match_percent": 100.0
+        },
+        {
+          "name": "initTableData__15StageDataHolderFv",
+          "demangled": "StageDataHolder::initTableData()",
+          "size": "128",
+          "match_percent": 99.375
+        },
+        {
+          "name": "initPlacementInfoOrderedCommon__15StageDataHolderFv",
+          "demangled": "StageDataHolder::initPlacementInfoOrderedCommon()",
+          "size": "332",
+          "match_percent": 100.0
+        },
+        {
+          "name": "initPlacementInfoOrderedScenario__15StageDataHolderFv",
+          "demangled": "StageDataHolder::initPlacementInfoOrderedScenario()",
+          "size": "312",
+          "match_percent": 100.0
+        },
+        {
+          "name": "findJmpInfoFromArray__15StageDataHolderCFPCQ22MR26AssignableArray<8JMapInfo>PCc",
+          "demangled": "StageDataHolder::findJmpInfoFromArray(const MR::AssignableArray<JMapInfo>*, const char*) const",
+          "size": "124",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getStartJMapInfoIterFromStartDataIndex__15StageDataHolderCFi",
+          "demangled": "StageDataHolder::getStartJMapInfoIterFromStartDataIndex(int) const",
+          "size": "260",
+          "match_percent": 100.0
+        },
+        {
+          "name": "calcDataAddress__15StageDataHolderFv",
+          "demangled": "StageDataHolder::calcDataAddress()",
+          "size": "112",
+          "match_percent": 100.0
+        },
+        {
+          "name": "updateDataAddress__15StageDataHolderFPCQ22MR26AssignableArray<8JMapInfo>",
+          "demangled": "StageDataHolder::updateDataAddress(const MR::AssignableArray<JMapInfo>*)",
+          "size": "104",
+          "match_percent": 100.0
+        },
+        {
+          "name": "createLocalStageDataHolder__15StageDataHolderFRCQ22MR26AssignableArray<8JMapInfo>b",
+          "demangled": "StageDataHolder::createLocalStageDataHolder(const MR::AssignableArray<JMapInfo>&, bool)",
+          "size": "320",
+          "match_percent": 99.875
+        },
+        {
+          "name": "calcPlacementMtx__15StageDataHolderFRC12JMapInfoIter",
+          "demangled": "StageDataHolder::calcPlacementMtx(const JMapInfoIter&)",
+          "size": "172",
+          "match_percent": 99.16279
+        },
+        {
+          "name": "getStageDataHolder__2MRFv",
+          "demangled": "MR::getStageDataHolder()",
+          "size": "40",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__dt__15StageDataHolderFv",
+          "demangled": "StageDataHolder::~StageDataHolder()",
+          "size": "188",
+          "match_percent": 100.0
+        }
+      ]
+    },
+    "PlacementInfoOrdered": {
+      "text_match": 99.36246,
+      "methods": [
+        {
+          "name": "getCreator__34@unnamed@PlacementInfoOrdered_cpp@FRCQ220PlacementInfoOrdered10Identifier",
+          "demangled": "@unnamed@PlacementInfoOrdered_cpp@::getCreator(const PlacementInfoOrdered::Identifier&)",
+          "size": "28",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__ct__20PlacementInfoOrderedFi",
+          "demangled": "PlacementInfoOrdered::PlacementInfoOrdered(int)",
+          "size": "192",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sort__20PlacementInfoOrderedFv",
+          "demangled": "PlacementInfoOrdered::sort()",
+          "size": "408",
+          "match_percent": 100.0
+        },
+        {
+          "name": "requestFileLoad__20PlacementInfoOrderedFv",
+          "demangled": "PlacementInfoOrdered::requestFileLoad()",
+          "size": "168",
+          "match_percent": 98.21429
+        },
+        {
+          "name": "initPlacement__20PlacementInfoOrderedFv",
+          "demangled": "PlacementInfoOrdered::initPlacement()",
+          "size": "236",
+          "match_percent": 98.22034
+        },
+        {
+          "name": "insert__20PlacementInfoOrderedFRCQ220PlacementInfoOrdered10IdentifierRC12JMapInfoIter",
+          "demangled": "PlacementInfoOrdered::insert(const PlacementInfoOrdered::Identifier&, const JMapInfoIter&)",
+          "size": "112",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getUsedArrayNum__20PlacementInfoOrderedCFv",
+          "demangled": "PlacementInfoOrdered::getUsedArrayNum() const",
+          "size": "64",
+          "match_percent": 98.0
+        },
+        {
+          "name": "find__20PlacementInfoOrderedCFRCQ220PlacementInfoOrdered10Identifier",
+          "demangled": "PlacementInfoOrdered::find(const PlacementInfoOrdered::Identifier&) const",
+          "size": "168",
+          "match_percent": 100.0
+        },
+        {
+          "name": "createSameIdSet__20PlacementInfoOrderedFRCQ220PlacementInfoOrdered10Identifier",
+          "demangled": "PlacementInfoOrdered::createSameIdSet(const PlacementInfoOrdered::Identifier&)",
+          "size": "96",
+          "match_percent": 100.0
+        },
+        {
+          "name": "createIndex__20PlacementInfoOrderedFRC12JMapInfoIter",
+          "demangled": "PlacementInfoOrdered::createIndex(const JMapInfoIter&)",
+          "size": "44",
+          "match_percent": 97.27273
+        },
+        {
+          "name": "__ct__Q220PlacementInfoOrdered5IndexFv",
+          "demangled": "PlacementInfoOrdered::Index::Index()",
+          "size": "68",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__dt__Q220PlacementInfoOrdered5IndexFv",
+          "demangled": "PlacementInfoOrdered::Index::~Index()",
+          "size": "92",
+          "match_percent": 95.608696
+        },
+        {
+          "name": "__ct__Q220PlacementInfoOrdered9SameIdSetFv",
+          "demangled": "PlacementInfoOrdered::SameIdSet::SameIdSet()",
+          "size": "68",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__dt__Q22MR43BothDirList<Q220PlacementInfoOrdered5Index>Fv",
+          "demangled": "MR::BothDirList<PlacementInfoOrdered::Index>::~BothDirList()",
+          "size": "88",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__dt__Q220PlacementInfoOrdered9SameIdSetFv",
+          "demangled": "PlacementInfoOrdered::SameIdSet::~SameIdSet()",
+          "size": "92",
+          "match_percent": 100.0
+        },
+        {
+          "name": "attach__20PlacementInfoOrderedFPC8JMapInfoP20PlacementInfoOrdered",
+          "demangled": "PlacementInfoOrdered::attach(const JMapInfo*, PlacementInfoOrdered*)",
+          "size": "228",
+          "match_percent": 100.0
+        }
+      ]
+    }
+  },
+  "claim": "Reference/native compilation and retail function comparison only; no native owner runtime or global factory activation.",
+  "reference_inlining_note": "BothDirPtrList(bool) body moved unchanged into header. The original out-of-line constructor symbol is no longer emitted; native already had this exact form."
+}
