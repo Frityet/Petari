@@ -23,7 +23,7 @@
 #include "runtime/RuntimeContext.hpp"
 #include "scene/NameObjChildOwner.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
-#include "scene/PlacementZoneNameScope.hpp"
+#include "scene/PlacementZoneScope.hpp"
 #include "scene/StagePlacementResolver.hpp"
 
 #include <aurora/dvd.h>
@@ -247,32 +247,22 @@ namespace {
         require(checker != nullptr,
                 "the placement-zone proof requires SceneObj_PlacementStateChecker");
         checker->setCurrentPlacementZoneId(41);
-        require_logic_error(
-            [] { static_cast<void>(MR::getCurrentPlacementZoneName()); },
-            "a checker ID alone must not invent a placement-zone name");
+        // The scope only borrows the original checker ID. Zone names now
+        // require the original scene controller and galaxy status accessor.
         {
-            auto outer = smgpc::scene::PlacementZoneNameScope(5, "OuterZone");
-            require(MR::getCurrentPlacementZoneId() == 5 &&
-                        std::string_view(MR::getCurrentPlacementZoneName()) ==
-                            "OuterZone",
-                    "the outer placement scope must install its exact ID and copied name");
+            auto outer = smgpc::scene::PlacementZoneScope(5);
+            require(MR::getCurrentPlacementZoneId() == 5,
+                    "the outer placement scope must install its exact ID");
             {
-                auto inner = smgpc::scene::PlacementZoneNameScope(9, "InnerZone");
-                require(MR::getCurrentPlacementZoneId() == 9 &&
-                            std::string_view(MR::getCurrentPlacementZoneName()) ==
-                                "InnerZone",
-                        "the nested placement scope must install its own ID and copied name");
+                auto inner = smgpc::scene::PlacementZoneScope(9);
+                require(MR::getCurrentPlacementZoneId() == 9,
+                        "the nested placement scope must install its own ID");
             }
-            require(MR::getCurrentPlacementZoneId() == 5 &&
-                        std::string_view(MR::getCurrentPlacementZoneName()) ==
-                            "OuterZone",
-                    "nested placement teardown must restore the outer ID and copied name");
+            require(MR::getCurrentPlacementZoneId() == 5,
+                    "nested placement teardown must restore the outer ID");
         }
         require(MR::getCurrentPlacementZoneId() == 41,
                 "outer placement teardown must restore the checker's prior ID");
-        require_logic_error(
-            [] { static_cast<void>(MR::getCurrentPlacementZoneName()); },
-            "outer placement teardown must clear its copied-name surface");
         checker->clearCurrentPlacementZoneId();
     }
 
@@ -721,17 +711,17 @@ namespace {
                     "released controller queries must not retain a stale host identity");
 
             // Exercise the non-direct retail construction path against the
-            // exact cast-0 placement. The copied placement-zone scope builds
-            // the same key as NPCActor and the session-owned AlreadyDone
-            // registry survives controller replacement.
+            // exact cast-0 placement. The scope installs the original checker
+            // ID; original scene queries resolve the zone name used by NPCActor.
+            // The AlreadyDone entry survives controller replacement.
             const auto rabbit_iter = JMapInfoIter(
                 &rabbit_placement.jmap_info,
                 rabbit_placement.jmap_entry_index);
             auto placement_actor = LiveActor("DemoRabbit placement talk proof");
             auto already_done_index = u32{};
             {
-                auto zone = smgpc::scene::PlacementZoneNameScope(
-                    rabbit_placement.zone_id, rabbit_placement.zone_name);
+                auto zone = smgpc::scene::PlacementZoneScope(
+                    rabbit_placement.zone_id);
                 auto* placement_controller = MR::createTalkCtrl(
                     &placement_actor, rabbit_iter, "DemoRabbit", TVec3f{}, nullptr);
                 require(placement_controller != nullptr &&
@@ -746,8 +736,8 @@ namespace {
 
             auto replacement_actor = LiveActor("DemoRabbit replacement talk proof");
             {
-                auto zone = smgpc::scene::PlacementZoneNameScope(
-                    rabbit_placement.zone_id, rabbit_placement.zone_name);
+                auto zone = smgpc::scene::PlacementZoneScope(
+                    rabbit_placement.zone_id);
                 auto* replacement_controller = MR::createTalkCtrl(
                     &replacement_actor, rabbit_iter, "DemoRabbit", TVec3f{}, nullptr);
                 require(replacement_controller != nullptr &&
