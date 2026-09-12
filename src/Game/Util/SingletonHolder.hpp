@@ -13,6 +13,16 @@ public:
         return sInstance;
     }
 
+#if defined(TARGET_PC)
+    // Native process retirement: drain borrowers and hold the guest CPU gate
+    // before releasing the actual singleton to its typed lifetime owner.
+    static T* release() noexcept {
+        T* instance = sInstance;
+        sInstance = nullptr;
+        return instance;
+    }
+#endif
+
 private:
     static T* sInstance;
 };

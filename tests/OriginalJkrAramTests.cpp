@@ -2,6 +2,7 @@
 #include "JSystem/JKernel/JKRAramPiece.hpp"
 #include "JSystem/JKernel/JKRAramStream.hpp"
 #include "JSystem/JKernel/JKRDecomp.hpp"
+#include "JSystem/JKernel/JKRArchive.hpp"
 #include "JSystem/JKernel/JKRDvdFile.hpp"
 #include "JSystem/JSupport/JSUFileStream.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -171,6 +172,24 @@ void decompression() {
     require(JKRDecomp::orderSync(const_cast<u8*>(yay.data()), output.data(), 8, 0),
             "actual Yay0 work must complete through the same worker");
     require(std::memcmp(output.data(), "SYSTEM!!", 8) == 0, "original Yay0 tables must decode with Wii byte order");
+
+    const auto fetch = [](std::span<const u8> source, const char* expected, u32 expanded, int compression) {
+        for (const u32 capacity : {u32(3), expanded, expanded + 4}) {
+            std::array<u8, 20> guarded;
+            guarded.fill(0xA5);
+            const auto count = std::min(expanded, capacity);
+            require(JKRMemArchive::fetchResource_subroutine(const_cast<u8*>(source.data()), source.size(),
+                        guarded.data() + 1, capacity, compression) == count,
+                    "actual archive fetch must report the bounded decoded byte count");
+            require(guarded.front() == 0xA5 && std::memcmp(guarded.data() + 1, expected, count) == 0 &&
+                        std::all_of(guarded.begin() + 1 + count, guarded.end(), [](u8 byte) { return byte == 0xA5; }),
+                    "archive fetch must preserve decoded content and bytes outside the reported output");
+        }
+    };
+    const std::array<u8, 6> plain{'A','R','C','H','I','V'};
+    fetch(plain, "ARCHIV", plain.size(), JKR_COMPRESSION_NONE);
+    fetch(yay, "SYSTEM!!", 8, JKR_COMPRESSION_SZP);
+    fetch(yaz, "ABCABCABC!", 10, JKR_COMPRESSION_SZS);
 }
 
 void cycle(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps, bool originalSizes) {

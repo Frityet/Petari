@@ -1,0 +1,11 @@
+# General VI, GX register and alarm SDK checkpoint
+
+VI now delivers real independently-timed retraces, maintains requested/flushed/current framebuffer and black state, wakes original SDK queues, and retires callbacks before shutdown. Presentation selects the actual VI-scanned GPU copy by destination. Native renderer geometry is atomically published: the original JUT fixture exposed a FIFO execution-lock/guest-CPU inversion, fixed at this shared boundary. GXRegs native writes encode real FIFO command bytes.
+
+OSAlarm now owns a single original deadline-ordered queue and native timer, preserves one-shot/periodic/cancel/tag semantics and callback allocation routing, and supplies OSSleepTicks through actual SDK thread suspension. Native interrupt scope preserves live thread/context identity while disabling scheduling and interrupts. Clock-change notifications wake pending deadlines. Existing VI/GX yielding callback policy is preserved. CMake now includes the existing real OSMessage and OSCache providers already enabled by Xmake.
+
+Final shared checks pass: 9alarm,39thread/mutex/queue and6VI tests each repeated10times; 291GX/FIFO checks; actual GPU scanout pixels across A/B selection, unflushed/flushed changes, black, eviction and address reuse. Original JUTVideo/Xfb/DirectPrint fixture also passes and found the fixed lock inversion. Its original SDK cohort remains staged, including documented native pointer/allocator/polling adaptations; production JUTVideo still needs coherent owner replacement. Separate isolated48case ASan/UBSan and56case clock regressions pass.
+
+Local CMake configuration required the explicit SDK and LLVM23 libc++ include/runtime paths: cached imported dependencies put the entire SDK C header directory before the C++ wrappers. This was corrected only in local build configuration, not through source macro workarounds. Commands and failure/final receipts are preserved in adjacent notes.
+
+No full original MainLoop/GameSystem or gameplay success is claimed. GPU abort/reset, CPU-written XFB backing, single-buffer rendering ownership, exact VI timing/NextField phase and true host instruction preemption remain explicit gaps. See original-display-owner-20260912, original-os-alarm-20260912 and original-gx-abort-frontier-20260912 for details.

@@ -1,0 +1,14 @@
+[
+  {
+    "path": "decomp/src/Game/Util/SceneUtil.cpp",
+    "sha256": "8c95e01714527facf38774899e79adf0ce0bf910ff975472e8012d5f80bd21d4"
+  },
+  {
+    "path": "decomp/include/Game/Scene/StageDataHolder.hpp",
+    "sha256": "3c6e158e121d8b627a8b3490211307ce0dd038269eba28dd9c2073adc137563d"
+  },
+  {
+    "path": "decomp/src/Game/System/ResourceHolderManager.cpp",
+    "sha256": "7ea90fe7b104c4bd51def9705db96041ac61acba6b7d8d30e595dc7d09efe6fd"
+  }
+]

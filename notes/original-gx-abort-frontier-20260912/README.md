@@ -1,0 +1,11 @@
+# GX watchdog ownership frontier
+
+Original MainLoopFramework timeout reads XF/RAS hardware cycle counters into unused locals, samples actual GP status, disables the breakpoint, calls GXAbortFrame, clears DrawSyncManager, restores BP revision state and requests draw completion. The counter reads are hardware-only diagnostics; a native-only architecture guard is preferable to fabricated zeros or host wall-clock substitutes. Reference source remains unchanged by this decision.
+
+The retail GXMisc.c __GXAbort waits for PE copy requests to stop changing when the misc flag requests it, toggles the physical PI abort register, then GXAbortFrame cleans the GP FIFO and restores revision bits. Aurora has no physical GPU-reset equivalent.
+
+A FIFO-only implementation would be incomplete. Current fifo::process_to serializes decoding with sExecutionMutex but completes draw prefixes and dispatches SDK interrupts after releasing it. An abort needs a separate command epoch (the existing storage generation identifies attached FIFO objects), invalidation of queued interrupt dispatch after CPU-gate acquisition, monotonic processed cursors despite old completions, and correct logical ring rebasing. It must not use drain/stop_worker: those execute pending commands and can wait at a breakpoint.
+
+The graphics side is also observable: recording seals passes to the render worker before end_frame, and frame::submit_frame_prefix may already have submitted some work. Resetting a packet requires synchronizing encoder ownership, retiring only unsubmitted work, handling after-submit callbacks and tagged/legacy depth readback slots, and invalidating pending copy texture/display identities without destroying previously completed XFB contents. Dropping an encoder or clearing every texture cache is not sufficient. Calling complete_draw as an abort substitute would execute commands intended to be discarded and might wait for the same GPU that timed out.
+
+No production GXAbortFrame or fake metric provider was added in this pass. This remains a lower SDK/renderer frontier before claiming original MainLoop watchdog recovery. Relevant sources: decomp/src/RVL_SDK/gx/GXMisc.c; decomp/src/RVL_SDK/gx/GXFifo.c; decomp/src/Game/System/MainLoopFramework.cpp; aurora/lib/gx/fifo.cpp; aurora/lib/gfx/{recording,frame,encoding,depth_peek}.cpp; aurora/lib/gx/texture.cpp.

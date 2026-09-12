@@ -1,0 +1,106 @@
+[
+  {
+    "path": "aurora/cmake/aurora_gx.cmake",
+    "sha256": "40e979b224df86845582a89235c91e0a4e98568375f9494562d326642a43ceb6"
+  },
+  {
+    "path": "aurora/cmake/aurora_os.cmake",
+    "sha256": "ccc6dc559017a81ed4051c162889f2374106b295af560663f0e10998b249b438"
+  },
+  {
+    "path": "aurora/cmake/aurora_vi.cmake",
+    "sha256": "5bc1d54ada566197ea302ad6ed96cee1da04b7975403ca92e0b1f241b76056b5"
+  },
+  {
+    "path": "aurora/include/aurora/guest_thread.hpp",
+    "sha256": "6f29055f6b32bc2baeb8b4f1d1a1cb26826cae3400370884a2b6952c00252b0c"
+  },
+  {
+    "path": "aurora/include/aurora/vi.hpp",
+    "sha256": "12b7dc65f7771de33e39fe25db95b0eabe3ff18e419775505f1ba602c67c4d53"
+  },
+  {
+    "path": "aurora/include/dolphin/os/OSAlarm.h",
+    "sha256": "0a49704aea7c0ffbc50f7a30d5434caa2c2b62cba32e6ac30cfca986e2422eee"
+  },
+  {
+    "path": "aurora/include/dolphin/os/OSThread.h",
+    "sha256": "0d92eaa05831002a90612078e25b3f933a29ba318a0e45e72112b26c5068a83f"
+  },
+  {
+    "path": "aurora/include/revolution/gx/GXRegs.h",
+    "sha256": "ca596c57b261cc3dcea4b80d033aebac33eb2551d9f09bbf5d426b8839d527c8"
+  },
+  {
+    "path": "aurora/include/revolution/types.h",
+    "sha256": "cc4f39cbdb26906543cc2ecfabca32977bbc214bb9fddd00f13d1ad327a19395"
+  },
+  {
+    "path": "aurora/lib/aurora.cpp",
+    "sha256": "7fdc9b86c980c59010a17d95fe5cf098cd8cb10f28082e3e504a7caab759fa92"
+  },
+  {
+    "path": "aurora/lib/dolphin/gx/GXFrameBuffer.cpp",
+    "sha256": "97b68ff75cabe7481267a13400bee989fd4636c5d05491ff396ebc27a33c048e"
+  },
+  {
+    "path": "aurora/lib/dolphin/gx/GXRegs.cpp",
+    "sha256": "9c812155c8ddd7e4e09cc7edaf0e820a0f1bc0db4a6862b11a40a4de6df7568c"
+  },
+  {
+    "path": "aurora/lib/dolphin/os/OSAlarm.cpp",
+    "sha256": "57638920f648250f1383fbf696dbc250fbbeae3ba6fafcc4ae7e8b9bc84e6efe"
+  },
+  {
+    "path": "aurora/lib/dolphin/os/OSExecution.cpp",
+    "sha256": "fc35ac445d3911aaf2d5d7e1ff5c9a8baca3d86725912f17aba4ba76b248ec02"
+  },
+  {
+    "path": "aurora/lib/dolphin/vi/vi.cpp",
+    "sha256": "293400f0ee1b6f37aacfbfa324ec43c308dde715536a7c1182662760700009ef"
+  },
+  {
+    "path": "aurora/lib/dolphin/vi/vi_window.cpp",
+    "sha256": "4bc64ea28584822cd94dee364da3c387adf686058a01a80d8eb33a32b1bbf5f1"
+  },
+  {
+    "path": "aurora/lib/gx/gx.hpp",
+    "sha256": "df5459404533697359f5359b8f7757b30522547204154bfd4f9933d123278020"
+  },
+  {
+    "path": "aurora/lib/gx/texture.cpp",
+    "sha256": "15c9c6b267772005f4eeb4135c80b0ed91bae28853b818e649604e5c0011e159"
+  },
+  {
+    "path": "aurora/lib/time.cpp",
+    "sha256": "c678a07d80a94a10cadc7e5dd4186ce918bad3b2571681c691069a25bdcbc209"
+  },
+  {
+    "path": "aurora/lib/time_internal.hpp",
+    "sha256": "a2680a6c8261f40672681be3c85afd913d4672d599efddc2da1a5b06ffb98d65"
+  },
+  {
+    "path": "aurora/tests/CMakeLists.txt",
+    "sha256": "44119f3caa2f7a38e518d13d22450e831f6e32acb63a0f4d1cc4e647c4ad7892"
+  },
+  {
+    "path": "aurora/tests/gx_fifo_test.cpp",
+    "sha256": "a99170666c25e26cfaba75c06677044d569b4326144c3c345673015c6fa500aa"
+  },
+  {
+    "path": "aurora/tests/gx_vi_scanout_render_test.cpp",
+    "sha256": "23ad8d7febf2036fdc899409f26a6a344cc55bddd70194eb6057ce53c4b0593e"
+  },
+  {
+    "path": "aurora/tests/os_alarm_test.cpp",
+    "sha256": "f08412e22c967ee791e9160c24440ec81a71dcc8607a292d344ca0387e79cd62"
+  },
+  {
+    "path": "aurora/tests/vi_test.cpp",
+    "sha256": "de3ed2106b437ac6c4f6258542e4c400a43dcb491ecc3b24f2d496f213d74856"
+  },
+  {
+    "path": "aurora/xmake.lua",
+    "sha256": "ee4cc7c0e7ba8627bbf23824caa1eaec1f509ce8ee214d2b9b9eed6b648fe22f"
+  }
+]

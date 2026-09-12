@@ -250,6 +250,7 @@ public:
     bool mountFixed(std::span<const u8>, JKRMemBreakFlag);
 
     void* fetchResource(SDIFileEntry*, u32*) override;
+    static s32 fetchResource_subroutine(u8*, u32, u8*, u32, int);
 
     RarcHeader* mHeader = nullptr;
     u8* mFileDataStart = nullptr;

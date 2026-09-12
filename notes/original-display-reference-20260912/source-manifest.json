@@ -1,0 +1,30 @@
+[
+  {
+    "path": "decomp/src/Game/Screen/ScreenPreserver.cpp",
+    "sha256": "c0aa47d04a8a6672fcd61e09f2058c7fe4e762bd30a3b64ade6f1a872242beed"
+  },
+  {
+    "path": "decomp/src/Game/System/MainLoopFramework.cpp",
+    "sha256": "e3e8dfdfcf4726d7e2a5cd0eb962b49ec636e4a01d3ef8244fbe62aeb23b42d8"
+  },
+  {
+    "path": "decomp/libs/JSystem/include/JSystem/J2DGraph/J2DPane.hpp",
+    "sha256": "e8ebd3ce9e9df1ad5c82224be31886ca0df6b367674cd3d8e626cc31f688d56f"
+  },
+  {
+    "path": "decomp/libs/JSystem/include/JSystem/JUtility/JUTAssert.hpp",
+    "sha256": "0c5ed965bf345ae204e01e20d1f81a164e2032b1ca45a41512815151a9c0ef86"
+  },
+  {
+    "path": "decomp/libs/JSystem/include/JSystem/JUtility/JUTPalette.hpp",
+    "sha256": "608300c0f5537668075573023f8ff999cb0ce307f20856d865909b71230f6a6d"
+  },
+  {
+    "path": "decomp/libs/JSystem/include/JSystem/JUtility/JUTDirectPrint.hpp",
+    "sha256": "86dd7bab528d990696fceef250fc5f6523f918aca16d31c1d4862f62c221975e"
+  },
+  {
+    "path": "decomp/src/JSystem/JUtility/JUTPalette.cpp",
+    "sha256": "7d110a262138b08446d23c66d5999fb8dc4aa520b9914c712d309e19ed493e9c"
+  }
+]

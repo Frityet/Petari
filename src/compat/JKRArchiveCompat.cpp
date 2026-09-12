@@ -2,6 +2,7 @@
 #include <aurora/endian.hpp>
 #include "JSystem/JKernel/JKRArchive.hpp"
 #include "JSystem/JKernel/JKRFileFinder.hpp"
+#include "JSystem/JKernel/JKRDecomp.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 
@@ -145,6 +146,30 @@ JKRMemArchive::~JKRMemArchive() {
     if (_6C && mHeader != nullptr) JKRHeap::free(mHeader, mHeap);
     mHeader = nullptr;
     mFileDataStart = nullptr;
+}
+
+s32 JKRMemArchive::fetchResource_subroutine(u8* pSrc, u32 srcSize, u8* pDst, u32 dstSize, int compression) {
+    switch (compression) {
+    case JKR_COMPRESSION_NONE:
+        if (srcSize > dstSize) {
+            srcSize = dstSize;
+        }
+        std::memcpy(pDst, pSrc, srcSize);
+        return srcSize;
+    case JKR_COMPRESSION_SZP:
+    case JKR_COMPRESSION_SZS: {
+        u32 size = JKRDecompExpandSize(pSrc);
+        if (size > dstSize) {
+            size = dstSize;
+        }
+        JKRDecomp::orderSync(pSrc, pDst, size, 0);
+        return size;
+    }
+    default:
+        OSPanic(__FILE__, 723, "??? bad sequence\n");
+        break;
+    }
+    return 0;
 }
 
 bool JKRMemArchive::mountFixed(void* data, JKRMemBreakFlag breakFlag) {

@@ -1,0 +1,5 @@
+# Original display source recovery
+
+Recovered ScreenPreserver::draw using the real JUT texture, J2D picture and original orthographic drawing path. Its complete original .text/.rodata/.data match100%. MainLoopFramework uses standard float literals and a standard unsigned64conversion in place of its compiler-specific runtime call; existing full text matches99.91803%. Canonical J2D/JUT enum types and explicit va_list includes make these original SDK headers usable by a native compiler.
+
+The full original-compiler cohort builds: MainLoop, ScreenPreserver, JUTVideo/Xfb/DirectPrint/Palette/Assert, J2DPane/Picture. Whole text comparisons range95.20113% (existing J2DPane) to100%; the receipt records data-section differences independently. These are compiler/source comparisons, not gameplay or complete display-manager activation. Native JUT/VI lifecycle tests remain separate; original MainLoop still requires faithful GPU watchdog abort handling. Its native-only guard for unused hardware counters is not part of this reference commit.

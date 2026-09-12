@@ -1,0 +1,57 @@
+{
+  "native_files": {
+    "src/Game/System/ArchiveHolder.cpp": "e7372d59d7a2cf92d5d11f2f4b84f82a0a4f18f2b9d9b13eb6bcb77ddd77507d",
+    "src/Game/System/FileHolder.cpp": "91019d4c2bec3717672961654683bb8421abb3f5e9bf411632d1e77fddd284ce",
+    "src/Game/System/FileLoader.cpp": "c9f607caa633cfe540e0ab33252a03c3bea7960573854515c26d05fb16d1dc88",
+    "src/Game/System/FileLoaderThread.cpp": "d7965558063b61b3c527206f162acf339d4f2666c3736b6021bfc9d2eba208bd",
+    "src/Game/System/FileRipper.cpp": "eba908b4be4c0c0ceb8d517741408f4b669a7f151e2369ec6b34342a6f9d45b7",
+    "src/Game/Util/FileUtil.cpp": "00658681813043049bd4e2080f2e2375a3a49eba34d849ca9aaa3dadb56bf1e7",
+    "src/Game/Util/SingletonHolder.hpp": "30c537d75666342d52e02e194483709fd32c8c19d0cb61551cb19a75f197c22c",
+    "src/compat/FileLoaderOwnership.cpp": "b969ba1c7991b17e1072b73ab8a77d6a79f2099facdbf70ae72de19aa6151fa0",
+    "src/compat/FileLoaderOwnership.hpp": "122a7b1c20f7fec21946d9b2534b0ea2f0fc351870f2616e57728dda539ea43b",
+    "src/JSystem/JKernel/JKRArchive.hpp": "bb77ef8804065b8973de80fd1df9213725825b82d47ea78b219e2288c0af0799",
+    "src/compat/JKRArchiveCompat.cpp": "f3a3c3327631b92b1cb63ca86d0cd421438e5472f3451dade8a0130ffaca9586",
+    "tests/OriginalFileLoaderTests.cpp": "52c51cd9d72f12dece6969b194a8c7ecf201a14eeebd31fb76f434e983b3bc5f"
+  },
+  "aurora_files": {
+    "aurora/include/dolphin/dvd.h": "33f758eed0bf54d6acfccdb9870fea3c4cff87a6ab0fc9c5c5d4d01660a56793",
+    "aurora/include/aurora/dvd.h": "750e56285d37dc939425f9d1cec218781bdfae4b3e23080e7bec4ed5bf7b8371",
+    "aurora/lib/dolphin/dvd/dvd.cpp": "87d26a27d8d361b914f2517e0fd8cef49f2b154887196de7c2a475140450869e",
+    "aurora/lib/dolphin/dvd/dvd.hpp": "1085957497bd74fa371e066919a3af8aaa59f98ca0912aa249397758622cbb4b",
+    "aurora/lib/dolphin/dvd/fst.cpp": "cc7e584dd71cc6a6afaa1d8ebc099557ccb10e6c1862a92447f4f633bd21c845",
+    "aurora/tests/test_dvd.cpp": "769d97d7e5ff7686f27c0beeae53ebb0a827b40557cfa66fe3155a8edb8db86d",
+    "aurora/cmake/aurora_dvd.cmake": "0d919e58cd8be8f70be2b8a6b81a01f31b2607aea4ca0277bbe52d5419829900"
+  },
+  "shared_integration": [
+    "aurora/xmake.lua: aurora-dvd depends on aurora-os",
+    "src/Game/xmake.lua: original FileUtil remains temporarily excluded globally",
+    "xmake.lua: private complete original FileUtil TU in actual FileLoader test target"
+  ],
+  "proof": [
+    "source-proof.json",
+    "wii-compile.json",
+    "native-compile.json",
+    "shared-dvd-identity-run.json",
+    "dvd/native-compile.json",
+    "dvd/tests-compile.json",
+    "dvd-barrier-run.json",
+    "file-loader-final-run.json"
+  ],
+  "limits": [
+    "Global original FileUtil dispatch and ResourceHolderManager backing migration remain held.",
+    "Full GameSystem startup and gameplay are not established by this component fixture.",
+    "Existing DVD guest callback routing and native-wait CPU gate integration remain separate pending work."
+  ],
+  "final_validation": {
+    "dvd_tests": {
+      "passed": 46,
+      "total": 46,
+      "binary_sha256": "22f57376cbf8b7fca367becc0f23499aa88cc53947c668ef62a4ffdf5acf39f8"
+    },
+    "original_file_loader": {
+      "cycles": 3,
+      "exit_code": 0,
+      "binary_sha256": "8a606fa9a233e4319bffe3d5d932ab5dbde30f557842a49dda423c888ac0bc19"
+    }
+  }
+}

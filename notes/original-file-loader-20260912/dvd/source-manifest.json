@@ -1,0 +1,9 @@
+{
+  "aurora/include/dolphin/dvd.h": "33f758eed0bf54d6acfccdb9870fea3c4cff87a6ab0fc9c5c5d4d01660a56793",
+  "aurora/include/aurora/dvd.h": "750e56285d37dc939425f9d1cec218781bdfae4b3e23080e7bec4ed5bf7b8371",
+  "aurora/lib/dolphin/dvd/dvd.cpp": "87d26a27d8d361b914f2517e0fd8cef49f2b154887196de7c2a475140450869e",
+  "aurora/lib/dolphin/dvd/dvd.hpp": "1085957497bd74fa371e066919a3af8aaa59f98ca0912aa249397758622cbb4b",
+  "aurora/lib/dolphin/dvd/fst.cpp": "cc7e584dd71cc6a6afaa1d8ebc099557ccb10e6c1862a92447f4f633bd21c845",
+  "aurora/tests/test_dvd.cpp": "769d97d7e5ff7686f27c0beeae53ebb0a827b40557cfa66fe3155a8edb8db86d",
+  "tests/OriginalFileLoaderTests.cpp": "52c51cd9d72f12dece6969b194a8c7ecf201a14eeebd31fb76f434e983b3bc5f"
+}
