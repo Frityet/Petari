@@ -4,10 +4,12 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Scene/StageResourceLoader.hpp"
 #include "Game/System/ScenarioDataParser.hpp"
+#include "Game/System/GalaxyStatusAccessor.hpp"
 #include "Game/Util/FileUtil.hpp"
 #include "Game/Util/JMapIdInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include <JSystem/JKernel/JKRFileFinder.hpp>
@@ -63,6 +65,14 @@ namespace {
         }
     }
 };  // namespace
+
+StageDataHolder::StageDataHolder(const char* pStageName, int zoneId, bool loadCommon)
+    : NameObj("StageDataHolder"), mObjNameTbl(nullptr), mStageDataHolderCount(0), mArchive(MR::getStageArchive(pStageName)),
+      _A8(pStageName), mZoneID(zoneId), _E0(loadCommon), _E4(0), _E8(0), _FC(nullptr), _100(nullptr), _104(nullptr),
+      _108(nullptr), _10C(nullptr) {
+    MR::zeroMemory(mStageDataArray, sizeof(mStageDataArray));
+    reinterpret_cast< TPos3f* >(mPlacementMtx)->identity();
+}
 
 void StageDataHolder::init(const JMapInfoIter& rIter) {
     if (!mZoneID) {
@@ -203,6 +213,43 @@ void StageDataHolder::getStartCameraIdInfoFromStartDataIndex(JMapIdInfo* pInfo, 
     s32 cameraID;
     startIter.getValue< s32 >("Camera_id", &cameraID);
     pInfo->initialize(cameraID, startIter);
+}
+
+s32 StageDataHolder::getChildObjNum(const JMapInfoIter& rIter) const {
+    s32 linkId;
+    MR::getJMapInfoLinkID(rIter, &linkId);
+    s32 count = 0;
+    if (mChildObjs.size() > 0) {
+        for (const JMapInfo* pInfo = mChildObjs.begin(); pInfo != mChildObjs.end(); pInfo++) {
+            for (s32 i = 0; i < pInfo->getNumEntries(); i++) {
+                s32 parentId;
+                pInfo->getValue< s32 >(i, "ParentID", &parentId);
+                if (parentId == linkId) {
+                    count++;
+                }
+            }
+        }
+    }
+    return count;
+}
+
+JMapInfoIter StageDataHolder::getChildObjInfoFromDataIndex(const JMapInfoIter& rIter, int index) const {
+    s32 linkId;
+    MR::getJMapInfoLinkID(rIter, &linkId);
+    s32 count = 0;
+    for (const JMapInfo* pInfo = mChildObjs.begin(); pInfo != mChildObjs.end(); pInfo++) {
+        for (s32 i = 0; i < pInfo->getNumEntries(); i++) {
+            s32 parentId;
+            pInfo->getValue< s32 >(i, "ParentID", &parentId);
+            if (parentId == linkId) {
+                if (count == index) {
+                    return JMapInfoIter(pInfo, i);
+                }
+                count++;
+            }
+        }
+    }
+    return JMapInfoIter();
 }
 
 const StageDataHolder* StageDataHolder::findPlacedStageDataHolder(const JMapInfoIter& rIter) const {
@@ -365,7 +412,34 @@ void StageDataHolder::initAllLayerJmpInfo(MR::AssignableArray< JMapInfo >* pInfo
     initLayerJmpInfo(pInfo, a2, a3, commonLayers | scenarioLayers);
 }
 
-// StageDataHolder::initLayerJmpInfo
+void StageDataHolder::initLayerJmpInfo(MR::AssignableArray< JMapInfo >* pInfo, const char* pPlacementDir, const char* pMapPartsDir,
+                                    u32 layerMask) {
+    s32 count = 0;
+    char path[64];
+    for (u32 i = 0; i < 0x11; i++) {
+        if ((layerMask & (1 << i)) != 0) {
+            snprintf(path, sizeof(path), "%s/%s", pPlacementDir, cLayerDirName[i]);
+            s32 fileCount = mArchive->countFile(path) - 2;
+            count += fileCount > 0 ? fileCount : 0;
+            snprintf(path, sizeof(path), "%s/%s", pMapPartsDir, cLayerDirName[i]);
+            fileCount = mArchive->countFile(path) - 2;
+            count += fileCount > 0 ? fileCount : 0;
+        }
+    }
+    if (count != 0) {
+        JMapInfo* pTable = new JMapInfo[count];
+        pInfo->mMaxSize = count;
+        pInfo->mArr = pTable;
+        for (u32 i = 0; i < 0x11; i++) {
+            if ((layerMask & (1 << i)) != 0) {
+                snprintf(path, sizeof(path), "%s/%s", pPlacementDir, cLayerDirName[i]);
+                pTable = attachJmpInfoToArray(pTable, path);
+                snprintf(path, sizeof(path), "%s/%s", pMapPartsDir, cLayerDirName[i]);
+                pTable = attachJmpInfoToArray(pTable, path);
+            }
+        }
+    }
+}
 
 JMapInfo* StageDataHolder::attachJmpInfoToArray(JMapInfo* pInfo, const char* a2) {
     s32 fileCnt = mArchive->countFile(a2) - 2;
@@ -417,11 +491,30 @@ void StageDataHolder::initPlacementInfoOrderedCommon() {
 
     for (s32 i = 0; i < mStageDataHolderCount; i++) {
         ::attachJmpInfoToPlacementInfoOrdered(_FC, _100, _10C, mStageDataArray[i]->_EC);
-        i++;
     }
 
     _FC->sort();
     _100->sort();
+}
+
+void StageDataHolder::initPlacementInfoOrderedScenario() {
+    int priorityCount, ordinaryCount;
+    ::calcPlacementInfoNum(&priorityCount, &ordinaryCount, _F4);
+    for (s32 i = 0; i < mStageDataHolderCount; i++) {
+        int childPriorityCount, childOrdinaryCount;
+        ::calcPlacementInfoNum(&childPriorityCount, &childOrdinaryCount, mStageDataArray[i]->_F4);
+        priorityCount += childPriorityCount;
+        ordinaryCount += childOrdinaryCount;
+    }
+    _104 = new PlacementInfoOrdered(priorityCount);
+    _108 = new PlacementInfoOrdered(ordinaryCount);
+    ::attachJmpInfoToPlacementInfoOrdered(_104, _108, nullptr, _F4);
+    for (s32 i = 0; i < mStageDataHolderCount; i++) {
+        ::attachJmpInfoToPlacementInfoOrdered(_104, _108, nullptr, mStageDataArray[i]->_F4);
+    }
+    _104->sort();
+    _108->sort();
+    _10C->sort();
 }
 
 const JMapInfo* StageDataHolder::findJmpInfoFromArray(const MR::AssignableArray< JMapInfo >* pInfoArr, const char* pName) const {
@@ -487,6 +580,24 @@ void StageDataHolder::calcPlacementMtx(const JMapInfoIter& rIter) {
     rIter.getValue< f32 >("dir_z", &rot.z);
 
     MR::makeMtxTR(mPlacementMtx, pos, rot);
+}
+
+void StageDataHolder::createLocalStageDataHolder(const MR::AssignableArray< JMapInfo >& rArray, bool loadCommon) {
+    for (const JMapInfo* pInfo = rArray.begin(); pInfo != rArray.end(); pInfo++) {
+        if (MR::isEqualStringCase(pInfo->getName(), "StageObjInfo")) {
+            for (s32 i = 0; i < pInfo->getNumEntries(); i++) {
+                JMapInfoIter iter(pInfo, i);
+                const char* pName = "";
+                MR::getObjectName(&pName, iter);
+                GalaxyStatusAccessor accessor = MR::makeCurrentGalaxyStatusAccessor();
+                s32 zoneId = accessor.getZoneId(pName);
+                mStageDataArray[mStageDataHolderCount] = new StageDataHolder(pName, zoneId, loadCommon);
+                mStageDataArray[mStageDataHolderCount]->initWithoutIter();
+                mStageDataArray[mStageDataHolderCount]->calcPlacementMtx(iter);
+                mStageDataHolderCount++;
+            }
+        }
+    }
 }
 
 void StageDataHolder::updateDataAddress(const MR::AssignableArray< JMapInfo >* pInfoArray) {

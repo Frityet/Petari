@@ -19,7 +19,11 @@ namespace MR {
 
     class BothDirPtrList {
     public:
-        BothDirPtrList(bool);
+        BothDirPtrList(bool doInit) {
+            if (doInit) {
+                initiate();
+            }
+        }
         ~BothDirPtrList();
 
         void initiate();

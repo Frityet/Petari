@@ -9,34 +9,31 @@ typedef NameObj* (*CreationFuncPtr)(const char*);
 
 class PlacementInfoOrdered {
 public:
+    class Identifier {
+    public:
+        Identifier(const char* pName, s32 modelNo) : mName(pName), mModelNo(modelNo) {
+        }
+
+        const char* mName;  // 0x0
+        s32 mModelNo;       // 0x4
+    };
+
     class Index {
     public:
         Index();
         ~Index();
 
         MR::BothDirPtrLink mLink;  // 0x0
-        u32 _10;
-        s32 _14;
+        JMapInfoIter mInfoIter;   // 0x10
     };
 
-    class SameIdSet {
+    class SameIdSet : public Identifier {
     public:
         SameIdSet();
         ~SameIdSet();
 
-        u32 _0;
-        s32 _4;
-        u32 _8;
-        MR::BothDirPtrList mList;  // 0xC
-    };
-
-    class Identifier {
-    public:
-        const char* mName;  // 0x0
-        s32 _4;
-        u32 _8;
-        u32 _C;
-        JMapInfoIter mInfoIter;  // 0x10
+        s32 mPriority;                     // 0x8
+        MR::BothDirList< Index > mList;     // 0xC
     };
 
     PlacementInfoOrdered(int);
@@ -55,6 +52,6 @@ public:
     Index* mIndexArray;  // 0x0
     u32 _4;
     SameIdSet* mSetArray;          // 0x8
-    Identifier** mIdentiferArray;  // 0xC
+    SameIdSet** mIdentiferArray;  // 0xC
     int mCount;                    // 0x10
 };

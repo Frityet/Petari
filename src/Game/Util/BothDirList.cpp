@@ -10,12 +10,6 @@ namespace MR {
         }
     }
 
-    BothDirPtrList::BothDirPtrList(bool doInit) {
-        if (doInit) {
-            initiate();
-        }
-    }
-
     BothDirPtrList::~BothDirPtrList() {
         BothDirPtrLink* pLink = mHead;
         u32 i = 0;
