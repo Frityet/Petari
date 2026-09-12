@@ -1,0 +1,96 @@
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-aurora-texture-object-tests>[0m compiling.debug aurora/tests/gx_texture_object_test.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-aurora-texture-object-tests>[0m compiling.debug aurora/lib/compat.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<aurora-core>[0m cache compiling.debug aurora/lib/aurora.cpp[0m
+[0m[38;5;2;1m[ 17%]:[0m [38;5;5;1m<aurora-platform>[0m cache compiling.debug aurora/lib/webgpu/gpu.cpp[0m
+[0m[38;5;2;1m[ 20%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/clear.cpp[0m
+[0m[38;5;2;1m[ 20%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/depth_peek.cpp[0m
+[0m[38;5;2;1m[ 20%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/encoding.cpp[0m
+[0m[38;5;2;1m[ 20%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/frame.cpp[0m
+[0m[38;5;2;1m[ 21%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/recording.cpp[0m
+[0m[38;5;2;1m[ 22%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/resource_cache.cpp[0m
+[0m[38;5;2;1m[ 22%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/pipeline_cache.cpp[0m
+[0m[38;5;2;1m[ 23%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/dds_io.cpp[0m
+[0m[38;5;2;1m[ 24%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/tex_copy_conv.cpp[0m
+[0m[38;5;2;1m[ 25%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/tex_palette_conv.cpp[0m
+[0m[38;5;2;1m[ 25%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/texture.cpp[0m
+[0m[38;5;2;1m[ 26%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/texture_format.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/texture_convert.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/texture_replacement.cpp[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/png_io.cpp[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/attr_fmt.cpp[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/command_processor.cpp[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/regs.cpp[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/dl.cpp[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/gx.cpp[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/texture.cpp[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/pipeline.cpp[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/shader.cpp[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/shader_info.cpp[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/rfl/CharacterModel.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/rfl/CharacterResource.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXBump.cpp[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXCull.cpp[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXCpu2Efb.cpp[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXDispList.cpp[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXDraw.cpp[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXExtra.cpp[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXFifo.cpp[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXFrameBuffer.cpp[0m
+[0m[38;5;3;1maurora/lib/dolphin/gx/GXBump.cpp:11:11: warning: enumeration value 'GX_MAX_INDTEXSTAGE' not handled in switch [-Wswitch]
+   11 |   switch (indStage) {
+      |           ^~~~~~~~
+aurora/lib/dolphin/gx/GXBump.cpp:36:13: warning: enumeration values 'GX_INDTEXSTAGE2', 'GX_INDTEXSTAGE3', and 'GX_MAX_INDTEXSTAGE' not handled in switch [-Wswitch]
+   36 |     switch (indStage) {
+      |             ^~~~~~~~
+aurora/lib/dolphin/gx/GXBump.cpp:48:13: warning: enumeration values 'GX_INDTEXSTAGE0', 'GX_INDTEXSTAGE1', and 'GX_MAX_INDTEXSTAGE' not handled in switch [-Wswitch]
+   48 |     switch (indStage) {
+      |             ^~~~~~~~
+3 warnings generated.[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXGeometry.cpp[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXGet.cpp[0m
+[0m[38;5;2;1m[ 44%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXLighting.cpp[0m
+[0m[38;5;2;1m[ 44%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXManage.cpp[0m
+[0m[38;5;2;1m[ 45%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXPerf.cpp[0m
+[0m[38;5;2;1m[ 45%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXPixel.cpp[0m
+[0m[38;5;2;1m[ 46%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXTev.cpp[0m
+[0m[38;5;2;1m[ 47%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXTexture.cpp[0m
+[0m[38;5;2;1m[ 47%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXTextureRegion.cpp[0m
+[0m[38;5;2;1m[ 48%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXTransform.cpp[0m
+[0m[38;5;2;1m[ 49%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXVert.cpp[0m
+[0m[38;5;2;1m[ 49%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXAurora.cpp[0m
+[0m[38;5;2;1m[ 50%]:[0m [38;5;5;1m<aurora-vi>[0m cache compiling.debug aurora/lib/dolphin/vi/vi.cpp[0m
+[0m[38;5;2;1m[ 50%]:[0m [38;5;5;1m<aurora-os>[0m cache compiling.debug aurora/lib/dolphin/os/OSInit.cpp[0m
+[0m[38;5;2;1m[ 51%]:[0m [38;5;5;1m<aurora-os>[0m cache compiling.debug aurora/lib/dolphin/os/OSMemory.cpp[0m
+[0m[38;5;2;1m[ 52%]:[0m [38;5;5;1m<aurora-os>[0m cache compiling.debug aurora/lib/dolphin/os/OSBootInfo.cpp[0m
+[0m[38;5;2;1m[ 52%]:[0m [38;5;5;1m<aurora-os>[0m cache compiling.debug aurora/lib/dolphin/os/OSTime.cpp[0m
+[0m[38;5;2;1m[ 53%]:[0m [38;5;5;1m<aurora-os>[0m cache compiling.debug aurora/lib/dolphin/os/OSExecution.cpp[0m
+[0m[38;5;2;1m[ 54%]:[0m [38;5;5;1m<aurora-os>[0m cache compiling.debug aurora/lib/dolphin/os/OSMutex.cpp[0m
+[0m[38;5;3;1maurora/lib/dolphin/os/OSMutex.cpp:6:9: warning: 'ASSERT' macro redefined [-Wmacro-redefined]
+    6 | #define ASSERT(condition) assert(condition)
+      |         ^
+aurora/include/dolphin/os.h:332:9: note: previous definition is here
+  332 | #define ASSERT(cond) ASSERTLINE(__LINE__, cond)
+      |         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 54%]:[0m [38;5;5;1m<aurora-os>[0m cache compiling.debug aurora/lib/dolphin/os/OSMessage.cpp[0m
+[0m[38;5;2;1m[ 55%]:[0m [38;5;5;1m<aurora-os>[0m cache compiling.debug aurora/lib/dolphin/os/OSArena.cpp[0m
+[0m[38;5;2;1m[ 56%]:[0m [38;5;5;1m<aurora-os>[0m cache compiling.debug aurora/lib/dolphin/os/OSAlloc.cpp[0m
+[0m[38;5;2;1m[ 57%]:[0m [38;5;5;1m<aurora-os>[0m cache compiling.debug aurora/lib/dolphin/os/OSAddress.cpp[0m
+[0m[38;5;2;1m[ 57%]:[0m [38;5;5;1m<aurora-os>[0m cache compiling.debug aurora/lib/dolphin/os/OSReport.cpp[0m
+[0m[38;5;2;1m[ 58%]:[0m [38;5;5;1m<aurora-os>[0m cache compiling.debug aurora/lib/dolphin/AR.cpp[0m
+[0m[38;5;2;1m[ 59%]:[0m [38;5;5;1m<aurora-os>[0m cache compiling.debug aurora/lib/nand.cpp[0m
+[0m[38;5;2;1m[ 66%]:[0m [38;5;5;1m<aurora-card>[0m cache compiling.debug aurora/lib/dolphin/card.cpp[0m
+[0m[38;5;2;1m[ 66%]:[0m [38;5;5;1m<aurora-dvd>[0m cache compiling.debug aurora/lib/dolphin/dvd/dvd.cpp[0m
+[0m[38;5;2;1m[ 67%]:[0m [38;5;5;1m<aurora-dvd>[0m cache compiling.debug aurora/lib/dolphin/dvd/fst.cpp[0m
+[0m[38;5;2;1m[ 68%]:[0m [38;5;5;1m<aurora-pad>[0m cache compiling.debug aurora/lib/wpad.cpp[0m
+[0m[38;5;2;1m[ 71%]:[0m [38;5;5;1m<aurora-platform>[0m [38;5;5;1marchiving.debug libaurora-platform.a[0m
+[0m[38;5;2;1m[ 74%]:[0m [38;5;5;1m<aurora-vi>[0m [38;5;5;1marchiving.debug libaurora-vi.a[0m
+[0m[38;5;2;1m[ 79%]:[0m [38;5;5;1m<aurora-pad>[0m [38;5;5;1marchiving.debug libaurora-pad.a[0m
+[0m[38;5;2;1m[ 81%]:[0m [38;5;5;1m<aurora-os>[0m [38;5;5;1marchiving.debug libaurora-os.a[0m
+[0m[38;5;2;1m[ 82%]:[0m [38;5;5;1m<aurora-gx>[0m [38;5;5;1marchiving.debug libaurora-gx.a[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<aurora-core>[0m [38;5;5;1marchiving.debug libaurora-core.a[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<aurora-card>[0m [38;5;5;1marchiving.debug libaurora-card.a[0m
+[0m[38;5;2;1m[ 91%]:[0m [38;5;5;1m<aurora-dvd>[0m [38;5;5;1marchiving.debug libaurora-dvd.a[0m
+[0m[38;5;2;1m[ 91%]:[0m [38;5;5;1m<smg-pc-aurora-texture-object-tests>[0m [38;5;5;1mlinking.debug smg-pc-aurora-texture-object-tests[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[38;5;2;1m[100%]:[0m [38;5;2;1mbuild ok, spent 9.449s[0m

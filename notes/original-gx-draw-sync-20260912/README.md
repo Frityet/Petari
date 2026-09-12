@@ -1,0 +1,9 @@
+# Shared GX completion and original layout texture access
+
+The original talk pipeline needs real GX draw-sync callbacks. The previous Aurora DrawDone implementation reported FIFO decoder completion before the render worker had even submitted its commands. Original TalkPeekZ and StarPointerPeekZ cannot safely use that as EFB completion. Work in progress adds partial frame submission with upload storage handoff and real GPU completion, preserving the active render targets and command-stream order. The existing StarPointer-specific snapshot adapter has not yet been removed: full DrawSyncManager ownership and breakpoints remain integration requirements.
+
+A separately validated prerequisite for original NW4R TexMap is complete GXGetTexObjAll and GXGetTexObjLODAll. They read the existing native texture object, preserving native pointer width and the SDK's fixed-point register semantics. Original SDK spelling aliases _GXTexObj and _GXTlutObj now identify those same native objects.
+
+The aggregate getter regression exposed an existing shared sampler decoder error: GX_LIN_MIP_NEAR and GX_NEAR_MIP_LIN were reversed. The decoder now follows the original HW2GXFiltConv table in decomp/src/RVL_SDK/gx/GXTexture.c. Both LOD bias setters now convert negative fixed-point values through a signed integer before narrowing to u8; direct negative float-to-u8 conversion is undefined in native C++.
+
+Validation: the standalone smg-pc-aurora-texture-object-tests target builds and passes texture identity plus 60 sampler combinations (all six minification filters, both magnification filters, and five signed/clamped bias cases). It also checks LOD clamping/quantization and individual sampler setter consistency. The target depends on Aurora only; this is not evidence that the original talk cohort or GameScene links or runs yet.
