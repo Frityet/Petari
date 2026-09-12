@@ -2,6 +2,7 @@
 #include "Game/Screen/WipeFade.hpp"
 #include "Game/Screen/WipeHolderBase.hpp"
 #include "Game/Screen/WipeRing.hpp"
+#include "Game/Util/LayoutUtil.hpp"
 #include "Game/Util.hpp"
 #include <JSystem/J2DGraph/J2DPicture.hpp>
 #include <JSystem/JUtility/JUTVideo.hpp>

@@ -92,3 +92,11 @@ void ShadowVolumeDrawer::draw() const {
 
 ShadowVolumeDrawInit::~ShadowVolumeDrawInit() {
 }
+
+void ShadowVolumeDrawer::calcBaseDropPosition(TVec3f* pPosition, const ShadowController* pController) const {
+    TVec3f dropPosition;
+    TVec3f dropDirection;
+    pController->getDropPos(&dropPosition);
+    pController->getDropDir(&dropDirection);
+    pPosition->set(dropPosition + dropDirection * mStartDrawShapeOffset);
+}

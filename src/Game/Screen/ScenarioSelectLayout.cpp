@@ -12,11 +12,13 @@
 #include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/LayoutUtil.hpp"
 #include "Game/Util/MessageUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
+#include <JSystem/JUtility/JUTVideo.hpp>
 
 namespace {
     const char* const cStarPaneName[] = {"Star1", "Star2", "Star3", "Star4", "Star5", "Star6", "Star7"};
@@ -435,7 +437,15 @@ ScenarioSelectStar* ScenarioSelectLayout::getSelectedStar() const {
     return nullptr;
 }
 
-// ScenarioSelectLayout::calcWorldPositionFromScreenPos
+void ScenarioSelectLayout::calcWorldPositionFromScreenPos(TVec3f* pWorldPos, const TVec2f& rScreenPos, f32 depth) const {
+    f32 height = JUTVideo::getManager()->getEfbHeight();
+    f32 screenDepth = (0.5f * height) / MR::tan(0.5f * (PI_180 * mCameraContext->getFovy()));
+    f32 worldDepth = depth >= 0.0f ? depth : screenDepth;
+    f32 scale = worldDepth / screenDepth;
+    TVec3f viewPos(scale * (rScreenPos.x - 0.5f * MR::getScreenWidth()), scale * -(rScreenPos.y - 0.5f * height), -worldDepth);
+    TPos3f invViewMtx = mCameraContext->getInvViewMtx();
+    invViewMtx.mult(viewPos, *pWorldPos);
+}
 
 bool ScenarioSelectLayout::calcDisplayScenarioNum(s32* pNormalScenarioCompleteNum, s32* pExtraScenarioCompleteNum) const {
     if (MR::isScenarioDecided()) {

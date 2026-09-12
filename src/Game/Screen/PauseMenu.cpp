@@ -6,12 +6,14 @@
 #include "Game/Screen/SysInfoWindow.hpp"
 #include "Game/System/GameSequenceFunction.hpp"
 #include "Game/Util/EventUtil.hpp"
+#include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/LayoutUtil.hpp"
 #include "Game/Util/MessageUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SequenceUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace {
     const s32 cBackSequenceFadeFrame = 90;
@@ -259,8 +261,65 @@ void PauseMenu::forceToWaitAllButton() {
     }
 }
 
-// PauseMenu::exeSelecting
-// PauseMenu::exeDecided
+void PauseMenu::exeSelecting() {
+    if (_20->isPointingTrigger() || (_24 != nullptr && _24->isPointingTrigger()) ||
+        (!(_38 == nullptr || _38->isHidden()) && _38->isPointingTrigger())) {
+        MR::startSystemSE("SE_SY_SELECT_PAUSE_ITEM");
+    }
+
+    if (_20->trySelect() || (_24 != nullptr && _24->trySelect()) || (!(_38 == nullptr || _38->isHidden()) && _38->trySelect())) {
+        setNerve(&NrvPauseMenu::PauseMenuNrvDecided::sInstance);
+        return;
+    }
+
+    if (isPaneAnimStoppedWithoutButton() && !_20->isAppearing() && (_24 == nullptr || !_24->isAppearing()) &&
+        ((_38 == nullptr || _38->isHidden()) || !_38->isAppearing())) {
+        if (MR::testCorePadTriggerPlus(WPAD_CHAN0) || MR::testCorePadTriggerMinus(WPAD_CHAN0)) {
+            MR::startSystemSE("SE_SY_PAUSE_OFF");
+            MR::startCSSound("CS_CLICK_CLOSE", nullptr, 0);
+            setNerve(&NrvPauseMenu::PauseMenuNrvDisappear::sInstance);
+        }
+    }
+}
+
+void PauseMenu::exeDecided() {
+    if (_20->mIsSelected) {
+        if (_20->isTimingForSelectedSe()) {
+            MR::startSystemSE("SE_SY_PAUSE_OFF");
+            MR::startCSSound("CS_CLICK_CLOSE", nullptr, 0);
+        }
+
+        if (_20->isDecidedWait()) {
+            setNerve(&NrvPauseMenu::PauseMenuNrvDisappear::sInstance);
+        }
+    } else if (_24 != nullptr && _24->mIsSelected) {
+        if (_24->isTimingForSelectedSe()) {
+            MR::startSystemSE("SE_SY_PAUSE_OFF");
+            MR::startCSSound("CS_CLICK_CLOSE", nullptr, 0);
+        }
+
+        if (_24->isDecidedWait()) {
+            if (::isInvalidBackAstroDome()) {
+                setNerve(&NrvPauseMenu::PauseMenuNrvGameDataSave::sInstance);
+            } else {
+                setNerve(&NrvPauseMenu::PauseMenuNrvConfirm::sInstance);
+            }
+        }
+    } else {
+        bool b = _38 == nullptr || _38->isHidden();
+
+        if (!b && _38->mIsSelected) {
+            if (_38->isTimingForSelectedSe()) {
+                MR::startSystemSE("SE_SY_FILE_SEL_UPPER_DECIDE");
+                MR::startCSSound("CS_CLICK_CLOSE", nullptr, 0);
+            }
+
+            if (_38->isDecidedWait()) {
+                setNerve(&NrvPauseMenu::PauseMenuNrvLuigiLetter::sInstance);
+            }
+        }
+    }
+}
 
 void PauseMenu::exeDisappear() {
     if (MR::isFirstStep(this)) {

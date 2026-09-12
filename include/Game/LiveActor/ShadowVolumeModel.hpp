@@ -8,7 +8,7 @@ class ShadowVolumeModel : public ShadowVolumeDrawer {
 public:
     ShadowVolumeModel(const char*);
 
-    inline virtual ~ShadowVolumeModel();
+    inline virtual ~ShadowVolumeModel() {}
     virtual void drawShape() const;
 
     void initVolumeModel(const char*);
