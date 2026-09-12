@@ -1,0 +1,5 @@
+{
+  "src/compat/NandSdkBinding.hpp": "5f0ecb8aacdb35762a5edcbc1a82fe0e3a9e7f1cf35c758f4c71506c76ff68e2",
+  "src/compat/NandSdkCompat.cpp": "c9221915029270aea6321fc8396f636754c9882d0e8ef8492b2b234cbf23c98b",
+  "tests/OriginalSystemConfigTests.cpp": "30444d3505c7fa0d1d8c9c688d6961c38703cf23e09fe4fe0fbcf03756f20b5f"
+}

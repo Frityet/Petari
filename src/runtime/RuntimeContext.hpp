@@ -48,7 +48,7 @@ namespace smgpc::layout {
 }
 
 namespace aurora::audio { class DisabledObjectAudioService; }
-namespace smgpc::compat { class StarPointerDepthOwnership; }
+namespace smgpc::compat { class StarPointerDepthOwnership; class NandSdkBinding; }
 
 namespace smgpc::runtime {
 
@@ -363,6 +363,7 @@ namespace smgpc::runtime {
         RumbleService _rumble;
         SequenceRequestService _sequence_requests;
         SaveDataService _save_data;
+        std::unique_ptr<compat::NandSdkBinding> _nand_sdk;
         std::unique_ptr<SystemConfigService> _system_config;
         MessageService _messages;
         std::unique_ptr<MessageHolderOwnership> _message_holder;

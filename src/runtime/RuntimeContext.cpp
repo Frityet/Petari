@@ -7,6 +7,7 @@
 #include "compat/DisabledObjectAudioService.hpp"
 #include "compat/SceneJ3dScope.hpp"
 #include "compat/StarPointerDepthOwnership.hpp"
+#include "compat/NandSdkBinding.hpp"
 #include "Game/Util/DrawUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
@@ -541,6 +542,7 @@ namespace smgpc::runtime {
                              imported.imported_files, nand_directory->string(), imported.preserved_files);
             }
             _system_config = std::make_unique<SystemConfigService>(_save_data.nand());
+            _nand_sdk = std::make_unique<compat::NandSdkBinding>(_save_data);
             _rumble.attach_actuator(smgpc::compat::aurora_rumble_actuator());
             JUTVideo::createManager(MR::getSuitableRenderMode());
             aurora::wpad_service().clear();

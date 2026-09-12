@@ -2,12 +2,14 @@
 #include <revolution/nand.h>
 #include <aurora/allocation.hpp>
 
-#include "runtime/RuntimeContext.hpp"
+#include "compat/NandSdkBinding.hpp"
+#include "runtime/RuntimeServices.hpp"
 #include "Game/System/NANDManager.hpp"
 #include "Game/System/NANDManagerThread.hpp"
 
 #include <algorithm>
 #include <cstring>
+#include <exception>
 #include <limits>
 #include <map>
 #include <mutex>
@@ -18,7 +20,7 @@
 
 namespace {
     struct OpenFile {
-        smgpc::runtime::RuntimeContext* runtime;
+        smgpc::runtime::SaveDataService* owner;
         std::string path;
         std::vector<u8> bytes;
         std::size_t position = 0;
@@ -30,10 +32,11 @@ namespace {
     std::map<s32, OpenFile> s_files;
     s32 s_next_descriptor = 1;
 
-    smgpc::runtime::RuntimeContext& runtime() {
-        auto* value = smgpc::runtime::RuntimeContext::try_instance();
-        if (!value) throw std::logic_error("NAND requires the active process resource owner");
-        return *value;
+    smgpc::runtime::SaveDataService* s_active_save_data = nullptr;
+
+    smgpc::runtime::SaveDataService& save_data() {
+        if (!s_active_save_data) throw std::logic_error("NAND requires the active process storage owner");
+        return *s_active_save_data;
     }
 
     bool valid_path(const char* path) {
@@ -57,15 +60,32 @@ namespace {
     OpenFile* find_file(const NANDFileInfo* info) {
         if (!info) return nullptr;
         const auto it = s_files.find(info->fileDescriptor);
-        if (it == s_files.end() || it->second.runtime != smgpc::runtime::RuntimeContext::try_instance()) return nullptr;
+        if (it == s_files.end() || it->second.owner != s_active_save_data) return nullptr;
         return &it->second;
     }
 
     bool is_open(std::string_view path) {
         for (const auto& [descriptor, file] : s_files) {
-            if (file.runtime == &runtime() && file.path == path) return true;
+            if (file.owner == &save_data() && file.path == path) return true;
         }
         return false;
+    }
+}
+
+namespace smgpc::compat {
+    NandSdkBinding::NandSdkBinding(runtime::SaveDataService& service) : _service(&service) {
+        const aurora::allocation::HostAllocationScope host;
+        const std::lock_guard lock(s_file_mutex);
+        if (s_active_save_data) throw std::logic_error("NAND already has an active process storage owner");
+        s_active_save_data = _service;
+    }
+
+    NandSdkBinding::~NandSdkBinding() {
+        const aurora::allocation::HostAllocationScope host;
+        const std::lock_guard lock(s_file_mutex);
+        if (s_active_save_data != _service) std::terminate();
+        std::erase_if(s_files, [this](const auto& entry) { return entry.second.owner == _service; });
+        s_active_save_data = nullptr;
     }
 }
 
@@ -74,8 +94,8 @@ NANDManager::~NANDManager() {
     // its queue, stack and any process resource owner can be released.
     delete mManagerThread;
     invoke([] {
-        const auto* owner = smgpc::runtime::RuntimeContext::try_instance();
-        std::erase_if(s_files, [owner](const auto& entry) { return entry.second.runtime == owner; });
+        const auto* owner = s_active_save_data;
+        std::erase_if(s_files, [owner](const auto& entry) { return entry.second.owner == owner; });
         return s32{NAND_RESULT_OK};
     });
 }
@@ -100,21 +120,20 @@ extern "C" {
     }
 
     s32 NANDInit() {
-        return invoke([] { (void)runtime().save_data(); return s32{NAND_RESULT_OK}; });
+        return invoke([] { (void)save_data(); return s32{NAND_RESULT_OK}; });
     }
 
     s32 NANDCreate(const char* path, u8 permission, u8 attribute) {
         return invoke([&] {
             if (!valid_path(path) || (permission & ~0x3fU)) return s32{NAND_RESULT_INVALID};
-            return runtime().save_data().create_nand_file(path, permission, attribute);
+            return save_data().create_nand_file(path, permission, attribute);
         });
     }
 
     s32 NANDOpen(const char* path, NANDFileInfo* info, u8 access) {
         return invoke([&] {
             if (!valid_path(path) || !info || access < NAND_ACCESS_READ || access > NAND_ACCESS_RW) return s32{NAND_RESULT_INVALID};
-            auto& owner = runtime();
-            auto& save = owner.save_data();
+            auto& save = save_data();
             const auto normalized = save.nand().normalize_path(path);
             if (normalized.size() >= NAND_MAX_PATH) return s32{NAND_RESULT_INVALID};
             if (is_open(normalized)) return s32{NAND_RESULT_OPENFD};
@@ -126,7 +145,7 @@ extern "C" {
             if (!bytes) return s32{NAND_RESULT_NOEXISTS};
             if (s_next_descriptor == std::numeric_limits<s32>::max()) return s32{NAND_RESULT_MAXFD};
             const s32 descriptor = s_next_descriptor++;
-            s_files.emplace(descriptor, OpenFile{&owner, normalized, std::move(*bytes), 0, access});
+            s_files.emplace(descriptor, OpenFile{&save, normalized, std::move(*bytes), 0, access});
             std::memset(info, 0, sizeof(*info));
             info->fileDescriptor = descriptor;
             info->origFd = descriptor;
@@ -157,7 +176,7 @@ extern "C" {
             const auto end = file->position + size;
             const auto added_blocks = (end + 0x3fffU) / 0x4000U - (file->bytes.size() + 0x3fffU) / 0x4000U;
             if (end > file->bytes.size()) {
-                const auto capacity = runtime().save_data().nand().check(static_cast<u32>(added_blocks), 0);
+                const auto capacity = save_data().nand().check(static_cast<u32>(added_blocks), 0);
                 if (capacity.result != NAND_RESULT_OK) return capacity.result;
                 file->bytes.resize(end);
             }
@@ -185,7 +204,7 @@ extern "C" {
             info->origFd = -1;
             auto& file = node.mapped();
             if (file.dirty) {
-                auto& save = runtime().save_data();
+                auto& save = save_data();
                 const auto metadata = save.nand().metadata(file.path);
                 save.write_nand_file(file.path, file.bytes);
                 if (metadata) {
@@ -200,7 +219,7 @@ extern "C" {
     s32 NANDDelete(const char* path) {
         return invoke([&] {
             if (!valid_path(path)) return s32{NAND_RESULT_INVALID};
-            auto& save = runtime().save_data();
+            auto& save = save_data();
             if (is_open(save.nand().normalize_path(path))) return s32{NAND_RESULT_OPENFD};
             return s32{save.erase_nand_file(path) ? NAND_RESULT_OK : NAND_RESULT_NOEXISTS};
         });
@@ -209,7 +228,7 @@ extern "C" {
     s32 NANDMove(const char* source, const char* destination_directory) {
         return invoke([&] {
             if (!valid_path(source) || !valid_path(destination_directory)) return s32{NAND_RESULT_INVALID};
-            auto& save = runtime().save_data();
+            auto& save = save_data();
             const auto normalized_source = save.nand().normalize_path(source);
             auto destination = save.nand().normalize_path(destination_directory);
             if (destination != "/") destination += '/';
@@ -223,7 +242,7 @@ extern "C" {
     s32 NANDCheck(u32 blocks, u32 inodes, u32* answer) {
         return invoke([&] {
             if (!answer) return s32{NAND_RESULT_INVALID};
-            const auto& nand = runtime().save_data().nand();
+            const auto& nand = save_data().nand();
             const auto home = nand.usage(aurora::NandFileSystem::title_data_root());
             aurora::NandUsage user;
             for (const auto* root : {"/meta", "/ticket", "/title/00010000", "/title/00010001", "/title/00010003",
@@ -245,7 +264,7 @@ extern "C" {
     s32 NANDGetHomeDir(char* path) {
         return invoke([&] {
             if (!path) return s32{NAND_RESULT_INVALID};
-            (void)runtime();
+            (void)save_data();
             const auto directory = aurora::NandFileSystem::title_data_root();
             if (directory.size() >= NAND_MAX_PATH) return s32{NAND_RESULT_INVALID};
             std::memcpy(path, directory.c_str(), directory.size() + 1);

@@ -1,10 +1,15 @@
 #include "runtime/SystemConfigService.hpp"
+#include "runtime/RuntimeServices.hpp"
+#include "compat/NandSdkBinding.hpp"
 #include <aurora/aurora.h>
 #include <aurora/sysconf.hpp>
 #include <revolution/sc.h>
+#include <revolution/nand.h>
 #include <algorithm>
 #include <array>
+#include <cstdlib>
 #include <cstring>
+#include <filesystem>
 #include <iostream>
 #include <span>
 #include <stdexcept>
@@ -12,6 +17,7 @@
 #include <string>
 #include <tuple>
 #include <vector>
+#include <unistd.h>
 
 namespace aurora { extern AuroraConfig g_config; }
 namespace {
@@ -20,6 +26,53 @@ namespace {
     constexpr auto config_path = "/shared2/sys/SYSCONF";
     constexpr auto product_path = "/title/00000001/00000002/data/setting.txt";
     void require(bool good, const char* message) { if (!good) throw std::runtime_error(message); }
+    void standalone_nand() {
+        using smgpc::compat::NandSdkBinding;
+        struct Directory {
+            std::filesystem::path path;
+            Directory() {
+                auto pattern = (std::filesystem::temp_directory_path() / "petari-nand-binding-XXXXXX").string();
+                const auto* created = mkdtemp(pattern.data());
+                require(created != nullptr, "create private NAND persistence directory");
+                path = created;
+            }
+            ~Directory() { std::error_code error; std::filesystem::remove_all(path, error); }
+        } directory;
+        smgpc::runtime::SaveDataService first, second;
+        first.set_host_directory(directory.path / "first");
+        second.set_host_directory(directory.path / "second");
+        require(NANDInit() == NAND_RESULT_UNKNOWN, "NAND does not create an implicit process owner");
+        NANDFileInfo retired{};
+        const std::array<u8, 5> bytes{0, 1, 0xff, 2, 0};
+        {
+            NandSdkBinding owner(first);
+            require(NANDInit() == NAND_RESULT_OK && NANDCreate("/binding-probe", 0x3c, 0) == NAND_RESULT_OK,
+                    "standalone storage binding supplies actual NAND initialization and file creation");
+            NANDFileInfo file{};
+            require(NANDOpen("/binding-probe", &file, NAND_ACCESS_RW) == NAND_RESULT_OK &&
+                        NANDWrite(&file, bytes.data(), bytes.size()) == bytes.size() && NANDClose(&file) == NAND_RESULT_OK,
+                    "SDK writes preserve the existing process save-storage path");
+            require(NANDOpen("/binding-probe", &retired, NAND_ACCESS_READ) == NAND_RESULT_OK,
+                    "the exact stored file can be reopened through the same owner");
+            bool rejected = false;
+            try { NandSdkBinding overlap(second); } catch (const std::logic_error&) { rejected = true; }
+            std::array<u8, 5> read{};
+            require(rejected && NANDRead(&retired, read.data(), read.size()) == read.size() && read == bytes,
+                    "overlapping owner rejection preserves live descriptors and exact binary contents");
+        }
+        u32 length = 0xfeed;
+        require(NANDGetLength(&retired, &length) == NAND_RESULT_INVALID && length == 0xfeed,
+                "retiring a storage binding invalidates its borrowed SDK descriptor without modifying failed outputs");
+        {
+            NandSdkBinding owner(second);
+            NANDFileInfo file{};
+            require(NANDGetLength(&retired, &length) == NAND_RESULT_INVALID &&
+                        NANDOpen("/binding-probe", &file, NAND_ACCESS_READ) == NAND_RESULT_NOEXISTS,
+                    "a later storage owner cannot inherit descriptors or files from the retired owner");
+        }
+        require(first.nand().read_file("/binding-probe") == std::optional(std::vector<u8>(bytes.begin(), bytes.end())),
+                "descriptor retirement does not destroy the caller-owned persistent NAND contents");
+    }
     std::array<u8, 256> encrypted(std::string_view text) {
         std::array<u8, 256> result{};
         std::uint32_t seed = 0x73B5DBFA;
@@ -211,6 +264,7 @@ int main() {
     try {
         aurora::g_config.mem1Size = 24U * 1024U * 1024U;
         OSInit();
+        standalone_nand(); std::cout << "PASS standalone NAND owner, exact SDK bytes and descriptor retirement\n";
         defaults(); std::cout << "PASS original defaults and failed outputs\n";
         product(); std::cout << "PASS original encrypted product/region/language accessors\n";
         typed_ranges(); std::cout << "PASS exact scalar types, byte order and original range rules\n";
