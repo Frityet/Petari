@@ -144,7 +144,6 @@ void HeapMemoryWatcher::createHeaps() {
     JKRHeap* gddr = HeapMemoryWatcher::sRootHeapGDDR3;
     u32 thing = OSRoundUp32B(WPADGetWorkMemorySize()) + 208 + (OSRoundUp32B(sizeof(JKRExpHeap)) - 0xA0);
     mWPadHeap = ::createExpHeap(thing, gddr, false);
-    mHomeButtonLayoutHeap = ::createExpHeap(0x80000, HeapMemoryWatcher::sRootHeapGDDR3, false);
     mStationedHeapGDDR = ::createExpHeap(0x1400000, HeapMemoryWatcher::sRootHeapGDDR3, false);
     createGameHeap();
 }
@@ -156,7 +155,7 @@ void HeapMemoryWatcher::createGameHeap() {
 
 HeapMemoryWatcher::HeapMemoryWatcher()
     : mStationedHeapNapa(nullptr), mStationedHeapGDDR(nullptr), mGameHeapNapa(nullptr), mGameHeapGDDR(nullptr), mFileCacheHeap(nullptr),
-      mSceneHeapNapa(nullptr), mSceneHeapGDDR(nullptr), mWPadHeap(nullptr), mHomeButtonLayoutHeap(nullptr), mAudSystemHeap(nullptr) {
+      mSceneHeapNapa(nullptr), mSceneHeapGDDR(nullptr), mWPadHeap(nullptr), mAudSystemHeap(nullptr) {
     JKRHeap::setErrorHandler(HeapMemoryWatcher::memoryErrorCallback);
     createHeaps();
 }

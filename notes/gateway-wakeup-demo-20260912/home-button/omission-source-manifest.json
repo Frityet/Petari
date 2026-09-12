@@ -1,0 +1,35 @@
+{
+  "src/Game/System/GameSystem.cpp": {
+    "sha256": "e8d0ae50bee26b1d09a9ff66864f3206030672ee9b3db733dd52cefd82a7ef24"
+  },
+  "src/Game/System/GameSystem.hpp": {
+    "sha256": "df4d4dba3b0b5db9ab73ac69381587b857338394f818a39c081349ee31ede28c"
+  },
+  "src/Game/System/GameSystemFunction.cpp": {
+    "sha256": "4e45fe0155357aefad384373d89553d0b91c0438571810d12f10d4950e112c90"
+  },
+  "src/Game/System/GameSystemFunction.hpp": {
+    "sha256": "65900b46f12d12b4aeabe6fabb04bcb594afde2f01ca4be098c1177a6e84215a"
+  },
+  "src/Game/System/GameSystemResetAndPowerProcess.cpp": {
+    "sha256": "c45f10490fe168bd47d161b7630b0a569789f237ba1b8fce66f00e66d092be03"
+  },
+  "src/Game/System/HeapMemoryWatcher.cpp": {
+    "sha256": "e0accf0df6fb02589910465d27e197bb89d3e47176066dbf867eacf569b7a844"
+  },
+  "src/Game/System/HeapMemoryWatcher.hpp": {
+    "sha256": "212e7670dacf45ac8b809c68f1200eb649d5ee1cad7dc3b4243e9c4dac976767"
+  },
+  "src/Game/System/StationedFileInfo.cpp": {
+    "sha256": "1c73e76674fcb824c663bd56995a30a716f83726dc12bf1c63508e0bab2366da"
+  },
+  "src/Game/Util/MemoryUtil.hpp": {
+    "sha256": "14c16162d0e347e2488d2bc90a7739999e7f89d0affb8f8d4c6ec3b5f9d73e47"
+  },
+  "src/Game/Screen/HomeButtonLayout.hpp": {
+    "deleted": true
+  },
+  "tests/OriginalGameSystemStartupTests.cpp": {
+    "sha256": "65db3a404749ddcd58f306733d4152b794535a26bac12056c1c14d3dfda80577"
+  }
+}

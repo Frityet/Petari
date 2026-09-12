@@ -1,7 +1,6 @@
 #include "Game/System/GameSystemFunction.hpp"
 #include "Game/NameObj/NameObjRegister.hpp"
 #include "Game/Scene/LogoScene.hpp"
-#include "Game/Screen/HomeButtonLayout.hpp"
 #include "Game/Screen/ScreenPreserver.hpp"
 #include "Game/System/AudSystemWrapper.hpp"
 #include "Game/System/GameSequenceDirector.hpp"
@@ -117,14 +116,6 @@ namespace GameSystemFunction {
 
     void requestGoWiiMenu(bool param1) {
         SingletonHolder< GameSystemResetAndPowerProcess >::get()->requestGoWiiMenu(param1);
-    }
-
-    void forceToDeactivateHomeButtonLayout() {
-        HomeButtonLayout* pHomeButtonLayout = SingletonHolder< GameSystem >::get()->mHomeButtonLayout;
-
-        if (pHomeButtonLayout != nullptr) {
-            pHomeButtonLayout->forceToDeactive();
-        }
     }
 
     void resetCurrentScenarioNo() {

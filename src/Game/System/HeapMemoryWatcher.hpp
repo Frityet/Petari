@@ -35,7 +35,6 @@ public:
     JKRSolidHeap* mSceneHeapNapa;       // 0x14
     JKRSolidHeap* mSceneHeapGDDR;       // 0x18
     JKRExpHeap* mWPadHeap;              // 0x1C
-    JKRExpHeap* mHomeButtonLayoutHeap;  // 0x20
     JKRSolidHeap* mAudSystemHeap;       // 0x24
 
     static JKRExpHeap* sRootHeapGDDR3;

@@ -19,7 +19,6 @@ namespace GameSystemFunction {
     void setResetOperationReturnToMenu();
     void requestResetGameSystem(bool);
     void requestGoWiiMenu(bool);
-    void forceToDeactivateHomeButtonLayout();
     void resetCurrentScenarioNo();
     bool isPermitToResetSaveDataHandleSequence();
     void prepareResetSaveDataHandleSequence();

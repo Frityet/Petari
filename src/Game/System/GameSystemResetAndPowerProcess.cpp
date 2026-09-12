@@ -122,7 +122,6 @@ void GameSystemResetAndPowerProcess::exePrepareReset() {
         GameSystemFunction::prepareResetAudioSystem();
         GameSystemFunction::prepareResetSystem();
         GameSystemFunction::resetAllControllerRumble();
-        GameSystemFunction::forceToDeactivateHomeButtonLayout();
         GameSequenceFunction::requestPrepareResetNWC24();
         GameSystemFunction::prepareResetSaveDataHandleSequence();
     }

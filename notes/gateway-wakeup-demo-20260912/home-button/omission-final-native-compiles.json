@@ -1,0 +1,27 @@
+[
+  {
+    "source": "src/Game/System/HeapMemoryWatcher.cpp",
+    "exit_code": 0,
+    "error_tail": ""
+  },
+  {
+    "source": "src/Game/System/StationedFileInfo.cpp",
+    "exit_code": 0,
+    "error_tail": ""
+  },
+  {
+    "source": "src/Game/System/GameSystem.cpp",
+    "exit_code": 0,
+    "error_tail": ""
+  },
+  {
+    "source": "src/Game/System/GameSystemFunction.cpp",
+    "exit_code": 0,
+    "error_tail": ""
+  },
+  {
+    "source": "tests/OriginalGameSystemStartupTests.cpp",
+    "exit_code": 0,
+    "error_tail": ""
+  }
+]

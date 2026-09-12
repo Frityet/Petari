@@ -874,21 +874,6 @@ namespace MR {
         },
         {
             1,
-            0,
-            "/HomeButton2/SpeakerSe.arc",
-        },
-        {
-            1,
-            0,
-            "/HomeButton2/home.csv",
-        },
-        {
-            1,
-            0,
-            "/HomeButton2/config.txt",
-        },
-        {
-            1,
             1,
             "/ParticleData/Effect.arc",
         },
@@ -919,23 +904,8 @@ namespace MR {
         },
         {
             1,
-            0,
-            "/ModuleData/HomeButtonMenuWrapperRSO.rso",
-        },
-        {
-            1,
-            0,
-            "/ModuleData/product.sel",
-        },
-        {
-            1,
             4,
             "/ObjectData/SaveIconBanner.arc",
-        },
-        {
-            1,
-            0,
-            "/LayoutData/HomeButton.arc",
         },
         {
             1,

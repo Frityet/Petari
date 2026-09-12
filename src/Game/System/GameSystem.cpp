@@ -1,7 +1,6 @@
 #include "Game/System/GameSystem.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NameObj/NameObjRegister.hpp"
-#include "Game/Screen/HomeButtonLayout.hpp"
 #include "Game/Screen/SystemWipeHolder.hpp"
 #include "Game/System/AudSystemWrapper.hpp"
 #include "Game/System/DrawSyncManager.hpp"
@@ -76,7 +75,7 @@ void main(void) {
 
 GameSystem::GameSystem()
     : NerveExecutor("GameSystem"), mFifoBase(nullptr), mSequenceDirector(nullptr), mErrorWatcher(nullptr), mFontHolder(nullptr),
-      mFrameControl(nullptr), mObjHolder(nullptr), mSceneController(nullptr), mStationedArchiveLoader(nullptr), mHomeButtonLayout(nullptr),
+      mFrameControl(nullptr), mObjHolder(nullptr), mSceneController(nullptr), mStationedArchiveLoader(nullptr),
       mSystemWipeHolder(nullptr), mHomeButtonStateNotifier(nullptr), mIsExecuteLoadSystemArchive(false) {
 }
 
@@ -96,7 +95,6 @@ void GameSystem::init() {
     SingletonHolder< GameSystemResetAndPowerProcess >::init();
     SingletonHolder< GameSystemResetAndPowerProcess >::get()->initWithoutIter();
     mStationedArchiveLoader = new GameSystemStationedArchiveLoader();
-    mHomeButtonLayout = new HomeButtonLayout();
     mHomeButtonStateNotifier = new HomeButtonStateNotifier();
     mDimmingWatcher = new GameSystemDimmingWatcher();
     setNerve(&NrvGameSystem::GameSystemInitializeAudio::sInstance);
@@ -171,7 +169,6 @@ void GameSystem::initGX() {
 void GameSystem::initAfterStationedResourceLoaded() {
     mFontHolder->createFontFromFile();
     mObjHolder->initAfterStationedResourceLoaded();
-    mHomeButtonLayout->initWithoutIter();
     mErrorWatcher->initAfterResourceLoaded();
     mSystemWipeHolder = MR::createSystemWipeHolder();
     mSceneController->initAfterStationedResourceLoaded();
@@ -216,7 +213,6 @@ void GameSystem::draw() {
     }
 
     mErrorWatcher->draw();
-    mHomeButtonLayout->draw();
     SingletonHolder< GameSystemResetAndPowerProcess >::get()->draw();
 }
 
@@ -224,13 +220,9 @@ void GameSystem::update() {
     SingletonHolder< GameSystemResetAndPowerProcess >::get()->movement();
     mSceneController->checkRequestAndChangeScene();
     mObjHolder->update();
-    mHomeButtonLayout->movement();
+    mErrorWatcher->movement();
 
-    if (!mHomeButtonLayout->isActive()) {
-        mErrorWatcher->movement();
-    }
-
-    mDimmingWatcher->_5 = mErrorWatcher->isWarning() || mHomeButtonLayout->isActive() || GameSequenceFunction::isActiveSaveDataHandleSequence();
+    mDimmingWatcher->_5 = mErrorWatcher->isWarning() || GameSequenceFunction::isActiveSaveDataHandleSequence();
     mDimmingWatcher->update();
     updateNerve();
 }
@@ -245,15 +237,11 @@ void GameSystem::updateSceneController() {
         isSceneUpdate = false;
     }
 
-    if (mHomeButtonLayout->isActive()) {
-        isSceneUpdate = false;
-    }
-
     if (GameSystemFunction::isOccurredSystemWarning()) {
         isSceneUpdate = false;
     }
 
-    mHomeButtonStateNotifier->update(mHomeButtonLayout->isActive() || GameSystemFunction::isOccurredSystemWarning());
+    mHomeButtonStateNotifier->update(GameSystemFunction::isOccurredSystemWarning());
 
     if (isSceneUpdate || isResetProcessing) {
         mSequenceDirector->update();

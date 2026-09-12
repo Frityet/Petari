@@ -10,7 +10,6 @@ class GameSystemFrameControl;
 class GameSystemObjHolder;
 class GameSystemSceneController;
 class GameSystemStationedArchiveLoader;
-class HomeButtonLayout;
 class HomeButtonStateNotifier;
 class SystemWipeHolder;
 
@@ -51,7 +50,6 @@ public:
     /* 0x20 */ GameSystemObjHolder* mObjHolder;
     /* 0x24 */ GameSystemSceneController* mSceneController;
     /* 0x28 */ GameSystemStationedArchiveLoader* mStationedArchiveLoader;
-    /* 0x2C */ HomeButtonLayout* mHomeButtonLayout;
     /* 0x30 */ SystemWipeHolder* mSystemWipeHolder;
     /* 0x34 */ HomeButtonStateNotifier* mHomeButtonStateNotifier;
     /* 0x38 */ bool mIsExecuteLoadSystemArchive;
