@@ -73,6 +73,57 @@ struct OriginalFileProcess {
     JKRHeap& heap() const { return *SingletonHolder<HeapMemoryWatcher>::get()->mStationedHeapNapa; }
 };
 
+void callback_allocations(OriginalFileProcess& process) {
+    const aurora::allocation::HostAllocationScope host;
+    const auto free_before = process.heap().getTotalFreeSize();
+    auto* callback_heap = JKRExpHeap::create(0x10000, &process.heap(), false);
+    require(callback_heap != nullptr, "callback allocation fixture needs a real child heap");
+    for (bool guest : {true, false}) {
+        struct State {
+            OSMessageQueue queue{};
+            OSMessage storage{};
+            OSContext* caller_context;
+            u8* allocation = nullptr;
+            s32 result = 0;
+            bool routed_to_guest = false;
+            bool interrupt_context = false;
+        } state{{}, {}, OSGetCurrentContext()};
+        OSInitMessageQueue(&state.queue, &state.storage, 1);
+        DVDFileInfo info{};
+        alignas(32) std::array<u8, 32> bytes{};
+        info.cb.userData = &state;
+        require(DVDOpen("/ObjectData/InvisibleWall10x10.arc", &info), "actual DVD callback fixture opens retail bytes");
+        {
+            const aurora::allocation::ClientAllocationScope allocations({guest, guest});
+            require(DVDReadAsyncPrio(&info, bytes.data(), bytes.size(), 0, [](s32 result, DVDFileInfo* info) {
+                auto& state = *static_cast<State*>(info->cb.userData);
+                state.result = result;
+                state.routed_to_guest = aurora::allocation::routing_state.guest;
+                state.interrupt_context = OSGetCurrentContext() != state.caller_context;
+                state.allocation = new u8[73];
+                std::memset(state.allocation, 0x6D, 73);
+                OSSendMessage(&state.queue, nullptr, OS_MESSAGE_NOBLOCK);
+            }, 2), "actual DVD read submits a client callback");
+        }
+        // Policy is captured at submission, while the actual heap selection is
+        // the shared SDK selection at delivery, protected by the guest CPU.
+        auto* previous = callback_heap->becomeCurrentHeap();
+        require(OSReceiveMessage(&state.queue, nullptr, OS_MESSAGE_BLOCK), "actual DVD interrupt wakes its original SDK queue");
+        require(DVDClose(&info), "DVD close drains callback before reclaiming its state");
+        require(state.result == 32 && state.routed_to_guest == guest && state.interrupt_context &&
+                    info.cb.userData == &state && !aurora::allocation::routing_state.guest &&
+                    JKRHeap::sCurrentHeap == callback_heap,
+                "DVD completion preserves callback policy, caller data, interrupt context and caller allocation routing");
+        require((JKRHeap::findFromRoot(state.allocation) == callback_heap) == guest &&
+                    std::all_of(state.allocation, state.allocation + 73, [](u8 byte) { return byte == 0x6D; }),
+                "actual callback allocation must use the selected JKR heap only for guest submissions");
+        delete[] state.allocation;
+        previous->becomeCurrentHeap();
+    }
+    callback_heap->destroy();
+    require(process.heap().getTotalFreeSize() == free_before, "callback allocation and heap retirement reclaim every original heap byte");
+}
+
 void cycle(OriginalFileProcess& process, smgpc::runtime::DvdFileSystemService& dvd) {
     const aurora::allocation::HostAllocationScope host;
     constexpr auto file_name = "/ObjectData/InvisibleWall10x10.arc";
@@ -151,14 +202,20 @@ int main() {
         OSInit();
         DVDInit();
         require(aurora_dvd_open(disc), "real DVD fixture must open");
+        struct DiscOwner {
+            ~DiscOwner() { aurora_dvd_close(); }
+        } disc_owner;
         smgpc::runtime::DvdFileSystemService dvd("/");
         {
             OriginalFileProcess process;
-            for (unsigned i = 0; i < 3; ++i) cycle(process, dvd);
+            for (unsigned i = 0; i < 3; ++i) {
+                callback_allocations(process);
+                cycle(process, dvd);
+            }
         }
         require(SingletonHolder<HeapMemoryWatcher>::get() == nullptr && JKRHeap::sRootHeap == nullptr,
                 "complete original heap graph must retire after the file worker cohort");
-        std::cout << "Original file queues, streamed retail bytes, archive identities and repeated retirement passed\n";
+        std::cout << "Original DVD callback heaps, file queues, streamed retail bytes, archive identities and repeated retirement passed\n";
         return 0;
     } catch (const std::exception& error) {
         std::cerr << error.what() << '\n';

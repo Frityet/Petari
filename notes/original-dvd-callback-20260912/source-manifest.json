@@ -1,0 +1,87 @@
+{
+  "scope": "General DVD callback policy, actual interrupt/cancellation delivery, worker pause, coherent cancellation and retirement",
+  "aurora_base": "2d0479fc5298e832f8ac87b6eac3cbfe7ebc6059",
+  "decomp_reference": "17583cbd72ce407815fd46209d9878eed0b8dd5c",
+  "aurora_sources": [
+    {
+      "path": "aurora/include/aurora/dvd.h",
+      "sha256": "f1da237b717105d81b705819e2ca3ebd9eeb194d1f66d7d06fa82e4a66e463ed",
+      "bytes": 4546
+    },
+    {
+      "path": "aurora/include/dolphin/dvd.h",
+      "sha256": "e6a5581a8cdd0f2d85e084d17f847c9abe4b0a9607b978dbec25f9f7e7cc59b6",
+      "bytes": 8754
+    },
+    {
+      "path": "aurora/lib/dolphin/dvd/dvd.cpp",
+      "sha256": "e3b1d3ea648414bafc708c43944f14cd80dcb9fab4e43393b83fe36fc162579d",
+      "bytes": 48850
+    },
+    {
+      "path": "aurora/lib/dolphin/dvd/dvd.hpp",
+      "sha256": "59d6d194ae0adfab3dbebf04e50bb6254a2967972b82aa186d31e361fc8f3a45",
+      "bytes": 2673
+    },
+    {
+      "path": "aurora/tests/test_dvd.cpp",
+      "sha256": "6c89d458a7efe187c3a83a3e2c25ba2f64b9b4c8a259b4c8f88e454d91d865a3",
+      "bytes": 44184
+    }
+  ],
+  "parent_sources": [
+    {
+      "path": "tests/OriginalFileLoaderTests.cpp",
+      "sha256": "45f4d2c529f0bb5101b939bfdf6d85f70fa2b9a047b8f64852f597f99f52d664",
+      "bytes": 12528
+    }
+  ],
+  "reference_sources": [
+    {
+      "path": "decomp/src/RVL_SDK/dvd/dvd.c",
+      "sha256": "20f1793abdacea7a78cc9c0f8aba9f49be6661e039f20c154778aca63c43652d",
+      "bytes": 53907
+    },
+    {
+      "path": "decomp/src/RVL_SDK/dvd/dvdfs.c",
+      "sha256": "20b68c47d5370d5981740eacccd2cc144efdf5bd68ef34e4f2ae8b270eb61669",
+      "bytes": 9921
+    },
+    {
+      "path": "decomp/src/RVL_SDK/dvd/dvd_broadway.c",
+      "sha256": "a5cbd0842adc7c328ae24356e58e534356370b18c9688bbd54b7a27c44241a60",
+      "bytes": 40998
+    },
+    {
+      "path": "decomp/src/RVL_SDK/ipc/ipcclt.c",
+      "sha256": "1b165bd6b2ef5fb447e948d306262350177c539cd213f99f64cc773d3dcfdeb8",
+      "bytes": 18668
+    },
+    {
+      "path": "decomp/src/RVL_SDK/os/OSInterrupt.c",
+      "sha256": "18e373c83f7508651fafee5d563c9994fd79c45a11569bc11488ab7b8d1df61c",
+      "bytes": 11052
+    }
+  ],
+  "abi": "abi.json",
+  "native_compile": "native-compile.json",
+  "validation": {
+    "dvd": "dvd-results.json",
+    "original_file_loader": "file-loader-results.json",
+    "sanitizers": "sanitizer/dvd-results.json",
+    "status": "Confirmed: final fresh root DVD source/test compilation and 58-case real-disc run; actual FileLoader callback allocation plus 3 complete retirement cycles.",
+    "dvd_binary_sha256": "9367a52604958561ff3233cec364b6be684f4e2de4224fb77fb8d641c40223b9",
+    "file_loader_binary_sha256": "e6a3e1ac8c495bea5776ffeea18c0f00452294068f094a1a32de709d5e020e15",
+    "sanitizer_binary_sha256": "e4615b0cd2bc1a80efb6d78c47f42053cc7580cda20803f9c1fbda9b0b221678",
+    "independent_review": "REVIEW.md"
+  },
+  "limits": [
+    "No Game production source changes.",
+    "Original FileLoader behavior remains original; fixture owns the host disc explicitly.",
+    "Sanitizers instrument changed DVD source/test TU; linked support archives are not rebuilt with sanitizers.",
+    "Raw low-level DVD helpers retain existing synchronous timing and hardware/stream omissions.",
+    "Host disc service replacement from own worker rejected before state mutation; descriptor close remains supported.",
+    "No claim of concurrent independent native callers replacing the same host disc service.",
+    "No GameSystem startup or Gateway gameplay claim."
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "fields": [
+    "sizeof DVDCommandBlock",
+    "sizeof DVDFileInfo",
+    "offsetof startAddr",
+    "offsetof length",
+    "offsetof callback",
+    "offsetof nativeGeneration"
+  ],
+  "measurements": [
+    {
+      "revision": "HEAD",
+      "command": [
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "-std=c++20",
+        "-DAURORA",
+        "-DTARGET_PC",
+        "-Inotes/original-dvd-callback-20260912/abi-HEAD",
+        "-Iaurora/include",
+        "notes/original-dvd-callback-20260912/abi.cpp",
+        "-o",
+        "notes/original-dvd-callback-20260912/abi-HEAD.bin"
+      ],
+      "result": "88 120 88 92 96 104"
+    },
+    {
+      "revision": "working",
+      "command": [
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "-std=c++20",
+        "-DAURORA",
+        "-DTARGET_PC",
+        "-Inotes/original-dvd-callback-20260912/abi-working",
+        "-Iaurora/include",
+        "notes/original-dvd-callback-20260912/abi.cpp",
+        "-o",
+        "notes/original-dvd-callback-20260912/abi-working.bin"
+      ],
+      "result": "88 120 88 92 96 104"
+    }
+  ]
+}
