@@ -326,7 +326,7 @@ namespace smgpc::app {
                     }
 #endif
 
-                    _renderer->end_frame(runtime.wii_video().render_mode());
+                    _renderer->end_frame();
 #ifndef NDEBUG
                     if (screenshot_path.has_value() && !screenshot_written && frame_context.frame_index >= screenshot_frame) {
                         _renderer->request_screenshot_png(std::filesystem::path(*screenshot_path));
@@ -345,13 +345,6 @@ namespace smgpc::app {
                     frame_pacer.wait_for_frame_end();
                 }
 
-                _renderer->shutdown();
-                if (g_disc_open) {
-#if defined(__GNUC__) || defined(__clang__)
-                    aurora_dvd_close();
-#endif
-                    g_disc_open = false;
-                }
                 static_cast<void>(_configuration);
                 return 0;
             }
@@ -373,6 +366,14 @@ namespace smgpc::app {
 
     void ensure_disc_image_open(const BootstrapConfiguration &configuration, logging::ILogger &logger) {
         ensure_disc_image_open_impl(configuration, logger);
+    }
+
+    void close_disc_image() {
+        if (!g_disc_open) return;
+#if defined(__GNUC__) || defined(__clang__)
+        aurora_dvd_close();
+#endif
+        g_disc_open = false;
     }
 
     ServiceGraph build_service_graph(const BootstrapConfiguration &configuration) {
@@ -437,7 +438,7 @@ namespace smgpc::app {
         register_runtime_service_reference<smgpc::runtime::DvdFileSystemService, &smgpc::runtime::RuntimeContext::dvd>(graph);
         register_runtime_service_reference<smgpc::runtime::WiiIosService, &smgpc::runtime::RuntimeContext::ios>(graph);
         register_runtime_service_reference<smgpc::runtime::WiiPlatformService, &smgpc::runtime::RuntimeContext::wii_platform>(graph);
-        register_runtime_service_reference<smgpc::runtime::WiiVideoService, &smgpc::runtime::RuntimeContext::wii_video>(graph);
+        register_runtime_service_reference<smgpc::runtime::OriginalDisplayLifetime, &smgpc::runtime::RuntimeContext::display>(graph);
         register_runtime_service_reference<smgpc::runtime::WpadService, &smgpc::runtime::RuntimeContext::wpad>(graph);
         register_runtime_service_reference<smgpc::runtime::AudioEventService, &smgpc::runtime::RuntimeContext::audio>(graph);
         register_runtime_service_reference<smgpc::runtime::EffectService, &smgpc::runtime::RuntimeContext::effects>(graph);

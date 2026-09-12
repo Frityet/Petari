@@ -1,0 +1,42 @@
+[
+  {
+    "path": "decomp/src/Game/LiveActor/ShadowSurfaceCircle.cpp",
+    "sha256": "5dd864c7085683720474f77d923b2dec74fdd1c5a405def6c98e37852e779ac4"
+  },
+  {
+    "path": "decomp/include/Game/LiveActor/ShadowSurfaceCircle.hpp",
+    "sha256": "dfb7c989212e76ac9fdb08160cdf2cda984fce13eb17100d8dd44126262c6965"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowSurfaceCircle.cpp",
+    "sha256": "5dd864c7085683720474f77d923b2dec74fdd1c5a405def6c98e37852e779ac4"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowSurfaceCircle.hpp",
+    "sha256": "dfb7c989212e76ac9fdb08160cdf2cda984fce13eb17100d8dd44126262c6965"
+  },
+  {
+    "path": "decomp/src/Game/LiveActor/ShadowSurfaceDrawer.cpp",
+    "sha256": "7cbc41dabb38ff1a9aa58b5359376d44f981260b29bb267a26aaeb4255327f87"
+  },
+  {
+    "path": "decomp/include/Game/LiveActor/ShadowSurfaceDrawer.hpp",
+    "sha256": "fe0ebc15075b60f853aa0a2a57312d162f10795644e1c2c33e4f8e4480e57ef7"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowSurfaceDrawer.cpp",
+    "sha256": "7cbc41dabb38ff1a9aa58b5359376d44f981260b29bb267a26aaeb4255327f87"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowSurfaceDrawer.hpp",
+    "sha256": "fe0ebc15075b60f853aa0a2a57312d162f10795644e1c2c33e4f8e4480e57ef7"
+  },
+  {
+    "path": "src/compat/ShadowControllerOwnership.cpp",
+    "sha256": "5a2d7d7d62a8e610feca3c1d4e730f91a1ee407f9460e670b10a559402326068"
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "sha256": "04cbbd5170befdf0ff4e8ec0f57894d82d4a2c759bc0c471595f8e5616a94a55"
+  }
+]

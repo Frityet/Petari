@@ -1,55 +1,95 @@
 #pragma once
 
 #include <revolution.h>
+#include <revolution/vi.h>
 
-using Pattern = u8 (*)[2];
+typedef u8 (*Pattern)[2];
 
 class JUTVideo {
 public:
-    using Callback = void (*)(u32);
+    typedef void (*Callback)(u32);
 
-    explicit JUTVideo(const GXRenderModeObj *render_mode);
+    JUTVideo(GXRenderModeObj const*);
     virtual ~JUTVideo();
 
-    static JUTVideo *createManager(const GXRenderModeObj *render_mode);
+    // TODO: return types not confirmed
+    static JUTVideo* createManager(GXRenderModeObj const*);
     static void destroyManager();
     static void drawDoneStart();
     static void dummyNoDrawWait();
-    void setRenderMode(const GXRenderModeObj *render_mode);
+    void setRenderMode(GXRenderModeObj const*);
     void waitRetraceIfNeed();
 
     static void preRetraceProc(u32);
     static void postRetraceProc(u32);
     static void drawDoneCallback();
 
-    [[nodiscard]] GXRenderModeObj *getRenderMode() const;
-    [[nodiscard]] u16 getFbWidth() const {
-        return getRenderMode()->fbWidth;
+    u16 getFbWidth() const {
+        return mRenderObj->fbWidth;
     }
-    [[nodiscard]] u16 getEfbHeight() const {
-        return getRenderMode()->efbHeight;
+    u16 getEfbHeight() const {
+        return mRenderObj->efbHeight;
     }
-    void getBounds(u16 &width, u16 &height) const {
-        width = getFbWidth();
-        height = getEfbHeight();
+    void getBounds(u16& width, u16& height) const {
+        width = (u16)getFbWidth();
+        height = (u16)getEfbHeight();
     }
-    [[nodiscard]] u16 getXfbHeight() const {
-        return getRenderMode()->xfbHeight;
+    u16 getXfbHeight() const {
+        return mRenderObj->xfbHeight;
     }
-    [[nodiscard]] u32 isAntiAliasing() const {
-        return getRenderMode()->aa;
+    u32 isAntiAliasing() const {
+        return mRenderObj->aa;
     }
-    [[nodiscard]] Pattern getSamplePattern() const {
-        return getRenderMode()->sample_pattern;
+    Pattern getSamplePattern() const {
+        return mRenderObj->sample_pattern;
     }
-    [[nodiscard]] u8 *getVFilter() const {
-        return getRenderMode()->vfilter;
+    u8* getVFilter() const {
+        return mRenderObj->vfilter;
+    }
+    OSMessageQueue* getMessageQueue() {
+        return &mMessageQueue;
     }
 
-    static JUTVideo *getManager();
+    static JUTVideo* getManager() {
+        return sManager;
+    }
+    static OSTick getVideoInterval() {
+        return sVideoInterval;
+    }
+    static OSTick getVideoLastTick() {
+        return sVideoLastTick;
+    }
+
+    GXRenderModeObj* getRenderMode() const {
+        return mRenderObj;
+    }
+
+private:
+    static JUTVideo* sManager;
+    static OSTick sVideoLastTick;
+    static OSTick sVideoInterval;
+
+private:
+    /* 0x04 */ _GXRenderModeObj* mRenderObj;
+    /* 0x08 */ u32 field_0x8;
+    /* 0x0C */ u32 mRetraceCount;
+    /* 0x10 */ u32 field_0x10;
+    /* 0x14 */ u32 field_0x14;
+    /* 0x18 */ u32 field_0x18;
+    /* 0x1C */ VIRetraceCallback mPreRetraceCallback;
+    /* 0x20 */ VIRetraceCallback mPostRetraceCallback;
+    /* 0x24 */ Callback mPreCallback;
+    /* 0x28 */ Callback mPostCallback;
+    /* 0x2C */ bool mSetBlack;
+    /* 0x30 */ s32 mSetBlackFrameCount;
+    /* 0x34 */ OSMessage mMessage;
+    /* 0x38 */ OSMessageQueue mMessageQueue;
+    // Retail retains this borrowed XFB in a function static because the
+    // video manager lasts for the process. Native managers may retire sooner.
+    void* mLastDirectPrintFrameBuffer = nullptr;
 };
 
-inline JUTVideo *JUTGetVideoManager() {
+inline JUTVideo* JUTGetVideoManager() {
     return JUTVideo::getManager();
 }
 

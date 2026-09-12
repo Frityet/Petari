@@ -33,18 +33,4 @@ namespace {
 
 namespace MR {
 
-    void activateDefaultGameLayout() {
-        require_runtime("Default-game-layout activation")
-            .game_layout()
-            .activate_default_game_layout();
-    }
-
-
-
-
-
-
-
-
-
 }  // namespace MR

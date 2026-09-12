@@ -1,4 +1,8 @@
 #include "Game/Screen/MessageTagSkipTagProcessor.hpp"
+#if defined(TARGET_PC)
+#include <aurora/exception.hpp>
+#include <stdexcept>
+#endif
 
 MessageTagSkipTagProcessor::MessageTagSkipTagProcessor() : nw4r::ut::TagProcessorBase< wchar_t >() {
 }
@@ -42,5 +46,47 @@ u32 MessageEditorMessageTag::getParam32(int index) const {
     return (static_cast<u32>(mMessage[2 + index * 2]) << 16) | static_cast<u32>(mMessage[3 + index * 2]);
 #else
     return *reinterpret_cast< const u32* >(reinterpret_cast< const u8* >(mMessage) + index * 4 + 4);
+#endif
+}
+
+MessageEditorMessageTag::MessageEditorMessageTag(const nw4r::ut::PrintContext< wchar_t >* context) : mMessage(context->str) {
+}
+
+u32 MessageEditorMessageTag::getTagLength() const {
+#if defined(TARGET_PC)
+    return (static_cast<u32>(mMessage[0]) >> 8) - 2U;
+#else
+    return reinterpret_cast< const u8* >(mMessage)[0] - 2U;
+#endif
+}
+
+u32 MessageEditorMessageTag::getParamLength() const {
+#if defined(TARGET_PC)
+    return (static_cast<u32>(mMessage[0]) >> 8) - 6U;
+#else
+    return reinterpret_cast< const u8* >(mMessage)[0] - 6U;
+#endif
+}
+
+u8 MessageEditorMessageTag::getParam8(int index) const {
+#if defined(TARGET_PC)
+    return static_cast<u32>(mMessage[2 + index / 2]) >> ((index & 1) ? 0 : 8);
+#else
+    return reinterpret_cast< const u8* >(mMessage)[index + 4];
+#endif
+}
+
+u16 MessageEditorMessageTag::getParam16(int index) const {
+    return mMessage[index + 2];
+}
+
+wchar_t* MessageEditorMessageTag::getParamPtr(int offset) const {
+#if defined(TARGET_PC)
+    if (offset & 1) {
+        aurora::throw_host_exception<std::logic_error>("Odd byte tag payloads require indexed byte access on native wchar_t");
+    }
+    return const_cast<wchar_t*>(mMessage) + offset / 2 + 2;
+#else
+    return reinterpret_cast< wchar_t* >(reinterpret_cast< u8* >(const_cast< wchar_t* >(mMessage)) + offset + 4);
 #endif
 }

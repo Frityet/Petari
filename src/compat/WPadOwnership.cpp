@@ -3,7 +3,12 @@
 #include "Game/System/WPad.hpp"
 #include "Game/System/WPadHolder.hpp"
 #include "Game/System/WPadRumble.hpp"
+#include "Game/System/GameSystem.hpp"
+#include "Game/System/GameSystemObjHolder.hpp"
+#include "Game/System/HeapMemoryWatcher.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
+#include "JSystem/JKernel/JKRExpHeap.hpp"
 #include <aurora/exception.hpp>
 #include <aurora/wpad.hpp>
 #include <stdexcept>
@@ -98,11 +103,22 @@ WPad& WPadOwnership::pad(int channel) {
 WPadHolder& WPadOwnership::holder() { return *_state->holder; }
 JKRHeap& WPadOwnership::heap() { return _state->domain->heap(); }
 WPadHolder& require_wpad_holder() {
+    if (auto* system = SingletonHolder<GameSystem>::get()) {
+        if (!system->mObjHolder || !system->mObjHolder->mWPadHolder)
+            aurora::throw_host_exception<std::logic_error>("The original process has not created its WPad holder.");
+        return *system->mObjHolder->mWPadHolder;
+    }
     if (!current_wpad_owner)
         aurora::throw_host_exception<std::logic_error>("Original WPad records require an active input owner.");
     return current_wpad_owner->holder();
 }
 JKRHeap& require_wpad_heap() {
+    if (SingletonHolder<GameSystem>::get()) {
+        auto* heaps = SingletonHolder<HeapMemoryWatcher>::get();
+        if (!heaps || !heaps->mWPadHeap)
+            aurora::throw_host_exception<std::logic_error>("The original process has not created its WPad heap.");
+        return *heaps->mWPadHeap;
+    }
     if (!current_wpad_owner)
         aurora::throw_host_exception<std::logic_error>("WPad SDK allocation requires an active input owner.");
     return current_wpad_owner->heap();

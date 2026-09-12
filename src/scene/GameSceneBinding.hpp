@@ -11,12 +11,6 @@ namespace MR { class FunctorBase; }
 
 namespace smgpc::scene {
     class SceneLifetimeBinding;
-    enum class GameSceneAction {
-        EndScenarioStarter, PlayMovie, StartGameOver, EndGameOver, EndMiss,
-        PowerStarGet, GrandStarGet, ShowGalaxyMap, StaffRoll
-    };
-    enum class GameSceneQuery { ScenarioOpeningCamera, ScenarioStarter, StageClearDemo };
-
     // Borrows an actual original GameScene. Native services never substitute
     // another Scene subclass for the original nerve and sequence fields.
     class GameSceneBinding final {
@@ -29,18 +23,11 @@ namespace smgpc::scene {
         // Snapshot raw children while the derived object is still alive.
         // Their destructors run at the Scene base retirement boundary.
         void prepare_retirement() noexcept;
-        [[nodiscard]] GameScene &scene() const;
-        [[nodiscard]] GameScene *scene_if_active() const noexcept;
-        void dispatch(GameSceneAction action);
-        [[nodiscard]] bool query(GameSceneQuery query) const;
 
     private:
+        friend void prepare_game_scene_retirement(GameScene&) noexcept;
         void retire() noexcept;
         GameScene *_scene;
-        // The actual owner installs these delegates. API users can link and
-        // validate a missing owner without pulling in its construction graph.
-        void (*_dispatch)(GameScene &, GameSceneAction);
-        bool (*_query)(const GameScene &, GameSceneQuery);
         std::unique_ptr<SceneLifetimeBinding> _lifetime;
         compat::NameObjRuntimeRegistrationMarker _marker;
         GameScenePauseControl *_pause_control = nullptr;
@@ -50,8 +37,5 @@ namespace smgpc::scene {
         bool _prepared = false;
     };
 
-    [[nodiscard]] GameScene *current_game_scene() noexcept;
-    [[nodiscard]] GameScene &require_game_scene();
-    void dispatch_game_scene_action(GameSceneAction action);
-    [[nodiscard]] bool query_game_scene(GameSceneQuery query);
+    void prepare_game_scene_retirement(GameScene&) noexcept;
 }

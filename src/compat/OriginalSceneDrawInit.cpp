@@ -14,6 +14,17 @@ namespace {
     }
 }
 namespace MR {
+    void setupDrawForNW4RLayout(f32 a1, bool) {
+        f32 v1 = MR::getScreenHeight() * 0.5f * a1;
+        f32 v2 = 608.0f * 0.5f * a1;
+
+        Mtx44 projMtx;
+        C_MTXOrtho(projMtx, v1, -v1, -v2, v2, -1000.0f, 1000.0f);
+        GXSetProjection(projMtx, GX_ORTHOGRAPHIC);
+        GXSetCullMode(GX_CULL_NONE);
+        GXSetZMode(GX_FALSE, GX_NEVER, GX_FALSE);
+    }
+
     void reinitGX() {
         j3dSys.reinitGX();
         GXSetAlphaUpdate(GX_FALSE);

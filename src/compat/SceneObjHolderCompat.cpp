@@ -2,6 +2,8 @@
 #include "resource/TextEncoding.hpp"
 #include <aurora/exception.hpp>
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/System/GameSystem.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "Game/Effect/EffectSystem.hpp"
 #include "compat/EffectSystemOwnership.hpp"
 #include "compat/ImageEffectOwnership.hpp"
@@ -10,12 +12,16 @@
 #include "Game/Map/CollisionDirector.hpp"
 #include "Game/Map/SunshadeMapHolder.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
+#include "Game/LiveActor/ShadowSurfaceDrawer.hpp"
 #include "Game/LiveActor/ShadowVolumeDrawer.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/MessageHolderOwnership.hpp"
 #include "Game/Scene/PlacementStateChecker.hpp"
 #include "Game/Scene/ScenePlayingResult.hpp"
+#include "Game/Scene/SceneDataInitializer.hpp"
+#include "Game/Scene/StageDataHolder.hpp"
+#include "Game/Util/SceneUtil.hpp"
 
 #include "Game/AreaObj/AreaObjContainer.hpp"
 #include "Game/Camera/CameraDirector.hpp"
@@ -36,6 +42,7 @@
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/Map/SwitchWatcherHolder.hpp"
 #include "Game/MapObj/CoinHolder.hpp"
+#include "Game/MapObj/StarPieceDirector.hpp"
 #include "Game/MapObj/ClipAreaHolder.hpp"
 #include "Game/MapObj/CoinRotater.hpp"
 #include "Game/MapObj/PurpleCoinHolder.hpp"
@@ -66,9 +73,12 @@
 #include "Game/Util/ShareUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
+#include "compat/DrawSyncManagerLifetime.hpp"
 #include "compat/CapturedFrameBlurService.hpp"
 #include "compat/GlobalGravityOwnership.hpp"
-#include "compat/TalkRuntime.hpp"
+#include "compat/TalkDirectorLifetime.hpp"
+#include "Game/NPC/TalkDirector.hpp"
+#include "Game/NPC/EventDirector.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 
@@ -85,6 +95,7 @@ namespace {
         return smgpc::resource::encode_cp932(name);
     }
 
+    const std::string cTalkDirectorName = encode_owner_name("会話ディレクター");
     const std::string cCameraDirectorName = encode_owner_name("カメラ管理");
     const std::string cGravityManagerName = encode_owner_name("重力");
     const std::string cBaseMatrixFollowTargetHolderName = encode_owner_name("行列追随先リスト");
@@ -94,6 +105,7 @@ namespace {
     const std::string cAreaObjContainerName = encode_owner_name("エリアオブジェクトコンテナ管理");
     const std::string cPlacementStateCheckerName = encode_owner_name("オブジェクト配置状態の監視");
     const std::string cWarpPodManagerName = encode_owner_name("ワープポッド管理局");
+    const std::string cStarPieceDirectorName = encode_owner_name("スターピース指揮");
     const std::string cCoinHolderName = encode_owner_name("コイン管理");
     const std::string cClipAreaHolderName = encode_owner_name("クリップエリアホルダー");
     const std::string cCoinRotaterName = encode_owner_name("コイン回転管理");
@@ -149,6 +161,7 @@ namespace smgpc::scene {
         _global_gravity_ownership = std::make_unique<smgpc::compat::GlobalGravityOwnership>(holder);
         _collision_director_ownership = std::make_unique<smgpc::compat::CollisionDirectorOwnership>();
         _demo_director_ownership = std::make_unique<smgpc::compat::DemoDirectorOwnership>();
+        _talk_director_lifetime = std::make_unique<smgpc::compat::TalkDirectorLifetime>();
         _image_effect_ownership = std::make_unique<smgpc::compat::ImageEffectOwnership>(holder);
         _area_obj_runtime = std::make_unique<AreaObjRuntime>();
         _captured_frame_blur_service = std::make_unique<smgpc::compat::CapturedFrameBlurService>();
@@ -168,8 +181,12 @@ namespace smgpc::scene {
         sCurrentSceneObjHolder = _holder;
         sCurrentSceneObjHolderBinding = this;
         try {
-            if (auto* messages = smgpc::runtime::current_message_holder())
-                _scene_messages = std::make_unique<smgpc::runtime::SceneMessageBinding>(*messages);
+            // Original GameScene owns initSceneMessage/destroySceneMessage timing.
+            // Only standalone hosts need the scoped alias supplied here.
+            if (!SingletonHolder<GameSystem>::get()) {
+                if (auto* messages = smgpc::runtime::current_message_holder())
+                    _scene_messages = std::make_unique<smgpc::runtime::SceneMessageBinding>(*messages);
+            }
             // Every original LiveActor joins this group during construction,
             // including actors with no movement or draw registration.
             if (dynamic_cast<AllLiveActorGroup*>(_holder->create(SceneObj_AllLiveActorGroup)) == nullptr) {
@@ -184,6 +201,9 @@ namespace smgpc::scene {
     }
 
     SceneObjHolderBinding::~SceneObjHolderBinding() {
+        if (_game_allocation_domain)
+            smgpc::compat::retire_draw_sync_callbacks(_game_allocation_domain->heap());
+        prepare_retirement();
         _demo_director_ownership->prepare_retirement();
         _collision_director_ownership->prepare_retirement();
         _image_effect_ownership->prepare_retirement();
@@ -299,6 +319,14 @@ namespace smgpc::scene {
         _initialization_state.complete();
     }
 
+    void SceneObjHolderBinding::prepare_retirement() noexcept {
+        _talk_director_lifetime->begin_retirement();
+    }
+
+    smgpc::compat::TalkDirectorLifetime* current_talk_director_lifetime() noexcept {
+        return sCurrentSceneObjHolderBinding ? sCurrentSceneObjHolderBinding->_talk_director_lifetime.get() : nullptr;
+    }
+
     smgpc::compat::DemoDirectorOwnership* current_demo_director_ownership() noexcept {
         return sCurrentSceneObjHolderBinding ? sCurrentSceneObjHolderBinding->_demo_director_ownership.get() : nullptr;
     }
@@ -383,6 +411,7 @@ NameObj *SceneObjHolder::create(int id) {
 
     auto *binding = sCurrentSceneObjHolderBinding;
     const auto marker = smgpc::compat::mark_name_obj_runtime_registrations();
+    smgpc::compat::DrawSyncRegistrationTransaction callbacks;
     const auto slot_checkpoint = binding->_provisional_slots.size();
     const auto outermost = binding->_construction_depth == 0U;
     ++binding->_construction_depth;
@@ -409,6 +438,8 @@ NameObj *SceneObjHolder::create(int id) {
         binding->_image_effect_ownership->capture(id, *object, textures);
         if (id == SceneObj_DemoDirector) binding->_demo_director_ownership->capture(static_cast<DemoDirector&>(*object));
         object->initWithoutIter();
+        if (id == SceneObj_TalkDirector)
+            binding->_talk_director_lifetime->capture_after_init(static_cast<TalkDirector&>(*object));
         binding->_image_effect_ownership->capture(id, *object, textures);
         smgpc::compat::JkrHostAllocationScope host_metadata;
         auto registrations =
@@ -474,8 +505,10 @@ NameObj *SceneObjHolder::create(int id) {
             binding->_provisional_slots.clear();
         }
         --binding->_construction_depth;
+        callbacks.commit();
         return result;
     } catch (...) {
+        callbacks.rollback();
         if (binding->_camera_runtime && smgpc::compat::name_obj_runtime_object_was_registered_since(
                 &binding->_camera_runtime->director(), marker))
             binding->_camera_runtime.reset();
@@ -534,6 +567,10 @@ NameObj *SceneObjHolder::newEachObj(int id) {
     }
 
     switch (id) {
+    case SceneObj_SceneDataInitializer:
+        return new SceneDataInitializer();
+    case SceneObj_StageDataHolder:
+        return new StageDataHolder(MR::getCurrentStageName(), 0, true);
     case SceneObj_AllLiveActorGroup:
         return new AllLiveActorGroup();
     case SceneObj_SunshadeMapHolder:
@@ -582,6 +619,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new BigFanHolder();
     case SceneObj_WarpPodMgr:
         return new WarpPodMgr(cWarpPodManagerName.c_str());
+    case SceneObj_StarPieceDirector:
+        return new StarPieceDirector(cStarPieceDirectorName.c_str());
     case SceneObj_CoinHolder:
         return new CoinHolder(cCoinHolderName.c_str());
     case SceneObj_ResourceShare:
@@ -622,6 +661,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new GameSceneLayoutHolder();
     case SceneObj_ShadowVolumeDrawInit:
         return new ShadowVolumeDrawInit();
+    case SceneObj_ShadowSurfaceDrawInit:
+        return new ShadowSurfaceDrawInit("水面影描画初期化");
     case SceneObj_ShadowControllerHolder:
         return new ShadowControllerHolder();
     case SceneObj_AudBgmConductor:
@@ -631,7 +672,9 @@ NameObj *SceneObjHolder::newEachObj(int id) {
     case SceneObj_ScenePlayingResult:
         return new ScenePlayingResult();
     case SceneObj_TalkDirector:
-        return new smgpc::compat::TalkRuntime();
+        return new TalkDirector(cTalkDirectorName.c_str());
+    case SceneObj_EventDirector:
+        return new EventDirector();
     case SceneObj_LensFlareDirector:
         return new LensFlareDirector();
     case SceneObj_SphereSelector:

@@ -3,6 +3,7 @@
 #include "Game/Screen/StarPointerController.hpp"
 
 #include "Game/Screen/StarPointerDirector.hpp"
+#include "Game/System/DrawSyncManager.hpp"
 
 #include "Game/Util/ScreenUtil.hpp"
 
@@ -11,6 +12,8 @@
 #include "Game/Util/StarPointerUtil.hpp"
 
 #include "compat/StarPointerDepthOwnership.hpp"
+#include "Game/System/GameSystem.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 
 #include <dolphin/gx/GXGet.h>
 
@@ -47,13 +50,18 @@ void StarPointerPeekZ::drawSyncCallback(u16 token) {
     }
 }
 
-// Native draw-sync identity is the retained Aurora snapshot ID. The Wii
-// manager token is not submitted to a fake GameSystem/FIFO manager.
-StarPointerPeekZ::StarPointerPeekZ() : mToken(0), mInfos(new DpdInfo*[2]) {}
+StarPointerPeekZ::StarPointerPeekZ() {
+    mInfos = new DpdInfo*[2];
+    mToken = DrawSyncManager::sInstance->setCallback(2, 1, this);
+}
 
 void StarPointerPeekZ::setDrawSyncToken() {
-    smgpc::compat::require_star_pointer_depth().capture();
+    GXGetProjectionv(mProjectionParameters);
+    GXGetViewportv(mViewportParameters);
+    DrawSyncManager::sInstance->pushBreakPoint();
+    GXSetDrawSync(mToken);
 }
+
 
 namespace StarPointerFunction {
 
@@ -91,14 +99,16 @@ s32 getNumStarPointer() {
 
 namespace MR {
 MtxPtr getStarPointerViewMtx() {
-    return smgpc::compat::require_star_pointer_depth().transform().mViewMtx;
+    return StarPointerFunction::getStarPointerDirector()->mTransHolder->mViewMtx;
 }
 
 Mtx44Ptr getStarPointerProjMtx() {
-    return smgpc::compat::require_star_pointer_depth().transform().mProjMtx;
+    return StarPointerFunction::getStarPointerDirector()->mTransHolder->mProjMtx;
 }
 
 TVec3f* getStarPointerWorldPosUsingDepth(s32 channel) {
+    if (SingletonHolder<GameSystem>::get())
+        return &StarPointerFunction::getStarPointerDirector()->getStarPointerController(channel)->mWorldPos;
     return &smgpc::compat::require_star_pointer_depth().world_position(channel);
 }
 } // namespace MR

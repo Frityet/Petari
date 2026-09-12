@@ -3,6 +3,7 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Scene/Scene.hpp"
 #include "compat/JkrAllocationDomain.hpp"
+#include "compat/DrawSyncManagerLifetime.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "Game/Scene/GameScene.hpp"
 #include "Game/Scene/SceneFunction.hpp"
@@ -32,6 +33,10 @@ namespace smgpc::scene {
         const auto scenario_no = _active_scenario_no;
         const auto before_entry_count = _runtime.scheduler().snapshot().size();
 #endif
+        if (_active_scene_domain)
+            smgpc::compat::retire_draw_sync_callbacks(_active_scene_domain->heap());
+        if (_active_initialization)
+            _active_initialization->prepare_retirement();
         if (_active_game_scene_binding)
             _active_game_scene_binding->prepare_retirement();
         _active_scene.reset();

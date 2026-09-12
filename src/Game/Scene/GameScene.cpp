@@ -1,3 +1,6 @@
+#if defined(TARGET_PC)
+#include "scene/GameSceneBinding.hpp"
+#endif
 #include "Game/Scene/GameScene.hpp"
 #if defined(TARGET_PC)
 #include "compat/DisabledObjectAudio.hpp"
@@ -73,6 +76,9 @@ GameScene::GameScene()
 }
 
 GameScene::~GameScene() {
+#if defined(TARGET_PC)
+    smgpc::scene::prepare_game_scene_retirement(*this);
+#endif
     MR::destroySceneMessage();
     NPCFunction::deleteNPCData();
     MR::onStarPointerSceneOut();

@@ -106,6 +106,7 @@ namespace smgpc::layout {
         std::string name;
         std::vector<BrlytMaterialTexture> textures;
         std::vector<BrlytTexSrt> tex_srts;
+        std::vector<std::uint8_t> native_resource;
         std::vector<BrlytTexCoordGen> tex_coord_gens;
         std::array<smgpc::render::GXTevRegisterColor, 3U> tev_colors{
             smgpc::render::GXTevRegisterColor{0, 0, 0, 0},
@@ -149,6 +150,7 @@ namespace smgpc::layout {
             std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U},
             std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U},
         };
+        std::vector<std::array<BrlytTexCoord, 4U>> tex_coord_sets;
         std::array<BrlytTexCoord, 4U> tex_coords{
             BrlytTexCoord{0.0F, 0.0F},
             BrlytTexCoord{1.0F, 0.0F},
@@ -158,7 +160,19 @@ namespace smgpc::layout {
         bool visible = true;
     };
 
+    struct BrlytTextResource {
+        std::uint16_t buffer_length = 0;
+        float font_width = 0.0f;
+        float font_height = 0.0f;
+        float char_space = 0.0f;
+        float line_space = 0.0f;
+        std::array<std::uint8_t, 4> top_color{};
+        std::array<std::uint8_t, 4> bottom_color{};
+    };
+
     struct BrlytTextBox {
+        BrlytTextResource resource;
+
         std::string name;
         std::string font_name;
         std::vector<std::uint16_t> text;

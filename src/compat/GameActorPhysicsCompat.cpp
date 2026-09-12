@@ -118,6 +118,7 @@ namespace {
         smgpc::compat::replace_actor_shadow_runtime_state(actor, std::move(shadow));
     }
 
+
 }  // namespace
 
 namespace MR {
@@ -253,15 +254,6 @@ namespace MR {
         });
     }
 
-
-
-    void createPurpleCoinCounter() {
-        throw_game_scene_layout_unavailable();
-    }
-
-    void validatePurpleCoinCounter() {
-        throw_game_scene_layout_unavailable();
-    }
 }  // namespace MR
 
 namespace MR {

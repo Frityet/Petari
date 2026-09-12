@@ -2,6 +2,7 @@
 #include "Game/Scene/SceneNameObjListExecutor.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "scene/SceneLifetimeBinding.hpp"
+#include "scene/OriginalSceneSupport.hpp"
 #include <memory>
 
 Scene::Scene(const char *pName) : NerveExecutor(pName) {
@@ -44,4 +45,5 @@ void Scene::initNameObjListExecutor() {
 
 void Scene::initSceneObjHolder() {
     mSceneObjHolder = new SceneObjHolder();
+    smgpc::scene::bind_original_scene_support(*this);
 }

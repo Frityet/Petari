@@ -10,12 +10,18 @@
 #include "Game/Map/SwitchSynchronizer.hpp"
 #include "Game/MapObj/BrightObj.hpp"
 #include "Game/MapObj/CollisionBlocker.hpp"
+#include "Game/MapObj/Coin.hpp"
 #include "Game/MapObj/InvisiblePolygonObj.hpp"
 #include "Game/MapObj/InvisiblePolygonObjGCapture.hpp"
+#include "Game/MapObj/StarPieceGroup.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
+#include "Game/NameObj/ModelChangableObjFactory.hpp"
+#include "Game/Util/MapPartsUtil.hpp"
 #include "Game/NPC/DemoRabbit.hpp"
+#include "Game/NPC/RunawayRabbitCollect.hpp"
+#include "Game/NPC/Rosetta.hpp"
 #include "Game/NPC/RunawayTico.hpp"
 #include "Game/NPC/Tico.hpp"
 #include "Game/Util/FileUtil.hpp"
@@ -46,10 +52,57 @@ namespace {
         return new PlanetMap(pName, nullptr);
     }
 
+    // Retail ModelChangableObjFactory has twelve rows, including the repeated
+    // TripodBossRotateParts entry. Keep membership separate from availability:
+    // absent native actor closures must never become an unknown retail name.
+    constexpr auto cModelChangableObjCreatorTable = std::to_array<Model2CreateFunc>({
+        {nullptr, "AssemblyBlock", nullptr},
+        {nullptr, "ClipFieldMapParts", nullptr},
+        {nullptr, "FlexibleSphere", nullptr},
+        {nullptr, "MercatorFixParts", nullptr},
+        {nullptr, "MercatorRailMoveParts", nullptr},
+        {nullptr, "MercatorRotateParts", nullptr},
+        {nullptr, "TripodBossFixParts", nullptr},
+        {nullptr, "TripodBossRailMoveParts", nullptr},
+        {nullptr, "TripodBossRotateParts", nullptr},
+        {nullptr, "TripodBossRotateParts", nullptr},
+        {nullptr, "SimpleNormalMapObj", nullptr},
+        {nullptr, "SunshadeMapParts", nullptr},
+    });
+
+    [[nodiscard]] const Model2CreateFunc *find_model_changing_entry(std::string_view object_name) {
+        for (const auto &entry : cModelChangableObjCreatorTable) {
+            if (entry._0 != nullptr ? object_name.starts_with(entry._0) : object_name == entry.mArchiveName) {
+                return &entry;
+            }
+        }
+        return nullptr;
+    }
+
     // This is a compiled subset of the retail cCreateTable, not an alternate
     // placement policy. An entry is present only when its normal init path has
     // no known mandatory dependency on an unavailable host subsystem.
     constexpr auto cSupportedCreateTable = std::array{
+        NameObjFactory::Name2CreateFunc{
+            "Coin",
+            MR::createDirectSetCoin,
+            "Coin",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "PurpleCoin",
+            MR::createDirectSetPurpleCoin,
+            "PurpleCoin",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "StarPieceFlow",
+            create_supported_name_obj<StarPieceGroup>,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "StarPieceGroup",
+            create_supported_name_obj<StarPieceGroup>,
+            nullptr,
+        },
         NameObjFactory::Name2CreateFunc{
             "PrologueDirector",
             create_supported_name_obj<PrologueDirector>,
@@ -251,6 +304,16 @@ namespace {
             "PolygonCodeRecoveryBowl",
         },
         NameObjFactory::Name2CreateFunc{
+            "Rosetta",
+            create_supported_name_obj<Rosetta>,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "RunawayRabbitCollect",
+            create_supported_name_obj<RunawayRabbitCollect>,
+            "TrickRabbit",
+        },
+        NameObjFactory::Name2CreateFunc{
             "DemoRabbit",
             create_supported_name_obj<DemoRabbit>,
             nullptr,
@@ -324,10 +387,6 @@ namespace {
 
     constexpr auto cUnavailableCreatorTable = std::array{
         UnavailableCreatorRecord{
-            "RunawayRabbitCollect",
-            "original_game_scene_demo_sequence_runtime_unavailable",
-        },
-        UnavailableCreatorRecord{
             "SummerSky",
             "exact_space_inner_child_and_switch_runtime_unavailable",
         },
@@ -345,13 +404,9 @@ namespace {
             "real_mario_update_and_restart_dispatch_runtime_unavailable",
         },
         UnavailableCreatorRecord{"Steam", "clipping_group_runtime_unavailable"},
-        UnavailableCreatorRecord{"Coin", "shadow_runtime_unavailable"},
-        UnavailableCreatorRecord{"PurpleCoin", "shadow_runtime_unavailable"},
         UnavailableCreatorRecord{"RailCoin", "shadow_area_and_mercator_runtime_unavailable"},
         UnavailableCreatorRecord{"PurpleRailCoin", "shadow_area_and_mercator_runtime_unavailable"},
         UnavailableCreatorRecord{"PurpleCoinStarter", "event_power_star_and_scene_layout_runtime_unavailable"},
-        UnavailableCreatorRecord{"StarPieceFlow", "star_piece_director_runtime_unavailable"},
-        UnavailableCreatorRecord{"StarPieceGroup", "star_piece_director_runtime_unavailable"},
     };
 
     struct OriginalArchiveRecord {
@@ -368,6 +423,18 @@ namespace {
     // makes actor construction and its complete preload description one
     // atomic compatibility capability.
     constexpr auto cSupportedMakeArchiveListFuncTable = std::array{
+        NameObjFactory::Name2MakeArchiveListFunc{
+            "Coin",
+            Coin::makeArchiveList,
+        },
+        NameObjFactory::Name2MakeArchiveListFunc{
+            "PurpleCoin",
+            Coin::makeArchiveList,
+        },
+        NameObjFactory::Name2MakeArchiveListFunc{
+            "Rosetta",
+            Rosetta::makeArchiveList,
+        },
         NameObjFactory::Name2MakeArchiveListFunc{
             "DemoRabbit",
             DemoRabbit::makeArchiveList,
@@ -670,7 +737,50 @@ namespace NameObjFactory {
 
 }  // namespace NameObjFactory
 
+namespace MR {
+
+    CreatorFuncPtr getModelChangableObjCreator(const char *pName) {
+        const auto *entry = find_model_changing_entry(pName);
+        if (entry == nullptr) {
+            return nullptr;
+        }
+        if (entry->mCreatorFunc == nullptr) {
+            aurora::throw_host_exception<std::runtime_error>(
+                "Retail model-changing creator requires an unavailable actor runtime: " + std::string(pName));
+        }
+        return entry->mCreatorFunc;
+    }
+
+    void requestMountModelChangableObjArchives(const char *pName, s32 modelNo) {
+        char objectName[128];
+        MR::getMapPartsObjectName(objectName, sizeof(objectName), pName, modelNo);
+        MR::mountAsyncArchiveByObjectOrLayoutName(objectName, nullptr);
+    }
+
+    bool isReadResourceFromDVDAtModelChangableObj(const char *pName, s32 modelNo) {
+        char objectName[128];
+        char archiveName[128];
+        MR::getMapPartsObjectName(objectName, sizeof(objectName), pName, modelNo);
+        MR::makeObjectArchiveFileNameFromPrefix(archiveName, sizeof(archiveName), objectName, true);
+        return !MR::isLoadedFile(archiveName);
+    }
+
+}  // namespace MR
+
 namespace smgpc::scene::nameobj {
+
+    NameObjCreatorSupport describe_model_changing_creator_support(std::string_view object_name) {
+        const auto *entry = find_model_changing_entry(object_name);
+        if (entry == nullptr) {
+            return {.kind = NameObjCreatorSupportKind::NotLinked,
+                    .reason = "unknown_retail_model_changing_creator"};
+        }
+        return entry->mCreatorFunc != nullptr
+                   ? NameObjCreatorSupport{.kind = NameObjCreatorSupportKind::Supported,
+                                           .reason = "compiled_retail_model_changing_creator"}
+                   : NameObjCreatorSupport{.kind = NameObjCreatorSupportKind::RuntimeClosureUnavailable,
+                                           .reason = "original_model_changing_actor_runtime_unavailable"};
+    }
 
     bool can_create_name_obj(std::string_view object_name) {
         const auto *planet = find_planet_map_entry(object_name);
@@ -782,10 +892,9 @@ namespace smgpc::scene::nameobj {
         return requests;
     }
 
-    std::unique_ptr<NameObj> create_name_obj(smgpc::runtime::DvdFileSystemService &,
-                                             std::string_view object_name, const char *actor_name) {
+    static std::unique_ptr<NameObj> create_with_creator(std::string_view object_name, const char *actor_name,
+                                                         CreatorFuncPtr creator) {
         const auto object = std::string(object_name);
-        const auto creator = NameObjFactory::getCreator(object.c_str());
         if (creator == nullptr) {
             const auto support = describe_creator_support(object_name);
             aurora::throw_host_exception<std::runtime_error>("Unsupported NameObj factory request: " + object +
@@ -812,6 +921,21 @@ namespace smgpc::scene::nameobj {
             smgpc::compat::adopt_global_gravity_children(*gravity);
         }
         return result;
+    }
+
+    std::unique_ptr<NameObj> create_name_obj(smgpc::runtime::DvdFileSystemService &,
+                                             std::string_view object_name, const char *actor_name) {
+        const auto name = std::string(object_name);
+        return create_with_creator(object_name, actor_name, NameObjFactory::getCreator(name.c_str()));
+    }
+
+    std::unique_ptr<NameObj> create_model_changing_name_obj(std::string_view object_name, const char *actor_name) {
+        const auto name = std::string(object_name);
+        const auto creator = MR::getModelChangableObjCreator(name.c_str());
+        if (creator == nullptr) {
+            aurora::throw_host_exception<std::runtime_error>("Unknown retail model-changing creator: " + name);
+        }
+        return create_with_creator(object_name, actor_name, creator);
     }
 
 }  // namespace smgpc::scene::nameobj

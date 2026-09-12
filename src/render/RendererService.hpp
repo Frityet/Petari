@@ -66,6 +66,16 @@ namespace smgpc::render {
         bool operator==(const CopyClearState &) const = default;
     };
 
+    // A display owner may supply its original framebuffer exchange/copy
+    // sequence while this renderer retains the host GPU frame and window.
+    class DisplayFrameSource {
+    public:
+        virtual ~DisplayFrameSource() = default;
+        virtual void begin_render(const CopyClearState&) = 0;
+        virtual void end_render() = 0;
+        virtual void set_copy_clear(const CopyClearState&) = 0;
+    };
+
     class AuroraWindow {
     public:
         explicit AuroraWindow(const WindowConfiguration &configuration);
@@ -84,8 +94,11 @@ namespace smgpc::render {
         [[nodiscard]] InputPointerState input_pointer_state() const;
         void close();
         void shutdown();
+        void attach_display(DisplayFrameSource&);
+        void detach_display(DisplayFrameSource&);
 
     private:
+        friend class AuroraRenderer;
         struct Impl;
         std::unique_ptr<Impl> _impl;
     };

@@ -1,0 +1,54 @@
+[
+  {
+    "path": "src/nw4r/lyt/lyt_animation.cpp",
+    "sha256": "0d40eab01c73902e1e72f23930c078d45585cd60afc6cd914b464a3a7eddb96f"
+  },
+  {
+    "path": "src/nw4r/lyt/lyt_group.cpp",
+    "sha256": "f581baf88e65378660195ee661cc344c771208d4b8a7cd6e3294eaacde315a41"
+  },
+  {
+    "path": "src/nw4r/lyt/animation.h",
+    "sha256": "4797e2574630bc544dba7a0db5f93de005ae29db09568618f3b5f7843a7662e6"
+  },
+  {
+    "path": "src/nw4r/lyt/group.h",
+    "sha256": "1fba44ada679320326a0907d5ace086bba911e6843733440190ebc5f29dbef0e"
+  },
+  {
+    "path": "src/nw4r/lyt/common.h",
+    "sha256": "ded0d0c8fe488b98cb5b23b4b5789beb0016308f39e2cb1a67ff56dee6e76959"
+  },
+  {
+    "path": "src/nw4r/lyt/layout.h",
+    "sha256": "4afb98c36391c6d7764f11cb18816970b2fcdd593d3abc4c653a18ba83b29ae0"
+  },
+  {
+    "path": "src/nw4r/lyt/pane.h",
+    "sha256": "a9dd1c9d99c29ca3db33d9e60e65a8505a0a60cda128099cc2e6584d3c836eaa"
+  },
+  {
+    "path": "src/nw4r/lyt/resources.h",
+    "sha256": "dad8213d0a99cd9ee419b145913d491890d90b2422b14640c1072a0ceca66541"
+  },
+  {
+    "path": "src/nw4r/lyt/types.h",
+    "sha256": "4cba482318bec28c0001867df719bc4fac5d664b3c3d04adaa7de2c7a1d311b2"
+  },
+  {
+    "path": "src/compat/Nw4rLayoutRecordsCompat.cpp",
+    "sha256": "034fde335b9184bd0483f544b74d79ba52f20bebba81d7282459fc3578762be3"
+  },
+  {
+    "path": "src/layout/Nw4rLayoutRecords.cpp",
+    "sha256": "01defaf12b44a95292d8447c702c6f6ed4d593ffe3502c283c52ff9384dcd0f6"
+  },
+  {
+    "path": "src/layout/Nw4rLayoutRecords.hpp",
+    "sha256": "ce44d9a53e6ec3d81d990cddd20056487da9a66f84197ad7b5f2e8ed101c08e6"
+  },
+  {
+    "path": "src/nw4r/math/types.h",
+    "sha256": "7fa3133cf574238f0139c6f4e155e3dd0fd8a04dbb8ea9fe503ba22f055f4a4c"
+  }
+]

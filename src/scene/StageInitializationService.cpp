@@ -13,6 +13,7 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "compat/DemoSceneRuntime.hpp"
 #include "compat/JkrAllocationDomain.hpp"
+#include "compat/DrawSyncManagerLifetime.hpp"
 #include "compat/StageResourceBinding.hpp"
 #include "compat/StageScenarioMetadataResolver.hpp"
 #include "compat/StageSessionState.hpp"
@@ -226,10 +227,16 @@ namespace smgpc::scene {
         retire();
     }
 
+    void StageInitializationService::prepare_retirement() noexcept {
+        if (_scene_obj_holder_binding) _scene_obj_holder_binding->prepare_retirement();
+    }
+
     void StageInitializationService::retire() noexcept {
         if (_retired)
             return;
         _retired = true;
+        smgpc::compat::retire_draw_sync_callbacks(_scene_domain->heap());
+        prepare_retirement();
         const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
         // Scheduler registrations retain raw object pointers, so remove the scene
         // scope while its roots and child objects are still alive.
@@ -520,6 +527,7 @@ namespace smgpc::scene {
         const auto capture =
             smgpc::compat::NameObjRuntimeRegistrationCapture{};
         auto root = std::unique_ptr<NameObj>{};
+        smgpc::compat::DrawSyncRegistrationTransaction callbacks;
         try {
             root = lifecycle.construct_and_init(
                 object_name, actor_name, placement);
@@ -529,21 +537,23 @@ namespace smgpc::scene {
             }
             registration_graph->adopt_root_registration_suffix(
                 capture.marker(), *root, this);
+#ifndef NDEBUG
+            _runtime.emit_semantic_trace_event("sequence", "stage_host_initialized",
+                                               "host=" + std::string(object_name) + ";stage=" + _request.stage_name);
+#endif
         } catch (...) {
+            callbacks.rollback();
             const auto construction_failure = std::current_exception();
             registration_graph.reset();
             NameObjChildOwner::rollback_registration_suffix(
                 capture.marker());
             std::rethrow_exception(construction_failure);
         }
-#ifndef NDEBUG
-        _runtime.emit_semantic_trace_event("sequence", "stage_host_initialized",
-                                           "host=" + std::string(object_name) + ";stage=" + _request.stage_name);
-#endif
         _roots.push_back(std::move(root));
         _root_registration_graphs.push_back(
             std::move(registration_graph));
         _root_host_appear.push_back(apply_host_appear);
+        callbacks.commit();
     }
 
     void StageInitializationService::prepare_actor_plan() {

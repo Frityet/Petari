@@ -1,159 +1,200 @@
 #pragma once
 
 #include <JSystem/JGeometry/TBox.hpp>
-class LayoutHolder;
-class TextBoxRecursiveOperation;
-namespace nw4r::lyt { class DrawInfo; }
+#include <revolution.h>
 
-#include <JSystem/JGeometry/TVec.hpp>
-#include <revolution/types.h>
-
-class SimpleLayout;
-class LayoutActor;
-class J3DFrameCtrl;
 class IconAButton;
+class J3DFrameCtrl;
+class LayoutActor;
+class LayoutHolder;
 class Nerve;
+class ResTIMG;
+class SimpleLayout;
 
-namespace nw4r::lyt {
-    class TexMap;
-    class Pane;
-}
+namespace nw4r {
+    namespace lyt {
+        class DrawInfo;
+        class Pane;
+        class TexMap;
+        class TextBox;
+    };  // namespace lyt
 
-namespace nw4r::ut {
-    class Font;
-}
+    namespace ut {
+        class Font;
+        class Rect;
+    };  // namespace ut
+};  // namespace nw4r
 
-namespace MR {
-    nw4r::lyt::Pane* getPane(const LayoutActor*, const char*);
-    bool isDead(const SimpleLayout* pLayout);
-    bool isDead(const LayoutActor* pLayout);
-    void startAnim(SimpleLayout* pLayout, const char* pAnimName, u32 animLayer);
-    void startAnim(LayoutActor* pLayout, const char* pAnimName, u32 animLayer);
-    bool isAnimStopped(const LayoutActor* pLayout, u32 animLayer);
-    void setAnimFrameAndStop(SimpleLayout* pLayout, f32 frame, u32 animLayer);
-    void setAnimFrameAndStop(LayoutActor* pLayout, f32 frame, u32 animLayer);
-    void setAnimFrame(SimpleLayout* pLayout, f32 frame, u32 animLayer);
-    void setAnimFrame(LayoutActor* pLayout, f32 frame, u32 animLayer);
-    f32 getAnimFrame(SimpleLayout* pLayout, u32 animLayer);
-    f32 getAnimFrame(LayoutActor* pLayout, u32 animLayer);
-    J3DFrameCtrl* getAnimCtrl(LayoutActor* pLayout, u32 animLayer);
-    void setAnimRate(SimpleLayout* pLayout, f32 rate, u32 animLayer);
-    void setAnimRate(LayoutActor* pLayout, f32 rate, u32 animLayer);
-    void stopAnim(LayoutActor* pLayout, u32 animLayer);
-    nw4r::lyt::TexMap* createLytTexMap(const char* pArchiveName, const char* pTextureName);
-    void replacePaneTexture(LayoutActor* pLayout, const char* pPaneName, const nw4r::lyt::TexMap* pTexMap, u8 texMapIndex);
-    void startAnimAtFirstStep(LayoutActor* pLayout, const char* pAnimName, u32 animLayer);
-    void setAnimFrameAndStopAdjustTextHeight(LayoutActor* pLayout, const char* pPaneName, u32 animLayer);
-    void setTextBoxNumberRecursive(LayoutActor* pLayout, const char* pPaneName, s32 number);
-    void setTextBoxGameMessageRecursive(LayoutActor* pLayout, const char* pPaneName, const char* pMessageId);
-    void setTextBoxLayoutMessageRecursive(LayoutActor* pLayout, const char* pPaneName, const char* pMessageId);
-    void setTextBoxSystemMessageRecursive(LayoutActor* pLayout, const char* pPaneName, const char* pMessageId);
-    void setTextBoxMessageRecursive(LayoutActor* pLayout, const char* pPaneName, const wchar_t* pMessage);
-    void setTextBoxFontRecursive(LayoutActor* pLayout, const char* pPaneName, nw4r::ut::Font* pFont);
-    void clearTextBoxMessageRecursive(LayoutActor* pLayout, const char* pPaneName);
-    void setTextBoxArgNumberRecursive(LayoutActor* pLayout, const char* pPaneName, s32 number, s32 argIndex);
-    void setTextBoxArgStringRecursive(LayoutActor* pLayout, const char* pPaneName, const wchar_t* pMessage, s32 argIndex);
-    void setTextBoxHorizontalPositionCenterRecursive(LayoutActor* pLayout, const char* pPaneName);
-    void setTextBoxHorizontalPositionLeftRecursive(LayoutActor* pLayout, const char* pPaneName);
-    void setTextBoxVerticalPositionTopRecursive(LayoutActor* pLayout, const char* pPaneName);
-    void setTextBoxVerticalPositionCenterRecursive(LayoutActor* pLayout, const char* pPaneName);
-    void setTextBoxVerticalPositionBottomRecursive(LayoutActor* pLayout, const char* pPaneName);
-    void createAndAddPaneCtrl(LayoutActor* pLayout, const char* pPaneName, u32 animLayerNum);
-    bool isExistPaneCtrl(LayoutActor* pLayout, const char* pPaneName);
-    void showPane(LayoutActor* pLayout, const char* pPaneName);
-    void showPaneRecursive(LayoutActor* pLayout, const char* pPaneName);
-    void hidePane(LayoutActor* pLayout, const char* pPaneName);
-    void hidePaneRecursive(LayoutActor* pLayout, const char* pPaneName);
-    void setPaneAlphaFloat(LayoutActor* pLayout, const char* pPaneName, f32 alpha);
-    void showLayout(LayoutActor* pLayout);
-    void hideLayout(LayoutActor* pLayout);
-    void convertScreenPosToLayoutPos(TVec2f* pLayoutPos, const TVec2f& rScreenPos);
-    void convertLayoutPosToScreenPos(TVec2f* pScreenPos, const TVec2f& rLayoutPos);
-    void setFollowPos(const TVec2f* pPos, const LayoutActor* pLayout, const char* pPaneName);
-    void copyPaneTrans(TVec2f* pPos, const LayoutActor* pLayout, const char* pPaneName);
-    void copyPaneScale(TVec2f* pScale, const LayoutActor* pLayout, const char* pPaneName);
-    void setLayoutPosAtPaneTrans(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName);
-    void setLayoutScaleAtPaneScale(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName);
-    void setLayoutScalePosAtPaneScaleTrans(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName);
-    void setLayoutScalePosAtPaneScaleTransIfExecCalcAnim(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName);
-    void startPaneAnim(LayoutActor* pLayout, const char* pPaneName, const char* pAnimName, u32 animLayer);
-    void stopPaneAnim(LayoutActor* pLayout, const char* pPaneName, u32 animLayer);
-    void setPaneAnimFrame(LayoutActor* pLayout, const char* pPaneName, f32 frame, u32 animLayer);
-    void setPaneAnimFrameAndStop(LayoutActor* pLayout, const char* pPaneName, f32 frame, u32 animLayer);
-    void setPaneAnimRate(LayoutActor* pLayout, const char* pPaneName, f32 rate, u32 animLayer);
-    f32 getPaneAnimFrame(LayoutActor* pLayout, const char* pPaneName, u32 animLayer);
-    s16 getPaneAnimFrameMax(const LayoutActor* pLayout, const char* pPaneName, u32 animLayer);
-    bool isPaneAnimStopped(const LayoutActor* pLayout, const char* pPaneName, u32 animLayer);
-    bool isFirstStep(const LayoutActor* pActor);
-    bool isStep(const LayoutActor* pActor, s32 step);
-    bool isLessStep(const LayoutActor* pActor, s32 step);
-    bool isGreaterStep(const LayoutActor* pActor, s32 step);
-    bool isGreaterEqualStep(const LayoutActor* pActor, s32 step);
-    f32 calcNerveRate(const LayoutActor* pActor, s32 stepMax);
-    f32 calcNerveRate(const LayoutActor* pActor, s32 stepMin, s32 stepMax);
-    void setNerveAtStep(LayoutActor* pLayout, const Nerve* pNerve, s32 step);
-    void setNerveAtPaneAnimStopped(LayoutActor* pLayout, const char* pPaneName, const Nerve* pNerve, u32 animLayer);
-    void setNerveAtAnimStopped(LayoutActor* pLayout, const Nerve* pNerve, u32 animLayer);
-    void killAtAnimStopped(LayoutActor* pLayout, u32 animLayer);
-    s16 getAnimFrameMax(LayoutActor* pLayout, const char* pAnimName);
-    s16 getAnimFrameMax(LayoutActor* pLayout, u32 animLayer);
-    void startAnimReverseOneTime(LayoutActor* pLayout, const char* pAnimName, u32 animLayer);
-    void invalidateParentAnim(LayoutActor* pLayout);
-    IconAButton* createAndSetupIconAButton(LayoutActor* pActor, bool connectToScene, bool connectToPause);
-    void emitEffect(SimpleLayout* pLayout, const char* pEffectName);
-    void emitEffect(LayoutActor* pLayout, const char* pEffectName);
-    void deleteEffectAll(SimpleLayout* pLayout);
-    void deleteEffectAll(LayoutActor* pLayout);
-}  // namespace MR
+class TextBoxRecursiveOperation {
+public:
+    /// @brief Destroys the `TextBoxRecursiveOperation`.
+    virtual ~TextBoxRecursiveOperation() {
+    }
 
-namespace MR {
-    void setTextBoxFormatRecursive(LayoutActor*, const char*, const wchar_t*, ...);
-    bool isHiddenPane(const LayoutActor*, const char*);
-    bool isHiddenLayout(const LayoutActor*);
-    void setFollowTypeAdd(const LayoutActor*, const char*);
-    f32 getPaneTransX(const LayoutActor*, const char*);
-    f32 getPaneTransY(const LayoutActor*, const char*);
-    void startAnimAndSetFrameAndStop(LayoutActor*, const char*, f32, u32);
-    bool isIntervalStep(const LayoutActor*, s32);
-    f32 calcNerveEaseInRate(const LayoutActor*, s32);
-    bool isExecuteCalcAnimLayout(const LayoutActor*);
-    bool isExecuteDrawLayout(const LayoutActor*);
-    void setFollowTypeReplace(const LayoutActor*, const char*);
-}
+    virtual void execute(nw4r::lyt::TextBox* pTextBox) const = 0;
+};
 
-namespace MR {
-    u32 getTextLineNumMaxRecursive(const LayoutActor*, const char*);
-    void clearTextBoxMessageRecursive(LayoutActor*, const char*);
-}
+class TextBoxRecursiveSetMessage : public TextBoxRecursiveOperation {
+public:
+    /// @brief Creates a new `TextBoxRecursiveSetMessage`.
+    TextBoxRecursiveSetMessage(const wchar_t* pMessage) : mMessage(pMessage) {
+    }
+
+    virtual void execute(nw4r::lyt::TextBox* pTextBox) const;
+
+private:
+    /* 0x4 */ const wchar_t* mMessage;
+};
+
+class TextBoxRecursiveSetArgNumber : public TextBoxRecursiveOperation {
+public:
+    /// @brief Creates a new `TextBoxRecursiveSetArgNumber`.
+    TextBoxRecursiveSetArgNumber(s32 arg, s32 param2) : mArg(arg), _8(param2) {
+    }
+
+    virtual void execute(nw4r::lyt::TextBox* pTextBox) const;
+
+private:
+    /* 0x4 */ s32 mArg;
+    /* 0x8 */ s32 _8;
+};
+
+class TextBoxRecursiveSetArgString : public TextBoxRecursiveOperation {
+public:
+    /// @brief Creates a new `TextBoxRecursiveSetArgString`.
+    TextBoxRecursiveSetArgString(const wchar_t* pArg, s32 param2) : mArg(pArg), _8(param2) {
+    }
+
+    virtual void execute(nw4r::lyt::TextBox* pTextBox) const;
+
+private:
+    /* 0x4 */ const wchar_t* mArg;
+    /* 0x8 */ s32 _8;
+};
+
+class TextBoxRecursiveSetVerticalPosition : public TextBoxRecursiveOperation {
+public:
+    /// @brief Creates a new `TextBoxRecursiveSetVerticalPosition`.
+    TextBoxRecursiveSetVerticalPosition(u8 position) : mPosition(position) {
+    }
+
+    virtual void execute(nw4r::lyt::TextBox* pTextBox) const;
+
+private:
+    /* 0x4 */ u8 mPosition;
+};
+
+class TextBoxRecursiveSetHorizontalPosition : public TextBoxRecursiveOperation {
+public:
+    /// @brief Creates a new `TextBoxRecursiveSetHorizontalPosition`.
+    TextBoxRecursiveSetHorizontalPosition(u8 position) : mPosition(position) {
+    }
+
+    virtual void execute(nw4r::lyt::TextBox* pTextBox) const;
+
+private:
+    /* 0x4 */ u8 mPosition;
+};
+
+class TextBoxRecursiveSetFont : public TextBoxRecursiveOperation {
+public:
+    /// @brief Creates a new `TextBoxRecursiveSetFont`.
+    TextBoxRecursiveSetFont(nw4r::ut::Font* pFont) : mFont(pFont) {
+    }
+
+    virtual void execute(nw4r::lyt::TextBox* pTextBox) const;
+
+private:
+    /* 0x4 */ nw4r::ut::Font* mFont;
+};
 
 namespace MR {
     LayoutHolder* createAndAddLayoutHolder(const char*);
     LayoutHolder* createAndAddLayoutHolderRawData(const char*);
+    void createAndAddPaneCtrl(LayoutActor*, const char*, u32);
     void createAndAddGroupCtrl(LayoutActor*, const char*, u32);
+    bool isExistPaneCtrl(LayoutActor*, const char*);
     u8 getPaneAlpha(const LayoutActor*, const char*);
     void setInfluencedAlphaToChild(const LayoutActor*);
     void setLayoutAlpha(const LayoutActor*, u8);
     void setLayoutAlphaFloat(const LayoutActor*, f32);
     void setPaneAlpha(const LayoutActor*, const char*, u8);
+    void setPaneAlphaFloat(const LayoutActor*, const char*, f32);
     void executeTextBoxRecursive(LayoutActor*, const char*, const TextBoxRecursiveOperation&);
+    void setTextBoxGameMessageRecursive(LayoutActor*, const char*, const char*);
+    void setTextBoxLayoutMessageRecursive(LayoutActor*, const char*, const char*);
+    void setTextBoxSystemMessageRecursive(LayoutActor*, const char*, const char*);
+    void setTextBoxMessageRecursive(LayoutActor*, const char*, const wchar_t*);
+    void setTextBoxFormatRecursive(LayoutActor*, const char*, const wchar_t*, ...);
+    void setTextBoxArgNumberRecursive(LayoutActor*, const char*, s32, s32);
+    void setTextBoxArgStringRecursive(LayoutActor*, const char*, const wchar_t*, s32);
     void setTextBoxArgGameMessageRecursive(LayoutActor*, const char*, const char*, s32);
+    void setTextBoxVerticalPositionTopRecursive(LayoutActor*, const char*);
+    void setTextBoxVerticalPositionCenterRecursive(LayoutActor*, const char*);
+    void setTextBoxVerticalPositionBottomRecursive(LayoutActor*, const char*);
+    void setTextBoxHorizontalPositionLeftRecursive(LayoutActor*, const char*);
+    void setTextBoxHorizontalPositionCenterRecursive(LayoutActor*, const char*);
     void updateClearTimeTextBox(LayoutActor*, const char*, u32);
     void updateMinuteAndSecondTextBox(LayoutActor*, const char*, u32);
+    void setTextBoxFontRecursive(LayoutActor*, const char*, nw4r::ut::Font*);
+    void showPane(LayoutActor*, const char*);
+    void showPaneRecursive(LayoutActor*, const char*);
+    void hidePane(LayoutActor*, const char*);
+    void hidePaneRecursive(LayoutActor*, const char*);
+    bool isHiddenPane(const LayoutActor*, const char*);
     void showScreen(LayoutActor*);
     void hideScreen(LayoutActor*);
+    void setFollowPos(const TVec2f*, const LayoutActor*, const char*);
+    void setFollowTypeReplace(const LayoutActor*, const char*);
+    void setFollowTypeAdd(const LayoutActor*, const char*);
+    void copyPaneTrans(TVec2f*, const LayoutActor*, const char*);
+    f32 getPaneTransX(const LayoutActor*, const char*);
+    f32 getPaneTransY(const LayoutActor*, const char*);
+    void setLayoutPosAtPaneTrans(LayoutActor*, const LayoutActor*, const char*);
+    void copyPaneScale(TVec2f*, const LayoutActor*, const char*);
     void setPaneScale(const LayoutActor*, f32, f32, const char*);
+    void setLayoutScaleAtPaneScale(LayoutActor*, const LayoutActor*, const char*);
     void copyPaneRotate(TVec3f*, const LayoutActor*, const char*);
     void setPaneRotate(const LayoutActor*, f32, f32, f32, const char*);
+    void setLayoutScalePosAtPaneScaleTrans(LayoutActor*, const LayoutActor*, const char*);
+    void setLayoutScalePosAtPaneScaleTransIfExecCalcAnim(LayoutActor*, const LayoutActor*, const char*);
+    nw4r::lyt::TexMap* createLytTexMap(const char*, const char*);
+    nw4r::lyt::TexMap* createLytTexMap(ResTIMG*);
     nw4r::lyt::TexMap* getLytTexMap(LayoutActor*, const char*, u8);
+    void replacePaneTexture(LayoutActor*, const char*, const nw4r::lyt::TexMap*, u8);
+    void startAnim(LayoutActor*, const char*, u32);
+    void startAnimAtFirstStep(LayoutActor*, const char*, u32);
+    void startPaneAnim(LayoutActor*, const char*, const char*, u32);
     void startPaneAnimAtStep(LayoutActor*, const char*, const char*, s32, u32);
     void startPaneAnimAtFirstStep(LayoutActor*, const char*, const char*, u32);
+    void startAnimReverseOneTime(LayoutActor*, const char*, u32);
     void startPaneAnimReverseOneTime(LayoutActor*, const char*, const char*, u32);
+    void startAnimAndSetFrameAndStop(LayoutActor*, const char*, f32, u32);
+    void setAnimFrameAndStop(LayoutActor*, f32, u32);
     void setAnimFrameAndStopAtEnd(LayoutActor*, u32);
     void setAnimFrameAndStopAdjustTextWidth(LayoutActor*, const char*, u32);
+    void setAnimFrameAndStopAdjustTextHeight(LayoutActor*, const char*, u32);
+    void setPaneAnimFrameAndStop(LayoutActor*, const char*, f32, u32);
     void setPaneAnimFrameAndStopAtEnd(LayoutActor*, const char*, u32);
+    void setAnimFrame(LayoutActor*, f32, u32);
+    void setPaneAnimFrame(LayoutActor*, const char*, f32, u32);
+    void setAnimRate(LayoutActor*, f32, u32);
+    void setPaneAnimRate(LayoutActor*, const char*, f32, u32);
+    void stopAnim(LayoutActor*, u32);
+    void stopPaneAnim(LayoutActor*, const char*, u32);
+    bool isAnimStopped(const LayoutActor*, u32);
+    bool isPaneAnimStopped(const LayoutActor*, const char*, u32);
+    f32 getAnimFrame(const LayoutActor*, u32);
+    f32 getPaneAnimFrame(const LayoutActor*, const char*, u32);
+    s16 getAnimFrameMax(const LayoutActor*, u32);
+    s16 getPaneAnimFrameMax(const LayoutActor*, const char*, u32);
+    s16 getAnimFrameMax(const LayoutActor*, const char*);
+    J3DFrameCtrl* getAnimCtrl(const LayoutActor*, u32);
     J3DFrameCtrl* getPaneAnimCtrl(const LayoutActor*, const char*, u32);
+    void emitEffect(LayoutActor*, const char*);
     void deleteEffect(LayoutActor*, const char*);
     void forceDeleteEffect(LayoutActor*, const char*);
+    void deleteEffectAll(LayoutActor*);
     void forceDeleteEffectAll(LayoutActor*);
     void setEffectHostMtx(LayoutActor*, const char*, MtxPtr);
     void setEffectRate(LayoutActor*, const char*, f32);
@@ -163,16 +204,42 @@ namespace MR {
     void copyLayoutDrawInfoWithAspect(nw4r::lyt::DrawInfo*, const LayoutActor*, bool);
     void calcAnimLayoutWithDrawInfo(const LayoutActor*, const nw4r::lyt::DrawInfo&);
     void drawLayoutWithDrawInfoWithoutProjectionSetup(const LayoutActor*, const nw4r::lyt::DrawInfo&);
+    bool isStep(const LayoutActor*, s32) NO_INLINE;
+    bool isFirstStep(const LayoutActor*);
+    bool isLessStep(const LayoutActor*, s32);
+    bool isGreaterStep(const LayoutActor*, s32);
+    bool isGreaterEqualStep(const LayoutActor*, s32);
+    bool isIntervalStep(const LayoutActor*, s32);
+    bool isNewNerve(const LayoutActor*) NO_INLINE;
+    f32 calcNerveRate(const LayoutActor*, s32);
+    f32 calcNerveRate(const LayoutActor*, s32, s32);
+    f32 calcNerveEaseInRate(const LayoutActor*, s32);
     f32 calcNerveEaseInValue(const LayoutActor*, s32, s32, f32, f32);
+    void setNerveAtStep(LayoutActor*, const Nerve*, s32);
+    void setNerveAtAnimStopped(LayoutActor*, const Nerve*, u32);
+    void setNerveAtPaneAnimStopped(LayoutActor*, const char*, const Nerve*, u32);
+    void killAtAnimStopped(LayoutActor*, u32);
+    bool isDead(const LayoutActor*);
+    bool isHiddenLayout(const LayoutActor*);
+    void showLayout(LayoutActor*);
+    void hideLayout(LayoutActor*);
     bool isStopAnimFrame(const LayoutActor*);
     void stopAnimFrame(LayoutActor*);
     void releaseAnimFrame(LayoutActor*);
     void onCalcAnim(LayoutActor*);
     void offCalcAnim(LayoutActor*);
+    bool isExecuteCalcAnimLayout(const LayoutActor*);
+    bool isExecuteDrawLayout(const LayoutActor*);
     SimpleLayout* createSimpleLayout(const char*, const char*, u32);
     SimpleLayout* createSimpleLayoutTalkParts(const char*, const char*, u32);
+    nw4r::lyt::Pane* getPane(const LayoutActor*, const char*);
     nw4r::lyt::Pane* getRootPane(const LayoutActor*);
     void calcTextBoxRectRecursive(TBox2f*, const LayoutActor*, const char*);
+    u32 getTextLineNumMaxRecursive(const LayoutActor*, const char*);
+    void invalidateParentAnim(LayoutActor*);
     void setCometPaneAnimFromId(LayoutActor*, const char*, int, u32);
+    void setTextBoxNumberRecursive(LayoutActor*, const char*, s32);
+    void clearTextBoxMessageRecursive(LayoutActor*, const char*);
+    IconAButton* createAndSetupIconAButton(LayoutActor*, bool, bool);
     void setCometAnimFromId(LayoutActor*, int, u32);
-}
+};  // namespace MR

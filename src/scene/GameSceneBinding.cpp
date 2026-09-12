@@ -8,6 +8,7 @@
 #include "Game/Util/Functor.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "scene/SceneLifetimeBinding.hpp"
+#include "scene/OriginalSceneSupport.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include <aurora/exception.hpp>
 #include <exception>
@@ -15,7 +16,7 @@
 
 namespace smgpc::scene {
     namespace {
-        thread_local GameSceneBinding *current_binding = nullptr;
+        GameSceneBinding *current_binding = nullptr;
 
         bool unclaimed_child(const NameObj *object, const void *) noexcept {
             return !current_scene_obj_holder_binding_owns(object) &&
@@ -25,27 +26,6 @@ namespace smgpc::scene {
 
     GameSceneBinding::GameSceneBinding(GameScene &scene)
         : _scene(&scene),
-          _dispatch([](GameScene &scene, GameSceneAction action) {
-              switch (action) {
-              case GameSceneAction::EndScenarioStarter: scene.notifyEndScenarioStarter(); break;
-              case GameSceneAction::PlayMovie: scene.requestPlayMovieDemo(); break;
-              case GameSceneAction::StartGameOver: scene.requestStartGameOverDemo(); break;
-              case GameSceneAction::EndGameOver: scene.requestEndGameOverDemo(); break;
-              case GameSceneAction::EndMiss: scene.requestEndMissDemo(); break;
-              case GameSceneAction::PowerStarGet: scene.requestPowerStarGetDemo(); break;
-              case GameSceneAction::GrandStarGet: scene.requestGrandStarGetDemo(); break;
-              case GameSceneAction::ShowGalaxyMap: scene.requestShowGalaxyMap(); break;
-              case GameSceneAction::StaffRoll: scene.requestStaffRoll(); break;
-              }
-          }),
-          _query([](const GameScene &scene, GameSceneQuery query) {
-              switch (query) {
-              case GameSceneQuery::ScenarioOpeningCamera: return scene.isExecScenarioOpeningCamera();
-              case GameSceneQuery::ScenarioStarter: return scene.isExecScenarioStarter();
-              case GameSceneQuery::StageClearDemo: return scene.isExecStageClearDemo();
-              }
-              std::terminate();
-          }),
           _marker(compat::mark_name_obj_runtime_registrations()) {
         const compat::JkrHostAllocationScope host;
         if (current_binding)
@@ -54,6 +34,12 @@ namespace smgpc::scene {
             static_cast<GameSceneBinding *>(context)->retire();
         }, this);
         current_binding = this;
+    }
+
+    void prepare_game_scene_retirement(GameScene& scene) noexcept {
+        prepare_original_scene_support_retirement(scene);
+        if (current_binding && current_binding->_scene == &scene)
+            current_binding->prepare_retirement();
     }
 
     GameSceneBinding::~GameSceneBinding() {
@@ -94,41 +80,4 @@ namespace smgpc::scene {
         _lifetime.reset();
     }
 
-    GameScene &GameSceneBinding::scene() const {
-        if (!scene_if_active())
-            aurora::throw_host_exception<std::logic_error>("The original GameScene has retired");
-        return *_scene;
-    }
-
-    GameScene *GameSceneBinding::scene_if_active() const noexcept {
-        return _prepared ? nullptr : _scene;
-    }
-
-    void GameSceneBinding::dispatch(GameSceneAction action) {
-        _dispatch(scene(), action);
-    }
-
-    bool GameSceneBinding::query(GameSceneQuery query) const {
-        return _query(scene(), query);
-    }
-
-    GameScene *current_game_scene() noexcept {
-        return current_binding ? current_binding->scene_if_active() : nullptr;
-    }
-
-    void dispatch_game_scene_action(GameSceneAction action) {
-        (void)require_game_scene();
-        current_binding->dispatch(action);
-    }
-
-    bool query_game_scene(GameSceneQuery query) {
-        (void)require_game_scene();
-        return current_binding->query(query);
-    }
-
-    GameScene &require_game_scene() {
-        if (auto *scene = current_game_scene())
-            return *scene;
-        aurora::throw_host_exception<std::logic_error>("This operation requires an active original GameScene");
-    }
 }

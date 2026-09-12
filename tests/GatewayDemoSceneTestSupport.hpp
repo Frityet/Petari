@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Game/Util/MtxUtil.hpp"
+
 #include "CameraTargetTestSupport.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Scene/SceneFunction.hpp"
@@ -79,18 +81,19 @@ namespace smgpc::test {
         // This fixture has no Mario movement states. Its explicit camera
         // capability describes the sentinel's actual stationary actor basis.
         static smgpc::camera::StageCameraTargetState read_camera_target(const LiveActor &actor) {
-            const auto &matrix = smgpc::compat::actor_base_matrix(&actor).m;
+            Mtx matrix;
+            MR::makeMtxTR(matrix, actor.mPosition, actor.mRotation);
             return {
                 .position = {actor.mPosition.x, actor.mPosition.y, actor.mPosition.z},
-                .up = {matrix[1U], matrix[5U], matrix[9U]},
-                .front = {matrix[2U], matrix[6U], matrix[10U]},
+                .up = {matrix[0][1], matrix[1][1], matrix[2][1]},
+                .front = {matrix[0][2], matrix[1][2], matrix[2][2]},
                 .last_move = {actor.mVelocity.x, actor.mVelocity.y, actor.mVelocity.z},
                 .ground_position = smgpc::camera::CameraParamVec3{actor.mPosition.x, actor.mPosition.y, actor.mPosition.z},
                 .gravity = smgpc::camera::CameraParamVec3{actor.mGravity.x, actor.mGravity.y, actor.mGravity.z},
                 .jumping = false,
                 .fast_rise = false,
                 .fast_drop = false,
-                .side = smgpc::camera::CameraParamVec3{matrix[0U], matrix[4U], matrix[8U]}};
+                .side = smgpc::camera::CameraParamVec3{matrix[0][0], matrix[1][0], matrix[2][0]}};
         }
 
         smgpc::runtime::RuntimeContext *_runtime = nullptr;

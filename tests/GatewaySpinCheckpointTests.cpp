@@ -435,7 +435,7 @@ namespace {
                     "checkpoint construction must not duplicate placement-owned rabbit LOD controllers");
         }
 
-        renderer.end_frame(runtime.wii_video().render_mode());
+        renderer.end_frame();
 
         require(&checkpoint->demo_runtime() == &scene.demo_runtime(),
                 "Gateway spin checkpoint installed a nested DemoDirector instead of borrowing the scene owner");

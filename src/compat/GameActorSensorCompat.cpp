@@ -723,3 +723,45 @@ namespace MR {
         return pActor->mBinder->mWallInfo.mParentTriangle.mSensor;
     }
 } // namespace MR
+
+namespace MR {
+    bool sendMsgLockOnStarPieceShoot(HitSensor* pReceiver, HitSensor* pSender) {
+        return sendArbitraryMsg(ACTMES_IS_LOCKON_STAR_PIECE_SHOOT, pReceiver, pSender);
+    }
+
+    bool sendMsgStarPieceAttack(HitSensor* pReceiver, HitSensor* pSender) {
+        return sendArbitraryMsg(ACTMES_STAR_PIECE_ATTACK, pReceiver, pSender);
+    }
+
+    bool sendMsgStarPieceGift(HitSensor* pReceiver, HitSensor* pSender, u32 num) {
+        return sendArbitraryMsg((num + ACTMES_STAR_PIECE_GIFT) - 1, pReceiver, pSender);
+    }
+
+    bool sendMsgToBindedSensor(u32 msg, LiveActor* pActor, HitSensor* pSender) {
+        HitInfo* info[32];
+        u32 size = pActor->mBinder->copyPlaneArrayAndSortingSensor(info, ARRAY_SIZE(info));
+
+        if (size == 0) {
+            return false;
+        }
+
+        bool isSent = false;
+        HitSensor* pReceiver = info[0]->mParentTriangle.mSensor;
+        isSent |= pReceiver->receiveMessage(msg, pSender);
+
+        for (int i = 1; i < size; i++) {
+            if (info[i]->mParentTriangle.mSensor == pReceiver) {
+                continue;
+            }
+
+            pReceiver = info[i]->mParentTriangle.mSensor;
+            isSent |= pReceiver->receiveMessage(msg, pSender);
+        }
+
+        return isSent;
+    }
+
+    bool sendMsgToBindedSensor(u32 msg, HitSensor* pSender) {
+        return sendMsgToBindedSensor(msg, getSensorHost(pSender), pSender);
+    }
+}

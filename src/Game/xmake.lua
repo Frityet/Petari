@@ -52,29 +52,22 @@ target("smg-pc-game")
     remove_files("Map/CollisionParts.cpp")
     remove_files("Map/FileSelectItem.cpp")
     remove_files("Map/FileSelector.cpp")
-    remove_files("MapObj/StarPieceGroup.cpp")
     remove_files("NameObj/NameObjFactory.cpp")
     remove_files("NameObj/NameObj.cpp")
     remove_files("Scene/Scene.cpp")
     remove_files("Scene/SceneFunction.cpp")
-    remove_files("Scene/GameSceneFunction.cpp")
     remove_files("Scene/SceneObjHolder.cpp")
     remove_files("System/GameDataFunction.cpp")
     remove_files("System/BinaryDataChunkHolder.cpp")
     remove_files("System/ConfigDataMisc.cpp")
     remove_files("System/SysConfigFile.cpp")
     remove_files("Util/ActorSensorUtil.cpp")
-    remove_files("Util/SequenceUtil.cpp")
     remove_files("Util/GravityUtil.cpp")
     remove_files("Util/FileUtil.cpp")
-    remove_files("Util/DemoUtil.cpp")
-    remove_files("Util/EventUtil.cpp")
     remove_files("Util/ActorShadowUtil.cpp")
     remove_files("Util/LiveActorUtil.cpp")
-    remove_files("Util/LayoutUtil.cpp")
     remove_files("Util/MapUtil.cpp")
     remove_files("Util/MathUtil.cpp")
-    remove_files("Util/ScreenUtil.cpp")
     remove_files("Util/SystemUtil.cpp")
     remove_files("Util/StarPointerUtil.cpp")
     remove_files("NPC/MiiFacePartsHolder.cpp")
@@ -83,7 +76,15 @@ target("smg-pc-game")
     add_files({"../nw4r/ut/ut_CharWriter.cpp", "../nw4r/ut/ut_TextWriterBase.cpp",
                "../nw4r/ut/ut_TagProcessorBase.cpp", "../nw4r/ut/ut_CharStrmReader.cpp",
                "../nw4r/ut/ut_Font.cpp"}, {cxxflags = "-ffp-contract=off"})
-    add_files("../nw4r/lyt/lyt_resourceAccessor.cpp")
+    add_files({"../nw4r/lyt/lyt_animation.cpp", "../nw4r/lyt/lyt_group.cpp",
+               "../nw4r/lyt/lyt_layout.cpp", "../nw4r/lyt/lyt_arcResourceAccessor.cpp",
+               "../nw4r/lyt/lyt_resourceAccessor.cpp", "../nw4r/lyt/lyt_common.cpp",
+               "../nw4r/lyt/lyt_material.cpp", "../nw4r/lyt/lyt_texMap.cpp",
+               "../nw4r/lyt/lyt_textBox.cpp", "../nw4r/lyt/lyt_picture.cpp",
+               "../nw4r/lyt/lyt_window.cpp", "../nw4r/lyt/lyt_bounding.cpp",
+               "../nw4r/lyt/lyt_drawInfo.cpp", "../nw4r/lyt/lyt_init.cpp",
+               "../nw4r/math/math_triangular.cpp"},
+              {cxxflags = "-ffp-contract=off"})
     add_files("../camera/**.cpp")
     add_files("../layout/**.cpp")
     add_files("../resource/**.cpp")
@@ -121,6 +122,7 @@ target("smg-pc-game")
     add_files("../JSystem/JGeometry/TMatrix.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("../JSystem/JKernel/JKRThread.cpp")
     add_files("../JSystem/JAudio2/JAUSoundTable.cpp", "../JSystem/JGadget/hashcode.cpp")
+    add_files("../JSystem/JUtility/JUTVideo.cpp", "../JSystem/JUtility/JUTXfb.cpp", "../JSystem/JUtility/JUTDirectPrint.cpp", "../JSystem/JUtility/JUTAssert.cpp", "../JSystem/JUtility/JUTConsole.cpp", "../JSystem/JUtility/JUTDbPrint.cpp", "../JSystem/JUtility/JUTFont.cpp", "../JSystem/JUtility/JUTPalette.cpp", "../JSystem/JGadget/linklist.cpp")
     add_files({"../JSystem/JKernel/JKRAram.cpp", "../JSystem/JKernel/JKRAramHeap.cpp",
                "../JSystem/JKernel/JKRAramBlock.cpp", "../JSystem/JKernel/JKRAramPiece.cpp",
                "../JSystem/JKernel/JKRAramStream.cpp", "../JSystem/JKernel/JKRDecomp.cpp",

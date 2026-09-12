@@ -2,12 +2,14 @@
 #include "compat/ResourceHolderCompat.hpp"
 #include "resource/BasResource.hpp"
 #include "resource/BtiTextureData.hpp"
+#include "layout/LytTexMap.hpp"
 #include "camera/CameraAnimation.hpp"
 
 #include "Game/Animation/MaterialAnmBuffer.hpp"
 #include "Game/System/LayoutHolder.hpp"
 #include "Game/System/StationedFileInfo.hpp"
 #include "Game/Util/FileUtil.hpp"
+#include "Game/Util/HashUtil.hpp"
 #include "Game/Util/MutexHolder.hpp"
 #include "JSystem/J3DGraphAnimator/J3DMaterialAnm.hpp"
 #include "compat/J3dCommandScope.hpp"
@@ -78,8 +80,10 @@ namespace smgpc::compat {
         std::shared_ptr<JkrAllocationDomain> domain;
         std::shared_ptr<const runtime::MountedArchive> archive;
         std::unique_ptr<LayoutHolder> holder;
+        std::vector<std::unique_ptr<nw4r::lyt::TexMap>> textures;
 
         ~Storage() {
+            textures.clear();
             if (!holder) return;
             JkrAllocationScope original(domain);
             // Original LayoutHolder retirement relied on scene-heap disposal.
@@ -111,7 +115,27 @@ namespace smgpc::compat {
         _storage.reset();
     }
     LayoutHolder& LayoutArchiveOwner::holder() const noexcept { return *_storage->holder; }
+    const resource::RarcArchive& LayoutArchiveOwner::archive() const noexcept { return _storage->archive->source(); }
     JKRHeap& LayoutArchiveOwner::heap() const noexcept { return _storage->domain->heap(); }
+
+    nw4r::lyt::TexMap* LayoutArchiveOwner::create_texture(std::string_view name, std::shared_ptr<resource::Mem1ResourceHeap> mem1) const {
+        JkrHostAllocationScope host;
+        const auto& source = _storage->archive->source();
+        auto* entry = source.find_resource(name);
+        if (!entry) entry = source.find_by_basename(name);
+        if (!entry)
+            aurora::throw_host_exception<std::runtime_error>("Layout texture resource is unavailable: " + std::string(name));
+        auto texture = layout::make_tex_map(_storage->archive->path().generic_string() + ":" + entry->path,
+                                            source.file_data(*entry), std::move(mem1));
+        std::unique_ptr<nw4r::lyt::TexMap> owned;
+        {
+            JkrAllocationScope original(_storage->domain);
+            owned = std::make_unique<nw4r::lyt::TexMap>(texture);
+        }
+        auto* result = owned.get();
+        _storage->textures.push_back(std::move(owned));
+        return result;
+    }
 
     struct ResourceArchiveOwner::Storage {
         std::shared_ptr<JkrAllocationDomain> domain;
@@ -257,10 +281,16 @@ namespace smgpc::compat {
 
     LayoutHolder* ResourceHolderService::create_layout(std::string_view archive_name) {
         JkrHostAllocationScope host;
+        // Original createAndAddInner first finds the published basename hash.
+        // Embedded and stationed archives need not have a corresponding DVD path.
+        const auto name = std::string(archive_name);
+        const auto hash = MR::getHashCodeLower(name.c_str());
+        for (const auto& [path, owner] : _layouts)
+            if (MR::getHashCodeLower(path.filename().string().c_str()) == hash)
+                return &owner->holder();
         auto* mounts = runtime::ArchiveMountService::active();
         if (mounts == nullptr)
             aurora::throw_host_exception<std::logic_error>("LayoutHolder requires an active archive mount owner");
-        const auto name = std::string(archive_name);
         char path[256]{};
         if (!MR::makeLayoutArchiveFileName(path, sizeof(path), name.c_str()))
             aurora::throw_host_exception<std::runtime_error>("Required LayoutHolder archive is unavailable: " + name);
@@ -290,6 +320,30 @@ namespace smgpc::compat {
         auto* result = &owner->holder();
         _layouts.emplace(path, std::move(owner));
         return result;
+    }
+
+    nw4r::lyt::TexMap* ResourceHolderService::create_layout_texture(std::string_view archive_name, std::string_view texture_name) {
+        JkrHostAllocationScope host;
+        auto* mounts = runtime::ArchiveMountService::active();
+        if (!mounts || archive_name.empty() || texture_name.empty())
+            aurora::throw_host_exception<std::logic_error>("Layout texture factory requires its archive owner and resource names");
+        auto name = std::string(archive_name);
+        if (!name.ends_with(".arc")) name += ".arc";
+        LayoutHolder* holder;
+        if (mounts->receive(name)) {
+            holder = create_layout_from_mounted(name);
+        } else {
+            char path[256]{};
+            if (!MR::makeLayoutArchiveFileName(path, sizeof(path), name.c_str()) &&
+                !MR::makeObjectArchiveFileName(path, sizeof(path), name.c_str()))
+                aurora::throw_host_exception<std::runtime_error>("Required layout texture archive is unavailable: " + name);
+            if (!mounts->receive(path)) {
+                auto domain = current_jkr_allocation_domain();
+                mounts->mount(path, &(domain ? domain : _domain)->heap());
+            }
+            holder = create_layout_from_mounted(path);
+        }
+        return retain(*holder)->create_texture(texture_name, _mem1);
     }
 
     void ResourceHolderService::remove_for_heap(JKRHeap* heap) {

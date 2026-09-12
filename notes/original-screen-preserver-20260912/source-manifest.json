@@ -1,0 +1,78 @@
+[
+  {
+    "path": "src/Game/Screen/ScreenPreserver.cpp",
+    "sha256": "c0aa47d04a8a6672fcd61e09f2058c7fe4e762bd30a3b64ade6f1a872242beed",
+    "reference": "decomp/src/Game/Screen/ScreenPreserver.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/JSystem/J2DGraph/J2DPane.cpp",
+    "sha256": "418d091014f410ba8d6118cad5aaa103c342d9b9dc41ef1bb9cf6da2b077a517",
+    "reference": "decomp/src/JSystem/J2DGraph/J2DPane.cpp",
+    "byte_identical": false
+  },
+  {
+    "path": "src/JSystem/J2DGraph/J2DPane.hpp",
+    "sha256": "e8ebd3ce9e9df1ad5c82224be31886ca0df6b367674cd3d8e626cc31f688d56f",
+    "reference": "decomp/libs/JSystem/include/JSystem/J2DGraph/J2DPane.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/JSystem/J2DGraph/J2DPicture.cpp",
+    "sha256": "665f4ef489e77eb8061d1c0ce6b77ffd3307b89f7f7738764ed300f194af102a",
+    "reference": "decomp/src/JSystem/J2DGraph/J2DPicture.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/JSystem/J2DGraph/J2DPicture.hpp",
+    "sha256": "07289b33fc203d6d5b495c6e487ca852a3f86c0eb77d3e72515516174b5adbb3",
+    "reference": "decomp/libs/JSystem/include/JSystem/J2DGraph/J2DPicture.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/JSystem/J2DGraph/J2DScreen.cpp",
+    "sha256": "71929b30c5e6bbdc0a346b89b709c5120f20e6b15075e4b4891933fea2f9bef7",
+    "reference": "decomp/src/JSystem/J2DGraph/J2DScreen.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/JSystem/J2DGraph/J2DScreen.hpp",
+    "sha256": "061ab7117c7d69665b835f885c9073ee2a992bdb4f02ef9ed7843ae9fc1ac41b",
+    "reference": "decomp/libs/JSystem/include/JSystem/J2DGraph/J2DScreen.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/JSystem/J2DGraph/J2DManage.cpp",
+    "sha256": "24d6f41bb969a46cebf9f2f3014e941e894c24b9e61f259aeec34c1512aa3123",
+    "reference": "decomp/src/JSystem/J2DGraph/J2DManage.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/JSystem/J2DGraph/J2DManage.hpp",
+    "sha256": "90fcfdf2339ff0158601fa40bb655d283b0e3d4e412b88e94107293c38b9504e",
+    "reference": "decomp/libs/JSystem/include/JSystem/J2DGraph/J2DManage.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/JSystem/J2DGraph/J2DAnimation.hpp",
+    "sha256": "c5443ced463b8a74aecaddb8fd613ed68fcd9a4ed3bcb5ebe89808f323d1ced1",
+    "reference": "decomp/libs/JSystem/include/JSystem/J2DGraph/J2DAnimation.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTPalette.cpp",
+    "sha256": "7d110a262138b08446d23c66d5999fb8dc4aa520b9914c712d309e19ed493e9c",
+    "reference": "decomp/src/JSystem/JUtility/JUTPalette.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTPalette.hpp",
+    "sha256": "a77762b8775b16d845a7ff5adbf7da6c7934e111d5e6339a69db443280137cba",
+    "reference": "decomp/libs/JSystem/include/JSystem/JUtility/JUTPalette.hpp",
+    "byte_identical": false
+  },
+  {
+    "path": "src/runtime/jut/JutTexture.cpp",
+    "sha256": "11c0df175bc71280ba00dfd8243b77ce96d45d207b10b031ba9089f378afe932"
+  }
+]

@@ -36,7 +36,7 @@ namespace nw4r {
                 return mPaneLinkList;
             }
 
-            inline void AppendPane(Pane *);
+            void AppendPane(Pane *);
 
             bool IsUserAllocated() const {
                 return mbUserAllocated;

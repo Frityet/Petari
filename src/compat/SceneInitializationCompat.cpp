@@ -1,35 +1,52 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Scene/SceneDataInitializer.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "camera/CameraDirectorRuntime.hpp"
 #include "scene/StageInitializationService.hpp"
+#include "scene/OriginalSceneSupport.hpp"
 #include "scene/SceneExecutionBinding.hpp"
 #include <aurora/exception.hpp>
 #include <stdexcept>
 
+namespace {
+    SceneDataInitializer* getSceneDataInitializer() {
+        return MR::getSceneObj< SceneDataInitializer >(SceneObj_SceneDataInitializer);
+    }
+};  // namespace
+
 void SceneFunction::startStageFileLoad() {
-    smgpc::scene::require_stage_initialization_service().start_stage_file_load();
+    MR::createSceneObj(SceneObj_SceneDataInitializer);
+    ::getSceneDataInitializer()->startStageFileLoad();
 }
 
 void SceneFunction::waitDoneStageFileLoad() {
-    smgpc::scene::require_stage_initialization_service().wait_done_stage_file_load();
+    ::getSceneDataInitializer()->waitDoneStageFileLoad();
 }
 
 void SceneFunction::startActorFileLoadCommon() {
-    smgpc::scene::require_stage_initialization_service().start_actor_file_load_common();
+    ::getSceneDataInitializer()->startActorFileLoadCommon();
 }
 
 void SceneFunction::startActorFileLoadScenario() {
-    smgpc::scene::require_stage_initialization_service().start_actor_file_load_scenario();
+    ::getSceneDataInitializer()->startActorFileLoadScenario();
 }
 
 void SceneFunction::startActorPlacement() {
-    smgpc::scene::require_stage_initialization_service().place_actors();
+    ::getSceneDataInitializer()->startActorPlacement();
+}
+
+void SceneFunction::initAfterScenarioSelected() {
+    ::getSceneDataInitializer()->startStageFileLoadAfterScenarioSelected();
+    ::getSceneDataInitializer()->initAfterScenarioSelected();
 }
 
 void SceneFunction::initEffectSystem(u32 particles, u32 emitters) {
-    smgpc::scene::require_stage_initialization_service().initialize_effect_system(particles, emitters);
+    if (auto* initializer = smgpc::scene::current_stage_initialization_service())
+        initializer->initialize_effect_system(particles, emitters);
+    else
+        smgpc::scene::initialize_original_scene_effects(particles, emitters);
 }
 
 void SceneFunction::allocateDrawBufferActorList() {

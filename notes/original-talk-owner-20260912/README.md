@@ -165,6 +165,7 @@ It checks the original masked message-name hash, zone/link keys, duplicate
 identity after a packed bit update, distinct keys, and all 64 entries. Removed
 the duplicate direct-native-registry block from TalkRealOrAbsentTests. Tests
 no longer demand invented exceptions after overrunning the original table.
-All changed source and fixture translation units compile directly; the target
-to run is smg-pc-original-scene-counter-owner-tests. Linked execution has not
-yet been recorded for this new fixture.
+All changed source and fixture translation units compile directly. The isolated
+linked fixture also passed with the real Korean disc; evidence is in
+`counter-owner-isolated-run.log` and its result JSON. The target is
+`smg-pc-original-scene-counter-owner-tests`; this does not establish full talk startup.

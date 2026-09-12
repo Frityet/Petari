@@ -16,21 +16,10 @@ namespace {
         return *system->mFontHolder;
     }
 
-    ResourceHolderManager& resources() {
-        auto* manager = SingletonHolder<ResourceHolderManager>::get();
-        if (manager == nullptr)
-            aurora::throw_host_exception<std::logic_error>("Layout resource access requires the original resource manager");
-        return *manager;
-    }
+
 }
 
 namespace MR {
-    LayoutHolder* createAndAddLayoutHolder(const char* name) {
-        return resources().createAndAddLayoutHolder(name, nullptr);
-    }
-    LayoutHolder* createAndAddLayoutHolderRawData(const char* name) {
-        return resources().createAndAddLayoutHolderRawData(name);
-    }
     nw4r::ut::Font* getFontOnCurrentLanguage() { return fonts().getMessageFont(); }
     nw4r::ut::Font* getMenuFontNW4R() { return fonts().mMenuFont; }
     nw4r::ut::Font* getNumberFontNW4R() { return fonts().mNumberFont; }

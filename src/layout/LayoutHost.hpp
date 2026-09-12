@@ -69,21 +69,12 @@ void set_layout_anim_rate(LayoutActor* actor, f32 rate, u32 layer);
 [[nodiscard]] bool is_layout_anim_stopped(const LayoutActor* actor, u32 layer);
 [[nodiscard]] J3DFrameCtrl* layout_anim_ctrl(LayoutActor* actor, u32 layer);
 
-void set_text_box_number(LayoutActor* actor, const char* pane_name, s32 number);
-void set_text_box_string(LayoutActor* actor, const char* pane_name, std::u16string_view text);
 void set_layout_scale(LayoutActor* actor, f32 x, f32 y);
 
 void set_pane_visible(LayoutManager* manager, const char* pane_name, bool visible, bool recursive);
 [[nodiscard]] bool is_pane_visible(const LayoutManager* manager, const char* pane_name);
 [[nodiscard]] bool is_pointing_pane(const LayoutManager* manager, const char* pane_name, f32 screen_x, f32 screen_y);
 void set_pane_alpha(LayoutManager* manager, const char* pane_name, f32 alpha);
-void replace_pane_texture(LayoutManager* manager, const char* pane_name, const nw4r::lyt::TexMap& texture, u8 texture_index);
-void set_text_box_tagged_string(LayoutManager* manager, const char* pane_name, std::u16string_view raw_text,
-                                std::u16string_view display_text);
-void set_text_box_arg_number(LayoutManager* manager, const char* pane_name, s32 number, s32 arg_index);
-void set_text_box_arg_string(LayoutManager* manager, const char* pane_name, std::u16string_view text, s32 arg_index);
-void set_text_box_horizontal_position(LayoutManager* manager, const char* pane_name, u8 position);
-void set_text_box_vertical_position(LayoutManager* manager, const char* pane_name, u8 position);
 
 void set_pane_anim_frame(LayoutPaneCtrl* pane_ctrl, f32 frame, u32 layer);
 void set_pane_anim_rate(LayoutPaneCtrl* pane_ctrl, f32 rate, u32 layer);

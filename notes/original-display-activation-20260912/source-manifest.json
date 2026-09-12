@@ -1,0 +1,186 @@
+[
+  {
+    "path": "src/JSystem/JUtility/JUTVideo.cpp",
+    "sha256": "b31c6a8c1f389f059915e9ac97faca671ddba9b1df6acbb99441d2ceab082e31",
+    "reference": "decomp/src/JSystem/JUtility/JUTVideo.cpp",
+    "byte_identical": false
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTVideo.hpp",
+    "sha256": "fdf2d50279074d2427d30a5440709b5356d47c710e418f48a1b050a3b352dfb3",
+    "reference": "decomp/libs/JSystem/include/JSystem/JUtility/JUTVideo.hpp",
+    "byte_identical": false
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTXfb.cpp",
+    "sha256": "3ab5bae8d5db0010a9e48468bc55ee1e69b481410f741f5ae2df5a20219c0a03",
+    "reference": "decomp/src/JSystem/JUtility/JUTXfb.cpp",
+    "byte_identical": false
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTXfb.hpp",
+    "sha256": "a2d7c0c0abfe552b7dbf1bb07e4b16524a50d920e0f9739fe4a7e4f6c46beeca",
+    "reference": "decomp/libs/JSystem/include/JSystem/JUtility/JUTXfb.hpp",
+    "byte_identical": false
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTDirectPrint.cpp",
+    "sha256": "fc1af9a113908f241421819b1f9e74522b6e3d322918dd2bcb0105613b442232",
+    "reference": "decomp/src/JSystem/JUtility/JUTDirectPrint.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTDirectPrint.hpp",
+    "sha256": "86dd7bab528d990696fceef250fc5f6523f918aca16d31c1d4862f62c221975e",
+    "reference": "decomp/libs/JSystem/include/JSystem/JUtility/JUTDirectPrint.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTAssert.cpp",
+    "sha256": "ae0c5f323393f8fc6382aacccd155f7369d10ef25324739db56c1358358c8dd7",
+    "reference": "decomp/src/JSystem/JUtility/JUTAssert.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTAssert.hpp",
+    "sha256": "dc2c5a6cb8affcb3e60b0911b13991f10e985b3c9cf09a70265aa68716bb7af9",
+    "reference": "decomp/libs/JSystem/include/JSystem/JUtility/JUTAssert.hpp",
+    "byte_identical": false
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTConsole.cpp",
+    "sha256": "3863ab4d785b030133b088398da9b2bac9059f2a17f057071f18c9d564b71769",
+    "reference": "decomp/src/JSystem/JUtility/JUTConsole.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTConsole.hpp",
+    "sha256": "a0cbcbf034fb92397737f1903985500148a87b9c1c983b824e872e27ec5081b1",
+    "reference": "decomp/libs/JSystem/include/JSystem/JUtility/JUTConsole.hpp",
+    "byte_identical": false
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTDbPrint.cpp",
+    "sha256": "480e5ba98ec106ee9fbe20e2eb9a3c165fb9002d8bf6d659c841c31f343f917e",
+    "reference": "decomp/src/JSystem/JUtility/JUTDbPrint.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTDbPrint.hpp",
+    "sha256": "b3fbe817929259be41dd1861a1069321e1818870a9d60bb958635af8e058c20e",
+    "reference": "decomp/libs/JSystem/include/JSystem/JUtility/JUTDbPrint.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTFont.cpp",
+    "sha256": "3b0a2815c22d62be138f08e9f62ad9c5889075fd94f57d862fbf0e51a724ae4f",
+    "reference": "decomp/src/JSystem/JUtility/JUTFont.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTFont.hpp",
+    "sha256": "7321e68fec630007081be87e3a10da9a9c74a6f8bc975798b5baa203a0cde8ae",
+    "reference": "decomp/libs/JSystem/include/JSystem/JUtility/JUTFont.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/JSystem/JGadget/linklist.cpp",
+    "sha256": "fbeb03888062db6dbfeedcce599b49fb659afdcf8944e575914f9f87199642f5",
+    "reference": "decomp/src/JSystem/JGadget/linklist.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/Game/System/MainLoopFramework.cpp",
+    "sha256": "de7c7e5e513f8400adbe07a655afb8268003ee28e416ed9939d6065b6944ec2c",
+    "reference": "decomp/src/Game/System/MainLoopFramework.cpp",
+    "byte_identical": false
+  },
+  {
+    "path": "src/runtime/jut/OriginalDisplayLifetime.cpp",
+    "sha256": "bbe530f9feb1d326f4e7c3645e80b1ae3e1a0e8b1805e54b4c521c5227542ab8"
+  },
+  {
+    "path": "src/runtime/jut/OriginalDisplayLifetime.hpp",
+    "sha256": "a0c907baf8e02471cae3bc5b5241f267a20f92b470cbffef96edc0e298d0b3cd"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.cpp",
+    "sha256": "da2ebf2b10af3e6e0dc4f57b7486327ebb65642b40eafa598e5d30c13607d7c6"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.hpp",
+    "sha256": "1d147e980d6d05019b346ecdd0ca0e38c8ce158a63c897bc8bcaa02a2243fd1d"
+  },
+  {
+    "path": "src/render/RendererService.cpp",
+    "sha256": "495bd85f1cd22025c9cc9581329a665ca269a18607f014bec60a48ac6fd225c6"
+  },
+  {
+    "path": "src/render/RendererService.hpp",
+    "sha256": "938fc85e20ce5cf85252c681007b426f961ba21fadd1fc28071a4f721ccb777e"
+  },
+  {
+    "path": "src/compat/ScreenUtilCompat.cpp",
+    "sha256": "3ace2f8bc2669fe4cebcb6444b6cba089c3ac5fa2f9a21376edabfe40f80effb"
+  },
+  {
+    "path": "src/app/Application.cpp",
+    "sha256": "07680c9ba8792aa17a1c287e2e39315d59863ac3dcacad186253f3dbd6502b9e"
+  },
+  {
+    "path": "src/app/Application.hpp",
+    "sha256": "23c35697cc43ffa04e267dbdee6de16bd1d5191e6f9f88fa272de4733665fb04"
+  },
+  {
+    "path": "src/app/main.cpp",
+    "sha256": "966507f3b71ee553376b320a7424129cec3993e5789f48b9f14a19e666d1f4e0"
+  },
+  {
+    "path": "src/showcase/Showcase.cpp",
+    "sha256": "ce1e06cde1798dc9eedb679a63f2030a1906cca63c5ac21a07e37b9271e15b2b"
+  },
+  {
+    "path": "tests/OriginalJutVideoTests.cpp",
+    "sha256": "b57ba38303a87b3de3fe47deca25896bde08f326c382c8e4fd9eccd5a3a8caac"
+  },
+  {
+    "path": "tests/RuntimeContextConstructionTests.cpp",
+    "sha256": "214d07df0a5d3ca0912a64f2a468c47b1752b00fbec3ee57ac82522fd1f1b9e8"
+  },
+  {
+    "path": "tests/OriginalViRenderModeTests.cpp",
+    "sha256": "ba9864e5c702e810806c9de699af2fca95ff5407a3fb8d50090f73e1dd3194c0"
+  },
+  {
+    "path": "tests/GxCopyFifoOrderTests.cpp",
+    "sha256": "315608f4119f2286b41a98387c3db42e83e8867e86847a1e1a873ee6ea80faef"
+  },
+  {
+    "path": "tests/TitleFileSelectRouteTests.cpp",
+    "sha256": "1b6576082b3ab1f9822fe3f873cc58550f45b7e884390048f7c1cec9d5d90f97"
+  },
+  {
+    "path": "tests/TitleFileSelectVisualTests.cpp",
+    "sha256": "8448489788e81bf4606dd5639477632d380294619dd3b259cabcbe465adb9bb4"
+  },
+  {
+    "path": "tests/GatewaySpinCheckpointTests.cpp",
+    "sha256": "c4f7ef263ec0d022d6e198b877312bc7300ffa781b4735957873159439c9a129"
+  },
+  {
+    "path": "tests/FileSelectFarVisualTests.cpp",
+    "sha256": "e717727ba4c910cc2ca4af6881b1e8985cc39d3ae0d4a0cfd3aea191a5ef6925"
+  },
+  {
+    "path": "src/runtime/jut/JutVideo.cpp",
+    "deleted": true
+  },
+  {
+    "path": "src/runtime/WiiVideoService.cpp",
+    "deleted": true
+  },
+  {
+    "path": "src/runtime/WiiVideoService.hpp",
+    "deleted": true
+  }
+]

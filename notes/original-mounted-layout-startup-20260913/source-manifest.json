@@ -1,0 +1,32 @@
+[
+  {
+    "path": "src/compat/ResourceHolderCompat.hpp",
+    "sha256": "89066f0d064f0ba619ea503f9316c3dc54f7e53f2aeda52cd655c39931bcdb6c",
+    "preexisting_source_sha256": "46c8b47e1861c57cc9b06dc4af1200ed917c60d20ee60956765abf222536bf8e"
+  },
+  {
+    "path": "src/compat/ResourceHolderCompat.cpp",
+    "sha256": "139dfd832e2cc7e810ef5fc9022258fe984385c80b9ee901f96be82bcde979b6",
+    "preexisting_source_sha256": "cf73ff93661be50fc16f5134a8d233361c9beb9acc34dd36af4340290eeef15f"
+  },
+  {
+    "path": "src/layout/LayoutRuntime.hpp",
+    "sha256": "e88fb3e46821224fbd03c0e3a01075a2e5a4990f5d8c6b1d5a71ccb8ba9b524c",
+    "preexisting_source_sha256": "601b0723bca8975b93be41c3631a87ff6e40fefd9511ba267540d3e03e625c3c"
+  },
+  {
+    "path": "src/layout/LayoutRuntime.cpp",
+    "sha256": "ec391015d740a80cf70c57c5965949a7cf3a06b693b03a59aca86e3a4a09cbea",
+    "preexisting_source_sha256": "83bf5deda471aa4e25c2a9c6bf9b66146637c414c89fb8be6a6e98e2219da187"
+  },
+  {
+    "path": "src/layout/LayoutManagerCompat.cpp",
+    "sha256": "b1abc82de7b809d216c0c3e56868b87749f54336097ac59477087644a12d2987",
+    "preexisting_source_sha256": "4d4f8b83598598c2b4b2adf44530bbf408e482623f0298fee34623ebdf7412fd"
+  },
+  {
+    "path": "src/layout/Nw4rLayoutRecords.cpp",
+    "sha256": "20cc6827f8bf0cf6685757c872298cb935e2beeea4716bcf36d19f66abf85f7d",
+    "preexisting_source_sha256": "85c51c12c9ac01871d5133d52f8ca65a557f5affe9bdee35cb9eef967ef4a5a1"
+  }
+]

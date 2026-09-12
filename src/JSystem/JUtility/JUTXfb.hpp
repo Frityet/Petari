@@ -28,6 +28,9 @@ public:
     void initiate(void*, void*, void*, JUTXfb::EXfbNumber);
 
     s16 getDisplayingXfbIndex() const NO_INLINE {
+        // Hardware VI interrupts can update this value while the original
+        // main loop polls. Yield the native guest CPU at this SDK boundary.
+        OSYieldThread();
         return mDisplayingXfbIndex;
     }
 

@@ -1,0 +1,58 @@
+[
+  {
+    "path": "src/Game/MapObj/StarPieceDirector.cpp",
+    "sha256": "83396fc3d7968e35ecccc7566653f6b9ea0e6bd19ff5d6d78bbee609da9597fd"
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "sha256": "52023ae83d33e99a4bab448de57afa4ceb47723bc21903b6e24ee46f6074bda4"
+  },
+  {
+    "path": "src/compat/OriginalStarPointerDirector.cpp",
+    "sha256": "a5d24c593477cd248dd421478318006ceaa48eb711210cc78f7c53dfed82aa36"
+  },
+  {
+    "path": "src/compat/OriginalStarPointerOwnerQueries.cpp",
+    "sha256": "44509e43857e293da1133fddce5055cdeb8c9857acf5ce1b2c268460c9fd4f48"
+  },
+  {
+    "path": "src/compat/WPadOwnership.cpp",
+    "sha256": "25fca7e5ed1605ba0f9a4c7fd4957026ed8ac2dfa23a9addebac3e34007a746f"
+  },
+  {
+    "path": "src/compat/OriginalStarPointerDepth.cpp",
+    "sha256": "3722771b42325d08f687820e5a826f49c5f86f49930db2eda80617dc5b269807"
+  },
+  {
+    "path": "src/compat/OriginalBinderQueries.cpp",
+    "sha256": "77ec46ad93ec5f49ded6a6e2358aa0d51fb797dc3b4ba11377a948162e27fe71"
+  },
+  {
+    "path": "src/compat/GameActorSensorCompat.cpp",
+    "sha256": "528f225d35b7080ef3b0689ddf86f6779235c3d14ca90df563119704d6997623"
+  },
+  {
+    "path": "src/compat/OriginalActorShadowQueries.cpp",
+    "sha256": "2f7b228f0a5f91430e354a76104cdd9c38ba96acc116f2a9c66f8632d25178e0"
+  },
+  {
+    "path": "src/compat/StarPointerServiceCompat.cpp",
+    "sha256": "6f63f8cd794ffc92e0f49706262ad23c2a1fdf489df532ab2ca63a3736d7ad30"
+  },
+  {
+    "path": "src/compat/StarPointerDepthOwnership.cpp",
+    "sha256": "147319c32cc7369c3eab4216d8ffce2264113c6ff8d1c9fbf84b558e2885c7b7"
+  },
+  {
+    "path": "src/compat/StarPointerDepthOwnership.hpp",
+    "sha256": "6ee446ee2d7bb891b498bcc49546ab28781638a6d91d06fed9d591d3d3a623c6"
+  },
+  {
+    "path": "src/compat/OriginalStarPieceSound.cpp",
+    "deleted": true
+  },
+  {
+    "path": "src/compat/StarPointerRuntimeCompat.cpp",
+    "deleted": true
+  }
+]

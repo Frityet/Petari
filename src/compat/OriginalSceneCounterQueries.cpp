@@ -14,10 +14,6 @@
 #include "compat/StageSessionState.hpp"
 
 namespace {
-    ScenePlayingResult* getScenePlayingResult() {
-        return MR::getSceneObj<ScenePlayingResult>(SceneObj_ScenePlayingResult);
-    }
-
     GameDataTemporaryInGalaxy* getGameDataTemporaryInGalaxy() {
         return &smgpc::compat::require_active_stage_session().temporary_data();
     }
@@ -59,35 +55,4 @@ namespace GameDataFunction {
     void updateAlreadyDoneFlag(int index, u32 value) {
         ::getGameDataTemporaryInGalaxy()->updateAlreadyDoneFlag(index, value);
     }
-}
-
-namespace MR {
-    void requestOneUp() {
-        startSystemSE("SE_SY_1UP");
-        getSceneObj<GameSceneLayoutHolder>(SceneObj_GameSceneLayoutHolder)->requestOneUp(1);
-    }
-
-    void requestPowerUpHPMeter() {
-        getSceneObj<GameSceneLayoutHolder>(SceneObj_GameSceneLayoutHolder)->requestPowerUpHPMeter();
-    }
-
-    s32 getPlayerLeft() {
-        return GameDataFunction::getPlayerLeft();
-    }
-
-    void incPlayerLeft() {
-        GameDataFunction::addPlayerLeft(1);
-    }
-
-
-
-    s32 getStarPieceNum() {
-        if (MR::isStageAstroLocation()) {
-            return GameDataFunction::getStockedStarPieceNum();
-        }
-        return ::getScenePlayingResult()->getStarPieceNum();
-    }
-
-
-
 }

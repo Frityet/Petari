@@ -9,6 +9,7 @@
 #include <vector>
 
 class LayoutHolder;
+namespace nw4r::lyt { class TexMap; }
 
 namespace smgpc::resource {
     class RarcArchive;
@@ -28,7 +29,9 @@ namespace smgpc::compat {
         LayoutArchiveOwner(const LayoutArchiveOwner&) = delete;
         LayoutArchiveOwner& operator=(const LayoutArchiveOwner&) = delete;
         [[nodiscard]] LayoutHolder& holder() const noexcept;
+        [[nodiscard]] const resource::RarcArchive& archive() const noexcept;
         [[nodiscard]] JKRHeap& heap() const noexcept;
+        [[nodiscard]] nw4r::lyt::TexMap* create_texture(std::string_view, std::shared_ptr<resource::Mem1ResourceHeap>) const;
     private:
         struct Storage;
         std::unique_ptr<Storage> _storage;
@@ -63,6 +66,7 @@ class ResourceHolderService final {
         [[nodiscard]] ResourceHolder* create_and_add(std::string_view archive_name, JKRHeap* heap);
         [[nodiscard]] LayoutHolder* create_layout(std::string_view archive_name);
         [[nodiscard]] LayoutHolder* create_layout_from_mounted(std::string_view archive_name);
+        [[nodiscard]] nw4r::lyt::TexMap* create_layout_texture(std::string_view archive_name, std::string_view texture_name);
         void remove_for_heap(JKRHeap* heap);
         [[nodiscard]] std::vector<ResourceHolder*> create_and_add_stationed(std::int32_t load_type);
         [[nodiscard]] std::shared_ptr<const ResourceArchiveOwner> retain(const ResourceHolder&) const;

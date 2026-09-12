@@ -19,6 +19,7 @@ namespace smgpc::compat {
     class EffectSystemOwnership;
     class ImageEffectOwnership;
     class JkrAllocationDomain;
+    class TalkDirectorLifetime;
     class CapturedFrameBlurService;
     class GlobalGravityOwnership;
 }
@@ -50,6 +51,7 @@ namespace smgpc::scene {
         void acknowledge_scene_postpass(std::span<NameObj *const> objects);
         void complete_camera_parameters();
         void complete_initialization();
+        void prepare_retirement() noexcept;
 
     private:
         friend class ::SceneObjHolder;
@@ -67,6 +69,8 @@ namespace smgpc::scene {
             NameObj *object);
 
         friend smgpc::compat::DemoDirectorOwnership* current_demo_director_ownership() noexcept;
+        friend smgpc::compat::TalkDirectorLifetime* current_talk_director_lifetime() noexcept;
+        std::unique_ptr<smgpc::compat::TalkDirectorLifetime> _talk_director_lifetime;
         std::unique_ptr<smgpc::compat::DemoDirectorOwnership> _demo_director_ownership;
         SceneInitializationBinding _initialization_state;
         std::unique_ptr<smgpc::runtime::SceneMessageBinding> _scene_messages;
@@ -101,6 +105,7 @@ namespace smgpc::scene {
     [[nodiscard]] smgpc::compat::EffectSystemOwnership* current_effect_system_ownership() noexcept;
     [[nodiscard]] SceneObjHolder *current_scene_obj_holder() noexcept;
     [[nodiscard]] smgpc::compat::DemoDirectorOwnership* current_demo_director_ownership() noexcept;
+    [[nodiscard]] smgpc::compat::TalkDirectorLifetime* current_talk_director_lifetime() noexcept;
     [[nodiscard]] std::shared_ptr<smgpc::compat::JkrAllocationDomain> current_scene_allocation_domain() noexcept;
     [[nodiscard]] bool current_scene_obj_holder_binding_owns(
         const NameObj *object) noexcept;

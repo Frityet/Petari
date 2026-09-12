@@ -138,18 +138,6 @@ void append_picture_tag(std::u16string& text, std::uint16_t payload) {
     return static_cast<std::uint16_t>(tokens.front().text.front());
 }
 
-[[nodiscard]] std::size_t glyph_advance(
-    const smgpc::layout::BrfntGlyph& glyph) {
-    return glyph.widths.char_width == 0
-               ? glyph.width
-               : static_cast<std::size_t>(glyph.widths.char_width);
-}
-
-[[nodiscard]] std::uint16_t texture_extent(float value) {
-    return static_cast<std::uint16_t>(
-        std::clamp(std::ceil(value), 1.0F, 4096.0F));
-}
-
 [[nodiscard]] std::size_t picture_glyph_rgb_count(
     const smgpc::layout::BrfntFont& font,
     const smgpc::layout::BrfntGlyph& glyph) {
@@ -181,137 +169,6 @@ void append_picture_tag(std::u16string& text, std::uint16_t payload) {
         }
     }
     return colors.size();
-}
-
-struct ExpectedPictureRaster {
-    std::uint16_t width = 0U;
-    std::uint16_t height = 0U;
-    std::size_t nontransparent_pixels = 0U;
-    std::size_t rgb_colors = 0U;
-    std::size_t alpha_values = 0U;
-    std::uint64_t hash = 0U;
-};
-
-[[nodiscard]] float text_factor(std::uint8_t alignment) {
-    return alignment == 1U ? 0.5F : alignment == 2U ? 1.0F : 0.0F;
-}
-
-[[nodiscard]] ExpectedPictureRaster expected_picture_only_raster(
-    const smgpc::layout::BrlytTextBox& text_box, float pane_width,
-    const smgpc::layout::BrfntFont& regular_font,
-    const smgpc::layout::BrfntFont& picture_font,
-    const smgpc::layout::BrfntGlyph& glyph,
-    const std::array<std::uint8_t, 4U>& text_color) {
-    const auto scale_x =
-        text_box.font_width / static_cast<float>(regular_font.width);
-    const auto scale_y =
-        text_box.font_height / static_cast<float>(regular_font.height);
-    require(scale_x > 0.0F && scale_y > 0.0F,
-            "expected PictureFont raster requires positive writer scale");
-    const auto native_char_space = text_box.char_space / scale_x;
-    const auto line_width =
-        static_cast<float>(glyph_advance(glyph)) + native_char_space;
-    const auto native_wrap_width = pane_width / scale_x;
-    const auto horizontal_position =
-        static_cast<std::uint8_t>(text_box.text_position % 3U);
-    const auto line_alignment = static_cast<std::uint8_t>(
-        text_box.text_alignment == 0U || text_box.text_alignment > 2U
-            ? horizontal_position
-            : text_box.text_alignment);
-    const auto native_width =
-        line_alignment == 0U ? line_width
-                             : std::max(native_wrap_width, line_width);
-    const auto picture_y =
-        static_cast<float>(regular_font.ascent) -
-        static_cast<float>(picture_font.ascent) - (2.0F / scale_y);
-    const auto top = std::min(0.0F, picture_y);
-    const auto bottom = std::max(
-        static_cast<float>(regular_font.height),
-        picture_y + static_cast<float>(glyph.height));
-
-    auto proof = ExpectedPictureRaster{
-        .width = texture_extent(native_width),
-        .height = texture_extent(bottom - top),
-    };
-    auto rgba = std::vector<std::uint8_t>(
-        static_cast<std::size_t>(proof.width) * proof.height * 4U, 0U);
-    const auto cursor_x =
-        (static_cast<float>(proof.width) - line_width) *
-        text_factor(line_alignment);
-    const auto glyph_x = static_cast<int>(std::round(cursor_x)) +
-                         static_cast<int>(glyph.widths.left);
-    const auto glyph_y = static_cast<int>(std::round(picture_y - top));
-    const auto draw_width =
-        glyph.widths.glyph_width == 0U
-            ? glyph.width
-            : std::min<std::uint8_t>(glyph.width,
-                                     glyph.widths.glyph_width);
-    require(glyph.sheet_index < picture_font.sheets.size(),
-            "expected PictureFont raster sheet must exist");
-    const auto& sheet = picture_font.sheets[glyph.sheet_index];
-    for (auto y = 0U; y < glyph.height; ++y) {
-        for (auto x = 0U; x < draw_width; ++x) {
-            const auto source_x = static_cast<std::uint16_t>(glyph.x + x);
-            const auto source_y = static_cast<std::uint16_t>(glyph.y + y);
-            if (source_x >= sheet.width || source_y >= sheet.height) {
-                continue;
-            }
-            const auto dest_x = glyph_x + static_cast<int>(x);
-            const auto dest_y = glyph_y + static_cast<int>(y);
-            if (dest_x < 0 || dest_y < 0 || dest_x >= proof.width ||
-                dest_y >= proof.height) {
-                continue;
-            }
-            const auto source_offset =
-                (static_cast<std::size_t>(source_y) * sheet.width + source_x) *
-                4U;
-            const auto source_alpha = static_cast<std::uint8_t>(
-                (static_cast<std::uint16_t>(
-                     sheet.rgba[source_offset + 3U]) *
-                 text_color[3U]) /
-                255U);
-            if (source_alpha == 0U) {
-                continue;
-            }
-            const auto dest_offset =
-                (static_cast<std::size_t>(dest_y) * proof.width +
-                 static_cast<std::size_t>(dest_x)) *
-                4U;
-            if (source_alpha < rgba[dest_offset + 3U]) {
-                continue;
-            }
-            for (auto component = std::size_t{}; component < 3U;
-                 ++component) {
-                rgba[dest_offset + component] = static_cast<std::uint8_t>(
-                    (static_cast<std::uint16_t>(
-                         sheet.rgba[source_offset + component]) *
-                     text_color[component]) /
-                    255U);
-            }
-            rgba[dest_offset + 3U] = source_alpha;
-        }
-    }
-
-    auto colors = std::set<std::uint32_t>{};
-    auto alphas = std::set<std::uint8_t>{};
-    proof.hash = 14695981039346656037ULL;
-    for (auto offset = std::size_t{}; offset < rgba.size(); offset += 4U) {
-        if (rgba[offset + 3U] != 0U) {
-            ++proof.nontransparent_pixels;
-            colors.insert(
-                (static_cast<std::uint32_t>(rgba[offset]) << 16U) |
-                (static_cast<std::uint32_t>(rgba[offset + 1U]) << 8U) |
-                static_cast<std::uint32_t>(rgba[offset + 2U]));
-            alphas.insert(rgba[offset + 3U]);
-        }
-        for (auto component = std::size_t{}; component < 4U; ++component) {
-            proof.hash ^= rgba[offset + component];
-            proof.hash *= 1099511628211ULL;
-        }
-    }
-    proof.rgb_colors = colors.size();
-    proof.alpha_values = alphas.size();
-    return proof;
 }
 
 void test_ordered_token_formatting() {
@@ -431,276 +288,27 @@ struct CorpusProof {
     };
 }
 
-#ifndef NDEBUG
-[[nodiscard]] smgpc::layout::LayoutRuntime::DebugTextRasterState
-require_exact_raster(const smgpc::layout::LayoutRuntime& layout,
-                     std::string_view text_box_name) {
-    const auto rasters = layout.debugTextRasters(text_box_name);
-    const auto found = std::ranges::find(
-        rasters, text_box_name,
-        &smgpc::layout::LayoutRuntime::DebugTextRasterState::text_box_name);
-    require(found != rasters.end(),
-            "the selected retail text box must produce a debug raster");
-    return *found;
-}
-#endif
-
-struct RasterProof {
-    std::uint16_t width = 0U;
-    std::uint16_t height = 0U;
-    std::size_t colors = 0U;
-    std::uint64_t hash = 0U;
-};
-
-[[nodiscard]] RasterProof test_retail_mixed_raster(
-    const RetailFixture& fixture,
-    const smgpc::resource::RarcArchive& font_archive,
-    const smgpc::layout::BrfntFont& picture_font) {
-#ifdef NDEBUG
-    throw std::runtime_error("PictureFont mixed-raster proof requires a debug build");
-#else
-    const auto press_archive =
-        smgpc::resource::RarcArchive::from_file(fixture.press_start_archive);
-    const auto* brlyt_entry = smgpc::layout::find_layout_brlyt(
-        press_archive.entries(), "PressStart");
-    require(brlyt_entry != nullptr,
-            "PressStart.arc must contain its exact retail BRLYT");
-    const auto parsed = smgpc::layout::parse_brlyt_layout(
-        press_archive.file_data(*brlyt_entry));
-
-    const auto* text_box =
-        static_cast<const smgpc::layout::BrlytTextBox*>(nullptr);
-    auto regular_font = smgpc::layout::BrfntFont{};
-    for (const auto& candidate : parsed.text_boxes) {
-        try {
-            auto font = load_font(font_archive, candidate.font_name);
-            if (font.glyph_for_exact('X').has_value() &&
-                font.glyph_for_exact('Y').has_value() &&
-                candidate.pane_index < parsed.panes.size()) {
-                text_box = &candidate;
-                regular_font = std::move(font);
-                break;
-            }
-        } catch (const std::exception&) {
-        }
+void test_actual_picture_font(const smgpc::resource::RarcArchive& archive,
+                              const smgpc::layout::BrfntFont& decoded) {
+    const auto bytes = archive.file_data(require_font_entry(archive, "PictureFont"));
+    nw4r::ut::ResFont font;
+    require(font.SetResource(const_cast<std::uint8_t*>(bytes.data()), bytes.size()),
+            "actual SDK PictureFont installs the retained authored BRFNT bytes");
+    size_t checked = 0;
+    for (std::uint32_t code = 0; code <= 0xffff; ++code) {
+        const auto expected = decoded.glyph_for_exact(static_cast<std::uint16_t>(code));
+        if (!expected) continue;
+        nw4r::ut::Glyph glyph;
+        font.GetGlyph(&glyph, static_cast<std::uint16_t>(code));
+        require(glyph.pTexture == bytes.data() + decoded.sheet_image_offset + expected->sheet_index * decoded.sheet_size &&
+                glyph.cellX == expected->x && glyph.cellY == expected->y && glyph.height == expected->height &&
+                glyph.widths.left == expected->widths.left && glyph.widths.glyphWidth == expected->widths.glyph_width &&
+                glyph.widths.charWidth == expected->widths.char_width && glyph.texFormat == GX_TF_RGB5A3,
+                "every actual PictureFont glyph retains exact encoded sheet identity, cell, width and color format");
+        ++checked;
     }
-    require(text_box != nullptr,
-            "PressStart must expose a real text box backed by X/Y glyphs");
-
-    auto layout = smgpc::layout::LayoutRuntime(
-        "picture-font-tag-test", "PressStart", 1U, 0,
-        fixture.press_start_archive);
-    require(layout.hasPane(text_box->name),
-            "PressStart runtime must parse the selected retail text box");
-    const auto font_count_before = layout.debugFontCount();
-    require(font_count_before > 0U,
-            "PressStart must load its ordinary font before tagged text is installed");
-
-    auto raw = std::u16string(u"X");
-    append_picture_tag(raw, 0U);
-    raw.push_back(u'Y');
-    append_picture_tag(raw, 1U);
-    layout.setTextBoxTaggedStringRecursive(text_box->name.c_str(), raw, u"");
-    require(layout.debugFontCount() == font_count_before + 1U,
-            "PictureFont must load lazily and exactly once when a group-3 tag is installed");
-
-    const auto first = require_exact_raster(layout, text_box->name);
-    const auto second = require_exact_raster(layout, text_box->name);
-    require(first.rgba_hash == second.rgba_hash &&
-                first.nontransparent_pixel_count ==
-                    second.nontransparent_pixel_count,
-            "mixed-font rasterization must be deterministic");
-
-    const auto regular_x = *regular_font.glyph_for_exact('X');
-    const auto regular_y = *regular_font.glyph_for_exact('Y');
-    const auto picture_zero = *picture_font.glyph_for_exact('0');
-    const auto picture_one = *picture_font.glyph_for_exact('1');
-    const auto scale_x =
-        text_box->font_width / static_cast<float>(regular_font.width);
-    const auto scale_y =
-        text_box->font_height / static_cast<float>(regular_font.height);
-    require(scale_x > 0.0F && scale_y > 0.0F,
-            "PressStart must retain positive writer scale");
-    const auto native_char_space = text_box->char_space / scale_x;
-    const auto expected_line_width =
-        static_cast<float>(glyph_advance(regular_x) +
-                           glyph_advance(picture_zero) +
-                           glyph_advance(regular_y) +
-                           glyph_advance(picture_one)) +
-        native_char_space * 4.0F;
-    const auto native_wrap_width =
-        parsed.panes[text_box->pane_index].width / scale_x;
-    require(expected_line_width <= native_wrap_width,
-            "focused mixed string must remain on one authored line");
-    const auto horizontal_position =
-        static_cast<std::uint8_t>(text_box->text_position % 3U);
-    const auto line_alignment = static_cast<std::uint8_t>(
-        text_box->text_alignment == 0U || text_box->text_alignment > 2U
-            ? horizontal_position
-            : text_box->text_alignment);
-    const auto expected_native_width =
-        line_alignment == 0U
-            ? expected_line_width
-            : std::max(native_wrap_width, expected_line_width);
-    const auto picture_y =
-        static_cast<float>(regular_font.ascent) -
-        static_cast<float>(picture_font.ascent) - (2.0F / scale_y);
-    const auto expected_top = std::min(0.0F, picture_y);
-    const auto expected_bottom = std::max(
-        static_cast<float>(regular_font.height),
-        picture_y + static_cast<float>(
-                        std::max(picture_zero.height, picture_one.height)));
-
-    require(first.width == texture_extent(expected_native_width) &&
-                first.height ==
-                    texture_extent(expected_bottom - expected_top) &&
-                first.font_width == regular_font.width &&
-                first.font_height == regular_font.height &&
-                first.ordinary_glyph_count == 2U &&
-                first.picture_glyph_count == 2U &&
-                first.nontransparent_pixel_count > 0U &&
-                first.nontransparent_rgb_color_count > 1U,
-            "mixed raster must preserve exact writer metrics, roles, and nonzero full-color pixels");
-    require(picture_glyph_rgb_count(picture_font, picture_zero) > 1U,
-            "retail PictureFont U+0030 must contain full-color RGB data");
-
-    constexpr auto custom_text_color =
-        std::array<std::uint8_t, 4U>{127U, 193U, 71U, 173U};
-    constexpr auto hostile_mapping_max =
-        std::array<std::uint8_t, 4U>{3U, 5U, 7U, 1U};
-    layout.debugSetTextBoxRasterColors(text_box->name, custom_text_color,
-                                       hostile_mapping_max);
-    auto picture_only = std::u16string{};
-    append_picture_tag(picture_only, 0U);
-    layout.setTextBoxTaggedStringRecursive(text_box->name.c_str(),
-                                           picture_only, u"");
-    const auto colored = require_exact_raster(layout, text_box->name);
-    const auto expected_colored = expected_picture_only_raster(
-        *text_box, parsed.panes[text_box->pane_index].width, regular_font,
-        picture_font, picture_zero, custom_text_color);
-    require(picture_font.sheet_format ==
-                    smgpc::resource::TplTextureFormat::RGB5A3 &&
-                colored.width == expected_colored.width &&
-                colored.height == expected_colored.height &&
-                colored.nontransparent_pixel_count ==
-                    expected_colored.nontransparent_pixels &&
-                colored.nontransparent_rgb_color_count ==
-                    expected_colored.rgb_colors &&
-                colored.nontransparent_alpha_value_count ==
-                    expected_colored.alpha_values &&
-                colored.rgba_hash == expected_colored.hash &&
-                colored.nontransparent_alpha_value_count > 1U,
-            "PictureFont RGB5A3 must preserve source alpha, reset color mapping, and modulate exact text RGBA");
-
-    layout.setTextBoxStringRecursive(text_box->name.c_str(), picture_only);
-    const auto direct_tag = require_exact_raster(layout, text_box->name);
-    require(direct_tag.picture_glyph_count == 1U &&
-                direct_tag.ordinary_glyph_count == 0U &&
-                direct_tag.rgba_hash == colored.rgba_hash,
-            "programmatic strings built with a valid type-3 tag must use the same PictureFont path as BMG text");
-    const auto malformed_direct = std::u16string{
-        static_cast<char16_t>(0x001aU),
-        static_cast<char16_t>(0x0603U),
-    };
-    require_throws<std::invalid_argument>(
-        [&] {
-            layout.setTextBoxStringRecursive(text_box->name.c_str(),
-                                             malformed_direct);
-        },
-        "programmatic strings must reject a malformed inline control before mutating the text box");
-    require(require_exact_raster(layout, text_box->name).rgba_hash ==
-                direct_tag.rgba_hash,
-            "a rejected programmatic control sequence must preserve the prior raster state");
-
-    auto player_tag = std::u16string{};
-    append_picture_tag(player_tag, 0x002bU);
-    layout.setTextBoxTaggedStringRecursive(text_box->name.c_str(), player_tag,
-                                           u"");
-    layout.setPictureTagPlayerCharacter(
-        smgpc::resource::BmgPlayerCharacter::Mario);
-    const auto mario = require_exact_raster(layout, text_box->name);
-    layout.setPictureTagPlayerCharacter(
-        smgpc::resource::BmgPlayerCharacter::Luigi);
-    const auto luigi = require_exact_raster(layout, text_box->name);
-    require(mario.picture_glyph_count == 1U &&
-                luigi.picture_glyph_count == 1U &&
-                mario.rgba_hash != luigi.rgba_hash,
-            "changing the explicit player policy must invalidate the prior raster and select a different PictureFont glyph");
-    layout.setPictureTagPlayerCharacter(std::nullopt);
-    require_throws<std::logic_error>(
-        [&] { (void)layout.debugTextRasters(text_box->name); },
-        "an actual dynamic tag without game-data identity must fail explicitly instead of defaulting to Mario");
-
-    layout.setTextBoxStringRecursive(text_box->name.c_str(), u"\ud55cAB");
-    const auto literal = require_exact_raster(layout, text_box->name);
-    require(literal.ordinary_glyph_count == 3U &&
-                literal.picture_glyph_count == 0U,
-            "localized literal A/B text must remain ordinary text without an icon alias heuristic");
-
-    return RasterProof{
-        .width = first.width,
-        .height = first.height,
-        .colors = first.nontransparent_rgb_color_count,
-        .hash = first.rgba_hash,
-    };
-#endif
-}
-
-void test_missing_picture_font_fails(
-    const RetailFixture& fixture,
-    const smgpc::resource::RarcArchive& font_archive) {
-#ifdef NDEBUG
-    throw std::runtime_error("missing PictureFont proof requires a debug build");
-#else
-    const auto press_archive =
-        smgpc::resource::RarcArchive::from_file(fixture.press_start_archive);
-    const auto* brlyt_entry = smgpc::layout::find_layout_brlyt(
-        press_archive.entries(), "PressStart");
-    require(brlyt_entry != nullptr,
-            "missing-font proof requires retail PressStart BRLYT");
-    const auto parsed = smgpc::layout::parse_brlyt_layout(
-        press_archive.file_data(*brlyt_entry));
-    require(!parsed.text_boxes.empty(),
-            "missing-font proof requires a retail PressStart text box");
-    const auto& text_box = parsed.text_boxes.front();
-    const auto& font_entry =
-        require_font_entry(font_archive, text_box.font_name);
-    const auto font_data = font_archive.file_data(font_entry);
-    auto external_font = nw4r::ut::ResFont{};
-    require(external_font.SetResource(
-                const_cast<std::uint8_t*>(font_data.data()),
-                font_data.size()) &&
-                external_font.SetAlternateChar('?'),
-            "missing-font proof requires a live ordinary retail ResFont");
-
-    const auto unique = std::chrono::steady_clock::now()
-                            .time_since_epoch()
-                            .count();
-    const auto directory = std::filesystem::temp_directory_path() /
-                           ("smgpc-picture-font-missing-" +
-                            std::to_string(unique));
-    std::filesystem::create_directories(directory);
-    struct TempDirectoryGuard {
-        std::filesystem::path path;
-        ~TempDirectoryGuard() {
-            auto error = std::error_code{};
-            std::filesystem::remove_all(path, error);
-        }
-    } guard{directory};
-    const auto isolated_layout = directory / "PressStart.arc";
-    std::filesystem::copy_file(fixture.press_start_archive, isolated_layout);
-
-    auto layout = smgpc::layout::LayoutRuntime(
-        "missing-picture-font-test", "PressStart", 1U, 0,
-        isolated_layout);
-    layout.setTextBoxFontRecursive(text_box.name.c_str(), external_font);
-    auto tagged = std::u16string{};
-    append_picture_tag(tagged, 0U);
-    layout.setTextBoxTaggedStringRecursive(text_box.name.c_str(), tagged, u"");
-    require_throws<std::logic_error>(
-        [&] { (void)layout.debugTextRasters(text_box.name); },
-        "a tagged layout with an ordinary font but no resolved PictureFont must fail explicitly");
-#endif
+    require(checked > 32 && picture_glyph_rgb_count(decoded, *decoded.glyph_for_exact('0')) > 1,
+            "retail PictureFont contains its full glyph map and genuinely colored icon pixels");
 }
 
 }  // namespace
@@ -711,25 +319,19 @@ int main() {
     const auto fixture = find_retail_fixture();
     if (!fixture.has_value()) {
         std::cout << "[skip] extracted RMGK01 PictureFont/message/layout proof\n";
-        std::cout << "PictureFont tag tests passed: 1/4\n";
-        return 0;
+        std::cout << "[pending] Original picture-tag rendering and retail corpus require the actual resource fixture.\n";
+        return 77;
     }
 
     const auto font_archive =
         smgpc::resource::RarcArchive::from_file(fixture->font_archive);
     const auto picture_font = load_font(font_archive, "PictureFont");
     const auto corpus = test_retail_corpus(*fixture, picture_font);
-    const auto raster =
-        test_retail_mixed_raster(*fixture, font_archive, picture_font);
-    test_missing_picture_font_fails(*fixture, font_archive);
-    std::cout << "picture_tags=" << corpus.tag_count
-              << ";payloads=" << corpus.payload_count
-              << ";picture_font=" << static_cast<unsigned>(picture_font.width)
-              << 'x' << static_cast<unsigned>(picture_font.height)
-              << ";ascent=" << static_cast<unsigned>(picture_font.ascent)
-              << ";mixed=" << raster.width << 'x' << raster.height
-              << ";colors=" << raster.colors << ";hash=" << raster.hash
-              << '\n';
-    std::cout << "PictureFont tag tests passed: 4/4\n";
-    return 0;
+    test_actual_picture_font(font_archive, picture_font);
+    std::cout << "picture_tags=" << corpus.tag_count << ";payloads=" << corpus.payload_count
+              << ";actual_font_glyphs=verified\n";
+    std::cout << "PictureFont resource checks passed: 3/3\n";
+    std::cout << "[pending] Original mixed picture-tag rendering requires the actual GameSystem font owner; "
+                 "the former CPU raster path has been removed.\n";
+    return 77;
 }

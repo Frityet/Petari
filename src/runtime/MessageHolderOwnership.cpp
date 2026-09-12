@@ -1,6 +1,9 @@
 #include "runtime/MessageHolderOwnership.hpp"
 #include "Game/System/ErrorArchive.hpp"
 #include "Game/System/MessageHolder.hpp"
+#include "Game/System/GameSystem.hpp"
+#include "Game/System/GameSystemObjHolder.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "JSystem/JKernel/JKRMemArchive.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -27,12 +30,8 @@ namespace smgpc::runtime {
         std::unique_ptr<MessageHolder> holder;
 
         ~Storage() {
-            if (holder) {
-                holder->destroySceneData();
-                delete holder->mGameMessageData;
-                delete holder->mSystemMessageData;
-                holder.reset();
-            }
+            auto* original = holder.release();
+            destroy_message_holder(original);
             if (mounts && domain)
                 mounts->remove_for_heap(&domain->heap());
             // JMapInfo disposal precedes its borrowed archive data and the heap.
@@ -48,8 +47,8 @@ namespace smgpc::runtime {
         compat::JkrHostAllocationScope host;
         if (!runtime || ArchiveMountService::active() != &mounts)
             aurora::throw_host_exception<std::invalid_argument>("Original messages require the active archive service and real heap runtime");
-        if (active_holder)
-            aurora::throw_host_exception<std::logic_error>("An original MessageHolder is already published");
+        if (active_holder || SingletonHolder<GameSystem>::get())
+            aurora::throw_host_exception<std::logic_error>("A standalone MessageHolder cannot coexist with another message or GameSystem owner");
 
         auto storage = std::make_unique<Storage>();
         storage->domain = compat::JkrAllocationDomain::create(std::move(runtime), byte_budget);
@@ -102,17 +101,30 @@ namespace smgpc::runtime {
         return *_storage->holder;
     }
     MessageHolder *current_message_holder() noexcept {
+        if (auto* system = SingletonHolder<GameSystem>::get())
+            return system->mObjHolder ? system->mObjHolder->mMessageHolder : nullptr;
         return active_holder;
     }
     MessageHolder &require_message_holder() {
-        if (!active_holder)
-            aurora::throw_host_exception<std::logic_error>("Original message access requires an active MessageHolder");
-        return *active_holder;
+        auto* holder = current_message_holder();
+        if (!holder)
+            aurora::throw_host_exception<std::logic_error>("Original message access requires an initialized MessageHolder owner");
+        return *holder;
+    }
+    void destroy_message_holder(MessageHolder*& holder) noexcept {
+        if (!holder) return;
+        const compat::JkrHostAllocationScope host;
+        holder->destroySceneData();
+        delete std::exchange(holder->mGameMessageData, nullptr);
+        delete std::exchange(holder->mSystemMessageData, nullptr);
+        if (active_holder == holder) active_holder = nullptr;
+        delete std::exchange(holder, nullptr);
     }
     const char *message_id_for_pointer(const wchar_t *pointer) noexcept {
-        if (!pointer || !active_holder)
+        const auto* holder = current_message_holder();
+        if (!pointer || !holder)
             return nullptr;
-        for (const auto *data : {active_holder->mGameMessageData, active_holder->mSystemMessageData}) {
+        for (const auto *data : {holder->mGameMessageData, holder->mSystemMessageData}) {
             if (!data)
                 continue;
             const auto index = data->mNativeResource->message_index(pointer);

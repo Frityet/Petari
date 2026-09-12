@@ -1,0 +1,12 @@
+{
+  "branch": "pcp-decomp",
+  "commit": "bd3c6a707e15388c897249d4dfb51b5ee73c9835",
+  "remote_sha": "bd3c6a707e15388c897249d4dfb51b5ee73c9835",
+  "paths": [
+    "include/Game/LiveActor/ShadowSurfaceCircle.hpp",
+    "include/Game/LiveActor/ShadowSurfaceDrawer.hpp",
+    "src/Game/LiveActor/ShadowSurfaceCircle.cpp",
+    "src/Game/LiveActor/ShadowSurfaceDrawer.cpp"
+  ],
+  "remote_verified": true
+}

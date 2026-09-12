@@ -12,7 +12,7 @@ namespace nw4r {
         struct PrintContext {
             TextWriterBase<CharType>* writer;
             const CharType* str;
-            const f32 xOrigin;
+            f32 xOrigin;
             const f32 yOrigin;
             u32 flags;
         };

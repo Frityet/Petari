@@ -1,5 +1,6 @@
 #include "resource/TextEncoding.hpp"
 #include "Game/Map/FileSelectSky.hpp"
+#include "Game/System/MainLoopFramework.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
@@ -215,9 +216,8 @@ namespace {
         // authored render mode's ordinary vertical display-copy filter too.
         const auto *disable_filter =
             std::getenv("SMGPC_FILE_SELECT_DISABLE_VFILTER");
-        renderer.end_frame(runtime.wii_video().render_mode(),
-                           disable_filter == nullptr ||
-                               disable_filter[0] == '\0');
+        runtime.display().main_loop().mUseVFilter = disable_filter == nullptr || disable_filter[0] == '\0';
+        renderer.end_frame();
     }
 
     void capture_screen_if_requested(

@@ -1,0 +1,9 @@
+# Original circular surface shadow
+
+Recovered complete `ShadowSurfaceCircle` from retail `0x8016D338–0x8016D51C`, reference first and then byte-identical native import. The actual original drawer checks projection/draw state, optionally scales radius by host X scale, obtains the projected position/normal, and draws the 20-segment filled circle one unit above the surface with the reversed normal. No custom renderer or substitute geometry was added.
+
+Imported whole `ShadowSurfaceDrawer` and original `ShadowSurfaceDrawInit`. Restored original TColor material initialization and missing empty base destructor (retail emitted in ShadowSurfaceBox.cpp); the existing native TColor SDK handles host byte order. Registered the exact original SurfaceDrawInit scene object and connected SurfaceCircle to the common ShadowControllerOwnership resource/retirement path. Coin remains inactive pending the root agent's factory work.
+
+Original compiler comparisons: circle draw 99.9359%, constructor 99.210526%, destructor/setRadius/vtable 100%; SurfaceDrawInit ctor/initDraw/destructor and SurfaceDrawer ctor/vtables 100%. Original and native TUs and the two native ownership/factory TUs compile; receipts in compile.json and reference-match.json. No component or GPU tests added or run; root owns production build/runtime validation.
+
+Exact owned files are in source-manifest.json. Shared ShadowControllerOwnership.cpp owns only the SurfaceCircle include/construction block; shared SceneObjHolderCompat.cpp owns only the SurfaceDrawer include and exact SurfaceDrawInit factory case. Other preexisting/shared changes are preserved. Reference checkpoint `bd3c6a707e15388c897249d4dfb51b5ee73c9835` pushed to origin/pcp-decomp and remote SHA verified; exact four reference paths only. Native publication remains with the root agent.

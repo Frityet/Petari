@@ -76,15 +76,7 @@ namespace MR {
         pActor->initActorStarPointerTarget(radius, &pActor->mPosition, pActor->getBaseMtx(), TVec3f(rOffset));
     }
 
-    bool isStarPointerPointing1PWithoutCheckZ(const LiveActor* pActor, const char*, bool, bool) {
-        auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-        return runtime != nullptr && pActor != nullptr && runtime->sample_star_pointer_target(*pActor, false);
-    }
 
-    bool isStarPointerPointingFileSelect(const LiveActor* pActor) {
-        auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-        return runtime != nullptr && pActor != nullptr && runtime->sample_star_pointer_target(*pActor, true);
-    }
 
     bool isExistStarPointerTarget(const LiveActor* pActor) {
         return pActor->mStarPointerTarget != nullptr;

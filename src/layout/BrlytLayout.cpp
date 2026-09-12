@@ -179,8 +179,8 @@ namespace smgpc::layout {
             auto materials = std::vector<BrlytMaterial>{};
             materials.reserve(material_count);
             for (auto i = 0U; i < material_count; ++i) {
-                const auto material_offset = read_big<std::uint32_t>(block, offset_table_offset + static_cast<std::size_t>(i) * 4U);
-                if (material_offset + 64U > block.size()) {
+                const auto material_offset = static_cast<std::size_t>(read_big<std::uint32_t>(block, offset_table_offset + static_cast<std::size_t>(i) * 4U));
+                if (material_offset > block.size() || 64U > block.size() - material_offset) {
                     aurora::throw_host_exception<std::runtime_error>("BRLYT material is truncated");
                 }
 
@@ -289,6 +289,7 @@ namespace smgpc::layout {
                 if (cursor + static_cast<std::size_t>(ind_texsrt_count) * 20U > block.size()) {
                     aurora::throw_host_exception<std::runtime_error>("BRLYT material indirect texture SRT is truncated");
                 }
+                const auto indirect_srt_offset = cursor - material_offset;
                 cursor += static_cast<std::size_t>(ind_texsrt_count) * 20U;
 
                 const auto ind_texstage_count = material_indtexstage_count(res_num_bits);
@@ -345,6 +346,21 @@ namespace smgpc::layout {
                     };
                     cursor += 4U;
                 }
+                // Material's original resource constructor consumes this same
+                // validated record. Only scalar byte order changes on the host;
+                // packed channel, TEV, indirect and blend bytes remain intact.
+                const auto packed = block.subspan(material_offset, cursor - material_offset);
+                material.native_resource.assign(packed.begin(), packed.end());
+                const auto scalar = [&]<typename T>(std::size_t offset) {
+                    const T value = read_big<T>(packed, offset);
+                    std::memcpy(material.native_resource.data() + offset, &value, sizeof(value));
+                };
+                for (std::size_t offset = 20; offset < 44; offset += 2) scalar.template operator()<std::int16_t>(offset);
+                scalar.template operator()<std::uint32_t>(60);
+                for (std::size_t i = 0; i < texmap_count; ++i) scalar.template operator()<std::uint16_t>(64 + i * 4);
+                const auto srt_offset = 64 + texmap_count * 4;
+                for (std::size_t i = 0; i < texsrt_count * 5; ++i) scalar.template operator()<float>(srt_offset + i * 4);
+                for (std::size_t i = 0; i < ind_texsrt_count * 5; ++i) scalar.template operator()<float>(indirect_srt_offset + i * 4);
                 material.gx_state = smgpc::render::gx_state_from_brlyt_material(material);
                 materials.push_back(material);
             }
@@ -424,6 +440,31 @@ namespace smgpc::layout {
             }
         }
 
+        [[nodiscard]] std::vector<std::array<BrlytTexCoord, 4U>> parse_tex_coord_sets(std::span<const std::uint8_t> block,
+                                                                                       std::size_t offset,
+                                                                                       std::uint8_t tex_coord_count) {
+            constexpr auto kTexCoordsPerSet = std::size_t{4U};
+            constexpr auto kTexCoordBytes = std::size_t{8U};
+            const auto tex_coord_set_size = kTexCoordsPerSet * kTexCoordBytes;
+            if (offset + static_cast<std::size_t>(tex_coord_count) * tex_coord_set_size > block.size()) {
+                aurora::throw_host_exception<std::runtime_error>("BRLYT texture coordinate table is truncated");
+            }
+
+            auto tex_coord_sets = std::vector<std::array<BrlytTexCoord, 4U>>{};
+            tex_coord_sets.reserve(tex_coord_count);
+            for (auto tex_coord_set = 0U; tex_coord_set < tex_coord_count; ++tex_coord_set) {
+                const auto set_offset = offset + static_cast<std::size_t>(tex_coord_set) * tex_coord_set_size;
+                tex_coord_sets.push_back(std::array<BrlytTexCoord, 4U>{
+                    BrlytTexCoord{read_big<float>(block, set_offset), read_big<float>(block, set_offset + 4U)},
+                    BrlytTexCoord{read_big<float>(block, set_offset + 8U), read_big<float>(block, set_offset + 12U)},
+                    BrlytTexCoord{read_big<float>(block, set_offset + 16U), read_big<float>(block, set_offset + 20U)},
+                    BrlytTexCoord{read_big<float>(block, set_offset + 24U), read_big<float>(block, set_offset + 28U)},
+                });
+            }
+
+            return tex_coord_sets;
+        }
+
         [[nodiscard]] BrlytPicturePane parse_picture(std::span<const std::uint8_t> block, const PaneState &global_state, const std::vector<BrlytMaterial> &materials) {
             if (block.size() < 96U) {
                 aurora::throw_host_exception<std::runtime_error>("BRLYT picture pane is truncated");
@@ -499,6 +540,7 @@ namespace smgpc::layout {
                 .height = height,
                 .color = {255U, 255U, 255U, alpha},
                 .vertex_colors = vertex_colors,
+                .tex_coord_sets = parse_tex_coord_sets(block, 96U, tex_coord_count),
                 .tex_coords = tex_coords,
                 .visible = (block[8U] & 0x1U) != 0U,
             };
@@ -524,30 +566,7 @@ namespace smgpc::layout {
             return vertex_colors;
         }
 
-        [[nodiscard]] std::vector<std::array<BrlytTexCoord, 4U>> parse_tex_coord_sets(std::span<const std::uint8_t> block,
-                                                                                       std::size_t offset,
-                                                                                       std::uint8_t tex_coord_count) {
-            constexpr auto kTexCoordsPerSet = std::size_t{4U};
-            constexpr auto kTexCoordBytes = std::size_t{8U};
-            const auto tex_coord_set_size = kTexCoordsPerSet * kTexCoordBytes;
-            if (offset + static_cast<std::size_t>(tex_coord_count) * tex_coord_set_size > block.size()) {
-                aurora::throw_host_exception<std::runtime_error>("BRLYT texture coordinate table is truncated");
-            }
 
-            auto tex_coord_sets = std::vector<std::array<BrlytTexCoord, 4U>>{};
-            tex_coord_sets.reserve(tex_coord_count);
-            for (auto tex_coord_set = 0U; tex_coord_set < tex_coord_count; ++tex_coord_set) {
-                const auto set_offset = offset + static_cast<std::size_t>(tex_coord_set) * tex_coord_set_size;
-                tex_coord_sets.push_back(std::array<BrlytTexCoord, 4U>{
-                    BrlytTexCoord{read_big<float>(block, set_offset), read_big<float>(block, set_offset + 4U)},
-                    BrlytTexCoord{read_big<float>(block, set_offset + 8U), read_big<float>(block, set_offset + 12U)},
-                    BrlytTexCoord{read_big<float>(block, set_offset + 16U), read_big<float>(block, set_offset + 20U)},
-                    BrlytTexCoord{read_big<float>(block, set_offset + 24U), read_big<float>(block, set_offset + 28U)},
-                });
-            }
-
-            return tex_coord_sets;
-        }
 
         [[nodiscard]] BrlytWindowPane parse_window(std::span<const std::uint8_t> block, const PaneState &global_state) {
             if (block.size() < 104U) {
@@ -609,19 +628,16 @@ namespace smgpc::layout {
         }
 
         [[nodiscard]] std::vector<std::uint16_t> parse_utf16be_string(std::span<const std::uint8_t> block, std::uint32_t offset, std::uint16_t byte_count) {
-            if (offset + byte_count > block.size()) {
+            if (byte_count < 2) return {};
+            if (offset > block.size() || byte_count > block.size() - offset) {
                 aurora::throw_host_exception<std::runtime_error>("BRLYT text string is truncated");
             }
 
             auto text = std::vector<std::uint16_t>{};
-            text.reserve(byte_count / 2U);
-            for (auto cursor = static_cast<std::size_t>(offset); cursor + 1U < static_cast<std::size_t>(offset) + byte_count; cursor += 2U) {
-                const auto code = read_big<std::uint16_t>(block, cursor);
-                if (code == 0U) {
-                    break;
-                }
-                text.push_back(code);
-            }
+            const auto length = byte_count / 2U - 1U;
+            text.reserve(length);
+            for (std::size_t i = 0; i < length; ++i)
+                text.push_back(read_big<std::uint16_t>(block, offset + i * 2));
 
             return text;
         }
@@ -669,7 +685,17 @@ namespace smgpc::layout {
             auto display_text = words_from_u16string(smgpc::resource::format_bmg_text(raw_text_u16, {}));
             auto control_tags = smgpc::resource::bmg_control_tags(raw_text_u16);
 
+            const auto buffer_units = read_big<std::uint16_t>(block, 76U) / 2;
             return BrlytTextBox{
+                .resource = {
+                    .buffer_length = static_cast<std::uint16_t>(buffer_units > 0 ? buffer_units - 1 : 0),
+                    .font_width = read_big<float>(block, 100U),
+                    .font_height = read_big<float>(block, 104U),
+                    .char_space = read_big<float>(block, 108U),
+                    .line_space = read_big<float>(block, 112U),
+                    .top_color = {block[92U], block[93U], block[94U], block[95U]},
+                    .bottom_color = {block[96U], block[97U], block[98U], block[99U]},
+                },
                 .name = name,
                 .font_name = font_index < font_names.size() ? font_names[font_index] : std::string{},
                 .text = std::move(display_text),
@@ -807,14 +833,12 @@ namespace smgpc::layout {
                 last_pane_index = static_cast<std::int32_t>(layout.panes.size() - 1U);
                 auto text_box = parse_text_box(block, last_state, layout.font_names, layout.materials);
                 text_box.pane_index = static_cast<std::size_t>(last_pane_index);
-                if (!text_box.font_name.empty()) {
-                    const auto text_box_index = layout.text_boxes.size();
-                    layout.text_boxes.push_back(std::move(text_box));
-                    layout.drawables.push_back(BrlytDrawable{
-                        .kind = BrlytDrawableKind::TextBox,
-                        .index = text_box_index,
-                    });
-                }
+                const auto text_box_index = layout.text_boxes.size();
+                layout.text_boxes.push_back(std::move(text_box));
+                layout.drawables.push_back(BrlytDrawable{
+                    .kind = BrlytDrawableKind::TextBox,
+                    .index = text_box_index,
+                });
             } else if (has_magic(block, 0U, "pic1")) {
                 const auto local = parse_pane_state(block);
                 const auto parent = parent_stack.empty() ? PaneState{} : parent_stack.back();

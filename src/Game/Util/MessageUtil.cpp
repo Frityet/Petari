@@ -1,4 +1,5 @@
 #include "Game/Util/MessageUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "Game/Screen/MessageEditorMessageTag.hpp"
 #include "Game/Map/RaceManager.hpp"
 #include "Game/NPC/TalkMessageInfo.hpp"
@@ -6,6 +7,7 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include <cstdio>
+#include <cstring>
 
 #define MESSAGE_ID_BUFFER_SIZE 256
 
@@ -80,8 +82,62 @@ namespace MR {
         }
         return count;
     }
-    // countMessageChar
-    // countMessageFigure
+    s32 countMessageChar(const wchar_t* pMessage) {
+        if (pMessage == nullptr) {
+            return 0;
+        }
+
+        s32 count = 0;
+        while (*pMessage != 0) {
+            if (*pMessage == 0x1A) {
+                pMessage++;
+                MessageEditorMessageTag tag(pMessage);
+                pMessage += tag.getSkipLength();
+#if defined(TARGET_PC)
+                u8 group = static_cast< u8 >(tag.mMessage[0]);
+#else
+                u8 group = reinterpret_cast< const u8* >(tag.mMessage)[1];
+#endif
+
+                if (group == 3) {
+                    count++;
+                } else if (group == 6) {
+#if defined(TARGET_PC)
+                    count += countMessageFigure(static_cast< s32 >(tag.getParam32(0)));
+#else
+                    count += countMessageFigure(*reinterpret_cast< const s32* >(tag.getParamPtr(0)));
+#endif
+                } else if (group == 5) {
+                    count += 3;
+                } else if (group == 11) {
+                    count += 2;
+                } else if (group == 7) {
+#if defined(TARGET_PC)
+                    const wchar_t* message;
+                    std::memcpy(&message, tag.getParamPtr(0), sizeof(message));
+                    count += countMessageChar(message);
+#else
+                    count += countMessageChar(*reinterpret_cast< const wchar_t* const* >(tag.getParamPtr(0)));
+#endif
+                } else if (tag.isGroupTagId(1, 1)) {
+                    break;
+                }
+            } else {
+                pMessage++;
+                count++;
+            }
+        }
+        return count;
+    }
+
+    s32 countMessageFigure(s32 value) {
+        u32 magnitude = MR::abs(value);
+        s32 count = 1;
+        while ((magnitude /= 10) != 0) {
+            count++;
+        }
+        return count;
+    }
     const wchar_t* getNextMessagePage(const wchar_t* pMessage) {
         while (*pMessage != 0) {
             if (*pMessage == 0x1A) {

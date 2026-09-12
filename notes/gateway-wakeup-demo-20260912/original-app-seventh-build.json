@@ -1,0 +1,10 @@
+{
+  "command": [
+    "xmake",
+    "build",
+    "-y",
+    "smg-pc"
+  ],
+  "exit_code": 0,
+  "seconds": 11.607789278030396
+}

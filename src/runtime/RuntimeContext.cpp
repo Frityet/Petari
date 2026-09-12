@@ -7,6 +7,7 @@
 #include "compat/DisabledObjectAudioService.hpp"
 #include "compat/SceneJ3dScope.hpp"
 #include "compat/StarPointerDepthOwnership.hpp"
+#include "compat/DrawSyncManagerLifetime.hpp"
 #include "compat/NandSdkBinding.hpp"
 #include "Game/Util/DrawUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
@@ -497,7 +498,6 @@ namespace smgpc::runtime {
         ~Registration() {
             // Every RuntimeContext member, including the callback scheduler,
             // has retired before this first-declared member is destroyed.
-            JUTVideo::destroyManager();
             aurora::wpad_service().clear();
             if (s_runtime_context == owner) s_runtime_context = nullptr;
         }
@@ -544,8 +544,9 @@ namespace smgpc::runtime {
             _system_config = std::make_unique<SystemConfigService>(_save_data.nand());
             _nand_sdk = std::make_unique<compat::NandSdkBinding>(_save_data);
             _rumble.attach_actuator(smgpc::compat::aurora_rumble_actuator());
-            JUTVideo::createManager(MR::getSuitableRenderMode());
             aurora::wpad_service().clear();
+            _draw_sync = std::make_unique<compat::DrawSyncManagerLifetime>(_host_heaps);
+            _display = std::make_unique<OriginalDisplayLifetime>(_window_service, _host_heaps, *MR::getSuitableRenderMode());
             _star_pointer_depth = std::make_unique<compat::StarPointerDepthOwnership>(_host_heaps);
             if (scene_service_mode == RuntimeContextSceneServiceMode::RuntimeOwned) {
                 _owned_name_obj_lifecycle = std::make_unique<smgpc::scene::NameObjLifecycleService>(*this);
@@ -632,6 +633,8 @@ namespace smgpc::runtime {
         _j_audio_playback->reset_scene();
         smgpc::compat::retire_audio_facade_state();
         _star_pointer_depth.reset();
+        _display.reset();
+        _draw_sync.reset();
         _scheduler.clear();
         _capture_screen_director.reset();
         _capture_screen_texture.reset();
@@ -657,7 +660,6 @@ namespace smgpc::runtime {
         _dvd.begin_frame(_frame_index);
         _ios.begin_frame(_frame_index);
         _wii_platform.begin_frame(_frame_index);
-        _wii_video.begin_frame(_frame_index);
         _copy_events.clear();
 #ifndef NDEBUG
         _j3d_packet_trace.clear();
@@ -681,7 +683,7 @@ namespace smgpc::runtime {
                 aurora::throw_host_exception<std::logic_error>("Camera shake requires an exact retail 4:3 or 16:9 projection ratio.");
             }
             _camera_system.set_shake_projection_dimensions(shake_screen_width,
-                                                           static_cast<float>(_wii_video.render_mode().efbHeight));
+                                                           static_cast<float>(_display->render_mode().efbHeight));
         }
         if (const auto camera_pose = _camera_system.effective_camera_pose()) {
             _scene_camera_pose = *camera_pose;
@@ -1202,12 +1204,12 @@ namespace smgpc::runtime {
         return _wii_platform;
     }
 
-    WiiVideoService &RuntimeContext::wii_video() {
-        return _wii_video;
+    OriginalDisplayLifetime& RuntimeContext::display() {
+        return *_display;
     }
 
-    const WiiVideoService &RuntimeContext::wii_video() const {
-        return _wii_video;
+    const OriginalDisplayLifetime& RuntimeContext::display() const {
+        return *_display;
     }
 
     WpadService &RuntimeContext::wpad() {

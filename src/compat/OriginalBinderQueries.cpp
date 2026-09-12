@@ -109,3 +109,53 @@ namespace MR {
         pActor->mFlag.mIsNoBind = true;
     }
 }  // namespace MR
+
+namespace MR {
+    const TVec3f* getBindedNormal(const LiveActor* pActor) {
+        if (isBindedGround(pActor)) {
+            return getGroundNormal(pActor);
+        }
+
+        if (isBindedWall(pActor)) {
+            return getWallNormal(pActor);
+        }
+
+        if (isBindedRoof(pActor)) {
+            return getRoofNormal(pActor);
+        }
+
+        return getGroundNormal(pActor);
+    }
+
+    const TVec3f* getBindedHitPos(const LiveActor* pActor) {
+        if (isBindedGround(pActor)) {
+            return getGroundHitPos(pActor);
+        }
+
+        if (isBindedWall(pActor)) {
+            return getWallHitPos(pActor);
+        }
+
+        if (isBindedRoof(pActor)) {
+            return getRoofHitPos(pActor);
+        }
+
+        return getGroundHitPos(pActor);
+    }
+
+    const TVec3f* getGroundHitPos(const LiveActor* pActor) {
+        return &pActor->mBinder->mGroundInfo.mHitPos;
+    }
+
+    const TVec3f* getWallHitPos(const LiveActor* pActor) {
+        return &pActor->mBinder->mWallInfo.mHitPos;
+    }
+
+    const TVec3f* getRoofHitPos(const LiveActor* pActor) {
+        return &pActor->mBinder->mRoofInfo.mHitPos;
+    }
+
+    void setBinderRadius(LiveActor* pActor, f32 radius) {
+        pActor->mBinder->mRadius = radius;
+    }
+}

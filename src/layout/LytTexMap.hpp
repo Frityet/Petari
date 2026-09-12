@@ -1,31 +1,28 @@
 #pragma once
 
-#include <cstdint>
-#include <string>
-
+#include "nw4r/lyt/texMap.h"
 #include "resource/TplTexture.hpp"
 
+#include <memory>
+#include <span>
+#include <string>
+#include <string_view>
+
+namespace smgpc::resource { class Mem1ResourceHeap; }
+
 namespace nw4r::lyt {
-
-    class TexMap final {
-    public:
-        TexMap(std::string name, smgpc::resource::DecodedTexture image, std::uint8_t wrapS, std::uint8_t wrapT, std::uint8_t minFilter,
-               std::uint8_t magFilter);
-
-        [[nodiscard]] const std::string &name() const;
-        [[nodiscard]] const smgpc::resource::DecodedTexture &image() const;
-        [[nodiscard]] std::uint8_t wrap_s() const;
-        [[nodiscard]] std::uint8_t wrap_t() const;
-        [[nodiscard]] std::uint8_t min_filter() const;
-        [[nodiscard]] std::uint8_t mag_filter() const;
-
-    private:
-        std::string _name;
-        smgpc::resource::DecodedTexture _image;
-        std::uint8_t _wrap_s = 0U;
-        std::uint8_t _wrap_t = 0U;
-        std::uint8_t _min_filter = 0U;
-        std::uint8_t _mag_filter = 0U;
+    struct HostTextureResourceState final {
+        std::string name;
+        std::shared_ptr<const void> backing;
+        const TPLPalette* tpl_palette = nullptr;
     };
+}
 
-}  // namespace nw4r::lyt
+namespace smgpc::layout {
+    // Decode bounded archive metadata once, retaining the unchanged GX image
+    // bytes. Null heap is the explicit standalone host-renderer allocation path.
+    [[nodiscard]] nw4r::lyt::TexMap make_tex_map(std::string_view resource_name,
+        std::span<const std::uint8_t> bytes, std::shared_ptr<resource::Mem1ResourceHeap> heap);
+    [[nodiscard]] std::string tex_map_name(const nw4r::lyt::TexMap&);
+    [[nodiscard]] resource::DecodedTexture decode_tex_map(const nw4r::lyt::TexMap&);
+}

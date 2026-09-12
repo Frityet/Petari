@@ -25,7 +25,12 @@
 #include "compat/GameDataOwnership.hpp"
 #include "compat/GameDataSession.hpp"
 #include "compat/StageSessionState.hpp"
-#include "compat/TalkRuntime.hpp"
+#include "Game/NPC/TalkDirector.hpp"
+#include "Game/LiveActor/ModelManager.hpp"
+#include "Game/LiveActor/ShadowController.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/NPC/TalkNodeCtrl.hpp"
+#include "Game/System/MessageHolder.hpp"
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -187,10 +192,9 @@ namespace {
                     guide->time_sheet_name == "TicoGuideDemo",
                 "the three DemoRabbit actors must join the exact guide demo");
 
-        auto *talk = dynamic_cast<smgpc::compat::TalkRuntime *>(
+        auto *talk = dynamic_cast<TalkDirector *>(
             scene.scene_obj_holder().getObj(SceneObj_TalkDirector));
-        require(talk != nullptr &&
-                    smgpc::compat::current_talk_runtime() == talk,
+        require(talk != nullptr && MR::getSceneObj<TalkDirector>(SceneObj_TalkDirector) == talk,
                 "the progress-5 rabbit talk controller must retain its scene owner");
 
         auto rabbits = std::array<const DemoRabbit *,
@@ -241,13 +245,12 @@ namespace {
                             smgpc::scene::nameobj::NameObjArchiveKind::Object &&
                         found->archives.front().loaded,
                     "a DemoRabbit lost its placement-selected mounted archive");
-            auto *model = smgpc::compat::actor_model(rabbit);
-            require(model != nullptr &&
-                        model->model_arc_name() == expected.archive_name,
-                    "a DemoRabbit model does not match its placement-selected archive");
-            model->requireLoaded();
-            require(model->isLoaded(),
-                    "a DemoRabbit must load its exact real model resource");
+            auto *model = rabbit->mModelManager;
+            require(model && model->mModelResourceHolder ==
+                        smgpc::compat::ResourceHolderService::active()->create_and_add(expected.archive_name),
+                    "a DemoRabbit model must retain its exact placement-selected archive owner");
+            require(model->getJ3DModel() && model->getJ3DModelData(),
+                    "a DemoRabbit must load its actual J3D model and model data");
 
             require(rabbit->mSpine != nullptr &&
                         rabbit->mWaitNerve != nullptr &&
@@ -275,19 +278,16 @@ namespace {
                             expected.action_count,
                     "a DemoRabbit lost its exact guide-demo membership, CastId, or action count");
 
+            const auto controller_count = std::count_if(talk->mMsgControls.begin(), talk->mMsgControls.end(),
+                [rabbit](const TalkMessageCtrl* controller) { return controller->mHostActor == rabbit; });
             require((rabbit->mMsgCtrl != nullptr) == expected.has_talk &&
-                        (smgpc::compat::owned_talk_ctrl(rabbit) != nullptr) ==
-                            expected.has_talk &&
-                        smgpc::compat::has_owned_talk_ctrl(rabbit) ==
-                            expected.has_talk,
-                    "only DemoRabbit CastId 0 may own a talk controller");
+                        controller_count == (expected.has_talk ? 1 : 0),
+                    "only DemoRabbit CastId 0 may register a talk controller with the original director");
             if (expected.has_talk) {
-                require(smgpc::compat::owned_talk_ctrl(rabbit) ==
-                                rabbit->mMsgCtrl &&
-                            talk->flow_key(*rabbit->mMsgCtrl) ==
+                require(std::find(talk->mMsgControls.begin(), talk->mMsgControls.end(), rabbit->mMsgCtrl) != talk->mMsgControls.end() &&
+                            std::string_view(rabbit->mMsgCtrl->mNodeCtrl->_0) ==
                                 "HeavensDoorMysteriousZone_DemoRabbit000" &&
-                            talk->current_node_index(*rabbit->mMsgCtrl) ==
-                                std::optional<std::uint32_t>{268U} &&
+                            rabbit->mMsgCtrl->mNodeCtrl->mCurrentNode == MessageSystem::getSceneMessageData()->getNode(268) &&
                             rabbit->mMsgCtrl->getMessageID() == 825U,
                         "the baby DemoRabbit must start on exact flow node 268/message 825");
             }
@@ -297,7 +297,10 @@ namespace {
             require(rabbit->mLodCtrl != nullptr &&
                         rabbit->mLodCtrl->mActor == rabbit &&
                         rabbit->mLodCtrl->_1A == 0U && shadow != nullptr &&
-                        shadow->valid && shadow->calculation_enabled &&
+                        rabbit->mShadowControllerList &&
+                        rabbit->mShadowControllerList->getControllerCount() == 1 &&
+                        rabbit->mShadowControllerList->getController(u32{0})->_71 == 1 &&
+                        rabbit->mShadowControllerList->getController(u32{0})->_60 == 1 &&
                         shadow->capacity == 1U &&
                         shadow->controllers.size() == 1U &&
                         shadow->controllers.front().name ==
@@ -627,14 +630,13 @@ namespace {
                 "the forthcoming real MarioActor must receive the retained exact JMap row");
 
         auto *planet = scene.planet();
-        auto *planet_model = smgpc::compat::actor_model(planet);
-        require(planet != nullptr && planet_model != nullptr &&
-                    planet_model->model_arc_name() == "HeavensDoorMysteriousPlanet",
+        auto *planet_model = planet ? planet->mModelManager : nullptr;
+        require(planet_model && planet_model->mModelResourceHolder ==
+                    smgpc::compat::ResourceHolderService::active()->create_and_add("HeavensDoorMysteriousPlanet"),
                 "Gateway must expose the production-owned ordinary PlanetMap model");
-        planet_model->requireLoaded();
         const auto planet_resources =
             smgpc::compat::actor_collision_parts_resources(planet);
-        require(planet_model->isLoaded() && planet_model->has_indirect_texture() &&
+        require(planet_model->getJ3DModel() && planet_model->getJ3DModelData() && MR::isExistIndirectTexture(planet) &&
                     planet_resources.size() == 2U &&
                     planet_resources[0].resource_name ==
                         "HeavensDoorMysteriousPlanet" &&
@@ -797,7 +799,7 @@ namespace {
         std::cout << "[proof] disc=" << disc_path.string()
                   << "; start=(" << start_position.x << ',' << start_position.y << ','
                   << start_position.z << ")"
-                  << "; planet_model=" << planet_model->model_arc_name()
+                  << "; planet_model=" << planet_model->getModelResourceHolder()->getModelName()
                   << "; visual_count=" << scene.visuals().size()
                   << "; ordinary_planets=" << ordinary_planet_count
                   << "; main_kcl_bytes=" << planet_resources[0].kcl_size
@@ -814,7 +816,7 @@ namespace {
         scene_owner.reset();
         require(smgpc::compat::actor_lod_ctrl_runtime_state_count() ==
                         placement_lod_baseline &&
-                    smgpc::compat::current_talk_runtime() == nullptr &&
+                    !MR::isExistSceneObj(SceneObj_TalkDirector) &&
                     std::ranges::none_of(
                         smgpc::compat::snapshot_name_obj_runtime_objects(),
                         [](const auto *object) {
@@ -825,7 +827,7 @@ namespace {
         for (const auto *rabbit : demo_rabbits) {
             require(!smgpc::compat::has_name_obj_runtime_state(rabbit) &&
                         !smgpc::compat::has_actor_runtime_state(rabbit) &&
-                        smgpc::compat::actor_model(rabbit) == nullptr &&
+                        !smgpc::compat::retain_actor_model_owner(rabbit) &&
                         smgpc::compat::actor_shadow_runtime_state(
                             static_cast<const LiveActor *>(rabbit)) == nullptr &&
                         smgpc::compat::registered_demo_membership_count(

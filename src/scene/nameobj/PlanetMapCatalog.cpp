@@ -1,5 +1,6 @@
 #include <aurora/exception.hpp>
 #include "scene/nameobj/PlanetMapCatalog.hpp"
+#include "Game/Map/PlanetMapCreator.hpp"
 
 #include "resource/BcsvTable.hpp"
 #include "resource/RarcArchive.hpp"
@@ -340,3 +341,12 @@ namespace smgpc::scene::nameobj {
     }
 
 }  // namespace smgpc::scene::nameobj
+
+bool PlanetMapCreatorFunction::isLoadArchiveAfterScenarioSelected(const char *pArchive) {
+    const auto *catalog = smgpc::scene::nameobj::PlanetMapCatalog::active();
+    if (catalog == nullptr) {
+        aurora::throw_host_exception<std::logic_error>(
+            "Planet map archive selection requires the retained PlanetMapDataTable catalog.");
+    }
+    return catalog->requires_scenario_selected_archive_load(pArchive);
+}

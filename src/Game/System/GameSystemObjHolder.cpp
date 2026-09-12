@@ -176,6 +176,9 @@ void GameSystemObjHolder::initDisplay() {
     mCaptureScreenDirector = new CaptureScreenDirector();
     mScreenPreserver = new ScreenPreserver();
 
+#if !defined(TARGET_PC)
+    // The Wii external analog encoder has no counterpart in native digital scanout.
     VISetTrapFilter(VI_TRUE);
     VISetTrapFilter(VI_FALSE);
+#endif
 }

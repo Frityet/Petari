@@ -102,10 +102,8 @@ int main() {
                         "mutating an absent pane must fail explicitly");
     require_unavailable([&] { runtime.startPaneAnim("InfoWindow", "Wait", 0U); },
                         "an absent pane must not acquire synthetic animation state");
-    require_unavailable([&] { runtime.setTextBoxNumberRecursive("InfoWindow", 7); },
-                        "an absent text box must not accept a number mutation");
-    require_unavailable([&] { runtime.setTextBoxHorizontalPosition("InfoWindow", 1U); },
-                        "an absent text box must not accept alignment mutation");
+    require_unavailable([&] { (void)runtime.native_records(); },
+                        "an absent BRLYT cannot acquire a fabricated SDK pane graph for text operations");
     ++passed;
 
     require_unavailable([&] { runtime.startAnim("Wait", 0U); },

@@ -1,7 +1,8 @@
 #include "RendererService.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
-#include "runtime/WiiVideoService.hpp"
+#include "Game/System/RenderMode.hpp"
+#include "runtime/SystemConfigService.hpp"
 
 #include <dolphin/gx.h>
 #include <dolphin/gx/GXAurora.h>
@@ -221,21 +222,22 @@ namespace {
             .title = "SMG PC GX copy FIFO-order proof",
         });
         auto renderer = smgpc::render::AuroraRenderer(window);
-        auto video = smgpc::runtime::WiiVideoService{};
-        const auto &render_mode = video.render_mode();
+        aurora::NandFileSystem nand;
+        smgpc::runtime::SystemConfigService configuration(nand);
+        const auto &render_mode = *MR::getSuitableRenderMode();
         constexpr auto RetailVFilter = std::array<std::uint8_t, 7U>{32U, 0U, 32U, 0U, 0U, 0U, 0U};
         require(render_mode.viTVmode == VI_TVMODE_NTSC_INT && render_mode.fbWidth == CopyWidth &&
                     render_mode.efbHeight == CopyHeight && render_mode.xfbHeight == CopyHeight &&
                     render_mode.viXOrigin == 25U && render_mode.viYOrigin == 12U && render_mode.viWidth == 670U &&
                     render_mode.viHeight == CopyHeight && render_mode.xFBmode == VI_XFBMODE_DF &&
                     render_mode.field_rendering == GX_FALSE && render_mode.aa == GX_FALSE,
-                "the showcase WiiVideoService bootstrap must retain exact GXNtscIntDf[0] geometry and flags");
+                "the actual original RenderMode selection must retain exact GXNtscIntDf[0] geometry and flags");
         require(std::ranges::all_of(render_mode.sample_pattern, [](const auto &sample) {
                     return sample[0U] == 6U && sample[1U] == 6U;
                 }),
-                "the showcase WiiVideoService bootstrap must retain the retail 12-position {6,6} sample pattern");
+                "the actual original RenderMode selection must retain the retail 12-position {6,6} sample pattern");
         require(std::equal(RetailVFilter.begin(), RetailVFilter.end(), render_mode.vfilter),
-                "the showcase WiiVideoService bootstrap must retain the retail SMG vertical filter");
+                "the actual original RenderMode selection must retain the retail SMG vertical filter");
         AuroraSetViewportPolicy(AURORA_VIEWPORT_NATIVE);
         // Aurora applies pending viewport policy changes while pumping events,
         // just as the application's normal frame loop does before rendering.

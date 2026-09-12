@@ -5,6 +5,7 @@
 class NameObj;
 class NameObjExecuteHolder;
 class NameObjListExecutor;
+class NameObjHolder;
 namespace smgpc::compat { class JkrAllocationDomain; }
 namespace smgpc::runtime { class SceneScheduler; }
 
@@ -15,7 +16,7 @@ class SceneNameObjRegistry;
 class SceneExecutionBinding final {
 public:
     SceneExecutionBinding(runtime::SceneScheduler&, NameObjListExecutor&,
-                          std::shared_ptr<compat::JkrAllocationDomain>);
+                          std::shared_ptr<compat::JkrAllocationDomain>, NameObjHolder* original_holder = nullptr);
     ~SceneExecutionBinding();
     SceneExecutionBinding(const SceneExecutionBinding&) = delete;
     SceneExecutionBinding& operator=(const SceneExecutionBinding&) = delete;

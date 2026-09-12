@@ -1,0 +1,50 @@
+[
+  {
+    "path": "src/layout/NativeLayoutResource.hpp",
+    "sha256": "ef7882c96230fbf50d60bc6f699e4e0597c0e15220bfec3d161c52ce132fdbcb"
+  },
+  {
+    "path": "src/layout/NativeLayoutResource.cpp",
+    "sha256": "120dc1f94ee3fc5aa5cbae88e7e17409be80e6961b05f4934dcbd781f47ff65b"
+  },
+  {
+    "path": "src/nw4r/lyt/resources.h",
+    "sha256": "4c11288fb34cf816e3475f178ea8efcab744f9918efba75995464cfd7d398e45"
+  },
+  {
+    "path": "src/nw4r/lyt/layout.h",
+    "sha256": "366ddfbff4bd17dc445e2fd327f8eaf44dcdb19ddc82b12a6d4dffb52db25f31"
+  },
+  {
+    "path": "src/nw4r/lyt/lyt_layout.cpp",
+    "sha256": "d8a0304d47bb2b994f6bc0e1a41aae31a162a76ce9a2f4612ec2c6ea173cb888"
+  },
+  {
+    "path": "src/nw4r/lyt/resourceAccessor.h",
+    "sha256": "a958335c832fcb225de5d5b5efcdf1eb0b3be27fa08373a43a405430e19fabad"
+  },
+  {
+    "path": "src/nw4r/lyt/arcResourceAccessor.h",
+    "sha256": "e7a822f36d8d1b1886d5b5c432bdc551b116c157f9a2f4fde078e52ded70fba7"
+  },
+  {
+    "path": "src/nw4r/lyt/lyt_arcResourceAccessor.cpp",
+    "sha256": "a1370c92bca23ec3cf94b05df96c63c94af53331226d4bd71a97187b60162b1f"
+  },
+  {
+    "path": "src/nw4r/lyt/lyt_material.cpp",
+    "sha256": "54cc223f01cba9bd4b95fd4891e3eb7dc455b4c142bf999c9bf53af4399a2b9b"
+  },
+  {
+    "path": "src/layout/Nw4rLayoutRecords.cpp",
+    "sha256": "85c51c12c9ac01871d5133d52f8ca65a557f5affe9bdee35cb9eef967ef4a5a1"
+  },
+  {
+    "path": "src/nw4r/lyt/animation.h",
+    "sha256": "a82b2d4159827f40ad297ded544dea3ca9b467c9479d7a3106ce8b2fc346045c"
+  },
+  {
+    "path": "src/nw4r/lyt/lyt_animation.cpp",
+    "sha256": "9c49e758f7c59ba60b70d98b1a88b4e3d76bddb5625b152b196fd9130cacb2fd"
+  }
+]

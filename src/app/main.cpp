@@ -1,8 +1,11 @@
+#include "app/ProcessRequest.hpp"
+#include "app/OriginalGameApplication.hpp"
 #include "Application.hpp"
 #include "Logger.hpp"
 
 #include <aurora/main.h>
 
+#include <algorithm>
 #include <cstdlib>
 #include <exception>
 #include <string>
@@ -45,12 +48,21 @@ int main(int argc, char* argv[]) try {
 
     auto startup_logger = smgpc::logging::create_default_logger();
     smgpc::app::ensure_disc_image_open(configuration, *startup_logger);
+    // The disc outlives the complete service graph, including pending original
+    // resource operations and display callback retirement.
+    struct DiscLifetime { ~DiscLifetime() { smgpc::app::close_disc_image(); } } disc;
+
+    if (std::find(configuration.arguments.begin(), configuration.arguments.end(), "--original") != configuration.arguments.end()) {
+        return smgpc::app::run_original_game(configuration, *startup_logger);
+    }
 
     auto overrides = smgpc::app::ServiceGraphOverrides {};
     overrides.logger = std::move(startup_logger);
     auto services = smgpc::app::build_service_graph(configuration, std::move(overrides));
     auto& application = services.get< smgpc::app::IApplication >();
     return application.run();
+} catch (const aurora::os::ProcessRequest& request) {
+    return smgpc::app::handle_process_request(request, argv);
 } catch (const std::exception& e) {
     auto fallback_logger = smgpc::logging::create_default_logger();
     fallback_logger->fatal(smgpc::logging::Category::APP, smgpc::logging::Message {"Uncaught exception {}"}, e.what());

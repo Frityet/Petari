@@ -5,6 +5,9 @@
 #include "resource/BcsvTable.hpp"
 #include "resource/JMapResource.hpp"
 #include "resource/BtiTextureData.hpp"
+#include "resource/TplTextureData.hpp"
+#include "layout/LytTexMap.hpp"
+#include "revolution/gx/GXGet.h"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/ArchiveMountService.hpp"
 #include "Game/Animation/MaterialAnmBuffer.hpp"
@@ -14,6 +17,7 @@
 #include "Game/Animation/BpkPlayer.hpp"
 #include "Game/Util/MutexHolder.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/LayoutUtil.hpp"
 #include "JSystem/J3DGraphAnimator/J3DAnimation.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
 #include "JSystem/J3DGraphAnimator/J3DMaterialAnm.hpp"
@@ -168,6 +172,16 @@ namespace {
         put16(bytes, 0x1a, -75); put32(bytes, 0x1c, 0x20);
         for (unsigned i = 0x20; i < bytes.size(); ++i) bytes[i] = i * 13;
         const auto available = process.mem1_heap()->available_bytes();
+        {
+            auto mapped = smgpc::layout::make_tex_map("image.bti", bytes, process.mem1_heap());
+            auto host = smgpc::layout::make_tex_map("image.bti", bytes, nullptr);
+            require(mapped.GetPaletteFormat() == GX_TL_RGB5A3 && mapped.GetPaletteEntryNum() == 256 &&
+                    mapped.GetWrapModeS() == GX_REPEAT && mapped.mLODBias == static_cast<u16>(-192),
+                    "SDK BTI mapping uses the true palette-format byte and retail unsigned bias storage");
+            require(smgpc::layout::decode_tex_map(mapped).rgba == smgpc::layout::decode_tex_map(host).rgba,
+                    "mapped and explicit host BTI retain identical encoded image and palette semantics");
+        }
+        require(process.mem1_heap()->available_bytes() == available, "SDK BTI objects release their retained mapped storage");
         auto source = archive({{"image.bti", bytes, true}});
         auto owner = std::make_unique<ResourceArchiveOwner>(source, "/retained/Texture.arc", process.create_cohort(), process.mem1_heap());
         const auto* entry = source->find_resource("image.bti");
@@ -319,8 +333,86 @@ namespace {
         require(weak_source.expired() && weak_domain.expired() && !find_jmap_resource(raw_map), "full teardown removes aliases before source and arena expire");
     }
 
+    Bytes indexed_tpl() {
+        // Two descriptors alias the same native image/header/CLUT. Both mip
+        // levels and palette remain in the original encoded GX block layout.
+        Bytes bytes(0xe0);
+        put32(bytes, 0, 0x0020af30); put32(bytes, 4, 2); put32(bytes, 8, 0xc);
+        for (int i = 0; i < 2; ++i) { put32(bytes, 0xc + i * 8, 0x20); put32(bytes, 0x10 + i * 8, 0x50); }
+        put16(bytes, 0x20, 8); put16(bytes, 0x22, 8); put32(bytes, 0x24, GX_TF_C4); put32(bytes, 0x28, 0xa0);
+        put32(bytes, 0x2c, GX_REPEAT); put32(bytes, 0x30, GX_MIRROR);
+        put32(bytes, 0x34, GX_LIN_MIP_LIN); put32(bytes, 0x38, GX_LINEAR);
+        put32(bytes, 0x3c, std::bit_cast<std::uint32_t>(0.5F)); bytes[0x40] = 1; bytes[0x42] = 1;
+        put16(bytes, 0x50, 16); put32(bytes, 0x54, GX_TL_RGB565); put32(bytes, 0x58, 0x80);
+        put16(bytes, 0x80, 0xf800);
+        return bytes;
+    }
+
+    void test_sdk_tex_map(GameResourceRuntime& process) {
+        using namespace smgpc::layout;
+        rejects([] { (void)MR::createLytTexMap("Absent", "Picture.tpl"); },
+                "original layout texture factory requires its real resource holder owner");
+        auto bytes = indexed_tpl();
+        const auto available = process.mem1_heap()->available_bytes();
+        {
+            TplTextureData owner(bytes, process.mem1_heap());
+            auto palette = owner.palette();
+            const auto& a = palette.descriptorArray[0];
+            require(a.textureHeader == palette.descriptorArray[1].textureHeader &&
+                    a.CLUTHeader == palette.descriptorArray[1].CLUTHeader,
+                    "native TPL descriptors preserve aliased header and CLUT identity");
+            require(std::memcmp(a.textureHeader->data, bytes.data() + 0xa0, 64) == 0 &&
+                    std::memcmp(a.CLUTHeader->data, bytes.data() + 0x80, 32) == 0,
+                    "native TPL retains full mip chain and palette bytes");
+            nw4r::lyt::TexMap image;
+            image.SetWrapMode(GX_MIRROR, GX_REPEAT); image.SetFilter(GX_NEAR, GX_LINEAR);
+            image.ReplaceImage(&palette, 3);
+            require(image.GetWrapModeS() == GX_MIRROR && image.GetMinFilter() == GX_NEAR &&
+                    image.mImage == a.textureHeader->data,
+                    "original ReplaceImage wraps descriptor IDs and preserves the existing sampler");
+        }
+        auto texture = make_tex_map("archive:Picture.tpl", bytes, process.mem1_heap());
+        require(texture.GetTexelFormat() == GX_TF_C4 && texture.mWidth == 8 && texture.mHeight == 8 &&
+                texture.GetWrapModeS() == GX_REPEAT && texture.GetWrapModeT() == GX_MIRROR &&
+                texture.GetMinFilter() == GX_LIN_MIP_LIN && texture.GetPaletteEntryNum() == 16 &&
+                texture.GetLODBias() == 0.5F && texture.GetMaxLOD() == 1 && texture.IsMipMap(),
+                "SDK TexMap receives native TPL image, palette, sampler and mip metadata");
+        GXTexObj gx{};
+        GXInitTexObjTlut(&gx, GX_TLUT3);
+        texture.Get(&gx);
+        nw4r::lyt::TexMap roundtrip;
+        roundtrip.Set(gx);
+        require(roundtrip.mImage == texture.mImage && roundtrip.mWidth == 8 && roundtrip.GetTexelFormat() == GX_TF_C4 &&
+                roundtrip.GetMinFilter() == texture.GetMinFilter() && roundtrip.GetWrapModeT() == GX_MIRROR &&
+                roundtrip.GetLODBias() == 0.5F && roundtrip.IsEdgeLODEnable() && GXGetTexObjTlut(&gx) == GX_TLUT3,
+                "actual SDK Get/Set round trip uses full native GX image pointers and sampler state");
+        auto copy = texture;
+        const std::weak_ptr<const nw4r::lyt::HostTextureResourceState> weak = texture.GetHostResourceState();
+        texture = {};
+        bytes.clear();
+        const auto decoded = decode_tex_map(copy);
+        require(!weak.expired() && decoded.rgba[0] == 255 && decoded.rgba[1] == 0 && decoded.rgba[3] == 255,
+                "copied SDK TexMap retains and decodes indexed GX bytes after its original source retires");
+        copy = {};
+        require(weak.expired() && process.mem1_heap()->available_bytes() == available,
+                "last SDK TexMap copy releases mapped encoded storage");
+        auto host = make_tex_map("Picture.tpl", indexed_tpl(), nullptr);
+        require(decode_tex_map(host).rgba == decoded.rgba && process.mem1_heap()->available_bytes() == available,
+                "explicit standalone host backing uses identical descriptor and indexed decoding semantics");
+        auto invalid = indexed_tpl(); invalid.resize(0xc0);
+        rejects([&] { (void)make_tex_map("bad.tpl", invalid, process.mem1_heap()); },
+                "native TPL rejects a missing mip level before publishing image pointers");
+        auto maximum_lod = indexed_tpl(); maximum_lod[0x42] = 10; maximum_lod.resize(0x120);
+        require(read_tpl_palette(maximum_lod).descriptors[0].image_levels.size() == 4,
+                "TPL mip storage stops at 1x1 even when sampler maximum LOD is larger");
+        invalid = indexed_tpl(); put32(invalid, 8, 0xfffffff8);
+        rejects([&] { (void)make_tex_map("bad.tpl", invalid, process.mem1_heap()); },
+                "native TPL rejects overflowed descriptor offsets before publication");
+        require(process.mem1_heap()->available_bytes() == available, "rejected TPL resources release all native storage");
+    }
+
     void test_original_layout_holder(GameResourceRuntime& process) {
-        Bytes layout(16), animation(16), texture(16), font(16);
+        Bytes layout(16), animation(16), texture = indexed_tpl(), font(16);
         tag(layout, 0, "RLYT"); put32(layout, 4, 0xFEFF0008);
         tag(animation, 0, "RLAN"); put32(animation, 4, 0xFEFF0008);
         auto source = archive({{"Window.brlyt", layout}, {"Appear.brlan", animation, true},
@@ -354,6 +446,12 @@ namespace {
         require(holder->GetResource('blyt', "Absent.brlyt", &header_word) == nullptr && header_word == 0,
                 "missing original layout resources return null and clear the size output");
         rejects([&] { holder->GetFont("MenuFont64.brfnt"); }, "layout fonts require the actual process font owner");
+        const auto texture_available = process.mem1_heap()->available_bytes();
+        auto* factory_texture = MR::createLytTexMap("/Memory/LayoutFixture.arc", "Picture.tpl");
+        require(JKRHeap::findFromRoot(factory_texture) == &domain->heap(),
+                "raw layout texture factory object belongs to its actual mounted archive heap");
+        auto texture_copy = *factory_texture;
+        const std::weak_ptr<const nw4r::lyt::HostTextureResourceState> texture_lifetime = factory_texture->GetHostResourceState();
         auto retained = service.retain(*holder);
         rejects([&] { service.remove_for_heap(&domain->heap()); }, "live layout borrowers prevent resource-heap removal");
         mounts.remove_for_heap(&domain->heap());
@@ -366,6 +464,11 @@ namespace {
         retained.reset();
         service.remove_for_heap(&domain->heap());
         require(weak_archive.expired(), "layout retirement releases the old mounted archive");
+        require(!texture_lifetime.expired() && smgpc::layout::decode_tex_map(texture_copy).rgba[0] == 255,
+                "copied texture remains valid after factory and mounted layout owner retirement");
+        texture_copy = {};
+        require(texture_lifetime.expired() && process.mem1_heap()->available_bytes() == texture_available,
+                "factory retirement and final copied texture release all mapped backing");
         require(manager.createAndAddLayoutHolderRawData("/Memory/LayoutFixture.arc")->mArchive ==
                     mounts.receive("/Memory/LayoutFixture.arc"), "retired layout names may bind to their new actual mount");
         rejects([&] { manager.createAndAddLayoutHolderRawData("/Memory/Missing.arc"); },
@@ -476,6 +579,24 @@ namespace {
             std::cout << "PASS real BTI " << archive_name << '/' << image_name << ' '
                       << image->mWidth << 'x' << image->mHeight << '\n';
         }
+        {
+            smgpc::runtime::ArchiveMountService mounts(dvd);
+            const auto path = dvd.find_first({"/KrKorean/LayoutData/SysInfoWindowMini.arc", "/LayoutData/SysInfoWindowMini.arc"});
+            require(path.has_value(), "real layout texture fixture archive exists");
+            const auto& source = dvd.archive_for_path(*path);
+            unsigned count = 0;
+            for (const auto& entry : source.entries()) {
+                if (!entry.path.ends_with(".tpl")) continue;
+                auto* texture = MR::createLytTexMap(path->generic_string().c_str(), entry.name.c_str());
+                const auto expected = decode_tpl_texture(source.file_data(entry));
+                require(smgpc::layout::decode_tex_map(*texture).rgba == expected.rgba &&
+                        texture->mWidth == expected.width && texture->mHeight == expected.height,
+                        "actual layout TPL factory preserves the encoded image and palette colors");
+                ++count;
+            }
+            require(count > 0, "real layout contains actual TPL textures");
+            std::cout << "PASS real layout TPL factory " << path->generic_string() << " textures=" << count << '\n';
+        }
         auto* original = service.create_and_add("Mario.arc");
         auto* model = static_cast<J3DModelData*>(original->mModelResTable->getRes(original->getModelName()));
         require(model && model->getMaterialNum() == 9, "real Mario holder contains actual complete nine-material model");
@@ -539,6 +660,7 @@ int main() {
     try {
         aurora::g_config.mem1Size = 24U * 1024U * 1024U;
         GameResourceRuntime process;
+        test_sdk_tex_map(process); std::cout << "PASS actual SDK TexMap descriptors, GX roundtrip and retained encoded storage\n";
         test_original_layout_holder(process); std::cout << "PASS original layout holder, nested resources, raw mounts, endian size and retained lifetime\n";
         test_native_bti(process); std::cout << "PASS retained BTI native header, all archive identities, GX payload and JUT consumer\n";
         test_original_constructor(process); std::cout << "PASS original holder, typed animation, control table and lifetime\n";

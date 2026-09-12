@@ -1,7 +1,6 @@
 #include "Game/System/RenderMode.hpp"
 #include "resource/GameResourceRuntime.hpp"
 #include "runtime/SystemConfigService.hpp"
-#include "runtime/WiiVideoService.hpp"
 #include <aurora/aurora.h>
 #include <aurora/sysconf.hpp>
 #include <aurora/vi.hpp>
@@ -29,27 +28,25 @@ void independent_connection() {
     VIInit();
     require(VIGetScanMode() == VI_INTERLACE && VIGetDTVStatus() == 1,
             "desktop capability exists before a progressive scan has been selected");
-    smgpc::runtime::WiiVideoService service;
     for (bool connected : {false, true}) {
         aurora::vi::set_dtv_connected(connected);
         for (u32 scan : {VI_INTERLACE, VI_NON_INTERLACE, VI_PROGRESSIVE}) {
             auto mode = boot_mode(VI_NTSC, scan);
-            service.configure(&mode);
-            require(VIGetScanMode() == scan && VIGetDTVStatus() == connected && service.dtv_status() == connected,
-                    "SDK and native video service expose one connection independent of configured scan");
+            VIConfigure(&mode);
+            require(VIGetScanMode() == scan && VIGetDTVStatus() == connected,
+                    "SDK exposes one connection independent of configured scan");
             VIInit();
             require(VIGetDTVStatus() == connected, "VI initialization does not change platform connection");
         }
     }
 }
 void tv_formats() {
-    smgpc::runtime::WiiVideoService service;
     constexpr std::array<u32, 9> expected{0, 1, 2, 0, 1, 5, 0, 0, 0};
     for (u32 format = 0; format < expected.size(); ++format) {
         for (u32 scan : {VI_INTERLACE, VI_NON_INTERLACE, VI_PROGRESSIVE}) {
             const auto mode = boot_mode(format, scan);
-            service.configure(&mode);
-            require(VIGetTvFormat() == expected[format] && service.tv_format() == expected[format], "SDK TV family follows actual retail nine-entry dispatch table");
+            VIConfigure(&mode);
+            require(VIGetTvFormat() == expected[format], "SDK TV family follows actual retail nine-entry dispatch table");
         }
     }
 }
@@ -121,7 +118,7 @@ int main() {
     try {
         aurora::g_config.mem1Size = 24U * 1024U * 1024U;
         smgpc::resource::GameResourceRuntime process;
-        independent_connection(); std::cout << "PASS independent desktop DTV connection and service delegation\n";
+        independent_connection(); std::cout << "PASS independent desktop DTV connection\n";
         tv_formats(); std::cout << "PASS all nine retail TV-format mappings across three scan modes\n";
         original_selection(); std::cout << "PASS 192 original RenderMode selections with actual SC data\n";
         defaults_and_invalid_config(); std::cout << "PASS missing and invalid SC original selection defaults\n";

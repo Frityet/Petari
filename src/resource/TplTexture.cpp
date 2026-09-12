@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cmath>
 #include <optional>
 #include <stdexcept>
 
@@ -163,7 +164,7 @@ namespace smgpc::resource {
                 aurora::throw_host_exception<std::runtime_error>("TPL descriptor index outside palette");
             }
 
-            const auto descriptor_offset = descriptor_array_offset + descriptor_index * 8U;
+            const auto descriptor_offset = static_cast<std::size_t>(descriptor_array_offset) + static_cast<std::size_t>(descriptor_index) * 8U;
             return {
                 .texture_header_offset = read_big<std::uint32_t>(data, descriptor_offset),
                 .clut_header_offset = read_big<std::uint32_t>(data, descriptor_offset + 4U),
@@ -171,7 +172,7 @@ namespace smgpc::resource {
         }
 
         [[nodiscard]] TplHeader read_texture_header(std::span<const std::uint8_t> data, std::uint32_t offset) {
-            if (offset + 0x24U > data.size()) {
+            if (static_cast<std::size_t>(offset) + 0x24U > data.size()) {
                 aurora::throw_host_exception<std::runtime_error>("TPL texture header outside buffer");
             }
 
@@ -193,7 +194,7 @@ namespace smgpc::resource {
         }
 
         [[nodiscard]] TplClutHeader read_clut_header(std::span<const std::uint8_t> data, std::uint32_t offset) {
-            if (offset + 12U > data.size()) {
+            if (static_cast<std::size_t>(offset) + 12U > data.size()) {
                 aurora::throw_host_exception<std::runtime_error>("TPL CLUT header outside buffer");
             }
 
@@ -389,6 +390,13 @@ namespace smgpc::resource {
         [[nodiscard]] TplTextureDescriptor make_tpl_texture_descriptor(std::span<const std::uint8_t> data, std::uint32_t index) {
             const auto descriptor = read_descriptor(data, index);
             const auto header = read_texture_header(data, descriptor.texture_header_offset);
+            if (!header.width || !header.height || header.width > 1024 || header.height > 1024 ||
+                header.wrap_s > 2 || header.wrap_t > 2 || header.min_filter > 5 || header.mag_filter > 1 ||
+                header.min_lod > header.max_lod || header.max_lod > 10 || !std::isfinite(header.lod_bias) ||
+                header.lod_bias < -128.0F || header.lod_bias >= 128.0F || header.data_offset % 32 != 0)
+                aurora::throw_host_exception<std::runtime_error>("TPL has invalid GX texture metadata");
+            std::uint8_t level_count = 1;
+            for (auto dimension = std::max(header.width, header.height); dimension > 1; dimension >>= 1) ++level_count;
             auto result = TplTextureDescriptor {
                 .index = index,
                 .texture_header_offset = descriptor.texture_header_offset,
@@ -408,8 +416,11 @@ namespace smgpc::resource {
                 .max_lod = header.max_lod,
                 .texture_header_unpacked = header.unpacked,
                 .has_palette = descriptor.clut_header_offset != 0U,
-                .image_levels = image_levels(header.format, header.width, header.height, header.data_offset, 1U),
+                .image_levels = image_levels(header.format, header.width, header.height, header.data_offset,
+                    std::min<std::uint8_t>(level_count, header.max_lod + 1U)),
             };
+            const auto& last = result.image_levels.back();
+            result.image_data_size = last.data_offset + last.data_size - result.image_data_offset;
             if (static_cast<std::size_t>(result.image_data_offset) + result.image_data_size > data.size()) {
                 aurora::throw_host_exception<std::runtime_error>("TPL image data outside buffer");
             }
@@ -420,10 +431,15 @@ namespace smgpc::resource {
                 result.palette_data_offset = clut.data_offset;
                 result.palette_data_size = static_cast<std::uint32_t>(clut.entries) * 2U;
                 result.palette_header_unpacked = clut.unpacked;
+                if (!clut.entries || result.palette_format > 2 || clut.data_offset % 32 != 0)
+                    aurora::throw_host_exception<std::runtime_error>("TPL has invalid GX palette metadata");
                 if (static_cast<std::size_t>(result.palette_data_offset) + result.palette_data_size > data.size()) {
                     aurora::throw_host_exception<std::runtime_error>("TPL palette data outside buffer");
                 }
             }
+            if ((header.format == TplTextureFormat::C4 || header.format == TplTextureFormat::C8 || header.format == TplTextureFormat::C14X2) &&
+                !result.has_palette)
+                aurora::throw_host_exception<std::runtime_error>("Indexed TPL requires a palette");
 
             return result;
         }
@@ -443,7 +459,7 @@ namespace smgpc::resource {
 
         const auto descriptor_count = read_big<std::uint32_t>(data, 4U);
         const auto descriptor_array_offset = read_big<std::uint32_t>(data, 8U);
-        if (descriptor_array_offset + descriptor_count * 8U > data.size()) {
+        if (static_cast<std::size_t>(descriptor_array_offset) + static_cast<std::size_t>(descriptor_count) * 8U > data.size()) {
             aurora::throw_host_exception<std::runtime_error>("TPL descriptor array outside buffer");
         }
 
@@ -547,6 +563,23 @@ namespace smgpc::resource {
         };
 
         return decode_texture(data, header, nullptr);
+    }
+
+    DecodedTexture decode_raw_gx_texture(std::span<const std::uint8_t> data, std::uint16_t width, std::uint16_t height,
+                                         TplTextureFormat format, std::span<const std::uint8_t> palette, std::uint32_t palette_format) {
+        if (format != TplTextureFormat::C4 && format != TplTextureFormat::C8 && format != TplTextureFormat::C14X2)
+            return decode_raw_gx_texture(data, width, height, format);
+        if (palette.empty() || palette.size() % 2 || palette.size() / 2 > 65535 || palette_format > 2)
+            aurora::throw_host_exception<std::invalid_argument>("Indexed GX texture requires a valid palette");
+        const auto image_size = gx_texture_data_size(width, height, format);
+        if (data.size() < image_size)
+            aurora::throw_host_exception<std::runtime_error>("GX image data outside buffer");
+        std::vector<std::uint8_t> combined(data.begin(), data.begin() + image_size);
+        combined.insert(combined.end(), palette.begin(), palette.end());
+        const TplHeader header{.height = height, .width = width, .format = format};
+        const TplClutHeader clut{.entries = static_cast<std::uint16_t>(palette.size() / 2),
+            .format = static_cast<TlutFormat>(palette_format), .data_offset = image_size};
+        return decode_texture(combined, header, &clut);
     }
 
 }  // namespace smgpc::resource

@@ -1,12 +1,20 @@
 #include "layout/BrlytLayout.hpp"
 #include "layout/LayoutRuntime.hpp"
 #include "layout/Nw4rLayoutRecords.hpp"
+#include "layout/LytTexMap.hpp"
+#include "Game/Screen/LayoutCoreUtil.hpp"
+#include "Game/Screen/CustomTagProcessor.hpp"
+#include <nw4r/lyt/picture.h>
+#include <nw4r/lyt/window.h>
+#include <nw4r/lyt/bounding.h>
+#include <nw4r/lyt/material.h>
 #include "resource/RarcArchive.hpp"
 #include "Game/Util/MessageUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include "Game/Screen/SubMeterLayout.hpp"
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/Util/LayoutUtil.hpp"
+#include "Game/System/Language.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "layout/LayoutHost.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -17,9 +25,11 @@
 #include <bit>
 #include <cmath>
 #include <cstdlib>
+#include <cstring>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <stdexcept>
 #include <vector>
 #include <unistd.h>
@@ -62,6 +72,109 @@ Bytes archive(const Bytes& data) {
     put16(b, entries, 0xFFFF); b[entries + 4] = 2; put32(b, entries + 8, 1); put32(b, entries + 12, 0x10);
     put16(b, entries + 20, 0); b[entries + 24] = 1; b[entries + 27] = 5; put32(b, entries + 32, data.size());
     std::copy(data.begin(), data.end(), b.begin() + payload); return b;
+}
+Bytes derived_resource() {
+    auto material = block("mat1", 184);
+    put16(material, 8, 1); put32(material, 12, 16); name(material, 16, "NativeMaterial");
+    put16(material, 36, static_cast<u16>(-73)); put16(material, 38, 42);
+    for (size_t i = 0; i < 16; ++i) material[60 + i] = static_cast<u8>(i + 17);
+    put32(material, 76, (1U << 4) | (1U << 8) | (1U << 12) | (1U << 13) | (1U << 15) |
+                         (1U << 18) | (1U << 23) | (1U << 24) | (1U << 25) | (1U << 27));
+    for (size_t i = 0; i < 5; ++i) putf(material, 80 + i * 4, 0.25f + i);
+    material[100] = GX_TG_MTX2x4; material[101] = GX_TG_TEX0; material[102] = GX_TEXMTX0;
+    material[104] = material[105] = 1;
+    put32(material, 108, 0x12345678); put32(material, 112, 0xE4E4E4E4);
+    for (size_t i = 0; i < 5; ++i) putf(material, 116 + i * 4, -0.5f - i);
+    for (size_t i = 0; i < 16; ++i) material[140 + i] = static_cast<u8>(i);
+    material[156] = 0x77; material[158] = 31; material[159] = 63;
+    material[160] = GX_BM_BLEND; material[161] = GX_BL_SRCALPHA; material[162] = GX_BL_INVSRCALPHA;
+    material.resize(164); put32(material, 4, material.size());
+
+    auto picture = pane("Picture", 0, 0); picture.resize(128); name(picture, 0, "pic1"); put32(picture, 4, picture.size());
+    for (size_t i = 0; i < 4; ++i) put32(picture, 76 + i * 4, 0x10203040 + i);
+    picture[94] = 1;
+    for (size_t i = 0; i < 8; ++i) putf(picture, 96 + i * 4, i * 0.125f);
+    auto window = pane("Window", 0, 0); window.resize(132); name(window, 0, "wnd1"); put32(window, 4, window.size());
+    for (size_t i = 0; i < 4; ++i) putf(window, 76 + i * 4, i + 1);
+    window[92] = 1; put32(window, 100, 124); put32(window, 124, 128); window[130] = 2;
+    put32(window, 96, 104); for (size_t i = 0; i < 4; ++i) put32(window, 104 + i * 4, 0xFFEEDDCC);
+    auto text = pane("TxtMessage", 0, 0); text.resize(130); name(text, 0, "txt1"); put32(text, 4, text.size());
+    putf(text, 68, 96); putf(text, 72, 32); put16(text, 76, 128); put16(text, 78, 14); put32(text, 88, 116);
+    put32(text, 92, 0x11223344); put32(text, 96, 0x55667788); putf(text, 100, 8); putf(text, 104, 16);
+    const u16 tagged[] = {'A', 0x1a, 0x0800, 2, 0, 'B', 0};
+    for (size_t i = 0; i < 7; ++i) put16(text, 116 + i * 2, tagged[i]);
+    auto bounding = pane("Bounds", 0, 0); name(bounding, 0, "bnd1");
+    std::vector<Bytes> blocks{material, pane("Root", 0, 0), block("pas1", 8), picture, window, text, bounding, block("pae1", 8)};
+    Bytes b(16); name(b, 0, "RLYT"); put16(b, 4, 0xFEFF); put16(b, 6, 8); put16(b, 12, 16); put16(b, 14, blocks.size());
+    for (auto& entry : blocks) b.insert(b.end(), entry.begin(), entry.end()); put32(b, 8, b.size());
+    return b;
+}
+void materials_and_text(const std::filesystem::path& path) {
+    for (int cycle = 0; cycle < 16; ++cycle) {
+        smgpc::layout::LayoutRuntime runtime("Derived owner", "Fixture", 1, 0, path);
+        auto& records = runtime.native_records();
+        using namespace nw4r::lyt;
+        auto* picture = nw4r::ut::DynamicCast<Picture*>(records.pane("Picture"));
+        auto* window = nw4r::ut::DynamicCast<Window*>(records.pane("Window"));
+        auto* box = nw4r::ut::DynamicCast<TextBox*>(records.pane("TxtMessage"));
+        require(picture && window && box && nw4r::ut::DynamicCast<Bounding*>(records.pane("Bounds")),
+                "all decoded pane kinds instantiate their actual SDK classes");
+        auto* material = picture->GetMaterial();
+        require(material && records.pane(nullptr)->FindMaterialByName("NativeMaterial", true) == material &&
+                window->GetMaterial() != material && box->GetMaterial() != material &&
+                window->GetFrameMaterial(0) != window->GetContentMaterial(),
+                "original recursive lookup sees separate material instances owned by each SDK pane");
+        require(material->GetTevColor(0).r == -73 && material->GetTevColor(0).g == 42 &&
+                material->GetTexSRTCap() == 1 && material->GetTexSRTAry()[0].translate.x == 0.25f &&
+                material->GetIndTexSRTAry()[0].scale.y == -4.5f && material->mTevKCols[0].r == 17 &&
+                material->GetMatColAry()[0].a == 0x78,
+                "original material constructor consumes signed colors, SRTs and byte channels in native order");
+        require(picture->mTexCoordAry.GetSize() == 1 && picture->mTexCoordAry.GetArray()[0][3].y == 0.875f &&
+                window->mContentInflation.l == 1 && window->mContentInflation.b == 4,
+                "actual SDK geometry retains all authored texture coordinates and window inflation");
+        require(box->mTextLen == 6 && box->mTextBuf[4] == 0 && box->mTextBuf[5] == 'B',
+                "native text buffers retain embedded zero tag payload and subsequent authored units");
+        LayoutCoreUtil::initTextBoxPane(box, nullptr, 64);
+        require(box->mTextLen == 8 && std::wstring_view(box->mTextBuf, box->mTextLen) == L"XXXXXXXX",
+                "native placeholder preserves original eight-X output when capacity clamps to nine");
+        LayoutCoreUtil::setTextBoxMessage(box, L"AB\nCD");
+        auto* processor = static_cast<CustomTagProcessor*>(box->mpTagProcessor);
+        processor->initAlpha(0.8f, 0.9f, 0, 0);
+        require(!processor->mAlphaCtrl.isEnd() && records.text_line_count("Root") == 2,
+                "text measurement and reveal state use the current actual TextBox buffer");
+        int frames = 0;
+        while (!processor->mAlphaCtrl.isEnd() && frames < 32) { processor->mAlphaCtrl.update(); ++frames; }
+        require(frames > 1 && frames < 32, "actual reveal controller completes only after frame progression");
+        processor->initAlpha(0, 0, 0, 0);
+        require(processor->mAlphaCtrl.isEnd(), "instant reveal uses the actual controller's disabled mode");
+
+        std::weak_ptr<const HostTextureResourceState> retired;
+        {
+            Material owned;
+            owned.ReserveGXMem(2, 0, 0, 0, false, 0, 0, false, false, false, false);
+            owned.SetTextureNum(2);
+            {
+                TexMap texture;
+                auto backing = std::make_shared<HostTextureResourceState>(); retired = backing;
+                texture.SetHostResourceState(backing); owned.SetTexture(1, texture);
+            }
+            require(!retired.expired(), "actual material copy retains a texture's host backing");
+            owned.SetTextureNum(1);
+            require(retired.expired(), "shrinking actual material texture count releases removed backing");
+            {
+                TexMap texture; auto backing = std::make_shared<HostTextureResourceState>(); retired = backing;
+                texture.SetHostResourceState(backing); owned.SetTexture(0, texture);
+            }
+            owned.ReserveGXMem(3, 0, 0, 0, false, 0, 0, false, false, false, false);
+            require(retired.expired(), "actual material storage reallocation releases prior texture backing");
+            owned.SetTextureNum(1);
+            {
+                TexMap texture; auto backing = std::make_shared<HostTextureResourceState>(); retired = backing;
+                texture.SetHostResourceState(backing); owned.SetTexture(0, texture);
+            }
+        }
+        require(retired.expired(), "actual material destruction releases its final texture backing");
+    }
 }
 void host_heap_boundary(const std::filesystem::path& path) {
     auto heaps = smgpc::compat::JkrHeapRuntime::create(1U << 20);
@@ -108,7 +221,7 @@ void records() {
     { std::ofstream out(path, std::ios::binary); out.write(reinterpret_cast<const char*>(bytes.data()), bytes.size()); }
     for (int cycle = 0; cycle < 32; ++cycle) {
         smgpc::layout::LayoutRuntime runtime("Group fixture", "Fixture", 1, 0, path);
-        smgpc::layout::Nw4rLayoutRecords records(runtime);
+        auto& records = runtime.native_records();
         auto* root = records.pane(nullptr); auto* child = records.pane("Child"); auto* sibling = records.pane("Sibling");
         require(records.pane_count() == 3 && root->mChildList.GetSize() == 2 && child->mpParent == root && sibling->mpParent == root,
                 "actual intrusive Pane nodes preserve resource hierarchy and stable identity");
@@ -190,6 +303,9 @@ void records() {
                 "original local-offset follow adds transformed XY while retaining global Z");
     }
     host_heap_boundary(path);
+    const auto derived = archive(derived_resource());
+    { std::ofstream out(path, std::ios::binary); out.write(reinterpret_cast<const char*>(derived.data()), derived.size()); }
+    materials_and_text(path);
 }
 
 class Logger final : public smgpc::logging::ILogger {
@@ -260,6 +376,33 @@ void unbound_panes() {
     parent.RemoveChild(&child); require(!child.mpParent && !parent.mChildList.GetSize(), "unbound original SDK pane removal clears the real list and parent");
 }
 void tags() {
+    require(MR::countMessageChar(nullptr) == 0 && MR::countMessageChar(L"") == 0 &&
+                MR::countMessageChar(L"a\nb") == 3,
+            "original reveal length counts ordinary newlines and accepts a null message");
+    const wchar_t counted_tags[] = {L'a', 0x1a, 0x0603, 0, 0x1a, 0x0605, 0,
+                                   0x1a, 0x060b, 0, L'\n', 0x1a, 0x0601, 1, L'z', 0};
+    require(MR::countMessageChar(counted_tags) == 8,
+            "original reveal length counts picture, player-name and race tags and stops at the page tag");
+    wchar_t number_tag[] = {0x1a, 0x0a06, 0, 0, 0, 0};
+    for (s32 number : {0, 9, 10, -10, 99999, std::numeric_limits<s32>::max(), std::numeric_limits<s32>::min()}) {
+        const auto bits = static_cast<u32>(number);
+        number_tag[3] = bits >> 16;
+        number_tag[4] = bits & 0xffff;
+        const auto expected = number == 0 || number == 9 ? 1 : number == 10 || number == -10 ? 2 : number == 99999 ? 5 : 10;
+        require(MR::countMessageFigure(number) == expected && MR::countMessageChar(number_tag) == expected,
+                "number tag length uses signed 32-bit magnitude including INT32_MIN, without counting a minus sign");
+    }
+    wchar_t string_tag[] = {0x1a, 0x0a07, 0, 0, 0, 0};
+    const wchar_t* nested = counted_tags;
+    std::memcpy(string_tag + 3, &nested, sizeof(nested));
+    require(MR::countMessageChar(string_tag) == 8,
+            "native string parameters retain a full-width borrowed pointer and recursively count its original tags");
+    nested = nullptr;
+    std::memcpy(string_tag + 3, &nested, sizeof(nested));
+    require(MR::countMessageChar(string_tag) == 0, "a null string substitution adds no reveal characters");
+    require(MR::getLanguageNum() == 12 && std::strcmp(MR::getLanguagePrefixByIndex(0), "JpJapanese") == 0 &&
+                std::strcmp(MR::getLanguagePrefixByIndex(11), "KrKorean") == 0,
+            "the original regional language table remains available without fabricating a current process language");
     require(MR::countMessageLine(L"") == 1 && MR::countMessageLine(L"a\nb\n") == 3, "original newline and empty-string counts");
     const wchar_t payload_newline[] = {L'a', 0x1a, 0x0800, 2, L'\n', L'b', L'\n', L'c', 0};
     require(MR::countMessageLine(payload_newline) == 2, "packed tag payload newline is skipped with actual big-endian UTF16-word semantics");

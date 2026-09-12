@@ -6,14 +6,16 @@
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Util/FileUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
+#include "Game/Util/MapPartsUtil.hpp"
+#include "Game/NameObj/ModelChangableObjFactory.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/DrawSyncManagerLifetime.hpp"
 #include "compat/GlobalGravityOwnership.hpp"
 #include "scene/PlacementZoneScope.hpp"
 
 #include <array>
-#include <cstdio>
 #include <stdexcept>
 #include <string>
 
@@ -105,14 +107,7 @@ namespace smgpc::scene {
 
         auto model_name = std::array<char, 128U>{};
         const auto identifier = std::string(object_name);
-        const auto written = std::snprintf(
-            model_name.data(), model_name.size(), "%s%02d",
-            identifier.c_str(), shape_model_no);
-        if (written < 0 ||
-            static_cast<std::size_t>(written) >= model_name.size()) {
-            aurora::throw_host_exception<std::runtime_error>(
-                "Model-changing NameObj archive identifier is too long.");
-        }
+        MR::getMapPartsObjectName(model_name.data(), model_name.size(), identifier.c_str(), shape_model_no);
 
         auto disc_path = std::array<char, 256U>{};
         if (!MR::makeObjectArchiveFileNameFromPrefix(
@@ -124,7 +119,7 @@ namespace smgpc::scene {
         }
         (void)MR::loadToMainRAM(
             disc_path.data(), nullptr, nullptr, JKRDvdRipper::ALLOC_DIRECTION_FORWARD);
-        MR::mountAsyncArchiveByObjectOrLayoutName(model_name.data(), nullptr);
+        MR::requestMountModelChangableObjArchives(identifier.c_str(), shape_model_no);
         auto requests =
             std::vector<smgpc::scene::nameobj::NameObjArchiveRequest>{
                 smgpc::scene::nameobj::NameObjArchiveRequest{
@@ -153,26 +148,34 @@ namespace smgpc::scene {
     }
 
     std::unique_ptr<NameObj> NameObjLifecycleService::construct(std::string_view object_name, const char *actor_name) {
-        auto object = smgpc::scene::nameobj::create_name_obj(_runtime.dvd(), object_name, actor_name);
+        // Roll back borrowed callback addresses before the returned object's
+        // destruction, including a failure in post-construction tracing.
+        auto object = std::unique_ptr<NameObj>{};
+        smgpc::compat::DrawSyncRegistrationTransaction callbacks;
+        object = smgpc::scene::nameobj::create_name_obj(_runtime.dvd(), object_name, actor_name);
 #ifndef NDEBUG
         _runtime.emit_semantic_trace_event("name_obj_lifecycle", "construct",
                                            "object=" + std::string(object_name) + ";actor=" +
                                                (actor_name != nullptr ? std::string(actor_name) : "<absent>"));
 #endif
+        callbacks.commit();
         return object;
     }
 
     std::unique_ptr<NameObj> NameObjLifecycleService::construct_and_init(
         std::string_view object_name, const char *actor_name,
         const NameObjPlacementContext *placement) {
+        smgpc::compat::DrawSyncRegistrationTransaction callbacks;
         if (placement == nullptr) {
             auto object = construct(object_name, actor_name);
             try {
                 init(*object, nullptr);
             } catch (...) {
+                callbacks.rollback();
                 destroy(*object);
                 throw;
             }
+            callbacks.commit();
             return object;
         }
 
@@ -183,13 +186,16 @@ namespace smgpc::scene {
         try {
             init(*object, placement);
         } catch (...) {
+            callbacks.rollback();
             destroy(*object);
             throw;
         }
+        callbacks.commit();
         return object;
     }
 
     void NameObjLifecycleService::init(NameObj &object, const NameObjPlacementContext *placement) {
+        smgpc::compat::DrawSyncRegistrationTransaction callbacks;
         if (placement != nullptr) {
             require_valid_placement_context(*placement);
 #ifndef NDEBUG
@@ -205,10 +211,12 @@ namespace smgpc::scene {
             try {
                 object.init(placement->iter);
             } catch (...) {
+                callbacks.rollback();
                 smgpc::compat::capture_failed_global_gravity_children(object);
                 throw;
             }
             smgpc::compat::capture_global_gravity_children(object);
+            callbacks.commit();
             return;
         }
 
@@ -219,10 +227,12 @@ namespace smgpc::scene {
         try {
             object.initWithoutIter();
         } catch (...) {
+            callbacks.rollback();
             smgpc::compat::capture_failed_global_gravity_children(object);
             throw;
         }
         smgpc::compat::capture_global_gravity_children(object);
+        callbacks.commit();
     }
 
     void NameObjLifecycleService::init_after_placement(NameObj &object) {

@@ -52,16 +52,6 @@ rule("smgpc.game_execution_charset")
             end
             local args = {python.program, wrapper, "--compiler", compiler, "--helper", helper,
                           "--game-root", path.join(root, "src/Game")}
-            -- These complete providers contain extracted original Game
-            -- behavior. Mixed services encode their Game API inputs explicitly.
-            for _, file in ipairs({
-                "src/compat/EventUtilCompat.cpp",
-                "src/compat/OriginalSceneWipeUtil.cpp",
-                "src/compat/OriginalDemoUtil.cpp"
-            }) do
-                table.insert(args, "--game-file")
-                table.insert(args, path.join(root, file))
-            end
             table.insert(args, "--")
             config = {tool = "clangxx@" .. os.args(args), fingerprint = fingerprint}
             configurations[key] = config

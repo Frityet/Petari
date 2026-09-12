@@ -147,8 +147,8 @@ int main() {
             require(smgpc::runtime::SystemConfigService::active() && SCGetAspectRatio() == cycle,
                     "actual startup did not publish imported console settings");
             require(MR::getScreenWidth() == (cycle ? 832 : 608) &&
-                        runtime.wii_video().render_mode().viWidth == (cycle ? 686 : 670) &&
-                        runtime.wii_video().scan_mode() == (cycle ? VI_PROGRESSIVE : VI_INTERLACE),
+                        runtime.display().render_mode().viWidth == (cycle ? 686 : 670) &&
+                        (runtime.display().render_mode().viTVmode & 0x3U) == (cycle ? VI_PROGRESSIVE : VI_INTERLACE),
                     "original render-mode selection and screen width must use the imported SC setting");
             {
                 CameraContext camera;

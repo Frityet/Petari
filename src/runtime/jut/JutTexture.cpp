@@ -1,4 +1,5 @@
 #include <JSystem/JUtility/JUTTexture.hpp>
+#include <JSystem/JUtility/JUTPalette.hpp>
 
 #include "compat/JutTextureAllocation.hpp"
 #include "compat/JkrHeapFinalizer.hpp"
@@ -73,6 +74,7 @@ JUTTexture::JUTTexture(const ResTIMG *p_timg, u8 param_1) {
     } catch (...) {
         smgpc::compat::unregister_jkr_heap_finalizer(this);
         GXDestroyTexObj(&mObj);
+        if (getEmbPaletteDelFlag()) delete mEmbPalette;
         throw;
     }
 }
@@ -84,65 +86,159 @@ JUTTexture::~JUTTexture() {
     if (getCaptureFlag()) {
         smgpc::compat::release_owned_jut_texture(*this);
     }
+    if (getEmbPaletteDelFlag()) delete mEmbPalette;
 }
 
-void JUTTexture::storeTIMG(const ResTIMG *timg, u8 tlut_name) {
-    if (timg == nullptr || tlut_name >= 0x10U) {
+void JUTTexture::storeTIMG(const ResTIMG* pTIMG, u8 a1) {
+    if (pTIMG != nullptr && a1 < 0x10) {
+        mTIMG = pTIMG;
+        mImage = reinterpret_cast< u8* >(const_cast< ResTIMG* >(pTIMG)) + pTIMG->mImageDataOffset;
+        if (pTIMG->mImageDataOffset == 0)
+            mImage = reinterpret_cast< u8* >(const_cast< ResTIMG* >(pTIMG)) + sizeof(ResTIMG);
+
+        mPalette = nullptr;
+        mTlutName = 0;
+        mWrapS = getTexInfo()->mWrapS;
+        mWrapT = getTexInfo()->mWrapT;
+        mMinType = getTexInfo()->mMinType;
+        mMagType = getTexInfo()->mMagType;
+        mMinLod = static_cast< s8 >(getTexInfo()->mMinLod);
+        mMaxLod = static_cast< s8 >(getTexInfo()->mMaxLod);
+        mLodBias = static_cast< s16 >(getTexInfo()->mLodBias);
+
+        if (getTexInfo()->mPaletteNum == 0) {
+            initTexObj();
+            return;
+        }
+
+        s32 lut;
+        if (getTexInfo()->mPaletteNum > 256) {
+            lut = (a1 % 4) + GX_BIGTLUT0;
+        } else {
+            lut = a1;
+        }
+
+        if (mEmbPalette == nullptr || (mFlag & 2) == 0) {
+            mEmbPalette = new JUTPalette(static_cast< GXTlut >(lut), static_cast< GXTlutFmt >(getTexInfo()->mPaletteFormat),
+                                         static_cast< JUTTransparency >(getTexInfo()->mTransparency), getTexInfo()->mPaletteNum,
+                                         reinterpret_cast< u8* >(const_cast< ResTIMG* >(getTexInfo())) + getTexInfo()->mPaletteDataOffset);
+            setEmbPaletteDelFlag(true);
+        } else {
+            mEmbPalette->storeTLUT(static_cast< GXTlut >(lut), static_cast< GXTlutFmt >(getTexInfo()->mPaletteFormat),
+                                   static_cast< JUTTransparency >(getTexInfo()->mTransparency), getTexInfo()->mPaletteNum,
+                                   reinterpret_cast< u8* >(const_cast< ResTIMG* >(getTexInfo())) + getTexInfo()->mPaletteDataOffset);
+        }
+        attachPalette(mEmbPalette);
+    }
+}
+
+void JUTTexture::storeTIMG(const ResTIMG* pTIMG, JUTPalette* pPalette) {
+    GXTlut tlut;
+
+    if (pPalette != nullptr) {
+        tlut = static_cast< GXTlut >(pPalette->mName);
+    } else {
+        tlut = GX_TLUT0;
+    }
+
+    storeTIMG(pTIMG, pPalette, tlut);
+}
+
+void JUTTexture::storeTIMG(ResTIMG const* pTIMG, JUTPalette* pPalette, GXTlut a1) {
+    if (pTIMG != nullptr) {
+        mTIMG = pTIMG;
+        mImage = reinterpret_cast< u8* >(const_cast< ResTIMG* >(pTIMG)) + pTIMG->mImageDataOffset;
+        if (pTIMG->mImageDataOffset == 0)
+            mImage = reinterpret_cast< u8* >(const_cast< ResTIMG* >(pTIMG)) + sizeof(ResTIMG);
+
+        if ((mFlag & 2) != 0) {
+            delete mEmbPalette;
+        }
+        mEmbPalette = pPalette;
+        setEmbPaletteDelFlag(false);
+        mPalette = nullptr;
+        if (pPalette != nullptr) {
+            mTlutName = a1;
+            if (a1 != pPalette->mName) {
+                pPalette->storeTLUT(a1, static_cast< GXTlutFmt >(pPalette->mFormat), static_cast< JUTTransparency >(pPalette->mTransparency),
+                                    pPalette->mLutNum, pPalette->mColorTable);
+            }
+        }
+
+        mWrapS = getTexInfo()->mWrapS;
+        mWrapT = getTexInfo()->mWrapT;
+        mMinType = getTexInfo()->mMinType;
+        mMagType = getTexInfo()->mMagType;
+        mMinLod = static_cast< s8 >(getTexInfo()->mMinLod);
+        mMaxLod = static_cast< s8 >(getTexInfo()->mMaxLod);
+        mLodBias = static_cast< s16 >(getTexInfo()->mLodBias);
+        init();
+    }
+}
+
+void JUTTexture::attachPalette(JUTPalette* pPalette) {
+    if (mTIMG->mPaletteName == GX_TLUT0) {
         return;
     }
 
-    mTIMG = timg;
-    const auto offset = timg->mImageDataOffset != 0 ? timg->mImageDataOffset : static_cast<s32>(sizeof(ResTIMG));
-    mImage = const_cast<u8 *>(reinterpret_cast<const u8 *>(timg) + offset);
-    mPalette = nullptr;
-    mTlutName = tlut_name;
-    mWrapS = timg->mWrapS;
-    mWrapT = timg->mWrapT;
-    mMinType = timg->mMinType;
-    mMagType = timg->mMagType;
-    mMinLod = timg->mMinLod;
-    mMaxLod = timg->mMaxLod;
-    mLodBias = timg->mLodBias;
-    init();
-}
+    if (pPalette == nullptr && mEmbPalette != nullptr) {
+        mPalette = mEmbPalette;
+    } else {
+        mPalette = pPalette;
+    }
 
-void JUTTexture::storeTIMG(const ResTIMG *timg, JUTPalette *palette) {
-    storeTIMG(timg, palette, palette != nullptr ? static_cast<GXTlut>(mTlutName) : GX_TLUT0);
-}
-
-void JUTTexture::storeTIMG(const ResTIMG *timg, JUTPalette *palette, GXTlut tlut) {
-    storeTIMG(timg, static_cast<u8>(tlut));
-    mEmbPalette = palette;
-    mPalette = palette;
-}
-
-void JUTTexture::attachPalette(JUTPalette *palette) {
-    mPalette = palette;
+    initTexObj(static_cast< GXTlut >(mPalette->mName));
 }
 
 void JUTTexture::init() {
-    initTexObj();
+    if (mTIMG->mPaletteNum == 0) {
+        initTexObj();
+    } else if (mEmbPalette != nullptr) {
+        mPalette = mEmbPalette;
+
+        initTexObj(static_cast< GXTlut >(mPalette->mName));
+    }
 }
 
 void JUTTexture::initTexObj() {
-    if (mTIMG == nullptr) {
-        return;
+    GXBool mipmapEnabled;
+    if (mTIMG->mMipmap != 0) {
+        mipmapEnabled = 1;
+    } else {
+        mipmapEnabled = 0;
+    }
+    u8* image = reinterpret_cast< u8* >(const_cast< ResTIMG* >(mTIMG));
+    image += (mTIMG->mImageDataOffset ? mTIMG->mImageDataOffset : 0x20);
+    GXInitTexObj(&mObj, image, mTIMG->mWidth, mTIMG->mHeight, static_cast< GXTexFmt >(mTIMG->mFormat), static_cast< GXTexWrapMode >(mWrapS),
+                 static_cast< GXTexWrapMode >(mWrapT), mipmapEnabled);
+
+    GXInitTexObjLOD(&mObj, static_cast< GXTexFilter >(mMinType), static_cast< GXTexFilter >(mMagType), mMinLod / 8.0f, mMaxLod / 8.0f,
+                    mLodBias / 100.0f, mTIMG->mBiasClamp, mTIMG->mDoEdgeLod, static_cast< GXAnisotropy >(mTIMG->mMaxAnisotropy));
+}
+
+void JUTTexture::initTexObj(GXTlut lut) {
+    GXBool mipmapEnabled;
+    if (mTIMG->mMipmap != 0) {
+        mipmapEnabled = 1;
+    } else {
+        mipmapEnabled = 0;
+    }
+    mTlutName = lut;
+    u8* image = reinterpret_cast< u8* >(const_cast< ResTIMG* >(mTIMG));
+    image += (mTIMG->mImageDataOffset ? mTIMG->mImageDataOffset : 0x20);
+    GXInitTexObjCI(&mObj, image, mTIMG->mWidth, mTIMG->mHeight, static_cast< GXCITexFmt >(mTIMG->mFormat), static_cast< GXTexWrapMode >(mWrapS),
+                   static_cast< GXTexWrapMode >(mWrapT), mipmapEnabled, lut);
+
+    GXInitTexObjLOD(&mObj, static_cast< GXTexFilter >(mMinType), static_cast< GXTexFilter >(mMagType), mMinLod / 8.0f, mMaxLod / 8.0f,
+                    mLodBias / 100.0f, mTIMG->mBiasClamp, mTIMG->mDoEdgeLod, static_cast< GXAnisotropy >(mTIMG->mMaxAnisotropy));
+}
+
+void JUTTexture::load(GXTexMapID texMapID) {
+    if (mPalette != nullptr) {
+        mPalette->load();
     }
 
-    GXInitTexObj(&mObj, mImage, mTIMG->mWidth, mTIMG->mHeight, static_cast<GXTexFmt>(mTIMG->mFormat), static_cast<GXTexWrapMode>(mWrapS),
-                 static_cast<GXTexWrapMode>(mWrapT), mTIMG->mMipmap ? GX_TRUE : GX_FALSE);
-    GXInitTexObjLOD(&mObj, static_cast<GXTexFilter>(mMinType), static_cast<GXTexFilter>(mMagType), static_cast<f32>(mMinLod) / 8.0F,
-                    static_cast<f32>(mMaxLod) / 8.0F, static_cast<f32>(mLodBias) / 100.0F, mTIMG->mBiasClamp ? GX_TRUE : GX_FALSE,
-                    mTIMG->mDoEdgeLod ? GX_TRUE : GX_FALSE, static_cast<GXAnisotropy>(mTIMG->mMaxAnisotropy));
-}
-
-void JUTTexture::initTexObj(GXTlut tlut) {
-    mTlutName = static_cast<u8>(tlut);
-    initTexObj();
-}
-
-void JUTTexture::load(GXTexMapID tex_map_id) {
-    GXLoadTexObj(&mObj, tex_map_id);
+    GXLoadTexObj(&mObj, texMapID);
 }
 
 void JUTTexture::capture(int width, int height, GXTexFmt format, bool mipmap, u8 clear) {

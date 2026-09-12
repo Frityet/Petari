@@ -1,7 +1,20 @@
 #include "layout/Nw4rLayoutRecords.hpp"
 #include "layout/LayoutRuntime.hpp"
+#include "layout/LytTexMap.hpp"
+#include "compat/ResourceHolderCompat.hpp"
+#include "Game/System/LayoutHolder.hpp"
 #include "Game/Util/MessageUtil.hpp"
 #include <nw4r/lyt/group.h>
+#include <nw4r/lyt/textBox.h>
+#include <nw4r/lyt/picture.h>
+#include <nw4r/lyt/window.h>
+#include <nw4r/lyt/bounding.h>
+#include <nw4r/lyt/resourceAccessor.h>
+#include <dolphin/os/OSFastCast.h>
+#include <nw4r/lyt/material.h>
+#include <nw4r/lyt/layout.h>
+#include "Game/Screen/CustomTagProcessor.hpp"
+#include <cstdlib>
 #include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
 #include <algorithm>
@@ -14,25 +27,175 @@
 
 namespace smgpc::layout {
 namespace {
-class NativePaneRecord final : public nw4r::lyt::Pane {
+class NativePaneIdentity {
 public:
-    NativePaneRecord(const nw4r::lyt::res::Pane& resource, Nw4rLayoutRecords& owner,
-                     std::array<char, 4> kind, u32 index) : Pane(&resource), owner(owner), kind(kind), index(index) {
-        mbUserAllocated = true;
-    }
-    const nw4r::ut::detail::RuntimeTypeInfo* GetRuntimeTypeInfo() const override {
-        require_base("NW4R derived pane RTTI");
-        return &nw4r::lyt::Pane::typeInfo;
-    }
-    void require_base(std::string_view operation) const {
-        if (kind != std::array<char, 4>{'p', 'a', 'n', '1'})
-            aurora::throw_host_exception<std::logic_error>(std::string(operation) + " requires the actual derived owner for " +
-                                                          std::string(kind.data(), kind.size()));
-    }
+    NativePaneIdentity(Nw4rLayoutRecords& owner, u32 index) : owner(owner), index(index) {}
+    virtual ~NativePaneIdentity() = default;
     Nw4rLayoutRecords& owner;
-    std::array<char, 4> kind;
     u32 index;
 };
+
+class NativePaneRecord final : public nw4r::lyt::Pane, public NativePaneIdentity {
+public:
+    NativePaneRecord(const nw4r::lyt::res::Pane& resource, Nw4rLayoutRecords& owner, u32 index)
+        : Pane(&resource), NativePaneIdentity(owner, index) { mbUserAllocated = true; }
+};
+
+class NativeResourceAccessor final : public nw4r::lyt::ResourceAccessor {
+public:
+    explicit NativeResourceAccessor(const std::vector<LayoutRuntime::RenderTexture>& textures) : textures(textures) {}
+    const nw4r::lyt::TexMap& texture(const char* name) const {
+        const auto it = std::ranges::find(textures, name, &LayoutRuntime::RenderTexture::name);
+        if (it == textures.end() || !it->native_texture)
+            aurora::throw_host_exception<std::runtime_error>("Missing retained layout texture: " + std::string(name));
+        return *it->native_texture;
+    }
+    void* GetResource(nw4r::lyt::ResType type, const char* name, u32* size) override {
+        if (type != 0x74696d67)
+            aurora::throw_host_exception<std::invalid_argument>("The material requested a non-texture layout resource");
+        const auto& state = texture(name).GetHostResourceState();
+        if (!state || !state->tpl_palette)
+            aurora::throw_host_exception<std::invalid_argument>("A layout material requires a retained native TPL palette");
+        if (size) *size = sizeof(TPLPalette);
+        return const_cast<TPLPalette*>(state->tpl_palette);
+    }
+    std::shared_ptr<const nw4r::lyt::HostTextureResourceState> GetHostTextureResourceState(const char* name) override {
+        return texture(name).GetHostResourceState();
+    }
+    const std::vector<LayoutRuntime::RenderTexture>& textures;
+};
+
+class NativeMaterialResources {
+public:
+    NativeMaterialResources(const BrlytLayout& source, const std::vector<LayoutRuntime::RenderTexture>& textures)
+        : source(source), accessor(textures) {
+        using namespace nw4r::lyt;
+        const auto table_size = source.texture_names.size() * sizeof(res::Texture);
+        std::size_t size = sizeof(res::TextureList) + table_size;
+        for (const auto& name : source.texture_names) size += name.size() + 1;
+        names.resize(size);
+        auto* list = reinterpret_cast<res::TextureList*>(names.data());
+        list->texNum = static_cast<u16>(source.texture_names.size());
+        auto* table = reinterpret_cast<res::Texture*>(names.data() + sizeof(res::TextureList));
+        std::size_t offset = table_size;
+        for (std::size_t i = 0; i < source.texture_names.size(); ++i) {
+            const auto& name = source.texture_names[i];
+            table[i].nameStrOffset = static_cast<u32>(offset);
+            std::memcpy(reinterpret_cast<char*>(table) + offset, name.c_str(), name.size() + 1);
+            offset += name.size() + 1;
+        }
+        blocks.pTextureList = list;
+        blocks.pResAccessor = &accessor;
+    }
+    nw4r::lyt::Material* create(std::size_t index) {
+        using namespace nw4r::lyt;
+        const auto& material = source.materials.at(index);
+        if (material.native_resource.size() < sizeof(res::Material))
+            aurora::throw_host_exception<std::runtime_error>("Missing native BRLYT material record");
+        for (const auto& texture : material.textures) {
+            if (texture.texture_index >= source.texture_names.size())
+                aurora::throw_host_exception<std::runtime_error>("BRLYT material texture index is out of range");
+            accessor.GetResource(0x74696d67, texture.texture_name.c_str(), nullptr);
+        }
+        auto* memory = Layout::AllocMemory(sizeof(Material));
+        if (!memory) aurora::throw_host_exception<std::runtime_error>("NW4R material allocation failed");
+        Material* result;
+        try { result = new (memory) Material(reinterpret_cast<const res::Material*>(material.native_resource.data()), blocks); }
+        catch (...) { Layout::FreeMemory(memory); throw; }
+        return result;
+    }
+    const BrlytLayout& source;
+    NativeResourceAccessor accessor;
+    std::vector<std::uint8_t> names;
+    nw4r::lyt::ResBlockSet blocks{};
+};
+
+void set_tex_coords(nw4r::lyt::detail::TexCoordAry& target, const std::vector<std::array<BrlytTexCoord, 4>>& source) {
+    const auto count = static_cast<u8>(std::min<std::size_t>(source.size(), GX_MAX_TEXCOORD));
+    target.Reserve(count);
+    target.SetSize(count);
+    for (u32 set = 0; set < target.GetSize(); ++set)
+        for (u32 corner = 0; corner < 4; ++corner)
+            target.mData[set][corner] = {source[set][corner].u, source[set][corner].v};
+}
+GXColor native_color(const std::array<std::uint8_t, 4>& color) { return {color[0], color[1], color[2], color[3]}; }
+
+class NativePictureRecord final : public nw4r::lyt::Picture, public NativePaneIdentity {
+public:
+    NativePictureRecord(const nw4r::lyt::res::Pane& pane, const BrlytPicturePane& picture, NativeMaterialResources& resources,
+                        Nw4rLayoutRecords& owner, u32 index)
+        : Picture(&pane, 0), NativePaneIdentity(owner, index) {
+        mbUserAllocated = true;
+        for (std::size_t i = 0; i < 4; ++i) mVtxColors[i] = native_color(picture.vertex_colors[i]);
+        set_tex_coords(mTexCoordAry, picture.tex_coord_sets);
+        mpMaterial = resources.create(picture.material_index);
+    }
+};
+class NativeWindowRecord final : public nw4r::lyt::Window, public NativePaneIdentity {
+public:
+    NativeWindowRecord(const nw4r::lyt::res::Pane& pane, const BrlytWindowPane& window, NativeMaterialResources& resources,
+                       Nw4rLayoutRecords& owner, u32 index)
+        : Window(&pane), NativePaneIdentity(owner, index) {
+        mbUserAllocated = true;
+        mContentInflation = {window.content_inflation.left, window.content_inflation.right,
+                             window.content_inflation.top, window.content_inflation.bottom};
+        for (std::size_t i = 0; i < 4; ++i) mContent.vtxColors[i] = native_color(window.content.vertex_colors[i]);
+        set_tex_coords(mContent.texCoordAry, window.content.tex_coord_sets);
+        mpMaterial = resources.create(window.content.material_index);
+        if (!window.frames.empty()) {
+            mFrames = nw4r::lyt::Layout::NewArray<Frame>(static_cast<u32>(window.frames.size()));
+            if (!mFrames) aurora::throw_host_exception<std::runtime_error>("NW4R window frame allocation failed");
+            for (const auto& frame : window.frames) {
+                mFrames[mFrameNum].textureFlip = frame.texture_flip;
+                mFrames[mFrameNum].pMaterial = resources.create(frame.material_index);
+                ++mFrameNum;
+            }
+        }
+    }
+};
+class NativeBoundingRecord final : public nw4r::lyt::Bounding, public NativePaneIdentity {
+public:
+    NativeBoundingRecord(const nw4r::lyt::res::Bounding& pane, Nw4rLayoutRecords& owner, u32 index)
+        : Bounding(&pane, nw4r::lyt::ResBlockSet{}), NativePaneIdentity(owner, index) { mbUserAllocated = true; }
+};
+class NativeTextBoxRecord final : public nw4r::lyt::TextBox, public NativePaneIdentity {
+public:
+    NativeTextBoxRecord(const nw4r::lyt::res::Pane& pane, const BrlytTextBox& text,
+                        NativeMaterialResources& resources, const nw4r::ut::Font* font,
+                        Nw4rLayoutRecords& owner, u32 index)
+        : TextBox(&pane, text.resource.buffer_length), NativePaneIdentity(owner, index) {
+        mbUserAllocated = true;
+        mpMaterial = resources.create(text.material_index);
+        mpFont = font;
+        mFontSize = {text.resource.font_width, text.resource.font_height};
+        mCharSpace = text.resource.char_space;
+        mLineSpace = text.resource.line_space;
+        mTextPosition = text.text_position;
+        mBits.textAlignment = text.text_alignment;
+        mTextColors[0] = native_color(text.resource.top_color);
+        mTextColors[1] = native_color(text.resource.bottom_color);
+        std::wstring message;
+        message.reserve(text.raw_text.size());
+        for (auto unit : text.raw_text) message.push_back(static_cast<wchar_t>(unit));
+        SetString(message.data(), 0, static_cast<u16>(message.size()));
+    }
+    ~NativeTextBoxRecord() override {
+        delete static_cast<CustomTagProcessor*>(mpTagProcessor);
+        mpTagProcessor = nullptr;
+    }
+};
+
+void* allocate_layout(MEMAllocator*, u32 size) {
+    const aurora::allocation::HostAllocationScope host;
+    return std::malloc(size);
+}
+void free_layout(MEMAllocator*, void* data) {
+    const aurora::allocation::HostAllocationScope host;
+    std::free(data);
+}
+const MEMAllocatorFunc layout_allocator_functions{allocate_layout, free_layout};
+MEMAllocator layout_allocator{&layout_allocator_functions, nullptr, 0, 0};
+
 class NativeGroupRecord final : public nw4r::lyt::Group {
 public:
     NativeGroupRecord(const nw4r::lyt::res::Group* resource, nw4r::lyt::Pane* root, Nw4rLayoutRecords& owner)
@@ -71,7 +234,7 @@ struct Nw4rLayoutRecords::State {
     bool published = false;
     bool retiring = false;
     bool synchronizing = false;
-    std::vector<std::unique_ptr<NativePaneRecord>> panes;
+    std::vector<std::unique_ptr<nw4r::lyt::Pane>> panes;
     std::vector<PublishedPane> previous;
     std::vector<std::unique_ptr<nw4r::lyt::Group>> groups;
 };
@@ -79,9 +242,11 @@ struct Nw4rLayoutRecords::State {
 Nw4rLayoutRecords::Nw4rLayoutRecords(LayoutRuntime& runtime) {
     const aurora::allocation::HostAllocationScope host;
     _state = std::make_unique<State>(runtime);
+    if (!nw4r::lyt::Layout::mspAllocator) nw4r::lyt::Layout::mspAllocator = &layout_allocator;
     runtime.loadRenderData();
     const auto& layout = runtime.mBrlytLayout;
     if (layout.panes.empty()) aurora::throw_host_exception<std::logic_error>("NW4R pane ownership requires an actual BRLYT root");
+    NativeMaterialResources materials(layout, runtime.mRenderTextures);
     _state->panes.reserve(layout.panes.size());
     _state->previous.resize(layout.panes.size());
     for (const auto& source : layout.panes) {
@@ -97,7 +262,36 @@ Nw4rLayoutRecords::Nw4rLayoutRecords(LayoutRuntime& runtime) {
         resource.rotate.x = source.rotate_x; resource.rotate.y = source.rotate_y; resource.rotate.z = source.rotate_z;
         resource.scale.x = source.scale_x; resource.scale.y = source.scale_y;
         resource.size.width = source.width; resource.size.height = source.height;
-        _state->panes.push_back(std::make_unique<NativePaneRecord>(resource, *this, source.resource_kind, static_cast<u32>(_state->panes.size())));
+        const auto index = static_cast<u32>(_state->panes.size());
+        if (source.resource_kind == std::array<char, 4>{'t', 'x', 't', '1'}) {
+            const auto text = std::ranges::find_if(layout.text_boxes, [index](const auto& entry) { return entry.pane_index == index; });
+            if (text == layout.text_boxes.end())
+                aurora::throw_host_exception<std::logic_error>("NW4R text pane has no decoded text resource");
+            const nw4r::ut::Font* font = nullptr;
+            if (runtime.mArchiveOwner) {
+                font = runtime.mArchiveOwner->holder().GetFont(text->font_name.c_str());
+            } else {
+                const auto entry = std::ranges::find(runtime.mRenderFonts, text->font_name, &LayoutRuntime::RenderFont::name);
+                if (entry != runtime.mRenderFonts.end()) font = entry->native_font.get();
+            }
+            _state->panes.push_back(std::make_unique<NativeTextBoxRecord>(resource, *text, materials, font, *this, index));
+        } else if (source.resource_kind == std::array<char, 4>{'p', 'i', 'c', '1'}) {
+            const auto picture = std::ranges::find(layout.pictures, index, &BrlytPicturePane::pane_index);
+            if (picture == layout.pictures.end()) aurora::throw_host_exception<std::logic_error>("Missing decoded picture record");
+            _state->panes.push_back(std::make_unique<NativePictureRecord>(resource, *picture, materials, *this, index));
+        } else if (source.resource_kind == std::array<char, 4>{'w', 'n', 'd', '1'}) {
+            const auto window = std::ranges::find(layout.windows, index, &BrlytWindowPane::pane_index);
+            if (window == layout.windows.end()) aurora::throw_host_exception<std::logic_error>("Missing decoded window record");
+            _state->panes.push_back(std::make_unique<NativeWindowRecord>(resource, *window, materials, *this, index));
+        } else if (source.resource_kind == std::array<char, 4>{'b', 'n', 'd', '1'}) {
+            nw4r::lyt::res::Bounding bounding{};
+            static_cast<nw4r::lyt::res::Pane&>(bounding) = resource;
+            _state->panes.push_back(std::make_unique<NativeBoundingRecord>(bounding, *this, index));
+        } else if (source.resource_kind == std::array<char, 4>{'p', 'a', 'n', '1'}) {
+            _state->panes.push_back(std::make_unique<NativePaneRecord>(resource, *this, index));
+        } else {
+            aurora::throw_host_exception<std::logic_error>("Unknown BRLYT pane kind has no native SDK class");
+        }
     }
     for (std::size_t i = 0; i < layout.panes.size(); ++i) {
         const auto parent = layout.panes[i].parent_index;
@@ -141,8 +335,8 @@ void Nw4rLayoutRecords::import_pane(u32 i) {
     const auto* expected_parent = source.parent_index < 0 ? nullptr : state.panes.at(source.parent_index).get();
     if (std::strncmp(pane.mName, source.name.c_str(), 16) != 0 || pane.mpParent != expected_parent)
         aurora::throw_host_exception<std::logic_error>("Changing a published NW4R resource name/hierarchy requires matching renderer topology support");
-    if (pane.mSize.width != old.size.width || pane.mSize.height != old.size.height)
-        aurora::throw_host_exception<std::logic_error>("Changing SDK pane size requires the derived geometry owner");
+    source.width = pane.mSize.width;
+    source.height = pane.mSize.height;
     auto& frame = runtime.mCommittedPaneFrames[source.name];
     if (pane.mTranslate.x != old.translate.x) frame.translate_x = pane.mTranslate.x;
     if (pane.mTranslate.y != old.translate.y) frame.translate_y = pane.mTranslate.y;
@@ -189,6 +383,31 @@ void Nw4rLayoutRecords::publish_pane(u32 i, bool matrices) {
         pane.mGlbAlpha = static_cast<u8>(std::clamp(global.alpha, 0.0F, 255.0F));
         runtime.paneLocalMatrix(i, pane.mMtx.m);
     }
+    const auto animate_material = [&](nw4r::lyt::Material* material) {
+        if (!material) return;
+        const auto frame = runtime.materialFrameForContent(material->GetName());
+        const auto apply_color = [&](const auto& values, u32 first) {
+            for (u32 component = 0; component < values.size(); ++component) {
+                if (!values[component]) continue;
+                f32 value = *values[component] + 0.5f;
+                s16 converted;
+                OSf32tos16(&value, &converted);
+                material->SetColorElement(first + component, std::clamp(converted, s16(-1024), s16(1023)));
+            }
+        };
+        apply_color(frame.material_color, 0);
+        for (u32 color = 0; color < frame.tev_colors.size(); ++color) apply_color(frame.tev_colors[color], 4 + color * 4);
+        for (u32 color = 0; color < frame.tev_k_colors.size(); ++color) apply_color(frame.tev_k_colors[color], 16 + color * 4);
+        if (material->GetTexSRTCap()) {
+            const auto texture = runtime.textureFrameForContent(material->GetName());
+            const std::array values{texture.translate_s, texture.translate_t, texture.rotate, texture.scale_s, texture.scale_t};
+            for (u32 component = 0; component < values.size(); ++component)
+                if (values[component]) material->SetTexSRTElement(0, component, *values[component]);
+        }
+    };
+    animate_material(pane.GetMaterial());
+    if (auto* window = nw4r::ut::DynamicCast<nw4r::lyt::Window*>(&pane))
+        for (u32 frame = 0; frame < window->mFrameNum; ++frame) animate_material(window->GetFrameMaterial(frame));
     state.previous[i] = published(pane);
 }
 
@@ -219,7 +438,7 @@ u32 Nw4rLayoutRecords::group_index(const char* name) const {
 u32 Nw4rLayoutRecords::pane_count() const { return static_cast<u32>(_state->panes.size()); }
 u32 Nw4rLayoutRecords::group_count() const { return static_cast<u32>(_state->groups.size()); }
 u32 Nw4rLayoutRecords::pane_index(const nw4r::lyt::Pane* pane) const {
-    if (const auto* record = dynamic_cast<const NativePaneRecord*>(pane); record && &record->owner == this) return record->index;
+    if (const auto* record = dynamic_cast<const NativePaneIdentity*>(pane); record && &record->owner == this) return record->index;
     aurora::throw_host_exception<std::logic_error>("The NW4R pane belongs to a different layout resource owner");
 }
 u32 Nw4rLayoutRecords::text_line_count(const char* pane_name) const {
@@ -233,37 +452,34 @@ u32 Nw4rLayoutRecords::text_line_count(const char* pane_name) const {
         auto index = static_cast<s32>(text.pane_index);
         while (index >= 0 && static_cast<u32>(index) != root_index) index = layout.panes[index].parent_index;
         if (index < 0) continue;
-        std::wstring wide;
-        wide.reserve(text.raw_text.size() + 1);
-        for (auto word : text.raw_text) wide.push_back(static_cast<wchar_t>(word));
-        maximum = std::max(maximum, static_cast<u32>(MR::countMessageLine(wide.c_str())));
+        const auto* box = nw4r::ut::DynamicCast<const nw4r::lyt::TextBox*>(_state->panes.at(text.pane_index).get());
+        if (box && box->mTextBuf) maximum = std::max(maximum, static_cast<u32>(MR::countMessageLine(box->mTextBuf)));
     }
     return maximum;
 }
 void animate_native_pane(const nw4r::lyt::Pane* pane) {
-    if (const auto* record = dynamic_cast<const NativePaneRecord*>(pane)) record->owner.animate_pane(record->index);
-    else aurora::throw_host_exception<std::logic_error>("The pane has no native layout resource owner");
+    if (const auto* record = dynamic_cast<const NativePaneIdentity*>(pane)) record->owner.animate_pane(record->index);
 }
-void synchronize_native_pane(const nw4r::lyt::Pane* pane) {
-    if (const auto* record = dynamic_cast<const NativePaneRecord*>(pane)) record->owner.synchronize();
-    else aurora::throw_host_exception<std::logic_error>("The pane has no native layout resource owner");
+bool synchronize_native_pane(const nw4r::lyt::Pane* pane) {
+    if (const auto* record = dynamic_cast<const NativePaneIdentity*>(pane)) {
+        record->owner.synchronize();
+        return true;
+    }
+    return false;
 }
 void Nw4rLayoutRecords::require_mutable_resource_graph(std::string_view operation) const {
     if (_state->published && !_state->retiring)
         aurora::throw_host_exception<std::logic_error>(std::string(operation) + " requires matching renderer resource topology support");
 }
 void validate_native_pane_hierarchy_change(const nw4r::lyt::Pane* parent, const nw4r::lyt::Pane* child) {
-    if (const auto* record = dynamic_cast<const NativePaneRecord*>(parent)) record->owner.require_mutable_resource_graph("Reparenting a published NW4R pane");
-    if (const auto* record = dynamic_cast<const NativePaneRecord*>(child)) record->owner.require_mutable_resource_graph("Reparenting a published NW4R pane");
+    if (const auto* record = dynamic_cast<const NativePaneIdentity*>(parent)) record->owner.require_mutable_resource_graph("Reparenting a published NW4R pane");
+    if (const auto* record = dynamic_cast<const NativePaneIdentity*>(child)) record->owner.require_mutable_resource_graph("Reparenting a published NW4R pane");
 }
 void validate_native_pane_rename(const nw4r::lyt::Pane* pane, const char* name) {
-    if (const auto* record = dynamic_cast<const NativePaneRecord*>(pane); record && std::strncmp(pane->mName, name, 16) != 0)
+    if (const auto* record = dynamic_cast<const NativePaneIdentity*>(pane); record && std::strncmp(pane->mName, name, 16) != 0)
         record->owner.require_mutable_resource_graph("Renaming a published NW4R pane");
 }
 void validate_native_group_append(const nw4r::lyt::Group* group) {
     if (const auto* record = dynamic_cast<const NativeGroupRecord*>(group)) record->owner.require_mutable_resource_graph("Appending to a published NW4R resource group");
-}
-void require_native_base_pane(const nw4r::lyt::Pane* pane, std::string_view operation) {
-    if (const auto* record = dynamic_cast<const NativePaneRecord*>(pane)) record->require_base(operation);
 }
 } // namespace smgpc::layout

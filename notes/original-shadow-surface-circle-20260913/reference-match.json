@@ -1,0 +1,57 @@
+[
+  {
+    "name": "__dt__19ShadowSurfaceCircleFv",
+    "size": "88",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__ct__19ShadowSurfaceCircleFv",
+    "size": "76",
+    "match_percent": 99.210526
+  },
+  {
+    "name": "setRadius__19ShadowSurfaceCircleFf",
+    "size": "8",
+    "match_percent": 100.0
+  },
+  {
+    "name": "draw__19ShadowSurfaceCircleCFv",
+    "size": "312",
+    "match_percent": 99.9359
+  },
+  {
+    "name": "__vt__19ShadowSurfaceCircle",
+    "size": "36",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__ct__21ShadowSurfaceDrawInitFPCc",
+    "size": "96",
+    "match_percent": 100.0
+  },
+  {
+    "name": "initDraw__21ShadowSurfaceDrawInitFv",
+    "size": "212",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__ct__19ShadowSurfaceDrawerFPCc",
+    "size": "92",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__dt__21ShadowSurfaceDrawInitFv",
+    "size": "88",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__vt__19ShadowSurfaceDrawer",
+    "size": "36",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__vt__21ShadowSurfaceDrawInit",
+    "size": "36",
+    "match_percent": 100.0
+  }
+]

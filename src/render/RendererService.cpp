@@ -803,6 +803,8 @@ namespace smgpc::render {
             if (!initialized) {
                 return;
             }
+            if (display != nullptr)
+                aurora::throw_host_exception<std::logic_error>("Retire the display owner before shutting down its window");
             aurora_shutdown();
             initialized = false;
         }
@@ -882,12 +884,31 @@ namespace smgpc::render {
         bool focused = true;
         bool minimized = false;
         bool initialized = true;
+        DisplayFrameSource* display = nullptr;
+        bool rendering = false;
+        CopyClearState copy_clear{};
     };
 
     AuroraWindow::AuroraWindow(const WindowConfiguration &configuration) : _impl(std::make_unique<Impl>(configuration)) {
     }
 
     AuroraWindow::~AuroraWindow() = default;
+
+    void AuroraWindow::attach_display(DisplayFrameSource& display) {
+        if (_impl->display != nullptr)
+            aurora::throw_host_exception<std::logic_error>("The window already has a display owner");
+        if (_impl->rendering) display.begin_render(_impl->copy_clear);
+        _impl->display = &display;
+    }
+
+    void AuroraWindow::detach_display(DisplayFrameSource& display) {
+        if (_impl->display != &display)
+            aurora::throw_host_exception<std::logic_error>("The window display owner does not match");
+        // Complete a frame opened before the enclosing process begins its
+        // teardown. No borrowed callback survives removal from the window.
+        if (_impl->rendering) display.end_render();
+        _impl->display = nullptr;
+    }
 
     bool AuroraWindow::poll_events() {
         return _impl->poll_events();
@@ -1175,7 +1196,11 @@ namespace smgpc::render {
             _impl->frame_textured_submits = 0U;
             _impl->frame_material_submits = 0U;
             _impl->frame_submitted_vertices = 0U;
-            configure_copy_clear(_impl->copy_clear);
+            auto& window = *_impl->window._impl;
+            window.rendering = true;
+            window.copy_clear = _impl->copy_clear;
+            if (window.display) window.display->begin_render(_impl->copy_clear);
+            else configure_copy_clear(_impl->copy_clear);
         }
         return {
             .frame_index = _impl->frame_index,
@@ -1197,13 +1222,19 @@ namespace smgpc::render {
 
     void AuroraRenderer::end_frame_impl(const GXRenderModeObj *render_mode, bool use_vertical_filter) {
         if (_impl->frame_open) {
-            GXFlush();
-            if (render_mode != nullptr) {
-                GXSetCopyFilter(render_mode->aa, render_mode->sample_pattern,
-                                use_vertical_filter ? GX_TRUE : GX_FALSE,
-                                render_mode->vfilter);
+            auto& window = *_impl->window._impl;
+            if (window.display) {
+                window.display->end_render();
+            } else {
+                GXFlush();
+                if (render_mode != nullptr) {
+                    GXSetCopyFilter(render_mode->aa, render_mode->sample_pattern,
+                                    use_vertical_filter ? GX_TRUE : GX_FALSE,
+                                    render_mode->vfilter);
+                }
+                GXCopyDisp(nullptr, GX_TRUE);
             }
-            GXCopyDisp(nullptr, GX_TRUE);
+            window.rendering = false;
             aurora_end_frame();
             if (environment_flag_enabled("SMGPC_AURORA_RENDER_STATS", false)) {
                 const auto *stats = aurora_get_stats();
@@ -1233,6 +1264,9 @@ namespace smgpc::render {
             aurora::throw_host_exception<std::invalid_argument>("GX copy-clear depth must fit the retail 24-bit Z buffer");
         }
         _impl->copy_clear = state;
+        _impl->window._impl->copy_clear = state;
+        if (_impl->window._impl->display)
+            _impl->window._impl->display->set_copy_clear(state);
         if (_impl->frame_open) {
             configure_copy_clear(_impl->copy_clear);
         }

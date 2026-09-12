@@ -16,6 +16,10 @@ namespace nw4r {
             ~Rect() {
             }
 
+            void SetHeight(f32 height) {
+                bottom = top + height;
+            }
+
             f32 GetWidth() const {
                 return right - left;
             }

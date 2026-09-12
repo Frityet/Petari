@@ -3,9 +3,11 @@
 
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
+#include "Game/NameObj/ModelChangableObjFactory.hpp"
 #include "Game/Util/FileUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/DrawSyncManagerLifetime.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/NameObjLifecycleService.hpp"
 #include "scene/PlacementZoneScope.hpp"
@@ -15,7 +17,6 @@
 #include <algorithm>
 #include <array>
 #include <cctype>
-#include <cstdio>
 #include <exception>
 #include <iterator>
 #include <numeric>
@@ -113,25 +114,10 @@ namespace smgpc::scene {
             }
 
             if (placement.shape_model_no != -1) {
-                auto model_name = std::array<char, 128U>{};
-                const auto written = std::snprintf(
-                    model_name.data(), model_name.size(), "%s%02d",
-                    placement.creator_identifier.c_str(),
-                    placement.shape_model_no);
-                if (written < 0 ||
-                    static_cast<std::size_t>(written) >= model_name.size()) {
-                    aurora::throw_host_exception<std::runtime_error>(
-                        "Model-changing authored placement identifier is too long.");
-                }
-                auto archive_path = std::array<char, 128U>{};
-                if (!MR::makeObjectArchiveFileNameFromPrefix(
-                        archive_path.data(), archive_path.size(),
-                        model_name.data(), true)) {
-                    return AuthoredPlacementGroupLoadOrder::ArchiveLoadRequired;
-                }
-                return MR::isLoadedFile(archive_path.data())
-                           ? AuthoredPlacementGroupLoadOrder::ArchivesReady
-                           : AuthoredPlacementGroupLoadOrder::ArchiveLoadRequired;
+                return MR::isReadResourceFromDVDAtModelChangableObj(
+                           placement.creator_identifier.c_str(), placement.shape_model_no)
+                           ? AuthoredPlacementGroupLoadOrder::ArchiveLoadRequired
+                           : AuthoredPlacementGroupLoadOrder::ArchivesReady;
             }
 
             const auto iter = JMapInfoIter(
@@ -148,10 +134,10 @@ namespace smgpc::scene {
 
         [[nodiscard]] bool default_creator_available(
             const StagePlacementObject &placement) {
-            // PC has not linked MR::getModelChangableObjCreator. Never let a
-            // ShapeModelNo row borrow the ordinary NameObjFactory creator.
             if (placement.shape_model_no != -1) {
-                return false;
+                return smgpc::scene::nameobj::describe_model_changing_creator_support(
+                           placement.creator_identifier).kind ==
+                       smgpc::scene::nameobj::NameObjCreatorSupportKind::Supported;
             }
             return NameObjFactory::getCreator(
                        placement.creator_identifier.c_str()) != nullptr;
@@ -431,10 +417,9 @@ namespace smgpc::scene {
             }
 
             std::unique_ptr<NameObj> construct_model_changing(
-                std::string_view, s32, const char *,
+                std::string_view object_name, s32, const char *actor_name,
                 const NameObjPlacementContext &) override {
-                aurora::throw_host_exception<std::runtime_error>(
-                    "Model-changing NameObj creator is unavailable on PC.");
+                return smgpc::scene::nameobj::create_model_changing_name_obj(object_name, actor_name);
             }
 
             void init(
@@ -481,9 +466,13 @@ namespace smgpc::scene {
         }
 
         if (placement.shape_model_no != -1) {
+            const auto support = smgpc::scene::nameobj::describe_model_changing_creator_support(
+                placement.creator_identifier);
             return AuthoredPlacementSupport{
-                .kind = AuthoredPlacementSupportKind::Blocked,
-                .reason = "model_changing_creator_unavailable",
+                .kind = support.kind == smgpc::scene::nameobj::NameObjCreatorSupportKind::Supported
+                            ? AuthoredPlacementSupportKind::Ready
+                            : AuthoredPlacementSupportKind::Blocked,
+                .reason = support.reason,
             };
         }
 
@@ -879,6 +868,7 @@ namespace smgpc::scene {
                     const auto marker = capture.marker();
                     auto actor = std::unique_ptr<NameObj>{};
                     auto registrations = std::vector<NameObj *>{};
+                    smgpc::compat::DrawSyncRegistrationTransaction callbacks;
                     try {
                         actor = entry.placement->shape_model_no == -1
                                     ? _lifecycle->construct(
@@ -1011,7 +1001,9 @@ namespace smgpc::scene {
                             .actor = actor_ptr,
                         });
                         entry.actor = actor_ptr;
+                        callbacks.commit();
                     } catch (...) {
+                        callbacks.rollback();
                         for (auto *object : registrations) {
                             smgpc::compat::
                                 release_name_obj_runtime_postpass_delegation(

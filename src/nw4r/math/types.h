@@ -104,7 +104,26 @@ namespace nw4r {
         };
 
         struct VEC2 : public _VEC2 {
+        public:
+            VEC2() {
+            }
 
+            VEC2(const _VEC2& v) {
+                x = v.x;
+                y = v.y;
+            }
+
+            VEC2(f32 fx, f32 fy) {
+                x = fx;
+                y = fy;
+            }
+
+            operator f32*() {
+                return &x;
+            }
+            operator const f32*() const {
+                return &x;
+            }
         };
 
         struct VEC3 : public _VEC3 {
@@ -120,13 +139,34 @@ namespace nw4r {
         };
 
         struct MTX34 : public _MTX34 {
+        public:
+            typedef const f32 (*ConstMtxPtr)[4];
 
+            operator f32*() {
+                return &_00;
+            }
+            operator MtxPtr() {
+                return (MtxPtr)&_00;
+            }
+            operator ConstMtxPtr() const {
+                return (ConstMtxPtr)&_00;
+            }
         };
+
+        inline MTX34* MTX34Identity(MTX34* pOut) {
+            PSMTXIdentity(*pOut);
+            return pOut;
+        }
 
         struct MTX44 : public _MTX44 {
 
         };
 
+
+        inline MTX34* MTX34Mult(MTX34* pOut, const MTX34* pA, const MTX34* pB) {
+            PSMTXConcat(*pA, *pB, *pOut);
+            return pOut;
+        }
 
     };
 };

@@ -242,25 +242,4 @@ namespace MR {
                       history_expand, current_alpha, history_alpha);
     }
 
-    void createCenterScreenBlur() {
-        if (createSceneObj(SceneObj_CenterScreenBlur) == nullptr) {
-            aurora::throw_host_exception<std::logic_error>(
-                "CenterScreenBlur requires a scene-owned SceneObjHolder.");
-        }
-    }
-
-    void startCenterScreenBlur(s32 time, f32 offset, u8 alpha, s32 fade_in,
-                               s32 fade_out) {
-        auto* holder = getSceneObjHolder();
-        auto* blur = holder != nullptr
-                         ? dynamic_cast<CenterScreenBlur*>(
-                               holder->getObj(SceneObj_CenterScreenBlur))
-                         : nullptr;
-        if (blur == nullptr) {
-            aurora::throw_host_exception<std::logic_error>(
-                "CenterScreenBlur must be created before it can be started.");
-        }
-        blur->start(time, offset, alpha, fade_in, fade_out);
-    }
-
 }  // namespace MR

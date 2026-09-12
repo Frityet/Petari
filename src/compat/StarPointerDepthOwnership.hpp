@@ -24,10 +24,9 @@ public:
 
     void set_camera(const TPos3f& view, const TProj3f& projection, f32 fovy);
     void update();
-    void capture();
     void initialize_layouts();
     void draw();
-    void discard_depth_samples();
+    void clear_depth_result();
     [[nodiscard]] StarPointerDirector& director();
     [[nodiscard]] StarPointerOnOffController& modes();
     [[nodiscard]] StarPointerController& controller(s32 channel);
@@ -56,4 +55,8 @@ private:
 
 [[nodiscard]] StarPointerDepthOwnership* try_star_pointer_depth() noexcept;
 [[nodiscard]] StarPointerDepthOwnership& require_star_pointer_depth();
+
+// Retire the actual GameSystem-owned graph before its heap and resource
+// services. The caller must first stop scheduling its update/draw methods.
+void destroy_star_pointer_director(StarPointerDirector*&);
 } // namespace smgpc::compat

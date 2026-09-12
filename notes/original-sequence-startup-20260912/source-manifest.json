@@ -1,0 +1,87 @@
+{
+  "parent_head": "d25ac205fb1e3013f8f7ec0cbccbc9a09636c16c",
+  "decomp_head": "0053750315fe159eb51e070ca507b96ef841fb00",
+  "owned_paths": [
+    {
+      "path": "src/Game/Util/SequenceUtil.cpp",
+      "state": "present",
+      "sha256": "3914352f1198c3b641f01f43e9c54dbde0bbb9753230c64ea5ccd718b5d627ad"
+    },
+    {
+      "path": "src/Game/System/PlacedHiddenStarScenarioTable.cpp",
+      "state": "present",
+      "sha256": "e9814c37e92fa3e7a80f2ce9cd7e1356fc7a061294d046a48560f6cc60b71335"
+    },
+    {
+      "path": "src/compat/OriginalGameSceneFunction.cpp",
+      "state": "deleted",
+      "sha256": null
+    },
+    {
+      "path": "src/compat/SequenceUtilCompat.cpp",
+      "state": "deleted",
+      "sha256": null
+    },
+    {
+      "path": "src/compat/StorySequencePlatformCompat.cpp",
+      "state": "present",
+      "sha256": "60d16c5a7f150841dcbdef6e0b2b1fff36b5422533dd210b6903b1e6f4e09876"
+    },
+    {
+      "path": "src/scene/GameSceneBinding.cpp",
+      "state": "present",
+      "sha256": "e680c529d3a44a9c41e5638e160039a5c58a98872df270d23d34f8fc9d61d9c6"
+    },
+    {
+      "path": "src/scene/GameSceneBinding.hpp",
+      "state": "present",
+      "sha256": "f5cbf8dc90e2178631f09b0d16cd8df4ecb6e7cb7cd4dc78e1aa2fd9a9542ad7"
+    }
+  ],
+  "unchanged_original_activation": [
+    {
+      "path": "src/Game/Scene/GameSceneFunction.cpp",
+      "sha256": "62a78476c0510ed244b75080db02fa4166800b2ab75031026f0497ee6875c789"
+    }
+  ],
+  "required_shared_build_patch": {
+    "path": "src/Game/xmake.lua",
+    "remove_exact_lines": [
+      "    remove_files(\"Scene/GameSceneFunction.cpp\")",
+      "    remove_files(\"Util/SequenceUtil.cpp\")"
+    ],
+    "new_source": "System/PlacedHiddenStarScenarioTable.cpp is found by existing source glob"
+  },
+  "shared_file_scope": {
+    "src/compat/StorySequencePlatformCompat.cpp": "Remove StageSessionState include and only MR::isExecScenarioStarter, MR::requestChangeScene, MR::requestChangeSceneTitle. Preserve prior root WIP deletion of MR::isStarCompleteAllGalaxy. Exact incremental patch saved as StorySequencePlatformCompat.owned.patch."
+  },
+  "reference_identity": [
+    {
+      "native": "src/Game/Util/SequenceUtil.cpp",
+      "reference": "decomp/src/Game/Util/SequenceUtil.cpp",
+      "byte_identical": true,
+      "sha256": "3914352f1198c3b641f01f43e9c54dbde0bbb9753230c64ea5ccd718b5d627ad"
+    },
+    {
+      "native": "src/Game/Scene/GameSceneFunction.cpp",
+      "reference": "decomp/src/Game/Scene/GameSceneFunction.cpp",
+      "byte_identical": true,
+      "sha256": "62a78476c0510ed244b75080db02fa4166800b2ab75031026f0497ee6875c789"
+    },
+    {
+      "native": "src/Game/System/PlacedHiddenStarScenarioTable.cpp",
+      "reference": "decomp/src/Game/System/PlacedHiddenStarScenarioTable.cpp",
+      "byte_identical": true,
+      "sha256": "e9814c37e92fa3e7a80f2ce9cd7e1356fc7a061294d046a48560f6cc60b71335"
+    }
+  ],
+  "validation": [
+    "native-compiles.json",
+    "binding-native-compiles.json",
+    "reference-compiles.json"
+  ],
+  "not_claimed": [
+    "No shared or integrated build run in this lane",
+    "No positive original process/scene runtime or Gateway progression proof"
+  ]
+}

@@ -14,7 +14,8 @@ namespace smgpc::runtime {
     class ArchiveMountService;
 
     // Owns the complete original system/game message records and their archive
-    // aliases. Publication is scoped until GameSystem owns this same class.
+    // aliases for standalone hosts. The original process publishes its own
+    // GameSystem-owned holder through the same read-only lookup boundary.
     class MessageHolderOwnership final {
     public:
         MessageHolderOwnership(std::shared_ptr<compat::JkrHeapRuntime>, std::size_t byte_budget,
@@ -46,5 +47,7 @@ namespace smgpc::runtime {
 
     [[nodiscard]] MessageHolder *current_message_holder() noexcept;
     [[nodiscard]] MessageHolder &require_message_holder();
+    // Retire native BMG backing before the original archive and heap owners.
+    void destroy_message_holder(MessageHolder*&) noexcept;
     [[nodiscard]] const char *message_id_for_pointer(const wchar_t *) noexcept;
 }  // namespace smgpc::runtime

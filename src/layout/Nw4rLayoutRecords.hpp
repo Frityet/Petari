@@ -40,9 +40,8 @@ private:
 };
 
 void animate_native_pane(const nw4r::lyt::Pane* pane);
-void synchronize_native_pane(const nw4r::lyt::Pane* pane);
+[[nodiscard]] bool synchronize_native_pane(const nw4r::lyt::Pane* pane);
 void validate_native_pane_hierarchy_change(const nw4r::lyt::Pane* parent, const nw4r::lyt::Pane* child);
 void validate_native_pane_rename(const nw4r::lyt::Pane* pane, const char* name);
 void validate_native_group_append(const nw4r::lyt::Group* group);
-void require_native_base_pane(const nw4r::lyt::Pane* pane, std::string_view operation);
 } // namespace smgpc::layout

@@ -1,11 +1,13 @@
 #include "Game/Effect/EffectSystemUtil.hpp"
 #include "Game/NameObj/NameObjHolder.hpp"
+#include "Game/System/GameSystem.hpp"
+#include "Game/System/GameSystemSceneController.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Scene/StopSceneController.hpp"
 #include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SystemUtil.hpp"
-#include "compat/TalkRuntime.hpp"
 #include "scene/SceneNameObjRegistry.hpp"
 #include "scene/StageInitializationService.hpp"
 #include <aurora/exception.hpp>
@@ -13,6 +15,8 @@
 
 namespace {
     NameObjHolder &scene_objects() {
+        if (auto* system = SingletonHolder<GameSystem>::get(); system && system->mSceneController && system->mSceneController->mObjHolder)
+            return *system->mSceneController->mObjHolder;
         if (auto *registry = smgpc::scene::current_scene_name_obj_registry())
             return registry->holder();
         aurora::throw_host_exception<std::logic_error>("Scene object operations require the actual scene NameObjHolder");
@@ -50,10 +54,5 @@ namespace MR {
         Effect::requestMovementOnAllEmitters();
     }
 
-    void pauseOffTalkDirector() {
-        // The native talk service currently owns its graph, input and rendered
-        // presentation together. Resume that exact scheduled owner; its slot
-        // is not an original TalkDirector and must never be cast to one.
-        requestMovementOn(&smgpc::compat::require_talk_runtime("pauseOffTalkDirector"));
-    }
+
 }  // namespace MR

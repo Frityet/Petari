@@ -82,6 +82,7 @@ namespace smgpc::scene {
         void finish_actor_placement();
         void complete_initialization();
         void finalize_scene_initialization();
+        void prepare_retirement() noexcept;
 
         [[nodiscard]] NameObj *root() const;
         [[nodiscard]] std::string_view scene_name() const;

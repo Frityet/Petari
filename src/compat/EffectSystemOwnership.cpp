@@ -18,6 +18,9 @@
 #include "Game/Effect/SyncBckEffectInfo.hpp"
 #include "Game/LiveActor/EffectKeeper.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/System/GameSystem.hpp"
+#include "Game/System/GameSystemObjHolder.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/HashUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ModelUtil.hpp"
@@ -104,6 +107,7 @@ namespace smgpc::compat {
 
     struct EffectSystemOwnership::Storage final {
         std::shared_ptr<runtime::ParticleResourceOwnership> resources;
+        ParticleResourceHolder* catalog = nullptr;
         std::shared_ptr<JkrAllocationDomain> domain;
         EffectSystem *system = nullptr;
         ParticleDrawExecutor *draw = nullptr;
@@ -117,12 +121,22 @@ namespace smgpc::compat {
 
     EffectSystemOwnership::EffectSystemOwnership(std::size_t byte_budget) {
         JkrHostAllocationScope host;
-        auto *runtime = runtime::RuntimeContext::try_instance();
-        if (!runtime)
-            aurora::throw_host_exception<std::logic_error>("EffectSystem requires the active resource runtime");
         _storage = std::make_unique<Storage>();
-        _storage->resources = runtime->retain_particle_resources();
-        _storage->domain = JkrAllocationDomain::create(runtime->host_heaps(), byte_budget);
+        if (auto* system = SingletonHolder<GameSystem>::get()) {
+            if (!system->mObjHolder || !system->mObjHolder->mParticleResHolder)
+                aurora::throw_host_exception<std::logic_error>("Original process particle resources have not been constructed");
+            _storage->catalog = system->mObjHolder->mParticleResHolder;
+            _storage->domain = scene::current_scene_allocation_domain();
+            if (!_storage->domain)
+                aurora::throw_host_exception<std::logic_error>("Original effects require their actual scene heap");
+        } else {
+            auto *runtime = runtime::RuntimeContext::try_instance();
+            if (!runtime)
+                aurora::throw_host_exception<std::logic_error>("EffectSystem requires the active resource runtime");
+            _storage->resources = runtime->retain_particle_resources();
+            _storage->catalog = &_storage->resources->holder();
+            _storage->domain = JkrAllocationDomain::create(runtime->host_heaps(), byte_budget);
+        }
     }
 
     EffectSystem *EffectSystemOwnership::construct() {
@@ -141,7 +155,7 @@ namespace smgpc::compat {
         if (!_storage->system || _storage->entered || particles == 0 || emitters == 0)
             aurora::throw_host_exception<std::logic_error>("EffectSystem entry requires a fresh system and nonzero pools");
         JkrAllocationScope heap(_storage->domain);
-        _storage->system->entry(&_storage->resources->holder(), particles, emitters);
+        _storage->system->entry(_storage->catalog, particles, emitters);
         _storage->manager = _storage->system->mEmitterManager;
         _storage->emitters = _storage->system->mEmitterHolder;
         _storage->entered = true;

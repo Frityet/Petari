@@ -2,6 +2,7 @@
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
+#include "Game/LiveActor/ShadowSurfaceCircle.hpp"
 #include "Game/LiveActor/ShadowVolumeSphere.hpp"
 #include "Game/LiveActor/ShadowVolumeCylinder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -141,6 +142,13 @@ namespace smgpc::compat {
             if (definition.volume_cut_drop_length) volume->onCutDropShadow();
             controller.setShadowDrawer(volume.get());
             entry->drawer = std::move(volume);
+        }
+        if (definition.kind == ActorShadowControllerKind::SurfaceCircle) {
+            JkrAllocationScope game(_domain);
+            auto circle = std::make_unique<ShadowSurfaceCircle>();
+            circle->setRadius(definition.radius);
+            controller.setShadowDrawer(circle.get());
+            entry->drawer = std::move(circle);
         }
         _list->addController(&controller);
         _entries.push_back(std::move(entry));

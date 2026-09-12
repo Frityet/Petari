@@ -102,5 +102,7 @@ namespace smgpc::resource {
     [[nodiscard]] BtiTexture decode_bti_texture(std::span<const std::uint8_t> data);
     [[nodiscard]] std::uint32_t gx_texture_data_size(std::uint16_t width, std::uint16_t height, TplTextureFormat format);
     [[nodiscard]] DecodedTexture decode_raw_gx_texture(std::span<const std::uint8_t> data, std::uint16_t width, std::uint16_t height, TplTextureFormat format);
+    [[nodiscard]] DecodedTexture decode_raw_gx_texture(std::span<const std::uint8_t> data, std::uint16_t width, std::uint16_t height,
+        TplTextureFormat format, std::span<const std::uint8_t> palette, std::uint32_t palette_format);
 
 }  // namespace smgpc::resource

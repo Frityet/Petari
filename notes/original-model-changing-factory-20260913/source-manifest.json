@@ -1,0 +1,38 @@
+[
+  {
+    "path": "decomp/src/Game/Util/MapPartsUtil.cpp",
+    "sha256": "e4e5547c1bdbf5a595ee7a1eb6c8d5f9a8c691876970cdbb83ba04d808bae5af"
+  },
+  {
+    "path": "decomp/src/Game/Map/PlanetMapCreator.cpp",
+    "sha256": "3b4504df7c890daab008a96f60c9c96e9b12efbf622c55658e19d3ad03b65031"
+  },
+  {
+    "path": "src/Game/Util/MapPartsUtil.cpp",
+    "sha256": "e4e5547c1bdbf5a595ee7a1eb6c8d5f9a8c691876970cdbb83ba04d808bae5af"
+  },
+  {
+    "path": "src/Game/Util/MapPartsUtil.hpp",
+    "sha256": "f638459dab583384bbdd695d44afad7c8193352e721a06555ccbeee0c8ec510e"
+  },
+  {
+    "path": "src/scene/nameobj/NameObjFactory.cpp",
+    "sha256": "57dad71fc2878d1874f76e3b4400b5e685f2c5627505709b6863e47837cd2938"
+  },
+  {
+    "path": "src/scene/nameobj/NameObjFactory.hpp",
+    "sha256": "4a7e4532a6547722c012234949114370810b21dd2276d0ceb22434fc76f36dec"
+  },
+  {
+    "path": "src/scene/nameobj/PlanetMapCatalog.cpp",
+    "sha256": "53cf78eeda90067afce16ebe6088cb322bf01574272b9ae6a2055f548fb8ed2e"
+  },
+  {
+    "path": "src/scene/AuthoredPlacementInstantiator.cpp",
+    "sha256": "3896bc2509877db4b1a52307b77ca245f0200bdec1fa8feddf306f99d89aaa72"
+  },
+  {
+    "path": "src/scene/NameObjLifecycleService.cpp",
+    "sha256": "6f396cd28f507739ec9566b1d0112d5325f67d1545ac8fcc1876f5ccf47b8c79"
+  }
+]

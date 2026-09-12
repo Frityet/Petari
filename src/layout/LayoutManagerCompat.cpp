@@ -26,6 +26,9 @@
 #include <nw4r/lyt/group.h>
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/LayoutUtil.hpp"
+#include "Game/Util/FileUtil.hpp"
+#include "compat/ResourceHolderCompat.hpp"
+#include "Game/Screen/LayoutCoreUtil.hpp"
 #include "layout/LayoutRuntime.hpp"
 #include "runtime/RuntimeContext.hpp"
 
@@ -61,7 +64,7 @@ struct ManagerState {
     u32 text_box_buffer_length = 0U;
     LayoutActor* actor = nullptr;
     std::unique_ptr< smgpc::layout::LayoutRuntime > runtime;
-    std::unique_ptr<smgpc::layout::Nw4rLayoutRecords> records;
+    smgpc::layout::Nw4rLayoutRecords* records = nullptr;
     std::vector<GroupControlOwner> group_controls;
     std::vector<LayoutGroupCtrl*> group_slots;
     std::vector<std::vector<LayoutGroupCtrl*>> pane_groups;
@@ -192,12 +195,25 @@ void bind_actor_manager(LayoutActor* actor, LayoutManager* manager) {
     auto& actor_state = require_actor_state(actor, "Binding a layout manager");
     auto& manager_state = require_manager_state(manager, "Binding a layout manager");
     manager_state.actor = actor;
+    auto resource_name = manager_state.layout_name;
+    if (manager_state.convert_filename) {
+        char path[128];
+        MR::makeLayoutArchiveFileNameFromPrefix(path, sizeof(path), resource_name.c_str(), true);
+        resource_name = std::filesystem::path(path).stem().string();
+    }
+    auto* resources = smgpc::compat::ResourceHolderService::active();
+    if (!resources)
+        aurora::throw_host_exception<std::logic_error>("LayoutManager requires its mounted layout resource owner");
+    manager->mLayoutHolder = MR::createAndAddLayoutHolder((resource_name + ".arc").c_str());
     manager_state.runtime = std::make_unique< smgpc::layout::LayoutRuntime >(
-        smgpc::resource::decode_cp932(actor->getName()).c_str(), manager_state.layout_name.c_str(), manager_state.animation_layer_count, MR::DrawType_Layout);
+        smgpc::resource::decode_cp932(actor->getName()).c_str(), resource_name.c_str(),
+        manager_state.animation_layer_count, MR::DrawType_Layout, resources->retain(*manager->mLayoutHolder));
     manager_state.runtime->initWithoutIter();
     manager_state.runtime->kill();
     manager_state.runtime->setTrans(actor_state.translation.x, actor_state.translation.y);
-    manager_state.records = std::make_unique<smgpc::layout::Nw4rLayoutRecords>(*manager_state.runtime);
+    manager_state.records = &manager_state.runtime->native_records();
+    manager->initTextBoxRecursive(manager_state.records->pane(nullptr), nullptr, manager_state.layout_name.c_str(),
+                                  manager_state.text_box_buffer_length);
     manager_state.group_slots.resize(manager_state.records->group_count());
     manager_state.pane_groups.resize(manager_state.records->pane_count());
     manager->createAndAddRootPaneCtrl(manager_state.animation_layer_count);
@@ -250,19 +266,6 @@ void refresh_pane_matrix(ManagerState& manager, PaneMatrixReference& reference) 
 #endif
 
 }  // namespace
-
-namespace nw4r::lyt {
-
-DrawInfo::DrawInfo() : mGlobalAlpha(1.0F) {
-    std::memset(&mFlag, 0, sizeof(mFlag));
-    mLocationAdjustScale.x = 1.0F;
-    mLocationAdjustScale.y = 1.0F;
-    PSMTXIdentity(mViewMtx.mtx);
-}
-
-DrawInfo::~DrawInfo() = default;
-
-}  // namespace nw4r::lyt
 
 LayoutActor::LayoutActor(const char* name, bool)
     : NameObj(name), mLayoutManager(nullptr), mSpine(nullptr), mEffectKeeper(nullptr), mPointingTarget(nullptr) {
@@ -657,10 +660,6 @@ void LayoutManager::initGroupCtrlList() {
     throw_retail_nw4r_unavailable("Initializing NW4R group controls");
 }
 
-void LayoutManager::initTextBoxRecursive(nw4r::lyt::Pane*, nw4r::lyt::Pane*, const char*, u32) {
-    throw_retail_nw4r_unavailable("Initializing NW4R text boxes");
-}
-
 void LayoutManager::animateRecursive(u32& index, nw4r::lyt::Pane* pane) {
     auto& state = require_manager_state(this, "Animating an NW4R pane subtree");
     const auto pane_index = state.records->pane_index(pane);
@@ -955,14 +954,6 @@ J3DFrameCtrl* layout_anim_ctrl(LayoutActor* actor, u32 layer) {
     return &require_actor_state(actor, "Reading a layout animation control").animation_controls[layer];
 }
 
-void set_text_box_number(LayoutActor* actor, const char* name, s32 number) {
-    require_layout_runtime(actor, "Setting a layout text-box number").setTextBoxNumberRecursive(name, number);
-}
-
-void set_text_box_string(LayoutActor* actor, const char* name, std::u16string_view text) {
-    require_layout_runtime(actor, "Setting a layout text-box string").setTextBoxStringRecursive(name, text);
-}
-
 void set_layout_scale(LayoutActor* actor, f32 x, f32 y) {
     require_layout_runtime(actor, "Setting a layout scale").setScale(x, y);
 }
@@ -986,31 +977,6 @@ bool is_pointing_pane(const LayoutManager* manager, const char* name, f32 screen
 
 void set_pane_alpha(LayoutManager* manager, const char* name, f32 alpha) {
     require_runtime(manager, "Setting pane alpha").setPaneAlpha(pane_name(name), alpha);
-}
-
-void replace_pane_texture(LayoutManager* manager, const char* name, const nw4r::lyt::TexMap& texture, u8 texture_index) {
-    require_runtime(manager, "Replacing a pane texture").replacePaneTexture(pane_name(name), texture, texture_index);
-}
-
-void set_text_box_tagged_string(LayoutManager* manager, const char* name, std::u16string_view raw_text,
-                                std::u16string_view display_text) {
-    require_runtime(manager, "Setting tagged text-box content").setTextBoxTaggedStringRecursive(name, raw_text, display_text);
-}
-
-void set_text_box_arg_number(LayoutManager* manager, const char* name, s32 number, s32 arg_index) {
-    require_runtime(manager, "Setting a text-box number argument").setTextBoxArgNumberRecursive(name, number, arg_index);
-}
-
-void set_text_box_arg_string(LayoutManager* manager, const char* name, std::u16string_view text, s32 arg_index) {
-    require_runtime(manager, "Setting a text-box string argument").setTextBoxArgStringRecursive(name, text, arg_index);
-}
-
-void set_text_box_horizontal_position(LayoutManager* manager, const char* name, u8 position) {
-    require_runtime(manager, "Setting text-box horizontal position").setTextBoxHorizontalPosition(pane_name(name), position);
-}
-
-void set_text_box_vertical_position(LayoutManager* manager, const char* name, u8 position) {
-    require_runtime(manager, "Setting text-box vertical position").setTextBoxVerticalPosition(pane_name(name), position);
 }
 
 void set_pane_anim_frame(LayoutPaneCtrl* pane_control, f32 frame, u32 layer) {
@@ -1168,9 +1134,3 @@ std::vector< ButtonControllerDebugState > debug_button_controllers(const LayoutM
 #endif
 
 }  // namespace smgpc::layout
-
-namespace MR {
-u32 getTextLineNumMaxRecursive(const LayoutActor* actor, const char* name) {
-    return require_records(actor->mLayoutManager, "Counting text lines in a pane subtree").text_line_count(name);
-}
-} // namespace MR

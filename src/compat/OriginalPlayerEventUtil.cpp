@@ -21,21 +21,3 @@ namespace GameDataFunction {
     }
 
 }  // namespace GameDataFunction
-
-namespace MR {
-
-    void decPlayerLeft() {
-        GameDataFunction::addPlayerLeft(-1);
-        GameDataFunction::addMissPoint(1);
-        GameDataFunction::incPlayerMissNum();
-    }
-
-    void startMissLayout() {
-        getSceneObj< GameSceneLayoutHolder >(SceneObj_GameSceneLayoutHolder)->startMiss();
-    }
-
-    bool isMissLayoutAnimEnd() {
-        return getSceneObj< GameSceneLayoutHolder >(SceneObj_GameSceneLayoutHolder)->isMissAnimEnd();
-    }
-
-}  // namespace MR

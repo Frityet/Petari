@@ -23,7 +23,6 @@ struct JMapData;
 #include "Game/Util/SequenceUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
-#include "compat/StageSessionState.hpp"
 #include <cstdio>
 #include <exception>
 #include <stdexcept>
@@ -154,26 +153,6 @@ namespace MR {
         }
         return hash;
     }
-
-    bool isExecScenarioStarter() {
-        return smgpc::compat::require_active_stage_session().execution_phase() ==
-               smgpc::compat::StageSessionState::ExecutionPhase::ScenarioStarter;
-    }
-
-    bool isStarCompleteAllGalaxy() {
-        unavailable("all-galaxy Power Star completion state");
-    }
-
-
-
-    void requestChangeScene(const char *) {
-        unavailable("story-driven scene request");
-    }
-
-    void requestChangeSceneTitle() {
-        unavailable("title scene request");
-    }
-
 
     void startMovieEpilogueA() {
         unavailable("epilogue movie playback");

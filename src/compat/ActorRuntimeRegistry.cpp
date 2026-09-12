@@ -1,4 +1,5 @@
 #include "compat/DemoDirectorOwnership.hpp"
+#include "compat/TalkDirectorLifetime.hpp"
 #include <aurora/exception.hpp>
 #include "Game/Screen/StarPointerTarget.hpp"
 #include "compat/EffectSystemOwnership.hpp"
@@ -236,6 +237,7 @@ namespace smgpc::compat {
     }
 
     void release_name_obj_runtime_state(const NameObj* object) {
+        if (auto* talk = smgpc::scene::current_talk_director_lifetime()) talk->release_name_obj(object);
         if (auto* demo = smgpc::scene::current_demo_director_ownership()) demo->release_name_obj(object);
         // Groups borrow their members. Native factory rollback and object
         // retirement may leave the group alive after one member is deleted.
@@ -457,7 +459,6 @@ namespace smgpc::compat {
 
         release_actor_effect_keeper(actor);
         release_actor_collision_parts(actor);
-        release_talk_runtime_state(actor);
         release_demo_runtime_state(actor);
 
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {

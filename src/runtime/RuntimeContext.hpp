@@ -29,7 +29,7 @@
 #include "runtime/SceneScheduler.hpp"
 #include "runtime/WiiIosService.hpp"
 #include "runtime/WiiPlatformService.hpp"
-#include "runtime/WiiVideoService.hpp"
+#include "runtime/jut/OriginalDisplayLifetime.hpp"
 
 class LiveActor;
 class LayoutActor;
@@ -48,7 +48,7 @@ namespace smgpc::layout {
 }
 
 namespace aurora::audio { class DisabledObjectAudioService; }
-namespace smgpc::compat { class StarPointerDepthOwnership; class NandSdkBinding; }
+namespace smgpc::compat { class StarPointerDepthOwnership; class DrawSyncManagerLifetime; class NandSdkBinding; }
 
 namespace smgpc::runtime {
 
@@ -212,8 +212,8 @@ namespace smgpc::runtime {
         [[nodiscard]] const WiiIosService &ios() const;
         [[nodiscard]] WiiPlatformService &wii_platform();
         [[nodiscard]] const WiiPlatformService &wii_platform() const;
-        [[nodiscard]] WiiVideoService &wii_video();
-        [[nodiscard]] const WiiVideoService &wii_video() const;
+        [[nodiscard]] OriginalDisplayLifetime& display();
+        [[nodiscard]] const OriginalDisplayLifetime& display() const;
         [[nodiscard]] WpadService &wpad();
         [[nodiscard]] const WpadService &wpad() const;
         [[nodiscard]] AudioEventService &audio();
@@ -350,12 +350,13 @@ namespace smgpc::runtime {
         std::unique_ptr<aurora::audio::DisabledObjectAudioService> _disabled_object_audio;
         WiiIosService _ios;
         WiiPlatformService _wii_platform;
-        WiiVideoService _wii_video;
+        std::unique_ptr<OriginalDisplayLifetime> _display;
         AudioEventService _audio;
         EffectService _effects;
         WipeService _scene_wipe;
         WipeService _system_wipe;
         StarPointerService _star_pointer;
+        std::unique_ptr<compat::DrawSyncManagerLifetime> _draw_sync;
         std::unique_ptr<compat::StarPointerDepthOwnership> _star_pointer_depth;
         CameraSystemService _camera_system;
         PlayerSystemService _player_system;

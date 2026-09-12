@@ -124,7 +124,7 @@ namespace {
 #endif
         runtime.draw_3d_normal();
         runtime.draw_2d_normal();
-        renderer.end_frame(runtime.wii_video().render_mode());
+        renderer.end_frame();
     }
 
     constexpr auto cExpectedSlots =

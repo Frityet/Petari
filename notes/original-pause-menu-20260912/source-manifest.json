@@ -1,0 +1,18 @@
+[
+  {
+    "path": "decomp/src/Game/Screen/PauseMenu.cpp",
+    "sha256": "48a23d98bbe713d2a7e1c47416d783c583612a83fc5fbd6ae66572bdfe1b5b03"
+  },
+  {
+    "path": "src/Game/Screen/PauseMenu.cpp",
+    "sha256": "48a23d98bbe713d2a7e1c47416d783c583612a83fc5fbd6ae66572bdfe1b5b03"
+  },
+  {
+    "path": "src/Game/Screen/LuigiLetter.cpp",
+    "sha256": "2ef24c50a807c3e666323557c5a0af413b6a4302695a899bd5169098ec663b08"
+  },
+  {
+    "path": "src/Game/Screen/LuigiLetter.hpp",
+    "sha256": "e4b1e3ac70c0bc306327543c2c7d0dd82bbcf8cb92d54eb0d812b923d196e9b4"
+  }
+]

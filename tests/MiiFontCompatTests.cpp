@@ -2,6 +2,9 @@
 #include "JSystem/JKernel/JKRMemArchive.hpp"
 #include "layout/BrlytLayout.hpp"
 #include "layout/LayoutRuntime.hpp"
+#include "layout/Nw4rLayoutRecords.hpp"
+#include <nw4r/lyt/textBox.h>
+#include <nw4r/ut/Rect.h>
 #include "resource/RarcArchive.hpp"
 
 #include <nw4r/ut/ResFont.h>
@@ -88,10 +91,7 @@ namespace {
                 "an empty ResFont must report that no resource or glyph is installed");
         require_throws< std::logic_error >([&] { (void)font.GetWidth(); },
                                            "font metrics without a resource must be unavailable");
-#ifndef NDEBUG
-        require_throws< std::invalid_argument >([&] { MR::setTextBoxFontRecursive(nullptr, "FileName", nullptr); },
-                                                "the MR bridge must reject an absent font before touching a layout");
-#endif
+
 
         auto malformed = std::array< std::uint8_t, 16U >{
             'R', 'F', 'N', 'T', 0xfeU, 0xffU, 0x01U, 0x04U,
@@ -172,69 +172,50 @@ namespace {
         auto layout = smgpc::layout::LayoutRuntime(
             "mii-font-compat-test", "FileInfo", 3U, 0, fixture.file_info_archive);
         require(layout.hasPane("FileName"), "FileInfo.arc must contain the real FileName text box");
-        layout.setTextBoxFontRecursive("FileName", font);
-        layout.setTextBoxStringRecursive("FileName", std::u16string_view(u"\uffff"));
-        const auto missing_rasters = layout.debugTextRasters("FileName");
-        std::cout << "FileInfo/FileName recursive text boxes:";
-        for (const auto& raster : missing_rasters) {
-            std::cout << ' ' << raster.text_box_name;
+        auto& records = layout.native_records();
+        std::vector<nw4r::lyt::TextBox*> boxes;
+        std::vector<nw4r::ut::Rect> missing_rects;
+        for (const auto& descendant : file_name_descendants) {
+            auto* box = nw4r::ut::DynamicCast<nw4r::lyt::TextBox*>(records.pane(descendant.c_str()));
+            require(box, "FileName descendants must be the actual original SDK TextBox objects");
+            const auto original_size = box->mFontSize;
+            TextBoxRecursiveSetFont(&font).execute(box);
+            require(box->mpFont == &font && box->mFontSize == original_size,
+                    "the original font operation borrows the live font and preserves authored display size");
+            box->AllocStringBuffer(2);
+            require(box->SetString(L"\uffff", 0, 1) == 1, "actual SDK buffer accepts one missing glyph");
+            missing_rects.push_back(box->GetTextDrawRect());
+            require(missing_rects.back().GetWidth() > 0 && missing_rects.back().GetHeight() > 0,
+                    "original text writer measures the selected alternate glyph through the live font");
+            boxes.push_back(box);
         }
-        std::cout << '\n';
-        const auto missing_rasters_are_real = missing_rasters.size() == file_name_descendants.size() &&
-            std::ranges::all_of(missing_rasters, [&font](const auto& raster) {
-                return raster.external_font && raster.font_width == font.GetWidth() &&
-                       raster.font_height == font.GetHeight() && raster.nontransparent_pixel_count > 0U;
-            }) && std::ranges::all_of(file_name_descendants, [&missing_rasters](const auto& descendant_name) {
-                return std::ranges::find(missing_rasters, descendant_name, &smgpc::layout::LayoutRuntime::DebugTextRasterState::text_box_name) !=
-                       missing_rasters.end();
-            });
-        if (!missing_rasters_are_real) {
-            std::cerr << "missing-raster diagnostics: count=" << missing_rasters.size();
-            for (const auto& raster : missing_rasters) {
-                std::cerr << ",external=" << raster.external_font << ",generation=" << raster.font_generation
-                          << ",size=" << raster.width << 'x' << raster.height
-                          << ",font=" << raster.font_width << 'x' << raster.font_height
-                          << ",opaque=" << raster.nontransparent_pixel_count << ",hash=" << raster.rgba_hash;
-            }
-            std::cerr << '\n';
+        for (size_t i = 0; i < boxes.size(); ++i) {
+            auto* box = boxes[i]; box->SetString(L"?", 0, 1);
+            const auto rect = box->GetTextDrawRect();
+            require(rect.left == missing_rects[i].left && rect.top == missing_rects[i].top &&
+                    rect.right == missing_rects[i].right && rect.bottom == missing_rects[i].bottom,
+                    "the actual TextBox writer gives fallback and literal '?' identical bounds and advance");
         }
-        require(missing_rasters_are_real,
-                "the bound external BRFNT must rasterize the missing character through its '?' glyph");
-
-        layout.setTextBoxStringRecursive("FileName", std::u16string_view(u"?"));
-        const auto question_rasters = layout.debugTextRasters("FileName");
-        const auto same_question_rasters = question_rasters.size() == missing_rasters.size() &&
-            std::ranges::equal(question_rasters, missing_rasters, [](const auto& question_raster, const auto& missing_raster) {
-                return question_raster.external_font == missing_raster.external_font &&
-                       question_raster.width == missing_raster.width && question_raster.height == missing_raster.height &&
-                       question_raster.font_width == missing_raster.font_width && question_raster.font_height == missing_raster.font_height &&
-                       question_raster.nontransparent_pixel_count == missing_raster.nontransparent_pixel_count &&
-                       question_raster.rgba_hash == missing_raster.rgba_hash;
-            });
-        require(same_question_rasters,
-                "LayoutRuntime must render the alternate character with the same real glyph bitmap and advance as '?'");
-
         font.RemoveResource();
-        require(font.IsManaging(nullptr) && layout.debugTextRasters("FileName").empty(),
-                "RemoveResource must invalidate an existing pane binding instead of preserving a copied fallback font");
-        require(font.SetResource(resource) && font.SetAlternateChar('?') &&
-                    !layout.debugTextRasters("FileName").empty(),
-                "reinstalling a real resource must reactivate bindings to the same live ResFont object");
-
+        require(font.IsManaging(nullptr) && std::ranges::all_of(boxes, [&font](const auto* box) { return box->mpFont == &font; }),
+                "font removal preserves the original borrowed object identity without hidden copied resources");
+        require_throws<std::logic_error>([&] { boxes.front()->GetTextDrawRect(); },
+                                        "measuring an actual font with no installed resource fails explicitly");
+        require(font.SetResource(resource) && font.SetAlternateChar('?'), "the same live font can reinstall its real resource");
+        require(boxes.front()->GetTextDrawRect().GetWidth() == missing_rects.front().GetWidth(),
+                "existing actual TextBox font pointers observe reinstalled resources");
         {
-            auto temporary_font = nw4r::ut::ResFont{};
+            nw4r::ut::ResFont temporary_font;
             require(temporary_font.SetResource(resource) && temporary_font.SetAlternateChar('?'),
-                    "the temporary lifetime check requires the retail font");
-            layout.setTextBoxFontRecursive("FileName", temporary_font);
-            require(!layout.debugTextRasters("FileName").empty(),
-                    "a live temporary ResFont must drive its pane binding");
+                    "the temporary borrowing check requires the real font");
+            for (auto* box : boxes) {
+                TextBoxRecursiveSetFont(&temporary_font).execute(box);
+                require(box->mpFont == &temporary_font && box->GetTextDrawRect().GetWidth() > 0,
+                        "actual TextBox borrows temporary font storage while the caller keeps it alive");
+                box->SetFont(nullptr);
+                require(!box->mpFont, "the caller detaches its borrowed font before destroying it");
+            }
         }
-        require(layout.debugTextRasters("FileName").empty(),
-                "destroying ResFont must expire the retail-style pointer binding instead of retaining a hidden copy");
-
-        auto empty_font = nw4r::ut::ResFont{};
-        require_throws< std::invalid_argument >([&] { layout.setTextBoxFontRecursive("FileName", empty_font); },
-                                                "LayoutRuntime must reject a Font without a parsed BRFNT");
 #endif
     }
 

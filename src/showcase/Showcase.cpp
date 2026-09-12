@@ -1,3 +1,4 @@
+#include "app/ProcessRequest.hpp"
 #include "resource/TextEncoding.hpp"
 #include <aurora/exception.hpp>
 #include "Application.hpp"
@@ -440,7 +441,7 @@ namespace {
 #endif
                     ++rendered_frames;
                 }
-                renderer.end_frame(runtime.wii_video().render_mode());
+                renderer.end_frame();
 
                 if (const auto* stats = aurora_get_stats(); stats != nullptr) {
                     gpu_draw_seen = gpu_draw_seen ||
@@ -799,7 +800,7 @@ namespace {
                 runtime.begin_frame(setup_frame);
                 runtime.game_layout().activate_game_scene_draw_3d();
             }
-            renderer.end_frame(runtime.wii_video().render_mode());
+            renderer.end_frame();
 
             const auto initial_camera = runtime.scene_camera_pose().value();
 
@@ -971,7 +972,7 @@ namespace {
                     runtime.draw_2d_normal();
                     ++rendered_frames;
                 }
-                renderer.end_frame(runtime.wii_video().render_mode());
+                renderer.end_frame();
 
 #ifndef NDEBUG
                 if (log_simulation_timing) {
@@ -1147,6 +1148,8 @@ int main(int argc, char* argv[]) try {
         bootstrap_configuration(gateway_options, arguments);
     return run_gateway_showcase(gateway_options, gateway_configuration,
                                 static_cast<u16>(title_outcome.selection->file_number));
+} catch (const aurora::os::ProcessRequest& request) {
+    return smgpc::app::handle_process_request(request, argv);
 } catch (const std::exception& error) {
     auto logger = smgpc::logging::create_default_logger();
     logger->fatal(smgpc::logging::Category::APP,

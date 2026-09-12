@@ -41,6 +41,7 @@ namespace nw4r {
         public:
             NW4R_UT_RUNTIME_TYPEINFO;
 
+            Pane();
             Pane(const res::Pane*);
             virtual ~Pane();
             virtual void CalculateMtx(const DrawInfo&);
@@ -84,8 +85,17 @@ namespace nw4r {
             math::VEC2 GetVtxPos() const;
             void CalculateMtxChild(const DrawInfo& rInfo);
 
+            void SetSRTElement(u32 idx, f32 value) {
+                f32* srtAry = &mTranslate.x;
+                srtAry[idx] = value;
+            }
+
             void SetInfluencedAlpha(bool influenced) {
                 detail::SetBit(&mFlag, 1, influenced);
+            }
+
+            void SetVisible(bool visible) {
+                detail::SetBit(&mFlag, 0, visible);
             }
 
             bool IsVisible() const { return detail::TestBit(mFlag, 0); }

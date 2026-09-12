@@ -13,6 +13,7 @@ class JKRHeap;
 #include <math_types.hpp>
 #include <revolution/types.h>
 
+#include <bit>
 #include <cmath>
 #include <concepts>
 #include <cstddef>
@@ -69,7 +70,8 @@ inline f32 __fabsf(f32 value) {
 }
 
 inline s32 __abs(s32 value) {
-    return value < 0 ? -value : value;
+    const u32 magnitude = value < 0 ? -static_cast<u32>(value) : static_cast<u32>(value);
+    return std::bit_cast<s32>(magnitude);
 }
 #endif
 

@@ -61,7 +61,7 @@ namespace smgpc::app {
         di::SingletonService<smgpc::runtime::DvdFileSystemService>,
         di::SingletonService<smgpc::runtime::WiiIosService>,
         di::SingletonService<smgpc::runtime::WiiPlatformService>,
-        di::SingletonService<smgpc::runtime::WiiVideoService>,
+        di::SingletonService<smgpc::runtime::OriginalDisplayLifetime>,
         di::SingletonService<smgpc::runtime::WpadService>,
         di::SingletonService<smgpc::runtime::AudioEventService>,
         di::SingletonService<smgpc::runtime::EffectService>,
@@ -91,5 +91,6 @@ namespace smgpc::app {
     [[nodiscard]] ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, ServiceGraphOverrides &&overrides);
     [[nodiscard]] std::filesystem::path required_disc_image(const BootstrapConfiguration &configuration);
     void ensure_disc_image_open(const BootstrapConfiguration &configuration, logging::ILogger &logger);
+    void close_disc_image();
 
 }  // namespace smgpc::app

@@ -10,6 +10,11 @@
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 #include "compat/StarPointerDepthOwnership.hpp"
+#include "Game/System/GameSystem.hpp"
+#include "Game/System/GameSystemObjHolder.hpp"
+#include "Game/Util/SingletonHolder.hpp"
+#include <aurora/exception.hpp>
+#include <stdexcept>
 
 namespace {
     // These stable Game names outlive every owner that borrows their bytes.
@@ -168,7 +173,14 @@ namespace StarPointerFunction {
         return isOnScreenEdge(pos, 0.0f, 0.0f);
     }
 
-    StarPointerDirector* getStarPointerDirector() { return &smgpc::compat::require_star_pointer_depth().director(); }
+    StarPointerDirector* getStarPointerDirector() {
+        if (auto* system = SingletonHolder<GameSystem>::get()) {
+            if (!system->mObjHolder || !system->mObjHolder->mStarPointerDirector)
+                aurora::throw_host_exception<std::logic_error>("The original process has not created its pointer director.");
+            return system->mObjHolder->mStarPointerDirector;
+        }
+        return &smgpc::compat::require_star_pointer_depth().director();
+    }
 
     s32 getPastPointNum(s32 channel) {
         return getStarPointerDirector()->getStarPointerController(channel)->mPastPointNum;

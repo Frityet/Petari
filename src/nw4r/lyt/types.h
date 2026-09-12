@@ -8,7 +8,16 @@
 
 namespace nw4r {
     namespace lyt {
+        enum AnimContentType { ANIMCONTENTTYPE_PANE, ANIMCONTENTTYPE_MATERIAL };
+        const int ResourceNameStrMax = 16;
+        const int MaterialNameStrMax = ResourceNameStrMax + 4;
         namespace detail {
+            template < typename T >
+            inline void SetBit(T* pBits, int pos, bool val) {
+                const T mask = T(~(1 << pos));
+                *pBits = T((*pBits & mask) | (int(val) << pos));
+            }
+
             typedef s16 ResS16;
             typedef u16 ResU16;
             typedef s32 ResS32;
@@ -143,7 +152,7 @@ namespace nw4r {
         };
 
         struct TexSRT {
-            TexSRT& operator=(const TexSRT&);
+            TexSRT& operator=(const TexSRT&) = default;
 
             math::VEC2 translate;
             f32 rotate;
@@ -536,26 +545,27 @@ namespace nw4r {
 
         class AnimationLink {
         public:
-            AnimationLink() {
+            AnimationLink() : mbDisable(false) {
                 Reset();
             }
 
             void Reset() {
-                Set(nullptr, 0, false);
+                Set(nullptr, 0);
             }
 
-            void Set(AnimTransform* pTrans, u16 idx, bool dis) {
+            void Set(AnimTransform* pTrans, u16 idx) {
                 mAnimTrans = pTrans;
                 mIdx = idx;
-                mbDisable = dis;
             }
 
             bool IsEnable() const {
                 return !mbDisable;
             }
+
             void SetEnable(bool enable) {
                 mbDisable = !enable;
             }
+
             u16 GetIndex() const {
                 return mIdx;
             }

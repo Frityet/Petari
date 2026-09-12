@@ -188,7 +188,7 @@ namespace {
             throw std::runtime_error(
                 "production title background proof requires a debug build");
 #endif
-            renderer.end_frame(runtime.wii_video().render_mode());
+            renderer.end_frame();
             u32 width = 0, height = 0, stride = 0;
             require(AuroraReadDisplayCopyRGBA8(nullptr, 0, &width, &height, &stride),
                     "title must complete a real GX display copy");

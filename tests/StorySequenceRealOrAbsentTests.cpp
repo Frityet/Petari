@@ -90,14 +90,12 @@ void test_source_is_exact_and_scene_shims_are_absent() {
             "pc-port EventUtil.cpp must remain byte-exact with the decompiled source");
 
     const auto game_xmake = read_file(project / "src/Game/xmake.lua");
-    require(game_xmake.find("remove_files(\"Util/EventUtil.cpp\")") != std::string::npos,
-            "the exact EventUtil TU must remain excluded while host providers own its available symbols");
+    require(game_xmake.find("remove_files(\"Util/EventUtil.cpp\")") == std::string::npos,
+            "the original EventUtil TU must be active");
 
-    const auto event_compat = read_file(project / "src/compat/EventUtilCompat.cpp");
-    require(event_compat.find("s32 getPictureBookChapterCanRead()") != std::string::npos &&
-                event_compat.find("s32 getPictureBookChapterAlreadyRead()") != std::string::npos &&
-                event_compat.find("void setPictureBookChapterAlreadyRead(int") != std::string::npos,
-            "picture-book EventUtil providers must remain in the EventUtil compatibility boundary");
+    require(!std::filesystem::exists(project / "src/compat/EventUtilCompat.cpp") &&
+                !std::filesystem::exists(project / "src/compat/StorySequencePlatformCompat.hpp"),
+            "duplicate event providers and synthetic scene state must be absent");
 
     const auto boot = read_file(project / "src/scene/SequenceBootService.cpp");
     require(boot.find("ACTMES_AUTORUSH_BEGIN") == std::string::npos &&

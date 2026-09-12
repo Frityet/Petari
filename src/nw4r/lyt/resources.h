@@ -7,6 +7,44 @@
 namespace nw4r {
     namespace lyt {
         namespace res {
+            const u32 FILESIGNATURE_RLYT = 'RLYT';
+
+            const u32 DATABLOCKKIND_LAYOUT = 'lyt1';
+            const u32 DATABLOCKKIND_PANE = 'pan1';
+            const u32 DATABLOCKKIND_PANEBEGIN = 'pas1';
+            const u32 DATABLOCKKIND_PANEEND = 'pae1';
+            const u32 DATABLOCKKIND_PICTURE = 'pic1';
+            const u32 DATABLOCKKIND_TEXTBOX = 'txt1';
+            const u32 DATABLOCKKIND_WINDOW = 'wnd1';
+            const u32 DATABLOCKKIND_BOUNDING = 'bnd1';
+            const u32 DATABLOCKKIND_GROUP = 'grp1';
+            const u32 DATABLOCKKIND_GROUPBEGIN = 'grs1';
+            const u32 DATABLOCKKIND_GROUPEND = 'gre1';
+            const u32 DATABLOCKKIND_FONTLIST = 'fnl1';
+            const u32 DATABLOCKKIND_TEXTURELIST = 'txl1';
+            const u32 DATABLOCKKIND_MATERIALLIST = 'mat1';
+            const u32 DATABLOCKKIND_USERDATALIST = 'usd1';
+
+            const u32 FILESIGNATURE_RLAN = 'RLAN';
+
+            const u32 ANIMATIONTYPE_RLPA = 'RLPA';
+            const u32 ANIMATIONTYPE_RLVI = 'RLVI';
+            const u32 ANIMATIONTYPE_RLVC = 'RLVC';
+            const u32 ANIMATIONTYPE_RLMC = 'RLMC';
+            const u32 ANIMATIONTYPE_RLTS = 'RLTS';
+            const u32 ANIMATIONTYPE_RLTP = 'RLTP';
+            const u32 ANIMATIONTYPE_RLIM = 'RLIM';
+
+            const u32 DATABLOCKKIND_PANEANIMTAG = 'pat1';
+            const u32 DATABLOCKKIND_PANEANIMSHARE = 'pah1';
+            const u32 DATABLOCKKIND_PANEANIMINFO = 'pai1';
+
+            const u32 RESOURCETYPE_LAYOUT = 'blyt';
+            const u32 RESOURCETYPE_ANIMATION = 'anim';
+            const u32 RESOURCETYPE_TEXTURE = 'timg';
+            const u32 RESOURCETYPE_FONT = 'font';
+            const u32 RESOURCETYPE_ARCHIVEFONT = 'fnta';
+
             struct BinaryFileHeader {
                 char signature[4];
                 u16 byteOrder;
@@ -118,8 +156,8 @@ namespace nw4r {
             };
 
             struct TextBox : Pane {
-                u16 textBufBytes;
-                u16 textStrBytes;
+                u32 textBufBytes;
+                u32 textStrBytes;
                 u16 materialIdx;
                 u16 fontIdx;
                 u8 textPosition;
@@ -220,6 +258,33 @@ namespace nw4r {
                 u16 fileNum;
                 u16 animContNum;
                 u32 animContOffsetsOffset;
+            };
+
+            struct AnimationContent {
+                char name[MaterialNameStrMax];
+
+                u8 num;
+                u8 type;
+                u8 padding[2];
+            };
+
+            struct AnimationInfo {
+                u32 kind;
+
+                u8 num;
+                u8 padding[3];
+            };
+
+            struct AnimationTarget {
+                u8 id;
+                u8 target;
+                u8 curveType;
+                u8 padding1;
+
+                u16 keyNum;
+                u8 padding2[2];
+
+                u32 keysOffset;
             };
 
             struct HermiteKey {

@@ -1,0 +1,7 @@
+[
+  {
+    "path": "src/scene/nameobj/NameObjFactory.cpp",
+    "sha256": "5367fbfcf057521d27689267b0f25986d5890410ee85c2d6796a046a05b670a4",
+    "owned_hunks": "StarPieceGroup include, exact StarPieceFlow/StarPieceGroup supported entries, removal of their two stale unavailable records"
+  }
+]

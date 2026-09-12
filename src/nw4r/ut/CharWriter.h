@@ -93,6 +93,23 @@ namespace nw4r {
                 mCursorPos.y = y;
             }
 
+            void MoveCursorX(f32 x) {
+                mCursorPos.x += x;
+            }
+
+            void MoveCursorY(f32 y) {
+                mCursorPos.y += y;
+            }
+
+            u8 GetAlpha() const {
+                return mAlpha;
+            }
+
+            void SetAlpha(u8 alpha) {
+                mAlpha = alpha;
+                UpdateVertexColor();
+            }
+
             void SetFont(const Font& rFont) {
                 mFont = &rFont;
             }
@@ -148,6 +165,10 @@ namespace nw4r {
                 mTextColor.start = start;
                 mTextColor.end = end;
                 UpdateVertexColor();
+            }
+
+            Color GetTextColor() const {
+                return mTextColor.start;
             }
 
             f32 GetFontWidth() const;
