@@ -1,0 +1,13 @@
+{
+  "branch": "pcp-decomp",
+  "commit": "39fcc64d7785aae3e160ca9685b79ea957821eb4",
+  "remote_sha": "39fcc64d7785aae3e160ca9685b79ea957821eb4",
+  "paths": [
+    "include/Game/LiveActor/DynamicJointCtrl.hpp",
+    "include/Game/NPC/TurnJointCtrl.hpp",
+    "include/Game/Util/JointController.hpp",
+    "src/Game/LiveActor/DynamicJointCtrl.cpp",
+    "src/Game/NPC/TurnJointCtrl.cpp"
+  ],
+  "remote_verified": true
+}

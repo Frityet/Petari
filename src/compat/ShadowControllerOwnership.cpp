@@ -3,6 +3,7 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
 #include "Game/LiveActor/ShadowVolumeSphere.hpp"
+#include "Game/LiveActor/ShadowVolumeCylinder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -122,15 +123,24 @@ namespace smgpc::compat {
         else controller.offVisibleSyncHost();
         if (definition.valid) controller.validate();
         else controller.invalidate();
-        if (definition.kind == ActorShadowControllerKind::VolumeSphere) {
+        if (definition.kind == ActorShadowControllerKind::VolumeSphere ||
+            definition.kind == ActorShadowControllerKind::VolumeCylinder) {
             JkrAllocationScope game(_domain);
-            auto sphere = std::make_unique<ShadowVolumeSphere>();
-            sphere->setRadius(definition.radius);
-            sphere->setStartDrawShepeOffset(definition.volume_start_offset);
-            sphere->setEndDrawShepeOffset(definition.volume_end_offset);
-            if (definition.volume_cut_drop_length) sphere->onCutDropShadow();
-            controller.setShadowDrawer(sphere.get());
-            entry->drawer = std::move(sphere);
+            std::unique_ptr<ShadowVolumeDrawer> volume;
+            if (definition.kind == ActorShadowControllerKind::VolumeSphere) {
+                auto sphere = std::make_unique<ShadowVolumeSphere>();
+                sphere->setRadius(definition.radius);
+                volume = std::move(sphere);
+            } else {
+                auto cylinder = std::make_unique<ShadowVolumeCylinder>();
+                cylinder->setRadius(definition.radius);
+                volume = std::move(cylinder);
+            }
+            volume->setStartDrawShepeOffset(definition.volume_start_offset);
+            volume->setEndDrawShepeOffset(definition.volume_end_offset);
+            if (definition.volume_cut_drop_length) volume->onCutDropShadow();
+            controller.setShadowDrawer(volume.get());
+            entry->drawer = std::move(volume);
         }
         _list->addController(&controller);
         _entries.push_back(std::move(entry));

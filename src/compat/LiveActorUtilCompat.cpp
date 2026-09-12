@@ -102,6 +102,13 @@ namespace MR {
         return pModel;
     }
 
+    PartsModel* createPartsModelNpc(LiveActor* pHost, const char* pName, const char* pModelName, MtxPtr pMtx) {
+        PartsModel* pModel = new PartsModel(pHost, pName, pModelName, pMtx, MR::DrawBufferType_NPC, false);
+        pModel->initWithoutIter();
+        pModel->_99 = true;
+        return pModel;
+    }
+
     void initLightCtrl(LiveActor* pActor) {
         if (pActor == nullptr) {
             return;
@@ -273,6 +280,10 @@ namespace MR {
             aurora::throw_host_exception<std::invalid_argument>("A LiveActor nerve comparison requires a real actor.");
         }
         return pActor->getNerveStep() >= step;
+    }
+
+    bool isIntervalStep(const LiveActor* pActor, s32 step) {
+        return pActor->getNerveStep() % step == 0;
     }
 
     bool isNewNerve(const LiveActor* pActor) {

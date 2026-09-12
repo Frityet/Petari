@@ -1,0 +1,18 @@
+[
+  {
+    "path": "aurora/lib/gx/fifo.hpp",
+    "sha256": "80dd2a82c7230ec46bb9b2eb5f32f70d492d81751c7f81c7451d135cf22744da"
+  },
+  {
+    "path": "aurora/lib/gx/fifo.cpp",
+    "sha256": "2175a716907b0cf658c42c1dc7f402db3701b68a10e508b5eeb265b6a1b92191"
+  },
+  {
+    "path": "aurora/lib/dolphin/gx/GXFifo.cpp",
+    "sha256": "fe5d8c4e0b3a6b78cd0d3621bd2e5fcfecd279e27504d1ac628beb9c86fd3d4f"
+  },
+  {
+    "path": "aurora/tests/gx_fifo_breakpoint_test.cpp",
+    "sha256": "ec5ab09a600eaf37264eaff987556ea2967c4ef092cc1d708f579557ab48dffc"
+  }
+]

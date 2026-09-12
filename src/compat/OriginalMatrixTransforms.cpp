@@ -14,6 +14,18 @@ static Mtx tmpmtx_ry = {{1.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f, 0.0f}, {0.0
 static Mtx tmpmtx_rz = {{1.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f, 0.0f}};
 
 namespace MR {
+    void extractMtxYDir(MtxPtr mtx, TVec3f* pOut) {
+        pOut->x = mtx[0][1];
+        pOut->y = mtx[1][1];
+        pOut->z = mtx[2][1];
+    }
+
+    void extractMtxZDir(MtxPtr mtx, TVec3f* pOut) {
+        pOut->x = mtx[0][2];
+        pOut->y = mtx[1][2];
+        pOut->z = mtx[2][2];
+    }
+
     void blendMtxRotate(MtxPtr mtxA, MtxPtr mtxB, f32 blend, MtxPtr dst) {
         Quaternion quatA, quatB, quatR;
         C_QUATMtx(&quatA, mtxA);

@@ -127,6 +127,47 @@ namespace MR {
         startTalkCamera(position, up, axisX, axisY, frame);
     }
 
+    void endNPCTalkCamera(bool isForce, s32 frame) {
+        endTalkCamera(isForce, frame);
+    }
+
+    bool calcPlayerFaceStareVector(TVec3f* pOut, MtxPtr pActorMtx, MtxPtr pFrontMtx) {
+        bool isFront = true;
+        TPos3f mtx;
+        calcPlayerJointMtx(&mtx, "Face0");
+        TVec3f playerPosition;
+        mtx.getTrans(playerPosition);
+        mtx.set(pActorMtx);
+        TVec3f actorPosition;
+        mtx.getTrans(actorPosition);
+        mtx.set(pFrontMtx);
+        TVec3f side;
+        TVec3f front;
+        TVec3f up;
+        mtx.getXDir(side);
+        mtx.getZDir(front);
+        mtx.getYDir(up);
+        TVec3f direction;
+        direction.set< f32 >(playerPosition - actorPosition);
+
+        if (front.dot(direction) < 0.0f) {
+            f32 distance = vecKillElement(direction, front, &direction);
+            direction = direction - front * 2.0f * distance;
+            isFront = false;
+        }
+
+        pOut->set< f32 >(direction);
+        return isFront;
+    }
+
+    bool calcPlayerFaceStarePos(TVec3f* pOut, MtxPtr pActorMtx, MtxPtr pFrontMtx) {
+        TVec3f position;
+        extractMtxTrans(pActorMtx, &position);
+        bool isFront = calcPlayerFaceStareVector(pOut, pActorMtx, pFrontMtx);
+        pOut->add(position);
+        return isFront;
+    }
+
     bool isActionLoopedOrStopped(const LiveActor* pActor) {
         if (getBckCtrl(pActor)->getAttribute() == 0) {
             return isBckStopped(pActor);

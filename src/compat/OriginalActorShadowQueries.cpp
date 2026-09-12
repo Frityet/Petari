@@ -30,6 +30,14 @@ namespace ActorShadow {
 }
 
 namespace MR {
+    void invalidateShadowAll(LiveActor* pActor) {
+        u32 count = ActorShadow::getShadowControllerCount(pActor);
+
+        for (u32 i = 0; i < count; i++) {
+            ActorShadow::getShadowController(pActor, i)->invalidate();
+        }
+    }
+
     bool calcClippingRangeIncludeShadow(TVec3f* pVecOutput, f32* pF32Output, const LiveActor* pActor, f32 a4) {
         TVec3f projectionPos;
 

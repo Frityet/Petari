@@ -1,0 +1,13 @@
+{
+  "repository": "aurora",
+  "branch": "codex/macos-compat",
+  "commit": "49e52114c7928d8191f43e42cdfe090ffd63a3ae",
+  "remote_sha": "49e52114c7928d8191f43e42cdfe090ffd63a3ae",
+  "verified": true,
+  "files": [
+    "lib/gx/fifo.hpp",
+    "lib/gx/fifo.cpp",
+    "lib/dolphin/gx/GXFifo.cpp",
+    "tests/gx_fifo_breakpoint_test.cpp"
+  ]
+}

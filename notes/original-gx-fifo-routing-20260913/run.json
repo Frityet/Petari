@@ -1,0 +1,10 @@
+{
+  "command": [
+    "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-aurora-upstream-20260907-q3qrkgbx/tests/gx_fifo_tests",
+    "--gtest_filter=GXFifoBreakpointTest.*"
+  ],
+  "exit": 0,
+  "seconds": 0.5530042089521885,
+  "binary_sha256": "58f9a1cc42b51321feb93ffa63e3f361c24a00260b102bcdd168602d316d3fa2",
+  "cache": "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-fifo-routing-yd32tjf0"
+}

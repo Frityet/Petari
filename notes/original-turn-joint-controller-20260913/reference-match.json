@@ -1,0 +1,247 @@
+[
+  {
+    "source": "TurnJointCtrl",
+    "symbols": [
+      {
+        "name": "makeMtxRotVecDegree__27@unnamed@TurnJointCtrl_cpp@FPA4_fRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>f",
+        "size": "212",
+        "match_percent": 98.01887
+      },
+      {
+        "name": "__ct__13TurnJointCtrlFP9LiveActor",
+        "size": "248",
+        "match_percent": 99.59677
+      },
+      {
+        "name": "init__13TurnJointCtrlFfff",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addFace__13TurnJointCtrlFPCcfQ213TurnJointCtrl4AXISQ213TurnJointCtrl4AXISQ213TurnJointCtrl4AXIS",
+        "size": "176",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addWaist__13TurnJointCtrlFPCcfQ213TurnJointCtrl4AXISQ213TurnJointCtrl4AXISQ213TurnJointCtrl4AXIS",
+        "size": "176",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startCtrl__13TurnJointCtrlFl",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "endCtrl__13TurnJointCtrlFl",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "validate__13TurnJointCtrlFv",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "invalidate__13TurnJointCtrlFv",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setStarePos__13TurnJointCtrlFRCQ29JGeometry8TVec3<f>",
+        "size": "216",
+        "match_percent": 99.62963
+      },
+      {
+        "name": "update__13TurnJointCtrlFv",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setCallBackFunction__13TurnJointCtrlFv",
+        "size": "116",
+        "match_percent": 99.82758
+      },
+      {
+        "name": "updateJointMtxCallBackFace__13TurnJointCtrlFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RC19JointControllerInfo",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "updateJointMtxCallBackWaist__13TurnJointCtrlFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RC19JointControllerInfo",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getMtxDir__13TurnJointCtrlFPQ29JGeometry8TVec3<f>PCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>Q213TurnJointCtrl4AXIS",
+        "size": "152",
+        "match_percent": 100.0
+      },
+      {
+        "name": "updateJointMtxCallBack__13TurnJointCtrlFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ213TurnJointCtrl4Ctrl",
+        "size": "676",
+        "match_percent": 98.16568
+      },
+      {
+        "name": "createJointController<13TurnJointCtrl>__2MRFP13TurnJointCtrlPC9LiveActorPCcM13TurnJointCtrlFPCvPvPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RC19JointControllerInfo_bM13TurnJointCtrlFPCvPvPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RC19JointControllerInfo_b_P15JointController",
+        "size": "220",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__38JointControlDelegator<13TurnJointCtrl>Fv",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcJointMatrix__38JointControlDelegator<13TurnJointCtrl>FPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RC19JointControllerInfo",
+        "size": "104",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcJointMatrixAfterChild__38JointControlDelegator<13TurnJointCtrl>FPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RC19JointControllerInfo",
+        "size": "104",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@60433",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@60457",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__38JointControlDelegator<13TurnJointCtrl>",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@59180",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@59181",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@60410",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@60425",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@60426",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@60427",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@60428",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@60490",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.data-0]",
+        "size": "48",
+        "match_percent": 96.93094
+      },
+      {
+        "name": "[.sdata2-0]",
+        "size": "32",
+        "match_percent": 75.0
+      }
+    ]
+  },
+  {
+    "source": "DynamicJointCtrl",
+    "symbols": [
+      {
+        "name": "__ct__13JointCtrlRateFv",
+        "size": "32",
+        "match_percent": 96.875
+      },
+      {
+        "name": "update__13JointCtrlRateFv",
+        "size": "224",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startCtrl__13JointCtrlRateFl",
+        "size": "40",
+        "match_percent": 100.0
+      },
+      {
+        "name": "endCtrl__13JointCtrlRateFl",
+        "size": "40",
+        "match_percent": 100.0
+      },
+      {
+        "name": "update__22DynamicJointCtrlKeeperFv",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setCallBackFunction__22DynamicJointCtrlKeeperFv",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startCtrl__22DynamicJointCtrlKeeperFPCcl",
+        "size": "56",
+        "match_percent": 100.0
+      },
+      {
+        "name": "endCtrl__22DynamicJointCtrlKeeperFPCcl",
+        "size": "56",
+        "match_percent": 100.0
+      },
+      {
+        "name": "reset__22DynamicJointCtrlKeeperFv",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "findJointCtrl__22DynamicJointCtrlKeeperFPCc",
+        "size": "132",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@58540",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@58541",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.rodata-0]",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.sdata2-0]",
+        "size": "16",
+        "match_percent": 66.66667
+      }
+    ]
+  }
+]
