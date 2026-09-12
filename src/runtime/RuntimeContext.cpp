@@ -522,7 +522,7 @@ namespace smgpc::runtime {
                                 ? std::move(audio_playback)
                                 : std::make_unique<JAudioPlaybackService>(_dvd)),
           _resource_holders(_dvd, resources.create_cohort(), resources.mem1_heap()),
-          _disabled_object_audio(aurora::audio::make_disabled_object_audio_service(resources.host_heaps())), _rfl(_save_data.nand()),
+          _disabled_object_audio(aurora::audio::make_disabled_object_audio_service(resources.host_heaps(), _j_audio_playback.get())), _rfl(_save_data.nand()),
           _current_stage_name(default_stage_name())
 #ifndef NDEBUG
           ,

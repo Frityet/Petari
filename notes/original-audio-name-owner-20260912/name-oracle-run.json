@@ -1,0 +1,9 @@
+{
+  "command": [
+    "notes/original-audio-name-owner-20260912/name-oracle",
+    "notes/original-audio-category-volume-20260907/fixture/KrKorean/AudioRes/SMR.szs"
+  ],
+  "sha256": "745fc121bd824522c4ceb47239325888ddb20e0a1759aeb2e5ad3648f791855f",
+  "exit": 0,
+  "output": "Internal name outside original named-call prefix contract: SE_DUMMY_SG00\nInternal name outside original named-call prefix contract: SE_DUMMY_SG01\nInternal name outside original named-call prefix contract: SE_DUMMY_SG02\n3 internal names outside the original API prefix contract\n3484 original named lookups agree with independently read retail category/identity bytes; no wave/device access\n"
+}

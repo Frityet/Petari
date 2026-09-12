@@ -1,0 +1,9 @@
+{
+  "command": [
+    "build/macosx/arm64/debug/smg-pc-original-jai-sound-ownership-tests",
+    "--names-only"
+  ],
+  "returncode": 0,
+  "duration": 0.5621800422668457,
+  "binary_sha256": "5b174151c38c680f8cd59b7a523986b69a1cf3ca08becd883e97ec1075dee41e"
+}

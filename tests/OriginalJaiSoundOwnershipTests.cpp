@@ -1,5 +1,9 @@
 #include "Game/AudioLib/AudAnmSoundObject.hpp"
 #include "Game/AudioLib/AudSoundId.hpp"
+#include "Game/AudioLib/AudSoundNameConverter.hpp"
+#include "Game/AudioLib/AudSpeakerWrap.hpp"
+#include "JSystem/JAudio2/JAUSoundTable.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/GameAudio/AudTalkSoundData.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/SoundUtil.hpp"
@@ -11,6 +15,7 @@
 #include <resource/Yaz0.hpp>
 #include <aurora/audio.hpp>
 #include <array>
+#include <algorithm>
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>
@@ -293,4 +298,75 @@ void test_retail_service() {
     std::puts("[pass] Stage/Sub prepare-unlock, original states, independent handles, native PCM level/SE params/lifetime and category control");
 }
 
-int main() { test_original_talk_sound_dispatch(); test_native_and_stream_owners(); test_retail_service(); }
+void test_original_name_owner() {
+    const auto baa = smgpc::resource::decompress_yaz0(read(fixture / "KrKorean/AudioRes/SMR.szs"));
+    std::size_t wave_requests = 0;
+    const auto wave = [&](std::string_view) {
+        ++wave_requests;
+        throw std::logic_error("name ownership must not load wave archives");
+        return std::vector<u8>{};
+    };
+    smgpc::runtime::JAudioPlaybackService playback(
+        [&] { return std::make_unique<aurora::audio::JAudioSoundArchive>(baa, wave); }, wave,
+        std::make_unique<aurora::audio::PcmAudioMixer>());
+    assert(!playback.is_device_open());
+    const auto heaps = smgpc::compat::JkrHeapRuntime::create(2U * 1024U * 1024U);
+    auto* previous = AudSingletonHolder<AudSoundNameConverter>::get();
+    auto* previous_table = JAUSoundNameTable::getInstance();
+    const auto free_bytes = heaps->root_heap().getFreeSize();
+    for (int cycle = 0; cycle != 3; ++cycle) {
+        {
+            auto owner = aurora::audio::make_disabled_object_audio_service(heaps, &playback);
+            auto* converter = AudSingletonHolder<AudSoundNameConverter>::get();
+            auto* table = JAUSoundNameTable::getInstance();
+            assert(converter && converter != previous && table && table != previous_table);
+            for (const char* name : {"SE_SY_GAME_START", "SE_AT_LV_ASTRO_DOME_WIND_1", "STM_PROLOGUE_01"}) {
+                assert(u32(converter->getSoundID(name)) == playback.find_sound_id(name).value());
+            }
+            const auto requests = aurora::audio::DisabledObjectAudio::declined_requests();
+            MR::startSystemSE("SE_SY_GAME_START", -1, -1);
+            assert(!AudSpeakerWrap::isPlayable(-1));
+            MR::startCSSound("CS_SPIN_HIT", "SE_SY_GAME_START", 0);
+            assert(aurora::audio::DisabledObjectAudio::declined_requests() == requests + 2);
+            {
+                auto nested = aurora::audio::make_disabled_object_audio_service(heaps, &playback);
+                assert(AudSingletonHolder<AudSoundNameConverter>::get() != converter);
+            }
+            assert(AudSingletonHolder<AudSoundNameConverter>::get() == converter);
+            assert(JAUSoundNameTable::getInstance() == table);
+            assert(u32(converter->getSoundID("SE_SY_GAME_START")) == playback.find_sound_id("SE_SY_GAME_START").value());
+            // A failing original-table setup must leave the active process's
+            // converter and table published, with all provisional heap bytes reclaimed.
+            auto corrupt = baa;
+            constexpr std::array<u8, 4> magic = {'B', 'S', 'T', 'N'};
+            const auto at = std::search(corrupt.begin(), corrupt.end(), magic.begin(), magic.end());
+            assert(at != corrupt.end());
+            const auto root_field = static_cast<std::size_t>(at - corrupt.begin()) + 12;
+            for (int i = 0; i != 4; ++i) corrupt[root_field + i] = 0xff;
+            smgpc::runtime::JAudioPlaybackService invalid(
+                [&] { return std::make_unique<aurora::audio::JAudioSoundArchive>(corrupt, wave); }, wave,
+                std::make_unique<aurora::audio::PcmAudioMixer>());
+            const auto before_failure = heaps->root_heap().getFreeSize();
+            bool rejected = false;
+            try { auto failed = aurora::audio::make_disabled_object_audio_service(heaps, &invalid); }
+            catch (const std::runtime_error&) { rejected = true; }
+            assert(rejected && heaps->root_heap().getFreeSize() == before_failure);
+            assert(AudSingletonHolder<AudSoundNameConverter>::get() == converter);
+            assert(JAUSoundNameTable::getInstance() == table);
+            assert(!invalid.is_device_open());
+        }
+        assert(AudSingletonHolder<AudSoundNameConverter>::get() == previous);
+        assert(JAUSoundNameTable::getInstance() == previous_table);
+        assert(heaps->root_heap().getFreeSize() == free_bytes);
+    }
+    assert(!playback.is_device_open() && wave_requests == 0);
+    std::puts("[pass] original name tables: retail IDs, disabled speaker fallback, nested publication, failed-init rollback, three heap retirements; no wave/device access");
+}
+
+int main(int argc, char** argv) {
+    if (argc == 2 && std::strcmp(argv[1], "--names-only") == 0) { test_original_name_owner(); return 0; }
+    test_original_name_owner();
+    test_original_talk_sound_dispatch();
+    test_native_and_stream_owners();
+    test_retail_service();
+}

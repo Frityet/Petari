@@ -1,0 +1,10 @@
+{
+  "command": [
+    "xmake",
+    "build",
+    "-y",
+    "smg-pc-original-jai-sound-ownership-tests"
+  ],
+  "returncode": 0,
+  "duration": 84.70183277130127
+}

@@ -57,6 +57,7 @@ namespace smgpc::runtime {
                                std::uint32_t delay_frames);
         [[nodiscard]] std::optional<std::uint32_t>
         find_sound_id(std::string_view name);
+        [[nodiscard]] std::vector<std::uint8_t> native_sound_name_table();
         void set_trigger_sound_permitted(bool permitted);
         [[nodiscard]] bool is_trigger_sound_permitted() const;
         [[nodiscard]] bool is_trigger_sound_permitted(std::uint32_t sound_id) const;

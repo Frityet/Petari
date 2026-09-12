@@ -118,6 +118,7 @@ target("smg-pc-game")
     }
     add_files("../JSystem/JGeometry/TMatrix.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("../JSystem/JKernel/JKRThread.cpp")
+    add_files("../JSystem/JAudio2/JAUSoundTable.cpp", "../JSystem/JGadget/hashcode.cpp")
     add_files({"../JSystem/JKernel/JKRAram.cpp", "../JSystem/JKernel/JKRAramHeap.cpp",
                "../JSystem/JKernel/JKRAramBlock.cpp", "../JSystem/JKernel/JKRAramPiece.cpp",
                "../JSystem/JKernel/JKRAramStream.cpp", "../JSystem/JKernel/JKRDecomp.cpp",

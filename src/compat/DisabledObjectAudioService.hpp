@@ -4,12 +4,16 @@
 #include "compat/JkrAllocationDomain.hpp"
 #include <memory>
 
+namespace smgpc::runtime { class JAudioPlaybackService; }
+
 namespace aurora::audio {
+class OriginalAudioNameLifetime;
 // Runtime owner of the actual disabled system object. The retained process
 // heap outlives the SDK object and its handles, including during unwind.
 class DisabledObjectAudioService final {
 public:
-    explicit DisabledObjectAudioService(std::shared_ptr<smgpc::compat::JkrHeapRuntime> heaps);
+    explicit DisabledObjectAudioService(std::shared_ptr<smgpc::compat::JkrHeapRuntime> heaps,
+                                        smgpc::runtime::JAudioPlaybackService* playback = nullptr);
     ~DisabledObjectAudioService();
     DisabledObjectAudioService(const DisabledObjectAudioService&) = delete;
     DisabledObjectAudioService& operator=(const DisabledObjectAudioService&) = delete;
@@ -18,11 +22,13 @@ public:
 private:
     std::shared_ptr<smgpc::compat::JkrHeapRuntime> _heaps;
     AudSoundObject _system_object;
+    std::unique_ptr<OriginalAudioNameLifetime> _names;
     DisabledObjectAudioService* _previous;
 };
 
 std::unique_ptr<DisabledObjectAudioService> make_disabled_object_audio_service(
-    std::shared_ptr<smgpc::compat::JkrHeapRuntime> heaps);
+    std::shared_ptr<smgpc::compat::JkrHeapRuntime> heaps,
+    smgpc::runtime::JAudioPlaybackService* playback = nullptr);
 // Borrowed only for the currently active service lifetime, like AudWrap's
 // ordinary system owner. It never creates an owner as a query side effect.
 AudSoundObject* disabled_system_sound_object() noexcept;

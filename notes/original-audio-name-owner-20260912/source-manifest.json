@@ -1,0 +1,126 @@
+[
+  {
+    "path": "src/Game/AudioLib/AudSoundNameConverter.cpp",
+    "sha256": "af4cb036b540a3e60cb281ec087330c2779315b7c0d5f372e4c8cd03180a6022"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAUSoundTable.hpp",
+    "sha256": "3361042278f7554e42bfc7076fb39798e10162f2a7d50df03fd632f975b3e6db"
+  },
+  {
+    "path": "src/JSystem/JGadget/hashcode.hpp",
+    "sha256": "75a0b46bd57b0a1fc39da39b61d43f9dc8c8ffe852367c52f8c1ca900c902ea8"
+  },
+  {
+    "path": "src/Game/AudioLib/AudMeNameConverter.cpp",
+    "sha256": "379c9f57fc14b77145abbeea9dac52dd8ddc2005c80454229bd76c323714471f"
+  },
+  {
+    "path": "src/Game/RhythmLib/AudRhythmMeSystem.hpp",
+    "sha256": "c33a14d5db0f39a22c35a7e6d58bc927cb3e18e7fff5e1266d8add76b61f176f"
+  },
+  {
+    "path": "src/Game/RhythmLib/AudRhythmHolder.hpp",
+    "sha256": "d8bcf033841576450f774fb76cfcd79fe15295803a34a5ff1c5a95f9957116e9"
+  },
+  {
+    "path": "src/Game/RhythmLib/AudRhythmSeqParser.hpp",
+    "sha256": "15524065867299c653ae4f2b57037aaba70e225c342c26ef7c2a21a2b43168cc"
+  },
+  {
+    "path": "src/Game/RhythmLib/AudBgmTempoAdjuster.hpp",
+    "sha256": "f17dcae62e8b40755f5f974c86cb119183c6a6430e96d978e508fac12428b792"
+  },
+  {
+    "path": "src/Game/RhythmLib/AudRhythmWrap.hpp",
+    "sha256": "9f4d21f894c0818d422590465e42f3b1fca5de71c1087a6764dabe45c767be52"
+  },
+  {
+    "path": "src/Game/RhythmLib/AudMeTrack.hpp",
+    "sha256": "9eab95aa0c01db80f710fba4f9bba1e2e4a2b99fd9a1856adab76a336ec858c9"
+  },
+  {
+    "path": "src/Game/RhythmLib/AudMeChannelMgr.hpp",
+    "sha256": "1e6807f0f36af6818a7885a7122f8571d4aa241c6ef37b79362937723d120202"
+  },
+  {
+    "path": "src/Game/RhythmLib/AudMeSeqCtrl.hpp",
+    "sha256": "0a3bdf4704bda31ed293dfbd76524c8f0eb0919207f6cca2a9a17f407f935147"
+  },
+  {
+    "path": "src/Game/RhythmLib/AudMeSeqParser.hpp",
+    "sha256": "3b66711260ae13339cec0f337390fdab35cdae0d614b703e0c2fdd9fb3d5ed4f"
+  },
+  {
+    "path": "src/Game/RhythmLib/AudMeSeqReader.hpp",
+    "sha256": "34336a632f1e3798959d058a7215f8156dd93788fb51d55fc31160673fb7a5a2"
+  },
+  {
+    "path": "src/Game/RhythmLib/AudMeTrackCallback.hpp",
+    "sha256": "775b7012c0740f27a8ae8b31bd1ba4e10ceb7c1fefec894d35d6d0a2fecca26c"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASBankTable.hpp",
+    "sha256": "d1084e1f2707ad707eeac5ba4a66ee2f9ff0f89e07e7c32b3ba45d20e4cc0541"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASDSPInterface.hpp",
+    "sha256": "829fadfb8cf716960da1b74bb9615e69f51040239f4a5e62fc33187534c0125f"
+  },
+  {
+    "path": "src/Game/AudioLib/CSSoundNameConverter.cpp",
+    "sha256": "c9f6e50aacbf2f34e506a0fc4854bfb748f32ee8b2ff20a8ba96ca8b9691a2c0"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAUSoundTable.cpp",
+    "sha256": "057dce62a97ebf5ff94fbd6becf7dfebb520dbf33ccd8844be7b85adfaf32e54"
+  },
+  {
+    "path": "src/JSystem/JGadget/hashcode.cpp",
+    "sha256": "6560d64aea142532c1d5dc13ad8fe100dab23e671d1b021f2a637edae4ee628f"
+  },
+  {
+    "path": "aurora/include/aurora/j_audio_sound_archive.hpp",
+    "sha256": "c500eeee20b767a1ffbd62776e081c206e64fa81a775d9481b8357528169c553"
+  },
+  {
+    "path": "aurora/lib/j_audio_sound_archive.cpp",
+    "sha256": "51fdf57eaadc98821a5800cef6ebb4c5284db8635580b02e72aa896412b21ff8"
+  },
+  {
+    "path": "src/runtime/JAudioPlaybackService.hpp",
+    "sha256": "f371d1af68d716178a1b5453d6f38b3f0c1f1de59e1bfd492a72a9271d6cf811"
+  },
+  {
+    "path": "src/runtime/JAudioPlaybackService.cpp",
+    "sha256": "649a5a617d46be5c23e43d699b3f66a812a1361b981e82cc92d16192cde91c8a"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.cpp",
+    "sha256": "1a34ab07a5ccdda9663d98b20276435973534830b4de26c5502b10c9c1668fdd"
+  },
+  {
+    "path": "src/compat/DisabledObjectAudioService.hpp",
+    "sha256": "b9bd493359659c9f1fa834e3d55885e99f73de5866400931b3ee97ee9819df93"
+  },
+  {
+    "path": "src/compat/DisabledObjectAudioService.cpp",
+    "sha256": "1cdf1455022f25c71c4dbe105857081632d8fb38a5777b15bb765cb22b46c3b1"
+  },
+  {
+    "path": "src/compat/DisabledObjectAudio.cpp",
+    "sha256": "6be64ff85036e39778d4e3cbc5a6930cc5534529d1bb7e93d93b4fbfa506dc61"
+  },
+  {
+    "path": "src/compat/AudioFacadeCompat.cpp",
+    "sha256": "cec9d06ede26b75696fe328c626444a1c28cecc5914907706b69db72c2b83e39"
+  },
+  {
+    "path": "src/Game/Util/SingletonHolder.hpp",
+    "sha256": "62bd3b0c23415ab5ff96a62b09f2ca678ef6ed4861eaec7abba6fb8bfe2ff6ca"
+  },
+  {
+    "path": "tests/OriginalJaiSoundOwnershipTests.cpp",
+    "sha256": "f8387b8d39da7a71ed04e34a34477d12c1ff93c0eab7d620843c97b177a6f1b4"
+  }
+]

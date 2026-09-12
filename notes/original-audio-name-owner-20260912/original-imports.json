@@ -1,0 +1,22 @@
+[
+  "src/Game/AudioLib/AudSoundNameConverter.cpp",
+  "src/JSystem/JAudio2/JAUSoundTable.hpp",
+  "src/JSystem/JGadget/hashcode.hpp",
+  "src/Game/AudioLib/AudMeNameConverter.cpp",
+  "src/Game/RhythmLib/AudRhythmMeSystem.hpp",
+  "src/Game/RhythmLib/AudRhythmHolder.hpp",
+  "src/Game/RhythmLib/AudRhythmSeqParser.hpp",
+  "src/Game/RhythmLib/AudBgmTempoAdjuster.hpp",
+  "src/Game/RhythmLib/AudRhythmWrap.hpp",
+  "src/Game/RhythmLib/AudMeTrack.hpp",
+  "src/Game/RhythmLib/AudMeChannelMgr.hpp",
+  "src/Game/RhythmLib/AudMeSeqCtrl.hpp",
+  "src/Game/RhythmLib/AudMeSeqParser.hpp",
+  "src/Game/RhythmLib/AudMeSeqReader.hpp",
+  "src/Game/RhythmLib/AudMeTrackCallback.hpp",
+  "src/JSystem/JAudio2/JASBankTable.hpp",
+  "src/JSystem/JAudio2/JASDSPInterface.hpp",
+  "src/Game/AudioLib/CSSoundNameConverter.cpp",
+  "src/JSystem/JAudio2/JAUSoundTable.cpp",
+  "src/JSystem/JGadget/hashcode.cpp"
+]

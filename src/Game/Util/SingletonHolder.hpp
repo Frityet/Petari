@@ -43,6 +43,16 @@ public:
         return sInstance;
     }
 
+#if defined(TARGET_PC)
+    // Native owners publish complete original objects and restore the previous
+    // borrower only after all users of their process lifetime have retired.
+    static T* exchange(T* instance) noexcept {
+        T* previous = sInstance;
+        sInstance = instance;
+        return previous;
+    }
+#endif
+
 private:
     static T* sInstance;
 };

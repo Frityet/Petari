@@ -277,6 +277,11 @@ namespace smgpc::runtime {
         return _archive->find_sound_id(name);
     }
 
+    std::vector<std::uint8_t> JAudioPlaybackService::native_sound_name_table() {
+        ensure_archive();
+        return _archive->native_sound_name_table();
+    }
+
     void JAudioPlaybackService::set_trigger_sound_permitted(bool permitted) {
         _trigger_sound_permitted = permitted;
     }

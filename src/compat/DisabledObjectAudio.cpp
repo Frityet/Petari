@@ -1,4 +1,6 @@
 #include "DisabledObjectAudio.hpp"
+#include "Game/AudioLib/AudSpeakerWrap.hpp"
+#include "Game/RhythmLib/AudMeObject.hpp"
 #include "Game/AudioLib/AudAnmSoundObject.hpp"
 #include "JSystem/JAudio2/JASSoundParams.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
@@ -93,3 +95,13 @@ void AudAnmSoundObject::startAnimSound(const TVec3f&, f32, JAISoundStarter*) {
     (void)decline();
 }
 bool AudAnmSoundObject::releaseHandleIfNecessary(JAISoundHandle*, u32) { return false; }
+
+// ME voices and controller speakers share the explicitly disabled output policy.
+// Returning no voice / no playable device preserves the original caller's
+// normal handle failure and system-speaker fallback paths.
+AudMeHandle* AudMeObject::startMe(u32) {
+    decline();
+    return nullptr;
+}
+bool AudSpeakerWrap::isPlayable(s32) { return aurora::audio::DisabledObjectAudio::enabled(); }
+void AudSpeakerWrap::start(s32, s32) { decline(); }
