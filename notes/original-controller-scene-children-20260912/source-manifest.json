@@ -1,0 +1,74 @@
+{
+  "reference_changes": [
+    "decomp/src/Game/Scene/SceneFactory.cpp",
+    "decomp/src/Game/Scene/IntermissionScene.cpp",
+    "decomp/src/Game/Scene/PlayTimerScene.cpp",
+    "decomp/src/Game/Scene/ScenarioSelectScene.cpp"
+  ],
+  "native_changes": [
+    "src/Game/Scene/SceneFactory.cpp",
+    "src/Game/Scene/IntermissionScene.cpp",
+    "src/Game/Scene/PlayTimerScene.cpp",
+    "src/Game/Scene/ScenarioSelectScene.cpp",
+    "src/Game/Scene/LogoScene.cpp",
+    "src/Game/Screen/ScenarioSelectLayout.hpp",
+    "src/Game/Screen/IsbnManager.hpp",
+    "src/Game/Screen/LogoFader.hpp"
+  ],
+  "files": [
+    {
+      "path": "decomp/src/Game/Scene/SceneFactory.cpp",
+      "sha256": "e837c47a5d984ca17ffbf6139e9fd6576448addf12d1ae801dd4d8c1f1d89e6b"
+    },
+    {
+      "path": "decomp/src/Game/Scene/IntermissionScene.cpp",
+      "sha256": "ba82790fd3a6d5f972303a95fe3a6f348e96453403e3617e8df031500c785022"
+    },
+    {
+      "path": "decomp/src/Game/Scene/PlayTimerScene.cpp",
+      "sha256": "728e1e06b68977f4acdd8f7d3f50d8456a95ae1ef86ad34ad3646324978b2d45"
+    },
+    {
+      "path": "decomp/src/Game/Scene/ScenarioSelectScene.cpp",
+      "sha256": "d7838421c64442e648cd5c9a805c03b404667225b3f985caba09221ee2035f10"
+    },
+    {
+      "path": "src/Game/Scene/SceneFactory.cpp",
+      "sha256": "e837c47a5d984ca17ffbf6139e9fd6576448addf12d1ae801dd4d8c1f1d89e6b"
+    },
+    {
+      "path": "src/Game/Scene/IntermissionScene.cpp",
+      "sha256": "ba82790fd3a6d5f972303a95fe3a6f348e96453403e3617e8df031500c785022"
+    },
+    {
+      "path": "src/Game/Scene/PlayTimerScene.cpp",
+      "sha256": "728e1e06b68977f4acdd8f7d3f50d8456a95ae1ef86ad34ad3646324978b2d45"
+    },
+    {
+      "path": "src/Game/Scene/ScenarioSelectScene.cpp",
+      "sha256": "d7838421c64442e648cd5c9a805c03b404667225b3f985caba09221ee2035f10"
+    },
+    {
+      "path": "src/Game/Scene/LogoScene.cpp",
+      "sha256": "81f7de77098056e47985d3f2dc1d85e3210054bc745504f7c9ca14034f7f2cff"
+    },
+    {
+      "path": "src/Game/Screen/ScenarioSelectLayout.hpp",
+      "sha256": "95c54dbbe8e7f78bd7d1bb40d1e8a494c3780e9296378d39a8608a10b82ab4a9"
+    },
+    {
+      "path": "src/Game/Screen/IsbnManager.hpp",
+      "sha256": "1bae7fcb7381562e08ab3eb288c7d9ad06aaec60a41affedfb68ba5737800166"
+    },
+    {
+      "path": "src/Game/Screen/LogoFader.hpp",
+      "sha256": "f8c1888e874f552683e6a183cdd9c978097072971837cd26ac8b95e33d2b90d6"
+    }
+  ],
+  "production_state": "frozen for coordinator integrated link; no shared builds or commits by subagent",
+  "oracle_counts": {
+    "factory": 10,
+    "reset": 80,
+    "draw": 64
+  }
+}

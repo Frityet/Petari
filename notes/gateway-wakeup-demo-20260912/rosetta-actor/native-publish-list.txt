@@ -1,0 +1,4 @@
+src/Game/NPC/Rosetta.cpp
+src/Game/NPC/RosettaDemoAstroDome.hpp
+src/Game/NPC/RosettaDemoEpilogue.hpp
+src/Game/NPC/TurnJointCtrl.hpp

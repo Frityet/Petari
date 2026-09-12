@@ -1,0 +1,2 @@
+src/Game/NPC/Rosetta.cpp
+include/Game/NPC/RosettaDemoEpilogue.hpp

@@ -581,3 +581,21 @@ namespace MR {
         setAnimFrameAndStop(pActor, ::getCometColorAnimFrameFromId(cometId), animLayer);
     }
 };  // namespace MR
+
+namespace MR {
+    void setInfluencedAlphaToChild(const LayoutActor* pActor) {
+        nw4r::lyt::Pane* pPane = pActor->getLayoutManager()->getPane(nullptr);
+        pPane->SetInfluencedAlpha(true);
+        nw4r::lyt::PaneList& children = pPane->GetChildList();
+
+        for (nw4r::lyt::PaneList::Iterator it = children.GetBeginIter(); it != children.GetEndIter(); it++) {
+            (*it).SetInfluencedAlpha(true);
+        }
+    }
+
+    void setLayoutAlphaFloat(const LayoutActor* pActor, f32 alpha) {
+        f32 clamped = MR::clamp(alpha, 0.0f, 1.0f);
+        nw4r::lyt::Pane* pPane = pActor->getLayoutManager()->getPane(nullptr);
+        pPane->mAlpha = clamped * 255;
+    }
+}

@@ -1,0 +1,2 @@
+src/Game/NPC/RosettaDemoHeavensDoor.cpp
+include/Game/NPC/RosettaDemoHeavensDoor.hpp

@@ -29,6 +29,7 @@
 #include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ClippingDirector.hpp"
+#include "Game/LiveActor/ClippingJudge.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Scene/SceneNameObjMovementController.hpp"
 #include "Game/Scene/StopSceneController.hpp"
@@ -99,6 +100,50 @@ namespace {
             require(pattern->mIntensity == 1 && pattern->mSpeed == 15,
                     "original infinity helper replaces the four overwritten slots");
         }
+    }
+
+    void original_clipping_judge(CameraDirector& director) {
+        auto* clipping = static_cast<ClippingDirector*>(MR::createSceneObj(SceneObj_ClippingDirector));
+        auto& judge = *MR::getClippingJudge();
+        require(&judge == clipping->mJudge, "clipping utility exposes the actual scene Director child");
+        const auto original_subjective_frame = director.mSubjectiveFrame;
+        TPos3f view;
+        view.identity();
+        MR::setCameraViewMtx(view, false, false, TVec3f(0, 0, 0));
+        MR::setNearZ(8); MR::setFovy(90);
+        director.mSubjectiveFrame = 0;
+        clipping->movement();
+        require(!judge.isJudgedToClipFrustum(TVec3f(0, 0, -500), 0) &&
+                judge.isJudgedToClipFrustum(TVec3f(0, 0, -499), 0),
+                "original clipping near plane is 500 independently of the projection near plane");
+        require(!judge.isJudgedToClipFrustum(TVec3f(0, 0, -400), 100) &&
+                judge.isJudgedToClipFrustum(TVec3f(0, 0, -399), 100),
+                "original near-plane sphere tangency is visible");
+        for (s32 level = 0; level < 8; ++level) {
+            const f32 distance = level ? judge.mClipDistances[level] : MR::getFarZ();
+            require(!judge.isJudgedToClipFrustum(TVec3f(0, 0, -distance), 0, level) &&
+                    judge.isJudgedToClipFrustum(TVec3f(0, 0, -distance - 2), 0, level),
+                    "the camera far plane and all seven original distance planes remain distinct");
+        }
+        const f32 right = 1000 * MR::getAspect();
+        require(!judge.isJudgedToClipFrustum(TVec3f(right - 1, 0, -1000), 0) &&
+                judge.isJudgedToClipFrustum(TVec3f(right + 1, 0, -1000), 0) &&
+                !judge.isJudgedToClipFrustum(TVec3f(0, 999, -1000), 0) &&
+                judge.isJudgedToClipFrustum(TVec3f(0, 1001, -1000), 0),
+                "the original side planes use current fovy and aspect");
+        director.mSubjectiveFrame = 1;
+        clipping->movement();
+        require(!judge.isJudgedToClipFrustum(TVec3f(0, 0, -100), 0) &&
+                judge.isJudgedToClipFrustum(TVec3f(0, 0, -99), 0),
+                "the actual CameraDirector subjective frame selects the original 100-unit near plane");
+        director.mSubjectiveFrame = 0;
+        view.setPositionFromLookAt(TVec3f(100, 200, 300), TVec3f(0, 1, 0), TVec3f(-900, 200, 300));
+        MR::setCameraViewMtx(view, false, false, TVec3f(0, 0, 0));
+        clipping->movement();
+        require(!judge.isJudgedToClipFrustum(TVec3f(-500, 200, 300), 0) &&
+                judge.isJudgedToClipFrustum(TVec3f(700, 200, 300), 0),
+                "translated and rotated actual camera matrices determine the clipping half-spaces");
+        director.mSubjectiveFrame = original_subjective_frame;
     }
 
     void camera_category_precedes_clipping(smgpc::runtime::RuntimeContext& runtime, CameraDirector& director,
@@ -317,6 +362,7 @@ int main() {
             near(pose->near_clip, 75, "renderer receives original near clip");
             near(pose->fovy_degrees, 55, "renderer receives original fovy");
             near(pose->projection_offset_y, -0.02F, "renderer receives original shaker projection offset");
+            original_clipping_judge(director);
             camera_category_precedes_clipping(runtime, director, execution);
         }
         require(weak_domain.expired() && !smgpc::camera::current_camera_director_runtime() &&

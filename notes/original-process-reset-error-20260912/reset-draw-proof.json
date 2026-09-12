@@ -1,0 +1,742 @@
+{
+  "retail_sha256": "1fa3f807372045fe507a9e4be447ff46c5b3624dad00b889c9d3577e10fad7ab",
+  "compiled_object_sha256": "a41a5068a818bbf18cd0701d08c68d5864dc9d78d93806b83e5002a73d5dc2ba",
+  "results": [
+    {
+      "case": {
+        "function": "draw__30GameSystemResetAndPowerProcessCFv",
+        "children": 0,
+        "frame": 0,
+        "width": 608,
+        "height": 456,
+        "active": false
+      },
+      "matched": true,
+      "retail": [],
+      "recovered": []
+    },
+    {
+      "case": {
+        "function": "draw__30GameSystemResetAndPowerProcessCFv",
+        "children": 0,
+        "frame": 0,
+        "width": 832,
+        "height": 480,
+        "active": false
+      },
+      "matched": true,
+      "retail": [],
+      "recovered": []
+    },
+    {
+      "case": {
+        "function": "draw__30GameSystemResetAndPowerProcessCFv",
+        "children": 0,
+        "frame": 1,
+        "width": 608,
+        "height": 456,
+        "active": false
+      },
+      "matched": true,
+      "retail": [],
+      "recovered": []
+    },
+    {
+      "case": {
+        "function": "draw__30GameSystemResetAndPowerProcessCFv",
+        "children": 0,
+        "frame": 1,
+        "width": 832,
+        "height": 480,
+        "active": false
+      },
+      "matched": true,
+      "retail": [],
+      "recovered": []
+    },
+    {
+      "case": {
+        "function": "draw__30GameSystemResetAndPowerProcessCFv",
+        "children": 0,
+        "frame": 15,
+        "width": 608,
+        "height": 456,
+        "active": false
+      },
+      "matched": true,
+      "retail": [],
+      "recovered": []
+    },
+    {
+      "case": {
+        "function": "draw__30GameSystemResetAndPowerProcessCFv",
+        "children": 0,
+        "frame": 15,
+        "width": 832,
+        "height": 480,
+        "active": false
+      },
+      "matched": true,
+      "retail": [],
+      "recovered": []
+    },
+    {
+      "case": {
+        "function": "draw__30GameSystemResetAndPowerProcessCFv",
+        "children": 0,
+        "frame": 30,
+        "width": 608,
+        "height": 456,
+        "active": false
+      },
+      "matched": true,
+      "retail": [],
+      "recovered": []
+    },
+    {
+      "case": {
+        "function": "draw__30GameSystemResetAndPowerProcessCFv",
+        "children": 0,
+        "frame": 30,
+        "width": 832,
+        "height": 480,
+        "active": false
+      },
+      "matched": true,
+      "retail": [],
+      "recovered": []
+    },
+    {
+      "case": {
+        "function": "draw__30GameSystemResetAndPowerProcessCFv",
+        "children": 0,
+        "frame": 0,
+        "width": 608,
+        "height": 456,
+        "active": true
+      },
+      "matched": true,
+      "retail": [
+        {
+          "graph": "__ct__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "graph": "setPort__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "lerp": [
+            255,
+            0,
+            0.0
+          ]
+        },
+        {
+          "colors": [
+            "000000ff",
+            "000000ff",
+            "000000ff",
+            "000000ff"
+          ]
+        },
+        {
+          "box": [
+            0.0,
+            0.0,
+            608.0,
+            456.0
+          ]
+        },
+        {
+          "graph": "__dt__19J2DOrthoGraphSimpleFv"
+        }
+      ],
+      "recovered": [
+        {
+          "graph": "__ct__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "graph": "setPort__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "lerp": [
+            255,
+            0,
+            0.0
+          ]
+        },
+        {
+          "colors": [
+            "000000ff",
+            "000000ff",
+            "000000ff",
+            "000000ff"
+          ]
+        },
+        {
+          "box": [
+            0.0,
+            0.0,
+            608.0,
+            456.0
+          ]
+        },
+        {
+          "graph": "__dt__19J2DOrthoGraphSimpleFv"
+        }
+      ]
+    },
+    {
+      "case": {
+        "function": "draw__30GameSystemResetAndPowerProcessCFv",
+        "children": 0,
+        "frame": 0,
+        "width": 832,
+        "height": 480,
+        "active": true
+      },
+      "matched": true,
+      "retail": [
+        {
+          "graph": "__ct__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "graph": "setPort__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "lerp": [
+            255,
+            0,
+            0.0
+          ]
+        },
+        {
+          "colors": [
+            "000000ff",
+            "000000ff",
+            "000000ff",
+            "000000ff"
+          ]
+        },
+        {
+          "box": [
+            0.0,
+            0.0,
+            832.0,
+            480.0
+          ]
+        },
+        {
+          "graph": "__dt__19J2DOrthoGraphSimpleFv"
+        }
+      ],
+      "recovered": [
+        {
+          "graph": "__ct__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "graph": "setPort__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "lerp": [
+            255,
+            0,
+            0.0
+          ]
+        },
+        {
+          "colors": [
+            "000000ff",
+            "000000ff",
+            "000000ff",
+            "000000ff"
+          ]
+        },
+        {
+          "box": [
+            0.0,
+            0.0,
+            832.0,
+            480.0
+          ]
+        },
+        {
+          "graph": "__dt__19J2DOrthoGraphSimpleFv"
+        }
+      ]
+    },
+    {
+      "case": {
+        "function": "draw__30GameSystemResetAndPowerProcessCFv",
+        "children": 0,
+        "frame": 1,
+        "width": 608,
+        "height": 456,
+        "active": true
+      },
+      "matched": true,
+      "retail": [
+        {
+          "graph": "__ct__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "graph": "setPort__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "lerp": [
+            255,
+            0,
+            0.03333333333333333
+          ]
+        },
+        {
+          "colors": [
+            "000000f6",
+            "000000f6",
+            "000000f6",
+            "000000f6"
+          ]
+        },
+        {
+          "box": [
+            0.0,
+            0.0,
+            608.0,
+            456.0
+          ]
+        },
+        {
+          "graph": "__dt__19J2DOrthoGraphSimpleFv"
+        }
+      ],
+      "recovered": [
+        {
+          "graph": "__ct__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "graph": "setPort__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "lerp": [
+            255,
+            0,
+            0.03333333333333333
+          ]
+        },
+        {
+          "colors": [
+            "000000f6",
+            "000000f6",
+            "000000f6",
+            "000000f6"
+          ]
+        },
+        {
+          "box": [
+            0.0,
+            0.0,
+            608.0,
+            456.0
+          ]
+        },
+        {
+          "graph": "__dt__19J2DOrthoGraphSimpleFv"
+        }
+      ]
+    },
+    {
+      "case": {
+        "function": "draw__30GameSystemResetAndPowerProcessCFv",
+        "children": 0,
+        "frame": 1,
+        "width": 832,
+        "height": 480,
+        "active": true
+      },
+      "matched": true,
+      "retail": [
+        {
+          "graph": "__ct__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "graph": "setPort__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "lerp": [
+            255,
+            0,
+            0.03333333333333333
+          ]
+        },
+        {
+          "colors": [
+            "000000f6",
+            "000000f6",
+            "000000f6",
+            "000000f6"
+          ]
+        },
+        {
+          "box": [
+            0.0,
+            0.0,
+            832.0,
+            480.0
+          ]
+        },
+        {
+          "graph": "__dt__19J2DOrthoGraphSimpleFv"
+        }
+      ],
+      "recovered": [
+        {
+          "graph": "__ct__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "graph": "setPort__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "lerp": [
+            255,
+            0,
+            0.03333333333333333
+          ]
+        },
+        {
+          "colors": [
+            "000000f6",
+            "000000f6",
+            "000000f6",
+            "000000f6"
+          ]
+        },
+        {
+          "box": [
+            0.0,
+            0.0,
+            832.0,
+            480.0
+          ]
+        },
+        {
+          "graph": "__dt__19J2DOrthoGraphSimpleFv"
+        }
+      ]
+    },
+    {
+      "case": {
+        "function": "draw__30GameSystemResetAndPowerProcessCFv",
+        "children": 0,
+        "frame": 15,
+        "width": 608,
+        "height": 456,
+        "active": true
+      },
+      "matched": true,
+      "retail": [
+        {
+          "graph": "__ct__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "graph": "setPort__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "lerp": [
+            255,
+            0,
+            0.5
+          ]
+        },
+        {
+          "colors": [
+            "0000007f",
+            "0000007f",
+            "0000007f",
+            "0000007f"
+          ]
+        },
+        {
+          "box": [
+            0.0,
+            0.0,
+            608.0,
+            456.0
+          ]
+        },
+        {
+          "graph": "__dt__19J2DOrthoGraphSimpleFv"
+        }
+      ],
+      "recovered": [
+        {
+          "graph": "__ct__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "graph": "setPort__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "lerp": [
+            255,
+            0,
+            0.5
+          ]
+        },
+        {
+          "colors": [
+            "0000007f",
+            "0000007f",
+            "0000007f",
+            "0000007f"
+          ]
+        },
+        {
+          "box": [
+            0.0,
+            0.0,
+            608.0,
+            456.0
+          ]
+        },
+        {
+          "graph": "__dt__19J2DOrthoGraphSimpleFv"
+        }
+      ]
+    },
+    {
+      "case": {
+        "function": "draw__30GameSystemResetAndPowerProcessCFv",
+        "children": 0,
+        "frame": 15,
+        "width": 832,
+        "height": 480,
+        "active": true
+      },
+      "matched": true,
+      "retail": [
+        {
+          "graph": "__ct__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "graph": "setPort__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "lerp": [
+            255,
+            0,
+            0.5
+          ]
+        },
+        {
+          "colors": [
+            "0000007f",
+            "0000007f",
+            "0000007f",
+            "0000007f"
+          ]
+        },
+        {
+          "box": [
+            0.0,
+            0.0,
+            832.0,
+            480.0
+          ]
+        },
+        {
+          "graph": "__dt__19J2DOrthoGraphSimpleFv"
+        }
+      ],
+      "recovered": [
+        {
+          "graph": "__ct__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "graph": "setPort__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "lerp": [
+            255,
+            0,
+            0.5
+          ]
+        },
+        {
+          "colors": [
+            "0000007f",
+            "0000007f",
+            "0000007f",
+            "0000007f"
+          ]
+        },
+        {
+          "box": [
+            0.0,
+            0.0,
+            832.0,
+            480.0
+          ]
+        },
+        {
+          "graph": "__dt__19J2DOrthoGraphSimpleFv"
+        }
+      ]
+    },
+    {
+      "case": {
+        "function": "draw__30GameSystemResetAndPowerProcessCFv",
+        "children": 0,
+        "frame": 30,
+        "width": 608,
+        "height": 456,
+        "active": true
+      },
+      "matched": true,
+      "retail": [
+        {
+          "graph": "__ct__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "graph": "setPort__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "lerp": [
+            255,
+            0,
+            1.0
+          ]
+        },
+        {
+          "colors": [
+            "00000000",
+            "00000000",
+            "00000000",
+            "00000000"
+          ]
+        },
+        {
+          "box": [
+            0.0,
+            0.0,
+            608.0,
+            456.0
+          ]
+        },
+        {
+          "graph": "__dt__19J2DOrthoGraphSimpleFv"
+        }
+      ],
+      "recovered": [
+        {
+          "graph": "__ct__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "graph": "setPort__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "lerp": [
+            255,
+            0,
+            1.0
+          ]
+        },
+        {
+          "colors": [
+            "00000000",
+            "00000000",
+            "00000000",
+            "00000000"
+          ]
+        },
+        {
+          "box": [
+            0.0,
+            0.0,
+            608.0,
+            456.0
+          ]
+        },
+        {
+          "graph": "__dt__19J2DOrthoGraphSimpleFv"
+        }
+      ]
+    },
+    {
+      "case": {
+        "function": "draw__30GameSystemResetAndPowerProcessCFv",
+        "children": 0,
+        "frame": 30,
+        "width": 832,
+        "height": 480,
+        "active": true
+      },
+      "matched": true,
+      "retail": [
+        {
+          "graph": "__ct__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "graph": "setPort__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "lerp": [
+            255,
+            0,
+            1.0
+          ]
+        },
+        {
+          "colors": [
+            "00000000",
+            "00000000",
+            "00000000",
+            "00000000"
+          ]
+        },
+        {
+          "box": [
+            0.0,
+            0.0,
+            832.0,
+            480.0
+          ]
+        },
+        {
+          "graph": "__dt__19J2DOrthoGraphSimpleFv"
+        }
+      ],
+      "recovered": [
+        {
+          "graph": "__ct__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "graph": "setPort__19J2DOrthoGraphSimpleFv"
+        },
+        {
+          "lerp": [
+            255,
+            0,
+            1.0
+          ]
+        },
+        {
+          "colors": [
+            "00000000",
+            "00000000",
+            "00000000",
+            "00000000"
+          ]
+        },
+        {
+          "box": [
+            0.0,
+            0.0,
+            832.0,
+            480.0
+          ]
+        },
+        {
+          "graph": "__dt__19J2DOrthoGraphSimpleFv"
+        }
+      ]
+    }
+  ]
+}

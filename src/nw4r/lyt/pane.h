@@ -75,12 +75,18 @@ namespace nw4r {
 
             Pane* GetParent() const { return mpParent; }
 
+            PaneList& GetChildList() { return mChildList; }
+
             void InsertChild(PaneList::Iterator, Pane*);
             void RemoveChild(Pane*);
             void AppendChild(Pane*);
             void AddAnimationLink(AnimationLink*);
             math::VEC2 GetVtxPos() const;
             void CalculateMtxChild(const DrawInfo& rInfo);
+
+            void SetInfluencedAlpha(bool influenced) {
+                detail::SetBit(&mFlag, 1, influenced);
+            }
 
             bool IsVisible() const { return detail::TestBit(mFlag, 0); }
 

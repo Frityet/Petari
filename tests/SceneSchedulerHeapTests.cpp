@@ -1,3 +1,4 @@
+#include "Game/LiveActor/ClippingJudge.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "Game/Scene/SceneNameObjMovementController.hpp"
@@ -261,13 +262,17 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
                 "original group broadcasts may remove future recipients without invalidating live traversal");
 
         configure_actor_clipping_sphere(&first, 1.0F, nullptr);
+        ClippingJudge judge("Callback clipping plane fixture");
+        const TVec3f normals[] = {{1, 0, 0}, {-1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}};
+        const TVec3f points[] = {{-100, 0, 0}, {100, 0, 0}, {0, -100, 0}, {0, 100, 0}, {0, 0, -100}, {0, 0, 100}};
+        for (unsigned i = 0; i < 6; ++i) judge.mFrustum.mPlanes[i].set(normals[i], points[i]);
+        configure_actor_clipping_far_level(&first, 0);
         CallbackObject clipping_driver(scheduler);
         clipping_driver.movement_hook = [&] {
-            smgpc::camera::CameraPose camera{.eye = {0, 0, 1000}, .watch = {0, 0, 0}};
             first.mPosition.x = 1000000;
-            update_actor_clipping(first, camera);
+            update_actor_clipping(first, judge);
             first.mPosition.x = 0;
-            update_actor_clipping(first, camera);
+            update_actor_clipping(first, judge);
         };
         scheduler.connect_name_obj(clipping_driver, 34, -1, -1, -1);
         scheduler.execute_movement();

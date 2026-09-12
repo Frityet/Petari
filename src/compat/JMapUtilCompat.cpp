@@ -16,6 +16,11 @@ namespace {
 }
 
 namespace MR {
+    bool getRailId(const JMapInfoIter& rIter, s32* pOut) {
+        *pOut = -1;
+        return ::getJMapInfoRailArg(rIter, "CommonPath_ID", pOut);
+    }
+
     bool getJMapInfoRailArg0NoInit(const JMapInfoIter& rIter, s32* pOut) {
         return ::getJMapInfoRailArg(rIter, "path_arg0", pOut);
     }

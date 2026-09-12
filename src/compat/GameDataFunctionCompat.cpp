@@ -8,11 +8,15 @@
 
 #include "Game/System/GameDataHolder.hpp"
 #include "Game/System/GameDataGalaxyStorage.hpp"
+#include "Game/System/GameDataTemporaryInGalaxy.hpp"
+#include "Game/System/GalaxyStatusAccessor.hpp"
+#include "Game/System/ScenarioDataParser.hpp"
 #include "Game/System/GameEventFlagTable.hpp"
 #include <cstdio>
 #include "Game/System/SaveDataHandleSequence.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSequenceDirector.hpp"
+#include "Game/System/GameSequenceProgress.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/System/SysConfigFile.hpp"
 #include "Game/System/UserFile.hpp"
@@ -24,6 +28,15 @@ thread_local GameDataHolder* sSceneStartGameDataOverride = nullptr;
 
 [[noreturn]] void unavailable(std::string_view operation) {
     aurora::throw_host_exception<std::logic_error>("GameDataFunction operation is unavailable: " + std::string(operation));
+}
+
+GameDataTemporaryInGalaxy* getGameDataTemporaryInGalaxy() {
+    auto* system = SingletonHolder<GameSystem>::get();
+    if (system == nullptr || system->mSequenceDirector == nullptr ||
+        system->mSequenceDirector->mGameDataTemporaryInGalaxy == nullptr) {
+        unavailable("original process temporary galaxy data");
+    }
+    return system->mSequenceDirector->mGameDataTemporaryInGalaxy;
 }
 
 SaveDataHandleSequence& require_save_sequence() {
@@ -78,6 +91,129 @@ ScopedGameDataHolderOverride::~ScopedGameDataHolderOverride() {
 }  // namespace smgpc::compat
 
 namespace GameDataFunction {
+
+bool isOnGalaxyScenarioFlagAlreadyVisited(const char* pGalaxyName, s32 scenarioNo) {
+    return getCurrentGameDataHolder()->isOnGalaxyScenarioFlagAlreadyVisited(pGalaxyName, scenarioNo);
+}
+
+void onGalaxyScenarioFlagAlreadyVisited(const char* pGalaxyName, s32 scenarioNo) {
+    getCurrentGameDataHolder()->onGalaxyScenarioFlagAlreadyVisited(pGalaxyName, scenarioNo);
+}
+
+void restoreGalaxyCometStatus(int cometId, u16* pCometStatus, u16* pPastSecond) {
+    char eventValueName[20];
+
+    snprintf(eventValueName, sizeof(eventValueName), "Comet%1dStatus", cometId);
+
+    *pCometStatus = getCurrentGameDataHolder()->getGameEventValue(eventValueName);
+}
+
+void resetGameDataGoToGalaxyFirst() {
+    ::getGameDataTemporaryInGalaxy()->resetRaceBestTime();
+    ::getGameDataTemporaryInGalaxy()->resetPlayerRestartIdInfo();
+    ::getGameDataTemporaryInGalaxy()->_4 = false;
+    ::getGameDataTemporaryInGalaxy()->clearAlreadyDoneFlag();
+    ::getGameDataTemporaryInGalaxy()->resetStageResultStarPieceParam();
+    ::getGameDataTemporaryInGalaxy()->resetStageResultCoinParam();
+}
+
+void resetGameDataGoToGalaxyRetry() {
+    ::getGameDataTemporaryInGalaxy()->resetRaceBestTime();
+    ::getGameDataTemporaryInGalaxy()->_4 = true;
+}
+
+bool isOnGameEventFlagNormalComet(const char* pGalaxyName) {
+    char eventFlagName[64];
+
+    snprintf(eventFlagName, sizeof(eventFlagName), "NormalComet%s", pGalaxyName);
+
+    return getCurrentGameDataHolder()->isOnGameEventFlag(eventFlagName);
+}
+
+bool isOnGameEventFlagCoin100Comet(const char* pGalaxyName) {
+    char eventFlagName[64];
+
+    snprintf(eventFlagName, sizeof(eventFlagName), "Coin100Comet%s", pGalaxyName);
+
+    return getCurrentGameDataHolder()->isOnGameEventFlag(eventFlagName);
+}
+
+void updateGalaxyCometStatus(int cometId, u16 cometStatus, u16 pastSecond) {
+    char eventValueName[20];
+
+    snprintf(eventValueName, sizeof(eventValueName), "Comet%1dStatus", cometId);
+
+    getCurrentGameDataHolder()->setGameEventValue(eventValueName, cometStatus);
+}
+
+void addStockedStarPiece(int num) {
+    getCurrentGameDataHolder()->addStockedStarPiece(num);
+
+    if (getCurrentGameDataHolder()->getStockedStarPieceNum() != 9999) {
+        return;
+    }
+
+    const char* pEventFlagName = "StarPieceCounterStop";
+
+    if (getCurrentGameDataHolder()->isOnGameEventFlag(pEventFlagName)) {
+        return;
+    }
+
+    getCurrentGameDataHolder()->tryOnGameEventFlag(pEventFlagName);
+}
+
+bool isPowerStarLeftInCometOnly() {
+    const char* pGalaxyName;
+
+    for (ScenarioDataIter iter = MR::makeBeginScenarioDataIter(); !iter.isEnd(); iter.goNext()) {
+        GalaxyStatusAccessor accessor = iter.makeAccessor();
+
+        if (accessor.getPowerStarNum() == 0) {
+            continue;
+        }
+
+        for (int i = 1; i <= accessor.getPowerStarNum(); i++) {
+            if (accessor.isCometStar(i)) {
+                continue;
+            }
+
+            pGalaxyName = accessor.getName();
+
+            if (getCurrentGameDataHolder()->hasPowerStar(pGalaxyName, i)) {
+                continue;
+            }
+
+            if (GameEventFlagTable::isPowerStarType(accessor.getName(), i, "SpecialStarFinalChallenge")) {
+                continue;
+            }
+
+            return false;
+        }
+    }
+
+    return true;
+}
+
+s32 getRaceBestTime(const char* pRaceName) {
+    return getCurrentGameDataHolder()->getRaceBestTime(pRaceName);
+}
+
+bool isPointCollectForLetter() {
+    return getCurrentGameDataHolder()->isPointCollectForLetter();
+}
+
+bool isPlayerLeftSupply() {
+    return getCurrentGameDataHolder()->isPlayerLeftSupply();
+}
+
+bool isLuigiLeftSupply() {
+    auto* system = SingletonHolder<GameSystem>::get();
+    if (system == nullptr || system->mSequenceDirector == nullptr ||
+        system->mSequenceDirector->mGameSequenceProgress == nullptr) {
+        unavailable("original process sequence progress");
+    }
+    return system->mSequenceDirector->mGameSequenceProgress->isLuigiLeftSupply();
+}
 
 bool hasPowerStar(const char* galaxy_name, s32 scenario_num) {
     return getCurrentGameDataHolder()->hasPowerStar(galaxy_name, scenario_num);

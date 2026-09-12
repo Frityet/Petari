@@ -1,0 +1,290 @@
+{
+  "root_head": "94cbfc68db47d035745d85d09b8cc472f5c5be87",
+  "reference_head": "df1d7db9539834311722be1bb9b88a54c5f62195",
+  "paths": [
+    {
+      "path": "decomp/src/Game/MapObj/PowerStar.cpp",
+      "sha256": "338dbab4a76d804cae0f108562ab3fa50b1a16e79939745cf75836b708fe7825"
+    },
+    {
+      "path": "src/Game/MapObj/PowerStar.cpp",
+      "sha256": "3e01279c6e7e66ca141180801192655ccc535eb40cbef5b2a267d1232eb498fb"
+    },
+    {
+      "path": "src/Game/MapObj/PowerStarAppearPoint.cpp",
+      "sha256": "442bafdf0b221b566d59d22015df8282a1ca3f62ac4eb46c06a17bb9b69177a9"
+    },
+    {
+      "path": "src/Game/MapObj/PowerStarAppearPoint.hpp",
+      "sha256": "1afad3c4f708d8079d9a5883738f82f34c7a6e8377e0df9fcc4f61fabc6a36a5"
+    }
+  ],
+  "retail_comparison": {
+    "PowerStar": {
+      "text": 96.88846,
+      "methods": [
+        {
+          "name": "__ct__9PowerStarFPCc",
+          "size": "192",
+          "match": 100.0
+        },
+        {
+          "name": "init__9PowerStarFRC12JMapInfoIter",
+          "size": "576",
+          "match": 99.61806
+        },
+        {
+          "name": "initAfterPlacement__9PowerStarFv",
+          "size": "4",
+          "match": 100.0
+        },
+        {
+          "name": "appear__9PowerStarFv",
+          "size": "60",
+          "match": 100.0
+        },
+        {
+          "name": "makeActorAppeared__9PowerStarFv",
+          "size": "68",
+          "match": 100.0
+        },
+        {
+          "name": "requestAppear__9PowerStarFv",
+          "size": "148",
+          "match": 100.0
+        },
+        {
+          "name": "setDemoAppearPos__9PowerStarFRCQ29JGeometry8TVec3<f>",
+          "size": "112",
+          "match": 100.0
+        },
+        {
+          "name": "isEndAppearDemo__9PowerStarCFv",
+          "size": "96",
+          "match": 100.0
+        },
+        {
+          "name": "offAppearDemo__9PowerStarFv",
+          "size": "12",
+          "match": 100.0
+        },
+        {
+          "name": "setupColor__9PowerStarFP9LiveActorPC7NameObjl",
+          "size": "180",
+          "match": 100.0
+        },
+        {
+          "name": "setupColorAtResultSequence__9PowerStarFP9LiveActorb",
+          "size": "140",
+          "match": 100.0
+        },
+        {
+          "name": "requestPointLight__9PowerStarFPC9LiveActorPC7NameObjl",
+          "size": "152",
+          "match": 100.0
+        },
+        {
+          "name": "requestPointLightAtResultSequence__9PowerStarFPC9LiveActor",
+          "size": "120",
+          "match": 100.0
+        },
+        {
+          "name": "getPowerStarWaitRotateSpeed__9PowerStarFv",
+          "size": "8",
+          "match": 97.5
+        },
+        {
+          "name": "getBtpFrameCurrentStage__9PowerStarFl",
+          "size": "80",
+          "match": 100.0
+        },
+        {
+          "name": "isCurrentStageKoopaVs3__9PowerStarFv",
+          "size": "4",
+          "match": 100.0
+        },
+        {
+          "name": "initShadowPowerStar__9PowerStarFP9LiveActorb",
+          "size": "100",
+          "match": 99.4
+        },
+        {
+          "name": "makeArchiveList__9PowerStarFP27NameObjArchiveListCollectorRC12JMapInfoIter",
+          "size": "68",
+          "match": 100.0
+        },
+        {
+          "name": "control__9PowerStarFv",
+          "size": "288",
+          "match": 99.44444
+        },
+        {
+          "name": "calcAndSetBaseMtx__9PowerStarFv",
+          "size": "356",
+          "match": 99.26966
+        },
+        {
+          "name": "receiveMsgPlayerAttack__9PowerStarFUlP9HitSensorP9HitSensor",
+          "size": "72",
+          "match": 100.0
+        },
+        {
+          "name": "receiveOtherMsg__9PowerStarFUlP9HitSensorP9HitSensor",
+          "size": "224",
+          "match": 99.73214
+        },
+        {
+          "name": "initMapToolInfo__9PowerStarFRC12JMapInfoIter",
+          "size": "232",
+          "match": 100.0
+        },
+        {
+          "name": "initModel__9PowerStarFv",
+          "size": "408",
+          "match": 99.65686
+        },
+        {
+          "name": "initSensorGrandStar__9PowerStarFv",
+          "size": "520",
+          "match": 98.73077
+        },
+        {
+          "name": "initShadow__9PowerStarFRC12JMapInfoIter",
+          "size": "148",
+          "match": 99.45946
+        },
+        {
+          "name": "initPosture__9PowerStarFv",
+          "size": "216",
+          "match": 99.81481
+        },
+        {
+          "name": "endAppearDemo__9PowerStarFv",
+          "size": "96",
+          "match": 99.583336
+        },
+        {
+          "name": "getNearestAppearPoint__9PowerStarCFRCQ29JGeometry8TVec3<f>",
+          "size": "164",
+          "match": 99.87805
+        },
+        {
+          "name": "getAppearCameraActor__9PowerStarFv",
+          "size": "20",
+          "match": 100.0
+        },
+        {
+          "name": "getAppearCameraInfo__9PowerStarCFv",
+          "size": "28",
+          "match": 100.0
+        },
+        {
+          "name": "requestAppearOrWait__9PowerStarFv",
+          "size": "180",
+          "match": 100.0
+        },
+        {
+          "name": "calcAppearDemoRiseTrans__9PowerStarCFPQ29JGeometry8TVec3<f>f",
+          "size": "192",
+          "match": 99.895836
+        },
+        {
+          "name": "processWait__9PowerStarFf",
+          "size": "340",
+          "match": 85.411766
+        },
+        {
+          "name": "exeAppearDemoRise__9PowerStarFv",
+          "size": "388",
+          "match": 85.30928
+        },
+        {
+          "name": "exeAppearDemoMove__9PowerStarFv",
+          "size": "912",
+          "match": 92.59649
+        },
+        {
+          "name": "exeAppearDemoKoopa__9PowerStarFv",
+          "size": "592",
+          "match": 90.189186
+        },
+        {
+          "name": "exeWait__9PowerStarFv",
+          "size": "128",
+          "match": 99.6875
+        },
+        {
+          "name": "exeWeak__9PowerStarFv",
+          "size": "120",
+          "match": 99.833336
+        },
+        {
+          "name": "exeWeakNoRotate__9PowerStarFv",
+          "size": "80",
+          "match": 99.75
+        },
+        {
+          "name": "exeWeakToWait__9PowerStarFv",
+          "size": "148",
+          "match": 99.5946
+        },
+        {
+          "name": "exeStageClearDemo__9PowerStarFv",
+          "size": "520",
+          "match": 92.99231
+        },
+        {
+          "name": "__dt__9PowerStarFv",
+          "size": "92",
+          "match": 100.0
+        }
+      ]
+    },
+    "PowerStarAppearPoint": {
+      "text": 100.0,
+      "methods": [
+        {
+          "name": "__ct__20PowerStarAppearPointFPCc",
+          "size": "68",
+          "match": 100.0
+        },
+        {
+          "name": "__dt__20PowerStarAppearPointFv",
+          "size": "92",
+          "match": 100.0
+        },
+        {
+          "name": "init__20PowerStarAppearPointFRC12JMapInfoIter",
+          "size": "116",
+          "match": 100.0
+        }
+      ]
+    }
+  },
+  "compilation": {
+    "PowerStar-native": {
+      "exit": 0,
+      "command_file": "PowerStar-native-command.json",
+      "log_file": "PowerStar-native.log",
+      "object_sha256": "30524abdb10536ae86703cc746371af846fc214512adf0fffef04aa82cbd0e35"
+    },
+    "PowerStar-reference": {
+      "exit": 0,
+      "command_file": "PowerStar-reference-command.json",
+      "log_file": "PowerStar-reference.log",
+      "object_sha256": "9f495abc476ce30ddc9c602071286039eaebe307393d4df3aad00e2ff4117ce6"
+    },
+    "PowerStarAppearPoint-native": {
+      "exit": 0,
+      "command_file": "PowerStarAppearPoint-native-command.json",
+      "log_file": "PowerStarAppearPoint-native.log",
+      "object_sha256": "41a8930cf2b6ab2089b015f677b7a0bce74f9589c6a5daa2e3c138f0627cffdf"
+    },
+    "PowerStarAppearPoint-reference": {
+      "exit": 0,
+      "command_file": "PowerStarAppearPoint-reference-command.json",
+      "log_file": "PowerStarAppearPoint-reference.log",
+      "object_sha256": "67e1e34c6e6b1e9c830f2caaa7fc9098ed00f237a8c20aee484614e822fcacae"
+    }
+  }
+}

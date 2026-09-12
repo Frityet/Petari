@@ -14,6 +14,7 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "render/J3dMatrix.hpp"
 
@@ -347,3 +348,34 @@ namespace MR {
         return &pActor->mBinder->mFixReactionVector;
     }
 }
+
+namespace MR {
+    bool changeShowModelFlagSyncNearClipping(LiveActor* pActor, f32 nearClip) {
+        if (MR::isJudgedToNearClip(pActor->mPosition, nearClip)) {
+            MR::hideModelAndOnCalcAnimIfShown(pActor);
+            return false;
+        }
+
+        MR::showModelIfHidden(pActor);
+        return true;
+    }
+
+    void showModelIfHidden(LiveActor* pActor) {
+        if (isHiddenModel(pActor)) {
+            showModel(pActor);
+        }
+    }
+
+    void hideModelAndOnCalcAnimIfShown(LiveActor* pActor) {
+        if (isHiddenModel(pActor)) {
+            return;
+        }
+
+        hideModel(pActor);
+        onCalcAnim(pActor);
+    }
+
+    f32 calcNerveEaseOutValue(const LiveActor* pActor, s32 stepMax, f32 valueStart, f32 valueEnd) {
+        return getEaseOutValue(calcNerveRate(pActor, stepMax), valueStart, valueEnd, 1.0f);
+    }
+}  // namespace MR

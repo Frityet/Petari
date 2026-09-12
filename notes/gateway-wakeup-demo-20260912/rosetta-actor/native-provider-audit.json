@@ -1,0 +1,769 @@
+{
+  "archive_sha256": "4bca780476db29f479176cb83695dd03d37a89a4df03fca9ae5c3534a01ceafd",
+  "symbols": [
+    {
+      "symbol": "__Unwind_Resume",
+      "name": "_Unwind_Resume",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN11FadeStarter6updateEv",
+      "name": "FadeStarter::update()",
+      "archive_providers": [
+        "NPCUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN11FadeStarterC1EP8NPCActori",
+      "name": "FadeStarter::FadeStarter(NPCActor*, int)",
+      "archive_providers": [
+        "NPCUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN12NPCActorCaps10setDefaultEv",
+      "name": "NPCActorCaps::setDefault()",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN12NPCActorCaps11setIndirectEv",
+      "name": "NPCActorCaps::setIndirect()",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN12NPCActorCapsC1EPKc",
+      "name": "NPCActorCaps::NPCActorCaps(char const*)",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN13NerveExecutor11updateNerveEv",
+      "name": "NerveExecutor::updateNerve()",
+      "archive_providers": [
+        "NerveExecutor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN13NerveExecutorD2Ev",
+      "name": "NerveExecutor::~NerveExecutor()",
+      "archive_providers": [
+        "NerveExecutor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN13TurnJointCtrl10invalidateEv",
+      "name": "TurnJointCtrl::invalidate()",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN13TurnJointCtrl11setStarePosERKN9JGeometry5TVec3IfEE",
+      "name": "TurnJointCtrl::setStarePos(JGeometry::TVec3<float> const&)",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN13TurnJointCtrl19setCallBackFunctionEv",
+      "name": "TurnJointCtrl::setCallBackFunction()",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN13TurnJointCtrl4initEfff",
+      "name": "TurnJointCtrl::init(float, float, float)",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN13TurnJointCtrl6updateEv",
+      "name": "TurnJointCtrl::update()",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN13TurnJointCtrl7addFaceEPKcfNS_4AXISES2_S2_",
+      "name": "TurnJointCtrl::addFace(char const*, float, TurnJointCtrl::AXIS, TurnJointCtrl::AXIS, TurnJointCtrl::AXIS)",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN13TurnJointCtrl8addWaistEPKcfNS_4AXISES2_S2_",
+      "name": "TurnJointCtrl::addWaist(char const*, float, TurnJointCtrl::AXIS, TurnJointCtrl::AXIS, TurnJointCtrl::AXIS)",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN13TurnJointCtrl8validateEv",
+      "name": "TurnJointCtrl::validate()",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN13TurnJointCtrl9startCtrlEi",
+      "name": "TurnJointCtrl::startCtrl(int)",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN13TurnJointCtrlC1EP9LiveActor",
+      "name": "TurnJointCtrl::TurnJointCtrl(LiveActor*)",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN17AstroDemoFunction23tryRegisterAstroDemoAllEP9LiveActorRK12JMapInfoIter",
+      "name": "AstroDemoFunction::tryRegisterAstroDemoAll(LiveActor*, JMapInfoIter const&)",
+      "archive_providers": [
+        "AstroDemoFunction.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN17AstroDemoFunction34tryRegisterSimpleCastIfAstroGalaxyEP9LiveActor",
+      "name": "AstroDemoFunction::tryRegisterSimpleCastIfAstroGalaxy(LiveActor*)",
+      "archive_providers": [
+        "AstroDemoFunction.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN19RosettaDemoEpilogueC1EP7RosettaRK12JMapInfoIter",
+      "name": "RosettaDemoEpilogue::RosettaDemoEpilogue(Rosetta*, JMapInfoIter const&)",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN23RosettaDemoHeavensDoor115makeArchiveListEP27NameObjArchiveListCollectorRK12JMapInfoIter",
+      "name": "RosettaDemoHeavensDoor1::makeArchiveList(NameObjArchiveListCollector*, JMapInfoIter const&)",
+      "archive_providers": [
+        "RosettaDemoHeavensDoor.cpp.o"
+      ],
+      "checkpoint_providers": [
+        "RosettaDemoHeavensDoor-native.o"
+      ]
+    },
+    {
+      "symbol": "__ZN23RosettaDemoHeavensDoor1C1EP7RosettaRK12JMapInfoIter",
+      "name": "RosettaDemoHeavensDoor1::RosettaDemoHeavensDoor1(Rosetta*, JMapInfoIter const&)",
+      "archive_providers": [
+        "RosettaDemoHeavensDoor.cpp.o"
+      ],
+      "checkpoint_providers": [
+        "RosettaDemoHeavensDoor-native.o"
+      ]
+    },
+    {
+      "symbol": "__ZN23RosettaDemoHeavensDoor215makeArchiveListEP27NameObjArchiveListCollectorRK12JMapInfoIter",
+      "name": "RosettaDemoHeavensDoor2::makeArchiveList(NameObjArchiveListCollector*, JMapInfoIter const&)",
+      "archive_providers": [
+        "RosettaDemoHeavensDoor.cpp.o"
+      ],
+      "checkpoint_providers": [
+        "RosettaDemoHeavensDoor-native.o"
+      ]
+    },
+    {
+      "symbol": "__ZN23RosettaDemoHeavensDoor2C1EP7RosettaRK12JMapInfoIter",
+      "name": "RosettaDemoHeavensDoor2::RosettaDemoHeavensDoor2(Rosetta*, JMapInfoIter const&)",
+      "archive_providers": [
+        "RosettaDemoHeavensDoor.cpp.o"
+      ],
+      "checkpoint_providers": [
+        "RosettaDemoHeavensDoor-native.o"
+      ]
+    },
+    {
+      "symbol": "__ZN24RosettaDemoAstroDomeTalkC1EP7RosettaRK12JMapInfoIter",
+      "name": "RosettaDemoAstroDomeTalk::RosettaDemoAstroDomeTalk(Rosetta*, JMapInfoIter const&)",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN27NameObjArchiveListCollector10addArchiveEPKc",
+      "name": "NameObjArchiveListCollector::addArchive(char const*)",
+      "archive_providers": [
+        "NameObjArchiveListCollector.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN27RosettaDemoAstroDomeExplain15makeArchiveListEP27NameObjArchiveListCollectorRK12JMapInfoIter",
+      "name": "RosettaDemoAstroDomeExplain::makeArchiveList(NameObjArchiveListCollector*, JMapInfoIter const&)",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN27RosettaDemoAstroDomeExplainC1EP7RosettaRK12JMapInfoIter",
+      "name": "RosettaDemoAstroDomeExplain::RosettaDemoAstroDomeExplain(Rosetta*, JMapInfoIter const&)",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR10isDemoCastEPK9LiveActorPKc",
+      "name": "MR::isDemoCast(LiveActor const*, char const*)",
+      "archive_providers": [
+        "DemoUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR10startSoundEPK9LiveActorPKcii",
+      "name": "MR::startSound(LiveActor const*, char const*, int, int)",
+      "archive_providers": [
+        "SoundUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR11getJointMtxEPK9LiveActorPKc",
+      "name": "MR::getJointMtx(LiveActor const*, char const*)",
+      "archive_providers": [
+        "OriginalJointAccess.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR11isFirstStepEPK9LiveActor",
+      "name": "MR::isFirstStep(LiveActor const*)",
+      "archive_providers": [
+        "LiveActorUtilCompat.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR11isTalkStartEPK15TalkMessageCtrl",
+      "name": "MR::isTalkStart(TalkMessageCtrl const*)",
+      "archive_providers": [
+        "TalkUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR12getPlayerPosEv",
+      "name": "MR::getPlayerPos()",
+      "archive_providers": [
+        "PlayerUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR12stopStageBGMEj",
+      "name": "MR::stopStageBGM(unsigned int)",
+      "archive_providers": [
+        "SoundUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR14calcAnimDirectEP9LiveActor",
+      "name": "MR::calcAnimDirect(LiveActor*)",
+      "archive_providers": [
+        "OriginalActorModelAccess.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR14extractMtxYDirEPA4_fPN9JGeometry5TVec3IfEE",
+      "name": "MR::extractMtxYDir(float (*) [4], JGeometry::TVec3<float>*)",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR14isIntervalStepEPK9LiveActori",
+      "name": "MR::isIntervalStep(LiveActor const*, int)",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR14vecKillElementERKN9JGeometry5TVec3IfEES4_PS2_",
+      "name": "MR::vecKillElement(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*)",
+      "archive_providers": [
+        "GameMathCompat.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR15addHitSensorNpcEP9LiveActorPKctfRKN9JGeometry5TVec3IfEE",
+      "name": "MR::addHitSensorNpc(LiveActor*, char const*, unsigned short, float, JGeometry::TVec3<float> const&)",
+      "archive_providers": [
+        "GameActorSensorCompat.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR15normalizeOrZeroEPN9JGeometry5TVec3IfEE",
+      "name": "MR::normalizeOrZero(JGeometry::TVec3<float>*)",
+      "archive_providers": [
+        "GameMathCompat.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR15setNextStageBGMEPKc",
+      "name": "MR::setNextStageBGM(char const*)",
+      "archive_providers": [
+        "SoundUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR16onStartOnlyFrontEP15TalkMessageCtrl",
+      "name": "MR::onStartOnlyFront(TalkMessageCtrl*)",
+      "archive_providers": [
+        "TalkUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR16startDPDHitSoundEv",
+      "name": "MR::startDPDHitSound()",
+      "archive_providers": [
+        "SoundUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR17registerEventFuncEP15TalkMessageCtrlRK19TalkMessageFuncBase",
+      "name": "MR::registerEventFunc(TalkMessageCtrl*, TalkMessageFuncBase const&)",
+      "archive_providers": [
+        "TalkUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR17setDistanceToTalkEP15TalkMessageCtrlf",
+      "name": "MR::setDistanceToTalk(TalkMessageCtrl*, float)",
+      "archive_providers": [
+        "TalkUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR18registerBranchFuncEP15TalkMessageCtrlRK19TalkMessageFuncBase",
+      "name": "MR::registerBranchFunc(TalkMessageCtrl*, TalkMessageFuncBase const&)",
+      "archive_providers": [
+        "TalkUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR19startBckNoInterpoleEPK9LiveActorPKc",
+      "name": "MR::startBckNoInterpole(LiveActor const*, char const*)",
+      "archive_providers": [
+        "OriginalActorAnimationStart.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR19tryRegisterDemoCastEP9LiveActorPKcRK12JMapInfoIter",
+      "name": "MR::tryRegisterDemoCast(LiveActor*, char const*, JMapInfoIter const&)",
+      "archive_providers": [
+        "DemoUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR20useStageSwitchWriteBEP9LiveActorRK12JMapInfoIter",
+      "name": "MR::useStageSwitchWriteB(LiveActor*, JMapInfoIter const&)",
+      "archive_providers": [
+        "ActorSwitchUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR21getJMapInfoArg0NoInitERK12JMapInfoIterPi",
+      "name": "MR::getJMapInfoArg0NoInit(JMapInfoIter const&, int*)",
+      "archive_providers": [
+        "JMapUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR21isPlayingStageBgmNameEPKc",
+      "name": "MR::isPlayingStageBgmName(char const*)",
+      "archive_providers": [
+        "SoundUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR22calcPlayerFaceStarePosEPN9JGeometry5TVec3IfEEPA4_fS5_",
+      "name": "MR::calcPlayerFaceStarePos(JGeometry::TVec3<float>*, float (*) [4], float (*) [4])",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR23getJMapInfoArg0WithInitERK12JMapInfoIterPi",
+      "name": "MR::getJMapInfoArg0WithInit(JMapInfoIter const&, int*)",
+      "archive_providers": [
+        "JMapUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR25onGameEventFlagGalaxyOpenEPKc",
+      "name": "MR::onGameEventFlagGalaxyOpen(char const*)",
+      "archive_providers": [
+        "EventUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR27tryStartReactionAndPopNerveEP8NPCActor",
+      "name": "MR::tryStartReactionAndPopNerve(NPCActor*)",
+      "archive_providers": [
+        "NPCUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR8startBrkEPK9LiveActorPKc",
+      "name": "MR::startBrk(LiveActor const*, char const*)",
+      "archive_providers": [
+        "OriginalActorModelAccess.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR9getRandomEii",
+      "name": "MR::getRandom(int, int)",
+      "archive_providers": [
+        "GameMathCompat.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN2MR9onSwitchAEP9LiveActor",
+      "name": "MR::onSwitchA(LiveActor*)",
+      "archive_providers": [
+        "ActorSwitchUtil.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN31RosettaDemoAstroDomeFinalBattleC1EP7RosettaRK12JMapInfoIter",
+      "name": "RosettaDemoAstroDomeFinalBattle::RosettaDemoAstroDomeFinalBattle(Rosetta*, JMapInfoIter const&)",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN8NPCActor10initializeERK12JMapInfoIterRK12NPCActorCaps",
+      "name": "NPCActor::initialize(JMapInfoIter const&, NPCActorCaps const&)",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN8NPCActor12attackSensorEP9HitSensorS1_",
+      "name": "NPCActor::attackSensor(HitSensor*, HitSensor*)",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN8NPCActor12setToDefaultEv",
+      "name": "NPCActor::setToDefault()",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN8NPCActor13makeActorDeadEv",
+      "name": "NPCActor::makeActorDead()",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN8NPCActor16tryPushNullNerveEv",
+      "name": "NPCActor::tryPushNullNerve()",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN8NPCActor17calcAndSetBaseMtxEv",
+      "name": "NPCActor::calcAndSetBaseMtx()",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN8NPCActor17makeActorAppearedEv",
+      "name": "NPCActor::makeActorAppeared()",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN8NPCActor18initAfterPlacementEv",
+      "name": "NPCActor::initAfterPlacement()",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN8NPCActor22receiveMsgPlayerAttackEjP9HitSensorS1_",
+      "name": "NPCActor::receiveMsgPlayerAttack(unsigned int, HitSensor*, HitSensor*)",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN8NPCActor4killEv",
+      "name": "NPCActor::kill()",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN8NPCActor7controlEv",
+      "name": "NPCActor::control()",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN8NPCActor8popNerveEv",
+      "name": "NPCActor::popNerve()",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN8NPCActor9pushNerveEPK5Nerve",
+      "name": "NPCActor::pushNerve(Nerve const*)",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN8NPCActorC2EPKc",
+      "name": "NPCActor::NPCActor(char const*)",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN9LiveActor10endClippedEv",
+      "name": "LiveActor::endClipped()",
+      "archive_providers": [
+        "LiveActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN9LiveActor12startClippedEv",
+      "name": "LiveActor::startClipped()",
+      "archive_providers": [
+        "LiveActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN9LiveActor13initHitSensorEi",
+      "name": "LiveActor::initHitSensor(int)",
+      "archive_providers": [
+        "LiveActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN9LiveActor14receiveMessageEjP9HitSensorS1_",
+      "name": "LiveActor::receiveMessage(unsigned int, HitSensor*, HitSensor*)",
+      "archive_providers": [
+        "LiveActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN9LiveActor15receiveMsgApartEP9HitSensorS1_",
+      "name": "LiveActor::receiveMsgApart(HitSensor*, HitSensor*)",
+      "archive_providers": [
+        "LiveActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN9LiveActor16calcViewAndEntryEv",
+      "name": "LiveActor::calcViewAndEntry()",
+      "archive_providers": [
+        "LiveActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN9LiveActor6appearEv",
+      "name": "LiveActor::appear()",
+      "archive_providers": [
+        "LiveActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN9LiveActor8calcAnimEv",
+      "name": "LiveActor::calcAnim()",
+      "archive_providers": [
+        "LiveActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN9LiveActor8movementEv",
+      "name": "LiveActor::movement()",
+      "archive_providers": [
+        "LiveActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZN9LiveActorD2Ev",
+      "name": "LiveActor::~LiveActor()",
+      "archive_providers": [
+        "LiveActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZNK5Nerve12executeOnEndEP5Spine",
+      "name": "Nerve::executeOnEnd(Spine*) const",
+      "archive_providers": [
+        "Nerve.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZNK7NameObj4drawEv",
+      "name": "NameObj::draw() const",
+      "archive_providers": [
+        "NameObjLifetimeCompat.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZNK8NPCActor12isEmptyNerveEv",
+      "name": "NPCActor::isEmptyNerve() const",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZNK8NPCActor12isPointingSeEv",
+      "name": "NPCActor::isPointingSe() const",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZNK9LiveActor10getBaseMtxEv",
+      "name": "LiveActor::getBaseMtx() const",
+      "archive_providers": [
+        "LiveActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZNK9LiveActor12getTakingMtxEv",
+      "name": "LiveActor::getTakingMtx() const",
+      "archive_providers": [
+        "LiveActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZNK9LiveActor7isNerveEPK5Nerve",
+      "name": "LiveActor::isNerve(Nerve const*) const",
+      "archive_providers": [
+        "LiveActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZTI5Nerve",
+      "name": "typeinfo for Nerve",
+      "archive_providers": [
+        "Nerve.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZTI8NPCActor",
+      "name": "typeinfo for NPCActor",
+      "archive_providers": [
+        "NPCActor.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZTVN10__cxxabiv117__class_type_infoE",
+      "name": "vtable for __cxxabiv1::__class_type_info",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZTVN10__cxxabiv120__si_class_type_infoE",
+      "name": "vtable for __cxxabiv1::__si_class_type_info",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZdlPvm",
+      "name": "operator delete(void*, unsigned long)",
+      "archive_providers": [
+        "MetrowerksAlignedNew.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__Znwm",
+      "name": "operator new(unsigned long)",
+      "archive_providers": [
+        "MetrowerksAlignedNew.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "__ZnwmP7JKRHeapi",
+      "name": "operator new(unsigned long, JKRHeap*, int)",
+      "archive_providers": [
+        "MetrowerksAlignedNew.cpp.o"
+      ],
+      "checkpoint_providers": []
+    },
+    {
+      "symbol": "___gxx_personality_v0",
+      "name": "__gxx_personality_v0",
+      "archive_providers": [],
+      "checkpoint_providers": []
+    }
+  ]
+}

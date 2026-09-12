@@ -1,0 +1,14 @@
+{
+  "decomp/src/Game/LiveActor/ClippingJudge.cpp": "693643e671d908f0b3ee04c7d6c43c4b70c8839c9d3ea46fa5311a206e91355c",
+  "decomp/libs/JSystem/include/JSystem/JGeometry/TPartition3.hpp": "c16e3eb705ba9a8a293995cf87702e6ca339e9f4e2c98103e992ecfe7c2a8ba4",
+  "src/Game/LiveActor/ClippingJudge.cpp": "693643e671d908f0b3ee04c7d6c43c4b70c8839c9d3ea46fa5311a206e91355c",
+  "src/JSystem/JGeometry/TPartition3.hpp": "c16e3eb705ba9a8a293995cf87702e6ca339e9f4e2c98103e992ecfe7c2a8ba4",
+  "src/compat/ClippingDirectorCompat.cpp": "ec10f78c89a505a5599322249fadaed6a9f2226130a5b5859747be09d13fd683",
+  "src/compat/ActorPhysicsRuntime.cpp": "0fc2e5d4268e01efb9b269ca6796fc90158fd7411fb76bf19e6ad850ea6562e4",
+  "src/compat/ActorPhysicsRuntime.hpp": "9aee417511c0c2a17951873a60e6f81cb06de5db296bc2ffbe365235f7a383d0",
+  "src/runtime/SceneScheduler.cpp": "8c733fc3d41478321918f59d090dc14fba782eed69fd214e6ef1193aa13b9932",
+  "tests/GameActorPhysicsRealOrAbsentTests.cpp": "a4132333d9d9c8745dfc5f3b2aadd44717fe4a0eacb26406dd06024b1920d407",
+  "tests/SceneSchedulerHeapTests.cpp": "14a8204d0f2455083a6a80e67ec46f0c15396b340b172c335c1c2e58829cbaa7",
+  "tests/GravityMathFoundationTests.cpp": "af75e754cd13d6a434e3a50e97f89000753aed7d53b1bf58ca4999948fc80466",
+  "tests/OriginalCameraDirectorTests.cpp": "0f8242d2b731f0f8c9898e786c06f6bcbc7eb9006eafe95a3368f8604ccf9656"
+}

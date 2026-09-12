@@ -1,0 +1,3 @@
+src/Game/MapObj/PowerStar.cpp
+src/Game/MapObj/PowerStarAppearPoint.cpp
+src/Game/MapObj/PowerStarAppearPoint.hpp

@@ -1,0 +1,1397 @@
+[
+  {
+    "source": "decomp/src/Game/Scene/SceneFactory.cpp",
+    "sha256": "e837c47a5d984ca17ffbf6139e9fd6576448addf12d1ae801dd4d8c1f1d89e6b",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-controller-scene-children-20260912/SceneFactory.wii.o",
+      "/Users/frityet/Projects/petari/decomp/src/Game/Scene/SceneFactory.cpp"
+    ],
+    "exit": 0,
+    "diff_exit": 0,
+    "sections": [
+      {
+        "name": ".text",
+        "match_percent": 88.943665
+      },
+      {
+        "name": ".rodata",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".data",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.rodata",
+        "match_percent": null
+      },
+      {
+        "name": ".symtab",
+        "match_percent": null
+      },
+      {
+        "name": ".strtab",
+        "match_percent": null
+      },
+      {
+        "name": ".shstrtab",
+        "match_percent": null
+      },
+      {
+        "name": ".comment",
+        "match_percent": null
+      },
+      {
+        "name": ".note.split",
+        "match_percent": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "createScene<9GameScene>__26@unnamed@SceneFactory_cpp@Fv_P5Scene",
+        "match_percent": 100.0
+      },
+      {
+        "name": "createScene<17IntermissionScene>__26@unnamed@SceneFactory_cpp@Fv_P5Scene",
+        "match_percent": 100.0
+      },
+      {
+        "name": "createScene<9LogoScene>__26@unnamed@SceneFactory_cpp@Fv_P5Scene",
+        "match_percent": 100.0
+      },
+      {
+        "name": "createScene__2MRFPCc",
+        "match_percent": 77.57143
+      },
+      {
+        "name": "cCreateTable__26@unnamed@SceneFactory_cpp@",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.rodata-0]",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.data-0]",
+        "match_percent": 97.87234
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Scene/IntermissionScene.cpp",
+    "sha256": "ba82790fd3a6d5f972303a95fe3a6f348e96453403e3617e8df031500c785022",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-controller-scene-children-20260912/IntermissionScene.wii.o",
+      "/Users/frityet/Projects/petari/decomp/src/Game/Scene/IntermissionScene.cpp"
+    ],
+    "exit": 0,
+    "diff_exit": 0,
+    "sections": [
+      {
+        "name": ".text",
+        "match_percent": 88.82703
+      },
+      {
+        "name": ".rodata",
+        "match_percent": 66.66667
+      },
+      {
+        "name": ".data",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sdata2",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.data",
+        "match_percent": null
+      },
+      {
+        "name": ".symtab",
+        "match_percent": null
+      },
+      {
+        "name": ".strtab",
+        "match_percent": null
+      },
+      {
+        "name": ".shstrtab",
+        "match_percent": null
+      },
+      {
+        "name": ".comment",
+        "match_percent": null
+      },
+      {
+        "name": ".note.split",
+        "match_percent": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__ct__17IntermissionSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "update__17IntermissionSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "draw__17IntermissionSceneCFv",
+        "match_percent": 73.83544
+      },
+      {
+        "name": "__dt__19J2DOrthoGraphSimpleFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setCurrentSceneControllerState__17IntermissionSceneFPCce",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__17IntermissionSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__17IntermissionScene",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@53136",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.rodata-0]",
+        "match_percent": 66.66667
+      },
+      {
+        "name": "[.data-0]",
+        "match_percent": 97.40741
+      },
+      {
+        "name": "[.sdata2-0]",
+        "match_percent": 66.66667
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Scene/PlayTimerScene.cpp",
+    "sha256": "728e1e06b68977f4acdd8f7d3f50d8456a95ae1ef86ad34ad3646324978b2d45",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-controller-scene-children-20260912/PlayTimerScene.wii.o",
+      "/Users/frityet/Projects/petari/decomp/src/Game/Scene/PlayTimerScene.cpp"
+    ],
+    "exit": 0,
+    "diff_exit": 0,
+    "sections": [
+      {
+        "name": ".text",
+        "match_percent": 86.98465
+      },
+      {
+        "name": ".ctors",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rodata",
+        "match_percent": 66.66667
+      },
+      {
+        "name": ".data",
+        "match_percent": 40.60914
+      },
+      {
+        "name": ".sbss",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sdata2",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.ctors",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.data",
+        "match_percent": null
+      },
+      {
+        "name": ".symtab",
+        "match_percent": null
+      },
+      {
+        "name": ".strtab",
+        "match_percent": null
+      },
+      {
+        "name": ".shstrtab",
+        "match_percent": null
+      },
+      {
+        "name": ".comment",
+        "match_percent": null
+      },
+      {
+        "name": ".note.split",
+        "match_percent": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__ct__14PlayTimerSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__14PlayTimerSceneFv",
+        "match_percent": 99.78261
+      },
+      {
+        "name": "start__14PlayTimerSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "update__14PlayTimerSceneFv",
+        "match_percent": 41.958904
+      },
+      {
+        "name": "draw__14PlayTimerSceneCFv",
+        "match_percent": 81.67033
+      },
+      {
+        "name": "isActive__14PlayTimerSceneCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isEndGlobalTimer__14PlayTimerSceneCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "stop__14PlayTimerSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startTimeUp__14PlayTimerSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeTimeUp__14PlayTimerSceneFv",
+        "match_percent": 99.44444
+      },
+      {
+        "name": "exeFadeoutAfterTimeUp__14PlayTimerSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__14PlayTimerSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__sinit_\\PlayTimerScene_cpp",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q217NrvPlayTimerScene20PlayTimerSceneNormalFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q217NrvPlayTimerScene20PlayTimerSceneTimeUpFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q217NrvPlayTimerScene32PlayTimerSceneFadeoutAfterTimeUpFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q217NrvPlayTimerScene32PlayTimerSceneFadeoutAfterTimeUpCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q217NrvPlayTimerScene20PlayTimerSceneTimeUpCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q217NrvPlayTimerScene20PlayTimerSceneNormalCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__14PlayTimerScene",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q217NrvPlayTimerScene32PlayTimerSceneFadeoutAfterTimeUp",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q217NrvPlayTimerScene20PlayTimerSceneTimeUp",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q217NrvPlayTimerScene20PlayTimerSceneNormal",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q217NrvPlayTimerScene20PlayTimerSceneNormal",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q217NrvPlayTimerScene20PlayTimerSceneTimeUp",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q217NrvPlayTimerScene32PlayTimerSceneFadeoutAfterTimeUp",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@55453",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.ctors-0]",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.rodata-0]",
+        "match_percent": 66.66667
+      },
+      {
+        "name": "[.data-0]",
+        "match_percent": 59.627323
+      },
+      {
+        "name": "[.sdata2-0]",
+        "match_percent": 66.66667
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Scene/ScenarioSelectScene.cpp",
+    "sha256": "d7838421c64442e648cd5c9a805c03b404667225b3f985caba09221ee2035f10",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-controller-scene-children-20260912/ScenarioSelectScene.wii.o",
+      "/Users/frityet/Projects/petari/decomp/src/Game/Scene/ScenarioSelectScene.cpp"
+    ],
+    "exit": 0,
+    "diff_exit": 0,
+    "sections": [
+      {
+        "name": ".text",
+        "match_percent": 99.97637
+      },
+      {
+        "name": ".ctors",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".data",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sbss",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sdata2",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.ctors",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.data",
+        "match_percent": null
+      },
+      {
+        "name": ".symtab",
+        "match_percent": null
+      },
+      {
+        "name": ".strtab",
+        "match_percent": null
+      },
+      {
+        "name": ".shstrtab",
+        "match_percent": null
+      },
+      {
+        "name": ".comment",
+        "match_percent": null
+      },
+      {
+        "name": ".note.split",
+        "match_percent": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "createDrawBuffer__33@unnamed@ScenarioSelectScene_cpp@Fv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "tryResumeInitializeThread__33@unnamed@ScenarioSelectScene_cpp@Fv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__19ScenarioSelectSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__19ScenarioSelectSceneFv",
+        "match_percent": 99.86631
+      },
+      {
+        "name": "start__19ScenarioSelectSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startBackground__19ScenarioSelectSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "update__19ScenarioSelectSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcAnim__19ScenarioSelectSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcViewAndEntry__19ScenarioSelectSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "draw__19ScenarioSelectSceneCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isActive__19ScenarioSelectSceneCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isExecForeground__19ScenarioSelectSceneCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isScenarioSelecting__19ScenarioSelectSceneCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "validateScenarioSelect__19ScenarioSelectSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "requestReset__19ScenarioSelectSceneFb",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isResetEnd__19ScenarioSelectSceneCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupCameraMtx__19ScenarioSelectSceneCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "trySetCurrentScenarioNo__19ScenarioSelectSceneCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "suspend__19ScenarioSelectSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "tryStartScreenToFrame__19ScenarioSelectSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeDeactive__19ScenarioSelectSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeStartScenarioSelect__19ScenarioSelectSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeWaitScenarioSelect__19ScenarioSelectSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeWaitResumeInitializeThread__19ScenarioSelectSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeWaitInitializeEnd__19ScenarioSelectSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeWaitDisappearLayout__19ScenarioSelectSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeWaitResumeInitializeThreadIfRequestedReset__19ScenarioSelectSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeWaitResumeInitializeThreadIfCanceledSelect__19ScenarioSelectSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__sinit_\\ScenarioSelectScene_cpp",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q222NrvScenarioSelectScene30ScenarioSelectSceneNrvDeactiveFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q222NrvScenarioSelectScene43ScenarioSelectSceneNrvInvalidScenarioSelectFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q222NrvScenarioSelectScene45ScenarioSelectSceneNrvWaitStartScenarioSelectFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q222NrvScenarioSelectScene41ScenarioSelectSceneNrvStartScenarioSelectFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q222NrvScenarioSelectScene40ScenarioSelectSceneNrvWaitScenarioSelectFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q222NrvScenarioSelectScene48ScenarioSelectSceneNrvWaitResumeInitializeThreadFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q222NrvScenarioSelectScene39ScenarioSelectSceneNrvWaitInitializeEndFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q222NrvScenarioSelectScene41ScenarioSelectSceneNrvWaitDisappearLayoutFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q222NrvScenarioSelectScene64ScenarioSelectSceneNrvWaitResumeInitializeThreadIfRequestedResetFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q222NrvScenarioSelectScene64ScenarioSelectSceneNrvWaitResumeInitializeThreadIfCanceledSelectFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q222NrvScenarioSelectScene64ScenarioSelectSceneNrvWaitResumeInitializeThreadIfCanceledSelectCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q222NrvScenarioSelectScene64ScenarioSelectSceneNrvWaitResumeInitializeThreadIfRequestedResetCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q222NrvScenarioSelectScene41ScenarioSelectSceneNrvWaitDisappearLayoutCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q222NrvScenarioSelectScene39ScenarioSelectSceneNrvWaitInitializeEndCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q222NrvScenarioSelectScene48ScenarioSelectSceneNrvWaitResumeInitializeThreadCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q222NrvScenarioSelectScene40ScenarioSelectSceneNrvWaitScenarioSelectCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q222NrvScenarioSelectScene41ScenarioSelectSceneNrvStartScenarioSelectCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q222NrvScenarioSelectScene45ScenarioSelectSceneNrvWaitStartScenarioSelectCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q222NrvScenarioSelectScene43ScenarioSelectSceneNrvInvalidScenarioSelectCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q222NrvScenarioSelectScene30ScenarioSelectSceneNrvDeactiveCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__19ScenarioSelectSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__19ScenarioSelectScene",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q222NrvScenarioSelectScene64ScenarioSelectSceneNrvWaitResumeInitializeThreadIfCanceledSelect",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q222NrvScenarioSelectScene64ScenarioSelectSceneNrvWaitResumeInitializeThreadIfRequestedReset",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q222NrvScenarioSelectScene41ScenarioSelectSceneNrvWaitDisappearLayout",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q222NrvScenarioSelectScene39ScenarioSelectSceneNrvWaitInitializeEnd",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q222NrvScenarioSelectScene48ScenarioSelectSceneNrvWaitResumeInitializeThread",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q222NrvScenarioSelectScene40ScenarioSelectSceneNrvWaitScenarioSelect",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q222NrvScenarioSelectScene41ScenarioSelectSceneNrvStartScenarioSelect",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q222NrvScenarioSelectScene45ScenarioSelectSceneNrvWaitStartScenarioSelect",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q222NrvScenarioSelectScene43ScenarioSelectSceneNrvInvalidScenarioSelect",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q222NrvScenarioSelectScene30ScenarioSelectSceneNrvDeactive",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q222NrvScenarioSelectScene30ScenarioSelectSceneNrvDeactive",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q222NrvScenarioSelectScene43ScenarioSelectSceneNrvInvalidScenarioSelect",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q222NrvScenarioSelectScene45ScenarioSelectSceneNrvWaitStartScenarioSelect",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q222NrvScenarioSelectScene41ScenarioSelectSceneNrvStartScenarioSelect",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q222NrvScenarioSelectScene40ScenarioSelectSceneNrvWaitScenarioSelect",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q222NrvScenarioSelectScene48ScenarioSelectSceneNrvWaitResumeInitializeThread",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q222NrvScenarioSelectScene39ScenarioSelectSceneNrvWaitInitializeEnd",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q222NrvScenarioSelectScene41ScenarioSelectSceneNrvWaitDisappearLayout",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q222NrvScenarioSelectScene64ScenarioSelectSceneNrvWaitResumeInitializeThreadIfRequestedReset",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q222NrvScenarioSelectScene64ScenarioSelectSceneNrvWaitResumeInitializeThreadIfCanceledSelect",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@55539",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@55540",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@56825",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.ctors-0]",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.data-0]",
+        "match_percent": 99.46978
+      },
+      {
+        "name": "[.sdata2-0]",
+        "match_percent": 57.14286
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Scene/LogoScene.cpp",
+    "sha256": "81f7de77098056e47985d3f2dc1d85e3210054bc745504f7c9ca14034f7f2cff",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-controller-scene-children-20260912/LogoScene.wii.o",
+      "/Users/frityet/Projects/petari/decomp/src/Game/Scene/LogoScene.cpp"
+    ],
+    "exit": 0,
+    "diff_exit": 0,
+    "sections": [
+      {
+        "name": ".text",
+        "match_percent": 99.3423
+      },
+      {
+        "name": ".ctors",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".data",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sdata",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sbss",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sdata2",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.ctors",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.data",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.sdata",
+        "match_percent": null
+      },
+      {
+        "name": ".symtab",
+        "match_percent": null
+      },
+      {
+        "name": ".strtab",
+        "match_percent": null
+      },
+      {
+        "name": ".shstrtab",
+        "match_percent": null
+      },
+      {
+        "name": ".comment",
+        "match_percent": null
+      },
+      {
+        "name": ".note.split",
+        "match_percent": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__ct__9LogoSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__9LogoSceneFv",
+        "match_percent": 86.0
+      },
+      {
+        "name": "init__9LogoSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "update__9LogoSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcAnim__9LogoSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "draw__9LogoSceneCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isDisplayStrapRemineder__9LogoSceneCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeCensorshipFadein__9LogoSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeCensorshipDisplay__9LogoSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeCensorshipFadeout__9LogoSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeStrapFadein__9LogoSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeStrapDisplay__9LogoSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeMountGameData__9LogoSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initLayout__9LogoSceneFv",
+        "match_percent": 99.69231
+      },
+      {
+        "name": "tryFadeinLayout__9LogoSceneFP11LayoutActor",
+        "match_percent": 100.0
+      },
+      {
+        "name": "tryFadeoutLayout__9LogoSceneFP11LayoutActor",
+        "match_percent": 100.0
+      },
+      {
+        "name": "tryFadeinLayout__9LogoSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "tryFadeoutLayout__9LogoSceneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__sinit_\\LogoScene_cpp",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q223@unnamed@LogoScene_cpp@25LogoSceneCensorshipFadeinFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q223@unnamed@LogoScene_cpp@26LogoSceneCensorshipDisplayFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q223@unnamed@LogoScene_cpp@26LogoSceneCensorshipFadeoutFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q223@unnamed@LogoScene_cpp@20LogoSceneStrapFadeinFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q223@unnamed@LogoScene_cpp@21LogoSceneStrapDisplayFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q223@unnamed@LogoScene_cpp@21LogoSceneStrapFadeoutFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q223@unnamed@LogoScene_cpp@22LogoSceneMountGameDataFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q223@unnamed@LogoScene_cpp@34LogoSceneWaitReadDoneSystemArchiveFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q223@unnamed@LogoScene_cpp@17LogoSceneDeactiveFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q223@unnamed@LogoScene_cpp@17LogoSceneDeactiveCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q223@unnamed@LogoScene_cpp@34LogoSceneWaitReadDoneSystemArchiveCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q223@unnamed@LogoScene_cpp@22LogoSceneMountGameDataCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q223@unnamed@LogoScene_cpp@21LogoSceneStrapFadeoutCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q223@unnamed@LogoScene_cpp@21LogoSceneStrapDisplayCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q223@unnamed@LogoScene_cpp@20LogoSceneStrapFadeinCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q223@unnamed@LogoScene_cpp@26LogoSceneCensorshipFadeoutCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q223@unnamed@LogoScene_cpp@26LogoSceneCensorshipDisplayCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q223@unnamed@LogoScene_cpp@25LogoSceneCensorshipFadeinCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__9LogoScene",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q223@unnamed@LogoScene_cpp@17LogoSceneDeactive",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q223@unnamed@LogoScene_cpp@34LogoSceneWaitReadDoneSystemArchive",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q223@unnamed@LogoScene_cpp@22LogoSceneMountGameData",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q223@unnamed@LogoScene_cpp@21LogoSceneStrapFadeout",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q223@unnamed@LogoScene_cpp@21LogoSceneStrapDisplay",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q223@unnamed@LogoScene_cpp@20LogoSceneStrapFadein",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q223@unnamed@LogoScene_cpp@26LogoSceneCensorshipFadeout",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q223@unnamed@LogoScene_cpp@26LogoSceneCensorshipDisplay",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q223@unnamed@LogoScene_cpp@25LogoSceneCensorshipFadein",
+        "match_percent": 100.0
+      },
+      {
+        "name": "pIsbnNumber",
+        "match_percent": 100.0
+      },
+      {
+        "name": "pRegistNumber",
+        "match_percent": 100.0
+      },
+      {
+        "name": "pOtherNumber",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q223@unnamed@LogoScene_cpp@25LogoSceneCensorshipFadein",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q223@unnamed@LogoScene_cpp@26LogoSceneCensorshipDisplay",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q223@unnamed@LogoScene_cpp@26LogoSceneCensorshipFadeout",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q223@unnamed@LogoScene_cpp@20LogoSceneStrapFadein",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q223@unnamed@LogoScene_cpp@21LogoSceneStrapDisplay",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q223@unnamed@LogoScene_cpp@21LogoSceneStrapFadeout",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q223@unnamed@LogoScene_cpp@22LogoSceneMountGameData",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q223@unnamed@LogoScene_cpp@34LogoSceneWaitReadDoneSystemArchive",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q223@unnamed@LogoScene_cpp@17LogoSceneDeactive",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@62963",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@62964",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@64272",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.ctors-0]",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.data-0]",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.sdata-0]",
+        "match_percent": 98.156685
+      },
+      {
+        "name": "[.sdata2-0]",
+        "match_percent": 85.71429
+      }
+    ]
+  }
+]

@@ -1,0 +1,397 @@
+{
+  "archive_sha256": "0ef00cfc2ebff78a033591f23b2b1421ea91183e60fdc5f4d6cf6b92cc0b8577",
+  "symbols": [
+    {
+      "symbol": "__Unwind_Resume",
+      "name": "_Unwind_Resume",
+      "providers": []
+    },
+    {
+      "symbol": "__ZN10PartsModel17initFixedPositionERKN9JGeometry5TVec3IfEES4_PKc",
+      "name": "PartsModel::initFixedPosition(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, char const*)",
+      "providers": [
+        "PartsModel.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN11DemoStarter5startEv",
+      "name": "DemoStarter::start()",
+      "providers": [
+        "NPCUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN11DemoStarter6updateEv",
+      "name": "DemoStarter::update()",
+      "providers": [
+        "NPCUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN11DemoStarterC1EP8NPCActor",
+      "name": "DemoStarter::DemoStarter(NPCActor*)",
+      "providers": [
+        "NPCUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN12DemoFunction27registerDemoTalkMessageCtrlEP9LiveActorP15TalkMessageCtrl",
+      "name": "DemoFunction::registerDemoTalkMessageCtrl(LiveActor*, TalkMessageCtrl*)",
+      "providers": [
+        "DemoFunction.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN12DemoFunction33tryCreateDemoTalkAnimCtrlForActorEP9LiveActorPKcS3_",
+      "name": "DemoFunction::tryCreateDemoTalkAnimCtrlForActor(LiveActor*, char const*, char const*)",
+      "providers": [
+        "DemoFunction.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN12DemoFunction33tryCreateDemoTalkAnimCtrlForSceneEP9LiveActorRK12JMapInfoIterPKcS6_ii",
+      "name": "DemoFunction::tryCreateDemoTalkAnimCtrlForScene(LiveActor*, JMapInfoIter const&, char const*, char const*, int, int)",
+      "providers": [
+        "DemoFunction.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN13NerveExecutor8setNerveEPK5Nerve",
+      "name": "NerveExecutor::setNerve(Nerve const*)",
+      "providers": [
+        "NerveExecutor.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN13NerveExecutor9initNerveEPK5Nerve",
+      "name": "NerveExecutor::initNerve(Nerve const*)",
+      "providers": [
+        "NerveExecutor.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN13NerveExecutorC2EPKc",
+      "name": "NerveExecutor::NerveExecutor(char const*)",
+      "providers": [
+        "NerveExecutor.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN13NerveExecutorD2Ev",
+      "name": "NerveExecutor::~NerveExecutor()",
+      "providers": [
+        "NerveExecutor.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN27NameObjArchiveListCollector10addArchiveEPKc",
+      "name": "NameObjArchiveListCollector::addArchive(char const*)",
+      "providers": [
+        "NameObjArchiveListCollector.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR10emitEffectEP9LiveActorPKc",
+      "name": "MR::emitEffect(LiveActor*, char const*)",
+      "providers": [
+        "EffectUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR10hidePlayerEv",
+      "name": "MR::hidePlayer()",
+      "providers": [
+        "PlayerUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR10isDemoCastEPK9LiveActorPKc",
+      "name": "MR::isDemoCast(LiveActor const*, char const*)",
+      "providers": [
+        "DemoUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR10showPlayerEv",
+      "name": "MR::showPlayer()",
+      "providers": [
+        "PlayerUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR10startSoundEPK9LiveActorPKcii",
+      "name": "MR::startSound(LiveActor const*, char const*, int, int)",
+      "providers": [
+        "SoundUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR11isFirstStepEPK13NerveExecutor",
+      "name": "MR::isFirstStep(NerveExecutor const*)",
+      "providers": [
+        "NerveUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR11startActionEPK9LiveActorPKc",
+      "name": "MR::startAction(LiveActor const*, char const*)",
+      "providers": [
+        "OriginalActorAnimationStart.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR12deleteEffectEP9LiveActorPKc",
+      "name": "MR::deleteEffect(LiveActor*, char const*)",
+      "providers": [
+        "EffectUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR12isNearPlayerEPK15TalkMessageCtrlf",
+      "name": "MR::isNearPlayer(TalkMessageCtrl const*, float)",
+      "providers": [
+        "TalkUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR12isNearPlayerEPK9LiveActorf",
+      "name": "MR::isNearPlayer(LiveActor const*, float)",
+      "providers": [
+        "ActorMovementUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR15getDemoPartStepEPKc",
+      "name": "MR::getDemoPartStep(char const*)",
+      "providers": [
+        "DemoUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR15onPlayerControlEb",
+      "name": "MR::onPlayerControl(bool)",
+      "providers": [
+        "PlayerUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR15startLevelSoundEPK9LiveActorPKciii",
+      "name": "MR::startLevelSound(LiveActor const*, char const*, int, int, int)",
+      "providers": [
+        "SoundUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR16isDemoPartActiveEPKc",
+      "name": "MR::isDemoPartActive(char const*)",
+      "providers": [
+        "DemoUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR16offPlayerControlEv",
+      "name": "MR::offPlayerControl()",
+      "providers": [
+        "PlayerUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR18timeKeepDemoFadeInEv",
+      "name": "MR::timeKeepDemoFadeIn()",
+      "providers": [
+        "DemoCompat.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR19createPartsModelNpcEP9LiveActorPKcS3_PA4_f",
+      "name": "MR::createPartsModelNpc(LiveActor*, char const*, char const*, float (*) [4])",
+      "providers": []
+    },
+    {
+      "symbol": "__ZN2MR19invalidateShadowAllEP9LiveActor",
+      "name": "MR::invalidateShadowAll(LiveActor*)",
+      "providers": []
+    },
+    {
+      "symbol": "__ZN2MR19isDemoPartFirstStepEPKc",
+      "name": "MR::isDemoPartFirstStep(char const*)",
+      "providers": [
+        "DemoUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR19timeKeepDemoFadeOutEv",
+      "name": "MR::timeKeepDemoFadeOut()",
+      "providers": [
+        "DemoCompat.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR19tryRegisterDemoCastEP9LiveActorRK12JMapInfoIter",
+      "name": "MR::tryRegisterDemoCast(LiveActor*, JMapInfoIter const&)",
+      "providers": [
+        "DemoUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR20invalidateHitSensorsEP9LiveActor",
+      "name": "MR::invalidateHitSensors(LiveActor*)",
+      "providers": [
+        "GameActorSensorCompat.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR20isTimeKeepDemoActiveEv",
+      "name": "MR::isTimeKeepDemoActive()",
+      "providers": [
+        "DemoUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR21needStageSwitchWriteAEP9LiveActorRK12JMapInfoIter",
+      "name": "MR::needStageSwitchWriteA(LiveActor*, JMapInfoIter const&)",
+      "providers": [
+        "ActorSwitchUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR21needStageSwitchWriteBEP9LiveActorRK12JMapInfoIter",
+      "name": "MR::needStageSwitchWriteB(LiveActor*, JMapInfoIter const&)",
+      "providers": [
+        "ActorSwitchUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR21setClippingTypeSphereEP9LiveActorf",
+      "name": "MR::setClippingTypeSphere(LiveActor*, float)",
+      "providers": [
+        "GameRuntimeCompat.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR25registerDemoActionFunctorEPK9LiveActorRKNS_11FunctorBaseEPKc",
+      "name": "MR::registerDemoActionFunctor(LiveActor const*, MR::FunctorBase const&, char const*)",
+      "providers": [
+        "DemoUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR32startTimeKeepDemoMarioPuppetableEP7NameObjPKcS3_",
+      "name": "MR::startTimeKeepDemoMarioPuppetable(NameObj*, char const*, char const*)",
+      "providers": [
+        "DemoUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR35tryStartTimeKeepDemoMarioPuppetableEP9LiveActorPKcS3_",
+      "name": "MR::tryStartTimeKeepDemoMarioPuppetable(LiveActor*, char const*, char const*)",
+      "providers": [
+        "DemoUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR42onGameEventFlagRosettaTalkAboutTicoInTowerEv",
+      "name": "MR::onGameEventFlagRosettaTalkAboutTicoInTower()",
+      "providers": [
+        "EventUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR44isOnGameEventFlagRosettaTalkAboutTicoInTowerEv",
+      "name": "MR::isOnGameEventFlagRosettaTalkAboutTicoInTower()",
+      "providers": [
+        "EventUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR6isStepEPK13NerveExecutori",
+      "name": "MR::isStep(NerveExecutor const*, int)",
+      "providers": [
+        "NerveUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR8startBckEPK9LiveActorPKcS4_",
+      "name": "MR::startBck(LiveActor const*, char const*, char const*)",
+      "providers": [
+        "OriginalActorAnimationStart.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR8startBrkEPK9LiveActorPKc",
+      "name": "MR::startBrk(LiveActor const*, char const*)",
+      "providers": [
+        "OriginalActorModelAccess.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR9onSwitchAEP9LiveActor",
+      "name": "MR::onSwitchA(LiveActor*)",
+      "providers": [
+        "ActorSwitchUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR9onSwitchBEP9LiveActor",
+      "name": "MR::onSwitchB(LiveActor*)",
+      "providers": [
+        "ActorSwitchUtil.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZN7Rosetta9startDemoEP13NerveExecutor",
+      "name": "Rosetta::startDemo(NerveExecutor*)",
+      "providers": []
+    },
+    {
+      "symbol": "__ZNK5Nerve12executeOnEndEP5Spine",
+      "name": "Nerve::executeOnEnd(Spine*) const",
+      "providers": [
+        "Nerve.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZTI13NerveExecutor",
+      "name": "typeinfo for NerveExecutor",
+      "providers": [
+        "NerveExecutor.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZTI5Nerve",
+      "name": "typeinfo for Nerve",
+      "providers": [
+        "Nerve.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZTVN10__cxxabiv117__class_type_infoE",
+      "name": "vtable for __cxxabiv1::__class_type_info",
+      "providers": []
+    },
+    {
+      "symbol": "__ZTVN10__cxxabiv120__si_class_type_infoE",
+      "name": "vtable for __cxxabiv1::__si_class_type_info",
+      "providers": []
+    },
+    {
+      "symbol": "__ZdlPvm",
+      "name": "operator delete(void*, unsigned long)",
+      "providers": [
+        "MetrowerksAlignedNew.cpp.o"
+      ]
+    },
+    {
+      "symbol": "__ZnwmP7JKRHeapi",
+      "name": "operator new(unsigned long, JKRHeap*, int)",
+      "providers": [
+        "MetrowerksAlignedNew.cpp.o"
+      ]
+    },
+    {
+      "symbol": "___gxx_personality_v0",
+      "name": "__gxx_personality_v0",
+      "providers": []
+    }
+  ]
+}

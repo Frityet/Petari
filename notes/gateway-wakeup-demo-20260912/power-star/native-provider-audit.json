@@ -1,0 +1,1323 @@
+{
+  "archive_sha256": "0ef00cfc2ebff78a033591f23b2b1421ea91183e60fdc5f4d6cf6b92cc0b8577",
+  "objects": {
+    "PowerStar": [
+      {
+        "symbol": "_PSVECMag",
+        "name": "PSVECMag",
+        "providers": []
+      },
+      {
+        "symbol": "__ZN15CameraTargetArgC1EPK9LiveActor",
+        "name": "CameraTargetArg::CameraTargetArg(LiveActor const*)",
+        "providers": [
+          "CameraTargetArg.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN27NameObjArchiveListCollector10addArchiveEPKc",
+        "name": "NameObjArchiveListCollector::addArchive(char const*)",
+        "providers": [
+          "NameObjArchiveListCollector.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR10emitEffectEP9LiveActorPKc",
+        "name": "MR::emitEffect(LiveActor*, char const*)",
+        "providers": [
+          "EffectUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR10isDemoCastEPK9LiveActorPKc",
+        "name": "MR::isDemoCast(LiveActor const*, char const*)",
+        "providers": [
+          "DemoUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR10isLessStepEPK9LiveActori",
+        "name": "MR::isLessStep(LiveActor const*, int)",
+        "providers": [
+          "LiveActorUtilCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR10setBrkRateEPK9LiveActorf",
+        "name": "MR::setBrkRate(LiveActor const*, float)",
+        "providers": [
+          "OriginalActorModelAccess.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR10startSoundEPK9LiveActorPKcii",
+        "name": "MR::startSound(LiveActor const*, char const*, int, int)",
+        "providers": [
+          "SoundUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR11calcGravityEP9LiveActorRKN9JGeometry5TVec3IfEE",
+        "name": "MR::calcGravity(LiveActor*, JGeometry::TVec3<float> const&)",
+        "providers": [],
+        "source_hits": [
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/LiveActorUtil.cpp:2208:    void calcGravity(LiveActor* pActor) {",
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/LiveActorUtil.cpp:2217:    void calcGravity(LiveActor* pActor, const TVec3f& rPos) {",
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/LiveActorUtil.cpp:2727:            calcGravity(pActor);",
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/ActorMovementUtil.cpp:504:            MR::calcGravity(pActor);",
+          "/Users/frityet/Projects/petari/src/compat/NPCActorRuntimeCompat.cpp:198:    void calcGravity(LiveActor* pActor) {"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR11isFirstStepEPK9LiveActor",
+        "name": "MR::isFirstStep(LiveActor const*)",
+        "providers": [
+          "LiveActorUtilCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR11startSubBGMEPKcb",
+        "name": "MR::startSubBGM(char const*, bool)",
+        "providers": [
+          "SoundUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR12addHitSensorEP9LiveActorPKcjtfRKN9JGeometry5TVec3IfEE",
+        "name": "MR::addHitSensor(LiveActor*, char const*, unsigned int, unsigned short, float, JGeometry::TVec3<float> const&)",
+        "providers": [
+          "GameActorSensorCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR12copyJointPosEPK9LiveActorPKcPN9JGeometry5TVec3IfEE",
+        "name": "MR::copyJointPos(LiveActor const*, char const*, JGeometry::TVec3<float>*)",
+        "providers": [
+          "OriginalJointAccess.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR12getPlayerPosEv",
+        "name": "MR::getPlayerPos()",
+        "providers": [
+          "PlayerUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR12hideMaterialEPK9LiveActorPKc",
+        "name": "MR::hideMaterial(LiveActor const*, char const*)",
+        "providers": [
+          "OriginalModelAccess.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR12isBckStoppedEPK9LiveActor",
+        "name": "MR::isBckStopped(LiveActor const*)",
+        "providers": [
+          "OriginalActorModelAccess.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR12onDrawEffectEP9LiveActor",
+        "name": "MR::onDrawEffect(LiveActor*)",
+        "providers": [
+          "EffectUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR12setBaseTRMtxEP9LiveActorRKN9JGeometry10TPosition3INS2_9TMatrix34INS2_10SMatrix34CIfEEEEEE",
+        "name": "MR::setBaseTRMtx(LiveActor*, JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>> const&)",
+        "providers": [
+          "OriginalActorModelAccess.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR12showMaterialEPK9LiveActorPKc",
+        "name": "MR::showMaterial(LiveActor const*, char const*)",
+        "providers": [
+          "OriginalModelAccess.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR13endAnimCameraEPK9LiveActorPK15ActorCameraInfoPKcib",
+        "name": "MR::endAnimCamera(LiveActor const*, ActorCameraInfo const*, char const*, int, bool)",
+        "providers": [
+          "ActorCameraUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR13initLightCtrlEP9LiveActor",
+        "name": "MR::initLightCtrl(LiveActor*)",
+        "providers": [
+          "LiveActorUtilCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR13makeMtxRotateEPA4_fRKN9JGeometry5TVec3IfEE",
+        "name": "MR::makeMtxRotate(float (*) [4], JGeometry::TVec3<float> const&)",
+        "providers": [
+          "MtxCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR13offDrawEffectEP9LiveActor",
+        "name": "MR::offDrawEffect(LiveActor*)",
+        "providers": [
+          "EffectUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR13startStageBGMEPKcb",
+        "name": "MR::startStageBGM(char const*, bool)",
+        "providers": [
+          "SoundUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR13startSystemSEEPKcii",
+        "name": "MR::startSystemSE(char const*, int, int)",
+        "providers": [
+          "SoundUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR14endActorCameraEPK9LiveActorPK15ActorCameraInfobi",
+        "name": "MR::endActorCamera(LiveActor const*, ActorCameraInfo const*, bool, int)",
+        "providers": [
+          "ActorCameraUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR14getBckFrameMaxEPK9LiveActor",
+        "name": "MR::getBckFrameMax(LiveActor const*)",
+        "providers": [
+          "OriginalActorModelAccess.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR14initAnimCameraEPK9LiveActorPK15ActorCameraInfoPKc",
+        "name": "MR::initAnimCamera(LiveActor const*, ActorCameraInfo const*, char const*)",
+        "providers": [
+          "ActorCameraUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR14initDefaultPosEP9LiveActorRK12JMapInfoIter",
+        "name": "MR::initDefaultPos(LiveActor*, JMapInfoIter const&)",
+        "providers": [
+          "LiveActorUtilCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR14isStageKoopaVsEv",
+        "name": "MR::isStageKoopaVs()",
+        "providers": [
+          "SceneUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR14makeMtxUpFrontEPN9JGeometry10TPosition3INS0_9TMatrix34INS0_10SMatrix34CIfEEEEEERKNS0_5TVec3IfEESB_",
+        "name": "MR::makeMtxUpFront(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+        "providers": [
+          "MtxCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR14setNerveAtStepEP9LiveActorPK5Nervei",
+        "name": "MR::setNerveAtStep(LiveActor*, Nerve const*, int)",
+        "providers": [
+          "LiveActorUtilCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR14startBckPlayerEPKcS1_",
+        "name": "MR::startBckPlayer(char const*, char const*)",
+        "providers": [
+          "PlayerUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR14startBckPlayerEPKci",
+        "name": "MR::startBckPlayer(char const*, int)",
+        "providers": [
+          "PlayerUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR14vecKillElementERKN9JGeometry5TVec3IfEES4_PS2_",
+        "name": "MR::vecKillElement(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*)",
+        "providers": [
+          "GameMathCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR15addHitSensorMtxEP9LiveActorPKcjtfPA4_fRKN9JGeometry5TVec3IfEE",
+        "name": "MR::addHitSensorMtx(LiveActor*, char const*, unsigned int, unsigned short, float, float (*) [4], JGeometry::TVec3<float> const&)",
+        "providers": [
+          "GameActorSensorCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR15getEaseOutValueEffff",
+        "name": "MR::getEaseOutValue(float, float, float, float)",
+        "providers": [
+          "GameMathCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR15getPlayerRotateEv",
+        "name": "MR::getPlayerRotate()",
+        "providers": [
+          "PlayerUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR15initActorCameraEPK9LiveActorRK12JMapInfoIterPP15ActorCameraInfo",
+        "name": "MR::initActorCamera(LiveActor const*, JMapInfoIter const&, ActorCameraInfo**)",
+        "providers": [
+          "ActorCameraUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR15isSameDirectionERKN9JGeometry5TVec3IfEES4_f",
+        "name": "MR::isSameDirection(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, float)",
+        "providers": [
+          "NPCActorRuntimeCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR15isStageKoopaVs3Ev",
+        "name": "MR::isStageKoopaVs3()",
+        "providers": [
+          "SceneUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR15startLevelSoundEPK9LiveActorPKciii",
+        "name": "MR::startLevelSound(LiveActor const*, char const*, int, int, int)",
+        "providers": [
+          "SoundUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR15stopSoundPlayerEPKcj",
+        "name": "MR::stopSoundPlayer(char const*, unsigned int)",
+        "providers": [
+          "PlayerUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR16getPlayerBaseMtxEv",
+        "name": "MR::getPlayerBaseMtx()",
+        "providers": [
+          "PlayerUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR16hideModelIfShownEP9LiveActor",
+        "name": "MR::hideModelIfShown(LiveActor*)",
+        "providers": [],
+        "source_hits": [
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/LiveActorUtil.cpp:2151:    void hideModelIfShown(LiveActor* pActor) {"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR16joinToGroupArrayEP9LiveActorRK12JMapInfoIterPKci",
+        "name": "MR::joinToGroupArray(LiveActor*, JMapInfoIter const&, char const*, int)",
+        "providers": [
+          "OriginalLiveActorGroupUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR16moveVolumeSubBGMEfj",
+        "name": "MR::moveVolumeSubBGM(float, unsigned int)",
+        "providers": [
+          "SoundUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR16setPlayerBaseMtxEPA4_f",
+        "name": "MR::setPlayerBaseMtx(float (*) [4])",
+        "providers": [
+          "PlayerUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR16validateClippingEP9LiveActor",
+        "name": "MR::validateClipping(LiveActor*)",
+        "providers": [
+          "LiveActorUtilCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR17calcGravityVectorEPK7NameObjRKN9JGeometry5TVec3IfEEPS5_P11GravityInfoj",
+        "name": "MR::calcGravityVector(NameObj const*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*, GravityInfo*, unsigned int)",
+        "providers": [
+          "GameGravityCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR17createModelObjNpcEPKcS1_PA4_f",
+        "name": "MR::createModelObjNpc(char const*, char const*, float (*) [4])",
+        "providers": [],
+        "source_hits": [
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/LiveActorUtil.cpp:2545:    ModelObj* createModelObjNpc(const char* pName, const char* pModelName, MtxPtr pMtx) {"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR17forceDeleteEffectEP9LiveActorPKc",
+        "name": "MR::forceDeleteEffect(LiveActor*, char const*)",
+        "providers": [
+          "EffectUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR17getGroupFromArrayEPK9LiveActor",
+        "name": "MR::getGroupFromArray(LiveActor const*)",
+        "providers": [
+          "OriginalLiveActorGroupUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR17initShadowFromCSVEP9LiveActorPKc",
+        "name": "MR::initShadowFromCSV(LiveActor*, char const*)",
+        "providers": [
+          "NPCActorRuntimeCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR17isEqualObjectNameERK12JMapInfoIterPKc",
+        "name": "MR::isEqualObjectName(JMapInfoIter const&, char const*)",
+        "providers": [
+          "JMapUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR17registerPowerStarEP9PowerStari",
+        "name": "MR::registerPowerStar(PowerStar*, int)",
+        "providers": [
+          "PowerStarHolder.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR17requestMovementOnEP9LiveActor",
+        "name": "MR::requestMovementOn(LiveActor*)",
+        "providers": [
+          "ObjUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR17requestPointLightEPK9LiveActorN9JGeometry5TVec3IfEE6Color8fi",
+        "name": "MR::requestPointLight(LiveActor const*, JGeometry::TVec3<float>, Color8, float, int)",
+        "providers": [
+          "LightUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR17showModelIfHiddenEP9LiveActor",
+        "name": "MR::showModelIfHidden(LiveActor*)",
+        "providers": [],
+        "source_hits": [
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/LiveActorUtil.cpp:715:        MR::showModelIfHidden(pActor);",
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/LiveActorUtil.cpp:2145:    void showModelIfHidden(LiveActor* pActor) {"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR18invalidateClippingEP9LiveActor",
+        "name": "MR::invalidateClipping(LiveActor*)",
+        "providers": [
+          "LiveActorUtilCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR18makeMtxUpNoSupportEPN9JGeometry10TPosition3INS0_9TMatrix34INS0_10SMatrix34CIfEEEEEERKNS0_5TVec3IfEE",
+        "name": "MR::makeMtxUpNoSupport(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, JGeometry::TVec3<float> const&)",
+        "providers": [],
+        "source_hits": [
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/MathUtil.cpp:417:        makeMtxUpNoSupport(&mtx, rUp);",
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/MtxUtil.cpp:503:    void makeMtxUpNoSupport(TPos3f* pDst, const TVec3f& rUp) {"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR18moveVolumeStageBGMEfj",
+        "name": "MR::moveVolumeStageBGM(float, unsigned int)",
+        "providers": [
+          "SoundUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR18setBtpFrameAndStopEPK9LiveActorf",
+        "name": "MR::setBtpFrameAndStop(LiveActor const*, float)",
+        "providers": [
+          "OriginalActorModelAccess.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR18setBvaFrameAndStopEPK9LiveActorf",
+        "name": "MR::setBvaFrameAndStop(LiveActor const*, float)",
+        "providers": [
+          "OriginalActorModelAccess.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR18validateHitSensorsEP9LiveActor",
+        "name": "MR::validateHitSensors(LiveActor*)",
+        "providers": [
+          "GameActorSensorCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR19invalidateShadowAllEP9LiveActor",
+        "name": "MR::invalidateShadowAll(LiveActor*)",
+        "providers": [],
+        "source_hits": [
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/ActorShadowUtil.cpp:293:            invalidateShadowAll(pActor);",
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/ActorShadowUtil.cpp:307:    void invalidateShadowAll(LiveActor* pActor) {"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR19tryRegisterDemoCastEP9LiveActorRK12JMapInfoIter",
+        "name": "MR::tryRegisterDemoCast(LiveActor*, JMapInfoIter const&)",
+        "providers": [
+          "DemoUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR19validateShadowGroupEP9LiveActorPKc",
+        "name": "MR::validateShadowGroup(LiveActor*, char const*)",
+        "providers": [],
+        "source_hits": [
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/ActorShadowUtil.cpp:271:    void validateShadowGroup(LiveActor* pActor, const char* pName) {"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR20calcNerveEaseInValueEPK9LiveActoriff",
+        "name": "MR::calcNerveEaseInValue(LiveActor const*, int, float, float)",
+        "providers": [],
+        "source_hits": [
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/LiveActorUtil.cpp:1903:    f32 calcNerveEaseInValue(const LiveActor* pActor, s32 stepMax, f32 valueStart, f32 valueEnd) {",
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/LiveActorUtil.cpp:1907:    f32 calcNerveEaseInValue(const LiveActor* pActor, s32 stepMin, s32 stepMax, f32 valueStart, f32 valueEnd) {",
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/LayoutUtil.cpp:515:    f32 calcNerveEaseInValue(const LayoutActor* pActor, s32 stepMin, s32 stepMax, f32 valueMin, f32 valueMax) {"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR20invalidateHitSensorsEP9LiveActor",
+        "name": "MR::invalidateHitSensors(LiveActor*)",
+        "providers": [
+          "GameActorSensorCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR20isMsgJetTurtleAttackEj",
+        "name": "MR::isMsgJetTurtleAttack(unsigned int)",
+        "providers": [
+          "GameActorSensorCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR20tryCreateMirrorActorEP9LiveActorPKc",
+        "name": "MR::tryCreateMirrorActor(LiveActor*, char const*)",
+        "providers": [
+          "GameActorPhysicsCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR21calcNerveEaseOutValueEPK9LiveActoriff",
+        "name": "MR::calcNerveEaseOutValue(LiveActor const*, int, float, float)",
+        "providers": [],
+        "source_hits": [
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/LiveActorUtil.cpp:1911:    f32 calcNerveEaseOutValue(const LiveActor* pActor, s32 stepMax, f32 valueStart, f32 valueEnd) {"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR21getJMapInfoArg0NoInitERK12JMapInfoIterPi",
+        "name": "MR::getJMapInfoArg0NoInit(JMapInfoIter const&, int*)",
+        "providers": [
+          "JMapUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR21getJMapInfoArg1NoInitERK12JMapInfoIterPb",
+        "name": "MR::getJMapInfoArg1NoInit(JMapInfoIter const&, bool*)",
+        "providers": [
+          "JMapUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR21getJMapInfoArg2NoInitERK12JMapInfoIterPb",
+        "name": "MR::getJMapInfoArg2NoInit(JMapInfoIter const&, bool*)",
+        "providers": [
+          "JMapUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR21getJMapInfoArg3NoInitERK12JMapInfoIterPb",
+        "name": "MR::getJMapInfoArg3NoInit(JMapInfoIter const&, bool*)",
+        "providers": [
+          "JMapUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR21getJMapInfoArg4NoInitERK12JMapInfoIterPb",
+        "name": "MR::getJMapInfoArg4NoInit(JMapInfoIter const&, bool*)",
+        "providers": [
+          "JMapUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR21isMsgStarPieceReflectEj",
+        "name": "MR::isMsgStarPieceReflect(unsigned int)",
+        "providers": [
+          "GameActorSensorCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR21sendMsgToAllLiveActorEjP9LiveActor",
+        "name": "MR::sendMsgToAllLiveActor(unsigned int, LiveActor*)",
+        "providers": [
+          "OriginalActorBroadcast.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR21setBrkFrameEndAndStopEPK9LiveActor",
+        "name": "MR::setBrkFrameEndAndStop(LiveActor const*)",
+        "providers": [
+          "OriginalActorModelAccess.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR21setClippingTypeSphereEP9LiveActorf",
+        "name": "MR::setClippingTypeSphere(LiveActor*, float)",
+        "providers": [
+          "GameRuntimeCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR22resetCameraLocalOffsetEv",
+        "name": "MR::resetCameraLocalOffset()",
+        "providers": [
+          "CameraUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR23registerDemoActionNerveEPK9LiveActorPK5NervePKc",
+        "name": "MR::registerDemoActionNerve(LiveActor const*, Nerve const*, char const*)",
+        "providers": [
+          "DemoUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR23requestGrandStarGetDemoEv",
+        "name": "MR::requestGrandStarGetDemo()",
+        "providers": [],
+        "source_hits": [
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/SequenceUtil.cpp:87:    void requestGrandStarGetDemo() {",
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/SequenceUtil.cpp:88:        GameSceneFunction::requestGrandStarGetDemo();",
+          "/Users/frityet/Projects/petari/src/compat/OriginalGameSceneFunction.cpp:37:    void requestGrandStarGetDemo() {"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR23requestPowerStarGetDemoEv",
+        "name": "MR::requestPowerStarGetDemo()",
+        "providers": [],
+        "source_hits": [
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/SequenceUtil.cpp:83:    void requestPowerStarGetDemo() {",
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/SequenceUtil.cpp:84:        GameSceneFunction::requestPowerStarGetDemo();",
+          "/Users/frityet/Projects/petari/src/compat/OriginalGameSceneFunction.cpp:33:    void requestPowerStarGetDemo() {"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR25isJudgedToClipFrustum100mERKN9JGeometry5TVec3IfEEf",
+        "name": "MR::isJudgedToClipFrustum100m(JGeometry::TVec3<float> const&, float)",
+        "providers": [
+          "ObjUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR25overlayWithPreviousScreenEj",
+        "name": "MR::overlayWithPreviousScreen(unsigned int)",
+        "providers": [
+          "CameraUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR25registerDemoSimpleCastAllEP9LiveActor",
+        "name": "MR::registerDemoSimpleCastAll(LiveActor*)",
+        "providers": [
+          "DemoUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR25startAnimCameraTargetSelfEPK9LiveActorPK15ActorCameraInfoPKcif",
+        "name": "MR::startAnimCameraTargetSelf(LiveActor const*, ActorCameraInfo const*, char const*, int, float)",
+        "providers": [
+          "ActorCameraUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR26hasPowerStarInCurrentStageEi",
+        "name": "MR::hasPowerStarInCurrentStage(int)",
+        "providers": [
+          "EventUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR26startBrkAndSetFrameAndStopEPK9LiveActorPKcf",
+        "name": "MR::startBrkAndSetFrameAndStop(LiveActor const*, char const*, float)",
+        "providers": [
+          "OriginalActorModelAccess.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR27startActorCameraTargetOtherEPK9LiveActorPK15ActorCameraInfoRK15CameraTargetArgi",
+        "name": "MR::startActorCameraTargetOther(LiveActor const*, ActorCameraInfo const*, CameraTargetArg const&, int)",
+        "providers": [
+          "ActorCameraUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR28connectToSceneIndirectMapObjEP9LiveActor",
+        "name": "MR::connectToSceneIndirectMapObj(LiveActor*)",
+        "providers": [
+          "ObjUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR28createModelObjIndirectMapObjEPKcS1_PA4_f",
+        "name": "MR::createModelObjIndirectMapObj(char const*, char const*, float (*) [4])",
+        "providers": [],
+        "source_hits": [
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/LiveActorUtil.cpp:2527:    ModelObj* createModelObjIndirectMapObj(const char* pName, const char* pModelName, MtxPtr pMtx) {"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR28hasPowerStarAtResultSequenceEv",
+        "name": "MR::hasPowerStarAtResultSequence()",
+        "providers": [
+          "EventUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR28isPowerStarRedInCurrentStageEi",
+        "name": "MR::isPowerStarRedInCurrentStage(int)",
+        "providers": [
+          "EventUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR28sendStageResultSequenceParamEi",
+        "name": "MR::sendStageResultSequenceParam(int)",
+        "providers": [
+          "EventUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR29hideModelAndOnCalcAnimIfShownEP9LiveActor",
+        "name": "MR::hideModelAndOnCalcAnimIfShown(LiveActor*)",
+        "providers": [],
+        "source_hits": [
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/LiveActorUtil.cpp:711:            MR::hideModelAndOnCalcAnimIfShown(pActor);",
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/LiveActorUtil.cpp:2159:    void hideModelAndOnCalcAnimIfShown(LiveActor* pActor) {"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR30isPowerStarGreenInCurrentStageEi",
+        "name": "MR::isPowerStarGreenInCurrentStage(int)",
+        "providers": [
+          "EventUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR30isPowerStarRedAtResultSequenceEv",
+        "name": "MR::isPowerStarRedAtResultSequence()",
+        "providers": [
+          "EventUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR32isPowerStarGreenAtResultSequenceEv",
+        "name": "MR::isPowerStarGreenAtResultSequence()",
+        "providers": [
+          "EventUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR33connectToSceneNoSilhouettedMapObjEP9LiveActor",
+        "name": "MR::connectToSceneNoSilhouettedMapObj(LiveActor*)",
+        "providers": [
+          "ObjUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR33createModelObjNoSilhouettedMapObjEPKcS1_PA4_f",
+        "name": "MR::createModelObjNoSilhouettedMapObj(char const*, char const*, float (*) [4])",
+        "providers": [],
+        "source_hits": [
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/LiveActorUtil.cpp:2515:    ModelObj* createModelObjNoSilhouettedMapObj(const char* pName, const char* pModelName, MtxPtr pMtx) {"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR34requestStartDemoWithoutCinemaFrameEP9LiveActorPKcPK5NerveS6_",
+        "name": "MR::requestStartDemoWithoutCinemaFrame(LiveActor*, char const*, Nerve const*, Nerve const*)",
+        "providers": [
+          "DemoUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR35changeShowModelFlagSyncNearClippingEP9LiveActorf",
+        "name": "MR::changeShowModelFlagSyncNearClipping(LiveActor*, float)",
+        "providers": [],
+        "source_hits": [
+          "/Users/frityet/Projects/petari/decomp/src/Game/Util/LiveActorUtil.cpp:709:    bool changeShowModelFlagSyncNearClipping(LiveActor* pActor, f32 nearClip) {"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR36startStarPointerModePowerStarGetDemoEPv",
+        "name": "MR::startStarPointerModePowerStarGetDemo(void*)",
+        "providers": [
+          "OriginalStarPointerOwnerQueries.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR37isGrandStarInCurrentStageWithDeclarerEPKci",
+        "name": "MR::isGrandStarInCurrentStageWithDeclarer(char const*, int)",
+        "providers": [
+          "EventUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR38hasPowerStarInCurrentStageWithDeclarerEPKci",
+        "name": "MR::hasPowerStarInCurrentStageWithDeclarer(char const*, int)",
+        "providers": [
+          "EventUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR38isGalaxyGhostCometAppearInCurrentStageEv",
+        "name": "MR::isGalaxyGhostCometAppearInCurrentStage()",
+        "providers": [
+          "EventUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR40isPowerStarGetDemoWithLuigiCurrentGalaxyEv",
+        "name": "MR::isPowerStarGetDemoWithLuigiCurrentGalaxy()",
+        "providers": [
+          "EventUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR40isPowerStarRedInCurrentStageWithDeclarerEPKci",
+        "name": "MR::isPowerStarRedInCurrentStageWithDeclarer(char const*, int)",
+        "providers": [
+          "EventUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR42isPowerStarGreenInCurrentStageWithDeclarerEPKci",
+        "name": "MR::isPowerStarGreenInCurrentStageWithDeclarer(char const*, int)",
+        "providers": [
+          "EventUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR49requestStartDemoMarioPuppetableWithoutCinemaFrameEP9LiveActorPKcPK5NerveS6_",
+        "name": "MR::requestStartDemoMarioPuppetableWithoutCinemaFrame(LiveActor*, char const*, Nerve const*, Nerve const*)",
+        "providers": [
+          "DemoUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR51isPowerStarGetDemoWithLuigiCurrentGalaxyAndScenarioEi",
+        "name": "MR::isPowerStarGetDemoWithLuigiCurrentGalaxyAndScenario(int)",
+        "providers": [
+          "EventUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR6isStepEPK9LiveActori",
+        "name": "MR::isStep(LiveActor const*, int)",
+        "providers": [
+          "LiveActorUtilCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR7endDemoEP7NameObjPKc",
+        "name": "MR::endDemo(NameObj*, char const*)",
+        "providers": [
+          "DemoUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR8startBckEPK9LiveActorPKcS4_",
+        "name": "MR::startBck(LiveActor const*, char const*, char const*)",
+        "providers": [
+          "OriginalActorAnimationStart.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR8startBrkEPK9LiveActorPKc",
+        "name": "MR::startBrk(LiveActor const*, char const*)",
+        "providers": [
+          "OriginalActorModelAccess.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR8startBtpEPK9LiveActorPKc",
+        "name": "MR::startBtp(LiveActor const*, char const*)",
+        "providers": [
+          "OriginalActorModelAccess.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR8startBvaEPK9LiveActorPKc",
+        "name": "MR::startBva(LiveActor const*, char const*)",
+        "providers": [
+          "OriginalActorModelAccess.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR9hideModelEP9LiveActor",
+        "name": "MR::hideModel(LiveActor*)",
+        "providers": [
+          "LiveActorUtilCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR9isInWaterEPK9LiveActorRKN9JGeometry5TVec3IfEE",
+        "name": "MR::isInWater(LiveActor const*, JGeometry::TVec3<float> const&)",
+        "providers": [
+          "ActorMovementUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR9makeMtxTREPA4_fPK9LiveActor",
+        "name": "MR::makeMtxTR(float (*) [4], LiveActor const*)",
+        "providers": [
+          "ActorMovementUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR9makeMtxTREPA4_fRKN9JGeometry5TVec3IfEES6_",
+        "name": "MR::makeMtxTR(float (*) [4], JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+        "providers": [
+          "MtxCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN5JMath12sSinCosTableE",
+        "name": "JMath::sSinCosTable",
+        "providers": [
+          "JMathTrig.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor10endClippedEv",
+        "name": "LiveActor::endClipped()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor12attackSensorEP9HitSensorS1_",
+        "name": "LiveActor::attackSensor(HitSensor*, HitSensor*)",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor12startClippedEv",
+        "name": "LiveActor::startClipped()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor13initHitSensorEi",
+        "name": "LiveActor::initHitSensor(int)",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor13makeActorDeadEv",
+        "name": "LiveActor::makeActorDead()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor14receiveMessageEjP9HitSensorS1_",
+        "name": "LiveActor::receiveMessage(unsigned int, HitSensor*, HitSensor*)",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor15receiveMsgApartEP9HitSensorS1_",
+        "name": "LiveActor::receiveMsgApart(HitSensor*, HitSensor*)",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor16calcViewAndEntryEv",
+        "name": "LiveActor::calcViewAndEntry()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor16initEffectKeeperEiPKcb",
+        "name": "LiveActor::initEffectKeeper(int, char const*, bool)",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor17makeActorAppearedEv",
+        "name": "LiveActor::makeActorAppeared()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor23initModelManagerWithAnmEPKcS1_b",
+        "name": "LiveActor::initModelManagerWithAnm(char const*, char const*, bool)",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor4killEv",
+        "name": "LiveActor::kill()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor6appearEv",
+        "name": "LiveActor::appear()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor8calcAnimEv",
+        "name": "LiveActor::calcAnim()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor8movementEv",
+        "name": "LiveActor::movement()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor8setNerveEPK5Nerve",
+        "name": "LiveActor::setNerve(Nerve const*)",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor9initNerveEPK5Nerve",
+        "name": "LiveActor::initNerve(Nerve const*)",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor9initSoundEib",
+        "name": "LiveActor::initSound(int, bool)",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActorC2EPKc",
+        "name": "LiveActor::LiveActor(char const*)",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActorD2Ev",
+        "name": "LiveActor::~LiveActor()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZNK14LiveActorGroup8getActorEi",
+        "name": "LiveActorGroup::getActor(int) const",
+        "providers": [
+          "LiveActorGroup.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZNK5Nerve12executeOnEndEP5Spine",
+        "name": "Nerve::executeOnEnd(Spine*) const",
+        "providers": [
+          "Nerve.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZNK7NameObj4drawEv",
+        "name": "NameObj::draw() const",
+        "providers": [
+          "NameObjLifetimeCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZNK9LiveActor10getBaseMtxEv",
+        "name": "LiveActor::getBaseMtx() const",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZNK9LiveActor12getNerveStepEv",
+        "name": "LiveActor::getNerveStep() const",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZNK9LiveActor12getTakingMtxEv",
+        "name": "LiveActor::getTakingMtx() const",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZNK9LiveActor7isNerveEPK5Nerve",
+        "name": "LiveActor::isNerve(Nerve const*) const",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZTI5Nerve",
+        "name": "typeinfo for Nerve",
+        "providers": [
+          "Nerve.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZTI9LiveActor",
+        "name": "typeinfo for LiveActor",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZTVN10__cxxabiv120__si_class_type_infoE",
+        "name": "vtable for __cxxabiv1::__si_class_type_info",
+        "providers": []
+      },
+      {
+        "symbol": "__ZdlPvm",
+        "name": "operator delete(void*, unsigned long)",
+        "providers": [
+          "MetrowerksAlignedNew.cpp.o"
+        ]
+      },
+      {
+        "symbol": "___sincosf_stret",
+        "name": "__sincosf_stret",
+        "providers": []
+      },
+      {
+        "symbol": "_fmodf",
+        "name": "fmodf",
+        "providers": []
+      },
+      {
+        "symbol": "_gZeroVec",
+        "name": "gZeroVec",
+        "providers": [
+          "GameMathCompat.cpp.o"
+        ]
+      }
+    ],
+    "PowerStarAppearPoint": [
+      {
+        "symbol": "__ZN2MR14initDefaultPosEP9LiveActorRK12JMapInfoIter",
+        "name": "MR::initDefaultPos(LiveActor*, JMapInfoIter const&)",
+        "providers": [
+          "LiveActorUtilCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR15initActorCameraEPK9LiveActorRK12JMapInfoIterPP15ActorCameraInfo",
+        "name": "MR::initActorCamera(LiveActor const*, JMapInfoIter const&, ActorCameraInfo**)",
+        "providers": [
+          "ActorCameraUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR16joinToGroupArrayEP9LiveActorRK12JMapInfoIterPKci",
+        "name": "MR::joinToGroupArray(LiveActor*, JMapInfoIter const&, char const*, int)",
+        "providers": [
+          "OriginalLiveActorGroupUtil.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN7NameObj18initAfterPlacementEv",
+        "name": "NameObj::initAfterPlacement()",
+        "providers": [
+          "NameObjLifetimeCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor10endClippedEv",
+        "name": "LiveActor::endClipped()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor12attackSensorEP9HitSensorS1_",
+        "name": "LiveActor::attackSensor(HitSensor*, HitSensor*)",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor12startClippedEv",
+        "name": "LiveActor::startClipped()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor13makeActorDeadEv",
+        "name": "LiveActor::makeActorDead()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor14receiveMessageEjP9HitSensorS1_",
+        "name": "LiveActor::receiveMessage(unsigned int, HitSensor*, HitSensor*)",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor15receiveMsgApartEP9HitSensorS1_",
+        "name": "LiveActor::receiveMsgApart(HitSensor*, HitSensor*)",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor16calcViewAndEntryEv",
+        "name": "LiveActor::calcViewAndEntry()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor17calcAndSetBaseMtxEv",
+        "name": "LiveActor::calcAndSetBaseMtx()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor17makeActorAppearedEv",
+        "name": "LiveActor::makeActorAppeared()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor4killEv",
+        "name": "LiveActor::kill()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor6appearEv",
+        "name": "LiveActor::appear()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor8calcAnimEv",
+        "name": "LiveActor::calcAnim()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActor8movementEv",
+        "name": "LiveActor::movement()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActorC2EPKc",
+        "name": "LiveActor::LiveActor(char const*)",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZN9LiveActorD2Ev",
+        "name": "LiveActor::~LiveActor()",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZNK7NameObj4drawEv",
+        "name": "NameObj::draw() const",
+        "providers": [
+          "NameObjLifetimeCompat.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZNK9LiveActor10getBaseMtxEv",
+        "name": "LiveActor::getBaseMtx() const",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZNK9LiveActor12getTakingMtxEv",
+        "name": "LiveActor::getTakingMtx() const",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZTI9LiveActor",
+        "name": "typeinfo for LiveActor",
+        "providers": [
+          "LiveActor.cpp.o"
+        ]
+      },
+      {
+        "symbol": "__ZTVN10__cxxabiv120__si_class_type_infoE",
+        "name": "vtable for __cxxabiv1::__si_class_type_info",
+        "providers": []
+      },
+      {
+        "symbol": "__ZdlPvm",
+        "name": "operator delete(void*, unsigned long)",
+        "providers": [
+          "MetrowerksAlignedNew.cpp.o"
+        ]
+      }
+    ]
+  }
+}

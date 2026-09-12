@@ -28,6 +28,7 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/ClippingJudge.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Screen/LayoutActor.hpp"
@@ -756,34 +757,22 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::execute_actor_clipping() {
-        auto clipping_camera = std::optional<smgpc::camera::CameraPose>{};
-        if (auto* runtime = RuntimeContext::try_instance(); runtime != nullptr) {
-            clipping_camera = runtime->camera_system().effective_camera_pose();
-            if (!clipping_camera.has_value()) {
-                clipping_camera = runtime->scene_camera_pose();
+        auto updated_actors = std::vector<LiveActor*>{};
+        for (const auto& registered : entries_snapshot()) {
+            auto entry = current_entry(registered);
+            if (!entry) continue;
+            auto* actor = entry_live_actor(*entry);
+            if (actor == nullptr || actor->mFlag.mIsDead || !smgpc::compat::actor_is_clipping_target(actor) ||
+                draw_buffer_uses_model_3d_for_2d(entry->draw_buffer_type) ||
+                std::ranges::find(updated_actors, actor) != updated_actors.end()) {
+                continue;
             }
-            if (!clipping_camera.has_value()) {
-                clipping_camera = runtime->last_camera_pose();
-            }
-        }
-        if (clipping_camera.has_value()) {
-            auto updated_actors = std::vector<LiveActor*>{};
-            for (const auto& registered : entries_snapshot()) {
-                auto entry = current_entry(registered);
-                if (!entry) continue;
-                auto* actor = entry_live_actor(*entry);
-                if (actor == nullptr || actor->mFlag.mIsDead || !smgpc::compat::actor_is_clipping_target(actor) ||
-                    draw_buffer_uses_model_3d_for_2d(entry->draw_buffer_type) ||
-                    std::ranges::find(updated_actors, actor) != updated_actors.end()) {
-                    continue;
-                }
-                invoke_game_callback(_allocation_domain, [&] {
-                    smgpc::compat::update_actor_clipping(*actor, *clipping_camera);
-                });
-                {
-                    smgpc::compat::JkrHostAllocationScope host;
-                    updated_actors.push_back(actor);
-                }
+            invoke_game_callback(_allocation_domain, [&] {
+                smgpc::compat::update_actor_clipping(*actor, *MR::getClippingJudge());
+            });
+            {
+                smgpc::compat::JkrHostAllocationScope host;
+                updated_actors.push_back(actor);
             }
         }
     }
@@ -819,11 +808,11 @@ namespace smgpc::runtime {
         smgpc::compat::SceneJ3dScope j3d_scope;
         if (movement_type < 0)
             aurora::throw_host_exception<std::out_of_range>("Movement category must be nonnegative");
-        // ClippingDirectorCompat still executes at its original category boundary.
-        // Sensor collisions run through the registered original SensorHitChecker.
-        if (movement_type == MR::MovementType_ClippingDirector) execute_actor_clipping();
         for (const auto& registered : category_entries(movement_type, false))
             execute_movement_entry(registered, movement_type);
+        // The original Director first updates its judge from the current camera.
+        // Apply those planes to the existing actor registry at the same boundary.
+        if (movement_type == MR::MovementType_ClippingDirector) execute_actor_clipping();
     }
 
     void SceneScheduler::execute_movement_entry(const Entry& registered, s32 movement_type) {

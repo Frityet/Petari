@@ -1,0 +1,145 @@
+{
+  "original_compile_exit_code": 0,
+  "text_match_percent": 97.79426,
+  "functions": [
+    {
+      "name": "__ct__13ClippingJudgeFPCc",
+      "size": "200",
+      "match_percent": 99.8
+    },
+    {
+      "name": "__ct__Q29JGeometry15THexahedron3<f>Fv",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "init__13ClippingJudgeFRC12JMapInfoIter",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "movement__13ClippingJudgeFv",
+      "size": "120",
+      "match_percent": 100.0
+    },
+    {
+      "name": "isJudgedToClipFrustum__13ClippingJudgeCFRCQ29JGeometry8TVec3<f>f",
+      "size": "44",
+      "match_percent": 100.0
+    },
+    {
+      "name": "isJudgedToClipFrustum__13ClippingJudgeCFRCQ29JGeometry8TVec3<f>fl",
+      "size": "80",
+      "match_percent": 100.0
+    },
+    {
+      "name": "calcViewingVolume__13ClippingJudgeFPQ29JGeometry15THexahedron3<f>f",
+      "size": "740",
+      "match_percent": 95.09189
+    },
+    {
+      "name": "getClippingJudge__2MRFv",
+      "size": "36",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__dt__13ClippingJudgeFv",
+      "size": "88",
+      "match_percent": 100.0
+    },
+    {
+      "name": "mayIntersectBall3__Q29JGeometry15THexahedron3<f>CFRCQ29JGeometry8TVec3<f>f",
+      "size": "132",
+      "match_percent": 100.0
+    },
+    {
+      "name": "set__Q29JGeometry14TPartition3<f>FRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "size": "144",
+      "match_percent": 99.888885
+    },
+    {
+      "name": "set__Q29JGeometry14TPartition3<f>FRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "size": "80",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__13ClippingJudge",
+      "size": "36",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@53925",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@55068",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@55129",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@55130",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@55131",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@55132",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@55133",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@55134",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@55135",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@55253",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@55254",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@55255",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "[.data-0]",
+      "size": "40",
+      "match_percent": 96.90403
+    },
+    {
+      "name": "[.sdata2-0]",
+      "size": "48",
+      "match_percent": 91.66667
+    }
+  ],
+  "native_reference_identical": {
+    "ClippingJudge.cpp": true,
+    "TPartition3.hpp": true
+  }
+}

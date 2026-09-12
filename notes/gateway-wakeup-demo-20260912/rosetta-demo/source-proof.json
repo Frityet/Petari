@@ -1,0 +1,223 @@
+{
+  "root_head": "94cbfc68db47d035745d85d09b8cc472f5c5be87",
+  "reference_head": "df1d7db9539834311722be1bb9b88a54c5f62195",
+  "paths": [
+    {
+      "path": "decomp/src/Game/NPC/RosettaDemoHeavensDoor.cpp",
+      "sha256": "20684ec9190a5586d70d900c1a87170424a2167899412f5e5806464eb4317fb3"
+    },
+    {
+      "path": "decomp/include/Game/NPC/RosettaDemoHeavensDoor.hpp",
+      "sha256": "4dcaa6da3da39c989375b04d4762ae842a00dc96c0683aace56873a01a6c3407"
+    },
+    {
+      "path": "src/Game/NPC/RosettaDemoHeavensDoor.cpp",
+      "sha256": "20684ec9190a5586d70d900c1a87170424a2167899412f5e5806464eb4317fb3"
+    },
+    {
+      "path": "src/Game/NPC/RosettaDemoHeavensDoor.hpp",
+      "sha256": "4dcaa6da3da39c989375b04d4762ae842a00dc96c0683aace56873a01a6c3407"
+    },
+    {
+      "path": "src/Game/NPC/Rosetta.hpp",
+      "sha256": "9bb4059bfebb19ed6d3b6d69882c96b0ccfa7df1c959fda7fb8897680db37444"
+    }
+  ],
+  "compilation": {
+    "native": {
+      "exit": 0,
+      "command_file": "RosettaDemoHeavensDoor-native-command.json",
+      "log_file": "RosettaDemoHeavensDoor-native.log",
+      "object_sha256": "dad2dfd90fffa5fdd79e0b3f4c03aa446c1787d23d56872ea23f1e49e40b1ee0"
+    },
+    "reference": {
+      "exit": 0,
+      "command_file": "RosettaDemoHeavensDoor-reference-command.json",
+      "log_file": "RosettaDemoHeavensDoor-reference.log",
+      "object_sha256": "0832d0c2010569def6b24f11b898e40523f2643794e8da1392197631b9f53c3b"
+    }
+  },
+  "comparison": {
+    "baseline": {
+      "text_match": 72.34433,
+      "methods": [
+        {
+          "name": "__ct__23RosettaDemoHeavensDoor1FP7RosettaRC12JMapInfoIter",
+          "size": "876",
+          "match_percent": 59.173515
+        },
+        {
+          "name": "makeArchiveList__23RosettaDemoHeavensDoor1FP27NameObjArchiveListCollectorRC12JMapInfoIter",
+          "size": "68",
+          "match_percent": 98.82353
+        },
+        {
+          "name": "preDemo__23RosettaDemoHeavensDoor1Fv",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "pstDemo__23RosettaDemoHeavensDoor1Fv",
+          "size": "24",
+          "match_percent": 98.333336
+        },
+        {
+          "name": "fadeOut__23RosettaDemoHeavensDoor1Fv",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "fadeIn__23RosettaDemoHeavensDoor1Fv",
+          "size": "84",
+          "match_percent": 99.52381
+        },
+        {
+          "name": "exeWait__23RosettaDemoHeavensDoor1Fv",
+          "size": "140",
+          "match_percent": 99.28571
+        },
+        {
+          "name": "exeFade__23RosettaDemoHeavensDoor1Fv",
+          "size": "108",
+          "match_percent": 99.25926
+        },
+        {
+          "name": "exeDemo__23RosettaDemoHeavensDoor1Fv",
+          "size": "428",
+          "match_percent": 92.62617
+        },
+        {
+          "name": "__ct__23RosettaDemoHeavensDoor2FP7RosettaRC12JMapInfoIter",
+          "size": "300",
+          "match_percent": 79.666664
+        },
+        {
+          "name": "makeArchiveList__23RosettaDemoHeavensDoor2FP27NameObjArchiveListCollectorRC12JMapInfoIter",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "exeWait__23RosettaDemoHeavensDoor2Fv",
+          "size": "144",
+          "match_percent": 99.361115
+        },
+        {
+          "name": "__dt__23RosettaDemoHeavensDoor1Fv",
+          "size": "88",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__dt__23RosettaDemoHeavensDoor2Fv",
+          "size": "104",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__23RosettaDemoHeavensDoor2",
+          "size": "12",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__23RosettaDemoHeavensDoor1",
+          "size": "12",
+          "match_percent": 100.0
+        }
+      ]
+    },
+    "RosettaDemoHeavensDoor": {
+      "text_match": 98.879944,
+      "methods": [
+        {
+          "name": "__ct__23RosettaDemoHeavensDoor1FP7RosettaRC12JMapInfoIter",
+          "size": "876",
+          "match_percent": 99.748856
+        },
+        {
+          "name": "makeArchiveList__23RosettaDemoHeavensDoor1FP27NameObjArchiveListCollectorRC12JMapInfoIter",
+          "size": "68",
+          "match_percent": 100.0
+        },
+        {
+          "name": "preDemo__23RosettaDemoHeavensDoor1Fv",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "pstDemo__23RosettaDemoHeavensDoor1Fv",
+          "size": "24",
+          "match_percent": 100.0
+        },
+        {
+          "name": "fadeOut__23RosettaDemoHeavensDoor1Fv",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "fadeIn__23RosettaDemoHeavensDoor1Fv",
+          "size": "84",
+          "match_percent": 100.0
+        },
+        {
+          "name": "exeWait__23RosettaDemoHeavensDoor1Fv",
+          "size": "140",
+          "match_percent": 100.0
+        },
+        {
+          "name": "exeFade__23RosettaDemoHeavensDoor1Fv",
+          "size": "108",
+          "match_percent": 100.0
+        },
+        {
+          "name": "exeDemo__23RosettaDemoHeavensDoor1Fv",
+          "size": "428",
+          "match_percent": 92.81309
+        },
+        {
+          "name": "__ct__23RosettaDemoHeavensDoor2FP7RosettaRC12JMapInfoIter",
+          "size": "300",
+          "match_percent": 99.86667
+        },
+        {
+          "name": "makeArchiveList__23RosettaDemoHeavensDoor2FP27NameObjArchiveListCollectorRC12JMapInfoIter",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "exeWait__23RosettaDemoHeavensDoor2Fv",
+          "size": "144",
+          "match_percent": 99.583336
+        },
+        {
+          "name": "changeNerve<Q226NrvRosettaDemoHeavensDoor130RosettaDemoHeavensDoor1NrvDemo>__23RosettaDemoHeavensDoor1Fv_v",
+          "size": "8",
+          "match_percent": 100.0
+        },
+        {
+          "name": "changeNerve<Q226NrvRosettaDemoHeavensDoor230RosettaDemoHeavensDoor2NrvDemo>__23RosettaDemoHeavensDoor2Fv_v",
+          "size": "8",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__dt__23RosettaDemoHeavensDoor1Fv",
+          "size": "88",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__dt__23RosettaDemoHeavensDoor2Fv",
+          "size": "104",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__23RosettaDemoHeavensDoor2",
+          "size": "12",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__23RosettaDemoHeavensDoor1",
+          "size": "12",
+          "match_percent": 100.0
+        }
+      ]
+    }
+  },
+  "native_matches_reference": true
+}

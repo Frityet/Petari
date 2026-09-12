@@ -1,0 +1,134 @@
+{
+  "root_head": "7da444583ebf56d6abfa6c1b98a949500da9248a",
+  "reference_head": "df1d7db9539834311722be1bb9b88a54c5f62195",
+  "paths": [
+    {
+      "path": "decomp/src/Game/NPC/Rosetta.cpp",
+      "sha256": "a70ab6dc037be3ead9b71dbdf09328397ea99b604a451b3ae1612099a1263b2c"
+    },
+    {
+      "path": "decomp/include/Game/NPC/RosettaDemoEpilogue.hpp",
+      "sha256": "b376ec70e10ec4bd05d9726e69c3948b1deaf55046d192c28e95f06b72b5fe15"
+    },
+    {
+      "path": "src/Game/NPC/Rosetta.cpp",
+      "sha256": "a70ab6dc037be3ead9b71dbdf09328397ea99b604a451b3ae1612099a1263b2c"
+    },
+    {
+      "path": "src/Game/NPC/RosettaDemoAstroDome.hpp",
+      "sha256": "2ec643ed7ba478718401fe621d674712702f3681ba52b9888158d3dcd6801f24"
+    },
+    {
+      "path": "src/Game/NPC/RosettaDemoEpilogue.hpp",
+      "sha256": "b376ec70e10ec4bd05d9726e69c3948b1deaf55046d192c28e95f06b72b5fe15"
+    },
+    {
+      "path": "src/Game/NPC/TurnJointCtrl.hpp",
+      "sha256": "b71e1aa6f745047cc9c185f6f7be30f7223236e963abfa88cf7d82e08dbf449e"
+    }
+  ],
+  "compilation": {
+    "native": {
+      "exit": 0,
+      "command_file": "Rosetta-native-command.json",
+      "log_file": "Rosetta-native.log",
+      "object_sha256": "071f019568b7941af06124fa081dd00c5afa744339d04b6968a1c7a593ba2e84"
+    },
+    "reference": {
+      "exit": 0,
+      "command_file": "Rosetta-reference-command.json",
+      "log_file": "Rosetta-reference.log",
+      "object_sha256": "5e427af74d83ceca999e87e60a37d4d4d1ba77229cd38afb0ed88787d64d0077"
+    }
+  },
+  "text_match": 98.23221,
+  "methods": [
+    {
+      "name": "__ct__7RosettaFPCc",
+      "size": "96",
+      "match_percent": 100.0
+    },
+    {
+      "name": "makeArchiveList__7RosettaFP27NameObjArchiveListCollectorRC12JMapInfoIter",
+      "size": "188",
+      "match_percent": 99.78723
+    },
+    {
+      "name": "init__7RosettaFRC12JMapInfoIter",
+      "size": "1064",
+      "match_percent": 95.04511
+    },
+    {
+      "name": "calcAndSetBaseMtx__7RosettaFv",
+      "size": "56",
+      "match_percent": 100.0
+    },
+    {
+      "name": "receiveMsgPlayerAttack__7RosettaFUlP9HitSensorP9HitSensor",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "control__7RosettaFv",
+      "size": "328",
+      "match_percent": 99.69512
+    },
+    {
+      "name": "branchFunc__7RosettaFUl",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "eventFunc__7RosettaFUl",
+      "size": "256",
+      "match_percent": 99.609375
+    },
+    {
+      "name": "startDemo__7RosettaFP13NerveExecutor",
+      "size": "60",
+      "match_percent": 100.0
+    },
+    {
+      "name": "endDemo__7RosettaFv",
+      "size": "84",
+      "match_percent": 100.0
+    },
+    {
+      "name": "endDemoWithInterpole__7RosettaFv",
+      "size": "64",
+      "match_percent": 100.0
+    },
+    {
+      "name": "canUpdateStarePos__7RosettaCFv",
+      "size": "212",
+      "match_percent": 100.0
+    },
+    {
+      "name": "exeReaction__7RosettaFv",
+      "size": "204",
+      "match_percent": 99.254906
+    },
+    {
+      "name": "execute__Q210NrvRosetta18RosettaNrvReactionCFP5Spine",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "execute__Q210NrvRosetta14RosettaNrvDemoCFP5Spine",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__dt__7RosettaFv",
+      "size": "104",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__7Rosetta",
+      "size": "120",
+      "match_percent": 100.0
+    }
+  ],
+  "native_matches_reference": true,
+  "Epilogue_reference_compile_exit": 0
+}

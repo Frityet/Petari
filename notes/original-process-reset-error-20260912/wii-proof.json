@@ -1,0 +1,1322 @@
+[
+  {
+    "source": "decomp/src/Game/System/GameSystemErrorWatcher.cpp",
+    "sha256": "6aa0613a3a4e221a18707fb726d94b234a7dbcca9450857cffd99848c4d8d658",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-process-reset-error-20260912/GameSystemErrorWatcher.wii.o",
+      "/Users/frityet/Projects/petari/decomp/src/Game/System/GameSystemErrorWatcher.cpp"
+    ],
+    "exit": 0,
+    "diff_exit": 0,
+    "sections": [
+      {
+        "name": ".text",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".ctors",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rodata",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".data",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sbss",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.ctors",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.rodata",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.data",
+        "match_percent": null
+      },
+      {
+        "name": ".symtab",
+        "match_percent": null
+      },
+      {
+        "name": ".strtab",
+        "match_percent": null
+      },
+      {
+        "name": ".shstrtab",
+        "match_percent": null
+      },
+      {
+        "name": ".comment",
+        "match_percent": null
+      },
+      {
+        "name": ".note.split",
+        "match_percent": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__ct__22GameSystemErrorWatcherFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initAfterResourceLoaded__22GameSystemErrorWatcherFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "movement__22GameSystemErrorWatcherFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "draw__22GameSystemErrorWatcherCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isWarning__22GameSystemErrorWatcherCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setPermissionUpdateWiiRemoteStatus__22GameSystemErrorWatcherFb",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeNoError__22GameSystemErrorWatcherFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeErrorWindowIn__22GameSystemErrorWatcherFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeErrorWindowDisplay__22GameSystemErrorWatcherFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeErrorWindowOut__22GameSystemErrorWatcherFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "updateWiiRemoteStatus__22GameSystemErrorWatcherFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getProperMessageId__22GameSystemErrorWatcherCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getProperErrorTexMap__22GameSystemErrorWatcherCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__22GameSystemErrorWatcherFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__sinit_\\GameSystemErrorWatcher_cpp",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q236@unnamed@GameSystemErrorWatcher_cpp@29GameSystemErrorWatcherNoErrorFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q236@unnamed@GameSystemErrorWatcher_cpp@35GameSystemErrorWatcherErrorWindowInFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q236@unnamed@GameSystemErrorWatcher_cpp@40GameSystemErrorWatcherErrorWindowDisplayFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q236@unnamed@GameSystemErrorWatcher_cpp@36GameSystemErrorWatcherErrorWindowOutFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q236@unnamed@GameSystemErrorWatcher_cpp@36GameSystemErrorWatcherErrorWindowOutCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q236@unnamed@GameSystemErrorWatcher_cpp@40GameSystemErrorWatcherErrorWindowDisplayCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q236@unnamed@GameSystemErrorWatcher_cpp@35GameSystemErrorWatcherErrorWindowInCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q236@unnamed@GameSystemErrorWatcher_cpp@29GameSystemErrorWatcherNoErrorCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "cMessageFatalError__36@unnamed@GameSystemErrorWatcher_cpp@",
+        "match_percent": 100.0
+      },
+      {
+        "name": "cMessageNoDisk__36@unnamed@GameSystemErrorWatcher_cpp@",
+        "match_percent": 100.0
+      },
+      {
+        "name": "cMessageWrongDisk__36@unnamed@GameSystemErrorWatcher_cpp@",
+        "match_percent": 100.0
+      },
+      {
+        "name": "cMessageRetry__36@unnamed@GameSystemErrorWatcher_cpp@",
+        "match_percent": 100.0
+      },
+      {
+        "name": "cMessageUnplagged__36@unnamed@GameSystemErrorWatcher_cpp@",
+        "match_percent": 100.0
+      },
+      {
+        "name": "cMessageDisconnect__36@unnamed@GameSystemErrorWatcher_cpp@",
+        "match_percent": 100.0
+      },
+      {
+        "name": "cMessageNoBattery__36@unnamed@GameSystemErrorWatcher_cpp@",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@60653",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@60663",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__22GameSystemErrorWatcher",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q236@unnamed@GameSystemErrorWatcher_cpp@36GameSystemErrorWatcherErrorWindowOut",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q236@unnamed@GameSystemErrorWatcher_cpp@40GameSystemErrorWatcherErrorWindowDisplay",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q236@unnamed@GameSystemErrorWatcher_cpp@35GameSystemErrorWatcherErrorWindowIn",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q236@unnamed@GameSystemErrorWatcher_cpp@29GameSystemErrorWatcherNoError",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q236@unnamed@GameSystemErrorWatcher_cpp@29GameSystemErrorWatcherNoError",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q236@unnamed@GameSystemErrorWatcher_cpp@35GameSystemErrorWatcherErrorWindowIn",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q236@unnamed@GameSystemErrorWatcher_cpp@40GameSystemErrorWatcherErrorWindowDisplay",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q236@unnamed@GameSystemErrorWatcher_cpp@36GameSystemErrorWatcherErrorWindowOut",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.ctors-0]",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.rodata-0]",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.data-0]",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/System/GameSystemResetAndPowerProcess.cpp",
+    "sha256": "6c84da8880ec9fd4e696c5bc2fba01405e424259b87b80f6e67fad9670b4bc84",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-process-reset-error-20260912/GameSystemResetAndPowerProcess.wii.o",
+      "/Users/frityet/Projects/petari/decomp/src/Game/System/GameSystemResetAndPowerProcess.cpp"
+    ],
+    "exit": 0,
+    "diff_exit": 0,
+    "sections": [
+      {
+        "name": ".text",
+        "match_percent": 96.1916
+      },
+      {
+        "name": ".ctors",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rodata",
+        "match_percent": 66.66667
+      },
+      {
+        "name": ".data",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sbss",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sdata2",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.ctors",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.data",
+        "match_percent": null
+      },
+      {
+        "name": ".symtab",
+        "match_percent": null
+      },
+      {
+        "name": ".strtab",
+        "match_percent": null
+      },
+      {
+        "name": ".shstrtab",
+        "match_percent": null
+      },
+      {
+        "name": ".comment",
+        "match_percent": null
+      },
+      {
+        "name": ".note.split",
+        "match_percent": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "init__30GameSystemResetAndPowerProcessFRC12JMapInfoIter",
+        "match_percent": 100.0
+      },
+      {
+        "name": "draw__30GameSystemResetAndPowerProcessCFv",
+        "match_percent": 73.55294
+      },
+      {
+        "name": "isActive__30GameSystemResetAndPowerProcessCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setResetOperationApplicationReset__30GameSystemResetAndPowerProcessFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setResetOperationReturnToMenu__30GameSystemResetAndPowerProcessFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "requestReset__30GameSystemResetAndPowerProcessFb",
+        "match_percent": 100.0
+      },
+      {
+        "name": "requestGoWiiMenu__30GameSystemResetAndPowerProcessFb",
+        "match_percent": 100.0
+      },
+      {
+        "name": "notifyCheckDiskResult__30GameSystemResetAndPowerProcessFb",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exePolling__30GameSystemResetAndPowerProcessFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeWaitResetPermitted__30GameSystemResetAndPowerProcessFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exePrepareReset__30GameSystemResetAndPowerProcessFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeReset__30GameSystemResetAndPowerProcessFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeWaitPrepareFadein__30GameSystemResetAndPowerProcessFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeFadein__30GameSystemResetAndPowerProcessFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exitApplication__30GameSystemResetAndPowerProcessFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "tryPermitReset__30GameSystemResetAndPowerProcessFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "tryAcceptPowerOff__30GameSystemResetAndPowerProcessFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isResetAcceptAudio__30GameSystemResetAndPowerProcessCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "control__30GameSystemResetAndPowerProcessFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "handleOSPowerCallback__30GameSystemResetAndPowerProcessFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "handleCheckDiskAsync__30GameSystemResetAndPowerProcessFlP15DVDCommandBlock",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__30GameSystemResetAndPowerProcessFv",
+        "match_percent": 99.55
+      },
+      {
+        "name": "__dt__30GameSystemResetAndPowerProcessFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__sinit_\\GameSystemResetAndPowerProcess_cpp",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q233NrvGameSystemResetAndPowerProcess37GameSystemResetAndPowerProcessPollingFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q233NrvGameSystemResetAndPowerProcess48GameSystemResetAndPowerProcessWaitResetPermittedFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q233NrvGameSystemResetAndPowerProcess42GameSystemResetAndPowerProcessPrepareResetFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q233NrvGameSystemResetAndPowerProcess35GameSystemResetAndPowerProcessResetFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q233NrvGameSystemResetAndPowerProcess47GameSystemResetAndPowerProcessWaitPrepareFadeinFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q233NrvGameSystemResetAndPowerProcess36GameSystemResetAndPowerProcessFadeinFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q233NrvGameSystemResetAndPowerProcess36GameSystemResetAndPowerProcessFadeinCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q233NrvGameSystemResetAndPowerProcess47GameSystemResetAndPowerProcessWaitPrepareFadeinCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q233NrvGameSystemResetAndPowerProcess35GameSystemResetAndPowerProcessResetCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q233NrvGameSystemResetAndPowerProcess42GameSystemResetAndPowerProcessPrepareResetCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q233NrvGameSystemResetAndPowerProcess48GameSystemResetAndPowerProcessWaitResetPermittedCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q233NrvGameSystemResetAndPowerProcess37GameSystemResetAndPowerProcessPollingCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__30GameSystemResetAndPowerProcess",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q233NrvGameSystemResetAndPowerProcess36GameSystemResetAndPowerProcessFadein",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q233NrvGameSystemResetAndPowerProcess47GameSystemResetAndPowerProcessWaitPrepareFadein",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q233NrvGameSystemResetAndPowerProcess35GameSystemResetAndPowerProcessReset",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q233NrvGameSystemResetAndPowerProcess42GameSystemResetAndPowerProcessPrepareReset",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q233NrvGameSystemResetAndPowerProcess48GameSystemResetAndPowerProcessWaitResetPermitted",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q233NrvGameSystemResetAndPowerProcess37GameSystemResetAndPowerProcessPolling",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q233NrvGameSystemResetAndPowerProcess37GameSystemResetAndPowerProcessPolling",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q233NrvGameSystemResetAndPowerProcess48GameSystemResetAndPowerProcessWaitResetPermitted",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q233NrvGameSystemResetAndPowerProcess42GameSystemResetAndPowerProcessPrepareReset",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q233NrvGameSystemResetAndPowerProcess35GameSystemResetAndPowerProcessReset",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q233NrvGameSystemResetAndPowerProcess47GameSystemResetAndPowerProcessWaitPrepareFadein",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q233NrvGameSystemResetAndPowerProcess36GameSystemResetAndPowerProcessFadein",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@55886",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.ctors-0]",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.rodata-0]",
+        "match_percent": 66.66667
+      },
+      {
+        "name": "[.data-0]",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.sdata2-0]",
+        "match_percent": 66.66667
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Screen/ErrorMessageWindow.cpp",
+    "sha256": "cec020d67212039f7a4a6c7676afc3a0ff770deb6705e03cab90736d67c1676b",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-process-reset-error-20260912/ErrorMessageWindow.wii.o",
+      "/Users/frityet/Projects/petari/decomp/src/Game/Screen/ErrorMessageWindow.cpp"
+    ],
+    "exit": 0,
+    "diff_exit": 0,
+    "sections": [
+      {
+        "name": ".text",
+        "match_percent": 99.941864
+      },
+      {
+        "name": ".ctors",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".data",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sdata",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sbss",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.ctors",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.data",
+        "match_percent": null
+      },
+      {
+        "name": ".symtab",
+        "match_percent": null
+      },
+      {
+        "name": ".strtab",
+        "match_percent": null
+      },
+      {
+        "name": ".shstrtab",
+        "match_percent": null
+      },
+      {
+        "name": ".comment",
+        "match_percent": null
+      },
+      {
+        "name": ".note.split",
+        "match_percent": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__ct__18ErrorMessageWindowFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__18ErrorMessageWindowFRC12JMapInfoIter",
+        "match_percent": 100.0
+      },
+      {
+        "name": "appear__18ErrorMessageWindowFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isAnimEnd__18ErrorMessageWindowCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "appearWithMessage__18ErrorMessageWindowFPCcQ218ErrorMessageWindow11MessageTypePCQ34nw4r3lyt6TexMap",
+        "match_percent": 100.0
+      },
+      {
+        "name": "disappear__18ErrorMessageWindowFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeAppear__18ErrorMessageWindowFv",
+        "match_percent": 99.74026
+      },
+      {
+        "name": "__dt__18ErrorMessageWindowFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__sinit_\\ErrorMessageWindow_cpp",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q232@unnamed@ErrorMessageWindow_cpp@22ErrorMessageWindowHideFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q232@unnamed@ErrorMessageWindow_cpp@24ErrorMessageWindowAppearFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q232@unnamed@ErrorMessageWindow_cpp@25ErrorMessageWindowDisplayFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q232@unnamed@ErrorMessageWindow_cpp@27ErrorMessageWindowDisappearFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q232@unnamed@ErrorMessageWindow_cpp@39ErrorMessageWindowDisappearBeforeAppearFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q232@unnamed@ErrorMessageWindow_cpp@39ErrorMessageWindowDisappearBeforeAppearCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q232@unnamed@ErrorMessageWindow_cpp@27ErrorMessageWindowDisappearCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q232@unnamed@ErrorMessageWindow_cpp@25ErrorMessageWindowDisplayCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q232@unnamed@ErrorMessageWindow_cpp@24ErrorMessageWindowAppearCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q232@unnamed@ErrorMessageWindow_cpp@22ErrorMessageWindowHideCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__18ErrorMessageWindow",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q232@unnamed@ErrorMessageWindow_cpp@39ErrorMessageWindowDisappearBeforeAppear",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q232@unnamed@ErrorMessageWindow_cpp@27ErrorMessageWindowDisappear",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q232@unnamed@ErrorMessageWindow_cpp@25ErrorMessageWindowDisplay",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q232@unnamed@ErrorMessageWindow_cpp@24ErrorMessageWindowAppear",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q232@unnamed@ErrorMessageWindow_cpp@22ErrorMessageWindowHide",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q232@unnamed@ErrorMessageWindow_cpp@22ErrorMessageWindowHide",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q232@unnamed@ErrorMessageWindow_cpp@24ErrorMessageWindowAppear",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q232@unnamed@ErrorMessageWindow_cpp@25ErrorMessageWindowDisplay",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q232@unnamed@ErrorMessageWindow_cpp@27ErrorMessageWindowDisappear",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q232@unnamed@ErrorMessageWindow_cpp@39ErrorMessageWindowDisappearBeforeAppear",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.ctors-0]",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.data-0]",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.sdata-0]",
+        "match_percent": 66.66667
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Screen/BatteryInfo.cpp",
+    "sha256": "9515e6932df0f365476927a2759fa0e88f2e882bfb2d9897a982783f4df1bec4",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-process-reset-error-20260912/BatteryInfo.wii.o",
+      "/Users/frityet/Projects/petari/decomp/src/Game/Screen/BatteryInfo.cpp"
+    ],
+    "exit": 0,
+    "diff_exit": 0,
+    "sections": [
+      {
+        "name": ".text",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".ctors",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".data",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sbss",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.ctors",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.data",
+        "match_percent": null
+      },
+      {
+        "name": ".symtab",
+        "match_percent": null
+      },
+      {
+        "name": ".strtab",
+        "match_percent": null
+      },
+      {
+        "name": ".shstrtab",
+        "match_percent": null
+      },
+      {
+        "name": ".comment",
+        "match_percent": null
+      },
+      {
+        "name": ".note.split",
+        "match_percent": null
+      }
+    ],
+    "functions": [
+      {
+        "name": "__ct__11BatteryInfoFP11LayoutActorPCci",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeEnought__11BatteryInfoFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeLowAppear__11BatteryInfoFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeLow__11BatteryInfoFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeLowHide__11BatteryInfoFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeCriticalAppear__11BatteryInfoFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeCritical__11BatteryInfoFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeNoneAppear__11BatteryInfoFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeNone__11BatteryInfoFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeNoneHide__11BatteryInfoFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeStartAnimAndSetNerveIfStopped__11BatteryInfoFPCcPC5Nerve",
+        "match_percent": 100.0
+      },
+      {
+        "name": "tryChangeNerveWithBatteryLeftAlreadyAppear__11BatteryInfoFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__13BatteryLayoutFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__13BatteryLayoutFRC12JMapInfoIter",
+        "match_percent": 100.0
+      },
+      {
+        "name": "appear__13BatteryLayoutFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "control__13BatteryLayoutFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__11BatteryInfoFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__13BatteryLayoutFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__sinit_\\BatteryInfo_cpp",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q225@unnamed@BatteryInfo_cpp@18BatteryInfoEnoughtFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q225@unnamed@BatteryInfo_cpp@20BatteryInfoLowAppearFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q225@unnamed@BatteryInfo_cpp@14BatteryInfoLowFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q225@unnamed@BatteryInfo_cpp@23BatteryInfoLowDisappearFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q225@unnamed@BatteryInfo_cpp@18BatteryInfoLowHideFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q225@unnamed@BatteryInfo_cpp@20BatteryInfoDisappearFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q225@unnamed@BatteryInfo_cpp@25BatteryInfoCriticalAppearFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q225@unnamed@BatteryInfo_cpp@19BatteryInfoCriticalFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q225@unnamed@BatteryInfo_cpp@21BatteryInfoNoneAppearFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q225@unnamed@BatteryInfo_cpp@15BatteryInfoNoneFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q225@unnamed@BatteryInfo_cpp@24BatteryInfoNoneDisappearFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q225@unnamed@BatteryInfo_cpp@19BatteryInfoNoneHideFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q225@unnamed@BatteryInfo_cpp@19BatteryInfoNoneHideCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q225@unnamed@BatteryInfo_cpp@24BatteryInfoNoneDisappearCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q225@unnamed@BatteryInfo_cpp@15BatteryInfoNoneCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q225@unnamed@BatteryInfo_cpp@21BatteryInfoNoneAppearCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q225@unnamed@BatteryInfo_cpp@19BatteryInfoCriticalCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q225@unnamed@BatteryInfo_cpp@25BatteryInfoCriticalAppearCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q225@unnamed@BatteryInfo_cpp@20BatteryInfoDisappearCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q225@unnamed@BatteryInfo_cpp@18BatteryInfoLowHideCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q225@unnamed@BatteryInfo_cpp@23BatteryInfoLowDisappearCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q225@unnamed@BatteryInfo_cpp@14BatteryInfoLowCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q225@unnamed@BatteryInfo_cpp@20BatteryInfoLowAppearCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q225@unnamed@BatteryInfo_cpp@18BatteryInfoEnoughtCFP5Spine",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__13BatteryLayout",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__11BatteryInfo",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q225@unnamed@BatteryInfo_cpp@19BatteryInfoNoneHide",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q225@unnamed@BatteryInfo_cpp@24BatteryInfoNoneDisappear",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q225@unnamed@BatteryInfo_cpp@15BatteryInfoNone",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q225@unnamed@BatteryInfo_cpp@21BatteryInfoNoneAppear",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q225@unnamed@BatteryInfo_cpp@19BatteryInfoCritical",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q225@unnamed@BatteryInfo_cpp@25BatteryInfoCriticalAppear",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q225@unnamed@BatteryInfo_cpp@20BatteryInfoDisappear",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q225@unnamed@BatteryInfo_cpp@18BatteryInfoLowHide",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q225@unnamed@BatteryInfo_cpp@23BatteryInfoLowDisappear",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q225@unnamed@BatteryInfo_cpp@14BatteryInfoLow",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q225@unnamed@BatteryInfo_cpp@20BatteryInfoLowAppear",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q225@unnamed@BatteryInfo_cpp@18BatteryInfoEnought",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q225@unnamed@BatteryInfo_cpp@18BatteryInfoEnought",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q225@unnamed@BatteryInfo_cpp@20BatteryInfoLowAppear",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q225@unnamed@BatteryInfo_cpp@14BatteryInfoLow",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q225@unnamed@BatteryInfo_cpp@23BatteryInfoLowDisappear",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q225@unnamed@BatteryInfo_cpp@18BatteryInfoLowHide",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q225@unnamed@BatteryInfo_cpp@20BatteryInfoDisappear",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q225@unnamed@BatteryInfo_cpp@25BatteryInfoCriticalAppear",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q225@unnamed@BatteryInfo_cpp@19BatteryInfoCritical",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q225@unnamed@BatteryInfo_cpp@21BatteryInfoNoneAppear",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q225@unnamed@BatteryInfo_cpp@15BatteryInfoNone",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q225@unnamed@BatteryInfo_cpp@24BatteryInfoNoneDisappear",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q225@unnamed@BatteryInfo_cpp@19BatteryInfoNoneHide",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.ctors-0]",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.data-0]",
+        "match_percent": 99.653595
+      }
+    ]
+  }
+]

@@ -4,6 +4,7 @@
 #include "Game/Util/MtxUtil.hpp"
 
 #include <math_types.hpp>
+#include "JSystem/JGeometry/THex.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -21,6 +22,35 @@ namespace {
 
     bool near(f32 actual, f32 expected, f32 tolerance = 0.00001F) {
         return std::fabs(actual - expected) <= tolerance;
+    }
+
+    void test_original_partition_and_volume() {
+        JGeometry::TPartition3<f32> plane;
+        plane.set(TVec3f(4, 0, 0), TVec3f(4, 1, 0), TVec3f(4, 1, 1));
+        require(plane.mNormal.epsilonEquals(TVec3f(-1, 0, 0), 0.00001F) && near(plane.mDot, -4),
+                "three-point partition uses the retail inward cross-product order and normalization");
+        plane.set(TVec3f(4, 0, 0), TVec3f(4, 1, 1), TVec3f(4, 1, 0));
+        require(plane.mNormal.epsilonEquals(TVec3f(1, 0, 0), 0.00001F) && near(plane.mDot, 4),
+                "reversing winding reverses the original plane half-space");
+        plane.set(TVec3f(2, 0, 0), TVec3f(3, 7, 9));
+        require(plane.mNormal.x == 2 && plane.mDot == 6,
+                "normal-point partition preserves the supplied normal without invented renormalization");
+
+        THex3f volume;
+        const TVec3f normals[] = {{1, 0, 0}, {-1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}};
+        const TVec3f points[] = {{-4, 0, 0}, {4, 0, 0}, {0, -4, 0}, {0, 4, 0}, {0, 0, -4}, {0, 0, 4}};
+        for (unsigned i = 0; i < 6; ++i) volume.mPlanes[i].set(normals[i], points[i]);
+        require(volume.mayIntersectBall3(TVec3f(0, 0, 0), 0), "all six original planes retain the interior");
+        for (const auto& normal : normals) {
+            const TVec3f edge(normal.x * -5, normal.y * -5, normal.z * -5);
+            const TVec3f outside(normal.x * -5.01F, normal.y * -5.01F, normal.z * -5.01F);
+            require(volume.mayIntersectBall3(edge, 1) && !volume.mayIntersectBall3(outside, 1),
+                    "a sphere tangent to any original plane remains visible and a separated sphere is rejected");
+        }
+        // This helper is conservative: six individual plane overlaps are not
+        // an exact sphere-to-polyhedron distance test at edges or corners.
+        require(volume.mayIntersectBall3(TVec3f(4.8F, 4.8F, 0), 1),
+                "the original six-plane test preserves conservative corner overlap");
     }
 
     void test_vector_decomposition_and_projection() {
@@ -178,6 +208,7 @@ namespace {
 
 int main() {
     try {
+        test_original_partition_and_volume();
         test_vector_decomposition_and_projection();
         test_gravity_scalar_math_surface();
         test_vector_gravity_helpers();

@@ -1,0 +1,22 @@
+{
+  "head": "0053750315fe159eb51e070ca507b96ef841fb00",
+  "remote": "0053750315fe159eb51e070ca507b96ef841fb00",
+  "paths": [
+    "include/Game/NPC/RosettaDemoEpilogue.hpp",
+    "include/Game/NPC/RosettaDemoHeavensDoor.hpp",
+    "libs/JSystem/include/JSystem/JGeometry/TPartition3.hpp",
+    "libs/nw4r/include/nw4r/lyt/pane.h",
+    "src/Game/LiveActor/ClippingJudge.cpp",
+    "src/Game/MapObj/PowerStar.cpp",
+    "src/Game/NPC/Rosetta.cpp",
+    "src/Game/NPC/RosettaDemoHeavensDoor.cpp",
+    "src/Game/Scene/IntermissionScene.cpp",
+    "src/Game/Scene/PlayTimerScene.cpp",
+    "src/Game/Scene/ScenarioSelectScene.cpp",
+    "src/Game/Scene/SceneFactory.cpp",
+    "src/Game/Scene/StageFileLoader.cpp",
+    "src/Game/System/AudSystemWrapper.cpp",
+    "src/Game/System/GameSystemResetAndPowerProcess.cpp",
+    "src/Game/Util/LayoutUtil.cpp"
+  ]
+}

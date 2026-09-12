@@ -1,0 +1,10 @@
+{
+  "command": [
+    "xmake",
+    "build",
+    "-y",
+    "smg-pc-showcase"
+  ],
+  "exit": 255,
+  "seconds": 8.768259042000864
+}

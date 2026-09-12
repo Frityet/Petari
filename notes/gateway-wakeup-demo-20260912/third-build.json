@@ -1,0 +1,10 @@
+{
+  "command": [
+    "xmake",
+    "build",
+    "-y",
+    "smg-pc-showcase"
+  ],
+  "returncode": 0,
+  "duration": 6.738678932189941
+}

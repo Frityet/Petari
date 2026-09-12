@@ -851,3 +851,41 @@ namespace MR {
         return false;
     }
 }
+
+namespace MR {
+    bool turnQuat(TQuat4f* pDst, const TQuat4f& rSrc, const TVec3f& rFrom, const TVec3f& rTo, f32 angle) {
+        TVec3f from;
+        TVec3f target = rTo;
+
+        bool isSameDir = rFrom.dot(rTo) >= 0.0f ? false : isSameDirection(rFrom, rTo);
+        if (isSameDir) {
+            turnRandomVector(&from, rFrom, 0.001f);
+        } else {
+            from.set(rFrom);
+        }
+
+        MR::normalizeOrZero(&from);
+        MR::normalizeOrZero(&target);
+
+        f32 angleBetween = acosEx(JGeometry::TUtil< f32 >::clamp(from.dot(target), -1.0f, 1.0f));
+        f32 rate;
+        if (angleBetween <= angle) {
+            rate = 1.0f;
+        } else {
+            rate = JGeometry::TUtil< f32 >::clamp(angle / angleBetween, 0.0f, 1.0f);
+        }
+
+        TQuat4f rot;
+        rot.setRotate(from, target, rate);
+        pDst->mult(rot, rSrc);
+        pDst->normalize();
+
+        return angleBetween < 0.015f;
+    }
+
+    bool turnQuatZDirRad(TQuat4f* pDst, const TQuat4f& rSrc, const TVec3f& rTo, f32 angle) {
+        TVec3f zDir;
+        rSrc.getZDir(zDir);
+        return turnQuat(pDst, rSrc, zDir, rTo, angle);
+    }
+}  // namespace MR

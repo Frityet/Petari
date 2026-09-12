@@ -1,0 +1,44 @@
+{
+  "retail_assembly": "notes/gateway-audit-20260907/restoration/retail/asm/Game/Util/LayoutUtil.s",
+  "methods": [
+    {
+      "name": "setInfluencedAlphaToChild__2MRFPC11LayoutActor",
+      "match_percent": 65.789474
+    },
+    {
+      "name": "setLayoutAlphaFloat__2MRFPC11LayoutActorf",
+      "match_percent": 99.46429
+    }
+  ],
+  "interpretation": "Alpha scaling is99.46429%. Child influence is a functional recovery at65.789474%: actual root and each direct child flag bit1 are set, child-list traversal and termination match; existing SDK template and iterator inlining/mangling differ (SetBit/SetInfluencedAlpha, operator* and postfix++). This is not a claim of high instruction match for that method. No layout tree or extra flags are synthesized.",
+  "sources": [
+    {
+      "path": "decomp/src/Game/Util/LayoutUtil.cpp",
+      "sha256": "237968c6de719e0c169659eec8bc982feab90c55e986bab3dff2d8c7533170ac"
+    },
+    {
+      "path": "decomp/libs/nw4r/include/nw4r/lyt/pane.h",
+      "sha256": "947ad4e4d32ee3ee986cca8319bebcb9764f5e2fe27d4d30d6047b72d9153384"
+    },
+    {
+      "path": "src/Game/Util/LayoutUtil.cpp",
+      "sha256": "237968c6de719e0c169659eec8bc982feab90c55e986bab3dff2d8c7533170ac"
+    },
+    {
+      "path": "src/nw4r/lyt/pane.h",
+      "sha256": "02e323ee4a311b4c50265e83b1bf035e95fc5ed8a5b4d7315a105ff1c5f4e1bf"
+    },
+    {
+      "path": "src/compat/GameDataFunctionCompat.cpp",
+      "sha256": "e7d17d34ad05344e2d9a797aac56d9ab44db4fc49559b216ffa296e5db9c89a0"
+    },
+    {
+      "path": "src/compat/GameMathCompat.cpp",
+      "sha256": "d768309ba0fa37865bf55836739b9e29a52db13697e9a68696fd1a9c43195742"
+    },
+    {
+      "path": "src/compat/JMapUtilCompat.cpp",
+      "sha256": "baa59b4ab18f367decbc7a2dc5009f95efdff7940d487a19096c74eb295183c3"
+    }
+  ]
+}

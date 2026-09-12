@@ -1,10 +1,8 @@
 #pragma once
 
 class LiveActor;
-namespace smgpc::camera {
-    struct CameraPose;
-}
+class ClippingJudge;
 
 namespace smgpc::compat {
-    void update_actor_clipping(LiveActor& actor, const smgpc::camera::CameraPose& camera);
+    void update_actor_clipping(LiveActor& actor, const ClippingJudge& judge);
 }  // namespace smgpc::compat

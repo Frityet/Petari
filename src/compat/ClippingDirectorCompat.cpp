@@ -2,6 +2,7 @@
 #include "resource/TextEncoding.hpp"
 #include <aurora/exception.hpp>
 #include "Game/LiveActor/ClippingDirector.hpp"
+#include "Game/LiveActor/ClippingJudge.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/LodCtrl.hpp"
@@ -20,16 +21,18 @@ namespace {
     }
 
     const std::string cClippingDirectorName = encode_owner_name("クリッピング指揮");
+    const std::string cClippingJudgeName = encode_owner_name("クリッピング判定者");
 }  // namespace
 
 ClippingDirector::ClippingDirector()
     : NameObj(cClippingDirectorName.c_str()), mJudge(nullptr), mActorHolder(nullptr), mGroupHolder(nullptr) {
+    mJudge = new ClippingJudge(cClippingJudgeName.c_str());
+    mJudge->initWithoutIter();
     MR::connectToScene(this, MR::MovementType_ClippingDirector, -1, -1, -1);
 }
 
 void ClippingDirector::movement() {
-    // The host scene scheduler evaluates registered actor clipping from the
-    // current real camera at this retail movement category, after Camera.
+    mJudge->movement();
 }
 
 void ClippingDirector::endInitActorSystemInfo() {

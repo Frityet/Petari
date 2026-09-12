@@ -1,0 +1,52 @@
+[
+  {
+    "path": "decomp/src/Game/System/GameSystemResetAndPowerProcess.cpp",
+    "sha256": "6c84da8880ec9fd4e696c5bc2fba01405e424259b87b80f6e67fad9670b4bc84"
+  },
+  {
+    "path": "src/Game/System/GameSystemErrorWatcher.cpp",
+    "sha256": "6aa0613a3a4e221a18707fb726d94b234a7dbcca9450857cffd99848c4d8d658",
+    "reference": "decomp/src/Game/System/GameSystemErrorWatcher.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/Game/System/GameSystemResetAndPowerProcess.cpp",
+    "sha256": "6c84da8880ec9fd4e696c5bc2fba01405e424259b87b80f6e67fad9670b4bc84",
+    "reference": "decomp/src/Game/System/GameSystemResetAndPowerProcess.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/Game/Screen/ErrorMessageWindow.cpp",
+    "sha256": "cec020d67212039f7a4a6c7676afc3a0ff770deb6705e03cab90736d67c1676b",
+    "reference": "decomp/src/Game/Screen/ErrorMessageWindow.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/Game/Screen/BatteryInfo.cpp",
+    "sha256": "9515e6932df0f365476927a2759fa0e88f2e882bfb2d9897a982783f4df1bec4",
+    "reference": "decomp/src/Game/Screen/BatteryInfo.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/Game/Screen/BatteryInfo.hpp",
+    "sha256": "b0529cc798ebbe0cbb1e313859f510d7877759a4c35aca96b3d7673b73313b1d",
+    "reference": "decomp/include/Game/Screen/BatteryInfo.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "aurora/include/revolution.h",
+    "sha256": "d4a000a9eb583ed982e624ddbaeb77c121001d8f0860a54f3d9a2bd8c0452895"
+  },
+  {
+    "path": "aurora/include/dolphin/dvd.h",
+    "sha256": "f23ec9ddd85e9e0fe94102c2e57f046b630ff788abbfa095f9215705b232f27b"
+  },
+  {
+    "path": "aurora/lib/dolphin/dvd/dvd.cpp",
+    "sha256": "d8d86a08e17aad67e5373eaf684f1d0f8db1af5d224b0b3e99d9d23eedb0680a"
+  },
+  {
+    "path": "aurora/tests/test_dvd.cpp",
+    "sha256": "d6d49bd5843f1172798bf3ed9949f63c87c610b0467db86bc5788a57602eac9b"
+  }
+]

@@ -11,7 +11,7 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
-#include "camera/CameraPose.hpp"
+#include "Game/LiveActor/ClippingJudge.hpp"
 #include "compat/ActorPhysicsRuntime.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/StageSessionState.hpp"
@@ -169,23 +169,26 @@ int main() {
         require(clipping != nullptr && clipping->sphere_configured && clipping->far_level == 6,
                 "sphere configuration must preserve the original ClippingActorInfo 100m default");
 
-        auto camera = smgpc::camera::CameraPose{};
-        camera.eye = {0.0F, 0.0F, 0.0F};
-        camera.watch = {0.0F, 0.0F, 1.0F};
-        camera.near_clip = 1.0F;
-        camera.far_clip = 30000.0F;
-        smgpc::compat::update_actor_clipping(actor, camera);
+        // Supply explicit test planes to the actual original judge. Camera
+        // reconstruction is exercised by OriginalCameraDirectorTests.
+        ClippingJudge judge("Actor clipping plane fixture");
+        const TVec3f normals[] = {{1, 0, 0}, {-1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}};
+        const TVec3f points[] = {{-30000, 0, 0}, {30000, 0, 0}, {0, -30000, 0}, {0, 30000, 0}, {0, 0, 500}, {0, 0, 30000}};
+        for (unsigned i = 0; i < 6; ++i) judge.mFrustum.mPlanes[i].set(normals[i], points[i]);
+        judge.mClipFrustums[6] = judge.mFrustum;
+        judge.mClipFrustums[6].mPlanes[5].set(TVec3f(0, 0, -1), TVec3f(0, 0, 10000));
+        smgpc::compat::update_actor_clipping(actor, judge);
         require(actor.mFlag.mIsClipped,
                 "a registered actor begins with the original 100m clipping distance");
         MR::setClippingFarMax(&actor);
-        smgpc::compat::update_actor_clipping(actor, camera);
+        smgpc::compat::update_actor_clipping(actor, judge);
         require(!actor.mFlag.mIsClipped,
                 "an explicit maximum clipping distance must use the current camera far plane");
         MR::setClippingFar100m(&actor);
-        smgpc::compat::update_actor_clipping(actor, camera);
+        smgpc::compat::update_actor_clipping(actor, judge);
         require(actor.mFlag.mIsClipped, "the scheduler clipping evaluator must consume the configured 100m level");
         actor.mPosition.z = 5000.0F;
-        smgpc::compat::update_actor_clipping(actor, camera);
+        smgpc::compat::update_actor_clipping(actor, judge);
         require(!actor.mFlag.mIsClipped, "a configured actor must be restored when its sphere re-enters the frustum");
         ++passed;
     }
