@@ -1,0 +1,22 @@
+{
+  "retail_dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "verified_retail_instruction_count": 66,
+  "verified_retail_text_bytes": 264,
+  "source_manifest": [
+    {
+      "reference": "decomp/src/Game/NPC/NPCFunction.cpp",
+      "port": "src/Game/NPC/NPCFunction.cpp",
+      "sha256": "629cfead50e0c1ba6c202cbaed63d446d50c80e44d5abc1d7a2b64887f428ef4"
+    },
+    {
+      "reference": "decomp/src/Game/Util/NPCUtil.cpp",
+      "port": "src/Game/Util/NPCUtil.cpp",
+      "sha256": "3808f47557a1c294b306d1948d59bb7bf3e897ee64800cdb0b8e0b8a2d9a699c"
+    },
+    {
+      "reference": "decomp/include/Game/NPC/NPCDirector.hpp",
+      "port": "src/Game/NPC/NPCDirector.hpp",
+      "sha256": "bb5b3c422e3b4f94a559f2b7b99595315455a9aa0178c81a88accdfe09e88762"
+    }
+  ]
+}

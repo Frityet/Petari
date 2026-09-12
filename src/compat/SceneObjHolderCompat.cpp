@@ -35,6 +35,7 @@
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/Map/SwitchWatcherHolder.hpp"
 #include "Game/MapObj/CoinHolder.hpp"
+#include "Game/MapObj/ClipAreaHolder.hpp"
 #include "Game/MapObj/CoinRotater.hpp"
 #include "Game/MapObj/PurpleCoinHolder.hpp"
 #include "Game/NameObj/NameObj.hpp"
@@ -61,6 +62,7 @@
 #include "Game/NameObj/MovementOnOffGroupHolder.hpp"
 #include "Game/NPC/NPCDirector.hpp"
 #include "Game/Util/FurCtrl.hpp"
+#include "Game/Util/ShareUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/CapturedFrameBlurService.hpp"
@@ -92,6 +94,7 @@ namespace {
     const std::string cPlacementStateCheckerName = encode_owner_name("オブジェクト配置状態の監視");
     const std::string cWarpPodManagerName = encode_owner_name("ワープポッド管理局");
     const std::string cCoinHolderName = encode_owner_name("コイン管理");
+    const std::string cClipAreaHolderName = encode_owner_name("クリップエリアホルダー");
     const std::string cCoinRotaterName = encode_owner_name("コイン回転管理");
     const std::string cPrologueHolderName = encode_owner_name("プロローグ保持");
     const std::string cGroupCheckManagerName = encode_owner_name("属性グループマネージャー");
@@ -580,6 +583,10 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new WarpPodMgr(cWarpPodManagerName.c_str());
     case SceneObj_CoinHolder:
         return new CoinHolder(cCoinHolderName.c_str());
+    case SceneObj_ResourceShare:
+        return new ResourceShare();
+    case SceneObj_ClipAreaHolder:
+        return new ClipAreaHolder(cClipAreaHolderName.c_str());
     case SceneObj_PurpleCoinHolder:
         return new PurpleCoinHolder();
     case SceneObj_CoinRotater:

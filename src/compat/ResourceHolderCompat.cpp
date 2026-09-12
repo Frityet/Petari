@@ -5,7 +5,9 @@
 #include "camera/CameraAnimation.hpp"
 
 #include "Game/Animation/MaterialAnmBuffer.hpp"
+#include "Game/System/LayoutHolder.hpp"
 #include "Game/System/StationedFileInfo.hpp"
+#include "Game/Util/FileUtil.hpp"
 #include "Game/Util/MutexHolder.hpp"
 #include "JSystem/J3DGraphAnimator/J3DMaterialAnm.hpp"
 #include "compat/J3dCommandScope.hpp"
@@ -15,6 +17,7 @@
 #include "resource/JMapResource.hpp"
 #include "resource/RarcArchive.hpp"
 #include "runtime/RuntimeServices.hpp"
+#include "runtime/ArchiveMountService.hpp"
 
 #include <algorithm>
 #include <exception>
@@ -70,6 +73,45 @@ namespace smgpc::compat {
             return BackingKind::Raw;
         }
     }
+
+    struct LayoutArchiveOwner::Storage {
+        std::shared_ptr<JkrAllocationDomain> domain;
+        std::shared_ptr<const runtime::MountedArchive> archive;
+        std::unique_ptr<LayoutHolder> holder;
+
+        ~Storage() {
+            if (!holder) return;
+            JkrAllocationScope original(domain);
+            // Original LayoutHolder retirement relied on scene-heap disposal.
+            // Retire its native owner's children before releasing borrowed bytes.
+            for (auto* table : {&holder->mLayoutRes, &holder->mAnimRes, &holder->mResOther}) {
+                for (u32 i = 0; i < table->mCount; ++i) delete[] table->mFileInfoTable[i].mName;
+                delete[] table->mFileInfoTable;
+                table->mFileInfoTable = nullptr;
+                table->mCount = 0;
+            }
+            holder.reset();
+        }
+    };
+
+    LayoutArchiveOwner::LayoutArchiveOwner(std::shared_ptr<const runtime::MountedArchive> archive,
+                                          std::shared_ptr<JkrAllocationDomain> domain) {
+        JkrHostAllocationScope host;
+        if (!archive || !domain || archive->heap() != &domain->heap())
+            aurora::throw_host_exception<std::invalid_argument>("LayoutHolder requires its mounted archive and owning heap");
+        _storage = std::make_unique<Storage>();
+        _storage->domain = std::move(domain);
+        _storage->archive = std::move(archive);
+        JkrAllocationScope original(_storage->domain);
+        _storage->holder = std::make_unique<LayoutHolder>(_storage->archive->archive());
+    }
+
+    LayoutArchiveOwner::~LayoutArchiveOwner() {
+        JkrHostAllocationScope host;
+        _storage.reset();
+    }
+    LayoutHolder& LayoutArchiveOwner::holder() const noexcept { return *_storage->holder; }
+    JKRHeap& LayoutArchiveOwner::heap() const noexcept { return _storage->domain->heap(); }
 
     struct ResourceArchiveOwner::Storage {
         std::shared_ptr<JkrAllocationDomain> domain;
@@ -185,6 +227,7 @@ namespace smgpc::compat {
     ResourceHolderService::~ResourceHolderService() {
         JkrHostAllocationScope host;
         if (active_service == this) active_service = nullptr;
+        _layouts.clear();
         _holders.clear();
     }
 
@@ -204,14 +247,48 @@ namespace smgpc::compat {
         if (const auto found = _holders.find(key); found != _holders.end()) return &found->second->holder();
         auto domain = _domain;
         if (heap != nullptr && heap != &domain->heap()) {
-            auto process = current_jkr_allocation_domain();
-            if (!process)
-                aurora::throw_host_exception<std::logic_error>("Original resource heap has no retained process owner");
-            domain = JkrAllocationDomain::retain_heap(std::move(process), *heap);
+            domain = JkrAllocationDomain::retain_heap(*heap);
         }
         auto owner = std::make_shared<ResourceArchiveOwner>(_dvd->retain_archive_for_path(*resolved), key, std::move(domain), _mem1);
         auto* result = &owner->holder();
         _holders.emplace(key, std::move(owner));
+        return result;
+    }
+
+    LayoutHolder* ResourceHolderService::create_layout(std::string_view archive_name) {
+        JkrHostAllocationScope host;
+        auto* mounts = runtime::ArchiveMountService::active();
+        if (mounts == nullptr)
+            aurora::throw_host_exception<std::logic_error>("LayoutHolder requires an active archive mount owner");
+        const auto name = std::string(archive_name);
+        char path[256]{};
+        if (!MR::makeLayoutArchiveFileName(path, sizeof(path), name.c_str()))
+            aurora::throw_host_exception<std::runtime_error>("Required LayoutHolder archive is unavailable: " + name);
+        if (mounts->receive(path) == nullptr) {
+            auto domain = current_jkr_allocation_domain();
+            mounts->mount(path, &(domain ? domain : _domain)->heap());
+        }
+        return create_layout_from_mounted(path);
+    }
+
+    LayoutHolder* ResourceHolderService::create_layout_from_mounted(std::string_view archive_name) {
+        JkrHostAllocationScope host;
+        auto* mounts = runtime::ArchiveMountService::active();
+        if (mounts == nullptr)
+            aurora::throw_host_exception<std::logic_error>("LayoutHolder requires an active archive mount owner");
+        auto archive = mounts->retain(archive_name);
+        if (!archive || archive->heap() == nullptr)
+            aurora::throw_host_exception<std::logic_error>("LayoutHolder requires its original mounted archive and heap");
+        const auto path = archive->path();
+        if (const auto found = _layouts.find(path); found != _layouts.end()) {
+            if (found->second->holder().mArchive != &archive->archive())
+                aurora::throw_host_exception<std::logic_error>("Retire layout resources before remounting their archive");
+            return &found->second->holder();
+        }
+        auto domain = JkrAllocationDomain::retain_heap(*archive->heap());
+        auto owner = std::make_shared<LayoutArchiveOwner>(std::move(archive), std::move(domain));
+        auto* result = &owner->holder();
+        _layouts.emplace(path, std::move(owner));
         return result;
     }
 
@@ -223,6 +300,10 @@ namespace smgpc::compat {
         for (const auto& [path, owner] : _holders)
             if (owner->holder().mHeap == heap && owner.use_count() != 1)
                 aurora::throw_host_exception<std::logic_error>("Cannot unload an original resource heap with live model owners");
+        for (const auto& [path, owner] : _layouts)
+            if (&owner->heap() == heap && owner.use_count() != 1)
+                aurora::throw_host_exception<std::logic_error>("Cannot unload an original resource heap with live layout owners");
+        std::erase_if(_layouts, [heap](const auto& entry) { return &entry.second->heap() == heap; });
         std::erase_if(_holders, [heap](const auto& entry) { return entry.second->holder().mHeap == heap; });
     }
 
@@ -239,6 +320,10 @@ namespace smgpc::compat {
         aurora::throw_host_exception<std::invalid_argument>("ResourceHolder is not owned by this service");
     }
     const ResourceArchiveOwner& ResourceHolderService::backing(const ResourceHolder& holder) const { return *retain(holder); }
+    std::shared_ptr<const LayoutArchiveOwner> ResourceHolderService::retain(const LayoutHolder& holder) const {
+        for (const auto& [path, owner] : _layouts) if (&owner->holder() == &holder) return owner;
+        aurora::throw_host_exception<std::invalid_argument>("LayoutHolder is not owned by this service");
+    }
     const std::shared_ptr<JkrAllocationDomain>& ResourceHolderService::allocation_domain() const noexcept { return _domain; }
     ResourceHolderService* ResourceHolderService::active() noexcept { return active_service; }
 }

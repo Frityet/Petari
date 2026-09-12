@@ -1,20 +1,11 @@
 #include <aurora/exception.hpp>
+#include <aurora/endian.hpp>
 #include "Yaz0.hpp"
 
 #include <stdexcept>
 
 namespace smgpc::resource {
-    namespace {
-
-        [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
-            if (offset + 4U > data.size()) {
-                aurora::throw_host_exception<std::runtime_error>("Yaz0 read past end of buffer");
-            }
-
-            return (static_cast<std::uint32_t>(data[offset]) << 24U) | (static_cast<std::uint32_t>(data[offset + 1U]) << 16U) | (static_cast<std::uint32_t>(data[offset + 2U]) << 8U) | static_cast<std::uint32_t>(data[offset + 3U]);
-        }
-
-    }  // namespace
+    using aurora::endian::read_big;
 
     bool is_yaz0(std::span<const std::uint8_t> data) {
         return data.size() >= 16U && data[0] == 'Y' && data[1] == 'a' && data[2] == 'z' && data[3] == '0';
@@ -25,7 +16,7 @@ namespace smgpc::resource {
             return {data.begin(), data.end()};
         }
 
-        const auto decompressed_size = read_be32(data, 4U);
+        const auto decompressed_size = read_big<std::uint32_t>(data, 4U);
         auto output = std::vector<std::uint8_t>(decompressed_size);
 
         std::size_t src_offset = 16U;

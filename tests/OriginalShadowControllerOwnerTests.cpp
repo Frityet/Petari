@@ -1,4 +1,5 @@
 #include "resource/TextEncoding.hpp"
+#include "SceneExecutionFixture.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -694,6 +695,45 @@ namespace {
                 "actor retirement must release the real model owner and every shadow binding together");
     }
 
+    void test_original_shadow_clipping() {
+        ProbeActor actor;
+        actor.mPosition.set(2, 3, 4);
+        MR::initShadowVolumeSphere(&actor, 10);
+        auto* first = actor.mShadowControllerList->getController(0U);
+        TVec3f clipping_center;
+        float clipping_radius = -1;
+        first->setProjectionFix(TVec3f(8, 3, 12), TVec3f(0, 1, 0), false);
+        require(!MR::calcClippingRangeIncludeShadow(&clipping_center, &clipping_radius, &actor, 150) &&
+                    clipping_center.epsilonEquals(actor.mPosition, 0) && clipping_radius == 150,
+                "an unprojected shadow keeps the authored actor-centered clipping sphere");
+        MR::setClippingRangeIncludeShadow(&actor, &clipping_center, 150);
+        auto* clipping = smgpc::compat::actor_clipping_runtime_state(&actor);
+        require(clipping && clipping->sphere_center == nullptr && clipping->sphere_radius == 150,
+                "unprojected clipping must retain the original null center binding");
+        first->setProjectionFix(TVec3f(8, 3, 12), TVec3f(0, 1, 0), true);
+        require(MR::isShadowProjected(&actor, nullptr) && MR::isShadowProjectedAny(&actor),
+                "original shadow queries observe the controller projection flag");
+        MR::setClippingRangeIncludeShadow(&actor, &clipping_center, 150);
+        clipping = smgpc::compat::actor_clipping_runtime_state(&actor);
+        require(clipping && clipping->sphere_center == &clipping_center &&
+                    clipping_center.epsilonEquals(TVec3f(5, 3, 8), 0),
+                "projected clipping borrows the caller center spanning actor and shadow");
+        require_near(clipping->sphere_radius, 155, "projected clipping includes half the shadow separation");
+        TVec3f moving_projection(2, 23, 4);
+        first->mProjPos = &moving_projection;
+        MR::setClippingRangeIncludeShadow(&actor, &clipping_center, 25);
+        require(clipping_center.epsilonEquals(TVec3f(2, 13, 4), 0),
+                "clipping follows the actual borrowed projection pointer");
+        require_near(smgpc::compat::actor_clipping_runtime_state(&actor)->sphere_radius, 35,
+                     "a changed projection updates the clipping radius");
+        first->mProjPos = nullptr;
+        first->setProjectionFix(TVec3f(8, 3, 12), TVec3f(0, 1, 0), false);
+        MR::setClippingRangeIncludeShadow(&actor, &clipping_center, 25);
+        require(!MR::isShadowProjectedAny(&actor) &&
+                    smgpc::compat::actor_clipping_runtime_state(&actor)->sphere_center == nullptr,
+                "losing projection clears the borrowed clipping center");
+    }
+
     void test_original_controller_graph() {
         auto& holder = *MR::getSceneObj<ShadowControllerHolder>(SceneObj_ShadowControllerHolder);
         const auto count = holder._C.size();
@@ -795,7 +835,7 @@ int main() try {
     smgpc::compat::StageSessionState session("Game", "HeavensDoorGalaxy", 1, JMapIdInfo(0, 0));
     smgpc::compat::StageSessionBinding session_binding(session);
     (void)renderer.begin_frame();
-    const auto tests = std::array< std::pair< std::string_view, void (*)() >, 8U >{
+    const auto tests = std::array< std::pair< std::string_view, void (*)() >, 9U >{
         std::pair{"missing CSV and transaction", test_missing_csv_and_strong_replacement},
         std::pair{"all types and defaults", test_all_types_and_exact_missing_defaults},
         std::pair{"authored bindings and modes", test_authored_bindings_modes_and_line_order},
@@ -803,6 +843,7 @@ int main() try {
         std::pair{"model binding lifetime", test_generic_ctor_and_model_binding_lifetime},
         std::pair{"real Tico", test_real_tico_shadow},
         std::pair{"original controller graph", test_original_controller_graph},
+        std::pair{"original shadow clipping", test_original_shadow_clipping},
         std::pair{"registry teardown",
                   [] {
                       const auto baseline = smgpc::compat::actor_shadow_runtime_state_count();
@@ -816,11 +857,12 @@ int main() try {
     const auto baseline_objects = smgpc::compat::name_obj_runtime_state_count();
     const auto baseline_entries = scheduler.snapshot().size();
     for (int cycle = 0; cycle < 2; ++cycle) {
-        SceneObjHolder holder;
         std::weak_ptr<smgpc::compat::JkrAllocationDomain> weak_domain;
         auto survivor = std::make_unique<ProbeActor>();
         {
-            smgpc::scene::SceneObjHolderBinding binding(holder);
+            smgpc::test::SceneExecutionFixture scene(scheduler,
+                smgpc::compat::JkrAllocationDomain::create(runtime.host_heaps(), 8U << 20));
+            auto& holder = scene.holder();
             weak_domain = smgpc::scene::current_scene_allocation_domain();
             {
                 ProbeActor empty;

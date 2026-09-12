@@ -1,0 +1,161 @@
+{
+  "removed_functions": [
+    {
+      "path": "src/resource/RarcArchive.cpp",
+      "function": "read_be16",
+      "lines": 7
+    },
+    {
+      "path": "src/resource/RarcArchive.cpp",
+      "function": "read_be24",
+      "lines": 7
+    },
+    {
+      "path": "src/resource/RarcArchive.cpp",
+      "function": "read_be32",
+      "lines": 7
+    },
+    {
+      "path": "src/resource/BcsvTable.cpp",
+      "function": "read_be16",
+      "lines": 7
+    },
+    {
+      "path": "src/resource/BcsvTable.cpp",
+      "function": "read_be32",
+      "lines": 8
+    },
+    {
+      "path": "src/resource/BcsvTable.cpp",
+      "function": "read_be_float",
+      "lines": 3
+    },
+    {
+      "path": "src/resource/BmgMessageArchive.cpp",
+      "function": "read_be16",
+      "lines": 7
+    },
+    {
+      "path": "src/resource/BmgMessageArchive.cpp",
+      "function": "read_be32",
+      "lines": 8
+    },
+    {
+      "path": "src/resource/BmgMessageArchive.cpp",
+      "function": "read_be64",
+      "lines": 3
+    },
+    {
+      "path": "src/layout/BrfntFont.cpp",
+      "function": "read_be16",
+      "lines": 7
+    },
+    {
+      "path": "src/layout/BrfntFont.cpp",
+      "function": "read_be32",
+      "lines": 8
+    },
+    {
+      "path": "src/layout/BrfntFont.cpp",
+      "function": "read_s8",
+      "lines": 7
+    },
+    {
+      "path": "src/layout/BrlytLayout.cpp",
+      "function": "read_be16",
+      "lines": 7
+    },
+    {
+      "path": "src/layout/BrlytLayout.cpp",
+      "function": "read_be32",
+      "lines": 7
+    },
+    {
+      "path": "src/layout/BrlytLayout.cpp",
+      "function": "read_be_s16",
+      "lines": 3
+    },
+    {
+      "path": "src/layout/BrlytLayout.cpp",
+      "function": "read_be_float",
+      "lines": 4
+    },
+    {
+      "path": "src/resource/TplTexture.cpp",
+      "function": "read_be16",
+      "lines": 7
+    },
+    {
+      "path": "src/resource/TplTexture.cpp",
+      "function": "read_be32",
+      "lines": 7
+    },
+    {
+      "path": "src/resource/TplTexture.cpp",
+      "function": "read_sbe16",
+      "lines": 4
+    },
+    {
+      "path": "src/resource/TplTexture.cpp",
+      "function": "read_be_f32",
+      "lines": 3
+    },
+    {
+      "path": "src/resource/Yaz0.cpp",
+      "function": "read_be32",
+      "lines": 7
+    },
+    {
+      "path": "src/resource/J3dTransformAnimation.cpp",
+      "function": "read_u16",
+      "lines": 4
+    },
+    {
+      "path": "src/resource/J3dTransformAnimation.cpp",
+      "function": "read_u32",
+      "lines": 5
+    },
+    {
+      "path": "src/resource/J3dModelResource.cpp",
+      "function": "read_u16",
+      "lines": 4
+    },
+    {
+      "path": "src/resource/J3dModelResource.cpp",
+      "function": "read_u32",
+      "lines": 3
+    },
+    {
+      "path": "src/compat/JKRArchiveCompat.cpp",
+      "function": "read_u16",
+      "lines": 4
+    },
+    {
+      "path": "src/compat/JKRArchiveCompat.cpp",
+      "function": "read_u32",
+      "lines": 5
+    },
+    {
+      "path": "src/compat/Nw4rFontCompat.cpp",
+      "function": "read_be16",
+      "lines": 3
+    },
+    {
+      "path": "src/compat/Nw4rFontCompat.cpp",
+      "function": "read_be32",
+      "lines": 4
+    },
+    {
+      "path": "src/resource/NativeBmgResource.cpp",
+      "function": "be16",
+      "lines": 4
+    },
+    {
+      "path": "src/resource/NativeBmgResource.cpp",
+      "function": "be32",
+      "lines": 3
+    }
+  ],
+  "total_functions": 31,
+  "total_definition_lines": 167
+}

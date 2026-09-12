@@ -57,20 +57,6 @@ namespace smgpc::compat {
         NameObjRuntimeRegistrationMarker _marker{};
     };
 
-    struct ActorBinderContactState {
-        bool ground = false;
-        bool wall = false;
-        bool roof = false;
-        TVec3f ground_normal{};
-        TVec3f wall_normal{};
-        TVec3f roof_normal{};
-        TVec3f fix_reaction{};
-        // This is the KCL prism attribute index. It is deliberately not
-        // interpreted as a Floor_code value without the source
-        // CollisionParts' attribute table.
-        std::optional<std::uint16_t> ground_attribute{};
-    };
-
     struct ActorBinderRuntimeConfig {
         float radius = 0.0F;
         float offset = 0.0F;
@@ -272,9 +258,6 @@ namespace smgpc::compat {
     void register_actor_binder(const LiveActor* actor);
     [[nodiscard]] bool has_actor_binder(const LiveActor* actor);
     [[nodiscard]] const ActorBinderRuntimeConfig* actor_binder_config(const LiveActor* actor);
-    void clear_actor_binder_contacts(LiveActor* actor);
-    void record_actor_binder_contacts(LiveActor* actor, const ActorBinderContactState& contacts);
-    [[nodiscard]] const ActorBinderContactState* actor_binder_contacts(const LiveActor* actor);
     void release_actor_binder_state(const LiveActor* actor);
 
     void configure_actor_clipping_sphere(LiveActor* actor, float radius, const TVec3f* center);

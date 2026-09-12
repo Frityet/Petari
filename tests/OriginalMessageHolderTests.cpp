@@ -1,10 +1,13 @@
 #include "OriginalTalkNodeTests.hpp"
 #include "Game/System/MessageHolder.hpp"
+#include "Game/Map/FileSelectFunc.hpp"
+#include "Game/Map/FileSelectIconID.hpp"
 #include "Game/NPC/TalkMessageInfo.hpp"
 #include "Game/NPC/TalkNodeCtrl.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/MessageUtil.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
+#include "nw4r/ut/ResFont.h"
 #include "compat/MessageUtilCompat.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/BmgMessageArchive.hpp"
@@ -119,6 +122,16 @@ void native_boundary(smgpc::resource::GameResourceRuntime& process, smgpc::runti
                     wide == data.mNativeResource->message(0) + 1 &&
                     JKRHeap::findFromRoot(data.mNativeResource->data()) == nullptr,
                 "native byte-offset relocation preserves aliases/interior offsets in retained host storage");
+        const auto* units = data.mNativeResource->message_utf16(1);
+        require(data.mNativeResource->message_utf16(0) == data.mNativeResource->message_utf16(2) &&
+                    units == data.mNativeResource->message_utf16(0) + 1 &&
+                    std::equal(expected.begin(), expected.end(), units),
+                "UTF16 DAT1 keeps original aliases, interior offsets, embedded tag zeros and surrogate units");
+        require(data.mNativeResource->message_utf16(0)[0] == 0 &&
+                    data.mNativeResource->message_utf16(0)[8] == 'Z',
+                "fixed-width copies through a short message terminator retain subsequent authored DAT1 units");
+        rejects([&] { (void)data.mNativeResource->message_utf16(data.mNativeResource->message_count()); },
+                "UTF16 pointer publication rejects an index after the original message table");
         require(data.findNode("Tagged") == data.getNode(0) && data.getNode(0)->mNextIdx == 2 &&
                     data.getNode(2)->mUnknown == 0x12345678 && data.getBranchNode(0) == data.getNode(1) &&
                     data.isValidBranchNode(0) && !data.isValidBranchNode(1),
@@ -218,6 +231,35 @@ void original_holder(smgpc::resource::GameResourceRuntime& process, smgpc::runti
             require(message && message == MR::getLayoutMessageDirect(id) && MR::getGameMessageDirectUtf16(id) &&
                         MR::isExistGameMessage(id) && smgpc::compat::layout_message_id_for_pointer(message),
                     "shared Game and layout utilities read retained actual MessageData pointers");
+            const auto& game_archive = mounts.retain("/MessageData/Message.arc")->source();
+            const auto authored_messages = smgpc::resource::BmgMessageArchive::from_message_archive(game_archive);
+            const auto authored_bytes = game_archive.resource_data("Message.bmg");
+            const auto* authored_dat = authored_messages.block("DAT1");
+            require(authored_dat, "the original game message archive retains its DAT1 block");
+            for (int fellow_id = FileSelectIconID::Mario; fellow_id <= FileSelectIconID::Peach; ++fellow_id) {
+                const auto fellow_message_id = "System_FileSelect_Icon00" + std::to_string(fellow_id);
+                const auto* units = MR::getGameMessageDirectUtf16(fellow_message_id.c_str());
+                const auto* authored_message = authored_messages.find(fellow_message_id);
+                require(units && authored_message, "each authored fellow icon has an original message");
+                std::array<u16, 11> expected;
+                const auto text_offset = std::size_t{8} + authored_message->info.text_offset;
+                require(text_offset <= authored_dat->available_size &&
+                            sizeof(expected) <= authored_dat->available_size - text_offset,
+                        "the original DAT1 allocation contains all eleven units copied by file-select");
+                for (std::size_t i = 0; i < expected.size(); ++i) {
+                    const auto offset = authored_dat->offset + text_offset + i * 2;
+                    expected[i] = (u16(authored_bytes[offset]) << 8) | authored_bytes[offset + 1];
+                }
+                std::array<u16, 13> name;
+                name.fill(0xA5A5);
+                FileSelectIconID icon;
+                icon.setFellowID(static_cast<FileSelectIconID::EFellowID>(fellow_id));
+                FileSelectFunc::copyMiiName(name.data() + 1, icon);
+                require(name.front() == 0xA5A5 && name.back() == 0xA5A5 &&
+                            std::equal(name.begin() + 1, name.end() - 1, expected.begin()) &&
+                            std::memcmp(units, expected.data(), sizeof(expected)) == 0,
+                        "file-select copies exactly eleven authored DAT1 units without host wchar_t expansion");
+            }
             const char* system_id = nullptr;
             require(holder.mSystemMessageData->mIDTable->getValue(0, "MessageId", &system_id), "the first system ID is authored");
             TalkMessageInfo info;
@@ -226,7 +268,7 @@ void original_holder(smgpc::resource::GameResourceRuntime& process, smgpc::runti
                     "system utilities use original embedded system data rather than game-text fallback");
             const auto before = info;
             require(!MessageSystem::getGameMessageDirect(&info, "Missing_Actual_Message") && info._0 == before._0 &&
-                        !MR::getGameMessageDirect("Missing_Actual_Message") && !MR::getGameMessageDirect(nullptr),
+                        !MR::getGameMessageDirect("Missing_Actual_Message"),
                     "original failed lookup preserves the caller record and utility absence stays null");
             rejects([&] { smgpc::runtime::MessageHolderOwnership duplicate(process.host_heaps(), 1U << 20,
                 mounts, "/KrKorean/MessageData/Message.arc", "KrKorean"); }, "a second process owner cannot replace live message identity");
@@ -240,9 +282,10 @@ void original_holder(smgpc::resource::GameResourceRuntime& process, smgpc::runti
 }
 int main() {
     try {
-        require(!MR::getGameMessageDirect("Missing") && !MR::getSystemMessageDirect("Missing") &&
-                    !MR::getLayoutMessageDirect("Missing") && !MR::isExistGameMessage("Missing"),
-                "utility absence never manufactures an owner");
+        rejects([] { (void)MR::getGameMessageDirect("Missing"); }, "game utility requires the original holder");
+        rejects([] { (void)MR::getSystemMessageDirect("Missing"); }, "system utility requires the original holder");
+        rejects([] { (void)MR::getLayoutMessageDirect("Missing"); }, "layout utility requires the original holder");
+        rejects([] { (void)MR::isExistGameMessage("Missing"); }, "existence queries require the original holder");
         rejects([] { (void)MessageSystem::getSceneMessageData(); }, "direct original access requires an actual holder");
         const auto* disc = std::getenv("SMGPC_REAL_DISC");
         require(disc && aurora_dvd_open(disc), "SMGPC_REAL_DISC must identify the original disc for complete message proof");
@@ -251,7 +294,14 @@ int main() {
         smgpc::resource::GameResourceRuntime process;
         smgpc::runtime::DvdFileSystemService dvd({});
         smgpc::runtime::ArchiveMountService mounts(dvd);
-        verify_original_message_tag_processor();
+        const auto font_path = dvd.find_layout_archive("Font");
+        require(font_path.has_value(), "the DVD catalog contains the current fixture's font archive");
+        auto font_archive = smgpc::resource::RarcArchive::from_bytes(dvd.read_file(font_path->generic_string()));
+        const auto font_bytes = font_archive.resource_data("MessageFont26.brfnt");
+        nw4r::ut::ResFont font;
+        require(font.SetResource(const_cast<std::uint8_t*>(font_bytes.data()), font_bytes.size()),
+                "the original tag processor uses the retained authored message font");
+        verify_original_message_tag_processor(font);
         native_boundary(process, mounts);
         original_holder(process, mounts);
         std::cout << "[ok] original message owner, all authored records, shared getters and repeated teardown\n";

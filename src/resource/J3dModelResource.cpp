@@ -1,4 +1,5 @@
 #include <aurora/exception.hpp>
+#include <aurora/endian.hpp>
 #include "J3dModelResource.hpp"
 #include "J3dJointData.hpp"
 #include "J3dGeometryData.hpp"
@@ -29,6 +30,8 @@
 
 namespace smgpc::resource {
     namespace {
+        using aurora::endian::read_big;
+
         using Bytes = std::span<const std::uint8_t>;
         constexpr std::uint32_t tag(char a, char b, char c, char d) {
             return (std::uint32_t(static_cast<unsigned char>(a)) << 24) |
@@ -40,28 +43,21 @@ namespace smgpc::resource {
             if (offset > size || extent > size - offset)
                 aurora::throw_host_exception<std::runtime_error>("J3D model range exceeds its retained resource");
         }
-        std::uint16_t read_u16(Bytes bytes, std::size_t offset) {
-            require_range(bytes.size(), offset, 2);
-            return (std::uint16_t(bytes[offset]) << 8) | bytes[offset + 1];
-        }
-        std::uint32_t read_u32(Bytes bytes, std::size_t offset) {
-            return (std::uint32_t(read_u16(bytes, offset)) << 16) | read_u16(bytes, offset + 2);
-        }
         struct File {
             Bytes source;
             std::uint32_t magic;
             std::uint32_t type;
             std::vector<Bytes> blocks;
-            explicit File(Bytes bytes) : source(bytes), magic(read_u32(bytes, 0)), type(read_u32(bytes, 4)) {
+            explicit File(Bytes bytes) : source(bytes), magic(read_big<std::uint32_t>(bytes, 0)), type(read_big<std::uint32_t>(bytes, 4)) {
                 require_range(bytes.size(), 0, 0x20);
-                const auto size = read_u32(bytes, 8);
+                const auto size = read_big<std::uint32_t>(bytes, 8);
                 if (size < 0x20) aurora::throw_host_exception<std::runtime_error>("J3D model file size is smaller than its header");
                 require_range(bytes.size(), 0, size);
                 source = bytes.first(size);
                 std::size_t offset = 0x20;
-                for (std::uint32_t i = 0; i < read_u32(source, 0xc); ++i) {
+                for (std::uint32_t i = 0; i < read_big<std::uint32_t>(source, 0xc); ++i) {
                     require_range(source.size(), offset, 8);
-                    const auto size = read_u32(source, offset + 4);
+                    const auto size = read_big<std::uint32_t>(source, offset + 4);
                     if (size < 8) aurora::throw_host_exception<std::runtime_error>("J3D model block is smaller than its header");
                     require_range(source.size(), offset, size);
                     blocks.push_back(source.subspan(offset, size));
@@ -71,7 +67,7 @@ namespace smgpc::resource {
             Bytes single_block(std::uint32_t type) const {
                 Bytes result;
                 for (const auto block : blocks) {
-                    if (read_u32(block, 0) != type) continue;
+                    if (read_big<std::uint32_t>(block, 0) != type) continue;
                     if (!result.empty()) aurora::throw_host_exception<std::runtime_error>("J3D model contains duplicate construction blocks");
                     result = block;
                 }
@@ -90,10 +86,10 @@ namespace smgpc::resource {
             std::vector<int> next_material(material_count, absent), material_shape(material_count, absent);
             struct Frame { int parent; int current; };
             std::vector<Frame> frames{{absent, absent}};
-            std::size_t offset = read_u32(information, 0x14);
+            std::size_t offset = read_big<std::uint32_t>(information, 0x14);
             for (;;) {
-                const auto type = read_u16(information, offset);
-                const auto value = read_u16(information, offset + 2);
+                const auto type = read_big<std::uint16_t>(information, offset);
+                const auto value = read_big<std::uint16_t>(information, offset + 2);
                 offset += 4;
                 auto& frame = frames.back();
                 if (type == 0) {
@@ -248,7 +244,7 @@ namespace smgpc::resource {
                     if (reg < 0x80 || reg > 0xbb) break;
                     require_range(commands.size(), offset, 5);
                     // Original getTexNoReg narrows the low 24 bits to u16.
-                    const auto texture = static_cast<u16>(read_u32(commands, offset + 1));
+                    const auto texture = static_cast<u16>(read_big<std::uint32_t>(commands, offset + 1));
                     if (slot >= 8 || !table.getTexture() || texture >= table.getTexture()->getNum())
                         aurora::throw_host_exception<std::runtime_error>("J3D display-list texture reference is outside TEX1/GX slots");
                     const auto* image = table.getTexture()->getResTIMG(texture);
@@ -343,8 +339,8 @@ namespace smgpc::resource {
 
         J3DModelData* load_model(std::uint32_t flags, bool binary) {
             compat::JkrHostAllocationScope host;
-            if (read_u32(source, 0) != tag('J','3','D','2')) return nullptr;
-            const auto type = read_u32(source, 4);
+            if (read_big<std::uint32_t>(source, 0) != tag('J','3','D','2')) return nullptr;
+            const auto type = read_big<std::uint32_t>(source, 4);
             if (!binary && type == tag('b','m','d','2'))
                 aurora::throw_host_exception<std::runtime_error>("Original v21 J3D model loading is not yet provided on this host");
             if (binary) {
@@ -386,7 +382,7 @@ namespace smgpc::resource {
 
         J3DMaterialTable* load_table() {
             compat::JkrHostAllocationScope host;
-            if (read_u32(source, 0) != tag('J','3','D','2') || read_u32(source, 4) != tag('b','m','t','3')) return nullptr;
+            if (read_big<std::uint32_t>(source, 0) != tag('J','3','D','2') || read_big<std::uint32_t>(source, 4) != tag('b','m','t','3')) return nullptr;
             const File file(source);
             auto result = std::make_unique<LoadedData>(domain);
             result->materials = std::make_unique<J3dMaterialTableData>(source, 0x51100000,
@@ -464,7 +460,7 @@ namespace smgpc::resource {
     Bytes J3dModelResource::bytes() const noexcept { return _storage ? Bytes(_storage->source) : Bytes{}; }
     J3DModelData* J3dModelResource::load(std::uint32_t flags) {
         if (!_storage) return nullptr;
-        const auto type = read_u32(bytes(), 4);
+        const auto type = read_big<std::uint32_t>(bytes(), 4);
         return load_registered_j3d_model(data(), flags, type == tag('b','d','l','3') || type == tag('b','d','l','4'));
     }
     J3DMaterialTable* J3dModelResource::load_material_table() { return load_registered_j3d_material_table(data()); }

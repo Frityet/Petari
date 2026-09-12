@@ -1,0 +1,17 @@
+{
+  "retail_dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "page_instruction_count": 38,
+  "page_retail_text_bytes": 152,
+  "resource_share_source_manifest": [
+    {
+      "reference": "decomp/src/Game/Util/ShareUtil.cpp",
+      "port": "src/Game/Util/ShareUtil.cpp",
+      "sha256": "0defd42b1cdb4ad688d53adede16d507eedf191a58e522fba0e69eb530db9e59"
+    },
+    {
+      "reference": "decomp/include/Game/Util/ShareUtil.hpp",
+      "port": "src/Game/Util/ShareUtil.hpp",
+      "sha256": "f56bb9adbe074ecfc3625ef49a64bbb868a50f50191ed41e84e29b95cc35822d"
+    }
+  ]
+}

@@ -5,14 +5,12 @@
 #include "Game/NPC/NPCActor.hpp"
 #include "Game/NPC/TalkMessageFunc.hpp"
 #include "Game/NPC/TalkNodeCtrl.hpp"
-#include "Game/Util/MessageUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/TalkUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/DemoSceneRuntime.hpp"
 #include "compat/TalkRuntime.hpp"
 
-#include <cstdio>
 #include <memory>
 #include <stdexcept>
 
@@ -52,13 +50,6 @@ namespace smgpc::compat {
 }  // namespace smgpc::compat
 
 namespace MR {
-
-    const wchar_t* getGalaxyNameOnCurrentLanguage(const char* galaxy_name) {
-        char message_id[256]{};
-        std::snprintf(message_id, sizeof(message_id), "GalaxyName_%s",
-                      galaxy_name != nullptr ? galaxy_name : "");
-        return getGameMessageDirect(message_id);
-    }
 
     void registerBranchFunc(TalkMessageCtrl* controller, const TalkMessageFuncBase& function) {
         if (controller != nullptr) {

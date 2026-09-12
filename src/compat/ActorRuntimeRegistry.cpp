@@ -74,7 +74,6 @@ namespace {
         std::unique_ptr<HitSensorKeeper, HitSensorKeeperDeleter> sensor_keeper{};
         std::optional<smgpc::compat::ActorBinderRuntimeConfig> binder{};
         std::unique_ptr<Binder> binder_provider{};
-        smgpc::compat::ActorBinderContactState binder_contacts{};
         // Original ClippingActorInfo constructor defaults; new actors belong
         // to the dormant list until their original appearance operation.
         std::optional<smgpc::compat::ActorClippingRuntimeState> clipping{
@@ -647,7 +646,6 @@ namespace smgpc::compat {
             actor->getBaseMtx(), &actor->mPosition, &actor->mGravity,
             radius, offset, plane_capacity);
         actor->mBinder = state.binder_provider.get();
-        state.binder_contacts = {};
     }
 
     void register_actor_binder(const LiveActor* actor) {
@@ -659,7 +657,6 @@ namespace smgpc::compat {
                 actor->getBaseMtx(), &mutable_actor->mPosition,
                 &mutable_actor->mGravity, 0.0F, 0.0F, 0U);
             mutable_actor->mBinder = state.binder_provider.get();
-            state.binder_contacts = {};
         }
     }
 
@@ -680,36 +677,6 @@ namespace smgpc::compat {
         return binder.has_value() ? &*binder : nullptr;
     }
 
-    void clear_actor_binder_contacts(LiveActor* actor) {
-        if (actor == nullptr) {
-            return;
-        }
-        auto& state = require_actor_state(actor);
-        if (state.binder.has_value()) {
-            state.binder_contacts = {};
-        }
-    }
-
-    void record_actor_binder_contacts(LiveActor* actor, const ActorBinderContactState& contacts) {
-        if (actor == nullptr) {
-            return;
-        }
-        auto& state = require_actor_state(actor);
-        if (state.binder.has_value()) {
-            state.binder_contacts = contacts;
-        }
-    }
-
-    const ActorBinderContactState* actor_binder_contacts(const LiveActor* actor) {
-        if (actor == nullptr) {
-            return nullptr;
-        }
-        const auto found = actor_states().find(actor);
-        return found != actor_states().end() && found->second.binder.has_value()
-                   ? &found->second.binder_contacts
-                   : nullptr;
-    }
-
     void release_actor_binder_state(const LiveActor* actor) {
         if (actor == nullptr) {
             return;
@@ -718,7 +685,6 @@ namespace smgpc::compat {
         const_cast<LiveActor*>(actor)->mBinder = nullptr;
         state.binder_provider.reset();
         state.binder.reset();
-        state.binder_contacts = {};
     }
 
     void configure_actor_clipping_sphere(LiveActor* actor, float radius, const TVec3f* center) {

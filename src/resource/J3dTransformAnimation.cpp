@@ -1,14 +1,15 @@
 #include <aurora/exception.hpp>
+#include <aurora/endian.hpp>
 #include "J3dTransformAnimation.hpp"
 
 #include <algorithm>
-#include <bit>
 #include <cmath>
 #include <stdexcept>
 #include <vector>
 
 namespace smgpc::resource {
     namespace {
+        using aurora::endian::read_big;
 
         constexpr std::uint32_t J3D1 = 0x4a334431U;
         constexpr std::uint32_t BCK1 = 0x62636b31U;
@@ -23,17 +24,6 @@ namespace smgpc::resource {
             }
         }
 
-        std::uint16_t read_u16(std::span<const std::uint8_t> data, std::size_t offset) {
-            require_range(data.size(), offset, 2U);
-            return static_cast<std::uint16_t>((std::uint16_t{data[offset]} << 8U) | data[offset + 1U]);
-        }
-
-        std::uint32_t read_u32(std::span<const std::uint8_t> data, std::size_t offset) {
-            require_range(data.size(), offset, 4U);
-            return (std::uint32_t{data[offset]} << 24U) | (std::uint32_t{data[offset + 1U]} << 16U) |
-                   (std::uint32_t{data[offset + 2U]} << 8U) | data[offset + 3U];
-        }
-
         template<class T>
         std::vector<T> read_values(std::span<const std::uint8_t> block, std::size_t offset,
                                    std::size_t count) {
@@ -46,11 +36,7 @@ namespace smgpc::resource {
             std::vector<T> values;
             values.reserve(count);
             for (std::size_t i = 0; i < count; ++i) {
-                if constexpr (sizeof(T) == 4U) {
-                    values.push_back(std::bit_cast<T>(read_u32(block, offset + i * sizeof(T))));
-                } else {
-                    values.push_back(std::bit_cast<T>(read_u16(block, offset + i * sizeof(T))));
-                }
+                values.push_back(read_big<T>(block, offset + i * sizeof(T)));
             }
             return values;
         }
@@ -65,16 +51,16 @@ namespace smgpc::resource {
 
             void load_metadata(std::span<const std::uint8_t> block) {
                 this->mAttribute = block[8U];
-                this->mFrameMax = std::bit_cast<std::int16_t>(read_u16(block, 0x0aU));
+                this->mFrameMax = read_big<std::int16_t>(block, 0x0aU);
                 this->mFrame = 0.0F;
-                this->field_0x1e = read_u16(block, 0x0cU);
+                this->field_0x1e = read_big<std::uint16_t>(block, 0x0cU);
             }
 
             void load_values(std::span<const std::uint8_t> block, std::size_t scale_count,
                               std::size_t rotation_count, std::size_t translation_count) {
-                scales = read_values<float>(block, read_u32(block, 0x18U), scale_count);
-                rotations = read_values<std::int16_t>(block, read_u32(block, 0x1cU), rotation_count);
-                translations = read_values<float>(block, read_u32(block, 0x20U), translation_count);
+                scales = read_values<float>(block, read_big<std::uint32_t>(block, 0x18U), scale_count);
+                rotations = read_values<std::int16_t>(block, read_big<std::uint32_t>(block, 0x1cU), rotation_count);
+                translations = read_values<float>(block, read_big<std::uint32_t>(block, 0x20U), translation_count);
                 this->mScaleData = scales.data();
                 this->mRotData = rotations.data();
                 this->mTransData = translations.data();
@@ -82,7 +68,7 @@ namespace smgpc::resource {
         };
 
         J3DAnmKeyTableBase read_key(std::span<const std::uint8_t> block, std::size_t offset) {
-            return {read_u16(block, offset), read_u16(block, offset + 2U), read_u16(block, offset + 4U)};
+            return {read_big<std::uint16_t>(block, offset), read_big<std::uint16_t>(block, offset + 2U), read_big<std::uint16_t>(block, offset + 4U)};
         }
 
         template<class T>
@@ -117,9 +103,9 @@ namespace smgpc::resource {
             require_range(block.size(), 0U, TRANSFORM_HEADER_SIZE);
             auto animation = std::make_unique<OwnedTransform<J3DAnmTransformKey, J3DAnmTransformKeyTable>>();
             animation->load_metadata(block);
-            animation->load_values(block, read_u16(block, 0x0eU), read_u16(block, 0x10U), read_u16(block, 0x12U));
+            animation->load_values(block, read_big<std::uint16_t>(block, 0x0eU), read_big<std::uint16_t>(block, 0x10U), read_big<std::uint16_t>(block, 0x12U));
             animation->mDecShift = block[9U];
-            const auto table_offset = read_u32(block, 0x14U);
+            const auto table_offset = read_big<std::uint32_t>(block, 0x14U);
             const auto table_count = std::size_t{animation->field_0x1e} * 3U;
             if (table_count != 0U) {
                 require_range(block.size(), table_offset, table_count * 0x12U);
@@ -152,7 +138,7 @@ namespace smgpc::resource {
             require_range(block.size(), 0U, TRANSFORM_HEADER_SIZE);
             auto animation = std::make_unique<OwnedTransform<Animation, J3DAnmTransformFullTable>>();
             animation->load_metadata(block);
-            const auto table_offset = read_u32(block, 0x14U);
+            const auto table_offset = read_big<std::uint32_t>(block, 0x14U);
             const auto table_count = std::size_t{animation->field_0x1e} * 3U;
             if (table_count != 0U) {
                 require_range(block.size(), table_offset, table_count * 0x0cU);
@@ -161,9 +147,9 @@ namespace smgpc::resource {
             std::size_t scale_count = 0U, rotation_count = 0U, translation_count = 0U;
             for (std::size_t i = 0; i < table_count; ++i) {
                 const auto offset = table_offset + i * 0x0cU;
-                J3DAnmTransformFullTable table{read_u16(block, offset), read_u16(block, offset + 2U),
-                                              read_u16(block, offset + 4U), read_u16(block, offset + 6U),
-                                              read_u16(block, offset + 8U), read_u16(block, offset + 10U)};
+                J3DAnmTransformFullTable table{read_big<std::uint16_t>(block, offset), read_big<std::uint16_t>(block, offset + 2U),
+                                              read_big<std::uint16_t>(block, offset + 4U), read_big<std::uint16_t>(block, offset + 6U),
+                                              read_big<std::uint16_t>(block, offset + 8U), read_big<std::uint16_t>(block, offset + 10U)};
                 scale_count = std::max(scale_count, full_extent(table.mScaleOffset, table.mScaleMaxFrame));
                 rotation_count = std::max(rotation_count, full_extent(table.mRotationOffset, table.mRotationMaxFrame));
                 translation_count = std::max(translation_count, full_extent(table.mTranslateOffset, table.mTranslateMaxFrame));
@@ -182,24 +168,24 @@ namespace smgpc::resource {
     std::unique_ptr<J3DAnmTransform> load_j3d_transform_animation(std::span<const std::uint8_t> data,
                                                                 bool interpolate_full) {
         require_range(data.size(), 0U, 0x20U);
-        if (read_u32(data, 0U) != J3D1) {
+        if (read_big<std::uint32_t>(data, 0U) != J3D1) {
             aurora::throw_host_exception<std::runtime_error>("Not a J3D1 transform animation");
         }
-        const auto type = read_u32(data, 4U);
+        const auto type = read_big<std::uint32_t>(data, 4U);
         if (type != BCK1 && type != BCA1) {
             aurora::throw_host_exception<std::runtime_error>("J3D animation is not BCK or BCA");
         }
-        const auto file_size = read_u32(data, 8U);
+        const auto file_size = read_big<std::uint32_t>(data, 8U);
         require_range(data.size(), 0U, file_size);
         require_range(file_size, 0U, 0x20U);
         data = data.first(file_size);
-        const auto block_count = read_u32(data, 0x0cU);
+        const auto block_count = read_big<std::uint32_t>(data, 0x0cU);
         std::size_t offset = 0x20U;
         std::unique_ptr<J3DAnmTransform> animation;
         for (std::uint32_t i = 0; i < block_count; ++i) {
             require_range(data.size(), offset, 8U);
-            const auto tag = read_u32(data, offset);
-            const auto size = read_u32(data, offset + 4U);
+            const auto tag = read_big<std::uint32_t>(data, offset);
+            const auto size = read_big<std::uint32_t>(data, offset + 4U);
             require_range(size, 0U, 8U);
             // The original loader only uses size to advance to another block.
             // Bound referenced tables by the retained file, not that cursor.

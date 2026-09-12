@@ -1,6 +1,9 @@
 #include "Game/Scene/Scene.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/NameObj/NameObjGroup.hpp"
+#include "Game/Demo/DemoDirector.hpp"
 #include "Game/Util/JMapInfo.hpp"
+#include "Game/Util/DemoUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/StageResourceBinding.hpp"
@@ -72,10 +75,16 @@ namespace {
                             "Scene and native bindings must use the same original allocation domain");
                     require(scene.mSceneObjHolder == smgpc::scene::current_scene_obj_holder() && domain,
                             "the actual Scene owns its one bound SceneObjHolder and Game allocation domain");
+                    require_logic_error([] { (void)MR::isPowerStarGetDemoActive(); },
+                                        "an actual initialized StageSession and SceneObjHolder cannot replace the original GameScene nerve owner");
                     require_logic_error([&] { initialization.bind_scene_objects(); },
                                         "rebinding cannot overwrite the original Scene holder");
                     require_logic_error([&] { initialization.initialize_scenario_resources(); },
                                         "scenario owners require completed stage file resolution");
+                    require(dynamic_cast<DemoDirector*>(MR::createSceneObj(SceneObj_DemoDirector)) != nullptr,
+                            "the original demo director must precede camera actors registering their simple casts");
+                    require(dynamic_cast<NameObjGroup*>(MR::createSceneObj(SceneObj_NameObjGroup)) != nullptr,
+                            "the original ignore-pause group must precede camera and layout initialization");
                     {
                         // These native loading calls will also be reached inside
                         // original GameScene::init. Native retained data must escape

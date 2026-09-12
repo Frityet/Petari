@@ -113,14 +113,6 @@ namespace smgpc::compat {
         _execution_phase = phase;
     }
 
-    bool StageSessionState::is_power_star_get_demo_active() const {
-        return _power_star_get_demo_active;
-    }
-
-    void StageSessionState::set_power_star_get_demo_active(bool active) {
-        _power_star_get_demo_active = active;
-    }
-
     s32 StageSessionState::setup_already_done_flag(u16 name_hash, s32 zone_id,
                                                    s32 link_id, u32 *value) {
         if (value == nullptr) {

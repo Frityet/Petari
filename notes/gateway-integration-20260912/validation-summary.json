@@ -1,0 +1,156 @@
+{
+  "focused_validation": [
+    {
+      "target": "smg-pc-picture-font-tag-tests",
+      "build_exit": 0,
+      "build_seconds": 4.674942291982006,
+      "run_exit": 0,
+      "run_seconds": 0.37655404198449105
+    },
+    {
+      "target": "smg-pc-original-resource-holder-tests",
+      "build_exit": 0,
+      "build_seconds": 5.087980290991254,
+      "run_exit": 0,
+      "run_seconds": 0.43498029198963195
+    },
+    {
+      "target": "smg-pc-npc-actor-real-or-absent-tests",
+      "build_exit": 0,
+      "build_seconds": 4.749746082990896,
+      "run_exit": 0,
+      "run_seconds": 1.1003030000138097
+    },
+    {
+      "target": "smg-pc-sceneobj-holder-real-or-absent-tests",
+      "build_exit": 0,
+      "build_seconds": 4.5613444579648785,
+      "run_exit": 0,
+      "run_seconds": 0.49071841698605567
+    },
+    {
+      "target": "smg-pc-original-shadow-controller-owner-tests",
+      "build_exit": 0,
+      "build_seconds": 5.3024666249984875,
+      "run_exit": 0,
+      "run_seconds": 1.0944292499916628
+    },
+    {
+      "target": "smg-pc-original-layout-group-tests",
+      "build_exit": 0,
+      "run_exit": 0,
+      "seconds": 6.344373875006568
+    },
+    {
+      "target": "smg-pc-message-real-or-absent-tests",
+      "build_exit": 0,
+      "run_exit": 0,
+      "seconds": 4.611720375018194
+    },
+    {
+      "target": "smg-pc-original-message-holder-tests",
+      "build_exit": 0,
+      "run_exit": 0,
+      "seconds": 9.274593500012998
+    },
+    {
+      "target": "smg-pc-file-select-name-real-or-absent-tests",
+      "build_exit": 0,
+      "run_exit": 0,
+      "seconds": 4.596725708979648
+    },
+    {
+      "target": "smg-pc-original-collision-parts-owner-tests",
+      "build_exit": 0,
+      "build_seconds": 4.7826454999740236,
+      "runs": [
+        {
+          "case": "smg-pc-original-collision-parts-owner-tests",
+          "run_exit": 0,
+          "run_seconds": 1.2794862079899758
+        }
+      ]
+    },
+    {
+      "target": "smg-pc-game-actor-physics-real-or-absent-tests",
+      "build_exit": 0,
+      "build_seconds": 4.61946066695964,
+      "runs": [
+        {
+          "case": "smg-pc-game-actor-physics-real-or-absent-tests",
+          "run_exit": 0,
+          "run_seconds": 1.074682832986582
+        }
+      ]
+    },
+    {
+      "target": "smg-pc-aurora-native-tests",
+      "build_exit": 0,
+      "build_seconds": 4.703968167013954,
+      "runs": [
+        {
+          "case": "KCL collision",
+          "run_exit": 0,
+          "run_seconds": 0.49206625000806525
+        },
+        {
+          "case": "same-frame Binder",
+          "run_exit": 0,
+          "run_seconds": 0.04490395897300914
+        },
+        {
+          "case": "Coin math",
+          "run_exit": 0,
+          "run_seconds": 0.044657375023234636
+        }
+      ]
+    },
+    {
+      "target": "smg-pc-stage-initialization-resource-tests",
+      "receipt": "../compat-consolidation-20260912/stage-resource-fixture-result.json",
+      "build_exit": 0,
+      "run_exit": 0,
+      "generation_count": 3,
+      "source": "tests/StageInitializationResourceTests.cpp",
+      "source_sha256": "b7a155ee4fb445c896ec16a71b0998da81b5e6b4beffe3c5441f4e0bd5fcc65e",
+      "disc": "Super Mario Wii - Galaxy Adventure (Korea).rvz"
+    }
+  ],
+  "known_unfiltered_fixture_failures": [
+    "AuroraNativeTests: initial ownerless WPad assumption and GX attachment without command stream; full suite aborts before Binder cases. Three affected groups run separately using generic --filter.",
+    "RestartStageSessionTests: original isPlayerDead reaches required MarioHolder; its synthetic LiveActor callback cannot provide that owner. The new GameScene query passed earlier in the run and is additionally checked in StageInitializationResourceTests."
+  ],
+  "gateway_smoke": {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-showcase",
+      "gateway",
+      "--disc",
+      "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--max-frames",
+      "240",
+      "--width",
+      "1280",
+      "--height",
+      "720",
+      "--screenshot",
+      "/Users/frityet/Projects/petari/notes/gateway-integration-20260912/gateway.png",
+      "--screenshot-frame",
+      "210"
+    ],
+    "binary_sha256": "06c97208925e4effe69a5b7115cc89bd13724e6e0b6672d4b4845ea37f85e1cc",
+    "timeout": false,
+    "sdl_key_script": "60-100:w;120-125:space",
+    "placement_summary_line": "[src/runtime/RuntimeContext.cpp:1787][APP - INFO] SMG semantic event placement:gateway_development_subset_summary (stage=HeavensDoorGalaxy;scenario=1;objects=242;ready=78;ignored=8;blocked=156;created=78;mode=supported_subset_for_development)",
+    "exit_code": 0,
+    "wall_seconds": 6.365324457990937,
+    "present_fps": 16.670543477384022,
+    "simulation_ticks_per_second": 57.84173418668093,
+    "screenshot_exists": true
+  },
+  "publication": {
+    "aurora": "c7db821cef0240ca5c4b930ba5cdc5cba421e8a5",
+    "decomp": "4e19b524de6457bd4d3b9a31e0c51c0884473bf1"
+  },
+  "focused_suite_count": 12,
+  "additional_filtered_native_groups": 3
+}

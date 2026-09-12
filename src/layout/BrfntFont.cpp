@@ -1,39 +1,15 @@
 #include <aurora/exception.hpp>
+#include <aurora/endian.hpp>
 #include "BrfntFont.hpp"
 
 #include <algorithm>
-#include <bit>
 #include <stdexcept>
 #include <string>
 #include <utility>
 
 namespace smgpc::layout {
     namespace {
-
-        [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
-            if (offset + 2U > data.size()) {
-                aurora::throw_host_exception<std::runtime_error>("BRFNT read_be16 out of range");
-            }
-
-            return static_cast<std::uint16_t>((static_cast<std::uint16_t>(data[offset]) << 8U) | data[offset + 1U]);
-        }
-
-        [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
-            if (offset + 4U > data.size()) {
-                aurora::throw_host_exception<std::runtime_error>("BRFNT read_be32 out of range");
-            }
-
-            return (static_cast<std::uint32_t>(data[offset]) << 24U) | (static_cast<std::uint32_t>(data[offset + 1U]) << 16U) |
-                   (static_cast<std::uint32_t>(data[offset + 2U]) << 8U) | data[offset + 3U];
-        }
-
-        [[nodiscard]] std::int8_t read_s8(std::span<const std::uint8_t> data, std::size_t offset) {
-            if (offset >= data.size()) {
-                aurora::throw_host_exception<std::runtime_error>("BRFNT read_s8 out of range");
-            }
-
-            return std::bit_cast<std::int8_t>(data[offset]);
-        }
+        using aurora::endian::read_big;
 
         [[nodiscard]] bool has_magic(std::span<const std::uint8_t> data, std::size_t offset, const char (&magic)[5]) {
             return offset + 4U <= data.size() && data[offset] == static_cast<std::uint8_t>(magic[0]) &&
@@ -63,18 +39,18 @@ namespace smgpc::layout {
             }
 
             return BrfntCharWidths {
-                .left = read_s8(data, offset),
+                .left = read_big<std::int8_t>(data, offset),
                 .glyph_width = data[offset + 1U],
-                .char_width = read_s8(data, offset + 2U),
+                .char_width = read_big<std::int8_t>(data, offset + 2U),
             };
         }
 
         void parse_width_blocks(BrfntFont &font, std::span<const std::uint8_t> data, std::uint32_t first_offset) {
             auto offset = checked_offset(data, first_offset);
             while (offset != 0U) {
-                const auto begin = read_be16(data, offset);
-                const auto end = read_be16(data, offset + 2U);
-                const auto next = read_be32(data, offset + 4U);
+                const auto begin = read_big<std::uint16_t>(data, offset);
+                const auto end = read_big<std::uint16_t>(data, offset + 2U);
+                const auto next = read_big<std::uint32_t>(data, offset + 4U);
                 if (end < begin) {
                     aurora::throw_host_exception<std::runtime_error>("BRFNT width block has invalid range");
                 }
@@ -106,10 +82,10 @@ namespace smgpc::layout {
         void parse_code_maps(BrfntFont &font, std::span<const std::uint8_t> data, std::uint32_t first_offset) {
             auto offset = checked_offset(data, first_offset);
             while (offset != 0U) {
-                const auto begin = read_be16(data, offset);
-                const auto end = read_be16(data, offset + 2U);
-                const auto method = static_cast<BrfntFont::MapMethod>(read_be16(data, offset + 4U));
-                const auto next = read_be32(data, offset + 8U);
+                const auto begin = read_big<std::uint16_t>(data, offset);
+                const auto end = read_big<std::uint16_t>(data, offset + 2U);
+                const auto method = static_cast<BrfntFont::MapMethod>(read_big<std::uint16_t>(data, offset + 4U));
+                const auto next = read_big<std::uint32_t>(data, offset + 8U);
                 if (end < begin) {
                     aurora::throw_host_exception<std::runtime_error>("BRFNT code map has invalid range");
                 }
@@ -125,22 +101,22 @@ namespace smgpc::layout {
 
                 switch (method) {
                 case BrfntFont::MapMethod::Direct:
-                    map.direct_start = read_be16(data, offset + 12U);
+                    map.direct_start = read_big<std::uint16_t>(data, offset + 12U);
                     break;
                 case BrfntFont::MapMethod::Table: {
                     const auto count = static_cast<std::size_t>(end - begin) + 1U;
                     map.table.reserve(count);
                     for (auto i = 0U; i < count; ++i) {
-                        map.table.push_back(read_be16(data, offset + 12U + static_cast<std::size_t>(i) * 2U));
+                        map.table.push_back(read_big<std::uint16_t>(data, offset + 12U + static_cast<std::size_t>(i) * 2U));
                     }
                     break;
                 }
                 case BrfntFont::MapMethod::Scan: {
-                    const auto count = read_be16(data, offset + 12U);
+                    const auto count = read_big<std::uint16_t>(data, offset + 12U);
                     map.scan_entries.reserve(count);
                     for (auto i = 0U; i < count; ++i) {
                         const auto entry_offset = offset + 14U + static_cast<std::size_t>(i) * 4U;
-                        map.scan_entries.emplace_back(read_be16(data, entry_offset), read_be16(data, entry_offset + 2U));
+                        map.scan_entries.emplace_back(read_big<std::uint16_t>(data, entry_offset), read_big<std::uint16_t>(data, entry_offset + 2U));
                     }
                     break;
                 }
@@ -164,19 +140,19 @@ namespace smgpc::layout {
 
             font.cell_width = data[glyph_offset];
             font.cell_height = data[glyph_offset + 1U];
-            font.baseline_position = read_s8(data, glyph_offset + 2U);
+            font.baseline_position = read_big<std::int8_t>(data, glyph_offset + 2U);
             font.max_char_width = data[glyph_offset + 3U];
 
-            const auto sheet_size = read_be32(data, glyph_offset + 4U);
-            const auto sheet_count = read_be16(data, glyph_offset + 8U);
-            font.sheet_format = static_cast<smgpc::resource::TplTextureFormat>(read_be16(data, glyph_offset + 10U));
-            font.sheet_row = read_be16(data, glyph_offset + 12U);
-            font.sheet_line = read_be16(data, glyph_offset + 14U);
-            font.sheet_width = read_be16(data, glyph_offset + 16U);
-            font.sheet_height = read_be16(data, glyph_offset + 18U);
+            const auto sheet_size = read_big<std::uint32_t>(data, glyph_offset + 4U);
+            const auto sheet_count = read_big<std::uint16_t>(data, glyph_offset + 8U);
+            font.sheet_format = static_cast<smgpc::resource::TplTextureFormat>(read_big<std::uint16_t>(data, glyph_offset + 10U));
+            font.sheet_row = read_big<std::uint16_t>(data, glyph_offset + 12U);
+            font.sheet_line = read_big<std::uint16_t>(data, glyph_offset + 14U);
+            font.sheet_width = read_big<std::uint16_t>(data, glyph_offset + 16U);
+            font.sheet_height = read_big<std::uint16_t>(data, glyph_offset + 18U);
             font.sheet_size = sheet_size;
             font.sheet_count = sheet_count;
-            font.sheet_image_offset = read_be32(data, glyph_offset + 20U);
+            font.sheet_image_offset = read_big<std::uint32_t>(data, glyph_offset + 20U);
             const auto sheet_image_offset = checked_offset(data, font.sheet_image_offset);
             if (sheet_size == 0U) {
                 aurora::throw_host_exception<std::runtime_error>("BRFNT sheet size is zero");
@@ -323,15 +299,15 @@ namespace smgpc::layout {
         if (!has_magic(data, 0U, "RFNT")) {
             aurora::throw_host_exception<std::runtime_error>("BRFNT file is missing RFNT magic");
         }
-        if (read_be16(data, 4U) != 0xFEFFU) {
+        if (read_big<std::uint16_t>(data, 4U) != 0xFEFFU) {
             aurora::throw_host_exception<std::runtime_error>("BRFNT file is not big-endian");
         }
 
-        const auto header_size = read_be16(data, 12U);
-        const auto block_count = read_be16(data, 14U);
+        const auto header_size = read_big<std::uint16_t>(data, 12U);
+        const auto block_count = read_big<std::uint16_t>(data, 14U);
         auto cursor = static_cast<std::size_t>(header_size);
         auto font = BrfntFont {};
-        font.declared_file_size = read_be32(data, 8U);
+        font.declared_file_size = read_big<std::uint32_t>(data, 8U);
         font.header_size = header_size;
         font.block_count = block_count;
 
@@ -341,7 +317,7 @@ namespace smgpc::layout {
                 aurora::throw_host_exception<std::runtime_error>("BRFNT block header is truncated");
             }
 
-            const auto block_size = read_be32(data, cursor + 4U);
+            const auto block_size = read_big<std::uint32_t>(data, cursor + 4U);
             if (block_size < 8U || cursor + block_size > data.size()) {
                 aurora::throw_host_exception<std::runtime_error>("BRFNT block size is invalid");
             }
@@ -364,13 +340,13 @@ namespace smgpc::layout {
 
         const auto finf = *finf_offset;
         font.font_type = data[finf];
-        font.line_feed = read_s8(data, finf + 1U);
-        font.alternate_char_index = read_be16(data, finf + 2U);
+        font.line_feed = read_big<std::int8_t>(data, finf + 1U);
+        font.alternate_char_index = read_big<std::uint16_t>(data, finf + 2U);
         font.default_width = read_width(data, finf + 4U);
         font.encoding = data[finf + 7U];
-        const auto glyph_offset = checked_offset(data, read_be32(data, finf + 8U));
-        const auto width_offset = read_be32(data, finf + 12U);
-        const auto map_offset = read_be32(data, finf + 16U);
+        const auto glyph_offset = checked_offset(data, read_big<std::uint32_t>(data, finf + 8U));
+        const auto width_offset = read_big<std::uint32_t>(data, finf + 12U);
+        const auto map_offset = read_big<std::uint32_t>(data, finf + 16U);
         font.height = data[finf + 20U];
         font.width = data[finf + 21U];
         font.ascent = data[finf + 22U];

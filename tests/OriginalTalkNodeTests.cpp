@@ -130,9 +130,10 @@ void verify_original_talk_nodes(MessageHolder& holder) {
     std::cout << "[ok] original talk nodes: messages=" << messages << " branches=" << branches << " events=" << events
               << " terminals=" << terminals << " history=" << read_history << '\n';
 }
-void verify_original_message_tag_processor() {
+void verify_original_message_tag_processor(const nw4r::ut::Font& metrics_font) {
     using namespace nw4r::ut;
     TextWriterBase<wchar_t> writer;
+    writer.SetFont(metrics_font);
     MessageTagSkipTagProcessor processor;
     std::array<wchar_t, 5> text{0x0806, 0, 0x1234, 'Z', 0};
     PrintContext<wchar_t> context{&writer, text.data(), 10, 0, 0};
@@ -143,13 +144,14 @@ void verify_original_message_tag_processor() {
     require(processor.CalcRect(&rect, 0x1a, &context) == TagProcessorBase<wchar_t>::OPERATION_DEFAULT &&
                 context.str == text.data() + 3 && rect.left == 1 && rect.top == 2 && rect.right == 3 && rect.bottom == 4,
             "tag-only rectangle processing advances the stream without changing geometric bounds");
-    writer.SetLineSpace(12); writer.SetCursor(17, 5);
+    writer.SetLineSpace(12 - writer.GetFontHeight()); writer.SetCursor(17, 5);
     require(processor.Process('\n', &context) == TagProcessorBase<wchar_t>::OPERATION_NEXT_LINE &&
                 writer.GetCursorX() == 10 && writer.GetCursorY() == 17,
             "ordinary line feeds dispatch into the full original NW4R writer and use origin plus line height");
     writer.mIsWidthFixed = true; writer.mFixedWidth = 5; writer.SetTabWidth(4); writer.SetCursorX(17);
     require(processor.CalcRect(&rect, '\t', &context) == TagProcessorBase<wchar_t>::OPERATION_NO_CHAR_SPACE &&
-                writer.GetCursorX() == 30 && rect.left == 17 && rect.right == 30 && rect.top == 17 && rect.bottom == 17,
+                writer.GetCursorX() == 30 && rect.left == 17 && rect.right == 30 && rect.top == 17 &&
+                rect.bottom == 17 + writer.GetFontHeight(),
             "ordinary tabs preserve original fixed-width tab stops and normalized rectangle bounds");
     std::array<wchar_t, 6> params{0x0e08, 0, 0x1234, 0x5678, 0xabcd, 0xef01};
     MessageEditorMessageTag tag(params.data());

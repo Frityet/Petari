@@ -10,6 +10,7 @@ namespace smgpc::resource {
     // Retains an original-layout BMG with native scalar fields and one wchar_t
     // per authored UTF-16 code unit. DAT1 offsets are relocated, not decoded as
     // Unicode scalar values: control-tag lengths and surrogate units stay intact.
+    // The UTF-16 view retains the same complete DAT1 and original offset aliases.
     class NativeBmgResource final {
     public:
         NativeBmgResource(std::span<const std::uint8_t> bmg,
@@ -21,7 +22,7 @@ namespace smgpc::resource {
         [[nodiscard]] std::size_t size() const noexcept;
         [[nodiscard]] std::size_t message_count() const noexcept;
         [[nodiscard]] const wchar_t* message(std::size_t index) const;
-        [[nodiscard]] const char16_t* message_utf16(std::size_t index) const;
+        [[nodiscard]] const std::uint16_t* message_utf16(std::size_t index) const;
         [[nodiscard]] std::optional<std::size_t> message_index(const wchar_t*) const noexcept;
     private:
         struct Storage;

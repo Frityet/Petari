@@ -1,0 +1,78 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/System/LayoutHolder.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/gateway-process-20260912/LayoutHolder.o",
+    "--format",
+    "json",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/gateway-process-20260912/objdiff.json"
+  ],
+  "exit_code": 0,
+  "weighted_function_match": 99.45190164653243,
+  "functions": [
+    {
+      "name": "__ct__12LayoutHolderFR10JKRArchive",
+      "size": "108",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__dt__12LayoutHolderFv",
+      "size": "88",
+      "match_percent": 100.0
+    },
+    {
+      "name": "GetResource__12LayoutHolderFUlPCcPUl",
+      "size": "220",
+      "match_percent": 97.90909
+    },
+    {
+      "name": "GetFont__12LayoutHolderFPCc",
+      "size": "260",
+      "match_percent": 99.07692
+    },
+    {
+      "name": "isAnimationHashEqual__12LayoutHolderCFUlUl",
+      "size": "68",
+      "match_percent": 99.411766
+    },
+    {
+      "name": "initializeArc__12LayoutHolderFv",
+      "size": "136",
+      "match_percent": 99.411766
+    },
+    {
+      "name": "getFileFinder__12LayoutHolderFPCc",
+      "size": "52",
+      "match_percent": 100.0
+    },
+    {
+      "name": "initEachResTable__12LayoutHolderFP8ResTablePCPCc",
+      "size": "124",
+      "match_percent": 100.0
+    },
+    {
+      "name": "count__12LayoutHolderFPCcPCc",
+      "size": "256",
+      "match_percent": 99.84375
+    },
+    {
+      "name": "mount__12LayoutHolderFPc",
+      "size": "296",
+      "match_percent": 99.86487
+    },
+    {
+      "name": "createAndRegisterObject__12LayoutHolderFPCcPv",
+      "size": "172",
+      "match_percent": 99.53488
+    },
+    {
+      "name": "getResOtherName__12LayoutHolderCFUl",
+      "size": "8",
+      "match_percent": 100.0
+    }
+  ]
+}

@@ -5,12 +5,12 @@
 #include "Game/Gravity/PlanetGravity.hpp"
 #include "Game/Gravity/PlanetGravityManager.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/Binder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
 #include <cstdint>
 #include <cstring>
 #include <stdexcept>
@@ -210,31 +210,22 @@ namespace MR {
         }
     }
 
-    void calcGravityOrZero(LiveActor* actor) {
-        if (actor == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("calcGravityOrZero requires a real LiveActor");
-        }
-        calcGravityOrZero(actor, actor->mPosition);
+    void calcGravityOrZero(LiveActor* pActor) {
+        calcGravityOrZero(pActor, pActor->mPosition);
     }
 
-    void calcGravityOrZero(LiveActor* actor, const TVec3f& position) {
-        if (actor == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("calcGravityOrZero requires a real LiveActor");
-        }
-
-        auto gravity = TVec3f{};
-        (void)calcGravityVectorOrZero(static_cast<const NameObj*>(actor), position, &gravity, nullptr, 0U);
-        if (!isNearZero(gravity, 0.001F)) {
-            actor->mGravity.set(gravity);
+    void calcGravityOrZero(LiveActor* pActor, const TVec3f& rPos) {
+        TVec3f gravity;
+        calcGravityVectorOrZero(pActor, rPos, &gravity, nullptr, 0);
+        if (!isNearZero(gravity, 0.001f)) {
+            pActor->mGravity.set(gravity);
             return;
         }
 
-        const auto* contacts = smgpc::compat::actor_binder_contacts(actor);
-        if (contacts != nullptr && contacts->ground) {
-            auto ground_normal = TVec3f{};
-            if (!normalizeOrZero(contacts->ground_normal, &ground_normal)) {
-                actor->mGravity.set(-ground_normal);
-            }
+        if (isBindedGround(pActor)) {
+            const TVec3f* normal = pActor->mBinder->mGroundInfo.mParentTriangle.getNormal(0);
+            pActor->mGravity.set(-*normal);
         }
     }
+
 }  // namespace MR

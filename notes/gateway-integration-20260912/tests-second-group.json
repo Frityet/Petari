@@ -1,0 +1,22 @@
+[
+  {
+    "target": "smg-pc-original-shadow-controller-owner-tests",
+    "exit_code": -11,
+    "seconds": 1.202514834003523
+  },
+  {
+    "target": "smg-pc-sceneobj-holder-real-or-absent-tests",
+    "exit_code": 0,
+    "seconds": 0.4421982909552753
+  },
+  {
+    "target": "smg-pc-original-layout-group-tests",
+    "exit_code": 0,
+    "seconds": 1.0482024169759825
+  },
+  {
+    "target": "smg-pc-original-resource-holder-tests",
+    "exit_code": 0,
+    "seconds": 0.4839210839709267
+  }
+]

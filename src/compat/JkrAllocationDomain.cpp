@@ -194,6 +194,22 @@ namespace smgpc::compat {
         return retain_heap(std::move(runtime), heap, std::move(parent));
     }
 
+    std::shared_ptr<JkrAllocationDomain> JkrAllocationDomain::retain_heap(JKRHeap& heap) {
+        JkrHostAllocationScope host;
+        HeapLock lock;
+        for (auto* ancestor = &heap; ancestor != nullptr; ancestor = ancestor->getParent()) {
+            for (auto* record = domains; record != nullptr; record = record->next) {
+                if (record->heap != ancestor) continue;
+                auto owner = record->owner.lock();
+                if (!owner)
+                    aurora::throw_host_exception<std::logic_error>("Cannot retain a JKR heap whose owner is retiring");
+                if (ancestor == &heap) return owner;
+                return retain_heap(std::move(owner), heap);
+            }
+        }
+        aurora::throw_host_exception<std::logic_error>("The selected JKR heap has no retained owner");
+    }
+
     JkrAllocationDomain::JkrAllocationDomain(std::shared_ptr<JkrHeapRuntime> runtime, std::size_t budget)
         : _storage(std::make_unique<Storage>()) {
         if (!runtime) aurora::throw_host_exception<std::invalid_argument>("A JKR allocation domain requires its actual root owner");

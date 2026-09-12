@@ -1,0 +1,48 @@
+[
+  {
+    "path": "src/compat/OriginalBinderQueries.cpp",
+    "exit": 0,
+    "output": "",
+    "verification": "Recompiled after reference scope repair; OriginalBinderQueries.compile.log is empty."
+  },
+  {
+    "path": "src/compat/GameActorPhysicsCompat.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "path": "src/compat/GameGravityCompat.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "path": "src/compat/ActorMotionCompat.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "path": "src/runtime/RuntimeServices.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "path": "tests/GameActorPhysicsRealOrAbsentTests.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "path": "tests/OriginalCollisionPartsOwnerTests.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "path": "tests/AuroraNativeTests.cpp",
+    "exit": 0,
+    "output": ""
+  }
+]

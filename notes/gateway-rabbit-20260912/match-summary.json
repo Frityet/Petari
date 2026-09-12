@@ -1,0 +1,27 @@
+[
+  {
+    "name": "createNPCData__11NPCFunctionFv",
+    "size": "4",
+    "match_percent": 100.0
+  },
+  {
+    "name": "deleteNPCData__11NPCFunctionFv",
+    "size": "4",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getNPCItemData__11NPCFunctionFP12NPCActorIteml",
+    "size": "256",
+    "match_percent": 100.0
+  },
+  {
+    "name": "[.data-0]",
+    "size": "16",
+    "match_percent": 85.71429
+  },
+  {
+    "name": "getNPCItemData__2MRFP12NPCActorIteml",
+    "size": "4",
+    "match_percent": 100.0
+  }
+]

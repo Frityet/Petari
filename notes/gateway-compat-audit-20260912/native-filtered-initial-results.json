@@ -1,0 +1,17 @@
+[
+  {
+    "filter": "KCL collision",
+    "run_exit": -11,
+    "run_seconds": 0.5952717079780996
+  },
+  {
+    "filter": "same-frame Binder",
+    "run_exit": 1,
+    "run_seconds": 0.048267540987581015
+  },
+  {
+    "filter": "Coin math",
+    "run_exit": 0,
+    "run_seconds": 0.023829583020415157
+  }
+]

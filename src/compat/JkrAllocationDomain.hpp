@@ -46,6 +46,9 @@ namespace smgpc::compat {
                     std::shared_ptr<void> heap_owner);
         [[nodiscard]] static std::shared_ptr<JkrAllocationDomain>
         retain_heap(std::shared_ptr<JkrAllocationDomain> parent, JKRHeap& heap);
+        // Resolve this heap's registered owner, or retain its nearest registered
+        // ancestor for a Game-owned subheap, independently of the current heap.
+        [[nodiscard]] static std::shared_ptr<JkrAllocationDomain> retain_heap(JKRHeap& heap);
         ~JkrAllocationDomain();
         JkrAllocationDomain(const JkrAllocationDomain&) = delete;
         JkrAllocationDomain& operator=(const JkrAllocationDomain&) = delete;

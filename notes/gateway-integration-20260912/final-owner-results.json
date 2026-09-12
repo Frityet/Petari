@@ -1,0 +1,20 @@
+[
+  {
+    "target": "smg-pc-original-message-holder-tests",
+    "build_exit": 0,
+    "run_exit": 0,
+    "seconds": 9.274593500012998
+  },
+  {
+    "target": "smg-pc-stage-initialization-resource-tests",
+    "build_exit": 0,
+    "run_exit": 1,
+    "seconds": 5.954284582985565
+  },
+  {
+    "target": "smg-pc-file-select-name-real-or-absent-tests",
+    "build_exit": 0,
+    "run_exit": 0,
+    "seconds": 4.596725708979648
+  }
+]

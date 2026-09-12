@@ -14,10 +14,6 @@ namespace {
             aurora::throw_host_exception<std::logic_error>("Original ResourceHolderManager requires its native archive resource owner");
         return *owner;
     }
-    [[noreturn]] void unavailable_layout_holder() {
-        aurora::throw_host_exception<std::logic_error>(
-            "Original stationed LayoutHolder resource construction is not implemented");
-    }
 }
 
 ResourceHolderManager::ResourceHolderManager() { mResourceArray.clear(); }
@@ -32,9 +28,15 @@ ResourceHolder* ResourceHolderManager::createAndAddStationed(const char* name) {
         aurora::throw_host_exception<std::logic_error>("Stationed resource creation requires its original mounted archive and heap");
     return resources().create_and_add(name, heap);
 }
-LayoutHolder* ResourceHolderManager::createAndAddLayoutHolder(const char*, JKRHeap*) { unavailable_layout_holder(); }
-LayoutHolder* ResourceHolderManager::createAndAddLayoutHolderStationed(const char*) { unavailable_layout_holder(); }
-LayoutHolder* ResourceHolderManager::createAndAddLayoutHolderRawData(const char*) { unavailable_layout_holder(); }
+LayoutHolder* ResourceHolderManager::createAndAddLayoutHolder(const char* name, JKRHeap*) {
+    return resources().create_layout(name);
+}
+LayoutHolder* ResourceHolderManager::createAndAddLayoutHolderStationed(const char* name) {
+    return resources().create_layout_from_mounted(name);
+}
+LayoutHolder* ResourceHolderManager::createAndAddLayoutHolderRawData(const char* name) {
+    return resources().create_layout_from_mounted(name);
+}
 void ResourceHolderManager::removeIfIsEqualHeap(JKRHeap* heap) { resources().remove_for_heap(heap); }
 
 ResourceHolderManagerName2Resource::ResourceHolderManagerName2Resource()

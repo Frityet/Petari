@@ -1,0 +1,22 @@
+[
+  {
+    "target": "smg-pc-npc-actor-real-or-absent-tests",
+    "exit_code": 0,
+    "seconds": 1.0459762499667704
+  },
+  {
+    "target": "smg-pc-original-collision-parts-owner-tests",
+    "exit_code": -6,
+    "seconds": 1.201865125040058
+  },
+  {
+    "target": "smg-pc-game-actor-physics-real-or-absent-tests",
+    "exit_code": -6,
+    "seconds": 0.5531634590006433
+  },
+  {
+    "target": "smg-pc-original-shadow-controller-owner-tests",
+    "exit_code": 1,
+    "seconds": 1.137279957998544
+  }
+]

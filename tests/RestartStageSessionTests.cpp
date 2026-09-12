@@ -143,10 +143,6 @@ int main() {
                 static_cast<u32>(AudStageBgmWrap::getCometEventBgm(MR::getCurrentStageName())) == static_cast<u32>(-1),
             "Purple must remain a resolved comet type while producing no five-predicate BGM override");
     session.set_metadata(metadata);
-    require(!MR::isPowerStarGetDemoActive(), "a new stage session must explicitly begin outside the Power Star get demo");
-    session.set_power_star_get_demo_active(true);
-    require(MR::isPowerStarGetDemoActive(), "Power Star get demo state must be an explicit mutable stage-session value");
-    session.set_power_star_get_demo_active(false);
     ++passed;
 
     auto audio = smgpc::runtime::AudioEventService{};

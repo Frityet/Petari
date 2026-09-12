@@ -1,0 +1,72 @@
+[
+  {
+    "target": "smg-pc-original-message-holder-tests",
+    "build_exit": 0,
+    "build_seconds": 4.440640833985526,
+    "run_exit": 1,
+    "run_seconds": 0.4835378330317326
+  },
+  {
+    "target": "smg-pc-file-select-name-real-or-absent-tests",
+    "build_exit": 0,
+    "build_seconds": 4.279239082999993,
+    "run_exit": 0,
+    "run_seconds": 0.36929516604868695
+  },
+  {
+    "target": "smg-pc-message-real-or-absent-tests",
+    "build_exit": 0,
+    "build_seconds": 4.560637042042799,
+    "run_exit": 0,
+    "run_seconds": 0.3709345409879461
+  },
+  {
+    "target": "smg-pc-original-layout-group-tests",
+    "build_exit": 0,
+    "build_seconds": 4.85965745797148,
+    "run_exit": 0,
+    "run_seconds": 1.0164399999775924
+  },
+  {
+    "target": "smg-pc-picture-font-tag-tests",
+    "build_exit": 0,
+    "build_seconds": 4.674942291982006,
+    "run_exit": 0,
+    "run_seconds": 0.37655404198449105
+  },
+  {
+    "target": "smg-pc-original-resource-holder-tests",
+    "build_exit": 0,
+    "build_seconds": 5.087980290991254,
+    "run_exit": 0,
+    "run_seconds": 0.43498029198963195
+  },
+  {
+    "target": "smg-pc-aurora-native-tests",
+    "build_exit": 0,
+    "build_seconds": 4.7934120839927346,
+    "run_exit": -6,
+    "run_seconds": 0.5380110000260174
+  },
+  {
+    "target": "smg-pc-npc-actor-real-or-absent-tests",
+    "build_exit": 0,
+    "build_seconds": 4.749746082990896,
+    "run_exit": 0,
+    "run_seconds": 1.1003030000138097
+  },
+  {
+    "target": "smg-pc-sceneobj-holder-real-or-absent-tests",
+    "build_exit": 0,
+    "build_seconds": 4.5613444579648785,
+    "run_exit": 0,
+    "run_seconds": 0.49071841698605567
+  },
+  {
+    "target": "smg-pc-original-shadow-controller-owner-tests",
+    "build_exit": 0,
+    "build_seconds": 5.3024666249984875,
+    "run_exit": 0,
+    "run_seconds": 1.0944292499916628
+  }
+]

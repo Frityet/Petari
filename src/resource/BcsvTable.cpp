@@ -1,8 +1,8 @@
 #include <aurora/exception.hpp>
+#include <aurora/endian.hpp>
 #include "BcsvTable.hpp"
 
 #include <algorithm>
-#include <bit>
 #include <numeric>
 #include <stdexcept>
 #include <string>
@@ -10,30 +10,10 @@
 
 namespace smgpc::resource {
     namespace {
-
-        [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
-            if (offset + 2U > data.size()) {
-                aurora::throw_host_exception<std::runtime_error>("BCSV read past end of buffer");
-            }
-
-            return static_cast<std::uint16_t>((static_cast<std::uint16_t>(data[offset]) << 8U) | data[offset + 1U]);
-        }
-
-        [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
-            if (offset + 4U > data.size()) {
-                aurora::throw_host_exception<std::runtime_error>("BCSV read past end of buffer");
-            }
-
-            return (static_cast<std::uint32_t>(data[offset]) << 24U) | (static_cast<std::uint32_t>(data[offset + 1U]) << 16U) |
-                   (static_cast<std::uint32_t>(data[offset + 2U]) << 8U) | data[offset + 3U];
-        }
-
-        [[nodiscard]] float read_be_float(std::span<const std::uint8_t> data, std::size_t offset) {
-            return std::bit_cast<float>(read_be32(data, offset));
-        }
+        using aurora::endian::read_big;
 
         [[nodiscard]] std::uint32_t masked_u32(std::span<const std::uint8_t> data, std::size_t offset, const BcsvField &field) {
-            return (read_be32(data, offset) & field.mask) >> field.shift;
+            return (read_big<std::uint32_t>(data, offset) & field.mask) >> field.shift;
         }
 
         [[nodiscard]] std::int32_t sign_extend(std::uint32_t value, std::uint8_t bits) {
@@ -178,7 +158,7 @@ namespace smgpc::resource {
         case BcsvFieldType::UInt32:
             return static_cast<std::int32_t>(masked_u32(_data, offset, field));
         case BcsvFieldType::Int16:
-            return sign_extend((read_be16(_data, offset) & field.mask) >> field.shift, masked_bit_width(field.mask, field.shift, 16U));
+            return sign_extend((read_big<std::uint16_t>(_data, offset) & field.mask) >> field.shift, masked_bit_width(field.mask, field.shift, 16U));
         case BcsvFieldType::Int8:
             if (offset >= _data.size()) {
                 aurora::throw_host_exception<std::runtime_error>("BCSV byte value is outside table");
@@ -206,7 +186,7 @@ namespace smgpc::resource {
         case BcsvFieldType::UInt32:
             return masked_u32(_data, offset, field);
         case BcsvFieldType::Int16:
-            return (read_be16(_data, offset) & field.mask) >> field.shift;
+            return (read_big<std::uint16_t>(_data, offset) & field.mask) >> field.shift;
         case BcsvFieldType::Int8:
             if (offset >= _data.size()) {
                 aurora::throw_host_exception<std::runtime_error>("BCSV byte value is outside table");
@@ -232,7 +212,7 @@ namespace smgpc::resource {
             return std::nullopt;
         }
 
-        return read_be_float(_data, value_offset(entry_index, field));
+        return read_big<float>(_data, value_offset(entry_index, field));
     }
 
     std::optional<float> BcsvTable::get_float(std::size_t entry_index, std::string_view name) const {
@@ -251,7 +231,7 @@ namespace smgpc::resource {
         case BcsvFieldType::InlineString:
             return read_c_string(offset);
         case BcsvFieldType::StringOffset:
-            return read_c_string(_string_table_offset + read_be32(_data, offset));
+            return read_c_string(_string_table_offset + read_big<std::uint32_t>(_data, offset));
         default:
             return std::nullopt;
         }
@@ -319,10 +299,10 @@ namespace smgpc::resource {
             aurora::throw_host_exception<std::runtime_error>("BCSV data is too short");
         }
 
-        _entry_count = read_be32(bytes, 0x00U);
-        const auto field_count = read_be32(bytes, 0x04U);
-        _data_offset = read_be32(bytes, 0x08U);
-        _entry_size = read_be32(bytes, 0x0cU);
+        _entry_count = read_big<std::uint32_t>(bytes, 0x00U);
+        const auto field_count = read_big<std::uint32_t>(bytes, 0x04U);
+        _data_offset = read_big<std::uint32_t>(bytes, 0x08U);
+        _entry_size = read_big<std::uint32_t>(bytes, 0x0cU);
 
         constexpr auto fields_offset = std::size_t {0x10U};
         if (fields_offset + static_cast<std::size_t>(field_count) * 0x0cU > bytes.size()) {
@@ -338,9 +318,9 @@ namespace smgpc::resource {
         for (auto i = 0U; i < field_count; ++i) {
             const auto offset = fields_offset + static_cast<std::size_t>(i) * 0x0cU;
             _fields.push_back(BcsvField {
-                .hash = read_be32(bytes, offset),
-                .mask = read_be32(bytes, offset + 0x04U),
-                .offset = read_be16(bytes, offset + 0x08U),
+                .hash = read_big<std::uint32_t>(bytes, offset),
+                .mask = read_big<std::uint32_t>(bytes, offset + 0x04U),
+                .offset = read_big<std::uint16_t>(bytes, offset + 0x08U),
                 .shift = bytes[offset + 0x0aU],
                 .type = static_cast<BcsvFieldType>(bytes[offset + 0x0bU]),
             });

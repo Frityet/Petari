@@ -1,0 +1,82 @@
+[
+  {
+    "path": "decomp/src/Game/Util/StringUtil.cpp",
+    "deleted": false
+  },
+  {
+    "path": "decomp/src/Game/Util/MessageUtil.cpp",
+    "deleted": false
+  },
+  {
+    "path": "src/Game/Util/StringUtil.cpp",
+    "deleted": false
+  },
+  {
+    "path": "src/Game/Util/MessageUtil.cpp",
+    "deleted": false
+  },
+  {
+    "path": "src/Game/Map/RaceManager.hpp",
+    "deleted": false
+  },
+  {
+    "path": "src/compat/MessageUtilCompat.cpp",
+    "deleted": false
+  },
+  {
+    "path": "src/compat/TalkCompat.cpp",
+    "deleted": false
+  },
+  {
+    "path": "src/compat/OriginalArchiveString.cpp",
+    "deleted": true
+  },
+  {
+    "path": "src/compat/StringComparisonCompat.cpp",
+    "deleted": true
+  },
+  {
+    "path": "src/compat/StringUtilCompat.cpp",
+    "deleted": true
+  },
+  {
+    "path": "src/compat/OriginalStringScan.cpp",
+    "deleted": true
+  },
+  {
+    "path": "src/compat/OriginalMessageLineQueries.cpp",
+    "deleted": true
+  },
+  {
+    "path": "src/compat/OriginalDemoUtil.cpp",
+    "deleted": false
+  },
+  {
+    "path": "src/compat/DemoUtilCompat.cpp",
+    "deleted": false
+  },
+  {
+    "path": "src/compat/StageSessionState.cpp",
+    "deleted": false
+  },
+  {
+    "path": "src/compat/StageSessionState.hpp",
+    "deleted": false
+  },
+  {
+    "path": "tests/OriginalLayoutGroupTests.cpp",
+    "deleted": false
+  },
+  {
+    "path": "tests/MessageRealOrAbsentTests.cpp",
+    "deleted": false
+  },
+  {
+    "path": "tests/RestartStageSessionTests.cpp",
+    "deleted": false
+  },
+  {
+    "path": "tests/StageInitializationResourceTests.cpp",
+    "deleted": false
+  }
+]

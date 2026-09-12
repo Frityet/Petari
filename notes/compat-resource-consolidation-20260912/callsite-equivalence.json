@@ -1,0 +1,49 @@
+{
+  "comparison": "HEAD versus working tree; remove declared duplicate definitions, shared include/using changes and whitespace; apply named scalar replacement, packed RARC word extraction, J3D typed load equivalents",
+  "files": [
+    {
+      "path": "src/resource/RarcArchive.cpp",
+      "equivalent_after_documented_substitutions": true
+    },
+    {
+      "path": "src/resource/BcsvTable.cpp",
+      "equivalent_after_documented_substitutions": true
+    },
+    {
+      "path": "src/resource/BmgMessageArchive.cpp",
+      "equivalent_after_documented_substitutions": true
+    },
+    {
+      "path": "src/layout/BrfntFont.cpp",
+      "equivalent_after_documented_substitutions": true
+    },
+    {
+      "path": "src/layout/BrlytLayout.cpp",
+      "equivalent_after_documented_substitutions": true
+    },
+    {
+      "path": "src/resource/TplTexture.cpp",
+      "equivalent_after_documented_substitutions": true
+    },
+    {
+      "path": "src/resource/Yaz0.cpp",
+      "equivalent_after_documented_substitutions": true
+    },
+    {
+      "path": "src/resource/J3dTransformAnimation.cpp",
+      "equivalent_after_documented_substitutions": true
+    },
+    {
+      "path": "src/resource/J3dModelResource.cpp",
+      "equivalent_after_documented_substitutions": true
+    },
+    {
+      "path": "src/compat/JKRArchiveCompat.cpp",
+      "equivalent_after_documented_substitutions": true
+    },
+    {
+      "path": "src/compat/Nw4rFontCompat.cpp",
+      "equivalent_after_documented_substitutions": true
+    }
+  ]
+}

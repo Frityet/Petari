@@ -1,0 +1,262 @@
+[
+  {
+    "source": "StringUtil",
+    "symbols": [
+      {
+        "name": "addFilePrefix__2MRFPcUlPCcPCc",
+        "size": "36",
+        "match_percent": 100.0
+      },
+      {
+        "name": "makeDateString__2MRFPwllll",
+        "size": "108",
+        "match_percent": 100.0
+      },
+      {
+        "name": "makeTimeString__2MRFPwlll",
+        "size": "100",
+        "match_percent": 100.0
+      },
+      {
+        "name": "makeClearTimeString__2MRFPwUl",
+        "size": "172",
+        "match_percent": 100.0
+      },
+      {
+        "name": "makeMinuteAndSecondString__2MRFPwUl",
+        "size": "144",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addNumberFontTag__2MRFPwi",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "removeExtensionString__2MRFPcUlPCc",
+        "size": "124",
+        "match_percent": 100.0
+      },
+      {
+        "name": "makeRaceBestTimeString__2MRFPwi",
+        "size": "60",
+        "match_percent": 100.0
+      },
+      {
+        "name": "makeRaceCurrentTimeString__2MRFPw",
+        "size": "56",
+        "match_percent": 100.0
+      },
+      {
+        "name": "copyString__2MRFPcPCcUl",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "copyString__2MRFPwPCwUl",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addPictureFontCode__2MRFPwi",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addPictureFontTag__2MRFPwi",
+        "size": "44",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addPictureFontTagPlayerIcon__2MRFPw",
+        "size": "68",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addNewLine__2MRFPw",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getBasename__2MRFPCc",
+        "size": "68",
+        "match_percent": 93.52941
+      },
+      {
+        "name": "extractString__2MRFPcPCcUlUl",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "convertUTF16ToASCII__2MRFPcPCwl",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "strcasecmp__2MRFPCcPCc",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isEqualString__2MRFPCcPCc",
+        "size": "40",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isEqualStringCase__2MRFPCcPCc",
+        "size": "40",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isEqualSubString__2MRFPCcPCc",
+        "size": "40",
+        "match_percent": 100.0
+      },
+      {
+        "name": "hasStringSpace__2MRFPCc",
+        "size": "44",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isDigitStringTail__2MRFPCci",
+        "size": "176",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isExistString__2MRFPCcPCPCcUl",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isNullOrEmptyString__2MRFPCc",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isMessageEditorNextTag__2MRFPCw",
+        "size": "40",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getStringLengthWithMessageTag__2MRFPCw",
+        "size": "132",
+        "match_percent": 99.393936
+      },
+      {
+        "name": "scan32__2MRFPCcPCcPl",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "scan16__2MRFPCcPCcPUs",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "scan8__2MRFPCcPCcPUc",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "scanf32__2MRFPCcPCcPf",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "scanu8x4__2MRFPCcPCcPUc",
+        "size": "136",
+        "match_percent": 100.0
+      },
+      {
+        "name": "scans16x4__2MRFPCcPCcPs",
+        "size": "140",
+        "match_percent": 100.0
+      },
+      {
+        "name": "scanf32x4__2MRFPCcPCcPf",
+        "size": "100",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "MessageUtil",
+    "symbols": [
+      {
+        "name": "getSystemMessageDirect__2MRFPCc",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getGameMessageDirect__2MRFPCc",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getLayoutMessageDirect__2MRFPCc",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getCurrentGalaxyNameOnCurrentLanguage__2MRFv",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getCurrentScenarioNameOnCurrentLanguage__2MRFv",
+        "size": "124",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRaceNameOnCurrentLanguage__2MRFi",
+        "size": "68",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isExistGameMessage__2MRFPCc",
+        "size": "96",
+        "match_percent": 100.0
+      },
+      {
+        "name": "countMessageLine__2MRFPCw",
+        "size": "156",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getNextMessagePage__2MRFPCw",
+        "size": "152",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getGalaxyNameOnCurrentLanguage__2MRFPCc",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getGalaxyNameShortOnCurrentLanguage__2MRFPCc",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getScenarioNameOnCurrentLanguage__2MRFPCcl",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getLayoutMessageID__2MRFPcPCcPCc",
+        "size": "28",
+        "match_percent": 100.0
+      },
+      {
+        "name": "makeCometMessageID__2MRFPcUlPCc",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isGroupTagId__23MessageEditorMessageTagCFii",
+        "size": "40",
+        "match_percent": 100.0
+      }
+    ]
+  }
+]

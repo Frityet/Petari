@@ -17,7 +17,6 @@ target("smg-pc-game")
     -- Xmake's broad-remove/explicit-re-add order drops the re-added object from
     -- the archive, so keep the provider-incomplete set explicit here.
     remove_files {
-        "Player/MarioSound.cpp",
         "Player/MarioState.cpp",
     }
     -- The retail source explicitly narrows its opaque host pointer to u32.
@@ -26,11 +25,6 @@ target("smg-pc-game")
         cxxflags = is_plat("macosx", "iphoneos") and "-fms-extensions" or "-fpermissive"
     })
     add_files("AudioLib/AudBgmSetting.cpp", {cxxflags = "-Wno-narrowing"})
-    add_files("AudioLib/AudParams.cpp", {
-        force = {
-            cxxflags = "-include " .. path.join(os.projectdir(), "src/compat/AudParamsSourceCompat.hpp")
-        }
-    })
     add_files("GameAudio/AudStageBgmTable.cpp", {cxxflags = "-Wno-narrowing"})
     add_files("GameAudio/AudStageBgmWrap.cpp", {cxxflags = "-Wno-narrowing"})
     add_files("Map/FileSelectSky.cpp", {
@@ -54,10 +48,8 @@ target("smg-pc-game")
     remove_files("Screen/FullScreenBlur.cpp")
     remove_files("Map/FileSelectEffect.cpp")
     remove_files("Map/CollisionParts.cpp")
-    remove_files("Map/FileSelectFunc.cpp")
     remove_files("Map/FileSelectItem.cpp")
     remove_files("Map/FileSelector.cpp")
-    remove_files("MapObj/StarPiece.cpp")
     remove_files("MapObj/StarPieceGroup.cpp")
     remove_files("NameObj/NameObjFactory.cpp")
     remove_files("NameObj/NameObj.cpp")
@@ -80,11 +72,9 @@ target("smg-pc-game")
     remove_files("Util/LayoutUtil.cpp")
     remove_files("Util/MapUtil.cpp")
     remove_files("Util/MathUtil.cpp")
-    remove_files("Util/MessageUtil.cpp")
     remove_files("Util/SceneUtil.cpp")
     remove_files("Util/ScreenUtil.cpp")
     remove_files("Util/SoundUtil.cpp")
-    remove_files("Util/StringUtil.cpp")
     remove_files("Util/SystemUtil.cpp")
     remove_files("Util/StarPointerUtil.cpp")
     remove_files("NPC/MiiFacePartsHolder.cpp")
@@ -93,6 +83,7 @@ target("smg-pc-game")
     add_files({"../nw4r/ut/ut_CharWriter.cpp", "../nw4r/ut/ut_TextWriterBase.cpp",
                "../nw4r/ut/ut_TagProcessorBase.cpp", "../nw4r/ut/ut_CharStrmReader.cpp",
                "../nw4r/ut/ut_Font.cpp"}, {cxxflags = "-ffp-contract=off"})
+    add_files("../nw4r/lyt/lyt_resourceAccessor.cpp")
     add_files("../camera/**.cpp")
     add_files("../layout/**.cpp")
     add_files("../resource/**.cpp")

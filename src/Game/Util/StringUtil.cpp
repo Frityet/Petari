@@ -5,7 +5,15 @@
 #include <cctype>
 // #include <cstdarg>
 #include <cstdio>
+#include <stdint.h>
+#if defined(TARGET_PC)
+#include "Game/Screen/MessageEditorMessageTag.hpp"
+#include <cstring>
+#include <cwchar>
+#include <strings.h>
+#else
 #include <va_list.h>
+#endif
 
 #define CENTISEC_PER_SEC 100
 #define SEC_PER_MIN 60
@@ -14,11 +22,11 @@
 #define FRAME_PER_MIN (FRAME_PER_SEC * SEC_PER_MIN)
 #define FRAME_PER_HOUR (FRAME_PER_SEC * SEC_PER_MIN * MIN_PER_HOUR)
 
-#ifdef __cplusplus
+#if !defined(TARGET_PC) && defined(__cplusplus)
 extern "C" {
 int strcasecmp(const char*, const char*);
 // extern int vswprintf(wchar_t*, size_t, const wchar_t*, va_list);
-int wcsncpy(wchar_t*, const wchar_t*, size_t);
+wchar_t* wcsncpy(wchar_t*, const wchar_t*, size_t);
 };
 #endif
 
@@ -99,7 +107,8 @@ namespace MR {
         char* pExtSeparator = strrchr(pDst, '.');
         char* pDirSeparator = strrchr(pDst, '/');
 
-        if (pExtSeparator < pDirSeparator || pDirSeparator + 1 == pExtSeparator) {
+        if (reinterpret_cast< uintptr_t >(pExtSeparator) < reinterpret_cast< uintptr_t >(pDirSeparator) ||
+            reinterpret_cast< uintptr_t >(pDirSeparator) + 1 == reinterpret_cast< uintptr_t >(pExtSeparator)) {
             return pDirSeparator;
         }
 
@@ -125,13 +134,22 @@ namespace MR {
     }
 
     wchar_t* addPictureFontCode(wchar_t* pDst, int code) {
-        pDst[0] = code;
+        pDst[0] = static_cast< u16 >(code);
         pDst[1] = '\0';
 
         return &pDst[1];
     }
 
     wchar_t* addPictureFontTag(wchar_t* pDst, int tag) {
+#if defined(TARGET_PC)
+        // BMG tags retain their original UTF-16 word values in native wchar_t storage.
+        pDst[0] = 26;
+        pDst[1] = (6 << 8) | 3;
+        pDst[2] = static_cast< u16 >(tag - '0');
+        pDst[3] = '\0';
+
+        return &pDst[3];
+#else
         Tag* pTag = reinterpret_cast< Tag* >(pDst);
 
         pTag->_0 = 26;
@@ -141,6 +159,7 @@ namespace MR {
         pTag->mBuffer[1] = '\0';
 
         return &pTag->mBuffer[1];
+#endif
     }
 
     wchar_t* addPictureFontTagPlayerIcon(wchar_t* pDst) {
@@ -174,15 +193,14 @@ namespace MR {
     }
     */
 
-    // FIXME: Missing stack accesses.
     const char* getBasename(const char* pPath) {
         const char* pBasename = strrchr(pPath, '/');
 
-        if (pBasename == nullptr) {
-            return pBasename;
+        if (pBasename != nullptr) {
+            pPath = pBasename + 1;
         }
 
-        return pBasename + 1;
+        return pPath;
     }
 
     void extractString(char* pDst, const char* pSrc, u32 num, u32) {
@@ -195,6 +213,14 @@ namespace MR {
         u32 i;
 
         for (i = 0; i < num - 1; pDst++, pSrc++, i++) {
+#if defined(TARGET_PC)
+            u32 code = static_cast< u32 >(*pSrc);
+            if (code > 0xFF || code == 0) {
+                break;
+            }
+
+            *pDst = static_cast< char >(code);
+#else
             const char* p = reinterpret_cast< const char* >(pSrc);
 
             if (p[0] != '\0') {
@@ -206,6 +232,7 @@ namespace MR {
             }
 
             *pDst = p[1];
+#endif
         }
 
         *pDst = '\0';
@@ -260,11 +287,15 @@ namespace MR {
     }
 
     bool isMessageEditorNextTag(const wchar_t* pStr) {
+#if defined(TARGET_PC)
+        return MessageEditorMessageTag(pStr + 1).isGroupTagId(1, 1);
+#else
         const Tag* pTag = reinterpret_cast< const Tag* >(pStr);
         u8 v1 = pTag->_3;
         wchar_t v2 = pTag->mBuffer[0];
 
         return v1 == 1 && v2 == 1;
+#endif
     }
 
     int getStringLengthWithMessageTag(const wchar_t* pMessage) {
@@ -276,10 +307,13 @@ namespace MR {
                     break;
                 }
 
+#if defined(TARGET_PC)
+                u16 dataSize = (MessageEditorMessageTag(pMessage + 1).getSkipLength() + 1) * sizeof(u16);
+#else
                 u16 dataSize = reinterpret_cast< const Tag* >(pMessage)->mDataSize;
+#endif
 
-                // FIXME: r3-r4 used instead of r30-r31, and slwi used instead of clrrwi.
-                pMessage = (pMessage + dataSize) - 1;
+                pMessage = (pMessage + dataSize / sizeof(u16)) - 1;
                 length += (dataSize / sizeof(u16)) - 1;
             }
 

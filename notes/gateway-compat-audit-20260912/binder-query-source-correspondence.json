@@ -1,0 +1,62 @@
+[
+  {
+    "name": "reboundVelocityFromCollision",
+    "reference": "decomp/src/Game/Util/ActorMovementUtil.cpp",
+    "body_sha256": "27a8ab21bed8fd94913bba1b7324f1160ac419877dbe23743eb78594dccab8e9"
+  },
+  {
+    "name": "calcHitPowerToWall",
+    "reference": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "body_sha256": "ef510d61fc3cedab3b5da20c5ee46a53462eb578142e48950c0cf71271de1665"
+  },
+  {
+    "name": "isPressedRoofAndGround",
+    "reference": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "body_sha256": "10450c1545c96dbf1788c391695f1649f964374e2c44ea461cca8b32bd3a6272"
+  },
+  {
+    "name": "isOnGround",
+    "reference": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "body_sha256": "6dc5e5a07013664869cdfa5c600b191c9cc920358a37f287550de7535c633472"
+  },
+  {
+    "name": "isBindedGround",
+    "reference": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "body_sha256": "202790109877adf4b2b2449f7abf0318d1bd9e226ff50a7ffbe8f5ac5d6b0d19"
+  },
+  {
+    "name": "isBindedWall",
+    "reference": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "body_sha256": "e6929fc3dcbba7ef7fd1d3b2041fc464669b4cf8d5bf9b5be6d1e4941fc46f39"
+  },
+  {
+    "name": "isBindedRoof",
+    "reference": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "body_sha256": "f2e2a04a0535625e52ab3de5df718b94256173423b7e65f60d6bfb872dbd0921"
+  },
+  {
+    "name": "getGroundNormal",
+    "reference": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "body_sha256": "832170f74a32e95dacf9eb27814678d13d901ee6ed911e241f381a5d403354ae"
+  },
+  {
+    "name": "getWallNormal",
+    "reference": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "body_sha256": "ddcd521d485b0ac578127e433259d6b399e6eefcdf03685189efe211f6074813"
+  },
+  {
+    "name": "getRoofNormal",
+    "reference": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "body_sha256": "e6902b8851affc88740b2d726461b8fbc1070df21742366150dedb826dcc5a18"
+  },
+  {
+    "name": "offBind",
+    "reference": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "body_sha256": "fe8fa37bfe7b6a6688f57b9d3a268a491e341c9a7d1636ba545ade9b39692bb1"
+  },
+  {
+    "name": "calcGravityOrZero both overloads",
+    "reference": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "body_sha256": "b87419fbf4ec666b20bc2484703341a8672ace48c177805cc96e4e1bd10dc9df"
+  }
+]

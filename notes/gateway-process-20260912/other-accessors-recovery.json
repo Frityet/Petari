@@ -1,0 +1,37 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Screen/LayoutManager.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/gateway-process-20260912/LayoutHolder.o",
+    "--format",
+    "json",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/gateway-process-20260912/other-accessors-objdiff.json"
+  ],
+  "exit_code": 0,
+  "functions": [
+    {
+      "name": "isExistResOther__12LayoutHolderCFPCc",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getResOther__12LayoutHolderCFPCc",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getResOther__12LayoutHolderCFUl",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getResOtherNum__12LayoutHolderCFv",
+      "size": "8",
+      "match_percent": 100.0
+    }
+  ]
+}

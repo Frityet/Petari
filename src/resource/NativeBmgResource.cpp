@@ -2,6 +2,7 @@
 #include "resource/BmgMessageArchive.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include <aurora/exception.hpp>
+#include <aurora/endian.hpp>
 
 #include <cstring>
 #include <array>
@@ -12,17 +13,11 @@
 
 namespace smgpc::resource {
 namespace {
+    using aurora::endian::read_big;
     using Bytes = std::span<const std::uint8_t>;
     void require_range(Bytes bytes, std::size_t offset, std::size_t count) {
         if (offset > bytes.size() || count > bytes.size() - offset)
             aurora::throw_host_exception<std::invalid_argument>("Native BMG field extends outside its retained block");
-    }
-    std::uint16_t be16(Bytes bytes, std::size_t offset) {
-        require_range(bytes, offset, 2);
-        return (std::uint16_t(bytes[offset]) << 8) | bytes[offset + 1];
-    }
-    std::uint32_t be32(Bytes bytes, std::size_t offset) {
-        return (std::uint32_t(be16(bytes, offset)) << 16) | be16(bytes, offset + 2);
     }
     template<class T> void store(std::vector<std::uint8_t>& bytes, std::size_t offset, T value) {
         if (offset > bytes.size() || sizeof(T) > bytes.size() - offset)
@@ -38,12 +33,13 @@ namespace {
 }
 
 struct NativeBmgResource::Storage {
-    BmgMessageArchive parsed;
     std::vector<std::uint8_t> bytes;
+    std::vector<std::uint16_t> text_utf16;
     std::size_t text_begin = 0;
     std::vector<std::uint32_t> text_offsets;
 
-    Storage(Bytes bmg, Bytes ids) : parsed(BmgMessageArchive::from_bytes(bmg, ids)) {
+    Storage(Bytes bmg, Bytes ids) {
+        const auto parsed = BmgMessageArchive::from_bytes(bmg, ids);
         static_assert(sizeof(wchar_t) == 2 || sizeof(wchar_t) == 4);
         constexpr std::array typed_blocks{"INF1", "DAT1", "FLW1", "FLI1"};
         std::array<bool, typed_blocks.size()> seen{};
@@ -79,48 +75,54 @@ struct NativeBmgResource::Storage {
             bytes.resize(start + output_size);
             if (block.magic != "DAT1")
                 std::memcpy(bytes.data() + start, source.data(), source.size());
-            store(bytes, start, be32(source, 0));
+            store(bytes, start, read_big<std::uint32_t>(source, 0));
             store(bytes, start + 4, size32(output_size));
 
             if (block.magic == "INF1") {
-                const auto count = be16(source, 8);
-                const auto item_size = be16(source, 10);
+                const auto count = read_big<std::uint16_t>(source, 8);
+                const auto item_size = read_big<std::uint16_t>(source, 10);
                 if (item_size < 12 || item_size % 4 != 0 || count != text_offsets.size())
                     aurora::throw_host_exception<std::invalid_argument>("BMG INF1 cannot be addressed by original aligned information records");
                 require_range(source, 16, std::size_t(count) * item_size);
                 store(bytes, start + 8, count);
                 store(bytes, start + 10, item_size);
-                store(bytes, start + 12, be32(source, 12));
+                store(bytes, start + 12, read_big<std::uint32_t>(source, 12));
                 for (std::size_t i = 0; i < count; ++i) {
                     const auto offset = 16U + i * item_size;
                     store(bytes, start + offset, text_offsets[i]);
-                    store(bytes, start + offset + 4, be16(source, offset + 4));
+                    store(bytes, start + offset + 4, read_big<std::uint16_t>(source, offset + 4));
                 }
             } else if (block.magic == "DAT1") {
                 text_begin = start + 8;
-                for (std::size_t i = 0; i < (source.size() - 8U) / 2U; ++i)
-                    store(bytes, text_begin + i * sizeof(wchar_t), static_cast<wchar_t>(be16(source, 8 + i * 2)));
+                // Both views retain the complete authored DAT1 payload. Original
+                // callers may copy through terminators or share interior offsets.
+                text_utf16.resize((source.size() - 8U) / 2U);
+                for (std::size_t i = 0; i < text_utf16.size(); ++i) {
+                    const auto unit = read_big<std::uint16_t>(source, 8 + i * 2);
+                    text_utf16[i] = unit;
+                    store(bytes, text_begin + i * sizeof(wchar_t), static_cast<wchar_t>(unit));
+                }
             } else if (block.magic == "FLW1") {
-                const auto count = be16(source, 8);
-                const auto branches = be16(source, 10);
+                const auto count = read_big<std::uint16_t>(source, 8);
+                const auto branches = read_big<std::uint16_t>(source, 10);
                 require_range(source, 16, std::size_t(count) * 8U + std::size_t(branches) * 2U);
                 store(bytes, start + 8, count);
                 store(bytes, start + 10, branches);
-                store(bytes, start + 12, be32(source, 12));
+                store(bytes, start + 12, read_big<std::uint32_t>(source, 12));
                 for (std::size_t i = 0; i < count; ++i) {
                     const auto offset = 16U + i * 8U;
-                    store(bytes, start + offset + 2, be16(source, offset + 2));
+                    store(bytes, start + offset + 2, read_big<std::uint16_t>(source, offset + 2));
                     if (source[offset] == 3) {
                         // Event nodes expose one u32 argument, other nodes two u16 fields.
-                        store(bytes, start + offset + 4, be32(source, offset + 4));
+                        store(bytes, start + offset + 4, read_big<std::uint32_t>(source, offset + 4));
                     } else {
-                        store(bytes, start + offset + 4, be16(source, offset + 4));
-                        store(bytes, start + offset + 6, be16(source, offset + 6));
+                        store(bytes, start + offset + 4, read_big<std::uint16_t>(source, offset + 4));
+                        store(bytes, start + offset + 6, read_big<std::uint16_t>(source, offset + 6));
                     }
                 }
                 for (std::size_t i = 0; i < branches; ++i) {
                     const auto offset = 16U + std::size_t(count) * 8U + i * 2U;
-                    const auto index = be16(source, offset);
+                    const auto index = read_big<std::uint16_t>(source, offset);
                     if (index != 0xffff && index >= count)
                         aurora::throw_host_exception<std::invalid_argument>("BMG branch points outside its original node array");
                     store(bytes, start + offset, index);
@@ -147,10 +149,10 @@ std::size_t NativeBmgResource::message_count() const noexcept { return _storage-
 const wchar_t* NativeBmgResource::message(std::size_t index) const {
     return reinterpret_cast<const wchar_t*>(_storage->bytes.data() + _storage->text_begin + _storage->text_offsets.at(index));
 }
-const char16_t* NativeBmgResource::message_utf16(std::size_t index) const {
-    if (index >= _storage->parsed.message_count())
+const std::uint16_t* NativeBmgResource::message_utf16(std::size_t index) const {
+    if (index >= message_count())
         aurora::throw_host_exception<std::out_of_range>("BMG message index is outside its original information table");
-    return _storage->parsed.messages()[index].raw_text.c_str();
+    return _storage->text_utf16.data() + _storage->text_offsets[index] / sizeof(wchar_t);
 }
 std::optional<std::size_t> NativeBmgResource::message_index(const wchar_t* pointer) const noexcept {
     if (!pointer) return std::nullopt;

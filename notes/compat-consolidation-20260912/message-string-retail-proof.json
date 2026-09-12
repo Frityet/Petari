@@ -1,0 +1,311 @@
+{
+  "dol": "decomp/orig/RMGK01/sys/main.dol",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "functions": [
+    {
+      "name": "addFilePrefix__2MRFPcUlPCcPCc",
+      "address": "803FE5E4",
+      "instructions": 9,
+      "bytes": 36
+    },
+    {
+      "name": "makeDateString__2MRFPwllll",
+      "address": "803FE608",
+      "instructions": 27,
+      "bytes": 108
+    },
+    {
+      "name": "makeTimeString__2MRFPwlll",
+      "address": "803FE674",
+      "instructions": 25,
+      "bytes": 100
+    },
+    {
+      "name": "makeClearTimeString__2MRFPwUl",
+      "address": "803FE6D8",
+      "instructions": 43,
+      "bytes": 172
+    },
+    {
+      "name": "makeMinuteAndSecondString__2MRFPwUl",
+      "address": "803FE784",
+      "instructions": 36,
+      "bytes": 144
+    },
+    {
+      "name": "addNumberFontTag__2MRFPwi",
+      "address": "803FE814",
+      "instructions": 5,
+      "bytes": 20
+    },
+    {
+      "name": "removeExtensionString__2MRFPcUlPCc",
+      "address": "803FE828",
+      "instructions": 31,
+      "bytes": 124
+    },
+    {
+      "name": "makeRaceBestTimeString__2MRFPwi",
+      "address": "803FE8A4",
+      "instructions": 15,
+      "bytes": 60
+    },
+    {
+      "name": "makeRaceCurrentTimeString__2MRFPw",
+      "address": "803FE8E0",
+      "instructions": 14,
+      "bytes": 56
+    },
+    {
+      "name": "copyString__2MRFPcPCcUl",
+      "address": "803FE918",
+      "instructions": 1,
+      "bytes": 4
+    },
+    {
+      "name": "copyString__2MRFPwPCwUl",
+      "address": "803FE91C",
+      "instructions": 1,
+      "bytes": 4
+    },
+    {
+      "name": "addPictureFontCode__2MRFPwi",
+      "address": "803FE920",
+      "instructions": 4,
+      "bytes": 16
+    },
+    {
+      "name": "addPictureFontTag__2MRFPwi",
+      "address": "803FE930",
+      "instructions": 11,
+      "bytes": 44
+    },
+    {
+      "name": "addPictureFontTagPlayerIcon__2MRFPw",
+      "address": "803FE95C",
+      "instructions": 17,
+      "bytes": 68
+    },
+    {
+      "name": "addNewLine__2MRFPw",
+      "address": "803FE9A0",
+      "instructions": 5,
+      "bytes": 20
+    },
+    {
+      "name": "getBasename__2MRFPCc",
+      "address": "803FEA90",
+      "instructions": 17,
+      "bytes": 68
+    },
+    {
+      "name": "extractString__2MRFPcPCcUlUl",
+      "address": "803FEAD4",
+      "instructions": 16,
+      "bytes": 64
+    },
+    {
+      "name": "convertUTF16ToASCII__2MRFPcPCwl",
+      "address": "803FEB14",
+      "instructions": 20,
+      "bytes": 80
+    },
+    {
+      "name": "strcasecmp__2MRFPCcPCc",
+      "address": "803FEB64",
+      "instructions": 1,
+      "bytes": 4
+    },
+    {
+      "name": "isEqualString__2MRFPCcPCc",
+      "address": "803FEB68",
+      "instructions": 10,
+      "bytes": 40
+    },
+    {
+      "name": "isEqualStringCase__2MRFPCcPCc",
+      "address": "803FEB90",
+      "instructions": 10,
+      "bytes": 40
+    },
+    {
+      "name": "isEqualSubString__2MRFPCcPCc",
+      "address": "803FEBB8",
+      "instructions": 10,
+      "bytes": 40
+    },
+    {
+      "name": "hasStringSpace__2MRFPCc",
+      "address": "803FEBE0",
+      "instructions": 11,
+      "bytes": 44
+    },
+    {
+      "name": "isDigitStringTail__2MRFPCci",
+      "address": "803FEC0C",
+      "instructions": 44,
+      "bytes": 176
+    },
+    {
+      "name": "isExistString__2MRFPCcPCPCcUl",
+      "address": "803FECBC",
+      "instructions": 30,
+      "bytes": 120
+    },
+    {
+      "name": "isNullOrEmptyString__2MRFPCc",
+      "address": "803FED34",
+      "instructions": 19,
+      "bytes": 76
+    },
+    {
+      "name": "isMessageEditorNextTag__2MRFPCw",
+      "address": "803FED80",
+      "instructions": 10,
+      "bytes": 40
+    },
+    {
+      "name": "getStringLengthWithMessageTag__2MRFPCw",
+      "address": "803FEDA8",
+      "instructions": 33,
+      "bytes": 132
+    },
+    {
+      "name": "scan32__2MRFPCcPCcPl",
+      "address": "803FEE2C",
+      "instructions": 21,
+      "bytes": 84
+    },
+    {
+      "name": "scan16__2MRFPCcPCcPUs",
+      "address": "803FEE80",
+      "instructions": 23,
+      "bytes": 92
+    },
+    {
+      "name": "scan8__2MRFPCcPCcPUc",
+      "address": "803FEEDC",
+      "instructions": 23,
+      "bytes": 92
+    },
+    {
+      "name": "scanf32__2MRFPCcPCcPf",
+      "address": "803FEF38",
+      "instructions": 22,
+      "bytes": 88
+    },
+    {
+      "name": "scanu8x4__2MRFPCcPCcPUc",
+      "address": "803FEF90",
+      "instructions": 34,
+      "bytes": 136
+    },
+    {
+      "name": "scans16x4__2MRFPCcPCcPs",
+      "address": "803FF018",
+      "instructions": 35,
+      "bytes": 140
+    },
+    {
+      "name": "scanf32x4__2MRFPCcPCcPf",
+      "address": "803FF0A4",
+      "instructions": 25,
+      "bytes": 100
+    },
+    {
+      "name": "getSystemMessageDirect__2MRFPCc",
+      "address": "803E8E14",
+      "instructions": 16,
+      "bytes": 64
+    },
+    {
+      "name": "getGameMessageDirect__2MRFPCc",
+      "address": "803E8E54",
+      "instructions": 16,
+      "bytes": 64
+    },
+    {
+      "name": "getLayoutMessageDirect__2MRFPCc",
+      "address": "803E8E94",
+      "instructions": 16,
+      "bytes": 64
+    },
+    {
+      "name": "getCurrentGalaxyNameOnCurrentLanguage__2MRFv",
+      "address": "803E8ED4",
+      "instructions": 21,
+      "bytes": 84
+    },
+    {
+      "name": "getCurrentScenarioNameOnCurrentLanguage__2MRFv",
+      "address": "803E8F28",
+      "instructions": 31,
+      "bytes": 124
+    },
+    {
+      "name": "getRaceNameOnCurrentLanguage__2MRFi",
+      "address": "803E8FA4",
+      "instructions": 17,
+      "bytes": 68
+    },
+    {
+      "name": "isExistGameMessage__2MRFPCc",
+      "address": "803E8FE8",
+      "instructions": 24,
+      "bytes": 96
+    },
+    {
+      "name": "countMessageLine__2MRFPCw",
+      "address": "803E9190",
+      "instructions": 39,
+      "bytes": 156
+    },
+    {
+      "name": "getNextMessagePage__2MRFPCw",
+      "address": "803E937C",
+      "instructions": 38,
+      "bytes": 152
+    },
+    {
+      "name": "getGalaxyNameOnCurrentLanguage__2MRFPCc",
+      "address": "803E9414",
+      "instructions": 20,
+      "bytes": 80
+    },
+    {
+      "name": "getGalaxyNameShortOnCurrentLanguage__2MRFPCc",
+      "address": "803E9464",
+      "instructions": 20,
+      "bytes": 80
+    },
+    {
+      "name": "getScenarioNameOnCurrentLanguage__2MRFPCcl",
+      "address": "803E94B4",
+      "instructions": 21,
+      "bytes": 84
+    },
+    {
+      "name": "getLayoutMessageID__2MRFPcPCcPCc",
+      "address": "803E9508",
+      "instructions": 7,
+      "bytes": 28
+    },
+    {
+      "name": "makeCometMessageID__2MRFPcUlPCc",
+      "address": "803E9524",
+      "instructions": 5,
+      "bytes": 20
+    },
+    {
+      "name": "isGroupTagId__23MessageEditorMessageTagCFii",
+      "address": "803E9538",
+      "instructions": 10,
+      "bytes": 40
+    }
+  ],
+  "instruction_count": 959,
+  "reference_source_sha256": {
+    "StringUtil": "04f912c73c9ac771bf3fd3efaea8de644458774a6eab1932524b1799384189ae",
+    "MessageUtil": "894ee5e9cc4d85e386ef5a017e61df686eda7c1ec7e5be06bffd0027487b8840"
+  }
+}

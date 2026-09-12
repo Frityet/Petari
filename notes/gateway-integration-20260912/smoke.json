@@ -1,0 +1,364 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-showcase",
+    "gateway",
+    "--disc",
+    "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--max-frames",
+    "240",
+    "--width",
+    "1280",
+    "--height",
+    "720",
+    "--screenshot",
+    "/Users/frityet/Projects/petari/notes/gateway-integration-20260912/gateway.png",
+    "--screenshot-frame",
+    "210"
+  ],
+  "binary_sha256": "06c97208925e4effe69a5b7115cc89bd13724e6e0b6672d4b4845ea37f85e1cc",
+  "timeout": false,
+  "sdl_key_script": "60-100:w;120-125:space",
+  "frames": [
+    {
+      "wall_seconds": 2.155008291010745,
+      "tick": 11,
+      "present": 1
+    },
+    {
+      "wall_seconds": 2.250438540999312,
+      "tick": 17,
+      "present": 2
+    },
+    {
+      "wall_seconds": 2.333326374995522,
+      "tick": 23,
+      "present": 3
+    },
+    {
+      "wall_seconds": 2.4074867079616524,
+      "tick": 28,
+      "present": 4
+    },
+    {
+      "wall_seconds": 2.4677923749550246,
+      "tick": 32,
+      "present": 5
+    },
+    {
+      "wall_seconds": 2.5276144159724936,
+      "tick": 36,
+      "present": 6
+    },
+    {
+      "wall_seconds": 2.5769998749601655,
+      "tick": 39,
+      "present": 7
+    },
+    {
+      "wall_seconds": 2.6263974999892525,
+      "tick": 42,
+      "present": 8
+    },
+    {
+      "wall_seconds": 2.675754749972839,
+      "tick": 45,
+      "present": 9
+    },
+    {
+      "wall_seconds": 2.725109582999721,
+      "tick": 48,
+      "present": 10
+    },
+    {
+      "wall_seconds": 2.7749102499801666,
+      "tick": 51,
+      "present": 11
+    },
+    {
+      "wall_seconds": 2.8243644579779357,
+      "tick": 54,
+      "present": 12
+    },
+    {
+      "wall_seconds": 2.8737384579726495,
+      "tick": 57,
+      "present": 13
+    },
+    {
+      "wall_seconds": 2.9233887500013225,
+      "tick": 60,
+      "present": 14
+    },
+    {
+      "wall_seconds": 2.972661707957741,
+      "tick": 63,
+      "present": 15
+    },
+    {
+      "wall_seconds": 3.021919207996689,
+      "tick": 66,
+      "present": 16
+    },
+    {
+      "wall_seconds": 3.0710727910045534,
+      "tick": 69,
+      "present": 17
+    },
+    {
+      "wall_seconds": 3.1202024159720168,
+      "tick": 72,
+      "present": 18
+    },
+    {
+      "wall_seconds": 3.169376415957231,
+      "tick": 75,
+      "present": 19
+    },
+    {
+      "wall_seconds": 3.2188500000047497,
+      "tick": 78,
+      "present": 20
+    },
+    {
+      "wall_seconds": 3.267822415975388,
+      "tick": 81,
+      "present": 21
+    },
+    {
+      "wall_seconds": 3.316845875000581,
+      "tick": 84,
+      "present": 22
+    },
+    {
+      "wall_seconds": 3.3660422500106506,
+      "tick": 87,
+      "present": 23
+    },
+    {
+      "wall_seconds": 3.415067915979307,
+      "tick": 90,
+      "present": 24
+    },
+    {
+      "wall_seconds": 3.453649041010067,
+      "tick": 92,
+      "present": 25
+    },
+    {
+      "wall_seconds": 3.5027162909973413,
+      "tick": 95,
+      "present": 26
+    },
+    {
+      "wall_seconds": 3.551718540955335,
+      "tick": 98,
+      "present": 27
+    },
+    {
+      "wall_seconds": 3.6008103329804726,
+      "tick": 101,
+      "present": 28
+    },
+    {
+      "wall_seconds": 3.649811790965032,
+      "tick": 104,
+      "present": 29
+    },
+    {
+      "wall_seconds": 3.698781707964372,
+      "tick": 107,
+      "present": 30
+    },
+    {
+      "wall_seconds": 3.7478676249738783,
+      "tick": 110,
+      "present": 31
+    },
+    {
+      "wall_seconds": 3.7862969579873607,
+      "tick": 112,
+      "present": 32
+    },
+    {
+      "wall_seconds": 3.835282832966186,
+      "tick": 115,
+      "present": 33
+    },
+    {
+      "wall_seconds": 3.8845013749669306,
+      "tick": 118,
+      "present": 34
+    },
+    {
+      "wall_seconds": 3.9342942080111243,
+      "tick": 121,
+      "present": 35
+    },
+    {
+      "wall_seconds": 3.983742540993262,
+      "tick": 124,
+      "present": 36
+    },
+    {
+      "wall_seconds": 4.032909500005189,
+      "tick": 127,
+      "present": 37
+    },
+    {
+      "wall_seconds": 4.0818272909964435,
+      "tick": 130,
+      "present": 38
+    },
+    {
+      "wall_seconds": 4.130821415979881,
+      "tick": 133,
+      "present": 39
+    },
+    {
+      "wall_seconds": 4.169443457969464,
+      "tick": 135,
+      "present": 40
+    },
+    {
+      "wall_seconds": 4.218259499990381,
+      "tick": 138,
+      "present": 41
+    },
+    {
+      "wall_seconds": 4.267090040957555,
+      "tick": 141,
+      "present": 42
+    },
+    {
+      "wall_seconds": 4.315900957968552,
+      "tick": 144,
+      "present": 43
+    },
+    {
+      "wall_seconds": 4.364863874972798,
+      "tick": 147,
+      "present": 44
+    },
+    {
+      "wall_seconds": 4.40331966598751,
+      "tick": 149,
+      "present": 45
+    },
+    {
+      "wall_seconds": 4.452360499999486,
+      "tick": 152,
+      "present": 46
+    },
+    {
+      "wall_seconds": 4.503206749970559,
+      "tick": 155,
+      "present": 47
+    },
+    {
+      "wall_seconds": 4.554662874958012,
+      "tick": 158,
+      "present": 48
+    },
+    {
+      "wall_seconds": 4.606692166009452,
+      "tick": 161,
+      "present": 49
+    },
+    {
+      "wall_seconds": 4.65865037497133,
+      "tick": 164,
+      "present": 50
+    },
+    {
+      "wall_seconds": 4.710380415956024,
+      "tick": 167,
+      "present": 51
+    },
+    {
+      "wall_seconds": 4.762069957971107,
+      "tick": 170,
+      "present": 52
+    },
+    {
+      "wall_seconds": 4.814149999991059,
+      "tick": 173,
+      "present": 53
+    },
+    {
+      "wall_seconds": 4.8651572079979815,
+      "tick": 176,
+      "present": 54
+    },
+    {
+      "wall_seconds": 4.925304125004914,
+      "tick": 180,
+      "present": 55
+    },
+    {
+      "wall_seconds": 4.974700499966275,
+      "tick": 183,
+      "present": 56
+    },
+    {
+      "wall_seconds": 5.024217166006565,
+      "tick": 186,
+      "present": 57
+    },
+    {
+      "wall_seconds": 5.0735173329594545,
+      "tick": 189,
+      "present": 58
+    },
+    {
+      "wall_seconds": 5.122668416006491,
+      "tick": 192,
+      "present": 59
+    },
+    {
+      "wall_seconds": 5.171842999989167,
+      "tick": 195,
+      "present": 60
+    },
+    {
+      "wall_seconds": 5.220903999987058,
+      "tick": 198,
+      "present": 61
+    },
+    {
+      "wall_seconds": 5.269934665993787,
+      "tick": 201,
+      "present": 62
+    },
+    {
+      "wall_seconds": 5.318950665998273,
+      "tick": 204,
+      "present": 63
+    },
+    {
+      "wall_seconds": 5.367929040978197,
+      "tick": 207,
+      "present": 64
+    },
+    {
+      "wall_seconds": 5.417048582981806,
+      "tick": 210,
+      "present": 65
+    },
+    {
+      "wall_seconds": 5.965159582963679,
+      "tick": 230,
+      "present": 66
+    },
+    {
+      "wall_seconds": 6.114087374997325,
+      "tick": 240,
+      "present": 67
+    }
+  ],
+  "placement_summary_line": "[src/runtime/RuntimeContext.cpp:1787][APP - INFO] SMG semantic event placement:gateway_development_subset_summary (stage=HeavensDoorGalaxy;scenario=1;objects=242;ready=78;ignored=8;blocked=156;created=78;mode=supported_subset_for_development)",
+  "exit_code": 0,
+  "wall_seconds": 6.365324457990937,
+  "present_fps": 16.670543477384022,
+  "simulation_ticks_per_second": 57.84173418668093,
+  "screenshot_exists": true
+}

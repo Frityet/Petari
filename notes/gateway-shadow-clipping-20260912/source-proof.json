@@ -1,0 +1,13 @@
+{
+  "getShadowControllerCount(const LiveActor* pActor)": true,
+  "getShadowController(const LiveActor* pActor, u32 index)": true,
+  "getShadowController(const LiveActor* pActor, const char* pName)": true,
+  "isExistShadowController(const LiveActor* pActor, const char* pName)": true,
+  "calcClippingRangeIncludeShadow(TVec3f* pVecOutput, f32* pF32Output, const LiveActor* pActor, f32 a4)": true,
+  "setClippingRangeIncludeShadow(LiveActor* pActor, TVec3f* a2, f32 a3)": true,
+  "isShadowProjected(const LiveActor* pActor, const char* pName)": true,
+  "isShadowProjectedAny(const LiveActor* pActor)": true,
+  "getShadowProjectionPos(const LiveActor* pActor, const char* pName, TVec3f* pResult)": true,
+  "getShadowProjectionNormal(const LiveActor* pActor, const char* pName, TVec3f* pResult)": true,
+  "getShadowProjectionLength(const LiveActor* pActor, const char* pName)": true
+}

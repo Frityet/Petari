@@ -3,6 +3,8 @@
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NPC/NPCActor.hpp"
 #include "Game/NPC/NPCActorItem.hpp"
+#include "Game/NPC/NPCDirector.hpp"
+#include "Game/NPC/NPCParameter.hpp"
 #include "Game/LiveActor/ModelManager.hpp"
 #include "Game/LiveActor/RailRider.hpp"
 #include "Game/NPC/TalkMessageCtrl.hpp"
@@ -21,6 +23,7 @@
 #include "compat/GroupCheckManagerCompat.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "resource/BcsvTable.hpp"
+#include "resource/JMapResource.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "SceneExecutionFixture.hpp"
 
@@ -193,6 +196,104 @@ namespace {
         write_be32(bytes, 0x00U, entry_count);
         write_be32(bytes, 0x08U, 0x10U);
         return JMapInfo::from_bcsv(bytes);
+    }
+
+    std::vector<std::uint8_t> make_npc_item_table(bool sparse) {
+        // Deliberately shuffle the columns: NPCParameterReader must resolve
+        // the authored field hashes, independently of their physical order.
+        constexpr auto names = std::array<std::string_view, 4>{
+            "mGoods1", "mGoodsJoint0", "mGoods0", "mGoodsJoint1"};
+        constexpr auto values = std::array<std::array<std::string_view, 4>, 2>{
+            std::array<std::string_view, 4>{"Lantern", "HandL", "AuthoredNpcItemNameLongEnoughToRequireRetainedStorage", "HandR"},
+            std::array<std::string_view, 4>{"Book", "Head", "Glasses", "Spine"}};
+        const auto fields = sparse ? 1U : 4U;
+        const auto rows = sparse ? 1U : 2U;
+        const auto data_offset = 0x10U + fields * 0x0cU;
+        const auto entry_size = fields * 4U;
+        const auto string_offset = data_offset + rows * entry_size;
+        auto bytes = std::vector<std::uint8_t>(string_offset, 0U);
+        write_be32(bytes, 0x00U, rows);
+        write_be32(bytes, 0x04U, fields);
+        write_be32(bytes, 0x08U, data_offset);
+        write_be32(bytes, 0x0cU, entry_size);
+        for (auto field = 0U; field < fields; ++field) {
+            write_bcsv_field(bytes, field, names[field], field * 4U,
+                             smgpc::resource::BcsvFieldType::StringOffset);
+        }
+        for (auto row = 0U; row < rows; ++row) {
+            for (auto field = 0U; field < fields; ++field) {
+                write_be32(bytes, data_offset + row * entry_size + field * 4U,
+                           static_cast<std::uint32_t>(bytes.size() - string_offset));
+                const auto value = values[row][field];
+                bytes.insert(bytes.end(), value.begin(), value.end());
+                bytes.push_back(0U);
+            }
+        }
+        return bytes;
+    }
+
+    void testOriginalNPCItemData() {
+        auto* director = dynamic_cast<NPCDirector*>(MR::createSceneObj(SceneObj_NPCDirector));
+        require(director != nullptr && director->mDataResourceHolder != nullptr &&
+                    director->mItemParameterReader != nullptr,
+                "NPC item lookup requires the actual scene-owned director, NPCData archive and original reader");
+        auto table = smgpc::resource::JMapResource(make_npc_item_table(false));
+        auto sparse = smgpc::resource::JMapResource(make_npc_item_table(true));
+        auto resources = ResTable{};
+        resources.newFileInfoTable(3);
+        resources.add("TestNpcItem.bcsv", const_cast<void*>(table.data()), false);
+        resources.add("SparseNpcItem.bcsv", const_cast<void*>(sparse.data()), false);
+        resources.add("NullNpcItem.bcsv", nullptr, false);
+        struct RestoreResources {
+            ResourceHolder& holder;
+            ResTable* original;
+            ResTable& fixture;
+            NPCItemParameterReader& reader;
+            NPCActorItem original_item;
+            ~RestoreResources() {
+                holder.mFileInfoTable = original;
+                reader.copy(&original_item);
+                for (u32 index = 0; index < fixture.mCount; ++index) {
+                    delete[] fixture.mFileInfoTable[index].mName;
+                }
+                delete[] fixture.mFileInfoTable;
+            }
+        } restore{*director->mDataResourceHolder, director->mDataResourceHolder->mFileInfoTable,
+                  resources, *director->mItemParameterReader, director->mItemParameterReader->mItem};
+        director->mDataResourceHolder->mFileInfoTable = &resources;
+
+        auto item = NPCActorItem("TestNpc");
+        require(MR::getNPCItemData(&item, 0) && std::string_view(item.mActor) == "TestNpc" &&
+                    std::string_view(item.mGoods0) == "AuthoredNpcItemNameLongEnoughToRequireRetainedStorage" &&
+                    std::string_view(item.mGoods1) == "Lantern" &&
+                    std::string_view(item.mGoodsJoint0) == "HandL" &&
+                    std::string_view(item.mGoodsJoint1) == "HandR",
+                "original getter must resolve the actor table and all four named item fields");
+        const auto* retained_name = item.mGoods0;
+        require(MR::getNPCItemData(&item, 1) && std::string_view(item.mGoods0) == "Glasses" &&
+                    std::string_view(item.mGoods1) == "Book" &&
+                    std::string_view(item.mGoodsJoint0) == "Head" &&
+                    std::string_view(item.mGoodsJoint1) == "Spine" &&
+                    std::string_view(retained_name) == "AuthoredNpcItemNameLongEnoughToRequireRetainedStorage",
+                "row selection must use the original reader while prior borrowed strings outlive its local JMapInfo");
+        for (const auto row : {-1, 2}) {
+            const auto old_goods = item.mGoods0;
+            require(MR::getNPCItemData(&item, row) && item.mGoods0 == old_goods,
+                    "an existing NPC table returns true and preserves input for an out-of-range row");
+        }
+        item.mActor = "SparseNpc";
+        const auto old_goods = item.mGoods0;
+        const auto old_joint = item.mGoodsJoint0;
+        require(MR::getNPCItemData(&item, 0) && item.mGoods0 == old_goods &&
+                    item.mGoodsJoint0 == old_joint && std::string_view(item.mGoods1) == "Lantern",
+                "missing named columns must preserve caller values rather than retain another actor's reader state");
+        item.mActor = "MissingNpc";
+        require(!MR::getNPCItemData(&item, 0) && item.mGoods0 == old_goods,
+                "a missing actor item table must return false without changing the item");
+        item.mActor = "NullNpc";
+        require(MR::getNPCItemData(&item, 0) && item.mGoods0 == old_goods,
+                "a present null table must preserve retail attach-false behavior and leave copied defaults intact");
+        std::cout << "[proof] original NPC item table lookup, shuffled fields, rows, sparse/missing/null resources and retained strings\n";
     }
 
     JMapInfo make_open_rail_path_info() {
@@ -460,6 +561,7 @@ namespace {
         auto domain = smgpc::compat::JkrAllocationDomain::create(runtime.host_heaps(), 16U << 20);
         auto scene = smgpc::test::SceneExecutionFixture(runtime.scheduler(), domain);
         const auto game_allocations = smgpc::compat::JkrAllocationScope(domain);
+        testOriginalNPCItemData();
         auto actor = DirectFloatBaseProbe{};
         actor.initModelManagerWithAnm("Tico", "Tico", false);
         require(actor.mModelManager != nullptr && actor.mModelManager->getJ3DModel() != nullptr &&
@@ -605,9 +707,6 @@ int main() {
                    "null attribute-group insertion must remain an explicit contract error");
     ++passed;
 
-    auto item = NPCActorItem("TestNpc");
-    requireUnavailable([&] { (void)MR::getNPCItemData(&item, 0); },
-                       "missing NPC item-table data must be explicitly unavailable");
     requireUnavailable([] { (void)MR::checkPlayerSwingTrigger(); },
                        "missing real MarioActor swing state must be explicitly unavailable");
     {

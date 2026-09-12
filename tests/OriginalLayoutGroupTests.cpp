@@ -3,6 +3,7 @@
 #include "layout/Nw4rLayoutRecords.hpp"
 #include "resource/RarcArchive.hpp"
 #include "Game/Util/MessageUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
 #include "Game/Screen/SubMeterLayout.hpp"
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/Util/LayoutUtil.hpp"
@@ -264,6 +265,42 @@ void tags() {
     require(MR::countMessageLine(payload_newline) == 2, "packed tag payload newline is skipped with actual big-endian UTF16-word semantics");
     const wchar_t page_break[] = {L'a', L'\n', 0x1a, 0x0601, 1, L'b', L'\n', L'c', 0};
     require(MR::countMessageLine(page_break) == 2, "group1/tag1 terminates this page's original line count");
+    require(MR::getNextMessagePage(L"") == nullptr && MR::getNextMessagePage(L"a\nb\n") == nullptr &&
+                MR::getNextMessagePage(payload_newline) == nullptr,
+            "only a page-break tag advances pages; ordinary newlines and tag payload words do not");
+    require(MR::getNextMessagePage(page_break) == page_break + 5 &&
+                MR::getNextMessagePage(page_break + 5) == nullptr,
+            "page lookup returns the original borrowed next-page pointer and stops at the actual string end");
+    const wchar_t pages[] = {L'a', 0x1a, 0x0a00, 2, 0, L'\n', 0x1a, 0x0601, 1,
+                            L'\n', L'\n', L'b', 0x1a, 0x0601, 1, L'c', 0};
+    require(MR::getNextMessagePage(pages) == pages + 10 &&
+                MR::getNextMessagePage(pages + 10) == pages + 15 &&
+                MR::getNextMessagePage(pages + 15) == nullptr,
+            "page scan skips embedded zero/newline tag payloads, skips exactly one optional newline and supports repeated pages");
+    const wchar_t empty_last_page[] = {L'a', 0x1a, 0x0601, 1, L'\n', 0};
+    require(MR::getNextMessagePage(empty_last_page) == empty_last_page + 5 &&
+                MR::getNextMessagePage(empty_last_page + 5) == nullptr,
+            "a final page-break returns the empty last-page pointer before a subsequent scan returns null");
+    require(MR::getStringLengthWithMessageTag(L"") == 0 && MR::getStringLengthWithMessageTag(payload_newline) == 8 &&
+                MR::getStringLengthWithMessageTag(page_break) == 2 && MR::getStringLengthWithMessageTag(pages) == 6,
+            "original string length counts encoded tag words, skips embedded terminators and stops before next-page tags");
+    wchar_t picture[] = {0, 0, 0, 0, 0x7777};
+    require(MR::addPictureFontTag(picture, 'B') == picture + 3 && picture[4] == 0x7777 &&
+                MR::getStringLengthWithMessageTag(picture) == 3 && MR::countMessageLine(picture) == 1 &&
+                MR::getNextMessagePage(picture) == nullptr && !MR::isMessageEditorNextTag(picture),
+            "original picture tags produce retained UTF16 words consumable by the shared message parser");
+    require(MR::addPictureFontTag(picture, '0' + 0x10001) == picture + 3 && picture[2] == 1 && picture[4] == 0x7777 &&
+                MR::addPictureFontCode(picture, 0x10002) == picture + 1 && picture[0] == 2 && picture[1] == 0,
+            "picture tags and literal glyph codes preserve original 16-bit stores on wider native wchar_t hosts");
+    const wchar_t wide[] = {L'A', 0xE9, 0x100, L'B', 0};
+    char narrow[] = {0, 0, 0, 0x77};
+    require(MR::convertUTF16ToASCII(narrow, wide, 4) == 2 && narrow[0] == 'A' &&
+                static_cast<unsigned char>(narrow[1]) == 0xE9 && narrow[2] == 0 && narrow[3] == 0x77,
+            "original wide-to-byte conversion retains low-byte characters and terminates before a nonzero high byte");
+    const char slashless[] = "Message.arc";
+    const char path[] = "/MessageData/Message.arc";
+    require(MR::getBasename(slashless) == slashless && MR::getBasename(path) == path + 13,
+            "original basename returns the input without a slash and the final component otherwise");
     nw4r::ut::Color color(0x12345678); require(color.r == 0x12 && color.g == 0x34 && color.b == 0x56 && color.a == 0x78 && u32(color) == 0x12345678,
         "SDK packed RRGGBBAA colors preserve byte channels on little-endian hosts");
 }

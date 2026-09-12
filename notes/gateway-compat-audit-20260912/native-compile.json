@@ -1,0 +1,37 @@
+[
+  {
+    "file": "src/Game/MapObj/ClipAreaHolder.cpp",
+    "exit": 0,
+    "output": "In file included from src/Game/MapObj/ClipAreaHolder.cpp:7:\nIn file included from src/Game/Util.hpp:18:\nsrc/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]\n  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) NO_INLINE {\n      |                                                                                          ^\nsrc/Inline.hpp:5:34: note: expanded from macro 'NO_INLINE'\n    5 | #define NO_INLINE __attribute__((noinline))\n      |                                  ^\n1 warning generated.\n"
+  },
+  {
+    "file": "src/compat/OriginalShadowVolumeDraw.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "file": "src/compat/OriginalBinderFilterUtil.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "file": "src/compat/GameActorPhysicsCompat.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "file": "src/compat/SceneObjHolderCompat.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "file": "tests/GameActorPhysicsRealOrAbsentTests.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "file": "tests/OriginalCollisionPartsOwnerTests.cpp",
+    "exit": 0,
+    "output": ":\nIn file included from src/Game/System/ResourceHolder.hpp:5:\nsrc/JSystem/JKernel/JKRArchive.hpp:160:31: warning: 'countFile' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]\n  160 |     [[nodiscard]] virtual s32 countFile(const char*) const;\n      |                               ^\nsrc/JSystem/JKernel/JKRFileLoader.hpp:18:17: note: overridden virtual function is here\n   18 |     virtual s32 countFile(const char*) const = 0;\n      |                 ^\nIn file included from tests/OriginalCollisionPartsOwnerTests.cpp:9:\nIn file included from src/runtime/RuntimeContext.hpp:23:\nIn file included from src/compat/ResourceHolderCompat.hpp:3:\nIn file included from src/Game/System/ResourceHolder.hpp:5:\nsrc/JSystem/JKernel/JKRArchive.hpp:161:33: warning: 'getFirstFile' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]\n  161 |     [[nodiscard]] JKRArcFinder* getFirstFile(const char*) const;\n      |                                 ^\nsrc/JSystem/JKernel/JKRFileLoader.hpp:19:27: note: overridden virtual function is here\n   19 |     virtual JKRArcFinder* getFirstFile(const char*) const = 0;\n      |                           ^\nIn file included from tests/OriginalCollisionPartsOwnerTests.cpp:9:\nIn file included from src/runtime/RuntimeContext.hpp:23:\nIn file included from src/compat/ResourceHolderCompat.hpp:3:\nIn file included from src/Game/System/ResourceHolder.hpp:5:\nsrc/JSystem/JKernel/JKRArchive.hpp:180:41: warning: 'readResource' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]\n  180 |     [[nodiscard]] virtual std::uint32_t readResource(void *pBuffer, std::uint32_t bufferSize, const char *pPath) const {\n      |                                         ^\nsrc/JSystem/JKernel/JKRFileLoader.hpp:16:17: note: overridden virtual function is here\n   16 |     virtual u32 readResource(void*, u32, const char*) const = 0;\n      |                 ^\n6 warnings generated.\n"
+  }
+]

@@ -557,6 +557,10 @@ namespace MR {
         DemoFunction::resumeTimeKeepDemo(pActor);
     }
 
+    bool isPowerStarGetDemoActive() {
+        return GameSceneFunction::isExecStageClearDemo();
+    }
+
     const char* getCurrentDemoPartNameMain(const char* pName) {
         return DemoFunction::getCurrentDemoPartNameMain(pName);
     }

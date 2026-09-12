@@ -1,4 +1,5 @@
 #include <aurora/exception.hpp>
+#include <aurora/endian.hpp>
 #include "JSystem/JKernel/JKRArchive.hpp"
 #include "JSystem/JKernel/JKRFileFinder.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
@@ -15,6 +16,8 @@
 #endif
 
 namespace {
+    using aurora::endian::read_big;
+
     using Bytes = std::span<const std::uint8_t>;
     OSMutex loader_mutex;
     std::once_flag loader_mutex_initialized;
@@ -33,16 +36,6 @@ namespace {
         }
     }
 
-    u16 read_u16(Bytes data, std::size_t offset) {
-        require_range(data, offset, 2);
-        return static_cast<u16>((u16(data[offset]) << 8) | data[offset + 1]);
-    }
-
-    u32 read_u32(Bytes data, std::size_t offset) {
-        require_range(data, offset, 4);
-        return (u32(data[offset]) << 24) | (u32(data[offset + 1]) << 16) |
-               (u32(data[offset + 2]) << 8) | data[offset + 3];
-    }
 }
 
 u32 JKRArchive::sCurrentDirID = 0;
@@ -159,7 +152,7 @@ bool JKRMemArchive::mountFixed(void* data, JKRMemBreakFlag breakFlag) {
     // This SDK entry point has no length argument: its caller supplies a valid
     // RARC header and the declared buffer. Native callers can use the span API.
     const Bytes header(static_cast<const u8*>(data), sizeof(RarcHeader));
-    return mountFixed(Bytes(static_cast<const u8*>(data), read_u32(header, 4)), breakFlag);
+    return mountFixed(Bytes(static_cast<const u8*>(data), read_big<u32>(header, 4)), breakFlag);
 }
 
 bool JKRMemArchive::mountFixed(Bytes bytes, JKRMemBreakFlag breakFlag) {
@@ -169,7 +162,7 @@ bool JKRMemArchive::mountFixed(Bytes bytes, JKRMemBreakFlag breakFlag) {
     if (check_mount_already(reinterpret_cast<std::uintptr_t>(bytes.data())) != nullptr) return false;
     if (mIsMounted) return false;
     require_range(bytes, 0, sizeof(RarcHeader));
-    const u32 size = read_u32(bytes, 4);
+    const u32 size = read_big<u32>(bytes, 4);
     require_range(bytes, 0, size);
     if (size < 0x40) aurora::throw_host_exception<std::invalid_argument>("Fixed archive is smaller than its RARC header and info block");
     auto* heap = JKRHeap::findFromRoot(const_cast<u8*>(bytes.data()));
@@ -210,13 +203,13 @@ void JKRArchive::attach_archive(const smgpc::resource::RarcArchive* archive) {
     std::vector<SDIFileEntry> nativeFiles;
     std::vector<char> nativeStrings;
     const Bytes bytes = archive->bytes();
-    const std::size_t info = read_u32(bytes, 8);
+    const std::size_t info = read_big<u32>(bytes, 8);
     require_range(bytes, info, 0x20);
-    nativeInfo = {read_u32(bytes, info), read_u32(bytes, info + 4),
-                   read_u32(bytes, info + 8), read_u32(bytes, info + 12),
-                   read_u32(bytes, info + 16), read_u32(bytes, info + 20),
-                   read_u16(bytes, info + 24), read_u16(bytes, info + 26),
-                   read_u32(bytes, info + 28)};
+    nativeInfo = {read_big<u32>(bytes, info), read_big<u32>(bytes, info + 4),
+                   read_big<u32>(bytes, info + 8), read_big<u32>(bytes, info + 12),
+                   read_big<u32>(bytes, info + 16), read_big<u32>(bytes, info + 20),
+                   read_big<u16>(bytes, info + 24), read_big<u16>(bytes, info + 26),
+                   read_big<u32>(bytes, info + 28)};
     const std::size_t directories = info + nativeInfo.mDirOffset;
     const std::size_t files = info + nativeInfo.mFileOffset;
     const std::size_t strings = info + nativeInfo.mStringTableOffset;
@@ -239,9 +232,9 @@ void JKRArchive::attach_archive(const smgpc::resource::RarcArchive* archive) {
     nativeDirs.reserve(nativeInfo.mNrDirs);
     for (u32 i = 0; i < nativeInfo.mNrDirs; ++i) {
         const std::size_t offset = directories + std::size_t(i) * 0x10;
-        SDIDirEntry dir{read_u32(bytes, offset), read_u32(bytes, offset + 4),
-                        read_u16(bytes, offset + 8), read_u16(bytes, offset + 10),
-                        read_u32(bytes, offset + 12)};
+        SDIDirEntry dir{read_big<u32>(bytes, offset), read_big<u32>(bytes, offset + 4),
+                        read_big<u16>(bytes, offset + 8), read_big<u16>(bytes, offset + 10),
+                        read_big<u32>(bytes, offset + 12)};
         validate_name(dir.mNameOffset);
         if (dir.mFirstFileIndex > nativeInfo.mNrFiles ||
             dir.mNrFiles > nativeInfo.mNrFiles - dir.mFirstFileIndex) {
@@ -253,13 +246,13 @@ void JKRArchive::attach_archive(const smgpc::resource::RarcArchive* archive) {
     for (u32 i = 0; i < nativeInfo.mNrFiles; ++i) {
         const std::size_t offset = files + std::size_t(i) * 0x14;
         SDIFileEntry file{};
-        file.mFileID = read_u16(bytes, offset);
-        file.mHash = read_u16(bytes, offset + 2);
-        const u32 flags_and_name = read_u32(bytes, offset + 4);
+        file.mFileID = read_big<u16>(bytes, offset);
+        file.mHash = read_big<u16>(bytes, offset + 2);
+        const u32 flags_and_name = read_big<u32>(bytes, offset + 4);
         file.mFlag = flags_and_name >> 24;
         file.mNameOffset = flags_and_name & 0xffffff;
-        file.mDataOffset = read_u32(bytes, offset + 8);
-        file.mDataSize = read_u32(bytes, offset + 12);
+        file.mDataOffset = read_big<u32>(bytes, offset + 8);
+        file.mDataSize = read_big<u32>(bytes, offset + 12);
         file.mFileData = nullptr;
         validate_name(file.mNameOffset);
         if ((file.mFlag & FILE_FLAG_FOLDER) != 0 && file.mDirIndex >= nativeInfo.mNrDirs &&

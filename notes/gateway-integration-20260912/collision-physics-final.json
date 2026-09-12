@@ -1,0 +1,12 @@
+[
+  {
+    "target": "smg-pc-original-collision-parts-owner-tests",
+    "exit_code": -6,
+    "seconds": 1.18211799999699
+  },
+  {
+    "target": "smg-pc-game-actor-physics-real-or-absent-tests",
+    "exit_code": -6,
+    "seconds": 0.9609214999945834
+  }
+]

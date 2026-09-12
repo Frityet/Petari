@@ -49,6 +49,7 @@
 #include "compat/ActorMotionCompat.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/GameGravityCompat.hpp"
+#include "SceneExecutionFixture.hpp"
 
 #include <RVLFaceLib.h>
 #include <aurora/dvd.h>
@@ -844,6 +845,14 @@ namespace {
     }
 
     void test_kcl_collision_service_queries_and_binder_resolution() {
+        auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+        auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20);
+        auto scheduler = smgpc::runtime::SceneScheduler{};
+        auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
+        auto scene = smgpc::test::SceneExecutionFixture(scheduler, domain);
+        const auto game = smgpc::compat::JkrAllocationScope(domain);
+        require(scene.holder().create(SceneObj_CollisionDirector) != nullptr,
+                "original Binder queries require the actual scene-owned CollisionDirector");
         auto collision = smgpc::scene::StageCollisionService{};
         constexpr auto identity = std::array<float, 12U>{
             1.0F, 0.0F, 0.0F, 0.0F,
@@ -926,9 +935,9 @@ namespace {
                 "the native fixture should permit orthogonal floor and wall KCL sources");
         retry_collision.build();
         const auto capped_retry = retry_collision.move_sphere(
-            TVec3f{0.25F, 0.25F, 0.25F}, TVec3f{70.0F, 0.0F, 0.0F}, 0.5F, 1U);
+            TVec3f{0.25F, 0.25F, 0.25F}, TVec3f{80.0F, 0.0F, 0.0F}, 0.5F, 1U);
         const auto retry_center = TVec3f{0.25F, 0.25F, 0.25F} + capped_retry.displacement;
-        require(capped_retry.contacts.size() == 1U && retry_center.x > 23.0F && retry_center.x < 24.0F,
+        require(capped_retry.contacts.size() == 1U && std::abs(retry_center.x - (0.25F + 80.0F / 3.0F)) < 0.0001F,
                 "a full Binder plane array should still detect and stop at a projected-retry face without storing it");
         require(retry_center.y > 1.0F && retry_center.y < 2.0F,
                 "an unstored projected-retry face must not contribute another collision reaction");
@@ -1000,9 +1009,7 @@ namespace {
         zero_binder.mPosition.set(0.25F, -1.0F, 0.25F);
         zero_binder.initBinder(0.0F, 0.0F, 0U);
         smgpc::compat::integrate_live_actor_velocity(zero_binder);
-        const auto* zero_binder_contacts = smgpc::compat::actor_binder_contacts(&zero_binder);
-        require(smgpc::compat::has_actor_binder(&zero_binder) && zero_binder_contacts != nullptr &&
-                    zero_binder_contacts->ground &&
+        require(smgpc::compat::has_actor_binder(&zero_binder) && MR::isBindedGround(&zero_binder) &&
                     std::abs(zero_binder.mPosition.y - 1.2F) < 0.0001F &&
                     zero_binder.mBinder->mPlaneNum == 1U && zero_binder.mBinder->mPlane == nullptr,
                 "a zero-radius Binder should remain explicit and resolve a strict-interior point-prism hit");
@@ -1026,20 +1033,23 @@ namespace {
         matrix_binder.mPosition.set(0.25F, 4.25F, 0.25F);
         matrix_binder.initBinder(0.5F, 2.0F, 1U);
         smgpc::compat::integrate_live_actor_velocity(matrix_binder);
-        const auto* matrix_binder_contacts = smgpc::compat::actor_binder_contacts(&matrix_binder);
-        require(matrix_binder_contacts != nullptr && matrix_binder_contacts->ground &&
+        require(MR::isBindedGround(&matrix_binder) &&
                     std::abs(matrix_binder.mPosition.y - 5.7F) < 0.0001F,
                 "original Binder multiplies offset by the supplied raw matrix Y without normalization");
 
-        auto negative_scale_binder = LiveActor("negative-scale-binder-test");
+        auto negative_scale_binder = MatrixBinderActor{};
         negative_scale_binder.makeActorAppeared();
         negative_scale_binder.mPosition.set(0.25F, -2.0F, 0.25F);
         negative_scale_binder.mScale.set(1.0F, -1.0F, 1.0F);
-        negative_scale_binder.calcAndSetBaseMtx();
+        // Supply the actual scale-free model transform queried by Binder.
+        // Calling calcAndSetBaseMtx on a model-less LiveActor is invalid.
+        PSMTXIdentity(negative_scale_binder.matrix);
+        negative_scale_binder.matrix[0][3] = 0.25F;
+        negative_scale_binder.matrix[1][3] = -2.0F;
+        negative_scale_binder.matrix[2][3] = 0.25F;
         negative_scale_binder.initBinder(0.5F, 2.0F, 1U);
         smgpc::compat::integrate_live_actor_velocity(negative_scale_binder);
-        const auto* negative_scale_contacts = smgpc::compat::actor_binder_contacts(&negative_scale_binder);
-        require(negative_scale_contacts != nullptr && negative_scale_contacts->ground &&
+        require(MR::isBindedGround(&negative_scale_binder) &&
                     negative_scale_binder.mPosition.y > -1.0F,
                 "host model-scale sign should not invert the scale-free Binder offset basis");
 
@@ -1055,16 +1065,22 @@ namespace {
                 "the native fixture should permit a positive-X wall");
         collapsed_axis_collision.build();
         collapsed_axis_collision.activate();
-        auto collapsed_axis_binder = LiveActor("collapsed-axis-binder-test");
+        auto collapsed_axis_binder = MatrixBinderActor{};
         collapsed_axis_binder.makeActorAppeared();
         collapsed_axis_binder.mPosition.set(2.0F, -1.0F, 1.0F);
         collapsed_axis_binder.mRotation.set(0.0F, 0.0F, 90.0F);
         collapsed_axis_binder.mScale.zero();
-        collapsed_axis_binder.calcAndSetBaseMtx();
+        PSMTXIdentity(collapsed_axis_binder.matrix);
+        collapsed_axis_binder.matrix[0][0] = 0.0F;
+        collapsed_axis_binder.matrix[0][1] = -1.0F;
+        collapsed_axis_binder.matrix[1][0] = 1.0F;
+        collapsed_axis_binder.matrix[1][1] = 0.0F;
+        collapsed_axis_binder.matrix[0][3] = 2.0F;
+        collapsed_axis_binder.matrix[1][3] = -1.0F;
+        collapsed_axis_binder.matrix[2][3] = 1.0F;
         collapsed_axis_binder.initBinder(0.5F, 2.0F, 1U);
         smgpc::compat::integrate_live_actor_velocity(collapsed_axis_binder);
-        const auto* collapsed_axis_contacts = smgpc::compat::actor_binder_contacts(&collapsed_axis_binder);
-        require(collapsed_axis_contacts != nullptr && collapsed_axis_contacts->wall &&
+        require(MR::isBindedWall(&collapsed_axis_binder) &&
                     collapsed_axis_binder.mPosition.x > 3.0F,
                 "zero model scale must leave Binder's supplied raw-TR Y basis intact");
         collapsed_axis_collision.deactivate();
@@ -1095,6 +1111,14 @@ namespace {
     };
 
     void test_derived_actor_consumes_same_frame_binder_before_scheduler_returns() {
+        auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+        auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20);
+        auto scheduler = smgpc::runtime::SceneScheduler{};
+        auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
+        auto scene = smgpc::test::SceneExecutionFixture(scheduler, domain);
+        const auto game = smgpc::compat::JkrAllocationScope(domain);
+        require(scene.holder().create(SceneObj_CollisionDirector) != nullptr,
+                "same-frame original Binder queries require the real CollisionDirector");
         auto collision = smgpc::scene::StageCollisionService{};
         constexpr auto identity = std::array<float, 12U>{
             1.0F, 0.0F, 0.0F, 0.0F,
@@ -1106,12 +1130,12 @@ namespace {
         collision.build();
         collision.activate();
 
-        auto scheduler = smgpc::runtime::SceneScheduler{};
         auto actor = DerivedMovementBinderProbe{};
         actor.mPosition.set(0.25F, 0.75F, 0.25F);
         actor.makeActorAppeared();
         actor.initBinder(0.5F, 0.0F, 1U);
         scheduler.connect_name_obj(actor, 0, -1, -1, -1);
+        scene.complete_initialization();
         scheduler.execute_movement();
 
         require(actor.control_count == 1 && actor.saw_fresh_ground,
@@ -1356,13 +1380,11 @@ namespace {
                 "the grounded fallback test requires the exact scene-owned gravity manager");
         actor.mGravity.zero();
         smgpc::compat::register_actor_binder(&actor);
-        auto grounded_contacts = smgpc::compat::ActorBinderContactState{};
-        grounded_contacts.ground = true;
-        grounded_contacts.ground_normal.set(0.0F, 2.0F, 0.0F);
-        smgpc::compat::record_actor_binder_contacts(&actor, grounded_contacts);
+        actor.mBinder->_C8 = 0.0F;
+        actor.mBinder->mGroundInfo.mParentTriangle.mNormals[0].set(0.0F, 2.0F, 0.0F);
         MR::calcGravityOrZero(&actor);
-        require(actor.mGravity.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.00001F),
-                "calcGravityOrZero should retain the original grounded-normal fallback");
+        require(actor.mGravity.epsilonEquals(TVec3f{0.0F, -2.0F, 0.0F}, 0.00001F),
+                "calcGravityOrZero copies the negated original contact normal without renormalizing it");
     }
 
     struct SpineProbeState {
@@ -1489,7 +1511,12 @@ namespace {
     };
 }  // namespace
 
-int main() {
+int main(int argc, char** argv) {
+    if (argc != 1 && (argc != 3 || std::string_view(argv[1]) != "--filter")) {
+        std::cerr << "Usage: " << argv[0] << " [--filter name-substring]\n";
+        return 2;
+    }
+    const auto filter = argc == 3 ? std::string_view(argv[2]) : std::string_view{};
     const auto tests = std::array{
         TestCase{"revolution headers and input defaults", test_revolution_headers_and_input_defaults},
         TestCase{"GamePad buttons use Aurora without runtime context", test_game_pad_buttons_use_aurora_without_runtime_context},
@@ -1525,7 +1552,10 @@ int main() {
     };
 
     auto failures = 0;
+    auto selected = 0U;
     for (const auto &test : tests) {
+        if (test.name.find(filter) == std::string_view::npos) continue;
+        ++selected;
         try {
             test.run();
             std::cout << "[ok] " << test.name << '\n';
@@ -1535,11 +1565,15 @@ int main() {
         }
     }
 
+    if (selected == 0) {
+        std::cerr << "No Aurora-native tests match the requested filter\n";
+        return 2;
+    }
     if (failures != 0) {
         std::cerr << failures << " Aurora-native test(s) failed\n";
         return 1;
     }
 
-    std::cout << tests.size() << " Aurora-native test(s) passed\n";
+    std::cout << selected << " Aurora-native test(s) passed\n";
     return 0;
 }

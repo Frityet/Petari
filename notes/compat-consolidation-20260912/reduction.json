@@ -1,0 +1,23 @@
+{
+  "baseline": "2fa4fcbe72fd4c7863ee4ce697e520f7690a5a00",
+  "scope": "src/compat/**/*.cpp; includes original owner additions earlier in this checkpoint",
+  "before": {
+    "files": 280,
+    "lines": 48377
+  },
+  "after": {
+    "files": 277,
+    "lines": 46421
+  },
+  "net_lines_removed": 1956,
+  "deleted_cpp": [
+    "src/compat/FileSelectFuncSource.cpp",
+    "src/compat/OriginalArchiveString.cpp",
+    "src/compat/OriginalMarioSound.cpp",
+    "src/compat/OriginalMessageLineQueries.cpp",
+    "src/compat/OriginalStringScan.cpp",
+    "src/compat/StarPieceCompat.cpp",
+    "src/compat/StringComparisonCompat.cpp",
+    "src/compat/StringUtilCompat.cpp"
+  ]
+}

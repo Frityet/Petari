@@ -1,0 +1,26 @@
+{
+  "decomp": [
+    "configure.py",
+    "include/Game/NPC/NPCDirector.hpp",
+    "src/Game/NPC/NPCFunction.cpp",
+    "src/Game/Util/NPCUtil.cpp",
+    "src/Game/Util/MessageUtil.cpp"
+  ],
+  "root": [
+    "src/Game/NPC/NPCDirector.hpp",
+    "src/Game/NPC/NPCFunction.cpp",
+    "src/Game/Util/NPCUtil.cpp",
+    "src/Game/Util/MessageUtil.cpp",
+    "src/Game/Util/ShareUtil.cpp",
+    "src/Game/Util/ShareUtil.hpp",
+    "src/compat/NPCActorRuntimeCompat.cpp",
+    "src/compat/OriginalMessageLineQueries.cpp",
+    "tests/NPCActorRealOrAbsentTests.cpp",
+    "tests/SceneObjHolderRealOrAbsentTests.cpp",
+    "tests/OriginalLayoutGroupTests.cpp"
+  ],
+  "parent_integration": [
+    "src/compat/SceneObjHolderCompat.cpp"
+  ],
+  "notes": "notes/gateway-rabbit-20260912 (force-add source/text evidence only; .o binaries remain local)"
+}

@@ -1,4 +1,5 @@
 #include "Game/Util/MessageUtil.hpp"
+#include "Game/Screen/MessageEditorMessageTag.hpp"
 #include "Game/Map/RaceManager.hpp"
 #include "Game/NPC/TalkMessageInfo.hpp"
 #include "Game/System/MessageHolder.hpp"
@@ -56,14 +57,52 @@ namespace MR {
         TalkMessageInfo messageInfo = TalkMessageInfo();
 
         return MessageSystem::getGameMessageDirect(&messageInfo, pMessageId) &&
-               getStringLengthWithMessageTag(reinterpret_cast< wchar_t* >(messageInfo._0)) != nullptr;
+               getStringLengthWithMessageTag(reinterpret_cast< wchar_t* >(messageInfo._0)) != 0;
     }
 
     // getMessageLine
-    // countMessageLine
+    s32 countMessageLine(const wchar_t* pMessage) {
+        s32 count = 1;
+        while (*pMessage != 0) {
+            if (*pMessage == 0x1A) {
+                pMessage++;
+                MessageEditorMessageTag tag(pMessage);
+                pMessage += tag.getSkipLength();
+                if (tag.isGroupTagId(1, 1)) {
+                    break;
+                }
+            } else {
+                if (*pMessage == L'\n') {
+                    count++;
+                }
+                pMessage++;
+            }
+        }
+        return count;
+    }
     // countMessageChar
     // countMessageFigure
-    // getNextMessagePage
+    const wchar_t* getNextMessagePage(const wchar_t* pMessage) {
+        while (*pMessage != 0) {
+            if (*pMessage == 0x1A) {
+                pMessage++;
+                MessageEditorMessageTag tag(pMessage);
+                pMessage += tag.getSkipLength();
+
+                if (tag.isGroupTagId(1, 1)) {
+                    if (*pMessage == L'\n') {
+                        pMessage++;
+                    }
+
+                    return pMessage;
+                }
+            } else {
+                pMessage++;
+            }
+        }
+
+        return nullptr;
+    }
 
     const wchar_t* getGalaxyNameOnCurrentLanguage(const char* pGalaxyName) {
         char messageId[MESSAGE_ID_BUFFER_SIZE];
@@ -94,3 +133,11 @@ namespace MR {
         snprintf(pDst, bufferSize, "CometName_%s", pCometName);
     }
 };  // namespace MR
+
+bool MessageEditorMessageTag::isGroupTagId(int group, int tag) const {
+#if defined(TARGET_PC)
+    return (static_cast< u32 >(*mMessage) & 0xFFU) == group && mMessage[1] == tag;
+#else
+    return reinterpret_cast< const u8* >(mMessage)[1] == group && mMessage[1] == tag;
+#endif
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "reference": "decomp/src/Game/MapObj/ClipAreaHolder.cpp",
+    "port": "src/Game/MapObj/ClipAreaHolder.cpp",
+    "identical": true,
+    "sha256": "cb17ec6c5ebff9e30aa29962f114f7079b779037aa47be6322ef2cc07c9e0940"
+  },
+  {
+    "reference": "decomp/include/Game/MapObj/ClipAreaHolder.hpp",
+    "port": "src/Game/MapObj/ClipAreaHolder.hpp",
+    "identical": true,
+    "sha256": "a8f3658049f31d65ba46928eb526da56fc4e88a6b5331b96b6729f7fa6235511"
+  },
+  {
+    "reference": "decomp/include/Game/MapObj/ClipArea.hpp",
+    "port": "src/Game/MapObj/ClipArea.hpp",
+    "identical": true,
+    "sha256": "015137cfbb3a9aa6f3d679b9344a58635ce88c0cf14e2da3c1b74b81667eb075"
+  },
+  {
+    "reference": "decomp/include/Game/Util/DrawUtil.hpp",
+    "port": "src/Game/Util/DrawUtil.hpp",
+    "identical": true,
+    "sha256": "d7705d7f3833324371bc66f248922e0c21796874642e896ed974eee3badad4bb"
+  },
+  {
+    "reference": "decomp/src/Game/Util/DrawUtil.cpp",
+    "port": "src/compat/OriginalShadowVolumeDraw.cpp",
+    "body_identical": true,
+    "sha256": "f057e7fd6b04922843b7d7bf300ec2c536c91fec0927ec0e00fe290a81acd17e"
+  },
+  {
+    "reference": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "port": "src/compat/OriginalBinderFilterUtil.cpp",
+    "body_identical": true,
+    "sha256": "64caaa1fae1b67041925038e19827ed7401da7a59637a0e4a86c35db19dbc10c"
+  }
+]

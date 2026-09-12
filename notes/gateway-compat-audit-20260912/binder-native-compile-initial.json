@@ -1,0 +1,47 @@
+[
+  {
+    "path": "src/compat/OriginalBinderQueries.cpp",
+    "exit": 1,
+    "output": "nalBinderQueries.cpp:67:16: note: jump bypasses variable initialization\n   67 |         TVec3f diff(roofPower);\n      |                ^\nsrc/compat/OriginalBinderQueries.cpp:63:16: note: jump bypasses variable initialization\n   63 |         TVec3f groundPower;\n      |                ^\nsrc/compat/OriginalBinderQueries.cpp:62:16: note: jump bypasses variable initialization\n   62 |         TVec3f roofPower;\n      |                ^\nsrc/compat/OriginalBinderQueries.cpp:61:24: note: jump bypasses variable initialization\n   61 |         const HitInfo* pGroundInfo = &binder->mGroundInfo;\n      |                        ^\nsrc/compat/OriginalBinderQueries.cpp:60:24: note: jump bypasses variable initialization\n   60 |         const HitInfo* pRoofInfo = &binder->mRoofInfo;\n      |                        ^\nsrc/compat/OriginalBinderQueries.cpp:59:23: note: jump bypasses variable initialization\n   59 |         const Binder* binder = pActor->mBinder;\n      |                       ^\n1 error generated.\n"
+  },
+  {
+    "path": "src/compat/GameActorPhysicsCompat.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "path": "src/compat/GameGravityCompat.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "path": "src/compat/ActorMotionCompat.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "path": "src/runtime/RuntimeServices.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "path": "tests/GameActorPhysicsRealOrAbsentTests.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "path": "tests/OriginalCollisionPartsOwnerTests.cpp",
+    "exit": 0,
+    "output": ""
+  },
+  {
+    "path": "tests/AuroraNativeTests.cpp",
+    "exit": 0,
+    "output": ""
+  }
+]

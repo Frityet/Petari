@@ -8,6 +8,8 @@
 #include "Game/Player/MarioHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/SceneUtil.hpp"
+#include "Game/Util/ShareUtil.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
@@ -89,6 +91,20 @@ namespace {
                 "SceneObj 0x32 must be the exact scene-owned PlanetGravityManager");
         require(MR::createSceneObj(SceneObj_PlanetGravityManager) == gravity_manager,
                 "repeated gravity-manager creation must return the scene singleton");
+
+        auto* resources = dynamic_cast<ResourceShare*>(MR::createSceneObj(SceneObj_ResourceShare));
+        require(resources != nullptr &&
+                    MR::getSceneObj<ResourceShare>(SceneObj_ResourceShare) == resources &&
+                    MR::createSceneObj(SceneObj_ResourceShare) == resources &&
+                    smgpc::resource::decode_cp932(resources->getName()) == "資源共有機構" &&
+                    resources->_14 == 0U && resources->_C != nullptr && resources->_10 != nullptr &&
+                    resources->_C != resources->_10,
+                "ResourceShare must be the original scene singleton with its distinct original buffers and empty count");
+        auto& scene_heap = smgpc::scene::current_scene_allocation_domain()->heap();
+        require(JKRHeap::findFromRoot(resources) == &scene_heap &&
+                    JKRHeap::findFromRoot(resources->_C) == &scene_heap &&
+                    JKRHeap::findFromRoot(resources->_10) == &scene_heap,
+                "the original ResourceShare object and both buffers must share the scene arena lifetime");
 
         auto* collision = dynamic_cast<CollisionDirector*>(MR::createSceneObj(SceneObj_CollisionDirector));
         require(collision && MR::getCollisionDirector() == collision &&

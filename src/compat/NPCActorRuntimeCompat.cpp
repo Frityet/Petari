@@ -227,10 +227,6 @@ namespace MR {
         setBckFrame(actor, static_cast<f32>(randomFrame));
     }
 
-    bool getNPCItemData(NPCActorItem*, s32) {
-        aurora::throw_host_exception<std::logic_error>("NPC item-table data is unavailable without the real NPC item parameter table.");
-    }
-
     bool isNPCItemFileExist(const char* name) {
         if (name == nullptr || *name == '\0') {
             return false;

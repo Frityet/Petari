@@ -1,0 +1,26 @@
+[
+  {
+    "target": "smg-pc-original-message-holder-tests",
+    "build_exit": 0,
+    "run_exit": 1,
+    "seconds": 4.969485000008717
+  },
+  {
+    "target": "smg-pc-original-layout-group-tests",
+    "build_exit": 0,
+    "run_exit": 0,
+    "seconds": 6.344373875006568
+  },
+  {
+    "target": "smg-pc-message-real-or-absent-tests",
+    "build_exit": 0,
+    "run_exit": 0,
+    "seconds": 4.611720375018194
+  },
+  {
+    "target": "smg-pc-restart-stage-session-tests",
+    "build_exit": 0,
+    "run_exit": -6,
+    "seconds": 5.103508125001099
+  }
+]

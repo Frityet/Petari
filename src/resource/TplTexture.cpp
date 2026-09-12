@@ -1,14 +1,15 @@
 #include <aurora/exception.hpp>
+#include <aurora/endian.hpp>
 #include "TplTexture.hpp"
 
 #include <algorithm>
 #include <array>
-#include <bit>
 #include <optional>
 #include <stdexcept>
 
 namespace smgpc::resource {
     namespace {
+        using aurora::endian::read_big;
 
         enum class TlutFormat : std::uint32_t {
             IA8 = 0x0,
@@ -50,31 +51,6 @@ namespace smgpc::resource {
             std::uint8_t b = 0U;
             std::uint8_t a = 0U;
         };
-
-        [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
-            if (offset + 2U > data.size()) {
-                aurora::throw_host_exception<std::runtime_error>("TPL read past end of buffer");
-            }
-
-            return static_cast<std::uint16_t>((static_cast<std::uint16_t>(data[offset]) << 8U) | static_cast<std::uint16_t>(data[offset + 1U]));
-        }
-
-        [[nodiscard]] std::int16_t read_sbe16(std::span<const std::uint8_t> data, std::size_t offset) {
-            const auto value = read_be16(data, offset);
-            return value < 0x8000U ? static_cast<std::int16_t>(value) : static_cast<std::int16_t>(static_cast<int>(value) - 0x10000);
-        }
-
-        [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
-            if (offset + 4U > data.size()) {
-                aurora::throw_host_exception<std::runtime_error>("TPL read past end of buffer");
-            }
-
-            return (static_cast<std::uint32_t>(data[offset]) << 24U) | (static_cast<std::uint32_t>(data[offset + 1U]) << 16U) | (static_cast<std::uint32_t>(data[offset + 2U]) << 8U) | static_cast<std::uint32_t>(data[offset + 3U]);
-        }
-
-        [[nodiscard]] float read_be_f32(std::span<const std::uint8_t> data, std::size_t offset) {
-            return std::bit_cast<float>(read_be32(data, offset));
-        }
 
         [[nodiscard]] std::uint8_t expand3(std::uint8_t value) {
             return static_cast<std::uint8_t>((value << 5U) | (value << 2U) | (value >> 1U));
@@ -135,9 +111,9 @@ namespace smgpc::resource {
             const auto sub_block_offset = (sub_block_y * 2U + sub_block_x) * 8U;
             const auto offset = static_cast<std::size_t>(block_offset + sub_block_offset);
 
-            const auto color0_value = read_be16(texture, offset);
-            const auto color1_value = read_be16(texture, offset + 2U);
-            const auto indices = read_be32(texture, offset + 4U);
+            const auto color0_value = read_big<std::uint16_t>(texture, offset);
+            const auto color1_value = read_big<std::uint16_t>(texture, offset + 2U);
+            const auto indices = read_big<std::uint32_t>(texture, offset + 4U);
             const auto color0 = decode_rgb565(color0_value);
             const auto color1 = decode_rgb565(color1_value);
 
@@ -163,7 +139,7 @@ namespace smgpc::resource {
                 aurora::throw_host_exception<std::runtime_error>("TPL palette index outside CLUT");
             }
 
-            const auto value = read_be16(texture_data, clut.data_offset + static_cast<std::size_t>(index) * 2U);
+            const auto value = read_big<std::uint16_t>(texture_data, clut.data_offset + static_cast<std::size_t>(index) * 2U);
             switch (clut.format) {
             case TlutFormat::IA8:
                 return decode_ia8(value);
@@ -177,20 +153,20 @@ namespace smgpc::resource {
         }
 
         [[nodiscard]] TplDescriptor read_descriptor(std::span<const std::uint8_t> data, std::uint32_t descriptor_index) {
-            if (read_be32(data, 0U) != 0x0020AF30U) {
+            if (read_big<std::uint32_t>(data, 0U) != 0x0020AF30U) {
                 aurora::throw_host_exception<std::runtime_error>("TPL has unexpected version magic");
             }
 
-            const auto descriptor_count = read_be32(data, 4U);
-            const auto descriptor_array_offset = read_be32(data, 8U);
+            const auto descriptor_count = read_big<std::uint32_t>(data, 4U);
+            const auto descriptor_array_offset = read_big<std::uint32_t>(data, 8U);
             if (descriptor_index >= descriptor_count) {
                 aurora::throw_host_exception<std::runtime_error>("TPL descriptor index outside palette");
             }
 
             const auto descriptor_offset = descriptor_array_offset + descriptor_index * 8U;
             return {
-                .texture_header_offset = read_be32(data, descriptor_offset),
-                .clut_header_offset = read_be32(data, descriptor_offset + 4U),
+                .texture_header_offset = read_big<std::uint32_t>(data, descriptor_offset),
+                .clut_header_offset = read_big<std::uint32_t>(data, descriptor_offset + 4U),
             };
         }
 
@@ -200,15 +176,15 @@ namespace smgpc::resource {
             }
 
             return {
-                .height = read_be16(data, offset),
-                .width = read_be16(data, offset + 2U),
-                .format = static_cast<TplTextureFormat>(read_be32(data, offset + 4U)),
-                .data_offset = read_be32(data, offset + 8U),
-                .wrap_s = read_be32(data, offset + 12U),
-                .wrap_t = read_be32(data, offset + 16U),
-                .min_filter = read_be32(data, offset + 20U),
-                .mag_filter = read_be32(data, offset + 24U),
-                .lod_bias = read_be_f32(data, offset + 28U),
+                .height = read_big<std::uint16_t>(data, offset),
+                .width = read_big<std::uint16_t>(data, offset + 2U),
+                .format = static_cast<TplTextureFormat>(read_big<std::uint32_t>(data, offset + 4U)),
+                .data_offset = read_big<std::uint32_t>(data, offset + 8U),
+                .wrap_s = read_big<std::uint32_t>(data, offset + 12U),
+                .wrap_t = read_big<std::uint32_t>(data, offset + 16U),
+                .min_filter = read_big<std::uint32_t>(data, offset + 20U),
+                .mag_filter = read_big<std::uint32_t>(data, offset + 24U),
+                .lod_bias = read_big<float>(data, offset + 28U),
                 .edge_lod_enable = data[offset + 32U] != 0U,
                 .min_lod = data[offset + 33U],
                 .max_lod = data[offset + 34U],
@@ -222,10 +198,10 @@ namespace smgpc::resource {
             }
 
             return {
-                .entries = read_be16(data, offset),
+                .entries = read_big<std::uint16_t>(data, offset),
                 .unpacked = data[offset + 2U] != 0U,
-                .format = static_cast<TlutFormat>(read_be32(data, offset + 4U)),
-                .data_offset = read_be32(data, offset + 8U),
+                .format = static_cast<TlutFormat>(read_big<std::uint32_t>(data, offset + 4U)),
+                .data_offset = read_big<std::uint32_t>(data, offset + 8U),
             };
         }
 
@@ -338,15 +314,15 @@ namespace smgpc::resource {
             }
             case TplTextureFormat::IA8: {
                 const auto offset = tiled_byte_offset(header.width, x, y, 4U, 4U, 32U, 2U);
-                return decode_ia8(read_be16(texture, offset));
+                return decode_ia8(read_big<std::uint16_t>(texture, offset));
             }
             case TplTextureFormat::RGB565: {
                 const auto offset = tiled_byte_offset(header.width, x, y, 4U, 4U, 32U, 2U);
-                return decode_rgb565(read_be16(texture, offset));
+                return decode_rgb565(read_big<std::uint16_t>(texture, offset));
             }
             case TplTextureFormat::RGB5A3: {
                 const auto offset = tiled_byte_offset(header.width, x, y, 4U, 4U, 32U, 2U);
-                return decode_rgb5a3(read_be16(texture, offset));
+                return decode_rgb5a3(read_big<std::uint16_t>(texture, offset));
             }
             case TplTextureFormat::RGBA8: {
                 const auto base = (static_cast<std::size_t>(y / 4U) * width_blocks(header.width, 4U) + (x / 4U)) * 64U;
@@ -374,7 +350,7 @@ namespace smgpc::resource {
                     aurora::throw_host_exception<std::runtime_error>("TPL C14X2 texture missing CLUT");
                 }
                 const auto offset = tiled_byte_offset(header.width, x, y, 4U, 4U, 32U, 2U);
-                return decode_palette(data, *clut, static_cast<std::uint16_t>(read_be16(texture, offset) & 0x3FFFU));
+                return decode_palette(data, *clut, static_cast<std::uint16_t>(read_big<std::uint16_t>(texture, offset) & 0x3FFFU));
             }
             case TplTextureFormat::CMPR:
                 return read_cmpr_texel(texture, header.width, x, y);
@@ -460,13 +436,13 @@ namespace smgpc::resource {
     }
 
     TplPalette read_tpl_palette(std::span<const std::uint8_t> data) {
-        const auto version = read_be32(data, 0U);
+        const auto version = read_big<std::uint32_t>(data, 0U);
         if (version != 0x0020AF30U) {
             aurora::throw_host_exception<std::runtime_error>("TPL has unexpected version magic");
         }
 
-        const auto descriptor_count = read_be32(data, 4U);
-        const auto descriptor_array_offset = read_be32(data, 8U);
+        const auto descriptor_count = read_big<std::uint32_t>(data, 4U);
+        const auto descriptor_array_offset = read_big<std::uint32_t>(data, 8U);
         if (descriptor_array_offset + descriptor_count * 8U > data.size()) {
             aurora::throw_host_exception<std::runtime_error>("TPL descriptor array outside buffer");
         }
@@ -503,13 +479,13 @@ namespace smgpc::resource {
         auto texture = BtiTexture {
             .format = static_cast<TplTextureFormat>(data[0x00U]),
             .transparency = data[0x01U],
-            .width = read_be16(data, 0x02U),
-            .height = read_be16(data, 0x04U),
+            .width = read_big<std::uint16_t>(data, 0x02U),
+            .height = read_big<std::uint16_t>(data, 0x04U),
             .wrap_s = data[0x06U],
             .wrap_t = data[0x07U],
             .palette_format = data[0x08U],
-            .palette_entry_count = read_be16(data, 0x0AU),
-            .palette_data_offset = read_be32(data, 0x0CU),
+            .palette_entry_count = read_big<std::uint16_t>(data, 0x0AU),
+            .palette_data_offset = read_big<std::uint32_t>(data, 0x0CU),
             .mipmap = data[0x10U] != 0U,
             .do_edge_lod = data[0x11U] != 0U,
             .bias_clamp = data[0x12U] != 0U,
@@ -519,8 +495,8 @@ namespace smgpc::resource {
             .min_lod = data[0x16U],
             .max_lod = data[0x17U],
             .image_count = data[0x18U],
-            .lod_bias = read_sbe16(data, 0x1AU),
-            .image_data_offset = read_be32(data, 0x1CU),
+            .lod_bias = read_big<std::int16_t>(data, 0x1AU),
+            .image_data_offset = read_big<std::uint32_t>(data, 0x1CU),
             .image_data_size = 0U,
             .image_levels = {},
             .image_data = {},

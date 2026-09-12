@@ -1,4 +1,5 @@
 #include <aurora/exception.hpp>
+#include <aurora/endian.hpp>
 #include "BmgMessageArchive.hpp"
 
 #include <algorithm>
@@ -13,6 +14,7 @@
 
 namespace smgpc::resource {
     namespace {
+        using aurora::endian::read_big;
 
         constexpr std::uint64_t MESG_MAGIC = 0x4d455347626d6731;
         constexpr std::uint8_t UTF16_ENCODING_SIZE = 2;
@@ -145,40 +147,19 @@ namespace smgpc::resource {
             return tags;
         }
 
-        [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
-            if (offset + 2U > data.size()) {
-                aurora::throw_host_exception<std::runtime_error>("BMG read past end of buffer");
-            }
-
-            return static_cast<std::uint16_t>((static_cast<std::uint16_t>(data[offset]) << 8U) | data[offset + 1U]);
-        }
-
-        [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
-            if (offset + 4U > data.size()) {
-                aurora::throw_host_exception<std::runtime_error>("BMG read past end of buffer");
-            }
-
-            return (static_cast<std::uint32_t>(data[offset]) << 24U) | (static_cast<std::uint32_t>(data[offset + 1U]) << 16U) |
-                   (static_cast<std::uint32_t>(data[offset + 2U]) << 8U) | data[offset + 3U];
-        }
-
-        [[nodiscard]] std::uint64_t read_be64(std::span<const std::uint8_t> data, std::size_t offset) {
-            return (static_cast<std::uint64_t>(read_be32(data, offset)) << 32U) | read_be32(data, offset + 4U);
-        }
-
         [[nodiscard]] BmgHeader read_bmg_header(std::span<const std::uint8_t> data) {
-            if (data.size() < BMG_HEADER_SIZE || read_be64(data, 0U) != MESG_MAGIC) {
+            if (data.size() < BMG_HEADER_SIZE || read_big<std::uint64_t>(data, 0U) != MESG_MAGIC) {
                 aurora::throw_host_exception<std::runtime_error>("BMG data is not a MESGbmg1 file");
             }
 
-            const auto file_size = read_be32(data, 0x08U);
+            const auto file_size = read_big<std::uint32_t>(data, 0x08U);
             if (file_size > data.size()) {
                 aurora::throw_host_exception<std::runtime_error>("BMG declared file size is outside buffer");
             }
 
             return BmgHeader {
                 .declared_file_size = file_size,
-                .block_count = read_be32(data, 0x0cU),
+                .block_count = read_big<std::uint32_t>(data, 0x0cU),
                 .encoding = data[0x10U],
             };
         }
@@ -193,7 +174,7 @@ namespace smgpc::resource {
                     aurora::throw_host_exception<std::runtime_error>("BMG block header is outside file");
                 }
 
-                const auto block_size = read_be32(data, cursor + 4U);
+                const auto block_size = read_big<std::uint32_t>(data, cursor + 4U);
                 if (block_size < BMG_BLOCK_HEADER_SIZE) {
                     aurora::throw_host_exception<std::runtime_error>("BMG block size is outside file");
                 }
@@ -253,9 +234,9 @@ namespace smgpc::resource {
             }
 
             auto flow = BmgFlowData {
-                .node_count = read_be16(flw, 0x08U),
-                .branch_count = read_be16(flw, 0x0aU),
-                .unknown_0c = read_be32(flw, 0x0cU),
+                .node_count = read_big<std::uint16_t>(flw, 0x08U),
+                .branch_count = read_big<std::uint16_t>(flw, 0x0aU),
+                .unknown_0c = read_big<std::uint32_t>(flw, 0x0cU),
                 .nodes = {},
                 .branch_node_indices = {},
                 .event_data = {},
@@ -276,16 +257,16 @@ namespace smgpc::resource {
                 flow.nodes.push_back(BmgFlowNode {
                     .node_type = flw[offset],
                     .group_id = flw[offset + 1U],
-                    .index = read_be16(flw, offset + 2U),
-                    .next_index = read_be16(flw, offset + 4U),
-                    .next_group = read_be16(flw, offset + 6U),
-                    .raw_next = read_be32(flw, offset + 4U),
+                    .index = read_big<std::uint16_t>(flw, offset + 2U),
+                    .next_index = read_big<std::uint16_t>(flw, offset + 4U),
+                    .next_group = read_big<std::uint16_t>(flw, offset + 6U),
+                    .raw_next = read_big<std::uint32_t>(flw, offset + 4U),
                 });
             }
 
             flow.branch_node_indices.reserve(flow.branch_count);
             for (auto i = 0U; i < flow.branch_count; ++i) {
-                flow.branch_node_indices.push_back(read_be16(flw, branch_table_offset + static_cast<std::size_t>(i) * 2U));
+                flow.branch_node_indices.push_back(read_big<std::uint16_t>(flw, branch_table_offset + static_cast<std::size_t>(i) * 2U));
             }
 
             const auto event_offset = branch_table_offset + branch_table_size;
@@ -297,7 +278,7 @@ namespace smgpc::resource {
                     aurora::throw_host_exception<std::runtime_error>("BMG FLI1 block is truncated");
                 }
 
-                const auto entry_count = read_be16(fli, 0x08U);
+                const auto entry_count = read_big<std::uint16_t>(fli, 0x08U);
                 const auto entry_size = fli[0x0aU];
                 if (entry_size < 8U) {
                     aurora::throw_host_exception<std::runtime_error>("BMG FLI1 entry size is too small");
@@ -310,8 +291,8 @@ namespace smgpc::resource {
                 for (auto i = 0U; i < entry_count; ++i) {
                     const auto offset = 0x10U + static_cast<std::size_t>(i) * entry_size;
                     auto entry = BmgFlowIndexEntry {
-                        .message_index = read_be16(fli, offset),
-                        .node_index = read_be16(fli, offset + 4U),
+                        .message_index = read_big<std::uint16_t>(fli, offset),
+                        .node_index = read_big<std::uint16_t>(fli, offset + 4U),
                         .raw = {},
                     };
                     for (auto raw_index = 0U; raw_index < entry.raw.size(); ++raw_index) {
@@ -342,7 +323,7 @@ namespace smgpc::resource {
 
             auto cursor = offset;
             while (cursor + 2U <= data.size()) {
-                const auto code = read_be16(data, cursor);
+                const auto code = read_big<std::uint16_t>(data, cursor);
                 cursor += 2U;
                 if (code == 0U) {
                     return decoded;
@@ -361,7 +342,7 @@ namespace smgpc::resource {
 
                     const auto control_end = cursor + static_cast<std::size_t>(control_size - 2U);
                     while (cursor + 1U < control_end) {
-                        decoded.raw_text.push_back(static_cast<char16_t>(read_be16(data, cursor)));
+                        decoded.raw_text.push_back(static_cast<char16_t>(read_big<std::uint16_t>(data, cursor)));
                         cursor += 2U;
                     }
                     cursor = control_end;
@@ -386,8 +367,8 @@ namespace smgpc::resource {
                 aurora::throw_host_exception<std::runtime_error>("BMG data is missing INF1 or DAT1 blocks");
             }
 
-            const auto message_count = read_be16(bmg_data, inf1->offset + 0x08U);
-            const auto item_size = read_be16(bmg_data, inf1->offset + 0x0aU);
+            const auto message_count = read_big<std::uint16_t>(bmg_data, inf1->offset + 0x08U);
+            const auto item_size = read_big<std::uint16_t>(bmg_data, inf1->offset + 0x0aU);
             if (item_size < 4U) {
                 aurora::throw_host_exception<std::runtime_error>("BMG INF1 item size is too small");
             }
@@ -402,11 +383,11 @@ namespace smgpc::resource {
             for (auto i = 0U; i < message_count; ++i) {
                 const auto entry_offset = inf1->offset + INF1_ENTRIES_OFFSET + static_cast<std::size_t>(i) * item_size;
                 auto info = BmgMessageInfo {
-                    .text_offset = read_be32(bmg_data, entry_offset),
+                    .text_offset = read_big<std::uint32_t>(bmg_data, entry_offset),
                 };
 
                 if (item_size >= 12U) {
-                    info.camera_set_id = read_be16(bmg_data, entry_offset + 4U);
+                    info.camera_set_id = read_big<std::uint16_t>(bmg_data, entry_offset + 4U);
                     info.unknown_06 = bmg_data[entry_offset + 6U];
                     info.camera_type = bmg_data[entry_offset + 7U];
                     info.talk_type = bmg_data[entry_offset + 8U];

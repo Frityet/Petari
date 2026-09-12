@@ -1,0 +1,48 @@
+[
+  {
+    "target": "smg-pc-original-collision-parts-owner-tests",
+    "build_exit": 0,
+    "build_seconds": 4.7826454999740236,
+    "runs": [
+      {
+        "case": "smg-pc-original-collision-parts-owner-tests",
+        "run_exit": 0,
+        "run_seconds": 1.2794862079899758
+      }
+    ]
+  },
+  {
+    "target": "smg-pc-game-actor-physics-real-or-absent-tests",
+    "build_exit": 0,
+    "build_seconds": 4.61946066695964,
+    "runs": [
+      {
+        "case": "smg-pc-game-actor-physics-real-or-absent-tests",
+        "run_exit": 0,
+        "run_seconds": 1.074682832986582
+      }
+    ]
+  },
+  {
+    "target": "smg-pc-aurora-native-tests",
+    "build_exit": 0,
+    "build_seconds": 4.703968167013954,
+    "runs": [
+      {
+        "case": "KCL collision",
+        "run_exit": 0,
+        "run_seconds": 0.49206625000806525
+      },
+      {
+        "case": "same-frame Binder",
+        "run_exit": 0,
+        "run_seconds": 0.04490395897300914
+      },
+      {
+        "case": "Coin math",
+        "run_exit": 0,
+        "run_seconds": 0.044657375023234636
+      }
+    ]
+  }
+]

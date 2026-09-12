@@ -1,5 +1,8 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/Binder.hpp"
+#include "Game/MapObj/ClipAreaHolder.hpp"
+#include "Game/LiveActor/ShadowController.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
@@ -11,6 +14,11 @@
 #include "camera/CameraPose.hpp"
 #include "compat/ActorPhysicsRuntime.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/StageSessionState.hpp"
+#include "runtime/RuntimeContext.hpp"
+#include "SceneExecutionFixture.hpp"
+#include <aurora/dvd.h>
+#include <cstdlib>
 
 #include <cmath>
 #include <functional>
@@ -75,6 +83,22 @@ int main() {
                         "Purple Coin counter validation must not succeed without the real counter layout");
     ++passed;
 
+    const auto* disc = std::getenv("SMGPC_REAL_DISC");
+    require(disc && aurora_dvd_open(disc), "actor physics proof requires SMGPC_REAL_DISC");
+    struct Disc { ~Disc() { aurora_dvd_close(); } } disc_guard;
+    DVDInit();
+    auto logger = smgpc::logging::create_default_logger();
+    smgpc::render::AuroraWindow window({.width = 640, .height = 456, .title = "Original actor physics utilities"});
+    smgpc::render::AuroraRenderer renderer(window);
+    smgpc::resource::GameResourceRuntime resources;
+    smgpc::runtime::RuntimeContext runtime(*logger, window, resources);
+    smgpc::runtime::SceneSchedulerBinding scheduler_binding(runtime.scheduler());
+    smgpc::compat::StageSessionState session("Game", "HeavensDoorGalaxy", 1, JMapIdInfo(0, 0));
+    smgpc::compat::StageSessionBinding session_binding(session);
+    auto domain = smgpc::compat::JkrAllocationDomain::create(runtime.host_heaps(), 16U << 20);
+    smgpc::test::SceneExecutionFixture scene(runtime.scheduler(), domain);
+    const smgpc::compat::JkrAllocationScope game(domain);
+
     {
         ProbeActor actor;
         actor.makeActorAppeared();
@@ -83,16 +107,18 @@ int main() {
         auto* second = smgpc::compat::add_actor_hit_sensor(&actor, "second", 1U, 1U, 10.0F, {});
         first->addHitSensor(second);
         actor.initBinder(50.0F, 0.0F, 8U);
-        auto contacts = smgpc::compat::ActorBinderContactState{};
-        contacts.wall = true;
-        contacts.wall_normal.set(1.0F, 0.0F, 0.0F);
-        contacts.fix_reaction.set(1.0F, 0.0F, 0.0F);
-        smgpc::compat::record_actor_binder_contacts(&actor, contacts);
+        actor.mBinder->_158 = 1.0F;
+        actor.mBinder->mWallInfo.mParentTriangle.mNormals[0].set(1.0F, 0.0F, 0.0F);
+        require(MR::isBindedWall(&actor), "the actor begins with an actual original Binder wall contact");
+        require(MR::getWallNormal(&actor) == &actor.mBinder->mWallInfo.mParentTriangle.mNormals[0],
+                "wall normal queries return the original Binder triangle storage");
         actor.mFlag.mIsNoCalcAnim = true;
+        actor.calc_anim_count = 0;
 
         MR::resetPosition(&actor, TVec3f{10.0F, 20.0F, 30.0F});
         require(first->mSensorCount == 0U, "resetPosition must clear real HitSensor contacts");
-        require(!MR::isBindedWall(&actor), "resetPosition must clear the registered Binder contact state");
+        require(!MR::isBindedWall(&actor),
+                "resetPosition must clear original Binder contact immediately without another integration tick");
         require(actor.calc_anim_count == 1 && actor.mFlag.mIsNoCalcAnim,
                 "resetPosition must perform calcAnimDirect semantics and restore the no-calc flag");
         require(actor.mPosition.epsilonEquals(TVec3f{10.0F, 20.0F, 30.0F}, 0.0001F),
@@ -110,11 +136,9 @@ int main() {
                 "calcActorAxisY must use the actor's rotation matrix rather than scaled render axes");
 
         actor.initBinder(50.0F, 0.0F, 8U);
-        auto ground = smgpc::compat::ActorBinderContactState{};
-        ground.ground = true;
-        ground.ground_normal.set(0.0F, 1.0F, 0.0F);
-        ground.fix_reaction.set(0.0F, 1.0F, 0.0F);
-        smgpc::compat::record_actor_binder_contacts(&actor, ground);
+        actor.mBinder->_C8 = 0.0F;
+        actor.mBinder->mGroundInfo.mParentTriangle.mNormals[0].set(0.0F, 1.0F, 0.0F);
+        actor.mBinder->mFixReactionVector.set(0.0F, 1.0F, 0.0F);
         actor.mRotation.zero();
         actor.mGravity.set(0.0F, -1.0F, 0.0F);
         actor.mVelocity.zero();
@@ -122,11 +146,10 @@ int main() {
         require(actor.mVelocity.epsilonEquals(TVec3f{3.0F, 0.0F, 0.0F}, 0.0001F),
                 "directional acceleration must use the exact gravity-plane then ground-plane calculation");
 
-        auto wall = smgpc::compat::ActorBinderContactState{};
-        wall.wall = true;
-        wall.wall_normal.set(1.0F, 0.0F, 0.0F);
-        wall.fix_reaction.set(1.0F, 0.0F, 0.0F);
-        smgpc::compat::record_actor_binder_contacts(&actor, wall);
+        actor.mBinder->clear();
+        actor.mBinder->_158 = 0.0F;
+        actor.mBinder->mWallInfo.mParentTriangle.mNormals[0].set(1.0F, 0.0F, 0.0F);
+        actor.mBinder->mFixReactionVector.set(1.0F, 0.0F, 0.0F);
         actor.mVelocity.set(-4.0F, 2.0F, 0.0F);
         require_near(MR::calcHitPowerToWall(&actor), 4.0F,
                      "wall hit power must use the real recorded wall normal");
@@ -143,8 +166,8 @@ int main() {
         actor.mPosition.set(0.0F, 0.0F, 20000.0F);
         MR::setClippingTypeSphere(&actor, 100.0F);
         const auto* clipping = smgpc::compat::actor_clipping_runtime_state(&actor);
-        require(clipping != nullptr && clipping->sphere_configured && !clipping->far_level.has_value(),
-                "sphere clipping must be actor-owned and must not invent a far level");
+        require(clipping != nullptr && clipping->sphere_configured && clipping->far_level == 6,
+                "sphere configuration must preserve the original ClippingActorInfo 100m default");
 
         auto camera = smgpc::camera::CameraPose{};
         camera.eye = {0.0F, 0.0F, 0.0F};
@@ -152,8 +175,12 @@ int main() {
         camera.near_clip = 1.0F;
         camera.far_clip = 30000.0F;
         smgpc::compat::update_actor_clipping(actor, camera);
+        require(actor.mFlag.mIsClipped,
+                "a registered actor begins with the original 100m clipping distance");
+        MR::setClippingFarMax(&actor);
+        smgpc::compat::update_actor_clipping(actor, camera);
         require(!actor.mFlag.mIsClipped,
-                "an unset clipping far level must use the real camera far plane, not a fabricated 100m level");
+                "an explicit maximum clipping distance must use the current camera far plane");
         MR::setClippingFar100m(&actor);
         smgpc::compat::update_actor_clipping(actor, camera);
         require(actor.mFlag.mIsClipped, "the scheduler clipping evaluator must consume the configured 100m level");
@@ -183,40 +210,41 @@ int main() {
             require(controller->drop_position == &actor.mPosition && controller->drop_direction == &actor.mGravity &&
                         controller->valid,
                     "a new volume controller must follow the host transform and begin valid");
-            require(actor.mShadowControllerList == nullptr,
-                    "native controller ownership must not place a host pointer in the retail Wii field");
+            require(actor.mShadowControllerList && actor.mShadowControllerList->getControllerCount() == 1U,
+                    "actor must retain its actual original ShadowControllerList");
+            auto* original = actor.mShadowControllerList->getController(0U);
             require(MR::isExistShadow(&actor, nullptr) && MR::isExistShadow(&actor, "any-single-controller-name"),
                     "the exact single-controller lookup must succeed without requiring a name match");
 
             MR::onCalcShadowOneTime(&actor, nullptr);
-            require(controller->calculation_mode == smgpc::compat::ActorShadowCalculationMode::OneTime,
+            require(original->_60 == 2 && original->_65 == 0,
                     "one-time shadow calculation must update the owned controller");
             MR::onCalcShadow(&actor, nullptr);
-            require(controller->calculation_mode == smgpc::compat::ActorShadowCalculationMode::Continuous,
+            require(original->_60 == 1,
                     "continuous shadow calculation must replace one-time mode");
             MR::offCalcShadow(&actor, nullptr);
-            require(controller->calculation_mode == smgpc::compat::ActorShadowCalculationMode::Disabled,
+            require(original->_60 == 0,
                     "offCalcShadow must disable the owned controller");
 
             MR::onCalcShadowDropPrivateGravity(&actor, nullptr);
-            require(controller->gravity_mode == smgpc::compat::ActorShadowGravityMode::PrivateContinuous,
+            require(original->_61 == 4,
                     "private-gravity calculation must be tracked per controller");
             MR::onCalcShadowDropPrivateGravityOneTime(&actor, nullptr);
-            require(controller->gravity_mode == smgpc::compat::ActorShadowGravityMode::PrivateOneTime,
+            require(original->_61 == 5 && original->_66 == 0,
                     "one-time private gravity must replace continuous mode");
             MR::offCalcShadowDropPrivateGravity(&actor, nullptr);
-            require(controller->gravity_mode == smgpc::compat::ActorShadowGravityMode::PrivateDisabled,
+            require(original->_61 == 3,
                     "private-gravity disable must remain controller-local");
 
             auto drop_position = TVec3f{4.0F, 5.0F, 6.0F};
             MR::setShadowDropPositionPtr(&actor, nullptr, &drop_position);
             MR::setShadowDropLength(&actor, nullptr, 250.0F);
-            require(controller->drop_position == &drop_position && std::abs(controller->drop_length - 250.0F) < 0.0001F,
+            require(original->mDropPos == &drop_position && std::abs(original->mDropLength - 250.0F) < 0.0001F,
                     "shadow position and length setters must update the named controller state");
             MR::invalidateShadow(&actor, nullptr);
-            require(!controller->valid, "shadow invalidation must update the owned controller");
+            require(!original->_71, "shadow invalidation must update the owned controller");
             MR::validateShadow(&actor, nullptr);
-            require(controller->valid, "shadow validation must update the owned controller");
+            require(original->_71, "shadow validation must update the owned controller");
         }
         {
             ProbeActor actor;
@@ -228,8 +256,8 @@ int main() {
             require(smgpc::compat::actor_shadow_controller_runtime_state(&actor, "first") == &first &&
                         smgpc::compat::actor_shadow_controller_runtime_state(&actor, "second") == &second,
                     "multi-controller lookup must select the exact authored name");
-            require(!MR::isExistShadow(&actor, nullptr) && !MR::isExistShadow(&actor, "missing"),
-                    "multi-controller lookup must not turn an absent or unnamed controller into success");
+            require(!MR::isExistShadow(&actor, "missing"),
+                    "multi-controller lookup must reject a missing authored controller name");
         }
         require(smgpc::compat::actor_shadow_runtime_state_count() == shadow_baseline,
                 "LiveActor destruction must release its complete shadow-controller state");
@@ -242,27 +270,26 @@ int main() {
         auto center = TVec3f{};
         require_unavailable([&] { (void)MR::tryCreateMirrorActor(&actor, "Coin"); },
                             "MirrorActor creation must not silently report that no MirrorArea exists");
-        require_unavailable([&] { MR::setBinderExceptSensorType(&actor, &center, 10.0F); },
-                            "ClipArea Binder filtering must not pretend to apply without CollisionParts sensor ownership");
+        MR::setBinderExceptSensorType(&actor, &center, 10.0F);
+        auto* clip_filter = dynamic_cast<ClipAreaCollisionFilter*>(actor.mBinder->mCollisionPartsFilter);
+        require(clip_filter && clip_filter->_04 == &center && clip_filter->_08 == 10.0F,
+                "Binder filtering must retain the original ClipArea filter and the caller's live center");
+        MR::setBinderCollisionPartsFilter(&actor, nullptr);
+        delete clip_filter;
         require_unavailable([&] { (void)MR::isInDeath(&actor, {}); },
                             "DeathArea membership must not become false while AreaObj ownership is absent");
         require_unavailable([&] { MR::onCalcShadow(&actor, nullptr); },
                             "shadow calculation must reject an actor without a controller list");
-        require_unavailable([&] { MR::setClippingRangeIncludeShadow(&actor, &center, 100.0F); },
-                            "shadow-aware clipping must not fabricate an unprojected center");
+        MR::initShadowVolumeSphere(&actor, 10.0F);
+        MR::setClippingRangeIncludeShadow(&actor, &center, 100.0F);
+        const auto* clipping = smgpc::compat::actor_clipping_runtime_state(&actor);
+        require(clipping && clipping->sphere_radius == 100.0F && center.epsilonEquals(actor.mPosition, 0.0F),
+                "an unprojected original shadow retains the actor's ordinary clipping sphere");
 
-        auto floor = smgpc::compat::ActorBinderContactState{};
-        floor.ground = true;
-        floor.ground_normal.set(0.0F, 1.0F, 0.0F);
-        floor.ground_attribute = 7U;
-        smgpc::compat::record_actor_binder_contacts(&actor, floor);
         require(!MR::isBindedGroundDamageFire(&actor),
-                "a raw host snapshot attribute must not be fabricated into a DamageFire floor code");
-        floor.roof = true;
-        floor.roof_normal.set(0.0F, -1.0F, 0.0F);
-        smgpc::compat::record_actor_binder_contacts(&actor, floor);
-        require_unavailable([&] { (void)MR::isPressedRoofAndGround(&actor); },
-                            "roof/ground pressure must not ignore moving CollisionParts and press sensors");
+                "an original Binder without ground contact cannot report a DamageFire floor");
+        require(!MR::isPressedRoofAndGround(&actor),
+                "an original Binder without opposing contacts cannot report crushing pressure");
         ++passed;
     }
 

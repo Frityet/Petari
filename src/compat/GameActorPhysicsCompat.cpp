@@ -136,9 +136,6 @@ namespace {
         return *position;
     }
 
-    [[noreturn]] void throw_shadow_projection_unavailable() {
-        aurora::throw_host_exception<std::logic_error>("Shadow-aware clipping is unavailable without real projection and draw behavior.");
-    }
 }  // namespace
 
 namespace MR {
@@ -227,29 +224,6 @@ namespace MR {
         }
     }
 
-    bool reboundVelocityFromCollision(LiveActor *pActor, f32 restitution, f32 threshold, f32 tangentScale) {
-        auto &actor = require_actor(pActor);
-        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
-        if (contacts == nullptr || (!contacts->ground && !contacts->wall && !contacts->roof)) {
-            return false;
-        }
-        auto unit_normal = contacts->fix_reaction;
-        if (MR::normalizeOrZero(&unit_normal)) {
-            return false;
-        }
-        const auto hit_speed = unit_normal.dot(actor.mVelocity);
-        if (hit_speed >= 0.0F) {
-            return false;
-        }
-        actor.mVelocity.sub(unit_normal * hit_speed);
-        if (hit_speed < -threshold) {
-            actor.mVelocity.scale(tangentScale);
-            actor.mVelocity.sub(unit_normal * hit_speed * restitution);
-            return true;
-        }
-        return false;
-    }
-
     void turnDirectionDegree(const LiveActor *pActor, TVec3f *pDirection, const TVec3f &rTargetDirection, f32 degree) {
         const auto &actor = require_actor(pActor);
         auto &direction = require_vector(pDirection);
@@ -283,16 +257,6 @@ namespace MR {
         return valueStart + ((valueEnd - valueStart) * rate);
     }
 
-    f32 calcHitPowerToWall(const LiveActor *pActor) {
-        const auto &actor = require_actor(pActor);
-        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
-        if (contacts == nullptr || !contacts->wall) {
-            return 0.0F;
-        }
-        const auto speed = actor.mVelocity.dot(contacts->wall_normal);
-        return speed < 0.0F ? -speed : 0.0F;
-    }
-
     void zeroVelocity(LiveActor *pActor) {
         require_actor(pActor).mVelocity.zero();
     }
@@ -302,78 +266,8 @@ namespace MR {
         aurora::throw_host_exception<std::logic_error>("MirrorActor creation is unavailable without parsed MirrorArea ownership and mirror rendering.");
     }
 
-    void setBinderExceptSensorType(LiveActor *pActor, const TVec3f *pCenter, f32) {
-        (void)require_actor(pActor);
-        if (pCenter == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("Clip-area binder filtering requires a center position.");
-        }
-        aurora::throw_host_exception<std::logic_error>(
-            "Clip-area binder filtering is unavailable without CollisionParts sensor ownership and ClipAreaHolder.");
-    }
-
     void setClippingFar100m(LiveActor *pActor) {
         smgpc::compat::configure_actor_clipping_far_level(pActor, 6);
-    }
-
-    bool isPressedRoofAndGround(const LiveActor *pActor) {
-        const auto &actor = require_actor(pActor);
-        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
-        if (contacts == nullptr || !contacts->roof || !contacts->ground) {
-            return false;
-        }
-        aurora::throw_host_exception<std::logic_error>(
-            "Pressed roof/ground resolution is unavailable without bound sensors and moving CollisionParts force data.");
-    }
-
-    bool isOnGround(const LiveActor *pActor) {
-        const auto &actor = require_actor(pActor);
-        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
-        return contacts != nullptr && contacts->ground && actor.mVelocity.dot(contacts->ground_normal) <= 0.0F;
-    }
-
-    bool isBindedGround(const LiveActor *pActor) {
-        const auto &actor = require_actor(pActor);
-        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
-        return contacts != nullptr && contacts->ground;
-    }
-
-    bool isBindedWall(const LiveActor *pActor) {
-        const auto &actor = require_actor(pActor);
-        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
-        return contacts != nullptr && contacts->wall;
-    }
-
-    bool isBindedRoof(const LiveActor *pActor) {
-        const auto &actor = require_actor(pActor);
-        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
-        return contacts != nullptr && contacts->roof;
-    }
-
-    const TVec3f *getGroundNormal(const LiveActor *pActor) {
-        const auto &actor = require_actor(pActor);
-        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
-        if (contacts == nullptr || !contacts->ground) {
-            aurora::throw_host_exception<std::logic_error>("Ground normal is unavailable without a real Binder ground contact.");
-        }
-        return &contacts->ground_normal;
-    }
-
-    const TVec3f *getWallNormal(const LiveActor *pActor) {
-        const auto &actor = require_actor(pActor);
-        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
-        if (contacts == nullptr || !contacts->wall) {
-            aurora::throw_host_exception<std::logic_error>("Wall normal is unavailable without a real Binder wall contact.");
-        }
-        return &contacts->wall_normal;
-    }
-
-    const TVec3f *getRoofNormal(const LiveActor *pActor) {
-        const auto &actor = require_actor(pActor);
-        const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
-        if (contacts == nullptr || !contacts->roof) {
-            aurora::throw_host_exception<std::logic_error>("Roof normal is unavailable without a real Binder roof contact.");
-        }
-        return &contacts->roof_normal;
     }
 
     bool isNoBind(const LiveActor *pActor) {
@@ -382,14 +276,6 @@ namespace MR {
 
     void onBind(LiveActor *pActor) {
         require_actor(pActor).mFlag.mIsNoBind = false;
-    }
-
-    void offBind(LiveActor *pActor) {
-        auto &actor = require_actor(pActor);
-        actor.mFlag.mIsNoBind = true;
-        if (smgpc::compat::has_actor_binder(&actor)) {
-            smgpc::compat::clear_actor_binder_contacts(&actor);
-        }
     }
 
     void offCalcGravity(LiveActor *pActor) {
@@ -499,10 +385,6 @@ namespace MR {
         for_each_shadow_controller(actor, name, [](auto &controller) {
             controller.validate();
         });
-    }
-
-    void setClippingRangeIncludeShadow(LiveActor *, TVec3f *, f32) {
-        throw_shadow_projection_unavailable();
     }
 
     void incCoin(int) {

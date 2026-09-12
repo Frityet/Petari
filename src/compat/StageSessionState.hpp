@@ -64,9 +64,6 @@ namespace smgpc::compat {
         [[nodiscard]] ExecutionPhase execution_phase() const;
         void set_execution_phase(ExecutionPhase phase);
 
-        [[nodiscard]] bool is_power_star_get_demo_active() const;
-        void set_power_star_get_demo_active(bool active);
-
         // Native callers already have the original masked hash/placement key.
         // These access the actual GameDataTemporaryInGalaxy-owned records.
         [[nodiscard]] s32 setup_already_done_flag(u16 name_hash, s32 zone_id,
@@ -82,7 +79,6 @@ namespace smgpc::compat {
         const JMapIdInfo _initial_start_id;
         StageScenarioMetadata _metadata;
         ExecutionPhase _execution_phase = ExecutionPhase::Initialization;
-        bool _power_star_get_demo_active = false;
         std::unique_ptr<TemporaryData> _temporary;
     };
 

@@ -6,7 +6,11 @@
 #include "resource/JMapResource.hpp"
 #include "resource/BtiTextureData.hpp"
 #include "runtime/RuntimeServices.hpp"
+#include "runtime/ArchiveMountService.hpp"
 #include "Game/Animation/MaterialAnmBuffer.hpp"
+#include "Game/System/LayoutHolder.hpp"
+#include "Game/System/ResourceHolderManager.hpp"
+#include "Game/Util/HashUtil.hpp"
 #include "Game/Animation/BpkPlayer.hpp"
 #include "Game/Util/MutexHolder.hpp"
 #include "Game/Util/ObjUtil.hpp"
@@ -315,6 +319,80 @@ namespace {
         require(weak_source.expired() && weak_domain.expired() && !find_jmap_resource(raw_map), "full teardown removes aliases before source and arena expire");
     }
 
+    void test_original_layout_holder(GameResourceRuntime& process) {
+        Bytes layout(16), animation(16), texture(16), font(16);
+        tag(layout, 0, "RLYT"); put32(layout, 4, 0xFEFF0008);
+        tag(animation, 0, "RLAN"); put32(animation, 4, 0xFEFF0008);
+        auto source = archive({{"Window.brlyt", layout}, {"Appear.brlan", animation, true},
+                               {"Picture.tpl", texture, true}, {"Font.brfnt", font}});
+        auto domain = process.create_cohort();
+        smgpc::runtime::DvdFileSystemService dvd("/");
+        smgpc::runtime::ArchiveMountService mounts(dvd);
+        ResourceHolderService service(dvd, domain, process.mem1_heap());
+        ResourceHolderManager manager;
+        auto* mounted = mounts.mount_memory("/Memory/LayoutFixture.arc", source->bytes(), &domain->heap());
+        const std::weak_ptr<const smgpc::runtime::MountedArchive> weak_archive = mounts.retain("/Memory/LayoutFixture.arc");
+        auto* holder = manager.createAndAddLayoutHolderRawData("/Memory/LayoutFixture.arc");
+        require(holder && holder->mArchive == mounted, "layout holder borrows the original mounted archive identity");
+        require(JKRHeap::findFromRoot(holder) == &domain->heap(), "original layout holder uses its mounted archive heap");
+        require(manager.createAndAddLayoutHolderStationed("/Memory/LayoutFixture.arc") == holder,
+                "stationed and raw requests share the same original layout holder");
+        require(holder->mLayoutRes.mCount == 1 && holder->mAnimRes.mCount == 1 && holder->getResOtherNum() == 2,
+                "original layout enumeration traverses nested directories and excludes dot links");
+        u32 header_word = 0;
+        auto* layout_bytes = holder->GetResource('blyt', "window.BRLYT", &header_word);
+        require(layout_bytes == mounted->getResource("Window.brlyt") && header_word == 0xFEFF0008,
+                "original layout accessor preserves archive identity and the retail big-endian second header word");
+        require(holder->GetResource('anim', "APPEAR.BRLAN", nullptr) == mounted->getResource("Appear.brlan"),
+                "original animation lookup preserves extension and case-insensitive resource hash");
+        require(holder->isAnimationHashEqual(MR::getHashCodeLower("Appear.brlan"), 0),
+                "original animation hash lookup sees nested animation resources");
+        require(holder->GetResource(0, "Picture.tpl", nullptr) == mounted->getResource("Picture.tpl") &&
+                holder->isExistResOther("Font.brfnt") && holder->GetResource(0, "Font.brfnt", nullptr) == nullptr,
+                "original accessor keeps font resources in the raw table but routes fonts through GetFont");
+        header_word = 42;
+        require(holder->GetResource('blyt', "Absent.brlyt", &header_word) == nullptr && header_word == 0,
+                "missing original layout resources return null and clear the size output");
+        rejects([&] { holder->GetFont("MenuFont64.brfnt"); }, "layout fonts require the actual process font owner");
+        auto retained = service.retain(*holder);
+        rejects([&] { service.remove_for_heap(&domain->heap()); }, "live layout borrowers prevent resource-heap removal");
+        mounts.remove_for_heap(&domain->heap());
+        require(mounts.receive("/Memory/LayoutFixture.arc") == nullptr && !weak_archive.expired() &&
+                holder->GetResource('blyt', "Window.brlyt", nullptr) == layout_bytes,
+                "retained original layout owner keeps removed mount bytes alive");
+        mounts.mount_memory("/Memory/LayoutFixture.arc", source->bytes(), &domain->heap());
+        rejects([&] { manager.createAndAddLayoutHolderRawData("/Memory/LayoutFixture.arc"); },
+                "remount cannot silently replace an archive while its layout holder is live");
+        retained.reset();
+        service.remove_for_heap(&domain->heap());
+        require(weak_archive.expired(), "layout retirement releases the old mounted archive");
+        require(manager.createAndAddLayoutHolderRawData("/Memory/LayoutFixture.arc")->mArchive ==
+                    mounts.receive("/Memory/LayoutFixture.arc"), "retired layout names may bind to their new actual mount");
+        rejects([&] { manager.createAndAddLayoutHolderRawData("/Memory/Missing.arc"); },
+                "missing original raw layout mounts remain explicit failures");
+
+        auto foreign_domain = JkrAllocationDomain::create(process.host_heaps(), 1024 * 1024);
+        auto sibling_domain = JkrAllocationDomain::create(process.host_heaps(), 1024 * 1024);
+        const std::weak_ptr<JkrAllocationDomain> weak_foreign = foreign_domain;
+        auto* foreign_heap = &foreign_domain->heap();
+        mounts.mount_memory("/Memory/ForeignLayout.arc", source->bytes(), foreign_heap);
+        auto* foreign = manager.createAndAddLayoutHolderRawData("/Memory/ForeignLayout.arc");
+        require(JKRHeap::findFromRoot(foreign) == foreign_heap,
+                "a layout on another registered heap resolves its actual owner outside any Game scope");
+        mounts.mount_memory("/Memory/SiblingLayout.arc", source->bytes(), foreign_heap);
+        {
+            JkrAllocationScope original(sibling_domain);
+            auto* other = manager.createAndAddLayoutHolderRawData("/Memory/SiblingLayout.arc");
+            require(JKRHeap::findFromRoot(other) == foreign_heap && JKRHeap::sCurrentHeap == &sibling_domain->heap(),
+                    "opening a foreign layout under a sibling scope retains the mounted heap and restores the current heap");
+        }
+        foreign_domain.reset();
+        require(!weak_foreign.expired(), "layout owners retain the actual foreign heap after its caller releases it");
+        mounts.remove_for_heap(foreign_heap);
+        service.remove_for_heap(foreign_heap);
+        require(weak_foreign.expired(), "retiring foreign layouts releases their actual heap owner");
+    }
+
     void test_failure_scope(GameResourceRuntime& process) {
         Bytes bad(0x20); tag(bad, 0, "J3D2bdl4"); put32(bad, 8, bad.size());
         auto source = archive({{"bad.bdl", bad}});
@@ -461,6 +539,7 @@ int main() {
     try {
         aurora::g_config.mem1Size = 24U * 1024U * 1024U;
         GameResourceRuntime process;
+        test_original_layout_holder(process); std::cout << "PASS original layout holder, nested resources, raw mounts, endian size and retained lifetime\n";
         test_native_bti(process); std::cout << "PASS retained BTI native header, all archive identities, GX payload and JUT consumer\n";
         test_original_constructor(process); std::cout << "PASS original holder, typed animation, control table and lifetime\n";
         test_original_csv_reader(process); std::cout << "PASS original CSV helpers and deferred archive tables\n";

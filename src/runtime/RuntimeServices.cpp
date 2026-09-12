@@ -3741,8 +3741,7 @@ namespace smgpc::runtime {
         _position = {_attached_actor->mPosition.x, _attached_actor->mPosition.y, _attached_actor->mPosition.z};
         _velocity = {_attached_actor->mVelocity.x, _attached_actor->mVelocity.y, _attached_actor->mVelocity.z};
         _gravity = {_attached_actor->mGravity.x, _attached_actor->mGravity.y, _attached_actor->mGravity.z};
-        const auto* contacts = smgpc::compat::actor_binder_contacts(_attached_actor);
-        _on_ground = contacts != nullptr && contacts->ground;
+        _on_ground = MR::isBindedGround(_attached_actor);
     }
 
     void GameLayoutService::activate_default_game_layout() {

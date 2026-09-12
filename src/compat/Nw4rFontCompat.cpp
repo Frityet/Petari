@@ -1,4 +1,5 @@
 #include <aurora/exception.hpp>
+#include <aurora/endian.hpp>
 #include "nw4r/ut/ResFont.h"
 
 #include <algorithm>
@@ -13,18 +14,10 @@
 #include "layout/BrfntFont.hpp"
 
 namespace {
+    using aurora::endian::read_big;
 
     constexpr auto kMinimumBrfntHeaderSize = std::size_t{16U};
     constexpr auto kMaximumBrfntFileSize = std::size_t{64U * 1024U * 1024U};
-
-    [[nodiscard]] std::uint16_t read_be16(const std::uint8_t* data) {
-        return static_cast< std::uint16_t >((static_cast< std::uint16_t >(data[0U]) << 8U) | data[1U]);
-    }
-
-    [[nodiscard]] std::uint32_t read_be32(const std::uint8_t* data) {
-        return (static_cast< std::uint32_t >(data[0U]) << 24U) | (static_cast< std::uint32_t >(data[1U]) << 16U) |
-               (static_cast< std::uint32_t >(data[2U]) << 8U) | static_cast< std::uint32_t >(data[3U]);
-    }
 
     [[nodiscard]] std::size_t declared_brfnt_size(const void* buffer) {
         if (buffer == nullptr) {
@@ -32,14 +25,14 @@ namespace {
         }
 
         const auto* bytes = static_cast< const std::uint8_t* >(buffer);
-        const auto version = read_be16(bytes + 6U);
+        const auto version = read_big<std::uint16_t>(bytes + 6U);
         if (bytes[0U] != 'R' || bytes[1U] != 'F' || bytes[2U] != 'N' || bytes[3U] != 'T' ||
-            read_be16(bytes + 4U) != 0xfeffU || (version != 0x0102U && version != 0x0104U) ||
-            read_be16(bytes + 12U) != kMinimumBrfntHeaderSize) {
+            read_big<std::uint16_t>(bytes + 4U) != 0xfeffU || (version != 0x0102U && version != 0x0104U) ||
+            read_big<std::uint16_t>(bytes + 12U) != kMinimumBrfntHeaderSize) {
             return 0U;
         }
 
-        const auto size = static_cast< std::size_t >(read_be32(bytes + 8U));
+        const auto size = static_cast< std::size_t >(read_big<std::uint32_t>(bytes + 8U));
         return size >= kMinimumBrfntHeaderSize && size <= kMaximumBrfntFileSize ? size : 0U;
     }
 

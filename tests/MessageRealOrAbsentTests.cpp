@@ -53,11 +53,19 @@ namespace {
         require(messages.format_message_utf16(missing, {}).empty(),
                 "formatting a missing BMG identifier must produce no visible text");
 
-        require(MR::getSystemMessageDirect(missing.data()) == nullptr &&
-                    MR::getGameMessageDirect(missing.data()) == nullptr &&
-                    MR::getLayoutMessageDirect(missing.data()) == nullptr &&
-                    !MR::isExistGameMessage(missing.data()),
-                "the retail MessageUtil surface must return absence when no runtime message archive exists");
+        const auto require_message_owner = [](auto lookup) {
+            bool rejected = false;
+            try {
+                lookup();
+            } catch (const std::logic_error& error) {
+                rejected = std::string_view(error.what()).find("active MessageHolder") != std::string_view::npos;
+            }
+            require(rejected, "original MessageUtil requires the real MessageHolder before querying its archives");
+        };
+        require_message_owner([&] { MR::getSystemMessageDirect(missing.data()); });
+        require_message_owner([&] { MR::getGameMessageDirect(missing.data()); });
+        require_message_owner([&] { MR::getLayoutMessageDirect(missing.data()); });
+        require_message_owner([&] { MR::isExistGameMessage(missing.data()); });
     }
 
     void test_present_message_retains_real_text() {

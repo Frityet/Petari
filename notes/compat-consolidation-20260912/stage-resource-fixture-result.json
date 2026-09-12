@@ -1,0 +1,9 @@
+{
+  "target": "smg-pc-stage-initialization-resource-tests",
+  "build_exit": 0,
+  "run_exit": 0,
+  "generation_count": 3,
+  "source": "tests/StageInitializationResourceTests.cpp",
+  "source_sha256": "b7a155ee4fb445c896ec16a71b0998da81b5e6b4beffe3c5441f4e0bd5fcc65e",
+  "disc": "Super Mario Wii - Galaxy Adventure (Korea).rvz"
+}
