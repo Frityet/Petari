@@ -1,7 +1,7 @@
 #include "JSystem/JUtility/JUTPalette.hpp"
 #include <revolution/os.h>
 
-void JUTPalette::storeTLUT(_GXTlut param_0, ResTLUT* tlut) {
+void JUTPalette::storeTLUT(GXTlut param_0, ResTLUT* tlut) {
     if (tlut == nullptr) {
         OSPanic("JUTPalette.cpp", 35, "JUTTexture: TLUT is NULL\n");
     }
@@ -13,7 +13,7 @@ void JUTPalette::storeTLUT(_GXTlut param_0, ResTLUT* tlut) {
     GXInitTlutObj(&mObj, mColorTable, static_cast< GXTlutFmt >(mFormat), mLutNum);
 }
 
-void JUTPalette::storeTLUT(_GXTlut param_0, _GXTlutFmt param_1, JUTTransparency param_2, u16 param_3, void* param_4) {
+void JUTPalette::storeTLUT(GXTlut param_0, GXTlutFmt param_1, JUTTransparency param_2, u16 param_3, void* param_4) {
     mName = param_0;
     mFormat = param_1;
     mTransparency = param_2;

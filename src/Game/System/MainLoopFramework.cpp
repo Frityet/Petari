@@ -9,7 +9,6 @@
 #include <JSystem/JUtility/JUTVideo.hpp>
 #include <JSystem/JUtility/JUTXfb.hpp>
 #include <revolution/gx/GXRegs.h>
-#include <runtime.h>
 
 MainLoopFramework* MainLoopFramework::sManager;
 
@@ -313,9 +312,9 @@ void MainLoopFramework::clearEfb(int param1, int param2, int param3, int param4,
     u16 fbWidth = JUTVideo::getManager()->getRenderMode()->fbWidth;
     u16 efbHeight = JUTVideo::getManager()->getRenderMode()->efbHeight;
     Mtx44 proj;
-    C_MTXOrtho(proj, 0f, efbHeight, 0f, fbWidth, 0f, 1f);
+    C_MTXOrtho(proj, 0.0f, efbHeight, 0.0f, fbWidth, 0.0f, 1.0f);
     GXSetProjection(proj, GX_ORTHOGRAPHIC);
-    GXSetViewport(0f, 0f, fbWidth, efbHeight, 0f, 1f);
+    GXSetViewport(0.0f, 0.0f, fbWidth, efbHeight, 0.0f, 1.0f);
     GXSetScissor(0, 0, fbWidth, efbHeight);
     GXLoadPosMtxImm(e_mtx, GX_PNMTX0);
     GXSetCurrentMtx(GX_PNMTX0);
@@ -386,8 +385,8 @@ void MainLoopFramework::calcCombinationRatio() {
     }
 
     mCombinationRatio = (f32)var2 / (u32)mLastFrameTime;
-    if (mCombinationRatio > 1f) {
-        mCombinationRatio = 1f;
+    if (mCombinationRatio > 1.0f) {
+        mCombinationRatio = 1.0f;
     }
 }
 
@@ -456,7 +455,7 @@ namespace {
             OSCreateAlarm(&alarm);
             MainLoopFrameworkAlarm::sList.append(&link);
         }
-        OSTime tick = __cvt_dbl_usll(OS_BUS_CLOCK / 4 * 0.5);
+        OSTime tick = static_cast< u64 >(OS_BUS_CLOCK / 4 * 0.5);
         OSSetAlarm(&alarm, tick, &handleGXAbortAlarm);
         GXDrawDone();
         DrawSyncManager::resetIfAborted();

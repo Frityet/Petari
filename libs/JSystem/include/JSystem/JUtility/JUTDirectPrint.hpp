@@ -1,6 +1,7 @@
 #pragma once
 
 #include "JSystem/JUtility/TColor.hpp"
+#include <cstdarg>
 #include <cstdio>
 #include <revolution.h>
 
