@@ -1,0 +1,15 @@
+{
+  "include/aurora/allocation.hpp": "d699db7d16da6e7be460006c64e1e4cf323dc411cac239a45ce7fcff6337eb49",
+  "include/aurora/guest_thread.hpp": "da33cbf2167b43da9fa6e9b05008175bcd6d79084d6e68313ab9858873b7683d",
+  "include/dolphin/gx/GXFifo.h": "8047e29f68aec648de4d8961c3911d2609f434fc6aa43b54eba73d16f063e8a0",
+  "lib/dolphin/gx/GXFifo.cpp": "8517c49db7c914014c624c53f37158eaf7d0b1c02c327516b4e04c464945fd9e",
+  "lib/dolphin/os/OSExecution.cpp": "f3485aaa45ec93921dd70eae2b369fbc9852d8a72e1ceeece94415e9a94ced56",
+  "lib/gx/fifo.cpp": "ca1a6f6ac8c5bf0d8bd3b2892b433f792163d57b2f5c65f5652421542e21a548",
+  "lib/gx/fifo.hpp": "540c70ea93090191d82fb6af91ddcfbc3b42f90438d04291f7530c3c05b29396",
+  "lib/internal.hpp": "0a627512f4d5dd9102043d064fea65190be91c6e4417309aed3cfc87a450a218",
+  "tests/CMakeLists.txt": "e8c391f0c06047ce385a5ec6097c6b8b16f4afd66cea6deede4a5a64dd01cb96",
+  "tests/gx_test_common.hpp": "9d733e5005303fbb3823dda1baec39494dcc1af4d51801f062dec68caa5080b4",
+  "tests/os_execution_test.cpp": "89586672204a19098bbc569e73646429fc87ebec4a88a73450c788725fda407c",
+  "tests/byte_buffer_test.cpp": "1ffac765c73a30acf7606d14ce1809edcbbbb117cda45a9b3df04abb9ccba514",
+  "tests/gx_fifo_breakpoint_test.cpp": "55414bfdae6d955d463deb56da11903ff2d3af7bbf025c745fea6fdeaa808c3f"
+}

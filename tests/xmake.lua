@@ -2707,6 +2707,18 @@ target("smg-pc-aurora-texture-object-tests")
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
 
+target("smg-pc-original-draw-sync-manager-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    add_includedirs("../src")
+    add_files("OriginalDrawSyncManagerTests.cpp", "../src/Game/System/DrawSyncManager.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"aurora-core", "aurora-card", "aurora-dvd", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("original_draw_sync_manager", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
 target("smg-pc-aurora-draw-sync-pass-render-tests")
     set_kind("binary")
     set_default(false)

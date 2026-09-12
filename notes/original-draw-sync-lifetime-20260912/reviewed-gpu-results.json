@@ -1,0 +1,44 @@
+[
+  {
+    "target": "smg-pc-original-draw-sync-manager-tests",
+    "build_exit": 0,
+    "sha256": "df18f1a49fb408635b2fde2c5b02f0e2f42548e84e79555f51b2e7c90580531a",
+    "test_exit": 0,
+    "seconds": 0.717128042015247
+  },
+  {
+    "target": "smg-pc-aurora-depth-snapshot-render-tests",
+    "build_exit": 0,
+    "sha256": "b4007946216fdc69c075e2219861b92bca50f6fec6b1f86f46ae3dffaab0d0b0",
+    "test_exit": 0,
+    "seconds": 0.810903916019015
+  },
+  {
+    "target": "smg-pc-aurora-draw-sync-pass-render-tests",
+    "build_exit": 0,
+    "sha256": "f3ef2af5e1252bc7c71ac0009592491fb7bbb3070067948be22790b5fa7837f2",
+    "test_exit": 0,
+    "seconds": 0.7772897920222022
+  },
+  {
+    "target": "smg-pc-aurora-z-texture-render-tests",
+    "build_exit": 0,
+    "sha256": "462cbaa4844bafd939bc8bd38723e75f325cddec81da39ba916c89358fd16c0a",
+    "test_exit": 0,
+    "seconds": 0.9999799999641255
+  },
+  {
+    "target": "smg-pc-aurora-clip-mode-render-tests",
+    "build_exit": 0,
+    "sha256": "c1d124c9f9a26bd9ec90d71754d7378c2d7d03924f962f4e4004e1d055e78b0b",
+    "test_exit": 0,
+    "seconds": 1.3946967090014368
+  },
+  {
+    "target": "smg-pc-aurora-texture-object-tests",
+    "build_exit": 0,
+    "sha256": "8a604092dab4714591faa9e0a78fdfffad4960b805e4154c306475908f1fa6d2",
+    "test_exit": 0,
+    "seconds": 0.3658131659612991
+  }
+]
