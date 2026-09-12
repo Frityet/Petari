@@ -4,6 +4,7 @@
 #include <nw4r/lyt/resourceAccessor.h>
 
 class JKRArchive;
+class JKRFileFinder;
 
 class LayoutHolder : public nw4r::lyt::ResourceAccessor {
 public:
@@ -18,11 +19,14 @@ public:
     virtual void* getResOther(u32) const;
     virtual bool isExistResOther(const char*) const;
 
+    bool isAnimationHashEqual(u32, u32) const;
     void initializeArc();
-
+    JKRFileFinder* getFileFinder(const char*);
     u32 initEachResTable(ResTable*, const char* const*);
 
+    s32 count(const char*, const char*);
     void mount(char*);
+    ResFileInfo* createAndRegisterObject(const char*, void*);
 
     JKRArchive* mArchive;  // 0x4
     ResTable mLayoutRes;   // 0x8

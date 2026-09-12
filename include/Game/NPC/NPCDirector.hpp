@@ -13,7 +13,6 @@ public:
 
     virtual void init(const JMapInfoIter& rIter);
 
-private:
     /* 0x0C */ NPCCapsParameterReader* mCapsParameterReader;
     /* 0x10 */ NPCItemParameterReader* mItemParameterReader;
     /* 0x14 */ ResourceHolder* mDataResourceHolder;

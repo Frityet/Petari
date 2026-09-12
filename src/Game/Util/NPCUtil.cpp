@@ -2,6 +2,7 @@
 #include "Game/LiveActor/ModelObj.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NPC/NPCActor.hpp"
+#include "Game/NPC/NPCFunction.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
@@ -51,6 +52,10 @@ namespace {
 };  // namespace
 
 namespace MR {
+    bool getNPCItemData(NPCActorItem* pItem, s32 itemType) {
+        return NPCFunction::getNPCItemData(pItem, itemType);
+    }
+
     void decidePose(NPCActor* pActor, const TVec3f& rUp, const TVec3f& rFront, const TVec3f& rPosition, f32 upRate, f32 frontRate, f32 positionRate) {
         blendVec(&pActor->mPosition, pActor->mPosition, rPosition, positionRate);
 

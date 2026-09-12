@@ -82,7 +82,27 @@ namespace MR {
     }
     // countMessageChar
     // countMessageFigure
-    // getNextMessagePage
+    const wchar_t* getNextMessagePage(const wchar_t* pMessage) {
+        while (*pMessage != 0) {
+            if (*pMessage == 0x1A) {
+                pMessage++;
+                MessageEditorMessageTag tag(pMessage);
+                pMessage += tag.getSkipLength();
+
+                if (tag.isGroupTagId(1, 1)) {
+                    if (*pMessage == L'\n') {
+                        pMessage++;
+                    }
+
+                    return pMessage;
+                }
+            } else {
+                pMessage++;
+            }
+        }
+
+        return nullptr;
+    }
 
     const wchar_t* getGalaxyNameOnCurrentLanguage(const char* pGalaxyName) {
         char messageId[MESSAGE_ID_BUFFER_SIZE];
