@@ -1,0 +1,5 @@
+{
+  "aurora/include/dolphin/os/OSFastCast.h": "44a8ed14a034d0d36f1dea46a6f9bb97db09dbd2b4d852cf83db1a77ef48cefe",
+  "aurora/tests/os_fast_cast_test.cpp": "ff1186e865a278f09685a98d76ba56a6bebdbae10d36e1089e3c4e6bf42c2dfc",
+  "aurora/tests/os_fast_cast_c_test.c": "cfd7a9a13094640504b1a77210d55d23c78504818599ec30cbe80a380d254b4a"
+}
