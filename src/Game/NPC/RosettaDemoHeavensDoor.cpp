@@ -23,7 +23,7 @@ RosettaDemoHeavensDoor1::RosettaDemoHeavensDoor1(Rosetta* pHost, const JMapInfoI
     initNerve(&NrvRosettaDemoHeavensDoor1::RosettaDemoHeavensDoor1NrvWait::sInstance);
 
     mLightDomeModel = MR::createPartsModelNpc(mHost, "ライトドーム", "LightDome", nullptr);
-    mLightDomeModel->makeActorDead();
+    mLightDomeModel->makeActorAppeared();
     mLightDomeModel->initFixedPosition(TVec3f(0.0f, -13.0f, -30.0f), TVec3f(0.0f, 0.0f, 0.0f), "Center");
     MR::startBrk(mLightDomeModel, "LightDome");
     MR::startBck(mLightDomeModel, "Appear", nullptr);
@@ -37,19 +37,24 @@ RosettaDemoHeavensDoor1::RosettaDemoHeavensDoor1(Rosetta* pHost, const JMapInfoI
 
     mLightHaloModel = MR::createPartsModelNpc(mHost, "ライト後光", "DomeHalo", nullptr);
     mLightHaloModel->initFixedPosition(TVec3f(0.0f, 25.14f, -6.16f), TVec3f(0.0f, 0.0f, 0.0f), "Center");
-    mLightHaloModel->makeActorDead();
+    mLightHaloModel->makeActorAppeared();
 
     if (MR::isDemoCast(mHost, nullptr)) {
         MR::tryRegisterDemoCast(mLightHaloModel, rIter);
     }
 
+    mLightHaloModel->mIsCalcOwnMtx = false;
+    mLightHaloModel->mPosition.set(15064.593f, -7917.67f, 7541.112f);
+
     MR::needStageSwitchWriteA(mHost, rIter);
     MR::needStageSwitchWriteB(mHost, rIter);
-    // MR::registerDemoActionFunctor(mHost, MR::Functor(this, &RosettaDemoHeavensDoor1::preDemo, "高楼出現[デモ]");
-    // MR::registerDemoActionFunctor(mHost, MR::Functor(this, &RosettaDemoHeavensDoor1::pstDemo, "高楼出現[デモ後]");
-    // MR::registerDemoActionFunctor(mHost, MR::Functor(this, &RosettaDemoHeavensDoor1::fadeOut, "高楼出現[フェードアウト]");
-    // MR::registerDemoActionFunctor(mHost, MR::Functor(this, &RosettaDemoHeavensDoor1::fadeIn, "高楼出現[フェードイン]");
-    // MR::registerDemoActionFunctor(mHost, MR::Functor(this, &RosettaDemoHeavensDoor1::changeNerve, "スピンゲット[デモ1]");
+    MR::registerDemoActionFunctor(mHost, MR::Functor(this, &RosettaDemoHeavensDoor1::preDemo), "高楼出現[デモ]");
+    MR::registerDemoActionFunctor(mHost, MR::Functor(this, &RosettaDemoHeavensDoor1::pstDemo), "高楼出現[デモ後]");
+    MR::registerDemoActionFunctor(mHost, MR::Functor(this, &RosettaDemoHeavensDoor1::fadeOut), "高楼出現[フェードアウト]");
+    MR::registerDemoActionFunctor(mHost, MR::Functor(this, &RosettaDemoHeavensDoor1::fadeIn), "高楼出現[フェードイン]");
+    MR::registerDemoActionFunctor(
+        mHost, MR::Functor(this, &RosettaDemoHeavensDoor1::changeNerve< NrvRosettaDemoHeavensDoor1::RosettaDemoHeavensDoor1NrvDemo >),
+        "スピンゲット[デモ1]");
     MR::invalidateShadowAll(mHost);
     MR::invalidateHitSensors(mHost);
     MR::setClippingTypeSphere(mHost, 1500.0f);
@@ -145,12 +150,13 @@ RosettaDemoHeavensDoor2::RosettaDemoHeavensDoor2(Rosetta* pHost, const JMapInfoI
     : NerveExecutor("ロゼッタデモ実行者"), mDemoStarter(pHost), mHost(pHost) {
     DemoFunction::tryCreateDemoTalkAnimCtrlForScene(mHost, rIter, "DemoRedStar", "郷愁[開始]", 0, 0);
     DemoFunction::registerDemoTalkMessageCtrl(mHost, mHost->mMsgCtrl);
-    // MR::registerDemoActionFunctor(mHost, MR::Functor(this, &RosettaDemoHeavensDoor2::changeNerve<
-    // NrvRosettaDemoHeavensDoor2::RosettaDemoHeavensDoor2 >), "郷愁[開始]");
+    MR::registerDemoActionFunctor(
+        mHost, MR::Functor_Inline(this, &RosettaDemoHeavensDoor2::changeNerve< NrvRosettaDemoHeavensDoor2::RosettaDemoHeavensDoor2NrvDemo >),
+        "郷愁[開始]");
     MR::needStageSwitchWriteA(mHost, rIter);
 
     if (MR::isOnGameEventFlagRosettaTalkAboutTicoInTower()) {
-        mHost->kill();
+        mHost->makeActorDead();
     } else {
         MR::onSwitchA(mHost);
     }

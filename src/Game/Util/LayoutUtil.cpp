@@ -168,6 +168,22 @@ namespace MR {
         executeTextBoxRecursive(pActor, pPaneName, TextBoxRecursiveSetArgString(pMessage, param4));
     }
 
+    void setInfluencedAlphaToChild(const LayoutActor* pActor) {
+        nw4r::lyt::Pane* pPane = pActor->getLayoutManager()->getPane(nullptr);
+        pPane->SetInfluencedAlpha(true);
+        nw4r::lyt::PaneList& children = pPane->GetChildList();
+
+        for (nw4r::lyt::PaneList::Iterator it = children.GetBeginIter(); it != children.GetEndIter(); it++) {
+            (*it).SetInfluencedAlpha(true);
+        }
+    }
+
+    void setLayoutAlphaFloat(const LayoutActor* pActor, f32 alpha) {
+        f32 clamped = MR::clamp(alpha, 0.0f, 1.0f);
+        nw4r::lyt::Pane* pPane = pActor->getLayoutManager()->getPane(nullptr);
+        pPane->mAlpha = clamped * 255;
+    }
+
     void setPaneAlphaFloat(const LayoutActor* pActor, const char* pName, f32 f) {
         f32 var = MR::clamp(f, 0.0f, 1.0f);
         nw4r::lyt::Pane* pane = pActor->getLayoutManager()->getPane(pName);

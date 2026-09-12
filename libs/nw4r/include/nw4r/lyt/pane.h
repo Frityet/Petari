@@ -102,6 +102,10 @@ namespace nw4r {
                 srtAry[idx] = value;
             }
 
+            void SetInfluencedAlpha(bool influenced) {
+                detail::SetBit(&mFlag, 1, influenced);
+            }
+
             void SetVisible(bool visible) {
                 detail::SetBit(&mFlag, 0, visible);
             }

@@ -12,7 +12,9 @@ public:
     static void makeArchiveList(NameObjArchiveListCollector*, const JMapInfoIter&);
 
     template < typename T >
-    void changeNerve();
+    void changeNerve() {
+        setNerve(&T::sInstance);
+    }
 
     void preDemo();
     void pstDemo();
@@ -35,7 +37,9 @@ public:
     static void makeArchiveList(NameObjArchiveListCollector*, const JMapInfoIter&);
 
     template < typename T >
-    void changeNerve();
+    void changeNerve() {
+        setNerve(&T::sInstance);
+    }
 
     void exeWait();
     void exeDemo();

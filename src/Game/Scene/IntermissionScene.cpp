@@ -4,7 +4,7 @@
 #include "Game/Util/ScreenUtil.hpp"
 #include <JSystem/JUtility/JUTVideo.hpp>
 #include <cstdio>
-#include <va_list.h>
+#include <cstdarg>
 
 IntermissionScene::IntermissionScene() : Scene("IntermissionScene") {
     _54 = 0;
@@ -24,16 +24,11 @@ void IntermissionScene::draw() const {
     v1.g = 0;
     v1.b = 0;
     v1.a = -1;
-    JUtility::TColor v4;
-    v4.r = 255;
-    v4.g = 255;
-    v4.b = 255;
-    v4.a = 255;
-    graph.setColor(v1, v1, v1, v4);
+    graph.setColor(v1, v1, v1, v1);
 
     f32 height = JUTVideo::getManager()->getRenderMode()->efbHeight;
     f32 width = MR::getScreenWidth();
-    TBox2f box(0.0f, 0.0f, 0.0f + height, 0.0f + width);
+    TBox2f box(0.0f, 0.0f, 0.0f + width, 0.0f + height);
     graph.fillBox(box);
 }
 
@@ -41,6 +36,6 @@ void IntermissionScene::setCurrentSceneControllerState(const char* pState, ...) 
     va_list list;
     va_start(list, pState);
     vsnprintf(mState, sizeof(mState), pState, list);
-    va_end();
+    va_end(list);
     _54 = 0;
 }

@@ -62,7 +62,17 @@ void ScenarioSelectScene::init() {
     mEffectSystem->initWithoutIter();
     mEffectSystem->entry(MR::getParticleResourceHolder(), 0x300, 0x20);
     mCameraContext = new CameraContext();
-    // todo
+
+    TPos3f viewMtx;
+    viewMtx.setPositionFromLookAt(TVec3f(0.0f, 0.0f, 1000.0f), TVec3f(0.0f, 1.0f, 0.0f), TVec3f(0.0f, 0.0f, 0.0f));
+    mCameraContext->setViewMtx(viewMtx, false, false, TVec3f(0.0f, 0.0f, 0.0f));
+
+    mScenarioLayout = new ScenarioSelectLayout(mEffectSystem, mCameraContext);
+    mScenarioLayout->initWithoutIter();
+    mCinemaFrame = new CinemaFrame(false);
+    mCinemaFrame->initWithoutIter();
+    initNerve(&NrvScenarioSelectScene::ScenarioSelectSceneNrvDeactive::sInstance);
+    _14 = 1;
 }
 
 void ScenarioSelectScene::start() {
@@ -166,6 +176,30 @@ void ScenarioSelectScene::validateScenarioSelect() {
         setNerve(GET_NERVE(ScenarioSelectScene, ScenarioSelectSceneNrvWaitStartScenarioSelect));
     } else {
         setNerve(GET_NERVE(ScenarioSelectScene, ScenarioSelectSceneNrvWaitResumeInitializeThreadIfRequestedReset));
+    }
+}
+
+void ScenarioSelectScene::requestReset(bool isInitializing) {
+    if (!_14) {
+        _28 = 0;
+        return;
+    }
+
+    _28 = 1;
+    suspend();
+
+    if (isNerve(&NrvScenarioSelectScene::ScenarioSelectSceneNrvDeactive::sInstance) ||
+        isNerve(&NrvScenarioSelectScene::ScenarioSelectSceneNrvWaitDisappearLayout::sInstance) ||
+        isNerve(&NrvScenarioSelectScene::ScenarioSelectSceneNrvWaitInitializeEnd::sInstance)) {
+        _28 = 0;
+        setNerve(&NrvScenarioSelectScene::ScenarioSelectSceneNrvDeactive::sInstance);
+    } else if (isNerve(&NrvScenarioSelectScene::ScenarioSelectSceneNrvInvalidScenarioSelect::sInstance)) {
+        if (!isInitializing) {
+            _28 = 0;
+            setNerve(&NrvScenarioSelectScene::ScenarioSelectSceneNrvDeactive::sInstance);
+        }
+    } else {
+        setNerve(&NrvScenarioSelectScene::ScenarioSelectSceneNrvWaitResumeInitializeThreadIfRequestedReset::sInstance);
     }
 }
 

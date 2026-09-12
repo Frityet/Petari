@@ -1,5 +1,7 @@
 #include "Game/System/AudSystemWrapper.hpp"
 #include "Game/AudioLib/AudMicWrap.hpp"
+#include "Game/AudioLib/AudMeNameConverter.hpp"
+#include "Game/AudioLib/CSSoundNameConverter.hpp"
 #include "Game/AudioLib/AudSceneMgr.hpp"
 #include "Game/AudioLib/AudSoundNameConverter.hpp"
 #include "Game/AudioLib/AudSpeakerWrap.hpp"
@@ -45,13 +47,12 @@ void AudSystemWrapper::createAudioSystem() {
     createSoundNameConverter();
     AudMicWrap::setMicEnv();
 }
-/*
 void AudSystemWrapper::createSoundNameConverter() {
     AudSingletonHolder<AudSoundNameConverter>::init();
     AudSingletonHolder<AudMeNameConverter>::init();
     AudSingletonHolder<CSSoundNameConverter>::init();
 }
-*/
+
 void AudSystemWrapper::updateRhythm() {
     if (mAudSystem == nullptr) {
         return;
@@ -60,8 +61,17 @@ void AudSystemWrapper::updateRhythm() {
     AudRhythmWrap::rhythmProc();
 }
 
-// AudSystemWrapper::movement
-// AudSystemWrapper::stopAllSound
+void AudSystemWrapper::movement() {
+    if (mAudSystem == nullptr) {
+        return;
+    }
+
+    mAudSystem->frameWork();
+}
+
+void AudSystemWrapper::stopAllSound(u32 fadeFrames) {
+    mAudSystem->stop(fadeFrames);
+}
 
 bool AudSystemWrapper::isLoadDoneWaveDataAtSystemInit() const {
     if (mAudSystem == nullptr) {
@@ -170,7 +180,7 @@ void AudSystemWrapper::requestReset(bool param1) {
         _29 = true;
     } else {
         mAudSystem->resetAudio(10, param1);
-        // mAudSystem->stop(10);
+        mAudSystem->stop(10);
     }
 }
 

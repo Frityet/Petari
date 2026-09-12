@@ -31,7 +31,7 @@ namespace MR {
         for (pIter = pBegin; pIter != pEnd; pIter++) {
             bool isEqualName = strcmp(pIter->mName, pName) == 0;
 
-            if (!isEqualName) {
+            if (isEqualName) {
                 break;
             }
         }

@@ -1,6 +1,7 @@
 #include "Game/Scene/StageFileLoader.hpp"
 #include "Game/System/GalaxyStatusAccessor.hpp"
 #include "Game/Util.hpp"
+#include "Game/Util/FileUtil.hpp"
 #include "JSystem/JKernel/JKRArchive.hpp"
 #include "JSystem/JKernel/JKRFileFinder.hpp"
 #include <cstdio>

@@ -73,19 +73,31 @@ void PlayTimerScene::update() {
 }
 
 void PlayTimerScene::draw() const {
+    if (mTimeLimitLayout != nullptr) {
+        mTimeLimitLayout->draw();
+    }
+
+    if (mTimeUpLayout != nullptr) {
+        mTimeUpLayout->draw();
+    }
+
+    if (_20->mFrame == 0) {
+        return;
+    }
+
     J2DOrthoGraphSimple graph;
     graph.setPort();
     u8 color = MR::lerp(0, 255, _20->getValue());
     JUtility::TColor v1;
-    v1.r = color;
-    v1.g = color;
-    v1.b = color;
+    v1.r = 0;
+    v1.g = 0;
+    v1.b = 0;
     v1.a = color;
     graph.setColor(v1, v1, v1, v1);
 
     f32 height = JUTVideo::getManager()->getRenderMode()->efbHeight;
     f32 width = MR::getScreenWidth();
-    TBox2f box(0.0f, 0.0f, 0.0f + height, 0.0f + width);
+    TBox2f box(0.0f, 0.0f, 0.0f + width, 0.0f + height);
     graph.fillBox(box);
 }
 

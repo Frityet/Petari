@@ -4,11 +4,14 @@
 #include "Game/System/GameSequenceFunction.hpp"
 #include "Game/System/GameSystemFunction.hpp"
 #include "Game/System/MainLoopFramework.hpp"
+#include "Game/Util/DrawUtil.hpp"
 #include "Game/Util/LayoutUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/TriggerChecker.hpp"
 #include "Game/Util/ValueControl.hpp"
+#include <JSystem/JUtility/JUTVideo.hpp>
 
 namespace {
     static const s32 sFadeinoutFrame = 30;
@@ -30,7 +33,26 @@ void GameSystemResetAndPowerProcess::init(const JMapInfoIter& rIter) {
     appear();
 }
 
-// GameSystemResetAndPowerProcess::draw
+void GameSystemResetAndPowerProcess::draw() const {
+    if (!isActive()) {
+        return;
+    }
+
+    J2DOrthoGraphSimple graph;
+    graph.setPort();
+    u8 alpha = MR::lerp(255, 0, mFadeinoutControl->getValue());
+    JUtility::TColor color;
+    color.r = 0;
+    color.g = 0;
+    color.b = 0;
+    color.a = alpha;
+    graph.setColor(color, color, color, color);
+
+    f32 height = JUTVideo::getManager()->getRenderMode()->efbHeight;
+    f32 width = MR::getScreenWidth();
+    TBox2f box(0.0f, 0.0f, width, height);
+    graph.fillBox(box);
+}
 
 bool GameSystemResetAndPowerProcess::isActive() const {
     return !isNerve(&NrvGameSystemResetAndPowerProcess::GameSystemResetAndPowerProcessPolling::sInstance);
