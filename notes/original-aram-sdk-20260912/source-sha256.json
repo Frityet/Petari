@@ -1,0 +1,110 @@
+[
+  {
+    "path": "decomp/src/Game/System/Overwrite.cpp",
+    "sha256": "3e80877a753014b5e1e887862baa87359850d4107404e56fe35fb4960cf5fc16"
+  },
+  {
+    "path": "aurora/lib/dolphin/AR.cpp",
+    "sha256": "0f3ee3084cd05d85b797b61f6c3c46de19ce0f6ad0995119bae29a20afabaee4"
+  },
+  {
+    "path": "aurora/lib/dolphin/AR.hpp",
+    "sha256": "276246a923ff91867e1ff750cc0cbffd7a65d0eaedde8c994e161d9dc7c3c787"
+  },
+  {
+    "path": "aurora/lib/dolphin/os/OSArena.cpp",
+    "sha256": "87da39aadc19791051101a9367d0215d516f0416f17ca732642d9b0b08e5c4ff"
+  },
+  {
+    "path": "aurora/include/dolphin/ar.h",
+    "sha256": "9dd7b17be1070e413048fee3a3a3c41310004271004b5dbd0efc25b047efc5b5"
+  },
+  {
+    "path": "tests/OriginalJkrAramTests.cpp",
+    "sha256": "1a8873d630cca9c84108f271dc2ab9bb5e3036ed0c8b4fdc5ecb0e25d6cc2a42"
+  },
+  {
+    "path": "src/revolution/aralt.h",
+    "sha256": "b2424ee017e0e4ba6da30aa4ed42d5680a8e6130430ea4a7761c210834daadae"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRCompression.hpp",
+    "sha256": "1790d57c31fd5f31c31667188427093dcc6f0c399a02989148f2f607bceffb71"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRDvdFile.hpp",
+    "sha256": "9575ac2c9f12d6a17d2530fe0763784e6b9c840d147f89977eaeeebed7c9b1cf"
+  },
+  {
+    "path": "src/JSystem/JSupport/JSUFileStream.hpp",
+    "sha256": "98ffc5a6fb5e12af89cd13f272b1879dcd56242372a9142aac2b2e16df117d9a"
+  },
+  {
+    "path": "src/JSystem/JSupport/JSUFileStream.cpp",
+    "sha256": "3f70b06e80b8d9ca8b9191bbd6131378c9a3788250dda4b994f1132d2644e5d5"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRAram.hpp",
+    "sha256": "693ef02854970e091ddb4a00d8625d672825d0ca17106f7709a75a1de76c7738"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRAram.cpp",
+    "sha256": "ba77b39aa39b7ef1b9a0b3b81a99cb8222b2c9cb1867bab3afd8f4a87957bd0c"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRAramHeap.hpp",
+    "sha256": "a5918cd26776502a0ff0cb5e3f46944920949fbd0b588352bd437bec707440a4"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRAramHeap.cpp",
+    "sha256": "2dfe046951ba3b0b168f9755008ff9d53122ed46c84ba54e7d7adbdb29450a29"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRAramBlock.hpp",
+    "sha256": "e42491f3be83ec42b708b4cfa83bce588dc0c2392a1108e726ed9a4bb35b25bf"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRAramBlock.cpp",
+    "sha256": "00ef0f449f2b9b6db8e48d274520b9aa7f97ae779d96edf49d56e237a76f0916"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRAramPiece.hpp",
+    "sha256": "4fa917ee75800f6d0e9e8366a9c9421791c8b042381b9f9e2ebc8e1bab6c13f6"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRAramPiece.cpp",
+    "sha256": "c7dec465b580dae4f1ddf4657ed560923e9a9d286223553761da5e836aa6ff67"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRAramStream.hpp",
+    "sha256": "0145738a985cdfbfcaf9bdd328fe8d6353930220abff3e3bcc117da342ab4e92"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRAramStream.cpp",
+    "sha256": "941a7ac97e30fd68ec11cb51f2628eca942903ab0e9e59159d56c0b68536f310"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRDecomp.hpp",
+    "sha256": "3897371c299b09dcd24d38347e8b20762ceeba9ce54706a6e9749ace4c072e82"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRDecomp.cpp",
+    "sha256": "9b2c34258a6a84317665c5376cca3da084c3c7b950e35476feb0b2348cff7302"
+  },
+  {
+    "path": "src/compat/JkrAllocationDomain.cpp",
+    "sha256": "3cdfed9f651a2e431f9684c37e267dd9a935ebeb55e7ec07244db8f36fdf41c1"
+  },
+  {
+    "path": "aurora/include/revolution/types.h",
+    "sha256": "db44acf5e1144fb04398547b1c3e0a9867355831166014a56a7b54c1ec79e935"
+  },
+  {
+    "path": "aurora/include/revolution/os/OSFastCast.h",
+    "sha256": "597c424c9e6e9d298394611d0e8a95acecb8d26f2a0c56c61673aabba8f701e9"
+  },
+  {
+    "path": "aurora/lib/dolphin/os/OSReport.cpp",
+    "sha256": "83598b1f5df611f26a8a3b8c5766b64ed3abfd45e2a201b2cf61aa8db42ad4b3"
+  }
+]

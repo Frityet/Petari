@@ -1,5 +1,7 @@
 #include <aurora/exception.hpp>
 #include <aurora/mem2_arena.hpp>
+#include <aurora/guest_thread.hpp>
+#include <dolphin/ar.h>
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/JkrAllocationRouting.hpp"
 #include "compat/JkrAllocationProvenance.hpp"
@@ -95,7 +97,11 @@ namespace smgpc::compat {
     }
 
     JkrHeapRuntime::~JkrHeapRuntime() {
+        const aurora::os::GuestThreadExecutionScope execution;
         JkrHostAllocationScope host;
+        // A borrowed AR callback may still allocate from the live root. Finish
+        // it before taking the heap mutex or destroying its allocation owner.
+        if (_storage->mem2 != nullptr) ARReset();
         HeapLock lock;
         if (domains != nullptr || _storage->root->mChildTree.getNumChildren() != 0) {
             jkr_panic(__FILE__, __LINE__, "JKR runtime released with live child heaps");
@@ -252,20 +258,24 @@ namespace smgpc::compat {
 
     JkrAllocationDomain::~JkrAllocationDomain() {
         JkrHostAllocationScope host;
-        HeapLock lock;
-        // Original heap destruction never selects a different current heap.
-        // Disposer allocations therefore follow the existing original selection;
-        // the base destructor may update that selection as it unlinks the heap.
         {
-            OriginalHeapTeardown original;
-            if (_storage->owns_heap) _storage->heap->destroy();
-        }
-        for (auto** record = &domains; *record != nullptr; record = &(*record)->next) {
-            if (*record == &_storage->record) {
-                *record = (*record)->next;
-                break;
+            HeapLock lock;
+            // Original heap destruction never selects a different current heap.
+            // Disposer allocations therefore follow the existing original selection;
+            // the base destructor may update that selection as it unlinks the heap.
+            {
+                OriginalHeapTeardown original;
+                if (_storage->owns_heap) _storage->heap->destroy();
+            }
+            for (auto** record = &domains; *record != nullptr; record = &(*record)->next) {
+                if (*record == &_storage->record) {
+                    *record = (*record)->next;
+                    break;
+                }
             }
         }
+        // A retained parent may reach its final release here. Its callback
+        // retirement must be able to wait without inheriting our heap lock.
         _storage.reset();
     }
 

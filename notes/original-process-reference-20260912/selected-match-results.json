@@ -1,0 +1,207 @@
+{
+  "Overwrite": {
+    "sections": [
+      {
+        "name": ".text",
+        "size": "11996",
+        "match_percent": 5.135045
+      },
+      {
+        "name": ".ctors",
+        "size": "4",
+        "match_percent": 0.0
+      },
+      {
+        "name": ".rodata",
+        "size": "16",
+        "match_percent": 0.0
+      },
+      {
+        "name": ".data",
+        "size": "264",
+        "match_percent": 0.0
+      },
+      {
+        "name": ".bss",
+        "size": "56",
+        "match_percent": 0.0
+      },
+      {
+        "name": ".sdata",
+        "size": "24",
+        "match_percent": 57.14286
+      },
+      {
+        "name": ".sbss",
+        "size": "8",
+        "match_percent": 0.0
+      },
+      {
+        "name": ".sdata2",
+        "size": "48",
+        "match_percent": 0.0
+      }
+    ],
+    "selected_functions": [
+      {
+        "name": "startDMA__12JKRAramPieceFP12JKRAMCommand",
+        "demangled_name": "JKRAramPiece::startDMA(JKRAMCommand*)",
+        "size": "128",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__7JKRAramFUlUll",
+        "demangled_name": "JKRAram::JKRAram(unsigned long, unsigned long, long)",
+        "size": "268",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  "ObjUtil": {
+    "sections": [
+      {
+        "name": ".text",
+        "size": "11296",
+        "match_percent": 98.47663
+      },
+      {
+        "name": ".ctors",
+        "size": "4",
+        "match_percent": 0.0
+      },
+      {
+        "name": ".bss",
+        "size": "16",
+        "match_percent": 0.0
+      },
+      {
+        "name": ".sdata2",
+        "size": "40",
+        "match_percent": 100.0
+      }
+    ],
+    "selected_functions": [
+      {
+        "name": "getCsvDataU8__2MRFPUcPC8JMapInfoPCcl",
+        "demangled_name": "MR::getCsvDataU8(unsigned char*, const JMapInfo*, const char*, long)",
+        "size": "72",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getCsvDataF32__2MRFPfPC8JMapInfoPCcl",
+        "demangled_name": "MR::getCsvDataF32(float*, const JMapInfo*, const char*, long)",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getCsvDataBool__2MRFPbPC8JMapInfoPCcl",
+        "demangled_name": "MR::getCsvDataBool(bool*, const JMapInfo*, const char*, long)",
+        "size": "136",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getCsvDataVec__2MRFP3VecPC8JMapInfoPCcl",
+        "demangled_name": "MR::getCsvDataVec(Vec*, const JMapInfo*, const char*, long)",
+        "size": "192",
+        "match_percent": 99.6875
+      },
+      {
+        "name": "getCsvDataColor__2MRFP8_GXColorPC8JMapInfoPCcl",
+        "demangled_name": "MR::getCsvDataColor(_GXColor*, const JMapInfo*, const char*, long)",
+        "size": "236",
+        "match_percent": 99.66102
+      }
+    ]
+  },
+  "SoundUtil": {
+    "sections": [
+      {
+        "name": ".text",
+        "size": "7596",
+        "match_percent": 99.16746
+      },
+      {
+        "name": ".data",
+        "size": "544",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sdata2",
+        "size": "8",
+        "match_percent": 100.0
+      }
+    ],
+    "selected_functions": [
+      {
+        "name": "getMapSoundCodeFoot__2MRFPC9LiveActor",
+        "demangled_name": "MR::getMapSoundCodeFoot(const LiveActor*)",
+        "size": "228",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startTalkSound__2MRFUcPC9LiveActor",
+        "demangled_name": "MR::startTalkSound(unsigned char, const LiveActor*)",
+        "size": "128",
+        "match_percent": 99.875
+      },
+      {
+        "name": "moveVolumeStageBGM__2MRFfUl",
+        "demangled_name": "MR::moveVolumeStageBGM(float, unsigned long)",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "moveVolumeStageBGMForNoteFairy__2MRFfUl",
+        "demangled_name": "MR::moveVolumeStageBGMForNoteFairy(float, unsigned long)",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isStopOrFadeoutStageBgmID__2MRFUl",
+        "demangled_name": "MR::isStopOrFadeoutStageBgmID(unsigned long)",
+        "size": "208",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  "FileLoader": {
+    "sections": [
+      {
+        "name": ".text",
+        "size": "1416",
+        "match_percent": 99.31921
+      },
+      {
+        "name": ".sdata",
+        "size": "8",
+        "match_percent": 100.0
+      }
+    ],
+    "selected_functions": []
+  },
+  "FileRipper": {
+    "sections": [
+      {
+        "name": ".text",
+        "size": "1812",
+        "match_percent": 99.97793
+      },
+      {
+        "name": ".data",
+        "size": "56",
+        "match_percent": 94.33962
+      },
+      {
+        "name": ".bss",
+        "size": "24",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sbss",
+        "size": "24",
+        "match_percent": 100.0
+      }
+    ],
+    "selected_functions": []
+  }
+}

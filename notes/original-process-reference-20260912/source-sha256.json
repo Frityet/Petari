@@ -1,0 +1,7 @@
+{
+  "decomp/src/Game/System/Overwrite.cpp": "3e80877a753014b5e1e887862baa87359850d4107404e56fe35fb4960cf5fc16",
+  "decomp/src/Game/System/FileLoader.cpp": "c9f607caa633cfe540e0ab33252a03c3bea7960573854515c26d05fb16d1dc88",
+  "decomp/src/Game/System/FileRipper.cpp": "d7a71c110e2e1872640f57fe5163d1e2f801eb6bb2a0c23d1af88959d6f73d23",
+  "decomp/src/Game/Util/ObjUtil.cpp": "5a88dfcaf25fdd93c00c711300b4de18afb8e75ac5211f68ed041dc7662c083c",
+  "decomp/src/Game/Util/SoundUtil.cpp": "50dfd27b509823581fa11b631a6183053cc6af25f44c7746d9a32071eeeb2db6"
+}

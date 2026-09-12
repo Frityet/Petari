@@ -120,6 +120,10 @@ target("smg-pc-game")
     }
     add_files("../JSystem/JGeometry/TMatrix.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("../JSystem/JKernel/JKRThread.cpp")
+    add_files({"../JSystem/JKernel/JKRAram.cpp", "../JSystem/JKernel/JKRAramHeap.cpp",
+               "../JSystem/JKernel/JKRAramBlock.cpp", "../JSystem/JKernel/JKRAramPiece.cpp",
+               "../JSystem/JKernel/JKRAramStream.cpp", "../JSystem/JKernel/JKRDecomp.cpp",
+               "../JSystem/JSupport/JSUFileStream.cpp"})
     add_headerfiles("**.hpp")
     add_headerfiles("../camera/**.hpp")
     add_headerfiles("../layout/**.hpp")
