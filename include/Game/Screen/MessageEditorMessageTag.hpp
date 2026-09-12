@@ -2,9 +2,16 @@
 
 #include <revolution/types.h>
 
+namespace nw4r {
+    namespace ut {
+        template < typename CharType > struct PrintContext;
+    };
+};
+
 class MessageEditorMessageTag {
 public:
     MessageEditorMessageTag(const wchar_t*);
+    MessageEditorMessageTag(const nw4r::ut::PrintContext< wchar_t >*);
 
     u32 getTagLength() const;
     u32 getSkipLength() const;

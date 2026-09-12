@@ -35,7 +35,25 @@ namespace MR {
         pCtrl->setMessageArg(arg);
     }
 
-    // ...
+    TalkMessageCtrl* createTalkCtrl(LiveActor* pHost, const JMapInfoIter& rIter, const char* pName, const TVec3f& rOffset, MtxPtr pMtx) {
+        TalkMessageCtrl* pCtrl = new TalkMessageCtrl(pHost, rOffset, pMtx);
+        pCtrl->createMessage(rIter, pName);
+        return pCtrl;
+    }
+
+    TalkMessageCtrl* createTalkCtrlDirect(LiveActor* pHost, const JMapInfoIter& rIter, const char* pName, const TVec3f& rOffset, MtxPtr pMtx) {
+        TalkMessageCtrl* pCtrl = new TalkMessageCtrl(pHost, rOffset, pMtx);
+        pCtrl->createMessageDirect(rIter, pName);
+        return pCtrl;
+    }
+
+    TalkMessageCtrl* createTalkCtrlDirectOnRootNodeAutomatic(LiveActor* pHost, const JMapInfoIter& rIter, const char* pName, const TVec3f& rOffset,
+                                                           MtxPtr pMtx) {
+        TalkMessageCtrl* pCtrl = new TalkMessageCtrl(pHost, rOffset, pMtx);
+        pCtrl->createMessageDirect(rIter, pName);
+        pCtrl->mIsOnRootNodeAuto = true;
+        return pCtrl;
+    }
 
     bool tryTalkNearPlayer(TalkMessageCtrl* pCtrl) {
         if (MR::isTimeKeepDemoActive()) {

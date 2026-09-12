@@ -35,3 +35,26 @@ u32 MessageEditorMessageTag::getSkipLength() const {
 u32 MessageEditorMessageTag::getParam32(int index) const {
     return *reinterpret_cast< const u32* >(reinterpret_cast< const u8* >(mMessage) + index * 4 + 4);
 }
+
+MessageEditorMessageTag::MessageEditorMessageTag(const nw4r::ut::PrintContext< wchar_t >* context) : mMessage(context->str) {
+}
+
+u32 MessageEditorMessageTag::getTagLength() const {
+    return reinterpret_cast< const u8* >(mMessage)[0] - 2U;
+}
+
+u32 MessageEditorMessageTag::getParamLength() const {
+    return reinterpret_cast< const u8* >(mMessage)[0] - 6U;
+}
+
+u8 MessageEditorMessageTag::getParam8(int index) const {
+    return reinterpret_cast< const u8* >(mMessage)[index + 4];
+}
+
+u16 MessageEditorMessageTag::getParam16(int index) const {
+    return mMessage[index + 2];
+}
+
+wchar_t* MessageEditorMessageTag::getParamPtr(int offset) const {
+    return reinterpret_cast< wchar_t* >(reinterpret_cast< u8* >(const_cast< wchar_t* >(mMessage)) + offset + 4);
+}

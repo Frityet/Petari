@@ -6,6 +6,7 @@
 #define __va_arg(ap, t) (*((t*)__va_arg(ap, _var_arg_typeof(t))))
 #define va_start __va_start
 #define va_arg __va_arg
+#define va_copy(dst, src) ((dst)[0] = (src)[0])
 #define va_end __va_end
 
 #define __va_end(ap) ((void)0)

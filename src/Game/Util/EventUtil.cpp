@@ -6,7 +6,7 @@
 #include "Game/System/GalaxyStatusAccessor.hpp"
 #include "Game/System/GameDataConst.hpp"
 #include "Game/System/GameDataFunction.hpp"
-// #include "Game/System/GameDataGalaxyStorage.hpp"
+#include "Game/System/GameDataGalaxyStorage.hpp"
 #include "Game/System/GameEventFlag.hpp"
 #include "Game/System/GameEventFlagTable.hpp"
 #include "Game/System/GameSequenceFunction.hpp"
@@ -46,7 +46,17 @@ namespace MR {
         GameDataFunction::incPlayerMissNum();
     }
 
-    // isAnyPlayerLeftSupply
+    bool isAnyPlayerLeftSupply() {
+        bool isAnySupply = true;
+        bool isPlayerSupply = true;
+        if (GameDataFunction::isPlayerLeftSupply() == false && GameDataFunction::isPointCollectForLetter() == false) {
+            isPlayerSupply = false;
+        }
+        if (isPlayerSupply == false && GameDataFunction::isLuigiLeftSupply() == false) {
+            isAnySupply = false;
+        }
+        return isAnySupply;
+    }
 
     void offAllPlayerLeftSupply() {
         if (GameDataFunction::isPlayerLeftSupply()) {
@@ -477,7 +487,29 @@ namespace MR {
         GameDataFunction::setGameEventValueForBit("TicoGalaxyAlreadyTalk", bit, isTalk);
     }
 
-    // isGalaxyAnyCometAppearInCurrentStage
+    bool isGalaxyAnyCometAppearInCurrentStage() {
+        bool isAnyComet = true;
+        bool isRedDarkGhostQuickPurple = true;
+        bool isRedDarkGhostQuick = true;
+        bool isRedDarkGhost = true;
+        bool isRedDark = true;
+        if (EventFunction::isStartCometEvent("Red") == false && EventFunction::isStartCometEvent("Dark") == false) {
+            isRedDark = false;
+        }
+        if (isRedDark == false && EventFunction::isStartCometEvent("Ghost") == false) {
+            isRedDarkGhost = false;
+        }
+        if (isRedDarkGhost == false && EventFunction::isStartCometEvent("Quick") == false) {
+            isRedDarkGhostQuick = false;
+        }
+        if (isRedDarkGhostQuick == false && EventFunction::isStartCometEvent("Purple") == false) {
+            isRedDarkGhostQuickPurple = false;
+        }
+        if (isRedDarkGhostQuickPurple == false && EventFunction::isStartCometEvent("Black") == false) {
+            isAnyComet = false;
+        }
+        return isAnyComet;
+    }
 
     void startGalaxyCometEvent() {
         EventFunction::startCometEvent();
@@ -593,14 +625,11 @@ namespace MR {
         return true;
     }
 
-    /*
-    // TODO: GameDataSomeScenarioAccessor has not yet been declared.
     s32 getCoinBestScore(const char* pGalaxyName, s32 scenarioNo) {
         GameDataSomeScenarioAccessor accessor = GameDataFunction::makeGalaxyScenarioAccessor(pGalaxyName, scenarioNo);
 
         return accessor.getMaxCoinNum();
     }
-    */
 
     s32 getCoinBestScore(const char* pGalaxyName) {
         GalaxyStatusAccessor accessor = MR::makeGalaxyStatusAccessor(pGalaxyName);
@@ -675,8 +704,8 @@ namespace MR {
             return true;
         }
 
-        s32 starId = 0;
         const char* pHidingGalaxyName = nullptr;
+        s32 starId;
 
         GameSequenceFunction::getLuigiHidingGalaxyNameAndStarId(&pHidingGalaxyName, &starId);
 
@@ -684,13 +713,11 @@ namespace MR {
     }
 
     bool isLuigiDisappearFromAstroGalaxyOrHiding() {
-        bool isLuigiDisappearFromAstroGalaxy = GameSequenceFunction::isLuigiDisappearFromAstroGalaxy();
-
-        if (isLuigiDisappearFromAstroGalaxy) {
-            return MR::isOnLuigiHiding();
-        } else {
-            return isLuigiDisappearFromAstroGalaxy;
+        bool isLuigiDisappear = GameSequenceFunction::isLuigiDisappearFromAstroGalaxy();
+        if (isLuigiDisappear == false) {
+            isLuigiDisappear = MR::isOnLuigiHiding();
         }
+        return isLuigiDisappear;
     }
 
     bool isLuigiLetterArrivalAtMessenger() {
@@ -703,7 +730,27 @@ namespace MR {
         }
     }
 
-    // isLuigiHidingGalaxyAndScenario
+    bool isLuigiHidingGalaxyAndScenario(const char* pGalaxyName, s32 scenarioNo) {
+        if (!GameDataFunction::isOnGameEventFlag("SpecialStarLuigiRescued")) {
+            return false;
+        }
+
+        s32 starId;
+        const char* pHidingGalaxyName = nullptr;
+
+        GameSequenceFunction::getLuigiHidingGalaxyNameAndStarId(&pHidingGalaxyName, &starId);
+
+        if (pHidingGalaxyName == nullptr) {
+            return false;
+        }
+
+        bool isHiding = false;
+        if (GameSequenceFunction::isLuigiHidingAnyGalaxy() && MR::isEqualString(pHidingGalaxyName, pGalaxyName) && starId == scenarioNo) {
+            isHiding = true;
+        }
+
+        return isHiding;
+    }
 
     bool isPowerStarGetDemoWithLuigiCurrentGalaxy() {
         if (MR::isOnLuigiHidingCurrentStage()) {
@@ -713,8 +760,50 @@ namespace MR {
         return GameDataConst::isGalaxyLuigiArrested(MR::getCurrentStageName(), -1);
     }
 
-    // isPowerStarGetDemoWithLuigiCurrentGalaxyAndScenario
-    // getLuigiLetterGalaxyName
+    bool isPowerStarGetDemoWithLuigiCurrentGalaxyAndScenario(s32 scenarioNo) {
+        if (GameSequenceFunction::isLuigiHidingAnyGalaxy()) {
+            s32 starId = -1;
+            const char* pHidingGalaxyName = nullptr;
+
+            GameSequenceFunction::getLuigiHidingGalaxyNameAndStarId(&pHidingGalaxyName, &starId);
+
+            if (MR::isEqualString(MR::getCurrentStageName(), pHidingGalaxyName) && starId == scenarioNo) {
+                return true;
+            }
+        }
+
+        if (GameDataConst::isGalaxyLuigiArrested(MR::getCurrentStageName(), scenarioNo)) {
+            return true;
+        }
+
+        s32 selectedScenarioNo = MR::getCurrentSelectedScenarioNo();
+
+        bool isSelectedStarLuigi = selectedScenarioNo != -1 && GameDataConst::isPowerStarLuigiHas(MR::getCurrentStageName(), selectedScenarioNo);
+        if (isSelectedStarLuigi) {
+            return GameDataConst::isPowerStarLuigiHas(MR::getCurrentStageName(), scenarioNo);
+        }
+
+        return false;
+    }
+    const char* getLuigiLetterGalaxyName() {
+        s32 selectedScenarioNo = MR::getCurrentSelectedScenarioNo();
+
+        bool isSelectedStarLuigi = selectedScenarioNo != -1 && GameDataConst::isPowerStarLuigiHas(MR::getCurrentStageName(), selectedScenarioNo);
+        if (isSelectedStarLuigi) {
+            return MR::getCurrentStageName();
+        }
+
+        if (GameSequenceFunction::isLuigiDisappearFromAstroGalaxy() || GameSequenceFunction::isLuigiHidingAnyGalaxy()) {
+            s32 starId;
+            const char* pHidingGalaxyName = nullptr;
+
+            GameSequenceFunction::getLuigiHidingGalaxyNameAndStarId(&pHidingGalaxyName, &starId);
+
+            return pHidingGalaxyName;
+        }
+
+        return nullptr;
+    }
 
     // FIXME: Improper stack accesses.
     const char* getLuigiLetterGalaxyNameForNPC() {

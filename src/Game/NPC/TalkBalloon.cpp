@@ -103,11 +103,11 @@ void TalkBalloon::pauseOff() {
     MR::requestMovementOn(this);
 }
 
-inline f32 fmin(f32 a, f32 b) {
+inline f32 minFloat(f32 a, f32 b) {
     return b >= a ? a : b;
 }
 
-inline f32 fmax(f32 a, f32 b) {
+inline f32 maxFloat(f32 a, f32 b) {
     return b >= a ? b : a;
 }
 
@@ -130,10 +130,10 @@ void TalkBalloon::updateBalloon() {
         if (v2.x * v3.y - v2.y * v3.x > 0.0f) {
             f32 halfMax = paneAnimFrameMax;
             halfMax *= 0.5f;
-            paneAnimFrameMax = fmin(paneAnimFrameMax, halfMax + cosine);
+            paneAnimFrameMax = minFloat(paneAnimFrameMax, halfMax + cosine);
         } else {
             f32 half = 0.5f;
-            paneAnimFrameMax = fmax(0.0f, paneAnimFrameMax * half - cosine);
+            paneAnimFrameMax = maxFloat(0.0f, paneAnimFrameMax * half - cosine);
         }
 
         if (!_29) {

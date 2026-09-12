@@ -40,9 +40,13 @@ void TalkMessageCtrl::createMessage(const JMapInfoIter& rIter, const char* pName
     }
 }
 
-bool isNodeEventContinue(const MessageSystem::FlowNodeEvent* pArg) {
-    return pArg->mEventType <= 4 && (1 << pArg->mEventType & 0x15);
-}
+namespace {
+    bool isNodeEventContinue(const MessageSystem::FlowNodeEvent*) NO_INLINE;
+
+    bool isNodeEventContinue(const MessageSystem::FlowNodeEvent* pArg) {
+        return pArg->mEventType <= 4 && (1 << pArg->mEventType & 0x15);
+    }
+};  // namespace
 
 void TalkMessageCtrl::createMessageDirect(const JMapInfoIter& rIter, const char* pName) {
     mNodeCtrl = new TalkNodeCtrl();
@@ -63,7 +67,7 @@ bool TalkMessageCtrl::rootNodeEve() {
             return true;
         }
 
-        if (mEventFunc->operator()(nodeEvent->mUnknown) == nullptr) {
+        if (mEventFunc->operator()(nodeEvent->mUnknown) == false) {
             return false;
         }
     } else if (groupID == 4) {
@@ -71,7 +75,7 @@ bool TalkMessageCtrl::rootNodeEve() {
             return true;
         }
 
-        if (mAnimeFunc->operator()(nodeEvent->mUnknown) == nullptr) {
+        if (mAnimeFunc->operator()(nodeEvent->mUnknown) == false) {
             return false;
         }
     } else if (groupID == 3) {
@@ -82,7 +86,7 @@ bool TalkMessageCtrl::rootNodeEve() {
     } else if (groupID == 6) {
         MR::onSwitchB(mHostActor);
     } else if (groupID == 7) {
-        if (mKillFunc->operator()(nodeEvent->mUnknown) == nullptr) {
+        if (mKillFunc->operator()(nodeEvent->mUnknown) == false) {
             return false;
         }
     }
