@@ -66,17 +66,3 @@ void SceneFunction::initForLiveActor() {
 
 void SceneFunction::createHioBasicNode(Scene*) {
 }
-
-namespace MR {
-    bool isStageDisablePauseMenu() {
-        return isStageFileSelect() || isStageEpilogueDemo();
-    }
-
-    bool isStageFileSelect() {
-        return isEqualStageName("FileSelect");
-    }
-
-    bool isStageEpilogueDemo() {
-        return isEqualStageName("EpilogueDemoStage");
-    }
-}

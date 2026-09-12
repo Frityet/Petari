@@ -690,7 +690,7 @@ namespace {
         const auto adapter = source.find(
             "class NameObjPlacementLifecycleAdapter final");
         const auto strict_scope = source.find(
-            "PlacementZoneNameScope _scope;", adapter);
+            "PlacementZoneScope _scope;", adapter);
         const auto adapter_factory = source.find(
             "std::make_unique<ConstructionScope>(placement)", adapter);
         const auto scope_use = source.find(

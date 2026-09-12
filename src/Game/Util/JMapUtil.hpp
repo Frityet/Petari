@@ -88,6 +88,8 @@ namespace MR {
     }
 
     bool isConnectedWithRail(const JMapInfoIter& rIter);
+    bool getRailId(const JMapInfoIter& rIter, s32*);
+    bool getNextLinkRailID(const JMapInfoIter& rIter, s32*);
     bool isEqualRailUsage(const JMapInfoIter& rIter, const char*);
     void getRailPointPos0(const JMapInfoIter& rIter, TVec3f* pOut);
     void getRailPointPos1(const JMapInfoIter& rIter, TVec3f* pOut);

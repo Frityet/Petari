@@ -28,7 +28,7 @@
 #include "resource/BcsvTable.hpp"
 #include "resource/RarcArchive.hpp"
 #include "scene/AreaObjRuntime.hpp"
-#include "scene/PlacementZoneNameScope.hpp"
+#include "scene/PlacementZoneScope.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "scene/StageInitializationService.hpp"
@@ -632,7 +632,7 @@ namespace {
         require(archives.size() == 1U && archives.front().loaded,
                 "the exact wall lifecycle must preload its real retail archive");
         {
-            const auto zone_scope = smgpc::scene::PlacementZoneNameScope(wall->zone_id, wall->zone_name);
+            const auto zone_scope = smgpc::scene::PlacementZoneScope(wall->zone_id);
             actor->init(iter);
         }
         require(MR::getCurrentPlacementZoneId() == -1,

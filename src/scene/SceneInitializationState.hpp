@@ -6,9 +6,8 @@ namespace smgpc::scene {
 
     class SceneInitializationScope;
 
-    // One native scene owns the same state that the retail scene controller
-    // retains through construction and normal execution. This is independent
-    // of the host controller's asynchronous scene-transition state machine.
+    // Native placement scopes borrow the actual process scene controller.
+    // This lifetime record does not publish a second initialization state.
     class SceneInitializationBinding final {
     public:
         SceneInitializationBinding();
@@ -22,9 +21,8 @@ namespace smgpc::scene {
     private:
         friend class SceneInitializationScope;
         friend SceneInitializeState current_scene_initialization_state();
-        friend void set_scene_initialization_state(SceneInitializeState state);
 
-        SceneInitializeState _state = SceneInitializeState_Init;
+        GameSystemSceneController *_controller = nullptr;
         SceneInitializationScope *_scope = nullptr;
     };
 
@@ -45,6 +43,5 @@ namespace smgpc::scene {
     };
 
     [[nodiscard]] SceneInitializeState current_scene_initialization_state();
-    void set_scene_initialization_state(SceneInitializeState state);
 
 }  // namespace smgpc::scene

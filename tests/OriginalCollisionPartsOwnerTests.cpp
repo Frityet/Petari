@@ -10,7 +10,7 @@
 #include "runtime/RuntimeContext.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StagePlacementResolver.hpp"
-#include "scene/PlacementZoneNameScope.hpp"
+#include "scene/PlacementZoneScope.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Binder.hpp"
@@ -116,7 +116,7 @@ int main() {
             holder.create(SceneObj_DemoDirector);
             binding.initialize_camera_system();
             holder.create(SceneObj_PlacementStateChecker);
-            smgpc::scene::PlacementZoneNameScope placement(0, "HeavensDoorGalaxy");
+            smgpc::scene::PlacementZoneScope placement(0);
             auto* resource = MR::createAndAddResourceHolder("HeavensDoorSmallPlanet.arc");
             MatrixActor actor;
             Triangle retained;

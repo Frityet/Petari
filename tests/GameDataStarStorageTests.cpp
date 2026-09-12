@@ -7,6 +7,7 @@
 #include "Game/System/GalaxyStatusAccessor.hpp"
 #include "Game/System/ScenarioDataParser.hpp"
 #include "Game/System/UserFile.hpp"
+#include "Game/Util/SceneUtil.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/GameDataFunctionCompat.hpp"
 #include "compat/GameDataOwnership.hpp"
@@ -69,7 +70,8 @@ int main() {
             require(source->user_file().mGameDataHolder == &source->holder() &&
                         source->holder().mUserFile == &source->user_file(),
                     "the selected file must contain the actual mutually associated UserFile and GameDataHolder");
-            require(GameDataFunction::calcCurrentPowerStarNum() == 0, "new selected file has no owned stars");
+            require(GameDataFunction::calcCurrentPowerStarNum() == 0 && MR::getPowerStarNum() == 0,
+                    "original SceneUtil counter reads zero from the actual new selected file");
             for (s32 index = 0; index < parser.mScenarioData.size(); ++index) {
                 const auto* data = parser.getScenarioData(index);
                 const auto accessor = GalaxyStatusAccessor(data);
@@ -105,8 +107,8 @@ int main() {
 
             }
             require(galaxy_count > 1 && hidden_stars > 0, "actual catalog exercises multiple galaxies and hidden stars");
-            require(GameDataFunction::calcCurrentPowerStarNum() == expected_total,
-                    "aggregate count is the sum of real galaxy bit counts, including hidden stars");
+            require(GameDataFunction::calcCurrentPowerStarNum() == expected_total && MR::getPowerStarNum() == expected_total,
+                    "original SceneUtil counter sums the selected file's real galaxy bits, including hidden stars");
 
             s32 grand_stars = 0;
             for (s32 i = 0; i < GameEventFlagTable::getTableSize(); ++i) {
@@ -119,7 +121,8 @@ int main() {
                         "original Grand Star classification reads the actual event table");
                 require(GameDataFunction::hasGrandStar(id), "original Grand Star predicates read actual per-galaxy bits");
                 GameDataFunction::setGameFlagPowerStarSuccess(flag->mGalaxyName, flag->mStarID, false);
-                require(!GameDataFunction::hasGrandStar(id) && GameDataFunction::calcCurrentPowerStarNum() == expected_total - 1,
+                require(!GameDataFunction::hasGrandStar(id) && GameDataFunction::calcCurrentPowerStarNum() == expected_total - 1 &&
+                            MR::getPowerStarNum() == expected_total - 1,
                         "clearing a Grand Star changes both its derived flag and total exactly once");
                 GameDataFunction::setGameFlagPowerStarSuccess(flag->mGalaxyName, flag->mStarID, true);
                 ++grand_stars;
@@ -150,16 +153,16 @@ int main() {
             require(binary_size > 0 && binary_size <= binary.size(), "actual original chunks must fit their file buffer");
             {
                 auto other = smgpc::compat::GameDataSession{6U, process, catalog};
-                require(GameDataFunction::getPowerStarNumOwned(first_name.c_str()) == 0 &&
+                require(GameDataFunction::getPowerStarNumOwned(first_name.c_str()) == 0 && MR::getPowerStarNum() == 0 &&
                             other.scene_start_holder().calcCurrentPowerStarNum() == 0,
                         "another selected file starts with independent current and scene-start star records");
                 GameDataFunction::setGameFlagPowerStarSuccess(first_name.c_str(), 1, true);
-                require(GameDataFunction::calcCurrentPowerStarNum() == 1 &&
+                require(GameDataFunction::calcCurrentPowerStarNum() == 1 && MR::getPowerStarNum() == 1 &&
                             other.scene_start_holder().calcCurrentPowerStarNum() == 0,
                         "current-file awards must not mutate the separate initial snapshot");
                 other.user_file().loadFromGameDataBinary("mario6", binary.data(), binary_size);
                 require(!other.user_file().mIsGameDataCorrupted &&
-                            other.holder().calcCurrentPowerStarNum() == expected_total,
+                            other.holder().calcCurrentPowerStarNum() == expected_total && MR::getPowerStarNum() == expected_total,
                         "original UserFile loading must restore all serialized per-galaxy ownership records");
                 require(other.holder().getPlayerLeft() == 4 && other.holder().getStockedStarPieceNum() == 321,
                         "loaded PLAY payload must keep the original new-session lives rule");
@@ -167,8 +170,8 @@ int main() {
                 source->holder().resetAllData();
                 require(source->holder().calcCurrentPowerStarNum() == 0 &&
                             source->scene_start_holder().calcCurrentPowerStarNum() == expected_total &&
-                            other.holder().calcCurrentPowerStarNum() == expected_total,
-                        "reset must clear the actual current records without changing either independent copy");
+                            other.holder().calcCurrentPowerStarNum() == expected_total && MR::getPowerStarNum() == expected_total,
+                        "resetting the outer file leaves the selected SceneUtil counter and both independent copies unchanged");
                 require(!original_scenario.hasPowerStar() && !original_scenario.isAlreadyVisited() &&
                             original_scenario.getMaxCoinNum() == 0,
                         "reset clears the existing records without invalidating original accessors");
@@ -181,15 +184,17 @@ int main() {
                             scenario.isAlreadyVisited() && scenario.getMaxCoinNum() == 999,
                         "loaded records retain authored identity, coins and visits with their real catalog owner");
                 GameDataFunction::setGameFlagPowerStarSuccess(first_name.c_str(), 1, false);
-                require(GameDataFunction::getPowerStarNumOwned(first_name.c_str()) == first_count - 1,
+                require(GameDataFunction::getPowerStarNumOwned(first_name.c_str()) == first_count - 1 &&
+                            MR::getPowerStarNum() == expected_total - 1,
                         "loaded individual ownership remains mutable without an external catalog handle");
                 other.holder().resetAllData();
-                require(other.holder().calcCurrentPowerStarNum() == 0 && !scenario.isAlreadyVisited() && scenario.getMaxCoinNum() == 0,
+                require(other.holder().calcCurrentPowerStarNum() == 0 && MR::getPowerStarNum() == 0 &&
+                            !scenario.isAlreadyVisited() && scenario.getMaxCoinNum() == 0,
                         "loaded records support a real reset of stars, coins and visits");
             }
             require(GameDataFunction::getCurrentGameDataHolder() == &source->holder() &&
                         GameDataFunction::getSceneStartGameDataHolder() == &source->scene_start_holder() &&
-                        GameDataFunction::calcCurrentPowerStarNum() == 0,
+                        GameDataFunction::calcCurrentPowerStarNum() == 0 && MR::getPowerStarNum() == 0,
                     "nested file teardown restores both distinct outer bindings");
             require(process.host_heaps()->root_heap().getTotalFreeSize() < before_sessions,
                     "the outer file and its retained catalog remain owned until session teardown");

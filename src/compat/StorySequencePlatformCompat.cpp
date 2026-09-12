@@ -1,5 +1,4 @@
 #include <aurora/exception.hpp>
-#include "compat/StorySequencePlatformCompat.hpp"
 
 struct JMapData;
 
@@ -32,8 +31,6 @@ struct JMapData;
 #include <string_view>
 
 namespace {
-    thread_local smgpc::compat::story_sequence::SceneStateBinding *s_scene_state = nullptr;
-
     [[noreturn]] void unavailable(std::string_view operation) {
         aurora::throw_host_exception<std::runtime_error>("StorySequenceExecutor platform operation is unavailable: " + std::string(operation));
     }
@@ -110,43 +107,6 @@ namespace {
 
 }  // namespace
 
-namespace smgpc::compat::story_sequence {
-    SceneStateBinding::SceneStateBinding(std::string_view scene_name, std::string_view stage_name, s32 scenario_no)
-        : _previous(s_scene_state), _scene_name(scene_name), _stage_name(stage_name), _scenario_no(scenario_no) {
-        if (_scene_name.empty()) {
-            aurora::throw_host_exception<std::invalid_argument>("Story sequence scene state requires a scene name");
-        }
-        s_scene_state = this;
-    }
-
-    SceneStateBinding::~SceneStateBinding() {
-        if (s_scene_state != this) {
-            std::terminate();
-        }
-        s_scene_state = _previous;
-    }
-
-    const std::string &SceneStateBinding::scene_name() const {
-        return _scene_name;
-    }
-
-    const std::string &SceneStateBinding::stage_name() const {
-        return _stage_name;
-    }
-
-    s32 SceneStateBinding::scenario_no() const {
-        return _scenario_no;
-    }
-
-    const SceneStateBinding &require_scene_state() {
-        if (s_scene_state == nullptr) {
-            unavailable("bound scene state");
-        }
-        return *s_scene_state;
-    }
-
-}  // namespace smgpc::compat::story_sequence
-
 namespace GameDataFunction {
     bool isDataMario() {
         return require_current_game_data().isDataMario();
@@ -177,6 +137,7 @@ namespace GameDataFunction {
 
 
 
+
 const StorySequenceExecutorType::DemoSequenceInfo *StorySequenceExecutor::addDynamicDemoSequenceInfo(u16, u16, const char *) {
     unavailable("dynamic story demo sequence construction");
 }
@@ -192,43 +153,6 @@ namespace MR {
             hash = static_cast<u8>(*text) + hash * 31U;
         }
         return hash;
-    }
-
-    const char *getCurrentStageName() {
-        if (const auto *session = smgpc::compat::try_active_stage_session(); session != nullptr) {
-            return session->stage_name().c_str();
-        }
-        return smgpc::compat::story_sequence::require_scene_state().stage_name().c_str();
-    }
-
-    s32 getCurrentScenarioNo() {
-        if (const auto *session = smgpc::compat::try_active_stage_session(); session != nullptr) {
-            return session->scenario_no();
-        }
-        return smgpc::compat::story_sequence::require_scene_state().scenario_no();
-    }
-
-    bool isEqualSceneName(const char *name) {
-        if (name == nullptr) {
-            return false;
-        }
-        if (const auto *session = smgpc::compat::try_active_stage_session(); session != nullptr) {
-            return MR::isEqualStringCase(session->scene_name().c_str(), name);
-        }
-        return MR::isEqualStringCase(smgpc::compat::story_sequence::require_scene_state().scene_name().c_str(), name);
-    }
-
-    bool isEqualStageName(const char *name) {
-        return name != nullptr && MR::isEqualStringCase(getCurrentStageName(), name);
-    }
-
-    const JMapIdInfo &getInitializeStartIdInfo() {
-        static const JMapIdInfo initial(0, 0);
-        return initial;
-    }
-
-    const JMapIdInfo &getCurrentMarioStartIdInfo() {
-        return smgpc::compat::require_active_stage_session().initial_start_id();
     }
 
     bool isExecScenarioStarter() {

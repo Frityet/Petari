@@ -79,13 +79,7 @@ namespace MR {
         GameDataFunction::addPlayerLeft(1);
     }
 
-    s32 getCoinNum() {
-        return ::getScenePlayingResult()->getCoinNum();
-    }
 
-    s32 getPurpleCoinNum() {
-        return ::getScenePlayingResult()->mPurpleCoinNum;
-    }
 
     s32 getStarPieceNum() {
         if (MR::isStageAstroLocation()) {
@@ -94,12 +88,6 @@ namespace MR {
         return ::getScenePlayingResult()->getStarPieceNum();
     }
 
-    s32 getPowerStarNum() {
-        return GameDataFunction::calcCurrentPowerStarNum();
-    }
 
-    bool isStageAstroLocation() {
-        return isEqualStageName("AstroGalaxy") || isEqualStageName("AstroDome") || isEqualStageName("LibraryRoom");
-    }
 
 }

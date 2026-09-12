@@ -114,13 +114,3 @@ namespace smgpc::compat {
         return s_active_binding->registry();
     }
 }
-
-namespace MR {
-    TPos3f* getZonePlacementMtx(const JMapInfoIter& iter) {
-        return smgpc::compat::require_stage_zone_matrices().matrix_for_iter(iter);
-    }
-
-    TPos3f* getZonePlacementMtx(s32 zone_id) {
-        return smgpc::compat::require_stage_zone_matrices().matrix_for_zone(zone_id);
-    }
-}

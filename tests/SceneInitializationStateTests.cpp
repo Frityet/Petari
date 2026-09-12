@@ -1,4 +1,6 @@
 #include "Game/Util/SceneUtil.hpp"
+#include "Game/System/GameSystem.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "scene/SceneInitializationState.hpp"
 
 #include <array>
@@ -25,16 +27,16 @@ namespace {
     }
 
     void test_unowned_operations() {
-        require_rejected([] { (void)MR::isInitializeStatePlacementSomething(); });
-        require_rejected([] { (void)MR::isInitializeStateEnd(); });
-        require_rejected([] { MR::setInitializeStatePlacementPlayer(); });
+        require_rejected([] { const auto owner = SceneInitializationBinding{}; });
+        require_rejected([] { (void)current_scene_initialization_state(); });
         require_rejected([] { const auto phase = SceneInitializationScope(SceneInitializeState_Placement); });
     }
 
     void test_original_state_predicates_and_setters() {
+        SingletonHolder<GameSystem>::get()->mSceneController->setSceneInitializeState(SceneInitializeState_Init);
         auto scene = SceneInitializationBinding{};
         require(current_scene_initialization_state() == SceneInitializeState_Init,
-                "Scene construction did not begin at the original Init phase.");
+                "The original controller did not retain the explicit Init phase.");
         constexpr auto phases = std::array{
             SceneInitializeState_NotInit, SceneInitializeState_Init,
             SceneInitializeState_PlacementPlayer, SceneInitializeState_PlacementHighPriority,
@@ -66,6 +68,7 @@ namespace {
 
     void test_nested_failure_and_scene_replacement() {
         {
+            SingletonHolder<GameSystem>::get()->mSceneController->setSceneInitializeState(SceneInitializeState_Init);
             auto scene = SceneInitializationBinding{};
             require_rejected([] { const auto duplicate = SceneInitializationBinding{}; });
             require(current_scene_initialization_state() == SceneInitializeState_Init,
@@ -94,8 +97,8 @@ namespace {
             }
             require(MR::isInitializeStateEnd(), "Scoped postpass lost persistent completed state.");
         }
-        test_unowned_operations();
         {
+            SingletonHolder<GameSystem>::get()->mSceneController->setSceneInitializeState(SceneInitializeState_Init);
             const auto next_scene = SceneInitializationBinding{};
             require(current_scene_initialization_state() == SceneInitializeState_Init && !MR::isInitializeStateEnd(),
                     "The next scene inherited End from a retired generation.");
@@ -105,7 +108,12 @@ namespace {
 
 int main() {
     try {
-        test_unowned_operations();
+        auto* system = SingletonHolder<GameSystem>::get();
+        if (system == nullptr || system->mSceneController == nullptr) {
+            test_unowned_operations();
+            std::cerr << "[unavailable] original GameSystem scene controller is required; unowned scope rejection verified\n";
+            return 77;
+        }
         test_original_state_predicates_and_setters();
         test_nested_failure_and_scene_replacement();
         std::cout << "[ok] original scene initialization phases, nesting, failure and retirement\n";

@@ -47,9 +47,6 @@ namespace {
 }  // namespace
 
 namespace {
-    [[noreturn]] void throw_scene_playing_result_unavailable() {
-        aurora::throw_host_exception<std::logic_error>("ScenePlayingResult is unavailable in the active scene.");
-    }
 
     [[noreturn]] void throw_game_scene_layout_unavailable() {
         aurora::throw_host_exception<std::logic_error>("GameSceneLayoutHolder is unavailable in the active scene.");
@@ -256,13 +253,7 @@ namespace MR {
         });
     }
 
-    void incCoin(int) {
-        throw_scene_playing_result_unavailable();
-    }
 
-    void incPurpleCoin() {
-        throw_scene_playing_result_unavailable();
-    }
 
     void createPurpleCoinCounter() {
         throw_game_scene_layout_unavailable();

@@ -1,0 +1,205 @@
+{
+  "head": "b857c64b9f7549700455577e1f79420f27ea18a7",
+  "path_count": 34,
+  "paths": [
+    {
+      "path": "src/Game/Scene/StageDataHolder.hpp",
+      "action": "add complete current header",
+      "current_sha256": "3c6e158e121d8b627a8b3490211307ce0dd038269eba28dd9c2073adc137563d",
+      "staged_sha256": "3c6e158e121d8b627a8b3490211307ce0dd038269eba28dd9c2073adc137563d"
+    },
+    {
+      "path": "src/Game/Scene/StageFileLoader.hpp",
+      "action": "add complete current header",
+      "current_sha256": "d344e7d53b1b4e1af75094faac768ba053dcdbaa3974223a1d8c37034941f99d",
+      "staged_sha256": "d344e7d53b1b4e1af75094faac768ba053dcdbaa3974223a1d8c37034941f99d"
+    },
+    {
+      "path": "src/Game/System/PlacedHiddenStarScenarioTable.hpp",
+      "action": "add complete current header",
+      "current_sha256": "6e142bea00ea2290c1aaf9b8feceab82f38d902d8947daa62eb1cf08d1d37259",
+      "staged_sha256": "6e142bea00ea2290c1aaf9b8feceab82f38d902d8947daa62eb1cf08d1d37259"
+    },
+    {
+      "path": "src/scene/PlacementZoneScope.hpp",
+      "action": "add complete current header",
+      "current_sha256": "5d56b2bf16c5a00d0246bae7f62a4cc95d6e90ba45e1e861e15f305973bd8374",
+      "staged_sha256": "5d56b2bf16c5a00d0246bae7f62a4cc95d6e90ba45e1e861e15f305973bd8374"
+    },
+    {
+      "path": "src/Game/Util/SceneUtil.cpp",
+      "action": "current complete diff belongs to SceneUtil cleanup",
+      "current_sha256": "8c95e01714527facf38774899e79adf0ce0bf910ff975472e8012d5f80bd21d4",
+      "staged_sha256": "8c95e01714527facf38774899e79adf0ce0bf910ff975472e8012d5f80bd21d4"
+    },
+    {
+      "path": "src/Game/Util/JMapUtil.cpp",
+      "action": "current complete diff belongs to SceneUtil cleanup",
+      "current_sha256": "e6085e90135656c5d6eea14cade3afa52e4543adb34148da101281e747360685",
+      "staged_sha256": "e6085e90135656c5d6eea14cade3afa52e4543adb34148da101281e747360685"
+    },
+    {
+      "path": "src/Game/Util/JMapUtil.hpp",
+      "action": "current complete diff belongs to SceneUtil cleanup",
+      "current_sha256": "6307fbee5293e3310833f7ecc9c28722e702ff7f1511965565d88115488db7e7",
+      "staged_sha256": "6307fbee5293e3310833f7ecc9c28722e702ff7f1511965565d88115488db7e7"
+    },
+    {
+      "path": "src/compat/StorySequencePlatformCompat.cpp",
+      "action": "Remove SceneStateBinding include/private TLS/full namespace implementation and six MR SceneUtil methods (getCurrentStageName, getCurrentScenarioNo, isEqualSceneName, isEqualStageName, getInitializeStartIdInfo, getCurrentMarioStartIdInfo). Keep EventUtil isStarCompleteAllGalaxy and GameSystemFunction permission-stub changes for their respective cohorts.",
+      "current_sha256": "e1945fa51dd348ac21837ecddaa4dbad4d7f7cf92ea450d90257570ec7660215",
+      "staged_sha256": "8655be03973f393bf345f966e97d54f4187d29a6170a9c029ece8166fdbab813"
+    },
+    {
+      "path": "src/compat/OriginalSceneCounterQueries.cpp",
+      "action": "Remove only MR::getCoinNum, getPurpleCoinNum, getPowerStarNum, isStageAstroLocation. Preserve EventUtil getPlayerLeft/incPlayerLeft/getStarPieceNum and ScreenUtil requestOneUp/requestPowerUpHPMeter. Preserve local getScenePlayingResult helper while EventUtil getStarPieceNum remains.",
+      "current_sha256": "af050f3bf0c7ab9a776ff56d6ae34411963c5ff784b028fbe4d8883a72471c75",
+      "staged_sha256": "802efc52226035474d650adf7968ccf5069132153f79707f6b26b875dc646406"
+    },
+    {
+      "path": "src/compat/StageResourceBinding.cpp",
+      "action": "current complete diff belongs to SceneUtil cleanup",
+      "current_sha256": "6cb3d09f423ebafef25961523bc4f1138fd991551cdafa7dd9f9f76c407f8817",
+      "staged_sha256": "6cb3d09f423ebafef25961523bc4f1138fd991551cdafa7dd9f9f76c407f8817"
+    },
+    {
+      "path": "src/compat/SceneSystemUtilCompat.cpp",
+      "action": "current complete diff belongs to SceneUtil cleanup",
+      "current_sha256": "12319896baf25cf94610efd59bd977d93381b99d6e910c61da9471a088436782",
+      "staged_sha256": "12319896baf25cf94610efd59bd977d93381b99d6e910c61da9471a088436782"
+    },
+    {
+      "path": "src/compat/StageZoneMatrixRegistry.cpp",
+      "action": "current complete diff belongs to SceneUtil cleanup",
+      "current_sha256": "7a42f1beefc1b90bcbbb32e4ecb2be641428bff23d293c9136d6793f5a8ffda3",
+      "staged_sha256": "7a42f1beefc1b90bcbbb32e4ecb2be641428bff23d293c9136d6793f5a8ffda3"
+    },
+    {
+      "path": "src/compat/GameActorPhysicsCompat.cpp",
+      "action": "Remove only MR::incCoin(int), MR::incPurpleCoin(), and now-unused private throw_scene_playing_result_unavailable. Preserve ScreenUtil createPurpleCoinCounter/validatePurpleCoinCounter and its error helper.",
+      "current_sha256": "28fc4f19dc9f25c7c667c5dc456f53ec596be551fdd65f1daef3132a73e22244",
+      "staged_sha256": "d28d9b025692e952f26aed66668f5e82bcf83ac75080ec24301f5400b5c9af8b"
+    },
+    {
+      "path": "src/compat/SceneInitializationCompat.cpp",
+      "action": "current complete diff belongs to SceneUtil cleanup",
+      "current_sha256": "00155735d6b9f3af51dc33912251c7cad6fc1da0f69a7de20ec7c784d08c99de",
+      "staged_sha256": "00155735d6b9f3af51dc33912251c7cad6fc1da0f69a7de20ec7c784d08c99de"
+    },
+    {
+      "path": "src/scene/SceneInitializationState.cpp",
+      "action": "current complete diff belongs to SceneUtil cleanup",
+      "current_sha256": "a52d4d07e133b434919dbe0ac682922c833586aad597452da783c744be5f3197",
+      "staged_sha256": "a52d4d07e133b434919dbe0ac682922c833586aad597452da783c744be5f3197"
+    },
+    {
+      "path": "src/scene/SceneInitializationState.hpp",
+      "action": "current complete diff belongs to SceneUtil cleanup",
+      "current_sha256": "bf3ffbcd4746dcad695b9b1b8b06a313c55642ef74942be3c816c43dbd7c63ca",
+      "staged_sha256": "bf3ffbcd4746dcad695b9b1b8b06a313c55642ef74942be3c816c43dbd7c63ca"
+    },
+    {
+      "path": "src/scene/SceneTransitionRequestService.cpp",
+      "action": "current complete diff belongs to SceneUtil cleanup",
+      "current_sha256": "60898e9dd746a3d6d57fcbfb5bc04acd93ee5045c6c69a3e207503750dc05f0a",
+      "staged_sha256": "60898e9dd746a3d6d57fcbfb5bc04acd93ee5045c6c69a3e207503750dc05f0a"
+    },
+    {
+      "path": "src/scene/SceneTransitionRequestService.hpp",
+      "action": "current complete diff belongs to SceneUtil cleanup",
+      "current_sha256": "a3ab4825a166bf5ee6d6bb73f8062dbc0dd29fed8ff31816c95af69b73e98e36",
+      "staged_sha256": "a3ab4825a166bf5ee6d6bb73f8062dbc0dd29fed8ff31816c95af69b73e98e36"
+    },
+    {
+      "path": "src/scene/AuthoredPlacementInstantiator.cpp",
+      "action": "Only rename PlacementZoneNameScope include/type to PlacementZoneScope and reduce ConstructionScope input to MR::getPlacedZoneId(iter). Exclude DrawSyncManagerLifetime include, DrawSyncRegistrationTransaction local, commit and rollback additions.",
+      "current_sha256": "d886248a081f9a58b3b441697c67863e5caee0797574724232a7d550381c295d",
+      "staged_sha256": "d42ff57988cc8bb76161fd9b6e5161e29fe4a6fdbcb193cedfd5795093751f4a"
+    },
+    {
+      "path": "src/scene/NameObjLifecycleService.cpp",
+      "action": "Only rename PlacementZoneNameScope include/type to PlacementZoneScope and remove zone_name argument in construct_and_init. Exclude all DrawSyncManagerLifetime include/transactions/commit/rollback changes in construct/construct_and_init/init.",
+      "current_sha256": "8b7870154e20703113c6bff4f2f11df7a95c2d4bbe6793b8c0f046914f81e00b",
+      "staged_sha256": "ddf68031413f67de0802c508e1ba8a48de13ddb1df413686bd256caf47aa88c9"
+    },
+    {
+      "path": "src/compat/OriginalNamePosUtil.cpp",
+      "action": "delete complete current obsolete file",
+      "current_sha256": null,
+      "staged_sha256": null
+    },
+    {
+      "path": "src/compat/OriginalStageWaterQuery.cpp",
+      "action": "delete complete current obsolete file",
+      "current_sha256": null,
+      "staged_sha256": null
+    },
+    {
+      "path": "src/compat/OriginalScenarioOpeningSceneControl.cpp",
+      "action": "delete complete current obsolete file",
+      "current_sha256": null,
+      "staged_sha256": null
+    },
+    {
+      "path": "src/compat/OriginalScenePredicates.cpp",
+      "action": "delete complete current obsolete file",
+      "current_sha256": null,
+      "staged_sha256": null
+    },
+    {
+      "path": "src/compat/SceneInitializationStateCompat.cpp",
+      "action": "delete complete current obsolete file",
+      "current_sha256": null,
+      "staged_sha256": null
+    },
+    {
+      "path": "src/compat/StorySequencePlatformCompat.hpp",
+      "action": "delete complete current obsolete file",
+      "current_sha256": null,
+      "staged_sha256": null
+    },
+    {
+      "path": "src/scene/PlacementZoneNameScope.hpp",
+      "action": "delete complete current obsolete file",
+      "current_sha256": null,
+      "staged_sha256": null
+    },
+    {
+      "path": "src/Game/xmake.lua",
+      "action": "remove only remove_files(\"Util/SceneUtil.cpp\"); preserve all other pending utility/layout/DrawSync build changes",
+      "current_sha256": "ebfe4353a2c76b55b4a0d5936fe95f200d43262eb4818af6c89b223742c333bd",
+      "staged_sha256": "9a247647a9f3fd62a603d014f756cad228639b055dfe2080a33d731a9d1e83f5"
+    },
+    {
+      "path": "tests/AuthoredPlacementInstantiatorTests.cpp",
+      "action": "required fixture migration or actual selected-file counter validation",
+      "staged_sha256": "ce07e2640266b37fb95caa43c87e2be078b89194748df466262e9ffd99448c3e"
+    },
+    {
+      "path": "tests/NameObjFactoryPlacementTests.cpp",
+      "action": "required fixture migration or actual selected-file counter validation",
+      "staged_sha256": "98f2fa19aa7549d848bb9a8dc51e87918cf6599d93c2be23309d37498b01d1f4"
+    },
+    {
+      "path": "tests/OriginalCollisionPartsOwnerTests.cpp",
+      "action": "required fixture migration or actual selected-file counter validation",
+      "staged_sha256": "e5b7e63d343263a3f60701ddd489d35f82fa997afafcfa32166dada67c76f95b"
+    },
+    {
+      "path": "tests/SceneInitializationStateTests.cpp",
+      "action": "required fixture migration or actual selected-file counter validation",
+      "staged_sha256": "12daba7bf43678b8d9bf27d7f2340835f7d4b93389f35efe20a81c80dd341af0"
+    },
+    {
+      "path": "tests/StorySequenceRealOrAbsentTests.cpp",
+      "action": "required fixture migration or actual selected-file counter validation",
+      "staged_sha256": "80eff37d8ea85938dce3f31488115bfaa76cd86c979b34cf99b0b560f4cf4b97"
+    },
+    {
+      "path": "tests/GameDataStarStorageTests.cpp",
+      "action": "required fixture migration or actual selected-file counter validation",
+      "staged_sha256": "d8090aa120235741f6446048167b0cfb3aac7e76d5209b77fc02e0ebf04cf80d"
+    }
+  ],
+  "checkout": "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-scene-head-audit-fvehe6ul"
+}

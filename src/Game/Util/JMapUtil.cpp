@@ -1,7 +1,6 @@
 #include "Game/Util/JMapUtil.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
-#include "Game/NameObj/NameObj.hpp"
 
 #include <array>
 #include <cstdio>
@@ -72,42 +71,6 @@ namespace {
         return pOut != nullptr && rIter.getValue(x, &pOut->x) && rIter.getValue(y, &pOut->y) && rIter.getValue(z, &pOut->z);
     }
 
-    [[nodiscard]] s32 link_id(const JMapInfoIter& rIter) {
-        auto id = s32{-1};
-        (void)rIter.getValue("l_id", &id);
-        return id;
-    }
-
-    [[nodiscard]] const JMapInfo* child_info(const JMapInfoIter& rIter) {
-        return rIter.mInfo != nullptr ? rIter.mInfo->getChildObjInfo() : nullptr;
-    }
-
-    [[nodiscard]] JMapInfoIter child_obj_iter(const JMapInfoIter& rIter, int child_index) {
-        const auto* info = child_info(rIter);
-        if (info == nullptr || child_index < 0) {
-            return {};
-        }
-
-        const auto parent_id = link_id(rIter);
-        if (parent_id < 0) {
-            return {};
-        }
-
-        auto matched_index = 0;
-        for (auto entry_index = 0; entry_index < info->getNumEntries(); ++entry_index) {
-            auto child_parent_id = s32{-1};
-            if (!info->getValue(entry_index, "ParentID", &child_parent_id) || child_parent_id != parent_id) {
-                continue;
-            }
-
-            if (matched_index == child_index) {
-                return JMapInfoIter(info, entry_index);
-            }
-            ++matched_index;
-        }
-
-        return {};
-    }
 }  // namespace
 
 namespace MR {
@@ -414,43 +377,4 @@ namespace MR {
         return name;
     }
 
-    s32 getChildObjNum(const JMapInfoIter& rIter) {
-        const auto* info = child_info(rIter);
-        if (info == nullptr) {
-            return 0;
-        }
-
-        const auto parent_id = link_id(rIter);
-        if (parent_id < 0) {
-            return 0;
-        }
-
-        auto count = s32{};
-        for (auto entry_index = 0; entry_index < info->getNumEntries(); ++entry_index) {
-            auto child_parent_id = s32{-1};
-            if (info->getValue(entry_index, "ParentID", &child_parent_id) && child_parent_id == parent_id) {
-                ++count;
-            }
-        }
-        return count;
-    }
-
-    void getChildObjName(const char** pDest, const JMapInfoIter& rIter, int index) {
-        if (pDest == nullptr) {
-            return;
-        }
-
-        *pDest = nullptr;
-        const auto iter = child_obj_iter(rIter, index);
-        (void)getObjectName(pDest, iter);
-    }
-
-    void initChildObj(NameObj* pObj, const JMapInfoIter& rIter, int index) {
-        if (pObj == nullptr) {
-            return;
-        }
-
-        const auto iter = child_obj_iter(rIter, index);
-        pObj->init(iter);
-    }
 }  // namespace MR

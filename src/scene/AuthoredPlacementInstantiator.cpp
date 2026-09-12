@@ -8,7 +8,7 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/NameObjLifecycleService.hpp"
-#include "scene/PlacementZoneNameScope.hpp"
+#include "scene/PlacementZoneScope.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/nameobj/PlanetMapCatalog.hpp"
 
@@ -395,12 +395,11 @@ namespace smgpc::scene {
                 explicit ConstructionScope(
                     const NameObjPlacementContext &placement)
                     : _scope(
-                          MR::getPlacedZoneId(placement.iter),
-                          placement.zone_name) {
+                          MR::getPlacedZoneId(placement.iter)) {
                 }
 
             private:
-                PlacementZoneNameScope _scope;
+                PlacementZoneScope _scope;
             };
 
             std::unique_ptr<AuthoredPlacementConstructionScope>

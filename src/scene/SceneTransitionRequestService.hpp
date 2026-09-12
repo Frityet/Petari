@@ -36,7 +36,6 @@ namespace smgpc::scene {
         smgpc::runtime::RuntimeContext &_runtime;
         std::unique_ptr<StorySequenceExecutor> _story_sequence;
         StageHostRequest _initial_stage_request;
-        s32 _active_story_scenario_no = 0;
         std::optional<std::string> _story_scene_start_stage;
         std::optional<StageHostRequest> _pending_request;
     };

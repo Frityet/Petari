@@ -10,7 +10,7 @@
 #include "runtime/RuntimeContext.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/GlobalGravityOwnership.hpp"
-#include "scene/PlacementZoneNameScope.hpp"
+#include "scene/PlacementZoneScope.hpp"
 
 #include <array>
 #include <cstdio>
@@ -177,8 +177,8 @@ namespace smgpc::scene {
         }
 
         require_valid_placement_context(*placement);
-        auto zone_scope = smgpc::scene::PlacementZoneNameScope(
-            MR::getPlacedZoneId(placement->iter), placement->zone_name);
+        auto zone_scope = smgpc::scene::PlacementZoneScope(
+            MR::getPlacedZoneId(placement->iter));
         auto object = construct(object_name, actor_name);
         try {
             init(*object, placement);

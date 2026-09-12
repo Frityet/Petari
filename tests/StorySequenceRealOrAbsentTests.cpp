@@ -1,7 +1,10 @@
 #include "Game/System/GalaxyMoveArgument.hpp"
 #include "Game/System/StorySequenceExecutor.hpp"
 #include "Game/Util/JMapIdInfo.hpp"
-#include "compat/StorySequencePlatformCompat.hpp"
+#include "Game/System/GameSystem.hpp"
+#include "Game/System/GameSystemSceneController.hpp"
+#include "Game/Util/SceneUtil.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 
 #include <array>
 #include <filesystem>
@@ -13,6 +16,7 @@
 #include <string_view>
 
 namespace {
+struct MissingOriginalProcess : std::runtime_error { using std::runtime_error::runtime_error; };
 void require(bool condition, std::string_view message) {
     if (!condition) {
         throw std::runtime_error(std::string(message));
@@ -44,7 +48,10 @@ void require(bool condition, std::string_view message) {
 
 void test_initial_file_select_comes_from_retail_executor() {
     auto executor = StorySequenceExecutor{};
-    const auto scene_state = smgpc::compat::story_sequence::SceneStateBinding("Game", "", 0);
+    auto* system = SingletonHolder<GameSystem>::get();
+    if (system == nullptr || system->mSceneController == nullptr) {
+        throw MissingOriginalProcess("the full story move requires the original GameSystem scene controller");
+    }
     const auto start = JMapIdInfo(19, 4);
     auto move = GalaxyMoveArgument(7, nullptr, 9, &start);
 
@@ -120,10 +127,14 @@ int main() {
     };
 
     auto failures = 0;
+    auto unavailable = 0;
     for (const auto& test : tests) {
         try {
             test.run();
             std::cout << "[ok] " << test.name << '\n';
+        } catch (const MissingOriginalProcess& error) {
+            ++unavailable;
+            std::cerr << "[unavailable] " << test.name << ": " << error.what() << '\n';
         } catch (const std::exception& error) {
             ++failures;
             std::cerr << "[fail] " << test.name << ": " << error.what() << '\n';
@@ -135,6 +146,10 @@ int main() {
         return 1;
     }
 
+    if (unavailable != 0) {
+        std::cerr << "Original process prerequisite absent; full story movement was not exercised\n";
+        return 77;
+    }
     std::cout << tests.size() << " StorySequence real-or-absent test(s) passed\n";
     return 0;
 }

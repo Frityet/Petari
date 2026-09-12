@@ -4,7 +4,6 @@
 #include "Game/System/GalaxyMoveArgument.hpp"
 #include "Game/System/StorySequenceExecutor.hpp"
 #include "Game/Util/JMapIdInfo.hpp"
-#include "compat/StorySequencePlatformCompat.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 #include <stdexcept>
@@ -41,8 +40,6 @@ namespace smgpc::scene {
     }
 
     void SceneTransitionRequestService::update() {
-        const auto scene_state = smgpc::compat::story_sequence::SceneStateBinding(
-            _runtime.current_sequence_scene_name(), _runtime.current_stage_name(), _active_story_scenario_no);
         _story_sequence->update();
 
         if (_runtime.sequence_requests().consume_change_stage_in_game_after_loading_game_data_request()) {
@@ -52,14 +49,11 @@ namespace smgpc::scene {
         }
     }
 
-    void SceneTransitionRequestService::notify_scene_started(std::string_view stage_name, s32 scenario_no) {
+    void SceneTransitionRequestService::notify_scene_started(std::string_view stage_name, s32) {
         if (!_story_scene_start_stage.has_value() || stage_name != *_story_scene_start_stage) {
             return;
         }
 
-        _active_story_scenario_no = scenario_no;
-        const auto scene_state = smgpc::compat::story_sequence::SceneStateBinding(
-            _runtime.current_sequence_scene_name(), stage_name, scenario_no);
         _story_sequence->setNerveSceneStart();
         _story_scene_start_stage.reset();
     }
@@ -73,8 +67,6 @@ namespace smgpc::scene {
     StageHostRequest SceneTransitionRequestService::execute_initial_story_move() {
         const auto start_info = JMapIdInfo(0, 0);
         auto move = GalaxyMoveArgument(7, nullptr, 1, &start_info);
-        const auto scene_state = smgpc::compat::story_sequence::SceneStateBinding(
-            _runtime.current_sequence_scene_name(), _runtime.current_stage_name(), _active_story_scenario_no);
         _story_sequence->moveGalaxy(&move, true);
         return stage_request_from_story_move(move);
     }
@@ -82,8 +74,6 @@ namespace smgpc::scene {
     StageHostRequest SceneTransitionRequestService::execute_after_loading_story_move() {
         const auto start_info = JMapIdInfo(0, 0);
         auto move = GalaxyMoveArgument(6, nullptr, 1, &start_info);
-        const auto scene_state = smgpc::compat::story_sequence::SceneStateBinding(
-            _runtime.current_sequence_scene_name(), _runtime.current_stage_name(), _active_story_scenario_no);
         _story_sequence->moveGalaxy(&move, true);
         return stage_request_from_story_move(move);
     }
