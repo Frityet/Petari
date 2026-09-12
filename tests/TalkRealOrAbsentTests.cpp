@@ -173,43 +173,6 @@ namespace {
             "AlreadyDone update without an active stage session must fail explicitly");
     }
 
-    void test_stage_session_already_done_registry() {
-        auto session = smgpc::compat::StageSessionState(
-            "Game", "DuplicateGalaxy", 1, JMapIdInfo(0, 0));
-        auto value = u32{99U};
-        const auto first = session.setup_already_done_flag(
-            0x9234U, 5, -1, &value);
-        require(first == 0 && value == 0U,
-                "a new AlreadyDone key must allocate an off entry");
-        session.update_already_done_flag(first, 1U);
-        value = 0U;
-        const auto duplicate = session.setup_already_done_flag(
-            0x1234U, 5, -1, &value);
-        require(duplicate == first && value == 1U,
-                "AlreadyDone identity must mask the hash high bit and retain its value");
-        value = 99U;
-        const auto distinct = session.setup_already_done_flag(
-            0x1234U, 5, 0, &value);
-        require(distinct == 1 && value == 0U,
-                "AlreadyDone link ID must remain part of the exact key");
-
-        auto capacity_session = smgpc::compat::StageSessionState(
-            "Game", "CapacityGalaxy", 1, JMapIdInfo(0, 0));
-        for (auto index = s32{}; index < 64; ++index) {
-            value = 99U;
-            require(capacity_session.setup_already_done_flag(
-                        static_cast<u16>(index + 1), index, index, &value) == index &&
-                        value == 0U,
-                    "the retail AlreadyDone registry must admit all 64 entries");
-        }
-        require_logic_error(
-            [&] {
-                static_cast<void>(capacity_session.setup_already_done_flag(
-                    0x7ffeU, 100, 100, &value));
-            },
-            "the 65th AlreadyDone identity must fail explicitly");
-    }
-
     void test_event_value_utilities() {
         require(!MR::isOnMessageAlreadyRead(3),
                 "a fresh MessageAlreadyRead event value must begin clear");
@@ -856,7 +819,6 @@ int main() {
         "Game", "HeavensDoorGalaxy", 1, JMapIdInfo(0, 0));
     auto stage_session_binding =
         smgpc::compat::StageSessionBinding(stage_session);
-    test_stage_session_already_done_registry();
     test_real_gateway_talk_runtime(runtime);
 
     std::cout << "Talk real-RMGK01 runtime and utility-provider tests passed\n";

@@ -51,6 +51,14 @@ namespace GameDataFunction {
     s32 getLast1upStarPieceNum() {
         return ::getGameDataTemporaryInGalaxy()->mLast1upStarPieceNum;
     }
+
+    s32 setupAlreadyDoneFlag(const char* pName, const JMapInfoIter& rIter, u32* pValue) {
+        return ::getGameDataTemporaryInGalaxy()->setupAlreadyDoneFlag(pName, rIter, pValue);
+    }
+
+    void updateAlreadyDoneFlag(int index, u32 value) {
+        ::getGameDataTemporaryInGalaxy()->updateAlreadyDoneFlag(index, value);
+    }
 }
 
 namespace MR {

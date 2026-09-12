@@ -113,43 +113,6 @@ namespace smgpc::compat {
         _execution_phase = phase;
     }
 
-    s32 StageSessionState::setup_already_done_flag(u16 name_hash, s32 zone_id,
-                                                   s32 link_id, u32 *value) {
-        if (value == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("Already-done setup requires an output value.");
-        }
-
-        auto& flags = *temporary_data().mAlreadyDoneFlag;
-        AlreadyDoneInfo key;
-        key._0 = static_cast<u16>(name_hash & 0x7fffU);
-        key._2 = static_cast<u16>(zone_id);
-        key._4 = static_cast<u16>(link_id);
-        for (auto index = u32{}; index < flags._8; ++index) {
-            const auto &entry = flags.mDoneInfos[index];
-            if (entry.isEqual(key)) {
-                *value = (entry._0 >> 15) & 1U;
-                return static_cast<s32>(index);
-            }
-        }
-
-        if (flags._8 >= static_cast<u32>(flags.mDoneInfos.size())) {
-            aurora::throw_host_exception<std::logic_error>("The stage AlreadyDoneInfo registry exceeded its retail 64-entry capacity.");
-        }
-
-        const auto index = flags._8++;
-        flags.mDoneInfos[index] = key;
-        *value = 0U;
-        return static_cast<s32>(index);
-    }
-
-    void StageSessionState::update_already_done_flag(s32 index, u32 value) {
-        auto& flags = *temporary_data().mAlreadyDoneFlag;
-        if (index < 0 || static_cast<u32>(index) >= flags._8) {
-            aurora::throw_host_exception<std::out_of_range>("Already-done update refers to an unallocated stage entry.");
-        }
-        flags.updateValue(index, value);
-    }
-
     StageSessionBinding::StageSessionBinding(StageSessionState &session)
         : _previous(s_active_binding), _session(&session) {
         if (try_star_pointer_depth()) _pointer_scene = std::make_unique<StarPointerSceneBinding>();

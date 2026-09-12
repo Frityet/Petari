@@ -4,11 +4,8 @@
 #include "Game/Screen/InformationObserver.hpp"
 #include "Game/System/GameDataFunction.hpp"
 #include "Game/System/GameSequenceFunction.hpp"
-#include "Game/Util/HashUtil.hpp"
-#include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
-#include "compat/StageSessionState.hpp"
 
 #include <stdexcept>
 
@@ -91,19 +88,11 @@ namespace MR {
     }
 
     s32 setupAlreadyDoneFlag(const char* name, const JMapInfoIter& iter, u32* value) {
-        if (name == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("Already-done setup requires a name.");
-        }
-
-        auto link_id = s32{-1};
-        static_cast<void>(MR::getJMapInfoLinkID(iter, &link_id));
-        const auto name_hash = static_cast<u16>(MR::getHashCode(name) & 0x7fffU);
-        return smgpc::compat::require_active_stage_session().setup_already_done_flag(
-            name_hash, MR::getPlacedZoneId(iter), link_id, value);
+        return GameDataFunction::setupAlreadyDoneFlag(name, iter, value);
     }
 
     void updateAlreadyDoneFlag(int index, u32 value) {
-        smgpc::compat::require_active_stage_session().update_already_done_flag(index, value);
+        GameDataFunction::updateAlreadyDoneFlag(index, value);
     }
 
     void onMessageAlreadyRead(s8 bit) {

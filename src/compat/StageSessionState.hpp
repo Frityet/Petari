@@ -64,12 +64,6 @@ namespace smgpc::compat {
         [[nodiscard]] ExecutionPhase execution_phase() const;
         void set_execution_phase(ExecutionPhase phase);
 
-        // Native callers already have the original masked hash/placement key.
-        // These access the actual GameDataTemporaryInGalaxy-owned records.
-        [[nodiscard]] s32 setup_already_done_flag(u16 name_hash, s32 zone_id,
-                                                  s32 link_id, u32 *value);
-        void update_already_done_flag(s32 index, u32 value);
-
     private:
         struct TemporaryData;
 

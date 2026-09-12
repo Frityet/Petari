@@ -1,6 +1,7 @@
 #include "compat/StageSessionState.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/GameDataFunctionCompat.hpp"
+#include "compat/GameDataSession.hpp"
 #include "Game/System/AlreadyDoneFlagInGalaxy.hpp"
 #include "Game/System/GameDataTemporaryInGalaxy.hpp"
 #include "Game/System/GameDataFunction.hpp"
@@ -11,20 +12,44 @@
 #include "Game/Util/SequenceUtil.hpp"
 #include "Game/Util/ActorCameraUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
+#include "Game/Util/HashUtil.hpp"
+#include "Game/Util/JMapInfo.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
+#include "resource/BcsvTable.hpp"
+#include "resource/GameResourceRuntime.hpp"
+#include "runtime/ArchiveMountService.hpp"
+#include "runtime/RuntimeServices.hpp"
+#include "runtime/ScenarioCatalogOwnership.hpp"
 
+#include <aurora/aurora.h>
+#include <aurora/dvd.h>
 #include <aurora/exception.hpp>
 #include <array>
+#include <cstdlib>
 #include <iostream>
 #include <limits>
 #include <memory>
 #include <stdexcept>
 #include <string_view>
 
+namespace aurora { extern AuroraConfig g_config; }
 namespace {
 using namespace smgpc::compat;
 void require(bool condition, const char* message) {
     if (!condition) aurora::throw_host_exception<std::runtime_error>(message);
+}
+JMapInfo placement(s32 zone, s32 link) {
+    std::array<u8, 0x20> bytes{};
+    const auto put = [&](std::size_t offset, u32 value) {
+        for (std::size_t i = 0; i < 4; ++i)
+            bytes[offset + i] = static_cast<u8>(value >> (24 - 8 * i));
+    };
+    put(0, 1); put(4, 1); put(8, 0x1c); put(12, 4);
+    put(16, smgpc::resource::jmap_hash("l_id")); put(20, 0xffffffff);
+    put(28, static_cast<u32>(link));
+    auto info = JMapInfo::from_bcsv(bytes);
+    info.setPlacedZoneId(zone);
+    return info;
 }
 template<class F> void rejected(F&& f) {
     bool failed = false;
@@ -87,20 +112,31 @@ void test_actual_temporary_owner() {
         require(session->temporary_data().mPlayerRestartIdInfo->_0 == 23 && session->restart_id().mZoneID == 8,
                 "restart writes route through original GameDataTemporaryInGalaxy");
         u32 value = 99;
-        const auto index = session->setup_already_done_flag(0x9234, 5, -1, &value);
+        const auto first_placement = placement(5, -1);
+        const JMapInfoIter first_iter(&first_placement, 0);
+        const auto index = MR::setupAlreadyDoneFlag("original message", first_iter, &value);
         auto& flags = *session->temporary_data().mAlreadyDoneFlag;
-        require(index == 0 && value == 0 && flags._8 == 1 && flags.mDoneInfos[0].mask() == 0x1234,
-                "native placement key creates the actual original packed record");
+        require(index == 0 && value == 0 && flags._8 == 1 &&
+                flags.mDoneInfos[0].mask() == (MR::getHashCode("original message") & 0x7fff) &&
+                flags.mDoneInfos[0]._2 == 5 && flags.mDoneInfos[0]._4 == 0xffff,
+                "original setup hashes the message and reads zone/link identity from JMapInfo");
         flags.updateValue(0, 1);
-        require(session->setup_already_done_flag(0x1234, 5, -1, &value) == 0 && value == 1,
-                "original writes are observed by the native placement facade");
-        session->update_already_done_flag(0, 0);
-        require((flags.mDoneInfos[0]._0 & 0x8000) == 0, "native writes update the actual original bit");
+        require(MR::setupAlreadyDoneFlag("original message", first_iter, &value) == 0 && value == 1,
+                "original setup finds the same identity after the packed value bit changes");
+        MR::updateAlreadyDoneFlag(0, 0);
+        require((flags.mDoneInfos[0]._0 & 0x8000) == 0, "original forwarding updates the actual original bit");
+        const auto next_link = placement(5, 0);
+        require(MR::setupAlreadyDoneFlag("original message", JMapInfoIter(&next_link, 0), &value) == 1 && value == 0,
+                "the original link ID distinguishes otherwise identical placements");
+        const auto next_zone = placement(6, 0);
+        require(MR::setupAlreadyDoneFlag("original message", JMapInfoIter(&next_zone, 0), &value) == 2 && value == 0,
+                "the original zone ID distinguishes otherwise identical placements");
         flags.clear();
-        for (s32 i = 0; i < 64; ++i)
-            require(session->setup_already_done_flag(i, i, i, &value) == i && value == 0, "cleared original owner admits 64 distinct records");
-        rejected([&] { (void)session->setup_already_done_flag(100, 100, 100, &value); });
-        rejected([&] { session->update_already_done_flag(64, 1); });
+        for (s32 i = 0; i < 64; ++i) {
+            const auto entry = placement(i, i);
+            require(MR::setupAlreadyDoneFlag("original message", JMapInfoIter(&entry, 0), &value) == i && value == 0,
+                    "cleared original owner admits all 64 distinct placement records");
+        }
         GameDataFunction::addStarPiece(13);
         {
             StageSessionState nested("Game", "NestedFixture", 2, JMapIdInfo(7, 2));
@@ -115,8 +151,7 @@ void test_actual_temporary_owner() {
     require(lease.expired(), "typed scene cleanup releases its final retained Game arena");
     rejected([] { (void)GameDataFunction::getStarPieceNum(); });
 }
-void test_original_counter_leaves() {
-    GameDataHolder profile(nullptr);
+void test_original_counter_leaves(GameDataHolder& profile) {
     profile.addPlayerLeft(17 - profile.getPlayerLeft());
     ScopedGameDataHolderOverride current(profile);
     require(MR::getPlayerLeft() == 17, "HUD life query reads the actual selected profile");
@@ -156,8 +191,22 @@ void test_original_counter_leaves() {
         require(MR::isStageAstroLocation() == expected, "stage category keeps the original exact stage-name predicate");
     }
 }
+void test_actual_profile_owner() {
+    const char* disc = std::getenv("SMGPC_REAL_DISC");
+    require(disc && aurora_dvd_open(disc), "Original profile counters require the authored scenario catalog");
+    struct DiscGuard { ~DiscGuard() { aurora_dvd_close(); } } disc_guard;
+    DVDInit();
+    aurora::g_config.mem1Size = 24U * 1024U * 1024U;
+    smgpc::resource::GameResourceRuntime resources;
+    smgpc::runtime::DvdFileSystemService dvd({});
+    smgpc::runtime::ArchiveMountService mounts(dvd);
+    auto catalog = std::make_shared<smgpc::runtime::ScenarioCatalogOwnership>(
+        resources.host_heaps(), resources.budget().scenario_catalog_bytes, mounts);
+    GameDataSession profile(1, resources, catalog);
+    test_original_counter_leaves(profile.holder());
+}
 }
 int main() {
-    try { test_actual_temporary_owner(); test_original_counter_leaves(); std::cout << "Original scene counter ownership passed\n"; return 0; }
+    try { test_actual_temporary_owner(); test_actual_profile_owner(); std::cout << "Original scene counter ownership passed\n"; return 0; }
     catch (const std::exception& e) { std::cerr << e.what() << '\n'; return 1; }
 }

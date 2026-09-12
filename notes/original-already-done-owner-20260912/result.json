@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "binary_sha256": "25667211f83b4b8ae29a9d61f618aa414c562801ffffe2841743ddfffc85cf2c",
+  "source_sha256": {
+    "src/compat/StageSessionState.cpp": "addefd1e6ffa1d0794c23e8e9c2d1ea2e1f404af196edc5b3e0da85486f30b95",
+    "src/compat/StageSessionState.hpp": "71d73fe60778840b8ecafc21b6b6aa7aee06a4dd93bf6db597215c5b08de6e19",
+    "src/compat/OriginalSceneCounterQueries.cpp": "1978f23520a49af84616643f7c0e4a0a3ab25394b6ece81d68ff4ae1b94e42f6",
+    "src/compat/EventUtilCompat.cpp": "49a694dd911e98430ac32c101c346ce471661272fca03960a5a6ad4bd0464ebe",
+    "tests/OriginalSceneCounterOwnerTests.cpp": "04e5240bafc2c2e9d42165d7823a5945bfa89427ee6d02252625639dbd119582",
+    "tests/TalkRealOrAbsentTests.cpp": "512eded6a447b8300e799212dec6bedc2768bea04bd5b68fbf140e3733f4c695"
+  },
+  "scope": "Isolated original scene counter fixture linked against current native archives before upstream reference merge. Full talk/text cohort not active."
+}
