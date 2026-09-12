@@ -1,0 +1,82 @@
+[
+  {
+    "path": "decomp/configure.py",
+    "sha256": "1746c8321cf69acb2cbe1493b5ca1a5436e2772e758961da9d3d79182ee5241d"
+  },
+  {
+    "path": "decomp/src/Game/NPC/TalkBalloon.cpp",
+    "sha256": "2fa210d27d3d8c47dad376d63d9bf6463811ad71f9714c15889b9ade019466ea"
+  },
+  {
+    "path": "decomp/src/Game/NPC/TalkMessageCtrl.cpp",
+    "sha256": "d603c0a3fd9d05cf6da0d4282ea820b8365b9a29bc45e974262679235c958b07"
+  },
+  {
+    "path": "decomp/src/Game/NPC/TalkState.cpp",
+    "sha256": "0efb18df1245fa5eadce5aa5f42c0cfdfe47f1757f196efdb661ebcc9cf0f9df"
+  },
+  {
+    "path": "decomp/src/Game/Util/TalkUtil.cpp",
+    "sha256": "f2efa4c203239d48cbf9e7e3b030e96943a8795df19f3fd8258303588fd2ddaa"
+  },
+  {
+    "path": "decomp/src/Game/Util/EventUtil.cpp",
+    "sha256": "da828c95bc26347dfc68cc3643ba9325e9bdcfb7e9c6638f0acda4c09e3a1ed0"
+  },
+  {
+    "path": "decomp/src/Game/NPC/TalkTextFormer.cpp",
+    "sha256": "bfde6d3173cf1713f367e887f95780a840ab41aa39ba1be05230614533b4a187"
+  },
+  {
+    "path": "decomp/src/Game/Screen/CustomTagProcessor.cpp",
+    "sha256": "558e01b222be26a820d33731eed7c0e8205e5a6abcba1da727e41bccb28312ad"
+  },
+  {
+    "path": "decomp/src/Game/Screen/ReplaceTagProcessor.cpp",
+    "sha256": "170134d26b485d82fc0e642901d51d3e0f4006b1acde58f78cb5d1fec9d0c9fa"
+  },
+  {
+    "path": "decomp/src/Game/Screen/MessageTagSkipTagProcessor.cpp",
+    "sha256": "146dbb22ef6f3de22a73c9a60da501c9e982b847cbc2da6c7fd9c2028e0de939"
+  },
+  {
+    "path": "decomp/src/Game/Screen/LayoutCoreUtil.cpp",
+    "sha256": "55acbcfa378c4eeeb07e067d1c786492539388933fcab04161c49b285f5c1fba"
+  },
+  {
+    "path": "decomp/include/Game/Screen/CustomTagProcessor.hpp",
+    "sha256": "ca06cfb7a173c91b0ff5dfcfc79a13f54ee2bbb0d0207fbfdacf7864cb340e40"
+  },
+  {
+    "path": "decomp/include/Game/Screen/MessageEditorMessageTag.hpp",
+    "sha256": "ebb695beb366e03d8797e58fddb0b551a06f8d63b0479dbfac2bff0bf089c952"
+  },
+  {
+    "path": "decomp/include/Game/Screen/ReplaceTagProcessor.hpp",
+    "sha256": "da5fb3445c6b4027ffad08290c3c743fdd682a14d701b0b761182c456743987a"
+  },
+  {
+    "path": "decomp/libs/nw4r/include/nw4r/ut/CharWriter.h",
+    "sha256": "543ce24ca7789213a0f8e8eb668262185fc8df70d84bebcb1aee33d3f8d9b012"
+  },
+  {
+    "path": "decomp/libs/nw4r/include/nw4r/ut/Rect.h",
+    "sha256": "40d13afbf4395c6b9946872fe70f6ab21887be8a24ab483223dc464bd103f484"
+  },
+  {
+    "path": "decomp/libs/nw4r/include/nw4r/ut/TagProcessorBase.h",
+    "sha256": "537e1ccadf2f0783ea9ed73bcc0c029d8012f4fc735622a9176ea40bcad9a46d"
+  },
+  {
+    "path": "decomp/libs/MSL_C++/include/algorithm",
+    "sha256": "0aea4b24eda38cca01bf39c233855e32de221a147307a554206f4b05fdc38263"
+  },
+  {
+    "path": "decomp/libs/MSL_C/include/cstdarg",
+    "sha256": "f0a5f19ff6ba07e326b34d0a2187ce0fdb28d50948ffb680d547c0ff50d4afbe"
+  },
+  {
+    "path": "decomp/libs/MSL_C/include/stdarg.h",
+    "sha256": "5e1f833187954c908c680589602c3607a8e9f37fd4a4b2dfd310fafe829e4974"
+  }
+]
