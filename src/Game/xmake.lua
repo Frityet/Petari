@@ -119,6 +119,7 @@ target("smg-pc-game")
         "../render/light/LightData.cpp",
     }
     add_files("../JSystem/JGeometry/TMatrix.cpp", {cxxflags = "-ffp-contract=off"})
+    add_files("../JSystem/JKernel/JKRThread.cpp")
     add_headerfiles("**.hpp")
     add_headerfiles("../camera/**.hpp")
     add_headerfiles("../layout/**.hpp")

@@ -18,6 +18,8 @@ namespace JUtility {
             set(color);
         }
 
+        TColor& operator=(const TColor& color);
+
         void set(u8 cR, u8 cG, u8 cB, u8 cA) {
             r = cR;
             g = cG;

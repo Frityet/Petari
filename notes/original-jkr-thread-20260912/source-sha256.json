@@ -1,0 +1,6 @@
+{
+  "src/JSystem/JKernel/JKRThread.cpp": "7ea832230f72cfbab55921df37843c6dc9704ea2956d46149dd72858c443c628",
+  "src/JSystem/JKernel/JKRThread.hpp": "0cc979ebb11fae201b6e3669bd5326605ee39588dce3861af78e1d2c6fa68679",
+  "src/JSystem/JUtility/TColor.hpp": "d72465d0d4e219755a62f905a919402c1800ccfc6af814ec4a9a6166e3cc22d4",
+  "tests/OriginalJkrThreadTests.cpp": "f56da072e07746643cd271d53590b13d10fa9f912aa0f358dd0d13821a56dcd8"
+}
