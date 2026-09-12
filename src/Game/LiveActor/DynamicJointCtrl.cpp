@@ -9,30 +9,20 @@ JointCtrlRate::JointCtrlRate() {
     _C = -1;
 }
 
-// way too many diffs to note here
 void JointCtrlRate::update() {
-    u32 temp;
-    if (_8 < 0) {
-        if (_C >= 0) {
-            temp = _4;
-            _4 = temp - 1;
-
-            if (temp - 1 >= 0) {
-                _0 = ((f32)(_4 - 1) / (f32)(_4 - 1));
-            } else {
-                _C = -1;
-                _0 = 0.0f;
-            }
-        }
-    } else {
-        temp = _4;
-        _4 = temp - 1;
-
-        if ((temp - 1) >= 0) {
-            _0 = ((f32)(_8 - (temp - 1) / _8));
-        } else {
+    if (_8 >= 0) {
+        if (--_4 < 0) {
             _8 = -1;
             _0 = 1.0f;
+        } else {
+            _0 = static_cast< f32 >(_8 - _4) / static_cast< f32 >(_8);
+        }
+    } else if (_C >= 0) {
+        if (--_4 < 0) {
+            _C = -1;
+            _0 = 0.0f;
+        } else {
+            _0 = static_cast< f32 >(_4) / static_cast< f32 >(_C);
         }
     }
 }

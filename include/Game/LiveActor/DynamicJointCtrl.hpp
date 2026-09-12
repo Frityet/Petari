@@ -14,7 +14,7 @@ public:
     void endCtrl(s32);
 
     f32 _0;
-    u32 _4;
+    s32 _4;
     s32 _8;
     s32 _C;
 };
