@@ -127,6 +127,10 @@ namespace MR {
         startTalkCamera(position, up, axisX, axisY, frame);
     }
 
+    void endNPCTalkCamera(bool isForce, s32 frame) {
+        endTalkCamera(isForce, frame);
+    }
+
     bool isActionLoopedOrStopped(const LiveActor* pActor) {
         if (getBckCtrl(pActor)->getAttribute() == 0) {
             return isBckStopped(pActor);

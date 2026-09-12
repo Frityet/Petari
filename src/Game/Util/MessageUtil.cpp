@@ -1,4 +1,5 @@
 #include "Game/Util/MessageUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "Game/Screen/MessageEditorMessageTag.hpp"
 #include "Game/Map/RaceManager.hpp"
 #include "Game/NPC/TalkMessageInfo.hpp"
@@ -80,8 +81,48 @@ namespace MR {
         }
         return count;
     }
-    // countMessageChar
-    // countMessageFigure
+    s32 countMessageChar(const wchar_t* pMessage) {
+        if (pMessage == nullptr) {
+            return 0;
+        }
+
+        s32 count = 0;
+        while (*pMessage != 0) {
+            if (*pMessage == 0x1A) {
+                pMessage++;
+                MessageEditorMessageTag tag(pMessage);
+                pMessage += tag.getSkipLength();
+                u8 group = reinterpret_cast< const u8* >(tag.mMessage)[1];
+
+                if (group == 3) {
+                    count++;
+                } else if (group == 6) {
+                    count += countMessageFigure(*reinterpret_cast< const s32* >(tag.getParamPtr(0)));
+                } else if (group == 5) {
+                    count += 3;
+                } else if (group == 11) {
+                    count += 2;
+                } else if (group == 7) {
+                    count += countMessageChar(*reinterpret_cast< const wchar_t* const* >(tag.getParamPtr(0)));
+                } else if (tag.isGroupTagId(1, 1)) {
+                    break;
+                }
+            } else {
+                pMessage++;
+                count++;
+            }
+        }
+        return count;
+    }
+
+    s32 countMessageFigure(s32 value) {
+        u32 magnitude = MR::abs(value);
+        s32 count = 1;
+        while ((magnitude /= 10) != 0) {
+            count++;
+        }
+        return count;
+    }
     const wchar_t* getNextMessagePage(const wchar_t* pMessage) {
         while (*pMessage != 0) {
             if (*pMessage == 0x1A) {

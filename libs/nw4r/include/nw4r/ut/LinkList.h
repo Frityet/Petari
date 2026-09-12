@@ -1,6 +1,7 @@
 #pragma once
 
 #include "nw4r/misc.h"
+#include "nw4r/db/assert.h"
 #include "nw4r/ut/inlines.h"
 
 namespace nw4r {
@@ -156,6 +157,9 @@ namespace nw4r {
 
                 reference operator*() const {
                     pointer p = operator->();
+                    if (p == nullptr) {
+                        db::Panic("LinkList.h", 403, "NW4R:Pointer must not be NULL (p)");
+                    }
                     return *p;
                 }
                 pointer operator->() const { return GetPointerFromNode(it_.operator->()); }
@@ -191,10 +195,14 @@ namespace nw4r {
             class ConstIterator : public detail::Iterator<value_type, PtrDiff, const_pointer, const_reference> {
             public:
                 explicit ConstIterator(const Node* p) : mPointer(p) {}
-                const_pointer operator->() const {
-                    return reinterpret_cast<const_pointer>(reinterpret_cast<IntPtr>(mPointer) - TNOffset);
+                const_pointer operator->() const { return GetPointerFromNode(mPointer); }
+                const_reference operator*() const {
+                    const_pointer p = operator->();
+                    if (p == nullptr) {
+                        db::Panic("LinkList.h", 447, "NW4R:Pointer must not be NULL (p)");
+                    }
+                    return *p;
                 }
-                const_reference operator*() const { return *operator->(); }
                 ConstIterator& operator++() { mPointer = mPointer->GetNext(); return *this; }
                 ConstIterator operator++(int) { ConstIterator iter(*this); ++*this; return iter; }
                 friend bool operator==(ConstIterator a, ConstIterator b) { return a.mPointer == b.mPointer; }
@@ -223,7 +231,19 @@ namespace nw4r {
 
             Iterator Erase(pointer p) { return Iterator(Base::Erase(GetNodeFromPointer(p))); }
 
-            static pointer GetPointerFromNode(Node* p) { return reinterpret_cast< pointer >(reinterpret_cast< IntPtr >(p) - TNOffset); }
+            static pointer GetPointerFromNode(Node* p) {
+                if (p == nullptr) {
+                    db::Panic("LinkList.h", 573, "NW4R:Pointer must not be NULL (p)");
+                }
+                return reinterpret_cast< pointer >(reinterpret_cast< IntPtr >(p) - TNOffset);
+            }
+
+            static const_pointer GetPointerFromNode(const Node* p) {
+                if (p == nullptr) {
+                    db::Panic("LinkList.h", 578, "NW4R:Pointer must not be NULL (p)");
+                }
+                return reinterpret_cast< const_pointer >(reinterpret_cast< IntPtr >(p) - TNOffset);
+            }
 
             static Node* GetNodeFromPointer(pointer p) { return reinterpret_cast< Node* >(reinterpret_cast< IntPtr >(p) + TNOffset); }
         };
