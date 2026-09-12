@@ -1,0 +1,32 @@
+{
+  "LayoutManager.objdiff.json": [
+    {
+      "name": "initTextBoxRecursive__13LayoutManagerFPQ34nw4r3lyt4PanePQ34nw4r3lyt4PanePCcUl",
+      "demangled_name": "LayoutManager::initTextBoxRecursive(nw4r::lyt::Pane*, nw4r::lyt::Pane*, const char*, unsigned long)",
+      "size": "344",
+      "match_percent": 67.93023
+    }
+  ],
+  "Language.count.objdiff.json": [
+    {
+      "name": "getCurrentRegionPrefix__2MRFv",
+      "demangled_name": "MR::getCurrentRegionPrefix()",
+      "size": "192",
+      "match_percent": 100.0
+    }
+  ],
+  "MessageUtil.count.objdiff.json": [
+    {
+      "name": "countMessageChar__2MRFPCw",
+      "demangled_name": "MR::countMessageChar(const wchar_t*)",
+      "size": "292",
+      "match_percent": 95.89041
+    },
+    {
+      "name": "countMessageFigure__2MRFl",
+      "demangled_name": "MR::countMessageFigure(long)",
+      "size": "44",
+      "match_percent": 100.0
+    }
+  ]
+}

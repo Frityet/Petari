@@ -1,0 +1,11 @@
+{
+  "libs/nw4r/include/nw4r/db/assert.h": "a3d942d3094f443abb8c4b9f240a964b1e31f8461fd7709c9e5ad06e4e2ea5dd",
+  "libs/nw4r/include/nw4r/lyt/material.h": "01988756d0f7ff7ac11f77f149999f1cd26325a90547ef2ee4e49e4842d139ba",
+  "libs/nw4r/include/nw4r/ut/LinkList.h": "6a17f2093c84cb8a998330da0e8efb8332e46d2e075b662af3c4c01a03693250",
+  "src/Game/System/Language.cpp": "47f401f2758ae6a6f46e2041222853a7e11b1cc1aebd37882aee95c85096bc19",
+  "src/Game/Util/DrawUtil.cpp": "5f3539cb45bc858caf52d395cdffaffe7e3fe5661387e50a54ebd5d1c6097152",
+  "src/Game/Util/LayoutUtil.cpp": "02f5adf2812e37ead4d94c8a264843c3e6e575b3be54aa4ad8a480f2e8462c45",
+  "src/Game/Util/MessageUtil.cpp": "ce1ed5a4a4a4d42c36779e2f1340a5f93363592344030e5ab927c7de8370a966",
+  "src/Game/Util/NPCUtil.cpp": "78658530cd9018e8a1e5a4c1006a24d17e99a733dc611657f42da704e289a2e4",
+  "src/Game/Screen/LayoutManager.cpp": "0dada7fe1568bb6ad5a8cda48d356059455720b65665cccb78ef08eaed067b45"
+}
