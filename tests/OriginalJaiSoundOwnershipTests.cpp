@@ -1,3 +1,11 @@
+#include "Game/AudioLib/AudAnmSoundObject.hpp"
+#include "Game/AudioLib/AudSoundId.hpp"
+#include "Game/GameAudio/AudTalkSoundData.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include "compat/DisabledObjectAudio.hpp"
+#include "compat/DisabledObjectAudioService.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 #include "runtime/JAudioPlaybackService.hpp"
 #include <JSystem/JAudio2/JAIStream.hpp>
 #include <resource/Yaz0.hpp>
@@ -8,6 +16,7 @@
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
+#include <stdexcept>
 
 namespace {
 const std::filesystem::path fixture = std::getenv("SMGPC_RETAIL_FILES_ROOT") ? std::getenv("SMGPC_RETAIL_FILES_ROOT") : "notes/original-audio-category-volume-20260907/fixture";
@@ -25,6 +34,54 @@ std::vector<u8> read(const std::filesystem::path& path) {
 #include <cassert>
 #include <cstdio>
 #include <fstream>
+
+void test_original_talk_sound_dispatch() {
+    using aurora::audio::DisabledObjectAudio;
+    assert(!DisabledObjectAudio::enabled());
+    const auto initial_requests = DisabledObjectAudio::declined_requests();
+    for (u8 sound_no : {u8(0), u8(0x3f), u8(0xa2), u8(0xff)}) {
+        assert(AudTalkSoundData::getSoundIDFromTalkSoundNo(sound_no).isAnonymous());
+        MR::startTalkSound(sound_no, nullptr);
+    }
+    assert(DisabledObjectAudio::declined_requests() == initial_requests);
+    const auto require_absent_owner_rejection = [] {
+        const auto before = DisabledObjectAudio::declined_requests();
+        bool rejected = false;
+        try { MR::startTalkSound(7, nullptr); }
+        catch (const std::logic_error&) { rejected = true; }
+        assert(rejected && DisabledObjectAudio::declined_requests() == before);
+    };
+    require_absent_owner_rejection();
+    assert(u32(AudTalkSoundData::getSoundIDFromTalkSoundNo(7)) == SE_SV_RABBIT_TALK_NORMAL);
+    assert(u32(AudTalkSoundData::getSoundIDFromTalkSoundNo(0xa1)) == SE_SV_CARETAKER_ANGRY_FAST);
+
+    const auto heaps = smgpc::compat::JkrHeapRuntime::create(2U * 1024U * 1024U);
+    for (int generation = 0; generation < 2; ++generation) {
+        const auto before = DisabledObjectAudio::declined_requests();
+        {
+            aurora::audio::DisabledObjectAudioService audio(heaps);
+            assert(aurora::audio::disabled_system_sound_object() == audio.system_object());
+            MR::startTalkSound(7, nullptr);
+            assert(DisabledObjectAudio::declined_requests() == before + 1);
+            assert(audio.system_object()->getNumHandles() == 0);
+
+            LiveActor actor("OriginalTalkSoundFixture");
+            AudAnmSoundObject sound(&actor.mPosition, 2, &heaps->root_heap());
+            actor.mSoundObject = &sound;
+            sound.setMapCode(7);
+            MR::startTalkSound(7, &actor);
+            assert(DisabledObjectAudio::declined_requests() == before + 2);
+            assert(sound.getMapCode() == 0 && !sound.isPlayingID(SE_SV_RABBIT_TALK_NORMAL));
+            assert(MR::startSoundObjectLevel(&sound, JAISoundID(SE_SV_RABBIT_TALK_NORMAL), 5) == nullptr);
+            assert(MR::startSoundObjectLevelParam(&sound, JAISoundID(SE_SV_RABBIT_TALK_NORMAL), 1, 2, 5) == nullptr);
+            assert(DisabledObjectAudio::declined_requests() == before + 4);
+            actor.mSoundObject = nullptr;
+        }
+        assert(aurora::audio::disabled_system_sound_object() == nullptr);
+        require_absent_owner_rejection();
+    }
+    std::puts("[pass] original talk ID table, system/actor dispatch and null disabled handles across owner generations");
+}
 
 void test_native_and_stream_owners() {
     static_assert(sizeof(JAISoundHandle) == sizeof(JAISound*));
@@ -236,4 +293,4 @@ void test_retail_service() {
     std::puts("[pass] Stage/Sub prepare-unlock, original states, independent handles, native PCM level/SE params/lifetime and category control");
 }
 
-int main() { test_native_and_stream_owners(); test_retail_service(); }
+int main() { test_original_talk_sound_dispatch(); test_native_and_stream_owners(); test_retail_service(); }

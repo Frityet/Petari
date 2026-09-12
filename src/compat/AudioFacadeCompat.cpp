@@ -811,7 +811,11 @@ namespace AudWrap {
     }
 
     AudSoundObject *getSystemSeObject() {
-        return aurora::audio::disabled_system_sound_object();
+        auto* object = aurora::audio::disabled_system_sound_object();
+        if (object == nullptr) {
+            unavailable("system-SE object access without its owner");
+        }
+        return object;
     }
 
     AudSoundObject *getAtmosphereSeObject() {

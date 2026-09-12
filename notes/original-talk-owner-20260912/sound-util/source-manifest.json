@@ -1,0 +1,122 @@
+[
+  {
+    "path": "decomp/src/Game/Util/SoundUtil.cpp",
+    "exists": true,
+    "sha256": "50dfd27b509823581fa11b631a6183053cc6af25f44c7746d9a32071eeeb2db6"
+  },
+  {
+    "path": "src/Game/Util/SoundUtil.cpp",
+    "exists": true,
+    "sha256": "50dfd27b509823581fa11b631a6183053cc6af25f44c7746d9a32071eeeb2db6"
+  },
+  {
+    "path": "src/Game/GameAudio/AudTalkSoundData.cpp",
+    "exists": true,
+    "sha256": "505771e7064bd41c4b9a7c8fbd018764e75009cc8c307da201d0749790671cd8"
+  },
+  {
+    "path": "src/Game/GameAudio/AudTalkSoundData.hpp",
+    "exists": true,
+    "sha256": "95dc3329139e7321c82cbb1c4d8e5b2fec21a8156f0eadbe3978c9c424f85738"
+  },
+  {
+    "path": "tests/OriginalJaiSoundOwnershipTests.cpp",
+    "exists": true,
+    "sha256": "66f2905283afb99f92a9dfdffa22b9450941728c81e94dcc18c3f9527bb97d2a"
+  },
+  {
+    "path": "src/Game/AudioLib/AudMeNameConverter.hpp",
+    "exists": true,
+    "sha256": "a294293c92409d3c1ae06c8b75ebd294ec11de6780a8e4d47ed3cf01f7ca255c"
+  },
+  {
+    "path": "src/Game/AudioLib/AudMicWrap.hpp",
+    "exists": true,
+    "sha256": "f16009e9421da918c42ce4dd44c6ddf7266a083d8bee7bdc740e78ec90848915"
+  },
+  {
+    "path": "src/Game/AudioLib/AudRemixMgr.hpp",
+    "exists": true,
+    "sha256": "ad2ee4d9c8547a7b75b76577a28f8537de404c5b39601fd918c46623302a52d3"
+  },
+  {
+    "path": "src/Game/AudioLib/AudSoundNameConverter.hpp",
+    "exists": true,
+    "sha256": "3986781f74faedf5b80b9a72d07b4681563224bc760a7b7c06fad78192d07f09"
+  },
+  {
+    "path": "src/Game/AudioLib/AudSpeakerWrap.hpp",
+    "exists": true,
+    "sha256": "135b8aff56b0b7d148879d7ad15773caeb9cebfe5e5a20e1c9ed4ae744bbfcf0"
+  },
+  {
+    "path": "src/Game/AudioLib/CSSoundNameConverter.hpp",
+    "exists": true,
+    "sha256": "59bd3dcf61d03dab7ba37c9adaff4671b1404a481aed224418654b375f1d5a0d"
+  },
+  {
+    "path": "src/Game/GameAudio/AudEffectDirector.hpp",
+    "exists": true,
+    "sha256": "0d9ecb726ef8c54742e0d643248b95eb6849e40c075297f8c473ffc5fa44ab19"
+  },
+  {
+    "path": "src/Game/GameAudio/AudSeKeeper.hpp",
+    "exists": true,
+    "sha256": "1b5091881f989395c88dfcc976429f69bb0f479cfc2c4cca16516f21766e240f"
+  },
+  {
+    "path": "src/Game/RhythmLib/AudChordInfo.hpp",
+    "exists": true,
+    "sha256": "e05f7c3fc453c1f2f1490854094b38acd1643d7a3ca5ead8576f4b4da2245e43"
+  },
+  {
+    "path": "src/Game/RhythmLib/AudMeObject.hpp",
+    "exists": true,
+    "sha256": "7a9d5dabc9bbd221e13d4efb1bfbfe6a605a36a9854fc12b1f35025ce301019a"
+  },
+  {
+    "path": "src/Game/AudioLib/AudRemixSequencer.hpp",
+    "exists": true,
+    "sha256": "a6e181fd1f2dd28778ee12fefcb98bfe5470e1faab27f87b8dce51414275bffe"
+  },
+  {
+    "path": "src/Game/RhythmLib/AudMeHandles.hpp",
+    "exists": true,
+    "sha256": "36ccf17eb8761f0df64758ddbb91da83005593b1dd40b01eb2392e536d4a5daf"
+  },
+  {
+    "path": "src/Game/RhythmLib/AudMePlayer.hpp",
+    "exists": true,
+    "sha256": "7c0d2387233a06cf5f47f185bad41ebea8722c5a795df888da862bf2516f53f7"
+  },
+  {
+    "path": "src/compat/SoundUtilCompat.cpp",
+    "exists": false,
+    "sha256": null
+  },
+  {
+    "path": "src/compat/OriginalActorSound.cpp",
+    "exists": false,
+    "sha256": null
+  },
+  {
+    "path": "src/compat/OriginalObjectSoundRequests.cpp",
+    "exists": false,
+    "sha256": null
+  },
+  {
+    "path": "src/compat/DisabledObjectSoundRequests.cpp",
+    "exists": false,
+    "sha256": null
+  },
+  {
+    "path": "src/compat/OriginalSubBgmQueries.cpp",
+    "exists": false,
+    "sha256": null
+  },
+  {
+    "path": "src/compat/AudioFacadeCompat.cpp",
+    "exists": true,
+    "sha256": "12d1e3909cf6d3b6f4aa4144c97947f6e324b002c75eb11e2fcfc1f6887d4cda"
+  }
+]
