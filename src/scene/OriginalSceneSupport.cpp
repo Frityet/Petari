@@ -21,6 +21,7 @@
 #include "scene/nameobj/PlanetMapCatalog.hpp"
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <memory>
+#include <algorithm>
 #include <exception>
 #include <stdexcept>
 #include <utility>
@@ -60,10 +61,22 @@ public:
         // release their native sidecars before that storage can be recycled.
         _game.reset();
         _execution->prepare_retirement();
-        auto objects = SceneNameObjRegistry::snapshot_holder(*_names);
+        const auto holder_objects = SceneNameObjRegistry::snapshot_holder(*_names);
+        auto objects = compat::snapshot_name_obj_runtime_objects();
         for (auto it = objects.rbegin(); it != objects.rend(); ++it) {
             auto* object = *it;
             if (!compat::has_name_obj_runtime_state(object) || current_scene_obj_holder_binding_owns(object)) continue;
+            bool belongs_to_heap = false;
+            for (auto* heap = JKRHeap::findFromRoot(object); heap; heap = heap->getParent()) {
+                if (heap == &_domain->heap()) {
+                    belongs_to_heap = true;
+                    break;
+                }
+            }
+            // The original startup changes NameObjRegister's holder only after
+            // stationed initialization. Earlier scene objects can therefore be
+            // listed in the process holder while allocated in this scene heap.
+            if (!belongs_to_heap && std::find(holder_objects.begin(), holder_objects.end(), object) == holder_objects.end()) continue;
             layout::release_layout_actor_if_registered(object);
             if (auto* actor = dynamic_cast<LiveActor*>(object)) compat::release_actor_runtime_state(actor);
             unregister_scene_name_obj(*object);

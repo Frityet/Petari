@@ -1,0 +1,11 @@
+# Scene heap borrower retirement, 2026-09-13
+
+The twelfth actual production run stopped on the existing resource unload guard. LLDB identified `/KrKorean/LayoutData/WiiRemoteStrapReplace.arc`, strong count 2, from `GameSystemSceneController::destroyScene -> MR::removeResourceAndFileHolderIfIsEqualHeap -> ResourceHolderService::remove_for_heap`. The worker's actual retiring JKRSolidHeap was 0x67ff20300 in that run. Full stack and variables are in `notes/gateway-wakeup-demo-20260912/original-app-layout-unload-backtrace.log`; the diagnostic process was killed afterward.
+
+The native OriginalSceneSupport retirement only visited the scene controller's NameObjHolder. Original early startup registers Logo objects in the process holder: `GameSystemStationedArchiveLoader::exeInitializeGameData` switches NameObjRegister to the scene holder only after stationed initialization. Therefore a native layout sidecar belonging to the actual scene heap could survive scene retirement merely because its original name registration predated that switch.
+
+`src/scene/OriginalSceneSupport.cpp` now walks existing registered identities in reverse construction order and selects either members of the actual scene holder or objects physically allocated in the retiring scene heap/its child heaps. It uses JKRHeap's actual allocation identity. Separately owned SceneObjs retain their existing teardown path. Native layout/model sidecars are released and original holder references removed while all original objects and pane matrices remain alive; original Game arrays and actors are still reclaimed by their heap.
+
+No resource guard was removed, no live borrow count was ignored, and no archive is forcibly unloaded. The existing checks run after these stale native sidecars retire. The one changed TU compiles (`native-compile.json`, with exact source hash). No tests or subsequent production run were performed by this agent; root owns the next build/run.
+
+Production receipt: the twentieth smg-pc build passed, and the thirteenth actual run now passes this Logo heap retirement. It reaches a separate screen-alpha owner error during the original scene worker. Exact build/run receipts are in notes/gateway-wakeup-demo-20260912; this does not yet prove a rendered Gateway scene.

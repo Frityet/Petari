@@ -1,0 +1,106 @@
+[
+  {
+    "name": "getStageEffectCameraParam__34@unnamed@StageEffectDataTable_cpp@FPCc",
+    "match_percent": 92.32143
+  },
+  {
+    "name": "getStageEffectPadParam__34@unnamed@StageEffectDataTable_cpp@FPCc",
+    "match_percent": 92.32143
+  },
+  {
+    "name": "getStageEffectSeParam__34@unnamed@StageEffectDataTable_cpp@FPCc",
+    "match_percent": 92.32143
+  },
+  {
+    "name": "shakeCamera__34@unnamed@StageEffectDataTable_cpp@FQ234@unnamed@StageEffectDataTable_cpp@15CameraShakeType",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isDistanceValidShake__34@unnamed@StageEffectDataTable_cpp@FP9LiveActorPCc",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getStartSe__Q22MR11StageEffectFPCc",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getMovingSe__Q22MR11StageEffectFPCc",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getStopSe__Q22MR11StageEffectFPCc",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getStopSeSteps__Q22MR11StageEffectFPCc",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isRiddleSeTypeStop__Q22MR11StageEffectFPCc",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isExistStageEffectSeData__Q22MR11StageEffectFPCc",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isExistStageEffectData__Q22MR11StageEffectFPCc",
+    "match_percent": 100.0
+  },
+  {
+    "name": "shakeStartCamera__Q22MR11StageEffectFP9LiveActorPCc",
+    "match_percent": 100.0
+  },
+  {
+    "name": "shakeStopCamera__Q22MR11StageEffectFP9LiveActorPCc",
+    "match_percent": 100.0
+  },
+  {
+    "name": "shakeCameraMoving__Q22MR11StageEffectFP7NameObjPCc",
+    "match_percent": 100.0
+  },
+  {
+    "name": "stopShakingCameraMoving__Q22MR11StageEffectFP7NameObjPCc",
+    "match_percent": 100.0
+  },
+  {
+    "name": "rumblePadStart__Q22MR11StageEffectFP9LiveActorPCc",
+    "match_percent": 100.0
+  },
+  {
+    "name": "rumblePadStop__Q22MR11StageEffectFP9LiveActorPCc",
+    "match_percent": 100.0
+  },
+  {
+    "name": "rumblePadMoving__Q22MR11StageEffectFP9LiveActorPCc",
+    "match_percent": 100.0
+  },
+  {
+    "name": "tryStageEffectStart__Q22MR11StageEffectFP9LiveActorPCc",
+    "match_percent": 84.75309
+  },
+  {
+    "name": "tryStageEffectMoving__Q22MR11StageEffectFP9LiveActorPCc",
+    "match_percent": 63.843136
+  },
+  {
+    "name": "tryStageEffectStop__Q22MR11StageEffectFP9LiveActorPCc",
+    "match_percent": 84.75309
+  },
+  {
+    "name": "@58231",
+    "match_percent": 100.0
+  },
+  {
+    "name": "@59371",
+    "match_percent": 100.0
+  },
+  {
+    "name": "[.sdata-0]",
+    "match_percent": 72.0
+  },
+  {
+    "name": "[.sdata2-0]",
+    "match_percent": 100.0
+  }
+]
