@@ -33,7 +33,11 @@ ProjmapEffectMtxSetter* DisplayListMaker::addProjmapEffectMtxSetter() {
     return setter;
 }
 
-// DisplayListMaker::addMirrorReflectionMtxSetter
+MirrorReflectionMtxSetter* DisplayListMaker::addMirrorReflectionMtxSetter() {
+    MirrorReflectionMtxSetter* setter = new MirrorReflectionMtxSetter(mModel, mResHolder);
+    push(setter);
+    return setter;
+}
 
 void DisplayListMaker::push(MaterialCtrl* pCtrl) {
     mMaterialCtrl.push_back(pCtrl);

@@ -68,3 +68,18 @@ public:
 
     u8 temp[0x3C];
 };
+
+class MirrorReflectionMtxSetter : public MaterialCtrl {
+public:
+    MirrorReflectionMtxSetter(J3DModel*, const ResourceHolder*);
+
+    virtual void update() override;
+
+    void addUpdatingTexMtxFromName(J3DModelData*);
+    void addUpdatingTexMtxFromTexNo(J3DModelData*, u16);
+    void addUpdatingTexMtxFromTexCoord(J3DMaterial*);
+    void addUpdatingTexMtx(J3DTexMtx*);
+
+    J3DTexMtx* mMatrices[8];  // 0xC
+    s32 mNumMatrices;        // 0x2C
+};

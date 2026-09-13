@@ -4,6 +4,48 @@
 #include "Game/Util.hpp"
 #include "Game/Util/MtxUtil.hpp"
 
+#include <JSystem/J3DGraphAnimator/J3DModelData.hpp>
+
+namespace {
+    const GXVtxAttrFmtList* getVertexFormat(const J3DModelData* pModelData, GXAttr attr) {
+        const GXVtxAttrFmtList* pFormat = pModelData->mVertexData.getVtxAttrFmtList();
+        while (pFormat->attr != GX_VA_NULL) {
+            if (pFormat->attr == attr) {
+                return pFormat;
+            }
+            pFormat++;
+        }
+        return nullptr;
+    }
+};
+
+MirrorCamera::MirrorCamera(const char* pName) : NameObj(pName), _C(0.0f, 0.0f, 0.0f), _18(0.0f, 1.0f, 0.0f), _24(0.0f) {
+    mViewMtx.identity();
+    mModelTexMtx.identity();
+}
+
+void MirrorCamera::setMirrorMapInfo(J3DModelData* pModelData) {
+    TVec3f position;
+    TVec3f normal;
+    const GXVtxAttrFmtList* pPositionFormat = getVertexFormat(pModelData, GX_VA_POS);
+    if (pPositionFormat->type == GX_S16) {
+        const s16* pPosition = static_cast<const s16*>(pModelData->mVertexData.getVtxPosArray());
+        MR::fixed16ToFloat(&position, TVec3s(pPosition[0], pPosition[1], pPosition[2]), pPositionFormat->frac);
+    } else {
+        const f32* pPosition = static_cast<const f32*>(pModelData->mVertexData.getVtxPosArray());
+        position.set(pPosition[0], pPosition[1], pPosition[2]);
+    }
+    const GXVtxAttrFmtList* pNormalFormat = getVertexFormat(pModelData, GX_VA_NRM);
+    if (pNormalFormat->type == GX_S16) {
+        const s16* pNormal = static_cast<const s16*>(pModelData->mVertexData.getVtxNrmArray());
+        MR::fixed16ToFloat(&normal, TVec3s(pNormal[0], pNormal[1], pNormal[2]), pNormalFormat->frac);
+    } else {
+        const f32* pNormal = static_cast<const f32*>(pModelData->mVertexData.getVtxNrmArray());
+        normal.set(pNormal[0], pNormal[1], pNormal[2]);
+    }
+    setMirrorMapInfo(normal, position);
+}
+
 void MirrorCamera::init(const JMapInfoIter& rIter) {
     MR::connectToScene(this, MR::MovementType_MirrorCamera, -1, -1, -1);
 }
