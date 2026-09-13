@@ -1048,8 +1048,13 @@ namespace smgpc::runtime {
     }
 
     std::filesystem::path DvdFileSystemService::resolve(std::string_view disc_path) const {
-        const auto normalized = normalize_disc_path(disc_path);
-        return std::filesystem::path(normalize_disc_path_string(normalized.generic_string()));
+        auto key = normalize_disc_path_string(disc_path);
+        // DVDConvertPathToEntrynum compares ASCII letters without case. Native
+        // archive and resource caches must use that same identity, including
+        // fixed memory mounts which do not have an entry in the disc FST.
+        for (char& value : key)
+            if (value >= 'A' && value <= 'Z') value += 'a' - 'A';
+        return std::filesystem::path(std::move(key));
     }
 
     bool DvdFileSystemService::exists(std::string_view disc_path) const {
@@ -1471,7 +1476,7 @@ namespace smgpc::runtime {
     }
 
     std::string DvdFileSystemService::archive_cache_key_for_path(const std::filesystem::path &path) const {
-        return normalize_disc_path_string(path.generic_string());
+        return resolve(path.generic_string()).generic_string();
     }
 
     std::string DvdFileSystemService::archive_cache_key(std::string_view disc_path) const {

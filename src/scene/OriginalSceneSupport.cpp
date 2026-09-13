@@ -18,6 +18,7 @@
 #include "scene/SceneLifetimeBinding.hpp"
 #include "scene/SceneNameObjRegistry.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
+#include "scene/StageCollisionService.hpp"
 #include "scene/nameobj/PlanetMapCatalog.hpp"
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <memory>
@@ -44,6 +45,9 @@ public:
             // table, before any planet actor is constructed.
             _planet_map_catalog = std::make_unique<nameobj::PlanetMapCatalog>(archives->dvd());
         }
+        if (StageCollisionService::active())
+            throw std::logic_error("Retire the previous scene collision owner before binding another scene");
+        _collision.activate();
         _scheduler_binding = std::make_unique<runtime::SceneSchedulerBinding>(_scheduler);
         _objects = std::make_unique<SceneObjHolderBinding>(*scene.mSceneObjHolder, nullptr, nullptr, _domain);
         _execution = std::make_unique<SceneExecutionBinding>(_scheduler, *scene.mListExecutor, _domain, &names);
@@ -101,6 +105,9 @@ private:
     NameObjHolder* _names;
     std::shared_ptr<compat::JkrAllocationDomain> _domain;
     std::unique_ptr<nameobj::PlanetMapCatalog> _planet_map_catalog;
+    // CollisionParts and original map queries share this scene's primary
+    // collision category. Retain it until all actor and SceneObj owners retire.
+    StageCollisionService _collision;
     runtime::SceneScheduler _scheduler;
     std::unique_ptr<runtime::SceneSchedulerBinding> _scheduler_binding;
     std::unique_ptr<SceneObjHolderBinding> _objects;

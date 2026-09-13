@@ -150,7 +150,9 @@ namespace smgpc::compat {
         const auto result = collision->register_kcl(state->kcl, state->published_current, state->source,
             state->registration, state->attributes, sensor, placement_zone_id);
         if (!result.accepted) aurora::throw_host_exception<std::runtime_error>("Required CollisionParts KCL is malformed: " + state->source);
-        if (category != 0) collision->build();
+        // Original initialization can query previously registered parts before
+        // placement ends. Publish every category's index at the same boundary.
+        collision->build();
         auto* result_parts = state->parts.get();
         actor_collision_parts()[sensor->mHost].push_back(std::move(state));
         return result_parts;

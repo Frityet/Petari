@@ -1,0 +1,11 @@
+{
+  "command": [
+    "xmake",
+    "build",
+    "-y",
+    "smg-pc"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 11.22905421257019,
+  "llvm": "/opt/homebrew/opt/llvm/bin"
+}

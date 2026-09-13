@@ -1,0 +1,13 @@
+{
+  "sources": [
+    {
+      "path": "src/runtime/RuntimeServices.cpp",
+      "sha256": "d0c8578a5ed59db181bc8822a29ce40da5e79201f6bb1feca6ec2fd51a2aa401"
+    }
+  ],
+  "evidence": [
+    "notes/gateway-wakeup-demo-20260912/original-app-thirty-fourth-build.json",
+    "notes/gateway-wakeup-demo-20260912/original-app-twenty-fifth-run.json",
+    "notes/gateway-wakeup-demo-20260912/original-app-twenty-fourth-exception.log"
+  ]
+}

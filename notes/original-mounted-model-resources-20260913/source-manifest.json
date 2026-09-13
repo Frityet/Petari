@@ -1,0 +1,18 @@
+{
+  "sources": [
+    {
+      "path": "src/compat/ResourceHolderCompat.cpp",
+      "sha256": "8db52865d2557bda51e45c51c5db678f0754418755bfd076013a3a54c7702537"
+    },
+    {
+      "path": "src/compat/ResourceHolderCompat.hpp",
+      "sha256": "2dfeea928d5c6730d969a661fe457ec16b75e60abf2af37e11e6eef2fda6458d"
+    }
+  ],
+  "evidence": [
+    "notes/gateway-wakeup-demo-20260912/original-app-thirty-second-build.json",
+    "notes/gateway-wakeup-demo-20260912/original-app-twenty-third-run.json",
+    "notes/gateway-wakeup-demo-20260912/original-app-twenty-second-backtrace.log"
+  ],
+  "scope": "Actual mounted archive and heap retained by original ResourceHolder; no Game source change or scheduler bypass."
+}

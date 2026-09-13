@@ -41,7 +41,7 @@ namespace smgpc::compat {
     // Game layout. Archive and raw identity aliases outlive all loaded objects.
     class ResourceArchiveOwner final {
     public:
-        ResourceArchiveOwner(std::shared_ptr<const resource::RarcArchive>, std::filesystem::path,
+        ResourceArchiveOwner(std::shared_ptr<const runtime::MountedArchive>,
                              std::shared_ptr<JkrAllocationDomain>, std::shared_ptr<resource::Mem1ResourceHeap>);
         ~ResourceArchiveOwner();
         ResourceArchiveOwner(const ResourceArchiveOwner&) = delete;

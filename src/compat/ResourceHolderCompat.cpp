@@ -139,13 +139,18 @@ namespace smgpc::compat {
 
     struct ResourceArchiveOwner::Storage {
         std::shared_ptr<JkrAllocationDomain> domain;
+        std::shared_ptr<const runtime::MountedArchive> mounted;
         std::shared_ptr<const resource::RarcArchive> source;
-        std::filesystem::path path;
-        std::unique_ptr<JKRMemArchive> archive;
+        JKRMemArchive* archive = nullptr;
+        struct ConvertedEntry {
+            u32 index;
+            void* original;
+            void* converted;
+        };
+        std::vector<ConvertedEntry> converted_entries;
         std::vector<resource::BasResource> bas_resources;
         std::vector<resource::BtiTextureData> textures;
         std::vector<camera::NativeCameraAnimationData> camera_animations;
-        std::vector<resource::JMapSourceRegistration> map_aliases;
         std::vector<resource::J3dAnimationResource> animations;
         std::vector<resource::J3dAnimationSourceRegistration> animation_aliases;
         std::vector<resource::J3dModelResource> models;
@@ -154,6 +159,12 @@ namespace smgpc::compat {
 
         ~Storage() {
             JkrHostAllocationScope host;
+            // The FileLoader mount can outlive this typed holder. Restore only
+            // cache entries still borrowing our converted storage, including
+            // when construction unwinds before the holder is published.
+            for (const auto& entry : converted_entries)
+                if (archive->mFiles[entry.index].mFileData == entry.converted)
+                    archive->mFiles[entry.index].mFileData = entry.original;
             // Loaded materials can still point into MaterialAnmBuffer.
             // Destroy models before the actual animation array and holder.
             model_aliases.clear();
@@ -168,19 +179,25 @@ namespace smgpc::compat {
                 holder.reset();
             }
         }
+
+        void publish_converted_entry(u32 index, void* data) {
+            converted_entries.push_back({index, archive->mFiles[index].mFileData, data});
+            archive->mFiles[index].mFileData = data;
+        }
     };
 
-    ResourceArchiveOwner::ResourceArchiveOwner(std::shared_ptr<const resource::RarcArchive> source,
-        std::filesystem::path path, std::shared_ptr<JkrAllocationDomain> domain,
+    ResourceArchiveOwner::ResourceArchiveOwner(std::shared_ptr<const runtime::MountedArchive> mounted,
+        std::shared_ptr<JkrAllocationDomain> domain,
         std::shared_ptr<resource::Mem1ResourceHeap> mem1) {
         JkrHostAllocationScope host;
-        if (!source || !domain || !mem1) aurora::throw_host_exception<std::invalid_argument>("ResourceHolder requires retained archive and heap owners");
+        if (!mounted || !domain || !mem1 || mounted->heap() != &domain->heap())
+            aurora::throw_host_exception<std::invalid_argument>("ResourceHolder requires its original mounted archive and owning heap");
         _storage = std::make_unique<Storage>();
         auto& state = *_storage;
         state.domain = std::move(domain);
-        state.source = std::move(source);
-        state.path = std::move(path);
-        state.archive = std::make_unique<JKRMemArchive>(*state.source);
+        state.mounted = std::move(mounted);
+        state.source = std::shared_ptr<const resource::RarcArchive>(state.mounted, &state.mounted->source());
+        state.archive = &state.mounted->archive();
         for (const auto& entry : state.source->entries()) {
             const auto bytes = state.source->file_data(entry);
             switch (backing_kind(entry.name)) {
@@ -197,8 +214,7 @@ namespace smgpc::compat {
                 state.model_aliases.push_back(state.models.back().register_source(bytes));
                 break;
             case BackingKind::Map:
-                if (bytes.empty()) break; // Original JMapInfo::attach(nullptr).
-                state.map_aliases.push_back(resource::register_jmap_source(bytes, state.source));
+                // MountedArchive already owns the bounded JMap registrations.
                 break;
             case BackingKind::Bas:
                 if (!bytes.empty()) state.bas_resources.emplace_back(bytes, state.source);
@@ -209,8 +225,7 @@ namespace smgpc::compat {
                 // Publish through the archive's original retained-file cache
                 // before ResourceHolder enumerates it. All lookup routes then
                 // share the same native record and unchanged resource size.
-                state.archive->mFiles[entry.file_entry_index].mFileData =
-                    const_cast<ResTIMG*>(state.textures.back().image());
+                state.publish_converted_entry(entry.file_entry_index, const_cast<ResTIMG*>(state.textures.back().image()));
                 break;
             case BackingKind::CameraAnimation:
                 if (bytes.empty()) break;
@@ -218,11 +233,10 @@ namespace smgpc::compat {
                 // Original CameraAnim borrows native scalar records directly.
                 // Publish once through the archive so every original lookup,
                 // including ActorCameraUtil and loadResourceFromArc, shares it.
-                state.archive->mFiles[entry.file_entry_index].mFileData =
-                    const_cast<std::uint8_t*>(state.camera_animations.back().bytes().data());
+                state.publish_converted_entry(entry.file_entry_index,
+                    const_cast<std::uint8_t*>(state.camera_animations.back().bytes().data()));
                 break;
             case BackingKind::Raw:
-                if (!bytes.empty()) state.map_aliases.push_back(resource::register_jmap_source(bytes, state.source));
                 break;
             }
         }
@@ -238,7 +252,7 @@ namespace smgpc::compat {
     }
     ResourceHolder& ResourceArchiveOwner::holder() const noexcept { return *_storage->holder; }
     const resource::RarcArchive& ResourceArchiveOwner::archive() const noexcept { return *_storage->source; }
-    const std::filesystem::path& ResourceArchiveOwner::resolved_path() const noexcept { return _storage->path; }
+    const std::filesystem::path& ResourceArchiveOwner::resolved_path() const noexcept { return _storage->mounted->path(); }
 
     ResourceHolderService::ResourceHolderService(runtime::DvdFileSystemService& dvd,
         std::shared_ptr<JkrAllocationDomain> domain, std::shared_ptr<resource::Mem1ResourceHeap> mem1)
@@ -271,11 +285,21 @@ namespace smgpc::compat {
         MR::makeFileNameConsideringLanguage(resolved_path, sizeof(resolved_path), logical_path);
         const auto key = _dvd->resolve(resolved_path);
         if (const auto found = _holders.find(key); found != _holders.end()) return &found->second->holder();
-        auto domain = _domain;
-        if (heap != nullptr && heap != &domain->heap()) {
-            domain = JkrAllocationDomain::retain_heap(*heap);
+        auto* mounts = runtime::ArchiveMountService::active();
+        if (mounts == nullptr)
+            aurora::throw_host_exception<std::logic_error>("ResourceHolder requires an active original archive mount owner");
+        auto mounted = mounts->retain(resolved_path);
+        if (!mounted) {
+            // Match createAndAddInner: complete an existing original request,
+            // or mount on the caller's heap before constructing the holder.
+            if (MR::receiveArchive(logical_path) == nullptr)
+                MR::mountArchive(logical_path, heap ? heap : JKRHeap::getCurrentHeap());
+            mounted = mounts->retain(resolved_path);
         }
-        auto owner = std::make_shared<ResourceArchiveOwner>(_dvd->retain_archive_for_path(key), key, std::move(domain), _mem1);
+        if (!mounted || !mounted->heap())
+            aurora::throw_host_exception<std::logic_error>("ResourceHolder requires its completed original archive and heap");
+        auto domain = JkrAllocationDomain::retain_heap(*mounted->heap());
+        auto owner = std::make_shared<ResourceArchiveOwner>(std::move(mounted), std::move(domain), _mem1);
         auto* result = &owner->holder();
         _holders.emplace(key, std::move(owner));
         return result;
