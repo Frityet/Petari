@@ -432,6 +432,26 @@ namespace MR {
         return pActor->getLayoutManager()->getPaneCtrl(pPaneName)->getFrameCtrl(animLayer);
     }
 
+    void emitEffect(LayoutActor* pActor, const char* pEffectName) {
+        pActor->mEffectKeeper->createEmitter(pEffectName);
+    }
+
+    void deleteEffect(LayoutActor* pActor, const char* pEffectName) {
+        pActor->mEffectKeeper->deleteEmitter(pEffectName);
+    }
+
+    void forceDeleteEffect(LayoutActor* pActor, const char* pEffectName) {
+        pActor->mEffectKeeper->forceDeleteEmitter(pEffectName);
+    }
+
+    void deleteEffectAll(LayoutActor* pActor) {
+        pActor->mEffectKeeper->deleteEmitterAll();
+    }
+
+    void forceDeleteEffectAll(LayoutActor* pActor) {
+        pActor->mEffectKeeper->forceDeleteEmitterAll();
+    }
+
     void setEffectHostMtx(LayoutActor* pActor, const char* pParam2, MtxPtr pHostMtx) {
         getEffect(pActor, pParam2)->setHostMtx(pHostMtx);
     }

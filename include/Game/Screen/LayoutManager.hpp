@@ -16,6 +16,15 @@ class LayoutGroupCtrl;
 class LayoutHolder;
 class LayoutPaneCtrl;
 
+struct LayoutPaneInfo {
+    /* 0x00 */ const char* mName;
+    /* 0x04 */ LayoutPaneCtrl* mPaneCtrl;
+    /* 0x08 */ void* mGroupCtrlList;
+    /* 0x0C */ MtxPtr mMtxRef;
+    /* 0x10 */ u32 mSubtreeSize;
+    /* 0x14 */ nw4r::lyt::Pane* mPane;
+};
+
 class LayoutManager {
 public:
     LayoutManager(const char*, bool, u32, u32);
@@ -64,8 +73,8 @@ public:
     /* 0x60 */ bool mIsScreenHidden;
     /* 0x61 */ bool _61;
     /* 0x64 */ u32 _64;
-    /* 0x68 */ u32 _68;
-    /* 0x6C */ u32 _6C;
+    /* 0x68 */ u32 mPaneCount;
+    /* 0x6C */ LayoutPaneInfo* mPaneInfos;
     /* 0x70 */ u32 _70;
     /* 0x74 */ u32 _74;
     /* 0x78 */ const char* _78;
