@@ -1,0 +1,26 @@
+[
+  {
+    "path": "src/layout/LayoutManagerCompat.cpp",
+    "sha256": "fa85bea6b48dd8857bf25efc4cf71b936348160f11afe15639a08f8973a9913d"
+  },
+  {
+    "path": "src/layout/LayoutUtilCompat.cpp",
+    "sha256": "c4ac3699144e9b0f423fa865cad9418b967e12cb2e08a6a3bb56b9ecbdd1a362"
+  },
+  {
+    "path": "src/compat/EffectSystemOwnership.cpp",
+    "sha256": "d54cd39dc67562654ddbff335d8e951cba0471b38def08b06326044fc62ec939"
+  },
+  {
+    "path": "src/compat/EffectSystemOwnership.hpp",
+    "sha256": "24614b0adaaca48318a15a25e5f48784630ffee64f2665f7613f24c3c1f0198c"
+  },
+  {
+    "path": "decomp/src/Game/Util/LayoutUtil.cpp",
+    "sha256": "426403a783928d1b32602b2b7fb6712565743ea06cffaa3584e1579c5a92d578"
+  },
+  {
+    "path": "src/Game/Util/LayoutUtil.cpp",
+    "sha256": "426403a783928d1b32602b2b7fb6712565743ea06cffaa3584e1579c5a92d578"
+  }
+]

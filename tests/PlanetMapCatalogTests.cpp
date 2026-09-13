@@ -183,12 +183,13 @@ namespace {
                         *optional.submodel_name(PlanetMapSubmodelKind::Low) ==
                             "AsteroidBlockPlanetLow" &&
                         optional.creator_kind ==
-                            PlanetMapCatalogCreatorKind::OptionalSubmodelsRuntimeUnavailable &&
+                            PlanetMapCatalogCreatorKind::OrdinaryPlanetMap &&
+                        catalog.is_ordinary_planet(optional.planet_name) &&
                         catalog.archive_names(optional) == std::vector<std::string>{
                             "AsteroidBlockPlanet",
                             "AsteroidBlockPlanetLow",
                         },
-                    "a retained Low submodel row must remain unavailable in tranche one");
+                    "a retained Low submodel row must use the original ordinary PlanetMap creator");
 
             const auto &force_low = require_entry(catalog, "DandelionHillPlanet");
             const auto dandelion_force_low_slots = std::array<std::string, 8U>{

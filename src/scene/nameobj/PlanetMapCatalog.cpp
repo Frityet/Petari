@@ -263,12 +263,11 @@ namespace smgpc::scene::nameobj {
             // Force-low selection is performed before the unique creator table in
             // retail. Within the non-force-low path, a unique name must never fall
             // through to the ordinary PlanetMap creator, even when it has no extras.
+            // Ordinary PlanetMap now constructs its original optional models.
             if (entry.has_force_low_scenarios()) {
                 entry.creator_kind = PlanetMapCatalogCreatorKind::ForceLowRuntimeUnavailable;
             } else if (is_unique_planet(entry.planet_name)) {
                 entry.creator_kind = PlanetMapCatalogCreatorKind::UniqueCreatorRuntimeUnavailable;
-            } else if (entry.has_retained_submodels()) {
-                entry.creator_kind = PlanetMapCatalogCreatorKind::OptionalSubmodelsRuntimeUnavailable;
             }
 
             const auto index = _entries.size();

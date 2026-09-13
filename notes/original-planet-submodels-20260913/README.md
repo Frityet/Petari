@@ -15,9 +15,14 @@ helper now serves low/middle/water/indirect names; its old duplicate and low/mid
 wrappers were moved out of LodCtrlRuntimeCompat. Original fullwidth punctuation
 keeps CP932 bytes in the host-charset compatibility TU.
 
-Exact current native paths:
+Exact final production paths:
 - src/compat/PlanetMapRuntimeCompat.cpp
 - src/compat/LodCtrlRuntimeCompat.cpp
+- src/scene/nameobj/PlanetMapCatalog.cpp and .hpp
+- src/scene/nameobj/NameObjFactory.cpp (optional-submodel diagnostic removal only)
+
+The single stale optional-submodel assertion in existing
+`tests/PlanetMapCatalogTests.cpp` now expects the ordinary creator.
 
 Sources are from already recovered `decomp/src/Game/Util/LiveActorUtil.cpp`;
 no new reference recovery or Game behavior edits. Explicit `u32` zero resolves
@@ -26,9 +31,11 @@ wider than the original type. Root's preceding model-existence provider deletion
 is preserved, with no RuntimeContext lookup restored. The separate original
 OceanHome controller frontier remains unchanged.
 
-Both changed TUs compile; logs are alongside this note. Root requested a native
-source freeze for the next production build/run, so the PlanetMapCatalog optional
-submodel exclusion, enum, factory diagnostics and existing expectations are
-currently unchanged. Enabling those catalog entries is the remaining step once
-that build window ends. Unique and force-low creator exclusions must remain.
-No new tests, shared build, or full application run was performed by this lane.
+The two constructor TUs compile, and root reports the fifteenth full production
+build succeeds including these constructors and Sky. After that integration
+checkpoint, removed the catalog optional-submodel exclusion, obsolete enum and
+factory diagnostic. Authored ordinary planets with optional models now use the
+original model/animation/LOD route. Unique and force-low creator exclusions stay
+unchanged. Both catalog/factory TUs compile too. Logs are alongside this note.
+No new tests, shared build, or full application run was performed by this lane;
+actual optional-model gameplay/rendering has not yet been exercised.

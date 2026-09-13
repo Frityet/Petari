@@ -1,0 +1,30 @@
+[
+  {
+    "path": "decomp/include/Game/Screen/LayoutManager.hpp",
+    "sha256": "2d4769bb508d6fef6b524cd5c7784256f707fd6ef8f1ef4f3d43b972909c3af4"
+  },
+  {
+    "path": "decomp/src/Game/Screen/LayoutManager.cpp",
+    "sha256": "010da658f16c10db5ebe9545b31200f546b1a0b9161eb0bd3a2bd542664d9147"
+  },
+  {
+    "path": "src/Game/Screen/LayoutManager.hpp",
+    "sha256": "2d4769bb508d6fef6b524cd5c7784256f707fd6ef8f1ef4f3d43b972909c3af4"
+  },
+  {
+    "path": "src/Game/Screen/LayoutManager.cpp",
+    "sha256": "010da658f16c10db5ebe9545b31200f546b1a0b9161eb0bd3a2bd542664d9147"
+  },
+  {
+    "path": "src/layout/LayoutManagerCompat.cpp",
+    "sha256": "fa85bea6b48dd8857bf25efc4cf71b936348160f11afe15639a08f8973a9913d"
+  },
+  {
+    "path": "src/layout/Nw4rLayoutRecords.hpp",
+    "sha256": "dc95f6666c24d34d34b6dc667c11e16fc533f439a0939cb6511db47ed99307eb"
+  },
+  {
+    "path": "src/layout/Nw4rLayoutRecords.cpp",
+    "sha256": "ba50551c7d5d470040f428d9d61329b784a22731d16b8a169e85121b3a738609"
+  }
+]

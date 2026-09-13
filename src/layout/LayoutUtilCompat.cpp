@@ -28,7 +28,6 @@
 #include "compat/ResourceHolderCompat.hpp"
 #include "resource/RarcArchive.hpp"
 #include "resource/TplTexture.hpp"
-#include "runtime/RuntimeContext.hpp"
 
 namespace {
     [[nodiscard]] LayoutManager& require_layout_manager(LayoutActor* layout, std::string_view operation) {
@@ -91,18 +90,6 @@ namespace MR {
     void setLayoutScalePosAtPaneScaleTransIfExecCalcAnim(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName) {
         setLayoutPosAtPaneTrans(pDst, pSrc, pPaneName);
         setLayoutScaleAtPaneScale(pDst, pSrc, pPaneName);
-    }
-
-    void emitEffect(LayoutActor* pLayout, const char* pEffectName) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->emit_effect(pLayout->getName(), pEffectName, pLayout);
-        }
-    }
-
-    void deleteEffectAll(LayoutActor* pLayout) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->delete_effect_all(pLayout->getName(), pLayout);
-        }
     }
 
 }  // namespace MR

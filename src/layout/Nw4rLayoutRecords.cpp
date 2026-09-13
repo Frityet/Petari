@@ -2,6 +2,7 @@
 #include "layout/LayoutRuntime.hpp"
 #include "layout/LytTexMap.hpp"
 #include "compat/ResourceHolderCompat.hpp"
+#include "resource/RarcArchive.hpp"
 #include "Game/System/LayoutHolder.hpp"
 #include "Game/Util/MessageUtil.hpp"
 #include <nw4r/lyt/group.h>
@@ -21,6 +22,7 @@
 #include <array>
 #include <cmath>
 #include <cstring>
+#include <map>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -43,12 +45,18 @@ public:
 
 class NativeResourceAccessor final : public nw4r::lyt::ResourceAccessor {
 public:
-    explicit NativeResourceAccessor(const std::vector<LayoutRuntime::RenderTexture>& textures) : textures(textures) {}
-    const nw4r::lyt::TexMap& texture(const char* name) const {
+    explicit NativeResourceAccessor(const std::vector<LayoutRuntime::RenderTexture>& textures,
+                                    const resource::RarcArchive* archive = nullptr) : textures(textures), archive(archive) {}
+    const nw4r::lyt::TexMap& texture(const char* name) {
         const auto it = std::ranges::find(textures, name, &LayoutRuntime::RenderTexture::name);
-        if (it == textures.end() || !it->native_texture)
-            aurora::throw_host_exception<std::runtime_error>("Missing retained layout texture: " + std::string(name));
-        return *it->native_texture;
+        if (it != textures.end() && it->native_texture) return *it->native_texture;
+        if (auto cached = animation_textures.find(name); cached != animation_textures.end()) return cached->second;
+        if (archive) {
+            auto* entry = archive->find_resource(name);
+            if (!entry) entry = archive->find_by_basename(name);
+            if (entry) return animation_textures.emplace(name, make_tex_map(name, archive->file_data(*entry), nullptr)).first->second;
+        }
+        aurora::throw_host_exception<std::runtime_error>("Missing retained layout texture: " + std::string(name));
     }
     void* GetResource(nw4r::lyt::ResType type, const char* name, u32* size) override {
         if (type != 0x74696d67)
@@ -63,6 +71,8 @@ public:
         return texture(name).GetHostResourceState();
     }
     const std::vector<LayoutRuntime::RenderTexture>& textures;
+    const resource::RarcArchive* archive;
+    std::map<std::string, nw4r::lyt::TexMap, std::less<>> animation_textures;
 };
 
 class NativeMaterialResources {
@@ -199,7 +209,7 @@ MEMAllocator layout_allocator{&layout_allocator_functions, nullptr, 0, 0};
 class NativeGroupRecord final : public nw4r::lyt::Group {
 public:
     NativeGroupRecord(const nw4r::lyt::res::Group* resource, nw4r::lyt::Pane* root, Nw4rLayoutRecords& owner)
-        : Group(resource, root), owner(owner) {}
+        : Group(resource, root), owner(owner) { mbUserAllocated = true; }
     Nw4rLayoutRecords& owner;
 };
 struct PublishedPane {
@@ -219,6 +229,13 @@ struct Nw4rLayoutRecords::State {
     explicit State(LayoutRuntime& runtime) : runtime(runtime) {}
     ~State() {
         retiring = true;
+        if (layout) {
+            // Animation links are embedded in the transforms. Remove them from
+            // the borrowed panes/materials before the actual Layout retires them.
+            layout->UnbindAllAnimation();
+            layout->mpRootPane = nullptr;
+            layout.reset();
+        }
         groups.clear();
         // All linked records remain alive until every intrusive child list has
         // been detached, including construction failures and vector teardown.
@@ -234,6 +251,7 @@ struct Nw4rLayoutRecords::State {
     bool published = false;
     bool retiring = false;
     bool synchronizing = false;
+    std::unique_ptr<nw4r::lyt::Layout> layout;
     std::vector<std::unique_ptr<nw4r::lyt::Pane>> panes;
     std::vector<PublishedPane> previous;
     std::vector<std::unique_ptr<nw4r::lyt::Group>> groups;
@@ -297,6 +315,13 @@ Nw4rLayoutRecords::Nw4rLayoutRecords(LayoutRuntime& runtime) {
         const auto parent = layout.panes[i].parent_index;
         if (parent >= 0) _state->panes.at(static_cast<std::size_t>(parent))->AppendChild(_state->panes[i].get());
     }
+    _state->layout = std::make_unique<nw4r::lyt::Layout>();
+    _state->layout->mpRootPane = _state->panes.front().get();
+    _state->layout->mLayoutSize = nw4r::lyt::Size(layout.width, layout.height);
+    _state->layout->_20 = layout.origin_type != 0 ? nw4r::lyt::ORIGINTYPE_CENTER : nw4r::lyt::ORIGINTYPE_TOPLEFT;
+    _state->layout->mpGroupContainer = nw4r::lyt::Layout::NewObj<nw4r::lyt::GroupContainer>();
+    if (!_state->layout->mpGroupContainer)
+        aurora::throw_host_exception<std::runtime_error>("NW4R group container allocation failed");
     for (const auto& source : layout.groups) {
         // NW4R Layout::Build retains only immediate children of the root group.
         if (source.root_group || source.nest_level != 1) continue;
@@ -310,10 +335,22 @@ Nw4rLayoutRecords::Nw4rLayoutRecords(LayoutRuntime& runtime) {
         for (std::size_t i = 0; i < source.pane_names.size(); ++i)
             std::strncpy(names + 16 * i, source.pane_names[i].c_str(), 16);
         _state->groups.push_back(std::make_unique<NativeGroupRecord>(resource, _state->panes.front().get(), *this));
+        _state->layout->mpGroupContainer->AppendGroup(_state->groups.back().get());
     }
     synchronize();
 }
 Nw4rLayoutRecords::~Nw4rLayoutRecords() = default;
+
+nw4r::lyt::Layout& Nw4rLayoutRecords::layout() { return *_state->layout; }
+
+nw4r::lyt::AnimTransform* Nw4rLayoutRecords::create_animation(const void* resource) {
+    const aurora::allocation::HostAllocationScope host;
+    const auto& runtime = _state->runtime;
+    NativeResourceAccessor accessor(runtime.mRenderTextures, runtime.mArchiveOwner ? &runtime.mArchiveOwner->archive() : nullptr);
+    auto* transform = _state->layout->CreateAnimTransform(resource, &accessor);
+    if (!transform) aurora::throw_host_exception<std::runtime_error>("NW4R animation resource could not create a transform");
+    return transform;
+}
 
 void Nw4rLayoutRecords::synchronize() {
     const aurora::allocation::HostAllocationScope host;

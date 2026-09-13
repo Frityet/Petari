@@ -19,6 +19,7 @@
 #include "Game/Screen/ButtonPaneController.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Screen/LayoutManager.hpp"
+#include "Game/System/LayoutHolder.hpp"
 #include "Game/Screen/LayoutPaneCtrl.hpp"
 #include "Game/Screen/LayoutGroupCtrl.hpp"
 #include "Game/Screen/StarPointerTarget.hpp"
@@ -29,6 +30,8 @@
 #include "Game/Util/LayoutUtil.hpp"
 #include "Game/Util/FileUtil.hpp"
 #include "compat/ResourceHolderCompat.hpp"
+#include "compat/EffectSystemOwnership.hpp"
+#include "Game/Screen/PaneEffectKeeper.hpp"
 #include "Game/Screen/LayoutCoreUtil.hpp"
 #include "layout/LayoutRuntime.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -40,7 +43,6 @@ struct ActorState {
     std::array< J3DFrameCtrl, 4U > animation_controls{};
     std::array< f32, 4U > last_frames{};
     std::array< f32, 4U > last_rates{};
-    bool effect_keeper_registered = false;
 };
 
 struct PaneMatrixReference {
@@ -60,11 +62,14 @@ using GroupControlOwner = std::unique_ptr<LayoutGroupCtrl, GroupControlDeleter>;
 
 struct ManagerState {
     std::string layout_name;
+    std::string base_name;
     bool convert_filename = true;
     u32 animation_layer_count = 0U;
     u32 text_box_buffer_length = 0U;
     LayoutActor* actor = nullptr;
     std::unique_ptr< smgpc::layout::LayoutRuntime > runtime;
+    std::unique_ptr<LayoutPaneInfo[]> pane_infos;
+    std::vector<nw4r::lyt::AnimTransform*> animation_transforms;
     smgpc::layout::Nw4rLayoutRecords* records = nullptr;
     std::vector<GroupControlOwner> group_controls;
     std::vector<LayoutGroupCtrl*> group_slots;
@@ -202,6 +207,17 @@ void bind_actor_manager(LayoutActor* actor, LayoutManager* manager) {
         MR::makeLayoutArchiveFileNameFromPrefix(path, sizeof(path), resource_name.c_str(), true);
         resource_name = std::filesystem::path(path).stem().string();
     }
+    // Retail uses the converted basename with the first matching aspect or
+    // replacement suffix removed as its default text/effect group name.
+    manager_state.base_name = resource_name.substr(0, 63);
+    for (const char* suffix : {"4x3", "16x9", "Replace"}) {
+        const auto pos = manager_state.base_name.find(suffix);
+        if (pos != std::string::npos) {
+            manager_state.base_name.resize(pos);
+            break;
+        }
+    }
+    manager->_78 = manager_state.base_name.c_str();
     auto* resources = smgpc::compat::ResourceHolderService::active();
     if (!resources)
         aurora::throw_host_exception<std::logic_error>("LayoutManager requires its mounted layout resource owner");
@@ -213,6 +229,14 @@ void bind_actor_manager(LayoutActor* actor, LayoutManager* manager) {
     manager_state.runtime->kill();
     manager_state.runtime->setTrans(actor_state.translation.x, actor_state.translation.y);
     manager_state.records = &manager_state.runtime->native_records();
+    manager->mLayout = &manager_state.records->layout();
+    manager->initPaneInfo();
+    manager_state.pane_infos.reset(manager->mPaneInfos);
+    manager_state.animation_transforms.reserve(manager->mLayoutHolder->mAnimRes.mCount);
+    for (u32 i = 0; i < manager->mLayoutHolder->mAnimRes.mCount; ++i) {
+        manager_state.animation_transforms.push_back(manager_state.records->create_animation(manager->mLayoutHolder->mAnimRes.getRes(i)));
+    }
+    manager->mAnimTransList = manager_state.animation_transforms.data();
     manager->initTextBoxRecursive(manager_state.records->pane(nullptr), nullptr, manager_state.layout_name.c_str(),
                                   manager_state.text_box_buffer_length);
     manager_state.group_slots.resize(manager_state.records->group_count());
@@ -230,13 +254,6 @@ void refresh_pane_matrix(ManagerState& manager, PaneMatrixReference& reference) 
 
 [[noreturn]] void throw_retail_nw4r_unavailable(std::string_view operation) {
     aurora::throw_host_exception<std::logic_error>(std::string(operation) + " requires the unavailable retail NW4R layout object graph");
-}
-
-[[nodiscard]] std::string_view require_effect_owner_name(const char* owner_name, std::string_view operation) {
-    if (owner_name == nullptr || *owner_name == '\0') {
-        aurora::throw_host_exception<std::logic_error>(std::string(operation) + " requires a real named effect owner");
-    }
-    return owner_name;
 }
 
 #ifndef NDEBUG
@@ -313,14 +330,12 @@ void LayoutActor::appear() {
 }
 
 void LayoutActor::kill() {
+    if (mEffectKeeper != nullptr) {
+        mEffectKeeper->clear();
+    }
     mFlag.mIsDead = true;
     if (mLayoutManager != nullptr)
         smgpc::layout::require_layout_runtime(this, "Killing a layout actor").kill();
-    if (require_actor_state(this, "Killing a layout actor").effect_keeper_registered) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->delete_effect_all(getName(), this);
-        }
-    }
 }
 
 void LayoutActor::setNerve(const Nerve* nerve) const {
@@ -395,14 +410,8 @@ void LayoutActor::initNerve(const Nerve* nerve) {
     mSpine = new Spine(this, nerve);
 }
 
-void LayoutActor::initEffectKeeper(int effect_count, const char* effect_name, const EffectSystem*) {
-    auto& layout = smgpc::layout::require_layout_runtime(this, "Initializing layout effects");
-    const auto owner_name = require_effect_owner_name(getName(), "Initializing layout effects");
-    auto& runtime = smgpc::runtime::RuntimeContext::instance();
-    const auto group_name = effect_name != nullptr ? std::string_view(effect_name) : std::string_view(layout.getLayoutName());
-    runtime.register_effect_keeper(smgpc::runtime::EffectKeeperHostKind::LayoutActor, owner_name, effect_count,
-                                   group_name, false, this);
-    require_actor_state(this, "Initializing layout effects").effect_keeper_registered = true;
+void LayoutActor::initEffectKeeper(int effect_count, const char* effect_name, const EffectSystem* effect_system) {
+    smgpc::compat::initialize_layout_effect_keeper(this, effect_count, effect_name, effect_system);
 }
 
 void LayoutActor::initPointingTarget(int maxNumTargets) {
@@ -418,7 +427,7 @@ void LayoutActor::updateSpine() {
 LayoutManager::LayoutManager(const char* layout_name, bool convert_filename, u32 animation_layer_count,
                              u32 text_box_buffer_length)
     : mLayoutHolder(nullptr), mLayout(nullptr), mAnimTransList(nullptr), mDrawInfo(), mIsScreenHidden(false), _61(false),
-      _64(0U), _68(0U), _6C(0U), _70(0U), _74(0U), _78(nullptr) {
+      _64(0U), mPaneCount(0U), mPaneInfos(nullptr), _70(0U), _74(0U), _78(nullptr) {
     if (layout_name == nullptr || *layout_name == '\0') {
         aurora::throw_host_exception<std::invalid_argument>("A layout manager requires a retail layout resource name");
     }
@@ -498,7 +507,11 @@ void LayoutManager::addPaneCtrl(LayoutPaneCtrl* pane_control) {
     if (std::ranges::any_of(state.pane_controls, [pane_control](const auto& existing) { return existing.get() == pane_control; })) {
         aurora::throw_host_exception<std::logic_error>("The pane control is already owned by this layout manager");
     }
+    if (pane_control->mHost != this || pane_control->mPaneIndex < 0 ||
+        static_cast<u32>(pane_control->mPaneIndex) >= mPaneCount || mPaneInfos[pane_control->mPaneIndex].mPane != pane_control->mPane)
+        aurora::throw_host_exception<std::invalid_argument>("A pane control requires its actual owning layout and pane");
     state.pane_controls.emplace_back(pane_control);
+    mPaneInfos[pane_control->mPaneIndex].mPaneCtrl = pane_control;
 }
 
 LayoutPaneCtrl* LayoutManager::createAndAddRootPaneCtrl(u32 layer_count) {
@@ -518,6 +531,7 @@ LayoutPaneCtrl* LayoutManager::createAndAddPaneCtrl(const char* name, u32 layer_
     auto control = std::make_unique< LayoutPaneCtrl >(this, name, layer_count);
     auto* result = control.get();
     state.pane_controls.push_back(std::move(control));
+    mPaneInfos[result->mPaneIndex].mPaneCtrl = result;
     return result;
 }
 
@@ -609,26 +623,6 @@ bool LayoutManager::isPointing(const char* name, const TVec2f& point) const {
     return smgpc::layout::is_pointing_pane(this, name, point.x, point.y);
 }
 
-nw4r::lyt::AnimTransform* LayoutManager::getAnimTransform(const char*) const {
-    throw_retail_nw4r_unavailable("Exposing an NW4R AnimTransform");
-}
-
-void LayoutManager::bindPaneCtrlAnim(LayoutPaneCtrl*, nw4r::lyt::AnimTransform*) {
-    throw_retail_nw4r_unavailable("Binding an NW4R pane animation");
-}
-
-void LayoutManager::bindPaneCtrlAnimSub(u32&, nw4r::lyt::AnimTransform*) {
-    throw_retail_nw4r_unavailable("Binding an NW4R pane animation subtree");
-}
-
-void LayoutManager::unbindPaneCtrlAnim(LayoutPaneCtrl*, nw4r::lyt::AnimTransform*) {
-    throw_retail_nw4r_unavailable("Unbinding an NW4R pane animation");
-}
-
-void LayoutManager::unbindPaneCtrlAnimSub(u32&, nw4r::lyt::AnimTransform*) {
-    throw_retail_nw4r_unavailable("Unbinding an NW4R pane animation subtree");
-}
-
 void LayoutManager::calcAnimWithoutLocationAdjust(const nw4r::lyt::DrawInfo&) {
     throw_retail_nw4r_unavailable("Calculating with an external NW4R DrawInfo");
 }
@@ -643,18 +637,6 @@ void LayoutManager::initArc(const char*, const char*) {
 
 void LayoutManager::initDrawInfo() {
     mDrawInfo = nw4r::lyt::DrawInfo{};
-}
-
-void LayoutManager::initPaneInfo() {
-    throw_retail_nw4r_unavailable("Initializing NW4R pane metadata");
-}
-
-void LayoutManager::initPaneInfoRecursive(u32&, nw4r::lyt::Pane*) {
-    throw_retail_nw4r_unavailable("Initializing NW4R pane metadata recursively");
-}
-
-u32 LayoutManager::countPanes(nw4r::lyt::Pane*) {
-    throw_retail_nw4r_unavailable("Counting an NW4R pane subtree");
 }
 
 void LayoutManager::initGroupCtrlList() {
@@ -812,8 +794,13 @@ J3DFrameCtrl* LayoutPaneCtrl::getFrameCtrl(u32 layer) const {
     return &state.animation_controls[layer];
 }
 
-void LayoutPaneCtrl::recalcChildGlobalMtx(nw4r::lyt::Pane*) {
-    throw_retail_nw4r_unavailable("Recalculating an NW4R pane subtree matrix");
+void LayoutPaneCtrl::recalcChildGlobalMtx(nw4r::lyt::Pane* pPane) {
+    for (nw4r::lyt::PaneList::Iterator it = pPane->mChildList.GetBeginIter(); it != pPane->mChildList.GetEndIter(); ++it) {
+        nw4r::math::MTX34 matrix;
+        PSMTXConcat(it->mpParent->mGlbMtx, it->mMtx, matrix);
+        it->mGlbMtx = matrix;
+        recalcChildGlobalMtx(&*it);
+    }
 }
 
 namespace smgpc::layout {
@@ -860,9 +847,10 @@ void release_layout_actor_if_registered(NameObj* object) {
     }
 
     if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-        runtime->unregister_effect_keeper(actor->getName(), actor);
         runtime->unregister_layout_actor(*actor);
     }
+
+    smgpc::compat::release_layout_effect_keeper(actor);
 
     if (auto* targets = actor->mPointingTarget) {
         for (s32 i = 0; i < targets->mNumTargets; ++i) delete targets->mTargets[i];

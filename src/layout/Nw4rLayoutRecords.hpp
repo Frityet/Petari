@@ -7,6 +7,8 @@
 namespace nw4r::lyt {
 class Pane;
 class Group;
+class Layout;
+class AnimTransform;
 }
 
 namespace smgpc::layout {
@@ -23,6 +25,8 @@ public:
 
     [[nodiscard]] nw4r::lyt::Pane* pane(const char* name);
     [[nodiscard]] nw4r::lyt::Group* group(const char* name);
+    [[nodiscard]] nw4r::lyt::Layout& layout();
+    [[nodiscard]] nw4r::lyt::AnimTransform* create_animation(const void* resource);
     [[nodiscard]] u32 group_index(const char* name) const;
     [[nodiscard]] u32 group_count() const;
     [[nodiscard]] u32 pane_count() const;

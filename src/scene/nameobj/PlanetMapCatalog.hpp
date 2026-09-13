@@ -29,7 +29,6 @@ namespace smgpc::scene::nameobj {
         OrdinaryPlanetMap,
         ForceLowRuntimeUnavailable,
         UniqueCreatorRuntimeUnavailable,
-        OptionalSubmodelsRuntimeUnavailable,
     };
 
     struct PlanetMapCatalogEntry {

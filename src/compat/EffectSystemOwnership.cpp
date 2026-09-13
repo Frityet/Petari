@@ -18,6 +18,8 @@
 #include "Game/Effect/SyncBckEffectInfo.hpp"
 #include "Game/LiveActor/EffectKeeper.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Screen/LayoutActor.hpp"
+#include "Game/Screen/PaneEffectKeeper.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemObjHolder.hpp"
 #include "Game/Util/SingletonHolder.hpp"
@@ -44,22 +46,45 @@ namespace {
 
 namespace smgpc::compat {
     namespace {
-        void destroy_keeper(EffectKeeper *keeper) noexcept {
+        void destroy_multi_emitter(MultiEmitter* multi) noexcept {
+            if (auto* sync = multi->_24) {
+                for (auto* resource : sync->mBckResources)
+                    delete resource;
+                delete sync;
+            }
+            delete multi->mParticleCallBack;
+            delete multi->mCallBack;
+            delete multi;
+        }
+
+        template <class EmitterTable>
+        void retire_emitter_callbacks(const EffectSystem& system, const EmitterTable& emitters) noexcept {
+            for (auto& slot : system.mEmitterHolder->mEmitters) {
+                if (!slot.mEmitter)
+                    continue;
+                const auto token = slot.mEmitter->mLastNonzeroUserWork;
+                bool belongs = false;
+                for (auto* multi : emitters) {
+                    for (const auto& single : multi->mEmitters) {
+                        if (token == reinterpret_cast<uintptr_t>(&single))
+                            belongs = true;
+                    }
+                }
+                // One-shot replacement unlinks older instances whose callbacks
+                // still borrow this keeper. Retire those instances as well.
+                if (belongs)
+                    system.forceDeleteEmitter(&slot);
+            }
+        }
+
+        void destroy_keeper(EffectKeeper* keeper) noexcept {
             if (!keeper)
                 return;
             // Child-emitter links are borrowed links to entries of this table.
-            for (auto *multi : keeper->_C) {
-                if (auto *sync = multi->_24) {
-                    for (auto *resource : sync->mBckResources)
-                        delete resource;
-                    delete sync;
-                }
-                delete multi->mParticleCallBack;
-                delete multi->mCallBack;
-                delete multi;
-            }
+            for (auto* multi : keeper->_C)
+                destroy_multi_emitter(multi);
             delete keeper->_20;
-            if (auto *table = keeper->_18) {
+            if (auto* table = keeper->_18) {
                 delete[] table->mHashCodes;
                 delete[] table->_8;
                 delete[] table->_C;
@@ -77,23 +102,7 @@ namespace smgpc::compat {
             ~ActorEffectOwner() {
                 if (!keeper)
                     return;
-                auto &system = scene->system();
-                for (auto &slot : system.mEmitterHolder->mEmitters) {
-                    if (!slot.mEmitter)
-                        continue;
-                    const auto token = slot.mEmitter->mLastNonzeroUserWork;
-                    bool belongs = false;
-                    for (auto *multi : keeper->_C) {
-                        for (const auto &single : multi->mEmitters) {
-                            if (token == reinterpret_cast<uintptr_t>(&single))
-                                belongs = true;
-                        }
-                    }
-                    // One-shot replacement deliberately unlinks older instances;
-                    // those instances still retain callbacks into this keeper.
-                    if (belongs)
-                        system.forceDeleteEmitter(&slot);
-                }
+                retire_emitter_callbacks(scene->system(), keeper->_C);
                 actor->mEffectKeeper = nullptr;
                 destroy_keeper(keeper);
             }
@@ -101,6 +110,28 @@ namespace smgpc::compat {
 
         auto &actor_owners() {
             static std::map<const LiveActor *, std::unique_ptr<ActorEffectOwner>> owners;
+            return owners;
+        }
+
+        struct LayoutEffectOwner final {
+            std::shared_ptr<JkrAllocationDomain> domain;
+            const EffectSystem* system = nullptr;
+            LayoutActor* actor = nullptr;
+            PaneEffectKeeper* keeper = nullptr;
+
+            ~LayoutEffectOwner() {
+                if (!keeper)
+                    return;
+                retire_emitter_callbacks(*system, keeper->mEmitters);
+                actor->mEffectKeeper = nullptr;
+                for (auto* multi : keeper->mEmitters)
+                    destroy_multi_emitter(multi);
+                delete keeper;
+            }
+        };
+
+        auto& layout_owners() {
+            static std::map<const LayoutActor*, std::unique_ptr<LayoutEffectOwner>> owners;
             return owners;
         }
     }  // namespace
@@ -180,6 +211,12 @@ namespace smgpc::compat {
             else
                 ++it;
         }
+        for (auto it = layout_owners().begin(); it != layout_owners().end();) {
+            if (it->second->system == _storage->system)
+                it = layout_owners().erase(it);
+            else
+                ++it;
+        }
         if (_storage->entered)
             _storage->emitters->forceDeleteAllEmitters();
         _storage->retired = true;
@@ -229,5 +266,32 @@ namespace smgpc::compat {
 
     void release_actor_effect_keeper(const LiveActor *actor) noexcept {
         actor_owners().erase(actor);
+    }
+
+    void initialize_layout_effect_keeper(LayoutActor* actor, int capacity, const char* name, const EffectSystem* effect_system) {
+        std::unique_ptr<LayoutEffectOwner> owner;
+        {
+            JkrHostAllocationScope host;
+            if (!actor || !actor->mLayoutManager || actor->mEffectKeeper || layout_owners().contains(actor) || capacity < 0)
+                aurora::throw_host_exception<std::logic_error>("Layout effects require a fresh keeper and an initialized layout");
+            owner = std::make_unique<LayoutEffectOwner>();
+            owner->domain = current_jkr_allocation_domain();
+            if (!owner->domain)
+                aurora::throw_host_exception<std::logic_error>("Layout effects require the original caller's Game heap");
+            owner->actor = actor;
+            owner->system = effect_system ? effect_system : MR::getEffectSystem();
+        }
+        // Preserve the actual current Game heap. The retained domain may be an
+        // ancestor of that heap; selecting it here would change retail routing.
+        actor->mEffectKeeper = new PaneEffectKeeper(actor, actor->mLayoutManager, capacity, name);
+        owner->keeper = actor->mEffectKeeper;
+        owner->keeper->init(actor, effect_system);
+        JkrHostAllocationScope host;
+        layout_owners().emplace(actor, std::move(owner));
+    }
+
+    void release_layout_effect_keeper(const LayoutActor* actor) noexcept {
+        JkrHostAllocationScope host;
+        layout_owners().erase(actor);
     }
 }  // namespace smgpc::compat

@@ -523,8 +523,6 @@ namespace {
             return "planet_force_low_creator_runtime_unavailable";
         case Kind::UniqueCreatorRuntimeUnavailable:
             return "planet_unique_creator_runtime_unavailable";
-        case Kind::OptionalSubmodelsRuntimeUnavailable:
-            return "planet_optional_submodel_runtime_unavailable";
         }
         return "planet_creator_runtime_unavailable";
     }

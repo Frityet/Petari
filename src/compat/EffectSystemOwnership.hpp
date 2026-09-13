@@ -6,6 +6,7 @@
 
 class EffectSystem;
 class LiveActor;
+class LayoutActor;
 
 namespace smgpc::compat {
     class JkrAllocationDomain;
@@ -32,4 +33,6 @@ namespace smgpc::compat {
 
     void initialize_actor_effect_keeper(LiveActor *, int capacity, const char *name, bool sort);
     void release_actor_effect_keeper(const LiveActor *) noexcept;
+    void initialize_layout_effect_keeper(LayoutActor*, int capacity, const char* name, const EffectSystem*);
+    void release_layout_effect_keeper(const LayoutActor*) noexcept;
 }  // namespace smgpc::compat
