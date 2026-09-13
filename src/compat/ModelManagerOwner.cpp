@@ -6,7 +6,6 @@
 #include "Game/Animation/XanimeResource.hpp"
 #include "Game/Animation/XanimeCore.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "compat/J3dCommandScope.hpp"
 #include "compat/ResourceHolderCompat.hpp"
 #include "Game/Util/MutexHolder.hpp"
 #include <exception>
@@ -15,19 +14,17 @@
 
 namespace smgpc::compat {
     namespace {
-        class LoadStateScope final {
+        class LoadMutexRecovery final {
         public:
-            LoadStateScope() : _system(j3dSys), _thread(OSGetCurrentThread()), _exceptions(std::uncaught_exceptions()) {
+            LoadMutexRecovery() : _thread(OSGetCurrentThread()), _exceptions(std::uncaught_exceptions()) {
                 _count = mutex().thread == _thread ? mutex().count : 0;
             }
-            ~LoadStateScope() {
-                j3dSys = _system;
+            ~LoadMutexRecovery() {
                 if (std::uncaught_exceptions() > _exceptions)
                     while (mutex().thread == _thread && mutex().count > _count) OSUnlockMutex(&mutex());
             }
         private:
             static OSMutex& mutex() { return MR::MutexHolder<0>::sMutex; }
-            J3DSys _system;
             OSThread* _thread;
             int _exceptions;
             int _count;
@@ -68,8 +65,10 @@ namespace smgpc::compat {
         // The instance graph belongs to the caller's original heap. Shared
         // model/animation resources retain their own archive heap independently.
         JkrAllocationScope heap(state.domain);
-        J3dCommandScope commands;
-        LoadStateScope restore;
+        // The original init can wait for FileLoader before entering its own
+        // model mutex and display-list critical sections. Do not disable the
+        // scheduler or snapshot shared J3D state across those resource waits.
+        LoadMutexRecovery recovery;
         state.manager = std::make_unique<ModelManager>();
         state.manager->init(model, animation, create_dl);
         state.created_model = state.manager->getJ3DModel();

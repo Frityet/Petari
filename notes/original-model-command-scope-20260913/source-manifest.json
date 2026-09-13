@@ -1,0 +1,14 @@
+{
+  "sources": [
+    {
+      "path": "src/compat/ModelManagerOwner.cpp",
+      "sha256": "da07f7a078f07d137c9b4f1001f3a27ae5bcff26705f39e06c2a35bd342e8b07"
+    }
+  ],
+  "evidence": [
+    "notes/gateway-wakeup-demo-20260912/original-app-thirty-fifth-build.json",
+    "notes/gateway-wakeup-demo-20260912/original-app-twenty-sixth-run.json",
+    "notes/gateway-wakeup-demo-20260912/original-app-twenty-sixth-backtrace.log",
+    "notes/gateway-wakeup-demo-20260912/original-app-twenty-fifth-backtrace.log"
+  ]
+}
