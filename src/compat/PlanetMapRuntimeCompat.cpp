@@ -64,6 +64,18 @@ namespace MR {
         return ::createSubModel(pActor, "Indirect", pMtx, 0x1D);
     }
 
+    ModelObj* createModelObjMapObj(const char* pName, const char* pModelName, MtxPtr pMtx) {
+        ModelObj* pObj = new ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_MapObj, -2, -2, false);
+        pObj->initWithoutIter();
+        return pObj;
+    }
+
+    ModelObj* createModelObjMapObjStrongLight(const char* pName, const char* pModelName, MtxPtr pMtx) {
+        ModelObj* pObj = new ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_MapObjStrongLight, -2, -2, false);
+        pObj->initWithoutIter();
+        return pObj;
+    }
+
     ModelObj* createModelObjBloomModel(const char* pName, const char* pModelName, MtxPtr pMtx) {
         ModelObj* pObj = new ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_BloomModel, -2, -2, false);
         pObj->initWithoutIter();

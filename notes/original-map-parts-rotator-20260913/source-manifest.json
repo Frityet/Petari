@@ -1,0 +1,18 @@
+[
+  {
+    "path": "decomp/src/Game/MapObj/MapPartsRotator.cpp",
+    "sha256": "74c00f887923fdab948fda3248dc0cfedcd71dc1c07294bca2bdb5dd2143e540"
+  },
+  {
+    "path": "decomp/include/Game/MapObj/MapPartsRotator.hpp",
+    "sha256": "f1d01ba4de5b653eff1c4d81907ce95a3afc03de0b0181ac7b8de0f4c56d0c6b"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsRotator.cpp",
+    "sha256": "74c00f887923fdab948fda3248dc0cfedcd71dc1c07294bca2bdb5dd2143e540"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsRotator.hpp",
+    "sha256": "f1d01ba4de5b653eff1c4d81907ce95a3afc03de0b0181ac7b8de0f4c56d0c6b"
+  }
+]

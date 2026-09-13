@@ -4,6 +4,7 @@
 #include <JSystem/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3DGraphAnimator/J3DModelData.hpp>
 #include <JSystem/J3DGraphBase/J3DMaterial.hpp>
+#include <JSystem/JUtility/JUTNameTab.hpp>
 
 MaterialCtrl::MaterialCtrl(J3DModelData* pModelData, const char* pMaterialName) {
     mModelData = pModelData;
@@ -223,4 +224,50 @@ void MaterialCtrl::updateMaterial(J3DMaterial*) {
 }
 
 ProjmapEffectMtxSetter::UpdateEffectMtxInfo::UpdateEffectMtxInfo() {
+}
+
+MirrorReflectionMtxSetter::MirrorReflectionMtxSetter(J3DModel* pModel, const ResourceHolder* pResourceHolder)
+    : MaterialCtrl(nullptr, nullptr), mNumMatrices(0) {
+    for (u16 i = 0; i < 8; i++) {
+        mMatrices[i] = nullptr;
+    }
+    addUpdatingTexMtxFromName(pModel->mModelData);
+}
+
+void MirrorReflectionMtxSetter::addUpdatingTexMtxFromTexNo(J3DModelData* pModelData, u16 textureNo) {
+    u16 materialCount = pModelData->getMaterialNum();
+    for (u16 i = 0; i < materialCount; i++) {
+        if (MR::isUseTex(pModelData->getMaterialNodePointer(i), textureNo)) {
+            addUpdatingTexMtxFromTexCoord(pModelData->getMaterialNodePointer(i));
+        }
+    }
+}
+
+void MirrorReflectionMtxSetter::addUpdatingTexMtxFromTexCoord(J3DMaterial* pMaterial) {
+    for (u32 i = 0; i < 8; i++) {
+        J3DTexMtx* pTexMtx = pMaterial->mTexGenBlock->getTexMtx(i);
+        if (pTexMtx != nullptr && (pTexMtx->getTexMtxInfo().mInfo & 0x3F) == J3DTexMtxMode_Projmap && MR::isUseTexMtx(pMaterial, i)) {
+            addUpdatingTexMtx(pTexMtx);
+        }
+    }
+}
+
+void MirrorReflectionMtxSetter::addUpdatingTexMtx(J3DTexMtx* pTexMtx) {
+    mMatrices[mNumMatrices] = pTexMtx;
+    mNumMatrices++;
+}
+
+void MirrorReflectionMtxSetter::update() {
+    for (s32 i = 0; i < mNumMatrices; i++) {
+        mMatrices[i]->getTexMtxInfo().setEffectMtx(const_cast< TPos3f& >(MR::getMirrorModelTexMtx()));
+    }
+}
+
+void MirrorReflectionMtxSetter::addUpdatingTexMtxFromName(J3DModelData* pModelData) {
+    u16 textureCount = pModelData->getTexture()->getNum();
+    for (u16 i = 0; i < textureCount; i++) {
+        if (MR::isEqualString(pModelData->getTextureName()->getName(i), "MirrorTex")) {
+            addUpdatingTexMtxFromTexNo(pModelData, i);
+        }
+    }
 }

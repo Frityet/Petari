@@ -28,7 +28,7 @@ namespace smgpc::scene::nameobj {
     enum class PlanetMapCatalogCreatorKind {
         OrdinaryPlanetMap,
         ForceLowRuntimeUnavailable,
-        UniqueCreatorRuntimeUnavailable,
+        UniqueCreator,
     };
 
     struct PlanetMapCatalogEntry {
@@ -40,6 +40,9 @@ namespace smgpc::scene::nameobj {
             submodel_names{};
         std::array<std::string, 8U> force_low_scenarios{};
         PlanetMapCatalogCreatorKind creator_kind = PlanetMapCatalogCreatorKind::OrdinaryPlanetMap;
+        // Original specialized actor class; its compiled availability belongs
+        // to the central NameObj factory, not the parsed resource catalog.
+        std::string_view unique_creator_class;
 
         [[nodiscard]] bool has_authored_submodels() const noexcept;
         [[nodiscard]] bool has_retained_submodels() const noexcept;

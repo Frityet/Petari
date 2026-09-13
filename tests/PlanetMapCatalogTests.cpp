@@ -161,14 +161,14 @@ namespace {
             const auto &inside = require_entry(catalog, "HeavensDoorInsidePlanet");
             require(inside.source_row == 213U && !inside.has_retained_submodels() &&
                         inside.creator_kind ==
-                            PlanetMapCatalogCreatorKind::UniqueCreatorRuntimeUnavailable &&
+                            PlanetMapCatalogCreatorKind::UniqueCreator &&
                         !catalog.is_ordinary_planet(inside.planet_name),
                     "a zero-submodel unique name must not fall through to ordinary PlanetMap");
 
             const auto &unique = require_entry(catalog, "BeamGoRoundPlanet");
             require(unique.source_row == 1U &&
                         unique.creator_kind ==
-                            PlanetMapCatalogCreatorKind::UniqueCreatorRuntimeUnavailable &&
+                            PlanetMapCatalogCreatorKind::UniqueCreator &&
                         catalog.archive_names(unique) == std::vector<std::string>{
                             "BeamGoRoundPlanet",
                             "BeamGoRoundBeam",

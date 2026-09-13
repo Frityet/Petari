@@ -49,8 +49,8 @@ namespace NrvRunawayRabbit {
         static RunawayRabbitNrvBlowDamage sInstance;
     };
 
-    RunawayRabbitNrvNoActive RunawayRabbitNrvNoActive::sInstance;
-    RunawayRabbitNrvTryCaughtDemo RunawayRabbitNrvTryCaughtDemo::sInstance;
+    INIT_NERVE(RunawayRabbitNrvNoActive);
+    INIT_NERVE(RunawayRabbitNrvTryCaughtDemo);
     RunawayRabbitNrvBlowDamage RunawayRabbitNrvBlowDamage::sInstance;
 
     void RunawayRabbitNrvBlowDamage::execute(Spine* pSpine) const {

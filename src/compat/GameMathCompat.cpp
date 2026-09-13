@@ -1009,3 +1009,18 @@ namespace MR {
         return turnQuat(pDst, rSrc, yDir, rTo, angle);
     }
 }  // namespace MR
+
+// Original shared math from Game/Util/MathUtil.cpp.
+namespace MR {
+    f32 sign(f32 x) {
+        if (0.0f < x) {
+            return 1.0f;
+        }
+
+        if (x < 0.0f) {
+            return -1.0f;
+        }
+
+        return 0.0f;
+    }
+}

@@ -1,0 +1,11 @@
+# Reached MapObjActor link closure — 2026-09-13
+
+The twenty-third original-process app link reached the newly activated complete SimpleMapObj/MapObjActor dependency graph. This bounded delta closes three missing original LiveActorUtil helpers and a shared native nerve storage bug.
+
+- `src/compat/PlanetMapRuntimeCompat.cpp`: copies existing original `createModelObjMapObj` and `createModelObjMapObjStrongLight` beside the current original ModelObj bloom helper. Both construct actual ModelObj with the original draw-buffer type, -2/-2 arguments and false flag, then call initWithoutIter.
+- `src/compat/OriginalModelMaterialHelpers.cpp`: copies existing original `initDLMakerChangeTex` exactly. It finds authored texture names, inspects actual material TEV usage with existing isUseTex, and sets original DisplayListMaker program flags 0x4020000. Existing onPrgFlag is already implemented in the native owner; no substitute rendering state was added.
+- `src/Game/LiveActor/Nerve.hpp`: appends the already established NERVE_NATIVE_INSTANCE expansion to NERVE_DECL_NULL, the one nerve macro that omitted native inline storage. Native INIT_NERVE is intentionally empty; this omission caused unresolved Wait/DrawAll/HideAll instances. The common macro now handles every original empty nerve. No per-actor edits or original reference behavior changes.
+
+Original helper source already exists at decomp/src/Game/Util/LiveActorUtil.cpp; no new recovery was required. Narrow native compiles pass for both provider files and all three unchanged rotator owners. Object symbols confirm each Wait singleton is now defined. Saved command/compile logs are in this directory. Root owns integrated app build and runtime; no full build, tests, index or commit operations performed here.
+
+Follow-up from twenty-fourth shared build: native `RunawayRabbit.cpp` contained two explicit NoActive/TryCaughtDemo singleton definitions inherited from its reference source. Replaced only those NULL-nerve definitions with the existing INIT_NERVE macro so native inline storage is emitted once. Its custom BlowDamage nerve still needs and retains explicit storage. A source-wide scan of every NERVE_DECL_NULL name found no other explicit instance-definition duplicates. Reference remains unchanged; this is a native storage declaration adaptation.

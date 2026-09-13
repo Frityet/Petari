@@ -32,6 +32,7 @@
 #include "compat/DemoDirectorOwnership.hpp"
 #include "Game/Gravity/PlanetGravityManager.hpp"
 #include "Game/LiveActor/ClippingDirector.hpp"
+#include "Game/LiveActor/MirrorCamera.hpp"
 #include "Game/LiveActor/AllLiveActorGroup.hpp"
 #include "Game/LiveActor/SensorHitChecker.hpp"
 #include "Game/LiveActor/MessageSensorHolder.hpp"
@@ -100,6 +101,7 @@ namespace {
     const std::string cScreenAlphaCaptureName = encode_owner_name("アルファテクスチャ取り込み");
     const std::string cTalkDirectorName = encode_owner_name("会話ディレクター");
     const std::string cCameraDirectorName = encode_owner_name("カメラ管理");
+    const std::string cMirrorCameraName = encode_owner_name("鏡用カメラ");
     const std::string cGravityManagerName = encode_owner_name("重力");
     const std::string cBaseMatrixFollowTargetHolderName = encode_owner_name("行列追随先リスト");
     const std::string cLiveActorGroupArrayName = encode_owner_name("オブジェクトグループ");
@@ -580,6 +582,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new SunshadeMapHolder();
     case SceneObj_CollisionDirector:
         return sCurrentSceneObjHolderBinding->_collision_director_ownership->construct();
+    case SceneObj_MirrorCamera:
+        return new MirrorCamera(cMirrorCameraName.c_str());
     case SceneObj_CameraContext:
         return new CameraContext();
     case SceneObj_CameraDirector:

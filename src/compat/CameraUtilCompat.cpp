@@ -2,7 +2,6 @@
 #include "camera/CameraDirectorRuntime.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "runtime/SceneScheduler.hpp"
-#include "Game/LiveActor/MirrorCamera.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/CameraUtil.hpp"
 
@@ -33,11 +32,3 @@ namespace smgpc::compat {
     }
 
 }  // namespace smgpc::compat
-
-namespace MR {
-    MirrorCamera* getMirrorCamera() {
-        if (!MR::isExistSceneObj(SceneObj_MirrorCamera))
-            aurora::throw_host_exception<std::logic_error>("Mirror camera access requires the actual scene MirrorCamera owner");
-        return MR::getSceneObj<MirrorCamera>(SceneObj_MirrorCamera);
-    }
-}

@@ -1,0 +1,117 @@
+[
+  {
+    "name": "__ct__15MapPartsRotatorFP9LiveActor",
+    "size": "200",
+    "match_percent": 99.9
+  },
+  {
+    "name": "init__15MapPartsRotatorFRC12JMapInfoIter",
+    "size": "224",
+    "match_percent": 99.82143
+  },
+  {
+    "name": "start__15MapPartsRotatorFv",
+    "size": "72",
+    "match_percent": 100.0
+  },
+  {
+    "name": "end__15MapPartsRotatorFv",
+    "size": "8",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isWorking__15MapPartsRotatorCFv",
+    "size": "84",
+    "match_percent": 100.0
+  },
+  {
+    "name": "startWithSignalMotion__15MapPartsRotatorFv",
+    "size": "64",
+    "match_percent": 100.0
+  },
+  {
+    "name": "cancelSignalMotion__15MapPartsRotatorFv",
+    "size": "68",
+    "match_percent": 100.0
+  },
+  {
+    "name": "updateBaseHostMtx__15MapPartsRotatorFv",
+    "size": "384",
+    "match_percent": 99.739586
+  },
+  {
+    "name": "isMoving__15MapPartsRotatorCFv",
+    "size": "8",
+    "match_percent": 100.0
+  },
+  {
+    "name": "updateVelocity__15MapPartsRotatorFv",
+    "size": "352",
+    "match_percent": 86.90909
+  },
+  {
+    "name": "updateAngle__15MapPartsRotatorFv",
+    "size": "124",
+    "match_percent": 99.354836
+  },
+  {
+    "name": "updateTargetAngle__15MapPartsRotatorFv",
+    "size": "120",
+    "match_percent": 92.833336
+  },
+  {
+    "name": "restartAtEnd__15MapPartsRotatorFv",
+    "size": "128",
+    "match_percent": 99.84375
+  },
+  {
+    "name": "initRotateSpeed__15MapPartsRotatorFRC12JMapInfoIter",
+    "size": "164",
+    "match_percent": 99.756096
+  },
+  {
+    "name": "isReachedTargetAngle__15MapPartsRotatorCFv",
+    "size": "144",
+    "match_percent": 94.02778
+  },
+  {
+    "name": "updateRotateMtx__15MapPartsRotatorFQ215MapPartsRotator8AxisTypef",
+    "size": "348",
+    "match_percent": 88.655174
+  },
+  {
+    "name": "calcRotateAxisDir__15MapPartsRotatorCFQ215MapPartsRotator8AxisTypePQ29JGeometry8TVec3<f>",
+    "size": "100",
+    "match_percent": 63.8
+  },
+  {
+    "name": "exeRotate__15MapPartsRotatorFv",
+    "size": "228",
+    "match_percent": 92.59649
+  },
+  {
+    "name": "exeRotateStart__15MapPartsRotatorFv",
+    "size": "196",
+    "match_percent": 99.69388
+  },
+  {
+    "name": "__dt__15MapPartsRotatorFv",
+    "size": "88",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isOnReverse__15MapPartsRotatorCFv",
+    "size": "8",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getRotateSpeed__15MapPartsRotatorCFv",
+    "size": "8",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__vt__15MapPartsRotator",
+    "size": "72",
+    "match_percent": 100.0
+  }
+]

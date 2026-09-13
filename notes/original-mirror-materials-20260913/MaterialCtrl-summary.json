@@ -1,0 +1,26 @@
+[
+  {
+    "name": "__ct__25MirrorReflectionMtxSetterFP8J3DModelPC14ResourceHolder",
+    "match_percent": 100.0
+  },
+  {
+    "name": "addUpdatingTexMtxFromTexNo__25MirrorReflectionMtxSetterFP12J3DModelDataUs",
+    "match_percent": 100.0
+  },
+  {
+    "name": "addUpdatingTexMtxFromTexCoord__25MirrorReflectionMtxSetterFP11J3DMaterial",
+    "match_percent": 97.36842
+  },
+  {
+    "name": "addUpdatingTexMtx__25MirrorReflectionMtxSetterFP9J3DTexMtx",
+    "match_percent": 100.0
+  },
+  {
+    "name": "update__25MirrorReflectionMtxSetterFv",
+    "match_percent": 100.0
+  },
+  {
+    "name": "addUpdatingTexMtxFromName__25MirrorReflectionMtxSetterFP12J3DModelData",
+    "match_percent": 100.0
+  }
+]

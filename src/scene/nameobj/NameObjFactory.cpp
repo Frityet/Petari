@@ -14,6 +14,7 @@
 #include "Game/MapObj/InvisiblePolygonObj.hpp"
 #include "Game/MapObj/InvisiblePolygonObjGCapture.hpp"
 #include "Game/MapObj/StarPieceGroup.hpp"
+#include "Game/MapObj/SimpleMapObj.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
@@ -50,6 +51,33 @@ namespace {
 
     NameObj *create_supported_planet_map(const char *pName) {
         return new PlanetMap(pName, nullptr);
+    }
+
+    struct UniquePlanetCreator {
+        std::string_view creator_class;
+        CreatorFuncPtr creator;
+    };
+
+    // Availability is registered by original actor class. Every authored
+    // unique-planet row for that class therefore uses its actual constructor.
+    constexpr auto cSupportedUniquePlanetCreators = std::to_array<UniquePlanetCreator>({
+        {"SimpleMapObj", create_supported_name_obj<SimpleMapObj>},
+    });
+
+    [[nodiscard]] CreatorFuncPtr planet_map_creator(
+        const smgpc::scene::nameobj::PlanetMapCatalogEntry &entry) {
+        using Kind = smgpc::scene::nameobj::PlanetMapCatalogCreatorKind;
+        if (entry.creator_kind == Kind::OrdinaryPlanetMap) {
+            return create_supported_planet_map;
+        }
+        if (entry.creator_kind == Kind::UniqueCreator) {
+            const auto found = std::ranges::find(cSupportedUniquePlanetCreators, entry.unique_creator_class,
+                                                 &UniquePlanetCreator::creator_class);
+            if (found != cSupportedUniquePlanetCreators.end()) {
+                return found->creator;
+            }
+        }
+        return nullptr;
     }
 
     // Retail ModelChangableObjFactory has twelve rows, including the repeated
@@ -514,15 +542,16 @@ namespace {
     }
 
     [[nodiscard]] std::string_view planet_map_support_reason(
-        smgpc::scene::nameobj::PlanetMapCatalogCreatorKind kind) {
+        const smgpc::scene::nameobj::PlanetMapCatalogEntry &entry) {
         using Kind = smgpc::scene::nameobj::PlanetMapCatalogCreatorKind;
-        switch (kind) {
+        switch (entry.creator_kind) {
         case Kind::OrdinaryPlanetMap:
             return "compiled_retail_planet_map_creator";
         case Kind::ForceLowRuntimeUnavailable:
             return "planet_force_low_creator_runtime_unavailable";
-        case Kind::UniqueCreatorRuntimeUnavailable:
-            return "planet_unique_creator_runtime_unavailable";
+        case Kind::UniqueCreator:
+            return planet_map_creator(entry) != nullptr ? "compiled_retail_unique_planet_creator" :
+                                                         "planet_unique_creator_runtime_unavailable";
         }
         return "planet_creator_runtime_unavailable";
     }
@@ -531,6 +560,14 @@ namespace {
         using smgpc::scene::nameobj::NameObjCreatorSupport;
         using smgpc::scene::nameobj::NameObjCreatorSupportKind;
 
+        if (const auto *planet = find_planet_map_entry(object_name); planet != nullptr) {
+            const auto supported = planet_map_creator(*planet) != nullptr;
+            return NameObjCreatorSupport{
+                .kind = supported ? NameObjCreatorSupportKind::Supported :
+                                    NameObjCreatorSupportKind::RuntimeClosureUnavailable,
+                .reason = std::string(planet_map_support_reason(*planet)),
+            };
+        }
         if (find_supported_entry(object_name) != nullptr) {
             return NameObjCreatorSupport{
                 .kind = NameObjCreatorSupportKind::Supported,
@@ -541,15 +578,6 @@ namespace {
             return NameObjCreatorSupport{
                 .kind = NameObjCreatorSupportKind::Supported,
                 .reason = "compiled_retail_area_creator_and_manager",
-            };
-        }
-        if (const auto *planet = find_planet_map_entry(object_name); planet != nullptr) {
-            const auto supported = planet->creator_kind ==
-                                   smgpc::scene::nameobj::PlanetMapCatalogCreatorKind::OrdinaryPlanetMap;
-            return NameObjCreatorSupport{
-                .kind = supported ? NameObjCreatorSupportKind::Supported :
-                                    NameObjCreatorSupportKind::RuntimeClosureUnavailable,
-                .reason = std::string(planet_map_support_reason(planet->creator_kind)),
             };
         }
         if (const auto *unavailable = find_unavailable_entry(object_name); unavailable != nullptr) {
@@ -637,17 +665,16 @@ namespace NameObjFactory {
 
     CreatorFuncPtr getCreator(const char *pName) {
         const auto name = pName != nullptr ? std::string_view(pName) : std::string_view{};
+        if (const auto *planet = find_planet_map_entry(name)) {
+            return planet_map_creator(*planet);
+        }
         if (const auto *entry = find_supported_entry(name); entry != nullptr) {
             return entry->mCreateFunc;
         }
         if (const auto *area_entry = find_area_obj_entry(name); area_entry != nullptr) {
             return area_entry->mCreateFunc;
         }
-        const auto *planet = find_planet_map_entry(name);
-        return planet != nullptr &&
-                       planet->creator_kind == smgpc::scene::nameobj::PlanetMapCatalogCreatorKind::OrdinaryPlanetMap ?
-                   create_supported_planet_map :
-                   nullptr;
+        return nullptr;
     }
 
     void requestMountObjectArchives(const char *pName, const JMapInfoIter &rIter) {
@@ -782,21 +809,20 @@ namespace smgpc::scene::nameobj {
     }
 
     bool can_create_name_obj(std::string_view object_name) {
-        const auto *planet = find_planet_map_entry(object_name);
-        return find_supported_entry(object_name) != nullptr ||
-               find_area_obj_entry(object_name) != nullptr ||
-               (planet != nullptr &&
-                planet->creator_kind == PlanetMapCatalogCreatorKind::OrdinaryPlanetMap);
+        if (const auto *planet = find_planet_map_entry(object_name)) {
+            return planet_map_creator(*planet) != nullptr;
+        }
+        return find_supported_entry(object_name) != nullptr || find_area_obj_entry(object_name) != nullptr;
     }
 
     NameObjSceneVisualKind scene_visual_kind(std::string_view object_name) {
+        if (const auto *planet = find_planet_map_entry(object_name)) {
+            return planet_map_creator(*planet) != nullptr ? NameObjSceneVisualKind::Planet :
+                                                           NameObjSceneVisualKind::None;
+        }
         const auto *entry = find_supported_entry(object_name);
         if (entry == nullptr) {
-            const auto *planet = find_planet_map_entry(object_name);
-            return planet != nullptr &&
-                           planet->creator_kind == PlanetMapCatalogCreatorKind::OrdinaryPlanetMap ?
-                       NameObjSceneVisualKind::Planet :
-                       NameObjSceneVisualKind::None;
+            return NameObjSceneVisualKind::None;
         }
 
         const auto creator = entry->mCreateFunc;

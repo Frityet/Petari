@@ -245,3 +245,25 @@ namespace MR {
         pOut->z = mtx[2][3];
     }
 }  // namespace MR
+
+// Original shared math from Game/Util/MtxUtil.cpp.
+namespace MR {
+    void makeMtxFrontNoSupport(TPos3f* pDst, const TVec3f& rFront) {
+        TVec3f support;
+        if (MR::getMaxAbsElementIndex(rFront) == 1) {
+            support.set(1.0f, 0.0f, 0.0f);
+        } else {
+            support.set(0.0f, 1.0f, 0.0f);
+        }
+
+        TVec3f axisZ;
+        MR::normalize(rFront, &axisZ);
+
+        TVec3f axisX = support.cross(axisZ);
+        MR::normalize(&axisX);
+
+        TVec3f axisY = axisZ.cross(axisX);
+
+        pDst->setXYZDir(axisX, axisY, axisZ);
+    }
+}

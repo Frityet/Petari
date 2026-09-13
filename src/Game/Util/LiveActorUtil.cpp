@@ -1674,45 +1674,7 @@ namespace MR {
             }
 
             J3DTexture* pTexture = pModelData->mMaterialTable.getTexture();
-            u32 texOffset = static_cast< u32 >(texIndex) << 5;
-            const u8* pSrc = reinterpret_cast< const u8* >(&rTimg);
-            u8* pBase = reinterpret_cast< u8* >(pTexture->getResTIMG(0));
-            pBase[texOffset] = pSrc[0];
-
-            u8* pDst = pBase + texOffset;
-            pDst[0x01] = pSrc[0x01];
-            *reinterpret_cast< u16* >(pDst + 0x02) = *reinterpret_cast< const u16* >(pSrc + 0x02);
-            *reinterpret_cast< u16* >(pDst + 0x04) = *reinterpret_cast< const u16* >(pSrc + 0x04);
-            pDst[0x06] = pSrc[0x06];
-            pDst[0x07] = pSrc[0x07];
-            pDst[0x08] = pSrc[0x08];
-            pDst[0x09] = pSrc[0x09];
-            *reinterpret_cast< u16* >(pDst + 0x0A) = *reinterpret_cast< const u16* >(pSrc + 0x0A);
-            *reinterpret_cast< u32* >(pDst + 0x0C) = *reinterpret_cast< const u32* >(pSrc + 0x0C);
-            pDst[0x10] = pSrc[0x10];
-            pDst[0x11] = pSrc[0x11];
-            pDst[0x12] = pSrc[0x12];
-            pDst[0x13] = pSrc[0x13];
-            pDst[0x14] = pSrc[0x14];
-            pDst[0x15] = pSrc[0x15];
-            pDst[0x16] = pSrc[0x16];
-            pDst[0x17] = pSrc[0x17];
-            pDst[0x18] = pSrc[0x18];
-            pDst[0x19] = pSrc[0x19];
-            *reinterpret_cast< s16* >(pDst + 0x1A) = *reinterpret_cast< const s16* >(pSrc + 0x1A);
-            *reinterpret_cast< u32* >(pDst + 0x1C) = *reinterpret_cast< const u32* >(pSrc + 0x1C);
-
-            pBase = reinterpret_cast< u8* >(pTexture->getResTIMG(0));
-            u8* pPal = pBase + texOffset;
-            u32 palOffset = *reinterpret_cast< u32* >(pPal + 0x1C);
-            palOffset = (palOffset + reinterpret_cast< u32 >(pSrc)) - reinterpret_cast< u32 >(pPal);
-            *reinterpret_cast< u32* >(pPal + 0x1C) = palOffset;
-
-            pBase = reinterpret_cast< u8* >(pTexture->getResTIMG(0));
-            u8* pImg = pBase + texOffset;
-            u32 imgOffset = *reinterpret_cast< u32* >(pImg + 0x0C);
-            imgOffset = (imgOffset + reinterpret_cast< u32 >(pSrc)) - reinterpret_cast< u32 >(pImg);
-            *reinterpret_cast< u32* >(pImg + 0x0C) = imgOffset;
+            pTexture->setResTIMG(texIndex, rTimg);
 
             for (u16 matIndex = 0; matIndex < pModelData->mMaterialTable.getMaterialNum(); matIndex++) {
                 J3DMaterial* material = pModelData->mMaterialTable.getMaterialNodePointer(matIndex);

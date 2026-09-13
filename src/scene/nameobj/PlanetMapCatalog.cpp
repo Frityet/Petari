@@ -34,46 +34,53 @@ namespace smgpc::scene::nameobj {
             "Indirect",
         });
 
-        constexpr auto cUniquePlanetNames = std::to_array<std::string_view>({
-            "BeamGoRoundPlanet",
-            "BumpAppearPlanet",
-            "ChoConveyorPlanetB",
-            "ChoConveyorPlanetD",
-            "DinoPackunBattlePlanet",
-            "DarkHopperPlanetA",
-            "DarkHopperPlanetB",
-            "DarkHopperPlanetC",
-            "DarkHopperPlanetD",
-            "DarknessRoomPlanet",
-            "FlagDiscPlanetB",
-            "FlagDiscPlanetC",
-            "FlagDiscPlanetD",
-            "FlagDiscPlanetE",
-            "HatchWaterPlanet",
-            "HeavensDoorInsidePlanet",
-            "HoneyQueenPlanet",
-            "LavaJamboSunPlanet",
-            "LavaRotatePlanet",
-            "LavaDomedPlanet",
-            "MarblePlanet",
-            "PeachCastleGardenPlanet",
-            "SandCapsuleInsidePlanet",
-            "ScaleDownRelayPlanet",
-            "SnowCapsulePlanet",
-            "TeresaRoomPlanet",
-            "TridentPlanet",
-            "QuestionBoxPlanetA",
-            "QuestionBoxPlanetB",
-            "QuestionBoxPlanetC",
-            "QuestionBoxPlanetD",
-            "QuestionBoxPlanetE",
-            "Quicksand2DPlanet",
-            "ReverseGravityRoomPlanet",
-            "SandStreamHighTowerPlanet",
-            "SandStreamJointPlanetA",
-            "SandStreamJointPlanetB",
-            "StarDustStartPlanet",
-            "WormEatenPlanet",
+        struct UniquePlanetCreator {
+            std::string_view planet_name;
+            std::string_view creator_class;
+        };
+
+        // Complete retail sUniquePlanetCreateFuncTable identity. Preserve the
+        // exact original class even while that class is unavailable natively.
+        constexpr auto cUniquePlanetCreators = std::to_array<UniquePlanetCreator>({
+            {"BeamGoRoundPlanet", "BeamGoRoundPlanet"},
+            {"BumpAppearPlanet", "BumpAppearPlanet"},
+            {"ChoConveyorPlanetB", "RailPlanetMap"},
+            {"ChoConveyorPlanetD", "RotateMoveObj"},
+            {"DinoPackunBattlePlanet", "FurPlanetMap"},
+            {"DarkHopperPlanetA", "SimpleClipPartsObj"},
+            {"DarkHopperPlanetB", "SimpleClipPartsObj"},
+            {"DarkHopperPlanetC", "SimpleClipPartsObj"},
+            {"DarkHopperPlanetD", "SimpleClipPartsObj"},
+            {"DarknessRoomPlanet", "SimpleClipPartsObj"},
+            {"FlagDiscPlanetB", "PlanetMapFarClippable"},
+            {"FlagDiscPlanetC", "PlanetMapFarClippable"},
+            {"FlagDiscPlanetD", "RotateMoveObj"},
+            {"FlagDiscPlanetE", "PlanetMapFarClippable"},
+            {"HatchWaterPlanet", "HatchWaterPlanet"},
+            {"HeavensDoorInsidePlanet", "SimpleMapObj"},
+            {"HoneyQueenPlanet", "FurPlanetMap"},
+            {"LavaJamboSunPlanet", "LavaJamboSunPlanet"},
+            {"LavaRotatePlanet", "LavaSunPlanet"},
+            {"LavaDomedPlanet", "LavaSunPlanet"},
+            {"MarblePlanet", "MarblePlanet"},
+            {"PeachCastleGardenPlanet", "PeachCastleGardenPlanet"},
+            {"SandCapsuleInsidePlanet", "SandCapsuleInsidePlanet"},
+            {"ScaleDownRelayPlanet", "FlexibleSphere"},
+            {"SnowCapsulePlanet", "SnowCapsulePlanet"},
+            {"TeresaRoomPlanet", "PlanetMapAnimLow"},
+            {"TridentPlanet", "AstroSimpleObj"},
+            {"QuestionBoxPlanetA", "QuestionBoxGalleryObj"},
+            {"QuestionBoxPlanetB", "QuestionBoxGalleryObj"},
+            {"QuestionBoxPlanetC", "QuestionBoxGalleryObj"},
+            {"QuestionBoxPlanetD", "QuestionBoxGalleryObj"},
+            {"QuestionBoxPlanetE", "QuestionBoxGalleryObj"},
+            {"Quicksand2DPlanet", "RailPlanetMap"},
+            {"ReverseGravityRoomPlanet", "ReverseGravityRoomPlanet"},
+            {"SandStreamHighTowerPlanet", "RailPlanetMap"},
+            {"SandStreamJointPlanetA", "RailPlanetMap"},
+            {"SandStreamJointPlanetB", "RailPlanetMap"},
+            {"StarDustStartPlanet", "RotateMoveObj"},
+            {"WormEatenPlanet", "WormEatenPlanet"},
         });
 
         struct UniqueArchiveName {
@@ -128,8 +135,10 @@ namespace smgpc::scene::nameobj {
             return "ForceLowScenarioName" + std::to_string(index);
         }
 
-        [[nodiscard]] bool is_unique_planet(std::string_view planet_name) {
-            return std::ranges::find(cUniquePlanetNames, planet_name) != cUniquePlanetNames.end();
+        [[nodiscard]] const UniquePlanetCreator *find_unique_planet_creator(std::string_view planet_name) {
+            const auto found = std::ranges::find(cUniquePlanetCreators, planet_name,
+                                                 &UniquePlanetCreator::planet_name);
+            return found != cUniquePlanetCreators.end() ? &*found : nullptr;
         }
 
         void append_unique(std::vector<std::string> &names, std::string_view name) {
@@ -266,8 +275,9 @@ namespace smgpc::scene::nameobj {
             // Ordinary PlanetMap now constructs its original optional models.
             if (entry.has_force_low_scenarios()) {
                 entry.creator_kind = PlanetMapCatalogCreatorKind::ForceLowRuntimeUnavailable;
-            } else if (is_unique_planet(entry.planet_name)) {
-                entry.creator_kind = PlanetMapCatalogCreatorKind::UniqueCreatorRuntimeUnavailable;
+            } else if (const auto *unique = find_unique_planet_creator(entry.planet_name)) {
+                entry.creator_kind = PlanetMapCatalogCreatorKind::UniqueCreator;
+                entry.unique_creator_class = unique->creator_class;
             }
 
             const auto index = _entries.size();

@@ -1,0 +1,6 @@
+{
+  "decomp/src/Game/Scene/StageDataHolder.cpp": "a49ed47665ba095ee37ee756d0e90af491957bb12b901ccb44fa33d00d7fe778",
+  "src/Game/Scene/StageDataHolder.cpp": "d832284c9f28e6580865d8d989af9c96e3b2c8629c67128a14876b64ec7ae5f3",
+  "src/compat/GameMathCompat.cpp": "73972c4b74bf506446a28689b639ced43a88332cdc98be706a95d167f8561907",
+  "src/compat/MtxCompat.cpp": "480f1a9df8413462f69c6a19d674d74fc3b2fbc7febbe8fb5051f5acbc0eaf15"
+}

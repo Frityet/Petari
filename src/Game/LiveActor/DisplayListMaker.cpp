@@ -95,7 +95,11 @@ ProjmapEffectMtxSetter* DisplayListMaker::addProjmapEffectMtxSetter() {
     return setter;
 }
 
-// DisplayListMaker::addMirrorReflectionMtxSetter
+MirrorReflectionMtxSetter* DisplayListMaker::addMirrorReflectionMtxSetter() {
+    MirrorReflectionMtxSetter* setter = new MirrorReflectionMtxSetter(mModel, mResHolder);
+    push(setter);
+    return setter;
+}
 
 void DisplayListMaker::offCurFlagBpk(const J3DAnmBase* pAnimation) {
     MR::offDiffFlagBpk(mCurFlag, static_cast< const J3DAnmColorKey* >(pAnimation), "");

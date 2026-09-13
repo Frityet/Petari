@@ -1,0 +1,18 @@
+[
+  {
+    "path": "src/scene/nameobj/PlanetMapCatalog.hpp",
+    "sha256": "bc351fd879286c4225bab653d7c0a4fe4ecac70bb128786c260f5ae1942845ae"
+  },
+  {
+    "path": "src/scene/nameobj/PlanetMapCatalog.cpp",
+    "sha256": "ec0f849021e9ec391c30e139708a1439389effab22d19638cbc54aa95f8dce2b"
+  },
+  {
+    "path": "src/scene/nameobj/NameObjFactory.cpp",
+    "sha256": "804d661544ef3c2e5586c0fa94e204f49dbf52c1a64752d051f5ef378dd8f4d9"
+  },
+  {
+    "path": "tests/PlanetMapCatalogTests.cpp",
+    "sha256": "8341a5ccb3596f87e14f6511d98ea17c2e79e8189200542b82dd734758cad0d8"
+  }
+]
