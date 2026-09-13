@@ -1,0 +1,17 @@
+{
+  "command": [
+    "build/macosx/arm64/debug/smg-pc",
+    "--original",
+    "--disc",
+    "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--stage",
+    "HeavensDoorGalaxy",
+    "--scenario",
+    "1",
+    "--max-frames",
+    "1800"
+  ],
+  "exit_code": 1,
+  "timed_out": false,
+  "seconds": 2.3930580615997314
+}

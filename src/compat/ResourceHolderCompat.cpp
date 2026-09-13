@@ -264,16 +264,18 @@ namespace smgpc::compat {
         const auto requested = normalize_archive_request(archive_name);
         if (requested.empty() || requested == "." || requested.filename().empty())
             aurora::throw_host_exception<std::invalid_argument>("ResourceHolder requires an exact archive name");
-        const auto resolved = _dvd->find_first({std::filesystem::path("ObjectData") / requested,
-                                               std::filesystem::path("MapPartsData") / requested, requested});
-        if (!resolved) aurora::throw_host_exception<std::runtime_error>("Required ResourceHolder archive is unavailable: " + requested.generic_string());
-        const auto key = _dvd->resolve(resolved->generic_string());
+        char logical_path[256];
+        if (!MR::makeObjectArchiveFileName(logical_path, sizeof(logical_path), requested.generic_string().c_str()))
+            aurora::throw_host_exception<std::runtime_error>("Required ResourceHolder archive is unavailable: " + requested.generic_string());
+        char resolved_path[256];
+        MR::makeFileNameConsideringLanguage(resolved_path, sizeof(resolved_path), logical_path);
+        const auto key = _dvd->resolve(resolved_path);
         if (const auto found = _holders.find(key); found != _holders.end()) return &found->second->holder();
         auto domain = _domain;
         if (heap != nullptr && heap != &domain->heap()) {
             domain = JkrAllocationDomain::retain_heap(*heap);
         }
-        auto owner = std::make_shared<ResourceArchiveOwner>(_dvd->retain_archive_for_path(*resolved), key, std::move(domain), _mem1);
+        auto owner = std::make_shared<ResourceArchiveOwner>(_dvd->retain_archive_for_path(key), key, std::move(domain), _mem1);
         auto* result = &owner->holder();
         _holders.emplace(key, std::move(owner));
         return result;

@@ -1,3 +1,4 @@
+#include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
 #include <aurora/endian.hpp>
 #include "nw4r/ut/ResFont.h"
@@ -81,7 +82,9 @@ namespace {
 
 namespace nw4r::ut {
 
-    Font::Font() : mHostResourceState(std::make_shared< HostFontResourceState >()) {
+    Font::Font() {
+        aurora::allocation::HostAllocationScope host;
+        mHostResourceState = std::make_shared< HostFontResourceState >();
     }
 
     Font::~Font() = default;
@@ -100,6 +103,7 @@ namespace nw4r::ut {
     }
 
     bool ResFont::SetResource(void* pBuffer, std::size_t bufferSize) {
+        aurora::allocation::HostAllocationScope host;
         if (!IsManaging(nullptr) || pBuffer == nullptr || bufferSize < kMinimumBrfntHeaderSize) {
             return false;
         }

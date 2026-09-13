@@ -1,3 +1,4 @@
+#include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
 #include <aurora/endian.hpp>
 #include "BrfntFont.hpp"
@@ -296,6 +297,9 @@ namespace smgpc::layout {
     }
 
     BrfntFont parse_brfnt_font(std::span<const std::uint8_t> data) {
+        // Decoded sheets and lookup tables are native backing, independent of
+        // the original Font object and its borrowed Game resource buffer.
+        aurora::allocation::HostAllocationScope host;
         if (!has_magic(data, 0U, "RFNT")) {
             aurora::throw_host_exception<std::runtime_error>("BRFNT file is missing RFNT magic");
         }

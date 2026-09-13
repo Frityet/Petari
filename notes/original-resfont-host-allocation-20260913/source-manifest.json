@@ -1,0 +1,10 @@
+[
+  {
+    "path": "src/compat/Nw4rFontCompat.cpp",
+    "sha256": "dcf5b4a58060a51ba18198aed3135a000068e18d2f40d11e60d4028d6bc5f9b1"
+  },
+  {
+    "path": "src/layout/BrfntFont.cpp",
+    "sha256": "11701068f326dae2111defd1de1985f0dc5b09421be3b8f0f99963f5ea22e14c"
+  }
+]
