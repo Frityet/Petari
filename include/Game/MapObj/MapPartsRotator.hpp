@@ -74,8 +74,8 @@ public:
     s32 mRotateAccelType;  // 0x34
     s32 mRotateType;       // 0x38
     s32 mSignMotionType;   // 0x3C
-    TMtx34f _40;
-    TMtx34f _70;
+    TPos3f _40;
+    TPos3f _70;
     f32 _A0;
     bool mIsOnReverse;  // 0xA4
 };

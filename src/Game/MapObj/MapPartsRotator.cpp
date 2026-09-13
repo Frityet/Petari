@@ -1,7 +1,9 @@
 #include "Game/MapObj/MapPartsRotator.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/Spine.hpp"
+#include "Game/MapObj/MapParts.hpp"
 #include "Game/Util.hpp"
+#include "Game/Util/MapPartsUtil.hpp"
 
 namespace NrvMapPartsRotator {
     NEW_NERVE(HostTypeNeverMove, MapPartsRotator, NeverMove);
@@ -92,6 +94,54 @@ bool MapPartsRotator::isMoving() const {
     return isNerve(&NrvMapPartsRotator::HostTypeRotate::sInstance);
 }
 
+void MapPartsRotator::updateBaseHostMtx() {
+    _40.setRotateDegree(mHost->mRotation);
+}
+
+void MapPartsRotator::updateVelocity() {
+    if (MR::isNearZero(mRotateAngle) || (mRotateAccelType == 0 || mRotateAccelType == 2)) {
+        mIsOnReverse = false;
+        mRotateSpeed = _18;
+    } else if (mRotateAccelType == 1) {
+        f32 accel = (_18 * _18 * MR::sign(_18)) / mRotateAngle;
+        bool isDecelerating;
+        if (0.0f < _18) {
+            isDecelerating = mTargetAngle - 0.5f * mRotateAngle <= mAngle;
+        } else {
+            isDecelerating = mAngle <= mTargetAngle + 0.5f * mRotateAngle;
+        }
+
+        if (isDecelerating) {
+            accel *= -1.0f;
+        }
+
+        f32 oldSpeed = mRotateSpeed;
+        mRotateSpeed = oldSpeed + accel;
+        if ((oldSpeed >= 0.0f && mRotateSpeed < 0.0f) || (oldSpeed < 0.0f && mRotateSpeed >= 0.0f)) {
+            mIsOnReverse = true;
+        } else {
+            mIsOnReverse = false;
+        }
+    }
+}
+
+void MapPartsRotator::updateAngle() {
+    mAngle += mRotateSpeed;
+    if (MR::isNearZero(mRotateAngle)) {
+        MR::repeatDegree(&mAngle);
+    }
+}
+
+void MapPartsRotator::updateTargetAngle() {
+    if (!MR::isNearZero(mRotateAngle)) {
+        if (0.0f < _18) {
+            mTargetAngle = mAngle + mRotateAngle;
+        } else {
+            mTargetAngle = mAngle - mRotateAngle;
+        }
+    }
+}
+
 void MapPartsRotator::restartAtEnd() {
     if (mRotateType != 0) {
         if (mRotateType == 1) {
@@ -114,13 +164,34 @@ void MapPartsRotator::initRotateSpeed(const JMapInfoIter& rIter) {
         MR::getMapPartsArgRotateTime(&rotate_time, rIter);
         _18 = mRotateAngle / rotate_time;
     } else {
-        MR::getMapPartsArgRotateSpeed(&mRotateSpeed, rIter);
+        MR::getMapPartsArgRotateSpeed(&_18, rIter);
         _18 *= 0.01f;
     }
 
     if (mRotateAngle < 0.0f) {
         _18 = 0.0f;
     }
+}
+
+bool MapPartsRotator::isReachedTargetAngle() const {
+    if (MR::isNearZero(mRotateAngle)) {
+        return false;
+    }
+
+    if (0.0f < _18) {
+        return mTargetAngle <= mAngle;
+    }
+
+    return mAngle <= mTargetAngle;
+}
+
+void MapPartsRotator::updateRotateMtx(AxisType type, f32 angle) {
+    TVec3f axis;
+    calcRotateAxisDir(type, &axis);
+    _70.identity();
+    _70.zeroTrans();
+    _70.setRotate(axis, (PI / 180.0f) * angle);
+    _70.concat(_70, _40);
 }
 
 void MapPartsRotator::calcRotateAxisDir(AxisType type, TVec3f* pDir) const {
@@ -153,9 +224,39 @@ void MapPartsRotator::exeNeverMove() {
 void MapPartsRotator::exeWait() {
 }
 
-// void MapPartsRotator::exeRotateStart() {}
+void MapPartsRotator::exeRotate() {
+    updateVelocity();
+    updateAngle();
 
-// void MapPartsRotator::exeRotate() {}
+    if ((mRotateAccelType == 0 || mRotateAccelType == 2) && isReachedTargetAngle()) {
+        mAngle = mTargetAngle;
+        updateRotateMtx(static_cast< AxisType >(mRotateAxis), mTargetAngle);
+        if (mRotateStopTime > 0) {
+            setNerve(&NrvMapPartsRotator::HostTypeStopAtEnd::sInstance);
+        } else {
+            restartAtEnd();
+        }
+    } else if (mRotateAccelType == 1 && MR::isNearZero(mRotateSpeed, 0.00001f)) {
+        setNerve(&NrvMapPartsRotator::HostTypeStopAtEnd::sInstance);
+    } else {
+        updateRotateMtx(static_cast< AxisType >(mRotateAxis), mAngle);
+    }
+}
+
+void MapPartsRotator::exeRotateStart() {
+    if (isFirstStep()) {
+        _A0 = mAngle;
+    }
+
+    f32 sign = (getStep() / 3) % 2 == 0 ? 1.0f : -1.0f;
+    mAngle += 0.5f * sign;
+    updateRotateMtx(static_cast< AxisType >(mRotateAxis), mAngle);
+    if (isStep(MapParts::getMoveStartSignalTime())) {
+        mAngle = _A0;
+        updateRotateMtx(static_cast< AxisType >(mRotateAxis), _A0);
+        setNerve(&NrvMapPartsRotator::HostTypeRotate::sInstance);
+    }
+}
 
 void MapPartsRotator::exeStopAtEnd() {
     if (isStep(mRotateStopTime)) {
