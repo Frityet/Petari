@@ -25,6 +25,7 @@
 #include "Game/NPC/Rosetta.hpp"
 #include "Game/NPC/RunawayTico.hpp"
 #include "Game/NPC/Tico.hpp"
+#include "Game/Player/MarioActor.hpp"
 #include "Game/Util/FileUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -111,6 +112,16 @@ namespace {
     // placement policy. An entry is present only when its normal init path has
     // no known mandatory dependency on an unavailable host subsystem.
     constexpr auto cSupportedCreateTable = std::array{
+        NameObjFactory::Name2CreateFunc{
+            "Mario",
+            create_supported_name_obj<MarioActor>,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "MarioActor",
+            create_supported_name_obj<MarioActor>,
+            nullptr,
+        },
         NameObjFactory::Name2CreateFunc{
             "Coin",
             MR::createDirectSetCoin,

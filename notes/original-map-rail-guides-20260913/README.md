@@ -11,3 +11,5 @@ The shared SimpleMapObj initializer can now use actual guide and rail movement o
 Owned files: decomp MapParts.cpp, MapPartsRailMover.cpp/.hpp, MapPartsRailGuideDrawer.cpp/.hpp and MapPartsRailGuideHolder.cpp; native MapParts, MapPartsRailMover, MapPartsRailPointPassChecker, MapPartsRailGuideDrawer, MapPartsRailGuideHolder, MapPartsRailGuidePoint source/header pairs; native TVec.hpp setPSZeroVec method; SceneObjHolderCompat rail-guide include/case. Other concurrent SceneObj cases belong to their respective notes.
 
 The twenty-second production smg-pc build links successfully with this complete imported cohort, real guide SceneObj factory, original screen-alpha owner and repaired asynchronous archive handoff. The fifteenth actual run still fails after the Gateway request; no placement/opening completion is claimed.
+
+Follow-up: the native guide drawer now uses the reference source unchanged, including std::mem_func. Aurora already supplies that legacy functional adapter through the existing host header boundary, so the temporary std::mem_fn source substitution was unnecessary and removed.

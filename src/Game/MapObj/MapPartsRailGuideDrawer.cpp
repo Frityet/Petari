@@ -3,7 +3,6 @@
 #include "Game/Util.hpp"
 #include "Game/Util/MapPartsUtil.hpp"
 #include <algorithm>
-#include <functional>
 
 namespace NrvMapPartsRailGuideDrawer {
     NERVE_DECL_NULL(HostTypeHideAll);
@@ -46,11 +45,11 @@ bool MapPartsRailGuideDrawer::isWorking() const {
 }
 
 void MapPartsRailGuideDrawer::show() {
-    std::for_each(mGuidePoints.begin(), mGuidePoints.end(), std::mem_fn(&LiveActor::appear));
+    std::for_each(mGuidePoints.begin(), mGuidePoints.end(), std::mem_func(&LiveActor::appear));
 }
 
 void MapPartsRailGuideDrawer::hide() {
-    std::for_each(mGuidePoints.begin(), mGuidePoints.end(), std::mem_fn(&LiveActor::kill));
+    std::for_each(mGuidePoints.begin(), mGuidePoints.end(), std::mem_func(&LiveActor::kill));
 }
 
 void MapPartsRailGuideDrawer::start() {

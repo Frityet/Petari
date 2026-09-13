@@ -838,7 +838,8 @@ void smgpc::layout::LayoutRuntime::startPaneAnim(std::string_view paneName, cons
     }
     const auto end = durationFor(pAnimName);
     const auto looping = isLoopingAnim(pAnimName);
-    (void)animation(animLayer);
+    // LayoutPaneCtrl validates its own declared layer count. Named panes have
+    // independent players and do not share the root layout layer limit.
     auto& anim = paneAnimation(paneName).animations.at(animLayer);
     anim.name = pAnimName;
     anim.frame = 0.0F;
@@ -854,7 +855,6 @@ void smgpc::layout::LayoutRuntime::stopPaneAnim(std::string_view paneName, u32 a
         aurora::throw_host_exception<std::logic_error>("Pane animation requires a real pane name");
     }
 
-    (void)animation(animLayer);
     auto& anim = paneAnimation(paneName).animations.at(animLayer);
     anim.rate = 0.0F;
     anim.stopped = true;
@@ -866,7 +866,6 @@ void smgpc::layout::LayoutRuntime::setPaneAnimFrame(std::string_view paneName, f
         aurora::throw_host_exception<std::logic_error>("Pane animation requires a real pane name");
     }
 
-    (void)animation(animLayer);
     auto& anim = paneAnimation(paneName).animations.at(animLayer);
     anim.frame = frame;
 }
@@ -877,7 +876,6 @@ void smgpc::layout::LayoutRuntime::setPaneAnimRate(std::string_view paneName, f3
         aurora::throw_host_exception<std::logic_error>("Pane animation requires a real pane name");
     }
 
-    (void)animation(animLayer);
     auto& anim = paneAnimation(paneName).animations.at(animLayer);
     anim.rate = rate;
     anim.stopped = anim.name.empty() || rate == 0.0F;
@@ -885,14 +883,12 @@ void smgpc::layout::LayoutRuntime::setPaneAnimRate(std::string_view paneName, f3
 
 f32 smgpc::layout::LayoutRuntime::getPaneAnimFrame(std::string_view paneName, u32 animLayer) const {
     const smgpc::compat::JkrHostAllocationScope host;
-    (void)animation(animLayer);
     const auto& anim = const_cast<LayoutRuntime*>(this)->paneAnimation(paneName).animations.at(animLayer);
     return anim.frame;
 }
 
 bool smgpc::layout::LayoutRuntime::isPaneAnimStopped(std::string_view paneName, u32 animLayer) const {
     const smgpc::compat::JkrHostAllocationScope host;
-    (void)animation(animLayer);
     const auto& anim = const_cast<LayoutRuntime*>(this)->paneAnimation(paneName).animations.at(animLayer);
     return anim.name.empty() || anim.stopped;
 }
@@ -946,7 +942,6 @@ f32 smgpc::layout::LayoutRuntime::debugPaneAnimEndFrame(std::string_view paneNam
         return 0.0F;
     }
 
-    (void)animation(animLayer);
     return pane->animations.at(animLayer).end;
 }
 
