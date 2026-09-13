@@ -4,17 +4,24 @@
 #include "Game/Screen/GameSceneLayoutHolder.hpp"
 #include "Game/System/GameDataFunction.hpp"
 #include "Game/System/GameDataHolder.hpp"
-#include "Game/System/GameDataTemporaryInGalaxy.hpp"
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 
+#include "Game/System/GameSystem.hpp"
+#include "Game/System/GameSequenceDirector.hpp"
+#include "Game/System/GameDataTemporaryInGalaxy.hpp"
+#include "Game/Util/SingletonHolder.hpp"
+
 #include "compat/StageSessionState.hpp"
 
 namespace {
     GameDataTemporaryInGalaxy* getGameDataTemporaryInGalaxy() {
+        if (auto* system = SingletonHolder<GameSystem>::get()) {
+            return system->mSequenceDirector->mGameDataTemporaryInGalaxy;
+        }
         return &smgpc::compat::require_active_stage_session().temporary_data();
     }
 }
