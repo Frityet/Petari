@@ -143,8 +143,8 @@ namespace smgpc::compat {
               exceptions(std::uncaught_exceptions()),
               mutex_count(MR::MutexHolder<0>::sMutex.thread == thread ? MR::MutexHolder<0>::sMutex.count : 0) {
             auto* service = ResourceHolderService::active();
-            if (!service || service->allocation_domain() != owner->allocation_domain()) {
-                aurora::throw_host_exception<std::logic_error>("MarioAnimator requires its model's retained scene resource cohort");
+            if (!service) {
+                aurora::throw_host_exception<std::logic_error>("MarioAnimator requires its actual archive resource service");
             }
             lifetime->domain = owner->allocation_domain();
             lifetime->resources = service->retain(*MR::getResourceHolder(animator.mActor));

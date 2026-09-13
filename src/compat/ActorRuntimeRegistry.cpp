@@ -537,7 +537,10 @@ namespace smgpc::compat {
             aurora::throw_host_exception<std::logic_error>("Actor ModelManager requires the active scene resource service");
         }
         JkrHostAllocationScope host;
-        auto owner = std::make_shared<ModelManagerOwner>(*service, service->allocation_domain(),
+        auto* heap = JKRHeap::getCurrentHeap();
+        if (!heap)
+            aurora::throw_host_exception<std::logic_error>("Actor ModelManager requires the original caller's Game heap");
+        auto owner = std::make_shared<ModelManagerOwner>(*service, JkrAllocationDomain::retain_heap(*heap),
                                                         model_archive, animation_archive, create_display_list);
         actor->mModelManager = &owner->manager();
         state.model_owner = std::move(owner);
@@ -545,11 +548,11 @@ namespace smgpc::compat {
 
     std::shared_ptr<JkrAllocationDomain> actor_scene_allocation_domain(const LiveActor* actor) {
         const auto& state = require_actor_state(actor);
-        auto* service = ResourceHolderService::active();
-        if (!service) aurora::throw_host_exception<std::logic_error>("Actor sound construction requires the active scene resource cohort");
-        if (state.model_owner && state.model_owner->allocation_domain() != service->allocation_domain())
-            aurora::throw_host_exception<std::logic_error>("Actor model and sound must retain the same scene resource cohort");
-        return service->allocation_domain();
+        if (state.model_owner) return state.model_owner->allocation_domain();
+        auto* heap = JKRHeap::getCurrentHeap();
+        if (!heap)
+            aurora::throw_host_exception<std::logic_error>("Actor sound construction requires the original caller's Game heap");
+        return JkrAllocationDomain::retain_heap(*heap);
     }
 
     void adopt_actor_sound_object(LiveActor* actor, std::shared_ptr<JkrAllocationDomain> domain) {

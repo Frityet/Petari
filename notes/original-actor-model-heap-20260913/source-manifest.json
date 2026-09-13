@@ -1,0 +1,5 @@
+{
+  "src/compat/ActorRuntimeRegistry.cpp": "e3349abc16d31fdfb09078332bd8605407d73928c2b243c9654177406c17eea0",
+  "src/compat/ModelManagerOwner.cpp": "93f2a0e4d535c32ea05d22cabad7eb2753cfb630fd676edb396396b9f7f7b138",
+  "src/compat/MarioAnimatorLifetime.cpp": "1f43c5fab34a6774f827cabab5d9b2d0e11c51d1be9c4b9d910253bfecb34551"
+}

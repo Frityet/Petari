@@ -58,13 +58,15 @@ namespace smgpc::compat {
     ModelManagerOwner::ModelManagerOwner(ResourceHolderService& service, std::shared_ptr<JkrAllocationDomain> domain,
                                          const char* model, const char* animation, bool create_dl) {
         JkrHostAllocationScope host;
-        if (!domain || domain != service.allocation_domain())
-            aurora::throw_host_exception<std::invalid_argument>("Models and their holder-owned material buffers require the same retained scene heap");
+        if (!domain)
+            aurora::throw_host_exception<std::invalid_argument>("A ModelManager requires its actual retained Game heap");
         if (ResourceHolderService::active() != &service)
             aurora::throw_host_exception<std::invalid_argument>("ModelManager requires the active original resource service");
         _storage = std::make_unique<Storage>();
         auto& state = *_storage;
         state.domain = std::move(domain);
+        // The instance graph belongs to the caller's original heap. Shared
+        // model/animation resources retain their own archive heap independently.
         JkrAllocationScope heap(state.domain);
         J3dCommandScope commands;
         LoadStateScope restore;
