@@ -1,0 +1,18 @@
+[
+  {
+    "path": "src/Game/MapObj/FlipPanel.cpp",
+    "sha256": "da94fe3edba77a962ab918b9ec2e7a536957e2de554a05cb0c43a2be8a7acef0"
+  },
+  {
+    "path": "src/Game/MapObj/FlipPanel.hpp",
+    "sha256": "f02f4f0b178d5161041a8d2dca1523851f384c6dd33406a7098976da58c04767"
+  },
+  {
+    "path": "src/Game/Util.hpp",
+    "sha256": "2bb659736c3c78f269e55980a05e4cd9d7beb1b9f9ebeee4af006bfe28c05bd0"
+  },
+  {
+    "path": "src/scene/nameobj/NameObjFactory.cpp",
+    "sha256": "0278e6f337a1ed015acfdbb4b228e94b483f427845e3aa72564fbbf93ff8b951"
+  }
+]

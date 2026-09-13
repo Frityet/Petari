@@ -11,9 +11,11 @@
 #include "Game/MapObj/BrightObj.hpp"
 #include "Game/MapObj/CollisionBlocker.hpp"
 #include "Game/MapObj/Coin.hpp"
+#include "Game/MapObj/FlipPanel.hpp"
 #include "Game/MapObj/InvisiblePolygonObj.hpp"
 #include "Game/MapObj/InvisiblePolygonObjGCapture.hpp"
 #include "Game/MapObj/StarPieceGroup.hpp"
+#include "Game/MapObj/ShockWaveGenerator.hpp"
 #include "Game/MapObj/SimpleMapObj.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
@@ -131,6 +133,26 @@ namespace {
             "PurpleCoin",
             MR::createDirectSetPurpleCoin,
             "PurpleCoin",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "ShockWaveGenerator",
+            create_supported_name_obj<ShockWaveGenerator>,
+            "ShockWaveGenerator",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "FlipPanel",
+            create_supported_name_obj<FlipPanel>,
+            "FlipPanel",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "FlipPanelObserver",
+            create_supported_name_obj<FlipPanelObserver>,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "FlipPanelReverse",
+            create_supported_name_obj<FlipPanel>,
+            "FlipPanelReverse",
         },
         NameObjFactory::Name2CreateFunc{
             "StarPieceFlow",

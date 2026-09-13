@@ -5,10 +5,12 @@
 #include "Game/LiveActor/HitSensorKeeper.hpp"
 #include "Game/LiveActor/HitSensorInfo.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/LiveActorGroupArray.hpp"
 #include "Game/LiveActor/MessageSensorHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "runtime/RuntimeContext.hpp"
 
@@ -584,6 +586,20 @@ namespace MR {
 
     bool sendArbitraryMsg(u32 message, HitSensor* receiver, HitSensor* sender) {
         return send_message(message, receiver, sender);
+    }
+
+    void sendMsgToGroupMember(u32 msg, LiveActor* pActor, HitSensor* pSender, const char* pName) {
+        MsgSharedGroup* pGroup = static_cast< MsgSharedGroup* >(getGroupFromArray(pActor));
+
+        if (pGroup != nullptr) {
+            pGroup->sendMsgToGroupMember(msg, pSender, pName);
+        } else {
+            pActor->receiveMessage(msg, pSender, pActor->getSensor(pName));
+        }
+    }
+
+    bool sendMsgToEnemyAttackShockWave(HitSensor* pReceiver, HitSensor* pSender) {
+        return sendArbitraryMsg(ACTMES_TO_ENEMY_ATTACK_SHOCK_WAVE, pReceiver, pSender);
     }
 
     bool sendMsgPush(HitSensor* receiver, HitSensor* sender) {

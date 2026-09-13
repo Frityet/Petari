@@ -1,0 +1,57 @@
+[
+  {
+    "name": "__ct__18ShockWaveGeneratorFPCc",
+    "size": "68",
+    "match_percent": 100.0
+  },
+  {
+    "name": "init__18ShockWaveGeneratorFRC12JMapInfoIter",
+    "size": "356",
+    "match_percent": 99.83146
+  },
+  {
+    "name": "exeWait__18ShockWaveGeneratorFv",
+    "size": "120",
+    "match_percent": 99.666664
+  },
+  {
+    "name": "exeDemoEcho__18ShockWaveGeneratorFv",
+    "size": "124",
+    "match_percent": 100.0
+  },
+  {
+    "name": "exeGenerate__18ShockWaveGeneratorFv",
+    "size": "168",
+    "match_percent": 100.0
+  },
+  {
+    "name": "receiveMsgPlayerAttack__18ShockWaveGeneratorFUlP9HitSensorP9HitSensor",
+    "size": "280",
+    "match_percent": 100.0
+  },
+  {
+    "name": "startShockWave__18ShockWaveGeneratorFv",
+    "size": "208",
+    "match_percent": 100.0
+  },
+  {
+    "name": "sendMsgShockWaveToNearEnemy__18ShockWaveGeneratorFv",
+    "size": "128",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isHitCylinder__18ShockWaveGeneratorCFP9HitSensorP9HitSensor",
+    "size": "184",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__dt__18ShockWaveGeneratorFv",
+    "size": "92",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__vt__18ShockWaveGenerator",
+    "size": "120",
+    "match_percent": 100.0
+  }
+]
