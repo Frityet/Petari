@@ -110,6 +110,14 @@ namespace MR {
     }
 #pragma dont_inline reset
 
+    void timeKeepDemoFadeIn() {
+        openWipeFade(-1);
+    }
+
+    void timeKeepDemoFadeOut() {
+        closeWipeFade(-1);
+    }
+
     void startNPCTalkCamera(const TalkMessageCtrl* pTalkCtrl, MtxPtr pActorMtx, f32 scale, s32 frame) {
         startNPCTalkCamera(pTalkCtrl, pActorMtx, getPlayerBaseMtx(), scale, frame);
     }
