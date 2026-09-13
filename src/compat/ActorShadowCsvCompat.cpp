@@ -322,3 +322,12 @@ namespace smgpc::compat {
         replace_actor_shadow_runtime_state(actor, std::move(candidate));
     }
 }  // namespace smgpc::compat
+
+namespace MR {
+    void initShadowFromCSV(LiveActor* actor, const char* definitionName) {
+        if (definitionName == nullptr) {
+            aurora::throw_host_exception<std::invalid_argument>("Shadow CSV initialization requires an exact definition name.");
+        }
+        smgpc::compat::initialize_actor_shadow_from_model_archive(actor, definitionName);
+    }
+}  // namespace MR

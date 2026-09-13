@@ -377,6 +377,14 @@ namespace MR {
         }
     }
 
+    void hideModelIfShown(LiveActor* pActor) {
+        if (isHiddenModel(pActor)) {
+            return;
+        }
+
+        hideModel(pActor);
+    }
+
     void hideModelAndOnCalcAnimIfShown(LiveActor* pActor) {
         if (isHiddenModel(pActor)) {
             return;

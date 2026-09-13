@@ -237,3 +237,11 @@ namespace MR {
         return true;
     }
 } // namespace MR
+
+namespace MR {
+    void extractMtxTrans(MtxPtr mtx, TVec3f* pOut) {
+        pOut->x = mtx[0][3];
+        pOut->y = mtx[1][3];
+        pOut->z = mtx[2][3];
+    }
+}  // namespace MR

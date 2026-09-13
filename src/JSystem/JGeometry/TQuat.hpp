@@ -85,6 +85,10 @@ namespace JGeometry {
                     1.0F - (2.0F * x * x) - (2.0F * y * y));
         }
 
+        void setEuler(T rx, T ry, T rz);
+        void setEuler(const TVec3<T>& rpy) { setEuler(rpy.x, rpy.y, rpy.z); }
+        void setEulerDegree(T rx, T ry, T rz) { setEuler(rx * PI_180, ry * PI_180, rz * PI_180); }
+
         void getEuler(TVec3f& out) const {
             const auto sin_x = 2.0F * ((w * x) + (y * z));
             const auto cos_x = 1.0F - (2.0F * ((x * x) + (y * y)));

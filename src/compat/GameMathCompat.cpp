@@ -541,31 +541,15 @@ namespace MR {
         return true;
     }
 
-    void rotateVecDegree(TVec3f *pDst, const TVec3f &rAxis, f32 degree) {
-        if (pDst == nullptr) {
-            return;
-        }
-
-        const auto source = *pDst;
-        rotateVecDegree(pDst, source, rAxis, degree);
+    void rotateVecDegree(TVec3f* pDst, const TVec3f& rAxis, f32 degree) {
+        rotateVecDegree(pDst, *pDst, rAxis, degree);
     }
 
-    void rotateVecDegree(TVec3f *pDst, const TVec3f &rSrc, const TVec3f &rAxis, f32 degree) {
-        if (pDst == nullptr) {
-            return;
-        }
-
-        auto axis = rAxis;
-        if (axis.normalize() <= JGeometry::TUtil<f32>::epsilon()) {
-            pDst->set(rSrc);
-            return;
-        }
-
-        const auto radians = degree * (std::numbers::pi_v<f32> / 180.0F);
-        const auto sine = std::sin(radians);
-        const auto cosine = std::cos(radians);
-        const auto axisProjection = axis * (axis.dot(rSrc) * (1.0F - cosine));
-        pDst->set((rSrc * cosine) + (axis.cross(rSrc) * sine) + axisProjection);
+    void rotateVecDegree(TVec3f* pDst, const TVec3f& rSrc, const TVec3f& rAxis, f32 degree) {
+        TRot3f rotation;
+        rotation.identity();
+        rotation.setRotate(rAxis, degree * PI_180);
+        rotation.mult(rSrc, *pDst);
     }
 
     void normalize(TVec3f* pVec) {
@@ -964,3 +948,64 @@ namespace MR {
         }
     }
 }
+
+namespace MR {
+    void makeQuatRotateRadian(TQuat4f* pQuat, const TVec3f& rRot) {
+        pQuat->setEuler(rRot.x, rRot.y, rRot.z);
+    }
+
+    void makeQuatRotateDegree(TQuat4f* pQuat, const TVec3f& rRot) {
+        pQuat->setEulerDegree(rRot.x, rRot.y, rRot.z);
+    }
+
+    void makeAxisFrontUp(TVec3f* pSide, TVec3f* pUp, const TVec3f& rFront, const TVec3f& rUp) {
+        pSide->cross(rUp, rFront);
+        normalize(pSide);
+        pUp->cross(rFront, *pSide);
+    }
+
+    bool isSameDirection(const TVec3f& rVec1, const TVec3f& rVec2, f32 tolerance) {
+        if (MR::abs(rVec1.y * rVec2.z - rVec1.z * rVec2.y) > tolerance) {
+            return false;
+        }
+
+        if (MR::abs(rVec1.z * rVec2.x - rVec1.x * rVec2.z) > tolerance) {
+            return false;
+        }
+
+        if (MR::abs(rVec1.x * rVec2.y - rVec1.y * rVec2.x) > tolerance) {
+            return false;
+        }
+
+        return true;
+    }
+
+    bool isOppositeDirection(const TVec3f& rVec1, const TVec3f& rVec2, f32 tolerance) {
+        if (rVec1.dot(rVec2) >= 0.0f) {
+            return false;
+        }
+
+        return isSameDirection(rVec1, rVec2, tolerance);
+    }
+
+    void clampVecAngleDeg(TVec3f* pDst, const TVec3f& rBase, f32 angle) {
+        if (pDst->angle(rBase) * _180_PI <= angle) {  // TODO: value written directly?
+            return;
+        }
+
+        TVec3f axis = rBase.cross(*pDst);
+        if (MR::normalizeOrZero(&axis)) {
+            return;
+        }
+
+        f32 degree = JMACosDegree(angle);
+
+        rotateVecDegree(pDst, rBase, axis, angle);
+    }
+
+    bool turnQuatYDirRad(TQuat4f* pDst, const TQuat4f& rSrc, const TVec3f& rTo, f32 angle) {
+        TVec3f yDir;
+        rSrc.getYDir(yDir);
+        return turnQuat(pDst, rSrc, yDir, rTo, angle);
+    }
+}  // namespace MR

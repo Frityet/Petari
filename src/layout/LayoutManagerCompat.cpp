@@ -21,6 +21,7 @@
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/Screen/LayoutPaneCtrl.hpp"
 #include "Game/Screen/LayoutGroupCtrl.hpp"
+#include "Game/Screen/StarPointerTarget.hpp"
 #include "Game/Animation/LayoutAnmPlayer.hpp"
 #include "layout/Nw4rLayoutRecords.hpp"
 #include <nw4r/lyt/group.h>
@@ -404,8 +405,8 @@ void LayoutActor::initEffectKeeper(int effect_count, const char* effect_name, co
     require_actor_state(this, "Initializing layout effects").effect_keeper_registered = true;
 }
 
-void LayoutActor::initPointingTarget(int) {
-    throw_retail_nw4r_unavailable("Initializing a StarPointerLayoutTargetKeeper");
+void LayoutActor::initPointingTarget(int maxNumTargets) {
+    mPointingTarget = new StarPointerLayoutTargetKeeper(maxNumTargets);
 }
 
 void LayoutActor::updateSpine() {
@@ -861,6 +862,13 @@ void release_layout_actor_if_registered(NameObj* object) {
     if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
         runtime->unregister_effect_keeper(actor->getName(), actor);
         runtime->unregister_layout_actor(*actor);
+    }
+
+    if (auto* targets = actor->mPointingTarget) {
+        for (s32 i = 0; i < targets->mNumTargets; ++i) delete targets->mTargets[i];
+        delete[] targets->mTargets;
+        delete targets;
+        actor->mPointingTarget = nullptr;
     }
 
     if (actor->mLayoutManager != nullptr) {

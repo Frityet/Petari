@@ -1,7 +1,7 @@
 #include "compat/CameraUtilCompat.hpp"
 #include "camera/CameraDirectorRuntime.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "runtime/RuntimeContext.hpp"
+#include "runtime/SceneScheduler.hpp"
 #include "Game/LiveActor/MirrorCamera.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/CameraUtil.hpp"
@@ -9,32 +9,8 @@
 #include <aurora/exception.hpp>
 #include <stdexcept>
 #include <string>
-#include <utility>
 
 namespace smgpc::compat {
-
-    namespace {
-        thread_local smgpc::runtime::CameraSystemService *
-            sCameraSystemOverride = nullptr;
-    }
-
-    ScopedCameraSystemServiceOverride::ScopedCameraSystemServiceOverride(
-        smgpc::runtime::CameraSystemService &service)
-        : _previous(std::exchange(sCameraSystemOverride, &service)) {
-    }
-
-    ScopedCameraSystemServiceOverride::~ScopedCameraSystemServiceOverride() {
-        sCameraSystemOverride = _previous;
-    }
-
-    smgpc::runtime::CameraSystemService *
-    active_camera_system_for_camera_util() {
-        if (sCameraSystemOverride != nullptr) {
-            return sCameraSystemOverride;
-        }
-        auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
-        return runtime != nullptr ? &runtime->camera_system() : nullptr;
-    }
 
     void declare_event_camera_animation(
         const ActorCameraInfo& info, std::string_view name,

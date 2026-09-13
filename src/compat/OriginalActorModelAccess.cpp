@@ -1,4 +1,5 @@
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ModelUtil.hpp"
 #include "Game/Animation/XanimeCore.hpp"
 #include "Game/Animation/XanimePlayer.hpp"
@@ -612,4 +613,12 @@ namespace MR {
         pActor->mFlag.mIsStoppedAnim = false;
     }
 
+}  // namespace MR
+
+namespace MR {
+    void setBckFrameAtRandom(const LiveActor* pActor) {
+        s32 randomFrame = getBckCtrl(pActor)->getEnd() * MR::getRandom();
+
+        setBckFrame(pActor, randomFrame);
+    }
 }  // namespace MR

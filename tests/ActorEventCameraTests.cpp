@@ -510,8 +510,6 @@ namespace {
         const auto baseline = camera.actor_camera_info_count();
         camera.attach_event_camera_catalog(first_catalog);
         {
-            auto override =
-                smgpc::compat::ScopedCameraSystemServiceOverride(camera);
             auto valid_row = make_actor_camera_row(16, 5);
             auto *first = MR::createActorCameraInfo(
                 JMapInfoIter(&valid_row, 0));
@@ -552,8 +550,6 @@ namespace {
         auto second_catalog = smgpc::camera::EventCameraCatalog{};
         camera.attach_event_camera_catalog(second_catalog);
         {
-            auto override =
-                smgpc::compat::ScopedCameraSystemServiceOverride(camera);
             auto valid_row = make_actor_camera_row(54, 0);
             auto *second = MR::createActorCameraInfo(
                 JMapInfoIter(&valid_row, 0));

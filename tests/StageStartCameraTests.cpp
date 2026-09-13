@@ -613,8 +613,6 @@ namespace {
                     same_pose(*camera.game_camera_pose(), start_pose),
                 "stage camera ownership must retain the complete resolved camera and publish its pose");
 
-        auto camera_override =
-            smgpc::compat::ScopedCameraSystemServiceOverride(camera);
         require(!MR::isStartPosCameraEnd() &&
                     camera.start_position_camera_zero_interpolation_frames() ==
                         5U,
@@ -1050,8 +1048,6 @@ namespace {
                                       .calculation.pose;
         camera.set_game_camera_pose(generic_pose);
         {
-            auto camera_override =
-                smgpc::compat::ScopedCameraSystemServiceOverride(camera);
             require(throws_logic_error([] { MR::startStartPosCamera(true); }) &&
                         throws_logic_error([] { MR::endStartPosCamera(); }) &&
                         throws_logic_error(
@@ -1082,8 +1078,6 @@ namespace {
             const auto owner_generation =
                 camera.set_stage_start_camera(resolved);
             {
-                auto camera_override =
-                    smgpc::compat::ScopedCameraSystemServiceOverride(camera);
                 MR::endStartPosCamera();
                 MR::startStartPosCamera(true);
                 require(camera.game_camera_pose().has_value() &&
@@ -1095,8 +1089,6 @@ namespace {
                         !camera.game_camera_pose().has_value(),
                     "stage teardown must return the longer-lived camera service to baseline");
 
-            auto camera_override =
-                smgpc::compat::ScopedCameraSystemServiceOverride(camera);
             require(throws_logic_error([] { MR::startStartPosCamera(true); }) &&
                         camera.stage_start_camera() == nullptr &&
                         !camera.game_camera_pose().has_value(),
@@ -1126,8 +1118,6 @@ namespace {
             camera.set_stage_start_camera(stale);
         camera.set_game_camera_pose(generic_pose);
         camera.clear_stage_start_camera(stale_owner_generation);
-        auto camera_override =
-            smgpc::compat::ScopedCameraSystemServiceOverride(camera);
         require(camera.stage_start_camera() == nullptr &&
                     throws_logic_error([] { MR::startStartPosCamera(true); }) &&
                     camera.game_camera_pose().has_value() &&
@@ -1218,8 +1208,6 @@ namespace {
         const auto owner_generation =
             camera.set_stage_start_camera(*root.camera);
         {
-            auto camera_override =
-                smgpc::compat::ScopedCameraSystemServiceOverride(camera);
             MR::endStartPosCamera();
             require(camera.stage_start_camera() != nullptr &&
                         camera.stage_start_camera()->camera_key == "s:004e" &&

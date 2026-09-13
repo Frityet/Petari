@@ -229,3 +229,14 @@ namespace MR {
     }
 
 }  // namespace MR
+
+namespace MR {
+    void calcGravity(LiveActor* pActor) {
+        TVec3f gravity;
+        calcGravityVector(pActor, pActor->mPosition, &gravity, nullptr, 0);
+
+        if (!isNearZero(gravity)) {
+            pActor->mGravity.set(gravity);
+        }
+    }
+}  // namespace MR

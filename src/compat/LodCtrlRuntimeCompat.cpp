@@ -11,8 +11,6 @@
 
 
 #include <cmath>
-#include <cstdio>
-#include <cstring>
 #include <limits>
 #include <memory>
 #include <stdexcept>
@@ -21,20 +19,6 @@ namespace {
 
 
 
-
-    const char* createSubModelObjName(const LiveActor* pActor, const char* pSubName) {
-        if (pActor == nullptr || pSubName == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("A LOD object name requires an actor and submodel name.");
-        }
-        // Actor and submodel names already carry Game's CP932 identity bytes.
-        // Keep the original fullwidth parentheses in that same encoding.
-        constexpr char brackets[] = "\x81\x69\x81\x6a";
-        constexpr char format[] = "%s\x81\x69%s\x81\x6a";
-        const auto length = std::strlen(pActor->getName()) + std::strlen(pSubName) + std::strlen(brackets) + 1U;
-        auto* name = new char[length];
-        std::snprintf(name, length, format, pActor->getName(), pSubName);
-        return name;
-    }
 
     void setShadowVisibleSyncHostAll(LiveActor* actor, bool visible) {
         if (!actor || !actor->mShadowControllerList) {
@@ -49,16 +33,6 @@ namespace {
 }  // namespace
 
 namespace MR {
-
-    const char* createLowModelObjName(const LiveActor* pActor) {
-        return createSubModelObjName(pActor, "Low");
-    }
-
-    const char* createMiddleModelObjName(const LiveActor* pActor) {
-        return createSubModelObjName(pActor, "Middle");
-    }
-
-
 
     void copyTransRotateScale(const LiveActor* pSource, LiveActor* pDestination) {
         if (pSource == nullptr || pDestination == nullptr) {

@@ -52,3 +52,20 @@ namespace JGeometry {
                    fromWeight * from.w + toWeight * to.w);
     }
 }  // namespace JGeometry
+
+namespace JGeometry {
+    template <>
+    void TQuat4< f32 >::setEuler(f32 rx, f32 ry, f32 rz) {
+        f32 cosX = cos(static_cast< f64 >(0.5f * rx));
+        f32 cosY = cos(static_cast< f64 >(0.5f * ry));
+        f32 cosZ = cos(static_cast< f64 >(0.5f * rz));
+        f32 sinX = sin(static_cast< f64 >(0.5f * rx));
+        f32 sinY = sin(static_cast< f64 >(0.5f * ry));
+        f32 sinZ = sin(static_cast< f64 >(0.5f * rz));
+
+        x = (cosY * cosZ) * sinX - (sinY * sinZ) * cosX;
+        y = (sinY * cosZ) * cosX + (cosY * sinZ) * sinX;
+        z = (cosY * sinZ) * cosX - (sinY * cosZ) * sinX;
+        w = (cosY * cosZ) * cosX + (sinY * sinZ) * sinX;
+    }
+}  // namespace JGeometry

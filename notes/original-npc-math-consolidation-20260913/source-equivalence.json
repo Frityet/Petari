@@ -1,0 +1,68 @@
+[
+  {
+    "method": "makeQuatRotateRadian",
+    "reference": "decomp/src/Game/Util/MathUtil.cpp",
+    "native": "src/compat/GameMathCompat.cpp",
+    "body_equal": true
+  },
+  {
+    "method": "makeQuatRotateDegree",
+    "reference": "decomp/src/Game/Util/MathUtil.cpp",
+    "native": "src/compat/GameMathCompat.cpp",
+    "body_equal": true
+  },
+  {
+    "method": "makeAxisFrontUp",
+    "reference": "decomp/src/Game/Util/MathUtil.cpp",
+    "native": "src/compat/GameMathCompat.cpp",
+    "body_equal": true
+  },
+  {
+    "method": "isSameDirection",
+    "reference": "decomp/src/Game/Util/MathUtil.cpp",
+    "native": "src/compat/GameMathCompat.cpp",
+    "body_equal": true
+  },
+  {
+    "method": "isOppositeDirection",
+    "reference": "decomp/src/Game/Util/MathUtil.cpp",
+    "native": "src/compat/GameMathCompat.cpp",
+    "body_equal": true
+  },
+  {
+    "method": "clampVecAngleDeg",
+    "reference": "decomp/src/Game/Util/MathUtil.cpp",
+    "native": "src/compat/GameMathCompat.cpp",
+    "body_equal": true
+  },
+  {
+    "method": "turnQuatYDirRad",
+    "reference": "decomp/src/Game/Util/MathUtil.cpp",
+    "native": "src/compat/GameMathCompat.cpp",
+    "body_equal": true
+  },
+  {
+    "method": "turnQuat",
+    "reference": "decomp/src/Game/Util/MathUtil.cpp",
+    "native": "src/compat/GameMathCompat.cpp",
+    "body_equal": true
+  },
+  {
+    "method": "extractMtxTrans",
+    "reference": "decomp/src/Game/Util/MtxUtil.cpp",
+    "native": "src/compat/MtxCompat.cpp",
+    "body_equal": true
+  },
+  {
+    "method": "calcGravity",
+    "reference": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "native": "src/compat/GameGravityCompat.cpp",
+    "body_equal": true
+  },
+  {
+    "method": "setBckFrameAtRandom",
+    "reference": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "native": "src/compat/OriginalActorModelAccess.cpp",
+    "body_equal": true
+  }
+]

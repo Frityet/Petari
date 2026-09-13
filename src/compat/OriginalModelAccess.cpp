@@ -2,6 +2,7 @@
 #include <cstdio>
 #include "Game/Util/StringUtil.hpp"
 #include "Game/Util/ModelUtil.hpp"
+#include "Game/Util/FileUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MutexHolder.hpp"
 #include "Game/Animation/XanimePlayer.hpp"
@@ -15,6 +16,18 @@
 
 
 namespace MR {
+    bool isExistModel(const char* pName) {
+        char buff[0x100];
+        snprintf(buff, sizeof(buff), "/ObjectData/%s.arc", pName);
+        return isFileExist(buff, false);
+    }
+
+    bool isExistSubModel(const char* pModelName, const char* pSubModelName) {
+        char buff[0x100];
+        snprintf(buff, sizeof(buff), "%s%s", pModelName, pSubModelName);
+        return isExistModel(buff);
+    }
+
     ResTIMG* getTexture(ResourceHolder* pResourceHolder, const char* pTextureName) {
         return static_cast< ResTIMG* >(pResourceHolder->mFileInfoTable->getRes(pTextureName));
     }

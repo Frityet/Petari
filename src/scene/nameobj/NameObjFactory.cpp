@@ -204,6 +204,11 @@ namespace {
             "StarrySky",
         },
         NameObjFactory::Name2CreateFunc{
+            "SummerSky",
+            create_supported_name_obj<Sky>,
+            "SummerSky",
+        },
+        NameObjFactory::Name2CreateFunc{
             "AstroDomeSkyA",
             create_supported_name_obj<Sky>,
             "AstroDomeSkyA",
@@ -386,10 +391,6 @@ namespace {
     };
 
     constexpr auto cUnavailableCreatorTable = std::array{
-        UnavailableCreatorRecord{
-            "SummerSky",
-            "exact_space_inner_child_and_switch_runtime_unavailable",
-        },
         UnavailableCreatorRecord{
             "AstroDomeSky",
             "exact_astro_dome_sky_actor_and_arg_archive_runtime_unavailable",

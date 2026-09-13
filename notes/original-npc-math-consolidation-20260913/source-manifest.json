@@ -1,0 +1,47 @@
+[
+  {
+    "path": "decomp/src/Game/Animation/AnmPlayer.cpp",
+    "sha256": "6197adffe91501f448f74e2f5d2b623796e0cfae69142dcdc47e0fda6d8804ae",
+    "action": "modified"
+  },
+  {
+    "path": "src/JSystem/JGeometry/TQuat.cpp",
+    "sha256": "091bb5240430509fbd7563586fd0b18e1e64ffdf82d60edec6432c905a359649",
+    "action": "modified"
+  },
+  {
+    "path": "src/JSystem/JGeometry/TQuat.hpp",
+    "sha256": "f1266c8c271fabcb91a7ab54aa80cf1c9d2d52380a3b467dc927aab7e757184a",
+    "action": "modified"
+  },
+  {
+    "path": "src/compat/GameMathCompat.cpp",
+    "sha256": "19fab0b91ebc38932b8da43c59753fea9e9412f4db2acc175c6f2da23c5e017f",
+    "action": "modified"
+  },
+  {
+    "path": "src/compat/MtxCompat.cpp",
+    "sha256": "749dc89408da1a538f5446b2ae25a2a68d362345dea2800802850e2f887842d9",
+    "action": "modified"
+  },
+  {
+    "path": "src/compat/GameGravityCompat.cpp",
+    "sha256": "691ef36f0d2c21ce708117c4b2090fe89735df566a8d2e81eb9c12c9947cb986",
+    "action": "modified"
+  },
+  {
+    "path": "src/compat/OriginalActorModelAccess.cpp",
+    "sha256": "97823512d19f3bf86bcf2eb8c6af089882570fc8c675ce8abdf7f840ab479806",
+    "action": "modified"
+  },
+  {
+    "path": "src/compat/ActorShadowCsvCompat.cpp",
+    "sha256": "b81c12914223a75bfbf2c37010c83e151071152858c7083eae7925fea8b65d90",
+    "action": "modified"
+  },
+  {
+    "path": "src/compat/NPCActorRuntimeCompat.cpp",
+    "sha256": null,
+    "action": "deleted"
+  }
+]
