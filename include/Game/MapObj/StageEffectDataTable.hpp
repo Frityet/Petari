@@ -38,6 +38,7 @@ namespace MR {
         static void rumblePadStop(LiveActor*, const char*);
 
         static void shakeCameraMoving(NameObj*, const char*);
+        static void shakeStartCamera(LiveActor*, const char*);
         static void shakeStopCamera(LiveActor*, const char*);
         static void stopShakingCameraMoving(NameObj*, const char*);
     };

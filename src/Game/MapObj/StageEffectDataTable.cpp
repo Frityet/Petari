@@ -3,7 +3,90 @@
 #include "Game/Util.hpp"
 
 namespace {
-    enum CameraShakeType { Strong = 1, Normal = 2, NormalWeak = 3, Weak = 4, VeryWeak = 5 };
+    enum CameraShakeType { None = 0, Strong = 1, Normal = 2, NormalWeak = 3, Weak = 4, VeryWeak = 5 };
+
+    struct StageEffectCameraData {
+        const char* objectName;
+        CameraShakeType startShake;
+        f32 movingIntensity;
+        f32 movingSpeed;
+        CameraShakeType stopShake;
+        f32 distance;
+    };
+
+    struct StageEffectPadData {
+        const char* objectName;
+        const char* startPattern;
+        const char* movingPattern;
+        const char* stopPattern;
+    };
+
+    static StageEffectCameraData sStageEffectCameraDataTable[] = {
+        {"LavaHomeVolcanoInnerFlow", None, 0.3f, 2.2f, None, 0.0f},
+        {"LavaRotatePlanetStartStep", None, 0.0f, 0.0f, None, 0.0f},
+        {"OceanRingRuinsMove", NormalWeak, 0.0f, 0.0f, NormalWeak, 3e+03f},
+        {"OceanRingRuinsGearBig", None, 0.0f, 0.0f, None, 0.0f},
+        {"OceanRingRuinsGearSmall", None, 0.0f, 0.0f, None, 0.0f},
+        {"OceanRotateBridge", None, 0.0f, 0.0f, None, 3e+03f},
+        {"ShutterDoorA", None, 0.0f, 0.0f, Normal, 3e+03f},
+        {"ShutterDoorD", None, 0.0f, 0.0f, Normal, 3e+03f},
+        {"OceanSwingBoard", None, 0.0f, 0.0f, None, 0.0f},
+        {"RotateNutStep", None, 0.0f, 0.0f, None, 0.0f},
+        {"OnimasuPlanetRailMovePartsA", None, 0.0f, 0.0f, None, 0.0f},
+        {"GhostShipCaveMoveGroundA", None, 0.0f, 0.0f, None, 0.0f},
+        {"GhostShipCaveMoveGroundB", None, 0.0f, 0.0f, None, 0.0f},
+        {"WaterRoadCaveStepA", None, 0.0f, 0.0f, None, 0.0f},
+        {"TeresaRoomDoor", None, 0.1f, 2.2f, None, 0.0f},
+        {"LavaObstacleRockHomeA", None, 0.1f, 2.2f, None, 0.0f},
+        {"LavaObstacleRockShell", None, 0.1f, 2.2f, None, 0.0f},
+        {"ForestObstacleWoodA", None, 0.1f, 2.2f, None, 0.0f},
+        {"MiniMechaKoopaPartsMoveStepA", None, 0.0f, 0.0f, Normal, 1e+04f},
+        {"MiniMechaKoopaPartsCage", None, 0.0f, 0.0f, Normal, 1e+04f},
+        {"RayGunPlanetPartsScrew", NormalWeak, 0.0f, 0.0f, Normal, 1e+04f},
+        {"KoopaVS1PartsMoveStepA", Weak, 0.0f, 0.0f, Weak, -1.0f},
+        {"KoopaVS1PartsMoveStepB", NormalWeak, 0.0f, 0.0f, NormalWeak, -1.0f},
+        {"KoopaVS1PartsRotateMoveStepA", Weak, 0.0f, 0.0f, Weak, -1.0f},
+        {"KoopaVS1PartsRotateMoveStepB", Weak, 0.0f, 0.0f, Weak, -1.0f},
+        {"BeeWallClimbPartsA", Weak, 0.0f, 0.0f, Weak, -1.0f},
+        {"KoopaJrSmallShipA", Normal, 0.0f, 0.0f, Normal, 3e+03f},
+        {"IceVolcanoAppearStepA", None, 0.0f, 0.0f, Strong, 3e+03f},
+        {"IceVolcanoClimbingWall", None, 0.0f, 0.0f, Strong, 1e+04f},
+        {"BroadBeanMoveStepA", None, 0.0f, 0.0f, VeryWeak, -1.0f},
+        {"BroadBeanMoveStepB", None, 0.0f, 0.0f, VeryWeak, -1.0f},
+        {"HeavensDoorInsideCage", None, 0.15f, 1.2f, None, 1e+04f},
+    };
+
+    static StageEffectPadData sStageEffectPadDataTable[] = {
+        {"LavaHomeVolcanoInnerFlow", "中", "中", nullptr},
+        {"LavaRotatePlanetStartStep", nullptr, nullptr, nullptr},
+        {"OceanRingRuinsMove", nullptr, nullptr, "中"},
+        {"OceanRingRuinsGearBig", nullptr, nullptr, nullptr},
+        {"OceanRingRuinsGearSmall", nullptr, nullptr, nullptr},
+        {"OceanRotateBridge", nullptr, nullptr, "中"},
+        {"ShutterDoorA", nullptr, nullptr, "中"},
+        {"ShutterDoorD", nullptr, "微弱", "中"},
+        {"OceanSwingBoard", nullptr, nullptr, nullptr},
+        {"RotateNutStep", nullptr, nullptr, nullptr},
+        {"OnimasuPlanetRailMovePartsA", nullptr, nullptr, nullptr},
+        {"GhostShipCaveMoveGroundA", nullptr, nullptr, nullptr},
+        {"GhostShipCaveMoveGroundB", nullptr, nullptr, nullptr},
+        {"WaterRoadCaveStepA", nullptr, nullptr, nullptr},
+        {"TeresaRoomDoor", "中", nullptr, nullptr},
+        {"MiniMechaKoopaPartsMoveStepA", nullptr, nullptr, "中"},
+        {"MiniMechaKoopaPartsCage", nullptr, nullptr, "中"},
+        {"RayGunPlanetPartsScrew", "中", "微弱", "中"},
+        {"KoopaVS1PartsMoveStepA", "弱", nullptr, "弱"},
+        {"KoopaVS1PartsMoveStepB", "弱", nullptr, "弱"},
+        {"KoopaVS1PartsRotateMoveStepA", "弱", nullptr, "弱"},
+        {"KoopaVS1PartsRotateMoveStepB", "弱", nullptr, "弱"},
+        {"BeeWallClimbPartsA", "弱", nullptr, "弱"},
+        {"KoopaJrSmallShipA", "中", nullptr, "強"},
+        {"IceVolcanoAppearStepA", nullptr, "弱", "強"},
+        {"IceVolcanoClimbingWall", nullptr, "弱", "強"},
+        {"BroadBeanMoveStepA", nullptr, nullptr, "弱"},
+        {"BroadBeanMoveStepB", nullptr, nullptr, "弱"},
+        {"HeavensDoorInsideCage", nullptr, "弱", nullptr},
+    };
 
     static StageEffectSoundData sStageEffectSeDataTable[] = {
         {"LavaHomeVolcanoInnerFlow", 0, "SE_OJ_LV_LAVA_INCREASE_HOME", 0, 0xffffffff, 0},
@@ -162,8 +245,213 @@ namespace {
         {"ClockworkHandle", 0, "SE_OJ_LV_CLOCKWORK_HANDLE", 0, 0xffffffff, 0},
         {"SunkenShip", 0, 0, "SE_OJ_SUNKEN_SHIP_BREAK", 0xffffffff, 2}};
 
-    StageEffectSoundData* getStageEffectSeParam(const char*);
+    StageEffectCameraData* getStageEffectCameraParam(const char* pName) {
+        for (u32 i = 0; i < sizeof(sStageEffectCameraDataTable) / sizeof(StageEffectCameraData); i++) {
+            if (MR::isEqualString(pName, sStageEffectCameraDataTable[i].objectName)) {
+                return &sStageEffectCameraDataTable[i];
+            }
+        }
+        return nullptr;
+    }
 
-    void shakeCamera(CameraShakeType);
-    bool isDistanceValidShake(LiveActor*, const char*);
-};  // namespace
+    StageEffectPadData* getStageEffectPadParam(const char* pName) {
+        for (u32 i = 0; i < sizeof(sStageEffectPadDataTable) / sizeof(StageEffectPadData); i++) {
+            if (MR::isEqualString(pName, sStageEffectPadDataTable[i].objectName)) {
+                return &sStageEffectPadDataTable[i];
+            }
+        }
+        return nullptr;
+    }
+
+    StageEffectSoundData* getStageEffectSeParam(const char* pName) {
+        for (u32 i = 0; i < sizeof(sStageEffectSeDataTable) / sizeof(StageEffectSoundData); i++) {
+            if (MR::isEqualString(pName, sStageEffectSeDataTable[i].objectName)) {
+                return &sStageEffectSeDataTable[i];
+            }
+        }
+        return nullptr;
+    }
+
+    void shakeCamera(CameraShakeType type) {
+        switch (type) {
+        case Strong:
+            MR::shakeCameraStrong();
+            break;
+        case Normal:
+            MR::shakeCameraNormal();
+            break;
+        case NormalWeak:
+            MR::shakeCameraNormalWeak();
+            break;
+        case Weak:
+            MR::shakeCameraWeak();
+            break;
+        case VeryWeak:
+            MR::shakeCameraVeryWeak();
+            break;
+        default:
+            break;
+        }
+    }
+
+    bool isDistanceValidShake(LiveActor* pActor, const char* pName) {
+        f32 range = getStageEffectCameraParam(pName) != nullptr ? getStageEffectCameraParam(pName)->distance : 0.0f;
+        if (range == -1.0f) {
+            return MR::isOnPlayer(pActor);
+        }
+
+        f32 distance = MR::calcDistanceToPlayer(pActor);
+        return 0.0f < distance && distance < (getStageEffectCameraParam(pName) != nullptr ? getStageEffectCameraParam(pName)->distance : 0.0f);
+    }
+}
+
+namespace MR {
+    const char* StageEffect::getStartSe(const char* pName) {
+        return getStageEffectSeParam(pName) != nullptr ? getStageEffectSeParam(pName)->startSoundEffect : nullptr;
+    }
+
+    const char* StageEffect::getMovingSe(const char* pName) {
+        return getStageEffectSeParam(pName) != nullptr ? getStageEffectSeParam(pName)->movingSoundEffect : nullptr;
+    }
+
+    const char* StageEffect::getStopSe(const char* pName) {
+        return getStageEffectSeParam(pName) != nullptr ? getStageEffectSeParam(pName)->stopSoundEffect : nullptr;
+    }
+
+    s32 StageEffect::getStopSeSteps(const char* pName) {
+        return getStageEffectSeParam(pName) != nullptr ? getStageEffectSeParam(pName)->stopSoundEffectSteps : -1;
+    }
+
+    bool StageEffect::isRiddleSeTypeStop(const char* pName) {
+        return getStageEffectSeParam(pName) != nullptr ? getStageEffectSeParam(pName)->soundEffectType == 2 : false;
+    }
+
+    bool StageEffect::isExistStageEffectSeData(const char* pName) {
+        return getStageEffectSeParam(pName) != nullptr;
+    }
+
+    bool StageEffect::isExistStageEffectData(const char* pName) {
+        return getStageEffectCameraParam(pName) != nullptr || getStageEffectPadParam(pName) != nullptr || getStageEffectSeParam(pName) != nullptr;
+    }
+
+    void StageEffect::shakeStartCamera(LiveActor* pActor, const char* pName) {
+        if (isDistanceValidShake(pActor, pName)) {
+            shakeCamera(getStageEffectCameraParam(pName) != nullptr ? getStageEffectCameraParam(pName)->startShake : None);
+        }
+    }
+
+    void StageEffect::shakeStopCamera(LiveActor* pActor, const char* pName) {
+        if (isDistanceValidShake(pActor, pName)) {
+            shakeCamera(getStageEffectCameraParam(pName) != nullptr ? getStageEffectCameraParam(pName)->stopShake : None);
+        }
+    }
+
+    void StageEffect::shakeCameraMoving(NameObj* pActor, const char* pName) {
+        f32 intensity = getStageEffectCameraParam(pName) != nullptr ? getStageEffectCameraParam(pName)->movingIntensity : 0.0f;
+        if (intensity <= 0.0f) {
+            return;
+        }
+
+        f32 speed = getStageEffectCameraParam(pName) != nullptr ? getStageEffectCameraParam(pName)->movingSpeed : 0.0f;
+        MR::shakeCameraInfinity(pActor, intensity, speed);
+    }
+
+    void StageEffect::stopShakingCameraMoving(NameObj* pActor, const char* pName) {
+        f32 intensity = getStageEffectCameraParam(pName) != nullptr ? getStageEffectCameraParam(pName)->movingIntensity : 0.0f;
+        if (intensity <= 0.0f) {
+            return;
+        }
+
+        MR::stopShakingCamera(pActor);
+    }
+
+    void StageEffect::rumblePadStart(LiveActor* pActor, const char* pName) {
+        if (!isDistanceValidShake(pActor, pName)) {
+            return;
+        }
+
+        const char* pPattern = getStageEffectPadParam(pName) != nullptr ? getStageEffectPadParam(pName)->startPattern : nullptr;
+        if (pPattern != nullptr) {
+            MR::tryRumblePad(pActor, pPattern, 0);
+        }
+    }
+
+    void StageEffect::rumblePadStop(LiveActor* pActor, const char* pName) {
+        if (!isDistanceValidShake(pActor, pName)) {
+            return;
+        }
+
+        const char* pPattern = getStageEffectPadParam(pName) != nullptr ? getStageEffectPadParam(pName)->stopPattern : nullptr;
+        if (pPattern != nullptr) {
+            MR::tryRumblePad(pActor, pPattern, 0);
+        }
+    }
+
+    void StageEffect::rumblePadMoving(LiveActor* pActor, const char* pName) {
+        const char* pPattern = getStageEffectPadParam(pName) != nullptr ? getStageEffectPadParam(pName)->movingPattern : nullptr;
+        if (pPattern != nullptr) {
+            MR::tryRumblePad(pActor, pPattern, 0);
+        }
+    }
+
+    bool StageEffect::tryStageEffectStart(LiveActor* pActor, const char* pName) {
+        if (!isExistStageEffectData(pName)) {
+            return false;
+        }
+
+        if (MR::isRegisteredEffect(pActor, "Start")) {
+            MR::emitEffect(pActor, "Start");
+        }
+
+        const char* pSound = getStartSe(pName);
+        if (pSound != nullptr) {
+            MR::startSound(pActor, pSound, -1, -1);
+        }
+
+        bool isRiddle = getStageEffectSeParam(pName) != nullptr ? getStageEffectSeParam(pName)->soundEffectType == 1 : false;
+        if (isRiddle) {
+            MR::startSystemSE("SE_SY_READ_RIDDLE_S", -1, -1);
+        }
+
+        rumblePadStart(pActor, pName);
+        shakeStartCamera(pActor, pName);
+        return true;
+    }
+
+    bool StageEffect::tryStageEffectMoving(LiveActor* pActor, const char* pName) {
+        if (!isExistStageEffectData(pName)) {
+            return false;
+        }
+
+        const char* pSound = getMovingSe(pName);
+        if (pSound != nullptr) {
+            MR::startLevelSound(pActor, pSound, -1, -1, -1);
+        }
+
+        rumblePadMoving(pActor, pName);
+        return true;
+    }
+
+    bool StageEffect::tryStageEffectStop(LiveActor* pActor, const char* pName) {
+        if (!isExistStageEffectData(pName)) {
+            return false;
+        }
+
+        if (MR::isRegisteredEffect(pActor, "Stop")) {
+            MR::emitEffect(pActor, "Stop");
+        }
+
+        const char* pSound = getStopSe(pName);
+        if (pSound != nullptr) {
+            MR::startSound(pActor, pSound, -1, -1);
+        }
+
+        if (isRiddleSeTypeStop(pName)) {
+            MR::startSystemSE("SE_SY_READ_RIDDLE_S", -1, -1);
+        }
+
+        rumblePadStop(pActor, pName);
+        shakeStopCamera(pActor, pName);
+        return true;
+    }
+}
