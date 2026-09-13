@@ -52,7 +52,6 @@ namespace smgpc::compat { class StarPointerDepthOwnership; class DrawSyncManager
 
 namespace smgpc::runtime {
 
-    class ScreenAlphaCaptureService;
     class SystemConfigService;
 
     enum class RuntimeContextSceneServiceMode {
@@ -372,7 +371,6 @@ namespace smgpc::runtime {
         RflService _rfl;
         aurora::WpadShakeGesture _core_pad_gesture;
         aurora::WpadShakeGesture _sub_pad_gesture;
-        std::unique_ptr<ScreenAlphaCaptureService> _screen_alpha_capture;
         std::unique_ptr<JUTTexture> _capture_screen_texture;
         std::unique_ptr<CaptureScreenDirector> _capture_screen_director;
         std::unique_ptr<smgpc::scene::NameObjLifecycleService> _owned_name_obj_lifecycle;

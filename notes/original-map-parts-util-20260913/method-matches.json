@@ -1,0 +1,292 @@
+[
+  {
+    "name": "getBodySensor__2MRFP9LiveActor",
+    "size": "12",
+    "match_percent": 96.666664
+  },
+  {
+    "name": "setBodySensorType__2MRFP9LiveActorUl",
+    "size": "60",
+    "match_percent": 99.333336
+  },
+  {
+    "name": "setBodySensorTypeMapObj__2MRFP9LiveActor",
+    "size": "48",
+    "match_percent": 99.166664
+  },
+  {
+    "name": "setBodySensorTypePress__2MRFP9LiveActor",
+    "size": "48",
+    "match_percent": 99.166664
+  },
+  {
+    "name": "setBodySensorTypeMoveCollision__2MRFP9LiveActor",
+    "size": "48",
+    "match_percent": 99.166664
+  },
+  {
+    "name": "isBodySensorTypeMapObj__2MRFPC9LiveActor",
+    "size": "48",
+    "match_percent": 99.166664
+  },
+  {
+    "name": "receiveMapPartsRotateMsg__2MRFP9LiveActorUlP17MapPartsRailMoverP19MapPartsRailRotator",
+    "size": "68",
+    "match_percent": 100.0
+  },
+  {
+    "name": "tryStartMapPartsRotateAtPoint__2MRFP9LiveActorP17MapPartsRailMoverP19MapPartsRailRotator",
+    "size": "144",
+    "match_percent": 100.0
+  },
+  {
+    "name": "tryEndMapPartsRotateAtPoint__2MRFP9LiveActorP17MapPartsRailMoverP19MapPartsRailRotator",
+    "size": "72",
+    "match_percent": 100.0
+  },
+  {
+    "name": "tryStartMapPartsRotateBetweenPoints__2MRFP9LiveActorP17MapPartsRailMoverP19MapPartsRailRotator",
+    "size": "168",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isMapPartsRailMovePassedStartPointRepeat__2MRFPC17MapPartsRailMover",
+    "size": "28",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isMapPartsRailMovePassedEndPointRepeat__2MRFPC17MapPartsRailMover",
+    "size": "28",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getMapPartsObjectName__2MRFPcUlRC12JMapInfoIter",
+    "size": "128",
+    "match_percent": 99.6875
+  },
+  {
+    "name": "getMapPartsObjectNameIfExistShapeID__2MRFPcUlRC12JMapInfoIter",
+    "size": "164",
+    "match_percent": 99.756096
+  },
+  {
+    "name": "getMapPartsObjectName__2MRFPcUlPCcl",
+    "size": "28",
+    "match_percent": 98.57143
+  },
+  {
+    "name": "initMapPartsClipping__2MRFP9LiveActorRC12JMapInfoIterPQ29JGeometry8TVec3<f>b",
+    "size": "320",
+    "match_percent": 99.75
+  },
+  {
+    "name": "isMapPartsPressOn__2MRFRC12JMapInfoIter",
+    "size": "68",
+    "match_percent": 99.411766
+  },
+  {
+    "name": "createMapPartsRailGuideDrawer__2MRFP9LiveActorPCcRC12JMapInfoIter",
+    "size": "80",
+    "match_percent": 100.0
+  },
+  {
+    "name": "initMapPartsShadow__2MRFP9LiveActorRC12JMapInfoIter",
+    "size": "252",
+    "match_percent": 68.79365
+  },
+  {
+    "name": "getJMapInfoArgNoInit__26@unnamed@MapPartsUtil_cpp@FRC12JMapInfoIterPCcPl",
+    "size": "144",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getJMapInfoArgNoInit__26@unnamed@MapPartsUtil_cpp@FRC12JMapInfoIterPCcPf",
+    "size": "108",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getMapPartsArgMoveConditionType__2MRFPlRC12JMapInfoIter",
+    "size": "20",
+    "match_percent": 98.0
+  },
+  {
+    "name": "getMapPartsArgRotateSpeed__2MRFPfRC12JMapInfoIter",
+    "size": "20",
+    "match_percent": 98.0
+  },
+  {
+    "name": "getMapPartsArgRotateTime__2MRFPlRC12JMapInfoIter",
+    "size": "20",
+    "match_percent": 98.0
+  },
+  {
+    "name": "getMapPartsArgRotateAngle__2MRFPfRC12JMapInfoIter",
+    "size": "20",
+    "match_percent": 98.0
+  },
+  {
+    "name": "getMapPartsArgRotateAxis__2MRFPlRC12JMapInfoIter",
+    "size": "20",
+    "match_percent": 98.0
+  },
+  {
+    "name": "getMapPartsArgRotateAccelType__2MRFPlRC12JMapInfoIter",
+    "size": "20",
+    "match_percent": 98.0
+  },
+  {
+    "name": "getMapPartsArgRotateStopTime__2MRFPlRC12JMapInfoIter",
+    "size": "20",
+    "match_percent": 98.0
+  },
+  {
+    "name": "getMapPartsArgRotateType__2MRFPlRC12JMapInfoIter",
+    "size": "20",
+    "match_percent": 98.0
+  },
+  {
+    "name": "getMapPartsArgShadowType__2MRFPlRC12JMapInfoIter",
+    "size": "20",
+    "match_percent": 98.0
+  },
+  {
+    "name": "getMapPartsArgSignMotionType__2MRFPlRC12JMapInfoIter",
+    "size": "20",
+    "match_percent": 98.0
+  },
+  {
+    "name": "getMapPartsArgMovePosture__2MRFPlPC9LiveActor",
+    "size": "16",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getMapPartsArgMoveStopType__2MRFPlPC9LiveActor",
+    "size": "16",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getMapPartsArgRailGuideType__2MRFPlPC9LiveActor",
+    "size": "16",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getMapPartsArgRailInitPosType__2MRFPlPC9LiveActor",
+    "size": "16",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getMapPartsArgMoveSpeed__2MRFPfPC9LiveActor",
+    "size": "16",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getMapPartsArgStopTime__2MRFPlPC9LiveActor",
+    "size": "16",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getMapPartsArgAccelTime__2MRFPlPC9LiveActor",
+    "size": "16",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getMapPartsArgSpeedCalcType__2MRFPlPC9LiveActor",
+    "size": "16",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getMapPartsArgRailRotateSpeed__2MRFPfPC9LiveActorl",
+    "size": "20",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getMapPartsArgRailRotateTime__2MRFPlPC9LiveActorl",
+    "size": "20",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getMapPartsArgRailRotateAngle__2MRFPfPC9LiveActorl",
+    "size": "20",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getMapPartsArgRailRotateAxis__2MRFPlPC9LiveActorl",
+    "size": "20",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getMapPartsArgRailRotateType__2MRFPlPC9LiveActorl",
+    "size": "20",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getMapPartsArgSpeedCalcType__2MRFPlPC9LiveActorl",
+    "size": "20",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getMapPartsArgMoveTimeToNextPoint__2MRFPlPC9LiveActor",
+    "size": "16",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isMapPartsSignMotionTypeMoveStart__2MRFl",
+    "size": "32",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isMapPartsSignMotionTypeMoveWait__2MRFl",
+    "size": "32",
+    "match_percent": 100.0
+  },
+  {
+    "name": "hasMapPartsMoveStartSignMotion__2MRFl",
+    "size": "68",
+    "match_percent": 100.0
+  },
+  {
+    "name": "hasMapPartsVanishSignMotion__2MRFl",
+    "size": "48",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isMapPartsShadowTypeNone__2MRFl",
+    "size": "12",
+    "match_percent": 100.0
+  },
+  {
+    "name": "hasMapPartsShadow__2MRFl",
+    "size": "12",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isMoveStartTypeUnconditional__2MRFl",
+    "size": "12",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isMoveStartTypePlayerOnStopEnd__2MRFl",
+    "size": "16",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isMapPartsRailInitPosTypeRailPos__2MRFl",
+    "size": "12",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isMapPartsRailInitPosTypeRailPoint__2MRFl",
+    "size": "16",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isMapPartsRailInitPosTypePoint0__2MRFl",
+    "size": "16",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isMapPartsRailSpeedCalcTypeTime__2MRFl",
+    "size": "16",
+    "match_percent": 100.0
+  }
+]

@@ -477,6 +477,10 @@ namespace JGeometry {
             zero();
         }
 
+        void setPSZeroVec() {
+            zero();
+        }
+
         [[nodiscard]] bool isZero() const {
             return squared() <= TUtil<f32>::epsilon();
         }

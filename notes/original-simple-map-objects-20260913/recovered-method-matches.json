@@ -1,0 +1,17 @@
+[
+  {
+    "name": "initialize__11MapObjActorFRC12JMapInfoIterRC19MapObjActorInitInfo",
+    "match_percent": 99.078575,
+    "size": "2800"
+  },
+  {
+    "name": "getSeesaw1AxisAngularSpeed__15MapObjActorUtilFPC11MapObjActor",
+    "match_percent": 100.0,
+    "size": "12"
+  },
+  {
+    "name": "forceRotateSeesaw1Axis__15MapObjActorUtilFPC11MapObjActorf",
+    "match_percent": 100.0,
+    "size": "12"
+  }
+]

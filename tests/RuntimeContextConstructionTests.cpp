@@ -1,7 +1,5 @@
 #include "runtime/RuntimeContext.hpp"
-#include "runtime/ScreenAlphaCaptureService.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "Game/Screen/ScreenAlphaCapture.hpp"
 #include "Game/System/ScenarioDataParser.hpp"
 #include "Game/Camera/CameraContext.hpp"
 #include "Game/Effect/ParticleResourceHolder.hpp"
@@ -103,10 +101,6 @@ int main() {
         require(smgpc::runtime::SystemConfigService::active() == nullptr, "failed/destroyed runtime retains console settings owner");
         require(smgpc::compat::name_obj_runtime_state_count() == objects, "failed/destroyed runtime retains NameObj callbacks");
         require(heap->available_bytes() == expected_capacity, "failed/destroyed runtime retains mapped texture storage");
-        bool absent = false;
-        try { (void)smgpc::runtime::ScreenAlphaCaptureService::active(); }
-        catch (const std::logic_error&) { absent = true; }
-        require(absent, "failed/destroyed runtime retains screen-alpha ownership");
     };
 
     {

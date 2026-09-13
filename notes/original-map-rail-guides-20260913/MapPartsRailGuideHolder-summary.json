@@ -1,0 +1,22 @@
+[
+  {
+    "name": "__ct__23MapPartsRailGuideHolderFv",
+    "match_percent": 99.47369
+  },
+  {
+    "name": "createRailGuide__23MapPartsRailGuideHolderFP9LiveActorPCcRC12JMapInfoIter",
+    "match_percent": 95.17242
+  },
+  {
+    "name": "init__23MapPartsRailGuideHolderFRC12JMapInfoIter",
+    "match_percent": 100.0
+  },
+  {
+    "name": "find__23MapPartsRailGuideHolderFl",
+    "match_percent": 97.0
+  },
+  {
+    "name": "__dt__23MapPartsRailGuideHolderFv",
+    "match_percent": 100.0
+  }
+]

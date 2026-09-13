@@ -13,7 +13,6 @@
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "compat/JutTextureAllocation.hpp"
-#include "runtime/ScreenAlphaCaptureService.hpp"
 #include "runtime/ConsoleNandImport.hpp"
 #include "runtime/SystemConfigService.hpp"
 #include "Game/System/RenderMode.hpp"
@@ -46,7 +45,6 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Screen/CaptureScreenDirector.hpp"
 #include "Game/Screen/LayoutActor.hpp"
-#include "Game/Screen/ScreenAlphaCapture.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "layout/LayoutHost.hpp"
 #include "layout/LayoutRuntime.hpp"
@@ -556,10 +554,8 @@ namespace smgpc::runtime {
                 attach_scene_execution(*_owned_scene_execution);
                 attach_scene_lifecycle(*_owned_scene_lifecycle);
             }
-            _screen_alpha_capture = std::make_unique<ScreenAlphaCaptureService>();
             _capture_screen_director = std::make_unique<CaptureScreenDirector>();
             _capture_screen_texture.reset(smgpc::compat::get_owned_jut_texture(_capture_screen_director->getResTIMG()));
-            MR::createScreenAlphaSceneObj(0, 1.0F);
             _logger.info(logging::Category::APP, logging::Message{"Using SMG disc image through Aurora DVD"});
             if (const auto message_archive = _dvd.find_first({
                     std::filesystem::path("KrKorean") / "MessageData" / "Message.arc",
@@ -638,7 +634,6 @@ namespace smgpc::runtime {
         _scheduler.clear();
         _capture_screen_director.reset();
         _capture_screen_texture.reset();
-        _screen_alpha_capture.reset();
         _disabled_object_audio.reset();
     }
 

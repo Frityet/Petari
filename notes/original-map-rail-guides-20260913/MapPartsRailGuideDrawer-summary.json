@@ -1,0 +1,78 @@
+[
+  {
+    "name": "__ct__23MapPartsRailGuideDrawerFP9LiveActorPCc",
+    "match_percent": 100.0
+  },
+  {
+    "name": "init__23MapPartsRailGuideDrawerFRC12JMapInfoIter",
+    "match_percent": 100.0
+  },
+  {
+    "name": "start__23MapPartsRailGuideDrawerFv",
+    "match_percent": 100.0
+  },
+  {
+    "name": "end__23MapPartsRailGuideDrawerFv",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isWorking__23MapPartsRailGuideDrawerCFv",
+    "match_percent": 100.0
+  },
+  {
+    "name": "show__23MapPartsRailGuideDrawerFv",
+    "match_percent": 100.0
+  },
+  {
+    "name": "hide__23MapPartsRailGuideDrawerFv",
+    "match_percent": 100.0
+  },
+  {
+    "name": "initGuidePoints__23MapPartsRailGuideDrawerFRC12JMapInfoIter",
+    "match_percent": 99.87952
+  },
+  {
+    "name": "exeDrawForward__23MapPartsRailGuideDrawerFv",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__sinit_\\MapPartsRailGuideDrawer_cpp",
+    "match_percent": 98.84615
+  },
+  {
+    "name": "__ct__Q226NrvMapPartsRailGuideDrawer15HostTypeHideAllFv",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__ct__Q226NrvMapPartsRailGuideDrawer15HostTypeDrawAllFv",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__ct__Q226NrvMapPartsRailGuideDrawer19HostTypeDrawForwardFv",
+    "match_percent": 100.0
+  },
+  {
+    "name": "execute__Q226NrvMapPartsRailGuideDrawer19HostTypeDrawForwardCFP5Spine",
+    "match_percent": 100.0
+  },
+  {
+    "name": "execute__Q226NrvMapPartsRailGuideDrawer15HostTypeDrawAllCFP5Spine",
+    "match_percent": 100.0
+  },
+  {
+    "name": "execute__Q226NrvMapPartsRailGuideDrawer15HostTypeHideAllCFP5Spine",
+    "match_percent": 100.0
+  },
+  {
+    "name": "for_each<PP22MapPartsRailGuidePoint,Q23std23mem_fun_t<v,9LiveActor>>__3stdFPP22MapPartsRailGuidePointPP22MapPartsRailGuidePointQ23std23mem_fun_t<v,9LiveActor>_Q23std23mem_fun_t<v,9LiveActor>",
+    "match_percent": 100.0
+  },
+  {
+    "name": "push_back__Q22MR56Vector<Q22MR41FixedArray<P22MapPartsRailGuidePoint,256>>FRCP22MapPartsRailGuidePoint",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__dt__23MapPartsRailGuideDrawerFv",
+    "match_percent": 100.0
+  }
+]

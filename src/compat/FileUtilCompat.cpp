@@ -67,25 +67,37 @@ namespace MR {
     }
 
     JKRMemArchive* mountArchive(const char* pFilePath, JKRHeap* pHeap) {
-        char filePath[256];
-        makeFileNameConsideringLanguage(filePath, sizeof(filePath), pFilePath);
-        if (pHeap == nullptr) pHeap = getCurrentHeap();
-        smgpc::compat::JkrHostAllocationScope host;
-        auto* mounts = smgpc::runtime::ArchiveMountService::active();
-        if (mounts == nullptr)
-            aurora::throw_host_exception<std::logic_error>("Archive mounting requires its native mount owner");
-        return mounts->mount(filePath, pHeap);
+        mountAsyncArchive(pFilePath, pHeap);
+
+        return receiveArchive(pFilePath);
     }
 
     void mountAsyncArchive(const char* pFilePath, JKRHeap* pHeap) {
-        (void)mountArchive(pFilePath, pHeap);
+        char filePath[256];
+        makeFileNameConsideringLanguage(filePath, sizeof(filePath), pFilePath);
+
+        SingletonHolder< FileLoader >::get()->requestMountArchive(filePath, pHeap, false);
     }
 
     void mountAsyncArchiveByObjectOrLayoutName(const char* pFilePrefix, JKRHeap* pHeap) {
-        char path[256]{};
-        if (makeObjectArchiveFileNameFromPrefix(path, sizeof(path), pFilePrefix, false) ||
-            makeLayoutArchiveFileNameFromPrefix(path, sizeof(path), pFilePrefix, false)) {
-            (void)mountArchive(path, pHeap);
+        JKRHeap* pLocalHeap;
+
+        if (pHeap != nullptr) {
+            pLocalHeap = pHeap;
+        } else {
+            pLocalHeap = getAproposHeapForSceneArchive(0.03f);
+        }
+
+        char objArcPath[256];
+        bool isExistObjArc = makeObjectArchiveFileNameFromPrefix(objArcPath, sizeof(objArcPath), pFilePrefix, false);
+
+        char layoutArcPath[256];
+        bool isExistLayoutArc = makeLayoutArchiveFileNameFromPrefix(layoutArcPath, sizeof(layoutArcPath), pFilePrefix, false);
+
+        if (isExistObjArc) {
+            mountAsyncArchive(objArcPath, pLocalHeap);
+        } else if (isExistLayoutArc) {
+            mountAsyncArchive(layoutArcPath, pLocalHeap);
         }
     }
 
@@ -99,6 +111,12 @@ namespace MR {
     JKRMemArchive* receiveArchive(const char* pFilePath) {
         char filePath[256];
         makeFileNameConsideringLanguage(filePath, sizeof(filePath), pFilePath);
+        // FileLoader owns the original request and completion event. The native
+        // archive backing is published by that worker before it signals read done.
+        if (auto* loader = SingletonHolder<FileLoader>::get()) {
+            if (const auto* request = loader->getRequestFileInfoConst(filePath))
+                request->mFileEntry->waitReadDone();
+        }
         auto* mounts = smgpc::runtime::ArchiveMountService::active();
         return mounts ? mounts->receive(filePath) : nullptr;
     }
@@ -172,7 +190,10 @@ namespace MR {
     }
 
     bool isMountedArchive(const char* pFilePath) {
-        return receiveArchive(pFilePath) != nullptr;
+        char filePath[256];
+        makeFileNameConsideringLanguage(filePath, sizeof(filePath), pFilePath);
+        auto* mounts = smgpc::runtime::ArchiveMountService::active();
+        return mounts && mounts->receive(filePath) != nullptr;
     }
 
     bool isLoadedObjectOrLayoutArchive(const char* pFilePrefix) {

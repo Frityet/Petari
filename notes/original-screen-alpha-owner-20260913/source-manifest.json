@@ -1,0 +1,9 @@
+{
+  "src/Game/Screen/ScreenAlphaCapture.cpp": "be0035abd69e882ffa0a5b8ffb24db44c2015cda55358c015a615867593c9a90",
+  "src/Game/Screen/ScreenAlphaCapture.hpp": "a205e20721990bea2d196ed1a1fc6e6db712ed8f31fa935c5a5621792a856b58",
+  "src/runtime/RuntimeContext.cpp": "064a7c126a746f4e8308c867711e773ad13fbdfba7942094093451bfbcecdf7d",
+  "src/runtime/RuntimeContext.hpp": "c0c135cbb1b9fa4e19fd5be61d06425487cb536e6ee3b686ef744dba523c81cc",
+  "src/runtime/screen/ScreenAlphaCapture.cpp": "deleted",
+  "src/runtime/ScreenAlphaCaptureService.hpp": "deleted",
+  "tests/RuntimeContextConstructionTests.cpp": "6613c75c87d8fdffef0bca155aecba9692ca56bcdb35e529bd0d7cbf54f70930"
+}

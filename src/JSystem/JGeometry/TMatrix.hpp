@@ -299,6 +299,10 @@ namespace JGeometry {
             mult33(vector, vector);
         }
 
+        void setRotateDegree(const TVec3f& rRot) {
+            setRotate(rRot * (PI / 180.0f));
+        }
+
         void setRotate(const TVec3f& rRot) {
             f32 z = rRot.z;
             f32 y = rRot.y;

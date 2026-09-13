@@ -46,6 +46,7 @@
 #include "Game/MapObj/ClipAreaHolder.hpp"
 #include "Game/MapObj/CoinRotater.hpp"
 #include "Game/MapObj/PurpleCoinHolder.hpp"
+#include "Game/MapObj/MapPartsRailGuideHolder.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjGroup.hpp"
 #include "Game/NameObj/NameObjExecuteHolder.hpp"
@@ -63,6 +64,7 @@
 #include "Game/Screen/SceneWipeHolder.hpp"
 #include "Game/Screen/CinemaFrame.hpp"
 #include "Game/Screen/CaptureScreenDirector.hpp"
+#include "Game/Screen/ScreenAlphaCapture.hpp"
 #include "Game/Map/NamePosHolder.hpp"
 #include "Game/Screen/LensFlare.hpp"
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
@@ -95,6 +97,7 @@ namespace {
         return smgpc::resource::encode_cp932(name);
     }
 
+    const std::string cScreenAlphaCaptureName = encode_owner_name("アルファテクスチャ取り込み");
     const std::string cTalkDirectorName = encode_owner_name("会話ディレクター");
     const std::string cCameraDirectorName = encode_owner_name("カメラ管理");
     const std::string cGravityManagerName = encode_owner_name("重力");
@@ -629,6 +632,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new ClipAreaHolder(cClipAreaHolderName.c_str());
     case SceneObj_PurpleCoinHolder:
         return new PurpleCoinHolder();
+    case SceneObj_MapPartsRailGuideHolder:
+        return new MapPartsRailGuideHolder();
     case SceneObj_CoinRotater:
         return new CoinRotater(cCoinRotaterName.c_str());
     case SceneObj_SensorHitChecker:
@@ -653,6 +658,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new NameObjGroup("IgnorePauseNameObj", 16);
     case SceneObj_NamePosHolder:
         return new NamePosHolder();
+    case SceneObj_ScreenAlphaCapture:
+        return new ScreenAlphaCapture(cScreenAlphaCaptureName.c_str());
     case SceneObj_CinemaFrame:
         return new CinemaFrame(true);
     case SceneObj_SceneWipeHolder:

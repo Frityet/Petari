@@ -1,0 +1,62 @@
+[
+  {
+    "path": "decomp/include/Game/MapObj/MapPartsRailRotator.hpp",
+    "sha256": "a851de768ddfa988a4c843de99e76f7f2af8a2661dc485f3257124b57706dd8f"
+  },
+  {
+    "path": "decomp/src/Game/MapObj/MapPartsRailRotator.cpp",
+    "sha256": "0eea86fd870e14e635ecf3374950ef580e3e6bab3fd5a0a1a5bc61ba8e39be70"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsRailRotator.hpp",
+    "sha256": "a851de768ddfa988a4c843de99e76f7f2af8a2661dc485f3257124b57706dd8f"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsRailRotator.cpp",
+    "sha256": "0eea86fd870e14e635ecf3374950ef580e3e6bab3fd5a0a1a5bc61ba8e39be70"
+  },
+  {
+    "path": "decomp/include/Game/MapObj/MapPartsSeesaw1AxisRotator.hpp",
+    "sha256": "0181c74dc6115b002882e926564a01106b306799f726e065e7dab84be2c1116a"
+  },
+  {
+    "path": "decomp/src/Game/MapObj/MapPartsSeesaw1AxisRotator.cpp",
+    "sha256": "6a636e0a3d4a36035c7a22afe7863c0cdc39066bc792d1becbc05cac736bb818"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsSeesaw1AxisRotator.hpp",
+    "sha256": "0181c74dc6115b002882e926564a01106b306799f726e065e7dab84be2c1116a"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsSeesaw1AxisRotator.cpp",
+    "sha256": "6a636e0a3d4a36035c7a22afe7863c0cdc39066bc792d1becbc05cac736bb818"
+  },
+  {
+    "path": "decomp/include/Game/MapObj/MapPartsSeesaw2AxisRotator.hpp",
+    "sha256": "76247266af8c87b457b21238a07cb7d2af5d52741431e23b1c042f348b61fbdb"
+  },
+  {
+    "path": "decomp/src/Game/MapObj/MapPartsSeesaw2AxisRotator.cpp",
+    "sha256": "1c8eb7fb02f15324e6b49f7a7303fe0823103154ed28eb540db2225b843da699"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsSeesaw2AxisRotator.hpp",
+    "sha256": "76247266af8c87b457b21238a07cb7d2af5d52741431e23b1c042f348b61fbdb"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsSeesaw2AxisRotator.cpp",
+    "sha256": "1c8eb7fb02f15324e6b49f7a7303fe0823103154ed28eb540db2225b843da699"
+  },
+  {
+    "path": "decomp/include/Game/MapObj/MapPartsRotator.hpp",
+    "sha256": "cc54e5f6168ebe2eb514b9053c8a00b785c6b72c9b11830e884200e6ec11885e"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsRotator.hpp",
+    "sha256": "cc54e5f6168ebe2eb514b9053c8a00b785c6b72c9b11830e884200e6ec11885e"
+  },
+  {
+    "path": "src/JSystem/JGeometry/TMatrix.hpp",
+    "sha256": "7911def0965c2da7f752c71f74b94f2a0d08f34eca7a3f499560202c035a91dd"
+  }
+]
