@@ -1,6 +1,7 @@
 #include "Game/LiveActor/ClippingActorInfo.hpp"
 #include "Game/LiveActor/ClippingJudge.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/ViewGroupCtrl.hpp"
 #include "Game/Util.hpp"
 
 ClippingActorInfo::ClippingActorInfo(LiveActor* pActor) {
@@ -26,10 +27,9 @@ void ClippingActorInfo::judgeClipping() {
     }
 }
 
-/*
 bool ClippingActorInfo::isJudgedToClip() const {
     s32 farClipLevel = mFarClipLevel;
-    if (*_14 == 1) {
+    if (_14->_0 == true) {
         farClipLevel = 0;
     }
 
@@ -37,7 +37,6 @@ bool ClippingActorInfo::isJudgedToClip() const {
     ClippingJudge* judge = MR::getClippingJudge();
     return judge->isJudgedToClipFrustum(*_4, val, farClipLevel);
 }
-*/
 
 bool ClippingActorInfo::isGroupClipping() const {
     return mInfo;
@@ -75,6 +74,14 @@ void ClippingActorInfoList::add(ClippingActorInfo* pInfo) {
     _4++;
 }
 
+ClippingActorInfo* ClippingActorInfoList::remove(LiveActor* pActor) {
+    s32 index = 0;
+    ClippingActorInfo* pInfo = find(pActor, &index);
+    mClippingActorList[index] = mClippingActorList[_4 - 1];
+    _4--;
+    return pInfo;
+}
+
 ClippingActorInfo* ClippingActorInfoList::find(const LiveActor* pActor, s32* pIndex) const {
     for (s32 i = 0; i < _4; i++) {
         ClippingActorInfo* inf = mClippingActorList[i];
@@ -91,7 +98,15 @@ ClippingActorInfo* ClippingActorInfoList::find(const LiveActor* pActor, s32* pIn
     return mClippingActorList[0];
 }
 
-// ClippingActorInfoList::findOrNone
+ClippingActorInfo* ClippingActorInfoList::findOrNone(const LiveActor* pActor) const {
+    for (s32 i = _4 - 1; i >= 0; i--) {
+        ClippingActorInfo* pInfo = mClippingActorList[i];
+        if (pInfo->mActor == pActor) {
+            return pInfo;
+        }
+    }
+    return nullptr;
+}
 
 bool ClippingActorInfoList::isInList(const LiveActor* pActor) const {
     for (s32 i = 0; i < _4; i++) {
