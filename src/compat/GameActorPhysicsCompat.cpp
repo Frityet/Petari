@@ -119,11 +119,6 @@ namespace MR {
         return valueStart + ((valueEnd - valueStart) * rate);
     }
 
-    MirrorActor *tryCreateMirrorActor(LiveActor *pActor, const char *) {
-        (void)require_actor(pActor);
-        aurora::throw_host_exception<std::logic_error>("MirrorActor creation is unavailable without parsed MirrorArea ownership and mirror rendering.");
-    }
-
     void setClippingFar100m(LiveActor *pActor) {
         smgpc::compat::configure_actor_clipping_far_level(pActor, 6);
     }

@@ -162,6 +162,10 @@ namespace smgpc::compat {
             controller.setShadowDrawer(circle.get());
             entry->drawer = std::move(circle);
         }
+        // The actor owner deletes its drawer. Scene construction captures
+        // still observe the NameObj for callbacks, but must not adopt it or
+        // delete it independently during rollback or scene retirement.
+        if (entry->drawer) claim_name_obj_runtime_ownership(entry->drawer.get(), entry.get());
         _list->addController(&controller);
         _entries.push_back(std::move(entry));
     }

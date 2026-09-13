@@ -1,5 +1,6 @@
 #include <aurora/exception.hpp>
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/MirrorActor.hpp"
 #include "Game/LiveActor/LodCtrl.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
@@ -7,6 +8,7 @@
 #include "Game/Map/PlanetMap.hpp"
 #include "Game/System/ResourceHolder.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Util/AreaObjUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ModelUtil.hpp"
@@ -48,6 +50,19 @@ namespace {
 }  // namespace
 
 namespace MR {
+    MirrorActor* tryCreateMirrorActor(LiveActor* pActor, const char* pModelName) {
+        if (!MR::isInAreaObj("MirrorArea", pActor->mPosition)) {
+            return nullptr;
+        }
+
+        // Original CP932 submodel suffix, shared name allocation below.
+        constexpr char mirrorModelName[] = "\x8b\xbe\x93\xe0\x83\x82\x83\x66\x83\x8b";
+        const char* objName = ::createSubModelObjName(pActor, mirrorModelName);
+        MirrorActor* mirror = new MirrorActor(pActor, objName, pModelName);
+        mirror->initWithoutIter();
+        return mirror;
+    }
+
     const char* createLowModelObjName(const LiveActor* pActor) {
         return createSubModelObjName(pActor, "Low");
     }

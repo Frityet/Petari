@@ -1,0 +1,22 @@
+[
+  {
+    "path": "decomp/src/Game/LiveActor/MirrorActor.cpp",
+    "sha256": "f7f89c4298e32ea7f23dbfa527eb406a7a57f7119deaff91eef5152ffe4ab0c1"
+  },
+  {
+    "path": "src/Game/LiveActor/MirrorActor.cpp",
+    "sha256": "f7f89c4298e32ea7f23dbfa527eb406a7a57f7119deaff91eef5152ffe4ab0c1"
+  },
+  {
+    "path": "src/Game/LiveActor/MirrorActor.hpp",
+    "sha256": "b29a6326f061150c7e1c199f0d03285f9e141ce706156f96f1ec7964e200ac46"
+  },
+  {
+    "path": "src/compat/PlanetMapRuntimeCompat.cpp",
+    "sha256": "9f8e0783440091c1618a80a0322b3a83c19fb481b987c5563820382323b5e2ce"
+  },
+  {
+    "path": "src/compat/GameActorPhysicsCompat.cpp",
+    "sha256": "f6346642ab794b1836cfafd3f6594e36f3a816f9e17c351f11814f31b1003d46"
+  }
+]
