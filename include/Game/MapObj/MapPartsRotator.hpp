@@ -9,7 +9,7 @@ public:
     inline MapPartsRotatorBase(LiveActor* pActor, const char* pName) : MapPartsFunction(pActor, pName) {
     }
 
-    virtual ~MapPartsRotatorBase();
+    virtual ~MapPartsRotatorBase() {}
 
     virtual const TMtx34f& getRotateMtx() const = 0;
 

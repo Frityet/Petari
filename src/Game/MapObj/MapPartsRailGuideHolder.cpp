@@ -1,4 +1,5 @@
 #include "Game/MapObj/MapPartsRailGuideHolder.hpp"
+#include "Game/MapObj/MapPartsRailGuideDrawer.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util.hpp"
 
@@ -12,18 +13,25 @@ MapPartsRailGuideHolder::MapPartsRailGuideHolder() : NameObj("レールガイド
 void MapPartsRailGuideHolder::init(const JMapInfoIter&) {
 }
 
-/*
-MapPartsRailGuideDrawer* MapPartsRailGuideHolder::find(s32 id) {
-    MapPartsRailGuideDrawer* drawer = mDrawers[0];
-    MapPartsRailGuideDrawer* last = mDrawers[mNumRailGuides];
-
-    while (drawer != last) {
-        if (drawer->_420 == id) {
-            return drawer;
-        }
-        drawer++;
+MapPartsRailGuideDrawer* MapPartsRailGuideHolder::createRailGuide(LiveActor* pActor, const char* pName, const JMapInfoIter& rIter) {
+    s32 id = -1;
+    rIter.getValue("CommonPath_ID", &id);
+    MapPartsRailGuideDrawer* pDrawer = find(id);
+    if (pDrawer == nullptr) {
+        pDrawer = new MapPartsRailGuideDrawer(pActor, pName);
+        pDrawer->init(rIter);
+        mDrawers[mNumRailGuides++] = pDrawer;
     }
-
-    return 0;
+    return pDrawer;
 }
-*/
+
+MapPartsRailGuideDrawer* MapPartsRailGuideHolder::find(s32 id) {
+    MapPartsRailGuideDrawer** pDrawer = &mDrawers[0];
+    MapPartsRailGuideDrawer** pEnd = &mDrawers[mNumRailGuides];
+    for (; pDrawer != pEnd; pDrawer++) {
+        if ((*pDrawer)->_420 == id) {
+            return *pDrawer;
+        }
+    }
+    return nullptr;
+}

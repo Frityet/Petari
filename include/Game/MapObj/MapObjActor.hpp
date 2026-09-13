@@ -5,7 +5,7 @@
 class LodCtrl;
 class MapObjActorInitInfo;
 class MapPartsRailMover;
-class MapPartsRotator;
+class MapPartsRotatorBase;
 class MapPartsRailRotator;
 class MapPartsRailGuideDrawer;
 class MapPartsRailPosture;
@@ -31,7 +31,8 @@ public:
     virtual void initCaseNoUseSwitchA(const MapObjActorInitInfo&);
     virtual void initCaseUseSwitchB(const MapObjActorInitInfo&);
     virtual void initCaseNoUseSwitchB(const MapObjActorInitInfo&);
-    virtual void makeSubModels(const JMapInfoIter&, const MapObjActorInitInfo&);
+    virtual void makeSubModels(const JMapInfoIter&, const MapObjActorInitInfo&) {
+    }
 
     void initialize(const JMapInfoIter&, const MapObjActorInitInfo&);
     bool isObjectName(const char*) const;
@@ -53,7 +54,7 @@ public:
     ModelObj* mModelObj;                        // 0x98
     ProjmapEffectMtxSetter* mMatrixSetter;      // 0x9C
     MapPartsRailMover* mRailMover;              // 0xA0
-    MapPartsRotator* mRotator;                  // 0xA4
+    MapPartsRotatorBase* mRotator;              // 0xA4
     MapPartsRailRotator* mRailRotator;          // 0xA8
     MapPartsRailPosture* mRailPosture;          // 0xAC
     MapPartsRailGuideDrawer* mRailGuideDrawer;  // 0xB0

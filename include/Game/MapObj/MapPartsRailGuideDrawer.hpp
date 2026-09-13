@@ -18,9 +18,10 @@ public:
 
     void show();
     void hide();
+    void exeDrawForward();
 
     MR::Vector< MR::FixedArray< MapPartsRailGuidePoint*, 256 > > mGuidePoints;  // 0x18
-    u32 _41C;
+    s32 _41C;
     s32 _420;
     const char* _424;
 };

@@ -1,6 +1,7 @@
 #include "Game/MapObj/MapPartsRailPosture.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util.hpp"
+#include "Game/Util/MapPartsUtil.hpp"
 
 namespace NrvMapPartsRailPosture {
     NEW_NERVE(HostTypeDoNothing, MapPartsRailPosture, DoNothing);
@@ -60,7 +61,7 @@ void MapPartsRailPosture::exeMove() {
         TVec3f v9(0.0f, 1.0f, 0.0f);
         TVec3f v8(0.0f, 0.0f, 1.0f);
 
-        if (mMovePosture == 1 || isPostureTypeRailDirRailUseShadowGravity) {
+        if (mMovePosture == 1 || &MapPartsRailPosture::isPostureTypeRailDirRailUseShadowGravity) {
             v9.set(-shadowVector);
             v10.cross(v9, v11);
             MR::normalize(&v10);
