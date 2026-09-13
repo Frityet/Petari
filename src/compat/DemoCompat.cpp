@@ -1,4 +1,3 @@
-#include "Game/Util/ScreenUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/DemoSceneRuntime.hpp"
 
@@ -21,13 +20,3 @@ namespace smgpc::compat {
     }
 
 }  // namespace smgpc::compat
-
-namespace MR {
-    void timeKeepDemoFadeOut() {
-        MR::closeWipeFade(60);
-    }
-
-    void timeKeepDemoFadeIn() {
-        MR::openWipeFade(60);
-    }
-}  // namespace MR

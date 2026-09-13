@@ -1,0 +1,10 @@
+[
+  {
+    "path": "src/compat/FileUtilCompat.cpp",
+    "sha256": "8ff41a1105b62be9da2cf612b20c6b8a2a075a195affe2dae6e156567416a8b1"
+  },
+  {
+    "path": "src/compat/ResourceHolderCompat.cpp",
+    "sha256": "e7d45d4ee9667fe0326f7439b2b896858f373a578273310972b296acab0077fe"
+  }
+]

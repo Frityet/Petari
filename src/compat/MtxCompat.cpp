@@ -11,43 +11,24 @@
 namespace {
     constexpr f32 cDegreesToRadians = 3.14159265358979323846F / 180.0F;
 
-    void set_axes(TPos3f *pMatrix, const TVec3f &rAxisX, const TVec3f &rAxisY, const TVec3f &rAxisZ) {
-        pMatrix->mMtx[0][0] = rAxisX.x;
-        pMatrix->mMtx[1][0] = rAxisX.y;
-        pMatrix->mMtx[2][0] = rAxisX.z;
-        pMatrix->mMtx[0][1] = rAxisY.x;
-        pMatrix->mMtx[1][1] = rAxisY.y;
-        pMatrix->mMtx[2][1] = rAxisY.z;
-        pMatrix->mMtx[0][2] = rAxisZ.x;
-        pMatrix->mMtx[1][2] = rAxisZ.y;
-        pMatrix->mMtx[2][2] = rAxisZ.z;
-    }
 }  // namespace
 
 namespace MR {
-    void makeMtxUpFront(TPos3f *pMatrix, const TVec3f &rUp,
-                        const TVec3f &rFront) {
-        if (pMatrix == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("An up/front matrix requires a real destination.");
-        }
+    void makeMtxUpFront(TPos3f* pDst, const TVec3f& rUp, const TVec3f& rFront) {
+        TVec3f axisY;
+        MR::normalize(rUp, &axisY);
 
-        auto axisY = rUp;
-        if (axisY.normalize() <= JGeometry::TUtil<f32>::epsilon()) {
-            aurora::throw_host_exception<std::invalid_argument>("An up/front matrix requires a non-degenerate up axis.");
-        }
-        auto axisX = axisY.cross(rFront);
-        if (axisX.normalize() <= JGeometry::TUtil<f32>::epsilon()) {
-            aurora::throw_host_exception<std::invalid_argument>(
-                "An up/front matrix requires independent up and front axes.");
-        }
-        const auto axisZ = axisX.cross(axisY);
-        set_axes(pMatrix, axisX, axisY, axisZ);
+        TVec3f axisX = axisY.cross(rFront);
+        MR::normalize(&axisX);
+
+        TVec3f axisZ = axisX.cross(axisY);
+
+        pDst->setXYZDir(axisX, axisY, axisZ);
     }
 
-    void makeMtxUpFrontPos(TPos3f *pMatrix, const TVec3f &rUp,
-                           const TVec3f &rFront, const TVec3f &rPosition) {
-        makeMtxUpFront(pMatrix, rUp, rFront);
-        pMatrix->setTrans(rPosition);
+    void makeMtxUpFrontPos(TPos3f* pDst, const TVec3f& rUp, const TVec3f& rFront, const TVec3f& rPos) {
+        makeMtxUpFront(pDst, rUp, rFront);
+        pDst->setTrans(rPos);
     }
 
     void makeMtxRotate(MtxPtr mtx, s16 rx, s16 ry, s16 rz) {
@@ -196,31 +177,34 @@ namespace MR {
         }
     }
 
-    void makeMtxUpNoSupportPos(TPos3f *pMatrix, const TVec3f &rUp, const TVec3f &rPosition) {
-        if (pMatrix == nullptr) {
-            return;
+    void makeMtxUpNoSupport(TPos3f* pDst, const TVec3f& rUp) {
+        TVec3f support;
+        if (MR::getMaxAbsElementIndex(rUp) == 2) {
+            support.set(0.0f, 1.0f, 0.0f);
+        } else {
+            support.set(0.0f, 0.0f, 1.0f);
         }
 
-        auto axisY = rUp;
-        if (axisY.normalize() == 0.0F) {
-            axisY.set(0.0F, 1.0F, 0.0F);
+        TVec3f axisY;
+        MR::normalize(rUp, &axisY);
+
+        TVec3f axisX = axisY.cross(support);
+        MR::normalize(&axisX);
+
+        TVec3f axisZ = axisX.cross(axisY);
+
+        pDst->setXYZDir(axisX, axisY, axisZ);
+    }
+
+    void makeMtxUpNoSupportPos(TPos3f* pDst, const TVec3f& rUp, const TVec3f& rPos) {
+        TVec3f support;
+        if (MR::getMaxAbsElementIndex(rUp) == 2) {
+            support.set< f32 >(0.0f, 1.0f, 0.0f);
+        } else {
+            support.set< f32 >(0.0f, 0.0f, 1.0f);
         }
 
-        const auto absX = std::fabs(axisY.x);
-        const auto absY = std::fabs(axisY.y);
-        const auto absZ = std::fabs(axisY.z);
-        const auto maxElementIsZ = absZ >= absX && absZ >= absY;
-        const auto support = maxElementIsZ ? TVec3f{0.0F, 1.0F, 0.0F} : TVec3f{0.0F, 0.0F, 1.0F};
-
-        auto axisX = axisY.cross(support);
-        if (axisX.normalize() == 0.0F) {
-            axisX.set(1.0F, 0.0F, 0.0F);
-        }
-        auto axisZ = axisX.cross(axisY);
-        axisZ.normalize();
-
-        set_axes(pMatrix, axisX, axisY, axisZ);
-        pMatrix->setTrans(rPosition);
+        MR::makeMtxUpFrontPos(pDst, rUp, support, rPos);
     }
 }  // namespace MR
 

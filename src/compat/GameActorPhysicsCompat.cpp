@@ -25,7 +25,6 @@
 #include "compat/ActorPhysicsRuntime.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "compat/PlayerUtilCompat.hpp"
 #include "runtime/RuntimeServices.hpp"
 
 #include <cmath>
@@ -76,14 +75,6 @@ namespace {
             aurora::throw_host_exception<std::logic_error>("Actor has no matching original shadow controller");
         }
         return *controller;
-    }
-
-    smgpc::compat::ActorShadowControllerRuntimeState& require_shadow_definition(LiveActor* actor, const char* name) {
-        auto* definition = smgpc::compat::actor_shadow_controller_runtime_state(actor, name);
-        if (!definition) {
-            aurora::throw_host_exception<std::logic_error>("Actor has no matching shadow shape definition");
-        }
-        return *definition;
     }
 
     template<typename Operation>
@@ -187,18 +178,6 @@ namespace MR {
 
     void setShadowDropLength(LiveActor *actor, const char *name, f32 length) {
         require_shadow_controller(actor, name).setDropLength(length);
-    }
-
-    void setShadowVolumeStartDropOffset(LiveActor *actor, const char *name, f32 offset) {
-        require_shadow_definition(actor, name).volume_start_offset = offset;
-    }
-
-    void setShadowVolumeEndDropOffset(LiveActor *actor, const char *name, f32 offset) {
-        require_shadow_definition(actor, name).volume_end_offset = offset;
-    }
-
-    void onShadowVolumeCutDropLength(LiveActor *actor, const char *name) {
-        require_shadow_definition(actor, name).volume_cut_drop_length = true;
     }
 
     void onCalcShadow(LiveActor *actor, const char *name) {

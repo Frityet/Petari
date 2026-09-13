@@ -513,6 +513,10 @@ namespace JGeometry {
             scale(scaleValue);
         }
 
+        void operator*=(const TVec3& value) {
+            mul(value);
+        }
+
         void operator/=(f32 divisor) {
             scale(1.0F / divisor);
         }

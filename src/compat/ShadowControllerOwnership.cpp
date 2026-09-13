@@ -5,6 +5,8 @@
 #include "Game/LiveActor/ShadowSurfaceCircle.hpp"
 #include "Game/LiveActor/ShadowVolumeSphere.hpp"
 #include "Game/LiveActor/ShadowVolumeCylinder.hpp"
+#include "Game/LiveActor/ShadowVolumeOval.hpp"
+#include "Game/LiveActor/ShadowVolumeOvalPole.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -125,13 +127,23 @@ namespace smgpc::compat {
         if (definition.valid) controller.validate();
         else controller.invalidate();
         if (definition.kind == ActorShadowControllerKind::VolumeSphere ||
-            definition.kind == ActorShadowControllerKind::VolumeCylinder) {
+            definition.kind == ActorShadowControllerKind::VolumeCylinder ||
+            definition.kind == ActorShadowControllerKind::VolumeOval ||
+            definition.kind == ActorShadowControllerKind::VolumeOvalPole) {
             JkrAllocationScope game(_domain);
             std::unique_ptr<ShadowVolumeDrawer> volume;
             if (definition.kind == ActorShadowControllerKind::VolumeSphere) {
                 auto sphere = std::make_unique<ShadowVolumeSphere>();
                 sphere->setRadius(definition.radius);
                 volume = std::move(sphere);
+            } else if (definition.kind == ActorShadowControllerKind::VolumeOval) {
+                auto oval = std::make_unique<ShadowVolumeOval>();
+                oval->setSize(definition.size);
+                volume = std::move(oval);
+            } else if (definition.kind == ActorShadowControllerKind::VolumeOvalPole) {
+                auto ovalPole = std::make_unique<ShadowVolumeOvalPole>();
+                ovalPole->setSize(definition.size);
+                volume = std::move(ovalPole);
             } else {
                 auto cylinder = std::make_unique<ShadowVolumeCylinder>();
                 cylinder->setRadius(definition.radius);

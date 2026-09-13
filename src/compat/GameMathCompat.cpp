@@ -628,6 +628,22 @@ namespace MR {
         return PSVECKillElement(rSrc, rKillDir, pDst);
     }
 
+    u32 getMaxAbsElementIndex(const TVec3f& rVec) {
+        f64 abs_x = abs(rVec.x);
+        f64 abs_y = abs(rVec.y);
+        f64 abs_z = abs(rVec.z);
+
+        if (abs_x > abs_y && abs_x > abs_z) {
+            return 0;
+        }
+
+        if (abs_y > abs_z) {
+            return 1;
+        }
+
+        return 2;
+    }
+
     f32 getMaxElement(const TVec3f &rVec) {
         if (rVec.x > rVec.y && rVec.x > rVec.z) {
             return rVec.x;

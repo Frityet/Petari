@@ -19,7 +19,6 @@
 #include "compat/CameraLocalUtilRuntime.hpp"
 #include "compat/CameraUtilCompat.hpp"
 #include "compat/DemoSceneRuntime.hpp"
-#include "compat/PlayerUtilCompat.hpp"
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -481,7 +480,6 @@ namespace {
             smgpc::runtime::PlayerSystemService& player;
             ~DetachGuard() { player.detach_actor(); }
         } detach{player};
-        const auto player_binding = smgpc::compat::ScopedPlayerSystemServiceOverride(player);
         Mtx matrix{{1.0F, 0.0F, 0.0F, 0.0F},
                    {0.0F, 0.0F, -1.0F, 0.0F},
                    {0.0F, 1.0F, 0.0F, 0.0F}};

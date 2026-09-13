@@ -13,7 +13,6 @@
 #include "compat/DemoSceneRuntime.hpp"
 #include "compat/GameDataOwnership.hpp"
 #include "compat/InformationMessageCompat.hpp"
-#include "compat/PlayerUtilCompat.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "scene/StagePlacementResolver.hpp"
 
@@ -167,9 +166,6 @@ namespace smgpc::scene {
               _mario_pos4(require_unique_position(
                   general_positions, cMarioDemoPos4, "layera", 0,
                   {-140.0F, 2500.0F, -700.0F})),
-              _player_binding(
-                  std::make_unique<smgpc::compat::ScopedPlayerSystemServiceOverride>(
-                      _player)),
               _information_message_binding(
                   std::make_unique<smgpc::compat::InformationMessageBinding>()),
               // GameScene owns one DemoDirector for the complete scene. The
@@ -210,7 +206,6 @@ namespace smgpc::scene {
 
         ~Impl() {
             _information_message_binding.reset();
-            _player_binding.reset();
         }
 
         void validate_route_data() const {
@@ -389,8 +384,6 @@ namespace smgpc::scene {
         const StagePlacementObject &_step_during_source;
         const StagePlacementObject &_step_after_source;
         const StageGeneralPos &_mario_pos4;
-        std::unique_ptr<smgpc::compat::ScopedPlayerSystemServiceOverride>
-            _player_binding;
         std::unique_ptr<smgpc::compat::InformationMessageBinding>
             _information_message_binding;
         smgpc::compat::DemoSceneRuntime *_demo;

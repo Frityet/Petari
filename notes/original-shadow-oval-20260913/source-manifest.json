@@ -1,0 +1,54 @@
+[
+  {
+    "path": "decomp/src/Game/LiveActor/ShadowVolumeOval.cpp",
+    "sha256": "7c37344a190020b3d10bdf7a9f99fa680cc72c16effa63e5c1dd32443475bae5"
+  },
+  {
+    "path": "decomp/include/Game/LiveActor/ShadowVolumeOval.hpp",
+    "sha256": "8cd87582f1e749b95cbbf67e5a7fda29a2ce3d7044b51d2c110cfc75e4246fea"
+  },
+  {
+    "path": "decomp/src/Game/LiveActor/ShadowVolumeOvalPole.cpp",
+    "sha256": "844b5abefa643b5556458d4bbf8d14eb600d57d5550db15e1add0a5886ec29e0"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowVolumeOval.cpp",
+    "sha256": "7c37344a190020b3d10bdf7a9f99fa680cc72c16effa63e5c1dd32443475bae5"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowVolumeOval.hpp",
+    "sha256": "8cd87582f1e749b95cbbf67e5a7fda29a2ce3d7044b51d2c110cfc75e4246fea"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowVolumeOvalPole.cpp",
+    "sha256": "844b5abefa643b5556458d4bbf8d14eb600d57d5550db15e1add0a5886ec29e0"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowVolumeOvalPole.hpp",
+    "sha256": "d197dda80c3f062999f0394fc452a793908bbc184470880aa7680b1fa3a610bd"
+  },
+  {
+    "path": "src/JSystem/JGeometry/TVec.hpp",
+    "sha256": "3e681402fe1dda40a738f27fb631435443d5b2a3ec566a322f6fe35c025d2567"
+  },
+  {
+    "path": "src/compat/ShadowControllerOwnership.cpp",
+    "sha256": "df33f6c5b0f65a6f0ed135314908b9e303ee0ebb6b617850525f15a6e59d8aa4"
+  },
+  {
+    "path": "src/compat/MtxCompat.cpp",
+    "sha256": "bbc04863b7487789438e8039a82ec99ea22508d5b59d186599b2cf4c0f565836"
+  },
+  {
+    "path": "src/compat/GameMathCompat.cpp",
+    "sha256": "1163daf41bd425bebb874e85efa00f0065fc8978f5890bc6cad7a53ac0948b61"
+  },
+  {
+    "path": "src/compat/GameActorPhysicsCompat.cpp",
+    "sha256": "2a2453c243a3f409b2592788727aaaea2055b9fabad8a75757497b834d3fb6b9"
+  },
+  {
+    "path": "src/compat/OriginalActorShadowQueries.cpp",
+    "sha256": "a85c04489df458495f9be861f1c6075df7d9b873dfc499b0e69c72266ad19a75"
+  }
+]

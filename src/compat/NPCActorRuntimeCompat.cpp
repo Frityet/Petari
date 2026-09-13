@@ -1,9 +1,6 @@
 #include <aurora/exception.hpp>
 #include "Game/Enemy/AnimScaleController.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
-#include "Game/LiveActor/PartsModel.hpp"
-#include "Game/NPC/NPCActor.hpp"
-#include "Game/NPC/NPCActorItem.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/JMapUtil.hpp"
@@ -11,15 +8,11 @@
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
-#include "Game/Util/NPCUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
-#include "Game/Util/PlayerUtil.hpp"
-#include "Game/Util/TalkUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/ActorShadowCsvCompat.hpp"
 #include "render/J3dMaterialRuntime.hpp"
 
-#include "runtime/RuntimeContext.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -90,30 +83,6 @@ namespace {
         return angle <= maximumRadians + 1.0e-6F;
     }
 
-    PartsModel* createNPCGoodsImpl(LiveActor* host, const char* modelName, const char* jointName, int drawBufferType) {
-        if (host == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("NPC goods require a host actor.");
-        }
-        if (modelName == nullptr || *modelName == '\0') {
-            return nullptr;
-        }
-        if (!MR::isNPCItemFileExist(modelName)) {
-            return nullptr;
-        }
-
-        auto* jointMatrix = static_cast<MtxPtr>(nullptr);
-        if (jointName != nullptr && *jointName != '\0') {
-            jointMatrix = MR::getJointMtx(host, jointName);
-            if (jointMatrix == nullptr) {
-                aurora::throw_host_exception<std::logic_error>("NPC goods require a real named model joint.");
-            }
-        }
-
-        auto* goods = new PartsModel(host, modelName, modelName, jointMatrix, drawBufferType, false);
-        goods->initWithoutIter();
-        goods->_99 = true;
-        return goods;
-    }
 }  // namespace
 
 namespace MR {
@@ -209,88 +178,6 @@ namespace MR {
         const auto randomFrame = static_cast<s32>(
             static_cast<f32>(controller->getEnd()) * getRandom());
         setBckFrame(actor, static_cast<f32>(randomFrame));
-    }
-
-    bool isNPCItemFileExist(const char* name) {
-        if (name == nullptr || *name == '\0') {
-            return false;
-        }
-        const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-        return runtime != nullptr && runtime->find_object_archive(name).has_value();
-    }
-
-    PartsModel* createNPCGoods(LiveActor* host, const char* modelName, const char* jointName) {
-        return createNPCGoodsImpl(host, modelName, jointName, DrawBufferType_NPC);
-    }
-
-    PartsModel* createIndirectNPCGoods(LiveActor* host, const char* modelName, const char* jointName) {
-        return createNPCGoodsImpl(host, modelName, jointName, DrawBufferType_IndirectNpc);
-    }
-
-    void initDefaultPosAndQuat(NPCActor* actor, const JMapInfoIter& iter) {
-        if (actor == nullptr || !iter.isValid()) {
-            aurora::throw_host_exception<std::invalid_argument>("NPC placement requires an actor and a valid JMap iterator.");
-        }
-        initDefaultPos(actor, iter);
-        makeQuatRotateDegree(&actor->_A0, actor->mRotation);
-        actor->_CC.set(actor->mRotation);
-        actor->setInitPose();
-    }
-
-    f32 calcFloatOffset(const NPCActor* actor, f32 current, f32 maximum) {
-        if (actor == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("NPC float offset requires an actor.");
-        }
-
-        auto result = current - 0.5F;
-        if (!(result >= 0.0F)) {
-            result = 0.0F;
-        }
-
-        auto* message = actor->mMsgCtrl;
-        if (message == nullptr || !isTalkTalking(message) || isShortTalk(message)) {
-            return result;
-        }
-
-        const auto* playerPosition = getPlayerPos();
-        if (playerPosition == nullptr) {
-            aurora::throw_host_exception<std::logic_error>("NPC talk float offset requires a real player position.");
-        }
-        auto delta = *playerPosition - actor->mPosition;
-        auto playerUp = TVec3f{};
-        getPlayerUpVec(&playerUp);
-        if (!(delta.dot(playerUp) > 0.0F)) {
-            return result;
-        }
-
-        const auto distance = delta.length();
-        if (!(distance < 200.0F)) {
-            return result;
-        }
-
-        const auto target = getLinerValueFromMinMax(
-            distance, 0.0F, 200.0F, maximum, 0.0F);
-        const auto capped = 0.5F + (5.0F + result);
-        return capped >= target ? target : capped;
-    }
-
-    void calcAndSetFloatBaseMtx(NPCActor* actor, f32 offset) {
-        if (actor == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("NPC float base matrix requires an actor.");
-        }
-
-        const auto position = actor->mPosition;
-        auto floatDirection = TVec3f{};
-        actor->_A0.getYDir(floatDirection);
-        floatDirection.scale(offset);
-        actor->mPosition.add(floatDirection);
-        try {
-            actor->NPCActor::calcAndSetBaseMtx();
-        } catch (...) {
-            actor->mPosition.set(position);
-            throw;
-        }
-        actor->mPosition.set(position);
     }
 
     void initShadowFromCSV(LiveActor* actor, const char* definitionName) {

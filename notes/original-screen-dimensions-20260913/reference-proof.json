@@ -1,0 +1,14 @@
+[
+  {
+    "source": "Camera/CameraContext.cpp",
+    "symbol": "getScreenHeight__2MRFv",
+    "match_percent": 100.0,
+    "compile_exit": 0
+  },
+  {
+    "source": "Screen/BloomEffect.cpp",
+    "symbol": "getFrameBufferHeight__2MRFv",
+    "match_percent": 100.0,
+    "compile_exit": 0
+  }
+]

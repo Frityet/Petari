@@ -8,6 +8,10 @@
 // Original query and clipping bodies from ActorShadowLocalUtil/ActorShadowUtil.
 // The native owner supplies the actual original controller list and projection.
 namespace ActorShadow {
+    ShadowVolumeDrawer* getShadowVolumeDrawer(const LiveActor* pActor, const char* pName) {
+        return static_cast< ShadowVolumeDrawer* >(pActor->mShadowControllerList->getController(pName)->getShadowDrawer());
+    }
+
     u32 getShadowControllerCount(const LiveActor* pActor) {
         return pActor->mShadowControllerList->getControllerCount();
     }
@@ -30,6 +34,18 @@ namespace ActorShadow {
 }
 
 namespace MR {
+    void setShadowVolumeStartDropOffset(LiveActor* pActor, const char* pName, f32 offset) {
+        ActorShadow::getShadowVolumeDrawer(pActor, pName)->setStartDrawShepeOffset(offset);
+    }
+
+    void setShadowVolumeEndDropOffset(LiveActor* pActor, const char* pName, f32 offset) {
+        ActorShadow::getShadowVolumeDrawer(pActor, pName)->setEndDrawShepeOffset(offset);
+    }
+
+    void onShadowVolumeCutDropLength(LiveActor* pActor, const char* pName) {
+        ActorShadow::getShadowVolumeDrawer(pActor, pName)->onCutDropShadow();
+    }
+
     void invalidateShadowAll(LiveActor* pActor) {
         u32 count = ActorShadow::getShadowControllerCount(pActor);
 

@@ -11,7 +11,6 @@
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/SystemUtil.hpp"
 #include "compat/AudioFacadeCompat.hpp"
-#include "compat/PlayerUtilCompat.hpp"
 #include "compat/StageScenarioMetadataResolver.hpp"
 #include "compat/StageSessionState.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -157,7 +156,6 @@ int main() {
     auto player = smgpc::runtime::PlayerSystemService{};
     auto player_actor = StatePlayer{};
     player.attach_actor(player_actor);
-    const auto player_binding = smgpc::compat::ScopedPlayerSystemServiceOverride(player);
     require_unavailable([] { (void)MR::isPlayerDead(); },
                         "generic LiveActor death must not substitute for Mario nerve-change/death state");
     player.attach_actor(player_actor, {

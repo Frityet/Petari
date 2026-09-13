@@ -67,11 +67,14 @@ namespace MR {
     }
 
     JKRMemArchive* mountArchive(const char* pFilePath, JKRHeap* pHeap) {
+        char filePath[256];
+        makeFileNameConsideringLanguage(filePath, sizeof(filePath), pFilePath);
+        if (pHeap == nullptr) pHeap = getCurrentHeap();
         smgpc::compat::JkrHostAllocationScope host;
         auto* mounts = smgpc::runtime::ArchiveMountService::active();
-        if (mounts == nullptr || pFilePath == nullptr) return nullptr;
-        try { return mounts->mount(pFilePath, pHeap); }
-        catch (const std::exception&) { return nullptr; }
+        if (mounts == nullptr)
+            aurora::throw_host_exception<std::logic_error>("Archive mounting requires its native mount owner");
+        return mounts->mount(filePath, pHeap);
     }
 
     void mountAsyncArchive(const char* pFilePath, JKRHeap* pHeap) {
@@ -94,9 +97,10 @@ namespace MR {
     }
 
     JKRMemArchive* receiveArchive(const char* pFilePath) {
+        char filePath[256];
+        makeFileNameConsideringLanguage(filePath, sizeof(filePath), pFilePath);
         auto* mounts = smgpc::runtime::ArchiveMountService::active();
-        if (mounts == nullptr || pFilePath == nullptr) return nullptr;
-        return mounts->receive(pFilePath);
+        return mounts ? mounts->receive(filePath) : nullptr;
     }
 
     void receiveAllRequestedFile() {
@@ -119,8 +123,10 @@ namespace MR {
     }
 
     void getMountedArchiveAndHeap(const char* pFilePath, JKRArchive** ppArchive, JKRHeap** ppHeap) {
+        char filePath[256];
+        makeFileNameConsideringLanguage(filePath, sizeof(filePath), pFilePath);
         const auto* mounts = smgpc::runtime::ArchiveMountService::active();
-        const auto owner = mounts && pFilePath ? mounts->retain(pFilePath) : nullptr;
+        const auto owner = mounts ? mounts->retain(filePath) : nullptr;
         if (ppArchive) *ppArchive = owner ? &owner->archive() : nullptr;
         if (ppHeap) *ppHeap = owner ? owner->heap() : nullptr;
     }

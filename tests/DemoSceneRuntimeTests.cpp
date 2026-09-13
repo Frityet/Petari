@@ -9,7 +9,6 @@
 #include "Game/Util/JMapInfo.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/DemoSceneRuntime.hpp"
-#include "compat/PlayerUtilCompat.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/RarcArchive.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -1388,8 +1387,6 @@ namespace {
         auto generic_actor = LiveActor("not-an-original-Mario-owner");
         generic_actor.mPosition.set(90.0F, 80.0F, 70.0F);
         host_player.attach_actor(generic_actor);
-        const auto player_context =
-            smgpc::compat::ScopedPlayerSystemServiceOverride{host_player};
         require(MR::tryStartTimeKeepDemo(&actor, "Other", nullptr),
                 "an unrelated ordinary clock must remain available without Mario");
         runtime.movement();

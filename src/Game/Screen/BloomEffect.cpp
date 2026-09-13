@@ -295,3 +295,9 @@ void BloomEffect::drawBlur(s32 divide, s32 index, Mtx* pMtx, u32 stages, u32 cou
         }
     }
 }
+
+namespace MR {
+    s32 getFrameBufferHeight() {
+        return JUTGetVideoManager()->getRenderMode()->efbHeight;
+    }
+}  // namespace MR

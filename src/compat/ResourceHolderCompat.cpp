@@ -291,9 +291,11 @@ namespace smgpc::compat {
         auto* mounts = runtime::ArchiveMountService::active();
         if (mounts == nullptr)
             aurora::throw_host_exception<std::logic_error>("LayoutHolder requires an active archive mount owner");
-        char path[256]{};
-        if (!MR::makeLayoutArchiveFileName(path, sizeof(path), name.c_str()))
+        char logical_path[256]{};
+        if (!MR::makeLayoutArchiveFileName(logical_path, sizeof(logical_path), name.c_str()))
             aurora::throw_host_exception<std::runtime_error>("Required LayoutHolder archive is unavailable: " + name);
+        char path[256];
+        MR::makeFileNameConsideringLanguage(path, sizeof(path), logical_path);
         if (mounts->receive(path) == nullptr) {
             auto domain = current_jkr_allocation_domain();
             mounts->mount(path, &(domain ? domain : _domain)->heap());
@@ -306,7 +308,9 @@ namespace smgpc::compat {
         auto* mounts = runtime::ArchiveMountService::active();
         if (mounts == nullptr)
             aurora::throw_host_exception<std::logic_error>("LayoutHolder requires an active archive mount owner");
-        auto archive = mounts->retain(archive_name);
+        char resolved_path[256];
+        MR::makeFileNameConsideringLanguage(resolved_path, sizeof(resolved_path), std::string(archive_name).c_str());
+        auto archive = mounts->retain(resolved_path);
         if (!archive || archive->heap() == nullptr)
             aurora::throw_host_exception<std::logic_error>("LayoutHolder requires its original mounted archive and heap");
         const auto path = archive->path();
@@ -333,10 +337,12 @@ namespace smgpc::compat {
         if (mounts->receive(name)) {
             holder = create_layout_from_mounted(name);
         } else {
-            char path[256]{};
-            if (!MR::makeLayoutArchiveFileName(path, sizeof(path), name.c_str()) &&
-                !MR::makeObjectArchiveFileName(path, sizeof(path), name.c_str()))
+            char logical_path[256]{};
+            if (!MR::makeLayoutArchiveFileName(logical_path, sizeof(logical_path), name.c_str()) &&
+                !MR::makeObjectArchiveFileName(logical_path, sizeof(logical_path), name.c_str()))
                 aurora::throw_host_exception<std::runtime_error>("Required layout texture archive is unavailable: " + name);
+            char path[256];
+            MR::makeFileNameConsideringLanguage(path, sizeof(path), logical_path);
             if (!mounts->receive(path)) {
                 auto domain = current_jkr_allocation_domain();
                 mounts->mount(path, &(domain ? domain : _domain)->heap());

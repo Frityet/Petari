@@ -20,7 +20,6 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/AreaObjUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/PlayerUtilCompat.hpp"
 #include "compat/ResourceHolderCompat.hpp"
 #include "resource/GameResourceRuntime.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -1024,7 +1023,6 @@ namespace {
         auto player = LiveActor{"SwitchArea player fixture"};
         // This fixture supplies position only; it does not own or update a rendered player model.
         player_service.attach_actor(player);
-        const auto player_binding = smgpc::compat::ScopedPlayerSystemServiceOverride{player_service};
         auto objects = std::vector<std::unique_ptr<NameObj>>{};
         for (const auto *placement : switch_rows) {
             const auto *descriptor = smgpc::scene::find_complete_area_obj_placement_descriptor(

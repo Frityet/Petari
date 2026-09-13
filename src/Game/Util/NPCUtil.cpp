@@ -1,5 +1,6 @@
 #include "Game/Util/NPCUtil.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
+#include "Game/LiveActor/PartsModel.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NPC/NPCActor.hpp"
 #include "Game/NPC/NPCFunction.hpp"
@@ -7,10 +8,12 @@
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/FileUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MapUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ModelUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/NerveUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
@@ -22,6 +25,7 @@
 #include "Game/Util/TalkUtil.hpp"
 #include <JSystem/JMath/JMATrigonometric.hpp>
 #include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
+#include <cstdio>
 
 namespace {
     static s32 sStarAppearSeStep = 103;
@@ -54,6 +58,12 @@ namespace {
 namespace MR {
     bool getNPCItemData(NPCActorItem* pItem, s32 itemType) {
         return NPCFunction::getNPCItemData(pItem, itemType);
+    }
+
+    bool isNPCItemFileExist(const char* pName) {
+        char path[256];
+        snprintf(path, sizeof(path), "/ObjectData/%s.arc", pName);
+        return isFileExist(path, false);
     }
 
     void decidePose(NPCActor* pActor, const TVec3f& rUp, const TVec3f& rFront, const TVec3f& rPosition, f32 upRate, f32 frontRate, f32 positionRate) {
@@ -100,6 +110,14 @@ namespace MR {
     }
 #pragma dont_inline reset
 
+    void timeKeepDemoFadeIn() {
+        openWipeFade(-1);
+    }
+
+    void timeKeepDemoFadeOut() {
+        closeWipeFade(-1);
+    }
+
     void startNPCTalkCamera(const TalkMessageCtrl* pTalkCtrl, MtxPtr pActorMtx, f32 scale, s32 frame) {
         startNPCTalkCamera(pTalkCtrl, pActorMtx, getPlayerBaseMtx(), scale, frame);
     }
@@ -129,6 +147,36 @@ namespace MR {
 
     void endNPCTalkCamera(bool isForce, s32 frame) {
         endTalkCamera(isForce, frame);
+    }
+
+    void initDefaultPosAndQuat(NPCActor* pActor, const JMapInfoIter& rIter) {
+        initDefaultPos(pActor, rIter);
+        makeQuatRotateDegree(&pActor->_A0, pActor->mRotation);
+        pActor->setInitPose();
+    }
+
+    PartsModel* createNPCGoods(LiveActor* pHost, const char* pModelName, const char* pJointName) {
+        PartsModel* pGoods = nullptr;
+        if (!isNullOrEmptyString(pModelName) && isNPCItemFileExist(pModelName) && isExistJoint(pHost, pJointName)) {
+            pGoods = createPartsModelNpcAndFix(pHost, "グッズ", pModelName, pJointName);
+            pGoods->appear();
+            if (getLightNumMax(pGoods) > 0) {
+                initLightCtrl(pGoods);
+            }
+        }
+        return pGoods;
+    }
+
+    PartsModel* createIndirectNPCGoods(LiveActor* pHost, const char* pModelName, const char* pJointName) {
+        PartsModel* pGoods = nullptr;
+        if (!isNullOrEmptyString(pModelName) && isNPCItemFileExist(pModelName) && isExistJoint(pHost, pJointName)) {
+            pGoods = createPartsModelIndirectNpc(pHost, "グッズ", pModelName, getJointMtx(pHost, pJointName));
+            pGoods->appear();
+            if (getLightNumMax(pGoods) > 0) {
+                initLightCtrl(pGoods);
+            }
+        }
+        return pGoods;
     }
 
     bool calcPlayerFaceStareVector(TVec3f* pOut, MtxPtr pActorMtx, MtxPtr pFrontMtx) {
@@ -389,6 +437,33 @@ namespace MR {
         }
 
         return false;
+    }
+    f32 calcFloatOffset(const NPCActor* pActor, f32 offset, f32 maximum) {
+        TalkMessageCtrl* pTalkCtrl = pActor->mMsgCtrl;
+        offset = max(offset - 0.5f, 0.0f);
+        if (pTalkCtrl != nullptr && isTalkTalking(pTalkCtrl) && !isShortTalk(pTalkCtrl)) {
+            TVec3f direction(pActor->mPosition - *getPlayerPos());
+            TVec3f up;
+            getPlayerUpVec(&up);
+            if (direction.dot(up) > 0.0f && PSVECMag(&direction) < 200.0f) {
+                f32 target = getLinerValueFromMinMax(PSVECMag(&direction), 0.0f, 200.0f, maximum, 0.0f);
+                offset = min(0.5f + (5.0f + offset), target);
+            }
+        }
+        return offset;
+    }
+
+    void calcAndSetFloatBaseMtx(NPCActor* pActor, f32 offset) {
+        TVec3f position(pActor->mPosition);
+        TVec3f up;
+        const TQuat4f& quat = pActor->_A0;
+        up.set< f32 >(2.0f * (quat.x * quat.y) - 2.0f * (quat.w * quat.z),
+                     1.0f - 2.0f * (quat.x * quat.x) - 2.0f * (quat.z * quat.z),
+                     2.0f * (quat.y * quat.z) + 2.0f * (quat.w * quat.x));
+        up.scale(offset);
+        pActor->mPosition.add(up);
+        pActor->NPCActor::calcAndSetBaseMtx();
+        pActor->mPosition.set< f32 >(position);
     }
 };  // namespace MR
 

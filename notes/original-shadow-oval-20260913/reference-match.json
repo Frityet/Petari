@@ -1,0 +1,57 @@
+[
+  {
+    "name": "__dt__16ShadowVolumeOvalFv",
+    "size": "88",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__ct__16ShadowVolumeOvalFv",
+    "size": "104",
+    "match_percent": 99.61539
+  },
+  {
+    "name": "isDraw__16ShadowVolumeOvalCFv",
+    "size": "92",
+    "match_percent": 100.0
+  },
+  {
+    "name": "loadModelDrawMtx__16ShadowVolumeOvalCFv",
+    "size": "644",
+    "match_percent": 95.32919
+  },
+  {
+    "name": "setSize__16ShadowVolumeOvalFRCQ29JGeometry8TVec3<f>",
+    "size": "20",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__vt__16ShadowVolumeOval",
+    "size": "48",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__dt__20ShadowVolumeOvalPoleFv",
+    "size": "88",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__ct__20ShadowVolumeOvalPoleFv",
+    "size": "104",
+    "match_percent": 98.84615
+  },
+  {
+    "name": "loadModelDrawMtx__20ShadowVolumeOvalPoleCFv",
+    "size": "704",
+    "match_percent": 92.53977
+  },
+  {
+    "name": "setSize__20ShadowVolumeOvalPoleFRCQ29JGeometry8TVec3<f>",
+    "size": "20",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__vt__20ShadowVolumeOvalPole",
+    "size": "48",
+    "match_percent": 100.0
+  }
+]
