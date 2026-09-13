@@ -98,6 +98,24 @@ namespace MR {
         return pObj;
     }
 
+    ModelObj* createModelObjNoSilhouettedMapObj(const char* pName, const char* pModelName, MtxPtr pMtx) {
+        ModelObj* pObj = new ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_NoSilhouettedMapObj, -2, -2, false);
+        pObj->initWithoutIter();
+        return pObj;
+    }
+
+    ModelObj* createModelObjIndirectMapObj(const char* pName, const char* pModelName, MtxPtr pMtx) {
+        ModelObj* pObj = new ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_IndirectMapObj, -2, -2, false);
+        pObj->initWithoutIter();
+        return pObj;
+    }
+
+    ModelObj* createModelObjNpc(const char* pName, const char* pModelName, MtxPtr pMtx) {
+        ModelObj* pObj = new ModelObj(pName, pModelName, pMtx, MR::DrawBufferType_NPC, -2, -2, false);
+        pObj->initWithoutIter();
+        return pObj;
+    }
+
     LodCtrl* createLodCtrlPlanet(LiveActor* pActor, const JMapInfoIter& rIter, f32 farClip, s32 lowModelType) {
         auto owner = std::make_unique<LodCtrl>(pActor, rIter);
         LodCtrl* pLod = owner.get();

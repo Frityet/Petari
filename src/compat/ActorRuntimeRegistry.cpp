@@ -1,4 +1,5 @@
 #include "compat/DemoDirectorOwnership.hpp"
+#include "compat/ClippingDirectorOwnership.hpp"
 #include "compat/TalkDirectorLifetime.hpp"
 #include <aurora/exception.hpp>
 #include "Game/Screen/StarPointerTarget.hpp"
@@ -8,6 +9,12 @@
 
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/Binder.hpp"
+#include "Game/LiveActor/ClippingDirector.hpp"
+#include "Game/LiveActor/ClippingActorHolder.hpp"
+#include "Game/LiveActor/ClippingActorInfo.hpp"
+#include "Game/LiveActor/ClippingGroupHolder.hpp"
+#include "Game/LiveActor/ViewGroupCtrl.hpp"
+#include "Game/Util/JMapIdInfo.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/HitSensorInfo.hpp"
 #include "Game/LiveActor/HitSensorKeeper.hpp"
@@ -75,11 +82,8 @@ namespace {
         std::unique_ptr<HitSensorKeeper, HitSensorKeeperDeleter> sensor_keeper{};
         std::optional<smgpc::compat::ActorBinderRuntimeConfig> binder{};
         std::unique_ptr<Binder> binder_provider{};
-        // Original ClippingActorInfo constructor defaults; new actors belong
-        // to the dormant list until their original appearance operation.
-        std::optional<smgpc::compat::ActorClippingRuntimeState> clipping{
-            smgpc::compat::ActorClippingRuntimeState{true, 300.0F, nullptr, 6}};
-        bool clipping_target = false;
+        ClippingActorHolder* clipping_holder = nullptr;
+        ClippingGroupHolder* clipping_groups = nullptr;
         std::optional<smgpc::compat::ActorShadowRuntimeState> shadow{};
         std::unique_ptr<smgpc::compat::ShadowControllerOwnership> shadow_owner{};
         std::unique_ptr<Spine> spine{};
@@ -237,6 +241,7 @@ namespace smgpc::compat {
     }
 
     void release_name_obj_runtime_state(const NameObj* object) {
+        if (auto* clipping = smgpc::scene::current_clipping_director_ownership()) clipping->release_name_obj(object);
         if (auto* talk = smgpc::scene::current_talk_director_lifetime()) talk->release_name_obj(object);
         if (auto* demo = smgpc::scene::current_demo_director_ownership()) demo->release_name_obj(object);
         // Groups borrow their members. Native factory rollback and object
@@ -431,15 +436,22 @@ namespace smgpc::compat {
     }
 
     void register_actor_runtime_state(LiveActor* actor) {
-        JkrHostAllocationScope host;
         if (actor == nullptr) {
             aurora::throw_host_exception<std::invalid_argument>("LiveActor runtime state requires a real actor.");
         }
-        if (!actor_states().try_emplace(actor).second) {
-            aurora::throw_host_exception<std::logic_error>("LiveActor runtime state is already registered.");
+        {
+            JkrHostAllocationScope host;
+            if (!actor_states().try_emplace(actor).second) {
+                aurora::throw_host_exception<std::logic_error>("LiveActor runtime state is already registered.");
+            }
         }
         if (smgpc::scene::current_scene_obj_holder() != nullptr) {
             MR::getAllLiveActorGroup()->registerActor(actor);
+            auto* director = MR::getClippingDirector();
+            director->registerActor(actor);
+            auto& state = require_actor_state(actor);
+            state.clipping_holder = director->mActorHolder;
+            state.clipping_groups = director->mGroupHolder;
         }
     }
 
@@ -457,6 +469,42 @@ namespace smgpc::compat {
             return;
         }
 
+        auto& state = found->second;
+        if (auto* holder = state.clipping_holder) {
+            ClippingActorInfoList* lists[] = {holder->_10, holder->_14, holder->_18, holder->_1C};
+            ClippingActorInfo* info = nullptr;
+            for (auto* list : lists) {
+                if (list->findOrNone(actor) != nullptr) {
+                    info = list->remove(const_cast<LiveActor*>(actor));
+                    --holder->_C;
+                    break;
+                }
+            }
+            if (info != nullptr) {
+                if (auto* groups = state.clipping_groups) {
+                    for (s32 i = 0; i < groups->mNumGroups; ++i) {
+                        auto* group = groups->mInfoGroups[i];
+                        for (s32 j = 0; j < group->_10; ++j) {
+                            if (group->_14[j] == info) {
+                                group->_14[j] = group->_14[--group->_10];
+                                break;
+                            }
+                        }
+                    }
+                }
+                delete info->mInfo;
+                delete info;
+            }
+            auto* view = holder->mViewGroupCtrl;
+            for (u32 i = 0; i < view->mViewCtrlCount; ++i) {
+                if (view->mLodCtrls[i] == state.lod_ctrl.get()) {
+                    view->mLodCtrls[i] = view->mLodCtrls[--view->mViewCtrlCount];
+                    break;
+                }
+            }
+            state.clipping_holder = nullptr;
+            state.clipping_groups = nullptr;
+        }
         release_actor_effect_keeper(actor);
         release_actor_collision_parts(actor);
         release_demo_runtime_state(actor);
@@ -691,63 +739,20 @@ namespace smgpc::compat {
         state.binder.reset();
     }
 
-    void configure_actor_clipping_sphere(LiveActor* actor, float radius, const TVec3f* center) {
-        if (actor == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("Actor clipping operation requires a LiveActor.");
+    void retire_clipping_actor_holder(ClippingActorHolder& holder) noexcept {
+        for (auto& [actor, state] : actor_states()) {
+            if (state.clipping_holder == &holder) {
+                state.clipping_holder = nullptr;
+                state.clipping_groups = nullptr;
+            }
         }
-        if (!std::isfinite(radius) || radius < 0.0F) {
-            aurora::throw_host_exception<std::invalid_argument>("Actor clipping radius must be finite and non-negative.");
-        }
-        auto& stored_clipping = require_actor_state(actor).clipping;
-        if (!stored_clipping.has_value()) {
-            stored_clipping.emplace();
-        }
-        auto& clipping = *stored_clipping;
-        clipping.sphere_configured = true;
-        clipping.sphere_radius = radius;
-        clipping.sphere_center = center;
     }
 
-    void configure_actor_clipping_far_level(LiveActor* actor, int level) {
-        if (actor == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("Actor clipping operation requires a LiveActor.");
-        }
-        if (level < 0 || level > 7) {
-            aurora::throw_host_exception<std::invalid_argument>("Actor clipping far level must be in the original 0..7 range.");
-        }
-        auto& clipping = require_actor_state(actor).clipping;
-        if (!clipping.has_value()) {
-            clipping.emplace();
-        }
-        clipping->far_level = level;
-    }
-
-    const ActorClippingRuntimeState* actor_clipping_runtime_state(const LiveActor* actor) {
-        if (actor == nullptr) {
-            return nullptr;
-        }
-        const auto found = actor_states().find(actor);
-        if (found == actor_states().end()) {
-            return nullptr;
-        }
-        const auto& clipping = found->second.clipping;
-        return clipping.has_value() ? &*clipping : nullptr;
-    }
-
-    void set_actor_clipping_target(LiveActor* actor, bool active) {
-        require_actor_state(actor).clipping_target = active;
-    }
-
-    bool actor_is_clipping_target(const LiveActor* actor) noexcept {
-        const auto found = actor_states().find(actor);
-        return found != actor_states().end() && found->second.clipping_target;
-    }
-
-    void release_actor_clipping_state(const LiveActor* actor) {
-        if (actor != nullptr) {
-            auto& state = require_actor_state(actor);
-            state.clipping_target = false;
-            state.clipping.reset();
+    void retire_clipping_group_holder(ClippingGroupHolder& holder) noexcept {
+        for (auto& [actor, state] : actor_states()) {
+            if (state.clipping_groups == &holder) {
+                state.clipping_groups = nullptr;
+            }
         }
     }
 

@@ -19,11 +19,10 @@ public:
         return 50.0f;
     };
 
-    virtual TVec3f* getClippingCenterOffset() const {
-        // RMGK02 returns a zero vector through expired stack storage here.
-        // Preserve the value while giving the host a valid lifetime.
-        static TVec3f vec(0.0f, 0.0f, 0.0f);
-        return &vec;
+    virtual TVec3f getClippingCenterOffset() const {
+        TVec3f vec;
+        vec.set(0.0f, 0.0f, 0.0f);
+        return vec;
     };
 
     virtual bool isSyncClipping() const {

@@ -1,3 +1,5 @@
+#include "Game/LiveActor/ClippingDirector.hpp"
+#include "Game/LiveActor/ClippingActorHolder.hpp"
 #include <aurora/allocation.hpp>
 #include "resource/TextEncoding.hpp"
 #include <aurora/exception.hpp>
@@ -22,7 +24,6 @@
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "compat/ActorMotionCompat.hpp"
-#include "compat/ActorPhysicsRuntime.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -119,8 +120,8 @@ namespace MR {
         return valueStart + ((valueEnd - valueStart) * rate);
     }
 
-    void setClippingFar100m(LiveActor *pActor) {
-        smgpc::compat::configure_actor_clipping_far_level(pActor, 6);
+    void setClippingFar100m(LiveActor* pActor) {
+        MR::getClippingDirector()->mActorHolder->setFarClipLevel(pActor, 6);
     }
 
     bool isNoBind(const LiveActor *pActor) {

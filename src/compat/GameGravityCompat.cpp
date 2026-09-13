@@ -239,4 +239,13 @@ namespace MR {
             pActor->mGravity.set(gravity);
         }
     }
+
+    void calcGravity(LiveActor* pActor, const TVec3f& rPos) {
+        TVec3f gravity;
+        calcGravityVector(pActor, rPos, &gravity, nullptr, 0);
+
+        if (!isNearZero(gravity)) {
+            pActor->mGravity.set(gravity);
+        }
+    }
 }  // namespace MR

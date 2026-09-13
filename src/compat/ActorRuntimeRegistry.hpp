@@ -20,6 +20,8 @@ class ActorLightCtrl;
 class HitSensor;
 class JMapInfoIter;
 class LiveActor;
+class ClippingActorHolder;
+class ClippingGroupHolder;
 class LodCtrl;
 class NameObj;
 class Nerve;
@@ -61,14 +63,6 @@ namespace smgpc::compat {
         float radius = 0.0F;
         float offset = 0.0F;
         std::uint32_t plane_capacity = 0U;
-    };
-
-    struct ActorClippingRuntimeState {
-        bool sphere_configured = false;
-        float sphere_radius = 0.0F;
-        // Null has the original meaning: center the sphere on actor position.
-        const TVec3f* sphere_center = nullptr;
-        std::optional<int> far_level{};
     };
 
     enum class ActorShadowControllerKind {
@@ -260,15 +254,8 @@ namespace smgpc::compat {
     [[nodiscard]] const ActorBinderRuntimeConfig* actor_binder_config(const LiveActor* actor);
     void release_actor_binder_state(const LiveActor* actor);
 
-    void configure_actor_clipping_sphere(LiveActor* actor, float radius, const TVec3f* center);
-    void configure_actor_clipping_far_level(LiveActor* actor, int level);
-    [[nodiscard]] const ActorClippingRuntimeState* actor_clipping_runtime_state(const LiveActor* actor);
-    // The host clipping evaluator consumes this actual active-target membership.
-    // Appearance/death and clipping validation control it independently of the
-    // actor's current clipped result and authored sphere parameters.
-    void set_actor_clipping_target(LiveActor* actor, bool active);
-    [[nodiscard]] bool actor_is_clipping_target(const LiveActor* actor) noexcept;
-    void release_actor_clipping_state(const LiveActor* actor);
+    void retire_clipping_actor_holder(ClippingActorHolder& holder) noexcept;
+    void retire_clipping_group_holder(ClippingGroupHolder& holder) noexcept;
 
     void initialize_actor_shadow_controller_list(LiveActor* actor, std::uint32_t capacity);
     // Name inputs and lookups below use raw CP932 bytes, including host callers.

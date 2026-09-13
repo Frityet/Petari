@@ -1,6 +1,7 @@
 #include <aurora/exception.hpp>
 #include "compat/DisabledObjectAudioService.hpp"
 #include "compat/AudioFacadeCompat.hpp"
+#include "compat/DisabledAudioBackend.hpp"
 
 #include "Game/AudioLib/AudBgm.hpp"
 #include "Game/AudioLib/AudSystem.hpp"
@@ -11,6 +12,10 @@
 #include "Game/AudioLib/AudFader.hpp"
 #include "Game/AudioLib/AudTrackController.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
+#include "Game/System/AudSystemWrapper.hpp"
+#include "Game/System/GameSystem.hpp"
+#include "Game/System/GameSystemObjHolder.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/RuntimeServices.hpp"
 
@@ -26,6 +31,15 @@ namespace {
 
     AudBgmMgr s_bgm_manager;
     using BgmLane = smgpc::runtime::BgmLane;
+
+    [[nodiscard]] bool process_output_disabled() {
+        const auto* system = SingletonHolder<GameSystem>::get();
+        const auto* wrapper = system && system->mObjHolder ? system->mObjHolder->mAudioSystem : nullptr;
+        const auto* backend = wrapper ? wrapper->mDisabledBackend : nullptr;
+        // The actual process explicitly owns a backend with no output device.
+        // Its absent voices do not require a separate RuntimeContext event log.
+        return backend && !backend->has_output_device();
+    }
 
     [[noreturn]] void unavailable(const char *operation) {
         aurora::throw_host_exception<std::logic_error>(std::string("The concrete JAudio backend does not provide ") + operation + ".");
@@ -639,6 +653,7 @@ JAISoundHandle *AudBgmMgr::start(s32 bgm_index, u32 sound_id, bool prepared) {
     if (bgm_index < 0 || bgm_index >= 2) {
         aurora::throw_host_exception<std::out_of_range>("BGM index is outside the original stage/sub lanes");
     }
+    if (process_output_disabled()) return nullptr;
     const auto lane = static_cast<BgmLane>(bgm_index);
     if (mBgm[bgm_index] != nullptr) mBgm[bgm_index]->stop(0);
     release_bgm_object(lane);
@@ -682,7 +697,7 @@ JAISoundHandle *AudBgmMgr::startLastBGM(s32 bgm_index) {
 
 void AudBgmMgr::clearLastBGM(s32 bgm_index) {
     mLastBGM[bgm_index] = static_cast<u32>(-1);
-    if (bgm_index == BgmType_Stage) {
+    if (bgm_index == BgmType_Stage && !process_output_disabled()) {
         smgpc::compat::require_active_audio_event_service().clear_last_stage_bgm_id();
     }
 }
@@ -757,7 +772,7 @@ namespace AudWrap {
     }
 
     AudBgmMgr *getBgmMgr() {
-        (void)smgpc::compat::require_active_audio_event_service();
+        if (!process_output_disabled()) (void)smgpc::compat::require_active_audio_event_service();
         if (auto *runtime = try_concrete_audio_runtime()) {
             (void)reconcile_bgm(BgmLane::Stage, runtime->j_audio_playback());
             (void)reconcile_bgm(BgmLane::Sub, runtime->j_audio_playback());
@@ -766,6 +781,7 @@ namespace AudWrap {
     }
 
     AudBgm *getStageBgm() {
+        if (process_output_disabled()) return nullptr;
         auto &audio = smgpc::compat::require_active_audio_event_service();
         if (!audio.is_stage_bgm_identity_resolved()) {
             aurora::throw_host_exception<std::logic_error>("The current stage-BGM identity has not been resolved.");
@@ -786,6 +802,7 @@ namespace AudWrap {
     }
 
     AudBgm *getSubBgm() {
+        if (process_output_disabled()) return nullptr;
         auto *runtime = try_concrete_audio_runtime();
         if (runtime == nullptr) {
             auto *audio = smgpc::compat::try_active_audio_event_service();

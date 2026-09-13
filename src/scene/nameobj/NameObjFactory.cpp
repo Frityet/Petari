@@ -2,6 +2,7 @@
 #include "scene/nameobj/NameObjFactory.hpp"
 
 #include "Game/Demo/PrologueDirector.hpp"
+#include "Game/Effect/SimpleEffectObj.hpp"
 #include "Game/Gravity/GlobalGravityObj.hpp"
 #include "Game/Map/Air.hpp"
 #include "Game/Map/GroupSwitchWatcher.hpp"
@@ -14,6 +15,8 @@
 #include "Game/MapObj/FlipPanel.hpp"
 #include "Game/MapObj/InvisiblePolygonObj.hpp"
 #include "Game/MapObj/InvisiblePolygonObjGCapture.hpp"
+#include "Game/MapObj/PowerStar.hpp"
+#include "Game/MapObj/PowerStarAppearPoint.hpp"
 #include "Game/MapObj/StarPieceGroup.hpp"
 #include "Game/MapObj/ShockWaveGenerator.hpp"
 #include "Game/MapObj/SimpleMapObj.hpp"
@@ -114,6 +117,11 @@ namespace {
     // placement policy. An entry is present only when its normal init path has
     // no known mandatory dependency on an unavailable host subsystem.
     constexpr auto cSupportedCreateTable = std::array{
+        NameObjFactory::Name2CreateFunc{
+            "Steam",
+            create_supported_name_obj<SimpleEffectObj>,
+            nullptr,
+        },
         NameObjFactory::Name2CreateFunc{
             "Mario",
             create_supported_name_obj<MarioActor>,
@@ -315,6 +323,21 @@ namespace {
             "LensFlare",
         },
         NameObjFactory::Name2CreateFunc{
+            "PowerStar",
+            create_supported_name_obj<PowerStar>,
+            "PowerStar",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "GrandStar",
+            create_supported_name_obj<PowerStar>,
+            "GrandStar",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "PowerStarAppearPoint",
+            create_supported_name_obj<PowerStarAppearPoint>,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
             "BrightSun",
             create_supported_name_obj<BrightSun>,
             "LensFlare",
@@ -465,7 +488,6 @@ namespace {
             "RestartCube",
             "real_mario_update_and_restart_dispatch_runtime_unavailable",
         },
-        UnavailableCreatorRecord{"Steam", "clipping_group_runtime_unavailable"},
         UnavailableCreatorRecord{"RailCoin", "shadow_area_and_mercator_runtime_unavailable"},
         UnavailableCreatorRecord{"PurpleRailCoin", "shadow_area_and_mercator_runtime_unavailable"},
         UnavailableCreatorRecord{"PurpleCoinStarter", "event_power_star_and_scene_layout_runtime_unavailable"},
@@ -492,6 +514,10 @@ namespace {
         NameObjFactory::Name2MakeArchiveListFunc{
             "PurpleCoin",
             Coin::makeArchiveList,
+        },
+        NameObjFactory::Name2MakeArchiveListFunc{
+            "PowerStar",
+            PowerStar::makeArchiveList,
         },
         NameObjFactory::Name2MakeArchiveListFunc{
             "Rosetta",

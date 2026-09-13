@@ -1277,6 +1277,10 @@ namespace smgpc::render {
     }
 
     void AuroraRenderer::request_screenshot_png(const std::filesystem::path &path) {
+        _impl->window.request_screenshot_png(path);
+    }
+
+    void AuroraWindow::request_screenshot_png(const std::filesystem::path &path) {
         const auto host_allocations = aurora::allocation::HostAllocationScope {};
         auto width = 0U;
         auto height = 0U;

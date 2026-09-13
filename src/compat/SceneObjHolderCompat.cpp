@@ -8,6 +8,7 @@
 #include "compat/EffectSystemOwnership.hpp"
 #include "compat/ImageEffectOwnership.hpp"
 #include "compat/CollisionDirectorOwnership.hpp"
+#include "compat/ClippingDirectorOwnership.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 #include "Game/Map/CollisionDirector.hpp"
 #include "Game/Map/SunshadeMapHolder.hpp"
@@ -153,6 +154,10 @@ namespace smgpc::scene {
         return sCurrentSceneObjHolderBinding ? sCurrentSceneObjHolderBinding->_collision_director_ownership.get() : nullptr;
     }
 
+    smgpc::compat::ClippingDirectorOwnership* current_clipping_director_ownership() noexcept {
+        return sCurrentSceneObjHolderBinding ? sCurrentSceneObjHolderBinding->_clipping_director_ownership.get() : nullptr;
+    }
+
     SceneObjHolderBinding::SceneObjHolderBinding(
         SceneObjHolder &holder,
         SceneObjFactoryOverride factory_override,
@@ -165,6 +170,7 @@ namespace smgpc::scene {
         smgpc::compat::JkrHostAllocationScope host;
         _global_gravity_ownership = std::make_unique<smgpc::compat::GlobalGravityOwnership>(holder);
         _collision_director_ownership = std::make_unique<smgpc::compat::CollisionDirectorOwnership>();
+        _clipping_director_ownership = std::make_unique<smgpc::compat::ClippingDirectorOwnership>();
         _demo_director_ownership = std::make_unique<smgpc::compat::DemoDirectorOwnership>();
         _talk_director_lifetime = std::make_unique<smgpc::compat::TalkDirectorLifetime>();
         _image_effect_ownership = std::make_unique<smgpc::compat::ImageEffectOwnership>(holder);
@@ -232,6 +238,8 @@ namespace smgpc::scene {
         smgpc::compat::release_scene_collision_parts(_holder);
         _collision_director_ownership->reclaim();
         _collision_director_ownership.reset();
+        _clipping_director_ownership->reclaim();
+        _clipping_director_ownership.reset();
         _image_effect_ownership->reclaim_prepared();
         _image_effect_ownership.reset();
         _owned_registration_objects.clear();
@@ -326,6 +334,7 @@ namespace smgpc::scene {
 
     void SceneObjHolderBinding::prepare_retirement() noexcept {
         _talk_director_lifetime->begin_retirement();
+        _clipping_director_ownership->prepare_retirement();
     }
 
     smgpc::compat::TalkDirectorLifetime* current_talk_director_lifetime() noexcept {
@@ -521,6 +530,7 @@ NameObj *SceneObjHolder::create(int id) {
         binding->_demo_director_ownership->prepare_rollback(marker);
         binding->_image_effect_ownership->prepare_rollback(marker);
         const bool collision_rollback = binding->_collision_director_ownership->prepare_rollback(marker);
+        const bool clipping_rollback = binding->_clipping_director_ownership->prepare_rollback(marker);
         if (object != nullptr &&
             smgpc::compat::name_obj_runtime_object_was_registered_since(
                 object.get(), marker)) {
@@ -537,6 +547,7 @@ NameObj *SceneObjHolder::create(int id) {
         binding->_demo_director_ownership->reclaim();
         binding->_image_effect_ownership->reclaim_prepared();
         if (collision_rollback) binding->_collision_director_ownership->reclaim();
+        if (clipping_rollback) binding->_clipping_director_ownership->reclaim();
         --binding->_construction_depth;
         if (outermost) {
             binding->_provisional_slots.clear();
@@ -593,7 +604,7 @@ NameObj *SceneObjHolder::newEachObj(int id) {
             aurora::throw_host_exception<std::logic_error>("EffectSystem requires scene heap initialization");
         return sCurrentSceneObjHolderBinding->_effect_system_ownership->construct();
     case SceneObj_ClippingDirector:
-        return new ClippingDirector();
+        return sCurrentSceneObjHolderBinding->_clipping_director_ownership->construct();
     case SceneObj_LightDirector:
         return new LightDirector();
     case SceneObj_FurDrawManager:

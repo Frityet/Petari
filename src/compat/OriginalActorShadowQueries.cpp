@@ -2,6 +2,7 @@
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/ActorShadowLocalUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
 
@@ -44,6 +45,16 @@ namespace MR {
 
     void onShadowVolumeCutDropLength(LiveActor* pActor, const char* pName) {
         ActorShadow::getShadowVolumeDrawer(pActor, pName)->onCutDropShadow();
+    }
+
+    void validateShadowGroup(LiveActor* pActor, const char* pName) {
+        u32 count = ActorShadow::getShadowControllerCount(pActor);
+
+        for (u32 i = 0; i < count; i++) {
+            if (isEqualString(ActorShadow::getShadowController(pActor, i)->mGroupName, pName)) {
+                ActorShadow::getShadowController(pActor, i)->validate();
+            }
+        }
     }
 
     void invalidateShadowAll(LiveActor* pActor) {

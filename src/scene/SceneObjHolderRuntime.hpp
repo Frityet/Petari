@@ -15,6 +15,7 @@ namespace smgpc::camera { class CameraDirectorRuntime; }
 
 namespace smgpc::compat {
     class CollisionDirectorOwnership;
+    class ClippingDirectorOwnership;
     class DemoDirectorOwnership;
     class EffectSystemOwnership;
     class ImageEffectOwnership;
@@ -57,6 +58,7 @@ namespace smgpc::scene {
         friend class ::SceneObjHolder;
         friend std::shared_ptr<smgpc::compat::JkrAllocationDomain> current_scene_allocation_domain() noexcept;
         friend smgpc::compat::CollisionDirectorOwnership* current_collision_director_ownership() noexcept;
+        friend smgpc::compat::ClippingDirectorOwnership* current_clipping_director_ownership() noexcept;
         friend smgpc::compat::EffectSystemOwnership* current_effect_system_ownership() noexcept;
         friend AreaObjRuntime *current_area_obj_runtime() noexcept;
         friend smgpc::compat::CapturedFrameBlurService *
@@ -80,6 +82,7 @@ namespace smgpc::scene {
         std::unique_ptr<smgpc::compat::EffectSystemOwnership> _effect_system_ownership;
         std::unique_ptr<smgpc::compat::ImageEffectOwnership> _image_effect_ownership;
         std::unique_ptr<smgpc::compat::CollisionDirectorOwnership> _collision_director_ownership;
+        std::unique_ptr<smgpc::compat::ClippingDirectorOwnership> _clipping_director_ownership;
         smgpc::runtime::SceneScheduler* _effect_scheduler = nullptr;
         std::size_t _effect_registration_marker = 0U;
         SceneObjHolder *_holder;
@@ -102,6 +105,7 @@ namespace smgpc::scene {
     };
 
     [[nodiscard]] smgpc::compat::CollisionDirectorOwnership* current_collision_director_ownership() noexcept;
+    [[nodiscard]] smgpc::compat::ClippingDirectorOwnership* current_clipping_director_ownership() noexcept;
     [[nodiscard]] smgpc::compat::EffectSystemOwnership* current_effect_system_ownership() noexcept;
     [[nodiscard]] SceneObjHolder *current_scene_obj_holder() noexcept;
     [[nodiscard]] smgpc::compat::DemoDirectorOwnership* current_demo_director_ownership() noexcept;

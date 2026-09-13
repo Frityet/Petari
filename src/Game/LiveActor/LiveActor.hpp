@@ -36,8 +36,7 @@ public:
 
     /// @brief Intializes the `LiveActor` while being placed into a scene.
     /// @param rIter A reference to an iterator over a `JMapInfo`.
-    /* 0x0C */ virtual void init(const JMapInfoIter& rIter) override;
-
+    /* 0x0C */ virtual void init(const JMapInfoIter& rIter);
     /* 0x14 */ virtual void movement();
     /* 0x1C */ virtual void calcAnim();
     /* 0x20 */ virtual void calcViewAndEntry();

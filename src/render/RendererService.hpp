@@ -84,6 +84,7 @@ namespace smgpc::render {
         ~AuroraWindow();
 
         bool poll_events();
+        void request_screenshot_png(const std::filesystem::path &path);
         [[nodiscard]] bool should_close() const;
         [[nodiscard]] bool is_focused() const;
         [[nodiscard]] bool is_minimized() const;

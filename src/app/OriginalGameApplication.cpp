@@ -409,6 +409,11 @@ int run_original_game(const BootstrapConfiguration& configuration, logging::ILog
     process.initialize();
     logger.info(logging::Category::APP, logging::Message{"Running the original GameSystem frame loop"});
     std::uint64_t completed_frames = 0;
+    const char* screenshot_path = std::getenv("SMGPC_SCREENSHOT_PATH");
+    const char* screenshot_frame_text = std::getenv("SMGPC_SCREENSHOT_FRAME");
+    const auto screenshot_frame = screenshot_frame_text && *screenshot_frame_text
+        ? option_integer<std::uint64_t>(screenshot_frame_text, "SMGPC_SCREENSHOT_FRAME") : 1U;
+    bool screenshot_written = false;
     while ((options.max_frames == 0 || completed_frames < options.max_frames) && window.poll_events()) {
         if (!aurora_begin_frame()) continue;
         try {
@@ -419,6 +424,10 @@ int run_original_game(const BootstrapConfiguration& configuration, logging::ILog
         }
         aurora_end_frame();
         ++completed_frames;
+        if (screenshot_path && *screenshot_path && !screenshot_written && completed_frames >= screenshot_frame) {
+            window.request_screenshot_png(screenshot_path);
+            screenshot_written = true;
+        }
     }
     logger.info(logging::Category::APP, logging::Message{"Original GameSystem stopped after {} completed frames"}, completed_frames);
     return 0;

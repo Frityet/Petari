@@ -42,7 +42,6 @@
 #include "Game/Util/LightUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "compat/ActorMotionCompat.hpp"
-#include "compat/ActorPhysicsRuntime.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "render/BrightVisibilityService.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -756,27 +755,6 @@ namespace smgpc::runtime {
 #endif
     }
 
-    void SceneScheduler::execute_actor_clipping() {
-        auto updated_actors = std::vector<LiveActor*>{};
-        for (const auto& registered : entries_snapshot()) {
-            auto entry = current_entry(registered);
-            if (!entry) continue;
-            auto* actor = entry_live_actor(*entry);
-            if (actor == nullptr || actor->mFlag.mIsDead || !smgpc::compat::actor_is_clipping_target(actor) ||
-                draw_buffer_uses_model_3d_for_2d(entry->draw_buffer_type) ||
-                std::ranges::find(updated_actors, actor) != updated_actors.end()) {
-                continue;
-            }
-            invoke_game_callback(_allocation_domain, [&] {
-                smgpc::compat::update_actor_clipping(*actor, *MR::getClippingJudge());
-            });
-            {
-                smgpc::compat::JkrHostAllocationScope host;
-                updated_actors.push_back(actor);
-            }
-        }
-    }
-
     void SceneScheduler::execute_movement() {
         smgpc::compat::JkrHostAllocationScope host;
         smgpc::compat::SceneJ3dScope j3d_scope;
@@ -810,9 +788,6 @@ namespace smgpc::runtime {
             aurora::throw_host_exception<std::out_of_range>("Movement category must be nonnegative");
         for (const auto& registered : category_entries(movement_type, false))
             execute_movement_entry(registered, movement_type);
-        // The original Director first updates its judge from the current camera.
-        // Apply those planes to the existing actor registry at the same boundary.
-        if (movement_type == MR::MovementType_ClippingDirector) execute_actor_clipping();
     }
 
     void SceneScheduler::execute_movement_entry(const Entry& registered, s32 movement_type) {

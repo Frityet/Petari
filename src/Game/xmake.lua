@@ -1,6 +1,7 @@
 target("smg-pc-game")
     set_kind("static")
     add_cxxflags("-Wno-register", {force = true})
+	add_cxxflags("-Wno-inconsistent-missing-override")
     add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), { force = true })
     add_cxxflags("-fno-builtin-sprintf", "-fno-builtin-snprintf", "-fno-builtin-vsprintf", "-fno-builtin-vsnprintf", {force = true})
     add_files("**.cpp")

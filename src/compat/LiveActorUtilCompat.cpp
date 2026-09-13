@@ -1,3 +1,5 @@
+#include "Game/LiveActor/ClippingDirector.hpp"
+#include "Game/LiveActor/ClippingActorHolder.hpp"
 #include <aurora/exception.hpp>
 #include "Game/Util/LiveActorUtil.hpp"
 
@@ -23,27 +25,23 @@
 namespace MR {
 
     void validateClipping(LiveActor* pActor) {
-        if (pActor != nullptr && pActor->mFlag.mIsInvalidClipping) {
-            pActor->mFlag.mIsInvalidClipping = false;
-            smgpc::compat::set_actor_clipping_target(pActor, !pActor->mFlag.mIsDead);
+        if (pActor->mFlag.mIsInvalidClipping) {
+            MR::getClippingDirector()->mActorHolder->validateClipping(pActor);
         }
     }
 
     void invalidateClipping(LiveActor* pActor) {
-        if (pActor == nullptr) {
-            return;
-        }
-        if (!pActor->mFlag.mIsInvalidClipping) {
-            pActor->mFlag.mIsInvalidClipping = true;
-            smgpc::compat::set_actor_clipping_target(pActor, false);
-        }
-        if (pActor->mFlag.mIsClipped) {
-            pActor->endClipped();
+        if (pActor->mFlag.mIsInvalidClipping) {
+            if (pActor->mFlag.mIsClipped) {
+                pActor->endClipped();
+            }
+        } else {
+            MR::getClippingDirector()->mActorHolder->invalidateClipping(pActor);
         }
     }
 
     void setClippingFarMax(LiveActor* pActor) {
-        smgpc::compat::configure_actor_clipping_far_level(pActor, 0);
+        MR::getClippingDirector()->mActorHolder->setFarClipLevel(pActor, 0);
     }
 
 
@@ -392,6 +390,10 @@ namespace MR {
 
         hideModel(pActor);
         onCalcAnim(pActor);
+    }
+
+    f32 calcNerveEaseInValue(const LiveActor* pActor, s32 stepMax, f32 valueStart, f32 valueEnd) {
+        return getEaseInValue(calcNerveRate(pActor, stepMax), valueStart, valueEnd, 1.0f);
     }
 
     f32 calcNerveEaseOutValue(const LiveActor* pActor, s32 stepMax, f32 valueStart, f32 valueEnd) {

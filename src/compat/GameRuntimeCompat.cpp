@@ -1,70 +1,55 @@
-#include <aurora/exception.hpp>
-#include "Game/LiveActor/HitSensor.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
-#include "Game/Util/ActorSensorUtil.hpp"
-#include "Game/Util/DemoUtil.hpp"
-#include "Game/Util/Functor.hpp"
-#include "Game/Util/JMapInfo.hpp"
-#include "Game/Util/JMapUtil.hpp"
+#include "compat/ClippingDirectorOwnership.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/LiveActor/ClippingDirector.hpp"
+#include "Game/LiveActor/ClippingActorHolder.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
-#include "Game/Util/ObjUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-
-#include <stdexcept>
 
 namespace MR {
-    void setClippingFar50m(LiveActor* pActor) {
-        smgpc::compat::configure_actor_clipping_far_level(pActor, 7);
-    }
-
     void setClippingTypeSphere(LiveActor* pActor, f32 radius) {
-        smgpc::compat::configure_actor_clipping_sphere(pActor, radius, nullptr);
+        MR::getClippingDirector()->mActorHolder->setTypeToSphere(pActor, radius, nullptr);
     }
 
-    void setClippingTypeSphere(LiveActor* pActor, f32 radius, const TVec3f* pCenter) {
-        smgpc::compat::configure_actor_clipping_sphere(pActor, radius, pCenter);
+    void setClippingTypeSphere(LiveActor* pActor, f32 radius, const TVec3f* pTrans) {
+        MR::getClippingDirector()->mActorHolder->setTypeToSphere(pActor, radius, pTrans);
     }
 
-    void setClippingFar(LiveActor* pActor, f32 distance) {
-        switch (static_cast<s32>(distance)) {
+    void setClippingFar50m(LiveActor* pActor) {
+        MR::getClippingDirector()->mActorHolder->setFarClipLevel(pActor, 7);
+    }
+
+    void setClippingFar(LiveActor* pActor, f32 clipping) {
+        s32 clip = clipping;
+
+        switch (clip) {
         case 50:
-            smgpc::compat::configure_actor_clipping_far_level(pActor, 7);
+            MR::getClippingDirector()->mActorHolder->setFarClipLevel(pActor, 7);
             break;
         case 100:
-            smgpc::compat::configure_actor_clipping_far_level(pActor, 6);
+            MR::getClippingDirector()->mActorHolder->setFarClipLevel(pActor, 6);
             break;
         case 200:
-            smgpc::compat::configure_actor_clipping_far_level(pActor, 5);
+            MR::getClippingDirector()->mActorHolder->setFarClipLevel(pActor, 5);
             break;
         case 300:
-            smgpc::compat::configure_actor_clipping_far_level(pActor, 4);
+            MR::getClippingDirector()->mActorHolder->setFarClipLevel(pActor, 4);
             break;
         case 400:
-            smgpc::compat::configure_actor_clipping_far_level(pActor, 3);
+            MR::getClippingDirector()->mActorHolder->setFarClipLevel(pActor, 3);
             break;
         case 500:
-            smgpc::compat::configure_actor_clipping_far_level(pActor, 2);
+            MR::getClippingDirector()->mActorHolder->setFarClipLevel(pActor, 2);
             break;
         case 600:
-            smgpc::compat::configure_actor_clipping_far_level(pActor, 1);
+            MR::getClippingDirector()->mActorHolder->setFarClipLevel(pActor, 1);
             break;
         case -1:
-            smgpc::compat::configure_actor_clipping_far_level(pActor, 0);
-            break;
-        default:
+            MR::getClippingDirector()->mActorHolder->setFarClipLevel(pActor, 0);
             break;
         }
     }
 
-    void setGroupClipping(LiveActor* pActor, const JMapInfoIter& rIter, int) {
-        if (pActor == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("Group clipping requires a LiveActor.");
-        }
-
-        auto clipping_group_id = s32{-1};
-        if (MR::getJMapInfoClippingGroupID(rIter, &clipping_group_id) && clipping_group_id >= 0) {
-            aurora::throw_host_exception<std::logic_error>("Group clipping is unavailable without ClippingGroupHolder.");
-        }
+    void setGroupClipping(LiveActor* pActor, const JMapInfoIter& rIter, int a3) {
+        MR::getClippingDirector()->joinToGroupClipping(pActor, rIter, a3);
+        smgpc::scene::current_clipping_director_ownership()->capture_groups();
     }
-
-}  // namespace MR
+}
