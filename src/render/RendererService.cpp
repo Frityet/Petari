@@ -2,6 +2,7 @@
 #include <aurora/exception.hpp>
 #include "RendererService.hpp"
 #include "render/AuroraBrightVisibilityService.hpp"
+#include "render/core/FrameButtonState.hpp"
 
 #include <algorithm>
 #include <array>
@@ -812,23 +813,40 @@ namespace smgpc::render {
         void process_sdl_event(const SDL_Event &event) {
             switch (event.type) {
             case SDL_EVENT_KEY_DOWN:
-            case SDL_EVENT_KEY_UP:
-                if (const auto button = input_button_from_key(event.key.key); button.has_value()) {
-                    pressed[static_cast<std::size_t>(*button)] = event.type == SDL_EVENT_KEY_DOWN;
+            case SDL_EVENT_KEY_UP: {
+                const auto source = (std::uint64_t{event.key.which} << 32U) |
+                                    static_cast<std::uint32_t>(event.key.scancode);
+                if (event.type == SDL_EVENT_KEY_UP) {
+                    pressed.release(source);
+                    debug_pressed.release(source);
+                    break;
                 }
-                if (const auto debug_button = debug_input_from_key(event.key.key); debug_button.has_value()) {
-                    debug_pressed[static_cast<std::size_t>(*debug_button)] = event.type == SDL_EVENT_KEY_DOWN;
+                if (!focused) break;
+                if (const auto button = input_button_from_key(event.key.key); button.has_value()) {
+                    pressed.press(source, *button, event.key.repeat);
+                }
+                if (const auto button = debug_input_from_key(event.key.key); button.has_value()) {
+                    debug_pressed.press(source, *button, event.key.repeat);
                 }
                 break;
+            }
             case SDL_EVENT_MOUSE_BUTTON_DOWN:
-            case SDL_EVENT_MOUSE_BUTTON_UP:
-                if (event.button.button == SDL_BUTTON_LEFT) {
-                    pressed[static_cast<std::size_t>(InputButton::CORE_PAD_A)] = event.type == SDL_EVENT_MOUSE_BUTTON_DOWN;
-                } else if (event.button.button == SDL_BUTTON_RIGHT) {
-                    pressed[static_cast<std::size_t>(InputButton::CORE_PAD_B)] = event.type == SDL_EVENT_MOUSE_BUTTON_DOWN;
+            case SDL_EVENT_MOUSE_BUTTON_UP: {
+                // Mouse buttons occupy a separate source range from scancodes,
+                // including when SDL assigns the same device ID to both.
+                const auto source = (std::uint64_t{event.button.which} << 32U) |
+                                    (0x80000000U | event.button.button);
+                if (event.type == SDL_EVENT_MOUSE_BUTTON_UP) {
+                    pressed.release(source);
+                } else if (focused) {
+                    if (event.button.button == SDL_BUTTON_LEFT)
+                        pressed.press(source, InputButton::CORE_PAD_A);
+                    else if (event.button.button == SDL_BUTTON_RIGHT)
+                        pressed.press(source, InputButton::CORE_PAD_B);
                 }
                 pointer = logical_pointer_from_window_point(event.button.x, event.button.y, size);
                 break;
+            }
             case SDL_EVENT_MOUSE_MOTION:
                 pointer = logical_pointer_from_window_point(event.motion.x, event.motion.y, size);
                 break;
@@ -837,6 +855,8 @@ namespace smgpc::render {
                 break;
             case SDL_EVENT_WINDOW_FOCUS_LOST:
                 focused = false;
+                pressed.clear();
+                debug_pressed.clear();
                 break;
             case SDL_EVENT_WINDOW_MINIMIZED:
                 minimized = true;
@@ -850,6 +870,11 @@ namespace smgpc::render {
         }
 
         bool poll_events() {
+            // Physical input records belong to the native window, which can
+            // outlive the current Game allocation domain.
+            const aurora::allocation::HostAllocationScope host;
+            pressed.begin_poll();
+            debug_pressed.begin_poll();
             for (const AuroraEvent *event = aurora_update(); event != nullptr && event->type != AURORA_NONE; ++event) {
                 switch (event->type) {
                 case AURORA_EXIT:
@@ -877,9 +902,9 @@ namespace smgpc::render {
 
         AuroraInfo info {};
         AuroraWindowSize size {};
-        std::array<bool, static_cast<std::size_t>(InputButton::COUNT)> pressed {};
+        core::FrameButtonState<InputButton> pressed;
         InputPointerState pointer {};
-        std::array<bool, static_cast<std::size_t>(DebugInput::COUNT)> debug_pressed {};
+        core::FrameButtonState<DebugInput> debug_pressed;
         bool should_close = false;
         bool focused = true;
         bool minimized = false;
@@ -937,17 +962,11 @@ namespace smgpc::render {
     }
 
     bool AuroraWindow::is_input_pressed(InputButton button) const {
-        if (button == InputButton::COUNT) {
-            return false;
-        }
-        return _impl->pressed[static_cast<std::size_t>(button)];
+        return _impl->pressed.is_pressed(button);
     }
 
     bool AuroraWindow::is_debug_input_pressed(DebugInput input) const {
-        if (input == DebugInput::COUNT) {
-            return false;
-        }
-        return _impl->debug_pressed[static_cast<std::size_t>(input)];
+        return _impl->debug_pressed.is_pressed(input);
     }
 
     InputPointerState AuroraWindow::input_pointer_state() const {

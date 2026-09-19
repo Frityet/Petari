@@ -3309,3 +3309,14 @@ target("smg-pc-original-jut-video-tests")
     add_tests("original_jut_video", {
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
+
+target("smg-pc-frame-button-state-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("FrameButtonStateTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("frame_button_state", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
