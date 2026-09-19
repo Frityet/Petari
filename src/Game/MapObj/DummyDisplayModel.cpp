@@ -4,6 +4,7 @@
 #include "Game/MapObj/CoinRotater.hpp"
 #include "Game/MapObj/PowerStar.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
+#include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util.hpp"
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
@@ -12,8 +13,22 @@
 #include "JSystem/JMath/JMath.hpp"
 
 namespace {
-    const static DummyDisplayModelInfo cDummyDisplayModelInfoTable[14] = {
-
+    const static DummyDisplayModelInfo cDummyDisplayModelInfoTable[15] = {
+        {"Coin", {0.0f, 70.0f, 0.0f}, MR::DrawBufferType_NoSilhouettedMapObjStrongLight, nullptr, false},
+        {"Kinopio", {0.0f, 50.0f, 0.0f}, MR::DrawBufferType_NPC, "Freeze", true},
+        {"SpinDriver", {0.0f, 0.0f, 0.0f}, MR::DrawBufferType_NoShadowedMapObj, nullptr, false},
+        {"SuperSpinDriver", {0.0f, 0.0f, 0.0f}, MR::DrawBufferType_NoShadowedMapObj, "Freeze", false},
+        {"StarPieceDummy", {-30.0f, 100.0f, -30.0f}, MR::DrawBufferType_NoSilhouettedMapObj, "Freeze", false},
+        {"Tico", {0.0f, 50.0f, 0.0f}, MR::DrawBufferType_NPC, nullptr, true},
+        {"KeySwitch", {0.0f, 0.0f, 0.0f}, MR::DrawBufferType_MapObjStrongLight, "InRotation", false},
+        {"PowerStar", {0.0f, 0.0f, 0.0f}, MR::DrawBufferType_NoSilhouettedMapObj, nullptr, false},
+        {"KinokoOneUp", {0.0f, 40.0f, 0.0f}, MR::DrawBufferType_NoSilhouettedMapObj, nullptr, false},
+        {"Kuribo", {0.0f, 80.0f, 0.0f}, MR::DrawBufferType_Enemy, nullptr, false},
+        {"BlueChip", {0.0f, 0.0f, 0.0f}, MR::DrawBufferType_NoShadowedMapObj, nullptr, false},
+        {"YellowChip", {0.0f, 0.0f, 0.0f}, MR::DrawBufferType_NoShadowedMapObj, nullptr, false},
+        {"StrayTico", {0.0f, 50.0f, 0.0f}, MR::DrawBufferType_NPC, nullptr, false},
+        {"GrandStar", {0.0f, 0.0f, 0.0f}, MR::DrawBufferType_NoSilhouettedMapObj, nullptr, false},
+        {"KinokoLifeUp", {0.0f, 40.0f, 0.0f}, MR::DrawBufferType_NoSilhouettedMapObj, nullptr, false},
     };
 
     s32 getItemType(const JMapInfoIter& rIter) {
@@ -24,14 +39,6 @@ namespace {
         }
 
         return type;
-    }
-
-    const DummyDisplayModelInfo* getInfo(int idx) {
-        if (idx < 0) {
-            idx = 0;
-        }
-
-        return &cDummyDisplayModelInfoTable[idx];
     }
 
     DummyDisplayModel* tryCreateDummyModel(LiveActor* pHost, const JMapInfoIter& rIter, s32 a3, int itemIdx) NO_INLINE {
@@ -45,7 +52,8 @@ namespace {
             return nullptr;
         }
 
-        DummyDisplayModel* mdl = new DummyDisplayModel(pHost, getInfo(itemIdx), itemIdx, modelId, getItemType(rIter));
+        const DummyDisplayModelInfo* pInfo = &cDummyDisplayModelInfoTable[modelId];
+        DummyDisplayModel* mdl = new DummyDisplayModel(pHost, pInfo, itemIdx < 0 ? pInfo->_10 : itemIdx, modelId, getItemType(rIter));
         mdl->initWithoutIter();
         return mdl;
     }

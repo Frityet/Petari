@@ -13,7 +13,7 @@ class NameObjArchiveListCollector;
 
 struct DummyDisplayModelInfo {
     const char* mName;  // 0x00
-    TVec3f _4;
+    Vec _4;
     u32 _10;
     const char* mAnim;     // 0x14
     bool mHasColorChange;  // 0x18
