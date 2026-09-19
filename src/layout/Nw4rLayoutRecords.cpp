@@ -15,6 +15,7 @@
 #include <nw4r/lyt/material.h>
 #include <nw4r/lyt/layout.h>
 #include "Game/Screen/CustomTagProcessor.hpp"
+#include "Game/Screen/LayoutManager.hpp"
 #include <cstdlib>
 #include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
@@ -23,6 +24,7 @@
 #include <cmath>
 #include <cstring>
 #include <map>
+#include <limits>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -35,6 +37,7 @@
 
 namespace smgpc::layout {
 namespace {
+constexpr u32 kDetachedPane = std::numeric_limits<u32>::max();
 class NativePaneIdentity {
 public:
     NativePaneIdentity(Nw4rLayoutRecords& owner, u32 index) : owner(owner), index(index) {}
@@ -239,6 +242,7 @@ struct Nw4rLayoutRecords::State {
             // Animation links are embedded in the transforms. Remove them from
             // the borrowed panes/materials before the actual Layout retires them.
             layout->UnbindAllAnimation();
+            for (auto& pane : detached_panes) pane->UnbindAllAnimation(true);
             layout->mpRootPane = nullptr;
             layout.reset();
         }
@@ -252,6 +256,13 @@ struct Nw4rLayoutRecords::State {
                 child->mpParent = nullptr;
             }
         }
+        for (auto& pane : detached_panes) {
+            while (pane->mChildList.GetSize()) {
+                auto* child = &*pane->mChildList.GetBeginIter();
+                pane->mChildList.Erase(child);
+                child->mpParent = nullptr;
+            }
+        }
     }
     LayoutRuntime& runtime;
     bool published = false;
@@ -259,11 +270,14 @@ struct Nw4rLayoutRecords::State {
     bool synchronizing = false;
     std::unique_ptr<nw4r::lyt::Layout> layout;
     std::vector<std::unique_ptr<nw4r::lyt::Pane>> panes;
+    // Retail RemoveChild only unlinks. Groups already constructed from the
+    // resource keep their original pane identities until the layout retires.
+    std::vector<std::unique_ptr<nw4r::lyt::Pane>> detached_panes;
     std::vector<PublishedPane> previous;
     std::vector<std::unique_ptr<nw4r::lyt::Group>> groups;
 };
 
-Nw4rLayoutRecords::Nw4rLayoutRecords(LayoutRuntime& runtime) {
+Nw4rLayoutRecords::Nw4rLayoutRecords(LayoutRuntime& runtime, LayoutManager* manager) {
     const aurora::allocation::HostAllocationScope host;
     _state = std::make_unique<State>(runtime);
     if (!nw4r::lyt::Layout::mspAllocator) nw4r::lyt::Layout::mspAllocator = &layout_allocator;
@@ -343,9 +357,88 @@ Nw4rLayoutRecords::Nw4rLayoutRecords(LayoutRuntime& runtime) {
         _state->groups.push_back(std::make_unique<NativeGroupRecord>(resource, _state->panes.front().get(), *this));
         _state->layout->mpGroupContainer->AppendGroup(_state->groups.back().get());
     }
+    if (manager) {
+        manager->removeUnnecessaryPanes(_state->layout->mpRootPane);
+        retain_reachable_panes();
+    }
     synchronize();
 }
 Nw4rLayoutRecords::~Nw4rLayoutRecords() = default;
+
+void Nw4rLayoutRecords::retain_reachable_panes() {
+    auto& state = *_state;
+    auto& resource = state.runtime.mBrlytLayout;
+    std::vector<u32> remap(state.panes.size(), kDetachedPane);
+    std::vector<u32> order;
+    std::vector<BrlytPane> retained;
+    std::vector<std::unique_ptr<nw4r::lyt::Pane>> owners;
+    order.reserve(state.panes.size());
+    retained.reserve(state.panes.size());
+    owners.reserve(state.panes.size());
+    state.detached_panes.reserve(state.panes.size());
+    const auto visit = [&](auto&& self, nw4r::lyt::Pane* pane, s32 parent) -> void {
+        const u32 old_index = dynamic_cast<NativePaneIdentity&>(*pane).index;
+        const u32 index = static_cast<u32>(retained.size());
+        remap.at(old_index) = index;
+        auto descriptor = resource.panes.at(old_index);
+        descriptor.name = pane->mName;
+        descriptor.parent_index = parent;
+        retained.push_back(std::move(descriptor));
+        order.push_back(old_index);
+        for (auto it = pane->mChildList.GetBeginIter(); it != pane->mChildList.GetEndIter(); ++it)
+            self(self, &*it, static_cast<s32>(index));
+    };
+    visit(visit, state.layout->mpRootPane, -1);
+    const auto remap_content = [&](auto& contents) {
+        std::vector<u32> indices(contents.size(), kDetachedPane);
+        u32 next = 0;
+        for (u32 i = 0; i < contents.size(); ++i)
+            if (remap.at(contents[i].pane_index) != kDetachedPane) indices[i] = next++;
+        std::erase_if(contents, [&](const auto& content) { return remap.at(content.pane_index) == kDetachedPane; });
+        for (auto& content : contents) {
+            content.pane_index = remap.at(content.pane_index);
+            content.name = retained.at(content.pane_index).name;
+        }
+        return indices;
+    };
+    const auto pictures = remap_content(resource.pictures);
+    const auto text = remap_content(resource.text_boxes);
+    const auto windows = remap_content(resource.windows);
+    const auto drawable_index = [&](const BrlytDrawable& drawable) {
+        switch (drawable.kind) {
+        case BrlytDrawableKind::Picture: return pictures.at(drawable.index);
+        case BrlytDrawableKind::TextBox: return text.at(drawable.index);
+        case BrlytDrawableKind::Window: return windows.at(drawable.index);
+        }
+        return kDetachedPane;
+    };
+    std::erase_if(resource.drawables, [&](const auto& drawable) { return drawable_index(drawable) == kDetachedPane; });
+    for (auto& drawable : resource.drawables) drawable.index = drawable_index(drawable);
+    // The diagnostic resource projection contains reachable indices. Actual
+    // SDK groups above retain the identities bound before locale selection.
+    for (auto& group : resource.groups) {
+        std::erase_if(group.pane_indices, [&](auto index) { return remap.at(index) == kDetachedPane; });
+        group.pane_names.clear();
+        for (auto& index : group.pane_indices) {
+            index = remap.at(index);
+            group.pane_names.push_back(retained.at(index).name);
+        }
+    }
+    state.previous.resize(order.size());
+    // All allocating work finishes before ownership is moved, including on a
+    // construction failure while the original child/group links are present.
+    for (u32 old_index : order) {
+        auto& pane = state.panes[old_index];
+        dynamic_cast<NativePaneIdentity&>(*pane).index = remap[old_index];
+        owners.push_back(std::move(pane));
+    }
+    for (auto& pane : state.panes) if (pane) {
+        dynamic_cast<NativePaneIdentity&>(*pane).index = kDetachedPane;
+        state.detached_panes.push_back(std::move(pane));
+    }
+    resource.panes = std::move(retained);
+    state.panes = std::move(owners);
+}
 
 nw4r::lyt::Layout& Nw4rLayoutRecords::layout() { return *_state->layout; }
 
@@ -378,9 +471,9 @@ void Nw4rLayoutRecords::import_pane(u32 i) {
     const auto* expected_parent = source.parent_index < 0 ? nullptr : state.panes.at(source.parent_index).get();
     if (std::strncmp(pane.mName, source.name.c_str(), 16) != 0 || pane.mpParent != expected_parent)
         aurora::throw_host_exception<std::logic_error>("Changing a published NW4R resource name/hierarchy requires matching renderer topology support");
-    source.width = pane.mSize.width;
-    source.height = pane.mSize.height;
     auto& frame = runtime.mCommittedPaneFrames[source.name];
+    if (pane.mSize.width != old.size.width) frame.width = pane.mSize.width;
+    if (pane.mSize.height != old.size.height) frame.height = pane.mSize.height;
     if (pane.mTranslate.x != old.translate.x) frame.translate_x = pane.mTranslate.x;
     if (pane.mTranslate.y != old.translate.y) frame.translate_y = pane.mTranslate.y;
     if (pane.mTranslate.z != old.translate.z) frame.translate_z = pane.mTranslate.z;
@@ -409,6 +502,8 @@ void Nw4rLayoutRecords::publish_pane(u32 i, bool matrices) {
     pane.mRotate.z = anim.rotate_z.value_or(source.rotate_z);
     pane.mScale.x = anim.scale_x.value_or(source.scale_x);
     pane.mScale.y = anim.scale_y.value_or(source.scale_y);
+    pane.mSize.width = anim.width.value_or(source.width);
+    pane.mSize.height = anim.height.value_or(source.height);
     pane.mAlpha = static_cast<u8>(std::clamp(anim.alpha.value_or(float(source.alpha)), 0.0F, 255.0F));
     if (const auto override = runtime.mPaneAlphaOverrides.find(source.name); override != runtime.mPaneAlphaOverrides.end())
         pane.mAlpha = static_cast<u8>(std::clamp(override->second, 0.0F, 255.0F));
@@ -481,7 +576,8 @@ u32 Nw4rLayoutRecords::group_index(const char* name) const {
 u32 Nw4rLayoutRecords::pane_count() const { return static_cast<u32>(_state->panes.size()); }
 u32 Nw4rLayoutRecords::group_count() const { return static_cast<u32>(_state->groups.size()); }
 u32 Nw4rLayoutRecords::pane_index(const nw4r::lyt::Pane* pane) const {
-    if (const auto* record = dynamic_cast<const NativePaneIdentity*>(pane); record && &record->owner == this) return record->index;
+    if (const auto* record = dynamic_cast<const NativePaneIdentity*>(pane); record && &record->owner == this && record->index != kDetachedPane)
+        return record->index;
     aurora::throw_host_exception<std::logic_error>("The NW4R pane belongs to a different layout resource owner");
 }
 u32 Nw4rLayoutRecords::text_line_count(const char* pane_name) const {
@@ -502,6 +598,7 @@ u32 Nw4rLayoutRecords::text_line_count(const char* pane_name) const {
 }
 #ifndef NDEBUG
 void Nw4rLayoutRecords::debug_dump_text(std::ostream& output) const {
+    output << " DETACHED_PANES " << _state->detached_panes.size() << '\n';
     for (const auto& record : _state->panes) {
         const auto& pane = *record;
         bool visible = pane.IsVisible();
@@ -534,10 +631,11 @@ void Nw4rLayoutRecords::debug_dump_text(std::ostream& output) const {
 }
 #endif
 void animate_native_pane(const nw4r::lyt::Pane* pane) {
-    if (const auto* record = dynamic_cast<const NativePaneIdentity*>(pane)) record->owner.animate_pane(record->index);
+    if (const auto* record = dynamic_cast<const NativePaneIdentity*>(pane); record && record->index != kDetachedPane)
+        record->owner.animate_pane(record->index);
 }
 bool synchronize_native_pane(const nw4r::lyt::Pane* pane) {
-    if (const auto* record = dynamic_cast<const NativePaneIdentity*>(pane)) {
+    if (const auto* record = dynamic_cast<const NativePaneIdentity*>(pane); record && record->index != kDetachedPane) {
         record->owner.synchronize();
         return true;
     }

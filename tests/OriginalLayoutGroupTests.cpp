@@ -16,10 +16,12 @@
 #include "Game/Util/LayoutUtil.hpp"
 #include "Game/System/Language.hpp"
 #include "SceneExecutionFixture.hpp"
+#include "compat/LanguageOwnership.hpp"
 #include "layout/LayoutHost.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <nw4r/lyt/group.h>
+#include <nw4r/lyt/animation.h>
 #include <aurora/exception.hpp>
 #include <aurora/dvd.h>
 #include <bit>
@@ -73,6 +75,161 @@ Bytes archive(const Bytes& data) {
     put16(b, entries + 20, 0); b[entries + 24] = 1; b[entries + 27] = 5; put32(b, entries + 32, data.size());
     std::copy(data.begin(), data.end(), b.begin() + payload); return b;
 }
+
+Bytes locale_resource() {
+    std::vector<Bytes> blocks{
+        pane("Root", 0, 0), block("pas1", 8),
+        pane("Current", 0, 0), block("pas1", 8), pane("Choice", 1, 0),
+        pane("ChoiceKrKo", 2, 0), block("pas1", 8), pane("Inside", 0, 0), pane("InsideCnSi", 0, 0), block("pae1", 8),
+        pane("ChoiceCnSi", 3, 0), pane("Other", 4, 0), block("pae1", 8),
+        pane("Fallback", 0, 0), block("pas1", 8), pane("Shared", 0, 0),
+        block("pas1", 8), pane("DeepCnSi", 0, 0), block("pae1", 8),
+        pane("SharedCnSi", 0, 0), pane("Aux", 0, 0), block("pae1", 8),
+        pane("Recurse", 0, 0), block("pas1", 8), pane("NestedBlock", 0, 0), block("pas1", 8),
+        pane("ValueKrKo", 0, 0), pane("ValueCnSi", 0, 0), block("pae1", 8), block("pae1", 8),
+        pane("XYZ", 0, 0), pane("UnknownAbCd", 0, 0), block("pae1", 8),
+        group("RootGroup", {"Root"}), block("grs1", 8),
+        group("BeforeRemoval", {"Choice", "ChoiceKrKo", "ChoiceCnSi", "Other"}), block("gre1", 8)};
+    Bytes b(16); name(b, 0, "RLYT"); put16(b, 4, 0xFEFF); put16(b, 6, 8); put16(b, 12, 16); put16(b, 14, blocks.size());
+    for (auto& entry : blocks) b.insert(b.end(), entry.begin(), entry.end()); put32(b, 8, b.size());
+    return b;
+}
+Bytes size_animation(std::string_view target, float first_width, float last_width, float first_height, float last_height) {
+    auto b = block("pai1", 140); put16(b, 8, 10); put16(b, 14, 1); put32(b, 16, 20); put32(b, 20, 24);
+    name(b, 24, target); b[44] = 1; put32(b, 48, 28);
+    name(b, 52, "RLPA"); b[56] = 2; put32(b, 60, 16); put32(b, 64, 52);
+    for (int channel = 0; channel < 2; ++channel) {
+        const size_t offset = 68 + channel * 36;
+        put16(b, offset, 8 + channel); b[offset + 2] = 2; put16(b, offset + 4, 2); put32(b, offset + 8, 12);
+        const float first = channel ? first_height : first_width, last = channel ? last_height : last_width;
+        putf(b, offset + 12, 0); putf(b, offset + 16, first); putf(b, offset + 20, (last - first) / 10);
+        putf(b, offset + 24, 10); putf(b, offset + 28, last); putf(b, offset + 32, (last - first) / 10);
+    }
+    Bytes result(16); name(result, 0, "RLAN"); put16(result, 4, 0xFEFF); put16(result, 6, 10); put16(result, 12, 16); put16(result, 14, 1);
+    result.insert(result.end(), b.begin(), b.end()); put32(result, 8, result.size()); return result;
+}
+Bytes animated_archive(const Bytes& layout, const std::vector<std::pair<std::string, Bytes>>& animations) {
+    constexpr size_t info = 0x20, dirs = 0x40, entries = 0x70;
+    const size_t count = 3 + animations.size(), strings = entries + count * 20;
+    std::string names; const auto add_name = [&](std::string_view value) {
+        const auto offset = names.size(); names.append(value); names.push_back(0); return offset;
+    };
+    const auto blyt_name = add_name("blyt"), anim_name = add_name("anim"), layout_name = add_name("fixture.brlyt");
+    std::vector<size_t> animation_names; for (const auto& [value, data] : animations) animation_names.push_back(add_name(value + ".brlan"));
+    const size_t payload = (strings + names.size() + 31) & ~size_t(31);
+    size_t data_size = layout.size(); for (const auto& [value, data] : animations) data_size += data.size();
+    Bytes b(payload + data_size); name(b, 0, "RARC"); put32(b, 4, b.size()); put32(b, 8, 0x20);
+    put32(b, 12, payload - info); put32(b, 16, data_size);
+    put32(b, info, 3); put32(b, info + 4, dirs - info); put32(b, info + 8, count); put32(b, info + 12, entries - info);
+    put32(b, info + 16, names.size()); put32(b, info + 20, strings - info); name(b, strings, names);
+    name(b, dirs, "ROOT"); put16(b, dirs + 10, 2);
+    name(b, dirs + 16, "BLYT"); put16(b, dirs + 26, 1); put32(b, dirs + 28, 2);
+    name(b, dirs + 32, "ANIM"); put16(b, dirs + 42, animations.size()); put32(b, dirs + 44, 3);
+    for (int directory = 0; directory < 2; ++directory) {
+        const auto offset = entries + directory * 20;
+        put16(b, offset, 0xFFFF); b[offset + 4] = 2; put16(b, offset + 6, directory ? anim_name : blyt_name);
+        put32(b, offset + 8, directory + 1); put32(b, offset + 12, 16);
+    }
+    size_t cursor = 0;
+    const auto append_file = [&](size_t index, size_t string_offset, const Bytes& data) {
+        const auto offset = entries + index * 20; b[offset + 4] = 1; put16(b, offset + 6, string_offset);
+        put32(b, offset + 8, cursor); put32(b, offset + 12, data.size());
+        std::copy(data.begin(), data.end(), b.begin() + payload + cursor); cursor += data.size();
+    };
+    append_file(2, layout_name, layout);
+    for (size_t i = 0; i < animations.size(); ++i) append_file(3 + i, animation_names[i], animations[i].second);
+    return b;
+}
+void locale_graph_and_size_animation() {
+    const auto has_size = [](const nw4r::lyt::Pane* pane, float width, float height) {
+        return std::fabs(pane->mSize.width - width) < 0.0001f && std::fabs(pane->mSize.height - height) < 0.0001f;
+    };
+    const auto path = std::filesystem::temp_directory_path() / ("smgpc-layout-locale-" + std::to_string(getpid()) + ".arc");
+    struct Cleanup { std::filesystem::path path; ~Cleanup() { std::filesystem::remove(path); } } cleanup{path};
+    const auto bytes = animated_archive(locale_resource(), {{"size", size_animation("Choice", 20, 40, 30, 70)},
+                                                          {"later", size_animation("Choice", 100, 200, 80, 120)}});
+    require(smgpc::resource::RarcArchive::from_bytes(bytes).contains("anim/size.brlan"), "animation fixture uses exact retail archive paths");
+    { std::ofstream out(path, std::ios::binary); out.write(reinterpret_cast<const char*>(bytes.data()), bytes.size()); }
+    const auto before = smgpc::layout::debug_layout_lifetime_state();
+    for (int cycle = 0; cycle < 16; ++cycle) {
+        smgpc::compat::LanguageOwnership language("KrKorean");
+        LayoutActor actor("locale fixture", false);
+        actor.mLayoutManager = new LayoutManager("Fixture", false, 2, 256);
+        smgpc::layout::LayoutRuntime runtime("Locale and size", "Fixture", 2, 0, path);
+        auto& records = runtime.native_records(actor.mLayoutManager);
+        auto* root = records.pane(nullptr); auto* chosen = records.pane("Choice");
+        require(chosen && chosen->mTranslate.x == 2 && !records.pane("ChoiceKrKo") && !records.pane("ChoiceCnSi") && !records.pane("Other"),
+                "original locale pass selects current siblings, strips suffix and removes base/foreign/unmarked peers");
+        require(records.pane("Current")->mChildList.GetSize() == 1 && chosen->mpParent == records.pane("Current"),
+                "native root traversal contains only selected localized owners");
+        require(records.pane("InsideCnSi") && records.pane("DeepCnSi") && !records.pane("SharedCnSi") && records.pane("Aux"),
+                "a localized sibling set stops recursion in both selected and base-language fallback branches");
+        require(records.pane("Value") && !records.pane("ValueKrKo") && !records.pane("ValueCnSi") && records.pane("XYZ") && records.pane("UnknownAbCd"),
+                "ordinary sibling sets recurse while short names and unknown suffixes remain exact");
+        auto& links = records.group("BeforeRemoval")->GetPaneList();
+        require(links.GetSize() == 4, "resource groups retain their pre-removal identities");
+        auto it = links.GetBeginIter(); auto* old_base = it++->mTarget; auto* selected = it++->mTarget;
+        auto* foreign = it++->mTarget; auto* other = it++->mTarget;
+        require(selected == chosen && !old_base->mpParent && !foreign->mpParent && !other->mpParent && old_base != selected &&
+                root->FindPaneByName("Choice", true) == selected &&
+                records.pane(old_base->mName) == selected, "detached group members stay alive but cannot enter root lookup/traversal");
+        old_base->mSize.width = 7; old_base->AnimateSelf(0); records.synchronize();
+        require(old_base->mSize.width == 7 && chosen->mSize.width == 12,
+                "animation on a retained detached group member does not alter the selected renderer identity");
+        runtime.startAnim("size", 0); runtime.setAnimFrameAndStop(5, 0); records.synchronize();
+        require(has_size(chosen, 30, 50) && old_base->mSize.width == 7,
+                "canonical animation names bind the selected locale and RLPA8/9 change actual SDK pane size");
+        runtime.appear();
+        const auto bounds = runtime.paneBounds("Choice");
+        require(bounds && std::fabs(bounds->right - bounds->left - 30) < 0.0001f && std::fabs(bounds->bottom - bounds->top - 50) < 0.0001f,
+                "animated pane geometry and pointer bounds share the same dimensions");
+        runtime.startAnim("later", 1); runtime.setAnimFrameAndStop(2, 1); records.synchronize();
+        require(has_size(chosen, 120, 88), "later animation layers override both size channels");
+        runtime.startPaneAnim("Choice", "size", 0); runtime.setPaneAnimFrame("Choice", 8, 0); records.synchronize();
+        require(has_size(chosen, 36, 62), "pane animation applies size after root animation layers");
+        runtime.stopPaneAnim("Choice", 0); runtime.update(); records.synchronize();
+        require(has_size(chosen, 36, 62), "stopping the pane player retains its final authored dimensions");
+        const auto detached_resource = size_animation("Choice", 8, 18, 10, 20);
+        auto* detached_animation = records.create_animation(detached_resource.data());
+        detached_animation->Bind(old_base, false); detached_animation->mFrame = 5;
+        old_base->AnimateSelf(0); records.synchronize();
+        require(has_size(old_base, 13, 15) && has_size(chosen, 36, 62),
+                "actual SDK animation links still bind retained group identities without rejoining the rendered hierarchy");
+        // Keep this link bound through owner retirement to exercise transform/borrowed-pane order.
+
+    }
+    const auto after = smgpc::layout::debug_layout_lifetime_state();
+    require(before.actors == after.actors && before.managers == after.managers && before.pane_controls == after.pane_controls,
+            "repeated selected/detached graph retirement releases registered original layout owners");
+    // A direct resource viewer has no original LayoutManager language owner.
+    smgpc::layout::LayoutRuntime raw("Unselected resource", "Fixture", 1, 0, path);
+    require(raw.native_records().pane("ChoiceKrKo") && raw.native_records().pane("ChoiceCnSi"),
+            "standalone metadata no longer guesses a language or rewrites authored names");
+}
+
+void retail_locale_and_window_size() {
+    const auto* path = std::getenv("SMGPC_LAYOUT_FIXTURE");
+    require(path && *path, "retail layout mode requires extracted TalkBalloonStretch archive through SMGPC_LAYOUT_FIXTURE");
+    smgpc::compat::LanguageOwnership language("KrKorean");
+    LayoutActor actor("Retail locale fixture", false);
+    actor.mLayoutManager = new LayoutManager("TalkBalloonStretch", false, 2, 256);
+    smgpc::layout::LayoutRuntime runtime("Retail layout", "TalkBalloonStretch", 2, 0, std::filesystem::path(path));
+    auto& records = runtime.native_records(actor.mLayoutManager);
+    auto* text = nw4r::ut::DynamicCast<nw4r::lyt::TextBox*>(records.pane("TxtText"));
+    auto* shadow = nw4r::ut::DynamicCast<nw4r::lyt::TextBox*>(records.pane("ShaText"));
+    require(text && shadow && runtime.debugTextBoxCount() == 2 && text->mFontSize.width == 24.3f &&
+            !records.pane("TxtTextKrKo") && !records.pane("TxtTextCnSi"),
+            "actual Korean resource retains one canonical text/shadow pair and its authored metrics");
+    runtime.startAnim("OneLine", 1); runtime.setAnimFrameAndStop(326.7f, 1); records.synchronize();
+    for (const char* name : {"WinBalloon", "ShaBalloon"}) {
+        auto* window = nw4r::ut::DynamicCast<nw4r::lyt::Window*>(records.pane(name));
+        require(window && std::fabs(window->mSize.width - (80.0f + 326.7f * 510.0f / 512.0f)) < 0.001f && window->mSize.height == 80,
+                "retail OneLine keys expand both real SDK windows to their authored dimensions");
+    }
+    require(std::fabs(records.pane("Text00")->mTranslate.x + 163.35f) < 0.001f,
+            "retail text positioning still uses the same sampled animation frame");
+}
+
 Bytes derived_resource() {
     auto material = block("mat1", 184);
     put16(material, 8, 1); put32(material, 12, 16); name(material, 16, "NativeMaterial");
@@ -448,7 +605,11 @@ void tags() {
         "SDK packed RRGGBBAA colors preserve byte channels on little-endian hosts");
 }
 }
-int main() {
-    try { tags(); unbound_panes(); records(); fly_meter(); std::cout << "Original typed layout groups, transforms, tag lines and repeated teardown passed\n"; }
+int main(int argc, char** argv) {
+    try {
+        if (argc == 2 && std::string_view(argv[1]) == "--retail-layout-only") { retail_locale_and_window_size(); std::cout << "Retail locale text owners and animated window sizes passed\n"; return 0; }
+        locale_graph_and_size_animation();
+        if (argc == 2 && std::string_view(argv[1]) == "--locale-only") { std::cout << "Original locale graph, group lifetime and animated pane sizes passed\n"; return 0; }
+        tags(); unbound_panes(); records(); fly_meter(); std::cout << "Original typed layout groups, transforms, tag lines and repeated teardown passed\n"; }
     catch (const std::exception& e) { std::cerr << e.what() << '\n'; return 1; }
 }

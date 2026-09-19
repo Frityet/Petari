@@ -1,0 +1,8 @@
+{
+  "retail_method": "LayoutManager::removeUnnecessaryPanes",
+  "start": "0x80369e9c",
+  "size": 796,
+  "instructions_equal_to_current_dol": 199,
+  "dol_sha256": "69f93fcc0fa34837347b5ac05168bc783adcacb3c02697cfda087a3b63abc9e0",
+  "native_exact_donor_method": true
+}

@@ -1,0 +1,49 @@
+[
+  {
+    "name": "removeUnnecessaryPanes__13LayoutManagerFPQ34nw4r3lyt4Pane",
+    "demangled_name": "LayoutManager::removeUnnecessaryPanes(nw4r::lyt::Pane*)",
+    "size": "796",
+    "match_percent": 74.944725
+  },
+  {
+    "name": "__ct__Q327@unnamed@LayoutManager_cpp@5Local12BitFlag<128>Fv",
+    "demangled_name": "@unnamed@LayoutManager_cpp@::Local::BitFlag<128>::BitFlag()",
+    "size": "68"
+  },
+  {
+    "name": "__dt__Q327@unnamed@LayoutManager_cpp@5Local12BitFlag<128>Fv",
+    "demangled_name": "@unnamed@LayoutManager_cpp@::Local::BitFlag<128>::~BitFlag()",
+    "size": "64",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isAnythingTrue__Q327@unnamed@LayoutManager_cpp@5Local12BitFlag<128>CFv",
+    "demangled_name": "@unnamed@LayoutManager_cpp@::Local::BitFlag<128>::isAnythingTrue() const",
+    "size": "52",
+    "match_percent": 100.0
+  },
+  {
+    "name": "onBit__Q327@unnamed@LayoutManager_cpp@5Local12BitFlag<128>Fi",
+    "demangled_name": "@unnamed@LayoutManager_cpp@::Local::BitFlag<128>::onBit(int)",
+    "size": "48",
+    "match_percent": 57.083332
+  },
+  {
+    "name": "offBit__Q327@unnamed@LayoutManager_cpp@5Local12BitFlag<128>Fi",
+    "demangled_name": "@unnamed@LayoutManager_cpp@::Local::BitFlag<128>::offBit(int)",
+    "size": "48",
+    "match_percent": 57.083332
+  },
+  {
+    "name": "isTrue__Q327@unnamed@LayoutManager_cpp@5Local12BitFlag<128>CFi",
+    "demangled_name": "@unnamed@LayoutManager_cpp@::Local::BitFlag<128>::isTrue(int) const",
+    "size": "52",
+    "match_percent": 80.76923
+  },
+  {
+    "name": "__vt__Q327@unnamed@LayoutManager_cpp@5Local12BitFlag<128>",
+    "demangled_name": "@unnamed@LayoutManager_cpp@::Local::BitFlag<128>::__vtable",
+    "size": "28",
+    "match_percent": 100.0
+  }
+]

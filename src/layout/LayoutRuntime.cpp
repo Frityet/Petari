@@ -95,81 +95,15 @@ namespace {
         return candidates;
     }
 
-    [[nodiscard]] std::string_view layout_locale_suffix() {
-        static const auto locale_suffix = [] {
-            if (const auto* value = std::getenv("SMGPC_LAYOUT_LOCALE_SUFFIX"); value != nullptr && value[0] != '\0') {
-                return std::string(value);
-            }
-
-            return std::string("KrKo");
-        }();
-        return locale_suffix;
-    }
-
-    [[nodiscard]] bool pane_name_has_inactive_locale_suffix(std::string_view name) {
-        constexpr std::array< std::string_view, 10U > suffixes{"JpJa", "UsEn", "EuEn", "EuFr", "EuGe",
-                                                               "EuSp", "EuIt", "KrKo", "CnSi", "CnTr"};
-        const auto active = layout_locale_suffix();
-        for (const auto suffix : suffixes) {
-            if (suffix == active) {
-                continue;
-            }
-            if (ends_with(name, suffix) && name.size() > suffix.size()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    [[nodiscard]] bool pane_name_has_locale_suffix(std::string_view name) {
-        constexpr std::array< std::string_view, 10U > suffixes{"JpJa", "UsEn", "EuEn", "EuFr", "EuGe",
-                                                               "EuSp", "EuIt", "KrKo", "CnSi", "CnTr"};
-        return std::ranges::any_of(suffixes, [name](const auto suffix) { return ends_with(name, suffix) && name.size() > suffix.size(); });
-    }
-
-    [[nodiscard]] bool pane_name_has_active_locale_variant(const smgpc::layout::BrlytLayout& layout, std::string_view name) {
-        if (name.empty() || pane_name_has_locale_suffix(name)) {
-            return false;
-        }
-
-        auto active_name = std::string(name);
-        active_name.append(layout_locale_suffix());
-        return std::ranges::any_of(layout.panes, [&active_name](const auto& pane) { return pane.name == active_name; });
-    }
-
-    [[nodiscard]] std::string active_locale_variant_name(std::string_view name) {
-        auto active_name = std::string(name);
-        active_name.append(layout_locale_suffix());
-        return active_name;
-    }
-
     [[nodiscard]] bool pane_name_matches_request(std::string_view pane_name, std::string_view requested_name) {
-        if (pane_name == requested_name) {
-            return true;
-        }
-        return !requested_name.empty() && !pane_name_has_locale_suffix(requested_name) && pane_name == active_locale_variant_name(requested_name);
+        return pane_name == requested_name;
     }
 
-    [[nodiscard]] std::optional< std::size_t > find_preferred_pane_index(const smgpc::layout::BrlytLayout& layout, std::string_view pane_name) {
-        if (pane_name.empty()) {
-            return std::nullopt;
-        }
-
-        if (!pane_name_has_locale_suffix(pane_name)) {
-            const auto active_name = active_locale_variant_name(pane_name);
-            const auto active = std::ranges::find_if(layout.panes, [&active_name](const auto& pane) { return pane.name == active_name; });
-            if (active != layout.panes.end()) {
-                return static_cast< std::size_t >(std::distance(layout.panes.begin(), active));
-            }
-        }
-
-        const auto exact = std::ranges::find_if(layout.panes, [pane_name](const auto& pane) { return pane.name == pane_name; });
-        if (exact == layout.panes.end()) {
-            return std::nullopt;
-        }
-
-        return static_cast< std::size_t >(std::distance(layout.panes.begin(), exact));
+    [[nodiscard]] std::optional<std::size_t> find_preferred_pane_index(const smgpc::layout::BrlytLayout& layout, std::string_view name) {
+        if (name.empty()) return std::nullopt;
+        const auto found = std::ranges::find(layout.panes, name, &smgpc::layout::BrlytPane::name);
+        if (found == layout.panes.end()) return std::nullopt;
+        return static_cast<std::size_t>(found - layout.panes.begin());
     }
 
     [[nodiscard]] bool font_name_matches(std::string_view loaded_name, std::string_view requested_name) {
@@ -459,9 +393,9 @@ const std::optional< std::filesystem::path >& smgpc::layout::LayoutRuntime::getA
     return mArchivePath;
 }
 
-smgpc::layout::Nw4rLayoutRecords& smgpc::layout::LayoutRuntime::native_records() {
+smgpc::layout::Nw4rLayoutRecords& smgpc::layout::LayoutRuntime::native_records(LayoutManager* manager) {
     const smgpc::compat::JkrHostAllocationScope host;
-    if (!mNativeRecords) mNativeRecords = std::make_unique<Nw4rLayoutRecords>(*this);
+    if (!mNativeRecords) mNativeRecords = std::make_unique<Nw4rLayoutRecords>(*this, manager);
     return *mNativeRecords;
 }
 
@@ -731,17 +665,20 @@ std::optional< smgpc::layout::LayoutRuntime::PaneBounds > smgpc::layout::LayoutR
         return std::nullopt;
     }
 
-    if (pane.width == 0.0F || pane.height == 0.0F) {
+    const auto frame = animationFrameForPane(pane.name);
+    const auto width = frame.width.value_or(pane.width);
+    const auto height = frame.height.value_or(pane.height);
+    if (width == 0.0F || height == 0.0F) {
         return std::nullopt;
     }
 
-    const auto local_left = base_position_x(pane.base_position, pane.width);
-    const auto local_top = base_position_y(pane.base_position, pane.height);
+    const auto local_left = base_position_x(pane.base_position, width);
+    const auto local_top = base_position_y(pane.base_position, height);
     const auto corners = std::array< std::array< float, 3U >, 4U >{
         panePointForAurora(pane_state, local_left, local_top),
-        panePointForAurora(pane_state, local_left + pane.width, local_top),
-        panePointForAurora(pane_state, local_left + pane.width, local_top + pane.height),
-        panePointForAurora(pane_state, local_left, local_top + pane.height),
+        panePointForAurora(pane_state, local_left + width, local_top),
+        panePointForAurora(pane_state, local_left + width, local_top + height),
+        panePointForAurora(pane_state, local_left, local_top + height),
     };
     auto left = corners.front()[0U];
     auto right = corners.front()[0U];
@@ -1013,6 +950,7 @@ std::vector< smgpc::layout::LayoutRuntime::DebugPaneState > smgpc::layout::Layou
     for (auto pane_index = std::size_t{}; pane_index < mBrlytLayout.panes.size(); ++pane_index) {
         const auto& pane = mBrlytLayout.panes[pane_index];
         const auto render_state = paneRenderState(pane_index);
+        const auto frame = animationFrameForPane(pane.name);
         auto state = DebugPaneState{
             .index = pane_index,
             .name = pane.name,
@@ -1024,8 +962,8 @@ std::vector< smgpc::layout::LayoutRuntime::DebugPaneState > smgpc::layout::Layou
             .scale_x = std::hypot(render_state.matrix[0][0], render_state.matrix[1][0], render_state.matrix[2][0]),
             .scale_y = std::hypot(render_state.matrix[0][1], render_state.matrix[1][1], render_state.matrix[2][1]),
             .alpha = render_state.alpha,
-            .width = pane.width,
-            .height = pane.height,
+            .width = frame.width.value_or(pane.width),
+            .height = frame.height.value_or(pane.height),
             .contents = {},
         };
 
@@ -1249,6 +1187,12 @@ void smgpc::layout::LayoutRuntime::commitAnimationState(const AnimationState& an
         if (pane_frame.rotate_z.has_value()) {
             committed.rotate_z = pane_frame.rotate_z;
         }
+        if (pane_frame.width.has_value()) {
+            committed.width = pane_frame.width;
+        }
+        if (pane_frame.height.has_value()) {
+            committed.height = pane_frame.height;
+        }
         if (pane_frame.alpha.has_value()) {
             committed.alpha = pane_frame.alpha;
         }
@@ -1405,9 +1349,6 @@ smgpc::layout::LayoutRuntime::PaneRenderState smgpc::layout::LayoutRuntime::pane
     if (const auto override = mPaneAlphaOverrides.find(pane.name); override != mPaneAlphaOverrides.end()) {
         local_alpha = override->second;
     }
-    if (pane_name_has_inactive_locale_suffix(pane.name) || pane_name_has_active_locale_variant(mBrlytLayout, pane.name)) {
-        local_visible = false;
-    }
 
     Mtx local_matrix;
     paneLocalMatrix(pane_index, local_matrix);
@@ -1513,6 +1454,12 @@ aurora::nw4r::lyt::BrlanPaneFrame smgpc::layout::LayoutRuntime::animationFrameFo
         if (layer_frame.rotate_z.has_value()) {
             result.rotate_z = layer_frame.rotate_z;
         }
+        if (layer_frame.width.has_value()) {
+            result.width = layer_frame.width;
+        }
+        if (layer_frame.height.has_value()) {
+            result.height = layer_frame.height;
+        }
         if (layer_frame.alpha.has_value()) {
             result.alpha = layer_frame.alpha;
         }
@@ -1560,6 +1507,12 @@ aurora::nw4r::lyt::BrlanPaneFrame smgpc::layout::LayoutRuntime::animationFrameFo
             }
             if (layer_frame.rotate_z.has_value()) {
                 result.rotate_z = layer_frame.rotate_z;
+            }
+            if (layer_frame.width.has_value()) {
+                result.width = layer_frame.width;
+            }
+            if (layer_frame.height.has_value()) {
+                result.height = layer_frame.height;
             }
             if (layer_frame.alpha.has_value()) {
                 result.alpha = layer_frame.alpha;

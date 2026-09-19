@@ -229,7 +229,7 @@ void bind_actor_manager(LayoutActor* actor, LayoutManager* manager) {
     manager_state.runtime->initWithoutIter();
     manager_state.runtime->kill();
     manager_state.runtime->setTrans(actor_state.translation.x, actor_state.translation.y);
-    manager_state.records = &manager_state.runtime->native_records();
+    manager_state.records = &manager_state.runtime->native_records(manager);
     manager->mLayout = &manager_state.records->layout();
     manager->initPaneInfo();
     manager_state.pane_infos.reset(manager->mPaneInfos);
@@ -563,15 +563,17 @@ void LayoutManager::addGroupCtrl(LayoutGroupCtrl* group) {
         aurora::throw_host_exception<std::logic_error>("A layout group control is already owned");
     // Reserve all host storage before adopting the Game object. Repeated group
     // registrations replace only the movement slot and prepend each pane link.
+    // Retail resolves group members by their current name. A retained base
+    // member can name the selected locale pane after the latter is renamed.
     state.group_controls.reserve(state.group_controls.size() + 1);
     for (u32 i = 0; i < group->getPaneNum(); ++i) {
-        auto& links = state.pane_groups.at(state.records->pane_index(group->getPane(i)));
+        auto& links = state.pane_groups.at(getIndexOfPane(group->getPane(i)->mName));
         links.reserve(links.size() + group->getPaneNum());
     }
     state.group_controls.emplace_back(group);
     state.group_slots[slot] = group;
     for (u32 i = 0; i < group->getPaneNum(); ++i) {
-        auto& links = state.pane_groups.at(state.records->pane_index(group->getPane(i)));
+        auto& links = state.pane_groups.at(getIndexOfPane(group->getPane(i)->mName));
         links.insert(links.begin(), group);
     }
 }
@@ -665,10 +667,6 @@ nw4r::lyt::Pane* LayoutManager::findPaneByName(const char* name) const {
 
 void LayoutManager::replaceIndDummyTexture() {
     throw_retail_nw4r_unavailable("Replacing an NW4R indirect dummy texture");
-}
-
-void LayoutManager::removeUnnecessaryPanes(nw4r::lyt::Pane*) {
-    throw_retail_nw4r_unavailable("Removing an NW4R pane subtree");
 }
 
 LayoutPaneCtrl::LayoutPaneCtrl(LayoutManager* host, const char* name, u32 layer_count)

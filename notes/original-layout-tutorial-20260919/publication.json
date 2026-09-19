@@ -1,0 +1,11 @@
+{
+  "aurora": "66c38d52b04427302030ad6d3443efaa2265310f",
+  "decomp": "8e641dd6a1d75cc9d461f784c72d905ed12253be",
+  "remote_verified": true,
+  "native_modes_passed": [
+    "--locale-only",
+    "--retail-layout-only",
+    "full without SMGPC_REAL_DISC"
+  ],
+  "aurora_brlan_tests_passed": 11
+}

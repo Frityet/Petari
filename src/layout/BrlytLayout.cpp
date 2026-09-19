@@ -847,14 +847,12 @@ namespace smgpc::layout {
                 last_pane_index = static_cast<std::int32_t>(layout.panes.size() - 1U);
                 auto picture = parse_picture(block, last_state, layout.materials);
                 picture.pane_index = static_cast<std::size_t>(last_pane_index);
-                if (!picture.texture_name.empty()) {
-                    const auto picture_index = layout.pictures.size();
-                    layout.pictures.push_back(std::move(picture));
-                    layout.drawables.push_back(BrlytDrawable{
-                        .kind = BrlytDrawableKind::Picture,
-                        .index = picture_index,
-                    });
-                }
+                const auto picture_index = layout.pictures.size();
+                layout.pictures.push_back(std::move(picture));
+                layout.drawables.push_back(BrlytDrawable{
+                    .kind = BrlytDrawableKind::Picture,
+                    .index = picture_index,
+                });
             } else if (has_magic(block, 0U, "pas1")) {
                 parent_stack.push_back(last_state);
                 parent_index_stack.push_back(last_pane_index);

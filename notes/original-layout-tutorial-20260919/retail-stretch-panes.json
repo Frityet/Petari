@@ -1,0 +1,338 @@
+{
+  "talkballoonstretch.brlyt": [
+    {
+      "kind": "pan1",
+      "name": "RootPane",
+      "flags": 1,
+      "base": 4,
+      "srt": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "size": [
+        608.0,
+        456.0
+      ]
+    },
+    {
+      "kind": "pan1",
+      "name": "BalloonStret",
+      "flags": 7,
+      "base": 4,
+      "srt": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "size": [
+        30.0,
+        40.0
+      ]
+    },
+    {
+      "kind": "pan1",
+      "name": "Balloon",
+      "flags": 3,
+      "base": 4,
+      "srt": [
+        0.0,
+        48.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "size": [
+        30.0,
+        40.0
+      ]
+    },
+    {
+      "kind": "wnd1",
+      "name": "ShaBalloon",
+      "flags": 1,
+      "base": 4,
+      "srt": [
+        1.0,
+        -3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "size": [
+        80.0,
+        80.0
+      ]
+    },
+    {
+      "kind": "pic1",
+      "name": "ShaBeak",
+      "flags": 1,
+      "base": 1,
+      "srt": [
+        1.0,
+        -16.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "size": [
+        32.0,
+        32.0
+      ]
+    },
+    {
+      "kind": "pic1",
+      "name": "PicBeak",
+      "flags": 1,
+      "base": 1,
+      "srt": [
+        -0.0,
+        -14.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "size": [
+        32.0,
+        32.0
+      ]
+    },
+    {
+      "kind": "wnd1",
+      "name": "WinBalloon",
+      "flags": 1,
+      "base": 4,
+      "srt": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "size": [
+        80.0,
+        80.0
+      ]
+    },
+    {
+      "kind": "pan1",
+      "name": "Text00",
+      "flags": 1,
+      "base": 4,
+      "srt": [
+        0.0,
+        49.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "size": [
+        30.0,
+        40.0
+      ]
+    },
+    {
+      "kind": "txt1",
+      "name": "ShaText",
+      "flags": 1,
+      "base": 3,
+      "srt": [
+        2.0,
+        -3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "size": [
+        512.0,
+        70.0
+      ],
+      "font": [
+        24.299999237060547,
+        33.0,
+        2.0,
+        -2.0
+      ],
+      "position": 3,
+      "alignment": 0,
+      "colors": "ffffffffffffffff"
+    },
+    {
+      "kind": "txt1",
+      "name": "TxtText",
+      "flags": 1,
+      "base": 3,
+      "srt": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "size": [
+        512.0,
+        70.0
+      ],
+      "font": [
+        24.299999237060547,
+        33.0,
+        2.0,
+        -2.0
+      ],
+      "position": 3,
+      "alignment": 0,
+      "colors": "ffffffffffffffff"
+    },
+    {
+      "kind": "txt1",
+      "name": "ShaTextKrKo",
+      "flags": 1,
+      "base": 3,
+      "srt": [
+        2.0,
+        -3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "size": [
+        512.0,
+        70.0
+      ],
+      "font": [
+        24.299999237060547,
+        33.0,
+        2.0,
+        -2.0
+      ],
+      "position": 3,
+      "alignment": 0,
+      "colors": "ffffffffffffffff"
+    },
+    {
+      "kind": "txt1",
+      "name": "TxtTextKrKo",
+      "flags": 1,
+      "base": 3,
+      "srt": [
+        -0.0,
+        -0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "size": [
+        512.0,
+        70.0
+      ],
+      "font": [
+        24.299999237060547,
+        33.0,
+        2.0,
+        -2.0
+      ],
+      "position": 3,
+      "alignment": 0,
+      "colors": "ffffffffffffffff"
+    },
+    {
+      "kind": "txt1",
+      "name": "ShaTextCnSi",
+      "flags": 1,
+      "base": 3,
+      "srt": [
+        2.0,
+        -3.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "size": [
+        512.0,
+        70.0
+      ],
+      "font": [
+        27.0,
+        33.0,
+        2.0,
+        -2.0
+      ],
+      "position": 3,
+      "alignment": 0,
+      "colors": "ffffffffffffffff"
+    },
+    {
+      "kind": "txt1",
+      "name": "TxtTextCnSi",
+      "flags": 1,
+      "base": 3,
+      "srt": [
+        -0.0,
+        -0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "size": [
+        512.0,
+        70.0
+      ],
+      "font": [
+        27.0,
+        33.0,
+        2.0,
+        -2.0
+      ],
+      "position": 3,
+      "alignment": 0,
+      "colors": "ffffffffffffffff"
+    }
+  ]
+}

@@ -22,6 +22,8 @@
 #include "resource/BmgMessageArchive.hpp"
 #include "resource/TplTexture.hpp"
 
+class LayoutManager;
+
 namespace nw4r::lyt {
     class TexMap;
 }
@@ -69,7 +71,7 @@ public:
     [[nodiscard]] const std::optional< std::filesystem::path >& getArchivePath() const;
 
     void draw();
-    [[nodiscard]] Nw4rLayoutRecords& native_records();
+    [[nodiscard]] Nw4rLayoutRecords& native_records(LayoutManager* manager = nullptr);
 
     void startAnim(const char* pAnimName, u32 animLayer);
     void setAnimFrameAndStop(f32 frame, u32 animLayer);
