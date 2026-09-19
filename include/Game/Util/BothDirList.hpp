@@ -23,11 +23,7 @@ namespace MR {
             initiate();
         }
 
-        BothDirPtrList(bool doInit) {
-            if (doInit) {
-                initiate();
-            }
-        }
+        BothDirPtrList(bool doInit);
         ~BothDirPtrList();
 
         void initiate();
