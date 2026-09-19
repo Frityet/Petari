@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-collision-area-tests",
+    "--probe-only"
+  ],
+  "binary_sha256": "bb9d0fbfeac89ac8414150f7b1925d6460b959dc8a9cad00ff047192d3c03dab",
+  "exit_code": 1,
+  "timeout_terminated": false,
+  "elapsed_seconds": 3.410263624973595,
+  "log": "process-query-diagnostic.log"
+}

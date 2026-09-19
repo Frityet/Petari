@@ -12,6 +12,7 @@
 #include "Game/AreaObj/DepthOfFieldArea.hpp"
 
 #include "Game/AreaObj/CameraRepulsiveArea.hpp"
+#include "Game/AreaObj/CollisionArea.hpp"
 #include "Game/AreaObj/CubeCamera.hpp"
 #include "Game/AreaObj/LightArea.hpp"
 #include "Game/AreaObj/LightAreaHolder.hpp"
@@ -599,6 +600,14 @@ namespace smgpc::scene {
                     .manager_name = "ForbidJumpCube",
                     .retail_manager_order = 60,
                     .manager_capacity = 0x8,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "CollisionArea",
+                    .object_creator = create_area_obj<CollisionArea, AreaForm::Type_Cube1>,
+                    .manager_name = "CollisionArea",
+                    .retail_manager_order = 61,
+                    .manager_capacity = 0x40,
                     .manager_creator = create_area_obj_manager,
                 },
                 AreaObjPlacementDescriptor{

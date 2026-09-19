@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-collision-area-tests"
+  ],
+  "binary_sha256": "d59e421b793a765d1ce2b1aee9264b4db0ce9b437ae6037e8a5bb448931b089b",
+  "main_binary_sha256": "05652f4f8634c25074d03c4eb5ff9c5e602b28c3010419b7fe32f2698f7fe1bd",
+  "exit_code": 0,
+  "timeout_terminated": false,
+  "elapsed_seconds": 23.54843687498942,
+  "log": "process-activation.log"
+}
