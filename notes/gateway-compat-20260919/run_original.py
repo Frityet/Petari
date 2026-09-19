@@ -20,11 +20,16 @@ parser.add_argument("--timeout", type=float, default=180)
 parser.add_argument("--button-script", help="Debug controller input spans; records scripted input explicitly")
 parser.add_argument("--pointer-script", help="Debug pointer input spans; records scripted input explicitly")
 parser.add_argument("--stick-script", help="Debug normalized stick input spans; records scripted input explicitly")
+parser.add_argument("--trace-types", help="Record original LiveActor states matching these comma-separated C++ type substrings")
+parser.add_argument("--trace-interval", type=int, default=60)
+parser.add_argument("--layout-dump-frame", type=int, help="Dump all live native layout text and pane state after this frame")
 options = parser.parse_args()
 label = options.label
 frames = str(options.frames)
 if Path(label).name != label or label in (".", ".."):
     parser.error("label must be one filename component")
+if options.frames < 1 or options.trace_interval < 1 or (options.layout_dump_frame is not None and options.layout_dump_frame < 0):
+    parser.error("frame count and trace interval must be positive; layout frame must be nonnegative")
 if (notes / (label + ".json")).exists() or (notes / (label + "-nand")).exists():
     parser.error("use a new label to preserve earlier evidence and start with fresh save data")
 binary = root / "build/macosx/arm64/debug/smg-pc"
@@ -39,6 +44,11 @@ settings = {
     "SMGPC_WINDOW_WIDTH": "1280", "SMGPC_WINDOW_HEIGHT": "720",
     "SMGPC_SCREENSHOT_PATH": str(notes / (label + f"-frame{options.screenshot_frame}.png")),
     "SMGPC_SCREENSHOT_FRAME": str(options.screenshot_frame),
+    "SMGPC_DEBUG_ACTOR_TRACE_PATH": str(notes / (label + "-actors.jsonl")) if options.trace_types is not None else "",
+    "SMGPC_DEBUG_ACTOR_TRACE_TYPES": options.trace_types or "",
+    "SMGPC_DEBUG_ACTOR_TRACE_INTERVAL": str(options.trace_interval),
+    "SMGPC_DEBUG_LAYOUT_DUMP_PATH": str(notes / (label + "-layout.txt")) if options.layout_dump_frame is not None else "",
+    "SMGPC_DEBUG_LAYOUT_DUMP_FRAME": str(options.layout_dump_frame) if options.layout_dump_frame is not None else "",
 }
 for name, value in [("SMGPC_DEBUG_WPAD_BUTTON_SCRIPT", options.button_script),
                     ("SMGPC_DEBUG_WPAD_POINTER_SCRIPT", options.pointer_script),

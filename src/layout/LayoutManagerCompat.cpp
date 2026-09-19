@@ -7,6 +7,7 @@
 #include <array>
 #include <cmath>
 #include <cstring>
+#include <fstream>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -1070,6 +1071,21 @@ void refresh_pane_matrices(LayoutManager* manager) {
 }
 
 #ifndef NDEBUG
+void debug_dump_layout_text(const char* path) {
+    const aurora::allocation::HostAllocationScope host;
+    if (!path || !*path) return;
+    std::ofstream output(path, std::ios::app);
+    if (!output) aurora::throw_host_exception<std::runtime_error>("Cannot open layout text diagnostic output");
+    for (const auto& [manager, state] : sManagerStates) {
+        if (!state.actor || state.actor->mFlag.mIsDead || !state.records) continue;
+        output << "LAYOUT " << state.runtime->getLayoutName() << " actor=" << state.runtime->getName() << '\n';
+        for (u32 layer = 0; layer < state.animation_layer_count; ++layer)
+            output << " ANIMATION " << layer << ' ' << state.runtime->debugAnimName(layer)
+                   << " frame=" << state.runtime->getAnimFrame(layer) << '\n';
+        state.records->debug_dump_text(output);
+    }
+}
+
 LayoutLifetimeDebugState debug_layout_lifetime_state() noexcept {
     return {sActorStates.size(), sManagerStates.size(), sPaneControlStates.size()};
 }

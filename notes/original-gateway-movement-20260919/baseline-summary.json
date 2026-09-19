@@ -1,0 +1,1438 @@
+{
+  "source": "notes/gateway-compat-20260919/movement-trace-baseline-3200-actors.jsonl",
+  "observed_frames": [
+    0,
+    3180
+  ],
+  "records": 107,
+  "note": "Sampled observations only; no completion or input between samples is inferred.",
+  "controller_spans": [
+    {
+      "first_observed_frame": 0,
+      "last_observed_frame": 1380,
+      "signature": [
+        0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "first_observed_frame": 1410,
+      "last_observed_frame": 1410,
+      "signature": [
+        2048,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 2048,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "first_observed_frame": 1440,
+      "last_observed_frame": 1470,
+      "signature": [
+        0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "first_observed_frame": 1500,
+      "last_observed_frame": 1500,
+      "signature": [
+        2147485696,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 2147485696,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 2048
+      }
+    },
+    {
+      "first_observed_frame": 1530,
+      "last_observed_frame": 1680,
+      "signature": [
+        0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "first_observed_frame": 1710,
+      "last_observed_frame": 1710,
+      "signature": [
+        2048,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 2048,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "first_observed_frame": 1740,
+      "last_observed_frame": 1770,
+      "signature": [
+        0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "first_observed_frame": 1800,
+      "last_observed_frame": 1800,
+      "signature": [
+        2147485696,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 2147485696,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 2048
+      }
+    },
+    {
+      "first_observed_frame": 1830,
+      "last_observed_frame": 1980,
+      "signature": [
+        0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "first_observed_frame": 2010,
+      "last_observed_frame": 2010,
+      "signature": [
+        2048,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 2048,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "first_observed_frame": 2040,
+      "last_observed_frame": 2070,
+      "signature": [
+        0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "first_observed_frame": 2100,
+      "last_observed_frame": 2100,
+      "signature": [
+        2147485696,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 2147485696,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 2048
+      }
+    },
+    {
+      "first_observed_frame": 2130,
+      "last_observed_frame": 2280,
+      "signature": [
+        0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "first_observed_frame": 2310,
+      "last_observed_frame": 2430,
+      "signature": [
+        0,
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "first_observed_frame": 2460,
+      "last_observed_frame": 2490,
+      "signature": [
+        0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "first_observed_frame": 2520,
+      "last_observed_frame": 2640,
+      "signature": [
+        0,
+        [
+          1.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "first_observed_frame": 2670,
+      "last_observed_frame": 2670,
+      "signature": [
+        0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "first_observed_frame": 2700,
+      "last_observed_frame": 2850,
+      "signature": [
+        0,
+        [
+          0.0,
+          -1.0
+        ]
+      ],
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          -1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "first_observed_frame": 2880,
+      "last_observed_frame": 2880,
+      "signature": [
+        0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "first_observed_frame": 2910,
+      "last_observed_frame": 3030,
+      "signature": [
+        0,
+        [
+          -1.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          -1.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "first_observed_frame": 3060,
+      "last_observed_frame": 3180,
+      "signature": [
+        0,
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    }
+  ],
+  "actors": [
+    {
+      "id": 339,
+      "type": "10MarioActor",
+      "name": "マリオアクター",
+      "samples": 105,
+      "transitions": [
+        {
+          "frame": 60,
+          "signature": [
+            false,
+            false,
+            false,
+            "N13NrvMarioActor17MarioActorNrvWaitE"
+          ],
+          "nerve": {
+            "step": 3,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "position": [
+            19.41160011291504,
+            -2250.93896484375,
+            -10.080477714538574
+          ]
+        }
+      ],
+      "first_frame": 60,
+      "first_position": [
+        19.41160011291504,
+        -2250.93896484375,
+        -10.080477714538574
+      ],
+      "sampled_path_distance": 7541.612067479732,
+      "nonfinite_position_samples": 0,
+      "stick_segments": [
+        {
+          "stick": [
+            0.0,
+            1.0
+          ],
+          "first_frame": 2310,
+          "controller_span": 13,
+          "first_position": [
+            20.428359985351562,
+            -2250.714111328125,
+            -12.614253997802734
+          ],
+          "first_player_stick": [
+            -4.371138473402425e-08,
+            0.9999999403953552,
+            0.9999999403953552
+          ],
+          "last_frame": 2430,
+          "last_position": [
+            805.6183471679688,
+            -1935.24072265625,
+            20.92188262939453
+          ],
+          "last_player_stick": [
+            -4.371138473402425e-08,
+            0.9999999403953552,
+            0.9999999403953552
+          ],
+          "last_world_pad_direction": [
+            0.8884574174880981,
+            0.4582318067550659,
+            0.025824163109064102
+          ],
+          "net_distance": 846.8597566255186,
+          "last_status": 0
+        },
+        {
+          "stick": [
+            1.0,
+            0.0
+          ],
+          "first_frame": 2520,
+          "controller_span": 15,
+          "first_position": [
+            805.7723999023438,
+            -1941.5013427734375,
+            -21.55727767944336
+          ],
+          "first_player_stick": [
+            0.9999999403953552,
+            0.0,
+            0.9999999403953552
+          ],
+          "last_frame": 2640,
+          "last_position": [
+            836.53955078125,
+            -1842.5745849609375,
+            -535.1898193359375
+          ],
+          "last_player_stick": [
+            0.9999999403953552,
+            0.0,
+            0.9999999403953552
+          ],
+          "last_world_pad_direction": [
+            -0.022282607853412628,
+            0.269485741853714,
+            -0.9627464413642883
+          ],
+          "net_distance": 523.9766300447078,
+          "last_status": 0
+        },
+        {
+          "stick": [
+            0.0,
+            -1.0
+          ],
+          "first_frame": 2700,
+          "controller_span": 17,
+          "first_position": [
+            835.95166015625,
+            -1842.9051513671875,
+            -535.8441772460938
+          ],
+          "first_player_stick": [
+            1.3113415775478643e-07,
+            -0.9999999403953552,
+            0.9999999403953552
+          ],
+          "last_frame": 2850,
+          "last_position": [
+            -665.8617553710938,
+            -2002.583740234375,
+            -246.5918426513672
+          ],
+          "last_player_stick": [
+            1.3113415775478643e-07,
+            -0.9999999403953552,
+            0.9999999403953552
+          ],
+          "last_world_pad_direction": [
+            -0.8443928956985474,
+            0.4934079349040985,
+            0.20868390798568726
+          ],
+          "net_distance": 1537.7280968588113,
+          "last_status": 0
+        },
+        {
+          "stick": [
+            -1.0,
+            0.0
+          ],
+          "first_frame": 2910,
+          "controller_span": 19,
+          "first_position": [
+            -869.71826171875,
+            -1899.5465087890625,
+            -180.50401306152344
+          ],
+          "first_player_stick": [
+            -0.9999999403953552,
+            -8.74227694680485e-08,
+            0.9999999403953552
+          ],
+          "last_frame": 3030,
+          "last_position": [
+            -535.7833862304688,
+            -1871.23974609375,
+            765.853271484375
+          ],
+          "last_player_stick": [
+            -0.9999999403953552,
+            -8.74227694680485e-08,
+            0.9999999403953552
+          ],
+          "last_world_pad_direction": [
+            0.35966956615448,
+            0.28449147939682007,
+            0.888651967048645
+          ],
+          "net_distance": 1003.9451598044334,
+          "last_status": 0
+        }
+      ],
+      "last_frame": 3180,
+      "last_position": [
+        -330.97625732421875,
+        -1719.71826171875,
+        1143.8349609375
+      ]
+    },
+    {
+      "id": 770,
+      "type": "7Rosetta",
+      "name": "ロゼッタ",
+      "samples": 105,
+      "transitions": [
+        {
+          "frame": 60,
+          "signature": [
+            true,
+            false,
+            false,
+            "N10NrvRosetta14RosettaNrvDemoE"
+          ],
+          "nerve": {
+            "step": -1,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          },
+          "position": [
+            -70.0,
+            2499.080810546875,
+            -340.0
+          ]
+        }
+      ],
+      "first_frame": 60,
+      "first_position": [
+        -70.0,
+        2499.080810546875,
+        -340.0
+      ],
+      "sampled_path_distance": 0.0,
+      "nonfinite_position_samples": 0,
+      "stick_segments": [],
+      "last_frame": 3180,
+      "last_position": [
+        -70.0,
+        2499.080810546875,
+        -340.0
+      ]
+    },
+    {
+      "id": 778,
+      "type": "20RunawayRabbitCollect",
+      "name": "逃げウサギ集め",
+      "samples": 105,
+      "transitions": [
+        {
+          "frame": 60,
+          "signature": [
+            false,
+            false,
+            false,
+            "N23NrvRunawayRabbitCollect27RunawayRabbitCollectNrvWaitE"
+          ],
+          "nerve": {
+            "step": 1,
+            "type": "N23NrvRunawayRabbitCollect27RunawayRabbitCollectNrvWaitE"
+          },
+          "position": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "first_frame": 60,
+      "first_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_path_distance": 0.0,
+      "nonfinite_position_samples": 0,
+      "stick_segments": [],
+      "last_frame": 3180,
+      "last_position": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": 779,
+      "type": "11RunawayTico",
+      "name": "逃げチコ",
+      "samples": 105,
+      "transitions": [
+        {
+          "frame": 60,
+          "signature": [
+            true,
+            false,
+            false,
+            "N7NrvTico11TicoNrvWaitE"
+          ],
+          "nerve": {
+            "step": 0,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          },
+          "position": [
+            -180.0,
+            2182.818603515625,
+            -150.0
+          ]
+        }
+      ],
+      "first_frame": 60,
+      "first_position": [
+        -180.0,
+        2182.818603515625,
+        -150.0
+      ],
+      "sampled_path_distance": 0.0,
+      "nonfinite_position_samples": 0,
+      "stick_segments": [],
+      "last_frame": 3180,
+      "last_position": [
+        -180.0,
+        2182.818603515625,
+        -150.0
+      ]
+    },
+    {
+      "id": 785,
+      "type": "11RunawayTico",
+      "name": "逃げチコ",
+      "samples": 105,
+      "transitions": [
+        {
+          "frame": 60,
+          "signature": [
+            true,
+            false,
+            false,
+            "N7NrvTico11TicoNrvWaitE"
+          ],
+          "nerve": {
+            "step": 0,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          },
+          "position": [
+            -110.0,
+            2180.275634765625,
+            350.0
+          ]
+        }
+      ],
+      "first_frame": 60,
+      "first_position": [
+        -110.0,
+        2180.275634765625,
+        350.0
+      ],
+      "sampled_path_distance": 0.0,
+      "nonfinite_position_samples": 0,
+      "stick_segments": [],
+      "last_frame": 3180,
+      "last_position": [
+        -110.0,
+        2180.275634765625,
+        350.0
+      ]
+    },
+    {
+      "id": 791,
+      "type": "11RunawayTico",
+      "name": "逃げチコ",
+      "samples": 105,
+      "transitions": [
+        {
+          "frame": 60,
+          "signature": [
+            false,
+            false,
+            false,
+            "N14NrvRunawayTico20RunawayTicoNrvGuide0E"
+          ],
+          "nerve": {
+            "step": 3,
+            "type": "N14NrvRunawayTico20RunawayTicoNrvGuide0E"
+          },
+          "position": [
+            19.41160011291504,
+            -2250.93896484375,
+            -10.080477714538574
+          ]
+        },
+        {
+          "frame": 990,
+          "signature": [
+            false,
+            false,
+            false,
+            "N14NrvRunawayTico20RunawayTicoNrvGuide1E"
+          ],
+          "nerve": {
+            "step": 2,
+            "type": "N14NrvRunawayTico20RunawayTicoNrvGuide1E"
+          },
+          "position": [
+            -129.9798126220703,
+            -2352.238037109375,
+            333.57135009765625
+          ]
+        },
+        {
+          "frame": 1080,
+          "signature": [
+            false,
+            true,
+            false,
+            "N14NrvRunawayTico20RunawayTicoNrvGuide1E"
+          ],
+          "nerve": {
+            "step": 92,
+            "type": "N14NrvRunawayTico20RunawayTicoNrvGuide1E"
+          },
+          "position": [
+            -129.9798126220703,
+            -2352.238037109375,
+            333.57135009765625
+          ]
+        },
+        {
+          "frame": 1440,
+          "signature": [
+            true,
+            false,
+            false,
+            "N14NrvRunawayTico20RunawayTicoNrvGuide1E"
+          ],
+          "nerve": {
+            "step": 442,
+            "type": "N14NrvRunawayTico20RunawayTicoNrvGuide1E"
+          },
+          "position": [
+            -129.9798126220703,
+            -2352.238037109375,
+            333.57135009765625
+          ]
+        }
+      ],
+      "first_frame": 60,
+      "first_position": [
+        19.41160011291504,
+        -2250.93896484375,
+        -10.080477714538574
+      ],
+      "sampled_path_distance": 388.1699048090842,
+      "nonfinite_position_samples": 0,
+      "stick_segments": [],
+      "last_frame": 3180,
+      "last_position": [
+        -129.9798126220703,
+        -2352.238037109375,
+        333.57135009765625
+      ]
+    },
+    {
+      "id": 795,
+      "type": "13RunawayRabbit",
+      "name": "球面逃げウサギ",
+      "samples": 105,
+      "transitions": [
+        {
+          "frame": 60,
+          "signature": [
+            false,
+            true,
+            true,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 0,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            760.0,
+            301.2020263671875,
+            1930.0
+          ]
+        },
+        {
+          "frame": 780,
+          "signature": [
+            false,
+            true,
+            false,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 0,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            760.0,
+            301.2020263671875,
+            1930.0
+          ]
+        },
+        {
+          "frame": 810,
+          "signature": [
+            false,
+            true,
+            true,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 0,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            760.0,
+            301.2020263671875,
+            1930.0
+          ]
+        },
+        {
+          "frame": 1560,
+          "signature": [
+            false,
+            true,
+            false,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 28,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            760.0,
+            301.2020263671875,
+            1930.0
+          ]
+        },
+        {
+          "frame": 2550,
+          "signature": [
+            false,
+            true,
+            true,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 1001,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            760.0,
+            301.2020263671875,
+            1930.0
+          ]
+        },
+        {
+          "frame": 2820,
+          "signature": [
+            false,
+            true,
+            false,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 1002,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            760.0,
+            301.2020263671875,
+            1930.0
+          ]
+        },
+        {
+          "frame": 2880,
+          "signature": [
+            false,
+            true,
+            true,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 1045,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            760.0,
+            301.2020263671875,
+            1930.0
+          ]
+        },
+        {
+          "frame": 2970,
+          "signature": [
+            false,
+            true,
+            false,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 1073,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            760.0,
+            301.2020263671875,
+            1930.0
+          ]
+        }
+      ],
+      "first_frame": 60,
+      "first_position": [
+        760.0,
+        301.2020263671875,
+        1930.0
+      ],
+      "sampled_path_distance": 0.0,
+      "nonfinite_position_samples": 0,
+      "stick_segments": [],
+      "last_frame": 3180,
+      "last_position": [
+        760.0,
+        301.2020263671875,
+        1930.0
+      ]
+    },
+    {
+      "id": 800,
+      "type": "13RunawayRabbit",
+      "name": "球面逃げウサギ",
+      "samples": 105,
+      "transitions": [
+        {
+          "frame": 60,
+          "signature": [
+            false,
+            true,
+            true,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 0,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            1300.0,
+            -933.8270874023438,
+            -1350.0
+          ]
+        },
+        {
+          "frame": 750,
+          "signature": [
+            false,
+            true,
+            false,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 0,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            1300.0,
+            -933.8270874023438,
+            -1350.0
+          ]
+        },
+        {
+          "frame": 780,
+          "signature": [
+            false,
+            true,
+            true,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 0,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            1300.0,
+            -933.8270874023438,
+            -1350.0
+          ]
+        },
+        {
+          "frame": 1560,
+          "signature": [
+            false,
+            true,
+            false,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 30,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            1300.8565673828125,
+            -934.3818359375,
+            -1350.824462890625
+          ]
+        },
+        {
+          "frame": 2790,
+          "signature": [
+            false,
+            true,
+            true,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 1233,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            1300.8565673828125,
+            -934.3818359375,
+            -1350.824462890625
+          ]
+        }
+      ],
+      "first_frame": 60,
+      "first_position": [
+        1300.0,
+        -933.8270874023438,
+        -1350.0
+      ],
+      "sampled_path_distance": 1.3119423297439532,
+      "nonfinite_position_samples": 0,
+      "stick_segments": [],
+      "last_frame": 3180,
+      "last_position": [
+        1300.8565673828125,
+        -934.3818359375,
+        -1350.824462890625
+      ]
+    },
+    {
+      "id": 805,
+      "type": "13RunawayRabbit",
+      "name": "球面逃げウサギ",
+      "samples": 105,
+      "transitions": [
+        {
+          "frame": 60,
+          "signature": [
+            false,
+            true,
+            false,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 0,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            -1215.6785888671875,
+            779.9697265625,
+            -1145.4390869140625
+          ]
+        },
+        {
+          "frame": 300,
+          "signature": [
+            false,
+            true,
+            true,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 0,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            -1215.6785888671875,
+            779.9697265625,
+            -1145.4390869140625
+          ]
+        },
+        {
+          "frame": 750,
+          "signature": [
+            false,
+            true,
+            false,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 0,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            -1215.6785888671875,
+            779.9697265625,
+            -1145.4390869140625
+          ]
+        },
+        {
+          "frame": 780,
+          "signature": [
+            false,
+            true,
+            true,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 0,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            -1215.6785888671875,
+            779.9697265625,
+            -1145.4390869140625
+          ]
+        },
+        {
+          "frame": 1560,
+          "signature": [
+            false,
+            true,
+            false,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            -1215.6785888671875,
+            779.9697265625,
+            -1145.4390869140625
+          ]
+        },
+        {
+          "frame": 2340,
+          "signature": [
+            false,
+            true,
+            true,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 778,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            -1215.6785888671875,
+            779.9697265625,
+            -1145.4390869140625
+          ]
+        },
+        {
+          "frame": 2760,
+          "signature": [
+            false,
+            true,
+            false,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 807,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            -1215.6785888671875,
+            779.9697265625,
+            -1145.4390869140625
+          ]
+        },
+        {
+          "frame": 2970,
+          "signature": [
+            false,
+            true,
+            true,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 996,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            -1215.6785888671875,
+            779.9697265625,
+            -1145.4390869140625
+          ]
+        }
+      ],
+      "first_frame": 60,
+      "first_position": [
+        -1215.6785888671875,
+        779.9697265625,
+        -1145.4390869140625
+      ],
+      "sampled_path_distance": 0.0,
+      "nonfinite_position_samples": 0,
+      "stick_segments": [],
+      "last_frame": 3180,
+      "last_position": [
+        -1215.6785888671875,
+        779.9697265625,
+        -1145.4390869140625
+      ]
+    },
+    {
+      "id": 810,
+      "type": "13RunawayRabbit",
+      "name": "球面逃げウサギ",
+      "samples": 105,
+      "transitions": [
+        {
+          "frame": 60,
+          "signature": [
+            false,
+            true,
+            true,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 0,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            260.0,
+            -1250.7486572265625,
+            -1940.0
+          ]
+        },
+        {
+          "frame": 750,
+          "signature": [
+            false,
+            true,
+            false,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 0,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            260.0,
+            -1250.7486572265625,
+            -1940.0
+          ]
+        },
+        {
+          "frame": 780,
+          "signature": [
+            false,
+            true,
+            true,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 0,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            260.0,
+            -1250.7486572265625,
+            -1940.0
+          ]
+        },
+        {
+          "frame": 2580,
+          "signature": [
+            false,
+            true,
+            false,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 27,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            260.0,
+            -1250.7486572265625,
+            -1940.0
+          ]
+        },
+        {
+          "frame": 2850,
+          "signature": [
+            false,
+            true,
+            true,
+            "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          ],
+          "nerve": {
+            "step": 267,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          },
+          "position": [
+            260.0,
+            -1250.7486572265625,
+            -1940.0
+          ]
+        }
+      ],
+      "first_frame": 60,
+      "first_position": [
+        260.0,
+        -1250.7486572265625,
+        -1940.0
+      ],
+      "sampled_path_distance": 0.0,
+      "nonfinite_position_samples": 0,
+      "stick_segments": [],
+      "last_frame": 3180,
+      "last_position": [
+        260.0,
+        -1250.7486572265625,
+        -1940.0
+      ]
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <iosfwd>
 #include <string_view>
 #include <revolution/types.h>
 
@@ -35,6 +36,10 @@ public:
     void animate_pane(u32 index);
     void require_mutable_resource_graph(std::string_view operation) const;
     [[nodiscard]] u32 text_line_count(const char* pane_name) const;
+
+#ifndef NDEBUG
+    void debug_dump_text(std::ostream& output) const;
+#endif
 
 private:
     void import_pane(u32 index);

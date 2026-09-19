@@ -26,6 +26,12 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#ifndef NDEBUG
+#include <iomanip>
+#include <ostream>
+#include <nw4r/ut/Font.h>
+#include <nw4r/ut/Rect.h>
+#endif
 
 namespace smgpc::layout {
 namespace {
@@ -494,6 +500,39 @@ u32 Nw4rLayoutRecords::text_line_count(const char* pane_name) const {
     }
     return maximum;
 }
+#ifndef NDEBUG
+void Nw4rLayoutRecords::debug_dump_text(std::ostream& output) const {
+    for (const auto& record : _state->panes) {
+        const auto& pane = *record;
+        bool visible = pane.IsVisible();
+        for (auto* parent = pane.mpParent; parent; parent = parent->mpParent) visible &= parent->IsVisible();
+        output << " PANE " << pane.mName << " parent=" << (pane.mpParent ? pane.mpParent->mName : "-")
+               << " visible=" << visible << " alpha=" << unsigned(pane.mAlpha) << '/' << unsigned(pane.mGlbAlpha)
+               << " position=" << pane.mTranslate.x << ',' << pane.mTranslate.y << ',' << pane.mTranslate.z
+               << " size=" << pane.mSize.width << ',' << pane.mSize.height << " base=" << unsigned(pane.mBasePosition)
+               << " matrix=";
+        for (const auto& row : pane.mGlbMtx.m) for (float value : row) output << value << ',';
+        output << '\n';
+        auto* box = nw4r::ut::DynamicCast<const nw4r::lyt::TextBox*>(&pane);
+        if (!box) continue;
+        output << "  TEXT font=" << box->mFontSize.width << ',' << box->mFontSize.height
+               << " spacing=" << box->mCharSpace << ',' << box->mLineSpace
+               << " position=" << unsigned(box->mTextPosition) << " alignment=" << unsigned(box->GetTextAlignment())
+               << " color=" << std::hex << u32(box->mTextColors[0]) << ',' << u32(box->mTextColors[1]) << std::dec;
+        if (box->mpFont) output << " font-metrics=" << box->mpFont->GetWidth() << ',' << box->mpFont->GetHeight()
+                                << ',' << box->mpFont->GetAscent() << ',' << box->mpFont->GetBaselinePos();
+        if (box->mpMaterial) for (u32 color = 0; color < 2; ++color) {
+            const auto value = box->mpMaterial->GetTevColor(color);
+            output << " tev" << color << '=' << value.r << ',' << value.g << ',' << value.b << ',' << value.a;
+        }
+        if (const auto* processor = dynamic_cast<const CustomTagProcessor*>(box->mpTagProcessor))
+            output << " shadow=" << processor->mIsShadow << " text=" << processor->mIsText;
+        output << " units=" << std::hex;
+        for (u32 i = 0; i < box->mTextLen; ++i) output << u32(box->mTextBuf[i]) << ',';
+        output << std::dec << '\n';
+    }
+}
+#endif
 void animate_native_pane(const nw4r::lyt::Pane* pane) {
     if (const auto* record = dynamic_cast<const NativePaneIdentity*>(pane)) record->owner.animate_pane(record->index);
 }

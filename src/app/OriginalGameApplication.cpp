@@ -47,6 +47,7 @@
 #include "runtime/ConsoleNandImport.hpp"
 #include "runtime/SystemConfigService.hpp"
 #include "runtime/DebugWpadInputScript.hpp"
+#include "runtime/OriginalProcessTrace.hpp"
 #include <JSystem/JKernel/JKRExpHeap.hpp>
 #include <JSystem/JKernel/JKRThread.hpp>
 #include <JSystem/JUtility/JUTDirectPrint.hpp>
@@ -207,6 +208,10 @@ public:
 
     ~OriginalProcess() { retire(); }
 
+#ifndef NDEBUG
+    void set_debug_observer(OriginalGameDebugObserver observer) { debug_observer = observer; }
+#endif
+
     void initialize() {
         const aurora::os::GuestThreadExecutionScope execution;
         if (SingletonHolder<GameSystem>::get() || SingletonHolder<HeapMemoryWatcher>::get())
@@ -257,7 +262,13 @@ public:
         scene::begin_original_scene_frame();
         auto& system = *SingletonHolder<GameSystem>::get();
         system.frameLoop();
+#ifndef NDEBUG
+        frame_trace.capture(system, frame_index);
+#endif
         request_selected_stage(system);
+#ifndef NDEBUG
+        if (debug_observer.after_frame) debug_observer.after_frame(debug_observer.context, system, frame_index);
+#endif
     }
 
 private:
@@ -420,18 +431,27 @@ private:
     compat::NameObjRuntimeRegistrationMarker marker;
     aurora::WpadShakeGesture shake;
 #ifndef NDEBUG
+    OriginalGameDebugObserver debug_observer;
     runtime::DebugWpadInputScript input_script = runtime::DebugWpadInputScript::from_environment();
     runtime::DebugWpadInputScript::Applied script_applied;
+    runtime::OriginalProcessTrace frame_trace;
 #endif
     JUTDirectPrint* direct_print = nullptr;
     bool started = false;
 };
 }
 
-int run_original_game(const BootstrapConfiguration& configuration, logging::ILogger& logger) {
+int run_original_game(const BootstrapConfiguration& configuration, logging::ILogger& logger
+#ifndef NDEBUG
+                      , OriginalGameDebugObserver observer
+#endif
+) {
     auto options = launch_options(configuration);
     render::AuroraWindow window({configuration.window_width, configuration.window_height, configuration.window_title});
     OriginalProcess process(configuration, std::move(options.selection));
+#ifndef NDEBUG
+    process.set_debug_observer(observer);
+#endif
     logger.info(logging::Category::APP, logging::Message{"Booting the original GameSystem"});
     process.initialize();
     logger.info(logging::Category::APP, logging::Message{"Running the original GameSystem frame loop"});
