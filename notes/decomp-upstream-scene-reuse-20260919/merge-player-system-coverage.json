@@ -1,0 +1,194 @@
+[
+  {
+    "path": "src/Game/Player/Mario.cpp",
+    "local_method_names": 51,
+    "merged_method_names": 50,
+    "local_names_absent_from_cpp": [
+      "XanimeCore::getJointTransform"
+    ]
+  },
+  {
+    "path": "src/Game/Player/MarioActor.cpp",
+    "local_method_names": 83,
+    "merged_method_names": 83,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Player/MarioActorOffensiveMsg.cpp",
+    "local_method_names": 17,
+    "merged_method_names": 17,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Player/MarioActorRush.cpp",
+    "local_method_names": 7,
+    "merged_method_names": 7,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Player/MarioActorSpecialDraw.cpp",
+    "local_method_names": 32,
+    "merged_method_names": 32,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Player/MarioAnimator.cpp",
+    "local_method_names": 44,
+    "merged_method_names": 44,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Player/MarioDamage.cpp",
+    "local_method_names": 54,
+    "merged_method_names": 54,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Player/MarioWarp.cpp",
+    "local_method_names": 11,
+    "merged_method_names": 11,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Player/MarioActorRushMsg.cpp",
+    "local_method_names": 10,
+    "merged_method_names": 10,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Player/MarioBlown.cpp",
+    "local_method_names": 5,
+    "merged_method_names": 5,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Player/MarioDamageParalyze.cpp",
+    "local_method_names": 5,
+    "merged_method_names": 5,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Player/MarioEffect.cpp",
+    "local_method_names": 31,
+    "merged_method_names": 31,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Player/MarioSwim.cpp",
+    "local_method_names": 58,
+    "merged_method_names": 57,
+    "local_names_absent_from_cpp": [
+      "MarioSwim::getBlurOffset"
+    ]
+  },
+  {
+    "path": "src/Game/Player/MarioTeresa.cpp",
+    "local_method_names": 31,
+    "merged_method_names": 29,
+    "local_names_absent_from_cpp": [
+      "MarioTeresa::keep",
+      "MarioTeresa::notice"
+    ]
+  },
+  {
+    "path": "src/Game/Player/MarioWait.cpp",
+    "local_method_names": 14,
+    "merged_method_names": 14,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Player/MatrixControl.cpp",
+    "local_method_names": 10,
+    "merged_method_names": 10,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Player/MarioRabbit.cpp",
+    "local_method_names": 10,
+    "merged_method_names": 10,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Screen/CustomTagProcessor.cpp",
+    "local_method_names": 31,
+    "merged_method_names": 32,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Screen/ReplaceTagProcessor.cpp",
+    "local_method_names": 0,
+    "merged_method_names": 1,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Screen/LayoutCoreUtil.cpp",
+    "local_method_names": 0,
+    "merged_method_names": 0,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Screen/PauseMenu.cpp",
+    "local_method_names": 16,
+    "merged_method_names": 16,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Screen/LayoutGroupCtrl.cpp",
+    "local_method_names": 5,
+    "merged_method_names": 5,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/Screen/LayoutManager.cpp",
+    "local_method_names": 10,
+    "merged_method_names": 24,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/System/AudSystemWrapper.cpp",
+    "local_method_names": 20,
+    "merged_method_names": 20,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/System/GameSequenceProgress.cpp",
+    "local_method_names": 25,
+    "merged_method_names": 26,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/System/LayoutHolder.cpp",
+    "local_method_names": 15,
+    "merged_method_names": 11,
+    "local_names_absent_from_cpp": [
+      "LayoutHolder::getResOther",
+      "LayoutHolder::getResOtherName",
+      "LayoutHolder::getResOtherNum",
+      "LayoutHolder::isExistResOther"
+    ]
+  },
+  {
+    "path": "src/Game/System/SaveDataFileAccessor.cpp",
+    "local_method_names": 4,
+    "merged_method_names": 4,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/System/WPadHVSwing.cpp",
+    "local_method_names": 4,
+    "merged_method_names": 4,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/System/Overwrite.cpp",
+    "local_method_names": 4,
+    "merged_method_names": 4,
+    "local_names_absent_from_cpp": []
+  },
+  {
+    "path": "src/Game/System/ResourceHolderManager.cpp",
+    "local_method_names": 17,
+    "merged_method_names": 17,
+    "local_names_absent_from_cpp": []
+  }
+]

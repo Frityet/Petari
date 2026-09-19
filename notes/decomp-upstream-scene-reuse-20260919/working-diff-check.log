@@ -1,0 +1,6 @@
+src/Game/LiveActor/ShadowVolumeDrawer.cpp:102: new blank line at EOF.
+src/Game/Player/MarioActorDraw.cpp:1065: new blank line at EOF.
+src/Game/Player/MarioFaint.cpp:167: new blank line at EOF.
+src/Game/Player/MarioFoo.cpp:832: new blank line at EOF.
+src/Game/Player/MarioHang.cpp:808: new blank line at EOF.
+src/Game/Player/MarioWall.cpp:774: new blank line at EOF.

@@ -1,0 +1,274 @@
+7663bd3be278c7dfaaccd9df729b3b9cf61acf27 Merge branch 'master' of https://github.com/SMGCommunity/Petari
+149c766af7b13f0d1d5335a4b8ce04c63dca73d3 Functor call cleanup
+999bb0d96af1e375618bfde7b829e7aa47f1e06d `MultiSceneEffectKeeper`
+720576cfde7c7a9f15d6105b908559a1475a77be const functor wrapper fix
+bac12b5f7b19c855b1021949924ed2d79cbe5b52 Merge pull request #2055 from Gonzalo-kebab/master
+c99f2c56e3f28dd0e63bf40bf8dc52a8e5d27905 link LogoFader
+2e10e789efdba1521482639a618ad9c215b62ed8 Merge pull request #2051 from vulcanbleh/master
+7fdeea6d7611581b17ec0917f45996d9a9a390d0 Merge pull request #2054 from Gonzalo-kebab/master
+ecc55b7ced8b97ff7e3ec3c3e3f61bf88fa32eaa format
+ffeab6affa305f9e0e3323332c81f19f3d022e7e forgot to commit header
+4b5b0d227d6682975d0a991ece61e7cc803bfcba oops
+236bb1ee26c8954662a377c1c46998e55146abbb link SeesawMoveNut
+3acb41468f3a33a442e1d83196008c35ff2b0315 Merge pull request #2053 from Gonzalo-kebab/master
+717f32e45a7b5bce2efd86f414198839d7fd6a33 improve NameObjFactory data matching
+c87e91708d82e844d05baf2151e0d7ceeac66d38 Merge pull request #2052 from Gonzalo-kebab/master
+e6340b4dd87e025dc6d742b8c83e857a57ca2cd4 link OceanSmallTurtle
+b79e9a24081cffad51826f567f2500e6a2a99e65 `GameEventFlag` type names
+15f89ed7d273e4e778f1ac20db4057d5492dd30b fixed LavaBreakColumn destructor
+b158a3b3e0da5a4f5b5d182479613fb391d74409 naming fix
+be0a57bef18b5148f466893324d7bb1281b94619 ``LavaBreakColumn`` 100%
+c0107028ed91d0d65e0481b0aca0e947811cae21 SideSpikeMoveStep 100%
+d8db3b1c6c1df46198dbdf248785e6e89aa63f6c Merge pull request #2050 from Gonzalo-kebab/master
+c92f244903b9dab5eef9c852bc696ed84d44b728 includes in DemoRabbit header oops
+a4d94f9aa971e3bd4dc2f7792113b0a1b25a672d Merge pull request #2049 from Gonzalo-kebab/master
+34248dd3a03cb1ac35c82fc3d0d1080dcb050174 link DemoRabbit
+06d2e17a2f11d84937a3723ff892941a19dc617e Merge branch 'master' of https://github.com/SMGCommunity/Petari
+c4fa02a2c59b8d5b8eb5f5e13ed7ef2744fb9c3e more `Effect` stuff
+eecd281f93ecd5af134be46089a8c533cf4bf7b7 `StageEffectDataTable`
+065ff2a7eaf5ceeddbc9eb84ae7dff663c9b27ac Merge branch 'master' of https://github.com/SMGCommunity/Petari
+ee18d42047b121da9792c8d5acf6da8efe058a58 `AutoEffectGroup` and `AutoEffectGroupHolder`
+cbb6b595e733957696e132046ff16bf813720de1 Merge pull request #2048 from Gonzalo-kebab/master
+d1dd7f5244855c44578f82cc13f28cecb8fe2b2c get rid of extra includes
+7472f2df664792584ce294d98adc569a972ae5a1 link OnimasuJump
+c1cd141cbffb08d4cf9715f48457ff5e116cf7b7 Merge pull request #2044 from stglez-udc/prueba-descompilacion-matching
+3f9479cba6bf5a517d52732ba7a6281b5b51c3a1 Merge pull request #2039 from aba4gamer/master
+adf1707fb4458ee837a875dc0da06ed182aa41bb `SyncBckEffectInfo`
+d69260932f46e3de1a251ed34c381567ea98eac2 `SyncBckEffectChecker`
+179f0fe56d294c5053ba3c5e464288be4ea3482d Merge pull request #2047 from Gonzalo-kebab/master
+f9f0033009086ea61d126291ffed3f5740a6fd21 match GalaxyNamePlateDrawer
+73398365b028faa6b8b55496ee60a4d0c6f14776 `MtxUtil`
+86774a67a790eb8de565ec9f5ec7c34125ba4fd0 Merge pull request #2046 from Gonzalo-kebab/master
+df32d56889ccfd957be28d7e05d3aff3995f1cf4 Merge branch 'SMGCommunity:master' into master
+7de07746923c5721524e376ff50c10a3bca19e0f FunctorBase linking fixes
+f6518d6a2b273f1f37ce35dfa3146dcce3a0ba67 WaterPlant 97%
+4fd11728fa00e16c8e1ff1e1bcb5de3f19807205 `SphereAccelSensorController` improvements
+089035e0823a430805045fddceac5fa0f7a1705b Match `Trapeze`
+f12cb4c8f1548e0c6d03a6c4c062b0b0827c0aba Match `TamakoroTutorial`
+0d5fa5829866f7c77ffb137c7563684d550e7354 Match `SwingRope`
+aca0ef2911b756e9b6745d79b2a2f3c3c96f32a1 Match `SpaceCocoon`
+6a7b0ca8a27031816197897a351459a48f80816c forgot to format
+ac8776833a840ddebb9c7d3dda1c2e89cd1ce81a ``TimerMoveWall`` 100%
+aeef062d5c78f98870470644c1dd2ceb22a1c53a ``Rabbit`` 99.8%
+70efef54b1b27fc8ac8c49dffa4e6d8a2b70a369 Merge pull request #2045 from alexsr1/LavaHomeSeesawRotator
+93408d8c4c9781c6c18d185140ee8149ca3a3c33 Match `LavaHomeSeesawRotator`
+5758995fe030614899029e85760454d6582efb8d Build fixed
+2404041a82b57c32d0f755ec0d00388dee11f902 Will fix, just let me save
+76b94a4ae71a989acb05eb15edc106d1f0b60324 Slightly improve `Dodoryu`
+74a2fa89acee8a75893ee9e44d406a192bd5659a Merge remote-tracking branch 'upstream/master'
+9f3bbac857c1b64def20b10bb545b712e43a58ce `odh` at 99%
+66e2e190c39c1a67b35b533ecd3f8832e69b98a4 `LayoutManager::replaceIndDummyTexture`
+27eb2aea1563cf73dff12ac86eed3ee928e5f4f2 Match 83% `Jellyfish`
+a237f78adba02dcc9e4dd6ec7b160c8628f4d54c Match 92% `SpinDriver`
+d58ec2158a1b3fd8453173d5bb07db94a8427772 Fix build error
+cb1b1ac2bd911f31d75bd824bf7bf23e86babb0b Match 98% `FireBall`
+5c743195b7ac3ad8d7e5b9cc5be16d2dde4a1f37 Merge branch 'master' of https://github.com/SMGCommunity/Petari
+53f83c80ff5e2386a7182dfbb673d493c0fa54f3 Match and Link `GameSequenceProgress`
+20f9847a249902d24dd6d37c622b8e2afb445e13 `ReplaceTagProcessor`
+eb76263315afb7ac6c319e7f289c05064df45a9e `RhythmLib` progress
+0240ed2be3c40bd279ab1399985ad5561dfc0605 Match and Link `GalaxyMapGalaxyPlain`
+65001c97a708774452eea710c47b2db2542d1562 Some of `LayoutGroupCtrl`
+ed2cf2cbfc5220dfc6496d77586ccd6069688380 fix `BossBegoman::receiveMsgEnemyAttack`
+24628e97bbe00ac4a1fe5b9c0fdeaeba6d99a12f fix build error
+934010cd76f23c2b0a086728d592b3373566080d Merge branch 'master' of https://github.com/SMGCommunity/Petari
+1f99ffe051602466d172dc58ace39b127d04a6d1 some `AudioLib` improvements
+2eacee226f7bc45ce9fdbed1ff46d465585530f0 Match `WarpPod` 90%
+c087df189957b14c5b7aa9db7fbdc9e95d6b579e link in two more `AreaObj` files
+a45acb6bf368a58ff148be73a2fc021d55596db8 Fix build error
+2b2c059fbf4b0839ea67e0d58600bfe34cc752c4 Add `GetSize` to `nw4r::ut::detail::LinkList`
+7c2052074a1b961e785dce9775fad0c0838c0abb Start `LayoutManager` (send help)
+703271394f9f98dd6f7bc217da5148532c93a883 match `LightAreaHolder`
+b9f8501375dfacd7b4db667fcdbbdc0ed4e3b463 finish up `AreaObj`
+0474b9fc40cccd05299ff603100cf2f375207618 `RailGraphUtil` 100%
+77e245da248fd53885856f1e5225e679104eb036 `DirectDraw` at 98%
+92a9dfba65ab6ee55e96d9b0dd65693642fc749f some more game classes
+05bd2ec996dbaee92c3345ce4037e026f3adff67 Match 100% en TalkMessageCtrl::startTalkForceWithoutDemo y PauseMenu::exeSelecting
+5005c8cc0e7464cd201d7fb6d410cf476f3546d9 Match `LavaGalaxyParts` 82%
+c67cb11157c5c994bf8eaa88b7a9ff797f4a4739 `StationedFileInfo` `HeapType` and `LoadType` enums
+d5f7178c03f3c212c782d020a03054d2c83c9885 Match Rosetta (#2042)
+305b639aa60a113da9545d9245ab8ba921070549 Match `SlingShooter`
+521281e1e3941d65f04d55b6275d9b121710d30d Match `Pole`
+c3df744c0d9a7506133ec883a449c9f8e02dfa5d Match `Tsukidashikun`
+cab43388439c920bd4496995c60f17c3317f9ca7 Cleanup `RosettaChair`
+5cc70af57cff57fb42739b694dcf2e5c6917904d Match `RailBlock`
+2c1f5691561494b9839833ca448bdc48ab44484f Merge branch 'master' of https://github.com/SMGCommunity/Petari
+aca1c4a4bb9950586e5a160abf857f7b79ddd6d8 `PressureBase` at 99%
+64020e92ebc4ae7871585413d794e6fef75c2575 Merge branch 'master' of https://github.com/SMGCommunity/Petari
+a8b3d4fcdb13848c69a46bf34ad8455962795cda Fix `OceanWaveFloater::calcAndSetBaseMtx`
+a6b00348fcba26796f7715225065799911d39eac Fix splits
+d10b4951e616e899d1ce62f73ad9834cce2c9829 Merge branch 'master' of https://github.com/SMGCommunity/Petari
+4746478b1070a8f92d19e467bb23ba5a44fe7dcb Fix build error
+33c3963b46207a54491f5b20e6275b700984d480 Merge branch 'master' of https://github.com/SMGCommunity/Petari
+7196e253e56eb4fb2fa3fc4bf3fa20f5ced8d9ff Match `CoinReplica`
+ef1cfb8b013125d91caecbb561d3112a471fb027 Almost match `OceanWaveFloater`
+02ce174bea42346b85225fa0b09d9b01b3c4ab3c match `JKRDvdArchive::fetchResource_subroutine`
+0420c6709eb07a818c54a4cc3e117cc03dceb2c6 Match `CoinGroup`
+b9ae270ff7d76493ec5884e906fdd30152a2d7c4 Match `BlueStarCupsulePlanet`
+3162b6ebc533f8c83fc9be5ee4304db8c6b89292 Minor `BossStinkBug` fixes
+888514ac90dadfd4294e147470bfa7414aca8e11 Merge branch 'master' of https://github.com/SMGCommunity/Petari
+3e9b2f06979dca131134890f7b12f7022d1e176f even more `JSystem`
+377240df0cd29a44ae22ce15f9f91de93fe7c234 Match and Link `WaveFloatingForce`
+e7429a36f1f79a3c36dccbc4f403682869745859 Adjust Functor header and fix add local symbols
+a7abfd4f2eb974b5ddd41fea4211e7383d6fb83d Namespace comment
+a84447f1cad49937946102263433dafd61ebc7d0 Match `PhantomShipHandle`
+8e6f8112bb23f073481508a73eca5c0ee5afc9b0 Match and Link `DodoryuStateBase`
+84e1f7c928f1f6bdeac247e6361fb07788815297 Almost match `ChipBase`
+676149c55ac968f443c36ba22a08310c63c13d41 Match and Link `ChipCounter`
+27cb5384756f43af2379191041fef977dc38698c Merge branch 'master' of https://github.com/SMGCommunity/Petari
+a9974c71fb2c638943b3cf30d539addce599e8c0 various `JSystem` improvements
+c04af8490dc61e291793e872263a98397f438fd2 Fix `JMapInfo::findElement` definition
+0fffc88a4a23d1bda08e5c39e57fb9eca1402ae0 Almost match `PlanetMapCreator`
+80f3066273d1ed9e6f19cfd169358beb62f903b1 Merge branch 'master' of https://github.com/SMGCommunity/Petari
+7d4e4dcb5f76b8a5a6fd52f399341cd339cee9d5 Update Nerve instance gets to macros
+78d289c2d33e33add395b5337818aacf4d65bb0e Remove need for deprecated NERVE macros
+c6a0a80b877d10aa56fe652a78a4e02cf0f61d38 Almost match `SkeletalFishJointCalc`
+76d104f401d39c5bfe9b9e39dadaef0fef43e88a Match and Link `CoinSpot`
+027ee8885e4cf71d9b480b13be9e1b27575ce9e3 Link `CoinRotater`
+67f88b1b04d39666353fa42d292622af81bf724a Merge branch 'master' of https://github.com/SMGCommunity/Petari
+9d42389d5104f4c8f5d3feb5d8fef4bb5dfc4ded Link `LightUtil`
+fd38e2417dd57d1b3d79fddbd588e43121f0bfe9 ``Liveactor`` 100%
+673e161c889733c0dbb4039aeecc194c1b685501 Match `GalaxyInfoLayoutSetter`
+19790f717d495b9919f0e2b537f191f98babd06d Slight improvement `SceneFactory::createScene`
+cd22ba81a920adcb5fedb5768a8b2ca560668e78 Almost match `FileSelectItem`
+66338d5d31fa284a4d70aabc6a728f7d12ff903b ``ShadowSurfaceOval`` 100%
+9709877baab203bd5d6f1bfaf2de9688c1547ded Match `ScenarioStarter` 97%
+1c684864a281044b818b64ec020712f18cfdab6b Merge remote-tracking branch 'upstream/master'
+f0b4c828843d97aea00aed96b0ee0bcc8d7fc272 Merge branch 'master' of https://github.com/SMGCommunity/Petari
+f6945669685f291ec9dcb32b98d575a71a0f9fcb Link `WarpCube`
+e8499de5a3e321f63d707c77e07be26c3a1e19c9 Some more `SuperSpinDriver` functions + updated `LayoutHolder` member offsets
+4ac1ede396b42c96206e31905afd4a5136635c1e link AudBgm and AudAudience (#2041)
+37088620a0d3a62b87ce14f42ccfe8d33947d0d6 link WaterPoint (#2038)
+7d86d084ad3a835a92bde9af85b86566bf236a5c Merge branch 'master' of https://github.com/SMGCommunity/Petari
+1fc052dc16fecd3f534a5d1362c7344bd24a62b8 Cleanup `PlantStalk`
+d5c05cfe46fc3d66112032453058e317afb97477 Cleanup `PlantLeaf`
+93740a41307744dba71981c46f1bf9be5d65750e Cleanup `Plant`
+de100ae686aa9aaf1fad26d2ed6c81059deb6db4 Cleanup `JumpBranch`
+72d23e3eaea46e6677c301897365d91b8bc2c78c Cleanup `FluffWind`
+251a353383461c0064624644f66165b454c6337c `DemoTimeKeeper` and `DemoWipeKeeper`
+5fd1e79b940e7a5444c3f6becbbcd4f8b1a19bc3 Merge pull request #2040 from Pucas01/PointLightInfo
+9b61cc745ea1b9ef13aeed08a22fa4f1fda3e4b4 `MemoryUtil`
+eb42c0ba3a642fd202b2a570acaf82fd6018e4c2 some `Animation`
+c64d8d77206a817ca5704c83049c3d61b69e1c0e Cleanup `Fluff`
+722583c03779e3b0b909b83b784dcf1d9efc43b3 `PlacementInfoOrdered` at 99%
+f15836082a11c7d809710bd757afd413b2be4c4c remove old file
+8555b01e7ea4985ef92a9d50e82bc83b3d498ca4 Cleanup and Link `Creeper`
+26ced8eb19e28da1ef0be3902ec5a2432364c456 Review changes
+b29e2adf5a06b543be3ed9d11a3d141b4df1dc1c Merge branch 'master' of https://github.com/SMGCommunity/Petari
+2292099869bf20f573bc4dd142dd759c3a42fcb9 second `Player` pass
+0bca4f2f9a5a4203205d307e843acaf8324ae6f5 Cleanup some `ActorMovementUtil`
+133db285f9cbc7aef81e45a97aa190ca4e12b606 Cleanup `ObjUtil` magic numbers
+411dcd412ab66ce885ea0536bfde45320b2a291b Match LightPointCtrl
+f96692f07241b5ae6db0cbc6510dbcbf599c7674 Cleanup `BigBubble` (almost match)
+88c6c597c680cd654966e6bf04609c77f1068687 improved ``ShadowVolumeOval`` by 0.001%
+7915cbebb1af317fd7c71bd8beb05eef4ddeab1b ``Rabbit`` quick attempt
+9fee4ccd9cb5cdbdd61ee0ea2b028ad8fcdc617e Fix formatting
+4b430ce140ec8e0082669476bd6fb4dda6da04c9 `LayoutHolder`
+9671d6ac817684eb3ec5a31b2b93bfdf2ac5cb31 Merge branch 'master' into master
+3a2356edd193e577a04c0f80f8b6ec97f93dd14e Merge remote-tracking branch 'upstream/master'
+ac0e2dfa4f87f368d130fde086c4610cb6bc5cf9 Kinopio stuff
+3e6a5e7ce8f97e25161b03e6e646a57fd871c9d0 Match KirairaChain (#2037)
+18471b2e3be55003372db86925b5cf7608610e12 Even more `SuperSpinDriver`
+e908515129404b06469232450fcb84db4ce3f65e Match `SuperSpinDriver::canBind`
+6c0938e5519f4ce65a318bcdc33563a7714dd445 More `SuperSpinDriver`
+7093f9e387ed2185214e207881fb126eb03ba773 Rabbit Header
+f56e1b8d154fc46bd06fa925f20ba0c34491ddb2 ``ShadowVolumeOval`` 99%
+f6b617ddb46d366ea7e70b54b148b8d23f37cf7a `SuperSpinDriver::init` and friends
+ab02150436ae50495446f012ad9b30f71dac2b86 More minor `JAudio2` fixes
+df5a629d9afea67cb026c272bc81793a080bee66 Merge branch 'master' of https://github.com/SMGCommunity/Petari
+16ee366cf6aa7942ebd4a5f4362220bd56b09c7a Minor fix to `JASTrack` (unfinished)
+ca829f2cab65dac1dabce6cde1e0538edf357a6b Fix `JASChannel` minus weak ordering
+a32ba889b6b63537053acc51e7c69c203c087775 `CollisionCategorizedKeeper`
+01e8ebca8d69df5d2b67e12a8a91f96e440dbab5 `GravityDust`
+b23d773fe71b8376070dc7be5604190577922986 fix `ParallelGravity::isInCylinderRange`
+6246cdfaa380e9e9e563d9533fbbcc892bc21f58 fix comparisions to nullptr
+8c9d5f6c0bda3c5197592a99192efd8cac8be3c9 fix `JASHeapCtrl`
+f701e17fd1199256deb4c21da7cbc5371ad82051 `JointController`
+3eed092f8cff0ab6fd8229106d1d97c28f6da42e Configure `exception` and System raw BCSVs
+212c2bd742525a5b66cf87e8a7def9851a8bb782 Merge pull request #2036 from Pucas01/master
+09e0ea01665dfd4e21e411f0b6500a509a0bc3ab Merge pull request #2035 from lammmab/match/WPadHVSwing
+2961270c7325a6a98d050b39a44040f065f4d002 `LayoutUtil`,  `MapPartsUtil` and `NPCUtil`
+f7655a15fa1c3ec58e27c78a1b292a58a3c4af47 Add offset comments
+834e59d9f1245b062cb58d2383fb1cce6c7b3442 offset comments + p prefix + build error
+54842ed317364c02671c903d255d62826de15b5a Make ChipHolder use mStageSwitchArg
+3184633d313420569095b6b883e88d390284ae44 `NameObjCategoryList` and `NameObjListExecutor`
+a90ad94458d921c3a7fb8579716ae31ce5074877 match ChipGroup
+fda821b23f43e674a6c4e5a085d44704e84fb518 match WPadHVSwing
+7b652ba525bb0a771ea2f5aa541d0aaebc7f09e8 Merge branch 'master' of https://github.com/SMGCommunity/Petari
+8f1b7ebb7de4250d31d8810c92cee8935c8d3877 `NameObjHolder`
+108cb16b58ee4c6d5db71aaeac9b020c5e3670fe Merge pull request #2034 from Pucas01/master
+df58ec1b2d2b3ca66440782ded4cb0ae9ec1c04c Merge remote-tracking branch 'upstream/master'
+d8c567cb5c1cc27f8a8f54925f50066a56cf498b `KoteBug`
+4151d00469b151ffab99e69f56b1839539f87f1b floaterIsMoving
+3d3d24f198cebef052d6f9a9a85d6649ac61202e match PhantomShipBoxFloater.cpp
+c03d823bb6a72ac2e70afbcba5ed12ed44c529f7 `SmallStone`
+4bfeaff64475d4b5370ee60c244c52c2cee36be0 Match `SaveDataFileAccessor` 87%
+6aa725084cacff457103e0f40204a70b7886aae8 `SphereRailDash`
+30901a1d9ce93419427e06c31522f6b933f4b658 `NormalMapBase`
+d7dd9d05caef4ec5a0105c920e2a0a9e1a3da699 `SceneUtil`
+4d4d8c75c137530d0bad2bfd02014236319e6f3d Merge branch 'master' of https://github.com/SMGCommunity/Petari
+8b91c5743f89d3ade8de06b46201918cd7a3448a Match `NPCFunction`
+7074ac39b36879a9b2e289d74023b1658116ec3e `MapUtil`
+77c7d57f755cbe9de66c37033f70e5639d4839dc `StringUtil`
+dd89ac63f81b91abd916511a6b22ca916a812efc `BaseMatrixFollowTargetHolder`
+0fe1850527c91284b94cf65ea51cfd12ed84f6a6 Merge branch 'master' of https://github.com/SMGCommunity/Petari
+5b06efc3bcd0c72a346c98cefa5a22a01da6f661 `Onimasu`
+720b7dee2b979681df6f953b5f6e7a03667ce135 `AreaObjUtil` at 99%
+fba6ddfbe868bfc4d9ec9ce6b97435d5f045529a `JointRumbler` and `TriangleFilter`
+ee77954de77da79eef9a959c8114079ede7ba74b ``ShadowSurfaceCircle`` 100%
+3afb06364e40758d2672eeb14e400d2465ca7ef0 `TalkUtil`
+8d2a5f5f00c06e7c52089fd8c44f181bf127f926 `StageDataHolder`
+9ab86082cd7f7aa9e8614b19668eb90586109e26 finish up `ScenarioSelectScene`
+4c3a36087993f7daeef39d444a76c6b96d2bef44 `BegomanLauncher`, `BegomanSpike`, `BegomanSpring`
+ff5154db407629a2d41e67373539fc94d0e70bde ``ShadowSurfaceDrawer`` 100%
+1c0e0eb1a380826e1ed9f3c7e8e9a98b31fef6d4 ``ShadowSurfaceOval`` 97%
+77b6de40d3cacc09d356c6440b90194a4a8f6670 add some comments for classification cases
+0a9384a94d3b54887f907e6da748df47e799692b `configure.py` formats and `CollisionParts`
+a413c5a288b40bb29fb688e1c05e279b52ef3c08 Merge branch 'master' of https://github.com/SMGCommunity/Petari
+cecb313cd1147e0106fb3197ffe886c726c0d10b more `LiveActor`
+899b3a6651119a93ce0dda5baccef0edaddf8644 Cleanup `ClippingActorHolder`
+03bfadfc511354e50d5443651cc8f8c7a7ad150d Fix minor matching issues
+3ed0d16a771c6e1bf9ebd18c8142f4025102998b Match 68% of `Onimasu`
+dc932299dfffe0d5b35eb2c160259483e027982a Match 59% of `OnimasuJump`
+de17ffba9f99c0d42a945ab4517a9401134b1724 Cleanup `OnimasuPivot`
+8b31d2a0321f9909dac7a5193ed00bd452e5200f `Kameck` and co. cleanup
+0c69bb631a801e8199c5337b6ca0cbd6e72e0ca6 Match `FishGroup`
+38743f65d85f357ed4d853fc26031f2a053c0fa4 Link a bunch of `JAudio2`
+afaab6c082a6a710dad9f881df6fa2791c0d1d8a `FaceJointCtrl`
+25ae2665b7afe625603848896e34e38fc3fce15a `DisplayListMaker`
+7fc4bb7ab70b4c613702a2ca4af5c62006cda9cf `dspproc`, `dsptask`, `osdsp_task` `osdsp`
+63677dde419baa37b4c31803579a03546590bc9a `DynamicJointCtrl`
+3a1a800a002012d83f5f11b2e2b6f9ee8883f9bd Saving the file is a nice idea...
+4b36fac8bf80c277bbca5f24c221208225b5067f Merge branch 'master' of https://github.com/SMGCommunity/Petari
+1bb25943a53393c27301d208cfeee29aac61a0e5 `AudSystemWrapper` at 99%
+35de90f4a7fb38450a48f05c7ea7f3529bd8dfa4 `IKJointCtrl`, `MaterialCtrl`, and `RailRider` fixes
+45859ceec9bba329552296bd6f55ac0f43a4cd50 Match `AudRhythmHolder`
+911a0ea473e96f9b7a01e058fd02ab94dd6a1611 Merge branch 'master' of https://github.com/SMGCommunity/Petari
+8276201c677b59e8cc5a3dcc19f26510e1dd3903 `AudRhythmSeqParser` at 100%
+b62694f1d529aaa7e427205e93ed4ed482efd2df `ViewGroupCtrl`
+13b6f99ea6457c1778a1e157a19440b56c29cde7 `HitSensorInfo::update`
+4cb8f34628c01e095307da6087f870cbb022bf58 `Binder` and `ActorPadAndCameraCtrl`
+1884e6e03fe3c2f23f79fe0e94c2cb6f182a5361 `CustomTagProcessor`
+99a08bb2a4b71a6b6d386e497e772d1d32f5d454 `Dossun::calcParameters`
+07dd8ebf23c6e137816383ce39e2d32fcffa96ea `BombBird`
+2cfd914460e4c6c3a4b81efd3ed834f067f383e0 ``ShadowSurfaceBox`` Matched
+068129e338512eeb74d2e4ee9431f2f1ec1b399b `BegomanFunction`
+a27f7c19a4dbc4cf957f561ff5035d0c3bdc05ed `PomponPlant`
+e7eda2b2fab33594a8b0636697a823588f6965a7 Merge branch 'master' of https://github.com/SMGCommunity/Petari
+772c40fea5125df186e7ac22f7203b88fb01fe44 `SnowFloorTile`
+b1471126b26a5682b49ce25c2be0b130936c5eba Merge pull request #2032 from Gonzalo-kebab/master
+0a432bed6b33744e65014fe2e381454c0afac279 `SwingLight` and `SpinDriverUtil`
+5cb634111dc7d1de6f46ecb77f195f2401903172 Match `AudBgmTempoAdjuster`
+28e0b1f446390e620016edfab8632bc33e23df1f DemoStartRequestUtil 99%
+4aa35d6789742f56ccd4e7a890a1a94879b4d368 Merge branch 'master' of https://github.com/SMGCommunity/Petari
+4b6e00498b3b7b1d4f099e802758ed8137b1df9b `MapObj`s and some `Fur`
+462a12f3d137c5757ca88ded8d6ed2b2eaeb6519 Merge remote-tracking branch 'upstream/master'
+bcf33f32ef4d28b1e436fa9affb379eb05a86923 Please insert commit name
+c68ca3b7ac2e059e38999bec6826ee94be099d50 Come on
+ef076f01cab0b2ba1c9ab86d943fbdd2a6021180 Merge remote-tracking branch 'upstream/master' into Kameck
+bb5e69f3be166bae9fd5446453586a0f4f04be87 I'm ready again!
+7ffdc374a3c85b0565e141fb008e15ae4d197cc6 I'm ready!
+70f780446589ea9ccae21283a5a4b0db00dc3318 I haven't finished yet
+b33b315f24d7307c8db40ed6beeff3bcb0131b59 Merge remote-tracking branch 'upstream/master' into Kameck
+e1d75e15a829b86db0d36c4afa000a43f0adf357 Merge branch 'SMGCommunity:master' into Kameck
+968c0a0c66f9cdcc52e7bca507c2445934cbf632 Shhhhh
+fd6d1427885bd5ce67027cf801f7edf88cfa13f5 Related to Kameck

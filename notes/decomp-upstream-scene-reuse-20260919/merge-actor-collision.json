@@ -1,0 +1,366 @@
+[
+  {
+    "path": "include/Game/LiveActor/MaterialCtrl.hpp",
+    "decision": "Repair auto-merged duplicate MirrorReflectionMtxSetter class; upstream inline NO_INLINE method already owns addUpdatingTexMtxFromName. Keep the one complete upstream class and all newly added material controllers.",
+    "local_sha256": "51100c7c97ad86b7b615a1b2ba2ffbc2cbc411ec01dbc0b4f4bb3ac79f4334e4",
+    "upstream_sha256": "312a6af0bc81158dd5b475f70337f0e0b1f6086c875a789b5425f4b16b453b74",
+    "merged_sha256": "312a6af0bc81158dd5b475f70337f0e0b1f6086c875a789b5425f4b16b453b74"
+  },
+  {
+    "path": "include/Game/LiveActor/DynamicJointCtrl.hpp",
+    "decision": "Upstream field offset annotations, identical member types.",
+    "local_sha256": "b6029c454ab47957e8d2fff6216a6e7a269cf0b7e83422852dc684ae86f3a109",
+    "upstream_sha256": "938c0ebb29428c7299d19b0fb5a8578343ac97b870830cc60933d5e4dde56c0b",
+    "merged_sha256": "46f54c415778f355b2cd744c707cf85d7076bfb3cc99bbbda042bece3e23af64"
+  },
+  {
+    "path": "include/Game/LiveActor/ShadowSurfaceCircle.hpp",
+    "decision": "Upstream radius offset annotation.",
+    "local_sha256": "dfb7c989212e76ac9fdb08160cdf2cda984fce13eb17100d8dd44126262c6965",
+    "upstream_sha256": "0dc7810bf4263bd18954c794fdd6f4279c69a0ca68c14d5f6881b6f36af0fc1b",
+    "merged_sha256": "0dc7810bf4263bd18954c794fdd6f4279c69a0ca68c14d5f6881b6f36af0fc1b"
+  },
+  {
+    "path": "include/Game/LiveActor/ShadowSurfaceDrawer.hpp",
+    "decision": "Use upstream inline empty destructor, remove old out-of-line duplicate with its cpp.",
+    "local_sha256": "fe0ebc15075b60f853aa0a2a57312d162f10795644e1c2c33e4f8e4480e57ef7",
+    "upstream_sha256": "75e8ea7d6b0bf15441b6d75e675a5294bff24e7737c3d4f6ac2b2ef8483de1f0",
+    "merged_sha256": "75e8ea7d6b0bf15441b6d75e675a5294bff24e7737c3d4f6ac2b2ef8483de1f0"
+  },
+  {
+    "path": "include/Game/LiveActor/ShadowVolumeDrawer.hpp",
+    "decision": "Equivalent formatted empty virtual destructor.",
+    "local_sha256": "e55d3dfdb122011d824409d6eaae5fe89c95a9898e7b7c02785c18799c499bdf",
+    "upstream_sha256": "3afaf2ed895efd49b76251cecb1fbd96a5d11d4554d52e0426ef54c9b4ed7a62",
+    "merged_sha256": "3afaf2ed895efd49b76251cecb1fbd96a5d11d4554d52e0426ef54c9b4ed7a62"
+  },
+  {
+    "path": "include/Game/LiveActor/ShadowVolumeModel.hpp",
+    "decision": "Use upstream declared destructor and its upstream body owner.",
+    "local_sha256": "5305428d543d965cedaf7763165252f26c8feaace23a141f2851992fbd3df495",
+    "upstream_sha256": "0c0a00434a86553fed624a4d49b3ef340f0b0dadd03cd6f30b36eac529018816",
+    "merged_sha256": "0c0a00434a86553fed624a4d49b3ef340f0b0dadd03cd6f30b36eac529018816"
+  },
+  {
+    "path": "include/Game/LiveActor/ShadowVolumeOval.hpp",
+    "decision": "Retain explicit recovered destructor declaration/body; adopt upstream member annotation.",
+    "local_sha256": "8cd87582f1e749b95cbbf67e5a7fda29a2ce3d7044b51d2c110cfc75e4246fea",
+    "upstream_sha256": "ca09edcdbef0335795dead3382865cde1bef92c20ba85203b334a900ac668d77",
+    "merged_sha256": "0c3211d543f36189ca0ff1794061eaa0df73cb11987d33333b67488bf8ffd135"
+  },
+  {
+    "path": "include/Game/Map/CollisionParts.hpp",
+    "decision": "Adopt upstream annotations and u32 area-list declaration matching both recovered bodies (old local header said void).",
+    "local_sha256": "f7c1a8c229bda949618b4410ae0c94085f56b29a7a30d4a0b68906ddb714f8b2",
+    "upstream_sha256": "266e6a665b6740302c5b71cbe693c4db5397f2633effcf24c64098360229caa0",
+    "merged_sha256": "266e6a665b6740302c5b71cbe693c4db5397f2633effcf24c64098360229caa0"
+  },
+  {
+    "path": "include/Game/MapObj/ChipCounter.hpp",
+    "decision": "Upstream exe* declarations replace old direct Nerve executors.",
+    "local_sha256": "f5023aad92a22cac59e458f109178410e63e39db0a0e33565d796cff59ce6aac",
+    "upstream_sha256": "abf305b2f6f044da347a0bacb32547ad6a1478eab16ea8827e54c8f86a410c8d",
+    "merged_sha256": "abf305b2f6f044da347a0bacb32547ad6a1478eab16ea8827e54c8f86a410c8d"
+  },
+  {
+    "path": "include/Game/MapObj/MapPartsRailRotator.hpp",
+    "decision": "Upstream enum naming, empty exeDone and member annotations align the full implementation.",
+    "local_sha256": "a851de768ddfa988a4c843de99e76f7f2af8a2661dc485f3257124b57706dd8f",
+    "upstream_sha256": "3e454739c5d74e08cbc03a87924834ac7145d11acd9a38792a1fa62750418610",
+    "merged_sha256": "3e454739c5d74e08cbc03a87924834ac7145d11acd9a38792a1fa62750418610"
+  },
+  {
+    "path": "include/Game/MapObj/MapPartsSeesaw1AxisRotator.hpp",
+    "decision": "Use upstream field names, inline isMoving and angle-limit helper with equivalent original behavior.",
+    "local_sha256": "0181c74dc6115b002882e926564a01106b306799f726e065e7dab84be2c1116a",
+    "upstream_sha256": "962910bcab924ab2ee0d07d0b737dd57e5faf46252b6d884a3ac10a9d8bddb40",
+    "merged_sha256": "962910bcab924ab2ee0d07d0b737dd57e5faf46252b6d884a3ac10a9d8bddb40"
+  },
+  {
+    "path": "include/Game/MapObj/MapPartsSeesaw2AxisRotator.hpp",
+    "decision": "Use upstream field names, inline isMoving and ordinary exeStay instead of direct Nerve body.",
+    "local_sha256": "76247266af8c87b457b21238a07cb7d2af5d52741431e23b1c042f348b61fbdb",
+    "upstream_sha256": "3afc5cda58f4439ff3533ab92364ecc80032920dc88b9c14809ce73e67870be8",
+    "merged_sha256": "3afc5cda58f4439ff3533ab92364ecc80032920dc88b9c14809ce73e67870be8"
+  },
+  {
+    "path": "include/Game/MapObj/PlantGroup.hpp",
+    "decision": "Use upstream mHintIndex/mTouchType and explicit matrix constructor parameter; call sites pass nullptr.",
+    "local_sha256": "eccd48346b161de18d2757782309e4ece0a74c21965c1f9b7de1cd7a62b36fd4",
+    "upstream_sha256": "82ce7841d0be08f770f2776b28394bdd83f2466033354330d98ba8e370736757",
+    "merged_sha256": "82ce7841d0be08f770f2776b28394bdd83f2466033354330d98ba8e370736757"
+  },
+  {
+    "path": "include/Game/MapObj/StageEffectDataTable.hpp",
+    "decision": "Upstream rearranges all existing public APIs, preserving complete table/helper interface.",
+    "local_sha256": "693c7424c7e7db8a2db63cb7cfae056e15f45256e39b836533ab2a25211a3af5",
+    "upstream_sha256": "2db70885b84a3fe7c3abcf0fdec066982e71d5cc0c8515cd733072f99e6555fc",
+    "merged_sha256": "04dd515b2010be166af0bff0605adf4ad02f84b29898962001aab90bef6ca12e"
+  },
+  {
+    "path": "include/Game/MapObj/WarpPod.hpp",
+    "decision": "Use upstream field naming and single WarpPodMgr declaration (same header, now before WarpPod).",
+    "local_sha256": "3dc975d4aa3d033ef9504a971e943688f211b9f0ddcd658bd13aa969929ae647",
+    "upstream_sha256": "8887f152aa71f3ed7f3b09dfdf8062d110cc8b942072a554b29696296209c009",
+    "merged_sha256": "8887f152aa71f3ed7f3b09dfdf8062d110cc8b942072a554b29696296209c009"
+  },
+  {
+    "path": "src/Game/Animation/AnmPlayer.cpp",
+    "decision": "Upstream shared TVec quaternion header contains setEuler implementation; remove duplicate specialization here.",
+    "local_sha256": "6197adffe91501f448f74e2f5d2b623796e0cfae69142dcdc47e0fda6d8804ae",
+    "upstream_sha256": "e8cfb0b8ea42c207644c11f4ba204afe6cb512316d77b5c36e06c49c7e812dd5",
+    "merged_sha256": "e8cfb0b8ea42c207644c11f4ba204afe6cb512316d77b5c36e06c49c7e812dd5"
+  },
+  {
+    "path": "src/Game/AreaObj/CollisionArea.cpp",
+    "decision": "Use upstream complete actor/AreaPolygon methods; retain verified hitCheck including negative-sentinel shift guard, plus local DynamicCollisionObj destructor.",
+    "local_sha256": "ecc334f59fd67a008fe97af67bf225566eb1c407b71dcd5aa5131a4d65e8c208",
+    "upstream_sha256": "8083fcd1cc343df10f298b0e901a85f4671bdaeea58d88231f6eadb2518c911e",
+    "merged_sha256": "3e1d2a093bb5f447e76ff3d3457386430f8649d4658a30bcf7289c97b8737c16"
+  },
+  {
+    "path": "src/Game/AreaObj/ImageEffectArea.cpp",
+    "decision": "Equivalent selection-sort traversal with upstream local names/types.",
+    "local_sha256": "7329566cae97da7a5a0e98b2d860493e0588bf00ca4988b57b9ac0514f2ab049",
+    "upstream_sha256": "b8fc3089cd28dd6f6c53752963ad5026eced8d55ab81666fe765d6eeddc6066f",
+    "merged_sha256": "b8fc3089cd28dd6f6c53752963ad5026eced8d55ab81666fe765d6eeddc6066f"
+  },
+  {
+    "path": "src/Game/AreaObj/LightAreaHolder.cpp",
+    "decision": "Equivalent selection-sort traversal and order; upstream direct array access.",
+    "local_sha256": "59b8eb73b209a43d8b091076c57ed17b3eb34d76545936d4d5162d719a537f4b",
+    "upstream_sha256": "0342f3e862db651e392910f86e1083e3b558470810a405fbe95ca0c73ccfde03",
+    "merged_sha256": "0342f3e862db651e392910f86e1083e3b558470810a405fbe95ca0c73ccfde03"
+  },
+  {
+    "path": "src/Game/AreaObj/WarpCube.cpp",
+    "decision": "Equivalent pairing null/self/ID checks and draw math, reconciled upstream locals.",
+    "local_sha256": "c1d333c940573f65c9d90f3d52c72787ddaacb279469513d611f2552bb7acce7",
+    "upstream_sha256": "3f1cb1628e606d6bc901035210a64ca9a1f399cdbd46ec5d27f5144e2439d816",
+    "merged_sha256": "3f1cb1628e606d6bc901035210a64ca9a1f399cdbd46ec5d27f5144e2439d816"
+  },
+  {
+    "path": "src/Game/Boss/SkeletalFishBaby.cpp",
+    "decision": "Upstream J3DJoint getter/include spelling, same joint-index test.",
+    "local_sha256": "73596203e86da4542949a6749840f964a743a47b122b83da920267a8ee1dd768",
+    "upstream_sha256": "480063894e58e134adbc46320c7f3e3d9152c2784b7a49efb69882efe5dd019a",
+    "merged_sha256": "480063894e58e134adbc46320c7f3e3d9152c2784b7a49efb69882efe5dd019a"
+  },
+  {
+    "path": "src/Game/Boss/SkeletalFishBoss.cpp",
+    "decision": "Upstream J3DJoint getter/include spelling, same joint-index test.",
+    "local_sha256": "6cdb6ce67587c002c5d3406792035d55f068faeb6e962e34c8bce5e125a5ded8",
+    "upstream_sha256": "dd0a47a0b03d200a3702b12ce3ed9971c0ad05158fb249c454ce4eb6bbf59a97",
+    "merged_sha256": "dd0a47a0b03d200a3702b12ce3ed9971c0ad05158fb249c454ce4eb6bbf59a97"
+  },
+  {
+    "path": "src/Game/LiveActor/Binder.cpp",
+    "decision": "Keep complete verified local bind/sweep/contact/reaction bodies and explicit HitInfo assignment; use upstream surrounding constructor/declarations/constants.",
+    "local_sha256": "7bd6ede6772644e0bedefbb16cba5833b92472e4a38c10aa5751da50b3355b51",
+    "upstream_sha256": "f0173bbda07160d141e1285ca6997d5a42b7a0813df3a06ac84a59213d65e6f7",
+    "merged_sha256": "bb700842fab3a913031dc7f06c99c62d83482163fea1a4e179e8437673b0a6ac"
+  },
+  {
+    "path": "src/Game/LiveActor/ClippingActorInfo.cpp",
+    "decision": "Equivalent bool test, swap-last erase and find locals.",
+    "local_sha256": "254ffffa0dfbf3298c55082d3d06d39d6dc94de74886e64c024de4d6f4756816",
+    "upstream_sha256": "691a3bbfb32b58865f33f9ab57be816543e95cc492e604877e9c0c5f807fbe12",
+    "merged_sha256": "691a3bbfb32b58865f33f9ab57be816543e95cc492e604877e9c0c5f807fbe12"
+  },
+  {
+    "path": "src/Game/LiveActor/ClippingJudge.cpp",
+    "decision": "Equivalent viewing-volume six-plane construction with upstream scalar and vector names.",
+    "local_sha256": "693643e671d908f0b3ee04c7d6c43c4b70c8839c9d3ea46fa5311a206e91355c",
+    "upstream_sha256": "110b0d6f005558780b71f960ed04e97212b20788e894b9f5d4033f0701e47430",
+    "merged_sha256": "110b0d6f005558780b71f960ed04e97212b20788e894b9f5d4033f0701e47430"
+  },
+  {
+    "path": "src/Game/LiveActor/DisplayListMaker.cpp",
+    "decision": "Adopt upstream complete display-list and material-difference methods, including previously missing flag methods.",
+    "local_sha256": "ba23614b0672ece480d83faa48e8dbe0cb13e6c0fca30d4e1fb6d529af7001ed",
+    "upstream_sha256": "658a51d84ecf63253741ffe62bca87a8c33807bd78da4c2940b03c51e26abe69",
+    "merged_sha256": "658a51d84ecf63253741ffe62bca87a8c33807bd78da4c2940b03c51e26abe69"
+  },
+  {
+    "path": "src/Game/LiveActor/DynamicJointCtrl.cpp",
+    "decision": "Adopt upstream complete node/controller methods; countdown decrement and branch are equivalent.",
+    "local_sha256": "f48b9776844a30684e214b39f4cd7f8bbca647c313e9c1ce7e7e56e4837769bc",
+    "upstream_sha256": "931e572806f4483adff97907434b28523ef9065b3476186b81ac54a864d6f133",
+    "merged_sha256": "931e572806f4483adff97907434b28523ef9065b3476186b81ac54a864d6f133"
+  },
+  {
+    "path": "src/Game/LiveActor/EffectKeeper.cpp",
+    "decision": "Upstream relocates floor-code and Binder helper definitions; retain one implementation rather than auto-merge duplicates; callback semantics unchanged.",
+    "local_sha256": "9aef3253a9d16e0e82fe7c68ebbc3d5cd2a81c243bf24af4d192cb0734a3f2d5",
+    "upstream_sha256": "c7380c46abb73f58a9cfdc5c2d4c439f488216854a3bca1fb1e6a1019b83f3a5",
+    "merged_sha256": "c7380c46abb73f58a9cfdc5c2d4c439f488216854a3bca1fb1e6a1019b83f3a5"
+  },
+  {
+    "path": "src/Game/LiveActor/HitSensorInfo.cpp",
+    "decision": "Equivalent original position/offset and optional host matrix handling with upstream names.",
+    "local_sha256": "d46dffbe7f7c4e905defe66a919b444283ca9c423285c923130156cc60ed8545",
+    "upstream_sha256": "dcf2778db86c1784e8d85dac53c4196cc3b4d2a4497e5e7e9f6841a6c529f7ba",
+    "merged_sha256": "dcf2778db86c1784e8d85dac53c4196cc3b4d2a4497e5e7e9f6841a6c529f7ba"
+  },
+  {
+    "path": "src/Game/LiveActor/LodCtrl.cpp",
+    "decision": "Equivalent nested guard/LOD-distance decision tree; upstream constructor and methods remain complete.",
+    "local_sha256": "3358532163a286f5e7a7809e7f00debbf0e2ad99441cc700e0247b85629c8457",
+    "upstream_sha256": "ea53a133a72b13397297436550bcc95db85d0950e53db08ea382f1f7f65032f0",
+    "merged_sha256": "ea53a133a72b13397297436550bcc95db85d0950e53db08ea382f1f7f65032f0"
+  },
+  {
+    "path": "src/Game/LiveActor/MaterialCtrl.cpp",
+    "decision": "Adopt newly complete upstream view/projection/Mario-shadow material controllers and renamed mirror fields; addUpdatingTexMtxFromName is already owned by the upstream header, so no out-of-line duplicate.",
+    "local_sha256": "5b45fce7fde4892027f0471c1ef2ada4b0bef81b978b2ccad9382af4d92efb5c",
+    "upstream_sha256": "864d9d6cc9e7456d811973711c0cba05e46f40e3d47b75ec38c7855def86f31a",
+    "merged_sha256": "864d9d6cc9e7456d811973711c0cba05e46f40e3d47b75ec38c7855def86f31a"
+  },
+  {
+    "path": "src/Game/LiveActor/MirrorCamera.cpp",
+    "decision": "Upstream retains complete S16/F32 resource parsing, reflected view/projection construction and lifecycle; reorganized helper placement.",
+    "local_sha256": "40993ad8dbd0fd626be149e3f65dbc3055d8400232bf96a116d6c63bd3c80ee8",
+    "upstream_sha256": "e1805173bc40d57707cc6de9b795346914af264206e3cc126db24fb9649ecf08",
+    "merged_sha256": "e1805173bc40d57707cc6de9b795346914af264206e3cc126db24fb9649ecf08"
+  },
+  {
+    "path": "src/Game/LiveActor/RailRider.cpp",
+    "decision": "Upstream forwardGoal naming and original accessor; preserve new nearest-point and next-point methods.",
+    "local_sha256": "f16e1fb50f1e6737003c4b368a5085b1c10f5340e2fe9f4504fdd4c8c81c6721",
+    "upstream_sha256": "35a3e6826dbc60a14b80afc505ee9888106cdaedb5d27e56cd34fafa0613c031",
+    "merged_sha256": "35a3e6826dbc60a14b80afc505ee9888106cdaedb5d27e56cd34fafa0613c031"
+  },
+  {
+    "path": "src/Game/LiveActor/SensorHitChecker.cpp",
+    "decision": "Upstream owns relocated SensorGroup once; retain locally verified checkAttack arithmetic grouping.",
+    "local_sha256": "ed949dcc14e482201e160a69b279ffa8f108f181652a46a3927b6add2c42e182",
+    "upstream_sha256": "5b1191c04f2bd03d75b080a706aa5fb19ec61861b40a93bce2fa461cecf55121",
+    "merged_sha256": "8d264603d9d29dd9761d9cd32f20ab8d1a697a54ee3cd6ccb0f1a95bf9427c65"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowController.cpp",
+    "decision": "Use upstream complete controller and new setProjectionPtr; retain verified local direction/projection/length/gravity bodies, avoiding duplicated moved definitions.",
+    "local_sha256": "e0620452eb1d014cf4eebf18a3ea26f5d6ed77fbb99c2e59e684d227d2500bdb",
+    "upstream_sha256": "a8c1e67766b3a126e902b91e9d5bff4b0470ea35806a9e27015d9b17254c3ead",
+    "merged_sha256": "7aa476165bb5e9f0c9cb07ba7fe54d57cf29ca2fdb0c0ad5ab58d5cf772709f9"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowSurfaceCircle.cpp",
+    "decision": "Equivalent original surface circle math and packed alpha 0x80.",
+    "local_sha256": "5dd864c7085683720474f77d923b2dec74fdd1c5a405def6c98e37852e779ac4",
+    "upstream_sha256": "45222fe07dece7e3cfd145b84c5872a9cb87177f66a43cb29b48d6f05bf2eba1",
+    "merged_sha256": "45222fe07dece7e3cfd145b84c5872a9cb87177f66a43cb29b48d6f05bf2eba1"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowSurfaceDrawer.cpp",
+    "decision": "Upstream Color8 spelling and inline destructor owner.",
+    "local_sha256": "7cbc41dabb38ff1a9aa58b5359376d44f981260b29bb267a26aaeb4255327f87",
+    "upstream_sha256": "8f3077f897a0ec07da5876a5150fac8507a6292b8c6691e0e8a0e395b6043cc9",
+    "merged_sha256": "8f3077f897a0ec07da5876a5150fac8507a6292b8c6691e0e8a0e395b6043cc9"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowVolumeCylinder.cpp",
+    "decision": "Upstream named scale constant and new destructor, retain recovered matrix arithmetic.",
+    "local_sha256": "c281cb27fee3f85b20206fd9bbc7a2d66bde4d5c61436daa71ffdcb0a51e6bf4",
+    "upstream_sha256": "8c547f88c5fc1b85ca3c2c653df845a19ed0819b57308e69cefb324447f13d00",
+    "merged_sha256": "09e8dbd26f18ea98160a377cdb7ca2bac922288e2794b0e177f57ae70289c9b0"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowVolumeLine.cpp",
+    "decision": "Retain verified local loadModelDrawMtx arithmetic; upstream remainder unchanged.",
+    "local_sha256": "8ad75ee66335bd28392b80417a86b8fcab019617360a9c1b82f90dc73bddbb63",
+    "upstream_sha256": "f29183b794590952bb7b3b50e6dc84032d9de243d2607345b1125fe49692b26a",
+    "merged_sha256": "bd8e0f1fd5846b3b0ef7c72c8e9c9d8c2bde152f153d2baae32c7839e2371688"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowVolumeOval.cpp",
+    "decision": "Retain recovered matrix arithmetic and explicit destructor; upstream remainder and include ownership.",
+    "local_sha256": "7c37344a190020b3d10bdf7a9f99fa680cc72c16effa63e5c1dd32443475bae5",
+    "upstream_sha256": "8125b21c13fbf009b1b37d21bdeb1b224703af4fc01072bf8b3231bfa51544c8",
+    "merged_sha256": "27240434cb6db842ca93ab551d684706790c3f9f25a2b1db35dc77e357b351f0"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowVolumeOvalPole.cpp",
+    "decision": "Retain recovered matrix arithmetic; preserve upstream named constant and matching helper.",
+    "local_sha256": "844b5abefa643b5556458d4bbf8d14eb600d57d5550db15e1add0a5886ec29e0",
+    "upstream_sha256": "4cb109e8aa9e2ce93027903f4bffa7cf600de39de0c7bc2ba2464499f44a2130",
+    "merged_sha256": "a2e7d8d96a550a44a912ffe90ea4ad618f952d3be0b8268e883d2c0dc8be53bb"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowVolumeSphere.cpp",
+    "decision": "Equivalent fully initialized scale matrix and projection position with upstream locals.",
+    "local_sha256": "648bd2e32bef78e361f2ab77bde099de2744ce82911fe9d72d2f117dbb43f346",
+    "upstream_sha256": "39fef2a6dc956afefdf546d0306374409e3d63ce2a979428b93b68418f93b6df",
+    "merged_sha256": "39fef2a6dc956afefdf546d0306374409e3d63ce2a979428b93b68418f93b6df"
+  },
+  {
+    "path": "src/Game/LiveActor/ViewGroupCtrl.cpp",
+    "decision": "Equivalent original group flags, last-match behavior, counts and LOD bindings with upstream variable names.",
+    "local_sha256": "2a45befd3f9a7c2e5e885226458844a9676f7eb027494d206aae14933be4af2a",
+    "upstream_sha256": "d02bfae69e945bff317f436402a45d34ca157df5857f974df69cc29685336ced",
+    "merged_sha256": "d02bfae69e945bff317f436402a45d34ca157df5857f974df69cc29685336ced"
+  },
+  {
+    "path": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "decision": "Complete upstream keeper and zone methods preserve recovered encounter, filtering and bound checks; adapt to upstream fixed arrays and descriptive fields.",
+    "local_sha256": "8d58d78d1899b009a42ec70c50454dbe025abdc6b5aaa1bfab74ac95daf11631",
+    "upstream_sha256": "b5713a9de1ce9a2c41ab417434bd33638b56fa9afad2e9a1275f090a1a5f35bf",
+    "merged_sha256": "b5713a9de1ce9a2c41ab417434bd33638b56fa9afad2e9a1275f090a1a5f35bf"
+  },
+  {
+    "path": "src/Game/Map/CollisionParts.cpp",
+    "decision": "Retain verified local query/motion and equal-scale bodies within upstream surrounding lifecycle; adopt complete matching area return type and shared getScale template ownership.",
+    "local_sha256": "43e98936bc5fc997e936ed8e91a74b89dca1f0325b32de82a44ce813ae60032e",
+    "upstream_sha256": "04a341212dc92df29588a2e2a113ada26573a130eda7201a015e27001a8f4891",
+    "merged_sha256": "f2a9d5e4a2dc8e6ac94b698a1ed3442d0ab098a698cc3b00613e7baa04207a8d"
+  },
+  {
+    "path": "src/Game/MapObj/ChipCounter.cpp",
+    "decision": "Use complete upstream exe* methods/nerve macros, retain local empty destructor declaration implementation.",
+    "local_sha256": "0d96cd0a14330ad81484f5c254d9557dd8442e30d487893d4a7efa182f52c6c0",
+    "upstream_sha256": "ed24bce5075f7d6d259064b186a7cb6d91bd745aea1b594ec4c6f413762b8130",
+    "merged_sha256": "78cf74a3df17dbf553fde5e26513029aa4abfd8f973cf762aa84f51fe1226b1c"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsRailRotator.cpp",
+    "decision": "Equivalent wait/done/update behavior with upstream nerve macros, named message/axis constants and destructor owner.",
+    "local_sha256": "0eea86fd870e14e635ecf3374950ef580e3e6bab3fd5a0a1a5bc61ba8e39be70",
+    "upstream_sha256": "1284e3af2d90c8e8573855bace55e6450fd213f149455aab635acaa085044dc4",
+    "merged_sha256": "1284e3af2d90c8e8573855bace55e6450fd213f149455aab635acaa085044dc4"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsSeesaw1AxisRotator.cpp",
+    "decision": "Equivalent complete torque/inertia/friction/hipdrop/limit behavior with upstream member names and inline helpers.",
+    "local_sha256": "6a636e0a3d4a36035c7a22afe7863c0cdc39066bc792d1becbc05cac736bb818",
+    "upstream_sha256": "f71a1d819d98ed9f333daa5953da4e45f9a308be0256deabf0b40bc2b401ab2b",
+    "merged_sha256": "f71a1d819d98ed9f333daa5953da4e45f9a308be0256deabf0b40bc2b401ab2b"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsSeesaw2AxisRotator.cpp",
+    "decision": "Equivalent complete gravity/torque/restore and hipdrop behavior, upstream field names and ordinary exeStay.",
+    "local_sha256": "1c8eb7fb02f15324e6b49f7a7303fe0823103154ed28eb540db2225b843da699",
+    "upstream_sha256": "2286af1df09fe827fdf5d4460ff87bf4d5351bef1b6746695da4139b2f67cdf4",
+    "merged_sha256": "2286af1df09fe827fdf5d4460ff87bf4d5351bef1b6746695da4139b2f67cdf4"
+  },
+  {
+    "path": "src/Game/MapObj/PlantGroup.cpp",
+    "decision": "Complete upstream group/member logic retains original placement, item, shake and clipping behavior; reconcile descriptive fields, constants and nerve macros.",
+    "local_sha256": "641ee9f6751922c0bd16284ca206ff2cf11ee492241e71a5ae32b5128473fa31",
+    "upstream_sha256": "e4bb089ad5d76ecb059986df62479f7f853e86dd49d3cfe81903039c88db02db",
+    "merged_sha256": "e4bb089ad5d76ecb059986df62479f7f853e86dd49d3cfe81903039c88db02db"
+  },
+  {
+    "path": "src/Game/MapObj/StageEffectDataTable.cpp",
+    "decision": "Complete upstream original camera/pad/sound tables and methods; use one table and consistent renamed fields.",
+    "local_sha256": "7a3ba948a5b7588ad5b6b1a0619b2da5d237b3bfe7c32ed5a83a3884d0d7017d",
+    "upstream_sha256": "8352fa65b958dec8f29d95c0db30734e5722b08ed4d4443e2bc3d2a848ebb0da",
+    "merged_sha256": "8352fa65b958dec8f29d95c0db30734e5722b08ed4d4443e2bc3d2a848ebb0da"
+  },
+  {
+    "path": "src/Game/MapObj/WarpPod.cpp",
+    "decision": "Retain complete local initPair/initDraw/drawCylinder (upstream path has uninitialized intermediate vectors), rename only member identifiers to upstream declarations.",
+    "local_sha256": "8a3ab031445cea6e8c95af6591e09306c7b1383eb00bf9afd00a8bbfae3ccb9f",
+    "upstream_sha256": "f094332fa28f4b469c9b7724bbb05bb8cb4ac125296e471980fd6a6bd92a60cd",
+    "merged_sha256": "cf3407581ea7252111985e271a617abbbf00c2ee61d2f128c0a58e49d54efa82"
+  }
+]

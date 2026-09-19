@@ -1,0 +1,40 @@
+{
+  "scope": "Read-only resolved root lane review; no mutation script executed, no build",
+  "objutil_preservation": [
+    {
+      "function": "getCsvDataBool",
+      "normalized_body_equal_HEAD": true
+    },
+    {
+      "function": "getCsvDataVec",
+      "normalized_body_equal_HEAD": true
+    },
+    {
+      "function": "getCsvDataColor",
+      "normalized_body_equal_HEAD": true
+    },
+    {
+      "function": "findNamePosOnGround",
+      "normalized_body_equal_HEAD": true
+    },
+    {
+      "function": "tryFindLinkNamePos",
+      "normalized_body_equal_HEAD": true
+    }
+  ],
+  "functor_after_parent_correction": {
+    "free_inline_present": true,
+    "member_argument_inline_present": true,
+    "const_one_arg_consistent": true
+  },
+  "file_sha256": {
+    "src/Game/Util/ObjUtil.cpp": "cc2719938a87a59ad03120ccf8396c4b35f6f000031bee1803762b4e74e86561",
+    "include/Game/Util/Functor.hpp": "6d2c2afdee9118365b02405a88badae36ac58ebe02bc8479bbc37dd82481c9f8",
+    "include/Game/Util/Array.hpp": "0f88908a700130405c52ffa2c9703376601f06765f984e9cd3e10eecb4bbc048",
+    "include/Game/Util/BothDirList.hpp": "6cb6c968c29e266dcb5ff122302fec7301ae23eae2f8b9a8e1a1bbe892a0e196",
+    "include/Game/Util/JointController.hpp": "c42def4c202061d27860507f56f012b4210e4ed64ce05a3f4cb98d83b1a1deec",
+    "libs/JSystem/include/JSystem/JGeometry/TPartition3.hpp": "2b52ee71bf0387e11ef615c540bc9a9f3033772ec84b7eee745fc23e103ff1f4",
+    "libs/nw4r/include/nw4r/ut/CharWriter.h": "cdb09693132e2caca6fa74588fd5f696792cc5a5974af42b764db69f203b847c",
+    "libs/nw4r/include/nw4r/ut/Rect.h": "7cbcd7ed3e88eff15f1ac3ef3cf979a042c0feb07b2203459f99b0869a8f9041"
+  }
+}

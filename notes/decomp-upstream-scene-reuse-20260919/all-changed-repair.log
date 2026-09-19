@@ -1,0 +1,10 @@
+0 src/Game/LiveActor/ShadowVolumeDrawer.cpp
+0 src/Game/MapObj/LavaHomeSeesawRotator.cpp
+0 src/Game/MapObj/MapObjActor.cpp
+0 src/Game/Player/MarioActorDraw.cpp
+0 src/Game/Player/MarioFaint.cpp
+0 src/Game/Player/MarioFoo.cpp
+0 src/Game/Player/MarioHang.cpp
+0 src/Game/Player/MarioWall.cpp
+0 src/Game/Util/NPCUtil.cpp
+PASS 9 TOTAL 9

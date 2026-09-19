@@ -1,0 +1,379 @@
+Auto-merging configure.py
+Auto-merging include/Game/Demo/DemoExecutor.hpp
+CONFLICT (content): Merge conflict in include/Game/Demo/DemoExecutor.hpp
+Auto-merging include/Game/Demo/DemoSoundKeeper.hpp
+CONFLICT (content): Merge conflict in include/Game/Demo/DemoSoundKeeper.hpp
+Auto-merging include/Game/Demo/DemoStartRequestHolder.hpp
+CONFLICT (content): Merge conflict in include/Game/Demo/DemoStartRequestHolder.hpp
+Auto-merging include/Game/Demo/DemoWipeKeeper.hpp
+Auto-merging include/Game/Effect/AutoEffectGroup.hpp
+CONFLICT (add/add): Merge conflict in include/Game/Effect/AutoEffectGroup.hpp
+Auto-merging include/Game/Effect/AutoEffectGroupHolder.hpp
+CONFLICT (add/add): Merge conflict in include/Game/Effect/AutoEffectGroupHolder.hpp
+Auto-merging include/Game/Effect/AutoEffectInfo.hpp
+Auto-merging include/Game/Effect/MultiEmitter.hpp
+Auto-merging include/Game/Effect/ParticleCalcExecutor.hpp
+CONFLICT (add/add): Merge conflict in include/Game/Effect/ParticleCalcExecutor.hpp
+Auto-merging include/Game/Effect/SyncBckEffectInfo.hpp
+CONFLICT (add/add): Merge conflict in include/Game/Effect/SyncBckEffectInfo.hpp
+Auto-merging include/Game/LiveActor/Binder.hpp
+Auto-merging include/Game/LiveActor/DynamicJointCtrl.hpp
+CONFLICT (content): Merge conflict in include/Game/LiveActor/DynamicJointCtrl.hpp
+Auto-merging include/Game/LiveActor/LodCtrl.hpp
+Auto-merging include/Game/LiveActor/MaterialCtrl.hpp
+Auto-merging include/Game/LiveActor/ShadowSurfaceCircle.hpp
+CONFLICT (content): Merge conflict in include/Game/LiveActor/ShadowSurfaceCircle.hpp
+Auto-merging include/Game/LiveActor/ShadowSurfaceDrawer.hpp
+CONFLICT (content): Merge conflict in include/Game/LiveActor/ShadowSurfaceDrawer.hpp
+Auto-merging include/Game/LiveActor/ShadowVolumeDrawer.hpp
+CONFLICT (content): Merge conflict in include/Game/LiveActor/ShadowVolumeDrawer.hpp
+Auto-merging include/Game/LiveActor/ShadowVolumeModel.hpp
+CONFLICT (content): Merge conflict in include/Game/LiveActor/ShadowVolumeModel.hpp
+Auto-merging include/Game/LiveActor/ShadowVolumeOval.hpp
+CONFLICT (content): Merge conflict in include/Game/LiveActor/ShadowVolumeOval.hpp
+Auto-merging include/Game/Map/CollisionCategorizedKeeper.hpp
+Auto-merging include/Game/Map/CollisionParts.hpp
+CONFLICT (content): Merge conflict in include/Game/Map/CollisionParts.hpp
+Auto-merging include/Game/MapObj/ChipCounter.hpp
+CONFLICT (content): Merge conflict in include/Game/MapObj/ChipCounter.hpp
+Auto-merging include/Game/MapObj/MapPartsRailRotator.hpp
+CONFLICT (content): Merge conflict in include/Game/MapObj/MapPartsRailRotator.hpp
+Auto-merging include/Game/MapObj/MapPartsSeesaw1AxisRotator.hpp
+CONFLICT (add/add): Merge conflict in include/Game/MapObj/MapPartsSeesaw1AxisRotator.hpp
+Auto-merging include/Game/MapObj/MapPartsSeesaw2AxisRotator.hpp
+CONFLICT (add/add): Merge conflict in include/Game/MapObj/MapPartsSeesaw2AxisRotator.hpp
+Auto-merging include/Game/MapObj/PlantGroup.hpp
+CONFLICT (content): Merge conflict in include/Game/MapObj/PlantGroup.hpp
+Auto-merging include/Game/MapObj/StageEffectDataTable.hpp
+CONFLICT (content): Merge conflict in include/Game/MapObj/StageEffectDataTable.hpp
+Auto-merging include/Game/MapObj/WarpPod.hpp
+CONFLICT (content): Merge conflict in include/Game/MapObj/WarpPod.hpp
+Auto-merging include/Game/NPC/DemoRabbit.hpp
+CONFLICT (content): Merge conflict in include/Game/NPC/DemoRabbit.hpp
+Auto-merging include/Game/NPC/NPCDirector.hpp
+CONFLICT (content): Merge conflict in include/Game/NPC/NPCDirector.hpp
+Auto-merging include/Game/Player/Mario.hpp
+Auto-merging include/Game/Player/MarioActor.hpp
+Auto-merging include/Game/Player/MarioAnimator.hpp
+Auto-merging include/Game/Player/MarioSwim.hpp
+Auto-merging include/Game/Player/MarioTeresa.hpp
+Auto-merging include/Game/Scene/PlacementInfoOrdered.hpp
+CONFLICT (content): Merge conflict in include/Game/Scene/PlacementInfoOrdered.hpp
+Auto-merging include/Game/Scene/StageDataHolder.hpp
+CONFLICT (content): Merge conflict in include/Game/Scene/StageDataHolder.hpp
+Auto-merging include/Game/Screen/CustomTagProcessor.hpp
+CONFLICT (content): Merge conflict in include/Game/Screen/CustomTagProcessor.hpp
+Auto-merging include/Game/Screen/LayoutGroupCtrl.hpp
+CONFLICT (add/add): Merge conflict in include/Game/Screen/LayoutGroupCtrl.hpp
+Auto-merging include/Game/Screen/LayoutManager.hpp
+CONFLICT (content): Merge conflict in include/Game/Screen/LayoutManager.hpp
+Auto-merging include/Game/Screen/MessageTagSkipTagProcessor.hpp
+CONFLICT (content): Merge conflict in include/Game/Screen/MessageTagSkipTagProcessor.hpp
+Auto-merging include/Game/Screen/ReplaceTagProcessor.hpp
+CONFLICT (content): Merge conflict in include/Game/Screen/ReplaceTagProcessor.hpp
+Auto-merging include/Game/System/LayoutHolder.hpp
+CONFLICT (content): Merge conflict in include/Game/System/LayoutHolder.hpp
+Auto-merging include/Game/System/WPadHVSwing.hpp
+CONFLICT (content): Merge conflict in include/Game/System/WPadHVSwing.hpp
+Auto-merging include/Game/Util/AreaObjUtil.hpp
+CONFLICT (content): Merge conflict in include/Game/Util/AreaObjUtil.hpp
+Auto-merging include/Game/Util/Array.hpp
+CONFLICT (content): Merge conflict in include/Game/Util/Array.hpp
+Auto-merging include/Game/Util/BothDirList.hpp
+CONFLICT (content): Merge conflict in include/Game/Util/BothDirList.hpp
+Auto-merging include/Game/Util/DirectDraw.hpp
+CONFLICT (content): Merge conflict in include/Game/Util/DirectDraw.hpp
+Auto-merging include/Game/Util/Functor.hpp
+CONFLICT (content): Merge conflict in include/Game/Util/Functor.hpp
+Auto-merging include/Game/Util/FurCtrl.hpp
+CONFLICT (content): Merge conflict in include/Game/Util/FurCtrl.hpp
+Auto-merging include/Game/Util/FurDrawer.hpp
+CONFLICT (add/add): Merge conflict in include/Game/Util/FurDrawer.hpp
+Auto-merging include/Game/Util/FurMulti.hpp
+CONFLICT (content): Merge conflict in include/Game/Util/FurMulti.hpp
+Auto-merging include/Game/Util/FurParam.hpp
+CONFLICT (add/add): Merge conflict in include/Game/Util/FurParam.hpp
+Auto-merging include/Game/Util/FurShader.hpp
+CONFLICT (content): Merge conflict in include/Game/Util/FurShader.hpp
+Auto-merging include/Game/Util/JointController.hpp
+CONFLICT (content): Merge conflict in include/Game/Util/JointController.hpp
+Auto-merging include/Game/Util/MapPartsUtil.hpp
+CONFLICT (content): Merge conflict in include/Game/Util/MapPartsUtil.hpp
+Auto-merging include/Game/Util/NPCUtil.hpp
+Auto-merging libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp
+CONFLICT (content): Merge conflict in libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp
+Auto-merging libs/JSystem/include/JSystem/JGeometry/TPartition3.hpp
+CONFLICT (content): Merge conflict in libs/JSystem/include/JSystem/JGeometry/TPartition3.hpp
+Auto-merging libs/MSL_C++/include/algorithm
+CONFLICT (content): Merge conflict in libs/MSL_C++/include/algorithm
+Auto-merging libs/MSL_C++/include/functional.hpp
+CONFLICT (content): Merge conflict in libs/MSL_C++/include/functional.hpp
+Auto-merging libs/RVL_SDK/include/revolution/gx/GXTransform.h
+Auto-merging libs/nw4r/include/nw4r/db/assert.h
+CONFLICT (content): Merge conflict in libs/nw4r/include/nw4r/db/assert.h
+Auto-merging libs/nw4r/include/nw4r/lyt/material.h
+CONFLICT (content): Merge conflict in libs/nw4r/include/nw4r/lyt/material.h
+Auto-merging libs/nw4r/include/nw4r/lyt/pane.h
+Auto-merging libs/nw4r/include/nw4r/ut/CharWriter.h
+CONFLICT (content): Merge conflict in libs/nw4r/include/nw4r/ut/CharWriter.h
+Auto-merging libs/nw4r/include/nw4r/ut/LinkList.h
+CONFLICT (content): Merge conflict in libs/nw4r/include/nw4r/ut/LinkList.h
+Auto-merging libs/nw4r/include/nw4r/ut/Rect.h
+Auto-merging libs/nw4r/include/nw4r/ut/TagProcessorBase.h
+CONFLICT (content): Merge conflict in libs/nw4r/include/nw4r/ut/TagProcessorBase.h
+Auto-merging src/Game/Animation/AnmPlayer.cpp
+CONFLICT (content): Merge conflict in src/Game/Animation/AnmPlayer.cpp
+Auto-merging src/Game/AreaObj/CollisionArea.cpp
+CONFLICT (content): Merge conflict in src/Game/AreaObj/CollisionArea.cpp
+Auto-merging src/Game/AreaObj/ImageEffectArea.cpp
+CONFLICT (content): Merge conflict in src/Game/AreaObj/ImageEffectArea.cpp
+Auto-merging src/Game/AreaObj/LightAreaHolder.cpp
+CONFLICT (content): Merge conflict in src/Game/AreaObj/LightAreaHolder.cpp
+Auto-merging src/Game/AreaObj/WarpCube.cpp
+CONFLICT (content): Merge conflict in src/Game/AreaObj/WarpCube.cpp
+Auto-merging src/Game/Boss/SkeletalFishBaby.cpp
+CONFLICT (content): Merge conflict in src/Game/Boss/SkeletalFishBaby.cpp
+Auto-merging src/Game/Boss/SkeletalFishBoss.cpp
+CONFLICT (content): Merge conflict in src/Game/Boss/SkeletalFishBoss.cpp
+Auto-merging src/Game/Demo/DemoExecutor.cpp
+CONFLICT (content): Merge conflict in src/Game/Demo/DemoExecutor.cpp
+Auto-merging src/Game/Demo/DemoSoundKeeper.cpp
+CONFLICT (add/add): Merge conflict in src/Game/Demo/DemoSoundKeeper.cpp
+Auto-merging src/Game/Demo/DemoStartRequestHolder.cpp
+CONFLICT (content): Merge conflict in src/Game/Demo/DemoStartRequestHolder.cpp
+Auto-merging src/Game/Demo/DemoStartRequestUtil.cpp
+CONFLICT (add/add): Merge conflict in src/Game/Demo/DemoStartRequestUtil.cpp
+Auto-merging src/Game/Demo/DemoTimeKeeper.cpp
+CONFLICT (add/add): Merge conflict in src/Game/Demo/DemoTimeKeeper.cpp
+Auto-merging src/Game/Demo/DemoWipeKeeper.cpp
+CONFLICT (add/add): Merge conflict in src/Game/Demo/DemoWipeKeeper.cpp
+Auto-merging src/Game/Effect/AutoEffectGroup.cpp
+CONFLICT (add/add): Merge conflict in src/Game/Effect/AutoEffectGroup.cpp
+Auto-merging src/Game/Effect/AutoEffectGroupHolder.cpp
+CONFLICT (add/add): Merge conflict in src/Game/Effect/AutoEffectGroupHolder.cpp
+Auto-merging src/Game/Effect/AutoEffectInfo.cpp
+CONFLICT (content): Merge conflict in src/Game/Effect/AutoEffectInfo.cpp
+Auto-merging src/Game/Effect/EffectSystemUtil.cpp
+CONFLICT (add/add): Merge conflict in src/Game/Effect/EffectSystemUtil.cpp
+Auto-merging src/Game/Effect/ParticleCalcExecutor.cpp
+CONFLICT (add/add): Merge conflict in src/Game/Effect/ParticleCalcExecutor.cpp
+Auto-merging src/Game/Effect/ParticleDrawExecutor.cpp
+CONFLICT (content): Merge conflict in src/Game/Effect/ParticleDrawExecutor.cpp
+Auto-merging src/Game/Effect/SyncBckEffectChecker.cpp
+CONFLICT (add/add): Merge conflict in src/Game/Effect/SyncBckEffectChecker.cpp
+Auto-merging src/Game/Effect/SyncBckEffectInfo.cpp
+CONFLICT (add/add): Merge conflict in src/Game/Effect/SyncBckEffectInfo.cpp
+Auto-merging src/Game/LiveActor/Binder.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/Binder.cpp
+Auto-merging src/Game/LiveActor/ClippingActorInfo.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/ClippingActorInfo.cpp
+Auto-merging src/Game/LiveActor/ClippingJudge.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/ClippingJudge.cpp
+Auto-merging src/Game/LiveActor/DisplayListMaker.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/DisplayListMaker.cpp
+Auto-merging src/Game/LiveActor/DynamicJointCtrl.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/DynamicJointCtrl.cpp
+Auto-merging src/Game/LiveActor/EffectKeeper.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/EffectKeeper.cpp
+Auto-merging src/Game/LiveActor/HitSensorInfo.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/HitSensorInfo.cpp
+Auto-merging src/Game/LiveActor/LiveActorGroupArray.cpp
+Auto-merging src/Game/LiveActor/LodCtrl.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/LodCtrl.cpp
+Auto-merging src/Game/LiveActor/MaterialCtrl.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/MaterialCtrl.cpp
+Auto-merging src/Game/LiveActor/MirrorCamera.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/MirrorCamera.cpp
+Auto-merging src/Game/LiveActor/RailRider.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/RailRider.cpp
+Auto-merging src/Game/LiveActor/SensorHitChecker.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/SensorHitChecker.cpp
+Auto-merging src/Game/LiveActor/ShadowController.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/ShadowController.cpp
+Auto-merging src/Game/LiveActor/ShadowSurfaceCircle.cpp
+CONFLICT (add/add): Merge conflict in src/Game/LiveActor/ShadowSurfaceCircle.cpp
+Auto-merging src/Game/LiveActor/ShadowSurfaceDrawer.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/ShadowSurfaceDrawer.cpp
+Auto-merging src/Game/LiveActor/ShadowVolumeCylinder.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/ShadowVolumeCylinder.cpp
+Auto-merging src/Game/LiveActor/ShadowVolumeDrawer.cpp
+Auto-merging src/Game/LiveActor/ShadowVolumeLine.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/ShadowVolumeLine.cpp
+Auto-merging src/Game/LiveActor/ShadowVolumeOval.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/ShadowVolumeOval.cpp
+Auto-merging src/Game/LiveActor/ShadowVolumeOvalPole.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/ShadowVolumeOvalPole.cpp
+Auto-merging src/Game/LiveActor/ShadowVolumeSphere.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/ShadowVolumeSphere.cpp
+Auto-merging src/Game/LiveActor/ViewGroupCtrl.cpp
+CONFLICT (content): Merge conflict in src/Game/LiveActor/ViewGroupCtrl.cpp
+Auto-merging src/Game/Map/CollisionCategorizedKeeper.cpp
+CONFLICT (content): Merge conflict in src/Game/Map/CollisionCategorizedKeeper.cpp
+Auto-merging src/Game/Map/CollisionParts.cpp
+CONFLICT (content): Merge conflict in src/Game/Map/CollisionParts.cpp
+Auto-merging src/Game/Map/LightFunction.cpp
+Auto-merging src/Game/Map/PlanetMapCreator.cpp
+Auto-merging src/Game/Map/SwitchWatcherHolder.cpp
+Auto-merging src/Game/MapObj/ChipCounter.cpp
+CONFLICT (content): Merge conflict in src/Game/MapObj/ChipCounter.cpp
+Auto-merging src/Game/MapObj/ChipHolder.cpp
+Auto-merging src/Game/MapObj/CollectCounter.cpp
+Auto-merging src/Game/MapObj/MapObjActor.cpp
+Auto-merging src/Game/MapObj/MapPartsRailRotator.cpp
+CONFLICT (add/add): Merge conflict in src/Game/MapObj/MapPartsRailRotator.cpp
+Auto-merging src/Game/MapObj/MapPartsRotator.cpp
+Auto-merging src/Game/MapObj/MapPartsSeesaw1AxisRotator.cpp
+CONFLICT (add/add): Merge conflict in src/Game/MapObj/MapPartsSeesaw1AxisRotator.cpp
+Auto-merging src/Game/MapObj/MapPartsSeesaw2AxisRotator.cpp
+CONFLICT (add/add): Merge conflict in src/Game/MapObj/MapPartsSeesaw2AxisRotator.cpp
+Auto-merging src/Game/MapObj/PlantGroup.cpp
+CONFLICT (content): Merge conflict in src/Game/MapObj/PlantGroup.cpp
+Auto-merging src/Game/MapObj/PowerStar.cpp
+Auto-merging src/Game/MapObj/ShockWaveGenerator.cpp
+Auto-merging src/Game/MapObj/StageEffectDataTable.cpp
+CONFLICT (content): Merge conflict in src/Game/MapObj/StageEffectDataTable.cpp
+Auto-merging src/Game/MapObj/WarpPod.cpp
+CONFLICT (content): Merge conflict in src/Game/MapObj/WarpPod.cpp
+Auto-merging src/Game/NPC/DemoRabbit.cpp
+CONFLICT (content): Merge conflict in src/Game/NPC/DemoRabbit.cpp
+Auto-merging src/Game/NPC/NPCFunction.cpp
+CONFLICT (add/add): Merge conflict in src/Game/NPC/NPCFunction.cpp
+Auto-merging src/Game/NPC/Rosetta.cpp
+CONFLICT (content): Merge conflict in src/Game/NPC/Rosetta.cpp
+Auto-merging src/Game/NPC/RosettaDemoHeavensDoor.cpp
+Auto-merging src/Game/NPC/TalkBalloon.cpp
+Auto-merging src/Game/NPC/TalkMessageCtrl.cpp
+CONFLICT (content): Merge conflict in src/Game/NPC/TalkMessageCtrl.cpp
+Auto-merging src/Game/NWC24/NWC24Messenger.cpp
+Auto-merging src/Game/NameObj/NameObjCategoryList.cpp
+CONFLICT (content): Merge conflict in src/Game/NameObj/NameObjCategoryList.cpp
+Auto-merging src/Game/NameObj/NameObjHolder.cpp
+CONFLICT (content): Merge conflict in src/Game/NameObj/NameObjHolder.cpp
+Auto-merging src/Game/Player/Mario.cpp
+CONFLICT (content): Merge conflict in src/Game/Player/Mario.cpp
+Auto-merging src/Game/Player/MarioAccess.cpp
+Auto-merging src/Game/Player/MarioActor.cpp
+CONFLICT (content): Merge conflict in src/Game/Player/MarioActor.cpp
+Auto-merging src/Game/Player/MarioActorDefensiveMsg.cpp
+Auto-merging src/Game/Player/MarioActorDraw.cpp
+Auto-merging src/Game/Player/MarioActorInit.cpp
+Auto-merging src/Game/Player/MarioActorOffensiveMsg.cpp
+CONFLICT (content): Merge conflict in src/Game/Player/MarioActorOffensiveMsg.cpp
+Auto-merging src/Game/Player/MarioActorRush.cpp
+CONFLICT (content): Merge conflict in src/Game/Player/MarioActorRush.cpp
+Auto-merging src/Game/Player/MarioActorRushMsg.cpp
+CONFLICT (content): Merge conflict in src/Game/Player/MarioActorRushMsg.cpp
+Auto-merging src/Game/Player/MarioActorSensor.cpp
+Auto-merging src/Game/Player/MarioActorSpecialDraw.cpp
+CONFLICT (content): Merge conflict in src/Game/Player/MarioActorSpecialDraw.cpp
+Auto-merging src/Game/Player/MarioAnimationEfx.cpp
+Auto-merging src/Game/Player/MarioAnimator.cpp
+CONFLICT (content): Merge conflict in src/Game/Player/MarioAnimator.cpp
+Auto-merging src/Game/Player/MarioBlown.cpp
+CONFLICT (content): Merge conflict in src/Game/Player/MarioBlown.cpp
+Auto-merging src/Game/Player/MarioDamage.cpp
+CONFLICT (content): Merge conflict in src/Game/Player/MarioDamage.cpp
+Auto-merging src/Game/Player/MarioDamageParalyze.cpp
+CONFLICT (content): Merge conflict in src/Game/Player/MarioDamageParalyze.cpp
+Auto-merging src/Game/Player/MarioEffect.cpp
+CONFLICT (content): Merge conflict in src/Game/Player/MarioEffect.cpp
+Auto-merging src/Game/Player/MarioFaint.cpp
+Auto-merging src/Game/Player/MarioFoo.cpp
+Auto-merging src/Game/Player/MarioHang.cpp
+Auto-merging src/Game/Player/MarioJump.cpp
+Auto-merging src/Game/Player/MarioRabbit.cpp
+CONFLICT (content): Merge conflict in src/Game/Player/MarioRabbit.cpp
+Auto-merging src/Game/Player/MarioSpecial.cpp
+Auto-merging src/Game/Player/MarioStick.cpp
+Auto-merging src/Game/Player/MarioSwim.cpp
+CONFLICT (content): Merge conflict in src/Game/Player/MarioSwim.cpp
+Auto-merging src/Game/Player/MarioTeresa.cpp
+CONFLICT (content): Merge conflict in src/Game/Player/MarioTeresa.cpp
+Auto-merging src/Game/Player/MarioWait.cpp
+CONFLICT (content): Merge conflict in src/Game/Player/MarioWait.cpp
+Auto-merging src/Game/Player/MarioWall.cpp
+Auto-merging src/Game/Player/MarioWarp.cpp
+CONFLICT (content): Merge conflict in src/Game/Player/MarioWarp.cpp
+Auto-merging src/Game/Player/MatrixControl.cpp
+CONFLICT (content): Merge conflict in src/Game/Player/MatrixControl.cpp
+Auto-merging src/Game/Scene/MultiSceneEffectKeeper.cpp
+CONFLICT (add/add): Merge conflict in src/Game/Scene/MultiSceneEffectKeeper.cpp
+Auto-merging src/Game/Scene/PlacementInfoOrdered.cpp
+CONFLICT (content): Merge conflict in src/Game/Scene/PlacementInfoOrdered.cpp
+Auto-merging src/Game/Scene/PlayTimerScene.cpp
+Auto-merging src/Game/Scene/ScenarioSelectScene.cpp
+CONFLICT (content): Merge conflict in src/Game/Scene/ScenarioSelectScene.cpp
+Auto-merging src/Game/Scene/SceneFactory.cpp
+Auto-merging src/Game/Scene/StageDataHolder.cpp
+CONFLICT (content): Merge conflict in src/Game/Scene/StageDataHolder.cpp
+Auto-merging src/Game/Scene/StopSceneController.cpp
+Auto-merging src/Game/Screen/CounterLayoutController.cpp
+Auto-merging src/Game/Screen/CustomTagProcessor.cpp
+CONFLICT (add/add): Merge conflict in src/Game/Screen/CustomTagProcessor.cpp
+Auto-merging src/Game/Screen/ImageEffectLocalUtil.cpp
+Auto-merging src/Game/Screen/LayoutCoreUtil.cpp
+CONFLICT (content): Merge conflict in src/Game/Screen/LayoutCoreUtil.cpp
+Auto-merging src/Game/Screen/LayoutGroupCtrl.cpp
+CONFLICT (add/add): Merge conflict in src/Game/Screen/LayoutGroupCtrl.cpp
+Auto-merging src/Game/Screen/LayoutManager.cpp
+CONFLICT (add/add): Merge conflict in src/Game/Screen/LayoutManager.cpp
+Auto-merging src/Game/Screen/NoteCounter.cpp
+Auto-merging src/Game/Screen/PaneEffectKeeper.cpp
+Auto-merging src/Game/Screen/PauseMenu.cpp
+CONFLICT (content): Merge conflict in src/Game/Screen/PauseMenu.cpp
+Auto-merging src/Game/Screen/ReplaceTagProcessor.cpp
+CONFLICT (add/add): Merge conflict in src/Game/Screen/ReplaceTagProcessor.cpp
+Auto-merging src/Game/Screen/ScenarioSelectLayout.cpp
+Auto-merging src/Game/Screen/WaterCameraFilter.cpp
+Auto-merging src/Game/Screen/WipeRing.cpp
+Auto-merging src/Game/System/AudSystemWrapper.cpp
+CONFLICT (content): Merge conflict in src/Game/System/AudSystemWrapper.cpp
+Auto-merging src/Game/System/GameSequenceProgress.cpp
+CONFLICT (content): Merge conflict in src/Game/System/GameSequenceProgress.cpp
+Auto-merging src/Game/System/GameSystemResetAndPowerProcess.cpp
+Auto-merging src/Game/System/LayoutHolder.cpp
+CONFLICT (content): Merge conflict in src/Game/System/LayoutHolder.cpp
+Auto-merging src/Game/System/Overwrite.cpp
+CONFLICT (content): Merge conflict in src/Game/System/Overwrite.cpp
+Auto-merging src/Game/System/ResourceHolderManager.cpp
+CONFLICT (content): Merge conflict in src/Game/System/ResourceHolderManager.cpp
+Auto-merging src/Game/System/SaveDataFileAccessor.cpp
+CONFLICT (add/add): Merge conflict in src/Game/System/SaveDataFileAccessor.cpp
+Auto-merging src/Game/System/SaveDataHandler.cpp
+Auto-merging src/Game/System/StorySequenceExecutor.cpp
+Auto-merging src/Game/System/WPadHVSwing.cpp
+CONFLICT (add/add): Merge conflict in src/Game/System/WPadHVSwing.cpp
+Auto-merging src/Game/Util/AreaObjUtil.cpp
+CONFLICT (content): Merge conflict in src/Game/Util/AreaObjUtil.cpp
+Auto-merging src/Game/Util/DirectDraw.cpp
+CONFLICT (content): Merge conflict in src/Game/Util/DirectDraw.cpp
+Auto-merging src/Game/Util/FurCtrl.cpp
+CONFLICT (content): Merge conflict in src/Game/Util/FurCtrl.cpp
+Auto-merging src/Game/Util/FurDrawer.cpp
+CONFLICT (add/add): Merge conflict in src/Game/Util/FurDrawer.cpp
+Auto-merging src/Game/Util/FurMulti.cpp
+CONFLICT (add/add): Merge conflict in src/Game/Util/FurMulti.cpp
+Auto-merging src/Game/Util/FurShader.cpp
+CONFLICT (content): Merge conflict in src/Game/Util/FurShader.cpp
+Auto-merging src/Game/Util/JointController.cpp
+CONFLICT (content): Merge conflict in src/Game/Util/JointController.cpp
+Auto-merging src/Game/Util/LayoutUtil.cpp
+CONFLICT (content): Merge conflict in src/Game/Util/LayoutUtil.cpp
+Auto-merging src/Game/Util/LiveActorUtil.cpp
+CONFLICT (content): Merge conflict in src/Game/Util/LiveActorUtil.cpp
+Auto-merging src/Game/Util/MapPartsUtil.cpp
+CONFLICT (content): Merge conflict in src/Game/Util/MapPartsUtil.cpp
+Auto-merging src/Game/Util/MapUtil.cpp
+CONFLICT (content): Merge conflict in src/Game/Util/MapUtil.cpp
+Auto-merging src/Game/Util/MathUtil.cpp
+Auto-merging src/Game/Util/MtxUtil.cpp
+Auto-merging src/Game/Util/NPCUtil.cpp
+Auto-merging src/Game/Util/ObjUtil.cpp
+CONFLICT (content): Merge conflict in src/Game/Util/ObjUtil.cpp
+Auto-merging src/Game/Util/SceneUtil.cpp
+CONFLICT (content): Merge conflict in src/Game/Util/SceneUtil.cpp
+Auto-merging src/Game/Util/StringUtil.cpp
+CONFLICT (content): Merge conflict in src/Game/Util/StringUtil.cpp
+Auto-merging src/Game/Util/TalkUtil.cpp
+CONFLICT (content): Merge conflict in src/Game/Util/TalkUtil.cpp
+Automatic merge failed; fix conflicts and then commit the result.

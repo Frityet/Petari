@@ -1,0 +1,49 @@
+{
+  "dol": "decomp/orig/RMGK01/sys/main.dol",
+  "dol_sha256": "69f93fcc0fa34837347b5ac05168bc783adcacb3c02697cfda087a3b63abc9e0",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "checks": [
+    {
+      "name": "wall_jump_compare",
+      "address": "0x802713a4",
+      "bytes": "c002ee54fc0100404c41138240820010c022ee9c",
+      "meaning": "fcmpo f1 versus zero; cror eq,gt,eq; bne skips jump unless hit power >= 0."
+    },
+    {
+      "name": "goal_action_reference",
+      "address": "0x80271768",
+      "bytes": "389f01114816a815",
+      "meaning": "addi r4,r31,0x111; r31=0x805AF6C8; then startAction."
+    },
+    {
+      "name": "goal_action_string",
+      "address": "0x805af7d9",
+      "bytes": "5761697400",
+      "meaning": "Retail animation string is Wait, not Change."
+    },
+    {
+      "name": "stopped_rebound_parameters",
+      "address": "0x80271070",
+      "bytes": "c022ee547fe3fb78c062ee50fc40089048150739",
+      "meaning": "Load f1 from zero, f3 from one, f2=f1 before reboundVelocityFromCollision call."
+    },
+    {
+      "name": "constant_one_zero",
+      "address": "0x806bea70",
+      "bytes": "3f80000000000000",
+      "meaning": "Referenced small-data constants, big-endian floats 1.0 then 0.0."
+    },
+    {
+      "name": "effect_constructor_final_defaults",
+      "address": "0x800c4ed4",
+      "bytes": "9083001c9883002090830024988300284e800020",
+      "meaning": "Final constructor stores overwrite primary color with zero, clear color validity and environment color; no stores to offset 0x2C..0x34."
+    },
+    {
+      "name": "effect_constructor_complete",
+      "address": "0x800c4e8c",
+      "bytes": "3800ffff38800000c022a0d09003001cc002a0d49083000090830004908300089083000c9083001090830014b0830018908300389003003cd0230040d0230044d00300489083004c9083001c9883002090830024988300284e800020",
+      "meaning": "Complete retail constructor supports retaining local final color defaults and lack of offset initialization."
+    }
+  ]
+}

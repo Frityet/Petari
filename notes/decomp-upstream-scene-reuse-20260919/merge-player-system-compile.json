@@ -1,0 +1,182 @@
+[
+  {
+    "path": "src/Game/Player/Mario.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "3befa3fad79c77ed9d0eb88da923bcb1b027d5c23a6b8df9ba08038d5bce0679",
+    "current_sha256": "3befa3fad79c77ed9d0eb88da923bcb1b027d5c23a6b8df9ba08038d5bce0679"
+  },
+  {
+    "path": "src/Game/Player/MarioActor.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "50a5e79564a8defd5275de31a941c2ce9dd6317bc4db144937d437eafdaeee3c",
+    "current_sha256": "50a5e79564a8defd5275de31a941c2ce9dd6317bc4db144937d437eafdaeee3c"
+  },
+  {
+    "path": "src/Game/Player/MarioActorOffensiveMsg.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "df06ef7624f8d4e58cb50ca405a33838e248c07f0d076ddae6b683b110552438",
+    "current_sha256": "df06ef7624f8d4e58cb50ca405a33838e248c07f0d076ddae6b683b110552438"
+  },
+  {
+    "path": "src/Game/Player/MarioActorRush.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "002329684af208d022fd51517adf52f5f1a61268d471f7601d96849a04d13093",
+    "current_sha256": "002329684af208d022fd51517adf52f5f1a61268d471f7601d96849a04d13093"
+  },
+  {
+    "path": "src/Game/Player/MarioActorSpecialDraw.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "15c81c13fe4de1bccd05c7a32ab34b5b2fbb6cbb4c17f728c6e37750ad564664",
+    "current_sha256": "15c81c13fe4de1bccd05c7a32ab34b5b2fbb6cbb4c17f728c6e37750ad564664"
+  },
+  {
+    "path": "src/Game/Player/MarioAnimator.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "bc1a420b04532f47fbe4d12a519bd76b705353e7db962b0009ef965354c92aa4",
+    "current_sha256": "bc1a420b04532f47fbe4d12a519bd76b705353e7db962b0009ef965354c92aa4"
+  },
+  {
+    "path": "src/Game/Player/MarioDamage.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "63405a894faf6f88e6f916511e1adcc284d368096e9b74d291cb7bddc2736d1e",
+    "current_sha256": "63405a894faf6f88e6f916511e1adcc284d368096e9b74d291cb7bddc2736d1e"
+  },
+  {
+    "path": "src/Game/Player/MarioWarp.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "3c68346a905297124dd31c164bb7aab72031d6f21a9843fad6f06c32f118425d",
+    "current_sha256": "3c68346a905297124dd31c164bb7aab72031d6f21a9843fad6f06c32f118425d"
+  },
+  {
+    "path": "src/Game/Player/MarioActorRushMsg.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "2fafc8b1eb2f5f0bfb769b76f892d1d63a78a303ecfa0038bb8cae4cf4205466",
+    "current_sha256": "2fafc8b1eb2f5f0bfb769b76f892d1d63a78a303ecfa0038bb8cae4cf4205466"
+  },
+  {
+    "path": "src/Game/Player/MarioBlown.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "a9d1813b50d5e549e195fce9bb7481157ec5157aa9551b7ee801c3d3e0a36cc6",
+    "current_sha256": "a9d1813b50d5e549e195fce9bb7481157ec5157aa9551b7ee801c3d3e0a36cc6"
+  },
+  {
+    "path": "src/Game/Player/MarioDamageParalyze.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "dae33cde66d4bb3dcb597c3c382e68db640512dcba133e700248a438df83bfaa",
+    "current_sha256": "dae33cde66d4bb3dcb597c3c382e68db640512dcba133e700248a438df83bfaa"
+  },
+  {
+    "path": "src/Game/Player/MarioEffect.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "53bfba39207f84f37431411b68c6ccef831c368a39d76fe0690000f191803d66",
+    "current_sha256": "53bfba39207f84f37431411b68c6ccef831c368a39d76fe0690000f191803d66"
+  },
+  {
+    "path": "src/Game/Player/MarioSwim.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "f3110179f0440f347249d4abcfdf8980fc1cd7649e586bee3e4dfead354902aa",
+    "current_sha256": "f3110179f0440f347249d4abcfdf8980fc1cd7649e586bee3e4dfead354902aa"
+  },
+  {
+    "path": "src/Game/Player/MarioTeresa.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "d8d128e208b88ea8b05fab69eda035cb58df1365d0e6a8e0442bd3552cf56cb5",
+    "current_sha256": "d8d128e208b88ea8b05fab69eda035cb58df1365d0e6a8e0442bd3552cf56cb5"
+  },
+  {
+    "path": "src/Game/Player/MarioWait.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "ac7486e48e7647f13c279cf6a8d0d8bf0914cfb1eafd861d0cd4571323d96991",
+    "current_sha256": "ac7486e48e7647f13c279cf6a8d0d8bf0914cfb1eafd861d0cd4571323d96991"
+  },
+  {
+    "path": "src/Game/Player/MatrixControl.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "e8103844f2c098e6d8ebb5801755056cedefc09c97744df1a0aea31149237183",
+    "current_sha256": "e8103844f2c098e6d8ebb5801755056cedefc09c97744df1a0aea31149237183"
+  },
+  {
+    "path": "src/Game/Player/MarioRabbit.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "430535d47012ff4fdc60f28377b1201fc7fa841e3a62b2780db0c429f2b38bd3",
+    "current_sha256": "430535d47012ff4fdc60f28377b1201fc7fa841e3a62b2780db0c429f2b38bd3"
+  },
+  {
+    "path": "src/Game/Screen/CustomTagProcessor.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "932fa022afa4d83f0e437d6aad48aef6ffc251cc6de1c6ad1b36f720123a1f9b",
+    "current_sha256": "932fa022afa4d83f0e437d6aad48aef6ffc251cc6de1c6ad1b36f720123a1f9b"
+  },
+  {
+    "path": "src/Game/Screen/ReplaceTagProcessor.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "4d19f881f3427a4314c0f6a9c46d51aa8b11544aaf9aa574f1643a34d021b62c",
+    "current_sha256": "4d19f881f3427a4314c0f6a9c46d51aa8b11544aaf9aa574f1643a34d021b62c"
+  },
+  {
+    "path": "src/Game/Screen/LayoutCoreUtil.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "664d1ab3421095bf15ebdd59e91512c6e8d29a49a3bf00860bbda0bbad17c872",
+    "current_sha256": "664d1ab3421095bf15ebdd59e91512c6e8d29a49a3bf00860bbda0bbad17c872"
+  },
+  {
+    "path": "src/Game/Screen/PauseMenu.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "9ef7944b1cb08e1b8395ff4d0a567933747790af08c3263e5d3529eeb278dff6",
+    "current_sha256": "9ef7944b1cb08e1b8395ff4d0a567933747790af08c3263e5d3529eeb278dff6"
+  },
+  {
+    "path": "src/Game/Screen/LayoutGroupCtrl.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "a31d87b4a39f540f9099f5696f062eb18b07f3e556bc363aa9604ab341ecff1e",
+    "current_sha256": "a31d87b4a39f540f9099f5696f062eb18b07f3e556bc363aa9604ab341ecff1e"
+  },
+  {
+    "path": "src/Game/Screen/LayoutManager.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "dc08367ab09541570370ee8ba005f60f52b07db646f4c67e8792527f84c90fb1",
+    "current_sha256": "dc08367ab09541570370ee8ba005f60f52b07db646f4c67e8792527f84c90fb1"
+  },
+  {
+    "path": "src/Game/System/AudSystemWrapper.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "71777ee8fbb23039094bbe8fd154739027dcc7e067b8b569a3109c1312f0c642",
+    "current_sha256": "71777ee8fbb23039094bbe8fd154739027dcc7e067b8b569a3109c1312f0c642"
+  },
+  {
+    "path": "src/Game/System/GameSequenceProgress.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "87d3ac328f4b06a712d3076cc0f62b3d066f787a428d537b9c924ad98d90540a",
+    "current_sha256": "87d3ac328f4b06a712d3076cc0f62b3d066f787a428d537b9c924ad98d90540a"
+  },
+  {
+    "path": "src/Game/System/LayoutHolder.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "f6b41a0b22b77a2badd381693fa95f6aed7183f4823e9cfd0ab3b12112277fb5",
+    "current_sha256": "f6b41a0b22b77a2badd381693fa95f6aed7183f4823e9cfd0ab3b12112277fb5"
+  },
+  {
+    "path": "src/Game/System/SaveDataFileAccessor.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "b55bbdd8dd33e7c4b39a56071193497cf7bae1cbb79dc5c0faa6b3accae9100a",
+    "current_sha256": "b55bbdd8dd33e7c4b39a56071193497cf7bae1cbb79dc5c0faa6b3accae9100a"
+  },
+  {
+    "path": "src/Game/System/WPadHVSwing.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "b82ee27afbdb3d0e3090cdff518d98e6df7bb87bf7f0f59b01a74c5b474c8e15",
+    "current_sha256": "b82ee27afbdb3d0e3090cdff518d98e6df7bb87bf7f0f59b01a74c5b474c8e15"
+  },
+  {
+    "path": "src/Game/System/Overwrite.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "3e80877a753014b5e1e887862baa87359850d4107404e56fe35fb4960cf5fc16",
+    "current_sha256": "3e80877a753014b5e1e887862baa87359850d4107404e56fe35fb4960cf5fc16"
+  },
+  {
+    "path": "src/Game/System/ResourceHolderManager.cpp",
+    "compiled_exit_code": 0,
+    "compiled_source_sha256": "c7cfc69d99114ed249105c3087a4050746ba9a1f8f33aa7976b2a1f3aeee0c5d",
+    "current_sha256": "c7cfc69d99114ed249105c3087a4050746ba9a1f8f33aa7976b2a1f3aeee0c5d"
+  }
+]

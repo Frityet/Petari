@@ -1,0 +1,5 @@
+{
+  "path": "decomp/include/Game/Screen/MessageEditorMessageTag.hpp",
+  "sha256": "528242a0b4f2ebbc238451127d305a95b167d317d8dcc30467a9a436dd01f6b1",
+  "decision": "Keep one recovered class and u32 parameter-length contract; add upstream inline getGroup and getTag."
+}

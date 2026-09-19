@@ -1,0 +1,270 @@
+{
+  "scope": "Every reported added trailing-whitespace line occurs in the upstream parent (line-ending normalized comparison); no unrelated whitespace normalization performed.",
+  "lines": [
+    {
+      "path": "configure.py",
+      "line": 3113,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 4,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 5,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 6,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 7,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 8,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 19,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 20,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 21,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 22,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 23,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 24,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 25,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 26,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 27,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 28,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 29,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 30,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 31,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 32,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 33,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 34,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 35,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 36,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 37,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 38,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 39,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 40,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 41,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 42,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 43,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 44,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/Enemy/KirairaChain.hpp",
+      "line": 45,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/MapObj/SpinDriver.hpp",
+      "line": 57,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "include/Game/MapObj/SpinDriver.hpp",
+      "line": 58,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "src/Game/Boss/SkeletalFishJointCalc.cpp",
+      "line": 8,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "src/Game/Enemy/FireBall.cpp",
+      "line": 50,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "src/Game/Enemy/FireBall.cpp",
+      "line": 52,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "src/Game/Enemy/FireBall.cpp",
+      "line": 54,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "src/Game/Enemy/Onimasu.cpp",
+      "line": 83,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "src/Game/Enemy/OnimasuJump.cpp",
+      "line": 19,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "src/Game/Enemy/RingBeam.cpp",
+      "line": 185,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "src/Game/Enemy/RingBeam.cpp",
+      "line": 213,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "src/Game/Enemy/RingBeamer.cpp",
+      "line": 40,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "src/Game/Enemy/RingBeamer.cpp",
+      "line": 44,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "src/Game/Enemy/RingBeamer.cpp",
+      "line": 68,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "src/Game/Enemy/RingBeamer.cpp",
+      "line": 91,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "src/Game/Enemy/RingBeamer.cpp",
+      "line": 125,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "src/Game/Enemy/RingBeamer.cpp",
+      "line": 140,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "src/Game/Enemy/RingBeamer.cpp",
+      "line": 146,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "src/Game/MapObj/CoinRotater.cpp",
+      "line": 11,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "src/Game/Screen/GalaxyInfoLayoutSetter.cpp",
+      "line": 154,
+      "same_line_present_in_upstream": true
+    },
+    {
+      "path": "src/Game/Screen/GalaxyInfoLayoutSetter.cpp",
+      "line": 214,
+      "same_line_present_in_upstream": true
+    }
+  ]
+}

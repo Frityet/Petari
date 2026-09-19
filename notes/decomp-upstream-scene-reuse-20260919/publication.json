@@ -1,0 +1,12 @@
+{
+  "decomp_merge": "ce9b333a05d42e4e2ecf2ccb050ce21ea4d04e3b",
+  "parents": [
+    "3c8ca69ba1d0c8367f983e30ce6182799a9694a3",
+    "7663bd3be278c7dfaaccd9df729b3b9cf61acf27"
+  ],
+  "remote": "origin",
+  "branch": "pcp-decomp",
+  "remote_sha_verified": true,
+  "incoming_commits": 274,
+  "aurora_published": "edffbd164d373e48de30d4be9997d952cdea7800"
+}

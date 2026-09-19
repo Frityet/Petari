@@ -1,0 +1,343 @@
+[
+  {
+    "path": "src/Game/Player/Mario.cpp",
+    "decision": "Upstream unit plus complete local recovered methods; avoids mixing renamed locals or reordered arithmetic inside a method.",
+    "local_methods_retained": [
+      "Mario::checkForceGrounding",
+      "Mario::fixHeadFrontVecByGravity",
+      "Mario::createDirectionMtx",
+      "Mario::createCorrectionMtx",
+      "Mario::inputStick",
+      "Mario::postureCtrl",
+      "Mario::createAngleMtx",
+      "Mario::getGravityVec"
+    ],
+    "stage2_sha256": "6ae11727799d4b775b073776805bc7d1d68e4fa4ba8b495fea8b7543a3984064",
+    "stage3_sha256": "52d36753093735188514f159b0255fa76f87618f7d44c7f054802bb0b5afbf2d",
+    "merged_sha256": "3befa3fad79c77ed9d0eb88da923bcb1b027d5c23a6b8df9ba08038d5bce0679"
+  },
+  {
+    "path": "src/Game/Player/MarioActor.cpp",
+    "decision": "Upstream unit plus complete local recovered methods; avoids mixing renamed locals or reordered arithmetic inside a method.",
+    "local_methods_retained": [
+      "MarioActor::calcAndSetBaseMtx"
+    ],
+    "stage2_sha256": "ca600322bb1507727f1d6f431065abf8765ff30f6763870cbdc314304837cd8c",
+    "stage3_sha256": "1b3e2f71077b89d3b9191bb44beda015597f5e94ec202d93e83f0b77ee6fb286",
+    "merged_sha256": "50a5e79564a8defd5275de31a941c2ce9dd6317bc4db144937d437eafdaeee3c"
+  },
+  {
+    "path": "src/Game/Player/MarioActorOffensiveMsg.cpp",
+    "decision": "Upstream unit plus complete local recovered methods; avoids mixing renamed locals or reordered arithmetic inside a method.",
+    "local_methods_retained": [
+      "MarioActor::attackOrPushSensor",
+      "MarioActor::checkAndTryTrampleAttack",
+      "MarioActor::tryGetItem",
+      "MarioActor::cylinderPushCheck"
+    ],
+    "stage2_sha256": "d0df011da86f221db7cd5cdd2790a3a5a6c977c90c024e4ac8903cad5f30793b",
+    "stage3_sha256": "62e254d919de1a05aebeb811a93b4058d3d21144eee3c01d3b0cc434f8a956ce",
+    "merged_sha256": "df06ef7624f8d4e58cb50ca405a33838e248c07f0d076ddae6b683b110552438"
+  },
+  {
+    "path": "src/Game/Player/MarioActorRush.cpp",
+    "decision": "Upstream unit plus complete local recovered methods; avoids mixing renamed locals or reordered arithmetic inside a method.",
+    "local_methods_retained": [
+      "MarioActor::beginRush",
+      "MarioActor::endRush"
+    ],
+    "stage2_sha256": "4354243c6f90d7b4537cbf304515113bb24a2f4a45f53412ddc695f98a053178",
+    "stage3_sha256": "2ffe33ac716fe3aa3a70ec85dbf50fe425964632ba048849c8041bda2c387657",
+    "merged_sha256": "002329684af208d022fd51517adf52f5f1a61268d471f7601d96849a04d13093"
+  },
+  {
+    "path": "src/Game/Player/MarioActorSpecialDraw.cpp",
+    "decision": "Upstream unit plus complete local recovered methods; avoids mixing renamed locals or reordered arithmetic inside a method.",
+    "local_methods_retained": [
+      "MarioActor::calcSpinEffect",
+      "MarioActor::drawSpinEffect"
+    ],
+    "stage2_sha256": "f7890a270757dceec83de2545216c12e8ee11734423a80497d123110ab7f9e2f",
+    "stage3_sha256": "bf37323fbb675ace35cb5daef0d67a46a6ab731d6d584a38a1e08712325196e7",
+    "merged_sha256": "15c81c13fe4de1bccd05c7a32ab34b5b2fbb6cbb4c17f728c6e37750ad564664"
+  },
+  {
+    "path": "src/Game/Player/MarioAnimator.cpp",
+    "decision": "Upstream unit plus complete local recovered methods; avoids mixing renamed locals or reordered arithmetic inside a method.",
+    "local_methods_retained": [
+      "MarioAnimator::update"
+    ],
+    "stage2_sha256": "b1a77698014725d79f587a6ca28c60c34932f43b5d5a0da845dc952ec934c954",
+    "stage3_sha256": "821dc313ab6a686a82612e08a59220ff2cdd2944b526ca8aa47522295e45e56c",
+    "merged_sha256": "bc1a420b04532f47fbe4d12a519bd76b705353e7db962b0009ef965354c92aa4"
+  },
+  {
+    "path": "src/Game/Player/MarioDamage.cpp",
+    "decision": "Upstream unit plus complete local recovered methods; avoids mixing renamed locals or reordered arithmetic inside a method.",
+    "local_methods_retained": [
+      "MarioFireRun::update"
+    ],
+    "stage2_sha256": "b5b77874b56ab5b9cf3626563194641b1594b836d592206d07e4ded598641af9",
+    "stage3_sha256": "25a3f2ac708f0d35d4111ecb7c7e0a53deffb7892e18c00a5f23151d34643216",
+    "merged_sha256": "63405a894faf6f88e6f916511e1adcc284d368096e9b74d291cb7bddc2736d1e"
+  },
+  {
+    "path": "src/Game/Player/MarioWarp.cpp",
+    "decision": "Upstream unit plus complete local recovered methods; avoids mixing renamed locals or reordered arithmetic inside a method.",
+    "local_methods_retained": [
+      "MarioWarp::updateJump",
+      "MarioWarp::start",
+      "MarioWarp::update",
+      "MarioWarp::close"
+    ],
+    "stage2_sha256": "05b3b58dfeebd9a35377e5d2547d691510499841e9147c306e3a0b98ad31f2df",
+    "stage3_sha256": "1ea6ea39692ec7b16f36eef0aeca59c91975329ab1094c2c2c59900828e3a8cf",
+    "merged_sha256": "3c68346a905297124dd31c164bb7aab72031d6f21a9843fad6f06c32f118425d"
+  },
+  {
+    "path": "src/Game/Player/MarioActorRushMsg.cpp",
+    "decision": "Both sides implement the same target selection/rebind gates; upstream uses coherent helper and parameter names.",
+    "local_methods_retained": [],
+    "stage2_sha256": "4d6424b1f06f74dbd248182b6eddeaeb04a0f40b71006702b6fcc950961ee553",
+    "stage3_sha256": "2fafc8b1eb2f5f0bfb769b76f892d1d63a78a303ecfa0038bb8cae4cf4205466",
+    "merged_sha256": "2fafc8b1eb2f5f0bfb769b76f892d1d63a78a303ecfa0038bb8cae4cf4205466"
+  },
+  {
+    "path": "src/Game/Player/MarioBlown.cpp",
+    "decision": "Preserve full close behavior at upstream position; remove duplicate MarioActor INIT_NERVE definitions from this unrelated unit.",
+    "local_methods_retained": [],
+    "stage2_sha256": "2df5fec90d5f2a7edf5d1c9b3b1ba0198d4353796119bb3655ac877e8819f229",
+    "stage3_sha256": "a9d1813b50d5e549e195fce9bb7481157ec5157aa9551b7ee801c3d3e0a36cc6",
+    "merged_sha256": "a9d1813b50d5e549e195fce9bb7481157ec5157aa9551b7ee801c3d3e0a36cc6"
+  },
+  {
+    "path": "src/Game/Player/MarioDamageParalyze.cpp",
+    "decision": "Preserve full close behavior at upstream position; remove duplicate MarioActor INIT_NERVE definitions from this unrelated unit.",
+    "local_methods_retained": [],
+    "stage2_sha256": "5ca73156f42207bb8eb8cd240911a2d7feea8249996acda7b203d89882e2885a",
+    "stage3_sha256": "dae33cde66d4bb3dcb597c3c382e68db640512dcba133e700248a438df83bfaa",
+    "merged_sha256": "dae33cde66d4bb3dcb597c3c382e68db640512dcba133e700248a438df83bfaa"
+  },
+  {
+    "path": "src/Game/Player/MarioEffect.cpp",
+    "decision": "Upstream retains smoke table and all recovered methods, names effect bitfields, and relies on merged MovingFollowMtx and Color8 initialization.",
+    "local_methods_retained": [],
+    "stage2_sha256": "b9df5d3a3e9ffe8c45a5da92ac6ea50501dc274532a0ed38a622e874ad302a4e",
+    "stage3_sha256": "53bfba39207f84f37431411b68c6ccef831c368a39d76fe0690000f191803d66",
+    "merged_sha256": "53bfba39207f84f37431411b68c6ccef831c368a39d76fe0690000f191803d66"
+  },
+  {
+    "path": "src/Game/Player/MarioSwim.cpp",
+    "decision": "Retain upstream implementation and water-area naming; local getBlurOffset is now the same inline body in merged MarioSwim.hpp.",
+    "local_methods_retained": [],
+    "stage2_sha256": "69ce21a2f45f1ec29f1f75a8f06dd71573206c6bc88ab72aa49e696a6ac60ba0",
+    "stage3_sha256": "f3110179f0440f347249d4abcfdf8980fc1cd7649e586bee3e4dfead354902aa",
+    "merged_sha256": "f3110179f0440f347249d4abcfdf8980fc1cd7649e586bee3e4dfead354902aa"
+  },
+  {
+    "path": "src/Game/Player/MarioTeresa.cpp",
+    "decision": "Both sides have complete behavior; upstream retains bodies and merged header owns the local constant keep/notice virtual methods inline.",
+    "local_methods_retained": [],
+    "stage2_sha256": "336b79a90a2fe9706354804ee87e42bf7621f1336be1a1dacf1639de755fdcb5",
+    "stage3_sha256": "d8d128e208b88ea8b05fab69eda035cb58df1365d0e6a8e0442bd3552cf56cb5",
+    "merged_sha256": "d8d128e208b88ea8b05fab69eda035cb58df1365d0e6a8e0442bd3552cf56cb5"
+  },
+  {
+    "path": "src/Game/Player/MarioWait.cpp",
+    "decision": "Equivalent timing/weight behavior with upstream named actor predicate and constructor stores.",
+    "local_methods_retained": [],
+    "stage2_sha256": "2c1a28ed60f569533efe9bf44e6ce3c995f5a64ef684a403703f153c121010a2",
+    "stage3_sha256": "ac7486e48e7647f13c279cf6a8d0d8bf0914cfb1eafd861d0cd4571323d96991",
+    "merged_sha256": "ac7486e48e7647f13c279cf6a8d0d8bf0914cfb1eafd861d0cd4571323d96991"
+  },
+  {
+    "path": "src/Game/Player/MatrixControl.cpp",
+    "decision": "Equivalent hash, packed-nibble and bit queries with upstream index types and coherent constructor names.",
+    "local_methods_retained": [],
+    "stage2_sha256": "14b3ab9d4a7bd65edd5b56c5e2af8780921b9441fa18bed64c3bb3d71775c720",
+    "stage3_sha256": "e8103844f2c098e6d8ebb5801755056cedefc09c97744df1a0aea31149237183",
+    "merged_sha256": "e8103844f2c098e6d8ebb5801755056cedefc09c97744df1a0aea31149237183"
+  },
+  {
+    "path": "src/Game/Player/MarioRabbit.cpp",
+    "decision": "Preserve all local recovered Rabbit bodies and notice; auto-merged header retains their descriptive fields, whereas upstream CPP still uses anonymous offsets. No upstream-only behavior methods exist.",
+    "local_methods_retained": [],
+    "stage2_sha256": "430535d47012ff4fdc60f28377b1201fc7fa841e3a62b2780db0c429f2b38bd3",
+    "stage3_sha256": "db75c76af1e845f87d0773b47a076f3ffc7772bfe361a4b5f44bc5b197fa6458",
+    "merged_sha256": "430535d47012ff4fdc60f28377b1201fc7fa841e3a62b2780db0c429f2b38bd3"
+  },
+  {
+    "path": "include/Game/Screen/CustomTagProcessor.hpp",
+    "decision": "Adopt upstream descriptive alpha/tag fields, inherited context type, and matching function table declaration.",
+    "local_methods_retained": [],
+    "stage2_sha256": "ca06cfb7a173c91b0ff5dfcfc79a13f54ee2bbb0d0207fbfdacf7864cb340e40",
+    "stage3_sha256": "d18efcaf03c292581d05404edfcffb15cdee6a9f15d957e40cea62e2f3ab9dd5",
+    "merged_sha256": "d18efcaf03c292581d05404edfcffb15cdee6a9f15d957e40cea62e2f3ab9dd5"
+  },
+  {
+    "path": "src/Game/Screen/CustomTagProcessor.cpp",
+    "decision": "Adopt upstream complete tag/text writer implementation, matching its descriptive fields and existing recovered behavior coverage.",
+    "local_methods_retained": [],
+    "stage2_sha256": "558e01b222be26a820d33731eed7c0e8205e5a6abcba1da727e41bccb28312ad",
+    "stage3_sha256": "932fa022afa4d83f0e437d6aad48aef6ffc251cc6de1c6ad1b36f720123a1f9b",
+    "merged_sha256": "932fa022afa4d83f0e437d6aad48aef6ffc251cc6de1c6ad1b36f720123a1f9b"
+  },
+  {
+    "path": "include/Game/Screen/ReplaceTagProcessor.hpp",
+    "decision": "Adopt namespace-private dispatch implementation and upstream bounded variadic wrapper declaration.",
+    "local_methods_retained": [],
+    "stage2_sha256": "da5fb3445c6b4027ffad08290c3c743fdd682a14d701b0b761182c456743987a",
+    "stage3_sha256": "39a59ca667ef3401a558553269478f35e1f63d63e9ced9fcdf3e5c6d118b6a8f",
+    "merged_sha256": "39a59ca667ef3401a558553269478f35e1f63d63e9ced9fcdf3e5c6d118b6a8f"
+  },
+  {
+    "path": "src/Game/Screen/ReplaceTagProcessor.cpp",
+    "decision": "Adopt upstream same tag replacement behavior and added ReplaceTagFunction wrapper; dispatch structs remain implementation-private.",
+    "local_methods_retained": [],
+    "stage2_sha256": "170134d26b485d82fc0e642901d51d3e0f4006b1acde58f78cb5d1fec9d0c9fa",
+    "stage3_sha256": "4d19f881f3427a4314c0f6a9c46d51aa8b11544aaf9aa574f1643a34d021b62c",
+    "merged_sha256": "4d19f881f3427a4314c0f6a9c46d51aa8b11544aaf9aa574f1643a34d021b62c"
+  },
+  {
+    "path": "src/Game/Screen/LayoutCoreUtil.cpp",
+    "decision": "Use upstream mIsInfo spelling matching merged CustomTagProcessor.",
+    "local_methods_retained": [],
+    "stage2_sha256": "55acbcfa378c4eeeb07e067d1c786492539388933fcab04161c49b285f5c1fba",
+    "stage3_sha256": "664d1ab3421095bf15ebdd59e91512c6e8d29a49a3bf00860bbda0bbad17c872",
+    "merged_sha256": "664d1ab3421095bf15ebdd59e91512c6e8d29a49a3bf00860bbda0bbad17c872"
+  },
+  {
+    "path": "include/Game/Screen/LayoutGroupCtrl.hpp",
+    "decision": "Use upstream mManager spelling and retain getPane declaration.",
+    "local_methods_retained": [],
+    "stage2_sha256": "458a3df75eb444e20b283539ca11fafd00f8dd01496e604b390a309dd44b544c",
+    "stage3_sha256": "ac03d827a825335a643c94f49657a453c9d6063cde2d88ea5ca29e1d5b8b2584",
+    "merged_sha256": "ac03d827a825335a643c94f49657a453c9d6063cde2d88ea5ca29e1d5b8b2584"
+  },
+  {
+    "path": "src/Game/Screen/PauseMenu.cpp",
+    "decision": "Equivalent original pause gates with upstream helper locals, explicit default SE arguments and GET_NERVE spelling.",
+    "local_methods_retained": [],
+    "stage2_sha256": "48a23d98bbe713d2a7e1c47416d783c583612a83fc5fbd6ae66572bdfe1b5b03",
+    "stage3_sha256": "9ef7944b1cb08e1b8395ff4d0a567933747790af08c3263e5d3529eeb278dff6",
+    "merged_sha256": "9ef7944b1cb08e1b8395ff4d0a567933747790af08c3263e5d3529eeb278dff6"
+  },
+  {
+    "path": "include/Game/Screen/MessageTagSkipTagProcessor.hpp",
+    "decision": "Retain dedicated recovered MessageEditorMessageTag header and NO_INLINE skipTag; avoid a duplicate class from upstream.",
+    "local_methods_retained": [],
+    "stage2_sha256": "aac1a63c7f4faf0803a2cfadab4ca40e8fb8751b0fd32dd3b3e0cde8356ff13c",
+    "stage3_sha256": "2c73ad086a0857fdd2e5623611fa72f68c1255a61134d512da095c5f093c19c2",
+    "merged_sha256": "aac1a63c7f4faf0803a2cfadab4ca40e8fb8751b0fd32dd3b3e0cde8356ff13c"
+  },
+  {
+    "path": "src/Game/Screen/LayoutGroupCtrl.cpp",
+    "decision": "Upstream constructor/member naming plus local original getPane iteration omitted upstream.",
+    "local_methods_retained": [
+      "LayoutGroupCtrl::getPane"
+    ],
+    "stage2_sha256": "2051be76e8cd86920cbaf45be57a537c5af3d58644ea2ade32fe2536e5fa3346",
+    "stage3_sha256": "01eaa47dda2dc4d778c3753c63bea639858880bf762f3e4963cef810cbcd9370",
+    "merged_sha256": "a31d87b4a39f540f9099f5696f062eb18b07f3e556bc363aa9604ab341ecff1e"
+  },
+  {
+    "path": "include/Game/Screen/LayoutManager.hpp",
+    "decision": "Combine upstream manager owner fields/inlines with local typed pane metadata and precise subtree-count meaning.",
+    "local_methods_retained": [],
+    "stage2_sha256": "2d4769bb508d6fef6b524cd5c7784256f707fd6ef8f1ef4f3d43b972909c3af4",
+    "stage3_sha256": "aae1c10d23700f542cb8a25731af0ab3cb952ac60034873560e34fa2a5f34f33",
+    "merged_sha256": "42663985b15bdb196e54e32b4a23cc9ac56f16227c3bc4bfcc62dfda63167159"
+  },
+  {
+    "path": "src/Game/Screen/LayoutManager.cpp",
+    "decision": "Union upstream constructor/archive/draw/pane/group/indirect texture owners with local recovered animation binding and nonempty locale pruning.",
+    "local_methods_retained": [
+      "LayoutManager::getAnimTransform",
+      "LayoutManager::bindPaneCtrlAnim",
+      "LayoutManager::bindPaneCtrlAnimSub",
+      "LayoutManager::unbindPaneCtrlAnim",
+      "LayoutManager::unbindPaneCtrlAnimSub",
+      "LayoutManager::removeUnnecessaryPanes"
+    ],
+    "stage2_sha256": "62dd83db268bc1b462e450c324e569a4271cf2e109de1d628b1fdb1183cefbf6",
+    "stage3_sha256": "0580c4d1c3be0dd4a19f9fd9b6e2871b34da55a58b61aea999c58ac13c65cb63",
+    "merged_sha256": "dc08367ab09541570370ee8ba005f60f52b07db646f4c67e8792527f84c90fb1"
+  },
+  {
+    "path": "src/Game/System/AudSystemWrapper.cpp",
+    "decision": "Use coherent upstream stopThreads argument and renamed wrapper members; full local function coverage retained.",
+    "local_methods_retained": [],
+    "stage2_sha256": "08efecf1464429ba1dd783dfe5068d7b7148d0bb55341670add8df20a1d0404a",
+    "stage3_sha256": "71777ee8fbb23039094bbe8fd154739027dcc7e067b8b569a3109c1312f0c642",
+    "merged_sha256": "71777ee8fbb23039094bbe8fd154739027dcc7e067b8b569a3109c1312f0c642"
+  },
+  {
+    "path": "src/Game/System/GameSequenceProgress.cpp",
+    "decision": "Retain full galaxy-move sequence using merged descriptive fields and upstream isCometStar helper.",
+    "local_methods_retained": [],
+    "stage2_sha256": "dafc15ab29f4b7259597e8e8574f5ddb16a99d7b658c05b0119f47a6b0749c8c",
+    "stage3_sha256": "87d3ac328f4b06a712d3076cc0f62b3d066f787a428d537b9c924ad98d90540a",
+    "merged_sha256": "87d3ac328f4b06a712d3076cc0f62b3d066f787a428d537b9c924ad98d90540a"
+  },
+  {
+    "path": "include/Game/System/LayoutHolder.hpp",
+    "decision": "Use actual JKRArcFinder return contract and upstream inline definitions for all local getResOther accessors.",
+    "local_methods_retained": [],
+    "stage2_sha256": "cc70a63f471f9d9e1123debb59584f968d9c7796782f5cde29f4ce9e222bf232",
+    "stage3_sha256": "347b9d90edade02047bee984b048c4ce59e0a796e650ccce1d4292e1f45303f9",
+    "merged_sha256": "347b9d90edade02047bee984b048c4ce59e0a796e650ccce1d4292e1f45303f9"
+  },
+  {
+    "path": "src/Game/System/LayoutHolder.cpp",
+    "decision": "Use JKRArcFinder contract and inline-header accessor ownership; preserve original font/resource lookup and recursive archive walking.",
+    "local_methods_retained": [],
+    "stage2_sha256": "440a462e4693bb0984802efa710d29a70cca183febf69c2d4864f02efcd3b8b6",
+    "stage3_sha256": "f6b41a0b22b77a2badd381693fa95f6aed7183f4823e9cfd0ab3b12112277fb5",
+    "merged_sha256": "f6b41a0b22b77a2badd381693fa95f6aed7183f4823e9cfd0ab3b12112277fb5"
+  },
+  {
+    "path": "src/Game/System/SaveDataFileAccessor.cpp",
+    "decision": "Equivalent offset/size/kind extraction with upstream signed loop and early continue; no bounds policy added.",
+    "local_methods_retained": [],
+    "stage2_sha256": "1a9116bd47d550004f229244a82a93bb73f3570a0a6ed547900ff83a76589af7",
+    "stage3_sha256": "b55bbdd8dd33e7c4b39a56071193497cf7bae1cbb79dc5c0faa6b3accae9100a",
+    "merged_sha256": "b55bbdd8dd33e7c4b39a56071193497cf7bae1cbb79dc5c0faa6b3accae9100a"
+  },
+  {
+    "path": "include/Game/System/WPadHVSwing.hpp",
+    "decision": "Adopt descriptive channel, threshold, latch, hold and cooldown names.",
+    "local_methods_retained": [],
+    "stage2_sha256": "30f5203bf6eef94ab9d8382bd4e7dbcea6dd0c180ec64e67ebdedf1435cbcac0",
+    "stage3_sha256": "7a639e6327cdd60bd3326a38bdb30e7017ec8fb5fe7e7544fd17f68e747cae6e",
+    "merged_sha256": "7a639e6327cdd60bd3326a38bdb30e7017ec8fb5fe7e7544fd17f68e747cae6e"
+  },
+  {
+    "path": "src/Game/System/WPadHVSwing.cpp",
+    "decision": "Keep original local complete member initialization while adopting upstream descriptive names; reject upstream pPad=pPad self-assignment bug.",
+    "local_methods_retained": [
+      "WPadHVSwing::WPadHVSwing"
+    ],
+    "stage2_sha256": "41e2bf5d5a3bc5f4f692e7cbd3d54ce15347b686d1f40145bd12faa41a2b887a",
+    "stage3_sha256": "9864fb7975942b240d64e69bf79e4c6899df0347e0bba3f04444bb1521caecbe",
+    "merged_sha256": "b82ee27afbdb3d0e3090cdff518d98e6df7bb87bf7f0f59b01a74c5b474c8e15"
+  },
+  {
+    "path": "src/Game/System/Overwrite.cpp",
+    "decision": "Keep local recovered JKRAram constructor and JKRAramPiece DMA override absent upstream; common audio-thread/exception-pad methods are equivalent.",
+    "local_methods_retained": [],
+    "stage2_sha256": "3e80877a753014b5e1e887862baa87359850d4107404e56fe35fb4960cf5fc16",
+    "stage3_sha256": "4314da361e6c6e2a65aa4489eb4273ec4edde904540a2e6ccabbbc4d69b176e9",
+    "merged_sha256": "3e80877a753014b5e1e887862baa87359850d4107404e56fe35fb4960cf5fc16"
+  },
+  {
+    "path": "src/Game/System/ResourceHolderManager.cpp",
+    "decision": "Retain explicit recovered member-function functors for main-thread dispatch, with upstream surrounding owner code.",
+    "local_methods_retained": [
+      "ResourceHolderManager::startCreateResourceHolderOnMainThread",
+      "ResourceHolderManager::startCreateLayoutHolderOnMainThread"
+    ],
+    "stage2_sha256": "7ea90fe7b104c4bd51def9705db96041ac61acba6b7d8d30e595dc7d09efe6fd",
+    "stage3_sha256": "2168c987c0036108a4b85bcd7151c7b686c1fafc2d2f02f9e79b5699f9520ce9",
+    "merged_sha256": "c7cfc69d99114ed249105c3087a4050746ba9a1f8f33aa7976b2a1f3aeee0c5d"
+  }
+]

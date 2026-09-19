@@ -1,0 +1,16 @@
+0 src/Game/Util/FurCtrl.cpp
+1 src/Game/Util/FurDrawer.cpp
+1 src/Game/Util/FurMulti.cpp
+0 src/Game/Util/FurShader.cpp
+1 src/Game/Util/AreaObjUtil.cpp
+1 src/Game/Util/DirectDraw.cpp
+1 src/Game/Util/MapPartsUtil.cpp
+1 src/Game/Util/JointController.cpp
+1 src/Game/Util/SceneUtil.cpp
+1 src/Game/Util/StringUtil.cpp
+0 src/Game/Util/TalkUtil.cpp
+2 src/Game/Util/LayoutUtil.cpp
+1 src/Game/Util/LiveActorUtil.cpp
+1 src/Game/Util/MapUtil.cpp
+1 src/Game/Util/ObjUtil.cpp
+PASS 3 TOTAL 15

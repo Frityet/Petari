@@ -1,0 +1,106 @@
+configure.py:3113: trailing whitespace.
++                Matching, 
+include/Game/Enemy/KirairaChain.hpp:4: trailing whitespace.
++#include <JSystem/JGeometry/TMatrix.hpp>
+include/Game/Enemy/KirairaChain.hpp:5: trailing whitespace.
++
+include/Game/Enemy/KirairaChain.hpp:6: trailing whitespace.
++class ModelObj;
+include/Game/Enemy/KirairaChain.hpp:7: trailing whitespace.
++class SimpleJ3DModelDrawer;
+include/Game/Enemy/KirairaChain.hpp:8: trailing whitespace.
++class SwingRopePoint;
+include/Game/Enemy/KirairaChain.hpp:19: trailing whitespace.
++    void initPoints();
+include/Game/Enemy/KirairaChain.hpp:20: trailing whitespace.
++    void updatePoints();
+include/Game/Enemy/KirairaChain.hpp:21: trailing whitespace.
++    void restrictPointFromTop(s32, s32, const TVec3f&, f32);
+include/Game/Enemy/KirairaChain.hpp:22: trailing whitespace.
++    void restrictPointFromBottom(s32, s32, const TVec3f&, f32);
+include/Game/Enemy/KirairaChain.hpp:23: trailing whitespace.
++    void restrictPointFromTopAndCalcAxis(s32, s32, const TVec3f&, f32);
+include/Game/Enemy/KirairaChain.hpp:24: trailing whitespace.
++    void restrictPointFromBottomAndCalcAxis(s32, s32, const TVec3f&, f32);
+include/Game/Enemy/KirairaChain.hpp:25: trailing whitespace.
++
+include/Game/Enemy/KirairaChain.hpp:26: trailing whitespace.
++    /* 0x8C */ const LiveActor* mHost;
+include/Game/Enemy/KirairaChain.hpp:27: trailing whitespace.
++    /* 0x90 */ bool mIsCut;
+include/Game/Enemy/KirairaChain.hpp:28: trailing whitespace.
++    /* 0x94 */ TVec3f mCutPos;
+include/Game/Enemy/KirairaChain.hpp:29: trailing whitespace.
++    /* 0xA0 */ TVec3f mRailStart;
+include/Game/Enemy/KirairaChain.hpp:30: trailing whitespace.
++    /* 0xAC */ TVec3f mRailEnd;
+include/Game/Enemy/KirairaChain.hpp:31: trailing whitespace.
++    /* 0xB8 */ TPos3f mFixPointBottomMtx;
+include/Game/Enemy/KirairaChain.hpp:32: trailing whitespace.
++    /* 0xE8 */ TPos3f mFixPointTopMtx;
+include/Game/Enemy/KirairaChain.hpp:33: trailing whitespace.
++    /* 0x118 */ TVec3f mFixPointTopDir;
+include/Game/Enemy/KirairaChain.hpp:34: trailing whitespace.
++    /* 0x124 */ TVec3f mFixPointBottomDir;
+include/Game/Enemy/KirairaChain.hpp:35: trailing whitespace.
++    /* 0x130 */ s32 mPointCount;
+include/Game/Enemy/KirairaChain.hpp:36: trailing whitespace.
++    /* 0x134 */ SwingRopePoint** mPoints;
+include/Game/Enemy/KirairaChain.hpp:37: trailing whitespace.
++    /* 0x138 */ s32 _138;
+include/Game/Enemy/KirairaChain.hpp:38: trailing whitespace.
++    /* 0x13C */ u8 _13C[4];
+include/Game/Enemy/KirairaChain.hpp:39: trailing whitespace.
++    /* 0x140 */ s32 mAccelPointIdx;
+include/Game/Enemy/KirairaChain.hpp:40: trailing whitespace.
++    /* 0x144 */ s32 mAccelTimer;
+include/Game/Enemy/KirairaChain.hpp:41: trailing whitespace.
++    /* 0x148 */ TVec3f mAccel;
+include/Game/Enemy/KirairaChain.hpp:42: trailing whitespace.
++    /* 0x154 */ TVec3f mClippingCenter;
+include/Game/Enemy/KirairaChain.hpp:43: trailing whitespace.
++    /* 0x160 */ SimpleJ3DModelDrawer* mModelDrawer;
+include/Game/Enemy/KirairaChain.hpp:44: trailing whitespace.
++    /* 0x164 */ ModelObj* mFixPointTop;
+include/Game/Enemy/KirairaChain.hpp:45: trailing whitespace.
++    /* 0x168 */ ModelObj* mFixPointBottom;
+include/Game/MapObj/SpinDriver.hpp:57: trailing whitespace.
++    /* 0x090 */ SpinDriverShootPath* mShootPath;      
+include/Game/MapObj/SpinDriver.hpp:58: trailing whitespace.
++    /* 0x094 */ SpinDriverCamera* mSpinDriverCamera; 
+src/Game/Boss/SkeletalFishJointCalc.cpp:8: trailing whitespace.
++    
+src/Game/Enemy/FireBall.cpp:50: trailing whitespace.
++    
+src/Game/Enemy/FireBall.cpp:52: trailing whitespace.
++    
+src/Game/Enemy/FireBall.cpp:54: trailing whitespace.
++    
+src/Game/Enemy/Onimasu.cpp:83: trailing whitespace.
++    
+src/Game/Enemy/OnimasuJump.cpp:19: trailing whitespace.
++    
+src/Game/Enemy/RingBeam.cpp:185: trailing whitespace.
++    initNerve(GET_NERVE(RingBeam, RingBeamNrvSpread));
+src/Game/Enemy/RingBeam.cpp:213: trailing whitespace.
++    setNerve(GET_NERVE(RingBeam, RingBeamNrvSpread));
+src/Game/Enemy/RingBeamer.cpp:40: trailing whitespace.
++    initNerve(GET_NERVE(RingBeamer, RingBeamerNrvWait));
+src/Game/Enemy/RingBeamer.cpp:44: trailing whitespace.
++        MR::listenStageSwitchOffB(this, MR::Functor(this, &RingBeamer::syncSwitchOffB));
+src/Game/Enemy/RingBeamer.cpp:68: trailing whitespace.
++    setNerve(GET_NERVE(RingBeamer, RingBeamerNrvInter));
+src/Game/Enemy/RingBeamer.cpp:91: trailing whitespace.
++        setNerve(GET_NERVE(RingBeamer, RingBeamerNrvInter));
+src/Game/Enemy/RingBeamer.cpp:125: trailing whitespace.
++        setNerve(GET_NERVE(RingBeamer, RingBeamerNrvWait));
+src/Game/Enemy/RingBeamer.cpp:140: trailing whitespace.
++        setNerve(GET_NERVE(RingBeamer, RingBeamerNrvAttack));
+src/Game/Enemy/RingBeamer.cpp:146: trailing whitespace.
++        setNerve(GET_NERVE(RingBeamer, RingBeamerNrvInter));
+src/Game/MapObj/CoinRotater.cpp:11: trailing whitespace.
++    
+src/Game/Screen/GalaxyInfoLayoutSetter.cpp:154: trailing whitespace.
++    
+src/Game/Screen/GalaxyInfoLayoutSetter.cpp:214: trailing whitespace.
++    

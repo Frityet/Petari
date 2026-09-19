@@ -1,0 +1,8 @@
+{
+  "source_sha256": "f7f0b27154424610be2ce8b66b468a176983f7f98e55355ed597dfe55a269704",
+  "proposed_sha256": "4a5a7d45d764097dc12a6162881079fef897aa7b775f46be59cbd15dec1eea62",
+  "patch_sha256": "5da0a8b15049512d9e25e7e1dfdb3fda910d0e0c1930e792a9674e146efe69e1",
+  "git_apply_check_exit": 0,
+  "applied": false,
+  "changes": 3
+}

@@ -1,0 +1,269 @@
+{
+  "files": [
+    {
+      "path": "include/Game/Demo/DemoExecutor.hpp",
+      "decision": "Integrate upstream names/signatures while preserving nonconflicting local declarations.",
+      "ours_sha256": "c1c1b33bc15e4dd85f612d4041b4b4db0365e1e8757c0a4e42741c09514628c2",
+      "upstream_sha256": "2af1a1704aeedb1f15f018981aa87d87844cc637ec5beacb94277f14d8aeac7c",
+      "resolved_sha256": "2af1a1704aeedb1f15f018981aa87d87844cc637ec5beacb94277f14d8aeac7c"
+    },
+    {
+      "path": "include/Game/Demo/DemoSoundKeeper.hpp",
+      "decision": "Preserve retail raw leading-byte value (u8), not bool; other declarations merged.",
+      "ours_sha256": "75b0653de9467272ef8e5e890d133937becc654c21ed872a66259f33de12eedf",
+      "upstream_sha256": "a714eead0bcca71b4ab510f6816064c111516cee32c857fa7e4c4f85b7261dae",
+      "resolved_sha256": "bf35f1b523cb7e02ee67ae33fa55f03dc53165e560760bba0be8674d500f8c51"
+    },
+    {
+      "path": "include/Game/Demo/DemoStartRequestHolder.hpp",
+      "decision": "Integrate upstream names/signatures while preserving nonconflicting local declarations.",
+      "ours_sha256": "86388f89e39fc705aa2c48af0fd76cab77900d7a05a1d81d8cc83a008d320f7f",
+      "upstream_sha256": "c9523bcb98a1fae9b9e803447057341bdc27d703dc76845aeabaed58ed0a9d6d",
+      "resolved_sha256": "481ec1fd940f61490b14e35c566f0ab662cda94b50c4f233f46005bbf6707f06"
+    },
+    {
+      "path": "include/Game/Effect/AutoEffectGroup.hpp",
+      "decision": "Integrate upstream names/signatures while preserving nonconflicting local declarations.",
+      "ours_sha256": "77873297c3bb9f49aa5bda4fca91287cde4091038f84b214de2d528a125f9748",
+      "upstream_sha256": "632c29b25e3aef55971735630fa5f873d6d4c15c196a68dc1af942cfe83452ca",
+      "resolved_sha256": "632c29b25e3aef55971735630fa5f873d6d4c15c196a68dc1af942cfe83452ca"
+    },
+    {
+      "path": "include/Game/Effect/AutoEffectGroupHolder.hpp",
+      "decision": "Integrate upstream names/signatures while preserving nonconflicting local declarations.",
+      "ours_sha256": "79b4cea7563571a2d679bdf2197f61356c13aebe3221977100e612213591281d",
+      "upstream_sha256": "3e556fae7dc2cfc39a9f5e66a20451929246273ac9503327837aa66cc3e1b7c1",
+      "resolved_sha256": "3e556fae7dc2cfc39a9f5e66a20451929246273ac9503327837aa66cc3e1b7c1"
+    },
+    {
+      "path": "include/Game/Effect/ParticleCalcExecutor.hpp",
+      "decision": "Integrate upstream names/signatures while preserving nonconflicting local declarations.",
+      "ours_sha256": "3c78e9c644b6530e634b912f2629b7978356a465cc347380d536c4511f8a5dcc",
+      "upstream_sha256": "9f75551e0ace0942b35e7c48686116057d5a02472c254827ec4ecf562d4f52a6",
+      "resolved_sha256": "9f75551e0ace0942b35e7c48686116057d5a02472c254827ec4ecf562d4f52a6"
+    },
+    {
+      "path": "include/Game/Effect/SyncBckEffectInfo.hpp",
+      "decision": "Integrate upstream names/signatures while preserving nonconflicting local declarations.",
+      "ours_sha256": "fe3a0f7402a836092d3d1c9cd714174f7e1589e9fe95806469875fda15e1ec88",
+      "upstream_sha256": "152c6b1a8aeb3077751b51edd297ac75d714d5a740321bad75986589ee5a5005",
+      "resolved_sha256": "152c6b1a8aeb3077751b51edd297ac75d714d5a740321bad75986589ee5a5005"
+    },
+    {
+      "path": "include/Game/NPC/DemoRabbit.hpp",
+      "decision": "Upstream mAirTimer name with retail 0x168 offset correction and retained recovered destructor declaration.",
+      "ours_sha256": "c19da9e38146b772b0807713d0daf71da90ca7587d72c46bfd3129e8f7876f28",
+      "upstream_sha256": "11fff13140895887e51a2d1446276c111202ffbb8fec28ecb6c8f184bd846249",
+      "resolved_sha256": "c4576542dea0895cce7b86220a56066064987a1fc49502cb998af8e192724c65"
+    },
+    {
+      "path": "include/Game/NPC/NPCDirector.hpp",
+      "decision": "Integrate upstream names/signatures while preserving nonconflicting local declarations.",
+      "ours_sha256": "bb5b3c422e3b4f94a559f2b7b99595315455a9aa0178c81a88accdfe09e88762",
+      "upstream_sha256": "3996534230bba5ed37d651f9f7d4c0446e3312941232051ec436133227499128",
+      "resolved_sha256": "bb5b3c422e3b4f94a559f2b7b99595315455a9aa0178c81a88accdfe09e88762"
+    },
+    {
+      "path": "include/Game/Scene/PlacementInfoOrdered.hpp",
+      "decision": "Integrate upstream names/signatures while preserving nonconflicting local declarations.",
+      "ours_sha256": "5e46d99ae7f2bfbdebbe3cd73a7919673dcaf683e107723809d4de7e9f34e2f4",
+      "upstream_sha256": "ba24381b62ea1d5cdcb2745dae4a5b7451bfd7b9f055a8fb4e2545a45d9ca59d",
+      "resolved_sha256": "ba24381b62ea1d5cdcb2745dae4a5b7451bfd7b9f055a8fb4e2545a45d9ca59d"
+    },
+    {
+      "path": "include/Game/Scene/StageDataHolder.hpp",
+      "decision": "Integrate upstream names/signatures while preserving nonconflicting local declarations.",
+      "ours_sha256": "3c6e158e121d8b627a8b3490211307ce0dd038269eba28dd9c2073adc137563d",
+      "upstream_sha256": "e5832a72682ae9724e3beb30a005a74c3cd0f5738c5ee25cf9d1fdfd9c8609bf",
+      "resolved_sha256": "e5832a72682ae9724e3beb30a005a74c3cd0f5738c5ee25cf9d1fdfd9c8609bf"
+    },
+    {
+      "path": "src/Game/Demo/DemoExecutor.cpp",
+      "decision": "Conflict is whitespace or coordinated member rename; preserve already merged local functions.",
+      "ours_sha256": "9b75407c5059c8ae5d189e113b80ee1c8e7f3ce920bf1be9352d938c67cbe6a1",
+      "upstream_sha256": "f5b74946e6151f633b4cfb5c74d40be36dde8bab548476b13d2e66651e7fc98f",
+      "resolved_sha256": "f5b74946e6151f633b4cfb5c74d40be36dde8bab548476b13d2e66651e7fc98f"
+    },
+    {
+      "path": "src/Game/Demo/DemoSoundKeeper.cpp",
+      "decision": "Upstream addInfo and readable parser retained; restore verified portable big-endian leading-byte extraction and push_back emission.",
+      "ours_sha256": "5651adc0104a9915f2c8bb350ae6ca3a196f43b14849c48f33b416781eab52aa",
+      "upstream_sha256": "e0a72a59cb21d2b220fc3f284858e31e7f491e6519b0119a68be5ae1ba967829",
+      "resolved_sha256": "3b5d908e6c611c31089767b07b98be35b60c1e9e6f7999f7e10342c0d6fca38e"
+    },
+    {
+      "path": "src/Game/Demo/DemoStartRequestHolder.cpp",
+      "decision": "Conflict is whitespace or coordinated member rename; preserve already merged local functions.",
+      "ours_sha256": "15cf42245a694549319389b3b8f6d517039c39d595bddf278e986a2f1752cdaa",
+      "upstream_sha256": "b5666066e9f8c938adced69c29c6807ff169caeb667ece4b0477065ad8b61041",
+      "resolved_sha256": "b5666066e9f8c938adced69c29c6807ff169caeb667ece4b0477065ad8b61041"
+    },
+    {
+      "path": "src/Game/Demo/DemoStartRequestUtil.cpp",
+      "decision": "Reviewed complete upstream implementation retains all public local functions and integrates naming/helper/representation changes.",
+      "ours_sha256": "186d7a6b4cd5fe0b2d5471958e1ee795a96547bc56db218495984203f731e269",
+      "upstream_sha256": "fa0ee6b8881b2fdc1f47a6c9b7ded7c4c544e4f76970b7f07b4882980eb87537",
+      "resolved_sha256": "6cd45a63b50affc8e3b1cb9a82c3d19ec8f833a00d5b4dc1463198bb1deb73f1"
+    },
+    {
+      "path": "src/Game/Demo/DemoTimeKeeper.cpp",
+      "decision": "Reviewed complete upstream implementation retains all public local functions and integrates naming/helper/representation changes.",
+      "ours_sha256": "2795bf48a6d47350cdd1e8f5c9156498385d1818bf31a72e73dffdcb7328967d",
+      "upstream_sha256": "1a4e6ddc43c3cdbe716cf2dc93f01668033ce2bd64531132a0a566274b71a8c9",
+      "resolved_sha256": "1a4e6ddc43c3cdbe716cf2dc93f01668033ce2bd64531132a0a566274b71a8c9"
+    },
+    {
+      "path": "src/Game/Demo/DemoWipeKeeper.cpp",
+      "decision": "Upstream equivalent sheet parser and new addInfo retained with known original out-of-line push_back emission.",
+      "ours_sha256": "a6a25382add6fd85e19586fccbbe2c9073a60dcbbd947cee060e9099b02dfb56",
+      "upstream_sha256": "cc80a133945b39a108e8976b88ef44e6bd7c57f0eb3d63920cb70235625bbdbd",
+      "resolved_sha256": "696bc5947e826737c3a650746a7136246b67a7769f7dac439634a3aba499645a"
+    },
+    {
+      "path": "src/Game/Effect/AutoEffectGroup.cpp",
+      "decision": "Reviewed complete upstream implementation retains all public local functions and integrates naming/helper/representation changes.",
+      "ours_sha256": "20641858c7a008a5b81700c1d537def6275ced5a773bf6c29d992168fbc640a9",
+      "upstream_sha256": "ee507ff8826bed97f3f7506c0e57abcfc0a984b2d42c24bb2622cffafcc531b6",
+      "resolved_sha256": "ee507ff8826bed97f3f7506c0e57abcfc0a984b2d42c24bb2622cffafcc531b6"
+    },
+    {
+      "path": "src/Game/Effect/AutoEffectGroupHolder.cpp",
+      "decision": "Reviewed complete upstream implementation retains all public local functions and integrates naming/helper/representation changes.",
+      "ours_sha256": "b30eaa5d5c22af22c23537ae14673b0b6493db4f6c3ade189471e183308dbf41",
+      "upstream_sha256": "20fe03c791f7b30bebb86fa57a1abada95e18bd8522e4b6b661de467ac117af9",
+      "resolved_sha256": "20fe03c791f7b30bebb86fa57a1abada95e18bd8522e4b6b661de467ac117af9"
+    },
+    {
+      "path": "src/Game/Effect/AutoEffectInfo.cpp",
+      "decision": "Upstream flag/helper names and color channels retained; restore exact retail constructor final zero colors and untouched offset. Preserve standard strtoul declaration.",
+      "ours_sha256": "534ca3b92af4854ccf4862e53b94dc8f3418d8901e227e79425122a8f7f368d5",
+      "upstream_sha256": "05f90fc3cd6cdc5f78c4fe65c162112d56f7950178cb9caa3b72f5d1418dbacf",
+      "resolved_sha256": "d86bfdad736ba13270e854a54bc7756abf67cd23debd18d71aa81575f294453b"
+    },
+    {
+      "path": "src/Game/Effect/EffectSystemUtil.cpp",
+      "decision": "Reviewed complete upstream implementation retains all public local functions and integrates naming/helper/representation changes.",
+      "ours_sha256": "36b2dc5c8da588c80760ed78b9e37b62b86b79526bae0c4b8e5b6f3aabdd6bf9",
+      "upstream_sha256": "35af137d7d87f98414e53616aaae7d042cfd979ab9111bb89d1098dcb01784eb",
+      "resolved_sha256": "35af137d7d87f98414e53616aaae7d042cfd979ab9111bb89d1098dcb01784eb"
+    },
+    {
+      "path": "src/Game/Effect/ParticleCalcExecutor.cpp",
+      "decision": "Reviewed complete upstream implementation retains all public local functions and integrates naming/helper/representation changes.",
+      "ours_sha256": "4764ec5073a4c401866a237a493d99d68878e2599607c5bfca4cdce9f077a486",
+      "upstream_sha256": "4584a9307cd5f32dbc3ba7364ffb8dbd222b14726bbb833c2812062ddbc38a38",
+      "resolved_sha256": "4584a9307cd5f32dbc3ba7364ffb8dbd222b14726bbb833c2812062ddbc38a38"
+    },
+    {
+      "path": "src/Game/Effect/ParticleDrawExecutor.cpp",
+      "decision": "Retain complete local recovered particle draw implementation; upstream still contains only its include.",
+      "ours_sha256": "ab930a200255aeed18918b44ddfa79a1c2ca39ca38b05ce897e31f6b51a59fc1",
+      "upstream_sha256": "68bfa6c65215161ae12ced3bde58f3b5bce9b87deeffeabdee89a97bfe20e0af",
+      "resolved_sha256": "ab930a200255aeed18918b44ddfa79a1c2ca39ca38b05ce897e31f6b51a59fc1"
+    },
+    {
+      "path": "src/Game/Effect/SyncBckEffectChecker.cpp",
+      "decision": "Reviewed complete upstream implementation retains all public local functions and integrates naming/helper/representation changes.",
+      "ours_sha256": "c550ffd191d991349c94751e21b3c9ff28b134551f8f11d3b8e7b5ba1b6f3563",
+      "upstream_sha256": "94ce01044917e80d77d676e78f53a7b25c7dab00fa78093ce39a62e2f05c8295",
+      "resolved_sha256": "94ce01044917e80d77d676e78f53a7b25c7dab00fa78093ce39a62e2f05c8295"
+    },
+    {
+      "path": "src/Game/Effect/SyncBckEffectInfo.cpp",
+      "decision": "Reviewed complete upstream implementation retains all public local functions and integrates naming/helper/representation changes.",
+      "ours_sha256": "9a54ee00dce57c6769f67169da425fa75f83f4f4b8c9696afdf25c999814ef01",
+      "upstream_sha256": "f2c8c576269c6ed4d45330cebe6f0a0c63db04b99882086ef4dbcb896829dcf2",
+      "resolved_sha256": "f2c8c576269c6ed4d45330cebe6f0a0c63db04b99882086ef4dbcb896829dcf2"
+    },
+    {
+      "path": "src/Game/NPC/DemoRabbit.cpp",
+      "decision": "Upstream constants/quaternion helper plus three DOL-verified corrections (wall >=0, Goal Wait, rebound 0/0/1); retain local destructor.",
+      "ours_sha256": "cdb8e023b6655c6cd79950660df60dac76c91e574751238796e296886f060427",
+      "upstream_sha256": "e13b8fe8e7d0578c8d1be84e37a15bc00e1208f027a01d535cc426c73185e009",
+      "resolved_sha256": "e742c22c0c098648914eadb58bac3980780f5ef6664440b31628bfb0f2c0af95"
+    },
+    {
+      "path": "src/Game/NPC/NPCFunction.cpp",
+      "decision": "Reviewed complete upstream implementation retains all public local functions and integrates naming/helper/representation changes.",
+      "ours_sha256": "629cfead50e0c1ba6c202cbaed63d446d50c80e44d5abc1d7a2b64887f428ef4",
+      "upstream_sha256": "d4a88668493e0b1ea29ac25c170026a8fb41f7fdb50fa34c506679d88768e715",
+      "resolved_sha256": "d4a88668493e0b1ea29ac25c170026a8fb41f7fdb50fa34c506679d88768e715"
+    },
+    {
+      "path": "src/Game/NPC/Rosetta.cpp",
+      "decision": "Reviewed complete upstream implementation retains all public local functions and integrates naming/helper/representation changes.",
+      "ours_sha256": "a70ab6dc037be3ead9b71dbdf09328397ea99b604a451b3ae1612099a1263b2c",
+      "upstream_sha256": "431031ab418134a4ab05703308df5cc9c410825f3be4e13cfdb135aa84ada0db",
+      "resolved_sha256": "bb19a8a5d8a56dc36ba03974ca5b8756224946a559d3c9fe41e5f624dcbc991f"
+    },
+    {
+      "path": "src/Game/NPC/TalkMessageCtrl.cpp",
+      "decision": "Conflict is whitespace or coordinated member rename; preserve already merged local functions.",
+      "ours_sha256": "d603c0a3fd9d05cf6da0d4282ea820b8365b9a29bc45e974262679235c958b07",
+      "upstream_sha256": "09dadb823ae8f82c31a2619bbea9d2de7582fb5cfc9628277ec9eae502ed8478",
+      "resolved_sha256": "d603c0a3fd9d05cf6da0d4282ea820b8365b9a29bc45e974262679235c958b07"
+    },
+    {
+      "path": "src/Game/NameObj/NameObjCategoryList.cpp",
+      "decision": "Reviewed complete upstream implementation retains all public local functions and integrates naming/helper/representation changes.",
+      "ours_sha256": "ec55f4e87b0570f12287e3682ffdcf548d9c42087758b694cf0d4ac1ca3e8758",
+      "upstream_sha256": "b62623d2d99d2660bb4881e078e7473cbd33532f3f8423d6cf4df2e5b01490cb",
+      "resolved_sha256": "b62623d2d99d2660bb4881e078e7473cbd33532f3f8423d6cf4df2e5b01490cb"
+    },
+    {
+      "path": "src/Game/NameObj/NameObjHolder.cpp",
+      "decision": "Reviewed complete upstream implementation retains all public local functions and integrates naming/helper/representation changes.",
+      "ours_sha256": "5467387df4f47c8f70f16f2cd474b08da6a6a63184ed775daea8e000abadecd9",
+      "upstream_sha256": "75c79a5df8491beb554b2983e5e86cc766472a133521387697b1a3391bc95cd9",
+      "resolved_sha256": "75c79a5df8491beb554b2983e5e86cc766472a133521387697b1a3391bc95cd9"
+    },
+    {
+      "path": "src/Game/Scene/MultiSceneEffectKeeper.cpp",
+      "decision": "Reviewed complete upstream implementation retains all public local functions and integrates naming/helper/representation changes.",
+      "ours_sha256": "6da1dd1362ad873a4f7e17d394c67b1fee1b24aa8168b1e7a7b1c9ddf4c66c39",
+      "upstream_sha256": "aa2739e840b05189a3d7d3ac13fb5060242664bc0d3ebeb0fb071d75b43a56c9",
+      "resolved_sha256": "aa2739e840b05189a3d7d3ac13fb5060242664bc0d3ebeb0fb071d75b43a56c9"
+    },
+    {
+      "path": "src/Game/Scene/PlacementInfoOrdered.cpp",
+      "decision": "Upstream typed BothDirLink/iterators, shape identifier and ordering operators preserve same priority/count Shell sort and creation order; retains all public functions.",
+      "ours_sha256": "f1d0be7283591e0cd6ad5cdceff9b8127aab5eb780b88b207a52776166deae21",
+      "upstream_sha256": "15ad26dd66f415a9bfabd6ed5f6df3dfd28e9410ad20e836dd804dc72957acf2",
+      "resolved_sha256": "15ad26dd66f415a9bfabd6ed5f6df3dfd28e9410ad20e836dd804dc72957acf2"
+    },
+    {
+      "path": "src/Game/Scene/ScenarioSelectScene.cpp",
+      "decision": "Upstream GET_NERVE and reset argument naming are equivalent; preserve recovered local destructor absent upstream.",
+      "ours_sha256": "d7838421c64442e648cd5c9a805c03b404667225b3f985caba09221ee2035f10",
+      "upstream_sha256": "aff1dc82fee2d76e2c4460ac7efd2df664ba0c82b1b30eef111b414fb1465389",
+      "resolved_sha256": "ea568016bfb9dbf44c44fd547805d91031b869eb1387645b3fd305fdb61d291d"
+    },
+    {
+      "path": "src/Game/Scene/StageDataHolder.cpp",
+      "decision": "Upstream supplies all locally recovered placement, child, rail and query functions; typed TPos3f and upstream ordered placement API used consistently; avoid duplicate reordered definitions.",
+      "ours_sha256": "a49ed47665ba095ee37ee756d0e90af491957bb12b901ccb44fa33d00d7fe778",
+      "upstream_sha256": "222fde1cbc64fe8df17e7e9ccff68519aa31fa53b1909b6d337ddaab81da1f3d",
+      "resolved_sha256": "222fde1cbc64fe8df17e7e9ccff68519aa31fa53b1909b6d337ddaab81da1f3d"
+    },
+    {
+      "path": "include/Game/Effect/AutoEffectInfo.hpp",
+      "decision": "Add exact upstream Flag enum to auto-merged local typed-offset header; required by AutoEffectInfo/EffectSystemUtil upstream names.",
+      "before_sha256": "df004264eb9c98df4d26a87d4941ef2899dae2dd0815ec53b0e6b8a5c64a441e",
+      "upstream_sha256": "1b2a4164b1e98d252e66ca75fc88f5927502138846f18051e928bbc7dcf4bb9a",
+      "resolved_sha256": "1b2a4164b1e98d252e66ca75fc88f5927502138846f18051e928bbc7dcf4bb9a"
+    },
+    {
+      "path": "src/Game/Effect/MultiEmitter.cpp",
+      "before_sha256": "053cb9158d739b0c2096f83cf4422031568575d5cecee6ab9aa4d2cf8d054999",
+      "decision": "Update the single existing write to upstream SyncBckEffectInfo::mContinueAnimEnd field name; identical offset/value semantics.",
+      "resolved_sha256": "394ae40029e60009f24a7b008acc0bd35a58dfd97ef026c6067cb4d7c06728ea"
+    }
+  ],
+  "staging_performed": false,
+  "build_performed": false,
+  "formatting": "clang-format applied only to the 36 resolved/conflict-related files; scoped git diff --check passed.",
+  "additional_auto_merged_coherence_files": [
+    "include/Game/Effect/AutoEffectInfo.hpp",
+    "src/Game/Effect/MultiEmitter.cpp"
+  ]
+}

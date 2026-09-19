@@ -131,7 +131,7 @@ void DemoRabbit::updateStopVelocity() {
     MR::attenuateVelocity(this, mNoGroundTimer < 5 ? 0.9f : 0.99f);
 
     MR::addVelocityToGravityOrGround(this, 0.1f);
-    MR::reboundVelocityFromCollision(this, 1.0f, 1.0f, 0.0f);
+    MR::reboundVelocityFromCollision(this, 0.0f, 0.0f, 1.0f);
 
     TVec3f hitNormal;
     TVec3f gravityOffset(mGravity);
@@ -185,7 +185,7 @@ void DemoRabbit::updateJump() {
         mVelocity.sub(normalVelocity);
     }
 
-    if (MR::isBindedWall(this) && MR::calcHitPowerToWall(this) <= 0.0f) {
+    if (MR::isBindedWall(this) && MR::calcHitPowerToWall(this) >= 0.0f) {
         MR::addVelocityJump(this, 30.0f);
     }
 }
@@ -279,7 +279,7 @@ void DemoRabbit::exeWait() {
 
 void DemoRabbit::exeGoal() {
     if (MR::isFirstStep(this)) {
-        MR::startAction(this, "Change");
+        MR::startAction(this, "Wait");
     }
 
     MR::turnDirectionToPlayerDegree(this, &mFrontVec, 10.0f);
