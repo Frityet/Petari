@@ -1,0 +1,36 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc",
+    "--original",
+    "--disc",
+    "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--stage",
+    "HeavensDoorGalaxy",
+    "--scenario",
+    "1",
+    "--max-frames",
+    "3200"
+  ],
+  "environment": {
+    "SMGPC_SAVE_DIR": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/perf-gameplay-o2-3200-nand",
+    "SMGPC_NAND_DIR": "",
+    "AURORA_BACKEND": "metal",
+    "SMGPC_WINDOW_WIDTH": "1280",
+    "SMGPC_WINDOW_HEIGHT": "720",
+    "SMGPC_SCREENSHOT_PATH": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/perf-gameplay-o2-3200-frame3000.png",
+    "SMGPC_SCREENSHOT_FRAME": "3000",
+    "SMGPC_DEBUG_WPAD_INPUT_FILE": "",
+    "SMGPC_DEBUG_FRAME_TIMING": "1",
+    "SMGPC_DEBUG_ACTOR_TRACE_PATH": "",
+    "SMGPC_DEBUG_ACTOR_TRACE_TYPES": "",
+    "SMGPC_DEBUG_ACTOR_TRACE_INTERVAL": "60",
+    "SMGPC_DEBUG_LAYOUT_DUMP_PATH": "",
+    "SMGPC_DEBUG_LAYOUT_DUMP_FRAME": "",
+    "SMGPC_DEBUG_WPAD_BUTTON_SCRIPT": "1400-1410:A;1500-1510:A;1600-1610:A;1700-1710:A;1800-1810:A;1900-1910:A;2000-2010:A;2100-2110:A",
+    "SMGPC_DEBUG_WPAD_POINTER_SCRIPT": "",
+    "SMGPC_DEBUG_WPAD_STICK_SCRIPT": "2300-2459:0:1;2500-2659:1:0;2700-2859:0:-1;2900-3059:-1:0"
+  },
+  "binary_sha256": "dcc7420463f7095aff46eb5f709cc2cbbf7814a3d70192911c1860b2a7d7279e",
+  "started_at": "2026-09-19T14:49:04.631773+00:00",
+  "pid": 64317
+}

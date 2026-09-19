@@ -1,0 +1,26 @@
+[
+  {
+    "target": "smg-pc-game",
+    "exit_code": 0,
+    "wall_seconds": 49.053783540963195,
+    "log": "notes/original-performance-20260919/o2-build-smg-pc-game.log"
+  },
+  {
+    "target": "smg-pc-render",
+    "exit_code": 0,
+    "wall_seconds": 3.696061624912545,
+    "log": "notes/original-performance-20260919/o2-build-smg-pc-render.log"
+  },
+  {
+    "target": "smg-pc-common",
+    "exit_code": 0,
+    "wall_seconds": 3.6120596249820665,
+    "log": "notes/original-performance-20260919/o2-build-smg-pc-common.log"
+  },
+  {
+    "target": "aurora-main",
+    "exit_code": 0,
+    "wall_seconds": 3.771378165925853,
+    "log": "notes/original-performance-20260919/o2-build-aurora-main.log"
+  }
+]

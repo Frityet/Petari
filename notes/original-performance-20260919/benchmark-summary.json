@@ -1,0 +1,45 @@
+{
+  "perf-neutral-debug-600": {
+    "binary_sha256": "874c080f050c3c532af8379b5fe74ac96c9366b4a451be84210e069af30757f6",
+    "elapsed_seconds": 36.84176470793318,
+    "completed_frames": 600,
+    "exit_code": 0,
+    "verified_bounded_completion": true
+  },
+  "perf-neutral-o2-600": {
+    "binary_sha256": "dcc7420463f7095aff46eb5f709cc2cbbf7814a3d70192911c1860b2a7d7279e",
+    "elapsed_seconds": 13.09289024991449,
+    "completed_frames": 600,
+    "exit_code": 0,
+    "verified_bounded_completion": true,
+    "frame_timing": {
+      "completed": 600.0,
+      "wall_ms": 12315.336,
+      "mean_ms": 20.526,
+      "begin_poll_ms": 0.505,
+      "process_ms": 19.892,
+      "end_ms": 0.129,
+      "last_window_frames": 300.0,
+      "last_window_wall_ms": 5575.441,
+      "last_window_fps": 53.807
+    }
+  },
+  "perf-gameplay-o2-3200": {
+    "binary_sha256": "dcc7420463f7095aff46eb5f709cc2cbbf7814a3d70192911c1860b2a7d7279e",
+    "elapsed_seconds": 83.55511245899834,
+    "completed_frames": 3200,
+    "exit_code": 0,
+    "verified_bounded_completion": true,
+    "frame_timing": {
+      "completed": 3200.0,
+      "wall_ms": 83201.657,
+      "mean_ms": 26.001,
+      "begin_poll_ms": 0.142,
+      "process_ms": 25.588,
+      "end_ms": 0.27,
+      "last_window_frames": 300.0,
+      "last_window_wall_ms": 8816.97,
+      "last_window_fps": 34.025
+    }
+  }
+}

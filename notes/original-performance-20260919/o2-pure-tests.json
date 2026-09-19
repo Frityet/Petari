@@ -1,0 +1,12 @@
+[
+  {
+    "target": "smg-pc-original-sensor-matrix-tests",
+    "exit_code": 0,
+    "wall_seconds": 0.45802708400879055
+  },
+  {
+    "target": "smg-pc-frame-button-state-tests",
+    "exit_code": 0,
+    "wall_seconds": 0.27957524999510497
+  }
+]

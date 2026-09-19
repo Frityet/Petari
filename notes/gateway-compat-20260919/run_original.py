@@ -21,6 +21,7 @@ parser.add_argument("--button-script", help="Debug controller input spans; recor
 parser.add_argument("--pointer-script", help="Debug pointer input spans; records scripted input explicitly")
 parser.add_argument("--stick-script", help="Debug normalized stick input spans; records scripted input explicitly")
 parser.add_argument("--input-file", type=Path, help="Opt-in live JSON controller scripts; each accepted revision is logged by the process")
+parser.add_argument("--frame-timing", action="store_true", help="Record the opt-in original frame timing summary")
 parser.add_argument("--trace-types", help="Record original LiveActor states matching these comma-separated C++ type substrings")
 parser.add_argument("--trace-interval", type=int, default=60)
 parser.add_argument("--layout-dump-frame", type=int, help="Dump all live native layout text and pane state after this frame")
@@ -47,6 +48,7 @@ settings = {
     "SMGPC_SCREENSHOT_PATH": str(notes / (label + f"-frame{options.screenshot_frame}.png")),
     "SMGPC_SCREENSHOT_FRAME": str(options.screenshot_frame),
     "SMGPC_DEBUG_WPAD_INPUT_FILE": str(options.input_file.resolve()) if options.input_file else "",
+    "SMGPC_DEBUG_FRAME_TIMING": "1" if options.frame_timing else "",
     "SMGPC_DEBUG_ACTOR_TRACE_PATH": str(notes / (label + "-actors.jsonl")) if options.trace_types is not None else "",
     "SMGPC_DEBUG_ACTOR_TRACE_TYPES": options.trace_types or "",
     "SMGPC_DEBUG_ACTOR_TRACE_INTERVAL": str(options.trace_interval),

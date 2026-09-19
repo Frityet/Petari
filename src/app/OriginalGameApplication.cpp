@@ -62,7 +62,9 @@
 #include <nw4r/lyt/init.h>
 #include <SDL3/SDL_filesystem.h>
 #include <algorithm>
+#include <array>
 #include <charconv>
+#include <chrono>
 #include <cstdint>
 #include <string_view>
 #include <cstdlib>
@@ -138,6 +140,66 @@ void startup_phase(const char* phase) {
     std::fprintf(stderr, "[original-process] %s\n", phase);
     std::fflush(stderr);
 }
+
+#ifndef NDEBUG
+class DebugFrameTiming {
+public:
+    DebugFrameTiming() {
+        const char* value = std::getenv("SMGPC_DEBUG_FRAME_TIMING");
+        enabled = value && std::string_view(value) == "1";
+        if (enabled) boundary = Clock::now();
+    }
+
+    void begin_complete() {
+        if (!enabled) return;
+        begin = Clock::now();
+        begin_ms += milliseconds(begin - boundary);
+    }
+
+    void process_complete() {
+        if (!enabled) return;
+        process = Clock::now();
+        process_ms += milliseconds(process - begin);
+    }
+
+    void complete() {
+        if (!enabled) return;
+        const auto end = Clock::now();
+        end_ms += milliseconds(end - process);
+        const double elapsed = milliseconds(end - boundary);
+        total_ms += elapsed;
+        const auto index = count % recent_ms.size();
+        window_ms += elapsed - recent_ms[index];
+        recent_ms[index] = elapsed;
+        ++count;
+        boundary = end;
+    }
+
+    void report() const {
+        if (!enabled) return;
+        const auto window_count = std::min<std::uint64_t>(count, recent_ms.size());
+        const double divisor = count ? static_cast<double>(count) : 1.0;
+        std::fprintf(stderr,
+                     "[original-process] Frame timing: completed=%llu wall_ms=%.3f mean_ms=%.3f begin_poll_ms=%.3f process_ms=%.3f end_ms=%.3f last_window_frames=%llu last_window_wall_ms=%.3f last_window_fps=%.3f (wall time includes polling, retrace and device waits)\n",
+                     static_cast<unsigned long long>(count), total_ms, total_ms / divisor,
+                     begin_ms / divisor, process_ms / divisor, end_ms / divisor,
+                     static_cast<unsigned long long>(window_count), window_ms,
+                     window_ms > 0.0 ? 1000.0 * window_count / window_ms : 0.0);
+    }
+
+private:
+    using Clock = std::chrono::steady_clock;
+    static double milliseconds(Clock::duration elapsed) {
+        return std::chrono::duration<double, std::milli>(elapsed).count();
+    }
+    bool enabled = false;
+    std::uint64_t count = 0;
+    Clock::time_point boundary{}, begin{}, process{};
+    std::array<double, 300> recent_ms{};
+    double total_ms = 0.0, window_ms = 0.0;
+    double begin_ms = 0.0, process_ms = 0.0, end_ms = 0.0;
+};
+#endif
 
 void initialize_console_language(runtime::SystemConfigService& settings) {
     // A newly created native console has no IPL settings. Select its initial
@@ -467,21 +529,36 @@ int run_original_game(const BootstrapConfiguration& configuration, logging::ILog
     const auto screenshot_frame = screenshot_frame_text && *screenshot_frame_text
         ? option_integer<std::uint64_t>(screenshot_frame_text, "SMGPC_SCREENSHOT_FRAME") : 1U;
     bool screenshot_written = false;
+#ifndef NDEBUG
+    DebugFrameTiming timing;
+#endif
     while ((options.max_frames == 0 || completed_frames < options.max_frames) && window.poll_events()) {
         if (!aurora_begin_frame()) continue;
+#ifndef NDEBUG
+        timing.begin_complete();
+#endif
         try {
             process.frame(window, completed_frames);
         } catch (...) {
             aurora_end_frame();
             throw;
         }
+#ifndef NDEBUG
+        timing.process_complete();
+#endif
         aurora_end_frame();
         ++completed_frames;
         if (screenshot_path && *screenshot_path && !screenshot_written && completed_frames >= screenshot_frame) {
             window.request_screenshot_png(screenshot_path);
             screenshot_written = true;
         }
+#ifndef NDEBUG
+        timing.complete();
+#endif
     }
+#ifndef NDEBUG
+    timing.report();
+#endif
     logger.info(logging::Category::APP, logging::Message{"Original GameSystem stopped after {} completed frames"}, completed_frames);
     return 0;
 }

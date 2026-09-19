@@ -4,7 +4,7 @@ set_xmakever("3.0.0")
 add_repositories("local-repo $(projectdir)")
 
 option("optimize_debug")
-    set_default(false)
+    set_default(true)
     set_showmenu(true)
     set_description("Optimize debug builds while retaining symbols and runtime checks")
 option_end()

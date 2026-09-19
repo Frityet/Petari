@@ -1,0 +1,65 @@
+[
+  {
+    "target": "smg-pc-game",
+    "dependency_recheck": true,
+    "exit_code": 0,
+    "wall_seconds": 4.211801666067913,
+    "log": "notes/original-performance-20260919/o2-recheck-smg-pc-game.log"
+  },
+  {
+    "target": "smg-pc-render",
+    "dependency_recheck": true,
+    "exit_code": 0,
+    "wall_seconds": 3.7025442089652643,
+    "log": "notes/original-performance-20260919/o2-recheck-smg-pc-render.log"
+  },
+  {
+    "target": "smg-pc-common",
+    "dependency_recheck": true,
+    "exit_code": 0,
+    "wall_seconds": 3.633976125041954,
+    "log": "notes/original-performance-20260919/o2-recheck-smg-pc-common.log"
+  },
+  {
+    "target": "aurora-main",
+    "dependency_recheck": true,
+    "exit_code": 0,
+    "wall_seconds": 3.684330707998015,
+    "log": "notes/original-performance-20260919/o2-recheck-aurora-main.log"
+  },
+  {
+    "target": "smg-pc",
+    "dependency_recheck": false,
+    "exit_code": 0,
+    "wall_seconds": 7.979581875028089,
+    "log": "notes/original-performance-20260919/o2-build-smg-pc.log"
+  },
+  {
+    "target": "smg-pc-original-sensor-matrix-tests",
+    "dependency_recheck": false,
+    "exit_code": 0,
+    "wall_seconds": 5.130591291002929,
+    "log": "notes/original-performance-20260919/o2-build-smg-pc-original-sensor-matrix-tests.log"
+  },
+  {
+    "target": "smg-pc-original-layout-group-tests",
+    "dependency_recheck": false,
+    "exit_code": 0,
+    "wall_seconds": 5.683021374978125,
+    "log": "notes/original-performance-20260919/o2-build-smg-pc-original-layout-group-tests.log"
+  },
+  {
+    "target": "smg-pc-frame-button-state-tests",
+    "dependency_recheck": false,
+    "exit_code": 0,
+    "wall_seconds": 5.013635291950777,
+    "log": "notes/original-performance-20260919/o2-build-smg-pc-frame-button-state-tests.log"
+  },
+  {
+    "target": "smg-pc-original-process-shadow-line-tests",
+    "dependency_recheck": false,
+    "exit_code": 0,
+    "wall_seconds": 5.226686125039123,
+    "log": "notes/original-performance-20260919/o2-build-smg-pc-original-process-shadow-line-tests.log"
+  }
+]
