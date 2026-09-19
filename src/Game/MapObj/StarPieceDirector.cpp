@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/StarPieceDirector.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -21,7 +22,7 @@ void MR::createStarPiece() {
         max = 70;
     }
     for (int i = 0; i < max; i++) {
-        StarPiece* starPiece = new StarPiece("スターピースディレクターピース");
+        StarPiece* starPiece = new StarPiece(CP932("スターピースディレクターピース"));
         starPiece->initWithoutIter();
         starPiece->makeActorDead();
         getStarPieceDirector()->registerActor(starPiece);
@@ -63,7 +64,7 @@ StarPieceDirector::StarPieceDirector(const char* pName)
     MR::connectToSceneMapObjMovement(this);
 
     for (int i = 0; i < ARRAY_SIZE(mStarPieceShooters); i++) {
-        mStarPieceShooters[i] = new StarPieceShooter(i, "発射用アクター");
+        mStarPieceShooters[i] = new StarPieceShooter(i, CP932("発射用アクター"));
         mStarPieceShooters[i]->initWithoutIter();
     }
 

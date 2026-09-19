@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioFlow.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioConst.hpp"
@@ -8,7 +9,7 @@ bool Mario::doFlow() {
         return false;
     }
 
-    if (isAnimationRun("空中ひねり")) {
+    if (isAnimationRun(CP932("空中ひねり"))) {
         return false;
     }
 
@@ -21,7 +22,7 @@ bool MarioFlow::start() {
     _12 = 0;
     _14 = 0;
 
-    changeAnimationNonStop("中ダメージ");
+    changeAnimationNonStop(CP932("中ダメージ"));
     startPadVib(2);
 
     getPlayer()->mMovementStates._1 = false;
@@ -50,7 +51,7 @@ bool MarioFlow::update() {
         _18 += mActor->_240 * mActor->getConst().getTable()->mGravityFlow;
 
         if (_12 == 20) {
-            changeAnimation("中ダメージ空中", static_cast< const char* >(nullptr));
+            changeAnimation(CP932("中ダメージ空中"), static_cast< const char* >(nullptr));
         }
 
         if (_12 > 30 && mActor->isRequestRush()) {
@@ -62,10 +63,10 @@ bool MarioFlow::update() {
         if (getPlayer()->getMovementStates()._1) {
             getPlayer()->mMovementStates.jumping = false;
 
-            changeAnimation("中ダメージ着地", static_cast< const char* >(nullptr));
+            changeAnimation(CP932("中ダメージ着地"), static_cast< const char* >(nullptr));
 
-            playEffect("共通ダメージ着地");
-            playSound("吹っ飛び倒れ");
+            playEffect(CP932("共通ダメージ着地"));
+            playSound(CP932("吹っ飛び倒れ"));
 
             MR::vecKillElement(_18, mActor->_240, &_18);
 
@@ -84,7 +85,7 @@ bool MarioFlow::update() {
             _18.y *= 0.95f;
             _18.z *= 0.95f;
 
-            if (!isAnimationRun("中ダメージ着地")) {
+            if (!isAnimationRun(CP932("中ダメージ着地"))) {
                 return false;
             }
 
@@ -103,8 +104,8 @@ bool MarioFlow::update() {
 }
 
 bool MarioFlow::close() {
-    stopAnimation("ダメージ");
-    stopAnimation("ダメージ着地", "基本");
+    stopAnimation(CP932("ダメージ"));
+    stopAnimation(CP932("ダメージ着地"), CP932("基本"));
 
     return true;
 }

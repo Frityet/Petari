@@ -1,9 +1,10 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/SwitchWatcher.hpp"
 #include "Game/Map/ActorAppearSwitchListener.hpp"
 #include "Game/Map/StageSwitch.hpp"
 
 SwitchWatcher::SwitchWatcher(const StageSwitchCtrl* pSwitchCtrl)
-    : NameObj("スイッチ監視"), mFlags(), mSwitchCtrl(pSwitchCtrl), mSwitchListenerA(), mSwitchListenerB(), mSwitchListenerAppear() {
+    : NameObj(CP932("スイッチ監視")), mFlags(), mSwitchCtrl(pSwitchCtrl), mSwitchListenerA(), mSwitchListenerB(), mSwitchListenerAppear() {
 }
 
 void SwitchWatcher::movement() {

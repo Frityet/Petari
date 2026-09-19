@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowSurfaceBox.hpp"
@@ -21,7 +22,7 @@
 namespace MR {
     void initShadowVolumeBox(LiveActor* pActor, const TVec3f& size) {
         pActor->initShadowControllerList(1);
-        addShadowVolumeBox(pActor, "ボリューム影(ボックス)", size);
+        addShadowVolumeBox(pActor, CP932("ボリューム影(ボックス)"), size);
     }
 
     void initShadowController(LiveActor* pActor, u32 numShadows) {
@@ -103,7 +104,7 @@ namespace MR {
 
     void initShadowVolumeBox(LiveActor* pActor, const TVec3f& size, MtxPtr mtx) {
         pActor->initShadowControllerList(1);
-        addShadowVolumeBox(pActor, "ボリューム影(ボックス)", size, mtx);
+        addShadowVolumeBox(pActor, CP932("ボリューム影(ボックス)"), size, mtx);
     }
 
     void setShadowDropPosition(LiveActor* pActor, const char* pName, const TVec3f& rPos) {

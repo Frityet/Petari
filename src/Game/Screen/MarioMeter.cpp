@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/MarioMeter.hpp"
 #include "Game/Screen/MeterLayout.hpp"
 #include "Game/Screen/SuddenDeathMeter.hpp"
@@ -59,8 +60,8 @@ MarioMeter::~MarioMeter() {
 }
 
 void MarioMeter::init(const JMapInfoIter& rIter) {
-    mHitPointMeter = new MeterLayout("通常HPメーター", "HitPointMeter");
+    mHitPointMeter = new MeterLayout(CP932("通常HPメーター"), "HitPointMeter");
     mHitPointMeter->initWithoutIter();
-    mSuddenDeathMeter = new SuddenDeathMeter("サドンデスHPメーター", "SuddenDeathMeter");
+    mSuddenDeathMeter = new SuddenDeathMeter(CP932("サドンデスHPメーター"), "SuddenDeathMeter");
     mSuddenDeathMeter->initWithoutIter();
 }

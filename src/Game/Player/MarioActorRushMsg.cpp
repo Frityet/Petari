@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioAnimator.hpp"
@@ -323,7 +324,7 @@ bool MarioActor::tryJumpRush() {
     if (jumpTarget != nullptr) {
         unsigned char autoBind;
         bool b = selectAutoBind(jumpTarget->mHost->mName, &autoBind);
-        if (!b && !isActionOk("ジャンプ系バインド")) {
+        if (!b && !isActionOk(CP932("ジャンプ系バインド"))) {
             return false;
         }
 
@@ -392,7 +393,7 @@ void MarioActor::tryRushInRush() {
     if (isFixJumpRushSensor(target) && isLandEffectRushSensor(sensor924)) {
         mMario->mMovementStates._3E = false;
 
-        playEffect("スーパースピンドライバ終了");
+        playEffect(CP932("スーパースピンドライバ終了"));
     }
 
     if (_934) {

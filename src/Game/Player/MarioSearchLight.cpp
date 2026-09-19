@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioSearchLight.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Player/DrawAdaptor.hpp"
@@ -28,7 +29,7 @@
 #include <revolution/mtx.h>
 
 MarioSearchLight::MarioSearchLight(LiveActor* pActor)
-    : PartsModel(pActor, "サーチライト", "SearchLightCone", nullptr, -1, 0), _9C(0.0f), _A0(0), _A4(nullptr) {
+    : PartsModel(pActor, CP932("サーチライト"), "SearchLightCone", nullptr, -1, 0), _9C(0.0f), _A0(0), _A4(nullptr) {
 }
 
 void MarioSearchLight::init(const JMapInfoIter& rParam1) {

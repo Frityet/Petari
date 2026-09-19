@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/BrightObj.hpp"
 
 #include "Game/MapObj/Sun.hpp"
@@ -304,7 +305,7 @@ void BrightSun::init(const JMapInfoIter& iter) {
     MR::invalidateClipping(this);
     MR::connectToScene(this, MR::MovementType_Environment, -1, -1, MR::DrawType_BrightSun);
 
-    mSun = new Sun("太陽");
+    mSun = new Sun(CP932("太陽"));
     mSun->initWithoutIter();
 
     MR::tryRegisterDemoCast(this, iter);

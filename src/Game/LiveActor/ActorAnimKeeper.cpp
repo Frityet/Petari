@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/ActorAnimKeeper.hpp"
 #include "Game/System/ResourceHolder.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
@@ -13,7 +14,7 @@ ActorAnimKeeper::ActorAnimKeeper(LiveActor* pActor) : mActor(pActor), mNumInfo(0
     if (!initAnimData()) {
         return;
     }
-    start("デフォルト");
+    start(CP932("デフォルト"));
 }
 
 ActorAnimKeeper* ActorAnimKeeper::tryCreate(LiveActor* pActor) {

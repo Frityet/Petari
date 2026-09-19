@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioFaint.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Player/Mario.hpp"
@@ -113,20 +114,20 @@ bool MarioFaint::start() {
 
     if (_18.dot(getPlayer()->mFrontVec) > 0.0f) {
         getPlayer()->setFrontVecKeepUp(_18);
-        changeAnimation("後方小ダメージ", static_cast<const char*>(nullptr));
+        changeAnimation(CP932("後方小ダメージ"), static_cast<const char*>(nullptr));
     }
     else {
         getPlayer()->setFrontVecKeepUp(-_18);
-        changeAnimation("前方小ダメージ", static_cast<const char*>(nullptr));
+        changeAnimation(CP932("前方小ダメージ"), static_cast<const char*>(nullptr));
     }
 
     if (_24) {
-        changeAnimation("ノーダメージ", static_cast<const char*>(nullptr));
+        changeAnimation(CP932("ノーダメージ"), static_cast<const char*>(nullptr));
     }
 
-    playSound("声小ダメージ", -1);
-    playSound("ダメージ", -1);
-    playEffect("ダメージ");
+    playSound(CP932("声小ダメージ"), -1);
+    playSound(CP932("ダメージ"), -1);
+    playEffect(CP932("ダメージ"));
     startPadVib(2);
     addVelocity(_18);
 
@@ -155,8 +156,8 @@ bool MarioFaint::start() {
 bool MarioFaint::close() {
 
     if (getPlayer()->mMovementStates._1) {
-        stopAnimation("後方小ダメージ", static_cast<const char*>(nullptr));
-        stopAnimation("前方小ダメージ", "基本");
+        stopAnimation(CP932("後方小ダメージ"), static_cast<const char*>(nullptr));
+        stopAnimation(CP932("前方小ダメージ"), CP932("基本"));
     }
 
     if (_25) {

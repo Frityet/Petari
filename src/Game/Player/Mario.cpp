@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Enemy/KarikariDirector.hpp"
 #include "Game/LiveActor/Binder.hpp"
@@ -1002,9 +1003,9 @@ void Mario::initAfterConst() {
     _814 = mPosition;
     PSMTXIdentity(_7E4);
     PSMTXIdentity(_824);
-    _720 = getAnimationStringPointer("ヒップドロップ開始");
-    _724 = getAnimationStringPointer("ヒップドロップ");
-    _728 = getAnimationStringPointer("ヒップドロップ着地");
+    _720 = getAnimationStringPointer(CP932("ヒップドロップ開始"));
+    _724 = getAnimationStringPointer(CP932("ヒップドロップ"));
+    _728 = getAnimationStringPointer(CP932("ヒップドロップ着地"));
 }
 
 void Mario::writeBackPhyisicalVector() {
@@ -1345,7 +1346,7 @@ void Mario::actionMain() {
                 clearSlope();
             }
         }
-        if (isStickOn() && isAnimationRun("水泳陸うちあげ")) {
+        if (isStickOn() && isAnimationRun(CP932("水泳陸うちあげ"))) {
             stopAnimation(nullptr, (char*)nullptr);
         }
         if (!mDrawStates._4) {
@@ -1373,8 +1374,8 @@ void Mario::updateGroundInfo() {
             _3C6 = 0;
         }
 
-        if (b1 && mMovementStates._1 && isDefaultAnimationRun("落下")) {
-            changeAnimation(nullptr, "基本");
+        if (b1 && mMovementStates._1 && isDefaultAnimationRun(CP932("落下"))) {
+            changeAnimation(nullptr, CP932("基本"));
         }
 
         if (!isStatusActive(MarioStatus_13)) {
@@ -1416,7 +1417,7 @@ const TVec3f* Mario::getGravityVec() const {
         if (mActor->mBeeWallWalk != 0) {
             return &mAirGravityVec;
         }
-        if (isAnimationRun("ハード着地")) {
+        if (isAnimationRun(CP932("ハード着地"))) {
             return &mAirGravityVec;
         }
         if (_3CE < 0x10 && _3BC > 3 && !mMovementStates._B) {
@@ -1449,7 +1450,7 @@ const TVec3f* Mario::getGravityVec() const {
 }
 
 void Mario::touchWater() {
-    if (mActor->isActionOk("水解除") && mMorphResetTimer == 0) {
+    if (mActor->isActionOk(CP932("水解除")) && mMorphResetTimer == 0) {
         mMorphResetTimer = 10;
     }
 }
@@ -1736,7 +1737,7 @@ void Mario::createAngleMtx(MtxPtr mtx, bool forceNoFix) {
     PSMTXConcat(_C4.toMtxPtr(), mtx, mtx);
 
     HitSensor* pTarget = mActor->_470;
-    if (isAnimationRun("投げ")) {
+    if (isAnimationRun(CP932("投げ"))) {
         pTarget = mActor->_474;
     }
     if (mActor->isPunching()) {
@@ -1960,12 +1961,12 @@ bool Mario::postureCtrl(MtxPtr) {
         }
     }
 
-    if (isAnimationRun("坂すべり上向きうつぶせ", 2)) {
+    if (isAnimationRun(CP932("坂すべり上向きうつぶせ"), 2)) {
         target = _368;
     }
 
     if (isStatusActive(MarioStatus_Wait)) {
-        if (isAnimationRun("特殊ウエイト1A")) {
+        if (isAnimationRun(CP932("特殊ウエイト1A"))) {
             f32 ratio;
             if (getAnimator()->getFrame() > 290.0f) {
                 ratio = 1.0f;
@@ -1981,8 +1982,8 @@ bool Mario::postureCtrl(MtxPtr) {
     }
 
     if (!isSwimming()) {
-        if (isAnimationRun("水泳ジェット") || isAnimationRun("水泳スピン移動") || isAnimationRun("リングダッシュ") ||
-            isAnimationRun("水泳スピンジャンプ")) {
+        if (isAnimationRun(CP932("水泳ジェット")) || isAnimationRun(CP932("水泳スピン移動")) || isAnimationRun(CP932("リングダッシュ")) ||
+            isAnimationRun(CP932("水泳スピンジャンプ"))) {
             MR::vecBlendSphere(mHeadVec, mJumpVec, &target, 0.1f);
             if (MR::normalizeOrZero(&target)) {
                 target = mHeadVec;
@@ -2018,7 +2019,7 @@ void Mario::updateLookOfs() {
         MR::vecBlend(_13C, lookOffset, &_13C, 0.3f);
     }
     if (_97C == nullptr) {
-        if (isAnimationRun("壁押し")) {
+        if (isAnimationRun(CP932("壁押し"))) {
             TVec3f wallDelta(_4E8);
             wallDelta -= mPosition;
             TVec3f horizontalWallDelta;

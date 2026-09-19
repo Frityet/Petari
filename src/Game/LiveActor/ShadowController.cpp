@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
 #include "Game/LiveActor/ShadowDrawer.hpp"
 #include "Game/Scene/SceneFunction.hpp"
@@ -11,7 +12,7 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 
-ShadowControllerHolder::ShadowControllerHolder() : NameObj("影管理"), _C(), _18(), _24(false) {
+ShadowControllerHolder::ShadowControllerHolder() : NameObj(CP932("影管理")), _C(), _18(), _24(false) {
     mFarClip = 4000.0f;
     _C.init(0x500);
     _18.init(0x400);

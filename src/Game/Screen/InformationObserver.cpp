@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/InformationObserver.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -46,12 +47,12 @@ namespace NrvInformationObserver {
     NEW_NERVE(InformationObserverNrvDisp, InformationObserver, Disp);
 };  // namespace NrvInformationObserver
 
-InformationObserver::InformationObserver() : LiveActor("初出監視"), mType(Type_Bee), _90(false), mDisplayFrame(-1) {
+InformationObserver::InformationObserver() : LiveActor(CP932("初出監視")), mType(Type_Bee), _90(false), mDisplayFrame(-1) {
 }
 
 void InformationObserver::init(const JMapInfoIter& rIter) {
     MR::connectToSceneLayoutMovement(this);
-    MR::declareEventCameraProgrammable("初出監視カメラ");
+    MR::declareEventCameraProgrammable(CP932("初出監視カメラ"));
     initNerve(&NrvInformationObserver::InformationObserverNrvWait::sInstance);
     MR::invalidateClipping(this);
     makeActorDead();
@@ -66,7 +67,7 @@ void InformationObserver::entry(TYPE type, LiveActor* pParam2) {
         MR::pauseTimeKeepDemo(_94);
         setNerve(&NrvInformationObserver::InformationObserverNrvDisp::sInstance);
     } else {
-        MR::requestStartDemoWithoutCinemaFrame(this, "初出表示", &NrvInformationObserver::InformationObserverNrvDisp::sInstance,
+        MR::requestStartDemoWithoutCinemaFrame(this, CP932("初出表示"), &NrvInformationObserver::InformationObserverNrvDisp::sInstance,
                                                &NrvInformationObserver::InformationObserverNrvWait::sInstance);
     }
 
@@ -103,7 +104,7 @@ void InformationObserver::exeDisp() {
     if (_90) {
         MR::resumeTimeKeepDemo(_94);
     } else {
-        MR::endDemo(this, "初出表示");
+        MR::endDemo(this, CP932("初出表示"));
     }
 
     if (sAttr[mType].mBgmName != nullptr) {

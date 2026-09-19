@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/ClippingDirector.hpp"
 #include "Game/LiveActor/ClippingActorHolder.hpp"
 #include "Game/LiveActor/ClippingGroupHolder.hpp"
@@ -7,8 +8,8 @@
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 
-ClippingDirector::ClippingDirector() : NameObj("クリッピング指揮"), mJudge(nullptr), mActorHolder(nullptr), mGroupHolder(nullptr) {
-    mJudge = new ClippingJudge("クリッピング判定者");
+ClippingDirector::ClippingDirector() : NameObj(CP932("クリッピング指揮")), mJudge(nullptr), mActorHolder(nullptr), mGroupHolder(nullptr) {
+    mJudge = new ClippingJudge(CP932("クリッピング判定者"));
     mJudge->initWithoutIter();
 
     mActorHolder = new ClippingActorHolder();

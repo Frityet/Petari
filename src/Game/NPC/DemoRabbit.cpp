@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/NPC/DemoRabbit.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
@@ -49,14 +50,14 @@ void DemoRabbit::init(const JMapInfoIter& rIter) {
             caps.mWaitNerve = &NrvDemoRabbit::DemoRabbitNrvAppear::sInstance;
 
             MR::invalidateClipping(this);
-            MR::registerDemoActionNerve(this, &NrvDemoRabbit::DemoRabbitNrvTalk0::sInstance, "チコとの出会い[ウサギ会話]");
-            MR::registerDemoActionNerve(this, &NrvDemoRabbit::DemoRabbitNrvGuide::sInstance, "チコとの出会い[ウサギ逃走]");
-            MR::registerDemoActionFunctor(this, MR::Functor(this, &DemoRabbit::fadeOut), "ウサギ追いかけ[フェードアウト]");
-            MR::registerDemoActionFunctor(this, MR::Functor(this, &DemoRabbit::fadeIn), "ウサギ追いかけ[フェードイン]");
-            MR::registerDemoActionNerve(this, &NrvDemoRabbit::DemoRabbitNrvTalk1::sInstance, "ウサギ追いかけ[会話]");
-            MR::registerDemoActionNerve(this, &NrvDemoRabbit::DemoRabbitNrvRunaway::sInstance, "ウサギ追いかけ[逃走]");
+            MR::registerDemoActionNerve(this, &NrvDemoRabbit::DemoRabbitNrvTalk0::sInstance, CP932("チコとの出会い[ウサギ会話]"));
+            MR::registerDemoActionNerve(this, &NrvDemoRabbit::DemoRabbitNrvGuide::sInstance, CP932("チコとの出会い[ウサギ逃走]"));
+            MR::registerDemoActionFunctor(this, MR::Functor(this, &DemoRabbit::fadeOut), CP932("ウサギ追いかけ[フェードアウト]"));
+            MR::registerDemoActionFunctor(this, MR::Functor(this, &DemoRabbit::fadeIn), CP932("ウサギ追いかけ[フェードイン]"));
+            MR::registerDemoActionNerve(this, &NrvDemoRabbit::DemoRabbitNrvTalk1::sInstance, CP932("ウサギ追いかけ[会話]"));
+            MR::registerDemoActionNerve(this, &NrvDemoRabbit::DemoRabbitNrvRunaway::sInstance, CP932("ウサギ追いかけ[逃走]"));
         } else {
-            MR::registerDemoActionNerve(this, &NrvDemoRabbit::DemoRabbitNrvRunaway::sInstance, "ウサギ追いかけ[逃走]");
+            MR::registerDemoActionNerve(this, &NrvDemoRabbit::DemoRabbitNrvRunaway::sInstance, CP932("ウサギ追いかけ[逃走]"));
             caps.mWaitNerve = &NrvDemoRabbit::DemoRabbitNrvDemo::sInstance;
         }
     }
@@ -286,7 +287,7 @@ void DemoRabbit::exeGoal() {
 
     if (!MR::isDemoActive()) {
         if (MR::isNearPlayer(mMsgCtrl, 500.0f)) {
-            MR::startTimeKeepDemoMarioPuppetable(this, "チコガイドデモ", "ウサギ追いかけ[フェードアウト]");
+            MR::startTimeKeepDemoMarioPuppetable(this, CP932("チコガイドデモ"), CP932("ウサギ追いかけ[フェードアウト]"));
         } else {
             MR::tryTalkNearPlayer(mMsgCtrl);
         }

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioTalk.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Util/MathUtil.hpp"
@@ -61,7 +62,7 @@ bool MarioTalk::start() {
         stopAnimationUpper(nullptr, nullptr);
     }
 
-    changeAnimationNonStop("見る");
+    changeAnimationNonStop(CP932("見る"));
 
     if (val) {
         mActor->_B90 = true;

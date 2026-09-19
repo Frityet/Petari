@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/NPC/RunawayRabbit.hpp"
 #include "Game/Enemy/WalkerStateBlowDamage.hpp"
 #include "Game/Enemy/WalkerStateRunaway.hpp"
@@ -218,7 +219,7 @@ void RunawayRabbit::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isSensorPlayer(pReceiver)) {
         if (pSender == getSensor("Catch") && isCaughtable()) {
             mCollect->noticeCaughtRabbit(this);
-            MR::requestStartDemoMarioPuppetable(this, "捕まり", &NrvRunawayRabbit::RunawayRabbitNrvCaught::sInstance,
+            MR::requestStartDemoMarioPuppetable(this, CP932("捕まり"), &NrvRunawayRabbit::RunawayRabbitNrvCaught::sInstance,
                                                 &NrvRunawayRabbit::RunawayRabbitNrvTryCaughtDemo::sInstance);
         }
         else if (isCaught()) {
@@ -442,7 +443,7 @@ void RunawayRabbit::exeCaughtEnd() {
     updateBindActorMatrix();
 
     if (MR::isBckStopped(this)) {
-        MR::endDemo(this, "捕まり");
+        MR::endDemo(this, CP932("捕まり"));
         setNerve(&NrvRunawayRabbit::RunawayRabbitNrvStop::sInstance);
     }
 }

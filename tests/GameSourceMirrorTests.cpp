@@ -1,3 +1,4 @@
+#include "SourceMirrorEncoding.hpp"
 #include <array>
 #include <exception>
 #include <fstream>
@@ -126,8 +127,8 @@ int main() {
 
     for (const auto &pair : cSourcePairs) {
         try {
-            if (readFile(pair.decomp) != readFile(pair.port)) {
-                throw std::runtime_error(std::string("PC Game mirror is not byte-identical: ") +
+            if (!smgpc::test::source_matches_with_cp932(readFile(pair.decomp), readFile(pair.port))) {
+                throw std::runtime_error(std::string("PC Game mirror differs beyond explicit CP932 encoding: ") +
                                          std::string(pair.port));
             }
 

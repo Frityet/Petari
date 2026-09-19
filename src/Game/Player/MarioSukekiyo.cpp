@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioSukekiyo.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Player/Mario.hpp"
@@ -21,7 +22,7 @@ MarioBury::MarioBury(MarioActor* pActor) : MarioSukekiyo(pActor) {
 bool MarioSukekiyo::close() {
     getPlayer()->stopWalk();
     mActor->_F44 = 1;
-    stopAnimation(static_cast< const char* >(nullptr), "基本");
+    stopAnimation(static_cast< const char* >(nullptr), CP932("基本"));
     return true;
 }
 
@@ -35,10 +36,10 @@ bool MarioSukekiyo::postureCtrl(MtxPtr mtx) {
 }
 
 bool MarioSukekiyo::start() {
-    playSound("スケキヨ開始");
+    playSound(CP932("スケキヨ開始"));
     Mario* player = getPlayer();
-    playEffectRT("属性尻ドロップ", player->_368, getTrans());
-    startPadVib("最強");
+    playEffectRT(CP932("属性尻ドロップ"), player->_368, getTrans());
+    startPadVib(CP932("最強"));
     startCamVib(3);
     mActor->_F44 = 0;
     _14 = getPlayer()->_368;
@@ -50,10 +51,10 @@ bool MarioSukekiyo::start() {
     getPlayer()->stopWalk();
 
     if (mStatusId == MarioStatus_Sukekiyo) {
-        changeAnimation("スケキヨ", static_cast< const char* >(nullptr));
+        changeAnimation(CP932("スケキヨ"), static_cast< const char* >(nullptr));
     } else {
-        playSound("声足埋まり開始");
-        changeAnimation("埋まり", static_cast< const char* >(nullptr));
+        playSound(CP932("声足埋まり開始"));
+        changeAnimation(CP932("埋まり"), static_cast< const char* >(nullptr));
     }
     return true;
 }
@@ -77,14 +78,14 @@ bool MarioSukekiyo::update() {
 
     if (_4A) {
         if (mStatusId == MarioStatus_Sukekiyo) {
-            changeAnimation("スケキヨ脱出", "基本");
-            playSound("声スケキヨ終了");
+            changeAnimation(CP932("スケキヨ脱出"), CP932("基本"));
+            playSound(CP932("声スケキヨ終了"));
         } else {
-            changeAnimation("埋まり脱出", "基本");
-            playSound("声足埋まり終了");
+            changeAnimation(CP932("埋まり脱出"), CP932("基本"));
+            playSound(CP932("声足埋まり終了"));
         }
 
-        playSound("スケキヨ終了");
+        playSound(CP932("スケキヨ終了"));
     }
 
     return true;

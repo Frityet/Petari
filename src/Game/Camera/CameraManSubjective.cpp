@@ -1,9 +1,10 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Camera/CameraManSubjective.hpp"
 #include "Game/Camera/CameraLocalUtil.hpp"
 #include "Game/Camera/CameraSubjective.hpp"
 
 CameraManSubjective::CameraManSubjective(const char* pName) : CameraMan(pName) {
-    mCamera = new CameraSubjective("主観カメラ");
+    mCamera = new CameraSubjective(CP932("主観カメラ"));
     mCamera->mCameraMan = this;
 }
 

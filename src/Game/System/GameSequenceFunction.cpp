@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/System/GameSequenceFunction.hpp"
 #include "Game/NWC24/NWC24Messenger.hpp"
 #include "Game/System/FindingLuigiEventScheduler.hpp"
@@ -275,7 +276,7 @@ namespace GameSequenceFunction {
     }
 
     void storeSceneStartGameDataHolder() {
-        if (!GameDataFunction::isPassedStoryEvent("チコガイドデモ終了") || GameDataFunction::hasGrandStar(1)) {
+        if (!GameDataFunction::isPassedStoryEvent(CP932("チコガイドデモ終了")) || GameDataFunction::hasGrandStar(1)) {
             ::getSaveDataHandleSequence()->backupCurrentUserFile();
         }
     }
@@ -292,7 +293,7 @@ namespace GameSequenceFunction {
     void startGameDataSaveSequence(bool isConfirmRemind, bool isSaveAndQuitMsg) {
         ::getGameSequenceProgress()->getGalaxyCometScheduler()->updateStateToGameData();
 
-        if (GameDataFunction::isPassedStoryEvent("ピーチ城浮上後") && !GameDataFunction::hasGrandStar(1)) {
+        if (GameDataFunction::isPassedStoryEvent(CP932("ピーチ城浮上後")) && !GameDataFunction::hasGrandStar(1)) {
             ::getSaveDataHandleSequence()->startSaveBackup(isConfirmRemind, isSaveAndQuitMsg);
         } else {
             ::getSaveDataHandleSequence()->startSave(isConfirmRemind, isSaveAndQuitMsg);

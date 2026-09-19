@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Demo/DemoExecutor.hpp"
@@ -18,7 +19,7 @@ public:
     DemoWipeKeeper(DemoExecutor*);
 
     virtual const char* getName() const {
-        return "ワイプ";
+        return CP932("ワイプ");
     }
 
     virtual const char* getTypeString() const {

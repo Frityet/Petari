@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Enemy/AnimScaleController.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/MathUtil.hpp"
@@ -48,7 +49,7 @@ AnimScaleParam::AnimScaleParam() {
     _30 = 0.25f;
 }
 
-AnimScaleController::AnimScaleController(AnimScaleParam* pScaleParam) : NerveExecutor("スケールアニメコントロール\00") {
+AnimScaleController::AnimScaleController(AnimScaleParam* pScaleParam) : NerveExecutor(CP932("スケールアニメコントロール\00")) {
     _8 = pScaleParam;
     _C.set(1.0f);
     _18 = 0.0f;

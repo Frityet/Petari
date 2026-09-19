@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Util/FurCtrl.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -66,7 +67,7 @@ namespace MR {
     }
 }
 
-FurDrawManager::FurDrawManager(u8 capacity) : NameObj("ファー描画マネージャ") {
+FurDrawManager::FurDrawManager(u8 capacity) : NameObj(CP932("ファー描画マネージャ")) {
     mNumFurCtrls[0] = 0;
     mNumFurCtrls[1] = 0;
     mFurCtrls[0] = new FurCtrl*[capacity];
@@ -146,7 +147,7 @@ void FurCtrl::setupFur(J3DModel* pModel, ResTIMG* pLength, ResTIMG* pIndirect, R
     _30 = new J3DModel*[count];
     for (s32 i = 0; i < _24; i++) {
         char name[32];
-        sprintf(name, "レイヤ %d", i);
+        sprintf(name, CP932("レイヤ %d"), i);
         J3DModel2* model = new J3DModel2(_10);
         model->mUnkCalc1 = _2C;
         if (model->mUnkCalc1 != nullptr) {
@@ -182,7 +183,7 @@ void FurCtrl::setupFurClone(J3DModel* pModel, FurCtrl* pOriginal) {
     _30 = new J3DModel*[_24];
     for (u32 i = 0; i < _24; i++) {
         char name[32];
-        sprintf(name, "レイヤ(コピー) %d", i);
+        sprintf(name, CP932("レイヤ(コピー) %d"), i);
         J3DModel2* model = new J3DModel2(_10);
         J3DVertexBuffer& destination = model->mVertexBuffer;
         const J3DVertexBuffer& source = pOriginal->_30[i]->mVertexBuffer;
@@ -291,33 +292,33 @@ namespace MR {
                 pData++;
                 offset++;
             }
-            scan32(line, "レイヤ数", &pParam->mLayerCount);
-            scanf32(line, "毛長さ", &pParam->_4);
-            scanf32(line, "長さ偏差", &pParam->_8);
-            scanf32(line, "ズレ(indirect)", &pParam->_C);
-            scanf32(line, "ズレ偏差", &pParam->_10);
-            scanf32(line, "明るさ(毛先)", &pParam->_14);
-            scanf32(line, "明るさ(毛元)", &pParam->_18);
-            scanf32(line, "明るさ偏差", &pParam->_1C);
-            scanf32(line, "透明度(毛先)", &pParam->_20);
-            scanf32(line, "透明度(毛元)", &pParam->_24);
-            scanf32(line, "透明度偏差", &pParam->_28);
-            scanf32(line, "透明度・地肌(毛先)", &pParam->_2C);
-            scanf32(line, "透明度・地肌(毛元)", &pParam->_30);
-            scanf32(line, "透明度・地肌偏差", &pParam->_34);
-            scanf32(line, "密度マップスケール", &pParam->_38);
-            scanf32(line, "ベースマップスケール", &pParam->_3C);
-            scanu8x4(line, "混合カラー", &pParam->_40.r);
-            scanf32x4(line, "植毛密度", pParam->_44);
-            scanf32x4(line, "植毛太さ", pParam->_54);
-            scanu8x4(line, "混合比", &pParam->_64.r);
-            scan32(line, "ライト0スイッチ", &light0Enabled);
-            scan32(line, "ライト0マテリアル", &light0Material);
-            scan32(line, "ライト0アンビエント", &light0Ambient);
-            scan32(line, "ライト1スイッチ", &light1Enabled);
-            scan32(line, "ライト1マテリアル", &light1Material);
-            scan32(line, "ライト1アンビエント", &light1Ambient);
-            scan32(line, "ライトカラーソース", &lightColorSource);
+            scan32(line, CP932("レイヤ数"), &pParam->mLayerCount);
+            scanf32(line, CP932("毛長さ"), &pParam->_4);
+            scanf32(line, CP932("長さ偏差"), &pParam->_8);
+            scanf32(line, CP932("ズレ(indirect)"), &pParam->_C);
+            scanf32(line, CP932("ズレ偏差"), &pParam->_10);
+            scanf32(line, CP932("明るさ(毛先)"), &pParam->_14);
+            scanf32(line, CP932("明るさ(毛元)"), &pParam->_18);
+            scanf32(line, CP932("明るさ偏差"), &pParam->_1C);
+            scanf32(line, CP932("透明度(毛先)"), &pParam->_20);
+            scanf32(line, CP932("透明度(毛元)"), &pParam->_24);
+            scanf32(line, CP932("透明度偏差"), &pParam->_28);
+            scanf32(line, CP932("透明度・地肌(毛先)"), &pParam->_2C);
+            scanf32(line, CP932("透明度・地肌(毛元)"), &pParam->_30);
+            scanf32(line, CP932("透明度・地肌偏差"), &pParam->_34);
+            scanf32(line, CP932("密度マップスケール"), &pParam->_38);
+            scanf32(line, CP932("ベースマップスケール"), &pParam->_3C);
+            scanu8x4(line, CP932("混合カラー"), &pParam->_40.r);
+            scanf32x4(line, CP932("植毛密度"), pParam->_44);
+            scanf32x4(line, CP932("植毛太さ"), pParam->_54);
+            scanu8x4(line, CP932("混合比"), &pParam->_64.r);
+            scan32(line, CP932("ライト0スイッチ"), &light0Enabled);
+            scan32(line, CP932("ライト0マテリアル"), &light0Material);
+            scan32(line, CP932("ライト0アンビエント"), &light0Ambient);
+            scan32(line, CP932("ライト1スイッチ"), &light1Enabled);
+            scan32(line, CP932("ライト1マテリアル"), &light1Material);
+            scan32(line, CP932("ライト1アンビエント"), &light1Ambient);
+            scan32(line, CP932("ライトカラーソース"), &lightColorSource);
             light->mLight0Enabled = light0Enabled;
             light->mLight0Material = light0Material;
             light->mLight0Ambient = light0Ambient;

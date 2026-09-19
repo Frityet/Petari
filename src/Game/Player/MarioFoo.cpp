@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioFoo.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
@@ -135,7 +136,7 @@ bool MarioFoo::start() {
         _12 = true;
     }
 
-    changeAnimation("フーファイター飛行開始", "フーファイター飛行");
+    changeAnimation(CP932("フーファイター飛行開始"), CP932("フーファイター飛行"));
     startPadVib(2);
     _48 = MR::getAreaObj("CelestrialSphere", getTrans());
     _AC = 0;
@@ -147,8 +148,8 @@ bool MarioFoo::update() {
     _14++;
 
     if (checkTrgZ()) {
-        playSound("声尻ドロップ", -1);
-        playSound("フーブレーキ", -1);
+        playSound(CP932("声尻ドロップ"), -1);
+        playSound(CP932("フーブレーキ"), -1);
         _11 = true;
         _59 = 3;
     }
@@ -300,7 +301,7 @@ bool MarioFoo::update() {
     }
 
     if (stopWaitAnimation) {
-        stopAnimation("水泳ターン下", static_cast< const char* >(nullptr));
+        stopAnimation(CP932("水泳ターン下"), static_cast< const char* >(nullptr));
     }
 
     _2C = MR::clamp(_2C, cUpperAngleWait, cLimitAngleSink);
@@ -395,28 +396,28 @@ bool MarioFoo::notice() {
 }
 
 bool MarioFoo::close() {
-    stopEffect("フーマリオブレーキ左");
-    stopEffect("フーマリオブレーキ右");
-    stopEffect("フーマリオグロー左");
-    stopEffect("フーマリオグロー右");
-    playEffect("フーマリオ解除左");
-    playEffect("フーマリオ解除右");
+    stopEffect(CP932("フーマリオブレーキ左"));
+    stopEffect(CP932("フーマリオブレーキ右"));
+    stopEffect(CP932("フーマリオグロー左"));
+    stopEffect(CP932("フーマリオグロー右"));
+    playEffect(CP932("フーマリオ解除左"));
+    playEffect(CP932("フーマリオ解除右"));
     stopAnimationUpper(nullptr, nullptr);
     setYangleOffset(0.0f);
     setJointGlobalMtx(getAnimator()->getUpperJointID(), nullptr);
 
     switch (_59) {
     case 0:
-        changeAnimation("飛び込み失敗回転着地", static_cast< const char* >(nullptr));
+        changeAnimation(CP932("飛び込み失敗回転着地"), static_cast< const char* >(nullptr));
         break;
     case 1:
-        changeAnimation("フーファイター着地", static_cast< const char* >(nullptr));
+        changeAnimation(CP932("フーファイター着地"), static_cast< const char* >(nullptr));
         break;
     case 2:
         stopAnimation(nullptr, static_cast< const char* >(nullptr));
         break;
     case 3:
-        changeAnimation("フーファイター解除", static_cast< const char* >(nullptr));
+        changeAnimation(CP932("フーファイター解除"), static_cast< const char* >(nullptr));
         TVec3f zeroVelocity(0.0f, 0.0f, 0.0f);
         getPlayer()->mJumpVec = zeroVelocity;
         getPlayer()->_10._21 = true;
@@ -424,9 +425,9 @@ bool MarioFoo::close() {
     }
 
     if (getPlayer()->mMovementStates.jumping) {
-        changeAnimation(nullptr, "落下");
+        changeAnimation(nullptr, CP932("落下"));
     } else {
-        changeAnimation(nullptr, "基本");
+        changeAnimation(nullptr, CP932("基本"));
     }
 
     getPlayer()->_4B0 = getPlayer()->mPosition;
@@ -461,16 +462,16 @@ void MarioFoo::jet() {
         deceleration = 0.9f;
         _AC++;
 
-        if (!isAnimationRun("フーファイタースピン")) {
-            changeAnimation("フーファイター静止", static_cast< const char* >(nullptr));
+        if (!isAnimationRun(CP932("フーファイタースピン"))) {
+            changeAnimation(CP932("フーファイター静止"), static_cast< const char* >(nullptr));
         }
 
-        playEffect("フーマリオブレーキ左");
-        playEffect("フーマリオブレーキ右");
-        stopEffect("フーマリオグロー左");
-        stopEffect("フーマリオグロー右");
+        playEffect(CP932("フーマリオブレーキ左"));
+        playEffect(CP932("フーマリオブレーキ右"));
+        stopEffect(CP932("フーマリオグロー左"));
+        stopEffect(CP932("フーマリオグロー右"));
         if (!_AE) {
-            playSound("フーブレーキ", -1);
+            playSound(CP932("フーブレーキ"), -1);
         }
 
         _AE = true;
@@ -485,12 +486,12 @@ void MarioFoo::jet() {
             _AE = false;
         } else {
             if (_AE) {
-                playEffect("共通ひこうきブースト");
-                playSound("フー加速", -1);
+                playEffect(CP932("共通ひこうきブースト"));
+                playSound(CP932("フー加速"), -1);
                 _AE = false;
 
-                if (isAnimationRun("フーファイター静止")) {
-                    changeAnimation("フーファイター飛行再開", static_cast< const char* >(nullptr));
+                if (isAnimationRun(CP932("フーファイター静止"))) {
+                    changeAnimation(CP932("フーファイター飛行再開"), static_cast< const char* >(nullptr));
                 }
             }
 
@@ -503,18 +504,18 @@ void MarioFoo::jet() {
             _AC--;
         }
 
-        stopAnimation("フーファイター静止", static_cast< const char* >(nullptr));
-        playEffect("フーマリオグロー左");
-        playEffect("フーマリオグロー右");
-        stopEffect("フーマリオブレーキ左");
-        stopEffect("フーマリオブレーキ右");
+        stopAnimation(CP932("フーファイター静止"), static_cast< const char* >(nullptr));
+        playEffect(CP932("フーマリオグロー左"));
+        playEffect(CP932("フーマリオグロー右"));
+        stopEffect(CP932("フーマリオブレーキ左"));
+        stopEffect(CP932("フーマリオブレーキ右"));
     }
 
     f32 soundLevel = 50.0f * (1.0f + getStickY());
     if (!_AE) {
-        playSound("フー飛行中", static_cast< s32 >(soundLevel));
+        playSound(CP932("フー飛行中"), static_cast< s32 >(soundLevel));
     }
-    playSound("フー滞空中", static_cast< s32 >(soundLevel));
+    playSound(CP932("フー滞空中"), static_cast< s32 >(soundLevel));
 
     if (_28 < targetSpeed) {
         if (_28 < 1.0f) {
@@ -583,7 +584,7 @@ void MarioFoo::hitWall(const TVec3f& rNormal, HitSensor* pSensor) {
         _59 = 2;
     }
 
-    playSound("フーブレーキ", -1);
+    playSound(CP932("フーブレーキ"), -1);
 }
 
 f32 MarioFoo::getStickY() const {
@@ -594,12 +595,12 @@ void MarioFoo::spin() {
     if (_60 == 0) {
         if (mActor->isRequestSpin() && _4C == 0) {
             _4C = 20;
-            if (!isAnimationRun("フーファイタースピン") && !checkLvlA()) {
-                playSound("声スピン", -1);
-                playSound("スピンジャンプ", -1);
+            if (!isAnimationRun(CP932("フーファイタースピン")) && !checkLvlA()) {
+                playSound(CP932("声スピン"), -1);
+                playSound(CP932("スピンジャンプ"), -1);
             }
 
-            changeAnimation("フーファイタースピン", static_cast< const char* >(nullptr));
+            changeAnimation(CP932("フーファイタースピン"), static_cast< const char* >(nullptr));
             if (mActor->_944 == 0) {
                 mActor->_945 = 0;
                 mActor->_974 = 0;
@@ -620,7 +621,7 @@ bool MarioFoo::passRing(const HitSensor* pSensor) {
 
     if (_4E == 0) {
         _50 = mActor->mConst->getTable()->mSwimRingDashChargeTime;
-        changeAnimation("リングダッシュ準備", static_cast< const char* >(nullptr));
+        changeAnimation(CP932("リングダッシュ準備"), static_cast< const char* >(nullptr));
     }
 
     if (_50 != 0) {
@@ -649,7 +650,7 @@ f32 MarioFoo::calcRingAcc() {
 
             if (_50 == 0) {
                 startPadVib(3);
-                changeAnimation("リングダッシュ", static_cast< const char* >(nullptr));
+                changeAnimation(CP932("リングダッシュ"), static_cast< const char* >(nullptr));
             }
 
             return 1.0f;

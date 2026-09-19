@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioModule.hpp"
 #include "Game/Animation/XanimeCore.hpp"
 #include "Game/Enemy/KarikariDirector.hpp"
@@ -600,16 +601,16 @@ bool MarioModule::isInputDisable() const {
     if (mActor->mMario->isStatusActive(MarioStatus_FpView)) {
         return true;
     }
-    if (isAnimationRun("ハード着地")) {  // "Hard landing"
+    if (isAnimationRun(CP932("ハード着地"))) {  // "Hard landing"
         return true;
     }
-    if (isAnimationRun("中ダメージ着地")) {
+    if (isAnimationRun(CP932("中ダメージ着地"))) {
         return true;
     }
-    if (isAnimationRun("中後ダメージ着地")) {
+    if (isAnimationRun(CP932("中後ダメージ着地"))) {
         return true;
     }
-    if (isAnimationRun("ステージインB")) {
+    if (isAnimationRun(CP932("ステージインB"))) {
         return true;
     }
     return mActor->_3C0;

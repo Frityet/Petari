@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "revolution/os.h"
 #include "Game/Player/DLchanger.hpp"
 #include "Game/Player/J3DModelX.hpp"
@@ -217,7 +218,7 @@ void MarioActor::hideBeeFur() {
     }
     if (mMario->isPlayerModeInvincible()) {
         _A6E = 0;
-        stopEffect("無敵中");
+        stopEffect(CP932("無敵中"));
     }
 }
 
@@ -647,7 +648,7 @@ void MarioActor::showBeeFur() {
     if (mMario->isPlayerModeInvincible()) {
         MR::showJoint(getJ3DModel(), "Face0");
         _A6E = 2;
-        playEffect("無敵中");
+        playEffect(CP932("無敵中"));
     }
 }
 
@@ -754,7 +755,7 @@ void MarioActor::calcSpinEffect() {
     _6D8 = 0.0f;
     f32 minimum = 30.0f;
     f32 scale = 5.8f;
-    if (selectAction("スピン回復エフェクト") != 1 || !_945 || _944 || !_946) {
+    if (selectAction(CP932("スピン回復エフェクト")) != 1 || !_945 || _944 || !_946) {
         return;
     }
 

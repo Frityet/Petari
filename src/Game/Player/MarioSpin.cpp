@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/HitInfo.hpp"
@@ -106,14 +107,14 @@ void Mario::doSpinWallEffect() {
         return;
     }
 
-    playSound("壁反射", -1);
-    playSound("声スピンキャンセル", -1);
-    playEffect("壁スパーク");
+    playSound(CP932("壁反射"), -1);
+    playSound(CP932("声スピンキャンセル"), -1);
+    playEffect(CP932("壁スパーク"));
 }
 
 bool Mario::taskOnRotation(u32 flags) {
     if (flags & 4) {
-        if (!isAnimationRun("ヘリコプタージャンプ")) {
+        if (!isAnimationRun(CP932("ヘリコプタージャンプ"))) {
             mYAngleOffset = sZero;
             return false;
         }

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/RaceManager.hpp"
 #include "Game/NPC/EventDirector.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -105,91 +106,91 @@ namespace MR {
     }
 
     void onGameEventFlagBeeMarioAtFirst() {
-        GameDataFunction::onGameEventFlag("ハチマリオ初変身");
+        GameDataFunction::onGameEventFlag(CP932("ハチマリオ初変身"));
     }
 
     void onGameEventFlagTeresaMarioAtFirst() {
-        GameDataFunction::onGameEventFlag("テレサマリオ初変身");
+        GameDataFunction::onGameEventFlag(CP932("テレサマリオ初変身"));
     }
 
     void onGameEventFlagHopperMarioAtFirst() {
-        GameDataFunction::onGameEventFlag("ホッパーマリオ初変身");
+        GameDataFunction::onGameEventFlag(CP932("ホッパーマリオ初変身"));
     }
 
     void onGameEventFlagFireMarioAtFirst() {
-        GameDataFunction::onGameEventFlag("ファイアマリオ初変身");
+        GameDataFunction::onGameEventFlag(CP932("ファイアマリオ初変身"));
     }
 
     void onGameEventFlagIceMarioAtFirst() {
-        GameDataFunction::onGameEventFlag("アイスマリオ初変身");
+        GameDataFunction::onGameEventFlag(CP932("アイスマリオ初変身"));
     }
 
     void onGameEventFlagFlyingMarioAtFirst() {
-        GameDataFunction::onGameEventFlag("フライングマリオ初変身");
+        GameDataFunction::onGameEventFlag(CP932("フライングマリオ初変身"));
     }
 
     void onGameEventFlagInvincibleMarioAtFirst() {
-        GameDataFunction::onGameEventFlag("無敵マリオ初変身");
+        GameDataFunction::onGameEventFlag(CP932("無敵マリオ初変身"));
     }
 
     void onGameEventFlagLifeUpAtFirst() {
-        GameDataFunction::onGameEventFlag("ライフアップキノコ解説");
+        GameDataFunction::onGameEventFlag(CP932("ライフアップキノコ解説"));
     }
 
     void onGameEventFlagOneUpAtFirst() {
-        GameDataFunction::onGameEventFlag("１ＵＰキノコ解説");
+        GameDataFunction::onGameEventFlag(CP932("１ＵＰキノコ解説"));
     }
 
     bool isOnGameEventFlagPlayMoviePrologueA() {
-        return GameDataFunction::isPassedStoryEvent("クッパ襲来後");
+        return GameDataFunction::isPassedStoryEvent(CP932("クッパ襲来後"));
     }
 
     bool isOnGameEventFlagEndTicoGuideDemo() {
-        return GameDataFunction::isPassedStoryEvent("チコガイドデモ終了");
+        return GameDataFunction::isPassedStoryEvent(CP932("チコガイドデモ終了"));
     }
 
     bool isOnGameEventFlagEndButlerDomeLecture() {
-        return GameDataFunction::isPassedStoryEvent("天球儀レクチャー");
+        return GameDataFunction::isPassedStoryEvent(CP932("天球儀レクチャー"));
     }
 
     bool isOnGameEventFlagEndButlerGalaxyMoveLecture() {
-        return GameDataFunction::isPassedStoryEvent("ギャラクシー移動レクチャー");
+        return GameDataFunction::isPassedStoryEvent(CP932("ギャラクシー移動レクチャー"));
     }
 
     bool isOnGameEventFlagEndButlerStarPieceLecture() {
-        return GameDataFunction::isPassedStoryEvent("スターピースレクチャー");
+        return GameDataFunction::isPassedStoryEvent(CP932("スターピースレクチャー"));
     }
 
     bool isOnGameEventFlagBeeMarioAtFirst() {
-        return GameDataFunction::isOnGameEventFlag("ハチマリオ初変身");
+        return GameDataFunction::isOnGameEventFlag(CP932("ハチマリオ初変身"));
     }
 
     bool isOnGameEventFlagTeresaMarioAtFirst() {
-        return GameDataFunction::isOnGameEventFlag("テレサマリオ初変身");
+        return GameDataFunction::isOnGameEventFlag(CP932("テレサマリオ初変身"));
     }
 
     bool isOnGameEventFlagHopperMarioAtFirst() {
-        return GameDataFunction::isOnGameEventFlag("ホッパーマリオ初変身");
+        return GameDataFunction::isOnGameEventFlag(CP932("ホッパーマリオ初変身"));
     }
 
     bool isOnGameEventFlagFireMarioAtFirst() {
-        return GameDataFunction::isOnGameEventFlag("ファイアマリオ初変身");
+        return GameDataFunction::isOnGameEventFlag(CP932("ファイアマリオ初変身"));
     }
 
     bool isOnGameEventFlagIceMarioAtFirst() {
-        return GameDataFunction::isOnGameEventFlag("アイスマリオ初変身");
+        return GameDataFunction::isOnGameEventFlag(CP932("アイスマリオ初変身"));
     }
 
     bool isOnGameEventFlagFlyingMarioAtFirst() {
-        return GameDataFunction::isOnGameEventFlag("フライングマリオ初変身");
+        return GameDataFunction::isOnGameEventFlag(CP932("フライングマリオ初変身"));
     }
 
     bool isOnGameEventFlagSurfingTutorialAtFirst() {
-        return GameDataFunction::isOnGameEventFlag("サーフィンチュートリアル");
+        return GameDataFunction::isOnGameEventFlag(CP932("サーフィンチュートリアル"));
     }
 
     bool isOnGameEventFlagTamakoroTutorialAtFirst() {
-        return GameDataFunction::isOnGameEventFlag("タマコロチュートリアル");
+        return GameDataFunction::isOnGameEventFlag(CP932("タマコロチュートリアル"));
     }
 
     bool isOnGameEventFlagViewCompleteEnding() {
@@ -837,94 +838,94 @@ namespace MR {
     }
 
     void explainBeeMarioIfAtFirst() {
-        if (!GameDataFunction::isOnGameEventFlag("ハチマリオ初変身")) {
+        if (!GameDataFunction::isOnGameEventFlag(CP932("ハチマリオ初変身"))) {
             InformationObserverFunction::explainBee();
         }
     }
 
     void explainTeresaMarioIfAtFirst() {
-        if (!GameDataFunction::isOnGameEventFlag("テレサマリオ初変身")) {
+        if (!GameDataFunction::isOnGameEventFlag(CP932("テレサマリオ初変身"))) {
             InformationObserverFunction::explainTeresa();
         }
     }
 
     void explainHopperMarioIfAtFirst() {
-        if (!GameDataFunction::isOnGameEventFlag("ホッパーマリオ初変身")) {
+        if (!GameDataFunction::isOnGameEventFlag(CP932("ホッパーマリオ初変身"))) {
             InformationObserverFunction::explainHopper();
         }
     }
 
     void explainFireMarioIfAtFirst() {
-        if (!GameDataFunction::isOnGameEventFlag("ファイアマリオ初変身")) {
+        if (!GameDataFunction::isOnGameEventFlag(CP932("ファイアマリオ初変身"))) {
             InformationObserverFunction::explainFire();
         }
     }
 
     void explainIceMarioIfAtFirst() {
-        if (!GameDataFunction::isOnGameEventFlag("アイスマリオ初変身")) {
+        if (!GameDataFunction::isOnGameEventFlag(CP932("アイスマリオ初変身"))) {
             InformationObserverFunction::explainIce();
         }
     }
 
     void explainFlyingMarioIfAtFirst() {
-        if (!GameDataFunction::isOnGameEventFlag("フライングマリオ初変身")) {
+        if (!GameDataFunction::isOnGameEventFlag(CP932("フライングマリオ初変身"))) {
             InformationObserverFunction::explainFlying();
         }
     }
 
     void explainInvincibleMarioIfAtFirst() {
-        if (!GameDataFunction::isOnGameEventFlag("無敵マリオ初変身")) {
+        if (!GameDataFunction::isOnGameEventFlag(CP932("無敵マリオ初変身"))) {
             InformationObserverFunction::explainInvincible();
         }
     }
 
     void explainLifeUpIfAtFirst() {
-        if (!GameDataFunction::isOnGameEventFlag("ライフアップキノコ解説")) {
+        if (!GameDataFunction::isOnGameEventFlag(CP932("ライフアップキノコ解説"))) {
             InformationObserverFunction::explainLifeUp();
         }
     }
 
     void explainOneUpIfAtFirst() {
-        if (!GameDataFunction::isOnGameEventFlag("１ＵＰキノコ解説")) {
+        if (!GameDataFunction::isOnGameEventFlag(CP932("１ＵＰキノコ解説"))) {
             InformationObserverFunction::explainOneUp();
         }
     }
 
     void onGameEventFlagPlayMoviePrologueA() {
-        GameDataFunction::followStoryEventByName("クッパ襲来後");
+        GameDataFunction::followStoryEventByName(CP932("クッパ襲来後"));
     }
 
     void onGameEventFlagPlayMoviePrologueB() {
-        GameDataFunction::followStoryEventByName("ピーチ城浮上後");
+        GameDataFunction::followStoryEventByName(CP932("ピーチ城浮上後"));
     }
 
     void onGameEventFlagEndTicoGuideDemo() {
-        GameDataFunction::followStoryEventByName("チコガイドデモ終了");
+        GameDataFunction::followStoryEventByName(CP932("チコガイドデモ終了"));
     }
 
     void onGameEventFlagEnableToSpinAndStarPointer() {
-        GameDataFunction::followStoryEventByName("スピン権利");
+        GameDataFunction::followStoryEventByName(CP932("スピン権利"));
         MR::setPlayerSwingPermission(true);
     }
 
     void onGameEventFlagEndButlerDomeLecture() {
-        GameDataFunction::followStoryEventByName("天球儀レクチャー");
+        GameDataFunction::followStoryEventByName(CP932("天球儀レクチャー"));
     }
 
     void onGameEventFlagEndButlerGalaxyMoveLecture() {
-        GameDataFunction::followStoryEventByName("ギャラクシー移動レクチャー");
+        GameDataFunction::followStoryEventByName(CP932("ギャラクシー移動レクチャー"));
     }
 
     void onGameEventFlagEndButlerStarPieceLecture() {
-        GameDataFunction::followStoryEventByName("スターピースレクチャー");
+        GameDataFunction::followStoryEventByName(CP932("スターピースレクチャー"));
     }
 
     void onGameEventFlagSurfingTutorialAtFirst() {
-        GameDataFunction::onGameEventFlag("サーフィンチュートリアル");
+        GameDataFunction::onGameEventFlag(CP932("サーフィンチュートリアル"));
     }
 
     void onGameEventFlagTamakoroTutorialAtFirst() {
-        GameDataFunction::onGameEventFlag("タマコロチュートリアル");
+        GameDataFunction::onGameEventFlag(CP932("タマコロチュートリアル"));
     }
 
     void onGameEventFlagRosettaTalkAboutTicoInTower() {
@@ -943,7 +944,7 @@ namespace MR {
     }
 
     bool isOnGameEventFlagUseAstroDome() {
-        return GameDataFunction::isPassedStoryEvent("バトラー情報Ａ");
+        return GameDataFunction::isPassedStoryEvent(CP932("バトラー情報Ａ"));
     }
 
     bool isOnGameEventFlagGreenDriver() {

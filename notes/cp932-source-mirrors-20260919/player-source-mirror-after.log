@@ -1,0 +1,113 @@
+[fail] DrawAdaptor.cpp: provider-incomplete Player source is not explicitly excluded: DrawAdaptor.cpp
+[fail] FireMarioBall.cpp: provider-incomplete Player source is not explicitly excluded: FireMarioBall.cpp
+[fail] J3DModelX.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/J3DModelX.cpp
+[fail] JetTurtleShadow.cpp: provider-incomplete Player source is not explicitly excluded: JetTurtleShadow.cpp
+[fail] MarineSnow.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarineSnow.cpp
+[fail] Mario.cpp: PC platform mirror does not retain retail branches except explicit CP932 encoding: src/Game/Player/Mario.cpp
+[fail] Mario2D.cpp: provider-incomplete Player source is not explicitly excluded: Mario2D.cpp
+[fail] MarioAccess.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioAccess.cpp
+[fail] MarioActor.cpp: PC platform mirror does not retain retail branches except explicit CP932 encoding: src/Game/Player/MarioActor.cpp
+[fail] MarioActorCamera.cpp: provider-incomplete Player source is not explicitly excluded: MarioActorCamera.cpp
+[fail] MarioActorClap.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioActorClap.cpp
+[fail] MarioActorDefensiveMsg.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioActorDefensiveMsg.cpp
+[fail] MarioActorDraw.cpp: PC platform mirror does not retain retail branches except explicit CP932 encoding: src/Game/Player/MarioActorDraw.cpp
+[fail] MarioActorEye.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioActorEye.cpp
+[fail] MarioActorGameOver.cpp: provider-incomplete Player source is not explicitly excluded: MarioActorGameOver.cpp
+[fail] MarioActorGravity.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioActorGravity.cpp
+[fail] MarioActorHand.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioActorHand.cpp
+[fail] MarioActorInit.cpp: PC platform mirror does not retain retail branches except explicit CP932 encoding: src/Game/Player/MarioActorInit.cpp
+[fail] MarioActorMatrix.cpp: provider-incomplete Player source is not explicitly excluded: MarioActorMatrix.cpp
+[fail] MarioActorMorph.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioActorMorph.cpp
+[fail] MarioActorOffensiveMsg.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioActorOffensiveMsg.cpp
+[fail] MarioActorPad.cpp: provider-incomplete Player source is not explicitly excluded: MarioActorPad.cpp
+[fail] MarioActorParts.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioActorParts.cpp
+[fail] MarioActorPunch.cpp: provider-incomplete Player source is not explicitly excluded: MarioActorPunch.cpp
+[fail] MarioActorRush.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioActorRush.cpp
+[fail] MarioActorRushMsg.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioActorRushMsg.cpp
+[fail] MarioActorSensor.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioActorSensor.cpp
+[fail] MarioActorShadow.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioActorShadow.cpp
+[fail] MarioActorSpecialDraw.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioActorSpecialDraw.cpp
+[fail] MarioActorTakeMsg.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioActorTakeMsg.cpp
+[fail] MarioActorWipe.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioActorWipe.cpp
+[fail] MarioAnimationEfx.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioAnimationEfx.cpp
+[fail] MarioAnimator.cpp: PC platform mirror does not retain retail branches except explicit CP932 encoding: src/Game/Player/MarioAnimator.cpp
+[fail] MarioBee.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioBee.cpp
+[fail] MarioBlown.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioBlown.cpp
+[fail] MarioBump.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioBump.cpp
+[fail] MarioClimb.cpp: provider-incomplete Player source is not explicitly excluded: MarioClimb.cpp
+[fail] MarioCollision.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioCollision.cpp
+[fail] MarioConst.cpp: provider-incomplete Player source is not explicitly excluded: MarioConst.cpp
+[fail] MarioDamage.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioDamage.cpp
+[fail] MarioDamageCrush.cpp: provider-incomplete Player source is not explicitly excluded: MarioDamageCrush.cpp
+[fail] MarioDamageFreeze.cpp: provider-incomplete Player source is not explicitly excluded: MarioDamageFreeze.cpp
+[fail] MarioDamageParalyze.cpp: provider-incomplete Player source is not explicitly excluded: MarioDamageParalyze.cpp
+[fail] MarioDamageStun.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioDamageStun.cpp
+[fail] MarioEffect.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioEffect.cpp
+[fail] MarioEnforce.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioEnforce.cpp
+[fail] MarioFaint.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioFaint.cpp
+[fail] MarioFlip.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioFlip.cpp
+[fail] MarioFlow.cpp: provider-incomplete Player source is not explicitly excluded: MarioFlow.cpp
+[fail] MarioFoo.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioFoo.cpp
+[fail] MarioFpView.cpp: provider-incomplete Player source is not explicitly excluded: MarioFpView.cpp
+[fail] MarioFrontStep.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioFrontStep.cpp
+[fail] MarioHang.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioHang.cpp
+[fail] MarioInit.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioInit.cpp
+[fail] MarioJump.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioJump.cpp
+[fail] MarioMagic.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioMagic.cpp
+[fail] MarioMapCode.cpp: provider-incomplete Player source is not explicitly excluded: MarioMapCode.cpp
+[fail] MarioMessenger.cpp: provider-incomplete Player source is not explicitly excluded: MarioMessenger.cpp
+[fail] MarioModule.cpp: PC platform mirror does not retain retail branches except explicit CP932 encoding: src/Game/Player/MarioModule.cpp
+[fail] MarioMove.cpp: PC platform mirror does not retain retail branches except explicit CP932 encoding: src/Game/Player/MarioMove.cpp
+[fail] MarioMove25D.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioMove25D.cpp
+[fail] MarioMove2D.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioMove2D.cpp
+[fail] MarioMoveSphere.cpp: provider-incomplete Player source is not explicitly excluded: MarioMoveSphere.cpp
+[fail] MarioNullBck.cpp: provider-incomplete Player source is not explicitly excluded: MarioNullBck.cpp
+[fail] MarioParts.cpp: provider-incomplete Player source is not explicitly excluded: MarioParts.cpp
+[fail] MarioPress.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioPress.cpp
+[fail] MarioRabbit.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioRabbit.cpp
+[fail] MarioRecovery.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioRecovery.cpp
+[fail] MarioSearchLight.cpp: provider-incomplete Player source is not explicitly excluded: MarioSearchLight.cpp
+[fail] MarioShadow.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioShadow.cpp
+[fail] MarioSideStep.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioSideStep.cpp
+[fail] MarioSkate.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioSkate.cpp
+[fail] MarioSlider.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioSlider.cpp
+[fail] MarioSlip.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioSlip.cpp
+[fail] MarioSlope.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioSlope.cpp
+[fail] MarioSound.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioSound.cpp
+[fail] MarioSpecial.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioSpecial.cpp
+[fail] MarioSpin.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioSpin.cpp
+[fail] MarioState.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioState.cpp
+[fail] MarioStep.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioStep.cpp
+[fail] MarioStick.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioStick.cpp
+[fail] MarioSukekiyo.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioSukekiyo.cpp
+[fail] MarioSwim.cpp: provider-incomplete Player source is not explicitly excluded: MarioSwim.cpp
+[fail] MarioSwimDamage.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioSwimDamage.cpp
+[fail] MarioTalk.cpp: provider-incomplete Player source is not explicitly excluded: MarioTalk.cpp
+[fail] MarioTask.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioTask.cpp
+[fail] MarioTeresa.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioTeresa.cpp
+[fail] MarioWait.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioWait.cpp
+[fail] MarioWalk.cpp: provider-incomplete Player source is not explicitly excluded: MarioWalk.cpp
+[fail] MarioWall.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioWall.cpp
+[fail] MarioWarp.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioWarp.cpp
+[fail] MatrixControl.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MatrixControl.cpp
+[fail] ModelHolder.cpp: provider-incomplete Player source is not explicitly excluded: ModelHolder.cpp
+[fail] RushEndInfo.cpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/RushEndInfo.cpp
+[fail] TornadoMario.cpp: provider-incomplete Player source is not explicitly excluded: TornadoMario.cpp
+[fail] DLchanger.hpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/DLchanger.hpp
+[fail] J3DModelX.hpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/J3DModelX.hpp
+[fail] Mario.hpp: PC platform mirror does not retain retail branches except explicit CP932 encoding: src/Game/Player/Mario.hpp
+[fail] MarioAccess.hpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioAccess.hpp
+[fail] MarioActor.hpp: PC platform mirror does not retain retail branches except explicit CP932 encoding: src/Game/Player/MarioActor.hpp
+[fail] MarioAnimator.hpp: PC platform mirror does not retain retail branches except explicit CP932 encoding: src/Game/Player/MarioAnimator.hpp
+[fail] MarioBlown.hpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioBlown.hpp
+[fail] MarioDamage.hpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioDamage.hpp
+[fail] MarioFaint.hpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioFaint.hpp
+[fail] MarioFoo.hpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioFoo.hpp
+[fail] MarioHang.hpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioHang.hpp
+[fail] MarioRecovery.hpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioRecovery.hpp
+[fail] MarioShadow.hpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioShadow.hpp
+[fail] MarioSkate.hpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioSkate.hpp
+[fail] MarioSwim.hpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioSwim.hpp
+[fail] MarioTeresa.hpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioTeresa.hpp
+[fail] MarioWall.hpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/MarioWall.hpp
+[fail] RushEndInfo.hpp: PC Game mirror is different beyond explicit CP932 encoding: src/Game/Player/RushEndInfo.hpp

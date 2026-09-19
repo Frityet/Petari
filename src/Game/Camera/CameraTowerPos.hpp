@@ -1,10 +1,11 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Camera/CameraTowerBase.hpp"
 
 class CameraTowerPos : public CameraTowerBase {
 public:
-    CameraTowerPos(const char* pName = "塔カメラ（サブターゲット付き）");
+    CameraTowerPos(const char* pName = CP932("塔カメラ（サブターゲット付き）"));
     virtual ~CameraTowerPos();
 
     virtual void reset();

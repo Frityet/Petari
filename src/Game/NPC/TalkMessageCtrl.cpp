@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/NPC/TalkMessageCtrl.hpp"
 #include "Game/AreaObj/MessageArea.hpp"
 #include "Game/LiveActor/ActorCameraInfo.hpp"
@@ -320,7 +321,7 @@ void TalkMessageCtrl::startCamera(s32 a1) {
     } else if (inf->isCameraEvent()) {
         if (inf->mCameraSetID) {
             mCameraInfo->mCameraSetID = inf->mCameraSetID;
-            MR::startMultiActorCameraNoTarget(mHostActor, mCameraInfo, "会話", a1);
+            MR::startMultiActorCameraNoTarget(mHostActor, mCameraInfo, CP932("会話"), a1);
         }
     }
 }
@@ -542,7 +543,7 @@ void TalkMessageCtrl::updateBalloonPos() {
 }
 
 TalkMessageCtrl::TalkMessageCtrl(LiveActor* pHost, const TVec3f& arg2, MtxPtr pArg3)
-    : NameObj("会話制御"), mHostActor(pHost), mNodeCtrl(nullptr), mZoneID(-1), _1C(0.0f, 0.0f, 0.0f), mMsgBalloonFollowOffs(arg2),
+    : NameObj(CP932("会話制御")), mHostActor(pHost), mNodeCtrl(nullptr), mZoneID(-1), _1C(0.0f, 0.0f, 0.0f), mMsgBalloonFollowOffs(arg2),
       mTalkDistance(240.0f), _3C(0), mIsOnReadNodeAuto(true), mAlreadyDoneFlags(0), mIsStartOnlyFront(false), mCameraInfo(nullptr),
       mBranchFunc(nullptr), mEventFunc(nullptr), mAnimeFunc(nullptr), mKillFunc(nullptr), mMtx(pArg3), mIsOnRootNodeAuto(false), _18(false),
       mTagArg(nullptr, CustomTagArg::Type_Uninitialized) {

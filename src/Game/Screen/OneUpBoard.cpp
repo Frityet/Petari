@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/OneUpBoard.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/CameraUtil.hpp"
@@ -16,7 +17,7 @@ namespace NrvOneUpBoard {
     NEW_NERVE(HostTypeAppear, OneUpBoard, Appear);
 };  // namespace NrvOneUpBoard
 
-OneUpBoard::OneUpBoard() : LayoutActor("1UPボード", true) {
+OneUpBoard::OneUpBoard() : LayoutActor(CP932("1UPボード"), true) {
 }
 
 void OneUpBoard::init(const JMapInfoIter& rIter) {

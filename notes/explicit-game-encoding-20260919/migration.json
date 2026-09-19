@@ -1,0 +1,1982 @@
+[
+  {
+    "path": "src/Game/AreaObj/CollisionArea.cpp",
+    "wrappers": 1,
+    "before_sha256": "ecc334f59fd67a008fe97af67bf225566eb1c407b71dcd5aa5131a4d65e8c208",
+    "after_sha256": "086e7b598da3134d8f67b13d9dbfd1e184ac5058069dd9af6f53cc043bffe73d"
+  },
+  {
+    "path": "src/Game/AreaObj/WarpCube.cpp",
+    "wrappers": 1,
+    "before_sha256": "c1d333c940573f65c9d90f3d52c72787ddaacb279469513d611f2552bb7acce7",
+    "after_sha256": "617bcd20c5c7c021c54d419553fd49e34f8df382ac4181d539dadf6bd86a2aab"
+  },
+  {
+    "path": "src/Game/Camera/CameraAnim.hpp",
+    "wrappers": 1,
+    "before_sha256": "cf4a31b2badad30d5a221739837ca74cceb15cb98ce66dc4011c9674b7057258",
+    "after_sha256": "5e6b8fb0ff7cbc3e885f659957eb8cd1fe0adacd344aabc24a27193b5d9c23ea"
+  },
+  {
+    "path": "src/Game/Camera/CameraBehind.hpp",
+    "wrappers": 1,
+    "before_sha256": "8a7e2bd06bc37b620e75f9f736f27258184c602818a5609aa8bc7db0ce045ce8",
+    "after_sha256": "6a66acde3ed2147a856876c8a296afc79551e250a885c7a6b3129cccd3f51839"
+  },
+  {
+    "path": "src/Game/Camera/CameraBlackHole.hpp",
+    "wrappers": 1,
+    "before_sha256": "39306d68b7c3ef1cb61acc529b0777f898d729c8ebaccc9a99f98616ab45c6d9",
+    "after_sha256": "eb3ab82f1fa5e84e3b9bec98dfdcdb6add85188d86d271049b69a0bb2e7c4fc2"
+  },
+  {
+    "path": "src/Game/Camera/CameraCharmedFix.hpp",
+    "wrappers": 1,
+    "before_sha256": "77b1d59582fd4db7676b9e3ae93ae842b5355459fdb1a8799300bbf691a26917",
+    "after_sha256": "8d78580f2e8c18b785183d87a98903616100e1ee214ea53797d4c0ea74e85c2a"
+  },
+  {
+    "path": "src/Game/Camera/CameraCharmedTripodBoss.hpp",
+    "wrappers": 1,
+    "before_sha256": "21a932e73f219357b93d9621a3604e344909547f91a182df84aabbfbd9b0761e",
+    "after_sha256": "a78dfbbb91b39900abc026a05798ae9f06a2d4089df6d484ec21483d66bebc82"
+  },
+  {
+    "path": "src/Game/Camera/CameraCharmedVecReg.hpp",
+    "wrappers": 1,
+    "before_sha256": "4b7b39124328ae28e2a36bcecf70bec69851096b1da7b56ad7bc26f4e773777a",
+    "after_sha256": "c6e899478e0af252e6d31ee78ff270322b3d098852541248cad0b8082e09951f"
+  },
+  {
+    "path": "src/Game/Camera/CameraContext.cpp",
+    "wrappers": 1,
+    "before_sha256": "179ca53782218f561d28aac6c3f3783cff57213169145f8ae4e416603679334b",
+    "after_sha256": "93eafcb285a57bf3266f4c3019be527b6aa1a6002a32f093897ea583b44a8a90"
+  },
+  {
+    "path": "src/Game/Camera/CameraCubePlanet.hpp",
+    "wrappers": 1,
+    "before_sha256": "8c8bc4d4bca4f0a05153d73ff6f7daaa872f7b88ee096710d129b1669badf6bd",
+    "after_sha256": "4f93162fd0ca859792bc10d906e847438d967bbe1b05ee0c642acc9e02b727fc"
+  },
+  {
+    "path": "src/Game/Camera/CameraDPD.hpp",
+    "wrappers": 1,
+    "before_sha256": "b326efae452b5cf6d75381ee180b2a2ef9f9c81e2733c123b40c464f0b3faaec",
+    "after_sha256": "6ca4c582bff02802e440a195006246c48b9d68b1bb6a8434329c5438e07a9720"
+  },
+  {
+    "path": "src/Game/Camera/CameraDead.hpp",
+    "wrappers": 1,
+    "before_sha256": "6041cc52d2fe6b0c32095fa2976a8521179da0c728c9b6a59a98b875bcbd62da",
+    "after_sha256": "95d1b8f41c586f914535c30086cc4ca36f460135cfb314017628b7c220716c6d"
+  },
+  {
+    "path": "src/Game/Camera/CameraDirector.cpp",
+    "wrappers": 13,
+    "before_sha256": "10eb05dc2b2615e8bdf1f948c12102e5337f6a17c1ac20be42946c3ba2c12fa0",
+    "after_sha256": "1b3edcfcd3e7f5bbd65bffd45952e2b3598336d152312ecdd4bf9296b5c82ad2"
+  },
+  {
+    "path": "src/Game/Camera/CameraFix.cpp",
+    "wrappers": 1,
+    "before_sha256": "244e86238fc3826fbcc7c8c0c2d7f99821080a8b1f4b36090b70ca9fdc2bad4a",
+    "after_sha256": "0e345f70e58b829c6af35ddd164e512734b49e500f99ec5571fa5fc9e37d60b1"
+  },
+  {
+    "path": "src/Game/Camera/CameraFix.hpp",
+    "wrappers": 1,
+    "before_sha256": "0b1e2fe10c1ffd2e364bc6e204a2bc4f8109336499f3810c19c11073b306ec85",
+    "after_sha256": "4e23bbfa2d55a45ff700a67a36b0347f3afed578d30e7f5abe4dccbfffed9359"
+  },
+  {
+    "path": "src/Game/Camera/CameraFixedPoint.hpp",
+    "wrappers": 1,
+    "before_sha256": "c3e376c91d69e1a10189b752cfb74e1c49b5cd41e53683373ec28dcfe1ea64ca",
+    "after_sha256": "9a6f2910eeb4397f0359b6aefdbe82065595174c72c8d9fd41de5af239a5c19d"
+  },
+  {
+    "path": "src/Game/Camera/CameraFixedThere.hpp",
+    "wrappers": 1,
+    "before_sha256": "b454106d0f31c70ddf7cf1db4998842dbb48e7fc154394ea374bd0be2fb6d93b",
+    "after_sha256": "40658d666eacd8280aa0b77c18986f886a322edad0f48679e01452f854103217"
+  },
+  {
+    "path": "src/Game/Camera/CameraFollow.hpp",
+    "wrappers": 1,
+    "before_sha256": "ba1509cb9ff9cee49ca084b0a7edba76bdbe8d0214a7d6f66ac8ec64974701bb",
+    "after_sha256": "e92794c8c059145b75f21cdff405d05289baf1baa645741f214c0a798c0ab232"
+  },
+  {
+    "path": "src/Game/Camera/CameraFooFighter.hpp",
+    "wrappers": 1,
+    "before_sha256": "92fe9f210e8e72970efefbe400cf7fd36ea60664fb9973069dd938584f615442",
+    "after_sha256": "da83192502ce4dacb3b7a07c22db1919cecc4b401a12f3663507945b77580f15"
+  },
+  {
+    "path": "src/Game/Camera/CameraFooFighterPlanet.hpp",
+    "wrappers": 1,
+    "before_sha256": "319048c71abcb8943af764cdb591a4a02c46a91eb4d112a0ee40c8cc4c6591bb",
+    "after_sha256": "e6b6644fb04e1d7537dc5def7953cf3743f2fdc56a961eb6935dae2639453f1f"
+  },
+  {
+    "path": "src/Game/Camera/CameraFrontAndBack.hpp",
+    "wrappers": 1,
+    "before_sha256": "ca094bf41b0a574bfd0f757d13e39de3e95238185bdc86d491fdd83b89736fbd",
+    "after_sha256": "f22e800918882a65afdb7cf5de397dbf2da2c8c3db6039949b11283e49090952"
+  },
+  {
+    "path": "src/Game/Camera/CameraGround.hpp",
+    "wrappers": 1,
+    "before_sha256": "4443dda3da78a3f0ebd9c3cd4b0da014159557335ebda6c3674e886428bcf134",
+    "after_sha256": "39ff4e0522bdee25b1ec10251e64b7cb1e2804ccce7b57a883c4677263acaf1c"
+  },
+  {
+    "path": "src/Game/Camera/CameraHolder.cpp",
+    "wrappers": 45,
+    "before_sha256": "71b4b6f5334a6eeb2af995607ec604297cf47588f394eaf26d17c82746662369",
+    "after_sha256": "cf0a820fe323885137de1a882dc444f5dc6bee7ccd877c0026eea6608ffd4f2d"
+  },
+  {
+    "path": "src/Game/Camera/CameraInwardSphere.hpp",
+    "wrappers": 1,
+    "before_sha256": "d4aea1f273646b252c2d0ed2e38f1ac3f4335d9c1bfa4478c734369cdf5e85e1",
+    "after_sha256": "37a13fc3986c4143b0a43286e1ecb0066f50efa615a8f922632326c384ef3401"
+  },
+  {
+    "path": "src/Game/Camera/CameraInwardTower.hpp",
+    "wrappers": 1,
+    "before_sha256": "6c21b0d686fff42aa9171fd7762bfff94b2d56bad1a06f4fcb620e157a61d1f8",
+    "after_sha256": "d9d20b8f2762dd8d34d3976c31c59625ea9661305b93b5baf22fa62dd0fb0b95"
+  },
+  {
+    "path": "src/Game/Camera/CameraManGame.cpp",
+    "wrappers": 9,
+    "before_sha256": "ebf8e61958d9d85f0cf554d9a112f6a8f3217803b9ec2569ec1c93982e004f5b",
+    "after_sha256": "a5061fb1fc151c1d229441f4a1d06a4560c689bdea3edbd0ea629944c6e55a3d"
+  },
+  {
+    "path": "src/Game/Camera/CameraManSubjective.cpp",
+    "wrappers": 1,
+    "before_sha256": "8d98ffa88ade5f82961e66e952e47e3f7b19c8bd011ecb3585f3e8fe85d75d6e",
+    "after_sha256": "4b73bdc7545e0f6e16cfae91781ac0ef8aefe688cb3872c131b79ae59b03d28b"
+  },
+  {
+    "path": "src/Game/Camera/CameraMedianPlanet.hpp",
+    "wrappers": 1,
+    "before_sha256": "447b49f8f132944bb4ae2b6ef6a08b243753c9adc651c74edc0ee83ef4c2a592",
+    "after_sha256": "a6bc83fe0daf111453e9d43a96268a97423fc4d63a934a11de66df36926625d6"
+  },
+  {
+    "path": "src/Game/Camera/CameraMedianTower.hpp",
+    "wrappers": 1,
+    "before_sha256": "6cdc9380d29bbb0ad37548878108fb3fee709ebba1b363003a7eb7c676399dfe",
+    "after_sha256": "a38c5329c3884e92f57e7a1079c91d1b73c0392b7807db146952c7ed92585f8e"
+  },
+  {
+    "path": "src/Game/Camera/CameraMtxRegParallel.hpp",
+    "wrappers": 1,
+    "before_sha256": "fcb598d48666e013bce394b24f4c6da36589b565162c2f3a6d9f9b22cad0b866",
+    "after_sha256": "efcd71640c603c7eff4df6a3181564001b4fe1682ea932f1a5199145ed157629"
+  },
+  {
+    "path": "src/Game/Camera/CameraObjParallel.hpp",
+    "wrappers": 1,
+    "before_sha256": "05c2ac9c7fcbf21afdf17e88b08d5c61d4b51f35a7c6c22f84fa8a369bccc10f",
+    "after_sha256": "39029083cf53e8fe4c70c6d78fb04c5625aedf312a09cd5fd617a66812323160"
+  },
+  {
+    "path": "src/Game/Camera/CameraParallel.hpp",
+    "wrappers": 1,
+    "before_sha256": "557cbdb6f5404555cb4e01e7483d344c284f01327ee9b4738a2c2f87ee6556fd",
+    "after_sha256": "eaede60a92d050b3033bfd7af6ffeaf3a375bff3e218f0d1d979c222e87feeb2"
+  },
+  {
+    "path": "src/Game/Camera/CameraRailDemo.hpp",
+    "wrappers": 1,
+    "before_sha256": "9d64788225674b1d650dafd61da67e16311028a5b66ebd42cf084eb3e8bc8340",
+    "after_sha256": "d10b53cf2f6e7e619f857a8edfb0dd4a0423247fc62e256331fd66768aa7721b"
+  },
+  {
+    "path": "src/Game/Camera/CameraRailFollow.hpp",
+    "wrappers": 1,
+    "before_sha256": "f6f90229a26e80c014632dc5168438aa0356e121cf71639b3886ece761824972",
+    "after_sha256": "b98678d978e19d2128ffc3eff89348d8f16d192743072b729fc5aeff6c67849e"
+  },
+  {
+    "path": "src/Game/Camera/CameraRailWatch.hpp",
+    "wrappers": 1,
+    "before_sha256": "930f80700b4367e52260739fe5f4ca6bc4bd5848470f3a385bc2c4096c325e49",
+    "after_sha256": "30ee72066e7c5a9a4c9c7432e8ea64168f7b9806a94fdea29b5d95325ab34c43"
+  },
+  {
+    "path": "src/Game/Camera/CameraRegisterHolder.cpp",
+    "wrappers": 3,
+    "before_sha256": "b6b9b815516cd59ce120dc3965f37f04a26f50eca65fa690743d68289923ce02",
+    "after_sha256": "616d6fbd7c0157338e0254734d0f67bf21769849117375f41ce40bffcc90b5f3"
+  },
+  {
+    "path": "src/Game/Camera/CameraSlide.hpp",
+    "wrappers": 1,
+    "before_sha256": "47b76ed30d6cc7b495c412152bc3481e2675e7a9bfe0e9294951e62c9f3fcbe4",
+    "after_sha256": "0f0d89c40bff3db1b8616a7b8cb868212e658934a33adbf4704cf0086d1017c3"
+  },
+  {
+    "path": "src/Game/Camera/CameraSpiral.hpp",
+    "wrappers": 1,
+    "before_sha256": "4af55100e9b0b2c7b2e3edb612ecbd51271ecda8a2857fbdb7aa3e403ad5e55e",
+    "after_sha256": "9dd7f0c6deb0e0724f34c0eaf74ee77d912ddf961fd62907d614a222959374ca"
+  },
+  {
+    "path": "src/Game/Camera/CameraSubjective.hpp",
+    "wrappers": 1,
+    "before_sha256": "2a3a085976bde6629b16c9adc8c323a0a2226bcdc7e84decccd08ae718de77df",
+    "after_sha256": "b8cca178212fae3a2e5ae2fd8b44ab83ded01c791fdda046388308c6137edd33"
+  },
+  {
+    "path": "src/Game/Camera/CameraTalk.hpp",
+    "wrappers": 1,
+    "before_sha256": "3d7de3ec069c08d30251f837f359b355bad0140ed4f85c8aef14e0894931d252",
+    "after_sha256": "3a3db342f2f38f68fe1a26545323684d241f8db17e4de9c1e302e070b1d28fe8"
+  },
+  {
+    "path": "src/Game/Camera/CameraTargetHolder.cpp",
+    "wrappers": 2,
+    "before_sha256": "426dd80fb1167fcd431f78305456b012cdd31d626dc4bd2b2125434fc19377c8",
+    "after_sha256": "85b7719bd38fc20c196d9cef14ab951adf84f43fadbac385124a3fdfb09b6386"
+  },
+  {
+    "path": "src/Game/Camera/CameraTower.hpp",
+    "wrappers": 1,
+    "before_sha256": "463dfdc94e638a66948715010ad28dbb80f181700f30d01482171f34f8131e91",
+    "after_sha256": "233131e93bcd458ef302749dd4851870e16ab408e1a714288e931f6df5ea6397"
+  },
+  {
+    "path": "src/Game/Camera/CameraTowerPos.hpp",
+    "wrappers": 1,
+    "before_sha256": "72a6e92bcb2ded2d92f375dfe648b8fff4c2710bc5a288415f40115a3d9b6a5a",
+    "after_sha256": "51627359be6038b62966de0ff9a9304b54ceb53f237120a211f277911ed8782c"
+  },
+  {
+    "path": "src/Game/Camera/CameraTripodBoss.hpp",
+    "wrappers": 1,
+    "before_sha256": "4c531e127f336896049ed84dad259d51cca50075649052a44b85da9c9dbf184f",
+    "after_sha256": "fbd053676f29f3c648da12eb330a376827fcdc86185bd31c06e60fdb330ff0b7"
+  },
+  {
+    "path": "src/Game/Camera/CameraTripodBossJoint.hpp",
+    "wrappers": 1,
+    "before_sha256": "a9c8a255285c3eabb36d2f60ce0db6bbf331f5609bd5dbaef65a46549220e035",
+    "after_sha256": "d1365e22f191c3dbac1a5650115dd5c25a163aff844eb9bf0a14d0c5ed3175fe"
+  },
+  {
+    "path": "src/Game/Camera/CameraTripodPlanet.hpp",
+    "wrappers": 1,
+    "before_sha256": "5f4ff8d10eb49a0c400e570c3484b5f957afeab9a30d53d748c140c2379ee109",
+    "after_sha256": "824c2f478bfc8e343d061c6cfeab5bb87d347d5ab3d2ee023d6de4c24772b41d"
+  },
+  {
+    "path": "src/Game/Camera/CameraTrundle.hpp",
+    "wrappers": 1,
+    "before_sha256": "112c7379240c6be5be605b208a5aa709d3c40759f74b38325b458000cb42a2bb",
+    "after_sha256": "5defe4043dfc3850cfe9955b92484435963d23b8713ac4b93668ac9395f22b2a"
+  },
+  {
+    "path": "src/Game/Camera/CameraTwistedPassage.hpp",
+    "wrappers": 1,
+    "before_sha256": "d8230e02efeec4221cf0c523087377d24d36048fa5545a76d448b170c3e8c4f3",
+    "after_sha256": "48d28f7625e440ed2e061bd8c7eba27054c6a7522d9ae5495089d2c898b292fe"
+  },
+  {
+    "path": "src/Game/Camera/CameraWaterFollow.hpp",
+    "wrappers": 1,
+    "before_sha256": "d483d5a516241d29378267dcdbdaad7c83b815c2c915d343ba4542e1d27ceb2e",
+    "after_sha256": "639d9de86aad1d05f5a69e3581d8167feb6c5a7972626968b38542339d11267d"
+  },
+  {
+    "path": "src/Game/Camera/CameraWaterPlanet.hpp",
+    "wrappers": 1,
+    "before_sha256": "4561adb7b907ca168dfc0ec4e0273b60e877fe391565289fc42cfb3f7858a4fe",
+    "after_sha256": "eea06d0a342697650b5858f84bfbc7b398e44a10688ad7655e99a8c5878912eb"
+  },
+  {
+    "path": "src/Game/Camera/CameraWaterPlanetBoss.hpp",
+    "wrappers": 1,
+    "before_sha256": "338457992bdd85f57dc1f29169856d2ff7b3dd68caddc1e60685d90c2392fc24",
+    "after_sha256": "312077a03df1e24f1176e73e4c7493c746f0a52c351f1e228002849faae30c73"
+  },
+  {
+    "path": "src/Game/Camera/CameraWonderPlanet.hpp",
+    "wrappers": 1,
+    "before_sha256": "8c179e0b8456580f567da3878bb057752549fb2a0ec7ba5bc1186dfbb9f7143b",
+    "after_sha256": "812ce2457c736c2349e4a8318357a37a50f70d2fb7b35cef347b73e75de2d6b6"
+  },
+  {
+    "path": "src/Game/Demo/AstroDemoFunction.cpp",
+    "wrappers": 25,
+    "before_sha256": "596ebe5c6b56f77c8bdaa5bce233ea4a2ecf98e7033632cc10c50ccb20aae700",
+    "after_sha256": "e191aac88358b11d99f8f52430418b25602a4f8deba1ac49f35f06e2c1a7d854"
+  },
+  {
+    "path": "src/Game/Demo/DemoCastGroup.cpp",
+    "wrappers": 1,
+    "before_sha256": "28c44ebfa18b691b68456b975a0704204015a3a68c89fe3f563b0341b0523d7f",
+    "after_sha256": "781c094f158ec9c2897dc4c393bc7d77829d373bea21324d7f612ff5315ae470"
+  },
+  {
+    "path": "src/Game/Demo/DemoCastGroupHolder.cpp",
+    "wrappers": 1,
+    "before_sha256": "74d9803d5ec0bc0a95a5f5d0b1fd50a6ce52a891864a0ceb60b59e4c7a198e17",
+    "after_sha256": "41e87724916b928b4465a61a3b0e71b93c47ad4417c731c6150a24ac6baf039c"
+  },
+  {
+    "path": "src/Game/Demo/DemoFunction.cpp",
+    "wrappers": 1,
+    "before_sha256": "72c0ff250432a95b02bf8435a1ccd5a1be46161f7ab22a2900521d07c96df04a",
+    "after_sha256": "3a342cd3191c28e13d39b6c70882ee4b769d129f6497bd8b97c097b2745a10c1"
+  },
+  {
+    "path": "src/Game/Demo/DemoPositionController.cpp",
+    "wrappers": 1,
+    "before_sha256": "3efc1b911643e9216921dbe57d8ecfbf5410480823473cfdecbe1e3e5d510504",
+    "after_sha256": "a2a9b9ffbf943c25791cf16264d7aa43fbcc803a418402ea9d3329b69963512e"
+  },
+  {
+    "path": "src/Game/Demo/DemoSoundKeeper.hpp",
+    "wrappers": 1,
+    "before_sha256": "75b0653de9467272ef8e5e890d133937becc654c21ed872a66259f33de12eedf",
+    "after_sha256": "f5635752f89583175433ebbff1de334f0a8f1955015af8f51efe661aa6e1ad0d"
+  },
+  {
+    "path": "src/Game/Demo/DemoStartRequestHolder.cpp",
+    "wrappers": 1,
+    "before_sha256": "15cf42245a694549319389b3b8f6d517039c39d595bddf278e986a2f1752cdaa",
+    "after_sha256": "b839aa64a05c8616895afc350fbdbac374aab271104827ad53557972a438b271"
+  },
+  {
+    "path": "src/Game/Demo/DemoTalkAnimCtrl.cpp",
+    "wrappers": 1,
+    "before_sha256": "0f4c79eb6020e0ba5b63f9091b466d4572b34ae5a1b9c2fee49f5c7626ef25c6",
+    "after_sha256": "486405d18eb23acc0e4ff491afbb4a1add8f22b361a5e7922c3affde3b146b9e"
+  },
+  {
+    "path": "src/Game/Demo/DemoWipeKeeper.cpp",
+    "wrappers": 1,
+    "before_sha256": "a6a25382add6fd85e19586fccbbe2c9073a60dcbbd947cee060e9099b02dfb56",
+    "after_sha256": "692acac359a33f6b04bac41e6a4187a3e3b62c1150f2b842ad0495bea95a1f73"
+  },
+  {
+    "path": "src/Game/Demo/DemoWipeKeeper.hpp",
+    "wrappers": 1,
+    "before_sha256": "4298b118b7b77708a75b74722b99a8fed4ded14677fdfb6e598bbdd641b8e8aa",
+    "after_sha256": "9b19e9dd61b0b5cf0b64de90326163fed9c910ce3e97ff2d4ee3f711a926c3a9"
+  },
+  {
+    "path": "src/Game/Demo/PrologueDirector.cpp",
+    "wrappers": 6,
+    "before_sha256": "49e002502ceddfe62fb291c40208ade1a4d3d1d4baba39c299c35ef4364b1d97",
+    "after_sha256": "20d5cf94345c4524e2085e71d178f0b090db62390abdd278e2c29451d445dc3b"
+  },
+  {
+    "path": "src/Game/Effect/ParticleCalcExecutor.cpp",
+    "wrappers": 4,
+    "before_sha256": "4764ec5073a4c401866a237a493d99d68878e2599607c5bfca4cdce9f077a486",
+    "after_sha256": "f46f03928ac5f69069c2a877781a1736d337eebf478b0f8eb2df563fdb173aea"
+  },
+  {
+    "path": "src/Game/Effect/ParticleDrawExecutor.cpp",
+    "wrappers": 7,
+    "before_sha256": "ab930a200255aeed18918b44ddfa79a1c2ca39ca38b05ce897e31f6b51a59fc1",
+    "after_sha256": "463ce57c90af43701af614bc44e2a884dd1bb37105c3cd6da6ed437f6a257997"
+  },
+  {
+    "path": "src/Game/Effect/SimpleEffectObj.cpp",
+    "wrappers": 4,
+    "before_sha256": "86f0d152976a6e253fa3e7aa0a4635baaf1c62e5f4ec200c5bfc1b5fda90de52",
+    "after_sha256": "c4226a68c6f33c2ada34e64d8cf53487b610285e12dde6b37ac22acaa3509de3"
+  },
+  {
+    "path": "src/Game/Enemy/AnimScaleController.cpp",
+    "wrappers": 1,
+    "before_sha256": "825850d5192972b329cf49b782de59fb58800cb9eaf68c8f3973116c9ae19fa6",
+    "after_sha256": "c0da4564accc86e30dc07e2d7b2322524b77b52815a439c023cf93a12b09990d"
+  },
+  {
+    "path": "src/Game/Enemy/Karikari.cpp",
+    "wrappers": 2,
+    "before_sha256": "5d787af799fd50e6126fd4fdbf1ea101c377da2ee8816f695e4211a1dd35ca70",
+    "after_sha256": "4769a4e81f21c195c52a25c6dd3368bfe309825cfa977035ed7d3668a058ee16"
+  },
+  {
+    "path": "src/Game/Enemy/WalkerStateBlowDamage.cpp",
+    "wrappers": 1,
+    "before_sha256": "4db6b65c64b4f1e3aa254f23396b0e65f8127b1cb7c059b40653e4509814ab99",
+    "after_sha256": "049bd23458f79b51021c57877dc6578920b7360b85d6e14976b978737a7f62e8"
+  },
+  {
+    "path": "src/Game/Enemy/WalkerStateRunaway.cpp",
+    "wrappers": 1,
+    "before_sha256": "b70dd985cf2e5c9b637b6f5c5dded77380606711dac1680b10590383aff936a7",
+    "after_sha256": "de2907688d60023c8333e8a576b397224afa3070e659e4fd85e1fddd2c080664"
+  },
+  {
+    "path": "src/Game/LiveActor/ActorAnimKeeper.cpp",
+    "wrappers": 1,
+    "before_sha256": "46e13b9a7171dd3c70a053f571ab5a71ccebfa9c0ce096ff2b95224d4eb5f32e",
+    "after_sha256": "77f1d87832589b5c4f1702c51af9ab151d39bd67a39ac43b9928ffed8de650fc"
+  },
+  {
+    "path": "src/Game/LiveActor/ActorPadAndCameraCtrl.cpp",
+    "wrappers": 7,
+    "before_sha256": "d2cdd7ba8bff81a84ea5d1a772a067f850cbc997299d520da39eb652cd896bb4",
+    "after_sha256": "c7f4bb58c118edc3cf2b2b213a1ffd8dfea0a9b06ea3a841f535d2e484cfad00"
+  },
+  {
+    "path": "src/Game/LiveActor/ClippingActorHolder.cpp",
+    "wrappers": 1,
+    "before_sha256": "a6f953ec313a9060c6f8f87d4ac476e7c38eccb4b0588076be481448c908e389",
+    "after_sha256": "e5a6274b079d899bf080345f1cb3592bcda2bcfa4a90c207103a1fc705ac5bea"
+  },
+  {
+    "path": "src/Game/LiveActor/ClippingDirector.cpp",
+    "wrappers": 2,
+    "before_sha256": "ea76498a5ee46e52aabd688348820df854ba8d8cf83fcd537e4f837d1327b9dc",
+    "after_sha256": "8f661a320a6ae57df39eacbdc1499c0e74e94b8040e6800045ef9548772733f5"
+  },
+  {
+    "path": "src/Game/LiveActor/ClippingGroupHolder.cpp",
+    "wrappers": 1,
+    "before_sha256": "3200150aa42e803eb6ac6475e2aadb04b03be3b0b2d586030e101a58246a8adc",
+    "after_sha256": "4fdfef5fa0e533ae030c0e0a0f18fd8e2cbf63c0383725787276b22413bc655d"
+  },
+  {
+    "path": "src/Game/LiveActor/FlashingCtrl.cpp",
+    "wrappers": 1,
+    "before_sha256": "9de020d35926dd71437460d65470a7c2969d391b01ac5c96758ab3541a25c45f",
+    "after_sha256": "40f66754702302ea3e099a47b0e2152c4ea1e88af5f97ef22398c38866e2b69b"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowController.cpp",
+    "wrappers": 1,
+    "before_sha256": "e0620452eb1d014cf4eebf18a3ea26f5d6ed77fbb99c2e59e684d227d2500bdb",
+    "after_sha256": "33ee090d1769116aeb1584756d32555e83b249885ba4a129c93f0d2058182694"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowSurfaceCircle.cpp",
+    "wrappers": 1,
+    "before_sha256": "5dd864c7085683720474f77d923b2dec74fdd1c5a405def6c98e37852e779ac4",
+    "after_sha256": "389dea35db0cf3613f9ae696e2b4ed6fe8ccec86b5b45aec3dc5a04727834852"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowVolumeCylinder.cpp",
+    "wrappers": 1,
+    "before_sha256": "c281cb27fee3f85b20206fd9bbc7a2d66bde4d5c61436daa71ffdcb0a51e6bf4",
+    "after_sha256": "9a0979519d02080fcc94eaa169bb9a7e381400bc4db615db05da1ba97f932897"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowVolumeDrawer.cpp",
+    "wrappers": 1,
+    "before_sha256": "e12e714a8e9b1f0409d7f6cba6a13c3c337fa01c243820ac88459dc458aebbe5",
+    "after_sha256": "a7f4a2428336803c7b402f52075b30ee829405a437241e180865be06d4f21f56"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowVolumeOval.cpp",
+    "wrappers": 1,
+    "before_sha256": "7c37344a190020b3d10bdf7a9f99fa680cc72c16effa63e5c1dd32443475bae5",
+    "after_sha256": "31f47aecab6e39d08d9945bdd53bcf159888b5b1fb0a09a8b27c6b658c324018"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowVolumeOvalPole.cpp",
+    "wrappers": 1,
+    "before_sha256": "844b5abefa643b5556458d4bbf8d14eb600d57d5550db15e1add0a5886ec29e0",
+    "after_sha256": "5f54f2a57ab75a2a922c0afe7b182569fb9e57c9ab63c9166df2208d8ce0a93e"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowVolumeSphere.cpp",
+    "wrappers": 1,
+    "before_sha256": "648bd2e32bef78e361f2ab77bde099de2744ce82911fe9d72d2f117dbb43f346",
+    "after_sha256": "bd954c389fa4f051415096c2b6384f6ca7423bd9f2d39cd1f0b2d0b24ba38c29"
+  },
+  {
+    "path": "src/Game/LiveActor/SpotMarkLight.cpp",
+    "wrappers": 1,
+    "before_sha256": "62a5adfe3c7c463fde4722f058f6976140bde6f4dd77847e5147a0b1e4493587",
+    "after_sha256": "861aeb0309d152897ef088c4ada9816aa53bd5514ce494b1a1e8a61be63063f7"
+  },
+  {
+    "path": "src/Game/Map/Air.cpp",
+    "wrappers": 2,
+    "before_sha256": "377759e2b1031bbd2929c3dd9031527f2910c3ca56848acbf7840c3e02f20505",
+    "after_sha256": "a30d68f8b689f21423dbbb616fec7a93dc2ae531f39509c60d735518c00c05a9"
+  },
+  {
+    "path": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "wrappers": 1,
+    "before_sha256": "21b9a800ef44bc93e7a54fc4e46710b7fcab59fc37100ff7e7966168cbada5f5",
+    "after_sha256": "596973a659dba3eed04380a0a04ad951f40281f8f47f6be126914e5f7ead7449"
+  },
+  {
+    "path": "src/Game/Map/CollisionDirector.cpp",
+    "wrappers": 1,
+    "before_sha256": "b5d24ac4e5bb6d52e72dab1987d983cad7314074a7c9ecac38318816a6f4de73",
+    "after_sha256": "3baab33c7599fd286223f96466335b7a0e620f84a00eb66dd43f4c411bfba8fc"
+  },
+  {
+    "path": "src/Game/Map/FileSelectEffect.hpp",
+    "wrappers": 1,
+    "before_sha256": "1184dc50f2310fda70141be7b6bae2cbe592a39da5354940f0364ff15e1a0a78",
+    "after_sha256": "a3760d65222759f4571d3ef06a3db03f0a0f12e40e91350d0ebbc86579029331"
+  },
+  {
+    "path": "src/Game/Map/FileSelectItem.cpp",
+    "wrappers": 7,
+    "before_sha256": "0e23fc759a4293dba2e17bcc08eaf58df69a894e9166bb38e10c2742a405c67b",
+    "after_sha256": "7a999f6fd88af9be2e001991457c93e9de448676ee15717c57503ed301ce9c04"
+  },
+  {
+    "path": "src/Game/Map/FileSelector.cpp",
+    "wrappers": 9,
+    "before_sha256": "736f8e1816dcd9d910be7bd59b6527f337401408db1edf25ae296caaff4f6551",
+    "after_sha256": "ab5220e9b68f5d95e1b3b6696fb874f23e32f8e0574d35bbefd7a22bae5da010"
+  },
+  {
+    "path": "src/Game/Map/LightDataHolder.cpp",
+    "wrappers": 1,
+    "before_sha256": "b8ea3424c7ecaa7b1f50badde55a910fc8a5a120dddffb50f6b09cfc491f04af",
+    "after_sha256": "10b49523f48c6922c516d5e8f4188f717e07718a815cc72c6e1dbeb9cf0db2cf"
+  },
+  {
+    "path": "src/Game/Map/LightDirector.cpp",
+    "wrappers": 1,
+    "before_sha256": "381bafeb2b187577fa9b6b757f7394deaeae28eb735592ad2b37af1bbde42810",
+    "after_sha256": "b8491500105d2258251c0fc7d0ec2e990559adda50de572a9a1d4fd1a9d8997f"
+  },
+  {
+    "path": "src/Game/Map/NamePosHolder.cpp",
+    "wrappers": 1,
+    "before_sha256": "7160c588742d7d842f3923c2d11bd4af3bbee2d3e868caac40e362d6a3b1f9ae",
+    "after_sha256": "d9bdb7254221878d7e8d969cdffc04e03e5e579f887dd3bf1a6aa529b318cbf3"
+  },
+  {
+    "path": "src/Game/Map/OceanSphere.cpp",
+    "wrappers": 2,
+    "before_sha256": "e80c04d5e4a0cccbf9278a892fba7b07e5ea0b90c4cb9ae5fe43c21579277647",
+    "after_sha256": "2ecb444108bddcb17f132247e89e027c285b78c5c9553205007fb2785c0abc4c"
+  },
+  {
+    "path": "src/Game/Map/RaceManager.cpp",
+    "wrappers": 12,
+    "before_sha256": "e1ee3c43a1808e2a842da1e5d1aca785f297e4463ea3a45628b13a3c550b7de2",
+    "after_sha256": "17bf02019e7bcb9a008e3caddee65910da52c31d424a2bb9908a24c7e882ae87"
+  },
+  {
+    "path": "src/Game/Map/ScenarioSelectStar.cpp",
+    "wrappers": 1,
+    "before_sha256": "c3b1b841a2241961c4d65026e646d5923359bd3ddd7042bb3480e1858d8cafb8",
+    "after_sha256": "4147e08b4282b740de07a5c67250c18dbbbad716d42fd3840f454c8bede823d5"
+  },
+  {
+    "path": "src/Game/Map/Sky.cpp",
+    "wrappers": 2,
+    "before_sha256": "42b1928a6e5473d63bb730c4aaf0a18cec03f3a91077168a5b94df5c8c1f7c73",
+    "after_sha256": "f0b4ca535a275e285ad296de0cdc0eb842e35833d8589471a968e64ff7562be6"
+  },
+  {
+    "path": "src/Game/Map/SleepControllerHolder.cpp",
+    "wrappers": 1,
+    "before_sha256": "37dac27e0f9d9eb0ed555fca39fb9a078fc5e2b338158aa3fe974c25bca8ab5b",
+    "after_sha256": "016aa0ad6b455016e1794afdf42bfbff172ac41b4b89abb4f9c4686c4ba6d3bb"
+  },
+  {
+    "path": "src/Game/Map/SphereSelector.cpp",
+    "wrappers": 2,
+    "before_sha256": "c9220367f5ab356a808d5daa9d0ff9829b60f21d9028f61a056c1fb205cbd83b",
+    "after_sha256": "dae3aac5de6a7f01e71ddc8edd22a93b3fcfa704c8869565fe8c8eebc55c5be3"
+  },
+  {
+    "path": "src/Game/Map/StageSwitch.cpp",
+    "wrappers": 1,
+    "before_sha256": "db0abe69e500765573303fc74a0f7065b5baf72241044d761407df666a450e61",
+    "after_sha256": "10085ed6b0aa1d77245228a1c1fe1365902325d7b1a48a7d0a6b7fae10840b32"
+  },
+  {
+    "path": "src/Game/Map/SunshadeMapHolder.cpp",
+    "wrappers": 1,
+    "before_sha256": "021bda425af1229256d15fdc21c1efabeb2067dc32b75970234c1a3c9f8d8d59",
+    "after_sha256": "5cfbea0f84df8534347afb112d675ce883e4100bb47cbb3f255ba9a65c111ae1"
+  },
+  {
+    "path": "src/Game/Map/SwitchWatcher.cpp",
+    "wrappers": 1,
+    "before_sha256": "c01b5f71df08e4c5ac8023d9166402c5da6f299d04c31db207bf19b44c6ced0c",
+    "after_sha256": "09670c71149653670e2b4de741d56a437d603a90c7c85b5f7e791eaf072e1630"
+  },
+  {
+    "path": "src/Game/Map/WaterAreaHolder.cpp",
+    "wrappers": 1,
+    "before_sha256": "91f39f781a9d77164a32f2160c4069483f8664f330e30d38f557194f9b3dd2b0",
+    "after_sha256": "f8dcdfa6f5418ca440a38a3c2a3c1e35b309ff5d36cc3518dbc7dbc225b54d31"
+  },
+  {
+    "path": "src/Game/MapObj/BigFan.cpp",
+    "wrappers": 1,
+    "before_sha256": "ef3dde538666a39c34013764a80c9e36cc505a7a4cd7cc33a883a8e029914c91",
+    "after_sha256": "497bbd6d36c5ee1dad896aa51de2bc4b15c750cb12187d44e9e1c8f928570b4a"
+  },
+  {
+    "path": "src/Game/MapObj/BigFanHolder.cpp",
+    "wrappers": 1,
+    "before_sha256": "b22be5f2cc717ddd709cdda1f2a57ddf02a30cc5aff75a511448a98f804f77c6",
+    "after_sha256": "55f1270d7e4c9086edcfb08fe4f19815ae72bbbfa05fff2905ee00d7b8cb7d49"
+  },
+  {
+    "path": "src/Game/MapObj/BlackHole.cpp",
+    "wrappers": 2,
+    "before_sha256": "40d542a2ab578ee74bf918d56582d1ae576d46a4d3d0efa19a218adfe8ea6711",
+    "after_sha256": "7a62d32595218ba9c7bf4d2f1e2352eeafee18eabe234414d52387696b25c00e"
+  },
+  {
+    "path": "src/Game/MapObj/BrightObj.cpp",
+    "wrappers": 1,
+    "before_sha256": "dbaad5e065accfa114fc8e110c2060a4c13f03b7c336894a21d3b5ee4c64f90c",
+    "after_sha256": "a8f7c6726cf69ce97710e1a011e3293d0244456f451767cab83db8b4507f837b"
+  },
+  {
+    "path": "src/Game/MapObj/ChipCounter.cpp",
+    "wrappers": 3,
+    "before_sha256": "0d96cd0a14330ad81484f5c254d9557dd8442e30d487893d4a7efa182f52c6c0",
+    "after_sha256": "1a33de70600af853739167367834a1de3852b5347a880a5eb362aa0f13302509"
+  },
+  {
+    "path": "src/Game/MapObj/ChipHolder.cpp",
+    "wrappers": 2,
+    "before_sha256": "fa781496f27e0e4c758556922f1caff4c7106bdf7a3d0bc7a06c9c4f446d6f35",
+    "after_sha256": "231e0047924889769283e96e299ef891af33a749df1425f857f2b7577fcdb107"
+  },
+  {
+    "path": "src/Game/MapObj/Coin.cpp",
+    "wrappers": 1,
+    "before_sha256": "a57b9aaf9609a2506003929c6f01bd89a80b17004ab32144b6edb6c5cfc9fa89",
+    "after_sha256": "bf260a1b24b59cb666a2acf6b2aaf95160ed166d2a4d271750964c3ceb2f40af"
+  },
+  {
+    "path": "src/Game/MapObj/CoinGroup.cpp",
+    "wrappers": 4,
+    "before_sha256": "2cc8e7275f58fd3e25b31789377cd063b474d35e3a18df9cb446e28c53f08e03",
+    "after_sha256": "467f606ea6b3df0314098e5aa0ca27cdab877b815b275b261e0d23ef1f7b7aee"
+  },
+  {
+    "path": "src/Game/MapObj/CoinHolder.cpp",
+    "wrappers": 1,
+    "before_sha256": "660c60e90827745c68335ade7773834cd94beeace05297e23cb06ba8b0798c23",
+    "after_sha256": "8791334e88c0fa21783e32ba50d03854ce4fe397610faa324ba9aedeec136238"
+  },
+  {
+    "path": "src/Game/MapObj/EarthenPipe.cpp",
+    "wrappers": 5,
+    "before_sha256": "8d320c9fbe1a529019c0bd6224385f9fcb881124a5a00ff25324c6ae57fb9946",
+    "after_sha256": "91b2e2529f728396fba58658135f764075222ad6096d953029e786fd8ce3dc10"
+  },
+  {
+    "path": "src/Game/MapObj/FlipPanel.cpp",
+    "wrappers": 1,
+    "before_sha256": "da94fe3edba77a962ab918b9ec2e7a536957e2de554a05cb0c43a2be8a7acef0",
+    "after_sha256": "7d23afc6187e37b81980c41bf588f04346436ec3554bf0ed6ac8f9f8a44a7c26"
+  },
+  {
+    "path": "src/Game/MapObj/HeavensDoorDemoObj.cpp",
+    "wrappers": 1,
+    "before_sha256": "ea992914a2a5ffec5c16e682ee67d94a543eea7d7b196c7be3582a255a4cbff3",
+    "after_sha256": "17bb11f79e57d852a1c96a326f2e4b495ae95b1293dfb14d71e782abd48805ff"
+  },
+  {
+    "path": "src/Game/MapObj/MapObjActor.cpp",
+    "wrappers": 2,
+    "before_sha256": "aeca0cc4755781dd73a27af665441b45e89149ea9f221b252dc7c5cfbdceb5cd",
+    "after_sha256": "f431413f53beaf234896c6fc7491942218f482a20b5f16370f20edd678a48909"
+  },
+  {
+    "path": "src/Game/MapObj/MapObjActorInitInfo.cpp",
+    "wrappers": 2,
+    "before_sha256": "d420a791915709493f99a918e73483864021ba2f19e094714de5412714ab4ea5",
+    "after_sha256": "1566389434f939c8e60a37a4eba05ecfabc604146a0f47ca451155c507673c43"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsFunction.cpp",
+    "wrappers": 1,
+    "before_sha256": "9600bbbe6dbdbf2b13f8ecfcfe4cf96d8e538083c834e6f8f2bdc617d8b2a098",
+    "after_sha256": "45f8d2fc615319c65c7597357fa5cfa00d293e117fe8c5f76fbd8d782ea36fe5"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsRailGuideDrawer.cpp",
+    "wrappers": 1,
+    "before_sha256": "cb19ea9581aeb527f16079e318cc0099f4eb0f505beb3a56ff0ab77f3d97726b",
+    "after_sha256": "e49fe1011ed17d198668f9f8dc828900070519763d3ad77bf5d50e645123a963"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsRailGuideHolder.cpp",
+    "wrappers": 1,
+    "before_sha256": "f7c6daaace9a4d029b8cc8c332a870a7210c302b59adea7f74fbce22e588a9c6",
+    "after_sha256": "5ee4ee79edf08a452511df5bf9f9186233692126b969a009cd7ce25f3591bdf0"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsRailGuidePoint.cpp",
+    "wrappers": 2,
+    "before_sha256": "c6b05c58ce761a760760893a899958fc9ac6079fa8ce9159444291560d444f82",
+    "after_sha256": "620876df05fbcaf7f1daa97003470c4a85d5d6da95bae0710c05781c8b8d697e"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsRailMover.cpp",
+    "wrappers": 1,
+    "before_sha256": "4e755d58842f9c364efcf8f7a02e4b5732f4241074b61f2588d328a12f01f34b",
+    "after_sha256": "83a494cee683481d6ffdddc0faf54f8fb1e049f00bc2db2179cec4f9706ec7f5"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsRailPointPassChecker.cpp",
+    "wrappers": 1,
+    "before_sha256": "4ac6c7b5f428bb8232a5b19ffa4c4729f8e5ade363548e206870b4742d621761",
+    "after_sha256": "e0d15895adc1e01b4fdeb8ff773f5ca83559ece15179c46dea94d3e09e5a8bc7"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsRailPosture.cpp",
+    "wrappers": 1,
+    "before_sha256": "8c2a926be7a6d032dfd2c705d987a784b68cf763e09a10fd089c999a33e91c3c",
+    "after_sha256": "5d9ff370750d47bff7a9ce424d57160e800daf8374043211fbe3327dc236dd5f"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsRailRotator.cpp",
+    "wrappers": 1,
+    "before_sha256": "0eea86fd870e14e635ecf3374950ef580e3e6bab3fd5a0a1a5bc61ba8e39be70",
+    "after_sha256": "5ea434060abe25bf142241e968fddf5638068ead0568ccf8af3347ab1b459df0"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsRotator.cpp",
+    "wrappers": 1,
+    "before_sha256": "74c00f887923fdab948fda3248dc0cfedcd71dc1c07294bca2bdb5dd2143e540",
+    "after_sha256": "35c2865e2e6fbe2b4eb4b640f27b329bfdeb34d422954bcf136e8f4545a2c63f"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsSeesaw1AxisRotator.cpp",
+    "wrappers": 1,
+    "before_sha256": "6a636e0a3d4a36035c7a22afe7863c0cdc39066bc792d1becbc05cac736bb818",
+    "after_sha256": "b6f88094c925e8578c200a31fd656692b628cf5d48e88fa78d25400d521256c5"
+  },
+  {
+    "path": "src/Game/MapObj/MapPartsSeesaw2AxisRotator.cpp",
+    "wrappers": 1,
+    "before_sha256": "1c8eb7fb02f15324e6b49f7a7303fe0823103154ed28eb540db2225b843da699",
+    "after_sha256": "e7c3c8a7e3396f927a8cdbed5a2adf7552af763946d962265e5c300bf81c1f96"
+  },
+  {
+    "path": "src/Game/MapObj/PlantGroup.cpp",
+    "wrappers": 5,
+    "before_sha256": "641ee9f6751922c0bd16284ca206ff2cf11ee492241e71a5ae32b5128473fa31",
+    "after_sha256": "1a3c6701a259cfaf82f8f64a0988bb38f88842145532d453b7f12cd6f379fd4c"
+  },
+  {
+    "path": "src/Game/MapObj/PowerStar.cpp",
+    "wrappers": 11,
+    "before_sha256": "3e01279c6e7e66ca141180801192655ccc535eb40cbef5b2a267d1232eb498fb",
+    "after_sha256": "893dc81736a1278cd5960277c6fe942d32b550cb38e0a573b44302b061cfddb1"
+  },
+  {
+    "path": "src/Game/MapObj/PowerStarAppearPoint.cpp",
+    "wrappers": 1,
+    "before_sha256": "442bafdf0b221b566d59d22015df8282a1ca3f62ac4eb46c06a17bb9b69177a9",
+    "after_sha256": "3020353fad59325505b1de2b171881b46662c281fbef70c3bab33ccde4d7654e"
+  },
+  {
+    "path": "src/Game/MapObj/PurpleCoinHolder.cpp",
+    "wrappers": 1,
+    "before_sha256": "d91f63d8e4a3806f5398b4fd670577f4e9ab0bc3f0639c86a6c5785ce74ec953",
+    "after_sha256": "36ef22930fd0f0da54f0f157e06468864abc9624a1106cfebc77a490632baa6c"
+  },
+  {
+    "path": "src/Game/MapObj/RailCoin.cpp",
+    "wrappers": 2,
+    "before_sha256": "9f9a5c834a89f08b53cc265c7d8536016f6aff435cdb418b9fe3c10c4169a672",
+    "after_sha256": "d12c65175d7aec65eacfc183cca05a5a08a0e6f1a58c31b24b999e71d4e92a4a"
+  },
+  {
+    "path": "src/Game/MapObj/ShockWaveGenerator.cpp",
+    "wrappers": 1,
+    "before_sha256": "ce7166eabcf8b0190619848b16a52d6b9f9fc1a39110c530a8afeef4f4c0dca8",
+    "after_sha256": "6506553b65ef1baad66945cee9724805ab9c06dd47f33a5836ab6340fc5dee39"
+  },
+  {
+    "path": "src/Game/MapObj/SimpleMapObj.cpp",
+    "wrappers": 2,
+    "before_sha256": "2edf5978cbc0d86efdcaf4abf9249082638e64a9b0323d4c625dceabc3e0c2c1",
+    "after_sha256": "36d77f019bcc76555b2f76da953b655f8becd491013f933262068f4f0627c284"
+  },
+  {
+    "path": "src/Game/MapObj/StageEffectDataTable.cpp",
+    "wrappers": 32,
+    "before_sha256": "7a3ba948a5b7588ad5b6b1a0619b2da5d237b3bfe7c32ed5a83a3884d0d7017d",
+    "after_sha256": "25f19ddf7a96c27dc13609e8b7859344d5039af697ed6fe23020c3cba4039a20"
+  },
+  {
+    "path": "src/Game/MapObj/StarPiece.cpp",
+    "wrappers": 1,
+    "before_sha256": "70ebab383d00a6d6c92c1ab17b8e43878a4a6507452f6484b6af214ae10c65dc",
+    "after_sha256": "6d5bb83f8545287ca7282d94acf3a66fff42d993c0087946987f4c5cc40de449"
+  },
+  {
+    "path": "src/Game/MapObj/StarPieceDirector.cpp",
+    "wrappers": 2,
+    "before_sha256": "83396fc3d7968e35ecccc7566653f6b9ea0e6bd19ff5d6d78bbee609da9597fd",
+    "after_sha256": "0ec19584795bc2b9df3dfcc3158b60ea50bf1476977337ce5d82edea27a00040"
+  },
+  {
+    "path": "src/Game/MapObj/StarPieceGroup.cpp",
+    "wrappers": 1,
+    "before_sha256": "94a716602bda4b9b905d609433ab9d877adade5ce19c3febb330d06225d912da",
+    "after_sha256": "020b6cb050f63606df2e4152c5101335bdb721c4e75f55539ea4ec7fc5b0745a"
+  },
+  {
+    "path": "src/Game/MapObj/WarpPod.cpp",
+    "wrappers": 6,
+    "before_sha256": "84210cc5eb1757709ce0fbeb02bd8bc2ce34a071f1e7c35d51d97bd8a62bdbf4",
+    "after_sha256": "f4c9213a8758d7bd31cf06dfb37bcf624d5f6abaa1bc9382e2be0a8373ea6e1c"
+  },
+  {
+    "path": "src/Game/NPC/CometEventExecutorTimeLimit.cpp",
+    "wrappers": 1,
+    "before_sha256": "9d34b1a1200473f9cefae8d094471d13df40d63acfc2925b3a7bfba55bca45d8",
+    "after_sha256": "071fe189262cdf599a81314abe45bb50ebd6976b5d169d9a0ca83ea5cede94ed"
+  },
+  {
+    "path": "src/Game/NPC/DemoRabbit.cpp",
+    "wrappers": 9,
+    "before_sha256": "49d14c034b6d571f520f316ea0e247a140e78e5ee5c62e8a83bc8c9b34ee20c2",
+    "after_sha256": "f7f0b27154424610be2ce8b66b468a176983f7f98e55355ed597dfe55a269704"
+  },
+  {
+    "path": "src/Game/NPC/EventDirector.cpp",
+    "wrappers": 3,
+    "before_sha256": "164763e1ad1e66cbacf7a70b252dd68df65227634e0f9a57097d5188a86344d3",
+    "after_sha256": "8f56a5e50888f5e2bcf0e9f8b566b7c0359224ddf9810b41354e125d325305a7"
+  },
+  {
+    "path": "src/Game/NPC/MiiFacePartsHolder.cpp",
+    "wrappers": 2,
+    "before_sha256": "496b6605e5dcddc9fa437731392a50f75954541a03d4a6129bbbf7fe6ca4c28a",
+    "after_sha256": "bfd05539f1f8ce7e95d61dabdeec7619ff587b93959911eabe7488742c0f60fa"
+  },
+  {
+    "path": "src/Game/NPC/NPCActor.cpp",
+    "wrappers": 1,
+    "before_sha256": "a7133299992076eff0c3d0fa72cc0446767d49fbb6d92f1da52b5a24494cca2e",
+    "after_sha256": "010c1677b140a413bab67e0441d53fb44d72dc2f77f4f0bc4a8a36fc4b0037f1"
+  },
+  {
+    "path": "src/Game/NPC/NPCDirector.cpp",
+    "wrappers": 1,
+    "before_sha256": "a26859efb5b1c46924d4d49ab4eeceae08b411426b09d906a24451995ba2dbda",
+    "after_sha256": "9febf878d335a77cb5ff13ab082f76bd7a9491bb3c0dab6f794b03eded459a81"
+  },
+  {
+    "path": "src/Game/NPC/PowerStarEventKeeper.cpp",
+    "wrappers": 4,
+    "before_sha256": "d56a6141301f6888db3e38dc4f042407576841d1b413fec57db99b4e6723ce42",
+    "after_sha256": "93f9aea52be3e73793723aaf4196dd9772d7db6ee1d107bc5aebdf3305198474"
+  },
+  {
+    "path": "src/Game/NPC/Rosetta.cpp",
+    "wrappers": 8,
+    "before_sha256": "a70ab6dc037be3ead9b71dbdf09328397ea99b604a451b3ae1612099a1263b2c",
+    "after_sha256": "24fcec1b9a8af5e1f3072e7388e0933bb363a50a45c2d19f3c42d482fdca874e"
+  },
+  {
+    "path": "src/Game/NPC/RosettaDemoAstroDome.cpp",
+    "wrappers": 19,
+    "before_sha256": "ceeec9be75bd4e98eaef3a98c0f3eff260c93a28980071fa09a108f2b25d2614",
+    "after_sha256": "542f58196219a3f614719041d6a3a5f221e51b47da5e09c60caa86e95271283f"
+  },
+  {
+    "path": "src/Game/NPC/RosettaDemoEpilogue.cpp",
+    "wrappers": 3,
+    "before_sha256": "b5ae437a6626084b8dc16d80b18881d544be8ec5aa27ee5ae889163b9ab7da6b",
+    "after_sha256": "15bdc5ee5a9be34f091e105a28b8dc1e70a4cb62d3ca834b2ab1a7496ee58fb3"
+  },
+  {
+    "path": "src/Game/NPC/RosettaDemoHeavensDoor.cpp",
+    "wrappers": 30,
+    "before_sha256": "20684ec9190a5586d70d900c1a87170424a2167899412f5e5806464eb4317fb3",
+    "after_sha256": "efd02e33f2ff30d1c7c9312c855dc7f4a8519b70255073451a6fad53db4300f9"
+  },
+  {
+    "path": "src/Game/NPC/RunawayRabbit.cpp",
+    "wrappers": 2,
+    "before_sha256": "310380dd99dbbde8358651c06edc02732b39364db21ef7cc9aec2ba07c719bf0",
+    "after_sha256": "0c1e165045ac0563f534c6f9e25c36267fde6c69ea13cec807228d59d24f99d4"
+  },
+  {
+    "path": "src/Game/NPC/RunawayRabbitCollect.cpp",
+    "wrappers": 2,
+    "before_sha256": "8bc4c6ea2dafb108bb1036ce44bdea5f80a180c74ccb8098d22eba51bb57375b",
+    "after_sha256": "0f8a6abe4fac26de941c9f2921d1067d59e9d9fbb2e351933be873c99a0c63cd"
+  },
+  {
+    "path": "src/Game/NPC/RunawayTico.cpp",
+    "wrappers": 14,
+    "before_sha256": "9b9c13699ae9539cd4c1e55f6270ce3827696c32ac2fe532d2077dce693f2d39",
+    "after_sha256": "46e36276d70eb76e596cf063275d44b23a2e6b7333efdd5c29011096c4405f2a"
+  },
+  {
+    "path": "src/Game/NPC/TalkBalloon.cpp",
+    "wrappers": 5,
+    "before_sha256": "2fa210d27d3d8c47dad376d63d9bf6463811ad71f9714c15889b9ade019466ea",
+    "after_sha256": "e94b0cee133a7fbce196cdfb74c0031ee84e4d2e802e3fa51cfcef8e624f100b"
+  },
+  {
+    "path": "src/Game/NPC/TalkDirector.cpp",
+    "wrappers": 3,
+    "before_sha256": "d7390465bc3ccfaf2b53bafb0556ce8292f650bb8a252f82851e5bf6d16cab28",
+    "after_sha256": "70491f4d397af5b0704cf3c24d3409d548019250ab8dd0182c0ec10de68b629b"
+  },
+  {
+    "path": "src/Game/NPC/TalkMessageCtrl.cpp",
+    "wrappers": 2,
+    "before_sha256": "d603c0a3fd9d05cf6da0d4282ea820b8365b9a29bc45e974262679235c958b07",
+    "after_sha256": "a7bd08978ca8f8b149d6414d3990fbbf301c2aadc548c604fc6d92076bb3f384"
+  },
+  {
+    "path": "src/Game/NPC/TalkNodeCtrl.cpp",
+    "wrappers": 1,
+    "before_sha256": "aa25a25a69f56b85549a6a4884a4238b69ac5919f0d4831a3ef83b97229e71ef",
+    "after_sha256": "858f62781d1606aea95de54552c8462d0fc22ffcb8a27b7b4acf74fcf033e66d"
+  },
+  {
+    "path": "src/Game/NPC/TalkState.cpp",
+    "wrappers": 1,
+    "before_sha256": "0efb18df1245fa5eadce5aa5f42c0cfdfe47f1757f196efdb661ebcc9cf0f9df",
+    "after_sha256": "47dc0b158a76fe263fc2a72cf06e00f04e1e0a2303b47309a450b4629f61d6fd"
+  },
+  {
+    "path": "src/Game/NPC/Tico.cpp",
+    "wrappers": 9,
+    "before_sha256": "65eb6d37145e538ef89f617896df99ac2b09aac06b9d3bdeec1c11f67e7977fd",
+    "after_sha256": "944a0a28e632fcab733d0b1c532ef9b2e3d340b45daaaf4e45c9199c3c82ea3d"
+  },
+  {
+    "path": "src/Game/NPC/TicoDemoGetPower.cpp",
+    "wrappers": 8,
+    "before_sha256": "4ed5231bd79f6d1a14d7cee58caa9fbadb39f26d4cc3d33349b4e5a8c9e12688",
+    "after_sha256": "b28c328f19328c891e18520f75c55f002b672065db0c45b9c8a673b29cf5fd8e"
+  },
+  {
+    "path": "src/Game/NPC/TrickRabbitUtil.cpp",
+    "wrappers": 1,
+    "before_sha256": "bc0e6e6bdd97b85570dc6f668d49893bc2216023b98a77a1db8954010fff18c3",
+    "after_sha256": "80d7224f551645a1da174d36a533706dd0a710f09f0f63ce51344fb9671921fd"
+  },
+  {
+    "path": "src/Game/NWC24/NWC24Messenger.cpp",
+    "wrappers": 1,
+    "before_sha256": "a29f456e3ae740f0be794f6592e1d3b0dde86a64cb249d8a83b1afccb89bf95f",
+    "after_sha256": "d94b9f0f028545736132895a9ad0919cb17246e17b4ce6775f0c6b54488106c7"
+  },
+  {
+    "path": "src/Game/Player/DrawAdaptor.cpp",
+    "wrappers": 1,
+    "before_sha256": "5b8eb456129c6ab5e0c01ff711475afeebbe15cb7a1720810b01450057282622",
+    "after_sha256": "6be7ec7f85e829b8236442a95cdf67d0940b6302bdbf032a5f076621af9735d6"
+  },
+  {
+    "path": "src/Game/Player/Mario.cpp",
+    "wrappers": 16,
+    "before_sha256": "58aae4f574829798e8d63e336c16ac8b462aa4b0a1ee5718494951fb3a75e704",
+    "after_sha256": "abd50a0c2c6cb05836260c905cfc0d02285ff30a9f055105d6562a884cf04316"
+  },
+  {
+    "path": "src/Game/Player/MarioAccess.cpp",
+    "wrappers": 4,
+    "before_sha256": "306b3ac507c57b1d4a81692cd74fd278943b4840979c6a96afd24332b8283b49",
+    "after_sha256": "39fbc989612952af886f2c189061b2c05159bd9a24ecb67bc980f31985ef3174"
+  },
+  {
+    "path": "src/Game/Player/MarioActor.cpp",
+    "wrappers": 103,
+    "before_sha256": "ee01f96b3b59ce9be2856f3752f0b350ba467cd66bd3cc74a0a46a9692d41fb2",
+    "after_sha256": "d2638c2aa10a7e5399bdd36ba22fa5e23d15a848e0ceb8039fb357bf1578f6fa"
+  },
+  {
+    "path": "src/Game/Player/MarioActorBlackHole.cpp",
+    "wrappers": 7,
+    "before_sha256": "dc505d36415eac5d7350db2a9f58a47ce239f262152a906fea77af7fa09ea730",
+    "after_sha256": "b708b8bab48a3bf6207b9d063d01e5efd75736a7fc0eb2a344be5b05150b3633"
+  },
+  {
+    "path": "src/Game/Player/MarioActorDefensiveMsg.cpp",
+    "wrappers": 9,
+    "before_sha256": "9a736e7dee49530295d00e3a3389f2cdece20c5f114f40c94e073ea78dccc1e1",
+    "after_sha256": "c57de9bb256f23ba54b592c60ca2eb3747b65f206159c0280ed44713f333495d"
+  },
+  {
+    "path": "src/Game/Player/MarioActorGameOver.cpp",
+    "wrappers": 30,
+    "before_sha256": "5bc907c72fef08fa66e2846c263ceea73e3de09a5dd8902b49c2d21ce2d00fa5",
+    "after_sha256": "21ac79550da294d321d137b0533f8410590efdf413e9257d81f31f2fc6f5f482"
+  },
+  {
+    "path": "src/Game/Player/MarioActorGravity.cpp",
+    "wrappers": 1,
+    "before_sha256": "4f9f0e9959239b43d59400a1a227e7c7cb6440af8e8dfb5dd4e22a3f284b2ae9",
+    "after_sha256": "95b6925e66872347f184a5f867fb7f6afa52233ea4afcaa04926e9e7ed659fe5"
+  },
+  {
+    "path": "src/Game/Player/MarioActorMatrix.cpp",
+    "wrappers": 180,
+    "before_sha256": "b49c408c0cb6b441e2eb707154d138ade1e67fdf50a9dfeabaaaf910d4d60319",
+    "after_sha256": "a1cd941b08d3c91d3078423576beed3a861c6ce0c53ab411862e27d89320f081"
+  },
+  {
+    "path": "src/Game/Player/MarioActorMorph.cpp",
+    "wrappers": 20,
+    "before_sha256": "9bf52e05454e4036ec4dc943fc613d15d591fb5dcfe2aa9350f4173bc65bb535",
+    "after_sha256": "f7dccf53470ec4cc272153bd0e26339135dcdea1e1a35b0f4fcaf206106ae315"
+  },
+  {
+    "path": "src/Game/Player/MarioActorOffensiveMsg.cpp",
+    "wrappers": 7,
+    "before_sha256": "1a59bd02c6f39b4d7fd2d0eacc7b455f273195c58a318d48c8443deb2ef6bfa6",
+    "after_sha256": "2b702106027d99487898dad5b7b6b63231acac3c209ebd82941fd664007ef28d"
+  },
+  {
+    "path": "src/Game/Player/MarioActorPad.cpp",
+    "wrappers": 3,
+    "before_sha256": "da9d25d2629a064fdbe9f1eb50bf57e975b06737820ca184f944f2d9be08602b",
+    "after_sha256": "d377650b6865866a5656b0b0ab3b3de83d5d42520e25d303a0ac7e61f0eeed15"
+  },
+  {
+    "path": "src/Game/Player/MarioActorParts.cpp",
+    "wrappers": 30,
+    "before_sha256": "5fce708222e0a7ab3c358c6f311e1359735870970eb860a537331393b8b829d7",
+    "after_sha256": "ae5ef1ec15053b6266e4694fa2760fc3c41ff432300f5b9d91609247ee7e4d89"
+  },
+  {
+    "path": "src/Game/Player/MarioActorPunch.cpp",
+    "wrappers": 17,
+    "before_sha256": "53fa0a6fb01cf197357f1e0ebbf6ed822b5e734d29308ce8352b83bbc2c240f4",
+    "after_sha256": "4c598d5c25cca7b15bf4ddcc97e944295de7344e6bce0dd2a6e44219c5914d5b"
+  },
+  {
+    "path": "src/Game/Player/MarioActorRush.cpp",
+    "wrappers": 14,
+    "before_sha256": "fa3f0a6e2370ee090f058527e4706baceb4c39d7e79c56b7272be53a0c82d2b5",
+    "after_sha256": "ca9798ffb53b8fb498b781d4c7aa1ba56d8cb2089f1502fe73e966b917758b66"
+  },
+  {
+    "path": "src/Game/Player/MarioActorRushMsg.cpp",
+    "wrappers": 2,
+    "before_sha256": "4a0fbc3d072c6c2d10eb46fb8254e3b3c566e1f43cb3d81ac39eab8cc566ed0c",
+    "after_sha256": "067b81eafc56bcf133925f3b9990f3ec590d170084e3f934bda3af1236be8e45"
+  },
+  {
+    "path": "src/Game/Player/MarioActorSensor.cpp",
+    "wrappers": 26,
+    "before_sha256": "bcc0d183a472aabea3106f49abbf751cfdeba54210df935213fdbed25f9d9f17",
+    "after_sha256": "47d2e4b5f005e2d3062d2e826abf9550bc6d7907c676dd8c576a26273ad44c83"
+  },
+  {
+    "path": "src/Game/Player/MarioActorShadow.cpp",
+    "wrappers": 1,
+    "before_sha256": "2dc5bb3bc674c9aa2a802ae7a22cbac88388c7710e4cdc50c7a2a425da5ef768",
+    "after_sha256": "25a4356b08781d6657a642ce44a2628b085bf920292bcff62d8dacd1ba13678a"
+  },
+  {
+    "path": "src/Game/Player/MarioActorSpecialDraw.cpp",
+    "wrappers": 3,
+    "before_sha256": "090fa90ecf4ce55d712b84b34864b32ff8f172463135366ebdc7debeeca2841e",
+    "after_sha256": "4506193e11f33b846adf6928a0a2211e69ad1f2b799f7454119c9b9ad5b89fab"
+  },
+  {
+    "path": "src/Game/Player/MarioActorTakeMsg.cpp",
+    "wrappers": 6,
+    "before_sha256": "9eb4c5b3b1586e5b0ae69619542f37e86453cbf7e9d25c3e3b19d3340c7d122e",
+    "after_sha256": "5a059eb5e9ada188a61528d93b792f591f3ace7c28c89ca6f71fe03a1b33dcaa"
+  },
+  {
+    "path": "src/Game/Player/MarioAnimationEfx.cpp",
+    "wrappers": 30,
+    "before_sha256": "2f68d47c3bde7c0fc249dea47186447bd9026209a35c1204de6f1c8ae069e6e7",
+    "after_sha256": "f42288d9352174950d344aff6cc42b53b2d75f6ba1893f5a945b1e092c83cdf6"
+  },
+  {
+    "path": "src/Game/Player/MarioAnimator.cpp",
+    "wrappers": 66,
+    "before_sha256": "8604be309e88e86d839e09b0b3b86824aa0675427f825068220a77852e78dbdb",
+    "after_sha256": "8d380cfbc5d89c999815eb88dca98f4390694053be879345f5f96558a943ae8d"
+  },
+  {
+    "path": "src/Game/Player/MarioAnimatorData.hpp",
+    "wrappers": 648,
+    "before_sha256": "2595e258a398b6e32b49c7af44fca8210c6caef023888d7599e1afa42a23f43a",
+    "after_sha256": "c2af16886eceac77e3efa72feaacf3d703e1bd10a45ccedde66f47fa1036682b"
+  },
+  {
+    "path": "src/Game/Player/MarioBee.cpp",
+    "wrappers": 17,
+    "before_sha256": "e8ed414085d379b33d0302f1fa646b1091c90d50ad83c422327dbebb348d4721",
+    "after_sha256": "1e2341665cf5ec72afee241dab463372b968c51f3990d85a5f1857012cb38cb8"
+  },
+  {
+    "path": "src/Game/Player/MarioBlown.cpp",
+    "wrappers": 13,
+    "before_sha256": "9536da6e6845f3560fe428faa96b5217eeb411a9dcd4aa862568051c6351782d",
+    "after_sha256": "16243a12ae87edc72b37981e208030686db356602fa5846a2d4920b1cf4e7cd6"
+  },
+  {
+    "path": "src/Game/Player/MarioBump.cpp",
+    "wrappers": 1,
+    "before_sha256": "d5ca89985d4de2c878608177b1386347b061c4e91e821dc537dc870d500e219d",
+    "after_sha256": "7334db5dccfb9a2784df27be2d5ecf612c221a2d2927b6acbee3e001bdf5e484"
+  },
+  {
+    "path": "src/Game/Player/MarioClimb.cpp",
+    "wrappers": 7,
+    "before_sha256": "672484aae255f3997adccc1176c5fd57ec4ef8e4ca7a6ac9c4078425f9fa3b8d",
+    "after_sha256": "2fc254d86e70dac5b3b9354c7c1bed4acf16d076fac6cb085773a7cee55b2de1"
+  },
+  {
+    "path": "src/Game/Player/MarioCollision.cpp",
+    "wrappers": 12,
+    "before_sha256": "960b1c2056d4f0be2c8918fdfe0a3ac5b8063d9aeec876d9143b163b4038ac64",
+    "after_sha256": "0d7fa692df230363430e889ceefde735138e8f1ce110dfc6250453104766fce5"
+  },
+  {
+    "path": "src/Game/Player/MarioDamage.cpp",
+    "wrappers": 49,
+    "before_sha256": "0782b8ed440e87441e9fbd49c32903bb8bf5066edad936e3b13ce0ea53a2656b",
+    "after_sha256": "d3d998533fe18ee52d64e53ecc6a660a72488d7a62cdefc32fd0dc4820bcf65f"
+  },
+  {
+    "path": "src/Game/Player/MarioDamageCrush.cpp",
+    "wrappers": 5,
+    "before_sha256": "f420fc4955efd42ee62ac3ff4a5051eb297bcc200fb12165533aba2b989412a5",
+    "after_sha256": "b4b85e0084b7d3dce9cc6c21e919ae95ab1703312c10ad180fe60a295f20b69f"
+  },
+  {
+    "path": "src/Game/Player/MarioDamageFreeze.cpp",
+    "wrappers": 12,
+    "before_sha256": "1ce3f7a63956bf56f10a37de8f50c315287246bfc8d4a108bb344dc23ef6d11f",
+    "after_sha256": "2b451bf2ea048de549f68d459dfeebac37562aae76ad715432a3f2d19b68e890"
+  },
+  {
+    "path": "src/Game/Player/MarioDamageParalyze.cpp",
+    "wrappers": 9,
+    "before_sha256": "5ca73156f42207bb8eb8cd240911a2d7feea8249996acda7b203d89882e2885a",
+    "after_sha256": "80923bdb925f5de72aaaaa97ae70b250d6e6a8c464b78cb59e6f67187771c2f4"
+  },
+  {
+    "path": "src/Game/Player/MarioDamageStun.cpp",
+    "wrappers": 5,
+    "before_sha256": "529777ceadb1b5af92e8108459a0339d0681c280d0cd954cdee793fac7b4261c",
+    "after_sha256": "2920fca585e6e28640baf2fea49882249b44c0f6289c2c34c0964b97ea89872d"
+  },
+  {
+    "path": "src/Game/Player/MarioEffect.cpp",
+    "wrappers": 141,
+    "before_sha256": "3732ffe819fc7a569e734b8cfd152191106dad84514df8c0ddbc6484f4270646",
+    "after_sha256": "3e24b6d5f0a8de2dce845d651f7aa704b360b23cc2191ed00863ab9925c403ca"
+  },
+  {
+    "path": "src/Game/Player/MarioEnforce.cpp",
+    "wrappers": 8,
+    "before_sha256": "27dc19a1ff298c22c6e937404da1253420ba5fbdfcbf89db81aacf0d32796b2d",
+    "after_sha256": "7e1b965718801b7e93df2a8a8c15c7e61eb0e086ab07c9be80cbd0963b37932d"
+  },
+  {
+    "path": "src/Game/Player/MarioFaint.cpp",
+    "wrappers": 9,
+    "before_sha256": "9474d0a19df0b1454dbbf2c0d637640297b8b9c3c5be5e68968e05fde4b808ae",
+    "after_sha256": "cfca9328dff10f5e75d051771d77eec64dd60990a2f0b92be03a2191b4bb8b91"
+  },
+  {
+    "path": "src/Game/Player/MarioFlip.cpp",
+    "wrappers": 19,
+    "before_sha256": "8721c93b15b0b6f1b3f5a4a9e2f14b26c29efba1f0f917e7c8851f2e01380040",
+    "after_sha256": "9bd71c802c2118f7ac9470eba62ab9bfe48bb88004ae01593af0cac74c6e2226"
+  },
+  {
+    "path": "src/Game/Player/MarioFlow.cpp",
+    "wrappers": 10,
+    "before_sha256": "afaeb3202d4d244c8da20e6beebf583cf74b3556ce982db676c1fda9dacd92a1",
+    "after_sha256": "68859a2fd53f1c522c4a438f8f3bee6d25a25a600e2c1a296c7d53379cc5509a"
+  },
+  {
+    "path": "src/Game/Player/MarioFoo.cpp",
+    "wrappers": 41,
+    "before_sha256": "b1ef73ba9f9c3d252a8dc67fc14a85ee61e2a1fe3b98b1a3a094d31027c803b0",
+    "after_sha256": "90e000d58d9282116bf69abea4b9a5ee3277cac47170a06f0a8250b71280171d"
+  },
+  {
+    "path": "src/Game/Player/MarioFpView.cpp",
+    "wrappers": 2,
+    "before_sha256": "8f4a40aee08adc283c893c820885bfdfba5c443bb7432d61713e945a1f87e2b0",
+    "after_sha256": "d7844ab3e35394ea37f4ed82c5c4b5add57f04b8894d4b51013261254c528d1d"
+  },
+  {
+    "path": "src/Game/Player/MarioFrontStep.cpp",
+    "wrappers": 2,
+    "before_sha256": "12aca1d07991479535e8f52a6a12be5e2624ff0ec7bd4b49da5d8259f001760e",
+    "after_sha256": "1368b88aa60f18f5c5ff5c79fb4b4419b97064d9decbe4871aa47df943eb27e0"
+  },
+  {
+    "path": "src/Game/Player/MarioHang.cpp",
+    "wrappers": 31,
+    "before_sha256": "bb927a64e9195413a950fc9331b458330ee7eb04264e416a1e247d46eb0b9c8e",
+    "after_sha256": "a275f21cead7636eaf87f37ee9fe0f7fdcc49ef8e37bfb73d759caee4572f3fb"
+  },
+  {
+    "path": "src/Game/Player/MarioHolder.cpp",
+    "wrappers": 1,
+    "before_sha256": "a17e21bcb47ec316396e317311431629552f64e0fcfcc2c48605bd9de3419fa3",
+    "after_sha256": "b1c57381fba6391fa98d9c34a8a305ae06730cc3550eca3cf2c63ed96540ad26"
+  },
+  {
+    "path": "src/Game/Player/MarioJump.cpp",
+    "wrappers": 239,
+    "before_sha256": "ff383f358fe374eaaea24b38928b38ddd247e606a26ca36f431b12238c2c6ce1",
+    "after_sha256": "963aa273da798eda4caf72d884ff6b46f31fce424a887043285b7ef39228b8c2"
+  },
+  {
+    "path": "src/Game/Player/MarioMagic.cpp",
+    "wrappers": 11,
+    "before_sha256": "5db3093552c926c86f123870d92e5dac402072eeaa718b6d2557170c952efed6",
+    "after_sha256": "ab263622c7ebdc0a87e8b604a83360b79e325a3a175d685229df3485742ecd11"
+  },
+  {
+    "path": "src/Game/Player/MarioMessenger.cpp",
+    "wrappers": 1,
+    "before_sha256": "1551cbf5636474c9510b84b47e14755f4c560e8c038bf86ac1e32e842c5554bf",
+    "after_sha256": "e0e3d6c67c7af4fa5ac72031332e07238a967333530125932c077efddb0a2865"
+  },
+  {
+    "path": "src/Game/Player/MarioModule.cpp",
+    "wrappers": 4,
+    "before_sha256": "7d31ae32295210260e01c43261abfeb53e186823aebc86302b0036a65cd66792",
+    "after_sha256": "a55f8a3b9ac589b7165d848018c9f334d444aa85245190c1f8683c9883c1e0b0"
+  },
+  {
+    "path": "src/Game/Player/MarioMove.cpp",
+    "wrappers": 40,
+    "before_sha256": "aa8425e16d7023dcb6753906a37b56875c9106d4c9e3e1ad655cfa6b01920e8a",
+    "after_sha256": "e4cb6b2225f80e9c8aba02fe10a1f600608840669628c15f177b0932772da1b7"
+  },
+  {
+    "path": "src/Game/Player/MarioRabbit.cpp",
+    "wrappers": 22,
+    "before_sha256": "3a036aef584943a747985a81121d83a9849815a1cc9635066b4c46a220abf6ca",
+    "after_sha256": "a44dd2877ccb71090433c785a746018f125602d4ba6d5e9960d1b64db0f3b6d6"
+  },
+  {
+    "path": "src/Game/Player/MarioRecovery.cpp",
+    "wrappers": 14,
+    "before_sha256": "0b00affb67c88c9b592b017ecccdb368aa916359c0b2c1d49883ece980aa10f7",
+    "after_sha256": "0b3f0fd89147004748baa3f664477e75a0d2d0dd7a68fe400b179daf846fc39e"
+  },
+  {
+    "path": "src/Game/Player/MarioSearchLight.cpp",
+    "wrappers": 1,
+    "before_sha256": "00e181458b540d2a873cf423d4774ff5000df176ef2642f20b3e3ba92e5145d3",
+    "after_sha256": "f36779c4da8f586adbfb515529dca3f420d8be375367fb578ac50792cb926a80"
+  },
+  {
+    "path": "src/Game/Player/MarioShadow.cpp",
+    "wrappers": 1,
+    "before_sha256": "a2848efa6cb94bef79c98f8f3a5a72dd6f144db96f5e946f414b7ed12fec1981",
+    "after_sha256": "490a7494d3ffe20eef8e769d6f55538e369d83f46904b1d9d95c2bb7dd37d865"
+  },
+  {
+    "path": "src/Game/Player/MarioSideStep.cpp",
+    "wrappers": 15,
+    "before_sha256": "7b9d5c8680e6ef9c40c2cac24e9f7b293669502ce82e449dcbfbfe388482f8fb",
+    "after_sha256": "e96a1a8d7840651dd4aa91bc77beccbceba19a60840c5ee662eb01d7fb152d9f"
+  },
+  {
+    "path": "src/Game/Player/MarioSkate.cpp",
+    "wrappers": 43,
+    "before_sha256": "822eaca49580a27c543c10fe3defa35824bb1236143896f4ef0d8858ca97613e",
+    "after_sha256": "b02d425edc927252906ae37c3f29e7763ddd7cb47564e12127170682d5ba87b5"
+  },
+  {
+    "path": "src/Game/Player/MarioSlider.cpp",
+    "wrappers": 12,
+    "before_sha256": "7d8e9276f80f8876085f20657e195b1fa7f9f3ab6cdb0751736a9891d99363ca",
+    "after_sha256": "bbd759fde42f7d836da7e5866641a368362d70497de07a7de224fd241557aad9"
+  },
+  {
+    "path": "src/Game/Player/MarioSlip.cpp",
+    "wrappers": 23,
+    "before_sha256": "03007fff7c11d2cb3c6bc46ae44ebaaedab813b1769639f073022c12f4341278",
+    "after_sha256": "d9f1ae854af299a9834588b97b420086eade29ff984d62919cfc4d1474bf9429"
+  },
+  {
+    "path": "src/Game/Player/MarioSlope.cpp",
+    "wrappers": 1,
+    "before_sha256": "19f64c2542b3a5e0b283683ecd9b7598c801fae47329b4aaa873263059cff092",
+    "after_sha256": "0aa766c22a57359d50f4db0256a51585cfc949a95fcf1390e237096432568d3e"
+  },
+  {
+    "path": "src/Game/Player/MarioSound.cpp",
+    "wrappers": 217,
+    "before_sha256": "c30c0caa1cdee414e143fcb5284b708c02a050a5d1d1da444bec4a3d3f85d5c8",
+    "after_sha256": "314326a44d20d866582bb2cb0ab341b45962537385e24dbfbccd66b73f344559"
+  },
+  {
+    "path": "src/Game/Player/MarioSpecial.cpp",
+    "wrappers": 3,
+    "before_sha256": "65d8bb485bcd9efe7571e5881a262544ddd5f09e589f7e872ded3dfd630df054",
+    "after_sha256": "77602f33dfda2aba2bcb9bf049e4a85f4d855406012d28c6135732836485fa7e"
+  },
+  {
+    "path": "src/Game/Player/MarioSpin.cpp",
+    "wrappers": 4,
+    "before_sha256": "a8021453aba28f654e9af7be42c694c795a3728b82e2e9cc83bf94e15c014bf2",
+    "after_sha256": "911582ddf0aa3a495b77b732030dff99bfb90dbf4889ff2d7daed5526a75f88e"
+  },
+  {
+    "path": "src/Game/Player/MarioStep.cpp",
+    "wrappers": 1,
+    "before_sha256": "36195374c2a592ed694f2996eb9075b5da4f45d869cbe346f4bb782925199dfa",
+    "after_sha256": "d420ccb0591a2c6c5fb24edcb9483d9715222ac6a01c34d804dfbb7d5f1421f7"
+  },
+  {
+    "path": "src/Game/Player/MarioStick.cpp",
+    "wrappers": 11,
+    "before_sha256": "fdc36e24282200c19954d1fc1375206116e1e78180afdebb4786ea39803fa7c9",
+    "after_sha256": "3ecb11db7fc19c1a1491c47dd72bd7834646bbfe6c3e98f70db365d3610e6270"
+  },
+  {
+    "path": "src/Game/Player/MarioSukekiyo.cpp",
+    "wrappers": 14,
+    "before_sha256": "1c3a26c9c009d8bfc5fc8df826ec549cbbff4d0cd50e8cb20b150c7e9cf25d6b",
+    "after_sha256": "ea46b811e57f3e7325d03cb5b05ea048323e40156d97d569ea8b9f46eed8186c"
+  },
+  {
+    "path": "src/Game/Player/MarioSwim.cpp",
+    "wrappers": 164,
+    "before_sha256": "69ce21a2f45f1ec29f1f75a8f06dd71573206c6bc88ab72aa49e696a6ac60ba0",
+    "after_sha256": "7f7fce25c52fee99d6e0f27dd6602a734a9ad8031f9378d35ab26ec67bbdc072"
+  },
+  {
+    "path": "src/Game/Player/MarioTalk.cpp",
+    "wrappers": 1,
+    "before_sha256": "3cbae8aab2e23cc4519dd110d635cd1b9ead8c241ed3892e517d2dae22545d11",
+    "after_sha256": "16ec60f07326fa668862fc7e7fb2c892b9bb2e63d62768e5ed50a201b7144974"
+  },
+  {
+    "path": "src/Game/Player/MarioTask.cpp",
+    "wrappers": 14,
+    "before_sha256": "27a57da83e3a4db0f9705079cfc33d5a1b5d207ec790e5db0a5e1f70b014bfea",
+    "after_sha256": "ab28179558b6e2ca8add797fafec3f075ebdcdb60d37bed327450d860a449fd2"
+  },
+  {
+    "path": "src/Game/Player/MarioTeresa.cpp",
+    "wrappers": 19,
+    "before_sha256": "f3afd07d72ca0f54a33d0c80b615365f27907029556c89310fd473bf0e5d2691",
+    "after_sha256": "9064ae603d8ca9892cba3c0bf52220840539675f7922d72aae349143c74f8d6e"
+  },
+  {
+    "path": "src/Game/Player/MarioWait.cpp",
+    "wrappers": 12,
+    "before_sha256": "cb286e999e536fd0aee291f9cf04a0b86ace7d432309bf8f41914f70290aab4f",
+    "after_sha256": "3e9d0cfb571a8ec7d2e7d937108d10d517ab1203366278a3eca1c3667bc82f07"
+  },
+  {
+    "path": "src/Game/Player/MarioWalk.cpp",
+    "wrappers": 72,
+    "before_sha256": "3be05aef659297a8206552b9da5675387ec51ccd70478851976d2d79fb2d32e4",
+    "after_sha256": "461701ea57f5d3d4d7cad47a3fde561df1ab0bfbe4f167d8c4839009414794dd"
+  },
+  {
+    "path": "src/Game/Player/MarioWall.cpp",
+    "wrappers": 31,
+    "before_sha256": "b4fba54fff4a0e5db941ee407d6755c58182773aa5b865a2070b2dd3835eb463",
+    "after_sha256": "36de8a22a69156af66f59609502cfd52923811ef228fc92dd45ea8699e35e65e"
+  },
+  {
+    "path": "src/Game/Player/MarioWarp.cpp",
+    "wrappers": 29,
+    "before_sha256": "dfe47617d7448957876aed63940dcb710f55bd22b90b1bd2388842c81a00d5c6",
+    "after_sha256": "107f8b63c2ac6ba4e2e781c991d87e832d98542c3854ebe763f6bcf3d5f59d10"
+  },
+  {
+    "path": "src/Game/Player/PlayerEvent.cpp",
+    "wrappers": 7,
+    "before_sha256": "862e42d3a48cd609e24daa76dd20660547f75659906d2599a9f0f97914d1d9d3",
+    "after_sha256": "e51f0de1614e84794d18fd05d33ecc8f21b348f2730e5e7288b953b073fc7d0a"
+  },
+  {
+    "path": "src/Game/Player/PlayerEventAbyss.cpp",
+    "wrappers": 7,
+    "before_sha256": "33989dafc45a1a49deb4fed955e9e3bceb126647f405d50f956a7665d515db5e",
+    "after_sha256": "8471959f4a2b29c720450ba8e5eb612f1e6f1889168b03a5336b9fdeee30486e"
+  },
+  {
+    "path": "src/Game/Player/PlayerEventDown.cpp",
+    "wrappers": 9,
+    "before_sha256": "2a8c4adbd34a38fcc1c82640755a7c2aefc8d918488ee2781d5c9ce51f7368db",
+    "after_sha256": "87ccec8495ca9c8088cecdd95bfe5b6c769d361f60b4c3210f7b1c5450465c4f"
+  },
+  {
+    "path": "src/Game/Player/PlayerEventFireDown.cpp",
+    "wrappers": 9,
+    "before_sha256": "2d54e15806ffba427ce129a3f5818468213c039db4d8349e607e48c26ce05e84",
+    "after_sha256": "8b57cab1c031bb58b815347f9e35cf78853193539f759eb91c17c0880ade8bd0"
+  },
+  {
+    "path": "src/Game/Player/PlayerEventGameOver.cpp",
+    "wrappers": 7,
+    "before_sha256": "e30b8b0f51998394b43183a330927abd38b642b9a0e8e62146f62f86ec47a683",
+    "after_sha256": "9b05c9452e3567860399a7ab982759dc75134449ac312a6a888cb4897daa755a"
+  },
+  {
+    "path": "src/Game/Player/PlayerEventGhostRaceDown.cpp",
+    "wrappers": 11,
+    "before_sha256": "c8e3aabf4d4ac76f8c41ba23f21450871c696368b6222e039a7243fa8d21bacb",
+    "after_sha256": "47282ce5a4d0ee08884382918d5b55ab58ecb7459b6b1e38ddd6c1f2427ddf6b"
+  },
+  {
+    "path": "src/Game/Player/PlayerEventRaceDown.cpp",
+    "wrappers": 12,
+    "before_sha256": "c7d7049d9356324c7985335e6502e1289f5cb006944f596b52b9851d3f5d356d",
+    "after_sha256": "b3869b22e2ddd5b664858e3da6099d325adae9182adb211831c68cd3e3b4f2e7"
+  },
+  {
+    "path": "src/Game/Scene/GameScene.cpp",
+    "wrappers": 1,
+    "before_sha256": "92893f57ea6bcec7c9424cb00e8bb04754b1151de5f927204fd0372b289db6bc",
+    "after_sha256": "d41802f060fdf4ef5786d78481bc7245c2ea3a108b4d4856581b0532748b1829"
+  },
+  {
+    "path": "src/Game/Scene/GameScenePauseControl.cpp",
+    "wrappers": 1,
+    "before_sha256": "d1f57d09f7f7c421543c0c22d79004294cdb6b12193d1e805d9105f92dcc810f",
+    "after_sha256": "ef80fd38119b3961189a6b865a30e51adfd590c4424065fe7cad109b72cc66ab"
+  },
+  {
+    "path": "src/Game/Scene/GameSceneScenarioOpeningCameraState.cpp",
+    "wrappers": 3,
+    "before_sha256": "f941be042d028ff27c8853a4636597733d47158135b97f8508f4ae5c06ef9720",
+    "after_sha256": "d1a8ff722a39336587d23ed555313b60161fb9c2a54431a5e78ef52b7e859ced"
+  },
+  {
+    "path": "src/Game/Scene/LogoScene.cpp",
+    "wrappers": 2,
+    "before_sha256": "6651bacef8b78c1545649385f542c1314f588470e34af4d2cc47f2ef50416ec4",
+    "after_sha256": "6ff867f70097b74efcf4c16b2d099c8481128fc22778d305a3b7fe13fa9131c1"
+  },
+  {
+    "path": "src/Game/Scene/ScenarioSelectScene.cpp",
+    "wrappers": 3,
+    "before_sha256": "d7838421c64442e648cd5c9a805c03b404667225b3f985caba09221ee2035f10",
+    "after_sha256": "405bb6509a98b013c2b59c22ceff15e24b91919288447fb4b2f85faf15cc541a"
+  },
+  {
+    "path": "src/Game/Scene/SceneObjHolder.cpp",
+    "wrappers": 51,
+    "before_sha256": "ea2a2a2dad5fcd4c9a789d68477fe74ec63835fc3f1ece6e824b70895e605823",
+    "after_sha256": "c3e5a3bef03fe7a5d2716362ee6e4c5fd21c9ea0d095e68eed245df0a5c0f368"
+  },
+  {
+    "path": "src/Game/Scene/ScenePlayingResult.cpp",
+    "wrappers": 1,
+    "before_sha256": "b0f6543c8e731ecf55c7456d3b18a17437b462bb38bd848f263b70070c61ae26",
+    "after_sha256": "61c1692b45a100806641ae5f98afafb0d67a0363e994c0b7c7d5d6e9ac09c782"
+  },
+  {
+    "path": "src/Game/Scene/StageDataHolder.cpp",
+    "wrappers": 1,
+    "before_sha256": "d832284c9f28e6580865d8d989af9c96e3b2c8629c67128a14876b64ec7ae5f3",
+    "after_sha256": "3a99b6f8a6131abcb2337bdc519574d96ebdd81ead4fc21a11864b0b209d4710"
+  },
+  {
+    "path": "src/Game/Scene/StopSceneController.cpp",
+    "wrappers": 2,
+    "before_sha256": "c761ec785fd7497c842da9d38a633d9f7bef59add3968cde7746a0d3a4f494a0",
+    "after_sha256": "2d722ba28ae1f5f6f0ccb3bbe4b694b746c276defaac15ac867fd8ef7e7a3cc1"
+  },
+  {
+    "path": "src/Game/Screen/BloomEffectSimple.cpp",
+    "wrappers": 1,
+    "before_sha256": "1ab13cb5e756301f879c9fbf74127c7b0dcc01ab8b20bfa41607844887907e55",
+    "after_sha256": "adaa426b953a0d7bcfe7c0c71a41b2586f032b6c703859e86f7e4413b94890e8"
+  },
+  {
+    "path": "src/Game/Screen/ButtonPaneController.cpp",
+    "wrappers": 2,
+    "before_sha256": "d25c13010c59ca5d23aaf02660bc72a00149be6075e14f8871ce5d62faa5cd0a",
+    "after_sha256": "206c5004c48f7b9bec71e541908ff78d2df2022a6a4082093fe6091aaf92a796"
+  },
+  {
+    "path": "src/Game/Screen/CaptureScreenDirector.cpp",
+    "wrappers": 2,
+    "before_sha256": "20798025dc7173b9640a66c439ebf47e1aae9ba5eb91d2ee7b0ce46133acde68",
+    "after_sha256": "87dcb4d1992a9a1cd6a3415c2087ee0463ea9af70ddcb8a058d9fadfe853aa35"
+  },
+  {
+    "path": "src/Game/Screen/CenterScreenBlur.cpp",
+    "wrappers": 1,
+    "before_sha256": "bc359e06abf0bf019a2661b15327ed142517383ae0270a16a4e5cc1c6f60ef0f",
+    "after_sha256": "d9947158426ed08ceecf977a5c645b5a3e4e7a935c52f78e02383dfeb4f3a741"
+  },
+  {
+    "path": "src/Game/Screen/CinemaFrame.cpp",
+    "wrappers": 1,
+    "before_sha256": "f1233699835c93da80df48e1d479b78e8825e182204875c94a8b5f20ff3a9427",
+    "after_sha256": "a826dca92e3a6e56217a0c8e13810be886aedbf5faec62238e03cf8f272523a5"
+  },
+  {
+    "path": "src/Game/Screen/CounterLayoutAppearer.cpp",
+    "wrappers": 1,
+    "before_sha256": "04e7e07a1288ffffeeb44c1ec3b7f12e40ed07a1c9b9f0ea57242798955b510d",
+    "after_sha256": "26d087195a27f539791a5e4e448effb06b434db922dbd59f11e4e5ad637e9ebb"
+  },
+  {
+    "path": "src/Game/Screen/CounterLayoutController.cpp",
+    "wrappers": 4,
+    "before_sha256": "1abcede75a4e3bacd9881b1cd3963cabb3a4315a2c594040322e16c2a01f8637",
+    "after_sha256": "d8dcb7853fc0aac2e5ee4d474d75cd93491120aa7728c49c96873526d6b4387f"
+  },
+  {
+    "path": "src/Game/Screen/EncouragePal60Window.cpp",
+    "wrappers": 1,
+    "before_sha256": "b5bdcbef0fd168f63718356b19f5ce1a602dcf6c76953d43ea357ac6d57cd127",
+    "after_sha256": "8a8f55687a67fca719f630e564d0bc8c3a0a802cb18f20d9a6085b8495583572"
+  },
+  {
+    "path": "src/Game/Screen/ErrorMessageWindow.cpp",
+    "wrappers": 1,
+    "before_sha256": "cec020d67212039f7a4a6c7676afc3a0ff770deb6705e03cab90736d67c1676b",
+    "after_sha256": "7311c9de54a333c18cd9f5c98a44528b4874e0f038339967c432a7a3e5f16958"
+  },
+  {
+    "path": "src/Game/Screen/FileSelectInfo.cpp",
+    "wrappers": 2,
+    "before_sha256": "5fa502bc6506aa16f90a3be08b958187e2f0dd79001d85277e2978e5eea65525",
+    "after_sha256": "cd3c339aafa695bbf02be96947de6b0f7a83b4e37163ea67012d82c6f4c3ffa6"
+  },
+  {
+    "path": "src/Game/Screen/FileSelectNumber.cpp",
+    "wrappers": 1,
+    "before_sha256": "27528706101a2d71c5306829d3d170cd76cb7548bd9909450a87a6f7cc3c8aff",
+    "after_sha256": "07de39ccc5c015f59f1d6a1e2b3bfa0fcb9657ca2a8a6c6e7956130da527ed7b"
+  },
+  {
+    "path": "src/Game/Screen/GalaxyCometScreenFilter.cpp",
+    "wrappers": 1,
+    "before_sha256": "e204728961c32ff0d81537c7e032f55e8c13260fedb0fdbf7d2ee706de4dabb8",
+    "after_sha256": "eeb25a86e98aaa77bf766433146abbf261e33360862104ab36e03807ca890c83"
+  },
+  {
+    "path": "src/Game/Screen/GalaxyMapGalaxyPlain.cpp",
+    "wrappers": 1,
+    "before_sha256": "9e5e5fb2185b6d78366256d0ffdfed6498f852ee96b2db4c60c2d0b812f8bed0",
+    "after_sha256": "69ecb7075e4ac9b61b98d344015f13092887fe0109eb7373f92fc5c22c39df38"
+  },
+  {
+    "path": "src/Game/Screen/GamePauseSequence.cpp",
+    "wrappers": 1,
+    "before_sha256": "3899f1237486c6f4bce2d767ff6b98013b7aa3fed7aa7629a1260380127aaa0e",
+    "after_sha256": "6309d644cf9181229f158c77b9ac74f2e5eb28de4c5c4af003397273a016d871"
+  },
+  {
+    "path": "src/Game/Screen/GameSceneLayoutHolder.cpp",
+    "wrappers": 6,
+    "before_sha256": "88726d69eb399de3abaa178209561340a3d7d22fc8fb4b11fd7be76beba46d30",
+    "after_sha256": "ab0487d736a0e67792e996e22e7927f9dece3b7ca47076ecd2d1eda5d7b26cef"
+  },
+  {
+    "path": "src/Game/Screen/GameStageClearSequence.cpp",
+    "wrappers": 2,
+    "before_sha256": "b5429c6311587f3dfdee870d9f068a934e81fddee9ac6c4cbf4316979b63ed12",
+    "after_sha256": "188e81379f78e253383df69758d546c79035c0881ca169ce69db68703884ac0d"
+  },
+  {
+    "path": "src/Game/Screen/IconAButton.cpp",
+    "wrappers": 1,
+    "before_sha256": "b779ac30acd9928a64d57c1bfe825d444d5832126c2f203cdb0b73dc9707f29b",
+    "after_sha256": "59c596ff01515ffbcd621baef8a33ac3a1f106ef0508f5c74ba6aa6ad1784e7b"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectSystemHolder.cpp",
+    "wrappers": 2,
+    "before_sha256": "d4bcbc7fb0af850fc532c67dd319a539ac7b32412a20cbcffbeec954a7657163",
+    "after_sha256": "50c38933a5ae3a17a385c702efd52276c03b99e3a7295bb805264044469cba86"
+  },
+  {
+    "path": "src/Game/Screen/InformationMessage.cpp",
+    "wrappers": 1,
+    "before_sha256": "e25681b6135066318dbde76411380e5aa3eb89e934f38564f2851ce4107c8cd3",
+    "after_sha256": "cd9aa18e87b2bc95658b58e2e77b6e694cc2d8777809c7e9bcb8fb66ff1bb257"
+  },
+  {
+    "path": "src/Game/Screen/InformationObserver.cpp",
+    "wrappers": 4,
+    "before_sha256": "7dc1ea7956609ac357efc84956406ec08ae4ee85e3a2f86921c8f45e143f61d9",
+    "after_sha256": "b2292cb1332dac6feb43b982f5ea5f8f1b3a803c60db8650154b06f020dd47ad"
+  },
+  {
+    "path": "src/Game/Screen/LensFlare.cpp",
+    "wrappers": 4,
+    "before_sha256": "eea618f325b19b31135e259a7519aacb1ccb865af0868ce5c3c04ee5f3589235",
+    "after_sha256": "51f4464ea3fb4b22e7e587b094e9cfc14a92f0afea94073324326a46cdcde353"
+  },
+  {
+    "path": "src/Game/Screen/LuigiLetter.cpp",
+    "wrappers": 1,
+    "before_sha256": "2ef24c50a807c3e666323557c5a0af413b6a4302695a899bd5169098ec663b08",
+    "after_sha256": "c55ca7871bd5ea28c19df0eab7bfdd8749747bbd3de416ac1ca632bf03424e49"
+  },
+  {
+    "path": "src/Game/Screen/Manual2P.cpp",
+    "wrappers": 1,
+    "before_sha256": "115af48ac460cf262e8ee28198771529d6f147c25f25a7cf95e4b014ce2cc657",
+    "after_sha256": "b66be9c3877c60615fdc5331027003d0b6e5e9ad47593ba798951afd7b248f0e"
+  },
+  {
+    "path": "src/Game/Screen/MarioMeter.cpp",
+    "wrappers": 2,
+    "before_sha256": "4189524d36f1cc90e277eb137eaa41712bb4b0df99b18bc3d9ecf3b6068d53bf",
+    "after_sha256": "e7b8e2ab8a260ce8b973919955cff15312e1c3bb7d526ac48c414b53f8447bec"
+  },
+  {
+    "path": "src/Game/Screen/MarioSubMeter.cpp",
+    "wrappers": 2,
+    "before_sha256": "fe44c850870dabe502cad040c0fa3984935cec06e93ac8a29bfd9981fcf1dc8b",
+    "after_sha256": "8d0d98d3da467e5206a37df0c41abe16e281cc05322c626c1a1cce3f899903f3"
+  },
+  {
+    "path": "src/Game/Screen/MiiSelect.cpp",
+    "wrappers": 3,
+    "before_sha256": "b3ec657735ffbc2b9fe69d05fc85a7d58b24490cee02f612c940919be4193dc5",
+    "after_sha256": "9e1c0c83db397fe5cf7c03e3e29db622d539b94ce397f1b1d7a75aab0a039d2d"
+  },
+  {
+    "path": "src/Game/Screen/MissLayout.cpp",
+    "wrappers": 1,
+    "before_sha256": "11cc94a872485ae49d4876afa059cea040a2159b51e961be6ad68158834861df",
+    "after_sha256": "af24f4817c44c8792f9c8d1aa85528ecc0c48b9cf631cee66f4b2f5171dd1d18"
+  },
+  {
+    "path": "src/Game/Screen/MoviePlayerSimple.cpp",
+    "wrappers": 2,
+    "before_sha256": "dd943d5be5c166d91eb0983dc73d6d373c0aa332f7db2083dffb998791ebded6",
+    "after_sha256": "8a35f09d6beaa33aec3e7e2c9575e24573e996179a54fbe6942b245fa9da3e05"
+  },
+  {
+    "path": "src/Game/Screen/MoviePlayingSequence.cpp",
+    "wrappers": 1,
+    "before_sha256": "aaff6d4db856568709bd51ef8ce723930b956b2e24ba4cae216337a2ed736ddd",
+    "after_sha256": "29fea80b1086de9e8623e129b463201fbb10f62aeef77a39536ea85588a67376"
+  },
+  {
+    "path": "src/Game/Screen/MovieSubtitles.cpp",
+    "wrappers": 1,
+    "before_sha256": "b68b8c838d1c89ba38b4a000f45fb8b8d24b24f1e56083cafd0d0e4c4b85167c",
+    "after_sha256": "0ef6018ec79a443570d367c9bf7b4dbd458c1b1c8bccc4cf585d08a7d2c49600"
+  },
+  {
+    "path": "src/Game/Screen/OneUpBoard.cpp",
+    "wrappers": 1,
+    "before_sha256": "bf0c93ed5e0e5b5aea24d53d8f80d0aa7bd58d810b5a7dc02eacb307c7ce83c4",
+    "after_sha256": "f379b7ff443ef5b4a594b6002ce01aa396d6c7922cba43c9ab9db7ab1ecf5e9e"
+  },
+  {
+    "path": "src/Game/Screen/PauseMenu.cpp",
+    "wrappers": 1,
+    "before_sha256": "48a23d98bbe713d2a7e1c47416d783c583612a83fc5fbd6ae66572bdfe1b5b03",
+    "after_sha256": "2eecc344cc8d64131923d25d266bc1b53314ac9dcdd5abb97d1b84076c9a0bd7"
+  },
+  {
+    "path": "src/Game/Screen/PictureBookCloseButton.cpp",
+    "wrappers": 1,
+    "before_sha256": "4edda14b6f324747ec9cba318ef6c8a0d549f919ea9efef4d21a0955bfcd88b4",
+    "after_sha256": "85dc891011404c84b1c60bf9ab252a2d7676d7770becec8f79b9c2ff56dd2b13"
+  },
+  {
+    "path": "src/Game/Screen/PictureBookLayout.cpp",
+    "wrappers": 1,
+    "before_sha256": "7f59d2bf6eed2cafac8346e1aa3a52a07f0390b5f80af4c6ab5136640decbce9",
+    "after_sha256": "10deaac6f5a99de751f8daa61c63621f75ab1bbad429b1e157a02f34e5fa7796"
+  },
+  {
+    "path": "src/Game/Screen/ProloguePictureBook.cpp",
+    "wrappers": 1,
+    "before_sha256": "6a8be74adc64e0c0118efddb60703380be26dfad0be67472b158ca4b3b1c34cc",
+    "after_sha256": "fc08284d7244333bbff8b90e4e488d0cf38a0f3564d79773701817a49d2dbc01"
+  },
+  {
+    "path": "src/Game/Screen/ScenarioSelectLayout.cpp",
+    "wrappers": 4,
+    "before_sha256": "6ab162c006c216a60e399635c906a9dbd971a73c42c182c3bda1905a36036c83",
+    "after_sha256": "4b81f4c1acc34e0289702b6d00f2575718004e4675ce5ad5d3ad5bb28c4502e6"
+  },
+  {
+    "path": "src/Game/Screen/ScenarioTitle.cpp",
+    "wrappers": 1,
+    "before_sha256": "9ebe7d7cf6a8005c4b3b510aaf2e8656126006753ec056a1161feb27c074083b",
+    "after_sha256": "da83f60c84ba6806bab45c958fa7f68fbc65c4f96e9019fac3c109ba93f32c46"
+  },
+  {
+    "path": "src/Game/Screen/SceneWipeHolder.cpp",
+    "wrappers": 4,
+    "before_sha256": "93df73978978d9a34fe2bc1e382d1c3591da916bdea71859ea622f0097f2acbd",
+    "after_sha256": "0ca21948fc509aa15ce52f982d11ac934f9c94210c5727e1f6e29b0fea40f92a"
+  },
+  {
+    "path": "src/Game/Screen/StarCounter.cpp",
+    "wrappers": 1,
+    "before_sha256": "24bfda5a77a734c51906a7e909231a9166bb2cf88412d18340b5744b8bdd06b9",
+    "after_sha256": "75bedba3484bd95d22d4e87614f9a544994413fb25bf6063555d1206edb0069d"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerBlur.cpp",
+    "wrappers": 1,
+    "before_sha256": "30e3037c24d07e2a7707f71a16d8dd57f424985cf987d3cc1c319e15d3241c8d",
+    "after_sha256": "7f8c250edc921d30d0633cb356d8188838a3a6e9a6abed161cca37b1b5739f2a"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerCommandStream.cpp",
+    "wrappers": 1,
+    "before_sha256": "5ac43ecb799f4672d0a49837818bdc1bbff5460d3be7fbfdccf903f26cef07d5",
+    "after_sha256": "71842ea5f90ca5c2fc52b7e54f4f9f52122098142a5c3faff7caf8a049b11fcd"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerLayout.cpp",
+    "wrappers": 1,
+    "before_sha256": "6bdbfaca13cbaf969c7fc452946c5a7c1d0ecb20fe06aa48b68a369862a67a58",
+    "after_sha256": "a26ab5cc8dc18575a0959c4a58ba99e09a5cade429c7ede3db20eeea4a6dcb6d"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerLayout.hpp",
+    "wrappers": 1,
+    "before_sha256": "5b22afbb08302b699c5b4a8f03147e5b411599022aec87e20b4f178ae80fbb5f",
+    "after_sha256": "623a10810bf4188ac72641f834246e3904f405e3be4315af9a829b0a08170618"
+  },
+  {
+    "path": "src/Game/Screen/SysInfoWindow.cpp",
+    "wrappers": 1,
+    "before_sha256": "5f7fb6e219ca4106bebdce10b3fc6f61dd40fb5f7f3ea2228a11a9418966eada",
+    "after_sha256": "86610b983b1c757f27a0322fa17ddc1c47d0462705de913d8204cc1ddfeab4ee"
+  },
+  {
+    "path": "src/Game/Screen/SystemWipeHolder.cpp",
+    "wrappers": 5,
+    "before_sha256": "c8c8dbd68d337116795adbaef2bf0dbc6bc3b075c81b584e9f66ed731a1faac9",
+    "after_sha256": "1cf2df367284d9d84ef293d36279fc30f1a1fef0025d401e21df466d51264c51"
+  },
+  {
+    "path": "src/Game/Screen/TimeLimitLayout.cpp",
+    "wrappers": 1,
+    "before_sha256": "7de0e077166d377c855731844224a1b7de6c8c23f530b5f5eeba8fcdc0cedd09",
+    "after_sha256": "0c547a8df3a678c613210aff0d43cd17e94ecef8a3308540424f23c95a021dd2"
+  },
+  {
+    "path": "src/Game/Screen/TimeLimitLayout.hpp",
+    "wrappers": 1,
+    "before_sha256": "780f568231a287dbae242923700e872e50309e6b84191a92d3ff8f3b4243323b",
+    "after_sha256": "37298b0845cd6867f13806b8eb7ddfd0e3c4290932492d01d1c61c5f4c74b9f5"
+  },
+  {
+    "path": "src/Game/Screen/TitleSequenceProduct.cpp",
+    "wrappers": 1,
+    "before_sha256": "f55e17622dea719d031717ae0a3d6687b29e4972ef6385d687a12b502a90fb48",
+    "after_sha256": "a3c5aa68befaf78ea74242c23239e8c2d3cf95a31b0a31d00237b2223a346981"
+  },
+  {
+    "path": "src/Game/Screen/WaterCameraFilter.cpp",
+    "wrappers": 1,
+    "before_sha256": "234a406eda0c0883d8518089f1ac235320c952cc60e2cb91a166fd51c8ff5c53",
+    "after_sha256": "aec6a951a1748f09dc02da3ae303ba96b25b206e91e60f3ef6af8129cb0d5657"
+  },
+  {
+    "path": "src/Game/Screen/WipeGameOver.cpp",
+    "wrappers": 1,
+    "before_sha256": "2986434b3203ee52f51421ac19069a30f5c2405dc15b7aee11945cb82c85fc04",
+    "after_sha256": "83a315b5a597eedf6e62cf32289b8f343042d1e83027d3f5326e32881dae5e90"
+  },
+  {
+    "path": "src/Game/Screen/WipeKoopa.cpp",
+    "wrappers": 1,
+    "before_sha256": "b019adf4a3234bc54e78003f41cdd57291e087aac8843a2c98e2f63b5349877b",
+    "after_sha256": "df06836675e1a07acc1865c58aebc67fe869aa678b4d8977960422ea72ef4ed7"
+  },
+  {
+    "path": "src/Game/Screen/YesNoController.cpp",
+    "wrappers": 1,
+    "before_sha256": "3c474c3e7de4fb8524e98bb0fb04d898ef96120f8ba2fb208aab7e3a0f5a5abf",
+    "after_sha256": "5f7ed8a38cf9685bed300630e5032fee84de7beacf805fff38749738750b0bd2"
+  },
+  {
+    "path": "src/Game/Screen/YesNoLayout.cpp",
+    "wrappers": 1,
+    "before_sha256": "a067947d5b6aab16d82f079775003a475e8e1ed455d942966559736a516bf8e3",
+    "after_sha256": "6a848f4acdee932bb64d18f510dd3d6489fa8ba2964680ad88730980644708da"
+  },
+  {
+    "path": "src/Game/System/GalaxyStatusAccessor.cpp",
+    "wrappers": 1,
+    "before_sha256": "1e12151b74a036f68979c78ce7e6afa36616e7ef32ce544f15bb655c38bab2f1",
+    "after_sha256": "8cc2b214b1edd46074aada45e728ec9e04fce6b07385b8f46d700b6cc11ad661"
+  },
+  {
+    "path": "src/Game/System/GameDataHolder.cpp",
+    "wrappers": 2,
+    "before_sha256": "57fae13e42f4bac2ac6f1f2237a5adc34d7260fdb80c312906cf491d3391667c",
+    "after_sha256": "78272e2157e3d5fef58736808b55331b723c7b7279dc0ae00cc5888112437f1e"
+  },
+  {
+    "path": "src/Game/System/GameEventFlagTable.cpp",
+    "wrappers": 19,
+    "before_sha256": "6ea148dfb97d7a9fa7db3523453aa03072bc5bedab0c843ed25a14348056956b",
+    "after_sha256": "4f340b7f368d6d225d511c2d19e07ebca0a64ea4cff67b9d358583dd8de6be5f"
+  },
+  {
+    "path": "src/Game/System/GameEventValueChecker.cpp",
+    "wrappers": 11,
+    "before_sha256": "0a31a476a7b2c9d4a3c32bb94c734cb1793fadd6135f3b5bc581f1793f111c93",
+    "after_sha256": "e376e0f198b61eeafefabd9165084d713c99df57af618b22838c442fe46ca88b"
+  },
+  {
+    "path": "src/Game/System/GameSequenceFunction.cpp",
+    "wrappers": 2,
+    "before_sha256": "d4579518e56a56a32633b405209d949956b96a430929b7a71770931335945639",
+    "after_sha256": "1e1d49ea2fa8ae484c42631aebf53a5f6372c20b7b523615a51cddd7f83cecac"
+  },
+  {
+    "path": "src/Game/System/GameSequenceProgress.cpp",
+    "wrappers": 3,
+    "before_sha256": "dafc15ab29f4b7259597e8e8574f5ddb16a99d7b658c05b0119f47a6b0749c8c",
+    "after_sha256": "037089a9125beebf78fe04c8e14f26295cefb683331fa81cb58af08a58a3ec20"
+  },
+  {
+    "path": "src/Game/System/GameSystem.cpp",
+    "wrappers": 1,
+    "before_sha256": "e8d0ae50bee26b1d09a9ff66864f3206030672ee9b3db733dd52cefd82a7ef24",
+    "after_sha256": "c83f44f96a42d0f53e1fdd42e61d4db07890f0a7805d16a5c214ffa4d71fa51d"
+  },
+  {
+    "path": "src/Game/System/GameSystemResetAndPowerProcess.cpp",
+    "wrappers": 1,
+    "before_sha256": "c45f10490fe168bd47d161b7630b0a569789f237ba1b8fce66f00e66d092be03",
+    "after_sha256": "a1c1e0816e7f4568c77e98cfc16ff27a50b07c6609cb39d40f1d13b24900f8b6"
+  },
+  {
+    "path": "src/Game/System/GameSystemSceneController.cpp",
+    "wrappers": 5,
+    "before_sha256": "a8c6bc4a1972f00f801a383874cae7c14811022c203d90018c6af7675d71fa6d",
+    "after_sha256": "66004de348d034d99c15f5b25226d45de637b8962cbe3e57316a6d1f78610d7b"
+  },
+  {
+    "path": "src/Game/System/GameSystemStationedArchiveLoader.cpp",
+    "wrappers": 9,
+    "before_sha256": "80cacb89f9c1f5e0a60c7ad5bb437e3eb71d2cde30d285e8c7ec8373a5dcb0ab",
+    "after_sha256": "fca8513b1f13292076f7a2b3907efc30ef0848419c2c10788fb35a626e8120ea"
+  },
+  {
+    "path": "src/Game/System/SaveDataHandleSequence.cpp",
+    "wrappers": 1,
+    "before_sha256": "8827336b8ae41f2611510c1e94eec67f663ae87f56f36cf2db5b843c0d72e19f",
+    "after_sha256": "e332b145bc8bf5f8a0b6f772d5b1ddaa06b1c2aceee8ff437a093886a49adc94"
+  },
+  {
+    "path": "src/Game/System/StarPointerOnOffController.cpp",
+    "wrappers": 1,
+    "before_sha256": "d0c7ab3a7d6ba288737e2b4c5fc20e8a07413da8955910f898dd6295c21a042f",
+    "after_sha256": "24785d7df7413da849bac36e8a74fd74287db8b4e7da12d8dcce2b66c4240394"
+  },
+  {
+    "path": "src/Game/System/StorySequenceExecutor.cpp",
+    "wrappers": 52,
+    "before_sha256": "d464f2d89d9e53e58788f8a58f7cfc8d748c88416416be4b2a2710e0313fa5f1",
+    "after_sha256": "925d82069ddb3b06c2700dc450ce0458f7eb9649cb5e228ef4fe172a15a0ae39"
+  },
+  {
+    "path": "src/Game/System/WPadRumbleData.cpp",
+    "wrappers": 13,
+    "before_sha256": "76bc96891dd4dc7b7351205e1ebeece3e71c824aebc0860a2a1dc58edc1d5053",
+    "after_sha256": "f757abd2bc3e490c0522118dc56b9fd4c918c44de695a6685d8883fe9d69a942"
+  },
+  {
+    "path": "src/Game/Util/ActorCameraUtil.cpp",
+    "wrappers": 4,
+    "before_sha256": "d7236a7f05126eb2abfd53cc06c6b6cd93d3fea18abd67ca015c21ac9bc7cfb6",
+    "after_sha256": "a3a9a950d5f4fa786c2d6b919ffa26867c079dff569899996518702a20e70575"
+  },
+  {
+    "path": "src/Game/Util/ActorShadowUtil.cpp",
+    "wrappers": 2,
+    "before_sha256": "019212eaff3a54c4c8df0bd4888be9a3947f38cf4aac46f61b59ece34427bf5b",
+    "after_sha256": "e09e3f9e5efd20a3b3b3e793ee5c99b63fa7bb203a62579b03c070467cc87769"
+  },
+  {
+    "path": "src/Game/Util/CameraUtil.cpp",
+    "wrappers": 2,
+    "before_sha256": "9a2f605f0568bf85cd21fb88ac6c706b2def153161d1204d7fd496ce03ba21e3",
+    "after_sha256": "030eccec707ef0a85bc85e8c6de0c213ae87014394637413b086b926f2654754"
+  },
+  {
+    "path": "src/Game/Util/DemoUtil.cpp",
+    "wrappers": 3,
+    "before_sha256": "70ec465c532c7d276248b7282cbbfde9f868326557474b84daf925f762e4c30a",
+    "after_sha256": "83f128badba30595222dddbebeca27155ad12e207cb3d1b71f779e150dc2a3a2"
+  },
+  {
+    "path": "src/Game/Util/EventUtil.cpp",
+    "wrappers": 41,
+    "before_sha256": "da828c95bc26347dfc68cc3643ba9325e9bdcfb7e9c6638f0acda4c09e3a1ed0",
+    "after_sha256": "9ffdcf141c4fdd48451fef3a73dcde8ef91d71c3f99d5151ce1a46ba9c34f22b"
+  },
+  {
+    "path": "src/Game/Util/FurCtrl.cpp",
+    "wrappers": 30,
+    "before_sha256": "67ae673cb7dd2d6ba02b65777e80ff966979c9fa921eba16bb23c23227e10f3a",
+    "after_sha256": "6594a07b2948f512b52a1d15b4057af1a2ba76239e690a9d5d2c64d18500deef"
+  },
+  {
+    "path": "src/Game/Util/LiveActorUtil.cpp",
+    "wrappers": 3,
+    "before_sha256": "a5a196d5d0f4d338d284e4a596b96a050b04731e3d0d9f9e33076f7a63020267",
+    "after_sha256": "39cc7cd0b40b6d4604d8b75ce5b516ae7131a161daf1f144e5df094f10f3124e"
+  },
+  {
+    "path": "src/Game/Util/NPCUtil.cpp",
+    "wrappers": 6,
+    "before_sha256": "deb18f278070e43fb28acd9119d6b395631f53b90280f04368088a4d8b0523de",
+    "after_sha256": "a22f84a501a12b3dd73095b18817df0fcf4d19a2bf5014892b987d72c322fa81"
+  },
+  {
+    "path": "src/Game/Util/ObjUtil.cpp",
+    "wrappers": 11,
+    "before_sha256": "828bd079bc7bdb73a2cfd83ac7ffd7a44f7433d00560a30ec41adb852b9165ed",
+    "after_sha256": "ad5d8192bb75882b952455beca1d89dcc9c219112d284433ea766546d92ebcad"
+  },
+  {
+    "path": "src/Game/Util/PlayerUtil.cpp",
+    "wrappers": 1,
+    "before_sha256": "fc4f5685c2ded2cf5304cb8475953a0f2d29f93147e4ad36fe9d6e1f526286be",
+    "after_sha256": "51eeba0d69ac4d2049d1c0e305ed107af458866b245925663d62fb9581e409d2"
+  },
+  {
+    "path": "src/Game/Util/SceneUtil.cpp",
+    "wrappers": 1,
+    "before_sha256": "8c95e01714527facf38774899e79adf0ce0bf910ff975472e8012d5f80bd21d4",
+    "after_sha256": "05bfa4758bc87aaa54a669b2239bb04f89d76649a969c777ac199916bbc5bbf0"
+  },
+  {
+    "path": "src/Game/Util/ScreenUtil.cpp",
+    "wrappers": 21,
+    "before_sha256": "e62eb2435f1cdb445cfb1c24d458ee384aec0874703e4d9f8c544187f24c81d2",
+    "after_sha256": "2ce73a04456f0e5c12caaedb92523b9184e7942822e610d28686f090d736b97f"
+  },
+  {
+    "path": "src/Game/Util/ShareUtil.cpp",
+    "wrappers": 1,
+    "before_sha256": "0defd42b1cdb4ad688d53adede16d507eedf191a58e522fba0e69eb530db9e59",
+    "after_sha256": "f681f4117d890f896a522a28cf60ebb093c71db788206aab3181fe86f2b975dd"
+  }
+]

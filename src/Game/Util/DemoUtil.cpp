@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Demo/DemoDirector.hpp"
 #include "Game/Demo/DemoExecutor.hpp"
@@ -573,12 +574,12 @@ namespace MR {
     }
 
     void startTalkingSequenceWithoutCinemaFrame(NameObj* pObj) {
-        DemoStartRequestUtil::startDemoSystem(pObj, "会話", 3, DemoStartInfo::DemoType(0), DemoStartInfo::CinemaFrameType(1),
+        DemoStartRequestUtil::startDemoSystem(pObj, CP932("会話"), 3, DemoStartInfo::DemoType(0), DemoStartInfo::CinemaFrameType(1),
                                               DemoStartInfo::StarPointerType(0), DemoStartInfo::DeleteEffectType(0), nullptr);
     }
 
     void endTalkingSequence(NameObj* pObj) {
-        endDemo(pObj, "会話");
+        endDemo(pObj, CP932("会話"));
     }
 
     bool isSystemTalking() {
@@ -610,7 +611,7 @@ namespace MR {
     }
 
     void startTalkingSequence(NameObj* pObj) {
-        DemoStartRequestUtil::startDemoSystem(pObj, "会話", 3, DemoStartInfo::DemoType(0), DemoStartInfo::CinemaFrameType(0),
+        DemoStartRequestUtil::startDemoSystem(pObj, CP932("会話"), 3, DemoStartInfo::DemoType(0), DemoStartInfo::CinemaFrameType(0),
                                               DemoStartInfo::StarPointerType(0), DemoStartInfo::DeleteEffectType(0), nullptr);
     }
 };  // namespace MR

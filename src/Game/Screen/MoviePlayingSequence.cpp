@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/MoviePlayingSequence.hpp"
 #include "Game/Demo/DemoPadRumbler.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -279,7 +280,7 @@ void MoviePlayingSequence::exePlayWait() {
 
         if (MR::isEqualStringCase(mInfo->mMovieName, "/MovieData/PrologueA.thp")) {
             MarioAccess::readyRemoteDemo();
-            MR::setPlayerPosOnGroundAndWait("リスタート");
+            MR::setPlayerPosOnGroundAndWait(CP932("リスタート"));
             MR::startBckPlayer("Wait", static_cast< const char* >(nullptr));
         }
     }

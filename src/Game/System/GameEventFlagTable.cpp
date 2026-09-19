@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/System/GameEventFlagTable.hpp"
 #include "Game/Util/HashUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
@@ -27,17 +28,17 @@ namespace {
         {"StarNumDarkRoomGalaxy", GameEventFlag::Type_GalaxyOpenStar, 1, 0, 0, 0, "DarkRoomGalaxy", 0},
         {"SpecialStarOpenDarkRoomGalaxy", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "FactoryGalaxy", 0},
         {"AppearDarkRoomGalaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "StarNumDarkRoomGalaxy", "SpecialStarOpenDarkRoomGalaxy"},
-        {"ハチマリオ初変身", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
-        {"テレサマリオ初変身", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
-        {"ホッパーマリオ初変身", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
-        {"ファイアマリオ初変身", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
-        {"アイスマリオ初変身", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
-        {"フライングマリオ初変身", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
-        {"無敵マリオ初変身", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
-        {"ライフアップキノコ解説", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
-        {"１ＵＰキノコ解説", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
-        {"サーフィンチュートリアル", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
-        {"タマコロチュートリアル", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
+        {CP932("ハチマリオ初変身"), GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
+        {CP932("テレサマリオ初変身"), GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
+        {CP932("ホッパーマリオ初変身"), GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
+        {CP932("ファイアマリオ初変身"), GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
+        {CP932("アイスマリオ初変身"), GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
+        {CP932("フライングマリオ初変身"), GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
+        {CP932("無敵マリオ初変身"), GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
+        {CP932("ライフアップキノコ解説"), GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
+        {CP932("１ＵＰキノコ解説"), GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
+        {CP932("サーフィンチュートリアル"), GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
+        {CP932("タマコロチュートリアル"), GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
         {"PeachCastleGardenGalaxy", GameEventFlag::Type_Galaxy, 1, 0, 0, 0, 0, 0},
         {"EpilogueDemoStage", GameEventFlag::Type_Galaxy, 1, 0, 0, 0, 0, 0},
         {"HeavensDoorGalaxy", GameEventFlag::Type_Galaxy, 1, 0, 0, 0, 0, 0},
@@ -190,14 +191,14 @@ namespace {
         {"StarPieceCounterStop", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
         {"PlayHeavensDoorGalaxy1", GameEventFlag::Type_4, 1, 0, 0, 0, 0, 0},
         {"PlayHeavensDoorGalaxy2", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarGrand6", 0},
-        {"[同期]ピーチ城浮上後", GameEventFlag::Type_11, 1, 0, 0, 0, "PlayHeavensDoorGalaxy1", "ピーチ城浮上後"},
+        {CP932("[同期]ピーチ城浮上後"), GameEventFlag::Type_11, 1, 0, 0, 0, "PlayHeavensDoorGalaxy1", CP932("ピーチ城浮上後")},
         {"PlayEggStarGalaxy1", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarGrand1", 0},
-        {"[同期]バトラー情報Ａ", GameEventFlag::Type_11, 1, 0, 0, 0, "PlayEggStarGalaxy1", "バトラー情報Ａ"},
+        {CP932("[同期]バトラー情報Ａ"), GameEventFlag::Type_11, 1, 0, 0, 0, "PlayEggStarGalaxy1", CP932("バトラー情報Ａ")},
         {"SpecialStarEggStarGalaxy1", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "EggStarGalaxy", 0},
         {"PlayEggStarGalaxy2", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarEggStarGalaxy1", 0},
-        {"[同期]スターピースレクチャー", GameEventFlag::Type_11, 1, 0, 0, 0, "PlayEggStarGalaxy2", "スターピースレクチャー"},
+        {CP932("[同期]スターピースレクチャー"), GameEventFlag::Type_11, 1, 0, 0, 0, "PlayEggStarGalaxy2", CP932("スターピースレクチャー")},
         {"PowerStarNumForButlerKoopaDemo", GameEventFlag::Type_GalaxyOpenStar, 1, 0, 0, 0, "KoopaBattleVs1Galaxy", 0},
-        {"[同期]クッパスタープラント発見", GameEventFlag::Type_11, 1, 0, 0, 0, "PowerStarNumForButlerKoopaDemo", "クッパスタープラント発見"},
+        {CP932("[同期]クッパスタープラント発見"), GameEventFlag::Type_11, 1, 0, 0, 0, "PowerStarNumForButlerKoopaDemo", CP932("クッパスタープラント発見")},
     };
 
     struct GameEventFlagSortLt {

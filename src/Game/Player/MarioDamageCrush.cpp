@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioCrush.hpp"
@@ -42,15 +43,15 @@ MarioCrush::MarioCrush(MarioActor* pActor) : MarioState(pActor, MarioStatus_Crus
 bool MarioCrush::close() {
     getPlayer()->mMovementStates._3C = true;
     mActor->mScale.set(1.0f);
-    stopAnimation("しびれ");
+    stopAnimation(CP932("しびれ"));
     getPlayer()->set41E(120);
     return true;
 }
 
 bool MarioCrush::start() {
-    changeAnimationNonStop("しびれ");
-    startPadVib("マリオ[しびれ]");
-    playSound("声しびれ");
+    changeAnimationNonStop(CP932("しびれ"));
+    startPadVib(CP932("マリオ[しびれ]"));
+    playSound(CP932("声しびれ"));
 
     getPlayer()->mMovementStates._3C = true;
     mActor->mScale.set(1.0f, 0.2f, 1.0f);
@@ -87,7 +88,7 @@ bool MarioCrush::update() {
         }
 
         if (getPlayer()->getMovementStates()._1) {
-            changeAnimation("しびれ回復", static_cast< const char* >(nullptr));
+            changeAnimation(CP932("しびれ回復"), static_cast< const char* >(nullptr));
         }
     }
 

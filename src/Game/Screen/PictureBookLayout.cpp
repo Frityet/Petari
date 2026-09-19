@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/PictureBookLayout.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
@@ -83,7 +84,7 @@ namespace NrvPictureBookLayout {
 };  // namespace NrvPictureBookLayout
 
 PictureBookLayout::PictureBookLayout(s32 chapterMin, s32 chapterMax, bool isRosettaReading)
-    : LayoutActor("絵本レイアウト", true), mChapterMin(chapterMin), mChapterMax(chapterMax), mChapterRosettaMax(chapterMax), mChapterNo(1),
+    : LayoutActor(CP932("絵本レイアウト"), true), mChapterMin(chapterMin), mChapterMax(chapterMax), mChapterRosettaMax(chapterMax), mChapterNo(1),
       mPageNo(0), mTextIndex(0), mNotReadedChapterNo(-1), mNotReadedPageNo(-1), mNotReadedTextIndex(-1), _44(nullptr), _48(nullptr),
       mTitleTexMap(nullptr), mCoverFrontTexMap(nullptr), mCoverBackTexMap(nullptr), mNextItemDir(1), mIsNextItemFast(false), mIconAButton(nullptr),
       mContentsButtonPaneController(nullptr), mCloseButton(nullptr) {

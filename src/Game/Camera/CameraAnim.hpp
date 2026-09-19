@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Camera/Camera.hpp"
@@ -52,7 +53,7 @@ class KeyCamAnmDataAccessor;
 
 class CameraAnim : public Camera {
 public:
-    CameraAnim(const char* pName = "アニメーションカメラ");
+    CameraAnim(const char* pName = CP932("アニメーションカメラ"));
 
     virtual void reset();
     virtual CameraTargetObj* calc();

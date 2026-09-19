@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/System/GameDataHolder.hpp"
 #include "Game/System/GameDataGalaxyStorage.hpp"
 #include "Game/System/GameDataPlayerStatus.hpp"
@@ -152,11 +153,11 @@ s32 GameDataHolder::getPictureBookChapterCanRead() const {
 }
 
 s32 GameDataHolder::getPictureBookChapterAlreadyRead() const {
-    return mEventValueChecker->getValue("絵本既読章");
+    return mEventValueChecker->getValue(CP932("絵本既読章"));
 }
 
 void GameDataHolder::setPictureBookChapterAlreadyRead(int value) {
-    setGameEventValue("絵本既読章", value);
+    setGameEventValue(CP932("絵本既読章"), value);
 }
 
 void GameDataHolder::setRaceBestTime(const char* pName, u32 value) {

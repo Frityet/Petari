@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Camera/Camera.hpp"
@@ -8,7 +9,7 @@ public:
         EaseType_Linear = 0,
         EaseType_InOut = 1,
     };
-    CameraSpiral(const char* pName = "螺旋カメラ（デモ用）");
+    CameraSpiral(const char* pName = CP932("螺旋カメラ（デモ用）"));
 
     virtual void reset();
     virtual CameraTargetObj* calc();

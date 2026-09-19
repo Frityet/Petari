@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/FileSelectItem.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
@@ -404,22 +405,22 @@ void FileSelectItem::control() {
 }
 
 void FileSelectItem::createNew() {
-    mPlanetMapObj = MR::createPartsModelMapObj(this, "ニューフェイス", "FileSelectDataPlanet", _A4);
+    mPlanetMapObj = MR::createPartsModelMapObj(this, CP932("ニューフェイス"), "FileSelectDataPlanet", _A4);
     mPlanetMapObj->mScale.set(30.0f);
     mPlanetMapObj->makeActorDead();
 }
 
 void FileSelectItem::createFellows() {
     for (u32 i = 0; i < 5; i++) {
-        mModels[i] = new FileSelectModel(::sFellowModel[i], _D4, "キャラフェイス");
+        mModels[i] = new FileSelectModel(::sFellowModel[i], _D4, CP932("キャラフェイス"));
     }
 }
 
 void FileSelectItem::createMii() {
     if (_8C || !mIconID->isMii()) {
-        mFaceParts = MiiFacePartsHolder::createPartsFromDefault("Miiフェイス", 0);
+        mFaceParts = MiiFacePartsHolder::createPartsFromDefault(CP932("Miiフェイス"), 0);
     } else {
-        mFaceParts = MiiFacePartsHolder::createPartsFromReceipe("Miiフェイス",
+        mFaceParts = MiiFacePartsHolder::createPartsFromReceipe(CP932("Miiフェイス"),
                                                                 MiiFaceRecipe(RFLDataSource_Official, mIconID->getMiiIndex(), RFLResolution_256, 33));
     }
 
@@ -431,7 +432,7 @@ void FileSelectItem::createMii() {
 }
 
 void FileSelectItem::createNumber() {
-    _A0 = new FileSelectNumber("ファイル番号");
+    _A0 = new FileSelectNumber(CP932("ファイル番号"));
     _A0->initWithoutIter();
     _A0->setNumber(_140);
 }
@@ -743,7 +744,7 @@ void FileSelectItem::deleteCompleteEffect() {
 
 namespace FileSelectItemSub {
 
-    ScaleController::ScaleController() : NerveExecutor("ファイルセレクタアイコンサイズ管理") {
+    ScaleController::ScaleController() : NerveExecutor(CP932("ファイルセレクタアイコンサイズ管理")) {
         _8 = 1.0f;
         initNerve(&FileSelectItemSub::ScaleControllerNrvSmall::sInstance);
     }
@@ -766,7 +767,7 @@ namespace FileSelectItemSub {
         MR::setNerveAtStep(this, &FileSelectItemSub::ScaleControllerNrvBig::sInstance, 30);
     }
 
-    BlinkController::BlinkController(FileSelectItem* pItem) : NerveExecutor("ファイルセレクタアイコン瞬き管理") {
+    BlinkController::BlinkController(FileSelectItem* pItem) : NerveExecutor(CP932("ファイルセレクタアイコン瞬き管理")) {
         mItem = pItem;
         _C = 0;
         _10 = 0;

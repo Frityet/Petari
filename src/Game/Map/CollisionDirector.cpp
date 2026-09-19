@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/CollisionDirector.hpp"
 #include "Game/Map/CollisionCategorizedKeeper.hpp"
 #include "Game/Map/CollisionCode.hpp"
@@ -7,7 +8,7 @@
 
 #define CATEGORY_KEEPER_NUM 4
 
-CollisionDirector::CollisionDirector() : NameObj("地形コリジョン"), mCategoryKeeper(), mCode() {
+CollisionDirector::CollisionDirector() : NameObj(CP932("地形コリジョン")), mCategoryKeeper(), mCode() {
     mCode = new CollisionCode();
     mCategoryKeeper = new CollisionCategorizedKeeper*[CATEGORY_KEEPER_NUM];
 

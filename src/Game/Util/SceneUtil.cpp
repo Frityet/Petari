@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/NameObj/NameObjFinder.hpp"
 #include "Game/Scene/PlacementStateChecker.hpp"
@@ -129,7 +130,7 @@ namespace MR {
             return false;
         }
 
-        return NameObjFinder::find("シナリオスターター");
+        return NameObjFinder::find(CP932("シナリオスターター"));
     }
 
     bool isStageSuddenDeathDodoryu() {

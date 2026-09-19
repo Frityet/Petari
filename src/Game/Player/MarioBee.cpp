@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioAnimator.hpp"
@@ -55,11 +56,11 @@ bool Mario::beeMarioOnAir() {
             _402--;
         }
 
-        if (isAnimationRun("ハチ壁ジャンプ") && isAnimationTerminate(nullptr)) {
+        if (isAnimationRun(CP932("ハチ壁ジャンプ")) && isAnimationTerminate(nullptr)) {
             if (checkLvlA()) {
-                changeAnimation("ハチ飛行中", "落下");
+                changeAnimation(CP932("ハチ飛行中"), CP932("落下"));
             } else {
-                changeAnimation("ハチ飛行中無入力", "落下");
+                changeAnimation(CP932("ハチ飛行中無入力"), CP932("落下"));
             }
 
             changeAnimationInterpoleFrame(30);
@@ -111,7 +112,7 @@ bool Mario::beeMarioOnAir() {
             }
 
             if (checkLvlA() && _402 != 0 && _3BC > airWalkInhibitTime) {
-                playSound("ハチ飛行中", -1);
+                playSound(CP932("ハチ飛行中"), -1);
 
                 if (!MR::isNearZero(mStickPos.z, 0.001f)) {
                     setFrontVecKeepUp(getWorldPadDir(), mActor->mConst->getTable()->mBeeAirWalkTurnSpd);
@@ -128,19 +129,19 @@ bool Mario::beeMarioOnAir() {
 
                 if (_402 == 0) {
                     if (previousAirWalkTime != 0) {
-                        playSound("ハチ体力切れ", -1);
+                        playSound(CP932("ハチ体力切れ"), -1);
                     }
 
                     mMovementStates._11 = false;
-                    stopAnimation("ハチ飛行中", static_cast< const char* >(nullptr));
+                    stopAnimation(CP932("ハチ飛行中"), static_cast< const char* >(nullptr));
                 } else {
                     if (!mMovementStates._F) {
-                        if (!isAnimationRun("ハチ壁ジャンプ") && !isAnimationRun("ハチセブン空中")) {
-                            changeAnimation("ハチ飛行中", "落下");
+                        if (!isAnimationRun(CP932("ハチ壁ジャンプ")) && !isAnimationRun(CP932("ハチセブン空中"))) {
+                            changeAnimation(CP932("ハチ飛行中"), CP932("落下"));
                         }
 
                         cancelSquatMode();
-                        playSound("空中ふんばり", -1);
+                        playSound(CP932("空中ふんばり"), -1);
 
                         if (static_cast< s32 >(_402) < static_cast< s32 >(static_cast< u32 >(mActor->mConst->getTable()->mAirWalkTime) >> 1)) {
                             getAnimator()->setSpeed(1.5f);
@@ -212,11 +213,11 @@ bool Mario::beeMarioOnAir() {
                     return true;
                 }
             } else {
-                if (!isAnimationRun("ハチジャンプ") && !isAnimationRun("ハチ壁ジャンプ")) {
-                    stopAnimation("ハチ飛行中", static_cast< const char* >(nullptr));
+                if (!isAnimationRun(CP932("ハチジャンプ")) && !isAnimationRun(CP932("ハチ壁ジャンプ"))) {
+                    stopAnimation(CP932("ハチ飛行中"), static_cast< const char* >(nullptr));
 
                     if (!isAnimationRun(nullptr) || isAnimationTerminate(nullptr)) {
-                        changeAnimation("ハチ飛行中無入力", static_cast< const char* >(nullptr));
+                        changeAnimation(CP932("ハチ飛行中無入力"), static_cast< const char* >(nullptr));
                     }
                 }
 

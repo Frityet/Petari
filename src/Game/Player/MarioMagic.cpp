@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioMagic.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioModule.hpp"
@@ -41,22 +42,22 @@ MarioMagic::MarioMagic(MarioActor* pActor) : MarioState(pActor, MarioStatus_Magi
 }
 
 bool MarioMagic::close() {
-    stopEffect("スピンライト");
+    stopEffect(CP932("スピンライト"));
 
     if (_12 < 0x1A) {
-        playEffect("スピンライト消去");
+        playEffect(CP932("スピンライト消去"));
     }
 
     return true;
 }
 
 bool MarioMagic::start() {
-    changeAnimation("地上ひねり", static_cast< const char* >(nullptr));
-    stopEffect("パンチブラー左");
-    stopEffect("パンチブラー右");
-    playEffect("共通地上スピン");
-    playSound("声スピン");
-    playSound("スピンジャンプ");
+    changeAnimation(CP932("地上ひねり"), static_cast< const char* >(nullptr));
+    stopEffect(CP932("パンチブラー左"));
+    stopEffect(CP932("パンチブラー右"));
+    playEffect(CP932("共通地上スピン"));
+    playSound(CP932("声スピン"));
+    playSound(CP932("スピンジャンプ"));
     startPadVib(2);
     _12 = 0;
     return true;
@@ -66,15 +67,15 @@ bool MarioMagic::update() {
     if (mActor->isRequestJump()) {
         getPlayer()->tryJump();
         return false;
-    } else if (!isAnimationRun("地上ひねり")) {
+    } else if (!isAnimationRun(CP932("地上ひねり"))) {
         return false;
     }
 
     _12++;
 
     if (_12 == 25) {
-        stopEffect("スピンライト");
-        playEffect("スピンライト消去");
+        stopEffect(CP932("スピンライト"));
+        playEffect(CP932("スピンライト消去"));
     }
 
     if (getPlayer()->mMovementStates.jumping) {

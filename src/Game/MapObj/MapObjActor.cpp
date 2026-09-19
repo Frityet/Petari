@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/MapObjActor.hpp"
 #include "Game/AudioLib/AudAnmSoundObject.hpp"
 #include "Game/LiveActor/LodCtrl.hpp"
@@ -554,10 +555,10 @@ bool MapObjActor::tryCreateBreakModel(const MapObjActorInitInfo& rInfo) {
 
     if (MR::isEqualString(mObjectName, "SandUpDownTowerBreakableWallB")) {
         MtxPtr baseMtx = getBaseMtx();
-        mModelObj = MR::createModelObjMapObj("壊れモデル", buf, baseMtx);
+        mModelObj = MR::createModelObjMapObj(CP932("壊れモデル"), buf, baseMtx);
     } else {
         MtxPtr baseMtx = getBaseMtx();
-        mModelObj = MR::createModelObjMapObjStrongLight("壊れモデル", buf, baseMtx);
+        mModelObj = MR::createModelObjMapObjStrongLight(CP932("壊れモデル"), buf, baseMtx);
     }
 
     mModelObj->makeActorDead();

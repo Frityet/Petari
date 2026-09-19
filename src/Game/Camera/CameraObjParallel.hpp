@@ -1,10 +1,11 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Camera/Camera.hpp"
 
 class CameraObjParallel : public Camera {
 public:
-    CameraObjParallel(const char* pName = "オブジェ並行カメラ");
+    CameraObjParallel(const char* pName = CP932("オブジェ並行カメラ"));
 
     virtual void reset();
     virtual CameraTargetObj* calc();

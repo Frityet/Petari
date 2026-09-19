@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NameObj/NameObjHolder.hpp"
@@ -77,7 +78,7 @@ GameSystemSceneController::GameSystemSceneController()
 }
 
 void GameSystemSceneController::initAfterStationedResourceLoaded() {
-    mScenarioParser = new ScenarioDataParser("シナリオデータ解析");
+    mScenarioParser = new ScenarioDataParser(CP932("シナリオデータ解析"));
     mScenarioParser->initWithoutIter();
 
     mPlayTimerScene->init();
@@ -335,10 +336,10 @@ void GameSystemSceneController::exeWaitDrawDoneScene() {
 void GameSystemSceneController::exeDestroyScene() {
     if (mSpine->mStep == 0) {
         mIntermissionScene->setCurrentSceneControllerState("[destroy Scene: %s]", mCurrSceneControlInfo.mScene);
-        MR::startFunctionAsyncExecute(MR::Functor(this, &GameSystemSceneController::destroyScene), 17, "シーン破棄");
+        MR::startFunctionAsyncExecute(MR::Functor(this, &GameSystemSceneController::destroyScene), 17, CP932("シーン破棄"));
     }
 
-    if (MR::tryEndFunctionAsyncExecute("シーン破棄")) {
+    if (MR::tryEndFunctionAsyncExecute(CP932("シーン破棄"))) {
         const Nerve* pNerve = &NrvGameSystemSceneController::GameSystemSceneControllerChangeWaveBank::sInstance;
 
         if (isCurrentNerve(&NrvGameSystemSceneController::GameSystemSceneControllerDestroySceneForDestroy::sInstance)) {
@@ -366,10 +367,10 @@ void GameSystemSceneController::exeChangeWaveBank() {
 void GameSystemSceneController::exeInitializeScene() {
     if (mSpine->mStep == 0) {
         mIntermissionScene->setCurrentSceneControllerState("[initialize Scene: %s]", mNextSceneControlInfo.mScene);
-        MR::startFunctionAsyncExecute(MR::Functor(this, &GameSystemSceneController::initializeScene), 17, "シーン初期化");
+        MR::startFunctionAsyncExecute(MR::Functor(this, &GameSystemSceneController::initializeScene), 17, CP932("シーン初期化"));
     }
 
-    if (MR::tryEndFunctionAsyncExecute("シーン初期化")) {
+    if (MR::tryEndFunctionAsyncExecute(CP932("シーン初期化"))) {
         mSceneInitializeState = SceneInitializeState_End;
 
         requestChangeNerve(&NrvGameSystemSceneController::GameSystemSceneControllerInvalidateSystemWipe::sInstance);

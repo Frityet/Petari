@@ -1,10 +1,11 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Camera/Camera.hpp"
 
 class CameraMtxRegParallel : public Camera {
 public:
-    CameraMtxRegParallel(const char* pName = "マトリクスレジスタ並行カメラ");
+    CameraMtxRegParallel(const char* pName = CP932("マトリクスレジスタ並行カメラ"));
     virtual ~CameraMtxRegParallel();
 
     virtual void reset();

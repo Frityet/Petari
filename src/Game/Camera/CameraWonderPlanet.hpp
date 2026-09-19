@@ -1,10 +1,11 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Camera/Camera.hpp"
 
 class CameraWonderPlanet : public Camera {
 public:
-    CameraWonderPlanet(const char* pName = "ワンダープラネットカメラ");
+    CameraWonderPlanet(const char* pName = CP932("ワンダープラネットカメラ"));
     virtual ~CameraWonderPlanet();
 
     virtual void reset();

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/ShadowVolumeOval.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
@@ -9,7 +10,7 @@
 ShadowVolumeOval::~ShadowVolumeOval() {
 }
 
-ShadowVolumeOval::ShadowVolumeOval() : ShadowVolumeModel("影描画[ボリューム楕球]"), mSize(100.0f, 100.0f, 200.0f) {
+ShadowVolumeOval::ShadowVolumeOval() : ShadowVolumeModel(CP932("影描画[ボリューム楕球]")), mSize(100.0f, 100.0f, 200.0f) {
     initVolumeModel("ShadowVolumeSphere");
 }
 

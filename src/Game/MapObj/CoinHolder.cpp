@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/CoinHolder.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/Coin.hpp"
@@ -133,7 +134,7 @@ void CoinHolder::init(const JMapInfoIter& rIter) {
     Coin* pCoin;
 
     for (int i = 0; i < ::sCreateCoinNum; i++) {
-        pCoin = new Coin("コイン(共用)");
+        pCoin = new Coin(CP932("コイン(共用)"));
         pCoin->initWithoutIter();
         registerActor(pCoin);
     }

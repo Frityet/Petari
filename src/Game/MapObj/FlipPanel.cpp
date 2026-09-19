@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/FlipPanel.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActorGroupArray.hpp"
@@ -38,7 +39,7 @@ FlipPanel::FlipPanel(const char* pName) : MapObjActor(pName) {
 void FlipPanel::init(const JMapInfoIter& rIter) {
     MapObjActor::init(rIter);
     MapObjActorInitInfo info;
-    info.setupHioNode("地形オブジェ");
+    info.setupHioNode(CP932("地形オブジェ"));
     info.setupDefaultPos();
     info.setupConnectToScene();
     info.setupEffect("FlipPanel");

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Camera/Camera.hpp"
@@ -10,7 +11,7 @@ public:
         /* 0x2 */ CameraType_PlayerUp,
     };
 
-    CameraFixedPoint(const char* pName = "定点カメラ");
+    CameraFixedPoint(const char* pName = CP932("定点カメラ"));
 
     virtual void reset();
     virtual CameraTargetObj* calc();

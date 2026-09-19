@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/ActorPadAndCameraCtrl.hpp"
 #include "Game/LiveActor/ModelManager.hpp"
 #include "Game/System/ResourceHolder.hpp"
@@ -102,19 +103,19 @@ namespace {
         if (pName == nullptr) {
             return;
         }
-        if (MR::isEqualStringCase(pName, "最強")) {
+        if (MR::isEqualStringCase(pName, CP932("最強"))) {
             MR::shakeCameraVeryStrong();
-        } else if (MR::isEqualStringCase(pName, "強")) {
+        } else if (MR::isEqualStringCase(pName, CP932("強"))) {
             MR::shakeCameraStrong();
-        } else if (MR::isEqualStringCase(pName, "中強")) {
+        } else if (MR::isEqualStringCase(pName, CP932("中強"))) {
             MR::shakeCameraNormalStrong();
-        } else if (MR::isEqualStringCase(pName, "中")) {
+        } else if (MR::isEqualStringCase(pName, CP932("中"))) {
             MR::shakeCameraNormal();
-        } else if (MR::isEqualStringCase(pName, "中弱")) {
+        } else if (MR::isEqualStringCase(pName, CP932("中弱"))) {
             MR::shakeCameraNormalWeak();
-        } else if (MR::isEqualStringCase(pName, "弱")) {
+        } else if (MR::isEqualStringCase(pName, CP932("弱"))) {
             MR::shakeCameraWeak();
-        } else if (MR::isEqualStringCase(pName, "最弱")) {
+        } else if (MR::isEqualStringCase(pName, CP932("最弱"))) {
             MR::shakeCameraVeryWeak();
         }
     }

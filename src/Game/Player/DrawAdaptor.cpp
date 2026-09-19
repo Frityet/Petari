@@ -1,7 +1,8 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/DrawAdaptor.hpp"
 #include "Game/Util/ObjUtil.hpp"
 
-DrawAdaptor::DrawAdaptor(const MR::FunctorBase& rFunc, int drawType) : NameObj("ドロー2D"), mFunc(rFunc.clone(nullptr)) {
+DrawAdaptor::DrawAdaptor(const MR::FunctorBase& rFunc, int drawType) : NameObj(CP932("ドロー2D")), mFunc(rFunc.clone(nullptr)) {
     MR::connectToScene(this, -1, -1, -1, drawType);
 }
 

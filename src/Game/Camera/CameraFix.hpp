@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Camera/Camera.hpp"
@@ -6,7 +7,7 @@ class CameraTargetMtx;
 
 class CameraFix : public Camera {
 public:
-    CameraFix(const char* pName = "完全固定カメラ");
+    CameraFix(const char* pName = CP932("完全固定カメラ"));
 
     virtual void reset();
     virtual CameraTargetObj* calc();

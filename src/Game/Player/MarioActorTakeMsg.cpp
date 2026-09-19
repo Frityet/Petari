@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioAnimator.hpp"
@@ -341,7 +342,7 @@ bool MarioActor::releaseThrowMemoSensor() {
 void MarioActor::tryReleaseWithMsg(u32 msg) {
     u32 maxIdx = _468;
     if (maxIdx == 0) {
-        if (isAnimationRun("ひろいクイック")) {
+        if (isAnimationRun(CP932("ひろいクイック"))) {
             mMario->stopAnimationUpperForce();
             clearNullAnimation(0);
             offTakingFlag();
@@ -386,11 +387,11 @@ void MarioActor::tryReleaseWithMsg(u32 msg) {
 }
 
 void MarioActor::tryTornadoPull(HitSensor* pSensor) {
-    if (!isActionOk("コイン引っ張り")) {
+    if (!isActionOk(CP932("コイン引っ張り"))) {
         return;
     }
     u32 type = pSensor->mType;
-    if (strcmp(pSensor->mHost->mName, "カメックビーム用カメ") == 0) {
+    if (strcmp(pSensor->mHost->mName, CP932("カメックビーム用カメ")) == 0) {
         type = 5555;
     }
     switch (type) {
@@ -439,7 +440,7 @@ void MarioActor::tryTornadoPull(HitSensor* pSensor) {
     }
     case ATYPE_JET_TURTLE:
     case ATYPE_JET_TURTLE_SLOW:
-        if (isActionOk("カメ持ち")) {
+        if (isActionOk(CP932("カメ持ち"))) {
             if (pSensor->receiveMessage(ACTMES_IS_PULL_ENABLE, getSensor("body"))) {
                 if ((pSensor->mPosition - mPosition).length() < 120.0f) {
                     tryGetItem(pSensor);
@@ -451,7 +452,7 @@ void MarioActor::tryTornadoPull(HitSensor* pSensor) {
         }
         break;
     case 5555:
-        if (isActionOk("カメ持ち")) {
+        if (isActionOk(CP932("カメ持ち"))) {
             if (pSensor->receiveMessage(ACTMES_IS_PULL_ENABLE, getSensor("body"))) {
                 tryCoinPullOne(pSensor);
             }
@@ -477,5 +478,5 @@ void MarioActor::tryReleaseBombTeresa() {
         mMario->_420 = 25;
     }
 
-    changeAnimation("ハンマー投げリリース", nullptr);
+    changeAnimation(CP932("ハンマー投げリリース"), nullptr);
 }

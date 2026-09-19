@@ -1,10 +1,11 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Camera/Camera.hpp"
 
 class CameraCharmedVecReg : public Camera {
 public:
-    CameraCharmedVecReg(const char* pName = "ベクトルレジスタ注目カメラ");
+    CameraCharmedVecReg(const char* pName = CP932("ベクトルレジスタ注目カメラ"));
 
     virtual void reset();
     virtual CameraTargetObj* calc();

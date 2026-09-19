@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Effect/ParticleDrawExecutor.hpp"
 #include "Game/Effect/EffectSystem.hpp"
 #include "Game/NameObj/NameObjAdaptor.hpp"
@@ -122,18 +123,18 @@ void ParticleDrawExecutor::drawWithViewMtxAfterImageEffect(const TPos3f& rViewMt
 }
 
 void ParticleDrawExecutor::initDrawAdaptor() {
-    _4 = new NameObjAdaptor("3Dパーティクル");
+    _4 = new NameObjAdaptor(CP932("3Dパーティクル"));
     connectToSceneDrawAdaptor(_4, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::draw3D), 71);
-    _8 = new NameObjAdaptor("2Dパーティクル");
+    _8 = new NameObjAdaptor(CP932("2Dパーティクル"));
     connectToSceneDrawAdaptor(_8, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::draw2D), 74);
-    _C = new NameObjAdaptor("インダイレクトパーティクル");
+    _C = new NameObjAdaptor(CP932("インダイレクトパーティクル"));
     connectToSceneDrawAdaptor(_C, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::drawIndirect), 72);
-    _10 = new NameObjAdaptor("インダイレクト後パーティクル");
+    _10 = new NameObjAdaptor(CP932("インダイレクト後パーティクル"));
     connectToSceneDrawAdaptor(_10, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::drawAfterIndirect), 73);
-    _14 = new NameObjAdaptor("2Dモデル用パーティクル");
+    _14 = new NameObjAdaptor(CP932("2Dモデル用パーティクル"));
     connectToSceneDrawAdaptor(_14, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::drawFor2DModel), 75);
-    _18 = new NameObjAdaptor("ブルーム用パーティクル");
+    _18 = new NameObjAdaptor(CP932("ブルーム用パーティクル"));
     connectToSceneDrawAdaptor(_18, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::drawForBloomEffect), 76);
-    _1C = new NameObjAdaptor("イメージエフェクト後パーティクル");
+    _1C = new NameObjAdaptor(CP932("イメージエフェクト後パーティクル"));
     connectToSceneDrawAdaptor(_1C, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::drawAfterImageEffect), 77);
 }

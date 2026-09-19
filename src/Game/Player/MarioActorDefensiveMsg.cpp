@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/MapObj/BlackHole.hpp"
 #include "Game/Player/MarioHang.hpp"
@@ -117,7 +118,7 @@ bool MarioActor::tryAttackMsg(u32 msg, const HitSensor* pSensor, bool* myBool) {
     switch (msg) {
     case ACTMES_ENEMY_ATTACK_FLIP_VERYWEAK:
         if (mMario->getMovementStates()._1 && !isAnimationRun(nullptr)) {
-            changeAnimation("ノーダメージ", nullptr);
+            changeAnimation(CP932("ノーダメージ"), nullptr);
         }
 
         return true;
@@ -196,7 +197,7 @@ bool MarioActor::receiveMsgPush(HitSensor* pSender, HitSensor* pReceiver) {
             sendMsgToSensor(pSender, ACTMES_ATTACKDROP);
             return false;
         }
-        if (strstr(pSender->mHost->mName, "ゴーストマリオ") != nullptr && (isJumping() || mMario->isHanging())) {
+        if (strstr(pSender->mHost->mName, CP932("ゴーストマリオ")) != nullptr && (isJumping() || mMario->isHanging())) {
             return false;
         }
         if (mMario->isActiveTaskID(0x200)) {
@@ -305,7 +306,7 @@ bool MarioActor::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiv
             stopAnimation(nullptr);
             mMario->mMovementStates._9 = false;
             mMario->mMovementStates._6 = false;
-            playSound("声壁反射", -1);
+            playSound(CP932("声壁反射"), -1);
             return true;
         }
         break;
@@ -332,7 +333,7 @@ bool MarioActor::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiv
         doTrampleJump(pSender);
         mMario->startPadVib(3);
         mMario->mJumpVec -= mMario->mFrontVec * 10.0f;
-        changeAnimation("飛びすさりジャンプ", nullptr);
+        changeAnimation(CP932("飛びすさりジャンプ"), nullptr);
         break;
     case ACTMES_REFLECT: {
         TVec3f direction;
@@ -344,8 +345,8 @@ bool MarioActor::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiv
         return true;
     }
     case ACTMES_KICK:
-        playSound("声ランニングキック", -1);
-        changeAnimation("ランニングキック", nullptr);
+        playSound(CP932("声ランニングキック"), -1);
+        changeAnimation(CP932("ランニングキック"), nullptr);
         return true;
     case ACTMES_PASS_RING:
         if (mMario->_97C == nullptr) {
@@ -361,8 +362,8 @@ bool MarioActor::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiv
         }
         bool result = mMario->doFlow();
         if (result) {
-            playSound("水弾かれ", -1);
-            playSound("声噴水ジャンプ", -1);
+            playSound(CP932("水弾かれ"), -1);
+            playSound(CP932("声噴水ジャンプ"), -1);
         }
         return result;
     }
@@ -384,7 +385,7 @@ bool MarioActor::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiv
         }
         if (mPlayerMode == 0 || mPlayerMode == 1) {
             _B94 = 2;
-            changeAnimationUpper("ハンマー投げ回転中");
+            changeAnimationUpper(CP932("ハンマー投げ回転中"));
             return true;
         }
         return false;

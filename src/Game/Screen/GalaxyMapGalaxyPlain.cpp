@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/GalaxyMapGalaxyPlain.hpp"
 
 #include <string>
@@ -17,7 +18,7 @@ namespace {
     }
 }  // namespace
 
-GalaxyMapGalaxyPlain::GalaxyMapGalaxyPlain(const LayoutActor* pHost) : LayoutActor("Galaxy情報簡易表示", true), mHost(pHost), mPaneName(nullptr) {
+GalaxyMapGalaxyPlain::GalaxyMapGalaxyPlain(const LayoutActor* pHost) : LayoutActor(CP932("Galaxy情報簡易表示"), true), mHost(pHost), mPaneName(nullptr) {
 }
 
 void GalaxyMapGalaxyPlain::init(const JMapInfoIter&) {

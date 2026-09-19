@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Map/CollisionParts.hpp"
 #include "Game/Map/HitInfo.hpp"
@@ -8,7 +9,7 @@
 #include <cstring>
 
 void Mario::checkOnimasu(const HitSensor* pSensor) {
-    if (strstr(pSensor->mHost->mName, "オニマス") == nullptr) {
+    if (strstr(pSensor->mHost->mName, CP932("オニマス")) == nullptr) {
         return;
     }
 
@@ -33,7 +34,7 @@ bool Mario::isDossun(const Triangle* pTriangle) const {
         return false;
     }
 
-    return strstr(pTriangle->mSensor->mHost->mName, "ドッスン") != nullptr;
+    return strstr(pTriangle->mSensor->mHost->mName, CP932("ドッスン")) != nullptr;
 }
 
 bool Mario::isStageCameraRotate2D() const {
@@ -344,7 +345,7 @@ bool Mario::isHeadPushEnableArea() const {
 }
 
 bool Mario::isOnimasuBinderPressSkip() const {
-    if (isStatusActive(0x15) && mFrontWallTriangle->mSensor != nullptr && strstr(mFrontWallTriangle->mSensor->mHost->mName, "オニマス") != nullptr) {
+    if (isStatusActive(0x15) && mFrontWallTriangle->mSensor != nullptr && strstr(mFrontWallTriangle->mSensor->mHost->mName, CP932("オニマス")) != nullptr) {
         return true;
     }
 

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioAccess.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
@@ -625,7 +626,7 @@ namespace MarioAccess {
             return getPlayerActor()->getMario()->mSwim->isOnWaterSurface();
         }
 
-        return getPlayerActor()->isAnimationRun("水泳ジェット");
+        return getPlayerActor()->isAnimationRun(CP932("水泳ジェット"));
     }
 
     void calcWorldPadDir(TVec3f* pOut, f32 f1, f32 f2) {
@@ -656,7 +657,7 @@ namespace MarioAccess {
             getPlayerActor()->getMario()->mSwim->incOxygen();
         }
 
-        getPlayerActor()->playEffect("酸素回復");
+        getPlayerActor()->playEffect(CP932("酸素回復"));
     }
 
     void scatterStarPiece(u32 amt) {
@@ -681,7 +682,7 @@ namespace MarioAccess {
             return;
         }
 
-        if (getPlayerActor()->isAnimationRun("氷結")) {
+        if (getPlayerActor()->isAnimationRun(CP932("氷結"))) {
             return;
         }
 
@@ -736,7 +737,7 @@ namespace MarioAccess {
             return true;
         }
 
-        return getPlayerActor()->isAnimationRun("水泳ジェット");
+        return getPlayerActor()->isAnimationRun(CP932("水泳ジェット"));
     }
 
     void changeItemStatus(s32 a1) {

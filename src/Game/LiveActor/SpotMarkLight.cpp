@@ -1,9 +1,10 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/SpotMarkLight.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 
-SpotMarkLight::SpotMarkLight(LiveActor* pActor, f32 a3, f32 a4, MtxPtr mtx) : PartsModel(pActor, "マーク光柱", "SpotMarkLight", mtx, -1, false) {
+SpotMarkLight::SpotMarkLight(LiveActor* pActor, f32 a3, f32 a4, MtxPtr mtx) : PartsModel(pActor, CP932("マーク光柱"), "SpotMarkLight", mtx, -1, false) {
     _9B = false;
 
     if (!mtx) {

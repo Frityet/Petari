@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Demo/DemoFunction.hpp"
 #include "Game/Demo/DemoCastGroup.hpp"
 #include "Game/Demo/DemoCastGroupHolder.hpp"
@@ -324,6 +325,6 @@ namespace DemoFunction {
     }
 
     bool isDemoPartTalk(const char* pDemoName) {
-        return MR::isEqualSubString(pDemoName, "会話");
+        return MR::isEqualSubString(pDemoName, CP932("会話"));
     }
 };  // namespace DemoFunction

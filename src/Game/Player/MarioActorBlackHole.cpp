@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Enemy/KarikariDirector.hpp"
 #include "Game/MapObj/BlackHole.hpp"
 #include "Game/Player/MarioActor.hpp"
@@ -45,14 +46,14 @@ void MarioActor::exeGameOverBlackHole2() {
         MR::clearBgmQueue();
 
         if (!(mBlackHole->tryStartDemoCamera()) && !mMario->getMovementStates()._37) {
-            MR::startBlackHoleCamera("ブラックホール", mBlackHolePosition, mPosition);
+            MR::startBlackHoleCamera(CP932("ブラックホール"), mBlackHolePosition, mPosition);
         }
 
         _F44 = false;
 
-        changeAnimationNonStop("ブラックホール落下");
-        playEffect("共通ブラックホール");
-        playSound("ブラックホール吸い込まれ", -1);
+        changeAnimationNonStop(CP932("ブラックホール落下"));
+        playEffect(CP932("共通ブラックホール"));
+        playSound(CP932("ブラックホール吸い込まれ"), -1);
         playEffect(changeMorphString("DieBlackHole"));
         initBlackHoleOut();
 
@@ -64,9 +65,9 @@ void MarioActor::exeGameOverBlackHole2() {
 
     if (getNerveStep() == 60) {
         if (!MR::getPlayerLeft()) {
-            MR::startPlayerEvent("ゲームオーバー");
+            MR::startPlayerEvent(CP932("ゲームオーバー"));
         } else {
-            MR::startPlayerEvent("マリオ奈落");
+            MR::startPlayerEvent(CP932("マリオ奈落"));
         }
     }
 
@@ -74,7 +75,7 @@ void MarioActor::exeGameOverBlackHole2() {
         _482 = true;
 
         MR::hidePlayer();
-        MR::emitEffect(this, "ブラックホール消滅");
+        MR::emitEffect(this, CP932("ブラックホール消滅"));
     }
 
     f32 nervestepfloat = getNerveStep();

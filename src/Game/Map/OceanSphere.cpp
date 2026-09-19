@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/OceanSphere.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/OceanSpherePoint.hpp"
@@ -300,10 +301,10 @@ void OceanSphere::exeWait() {
 }
 
 void OceanSphere::exeRiseUp() {
-    f32 rate = MR::calcDemoPartStepRate("湧き水上昇");
+    f32 rate = MR::calcDemoPartStepRate(CP932("湧き水上昇"));
     mRadius = 1000.0f + (rate * (mRadiusTarget - 1000.0f));
 
-    if (MR::isDemoPartLastStep("湧き水上昇")) {
+    if (MR::isDemoPartLastStep(CP932("湧き水上昇"))) {
         setNerve(&NrvOceanSphere::OceanSphereNrvWait::sInstance);
     }
 }

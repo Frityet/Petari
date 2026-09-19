@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/MissLayout.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/LayoutUtil.hpp"
@@ -9,7 +10,7 @@ namespace {
     NEW_NERVE(MissLayoutNrvEnd, MissLayout, End);
 };  // namespace
 
-MissLayout::MissLayout() : LayoutActor("ミス!", true) {
+MissLayout::MissLayout() : LayoutActor(CP932("ミス!"), true) {
 }
 
 void MissLayout::init(const JMapInfoIter& rIter) {

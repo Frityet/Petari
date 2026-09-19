@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/MoviePlayerSimple.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/THPSimplePlayerWrapper.hpp"
@@ -34,7 +35,7 @@ namespace {
 };  // namespace
 
 MoviePlayerSimple::MoviePlayerSimple()
-    : LayoutActor("ムービープレイヤー", true), JKRDisposer(), mMovie(nullptr), mPlayerWrapper(nullptr), _44(false), _45(false) {
+    : LayoutActor(CP932("ムービープレイヤー"), true), JKRDisposer(), mMovie(nullptr), mPlayerWrapper(nullptr), _44(false), _45(false) {
     mMovie = new Movie();
     mMovie->mMovieName = "";
     mMovie->mBuffer = nullptr;
@@ -56,7 +57,7 @@ MoviePlayerSimple::~MoviePlayerSimple() {
 void MoviePlayerSimple::init(const JMapInfoIter& rIter) {
     MR::connectToSceneMovie(this);
 
-    mPlayerWrapper = new THPSimplePlayerWrapper("THPシンプルプレイヤーのラッパ");
+    mPlayerWrapper = new THPSimplePlayerWrapper(CP932("THPシンプルプレイヤーのラッパ"));
     mPlayerWrapper->init(0);
 
     mHeap = JKRExpHeap::create(calcNeedMemoryForMovieWorks(), MR::getCurrentHeap(), true);

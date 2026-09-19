@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/SystemWipeHolder.hpp"
 #include "Game/Screen/WipeFade.hpp"
 #include "Game/Screen/WipeHolderBase.hpp"
@@ -7,13 +8,13 @@
 #include <JSystem/J2DGraph/J2DPicture.hpp>
 #include <JSystem/JUtility/JUTVideo.hpp>
 
-SystemWipeHolder::SystemWipeHolder() : WipeHolderBase(4, "システムワイプ保持"), _1C(false) {
+SystemWipeHolder::SystemWipeHolder() : WipeHolderBase(4, CP932("システムワイプ保持")), _1C(false) {
 }
 
 void SystemWipeHolder::init(const JMapInfoIter& rIter) {
-    addWipeLayout(new WipeFade("フェードワイプ", Color8(0, 0, 0, 255)));
-    addWipeLayout(new WipeRing(false, "円ワイプ"));
-    addWipeLayout(new WipeFade("白フェードワイプ", Color8(255, 255, 255, 255)));
+    addWipeLayout(new WipeFade(CP932("フェードワイプ"), Color8(0, 0, 0, 255)));
+    addWipeLayout(new WipeRing(false, CP932("円ワイプ")));
+    addWipeLayout(new WipeFade(CP932("白フェードワイプ"), Color8(255, 255, 255, 255)));
 }
 
 bool SystemWipeHolder::isCurrentAlive() const {
@@ -48,7 +49,7 @@ void SystemWipeHolder::draw() const {
 }
 
 void SystemWipeHolder::setWipeRingCenter(const TVec3f& rCenter) {
-    static_cast< WipeRing* >(findWipe("円ワイプ"))->setCenterPos(rCenter);
+    static_cast< WipeRing* >(findWipe(CP932("円ワイプ")))->setCenterPos(rCenter);
 }
 
 void SystemWipeHolder::startGameScreenCapture() {

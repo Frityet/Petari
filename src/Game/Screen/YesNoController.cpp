@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/YesNoController.hpp"
 
 #include "Game/LiveActor/Nerve.hpp"
@@ -20,7 +21,7 @@ namespace NrvYesNoController {
 }  // namespace NrvYesNoController
 
 YesNoController::YesNoController(LayoutActor* pHost)
-    : NerveExecutor("はい／いいえ選択制御"), mHost(pHost), _C(false), mButtonYesPaneCtrl(new ButtonPaneController(mHost, "Right", "BoxRight", 0, true)),
+    : NerveExecutor(CP932("はい／いいえ選択制御")), mHost(pHost), _C(false), mButtonYesPaneCtrl(new ButtonPaneController(mHost, "Right", "BoxRight", 0, true)),
       mButtonNoPaneCtrl(new ButtonPaneController(mHost, "Left", "BoxLeft", 0, true)), mCursorSE(nullptr), mYesSE(nullptr), mNoSE(nullptr) {
     mButtonYesPaneCtrl->_22 = false;
     mButtonNoPaneCtrl->_22 = false;

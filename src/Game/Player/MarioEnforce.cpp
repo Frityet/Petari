@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Map/HitInfo.hpp"
@@ -546,12 +547,12 @@ void Mario::pushedByWind() {
     MR::normalizeOrZero(&windDir);
 
     if (MR::isNearZero(windDir)) {
-        if (isAnimationRun("向かい風ふんばり")) {
-            stopAnimation("向かい風ふんばり");
+        if (isAnimationRun(CP932("向かい風ふんばり"))) {
+            stopAnimation(CP932("向かい風ふんばり"));
         }
 
-        if (isAnimationRun("向かい風走り")) {
-            stopAnimation("向かい風走り");
+        if (isAnimationRun(CP932("向かい風走り"))) {
+            stopAnimation(CP932("向かい風走り"));
         }
 
         if (_10.debugMode) {
@@ -577,7 +578,7 @@ void Mario::pushedByWind() {
         windMag = (windMag - table->mWindSlideLimit) * table->mWindSlideFriction;
         _350 += windDir * windMag;
         _1C._A = 1;
-        changeAnimation("向かい風ふんばり", static_cast< const char* >(nullptr));
+        changeAnimation(CP932("向かい風ふんばり"), static_cast< const char* >(nullptr));
         return;
     }
 
@@ -587,8 +588,8 @@ void Mario::pushedByWind() {
         const MarioConstTable* table = mActor->getConst().getTable();
         _350 += scaled * table->mWindForwardFriction;
         _1C._A = 1;
-        stopAnimation("向かい風ふんばり");
-        stopAnimation("向かい風走り");
+        stopAnimation(CP932("向かい風ふんばり"));
+        stopAnimation(CP932("向かい風走り"));
         return;
     }
 
@@ -606,7 +607,7 @@ void Mario::pushedByWind() {
 
     TVec3f final(killed + windDir * element);
 
-    changeAnimation("向かい風走り", static_cast< const char* >(nullptr));
+    changeAnimation(CP932("向かい風走り"), static_cast< const char* >(nullptr));
     _350 += final;
     _1C._A = 1;
 }

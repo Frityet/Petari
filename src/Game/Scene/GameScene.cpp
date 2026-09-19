@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #if defined(TARGET_PC)
 #include "scene/GameSceneBinding.hpp"
 #endif
@@ -117,7 +118,7 @@ void GameScene::init() {
     SceneFunction::waitDoneStageFileLoad();
     MR::waitEndChangeArchivePlayer();
     SceneFunction::startActorFileLoadCommon();
-    MR::suspendAsyncExecuteThread("シーン初期化");
+    MR::suspendAsyncExecuteThread(CP932("シーン初期化"));
 
     if (!MR::isScenarioDecided()) {
         MR::receiveAllRequestedFile();

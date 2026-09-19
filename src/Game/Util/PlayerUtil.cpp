@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Camera/CameraTargetArg.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
@@ -388,7 +389,7 @@ namespace MR {
     }
 
     bool isPlayerPointedBy2POnTriggerButton() {
-        return MR::isStarPointerPointing2POnTriggerButton(MarioAccess::getPlayerActor(), "弱", true, false);
+        return MR::isStarPointerPointing2POnTriggerButton(MarioAccess::getPlayerActor(), CP932("弱"), true, false);
     }
 
     bool isPlayerSquat() {

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/ShadowVolumeDrawer.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -10,7 +11,7 @@ namespace {
     static Color8 sDebugShapeColor(0xFF, 0, 0, 0x80);
 };  // namespace
 
-ShadowVolumeDrawInit::ShadowVolumeDrawInit() : NameObj("シャドウボリューム描画初期化") {
+ShadowVolumeDrawInit::ShadowVolumeDrawInit() : NameObj(CP932("シャドウボリューム描画初期化")) {
     MR::registerPreDrawFunction(MR::Functor_Inline(&MR::setupShadowVolumeDraw), MR::DrawType_ShadowVolume);
 }
 

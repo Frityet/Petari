@@ -1,10 +1,11 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Demo/DemoPositionController.hpp"
 #include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/ActorCameraUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 
-DemoPositionController::DemoPositionController(const char* pName, const JMapInfoIter& rIter) : LiveActor("デモアクター位置"), pCameraInfo(nullptr) {
+DemoPositionController::DemoPositionController(const char* pName, const JMapInfoIter& rIter) : LiveActor(CP932("デモアクター位置")), pCameraInfo(nullptr) {
     MR::initDefaultPos(this, rIter);
     initModelManagerWithAnm(pName, nullptr, false);
     pCameraInfo = new ActorCameraInfo(rIter);

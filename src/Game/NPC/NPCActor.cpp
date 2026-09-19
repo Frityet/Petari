@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/NPC/NPCActor.hpp"
 #include "Game/Enemy/AnimScaleController.hpp"
 #include "Game/LiveActor/LodCtrl.hpp"
@@ -549,7 +550,7 @@ void NPCActor::control() {
         _E3 = true;
     }
 
-    if (mStarPointerTarget != nullptr && MR::isStarPointerPointing2POnPressButton(this, "弱", true, false)) {
+    if (mStarPointerTarget != nullptr && MR::isStarPointerPointing2POnPressButton(this, CP932("弱"), true, false)) {
         _E4 = true;
     }
 

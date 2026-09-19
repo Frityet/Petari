@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Demo/DemoStartRequestHolder.hpp"
 #include "Game/Demo/DemoStartRequestUtil.hpp"
 #include "Game/NameObj/NameObj.hpp"
@@ -162,7 +163,7 @@ DemoStartInfo* DemoStartRequestHolder::findEmpty() const {
 }
 
 DemoStartRequestHolder::DemoStartRequestHolder() : mNumInfos(0), mRequestBuffer(mRequestBuffer.mBuffer, mRequestBuffer.mBuffer) {
-    mProxyObj = new NameObj("代理人");
+    mProxyObj = new NameObj(CP932("代理人"));
     for (u32 i = 0; i < ARRAY_SIZE(mStartInfos); i++) {
         DemoStartInfo* pInfo = new DemoStartInfo();
         s32 idx = mNumInfos;

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Scene/LogoScene.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneFunction.hpp"
@@ -215,11 +216,11 @@ void LogoScene::exeDeactive() {
 
 void LogoScene::initLayout() {
 #if !defined(TARGET_PC)
-    mStrapLayout = MR::createSimpleLayout("ストラップ着用画面", "WiiRemoteStrap", 1);
+    mStrapLayout = MR::createSimpleLayout(CP932("ストラップ着用画面"), "WiiRemoteStrap", 1);
     mStrapLayout->kill();
 #endif
 
-    mLogoFader = new LogoFader("ロゴフェーダ");
+    mLogoFader = new LogoFader(CP932("ロゴフェーダ"));
     mLogoFader->initWithoutIter();
     mLogoFader->setBlank();
     mLogoFader->appear();

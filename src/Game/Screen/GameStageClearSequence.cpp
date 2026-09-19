@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/GameStageClearSequence.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/PowerStar.hpp"
@@ -30,11 +31,11 @@ namespace NrvGameStageClearSequence {
 };  // namespace NrvGameStageClearSequence
 
 GameStageClearSequence::GameStageClearSequence()
-    : LayoutActor("ステージクリアシーケンス", true), mEffectLayout(nullptr), mEffectFollowPos(0.0f, 0.0f) {
+    : LayoutActor(CP932("ステージクリアシーケンス"), true), mEffectLayout(nullptr), mEffectFollowPos(0.0f, 0.0f) {
 }
 
 void GameStageClearSequence::init(const JMapInfoIter& rIter) {
-    mEffectLayout = new SimpleEffectLayout("スター取得", "GetStar", 1, -1);
+    mEffectLayout = new SimpleEffectLayout(CP932("スター取得"), "GetStar", 1, -1);
     mEffectLayout->initWithoutIter();
 
     MR::setFollowPos(&mEffectFollowPos, mEffectLayout, nullptr);

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/CollisionCategorizedKeeper.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Map/CollisionParts.hpp"
@@ -8,7 +9,7 @@
 #include <algorithm>
 
 CollisionCategorizedKeeper::CollisionCategorizedKeeper(s32 category)
-    : NameObj("地形コリジョンカテゴリキーパー"), mHitInfoArray(nullptr), _10(0), mZoneCount(0), mZoneNum(0), _9C(category), _A0(false), _A1(true) {
+    : NameObj(CP932("地形コリジョンカテゴリキーパー")), mHitInfoArray(nullptr), _10(0), mZoneCount(0), mZoneNum(0), _9C(category), _A0(false), _A1(true) {
     mHitInfoArray = new HitInfo[32];
 }
 

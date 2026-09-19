@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/ShockWaveGenerator.hpp"
 #include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
@@ -13,7 +14,7 @@
 #include "Game/Util/ObjUtil.hpp"
 
 namespace {
-    static const char* cDemoCameraName = "衝撃波カメラ";
+    static const char* cDemoCameraName = CP932("衝撃波カメラ");
     static const s32 sStepForGenerate = 50;
     static const s32 sStepForDemoEcho = 1;
     static const f32 sHitCylinderRadius = 400.0f;

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/ShadowSurfaceCircle.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
@@ -6,7 +7,7 @@
 ShadowSurfaceCircle::~ShadowSurfaceCircle() {
 }
 
-ShadowSurfaceCircle::ShadowSurfaceCircle() : ShadowSurfaceDrawer("影描画[水面円]"), mRadius(100.0f) {
+ShadowSurfaceCircle::ShadowSurfaceCircle() : ShadowSurfaceDrawer(CP932("影描画[水面円]")), mRadius(100.0f) {
 }
 
 void ShadowSurfaceCircle::setRadius(f32 radius) {

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/System/GameSystemResetAndPowerProcess.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/System/DrawSyncManager.hpp"
@@ -262,7 +263,7 @@ void GameSystemResetAndPowerProcess::handleCheckDiskAsync(s32 result, DVDCommand
 }
 
 GameSystemResetAndPowerProcess::GameSystemResetAndPowerProcess()
-    : LayoutActor("リセット・電源", false), mResetTriggerChecker(), mFadeinoutControl(), mResetOperation(ResetOperation_Restart), _5C(true),
+    : LayoutActor(CP932("リセット・電源"), false), mResetTriggerChecker(), mFadeinoutControl(), mResetOperation(ResetOperation_Restart), _5C(true),
       mIsValidPowerOff(), _5E() {
     mResetTriggerChecker = new TriggerChecker();
 

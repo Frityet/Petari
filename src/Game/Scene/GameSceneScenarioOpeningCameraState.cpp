@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Scene/GameSceneScenarioOpeningCameraState.hpp"
 #include "Game/AudioLib/AudSystem.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
@@ -19,7 +20,7 @@ namespace {
     NEW_NERVE(GameSceneScenarioOpeningCameraStatePlay, GameSceneScenarioOpeningCameraState, Play);
 };  // namespace
 
-GameSceneScenarioOpeningCameraState::GameSceneScenarioOpeningCameraState() : NerveExecutor("シナリオ開始カメラ再生") {
+GameSceneScenarioOpeningCameraState::GameSceneScenarioOpeningCameraState() : NerveExecutor(CP932("シナリオ開始カメラ再生")) {
     mBaseMtx.identity();
     initNerve(&GameSceneScenarioOpeningCameraStatePlay::sInstance);
     mScenarioTitle = new ScenarioTitle();
@@ -47,8 +48,8 @@ void GameSceneScenarioOpeningCameraState::start() {
 
     TVec3f namePos;
 
-    if (MR::tryFindNamePos("スタートカメラマリオ座標", &namePos, nullptr)) {
-        MR::setPlayerPos("スタートカメラマリオ座標");
+    if (MR::tryFindNamePos(CP932("スタートカメラマリオ座標"), &namePos, nullptr)) {
+        MR::setPlayerPos(CP932("スタートカメラマリオ座標"));
     }
 }
 

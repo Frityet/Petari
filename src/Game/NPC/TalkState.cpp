@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/NPC/TalkState.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NPC/TalkBalloon.hpp"
@@ -294,7 +295,7 @@ TalkStateHolder::TalkStateHolder() {
     mAButton = new IconAButton(true, false);
     mAButton->initWithoutIter();
 
-    mBalloonShort = new TalkBalloonShort("会話吹き出し[合成会話]");
+    mBalloonShort = new TalkBalloonShort(CP932("会話吹き出し[合成会話]"));
     mBalloonShort->initWithoutIter();
     mBalloonShort->initInterval();
     mBalloonShort->kill();

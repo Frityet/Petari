@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/RaceManager.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/RaceRail.hpp"
@@ -45,11 +46,11 @@ namespace {
     };
 
     static const RaceStructData sRaceStruct[] = {
-        {"ペンギンレース[オーシャンリング]", MR::EventBgmID_PenguinRace, 120, "RaceName_Penguin", "OceanRingGalaxy", 2, false},
-        {"テレサレース[ファントム]", MR::EventBgmID_TeresaRace, 120, "RaceName_TeresaPhantom", "PhantomGalaxy", 2, true},
-        {"テレサレース[デスプロムナード]", MR::EventBgmID_TeresaRace, 120, "RaceName_TeresaDeathPromenade", "TeresaMario2DGalaxy", 1, false},
-        {"サーフィン[トライアル]", MR::EventBgmID_Surfing, 0, "RaceName_SurfingTrial", "SurfingLv1Galaxy", 1, false},
-        {"サーフィン[チャレンジ]", MR::EventBgmID_Surfing, 180, "RaceName_SurfingChallenge", "SurfingLv2Galaxy", 1, false}};
+        {CP932("ペンギンレース[オーシャンリング]"), MR::EventBgmID_PenguinRace, 120, "RaceName_Penguin", "OceanRingGalaxy", 2, false},
+        {CP932("テレサレース[ファントム]"), MR::EventBgmID_TeresaRace, 120, "RaceName_TeresaPhantom", "PhantomGalaxy", 2, true},
+        {CP932("テレサレース[デスプロムナード]"), MR::EventBgmID_TeresaRace, 120, "RaceName_TeresaDeathPromenade", "TeresaMario2DGalaxy", 1, false},
+        {CP932("サーフィン[トライアル]"), MR::EventBgmID_Surfing, 0, "RaceName_SurfingTrial", "SurfingLv1Galaxy", 1, false},
+        {CP932("サーフィン[チャレンジ]"), MR::EventBgmID_Surfing, 180, "RaceName_SurfingChallenge", "SurfingLv2Galaxy", 1, false}};
 
     const RaceStructData& getRaceStruceData(s32 id) {
         return sRaceStruct[id];
@@ -181,14 +182,14 @@ namespace NrvRaceManager {
 };  // namespace NrvRaceManager
 
 RaceManager::RaceManager()
-    : LiveActor("レース管理"), mLayout(nullptr), mRacerNum(0), mAudienceNum(0), mRank(0), mBestTime(0), mTime(0), mPlayerRacer(nullptr) {
+    : LiveActor(CP932("レース管理")), mLayout(nullptr), mRacerNum(0), mAudienceNum(0), mRank(0), mBestTime(0), mTime(0), mPlayerRacer(nullptr) {
     _FC.identity();
 }
 
 void RaceManager::init(const JMapInfoIter& rIter) {
     MR::connectToSceneMapObjMovement(this);
 
-    mLayout = new RaceManagerLayout("レース管理用レイアウト");
+    mLayout = new RaceManagerLayout(CP932("レース管理用レイアウト"));
     mLayout->init(rIter);
 
     MR::invalidateClipping(this);
@@ -267,7 +268,7 @@ void RaceManager::exeWipeIn() {
         setNerve(&NrvRaceManager::RaceManagerNrvIntro::sInstance);
     } else {
         MR::onPlayerControl(true);
-        MR::endDemo(this, "レース");
+        MR::endDemo(this, CP932("レース"));
         std::for_each(&mRacer[0], &mRacer[mRacerNum], std::mem_func(&AbstractRacer::exitRacer));
         setNerve(&NrvRaceManager::RaceManagerNrvWait::sInstance);
     }
@@ -388,7 +389,7 @@ void RaceManager::exeRank() {
         return;
     }
 
-    MR::tryStartDemoWithoutCinemaFrame(this, "レース");
+    MR::tryStartDemoWithoutCinemaFrame(this, CP932("レース"));
     setNerve(&NrvRaceManager::RaceManagerNrvPstWipeOut::sInstance);
 }
 
@@ -396,7 +397,7 @@ bool RaceManager::startWithWipe() {
     mRank = 0;
 
     mLayout->hideAllPane();
-    MR::requestStartDemoMarioPuppetableWithoutCinemaFrame(this, "レース", &NrvRaceManager::RaceManagerNrvPrepWipe::sInstance, nullptr);
+    MR::requestStartDemoMarioPuppetableWithoutCinemaFrame(this, CP932("レース"), &NrvRaceManager::RaceManagerNrvPrepWipe::sInstance, nullptr);
 
     return true;
 }
@@ -405,7 +406,7 @@ bool RaceManager::startImmediately() {
     mRank = 0;
 
     mLayout->hideAllPane();
-    MR::requestStartDemoWithoutCinemaFrame(this, "レース", &NrvRaceManager::RaceManagerNrvPrepImme::sInstance, nullptr);
+    MR::requestStartDemoWithoutCinemaFrame(this, CP932("レース"), &NrvRaceManager::RaceManagerNrvPrepImme::sInstance, nullptr);
     MR::requestMovementOnPlayer();
     MR::stopStageBGM(90);
     MR::startSubBGM("BGM_MINIGAME_START", false);
@@ -434,7 +435,7 @@ void RaceManager::startRace() {
 
     std::for_each(&mRacer[0], &mRacer[mRacerNum], std::mem_func(&AbstractRacer::startRacer));
     MR::endStarPointerMode(this);
-    MR::endDemo(this, "レース");
+    MR::endDemo(this, CP932("レース"));
     MR::onPlayerControl(true);
 }
 

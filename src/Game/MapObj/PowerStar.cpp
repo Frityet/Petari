@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/PowerStar.hpp"
 #include "Game/Camera/CameraTargetArg.hpp"
 #include "Game/LiveActor/LiveActorGroup.hpp"
@@ -35,7 +36,7 @@ const GXColor lightColor[] = {
 };
 
 namespace {
-    const char* const cAppearDemoName = "パワースター出現";
+    const char* const cAppearDemoName = CP932("パワースター出現");
     const char* const cStageClearAnimNameKoopaVs3 = "GrandStarGetKoopaVs3";
 
     void setupColor(LiveActor* pActor, bool useFrame, int frame) {
@@ -129,8 +130,8 @@ void PowerStar::init(const JMapInfoIter& rIter) {
     }
 
     if (MR::tryRegisterDemoCast(this, rIter)) {
-        MR::registerDemoActionNerve(this, &NrvPowerStar::PowerStarNrvWeakNoRotate::sInstance, "ミニ太陽消失");
-        MR::registerDemoActionNerve(this, &NrvPowerStar::PowerStarNrvWeakToWait::sInstance, "グランドスター復活");
+        MR::registerDemoActionNerve(this, &NrvPowerStar::PowerStarNrvWeakNoRotate::sInstance, CP932("ミニ太陽消失"));
+        MR::registerDemoActionNerve(this, &NrvPowerStar::PowerStarNrvWeakToWait::sInstance, CP932("グランドスター復活"));
         MR::registerDemoSimpleCastAll(this);
     }
 
@@ -284,7 +285,7 @@ bool PowerStar::isCurrentStageKoopaVs3() {
 void PowerStar::initShadowPowerStar(LiveActor* pActor, bool a2) {
     MR::initShadowFromCSV(pActor, "Shadow");
     MR::invalidateShadowAll(pActor);
-    MR::validateShadowGroup(pActor, a2 ? "円柱" : "通常");
+    MR::validateShadowGroup(pActor, a2 ? CP932("円柱") : CP932("通常"));
 }
 
 void PowerStar::makeArchiveList(NameObjArchiveListCollector* pCollector, const JMapInfoIter& rIter) {
@@ -360,7 +361,7 @@ void PowerStar::initMapToolInfo(const JMapInfoIter& rIter) {
     mAppearPosition.set< f32 >(mPosition);
     mInitRotation.set< f32 >(mRotation);
     MR::registerPowerStar(this, mPowerStarId);
-    MR::joinToGroupArray(this, rIter, "パワースター出現ポイントグループ", 0x10);
+    MR::joinToGroupArray(this, rIter, CP932("パワースター出現ポイントグループ"), 0x10);
 
     if (mPowerStarId > 0) {
         if (!MR::hasPowerStarInCurrentStage(mPowerStarId)) {
@@ -390,14 +391,14 @@ void PowerStar::initModel() {
 
     if (mIsGrandStar) {
         MtxPtr pMtx = (MtxPtr)&mBaseMtx;
-        const char* pName = "グランドスターデモモデル";
+        const char* pName = CP932("グランドスターデモモデル");
 
         mPowerStarModelObj = MR::createModelObjIndirectMapObj(pName, mIsGrandStar ? "GrandStar" : "PowerStar", pMtx);
 
         ::setupColorGrandStar(mPowerStarModelObj, mColorFrame_v == 4);
     } else {
         MtxPtr pMtx = (MtxPtr)&mBaseMtx;
-        const char* pName = "パワースターデモモデル";
+        const char* pName = CP932("パワースターデモモデル");
 
         mPowerStarModelObj = MR::createModelObjNoSilhouettedMapObj(pName, mIsGrandStar ? "GrandStar" : "PowerStar", pMtx);
 
@@ -408,7 +409,7 @@ void PowerStar::initModel() {
     mPowerStarModelObj->makeActorDead();
 
     if (MR::isPowerStarGetDemoWithLuigiCurrentGalaxy()) {
-        mLuigiNPC = MR::createModelObjNpc("ルイージデモモデル", "LuigiNPC", (MtxPtr)&mBaseMtx);
+        mLuigiNPC = MR::createModelObjNpc(CP932("ルイージデモモデル"), "LuigiNPC", (MtxPtr)&mBaseMtx);
 
         MR::initLightCtrl(mLuigiNPC);
         MR::invalidateClipping(mLuigiNPC);
@@ -447,7 +448,7 @@ void PowerStar::initShadow(const JMapInfoIter& rIter) {
         bool thing = arg3;
         MR::initShadowFromCSV(this, "Shadow");
         MR::invalidateShadowAll(this);
-        MR::validateShadowGroup(this, thing ? "円柱" : "通常");
+        MR::validateShadowGroup(this, thing ? CP932("円柱") : CP932("通常"));
     } else {
         MR::initShadowFromCSV(this, "Shadow");
     }

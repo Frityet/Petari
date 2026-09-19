@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/BlackHole.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
@@ -105,7 +106,7 @@ void BlackHole::initMapToolInfo(const JMapInfoIter& rIter) {
 
     if (MR::isEqualObjectName(rIter, "BlackHoleCube")) {
         initCubeBox();
-        setName("ブラックホール[キューブ指定]");
+        setName(CP932("ブラックホール[キューブ指定]"));
     }
 
     if (_A4 == nullptr) {
@@ -127,7 +128,7 @@ void BlackHole::initMapToolInfo(const JMapInfoIter& rIter) {
 
 void BlackHole::initModel() {
     initModelManagerWithAnm("BlackHoleRange", 0, false);
-    mBlackHoleModel = MR::createModelObjMapObj("コアモデル", "BlackHole", getBaseMtx());
+    mBlackHoleModel = MR::createModelObjMapObj(CP932("コアモデル"), "BlackHole", getBaseMtx());
     mBlackHoleModel->makeActorDead();
     updateModelScale(_9C, _9C);
 }

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioBlown.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Player/Mario.hpp"
@@ -39,10 +40,10 @@ bool MarioBlown::close() {
         getPlayer()->stopJump();
     }
 
-    stopAnimation("壁ヒット", static_cast<const char*>(nullptr));
+    stopAnimation(CP932("壁ヒット"), static_cast<const char*>(nullptr));
 
     if (_25) {
-        stopAnimation("壁ヒット着地", "基本");
+        stopAnimation(CP932("壁ヒット着地"), CP932("基本"));
     }
 
     mActor->setBlendMtxTimer(6);
@@ -61,10 +62,10 @@ bool MarioBlown::start() {
     _24 = false;
     _25 = false;
 
-    changeAnimation("壁ヒット", "基本");
-    playSound("声壁体当たり", -1);
-    playSound("壁衝突", -1);
-    playEffectTrans("壁ヒット", getPlayer()->getWallPos());
+    changeAnimation(CP932("壁ヒット"), CP932("基本"));
+    playSound(CP932("声壁体当たり"), -1);
+    playSound(CP932("壁衝突"), -1);
+    playEffectTrans(CP932("壁ヒット"), getPlayer()->getWallPos());
 
     getPlayer()->mMovementStates._1 = false;
     getPlayer()->mMovementStates.jumping = true;
@@ -92,7 +93,7 @@ bool MarioBlown::update() {
         _18 += mActor->_240 * mActor->mConst->getTable()->mGravityBlown;
 
         if (_12 > 120) {
-            changeAnimation("中ダメージ空中", static_cast<const char*>(nullptr));
+            changeAnimation(CP932("中ダメージ空中"), static_cast<const char*>(nullptr));
         }
 
         if (_12 > 60) {
@@ -117,9 +118,9 @@ bool MarioBlown::update() {
         }
 
         if (_14 != 2 || _12 >= 3) {
-            playSound("吹っ飛び倒れ", -1);
-            changeAnimation("壁ヒット着地", static_cast<const char*>(nullptr));
-            playEffect("共通壁ヒット着地");
+            playSound(CP932("吹っ飛び倒れ"), -1);
+            changeAnimation(CP932("壁ヒット着地"), static_cast<const char*>(nullptr));
+            playEffect(CP932("共通壁ヒット着地"));
             MR::vecKillElement(_18, mActor->_240, &_18);
         }
 
@@ -139,7 +140,7 @@ bool MarioBlown::update() {
         _18.y *= 0.95f;
         _18.z *= 0.95f;
 
-        if (!isAnimationRun("壁ヒット着地")) {
+        if (!isAnimationRun(CP932("壁ヒット着地"))) {
             return false;
         }
 

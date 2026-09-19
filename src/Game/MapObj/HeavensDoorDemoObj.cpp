@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/HeavensDoorDemoObj.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/MapObjActorInitInfo.hpp"
@@ -43,7 +44,7 @@ void HeavensDoorDemoObj::init(const JMapInfoIter& rIter) {
     if (MR::isDemoCast(this, nullptr)) {
         MR::tryRegisterDemoActionNerve(this, &NrvHeavensDoorDemoObj::HeavensDoorDemoObjNrvVanish::sInstance, nullptr);
         if (MapObjActor::isObjectName("HeavensDoorInsideCage")) {
-            MR::tryRegisterDemoActionFunctor(this, MR::Functor_Inline(this, &HeavensDoorDemoObj::startInsideCageDemo), "ミニ太陽消失");
+            MR::tryRegisterDemoActionFunctor(this, MR::Functor_Inline(this, &HeavensDoorDemoObj::startInsideCageDemo), CP932("ミニ太陽消失"));
         }
     }
 }

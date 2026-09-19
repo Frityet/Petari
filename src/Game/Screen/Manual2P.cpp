@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/Manual2P.hpp"
 
 #include <cstdio>
@@ -51,7 +52,7 @@ void Manual2P::init(const JMapInfoIter&) {
     mRightPaneCtrl = new ButtonPaneController(this, "RightButton", "PicRButton", 0, true);
     mRightPaneCtrl->_22 = false;
 
-    mBackButton = new BackButton("マニュアルの戻るボタン", true);
+    mBackButton = new BackButton(CP932("マニュアルの戻るボタン"), true);
     mBackButton->initWithoutIter();
 
     initNerve(&Manual2PNrvAppear::sInstance);

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/AreaObj/AreaObjContainer.hpp"
 #include "Game/Boss/BossAccessor.hpp"
@@ -151,17 +152,17 @@ bool SceneObjHolder::isExist(int id) const {
 NameObj* SceneObjHolder::newEachObj(int id) {
     switch (id) {
     case SceneObj_SensorHitChecker:
-        return new SensorHitChecker("センサー当たり");
+        return new SensorHitChecker(CP932("センサー当たり"));
     case SceneObj_CollisionDirector:
         return new CollisionDirector();
     case SceneObj_ClippingDirector:
         return new ClippingDirector();
     case SceneObj_DemoDirector:
-        return new DemoDirector("デモ指揮");
+        return new DemoDirector(CP932("デモ指揮"));
     case SceneObj_EventDirector:
         return new EventDirector();
     case SceneObj_EffectSystem:
-        return new EffectSystem("エフェクトシステム", true);
+        return new EffectSystem(CP932("エフェクトシステム"), true);
     case SceneObj_LightDirector:
         return new LightDirector();
     case SceneObj_SceneDataInitializer:
@@ -169,7 +170,7 @@ NameObj* SceneObjHolder::newEachObj(int id) {
     case SceneObj_StageDataHolder:
         return new StageDataHolder(MR::getCurrentStageName(), 0, true);
     case SceneObj_MessageSensorHolder:
-        return new MessageSensorHolder("システム汎用センサー");
+        return new MessageSensorHolder(CP932("システム汎用センサー"));
     case SceneObj_StageSwitchContainer:
         return new StageSwitchContainer();
     case SceneObj_SwitchWatcherHolder:
@@ -177,11 +178,11 @@ NameObj* SceneObjHolder::newEachObj(int id) {
     case SceneObj_SleepControllerHolder:
         return new SleepControllerHolder();
     case SceneObj_AreaObjContainer:
-        return new AreaObjContainer("エリアオブジェクトコンテナ管理");
+        return new AreaObjContainer(CP932("エリアオブジェクトコンテナ管理"));
     case SceneObj_LiveActorGroupArray:
-        return new LiveActorGroupArray("オブジェクトグループ");
+        return new LiveActorGroupArray(CP932("オブジェクトグループ"));
     case SceneObj_MovementOnOffGroupHolder:
-        return new MovementOnOffGroupHolder("Movementグループ管理");
+        return new MovementOnOffGroupHolder(CP932("Movementグループ管理"));
     case SceneObj_CaptureScreenActor:
         return new CaptureScreenActor(MR::DrawType_CaptureScreenIndirect, "Indirect");
     case SceneObj_AudCameraWatcher:
@@ -193,13 +194,13 @@ NameObj* SceneObjHolder::newEachObj(int id) {
     case SceneObj_MarioHolder:
         return new MarioHolder();
     case SceneObj_MirrorCamera:
-        return new MirrorCamera("鏡用カメラ");
+        return new MirrorCamera(CP932("鏡用カメラ"));
     case SceneObj_CameraContext:
         return new CameraContext();
     case SceneObj_NameObjGroup:
         return new NameObjGroup("IgnorePauseNameObj", 16);
     case SceneObj_TalkDirector:
-        return new TalkDirector("会話ディレクター");
+        return new TalkDirector(CP932("会話ディレクター"));
     case SceneObj_EventSequencer:
         return new EventSequencer();
     case SceneObj_StopSceneController:
@@ -209,13 +210,13 @@ NameObj* SceneObjHolder::newEachObj(int id) {
     case SceneObj_ImageEffectSystemHolder:
         return new ImageEffectSystemHolder();
     case SceneObj_BloomEffect:
-        return new BloomEffect("ブルーム");
+        return new BloomEffect(CP932("ブルーム"));
     case SceneObj_BloomEffectSimple:
         return new BloomEffectSimple();
     case SceneObj_ScreenBlurEffect:
-        return new ScreenBlurEffect("画面ブラー");
+        return new ScreenBlurEffect(CP932("画面ブラー"));
     case SceneObj_DepthOfFieldBlur:
-        return new DepthOfFieldBlur("被写界深度ブラー");
+        return new DepthOfFieldBlur(CP932("被写界深度ブラー"));
     case SceneObj_SceneWipeHolder:
         return new SceneWipeHolder();
     case SceneObj_PlayerActionGuidance:
@@ -227,7 +228,7 @@ NameObj* SceneObjHolder::newEachObj(int id) {
     case SceneObj_FurDrawManager:
         return new FurDrawManager(64);
     case SceneObj_PlacementStateChecker:
-        return new PlacementStateChecker("オブジェクト配置状態の監視");
+        return new PlacementStateChecker(CP932("オブジェクト配置状態の監視"));
     case SceneObj_NamePosHolder:
         return new NamePosHolder();
     case SceneObj_NPCDirector:
@@ -243,19 +244,19 @@ NameObj* SceneObjHolder::newEachObj(int id) {
     case SceneObj_OdhConverter:
         return new OdhConverter();
     case SceneObj_CometRetryButton:
-        return new CometRetryButton("コメットリトライボタン");
+        return new CometRetryButton(CP932("コメットリトライボタン"));
     case SceneObj_AllLiveActorGroup:
         return new AllLiveActorGroup();
     case SceneObj_CameraDirector:
-        return new CameraDirector("カメラ管理");
+        return new CameraDirector(CP932("カメラ管理"));
     case SceneObj_PlanetGravityManager:
-        return new PlanetGravityManager("重力");
+        return new PlanetGravityManager(CP932("重力"));
     case SceneObj_BaseMatrixFollowTargetHolder:
-        return new BaseMatrixFollowTargetHolder("行列追随先リスト", 256, 256);
+        return new BaseMatrixFollowTargetHolder(CP932("行列追随先リスト"), 256, 256);
     case SceneObj_GameSceneLayoutHolder:
         return new GameSceneLayoutHolder();
     case SceneObj_TripodBossAccesser:
-        return new TripodBossAccesser("三脚ボスアクセサ");
+        return new TripodBossAccesser(CP932("三脚ボスアクセサ"));
     case SceneObj_KameckBeamHolder:
         return new KameckBeamHolder();
     case SceneObj_KameckFireBallHolder:
@@ -267,35 +268,35 @@ NameObj* SceneObjHolder::newEachObj(int id) {
     case SceneObj_TakoHeiInkHolder:
         return new TakoHeiInkHolder();
     case SceneObj_SwingRopeGroup:
-        return new SwingRopeGroup("スイングロープ描画");
+        return new SwingRopeGroup(CP932("スイングロープ描画"));
     case SceneObj_CoinHolder:
-        return new CoinHolder("コイン管理");
+        return new CoinHolder(CP932("コイン管理"));
     case SceneObj_PurpleCoinHolder:
         return new PurpleCoinHolder();
     case SceneObj_CoinRotater:
-        return new CoinRotater("コイン回転管理");
+        return new CoinRotater(CP932("コイン回転管理"));
     case SceneObj_AirBubbleHolder:
-        return new AirBubbleHolder("空気アワ管理");
+        return new AirBubbleHolder(CP932("空気アワ管理"));
     case SceneObj_StarPieceDirector:
-        return new StarPieceDirector("スターピース指揮");
+        return new StarPieceDirector(CP932("スターピース指揮"));
     case SceneObj_BegomanAttackPermitter:
-        return new BegomanAttackPermitter("ベーゴマン攻撃許可者");
+        return new BegomanAttackPermitter(CP932("ベーゴマン攻撃許可者"));
     case SceneObj_BigFanHolder:
         return new BigFanHolder();
     case SceneObj_KarikariDirector:
-        return new KarikariDirector("カリカリディレクター");
+        return new KarikariDirector(CP932("カリカリディレクター"));
     case SceneObj_ShadowControllerHolder:
         return new ShadowControllerHolder();
     case SceneObj_ShadowVolumeDrawInit:
         return new ShadowVolumeDrawInit();
     case SceneObj_ShadowSurfaceDrawInit:
-        return new ShadowSurfaceDrawInit("水面影描画初期化");
+        return new ShadowSurfaceDrawInit(CP932("水面影描画初期化"));
     case SceneObj_PlantStalkDrawInit:
-        return new PlantStalkDrawInit("植物の茎描画初期化");
+        return new PlantStalkDrawInit(CP932("植物の茎描画初期化"));
     case SceneObj_PlantLeafDrawInit:
-        return new PlantLeafDrawInit("描画初期化[植物の葉]");
+        return new PlantLeafDrawInit(CP932("描画初期化[植物の葉]"));
     case SceneObj_TrapezeRopeDrawInit:
-        return new TrapezeRopeDrawInit("空中ブランコロープ描画");
+        return new TrapezeRopeDrawInit(CP932("空中ブランコロープ描画"));
     case SceneObj_VolumeModelDrawInit:
         return new VolumeModelDrawInit();
     case SceneObj_SpinDriverPathDrawInit:
@@ -303,37 +304,37 @@ NameObj* SceneObjHolder::newEachObj(int id) {
     case SceneObj_NoteGroup:
         return new NoteGroup();
     case SceneObj_ClipAreaHolder:
-        return new ClipAreaHolder("クリップエリアホルダー");
+        return new ClipAreaHolder(CP932("クリップエリアホルダー"));
     case SceneObj_ArrowSwitchMultiHolder:
         return new ArrowSwitchMultiHolder();
     case SceneObj_ClipAreaDropHolder:
         return new ClipAreaDropHolder();
     case SceneObj_FallOutFieldDraw:
-        return new FallOutFieldDraw("クリップエリア描画[抜き]");
+        return new FallOutFieldDraw(CP932("クリップエリア描画[抜き]"));
     case SceneObj_ClipFieldFillDraw:
-        return new ClipFieldFillDraw("クリップエリア描画[塗りつぶし]");
+        return new ClipFieldFillDraw(CP932("クリップエリア描画[塗りつぶし]"));
     case SceneObj_ScreenAlphaCapture:
-        return new ScreenAlphaCapture("アルファテクスチャ取り込み");
+        return new ScreenAlphaCapture(CP932("アルファテクスチャ取り込み"));
     case SceneObj_MapPartsRailGuideHolder:
         return new MapPartsRailGuideHolder();
     case SceneObj_GCapture:
-        return new GCapture("Gキャプチャー");
+        return new GCapture(CP932("Gキャプチャー"));
     case SceneObj_NameObjExecuteHolder:
         return new NameObjExecuteHolder(4096);
     case SceneObj_ElectricRailHolder:
-        return new ElectricRailHolder("電撃レール保持");
+        return new ElectricRailHolder(CP932("電撃レール保持"));
     case SceneObj_SpiderThread:
-        return new SpiderThread("クモの巣");
+        return new SpiderThread(CP932("クモの巣"));
     case SceneObj_QuakeEffectGenerator:
         return new QuakeEffectGenerator();
     case SceneObj_HeatHazeDirector:
-        return new HeatHazeDirector("陽炎制御");
+        return new HeatHazeDirector(CP932("陽炎制御"));
     case SceneObj_BlueChipHolder:
-        return new ChipHolder("ブルーチップホルダー", 0);
+        return new ChipHolder(CP932("ブルーチップホルダー"), 0);
     case SceneObj_YellowChipHolder:
-        return new ChipHolder("イエローーチップホルダー", 1);
+        return new ChipHolder(CP932("イエローーチップホルダー"), 1);
     case SceneObj_BigBubbleHolder:
-        return new BigBubbleHolder("オオアワホルダー");
+        return new BigBubbleHolder(CP932("オオアワホルダー"));
     case SceneObj_EarthenPipeMediator:
         return new EarthenPipeMediator();
     case SceneObj_WaterAreaHolder:
@@ -345,21 +346,21 @@ NameObj* SceneObjHolder::newEachObj(int id) {
     case SceneObj_RaceManager:
         return new RaceManager();
     case SceneObj_GroupCheckManager:
-        return new GroupCheckManager("属性グループマネージャー");
+        return new GroupCheckManager(CP932("属性グループマネージャー"));
     case SceneObj_SkeletalFishBabyRailHolder:
-        return new SkeletalFishBabyRailHolder("スカルシャークベビーレール管理");
+        return new SkeletalFishBabyRailHolder(CP932("スカルシャークベビーレール管理"));
     case SceneObj_SkeletalFishBossRailHolder:
-        return new SkeletalFishBossRailHolder("スカルシャークボスレール管理");
+        return new SkeletalFishBossRailHolder(CP932("スカルシャークボスレール管理"));
     case SceneObj_WaterPressureBulletHolder:
-        return new WaterPressureBulletHolder("ウォータープレッシャー玉ホルダ−");
+        return new WaterPressureBulletHolder(CP932("ウォータープレッシャー玉ホルダ−"));
     case SceneObj_FirePressureBulletHolder:
-        return new FirePressureBulletHolder("ファイアプレッシャー玉ホルダ−");
+        return new FirePressureBulletHolder(CP932("ファイアプレッシャー玉ホルダ−"));
     case SceneObj_SunshadeMapHolder:
         return new SunshadeMapHolder();
     case SceneObj_MiiFacePartsHolder:
         return new MiiFacePartsHolder(128);
     case SceneObj_MiiFaceIconHolder:
-        return new MiiFaceIconHolder(16, "Miiアイコン保持管理");
+        return new MiiFaceIconHolder(16, CP932("Miiアイコン保持管理"));
     case SceneObj_FluffWindHolder:
         return new FluffWindHolder();
     case SceneObj_SphereSelector:
@@ -373,19 +374,19 @@ NameObj* SceneObjHolder::newEachObj(int id) {
     case SceneObj_MiniatureGalaxyHolder:
         return new MiniatureGalaxyHolder();
     case SceneObj_PlanetMapCreator:
-        return new PlanetMapCreator("惑星クリエイタ");
+        return new PlanetMapCreator(CP932("惑星クリエイタ"));
     case SceneObj_WarpPodMgr:
-        return new WarpPodMgr("ワープポッド管理局");
+        return new WarpPodMgr(CP932("ワープポッド管理局"));
     case SceneObj_PriorDrawAirHolder:
         return new PriorDrawAirHolder();
     case SceneObj_GalaxyMapController:
         return new GalaxyMapController();
     case SceneObj_MoviePlayingSequenceHolder:
-        return new MoviePlayingSequenceHolder("ムービー管理保持");
+        return new MoviePlayingSequenceHolder(CP932("ムービー管理保持"));
     case SceneObj_PrologueHolder:
-        return new PrologueHolder("プロローグ保持");
+        return new PrologueHolder(CP932("プロローグ保持"));
     case SceneObj_StaffRoll:
-        return new StaffRoll("スタッフロール");
+        return new StaffRoll(CP932("スタッフロール"));
     default:
         return nullptr;
     }

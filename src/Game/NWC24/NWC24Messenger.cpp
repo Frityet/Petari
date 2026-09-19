@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/NWC24/NWC24Messenger.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NWC24/NWC24Function.hpp"
@@ -214,7 +215,7 @@ namespace NWC24MessengerSub {
     };  // namespace
 
     SendState::SendState(NWC24Messenger* pHost)
-        : NerveExecutor("送信状態"), mHost(pHost), mTask(nullptr), mWindow(nullptr), mMiniWindow(nullptr), _18(nullptr) {
+        : NerveExecutor(CP932("送信状態")), mHost(pHost), mTask(nullptr), mWindow(nullptr), mMiniWindow(nullptr), _18(nullptr) {
         initNerve(&SendStateNrvWait::sInstance);
     }
 

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Screen/LayoutActor.hpp"
@@ -15,7 +16,7 @@ struct Timing {
 class TimeUpLayout : public LayoutActor {
 public:
     /// @brief Creates a new `TimeUpLayout`.
-    TimeUpLayout() : LayoutActor("タイムアップ画面", true) {
+    TimeUpLayout() : LayoutActor(CP932("タイムアップ画面"), true) {
     }
 
     virtual void init(const JMapInfoIter& rIter);

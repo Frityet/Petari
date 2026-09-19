@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Camera/Camera.hpp"
@@ -9,7 +10,7 @@ public:
         CameraType_Interpolate = 1,
     };
 
-    CameraDead(const char* pName = "通常死亡カメラ");
+    CameraDead(const char* pName = CP932("通常死亡カメラ"));
 
     virtual void reset();
     virtual CameraTargetObj* calc();

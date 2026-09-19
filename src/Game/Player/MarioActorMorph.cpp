@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Enemy/KarikariDirector.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Player/MarioActor.hpp"
@@ -42,7 +43,7 @@ void MarioActor::setPlayerMode(u16 playerMode, bool myBool) {
         }
 
         if (playerMode != 0) {
-            playEffect("アイテム再ゲット");
+            playEffect(CP932("アイテム再ゲット"));
         }
 
         return;
@@ -85,7 +86,7 @@ void MarioActor::setPlayerMode(u16 playerMode, bool myBool) {
         break;
 
     case 4:
-        stopAnimation("ハチ飛行中");
+        stopAnimation(CP932("ハチ飛行中"));
 
         if (!mMario->isSwimming()) {
             MR::getGameSceneLayoutHolder()->changeLifeMeterModeGround();
@@ -96,7 +97,7 @@ void MarioActor::setPlayerMode(u16 playerMode, bool myBool) {
         break;
 
     case 3:
-        stopEffect("アイス中");
+        stopEffect(CP932("アイス中"));
 
         changeHandMaterial();
 
@@ -108,7 +109,7 @@ void MarioActor::setPlayerMode(u16 playerMode, bool myBool) {
         break;
 
     case 1:
-        stopEffect("無敵中");
+        stopEffect(CP932("無敵中"));
 
         _A6E = 0;
 
@@ -132,16 +133,16 @@ void MarioActor::setPlayerMode(u16 playerMode, bool myBool) {
         MR::startBtp(this, "TornadoElement");
 
         if (isJumping()) {
-            changeAnimation("エレメントゲット", nullptr);
+            changeAnimation(CP932("エレメントゲット"), nullptr);
         } else {
-            changeAnimation("エレメントゲット接地中", nullptr);
+            changeAnimation(CP932("エレメントゲット接地中"), nullptr);
         }
         break;
 
     case 1:
         _3DC = mConst->getTable()->mMetalHoldTime;
 
-        playEffect("無敵中");
+        playEffect(CP932("無敵中"));
 
         MR::startSubBGM("BGM_MUTEKI_A", false);
 
@@ -166,11 +167,11 @@ void MarioActor::setPlayerMode(u16 playerMode, bool myBool) {
             case 4:
             case 5:
             case 6:
-                playSound("呪い解除", -1);
+                playSound(CP932("呪い解除"), -1);
                 break;
 
             default:
-                playSound("変身解除", -1);
+                playSound(CP932("変身解除"), -1);
                 break;
             }
         }
@@ -180,12 +181,12 @@ void MarioActor::setPlayerMode(u16 playerMode, bool myBool) {
 
         if (mMario->isSwimming()) {
             if (_468 == 0) {
-                changeAnimation(nullptr, "水泳基本");
+                changeAnimation(nullptr, CP932("水泳基本"));
             }
         } else if (isJumping()) {
-            changeAnimation(nullptr, "落下");
+            changeAnimation(nullptr, CP932("落下"));
         } else {
-            changeAnimation(nullptr, "基本");
+            changeAnimation(nullptr, CP932("基本"));
         }
 
         if (_4A4 != nullptr) {
@@ -231,7 +232,7 @@ void MarioActor::setPlayerMode(u16 playerMode, bool myBool) {
         break;
 
     case 3:
-        playEffect("アイス中");
+        playEffect(CP932("アイス中"));
 
         MR::startSubBGM("BGM_ICE_A", false);
 
@@ -268,18 +269,18 @@ void MarioActor::setPlayerMode(u16 playerMode, bool myBool) {
 
     if (mPlayerMode == 0) {
         if (mTransforming) {
-            MR::endDemo(this, "マリオ変身");
+            MR::endDemo(this, CP932("マリオ変身"));
             mTransforming = false;
         }
 
         if (myBool) {
             _3D8 = 30;
-            mMario->startPadVib("マリオ[変身解除]");
+            mMario->startPadVib(CP932("マリオ[変身解除]"));
         } else {
             _3D8 = 2;
         }
 
-        playEffect("変身解除");
+        playEffect(CP932("変身解除"));
     } else {
         if (_3D8 == 0 || _3D6 == 0) {
             mPowerupCollected = true;
@@ -288,9 +289,9 @@ void MarioActor::setPlayerMode(u16 playerMode, bool myBool) {
 
             MR::stopAnimFrame(this);
 
-            playEffect("変身");
+            playEffect(CP932("変身"));
 
-            mMario->startPadVib("マリオ[変身]");
+            mMario->startPadVib(CP932("マリオ[変身]"));
 
             mPowerupCollected = false;
         }
@@ -311,13 +312,13 @@ void MarioActor::setPlayerMode(u16 playerMode, bool myBool) {
 }
 
 void MarioActor::resetPlayerModeOnDamage() {
-    if (isActionOk("ダメージ解除")) {
+    if (isActionOk(CP932("ダメージ解除"))) {
         setPlayerMode(0, true);
     }
 }
 
 void MarioActor::resetPlayerModeOnNoDamage() {
-    if (isActionOk("ノーダメージ解除")) {
+    if (isActionOk(CP932("ノーダメージ解除"))) {
         setPlayerMode(0, true);
     }
 }

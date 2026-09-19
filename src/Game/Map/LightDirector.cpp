@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/LightDirector.hpp"
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/Map/LightDataHolder.hpp"
@@ -8,7 +9,7 @@
 #include "Game/Util/ObjUtil.hpp"
 
 LightDirector::LightDirector()
-    : NameObj("ライト指揮"), _C(), mDataHolder(), mZoneDataHolder(), mDefaultAreaLight(), _1C(), mPointCtrl(), mResourceHolder() {
+    : NameObj(CP932("ライト指揮")), _C(), mDataHolder(), mZoneDataHolder(), mDefaultAreaLight(), _1C(), mPointCtrl(), mResourceHolder() {
 }
 
 void LightDirector::init(const JMapInfoIter& rIter) {

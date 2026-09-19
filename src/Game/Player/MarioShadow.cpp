@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioShadow.hpp"
 
 #include "Game/Map/HitInfo.hpp"
@@ -55,7 +56,7 @@ void CollisionShadow::setMode(u32 mode) {
     _C = mode;
 }
 
-CollisionShadow::CollisionShadow(f32 extent, f32 projectionLength) : NameObj("投影シャドウ") {
+CollisionShadow::CollisionShadow(f32 extent, f32 projectionLength) : NameObj(CP932("投影シャドウ")) {
     _2F0.zero();
     _2FC = 0;
     _2FE = 0;

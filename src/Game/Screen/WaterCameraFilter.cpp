@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/WaterCameraFilter.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/WaterAreaHolder.hpp"
@@ -31,7 +32,7 @@ namespace NrvWaterCameraFilter {
 
 static GXColor sDefaultColor;
 
-WaterCameraFilter::WaterCameraFilter() : LiveActor("水中カメラフィルター") {
+WaterCameraFilter::WaterCameraFilter() : LiveActor(CP932("水中カメラフィルター")) {
     mWaterAlpha = 0.0f;
     mWavePhase = 0.0f;
     _94 = sDefaultColor;

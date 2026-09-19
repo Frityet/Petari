@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/NPC/PowerStarEventKeeper.hpp"
 #include "Game/MapObj/PowerStarHolder.hpp"
 #include "Game/NPC/EventDirector.hpp"
@@ -77,7 +78,7 @@ bool PowerStarEventKeeper::isGreen(const char* pName, s32 starID) const {
         starID = findStarID(pName);
     }
 
-    if (!isCorrectStarIdWithBBS(pName, "ゾーン不明", starID)) {
+    if (!isCorrectStarIdWithBBS(pName, CP932("ゾーン不明"), starID)) {
         return false;
     }
 
@@ -89,7 +90,7 @@ bool PowerStarEventKeeper::isRed(const char* pName, s32 starID) const {
         starID = findStarID(pName);
     }
 
-    if (!isCorrectStarIdWithBBS(pName, "ゾーン不明", starID)) {
+    if (!isCorrectStarIdWithBBS(pName, CP932("ゾーン不明"), starID)) {
         return false;
     }
 
@@ -101,7 +102,7 @@ bool PowerStarEventKeeper::isGrand(const char* pName, s32 starID) const {
         starID = findStarID(pName);
     }
 
-    if (!isCorrectStarIdWithBBS(pName, "ゾーン不明", starID)) {
+    if (!isCorrectStarIdWithBBS(pName, CP932("ゾーン不明"), starID)) {
         return false;
     }
 
@@ -169,7 +170,7 @@ bool PowerStarEventKeeper::isSuccess(const char* pName, s32 starNum) const {
         starNum = findStarID(pName);
     }
 
-    if (!isCorrectStarIdWithBBS(pName, "ゾーン不明", starNum)) {
+    if (!isCorrectStarIdWithBBS(pName, CP932("ゾーン不明"), starNum)) {
         return false;
     }
 

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/ProloguePictureBook.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/IconAButton.hpp"
@@ -18,7 +19,7 @@ namespace NrvProloguePictureBook {
     NEW_NERVE(ProloguePictureBookEnd, ProloguePictureBook, End);
 };  // namespace NrvProloguePictureBook
 
-ProloguePictureBook::ProloguePictureBook() : LayoutActor("プロローグの絵本", true), mIconAButton(), mPage() {
+ProloguePictureBook::ProloguePictureBook() : LayoutActor(CP932("プロローグの絵本"), true), mIconAButton(), mPage() {
 }
 
 void ProloguePictureBook::init(const JMapInfoIter& rIter) {

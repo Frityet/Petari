@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/FileSelectInfo.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/LayoutUtil.hpp"
@@ -218,7 +219,7 @@ void FileSelectInfo::reflectInfo() {
 }
 
 namespace FileSelectInfoSub {
-    SlideState::SlideState(FileSelectInfo* pHost) : NerveExecutor("スライド状態"), mHost(pHost) {
+    SlideState::SlideState(FileSelectInfo* pHost) : NerveExecutor(CP932("スライド状態")), mHost(pHost) {
         initNerve(&SlideStateNrvNormalPos::sInstance);
     }
 
@@ -258,7 +259,7 @@ namespace FileSelectInfoSub {
 };  // namespace FileSelectInfoSub
 
 namespace FileSelectInfoSub {
-    CharaState::CharaState(FileSelectInfo* pHost) : NerveExecutor("キャラ選択状態"), mHost(pHost) {
+    CharaState::CharaState(FileSelectInfo* pHost) : NerveExecutor(CP932("キャラ選択状態")), mHost(pHost) {
         initNerve(&CharaStateNrvMario::sInstance);
     }
 

@@ -1,8 +1,9 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Demo/DemoCastGroupHolder.hpp"
 #include "Game/Demo/DemoCastGroup.hpp"
 #include "Game/Util/ObjUtil.hpp"
 
-DemoCastGroupHolder::DemoCastGroupHolder() : NameObjGroup("デモ関係者グループ保持", 32) {
+DemoCastGroupHolder::DemoCastGroupHolder() : NameObjGroup(CP932("デモ関係者グループ保持"), 32) {
 }
 
 bool DemoCastGroupHolder::tryRegisterDemoActor(LiveActor* pActor, const JMapInfoIter& rIter, const JMapIdInfo& rInfo) const {

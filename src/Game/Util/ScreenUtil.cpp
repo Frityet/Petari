@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Scene/GameSceneFunction.hpp"
 #include "Game/Scene/PlayTimerScene.hpp"
@@ -150,39 +151,39 @@ namespace MR {
     }
 
     void closeWipeCircle(s32 frame) {
-        SceneWipeHolderFunction::closeWipe("円ワイプ", frame);
+        SceneWipeHolderFunction::closeWipe(CP932("円ワイプ"), frame);
     }
 
     void forceOpenWipeCircle() {
-        SceneWipeHolderFunction::forceOpenWipe("円ワイプ");
+        SceneWipeHolderFunction::forceOpenWipe(CP932("円ワイプ"));
     }
 
     void forceCloseWipeCircle() {
-        SceneWipeHolderFunction::forceCloseWipe("円ワイプ");
+        SceneWipeHolderFunction::forceCloseWipe(CP932("円ワイプ"));
     }
 
     void closeWipeFade(s32 frame) {
-        SceneWipeHolderFunction::closeWipe("フェードワイプ", frame);
+        SceneWipeHolderFunction::closeWipe(CP932("フェードワイプ"), frame);
     }
 
     void forceOpenWipeFade() {
-        SceneWipeHolderFunction::forceOpenWipe("フェードワイプ");
+        SceneWipeHolderFunction::forceOpenWipe(CP932("フェードワイプ"));
     }
 
     void forceCloseWipeFade() {
-        SceneWipeHolderFunction::forceCloseWipe("フェードワイプ");
+        SceneWipeHolderFunction::forceCloseWipe(CP932("フェードワイプ"));
     }
 
     void closeWipeWhiteFade(s32 frame) {
-        SceneWipeHolderFunction::closeWipe("白フェードワイプ", frame);
+        SceneWipeHolderFunction::closeWipe(CP932("白フェードワイプ"), frame);
     }
 
     void forceOpenWipeWhiteFade() {
-        SceneWipeHolderFunction::forceOpenWipe("白フェードワイプ");
+        SceneWipeHolderFunction::forceOpenWipe(CP932("白フェードワイプ"));
     }
 
     void forceCloseWipeWhiteFade() {
-        SceneWipeHolderFunction::forceCloseWipe("白フェードワイプ");
+        SceneWipeHolderFunction::forceCloseWipe(CP932("白フェードワイプ"));
     }
 
     bool isWipeActive() {
@@ -198,36 +199,36 @@ namespace MR {
     }
 
     void closeSystemWipeCircle(s32 frame) {
-        ::getSystemWipeHolder()->forceOpen("円ワイプ");
+        ::getSystemWipeHolder()->forceOpen(CP932("円ワイプ"));
         ::getSystemWipeHolder()->wipe(nullptr, frame);
     }
 
     void openSystemWipeFade(s32 frame) {
-        ::getSystemWipeHolder()->forceClose("フェードワイプ");
+        ::getSystemWipeHolder()->forceClose(CP932("フェードワイプ"));
         ::getSystemWipeHolder()->wipe(nullptr, frame);
     }
 
     void closeSystemWipeFade(s32 frame) {
-        ::getSystemWipeHolder()->forceOpen("フェードワイプ");
+        ::getSystemWipeHolder()->forceOpen(CP932("フェードワイプ"));
         ::getSystemWipeHolder()->wipe(nullptr, frame);
     }
 
     void forceOpenSystemWipeFade() {
-        ::getSystemWipeHolder()->forceOpen("フェードワイプ");
+        ::getSystemWipeHolder()->forceOpen(CP932("フェードワイプ"));
     }
 
     void openSystemWipeWhiteFade(s32 frame) {
-        ::getSystemWipeHolder()->forceClose("白フェードワイプ");
+        ::getSystemWipeHolder()->forceClose(CP932("白フェードワイプ"));
         ::getSystemWipeHolder()->wipe(nullptr, frame);
     }
 
     void closeSystemWipeWhiteFade(s32 frame) {
-        ::getSystemWipeHolder()->forceOpen("白フェードワイプ");
+        ::getSystemWipeHolder()->forceOpen(CP932("白フェードワイプ"));
         ::getSystemWipeHolder()->wipe(nullptr, frame);
     }
 
     void forceCloseSystemWipeWhiteFade() {
-        ::getSystemWipeHolder()->forceClose("白フェードワイプ");
+        ::getSystemWipeHolder()->forceClose(CP932("白フェードワイプ"));
     }
 
     bool isSystemWipeActive() {
@@ -570,23 +571,23 @@ namespace MR {
     }
 
     void openWipeCircle(s32 frame) {
-        SceneWipeHolderFunction::openWipe("円ワイプ", frame);
+        SceneWipeHolderFunction::openWipe(CP932("円ワイプ"), frame);
     }
 
     void openWipeFade(s32 frame) {
-        SceneWipeHolderFunction::openWipe("フェードワイプ", frame);
+        SceneWipeHolderFunction::openWipe(CP932("フェードワイプ"), frame);
     }
 
     void openWipeWhiteFade(s32 frame) {
-        SceneWipeHolderFunction::openWipe("白フェードワイプ", frame);
+        SceneWipeHolderFunction::openWipe(CP932("白フェードワイプ"), frame);
     }
 
     void startGameOverWipe() {
-        SceneWipeHolderFunction::getSceneWipeHolder()->wipe("ゲームオーバー", -1);
+        SceneWipeHolderFunction::getSceneWipeHolder()->wipe(CP932("ゲームオーバー"), -1);
     }
 
     void startDownWipe() {
-        SceneWipeHolderFunction::getSceneWipeHolder()->wipe("クッパ", -1);
+        SceneWipeHolderFunction::getSceneWipeHolder()->wipe(CP932("クッパ"), -1);
     }
 
     void requestOneUp() {

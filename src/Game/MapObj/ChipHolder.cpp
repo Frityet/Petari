@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/ChipHolder.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/ChipBase.hpp"
@@ -115,10 +116,10 @@ void ChipHolder::init(const JMapInfoIter& rIter) {
 
     switch (mChipType) {
     case ChipBase::Type_Blue:
-        mChipCounter = new ChipCounter("ブルーチップカウンター", mChipType);
+        mChipCounter = new ChipCounter(CP932("ブルーチップカウンター"), mChipType);
         break;
     case ChipBase::Type_Yellow:
-        mChipCounter = new ChipCounter("イエローチップカウンター", mChipType);
+        mChipCounter = new ChipCounter(CP932("イエローチップカウンター"), mChipType);
         break;
     }
 

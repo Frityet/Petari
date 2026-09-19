@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Demo/DemoWipeKeeper.hpp"
 #include "Game/Demo/DemoFunction.hpp"
 #include "Game/Screen/SceneWipeHolder.hpp"
@@ -7,7 +8,7 @@
 
 template void MR::Vector< MR::AssignableArray< DemoWipeInfo > >::push_back(const DemoWipeInfo&) NO_INLINE;
 
-DemoWipeInfo::DemoWipeInfo() : mPartName(nullptr), mWipeName("フェードワイプ"), mWipeType(0), mWipeFrame(-1) {
+DemoWipeInfo::DemoWipeInfo() : mPartName(nullptr), mWipeName(CP932("フェードワイプ")), mWipeType(0), mWipeFrame(-1) {
 }
 
 DemoWipeKeeper::DemoWipeKeeper(DemoExecutor* pExecutor) : DemoSheetKeeperBase(pExecutor) {

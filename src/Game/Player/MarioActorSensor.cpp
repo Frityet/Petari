@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/MapObj/CollectCounter.hpp"
 #include "Game/Player/MarioActor.hpp"
@@ -109,49 +110,49 @@ void MarioActor::updateHitSensor(HitSensor* pSensor) {
                 _3E5 = true;
             }
 
-            if (isAnimationRun("地上ひねり")) {
+            if (isAnimationRun(CP932("地上ひねり"))) {
                 _3E5 = true;
             }
-            if (isAnimationRun("サマーソルト")) {
+            if (isAnimationRun(CP932("サマーソルト"))) {
                 _3E5 = true;
             }
-            if (isAnimationRun("水泳スピン")) {
+            if (isAnimationRun(CP932("水泳スピン"))) {
                 _3E5 = true;
             }
-            if (isAnimationRun("水上スピン")) {
+            if (isAnimationRun(CP932("水上スピン"))) {
                 _3E5 = true;
             }
-            if (isAnimationRun("しゃがみスピン")) {
+            if (isAnimationRun(CP932("しゃがみスピン"))) {
                 _3E5 = true;
             }
-            if (isAnimationRun("フーファイタースピン")) {
+            if (isAnimationRun(CP932("フーファイタースピン"))) {
                 _3E5 = true;
             }
-            if (isAnimationRun("ハチスピン")) {
+            if (isAnimationRun(CP932("ハチスピン"))) {
                 _3E5 = true;
             }
-            if (isAnimationRun("ハチスピン空中")) {
+            if (isAnimationRun(CP932("ハチスピン空中"))) {
                 _3E5 = true;
             }
-            if (isAnimationRun("アイスひねり空中")) {
+            if (isAnimationRun(CP932("アイスひねり空中"))) {
                 _3E5 = true;
             }
-            if (isAnimationRun("ファイアスピン空中")) {
+            if (isAnimationRun(CP932("ファイアスピン空中"))) {
                 _3E5 = true;
             }
-            if (isAnimationRun("ファイアスピン")) {
+            if (isAnimationRun(CP932("ファイアスピン"))) {
                 _3E5 = true;
             }
-            if (isAnimationRun("アイスひねり")) {
+            if (isAnimationRun(CP932("アイスひねり"))) {
                 _3E5 = true;
             }
-            if (isAnimationRun("アイスひねり移動")) {
+            if (isAnimationRun(CP932("アイスひねり移動"))) {
                 _3E5 = true;
             }
-            if (isAnimationRun("アイスひねり静止")) {
+            if (isAnimationRun(CP932("アイスひねり静止"))) {
                 _3E5 = true;
             }
-            if (isAnimationRun("ハンマー投げリリース")) {
+            if (isAnimationRun(CP932("ハンマー投げリリース"))) {
                 _3E5 = true;
             }
 
@@ -194,15 +195,15 @@ void MarioActor::doTrampleJump(HitSensor* pSensor) {
         _988 = 0;
         MarioConstTable* table = mConst->getTable();
         trampleJump(table->mTrampleBegoma, table->mTrampleLong);
-        changeAnimationNonStop("ヘリコプタージャンプ");
+        changeAnimationNonStop(CP932("ヘリコプタージャンプ"));
         mMario->startPadVib(2);
-        playSound("ヘリコプタージャンプ", -1);
+        playSound(CP932("ヘリコプタージャンプ"), -1);
         mMario->startRotationTask(4);
         mMario->_430 = 0xB;
         return;
     }
 
-    if (strcmp(pSensor->mHost->mName, "砲弾") == 0) {
+    if (strcmp(pSensor->mHost->mName, CP932("砲弾")) == 0) {
         mMario->playSoundTrampleCombo(_989);
         _989++;
 
@@ -218,7 +219,7 @@ void MarioActor::doTrampleJump(HitSensor* pSensor) {
         }
     }
 
-    if (strcmp(pSensor->mHost->mName, "全滅用クリボー") == 0) {
+    if (strcmp(pSensor->mHost->mName, CP932("全滅用クリボー")) == 0) {
         mMario->playSoundTrampleCombo(_989);
         _989++;
 
@@ -271,11 +272,11 @@ void MarioActor::trampleJump(f32 ySpeed, f32 ySpeedLvlA) {
             _988++;
 
             if (_988 == 1) {
-                changeAnimation("地上ひねり", nullptr);
+                changeAnimation(CP932("地上ひねり"), nullptr);
             } else if (_988 == 2) {
-                changeAnimation("サマーソルト", nullptr);
+                changeAnimation(CP932("サマーソルト"), nullptr);
             } else if (_988 >= 3) {
-                changeAnimation("水泳スピン", nullptr);
+                changeAnimation(CP932("水泳スピン"), nullptr);
                 _988 = 0;
             }
         }
@@ -283,14 +284,14 @@ void MarioActor::trampleJump(f32 ySpeed, f32 ySpeedLvlA) {
         stopAnimation(nullptr);
 
         if (mMario->mRabbit->mJumpAnimationIndex == 0) {
-            changeAnimation("ハチスピン空中", nullptr);
+            changeAnimation(CP932("ハチスピン空中"), nullptr);
         } else if (mMario->mRabbit->mJumpAnimationIndex == 1) {
-            changeAnimation("ファイアスピン空中", nullptr);
+            changeAnimation(CP932("ファイアスピン空中"), nullptr);
         }
     }
 
-    playSound("ジャンプ", -1);
-    playEffect("踏み");
+    playSound(CP932("ジャンプ"), -1);
+    playEffect(CP932("踏み"));
     mMario->startPadVib(0U);
     mMario->mMovementStates._2F = false;
     mMario->mMovementStates._22 = false;

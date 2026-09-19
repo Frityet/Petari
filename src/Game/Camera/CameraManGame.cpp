@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Camera/CameraManGame.hpp"
 #include "Game/AreaObj/CubeCamera.hpp"
 #include "Game/Boss/SkeletalFishGuard.hpp"
@@ -30,11 +31,11 @@ void CameraManGame_FORCE_MATCH_SDATA2() {
 
 namespace {
     static const f32 sMinDistance = 300.0f;
-    const char* sThruCamName = "デフォルトカメラ";
-    const char* sDefaultWaterCamName = "デフォルト水中カメラ";
-    const char* sDefaultWaterSurfaceCamName = "デフォルト水面カメラ";
-    const char* sDefaultFooFighterCamName = "デフォルトフーファイターカメラ";
-    const char* sStartAnimCamName = "スタートアニメカメラ";
+    const char* sThruCamName = CP932("デフォルトカメラ");
+    const char* sDefaultWaterCamName = CP932("デフォルト水中カメラ");
+    const char* sDefaultWaterSurfaceCamName = CP932("デフォルト水面カメラ");
+    const char* sDefaultFooFighterCamName = CP932("デフォルトフーファイターカメラ");
+    const char* sStartAnimCamName = CP932("スタートアニメカメラ");
     static const f32 sZoomRadius = 100.0f;
     static const s32 sInterpolateOffCounterMax = 5;
 };  // namespace
@@ -86,7 +87,7 @@ void CameraManGame::zoomIn() {
     mZoomedIn = true;
 
     CameraParamChunkID_Tmp chunkID = CameraParamChunkID_Tmp();
-    chunkID.createOtherID(0, "ズームカメラ");
+    chunkID.createOtherID(0, CP932("ズームカメラ"));
 
     CameraParamChunk* chunk = mChunkHolder->getChunk(chunkID);
 
@@ -501,7 +502,7 @@ void CameraManGame::createStartAnimCamera() {
 
 void CameraManGame::createZoomCamera() {
     CameraParamChunkID_Tmp chunkID = CameraParamChunkID_Tmp();
-    chunkID.createOtherID(0, "ズームカメラ");
+    chunkID.createOtherID(0, CP932("ズームカメラ"));
     CameraParamChunk* chunk = mChunkHolder->createChunk(chunkID, nullptr);
 
     CameraDirector* director = CameraLocalUtil::getCameraDirector();
@@ -678,7 +679,7 @@ bool CameraManGame::tryZoomCamera() {
     }
 
     CameraParamChunkID_Tmp chunkID = CameraParamChunkID_Tmp();
-    chunkID.createOtherID(0, "ズームカメラ");
+    chunkID.createOtherID(0, CP932("ズームカメラ"));
 
     setChunk(chunkID);
 
@@ -687,7 +688,7 @@ bool CameraManGame::tryZoomCamera() {
 
 bool CameraManGame::isZoomCamera() const {
     CameraParamChunkID_Tmp chunkID = CameraParamChunkID_Tmp();
-    chunkID.createOtherID(0, "ズームカメラ");
+    chunkID.createOtherID(0, CP932("ズームカメラ"));
 
     CameraParamChunk* chunk = mChunkHolder->getChunk(chunkID);
 

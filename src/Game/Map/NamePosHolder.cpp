@@ -1,10 +1,11 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/NamePosHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/JMapLinkInfo.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 
-NamePosHolder::NamePosHolder() : NameObj("位置テーブル保持") {
+NamePosHolder::NamePosHolder() : NameObj(CP932("位置テーブル保持")) {
     mPosNum = 0;
     mInfos = 0;
     mPosNum = MR::getGeneralPosNum();

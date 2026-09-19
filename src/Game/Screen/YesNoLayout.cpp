@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/YesNoLayout.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/YesNoController.hpp"
@@ -10,7 +11,7 @@ namespace NrvYesNoLayout {
     NEW_NERVE(YesNoLayoutNrvSelecting, YesNoLayout, Selecting);
 };  // namespace NrvYesNoLayout
 
-YesNoLayout::YesNoLayout() : SimpleLayout("Yes/Noレイアウト", "SelectButton", 1, 68), mController(nullptr), _24(false) {
+YesNoLayout::YesNoLayout() : SimpleLayout(CP932("Yes/Noレイアウト"), "SelectButton", 1, 68), mController(nullptr), _24(false) {
 }
 
 void YesNoLayout::init(const JMapInfoIter& rIter) {

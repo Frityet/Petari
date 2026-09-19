@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/WipeKoopa.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/LayoutUtil.hpp"
@@ -13,7 +14,7 @@ namespace {
     NEW_NERVE(WipeKoopaNrvClose, WipeKoopa, Close);
 };  // namespace
 
-WipeKoopa::WipeKoopa() : WipeLayoutBase("クッパ"), mFrame(::sAnimFrame) {
+WipeKoopa::WipeKoopa() : WipeLayoutBase(CP932("クッパ")), mFrame(::sAnimFrame) {
 }
 
 void WipeKoopa::init(const JMapInfoIter& rIter) {

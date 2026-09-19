@@ -1,10 +1,11 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Camera/Camera.hpp"
 
 class CameraCharmedTripodBoss : public Camera {
 public:
-    CameraCharmedTripodBoss(const char* pName = "三脚ボスジョイント注視カメラ");
+    CameraCharmedTripodBoss(const char* pName = CP932("三脚ボスジョイント注視カメラ"));
 
     virtual void reset();
     virtual CameraTargetObj* calc();

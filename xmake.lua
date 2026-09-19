@@ -19,7 +19,7 @@ includes("aurora")
 set_project("smg-pc")
 
 add_rules("mode.debug", "mode.release")
-includes("script/game_compilation_database.lua")
+includes("scripts/build/compilation_database.lua")
 add_rules("smgpc.compilation_database")
 set_languages("c++23")
 -- Keep complete original translation units while linking the reachable native
@@ -33,8 +33,6 @@ if is_plat("macosx", "iphoneos", "linux", "mingw") then
     end
 end
 includes("scripts")
-includes("script/game_execution_charset.lua")
-add_rules("smgpc.game_execution_charset")
 
 if not is_mode("debug") then
     add_defines("NDEBUG")

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioFlip.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
@@ -8,7 +9,7 @@
 
 bool Mario::doFlipJump(const TVec3f& rVec) {
     // FIXME: regswap
-    if (isAnimationRun("壁はじき")) {
+    if (isAnimationRun(CP932("壁はじき"))) {
         return false;
     }
 
@@ -18,7 +19,7 @@ bool Mario::doFlipJump(const TVec3f& rVec) {
     vec -= getGravityVec()->scaleInline(mActor->mConst->getTable()->mWallSpinHopGround);
     tryForcePowerJump(vec, true);
 
-    changeAnimation("壁はじき", static_cast< const char* >(nullptr));
+    changeAnimation(CP932("壁はじき"), static_cast< const char* >(nullptr));
 
     stopPunch();
     mMovementStates._2B = true;
@@ -34,9 +35,9 @@ bool Mario::doFlipBackRoll(const TVec3f& rVec) {
 
     if (doFlipLarge(vec20)) {
         checkDamage();
-        changeAnimationNonStop("後転ふっとび");
+        changeAnimationNonStop(CP932("後転ふっとび"));
 
-        mDamage->setStrings("後転ふっとび空中", "後転ふっとび着地");
+        mDamage->setStrings(CP932("後転ふっとび空中"), CP932("後転ふっとび着地"));
 
         TVec3f vec28;
         MR::vecKillElement(rVec, getAirGravityVec(), &vec28);
@@ -54,11 +55,11 @@ bool MarioFlip::start() {
     _24 = 0.0f;
     _28 = -0.75f;
 
-    changeAnimation("はねとばされ", static_cast< const char* >(nullptr));
+    changeAnimation(CP932("はねとばされ"), static_cast< const char* >(nullptr));
 
-    playSound("声小ダメージ");
-    playSound("壁衝突");
-    playEffect("ダメージ");
+    playSound(CP932("声小ダメージ"));
+    playSound(CP932("壁衝突"));
+    playEffect(CP932("ダメージ"));
     startPadVib(2);
 
     addVelocity(_18);
@@ -68,7 +69,7 @@ bool MarioFlip::start() {
 
 bool MarioFlip::update() {
     if (_12 == 0) {
-        changeAnimationNonStop("はねとばされ");
+        changeAnimationNonStop(CP932("はねとばされ"));
     }
     ++_12;
 
@@ -94,7 +95,7 @@ bool MarioFlip::update() {
     case 0:
         _24 += _28;
         _28 *= 0.98f;
-        playSound("はねとばされ");
+        playSound(CP932("はねとばされ"));
         addVelocity(velocity);
         _18.scale(mActor->mConst->getTable()->mFlipFriction1);
         if (_12 == mActor->mConst->getTable()->mFlipTimer1) {
@@ -104,7 +105,7 @@ bool MarioFlip::update() {
     case 1:
         _24 += _28;
         _28 *= 0.97f;
-        playSound("はねとばされ");
+        playSound(CP932("はねとばされ"));
         if (!getPlayer()->mMovementStates._1) {
             return false;
         }
@@ -118,16 +119,16 @@ bool MarioFlip::update() {
         addVelocity(velocity);
         _18.scale(mActor->mConst->getTable()->mFlipFriction2);
         _28 *= 0.97f;
-        playSound("はねとばされ");
+        playSound(CP932("はねとばされ"));
         _24 += _28;
         if (MR::isAngleBetween(_24, -0.1f, 0.1f)) {
-            changeAnimation("はねとばされ終了", static_cast< const char* >(nullptr));
+            changeAnimation(CP932("はねとばされ終了"), static_cast< const char* >(nullptr));
             ++_14;
         }
         break;
     case 3:
         _24 = 0.0f;
-        if (!isAnimationRun("はねとばされ終了")) {
+        if (!isAnimationRun(CP932("はねとばされ終了"))) {
             return false;
         }
         break;
@@ -142,8 +143,8 @@ bool MarioFlip::update() {
         f32 speed = MR::vecKillElement(_18, normal, &horizontal);
         if (speed < 0.0f) {
             stopAnimation(static_cast< const char* >(nullptr), static_cast< const char* >(nullptr));
-            changeAnimationNonStop("はねとばされ");
-            playEffectTrans("壁ヒット", getPlayer()->getWallPos());
+            changeAnimationNonStop(CP932("はねとばされ"));
+            playEffectTrans(CP932("壁ヒット"), getPlayer()->getWallPos());
             _18 = horizontal + normal * -speed * 1.2f;
             addVelocity(_18, 2.0f);
             _28 *= 1.2f;
@@ -234,8 +235,8 @@ void MarioFlip::setVec(const TVec3f& rVec) {
 bool MarioFlip::close() {
     setYangleOffset(0.0f);
 
-    stopAnimation("はねとばされ");
-    stopAnimation("はねとばされ終了");
+    stopAnimation(CP932("はねとばされ"));
+    stopAnimation(CP932("はねとばされ終了"));
 
     if (mActor->mHealth == 0) {
         if (!getPlayer()->getMovementStates()._1) {

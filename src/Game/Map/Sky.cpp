@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/Sky.hpp"
 #include "Game/LiveActor/MaterialCtrl.hpp"
 #include "Game/LiveActor/MirrorReflectionModel.hpp"
@@ -37,7 +38,7 @@ void Sky::init(const JMapInfoIter& rIter) {
     MR::useStageSwitchReadAppear(this, rIter);
 
     if (MR::isEqualString(objName, "SummerSky")) {
-        mSpaceInner = new SpaceInner("内側宇宙");
+        mSpaceInner = new SpaceInner(CP932("内側宇宙"));
         mSpaceInner->initWithoutIter();
 
         if (MR::isValidSwitchB(this)) {
@@ -49,7 +50,7 @@ void Sky::init(const JMapInfoIter& rIter) {
     MR::getJMapInfoArg0NoInit(rIter, &arg0);
 
     if (arg0 == 0) {
-        mReflectionModel = new MirrorReflectionModel(this, "鏡内モデル", objName, getBaseMtx());
+        mReflectionModel = new MirrorReflectionModel(this, CP932("鏡内モデル"), objName, getBaseMtx());
         mReflectionModel->initWithoutIter();
     }
 

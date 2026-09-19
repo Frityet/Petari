@@ -1,3 +1,4 @@
+#include "SourceMirrorEncoding.hpp"
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
 #include "Game/Util/MtxUtil.hpp"
@@ -62,8 +63,8 @@ namespace {
                     expected.insert(offset + declaration.size() - 1, " = 0");
                 }
             }
-            require(expected == read_file(pair.port),
-                    std::string("pc-port Game file must match the decomp with only the verified base declaration fixes: ") +
+            require(smgpc::test::source_matches_with_cp932(expected, read_file(pair.port)),
+                    std::string("pc-port Game file must match the decomp with only the verified base declaration fixes and explicit CP932 encoding: ") +
                         std::string(pair.port));
         }
     }

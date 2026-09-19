@@ -1,9 +1,10 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/LightDataHolder.hpp"
 
 #include <cstring>
 
 namespace {
-    static const char* sDefaultAreaLightName = "デフォルト";
+    static const char* sDefaultAreaLightName = CP932("デフォルト");
 }
 
 LightDataHolder::LightDataHolder() {

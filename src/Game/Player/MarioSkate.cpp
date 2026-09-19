@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioSkate.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Player/Mario.hpp"
@@ -46,7 +47,7 @@ bool MarioSkate::postureCtrl(MtxPtr mtx) {
 void MarioSkate::exitJump() {
     _18 = true;
     getPlayer()->tryJump();
-    playSound("スケートジャンプ", -1);
+    playSound(CP932("スケートジャンプ"), -1);
 }
 
 bool MarioSkate::start() {
@@ -59,28 +60,28 @@ bool MarioSkate::start() {
     _24 = 0.0f;
     _1A = false;
 
-    if (isAnimationRun("スケートジャンプ") || isAnimationRun("スケートジャンプ2") || isAnimationRun("スケートジャンプ3")) {
+    if (isAnimationRun(CP932("スケートジャンプ")) || isAnimationRun(CP932("スケートジャンプ2")) || isAnimationRun(CP932("スケートジャンプ3"))) {
         _1D = 1;
-        changeAnimation(static_cast< const char* >(nullptr), "基本");
-        changeAnimationNonStop("スケート着地");
-        playEffect("スケート右");
-        playEffect("スケート左");
-        playSound("スケート着地", -1);
+        changeAnimation(static_cast< const char* >(nullptr), CP932("基本"));
+        changeAnimationNonStop(CP932("スケート着地"));
+        playEffect(CP932("スケート右"));
+        playEffect(CP932("スケート左"));
+        playSound(CP932("スケート着地"), -1);
         _19 = false;
         _20 = 0.0f;
     } else {
         _20 = 0.0f;
         if (getPlayer()->mTargetWalkSpeedIndex < 3) {
             _1A = true;
-            changeAnimationNonStop("アイスひねり静止");
+            changeAnimationNonStop(CP932("アイスひねり静止"));
         } else {
-            changeAnimationNonStop("アイスひねり");
-            playEffect("スケート左");
+            changeAnimationNonStop(CP932("アイスひねり"));
+            playEffect(CP932("スケート左"));
         }
 
-        playSound("スケートスピン", -1);
-        playSound("スピンジャンプ", -1);
-        playSound("声スピン", -1);
+        playSound(CP932("スケートスピン"), -1);
+        playSound(CP932("スピンジャンプ"), -1);
+        playSound(CP932("声スピン"), -1);
     }
 
     return true;
@@ -94,7 +95,7 @@ bool MarioSkate::update() {
     if (checkTrgA() || getPlayer()->mMovementStates._38) {
         _18 = true;
         getPlayer()->tryJump();
-        playSound("スケートジャンプ", -1);
+        playSound(CP932("スケートジャンプ"), -1);
         return false;
     }
 
@@ -118,12 +119,12 @@ bool MarioSkate::update() {
         _14 = 20;
         _1C = true;
         _1B = 1 - _1B;
-        playSound("声壁押し", -1);
+        playSound(CP932("声壁押し"), -1);
     }
 
     getPlayer()->updateWalkSpeed();
 
-    if (isAnimationRun("スケート着地")) {
+    if (isAnimationRun(CP932("スケート着地"))) {
         if (isAnimationTerminate(static_cast< const char* >(nullptr))) {
             _1C = true;
         }
@@ -136,12 +137,12 @@ bool MarioSkate::update() {
 
     if (mActor->isRequestSpin()) {
         if (_1D != 0) {
-            if (!isAnimationRun("アイスひねり移動") || isAnimationTerminate(static_cast< const char* >(nullptr))) {
+            if (!isAnimationRun(CP932("アイスひねり移動")) || isAnimationTerminate(static_cast< const char* >(nullptr))) {
                 stopAnimation(static_cast< const char* >(nullptr), static_cast< const char* >(nullptr));
-                changeAnimationNonStop("アイスひねり移動");
-                playSound("スケートスピン", -1);
-                playSound("スピンジャンプ", -1);
-                playSound("声パンチ", -1);
+                changeAnimationNonStop(CP932("アイスひねり移動"));
+                playSound(CP932("スケートスピン"), -1);
+                playSound(CP932("スピンジャンプ"), -1);
+                playSound(CP932("声パンチ"), -1);
 
                 if (getPlayer()->mWalkSpeed < 1.25f) {
                     const f32 acceleratedSpeed = 1.5f * getPlayer()->mWalkSpeed;
@@ -160,8 +161,8 @@ bool MarioSkate::update() {
         getPlayer()->mWalkSpeed = 1.2f * getStickP();
     }
 
-    if (speed > 0.0f && !isAnimationRun("基本")) {
-        playSound("スケート滑り", -1);
+    if (speed > 0.0f && !isAnimationRun(CP932("基本"))) {
+        playSound(CP932("スケート滑り"), -1);
     }
 
     if (_19) {
@@ -218,23 +219,23 @@ bool MarioSkate::update() {
                     switch (_1B) {
                     case 0:
                         if (_19) {
-                            changeAnimationNonStop("氷上後行右");
+                            changeAnimationNonStop(CP932("氷上後行右"));
                         } else {
-                            changeAnimationNonStop("氷上力行左");
+                            changeAnimationNonStop(CP932("氷上力行左"));
                         }
-                        playEffect("スケート左");
-                        stopEffect("スケート右");
-                        playSound("スケート足", -1);
+                        playEffect(CP932("スケート左"));
+                        stopEffect(CP932("スケート右"));
+                        playSound(CP932("スケート足"), -1);
                         break;
                     case 1:
                         if (_19) {
-                            changeAnimationNonStop("氷上後行左");
+                            changeAnimationNonStop(CP932("氷上後行左"));
                         } else {
-                            changeAnimationNonStop("氷上力行右");
+                            changeAnimationNonStop(CP932("氷上力行右"));
                         }
-                        playEffect("スケート右");
-                        stopEffect("スケート左");
-                        playSound("スケート足", -1);
+                        playEffect(CP932("スケート右"));
+                        stopEffect(CP932("スケート左"));
+                        playSound(CP932("スケート足"), -1);
                         break;
                     }
                 }
@@ -246,7 +247,7 @@ bool MarioSkate::update() {
 
     f32 animationSpeed = 1.0f;
     const f32 stickSpeedRatio = 1.0f - 0.5f * (1.0f - getStickP());
-    if (!isAnimationRun("スケート着地")) {
+    if (!isAnimationRun(CP932("スケート着地"))) {
         getAnimator()->setSpeed(animationSpeed * stickSpeedRatio);
     }
 
@@ -272,13 +273,13 @@ bool MarioSkate::close() {
         if (!_1A) {
             switch (getPlayer()->_430) {
             case 1:
-                changeAnimationNonStop("スケートアクセルジャンプ");
+                changeAnimationNonStop(CP932("スケートアクセルジャンプ"));
                 break;
             case 2:
-                changeAnimationNonStop("スケートジャンプ2");
+                changeAnimationNonStop(CP932("スケートジャンプ2"));
                 break;
             default:
-                changeAnimationNonStop("スケートジャンプ");
+                changeAnimationNonStop(CP932("スケートジャンプ"));
                 break;
             }
 
@@ -293,13 +294,13 @@ bool MarioSkate::close() {
             getPlayer()->mJumpVec = horizontal;
         }
     } else if (getPlayer()->mMovementStates._1) {
-        stopAnimation(static_cast< const char* >(nullptr), "基本");
+        stopAnimation(static_cast< const char* >(nullptr), CP932("基本"));
     } else {
-        stopAnimation(static_cast< const char* >(nullptr), "落下");
+        stopAnimation(static_cast< const char* >(nullptr), CP932("落下"));
     }
 
-    stopEffect("スケート左");
-    stopEffect("スケート右");
+    stopEffect(CP932("スケート左"));
+    stopEffect(CP932("スケート右"));
     return true;
 }
 

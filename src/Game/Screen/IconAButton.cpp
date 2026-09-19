@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/IconAButton.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/LayoutUtil.hpp"
@@ -10,7 +11,7 @@ namespace NrvIconAButton {
     NEW_NERVE(IconAButtonNrvTerm, IconAButton, Term);
 };  // namespace NrvIconAButton
 
-IconAButton::IconAButton(bool connectToScene, bool connectToPause) : LayoutActor("Aボタンアイコン", true), mFollowPos(0.0f, 0.0f), mFollowActor() {
+IconAButton::IconAButton(bool connectToScene, bool connectToPause) : LayoutActor(CP932("Aボタンアイコン"), true), mFollowPos(0.0f, 0.0f), mFollowActor() {
     if (connectToScene) {
         if (connectToPause) {
             MR::connectToSceneLayoutOnPause(this);

@@ -95,6 +95,28 @@ actual source differences and absent counterparts in the selected decompilation
 branch. These failures are retained rather than bypassed. Full gameplay remains
 incomplete. The Linux CI workflow has been linted, but has not been run here.
 
+## Original string encoding
+
+Keep source files in UTF-8. Original narrow strings containing Japanese text
+must use `CP932("日本語")` from `compat/Cp932Literal.hpp`. Conversion happens
+entirely at compile time, with no compiler wrapper or runtime allocation. ASCII
+strings and original wide strings keep their normal spelling. Put adjacent
+literals inside one wrapper: `CP932("日本" "語")`.
+
+The result is a static `const char` array with the exact encoded size, including
+its terminating NUL. It decays to a pointer normally and supports `sizeof`.
+For array references, use `constexpr const auto& name = CP932("日本語")`;
+C++ does not permit copying it through `char name[] = CP932(...)`. Malformed
+UTF-8 and characters outside the frozen CP932 mapping are compilation errors.
+Raw CP932 byte escapes already contain encoded bytes and must stay unwrapped.
+
+Source-mirror checks recognize only this explicit encoding adaptation; other
+Game differences remain visible. After importing new decompiled Game code,
+annotate its non-ASCII narrow literals before compiling the port.
+
+Run `python3 tests/test_cp932_literals.py --cxx clang++` to check the complete
+mapping, array semantics, cross-translation-unit storage and rejected inputs.
+
 ## Credits
 
 Based on [SMGCommunity/Petari](https://github.com/SMGCommunity/Petari), Aurora,

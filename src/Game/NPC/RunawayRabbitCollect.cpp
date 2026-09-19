@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/NPC/RunawayRabbitCollect.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NPC/RunawayRabbit.hpp"
@@ -58,11 +59,11 @@ void RunawayRabbitCollect::init(const JMapInfoIter& rIter) {
         MR::getChildObjName(&objName, rIter, i);
 
         if (MR::isEqualString(objName, "RunawayRabbit")) {
-            mRabbit[mRabbitNum] = new RunawayRabbit("球面逃げウサギ", this);
+            mRabbit[mRabbitNum] = new RunawayRabbit(CP932("球面逃げウサギ"), this);
             MR::initChildObj(mRabbit[mRabbitNum], rIter, i);
             mRabbitNum++;
         } else if (MR::isEqualString(objName, "RunawayTico")) {
-            mTico[mTicoNum] = new RunawayTico("逃げチコ");
+            mTico[mTicoNum] = new RunawayTico(CP932("逃げチコ"));
             MR::initChildObj(mTico[mTicoNum], rIter, i);
             mTicoNum++;
         }

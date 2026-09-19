@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Demo/PrologueDirector.hpp"
 #include "Game/Camera/CameraTargetArg.hpp"
 #include "Game/Camera/CameraTargetMtx.hpp"
@@ -20,8 +21,8 @@
 #include "Game/Util/SoundUtil.hpp"
 
 namespace {
-    static const char* sPictureBookDemoName = "プロローグデモ";
-    static const char* sArriveDemoName = "主人公ピーチ城に到着";
+    static const char* sPictureBookDemoName = CP932("プロローグデモ");
+    static const char* sArriveDemoName = CP932("主人公ピーチ城に到着");
     static const s32 sPicBookStartWipeFrame = 60;
     static const s32 sPeachLetterWait = 20;
     static const s32 sPeachLetterStartWipeFrame = 60;
@@ -251,12 +252,12 @@ void PrologueDirector::createPictureBook() {
 }
 
 void PrologueDirector::createLetter() {
-    mLetter = new PrologueLetter("ピーチからの手紙");
+    mLetter = new PrologueLetter(CP932("ピーチからの手紙"));
     mLetter->initWithoutIter();
 }
 
 void PrologueDirector::createScenery() {
-    mScenery = new ModelObj("背景書割", "DemoLetter", nullptr, MR::DrawBufferType_MapObjStrongLight, -2, -2, false);
+    mScenery = new ModelObj(CP932("背景書割"), "DemoLetter", nullptr, MR::DrawBufferType_MapObjStrongLight, -2, -2, false);
 
     MR::invalidateClipping(mScenery);
     mScenery->initWithoutIter();
@@ -269,7 +270,7 @@ void PrologueDirector::createScenery() {
 }
 
 void PrologueDirector::createMarioPosDummyModel() {
-    mMarioPosDummyModel = new ModelObj("マリオの経路", "DemoPeachCastleGate", nullptr, -2, -2, -2, false);
+    mMarioPosDummyModel = new ModelObj(CP932("マリオの経路"), "DemoPeachCastleGate", nullptr, -2, -2, -2, false);
     mMarioPosDummyModel->initWithoutIter();
 
     MR::invalidateClipping(mMarioPosDummyModel);
@@ -283,7 +284,7 @@ void PrologueDirector::createMarioPosDummyModel() {
 }
 
 void PrologueDirector::createCameraTarget() {
-    mCameraTarget = new CameraTargetMtx("カメラターゲットダミー");
+    mCameraTarget = new CameraTargetMtx(CP932("カメラターゲットダミー"));
     mCameraTarget->mMatrix.identity();
 }
 

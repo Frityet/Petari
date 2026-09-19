@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioWait.hpp"
 #include "Game/Animation/XanimePlayer.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -53,9 +54,9 @@ void MarioAnimator::controlWaitAnimation() {
         blendWeight[3] = 1.0f - blend;
 
         if (sideAngle < 0.0f) {
-            mXanimePlayer->changeTrackAnimation(2, "坂右ウエイト");
+            mXanimePlayer->changeTrackAnimation(2, CP932("坂右ウエイト"));
         } else {
-            mXanimePlayer->changeTrackAnimation(2, "坂左ウエイト");
+            mXanimePlayer->changeTrackAnimation(2, CP932("坂左ウエイト"));
         }
 
         if (getPlayer()->_10._F) {
@@ -77,9 +78,9 @@ void MarioAnimator::controlWaitAnimation() {
         blendWeight[3] = 1.0f - blend;
 
         if (frontAngle < 0.0f) {
-            mXanimePlayer->changeTrackAnimation(2, "坂前ウエイト");
+            mXanimePlayer->changeTrackAnimation(2, CP932("坂前ウエイト"));
         } else {
-            mXanimePlayer->changeTrackAnimation(2, "坂後ウエイト");
+            mXanimePlayer->changeTrackAnimation(2, CP932("坂後ウエイト"));
         }
 
         if (getPlayer()->_10._F) {
@@ -105,8 +106,8 @@ void MarioAnimator::stopWaitAnimation() {
         return;
     }
 
-    if (isAnimationRun("基本")) {
-        mXanimePlayer->changeTrackAnimation(2, "ラン");
+    if (isAnimationRun(CP932("基本"))) {
+        mXanimePlayer->changeTrackAnimation(2, CP932("ラン"));
     }
 }
 
@@ -211,10 +212,10 @@ bool MarioWait::checkStart() {
 bool MarioWait::start() {
     switch (_12) {
     case 0:
-        changeAnimation("特殊ウエイト1A", static_cast< const char* >(nullptr));
+        changeAnimation(CP932("特殊ウエイト1A"), static_cast< const char* >(nullptr));
         break;
     case 1:
-        changeAnimation("特殊ウエイト1B", static_cast< const char* >(nullptr));
+        changeAnimation(CP932("特殊ウエイト1B"), static_cast< const char* >(nullptr));
         break;
     }
 
@@ -270,7 +271,7 @@ bool MarioWait::update() {
                 if (_16 == waitTimer) {
                     _16 = 0;
                     ++_14;
-                    changeAnimation("戦闘ウエイト", static_cast< const char* >(nullptr));
+                    changeAnimation(CP932("戦闘ウエイト"), static_cast< const char* >(nullptr));
                 }
             }
             break;
@@ -284,9 +285,9 @@ bool MarioWait::update() {
 }
 
 bool MarioWait::close() {
-    stopSound("声あくび", 0);
-    stopSound("声いびき１", 0);
-    stopSound("声いびき２", 0);
+    stopSound(CP932("声あくび"), 0);
+    stopSound(CP932("声いびき１"), 0);
+    stopSound(CP932("声いびき２"), 0);
     _16 = 0;
     return true;
 }

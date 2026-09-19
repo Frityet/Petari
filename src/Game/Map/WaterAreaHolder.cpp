@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/WaterAreaHolder.hpp"
 #include "Game/Map/OceanBowl.hpp"
 #include "Game/Map/OceanRing.hpp"
@@ -22,7 +23,7 @@ namespace {
 };  // namespace
 
 WaterAreaHolder::WaterAreaHolder()
-    : NameObj("水エリア保持"), mNumOceanBowls(0), mOceanBowls(nullptr), mNumOceanRings(0), mOceanRings(nullptr), mNumOceanSpheres(0),
+    : NameObj(CP932("水エリア保持")), mNumOceanBowls(0), mOceanBowls(nullptr), mNumOceanRings(0), mOceanRings(nullptr), mNumOceanSpheres(0),
       mOceanSpheres(nullptr), mNumWhirlPools(0), mWhirlPools(nullptr), mNumWhirlPoolAccelerators(0), mWhirlPoolAccelerators(nullptr),
       mCamInWater(false), mCameraFilter(nullptr), mUseBloom(false) {
     mWaterInfo.clear();

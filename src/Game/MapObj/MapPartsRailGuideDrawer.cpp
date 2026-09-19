@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/MapPartsRailGuideDrawer.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util.hpp"
@@ -13,7 +14,7 @@ namespace NrvMapPartsRailGuideDrawer {
 }
 
 MapPartsRailGuideDrawer::MapPartsRailGuideDrawer(LiveActor* pHost, const char* pName)
-    : MapPartsFunction(pHost, "ガイド描画"), _41C(0), _420(-1), _424(pName) {
+    : MapPartsFunction(pHost, CP932("ガイド描画")), _41C(0), _420(-1), _424(pName) {
 }
 
 void MapPartsRailGuideDrawer::init(const JMapInfoIter& rIter) {

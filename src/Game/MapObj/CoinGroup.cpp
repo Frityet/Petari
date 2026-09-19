@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/CoinGroup.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/Coin.hpp"
@@ -51,7 +52,7 @@ void CoinGroup::init(const JMapInfoIter& rIter) {
     placementCoin();
 
     if (MR::tryRegisterDemoCast(this, rIter)) {
-        MR::registerDemoActionFunctor(this, MR::Functor(this, &CoinGroup::appearCoinAll), "コイン出現");
+        MR::registerDemoActionFunctor(this, MR::Functor(this, &CoinGroup::appearCoinAll), CP932("コイン出現"));
     } else if (MR::useStageSwitchReadAppear(this, rIter)) {
         MR::connectToSceneMapObjMovement(this);
         MR::syncStageSwitchAppear(this);
@@ -111,7 +112,7 @@ void CoinGroup::appear() {
     LiveActor::appear();
 
     if (isNerve(&NrvCoinGroup::CoinGroupNrvDemoAppear::sInstance)) {
-        MR::requestStartDemo(this, "出現", &NrvCoinGroup::CoinGroupNrvDemoAppear::sInstance, &NrvCoinGroup::CoinGroupNrvTryStartDemo::sInstance);
+        MR::requestStartDemo(this, CP932("出現"), &NrvCoinGroup::CoinGroupNrvDemoAppear::sInstance, &NrvCoinGroup::CoinGroupNrvTryStartDemo::sInstance);
     }
 }
 
@@ -140,7 +141,7 @@ void CoinGroup::exeDemoAppear() {
     }
 
     if (MR::isGreaterStep(this, 90)) {
-        MR::endDemo(this, "出現");
+        MR::endDemo(this, CP932("出現"));
         MR::endActorCamera(this, mCameraInfo, false, -1);
         setNerve(&NrvCoinGroup::CoinGroupNrvKill::sInstance);
         kill();
@@ -152,7 +153,7 @@ void CoinGroup::exeKill() {
 }
 
 const char* CoinGroup::getCoinName() const {
-    return "コイン(グループ配置)";
+    return CP932("コイン(グループ配置)");
 }
 
 void CoinGroup::placementCoin() {

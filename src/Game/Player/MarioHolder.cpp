@@ -1,7 +1,8 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 
-MarioHolder::MarioHolder() : NameObj("マリオ保持") {
+MarioHolder::MarioHolder() : NameObj(CP932("マリオ保持")) {
     mActor = nullptr;
 }
 

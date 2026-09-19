@@ -1,10 +1,11 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/System/WPadRumbleData.hpp"
 #include "Game/Util/HashUtil.hpp"
 #include <revolution/wpad.h>
 
 static RumblePattern gRumblePatternTable[] = {
     {
-        "最強【長】",
+        CP932("最強【長】"),
         100,
         {
             WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP,   WPAD_MOTOR_STOP,   WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP,   WPAD_MOTOR_STOP,   WPAD_MOTOR_RUMBLE,
@@ -25,7 +26,7 @@ static RumblePattern gRumblePatternTable[] = {
         },
     },
     {
-        "最強",
+        CP932("最強"),
         30,
         {
             WPAD_MOTOR_RUMBLE, WPAD_MOTOR_RUMBLE, WPAD_MOTOR_RUMBLE, WPAD_MOTOR_RUMBLE, WPAD_MOTOR_RUMBLE, WPAD_MOTOR_RUMBLE,
@@ -36,7 +37,7 @@ static RumblePattern gRumblePatternTable[] = {
         },
     },
     {
-        "強",
+        CP932("強"),
         30,
         {
             WPAD_MOTOR_STOP, WPAD_MOTOR_RUMBLE, WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP, WPAD_MOTOR_RUMBLE, WPAD_MOTOR_RUMBLE,
@@ -47,7 +48,7 @@ static RumblePattern gRumblePatternTable[] = {
         },
     },
     {
-        "中",
+        CP932("中"),
         30,
         {
             WPAD_MOTOR_STOP, WPAD_MOTOR_RUMBLE, WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP, WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP,
@@ -58,7 +59,7 @@ static RumblePattern gRumblePatternTable[] = {
         },
     },
     {
-        "弱",
+        CP932("弱"),
         30,
         {
             WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP,   WPAD_MOTOR_STOP,   WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP,   WPAD_MOTOR_RUMBLE,
@@ -69,7 +70,7 @@ static RumblePattern gRumblePatternTable[] = {
         },
     },
     {
-        "微弱",
+        CP932("微弱"),
         30,
         {
             WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP, WPAD_MOTOR_STOP, WPAD_MOTOR_STOP,   WPAD_MOTOR_STOP,   WPAD_MOTOR_RUMBLE,
@@ -80,7 +81,7 @@ static RumblePattern gRumblePatternTable[] = {
         },
     },
     {
-        "マリオ[スリップアップ]",
+        CP932("マリオ[スリップアップ]"),
         25,
         {
             WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP,   WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP,   WPAD_MOTOR_STOP, WPAD_MOTOR_RUMBLE, WPAD_MOTOR_RUMBLE,
@@ -90,7 +91,7 @@ static RumblePattern gRumblePatternTable[] = {
         },
     },
     {
-        "マリオ[亀投げ]",
+        CP932("マリオ[亀投げ]"),
         10,
         {
             WPAD_MOTOR_STOP,
@@ -106,7 +107,7 @@ static RumblePattern gRumblePatternTable[] = {
         },
     },
     {
-        "マリオ[ホッパーため]",
+        CP932("マリオ[ホッパーため]"),
         5,
         {
             WPAD_MOTOR_RUMBLE,
@@ -117,7 +118,7 @@ static RumblePattern gRumblePatternTable[] = {
         },
     },
     {
-        "マリオ[変身]",
+        CP932("マリオ[変身]"),
         60,
         {
             WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP,   WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP,   WPAD_MOTOR_STOP,   WPAD_MOTOR_RUMBLE, WPAD_MOTOR_RUMBLE,
@@ -132,7 +133,7 @@ static RumblePattern gRumblePatternTable[] = {
         },
     },
     {
-        "マリオ[変身解除]",
+        CP932("マリオ[変身解除]"),
         30,
         {
             WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP,   WPAD_MOTOR_RUMBLE, WPAD_MOTOR_RUMBLE, WPAD_MOTOR_RUMBLE, WPAD_MOTOR_RUMBLE,
@@ -143,7 +144,7 @@ static RumblePattern gRumblePatternTable[] = {
         },
     },
     {
-        "マリオ[しびれ]",
+        CP932("マリオ[しびれ]"),
         60,
         {
             WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP,   WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP,   WPAD_MOTOR_RUMBLE, WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP,
@@ -158,7 +159,7 @@ static RumblePattern gRumblePatternTable[] = {
         },
     },
     {
-        "マリオ[つぶれ]",
+        CP932("マリオ[つぶれ]"),
         120,
         {
             WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP,   WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP,   WPAD_MOTOR_RUMBLE, WPAD_MOTOR_RUMBLE, WPAD_MOTOR_STOP,

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/MapObj/CollectCounter.hpp"
@@ -108,12 +109,12 @@ void MarioActor::resetCondition() {
 
     if (mMario->isStatusActive(MarioStatus_Swim) && v2) {
         if (_468) {
-            mMario->changeAnimation("水泳ジェット", "水泳ジェット");
+            mMario->changeAnimation(CP932("水泳ジェット"), CP932("水泳ジェット"));
         } else {
-            mMario->changeAnimation(nullptr, "水泳基本");
+            mMario->changeAnimation(nullptr, CP932("水泳基本"));
         }
     } else {
-        mMario->changeAnimation(nullptr, "基本");
+        mMario->changeAnimation(nullptr, CP932("基本"));
 
         if (_468) {
             mMarioAnim->waterToGround();
@@ -133,11 +134,11 @@ void MarioActor::resetCondition() {
     mMario->_154.zero();
     mMario->mVerticalSpeed = 0.0f;
     mMario->_474->mIdx = -1;
-    stopEffect("いい汗");
-    stopEffect("ホッパー尻落ルイージ");
-    stopEffect("ホッパー尻落");
-    stopEffect("尻落ルイージ");
-    stopEffect("尻落");
+    stopEffect(CP932("いい汗"));
+    stopEffect(CP932("ホッパー尻落ルイージ"));
+    stopEffect(CP932("ホッパー尻落"));
+    stopEffect(CP932("尻落ルイージ"));
+    stopEffect(CP932("尻落"));
 
     _9C4->kill();
     MR::offCalcAnim(_9C4);
@@ -156,8 +157,8 @@ void MarioActor::beginRush() {
     _924 = _7E4[0];
     mMarioAnim->clearAllJointTransform();
     MR::invalidateHitSensors(this);
-    stopEffect("共通壁手擦り");
-    stopEffect("スピンライト");
+    stopEffect(CP932("共通壁手擦り"));
+    stopEffect(CP932("スピンライト"));
     bool isSpinCatch = selectSpinCatchInRush(_924->mHost->mName);
     if (mPlayerMode == 4 && selectHideFlyMeter(_924)) {
         MR::getGameSceneLayoutHolder()->changeLifeMeterModeGround();
@@ -173,7 +174,7 @@ void MarioActor::beginRush() {
             _1B8->kill();
         }
         if (selectLandEffect(_924)) {
-            playEffect("特殊着地");
+            playEffect(CP932("特殊着地"));
         }
         switch (_924->mType) {
         case ATYPE_POWER_STAR_BIND:
@@ -354,7 +355,7 @@ void MarioActor::endRush(const RushEndInfo* pInfo) {
             mMario->mMovementStates.jumping = true;
             mMario->mMovementStates._1 = false;
         } else {
-            changeAnimation("基本", nullptr);
+            changeAnimation(CP932("基本"), nullptr);
         }
         updateGravityVec(true, true);
         _2C4 = _24C * -70.0f;
@@ -397,7 +398,7 @@ bool MarioActor::takeSensor(HitSensor* pSensor) {
         return false;
     }
 
-    changeAnimation("カブ抜き", nullptr);
+    changeAnimation(CP932("カブ抜き"), nullptr);
     changeNullAnimation("PullOut", -1);
     _424 = pSensor;
     memorizeSensorThrow(pSensor);

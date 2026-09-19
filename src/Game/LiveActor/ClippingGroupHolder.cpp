@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/ClippingGroupHolder.hpp"
 #include "Game/LiveActor/ClippingActorInfo.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
@@ -121,7 +122,7 @@ ClippingInfoGroup::~ClippingInfoGroup() {
 ClippingGroupHolder::~ClippingGroupHolder() {
 }
 
-ClippingGroupHolder::ClippingGroupHolder() : NameObj("クリッピングアクター保持") {
+ClippingGroupHolder::ClippingGroupHolder() : NameObj(CP932("クリッピングアクター保持")) {
     mNumGroups = 0;
     mInfoGroups = 0;
     mInfoGroups = new ClippingInfoGroup*[0x40];

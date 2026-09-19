@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/InformationMessage.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -12,7 +13,7 @@ namespace NrvInformationMessage {
     NEW_NERVE(InformationMessageNrvDisappear, InformationMessage, Disappear);
 };  // namespace NrvInformationMessage
 
-InformationMessage::InformationMessage() : LayoutActor("インフォメーションメッセージ", true), mAButtonIcon(nullptr), mIsCenter(false) {
+InformationMessage::InformationMessage() : LayoutActor(CP932("インフォメーションメッセージ"), true), mAButtonIcon(nullptr), mIsCenter(false) {
 }
 
 void InformationMessage::init(const JMapInfoIter& rIter) {

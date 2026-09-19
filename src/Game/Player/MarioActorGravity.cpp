@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Util/AreaObjUtil.hpp"
 #include "Game/Player/MarioConst.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
@@ -179,7 +180,7 @@ void MarioActor::updateGravityVec(bool isReset, bool usePosition) {
                 if (mMario->_430 == 11) {
                     mMario->_430 = 0;
                 }
-                changeAnimation("ショートジャンプ", nullptr);
+                changeAnimation(CP932("ショートジャンプ"), nullptr);
                 resetGroundNorm = true;
             }
             if (_F74) {

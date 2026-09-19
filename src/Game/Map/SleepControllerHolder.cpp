@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/SleepControllerHolder.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
@@ -15,7 +16,7 @@ namespace {
     }
 };  // namespace
 
-SleepControllerHolder::SleepControllerHolder() : NameObj("オブジェスリープ管理"), mSleepControl() {
+SleepControllerHolder::SleepControllerHolder() : NameObj(CP932("オブジェスリープ管理")), mSleepControl() {
     MR::connectToSceneMapObjMovement(this);
 }
 

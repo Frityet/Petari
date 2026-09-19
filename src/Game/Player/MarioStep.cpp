@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioStep.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/HitInfo.hpp"
@@ -160,7 +161,7 @@ void Mario::startStep(const TVec3f& rVec) {
         }
     }
 
-    setTrans(rVec, "段差");
+    setTrans(rVec, CP932("段差"));
     changeStatus(mStep);
     _3D0 = 0;
     const f32 zero = 0.0f;

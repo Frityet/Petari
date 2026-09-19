@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/NPC/Tico.hpp"
 #include "Game/Demo/AstroDemoFunction.hpp"
 #include "Game/Demo/DemoFunction.hpp"
@@ -164,17 +165,17 @@ void Tico::init(const JMapInfoIter& rIter) {
             makeActorDead();
         }
 
-        if (MR::isDemoCast(this, "チコガイドデモ")) {
+        if (MR::isDemoCast(this, CP932("チコガイドデモ"))) {
             if (clr == -1) {
                 _15C = 5;
             } else {
                 _15C = 6;
             }
         } else {
-            if (MR::isDemoCast(this, "青チコ変身")) {
+            if (MR::isDemoCast(this, CP932("青チコ変身"))) {
                 _15C = 1;
             } else {
-                if (MR::isDemoCast(this, "赤いスター")) {
+                if (MR::isDemoCast(this, CP932("赤いスター"))) {
                     _15C = 9;
                     MR::useStageSwitchWriteA(this, rIter);
                     MR::useStageSwitchWriteB(this, rIter);
@@ -379,14 +380,14 @@ void Tico::exeBlue0() {
 
     if (MR::tryTalkNearPlayerAtEndAndStartTalkAction(this)) {
         setNerve(&NrvTico::TicoNrvBlue1::sInstance);
-        MR::startTimeKeepDemo(this, "青チコ変身", nullptr);
+        MR::startTimeKeepDemo(this, CP932("青チコ変身"), nullptr);
     }
 }
 
 void Tico::exeBlue1() {
     if (MR::isFirstStep(this)) {
         MR::startAction(this, "Fly");
-        MR::setRailCoordSpeed(this, (MR::getRailTotalLength(this) / MR::getDemoPartTotalStep("青チコ変身[移動]")));
+        MR::setRailCoordSpeed(this, (MR::getRailTotalLength(this) / MR::getDemoPartTotalStep(CP932("青チコ変身[移動]"))));
     }
 
     MR::moveCoordAndFollowTrans(this);
@@ -397,7 +398,7 @@ void Tico::exeBlue1() {
 }
 
 void Tico::exeRed0() {
-    if (MR::tryStartTimeKeepDemoMarioPuppetable(this, "赤いスター", "赤いスター[開始]")) {
+    if (MR::tryStartTimeKeepDemoMarioPuppetable(this, CP932("赤いスター"), CP932("赤いスター[開始]"))) {
         setNerve(&NrvTico::TicoNrvWait::sInstance);
     }
 }
@@ -420,7 +421,7 @@ void Tico::exeRed2() {
     }
 
     if (mDemoStarter.update()) {
-        MR::tryStartTimeKeepDemoMarioPuppetable(this, "赤いスター", "赤いスター[開始]");
+        MR::tryStartTimeKeepDemoMarioPuppetable(this, CP932("赤いスター"), CP932("赤いスター[開始]"));
         setNerve(&NrvTico::TicoNrvWait::sInstance);
     }
 }

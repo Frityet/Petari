@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/MapPartsRailPosture.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util.hpp"
@@ -11,7 +12,7 @@ namespace NrvMapPartsRailPosture {
 MapPartsRailPosture::~MapPartsRailPosture() {
 }
 
-MapPartsRailPosture::MapPartsRailPosture(LiveActor* pHost) : MapPartsFunction(pHost, "姿勢制御") {
+MapPartsRailPosture::MapPartsRailPosture(LiveActor* pHost) : MapPartsFunction(pHost, CP932("姿勢制御")) {
     mMovePosture = 0;
     _18.identity();
 }

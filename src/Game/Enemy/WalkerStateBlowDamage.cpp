@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Enemy/WalkerStateBlowDamage.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
@@ -21,7 +22,7 @@ namespace NrvWalkerStateBlowDamage {
 };  // namespace NrvWalkerStateBlowDamage
 
 WalkerStateBlowDamage::WalkerStateBlowDamage(LiveActor* pHost, TVec3f* pDirection, WalkerStateBlowDamageParam* pBlowDamageParam)
-    : ActorStateBase< LiveActor >("吹き飛びダメージ状態", pHost), mDirection(pDirection), mBlowDamageParam(pBlowDamageParam) {
+    : ActorStateBase< LiveActor >(CP932("吹き飛びダメージ状態"), pHost), mDirection(pDirection), mBlowDamageParam(pBlowDamageParam) {
     initNerve(&NrvWalkerStateBlowDamage::WalkerStateBlowDamageNrvBlow::sInstance);
 }
 

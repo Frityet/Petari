@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "compat/MarioAnimatorLifetime.hpp"
 #include "Game/Player/MarioAnimator.hpp"
 #include "Game/Animation/XanimeCore.hpp"
@@ -72,15 +73,15 @@ void MarioAnimator::init() {
 
     mXanimePlayer = new XanimePlayer(MR::getJ3DModel(mActor), mResourceTable);
 
-    changeDefault("基本");
-    change("基本");
+    changeDefault(CP932("基本"));
+    change(CP932("基本"));
 
     mXanimePlayer->getCore()->enableJointTransform(MR::getJ3DModelData(mActor));
 
     mActor->mModelManager->mXanimePlayer = mXanimePlayer;
     mXanimePlayerUpper = new XanimePlayer(MR::getJ3DModel(mActor), mResourceTable, mXanimePlayer);
-    changeDefaultUpper("基本");
-    mXanimePlayerUpper->changeAnimation("基本");
+    changeDefaultUpper(CP932("基本"));
+    mXanimePlayerUpper->changeAnimation(CP932("基本"));
     mXanimePlayerUpper->mCore->shareJointTransform(mXanimePlayer->mCore);
     PSMTXCopy(MR::tmpMtxRotYRad(PI), _DC.toMtxPtr());
 }
@@ -231,12 +232,12 @@ bool MarioAnimator::isLandingAnimationRun() const {
         return false;
     }
 
-    if (isAnimationRun("着地") || isAnimationRun("着地B") || isAnimationRun("着地C") || isAnimationRun("着地ターン") ||
-        isAnimationRun("着地幅とび")) {
+    if (isAnimationRun(CP932("着地")) || isAnimationRun(CP932("着地B")) || isAnimationRun(CP932("着地C")) || isAnimationRun(CP932("着地ターン")) ||
+        isAnimationRun(CP932("着地幅とび"))) {
         return true;
     }
 
-    if (isAnimationRun("ハード着地")) {
+    if (isAnimationRun(CP932("ハード着地"))) {
         return true;
     }
 
@@ -244,54 +245,54 @@ bool MarioAnimator::isLandingAnimationRun() const {
         return true;
     }
 
-    if (isAnimationRun("すべり着地")) {
+    if (isAnimationRun(CP932("すべり着地"))) {
         return true;
     }
 
-    if (isAnimationRun("ショート着地")) {
+    if (isAnimationRun(CP932("ショート着地"))) {
         return true;
     }
 
-    if (isAnimationRun("逆着地")) {
+    if (isAnimationRun(CP932("逆着地"))) {
         return true;
     }
 
-    return MR::isBckPlaying(mActor, "引き戻し着地");
+    return MR::isBckPlaying(mActor, CP932("引き戻し着地"));
 }
 
 bool MarioAnimator::isCancelableAnimationRun() const {
-    if (isAnimationRun("着地") || isAnimationRun("着地B") || isAnimationRun("着地C") || isAnimationRun("着地ターン") ||
-        isAnimationRun("着地幅とび")) {
+    if (isAnimationRun(CP932("着地")) || isAnimationRun(CP932("着地B")) || isAnimationRun(CP932("着地C")) || isAnimationRun(CP932("着地ターン")) ||
+        isAnimationRun(CP932("着地幅とび"))) {
         return true;
     }
 
-    if (isAnimationRun("ハード着地")) {
+    if (isAnimationRun(CP932("ハード着地"))) {
         return true;
     }
 
-    return MR::isBckPlaying(mActor, "引き戻し着地");
+    return MR::isBckPlaying(mActor, CP932("引き戻し着地"));
 }
 
 bool MarioAnimator::isWalkOrWaitingMotion() const {
     if (isAnimationStop()) {
-        if (isAnimationRun("基本") || isAnimationRun("水泳基本")) {
+        if (isAnimationRun(CP932("基本")) || isAnimationRun(CP932("水泳基本"))) {
             return true;
         }
     }
 
-    if (isAnimationRun("テニス基本")) {
+    if (isAnimationRun(CP932("テニス基本"))) {
         return true;
     }
 
-    if (isAnimationRun("スライダー尻")) {
+    if (isAnimationRun(CP932("スライダー尻"))) {
         return true;
     }
 
-    if (isAnimationRun("スライダー腹")) {
+    if (isAnimationRun(CP932("スライダー腹"))) {
         return true;
     }
 
-    return isAnimationRun("スライダー逆座り");
+    return isAnimationRun(CP932("スライダー逆座り"));
 }
 
 void MarioAnimator::setWalkMode() {
@@ -312,21 +313,21 @@ void MarioAnimator::setWalkMode() {
         } else {
             player = self->getPlayer();
             if (player->mMovementStates._35) {
-                self->change("ブレーキ滑り床");
+                self->change(CP932("ブレーキ滑り床"));
             } else {
-                self->change("ブレーキ");
+                self->change(CP932("ブレーキ"));
             }
             goto end;
         }
     }
 
-    if (self->isAnimationRun("ブレーキ")) {
+    if (self->isAnimationRun(CP932("ブレーキ"))) {
         player = self->getPlayer();
         player->doBrakingAnimation();
         player = self->getPlayer();
         player->mTargetWalkSpeedIndex = zero;
     } else {
-        self->mXanimePlayer->stopAnimation("ブレーキ滑り床");
+        self->mXanimePlayer->stopAnimation(CP932("ブレーキ滑り床"));
     }
 
 end:
@@ -497,12 +498,12 @@ void MarioAnimator::waterToGround() {
     switch (state) {
     case ACTMES_STAR_PIECE_GIFT:
     case ACTMES_STAR_PIECE_GIFT_1:
-        changeAnimationUpper("ひろいウエイト", nullptr);
+        changeAnimationUpper(CP932("ひろいウエイト"), nullptr);
         mActor->clearNullAnimation(0);
         MR::deleteEffect(swimSensor->mHost, "SwimBubble");
         break;
     case ACTMES_STAR_PIECE_GIFT_MAX:
-        changeAnimationUpper("カブウエイト", nullptr);
+        changeAnimationUpper(CP932("カブウエイト"), nullptr);
         mActor->clearNullAnimation(0);
         break;
     }
@@ -513,8 +514,8 @@ void MarioAnimator::changePickupAnimation(const HitSensor* pSensor) {
     switch (type) {
     case ACTMES_STAR_PIECE_GIFT_MAX:
         mActor->_494 = mActor->_49C;
-        changeAnimation("カブひろい", static_cast< const char* >(nullptr));
-        mActor->changeNullAnimation("カブひろい", -2);
+        changeAnimation(CP932("カブひろい"), static_cast< const char* >(nullptr));
+        mActor->changeNullAnimation(CP932("カブひろい"), -2);
         getPlayer()->stopWalk();
         break;
     case ACTMES_STAR_PIECE_GIFT:
@@ -522,19 +523,19 @@ void MarioAnimator::changePickupAnimation(const HitSensor* pSensor) {
         mActor->_494 = mActor->_498;
         if (!getPlayer()->isSwimming()) {
             if (mActor->_424 == pSensor) {
-                changeAnimationUpper("ひろいクイック", nullptr);
-                playEffect("ひろいクイック");
+                changeAnimationUpper(CP932("ひろいクイック"), nullptr);
+                playEffect(CP932("ひろいクイック"));
                 mActor->clearNullAnimation(-3);
                 startPadVib(2);
             } else if (getPlayer()->mMovementStates._1F) {
                 if (!getPlayer()->mMovementStates._14) {
-                    changeAnimation("ひろい空中", static_cast< const char* >(nullptr));
+                    changeAnimation(CP932("ひろい空中"), static_cast< const char* >(nullptr));
                     mActor->clearNullAnimation(-3);
                     getPlayer()->stopWalk();
                 }
             } else {
-                changeAnimation("ひろい", static_cast< const char* >(nullptr));
-                mActor->changeNullAnimation("ひろい", -2);
+                changeAnimation(CP932("ひろい"), static_cast< const char* >(nullptr));
+                mActor->changeNullAnimation(CP932("ひろい"), -2);
                 getPlayer()->stopWalk();
             }
         } else {
@@ -550,18 +551,18 @@ void MarioAnimator::changeThrowAnimation(const HitSensor* pSensor) {
     switch (type) {
     case ACTMES_STAR_PIECE_GIFT_MAX:
         stopAnimationUpper(nullptr, nullptr);
-        changeAnimation("両手投げ", static_cast< const char* >(nullptr));
-        startPadVib("マリオ[亀投げ]");
+        changeAnimation(CP932("両手投げ"), static_cast< const char* >(nullptr));
+        startPadVib(CP932("マリオ[亀投げ]"));
         break;
     case ACTMES_STAR_PIECE_GIFT:
     case ACTMES_STAR_PIECE_GIFT_1:
         stopAnimationUpper(nullptr, nullptr);
         if (getPlayer()->isSwimming()) {
-            changeAnimation("水泳亀投げ", "水泳基本");
+            changeAnimation(CP932("水泳亀投げ"), CP932("水泳基本"));
         } else {
-            changeAnimation("投げ", static_cast< const char* >(nullptr));
+            changeAnimation(CP932("投げ"), static_cast< const char* >(nullptr));
         }
-        startPadVib("マリオ[亀投げ]");
+        startPadVib(CP932("マリオ[亀投げ]"));
         break;
     }
 }
@@ -583,7 +584,7 @@ void MarioAnimator::updateTakingAnimation(const HitSensor* pSensor) {
     switch (type) {
     case ACTMES_STAR_PIECE_GIFT_MAX:
         stopAnimation(nullptr);
-        changeAnimationUpper("カブウエイト", nullptr);
+        changeAnimationUpper(CP932("カブウエイト"), nullptr);
         mActor->clearNullAnimation(0);
         mActor->offTakingFlag();
         break;
@@ -591,12 +592,12 @@ void MarioAnimator::updateTakingAnimation(const HitSensor* pSensor) {
     case ACTMES_STAR_PIECE_GIFT_1:
         if (!getPlayer()->isSwimming()) {
             s32 shouldChange = 1;
-            if (isAnimationRun("ひろいクイック")) {
+            if (isAnimationRun(CP932("ひろいクイック"))) {
                 shouldChange = isAnimationTerminateUpper(nullptr);
             }
             if (shouldChange) {
-                if (!isAnimationRun("ひろい空中") && mActor->isStopNullAnimation()) {
-                    changeAnimationUpper("ひろいウエイト", nullptr);
+                if (!isAnimationRun(CP932("ひろい空中")) && mActor->isStopNullAnimation()) {
+                    changeAnimationUpper(CP932("ひろいウエイト"), nullptr);
                     startPadVib(2);
                     mActor->clearNullAnimation(0);
                     mActor->offTakingFlag();
@@ -1101,7 +1102,7 @@ void MarioAnimator::update() {
     player = getPlayer();
     player->_71D = prevWalkState;
 
-    if (isWalkOrWaitingMotion() || isAnimationRun("しゃがみ基本")) {
+    if (isWalkOrWaitingMotion() || isAnimationRun(CP932("しゃがみ基本"))) {
         player = getPlayer();
         _14 = walkStateTable[player->mTargetWalkSpeedIndex];
     } else {
@@ -1121,25 +1122,25 @@ void MarioAnimator::update() {
                 if (player->mMovementStates._B) {
                     player->mMovementStates.jumping = false;
                     player->mMovementStates._B = false;
-                    stopAnimation(nullptr, "基本");
+                    stopAnimation(nullptr, CP932("基本"));
                 }
 
                 if (isAnimationStop()) {
-                    changeAnimation("崖ふんばり", static_cast< const char* >(nullptr));
+                    changeAnimation(CP932("崖ふんばり"), static_cast< const char* >(nullptr));
                 }
             }
         }
         goto afterBrake;
     }
 
-    if (isAnimationRun("崖ふんばり")) {
+    if (isAnimationRun(CP932("崖ふんばり"))) {
         player = getPlayer();
         if (!player->mMovementStates._1) {
-            stopAnimation("崖ふんばり", "落下");
+            stopAnimation(CP932("崖ふんばり"), CP932("落下"));
             player = getPlayer();
             player->_414 = 15;
         } else {
-            stopAnimation("崖ふんばり", static_cast< const char* >(nullptr));
+            stopAnimation(CP932("崖ふんばり"), static_cast< const char* >(nullptr));
         }
     }
 
@@ -1191,7 +1192,7 @@ squatWalk:
             player = getPlayer();
             player->startBas(nullptr, false, 0.0f, 0.0f);
         } else {
-            if (!isAnimationRun("幅とび")) {
+            if (!isAnimationRun(CP932("幅とび"))) {
                 player = getPlayer();
                 player->startBas("SquatWalk", false, 0.0f, 79.0f);
             } else {
@@ -1231,12 +1232,12 @@ notSquat:
         goto afterBrake;
     }
 
-    if (isAnimationRun("氷上慣性走行")) {
+    if (isAnimationRun(CP932("氷上慣性走行"))) {
         stopAnimation(nullptr);
         goto doBrake;
     }
 
-    if (isAnimationRun("壁押し", 0)) {
+    if (isAnimationRun(CP932("壁押し"), 0)) {
         player = getPlayer();
         player->decideWalkSpeed();
         player = getPlayer();
@@ -1251,8 +1252,8 @@ notSquat:
         goto doBrake;
     }
 
-    if (!isAnimationRun("ハード着地")) {
-        if (isAnimationRun("がんばり走り")) {
+    if (!isAnimationRun(CP932("ハード着地"))) {
+        if (isAnimationRun(CP932("がんばり走り"))) {
             player = getPlayer();
             if (player->_8F0 < 1.0f) {
                 stopAnimation(nullptr);
@@ -1267,17 +1268,17 @@ doBrake:
     player->updateBrakeAnimation();
 
 afterBrake:
-    if (isAnimationRun("基本") || isAnimationRun("がんばり走り")) {
+    if (isAnimationRun(CP932("基本")) || isAnimationRun(CP932("がんばり走り"))) {
         setTilt();
     } else {
         resetTilt();
     }
 
-    if (isAnimationRun("スライダー尻")) {
+    if (isAnimationRun(CP932("スライダー尻"))) {
         setHipSliderTilt();
     }
 
-    if (isAnimationRun("坂すべり下向きあおむけ", 3)) {
+    if (isAnimationRun(CP932("坂すべり下向きあおむけ"), 3)) {
         setHipSlipTilt();
     }
 

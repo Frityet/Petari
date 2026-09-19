@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/NPC/Rosetta.hpp"
 #include "Game/Demo/AstroDemoFunction.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -67,9 +68,9 @@ void Rosetta::init(const JMapInfoIter& rIter) {
     MR::startBrk(this, "Normal");
     MR::getJMapInfoArg0NoInit(rIter, &_17C);
     AstroDemoFunction::tryRegisterAstroDemoAll(this, rIter);
-    MR::tryRegisterDemoCast(this, "赤いスター", rIter);
-    MR::tryRegisterDemoCast(this, "チコガイドデモ", rIter);
-    MR::tryRegisterDemoCast(this, "エピローグデモ", rIter);
+    MR::tryRegisterDemoCast(this, CP932("赤いスター"), rIter);
+    MR::tryRegisterDemoCast(this, CP932("チコガイドデモ"), rIter);
+    MR::tryRegisterDemoCast(this, CP932("エピローグデモ"), rIter);
     AstroDemoFunction::tryRegisterSimpleCastIfAstroGalaxy(this);
 
     _178 = new TurnJointCtrl(this);
@@ -78,15 +79,15 @@ void Rosetta::init(const JMapInfoIter& rIter) {
     _178->addWaist("Spine2", 0.4f, TurnJointCtrl::Z, TurnJointCtrl::X, TurnJointCtrl::Y);
     makeActorAppeared();
 
-    if (MR::isDemoCast(this, "チコガイドデモ")) {
+    if (MR::isDemoCast(this, CP932("チコガイドデモ"))) {
         _170 = new RosettaDemoHeavensDoor1(this, rIter);
-    } else if (MR::isDemoCast(this, "赤いスター")) {
+    } else if (MR::isDemoCast(this, CP932("赤いスター"))) {
         _170 = new RosettaDemoHeavensDoor2(this, rIter);
-    } else if (MR::isDemoCast(this, "ロゼッタ状況説明デモ")) {
+    } else if (MR::isDemoCast(this, CP932("ロゼッタ状況説明デモ"))) {
         _170 = new RosettaDemoAstroDomeExplain(this, rIter);
-    } else if (MR::isDemoCast(this, "エピローグデモ")) {
+    } else if (MR::isDemoCast(this, CP932("エピローグデモ"))) {
         _170 = new RosettaDemoEpilogue(this, rIter);
-    } else if (MR::isDemoCast(this, "ロゼッタ最終決戦デモ")) {
+    } else if (MR::isDemoCast(this, CP932("ロゼッタ最終決戦デモ"))) {
         _170 = new RosettaDemoAstroDomeFinalBattle(this, rIter);
     }
 

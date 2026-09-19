@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/PlayerEvent.hpp"
 #include "Game/Player/PlayerEventAbyss.hpp"
 #include "Game/Player/PlayerEventDown.hpp"
@@ -12,18 +13,18 @@
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SequenceUtil.hpp"
 
-EventSequencer::EventSequencer() : NameObj("イベントシーケンサー"), mSequence() {
+EventSequencer::EventSequencer() : NameObj(CP932("イベントシーケンサー")), mSequence() {
     MR::connectToSceneMapObjMovement(this);
     mHashTable = new HashSortTable(16);
 }
 
 void EventSequencer::init(const JMapInfoIter& rIter) {
-    addEventSequence< EventDown >("マリオダウン");
-    addEventSequence< EventAbyss >("マリオ奈落");
-    addEventSequence< EventFireDown >("マリオ炎ダウン");
-    addEventSequence< EventRaceDown >("レース負け");
-    addEventSequence< EventGhostRaceDown >("ゴーストレース負け");
-    addEventSequence< EventGameOver >("ゲームオーバー");
+    addEventSequence< EventDown >(CP932("マリオダウン"));
+    addEventSequence< EventAbyss >(CP932("マリオ奈落"));
+    addEventSequence< EventFireDown >(CP932("マリオ炎ダウン"));
+    addEventSequence< EventRaceDown >(CP932("レース負け"));
+    addEventSequence< EventGhostRaceDown >(CP932("ゴーストレース負け"));
+    addEventSequence< EventGameOver >(CP932("ゲームオーバー"));
 
     mHashTable->sort();
 }

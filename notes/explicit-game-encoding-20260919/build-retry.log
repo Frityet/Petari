@@ -1,0 +1,88 @@
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/SceneObjHolderCompat.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J2DGraph/J2DOrthoGraph.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J2DGraph/J2DPane.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J2DGraph/J2DManage.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J2DGraph/J2DScreen.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J2DGraph/J2DGrafContext.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAResourceManager.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPATexture.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAChildShape.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAFieldBlock.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAMath.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPADynamicsBlock.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAEmitterManager.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAKeyBlock.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAResourceLoader.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAEmitter.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAExtraShape.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPABaseShape.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAExTexShape.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAResource.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAParticle.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/effects/JpcBillboard.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/effects/EffectResource.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/GXState.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/J3dAnimation.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/J3dMaterialRuntime.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/J3dMatrix.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/J3dModel.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/J3dModelRenderer.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/J3dTexture.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/JMathTrig.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JGeometry/TQuat.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JMath/JMATrigonometricTable.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JMath/random.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/light/LightData.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JGeometry/TMatrix.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRThread.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JAudio2/JAUSoundTable.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JGadget/hashcode.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JUtility/JUTVideo.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JUtility/JUTXfb.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JUtility/JUTDirectPrint.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JUtility/JUTAssert.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JUtility/JUTConsole.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JUtility/JUTDbPrint.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JUtility/JUTFont.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JUtility/JUTPalette.cpp[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JGadget/linklist.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/JUtility/JUTAssert.cpp:2:
+src/JSystem/JUtility/JUTConsole.hpp:122:63: warning: 'offsetof' on non-standard-layout type 'JUTConsole' [-Winvalid-offsetof]
+  122 |     typedef JGadget::TLinkList< JUTConsole, -static_cast<int>(__builtin_offsetof(JUTConsole, mListNode)) > ConsoleList;
+      |                                                               ^                              ~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRAram.cpp[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRAramHeap.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/JUtility/JUTConsole.cpp:1:
+src/JSystem/JUtility/JUTConsole.hpp:122:63: warning: 'offsetof' on non-standard-layout type 'JUTConsole' [-Winvalid-offsetof]
+  122 |     typedef JGadget::TLinkList< JUTConsole, -static_cast<int>(__builtin_offsetof(JUTConsole, mListNode)) > ConsoleList;
+      |                                                               ^                              ~~~~~~~~~
+In file included from src/JSystem/JUtility/JUTConsole.cpp:1:
+In file included from src/JSystem/JUtility/JUTConsole.hpp:3:
+src/JSystem/JGadget/linklist.hpp:18:28: warning: 'iterator<std::bidirectional_iterator_tag, JUTConsole, int>' is deprecated [-Wdeprecated-declarations]
+   18 |     class TIterator : std::iterator< Category, T, Distance, Pointer, Reference > {
+      |                            ^
+src/JSystem/JGadget/linklist.hpp:136:34: note: in instantiation of template class 'JGadget::TIterator<std::bidirectional_iterator_tag, JUTConsole>' requested here
+  136 |         struct iterator : public TIterator< std::bidirectional_iterator_tag, T >, public TNodeLinkList::iterator {
+      |                                  ^
+src/JSystem/JUtility/JUTConsole.cpp:273:24: note: in instantiation of member class 'JGadget::TLinkList<JUTConsole, -48>::iterator' requested here
+  273 |     mList.Insert(mList.end(), console);
+      |                        ^
+/opt/homebrew/opt/llvm/include/c++/v1/__iterator/iterator.h:23:23: note: 'iterator<std::bidirectional_iterator_tag, JUTConsole, int>' has been explicitly marked deprecated here[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRAramBlock.cpp[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRAramPiece.cpp[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRAramStream.cpp[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRDecomp.cpp[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JSupport/JSUFileStream.cpp[0m
+[0m[38;5;2;1m[ 91%]:[0m [38;5;5;1m<smg-pc-common>[0m [38;5;5;1marchiving.debug libsmg-pc-common.a[0m
+[0m[38;5;2;1m[ 93%]:[0m [38;5;5;1m<smg-pc-render>[0m [38;5;5;1marchiving.debug libsmg-pc-render.a[0m
+[0m[38;5;3;1msrc/JSystem/JKernel/JKRAramStream.cpp:47:17: warning: enumeration value 'UNKNOWN' not handled in switch [-Wswitch]
+   47 |         switch (command->mType) {
+      |                 ^~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-game>[0m [38;5;5;1marchiving.debug libsmg-pc-game.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-app>[0m [38;5;5;1marchiving.debug libsmg-pc-app.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc>[0m [38;5;5;1mlinking.debug smg-pc[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc>[0m [38;5;5;1mgenerating.xcode.debug smg-pc.app[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[38;5;2;1m[100%]:[0m [38;5;2;1mbuild ok, spent 7.617s[0m

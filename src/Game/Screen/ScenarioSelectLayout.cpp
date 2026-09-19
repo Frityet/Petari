@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/ScenarioSelectLayout.hpp"
 #include "Game/Camera/CameraContext.hpp"
 #include "Game/Effect/MultiEmitter.hpp"
@@ -68,7 +69,7 @@ namespace NrvScenarioSelectLayout {
 };  // namespace NrvScenarioSelectLayout
 
 ScenarioSelectLayout::ScenarioSelectLayout(EffectSystem* pEffectSystem, const CameraContext* pCameraContext)
-    : LayoutActor("シナリオ選択レイアウト", true), mSelectedScenarioNo(-1), _24(0), _28(false), mStar(nullptr), mScenarioSky(nullptr),
+    : LayoutActor(CP932("シナリオ選択レイアウト"), true), mSelectedScenarioNo(-1), _24(0), _28(false), mStar(nullptr), mScenarioSky(nullptr),
       mEffectSystem(pEffectSystem), mCameraContext(pCameraContext), mNewTextFollowPos(0.0f, 0.0f), mNewGreenTextFollowPos(0.0f, 0.0f),
       mStarTopFollowPos(0.0f, 0.0f), mBackButton(nullptr), mMarioPaneFollowPos(0.0f, 0.0f), mMarioPaneName(nullptr), _A4(0), _A8(-1) {
     mEffectHostMtx.identity();
@@ -115,10 +116,10 @@ void ScenarioSelectLayout::init(const JMapInfoIter& rIter) {
         MR::addStarPointerTargetCircle(this, ::cStarPaneName[i], ::cPointingTargetRadius, TVec2f(0.0f, 0.0f), nullptr);
     }
 
-    mScenarioSky = new MultiSceneActor("シナリオ選択の空", "ScenarioSelectSky", false);
+    mScenarioSky = new MultiSceneActor(CP932("シナリオ選択の空"), "ScenarioSelectSky", false);
     mScenarioSky->initWithoutIter();
 
-    mBackButton = new BackButton("戻るボタン", false);
+    mBackButton = new BackButton(CP932("戻るボタン"), false);
     mBackButton->initWithoutIter();
 
     initNerve(&NrvScenarioSelectLayout::ScenarioSelectLayoutNrvAppearStar::sInstance);
@@ -313,7 +314,7 @@ void ScenarioSelectLayout::updateSelectedScenario() {
         for (s32 i = 0; i < 7; i++) {
             star = mStar[i];
 
-            if (!star->_30 && MR::isStarPointerPointingTarget(this, ::cStarPaneName[i], 0, true, "弱")) {
+            if (!star->_30 && MR::isStarPointerPointingTarget(this, ::cStarPaneName[i], 0, true, CP932("弱"))) {
                 mSelectedScenarioNo = star->mScenarioNo;
                 _24 = 0;
                 return;

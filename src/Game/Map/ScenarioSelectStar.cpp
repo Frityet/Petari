@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/ScenarioSelectStar.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/PowerStar.hpp"
@@ -36,7 +37,7 @@ namespace NrvScenarioSelectStar {
 };  // namespace NrvScenarioSelectStar
 
 ScenarioSelectStar::ScenarioSelectStar(EffectSystem* pSystem)
-    : MultiSceneActor("シナリオ選択のスター", "PowerStar", false), mStarCollectedStatus(0), mScenarioNo(1), mStarId(0), mIsPointing(false),
+    : MultiSceneActor(CP932("シナリオ選択のスター"), "PowerStar", false), mStarCollectedStatus(0), mScenarioNo(1), mStarId(0), mIsPointing(false),
       mRotateSpeed(0.0f), mBasePos(gZeroVec), mTranslationOnSelect(gZeroVec), mAppearFrame(::cAppearFrame), mScaleOnSelect(1.0f) {
     initEffect(pSystem, 0, "ScenarioStar");
 }

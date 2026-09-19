@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/TitleSequenceProduct.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/EncouragePal60Window.hpp"
@@ -15,7 +16,7 @@ namespace {
 };  // namespace
 
 namespace TitleSequenceProductSub {
-    LogoLayout::LogoLayout() : SimpleLayout("ロゴ", "TitleLogo", 2, -1) {
+    LogoLayout::LogoLayout() : SimpleLayout(CP932("ロゴ"), "TitleLogo", 2, -1) {
         initEffectKeeper(1, "TitleLogo", nullptr);
         kill();
     }

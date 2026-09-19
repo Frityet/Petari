@@ -1,9 +1,10 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/MapPartsFunction.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Spine.hpp"
 
 MapPartsFunction::MapPartsFunction(LiveActor* pHost, const char* pName)
-    : NameObj(pName != nullptr ? pName : "マップパーツ機能"), mSpine(), mHost(pHost), mIsActive(true) {
+    : NameObj(pName != nullptr ? pName : CP932("マップパーツ機能")), mSpine(), mHost(pHost), mIsActive(true) {
 }
 
 bool MapPartsFunction::sendMsgToHost(u32 msg) {

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/Air.hpp"
 #include "Game/LiveActor/MaterialCtrl.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -44,7 +45,7 @@ void Air::init(const JMapInfoIter& rIter) {
     if (registered) {
         bool val = true;
 
-        bool ret = MR::tryRegisterDemoActionFunctor(this, MR::Functor(this, &Air::appearFadeOut), "消滅");
+        bool ret = MR::tryRegisterDemoActionFunctor(this, MR::Functor(this, &Air::appearFadeOut), CP932("消滅"));
 
         if (!ret) {
             ret = MR::tryRegisterDemoActionFunctor(this, MR::Functor(this, &Air::appearFadeIn), nullptr);
@@ -181,7 +182,7 @@ PriorDrawAir::PriorDrawAir(const char* pName) : Air(pName) {
     MR::getSceneObj< PriorDrawAirHolder >(SceneObj_PriorDrawAirHolder)->add(this);
 }
 
-PriorDrawAirHolder::PriorDrawAirHolder() : NameObj("先描画大気保持") {
+PriorDrawAirHolder::PriorDrawAirHolder() : NameObj(CP932("先描画大気保持")) {
     mAirCount = 0;
 }
 

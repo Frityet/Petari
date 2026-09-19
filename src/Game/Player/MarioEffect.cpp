@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioEffect.hpp"
 #include "Game/Effect/MultiEmitter.hpp"
 #include "Game/Effect/ParticleEmitter.hpp"
@@ -75,40 +76,40 @@ struct SmokeEffectEntry {
 };
 
 MaterialEffectEntry cMaterialEffectTable[] = {
-    {"属性尻ドロップ",
+    {CP932("属性尻ドロップ"),
      0x00000000,
      {"HipDropSmoke", "HipDropWater", "HipDropFlower", "HipDropSand", "HipDropSnow", "MudCircle", "HoneyCircle"},
      nullptr,
      nullptr},
-    {"属性ハチ風", 0x03000000, {"Hovering", "HoveringWater", "Hovering", "Hovering", "Hovering", "Hovering", "Hovering"}, nullptr, nullptr},
-    {"属性スピン", 0x00000000, {nullptr, "WaterSpin", "FlowerSpin", "SandSpin", "SnowSpin", "MudCircle", "HoneyCircle"}, nullptr, nullptr},
-    {"属性ステージイン",
+    {CP932("属性ハチ風"), 0x03000000, {"Hovering", "HoveringWater", "Hovering", "Hovering", "Hovering", "Hovering", "Hovering"}, nullptr, nullptr},
+    {CP932("属性スピン"), 0x00000000, {nullptr, "WaterSpin", "FlowerSpin", "SandSpin", "SnowSpin", "MudCircle", "HoneyCircle"}, nullptr, nullptr},
+    {CP932("属性ステージイン"),
      0x00000000,
      {"StageStartGroundSmoke", nullptr, nullptr, "StageStartGroundSand", nullptr, nullptr, nullptr},
      nullptr,
      nullptr},
     {nullptr, 0, {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}, nullptr, nullptr}};
 
-SmokeEffectEntry cSmokeTable[] = {{"共通着地普通", 0x08000000, 1.0f, 1.0f, 0x00000400, 0, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通着地大", 0x03000000, 1.5f, 1.0f, 0x00000400, 0, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通壁ジャンプ", 0x03000000, 1.0f, 1.0f, 0x00000300, 0, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通砂煙レベル", 0x07000000, 0.65f, 1.0f, 0x00000000, 0, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通壁手擦り", 0x01000000, 0.35f, 1.0f, 0x02010000, 0, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通壁上昇", 0x01000000, 1.0f, 1.0f, 0x00000200, 0, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通スリップ坂", 0x02000000, 0.35f, 1.0f, 0x00010000, 2, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通スリップ空転", 0x00000000, 1.0f, 1.0f, 0x00000000, 0, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通スリップ坂制動", 0x02000000, 0.5f, 1.0f, 0x00000000, 2, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通壁ヒット着地", 0x03000000, 1.0f, 1.0f, 0x00000400, 0, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通ダメージ着地", 0x03000000, 1.0f, 1.0f, 0x00000400, 0, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通地上スピン", 0x03000000, 0.9f, 1.0f, 0x00000400, 0, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通ブレーキ", 0x02000000, 0.65f, 1.0f, 0x00010000, 15, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通ハイジャンプ", 0x02000000, 0.65f, 1.0f, 0x00010000, 6, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通ブラックホール", 0x01000000, 0.65f, 1.0f, 0x03030000, 0, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通引き戻し着地", 0x03000000, 1.2f, 1.0f, 0x00000400, 0, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通水底接触", 0x01000000, 6.0f, 0.5f, 0x00000400, 0, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通跳躍", 0x08000000, 1.0f, 1.0f, 0x00000C00, 0, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通ひこうき雲", 0x03000000, 0.3f, 0.2f, 0x00010000, 0, 0, 0, nullptr, 0, {0, 0, 0}},
-                                  {"共通ひこうきブースト", 0x00000000, 2.0f, 1.0f, 0x00000000, 0, 0, 0, nullptr, 0, {0, 0, 0}},
+SmokeEffectEntry cSmokeTable[] = {{CP932("共通着地普通"), 0x08000000, 1.0f, 1.0f, 0x00000400, 0, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通着地大"), 0x03000000, 1.5f, 1.0f, 0x00000400, 0, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通壁ジャンプ"), 0x03000000, 1.0f, 1.0f, 0x00000300, 0, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通砂煙レベル"), 0x07000000, 0.65f, 1.0f, 0x00000000, 0, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通壁手擦り"), 0x01000000, 0.35f, 1.0f, 0x02010000, 0, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通壁上昇"), 0x01000000, 1.0f, 1.0f, 0x00000200, 0, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通スリップ坂"), 0x02000000, 0.35f, 1.0f, 0x00010000, 2, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通スリップ空転"), 0x00000000, 1.0f, 1.0f, 0x00000000, 0, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通スリップ坂制動"), 0x02000000, 0.5f, 1.0f, 0x00000000, 2, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通壁ヒット着地"), 0x03000000, 1.0f, 1.0f, 0x00000400, 0, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通ダメージ着地"), 0x03000000, 1.0f, 1.0f, 0x00000400, 0, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通地上スピン"), 0x03000000, 0.9f, 1.0f, 0x00000400, 0, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通ブレーキ"), 0x02000000, 0.65f, 1.0f, 0x00010000, 15, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通ハイジャンプ"), 0x02000000, 0.65f, 1.0f, 0x00010000, 6, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通ブラックホール"), 0x01000000, 0.65f, 1.0f, 0x03030000, 0, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通引き戻し着地"), 0x03000000, 1.2f, 1.0f, 0x00000400, 0, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通水底接触"), 0x01000000, 6.0f, 0.5f, 0x00000400, 0, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通跳躍"), 0x08000000, 1.0f, 1.0f, 0x00000C00, 0, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通ひこうき雲"), 0x03000000, 0.3f, 0.2f, 0x00010000, 0, 0, 0, nullptr, 0, {0, 0, 0}},
+                                  {CP932("共通ひこうきブースト"), 0x00000000, 2.0f, 1.0f, 0x00000000, 0, 0, 0, nullptr, 0, {0, 0, 0}},
                                   {nullptr, 0, 0.0f, 0.0f, 0, 0, 0, 0, nullptr, 0, {0, 0, 0}}};
 
 namespace {
@@ -944,22 +945,22 @@ void MarioActor::updateEffect() {
     }
 
     if (effectA) {
-        playEffect("共通砂煙レベル");
+        playEffect(CP932("共通砂煙レベル"));
     } else {
         if ((_B98 >> 31) != 0) {
-            stopEffect("共通砂煙レベル");
+            stopEffect(CP932("共通砂煙レベル"));
         }
     }
 
     if (effectB) {
         if (((_B98 >> 30) & 1) == 0) {
-            playEffect("雪煙レベル");
+            playEffect(CP932("雪煙レベル"));
         }
     }
 
     if (!effectB) {
         if (((_B98 >> 30) & 1) != 0) {
-            stopEffect("雪煙レベル");
+            stopEffect(CP932("雪煙レベル"));
         }
     }
 
@@ -971,10 +972,10 @@ void MarioActor::updateEffect() {
     }
 
     if (effectA) {
-        playEffect("共通スリップ坂");
+        playEffect(CP932("共通スリップ坂"));
     } else {
         if (((_B98 >> 28) & 1) != 0) {
-            stopEffect("共通スリップ坂");
+            stopEffect(CP932("共通スリップ坂"));
         }
     }
 
@@ -982,7 +983,7 @@ void MarioActor::updateEffect() {
 
     if ((mHealth <= 1 || mWaterLife <= 1) && !MR::isDemoActive() && !MR::isPowerStarGetDemoActive() && !MR::isGalaxyDarkCometAppearInCurrentStage() &&
         MR::isPermitSE() && isEnableNerveChange()) {
-        playSound("ライフ警告", -1);
+        playSound(CP932("ライフ警告"), -1);
     }
 
     s32 nearZero = 0;
@@ -992,20 +993,20 @@ void MarioActor::updateEffect() {
 
     if (!nearZero) {
         if (_B98 & 0x08000000) {
-            playEffect("宇宙遊泳");
+            playEffect(CP932("宇宙遊泳"));
         }
     }
 
     if (nearZero) {
         if (!(_B98 & 0x08000000)) {
-            stopEffect("宇宙遊泳");
+            stopEffect(CP932("宇宙遊泳"));
         }
     }
 
     _B98 = (_B98 & ~0x08000000) | (static_cast< u32 >(nearZero) << 27);
 
     if (!isJumping() && _934 == 0) {
-        MR::deleteEffect(this, "ジャンプフェアリー");
+        MR::deleteEffect(this, CP932("ジャンプフェアリー"));
     }
 
     mMarioEffect->doCubeEffect();
@@ -1022,10 +1023,10 @@ void MarioActor::updateEffect() {
     }
 
     if (effectC) {
-        playEffectRT("属性ハチ風", mMario->_368, mMario->mShadowPos);
+        playEffectRT(CP932("属性ハチ風"), mMario->_368, mMario->mShadowPos);
     } else {
         if (_B98 & 0x04000000) {
-            stopEffect("属性ハチ風");
+            stopEffect(CP932("属性ハチ風"));
         }
     }
 
@@ -1051,114 +1052,114 @@ void MarioActor::initEffect() {
     initCommonEffect();
     initMaterialEffect();
 
-    MR::setEffectName(this, "SlipUp", "スリップアップ");
-    MR::setEffectName(this, "WallSpark", "壁スパーク");
-    MR::setEffectName(this, "Damage", "ダメージ");
-    MR::setEffectName(this, "StepOn", "ふみつぶし");
-    MR::setEffectName(this, "SuperSpinDriverEnd", "スーパースピンドライバ終了");
-    MR::setEffectName(this, "BringBubble", "引き戻し泡");
-    MR::setEffectName(this, "BringBubbleBreak", "引き戻し泡破裂");
-    MR::setEffectName(this, "WaterSplashRight", "水はね右");
-    MR::setEffectName(this, "WaterSplashLeft", "水はね左");
-    MR::setEffectName(this, "WaterSplashSRight", "水はね右弱");
-    MR::setEffectName(this, "WaterSplashSLeft", "水はね左弱");
-    MR::setEffectName(this, "SpinLightBurst", "スピンライト消去");
-    MR::setEffectName(this, "ElectricDamage", "ビリビリ");
-    MR::setEffectName(this, "FireDamageSmoke", "炎ダメージ煙");
-    MR::setEffectName(this, "BlueFireDamageSmoke", "炎ダメージ青煙");
-    MR::setEffectName(this, "SpinLight", "スピンライト");
-    MR::setEffectName(this, "IceMarioSpinLight", "アイススピン");
-    MR::setEffectName(this, "FireMarioSpinLight", "ファイアスピン");
-    MR::setEffectName(this, "BeeMarioSpinLight", "ハチスピン");
-    MR::setEffectName(this, "BeeLuigiSpinLight", "ハチルイージスピン");
-    MR::setEffectName(this, "Sweat", "いい汗");
-    MR::setEffectName(this, "CarryStartShort", "ひろいクイック");
-    MR::setEffectName(this, "AirRecover", "酸素回復");
-    MR::setEffectName(this, "Invincible", "無敵中");
-    MR::setEffectHostSRT(this, "無敵中", &mPosition, nullptr, nullptr);
-    MR::setEffectName(this, "Ice", "アイス中");
-    MR::setEffectHostSRT(this, "アイス中", &mPosition, nullptr, nullptr);
-    MR::setEffectName(this, "FireBallThrow", "ファイアボール投げ");
-    MR::setEffectName(this, "Throw", "こうら投げ");
-    MR::setEffectName(this, "DieBuryBody", "砂埋まり体");
-    MR::setEffectName(this, "DieBuryHand", "砂埋まり手");
-    MR::setEffectName(this, "DieDeathMudBody", "泥埋まり体");
-    MR::setEffectName(this, "DieDeathMudHand", "泥埋まり手");
-    MR::setEffectName(this, "SpinLightConcentrate", "スピン許可");
-    MR::setEffectName(this, "FooMarioHandGlowL", "フーマリオグロー左");
-    MR::setEffectName(this, "FooMarioHandGlowR", "フーマリオグロー右");
-    MR::setEffectName(this, "FooMarioBrakeLampL", "フーマリオブレーキ左");
-    MR::setEffectName(this, "FooMarioBrakeLampR", "フーマリオブレーキ右");
-    MR::setEffectName(this, "FooMarioEndL", "フーマリオ解除左");
-    MR::setEffectName(this, "FooMarioEndR", "フーマリオ解除右");
-    MR::setEffectName(this, "WallHit", "壁ヒット");
-    MR::setEffectName(this, "BarrierBound", "結界ヒット");
-    MR::setEffectName(this, "WaterBound", "水壁ヒット");
-    MR::setEffectName(this, "IceWallJump", "氷壁ジャンプ");
-    MR::setEffectHostSRT(this, "氷壁ジャンプ", nullptr, nullptr, nullptr);
-    MR::setEffectName(this, "CeilingCrash", "天井ヒット");
-    MR::setEffectName(this, "Coin", "コイン");
-    MR::setEffectName(this, "PunchHit", "パンチヒット");
-    MR::setEffectName(this, "WaterRipple", "水波紋");
-    MR::setEffectName(this, "SwimWaitRipple", "水面ウエイト波紋");
-    MR::setEffectHostSRT(this, "水面ウエイト波紋", &_BAC, &_BB8, nullptr);
-    MR::setEffectName(this, "SwimSpinLight", "水泳スピン");
-    MR::setEffectName(this, "DiveBubble", "水面Ｚ沈降");
+    MR::setEffectName(this, "SlipUp", CP932("スリップアップ"));
+    MR::setEffectName(this, "WallSpark", CP932("壁スパーク"));
+    MR::setEffectName(this, "Damage", CP932("ダメージ"));
+    MR::setEffectName(this, "StepOn", CP932("ふみつぶし"));
+    MR::setEffectName(this, "SuperSpinDriverEnd", CP932("スーパースピンドライバ終了"));
+    MR::setEffectName(this, "BringBubble", CP932("引き戻し泡"));
+    MR::setEffectName(this, "BringBubbleBreak", CP932("引き戻し泡破裂"));
+    MR::setEffectName(this, "WaterSplashRight", CP932("水はね右"));
+    MR::setEffectName(this, "WaterSplashLeft", CP932("水はね左"));
+    MR::setEffectName(this, "WaterSplashSRight", CP932("水はね右弱"));
+    MR::setEffectName(this, "WaterSplashSLeft", CP932("水はね左弱"));
+    MR::setEffectName(this, "SpinLightBurst", CP932("スピンライト消去"));
+    MR::setEffectName(this, "ElectricDamage", CP932("ビリビリ"));
+    MR::setEffectName(this, "FireDamageSmoke", CP932("炎ダメージ煙"));
+    MR::setEffectName(this, "BlueFireDamageSmoke", CP932("炎ダメージ青煙"));
+    MR::setEffectName(this, "SpinLight", CP932("スピンライト"));
+    MR::setEffectName(this, "IceMarioSpinLight", CP932("アイススピン"));
+    MR::setEffectName(this, "FireMarioSpinLight", CP932("ファイアスピン"));
+    MR::setEffectName(this, "BeeMarioSpinLight", CP932("ハチスピン"));
+    MR::setEffectName(this, "BeeLuigiSpinLight", CP932("ハチルイージスピン"));
+    MR::setEffectName(this, "Sweat", CP932("いい汗"));
+    MR::setEffectName(this, "CarryStartShort", CP932("ひろいクイック"));
+    MR::setEffectName(this, "AirRecover", CP932("酸素回復"));
+    MR::setEffectName(this, "Invincible", CP932("無敵中"));
+    MR::setEffectHostSRT(this, CP932("無敵中"), &mPosition, nullptr, nullptr);
+    MR::setEffectName(this, "Ice", CP932("アイス中"));
+    MR::setEffectHostSRT(this, CP932("アイス中"), &mPosition, nullptr, nullptr);
+    MR::setEffectName(this, "FireBallThrow", CP932("ファイアボール投げ"));
+    MR::setEffectName(this, "Throw", CP932("こうら投げ"));
+    MR::setEffectName(this, "DieBuryBody", CP932("砂埋まり体"));
+    MR::setEffectName(this, "DieBuryHand", CP932("砂埋まり手"));
+    MR::setEffectName(this, "DieDeathMudBody", CP932("泥埋まり体"));
+    MR::setEffectName(this, "DieDeathMudHand", CP932("泥埋まり手"));
+    MR::setEffectName(this, "SpinLightConcentrate", CP932("スピン許可"));
+    MR::setEffectName(this, "FooMarioHandGlowL", CP932("フーマリオグロー左"));
+    MR::setEffectName(this, "FooMarioHandGlowR", CP932("フーマリオグロー右"));
+    MR::setEffectName(this, "FooMarioBrakeLampL", CP932("フーマリオブレーキ左"));
+    MR::setEffectName(this, "FooMarioBrakeLampR", CP932("フーマリオブレーキ右"));
+    MR::setEffectName(this, "FooMarioEndL", CP932("フーマリオ解除左"));
+    MR::setEffectName(this, "FooMarioEndR", CP932("フーマリオ解除右"));
+    MR::setEffectName(this, "WallHit", CP932("壁ヒット"));
+    MR::setEffectName(this, "BarrierBound", CP932("結界ヒット"));
+    MR::setEffectName(this, "WaterBound", CP932("水壁ヒット"));
+    MR::setEffectName(this, "IceWallJump", CP932("氷壁ジャンプ"));
+    MR::setEffectHostSRT(this, CP932("氷壁ジャンプ"), nullptr, nullptr, nullptr);
+    MR::setEffectName(this, "CeilingCrash", CP932("天井ヒット"));
+    MR::setEffectName(this, "Coin", CP932("コイン"));
+    MR::setEffectName(this, "PunchHit", CP932("パンチヒット"));
+    MR::setEffectName(this, "WaterRipple", CP932("水波紋"));
+    MR::setEffectName(this, "SwimWaitRipple", CP932("水面ウエイト波紋"));
+    MR::setEffectHostSRT(this, CP932("水面ウエイト波紋"), &_BAC, &_BB8, nullptr);
+    MR::setEffectName(this, "SwimSpinLight", CP932("水泳スピン"));
+    MR::setEffectName(this, "DiveBubble", CP932("水面Ｚ沈降"));
     MR::addEffect(this, "WaterColumnS");
-    MR::setEffectName(this, "WaterColumnS", "水面ジャンプ水柱");
-    MR::setEffectName(this, "SurfaceWave", "水面泳ぎ");
-    MR::setEffectHostSRT(this, "水面泳ぎ", &_BAC, &_BB8, nullptr);
-    MR::setEffectName(this, "BodyBubble", "水中身体泡");
-    MR::setEffectName(this, "MouthBubble", "水中口泡");
-    MR::setEffectName(this, "SeaSmoke", "水底接触");
-    MR::setEffectName(this, "Metamorphosis", "変身");
-    MR::setEffectName(this, "MetamorphosisEnd", "変身解除");
-    MR::setEffectName(this, "BeeFlowerPollen", "ハチ花くっつき");
-    MR::setEffectHostSRT(this, "ハチ花くっつき", nullptr, nullptr, nullptr);
-    MR::setEffectName(this, "SkateL", "スケート左");
-    MR::setEffectName(this, "SkateR", "スケート右");
-    MR::setEffectName(this, "IceJumpLand", "スケート着地");
+    MR::setEffectName(this, "WaterColumnS", CP932("水面ジャンプ水柱"));
+    MR::setEffectName(this, "SurfaceWave", CP932("水面泳ぎ"));
+    MR::setEffectHostSRT(this, CP932("水面泳ぎ"), &_BAC, &_BB8, nullptr);
+    MR::setEffectName(this, "BodyBubble", CP932("水中身体泡"));
+    MR::setEffectName(this, "MouthBubble", CP932("水中口泡"));
+    MR::setEffectName(this, "SeaSmoke", CP932("水底接触"));
+    MR::setEffectName(this, "Metamorphosis", CP932("変身"));
+    MR::setEffectName(this, "MetamorphosisEnd", CP932("変身解除"));
+    MR::setEffectName(this, "BeeFlowerPollen", CP932("ハチ花くっつき"));
+    MR::setEffectHostSRT(this, CP932("ハチ花くっつき"), nullptr, nullptr, nullptr);
+    MR::setEffectName(this, "SkateL", CP932("スケート左"));
+    MR::setEffectName(this, "SkateR", CP932("スケート右"));
+    MR::setEffectName(this, "IceJumpLand", CP932("スケート着地"));
 
-    MR::setEffectHostSRT(this, "天井ヒット", nullptr, nullptr, nullptr);
-    MR::setEffectHostSRT(this, "壁ヒット", nullptr, nullptr, nullptr);
-    MR::setEffectHostSRT(this, "パンチヒット", nullptr, nullptr, nullptr);
+    MR::setEffectHostSRT(this, CP932("天井ヒット"), nullptr, nullptr, nullptr);
+    MR::setEffectHostSRT(this, CP932("壁ヒット"), nullptr, nullptr, nullptr);
+    MR::setEffectHostSRT(this, CP932("パンチヒット"), nullptr, nullptr, nullptr);
     MR::setEffectHostSRT(this, "FlowerSpin", nullptr, nullptr, nullptr);
-    MR::setEffectHostSRT(this, "水波紋", nullptr, nullptr, nullptr);
-    MR::setEffectHostSRT(this, "結界ヒット", nullptr, nullptr, nullptr);
-    MR::setEffectHostSRT(this, "水壁ヒット", nullptr, nullptr, nullptr);
+    MR::setEffectHostSRT(this, CP932("水波紋"), nullptr, nullptr, nullptr);
+    MR::setEffectHostSRT(this, CP932("結界ヒット"), nullptr, nullptr, nullptr);
+    MR::setEffectHostSRT(this, CP932("水壁ヒット"), nullptr, nullptr, nullptr);
 
-    MR::setEffectName(this, "Blur", "ワープポッドブラー");
-    MR::setEffectName(this, "SpinRing", "スピンリング");
-    MR::setEffectName(this, "Vanish", "ブラックホール消滅");
+    MR::setEffectName(this, "Blur", CP932("ワープポッドブラー"));
+    MR::setEffectName(this, "SpinRing", CP932("スピンリング"));
+    MR::setEffectName(this, "Vanish", CP932("ブラックホール消滅"));
 
-    mEffectKeeper->registerEffect("CrestGetFlyC", _D1C.toMtxPtr(), "雪煙レベル", nullptr);
+    mEffectKeeper->registerEffect("CrestGetFlyC", _D1C.toMtxPtr(), CP932("雪煙レベル"), nullptr);
 
     const TVec3f* pos = &mPosition;
     const TVec3f* rot = &mRotation;
     const TVec3f* scale = &mScale;
 
-    mEffectKeeper->registerEffect("CommonPhotonDustCircle", pos, rot, scale, "スイングフライ");
-    mEffectKeeper->registerEffect("MarioSpaceDust", pos, rot, scale, "宇宙遊泳");
-    mEffectKeeper->registerEffect("CrestGetFlyC", pos, rot, scale, "ジャンプフェアリー");
-    mEffectKeeper->registerEffect("MiniPandaSpinLoopLeg", pos, rot, scale, "Bダッシュ");
-    mEffectKeeper->registerEffect("IndTest", pos, rot, scale, "インダイレクトテスト");
-    mEffectKeeper->registerEffect("TestMarioBaobabooPowerDown", _DAC.toMtxPtr(), "ラケット消去", nullptr);
-    mEffectKeeper->registerEffect("TornadoChargeEnd", pos, rot, scale, "チャージ完了");
-    mEffectKeeper->registerEffect("TornadoCharge", pos, rot, scale, "チャージ中");
-    mEffectKeeper->registerEffect("AppleHit", pos, rot, scale, "チャージ切れ");
+    mEffectKeeper->registerEffect("CommonPhotonDustCircle", pos, rot, scale, CP932("スイングフライ"));
+    mEffectKeeper->registerEffect("MarioSpaceDust", pos, rot, scale, CP932("宇宙遊泳"));
+    mEffectKeeper->registerEffect("CrestGetFlyC", pos, rot, scale, CP932("ジャンプフェアリー"));
+    mEffectKeeper->registerEffect("MiniPandaSpinLoopLeg", pos, rot, scale, CP932("Bダッシュ"));
+    mEffectKeeper->registerEffect("IndTest", pos, rot, scale, CP932("インダイレクトテスト"));
+    mEffectKeeper->registerEffect("TestMarioBaobabooPowerDown", _DAC.toMtxPtr(), CP932("ラケット消去"), nullptr);
+    mEffectKeeper->registerEffect("TornadoChargeEnd", pos, rot, scale, CP932("チャージ完了"));
+    mEffectKeeper->registerEffect("TornadoCharge", pos, rot, scale, CP932("チャージ中"));
+    mEffectKeeper->registerEffect("AppleHit", pos, rot, scale, CP932("チャージ切れ"));
 
-    MR::setEffectName(this, "LandRubber", "特殊着地");
-    MR::setEffectName(this, "DieDarkMatter", "ダークマター死亡");
-    MR::setEffectName(this, "HopperMarioHipDropBlur", "ホッパー尻落");
-    MR::setEffectName(this, "HopperLuigiHipDropBlur", "ホッパー尻落ルイージ");
-    MR::setEffectName(this, "HipDropBlur", "尻落");
-    MR::setEffectName(this, "HipDropBlurLuigi", "尻落ルイージ");
-    MR::setEffectName(this, "GetAgain", "アイテム再ゲット");
+    MR::setEffectName(this, "LandRubber", CP932("特殊着地"));
+    MR::setEffectName(this, "DieDarkMatter", CP932("ダークマター死亡"));
+    MR::setEffectName(this, "HopperMarioHipDropBlur", CP932("ホッパー尻落"));
+    MR::setEffectName(this, "HopperLuigiHipDropBlur", CP932("ホッパー尻落ルイージ"));
+    MR::setEffectName(this, "HipDropBlur", CP932("尻落"));
+    MR::setEffectName(this, "HipDropBlurLuigi", CP932("尻落ルイージ"));
+    MR::setEffectName(this, "GetAgain", CP932("アイテム再ゲット"));
 
-    mEffectKeeper->registerEffect("MarioPunchLBlur", pos, rot, scale, "パンチブラー左");
-    MR::getEffect(this, "パンチブラー左")->forceFollowOn();
-    mEffectKeeper->registerEffect("MarioPunchRBlur", pos, rot, scale, "パンチブラー右");
-    MR::getEffect(this, "パンチブラー右")->forceFollowOn();
+    mEffectKeeper->registerEffect("MarioPunchLBlur", pos, rot, scale, CP932("パンチブラー左"));
+    MR::getEffect(this, CP932("パンチブラー左"))->forceFollowOn();
+    mEffectKeeper->registerEffect("MarioPunchRBlur", pos, rot, scale, CP932("パンチブラー右"));
+    MR::getEffect(this, CP932("パンチブラー右"))->forceFollowOn();
 
     mEffectKeeper->finalizeSort();
 
@@ -1191,8 +1192,8 @@ void MarioActor::emitEffectWaterColumn(const TVec3f& rDir, const TVec3f& rTrans)
 }
 
 bool MarioActor::isCommonEffect(const char* pName) const {
-    if (sizeof("共") != 3) {
-        return strncmp(pName, "共", sizeof("共") - 1) == 0;
+    if (sizeof(CP932("共")) != 3) {
+        return strncmp(pName, CP932("共"), sizeof(CP932("共")) - 1) == 0;
     }
 
     if (static_cast< u8 >(pName[0]) == 0x8B) {
@@ -1205,8 +1206,8 @@ bool MarioActor::isCommonEffect(const char* pName) const {
 }
 
 bool MarioActor::isMaterialEffect(const char* pName) const {
-    if (sizeof("属") != 3) {
-        return strncmp(pName, "属", sizeof("属") - 1) == 0;
+    if (sizeof(CP932("属")) != 3) {
+        return strncmp(pName, CP932("属"), sizeof(CP932("属")) - 1) == 0;
     }
 
     if (static_cast< u8 >(pName[0]) == 0x91) {
@@ -1248,7 +1249,7 @@ void MarioEffect::playSwingEffect() {
     }
 
     Mario* mario = getPlayer();
-    playEffectRT("属性スピン", mario->_368, getTrans());
+    playEffectRT(CP932("属性スピン"), mario->_368, getTrans());
 }
 
 void MarioEffect::doCubeEffect() {
@@ -1317,9 +1318,9 @@ void MarioActor::stopSpinTicoEffect(bool force) {
     _946 = 0;
 
     if (force) {
-        stopEffectForce("スピンリング");
+        stopEffectForce(CP932("スピンリング"));
     } else {
-        stopEffect("スピンリング");
+        stopEffect(CP932("スピンリング"));
     }
 }
 

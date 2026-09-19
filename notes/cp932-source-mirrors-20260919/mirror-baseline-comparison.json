@@ -1,0 +1,10 @@
+{
+  "game": {
+    "failures": 14,
+    "output_identical_after_migration": true
+  },
+  "player": {
+    "failures": 113,
+    "output_identical_after_migration": true
+  }
+}

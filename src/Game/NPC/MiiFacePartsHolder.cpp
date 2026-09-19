@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/NPC/MiiFacePartsHolder.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NPC/MiiDatabase.hpp"
@@ -17,7 +18,7 @@
 #include <JSystem/JKernel/JKRMemArchive.hpp>
 #include <JSystem/JKernel/JKRSolidHeap.hpp>
 
-MiiFacePartsHolder::MiiFacePartsHolder(int partsNumMax) : LiveActorGroup("Mii顔モデル保持", partsNumMax), JKRDisposer(), mRFLWorkBuffer(), _34() {
+MiiFacePartsHolder::MiiFacePartsHolder(int partsNumMax) : LiveActorGroup(CP932("Mii顔モデル保持"), partsNumMax), JKRDisposer(), mRFLWorkBuffer(), _34() {
 }
 
 MiiFacePartsHolder::~MiiFacePartsHolder() {
@@ -35,7 +36,7 @@ void MiiFacePartsHolder::init(const JMapInfoIter& rIter) {
     _38 = RFLInitResAsync(mRFLWorkBuffer, pResBuffer, resSize, false);
 
     MR::connectToScene(this, -1, MR::CalcAnimType_NPC, -1, MR::DrawType_MiiFacePartsHolder);
-    MR::connectToScene(MR::createDrawAdaptor("Miiモデル再作成", MR::Functor_Inline(this, &MiiFacePartsHolder::reinitCharModel)), -1, -1, -1, 80);
+    MR::connectToScene(MR::createDrawAdaptor(CP932("Miiモデル再作成"), MR::Functor_Inline(this, &MiiFacePartsHolder::reinitCharModel)), -1, -1, -1, 80);
 }
 
 void MiiFacePartsHolder::calcAnim() {

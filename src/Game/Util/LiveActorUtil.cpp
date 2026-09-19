@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Animation/BckCtrl.hpp"
 #include "Game/Animation/XanimeCore.hpp"
@@ -82,12 +83,12 @@ namespace {
     const char* createSubModelObjName(const LiveActor* pActor, const char* pSubName) {
         u32 len_sub = strlen(pSubName);
         u32 len_actor = strlen(pActor->mName);
-        u32 len_bracket = strlen("（）");
+        u32 len_bracket = strlen(CP932("（）"));
         u32 len_name = len_sub;
         len_name = len_actor + len_name;
         u32 len = len_bracket + len_name + 1;
         char* buf = new char[len];
-        snprintf(buf, len, "%s（%s）", pActor->mName, pSubName);
+        snprintf(buf, len, CP932("%s（%s）"), pActor->mName, pSubName);
         return buf;
     }
 
@@ -327,7 +328,7 @@ namespace MR {
             return nullptr;
         }
 
-        const char* objName = ::createSubModelObjName(pActor, "鏡内モデル");
+        const char* objName = ::createSubModelObjName(pActor, CP932("鏡内モデル"));
         MirrorActor* mirror = new MirrorActor(pActor, objName, pModelName);
         mirror->initWithoutIter();
         return mirror;

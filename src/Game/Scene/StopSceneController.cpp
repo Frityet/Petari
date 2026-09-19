@@ -1,13 +1,14 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Scene/StopSceneController.hpp"
 #include "Game/NameObj/NameObjGroup.hpp"
 #include "Game/Util/ObjUtil.hpp"
 
-StopSceneDelayRequest::StopSceneDelayRequest() : NameObj("シーン硬直遅延発行"), mFrame(), mDelay() {
+StopSceneDelayRequest::StopSceneDelayRequest() : NameObj(CP932("シーン硬直遅延発行")), mFrame(), mDelay() {
     MR::connectToScene(this, 1, -1, -1, -1);
 }
 
 StopSceneController::StopSceneController() : NameObj("StopSceneController"), mDelayRequestArray(), mFrame() {
-    mDelayRequestArray = new NameObjGroup("シーン硬直遅延発行者の管理", 16);
+    mDelayRequestArray = new NameObjGroup(CP932("シーン硬直遅延発行者の管理"), 16);
 
     for (s32 i = 0; i < 16; i++) {
         StopSceneDelayRequest* delayRequest = new StopSceneDelayRequest();

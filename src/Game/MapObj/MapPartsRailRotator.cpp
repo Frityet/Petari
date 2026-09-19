@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/MapPartsRailRotator.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -14,7 +15,7 @@ namespace NrvMapPartsRailRotator {
 };
 
 MapPartsRailRotator::MapPartsRailRotator(LiveActor* pActor)
-    : MapPartsFunction(pActor, "レイル回転"), mRotateAxis(0), mRotateType(0), mRotateSpeed(0.0f), mTargetAngle(0.0f), mAngle(0.0f),
+    : MapPartsFunction(pActor, CP932("レイル回転")), mRotateAxis(0), mRotateType(0), mRotateSpeed(0.0f), mTargetAngle(0.0f), mAngle(0.0f),
       mHostRotateMtx(nullptr) {
     _2C.identity();
     _5C.identity();

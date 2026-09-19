@@ -1,19 +1,20 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/PlayerEventRaceDown.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 
 EventRaceDown::EventRaceDown() : EventSequence(16) {
-    addEventOnTime("初期化", static_cast< EventFunc1 >(&EventRaceDown::init), 0);
-    addEventOnTime("MISSレイアウト開始", static_cast< EventFunc1 >(&EventRaceDown::missLayoutOpen), 45);
-    addEventOnTime("通常レイアウト消去", (&EventRaceDown::closeDefaultLayout), 30);
-    addEventOnTime("サウンドA", static_cast< EventFunc1 >(&EventRaceDown::sound), 30);
-    addEventOnTime("サウンドB", static_cast< EventFunc1 >(&EventRaceDown::sound), 100);
-    addEventOnTime("サウンドC", static_cast< EventFunc1 >(&EventRaceDown::sound), 120);
-    addEventInStatus("ワイプ開始", static_cast< EventFunc1 >(&EventRaceDown::doCloseWipe),
+    addEventOnTime(CP932("初期化"), static_cast< EventFunc1 >(&EventRaceDown::init), 0);
+    addEventOnTime(CP932("MISSレイアウト開始"), static_cast< EventFunc1 >(&EventRaceDown::missLayoutOpen), 45);
+    addEventOnTime(CP932("通常レイアウト消去"), (&EventRaceDown::closeDefaultLayout), 30);
+    addEventOnTime(CP932("サウンドA"), static_cast< EventFunc1 >(&EventRaceDown::sound), 30);
+    addEventOnTime(CP932("サウンドB"), static_cast< EventFunc1 >(&EventRaceDown::sound), 100);
+    addEventOnTime(CP932("サウンドC"), static_cast< EventFunc1 >(&EventRaceDown::sound), 120);
+    addEventInStatus(CP932("ワイプ開始"), static_cast< EventFunc1 >(&EventRaceDown::doCloseWipe),
                      static_cast< EventFunc2 >(&EventRaceDown::checkCloseWipeStart));
-    addEventOnTime("残機を引く", static_cast< EventFunc1 >(&EventRaceDown::decLeft), 120);
-    addEventInPhase("ワイプ終了後", static_cast< EventFunc1 >(&EventRaceDown::doWaitAfterWipe), 2);
+    addEventOnTime(CP932("残機を引く"), static_cast< EventFunc1 >(&EventRaceDown::decLeft), 120);
+    addEventInPhase(CP932("ワイプ終了後"), static_cast< EventFunc1 >(&EventRaceDown::doWaitAfterWipe), 2);
 }
 
 void EventRaceDown::init(u16, u16) {
@@ -21,9 +22,9 @@ void EventRaceDown::init(u16, u16) {
     MR::clearBgmQueue();
     MR::stopStageBGM(10);
     MR::stopSubBGM(10);
-    playAnimation("レース負け");
-    playSound("声最終ダメージ");
-    playSound("最後の一撃");
+    playAnimation(CP932("レース負け"));
+    playSound(CP932("声最終ダメージ"));
+    playSound(CP932("最後の一撃"));
     MR::startPlayerDownWipe();
 }
 

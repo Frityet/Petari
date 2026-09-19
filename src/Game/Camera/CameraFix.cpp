@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Camera/CameraFix.hpp"
 #include "Game/Camera/CamTranslatorFix.hpp"
 #include "Game/Camera/CameraLocalUtil.hpp"
@@ -10,7 +11,7 @@ void CameraFix_FORCE_MATCH_SDATA2() {
 }
 
 CameraFix::CameraFix(const char* pName) : Camera(pName), mWPoint(0.0f, 0.0f, 0.0f), mAxis(0.0f, 0.0f, -2500.0f), mUp(0.0f, 1.0f, 0.0f) {
-    mTarget = new CameraTargetMtx("カメラターゲットダミー");
+    mTarget = new CameraTargetMtx(CP932("カメラターゲットダミー"));
 }
 
 void CameraFix::reset() {

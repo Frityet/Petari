@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioFreeze.hpp"
 
@@ -38,7 +39,7 @@ bool MarioFreeze::close() {
     _1C = 120;
 
     if (mIsFrozen) {
-        playSound("氷ダメージ終了");
+        playSound(CP932("氷ダメージ終了"));
         mActor->hideFreezeModel();
     }
 
@@ -57,11 +58,11 @@ bool MarioFreeze::notice() {
 }
 
 bool MarioFreeze::start() {
-    changeAnimationNonStop("氷結");
+    changeAnimationNonStop(CP932("氷結"));
 
-    playSound("声氷ダメージ");
-    playSound("氷ダメージ");
-    playSound("ダメージ");
+    playSound(CP932("声氷ダメージ"));
+    playSound(CP932("氷ダメージ"));
+    playSound(CP932("ダメージ"));
 
     startPadVib(3);
     mActor->decLife(0);
@@ -89,11 +90,11 @@ bool MarioFreeze::update() {
             }
         } else if (mFreezeTimer < 120 && mActor->mHealth != 0 && mActor->isRequestSpin()) {
             addVelocity(getFrontVec(), -10.0f);
-            changeAnimation("地上ひねり", static_cast< const char* >(nullptr));
+            changeAnimation(CP932("地上ひねり"), static_cast< const char* >(nullptr));
 
-            playSound("声スピン");
-            playSound("スピンジャンプ");
-            playSound("氷ダメージ終了");
+            playSound(CP932("声スピン"));
+            playSound(CP932("スピンジャンプ"));
+            playSound(CP932("氷ダメージ終了"));
 
             mActor->hideFreezeModel();
             mIsFrozen = false;
@@ -104,7 +105,7 @@ bool MarioFreeze::update() {
     if (mFreezeTimer == 0) {
         if (_18 != 0) {
             if (mActor->mHealth != 0) {
-                playSound("声氷ダメージ終了");
+                playSound(CP932("声氷ダメージ終了"));
                 return false;
             }
         } else {
@@ -122,8 +123,8 @@ bool MarioFreeze::update() {
                     mActor->forceGameOver();
                 }
             } else if (getPlayer()->getMovementStates()._1) {
-                changeAnimation("氷結解除", static_cast< const char* >(nullptr));
-                playSound("氷ダメージ終了");
+                changeAnimation(CP932("氷結解除"), static_cast< const char* >(nullptr));
+                playSound(CP932("氷ダメージ終了"));
                 mActor->hideFreezeModel();
                 mIsFrozen = false;
             }

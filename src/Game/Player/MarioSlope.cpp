@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
@@ -62,7 +63,7 @@ bool Mario::isUseSimpleGroundCheck() const {
 
 bool Mario::checkGroundOnSlope() {
     TVec3f groundNormal;
-    if (isAnimationRun("崖ふんばり")) {
+    if (isAnimationRun(CP932("崖ふんばり"))) {
         groundNormal = -*getGravityVec();
     } else {
         groundNormal = *_45C->getNormal(0);

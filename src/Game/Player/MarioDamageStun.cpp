@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioStun.hpp"
@@ -6,14 +7,14 @@ MarioStun::MarioStun(MarioActor* pActor) : MarioState(pActor, MarioStatus_Stun),
 }
 
 bool MarioStun::close() {
-    stopAnimation("しびれ");  // "hesitation"
+    stopAnimation(CP932("しびれ"));  // "hesitation"
     return true;
 }
 
 bool MarioStun::start() {
-    changeAnimationNonStop("しびれ");
-    startPadVib("マリオ[しびれ]");
-    playSound("声しびれ");
+    changeAnimationNonStop(CP932("しびれ"));
+    startPadVib(CP932("マリオ[しびれ]"));
+    playSound(CP932("声しびれ"));
     _14 = 0x3c;
     _12 = 0;
     return true;
@@ -34,7 +35,7 @@ bool MarioStun::update() {
             _14 = 0x1e;
         }
         if (getPlayer()->mMovementStates._1) {
-            changeAnimation("しびれ回復", static_cast< const char* >(nullptr));
+            changeAnimation(CP932("しびれ回復"), static_cast< const char* >(nullptr));
         }
     }
     if (_12 != 0 && (mActor->isRequestRush() || checkTrgA())) {

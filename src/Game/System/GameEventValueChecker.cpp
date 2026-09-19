@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/System/GameEventValueChecker.hpp"
 #include "Game/System/FindingLuigiEventScheduler.hpp"
 #include "Game/Util/HashUtil.hpp"
@@ -7,18 +8,18 @@
 
 namespace {
     const GameEventValue cGameEventValueTable[] = {
-        {"ペンギンレース[オーシャンリング]/hi", 0},
-        {"ペンギンレース[オーシャンリング]/lo", 90 * 60},
-        {"テレサレース[ファントム]/hi", 0},
-        {"テレサレース[ファントム]/lo", 90 * 60},
-        {"テレサレース[デスプロムナード]/hi", 0},
-        {"テレサレース[デスプロムナード]/lo", 90 * 60},
-        {"サーフィン[トライアル]/hi", 0},
-        {"サーフィン[トライアル]/lo", 90 * 60},
-        {"サーフィン[チャレンジ]/hi", 0},
-        {"サーフィン[チャレンジ]/lo", 90 * 60},
+        {CP932("ペンギンレース[オーシャンリング]/hi"), 0},
+        {CP932("ペンギンレース[オーシャンリング]/lo"), 90 * 60},
+        {CP932("テレサレース[ファントム]/hi"), 0},
+        {CP932("テレサレース[ファントム]/lo"), 90 * 60},
+        {CP932("テレサレース[デスプロムナード]/hi"), 0},
+        {CP932("テレサレース[デスプロムナード]/lo"), 90 * 60},
+        {CP932("サーフィン[トライアル]/hi"), 0},
+        {CP932("サーフィン[トライアル]/lo"), 90 * 60},
+        {CP932("サーフィン[チャレンジ]/hi"), 0},
+        {CP932("サーフィン[チャレンジ]/lo"), 90 * 60},
         {"LibraryOpenNewStarCount", 1},
-        {"絵本既読章", 0},
+        {CP932("絵本既読章"), 0},
         {"MsgLedPattern", 1},
         {"LuigiEventState", FindingLuigiEventScheduler::STATE_NULL},
         {"WarpPodSaveBits", 0},

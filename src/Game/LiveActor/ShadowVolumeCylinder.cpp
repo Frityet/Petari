@@ -1,10 +1,11 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/ShadowVolumeCylinder.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 
-ShadowVolumeCylinder::ShadowVolumeCylinder() : ShadowVolumeModel("影描画[ボリューム円柱]") {
+ShadowVolumeCylinder::ShadowVolumeCylinder() : ShadowVolumeModel(CP932("影描画[ボリューム円柱]")) {
     mRadius = 100.0f;
     initVolumeModel("ShadowVolumeCylinder");
 }

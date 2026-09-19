@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioFrontStep.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/HitInfo.hpp"
@@ -72,7 +73,7 @@ bool Mario::doFrontStep() {
 }
 
 bool MarioFrontStep::start() {
-    changeAnimation("前壁ウエイト", static_cast< const char* >(nullptr));
+    changeAnimation(CP932("前壁ウエイト"), static_cast< const char* >(nullptr));
 
     mActor->setBlendMtxTimer(10);
 
@@ -149,7 +150,7 @@ bool MarioFrontStep::update() {
 }
 
 bool MarioFrontStep::close() {
-    stopAnimation("前壁ウエイト");
+    stopAnimation(CP932("前壁ウエイト"));
 
     getPlayer()->lockGroundCheck(this, false);
 

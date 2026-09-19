@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Scene/GameScenePauseControl.hpp"
 #if defined(TARGET_PC)
 #include "compat/DisabledObjectAudio.hpp"
@@ -13,7 +14,7 @@ namespace {
     NEW_NERVE(GameScenePauseControlNormal, GameScenePauseControl, Normal);
 };  // namespace
 
-GameScenePauseControl::GameScenePauseControl(GameScene* pScene) : NerveExecutor("GameSceneポーズ制御") {
+GameScenePauseControl::GameScenePauseControl(GameScene* pScene) : NerveExecutor(CP932("GameSceneポーズ制御")) {
     mScene = pScene;
     mPauseChecker = nullptr;
     mPauseMenuOff = false;

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioWarp.hpp"
 #include "Game/AreaObj/WarpCube.hpp"
 #include "Game/MapObj/WarpPod.hpp"
@@ -258,7 +259,7 @@ bool Mario::doPointWarpRecovery(const TVec3f& rVec1, const TVec3f& rVec2) {
 
     stopJump();
 
-    MR::startGlobalEventCameraNoTarget("引き戻し", -1);
+    MR::startGlobalEventCameraNoTarget(CP932("引き戻し"), -1);
 
     return true;
 }
@@ -307,28 +308,28 @@ bool MarioWarp::start() {
     }
     _56 = _54;
     if (_45 == 3) {
-        playEffect("引き戻し泡");
+        playEffect(CP932("引き戻し泡"));
     }
     if (_45 == 1) {
-        playEffect("ワープポッドブラー");
-        playSound("ワープポッド入り");
+        playEffect(CP932("ワープポッドブラー"));
+        playSound(CP932("ワープポッド入り"));
     }
     if (_45 == 2) {
-        playSound("声小ジャンプ");
+        playSound(CP932("声小ジャンプ"));
     } else {
-        playSound("声慌て");
+        playSound(CP932("声慌て"));
     }
     switch (_45) {
     case 0:
         break;
     case 3:
-        changeAnimationNonStop("引き戻し");
+        changeAnimationNonStop(CP932("引き戻し"));
         break;
     case 1:
-        changeAnimationNonStop("ポッドワープ開始");
+        changeAnimationNonStop(CP932("ポッドワープ開始"));
         break;
     case 2:
-        changeAnimationNonStop("しゃがみジャンプ");
+        changeAnimationNonStop(CP932("しゃがみジャンプ"));
         break;
     }
     mActor->_F44 = false;
@@ -352,10 +353,10 @@ bool MarioWarp::update() {
     clearVelocity();
     if (_54 != 0) {
         if (_45 == 1 || _45 == 3) {
-            playSound("引き戻し基本");
+            playSound(CP932("引き戻し基本"));
         }
         if (_45 == 1) {
-            playSound("ワープポッド移動");
+            playSound(CP932("ワープポッド移動"));
         }
         --_54;
         TVec3f difference(_20 - getTrans());
@@ -385,7 +386,7 @@ bool MarioWarp::update() {
     }
     switch (_45) {
     case 0:
-        playSound("惑星貫通中");
+        playSound(CP932("惑星貫通中"));
         break;
     case 1:
     case 3: {
@@ -407,25 +408,25 @@ bool MarioWarp::update() {
         if (volume > 100) {
             volume = 100;
         }
-        playSound("引き戻し基本");
-        playSound("引き戻し浮遊", volume);
+        playSound(CP932("引き戻し基本"));
+        playSound(CP932("引き戻し浮遊"), volume);
         if (_45 == 1) {
-            playSound("ワープポッド移動");
+            playSound(CP932("ワープポッド移動"));
         }
         break;
     }
     }
-    if (_58 == 1 && !isAnimationRun("ポッドワープ終了")) {
+    if (_58 == 1 && !isAnimationRun(CP932("ポッドワープ終了"))) {
         return false;
     }
     if (_88 == 0) {
         if (_45 == 1 && getPlayerMode() != PlayerMode_Teresa) {
             if (_58 != 1) {
-                playSound("ワープポッド出");
+                playSound(CP932("ワープポッド出"));
             }
             _58 = 1;
             mActor->_481 = 0;
-            changeAnimation("ポッドワープ終了", static_cast< const char* >(nullptr));
+            changeAnimation(CP932("ポッドワープ終了"), static_cast< const char* >(nullptr));
             WarpPodMgr* manager = MR::getWarpPodManager();
             if (manager != nullptr) {
                 manager->endEventCamera();
@@ -444,21 +445,21 @@ bool MarioWarp::close() {
     getPlayer()->mMovementStates.jumping = false;
     getPlayer()->_420 = 16;
     stopAnimation(static_cast< const char* >(nullptr), static_cast< const char* >(nullptr));
-    changeAnimation(static_cast< const char* >(nullptr), "基本");
+    changeAnimation(static_cast< const char* >(nullptr), CP932("基本"));
     switch (_45) {
     case 0:
-        playSound("惑星貫通終了");
+        playSound(CP932("惑星貫通終了"));
         break;
     case 3:
-        playSound("引き戻し泡破裂");
-        stopEffectForce("引き戻し泡");
-        playEffect("引き戻し泡破裂");
+        playSound(CP932("引き戻し泡破裂"));
+        stopEffectForce(CP932("引き戻し泡"));
+        playEffect(CP932("引き戻し泡破裂"));
         break;
     case 1:
-        stopEffect("ワープポッドブラー");
+        stopEffect(CP932("ワープポッドブラー"));
         break;
     case 2:
-        changeAnimation("しゃがみジャンプ着地", static_cast< const char* >(nullptr));
+        changeAnimation(CP932("しゃがみジャンプ着地"), static_cast< const char* >(nullptr));
         break;
     }
     mActor->_F44 = true;
@@ -486,14 +487,14 @@ bool MarioWarp::close() {
     }
     switch (_45) {
     case 0: {
-        playSound("声中ジャンプ");
+        playSound(CP932("声中ジャンプ"));
         MarioConstTable* table = mActor->mConst->getTable();
         TVec3f jump(_2C * table->mWarpPodJumpY + _38 * table->mWarpPodJumpX);
         getPlayer()->tryForcePowerJump(jump, false);
         break;
     }
     case 3:
-        MR::endGlobalEventCamera("引き戻し", -1, true);
+        MR::endGlobalEventCamera(CP932("引き戻し"), -1, true);
         if (getPlayerMode() != PlayerMode_Invincible) {
             mActor->_A6E = 0;
         }
@@ -502,7 +503,7 @@ bool MarioWarp::close() {
         getPlayer()->mMovementStates._2B = true;
         getPlayer()->_402 = 0;
         getPlayer()->mJumpVec = TVec3f(0.0f, 0.0f, 0.0f);
-        changeAnimation("落下", static_cast< const char* >(nullptr));
+        changeAnimation(CP932("落下"), static_cast< const char* >(nullptr));
         {
             Mario* player = getPlayer();
             player->_42A = 0;
@@ -514,7 +515,7 @@ bool MarioWarp::close() {
             mActor->_A6E = 0;
         }
         if (getPlayerMode() != PlayerMode_Teresa) {
-            playSound("声中ジャンプ");
+            playSound(CP932("声中ジャンプ"));
             TVec3f jump(_2C * 12.0f + _38 * 5.0f);
             getPlayer()->tryForcePowerJump(jump, false);
         }

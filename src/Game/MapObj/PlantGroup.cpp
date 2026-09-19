@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/PlantGroup.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -96,11 +97,11 @@ void PlantGroup::initMember(s32 itemCount, const JMapInfoIter& rIter) {
     mMembers = new PlantMember*[mMemberCount];
     for (s32 i = 0; i < mMemberCount; i++) {
         if (mPlantType == 1) {
-            mMembers[i] = new PlantMember("花", "Flower", false);
+            mMembers[i] = new PlantMember(CP932("花"), "Flower", false);
         } else if (mPlantType == 2) {
-            mMembers[i] = new PlantMember("青い花", "FlowerBlue", false);
+            mMembers[i] = new PlantMember(CP932("青い花"), "FlowerBlue", false);
         } else {
-            mMembers[i] = new PlantMember("草", "CutBush", true);
+            mMembers[i] = new PlantMember(CP932("草"), "CutBush", true);
         }
         mMembers[i]->initWithoutIter();
         MR::invalidateClipping(mMembers[i]);
@@ -119,7 +120,7 @@ void PlantGroup::initMember(s32 itemCount, const JMapInfoIter& rIter) {
     }
 
     initHitSensor(1);
-    MR::addHitSensorMapObj(this, "境界球", 16, 100.0f, TVec3f(gZeroVec));
+    MR::addHitSensorMapObj(this, CP932("境界球"), 16, 100.0f, TVec3f(gZeroVec));
 }
 
 s32 PlantGroup::placeOnCollisionFormCircle(TVec3f* pCenter, const TVec3f& rGravity, const TVec3f& rAxisX, const TVec3f& rAxisY) {
@@ -215,7 +216,7 @@ void PlantGroup::initAfterPlacement() {
     placeOnCollisionFormCircle(&center, gravity, axisX, axisY);
     f32 radius = calcBoundingSphereRadius(center);
     f32 scale = mScale.y;
-    HitSensor* sensor = getSensor("境界球");
+    HitSensor* sensor = getSensor(CP932("境界球"));
     f32 sensorRadius = 160.0f + radius * scale;
     sensor->mRadius = sensorRadius;
     MR::setStarPointerTargetRadius3d(this, sensorRadius);

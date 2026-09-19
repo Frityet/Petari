@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/ClippingActorHolder.hpp"
 #include "Game/LiveActor/ClippingActorInfo.hpp"
 #include "Game/LiveActor/ClippingGroupHolder.hpp"
@@ -11,7 +12,7 @@ namespace {
 };  // namespace
 
 ClippingActorHolder::ClippingActorHolder()
-    : NameObj("クリッピングアクター保持"), _C(0), _10(nullptr), _14(nullptr), _18(nullptr), _1C(nullptr), mViewGroupCtrl(nullptr) {
+    : NameObj(CP932("クリッピングアクター保持")), _C(0), _10(nullptr), _14(nullptr), _18(nullptr), _1C(nullptr), mViewGroupCtrl(nullptr) {
     _10 = new ClippingActorInfoList(::sActorNumMax);
     _14 = new ClippingActorInfoList(::sActorNumMax);
     _18 = new ClippingActorInfoList(::sActorNumMax);

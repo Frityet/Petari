@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Demo/DemoTalkAnimCtrl.hpp"
 #include "Game/Demo/DemoExecutor.hpp"
 #include "Game/Demo/DemoFunction.hpp"
@@ -58,7 +59,7 @@ namespace {
         DemoSubPartKeeper* subpartkeeper = exec->mSubPartKeeper;
         for (int i = 0; i < subpartkeeper->mNumSubPartInfos; i++) {
             subpart = &subpartkeeper->mSubPartInfos[i];
-            if (MR::isEqualString(pMainPartName, subpart->mMainPartName) && MR::isEqualSubString(subpart->mSubPartName, "会話アニメループ")) {
+            if (MR::isEqualString(pMainPartName, subpart->mMainPartName) && MR::isEqualSubString(subpart->mSubPartName, CP932("会話アニメループ"))) {
                 return subpart->mMainPartStep;
             }
         }

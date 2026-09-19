@@ -1,10 +1,11 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Camera/CameraTower.hpp"
 
 class CameraTripodBoss : public CameraTower {
 public:
-    CameraTripodBoss(const char* pName = "三脚ボスカメラ");
+    CameraTripodBoss(const char* pName = CP932("三脚ボスカメラ"));
     virtual ~CameraTripodBoss();
 
     virtual CamTranslatorBase* createTranslator();

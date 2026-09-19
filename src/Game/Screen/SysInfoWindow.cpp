@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/SysInfoWindow.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/IconAButton.hpp"
@@ -21,7 +22,7 @@ namespace NrvSysInfoWindow {
 };  // namespace NrvSysInfoWindow
 
 SysInfoWindow::SysInfoWindow(SysInfoWindowType windowType, SysInfoExecuteType executeType)
-    : LayoutActor("システム用インフォメーションウィンドウ", true), mWindowType(windowType), mType(Type_Key), mYesNoSelector(nullptr),
+    : LayoutActor(CP932("システム用インフォメーションウィンドウ"), true), mWindowType(windowType), mType(Type_Key), mYesNoSelector(nullptr),
       mIconAButton(nullptr), mTextParentPaneName(nullptr), mWindowParentPaneName(nullptr), _38(executeType == ExecuteType_Children) {
     switch (windowType) {
     case WindowType_Normal:

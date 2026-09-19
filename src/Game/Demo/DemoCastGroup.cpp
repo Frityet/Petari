@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Demo/DemoCastGroup.hpp"
 #include "Game/LiveActor/LiveActorGroup.hpp"
 #include "Game/Util/JMapIdInfo.hpp"
@@ -35,7 +36,7 @@ void DemoCastGroup::registerDemoActor(LiveActor* pActor, const JMapInfoIter& /* 
 
 void DemoCastGroup::init(const JMapInfoIter& rIter) {
     setName(MR::getDemoName(rIter));
-    mGroup = new LiveActorGroup("関連者保持", 0xC0);
+    mGroup = new LiveActorGroup(CP932("関連者保持"), 0xC0);
     mGroup->initWithoutIter();
     mInfo = new JMapIdInfo(MR::getDemoGroupLinkID(rIter), rIter);
 }

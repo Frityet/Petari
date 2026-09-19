@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
@@ -37,7 +38,7 @@ void Mario::mainMove() {
         mWalkSpeed = 0.0f;
         a1 = true;
 
-        playSound("坂滑り");
+        playSound(CP932("坂滑り"));
     }
 
     if (_754) {
@@ -54,7 +55,7 @@ void Mario::mainMove() {
         tryJump();
         beforeJumping2D();
 
-        if (isAnimationRun("その場足踏み上半身")) {
+        if (isAnimationRun(CP932("その場足踏み上半身"))) {
             stopAnimationUpper(nullptr, nullptr);
         }
 
@@ -87,7 +88,7 @@ void Mario::mainMove() {
     if (isRequestJump || mMovementStates._38) {
         if (mMovementStates._A && calcDistToCeil(false) < 160.0f) {
             mActor->sendMsgUpperPunch(_730);
-            changeAnimation("しゃがみアッパー", static_cast< const char* >(nullptr));
+            changeAnimation(CP932("しゃがみアッパー"), static_cast< const char* >(nullptr));
         } else if (isStatusActive(MarioStatus_Skate)) {
             mSkate->exitJump();
             closeStatus(mSkate);
@@ -105,17 +106,17 @@ void Mario::mainMove() {
                 mWalkSpeed = 5.0f;
                 _434 = 180;
 
-                playSound("スペシャルダッシュ強");
-                playSound("ダッシュ加速強成功");
-                playSound("声物ジャンプ");
+                playSound(CP932("スペシャルダッシュ強"));
+                playSound(CP932("ダッシュ加速強成功"));
+                playSound(CP932("声物ジャンプ"));
             }
         } else if (a2 && mStickPos.z >= 0.5f) {
             a2 = false;
             _436 = 0;
             mWalkSpeed = 2.0f;
             _434 = 60;
-            playSound("スペシャルダッシュ弱");
-            playSound("声物ジャンプ");
+            playSound(CP932("スペシャルダッシュ弱"));
+            playSound(CP932("声物ジャンプ"));
         }
     }
 
@@ -124,7 +125,7 @@ void Mario::mainMove() {
         tryJump();
         beforeJumping2D();
 
-        if (isAnimationRun("その場足踏み上半身")) {
+        if (isAnimationRun(CP932("その場足踏み上半身"))) {
             stopAnimationUpper(nullptr, nullptr);
         }
 
@@ -170,7 +171,7 @@ void Mario::mainMove() {
 
         calcShadowDir(_328, &_22C);
         _40C = 10;
-    } else if (!(mTargetWalkSpeedIndex != 0 && _71D) && (!isAnimationRun("ブレーキ") && !isAnimationRun("ターンブレーキ") && !mMovementStates._10 &&
+    } else if (!(mTargetWalkSpeedIndex != 0 && _71D) && (!isAnimationRun(CP932("ブレーキ")) && !isAnimationRun(CP932("ターンブレーキ")) && !mMovementStates._10 &&
                                                          !mMovementStates._F && mWalkSpeed < 0.05f && !mDrawStates._5)) {
         bool a3 = true;
         if (_40C != 0) {
@@ -212,13 +213,13 @@ void Mario::mainMove() {
                     return;
                 }
 
-                changeAnimation("その場足踏み", static_cast< const char* >(nullptr));
+                changeAnimation(CP932("その場足踏み"), static_cast< const char* >(nullptr));
 
-                if (isAnimationRun("カリカリ限界")) {
+                if (isAnimationRun(CP932("カリカリ限界"))) {
                     return;
                 }
 
-                changeAnimationUpperWeak("その場足踏み上半身", nullptr);
+                changeAnimationUpperWeak(CP932("その場足踏み上半身"), nullptr);
                 return;
             } else if (!a1) {
                 setFrontVecKeepUp(_22C);
@@ -286,7 +287,7 @@ void Mario::mainMove() {
             mWalkSpeed = 0.0f;
         }
 
-        if (isAnimationRun("ブレーキ")) {
+        if (isAnimationRun(CP932("ブレーキ"))) {
             a1 = true;
         }
 
@@ -309,7 +310,7 @@ void Mario::mainMove() {
             if (mMovementStates._35) {
                 _3D0 = mActor->getConst().getTable()->mTurnSlipTimeB;
                 mMovementStates._4 = true;
-                changeAnimation("ターンブレーキ滑り床", static_cast< const char* >(nullptr));
+                changeAnimation(CP932("ターンブレーキ滑り床"), static_cast< const char* >(nullptr));
                 _2B8 = mActor->getLastMove();
                 stopWalk();
                 _754 = 10;
@@ -318,8 +319,8 @@ void Mario::mainMove() {
                 _3D0 = mActor->getConst().getTable()->mTurnSlipTime;
                 mMovementStates._4 = true;
                 mWalkSpeed = 0.0f;
-                changeAnimation("ターンブレーキ", static_cast< const char* >(nullptr));
-                playEffect("共通ブレーキ");
+                changeAnimation(CP932("ターンブレーキ"), static_cast< const char* >(nullptr));
+                playEffect(CP932("共通ブレーキ"));
             }
         }
 
@@ -328,7 +329,7 @@ void Mario::mainMove() {
 
     if (_3D0 != 0) {
         if (!mMovementStates._35) {
-            playSound("スリップ");
+            playSound(CP932("スリップ"));
         }
 
         if (_3D0 == static_cast< u16 >(mActor->getConst().getTable()->mTurnSlipTime)) {
@@ -346,13 +347,13 @@ void Mario::mainMove() {
         if (mMovementStates._4) {
             TVec3f* frontVec = &mFrontVec;
             if (MR::diffAngleAbsHorizontal(getWorldPadDir(), *frontVec, *getGravityVec()) > MR::pi() * 90.0f / 180.0f) {
-                stopAnimation("ターンブレーキ");
+                stopAnimation(CP932("ターンブレーキ"));
                 setFrontVecKeepUp(-*frontVec);
                 mMovementStates._4 = false;
             }
 
-            if (isAnimationTerminate("ターンブレーキ")) {
-                stopAnimation("ターンブレーキ");
+            if (isAnimationTerminate(CP932("ターンブレーキ"))) {
+                stopAnimation(CP932("ターンブレーキ"));
                 mMovementStates._4 = false;
 
                 if (mStickPos.z < 0.1f) {
@@ -363,11 +364,11 @@ void Mario::mainMove() {
 
         // needs to be written as two nested if statements to match for some reason
         if (isActiveTask(&Mario::taskOnSlipTurn)) {
-            if (isAnimationRun("ターンブレーキ滑り床")) {
+            if (isAnimationRun(CP932("ターンブレーキ滑り床"))) {
                 setFrontVecKeepUp(-_220);
                 a1 = true;
 
-                stopAnimation("ターンブレーキ滑り床");
+                stopAnimation(CP932("ターンブレーキ滑り床"));
                 _754 = 0;
                 _74C = 0.0f;
                 mWalkSpeed = 0.0f;
@@ -554,11 +555,11 @@ void Mario::mainMove() {
 
             mMovementStates.turning = true;
 
-            if (!isAnimationRun("その場足踏み") && dot > 0.99f) {
+            if (!isAnimationRun(CP932("その場足踏み")) && dot > 0.99f) {
                 mMovementStates.turning = false;
             }
 
-            if (mMovementStates._37 && mFrontVec.dot(vec2) < 0.0f && !isAnimationRun("ブレーキ")) {
+            if (mMovementStates._37 && mFrontVec.dot(vec2) < 0.0f && !isAnimationRun(CP932("ブレーキ"))) {
                 _750 = 10;
                 _74C = MR::pi();
             }
@@ -584,17 +585,17 @@ void Mario::mainMove() {
     }
 
     if (_750 != 0 && mTargetWalkSpeedIndex == 0 && isEnableTurn()) {
-        changeAnimation("その場足踏み", static_cast< const char* >(nullptr));
+        changeAnimation(CP932("その場足踏み"), static_cast< const char* >(nullptr));
 
-        if (!isAnimationRun("カリカリ限界")) {
-            changeAnimationUpperWeak("その場足踏み上半身", nullptr);
+        if (!isAnimationRun(CP932("カリカリ限界"))) {
+            changeAnimationUpperWeak(CP932("その場足踏み上半身"), nullptr);
         }
     } else {
         if (mTargetWalkSpeedIndex != 0) {
-            stopAnimation("その場足踏み");
+            stopAnimation(CP932("その場足踏み"));
         }
 
-        if (isAnimationRun("その場足踏み上半身")) {
+        if (isAnimationRun(CP932("その場足踏み上半身"))) {
             stopAnimationUpper(nullptr, nullptr);
         }
     }
@@ -707,27 +708,27 @@ bool Mario::isEnableTurn() {
         return false;
     }
 
-    if (isAnimationRun("坂すべり上向きうつぶせ", 2)) {
+    if (isAnimationRun(CP932("坂すべり上向きうつぶせ"), 2)) {
         return false;
     }
 
-    if (isAnimationRun("坂すべり下向きあおむけ", 3)) {
+    if (isAnimationRun(CP932("坂すべり下向きあおむけ"), 3)) {
         return false;
     }
 
-    if (isAnimationRun("坂すべり下向き終了")) {
+    if (isAnimationRun(CP932("坂すべり下向き終了"))) {
         return false;
     }
 
-    if (isAnimationRun("坂すべり上向き終了")) {
+    if (isAnimationRun(CP932("坂すべり上向き終了"))) {
         return false;
     }
 
-    if (isAnimationRun("飛び込み失敗着地")) {
+    if (isAnimationRun(CP932("飛び込み失敗着地"))) {
         return false;
     }
 
-    if (isAnimationRun("飛び込み失敗回転着地")) {
+    if (isAnimationRun(CP932("飛び込み失敗回転着地"))) {
         return false;
     }
 
@@ -912,11 +913,11 @@ bool Mario::retainMoveDir(f32 stickX, f32 stickY, TVec3f* pOut) {
     f32 stickAngle = JMath::sAtanTable.atan2_(stickY, stickX);
     f32 stickAngleDiff = MR::diffAngleAbs(stickAngle, _2B4);
 
-    if (isAnimationRun("ターン")) {
+    if (isAnimationRun(CP932("ターン"))) {
         stickAngleDiff = 1.0f;
     }
 
-    if (isAnimationRun("ターンブレーキ")) {
+    if (isAnimationRun(CP932("ターンブレーキ"))) {
         stickAngleDiff = 1.0f;
     }
 
@@ -1122,7 +1123,7 @@ void Mario::doLockOnHoming() {
     calcShadowDir(front, &shadowFront);
 
     if (MR::diffAngleAbsHorizontal(mFrontVec, front, mHeadVec) >= 0.05235988f && getAnimator()->isAnimationStop()) {
-        changeAnimation("その場足踏み", static_cast<const char*>(nullptr));
+        changeAnimation(CP932("その場足踏み"), static_cast<const char*>(nullptr));
 
         if (_750 == 0) {
             setFrontVecKeepUp(front, static_cast< u32 >(15));

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/WipeGameOver.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/LayoutUtil.hpp"
@@ -7,7 +8,7 @@ namespace NrvWipeGameOver {
     NEW_NERVE(WipeGameOverActive, WipeGameOver, Active);
 };  // namespace NrvWipeGameOver
 
-WipeGameOver::WipeGameOver() : WipeLayoutBase("ゲームオーバー") {
+WipeGameOver::WipeGameOver() : WipeLayoutBase(CP932("ゲームオーバー")) {
 }
 
 void WipeGameOver::init(const JMapInfoIter& rIter) {

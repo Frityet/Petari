@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Scene/StageDataHolder.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
 #include "Game/Scene/PlacementInfoOrdered.hpp"
@@ -332,7 +333,7 @@ void StageDataHolder::initPlacementMario() {
     MR::getObjectName(&objName, iter);
     CreationFuncPtr funcPtr = NameObjFactory::getCreator(objName);
 
-    NameObj* obj = funcPtr("マリオアクター");
+    NameObj* obj = funcPtr(CP932("マリオアクター"));
     obj->init(iter);
     MR::clearCurrentPlacementZoneId();
 }

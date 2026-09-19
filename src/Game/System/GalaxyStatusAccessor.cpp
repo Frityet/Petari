@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/System/GalaxyStatusAccessor.hpp"
 #include "Game/System/GameDataConst.hpp"
 #include "Game/System/GameDataFunction.hpp"
@@ -196,7 +197,7 @@ const char* GalaxyStatusAccessor::getAppearPowerStarObjName(s32 scenarioNo) cons
     bool ret = mScenarioData->getValueString("AppearPowerStarObj", scenarioNo, &pObjName);
 
     if (isValidCoin100(scenarioNo)) {
-        return "１００枚コイン";
+        return CP932("１００枚コイン");
     }
 
     if (ret) {

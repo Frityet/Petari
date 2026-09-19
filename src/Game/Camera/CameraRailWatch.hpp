@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Camera/Camera.hpp"
@@ -6,7 +7,7 @@ class RailRider;
 
 class CameraRailWatch : public Camera {
 public:
-    CameraRailWatch(const char* pName = "レール注目カメラ");
+    CameraRailWatch(const char* pName = CP932("レール注目カメラ"));
 
     virtual void reset();
     virtual CameraTargetObj* calc();

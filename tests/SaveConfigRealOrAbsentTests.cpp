@@ -1,3 +1,4 @@
+#include "SourceMirrorEncoding.hpp"
 #include "Game/System/BinaryDataChunkHolder.hpp"
 #include "Game/System/ConfigDataHolder.hpp"
 #include "Game/System/SysConfigFile.hpp"
@@ -65,7 +66,7 @@ void test_decompiled_sources_are_byte_exact() {
         "UserFile.cpp",
     };
     for (const auto* name : sources) {
-        require(read_file(project / "src/Game/System" / name) == read_file(project / "decomp/src/Game/System" / name),
+        require(smgpc::test::source_matches_with_cp932(read_file(project / "decomp/src/Game/System" / name), read_file(project / "src/Game/System" / name)),
                 std::string("pc-port Game source differs from the decomp: ") + name);
     }
 
@@ -75,7 +76,7 @@ void test_decompiled_sources_are_byte_exact() {
         "UserFile.hpp",
     };
     for (const auto* name : headers) {
-        require(read_file(project / "src/Game/System" / name) == read_file(project / "decomp/include/Game/System" / name),
+        require(smgpc::test::source_matches_with_cp932(read_file(project / "decomp/include/Game/System" / name), read_file(project / "src/Game/System" / name)),
                 std::string("pc-port Game header differs from the decomp: ") + name);
     }
 }

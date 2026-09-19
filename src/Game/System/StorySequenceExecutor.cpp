@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/System/StorySequenceExecutor.hpp"
 #include "Game/Demo/PrologueDirector.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -27,7 +28,7 @@ namespace {
         {
             0,
             1,
-            "天文ドームスター帰還",
+            CP932("天文ドームスター帰還"),
         },
         {
             13,
@@ -37,7 +38,7 @@ namespace {
         {
             0,
             1,
-            "天文ドームスター帰還",
+            CP932("天文ドームスター帰還"),
         },
         {
             5,
@@ -52,7 +53,7 @@ namespace {
         {
             0,
             1,
-            "パワースター帰還",
+            CP932("パワースター帰還"),
         },
         {
             13,
@@ -62,7 +63,7 @@ namespace {
         {
             0,
             1,
-            "グランドスター帰還[２回目以降]",
+            CP932("グランドスター帰還[２回目以降]"),
         },
         {
             13,
@@ -82,12 +83,12 @@ namespace {
         {
             0,
             1,
-            "グランドスター１帰還",
+            CP932("グランドスター１帰還"),
         },
         {
             0,
             1,
-            "ロゼッタ状況説明デモ",
+            CP932("ロゼッタ状況説明デモ"),
         },
         {
             13,
@@ -97,12 +98,12 @@ namespace {
         {
             0,
             1,
-            "パワースター帰還",
+            CP932("パワースター帰還"),
         },
         {
             0,
             1,
-            "ロゼッタキノピオ探検隊デモ",
+            CP932("ロゼッタキノピオ探検隊デモ"),
         },
         {
             13,
@@ -112,17 +113,17 @@ namespace {
         {
             0,
             1,
-            "グランドスター２帰還",
+            CP932("グランドスター２帰還"),
         },
         {
             0,
             1,
-            "ロゼッタトーチの炎説明デモ",
+            CP932("ロゼッタトーチの炎説明デモ"),
         },
         {
             0,
             1,
-            "バトラーマップレクチャー",
+            CP932("バトラーマップレクチャー"),
         },
         {
             13,
@@ -132,12 +133,12 @@ namespace {
         {
             0,
             1,
-            "パワースター帰還",
+            CP932("パワースター帰還"),
         },
         {
             0,
             1,
-            "ロゼッタコメット説明デモ",
+            CP932("ロゼッタコメット説明デモ"),
         },
         {
             13,
@@ -147,12 +148,12 @@ namespace {
         {
             0,
             1,
-            "グランドスター３帰還",
+            CP932("グランドスター３帰還"),
         },
         {
             0,
             1,
-            "ロゼッタ銀河の中心説明デモ",
+            CP932("ロゼッタ銀河の中心説明デモ"),
         },
         {
             13,
@@ -162,12 +163,12 @@ namespace {
         {
             0,
             1,
-            "パワースター帰還",
+            CP932("パワースター帰還"),
         },
         {
             0,
             1,
-            "ロゼッタルイージデモ",
+            CP932("ロゼッタルイージデモ"),
         },
         {
             13,
@@ -177,12 +178,12 @@ namespace {
         {
             0,
             1,
-            "グランドスター４帰還",
+            CP932("グランドスター４帰還"),
         },
         {
             0,
             1,
-            "ロゼッタ天文台機能回復デモ",
+            CP932("ロゼッタ天文台機能回復デモ"),
         },
         {
             13,
@@ -192,7 +193,7 @@ namespace {
         {
             0,
             1,
-            "グランドスター５帰還",
+            CP932("グランドスター５帰還"),
         },
         {
             13,
@@ -202,7 +203,7 @@ namespace {
         {
             0,
             1,
-            "ロゼッタカウントダウン開始デモ",
+            CP932("ロゼッタカウントダウン開始デモ"),
         },
         {
             13,
@@ -212,7 +213,7 @@ namespace {
         {
             0,
             1,
-            "グランドスター６帰還",
+            CP932("グランドスター６帰還"),
         },
         {
             13,
@@ -222,7 +223,7 @@ namespace {
         {
             0,
             1,
-            "ロゼッタトーチの炎進捗デモ",
+            CP932("ロゼッタトーチの炎進捗デモ"),
         },
         {
             13,
@@ -237,7 +238,7 @@ namespace {
         {
             0,
             1,
-            "ロゼッタ最終決戦デモ",
+            CP932("ロゼッタ最終決戦デモ"),
         },
         {
             12,
@@ -247,7 +248,7 @@ namespace {
         {
             0,
             3,
-            "スターピース解説前半",
+            CP932("スターピース解説前半"),
         },
         {
             1,
@@ -262,12 +263,12 @@ namespace {
         {
             0,
             1,
-            "天文ドームスター帰還",
+            CP932("天文ドームスター帰還"),
         },
         {
             0,
             4,
-            "バトラー報告",
+            CP932("バトラー報告"),
         },
         {
             13,
@@ -277,12 +278,12 @@ namespace {
         {
             0,
             1,
-            "パワースター帰還",
+            CP932("パワースター帰還"),
         },
         {
             0,
             7,
-            "バトラーグリーンドライバ説明",
+            CP932("バトラーグリーンドライバ説明"),
         },
         {
             13,
@@ -292,12 +293,12 @@ namespace {
         {
             0,
             1,
-            "パワースター帰還",
+            CP932("パワースター帰還"),
         },
         {
             0,
             8,
-            "バトラーグリーンドライバ説明",
+            CP932("バトラーグリーンドライバ説明"),
         },
         {
             13,
@@ -307,12 +308,12 @@ namespace {
         {
             0,
             2,
-            "ドームレクチャー１",
+            CP932("ドームレクチャー１"),
         },
         {
             7,
             0,
-            "バトラー情報Ａ",
+            CP932("バトラー情報Ａ"),
         },
         {
             12,
@@ -322,7 +323,7 @@ namespace {
         {
             0,
             1,
-            "ルイージ失踪デモ",
+            CP932("ルイージ失踪デモ"),
         },
         {
             13,
@@ -341,7 +342,7 @@ namespace {
         {
             0,
             1,
-            "エピローグデモ",
+            CP932("エピローグデモ"),
         },
         {
             11,
@@ -385,7 +386,7 @@ namespace {
         {
             0,
             1,
-            "エピローグデモ",
+            CP932("エピローグデモ"),
         },
         {
             11,
@@ -422,7 +423,7 @@ namespace {
         },
     };
     const StorySequenceExecutorType::DemoSequenceInfo cDemoRosettaPicureBookTalk[] = {
-        {0, 1, "ロゼッタ朗読"},
+        {0, 1, CP932("ロゼッタ朗読")},
         {
             1,
             1,
@@ -433,7 +434,7 @@ namespace {
         },
     };
     const StorySequenceExecutorType::DemoSequenceInfo cDemoRosettaTalkAfterNormalEnding[] = {
-        {0, 1, "ロゼッタノーマルエンディング後デモ"},
+        {0, 1, CP932("ロゼッタノーマルエンディング後デモ")},
         {
             6,
             1,
@@ -451,27 +452,27 @@ namespace {
     const DemoFortressDiscoverCheckList cDemoFortressDiscoverCheckListTable[] = {
         {
             "TriLegLv1Galaxy",
-            "クッパＪｒロボプラント発見",
+            CP932("クッパＪｒロボプラント発見"),
             false,
         },
         {
             "KoopaBattleVs1Galaxy",
-            "クッパスタープラント発見",
+            CP932("クッパスタープラント発見"),
             true,
         },
         {
             "KoopaJrShipLv1Galaxy",
-            "クッパＪｒシッププラント発見",
+            CP932("クッパＪｒシッププラント発見"),
             false,
         },
         {
             "KoopaBattleVs2Galaxy",
-            "クッパダークマタープラント発見",
+            CP932("クッパダークマタープラント発見"),
             true,
         },
         {
             "FloaterOtaKingGalaxy",
-            "クッパＪｒクリーチャープラント発見",
+            CP932("クッパＪｒクリーチャープラント発見"),
             false,
         },
     };
@@ -735,7 +736,7 @@ void StorySequenceExecutor::exeWaitTimeKeepDemoEnd() {
         return;
     }
 
-    if (MR::isEqualString(getCurrentDemoInfo()->_4, "エピローグデモ")) {
+    if (MR::isEqualString(getCurrentDemoInfo()->_4, CP932("エピローグデモ"))) {
         MR::offPlayerControl();
     }
 
@@ -749,7 +750,7 @@ void StorySequenceExecutor::exeWaitSaveEnd() {
         return;
     }
 
-    MR::endDemo(mSaveObj, "セーブ");
+    MR::endDemo(mSaveObj, CP932("セーブ"));
 
     _48[0]++;
 
@@ -944,12 +945,12 @@ void StorySequenceExecutor::decideNextEventForClearGalaxy(GalaxyMoveArgument* pM
 
 void StorySequenceExecutor::decideNextEventForMoveGalaxy(GalaxyMoveArgument* pMoveArgument) {
     if (pMoveArgument->isEqualStage("AstroDome")) {
-        if (!GameDataFunction::isPassedStoryEvent("バトラー情報Ａ")) {
+        if (!GameDataFunction::isPassedStoryEvent(CP932("バトラー情報Ａ"))) {
             prepareDemoSequence(::cDemoAstroDomeLecture);
             return;
         }
 
-        if (GameDataFunction::hasPowerStar("EggStarGalaxy", 1) && !GameDataFunction::isPassedStoryEvent("スターピースレクチャー")) {
+        if (GameDataFunction::hasPowerStar("EggStarGalaxy", 1) && !GameDataFunction::isPassedStoryEvent(CP932("スターピースレクチャー"))) {
             prepareDemoSequence(::cDemoStarPieceLectureRetry);
             return;
         }
@@ -1003,10 +1004,10 @@ void StorySequenceExecutor::decideNextStageForGalaxyOut(GalaxyMoveArgument* pMov
 void StorySequenceExecutor::overwriteGalaxyNameAfterLoading(GalaxyMoveArgument* pMoveArgument) {
     if (GameDataFunction::hasGrandStar(1)) {
         setNextStageToAstroGalaxy(pMoveArgument);
-    } else if (GameDataFunction::isPassedStoryEvent("ピーチ城浮上後") || !GameDataFunction::isDataMario()) {
+    } else if (GameDataFunction::isPassedStoryEvent(CP932("ピーチ城浮上後")) || !GameDataFunction::isDataMario()) {
         pMoveArgument->mStageName = "HeavensDoorGalaxy";
         pMoveArgument->mScenarioNo = 1;
-    } else if (GameDataFunction::isPassedStoryEvent("クッパ襲来後")) {
+    } else if (GameDataFunction::isPassedStoryEvent(CP932("クッパ襲来後"))) {
         pMoveArgument->mStageName = "PeachCastleGardenGalaxy";
         pMoveArgument->mScenarioNo = 1;
         pMoveArgument->mIDInfo = JMapIdInfo(1, 0);
@@ -1092,7 +1093,7 @@ void StorySequenceExecutor::prepareDemoSequence(
 
 void StorySequenceExecutor::prepareDemoSequenceButlerFortressDiscover(const GalaxyMoveArgument* pMoveArgument,
                                                                       const DemoFortressDiscoverCheckList& rCheckList) {
-    const StorySequenceExecutorType::DemoSequenceInfo* pDemoInfo = addDynamicDemoSequenceInfo(0, rCheckList._8 ? 6 : 5, "バトラー報告");
+    const StorySequenceExecutorType::DemoSequenceInfo* pDemoInfo = addDynamicDemoSequenceInfo(0, rCheckList._8 ? 6 : 5, CP932("バトラー報告"));
 
     addDynamicDemoSequenceInfo(7, 0, rCheckList.mStoryEventName);
 
@@ -1111,7 +1112,7 @@ bool StorySequenceExecutor::tryStartDemo(const char* pParam1) {
 }
 
 bool StorySequenceExecutor::tryStartSave() {
-    if (MR::tryStartDemoWithoutCinemaFrameValidHandPointerFinger(mSaveObj, "セーブ")) {
+    if (MR::tryStartDemoWithoutCinemaFrameValidHandPointerFinger(mSaveObj, CP932("セーブ"))) {
         GameSequenceFunction::startGameDataSaveSequence(false, false);
 
         _B0 = true;
@@ -1124,7 +1125,7 @@ bool StorySequenceExecutor::tryStartSave() {
 
 bool StorySequenceExecutor::tryWaitSaveEnd() {
     if (!GameSequenceFunction::isActiveSaveDataHandleSequence()) {
-        MR::endDemo(mSaveObj, "セーブ");
+        MR::endDemo(mSaveObj, CP932("セーブ"));
 
         return true;
     }

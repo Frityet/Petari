@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #if !defined(NDEBUG)
 #include "compat/OriginalGameDiagnostics.hpp"
@@ -49,8 +50,8 @@ void CameraUtil_DUMMY() {
 }
 
 namespace {
-    static const char* sLauncherCameraName = "大砲";
-    static const char* sLauncherFlightCameraName = "大砲飛行";
+    static const char* sLauncherCameraName = CP932("大砲");
+    static const char* sLauncherFlightCameraName = CP932("大砲飛行");
 
     CameraContext* getCameraContext() {
 #if !defined(NDEBUG)

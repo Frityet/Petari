@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Scene/ScenePlayingResult.hpp"
 #include "Game/System/GameDataFunction.hpp"
 #include "Game/Util/EventUtil.hpp"
@@ -70,5 +71,5 @@ s32 ScenePlayingResult::getStarPieceNum() const {
 ScenePlayingResult::~ScenePlayingResult() {
 }
 
-ScenePlayingResult::ScenePlayingResult() : NameObj("プレイ結果保持"), mCoinNum(0), mPurpleCoinNum(0) {
+ScenePlayingResult::ScenePlayingResult() : NameObj(CP932("プレイ結果保持")), mCoinNum(0), mPurpleCoinNum(0) {
 }

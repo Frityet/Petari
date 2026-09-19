@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/NPC/TalkBalloon.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NPC/TalkMessageCtrl.hpp"
@@ -426,29 +427,29 @@ TalkBalloonHolder::TalkBalloonHolder() : _14(0) {
 
     for (u32 i = 0; i < 4; i++) {
         // "Speech bubble [plain discussion]"
-        TalkBalloonShort* temp = new TalkBalloonShort("会話吹き出し[簡易会話]");
+        TalkBalloonShort* temp = new TalkBalloonShort(CP932("会話吹き出し[簡易会話]"));
         mBalloonShortArray[i] = temp;
         mBalloonShortArray[i]->initWithoutIter();
         mBalloonShortArray[i]->kill();
     }
 
     // "Speech bubble [event]"
-    mBalloonEvent = new TalkBalloonEvent("会話吹き出し[イベント]");
+    mBalloonEvent = new TalkBalloonEvent(CP932("会話吹き出し[イベント]"));
     mBalloonEvent->initWithoutIter();
     mBalloonEvent->kill();
 
     // "Speech bubble [information]"
-    mBalloonInfo = new TalkBalloonInfo("会話吹き出し[インフォメーション]");
+    mBalloonInfo = new TalkBalloonInfo(CP932("会話吹き出し[インフォメーション]"));
     mBalloonInfo->initWithoutIter();
     mBalloonInfo->kill();
 
     // "Speech bubble [signboard]"
-    mBalloonSign = new TalkBalloonSign("会話吹き出し[看板]");
+    mBalloonSign = new TalkBalloonSign(CP932("会話吹き出し[看板]"));
     mBalloonSign->initWithoutIter();
     mBalloonSign->kill();
 
     // "Speech bubble [icon]"
-    mBalloonIcon = new TalkBalloonIcon("会話吹き出し[アイコン]");
+    mBalloonIcon = new TalkBalloonIcon(CP932("会話吹き出し[アイコン]"));
     mBalloonIcon->initWithoutIter();
     mBalloonIcon->kill();
 

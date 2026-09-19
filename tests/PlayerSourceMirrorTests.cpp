@@ -1,3 +1,4 @@
+#include "SourceMirrorEncoding.hpp"
 #include <array>
 #include <exception>
 #include <fstream>
@@ -256,17 +257,17 @@ namespace {
     void requireMirrored(const std::string_view name, const std::string &rootPath, const std::string &portPath) {
         const auto root = readFile(rootPath);
         const auto port = readFile(portPath);
-        if (root == port) {
+        if (smgpc::test::source_matches_with_cp932(root, port)) {
             return;
         }
 
         if (!permitsPcDivergence(name)) {
-            throw std::runtime_error("PC Game mirror is not byte-identical: " + portPath);
+            throw std::runtime_error("PC Game mirror is different beyond explicit CP932 encoding: " + portPath);
         }
 
         auto guardCount = std::size_t{};
-        if (selectRetailSource(port, &guardCount) != root || guardCount == 0) {
-            throw std::runtime_error("PC platform mirror does not retain byte-identical retail branches: " + portPath);
+        if (!smgpc::test::source_matches_with_cp932(root, selectRetailSource(port, &guardCount)) || guardCount == 0) {
+            throw std::runtime_error("PC platform mirror does not retain retail branches except explicit CP932 encoding: " + portPath);
         }
     }
 
@@ -306,7 +307,7 @@ int main() {
     }
 
     if (failures == 0) {
-        std::cout << "Player source mirror passed: 96/96 retail source branches exact, 63/63 headers exact, "
+        std::cout << "Player source mirror passed: 96/96 retail source branches and 63/63 headers preserved except explicit CP932 encoding, "
                      "1 production TU and 95 explicit exclusions\n";
     }
 

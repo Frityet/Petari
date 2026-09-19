@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/PictureBookCloseButton.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/ButtonPaneController.hpp"
@@ -12,7 +13,7 @@ namespace NrvPictureBookCloseButton {
 };  // namespace NrvPictureBookCloseButton
 
 PictureBookCloseButton::PictureBookCloseButton(bool canCloseWithPad)
-    : LayoutActor("絵本閉じるボタン", true), mPaneCtrl(nullptr), mCanCloseWithPad(canCloseWithPad) {
+    : LayoutActor(CP932("絵本閉じるボタン"), true), mPaneCtrl(nullptr), mCanCloseWithPad(canCloseWithPad) {
 }
 
 void PictureBookCloseButton::init(const JMapInfoIter& rIter) {

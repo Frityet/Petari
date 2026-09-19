@@ -2,6 +2,7 @@
 #include "resource/TextEncoding.hpp"
 #include <aurora/exception.hpp>
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "compat/Cp932Literal.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Effect/EffectSystem.hpp"
@@ -687,7 +688,7 @@ NameObj *SceneObjHolder::newEachObj(int id) {
     case SceneObj_ShadowVolumeDrawInit:
         return new ShadowVolumeDrawInit();
     case SceneObj_ShadowSurfaceDrawInit:
-        return new ShadowSurfaceDrawInit("水面影描画初期化");
+        return new ShadowSurfaceDrawInit(CP932("水面影描画初期化"));
     case SceneObj_ShadowControllerHolder:
         return new ShadowControllerHolder();
     case SceneObj_AudBgmConductor:

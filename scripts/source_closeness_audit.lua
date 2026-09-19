@@ -1,3 +1,5 @@
+import("scripts.source_mirror_encoding", {rootdir = os.projectdir(), alias = "source_encoding"})
+
 local function trim(value)
     local text = tostring(value or ""):gsub("^%s+", "")
     return (text:gsub("%s+$", ""))
@@ -350,6 +352,11 @@ local function classify(pc_text, root_text)
     end
     if pc_text == root_text then
         return "exact-source", "byte-for-byte match"
+    end
+
+    pc_text = source_encoding.normalize(pc_text)
+    if pc_text == root_text then
+        return "compile-only", "explicit CP932 literal wrappers and encoding include only"
     end
 
     local pc_trim = normalize_trailing_ws(pc_text)
@@ -726,7 +733,7 @@ local function write_summary(path)
     table.insert(lines, "## Classification Policy")
     table.insert(lines, "")
     table.insert(lines, "- `exact-source`: byte-for-byte match with root `src/Game` or `include/Game`.")
-    table.insert(lines, "- `compile-only`: only line endings, trailing whitespace, or warning-only unused parameter/local annotations differ.")
+    table.insert(lines, "- `compile-only`: only explicit CP932 literal wrappers/the encoding header include, line endings, trailing whitespace, or warning-only unused parameter/local annotations differ.")
     table.insert(lines, "- `debug-only`: the diff disappears after guarded `NDEBUG` debug blocks are stripped.")
     table.insert(lines, "- `compat-temporary`: root source exists, but the PC file has non-debug behavioral or API-shape differences.")
     table.insert(lines, "- `decomp-needed`: no root source/header counterpart exists at the expected path.")

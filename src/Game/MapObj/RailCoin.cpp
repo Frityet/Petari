@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/RailCoin.hpp"
 #include "Game/AreaObj/MercatorTransformCube.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -83,5 +84,5 @@ void RailCoin::placementCoin() {
 }
 
 const char* RailCoin::getCoinName() const {
-    return mIsPurpleCoinGroup ? "パープルコイン(レール配置)" : "コイン(レール配置)";
+    return mIsPurpleCoinGroup ? CP932("パープルコイン(レール配置)") : CP932("コイン(レール配置)");
 }

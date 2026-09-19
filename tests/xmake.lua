@@ -3320,3 +3320,12 @@ target("smg-pc-frame-button-state-tests")
     add_tests("frame_button_state", {
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
+
+target("smg-pc-source-mirror-encoding-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/source-boundary")
+    add_files("SourceMirrorEncodingTests.cpp")
+    add_tests("source_mirror_encoding", {
+        group = "source-boundary", rundir = os.projectdir(), realtime_output = true
+    })

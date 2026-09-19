@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Demo/DemoExecutor.hpp"
@@ -19,7 +20,7 @@ public:
     DemoSoundKeeper(DemoExecutor*);
 
     virtual const char* getName() const {
-        return "サウンド";
+        return CP932("サウンド");
     }
 
     virtual const char* getTypeString() const {

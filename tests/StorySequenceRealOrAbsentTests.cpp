@@ -1,3 +1,4 @@
+#include "SourceMirrorEncoding.hpp"
 #include "Game/System/GalaxyMoveArgument.hpp"
 #include "Game/System/StorySequenceExecutor.hpp"
 #include "Game/Util/JMapIdInfo.hpp"
@@ -81,13 +82,13 @@ void test_source_is_exact_and_scene_shims_are_absent() {
     const auto project = find_project_root();
     const auto port_executor = read_file(project / "src/Game/System/StorySequenceExecutor.cpp");
     const auto decomp_executor = read_file(project / "decomp/src/Game/System/StorySequenceExecutor.cpp");
-    require(port_executor == decomp_executor,
-            "pc-port StorySequenceExecutor.cpp must remain byte-exact with the decompiled source");
+    require(smgpc::test::source_matches_with_cp932(decomp_executor, port_executor),
+            "pc-port StorySequenceExecutor.cpp must retain the decompiled source except explicit CP932 encoding");
 
     const auto port_event_util = read_file(project / "src/Game/Util/EventUtil.cpp");
     const auto decomp_event_util = read_file(project / "decomp/src/Game/Util/EventUtil.cpp");
-    require(port_event_util == decomp_event_util,
-            "pc-port EventUtil.cpp must remain byte-exact with the decompiled source");
+    require(smgpc::test::source_matches_with_cp932(decomp_event_util, port_event_util),
+            "pc-port EventUtil.cpp must retain the decompiled source except explicit CP932 encoding");
 
     const auto game_xmake = read_file(project / "src/Game/xmake.lua");
     require(game_xmake.find("remove_files(\"Util/EventUtil.cpp\")") == std::string::npos,

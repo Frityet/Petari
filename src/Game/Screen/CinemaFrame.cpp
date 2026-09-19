@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/CinemaFrame.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneFunction.hpp"
@@ -15,7 +16,7 @@ namespace NrvCinemaFrame {
     NEW_NERVE(CinemaFrameNrvFrameToScreen, CinemaFrame, FrameToScreen);
 };  // namespace NrvCinemaFrame
 
-CinemaFrame::CinemaFrame(bool isConnectToSceneLayout) : LayoutActor("シネマフレーム", true) {
+CinemaFrame::CinemaFrame(bool isConnectToSceneLayout) : LayoutActor(CP932("シネマフレーム"), true) {
     if (isConnectToSceneLayout) {
         MR::connectToScene(this, MR::MovementType_Layout, MR::CalcAnimType_Layout, -1, MR::DrawType_CinemaFrame);
     }

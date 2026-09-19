@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
@@ -1237,7 +1238,7 @@ bool Mario::checkHeadPoint() {
         }
 
         const char* pWallCode = MR::getWallCodeString(&rTriangle);
-        if (pWallCode != nullptr && strcmp(pWallCode, "頭ぶつけ") == 0) {
+        if (pWallCode != nullptr && strcmp(pWallCode, CP932("頭ぶつけ")) == 0) {
             mDrawStates_WORD |= 0x400;
         }
 
@@ -1511,7 +1512,7 @@ bool Mario::updateBinderInfo() {
                 TVec3f killed;
                 const f32 removed = MR::vecKillElement(mJumpVec, normal, &killed);
                 if ((removed < 0.0f || mPrevDrawStates._1E) && calcAngleD(normal) > 100.0f) {
-                    if (strcmp(pPlane->mSensor->mHost->mName, "マンホールのふた(クッパ船)") != 0) {
+                    if (strcmp(pPlane->mSensor->mHost->mName, CP932("マンホールのふた(クッパ船)")) != 0) {
                         mJumpVec = killed;
                     }
                     startPadVib(static_cast<u32>(0));
@@ -1584,7 +1585,7 @@ bool Mario::checkGround() {
     }
 
     TVec3f groundBase;
-    if (isAnimationRun("崖ふんばり")) {
+    if (isAnimationRun(CP932("崖ふんばり"))) {
         groundBase = -*getGravityVec();
     }
     else {
@@ -1630,7 +1631,7 @@ bool Mario::checkGround() {
     if (!mTargetWalkSpeedIndex && mMovementStates._1 && !mMovementStates.jumping && !(mMovementStates_HIGH_WORD & 0x10000000)) {
         probeCount = 4;
     }
-    if (isAnimationRun("壁押し", 0)) {
+    if (isAnimationRun(CP932("壁押し"), 0)) {
         probeCount = 4;
     }
 
@@ -1739,7 +1740,7 @@ bool Mario::checkGround() {
                 if (!mMovementStates._8) {
                     TVec3f push = mFrontVec;
                     push.scale(6.0f);
-                    addTrans(push, "前方WKFALL");
+                    addTrans(push, CP932("前方WKFALL"));
                     moved = true;
                 }
 
@@ -1755,14 +1756,14 @@ bool Mario::checkGround() {
                             front.scale(6.0f);
                             TVec3f side = -mSideVec;
                             side.scale(3.0f);
-                            addTrans(side - front, "+逆-左WKFALL");
+                            addTrans(side - front, CP932("+逆-左WKFALL"));
                         }
                         break;
                     }
 
                     TVec3f push = mSideVec;
                     push.scale(3.0f);
-                    addTrans(push, "+左WKFALL");
+                    addTrans(push, CP932("+左WKFALL"));
                     moved = true;
                 }
                 else {
@@ -1772,14 +1773,14 @@ bool Mario::checkGround() {
                             front.scale(6.0f);
                             TVec3f side = mSideVec;
                             side.scale(3.0f);
-                            addTrans(side - front, "+逆-右WKFALL");
+                            addTrans(side - front, CP932("+逆-右WKFALL"));
                         }
                         break;
                     }
 
                     TVec3f push = -mSideVec;
                     push.scale(3.0f);
-                    addTrans(push, "+右WKFALL");
+                    addTrans(push, CP932("+右WKFALL"));
                     moved = true;
                 }
 
@@ -1794,7 +1795,7 @@ bool Mario::checkGround() {
                     if (!mMovementStates._8 && !mMovementStates._32) {
                         TVec3f push = mFrontVec;
                         push.scale(3.0f);
-                        addTrans(push, "+後ろ1WKFALL");
+                        addTrans(push, CP932("+後ろ1WKFALL"));
                         mDrawStates_WORD |= 0x00200000;
                     }
                     break;
@@ -1804,7 +1805,7 @@ bool Mario::checkGround() {
                     mDrawStates_WORD |= 0x00000080;
                     TVec3f push = mFrontVec;
                     push.scale(-6.0f);
-                    addTrans(push, "+後ろ2WKFALL");
+                    addTrans(push, CP932("+後ろ2WKFALL"));
                     mDrawStates_WORD |= 0x00200000;
                 }
 
@@ -2088,7 +2089,7 @@ void Mario::updateCubeCode() {
 
     if (MR::getAreaObj("FallsCube", mActor->_2AC) != nullptr) {
         touchWater();
-        playEffectRTZ("水しぶき", mHeadVec, mActor->_2AC);
+        playEffectRTZ(CP932("水しぶき"), mHeadVec, mActor->_2AC);
     }
 
     if (MR::getAreaObj("HeavySteeringCube", mPosition) != nullptr) {

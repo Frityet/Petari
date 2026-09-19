@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/PurpleCoinHolder.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/Coin.hpp"
@@ -10,7 +11,7 @@ namespace {
     // static const s32 sGetIncrementCount = _;
 };  // namespace
 
-PurpleCoinHolder::PurpleCoinHolder() : DeriveActorGroup< Coin >("パープルコイン管理", ::sMaxPurpleCoin), mStarter() {
+PurpleCoinHolder::PurpleCoinHolder() : DeriveActorGroup< Coin >(CP932("パープルコイン管理"), ::sMaxPurpleCoin), mStarter() {
     MR::declarePowerStarCoin100();
     MR::createPurpleCoinCounter();
 }

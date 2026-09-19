@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioSideStep.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/HitInfo.hpp"
@@ -51,10 +52,10 @@ MarioSideStep::MarioSideStep(MarioActor* pActor) : MarioState(pActor, MarioStatu
 }
 
 bool MarioSideStep::close() {
-    stopAnimation("壁ウエイト");
-    stopAnimation("壁右歩き");
-    stopAnimation("壁左歩き");
-    stopAnimation("壁押し");
+    stopAnimation(CP932("壁ウエイト"));
+    stopAnimation(CP932("壁右歩き"));
+    stopAnimation(CP932("壁左歩き"));
+    stopAnimation(CP932("壁押し"));
     getPlayer()->startBas(nullptr, false, 0.0f, 0.0f);
     return true;
 }
@@ -126,11 +127,11 @@ bool Mario::doSideStep() {
 }
 
 bool MarioSideStep::start() {
-    if (!isAnimationRun("壁押し")) {
-        playSound("声壁押し", -1);
+    if (!isAnimationRun(CP932("壁押し"))) {
+        playSound(CP932("声壁押し"), -1);
     }
 
-    changeAnimation("壁押し", static_cast< u32 >(0));
+    changeAnimation(CP932("壁押し"), static_cast< u32 >(0));
     mActor->setBlendMtxTimer(10);
     return true;
 }
@@ -163,7 +164,7 @@ bool MarioSideStep::update() {
     }
 
     if (getStickP() < 0.1f) {
-        changeAnimation("壁ウエイト", static_cast< const char* >(nullptr));
+        changeAnimation(CP932("壁ウエイト"), static_cast< const char* >(nullptr));
     } else {
         TVec3f padDir(getWorldPadDir());
         MR::vecKillElement(padDir, getPlayer()->getAirGravityVec(), &padDir);
@@ -172,11 +173,11 @@ bool MarioSideStep::update() {
         TVec3f moveDir;
         const f32 wallElement = MR::vecKillElement(padDir, getPlayer()->getWallNorm(), &moveDir);
         if (wallElement < -0.866f) {
-            if (!isAnimationRun("壁押し")) {
-                playSound("声壁押し", -1);
+            if (!isAnimationRun(CP932("壁押し"))) {
+                playSound(CP932("声壁押し"), -1);
             }
 
-            changeAnimation("壁押し", static_cast< u32 >(0));
+            changeAnimation(CP932("壁押し"), static_cast< u32 >(0));
         } else if (wallElement > 0.0f) {
             if (wallElement > 0.707f) {
                 const TVec3f* pWallNorm = &getPlayer()->getWallNorm();
@@ -189,11 +190,11 @@ bool MarioSideStep::update() {
             moveDir *= getStickP() * (1.0f + 0.25f * wallElement);
 
             if (moveDir.dot(getPlayer()->mSideVec) < 0.0f) {
-                if (!isAnimationRun("壁右歩き")) {
-                    changeAnimation("壁右歩き", static_cast< const char* >(nullptr));
+                if (!isAnimationRun(CP932("壁右歩き"))) {
+                    changeAnimation(CP932("壁右歩き"), static_cast< const char* >(nullptr));
                 }
-            } else if (!isAnimationRun("壁左歩き")) {
-                changeAnimation("壁左歩き", static_cast< const char* >(nullptr));
+            } else if (!isAnimationRun(CP932("壁左歩き"))) {
+                changeAnimation(CP932("壁左歩き"), static_cast< const char* >(nullptr));
             }
 
             addVelocity(moveDir * 6.0f - getPlayer()->getWallNorm() * 6.0f);

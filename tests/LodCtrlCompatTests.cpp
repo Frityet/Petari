@@ -1,3 +1,4 @@
+#include "SourceMirrorEncoding.hpp"
 #include "Game/LiveActor/ClippingDirector.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/LodCtrl.hpp"
@@ -47,11 +48,11 @@ namespace {
     }
 
     void test_game_source_boundary_retains_only_gcc_attribute_relocation() {
-        require(normalizeLodCtrlNoInlinePlacement(readFile("decomp/src/Game/LiveActor/LodCtrl.cpp")) ==
-                    readFile("src/Game/LiveActor/LodCtrl.cpp"),
-                "the PC Game LodCtrl source may differ only by the GCC-required NO_INLINE prefix placement");
-        require(readFile("decomp/include/Game/LiveActor/LodCtrl.hpp") == readFile("src/Game/LiveActor/LodCtrl.hpp"),
-                "the PC Game LodCtrl header must be byte-identical to the root decomp header");
+        require(smgpc::test::source_matches_with_cp932(normalizeLodCtrlNoInlinePlacement(readFile("decomp/src/Game/LiveActor/LodCtrl.cpp")),
+                    readFile("src/Game/LiveActor/LodCtrl.cpp")),
+                "the PC Game LodCtrl source may differ only by the GCC-required NO_INLINE prefix placement and explicit CP932 encoding");
+        require(smgpc::test::source_matches_with_cp932(readFile("decomp/include/Game/LiveActor/LodCtrl.hpp"), readFile("src/Game/LiveActor/LodCtrl.hpp")),
+                "the PC Game LodCtrl header must be identical to the root decomp header except explicit CP932 encoding");
     }
 
     void test_director_must_be_explicitly_scene_owned() {

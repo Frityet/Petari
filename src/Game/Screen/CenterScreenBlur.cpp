@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/CenterScreenBlur.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneFunction.hpp"
@@ -12,7 +13,7 @@ namespace NrvCenterScreenBlur {
     NEW_NERVE(CenterScreenBlurNrvFadeOut, CenterScreenBlur, FadeOut);
 };  // namespace NrvCenterScreenBlur
 
-CenterScreenBlur::CenterScreenBlur() : LiveActor("画面中心ブラー"), mTime(), mFadeIn(), mFadeOut(), mOffset(), mAlpha(), mBlendRate() {
+CenterScreenBlur::CenterScreenBlur() : LiveActor(CP932("画面中心ブラー")), mTime(), mFadeIn(), mFadeOut(), mOffset(), mAlpha(), mBlendRate() {
 }
 
 void CenterScreenBlur::init(const JMapInfoIter& rIter) {

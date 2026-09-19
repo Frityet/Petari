@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/CounterLayoutController.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/CoinCounter.hpp"
@@ -24,7 +25,7 @@ namespace NrvCounterLayoutController {
 };  // namespace NrvCounterLayoutController
 
 CounterLayoutController::CounterLayoutController()
-    : LayoutActor("カウンタ系レイアウト制御", true), mPlayerNotMovingFrame(0), _24(false), mCoinCounter(nullptr), mStarPieceCounter(nullptr),
+    : LayoutActor(CP932("カウンタ系レイアウト制御"), true), mPlayerNotMovingFrame(0), _24(false), mCoinCounter(nullptr), mStarPieceCounter(nullptr),
       mPlayerLeft(nullptr), mStarCounter(nullptr), mHPMeter(nullptr) {
 }
 
@@ -32,11 +33,11 @@ void CounterLayoutController::init(const JMapInfoIter& rIter) {
     MR::connectToSceneLayout(this);
     initNerve(&NrvCounterLayoutController::CounterLayoutControllerNrvPlayerMoving::sInstance);
 
-    mCoinCounter = new CoinCounter("コインカウンタ");
+    mCoinCounter = new CoinCounter(CP932("コインカウンタ"));
     mCoinCounter->initWithoutIter();
-    mStarPieceCounter = new StarPieceCounter("スターピースカウンタ");
+    mStarPieceCounter = new StarPieceCounter(CP932("スターピースカウンタ"));
     mStarPieceCounter->initWithoutIter();
-    mPlayerLeft = new PlayerLeft("プレイヤー残機表示");
+    mPlayerLeft = new PlayerLeft(CP932("プレイヤー残機表示"));
     mPlayerLeft->initWithoutIter();
     mStarCounter = new StarCounter();
     mStarCounter->initWithoutIter();

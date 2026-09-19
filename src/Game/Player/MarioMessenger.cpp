@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioMessenger.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
@@ -5,7 +6,7 @@
 
 #define MSG_SIZE 32
 
-MarioMessenger::MarioMessenger(HitSensor* pSender) : NameObj("マリオメッセンジャー"), mSender(pSender) {
+MarioMessenger::MarioMessenger(HitSensor* pSender) : NameObj(CP932("マリオメッセンジャー")), mSender(pSender) {
     mReceiverArray = new HitSensor*[MSG_SIZE];
     mMsgArray = new u32[MSG_SIZE];
     mArraySize = 0;

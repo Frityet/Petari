@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -6,7 +7,7 @@ class FileSelectEffect : public LiveActor {
 public:
     /// @brief Creates a new `FileSelectEffect`.
     /// @param pName A pointer to the null-terminated name of the object.
-    FileSelectEffect(const char* pName = "選択時エフェクト");
+    FileSelectEffect(const char* pName = CP932("選択時エフェクト"));
 
     virtual void init(const JMapInfoIter&);
     virtual void appear();

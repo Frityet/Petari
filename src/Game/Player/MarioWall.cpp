@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #if !defined(TARGET_PC)
 #define JMAAcosRadian JMAAcosRadianInline
 #endif
@@ -304,7 +305,7 @@ bool Mario::isEnableStickWall() {
         return false;
     }
 
-    if (isAnimationRun("空中ひねり")) {
+    if (isAnimationRun(CP932("空中ひねり"))) {
         if (mActor->_945 < 25) {
             return false;
         }
@@ -357,10 +358,10 @@ bool Mario::isEnableStickWall() {
     }
 
     if (mMovementStates._19) {
-        if (!isAnimationRun("壁ジャンプ") && checkStickWallSide() != 1) {
+        if (!isAnimationRun(CP932("壁ジャンプ")) && checkStickWallSide() != 1) {
             return false;
         }
-    } else if (!isAnimationRun("壁ジャンプ") && !mMovementStates._9 && checkStickWallSide() != 1) {
+    } else if (!isAnimationRun(CP932("壁ジャンプ")) && !mMovementStates._9 && checkStickWallSide() != 1) {
         return false;
     }
 
@@ -393,7 +394,7 @@ bool Mario::isEnableStickWall() {
 bool MarioWall::start() {
     _18 = 0;
     _20 = 0.0f;
-    changeAnimation("壁くっつき", static_cast< const char* >(nullptr));
+    changeAnimation(CP932("壁くっつき"), static_cast< const char* >(nullptr));
     startPadVib(static_cast< u32 >(0));
     getPlayer()->mMovementStates._28 = false;
     getPlayer()->_20_HIGH_WORD &= ~0x800000;
@@ -412,8 +413,8 @@ bool MarioWall::start() {
         effectOffset.scale(15.0f);
         TVec3f effectPos(getPlayer()->getWallPos());
         effectPos -= effectOffset;
-        playEffectRT("氷壁ジャンプ", getPlayer()->getWallNorm(), effectPos);
-        playSound("スケート着地", -1);
+        playEffectRT(CP932("氷壁ジャンプ"), getPlayer()->getWallNorm(), effectPos);
+        playSound(CP932("スケート着地"), -1);
         _1E = true;
     }
     return true;
@@ -447,7 +448,7 @@ bool MarioWall::update() {
         if (getPlayer()->mVerticalSpeed < 80.0f) {
             if (!isOnSlipGround()) {
                 getPlayer()->setFrontVecKeepUp(getPlayer()->getWallNorm());
-                changeAnimation("着地", static_cast< const char* >(nullptr));
+                changeAnimation(CP932("着地"), static_cast< const char* >(nullptr));
                 changeAnimationInterpoleFrame(1);
                 mActor->setBlendMtxTimer(4);
             }
@@ -486,14 +487,14 @@ bool MarioWall::update() {
 
     if (checkTrgA() && startJump()) {
         if (_1E) {
-            playSound("スケートジャンプ", -1);
+            playSound(CP932("スケートジャンプ"), -1);
         }
         return false;
     }
 
     if (mActor->isRequestRush()) {
         getPlayer()->mMovementStates._2B = false;
-        changeAnimation("空中ひねり", static_cast< const char* >(nullptr));
+        changeAnimation(CP932("空中ひねり"), static_cast< const char* >(nullptr));
         getPlayer()->tryWallPunch();
         getPlayer()->setWallCancel();
         return false;
@@ -519,8 +520,8 @@ bool MarioWall::update() {
         }
         _18 = 0;
         dropSpeed = mActor->mConst->getTable()->mWallDropSpeedStop;
-        changeAnimation("壁くっつき", static_cast< const char* >(nullptr));
-        stopEffect("共通壁手擦り");
+        changeAnimation(CP932("壁くっつき"), static_cast< const char* >(nullptr));
+        stopEffect(CP932("共通壁手擦り"));
         break;
     case 2:
         if (_1E) {
@@ -534,17 +535,17 @@ bool MarioWall::update() {
         if (_18 == 0) {
             _18 = 1;
         }
-        stopEffect("共通壁手擦り");
+        stopEffect(CP932("共通壁手擦り"));
         break;
     case 0:
         if (_14 < static_cast< u32 >(mActor->mConst->getTable()->mWallStickTime)) {
-            stopEffect("共通壁手擦り");
+            stopEffect(CP932("共通壁手擦り"));
         } else {
-            if (!isAnimationRun("壁くっつき")) {
-                changeAnimation("壁すべり", static_cast< const char* >(nullptr));
+            if (!isAnimationRun(CP932("壁くっつき"))) {
+                changeAnimation(CP932("壁すべり"), static_cast< const char* >(nullptr));
             }
-            playSound("スリップ", -1);
-            playEffect("共通壁手擦り");
+            playSound(CP932("スリップ"), -1);
+            playEffect(CP932("共通壁手擦り"));
         }
         break;
     }
@@ -589,12 +590,12 @@ bool MarioWall::update() {
 }
 
 bool MarioWall::close() {
-    stopAnimation("壁くっつき", static_cast< const char* >(nullptr));
-    stopAnimation("壁すべり", static_cast< const char* >(nullptr));
+    stopAnimation(CP932("壁くっつき"), static_cast< const char* >(nullptr));
+    stopAnimation(CP932("壁すべり"), static_cast< const char* >(nullptr));
     if (getPlayer()->mMovementStates._1) {
-        changeAnimation(static_cast< const char* >(nullptr), "基本");
+        changeAnimation(static_cast< const char* >(nullptr), CP932("基本"));
     }
-    stopEffect("共通壁手擦り");
+    stopEffect(CP932("共通壁手擦り"));
     getPlayer()->resetTornado();
     getPlayer()->mMovementStates._38 = false;
     return true;
@@ -625,7 +626,7 @@ bool MarioWall::startJump() {
     vertical.scale(verticalSpeed);
     jump += vertical;
     getPlayer()->tryWallJump(jump, true);
-    playEffect("共通壁ジャンプ");
+    playEffect(CP932("共通壁ジャンプ"));
     _1C = true;
     getPlayer()->mMovementStates._2B = false;
     return true;
@@ -650,17 +651,17 @@ bool MarioWall::startBackJump(u32 type) {
 
     switch (type) {
     case 0:
-        playEffectRTZ("結界ヒット", _24, getPlayer()->getWallPos());
-        playSound("結界ヒット", -1);
+        playEffectRTZ(CP932("結界ヒット"), _24, getPlayer()->getWallPos());
+        playSound(CP932("結界ヒット"), -1);
         getPlayer()->_402 = 0;
         getPlayer()->_428 = 60;
         break;
     case 1:
-        playEffectRTZ("水壁ヒット", _24, getPlayer()->getWallPos());
-        playSound("水弾かれ", -1);
+        playEffectRTZ(CP932("水壁ヒット"), _24, getPlayer()->getWallPos());
+        playSound(CP932("水弾かれ"), -1);
         break;
     case 2:
-        playSound("トランポリンジャンプ大", -1);
+        playSound(CP932("トランポリンジャンプ大"), -1);
         break;
     }
 
@@ -733,7 +734,7 @@ bool Mario::fixWallingDist() {
                 if (__fabsf(moved.z) < __fabsf(horizontal.z)) {
                     horizontal.z = moved.z;
                 }
-                addTrans(horizontal, "壁補正");
+                addTrans(horizontal, CP932("壁補正"));
             }
         }
     }
@@ -781,9 +782,9 @@ void Mario::tryWallPunch() {
     tryForcePowerJump(jump, true);
     mMovementStates._2B = true;
     startPadVib(2);
-    playSound("壁反射", -1);
-    playSound("声スピンキャンセル", -1);
-    playEffectTrans("壁ヒット", getWallPos());
+    playSound(CP932("壁反射"), -1);
+    playSound(CP932("声スピンキャンセル"), -1);
+    playEffectTrans(CP932("壁ヒット"), getWallPos());
 
     if (mMovementStates._8) {
         sendPunch(mFrontWallTriangle->mSensor, true);

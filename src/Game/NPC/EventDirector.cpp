@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/NPC/EventDirector.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/PowerStarHolder.hpp"
@@ -8,13 +9,13 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 
 EventDirector::EventDirector()
-    : NameObj("イベント指揮"), mPowerStarEventKeeper(), mStageStateKeeper(), mPowerStarHolder(), mCometEventKeeper(), mTimeAttackEventKeeper() {
+    : NameObj(CP932("イベント指揮")), mPowerStarEventKeeper(), mStageStateKeeper(), mPowerStarHolder(), mCometEventKeeper(), mTimeAttackEventKeeper() {
 }
 
 void EventDirector::init(const JMapInfoIter& rIter) {
     mPowerStarEventKeeper = new PowerStarEventKeeper();
     mStageStateKeeper = new StageStateKeeper();
-    mPowerStarHolder = new PowerStarHolder("パワースター保持");
+    mPowerStarHolder = new PowerStarHolder(CP932("パワースター保持"));
     mPowerStarHolder->initWithoutIter();
     mCometEventKeeper = new CometEventKeeper();
     mCometEventKeeper->init();
@@ -23,7 +24,7 @@ void EventDirector::init(const JMapInfoIter& rIter) {
 }
 
 void MR::declareEventPowerStar(const char* pParam1, s32 param2, bool param3) {
-    EventFunction::getPowerStarEventKeeper()->declareStar(pParam1, "ゾーン無し", param2, param3);
+    EventFunction::getPowerStarEventKeeper()->declareStar(pParam1, CP932("ゾーン無し"), param2, param3);
 }
 
 PowerStarEventKeeper* EventFunction::getPowerStarEventKeeper() {

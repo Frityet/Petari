@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/Coin.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/CoinHolder.hpp"
@@ -62,7 +63,7 @@ void Coin::init(const JMapInfoIter& rIter) {
     initShadow(rIter);
 
     if (mIsNeedBubble) {
-        mAirBubble = MR::createPartsModelNoSilhouettedMapObj(this, "アワ", "AirBubble", nullptr);
+        mAirBubble = MR::createPartsModelNoSilhouettedMapObj(this, CP932("アワ"), "AirBubble", nullptr);
         mAirBubble->initFixedPosition(TVec3f(0.0f, 70.0f, 0.0f), TVec3f(0.0f, 0.0f, 0.0f), nullptr);
         mAirBubble->makeActorDead();
         MR::registerDemoSimpleCastAll(mAirBubble);

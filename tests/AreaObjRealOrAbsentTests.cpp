@@ -1,3 +1,4 @@
+#include "SourceMirrorEncoding.hpp"
 #include "resource/TextEncoding.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "Game/AreaObj/AreaForm.hpp"
@@ -161,8 +162,8 @@ namespace {
             std::pair{"src/Game/AreaObj/LightAreaHolder.cpp", "src/Game/AreaObj/LightAreaHolder.cpp"},
         };
         for (const auto &[retail_source, host_source] : source_pairs) {
-            require(read_file(decomp_root / retail_source) == read_file(*pc_port_root / host_source),
-                    std::string("completed PC AreaObj sources must remain byte-identical to the decompiled source: ") + host_source);
+            require(smgpc::test::source_matches_with_cp932(read_file(decomp_root / retail_source), read_file(*pc_port_root / host_source)),
+                    std::string("completed PC AreaObj sources must remain identical to the decompiled source except explicit CP932 encoding: ") + host_source);
         }
     }
 

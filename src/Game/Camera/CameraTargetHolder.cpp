@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Camera/CameraTargetHolder.hpp"
 #include "Game/Camera/CameraTargetObj.hpp"
 
@@ -7,8 +8,8 @@ namespace {
 
 CameraTargetHolder::CameraTargetHolder() {
     mTarget = nullptr;
-    mTargetActor = new CameraTargetActor("アクター注目");
-    mTargetPlayer = new CameraTargetPlayer("マリオ注目");
+    mTargetActor = new CameraTargetActor(CP932("アクター注目"));
+    mTargetPlayer = new CameraTargetPlayer(CP932("マリオ注目"));
 }
 
 void CameraTargetHolder::movement() {

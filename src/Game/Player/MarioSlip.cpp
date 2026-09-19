@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
@@ -58,7 +59,7 @@ void Mario::moveSlopeSlide() {
 
             addVelocity(_910);
         }
-    } else if (isAnimationRun("スケーティング") || isAnimationRun("坂すべり上向きうつぶせ", 2) || isAnimationRun("坂すべり下向きあおむけ", 3)) {
+    } else if (isAnimationRun(CP932("スケーティング")) || isAnimationRun(CP932("坂すべり上向きうつぶせ"), 2) || isAnimationRun(CP932("坂すべり下向きあおむけ"), 3)) {
         TVec3f stack_20;
         stack_20.cross(getAirGravityVec(), _368);
         MR::normalizeOrZero(&stack_20);
@@ -180,7 +181,7 @@ void Mario::slopeMove() {
                 _8F0 = 10.0f;
             }
 
-            if (mTargetWalkSpeedIndex == 0 && !isAnimationRun("すべり着地")) {
+            if (mTargetWalkSpeedIndex == 0 && !isAnimationRun(CP932("すべり着地"))) {
                 _8F0 = 10.0f;
             }
 
@@ -237,7 +238,7 @@ void Mario::slopeMove() {
 
                 mVelocity += -_904 * (1.0f + ((_8F4 - 1.0f) * mActor->mConst->getTable()->mSlopeDashAccelFactor));
 
-                if (isAnimationRun("がんばり走り")) {
+                if (isAnimationRun(CP932("がんばり走り"))) {
                     stopAnimation(static_cast< const char* >(nullptr));
                 }
             }
@@ -313,11 +314,11 @@ void Mario::slopeMove() {
                 MR::normalize(&stack_11C);
 
                 f32 turnDot = MR::cos(1.0471976f);
-                if (isAnimationRun("坂すべり上向きうつぶせ", 2)) {
+                if (isAnimationRun(CP932("坂すべり上向きうつぶせ"), 2)) {
                     turnDot = MR::cos(1.4959966f);
                 }
 
-                if (isAnimationRun("スケーティング") && _910.dot(stack_17C) > 0.0f) {
+                if (isAnimationRun(CP932("スケーティング")) && _910.dot(stack_17C) > 0.0f) {
                     if (_910.length() > 2.0f) {
                         _8F8 = _910;
                     }
@@ -327,8 +328,8 @@ void Mario::slopeMove() {
 
                 if (stack_128.dot(stack_17C) < turnDot) {
                     setFrontVecKeepUp(stack_11C, 0.1f);
-                    if (!isAnimationRun("坂すべり上向きうつぶせ", 2)) {
-                        changeAnimation("坂すべり下向きあおむけ", 3);
+                    if (!isAnimationRun(CP932("坂すべり上向きうつぶせ"), 2)) {
+                        changeAnimation(CP932("坂すべり下向きあおむけ"), 3);
                     }
 
                     if (isStickOn() && _16C.dot(stack_11C) > 0.0f &&
@@ -336,8 +337,8 @@ void Mario::slopeMove() {
                         setFrontVecKeepUpAngle(_16C, mActor->mConst->getTable()->mSlipMoveTurnAngleRad);
                     }
                 } else {
-                    if (!isAnimationRun("坂すべり下向きあおむけ", 3)) {
-                        changeAnimation("坂すべり上向きうつぶせ", 2);
+                    if (!isAnimationRun(CP932("坂すべり下向きあおむけ"), 3)) {
+                        changeAnimation(CP932("坂すべり上向きうつぶせ"), 2);
                     }
 
                     if (_3C2 < 5) {
@@ -354,12 +355,12 @@ void Mario::slopeMove() {
                     }
                 }
             } else if (mDrawStates._C) {
-                if (!isAnimationRun("スケーティング")) {
+                if (!isAnimationRun(CP932("スケーティング"))) {
                     _910 = _8F8;
                     _8F8.zero();
                 }
 
-                changeAnimation("スケーティング", static_cast< const char* >(nullptr));
+                changeAnimation(CP932("スケーティング"), static_cast< const char* >(nullptr));
             }
         }
 
@@ -374,7 +375,7 @@ void Mario::slopeMove() {
 
             MR::normalize(&stack_17C);
             if (stack_17C.dot(worldPadDir) > 0.15f) {
-                playEffect("共通スリップ坂制動");
+                playEffect(CP932("共通スリップ坂制動"));
                 _3D0 = mActor->mConst->getTable()->mTurnSlipTime;
             }
         }
@@ -400,22 +401,22 @@ void Mario::slopeMove() {
 
         const MarioConstTable* table = mActor->mConst->getTable();
         if (_8F8.length() < table->mSlopeAnimeFinishSpeed) {
-            if (isAnimationRun("坂すべり上向きうつぶせ", 2)) {
-                changeAnimation("坂すべり上向き終了", static_cast< const char* >(nullptr));
+            if (isAnimationRun(CP932("坂すべり上向きうつぶせ"), 2)) {
+                changeAnimation(CP932("坂すべり上向き終了"), static_cast< const char* >(nullptr));
             }
 
-            if (isAnimationRun("坂すべり下向きあおむけ", 3)) {
-                changeAnimation("坂すべり下向き終了", static_cast< const char* >(nullptr));
+            if (isAnimationRun(CP932("坂すべり下向きあおむけ"), 3)) {
+                changeAnimation(CP932("坂すべり下向き終了"), static_cast< const char* >(nullptr));
             }
 
-            if (isAnimationRun("スケーティング")) {
-                stopAnimation("スケーティング");
+            if (isAnimationRun(CP932("スケーティング"))) {
+                stopAnimation(CP932("スケーティング"));
             }
 
             if (isStickOn() && _8F0 == 0.0f) {
-                if (isAnimationRun("坂すべり上向き終了")) {
+                if (isAnimationRun(CP932("坂すべり上向き終了"))) {
                     stopAnimation(static_cast< const char* >(nullptr));
-                } else if (isAnimationRun("坂すべり下向き終了")) {
+                } else if (isAnimationRun(CP932("坂すべり下向き終了"))) {
                     stopAnimation(static_cast< const char* >(nullptr));
                 }
             }
@@ -451,7 +452,7 @@ void Mario::slopeMove() {
 }
 
 bool Mario::taskOnSlipTurn(u32) {
-    if (!isAnimationRun("ターンブレーキ滑り床")) {
+    if (!isAnimationRun(CP932("ターンブレーキ滑り床"))) {
         setFrontVecKeepUp(-_220);
         _754 = 0;
         _74C = 0.0f;

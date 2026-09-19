@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/ScenarioTitle.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/LayoutUtil.hpp"
@@ -10,7 +11,7 @@ namespace {
     NEW_NERVE(ScenarioTitleEnd, ScenarioTitle, End);
 };  // namespace
 
-ScenarioTitle::ScenarioTitle() : LayoutActor("シナリオ名表示", true) {
+ScenarioTitle::ScenarioTitle() : LayoutActor(CP932("シナリオ名表示"), true) {
 }
 
 void ScenarioTitle::init(const JMapInfoIter& rInfo) {

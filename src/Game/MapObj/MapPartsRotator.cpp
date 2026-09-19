@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/MapPartsRotator.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/Spine.hpp"
@@ -14,7 +15,7 @@ namespace NrvMapPartsRotator {
 };  // namespace NrvMapPartsRotator
 
 // floating reg order on the inlined matrix set, but oh well
-MapPartsRotator::MapPartsRotator(LiveActor* pActor) : MapPartsRotatorBase(pActor, "自身回転") {
+MapPartsRotator::MapPartsRotator(LiveActor* pActor) : MapPartsRotatorBase(pActor, CP932("自身回転")) {
     _18 = 0.0f;
     mRotateAngle = 0.0f;
     mRotateStopTime = 0;

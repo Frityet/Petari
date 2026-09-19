@@ -1,10 +1,11 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Camera/Camera.hpp"
 
 class CameraWaterFollow : public Camera {
 public:
-    CameraWaterFollow(const char* pName = "水中フォロー");
+    CameraWaterFollow(const char* pName = CP932("水中フォロー"));
 
     virtual void reset();
     virtual CameraTargetObj* calc();

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/LensFlare.hpp"
 
 #include "Game/LiveActor/Nerve.hpp"
@@ -160,7 +161,7 @@ void LensFlareModel::notifyInArea() {
     }
 }
 
-LensFlareRing::LensFlareRing() : LensFlareModel("レンズフレアリング", "LensFlare"), mDistanceFrame(0.0F) {
+LensFlareRing::LensFlareRing() : LensFlareModel(CP932("レンズフレアリング"), "LensFlare"), mDistanceFrame(0.0F) {
     mScale.set(cRingScale, cRingScale, cRingScale);
     mFadeStep = cFadeStep;
 }
@@ -181,7 +182,7 @@ void LensFlareRing::controlAnim() {
     MR::setBckFrameAndStop(this, mDistanceFrame * static_cast< f32 >(MR::getBckCtrl(this)->getEnd()));
 }
 
-LensFlareGlow::LensFlareGlow() : LensFlareModel("グレア（円形）", "GlareGlow") {
+LensFlareGlow::LensFlareGlow() : LensFlareModel(CP932("グレア（円形）"), "GlareGlow") {
     mFadeStep = cFadeStep;
 }
 
@@ -195,7 +196,7 @@ void LensFlareGlow::controlAnim() {
     MR::setBrkFrame(this, (1.0F - mIntensity * mFade) * static_cast< f32 >(MR::getBrkCtrl(this)->getEnd()));
 }
 
-LensFlareLine::LensFlareLine() : LensFlareModel("グレア（ライン）", "GlareLine") {
+LensFlareLine::LensFlareLine() : LensFlareModel(CP932("グレア（ライン）"), "GlareLine") {
     mFadeStep = cFadeStep;
 }
 
@@ -209,7 +210,7 @@ void LensFlareLine::controlAnim() {
 }
 
 LensFlareDirector::LensFlareDirector()
-    : NameObj("レンズフレア管理"), mDrawSyncCallbackHost(nullptr), mRing(nullptr), mGlow(nullptr), mLine(nullptr),
+    : NameObj(CP932("レンズフレア管理")), mDrawSyncCallbackHost(nullptr), mRing(nullptr), mGlow(nullptr), mLine(nullptr),
       mBrightObjArray(), mBrightnessCenter(0.0F, 0.0F), mBright(0.0F), mRealCenter(0.0F, 0.0F),
       mNowCenter(0.0F, 0.0F), mDrawSyncTokenBase(0U), mDrawSyncTokenIndex(0U), mBrightCamInfo(nullptr) {
     sLiveLensFlareDirector = this;

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioStick.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Map/HitInfo.hpp"
@@ -90,10 +91,10 @@ bool MarioStick::setStickSensor(const HitSensor* pSensor) {
 
 bool MarioStick::start() {
     _4C = 0;
-    changeAnimation("ハチ壁くっつき", "ハチ壁くっつき中");
+    changeAnimation(CP932("ハチ壁くっつき"), CP932("ハチ壁くっつき中"));
     startPadVib(u32(0));
-    playEffectTrans("ハチ花くっつき", _38);
-    playSound("ハチ壁くっつき");
+    playEffectTrans(CP932("ハチ花くっつき"), _38);
+    playSound(CP932("ハチ壁くっつき"));
     mActor->_F44 = 0;
     getPlayer()->setFrontVecKeepSide(-_20);
     _6C = -_20;
@@ -107,7 +108,7 @@ bool MarioStick::update() {
     getPlayer()->setTrans(_14, nullptr);
 
     if (checkTrgA()) {
-        if (!isAnimationRun("ハチ壁くっつき")) {
+        if (!isAnimationRun(CP932("ハチ壁くっつき"))) {
             if (startJump()) {
                 return false;
             }
@@ -136,9 +137,9 @@ bool MarioStick::update() {
     PSMTXMultVec(rotMtx, &stack_2C, &stack_2C);
 
     if (getStickP() > 0.0f) {
-        changeAnimation("ハチ壁移動", static_cast< const char* >(nullptr));
+        changeAnimation(CP932("ハチ壁移動"), static_cast< const char* >(nullptr));
     } else {
-        stopAnimation("ハチ壁移動");
+        stopAnimation(CP932("ハチ壁移動"));
     }
 
     if (MR::diffAngleAbs(stack_2C, _2C) < 1.308997f) {
@@ -164,15 +165,15 @@ bool MarioStick::update() {
 }
 
 bool MarioStick::close() {
-    stopAnimation("ハチ壁くっつき", "落下");
+    stopAnimation(CP932("ハチ壁くっつき"), CP932("落下"));
 
     if (getPlayer()->mMovementStates._1) {
-        changeAnimation(nullptr, "基本");
+        changeAnimation(nullptr, CP932("基本"));
     }
 
     getPlayer()->mMovementStates._38 = 0;
     mActor->_F44 = 1;
-    playEffectTrans("ハチ花くっつき", _38);
+    playEffectTrans(CP932("ハチ花くっつき"), _38);
     return true;
 }
 

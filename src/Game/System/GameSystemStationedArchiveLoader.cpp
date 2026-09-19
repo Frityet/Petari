@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/System/GameSystemStationedArchiveLoader.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/System/GameSystemFunction.hpp"
@@ -105,7 +106,7 @@ JKRExpHeap* PlayerHeapHolder::createHeap(u32 size, JKRHeap* pParent) {
     return JKRExpHeap::create(size, pParent, true);
 }
 
-GameSystemStationedArchiveLoader::GameSystemStationedArchiveLoader() : NerveExecutor("常駐データ初期化"), mHeapHolder(nullptr), _C(false) {
+GameSystemStationedArchiveLoader::GameSystemStationedArchiveLoader() : NerveExecutor(CP932("常駐データ初期化")), mHeapHolder(nullptr), _C(false) {
     initNerve(&::GameSystemStationedArchiveLoaderLoadAudio1stWaveData::sInstance);
 }
 
@@ -176,14 +177,14 @@ void GameSystemStationedArchiveLoader::exeLoadStationedArchivePlayer() {
         mHeapHolder = new PlayerHeapHolder();
 
         MR::startFunctionAsyncExecute(MR::Functor(this, &GameSystemStationedArchiveLoader::startToLoadStationedArchivePlayer, true), 14,
-                                      "常駐リソース読み込み");
+                                      CP932("常駐リソース読み込み"));
     } else if (trySuspend()) {
-        MR::suspendAsyncExecuteThread("常駐リソース読み込み");
+        MR::suspendAsyncExecuteThread(CP932("常駐リソース読み込み"));
         setNerve(&::GameSystemStationedArchiveLoaderSuspended::sInstance);
         return;
     }
 
-    if (MR::tryEndFunctionAsyncExecute("常駐リソース読み込み")) {
+    if (MR::tryEndFunctionAsyncExecute(CP932("常駐リソース読み込み"))) {
         createAndAddPlayerArchives(mHeapHolder->mIsDataMario);
 
         if (mHeapHolder != nullptr) {
@@ -197,17 +198,17 @@ void GameSystemStationedArchiveLoader::exeLoadStationedArchivePlayer() {
 void GameSystemStationedArchiveLoader::exeLoadStationedArchiveOthers() {
     if (MR::isFirstStep(this)) {
         if (!tryAsyncExecuteIfNotSuspend(MR::Functor_Inline(this, &GameSystemStationedArchiveLoader::startToLoadStationedArchiveOthers),
-                                         "常駐リソース読み込み")) {
+                                         CP932("常駐リソース読み込み"))) {
             setNerve(&::GameSystemStationedArchiveLoaderSuspended::sInstance);
             return;
         }
     } else if (trySuspend()) {
-        MR::suspendAsyncExecuteThread("常駐リソース読み込み");
+        MR::suspendAsyncExecuteThread(CP932("常駐リソース読み込み"));
         setNerve(&::GameSystemStationedArchiveLoaderSuspended::sInstance);
         return;
     }
 
-    if (MR::tryEndFunctionAsyncExecute("常駐リソース読み込み")) {
+    if (MR::tryEndFunctionAsyncExecute(CP932("常駐リソース読み込み"))) {
         createAndAddOtherArchives();
         setNerve(&::GameSystemStationedArchiveLoaderLoadStationedArchivePlayer::sInstance);
     }
@@ -233,10 +234,10 @@ void GameSystemStationedArchiveLoader::exeChangeArchivePlayer() {
         mHeapHolder->dispose();
         MR::startFunctionAsyncExecute(
             MR::Functor_Inline(this, &GameSystemStationedArchiveLoader::startToLoadStationedArchivePlayer, mHeapHolder->mIsDataMario), 14,
-            "プレイヤーリソース読み込み");
+            CP932("プレイヤーリソース読み込み"));
     }
 
-    if (MR::tryEndFunctionAsyncExecute("プレイヤーリソース読み込み")) {
+    if (MR::tryEndFunctionAsyncExecute(CP932("プレイヤーリソース読み込み"))) {
         createAndAddPlayerArchives(mHeapHolder->mIsDataMario);
         setNerve(&::GameSystemStationedArchiveLoaderEnd::sInstance);
     }

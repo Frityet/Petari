@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "files": 330,
+  "literal_runs": 3580,
+  "source_bytes_including_terminators": 72679,
+  "encoded_bytes_including_terminators": 49921,
+  "embedded_nul_runs": 1,
+  "array_initializer_hazards": [],
+  "generated_translation_unit_sha256": "115e411392887bacb99cde6c1164c27c1ad1021946bd50b1f174e7a1bc42e95a",
+  "framed_compiler_output_sha256": "7a597ba9f4caeb724cb294cc3aa9970e95ba3e57a33436aea5deaf043b4abbed",
+  "compiler": "/opt/homebrew/opt/llvm/bin/clang++",
+  "cpp_standard": "c++23"
+}

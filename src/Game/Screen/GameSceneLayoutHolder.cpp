@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/GameSceneLayoutHolder.hpp"
 #include "Game/MapObj/ChipHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -15,20 +16,20 @@
 #include "Game/Util/ObjUtil.hpp"
 
 GameSceneLayoutHolder::GameSceneLayoutHolder()
-    : NameObj("ゲームシーンのレイアウト保持"), mCameraInfo(nullptr), mInformationMessage(nullptr), mMarioMeter(nullptr), mMarioSubMeter(nullptr),
+    : NameObj(CP932("ゲームシーンのレイアウト保持")), mCameraInfo(nullptr), mInformationMessage(nullptr), mMarioMeter(nullptr), mMarioSubMeter(nullptr),
       mMissLayout(nullptr), mNoteCounter(nullptr), mYesNoLayout(nullptr), mPurpleCoinCounter(nullptr), _30(false), _31(false),
       mCounterLayoutCtrl(nullptr), mIsActiveDefaultGameLayout(true) {
     MR::joinToNameObjGroup(this, "IgnorePauseNameObj");
     MR::connectToSceneLayoutMovement(this);
 
-    mMarioMeter = new MarioMeter("マリオメーター");
+    mMarioMeter = new MarioMeter(CP932("マリオメーター"));
     mMarioMeter->initWithoutIter();
 
     mCounterLayoutCtrl = new CounterLayoutController();
     mCounterLayoutCtrl->initWithoutIter();
     mCounterLayoutCtrl->setHPMeter(mMarioMeter);
 
-    mCameraInfo = new CameraInfo("カメラ情報表示");
+    mCameraInfo = new CameraInfo(CP932("カメラ情報表示"));
     mCameraInfo->initWithoutIter();
 
     mInformationMessage = new InformationMessage();
@@ -40,10 +41,10 @@ GameSceneLayoutHolder::GameSceneLayoutHolder()
     mMissLayout = new MissLayout();
     mMissLayout->initWithoutIter();
 
-    mMarioSubMeter = new MarioSubMeter("マリオサブメーター");
+    mMarioSubMeter = new MarioSubMeter(CP932("マリオサブメーター"));
     mMarioSubMeter->initWithoutIter();
 
-    mNoteCounter = new NoteCounter("音符カウンタ");
+    mNoteCounter = new NoteCounter(CP932("音符カウンタ"));
     mNoteCounter->initWithoutIter();
     MR::hideLayout(mNoteCounter);
 
@@ -52,7 +53,7 @@ GameSceneLayoutHolder::GameSceneLayoutHolder()
 }
 
 void GameSceneLayoutHolder::createPurpleCoinCounter() {
-    mPurpleCoinCounter = new PurpleCoinCounter("パープルコインカウンタ");
+    mPurpleCoinCounter = new PurpleCoinCounter(CP932("パープルコインカウンタ"));
     mPurpleCoinCounter->initWithoutIter();
 }
 

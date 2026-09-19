@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/System/SaveDataHandleSequence.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/SaveIcon.hpp"
@@ -32,7 +33,7 @@ namespace {
 };  // namespace
 
 SaveDataHandleSequence::SaveDataHandleSequence()
-    : NerveExecutor("セーブ/ロード"), mSysConfigFile(nullptr), mCurrentUserFile(nullptr), mBackupUserFile(nullptr), mSaveDataHandler(nullptr),
+    : NerveExecutor(CP932("セーブ/ロード")), mSysConfigFile(nullptr), mCurrentUserFile(nullptr), mBackupUserFile(nullptr), mSaveDataHandler(nullptr),
       mNANDErrorSequence(nullptr), mSysInfoWindowConfirm(nullptr), mSysInfoWindowSave(nullptr), _24(0), mIsConfirmRemind(false),
       mIsSaveAndQuitMsg(false), _2A(false), _2B(false), _2C(false), mWorkUserFile(nullptr), mNerveForError(nullptr), mTempBuffer(nullptr),
       mOnSaveSuccessFunc(nullptr), mJustBeforeSaveFunc(nullptr), mSaveIcon(nullptr) {

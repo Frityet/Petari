@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/WarpPod.hpp"
 #include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/LiveActor/LiveActorGroup.hpp"
@@ -40,7 +41,7 @@ namespace MR {
 };  // namespace MR
 
 WarpPodMgr::WarpPodMgr(const char* pName) : NameObj(pName) {
-    _10 = new LiveActorGroup("ワープポッド群", 128);
+    _10 = new LiveActorGroup(CP932("ワープポッド群"), 128);
     _C = nullptr;
     _14 = 0;
 
@@ -119,7 +120,7 @@ void WarpPodMgr::draw() const {
 
 void WarpPod::init(const JMapInfoIter& rIter) {
     MR::createSceneObj(SceneObj_WarpPodMgr);
-    MR::joinToGroup(this, "ワープポッド群");
+    MR::joinToGroup(this, CP932("ワープポッド群"));
     LiveActor::init(rIter);
     MR::initDefaultPos(this, rIter);
     initModelManagerWithAnm("WarpPod", nullptr, false);
@@ -162,7 +163,7 @@ void WarpPod::init(const JMapInfoIter& rIter) {
     MR::getJMapInfoArg0WithInit(rIter, &arg0);
 
     char eventCameraName[256];
-    sprintf(eventCameraName, "ワープカメラ %d-%c", groupID, arg0 + 65);
+    sprintf(eventCameraName, CP932("ワープカメラ %d-%c"), groupID, arg0 + 65);
     MR::declareEventCamera(_94, eventCameraName);
 
     mEventCameraName = new char[strlen(eventCameraName) + 1];
@@ -285,7 +286,7 @@ void WarpPod::initPair() {
     }
 
     char buf[256];
-    sprintf(buf, "wPod出現カメラ %d", _90);
+    sprintf(buf, CP932("wPod出現カメラ %d"), _90);
 
     _9C = new char[strlen(buf) + 1];
     strcpy(_9C, buf);
@@ -334,7 +335,7 @@ void WarpPod::control() {
         return;
     }
 
-    if (!MR::tryStartDemoWithoutCinemaFrame(this, "出現")) {
+    if (!MR::tryStartDemoWithoutCinemaFrame(this, CP932("出現"))) {
         return;
     }
 
@@ -362,7 +363,7 @@ void WarpPod::movement() {
             MR::validateClipping(this);
 
             if (_CC) {
-                MR::endDemo(this, "出現");
+                MR::endDemo(this, CP932("出現"));
             }
 
             mPairPod->glowEffect();

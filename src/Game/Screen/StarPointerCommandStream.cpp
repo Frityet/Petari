@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/StarPointerCommandStream.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/StarPointerDirector.hpp"
@@ -33,7 +34,7 @@ namespace {
 };  // namespace
 
 StarPointerCommandStream::StarPointerCommandStream(const TVec2f* pScreenPos)
-    : LayoutActor("スターポインタ指示線", true), _20(false), mOffScreenTime(0), _28(0.0f), mScreenPos(pScreenPos), mWorldPos(nullptr),
+    : LayoutActor(CP932("スターポインタ指示線"), true), _20(false), mOffScreenTime(0), _28(0.0f), mScreenPos(pScreenPos), mWorldPos(nullptr),
       mPadChannel(-1), mColor(nullptr) {
 }
 

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioSlider.hpp"
 #include "Game/Enemy/KariKariDirector.hpp"
 #include "Game/Map/HitInfo.hpp"
@@ -89,10 +90,10 @@ void Mario::startSlider() {
         if (getPlayer()->mMovementStates._B) {
             if (getPlayer()->mMovementStates.jumping) {
                 mDrawStates._14 = true;
-                playSound("尻ドロップ着地");
-                playSound("声尻ドロップ着地");
-                playEffectRT("属性尻ドロップ", _368, mPosition);
-                startPadVib("最強");
+                playSound(CP932("尻ドロップ着地"));
+                playSound(CP932("声尻ドロップ着地"));
+                playEffectRT(CP932("属性尻ドロップ"), _368, mPosition);
+                startPadVib(CP932("最強"));
                 startCamVib(0);
                 MR::removeAllClingingKarikari();
             }
@@ -109,7 +110,7 @@ bool MarioSlider::start() {
     MR::vecKillElement(_14, getPlayer()->_368, &_14);
     _20 = getFrontVec();
     getPlayer()->cancelSquatMode();
-    changeAnimation("スライダー尻", "スライダー尻");
+    changeAnimation(CP932("スライダー尻"), CP932("スライダー尻"));
     _40 = 10;
     _38 = 0.0f;
     _3C = 0.0f;
@@ -196,7 +197,7 @@ bool MarioSlider::update() {
             }
 
             calcWallHit();
-            playSound("坂滑り");
+            playSound(CP932("坂滑り"));
             return true;
         }
     }
@@ -206,11 +207,11 @@ bool MarioSlider::update() {
 
 bool MarioSlider::close() {
     if (getPlayer()->isSwimming()) {
-        stopAnimation("スライダー尻");
+        stopAnimation(CP932("スライダー尻"));
     } else if (getPlayer()->mMovementStates.jumping) {
-        stopAnimation("スライダー尻", "基本");
+        stopAnimation(CP932("スライダー尻"), CP932("基本"));
     } else {
-        stopAnimation("スライダー尻", "落下");
+        stopAnimation(CP932("スライダー尻"), CP932("落下"));
     }
 
     return true;

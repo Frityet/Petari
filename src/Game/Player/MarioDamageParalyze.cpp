@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
@@ -57,8 +58,8 @@ bool MarioParalyze::close() {
         mActor->changeGameOverAnimation();
     }
 
-    stopAnimation("電気ダメージ");
-    stopEffect("ビリビリ");
+    stopAnimation(CP932("電気ダメージ"));
+    stopEffect(CP932("ビリビリ"));
 
     _16 = 120;
 
@@ -70,11 +71,11 @@ bool MarioParalyze::close() {
 }
 
 bool MarioParalyze::start() {
-    changeAnimationNonStop("電気ダメージ");
-    playSound("ダメージ");
-    playSound("電気ダメージ");
-    playSound("声電気ダメージ");
-    playEffect("ビリビリ");
+    changeAnimationNonStop(CP932("電気ダメージ"));
+    playSound(CP932("ダメージ"));
+    playSound(CP932("電気ダメージ"));
+    playSound(CP932("声電気ダメージ"));
+    playEffect(CP932("ビリビリ"));
 
     startPadVib(3);
 
@@ -111,8 +112,8 @@ bool MarioParalyze::update() {
         }
 
         if (getPlayer()->getMovementStates()._1) {
-            changeAnimation("電気ダメージ終了", static_cast< const char* >(nullptr));
-            playSound("声電気ダメージ終了");
+            changeAnimation(CP932("電気ダメージ終了"), static_cast< const char* >(nullptr));
+            playSound(CP932("声電気ダメージ終了"));
         }
 
         if (mActor->mHealth == 0) {

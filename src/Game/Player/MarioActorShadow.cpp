@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Player/J3DModelX.hpp"
@@ -44,7 +45,7 @@ void MarioActor::calcViewReflectionModel() {
     PSMTXIdentity(offsetMatrix);
     TVec3f position;
     f32 offset = 10.0f;
-    if (isAnimationRun("ターンジャンプ")) {
+    if (isAnimationRun(CP932("ターンジャンプ"))) {
         offset = 25.0f;
     }
     if (_A08 != 6 && _A08 != 7) {

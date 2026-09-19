@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/System/GameSequenceProgress.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/PlayerMissLeft.hpp"
@@ -39,7 +40,7 @@ namespace {
 };  // namespace
 
 GameSequenceProgress::GameSequenceProgress()
-    : NerveExecutor("シーケンス進行"), mStarPointerOnOffController(), mStorySequenceExecutor(), mFindingLuigiEventScheduler(),
+    : NerveExecutor(CP932("シーケンス進行")), mStarPointerOnOffController(), mStorySequenceExecutor(), mFindingLuigiEventScheduler(),
       mGalaxyCometScheduler(), mLuigiLeftSupplier(), mPlayerMissLeft(), _20(), _24(), _25(), _26(true) {
     initNerve(&::GameSequenceProgressBooting::sInstance);
 
@@ -52,7 +53,7 @@ GameSequenceProgress::GameSequenceProgress()
 void GameSequenceProgress::initAfterResourceLoaded() {
     mGalaxyCometScheduler = new GalaxyCometScheduler();
 
-    mPlayerMissLeft = new PlayerMissLeft("ミス時のプレイヤー残機表示");
+    mPlayerMissLeft = new PlayerMissLeft(CP932("ミス時のプレイヤー残機表示"));
     mPlayerMissLeft->initWithoutIter();
 
     mFindingLuigiEventScheduler->initAfterResourceLoaded();
@@ -115,7 +116,7 @@ void GameSequenceProgress::startScene() {
             MR::forceOpenSystemWipeFade();
         }
 
-        if (!GameDataFunction::isPassedStoryEvent("スピン権利")) {
+        if (!GameDataFunction::isPassedStoryEvent(CP932("スピン権利"))) {
             MR::setPlayerSwingPermission(false);
         }
     }

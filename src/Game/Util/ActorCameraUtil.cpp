@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Util/ActorCameraUtil.hpp"
 #include "Game/Camera/CameraTargetArg.hpp"
 #include "Game/LiveActor/ActorCameraInfo.hpp"
@@ -13,17 +14,17 @@
 namespace {
     void createActorCameraName(char* pName, u32 nameSize, const LiveActor* pActor, const ActorCameraInfo* pInfo) {
         if (pInfo->mCameraSetID & 0x8000) {
-            snprintf(pName, nameSize, "%s共通%03d", pActor->getName(), pInfo->mCameraSetID - 0x8000);
+            snprintf(pName, nameSize, CP932("%s共通%03d"), pActor->getName(), pInfo->mCameraSetID - 0x8000);
         } else {
-            snprintf(pName, nameSize, "%s固有%03d", pActor->getName(), pInfo->mCameraSetID);
+            snprintf(pName, nameSize, CP932("%s固有%03d"), pActor->getName(), pInfo->mCameraSetID);
         }
     }
 
     void createMultiActorCameraName(char* pName, u32 nameSize, const LiveActor* pActor, const ActorCameraInfo* pInfo, const char* pEventName) {
         if (pInfo->mCameraSetID & 0x8000) {
-            snprintf(pName, nameSize, "%s共通%s%03d", pActor->getName(), pEventName, pInfo->mCameraSetID - 0x8000);
+            snprintf(pName, nameSize, CP932("%s共通%s%03d"), pActor->getName(), pEventName, pInfo->mCameraSetID - 0x8000);
         } else {
-            snprintf(pName, nameSize, "%s固有%s%03d", pActor->getName(), pEventName, pInfo->mCameraSetID);
+            snprintf(pName, nameSize, CP932("%s固有%s%03d"), pActor->getName(), pEventName, pInfo->mCameraSetID);
         }
     }
 };  // namespace

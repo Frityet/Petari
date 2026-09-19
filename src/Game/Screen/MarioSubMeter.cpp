@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/MarioSubMeter.hpp"
 #include "Game/Screen/SubMeterLayout.hpp"
 
@@ -59,9 +60,9 @@ MarioSubMeter::~MarioSubMeter() {
 }
 
 void MarioSubMeter::init(const JMapInfoIter& rIter) {
-    mFlyMeter = new SubMeterLayout("ハチメーター", "FlyMeter");
+    mFlyMeter = new SubMeterLayout(CP932("ハチメーター"), "FlyMeter");
     mFlyMeter->initWithoutIter();
 
-    mAirMeter = new SubMeterLayout("水中メーター", "AirMeter");
+    mAirMeter = new SubMeterLayout(CP932("水中メーター"), "AirMeter");
     mAirMeter->initWithoutIter();
 }

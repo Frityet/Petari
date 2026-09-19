@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioSwim.hpp"
 #include "Game/AreaObj/WaterArea.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
@@ -164,13 +165,13 @@ void Mario::startSwim() {
     if (!isStatusActive(MarioStatus_Swim)) {
         if (getPlayer()->isDamaging()) {
             mSwim->_9D = 4;
-            playSound("水落下突入");
+            playSound(CP932("水落下突入"));
         } else if (getPlayer()->getMovementStates().jumping) {
             mSwim->_9D = 1;
-            playSound("水落下突入");
+            playSound(CP932("水落下突入"));
         } else {
             mSwim->_9D = 0;
-            playSound("水歩行突入");
+            playSound(CP932("水歩行突入"));
         }
 
         changeStatus(mSwim);
@@ -341,10 +342,10 @@ bool MarioSwim::start() {
     u32 r1e = 0, r1d = 0;
     _1D = false;
     _1E = 0;
-    if (isAnimationRun("飛び込みジャンプ")) {
+    if (isAnimationRun(CP932("飛び込みジャンプ"))) {
         r1e = 1;
     }
-    if (isAnimationRun("後方飛び込みジャンプ")) {
+    if (isAnimationRun(CP932("後方飛び込みジャンプ"))) {
         r1e = 1;
         getPlayer()->setFrontVecKeepUp(-getFrontVec(), -1.0f);
     }
@@ -363,13 +364,13 @@ bool MarioSwim::start() {
     }
     getPlayer()->_10.digitalJump = false;
 
-    if (isAnimationRun("リングダッシュ")) {
+    if (isAnimationRun(CP932("リングダッシュ"))) {
         r1e = 2;
     }
-    if (isAnimationRun("水泳スピン移動")) {
+    if (isAnimationRun(CP932("水泳スピン移動"))) {
         r1e = 3;
     }
-    if (isAnimationRun("水泳スピンジャンプ")) {
+    if (isAnimationRun(CP932("水泳スピンジャンプ"))) {
         r1e = 3;
     }
 
@@ -377,8 +378,8 @@ bool MarioSwim::start() {
     MR::normalize(&mFrontVec);
     stopAnimationUpper(nullptr, nullptr);
     // Basic Swimming
-    changeAnimation(nullptr, "水泳基本");
-    changeAnimationNonStop("水泳基本");
+    changeAnimation(nullptr, CP932("水泳基本"));
+    changeAnimationNonStop(CP932("水泳基本"));
     getPlayer()->mMovementStates._1 = false;
     f32 fr1f = mDistToFloor;
 
@@ -422,11 +423,11 @@ bool MarioSwim::start() {
             mForwardSpeed = 10.0f;
 
             if (mJetTimer != 0) {
-                changeAnimationNonStop("水泳ジェット");
+                changeAnimationNonStop(CP932("水泳ジェット"));
             } else {
-                changeAnimation("水泳ジャンプダイブ回転", static_cast< const char* >(nullptr));
+                changeAnimation(CP932("水泳ジャンプダイブ回転"), static_cast< const char* >(nullptr));
             }
-            playEffect("水面Ｚ沈降");
+            playEffect(CP932("水面Ｚ沈降"));
 
             switch (r1e) {
             case 0:
@@ -452,12 +453,12 @@ bool MarioSwim::start() {
             MR::normalize(&stack_38);
             getPlayer()->forceSetHeadVecKeepSide(stack_38);
         } else if (r1d) {
-            changeAnimation("水上ダメージ着水", static_cast< const char* >(nullptr));
+            changeAnimation(CP932("水上ダメージ着水"), static_cast< const char* >(nullptr));
             mSinkTimer = mActor->getConst().getTable()->mJumpDamageSinkTimer;
             mKnockbackTimer = 0x78;
         } else {
             mForwardSpeed = (0.2f + 0.1f * fr1f) * mActor->getConst().getTable()->mSwimFrontMaxSpeed;
-            changeAnimation("水泳ジャンプダイブ", static_cast< const char* >(nullptr));
+            changeAnimation(CP932("水泳ジャンプダイブ"), static_cast< const char* >(nullptr));
 
             mActor->setBlendMtxTimer(8);
             mActionLockTimer = 15;
@@ -499,10 +500,10 @@ bool MarioSwim::start() {
         }
     }
     if (r1e == 2) {
-        if (!isAnimationRun("水泳ジェット")) {
-            changeAnimation("水泳ジェット開始", "水泳ジェット");
+        if (!isAnimationRun(CP932("水泳ジェット"))) {
+            changeAnimation(CP932("水泳ジェット開始"), CP932("水泳ジェット"));
         } else {
-            changeAnimation(nullptr, "水泳ジェット");
+            changeAnimation(nullptr, CP932("水泳ジェット"));
         }
     }
 
@@ -545,7 +546,7 @@ bool MarioSwim::update() {
         TVec3f stack_194;
         MR::vecKillElement(mSurfaceNorm - getTrans(), getAirGravityVec(), &stack_194);
         if (stack_194.length() > 100.0f || -mWaterDepth >= getPlayer()->mVerticalSpeed || mKnockbackTimer != 0 || mWallStickTimer != 0) {
-            if (!isAnimationRun("水泳ジャンプダイブ")) {
+            if (!isAnimationRun(CP932("水泳ジャンプダイブ"))) {
                 if (mJetTimer != 0) {
                     doJetJump(1);
                     return false;
@@ -603,12 +604,12 @@ bool MarioSwim::update() {
             } else {
                 u32 tmp = 0x1E;
                 // Surface Paddle
-                if (isAnimationRun("水上一掻き")) {
+                if (isAnimationRun(CP932("水上一掻き"))) {
                     tmp = 0x1E;
                 }
 
                 if (checkLvlA()) {
-                    if (_9C && (!isAnimationRun("水上一掻き") || !mSurfacePaddleHoldTimer)) {
+                    if (_9C && (!isAnimationRun(CP932("水上一掻き")) || !mSurfacePaddleHoldTimer)) {
                         mSurfacePaddleHoldTimer++;
                     }
                     if ((mWallStickTimer != 0 || mJetTimer != 0 || getPlayer()->mMovementStates._8 || getPlayer()->mMovementStates._32) &&
@@ -655,7 +656,7 @@ bool MarioSwim::update() {
     } else if (mWaterDepth > -30.0f) {
         if (!mActionLockTimer && !mZSinkTimer && !mSinkTimer && mJetTimer == 0) {
             getAnimator()->forceSetBlendWeight(::cWeightTable);
-            changeAnimation("炊泳上昇呼吸", static_cast< const char* >(nullptr));
+            changeAnimation(CP932("炊泳上昇呼吸"), static_cast< const char* >(nullptr));
         }
 
         if (!mSinkTimer) {
@@ -678,10 +679,10 @@ bool MarioSwim::update() {
             stack_188 += getGravityVec() * res2;
             getPlayer()->tryForcePowerJump(stack_188, false);
             mNextAction = EXIT_ACTION_POWER_JUMP;
-            if (isAnimationRun("水泳スピン移動")) {
-                changeAnimationNonStop("水泳スピン移動");
+            if (isAnimationRun(CP932("水泳スピン移動"))) {
+                changeAnimationNonStop(CP932("水泳スピン移動"));
             } else {
-                changeAnimationNonStop("水泳スピンジャンプ");
+                changeAnimationNonStop(CP932("水泳スピンジャンプ"));
             }
             return false;
         }
@@ -697,7 +698,7 @@ bool MarioSwim::update() {
             getPlayer()->tryForcePowerJump(mActor->getLastMove() * 2.0f + mUpVec * 10.0f, false);
 
             mNextAction = EXIT_ACTION_POWER_JUMP;
-            changeAnimationNonStop("リングダッシュ");
+            changeAnimationNonStop(CP932("リングダッシュ"));
             return false;
         }
     } else {
@@ -723,16 +724,16 @@ bool MarioSwim::update() {
             }
             if (mJetTimer != 0 && getPlayer()->mVerticalSpeed < 100.0f) {
                 mFloorContactTimer = 2;
-                playEffect("水底接触");
+                playEffect(CP932("水底接触"));
                 mForwardSpeed *= mActor->getConst().getTable()->mTurboReductionHitFloor;
             }
         }
         _1F = false;
     }
     if (mFloorContactTimer != 0) {
-        playSound("水底接触");
+        playSound(CP932("水底接触"));
         if (--mFloorContactTimer == 0) {
-            stopEffect("水底接触");
+            stopEffect(CP932("水底接触"));
         }
     }
     if (mZSinkTimer != 0 && --mZSinkTimer == 0) {
@@ -772,10 +773,10 @@ bool MarioSwim::update() {
                     }
                     mStickInputXInertia *= fr1c;
                 } else if (checkTrgZ() && !check7Aand7C()) {
-                    stopAnimationUpper("水泳水面初期移動", nullptr);
-                    changeAnimation("水泳潜り", static_cast< const char* >(nullptr));
-                    playEffect("水面Ｚ沈降");
-                    playSound("水面潜り", -1);
+                    stopAnimationUpper(CP932("水泳水面初期移動"), nullptr);
+                    changeAnimation(CP932("水泳潜り"), static_cast< const char* >(nullptr));
+                    playEffect(CP932("水面Ｚ沈降"));
+                    playSound(CP932("水面潜り"), -1);
                     mZSinkTimer = mActor->getConst().getTable()->mZsinkStartTimer;
                 } else if (!checkLvlZ()) {
                     res = 0.0f;
@@ -790,9 +791,9 @@ bool MarioSwim::update() {
         } else {
             if (mRingDashTimer == 0 && mDistToFloor > 200.0f && checkTrgZ() && !mZSinkTimer && !mSinkTimer && mJetTimer == 0 && !check7Aand7C()) {
                 stopAnimation(nullptr);
-                changeAnimation("水泳潜り", static_cast< const char* >(nullptr));
-                playSound("水中潜り");
-                playEffect("水面Ｚ沈降");
+                changeAnimation(CP932("水泳潜り"), static_cast< const char* >(nullptr));
+                playSound(CP932("水中潜り"));
+                playEffect(CP932("水面Ｚ沈降"));
                 mZSinkTimer = mActor->getConst().getTable()->mZsinkStartTimer;
             }
             if (mJetTimer != 0) {
@@ -825,8 +826,8 @@ bool MarioSwim::update() {
             mVerticalAngle += res * (mStickInputYInertia * mActor->getConst().getTable()->mSwimRotSpeedX);
         }
 
-        if ((mForwardSpeed < ::cTurnMotionSpeed || mIsOnSurface || checkLvlA() || checkLvlZ()) && isAnimationRun("水泳一掻き") &&
-            isAnimationTerminate("水泳一掻き")) {
+        if ((mForwardSpeed < ::cTurnMotionSpeed || mIsOnSurface || checkLvlA() || checkLvlZ()) && isAnimationRun(CP932("水泳一掻き")) &&
+            isAnimationTerminate(CP932("水泳一掻き"))) {
             stopAnimation(nullptr, static_cast< const char* >(nullptr));
         }
 
@@ -837,7 +838,7 @@ bool MarioSwim::update() {
             if (!mIsSwimmingAtSurface && mKnockbackTimer == 0 && mWaterDepth < -400.0f) {
                 mIdleWaitTimer++;
                 if (MR::getRandom() < 0.03f) {
-                    playSound("水中ウエイト");
+                    playSound(CP932("水中ウエイト"));
                 }
             }
             if (mIdleWaitTimer >= 0x78) {
@@ -917,12 +918,12 @@ bool MarioSwim::update() {
                 mVerticalAngle = mVerticalAngle * (1.0f - fr1e) + fr1d * fr1e;
             }
             if (!check7Aand7C() && mJetTimer == 0) {
-                changeAnimation("水泳ターン下", static_cast< const char* >(nullptr));
+                changeAnimation(CP932("水泳ターン下"), static_cast< const char* >(nullptr));
             }
             r1b = false;
         }
         if (r1b) {
-            stopAnimation("水泳ターン下");
+            stopAnimation(CP932("水泳ターン下"));
         }
         if (mZSinkTimer != 0) {
             mVerticalAngle = MR::clamp(mVerticalAngle, 0.523598790169f, mActor->getConst().getTable()->mZsinkAngleX);
@@ -986,7 +987,7 @@ bool MarioSwim::update() {
     spin();
     TVec3f stack_110;
     stack_110 = getPlayer()->_1FC;
-    if (mJumpDiveTimer != 0 || mSinkTimer != 0 || isAnimationRun("水泳ジャンプダイブ回転") || isAnimationRun("水泳潜り")) {
+    if (mJumpDiveTimer != 0 || mSinkTimer != 0 || isAnimationRun(CP932("水泳ジャンプダイブ回転")) || isAnimationRun(CP932("水泳潜り"))) {
         stack_110.cross(stack_14C, stack_140);
     }
     if (mJetTimer == 0) {
@@ -1286,7 +1287,7 @@ void MarioSwim::decideVelocity() {
 
                     _1E = 0;
 
-                    bool isTerminated = MarioModule::isAnimationTerminate("水泳一掻き");
+                    bool isTerminated = MarioModule::isAnimationTerminate(CP932("水泳一掻き"));
 
                     bool inRange;
                     if (isTerminated || !_1D) {
@@ -1305,11 +1306,11 @@ void MarioSwim::decideVelocity() {
                             mActionLockTimer = 60;
                             mSwimYAccTimer = 50;
 
-                            if (!MarioModule::isAnimationRun("水泳潜り") && !MarioModule::isAnimationRun("水泳ジャンプダイブ回転")) {
+                            if (!MarioModule::isAnimationRun(CP932("水泳潜り")) && !MarioModule::isAnimationRun(CP932("水泳ジャンプダイブ回転"))) {
                                 getAnimator()->forceSetBlendWeight(::cWeightTableSP);
                                 stopAnimation(static_cast< const char* >(nullptr));
-                                changeAnimationNonStop("水泳一掻き");
-                                playSound("水中一掻き");
+                                changeAnimationNonStop(CP932("水泳一掻き"));
+                                playSound(CP932("水中一掻き"));
                                 mDashTimer = 40;
                             }
                         }
@@ -1329,7 +1330,7 @@ void MarioSwim::decideVelocity() {
                     mForwardSpeed *= mActor->getConst().getTable()->mSwimStopIne;
                 }
 
-                if (MarioModule::isAnimationRun("水泳上昇呼吸")) {
+                if (MarioModule::isAnimationRun(CP932("水泳上昇呼吸"))) {
                     mForwardSpeed *= 0.95f;
                 }
 
@@ -1356,7 +1357,7 @@ void MarioSwim::decideVelocity() {
                         mForwardSpeed += acc * mActor->getConst().getTable()->mSwimSpinSurfaceAccRatio;
                     }
 
-                    playSound("水面スピン");
+                    playSound(CP932("水面スピン"));
                 } else {
                     mForwardSpeed *= 0.96f;
                 }
@@ -1368,7 +1369,7 @@ void MarioSwim::decideVelocity() {
                     } else {
                         mForwardSpeed += acc * mActor->getConst().getTable()->mSwimSpinAccRatio;
                     }
-                    playSound("水中スピン");
+                    playSound(CP932("水中スピン"));
                 } else {
                     mForwardSpeed *= 0.96f;
                 }
@@ -1423,16 +1424,16 @@ void MarioSwim::decideAnimation() {
     if (mJetTimer != 0) {
         return;
     }
-    if (isAnimationRun("水泳水面初期移動")) {
+    if (isAnimationRun(CP932("水泳水面初期移動"))) {
         if (getStickP() < 0.1f) {
             stopAnimationUpper(nullptr, nullptr);
         }
     }
 
-    if (isAnimationRun(nullptr) && !isAnimationRun("水泳上昇呼吸")) {
+    if (isAnimationRun(nullptr) && !isAnimationRun(CP932("水泳上昇呼吸"))) {
         if (MR::abs(getStickX()) < 0.1f) {
-            stopAnimation("水泳ターン左");
-            stopAnimation("水泳ターン右");
+            stopAnimation(CP932("水泳ターン左"));
+            stopAnimation(CP932("水泳ターン右"));
         }
         return;
     }
@@ -1446,7 +1447,7 @@ void MarioSwim::decideAnimation() {
 
     if (!mIsOnSurface) {
         if (checkLvlA()) {
-            playSound("水中バタ足");
+            playSound(CP932("水中バタ足"));
             animIndex = 2;
         } else {
             animIndex = 3;
@@ -1456,9 +1457,9 @@ void MarioSwim::decideAnimation() {
                 }
             } else if (MR::abs(getStickX()) > 0.1f && mVerticalAngle < 1.6534699f && mForwardSpeed < ::cTurnMotionSpeed) {
                 if (getStickX() < 0.0f) {
-                    changeAnimation("水泳ターン左", static_cast< const char* >(nullptr));
+                    changeAnimation(CP932("水泳ターン左"), static_cast< const char* >(nullptr));
                 } else {
-                    changeAnimation("水泳ターン右", static_cast< const char* >(nullptr));
+                    changeAnimation(CP932("水泳ターン右"), static_cast< const char* >(nullptr));
                 }
                 return;
             }
@@ -1466,10 +1467,10 @@ void MarioSwim::decideAnimation() {
     } else {
         // Surface logic
         if (getStickP() > 0.1f) {
-            playSound("水面バタ足");
+            playSound(CP932("水面バタ足"));
 
-            if (isAnimationRun("水泳上昇呼吸")) {
-                stopAnimation("水泳上昇呼吸");
+            if (isAnimationRun(CP932("水泳上昇呼吸"))) {
+                stopAnimation(CP932("水泳上昇呼吸"));
                 if (mIsSwimmingAtSurface == false) {
                     _1B = true;
                 }
@@ -1479,7 +1480,7 @@ void MarioSwim::decideAnimation() {
 
             if (_1B) {
                 getAnimator()->forceSetBlendWeight(&::cWeightTable[4]);
-                changeAnimationUpper("水泳水面初期移動", static_cast< const char* >(nullptr));
+                changeAnimationUpper(CP932("水泳水面初期移動"), static_cast< const char* >(nullptr));
                 _1B = false;
                 return;
             }
@@ -1505,7 +1506,7 @@ void MarioSwim::decideAnimation() {
 void MarioSwim::decideEffect(bool isReset) {
     u8 oldState = mEffectState;
     if (mIsOnSurface) {
-        if (isAnimationRun("水泳水面初期移動") || mForwardSpeed > 2.5f) {
+        if (isAnimationRun(CP932("水泳水面初期移動")) || mForwardSpeed > 2.5f) {
             mEffectState = 1;
         } else {
             mEffectState = 0;
@@ -1527,24 +1528,24 @@ void MarioSwim::decideEffect(bool isReset) {
         switch (oldState) {
         case 0:
             if (mEffectState != 1) {
-                stopEffect("水面ウエイト波紋");
+                stopEffect(CP932("水面ウエイト波紋"));
             }
             break;
 
         case 1:
-            stopEffect("水面泳ぎ");
+            stopEffect(CP932("水面泳ぎ"));
             if (mEffectState != 0) {
-                stopEffect("水面ウエイト波紋");
+                stopEffect(CP932("水面ウエイト波紋"));
             }
             break;
 
         case 2:
-            stopEffect("水中身体泡");
+            stopEffect(CP932("水中身体泡"));
             break;
         }
 
         if (mEffectState >= 2 || oldState >= 2 || isReset) {
-            stopEffect("水中口泡");
+            stopEffect(CP932("水中口泡"));
         }
 
         switch (mEffectState) {
@@ -1560,17 +1561,17 @@ void MarioSwim::decideEffect(bool isReset) {
 
                 const TVec3f& lastMove = mActor->getLastMove();
 
-                playEffectRTW("水面泳ぎ", mSurfacePos, mSurfaceNorm + projected + lastMove);
+                playEffectRTW(CP932("水面泳ぎ"), mSurfacePos, mSurfaceNorm + projected + lastMove);
             } else {
-                stopEffect("水面泳ぎ");
+                stopEffect(CP932("水面泳ぎ"));
             }
             break;
         case 2:
-            playEffect("水中身体泡");
+            playEffect(CP932("水中身体泡"));
 
         case 3:
         case 4:
-            playEffect("水中口泡");
+            playEffect(CP932("水中口泡"));
             break;
         }
     }
@@ -1581,10 +1582,10 @@ void MarioSwim::decideEffect(bool isReset) {
 
         const TVec3f& lastMove = mActor->getLastMove();
 
-        playEffectRTW("水面ウエイト波紋", mSurfacePos, mSurfaceNorm + projected + lastMove);
+        playEffectRTW(CP932("水面ウエイト波紋"), mSurfacePos, mSurfaceNorm + projected + lastMove);
 
         if (MR::getRandom() < 0.03f) {
-            playSound("水面ウエイト");
+            playSound(CP932("水面ウエイト"));
         }
     }
 }
@@ -1603,11 +1604,11 @@ bool MarioSwim::close() {
     }
 
     stopAnimationUpper(nullptr, nullptr);
-    stopAnimation("水上スピン");        // Surface Spin
-    stopAnimation("水泳スピン");        // Swim Spin
-    stopAnimation("水泳ジェット開始");  // Swim Jet Start
-    stopEffect("水底接触");             // Water Bottom Contact
-    stopEffect("水泳スピン");           // Swim Spin Effect
+    stopAnimation(CP932("水上スピン"));        // Surface Spin
+    stopAnimation(CP932("水泳スピン"));        // Swim Spin
+    stopAnimation(CP932("水泳ジェット開始"));  // Swim Jet Start
+    stopEffect(CP932("水底接触"));             // Water Bottom Contact
+    stopEffect(CP932("水泳スピン"));           // Swim Spin Effect
 
     if (mActor->getCarrySensor()) {
         LiveActor* shell = mActor->getCarrySensor()->mHost;
@@ -1623,13 +1624,13 @@ bool MarioSwim::close() {
     if (mNextAction != EXIT_ACTION_SURFACE) {
         // If not surfacing, decide between Fall or Basic based on vertical state
         if (getPlayer()->mMovementStates.jumping) {
-            stopAnimation("水泳基本", "基本");
+            stopAnimation(CP932("水泳基本"), CP932("基本"));
         } else {
-            stopAnimation("水泳基本", "落下");  // Fall
+            stopAnimation(CP932("水泳基本"), CP932("落下"));  // Fall
         }
     } else {
-        if (isDefaultAnimationRun("水泳基本")) {
-            changeAnimation(nullptr, "基本");  // Transition to Basic/Wait
+        if (isDefaultAnimationRun(CP932("水泳基本"))) {
+            changeAnimation(nullptr, CP932("基本"));  // Transition to Basic/Wait
         }
     }
 
@@ -1637,8 +1638,8 @@ bool MarioSwim::close() {
 
     if (mNextAction == EXIT_ACTION_JUMP || mNextAction == EXIT_ACTION_SLIDE) {
         mActor->setBlendMtxTimer(16);
-        changeAnimation("水泳陸うちあげ", static_cast< const char* >(nullptr));  // Landing from water
-        playSound("水歩行脱出");
+        changeAnimation(CP932("水泳陸うちあげ"), static_cast< const char* >(nullptr));  // Landing from water
+        playSound(CP932("水歩行脱出"));
 
         f32 stickP = getStickP();
         getPlayer()->mWalkSpeed = stickP;
@@ -1675,8 +1676,8 @@ bool MarioSwim::close() {
     if (mNextAction == EXIT_ACTION_POWER_JUMP) {
         TVec3f spawnPos = getTrans() - mUpVec * mWaterDepth + mUpVec * 10.0f;
 
-        playEffectRT("水面ジャンプ水柱", mSurfacePos, mSurfaceNorm);
-        playSound("水ジャンプ脱出");
+        playEffectRT(CP932("水面ジャンプ水柱"), mSurfacePos, mSurfaceNorm);
+        playSound(CP932("水ジャンプ脱出"));
 
         _1B2 = true;
         mWaterDistanceTarget = 0.0f;
@@ -1688,12 +1689,12 @@ bool MarioSwim::close() {
     if (mNextAction == EXIT_ACTION_FALL) {
         TVec3f trans = getTrans();
 
-        playEffectRT("水面ジャンプ水柱", -mSurfacePos, trans + mSurfacePos * mDistToFloor);
+        playEffectRT(CP932("水面ジャンプ水柱"), -mSurfacePos, trans + mSurfacePos * mDistToFloor);
 
         getPlayer()->setGroundNorm(-getAirGravityVec());
 
         if (mJetTimer != 0) {
-            changeAnimationNonStop("水泳ジェット");
+            changeAnimationNonStop(CP932("水泳ジェット"));
         }
     }
 
@@ -1993,9 +1994,9 @@ bool MarioSwim::surfacePaddle() {
     }
 
     stopAnimation(static_cast< const char* >(nullptr));
-    changeAnimation("水上一掻き", static_cast< const char* >(nullptr));
+    changeAnimation(CP932("水上一掻き"), static_cast< const char* >(nullptr));
     // Surface Paddle
-    playSound("水面一掻き");
+    playSound(CP932("水面一掻き"));
     mDashTimer = 40;
 
     return true;
@@ -2063,23 +2064,23 @@ void MarioSwim::spin() {
 
     stopAnimationUpper(nullptr, nullptr);
     if (!mIsOnSurface) {
-        changeAnimation("水上スピン", static_cast< const char* >(nullptr));
-        playSound("水面スピン開始");
+        changeAnimation(CP932("水上スピン"), static_cast< const char* >(nullptr));
+        playSound(CP932("水面スピン開始"));
     } else {
-        changeAnimation("水泳スピン", static_cast< const char* >(nullptr));
-        playSound("水中スピン開始");
+        changeAnimation(CP932("水泳スピン"), static_cast< const char* >(nullptr));
+        playSound(CP932("水中スピン開始"));
     }
 
     mActor->setPunchHitTimer(40);
-    playEffect("水泳スピン");
+    playEffect(CP932("水泳スピン"));
 }
 
 void MarioSwim::startSpinDash() {
-    stopEffect("水泳スピン");
+    stopEffect(CP932("水泳スピン"));
 
     if (_78) {
-        stopAnimation("水泳スピン");
-        stopAnimation("水上スピン");
+        stopAnimation(CP932("水泳スピン"));
+        stopAnimation(CP932("水上スピン"));
         return;
     }
 
@@ -2097,9 +2098,9 @@ void MarioSwim::startSpinDash() {
     }
 
     if (!mIsOnSurface) {
-        changeAnimation("水上スピン移動", static_cast< const char* >(nullptr));
+        changeAnimation(CP932("水上スピン移動"), static_cast< const char* >(nullptr));
     } else {
-        changeAnimation("水泳スピン移動", static_cast< const char* >(nullptr));
+        changeAnimation(CP932("水泳スピン移動"), static_cast< const char* >(nullptr));
     }
     mActor->setPunchHitTimer(mSpinDashTimer);
 
@@ -2115,7 +2116,7 @@ void MarioSwim::hitPunch(const TVec3f& rPunchDir) {
         mKnockbackVel = rPunchDir;
         _78 = true;
 
-        stopAnimation("アッパーパンチ");
+        stopAnimation(CP932("アッパーパンチ"));
     }
 }
 
@@ -2167,7 +2168,7 @@ void MarioSwim::jet() {
 
         if (checkLvlZ()) {
             if (checkTrgZ() || mStateTimer < 2) {
-                playSound("亀ブレーキ");
+                playSound(CP932("亀ブレーキ"));
                 MR::emitEffect(mActor->getCarrySensor()->mHost, "BrakeLamp");
             }
             getPlayer()->_1C._9 = 1;
@@ -2183,7 +2184,7 @@ void MarioSwim::jet() {
             }
 
         } else {
-            playSound("亀ジェット泳ぎ");
+            playSound(CP932("亀ジェット泳ぎ"));
             MR::forceDeleteEffect(mActor->getCarrySensor()->mHost, "BrakeLamp");
         }
 
@@ -2211,7 +2212,7 @@ void MarioSwim::jet() {
 void MarioSwim::resetJet() {
     if (mJetTimer != 0) {
         if (isStatusActiveS(this)) {
-            getAnimator()->changeDefault("水泳基本");
+            getAnimator()->changeDefault(CP932("水泳基本"));
         }
     }
     mJetTimer = 0;
@@ -2228,9 +2229,9 @@ void MarioSwim::dropJet(bool isDamage) {
     }
 
     if (isDamage) {
-        changeAnimation("水泳ジェット終了", "水泳基本");
+        changeAnimation(CP932("水泳ジェット終了"), CP932("水泳基本"));
     } else {
-        changeAnimation("水泳亀投げ", "水泳基本");
+        changeAnimation(CP932("水泳亀投げ"), CP932("水泳基本"));
     }
 
     if (mActor->getCarrySensor()) {
@@ -2260,11 +2261,11 @@ bool MarioSwim::startJet(u32 type) {
 
     forceStopSpin();
     // Swim Jet
-    if (!isAnimationRun("水泳ジェット")) {
+    if (!isAnimationRun(CP932("水泳ジェット"))) {
         // Swim Jet Start
-        changeAnimation("水泳ジェット開始", "水泳ジェット");
+        changeAnimation(CP932("水泳ジェット開始"), CP932("水泳ジェット"));
     } else {
-        changeAnimation(nullptr, "水泳ジェット");
+        changeAnimation(nullptr, CP932("水泳ジェット"));
     }
 
     mJetCooldownTimer = 20;
@@ -2279,13 +2280,13 @@ void MarioSwim::forceStopSpin() {
     _84 = 0.0f;
 
     // Swim Spin
-    stopAnimation("水泳スピン");
-    stopAnimation("水泳スピン移動");
+    stopAnimation(CP932("水泳スピン"));
+    stopAnimation(CP932("水泳スピン移動"));
     // Surface Spin
-    stopAnimation("水上スピン");
-    stopAnimation("水上スピン移動");
+    stopAnimation(CP932("水上スピン"));
+    stopAnimation(CP932("水上スピン移動"));
 
-    stopEffect("水泳スピン");
+    stopEffect(CP932("水泳スピン"));
 }
 
 void MarioSwim::addFaint(const TVec3f& rFaintDir) {
@@ -2301,10 +2302,10 @@ void MarioSwim::addFaint(const TVec3f& rFaintDir) {
     dropJet(false);
     mKnockbackTimer = mActor->getConst().getTable()->mWaterInnerFaintTime;
 
-    changeAnimation("水泳ダメージ", static_cast< const char* >(nullptr));
-    playSound("水中ダメージ");
-    playSound("声水中ダメージ");
-    playSound("ダメージ");
+    changeAnimation(CP932("水泳ダメージ"), static_cast< const char* >(nullptr));
+    playSound(CP932("水中ダメージ"));
+    playSound(CP932("声水中ダメージ"));
+    playSound(CP932("ダメージ"));
 
     startPadVib(2);
     mKnockbackVel = rFaintDir;
@@ -2335,9 +2336,9 @@ void MarioSwim::addDamage(const TVec3f& rDamageDir) {
     mForwardSpeed = 0.0f;
 
     if (mDamageType == 0) {
-        playSound("ダメージ");
+        playSound(CP932("ダメージ"));
     } else {
-        playSound("小ダメージ");
+        playSound(CP932("小ダメージ"));
     }
 
     if (mIsOnSurface) {
@@ -2347,9 +2348,9 @@ void MarioSwim::addDamage(const TVec3f& rDamageDir) {
 
         TVec3f jumpVel = mUpVec * mActor->getConst().getTable()->mWaterSurfaceDamageJump + surfaceKnockback;
         getPlayer()->tryForcePowerJump(jumpVel, false);
-        changeAnimationNonStop("水上ダメージ中");
-        playSound("水面ダメージ");
-        playSound("声小ダメージ");
+        changeAnimationNonStop(CP932("水上ダメージ中"));
+        playSound(CP932("水面ダメージ"));
+        playSound(CP932("声小ダメージ"));
 
         mFrontVec = -surfaceKnockback;
         mNextAction = EXIT_ACTION_POWER_JUMP;
@@ -2364,13 +2365,13 @@ void MarioSwim::addDamage(const TVec3f& rDamageDir) {
         mDamageType = 0;
     } else {
         mKnockbackTimer = mActor->getConst().getTable()->mWaterInnerDamageTime;
-        changeAnimation("水泳ダメージ中", static_cast< const char* >(nullptr));
+        changeAnimation(CP932("水泳ダメージ中"), static_cast< const char* >(nullptr));
 
         mKnockbackVel = rDamageDir;
         mKnockbackVel.setLength(mActor->getConst().getTable()->mSwimDamageSpeed);
 
-        playSound("水中ダメージ");
-        playSound("声水中ダメージ");
+        playSound(CP932("水中ダメージ"));
+        playSound(CP932("声水中ダメージ"));
 
         if (mDamageType == 0) {
             decLife();
@@ -2385,7 +2386,7 @@ void MarioSwim::addDamage(const TVec3f& rDamageDir) {
     }
 
     startPadVib(3);
-    playEffect("ダメージ");
+    playEffect(CP932("ダメージ"));
     mActionLockTimer = 0;
     forceStopSpin();
     mForwardSpeed = 0.0f;
@@ -2430,7 +2431,7 @@ void MarioSwim::updateTilt() {
         targetTiltX = (getStickX() * PI) / 5.0f;
     }
 
-    if (isAnimationRun("水泳ターン左") || isAnimationRun("水泳ターン右") || isAnimationRun("水泳ターン下")) {
+    if (isAnimationRun(CP932("水泳ターン左")) || isAnimationRun(CP932("水泳ターン右")) || isAnimationRun(CP932("水泳ターン下"))) {
         f32 stickX = getStickX();
         targetTiltX = (MR::clamp(stickX / 0.7f, -1.0f, 1.0f) * PI) * 0.125f;
     }
@@ -2706,9 +2707,9 @@ void MarioSwim::hitWall(const TVec3f& rNormal, HitSensor* pSensor) {
                 }
 
                 if (mJetTimer != 0 && isReflect) {
-                    playEffectTrans("壁ヒット", getPlayer()->getWallPos());
-                    playSound("亀壁ヒット");
-                    changeAnimation("水泳ジェット壁ターン", static_cast< const char* >(nullptr));
+                    playEffectTrans(CP932("壁ヒット"), getPlayer()->getWallPos());
+                    playSound(CP932("亀壁ヒット"));
+                    changeAnimation(CP932("水泳ジェット壁ターン"), static_cast< const char* >(nullptr));
                 }
 
                 mForwardSpeed *= speedReduction;
@@ -2721,8 +2722,8 @@ void MarioSwim::hitWall(const TVec3f& rNormal, HitSensor* pSensor) {
             if (!sendPunch(pSensor, true)) {
                 mForwardSpeed = 0.0f;
                 forceStopSpin();
-                changeAnimation("水泳壁ヒット", static_cast< const char* >(nullptr));
-                playEffectTrans("壁ヒット", getPlayer()->getWallPos());
+                changeAnimation(CP932("水泳壁ヒット"), static_cast< const char* >(nullptr));
+                playEffectTrans(CP932("壁ヒット"), getPlayer()->getWallPos());
                 startCamVib(0);
                 mKnockbackTimer = 60;
                 mKnockbackVel = rNormal * 6.0f;
@@ -2732,7 +2733,7 @@ void MarioSwim::hitWall(const TVec3f& rNormal, HitSensor* pSensor) {
             if (!sendPunch(pSensor, false)) {
                 mSpinTimer = 0;
                 mForwardSpeed = 0.0f;
-                playEffectTrans("壁ヒット", getPlayer()->getWallPos());
+                playEffectTrans(CP932("壁ヒット"), getPlayer()->getWallPos());
                 startCamVib(2);
                 mKnockbackTimer = 30;
                 mKnockbackVel = rNormal * 6.0f;
@@ -2746,8 +2747,8 @@ void MarioSwim::hitWall(const TVec3f& rNormal, HitSensor* pSensor) {
                 dropJet(true);
             }
             mForwardSpeed = 0.0f;
-            changeAnimation("水泳壁ヒット", static_cast< const char* >(nullptr));
-            playEffectTrans("壁ヒット", getPlayer()->getWallPos());
+            changeAnimation(CP932("水泳壁ヒット"), static_cast< const char* >(nullptr));
+            playEffectTrans(CP932("壁ヒット"), getPlayer()->getWallPos());
             startCamVib(0);
             mKnockbackTimer = 60;
             mKnockbackVel = rNormal * 6.0f;
@@ -2776,7 +2777,7 @@ void MarioSwim::hitWall(const TVec3f& rNormal, HitSensor* pSensor) {
             }
         }
 
-        stopEffect("水泳スピン");
+        stopEffect(CP932("水泳スピン"));
     }
 }
 
@@ -2813,10 +2814,10 @@ void MarioSwim::incOxygen() {
 
     if (mOxygen == mActor->getConst().getTable()->mOxygenMax) {
         // Play "Full" sound
-        playSound("酸素回復最大");
+        playSound(CP932("酸素回復最大"));
     } else {
         // Play "Recovering" sound
-        playSound("酸素回復");
+        playSound(CP932("酸素回復"));
     }
 
     mOxygenWarningTimer = 120;
@@ -2848,7 +2849,7 @@ void MarioSwim::decOxygen(u16 amount) {
     }
 
     if (mOxygen == 0) {
-        playSound("無酸素警告");
+        playSound(CP932("無酸素警告"));
     }
 }
 
@@ -2911,10 +2912,10 @@ void MarioSwim::updateLifeByTime() {
             if (mOxygen != mActor->getConst().getTable()->mOxygenMax) {
                 mOxygen += 32;
                 if (mOxygen > mActor->getConst().getTable()->mOxygenMax) {
-                    playSound("酸素回復最大");
+                    playSound(CP932("酸素回復最大"));
                     mOxygen = mActor->getConst().getTable()->mOxygenMax;
                 } else {
-                    playSound("酸素回復");
+                    playSound(CP932("酸素回復"));
                 }
 
                 mOxygenWarningTimer = 180;
@@ -2942,14 +2943,14 @@ void MarioSwim::doDecLifeByCold() {
         decLife();
 
         if (mJetTimer != 0) {
-            changeAnimation("水泳ダメージ亀", static_cast< const char* >(nullptr));
+            changeAnimation(CP932("水泳ダメージ亀"), static_cast< const char* >(nullptr));
         } else {
-            changeAnimation("水泳ダメージ", static_cast< const char* >(nullptr));
+            changeAnimation(CP932("水泳ダメージ"), static_cast< const char* >(nullptr));
         }
 
-        playSound("水中ダメージ");
-        playSound("声冷水ダメージ");
-        playSound("ダメージ");
+        playSound(CP932("水中ダメージ"));
+        playSound(CP932("声冷水ダメージ"));
+        playSound(CP932("ダメージ"));
         startPadVib(2);
 
         mActor->_BC4 = 16;
@@ -2962,9 +2963,9 @@ bool MarioSwim::passRing(const HitSensor* pSensor) {
         mRingDashChargeTimer = mActor->getConst().getTable()->mSwimRingDashChargeTime;
 
         if (mJetTimer == 0) {
-            changeAnimation("リングダッシュ準備", static_cast< const char* >(nullptr));
+            changeAnimation(CP932("リングダッシュ準備"), static_cast< const char* >(nullptr));
         } else {
-            changeAnimation("カメ持ちリング準備", static_cast< const char* >(nullptr));
+            changeAnimation(CP932("カメ持ちリング準備"), static_cast< const char* >(nullptr));
         }
     }
 
@@ -2977,7 +2978,7 @@ bool MarioSwim::passRing(const HitSensor* pSensor) {
     mRingDashSpeedScale = host->mSpeedScale;
     mRingDashTimer = host->mBoostTime;
 
-    playSound("亀加速");
+    playSound(CP932("亀加速"));
 
     return true;
 }
@@ -3002,9 +3003,9 @@ f32 MarioSwim::calcRingAcc() {
             if (mRingDashChargeTimer == 0) {
                 startPadVib(3);
                 if (mJetTimer == 0) {
-                    changeAnimation("カメ持ちリング", static_cast< const char* >(nullptr));
+                    changeAnimation(CP932("カメ持ちリング"), static_cast< const char* >(nullptr));
                 } else {
-                    changeAnimation("リングダッシュ", static_cast< const char* >(nullptr));
+                    changeAnimation(CP932("リングダッシュ"), static_cast< const char* >(nullptr));
                 }
             }
 
@@ -3108,11 +3109,11 @@ void MarioSwim::updateOxygenWatch() {
         mOxygenWarningTimer = 180;
     }
     if (mOxygen == (mActor->getConst().getTable()->mOxygenMax / 4)) {
-        playSound("酸素減少警告");
+        playSound(CP932("酸素減少警告"));
     }
     if (mOxygen == (mActor->getConst().getTable()->mOxygenMax / 2)) {
         mOxygenWarningTimer = 180;
-        playSound("酸素減少警告");
+        playSound(CP932("酸素減少警告"));
     }
 
     if (mOxygenWarningTimer != 0) {
@@ -3183,7 +3184,7 @@ void MarioSwim::doJetJump(u8 type) {
         getPlayer()->tryForcePowerJump(finalVelocity, false);
 
         mNextAction = EXIT_ACTION_POWER_JUMP;
-        changeAnimationNonStop("水泳ジェット");
+        changeAnimationNonStop(CP932("水泳ジェット"));
     }
 }
 

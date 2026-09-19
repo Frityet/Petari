@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/JMapIdInfo.hpp"
@@ -218,7 +219,7 @@ namespace MR {
 StageSwitchContainer::~StageSwitchContainer() {
 }
 
-StageSwitchContainer::StageSwitchContainer() : NameObj("ステージスイッチ"), mSwitches(), mGlobalSwitches() {
+StageSwitchContainer::StageSwitchContainer() : NameObj(CP932("ステージスイッチ")), mSwitches(), mGlobalSwitches() {
     mGlobalSwitches = new ZoneSwitch();
 }
 

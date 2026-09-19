@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Demo/AstroDemoFunction.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
@@ -7,8 +8,8 @@
 
 namespace {
     const char* const cGrandStarReturnDemoTable[] = {
-        "グランドスター１帰還", "グランドスター２帰還", "グランドスター３帰還",
-        "グランドスター４帰還", "グランドスター５帰還", "グランドスター６帰還",
+        CP932("グランドスター１帰還"), CP932("グランドスター２帰還"), CP932("グランドスター３帰還"),
+        CP932("グランドスター４帰還"), CP932("グランドスター５帰還"), CP932("グランドスター６帰還"),
     };
 };  // namespace
 
@@ -39,22 +40,22 @@ namespace AstroDemoFunction {
 
     void tryRegisterAstroDemoAll(LiveActor* pParam1, const JMapInfoIter& rIter) {
         AstroDemoFunction::tryRegisterGrandStarReturn(pParam1, rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "グランドスター帰還[２回目以降]", rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "パワースター帰還", rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "ロゼッタ状況説明デモ", rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "ロゼッタ最終決戦デモ", rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "ロゼッタコメット説明デモ", rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "ロゼッタトーチの炎説明デモ", rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "ロゼッタトーチの炎進捗デモ", rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "ロゼッタ天文台機能回復デモ", rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "ロゼッタキノピオ探検隊デモ", rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "ルイージ失踪デモ", rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "ロゼッタカウントダウン開始デモ", rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "ロゼッタノーマルエンディング後デモ", rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "ロゼッタ銀河の中心説明デモ", rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "ロゼッタルイージデモ", rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "バトラーグリーンドライバ説明", rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "バトラーマップレクチャー", rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("グランドスター帰還[２回目以降]"), rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("パワースター帰還"), rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("ロゼッタ状況説明デモ"), rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("ロゼッタ最終決戦デモ"), rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("ロゼッタコメット説明デモ"), rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("ロゼッタトーチの炎説明デモ"), rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("ロゼッタトーチの炎進捗デモ"), rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("ロゼッタ天文台機能回復デモ"), rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("ロゼッタキノピオ探検隊デモ"), rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("ルイージ失踪デモ"), rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("ロゼッタカウントダウン開始デモ"), rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("ロゼッタノーマルエンディング後デモ"), rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("ロゼッタ銀河の中心説明デモ"), rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("ロゼッタルイージデモ"), rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("バトラーグリーンドライバ説明"), rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("バトラーマップレクチャー"), rIter);
     }
 
     void tryRegisterGrandStarReturn(LiveActor* pParam1, const JMapInfoIter& rIter) {
@@ -120,8 +121,8 @@ namespace AstroDemoFunction {
 
     void tryRegisterDemoForLuigiAndKinopio(LiveActor* pParam1, const JMapInfoIter& rIter) {
         AstroDemoFunction::tryRegisterGrandStarReturn(pParam1, rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "ロゼッタルイージデモ", rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "バトラーグリーンドライバ説明", rIter);
-        AstroDemoFunction::tryRegisterDemo(pParam1, "ロゼッタ最終決戦デモ", rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("ロゼッタルイージデモ"), rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("バトラーグリーンドライバ説明"), rIter);
+        AstroDemoFunction::tryRegisterDemo(pParam1, CP932("ロゼッタ最終決戦デモ"), rIter);
     }
 };  // namespace AstroDemoFunction

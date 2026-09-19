@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/NPC/TalkNodeCtrl.hpp"
 #include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -323,7 +324,7 @@ void TalkNodeCtrl::initNodeRecursive(TalkMessageCtrl* pMsgCtrl, const JMapInfoIt
 
     if (mMessageInfo.isCameraEvent()) {
         pCameraInf->mCameraSetID = mMessageInfo.mCameraSetID;
-        MR::initMultiActorCamera(pMsgCtrl->mHostActor, rIter, &pCameraInf, "会話");
+        MR::initMultiActorCamera(pMsgCtrl->mHostActor, rIter, &pCameraInf, CP932("会話"));
     }
 
     TalkNode* nodeEvent = getCurrentNodeEvent();

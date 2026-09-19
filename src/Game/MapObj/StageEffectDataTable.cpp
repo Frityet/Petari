@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/StageEffectDataTable.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util.hpp"
@@ -57,35 +58,35 @@ namespace {
     };
 
     static StageEffectPadData sStageEffectPadDataTable[] = {
-        {"LavaHomeVolcanoInnerFlow", "中", "中", nullptr},
+        {"LavaHomeVolcanoInnerFlow", CP932("中"), CP932("中"), nullptr},
         {"LavaRotatePlanetStartStep", nullptr, nullptr, nullptr},
-        {"OceanRingRuinsMove", nullptr, nullptr, "中"},
+        {"OceanRingRuinsMove", nullptr, nullptr, CP932("中")},
         {"OceanRingRuinsGearBig", nullptr, nullptr, nullptr},
         {"OceanRingRuinsGearSmall", nullptr, nullptr, nullptr},
-        {"OceanRotateBridge", nullptr, nullptr, "中"},
-        {"ShutterDoorA", nullptr, nullptr, "中"},
-        {"ShutterDoorD", nullptr, "微弱", "中"},
+        {"OceanRotateBridge", nullptr, nullptr, CP932("中")},
+        {"ShutterDoorA", nullptr, nullptr, CP932("中")},
+        {"ShutterDoorD", nullptr, CP932("微弱"), CP932("中")},
         {"OceanSwingBoard", nullptr, nullptr, nullptr},
         {"RotateNutStep", nullptr, nullptr, nullptr},
         {"OnimasuPlanetRailMovePartsA", nullptr, nullptr, nullptr},
         {"GhostShipCaveMoveGroundA", nullptr, nullptr, nullptr},
         {"GhostShipCaveMoveGroundB", nullptr, nullptr, nullptr},
         {"WaterRoadCaveStepA", nullptr, nullptr, nullptr},
-        {"TeresaRoomDoor", "中", nullptr, nullptr},
-        {"MiniMechaKoopaPartsMoveStepA", nullptr, nullptr, "中"},
-        {"MiniMechaKoopaPartsCage", nullptr, nullptr, "中"},
-        {"RayGunPlanetPartsScrew", "中", "微弱", "中"},
-        {"KoopaVS1PartsMoveStepA", "弱", nullptr, "弱"},
-        {"KoopaVS1PartsMoveStepB", "弱", nullptr, "弱"},
-        {"KoopaVS1PartsRotateMoveStepA", "弱", nullptr, "弱"},
-        {"KoopaVS1PartsRotateMoveStepB", "弱", nullptr, "弱"},
-        {"BeeWallClimbPartsA", "弱", nullptr, "弱"},
-        {"KoopaJrSmallShipA", "中", nullptr, "強"},
-        {"IceVolcanoAppearStepA", nullptr, "弱", "強"},
-        {"IceVolcanoClimbingWall", nullptr, "弱", "強"},
-        {"BroadBeanMoveStepA", nullptr, nullptr, "弱"},
-        {"BroadBeanMoveStepB", nullptr, nullptr, "弱"},
-        {"HeavensDoorInsideCage", nullptr, "弱", nullptr},
+        {"TeresaRoomDoor", CP932("中"), nullptr, nullptr},
+        {"MiniMechaKoopaPartsMoveStepA", nullptr, nullptr, CP932("中")},
+        {"MiniMechaKoopaPartsCage", nullptr, nullptr, CP932("中")},
+        {"RayGunPlanetPartsScrew", CP932("中"), CP932("微弱"), CP932("中")},
+        {"KoopaVS1PartsMoveStepA", CP932("弱"), nullptr, CP932("弱")},
+        {"KoopaVS1PartsMoveStepB", CP932("弱"), nullptr, CP932("弱")},
+        {"KoopaVS1PartsRotateMoveStepA", CP932("弱"), nullptr, CP932("弱")},
+        {"KoopaVS1PartsRotateMoveStepB", CP932("弱"), nullptr, CP932("弱")},
+        {"BeeWallClimbPartsA", CP932("弱"), nullptr, CP932("弱")},
+        {"KoopaJrSmallShipA", CP932("中"), nullptr, CP932("強")},
+        {"IceVolcanoAppearStepA", nullptr, CP932("弱"), CP932("強")},
+        {"IceVolcanoClimbingWall", nullptr, CP932("弱"), CP932("強")},
+        {"BroadBeanMoveStepA", nullptr, nullptr, CP932("弱")},
+        {"BroadBeanMoveStepB", nullptr, nullptr, CP932("弱")},
+        {"HeavensDoorInsideCage", nullptr, CP932("弱"), nullptr},
     };
 
     static StageEffectSoundData sStageEffectSeDataTable[] = {

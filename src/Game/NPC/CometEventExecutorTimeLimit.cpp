@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/NPC/CometEventExecutorTimeLimit.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/TimeLimitLayout.hpp"
@@ -15,7 +16,7 @@ namespace NrvCometEventExecutorTimeLimit {
 };  // namespace NrvCometEventExecutorTimeLimit
 
 CometEventExecutorTimeLimit::CometEventExecutorTimeLimit(u32 timeLimit)
-    : LiveActor("制限時間コメット実行者"), mTimeLimitLayout(nullptr), mTimeLimit(timeLimit) {
+    : LiveActor(CP932("制限時間コメット実行者")), mTimeLimitLayout(nullptr), mTimeLimit(timeLimit) {
 }
 
 void CometEventExecutorTimeLimit::init(const JMapInfoIter&) {

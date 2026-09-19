@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/MiiSelect.hpp"
 
 #include "Game/LiveActor/Nerve.hpp"
@@ -86,7 +87,7 @@ void MiiSelect::control() {
 
         auto pane_name = std::array< char, 8U >{};
         std::snprintf(pane_name.data(), pane_name.size(), "Mii%02d", i + 1);
-        if (MR::isStarPointerPointingPane(this, pane_name.data(), 0, true, "弱")) {
+        if (MR::isStarPointerPointingPane(this, pane_name.data(), 0, true, CP932("弱"))) {
             pointed_index = icon_index;
             break;
         }
@@ -103,10 +104,10 @@ void MiiSelect::control() {
     }
 
     if (icon_count > cIconsPerPage && (MR::testCorePadTriggerRight(WPAD_CHAN0) || MR::testSubPadStickTriggerRight(WPAD_CHAN0) ||
-                                       (MR::isStarPointerPointingPane(this, "Right", 0, true, "弱") && MR::testDPDMenuPadDecideTrigger()))) {
+                                       (MR::isStarPointerPointingPane(this, "Right", 0, true, CP932("弱")) && MR::testDPDMenuPadDecideTrigger()))) {
         setNerve(&MiiSelectNrvScrollRight::sInstance);
     } else if (icon_count > cIconsPerPage && (MR::testCorePadTriggerLeft(WPAD_CHAN0) || MR::testSubPadStickTriggerLeft(WPAD_CHAN0) ||
-                                              (MR::isStarPointerPointingPane(this, "Left", 0, true, "弱") && MR::testDPDMenuPadDecideTrigger()))) {
+                                              (MR::isStarPointerPointingPane(this, "Left", 0, true, CP932("弱")) && MR::testDPDMenuPadDecideTrigger()))) {
         setNerve(&MiiSelectNrvScrollLeft::sInstance);
     }
 }

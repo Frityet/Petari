@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/NPC/RosettaDemoAstroDome.hpp"
 #include "Game/Demo/DemoFunction.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -35,11 +36,11 @@ static void EntryDemo(T* caller, const char* pDemoName, const char* pRootName, c
         TalkMessageCtrl* ctrl = MR::createTalkCtrlDirectOnRootNodeAutomatic(caller->mRosetta, rIter, pRootName, offset, nullptr);
         MR::registerEventFunc(ctrl, TalkMessageFunc(caller->mRosetta, &Rosetta::eventFunc));
         DemoFunction::registerDemoTalkMessageCtrlDirect(caller->mRosetta, ctrl, pDemoName);
-        MR::registerDemoActionFunctorDirect(caller->mRosetta, MR::Functor_Inline(caller, &T::startDemo), pDemoName, "開始");
+        MR::registerDemoActionFunctorDirect(caller->mRosetta, MR::Functor_Inline(caller, &T::startDemo), pDemoName, CP932("開始"));
     }
 }
 
-RosettaMonologue::RosettaMonologue() : SimpleLayout("ロゼッタの語り", "PrologueStarSteward", 2, -1), mTextFormer(this, "Text00") {
+RosettaMonologue::RosettaMonologue() : SimpleLayout(CP932("ロゼッタの語り"), "PrologueStarSteward", 2, -1), mTextFormer(this, "Text00") {
     MR::createAndAddPaneCtrl(this, "TalkBalloon", 1);
     MR::createAndAddPaneCtrl(this, "CrossFade1", 1);
     MR::createAndAddPaneCtrl(this, "CrossFade2", 1);
@@ -137,11 +138,11 @@ void RosettaMonologue::control() {
 }
 
 RosettaDemoAstroDomeExplain::RosettaDemoAstroDomeExplain(Rosetta* pRosetta, const JMapInfoIter& rIter)
-    : NerveExecutor("ロゼッタ状況説明デモ実行者"), mRosetta(pRosetta) {
-    const char* sDemoExplain = "ロゼッタ状況説明デモ";
+    : NerveExecutor(CP932("ロゼッタ状況説明デモ実行者")), mRosetta(pRosetta) {
+    const char* sDemoExplain = CP932("ロゼッタ状況説明デモ");
     DemoFunction::tryCreateDemoTalkAnimCtrlForSceneDirect(mRosetta, sDemoExplain, rIter, "DemoWithButler", nullptr, 0, 0);
     DemoFunction::registerDemoTalkMessageCtrlDirect(mRosetta, mRosetta->mMsgCtrl, sDemoExplain);
-    MR::registerDemoActionFunctorDirect(mRosetta, MR::Functor_Inline(this, &RosettaDemoAstroDomeExplain::startDemo), sDemoExplain, "状況説明[開始]");
+    MR::registerDemoActionFunctorDirect(mRosetta, MR::Functor_Inline(this, &RosettaDemoAstroDomeExplain::startDemo), sDemoExplain, CP932("状況説明[開始]"));
     mMonologue = new RosettaMonologue();
     initNerve(&NrvRosettaDemoAstroDomeExplain::RosettaDemoAstroDomeExplainNrvExplainDemo::sInstance);
 }
@@ -155,8 +156,8 @@ void RosettaDemoAstroDomeExplain::startDemo() {
 }
 
 void RosettaDemoAstroDomeExplain::exeDemo() {
-    if (MR::isDemoPartActive("状況説明[絵本表示]")) {
-        if (MR::isDemoPartFirstStep("状況説明[絵本表示]")) {
+    if (MR::isDemoPartActive(CP932("状況説明[絵本表示]"))) {
+        if (MR::isDemoPartFirstStep(CP932("状況説明[絵本表示]"))) {
             MR::tryFrameToScreenCinemaFrame();
             mMonologue->appear();
             MR::pauseTimeKeepDemo(mRosetta);
@@ -176,9 +177,9 @@ void RosettaDemoAstroDomeExplain::exeDemo() {
 }
 
 RosettaDemoAstroDomeFinalBattle::RosettaDemoAstroDomeFinalBattle(Rosetta* pRosetta, const JMapInfoIter& rIter)
-    : NerveExecutor("ロゼッタ最終決戦デモ実行者"), mRosetta(pRosetta) {
-    EntryDemo(this, "ロゼッタ最終決戦デモ", "AstroGalaxy_Rosetta300", rIter);
-    EntryDemo(this, "ロゼッタノーマルエンディング後デモ", "AstroGalaxy_Rosetta400", rIter);
+    : NerveExecutor(CP932("ロゼッタ最終決戦デモ実行者")), mRosetta(pRosetta) {
+    EntryDemo(this, CP932("ロゼッタ最終決戦デモ"), "AstroGalaxy_Rosetta300", rIter);
+    EntryDemo(this, CP932("ロゼッタノーマルエンディング後デモ"), "AstroGalaxy_Rosetta400", rIter);
 
     MR::needStageSwitchWriteA(mRosetta, rIter);
     initNerve(&NrvRosettaDemoAstroDomeFinalBattle::RosettaDemoAstroDomeFinalBattleNrvFinalBattleDemo::sInstance);
@@ -195,15 +196,15 @@ void RosettaDemoAstroDomeFinalBattle::exeDemo() {
 }
 
 RosettaDemoAstroDomeTalk::RosettaDemoAstroDomeTalk(Rosetta* pRosetta, const JMapInfoIter& rIter)
-    : NerveExecutor("ロゼッタ会話デモ実行者"), mRosetta(pRosetta) {
-    EntryDemo(this, "ロゼッタキノピオ探検隊デモ", "AstroGalaxy_Rosetta080", rIter);
-    EntryDemo(this, "ロゼッタトーチの炎説明デモ", "AstroGalaxy_Rosetta020", rIter);
-    EntryDemo(this, "ロゼッタコメット説明デモ", "AstroGalaxy_Rosetta030", rIter);
-    EntryDemo(this, "ロゼッタ銀河の中心説明デモ", "AstroGalaxy_Rosetta040", rIter);
-    EntryDemo(this, "ロゼッタ天文台機能回復デモ", "AstroGalaxy_Rosetta050", rIter);
-    EntryDemo(this, "ロゼッタカウントダウン開始デモ", "AstroGalaxy_Rosetta060", rIter);
-    EntryDemo(this, "ロゼッタトーチの炎進捗デモ", "AstroGalaxy_Rosetta084", rIter);
-    EntryDemo(this, "ロゼッタルイージデモ", "AstroGalaxy_Rosetta054", rIter);
+    : NerveExecutor(CP932("ロゼッタ会話デモ実行者")), mRosetta(pRosetta) {
+    EntryDemo(this, CP932("ロゼッタキノピオ探検隊デモ"), "AstroGalaxy_Rosetta080", rIter);
+    EntryDemo(this, CP932("ロゼッタトーチの炎説明デモ"), "AstroGalaxy_Rosetta020", rIter);
+    EntryDemo(this, CP932("ロゼッタコメット説明デモ"), "AstroGalaxy_Rosetta030", rIter);
+    EntryDemo(this, CP932("ロゼッタ銀河の中心説明デモ"), "AstroGalaxy_Rosetta040", rIter);
+    EntryDemo(this, CP932("ロゼッタ天文台機能回復デモ"), "AstroGalaxy_Rosetta050", rIter);
+    EntryDemo(this, CP932("ロゼッタカウントダウン開始デモ"), "AstroGalaxy_Rosetta060", rIter);
+    EntryDemo(this, CP932("ロゼッタトーチの炎進捗デモ"), "AstroGalaxy_Rosetta084", rIter);
+    EntryDemo(this, CP932("ロゼッタルイージデモ"), "AstroGalaxy_Rosetta054", rIter);
 
     initNerve(&NrvRosettaDemoAstroDomeTalk::RosettaDemoAstroDomeTalkNrvTalkDemo::sInstance);
 }

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/MapObjActorInitInfo.hpp"
 #include "Game/MapObj/MapObjActor.hpp"
 #include "Game/Util/JMapUtil.hpp"
@@ -233,7 +234,7 @@ void MapObjActorUtil::setupInitInfoSeesaw(MapObjActorInitInfo* pInitInfo, const 
 }
 
 void MapObjActorUtil::setupInitInfoSimpleMapObj(MapObjActorInitInfo* pInitInfo) {
-    pInitInfo->setupHioNode("地形オブジェ");
+    pInitInfo->setupHioNode(CP932("地形オブジェ"));
     pInitInfo->setupDefaultPos();
     pInitInfo->setupConnectToScene();
     pInitInfo->setupEffect();
@@ -244,7 +245,7 @@ void MapObjActorUtil::setupInitInfoSimpleMapObj(MapObjActorInitInfo* pInitInfo) 
 }
 
 void MapObjActorUtil::setupInitInfoPlanet(MapObjActorInitInfo* pInitInfo) {
-    pInitInfo->setupHioNode("惑星");
+    pInitInfo->setupHioNode(CP932("惑星"));
     pInitInfo->setupDefaultPos();
     pInitInfo->setupConnectToScene();
     pInitInfo->setupEffect();

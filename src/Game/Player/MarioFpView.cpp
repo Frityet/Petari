@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioFpView.hpp"
 #include "Game/Enemy/KarikariDirector.hpp"
 #include "Game/Player/MarioActor.hpp"
@@ -127,7 +128,7 @@ MarioFpView::MarioFpView(MarioActor* pActor) : MarioState(pActor, MarioStatus_Fp
 
 bool MarioFpView::start() {
     MR::startSubjectiveCamera(-1);
-    changeAnimation("見る", static_cast< char* >(nullptr));
+    changeAnimation(CP932("見る"), static_cast< char* >(nullptr));
 
     sIsDisabled = true;
 
@@ -174,7 +175,7 @@ bool MarioFpView::close() {
         MR::endSubjectiveCamera(15);
     }
 
-    stopAnimation("見る");
+    stopAnimation(CP932("見る"));
 
     mActor->showBeeFur();
 

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
@@ -188,9 +189,9 @@ void Mario::startHandy() {
 bool Mario::taskOnHipDropBlurHopper(u32) {
     if (!getPlayer()->mMovementStates._B || mMovementStates._1 || isStatusActive(MarioStatus_Swim)) {
         if (gIsLuigi) {
-            stopEffect("ホッパー尻落ルイージ");
+            stopEffect(CP932("ホッパー尻落ルイージ"));
         } else {
-            stopEffect("ホッパー尻落");
+            stopEffect(CP932("ホッパー尻落"));
         }
         return false;
     }
@@ -201,9 +202,9 @@ bool Mario::taskOnHipDropBlurHopper(u32) {
 bool Mario::taskOnHipDropBlur(u32) {
     if (!getPlayer()->mMovementStates._B || mMovementStates._1 || isStatusActive(MarioStatus_Swim)) {
         if (gIsLuigi) {
-            stopEffect("尻落ルイージ");
+            stopEffect(CP932("尻落ルイージ"));
         } else {
-            stopEffect("尻落");
+            stopEffect(CP932("尻落"));
         }
         return false;
     }
@@ -271,14 +272,14 @@ void Mario::startFreezeEnd() {
 
 bool Mario::taskOnHandy(u32) {
     if (!mActor->_468) {
-        stopEffect("いい汗");
+        stopEffect(CP932("いい汗"));
         return false;
     }
 
     if (mTargetWalkSpeedIndex > 2) {
-        playEffect("いい汗");
+        playEffect(CP932("いい汗"));
     } else {
-        stopEffect("いい汗");
+        stopEffect(CP932("いい汗"));
     }
 
     return true;
@@ -287,18 +288,18 @@ bool Mario::taskOnHandy(u32) {
 void Mario::startHipDropBlur() {
     if (isPlayerModeHopper()) {
         if (gIsLuigi) {
-            playEffect("ホッパー尻落ルイージ");
+            playEffect(CP932("ホッパー尻落ルイージ"));
         } else {
-            playEffect("ホッパー尻落");
+            playEffect(CP932("ホッパー尻落"));
         }
         pushTask(sTaskHipDropBlurHopper, 0x80);
         return;
     }
 
     if (gIsLuigi) {
-        playEffect("尻落ルイージ");
+        playEffect(CP932("尻落ルイージ"));
     } else {
-        playEffect("尻落");
+        playEffect(CP932("尻落"));
     }
     pushTask(sTaskHipDropBlur, 0x80);
 }
@@ -330,7 +331,7 @@ void Mario::startHipDropSlide(const HitSensor* pSensor) {
     _A64 = pSensor->mRadius;
     _70C = getAirGravityVec();
 
-    changeAnimation("ヒップドロップ滑り", static_cast< const char* >(nullptr));
+    changeAnimation(CP932("ヒップドロップ滑り"), static_cast< const char* >(nullptr));
 }
 
 void Mario::startJumpDropSlide(const HitSensor* pSensor) {
@@ -372,9 +373,9 @@ void Mario::startJumpDropSlide(const HitSensor* pSensor) {
         if (dot > sHopperJumpSlideDotMin) {
             f32 frontDot = mFrontVec.dot(slideDir);
             if (frontDot > sZero) {
-                changeAnimation("ジャンプ順滑り", static_cast< const char* >(nullptr));
+                changeAnimation(CP932("ジャンプ順滑り"), static_cast< const char* >(nullptr));
             } else {
-                changeAnimation("ジャンプ逆滑り", static_cast< const char* >(nullptr));
+                changeAnimation(CP932("ジャンプ逆滑り"), static_cast< const char* >(nullptr));
             }
         }
     }

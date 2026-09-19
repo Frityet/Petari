@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/SceneWipeHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Screen/WipeFade.hpp"
@@ -6,20 +7,20 @@
 #include "Game/Screen/WipeRing.hpp"
 #include "Game/Util/ObjUtil.hpp"
 
-SceneWipeHolder::SceneWipeHolder() : WipeHolderBase(8, "シーンワイプ保持") {
+SceneWipeHolder::SceneWipeHolder() : WipeHolderBase(8, CP932("シーンワイプ保持")) {
     WipeLayoutBase* pWipeLayout;
 
-    pWipeLayout = new WipeRing(1, "円ワイプ");
+    pWipeLayout = new WipeRing(1, CP932("円ワイプ"));
     addWipeLayout(pWipeLayout);
     MR::connectToSceneWipeLayout(pWipeLayout);
     MR::joinToNameObjGroup(pWipeLayout, "IgnorePauseNameObj");
 
-    pWipeLayout = new WipeFade("フェードワイプ", Color8(0, 0, 0, 255));
+    pWipeLayout = new WipeFade(CP932("フェードワイプ"), Color8(0, 0, 0, 255));
     addWipeLayout(pWipeLayout);
     MR::connectToSceneWipeLayout(pWipeLayout);
     MR::joinToNameObjGroup(pWipeLayout, "IgnorePauseNameObj");
 
-    pWipeLayout = new WipeFade("白フェードワイプ", Color8(255, 255, 255, 255));
+    pWipeLayout = new WipeFade(CP932("白フェードワイプ"), Color8(255, 255, 255, 255));
     addWipeLayout(pWipeLayout);
     MR::connectToSceneWipeLayout(pWipeLayout);
     MR::joinToNameObjGroup(pWipeLayout, "IgnorePauseNameObj");

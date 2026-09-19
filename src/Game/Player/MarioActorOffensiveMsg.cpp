@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Player/MarioActor.hpp"
@@ -42,7 +43,7 @@ void MarioActor::attackOrPushSensor(HitSensor* pSensor, f32 distance) {
         }
     } else if (_3E5 && _945 < 15) {
         if (distance < sensorRadius + mSensorRadiusSpinStorm) {
-            if (selectAction("スピンアタック") < 4) {
+            if (selectAction(CP932("スピンアタック")) < 4) {
                 pSensor->receiveMessage(ACTMES_SPIN_STORM_RANGE, getSensor("body"));
             }
             if (mMario->isSwimming()) {
@@ -53,7 +54,7 @@ void MarioActor::attackOrPushSensor(HitSensor* pSensor, f32 distance) {
                 canPull = true;
             }
         }
-    } else if (isAnimationRun("ファイアスピン")) {
+    } else if (isAnimationRun(CP932("ファイアスピン"))) {
         if (distance < sensorRadius + mSensorRadiusSpinStorm) {
             pSensor->receiveMessage(ACTMES_SPIN_STORM_RANGE, getSensor("body"));
         }
@@ -407,7 +408,7 @@ bool MarioActor::tryGetItem(HitSensor* pSensor) {
         if (isDamaging()) {
             return false;
         }
-        if (!isActionOk("カメ持ち")) {
+        if (!isActionOk(CP932("カメ持ち"))) {
             return false;
         }
         if (_468 != 0) {
@@ -428,7 +429,7 @@ bool MarioActor::tryGetItem(HitSensor* pSensor) {
         if (isDamaging()) {
             return false;
         }
-        if (!isActionOk("カメ持ち")) {
+        if (!isActionOk(CP932("カメ持ち"))) {
             return false;
         }
         if (_468 != 0) {
@@ -635,15 +636,15 @@ void MarioActor::sendWallTouch(HitSensor* pReceiver, HitSensor* pSender) {
 }
 
 bool MarioActor::sendMsgUpperPunch(HitSensor* pSensor) {
-    if (!isActionOk("アッパーパンチ")) {
+    if (!isActionOk(CP932("アッパーパンチ"))) {
         return false;
     }
 
     if (pSensor != nullptr && !MR::isDead(pSensor->mHost) && pSensor->receiveMessage(MR::MovementType_SensorHitChecker, getSensor("body"))) {
-        playSound("声蹴り", -1);
+        playSound(CP932("声蹴り"), -1);
 
         if (!mMario->isSwimming()) {
-            changeAnimation("アッパーパンチ", nullptr);
+            changeAnimation(CP932("アッパーパンチ"), nullptr);
         }
 
         return true;

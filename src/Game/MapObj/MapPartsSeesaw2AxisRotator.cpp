@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/MapPartsSeesaw2AxisRotator.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/MapPartsUtil.hpp"
@@ -23,7 +24,7 @@ namespace NrvMapPartsSeesaw2AxisRotator {
 };
 
 MapPartsSeesaw2AxisRotator::MapPartsSeesaw2AxisRotator(LiveActor* pActor, const char* pSoundName, f32 soundSpeedThreshold)
-    : MapPartsRotatorBase(pActor, "シーソー(2軸)"), mRotateAngle(0.0f), mInertia(500.0f), mRestoreForce(100.0f), mBaseUp(0.0f, 1.0f, 0.0f),
+    : MapPartsRotatorBase(pActor, CP932("シーソー(2軸)")), mRotateAngle(0.0f), mInertia(500.0f), mRestoreForce(100.0f), mBaseUp(0.0f, 1.0f, 0.0f),
       mIsPlayerOn(false), mRotateSpeed(0.0f), mSoundName(pSoundName), mSoundSpeedThreshold(soundSpeedThreshold) {
     mRotateMtx.identity();
     mBaseMtx.identity();

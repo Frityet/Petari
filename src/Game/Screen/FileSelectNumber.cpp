@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/FileSelectNumber.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/LayoutUtil.hpp"
@@ -99,7 +100,7 @@ namespace FileSelectNumberSub {
     NEW_NERVE(SelectAnimControllerNrvSelectOutStart, SelectAnimController, SelectOutStart);
     NEW_NERVE(SelectAnimControllerNrvSelectOut, SelectAnimController, SelectOut);
 
-    SelectAnimController::SelectAnimController(LayoutActor* pHost) : NerveExecutor("セレクトアニメ制御"), mHost(pHost) {
+    SelectAnimController::SelectAnimController(LayoutActor* pHost) : NerveExecutor(CP932("セレクトアニメ制御")), mHost(pHost) {
         initNerve(&SelectAnimControllerNrvSelectOut::sInstance);
     }
 

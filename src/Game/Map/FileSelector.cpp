@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/FileSelector.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/FileSelectCameraController.hpp"
@@ -256,18 +257,18 @@ void FileSelector::initUserFileArray() {
 }
 
 void FileSelector::createCameraController() {
-    mCameraController = new FileSelectCameraController("ファイルセレクトカメラ制御");
+    mCameraController = new FileSelectCameraController(CP932("ファイルセレクトカメラ制御"));
     mCameraController->initWithoutIter();
 }
 
 void FileSelector::createSky() {
-    mSky = new FileSelectSky("ファイルセレクト画面の空");
+    mSky = new FileSelectSky(CP932("ファイルセレクト画面の空"));
     mSky->initWithoutIter();
     mSky->appear();
 }
 
 void FileSelector::createFileItems() {
-    mItems = new DeriveActorGroup< FileSelectItem >("全ファイルアイテム保持", USER_FILE_NUM);
+    mItems = new DeriveActorGroup< FileSelectItem >(CP932("全ファイルアイテム保持"), USER_FILE_NUM);
     _98 = new TVec3f[USER_FILE_NUM]();
 
     calcBasePos(0.0f);
@@ -277,7 +278,7 @@ void FileSelector::createFileItems() {
 
     for (int i = 0; i < USER_FILE_NUM; i++) {
         FileSelectIconID iconId = FileSelectIconID();
-        FileSelectItem* pItem = new FileSelectItem(::sIndexOrder[i], true, iconId, "ファイルセレクトアイテム");
+        FileSelectItem* pItem = new FileSelectItem(::sIndexOrder[i], true, iconId, CP932("ファイルセレクトアイテム"));
 
         pItem->initWithoutIter();
         pItem->setSelectDelegator(pDelegator);
@@ -295,14 +296,14 @@ void FileSelector::createOperationButton() {
 }
 
 void FileSelector::createBackButton() {
-    mBackButton = new BackButton("戻るボタン", false);
+    mBackButton = new BackButton(CP932("戻るボタン"), false);
     mBackButton->initWithoutIter();
 
     MR::connectToScene(mBackButton, MR::MovementType_Layout, MR::CalcAnimType_Layout, -1, MR::DrawType_LayoutDecoration);
 }
 
 void FileSelector::createBrosButton() {
-    mBrosButton = new BrosButton("ルイージ切り替えボタン");
+    mBrosButton = new BrosButton(CP932("ルイージ切り替えボタン"));
     mBrosButton->initWithoutIter();
 }
 
@@ -320,7 +321,7 @@ void FileSelector::createSysInfoWindow() {
 }
 
 void FileSelector::createFileInfo() {
-    mFileInfo = new FileSelectInfo(RFL_NAME_LEN + 1, "ファイル情報");
+    mFileInfo = new FileSelectInfo(RFL_NAME_LEN + 1, CP932("ファイル情報"));
     mFileInfo->initWithoutIter();
 }
 
@@ -335,7 +336,7 @@ void FileSelector::createMiiSelect() {
 }
 
 void FileSelector::createMiiConfirmIcon() {
-    mMiiConfirmIcon = new MiiConfirmIcon("Mii確認用アイコン");
+    mMiiConfirmIcon = new MiiConfirmIcon(CP932("Mii確認用アイコン"));
     mMiiConfirmIcon->initWithoutIter();
     MR::connectToScene(mMiiConfirmIcon, MR::MovementType_Layout, MR::CalcAnimType_Layout, -1, MR::DrawType_LayoutDecoration);
 }
@@ -351,7 +352,7 @@ void FileSelector::createMiiFont() {
 }
 
 void FileSelector::createManual() {
-    mManual = new Manual2P("２Ｐマニュアル");
+    mManual = new Manual2P(CP932("２Ｐマニュアル"));
     mManual->initWithoutIter();
 }
 

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/BloomEffectSimple.hpp"
 #include "Game/Screen/CopyFilterNegater.hpp"
 #include "Game/Screen/ImageEffectLocalUtil.hpp"
@@ -30,7 +31,7 @@ namespace {
 };  // namespace
 
 BloomEffectSimple::BloomEffectSimple()
-    : ImageEffectBase("簡易ブルーム"), _14(), _18(), _1C(), _20(), _24(), _28(), _2C(), mMaskFilter(), mThreshold(205), mIntensity(0.3f) {
+    : ImageEffectBase(CP932("簡易ブルーム")), _14(), _18(), _1C(), _20(), _24(), _28(), _2C(), mMaskFilter(), mThreshold(205), mIntensity(0.3f) {
     MR::connectToSceneImageEffect(this);
     MR::createImageEffectSystemHolder();
     MR::getImageEffectResource()->createBloomTexture();

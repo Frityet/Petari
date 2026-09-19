@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/ErrorMessageWindow.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/LayoutUtil.hpp"
@@ -12,7 +13,7 @@ namespace {
     NEW_NERVE(ErrorMessageWindowDisappearBeforeAppear, ErrorMessageWindow, DisappearBeforeAppear);
 };  // namespace
 
-ErrorMessageWindow::ErrorMessageWindow() : LayoutActor("エラーメッセージ表示", false), mMessageId(nullptr), mTexture(nullptr) {
+ErrorMessageWindow::ErrorMessageWindow() : LayoutActor(CP932("エラーメッセージ表示"), false), mMessageId(nullptr), mTexture(nullptr) {
 }
 
 void ErrorMessageWindow::init(const JMapInfoIter& rIter) {

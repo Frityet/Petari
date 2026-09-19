@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/ButtonPaneController.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/GamePadUtil.hpp"
@@ -151,7 +152,7 @@ void ButtonPaneController::decide() {
 }
 
 bool ButtonPaneController::isPointingPaneDirect() const {
-    return MR::isStarPointerPointingPane(mHost, mBoundingPaneName, 0, true, "弱");
+    return MR::isStarPointerPointingPane(mHost, mBoundingPaneName, 0, true, CP932("弱"));
 }
 
 bool ButtonPaneController::startAnimAtFirstStep(const char* pAnimName) {
@@ -181,7 +182,7 @@ void ButtonPaneController::setNerveAtAnimStopped(const Nerve* pNerve) {
 }
 
 bool ButtonPaneController::isPointingPane() const {
-    return mIsPointing && MR::isStarPointerPointingPane(mHost, mBoundingPaneName, 0, true, "弱");
+    return mIsPointing && MR::isStarPointerPointingPane(mHost, mBoundingPaneName, 0, true, CP932("弱"));
 }
 
 bool ButtonPaneController::tryPointing(bool param1) {

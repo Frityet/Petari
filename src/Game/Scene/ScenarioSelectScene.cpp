@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Scene/ScenarioSelectScene.hpp"
 #include "Game/Camera/CameraContext.hpp"
 #include "Game/Effect/EffectSystem.hpp"
@@ -40,7 +41,7 @@ namespace {
     }
 
     bool tryResumeInitializeThread() {
-        const char* thread = "シーン初期化";
+        const char* thread = CP932("シーン初期化");
         if (MR::isSuspendedAsyncExecuteThread(thread)) {
             MR::resumeAsyncExecuteThread(thread);
             return true;
@@ -51,14 +52,14 @@ namespace {
 };  // namespace
 
 ScenarioSelectScene::ScenarioSelectScene()
-    : Scene("シナリオ選択シーン"), _14(0), _15(0), _16(0), mScenarioLayout(nullptr), mCinemaFrame(nullptr), _28(0), mEffectSystem(nullptr),
+    : Scene(CP932("シナリオ選択シーン")), _14(0), _15(0), _16(0), mScenarioLayout(nullptr), mCinemaFrame(nullptr), _28(0), mEffectSystem(nullptr),
       mCameraContext(nullptr) {
 }
 
 void ScenarioSelectScene::init() {
     _20 = ::createDrawBuffer();
     _24 = ::createDrawBuffer();
-    mEffectSystem = new EffectSystem("エフェクトシステム", false);
+    mEffectSystem = new EffectSystem(CP932("エフェクトシステム"), false);
     mEffectSystem->initWithoutIter();
     mEffectSystem->entry(MR::getParticleResourceHolder(), 0x300, 0x20);
     mCameraContext = new CameraContext();

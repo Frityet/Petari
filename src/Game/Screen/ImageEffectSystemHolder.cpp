@@ -1,13 +1,14 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/ImageEffectSystemHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Screen/ImageEffectDirector.hpp"
 #include "Game/Screen/ImageEffectResource.hpp"
 #include "Game/Util/ObjUtil.hpp"
 
-ImageEffectSystemHolder::ImageEffectSystemHolder() : NameObj("画像効果管理") {
+ImageEffectSystemHolder::ImageEffectSystemHolder() : NameObj(CP932("画像効果管理")) {
     mResource = new ImageEffectResource();
     mDirector = nullptr;
-    mDirector = new ImageEffectDirector("全画面エフェクト管理");
+    mDirector = new ImageEffectDirector(CP932("全画面エフェクト管理"));
 }
 
 void ImageEffectSystemHolder::pauseOff() {

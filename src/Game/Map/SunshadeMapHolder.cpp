@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/SunshadeMapHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/AreaObjUtil.hpp"
@@ -7,7 +8,7 @@ void SunshadeMapHolder_FORCE_MATCH_SDATA2() {
     (void)1.0f;
 }
 
-SunshadeMapHolder::SunshadeMapHolder() : NameObj("日よけコリジョン管理"), _C(0.0f, 1.0f, 0.0f) {
+SunshadeMapHolder::SunshadeMapHolder() : NameObj(CP932("日よけコリジョン管理")), _C(0.0f, 1.0f, 0.0f) {
 }
 
 namespace MR {

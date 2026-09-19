@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Util/NPCUtil.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
@@ -158,7 +159,7 @@ namespace MR {
     PartsModel* createNPCGoods(LiveActor* pHost, const char* pModelName, const char* pJointName) {
         PartsModel* pGoods = nullptr;
         if (!isNullOrEmptyString(pModelName) && isNPCItemFileExist(pModelName) && isExistJoint(pHost, pJointName)) {
-            pGoods = createPartsModelNpcAndFix(pHost, "グッズ", pModelName, pJointName);
+            pGoods = createPartsModelNpcAndFix(pHost, CP932("グッズ"), pModelName, pJointName);
             pGoods->appear();
             if (getLightNumMax(pGoods) > 0) {
                 initLightCtrl(pGoods);
@@ -170,7 +171,7 @@ namespace MR {
     PartsModel* createIndirectNPCGoods(LiveActor* pHost, const char* pModelName, const char* pJointName) {
         PartsModel* pGoods = nullptr;
         if (!isNullOrEmptyString(pModelName) && isNPCItemFileExist(pModelName) && isExistJoint(pHost, pJointName)) {
-            pGoods = createPartsModelIndirectNpc(pHost, "グッズ", pModelName, getJointMtx(pHost, pJointName));
+            pGoods = createPartsModelIndirectNpc(pHost, CP932("グッズ"), pModelName, getJointMtx(pHost, pJointName));
             pGoods->appear();
             if (getLightNumMax(pGoods) > 0) {
                 initLightCtrl(pGoods);
@@ -486,8 +487,8 @@ namespace NrvDemoStarter {
 };  // namespace NrvDemoStarter
 
 TakeOutStar::TakeOutStar(NPCActor* pActor, const char* pActionName, const char* pAnimName, const Nerve* pNerve)
-    : NerveExecutor("パワースター取り出しデモ実行者"), mActor(pActor), mNerve(pNerve), mActionName(pActionName), mAnimName(pAnimName) {
-    mStarModel = MR::createPowerStarDemoModel(mActor, "パワースターデモモデル", pActor->getBaseMtx());
+    : NerveExecutor(CP932("パワースター取り出しデモ実行者")), mActor(pActor), mNerve(pNerve), mActionName(pActionName), mAnimName(pAnimName) {
+    mStarModel = MR::createPowerStarDemoModel(mActor, CP932("パワースターデモモデル"), pActor->getBaseMtx());
     mStarModel->makeActorDead();
 
     initNerve(&NrvTakeOutStar::TakeOutStarNrvAnim::sInstance);
@@ -569,7 +570,7 @@ void TakeOutStar::exeDemo() {
 void TakeOutStar::exeTerm() {
 }
 
-FadeStarter::FadeStarter(NPCActor* pActor, s32 a2) : NerveExecutor("フェード開始制御"), mActor(pActor), _C(nullptr), _10(a2) {
+FadeStarter::FadeStarter(NPCActor* pActor, s32 a2) : NerveExecutor(CP932("フェード開始制御")), mActor(pActor), _C(nullptr), _10(a2) {
     initNerve(&NrvFadeStarter::FadeStarterNrvFade::sInstance);
 }
 
@@ -611,7 +612,7 @@ void FadeStarter::exeFade() {
 void FadeStarter::exeTerm() {
 }
 
-DemoStarter::DemoStarter(NPCActor* pActor) : NerveExecutor("デモ開始制御"), mActor(pActor) {
+DemoStarter::DemoStarter(NPCActor* pActor) : NerveExecutor(CP932("デモ開始制御")), mActor(pActor) {
     initNerve(&NrvDemoStarter::DemoStarterNrvInit::sInstance);
 }
 

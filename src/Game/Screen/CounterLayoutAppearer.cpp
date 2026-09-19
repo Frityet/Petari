@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/CounterLayoutAppearer.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/LayoutUtil.hpp"
@@ -11,7 +12,7 @@ namespace NrvCounterLayoutAppearer {
 };  // namespace NrvCounterLayoutAppearer
 
 CounterLayoutAppearer::CounterLayoutAppearer(LayoutActor* pActor, const TVec2f& rAppearOffset)
-    : NerveExecutor("カウンタ出現制御"), mLayout(pActor), mAppearOffset(rAppearOffset.x, rAppearOffset.y), mFollowPos(0.0f, 0.0f), _1C(0.0f, 0.0f) {
+    : NerveExecutor(CP932("カウンタ出現制御")), mLayout(pActor), mAppearOffset(rAppearOffset.x, rAppearOffset.y), mFollowPos(0.0f, 0.0f), _1C(0.0f, 0.0f) {
     MR::setFollowPos(&mFollowPos, pActor, nullptr);
     MR::setFollowTypeAdd(mLayout, nullptr);
     initNerve(&NrvCounterLayoutAppearer::CounterLayoutAppearerNrvHide::sInstance);

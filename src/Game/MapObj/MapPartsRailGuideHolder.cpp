@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/MapPartsRailGuideHolder.hpp"
 #include "Game/MapObj/MapPartsRailGuideDrawer.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -6,7 +7,7 @@
 MapPartsRailGuideHolder::~MapPartsRailGuideHolder() {
 }
 
-MapPartsRailGuideHolder::MapPartsRailGuideHolder() : NameObj("レールガイド保持") {
+MapPartsRailGuideHolder::MapPartsRailGuideHolder() : NameObj(CP932("レールガイド保持")) {
     mNumRailGuides = 0;
 }
 

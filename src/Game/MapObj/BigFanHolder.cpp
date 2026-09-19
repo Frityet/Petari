@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/BigFanHolder.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/BigFan.hpp"
@@ -12,7 +13,7 @@ namespace {
     }
 };  // namespace
 
-BigFanHolder::BigFanHolder() : DeriveActorGroup("大型扇風機管理", ::sMaxBigFan) {
+BigFanHolder::BigFanHolder() : DeriveActorGroup(CP932("大型扇風機管理"), ::sMaxBigFan) {
 }
 
 void BigFanHolder::calcWindInfo(TVec3f* pWindInfo, const TVec3f& rPos, f32* pWindSpeed) {

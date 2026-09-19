@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/ChipCounter.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/ChipBase.hpp"
@@ -85,7 +86,7 @@ void ChipCounter::init(const JMapInfoIter& rIter) {
 
     MR::startAnim(this, "ShowHide", 1);
     MR::setAnimFrameAndStop(this, _30 * 20.0f, 1);
-    mCollectCounter = new CollectCounter("集め数字");
+    mCollectCounter = new CollectCounter(CP932("集め数字"));
     mCollectCounter->initWithoutIter();
     kill();
 }
@@ -160,7 +161,7 @@ void ChipCounter::requestComplete(s32 groupId) {
     }
 
     _2C = groupId;
-    MR::requestStartDemoWithoutCinemaFrame(this, "チップコンプリート", &NrvChipCounter::ChipCounterNrvComplete::sInstance,
+    MR::requestStartDemoWithoutCinemaFrame(this, CP932("チップコンプリート"), &NrvChipCounter::ChipCounterNrvComplete::sInstance,
                                            &NrvChipCounter::ChipCounterNrvTryDemo::sInstance);
 }
 
@@ -256,7 +257,7 @@ void ChipCounter::exeCompleteOut() {
     if (tryEndFrameOut()) {
         setNerve(&NrvChipCounter::ChipCounterNrvHide::sInstance);
         mCollectCounter->kill();
-        MR::endDemo(this, "チップコンプリート");
+        MR::endDemo(this, CP932("チップコンプリート"));
         MR::noticeEndChipCompleteDemo(mType, _2C);
     }
 }

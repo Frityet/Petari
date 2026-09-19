@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioHang.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/HitInfo.hpp"
@@ -208,15 +209,15 @@ MarioHang::MarioHang(MarioActor* pActor) : MarioState(pActor, MarioStatus_Hang) 
 }
 
 bool MarioHang::close() {
-    stopAnimation("崖つかまり開始", static_cast< const char* >(nullptr));
-    stopAnimation("崖つかまり中", static_cast< const char* >(nullptr));
-    stopAnimation("崖つかまり終了", static_cast< const char* >(nullptr));
-    stopAnimation("崖つかまり終了坂", static_cast< const char* >(nullptr));
+    stopAnimation(CP932("崖つかまり開始"), static_cast< const char* >(nullptr));
+    stopAnimation(CP932("崖つかまり中"), static_cast< const char* >(nullptr));
+    stopAnimation(CP932("崖つかまり終了"), static_cast< const char* >(nullptr));
+    stopAnimation(CP932("崖つかまり終了坂"), static_cast< const char* >(nullptr));
 
     if (getPlayer()->mMovementStates._1) {
-        changeAnimation(static_cast< const char* >(nullptr), "基本");
+        changeAnimation(static_cast< const char* >(nullptr), CP932("基本"));
     } else {
-        changeAnimation(static_cast< const char* >(nullptr), "落下");
+        changeAnimation(static_cast< const char* >(nullptr), CP932("落下"));
     }
 
     getPlayer()->setWallCancel();
@@ -234,7 +235,7 @@ bool MarioHang::notice() {
     if (getNoticedStatus() == MarioStateMsg_Notice) {
         addTrans(getPlayer()->mFrontVec * -150.0f, "Module");
         mActor->setBlendMtxTimer(16);
-        stopAnimation("崖つかまり中", "基本");
+        stopAnimation(CP932("崖つかまり中"), CP932("基本"));
     }
     return false;
 }
@@ -313,7 +314,7 @@ void Mario::checkHang() {
         TVec3f line(mFrontVec * 60.0f);
         TVec3f start(_4A4 - mFrontVec * 50.0f - getAirGravityVec() * 5.0f);
         if (!MR::isExistMapCollision(start, line)) {
-            const bool enteredFromFall = !isAnimationRun("落下");
+            const bool enteredFromFall = !isAnimationRun(CP932("落下"));
             changeStatus(mHang);
             mVelocity.zero();
             stopWalk();
@@ -485,7 +486,7 @@ bool Mario::isEnableHang() {
 bool MarioHang::start() {
     getPlayer()->cancelSquatMode();
     stopAnimationUpper(static_cast< const char* >(nullptr), static_cast< const char* >(nullptr));
-    changeAnimation("崖つかまり開始", "崖つかまり中");
+    changeAnimation(CP932("崖つかまり開始"), CP932("崖つかまり中"));
     mActor->setBlendMtxTimer(mActor->mConst->getTable()->mHangBlendTime);
     _12 = 0;
     _14 = 0;
@@ -529,7 +530,7 @@ bool MarioHang::update() {
         if (getPlayer()->_8D4 != nullptr) {
             addTrans(getPlayer()->mFrontVec * -150.0f, "Module");
             mActor->setBlendMtxTimer(16);
-            stopAnimation("崖つかまり中", "基本");
+            stopAnimation(CP932("崖つかまり中"), CP932("基本"));
             return false;
         }
     } else {
@@ -539,7 +540,7 @@ bool MarioHang::update() {
                 _1C = true;
             }
         }
-        if (getPlayer()->_184.dot(getFrontVec()) > 0.95f && getPlayer()->_4E4 < 6.0f && !isAnimationRun("崖つかまり開始")) {
+        if (getPlayer()->_184.dot(getFrontVec()) > 0.95f && getPlayer()->_4E4 < 6.0f && !isAnimationRun(CP932("崖つかまり開始"))) {
             _1C = true;
         }
     }
@@ -547,14 +548,14 @@ bool MarioHang::update() {
     if (getPlayer()->_8D4 != nullptr && mWallSensor != getPlayer()->_8D4) {
         addTrans(getPlayer()->mFrontVec * -150.0f, "Module");
         mActor->setBlendMtxTimer(16);
-        stopAnimation("崖つかまり中", "基本");
+        stopAnimation(CP932("崖つかまり中"), CP932("基本"));
         return false;
     }
 
     if (_1C) {
         addTrans(getPlayer()->mFrontVec * -150.0f, "Module");
         mActor->setBlendMtxTimer(16);
-        stopAnimation("崖つかまり中", "基本");
+        stopAnimation(CP932("崖つかまり中"), CP932("基本"));
         return false;
     }
 
@@ -563,7 +564,7 @@ bool MarioHang::update() {
         if (getPlayer()->mVerticalSpeed < 0.1f && getPlayer()->getShadowNorm().dot(getGravityVec()) < -0.707f) {
             addTrans(getPlayer()->mFrontVec * -150.0f, "Module");
             mActor->setBlendMtxTimer(16);
-            stopAnimation("崖つかまり中", "基本");
+            stopAnimation(CP932("崖つかまり中"), CP932("基本"));
             return false;
         }
         if (!getPlayer()->mMovementStates._1) {
@@ -575,12 +576,12 @@ bool MarioHang::update() {
         break;
     case 1:
         if (calcAngleD(getPlayer()->_368) > 45.0f) {
-            changeAnimationNonStop("崖つかまり終了坂");
-            changeAnimation(static_cast< const char* >(nullptr), "基本");
+            changeAnimationNonStop(CP932("崖つかまり終了坂"));
+            changeAnimation(static_cast< const char* >(nullptr), CP932("基本"));
         } else {
-            changeAnimation("崖つかまり終了", "基本");
+            changeAnimation(CP932("崖つかまり終了"), CP932("基本"));
         }
-        playSound("声崖つかまり終了", -1);
+        playSound(CP932("声崖つかまり終了"), -1);
         _12++;
         return true;
     case 2:
@@ -597,7 +598,7 @@ bool MarioHang::update() {
     if (_1C) {
         addTrans(getPlayer()->mFrontVec * -150.0f, "Module");
         mActor->setBlendMtxTimer(16);
-        stopAnimation("崖つかまり中", "基本");
+        stopAnimation(CP932("崖つかまり中"), CP932("基本"));
         return false;
     }
 
@@ -626,7 +627,7 @@ bool MarioHang::update() {
         }
         break;
     case 2:
-        if (isAnimationRun("崖つかまり開始") && getAnimator()->getFrame() < 15.0f) {
+        if (isAnimationRun(CP932("崖つかまり開始")) && getAnimator()->getFrame() < 15.0f) {
             _1D = true;
         } else {
             addTrans(getPlayer()->mFrontVec * -150.0f, "Module");
@@ -646,7 +647,7 @@ bool MarioHang::update() {
         _14 = 0;
     }
     if (_12 == 0 && _14 == 2) {
-        playSound("声崖つかまり", -1);
+        playSound(CP932("声崖つかまり"), -1);
     }
     return true;
 }
@@ -693,13 +694,13 @@ void MarioHang::tryClimb(bool allowSlipUp) {
         return;
     }
 
-    if (!isAnimationRun("崖つかまり開始")) {
+    if (!isAnimationRun(CP932("崖つかまり開始"))) {
         _12 = 1;
         _14 = 0;
     } else {
         if (_1E && allowSlipUp && getAnimationFrame() < 30.0f) {
             _16 = 5;
-            changeAnimationNonStop("つかまりスリップアップ準備");
+            changeAnimationNonStop(CP932("つかまりスリップアップ準備"));
         }
         _1B = true;
     }

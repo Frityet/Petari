@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Screen/LayoutActor.hpp"
@@ -31,7 +32,7 @@ enum AnimType {
 
 class StarPointerLayout : public LayoutActor {
 public:
-    StarPointerLayout(const char* pName = "スターポインタレイアウト");
+    StarPointerLayout(const char* pName = CP932("スターポインタレイアウト"));
 
     virtual void draw() const;
     virtual void calcAnim();

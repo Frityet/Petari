@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Effect/ParticleCalcExecutor.hpp"
 #include "Game/Effect/EffectSystem.hpp"
 #include "Game/Effect/ParticleEmitterHolder.hpp"
@@ -54,28 +55,28 @@ void ParticleCalcExecutor::requestMovementOnPauseIgnore() {
 }
 
 void ParticleCalcExecutor::initMovementAdaptor() {
-    _4 = new NameObjAdaptor("パーティクル");
+    _4 = new NameObjAdaptor(CP932("パーティクル"));
     {
         const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementNormal);
         NameObjAdaptor* pAdaptor = _4;
         pAdaptor->connectToCalcAnim(functor);
         MR::connectToScene(pAdaptor, -1, 19, -1, -1);
     }
-    _8 = new NameObjAdaptor("ポーズ無効3Dパーティクル");
+    _8 = new NameObjAdaptor(CP932("ポーズ無効3Dパーティクル"));
     {
         const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementIgnorePause3D);
         NameObjAdaptor* pAdaptor = _8;
         pAdaptor->connectToCalcAnim(functor);
         MR::connectToScene(pAdaptor, -1, 20, -1, -1);
     }
-    _C = new NameObjAdaptor("ポーズ無効2Dパーティクル");
+    _C = new NameObjAdaptor(CP932("ポーズ無効2Dパーティクル"));
     {
         const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementIgnorePause2D);
         NameObjAdaptor* pAdaptor = _C;
         pAdaptor->connectToCalcAnim(functor);
         MR::connectToScene(pAdaptor, -1, 20, -1, -1);
     }
-    _10 = new NameObjAdaptor("更新チェック");
+    _10 = new NameObjAdaptor(CP932("更新チェック"));
     {
         const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementCheckUpdate);
         NameObjAdaptor* pAdaptor = _10;

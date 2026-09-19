@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioRabbit.hpp"
 
 #include "Game/Player/Mario.hpp"
@@ -113,10 +114,10 @@ void MarioRabbit::impact() {
     if (mIsHighJump) {
         switch (mJumpAnimationIndex) {
         case 0:
-            changeAnimationNonStop("ホッパーハイジャンプA");
+            changeAnimationNonStop(CP932("ホッパーハイジャンプA"));
             break;
         case 1:
-            changeAnimationNonStop("ホッパーハイジャンプB");
+            changeAnimationNonStop(CP932("ホッパーハイジャンプB"));
             break;
         }
 
@@ -125,10 +126,10 @@ void MarioRabbit::impact() {
     else if (!MR::isNearZero(getStickP())) {
         switch (mJumpAnimationIndex) {
         case 0:
-            changeAnimationNonStop("ホッパージャンプA");
+            changeAnimationNonStop(CP932("ホッパージャンプA"));
             break;
         case 1:
-            changeAnimationNonStop("ホッパージャンプB");
+            changeAnimationNonStop(CP932("ホッパージャンプB"));
             break;
         }
 
@@ -137,10 +138,10 @@ void MarioRabbit::impact() {
     else {
         switch (mJumpAnimationIndex) {
         case 0:
-            changeAnimationNonStop("ホッパー移動A");
+            changeAnimationNonStop(CP932("ホッパー移動A"));
             break;
         case 1:
-            changeAnimationNonStop("ホッパー移動B");
+            changeAnimationNonStop(CP932("ホッパー移動B"));
             break;
         }
     }
@@ -166,18 +167,18 @@ bool MarioRabbit::update() {
 
     if (getPlayer()->mMovementStates._1) {
         if (mPlayLandingSound) {
-            playSound("ホッパー跳ね返り", -1);
+            playSound(CP932("ホッパー跳ね返り"), -1);
             mPlayLandingSound = false;
         }
 
-        if (mDidImpact || isAnimationRun("ホッパー壁ジャンプ") || isAnimationRun("ホッパーヒップドロップ")) {
+        if (mDidImpact || isAnimationRun(CP932("ホッパー壁ジャンプ")) || isAnimationRun(CP932("ホッパーヒップドロップ"))) {
             stopAnimation(static_cast< const char* >(nullptr), static_cast< const char* >(nullptr));
             switch (mJumpAnimationIndex) {
             case 0:
-                changeAnimation("ホッパージャンプA", static_cast< const char* >(nullptr));
+                changeAnimation(CP932("ホッパージャンプA"), static_cast< const char* >(nullptr));
                 break;
             case 1:
-                changeAnimation("ホッパージャンプB", static_cast< const char* >(nullptr));
+                changeAnimation(CP932("ホッパージャンプB"), static_cast< const char* >(nullptr));
                 break;
             }
 
@@ -189,24 +190,24 @@ bool MarioRabbit::update() {
             }
 
             startPadVib(1);
-            playEffect("共通着地普通");
+            playEffect(CP932("共通着地普通"));
 
             if (!mIsHighJump) {
-                playSound("ホッパー跳ね返り", -1);
+                playSound(CP932("ホッパー跳ね返り"), -1);
             }
         }
 
         if (getPlayer()->_3CE < mActor->mConst->getTable()->mHopperLandingTime) {
             if (mActor->isRequestJump() || mJumpRequestTimer != 0) {
                 mIsHighJump = true;
-                playEffect("共通ハイジャンプ");
-                startPadVib("マリオ[ホッパーため]");
+                playEffect(CP932("共通ハイジャンプ"));
+                startPadVib(CP932("マリオ[ホッパーため]"));
                 switch (mJumpAnimationIndex) {
                 case 0:
-                    changeAnimationNonStop("ホッパーハイジャンプA");
+                    changeAnimationNonStop(CP932("ホッパーハイジャンプA"));
                     break;
                 case 1:
-                    changeAnimationNonStop("ホッパーハイジャンプB");
+                    changeAnimationNonStop(CP932("ホッパーハイジャンプB"));
                     break;
                 }
             }
@@ -216,13 +217,13 @@ bool MarioRabbit::update() {
 
         if (mIsHighJump) {
             if (getPlayer()->_3CE < mActor->mConst->getTable()->mRabbitChargeTime2) {
-                playSound("ホッパージャンプ溜め", -1);
+                playSound(CP932("ホッパージャンプ溜め"), -1);
                 return true;
             }
 
             mVerticalSpeed = -mActor->mConst->getTable()->mRabbitFirstJump2;
-            playSound("声物ジャンプ", -1);
-            playSound("ホッパージャンプ", -1);
+            playSound(CP932("声物ジャンプ"), -1);
+            playSound(CP932("ホッパージャンプ"), -1);
         }
         else {
             mVerticalSpeed = -mActor->mConst->getTable()->mRabbitFirstJump;
@@ -335,10 +336,10 @@ bool MarioRabbit::close() {
     stopAnimation(static_cast< const char* >(nullptr), static_cast< const char* >(nullptr));
 
     if (getPlayer()->mMovementStates.jumping) {
-        stopAnimation(static_cast< const char* >(nullptr), "落下");
+        stopAnimation(static_cast< const char* >(nullptr), CP932("落下"));
     }
     else {
-        stopAnimation(static_cast< const char* >(nullptr), "基本");
+        stopAnimation(static_cast< const char* >(nullptr), CP932("基本"));
     }
 
     setJointGlobalMtx(static_cast< u8 >(MR::getJointIndex(mActor, "Hip")), nullptr);

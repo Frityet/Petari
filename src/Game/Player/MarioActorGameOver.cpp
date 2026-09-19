@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioAnimator.hpp"
@@ -108,29 +109,29 @@ void MarioActor::exeGameOver() {
     MR::clearBgmQueue();
 
     if (MR::getPlayerLeft() == 0) {
-        MR::startPlayerEvent("ゲームオーバー");
+        MR::startPlayerEvent(CP932("ゲームオーバー"));
         changeGameOverAnimation();
     } else {
         switch (_39D) {
         case 2:
-            MR::startPlayerEvent("ゴーストレース負け");
+            MR::startPlayerEvent(CP932("ゴーストレース負け"));
             break;
 
         case 1:
-            MR::startPlayerEvent("レース負け");
+            MR::startPlayerEvent(CP932("レース負け"));
             changeGameOverAnimation();
             break;
 
         case 5:
-            MR::startPlayerEvent("レース負け");
+            MR::startPlayerEvent(CP932("レース負け"));
             break;
 
         default:
-            MR::startPlayerEvent("マリオダウン");
+            MR::startPlayerEvent(CP932("マリオダウン"));
         }
     }
 
-    MR::startGlobalEventCameraNoTarget("昇天カメラ", -1);
+    MR::startGlobalEventCameraNoTarget(CP932("昇天カメラ"), -1);
     MR::startStarPointerModeDemoMarioDeath(this);
 }
 
@@ -144,18 +145,18 @@ void MarioActor::exeGameOverAbyss() {
 
     MR::setCubeBgmChangeInvalid();
     MR::clearBgmQueue();
-    MR::startGlobalEventCameraNoTarget("奈落カメラ", -1);
+    MR::startGlobalEventCameraNoTarget(CP932("奈落カメラ"), -1);
 
     _F44 = false;
 
     if (MR::getPlayerLeft() == 0) {
-        MR::startPlayerEvent("ゲームオーバー");
+        MR::startPlayerEvent(CP932("ゲームオーバー"));
     } else {
-        MR::startPlayerEvent("マリオ奈落");
+        MR::startPlayerEvent(CP932("マリオ奈落"));
     }
 
     MR::startStarPointerModeDemoMarioDeath(this);
-    mMario->changeAnimationNonStop("奈落ダウン");
+    mMario->changeAnimationNonStop(CP932("奈落ダウン"));
 
     _B90 = true;
 }
@@ -177,11 +178,11 @@ void MarioActor::exeGameOverFire() {
     MR::clearBgmQueue();
 
     if (MR::getPlayerLeft() == 0) {
-        MR::startPlayerEvent("ゲームオーバー");
-        MR::startGlobalEventCameraNoTarget("昇天カメラ", -1);
+        MR::startPlayerEvent(CP932("ゲームオーバー"));
+        MR::startGlobalEventCameraNoTarget(CP932("昇天カメラ"), -1);
     } else {
-        MR::startPlayerEvent("マリオ炎ダウン");
-        MR::startGlobalEventCameraNoTarget("奈落カメラ", -1);
+        MR::startPlayerEvent(CP932("マリオ炎ダウン"));
+        MR::startGlobalEventCameraNoTarget(CP932("奈落カメラ"), -1);
     }
 
     MR::startStarPointerModeDemoMarioDeath(this);
@@ -202,37 +203,37 @@ void MarioActor::exeGameOverSink() {
         changeGameOverAnimation();
 
         if (MR::getPlayerLeft() == 0) {
-            MR::startPlayerEvent("ゲームオーバー");
-            MR::startGlobalEventCameraNoTarget("昇天カメラ", -1);
+            MR::startPlayerEvent(CP932("ゲームオーバー"));
+            MR::startGlobalEventCameraNoTarget(CP932("昇天カメラ"), -1);
         } else {
-            MR::startPlayerEvent("マリオダウン");
-            MR::startGlobalEventCameraNoTarget("奈落カメラ", -1);
+            MR::startPlayerEvent(CP932("マリオダウン"));
+            MR::startGlobalEventCameraNoTarget(CP932("奈落カメラ"), -1);
         }
 
         MR::startStarPointerModeDemoMarioDeath(this);
 
         if (mMario->_960 == 25 || mMario->_960 == 17) {
-            playEffect("砂埋まり体");
-            playEffect("砂埋まり手");
+            playEffect(CP932("砂埋まり体"));
+            playEffect(CP932("砂埋まり手"));
         }
 
         if (mMario->_960 == 31) {
-            playEffect("泥埋まり体");
-            playEffect("泥埋まり手");
+            playEffect(CP932("泥埋まり体"));
+            playEffect(CP932("泥埋まり手"));
         }
     }
 
     if (mMario->_960 == 31 || mMario->_960 == 18) {
-        playSound("沼死亡", -1);
+        playSound(CP932("沼死亡"), -1);
 
         if (getNerveStep() == 90) {
-            playSound("声沼沈み死亡", -1);
+            playSound(CP932("声沼沈み死亡"), -1);
         }
     } else {
-        playSound("砂死亡", -1);
+        playSound(CP932("砂死亡"), -1);
 
         if (getNerveStep() == 90) {
-            playSound("声砂沈み死亡", -1);
+            playSound(CP932("声砂沈み死亡"), -1);
         }
     }
 }
@@ -246,11 +247,11 @@ void MarioActor::exeGameOverNonStop() {
     MR::clearBgmQueue();
 
     if (MR::getPlayerLeft() == 0) {
-        MR::startPlayerEvent("ゲームオーバー");
-        MR::startGlobalEventCameraNoTarget("昇天カメラ", -1);
+        MR::startPlayerEvent(CP932("ゲームオーバー"));
+        MR::startGlobalEventCameraNoTarget(CP932("昇天カメラ"), -1);
     } else {
-        MR::startPlayerEvent("マリオ炎ダウン");
-        MR::startGlobalEventCameraNoTarget("奈落カメラ", -1);
+        MR::startPlayerEvent(CP932("マリオ炎ダウン"));
+        MR::startGlobalEventCameraNoTarget(CP932("奈落カメラ"), -1);
     }
 
     MR::startStarPointerModeDemoMarioDeath(this);

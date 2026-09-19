@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/MapPartsRailMover.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/MapParts.hpp"
@@ -22,7 +23,7 @@ namespace NrvMapPartsRailMover {
 };  // namespace NrvMapPartsRailMover
 
 MapPartsRailMover::MapPartsRailMover(LiveActor* pActor)
-    : MapPartsFunction(pActor, "レイル移動"), mRailPointPassChecker(), mMoveConditionType(), mMoveStopType(1), mSignMotionType(), _28(gZeroVec) {
+    : MapPartsFunction(pActor, CP932("レイル移動")), mRailPointPassChecker(), mMoveConditionType(), mMoveStopType(1), mSignMotionType(), _28(gZeroVec) {
     _34 = 0.0f;
     mStopTime = 0;
     mSpeed = 0.0f;

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/StarPieceGroup.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/StarPiece.hpp"
@@ -130,7 +131,7 @@ void StarPieceGroup::init(const JMapInfoIter& rIter) {
     MR::declareStarPiece(this, mNumPieces);
 
     for (u32 i = 0; i < mNumPieces; i++) {
-        mPieces[i] = new StarPiece("グループスターピース");
+        mPieces[i] = new StarPiece(CP932("グループスターピース"));
         if (isFlow) {
             mPieces[i]->initAndSetRailMoveFromGroup(rIter);
         } else {

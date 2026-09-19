@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Camera/CameraContext.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
@@ -13,7 +14,7 @@ void CameraContext_FORCE_MATCH_SDATA2() {
 CameraContext::~CameraContext() {
 }
 
-CameraContext::CameraContext() : NameObj("カメラコンテキスト") {
+CameraContext::CameraContext() : NameObj(CP932("カメラコンテキスト")) {
     initParams();
 }
 

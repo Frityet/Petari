@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #pragma once
 
 #include "Game/Camera/Camera.hpp"
@@ -10,7 +11,7 @@ public:
         CameraType_UpdateWithTarget = 1,
         CameraType_FollowWorldPos = 2,
     };
-    CameraDPD(const char* pName = "DPD操作カメラ");
+    CameraDPD(const char* pName = CP932("DPD操作カメラ"));
 
     virtual void reset();
     virtual CameraTargetObj* calc();

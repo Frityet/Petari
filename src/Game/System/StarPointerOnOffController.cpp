@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/System/StarPointerOnOffController.hpp"
 #include "Game/Screen/StarPointerDirector.hpp"
 #include "Game/Screen/StarPointerLayout.hpp"
@@ -21,7 +22,7 @@ namespace {
     }
 };  // namespace
 
-StarPointerOnOffController::StarPointerOnOffController() : NerveExecutor("スターポインタON/OFF制御"), _8(false), mMode(-1) {
+StarPointerOnOffController::StarPointerOnOffController() : NerveExecutor(CP932("スターポインタON/OFF制御")), _8(false), mMode(-1) {
     for (s32 idx = 0; idx < 16; idx++) {
         mRequests[idx] = new RequestInfo();
     }

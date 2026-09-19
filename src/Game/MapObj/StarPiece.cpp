@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/StarPiece.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -1037,7 +1038,7 @@ void StarPiece::tryGotJudge() {
     }
 
     if (mGettableDelayCounter < 0) {
-        bool isPointing = MR::isStarPointerPointing1Por2P(this, "弱", false, false);
+        bool isPointing = MR::isStarPointerPointing1Por2P(this, CP932("弱"), false, false);
         MR::getStarPointerLastPointedPort(this);
         if (isPointing == true) {
             goToPlayer(TVec3f(_8C));

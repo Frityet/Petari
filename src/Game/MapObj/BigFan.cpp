@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/BigFan.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -67,7 +68,7 @@ void BigFan::init(const JMapInfoIter& rIter) {
 }
 
 void BigFan::initWindModel() {
-    mWindModel = MR::createModelObjMapObj("風モデル", "BigFanWind", getBaseMtx());
+    mWindModel = MR::createModelObjMapObj(CP932("風モデル"), "BigFanWind", getBaseMtx());
     mWindModel->initWithoutIter();
     MR::invalidateClipping(mWindModel);
     MR::startBtk(mWindModel, "BigFanWind");

@@ -1,0 +1,93 @@
+[ok] src/Game/Animation/AnmPlayer.hpp
+[ok] src/Game/AudioLib/AudBgmSetting.hpp
+[ok] src/Game/AudioLib/AudBgmSetting.cpp
+[ok] src/Game/Camera/Camera.hpp
+[ok] src/Game/Camera/Camera.cpp
+[ok] src/Game/Camera/CameraMan.hpp
+[ok] src/Game/Camera/CameraMan.cpp
+[ok] src/Game/Camera/CameraParallel.hpp
+[ok] src/Game/Camera/CameraParallel.cpp
+[ok] src/Game/Camera/CameraHeightArrange.hpp
+[ok] src/Game/Camera/CameraHeightArrange.cpp
+[ok] src/Game/Camera/CameraPoseParam.hpp
+[ok] src/Game/Camera/CameraPoseParam.cpp
+[ok] src/Game/Camera/CamTranslatorParallel.hpp
+[ok] src/Game/Camera/CamTranslatorParallel.cpp
+[ok] src/Game/Camera/CameraCalc.hpp
+[ok] src/Game/Camera/CameraCalc.cpp
+[fail] src/Game/LiveActor/MaterialCtrl.hpp: PC Game mirror differs beyond explicit CP932 encoding: src/Game/LiveActor/MaterialCtrl.hpp
+[fail] src/Game/LiveActor/MaterialCtrl.cpp: PC Game mirror differs beyond explicit CP932 encoding: src/Game/LiveActor/MaterialCtrl.cpp
+[ok] src/Game/LiveActor/ActorStateBase.hpp
+[ok] src/Game/LiveActor/ActorStateBase.cpp
+[ok] src/Game/LiveActor/ActorStateKeeper.hpp
+[ok] src/Game/LiveActor/ActorStateKeeper.cpp
+[ok] src/Game/LiveActor/Spine.hpp
+[ok] src/Game/LiveActor/Spine.cpp
+[ok] src/Game/MapObj/InvisiblePolygonObj.hpp
+[ok] src/Game/MapObj/InvisiblePolygonObj.cpp
+[ok] src/Game/MapObj/InvisiblePolygonObjGCapture.hpp
+[ok] src/Game/MapObj/InvisiblePolygonObjGCapture.cpp
+[ok] src/Game/System/NerveExecutor.hpp
+[ok] src/Game/System/NerveExecutor.cpp
+[ok] src/Game/System/StationedFileInfo.hpp
+[fail] src/Game/System/StationedFileInfo.cpp: PC Game mirror differs beyond explicit CP932 encoding: src/Game/System/StationedFileInfo.cpp
+[fail] src/Game/Map/FileSelectItem.hpp: PC Game mirror differs beyond explicit CP932 encoding: src/Game/Map/FileSelectItem.hpp
+[fail] src/Game/Map/FileSelectItem.cpp: PC Game mirror differs beyond explicit CP932 encoding: src/Game/Map/FileSelectItem.cpp
+[ok] src/Game/Map/FileSelectEffect.hpp
+[ok] src/Game/Map/FileSelectEffect.cpp
+[ok] src/Game/Map/FileSelectFunc.hpp
+[fail] src/Game/Map/FileSelectFunc.cpp: PC Game mirror differs beyond explicit CP932 encoding: src/Game/Map/FileSelectFunc.cpp
+[ok] src/Game/Map/FileSelector.hpp
+[fail] src/Game/Map/FileSelector.cpp: PC Game mirror differs beyond explicit CP932 encoding: src/Game/Map/FileSelector.cpp
+[ok] src/Game/Map/FileSelectSky.hpp
+[ok] src/Game/Map/FileSelectSky.cpp
+[ok] src/Game/Map/SphereSelector.hpp
+[fail] src/Game/Map/SphereSelector.cpp: PC Game mirror differs beyond explicit CP932 encoding: src/Game/Map/SphereSelector.cpp
+[ok] src/Game/Map/SphereSelectorHandle.hpp
+[ok] src/Game/Map/SphereSelectorHandle.cpp
+[ok] src/Game/NPC/MiiFaceParts.hpp
+[ok] src/Game/NPC/MiiFaceParts.cpp
+[ok] src/Game/NPC/MiiFaceRecipe.hpp
+[ok] src/Game/NPC/MiiFaceRecipe.cpp
+[ok] src/Game/NPC/MiiFacePartsHolder.hpp
+[fail] src/Game/NPC/MiiFacePartsHolder.cpp: PC Game mirror differs beyond explicit CP932 encoding: src/Game/NPC/MiiFacePartsHolder.cpp
+[ok] src/Game/Player/MarioHolder.hpp
+[ok] src/Game/Player/MarioHolder.cpp
+[ok] src/Game/Scene/PlacementStateChecker.hpp
+[ok] src/Game/Scene/PlacementStateChecker.cpp
+[ok] src/Game/Screen/FileSelectInfo.hpp
+[fail] src/Game/Screen/FileSelectInfo.cpp: PC Game mirror differs beyond explicit CP932 encoding: src/Game/Screen/FileSelectInfo.cpp
+[ok] src/Game/Screen/BackButton.hpp
+[ok] src/Game/Screen/BackButton.cpp
+[ok] src/Game/Screen/BrosButton.hpp
+[ok] src/Game/Screen/BrosButton.cpp
+[ok] src/Game/Screen/InformationMessage.hpp
+[ok] src/Game/Screen/InformationMessage.cpp
+[ok] src/Game/Screen/InformationObserver.hpp
+[ok] src/Game/Screen/InformationObserver.cpp
+[ok] src/Game/Screen/MiiConfirmIcon.hpp
+[ok] src/Game/Screen/MiiConfirmIcon.cpp
+[ok] src/Game/Screen/SysInfoWindow.hpp
+[ok] src/Game/Screen/SysInfoWindow.cpp
+[ok] src/Game/Screen/CenterScreenBlur.hpp
+[ok] src/Game/Screen/CenterScreenBlur.cpp
+[ok] src/Game/Screen/FullScreenBlur.hpp
+[ok] src/Game/Screen/FullScreenBlur.cpp
+[ok] src/Game/Util/JointController.hpp
+[ok] src/Game/Util/JointController.cpp
+[fail] src/Game/Util/LiveActorUtil.hpp: PC Game mirror differs beyond explicit CP932 encoding: src/Game/Util/LiveActorUtil.hpp
+[ok] src/Game/Util/LiveActorUtil.cpp
+[fail] src/Game/Util/ModelUtil.hpp: PC Game mirror differs beyond explicit CP932 encoding: src/Game/Util/ModelUtil.hpp
+[fail] src/Game/Util/Color.hpp: PC Game mirror differs beyond explicit CP932 encoding: src/Game/Util/Color.hpp
+[ok] src/Game/Util/DirectDraw.hpp
+[ok] src/Game/Util/GamePadUtil.hpp
+[ok] src/Game/Util/GamePadUtil.cpp
+[ok] src/Game/Util/NerveUtil.hpp
+[ok] src/Game/Util/NerveUtil.cpp
+[ok] src/Game/Util/PlayerUtil.hpp
+[ok] src/Game/Util/PlayerUtil.cpp
+[ok] src/Game/Util/SequenceUtil.hpp
+[ok] src/Game/Util/SequenceUtil.cpp
+[ok] src/Game/Util/ScreenUtil.hpp
+[ok] src/Game/Util/SystemUtil.hpp
+[fail] src/Game/Util/SystemUtil.cpp: PC Game mirror differs beyond explicit CP932 encoding: src/Game/Util/SystemUtil.cpp

@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/EarthenPipe.hpp"
 #include "Game/AudioLib/AudBgmMgr.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
@@ -143,7 +144,7 @@ void EarthenPipe::init(const JMapInfoIter& rIter) {
     MR::setEffectHostMtx(this, "LavaAppear", _BC.mMtx);
     MR::setEffectHostMtx(this, "LavaVanish", _BC.mMtx);
     initSound(4, false);
-    MR::initMultiActorCamera(this, rIter, &mCameraInfo, "出現");
+    MR::initMultiActorCamera(this, rIter, &mCameraInfo, CP932("出現"));
     initNerve(&NrvEarthenPipe::EarthenPipeNrvWait::sInstance);
 
     if ((mPipeMode - 1) <= 1u) {
@@ -155,7 +156,7 @@ void EarthenPipe::init(const JMapInfoIter& rIter) {
     }
 
     if (isWaterPipe) {
-        mPipeStreamModel = MR::createPartsModelMapObj(this, "土管水流", "EarthenPipeStream", nullptr);
+        mPipeStreamModel = MR::createPartsModelMapObj(this, CP932("土管水流"), "EarthenPipeStream", nullptr);
         MR::setClippingTypeSphere(mPipeStreamModel, 500.0f);
         MR::tryStartAllAnim(mPipeStreamModel, "EarthenPipeStream");
         mPipeStreamModel->appear();
@@ -187,7 +188,7 @@ void EarthenPipe::makeActorAppeared() {
 
 bool EarthenPipe::tryShowUp() {
     MR::invalidateClipping(this);
-    MR::startMultiActorCameraTargetSelf(this, mCameraInfo, "出現", -1);
+    MR::startMultiActorCameraTargetSelf(this, mCameraInfo, CP932("出現"), -1);
     if (mPipeMode != 1 && mPipeMode != 2) {
         return false;
     }
@@ -198,7 +199,7 @@ bool EarthenPipe::tryShowUp() {
 
 bool EarthenPipe::tryHideDown() {
     MR::validateClipping(this);
-    MR::endMultiActorCamera(this, mCameraInfo, "出現", true, -1);
+    MR::endMultiActorCamera(this, mCameraInfo, CP932("出現"), true, -1);
 
     if (!mPipeMode || (mPipeMode - 3) <= 1u) {
         setNerve(&NrvEarthenPipe::EarthenPipeNrvInvalid::sInstance);
@@ -517,7 +518,7 @@ void EarthenPipe::processBgmPlayerOut() {
     }
 }
 
-EarthenPipeMediator::EarthenPipeMediator() : NameObj("土管仲介者") {
+EarthenPipeMediator::EarthenPipeMediator() : NameObj(CP932("土管仲介者")) {
     mNumEntries = 0;
     mPipeEntries = nullptr;
     mPipeEntries = new Entry[0x20];

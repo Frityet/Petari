@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/StarPointerLayout.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/LayoutCoreUtil.hpp"
@@ -107,7 +108,7 @@ void StarPointerLayout::initWithPort(s32 channel) {
     mCommandStream->setPortAndColor(mPadChannel, &::sColorA[mPadChannel]);
     mCommandStream->initWithoutIter();
 
-    mNumber = new StarPointerNumber(this, mPadChannel, "スターポインタナンバー");
+    mNumber = new StarPointerNumber(this, mPadChannel, CP932("スターポインタナンバー"));
     mNumber->initWithoutIter();
     mNumber->appear();
 

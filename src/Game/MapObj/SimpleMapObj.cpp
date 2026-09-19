@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/MapObj/SimpleMapObj.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/MapObjActorInitInfo.hpp"
@@ -173,7 +174,7 @@ void SimpleEnvironmentObj::init(const JMapInfoIter& rIter) {
     MapObjActor::init(rIter);
     MapObjActorInitInfo info;
     MapObjActorUtil::setupInitInfoSimpleMapObj(&info);
-    info.setupHioNode("環境");
+    info.setupHioNode(CP932("環境"));
     initialize(rIter, info);
 }
 
@@ -190,7 +191,7 @@ void SimpleMirrorObj::init(const JMapInfoIter& rIter) {
     if (!mMtx) {
         MapObjActorUtil::setupInitInfoSimpleMapObj(&info);
     } else {
-        info.setupHioNode("地形オブジェ");
+        info.setupHioNode(CP932("地形オブジェ"));
         info.setupConnectToScene();
         info.setupEffect(nullptr);
         info.setupSound(4);

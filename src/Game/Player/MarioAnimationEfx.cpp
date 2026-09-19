@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioAnimator.hpp"
 #include "Game/Animation/XanimeResource.hpp"
 #include "Game/Player/MarioActor.hpp"
@@ -26,20 +27,20 @@ struct MarioCallbackInfo {
 };
 
 MarioCallbackInfo marioCallbackTable[] = {
-    {"空中ひねり", 0, &MarioAnimator::spinEntry, &MarioAnimator::spinUpdate, &MarioAnimator::spinClose, 0},
-    {"地上ひねり", 0, &MarioAnimator::spinEntry, nullptr, &MarioAnimator::spinClose, 0},
-    {"アイスひねり", 1, &MarioAnimator::spinEntry, nullptr, &MarioAnimator::spinClose, 0},
-    {"アイスひねり静止", 1, &MarioAnimator::spinEntry, nullptr, &MarioAnimator::spinClose, 0},
-    {"ファイアスピン", 2, &MarioAnimator::spinEntry, nullptr, &MarioAnimator::spinClose, 0},
-    {"ファイアスピン空中", 2, &MarioAnimator::spinEntry, nullptr, &MarioAnimator::spinClose, 0},
-    {"ハチスピン", 3, &MarioAnimator::spinEntry, nullptr, &MarioAnimator::spinClose, 0},
-    {"ハチスピン空中", 3, &MarioAnimator::spinEntry, nullptr, &MarioAnimator::spinClose, 0},
-    {"ステージインA", 0, nullptr, &MarioAnimator::stageInCheck, nullptr, 0},
-    {"投げ", 0, &MarioAnimator::throwEntry, &MarioAnimator::throwCheck, &MarioAnimator::throwClose, 0},
-    {"ファイア投げ", 1, &MarioAnimator::throwEntry, nullptr, &MarioAnimator::throwClose, 0},
-    {"サマーソルト", 0, nullptr, &MarioAnimator::squatSpinCheck, nullptr, 0},
-    {"ウォークイン", 0, nullptr, nullptr, &MarioAnimator::walkinClose, 0},
-    {"見る", 0, nullptr, nullptr, &MarioAnimator::walkinClose, 0},
+    {CP932("空中ひねり"), 0, &MarioAnimator::spinEntry, &MarioAnimator::spinUpdate, &MarioAnimator::spinClose, 0},
+    {CP932("地上ひねり"), 0, &MarioAnimator::spinEntry, nullptr, &MarioAnimator::spinClose, 0},
+    {CP932("アイスひねり"), 1, &MarioAnimator::spinEntry, nullptr, &MarioAnimator::spinClose, 0},
+    {CP932("アイスひねり静止"), 1, &MarioAnimator::spinEntry, nullptr, &MarioAnimator::spinClose, 0},
+    {CP932("ファイアスピン"), 2, &MarioAnimator::spinEntry, nullptr, &MarioAnimator::spinClose, 0},
+    {CP932("ファイアスピン空中"), 2, &MarioAnimator::spinEntry, nullptr, &MarioAnimator::spinClose, 0},
+    {CP932("ハチスピン"), 3, &MarioAnimator::spinEntry, nullptr, &MarioAnimator::spinClose, 0},
+    {CP932("ハチスピン空中"), 3, &MarioAnimator::spinEntry, nullptr, &MarioAnimator::spinClose, 0},
+    {CP932("ステージインA"), 0, nullptr, &MarioAnimator::stageInCheck, nullptr, 0},
+    {CP932("投げ"), 0, &MarioAnimator::throwEntry, &MarioAnimator::throwCheck, &MarioAnimator::throwClose, 0},
+    {CP932("ファイア投げ"), 1, &MarioAnimator::throwEntry, nullptr, &MarioAnimator::throwClose, 0},
+    {CP932("サマーソルト"), 0, nullptr, &MarioAnimator::squatSpinCheck, nullptr, 0},
+    {CP932("ウォークイン"), 0, nullptr, nullptr, &MarioAnimator::walkinClose, 0},
+    {CP932("見る"), 0, nullptr, nullptr, &MarioAnimator::walkinClose, 0},
     {"ResultWait", 0, nullptr, nullptr, &MarioAnimator::walkinClose, 0},
     {"ResultWaitGrandStar", 0, nullptr, nullptr, &MarioAnimator::walkinClose, 0},
     {"WatchUpMore", 0, nullptr, nullptr, &MarioAnimator::walkinClose, 0},
@@ -124,19 +125,19 @@ void MarioAnimator::closeCallback() {
 void MarioAnimator::spinEntry() {
     switch (marioCallbackTable[_11C].mType) {
     case 0:
-        playEffect("スピンライト");
+        playEffect(CP932("スピンライト"));
         break;
     case 1:
-        playEffect("アイススピン");
+        playEffect(CP932("アイススピン"));
         break;
     case 2:
-        playEffect("ファイアスピン");
+        playEffect(CP932("ファイアスピン"));
         break;
     case 3:
         if (gIsLuigi) {
-            playEffect("ハチルイージスピン");
+            playEffect(CP932("ハチルイージスピン"));
         } else {
-            playEffect("ハチスピン");
+            playEffect(CP932("ハチスピン"));
         }
         break;
     }
@@ -144,26 +145,26 @@ void MarioAnimator::spinEntry() {
 
 void MarioAnimator::spinUpdate() {
     if (getFrame() > 30.0f) {
-        stopEffect("スピンライト");
+        stopEffect(CP932("スピンライト"));
     }
 }
 
 void MarioAnimator::spinClose() {
     switch (marioCallbackTable[_11C].mType) {
     case 0:
-        stopEffect("スピンライト");
+        stopEffect(CP932("スピンライト"));
         break;
     case 1:
-        stopEffect("アイススピン");
+        stopEffect(CP932("アイススピン"));
         break;
     case 2:
-        stopEffect("ファイアスピン");
+        stopEffect(CP932("ファイアスピン"));
         break;
     case 3:
         if (gIsLuigi) {
-            stopEffect("ハチルイージスピン");
+            stopEffect(CP932("ハチルイージスピン"));
         } else {
-            stopEffect("ハチスピン");
+            stopEffect(CP932("ハチスピン"));
         }
         break;
     }
@@ -172,7 +173,7 @@ void MarioAnimator::spinClose() {
 void MarioAnimator::stageInCheck() {
     if ((s32)getFrame() == 0x32) {
         Mario* pPlayer = getPlayer();
-        playEffectRT("属性ステージイン", pPlayer->_368, getTrans());
+        playEffectRT(CP932("属性ステージイン"), pPlayer->_368, getTrans());
     }
 }
 
@@ -204,11 +205,11 @@ void MarioAnimator::throwEntry() {
     }
 
 effect_shell_throw:
-    playEffect("こうら投げ");
+    playEffect(CP932("こうら投げ"));
     return;
 
 effect_fire_throw:
-    playEffect("ファイアボール投げ");
+    playEffect(CP932("ファイアボール投げ"));
 }
 
 void MarioAnimator::throwClose() {
@@ -223,11 +224,11 @@ void MarioAnimator::throwClose() {
     }
 
 effect_shell_throw:
-    stopEffect("こうら投げ");
+    stopEffect(CP932("こうら投げ"));
     return;
 
 effect_fire_throw:
-    stopEffect("ファイアボール投げ");
+    stopEffect(CP932("ファイアボール投げ"));
 }
 
 void MarioAnimator::squatSpinCheck() {

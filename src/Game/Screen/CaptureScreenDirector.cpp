@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/CaptureScreenDirector.hpp"
 
 #include <cstring>
@@ -19,7 +20,7 @@ namespace {
     };
 }
 
-CaptureScreenDirector::CaptureScreenDirector() : NameObj("画面キャプチャ"), _C(nullptr), mTimingType("Indirect"), mTexture(nullptr), _18(false) {
+CaptureScreenDirector::CaptureScreenDirector() : NameObj(CP932("画面キャプチャ")), _C(nullptr), mTimingType("Indirect"), mTexture(nullptr), _18(false) {
     mTexture = new JUTTexture(JUTVideo::getManager()->getRenderMode()->fbWidth, JUTVideo::getManager()->getRenderMode()->efbHeight, GX_TF_RGB565);
 }
 
@@ -98,7 +99,7 @@ const TimingInfo* CaptureScreenDirector::findFromName(const char* pName) const {
     return nullptr;
 }
 
-CaptureScreenActor::CaptureScreenActor(u32 drawType, const char* pCameraName) : NameObj("画面キャプチャ"), mCameraName(pCameraName) {
+CaptureScreenActor::CaptureScreenActor(u32 drawType, const char* pCameraName) : NameObj(CP932("画面キャプチャ")), mCameraName(pCameraName) {
     MR::connectToScene(this, -1, -1, -1, drawType);
 }
 

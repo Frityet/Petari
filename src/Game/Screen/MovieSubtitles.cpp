@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/MovieSubtitles.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NPC/TalkTextFormer.hpp"
@@ -13,7 +14,7 @@ namespace NrvMovieSubtitles {
 };  // namespace NrvMovieSubtitles
 
 MovieSubtitles::MovieSubtitles(const char* pMessageId, s32 appearTime)
-    : LayoutActor("ムービーの字幕", true), mFormerText(nullptr), mAppearTime(appearTime) {
+    : LayoutActor(CP932("ムービーの字幕"), true), mFormerText(nullptr), mAppearTime(appearTime) {
     MR::connectToScene(this, MR::MovementType_MovieSubtitles, MR::CalcAnimType_MovieSubtitles, -1, MR::DrawType_MovieSubtitles);
     initLayoutManager("CinemaSuper", 1);
 

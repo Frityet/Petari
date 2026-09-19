@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/NPC/TicoDemoGetPower.hpp"
 #include "Game/Demo/DemoFunction.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -25,10 +26,10 @@ namespace NrvTicoDemoGetPower {
     NEW_NERVE(TicoDemoGetPowerNrvDemo, TicoDemoGetPower, Demo);
 };  // namespace NrvTicoDemoGetPower
 
-TicoDemoGetPower::TicoDemoGetPower(Tico* pHost, const JMapInfoIter& rIter) : NerveExecutor("チコゲットパワーデモ実行者"), mHost(pHost) {
+TicoDemoGetPower::TicoDemoGetPower(Tico* pHost, const JMapInfoIter& rIter) : NerveExecutor(CP932("チコゲットパワーデモ実行者")), mHost(pHost) {
     initNerve(&NrvTicoDemoGetPower::TicoDemoGetPowerNrvWait::sInstance);
-    DemoFunction::tryCreateDemoTalkAnimCtrlForScene(mHost, rIter, "DemoGetPower", "スピンゲット[デモ1]", 0, 0);
-    MR::registerDemoActionFunctor(mHost, MR::Functor_Inline(this, &TicoDemoGetPower::startDemo), "スピンゲット[デモ1]");
+    DemoFunction::tryCreateDemoTalkAnimCtrlForScene(mHost, rIter, "DemoGetPower", CP932("スピンゲット[デモ1]"), 0, 0);
+    MR::registerDemoActionFunctor(mHost, MR::Functor_Inline(this, &TicoDemoGetPower::startDemo), CP932("スピンゲット[デモ1]"));
     mHost->makeActorDead();
 }
 
@@ -42,12 +43,12 @@ void TicoDemoGetPower::exeWait() {
 }
 
 void TicoDemoGetPower::exeDemo() {
-    if (MR::isDemoPartFirstStep("スピンゲット[デモ5]")) {
+    if (MR::isDemoPartFirstStep(CP932("スピンゲット[デモ5]"))) {
         MR::explainEnableToSpin(mHost);
     }
 
-    if (MR::isDemoPartActive("スピンゲット[デモ3]")) {
-        s32 partStep = MR::getDemoPartStep("スピンゲット[デモ3]");
+    if (MR::isDemoPartActive(CP932("スピンゲット[デモ3]"))) {
+        s32 partStep = MR::getDemoPartStep(CP932("スピンゲット[デモ3]"));
 
         if (partStep == ::sTicoAppearFrame) {
             MR::startSound(mHost, "SE_SM_TICO_OP_APPEAR");
@@ -62,8 +63,8 @@ void TicoDemoGetPower::exeDemo() {
         }
     }
 
-    if (MR::isDemoPartActive("スピンゲット[デモ4]")) {
-        s32 partStep = MR::getDemoPartStep("スピンゲット[デモ4]");
+    if (MR::isDemoPartActive(CP932("スピンゲット[デモ4]"))) {
+        s32 partStep = MR::getDemoPartStep(CP932("スピンゲット[デモ4]"));
 
         if (partStep == ::sFanfareFrame) {
             MR::startSubBGM("BGM_STAR_POW_GET", false);

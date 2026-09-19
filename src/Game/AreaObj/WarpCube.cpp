@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/AreaObj/WarpCube.hpp"
 #include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/Scene/SceneFunction.hpp"
@@ -107,7 +108,7 @@ void WarpCube::init(const JMapInfoIter& rIter) {
     MR::getJMapInfoArg0WithInit(rIter, &local118);
 
     char eventName[0x100];
-    sprintf(eventName, "ワープカメラ %d-%c", groupID, local118 + 65);
+    sprintf(eventName, CP932("ワープカメラ %d-%c"), groupID, local118 + 65);
 
     MR::declareEventCamera(mCameraInfo, eventName);
 

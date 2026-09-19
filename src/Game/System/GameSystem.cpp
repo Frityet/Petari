@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NameObj/NameObjRegister.hpp"
@@ -35,7 +36,7 @@
 
 #define GX_FIFO_SIZE 0x80000
 
-#define INIT_AUDIO_KEY "オーディオ初期化"  // "Audio Initialization"
+#define INIT_AUDIO_KEY CP932("オーディオ初期化")  // "Audio Initialization"
 
 namespace NrvGameSystem {
     NEW_NERVE(GameSystemInitializeAudio, GameSystem, InitializeAudio);

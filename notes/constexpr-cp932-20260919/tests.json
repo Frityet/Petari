@@ -1,0 +1,20 @@
+{
+  "mapping_sha256": "46778ae55afa614d3ece7e4f7160d9f1205626f09a461e6d7a933b57b582d600",
+  "mapping_entries": 9280,
+  "negative_cases": [
+    "unrepresentable_emoji",
+    "unrepresentable_yen",
+    "isolated_continuation",
+    "raw_cp932_is_not_utf8",
+    "truncated_utf8",
+    "bad_continuation",
+    "overlong_two_byte",
+    "overlong_three_byte",
+    "surrogate",
+    "out_of_unicode_range",
+    "invalid_final_byte",
+    "missing_nul"
+  ],
+  "status": "passed",
+  "compiled_codepoints": 9408
+}

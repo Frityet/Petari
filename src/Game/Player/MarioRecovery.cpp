@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Player/MarioRecovery.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
@@ -187,9 +188,9 @@ bool MarioRecovery::start() {
     _1A = 0;
     _34 = *getPlayer()->getLastSafetyTrans(nullptr);
 
-    changeAnimationNonStop("引き戻し");
-    playSound("声慌て", -1);
-    playEffect("引き戻し泡");
+    changeAnimationNonStop(CP932("引き戻し"));
+    playSound(CP932("声慌て"), -1);
+    playEffect(CP932("引き戻し泡"));
 
     if (_12) {
         _1A = 3;
@@ -216,7 +217,7 @@ bool MarioRecovery::start() {
         return false;
     }
 
-    MR::startGlobalEventCameraNoTarget("引き戻し", -1);
+    MR::startGlobalEventCameraNoTarget(CP932("引き戻し"), -1);
     return true;
 }
 
@@ -245,8 +246,8 @@ bool MarioRecovery::update() {
         if (soundLevel > 100) {
             soundLevel = 100;
         }
-        playSound("引き戻し基本", -1);
-        playSound("引き戻し浮遊", soundLevel);
+        playSound(CP932("引き戻し基本"), -1);
+        playSound(CP932("引き戻し浮遊"), soundLevel);
         getPlayer()->setFrontVecKeepUp(_1C, 0.1f);
 
         if (_14 != 0 && --_14 == 0) {
@@ -290,9 +291,9 @@ bool MarioRecovery::update() {
                 break;
             }
 
-            stopEffectForce("引き戻し泡");
-            playEffect("引き戻し泡破裂");
-            playSound("引き戻し泡破裂", -1);
+            stopEffectForce(CP932("引き戻し泡"));
+            playEffect(CP932("引き戻し泡破裂"));
+            playSound(CP932("引き戻し泡破裂"), -1);
             _1A++;
         }
         break;
@@ -321,7 +322,7 @@ bool MarioRecovery::update() {
                 addTrans(_58 * movement, "Module");
             }
 
-            playSound("引き戻し基本", -1);
+            playSound(CP932("引き戻し基本"), -1);
         }
         break;
     }
@@ -330,16 +331,16 @@ bool MarioRecovery::update() {
 }
 
 bool MarioRecovery::close() {
-    MR::endGlobalEventCamera("引き戻し", -1, true);
+    MR::endGlobalEventCamera(CP932("引き戻し"), -1, true);
 
     getPlayer()->mMovementStates._1 = true;
     getPlayer()->mMovementStates.jumping = false;
     getPlayer()->_420 = 16;
 
-    stopEffectForce("引き戻し泡");
-    playEffect("引き戻し泡破裂");
+    stopEffectForce(CP932("引き戻し泡"));
+    playEffect(CP932("引き戻し泡破裂"));
     stopAnimation(static_cast< const char* >(nullptr), static_cast< const char* >(nullptr));
-    changeAnimation(static_cast< const char* >(nullptr), "基本");
+    changeAnimation(static_cast< const char* >(nullptr), CP932("基本"));
 
     mActor->_F44 = true;
     return true;

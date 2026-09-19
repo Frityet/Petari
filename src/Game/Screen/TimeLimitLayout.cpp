@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/TimeLimitLayout.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/LayoutUtil.hpp"
@@ -31,7 +32,7 @@ namespace NrvTimeLimitLayout {
 };  // namespace NrvTimeLimitLayout
 
 TimeLimitLayout::TimeLimitLayout(u32 timeLimit)
-    : LayoutActor("タイムリミット", true), mTime(0), mTimeLimit(timeLimit), mScaleControl(nullptr), mFadeControl(nullptr), mCurrentTiming(nullptr),
+    : LayoutActor(CP932("タイムリミット"), true), mTime(0), mTimeLimit(timeLimit), mScaleControl(nullptr), mFadeControl(nullptr), mCurrentTiming(nullptr),
       mIsSuspend(false), _35(false) {
 }
 

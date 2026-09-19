@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Camera/CameraRegisterHolder.hpp"
 #include <cstring>
 
@@ -5,9 +6,9 @@ namespace {
     // static const char* sMtxRegHioName =
     // static const char* sVecRegHioName =
     // static const char* sFltRegHioName =
-    static const char* sDummyMtxRegName = "ダミーマトリクス";
-    static const char* sDummyVecRegName = "ダミーベクトル";
-    static const char* sDummyFloatRegName = "ダミー浮動小数";
+    static const char* sDummyMtxRegName = CP932("ダミーマトリクス");
+    static const char* sDummyVecRegName = CP932("ダミーベクトル");
+    static const char* sDummyFloatRegName = CP932("ダミー浮動小数");
 };  // namespace
 
 CameraRegisterHolder::CameraRegisterHolder(const char* pName) : NameObj(pName) {

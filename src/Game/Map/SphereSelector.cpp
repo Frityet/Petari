@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Map/SphereSelector.hpp"
 #include "Game/LiveActor/LiveActorGroup.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -32,14 +33,14 @@ namespace NrvSphereSelector {
 };  // namespace NrvSphereSelector
 
 SphereSelector::SphereSelector()
-    : LiveActor("スフィアセレクター"), mSphereGroup(), mHandle(), mSelectedTarget(), _98(), mPointingTarget(), _A4(), _A8(0.0f, 0.0f),
+    : LiveActor(CP932("スフィアセレクター")), mSphereGroup(), mHandle(), mSelectedTarget(), _98(), mPointingTarget(), _A4(), _A8(0.0f, 0.0f),
       mIsPointingInvalid(), _B1() {
 }
 
 void SphereSelector::init(const JMapInfoIter& rIter) {
     MR::connectToSceneMapObjDecorationMovement(this);
     MR::invalidateClipping(this);
-    mSphereGroup = new LiveActorGroup("スフィアセレクターアクターグループ", 32);
+    mSphereGroup = new LiveActorGroup(CP932("スフィアセレクターアクターグループ"), 32);
     initNerve(&NrvSphereSelector::SphereSelectorNrvSelectStart::sInstance);
     makeActorDead();
 }

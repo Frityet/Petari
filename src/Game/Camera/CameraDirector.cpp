@@ -1,3 +1,4 @@
+#include "compat/Cp932Literal.hpp"
 #include "Game/Camera/CameraDirector.hpp"
 #include "Game/Boss/BossStinkBug.hpp"
 #include "Game/Camera/CameraCover.hpp"
@@ -53,9 +54,9 @@ namespace {
     // static const s32 sAnimCamBlendFrame =
     // static const f32 sAnimCamRate =
     static f32 sDefaultFovy = 45.0f;
-    static const char* sTalkCameraName = "共通会話カメラ";
-    static const char* sStartAnimCameraName = "スタートアニメカメラ";
-    static const char* sSubjectiveCameraName = "主観カメラ";
+    static const char* sTalkCameraName = CP932("共通会話カメラ");
+    static const char* sStartAnimCameraName = CP932("スタートアニメカメラ");
+    static const char* sSubjectiveCameraName = CP932("主観カメラ");
     // static const s32 sTestAnimCameraName =
     // static const s32 sConvertSize =
     // static const s32 sConvertQuality =
@@ -70,26 +71,26 @@ CameraDirector::CameraDirector(const char* pName) : NameObj(pName) {
     mOnlyCamera = new OnlyCamera("OnlyCamera");
     mPoseParam1 = new CameraPoseParam();
     mPoseParam2 = new CameraPoseParam();
-    mHolder = new CameraHolder("カメラホルダー");
-    mChunkHolder = new CameraParamChunkHolder(mHolder, "パラメータ");
+    mHolder = new CameraHolder(CP932("カメラホルダー"));
+    mChunkHolder = new CameraParamChunkHolder(mHolder, CP932("パラメータ"));
     mCameraCreator = new GameCameraCreator(mChunkHolder);
-    mRailHolder = new CameraRailHolder("カメラレール管理");
-    mRegisterHolder = new CameraRegisterHolder("カメラレジスタ");
+    mRailHolder = new CameraRailHolder(CP932("カメラレール管理"));
+    mRegisterHolder = new CameraRegisterHolder(CP932("カメラレジスタ"));
     mTargetHolder = new CameraTargetHolder();
-    mShaker = new CameraShaker("振動");
+    mShaker = new CameraShaker(CP932("振動"));
     mViewInterpolator = new CameraViewInterpolator();
     mCover = new CameraCover("CameraCover");
     mRotChecker = new CameraRotChecker();
-    mCameraManGame = new CameraManGame(mHolder, mChunkHolder, "ゲームカメラマン");
-    mCameraManEvent = new CameraManEvent(mHolder, mChunkHolder, "イベントカメラマン");
-    mCameraManPause = new CameraManPause("ポーズカメラマン");
-    mCameraManSubjective = new CameraManSubjective("主観カメラマン");
+    mCameraManGame = new CameraManGame(mHolder, mChunkHolder, CP932("ゲームカメラマン"));
+    mCameraManEvent = new CameraManEvent(mHolder, mChunkHolder, CP932("イベントカメラマン"));
+    mCameraManPause = new CameraManPause(CP932("ポーズカメラマン"));
+    mCameraManSubjective = new CameraManSubjective(CP932("主観カメラマン"));
     _58 = false;
     mEventNum = 0;
     mIsStartCameraActive = true;
     mStartTime = 0;
     mStartCameraCreated = false;
-    mCameraTargetMtx = new CameraTargetMtx("カメラターゲットダミー");
+    mCameraTargetMtx = new CameraTargetMtx(CP932("カメラターゲットダミー"));
     mRequestCameraManReset = false;
     mRequestCameraLocalOffsetReset = false;
     mIsSubjectiveCamera = false;
