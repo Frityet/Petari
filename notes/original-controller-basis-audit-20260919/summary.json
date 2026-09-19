@@ -1,0 +1,622 @@
+{
+  "scope": "Read-only captured frames11000..12500; fixed hole target supplied by operator logs; no gameplay mutations",
+  "count": 151,
+  "stats": {
+    "predicted_to_pad_dot": {
+      "min": 0.7867933653134136,
+      "median": 0.9999930164358475,
+      "max": 0.9999999758949125
+    },
+    "unmargined_to_pad_dot": {
+      "min": 0.8540392948106901,
+      "median": 0.9871913437230256,
+      "max": 0.9999991737728687
+    },
+    "velocity_to_pad_dot": {
+      "min": 0.6216593883625785,
+      "median": 0.999199149086036,
+      "max": 0.9999988584086488
+    },
+    "pad_to_hole_tangent_dot": {
+      "min": -0.2405930996303879,
+      "median": 0.9979170657281572,
+      "max": 0.9999748971948628
+    },
+    "fresh_controls_to_hole_tangent_dot": {
+      "min": 0.9999999999999998,
+      "median": 0.9999999999999999,
+      "max": 1.0000000000000002
+    },
+    "current_to_fresh_control_dot": {
+      "min": 0.013845418869910975,
+      "median": 0.9999999999999194,
+      "max": 0.9999999999999194
+    },
+    "basis_det": {
+      "min": 0.5814137112592397,
+      "median": 0.9999187168381424,
+      "max": 0.9999989753804417
+    },
+    "speed": {
+      "min": 0.0,
+      "median": 0.0,
+      "max": 22.190596278947275
+    }
+  },
+  "samples": [
+    {
+      "frame": 11000,
+      "position": [
+        14045.205078125,
+        -11773.203125,
+        5136.2421875
+      ],
+      "status": 0,
+      "controller": [
+        -0.03290000185370445,
+        -0.9994590282440186
+      ],
+      "player_stick": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "predicted_to_pad_dot": null,
+      "unmargined_to_pad_dot": null,
+      "velocity_to_pad_dot": null,
+      "speed": 0.0,
+      "pad_to_hole_tangent_dot": null,
+      "fresh_controls_to_hole_tangent_dot": 0.9999999999999999,
+      "current_to_fresh_control_dot": 0.9999999999999194,
+      "hole_distance": 3310.4922784979512,
+      "basis_lengths": [
+        0.9819557201266715,
+        0.998905842832666
+      ],
+      "basis_det": 0.9999187168381424,
+      "movement_low_word": 1610612736,
+      "movement_high_word": 49152
+    },
+    {
+      "frame": 11100,
+      "position": [
+        14045.205078125,
+        -11773.203125,
+        5136.2421875
+      ],
+      "status": 0,
+      "controller": [
+        -0.03290000185370445,
+        -0.9994590282440186
+      ],
+      "player_stick": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "predicted_to_pad_dot": null,
+      "unmargined_to_pad_dot": null,
+      "velocity_to_pad_dot": null,
+      "speed": 0.0,
+      "pad_to_hole_tangent_dot": null,
+      "fresh_controls_to_hole_tangent_dot": 0.9999999999999999,
+      "current_to_fresh_control_dot": 0.9999999999999194,
+      "hole_distance": 3310.4922784979512,
+      "basis_lengths": [
+        0.9819557201266715,
+        0.998905842832666
+      ],
+      "basis_det": 0.9999187168381424,
+      "movement_low_word": 1610612736,
+      "movement_high_word": 49152
+    },
+    {
+      "frame": 11200,
+      "position": [
+        14045.205078125,
+        -11773.203125,
+        5136.2421875
+      ],
+      "status": 0,
+      "controller": [
+        -0.03290000185370445,
+        -0.9994590282440186
+      ],
+      "player_stick": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "predicted_to_pad_dot": null,
+      "unmargined_to_pad_dot": null,
+      "velocity_to_pad_dot": null,
+      "speed": 0.0,
+      "pad_to_hole_tangent_dot": null,
+      "fresh_controls_to_hole_tangent_dot": 0.9999999999999999,
+      "current_to_fresh_control_dot": 0.9999999999999194,
+      "hole_distance": 3310.4922784979512,
+      "basis_lengths": [
+        0.9819557201266715,
+        0.998905842832666
+      ],
+      "basis_det": 0.9999187168381424,
+      "movement_low_word": 1610612736,
+      "movement_high_word": 49152
+    },
+    {
+      "frame": 11300,
+      "position": [
+        14045.205078125,
+        -11773.203125,
+        5136.2421875
+      ],
+      "status": 0,
+      "controller": [
+        -0.03290000185370445,
+        -0.9994590282440186
+      ],
+      "player_stick": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "predicted_to_pad_dot": null,
+      "unmargined_to_pad_dot": null,
+      "velocity_to_pad_dot": null,
+      "speed": 0.0,
+      "pad_to_hole_tangent_dot": null,
+      "fresh_controls_to_hole_tangent_dot": 0.9999999999999999,
+      "current_to_fresh_control_dot": 0.9999999999999194,
+      "hole_distance": 3310.4922784979512,
+      "basis_lengths": [
+        0.9819557201266715,
+        0.998905842832666
+      ],
+      "basis_det": 0.9999187168381424,
+      "movement_low_word": 1610612736,
+      "movement_high_word": 49152
+    },
+    {
+      "frame": 11400,
+      "position": [
+        14045.205078125,
+        -11773.203125,
+        5136.2421875
+      ],
+      "status": 0,
+      "controller": [
+        -0.03290000185370445,
+        -0.9994590282440186
+      ],
+      "player_stick": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "predicted_to_pad_dot": null,
+      "unmargined_to_pad_dot": null,
+      "velocity_to_pad_dot": null,
+      "speed": 0.0,
+      "pad_to_hole_tangent_dot": null,
+      "fresh_controls_to_hole_tangent_dot": 0.9999999999999999,
+      "current_to_fresh_control_dot": 0.9999999999999194,
+      "hole_distance": 3310.4922784979512,
+      "basis_lengths": [
+        0.9819557201266715,
+        0.998905842832666
+      ],
+      "basis_det": 0.9999187168381424,
+      "movement_low_word": 1610612736,
+      "movement_high_word": 49152
+    },
+    {
+      "frame": 11500,
+      "position": [
+        14045.205078125,
+        -11773.203125,
+        5136.2421875
+      ],
+      "status": 0,
+      "controller": [
+        -0.03290000185370445,
+        -0.9994590282440186
+      ],
+      "player_stick": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "predicted_to_pad_dot": null,
+      "unmargined_to_pad_dot": null,
+      "velocity_to_pad_dot": null,
+      "speed": 0.0,
+      "pad_to_hole_tangent_dot": null,
+      "fresh_controls_to_hole_tangent_dot": 0.9999999999999999,
+      "current_to_fresh_control_dot": 0.9999999999999194,
+      "hole_distance": 3310.4922784979512,
+      "basis_lengths": [
+        0.9819557201266715,
+        0.998905842832666
+      ],
+      "basis_det": 0.9999187168381424,
+      "movement_low_word": 1610612736,
+      "movement_high_word": 49152
+    },
+    {
+      "frame": 11600,
+      "position": [
+        14045.205078125,
+        -11773.203125,
+        5136.2421875
+      ],
+      "status": 0,
+      "controller": [
+        -0.03290000185370445,
+        -0.9994590282440186
+      ],
+      "player_stick": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "predicted_to_pad_dot": null,
+      "unmargined_to_pad_dot": null,
+      "velocity_to_pad_dot": null,
+      "speed": 0.0,
+      "pad_to_hole_tangent_dot": null,
+      "fresh_controls_to_hole_tangent_dot": 0.9999999999999999,
+      "current_to_fresh_control_dot": 0.9999999999999194,
+      "hole_distance": 3310.4922784979512,
+      "basis_lengths": [
+        0.9819557201266715,
+        0.998905842832666
+      ],
+      "basis_det": 0.9999187168381424,
+      "movement_low_word": 1610612736,
+      "movement_high_word": 49152
+    },
+    {
+      "frame": 11700,
+      "position": [
+        14045.205078125,
+        -11773.203125,
+        5136.2421875
+      ],
+      "status": 0,
+      "controller": [
+        -0.03290000185370445,
+        -0.9994590282440186
+      ],
+      "player_stick": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "predicted_to_pad_dot": null,
+      "unmargined_to_pad_dot": null,
+      "velocity_to_pad_dot": null,
+      "speed": 0.0,
+      "pad_to_hole_tangent_dot": null,
+      "fresh_controls_to_hole_tangent_dot": 0.9999999999999999,
+      "current_to_fresh_control_dot": 0.9999999999999194,
+      "hole_distance": 3310.4922784979512,
+      "basis_lengths": [
+        0.9819557201266715,
+        0.998905842832666
+      ],
+      "basis_det": 0.9999187168381424,
+      "movement_low_word": 1610612736,
+      "movement_high_word": 49152
+    },
+    {
+      "frame": 11800,
+      "position": [
+        14045.205078125,
+        -11773.203125,
+        5136.2421875
+      ],
+      "status": 0,
+      "controller": [
+        -0.03290000185370445,
+        -0.9994590282440186
+      ],
+      "player_stick": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "predicted_to_pad_dot": null,
+      "unmargined_to_pad_dot": null,
+      "velocity_to_pad_dot": null,
+      "speed": 0.0,
+      "pad_to_hole_tangent_dot": null,
+      "fresh_controls_to_hole_tangent_dot": 0.9999999999999999,
+      "current_to_fresh_control_dot": 0.9999999999999194,
+      "hole_distance": 3310.4922784979512,
+      "basis_lengths": [
+        0.9819557201266715,
+        0.998905842832666
+      ],
+      "basis_det": 0.9999187168381424,
+      "movement_low_word": 1610612736,
+      "movement_high_word": 49152
+    },
+    {
+      "frame": 11900,
+      "position": [
+        13884.603515625,
+        -11686.607421875,
+        5158.79443359375
+      ],
+      "status": 0,
+      "controller": [
+        -0.8087030053138733,
+        -0.58821702003479
+      ],
+      "player_stick": [
+        -0.755703866481781,
+        -0.6549134850502014,
+        1.0
+      ],
+      "predicted_to_pad_dot": 0.9999976856716033,
+      "unmargined_to_pad_dot": 0.9988302468013694,
+      "velocity_to_pad_dot": 0.9984030059475353,
+      "speed": 10.14007523378346,
+      "pad_to_hole_tangent_dot": 0.8686434609299105,
+      "fresh_controls_to_hole_tangent_dot": 1.0,
+      "current_to_fresh_control_dot": 0.8985110912642383,
+      "hole_distance": 3228.4472300966695,
+      "basis_lengths": [
+        0.7371998146014788,
+        0.9817943859950018
+      ],
+      "basis_det": 0.9685570315636258,
+      "movement_low_word": 1610612736,
+      "movement_high_word": 49152
+    },
+    {
+      "frame": 12000,
+      "position": [
+        12978.056640625,
+        -11431.4892578125,
+        5969.18701171875
+      ],
+      "status": 0,
+      "controller": [
+        -0.9186739921569824,
+        -0.39501699805259705
+      ],
+      "player_stick": [
+        -0.8782797455787659,
+        -0.47814714908599854,
+        1.0
+      ],
+      "predicted_to_pad_dot": 0.9999906098240791,
+      "unmargined_to_pad_dot": 0.9857018622406276,
+      "velocity_to_pad_dot": 0.9999072667929184,
+      "speed": 12.945265643967444,
+      "pad_to_hole_tangent_dot": 0.9999748971948628,
+      "fresh_controls_to_hole_tangent_dot": 1.0000000000000002,
+      "current_to_fresh_control_dot": 0.9997268459651066,
+      "hole_distance": 2459.631135766463,
+      "basis_lengths": [
+        0.9215666606247578,
+        0.6434931911297699
+      ],
+      "basis_det": 0.7488986361275101,
+      "movement_low_word": 1610612736,
+      "movement_high_word": 49152
+    },
+    {
+      "frame": 12100,
+      "position": [
+        12761.115234375,
+        -11282.013671875,
+        6032.2978515625
+      ],
+      "status": 0,
+      "controller": [
+        -0.9862710237503052,
+        -0.165133997797966
+      ],
+      "player_stick": [
+        -0.8966464400291443,
+        -0.4427473247051239,
+        1.0
+      ],
+      "predicted_to_pad_dot": 0.9900240122051123,
+      "unmargined_to_pad_dot": 0.9560494572729992,
+      "velocity_to_pad_dot": null,
+      "speed": 0.0,
+      "pad_to_hole_tangent_dot": 0.9993761799935528,
+      "fresh_controls_to_hole_tangent_dot": 1.0,
+      "current_to_fresh_control_dot": 0.9999999978746706,
+      "hole_distance": 2393.865667255895,
+      "basis_lengths": [
+        0.9723325266490267,
+        0.6830428844344959
+      ],
+      "basis_det": 0.9340039504146742,
+      "movement_low_word": 536872960,
+      "movement_high_word": 0
+    },
+    {
+      "frame": 12200,
+      "position": [
+        16984.353515625,
+        -10288.4208984375,
+        6375.458984375
+      ],
+      "status": 0,
+      "controller": [
+        -0.5154309868812561,
+        -0.8569309711456299
+      ],
+      "player_stick": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "predicted_to_pad_dot": null,
+      "unmargined_to_pad_dot": null,
+      "velocity_to_pad_dot": null,
+      "speed": 17.683008662249335,
+      "pad_to_hole_tangent_dot": null,
+      "fresh_controls_to_hole_tangent_dot": 0.9999999999999998,
+      "current_to_fresh_control_dot": 0.9998959345432963,
+      "hole_distance": 3770.0835350783423,
+      "basis_lengths": [
+        0.9912786703138127,
+        0.6569512851944906
+      ],
+      "basis_det": 0.9767233637576112,
+      "movement_low_word": 2684485632,
+      "movement_high_word": 539033600
+    },
+    {
+      "frame": 12300,
+      "position": [
+        16854.025390625,
+        -10603.7236328125,
+        6756.5869140625
+      ],
+      "status": 0,
+      "controller": [
+        -0.9486939907073975,
+        0.3161959946155548
+      ],
+      "player_stick": [
+        -0.9235857725143433,
+        0.3833918571472168,
+        1.0
+      ],
+      "predicted_to_pad_dot": 0.9999972557243225,
+      "unmargined_to_pad_dot": 0.9948161404437351,
+      "velocity_to_pad_dot": 0.9997264454781646,
+      "speed": 12.871015748788851,
+      "pad_to_hole_tangent_dot": 0.9996556338832409,
+      "fresh_controls_to_hole_tangent_dot": 1.0,
+      "current_to_fresh_control_dot": 0.9991215289250216,
+      "hole_distance": 3535.1524833928747,
+      "basis_lengths": [
+        0.8754875670473197,
+        0.7457023628255957
+      ],
+      "basis_det": 0.7567755530632935,
+      "movement_low_word": 1610743808,
+      "movement_high_word": 2211840
+    },
+    {
+      "frame": 12400,
+      "position": [
+        16490.19140625,
+        -10216.7724609375,
+        7777.81298828125
+      ],
+      "status": 0,
+      "controller": [
+        -0.9650059938430786,
+        0.26222699880599976
+      ],
+      "player_stick": [
+        -0.950724184513092,
+        0.3100379705429077,
+        1.0
+      ],
+      "predicted_to_pad_dot": 0.9999981916694959,
+      "unmargined_to_pad_dot": 0.9932961892088095,
+      "velocity_to_pad_dot": 0.9992496063657103,
+      "speed": 12.999996093177513,
+      "pad_to_hole_tangent_dot": 0.9979170657281572,
+      "fresh_controls_to_hole_tangent_dot": 1.0,
+      "current_to_fresh_control_dot": 0.999572084603814,
+      "hole_distance": 2931.917835222467,
+      "basis_lengths": [
+        0.9228631785008234,
+        0.6040262764459866
+      ],
+      "basis_det": 0.6968199171111205,
+      "movement_low_word": 1610743808,
+      "movement_high_word": 2211840
+    },
+    {
+      "frame": 12500,
+      "position": [
+        15538.69921875,
+        -9955.248046875,
+        8573.251953125
+      ],
+      "status": 0,
+      "controller": [
+        -0.9610450267791748,
+        0.2763940095901489
+      ],
+      "player_stick": [
+        -0.9439737796783447,
+        0.3300204277038574,
+        1.0
+      ],
+      "predicted_to_pad_dot": 0.9999748191680717,
+      "unmargined_to_pad_dot": 0.994341804031816,
+      "velocity_to_pad_dot": 0.997595471141656,
+      "speed": 12.999995240994835,
+      "pad_to_hole_tangent_dot": 0.9960644635379291,
+      "fresh_controls_to_hole_tangent_dot": 1.0,
+      "current_to_fresh_control_dot": 0.999644444955548,
+      "hole_distance": 2073.0331196919656,
+      "basis_lengths": [
+        0.9391892454922074,
+        0.5284016629755185
+      ],
+      "basis_det": 0.6548764677379253,
+      "movement_low_word": 1610743808,
+      "movement_high_word": 2211840
+    }
+  ],
+  "motion_subset": {
+    "selection": "speed >0.01 and both reconstructed/observed pad vectors nonzero; excludes stopped/bound samples and zero input",
+    "count": 42,
+    "statistics": {
+      "predicted_to_pad_dot": {
+        "min": 0.999591382396904,
+        "median": 0.9999965002729309,
+        "max": 0.9999999758949125
+      },
+      "velocity_to_pad_dot": {
+        "min": 0.6216593883625785,
+        "median": 0.999199149086036,
+        "max": 0.9999988584086488
+      },
+      "pad_to_hole_tangent_dot": {
+        "min": -0.2405930996303879,
+        "median": 0.9944386502430993,
+        "max": 0.9999748971948628
+      }
+    }
+  },
+  "provenance": {
+    "notes/gateway-compat-20260919/content-world-first-catch-18000-actors.jsonl": "381db0f083cca4ac8f352bea029966af9b845d9ef94705568f289c6c818f4492",
+    "notes/original-gateway-chase-20260919/follow_actor.py": "44af1fab56b2964b2c700042ba6959495e34ac307706f3b8ef596f157dab2901",
+    "src/Game/Player/MarioMove.cpp": "14397b92a59090a6e94a57f129a38968f86942f9370d8cb2f5be9fc2f2cbb43a",
+    "src/Game/Player/MarioModule.cpp": "a55f8a3b9ac589b7165d848018c9f334d444aa85245190c1f8683c9883c1e0b0",
+    "src/Game/Player/Mario.cpp": "abd50a0c2c6cb05836260c905cfc0d02285ff30a9f055105d6562a884cf04316",
+    "src/Game/MapObj/EarthenPipe.cpp": "91b2e2529f728396fba58658135f764075222ad6096d953029e786fd8ce3dc10"
+  },
+  "position_discontinuities": [
+    {
+      "before_frame": 12110,
+      "after_frame": 12120,
+      "distance": 4260.541371407022,
+      "before": [
+        12761.115234375,
+        -11282.013671875,
+        6032.2978515625
+      ],
+      "after": [
+        16877.8828125,
+        -10250.9619140625,
+        6408.28955078125
+      ]
+    }
+  ]
+}

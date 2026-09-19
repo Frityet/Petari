@@ -1,0 +1,105 @@
+{
+  "scope": "Exact curated audit notes for the parent evidence checkpoint. No disc/archive/model assets, executable binaries, production source, save data, or full actor trace are included.",
+  "curated_paths": [
+    "notes/gateway-content-inventory-20260919/README.md",
+    "notes/gateway-content-inventory-20260919/read_metadata.py",
+    "notes/gateway-content-inventory-20260919/compare_inventory.py",
+    "notes/gateway-content-inventory-20260919/source-placement-inventory.json",
+    "notes/gateway-content-inventory-20260919/HeavensDoorGalaxyScenario.json",
+    "notes/gateway-content-inventory-20260919/root-zone.json",
+    "notes/gateway-content-inventory-20260919/HeavensBlackHoleZone.json",
+    "notes/gateway-content-inventory-20260919/HeavensDoorInsideZone.json",
+    "notes/gateway-content-inventory-20260919/HeavensDoorMiddleZone.json",
+    "notes/gateway-content-inventory-20260919/HeavensDoorSmallZone.json",
+    "notes/gateway-content-inventory-20260919/planet-map-catalog.json",
+    "notes/gateway-content-inventory-20260919/live-pipe-route.json",
+    "notes/gateway-content-inventory-20260919/validation-update.json",
+    "notes/gateway-content-inventory-20260919/note-manifest.json"
+  ],
+  "files": [
+    {
+      "path": "notes/gateway-content-inventory-20260919/README.md",
+      "sha256": "53392e91e4e4d8ab85b65e07e0e92ae7690873fa3bafa45aca6b986e022c922b",
+      "bytes": 9651
+    },
+    {
+      "path": "notes/gateway-content-inventory-20260919/read_metadata.py",
+      "sha256": "0fc3a9f36010078b2334e21a8df5a8ae5276c580978152ae06c06cdcfa95e0ff",
+      "bytes": 3592
+    },
+    {
+      "path": "notes/gateway-content-inventory-20260919/compare_inventory.py",
+      "sha256": "67fc413d364755fff9fc984767f62df4a3f6c3678a4502e689c5af945eb09baa",
+      "bytes": 4694
+    },
+    {
+      "path": "notes/gateway-content-inventory-20260919/source-placement-inventory.json",
+      "sha256": "eb2b3e718b76e8df4c95332fbcca6f12a1c958e887f1e07a1e7fa5d0d63b7574",
+      "bytes": 390699
+    },
+    {
+      "path": "notes/gateway-content-inventory-20260919/HeavensDoorGalaxyScenario.json",
+      "sha256": "d463b6826f0f3ddbebb2e250ae683dd1e2541a443f401582e40f6387f76e3d6f",
+      "bytes": 1862
+    },
+    {
+      "path": "notes/gateway-content-inventory-20260919/root-zone.json",
+      "sha256": "29d2dc4cc40edf92cdb82bfac55ed0f29230231b15cedaf1ad4ba422a8a9af1b",
+      "bytes": 102388
+    },
+    {
+      "path": "notes/gateway-content-inventory-20260919/HeavensBlackHoleZone.json",
+      "sha256": "e30404b2b2c3b50651f46d17fedc4d93b38c23efacc4aba9111b350d5fb596a0",
+      "bytes": 38587
+    },
+    {
+      "path": "notes/gateway-content-inventory-20260919/HeavensDoorInsideZone.json",
+      "sha256": "8c2274db3a86a570ddc3c85026fa8019e17d588e2ecaaa2fea01e4fa5bde9bc4",
+      "bytes": 79511
+    },
+    {
+      "path": "notes/gateway-content-inventory-20260919/HeavensDoorMiddleZone.json",
+      "sha256": "73dde234fdde4172f3e721e776e3033b59bfbd3fa4ff0fae2e2e9337ebcf90f9",
+      "bytes": 60651
+    },
+    {
+      "path": "notes/gateway-content-inventory-20260919/HeavensDoorSmallZone.json",
+      "sha256": "fea69b7da2f00a39f5d867cc7bcc685f444960e4d5d4af06e50551e6aa9e1fc2",
+      "bytes": 47777
+    },
+    {
+      "path": "notes/gateway-content-inventory-20260919/planet-map-catalog.json",
+      "sha256": "4440e9b24ae67a3a772050b559ed8887e53d0c795fc1f2863dc6247df79e830d",
+      "bytes": 128818
+    },
+    {
+      "path": "notes/gateway-content-inventory-20260919/live-pipe-route.json",
+      "sha256": "c33ac672e95e0fe6502cf998a6e0fadf1998b7ff58ce1dd8ffad94ce0e501694",
+      "bytes": 2947
+    },
+    {
+      "path": "notes/gateway-content-inventory-20260919/validation-update.json",
+      "sha256": "0e57c444868007936c4e94f627025d2dee48decc0835984d3545e8b2228fc3a0",
+      "bytes": 4792
+    }
+  ],
+  "manifest_self_hash": "Omitted to avoid self-reference.",
+  "excluded_paths": [
+    {
+      "path": "notes/gateway-content-inventory-20260919/scenario.json",
+      "reason": "Superseded initial scenario parse with unresolved key hashes; use HeavensDoorGalaxyScenario.json."
+    },
+    {
+      "path": "build/gateway-content-inventory-20260919/*.arc",
+      "reason": "Raw retail archives are outside the curated notes."
+    }
+  ],
+  "existing_external_evidence": [
+    "notes/original-rabbit-tower-chain-20260919/zone-metadata.json",
+    "notes/original-rabbit-tower-chain-20260919/tico-guide-sheet.json",
+    "notes/original-crystal-cage-20260919/README.md",
+    "notes/original-crystal-cage-20260919/crystal-cage-run.json",
+    "notes/original-crystal-cage-20260919/star-piece-placement-run.json",
+    "notes/gateway-compat-20260919/content-world-first-catch-18000.json"
+  ]
+}

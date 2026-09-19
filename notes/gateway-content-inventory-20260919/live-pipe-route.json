@@ -1,0 +1,117 @@
+{
+  "trace_path": "notes/gateway-compat-20260919/content-world-first-catch-18000-actors.jsonl",
+  "frame_index": 12290,
+  "scope": "Live trace positions and gravity; binder center derived from exact original offset, not directly sampled. No controller or game state writes. IDs apply to this launch only.",
+  "rows": [
+    {
+      "trace_actor": {
+        "clipped": true,
+        "dead": false,
+        "gravity": [
+          0.9023851752281189,
+          0.2734796702861786,
+          0.33303138613700867
+        ],
+        "hidden": false,
+        "id": 697,
+        "invalid_clipping": false,
+        "name": "土管",
+        "nerve": {
+          "step": 0,
+          "type": "N14NrvEarthenPipe18EarthenPipeNrvWaitE"
+        },
+        "position": [
+          12761.115234375,
+          -11282.013671875,
+          6032.2978515625
+        ],
+        "rotation": [
+          213.39776611328125,
+          306.7423400878906,
+          256.2802734375
+        ],
+        "type": "11EarthenPipe",
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "authored_l_id": 56,
+      "paired_runtime_actor_id": 699,
+      "source_write_switch": 1112,
+      "revealed_rabbit_runtime_id": 902,
+      "live_top_position": [
+        12761.115234375,
+        -11282.013671875,
+        6032.2978515625
+      ],
+      "derived_binder_center": [
+        12806.234493136406,
+        -11268.339688360691,
+        6048.94942086935
+      ],
+      "derived_top_plus_up10_approach": [
+        12752.091382622719,
+        -11284.748468577862,
+        6028.96753770113
+      ],
+      "sensor_radius": 70
+    },
+    {
+      "trace_actor": {
+        "clipped": false,
+        "dead": false,
+        "gravity": [
+          -0.9669677019119263,
+          -0.19416385889053345,
+          0.16514715552330017
+        ],
+        "hidden": false,
+        "id": 699,
+        "invalid_clipping": false,
+        "name": "土管",
+        "nerve": {
+          "step": 45,
+          "type": "N14NrvEarthenPipe18EarthenPipeNrvWaitE"
+        },
+        "position": [
+          16877.8828125,
+          -10250.9619140625,
+          6408.28955078125
+        ],
+        "rotation": [
+          211.7769012451172,
+          71.46646118164062,
+          132.24008178710938
+        ],
+        "type": "11EarthenPipe",
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "authored_l_id": 57,
+      "paired_runtime_actor_id": 697,
+      "source_write_switch": 1118,
+      "revealed_rabbit_runtime_id": 917,
+      "live_top_position": [
+        16877.8828125,
+        -10250.9619140625,
+        6408.28955078125
+      ],
+      "derived_binder_center": [
+        16829.534427404404,
+        -10260.670107007027,
+        6416.546908557415
+      ],
+      "derived_top_plus_up10_approach": [
+        16887.55248951912,
+        -10249.020275473595,
+        6406.638079226017
+      ],
+      "sensor_radius": 70
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "archive": "build/gateway-content-inventory-20260919/HeavensDoorGalaxyScenario.arc",
+  "archive_sha256": "03eba87db26d2ce0dde6d331fc829372c580954e1af049f657adeaeb515c5813",
+  "tables": {
+    "/scenariodata.bcsv": [
+      {
+        "row": 0,
+        "ScenarioNo": 1,
+        "ScenarioName": "チュートリアル",
+        "PowerStarId": 1,
+        "AppearPowerStarObj": "",
+        "Comet": "",
+        "LuigiModeTimer": 600,
+        "HeavensDoorGalaxy": 1,
+        "HeavensBlackHoleZone": 1,
+        "HeavensDoorInsideZone": 1,
+        "HeavensDoorMysteriousZone": 1,
+        "HeavensDoorLargeZone": 1,
+        "HeavensDoorMiddleZone": 1,
+        "HeavensDoorSmallZone": 1,
+        "IsHidden": 0,
+        "hash_d6c80400": 1
+      },
+      {
+        "row": 1,
+        "ScenarioNo": 2,
+        "ScenarioName": "子供部屋",
+        "PowerStarId": 2,
+        "AppearPowerStarObj": "１００枚コイン",
+        "Comet": "",
+        "LuigiModeTimer": 600,
+        "HeavensDoorGalaxy": 2,
+        "HeavensBlackHoleZone": 2,
+        "HeavensDoorInsideZone": 2,
+        "HeavensDoorMysteriousZone": 2,
+        "HeavensDoorLargeZone": 2,
+        "HeavensDoorMiddleZone": 2,
+        "HeavensDoorSmallZone": 2,
+        "IsHidden": 0,
+        "hash_d6c80400": 1
+      }
+    ],
+    "/zonelist.bcsv": [
+      {
+        "row": 0,
+        "ZoneName": "HeavensDoorGalaxy"
+      },
+      {
+        "row": 1,
+        "ZoneName": "HeavensBlackHoleZone"
+      },
+      {
+        "row": 2,
+        "ZoneName": "HeavensDoorInsideZone"
+      },
+      {
+        "row": 3,
+        "ZoneName": "HeavensDoorLargeZone"
+      },
+      {
+        "row": 4,
+        "ZoneName": "HeavensDoorMiddleZone"
+      },
+      {
+        "row": 5,
+        "ZoneName": "HeavensDoorMysteriousZone"
+      },
+      {
+        "row": 6,
+        "ZoneName": "HeavensDoorSmallZone"
+      }
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "void Mario::calcMoveDir(": false,
+  "bool MarioModule::calcWorldPadDir(": true
+}

@@ -1,0 +1,106 @@
+{
+  "published_parent_checkpoint": "066d765bed38f95270b4ea85434d87d0750fd663",
+  "scope": "Passing original-process actor ownership/retirement and integrated survival; does not establish natural cage activation/breaking, StarPiece collection, third rabbit catch, Rosalina appearance, or visual parity.",
+  "evidence": {
+    "crystal_probe": {
+      "path": "notes/original-crystal-cage-20260919/crystal-cage-run.json",
+      "sha256": "59de9872dd8f1ea42be560625f9a03c4d64dc5fc5799400acd264490f5926b3d",
+      "result": {
+        "command": [
+          "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-crystal-cage-tests"
+        ],
+        "binary_sha256": "66e3aace775020f610a298ec2c97b9b7463bdee10b07abd9bd458a1cc2d8f6b4",
+        "binary_unchanged": true,
+        "pid": 80612,
+        "exit_code": 0,
+        "timeout_terminated": false,
+        "process_still_exists": false,
+        "elapsed_seconds": 3.0990593750029802,
+        "original_completed_120_frames": true,
+        "probe_and_retirement_pass": true,
+        "debugger_attached": false
+      }
+    },
+    "star_piece_probe": {
+      "path": "notes/original-crystal-cage-20260919/star-piece-placement-run.json",
+      "sha256": "4aa52ae31214ade635e9dea7f0d10e54e905c933bf13dc9c63298245311ee0d1",
+      "result": {
+        "command": [
+          "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-star-piece-placement-tests"
+        ],
+        "binary_sha256": "aa85e9550e534e1589d5f67fa61e4d8003a6599c8cdad0c1d36679f7af487ae2",
+        "binary_unchanged": true,
+        "pid": 80725,
+        "exit_code": 0,
+        "timeout_terminated": false,
+        "process_still_exists": false,
+        "elapsed_seconds": 3.693747292039916,
+        "original_completed_120_frames": true,
+        "probe_and_retirement_pass": true,
+        "debugger_attached": false
+      }
+    },
+    "integrated_run": {
+      "path": "notes/gateway-compat-20260919/content-world-first-catch-18000.json",
+      "sha256": "45f2f0fce39778576351698b60eea9e81fe17d347b935e472db650e4c7b4b67c",
+      "result": {
+        "command": [
+          "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc",
+          "--original",
+          "--disc",
+          "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+          "--stage",
+          "HeavensDoorGalaxy",
+          "--scenario",
+          "1",
+          "--max-frames",
+          "18000"
+        ],
+        "environment": {
+          "SMGPC_SAVE_DIR": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/content-world-first-catch-18000-nand",
+          "SMGPC_NAND_DIR": "",
+          "AURORA_BACKEND": "metal",
+          "SMGPC_WINDOW_WIDTH": "1280",
+          "SMGPC_WINDOW_HEIGHT": "720",
+          "SMGPC_SCREENSHOT_PATH": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/content-world-first-catch-18000-frame5500.png",
+          "SMGPC_SCREENSHOT_FRAME": "5500",
+          "SMGPC_DEBUG_WPAD_INPUT_FILE": "/Users/frityet/Projects/petari/notes/original-gateway-chase-20260919/live-input-world-first-catch.json",
+          "SMGPC_DEBUG_FRAME_TIMING": "1",
+          "SMGPC_DEBUG_ACTOR_TRACE_PATH": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/content-world-first-catch-18000-actors.jsonl",
+          "SMGPC_DEBUG_ACTOR_TRACE_TYPES": "MarioActor,Rabbit,Tico,Rosetta,WarpPod,EarthenPipe,PunchingKinoko,Butterfly,CrystalCage,StarPiece",
+          "SMGPC_DEBUG_ACTOR_TRACE_INTERVAL": "10",
+          "SMGPC_DEBUG_LAYOUT_DUMP_PATH": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/content-world-first-catch-18000-layout.txt",
+          "SMGPC_DEBUG_LAYOUT_DUMP_FRAME": "5500",
+          "SMGPC_DEBUG_WPAD_BUTTON_SCRIPT": "",
+          "SMGPC_DEBUG_WPAD_POINTER_SCRIPT": "",
+          "SMGPC_DEBUG_WPAD_STICK_SCRIPT": "0-18000:0:0"
+        },
+        "binary_sha256": "b38e90868eb8ab1f1cdc72487c293cf0f15a3e50c6fd8b14adc846bec7a7d123",
+        "started_at": "2026-09-19T15:56:25.910548+00:00",
+        "pid": 81050,
+        "exit_code": 0,
+        "timeout_terminated": false,
+        "elapsed_seconds": 372.3031810000539,
+        "process_still_exists_after_wait": false,
+        "completed_frames": 18000,
+        "verified_bounded_completion": true
+      }
+    }
+  },
+  "trace_observations": {
+    "path": "notes/gateway-compat-20260919/content-world-first-catch-18000-actors.jsonl",
+    "sample_interval_frames": 10,
+    "first_observed_caught_frame_by_runtime_id": {
+      "907": 3490,
+      "902": 17670
+    },
+    "last_sample_frame": 17990,
+    "final_states": {
+      "907": "Stop; dead",
+      "902": "Stop; dead",
+      "912": "Hide; hidden; alive",
+      "877": "Rosetta Demo; dead"
+    },
+    "no_gameplay_state_written_by_audit": true
+  }
+}

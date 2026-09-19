@@ -1,0 +1,167 @@
+[
+  {
+    "frame": 11000,
+    "id": 339,
+    "state": "N13NrvMarioActor17MarioActorNrvWaitE",
+    "dead": false,
+    "position": [
+      14045.205078125,
+      -11773.203125,
+      5136.2421875
+    ]
+  },
+  {
+    "frame": 11000,
+    "id": 697,
+    "state": "N14NrvEarthenPipe18EarthenPipeNrvWaitE",
+    "dead": false,
+    "position": [
+      12761.115234375,
+      -11282.013671875,
+      6032.2978515625
+    ]
+  },
+  {
+    "frame": 11000,
+    "id": 699,
+    "state": "N14NrvEarthenPipe18EarthenPipeNrvWaitE",
+    "dead": false,
+    "position": [
+      16877.8828125,
+      -10250.9619140625,
+      6408.28955078125
+    ]
+  },
+  {
+    "frame": 11000,
+    "id": 892,
+    "state": "N14NrvRunawayTico18RunawayTicoNrvTalkE",
+    "dead": false,
+    "position": [
+      13964.357421875,
+      -11758.46484375,
+      4931.5576171875
+    ]
+  },
+  {
+    "frame": 11000,
+    "id": 902,
+    "state": "N16NrvRunawayRabbit20RunawayRabbitNrvHideE",
+    "dead": false,
+    "position": [
+      16820.5,
+      -10519.0859375,
+      6419.4697265625
+    ]
+  },
+  {
+    "frame": 11860,
+    "id": 892,
+    "state": "N7NrvTico11TicoNrvWaitE",
+    "dead": false,
+    "position": [
+      13964.357421875,
+      -11758.46484375,
+      4931.5576171875
+    ]
+  },
+  {
+    "frame": 12020,
+    "id": 697,
+    "state": "N14NrvEarthenPipe19EarthenPipeNrvReadyE",
+    "dead": false,
+    "position": [
+      12761.115234375,
+      -11282.013671875,
+      6032.2978515625
+    ]
+  },
+  {
+    "frame": 12050,
+    "id": 697,
+    "state": "N14NrvEarthenPipe22EarthenPipeNrvPlayerInE",
+    "dead": false,
+    "position": [
+      12761.115234375,
+      -11282.013671875,
+      6032.2978515625
+    ]
+  },
+  {
+    "frame": 12120,
+    "id": 697,
+    "state": "N14NrvEarthenPipe23EarthenPipeNrvPlayerOutE",
+    "dead": false,
+    "position": [
+      12761.115234375,
+      -11282.013671875,
+      6032.2978515625
+    ]
+  },
+  {
+    "frame": 12200,
+    "id": 697,
+    "state": "N14NrvEarthenPipe21EarthenPipeNrvInvalidE",
+    "dead": false,
+    "position": [
+      12761.115234375,
+      -11282.013671875,
+      6032.2978515625
+    ]
+  },
+  {
+    "frame": 12200,
+    "id": 699,
+    "state": "N14NrvEarthenPipe21EarthenPipeNrvInvalidE",
+    "dead": false,
+    "position": [
+      16877.8828125,
+      -10250.9619140625,
+      6408.28955078125
+    ]
+  },
+  {
+    "frame": 12200,
+    "id": 902,
+    "state": "N16NrvRunawayRabbit22RunawayRabbitNrvAppearE",
+    "dead": false,
+    "position": [
+      16931.33984375,
+      -10602.7275390625,
+      6395.8125
+    ]
+  },
+  {
+    "frame": 12250,
+    "id": 697,
+    "state": "N14NrvEarthenPipe18EarthenPipeNrvWaitE",
+    "dead": false,
+    "position": [
+      12761.115234375,
+      -11282.013671875,
+      6032.2978515625
+    ]
+  },
+  {
+    "frame": 12250,
+    "id": 699,
+    "state": "N14NrvEarthenPipe18EarthenPipeNrvWaitE",
+    "dead": false,
+    "position": [
+      16877.8828125,
+      -10250.9619140625,
+      6408.28955078125
+    ]
+  },
+  {
+    "frame": 12250,
+    "id": 902,
+    "state": "N16NrvRunawayRabbit23RunawayRabbitNrvRunawayE",
+    "dead": false,
+    "position": [
+      16736.69140625,
+      -11186.5009765625,
+      6400.9755859375
+    ]
+  }
+]

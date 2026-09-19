@@ -1,0 +1,8 @@
+[
+  "README.md",
+  "analyze.py",
+  "summary.json",
+  "samples.json.gz",
+  "state-transitions.json",
+  "source-equivalence.json"
+]
