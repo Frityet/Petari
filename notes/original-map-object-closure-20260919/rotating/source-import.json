@@ -1,0 +1,19 @@
+{
+  "files": [
+    {
+      "canonical": "decomp/src/Game/MapObj/RotateMoveObj.cpp",
+      "native": "src/Game/MapObj/RotateMoveObj.cpp",
+      "byte_identical": true,
+      "sha256": "04305700dacb0c6a851eb88ff52cbf29ea1a2eb77afe199319c6a3655ef3aa28"
+    },
+    {
+      "canonical": "decomp/include/Game/MapObj/RotateMoveObj.hpp",
+      "native": "src/Game/MapObj/RotateMoveObj.hpp",
+      "byte_identical": true,
+      "sha256": "403b98c4da3d59f81976841cd4a5b3de1cac6e7da42c1b8d5ea83cbe0c5133a2"
+    }
+  ],
+  "xmake": "src/Game/xmake.lua already adds **.cpp and **.hpp; no duplicate explicit input added",
+  "encoding": "Both canonical files are ASCII only; no CP932 wrapper or compile adjustment needed",
+  "validation": "Parent ordinary360 smoke and original-process MapObj360 owner regression PASS; see ../map-object-second.json and README limits."
+}

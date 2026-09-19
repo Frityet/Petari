@@ -26,6 +26,7 @@
 #include "Game/Map/Butterfly.hpp"
 #include "Game/MapObj/PunchingKinoko.hpp"
 #include "Game/MapObj/PowerStarAppearPoint.hpp"
+#include "Game/MapObj/RotateMoveObj.hpp"
 #include "Game/MapObj/StarPiece.hpp"
 #include "Game/MapObj/StarPieceGroup.hpp"
 #include "Game/MapObj/ShockWaveGenerator.hpp"
@@ -83,6 +84,7 @@ namespace {
     // unique-planet row for that class therefore uses its actual constructor.
     constexpr auto cSupportedUniquePlanetCreators = std::to_array<UniquePlanetCreator>({
         {"SimpleMapObj", create_supported_name_obj<SimpleMapObj>},
+        {"RotateMoveObj", create_supported_name_obj<RotateMoveObj>},
     });
 
     [[nodiscard]] CreatorFuncPtr planet_map_creator(
@@ -486,6 +488,36 @@ namespace {
             "HeavensDoorInsidePlanetPartsA",
             create_supported_name_obj<HeavensDoorDemoObj>,
             "HeavensDoorInsidePlanetPartsA",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "HeavensDoorMiddleRotatePartsA",
+            create_supported_name_obj<RotateMoveObj>,
+            "HeavensDoorMiddleRotatePartsA",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "HeavensDoorMiddleRotatePartsB",
+            create_supported_name_obj<RotateMoveObj>,
+            "HeavensDoorMiddleRotatePartsB",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "HeavensDoorInsideRotatePartsA",
+            create_supported_name_obj<RotateMoveObj>,
+            "HeavensDoorInsideRotatePartsA",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "HeavensDoorInsideRotatePartsB",
+            create_supported_name_obj<RotateMoveObj>,
+            "HeavensDoorInsideRotatePartsB",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "HeavensDoorInsideRotatePartsC",
+            create_supported_name_obj<RotateMoveObj>,
+            "HeavensDoorInsideRotatePartsC",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "KoopaJrNormalShipA",
+            create_supported_name_obj<SimpleMapObj>,
+            "KoopaJrNormalShipA",
         },
         NameObjFactory::Name2CreateFunc{
             "Rosetta",

@@ -1,0 +1,42 @@
+{
+  "target": "smg-pc-original-process-map-object-tests",
+  "build": {
+    "command": [
+      "xmake",
+      "build",
+      "-j",
+      "8",
+      "smg-pc-original-process-map-object-tests"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 5.077384750009514
+  },
+  "binary_sha256": "52b107ac5ce507bc008b4195135803a228071031664e9c41e0eecafc15d7ed9e",
+  "test": {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-map-object-tests",
+      "-ApplePersistenceIgnoreState",
+      "YES"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 8.224568750010803
+  },
+  "evidence_notes": [
+    "All 11 observed resources active; zero retained inactive resources in this actual opening. Retained disabled lookup is implemented but not exercised here.",
+    "Inside SW_APPEAR1 is naturally ON, all eight observed actors alive.",
+    "All299 subsequent observed frames NameObj movement off; no angle/collision matrix changes in opening360.",
+    "The final test printf was subsequently clarified to print active/inactive counts; all asserted behavior is unchanged. This is a source-only report wording adjustment after the recorded binary."
+  ],
+  "observations": {
+    "authored_owners": 8,
+    "low_children": 3,
+    "kcl_resources": 11,
+    "active_face_queries": 11,
+    "inactive_parts_observed": 0,
+    "opening_frames_completed": 360,
+    "post_initialization_observations": 299,
+    "original_scene_retirement": "PASS"
+  },
+  "test_source_sha256_current": "cf68a92d2a0097b43e282a21e6635915f22fb3784f97ee3dfb9daee016b6a36c",
+  "artifact_source_limit": "Current source includes parent final-printf wording adjustment after this test artifact; do not claim full source byte identity for that artifact."
+}

@@ -1,0 +1,19 @@
+{
+  "cwd": "/Users/frityet/Projects/petari",
+  "tool": "build/original-layout-tutorial-20260919/extract-file",
+  "tool_sha256": "19fd6394d428455d09ce99f318fed52e516eca11050025c8016efaef18ec0f81",
+  "disc": "Super Mario Wii - Galaxy Adventure (Korea).rvz",
+  "queries": [
+    {
+      "disc_path": "ObjectData/KoopaJrNormalShipALow.arc",
+      "output": "build/original-map-object-closure-20260919/KoopaJrNormalShipALow.arc",
+      "bytes_written": 124256
+    },
+    {
+      "disc_path": "ObjectData/KoopaJrNormalShipAMiddle.arc",
+      "output": "build/original-map-object-closure-20260919/KoopaJrNormalShipAMiddle.arc",
+      "matching_output_observed": false
+    }
+  ],
+  "scope": "Read-only retail extraction, no native/game process build or execution"
+}

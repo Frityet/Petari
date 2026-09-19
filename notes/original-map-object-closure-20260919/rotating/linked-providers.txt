@@ -1,0 +1,116 @@
+Read-only current linked definition evidence; binary SHA256 ca48cd2ab12a20044ffb29e89928e7f33dedcc8dd96b14d022f76b6b6d0a027e
+000000010015984c T MapObjActor::initialize(JMapInfoIter const&, MapObjActorInitInfo const&)
+000000010015a7cc T MapObjActor::calcAndSetBaseMtx()
+000000010015a5a4 T MapObjActor::control()
+00000001001449ac T RotateMoveObj::setStateMove()
+0000000100144a00 T RotateMoveObj::initCaseUseSwitchB(MapObjActorInitInfo const&)
+0000000100144a60 T RotateMoveObj::initCaseNoUseSwitchB(MapObjActorInitInfo const&)
+0000000100144874 T RotateMoveObj::init(JMapInfoIter const&)
+0000000100144a64 T RotateMoveObj::exeMove()
+0000000100144b1c t RotateMoveObj::~RotateMoveObj()
+0000000100144b18 t RotateMoveObj::~RotateMoveObj()
+000000010014ef9c T MapObjActorUtil::setupInitInfoTypical(MapObjActorInitInfo*, char const*)
+000000010014f244 T MapObjActorUtil::setupInitInfoSimpleMapObj(MapObjActorInitInfo*)
+000000010014f178 T MapObjActorUtil::setupInitInfoColorChangeArg0(MapObjActorInitInfo*, JMapInfoIter const&)
+000000010014f200 T MapObjActorUtil::setupInitInfoShadowLengthArg2(MapObjActorInitInfo*, JMapInfoIter const&)
+000000010014f1bc T MapObjActorUtil::setupInitInfoTextureChangeArg1(MapObjActorInitInfo*, JMapInfoIter const&)
+0000000100148638 T MapPartsRotator::exeStopAtEnd()
+0000000100148584 T MapPartsRotator::exeRotateStart()
+00000001001482ec T MapPartsRotator::updateVelocity()
+00000001001480d4 T MapPartsRotator::updateRotateMtx(MapPartsRotator::AxisType, float)
+000000010014828c T MapPartsRotator::end()
+0000000100147f50 T MapPartsRotator::init(JMapInfoIter const&)
+0000000100148064 T MapPartsRotator::start()
+00000001001483ec T MapPartsRotator::exeRotate()
+0000000100147f4c T MapPartsRotator::MapPartsRotator(LiveActor*)
+0000000100147dec T MapPartsRotator::MapPartsRotator(LiveActor*)
+00000001001486e4 T MapPartsRotator::~MapPartsRotator()
+00000001001486e0 T MapPartsRotator::~MapPartsRotator()
+0000000100142bd4 t MapPartsFunction::receiveMsg(unsigned int)
+00000001001496f4 T MapPartsFunction::sendMsgToHost(unsigned int)
+0000000100149888 t MapPartsFunction::end()
+0000000100149878 t MapPartsFunction::init(JMapInfoIter const&)
+0000000100149884 t MapPartsFunction::start()
+00000001001494b8 t MapPartsFunction::control()
+0000000100149758 T MapPartsFunction::movement()
+00000001001497f4 T MapPartsFunction::setNerve(Nerve const*)
+0000000100149798 T MapPartsFunction::initNerve(Nerve const*)
+00000001001496ac T MapPartsFunction::MapPartsFunction(LiveActor*, char const*)
+0000000100149860 t MapPartsFunction::~MapPartsFunction()
+000000010014985c t MapPartsFunction::~MapPartsFunction()
+0000000100e8ab28 D NrvRotateMoveObj::HostTypeMove::sInstance
+0000000100e8ab30 D NrvRotateMoveObj::HostTypeStop::sInstance
+0000000100e8ab20 D NrvRotateMoveObj::HostTypeWait::sInstance
+0000000100e8ab18 D NrvRotateMoveObj::HostTypeWaitForPlayerOn::sInstance
+0000000100e8aba0 D NrvMapPartsRotator::HostTypeWait::sInstance
+0000000100e8abb0 D NrvMapPartsRotator::HostTypeRotate::sInstance
+0000000100e8ab98 D NrvMapPartsRotator::HostTypeNeverMove::sInstance
+0000000100e8abb8 D NrvMapPartsRotator::HostTypeStopAtEnd::sInstance
+0000000100e8aba8 D NrvMapPartsRotator::HostTypeRotateStart::sInstance
+000000010014ef6c T MapObjActorInitInfo::setupNerve(Nerve const*)
+000000010014ef64 T MapObjActorInitInfo::setupSound(int)
+000000010014ef54 T MapObjActorInitInfo::setupEffect(char const*)
+000000010014ef34 T MapObjActorInitInfo::setupHioNode(char const*)
+000000010014ef84 T MapObjActorInitInfo::setupRotator()
+000000010014ef3c T MapObjActorInitInfo::setupDefaultPos()
+000000010014ef74 T MapObjActorInitInfo::setupProjmapMtx(bool)
+000000010014ef48 T MapObjActorInitInfo::setupConnectToScene()
+000000010014ef90 T MapObjActorInitInfo::setupBaseMtxFollowTarget()
+000000010014eeb0 T MapObjActorInitInfo::MapObjActorInitInfo()
+0000000100144c10 t MR::FunctorV0M<RotateMoveObj*, void (RotateMoveObj::*)()>::~FunctorV0M()
+00000001001449fc t MR::FunctorV0M<RotateMoveObj*, void (RotateMoveObj::*)()>::~FunctorV0M()
+00000001001501a4 T MR::StageEffect::tryStageEffectStop(LiveActor*, char const*)
+000000010014fe5c T MR::StageEffect::tryStageEffectStart(LiveActor*, char const*)
+0000000100150020 T MR::StageEffect::tryStageEffectMoving(LiveActor*, char const*)
+00000001000298c4 T MR::getMapPartsArgMoveConditionType(int*, JMapInfoIter const&)
+00000001001486fc T MapPartsRotator::isOnReverse() const
+000000010014870c t MapPartsRotator::getRotateMtx() const
+0000000100148704 T MapPartsRotator::getRotateSpeed() const
+00000001001482e0 T MapPartsRotator::isMoving() const
+0000000100148298 T MapPartsRotator::isWorking() const
+0000000100149848 T MapPartsFunction::isFirstStep() const
+0000000100149808 T MapPartsFunction::isStep(int) const
+00000001001497fc T MapPartsFunction::getStep() const
+000000010014981c T MapPartsFunction::isNerve(Nerve const*) const
+000000010014987c t MapPartsFunction::isWorking() const
+0000000100144ba8 t NrvRotateMoveObj::HostTypeMove::execute(Spine*) const
+0000000100144bb0 t NrvRotateMoveObj::HostTypeStop::execute(Spine*) const
+0000000100144ba4 t NrvRotateMoveObj::HostTypeWait::execute(Spine*) const
+0000000100144b38 t NrvRotateMoveObj::HostTypeWaitForPlayerOn::execute(Spine*) const
+0000000100148718 t NrvMapPartsRotator::HostTypeWait::execute(Spine*) const
+0000000100148724 t NrvMapPartsRotator::HostTypeRotate::execute(Spine*) const
+0000000100148714 t NrvMapPartsRotator::HostTypeNeverMove::execute(Spine*) const
+000000010014872c t NrvMapPartsRotator::HostTypeStopAtEnd::execute(Spine*) const
+000000010014871c t NrvMapPartsRotator::HostTypeRotateStart::execute(Spine*) const
+0000000100144c34 t MR::FunctorV0M<RotateMoveObj*, void (RotateMoveObj::*)()>::clone(JKRHeap*) const
+0000000100144c18 t MR::FunctorV0M<RotateMoveObj*, void (RotateMoveObj::*)()>::operator()() const
+0000000100e10fb0 s typeinfo for NrvRotateMoveObj::HostTypeMove
+0000000100e10fc8 s typeinfo for NrvRotateMoveObj::HostTypeStop
+0000000100e10f98 s typeinfo for NrvRotateMoveObj::HostTypeWait
+0000000100e10f80 s typeinfo for NrvRotateMoveObj::HostTypeWaitForPlayerOn
+0000000100e11c10 s typeinfo for NrvMapPartsRotator::HostTypeWait
+0000000100e11c40 s typeinfo for NrvMapPartsRotator::HostTypeRotate
+0000000100e11bf8 s typeinfo for NrvMapPartsRotator::HostTypeNeverMove
+0000000100e11c58 s typeinfo for NrvMapPartsRotator::HostTypeStopAtEnd
+0000000100e11c28 s typeinfo for NrvMapPartsRotator::HostTypeRotateStart
+0000000100e11010 s typeinfo for MR::FunctorV0M<RotateMoveObj*, void (RotateMoveObj::*)()>
+0000000100c48333 s typeinfo name for NrvRotateMoveObj::HostTypeMove
+0000000100c48356 s typeinfo name for NrvRotateMoveObj::HostTypeStop
+0000000100c48310 s typeinfo name for NrvRotateMoveObj::HostTypeWait
+0000000100c482e2 s typeinfo name for NrvRotateMoveObj::HostTypeWaitForPlayerOn
+0000000100c48795 s typeinfo name for NrvMapPartsRotator::HostTypeWait
+0000000100c487e6 s typeinfo name for NrvMapPartsRotator::HostTypeRotate
+0000000100c4876b s typeinfo name for NrvMapPartsRotator::HostTypeNeverMove
+0000000100c4880d s typeinfo name for NrvMapPartsRotator::HostTypeStopAtEnd
+0000000100c487ba s typeinfo name for NrvMapPartsRotator::HostTypeRotateStart
+0000000100c48379 s typeinfo name for MR::FunctorV0M<RotateMoveObj*, void (RotateMoveObj::*)()>
+0000000100e10e00 s vtable for NrvRotateMoveObj::HostTypeMove
+0000000100e10e20 s vtable for NrvRotateMoveObj::HostTypeStop
+0000000100e10de0 s vtable for NrvRotateMoveObj::HostTypeWait
+0000000100e10dc0 s vtable for NrvRotateMoveObj::HostTypeWaitForPlayerOn
+0000000100e11ab0 s vtable for NrvMapPartsRotator::HostTypeWait
+0000000100e11af0 s vtable for NrvMapPartsRotator::HostTypeRotate
+0000000100e11a90 s vtable for NrvMapPartsRotator::HostTypeNeverMove
+0000000100e11b10 s vtable for NrvMapPartsRotator::HostTypeStopAtEnd
+0000000100e11ad0 s vtable for NrvMapPartsRotator::HostTypeRotateStart
+0000000100e10fe0 s vtable for MR::FunctorV0M<RotateMoveObj*, void (RotateMoveObj::*)()>

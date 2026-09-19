@@ -1,0 +1,11 @@
+{
+  "native_unchanged": true,
+  "complete_source_matches_after_existing_noinline_relocation": true,
+  "header_byte_identical": true,
+  "sha256": {
+    "src/Game/LiveActor/LodCtrl.cpp": "1f12e13f604a0ad901e3058a9efa4918d5b81944ab282709d3546858e2be0287",
+    "decomp/src/Game/LiveActor/LodCtrl.cpp": "3358532163a286f5e7a7809e7f00debbf0e2ad99441cc700e0247b85629c8457",
+    "src/Game/LiveActor/LodCtrl.hpp": "4c5c22bcc5c7962d597468875a6168a1a4eafc367ce300d7886e2dfd980af01c",
+    "decomp/include/Game/LiveActor/LodCtrl.hpp": "4c5c22bcc5c7962d597468875a6168a1a4eafc367ce300d7886e2dfd980af01c"
+  }
+}

@@ -1,0 +1,163 @@
+[
+  {
+    "archive": "build/demo-system-verification-20260919/KoopaJrNormalShipA.arc",
+    "archive_sha256": "3e83d469f53392c35a6e6e55d4e85b80a4b9e936f007c05e3bed2eceb150ef76",
+    "files": [
+      {
+        "path": "/koopajrnormalshipa.bck",
+        "size": 608,
+        "sha256": "53291348d2ac6b585773888bb1afaecdcc6c8075c934415d94690509e23afa39",
+        "j3d_type": "J3D1bck1",
+        "sections": [
+          {
+            "type": "ANK1",
+            "size": 576,
+            "loop_mode": 2,
+            "duration": 15,
+            "joint_count": 7
+          }
+        ]
+      },
+      {
+        "path": "/koopajrnormalshipa.bdl",
+        "size": 431136,
+        "sha256": "17681347f8b62fb905cb07a576f63fb8929d9074abb9ee27cb1c4282845eb284",
+        "j3d_type": "J3D2bdl4",
+        "sections": [
+          {
+            "type": "INF1",
+            "size": 352
+          },
+          {
+            "type": "VTX1",
+            "size": 92960
+          },
+          {
+            "type": "EVP1",
+            "size": 32
+          },
+          {
+            "type": "DRW1",
+            "size": 64
+          },
+          {
+            "type": "JNT1",
+            "size": 608,
+            "count": 7
+          },
+          {
+            "type": "SHP1",
+            "size": 185088,
+            "count": 11
+          },
+          {
+            "type": "MAT3",
+            "size": 6176,
+            "count": 11
+          },
+          {
+            "type": "MDL3",
+            "size": 5600
+          },
+          {
+            "type": "TEX1",
+            "size": 140224
+          }
+        ]
+      },
+      {
+        "path": "/koopajrnormalshipa.kcl",
+        "size": 51540,
+        "sha256": "cdcdf11fd4c61740e91d2e808fa2102ea61501013286e650d13fbc09be3a37ca"
+      },
+      {
+        "path": "/koopajrnormalshipa.pa",
+        "size": 3008,
+        "sha256": "1377068bee44d5745c239e2b5ba4605b0ef574097ec4a8330828a6a9d652777d"
+      },
+      {
+        "path": "/collisionversion",
+        "size": 7,
+        "sha256": "f34306bb50e2d2ec59c788b9013c5ac682ef7f7f69345a3e957e38c0b6ba2fdd"
+      },
+      {
+        "path": "/movelimit.kcl",
+        "size": 456,
+        "sha256": "44009cd710501b59485d1e1bb34e895265ff04cd7313175b33874a569d93e187"
+      },
+      {
+        "path": "/movelimit.pa",
+        "size": 96,
+        "sha256": "1dc4fc45fc0735087e2b151dfb8f1e5813a953a6d280e04e67ebea94deb48e41"
+      }
+    ]
+  },
+  {
+    "archive": "build/original-map-object-closure-20260919/KoopaJrNormalShipALow.arc",
+    "archive_sha256": "78a1d3e88610c1bd63db5425fac5e2dae1c35e08582cc6c9e973a0252e30179e",
+    "files": [
+      {
+        "path": "/koopajrnormalshipalow.bck",
+        "size": 608,
+        "sha256": "53291348d2ac6b585773888bb1afaecdcc6c8075c934415d94690509e23afa39",
+        "j3d_type": "J3D1bck1",
+        "sections": [
+          {
+            "type": "ANK1",
+            "size": 576,
+            "loop_mode": 2,
+            "duration": 15,
+            "joint_count": 7
+          }
+        ]
+      },
+      {
+        "path": "/koopajrnormalshipalow.bdl",
+        "size": 193376,
+        "sha256": "717ece6c250465c4452f03cdab7f9392191689fb8708e972691672f21e1056bd",
+        "j3d_type": "J3D2bdl4",
+        "sections": [
+          {
+            "type": "INF1",
+            "size": 352
+          },
+          {
+            "type": "VTX1",
+            "size": 51040
+          },
+          {
+            "type": "EVP1",
+            "size": 32
+          },
+          {
+            "type": "DRW1",
+            "size": 64
+          },
+          {
+            "type": "JNT1",
+            "size": 608,
+            "count": 7
+          },
+          {
+            "type": "SHP1",
+            "size": 93696,
+            "count": 11
+          },
+          {
+            "type": "MAT3",
+            "size": 6176,
+            "count": 11
+          },
+          {
+            "type": "MDL3",
+            "size": 5600
+          },
+          {
+            "type": "TEX1",
+            "size": 35776
+          }
+        ]
+      }
+    ]
+  }
+]

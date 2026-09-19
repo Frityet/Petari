@@ -1,0 +1,147 @@
+{
+  "source": "notes/demo-system-verification-20260919/scene/omitted-geometry-resources.json",
+  "source_sha256": "5d3f811c0ceefb05fa1cd14964cab181cdee75662b36b9cd4d990bad87f5258c",
+  "assets": [
+    {
+      "disc_path": "ObjectData/HeavensDoorMiddleRotatePartsA.arc",
+      "archive_sha256": "a6b0f4aa2cdcdb4c7161d454e7c17abe3d08a6ee092d6f366b77ef672c6d8d69",
+      "files": [
+        {
+          "path": "/heavensdoormiddlerotatepartsa.bdl",
+          "size": 108320
+        },
+        {
+          "path": "/heavensdoormiddlerotatepartsa.btk",
+          "size": 480
+        },
+        {
+          "path": "/heavensdoormiddlerotatepartsa.kcl",
+          "size": 51294
+        },
+        {
+          "path": "/heavensdoormiddlerotatepartsa.pa",
+          "size": 2272
+        },
+        {
+          "path": "/collisionversion",
+          "size": 7
+        }
+      ],
+      "cached_path": "build/demo-system-verification-20260919/HeavensDoorMiddleRotatePartsA.arc",
+      "fresh_cached_sha256": "a6b0f4aa2cdcdb4c7161d454e7c17abe3d08a6ee092d6f366b77ef672c6d8d69",
+      "matches_disc_extraction_record": true
+    },
+    {
+      "disc_path": "ObjectData/HeavensDoorMiddleRotatePartsB.arc",
+      "archive_sha256": "14cbcedb93d5106932d6960887def4b39824fe234c8dcbe562be45251bcd8919",
+      "files": [
+        {
+          "path": "/heavensdoormiddlerotatepartsb.bdl",
+          "size": 34368
+        },
+        {
+          "path": "/heavensdoormiddlerotatepartsb.kcl",
+          "size": 15962
+        },
+        {
+          "path": "/heavensdoormiddlerotatepartsb.pa",
+          "size": 1376
+        },
+        {
+          "path": "/collisionversion",
+          "size": 7
+        }
+      ],
+      "cached_path": "build/demo-system-verification-20260919/HeavensDoorMiddleRotatePartsB.arc",
+      "fresh_cached_sha256": "14cbcedb93d5106932d6960887def4b39824fe234c8dcbe562be45251bcd8919",
+      "matches_disc_extraction_record": true
+    },
+    {
+      "disc_path": "ObjectData/HeavensDoorInsideRotatePartsA.arc",
+      "archive_sha256": "e64bfc5fc5f5a39fc5b81a711f51b36f4e83be172c545d61a99516d5af8189d6",
+      "files": [
+        {
+          "path": "/heavensdoorinsiderotatepartsa.bdl",
+          "size": 104480
+        },
+        {
+          "path": "/heavensdoorinsiderotatepartsa.btk",
+          "size": 480
+        },
+        {
+          "path": "/heavensdoorinsiderotatepartsa.kcl",
+          "size": 51718
+        },
+        {
+          "path": "/heavensdoorinsiderotatepartsa.pa",
+          "size": 2272
+        },
+        {
+          "path": "/collisionversion",
+          "size": 7
+        }
+      ],
+      "cached_path": "build/demo-system-verification-20260919/HeavensDoorInsideRotatePartsA.arc",
+      "fresh_cached_sha256": "e64bfc5fc5f5a39fc5b81a711f51b36f4e83be172c545d61a99516d5af8189d6",
+      "matches_disc_extraction_record": true
+    },
+    {
+      "disc_path": "ObjectData/HeavensDoorInsideRotatePartsB.arc",
+      "archive_sha256": "19dca6e30d712136735b41ffcfe9708c37e7eb4e28d9afbeb979a29c60f36e1d",
+      "files": [
+        {
+          "path": "/heavensdoorinsiderotatepartsb.bdl",
+          "size": 108704
+        },
+        {
+          "path": "/heavensdoorinsiderotatepartsb.btk",
+          "size": 480
+        },
+        {
+          "path": "/heavensdoorinsiderotatepartsb.kcl",
+          "size": 48176
+        },
+        {
+          "path": "/heavensdoorinsiderotatepartsb.pa",
+          "size": 2272
+        },
+        {
+          "path": "/collisionversion",
+          "size": 7
+        }
+      ],
+      "cached_path": "build/demo-system-verification-20260919/HeavensDoorInsideRotatePartsB.arc",
+      "fresh_cached_sha256": "19dca6e30d712136735b41ffcfe9708c37e7eb4e28d9afbeb979a29c60f36e1d",
+      "matches_disc_extraction_record": true
+    },
+    {
+      "disc_path": "ObjectData/HeavensDoorInsideRotatePartsC.arc",
+      "archive_sha256": "f7fbdfefdc714460c0eb85933bfca8766783d83cc70153c73271802e6ba52089",
+      "files": [
+        {
+          "path": "/heavensdoorinsiderotatepartsc.bdl",
+          "size": 104448
+        },
+        {
+          "path": "/heavensdoorinsiderotatepartsc.btk",
+          "size": 480
+        },
+        {
+          "path": "/heavensdoorinsiderotatepartsc.kcl",
+          "size": 50780
+        },
+        {
+          "path": "/heavensdoorinsiderotatepartsc.pa",
+          "size": 2272
+        },
+        {
+          "path": "/collisionversion",
+          "size": 7
+        }
+      ],
+      "cached_path": "build/demo-system-verification-20260919/HeavensDoorInsideRotatePartsC.arc",
+      "fresh_cached_sha256": "f7fbdfefdc714460c0eb85933bfca8766783d83cc70153c73271802e6ba52089",
+      "matches_disc_extraction_record": true
+    }
+  ]
+}

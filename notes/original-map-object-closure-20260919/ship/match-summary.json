@@ -1,0 +1,173 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "retail_start": "0x80166c70",
+  "retail_end": "0x80167868",
+  "retail_text_bytes": 3064,
+  "retail_reference_comparison": "PASS (only ELF relocation bits masked)",
+  "relocations": 94,
+  "sections": [
+    {
+      "name": ".text",
+      "size": "3064",
+      "match_percent": 98.64883
+    },
+    {
+      "name": ".data",
+      "size": "80",
+      "match_percent": 81.48148
+    },
+    {
+      "name": ".sdata",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": ".sdata2",
+      "size": "16",
+      "match_percent": 89.655174
+    }
+  ],
+  "functions": [
+    {
+      "name": "__ct__7LodCtrlFP9LiveActorRC12JMapInfoIter",
+      "size": "172",
+      "match_percent": 100.0
+    },
+    {
+      "name": "offSyncShadowHost__7LodCtrlFv",
+      "size": "56",
+      "match_percent": 100.0
+    },
+    {
+      "name": "appear__7LodCtrlFv",
+      "size": "168",
+      "match_percent": 100.0
+    },
+    {
+      "name": "kill__7LodCtrlFv",
+      "size": "164",
+      "match_percent": 100.0
+    },
+    {
+      "name": "validate__7LodCtrlFv",
+      "size": "52",
+      "match_percent": 100.0
+    },
+    {
+      "name": "invalidate__7LodCtrlFv",
+      "size": "52",
+      "match_percent": 100.0
+    },
+    {
+      "name": "update__7LodCtrlFv",
+      "size": "420",
+      "match_percent": 90.2381
+    },
+    {
+      "name": "isShowLowModel__7LodCtrlCFv",
+      "size": "40",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setDistanceToMiddle__7LodCtrlFf",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "calcDistanceToCamera__7LodCtrlCFv",
+      "size": "32",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setDistanceToLow__7LodCtrlFf",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setDistanceToMiddleAndLow__7LodCtrlFff",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "LodFuntionCall__21@unnamed@LodCtrl_cpp@FP7LodCtrlPFP9LiveActor_v",
+      "size": "116",
+      "match_percent": 100.0
+    },
+    {
+      "name": "LodFuntionCall<f>__21@unnamed@LodCtrl_cpp@FP7LodCtrlPFP9LiveActorf_vf_v",
+      "size": "136",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setClippingTypeSphereContainsModelBoundingBox__7LodCtrlFf",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setFarClipping__7LodCtrlFf",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "invalidateClipping__7LodCtrlFv",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "showHighModel__7LodCtrlFv",
+      "size": "196",
+      "match_percent": 100.0
+    },
+    {
+      "name": "showMiddleModel__7LodCtrlFv",
+      "size": "196",
+      "match_percent": 100.0
+    },
+    {
+      "name": "showLowModel__7LodCtrlFv",
+      "size": "196",
+      "match_percent": 100.0
+    },
+    {
+      "name": "hideAllModel__7LodCtrlFv",
+      "size": "160",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setViewCtrlPtr__7LodCtrlFPCbPCbPCbPCb",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "createLodModel__7LodCtrlFiii",
+      "size": "156",
+      "match_percent": 100.0
+    },
+    {
+      "name": "syncMaterialAnimation__7LodCtrlFv",
+      "size": "84",
+      "match_percent": 100.0
+    },
+    {
+      "name": "syncJointAnimation__7LodCtrlFv",
+      "size": "84",
+      "match_percent": 100.0
+    },
+    {
+      "name": "initLightCtrl__7LodCtrlFv",
+      "size": "76",
+      "match_percent": 100.0
+    },
+    {
+      "name": "initLodModel__7LodCtrlCFiiib",
+      "size": "356",
+      "match_percent": 99.88764
+    },
+    {
+      "name": "isExistLodLowModel__15LodCtrlFunctionFPCc",
+      "size": "68",
+      "match_percent": 100.0
+    }
+  ],
+  "canonical_source_sha256": "3358532163a286f5e7a7809e7f00debbf0e2ad99441cc700e0247b85629c8457"
+}

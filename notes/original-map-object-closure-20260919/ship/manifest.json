@@ -1,0 +1,21 @@
+{
+  "files": {
+    "notes/original-map-object-closure-20260919/ship/README.md": "cdbc3454bd60339d0489a700b993eb6bc1f9f432deb4eeef19b0f79e20fbc4a3",
+    "notes/original-map-object-closure-20260919/ship/match-summary.json": "c53ad5b05e959c32787400573a5251b549764b51b5229646420eb2f6d8567593",
+    "notes/original-map-object-closure-20260919/ship/objdiff.json.gz": "53d7003ba9dd370e6f0fcd986b9c3b1f4f0f2fef06807e4b444531be9aadc8e4",
+    "notes/original-map-object-closure-20260919/ship/resource-commands.json": "ea83a506b94a2d306002e380f81c2012a6a20ef30d361945591689c5d8ca95e1",
+    "notes/original-map-object-closure-20260919/ship/ship-placements.json": "8445c165b24deb05db0b612410fb5af3045b17bd4c22014be1a15ecbb6f5e630",
+    "notes/original-map-object-closure-20260919/ship/ship-resource-inventory.json": "bafb0478a2f2f0c44baa4f7f014a316268ec55e11987ca86d933d6287d7cb6cf",
+    "notes/original-map-object-closure-20260919/ship/source-mirror-proof.json": "b3e2c9eb3e3a588646d4c1cbeed1837e22a8535a63fb11c0e38c3b5b67a9f58a",
+    "notes/original-map-object-closure-20260919/ship/verify-recovery.py": "e1fb338de2bb3e63a98f4abe52924f516120164fcb42788ed875bb23f39f8455",
+    "notes/original-map-object-closure-20260919/ship/wii-command.json": "b6997e0e65d41da471e213c74b93f28c8ee07cd46771033d42772faf8ce08ed3",
+    "notes/original-map-object-closure-20260919/ship/wii-compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "excluded": [
+    "LodCtrl-wii.o",
+    "retail archive files remain under build/"
+  ],
+  "source_sha256": {
+    "decomp/src/Game/LiveActor/LodCtrl.cpp": "3358532163a286f5e7a7809e7f00debbf0e2ad99441cc700e0247b85629c8457"
+  }
+}
