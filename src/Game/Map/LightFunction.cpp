@@ -215,7 +215,17 @@ void LightFunction::loadPointLightInfo(const PointLightInfo* pInfo) {
     GXLoadLightObjImm(&obj, GX_LIGHT4);
 }
 
-// LightFunction::loadAllLightWhite
+void LightFunction::loadAllLightWhite() {
+    const GXLightID cLightDataIDs[8] = {GX_LIGHT0, GX_LIGHT1, GX_LIGHT2, GX_LIGHT3, GX_LIGHT4, GX_LIGHT5, GX_LIGHT6, GX_LIGHT7};
+    static GXColor cWhite = {255, 255, 255, 255};
+
+    for (u32 i = 0; i < 8; i++) {
+        GXLightObj obj;
+        GXInitLightPos(&obj, 0.0f, 0.0f, 0.0f);
+        GXInitLightColor(&obj, cWhite);
+        GXLoadLightObjImm(&obj, cLightDataIDs[i]);
+    }
+}
 
 void LightFunction::calcLightWorldPos(TVec3f* pPos, const LightInfo& rInfo) {
     pPos->x = rInfo.mPos.x;
