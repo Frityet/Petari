@@ -1,0 +1,42 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc",
+    "--original",
+    "--disc",
+    "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--stage",
+    "HeavensDoorGalaxy",
+    "--scenario",
+    "1",
+    "--max-frames",
+    "18000"
+  ],
+  "environment": {
+    "SMGPC_SAVE_DIR": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/content-world-first-catch-18000-nand",
+    "SMGPC_NAND_DIR": "",
+    "AURORA_BACKEND": "metal",
+    "SMGPC_WINDOW_WIDTH": "1280",
+    "SMGPC_WINDOW_HEIGHT": "720",
+    "SMGPC_SCREENSHOT_PATH": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/content-world-first-catch-18000-frame5500.png",
+    "SMGPC_SCREENSHOT_FRAME": "5500",
+    "SMGPC_DEBUG_WPAD_INPUT_FILE": "/Users/frityet/Projects/petari/notes/original-gateway-chase-20260919/live-input-world-first-catch.json",
+    "SMGPC_DEBUG_FRAME_TIMING": "1",
+    "SMGPC_DEBUG_ACTOR_TRACE_PATH": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/content-world-first-catch-18000-actors.jsonl",
+    "SMGPC_DEBUG_ACTOR_TRACE_TYPES": "MarioActor,Rabbit,Tico,Rosetta,WarpPod,EarthenPipe,PunchingKinoko,Butterfly,CrystalCage,StarPiece",
+    "SMGPC_DEBUG_ACTOR_TRACE_INTERVAL": "10",
+    "SMGPC_DEBUG_LAYOUT_DUMP_PATH": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/content-world-first-catch-18000-layout.txt",
+    "SMGPC_DEBUG_LAYOUT_DUMP_FRAME": "5500",
+    "SMGPC_DEBUG_WPAD_BUTTON_SCRIPT": "",
+    "SMGPC_DEBUG_WPAD_POINTER_SCRIPT": "",
+    "SMGPC_DEBUG_WPAD_STICK_SCRIPT": "0-18000:0:0"
+  },
+  "binary_sha256": "b38e90868eb8ab1f1cdc72487c293cf0f15a3e50c6fd8b14adc846bec7a7d123",
+  "started_at": "2026-09-19T15:56:25.910548+00:00",
+  "pid": 81050,
+  "exit_code": 0,
+  "timeout_terminated": false,
+  "elapsed_seconds": 372.3031810000539,
+  "process_still_exists_after_wait": false,
+  "completed_frames": 18000,
+  "verified_bounded_completion": true
+}

@@ -1,0 +1,40 @@
+{
+  "scope": "External test operators only; two writers overlapped frames11730-12230 and replacement failed, both were stopped before later exclusive operator",
+  "operators": [
+    {
+      "label": "controller-world-first-catch",
+      "first_decision_frame": 1400,
+      "last_decision_frame": 3620,
+      "decisions": 223,
+      "reported_finished": true
+    },
+    {
+      "label": "controller-world-hole-catch",
+      "first_decision_frame": 6790,
+      "last_decision_frame": 12410,
+      "decisions": 563,
+      "reported_finished": false
+    },
+    {
+      "label": "controller-world-hole-catch-v2",
+      "first_decision_frame": 11730,
+      "last_decision_frame": 12230,
+      "decisions": 51,
+      "reported_finished": false
+    },
+    {
+      "label": "controller-world-pipe-catch",
+      "first_decision_frame": 13960,
+      "last_decision_frame": 16770,
+      "decisions": 282,
+      "reported_finished": false
+    },
+    {
+      "label": "controller-world-revealed-pipe-catch",
+      "first_decision_frame": 16790,
+      "last_decision_frame": 17910,
+      "decisions": 113,
+      "reported_finished": true
+    }
+  ]
+}
