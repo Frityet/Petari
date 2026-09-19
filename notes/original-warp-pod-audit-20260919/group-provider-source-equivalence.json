@@ -1,0 +1,7 @@
+{
+  "native": "src/compat/OriginalLiveActorGroupUtil.cpp",
+  "donor": "decomp/src/Game/Util/LiveActorUtil.cpp",
+  "method": "MR::joinToGroup",
+  "exact_body_equal": true,
+  "body_sha256": "c576e65f13ac898866b7aef102dd4b426cfc508dd7f67859d5a8257c2088641f"
+}

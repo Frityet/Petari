@@ -1,0 +1,42 @@
+[
+  {
+    "name": "sendMsgEnemyAttackMsgToDir__2MRFUlP9HitSensorP9HitSensorRCQ29JGeometry8TVec3<f>",
+    "size": "124",
+    "match_percent": 100.0
+  },
+  {
+    "name": "sendMsgEnemyAttackFlipWeak__2MRFP9HitSensorP9HitSensor",
+    "size": "12",
+    "match_percent": 100.0
+  },
+  {
+    "name": "sendMsgEnemyAttackFlipWeakJump__2MRFP9HitSensorP9HitSensor",
+    "size": "12",
+    "match_percent": 100.0
+  },
+  {
+    "name": "sendMsgEnemyAttackFlipToDir__2MRFP9HitSensorP9HitSensorRCQ29JGeometry8TVec3<f>",
+    "size": "28",
+    "match_percent": 100.0
+  },
+  {
+    "name": "sendMsgEnemyAttackFlipMaximumToDir__2MRFP9HitSensorP9HitSensorRCQ29JGeometry8TVec3<f>",
+    "size": "28",
+    "match_percent": 100.0
+  },
+  {
+    "name": "sendMsgEnemyAttackToBindedSensor__2MRFP9LiveActorP9HitSensor",
+    "size": "16",
+    "match_percent": 100.0
+  },
+  {
+    "name": "sendMsgToEnemyAttackBlow__2MRFP9HitSensorP9HitSensor",
+    "size": "12",
+    "match_percent": 100.0
+  },
+  {
+    "name": "turnQuatYDirRate__2MRFPQ29JGeometry9TQuat4<f>RCQ29JGeometry9TQuat4<f>RCQ29JGeometry8TVec3<f>f",
+    "size": "116",
+    "match_percent": 100.0
+  }
+]

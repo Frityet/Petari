@@ -1,3 +1,4 @@
+#include "Game/Util/MathUtil.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "compat/GameActorSensorCompat.hpp"
 
@@ -781,3 +782,56 @@ namespace MR {
         return sendMsgToBindedSensor(msg, getSensorHost(pSender), pSender);
     }
 }
+
+// Original shared utilities from Game/Util/ActorSensorUtil.cpp.
+namespace MR {
+    bool sendMsgEnemyAttackMsgToDir(u32 msg, HitSensor* pReceiver, HitSensor* pSender, const TVec3f& rDir) {
+        TVec3f senderPos = pSender->mPosition;
+        pSender->mPosition.sub(pReceiver->mPosition, rDir);
+
+        bool isSent = pReceiver->receiveMessage(msg, pSender);
+        setSensorPos(pSender, senderPos);
+
+        return isSent;
+    }
+
+    bool sendMsgEnemyAttackFlipWeak(HitSensor* pReceiver, HitSensor* pSender) {
+        return sendArbitraryMsg(ACTMES_ENEMY_ATTACK_FLIP_WEAK, pReceiver, pSender);
+    }
+
+    bool sendMsgEnemyAttackFlipWeakJump(HitSensor* pReceiver, HitSensor* pSender) {
+        return sendArbitraryMsg(ACTMES_ENEMY_ATTACK_FLIP_WEAK_JUMP, pReceiver, pSender);
+    }
+
+    bool sendMsgEnemyAttackFlipToDir(HitSensor* pReceiver, HitSensor* pSender, const TVec3f& rDir) {
+        return sendMsgEnemyAttackMsgToDir(ACTMES_ENEMY_ATTACK_FLIP, pReceiver, pSender, rDir);
+    }
+
+    bool sendMsgEnemyAttackFlipMaximumToDir(HitSensor* pReceiver, HitSensor* pSender, const TVec3f& rDir) {
+        return sendMsgEnemyAttackMsgToDir(ACTMES_ENEMY_ATTACK_FLIP_MAXIMUM, pReceiver, pSender, rDir);
+    }
+
+    bool sendMsgEnemyAttackToBindedSensor(LiveActor* pActor, HitSensor* pSender) {
+        return sendMsgToBindedSensor(ACTMES_ENEMY_ATTACK, pActor, pSender);
+    }
+
+    bool sendMsgToEnemyAttackBlow(HitSensor* pReceiver, HitSensor* pSender) {
+        return sendArbitraryMsg(ACTMES_TO_ENEMY_ATTACK_BLOW, pReceiver, pSender);
+    }
+}  // namespace MR
+
+namespace MR {
+    void calcPosBetweenSensors(TVec3f* pPos, const HitSensor* pSensor1, const HitSensor* pSensor2, f32 offset) {
+        TVec3f dir = pSensor2->mPosition - pSensor1->mPosition;
+        normalizeOrZero(&dir);
+
+        f32 dist = pSensor1->mPosition.distance(pSensor2->mPosition);
+        f32 radius2 = pSensor2->mRadius;
+        f32 radius1 = pSensor1->mRadius;
+        f32 value = (radius1 + radius2 - dist) / 2.0f;
+
+        pPos->set(dir);
+        *pPos *= value + pSensor1->mRadius + offset;
+        pPos->add(pSensor1->mPosition);
+    }
+}  // namespace MR

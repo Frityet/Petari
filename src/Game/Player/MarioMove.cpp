@@ -909,88 +909,76 @@ void Mario::calcShadowDir(const TVec3f& rMoveDir, TVec3f* pOut) {
     MR::normalizeOrZero(pOut);
 }
 
-bool Mario::retainMoveDir(f32 stickX, f32 stickY, TVec3f* pOut) {
-    f32 stickAngle = JMath::sAtanTable.atan2_(stickY, stickX);
-    f32 stickAngleDiff = MR::diffAngleAbs(stickAngle, _2B4);
-
-    if (isAnimationRun(CP932("ターン"))) {
-        stickAngleDiff = 1.0f;
+bool Mario::retainMoveDir(f32 stickX, f32 stickY, TVec3f* moveDir) {
+    f32 angle = MR::atan2(stickY, stickX);
+    f32 difference = MR::diffAngleAbs(angle, _2B4);
+    if (isAnimationRun(CP932("その場足踏み"))) {
+        difference = 1.0f;
     }
-
     if (isAnimationRun(CP932("ターンブレーキ"))) {
-        stickAngleDiff = 1.0f;
+        difference = 1.0f;
     }
-
     if (isSwimming()) {
-        stickAngleDiff = 1.0f;
+        difference = 1.0f;
     }
-
     if (mActor->isRequestSpin() && mMovementStates.jumping && mWorldPadDir.dot(_16C) < 0.0f) {
-        stickAngleDiff = 1.0f;
+        difference = 1.0f;
     }
 
-    f32 retainAngle = 0.99f;
+    f32 limit = 0.06f;
     if (_3CE < 2) {
-        retainAngle = 0.1f;
+        limit = 0.1f;
     }
-
     if (_10._B) {
         if (isStickOn()) {
             _10._B = false;
         }
-        stickAngleDiff = 1.0f;
+        difference = 1.0f;
     }
 
-    bool enableRetain = true;
-    mDrawStates._9 = true;
-
+    bool retain = true;
+    mDrawStates._16 = true;
     if (mMovementStates.jumping && !_10._A) {
-        enableRetain = false;
+        retain = false;
     }
-
     if (mMovementStates.jumping && mMovementStates._8) {
-        enableRetain = false;
+        retain = false;
     }
-
     if (mMovementStates.jumping && !isAnimationRun(nullptr)) {
-        enableRetain = false;
+        retain = false;
     }
 
-    if (stickAngleDiff < retainAngle && isStickOn() && enableRetain) {
-        if (_40E == 0 || _10._A && mMovementStates.jumping) {
-            _40E = 0;
+    if (difference < limit && isStickOn() && retain) {
+        if (!_40E || (_10._A && mMovementStates.jumping)) {
             mDrawStates._D = true;
+            _40E = 0;
         } else {
-            _40E--;
+            if (_40E) {
+                _40E--;
+            }
             _29C = _368;
             _2A8 = *getGravityVec();
         }
-
-        _2B4 = stickAngle;
-        return false;
-    }
-
-    if (mMovementStates.jumping) {
-        if (isStickOn()) {
-            _10._A = false;
-        }
+        _2B4 = angle;
     } else {
-        _10._A = true;
+        if (mMovementStates.jumping) {
+            if (isStickOn()) {
+                _10._A = false;
+            }
+        } else {
+            _10._A = true;
+        }
+        if (!_40E) {
+            _3D4 = 0;
+        }
+        _40E = 30;
+        if (!isStickOn()) {
+            _10._B = true;
+        }
+        _2B4 = angle;
+        _29C = _368;
+        _2A8 = *getGravityVec();
     }
-
-    if (_40E == 0) {
-        _3D4 = 0;
-    }
-
-    _40E = 30;
-
-    if (!isStickOn()) {
-        _10._B = true;
-    }
-
-    _2B4 = stickAngle;
-    _29C = _368;
-    _2A8 = *getGravityVec();
     return false;
 }
 

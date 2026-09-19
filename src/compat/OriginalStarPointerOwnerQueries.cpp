@@ -12,6 +12,8 @@
 #include "Game/System/WPadRumble.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "compat/StarPointerDepthOwnership.hpp"
@@ -235,6 +237,47 @@ namespace MR {
 
     void getStarPointerWorldVelocityDirection(TVec3f* pVel, s32 channel) {
         pVel->set(::getStarPointerController(channel)->mWorldVel);
+    }
+
+    bool calcStarPointerWorldVelocityDirectionOnPlane(TVec3f* pDir, const TVec3f& rPlaneBasePos, const TVec3f& rPlaneNorm, s32 channel) {
+        StarPointerController* controller = ::getStarPointerController(channel);
+        TVec3f camPos = MR::getCamPos();
+        const TVec2f& posA = controller->mPastInfo.mPos;
+        const TVec2f& posB = posA.subInline(controller->mScreenVel);
+        TVec3f toPointA, toPointB;
+        MR::calcWorldPositionFromScreen(&toPointA, posA, -1.0f);
+        MR::calcWorldPositionFromScreen(&toPointB, posB, -1.0f);
+        toPointA.sub(camPos);
+        toPointB.sub(camPos);
+        MR::normalize(&toPointA);
+        MR::normalize(&toPointB);
+
+        f32 projA = toPointA.dot(rPlaneNorm);
+        if (MR::isNearZero(projA)) {
+            return false;
+        }
+
+        f32 projB = toPointB.dot(rPlaneNorm);
+        if (MR::isNearZero(projB)) {
+            return false;
+        }
+
+        TVec3f camDiff = rPlaneBasePos;
+        camDiff.sub(camPos);
+        f32 projCam = rPlaneNorm.dot(camDiff);
+
+        f32 distA = projCam / projA;
+        f32 distB = projCam / projB;
+
+        TVec3f planePosA, planePosB;
+        planePosA.set(camPos);
+        planePosA.add(toPointA * distA);
+        planePosB.set(camPos);
+        planePosB.add(toPointB * distB);
+        pDir->set(planePosA);
+        pDir->sub(planePosB);
+        MR::normalizeOrZero(pDir);
+        return true;
     }
 
     bool tryStartStarPointerCommandStream(const LiveActor* pActor, const TVec3f* pPos, s32 channel, bool b) {

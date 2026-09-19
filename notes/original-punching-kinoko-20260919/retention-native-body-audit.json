@@ -1,0 +1,4 @@
+{
+  "exact_donor_body_after_literal_normalization": true,
+  "changes": "Only entire retainMoveDir function replaced with validated canonical body; Japanese narrow strings use CP932"
+}

@@ -1,0 +1,38 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "retail_start": "0x802e9fec",
+  "retail_end": "0x802eca14",
+  "retail_text_bytes": 10792,
+  "retail_reference_comparison": "PASS (only ELF relocation bits masked)",
+  "relocations": 461,
+  "sections": [
+    {
+      "name": ".text",
+      "size": "10792",
+      "match_percent": 98.27502
+    },
+    {
+      "name": ".ctors",
+      "size": "4",
+      "match_percent": 0.0
+    },
+    {
+      "name": ".data",
+      "size": "744",
+      "match_percent": 66.18705
+    },
+    {
+      "name": ".sdata2",
+      "size": "128",
+      "match_percent": 100.0
+    }
+  ],
+  "functions": [
+    {
+      "name": "retainMoveDir__5MarioFffPQ29JGeometry8TVec3<f>",
+      "size": "736",
+      "match_percent": 99.78261
+    }
+  ],
+  "canonical_source_sha256": "f9788d532e8fdbdb7c052ad92ecba69ad69e874f84e49e24a98dd41fd912bf18"
+}

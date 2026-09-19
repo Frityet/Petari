@@ -267,3 +267,88 @@ namespace MR {
         pDst->setXYZDir(axisX, axisY, axisZ);
     }
 }
+
+// Original shared utilities from Game/Util/MtxUtil.cpp.
+namespace MR {
+    void scaleMtxToDir(TPos3f* pDst, const TVec3f& rDir, const TVec3f& rScale) {
+        TVec3f axisX, axisY;
+        MR::makeAxisCrossPlane(&axisX, &axisY, rDir);
+
+        TPos3f tmp1;
+        tmp1.identity();
+        TPos3f tmp2;
+        tmp2.identity();
+
+        tmp1.setXYZDir(axisX, rDir, axisY);
+
+        // Copy rotation part from tmp1 to tmp2
+        tmp2.mMtx[0][0] = axisX.x;
+        tmp2.mMtx[0][1] = axisX.y;
+        tmp2.mMtx[0][2] = axisX.z;
+        tmp2.mMtx[1][0] = rDir.x;
+        tmp2.mMtx[1][1] = rDir.y;
+        tmp2.mMtx[1][2] = rDir.z;
+        tmp2.mMtx[2][0] = axisY.x;
+        tmp2.mMtx[2][1] = axisY.y;
+        tmp2.mMtx[2][2] = axisY.z;
+
+        pDst->zeroTrans();
+        pDst->setScale(rScale.x, rScale.y, rScale.z);
+        pDst->concat(*pDst, tmp2);
+        pDst->concat(tmp1, *pDst);
+    }
+
+    void orthogonalize(TPos3f* pMtx) {
+        TVec3f axisX, axisY, axisZ;
+
+        pMtx->getXYZDir(axisX, axisY, axisZ);
+
+        axisX.cross(axisY, axisZ);
+        axisY.cross(axisZ, axisX);
+
+        axisX.normalize();
+        axisY.normalize();
+
+        pMtx->setXYZDir(axisX, axisY, axisZ);
+
+        TVec3f zDir;
+        zDir.set< f32 >(pMtx->mMtx[0][2], pMtx->mMtx[1][2], pMtx->mMtx[2][2]);
+
+        f32 magAll = pMtx->mMtx[1][0] * pMtx->mMtx[1][0] + pMtx->mMtx[0][0] * pMtx->mMtx[0][0] + pMtx->mMtx[2][0] * pMtx->mMtx[2][0] +
+                     pMtx->mMtx[0][1] * pMtx->mMtx[0][1] + pMtx->mMtx[1][1] * pMtx->mMtx[1][1] + pMtx->mMtx[2][1] * pMtx->mMtx[2][1] +
+                     pMtx->mMtx[0][2] * pMtx->mMtx[0][2] + pMtx->mMtx[1][2] * pMtx->mMtx[1][2] + pMtx->mMtx[2][2] * pMtx->mMtx[2][2];
+
+        JGeometry::TUtil< f32 >::sqrt(magAll);
+
+        if (pMtx) {
+            f32 magX = pMtx->mMtx[0][0] * pMtx->mMtx[0][0] + pMtx->mMtx[1][0] * pMtx->mMtx[1][0] + pMtx->mMtx[2][0] * pMtx->mMtx[2][0];
+            f32 invSqrtX = JGeometry::TUtil< f32 >::inv_sqrt(magX);
+            pMtx->mMtx[0][0] = invSqrtX * pMtx->mMtx[0][0];
+            pMtx->mMtx[1][0] = invSqrtX * pMtx->mMtx[1][0];
+            pMtx->mMtx[2][0] = invSqrtX * pMtx->mMtx[2][0];
+
+            f32 magY = pMtx->mMtx[0][1] * pMtx->mMtx[0][1] + pMtx->mMtx[1][1] * pMtx->mMtx[1][1] + pMtx->mMtx[2][1] * pMtx->mMtx[2][1];
+            f32 invSqrtY = JGeometry::TUtil< f32 >::inv_sqrt(magY);
+            pMtx->mMtx[0][1] = invSqrtY * pMtx->mMtx[0][1];
+            pMtx->mMtx[1][1] = invSqrtY * pMtx->mMtx[1][1];
+            pMtx->mMtx[2][1] = invSqrtY * pMtx->mMtx[2][1];
+
+            f32 magZ = pMtx->mMtx[0][2] * pMtx->mMtx[0][2] + pMtx->mMtx[1][2] * pMtx->mMtx[1][2] + pMtx->mMtx[2][2] * pMtx->mMtx[2][2];
+            f32 invSqrtZ = JGeometry::TUtil< f32 >::inv_sqrt(magZ);
+            pMtx->mMtx[0][2] = invSqrtZ * pMtx->mMtx[0][2];
+            pMtx->mMtx[1][2] = invSqrtZ * pMtx->mMtx[1][2];
+            pMtx->mMtx[2][2] = invSqrtZ * pMtx->mMtx[2][2];
+        }
+
+        pMtx->mMtx[0][2] = zDir.x;
+        pMtx->mMtx[1][2] = zDir.y;
+        pMtx->mMtx[2][2] = zDir.z;
+    }
+
+    void turnMtxToYDirRate(TPos3f* pMtx, const TVec3f& rDir, f32 rate) {
+        TQuat4f quat;
+        pMtx->getQuat(quat);
+        MR::turnQuatYDirRate(&quat, quat, rDir, rate);
+        pMtx->setQuat(quat);
+    }
+}  // namespace MR

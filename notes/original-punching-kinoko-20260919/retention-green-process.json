@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-sensor-matrix-tests",
+    "--original-sensors"
+  ],
+  "pid": 67791,
+  "exit_code": 0,
+  "wall_seconds": 3.3102963749552146,
+  "binary_sha256": "07eeb68b29fd4a7a3b3f556cf670e220ccd021dd58cd283ac707358649359f26",
+  "pid_reaped": true
+}

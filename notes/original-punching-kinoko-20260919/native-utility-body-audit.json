@@ -1,0 +1,79 @@
+[
+  {
+    "function": "sendMsgEnemyAttackMsgToDir",
+    "donor": "decomp/src/Game/Util/ActorSensorUtil.cpp",
+    "native": "src/compat/GameActorSensorCompat.cpp",
+    "exact_body": true,
+    "sha256": "2256145a71f58b4b01cbf1c9bc526a8faa622ffaada406ab0ba712654157a083"
+  },
+  {
+    "function": "sendMsgEnemyAttackFlipWeak",
+    "donor": "decomp/src/Game/Util/ActorSensorUtil.cpp",
+    "native": "src/compat/GameActorSensorCompat.cpp",
+    "exact_body": true,
+    "sha256": "6882cb20399b8141c0440fee69ae4f874add736430621a52bdb2630b6f287203"
+  },
+  {
+    "function": "sendMsgEnemyAttackFlipWeakJump",
+    "donor": "decomp/src/Game/Util/ActorSensorUtil.cpp",
+    "native": "src/compat/GameActorSensorCompat.cpp",
+    "exact_body": true,
+    "sha256": "bf965bc3aa11b649426b056593a4b096bf768d20e7ce21784d95b3131d352bdb"
+  },
+  {
+    "function": "sendMsgEnemyAttackFlipToDir",
+    "donor": "decomp/src/Game/Util/ActorSensorUtil.cpp",
+    "native": "src/compat/GameActorSensorCompat.cpp",
+    "exact_body": true,
+    "sha256": "efa957784af57b5690dd45f06c6661c628845d0ac0ed2836f54a0af605fa544c"
+  },
+  {
+    "function": "sendMsgEnemyAttackFlipMaximumToDir",
+    "donor": "decomp/src/Game/Util/ActorSensorUtil.cpp",
+    "native": "src/compat/GameActorSensorCompat.cpp",
+    "exact_body": true,
+    "sha256": "9dd9b7fb061819a4f5c0fa3ad081bf15804da78e96520212db9bfaa9c25e9881"
+  },
+  {
+    "function": "sendMsgEnemyAttackToBindedSensor",
+    "donor": "decomp/src/Game/Util/ActorSensorUtil.cpp",
+    "native": "src/compat/GameActorSensorCompat.cpp",
+    "exact_body": true,
+    "sha256": "92acf94f2ed72a19f8c71da9bd582cc8577896c0addf8b100b452aa781a39dfc"
+  },
+  {
+    "function": "sendMsgToEnemyAttackBlow",
+    "donor": "decomp/src/Game/Util/ActorSensorUtil.cpp",
+    "native": "src/compat/GameActorSensorCompat.cpp",
+    "exact_body": true,
+    "sha256": "8c4db93869a3065e26d863302b90dbbf4a52a927d41a12e3ed683ac5d977e75d"
+  },
+  {
+    "function": "scaleMtxToDir",
+    "donor": "decomp/src/Game/Util/MtxUtil.cpp",
+    "native": "src/compat/MtxCompat.cpp",
+    "exact_body": true,
+    "sha256": "ff055faf8d0cbe8f4c6d6991ab514a0041de63de46e9fe8f3ca6150c6a1f7793"
+  },
+  {
+    "function": "orthogonalize",
+    "donor": "decomp/src/Game/Util/MtxUtil.cpp",
+    "native": "src/compat/MtxCompat.cpp",
+    "exact_body": true,
+    "sha256": "3ddef2e6be52fbd9d29f3bb61734c8c7637f5b4c10bbd3d5c7e2f6d0e354fc3f"
+  },
+  {
+    "function": "turnMtxToYDirRate",
+    "donor": "decomp/src/Game/Util/MtxUtil.cpp",
+    "native": "src/compat/MtxCompat.cpp",
+    "exact_body": true,
+    "sha256": "c46f6c3005e160310ed4bbc722324227ff277a7ca44ce0756e4300fd059d5c12"
+  },
+  {
+    "function": "turnQuatYDirRate",
+    "donor": "decomp/src/Game/Util/MathUtil.cpp",
+    "native": "src/compat/GameMathCompat.cpp",
+    "exact_body": true,
+    "sha256": "53277ef44868453df5bbd2eb80b94c2e76205e69c50db5714eb30f83b50b3a96"
+  }
+]

@@ -1,0 +1,7 @@
+{
+  "function": "calcStarPointerWorldVelocityDirectionOnPlane",
+  "exact_donor_match": true,
+  "native_value_return": "TVec2::subInline returns a value to preserve temporary lifetime in native C++; donor returns dangling reference",
+  "validation": "PASS original-process120 frames;30moving,53stationary,30second-ray-only parallel samples; actual system pointer director and scene camera",
+  "evidence": "native-pointer-o2-process3.log/json"
+}

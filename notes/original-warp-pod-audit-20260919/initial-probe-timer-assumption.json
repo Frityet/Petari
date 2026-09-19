@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-warp-pod-tests"
+  ],
+  "binary_sha256": "652f316b6ecb8768230cb66934b14a408626f9f54819966b378b0908857c6721",
+  "pid": 67075,
+  "exit_code": 1,
+  "timeout_terminated": false,
+  "process_still_exists": false,
+  "elapsed_seconds": 9.107848459039815,
+  "original_completed_360_frames": true,
+  "probe_and_retirement_pass": false,
+  "debugger_attached": false
+}

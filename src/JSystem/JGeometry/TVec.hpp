@@ -88,6 +88,12 @@ namespace JGeometry {
             y = lhs.y - rhs.y;
         }
 
+        [[nodiscard]] TVec2 subInline(const TVec2& value) const {
+            // The donor expresses a temporary as a reference return. Preserve
+            // the value operation without returning expired native storage.
+            return TVec2{x - value.x, y - value.y};
+        }
+
         void scale(f32 factor) {
             x = detail::castVectorComponent<T>(x * factor);
             y = detail::castVectorComponent<T>(y * factor);

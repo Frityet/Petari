@@ -1,0 +1,254 @@
+{
+  "Functor": [],
+  "addHitSensorAtJointEnemy": [
+    "0000000000000e84 T MR::addHitSensorAtJointEnemy(LiveActor*, char const*, char const*, unsigned short, float, JGeometry::TVec3<float> const&)"
+  ],
+  "addHitSensorEnemy": [
+    "0000000000000688 T MR::addHitSensorEnemy(LiveActor*, char const*, unsigned short, float, JGeometry::TVec3<float> const&)"
+  ],
+  "addShadowVolumeLine": [
+    "0000000000000470 T MR::addShadowVolumeLine(LiveActor*, char const*, LiveActor*, char const*, float, LiveActor*, char const*, float)"
+  ],
+  "addShadowVolumeSphere": [
+    "0000000000000420 T MR::addShadowVolumeSphere(LiveActor*, char const*, float)"
+  ],
+  "addVelocity": [
+    "0000000000003e6c T MR::addVelocity(LiveActor*, JGeometry::TVec3<float> const&)"
+  ],
+  "addVelocityKeepHeight": [
+    "00000000000030e0 T MR::addVelocityKeepHeight(LiveActor*, JGeometry::TVec3<float> const&, float, float)",
+    "0000000000003120 T MR::addVelocityKeepHeight(LiveActor*, JGeometry::TVec3<float> const&, float, float, float)"
+  ],
+  "attenuateVelocity": [
+    "0000000000003580 T MR::attenuateVelocity(LiveActor*, float)"
+  ],
+  "calcGravity": [
+    "0000000000000e38 T MR::calcGravity(LiveActor*)",
+    "0000000000000ef0 T MR::calcGravity(LiveActor*, JGeometry::TVec3<float> const&)"
+  ],
+  "calcPositionUpOffset": [
+    "0000000000000aac T MR::calcPositionUpOffset(JGeometry::TVec3<float>*, LiveActor const*, float)"
+  ],
+  "calcSensorDirectionNormalize": [
+    "0000000000002258 T MR::calcSensorDirectionNormalize(JGeometry::TVec3<float>*, HitSensor const*, HitSensor const*)"
+  ],
+  "calcSensorHorizonNormalize": [
+    "000000000000230c T MR::calcSensorHorizonNormalize(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&, HitSensor const*, HitSensor const*)"
+  ],
+  "calcStarPointerWorldVelocityDirectionOnPlane": [
+    "0000000000000660 T MR::calcStarPointerWorldVelocityDirectionOnPlane(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, int)"
+  ],
+  "calcVelocityLength": [
+    "0000000000003ecc T MR::calcVelocityLength(LiveActor const*)"
+  ],
+  "connectToSceneNoSilhouettedMapObj": [
+    "0000000000000e28 T MR::connectToSceneNoSilhouettedMapObj(LiveActor*)"
+  ],
+  "createJointDelegatorWithNullChildFunc": [],
+  "declareCameraRegisterVec": [
+    "0000000000001fd0 T MR::declareCameraRegisterVec(NameObj const*, unsigned int, JGeometry::TVec3<float>*)"
+  ],
+  "emitEffectHitBetweenSensors": [
+    "0000000000000988 T MR::emitEffectHitBetweenSensors(LiveActor*, HitSensor const*, HitSensor const*, float, char const*)"
+  ],
+  "getJMapInfoArg7WithInit": [
+    "0000000000000bb8 T MR::getJMapInfoArg7WithInit(JMapInfoIter const&, bool*)",
+    "0000000000000b88 T MR::getJMapInfoArg7WithInit(JMapInfoIter const&, int*)"
+  ],
+  "getShadowProjectionNormal": [
+    "00000000000006a8 T MR::getShadowProjectionNormal(LiveActor const*, char const*, JGeometry::TVec3<float>*)"
+  ],
+  "getShadowProjectionPos": [
+    "0000000000000404 T MR::getShadowProjectionPos(LiveActor const*, char const*, JGeometry::TVec3<float>*)"
+  ],
+  "getStarPointerScreenSpeed": [
+    "0000000000000478 T MR::getStarPointerScreenSpeed(int)"
+  ],
+  "initDefaultPos": [
+    "0000000000000520 T MR::initDefaultPos(LiveActor*, JMapInfoIter const&)"
+  ],
+  "initShadowController": [
+    "00000000000003f0 T MR::initShadowController(LiveActor*, unsigned int)"
+  ],
+  "initStarPointerTargetAtPos": [
+    "000000000000022c T MR::initStarPointerTargetAtPos(LiveActor*, float, JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const&)"
+  ],
+  "invalidateClipping": [
+    "0000000000000044 T MR::invalidateClipping(LiveActor*)"
+  ],
+  "isFirstStep": [
+    "00000000000013a0 T MR::isFirstStep(LayoutActor const*)",
+    "0000000000000034 T MR::isFirstStep(NerveExecutor const*)",
+    "0000000000000c58 T MR::isFirstStep(LiveActor const*)"
+  ],
+  "isGreaterStep": [
+    "0000000000002424 T MR::isGreaterStep(LayoutActor const*, int)",
+    "00000000000000c4 T MR::isGreaterStep(NerveExecutor const*, int)",
+    "0000000000000d38 T MR::isGreaterStep(LiveActor const*, int)"
+  ],
+  "isMsgInvincibleAttack": [
+    "0000000000002ad0 T MR::isMsgInvincibleAttack(unsigned int)"
+  ],
+  "isMsgLockOnStarPieceShoot": [
+    "0000000000002e88 T MR::isMsgLockOnStarPieceShoot(unsigned int)"
+  ],
+  "isMsgPlayerHipDrop": [
+    "00000000000029f0 T MR::isMsgPlayerHipDrop(unsigned int)"
+  ],
+  "isMsgPlayerSpinAttack": [
+    "00000000000029b8 T MR::isMsgPlayerSpinAttack(unsigned int)"
+  ],
+  "isMsgPlayerTrample": [
+    "00000000000029d4 T MR::isMsgPlayerTrample(unsigned int)"
+  ],
+  "isMsgStarPieceAttack": [
+    "0000000000002f30 T MR::isMsgStarPieceAttack(unsigned int)"
+  ],
+  "isMsgToEnemyAttackBlow": [
+    "0000000000002d38 T MR::isMsgToEnemyAttackBlow(unsigned int)"
+  ],
+  "isMsgToEnemyAttackTrample": [
+    "0000000000002d54 T MR::isMsgToEnemyAttackTrample(unsigned int)"
+  ],
+  "isSensorPlayer": [
+    "0000000000001d6c T MR::isSensorPlayer(HitSensor const*)"
+  ],
+  "isShadowProjected": [
+    "00000000000005d8 T MR::isShadowProjected(LiveActor const*, char const*)"
+  ],
+  "isStarPointerPointing2POnPressButton": [
+    "0000000000001e68 T MR::isStarPointerPointing2POnPressButton(LiveActor const*, char const*, bool, bool)"
+  ],
+  "isStep": [
+    "0000000000001464 T MR::isStep(LayoutActor const*, int)",
+    "0000000000000000 T MR::isStep(NerveExecutor const*, int)",
+    "0000000000000ae0 T MR::isStep(LiveActor const*, int)"
+  ],
+  "listenStageSwitchOnB": [
+    "0000000000000918 T MR::listenStageSwitchOnB(LiveActor*, MR::FunctorBase const&)"
+  ],
+  "makeMtxUpNoSupportPos": [
+    "0000000000000dc8 T MR::makeMtxUpNoSupportPos(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)"
+  ],
+  "normalizeOrZero": [
+    "0000000000002e8c T MR::normalizeOrZero(JGeometry::TVec3<float>*)",
+    "0000000000002f54 T MR::normalizeOrZero(JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*)",
+    "0000000000000000 T MR::normalizeOrZero(JGeometry::TVec2<float>*)"
+  ],
+  "offBind": [
+    "0000000000000568 T MR::offBind(LiveActor*)"
+  ],
+  "onBind": [
+    "000000000000025c T MR::onBind(LiveActor*)"
+  ],
+  "onCalcGravity": [
+    "00000000000002f4 T MR::onCalcGravity(LiveActor*)"
+  ],
+  "onCalcShadowOneTime": [
+    "000000000000101c t void (anonymous namespace)::for_each_shadow_controller<MR::onCalcShadowOneTime(LiveActor*, char const*)::$_0>(LiveActor*, char const*, MR::onCalcShadowOneTime(LiveActor*, char const*)::$_0&&)",
+    "0000000000000fec T MR::onCalcShadowOneTime(LiveActor*, char const*)"
+  ],
+  "orthogonalize": [
+    "000000000000151c T MR::orthogonalize(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*)"
+  ],
+  "reboundVelocityFromCollision": [
+    "0000000000003c34 T MR::reboundVelocityFromCollision(LiveActor*, float, float, float)"
+  ],
+  "resetPosition": [
+    "0000000000002588 T MR::resetPosition(LiveActor*)",
+    "000000000000264c T MR::resetPosition(LiveActor*, char const*)",
+    "0000000000002614 T MR::resetPosition(LiveActor*, JGeometry::TVec3<float> const&)"
+  ],
+  "scaleMtxToDir": [
+    "00000000000011bc T MR::scaleMtxToDir(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)"
+  ],
+  "scatterStarPiecePlayer": [
+    "0000000000000d44 T MR::scatterStarPiecePlayer(unsigned int)"
+  ],
+  "sendMsgEnemyAttackFlipMaximumToDir": [
+    "000000000000341c T MR::sendMsgEnemyAttackFlipMaximumToDir(HitSensor*, HitSensor*, JGeometry::TVec3<float> const&)"
+  ],
+  "sendMsgEnemyAttackFlipToDir": [
+    "00000000000033e4 T MR::sendMsgEnemyAttackFlipToDir(HitSensor*, HitSensor*, JGeometry::TVec3<float> const&)"
+  ],
+  "sendMsgEnemyAttackFlipWeak": [
+    "0000000000003384 T MR::sendMsgEnemyAttackFlipWeak(HitSensor*, HitSensor*)"
+  ],
+  "sendMsgEnemyAttackFlipWeakJump": [
+    "00000000000033b4 T MR::sendMsgEnemyAttackFlipWeakJump(HitSensor*, HitSensor*)"
+  ],
+  "sendMsgEnemyAttackToBindedSensor": [
+    "0000000000003454 T MR::sendMsgEnemyAttackToBindedSensor(LiveActor*, HitSensor*)"
+  ],
+  "sendMsgPush": [
+    "00000000000025b0 T MR::sendMsgPush(HitSensor*, HitSensor*)"
+  ],
+  "sendMsgToEnemyAttackBlow": [
+    "0000000000003484 T MR::sendMsgToEnemyAttackBlow(HitSensor*, HitSensor*)"
+  ],
+  "separateScalarAndDirection": [
+    "0000000000003058 T MR::separateScalarAndDirection(float*, JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&)",
+    "00000000000000ac T MR::separateScalarAndDirection(float*, JGeometry::TVec2<float>*, JGeometry::TVec2<float> const&)"
+  ],
+  "setBaseTRMtx": [
+    "0000000000000124 T MR::setBaseTRMtx(LiveActor*, float (*) [4])",
+    "0000000000000164 T MR::setBaseTRMtx(LiveActor*, JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>> const&)",
+    "00000000000001a4 T MR::setBaseTRMtx(LiveActor*, JGeometry::TQuat4<float> const&)"
+  ],
+  "setShadowDropDirectionPtr": [
+    "000000000000086c T MR::setShadowDropDirectionPtr(LiveActor*, char const*, JGeometry::TVec3<float> const*)"
+  ],
+  "setShadowDropPositionPtr": [
+    "0000000000000c2c T MR::setShadowDropPositionPtr(LiveActor*, char const*, JGeometry::TVec3<float> const*)"
+  ],
+  "start2PAttackAssistSound": [
+    "00000000000021ec T MR::start2PAttackAssistSound()"
+  ],
+  "startBlowHitSound": [
+    "0000000000002084 T MR::startBlowHitSound(LiveActor const*)"
+  ],
+  "startBrk": [
+    "0000000000000ff8 T MR::startBrk(LiveActor const*, char const*)"
+  ],
+  "startLevelSound": [
+    "00000000000009cc T MR::startLevelSound(LiveActor const*, JAISoundID, int, int, int)",
+    "000000000000092c T MR::startLevelSound(LiveActor const*, char const*, int, int, int)"
+  ],
+  "startSound": [
+    "00000000000007c4 T MR::startSound(LiveActor const*, JAISoundID, int, int)",
+    "000000000000050c T MR::startSound(LiveActor const*, char const*, int, int)"
+  ],
+  "startSoundPlayer": [
+    "00000000000018f8 T MR::startSoundPlayer(char const*, int)"
+  ],
+  "startSpinHitSound": [
+    "0000000000002054 T MR::startSpinHitSound(LiveActor const*)"
+  ],
+  "stopScene": [
+    "0000000000002e6c T MR::stopScene(int)"
+  ],
+  "tryRumblePadStrong": [
+    "0000000000002f98 T MR::tryRumblePadStrong(void const*, int)"
+  ],
+  "tryRumblePadWeak": [
+    "0000000000003008 T MR::tryRumblePadWeak(void const*, int)"
+  ],
+  "turnMtxToYDirRate": [
+    "0000000000001a8c T MR::turnMtxToYDirRate(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, JGeometry::TVec3<float> const&, float)"
+  ],
+  "useStageSwitchReadB": [
+    "00000000000000a4 T MR::useStageSwitchReadB(LiveActor*, JMapInfoIter const&)"
+  ],
+  "useStageSwitchSleep": [
+    "00000000000001ec T MR::useStageSwitchSleep(LiveActor*, JMapInfoIter const&)"
+  ],
+  "validateClipping": [
+    "0000000000000000 T MR::validateClipping(LiveActor*)"
+  ],
+  "vecBlend": [
+    "00000000000014a8 T MR::vecBlend(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*, float)"
+  ],
+  "zeroVelocity": [
+    "0000000000003e14 T MR::zeroVelocity(LiveActor*)"
+  ]
+}

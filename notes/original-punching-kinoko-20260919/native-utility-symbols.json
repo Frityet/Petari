@@ -1,0 +1,35 @@
+{
+  "sendMsgEnemyAttackMsgToDir": [
+    "0000000000003278 T MR::sendMsgEnemyAttackMsgToDir(unsigned int, HitSensor*, HitSensor*, JGeometry::TVec3<float> const&)"
+  ],
+  "sendMsgEnemyAttackFlipWeak": [
+    "0000000000003384 T MR::sendMsgEnemyAttackFlipWeak(HitSensor*, HitSensor*)"
+  ],
+  "sendMsgEnemyAttackFlipWeakJump": [
+    "00000000000033b4 T MR::sendMsgEnemyAttackFlipWeakJump(HitSensor*, HitSensor*)"
+  ],
+  "sendMsgEnemyAttackFlipToDir": [
+    "00000000000033e4 T MR::sendMsgEnemyAttackFlipToDir(HitSensor*, HitSensor*, JGeometry::TVec3<float> const&)"
+  ],
+  "sendMsgEnemyAttackFlipMaximumToDir": [
+    "000000000000341c T MR::sendMsgEnemyAttackFlipMaximumToDir(HitSensor*, HitSensor*, JGeometry::TVec3<float> const&)"
+  ],
+  "sendMsgEnemyAttackToBindedSensor": [
+    "0000000000003454 T MR::sendMsgEnemyAttackToBindedSensor(LiveActor*, HitSensor*)"
+  ],
+  "sendMsgToEnemyAttackBlow": [
+    "0000000000003484 T MR::sendMsgToEnemyAttackBlow(HitSensor*, HitSensor*)"
+  ],
+  "scaleMtxToDir": [
+    "00000000000011bc T MR::scaleMtxToDir(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)"
+  ],
+  "orthogonalize": [
+    "000000000000151c T MR::orthogonalize(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*)"
+  ],
+  "turnMtxToYDirRate": [
+    "0000000000001a8c T MR::turnMtxToYDirRate(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, JGeometry::TVec3<float> const&, float)"
+  ],
+  "turnQuatYDirRate": [
+    "000000000000512c T MR::turnQuatYDirRate(JGeometry::TQuat4<float>*, JGeometry::TQuat4<float> const&, JGeometry::TVec3<float> const&, float)"
+  ]
+}

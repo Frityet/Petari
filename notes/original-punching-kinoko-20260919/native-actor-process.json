@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-punching-kinoko-tests"
+  ],
+  "binary_sha256": "ae056efa577fc534556ae3ee529bc0ec5a7996779e4b109b512abe7ac34005b7",
+  "exit_code": 1,
+  "timeout_terminated": false,
+  "elapsed_seconds": 1.6829743749694899,
+  "pid": 65561,
+  "log": "native-actor-process.log"
+}

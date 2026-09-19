@@ -1,5 +1,6 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/LiveActorGroupArray.hpp"
+#include "Game/NameObj/NameObjFinder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
@@ -97,6 +98,12 @@ namespace {
 }  // namespace
 
 namespace MR {
+    LiveActorGroup* joinToGroup(LiveActor* pActor, const char* pGroupName) {
+        LiveActorGroup* pGroup = (LiveActorGroup*)NameObjFinder::find(pGroupName);
+        pGroup->registerActor(pActor);
+        return pGroup;
+    }
+
     MsgSharedGroup* joinToGroupArray(LiveActor* pActor, const JMapInfoIter& rIter, const char* pName, s32 maxCount) {
         if (!rIter.isValid()) {
             return nullptr;

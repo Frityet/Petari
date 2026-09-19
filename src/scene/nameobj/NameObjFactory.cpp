@@ -21,10 +21,12 @@
 #include "Game/MapObj/InvisiblePolygonObjGCapture.hpp"
 #include "Game/MapObj/PlantGroup.hpp"
 #include "Game/MapObj/PowerStar.hpp"
+#include "Game/MapObj/PunchingKinoko.hpp"
 #include "Game/MapObj/PowerStarAppearPoint.hpp"
 #include "Game/MapObj/StarPieceGroup.hpp"
 #include "Game/MapObj/ShockWaveGenerator.hpp"
 #include "Game/MapObj/SimpleMapObj.hpp"
+#include "Game/MapObj/WarpPod.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
@@ -418,6 +420,11 @@ namespace {
             "CutBush",
         },
         NameObjFactory::Name2CreateFunc{
+            "WarpPod",
+            create_supported_name_obj<WarpPod>,
+            "WarpPod",
+        },
+        NameObjFactory::Name2CreateFunc{
             "EarthenPipe",
             create_supported_name_obj<EarthenPipe>,
             "EarthenPipe",
@@ -466,6 +473,11 @@ namespace {
             "Rosetta",
             create_supported_name_obj<Rosetta>,
             nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "PunchingKinoko",
+            create_supported_name_obj<PunchingKinoko>,
+            "PunchingKinoko",
         },
         NameObjFactory::Name2CreateFunc{
             "RunawayRabbitCollect",

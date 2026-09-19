@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-sensor-matrix-tests",
+    "--original-sensors"
+  ],
+  "pid": 66898,
+  "exit_code": 1,
+  "wall_seconds": 1.7275853329338133,
+  "binary_sha256": "df3f38a7c2ccaf4936a0deeb3760c6bc03bc08412fef9247fd2a9fefbea57be0",
+  "pid_reaped": true,
+  "expected_failure": "Retail DrawStates flag mask0x200 differs from previous native0x00400000"
+}

@@ -1,0 +1,16 @@
+{
+  "Game/MapObj/PunchingKinoko": {
+    "native_cpp_sha256": "1d531f0e86462c9d918c1444080f334243baee5f6a6ad6ee2b626c53b627ce5b",
+    "donor_cpp_sha256": "da467f075e584b99e305c576d9bf197d09e7ebc0c501248855af87c03599b51c",
+    "literal_wrappers": 14,
+    "header_exact": true,
+    "normalized_cpp_exact": true
+  },
+  "Game/Map/GroundChecker": {
+    "native_cpp_sha256": "a0bc6aa01dfb88b40cd652bcc559e901d5c23d14ee1210c84edde83721823f57",
+    "donor_cpp_sha256": "a0bc6aa01dfb88b40cd652bcc559e901d5c23d14ee1210c84edde83721823f57",
+    "literal_wrappers": 0,
+    "header_exact": true,
+    "normalized_cpp_exact": true
+  }
+}

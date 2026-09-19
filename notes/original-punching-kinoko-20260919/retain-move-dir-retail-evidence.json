@@ -1,0 +1,21 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "default_threshold": {
+    "address": "0x806BFDE8",
+    "bytes": "3d75c28f",
+    "float": 0.05999999865889549
+  },
+  "startup_threshold": {
+    "address": "0x806BFDB0",
+    "float": 0.10000000149011612
+  },
+  "animation": {
+    "address": "0x805C8CE9",
+    "cp932": "その場足踏み"
+  },
+  "draw_flag_instruction": {
+    "address": "0x802EC2D0",
+    "bytes": "60630200",
+    "operation": "ori r3,r3,0x200; Mario DrawStates bit index0x16 (MSB-first)"
+  }
+}

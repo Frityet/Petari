@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-punching-kinoko-tests"
+  ],
+  "binary_sha256": "7c9f1215870f3d29af0db8a83de06fd1a44ec9f75ef8442ccaab23aaa9695beb",
+  "exit_code": 0,
+  "timeout_terminated": false,
+  "elapsed_seconds": 3.67849891691003,
+  "pid": 67278,
+  "log": "native-placement-process.log"
+}

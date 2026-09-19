@@ -60,6 +60,7 @@ namespace smgpc::runtime {
                         {"rotation", vector(value.mRotation)}, {"velocity", vector(value.mVelocity)},
                         {"gravity", vector(value.mGravity)}, {"dead", value.mFlag.mIsDead},
                         {"hidden", value.mFlag.mIsHiddenModel}, {"clipped", value.mFlag.mIsClipped},
+                        {"invalid_clipping", value.mFlag.mIsInvalidClipping},
                         {"nerve", spine(value.mSpine)}};
             if (value.mName) {
                 try { result["name"] = resource::decode_cp932(value.mName); }

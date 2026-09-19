@@ -3363,6 +3363,18 @@ target("smg-pc-original-process-collision-area-tests")
         group = "original-process", rundir = os.projectdir(), realtime_output = true
     })
 
+target("smg-pc-original-sensor-matrix-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/original-process")
+    set_rundir(os.projectdir())
+    add_files("OriginalSensorMatrixTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-app", "aurora-main"}
+    add_tests("original_sensor_matrix_math", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
+
 target("smg-pc-original-process-shadow-line-tests")
     set_kind("binary")
     set_default(false)
@@ -3371,5 +3383,27 @@ target("smg-pc-original-process-shadow-line-tests")
     add_files("OriginalProcessShadowVolumeLineTests.cpp", "../aurora/lib/compat.cpp")
     add_deps {"smg-pc-app", "aurora-main"}
     add_tests("original_process_shadow_line", {
+        group = "original-process", rundir = os.projectdir(), realtime_output = true
+    })
+
+target("smg-pc-original-process-punching-kinoko-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/original-process")
+    set_rundir(os.projectdir())
+    add_files("OriginalProcessPunchingKinokoTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-app", "aurora-main"}
+    add_tests("original_process_punching_kinoko", {
+        group = "original-process", rundir = os.projectdir(), realtime_output = true
+    })
+
+target("smg-pc-original-process-warp-pod-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/original-process")
+    set_rundir(os.projectdir())
+    add_files("OriginalProcessWarpPodTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-app", "aurora-main"}
+    add_tests("original_process_warp_pod", {
         group = "original-process", rundir = os.projectdir(), realtime_output = true
     })

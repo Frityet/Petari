@@ -1,0 +1,20 @@
+{
+  "binary_sha256": "ae056efa577fc534556ae3ee529bc0ec5a7996779e4b109b512abe7ac34005b7",
+  "symbols": {
+    "PunchingKinoko::init(": [
+      "000000010013e69c T PunchingKinoko::init(JMapInfoIter const&)"
+    ],
+    "PunchingKinoko::control(": [
+      "000000010013ebd4 T PunchingKinoko::control()"
+    ],
+    "PunchingKinoko::ballMtxCallBack(": [
+      "000000010013e9d8 T PunchingKinoko::ballMtxCallBack(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, JointControllerInfo const&)"
+    ],
+    "GroundChecker::GroundChecker(": [
+      "0000000100096020 T GroundChecker::GroundChecker(char const*, float, float)"
+    ],
+    "MR::calcPosBetweenSensors(": [
+      "00000001002456cc T MR::calcPosBetweenSensors(JGeometry::TVec3<float>*, HitSensor const*, HitSensor const*, float)"
+    ]
+  }
+}

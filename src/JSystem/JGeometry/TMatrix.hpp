@@ -252,6 +252,18 @@ namespace JGeometry {
             quaternion.makeMtx(this->mMtx);
         }
 
+        void setScale(f32 x, f32 y, f32 z) {
+            this->mMtx[0][0] = x;
+            this->mMtx[0][1] = 0.0f;
+            this->mMtx[0][2] = 0.0f;
+            this->mMtx[1][0] = 0.0f;
+            this->mMtx[1][1] = y;
+            this->mMtx[1][2] = 0.0f;
+            this->mMtx[2][0] = 0.0f;
+            this->mMtx[2][1] = 0.0f;
+            this->mMtx[2][2] = z;
+        }
+
         f32 getRotate(TVec3f& rAxis) const {
             TQuat4f rot;
             getQuat(rot);

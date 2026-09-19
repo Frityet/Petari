@@ -1024,3 +1024,14 @@ namespace MR {
         return 0.0f;
     }
 }
+
+// Original shared utilities from Game/Util/MathUtil.cpp.
+namespace MR {
+    void turnQuatYDirRate(TQuat4f* pDst, const TQuat4f& rSrc, const TVec3f& rTo, f32 rate) {
+        TVec3f yDir;
+        rSrc.getYDir(yDir);
+        TQuat4f rot;
+        rot.setRotate(yDir, rTo, rate);
+        pDst->mult(rot, rSrc);
+    }
+}  // namespace MR
