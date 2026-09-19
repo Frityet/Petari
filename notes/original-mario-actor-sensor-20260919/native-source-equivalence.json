@@ -1,0 +1,10 @@
+{
+  "result": "PASS",
+  "cp932_literals": 26,
+  "canonical_sha256": "7ec5fdd3c5f93b7b4c4df8ad4db71448716ff992a01b65d8c24e09424ac6ac89",
+  "native_sha256": "143bf55841a2f383afb1da288af456e85e54473d791dbbc1d006456aa0f485d5",
+  "normalization": [
+    "Remove CP932 include and literal wrappers",
+    "startPadVib zero uses0U instead of Wii32-bit0UL to selectu32 overload onLP64; native unsigned long would also match null-pointer overload"
+  ]
+}

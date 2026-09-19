@@ -1,0 +1,74 @@
+{
+  "retail_dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "retail_instruction_words": {
+    "0x802ea01c": "7c7c1b78",
+    "0x802ea3d0": "807c0004",
+    "0x802ea3d4": "c03c01c8",
+    "0x802ea3d8": "8063023c",
+    "0x802ea3e8": "c0040484",
+    "0x802ea3ec": "fc010040",
+    "0x802ea3f0": "40800010",
+    "0x802ea3f8": "b01c03c0"
+  },
+  "finding": "mainMove native uses actor._1C8; retail lfs uses Mario this r28+0x1C8 = mStickPos.z, matching canonical donor",
+  "canonical_compilation_functions": [
+    {
+      "name": "mainMove__5MarioFv",
+      "size": "6692",
+      "match_percent": 98.94262
+    },
+    {
+      "name": "isEnableTurn__5MarioFv",
+      "size": "548",
+      "match_percent": 99.78102
+    },
+    {
+      "name": "recordTurnSlipAngle__5MarioFv",
+      "size": "96",
+      "match_percent": 100.0
+    },
+    {
+      "name": "decideInertia__5MarioFf",
+      "size": "708",
+      "match_percent": 99.80226
+    },
+    {
+      "name": "decideInertiaOnIce__5MarioFf",
+      "size": "108",
+      "match_percent": 99.44444
+    },
+    {
+      "name": "decideInertiaOnSlip__5MarioFf",
+      "size": "96",
+      "match_percent": 99.583336
+    },
+    {
+      "name": "calcShadowDir__5MarioFRCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+      "size": "276",
+      "match_percent": 99.927536
+    },
+    {
+      "name": "calcMoveDir__5MarioFffPQ29JGeometry8TVec3<f>b",
+      "size": "836",
+      "match_percent": 99.832535
+    },
+    {
+      "name": "checkLockOnHoming__5MarioFv",
+      "size": "168",
+      "match_percent": 99.88095
+    },
+    {
+      "name": "doLockOnHoming__5MarioFv",
+      "size": "224",
+      "match_percent": 99.91071
+    },
+    {
+      "name": "fixPositionInTower__5MarioFv",
+      "size": "196",
+      "match_percent": 99.89796
+    }
+  ],
+  "changes_made": true,
+  "change_scope": "Single expression mActor->_1C8 -> mStickPos.z after checkpoint b04188e8f",
+  "native_validation": "Shared Game compile/link PASS; actual original-process2100frames/exit0 in injected-action-process2, ordinary execution coverage only"
+}

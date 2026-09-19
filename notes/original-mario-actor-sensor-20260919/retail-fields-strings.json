@@ -1,0 +1,119 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "trample_strings": [
+    {
+      "load_address": "0x802bf418",
+      "load_instruction": "0x389f013c",
+      "string_address": "0x805b8cf4",
+      "cp932_hex": "835783838393837682d382dd31",
+      "text": "ジャンプふみ1"
+    },
+    {
+      "load_address": "0x802bf434",
+      "load_instruction": "0x389f014a",
+      "string_address": "0x805b8d02",
+      "cp932_hex": "835783838393837682d382dd32",
+      "text": "ジャンプふみ2"
+    },
+    {
+      "load_address": "0x802bf450",
+      "load_instruction": "0x389f0158",
+      "string_address": "0x805b8d10",
+      "cp932_hex": "835783838393837682d382dd33",
+      "text": "ジャンプふみ3"
+    },
+    {
+      "load_address": "0x802bf49c",
+      "load_instruction": "0x389f0166",
+      "string_address": "0x805b8d1e",
+      "cp932_hex": "837a83628370815b82d382dd835783838393837641",
+      "text": "ホッパーふみジャンプA"
+    },
+    {
+      "load_address": "0x802bf4b0",
+      "load_instruction": "0x389f017c",
+      "string_address": "0x805b8d34",
+      "cp932_hex": "837a83628370815b82d382dd835783838393837642",
+      "text": "ホッパーふみジャンプB"
+    },
+    {
+      "load_address": "0x802bf4c0",
+      "load_instruction": "0x389f0192",
+      "string_address": "0x805b8d4a",
+      "cp932_hex": "90ba93a582dd",
+      "text": "声踏み"
+    },
+    {
+      "load_address": "0x802bf4d0",
+      "load_instruction": "0x389f0199",
+      "string_address": "0x805b8d51",
+      "cp932_hex": "82d382dd82c282d482b5",
+      "text": "ふみつぶし"
+    }
+  ],
+  "other_fields": {
+    "0x802becfc": "80030008",
+    "0x802bed00": "540087ff",
+    "0x802bf07c": "8005001c",
+    "0x802bf084": "54003fff",
+    "0x802bf0c0": "a00403a4",
+    "0x802bfa60": "c0830718"
+  },
+  "function_matches": [
+    {
+      "name": "setupSensors__10MarioActorFv",
+      "size": "332",
+      "match_percent": 99.39759
+    },
+    {
+      "name": "updateHitSensor__10MarioActorFP9HitSensor",
+      "size": "1120",
+      "match_percent": 99.19643
+    },
+    {
+      "name": "doTrampleJump__10MarioActorFP9HitSensor",
+      "size": "548",
+      "match_percent": 99.41606
+    },
+    {
+      "name": "trampleJump__10MarioActorFff",
+      "size": "704",
+      "match_percent": 99.77273
+    },
+    {
+      "name": "attackSensor__10MarioActorFP9HitSensorP9HitSensor",
+      "size": "380",
+      "match_percent": 100.0
+    },
+    {
+      "name": "sendMsgToSensor__10MarioActorFP9HitSensorUl",
+      "size": "80",
+      "match_percent": 100.0
+    },
+    {
+      "name": "resetSensorCount__10MarioActorFv",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "recordScoutingObject__10MarioActorFP9HitSensor",
+      "size": "232",
+      "match_percent": 99.82758
+    },
+    {
+      "name": "updateScouter__10MarioActorFv",
+      "size": "652",
+      "match_percent": 95.7546
+    },
+    {
+      "name": "initScouter__10MarioActorFv",
+      "size": "120",
+      "match_percent": 99.5
+    },
+    {
+      "name": "initForJump__10MarioActorFv",
+      "size": "16",
+      "match_percent": 100.0
+    }
+  ]
+}

@@ -3407,3 +3407,12 @@ target("smg-pc-original-process-warp-pod-tests")
     add_tests("original_process_warp_pod", {
         group = "original-process", rundir = os.projectdir(), realtime_output = true
     })
+
+target("smg-pc-original-process-trample-jump-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/original-process")
+    set_rundir(os.projectdir())
+    add_files("OriginalProcessTrampleJumpTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-app", "aurora-main"}
+    add_tests("original_process_trample_jump", {group = "original-process", rundir = os.projectdir(), realtime_output = true})

@@ -142,7 +142,7 @@ void Mario::mainMove() {
             _420 = 0;
             return;
         }
-    } else if (mActor->_1C8 < mActor->getConst().getTable()->mWallBackHangStickPower) {
+    } else if (mStickPos.z < mActor->getConst().getTable()->mWallBackHangStickPower) {
         _3C0 = 0;
     } else if (mDrawStates._A) {
         _3C0 = 0;

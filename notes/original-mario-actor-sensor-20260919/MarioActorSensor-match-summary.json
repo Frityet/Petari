@@ -1,0 +1,43 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "retail_start": "0x802beaac",
+  "retail_end": "0x802bfb84",
+  "retail_text_bytes": 4312,
+  "retail_reference_comparison": "PASS (only ELF relocation bits masked)",
+  "relocations": 230,
+  "sections": [
+    {
+      "name": ".text",
+      "size": "4312",
+      "match_percent": 96.46382
+    },
+    {
+      "name": ".ctors",
+      "size": "4",
+      "match_percent": 0.0
+    },
+    {
+      "name": ".data",
+      "size": "584",
+      "match_percent": 83.665344
+    },
+    {
+      "name": ".sdata",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": ".sdata2",
+      "size": "72",
+      "match_percent": 88.23529
+    }
+  ],
+  "functions": [
+    {
+      "name": "trampleJump__10MarioActorFff",
+      "size": "704",
+      "match_percent": 99.77273
+    }
+  ],
+  "canonical_source_sha256": "7ec5fdd3c5f93b7b4c4df8ad4db71448716ff992a01b65d8c24e09424ac6ac89"
+}

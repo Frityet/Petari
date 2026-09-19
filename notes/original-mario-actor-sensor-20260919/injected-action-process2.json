@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-trample-jump-tests"
+  ],
+  "binary_sha256": "aaa0a27c84258e624fe64155c8615199ff2fb801b0efa27fc335471c8a64bd9c",
+  "pid": 75358,
+  "exit_code": 0,
+  "wall_seconds": 48.6878760419786,
+  "timed_out": false,
+  "pid_reaped": true,
+  "completed_2100_frames": true,
+  "injected_action_assertions_passed": true,
+  "scope": "Injected public action under actual owners, not a sensor-driven stomp"
+}
