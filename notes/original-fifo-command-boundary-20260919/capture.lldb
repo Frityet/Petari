@@ -1,0 +1,18 @@
+settings set interpreter.stop-command-source-on-error false
+thread select 9
+thread backtrace
+frame select 10
+frame variable data size epoch reader
+frame select 8
+frame variable
+frame select 11
+frame variable target revision decoded start size end result
+frame variable *stream
+frame variable sBreakPoint sFrameActive sPendingDraws
+memory read --binary --outfile /Users/frityet/Projects/petari/notes/original-fifo-command-boundary-20260919/boundary-bytes.bin --count 256 --size 1 `stream->data + start + size - 128`
+memory read --format x --count 96 --size 1 `stream->data + start + size - 48`
+thread select 1
+frame select 8
+frame variable target processed stream
+frame variable *stream
+thread backtrace

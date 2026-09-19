@@ -1,0 +1,9 @@
+{
+  "aurora/lib/gx/command_processor.cpp": "9a663d29cfa8b3207279b798bb3b14bc61a3fd8504dc0d6eb9297e5818c859d8",
+  "aurora/lib/gx/command_processor.hpp": "657df198760e3cdd406f2dc2141b83dd4c91c39ec57155f1b0f0e76b9afdb781",
+  "aurora/lib/gx/fifo.cpp": "75e2eab53496203a0fe17a215c59aedd2a112f613fcbeb8c8f3ecebb16f94a98",
+  "aurora/lib/gx/fifo.hpp": "4135a8cfafa0d3b8348df01ab4fbd4d35444706df64bc90155c6d6a6314e7a29",
+  "aurora/tests/gx_fifo_breakpoint_test.cpp": "75b809a115fc09a417416143b1323cfe6a950b5e84c652e9a82a6afedb66494b",
+  "aurora/tests/gx_fifo_test.cpp": "bc2a3e3d090da1d882461727c153f9c5dd6321165064a9c256966ccccf68afdd",
+  "test_binary": "e60fcf532d0f08254da03722aa5e1c9e55de64d620673956892f93bc5e6929ff"
+}
