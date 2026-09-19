@@ -60,4 +60,7 @@ void DisabledAudioBackend::resume_reset() noexcept { _reset_requested = false; }
 void DisabledAudioBackend::stop_all() noexcept {
     // The backend owns no voices. No audible/hardware completion is asserted.
 }
+void DisabledAudioBackend::movement() {
+    if (_objects) _objects->update_scene_controls();
+}
 }

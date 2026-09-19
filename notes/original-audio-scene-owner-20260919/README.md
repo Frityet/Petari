@@ -15,9 +15,10 @@ preserves its original player-selection argument when loading a stage.
 
 `AudWrap::getSceneMgr()` borrows this actual service-owned object. Querying an
 absent owner still throws. The scene-start adapter rejects a nonactive owner and
-performs the original `_4 = 0` and `_1D = false` assignments. Retail output-only
-operations on AudSystem voice flags, volume, effect and Wii-speaker owners are
-omitted under the existing explicitly disabled-output policy. This does not
+performs the original `_4 = 0` and `_1D = false` assignments. The subsequent
+output-control implementation also resets the actual service-owned category
+volume controller and SE permission flags at this boundary. Effects and
+Wii-speaker owners remain absent under the explicitly disabled-output policy. This does not
 create an AudSystem, loaded wave bank, sound voice, rhythm graph or output device.
 
 The existing native audio bypass was removed from `GameScene::start()`, restoring
@@ -39,7 +40,17 @@ owner rejection and three heap retirement cycles. `--backend-only` also checks
 scene-owner publication from the original OS initialization worker, real wrapper
 player selection, flag reset and retirement alongside existing name-resource,
 bank-request and reset checks. Root coordinates builds to avoid concurrent Xmake
-mutations. Build/runtime results will be recorded after execution.
+mutations.
+
+Both focused modes passed on the rebuilt native executable:
+
+- `../gateway-compat-20260919/audio-scene-test.log`: `--scene-only` passes.
+- `backend-only.log`: `--backend-only` passes against the existing extracted
+  Korean retail fixture using `SMGPC_RETAIL_FILES_ROOT`.
+- `../native-startup-without-wii-strap-20260919/startup.log`: the original process
+  reaches Game/FileSelect and completes 300 frames with the restored ordinary
+  GameScene start call. The bounded debugger stopped on a worker-cancellation
+  exception after frame completion; clean teardown is not claimed by that run.
 
 The native production build and the focused test target passed. Both
 `--scene-only` and `--backend-only` passed (the latter uses the retained local
@@ -50,8 +61,17 @@ was the independent gravity query restriction, not scene audio state.
 ## Remaining audio boundary
 
 Direct `AudWrap::getSystem()` requests remain explicit unsupported operations;
-no substitute AudSystem is introduced. In particular, unchanged SoundUtil
-submit/permit-SE functions write AudSystem `_82B`/`_82C` directly, while volume,
-limited-sound and chord queries require other original audio owners. Those
-interfaces are separate from this implemented logical scene-state contract.
-Full wave-bank loading, effects, rhythm and audible output remain disabled.
+no substitute AudSystem is introduced. The later native SoundUtil provider
+routes volume preset/recovery and submit/permit-SE controls to the actual
+disabled-audio service while preserving the remaining original helper bodies.
+The original Game utility remains unchanged. Limited-sound, chord and other
+unsupported AudSystem accesses still reject absent owners. Full wave-bank
+loading, effects, rhythm and audible output remain disabled in the original
+process.
+
+The output-control regression reruns passed (`--scene-only`, `--backend-only`
+and original category-volume tests), and the integrated original-process
+HeavensDoorGalaxy scenario 1 run completed 1800 frames with exit 0 after crossing
+the previous first-dialogue volume exception. Evidence and the exact binary
+hash are in `../original-audio-output-controls-20260919/README.md`. That bounded
+no-input run does not establish dialogue input, the rabbit chase or Rosalina.

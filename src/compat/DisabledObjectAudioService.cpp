@@ -99,7 +99,7 @@ private:
 
 DisabledObjectAudioService::DisabledObjectAudioService(std::shared_ptr<smgpc::compat::JkrHeapRuntime> heaps,
                                                        smgpc::runtime::JAudioPlaybackService* playback)
-    : _heaps(std::move(heaps)), _system_object(nullptr, 0, &_heaps->root_heap()),
+    : _heaps(std::move(heaps)), _system_object(nullptr, 0, &_heaps->root_heap()), _playback(playback),
       _names(playback ? std::make_unique<OriginalAudioNameLifetime>(_heaps, *playback) : nullptr),
       _previous(active_service) {
     active_service = this;
@@ -113,6 +113,38 @@ DisabledObjectAudioService::DisabledObjectAudioService(JKRHeap& heap, std::vecto
 DisabledObjectAudioService::~DisabledObjectAudioService() {
     active_service = _previous;
 }
+void DisabledObjectAudioService::set_trigger_sound_permitted(bool permitted) {
+    _trigger_sound_permitted = permitted;
+    if (_playback) _playback->set_trigger_sound_permitted(permitted);
+}
+void DisabledObjectAudioService::set_level_sound_permitted(bool permitted) {
+    _level_sound_permitted = permitted;
+    if (_playback) _playback->set_level_sound_permitted(permitted);
+}
+bool DisabledObjectAudioService::is_sound_permitted() const {
+    return _playback ? _playback->is_sound_permitted() : _trigger_sound_permitted && _level_sound_permitted;
+}
+void DisabledObjectAudioService::set_sound_volume_setting(s32 volume_set, u32 steps) {
+    if (_playback) _playback->set_sound_volume_setting(volume_set, steps);
+    else _volumes.controller().setSeVolumeSetTrig(volume_set, steps);
+}
+void DisabledObjectAudioService::recover_sound_volume_setting(u32 steps) {
+    if (_playback) _playback->recover_sound_volume_setting(steps);
+    else _volumes.controller().recoverSeVolumeSet(steps);
+}
+float DisabledObjectAudioService::sound_category_gain(u32 sound_id) const {
+    return _playback ? _playback->sound_category_gain(sound_id) : _volumes.sound_gain(sound_id);
+}
+void DisabledObjectAudioService::reset_scene_controls() {
+    _volumes.reset();
+    _trigger_sound_permitted = true;
+    _level_sound_permitted = true;
+    if (_playback) _playback->reset_output_controls();
+}
+void DisabledObjectAudioService::update_scene_controls() {
+    // RuntimeContext advances its concrete PCM backend at its own frame edge.
+    if (!_playback) _volumes.update();
+}
 std::unique_ptr<DisabledObjectAudioService> make_disabled_object_audio_service(
     std::shared_ptr<smgpc::compat::JkrHeapRuntime> heaps,
     smgpc::runtime::JAudioPlaybackService* playback) {
@@ -125,6 +157,7 @@ AudSoundObject* disabled_system_sound_object() noexcept {
 AudSceneMgr* disabled_audio_scene_manager() noexcept {
     return active_service == nullptr ? nullptr : active_service->scene_manager();
 }
+DisabledObjectAudioService* disabled_object_audio_service() noexcept { return active_service; }
 }
 
 // Original state construction and player selection from AudSceneMgr.cpp. The
@@ -146,9 +179,10 @@ void AudSceneMgr::setPlayerModeLuigi() {
 void AudSceneMgr::startScene() {
     if (aurora::audio::disabled_audio_scene_manager() != this)
         aurora::throw_host_exception<std::logic_error>("Audio scene start requires its active disabled backend owner");
-    // Keep the original scene-local flags. The remaining retail operations
-    // reset AudSystem voice/volume/effect state and reconnect a Wii speaker;
-    // none of those output owners exist under the explicit disabled policy.
+    // Keep the original scene-local flags and actual native output controls.
+    // Voice/effect owners and Wii-speaker reconnection remain absent under
+    // the explicit disabled output policy.
     _4 = 0;
     _1D = false;
+    aurora::audio::disabled_object_audio_service()->reset_scene_controls();
 }

@@ -8,7 +8,7 @@
 
 namespace smgpc::compat {
 
-    thread_local JAudioCategoryVolumeOwnership *JAudioCategoryVolumeOwnership::_head = nullptr;
+    JAudioCategoryVolumeOwnership *JAudioCategoryVolumeOwnership::_head = nullptr;
 
     JAudioCategoryVolumeOwnership::JAudioCategoryVolumeOwnership()
         : _controller(nullptr), _next(_head) {

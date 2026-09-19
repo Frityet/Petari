@@ -31,7 +31,9 @@ namespace smgpc::compat {
         AudSystemVolumeController _controller;
         std::array<JAISoundParamsMove, 16> _categories;
         JAudioCategoryVolumeOwnership *_next = nullptr;
-        static thread_local JAudioCategoryVolumeOwnership *_head;
+        // Original audio owners can be initialized on a guest worker and used
+        // by the scene thread. Publication and use share the guest CPU gate.
+        static JAudioCategoryVolumeOwnership *_head;
     };
 
 }  // namespace smgpc::compat

@@ -1,0 +1,17 @@
+{
+  "original_path": "src/Game/Util/SoundUtil.cpp",
+  "provider_path": "src/compat/OriginalSoundUtil.cpp",
+  "original_sha256": "50dfd27b509823581fa11b631a6183053cc6af25f44c7746d9a32071eeeb2db6",
+  "provider_sha256": "a80daafd3282d42a36414a34d4ff7ce683fdbd7994f30c3a2a22c28eb36d7a7d",
+  "function_definitions": 86,
+  "changed_functions": [
+    "isPermitSE",
+    "permitLevelSE",
+    "permitTrigSE",
+    "recoverSoundVolumeSetting",
+    "setSoundVolumeSetting",
+    "submitLevelSE",
+    "submitTrigSE"
+  ],
+  "unchanged_function_definitions": 79
+}

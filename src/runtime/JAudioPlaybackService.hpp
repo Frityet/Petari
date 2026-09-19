@@ -91,6 +91,7 @@ namespace smgpc::runtime {
         [[nodiscard]] bool has_me() const;
 
         void reset_scene();
+        void reset_output_controls();
 
         [[nodiscard]] bool is_device_open() const;
         [[nodiscard]] std::size_t active_voice_count() const;

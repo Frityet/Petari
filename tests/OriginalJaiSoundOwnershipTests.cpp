@@ -3,6 +3,7 @@
 #include "Game/AudioLib/AudSoundNameConverter.hpp"
 #include "Game/AudioLib/AudSpeakerWrap.hpp"
 #include "Game/AudioLib/AudSceneMgr.hpp"
+#include "Game/AudioLib/AudParams.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
 #include "JSystem/JAudio2/JAUSoundTable.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
@@ -24,6 +25,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cstdio>
+#include <cmath>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
@@ -66,12 +68,35 @@ void test_disabled_audio_scene_state() {
                    scene->mSeScenarioWaveSetId == -1 && scene->mBgmWaveSetId == 0 &&
                    scene->mPlayerMode == 0 && scene->mPrevPlayerMode == 0 && !scene->mIsNewPlayerMode);
             assert(!MR::isCubeBgmChangeInvalid());
+            assert(MR::isPermitSE());
+            MR::submitTrigSE();
+            assert(!MR::isPermitSE());
+            MR::permitTrigSE();
+            MR::submitLevelSE();
+            assert(!MR::isPermitSE());
+            MR::permitLevelSE();
+            assert(MR::isPermitSE());
+            MR::setSoundVolumeSetting(3, 4);
+            for (int step = 1; step <= 4; ++step) {
+                output.update_scene_controls();
+                const auto expected = AudParams::scCtgVolume[0][6] +
+                    (AudParams::scCtgVolume[3][6] - AudParams::scCtgVolume[0][6]) * (step / 4.0f);
+                assert(std::abs(output.sound_category_gain(0x60000) - expected) < 0.00001f);
+            }
+            MR::setSoundVolumeSetting(2, 0);
+            MR::recoverSoundVolumeSetting(0);
+            assert(output.sound_category_gain(0x60000) == AudParams::scCtgVolume[3][6]);
+            MR::recoverSoundVolumeSetting(0);
+            assert(output.sound_category_gain(0x60000) == AudParams::scCtgVolume[0][6]);
+            MR::setSoundVolumeSetting(3, 0);
+            MR::submitSE();
             MR::setCubeBgmChangeInvalid();
             scene->_4 = 1;
             assert(scene->_1D && MR::isCubeBgmChangeInvalid());
             scene->setPlayerModeLuigi();
             scene->startScene();
             assert(scene->_4 == 0 && !MR::isCubeBgmChangeInvalid() && scene->isPlayerModeLuigi());
+            assert(MR::isPermitSE() && output.sound_category_gain(0x60000) == AudParams::scCtgVolume[0][6]);
             scene->setPlayerModeMario();
             assert(scene->isPlayerModeMario() && !scene->isPlayerModeLuigi());
             MR::setCubeBgmChangeInvalid();
@@ -333,6 +358,13 @@ void test_retail_service() {
     assert(wind_token && pcm->voice_pitch_multiplier(wind_token).value() == 1.5F);
     service.set_sound_volume_setting(1, 0);
     assert(pcm->voice_bus_gain_multiplier(wind_token).value() == 0.3F);
+    service.set_trigger_sound_permitted(false);
+    service.set_level_sound_permitted(false);
+    service.reset_output_controls();
+    assert(service.is_sound_permitted());
+    assert(wind->mSound == native_sound && service.owns_sound(native_sound));
+    assert(pcm->is_voice_active(wind_token) && service.active_voice_count() == 1);
+    assert(pcm->voice_bus_gain_multiplier(wind_token).value() == AudParams::scCtgVolume[0][6]);
     service.end_frame();
     service.begin_frame(21);
     assert(service.start_level_sound("SE_AT_LV_ASTRO_DOME_WIND_1", 100, -1)->mSound == native_sound);
@@ -460,6 +492,18 @@ void test_disabled_backend_wrapper_owner() {
         assert(wrapper->isLoadDoneWaveDataAtSystemInit());
         assert(wrapper->mAudSystem == nullptr && !backend.has_output_device());
         assert(AudWrap::getSceneMgr() == backend.scene_manager());
+        // Volume ownership was constructed on the original initialization
+        // worker; the main guest controls and advances that same real state.
+        auto* output = aurora::audio::disabled_object_audio_service();
+        assert(output != nullptr);
+        MR::setSoundVolumeSetting(3, 2);
+        wrapper->movement();
+        assert(std::abs(output->sound_category_gain(0x60000) -
+            (AudParams::scCtgVolume[0][6] + AudParams::scCtgVolume[3][6]) * 0.5f) < 0.00001f);
+        wrapper->movement();
+        assert(output->sound_category_gain(0x60000) == AudParams::scCtgVolume[3][6]);
+        MR::recoverSoundVolumeSetting(0);
+        assert(output->sound_category_gain(0x60000) == AudParams::scCtgVolume[0][6]);
         MR::setCubeBgmChangeInvalid();
         assert(MR::isCubeBgmChangeInvalid());
         AudWrap::getSceneMgr()->startScene();

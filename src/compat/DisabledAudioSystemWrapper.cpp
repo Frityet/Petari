@@ -78,7 +78,7 @@ void AudSystemWrapper::createSoundNameConverter() {
         aurora::throw_host_exception<std::logic_error>("Audio name publication requires completed backend initialization");
 }
 void AudSystemWrapper::updateRhythm() { (void)backend(*this); }
-void AudSystemWrapper::movement() { (void)backend(*this); }
+void AudSystemWrapper::movement() { backend(*this).movement(); }
 void AudSystemWrapper::stopAllSound(u32) { backend(*this).stop_all(); }
 bool AudSystemWrapper::isLoadDoneWaveDataAtSystemInit() const { return backend(*this).initialized(); }
 void AudSystemWrapper::loadStaticWaveData() { backend(*this).request_banks(Backend::BankGroup::Static); }

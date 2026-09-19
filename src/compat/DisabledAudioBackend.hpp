@@ -34,6 +34,7 @@ public:
     [[nodiscard]] bool reset_complete() const noexcept;
     void resume_reset() noexcept;
     void stop_all() noexcept;
+    void movement();
     [[nodiscard]] bool has_output_device() const noexcept { return false; }
     [[nodiscard]] AudSceneMgr* scene_manager() noexcept;
 

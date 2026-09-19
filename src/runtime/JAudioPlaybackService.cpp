@@ -473,11 +473,16 @@ namespace smgpc::runtime {
         _sound_effect_voices.clear();
         _retired_sound_effect_voices.clear();
         _mixer->stop_all_voices();
+        reset_output_controls();
+        for (auto& voice : _bgm_voices) voice.reset();
+        // Scene teardown may occur between begin_frame and end_frame.
+    }
+
+    void JAudioPlaybackService::reset_output_controls() {
         _category_volume->reset();
         _trigger_sound_permitted = true;
         _level_sound_permitted = true;
-        for (auto& voice : _bgm_voices) voice.reset();
-        // Scene teardown may occur between begin_frame and end_frame.
+        apply_category_gains();
     }
 
     bool JAudioPlaybackService::is_device_open() const {
