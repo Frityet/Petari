@@ -15,6 +15,7 @@
 
 #include "Logger.hpp"
 #include "runtime/ArchiveMountService.hpp"
+#include "runtime/DebugWpadInputScript.hpp"
 #include "runtime/ScenarioCatalogOwnership.hpp"
 #include "runtime/ParticleResourceOwnership.hpp"
 #include "runtime/MessageHolderOwnership.hpp"
@@ -112,28 +113,19 @@ namespace smgpc::runtime {
             std::string stage_name;
         };
 
-        struct DebugWpadButtonScriptSpan {
-            std::uint64_t first_frame = 0U;
-            std::uint64_t last_frame = 0U;
-            std::uint32_t button_mask = 0U;
-        };
-
-        struct DebugWpadPointerScriptSpan {
-            std::uint64_t first_frame = 0U;
-            std::uint64_t last_frame = 0U;
-            float x = 0.0F;
-            float y = 0.0F;
-            bool valid = false;
-        };
-
         struct HostInputTraceState {
             std::uint64_t frame_index = 0U;
             std::uint32_t raw_hold_mask = 0U;
             std::uint32_t effective_hold_mask = 0U;
             render::InputPointerState raw_pointer = {};
             render::InputPointerState effective_pointer = {};
+            float raw_stick_x = 0.0F;
+            float raw_stick_y = 0.0F;
+            float effective_stick_x = 0.0F;
+            float effective_stick_y = 0.0F;
             bool debug_button_script_applied = false;
             bool debug_pointer_script_applied = false;
+            bool debug_stick_script_applied = false;
         };
 #endif
 
@@ -412,8 +404,7 @@ namespace smgpc::runtime {
         std::vector<SemanticTraceEvent> _semantic_trace_events = {};
         HostInputTraceState _host_input_trace = {};
         std::optional<std::uint64_t> _j3d_packet_trace_frame = {};
-        std::vector<DebugWpadButtonScriptSpan> _debug_wpad_button_script = {};
-        std::vector<DebugWpadPointerScriptSpan> _debug_wpad_pointer_script = {};
+        DebugWpadInputScript _debug_wpad_input_script;
         std::uint64_t _next_semantic_trace_event_index = 0U;
         std::size_t _next_star_pointer_target_trace_event_index = 0U;
         bool _emitted_wpad_buttons_held_event = false;

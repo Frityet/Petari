@@ -4,11 +4,13 @@
 #include "compat/WPadOwnership.hpp"
 #include "Game/System/WPad.hpp"
 #include "Game/System/WPadButton.hpp"
+#include "runtime/DebugWpadInputScript.hpp"
 #include <aurora/exception.hpp>
 #include <aurora/wpad.hpp>
 
 #include <iostream>
 #include <stdexcept>
+#include <limits>
 
 namespace {
     using Button = smgpc::render::core::InputButton;
@@ -144,12 +146,111 @@ namespace {
         buttons.begin_poll();
         require(!buttons.is_pressed(toggle), "debug taps do not become stuck holds");
     }
+
+#ifndef NDEBUG
+    void test_shared_controller_script() {
+        using Script = smgpc::runtime::DebugWpadInputScript;
+        using Pointer = smgpc::render::core::InputPointerState;
+        float stick_x = 0.25F;
+        float stick_y = -0.5F;
+        const Script script{
+            " 2-4: A + B ; 3:C; 7-:PLUS; 6-2:A; nope:A; 9:unknown; 18446744073709551616:A",
+            "2-4:10.5,20;3:90,80,false;5-:6,7,off;bad;5-2:0,0;6:not-a-number,7"};
+        require(script.button_span_count() == 3 && script.pointer_span_count() == 3,
+                "shared parser retains valid spans and ignores malformed entries as before");
+        for (std::uint64_t frame = 0; frame != 9; ++frame) {
+            u32 mask = WPAD_BUTTON_Z;
+            Pointer pointer{1, 2, true};
+            const auto applied = script.apply(frame, mask, pointer, stick_x, stick_y);
+            u32 expected = WPAD_BUTTON_Z;
+            if (frame >= 2 && frame <= 4) expected |= WPAD_BUTTON_A | WPAD_BUTTON_B;
+            if (frame == 3) expected |= WPAD_BUTTON_C;
+            if (frame >= 7) expected |= WPAD_BUTTON_PLUS;
+            require(mask == expected && applied.buttons == (expected != WPAD_BUTTON_Z),
+                    "button ranges are inclusive, overlap by OR, and preserve physical input");
+            if (frame == 3) {
+                require(pointer.x == 90 && pointer.y == 80 && !pointer.valid,
+                        "the last active pointer span wins, including explicit invalidity");
+            } else if (frame >= 2 && frame <= 4) {
+                require(pointer.x == 10.5F && pointer.y == 20 && pointer.valid,
+                        "pointer coordinates and default validity survive parsing");
+            } else if (frame >= 5) {
+                require(pointer.x == 6 && pointer.y == 7 && !pointer.valid,
+                        "open-ended pointer spans preserve false validity");
+            } else {
+                require(pointer.x == 1 && pointer.y == 2 && pointer.valid,
+                        "inactive scripts preserve physical pointer input");
+            }
+            require(applied.pointer == (frame >= 2), "pointer activity reports actual span application");
+        }
+        u32 mask = 0;
+        Pointer pointer;
+        require(script.apply(std::numeric_limits<std::uint64_t>::max(), mask, pointer, stick_x, stick_y).buttons &&
+                    mask == WPAD_BUTTON_PLUS,
+                "open-ended button ranges include the final representable frame");
+        const Script empty;
+        mask = WPAD_BUTTON_B;
+        const auto inactive = empty.apply(3, mask, pointer, stick_x, stick_y);
+        require(!inactive.buttons && !inactive.pointer && mask == WPAD_BUTTON_B,
+                "an absent script leaves physical input unchanged");
+        require(!inactive.stick && stick_x == 0.25F && stick_y == -0.5F,
+                "an absent stick script preserves the physical stick");
+        const Script stick_script{{}, {}, "2-4:1:-1;3:0:0;7-:-0.5:0.25"};
+        require(stick_script.stick_span_count() == 3, "stick scripts use the shared frame-range syntax");
+        require(stick_script.apply(2, mask, pointer, stick_x, stick_y).stick && stick_x == 1 && stick_y == -1,
+                "stick axes accept inclusive normalized endpoints");
+        require(stick_script.apply(3, mask, pointer, stick_x, stick_y).stick && stick_x == 0 && stick_y == 0,
+                "the last overlapping stick span can explicitly center the stick");
+        require(stick_script.apply(std::numeric_limits<std::uint64_t>::max(), mask, pointer, stick_x, stick_y).stick &&
+                    stick_x == -0.5F && stick_y == 0.25F,
+                "open-ended stick ranges preserve their normalized coordinates");
+        for (const char* invalid : {"2-1:0:0", "bad:0:0", "2:1.01:0", "2:0:-1.01", "2:nan:0", "2:0:inf", "2:0,0", "2:0:0:0"}) {
+            bool rejected = false;
+            try { (void)Script{{}, {}, invalid}; }
+            catch (const std::invalid_argument&) { rejected = true; }
+            require(rejected, "invalid scripted stick ranges, coordinates and syntax are rejected");
+        }
+
+        auto heaps = smgpc::compat::JkrHeapRuntime::create(2U << 20);
+        auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 512U << 10);
+        aurora::wpad_service().clear();
+        smgpc::compat::WPadOwnership owner(domain);
+        const Script held{"3-5:A", {}, "3-5:0.5:-0.25"};
+        for (std::uint64_t frame = 0; frame != 8; ++frame) {
+            auto& input = aurora::wpad_service();
+            input.begin_frame();
+            input.set_device_type(0, aurora::WpadDeviceType::Freestyle);
+            input.set_connected(0, true);
+            mask = WPAD_BUTTON_B;
+            stick_x = stick_y = 0.0F;
+            const auto applied = held.apply(frame, mask, pointer, stick_x, stick_y);
+            input.set_button_mask(0, mask);
+            input.set_sub_stick(0, stick_x, stick_y);
+            owner.update_samples();
+            const auto& original = *owner.pad(0).mButton;
+            const bool active = frame >= 3 && frame <= 5;
+            require(applied.buttons == active && original.testButtonA() == active && original.testButtonB(),
+                    "script is applied before original WPad sampling and keeps physical B held");
+            const auto& stick = owner.pad(0).getKPadStatus(0)->ex_status.fs.stick;
+            require(applied.stick == active && stick.x == (active ? 0.5F : 0.0F) && stick.y == (active ? -0.25F : 0.0F),
+                    "scripted Nunchuk axes reach the original KPAD record and release to physical input");
+            require(original.testTriggerA() == (frame == 3),
+                    "a scripted hold has one original trigger and subsequent non-trigger held samples");
+            require((owner.pad(0).getKPadStatus(0)->release & WPAD_BUTTON_A) == (frame == 6 ? WPAD_BUTTON_A : 0),
+                    "leaving a script range creates the normal original release edge");
+        }
+        std::cout << "Shared debug controller script: parsing, overlap, pointer precedence and original WPad hold/trigger/release passed\n";
+    }
+#endif
 }
 
 int main() {
     try {
         test_controller_samples();
         test_debug_input();
+#ifndef NDEBUG
+        test_shared_controller_script();
+#endif
         std::cout << "Frame input: quick key/mouse taps, physical aliases, repeat, focus reset and original WPad edges passed\n";
     } catch (const std::exception& error) {
         std::cerr << error.what() << '\n';

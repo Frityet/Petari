@@ -20,15 +20,12 @@
 
 #include <algorithm>
 #include <array>
-#include <cctype>
-#include <charconv>
 #include <chrono>
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
 #include <exception>
 #include <fstream>
-#include <limits>
 #include <memory>
 #include <optional>
 #include <sstream>
@@ -114,157 +111,6 @@ namespace smgpc::runtime {
         }
 
 #ifndef NDEBUG
-        [[nodiscard]] std::string_view trim(std::string_view text) {
-            while (!text.empty() && std::isspace(static_cast<unsigned char>(text.front())) != 0) {
-                text.remove_prefix(1U);
-            }
-            while (!text.empty() && std::isspace(static_cast<unsigned char>(text.back())) != 0) {
-                text.remove_suffix(1U);
-            }
-            return text;
-        }
-
-        [[nodiscard]] std::optional<std::uint64_t> parse_frame_index(std::string_view text) {
-            text = trim(text);
-            if (text.empty()) {
-                return std::nullopt;
-            }
-
-            auto frame = std::uint64_t{};
-            const auto *begin = text.data();
-            const auto *end = begin + text.size();
-            const auto result = std::from_chars(begin, end, frame);
-            if (result.ec != std::errc{} || result.ptr != end) {
-                return std::nullopt;
-            }
-            return frame;
-        }
-
-        [[nodiscard]] std::optional<float> parse_float(std::string_view text) {
-            text = trim(text);
-            if (text.empty()) {
-                return std::nullopt;
-            }
-
-            auto value = 0.0F;
-            const auto *begin = text.data();
-            const auto *end = begin + text.size();
-            const auto result = std::from_chars(begin, end, value);
-            if (result.ec != std::errc{} || result.ptr != end) {
-                return std::nullopt;
-            }
-            return value;
-        }
-
-        [[nodiscard]] std::optional<bool> parse_bool(std::string_view text) {
-            text = trim(text);
-            if (text == "1" || text == "true" || text == "TRUE" || text == "True" || text == "on" || text == "ON") {
-                return true;
-            }
-            if (text == "0" || text == "false" || text == "FALSE" || text == "False" || text == "off" || text == "OFF") {
-                return false;
-            }
-            return std::nullopt;
-        }
-
-        struct DebugFrameRange {
-            std::uint64_t first_frame = 0U;
-            std::uint64_t last_frame = std::numeric_limits<std::uint64_t>::max();
-        };
-
-        [[nodiscard]] std::optional<DebugFrameRange> parse_debug_frame_range(std::string_view text) {
-            text = trim(text);
-            if (text.empty()) {
-                return std::nullopt;
-            }
-
-            const auto dash = text.find('-');
-            if (dash == std::string_view::npos) {
-                const auto frame = parse_frame_index(text);
-                if (!frame.has_value()) {
-                    return std::nullopt;
-                }
-                return DebugFrameRange{.first_frame = *frame, .last_frame = *frame};
-            }
-
-            const auto first = parse_frame_index(text.substr(0U, dash));
-            if (!first.has_value()) {
-                return std::nullopt;
-            }
-
-            auto last = std::numeric_limits<std::uint64_t>::max();
-            const auto last_text = trim(text.substr(dash + 1U));
-            if (!last_text.empty()) {
-                const auto parsed_last = parse_frame_index(last_text);
-                if (!parsed_last.has_value() || *parsed_last < *first) {
-                    return std::nullopt;
-                }
-                last = *parsed_last;
-            }
-
-            return DebugFrameRange{.first_frame = *first, .last_frame = last};
-        }
-
-        [[nodiscard]] std::optional<std::uint32_t> debug_wpad_button_mask(std::string_view text) {
-            text = trim(text);
-            if (text == "A") {
-                return WPAD_BUTTON_A;
-            }
-            if (text == "B") {
-                return WPAD_BUTTON_B;
-            }
-            if (text == "UP") {
-                return WPAD_BUTTON_UP;
-            }
-            if (text == "DOWN") {
-                return WPAD_BUTTON_DOWN;
-            }
-            if (text == "LEFT") {
-                return WPAD_BUTTON_LEFT;
-            }
-            if (text == "RIGHT") {
-                return WPAD_BUTTON_RIGHT;
-            }
-            if (text == "PLUS" || text == "+") {
-                return WPAD_BUTTON_PLUS;
-            }
-            if (text == "MINUS") {
-                return WPAD_BUTTON_MINUS;
-            }
-            if (text == "HOME") {
-                return WPAD_BUTTON_HOME;
-            }
-            if (text == "C") {
-                return WPAD_BUTTON_C;
-            }
-            if (text == "Z") {
-                return WPAD_BUTTON_Z;
-            }
-            if (text == "ONE" || text == "1") {
-                return WPAD_BUTTON_1;
-            }
-            if (text == "TWO" || text == "2") {
-                return WPAD_BUTTON_2;
-            }
-            return std::nullopt;
-        }
-
-        [[nodiscard]] std::uint32_t parse_debug_wpad_button_mask(std::string_view text) {
-            auto mask = std::uint32_t{};
-            while (true) {
-                const auto plus = text.find('+');
-                const auto token = trim(text.substr(0U, plus));
-                if (const auto button = debug_wpad_button_mask(token)) {
-                    mask |= *button;
-                }
-                if (plus == std::string_view::npos) {
-                    break;
-                }
-                text.remove_prefix(plus + 1U);
-            }
-            return mask;
-        }
-
         [[nodiscard]] std::string debug_wpad_button_mask_detail(std::uint32_t mask) {
             constexpr auto buttons = std::array{
                 std::pair{WPAD_BUTTON_A, "A"},
@@ -299,101 +145,6 @@ namespace smgpc::runtime {
             }
             return detail;
         }
-
-        [[nodiscard]] std::optional<std::string> read_debug_string_environment(std::string_view name) {
-            const auto key = std::string(name);
-            const auto *value = std::getenv(key.c_str());
-            if (value == nullptr || value[0] == '\0') {
-                return std::nullopt;
-            }
-            return std::string(value);
-        }
-
-        [[nodiscard]] std::vector<RuntimeContext::DebugWpadButtonScriptSpan> read_debug_wpad_button_script_environment() {
-            auto spans = std::vector<RuntimeContext::DebugWpadButtonScriptSpan>{};
-            const auto script = read_debug_string_environment("SMGPC_DEBUG_WPAD_BUTTON_SCRIPT");
-            if (!script.has_value()) {
-                return spans;
-            }
-
-            auto text = std::string_view(*script);
-            while (!text.empty()) {
-                const auto separator = text.find(';');
-                const auto entry = trim(text.substr(0U, separator));
-                if (!entry.empty()) {
-                    const auto colon = entry.find(':');
-                    if (colon != std::string_view::npos) {
-                        const auto range = parse_debug_frame_range(entry.substr(0U, colon));
-                        const auto mask = parse_debug_wpad_button_mask(entry.substr(colon + 1U));
-                        if (range.has_value() && mask != 0U) {
-                            spans.push_back(RuntimeContext::DebugWpadButtonScriptSpan{
-                                .first_frame = range->first_frame,
-                                .last_frame = range->last_frame,
-                                .button_mask = mask,
-                            });
-                        }
-                    }
-                }
-                if (separator == std::string_view::npos) {
-                    break;
-                }
-                text.remove_prefix(separator + 1U);
-            }
-            return spans;
-        }
-
-        [[nodiscard]] std::vector<RuntimeContext::DebugWpadPointerScriptSpan> read_debug_wpad_pointer_script_environment() {
-            auto spans = std::vector<RuntimeContext::DebugWpadPointerScriptSpan>{};
-            const auto script = read_debug_string_environment("SMGPC_DEBUG_WPAD_POINTER_SCRIPT");
-            if (!script.has_value()) {
-                return spans;
-            }
-
-            auto text = std::string_view(*script);
-            while (!text.empty()) {
-                const auto separator = text.find(';');
-                const auto entry = trim(text.substr(0U, separator));
-                if (!entry.empty()) {
-                    const auto colon = entry.find(':');
-                    if (colon != std::string_view::npos) {
-                        const auto range = parse_debug_frame_range(entry.substr(0U, colon));
-                        auto values = entry.substr(colon + 1U);
-                        const auto first_comma = values.find(',');
-                        if (range.has_value() && first_comma != std::string_view::npos) {
-                            const auto x = parse_float(values.substr(0U, first_comma));
-                            values.remove_prefix(first_comma + 1U);
-                            const auto second_comma = values.find(',');
-                            const auto y = parse_float(values.substr(0U, second_comma));
-                            auto valid = true;
-                            if (second_comma != std::string_view::npos) {
-                                if (const auto parsed_valid = parse_bool(values.substr(second_comma + 1U))) {
-                                    valid = *parsed_valid;
-                                }
-                            }
-                            if (x.has_value() && y.has_value()) {
-                                spans.push_back(RuntimeContext::DebugWpadPointerScriptSpan{
-                                    .first_frame = range->first_frame,
-                                    .last_frame = range->last_frame,
-                                    .x = *x,
-                                    .y = *y,
-                                    .valid = valid,
-                                });
-                            }
-                        }
-                    }
-                }
-                if (separator == std::string_view::npos) {
-                    break;
-                }
-                text.remove_prefix(separator + 1U);
-            }
-            return spans;
-        }
-
-        [[nodiscard]] bool debug_span_active(std::uint64_t frame_index, std::uint64_t first_frame, std::uint64_t last_frame) {
-            return frame_index >= first_frame && frame_index <= last_frame;
-        }
-
 #endif
 
         [[nodiscard]] std::optional<std::string> read_string_environment(std::string_view name) {
@@ -524,8 +275,7 @@ namespace smgpc::runtime {
           _current_stage_name(default_stage_name())
 #ifndef NDEBUG
           ,
-          _debug_wpad_button_script(read_debug_wpad_button_script_environment()),
-          _debug_wpad_pointer_script(read_debug_wpad_pointer_script_environment())
+          _debug_wpad_input_script(DebugWpadInputScript::from_environment())
 #endif
     {
         _registration = std::make_unique<Registration>(*this);
@@ -587,13 +337,17 @@ namespace smgpc::runtime {
                 }
             }
 #ifndef NDEBUG
-            if (!_debug_wpad_button_script.empty()) {
+            if (_debug_wpad_input_script.button_span_count() != 0) {
                 _logger.info(logging::Category::APP, logging::Message{"Loaded {} debug WPAD button script spans"},
-                             _debug_wpad_button_script.size());
+                             _debug_wpad_input_script.button_span_count());
             }
-            if (!_debug_wpad_pointer_script.empty()) {
+            if (_debug_wpad_input_script.pointer_span_count() != 0) {
                 _logger.info(logging::Category::APP, logging::Message{"Loaded {} debug WPAD pointer script spans"},
-                             _debug_wpad_pointer_script.size());
+                             _debug_wpad_input_script.pointer_span_count());
+            }
+            if (_debug_wpad_input_script.stick_span_count() != 0) {
+                _logger.info(logging::Category::APP, logging::Message{"Loaded {} debug WPAD stick script spans"},
+                             _debug_wpad_input_script.stick_span_count());
             }
             emit_semantic_trace_event("runtime", "runtime_context_created", "disc=aurora-dvd");
 #endif
@@ -752,26 +506,7 @@ namespace smgpc::runtime {
         const auto raw_pointer = pointer;
         auto sub_stick_x = 0.0F;
         auto sub_stick_y = 0.0F;
-#ifndef NDEBUG
-        auto debug_button_script_applied = false;
-        auto debug_pointer_script_applied = false;
-        for (const auto &span : _debug_wpad_button_script) {
-            if (debug_span_active(_frame_index, span.first_frame, span.last_frame)) {
-                hold_mask |= span.button_mask;
-                debug_button_script_applied = true;
-            }
-        }
-        for (const auto &span : _debug_wpad_pointer_script) {
-            if (debug_span_active(_frame_index, span.first_frame, span.last_frame)) {
-                pointer = render::InputPointerState{
-                    .x = span.x,
-                    .y = span.y,
-                    .valid = span.valid,
-                };
-                debug_pointer_script_applied = true;
-            }
-        }
-#endif
+
         if (_window_service.is_input_pressed(render::InputButton::SUB_STICK_LEFT)) {
             sub_stick_x -= 1.0F;
         }
@@ -789,6 +524,14 @@ namespace smgpc::runtime {
             sub_stick_x *= cDiagonalStickScale;
             sub_stick_y *= cDiagonalStickScale;
         }
+
+#ifndef NDEBUG
+        const auto raw_stick_x = sub_stick_x;
+        const auto raw_stick_y = sub_stick_y;
+        const auto debug_script_applied = _debug_wpad_input_script.apply(_frame_index, hold_mask, pointer, sub_stick_x, sub_stick_y);
+        const auto debug_button_script_applied = debug_script_applied.buttons;
+        const auto debug_pointer_script_applied = debug_script_applied.pointer;
+#endif
 
         if (_freecam_enabled && _freecam_target_pose.has_value()) {
             auto freecam_pose = *_freecam_target_pose;
@@ -865,8 +608,13 @@ namespace smgpc::runtime {
             .effective_hold_mask = hold_mask,
             .raw_pointer = raw_pointer,
             .effective_pointer = pointer,
+            .raw_stick_x = raw_stick_x,
+            .raw_stick_y = raw_stick_y,
+            .effective_stick_x = sub_stick_x,
+            .effective_stick_y = sub_stick_y,
             .debug_button_script_applied = debug_button_script_applied,
             .debug_pointer_script_applied = debug_pointer_script_applied,
+            .debug_stick_script_applied = debug_script_applied.stick,
         };
 #endif
         auto &wpad = aurora::wpad_service();

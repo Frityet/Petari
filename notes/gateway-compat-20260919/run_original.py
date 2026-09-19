@@ -1,4 +1,4 @@
-"""Record a bounded real-disc original-process run; no game input/state injection."""
+"""Record a bounded real-disc run, optionally replaying explicit debug controller input."""
 import hashlib
 import argparse
 from datetime import datetime, timezone
@@ -17,6 +17,9 @@ parser.add_argument("frames", type=int, nargs="?", default=300)
 parser.add_argument("--bundle", action="store_true", help="Run the native app bundle for live keyboard checks")
 parser.add_argument("--screenshot-frame", type=int, default=240)
 parser.add_argument("--timeout", type=float, default=180)
+parser.add_argument("--button-script", help="Debug controller input spans; records scripted input explicitly")
+parser.add_argument("--pointer-script", help="Debug pointer input spans; records scripted input explicitly")
+parser.add_argument("--stick-script", help="Debug normalized stick input spans; records scripted input explicitly")
 options = parser.parse_args()
 label = options.label
 frames = str(options.frames)
@@ -37,6 +40,12 @@ settings = {
     "SMGPC_SCREENSHOT_PATH": str(notes / (label + f"-frame{options.screenshot_frame}.png")),
     "SMGPC_SCREENSHOT_FRAME": str(options.screenshot_frame),
 }
+for name, value in [("SMGPC_DEBUG_WPAD_BUTTON_SCRIPT", options.button_script),
+                    ("SMGPC_DEBUG_WPAD_POINTER_SCRIPT", options.pointer_script),
+                    ("SMGPC_DEBUG_WPAD_STICK_SCRIPT", options.stick_script)]:
+    # Empty values also prevent an unrecorded inherited script from affecting
+    # what is intended to be a neutral-input run.
+    settings[name] = value or ""
 record = {"command": command, "environment": settings,
           "binary_sha256": hashlib.sha256(binary.read_bytes()).hexdigest(),
           "started_at": datetime.now(timezone.utc).isoformat()}

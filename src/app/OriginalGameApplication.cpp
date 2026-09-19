@@ -46,6 +46,7 @@
 #include "runtime/MessageHolderOwnership.hpp"
 #include "runtime/ConsoleNandImport.hpp"
 #include "runtime/SystemConfigService.hpp"
+#include "runtime/DebugWpadInputScript.hpp"
 #include <JSystem/JKernel/JKRExpHeap.hpp>
 #include <JSystem/JKernel/JKRThread.hpp>
 #include <JSystem/JUtility/JUTDirectPrint.hpp>
@@ -192,6 +193,16 @@ public:
             (void)runtime::import_console_nand_directory(save.nand(), source, runtime::NandImportExisting::Preserve);
         settings = std::make_unique<runtime::SystemConfigService>(save.nand());
         nand = std::make_unique<compat::NandSdkBinding>(save);
+#ifndef NDEBUG
+        if (input_script.button_span_count() || input_script.pointer_span_count() || input_script.stick_span_count()) {
+            std::fprintf(stderr, "[original-process] Debug controller script configured: %zu button spans, %zu pointer spans, %zu stick spans; zero-based inclusive frame ranges\n",
+                         input_script.button_span_count(), input_script.pointer_span_count(), input_script.stick_span_count());
+            for (const char* name : {"SMGPC_DEBUG_WPAD_BUTTON_SCRIPT", "SMGPC_DEBUG_WPAD_POINTER_SCRIPT", "SMGPC_DEBUG_WPAD_STICK_SCRIPT"})
+                if (const auto* value = std::getenv(name); value && *value)
+                    std::fprintf(stderr, "[original-process] Scripted controller evidence: %s=%s\n", name, value);
+            std::fflush(stderr);
+        }
+#endif
     }
 
     ~OriginalProcess() { retire(); }
@@ -239,10 +250,10 @@ public:
         startup_phase("GameSystem::init completed");
     }
 
-    void frame(render::AuroraWindow& window) {
+    void frame(render::AuroraWindow& window, std::uint64_t frame_index) {
         const aurora::os::GuestThreadExecutionScope execution;
         const aurora::allocation::ClientAllocationScope game({true, true});
-        publish_input(window);
+        publish_input(window, frame_index);
         scene::begin_original_scene_frame();
         auto& system = *SingletonHolder<GameSystem>::get();
         system.frameLoop();
@@ -272,7 +283,7 @@ private:
         stage_selection->requested = true;
     }
 
-    void publish_input(const render::AuroraWindow& window) {
+    void publish_input(const render::AuroraWindow& window, std::uint64_t frame_index) {
         auto& input = aurora::wpad_service();
         input.begin_frame();
         input.set_device_type(WPAD_CHAN0, aurora::WpadDeviceType::Freestyle);
@@ -288,13 +299,25 @@ private:
         u32 mask = 0;
         for (const auto& [button, bit] : buttons)
             if (window.is_input_pressed(button)) mask |= bit;
+        auto pointer = window.input_pointer_state();
+        float x = float(window.is_input_pressed(Button::SUB_STICK_RIGHT)) - float(window.is_input_pressed(Button::SUB_STICK_LEFT));
+        float y = float(window.is_input_pressed(Button::SUB_STICK_UP)) - float(window.is_input_pressed(Button::SUB_STICK_DOWN));
+#ifndef NDEBUG
+        const auto applied = input_script.apply(frame_index, mask, pointer, x, y);
+        if (applied.buttons != script_applied.buttons || applied.pointer != script_applied.pointer || applied.stick != script_applied.stick) {
+            std::fprintf(stderr, "[original-process] Debug controller script frame %llu: buttons=%s pointer=%s stick=%s hold=0x%08x axes=%g,%g\n",
+                         static_cast<unsigned long long>(frame_index), applied.buttons ? "active" : "inactive",
+                         applied.pointer ? "active" : "inactive", applied.stick ? "active" : "inactive", mask, x, y);
+            std::fflush(stderr);
+            script_applied = applied;
+        }
+#else
+        (void)frame_index;
+#endif
         input.set_button_mask(WPAD_CHAN0, mask);
-        const auto pointer = window.input_pointer_state();
         input.set_pointer_resolution(WPAD_CHAN0, MR::getFrameBufferWidth(), MR::getFrameBufferHeight());
         input.set_pointer(WPAD_CHAN0, pointer.x, pointer.y, pointer.valid);
         input.set_distance_to_display(WPAD_CHAN0, pointer.valid ? 1.0f : 0.0f);
-        const float x = float(window.is_input_pressed(Button::SUB_STICK_RIGHT)) - float(window.is_input_pressed(Button::SUB_STICK_LEFT));
-        const float y = float(window.is_input_pressed(Button::SUB_STICK_UP)) - float(window.is_input_pressed(Button::SUB_STICK_DOWN));
         input.set_sub_stick(WPAD_CHAN0, x, y);
         const auto acceleration = shake.sample(window.is_input_pressed(Button::CORE_PAD_SWING));
         input.set_core_acceleration(WPAD_CHAN0, acceleration.x, acceleration.y, acceleration.z);
@@ -396,6 +419,10 @@ private:
     std::optional<StageSelection> stage_selection;
     compat::NameObjRuntimeRegistrationMarker marker;
     aurora::WpadShakeGesture shake;
+#ifndef NDEBUG
+    runtime::DebugWpadInputScript input_script = runtime::DebugWpadInputScript::from_environment();
+    runtime::DebugWpadInputScript::Applied script_applied;
+#endif
     JUTDirectPrint* direct_print = nullptr;
     bool started = false;
 };
@@ -417,7 +444,7 @@ int run_original_game(const BootstrapConfiguration& configuration, logging::ILog
     while ((options.max_frames == 0 || completed_frames < options.max_frames) && window.poll_events()) {
         if (!aurora_begin_frame()) continue;
         try {
-            process.frame(window);
+            process.frame(window, completed_frames);
         } catch (...) {
             aurora_end_frame();
             throw;

@@ -1,0 +1,7 @@
+{
+  "src/compat/Cp932Literal.hpp": "e5c5c748631b290daa48d235ebf3ef9c2786a89a11a125ced62452c55ac5d713",
+  "src/compat/detail/Cp932Table.hpp": "efea8729a5f23357b223d01c6322b30c919bcf512df945f8ce6a01c358442deb",
+  "src/compat/detail/Cp932Mapping.tsv": "46778ae55afa614d3ece7e4f7160d9f1205626f09a461e6d7a933b57b582d600",
+  "tests/Cp932LiteralTests.cpp": "36c27ec48c07e2ca6827102b2e22e6b13f1af5bf874fa20f4e40cec4de8ac2a0",
+  "tests/test_cp932_literals.py": "a68e2e7894e1926b3bf6c396f8d81490abb2f92678140173cb3d951ff03ee314"
+}

@@ -1,0 +1,58 @@
+{
+  "retail_dol_sha256": "69f93fcc0fa34837347b5ac05168bc783adcacb3c02697cfda087a3b63abc9e0",
+  "functions": [
+    {
+      "symbol": "talk__14TalkStateEventFPC15TalkMessageCtrl",
+      "start": "0x802a2b64",
+      "instructions": 88,
+      "every_instruction_matches_current_retail_dol": true
+    },
+    {
+      "symbol": "update__10WPadButtonFv",
+      "start": "0x803ac508",
+      "instructions": 43,
+      "every_instruction_matches_current_retail_dol": true
+    },
+    {
+      "symbol": "testButtonA__10WPadButtonCFv",
+      "start": "0x803ac5e4",
+      "instructions": 3,
+      "every_instruction_matches_current_retail_dol": true
+    },
+    {
+      "symbol": "testTriggerA__10WPadButtonCFv",
+      "start": "0x803ac674",
+      "instructions": 3,
+      "every_instruction_matches_current_retail_dol": true
+    },
+    {
+      "symbol": "testCorePadButtonA__2MRFl",
+      "start": "0x803d39c4",
+      "instructions": 10,
+      "every_instruction_matches_current_retail_dol": true
+    },
+    {
+      "symbol": "testCorePadTriggerA__2MRFl",
+      "start": "0x803d3d4c",
+      "instructions": 10,
+      "every_instruction_matches_current_retail_dol": true
+    }
+  ],
+  "sources": [
+    {
+      "path": "Game/NPC/TalkState.cpp",
+      "native_equals_decomp": true,
+      "sha256": "0efb18df1245fa5eadce5aa5f42c0cfdfe47f1757f196efdb661ebcc9cf0f9df"
+    },
+    {
+      "path": "Game/System/WPadButton.cpp",
+      "native_equals_decomp": true,
+      "sha256": "cb63973e0ead41eacb56c26ebe63275422bc86cdbac596eb2d84e8f8cedffc76"
+    },
+    {
+      "path": "Game/Util/GamePadUtil.cpp",
+      "native_equals_decomp": true,
+      "sha256": "83bff1b7229e8c75583793876283fce1e7c42f4bec9ccb322f8119c96f9ade86"
+    }
+  ]
+}
