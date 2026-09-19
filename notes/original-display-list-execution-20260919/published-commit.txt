@@ -1,0 +1,13 @@
+1bdd5ba Execute GX display lists outside the physical FIFO stream
+ include/dolphin/gx/GXAurora.h   |   7 +
+ include/dolphin/gx/GXDispList.h |   2 +
+ lib/dolphin/gx/GXDispList.cpp   |  14 +-
+ lib/gx/command_processor.cpp    |  38 +++++-
+ lib/gx/command_processor.hpp    |   5 +
+ lib/gx/fifo.cpp                 |  36 ++++-
+ lib/gx/fifo.hpp                 |   6 +
+ tests/CMakeLists.txt            |   1 +
+ tests/gd_array_test.cpp         |   3 +-
+ tests/gd_texture_test.cpp       |   2 +-
+ tests/gx_display_list_test.cpp  | 293 ++++++++++++++++++++++++++++++++++++++++
+ 11 files changed, 395 insertions(+), 12 deletions(-)
