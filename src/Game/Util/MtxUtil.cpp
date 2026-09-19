@@ -242,7 +242,7 @@ namespace MR {
         TPos3f tmp2;
         tmp2.identity();
 
-        tmp1.setXYZDir(axisX, axisY, rDir);
+        tmp1.setXYZDir(axisX, rDir, axisY);
 
         // Copy rotation part from tmp1 to tmp2
         tmp2.mMtx[0][0] = axisX.x;
