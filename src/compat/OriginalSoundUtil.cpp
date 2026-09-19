@@ -336,6 +336,10 @@ namespace MR {
     void limitedSound(const char* pName, s32 param2) {
         JAISoundID id = AudSingletonHolder< AudSoundNameConverter >::get()->getSoundID(pName);
 
+        if (auto* output = aurora::audio::disabled_object_audio_service()) {
+            output->register_limited_sound(id, param2);
+            return;
+        }
         AudWrap::getSystem()->registerLimitedSound(id, param2);
     }
 

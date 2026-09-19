@@ -135,6 +135,15 @@ void DisabledObjectAudioService::recover_sound_volume_setting(u32 steps) {
 float DisabledObjectAudioService::sound_category_gain(u32 sound_id) const {
     return _playback ? _playback->sound_category_gain(sound_id) : _volumes.sound_gain(sound_id);
 }
+void DisabledObjectAudioService::register_limited_sound(JAISoundID sound_id, s32 delay) {
+    // With disabled output there is no playing voice to stop. A concrete
+    // playback owner performs the original stop-by-ID before registration.
+    if (_playback) _playback->register_limited_sound(sound_id, delay);
+    else _limited_sounds.register_sound(sound_id, delay);
+}
+bool DisabledObjectAudioService::is_limited_sound(JAISoundID sound_id) const {
+    return _playback ? _playback->is_limited_sound(sound_id) : _limited_sounds.contains(sound_id);
+}
 void DisabledObjectAudioService::reset_scene_controls() {
     _volumes.reset();
     _trigger_sound_permitted = true;
@@ -143,7 +152,10 @@ void DisabledObjectAudioService::reset_scene_controls() {
 }
 void DisabledObjectAudioService::update_scene_controls() {
     // RuntimeContext advances its concrete PCM backend at its own frame edge.
-    if (!_playback) _volumes.update();
+    if (!_playback) {
+        _volumes.update();
+        _limited_sounds.update();
+    }
 }
 std::unique_ptr<DisabledObjectAudioService> make_disabled_object_audio_service(
     std::shared_ptr<smgpc::compat::JkrHeapRuntime> heaps,

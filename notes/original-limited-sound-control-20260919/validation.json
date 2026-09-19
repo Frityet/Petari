@@ -1,0 +1,52 @@
+{
+  "fixture": "notes/original-audio-category-volume-20260907/fixture",
+  "point_light_objects_before": {
+    "build/.objs/smg-pc-point-light-runtime-tests/macosx/arm64/debug/tests/PointLightRuntimeTests.cpp.o": "44e0f8394a915d6f3a931bbf08de8760877a33c592d4668e97d7d370618486a8"
+  },
+  "commands": [
+    {
+      "name": "build",
+      "command": [
+        "xmake",
+        "build",
+        "smg-pc-original-jai-sound-ownership-tests"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 11.54
+    },
+    {
+      "name": "scene-only",
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-jai-sound-ownership-tests",
+        "--scene-only"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 0.369,
+      "fixture_skipped": false
+    },
+    {
+      "name": "backend-only",
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-jai-sound-ownership-tests",
+        "--backend-only"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 0.05,
+      "fixture_skipped": false
+    },
+    {
+      "name": "full-retail",
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-jai-sound-ownership-tests"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 6.375,
+      "fixture_skipped": false
+    }
+  ],
+  "binary_sha256": "4a54239708b05748e69f2607dea5ad6c955df46398bb77b93d7e99f591d45061",
+  "point_light_objects_after": {
+    "build/.objs/smg-pc-point-light-runtime-tests/macosx/arm64/debug/tests/PointLightRuntimeTests.cpp.o": "44e0f8394a915d6f3a931bbf08de8760877a33c592d4668e97d7d370618486a8"
+  },
+  "point_light_objects_unchanged": true
+}

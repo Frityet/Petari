@@ -48,7 +48,34 @@ std::vector<u8> read(const std::filesystem::path& path) {
 #include <cstdio>
 #include <fstream>
 
+void test_original_limited_sound_records() {
+    smgpc::compat::JAudioLimitedSoundOwnership limits;
+    const JAISoundID first(0x60001), second(0x60002), third(0x60003);
+    assert(!limits.contains(first) && !limits.contains(second));
+    limits.register_sound(first, 2);
+    limits.register_sound(second, 3);
+    limits.register_sound(third, 20);
+    assert(limits.contains(first) && limits.contains(second) && !limits.contains(third));
+    limits.update();
+    limits.register_sound(first, 100);
+    limits.update();
+    assert(!limits.contains(first) && limits.contains(second)); // Duplicate did not extend expiry.
+    limits.register_sound(third, 0);
+    assert(limits.contains(third)); // Zero delay still occupies its slot until the next update.
+    limits.update();
+    assert(!limits.contains(second) && !limits.contains(third));
+    limits.register_sound(first, -2);
+    assert(limits.contains(first));
+    limits.update();
+    assert(!limits.contains(first));
+    limits.register_sound(first, 10);
+    limits.register_sound(second, 10);
+    limits.clear();
+    assert(!limits.contains(first) && !limits.contains(second));
+}
+
 void test_disabled_audio_scene_state() {
+    test_original_limited_sound_records();
     const aurora::os::GuestThreadExecutionScope execution;
     const auto require_absent = [] {
         bool rejected = false;
@@ -97,6 +124,13 @@ void test_disabled_audio_scene_state() {
             scene->startScene();
             assert(scene->_4 == 0 && !MR::isCubeBgmChangeInvalid() && scene->isPlayerModeLuigi());
             assert(MR::isPermitSE() && output.sound_category_gain(0x60000) == AudParams::scCtgVolume[0][6]);
+            output.register_limited_sound(JAISoundID(0x60001), 2);
+            scene->startScene();
+            assert(output.is_limited_sound(JAISoundID(0x60001))); // Scene volume reset preserves the original limiter.
+            output.update_scene_controls();
+            assert(output.is_limited_sound(JAISoundID(0x60001)));
+            output.update_scene_controls();
+            assert(!output.is_limited_sound(JAISoundID(0x60001)));
             scene->setPlayerModeMario();
             assert(scene->isPlayerModeMario() && !scene->isPlayerModeLuigi());
             MR::setCubeBgmChangeInvalid();
@@ -382,8 +416,50 @@ void test_retail_service() {
     service.reset_scene();
     assert(!wind->isSoundAttached() && service.active_voice_count() == 0);
     service.end_frame();
+
+    service.begin_frame(24);
+    auto* limited_wind = service.start_level_sound("SE_AT_LV_ASTRO_DOME_WIND_1", 100, -1);
+    const auto wind_id = limited_wind->mSound->mSoundID;
+    auto* limited_wind_sound = dynamic_cast<smgpc::compat::NativePcmSound*>(limited_wind->mSound);
+    auto* first_shot = service.start_sound_effect("SE_SY_GAME_START", -1, -1);
+    auto* second_shot = service.start_sound_effect("SE_SY_GAME_START", -1, -1);
+    const auto shot_id = first_shot->mSound->mSoundID;
+    auto* first_shot_sound = dynamic_cast<smgpc::compat::NativePcmSound*>(first_shot->mSound);
+    auto* second_shot_sound = dynamic_cast<smgpc::compat::NativePcmSound*>(second_shot->mSound);
+    service.register_limited_sound(wind_id, 2);
+    service.register_limited_sound(shot_id, 3);
+    assert(!limited_wind->isSoundAttached() && limited_wind_sound);
+    assert(limited_wind_sound->isDead() || limited_wind_sound->releasing());
+    assert(!first_shot->isSoundAttached() && !second_shot->isSoundAttached());
+    assert(first_shot_sound && (first_shot_sound->isDead() || first_shot_sound->releasing()));
+    assert(second_shot_sound && (second_shot_sound->isDead() || second_shot_sound->releasing()));
+    assert(service.start_level_sound("SE_AT_LV_ASTRO_DOME_WIND_1", 100, -1) == nullptr);
+    assert(service.start_sound_effect("SE_SY_GAME_START", -1, -1) == nullptr); // System SE is limited too.
+    auto* limited_stream = service.start_bgm(Lane::Stage, "STM_TITLE", true);
+    const auto stream_id = limited_stream->mSound->mSoundID;
+    service.register_limited_sound(stream_id, 4);
+    assert(!limited_stream->isSoundAttached() && !service.has_active_bgm(Lane::Stage));
+    assert(!service.is_limited_sound(stream_id)); // A full table still stops matching voices before rejecting a slot.
+    service.reset_output_controls();
+    service.reset_scene();
+    assert(service.is_limited_sound(wind_id) && service.is_limited_sound(shot_id));
+    service.end_frame();
+    service.begin_frame(25);
+    service.register_limited_sound(wind_id, 100);
+    assert(service.is_limited_sound(wind_id));
+    service.end_frame();
+    service.begin_frame(26);
+    assert(!service.is_limited_sound(wind_id) && service.is_limited_sound(shot_id));
+    assert(service.start_level_sound("SE_AT_LV_ASTRO_DOME_WIND_1", 100, -1) != nullptr);
+    service.end_frame();
+    service.begin_frame(27);
+    assert(!service.is_limited_sound(shot_id));
+    assert(service.start_sound_effect("SE_SY_GAME_START", -1, -1) != nullptr);
+    service.reset_scene();
+    service.end_frame();
     std::puts("[pass] actual retail playback service uses original stream manager and canonical original sound/handle ABI");
     std::puts("[pass] Stage/Sub prepare-unlock, original states, independent handles, native PCM level/SE params/lifetime and category control");
+    std::puts("[pass] original limited-sound slots stop actual level/SE/stream IDs, suppress new SE, preserve reset state and expire without duplicate refresh");
 }
 
 void test_original_name_owner() {
@@ -496,6 +572,12 @@ void test_disabled_backend_wrapper_owner() {
         // worker; the main guest controls and advances that same real state.
         auto* output = aurora::audio::disabled_object_audio_service();
         assert(output != nullptr);
+        const auto limited_id = AudSingletonHolder<AudSoundNameConverter>::get()->getSoundID("SE_SM_LV_TICO_WAIT");
+        assert(!output->is_limited_sound(limited_id));
+        MR::limitedSound("SE_SM_LV_TICO_WAIT", 1);
+        assert(output->is_limited_sound(limited_id));
+        wrapper->movement();
+        assert(!output->is_limited_sound(limited_id));
         MR::setSoundVolumeSetting(3, 2);
         wrapper->movement();
         assert(std::abs(output->sound_category_gain(0x60000) -

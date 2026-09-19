@@ -52,4 +52,13 @@ movement once per frame. No audio mixer callback traverses the category-owner
 registry. This change supports serialized original guest ownership; it does not
 claim a new freely concurrent native audio-owner API.
 
+The later `../original-limited-sound-control-20260919/README.md` records the
+additional native limited-sound control and exact original limiter-state import.
+Its eight-function utility comparison supersedes the current-provider portion
+of this checkpoint's seven-function comparison. That later control passed its
+native ownership-target build and scene-only, backend-only and complete retail
+fixture modes; its notes record the exact logs and binary hash. Live progression
+through the third catch remains unverified; chord and other absent audio owners
+remain unsupported.
+
 Final verification after the immediate PCM gain correction: the eighth native build passed; the complete OriginalJaiSoundOwnershipTests passed using the existing retail fixture, including the playing-voice identity/token/active-state and immediate default-gain assertion. SoundPermissionTests passed absent-owner rejection, trigger/level independence, original exempt categories, and scene reset. Logs: ownership-final-build.log, ownership-full-test.log, permission-build.log, permission-test.log. The live bundled app displayed the first authored rabbit message; direct Return presses did not yet establish conversation advancement (native window sampling is under separate investigation).

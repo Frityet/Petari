@@ -4,6 +4,7 @@
 #include <aurora/audio.hpp>
 #include <aurora/j_audio_sound_archive.hpp>
 #include <aurora/j_audio_stream.hpp>
+#include "compat/JAudioLimitedSoundOwnership.hpp"
 
 #include <array>
 #include <cstddef>
@@ -69,6 +70,8 @@ namespace smgpc::runtime {
         void recover_sound_volume_setting(std::uint32_t steps);
         void set_sound_volume_setting_level(std::int32_t volume_set);
         [[nodiscard]] float sound_category_gain(std::uint32_t sound_id) const;
+        void register_limited_sound(JAISoundID sound_id, s32 delay);
+        [[nodiscard]] bool is_limited_sound(JAISoundID sound_id) const;
         [[nodiscard]] JAISoundHandle *start_bgm(BgmLane lane,
             std::string_view name, bool prepared);
         [[nodiscard]] JAISoundHandle *start_bgm(BgmLane lane,
@@ -128,6 +131,7 @@ namespace smgpc::runtime {
         std::unique_ptr<aurora::audio::JAudioSoundArchive> _archive;
         std::unique_ptr<aurora::audio::PcmAudioMixer> _mixer;
         std::unique_ptr<compat::JAudioCategoryVolumeOwnership> _category_volume;
+        compat::JAudioLimitedSoundOwnership _limited_sounds;
         std::unique_ptr<compat::JaiStreamPlayback> _stream_playback;
         std::map<std::uint32_t, LevelVoiceEntry> _level_voices;
         std::map<std::uint32_t, aurora::audio::JAudioSoundEffectRecipe>

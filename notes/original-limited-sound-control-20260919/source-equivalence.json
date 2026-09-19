@@ -1,0 +1,30 @@
+{
+  "donor_imports": [
+    {
+      "donor": "decomp/src/Game/AudioLib/AudLimitedSound.cpp",
+      "native": "src/Game/AudioLib/AudLimitedSound.cpp",
+      "identical": true,
+      "sha256": "5f4506ab6c57628f66ba5adcac0dc0a2ac23aea7d828423233ba173a21a3e3fd"
+    },
+    {
+      "donor": "decomp/include/Game/AudioLib/AudLimitedSound.hpp",
+      "native": "src/Game/AudioLib/AudLimitedSound.hpp",
+      "identical": true,
+      "sha256": "dd4d52699915fa415516c5a5654248192cd917957c1a5ae78b43168dcac9ac5a"
+    }
+  ],
+  "original_utility_sha256": "50dfd27b509823581fa11b631a6183053cc6af25f44c7746d9a32071eeeb2db6",
+  "native_provider_sha256": "1b8294cedecb3d1b799db9d18bd51f9aa0d304a04c1c9412a4f2262bc4de15a8",
+  "function_definitions": 86,
+  "changed_functions": [
+    "isPermitSE",
+    "limitedSound",
+    "permitLevelSE",
+    "permitTrigSE",
+    "recoverSoundVolumeSetting",
+    "setSoundVolumeSetting",
+    "submitLevelSE",
+    "submitTrigSE"
+  ],
+  "unchanged_function_definitions": 78
+}

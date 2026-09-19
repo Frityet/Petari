@@ -4,6 +4,7 @@
 #include "Game/AudioLib/AudSceneMgr.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/JAudioCategoryVolumeOwnership.hpp"
+#include "compat/JAudioLimitedSoundOwnership.hpp"
 #include <memory>
 #include <cstdint>
 #include <vector>
@@ -32,6 +33,8 @@ public:
     void set_sound_volume_setting(s32 volume_set, u32 steps);
     void recover_sound_volume_setting(u32 steps);
     float sound_category_gain(u32 sound_id) const;
+    void register_limited_sound(JAISoundID sound_id, s32 delay);
+    bool is_limited_sound(JAISoundID sound_id) const;
     void reset_scene_controls();
     void update_scene_controls();
 
@@ -42,6 +45,7 @@ private:
     // this backend has no JAU wave heap or output device.
     AudSceneMgr _scene_manager{nullptr};
     smgpc::compat::JAudioCategoryVolumeOwnership _volumes;
+    smgpc::compat::JAudioLimitedSoundOwnership _limited_sounds;
     smgpc::runtime::JAudioPlaybackService* _playback = nullptr;
     bool _trigger_sound_permitted = true;
     bool _level_sound_permitted = true;

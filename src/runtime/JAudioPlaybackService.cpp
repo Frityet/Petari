@@ -114,6 +114,7 @@ namespace smgpc::runtime {
     void JAudioPlaybackService::begin_frame(std::uint64_t frame_index) {
         if (_frame_open) aurora::throw_host_exception<std::logic_error>("JAudio frame is already open");
         _category_volume->update();
+        _limited_sounds.update();
         apply_category_gains();
         _frame_index = frame_index;
         _frame_open = true;
@@ -146,7 +147,7 @@ namespace smgpc::runtime {
                 "Level sound is absent from the retail JAudio name table: " +
                 std::string(name));
         }
-        if (!is_level_sound_permitted(*sound_id)) {
+        if (!is_level_sound_permitted(*sound_id) || is_limited_sound(*sound_id)) {
             return nullptr;
         }
         const auto adjustment =
@@ -205,7 +206,7 @@ namespace smgpc::runtime {
                 "Sound effect is absent from the retail JAudio name table: " +
                 std::string(name));
         }
-        if (!is_trigger_sound_permitted(*sound_id)) {
+        if (!is_trigger_sound_permitted(*sound_id) || is_limited_sound(*sound_id)) {
             return nullptr;
         }
         if (parameter_1 != -1) {
@@ -330,6 +331,33 @@ namespace smgpc::runtime {
 
     float JAudioPlaybackService::sound_category_gain(std::uint32_t sound_id) const {
         return _category_volume->sound_gain(sound_id);
+    }
+
+    void JAudioPlaybackService::register_limited_sound(JAISoundID sound_id, s32 delay) {
+        // JAUSoundMgr::stopSoundID visits every sound kind before the original
+        // limiter checks duplicates or available slots.
+        if (const auto voice = _level_voices.find(u32(sound_id)); voice != _level_voices.end() && voice->second.sound) {
+            voice->second.sound->stop(0);
+            voice->second.sound->JAISound_tryDie_();
+            voice->second.sound->mix();
+        }
+        for (const auto& [token, voice] : _sound_effect_voices) {
+            if (voice->sound_id == u32(sound_id)) {
+                voice->sound->stop(0);
+                voice->sound->JAISound_tryDie_();
+                voice->sound->mix();
+            }
+        }
+        for (const auto lane : {BgmLane::Stage, BgmLane::Sub}) {
+            if (auto* sound = bgm_sound(lane); sound && sound->mSoundID == sound_id) sound->stop(0);
+        }
+        _stream_playback->mix();
+        retire_finished_voices();
+        _limited_sounds.register_sound(sound_id, delay);
+    }
+
+    bool JAudioPlaybackService::is_limited_sound(JAISoundID sound_id) const {
+        return _limited_sounds.contains(sound_id);
     }
 
     void JAudioPlaybackService::apply_category_gains() {
