@@ -28,7 +28,7 @@ def normalized(a):
     return scale(a, 1 / length) if length > 1e-5 else [0, 0, 0]
 
 
-def controls(player, target):
+def controls(player, target, stop_distance=130):
     # Reconstruct the two tangent input directions from captured fields. This
     # does not invoke calcMoveDir, whose gravity smoothing mutates Mario state.
     state = player["player"]
@@ -58,7 +58,7 @@ def controls(player, target):
     x, y = (da * bb - db * ab) / determinant, (db * aa - da * ab) / determinant
     length = math.hypot(x, y)
     distance = math.sqrt(dot(difference, difference))
-    magnitude = min(1, max(0.35, distance / 350)) if distance > 130 else 0
+    magnitude = min(1, max(0.35, distance / 350)) if distance > stop_distance else 0
     return (x * magnitude / length, y * magnitude / length, distance) if length else (0, 0, distance)
 
 
@@ -70,41 +70,56 @@ def publish(path, x, y, frame):
     return command
 
 
-parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument("trace", type=Path)
-parser.add_argument("input", type=Path)
-parser.add_argument("actor", type=int)
-parser.add_argument("--start", type=int, default=2250)
-parser.add_argument("--end", type=int, default=11000)
-parser.add_argument("--states", default="Wait,Guide,Goal")
-parser.add_argument("--timeout", type=float, default=1400)
-args = parser.parse_args()
-deadline = time.monotonic() + args.timeout
-while not args.trace.exists() and time.monotonic() < deadline:
-    time.sleep(0.1)
-allowed = args.states.split(",")
-with args.trace.open() as source:
-    while time.monotonic() < deadline:
-        offset = source.tell()
-        line = source.readline()
-        if not line.endswith("\n"):
-            source.seek(offset)
-            time.sleep(0.1)
-            continue
-        snapshot = json.loads(line)
-        frame = snapshot["frame_index"]
-        if frame < args.start:
-            continue
-        actors = snapshot["actors"]
-        player = next(a for a in actors if "player" in a)
-        target = next(a for a in actors if a["id"] == args.actor)
-        nerve = (target.get("nerve") or {}).get("type", "")
-        complete = frame >= args.end or target["dead"] or not any("Nrv" + n + "E" in nerve for n in allowed)
-        x, y, distance = controls(player, target)
-        if complete:
-            x = y = 0
-        command = publish(args.input, x, y, frame)
-        print(json.dumps({"frame": frame, "player": player["position"], "target": target["position"],
-                          "nerve": nerve, "distance": distance, "command": command, "finished": complete}), flush=True)
-        if complete:
-            break
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("trace", type=Path)
+    parser.add_argument("input", type=Path)
+    parser.add_argument("actor", type=int, nargs="?", help="Runtime actor identity from this trace")
+    parser.add_argument("--position", type=float, nargs=3, metavar=("X", "Y", "Z"),
+                        help="Navigate toward a world position using controller input only")
+    parser.add_argument("--start", type=int, default=2250)
+    parser.add_argument("--end", type=int, default=11000)
+    parser.add_argument("--states", default="Wait,Guide,Goal")
+    parser.add_argument("--timeout", type=float, default=1400)
+    args = parser.parse_args()
+    if (args.actor is None) == (args.position is None):
+        parser.error("select exactly one runtime actor or --position target")
+    if args.position is not None and not all(math.isfinite(v) for v in args.position):
+        parser.error("position components must be finite")
+    deadline = time.monotonic() + args.timeout
+    while not args.trace.exists() and time.monotonic() < deadline:
+        time.sleep(0.1)
+    allowed = args.states.split(",")
+    with args.trace.open() as source:
+        while time.monotonic() < deadline:
+            offset = source.tell()
+            line = source.readline()
+            if not line.endswith("\n"):
+                source.seek(offset)
+                time.sleep(0.1)
+                continue
+            snapshot = json.loads(line)
+            frame = snapshot["frame_index"]
+            if frame < args.start:
+                continue
+            actors = snapshot["actors"]
+            player = next(a for a in actors if "player" in a)
+            target = next(a for a in actors if a["id"] == args.actor) if args.actor is not None else {
+                "position": args.position, "dead": False
+            }
+            nerve = (target.get("nerve") or {}).get("type", "")
+            x, y, distance = controls(player, target)
+            complete = frame >= args.end or target["dead"] or (
+                not any("Nrv" + n + "E" in nerve for n in allowed) if args.actor is not None else distance <= 130
+            )
+            if complete:
+                x = y = 0
+            command = publish(args.input, x, y, frame)
+            print(json.dumps({"frame": frame, "player": player["position"], "target": target["position"],
+                              "nerve": nerve, "distance": distance, "command": command, "finished": complete}), flush=True)
+            if complete:
+                break
+
+
+if __name__ == "__main__":
+    main()

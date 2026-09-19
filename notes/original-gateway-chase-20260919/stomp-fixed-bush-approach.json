@@ -1,0 +1,33 @@
+{
+  "observed_frame": 8170,
+  "input": {
+    "buttons": "8200-8210:A",
+    "pointer": "",
+    "stick": ""
+  },
+  "follow_start": 8370,
+  "world_position": [
+    1550,
+    -760.6881103515625,
+    -1090
+  ],
+  "source": "authored SwitchCube l_id8 position; bottom-origin volume; controller navigation only",
+  "driver_pid": 77015,
+  "command": [
+    "python3",
+    "-u",
+    "notes/original-gateway-chase-20260919/follow_actor.py",
+    "notes/gateway-compat-20260919/content-stomp-fixed-16000-actors.jsonl",
+    "notes/original-gateway-chase-20260919/live-input-stomp-fixed.json",
+    "--position",
+    "1550",
+    "-760.6881103515625",
+    "-1090",
+    "--start",
+    "8370",
+    "--end",
+    "14000",
+    "--timeout",
+    "400"
+  ]
+}

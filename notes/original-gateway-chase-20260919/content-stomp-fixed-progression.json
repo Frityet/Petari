@@ -1,0 +1,378 @@
+{
+  "last_trace_frame": 15990,
+  "state_transitions": [
+    {
+      "frame": 40,
+      "id": 621,
+      "type": "14PunchingKinoko",
+      "position": [
+        1590.0,
+        -538.8348999023438,
+        -1260.0
+      ],
+      "dead": false,
+      "nerve": "N17NrvPunchingKinoko21PunchingKinokoNrvWaitE"
+    },
+    {
+      "frame": 40,
+      "id": 626,
+      "type": "14PunchingKinoko",
+      "position": [
+        1430.0,
+        -724.5782470703125,
+        -1350.0
+      ],
+      "dead": false,
+      "nerve": "N17NrvPunchingKinoko21PunchingKinokoNrvWaitE"
+    },
+    {
+      "frame": 40,
+      "id": 631,
+      "type": "14PunchingKinoko",
+      "position": [
+        1780.0,
+        -549.301025390625,
+        -950.0
+      ],
+      "dead": false,
+      "nerve": "N17NrvPunchingKinoko21PunchingKinokoNrvWaitE"
+    },
+    {
+      "frame": 40,
+      "id": 636,
+      "type": "14PunchingKinoko",
+      "position": [
+        1740.0,
+        -292.4286193847656,
+        -1130.0
+      ],
+      "dead": false,
+      "nerve": "N17NrvPunchingKinoko21PunchingKinokoNrvWaitE"
+    },
+    {
+      "frame": 40,
+      "id": 641,
+      "type": "14PunchingKinoko",
+      "position": [
+        1660.0,
+        -826.8701171875,
+        -970.0
+      ],
+      "dead": false,
+      "nerve": "N17NrvPunchingKinoko21PunchingKinokoNrvWaitE"
+    },
+    {
+      "frame": 40,
+      "id": 646,
+      "type": "14PunchingKinoko",
+      "position": [
+        1750.0,
+        -962.0391235351562,
+        -640.0
+      ],
+      "dead": false,
+      "nerve": "N17NrvPunchingKinoko21PunchingKinokoNrvWaitE"
+    },
+    {
+      "frame": 40,
+      "id": 651,
+      "type": "14PunchingKinoko",
+      "position": [
+        1430.0,
+        -920.091064453125,
+        -1230.0
+      ],
+      "dead": false,
+      "nerve": "N17NrvPunchingKinoko21PunchingKinokoNrvWaitE"
+    },
+    {
+      "frame": 40,
+      "id": 656,
+      "type": "14PunchingKinoko",
+      "position": [
+        1560.0,
+        -1093.451904296875,
+        -870.0
+      ],
+      "dead": false,
+      "nerve": "N17NrvPunchingKinoko21PunchingKinokoNrvWaitE"
+    },
+    {
+      "frame": 40,
+      "id": 661,
+      "type": "14PunchingKinoko",
+      "position": [
+        1020.0,
+        -878.1182861328125,
+        -1600.0
+      ],
+      "dead": false,
+      "nerve": "N17NrvPunchingKinoko21PunchingKinokoNrvWaitE"
+    },
+    {
+      "frame": 40,
+      "id": 666,
+      "type": "14PunchingKinoko",
+      "position": [
+        1250.0,
+        -1269.5494384765625,
+        -1100.0
+      ],
+      "dead": false,
+      "nerve": "N17NrvPunchingKinoko21PunchingKinokoNrvWaitE"
+    },
+    {
+      "frame": 40,
+      "id": 671,
+      "type": "14PunchingKinoko",
+      "position": [
+        630.0,
+        -6.4150710105896,
+        2000.0
+      ],
+      "dead": false,
+      "nerve": "N17NrvPunchingKinoko21PunchingKinokoNrvWaitE"
+    },
+    {
+      "frame": 40,
+      "id": 676,
+      "type": "14PunchingKinoko",
+      "position": [
+        570.0,
+        287.14599609375,
+        2000.0
+      ],
+      "dead": false,
+      "nerve": "N17NrvPunchingKinoko21PunchingKinokoNrvWaitE"
+    },
+    {
+      "frame": 40,
+      "id": 681,
+      "type": "14PunchingKinoko",
+      "position": [
+        320.0,
+        334.3748779296875,
+        2040.0
+      ],
+      "dead": false,
+      "nerve": "N17NrvPunchingKinoko21PunchingKinokoNrvWaitE"
+    },
+    {
+      "frame": 40,
+      "id": 686,
+      "type": "14PunchingKinoko",
+      "position": [
+        410.0,
+        134.1682586669922,
+        2050.0
+      ],
+      "dead": false,
+      "nerve": "N17NrvPunchingKinoko21PunchingKinokoNrvWaitE"
+    },
+    {
+      "frame": 40,
+      "id": 846,
+      "type": "10DemoRabbit",
+      "position": [
+        10.0,
+        -2384.429931640625,
+        210.0
+      ],
+      "dead": true,
+      "nerve": "N13NrvDemoRabbit19DemoRabbitNrvAppearE"
+    },
+    {
+      "frame": 40,
+      "id": 849,
+      "type": "10DemoRabbit",
+      "position": [
+        -80.0,
+        2201.922607421875,
+        -210.0
+      ],
+      "dead": false,
+      "nerve": "N13NrvDemoRabbit17DemoRabbitNrvDemoE"
+    },
+    {
+      "frame": 40,
+      "id": 851,
+      "type": "10DemoRabbit",
+      "position": [
+        30.0,
+        2194.529296875,
+        300.0
+      ],
+      "dead": false,
+      "nerve": "N13NrvDemoRabbit17DemoRabbitNrvDemoE"
+    },
+    {
+      "frame": 40,
+      "id": 853,
+      "type": "7Rosetta",
+      "position": [
+        -70.0,
+        2499.080810546875,
+        -340.0
+      ],
+      "dead": true,
+      "nerve": "N10NrvRosetta14RosettaNrvDemoE"
+    },
+    {
+      "frame": 40,
+      "id": 861,
+      "type": "20RunawayRabbitCollect",
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dead": false,
+      "nerve": "N23NrvRunawayRabbitCollect27RunawayRabbitCollectNrvWaitE"
+    },
+    {
+      "frame": 40,
+      "id": 878,
+      "type": "13RunawayRabbit",
+      "position": [
+        760.0,
+        301.2020263671875,
+        1930.0
+      ],
+      "dead": false,
+      "nerve": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+    },
+    {
+      "frame": 40,
+      "id": 883,
+      "type": "13RunawayRabbit",
+      "position": [
+        1300.0,
+        -933.8270874023438,
+        -1350.0
+      ],
+      "dead": false,
+      "nerve": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+    },
+    {
+      "frame": 40,
+      "id": 888,
+      "type": "13RunawayRabbit",
+      "position": [
+        -1215.6785888671875,
+        779.9697265625,
+        -1145.4390869140625
+      ],
+      "dead": false,
+      "nerve": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+    },
+    {
+      "frame": 40,
+      "id": 893,
+      "type": "13RunawayRabbit",
+      "position": [
+        260.0,
+        -1250.7486572265625,
+        -1940.0
+      ],
+      "dead": false,
+      "nerve": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+    },
+    {
+      "frame": 1050,
+      "id": 846,
+      "type": "10DemoRabbit",
+      "position": [
+        10.4484224319458,
+        -2491.35302734375,
+        219.41688537597656
+      ],
+      "dead": false,
+      "nerve": "N13NrvDemoRabbit19DemoRabbitNrvAppearE"
+    },
+    {
+      "frame": 1090,
+      "id": 846,
+      "type": "10DemoRabbit",
+      "position": [
+        9.093728065490723,
+        -2228.710693359375,
+        198.2386474609375
+      ],
+      "dead": false,
+      "nerve": "N13NrvDemoRabbit17DemoRabbitNrvDemoE"
+    },
+    {
+      "frame": 1140,
+      "id": 846,
+      "type": "10DemoRabbit",
+      "position": [
+        9.067656517028809,
+        -2228.34228515625,
+        198.1486053466797
+      ],
+      "dead": false,
+      "nerve": "N13NrvDemoRabbit18DemoRabbitNrvTalk0E"
+    },
+    {
+      "frame": 1410,
+      "id": 846,
+      "type": "10DemoRabbit",
+      "position": [
+        45.923866271972656,
+        -2229.806396484375,
+        183.798583984375
+      ],
+      "dead": false,
+      "nerve": "N13NrvDemoRabbit18DemoRabbitNrvGuideE"
+    },
+    {
+      "frame": 1490,
+      "id": 846,
+      "type": "10DemoRabbit",
+      "position": [
+        185.3885498046875,
+        -1825.6072998046875,
+        1016.6139526367188
+      ],
+      "dead": false,
+      "nerve": "N13NrvDemoRabbit17DemoRabbitNrvWaitE"
+    },
+    {
+      "frame": 2310,
+      "id": 846,
+      "type": "10DemoRabbit",
+      "position": [
+        185.83575439453125,
+        -1826.64208984375,
+        1012.8261108398438
+      ],
+      "dead": false,
+      "nerve": "N13NrvDemoRabbit18DemoRabbitNrvGuideE"
+    },
+    {
+      "frame": 3020,
+      "id": 846,
+      "type": "10DemoRabbit",
+      "position": [
+        -221.18325805664062,
+        2274.186279296875,
+        157.61129760742188
+      ],
+      "dead": false,
+      "nerve": "N13NrvDemoRabbit17DemoRabbitNrvGoalE"
+    },
+    {
+      "frame": 3140,
+      "id": 846,
+      "type": "10DemoRabbit",
+      "position": [
+        -150.29153442382812,
+        2203.42919921875,
+        135.33937072753906
+      ],
+      "dead": false,
+      "nerve": "N13NrvDemoRabbit18DemoRabbitNrvTalk1E"
+    }
+  ],
+  "claim": "Bounded 16000-frame completion; guide Talk1 reached, minigame not activated in this run; no rabbit catch or sensor-stomp replay established."
+}

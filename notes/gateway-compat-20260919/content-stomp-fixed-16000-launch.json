@@ -1,0 +1,36 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc",
+    "--original",
+    "--disc",
+    "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--stage",
+    "HeavensDoorGalaxy",
+    "--scenario",
+    "1",
+    "--max-frames",
+    "16000"
+  ],
+  "environment": {
+    "SMGPC_SAVE_DIR": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/content-stomp-fixed-16000-nand",
+    "SMGPC_NAND_DIR": "",
+    "AURORA_BACKEND": "metal",
+    "SMGPC_WINDOW_WIDTH": "1280",
+    "SMGPC_WINDOW_HEIGHT": "720",
+    "SMGPC_SCREENSHOT_PATH": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/content-stomp-fixed-16000-frame4200.png",
+    "SMGPC_SCREENSHOT_FRAME": "4200",
+    "SMGPC_DEBUG_WPAD_INPUT_FILE": "/Users/frityet/Projects/petari/notes/original-gateway-chase-20260919/live-input-stomp-fixed.json",
+    "SMGPC_DEBUG_FRAME_TIMING": "1",
+    "SMGPC_DEBUG_ACTOR_TRACE_PATH": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/content-stomp-fixed-16000-actors.jsonl",
+    "SMGPC_DEBUG_ACTOR_TRACE_TYPES": "MarioActor,Rabbit,Tico,Rosetta,WarpPod,EarthenPipe,PunchingKinoko,Butterfly",
+    "SMGPC_DEBUG_ACTOR_TRACE_INTERVAL": "10",
+    "SMGPC_DEBUG_LAYOUT_DUMP_PATH": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/content-stomp-fixed-16000-layout.txt",
+    "SMGPC_DEBUG_LAYOUT_DUMP_FRAME": "4200",
+    "SMGPC_DEBUG_WPAD_BUTTON_SCRIPT": "1400-1410:A;1500-1510:A;1600-1610:A;1700-1710:A;1800-1810:A;1900-1910:A;2000-2010:A;2100-2110:A;3000-3010:A",
+    "SMGPC_DEBUG_WPAD_POINTER_SCRIPT": "",
+    "SMGPC_DEBUG_WPAD_STICK_SCRIPT": "0-16000:0:0"
+  },
+  "binary_sha256": "1c822fdbe63f8466f7272e2f405579e0db447a20140a37642af2a57de940af16",
+  "started_at": "2026-09-19T15:34:35.345975+00:00",
+  "pid": 76171
+}
