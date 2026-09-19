@@ -1,3 +1,4 @@
+#include "compat/LightFunctionCompat.hpp"
 #include "resource/TextEncoding.hpp"
 #include "Game/Gravity/PointGravity.hpp"
 #include "Game/Animation/XanimeCore.hpp"
@@ -666,7 +667,7 @@ namespace {
         smgpc::tests::verify_original_mario_state_lifecycle(*actor);
         require(actor->mActorLightCtrl != nullptr &&
                     actor->mActorLightCtrl->_4 == MR::LightType_Player &&
-                    runtime.scene_lights().player_light_ctrl() ==
+                    smgpc::compat::registered_player_light_controller() ==
                         actor->mActorLightCtrl,
                 "MarioActor PC init must install and register the exact player-light controller after scene connection");
         require(actor->mModelManager != nullptr &&
@@ -842,7 +843,7 @@ namespace {
             actor = nullptr;
             require(runtime.player_system().attached_actor() == nullptr &&
                         MR::getMarioHolder()->getMarioActor() == nullptr &&
-                        runtime.scene_lights().player_light_ctrl() == nullptr,
+                        smgpc::compat::registered_player_light_controller() == nullptr,
                     "focused player retirement must clear every borrowed player owner");
             std::cout << "[proof] focused actual PlayerUtil: original entry, finite joints, original draw buffers, utility checks and scene teardown passed\n";
             return;
@@ -1366,7 +1367,7 @@ namespace {
         created.reset();
         actor = nullptr;
         require(MR::getMarioHolder()->getMarioActor() == nullptr &&
-                    runtime.scene_lights().player_light_ctrl() == nullptr,
+                    smgpc::compat::registered_player_light_controller() == nullptr,
                 "MarioHolder and the non-owning player-light binding must clear before the actor owner is destroyed");
 #ifndef NDEBUG
         require(std::ranges::none_of(runtime.scheduler().snapshot(), [](const auto& entry) {
@@ -1407,7 +1408,7 @@ namespace {
                     actor->mModelManager->getJ3DModel() != nullptr &&
                     actor->mModelManager->getJ3DModelData() != nullptr &&
                     actor->mModelManager->getJ3DModelData()->getJointNum() != 0U &&
-                    runtime.scene_lights().player_light_ctrl() ==
+                    smgpc::compat::registered_player_light_controller() ==
                         actor->mActorLightCtrl,
                 "recreated Mario must own the real model and replace the holder and player-light bindings");
         const auto recreated_frame = run_frame(release_end_frame + 2U);
@@ -1440,7 +1441,7 @@ namespace {
         MR::getMarioHolder()->setMarioActor(nullptr);
         created.reset();
         actor = nullptr;
-        require(runtime.scene_lights().player_light_ctrl() == nullptr,
+        require(smgpc::compat::registered_player_light_controller() == nullptr,
                 "recreated Mario destruction must not leave a stale player-light controller");
 #ifndef NDEBUG
         require(std::ranges::none_of(runtime.scheduler().snapshot(), [](const auto& entry) {

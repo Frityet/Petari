@@ -1,5 +1,8 @@
 #include "resource/TextEncoding.hpp"
+#include "OriginalSceneControllerFixture.hpp"
+#include "SceneExecutionFixture.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/Map/LightDirector.hpp"
 #include "Game/Map/LightFunction.hpp"
 #include "Game/Map/LightPointCtrl.hpp"
@@ -11,6 +14,7 @@
 #include "Logger.hpp"
 #include "RendererService.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/LightFunctionCompat.hpp"
 #include "render/GXState.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -22,6 +26,8 @@
 
 #include <algorithm>
 #include <array>
+#include <bit>
+#include <map>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
@@ -43,6 +49,44 @@ namespace {
         if (!condition) {
             throw std::runtime_error(std::string(message));
         }
+    }
+
+    void testOriginalPlayerLightOwnership() {
+        using namespace smgpc;
+        const auto heaps = compat::JkrHeapRuntime::create(16U << 20);
+        test::OriginalSceneControllerFixture original(heaps);
+        runtime::SceneScheduler scheduler;
+        runtime::SceneSchedulerBinding active(scheduler);
+        for (unsigned generation = 0; generation < 8; ++generation) {
+            const auto domain = compat::JkrAllocationDomain::create(heaps, 1U << 20);
+            test::SceneExecutionFixture scene(scheduler, domain, nullptr, nullptr,
+                                              &original.scene, original.controller().mObjHolder);
+            alignas(32) std::array<u8, 4096> commands{};
+            GXBeginDisplayList(commands.data(), commands.size());
+            auto* director = static_cast<LightDirector*>(MR::createSceneObj(SceneObj_LightDirector));
+            GXEndDisplayList();
+            require(director && !director->_1C, "each real scene starts without a borrowed player controller");
+            MR::createSceneObj(SceneObj_ClippingDirector);
+            {
+                LiveActor first("first original player light"), second("second original player light");
+                compat::replace_actor_light_ctrl(&first);
+                compat::replace_actor_light_ctrl(&second);
+                LightFunction::registerPlayerLightCtrl(first.mActorLightCtrl);
+                require(director->_1C == first.mActorLightCtrl &&
+                            compat::registered_player_light_controller() == first.mActorLightCtrl,
+                        "registration uses the original director's actual borrowed pointer");
+                LightFunction::registerPlayerLightCtrl(second.mActorLightCtrl);
+                compat::replace_actor_light_ctrl(&first);
+                require(director->_1C == second.mActorLightCtrl,
+                        "replacing an unregistered controller preserves the active player");
+                compat::replace_actor_light_ctrl(&second);
+                require(!director->_1C, "replacing the registered controller clears its borrowed pointer");
+                LightFunction::registerPlayerLightCtrl(first.mActorLightCtrl);
+            }
+            require(!director->_1C, "actor retirement clears the original director before the controller is freed");
+        }
+        require(!compat::registered_player_light_controller(),
+                "retired original scenes expose no player light controller");
     }
 
     template <typename Exception>
@@ -408,6 +452,70 @@ namespace {
         director->mPointCtrl = pointController;
     }
 
+    void testOriginalGxLightSubmission() {
+        require(smgpc::runtime::RuntimeContext::try_instance() == nullptr,
+                "direct light proof must not install the host showcase runtime");
+        alignas(32) std::array<u8, 4096> commands{};
+        auto decode = [&commands](u32 size) {
+            auto registers = std::map<u16, u32>{};
+            auto word = [&commands](std::size_t offset) {
+                return u32(commands[offset]) << 24 | u32(commands[offset + 1]) << 16 |
+                       u32(commands[offset + 2]) << 8 | commands[offset + 3];
+            };
+            for (std::size_t offset = 0; offset < size;) {
+                const auto opcode = commands[offset++];
+                if (opcode == 0) continue;
+                require(opcode == 0x10 && offset + 4 <= size,
+                        "light APIs must encode actual XF commands");
+                const auto header = word(offset);
+                offset += 4;
+                const auto count = (header >> 16) + 1;
+                require(offset + count * 4 <= size, "complete XF light register write");
+                for (u32 index = 0; index < count; ++index) {
+                    registers[static_cast<u16>((header & 0xffff) + index)] = word(offset);
+                    offset += 4;
+                }
+            }
+            return registers;
+        };
+        ActorLightInfo actor;
+        actor.mInfo0 = LightInfo{GXColor{17, 34, 51, 68}, TVec3f{10, 20, 30}, true};
+        actor.mInfo1 = LightInfo{GXColor{81, 82, 83, 84}, TVec3f{-40, 50, -60}, true};
+        actor.mAlpha2 = 137;
+        actor.mColor = GXColor{64, 75, 85, 110};
+        GXBeginDisplayList(commands.data(), commands.size());
+        LightFunction::loadActorLightInfo(&actor);
+        const auto actorRegisters = decode(GXEndDisplayList());
+        require(actorRegisters.at(0x603) == 0x11223344 && actorRegisters.at(0x613) == 0x51525354 &&
+                    actorRegisters.at(0x623) == 137 && actorRegisters.at(0x100a) == 0x404b556e,
+                "authored distinct-channel diffuse, alpha and ambient reach GX without RuntimeContext");
+        require(actorRegisters.at(0x60a) == std::bit_cast<u32>(10.0f) &&
+                    actorRegisters.at(0x61c) == std::bit_cast<u32>(-60.0f) &&
+                    actorRegisters.at(0x604) == std::bit_cast<u32>(1.0f) &&
+                    actorRegisters.at(0x607) == std::bit_cast<u32>(1.0f),
+                "follow-camera positions and diffuse attenuation retain original GX registers");
+        GXBeginDisplayList(commands.data(), commands.size());
+        LightFunction::loadAllLightWhite();
+        const auto whiteRegisters = decode(GXEndDisplayList());
+        for (u16 light = 0; light < 8; ++light) {
+            require(whiteRegisters.at(0x603 + light * 16) == 0xffffffff &&
+                        whiteRegisters.at(0x60a + light * 16) == 0 &&
+                        whiteRegisters.at(0x60b + light * 16) == 0 &&
+                        whiteRegisters.at(0x60c + light * 16) == 0,
+                    "retail all-white initializer writes eight white lights at origin");
+        }
+        LightInfoCoin coin;
+        static_cast<LightInfo&>(coin) = actor.mInfo0;
+        coin._14 = 3; coin._15 = 5; coin._16 = 7; coin._17 = 11; coin._18 = 65.0f;
+        GXBeginDisplayList(commands.data(), commands.size());
+        LightFunction::loadLightInfoCoin(&coin);
+        const auto coinRegisters = decode(GXEndDisplayList());
+        require(coinRegisters.at(0x603) == 0x11223344 && coinRegisters.at(0x633) == 0x0305070b &&
+                    coinRegisters.at(0x637) == std::bit_cast<u32>(32.5f) &&
+                    coinRegisters.at(0x639) == std::bit_cast<u32>(-31.5f),
+                "coin uses original diffuse slot zero and GX_LIGHT3 specular attenuation");
+    }
+
     void testSceneOwnerSchedulingAndTransitions(
         smgpc::runtime::RuntimeContext &runtime, LiveActor &player,
         bool realDiscMounted) {
@@ -435,6 +543,16 @@ namespace {
             auto binding = smgpc::scene::SceneObjHolderBinding(holder);
             auto *director = dynamic_cast<LightDirector *>(
                 MR::createSceneObj(SceneObj_LightDirector));
+            {
+                LiveActor registered("registered light owner");
+                smgpc::compat::replace_actor_light_ctrl(&registered);
+                LightFunction::registerPlayerLightCtrl(registered.mActorLightCtrl);
+                require(director->_1C == registered.mActorLightCtrl,
+                        "player registration must use the actual LightDirector field");
+                smgpc::compat::replace_actor_light_ctrl(&registered);
+                require(director->_1C == nullptr,
+                        "retiring a registered controller must release the actual borrowed pointer");
+            }
             require(director != nullptr && director->mPointCtrl != nullptr &&
                         MR::createSceneObj(SceneObj_LightDirector) == director &&
                         holder.getObj(SceneObj_LightDirector) == director,
@@ -443,7 +561,7 @@ namespace {
                         smgpc::compat::name_obj_runtime_state_count() ==
                             nameBaseline + 1U,
                     "LightDirector must retain its retail identity in the scene owner");
-            require(runtime.scene_lights().player_light_ctrl() == nullptr,
+            require(director->_1C == nullptr,
                     "the simplified player fixture must exercise the no-registered-controller fallback");
 
             auto requester = NpcPointLightRequester{};
@@ -781,8 +899,18 @@ namespace {
     }
 }  // namespace
 
-int main() {
+int main(int argc, char** argv) {
     try {
+        if (argc == 2 && std::string_view(argv[1]) == "--original-owner-only") {
+            testOriginalPlayerLightOwnership();
+            std::cout << "Original player-light ownership passed: registration, replacement, actor retirement and eight scene lifetimes\n";
+            return 0;
+        }
+        if (argc == 2 && std::string_view(argv[1]) == "--original-gx-only") {
+            testOriginalGxLightSubmission();
+            std::cout << "Original GX light submission passed: authored diffuse, ambient, alpha, all-white and coin without RuntimeContext\n";
+            return 0;
+        }
         auto discMount = DiscMount{};
         auto logger = smgpc::logging::create_default_logger();
         auto window = smgpc::render::AuroraWindow({

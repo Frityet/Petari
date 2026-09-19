@@ -54,6 +54,21 @@ namespace {
     }
 
     void test_vector_decomposition_and_projection() {
+        TVec3f planeX, planeY;
+        MR::makeAxisCrossPlane(&planeX, &planeY, TVec3f{0, 1, 0});
+        require(planeX.epsilonEquals(TVec3f{0, 0, 1}, 0.00001F) &&
+                    planeY.epsilonEquals(TVec3f{-1, 0, 0}, 0.00001F),
+                "plane axes preserve retail winding for gravity-aligned placement");
+        MR::makeAxisCrossPlane(&planeX, &planeY, TVec3f{0, 0, 1});
+        require(planeX.epsilonEquals(TVec3f{1, 0, 0}, 0.00001F) &&
+                    planeY.epsilonEquals(TVec3f{0, -1, 0}, 0.00001F),
+                "a Z-aligned normal uses the original alternate tangent without degeneracy");
+        const TVec3f inclinedNormal{0.6F, 0.8F, 0};
+        MR::makeAxisCrossPlane(&planeX, &planeY, inclinedNormal);
+        require(near(planeX.dot(inclinedNormal), 0) && near(planeY.dot(inclinedNormal), 0) &&
+                    near(planeX.dot(planeY), 0) && near(planeX.squared(), 1) && near(planeY.squared(), 1),
+                "an inclined unit normal produces orthonormal surface tangents");
+
         auto direction = TVec3f{3.0F, 4.0F, 0.0F};
         auto scalar = 0.0F;
         MR::separateScalarAndDirection(&scalar, &direction, direction);

@@ -1,0 +1,270 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "retail_start": "0x8020c7e0",
+  "retail_end": "0x8020e394",
+  "retail_text_bytes": 7092,
+  "retail_reference_comparison": "PASS (only ELF relocation bits masked)",
+  "relocations": 362,
+  "sections": [
+    {
+      "name": ".text",
+      "size": "7092",
+      "match_percent": 98.22674
+    },
+    {
+      "name": ".ctors",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": ".data",
+      "size": "472",
+      "match_percent": 68.085106
+    },
+    {
+      "name": ".sdata",
+      "size": "8",
+      "match_percent": 85.71429
+    },
+    {
+      "name": ".sbss",
+      "size": "24",
+      "match_percent": 100.0
+    },
+    {
+      "name": ".sdata2",
+      "size": "112",
+      "match_percent": 100.0
+    },
+    {
+      "name": ".rela.text",
+      "size": "4344"
+    },
+    {
+      "name": ".rela.ctors",
+      "size": "12"
+    },
+    {
+      "name": ".rela.data",
+      "size": "792"
+    },
+    {
+      "name": ".symtab",
+      "size": "3488"
+    },
+    {
+      "name": ".strtab",
+      "size": "7044"
+    },
+    {
+      "name": ".shstrtab",
+      "size": "103"
+    },
+    {
+      "name": ".comment",
+      "size": "1788"
+    },
+    {
+      "name": ".note.split",
+      "size": "980"
+    }
+  ],
+  "functions": [
+    {
+      "name": "__ct__10PlantGroupFPCc",
+      "size": "124",
+      "match_percent": 99.83871
+    },
+    {
+      "name": "init__10PlantGroupFRC12JMapInfoIter",
+      "size": "576",
+      "match_percent": 99.895836
+    },
+    {
+      "name": "makeActorAppeared__10PlantGroupFv",
+      "size": "108",
+      "match_percent": 100.0
+    },
+    {
+      "name": "makeActorDead__10PlantGroupFv",
+      "size": "108",
+      "match_percent": 100.0
+    },
+    {
+      "name": "initMember__10PlantGroupFlRC12JMapInfoIter",
+      "size": "516",
+      "match_percent": 87.70543
+    },
+    {
+      "name": "placeOnCollisionFormCircle__10PlantGroupFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "size": "856",
+      "match_percent": 96.98131
+    },
+    {
+      "name": "calcBoundingSphereRadius__10PlantGroupFRCQ29JGeometry8TVec3<f>",
+      "size": "456",
+      "match_percent": 99.429825
+    },
+    {
+      "name": "initAfterPlacement__10PlantGroupFv",
+      "size": "256",
+      "match_percent": 99.84375
+    },
+    {
+      "name": "control__10PlantGroupFv",
+      "size": "288",
+      "match_percent": 99.65278
+    },
+    {
+      "name": "emitHintEffect__10PlantGroupFv",
+      "size": "256",
+      "match_percent": 99.84375
+    },
+    {
+      "name": "receiveOtherMsg__10PlantGroupFUlP9HitSensorP9HitSensor",
+      "size": "116",
+      "match_percent": 100.0
+    },
+    {
+      "name": "attackSensor__10PlantGroupFP9HitSensorP9HitSensor",
+      "size": "272",
+      "match_percent": 99.92647
+    },
+    {
+      "name": "startClipped__10PlantGroupFv",
+      "size": "108",
+      "match_percent": 100.0
+    },
+    {
+      "name": "endClipped__10PlantGroupFv",
+      "size": "108",
+      "match_percent": 100.0
+    },
+    {
+      "name": "init__11PlantMemberFRC12JMapInfoIter",
+      "size": "104",
+      "match_percent": 99.15385
+    },
+    {
+      "name": "tryEmitHint__11PlantMemberFv",
+      "size": "80",
+      "match_percent": 100.0
+    },
+    {
+      "name": "exeHint__11PlantMemberFv",
+      "size": "100",
+      "match_percent": 100.0
+    },
+    {
+      "name": "exeShakeWeak__11PlantMemberFv",
+      "size": "148",
+      "match_percent": 99.72973
+    },
+    {
+      "name": "exeShakeMiddle__11PlantMemberFv",
+      "size": "148",
+      "match_percent": 99.72973
+    },
+    {
+      "name": "exeShakeStrong__11PlantMemberFv",
+      "size": "148",
+      "match_percent": 99.72973
+    },
+    {
+      "name": "generateItem__11PlantMemberFP10PlantGroup",
+      "size": "208",
+      "match_percent": 99.71154
+    },
+    {
+      "name": "initPosture__11PlantMemberFv",
+      "size": "696",
+      "match_percent": 97.24138
+    },
+    {
+      "name": "tryShake__11PlantMemberFP9HitSensor",
+      "size": "292",
+      "match_percent": 99.79452
+    },
+    {
+      "name": "tryPush__11PlantMemberFRCQ29JGeometry8TVec3<f>fl",
+      "size": "420",
+      "match_percent": 97.95238
+    },
+    {
+      "name": "animControl__11PlantMemberFP10PlantGroup",
+      "size": "164",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__dt__10PlantGroupFv",
+      "size": "92",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__dt__11PlantMemberFv",
+      "size": "88",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__sinit_\\PlantGroup_cpp",
+      "size": "68",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__Q214NrvPlantMember15HostTypeNrvWaitFv",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__Q214NrvPlantMember15HostTypeNrvHintFv",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__Q214NrvPlantMember20HostTypeNrvShakeWeakFv",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__Q214NrvPlantMember22HostTypeNrvShakeMiddleFv",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__Q214NrvPlantMember22HostTypeNrvShakeStrongFv",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "execute__Q214NrvPlantMember22HostTypeNrvShakeStrongCFP5Spine",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "execute__Q214NrvPlantMember22HostTypeNrvShakeMiddleCFP5Spine",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "execute__Q214NrvPlantMember20HostTypeNrvShakeWeakCFP5Spine",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "execute__Q214NrvPlantMember15HostTypeNrvHintCFP5Spine",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "execute__Q214NrvPlantMember15HostTypeNrvWaitCFP5Spine",
+      "size": "76",
+      "match_percent": 100.0
+    }
+  ],
+  "identical_port_copies_sha256": {
+    "src/Game/MapObj/PlantGroup.cpp": "641ee9f6751922c0bd16284ca206ff2cf11ee492241e71a5ae32b5128473fa31",
+    "src/Game/MapObj/PlantGroup.hpp": "eccd48346b161de18d2757782309e4ece0a74c21965c1f9b7de1cd7a62b36fd4",
+    "src/Game/MapObj/CutBushModelObj.cpp": "c3353a861909c9ef0624de62f9fb603c7291917b084462ebe95f9fbfddd0c5a8",
+    "src/Game/MapObj/CutBushModelObj.hpp": "20379d5ddb22edc9fdb5ee513142d0c1531c9ce9588e2927b9ef3c799585963e"
+  }
+}

@@ -55,3 +55,35 @@ empty/populated gravity managers, null-requester position queries, host filterin
 priority/type selection and explicit missing-owner failure (`--queries-only`).
 The old standalone test fixtures required updating to construct the original
 GameSystem/controller/Scene owners; production ownership checks were preserved.
+
+## Authored lighting, plants and native input checkpoint
+
+The real original scene now owns its authored root/child stage-light cache. The
+previous all-blue Mario was traced to uninitialized actor light data, not a
+texture or shader channel swap. Original GX diffuse, ambient, point and coin
+specular calls and LightDirector player registration are restored in native
+providers; the three corresponding Game sources are exact reference copies.
+See ../original-player-material-state-20260919/ for live register, command-byte,
+scene-lifetime and image evidence, including the broader standalone fixture's
+separate missing-language-owner failure.
+
+PlantGroup and PlantMember were recovered in decomp first (98.22674% text and
+100% numeric constants) and imported exactly with CutBushModelObj. Their three
+original factory variants and three existing SimpleMapObj prop rows are now
+registered. The missing general makeAxisCrossPlane body follows the original
+math and passes winding, polar-normal and inclined-plane tests. This adds real
+plant/scenery placement; rabbit reveal still follows its authored area/pipe
+switches and is not inferred from visible plants.
+
+`input-light-plant-ui.json` records a 4500-frame original opening with exit0 and
+normal Mario colors. The later live debugger process PID6264 is a separate
+diagnostic session, possibly relaunched by Computer Use; it is not covered by
+that runner's exit status. It received actual SDL Return events and published
+A to original KPAD/WPad. TalkStateEvent requires a held A sample after the
+trigger frame, which the short automated tap did not establish. That process
+later exposed a FIFO breakpoint exactly one byte before the end of a vertex
+command, despite the following byte being present in the retained stream.
+See ../original-fifo-command-boundary-20260919/ for its boundary capture.
+
+The runner now records start time and PID before waiting, as well as final
+status, so later live app launches can be distinguished from bounded runs.

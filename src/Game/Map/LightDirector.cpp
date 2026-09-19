@@ -1,77 +1,41 @@
 #include "Game/Map/LightDirector.hpp"
-
 #include "Game/LiveActor/ActorLightCtrl.hpp"
+#include "Game/Map/LightDataHolder.hpp"
 #include "Game/Map/LightFunction.hpp"
+#include "Game/Map/LightPointCtrl.hpp"
+#include "Game/Map/LightZoneDataHolder.hpp"
+#include "Game/System/ResourceHolder.hpp"
 #include "Game/Util/ObjUtil.hpp"
-#include "runtime/RuntimeContext.hpp"
-
-#include <memory>
 
 LightDirector::LightDirector()
     : NameObj("ライト指揮"), _C(), mDataHolder(), mZoneDataHolder(), mDefaultAreaLight(), _1C(), mPointCtrl(), mResourceHolder() {
 }
 
-LightDirector::~LightDirector() {
-    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr) {
-        runtime->scene_lights().clear_light(4U);
-    }
-    delete mPointCtrl;
-    delete mZoneDataHolder;
-    delete mDataHolder;
-    mPointCtrl = nullptr;
-    mZoneDataHolder = nullptr;
-    mDataHolder = nullptr;
-    mResourceHolder = nullptr;
-}
-
-void LightDirector::init(const JMapInfoIter&) {
+void LightDirector::init(const JMapInfoIter& rIter) {
     MR::connectToSceneMapObjMovement(this);
     LightFunction::loadAllLightWhite();
 
-    auto holder = std::make_unique< LightDataHolder >();
-    auto zoneHolder = std::make_unique< LightZoneDataHolder >();
-    auto pointCtrl = std::make_unique< LightPointCtrl >();
-
-    mDataHolder = holder.release();
-    mZoneDataHolder = zoneHolder.release();
-    mPointCtrl = pointCtrl.release();
+    mDataHolder = new LightDataHolder();
+    mZoneDataHolder = new LightZoneDataHolder();
+    mPointCtrl = new LightPointCtrl();
 }
 
 void LightDirector::initData() {
     mResourceHolder = LightFunction::loadLightArchive();
-    if (mDataHolder != nullptr) {
-        mDataHolder->initLightData();
-    }
-    LightFunction::initLightData();
-    mDefaultAreaLight = LightFunction::getAreaLightInfo(ZoneLightID{});
+    mDataHolder->initLightData();
+    mZoneDataHolder->initZoneData();
+    mDefaultAreaLight = mDataHolder->findAreaLight(mZoneDataHolder->getDefaultStageAreaLightName());
 }
 
 void LightDirector::loadLightPlayer() const {
-    auto loadedActorLight = false;
-    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr) {
-        if (const auto* playerLight = runtime->scene_lights().player_light_ctrl(); playerLight != nullptr) {
-            playerLight->loadLight();
-            loadedActorLight = true;
-        }
-    }
-    if (!loadedActorLight) {
-        if (const auto* areaLight = LightFunction::getAreaLightInfo(ZoneLightID{}); areaLight != nullptr) {
-            LightFunction::loadActorLightInfo(&areaLight->mPlayerLight);
-        }
-    }
-    if (mPointCtrl != nullptr) {
-        mPointCtrl->loadPointLight();
-    }
+    _1C->loadLight();
+    mPointCtrl->loadPointLight();
 }
 
 void LightDirector::loadLightCoin() const {
-    if (mDataHolder != nullptr) {
-        LightFunction::loadLightInfoCoin(&mDataHolder->_8);
-    }
+    LightFunction::loadLightInfoCoin(&mDataHolder->_8);
 }
 
 void LightDirector::movement() {
-    if (mPointCtrl != nullptr) {
-        mPointCtrl->update();
-    }
+    mPointCtrl->update();
 }

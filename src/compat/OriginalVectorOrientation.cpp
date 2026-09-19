@@ -1,6 +1,12 @@
 #include "Game/Util/MathUtil.hpp"
 
 namespace MR {
+    void makeAxisCrossPlane(TVec3f* pVec, TVec3f* pCross, const TVec3f& rNorm) {
+        makeAxisVerticalZX(pVec, rNorm);
+        pCross->cross(*pVec, rNorm);
+        normalizeOrZero(pCross);
+    }
+
     bool makeAxisAndCosignVecToVec(TVec3f* pAxis, f32* pCos, const TVec3f& rFrom, const TVec3f& rTo) {
         TVec3f from;
         if (isOppositeDirection(rFrom, rTo)) {

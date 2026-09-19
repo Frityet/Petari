@@ -1,4 +1,5 @@
 #include "compat/DemoDirectorOwnership.hpp"
+#include "compat/LightFunctionCompat.hpp"
 #include "compat/ClippingDirectorOwnership.hpp"
 #include "compat/TalkDirectorLifetime.hpp"
 #include <aurora/exception.hpp>
@@ -509,8 +510,8 @@ namespace smgpc::compat {
         release_actor_collision_parts(actor);
         release_demo_runtime_state(actor);
 
+        unregister_player_light_controller(actor->mActorLightCtrl);
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->scene_lights().unregister_player_light_ctrl(actor->mActorLightCtrl);
             runtime->star_pointer().unregister_target(*actor);
             runtime->unregister_effect_keeper(actor->getName(), actor);
             runtime->unregister_live_actor_model(*const_cast<LiveActor*>(actor));
@@ -550,9 +551,7 @@ namespace smgpc::compat {
 
     void replace_actor_light_ctrl(LiveActor* actor) {
         auto& state = require_actor_state(actor);
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->scene_lights().unregister_player_light_ctrl(state.light_ctrl.get());
-        }
+        unregister_player_light_controller(state.light_ctrl.get());
         state.light_ctrl = std::make_unique<ActorLightCtrl>(actor);
         actor->mActorLightCtrl = state.light_ctrl.get();
     }

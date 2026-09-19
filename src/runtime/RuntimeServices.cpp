@@ -4388,7 +4388,6 @@ namespace smgpc::runtime {
     void SceneLightService::clear() {
         _lights = {};
         _actor_ambient.reset();
-        _player_light_ctrl = nullptr;
     }
 
     void SceneLightService::clear_light(std::size_t index) {
@@ -4416,16 +4415,6 @@ namespace smgpc::runtime {
         _actor_ambient = color;
     }
 
-    void SceneLightService::register_player_light_ctrl(const ActorLightCtrl *light_ctrl) {
-        _player_light_ctrl = light_ctrl;
-    }
-
-    void SceneLightService::unregister_player_light_ctrl(const ActorLightCtrl *light_ctrl) {
-        if (_player_light_ctrl == light_ctrl) {
-            _player_light_ctrl = nullptr;
-        }
-    }
-
     const smgpc::render::GXLightState *SceneLightService::light(std::size_t index) const {
         if (index >= _lights.size() || !_lights[index].loaded) {
             return nullptr;
@@ -4440,10 +4429,6 @@ namespace smgpc::runtime {
 
     const std::optional<smgpc::render::GXColorValue> &SceneLightService::actor_ambient() const {
         return _actor_ambient;
-    }
-
-    const ActorLightCtrl *SceneLightService::player_light_ctrl() const {
-        return _player_light_ctrl;
     }
 
     std::uint8_t SceneLightService::loaded_mask() const {

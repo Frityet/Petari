@@ -19,6 +19,7 @@
 #include "Game/MapObj/HeavensDoorDemoObj.hpp"
 #include "Game/MapObj/InvisiblePolygonObj.hpp"
 #include "Game/MapObj/InvisiblePolygonObjGCapture.hpp"
+#include "Game/MapObj/PlantGroup.hpp"
 #include "Game/MapObj/PowerStar.hpp"
 #include "Game/MapObj/PowerStarAppearPoint.hpp"
 #include "Game/MapObj/StarPieceGroup.hpp"
@@ -402,6 +403,21 @@ namespace {
             nullptr,
         },
         NameObjFactory::Name2CreateFunc{
+            "FlowerGroup",
+            create_supported_name_obj<PlantGroup>,
+            "Flower",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "FlowerBlueGroup",
+            create_supported_name_obj<PlantGroup>,
+            "FlowerBlue",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "CutBushGroup",
+            create_supported_name_obj<PlantGroup>,
+            "CutBush",
+        },
+        NameObjFactory::Name2CreateFunc{
             "EarthenPipe",
             create_supported_name_obj<EarthenPipe>,
             "EarthenPipe",
@@ -420,6 +436,21 @@ namespace {
             "HeavensDoorAppearStepA",
             create_supported_name_obj<HeavensDoorDemoObj>,
             "HeavensDoorAppearStepA",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "HeavensDoorAppearStepAAfter",
+            create_supported_name_obj<SimpleMapObj>,
+            "HeavensDoorAppearStepAAfter",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "HeavensDoorHouseDoor",
+            create_supported_name_obj<SimpleMapObj>,
+            "HeavensDoorHouseDoor",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "HeavensDoorFlowerA",
+            create_supported_name_obj<SimpleMapObjNoSilhouetted>,
+            "HeavensDoorFlowerA",
         },
         NameObjFactory::Name2CreateFunc{
             "HeavensDoorInsideCage",

@@ -1,0 +1,33 @@
+{
+  "canonical_Game_copies": [
+    {
+      "path": "src/Game/Map/LightFunction.cpp",
+      "reference": "decomp/src/Game/Map/LightFunction.cpp",
+      "identical": true,
+      "sha256": "c8a52b7cb3148b94ca08735c5f78524e7b537cf6bf06fffa3c3174b3ee47bf5c"
+    },
+    {
+      "path": "src/Game/Map/LightDirector.cpp",
+      "reference": "decomp/src/Game/Map/LightDirector.cpp",
+      "identical": true,
+      "sha256": "381bafeb2b187577fa9b6b757f7394deaeae28eb735592ad2b37af1bbde42810"
+    },
+    {
+      "path": "src/Game/Util/LightUtil.cpp",
+      "reference": "decomp/src/Game/Util/LightUtil.cpp",
+      "identical": true,
+      "sha256": "111ee6f921f406b1205d2ac1fe5ab951428bf6be0f50ccbedf7d90f4df90334a"
+    }
+  ],
+  "loadAllLightWhite": {
+    "guide": "decomp/AGENT_DECOMP_GUIDE.md",
+    "retail_symbol": "loadAllLightWhite__13LightFunctionFv",
+    "retail_address": "0x80188FB8",
+    "retail_size": 192,
+    "native_candidate_size": 192,
+    "objdiff_match_percent": 99.479164,
+    "compiler": "MWCC GC/3.0a3 via generated ninja target",
+    "decomp_commit": "b57aa547e",
+    "semantics": "eight original GXLightID entries, position zero, RGBA white; no invented attenuation writes"
+  }
+}

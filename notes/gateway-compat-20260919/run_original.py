@@ -1,17 +1,31 @@
 """Record a bounded real-disc original-process run; no game input/state injection."""
 import hashlib
+import argparse
+from datetime import datetime, timezone
 import json
 import os
 from pathlib import Path
 import subprocess
-import sys
 import time
 
 root = Path(__file__).resolve().parents[2]
 notes = Path(__file__).resolve().parent
-label = sys.argv[1]
-frames = sys.argv[2] if len(sys.argv) > 2 else "300"
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("label")
+parser.add_argument("frames", type=int, nargs="?", default=300)
+parser.add_argument("--bundle", action="store_true", help="Run the native app bundle for live keyboard checks")
+parser.add_argument("--screenshot-frame", type=int, default=240)
+parser.add_argument("--timeout", type=float, default=180)
+options = parser.parse_args()
+label = options.label
+frames = str(options.frames)
+if Path(label).name != label or label in (".", ".."):
+    parser.error("label must be one filename component")
+if (notes / (label + ".json")).exists() or (notes / (label + "-nand")).exists():
+    parser.error("use a new label to preserve earlier evidence and start with fresh save data")
 binary = root / "build/macosx/arm64/debug/smg-pc"
+if options.bundle:
+    binary = binary.parent / "smg-pc.app/Contents/MacOS/smg-pc"
 disc = root / "Super Mario Wii - Galaxy Adventure (Korea).rvz"
 command = [str(binary), "--original", "--disc", str(disc), "--stage",
            "HeavensDoorGalaxy", "--scenario", "1", "--max-frames", frames]
@@ -19,17 +33,20 @@ settings = {
     "SMGPC_SAVE_DIR": str(notes / (label + "-nand")),
     "AURORA_BACKEND": "metal",
     "SMGPC_WINDOW_WIDTH": "1280", "SMGPC_WINDOW_HEIGHT": "720",
-    "SMGPC_SCREENSHOT_PATH": str(notes / (label + "-frame240.png")),
-    "SMGPC_SCREENSHOT_FRAME": "240",
+    "SMGPC_SCREENSHOT_PATH": str(notes / (label + f"-frame{options.screenshot_frame}.png")),
+    "SMGPC_SCREENSHOT_FRAME": str(options.screenshot_frame),
 }
 record = {"command": command, "environment": settings,
-          "binary_sha256": hashlib.sha256(binary.read_bytes()).hexdigest()}
+          "binary_sha256": hashlib.sha256(binary.read_bytes()).hexdigest(),
+          "started_at": datetime.now(timezone.utc).isoformat()}
 start = time.monotonic()
 with (notes / (label + ".log")).open("w") as output:
     process = subprocess.Popen(command, cwd=root, env=os.environ | settings,
                                stdout=output, stderr=subprocess.STDOUT)
+    record["pid"] = process.pid
+    (notes / (label + "-launch.json")).write_text(json.dumps(record, indent=2) + "\n")
     try:
-        record["exit_code"] = process.wait(timeout=180)
+        record["exit_code"] = process.wait(timeout=options.timeout)
         record["timeout_terminated"] = False
     except subprocess.TimeoutExpired:
         process.terminate()

@@ -4,6 +4,9 @@
 #include <string_view>
 
 #include "scene/StagePlacementResolver.hpp"
+#include "render/light/LightData.hpp"
+
+class StageDataHolder;
 
 namespace smgpc::runtime {
     class DvdFileSystemService;
@@ -20,6 +23,8 @@ namespace smgpc::scene {
         StageLightSceneBinding(smgpc::runtime::DvdFileSystemService &dvd,
                                std::string_view stage_name,
                                std::span<const StagePlacementTable> tables);
+        StageLightSceneBinding(smgpc::runtime::DvdFileSystemService &dvd,
+                               const StageDataHolder &stage);
         ~StageLightSceneBinding();
 
         StageLightSceneBinding(const StageLightSceneBinding &) = delete;
@@ -28,6 +33,9 @@ namespace smgpc::scene {
         StageLightSceneBinding &operator=(StageLightSceneBinding &&) = delete;
 
     private:
+        void initialize(smgpc::runtime::DvdFileSystemService &dvd,
+                        std::string_view stage_name,
+                        std::span<const smgpc::render::light::StageLightZone> zones);
         bool _owns_cache = false;
     };
 
