@@ -589,10 +589,6 @@ namespace {
             "SphereSelectorHandle",
             "me_and_multi_stage_bgm_playback_runtime_unavailable",
         },
-        UnavailableCreatorRecord{
-            "RestartCube",
-            "real_mario_update_and_restart_dispatch_runtime_unavailable",
-        },
         UnavailableCreatorRecord{"RailCoin", "shadow_area_and_mercator_runtime_unavailable"},
         UnavailableCreatorRecord{"PurpleRailCoin", "shadow_area_and_mercator_runtime_unavailable"},
         UnavailableCreatorRecord{"PurpleCoinStarter", "event_power_star_and_scene_layout_runtime_unavailable"},

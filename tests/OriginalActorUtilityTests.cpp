@@ -2,6 +2,7 @@
 #include "OriginalSceneControllerFixture.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "Game/Gravity/PlanetGravity.hpp"
+#include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/Spine.hpp"
@@ -51,6 +52,67 @@ namespace {
         void execute(Spine*) const override {}
     };
 
+    void check_original_binder_integration() {
+        // Exercise the public original method under the existing real scene
+        // owner. These cases deliberately need no collision-query provider.
+        LiveActor actor("original Binder integration probe");
+        const TVec3f start{7.0f, -13.0f, 29.0f};
+        const TVec3f velocity{0.25f, -1.5f, 2.0f};
+        TVec3f expected(start);
+        expected += velocity;
+        for (bool dead : {false, true}) {
+            actor.mPosition = start;
+            actor.mVelocity = velocity;
+            actor.mFlag.mIsDead = dead;
+            actor.updateBinder();
+            check(same_bits(actor.mPosition, expected),
+                  "public updateBinder integrates one velocity even when called on a dead actor");
+            check(same_bits(actor.mVelocity, velocity), "updateBinder does not rewrite velocity");
+        }
+
+        actor.initBinder(10.0f, 0.0f, 4);
+        actor.mFlag.mIsNoBind = true;
+        for (bool dead : {false, true}) {
+            actor.mPosition = start;
+            actor.mVelocity = velocity;
+            actor.mFlag.mIsDead = dead;
+            actor.mBinder->mPlaneNum = 3;
+            actor.mBinder->_C8 = 2.0f;
+            actor.mBinder->_158 = 3.0f;
+            actor.mBinder->_1E8 = 4.0f;
+            actor.mBinder->mFixReactionVector.set(1.0f, 2.0f, 3.0f);
+            actor.updateBinder();
+            check(same_bits(actor.mPosition, expected), "disabled binding integrates exactly one original velocity");
+            check(actor.mBinder->mPlaneNum == 0 && !actor.mBinder->isBindedGround() &&
+                      !actor.mBinder->isBindedWall() && !actor.mBinder->isBindedRoof() &&
+                      same_bits(actor.mBinder->mFixReactionVector, TVec3f(0.0f)),
+                  "disabled binding clears every previous contact and reaction, including explicit dead-actor calls");
+        }
+
+        UtilityActor dies_in_control;
+        dies_in_control.mFlag.mIsDead = false;
+        dies_in_control.mPosition = start;
+        dies_in_control.mVelocity = velocity;
+        dies_in_control.movement();
+        check(same_bits(dies_in_control.mPosition, start),
+              "ordinary movement keeps its original death-after-control guard before integration");
+
+        LiveActor stepping("original per-movement step probe");
+        const IdleNerve idle;
+        stepping.initNerve(&idle);
+        stepping.mFlag.mIsDead = false;
+        stepping.mPosition = start;
+        stepping.mVelocity = velocity;
+        TVec3f accumulated(start);
+        for (int step = 1; step <= 8; ++step) {
+            stepping.movement();
+            accumulated += velocity;
+            check(stepping.getNerveStep() == step && same_bits(stepping.mPosition, accumulated),
+                  "each original movement call advances exactly one nerve step and one velocity displacement");
+        }
+        std::cout << "original Binder integration and per-call nerve/displacement checks completed\n";
+    }
+
     void run_gravity_checks() {
         const auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
         smgpc::test::OriginalSceneControllerFixture original(heaps);
@@ -63,6 +125,7 @@ namespace {
             throw std::runtime_error("utility tests require the actual scene-owned gravity manager");
         if (!MR::createSceneObj(SceneObj_ClippingDirector))
             throw std::runtime_error("utility actors require the original clipping registration owner");
+        check_original_binder_integration();
         UtilityActor actor;
         const TVec3f previous{0.125f, -0.25f, 0.5f};
         actor.mGravity = previous;

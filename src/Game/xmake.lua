@@ -96,7 +96,8 @@ target("smg-pc-game")
     -- Original paired-single helpers make fused and rounded operations explicit.
     add_files("../compat/GameMathCompat.cpp", {cxxflags = "-ffp-contract=off"})
     add_files({"Util/ActorMovementUtil.cpp", "../compat/OriginalMapQueries.cpp",
-               "../compat/OriginalCollisionPartsCompat.cpp", "../compat/OriginalJMathSqrt.cpp"},
+               "../compat/OriginalCollisionPartsCompat.cpp", "../compat/OriginalKCollisionCompat.cpp",
+               "../compat/OriginalJMathSqrt.cpp"},
               {cxxflags = "-ffp-contract=off"})
     add_files("../JSystem/J2DGraph/**.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("../JSystem/JParticle/**.cpp", {cxxflags = "-ffp-contract=off"})

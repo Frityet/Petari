@@ -1,5 +1,6 @@
 // Original MapUtil entry points using the actual scene CollisionDirector.
 #include "Game/Util/MapUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/CollisionCategorizedKeeper.hpp"
@@ -49,6 +50,12 @@ namespace {
         return true;
     }
 
+    bool getFirstPolyOnLineCategoryExceptSensor(TVec3f* pPosition, Triangle* pTriangle, const TVec3f& rStart,
+                                                const TVec3f& rDirection, const HitSensor* pSensor, s32 category) NO_INLINE {
+        CollisionPartsFilterSensor filter(pSensor);
+        return getFirstPolyOnLineCategory(pPosition, pTriangle, rStart, rDirection, nullptr, &filter, category);
+    }
+
     bool getFirstPolyOnLineCategoryExceptActor(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset,
                                               const LiveActor* pActor, s32 category) NO_INLINE {
         CollisionPartsFilterActor filter(pActor);
@@ -78,6 +85,16 @@ namespace MR {
     bool getFirstPolyOnLineToWaterSurface(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset,
                                          const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter) {
         return ::getFirstPolyOnLineCategory(pPos, pTriangle, rStart, rOffset, pTriangleFilter, pPartsFilter, 2);
+    }
+
+    bool getFirstPolyNormalOnLineToMap(TVec3f* pNormal, const TVec3f& rStart, const TVec3f& rDirection, TVec3f* pPosition,
+                                       const HitSensor* pSensor) {
+        Triangle triangle;
+        if (!::getFirstPolyOnLineCategoryExceptSensor(pPosition, &triangle, rStart, rDirection, pSensor, 0)) {
+            return false;
+        }
+        pNormal->set< f32 >(*triangle.getFaceNormal());
+        return true;
     }
 
     u32 getNearPolyOnLineSort(const TVec3f& rReference, const TVec3f& rStart, const TVec3f& rOffset, const HitSensor* pExceptSensor) {
@@ -144,6 +161,80 @@ namespace MR {
         }
 
         return &mSortBuffer[sortIndex].mParentTriangle;
+    }
+
+    const Triangle* getCameraPolyFast(const TVec3f& rStart, const TVec3f& rDirection, const HitSensor* pSensor) {
+        Triangle triangle;
+        f32 remaining = PSVECMag(&rDirection);
+        TVec3f direction(rDirection);
+        direction.normalize();
+        TVec3f position(rStart);
+        TVec3f offset(direction);
+        offset *= 5000.0f;
+        do {
+            f32 step = 5000.0f;
+            if (remaining < step) {
+                step = remaining;
+                TVec3f tail(direction);
+                tail *= remaining;
+                offset = tail;
+            }
+            u32 count = getNearPolyOnLineSort(position, position, offset, pSensor);
+            while (count != 0) {
+                return getSortedPoly(0);
+            }
+            remaining -= step;
+            position += offset;
+        } while (!isNearZero(remaining, 0.001f));
+        return nullptr;
+    }
+
+    bool getFirstPolyOnLineBFast(const TVec3f& rStart, const TVec3f& rDirection, TVec3f* pPosition, Triangle* pTriangle) {
+        Triangle triangle;
+        f32 remaining = PSVECMag(&rDirection);
+        TVec3f direction(rDirection);
+        direction.normalize();
+        TVec3f position(rStart);
+        TVec3f offset(direction);
+        offset *= 5000.0f;
+        do {
+            f32 step = 5000.0f;
+            if (remaining < step) {
+                step = remaining;
+                TVec3f tail(direction);
+                tail *= remaining;
+                offset = tail;
+            }
+            u32 count = getNearPolyOnLineSort(position, position, offset, nullptr);
+            for (u32 i = 0; i < count; i++) {
+                Triangle hitTriangle;
+                TVec3f hitPosition;
+                if (getSortedPoly(&hitPosition, &hitTriangle, i)) {
+                    if (isWaterPolygon(&hitTriangle)) {
+                        continue;
+                    }
+                    TVec3f back(*hitTriangle.getNormal(0));
+                    back *= 5.0f;
+                    TVec3f probePosition(hitPosition);
+                    probePosition.sub(back);
+                    TVec3f probeDirection(*hitTriangle.getNormal(0));
+                    probeDirection *= 35.0f;
+                    if (isExistMapCollision(probePosition, probeDirection)) {
+                        continue;
+                    }
+                }
+                if (pPosition != nullptr) {
+                    *pPosition = hitPosition;
+                }
+                if (pTriangle != nullptr) {
+                    *pTriangle = hitTriangle;
+                }
+                return true;
+            }
+            remaining -= step;
+            position += offset;
+        } while (!isNearZero(remaining, 0.001f));
+        return false;
     }
 
     bool isExistMapCollision(const TVec3f& rParam1, const TVec3f& rParam2) {

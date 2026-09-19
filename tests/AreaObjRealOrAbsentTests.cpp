@@ -214,15 +214,15 @@ namespace {
         auto holder = SceneObjHolder{};
         auto binding = smgpc::scene::SceneObjHolderBinding(holder);
         auto *container = static_cast<AreaObjContainer *>(holder.create(SceneObj_AreaObjContainer));
-        auto *manager = container->getManager("RestartCube");
-        require(typeid(*manager) == typeid(AreaObjMgr) && manager->_18 == 0x40,
-                "RestartCube's original base manager exists independently of its specialized actor");
-        require(MR::getAreaObj("RestartCube", TVec3f{}) == nullptr,
+        auto *manager = container->getManager("ChangeBgmCube");
+        require(typeid(*manager) == typeid(AreaObjMgr) && manager->_18 == 0x20,
+                "ChangeBgmCube's original base manager exists independently of its specialized actor");
+        require(MR::getAreaObj("ChangeBgmCube", TVec3f{}) == nullptr,
                 "a real manager with no placed actor returns a real empty-volume miss");
-        require(smgpc::scene::find_complete_area_obj_placement_descriptor("RestartCube") == nullptr &&
+        require(smgpc::scene::find_complete_area_obj_placement_descriptor("ChangeBgmCube") == nullptr &&
                     !smgpc::scene::placement_has_complete_area_obj_runtime(
-                        "RestartCube", "jmp/placement/common/areaobjinfo", true),
-                "a manager alone cannot claim completion of the specialized RestartCube placement");
+                        "ChangeBgmCube", "jmp/placement/common/areaobjinfo", true),
+                "a manager alone cannot claim completion of the specialized ChangeBgmCube placement");
         auto *warp = dynamic_cast<WarpCubeMgr *>(container->getManager("WarpCube"));
         require(warp != nullptr && warp->_18 == 0x40 && warp->mWarpCube == nullptr &&
                     warp->find_in(TVec3f{}) == nullptr,
@@ -558,6 +558,7 @@ namespace {
             std::tuple{"CubeCameraSphere", "CubeCamera", 4, 0xA0, AreaForm::Type_Sphere, true},
             std::tuple{"CubeCameraBowl", "CubeCamera", 4, 0xA0, AreaForm::Type_Bowl, true},
             std::tuple{"PullBackCylinder", "PullBackCylinder", 17, 0x40, AreaForm::Type_Cylinder, false},
+            std::tuple{"RestartCube", "RestartCube", 18, 0x40, AreaForm::Type_Cube2, false},
             std::tuple{"ViewGroupCtrlCube", "ViewGroupCtrlCube", 32, 0x40, AreaForm::Type_Cube2, false},
             std::tuple{"LensFlareArea", "LensFlareArea", 33, 0x40, AreaForm::Type_Cube2, false},
             std::tuple{"LightCtrlCube", "LightArea", 35, 0x80, AreaForm::Type_Cube2, false},
@@ -1202,7 +1203,7 @@ namespace {
 
     void test_water_and_mercator_do_not_fabricate_results() {
         constexpr auto position = TVec3f{};
-        require_throws<std::logic_error>([&] { (void)MR::isInWater(position); }, "WaterArea");
+        require_throws<std::logic_error>([&] { (void)MR::isInWater(position); }, "active scene-owned");
 
         require_throws<std::logic_error>(
             [] { MR::getDivideMercatorRailPosition(nullptr, nullptr, 0, 10.0F, 10); },

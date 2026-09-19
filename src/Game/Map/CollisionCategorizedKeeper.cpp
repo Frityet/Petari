@@ -76,6 +76,211 @@ void CollisionCategorizedKeeper::removeFromGlobal(CollisionParts* pParts) {
     mZoneCount--;
 }
 
+s32 CollisionCategorizedKeeper::checkStrikePoint(const TVec3f& rPos, HitInfo* pHitInfo) {
+    MR::getCollisionDirector();
+    _10 = 0;
+
+    for (CollisionZone** pZone = mZones; pZone != mZones + mZoneNum; pZone++) {
+        if (pZone != mZones) {
+            if (!isSphereOverlappingWithBox((*pZone)->_818, (*pZone)->_824, rPos, 0.0f)) {
+                continue;
+            }
+
+            f32 range = (*pZone)->mRadius;
+            TVec3f distance((*pZone)->_808);
+            distance -= rPos;
+
+            if (range * range < distance.squared()) {
+                continue;
+            }
+        }
+
+        s32 partCount = (*pZone)->mNumParts;
+
+        for (s32 i = 0; i < partCount; i++) {
+            CollisionParts* pParts = (*pZone)->mPartsArray[i];
+
+            if (!pParts->_CC) {
+                continue;
+            }
+
+            f32 range = pParts->_D8;
+            TVec3f distance;
+            distance.x = MR::abs(pParts->getTrans().x - rPos.x);
+
+            if (range < distance.x) {
+                continue;
+            }
+
+            distance.y = MR::abs(pParts->getTrans().y - rPos.y);
+
+            if (range < distance.y) {
+                continue;
+            }
+
+            distance.z = MR::abs(pParts->getTrans().z - rPos.z);
+
+            if (range < distance.z) {
+                continue;
+            }
+
+            if (distance.squared() > range * range) {
+                continue;
+            }
+
+            if (pParts->checkStrikePoint(pHitInfo, rPos)) {
+                _10 = 1;
+                return 1;
+            }
+        }
+    }
+
+    return _10;
+}
+
+s32 CollisionCategorizedKeeper::checkStrikeBall(const TVec3f& rPos, f32 radius, bool movingReaction, const CollisionPartsFilterBase* pPartsFilter,
+                                                const TriangleFilterBase* pTriangleFilter) {
+    MR::getCollisionDirector();
+    _10 = 0;
+    s32 count = 0;
+
+    for (CollisionZone** pZone = mZones; pZone != mZones + mZoneNum; pZone++) {
+        if (pZone != mZones) {
+            if (!isSphereOverlappingWithBox((*pZone)->_818, (*pZone)->_824, rPos, radius)) {
+                continue;
+            }
+
+            f32 range = radius + (*pZone)->mRadius;
+            TVec3f distance((*pZone)->_808);
+            distance -= rPos;
+
+            if (range * range < distance.squared()) {
+                continue;
+            }
+        }
+
+        s32 partCount = (*pZone)->mNumParts;
+
+        for (s32 i = 0; i < partCount; i++) {
+            CollisionParts* pParts = (*pZone)->mPartsArray[i];
+
+            if (!pParts->_CC) {
+                continue;
+            }
+
+            if (pPartsFilter != nullptr && pPartsFilter->isInvalidParts(pParts)) {
+                continue;
+            }
+
+            f32 range = radius + pParts->_D8;
+            TVec3f distance;
+            distance.x = MR::abs(pParts->getTrans().x - rPos.x);
+
+            if (range < distance.x) {
+                continue;
+            }
+
+            distance.y = MR::abs(pParts->getTrans().y - rPos.y);
+
+            if (range < distance.y) {
+                continue;
+            }
+
+            distance.z = MR::abs(pParts->getTrans().z - rPos.z);
+
+            if (range < distance.z) {
+                continue;
+            }
+
+            if (distance.squared() > range * range) {
+                continue;
+            }
+
+            count += pParts->checkStrikeBall(mHitInfoArray + count, 32 - count, rPos, radius, movingReaction, pTriangleFilter);
+
+            if (count >= 32) {
+                _10 = count;
+                return count;
+            }
+        }
+    }
+
+    _10 = count;
+    return count;
+}
+
+s32 CollisionCategorizedKeeper::checkStrikeBallWithThickness(const TVec3f& rPos, f32 radius, f32 thickness,
+                                                             const CollisionPartsFilterBase* pPartsFilter,
+                                                             const TriangleFilterBase* pTriangleFilter) {
+    MR::getCollisionDirector();
+    _10 = 0;
+    s32 count = 0;
+
+    for (CollisionZone** pZone = mZones; pZone != mZones + mZoneNum; pZone++) {
+        if (pZone != mZones) {
+            if (!isSphereOverlappingWithBox((*pZone)->_818, (*pZone)->_824, rPos, radius)) {
+                continue;
+            }
+
+            f32 range = radius + (*pZone)->mRadius;
+            TVec3f distance((*pZone)->_808);
+            distance -= rPos;
+
+            if (range * range < distance.squared()) {
+                continue;
+            }
+        }
+
+        s32 partCount = (*pZone)->mNumParts;
+
+        for (s32 i = 0; i < partCount; i++) {
+            CollisionParts* pParts = (*pZone)->mPartsArray[i];
+
+            if (!pParts->_CC) {
+                continue;
+            }
+
+            if (pPartsFilter != nullptr && pPartsFilter->isInvalidParts(pParts)) {
+                continue;
+            }
+
+            f32 range = radius + pParts->_D8;
+            TVec3f distance;
+            distance.x = MR::abs(pParts->getTrans().x - rPos.x);
+
+            if (range < distance.x) {
+                continue;
+            }
+
+            distance.y = MR::abs(pParts->getTrans().y - rPos.y);
+
+            if (range < distance.y) {
+                continue;
+            }
+
+            distance.z = MR::abs(pParts->getTrans().z - rPos.z);
+
+            if (range < distance.z) {
+                continue;
+            }
+
+            if (distance.squared() > range * range) {
+                continue;
+            }
+
+            count += pParts->checkStrikeBallWithThickness(mHitInfoArray + count, 32 - count, rPos, radius, thickness, pTriangleFilter);
+
+            if (count >= 32) {
+                _10 = count;
+                return count;
+            }
+        }
+    }
+
+    _10 = count;
+    return count;
+}
+
 s32 CollisionCategorizedKeeper::checkStrikeLine(const TVec3f& rStart, const TVec3f& rOffset, s32 maxCount,
                                                const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter) {
     MR::getCollisionDirector();
@@ -244,41 +449,86 @@ void CollisionZone::eraseParts(CollisionParts* pParts) {
     mNumParts--;
 }
 
-u32 CollisionCategorizedKeeper::createAreaPolygonListArray(Triangle* pTriangles, u32 maxCount, TVec3f* pPoints, u32 pointCount) {
+u32 CollisionCategorizedKeeper::createAreaPolygonList(Triangle* pTriangles, u32 capacity, const TVec3f& rStart, const TVec3f& rEnd) {
     MR::getCollisionDirector();
-
-    TVec3f boxMin;
-    TVec3f boxMax;
-    u32 foundCount = 0;
-    MR::createBoundingBox(pPoints, pointCount, &boxMin, &boxMax);
-
-    for (CollisionZone** zone = mZones; zone != mZones + mZoneNum; zone++) {
-        if (zone != mZones && !isSphereOverlappingWithBox(boxMin, boxMax, (*zone)->_808, (*zone)->mRadius)) {
-            continue;
+    u32 count = 0;
+    TVec3f minimum;
+    TVec3f maximum;
+    if (rStart.x < rEnd.x) {
+        minimum.x = rStart.x;
+        maximum.x = rEnd.x;
+    } else {
+        minimum.x = rEnd.x;
+        maximum.x = rStart.x;
+    }
+    if (rStart.y < rEnd.y) {
+        minimum.y = rStart.y;
+        maximum.y = rEnd.y;
+    } else {
+        minimum.y = rEnd.y;
+        maximum.y = rStart.y;
+    }
+    if (rStart.z < rEnd.z) {
+        minimum.z = rStart.z;
+        maximum.z = rEnd.z;
+    } else {
+        minimum.z = rEnd.z;
+        maximum.z = rStart.z;
+    }
+    for (CollisionZone** pZone = mZones; pZone != mZones + mZoneNum; pZone++) {
+        if (pZone != mZones) {
+            if (!isSphereOverlappingWithBox(minimum, maximum, (*pZone)->_808, (*pZone)->mRadius)) {
+                continue;
+            }
         }
-
-        s32 partCount = (*zone)->mNumParts;
-
+        s32 partCount = (*pZone)->mNumParts;
         for (s32 i = 0; i < partCount; i++) {
-            CollisionParts* part = (*zone)->mPartsArray[i];
-
-            if (!part->_CC) {
+            CollisionParts* pParts = (*pZone)->mPartsArray[i];
+            if (!pParts->_CC) {
                 continue;
             }
-
-            if (!isSphereOverlappingWithBox(boxMin, boxMax, part->getTrans(), part->_D8)) {
+            f32 radius = pParts->_D8;
+            if (!isSphereOverlappingWithBox(minimum, maximum, pParts->getTrans(), radius)) {
                 continue;
             }
-
-            foundCount += part->createAreaPolygonListArray(pTriangles + foundCount, maxCount - foundCount, pPoints, pointCount);
-
-            if (maxCount <= foundCount) {
-                return foundCount;
+            count += pParts->createAreaPolygonList(pTriangles + count, capacity - count, rStart, rEnd);
+            if (capacity <= count) {
+                return count;
             }
         }
     }
+    return count;
+}
 
-    return foundCount;
+u32 CollisionCategorizedKeeper::createAreaPolygonListArray(Triangle* pTriangles, u32 capacity, TVec3f* pPoints, u32 pointCount) {
+    MR::getCollisionDirector();
+    u32 count = 0;
+    TVec3f minimum;
+    TVec3f maximum;
+    MR::createBoundingBox(pPoints, pointCount, &minimum, &maximum);
+    for (CollisionZone** pZone = mZones; pZone != mZones + mZoneNum; pZone++) {
+        if (pZone != mZones) {
+            if (!isSphereOverlappingWithBox(minimum, maximum, (*pZone)->_808, (*pZone)->mRadius)) {
+                continue;
+            }
+        }
+        s32 partCount = (*pZone)->mNumParts;
+        for (s32 i = 0; i < partCount; i++) {
+            CollisionParts* pParts = (*pZone)->mPartsArray[i];
+            if (!pParts->_CC) {
+                continue;
+            }
+            f32 radius = pParts->_D8;
+            if (!isSphereOverlappingWithBox(minimum, maximum, pParts->getTrans(), radius)) {
+                continue;
+            }
+            count += pParts->createAreaPolygonListArray(pTriangles + count, capacity - count, pPoints, pointCount);
+            if (capacity <= count) {
+                return count;
+            }
+        }
+    }
+    return count;
 }
 
 bool CollisionCategorizedKeeper::isSphereOverlappingWithBox(const TVec3f& rMin, const TVec3f& rMax, const TVec3f& rCenter, f32 radius) {

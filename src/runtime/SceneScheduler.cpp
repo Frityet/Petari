@@ -41,7 +41,6 @@
 #include "Game/Util/DrawUtil.hpp"
 #include "Game/Util/LightUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
-#include "compat/ActorMotionCompat.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "render/BrightVisibilityService.hpp"
 #include "runtime/RuntimeContext.hpp"

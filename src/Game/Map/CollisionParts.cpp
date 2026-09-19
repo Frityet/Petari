@@ -244,6 +244,220 @@ s32 CollisionParts::getPlacementZoneID() const {
 }
 
 // Instruction order
+bool CollisionParts::checkStrikePoint(HitInfo* pHitInfo, const TVec3f& rPos) {
+    TVec3f localPos;
+    mInvBaseMatrix.mult(rPos, localPos);
+    TVec3f scale;
+    mInvBaseMatrix.getScale(scale);
+    f32 localScale = (scale.x + scale.y + scale.z) / 3.0f;
+    Fxyz position;
+    position.x = localPos.x;
+    position.y = localPos.y;
+    position.z = localPos.z;
+    KC_PrismData* pPrism = nullptr;
+    f32 distance;
+
+    if (1.0f < localScale) {
+        f32 radius = 20.0f * localScale;
+        u8 feature;
+        mServer->checkSphereWithThickness(&position, radius, localScale, 1, &pPrism, &distance, &feature, 2.0f * radius);
+        if (pPrism == nullptr) {
+            return false;
+        }
+        TVec3f offset(localPos);
+        offset.sub(mServer->getPos(pPrism, 0));
+        TVec3f normal(*mServer->getFaceNormal(pPrism));
+        distance = -offset.x * normal.x - offset.y * normal.y - offset.z * normal.z;
+    } else {
+        pPrism = mServer->checkPoint(&position, localScale, &distance);
+        if (pPrism == nullptr) {
+            return false;
+        }
+    }
+
+    if (pHitInfo != nullptr) {
+        pHitInfo->mParentTriangle.fillData(this, mServer->toIndex(pPrism), mHitSensor);
+        f32 worldDistance = distance / localScale;
+        pHitInfo->_60 = worldDistance;
+        TVec3f offset(*pHitInfo->mParentTriangle.getNormal(0));
+        offset.scale(worldDistance);
+        TVec3f hitPos(rPos);
+        hitPos.add(offset);
+        pHitInfo->mHitPos = hitPos;
+    }
+    return true;
+}
+
+u32 CollisionParts::checkStrikeBall(HitInfo* pHitInfo, u32 capacity, const TVec3f& rPos, f32 radius, bool movingReaction,
+                                   const TriangleFilterBase* pFilter) {
+    KC_PrismData* prisms[64];
+    f32 distances[64];
+    u8 features[64];
+    TVec3f localPos;
+    mInvBaseMatrix.mult(rPos, localPos);
+
+    TVec3f scale;
+    mInvBaseMatrix.getScale(scale);
+    f32 localScale = (scale.x + scale.y + scale.z) / 3.0f;
+    f32 worldScale = 1.0f / localScale;
+    radius *= localScale;
+    TVec3f movePower(0, 0, 0);
+
+    if (movingReaction && _D4 == 0) {
+        TPos3f inversePrevious;
+        PSMTXInverse(mPrevBaseMatrix.toMtxPtr(), inversePrevious.toMtxPtr());
+        TVec3f previousPos;
+        inversePrevious.mult(rPos, previousPos);
+        TVec3f movement = localPos - previousPos;
+        TVec3f worldMovement(movement);
+        mBaseMatrix.mult33(worldMovement, worldMovement);
+        s32 stepCount = static_cast< s32 >((1.0f / 35.0f) * movement.length()) + 1;
+        TVec3f step(movement);
+
+        if (stepCount > 1) {
+            step.scale(1.0f / stepCount);
+        }
+
+        TVec3f offset(0.0f, 0.0f, 0.0f);
+
+        for (s32 i = 0; i <= stepCount; i++) {
+            movePower.set(-(movement - offset));
+            mBaseMatrix.mult33(movePower, movePower);
+            const TVec3f* pRejectNormal = &worldMovement;
+
+            if (i == stepCount) {
+                pRejectNormal = nullptr;
+            }
+
+            u32 count = checkStrikeBallCore(pHitInfo, capacity, previousPos + offset, movePower, radius, localScale, worldScale, prisms,
+                                           distances, features, pFilter, pRejectNormal);
+
+            if (count != 0) {
+                return count;
+            }
+
+            offset.add(step);
+        }
+
+        return 0;
+    }
+
+    return checkStrikeBallCore(pHitInfo, capacity, localPos, TVec3f(0, 0, 0), radius, localScale, worldScale, prisms, distances, features,
+                               pFilter, nullptr);
+}
+
+u32 CollisionParts::checkStrikeBallCore(HitInfo* pHitInfo, u32 capacity, const TVec3f& rLocalPos, const TVec3f& rMovePower, f32 radius,
+                                       f32 localScale, f32 worldScale, KC_PrismData** pPrisms, f32* pDistances, u8* pFeatures,
+                                       const TriangleFilterBase* pFilter, const TVec3f* pRejectNormal) {
+    u32 count = mServer->checkSphere(reinterpret_cast< Fxyz* >(const_cast< TVec3f* >(&rLocalPos)), radius, localScale, capacity, pPrisms,
+                                     pDistances, pFeatures);
+    u32 acceptedCount = 0;
+
+    for (u32 i = 0; i < count; i++) {
+        HitInfo* pHit = &pHitInfo[acceptedCount];
+        TVec3f position(rLocalPos);
+        calcCollidePosition(&position, *pPrisms[i], pFeatures[i]);
+        mBaseMatrix.mult(position, pHit->mHitPos);
+        pHit->mParentTriangle.fillData(this, mServer->toIndex(pPrisms[i]), mHitSensor);
+
+        if (pFilter != nullptr && pFilter->isInvalidTriangle(&pHit->mParentTriangle)) {
+            continue;
+        }
+
+        if (pRejectNormal != nullptr && 0.0f < pRejectNormal->dot(*pHit->mParentTriangle.getFaceNormal())) {
+            continue;
+        }
+
+        pHit->_60 = worldScale * pDistances[i];
+        pHit->_88 = pFeatures[i];
+        pHit->_7C.set(rMovePower);
+        const TVec3f* pNormal = pHit->mParentTriangle.getFaceNormal();
+        pHit->_7C.scale(pNormal->dot(pHit->_7C), *pNormal);
+        acceptedCount++;
+    }
+
+    return acceptedCount;
+}
+
+u32 CollisionParts::checkStrikeBallWithThickness(HitInfo* pHitInfo, u32 capacity, const TVec3f& rPos, f32 radius, f32 thickness,
+                                                const TriangleFilterBase* pFilter) {
+    KC_PrismData* prisms[64];
+    f32 distances[64];
+    u8 features[64];
+    TVec3f localPos;
+    mInvBaseMatrix.mult(rPos, localPos);
+    TVec3f scale;
+    mInvBaseMatrix.getScale(scale);
+    f32 localScale = (scale.x + scale.y + scale.z) / 3.0f;
+    Fxyz position;
+    position.x = localPos.x;
+    position.y = localPos.y;
+    position.z = localPos.z;
+    u32 count = mServer->checkSphereWithThickness(&position, radius * localScale, localScale, capacity, prisms, distances, features,
+                                                 thickness);
+    f32 worldScale = 1.0f / localScale;
+    u32 acceptedCount = 0;
+
+    for (u32 i = 0; i < count; i++) {
+        HitInfo* pHit = &pHitInfo[acceptedCount];
+        TVec3f hitPos(localPos);
+        calcCollidePosition(&hitPos, *prisms[i], features[i]);
+        mBaseMatrix.mult(hitPos, pHit->mHitPos);
+        pHit->mParentTriangle.fillData(this, mServer->toIndex(prisms[i]), mHitSensor);
+
+        if (pFilter != nullptr && pFilter->isInvalidTriangle(&pHit->mParentTriangle)) {
+            continue;
+        }
+
+        pHit->_60 = worldScale * distances[i];
+        pHit->_88 = features[i];
+        acceptedCount++;
+    }
+
+    return acceptedCount;
+}
+
+void CollisionParts::calcCollidePosition(TVec3f* pPos, const KC_PrismData& rPrism, u8 feature) {
+    TVec3f offset;
+    TVec3f edgeNormal;
+
+    switch (feature) {
+    case 1:
+        projectToPlane(pPos, *pPos, mServer->getPos(&rPrism, 0), *mServer->getNormal(rPrism.mNormalIndex));
+        break;
+    case 2:
+        projectToPlane(pPos, *pPos, mServer->getPos(&rPrism, 0), *mServer->getNormal(rPrism.mNormalIndex));
+        edgeNormal.set(*mServer->getNormal(rPrism.mEdgeIndices[0]));
+        offset.set(*pPos);
+        offset.sub(mServer->getPos(&rPrism, 0));
+        pPos->add(-edgeNormal * offset.dot(edgeNormal));
+        break;
+    case 3:
+        projectToPlane(pPos, *pPos, mServer->getPos(&rPrism, 0), *mServer->getNormal(rPrism.mNormalIndex));
+        edgeNormal.set(*mServer->getNormal(rPrism.mEdgeIndices[1]));
+        offset.set(*pPos);
+        offset.sub(mServer->getPos(&rPrism, 0));
+        pPos->add(-edgeNormal * offset.dot(edgeNormal));
+        break;
+    case 4:
+        projectToPlane(pPos, *pPos, mServer->getPos(&rPrism, 0), *mServer->getNormal(rPrism.mNormalIndex));
+        edgeNormal.set(*mServer->getNormal(rPrism.mEdgeIndices[2]));
+        offset.set(*pPos);
+        offset.sub(mServer->getPos(&rPrism, 1));
+        pPos->add(-edgeNormal * offset.dot(edgeNormal));
+        break;
+    case 5:
+        pPos->set(mServer->getPos(&rPrism, 0));
+        break;
+    case 6:
+        pPos->set(mServer->getPos(&rPrism, 1));
+        break;
+    case 7:
+        pPos->set(mServer->getPos(&rPrism, 2));
+        break;
+    }
+}
+
 void CollisionParts::projectToPlane(TVec3f* pProjected, const TVec3f& rPos, const TVec3f& rOrigin, const TVec3f& rNormal) {
     TVec3f projected = rPos;
 
@@ -298,31 +512,43 @@ void CollisionParts::calcForceMovePower(TVec3f* a1, const TVec3f& a2) const {
     *a1 = tStack88;
 }
 
-u32 CollisionParts::createAreaPolygonListArray(Triangle* pTriangles, u32 maxCount, TVec3f* pPoints, u32 pointCount) {
-    TPos3f matrix;
-    PSMTXCopy(mInvBaseMatrix.toMtxPtr(), matrix.toMtxPtr());
-    matrix.zeroTrans();
-
-    TVec3f points[32];
-
-    for (u32 i = 0; i < pointCount; i++) {
-        mInvBaseMatrix.mult(pPoints[i], points[i]);
-    }
-
-    TVec3f boxMin;
-    TVec3f boxMax;
-    MR::createBoundingBox(points, pointCount, &boxMin, &boxMax);
-
+u32 CollisionParts::createAreaPolygonList(Triangle* pTriangles, u32 capacity, const TVec3f& rStart, const TVec3f& rEnd) {
     KC_PrismData* prisms[512];
-    u32 foundCount = mServer->checkArea3D(reinterpret_cast< Fxyz* >(&boxMin), reinterpret_cast< Fxyz* >(&boxMax), prisms, maxCount);
-
-    if (foundCount == 0) {
+    TPos3f rotation;
+    PSMTXCopy(mInvBaseMatrix.toMtxPtr(), rotation.toMtxPtr());
+    rotation.zeroTrans();
+    TVec3f minimum;
+    TVec3f maximum;
+    mInvBaseMatrix.mult(rStart, minimum);
+    mInvBaseMatrix.mult(rEnd, maximum);
+    u32 count = mServer->checkArea3D(reinterpret_cast< Fxyz* >(&minimum), reinterpret_cast< Fxyz* >(&maximum), prisms, capacity);
+    if (count == 0) {
         return 0;
     }
-
-    for (u32 i = 0; i < foundCount; i++) {
+    for (u32 i = 0; i < count; i++) {
         pTriangles[i].fillData(this, mServer->toIndex(prisms[i]), mHitSensor);
     }
+    return count;
+}
 
-    return foundCount;
+u32 CollisionParts::createAreaPolygonListArray(Triangle* pTriangles, u32 capacity, TVec3f* pPoints, u32 pointCount) {
+    KC_PrismData* prisms[512];
+    TVec3f localPoints[32];
+    TPos3f rotation;
+    PSMTXCopy(mInvBaseMatrix.toMtxPtr(), rotation.toMtxPtr());
+    rotation.zeroTrans();
+    for (u32 i = 0; i < pointCount; i++) {
+        mInvBaseMatrix.mult(pPoints[i], localPoints[i]);
+    }
+    TVec3f minimum;
+    TVec3f maximum;
+    MR::createBoundingBox(localPoints, pointCount, &minimum, &maximum);
+    u32 count = mServer->checkArea3D(reinterpret_cast< Fxyz* >(&minimum), reinterpret_cast< Fxyz* >(&maximum), prisms, capacity);
+    if (count == 0) {
+        return 0;
+    }
+    for (u32 i = 0; i < count; i++) {
+        pTriangles[i].fillData(this, mServer->toIndex(prisms[i]), mHitSensor);
+    }
+    return count;
 }

@@ -250,27 +250,22 @@ namespace {
 
         constexpr auto cUnavailableCreators = std::array{
             std::string_view{"FileSelector"},
-            std::string_view{"RestartCube"},
-            std::string_view{"Steam"},
-            std::string_view{"Coin"},
-            std::string_view{"PurpleCoin"},
             std::string_view{"RailCoin"},
             std::string_view{"PurpleRailCoin"},
             std::string_view{"PurpleCoinStarter"},
-            std::string_view{"StarPieceFlow"},
-            std::string_view{"StarPieceGroup"},
         };
         for (const auto name : cUnavailableCreators) {
             const auto support = smgpc::scene::nameobj::describe_name_obj_creator_support(name);
             require(support.kind == smgpc::scene::nameobj::NameObjCreatorSupportKind::RuntimeClosureUnavailable &&
                         !support.reason.empty() && NameObjFactory::getCreator(std::string(name).c_str()) == nullptr &&
                         smgpc::scene::nameobj::collect_name_obj_archive_requests(dvd, name).empty(),
-                    "a retail creator with a mandatory unavailable init dependency must remain absent");
+                    "retail creator still lacks its mandatory init owner: " + std::string(name));
         }
-        require(
-            smgpc::scene::nameobj::describe_name_obj_creator_support("RestartCube").reason ==
-                "real_mario_update_and_restart_dispatch_runtime_unavailable",
-            "RestartCube must identify its real Mario update/restart-dispatch closure as the remaining blocker");
+        for (const auto name : {"RestartCube", "Steam", "Coin", "PurpleCoin", "StarPieceFlow", "StarPieceGroup"}) {
+            require(smgpc::scene::nameobj::describe_name_obj_creator_support(name).kind ==
+                        smgpc::scene::nameobj::NameObjCreatorSupportKind::Supported && NameObjFactory::getCreator(name),
+                    "current original creator must remain registered: " + std::string(name));
+        }
 
         require_throws(
             [&] {

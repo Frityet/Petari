@@ -26,7 +26,6 @@
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
-#include "compat/ActorMotionCompat.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -415,5 +414,12 @@ void LiveActor::addToSoundObjHolder() {
 }
 
 void LiveActor::updateBinder() {
-    smgpc::compat::integrate_live_actor_velocity(*this);
+    if (mBinder == nullptr) {
+        mPosition += mVelocity;
+    } else if (mFlag.mIsNoBind) {
+        mPosition += mVelocity;
+        mBinder->clear();
+    } else {
+        mPosition += getBinder()->bind(mVelocity);
+    }
 }

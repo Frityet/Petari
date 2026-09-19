@@ -45,7 +45,6 @@
 #include "scene/StageCollisionService.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
-#include "compat/ActorMotionCompat.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/GameGravityCompat.hpp"
 #include "SceneExecutionFixture.hpp"
@@ -817,15 +816,7 @@ namespace {
                 "an absent StarPiece group factory must not synthesize archive requests");
     }
 
-    void test_kcl_collision_service_queries_and_binder_resolution() {
-        auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
-        auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20);
-        auto scheduler = smgpc::runtime::SceneScheduler{};
-        auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
-        auto scene = smgpc::test::SceneExecutionFixture(scheduler, domain);
-        const auto game = smgpc::compat::JkrAllocationScope(domain);
-        require(scene.holder().create(SceneObj_CollisionDirector) != nullptr,
-                "original Binder queries require the actual scene-owned CollisionDirector");
+    void test_host_kcl_collision_service_queries() {
         auto collision = smgpc::scene::StageCollisionService{};
         constexpr auto identity = std::array<float, 12U>{
             1.0F, 0.0F, 0.0F, 0.0F,
@@ -857,31 +848,6 @@ namespace {
         const auto contacts = collision.sphere_contacts(TVec3f{0.25F, 0.25F, 0.25F}, 0.5F);
         require(!contacts.empty() && contacts.front().penetration > 0.24F && contacts.front().attribute == 7U,
                 "sphere queries should expose penetrating KCL contacts to the generalized binder");
-        const auto move = collision.move_sphere(TVec3f{0.25F, 0.75F, 0.25F}, TVec3f{0.0F, -0.5F, 0.0F}, 0.5F);
-        const auto resolved_center = TVec3f{0.25F, 0.75F, 0.25F} + move.displacement;
-        require(!move.contacts.empty() && resolved_center.y >= 0.5F && resolved_center.y < 2.0F,
-                "binder motion should stop a moving sphere at the KCL surface instead of passing through it");
-
-        const auto moving_away = collision.move_sphere(TVec3f{0.25F, 0.25F, 0.25F},
-                                                        TVec3f{0.0F, 0.25F, 0.0F}, 0.5F);
-        require(!moving_away.contacts.empty() && moving_away.displacement.y > 0.25F,
-                "binder motion should resolve an initial overlap before preserving movement away from the face");
-
-        auto duplicate_collision = smgpc::scene::StageCollisionService{};
-        require(duplicate_collision.add_kcl(kcl, identity, "duplicate-a.kcl") &&
-                    duplicate_collision.add_kcl(kcl, identity, "duplicate-b.kcl"),
-                "the native fixture should permit coincident KCL sources");
-        duplicate_collision.build();
-        const auto duplicate_move = duplicate_collision.move_sphere(TVec3f{0.25F, 0.75F, 0.25F},
-                                                                     TVec3f{0.0F, -0.5F, 0.0F}, 0.5F);
-        require(duplicate_move.displacement.epsilonEquals(move.displacement, 0.0001F),
-                "coincident triangles should use Binder's component extrema instead of summing duplicate reactions");
-        const auto capped_move = duplicate_collision.move_sphere(TVec3f{0.25F, 0.75F, 0.25F},
-                                                                  TVec3f{0.0F, -0.5F, 0.0F}, 0.5F, 1U);
-        require(capped_move.contacts.size() == 1U &&
-                    capped_move.displacement.epsilonEquals(move.displacement, 0.0001F),
-                "Binder's third init argument should cap stored planes without changing a coincident-face reaction");
-
         auto ordered_collision = smgpc::scene::StageCollisionService{};
         constexpr auto raised = std::array<float, 12U>{
             1.0F, 0.0F, 0.0F, 0.0F,
@@ -896,24 +862,6 @@ namespace {
             ordered_collision.sphere_contacts(TVec3f{0.25F, 0.25F, 0.25F}, 0.5F, 1U);
         require(first_ordered_contact.size() == 1U && first_ordered_contact.front().attribute == 7U,
                 "a full collision-plane array should use deterministic source order rather than deepest-first order");
-
-        auto retry_collision = smgpc::scene::StageCollisionService{};
-        constexpr auto wall = std::array<float, 12U>{
-            0.0F, -4.0F, 0.0F, 10.0F,
-            4.0F, 0.0F, 0.0F, 0.0F,
-            0.0F, 0.0F, 4.0F, 0.0F,
-        };
-        require(retry_collision.add_kcl(kcl, identity, "retry-floor.kcl") &&
-                    retry_collision.add_kcl(make_single_triangle_kcl(100.0F), wall, "retry-wall.kcl"),
-                "the native fixture should permit orthogonal floor and wall KCL sources");
-        retry_collision.build();
-        const auto capped_retry = retry_collision.move_sphere(
-            TVec3f{0.25F, 0.25F, 0.25F}, TVec3f{80.0F, 0.0F, 0.0F}, 0.5F, 1U);
-        const auto retry_center = TVec3f{0.25F, 0.25F, 0.25F} + capped_retry.displacement;
-        require(capped_retry.contacts.size() == 1U && std::abs(retry_center.x - (0.25F + 80.0F / 3.0F)) < 0.0001F,
-                "a full Binder plane array should still detect and stop at a projected-retry face without storing it");
-        require(retry_center.y > 1.0F && retry_center.y < 2.0F,
-                "an unstored projected-retry face must not contribute another collision reaction");
 
         auto thin_collision = smgpc::scene::StageCollisionService{};
         const auto thin_kcl = make_single_triangle_kcl(0.2F);
@@ -977,148 +925,9 @@ namespace {
         require(smgpc::scene::StageCollisionService::active() == &collision,
                 "the scene collision boundary should publish the current stage service");
 
-        auto zero_binder = LiveActor("zero-binder-test");
-        zero_binder.makeActorAppeared();
-        zero_binder.mPosition.set(0.25F, -1.0F, 0.25F);
-        zero_binder.initBinder(0.0F, 0.0F, 0U);
-        smgpc::compat::integrate_live_actor_velocity(zero_binder);
-        require(smgpc::compat::has_actor_binder(&zero_binder) && MR::isBindedGround(&zero_binder) &&
-                    std::abs(zero_binder.mPosition.y - 1.2F) < 0.0001F &&
-                    zero_binder.mBinder->mPlaneNum == 1U && zero_binder.mBinder->mPlane == nullptr,
-                "a zero-radius Binder should remain explicit and resolve a strict-interior point-prism hit");
-
-        struct MatrixBinderActor final : LiveActor {
-            MatrixBinderActor() : LiveActor("matrix-binder-test") {
-            }
-
-            MtxPtr getBaseMtx() const override {
-                return matrix;
-            }
-
-            mutable Mtx matrix{
-                {1.0F, 0.0F, 0.0F, 0.25F},
-                {0.0F, -2.0F, 0.0F, 4.25F},
-                {0.0F, 0.0F, -1.0F, 0.25F},
-            };
-        };
-        auto matrix_binder = MatrixBinderActor{};
-        matrix_binder.makeActorAppeared();
-        matrix_binder.mPosition.set(0.25F, 4.25F, 0.25F);
-        matrix_binder.initBinder(0.5F, 2.0F, 1U);
-        smgpc::compat::integrate_live_actor_velocity(matrix_binder);
-        require(MR::isBindedGround(&matrix_binder) &&
-                    std::abs(matrix_binder.mPosition.y - 5.7F) < 0.0001F,
-                "original Binder multiplies offset by the supplied raw matrix Y without normalization");
-
-        auto negative_scale_binder = MatrixBinderActor{};
-        negative_scale_binder.makeActorAppeared();
-        negative_scale_binder.mPosition.set(0.25F, -2.0F, 0.25F);
-        negative_scale_binder.mScale.set(1.0F, -1.0F, 1.0F);
-        // Supply the actual scale-free model transform queried by Binder.
-        // Calling calcAndSetBaseMtx on a model-less LiveActor is invalid.
-        PSMTXIdentity(negative_scale_binder.matrix);
-        negative_scale_binder.matrix[0][3] = 0.25F;
-        negative_scale_binder.matrix[1][3] = -2.0F;
-        negative_scale_binder.matrix[2][3] = 0.25F;
-        negative_scale_binder.initBinder(0.5F, 2.0F, 1U);
-        smgpc::compat::integrate_live_actor_velocity(negative_scale_binder);
-        require(MR::isBindedGround(&negative_scale_binder) &&
-                    negative_scale_binder.mPosition.y > -1.0F,
-                "host model-scale sign should not invert the scale-free Binder offset basis");
-
         collision.deactivate();
-
-        auto collapsed_axis_collision = smgpc::scene::StageCollisionService{};
-        constexpr auto positive_x_wall = std::array<float, 12U>{
-            0.0F, 4.0F, 0.0F, 0.0F,
-            -4.0F, 0.0F, 0.0F, 0.0F,
-            0.0F, 0.0F, 4.0F, 0.0F,
-        };
-        require(collapsed_axis_collision.add_kcl(kcl, positive_x_wall, "collapsed-axis-wall.kcl"),
-                "the native fixture should permit a positive-X wall");
-        collapsed_axis_collision.build();
-        collapsed_axis_collision.activate();
-        auto collapsed_axis_binder = MatrixBinderActor{};
-        collapsed_axis_binder.makeActorAppeared();
-        collapsed_axis_binder.mPosition.set(2.0F, -1.0F, 1.0F);
-        collapsed_axis_binder.mRotation.set(0.0F, 0.0F, 90.0F);
-        collapsed_axis_binder.mScale.zero();
-        PSMTXIdentity(collapsed_axis_binder.matrix);
-        collapsed_axis_binder.matrix[0][0] = 0.0F;
-        collapsed_axis_binder.matrix[0][1] = -1.0F;
-        collapsed_axis_binder.matrix[1][0] = 1.0F;
-        collapsed_axis_binder.matrix[1][1] = 0.0F;
-        collapsed_axis_binder.matrix[0][3] = 2.0F;
-        collapsed_axis_binder.matrix[1][3] = -1.0F;
-        collapsed_axis_binder.matrix[2][3] = 1.0F;
-        collapsed_axis_binder.initBinder(0.5F, 2.0F, 1U);
-        smgpc::compat::integrate_live_actor_velocity(collapsed_axis_binder);
-        require(MR::isBindedWall(&collapsed_axis_binder) &&
-                    collapsed_axis_binder.mPosition.x > 3.0F,
-                "zero model scale must leave Binder's supplied raw-TR Y basis intact");
-        collapsed_axis_collision.deactivate();
         require(smgpc::scene::StageCollisionService::active() == nullptr,
                 "stage teardown should clear the active collision boundary");
-    }
-
-    class DerivedMovementBinderProbe final : public LiveActor {
-    public:
-        DerivedMovementBinderProbe() : LiveActor("derived-movement-binder-probe") {
-        }
-
-        void control() override {
-            ++control_count;
-            mVelocity.set(0.0F, -0.5F, 0.0F);
-        }
-
-        void movement() override {
-            LiveActor::movement();
-            post_base_position.set(mPosition);
-            saw_fresh_ground = mBinder != nullptr && mBinder->isBindedGround() &&
-                               mBinder->mPlaneNum == 1 && mBinder->getPlane(0) != nullptr;
-        }
-
-        int control_count = 0;
-        bool saw_fresh_ground = false;
-        TVec3f post_base_position{};
-    };
-
-    void test_derived_actor_consumes_same_frame_binder_before_scheduler_returns() {
-        auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
-        auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20);
-        auto scheduler = smgpc::runtime::SceneScheduler{};
-        auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
-        auto scene = smgpc::test::SceneExecutionFixture(scheduler, domain);
-        const auto game = smgpc::compat::JkrAllocationScope(domain);
-        require(scene.holder().create(SceneObj_CollisionDirector) != nullptr,
-                "same-frame original Binder queries require the real CollisionDirector");
-        auto collision = smgpc::scene::StageCollisionService{};
-        constexpr auto identity = std::array<float, 12U>{
-            1.0F, 0.0F, 0.0F, 0.0F,
-            0.0F, 1.0F, 0.0F, 0.0F,
-            0.0F, 0.0F, 1.0F, 0.0F,
-        };
-        require(collision.add_kcl(make_single_triangle_kcl(), identity, "movement-order-floor.kcl"),
-                "the movement-order proof requires one real KCL floor");
-        collision.build();
-        collision.activate();
-
-        auto actor = DerivedMovementBinderProbe{};
-        actor.mPosition.set(0.25F, 0.75F, 0.25F);
-        actor.makeActorAppeared();
-        actor.initBinder(0.5F, 0.0F, 1U);
-        scheduler.connect_name_obj(actor, 0, -1, -1, -1);
-        scene.complete_initialization();
-        scheduler.execute_movement();
-
-        require(actor.control_count == 1 && actor.saw_fresh_ground,
-                "a MarioActor-shaped override must consume this frame's exact Binder plane after LiveActor::movement");
-        require(actor.mPosition.epsilonEquals(actor.post_base_position, 0.0001F),
-                "the scheduler must not integrate actor velocity again after the derived movement override returns");
-        require(actor.mPosition.y >= 0.5F && actor.mPosition.y < 2.0F,
-                "the same-frame exact Binder must resolve the actor onto the real KCL floor");
-
-        collision.deactivate();
     }
 
     void test_original_rail_part_geometry() {
@@ -1511,9 +1320,8 @@ int main(int argc, char** argv) {
         TestCase{"story-event spin entitlement boundary", test_story_event_spin_entitlement_boundary},
         TestCase{"StarPieceGroup factory absent without real director",
                  test_star_piece_group_factory_is_absent_without_real_director},
-        TestCase{"KCL collision queries and binder resolution", test_kcl_collision_service_queries_and_binder_resolution},
+        TestCase{"host KCL query and storage surface", test_host_kcl_collision_service_queries},
         TestCase{"derived actor same-frame Binder ownership",
-                 test_derived_actor_consumes_same_frame_binder_before_scheduler_returns},
         TestCase{"original rail part geometry", test_original_rail_part_geometry},
         TestCase{"FixedPosition and PartsModel surface", test_fixed_position_and_parts_model_surface},
         TestCase{"original vector kill and normalize", test_original_vector_kill_and_normalize},

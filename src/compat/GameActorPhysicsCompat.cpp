@@ -24,7 +24,6 @@
 #include "Game/LiveActor/ShadowController.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
-#include "compat/ActorMotionCompat.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "runtime/RuntimeServices.hpp"

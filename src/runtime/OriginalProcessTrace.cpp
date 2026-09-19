@@ -2,6 +2,11 @@
 
 #ifndef NDEBUG
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/Binder.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
+#include "Game/Gravity/GlobalGravityObj.hpp"
+#include "Game/Gravity/PlanetGravity.hpp"
+#include "Game/Gravity/GravityInfo.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/Mario.hpp"
@@ -21,6 +26,7 @@
 #include <charconv>
 #include <cstdio>
 #include <cstdlib>
+#include <map>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -30,6 +36,7 @@
 namespace smgpc::runtime {
     namespace {
         using Json = nlohmann::json;
+        using GravityOwners = std::map<const PlanetGravity*, std::uint64_t>;
 
         std::string environment(const char* name) {
             const auto* value = std::getenv(name);
@@ -54,7 +61,24 @@ namespace smgpc::runtime {
             return {{"type", nerve ? typeid(*nerve).name() : ""}, {"step", state->mStep}};
         }
 
-        Json actor(const LiveActor& value) {
+        Json triangle(const Triangle* value) {
+            if (!value || !value->mParts || value->mIdx == 0xFFFFFFFFU) return nullptr;
+            return {{"prism_index", value->mIdx},
+                    {"host_id", value->mSensor && value->mSensor->mHost
+                        ? compat::name_obj_runtime_generation(value->mSensor->mHost) : 0},
+                    {"normal", vector(value->mNormals[0])},
+                    {"vertices", {vector(value->mPos[0]), vector(value->mPos[1]), vector(value->mPos[2])}}};
+        }
+
+        Json contact(const HitInfo& value, float distance) {
+            if (distance < 0.0f) return nullptr;
+            return {{"distance", distance}, {"feature", value._88},
+                    {"hit_position", vector(value.mHitPos)},
+                    {"unknown_70", vector(value._70)}, {"moving_reaction", vector(value._7C)},
+                    {"triangle", triangle(&value.mParentTriangle)}};
+        }
+
+        Json actor(const LiveActor& value, const GravityOwners& gravity_owners) {
             Json result{{"id", compat::name_obj_runtime_generation(&value)},
                         {"type", typeid(value).name()}, {"position", vector(value.mPosition)},
                         {"rotation", vector(value.mRotation)}, {"velocity", vector(value.mVelocity)},
@@ -62,6 +86,24 @@ namespace smgpc::runtime {
                         {"hidden", value.mFlag.mIsHiddenModel}, {"clipped", value.mFlag.mIsClipped},
                         {"invalid_clipping", value.mFlag.mIsInvalidClipping},
                         {"nerve", spine(value.mSpine)}};
+            if (const auto* binder = value.mBinder) {
+                result["binder"] = {{"radius", binder->mRadius}, {"offset_y", binder->mOffsetY},
+                    {"plane_count", binder->mPlaneNum}, {"fix_reaction", vector(binder->mFixReactionVector)},
+                    {"ground", contact(binder->mGroundInfo, binder->_C8)},
+                    {"wall", contact(binder->mWallInfo, binder->_158)},
+                    {"roof", contact(binder->mRoofInfo, binder->_1E8)}};
+            }
+            if (const auto* owner = dynamic_cast<const GlobalGravityObj*>(&value);
+                owner && owner->mGravityCreator && owner->mGravityCreator->getGravity()) {
+                const auto& field = *owner->mGravityCreator->getGravity();
+                result["gravity_field"] = {{"type", typeid(field).name()},
+                    {"priority", field.mPriority}, {"gravity_id", field.mGravityId},
+                    {"range", field.mRange}, {"distant", field.mDistant},
+                    {"gravity_type", field.mGravityType}, {"power", field.mGravityPower},
+                    {"activated", field.mActivated}, {"inverse", field.mIsInverse},
+                    {"valid_follower", field.mValidFollower}, {"registered", field.mIsRegistered},
+                    {"appeared", field.mAppeared}};
+            }
             if (value.mName) {
                 try { result["name"] = resource::decode_cp932(value.mName); }
                 catch (const std::exception& error) { result["name_decode_error"] = error.what(); }
@@ -78,6 +120,16 @@ namespace smgpc::runtime {
                     {"camera_z", vector(player->mCamDirZ)},
                     {"movement_low_word", mario.mMovementStates_LOW_WORD},
                     {"movement_high_word", mario.mMovementStates_HIGH_WORD}, {"draw_word", mario.mDrawStates_WORD}};
+                result["player"]["ground_triangle"] = triangle(mario.mGroundPolygon);
+                result["player"]["ground_position"] = vector(mario.mGroundPos);
+                if (const auto* info = player->mGravityInfo) {
+                    const auto owner = gravity_owners.find(info->mGravityInstance);
+                    result["player"]["gravity_info"] = {{"vector", vector(info->mGravityVector)},
+                        {"largest_priority", info->mLargestPriority},
+                        {"field_actor_id", owner != gravity_owners.end() ? Json(owner->second) : Json(nullptr)},
+                        {"field_type", info->mGravityInstance ? typeid(*info->mGravityInstance).name() : ""},
+                        {"field_gravity_id", info->mGravityInstance ? Json(info->mGravityInstance->mGravityId) : Json(nullptr)}};
+                }
             }
             return result;
         }
@@ -144,9 +196,16 @@ namespace smgpc::runtime {
             // owner. Never inspect actors of an asynchronously loading scene.
             if (controller->mObjHolder && controller->mScene &&
                 controller->getCurrentSceneForExecute() == controller->mScene) {
-                for (const auto* object : scene::SceneNameObjRegistry::snapshot_holder(*controller->mObjHolder)) {
+                const auto objects = scene::SceneNameObjRegistry::snapshot_holder(*controller->mObjHolder);
+                GravityOwners gravity_owners;
+                for (const auto* object : objects) {
+                    if (const auto* owner = dynamic_cast<const GlobalGravityObj*>(object);
+                        owner && owner->mGravityCreator && owner->mGravityCreator->getGravity())
+                        gravity_owners.emplace(owner->mGravityCreator->getGravity(), compat::name_obj_runtime_generation(owner));
+                }
+                for (const auto* object : objects) {
                     if (const auto* live = dynamic_cast<const LiveActor*>(object); live && _state->includes(typeid(*live).name()))
-                        record["actors"].push_back(actor(*live));
+                        record["actors"].push_back(actor(*live, gravity_owners));
                 }
             }
         }

@@ -6,7 +6,6 @@
 #include "resource/KCollisionResource.hpp"
 #include "aurora/allocation.hpp"
 
-#include "Game/LiveActor/Binder.hpp"
 #include "Game/Util/MathUtil.hpp"
 
 #include <algorithm>
@@ -1318,71 +1317,6 @@ namespace smgpc::scene {
             contacts.push_back(indexed_contacts[index].contact);
         }
         return contacts;
-    }
-
-    StageCollisionMoveResult StageCollisionService::move_sphere(const TVec3f& center, const TVec3f& movement,
-                                                                float radius, std::size_t maximum_contacts,
-                                                           bool skip_initial_check,
-                                                           const StageCollisionTriangleFilter& filter) const {
-        require_published_geometry();
-        auto result = StageCollisionMoveResult{};
-        if (!_built || _nodes.empty() || radius < 0.0F || !std::isfinite(radius) || maximum_contacts == 0U) {
-            result.displacement = movement;
-            return result;
-        }
-        if (maximum_contacts > std::numeric_limits<u32>::max()) {
-            aurora::throw_host_exception<std::invalid_argument>("A Binder plane capacity must fit its original u32 count.");
-        }
-
-        // Geometry probes use a real Binder as well. This service owns only
-        // prism queries; response, margin, stepping and retries come from Game.
-        struct ServiceScope {
-            StageCollisionService* previous = sActiveService;
-            explicit ServiceScope(const StageCollisionService* service) {
-                sActiveService = const_cast<StageCollisionService*>(service);
-            }
-            ~ServiceScope() {
-                sActiveService = previous;
-            }
-        } scope(this);
-        struct QueryFilter final : TriangleFilterBase {
-            const StageCollisionTriangleFilter& filter;
-            const StageCollisionService& service;
-            QueryFilter(const StageCollisionTriangleFilter& value, const StageCollisionService& owner) : filter(value), service(owner) {}
-            bool isInvalidTriangle(const ::Triangle* triangle) const override {
-                const auto source = triangle->mParts ? service.surface(triangle->mParts, triangle->mIdx) : service.surface(triangle->mIdx);
-                return !source || !filter(source->triangle_index);
-            }
-        } query_filter(filter, *this);
-
-        // Gravity affects only ground/wall/roof classification, which these
-        // geometry probes do not consume. Game actors retain their own gravity.
-        const auto gravity = TVec3f{0.0F, -1.0F, 0.0F};
-        auto binder = Binder(nullptr, &center, &gravity, radius, 0.0F, static_cast<u32>(maximum_contacts));
-        binder._1EC._3 = skip_initial_check;
-        if (filter) {
-            binder.setTriangleFilter(&query_filter);
-        }
-        result.displacement = binder.bind(movement);
-        result.fix_reaction = binder.mFixReactionVector;
-        result.contacts.reserve(binder.mPlaneNum);
-        for (auto index = u32{}; index < binder.mPlaneNum; ++index) {
-            const auto& info = *binder.getPlane(static_cast<int>(index));
-            const auto& triangle = info.mParentTriangle;
-            const auto source = triangle.mParts ? surface(triangle.mParts, triangle.mIdx) : surface(triangle.mIdx);
-            if (!source.has_value()) {
-                aurora::throw_host_exception<std::logic_error>("A Binder contact must retain its live source prism.");
-            }
-            result.contacts.push_back(StageCollisionContact{
-                .position = info.mHitPos,
-                .normal = *info.mParentTriangle.getNormal(0),
-                .moving_reaction = info._7C,
-                .penetration = info._60,
-                .attribute = source->attribute,
-                .triangle_index = source->triangle_index,
-            });
-        }
-        return result;
     }
 
     std::optional<StageCollisionSurface> StageCollisionService::surface(std::uint32_t triangle_index, bool require_enabled) const {

@@ -3,6 +3,7 @@
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
 #include "Game/AreaObj/AreaObjContainer.hpp"
+#include "Game/AreaObj/RestartCube.hpp"
 #include "Game/LiveActor/LiveActorGroup.hpp"
 #include "Game/MapObj/WarpPod.hpp"
 #include "Game/NameObj/NameObjFinder.hpp"
@@ -10,11 +11,17 @@
 #include "Game/Scene/StageDataHolder.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemSceneController.hpp"
+#include "Game/System/GameSequenceDirector.hpp"
+#include "Game/System/GameDataTemporaryInGalaxy.hpp"
+#include "Game/Util/AreaObjUtil.hpp"
+#include "Game/Util/JMapIdInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
+#include "Game/Util/SystemUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/Cp932Literal.hpp"
 #include "runtime/ArchiveMountService.hpp"
+#include "scene/OriginalPlacementCoverage.hpp"
 #include "scene/StagePlacementResolver.hpp"
 #include <aurora/allocation.hpp>
 #include <array>
@@ -23,6 +30,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <filesystem>
+#include <set>
 #include <stdexcept>
 #include <unistd.h>
 #include <vector>
@@ -80,13 +88,126 @@ struct Probe {
     unsigned positions = 0, rotations = 0, rail_points = 0, areas = 0;
     std::vector<NameObj*> retained;
 
-    void verify(StageDataHolder& root) {
+    void verify(StageDataHolder& root, GameSystem& system) {
         require(MR::isPlacementLocalStage(), "Actual original stage contains child holders");
         auto* child = root.getStageDataHolderFromZoneId(5);
         require(child && std::abs(child->mPlacementMtx[0][3]) > 10000,
                 "Actual authored MysteriousZone placement has a nonidentity transform");
         std::fprintf(stderr, "[placement-transform] zone=5 translation=(%.9g,%.9g,%.9g)\n",
                      child->mPlacementMtx[0][3], child->mPlacementMtx[1][3], child->mPlacementMtx[2][3]);
+        // This report must identify original retained rows even though their
+        // JMapInfo native-copy zone metadata is deliberately unpopulated.
+        const auto queues = std::array{
+            smgpc::scene::OriginalPlacementQueue{"common_priority", root._FC},
+            smgpc::scene::OriginalPlacementQueue{"scenario_priority", root._104},
+            smgpc::scene::OriginalPlacementQueue{"common", root._100},
+            smgpc::scene::OriginalPlacementQueue{"scenario", root._108},
+            smgpc::scene::OriginalPlacementQueue{"deferred", root._10C},
+        };
+        const auto start = root.makeCurrentMarioJMapInfoIter();
+        require(start.isValid() && start.mInfo->getPlacedZoneId() == -1,
+                "Original start has no synthetic-copy zone metadata");
+        const auto coverage = smgpc::scene::inspect_original_placement_queues(queues, start, &root);
+        std::set<std::string> identities;
+        std::set<s32> zones;
+        bool player_seen = false, rosetta_seen = false;
+        for (const auto& entry : coverage) {
+            const auto* owner = &root;
+            for (const auto index : entry.holder_path) {
+                require(index >= 0 && index < owner->mStageDataHolderCount,
+                        "Coverage reports an attached holder path");
+                owner = owner->mStageDataArray[index];
+            }
+            require(owner->mZoneID == entry.zone && owner->_A8 == entry.zone_name,
+                    "Coverage provenance agrees with the actual attached owner");
+            require(entry.table_path.starts_with("/jmp/") && entry.table_path.ends_with('/' + entry.table) &&
+                        (entry.layer == "common" || entry.layer == "layera"),
+                    "Coverage keeps full archive path and actual scenario-one layer");
+            for (unsigned row = 0; row < 3; ++row)
+                for (unsigned column = 0; column < 4; ++column)
+                    require(entry.zone_placement_matrix[row * 4 + column] == owner->mPlacementMtx[row][column],
+                            "Coverage matrix is copied from the original owner");
+            const auto identity = std::to_string(entry.zone) + ':' + entry.table_path + ':' + std::to_string(entry.row);
+            require(identities.insert(identity).second, "Coverage includes each retained placement row once");
+            zones.insert(entry.zone);
+            if (entry.phase == "player") {
+                require(entry.zone == 0 && entry.holder_path.empty() &&
+                            entry.table_path == "/jmp/start/layera/startinfo",
+                        "Default Mario start resolves to original root-zone LayerA");
+                player_seen = true;
+            }
+            if (entry.object == "Rosetta") {
+                require(entry.zone == 5 && entry.layer == "layera" && entry.link_id == 28,
+                        "Rosetta retains her authored zone, layer and link ID");
+                rosetta_seen = true;
+            }
+        }
+        require(coverage.size() == 243 && zones == std::set<s32>{0, 1, 2, 4, 5, 6} && player_seen && rosetta_seen,
+                "Actual queues contain all attached scenario-one zones and exclude unattached LargeZone");
+        std::fprintf(stderr, "[placement-transform] coverage provenance PASS rows=%zu attached_zones=%zu\n",
+                     coverage.size(), zones.size());
+        auto* restarts = MR::getAreaObjContainer()->getManager("RestartCube");
+        require(restarts && restarts->getNumAreaObj() == 4,
+                "All four authored RestartCube placements use the original manager");
+        auto* temporary = system.mSequenceDirector->mGameDataTemporaryInGalaxy;
+        require(temporary && temporary->mPlayerRestartIdInfo &&
+                    MR::getPlayerRestartIdInfo() == temporary->mPlayerRestartIdInfo,
+                "Restart dispatch uses the actual original GameSequenceDirector owner");
+        const JMapIdInfo saved_restart(*temporary->mPlayerRestartIdInfo);
+        unsigned restart_dispatches = 0;
+        {
+            struct RestoreRestart {
+                GameDataTemporaryInGalaxy& owner;
+                JMapIdInfo saved;
+                ~RestoreRestart() { owner.setPlayerRestartIdInfo(saved); }
+            } restore{*temporary, saved_restart};
+            for (const auto& table : root.mPlacementObjs) {
+                for (s32 row = 0; row < table.getNumEntries(); ++row) {
+                    const JMapInfoIter iter(&table, row);
+                    const char* name = nullptr;
+                    if (!MR::getObjectName(&name, iter) || std::strcmp(name, "RestartCube") != 0) continue;
+                    s32 start_id = -1;
+                    require(MR::getJMapInfoArg0NoInit(iter, &start_id), "Authored restart target is readable");
+                    const JMapIdInfo authored_id(start_id, iter);
+                    RestartCube* cube = nullptr;
+                    for (s32 i = 0; i < restarts->getNumAreaObj(); ++i) {
+                        auto* candidate = dynamic_cast<RestartCube*>(restarts->getAreaObj(i));
+                        require(candidate && candidate->mIdInfo, "Manager retains actual original RestartCube controllers");
+                        if (*candidate->mIdInfo == authored_id) {
+                            require(!cube, "Authored restart ID identifies one original area");
+                            cube = candidate;
+                        }
+                    }
+                    require(cube && cube->mFormType == AreaForm::Type_Cube2 && cube->mObjArg3 == -1,
+                            "Restart placement keeps its original base-origin form and authored ground policy");
+                    auto* form = cube->getForm<AreaFormCube>();
+                    TVec3f authored_position;
+                    require(MR::getJMapInfoTrans(iter, &authored_position), "Authored restart position is readable");
+                    require_position(form->mTranslation, authored_position, "Restart controller keeps original placement coordinates");
+                    TPos3f world;
+                    form->calcWorldMtx(&world);
+                    TVec3f interior(0, form->mScale.y * 500.0f, 0);
+                    world.mult(interior, interior);
+                    require(MR::getAreaObj("RestartCube", interior) == cube,
+                            "Original area query selects the actual authored restart controller");
+                    const bool old_bgm_latch = cube->_48;
+                    MR::tryToUpdatePlayerRestartIdInfo(interior);
+                    require(*temporary->mPlayerRestartIdInfo == authored_id,
+                            "Original area dispatch writes the target ID and zone to real restart state");
+                    cube->_48 = old_bgm_latch;
+                    const JMapIdInfo after_dispatch(*temporary->mPlayerRestartIdInfo);
+                    MR::tryToUpdatePlayerRestartIdInfo(TVec3f(1.0e8f, 1.0e8f, 1.0e8f));
+                    require(*temporary->mPlayerRestartIdInfo == after_dispatch,
+                            "A real empty-volume query leaves restart state unchanged");
+                    retained.push_back(cube);
+                    ++restart_dispatches;
+                }
+            }
+        }
+        require(restart_dispatches == 4 && *temporary->mPlayerRestartIdInfo == saved_restart,
+                "All four original restart dispatches were verified and prior scene state restored");
+        std::fprintf(stderr, "[placement-transform] restart dispatch PASS authored_areas=%u owner=GameSequenceDirector restored=true\n",
+                     restart_dispatches);
         std::vector<TVec3f> warp_positions;
         auto* area_manager = MR::getAreaObjContainer()->getManager("SwitchArea");
         require(area_manager, "Actual switch-area manager exists");
@@ -224,7 +345,7 @@ struct Probe {
             controller->getCurrentSceneForExecute() != controller->mScene ||
             !dynamic_cast<GameScene*>(controller->mScene)) return;
         const aurora::allocation::HostAllocationScope host;
-        verify(*MR::getStageDataHolder());
+        verify(*MR::getStageDataHolder(), system);
         exercised = true;
         std::fprintf(stderr, "[placement-transform] PASS frame=%llu positions=%u rotations=%u rail_points=%u areas=%u\n",
                      static_cast<unsigned long long>(frame), positions, rotations, rail_points, areas);
@@ -247,7 +368,7 @@ int main() {
                                 "SMGPC_DEBUG_WPAD_STICK_SCRIPT", "SMGPC_DEBUG_WPAD_INPUT_FILE"}) unsetenv(name);
         smgpc::app::BootstrapConfiguration configuration{
             .window_width = 640, .window_height = 456, .window_title = "Original zone placement integration",
-            .arguments = {"placement-transform-test", "--original", "--stage", "HeavensDoorGalaxy", "--scenario", "1", "--max-frames", "120"},
+            .arguments = {"placement-transform-test", "--stage", "HeavensDoorGalaxy", "--scenario", "1", "--max-frames", "120"},
             .disc_image = disc,
         };
         auto logger = smgpc::logging::create_default_logger();

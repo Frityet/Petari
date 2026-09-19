@@ -73,12 +73,6 @@ namespace smgpc::scene {
     // a sweep or hide another accepted contact.
     using StageCollisionTriangleFilter = std::function<bool(std::uint32_t)>;
 
-    struct StageCollisionMoveResult {
-        TVec3f displacement{};
-        TVec3f fix_reaction{};
-        std::vector<StageCollisionContact> contacts{};
-    };
-
     struct StageCollisionStats {
         std::size_t mesh_count = 0U;
         std::size_t triangle_count = 0U;
@@ -170,10 +164,6 @@ namespace smgpc::scene {
         [[nodiscard]] std::vector<StageCollisionContact> sphere_contacts_with_thickness(
             const TVec3f& center, float radius, float thickness, std::size_t maximum = 32U,
             const StageCollisionTriangleFilter& filter = {}) const;
-        [[nodiscard]] StageCollisionMoveResult move_sphere(const TVec3f& center, const TVec3f& movement,
-                                                           float radius, std::size_t maximum_contacts = 32U,
-                                                           bool skip_initial_check = false,
-                                                           const StageCollisionTriangleFilter& filter = {}) const;
         [[nodiscard]] std::optional<StageCollisionSurface> surface(std::uint32_t triangle_index, bool require_enabled = true) const;
         [[nodiscard]] std::optional<StageCollisionSurface> surface(const CollisionParts* parts,
                                                                  std::uint32_t prism_index) const;
@@ -194,6 +184,9 @@ namespace smgpc::scene {
         void activate();
         void deactivate();
         [[nodiscard]] static StageCollisionService* active();
+
+        // Native original queries share the generated-resource publication boundary.
+        void require_published_geometry() const;
 
     private:
         struct Bounds {
@@ -250,7 +243,6 @@ namespace smgpc::scene {
 
         [[nodiscard]] std::uint32_t build_node(std::uint32_t first, std::uint32_t count);
         void prepare_kcl_source(const Source& source) const;
-        void require_published_geometry() const;
         [[nodiscard]] KCollisionServer& source_server(const Source& source) const;
         [[nodiscard]] static bool load_native_triangle(Triangle& triangle, const KCollisionServer& server,
                                                        std::uint32_t prism_index,

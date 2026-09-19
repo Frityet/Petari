@@ -1,3 +1,4 @@
+#include "OriginalSphereQueryFixture.hpp"
 #include "Game/Util/MapUtil.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Map/CollisionParts.hpp"
@@ -104,16 +105,10 @@ namespace {
     };
 
     void test_collision_is_absent_without_explicit_registration() {
-        require_unavailable(
-            [] { (void)MR::isExistMapCollision(TVec3f{}, TVec3f{0.0F, -1.0F, 0.0F}); },
-            "an absent scene collision owner must not be reported as a collision miss");
-
         auto collision = smgpc::scene::StageCollisionService{};
         collision.build();
         collision.activate();
 
-        const auto movement = TVec3f{3.0F, -4.0F, 5.0F};
-        const auto moved = collision.move_sphere(TVec3f{}, movement, 50.0F);
         require(collision.empty(), "a new stage collision registry must remain empty");
         require(collision.stats().mesh_count == 0U && collision.stats().triangle_count == 0U &&
                     collision.stats().rejected_triangle_count == 0U,
@@ -122,17 +117,13 @@ namespace {
                 "line queries must miss when CollisionParts has registered nothing");
         require(collision.sphere_contacts(TVec3f{}, 50.0F).empty(),
                 "sphere queries must have no contacts when collision is absent");
-        require(moved.contacts.empty() && moved.displacement.epsilonEquals(movement, 0.0001F),
-                "binder movement must remain unobstructed when collision is absent");
-
-        auto normal = TVec3f{4.0F, 5.0F, 6.0F};
-        auto position = TVec3f{7.0F, 8.0F, 9.0F};
-        require(!MR::getFirstPolyNormalOnLineToMap(&normal, TVec3f{0.0F, 1.0F, 0.0F},
-                                                   TVec3f{0.0F, -2.0F, 0.0F}, &position, nullptr),
-                "a real empty collision owner should produce an ordinary miss");
-        require(normal.epsilonEquals(TVec3f{4.0F, 5.0F, 6.0F}, 0.0001F) &&
-                    position.epsilonEquals(TVec3f{7.0F, 8.0F, 9.0F}, 0.0001F),
-                "a collision miss must not fabricate zero-valued hit outputs");
+        smgpc::scene::StageCollisionHit unchanged;
+        unchanged.position.set(7.0F, 8.0F, 9.0F);
+        unchanged.normal.set(4.0F, 5.0F, 6.0F);
+        require(!collision.line_cast(TVec3f(0, 1, 0), TVec3f(0, -2, 0), &unchanged) &&
+                    unchanged.position.epsilonEquals(TVec3f(7, 8, 9), 0.0F) &&
+                    unchanged.normal.epsilonEquals(TVec3f(4, 5, 6), 0.0F),
+                "an empty host registry must not fabricate hit output values");
     }
 
     void test_only_explicit_valid_kcl_registration_adds_collision() {
@@ -213,10 +204,10 @@ namespace {
             const smgpc::compat::JkrAllocationScope game(domain);
             const auto free_before = domain->heap().getFreeSize();
             for (unsigned query = 0; query < 2048U; ++query) {
-                require(MR::isExistMapCollision(start, offset),
-                        "repeated original line queries must retain actual hits");
-                require(!MR::isExistMapCollision(TVec3f(2.0F, 1.0F, 2.0F), offset),
-                        "repeated original line queries must retain actual misses");
+                require(collision.line_cast(start, offset),
+                        "repeated host line queries must retain actual hits");
+                require(!collision.line_cast(TVec3f(2.0F, 1.0F, 2.0F), offset),
+                        "repeated host line queries must retain actual misses");
                 require(domain->heap().getFreeSize() == free_before,
                         "native line traversal storage must not consume the selected Game heap");
             }
@@ -228,11 +219,14 @@ namespace {
         domain.reset();
         require(retired.expired(), "native line queries must not retain the original heap");
         runtime.reset();
-        require(MR::isExistMapCollision(start, offset),
+        require(collision.line_cast(start, offset),
                 "native collision geometry must remain valid after unrelated Game heap retirement");
     }
 
     void test_generated_geometry_publication_and_retirement() {
+        smgpc::test::OriginalSphereQueryFixture original;
+        require(MR::createSceneObj(SceneObj_ClippingDirector) != nullptr,
+                "the generated writer uses real original actor-registration owners");
         // Run the original geometry writer against separately allocated arrays.
         // This fixture exercises publication below CollisionParts::init; it does
         // not claim full AreaPolygon/Mario/process initialization coverage.
@@ -251,9 +245,7 @@ namespace {
                 file.mBlockXShift = file.mBlockXYShift = -1;
             }
         };
-        auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
-        auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20);
-        const smgpc::compat::JkrAllocationScope game(domain);
+        const smgpc::compat::JkrAllocationScope game(original.domain);
         DynamicCollisionObj actor("generated geometry publication fixture");
         // StageCollisionService retains this field solely as opaque identity;
         // no method dereferences it. This is deliberately not a constructed
@@ -412,6 +404,106 @@ namespace {
                 "final service retirement releases generated arrays and typed file identity");
     }
 
+    std::array<float, 12> floor_matrix(float height = 0) {
+        return {100, 0, 0, 0, 0, 1, 0, height, 0, 0, 100, 0};
+    }
+
+    struct CollisionOwner {
+        explicit CollisionOwner(const char* name)
+            : actor(name), sensor(0U, 0U, 1.0F, &actor),
+              registration(std::make_shared<smgpc::scene::StageCollisionRegistrationState>(&actor.mFlag.mIsDead)) {
+            actor.makeActorAppeared();
+        }
+
+        ~CollisionOwner() {
+            registration->release_owner();
+        }
+
+        bool add(smgpc::scene::StageCollisionService& collision,
+                 std::span<const std::uint8_t> kcl, const std::array<float, 12U>& matrix,
+                 std::int32_t zone_id = 0) {
+            return collision.register_kcl(kcl, matrix, "/ObjectData/Shared.arc:/Shared.kcl",
+                                          registration, {}, &sensor, zone_id).accepted;
+        }
+
+        LiveActor actor;
+        HitSensor sensor;
+        std::shared_ptr<smgpc::scene::StageCollisionRegistrationState> registration;
+    };
+
+    void test_owner_name_and_zone_remain_separate_from_resources() {
+        smgpc::test::OriginalSphereQueryFixture original;
+        require(MR::createSceneObj(SceneObj_ClippingDirector) != nullptr,
+                "host metadata test uses the original actor-registration owner");
+        auto collision = smgpc::scene::StageCollisionService{};
+        const auto kcl = make_single_triangle_kcl();
+        auto lower = CollisionOwner("LowerActor");
+        auto upper = std::make_unique<CollisionOwner>("UpperActor");
+        require(lower.add(collision, kcl, floor_matrix(), 5) &&
+                    upper->add(collision, kcl, floor_matrix(2.0F), 9),
+                "two actors in different zones must be able to share the exact same KCL resource");
+        collision.build();
+        collision.activate();
+        const auto read_triangle = [&collision](const TVec3f& start) {
+            smgpc::scene::StageCollisionHit hit;
+            require(collision.line_cast(start, TVec3f(0.0F, -1.5F, 0.0F), &hit),
+                    "the explicit host registry must return its live floor surface");
+            auto triangle = smgpc::compat::make_collision_triangle(collision, hit.triangle_index);
+            return triangle;
+        };
+        auto lower_triangle = read_triangle(TVec3f(10.0F, 1.0F, 10.0F));
+        auto upper_triangle = read_triangle(TVec3f(10.0F, 3.0F, 10.0F));
+        require(std::string_view(lower_triangle.getHostName()) == "LowerActor" &&
+                    std::string_view(upper_triangle.getHostName()) == "UpperActor" &&
+                    lower_triangle.getHostPlacementZoneID() == 5 && upper_triangle.getHostPlacementZoneID() == 9,
+                "Triangle must retain each actual sensor host and its creation zone");
+        const auto lower_surface = collision.surface(lower_triangle.mIdx);
+        const auto upper_surface = collision.surface(upper_triangle.mIdx);
+        require(lower_surface.has_value() && upper_surface.has_value() &&
+                    lower_surface->source_name == "/ObjectData/Shared.arc:/Shared.kcl" &&
+                    lower_surface->source_name == upper_surface->source_name &&
+                    lower_surface->sensor == &lower.sensor && upper_surface->sensor == &upper->sensor &&
+                    lower_surface->placement_zone_id == 5 && upper_surface->placement_zone_id == 9,
+                "diagnostic resource identity must remain unchanged and independent of actor/zone metadata");
+
+        lower.actor.setName("RenamedLowerActor");
+        require(std::string_view(lower_triangle.getHostName()) == "RenamedLowerActor",
+                "the host getter must read the current NameObj name rather than a stale copied label");
+        lower.sensor.mHost = nullptr;
+        require(lower_triangle.getHostName() == nullptr && lower_triangle.getHostPlacementZoneID() == 5,
+                "a missing sensor host has no name and does not change the part's retained zone");
+        lower.sensor.mHost = &lower.actor;
+        collision.build();
+        require(lower_triangle.getHostPlacementZoneID() == 5 && upper_triangle.getHostPlacementZoneID() == 9,
+                "rebuilding the query structure must preserve triangle owner provenance");
+
+        upper->actor.makeActorDead();
+        require(!upper_triangle.isValid() && upper_triangle.getHostName() == nullptr,
+                "inactive actor collision must not publish stale owner pointers");
+        upper->actor.makeActorAppeared();
+        require(upper_triangle.isValid() && upper_triangle.getHostPlacementZoneID() == 9,
+                "reappearing an actor must recover its original zone identity");
+        upper.reset();
+        require(!upper_triangle.isValid() && upper_triangle.getHostName() == nullptr,
+                "released registrations must not dereference a destroyed sensor or actor");
+
+        collision.clear();
+        require(!lower_triangle.isValid() && lower_triangle.getHostName() == nullptr,
+                "clearing the stage must withdraw previous triangle provenance");
+        require(collision.add_kcl(kcl, floor_matrix(), "geometry-only.kcl"), "an unowned geometry fixture must still register");
+        collision.build();
+        const auto unowned = read_triangle(TVec3f(10.0F, 1.0F, 10.0F));
+        require(unowned.getHostName() == nullptr && lower_triangle.getHostName() == nullptr,
+                "geometry-only registrations must not pretend resource names are actor names or revive old triangles");
+        auto zone_unavailable = false;
+        try {
+            (void)unowned.getHostPlacementZoneID();
+        } catch (const std::logic_error&) {
+            zone_unavailable = true;
+        }
+        require(zone_unavailable, "an absent authored zone must fail explicitly when requested");
+    }
+
     struct TestCase {
         std::string_view name;
         void (*run)();
@@ -425,6 +517,7 @@ int main(int argc, char** argv) {
         TestCase{"collision absent without registration", test_collision_is_absent_without_explicit_registration},
         TestCase{"only explicit valid KCL registers", test_only_explicit_valid_kcl_registration_adds_collision},
         TestCase{"triangle source matrix lifetime", test_triangle_source_matrix_lifetime},
+        TestCase{"host owner/zone/resource separation and retirement", test_owner_name_and_zone_remain_separate_from_resources},
         TestCase{"line traversal Game heap ownership", test_repeated_line_queries_preserve_game_heap},
         TestCase{"generated original geometry publication and retirement", test_generated_geometry_publication_and_retirement},
     };

@@ -2,6 +2,7 @@
 #include "Game/Util/MapUtil.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/JkrAllocationDomain.hpp"
+#include "compat/HitInfoCompat.hpp"
 #include "resource/BcsvTable.hpp"
 #include "scene/StageCollisionService.hpp"
 
@@ -31,6 +32,14 @@ namespace {
     void rejects(Function function) {
         try { function(); } catch (const Exception&) { return; }
         throw std::runtime_error("Invalid area query was accepted.");
+    }
+    // These are retained host-resource/identity tests. Actual Game area-query
+    // ownership is exercised by OriginalSphereQueryTests, not this host graph.
+    u32 collect_host_area(const Collision& collision, Triangle* output, u32 capacity, TVec3f* points, u32 count) {
+        const auto identities=collision.area_polygons({points,count},capacity);
+        for (std::size_t i=0;i<identities.size();++i)
+            output[i]=smgpc::compat::make_collision_triangle(collision,identities[i]);
+        return static_cast<u32>(identities.size());
     }
     void put16(Bytes& bytes, std::size_t offset, std::uint16_t value) {
         bytes.at(offset) = value >> 8;
@@ -156,7 +165,7 @@ namespace {
         collision.activate();
         auto box = full_box();
         auto output = std::array<Triangle, 16>{};
-        require(MR::createAreaPolygonListArray(output.data(), output.size(), box.data(), box.size()) == 12,
+        require(collect_host_area(collision, output.data(), output.size(), box.data(), box.size()) == 12,
                 "Every enabled part must contribute its three active prisms.");
         const auto expected = std::array<std::string_view, 4>{"global", "zone2-first", "zone2-second", "zone7"};
         for (std::size_t i = 0; i < expected.size(); ++i)
@@ -232,7 +241,7 @@ namespace {
         auto box = std::array{TVec3f(21, -11, 6.9F), TVec3f(11, 3, 7.1F)};
         auto output = std::array<Triangle, 4>{};
         output[3].mIdx = 123456;
-        require(MR::createAreaPolygonListArray(output.data(), output.size(), box.data(), box.size()) == 3,
+        require(collect_host_area(collision, output.data(), output.size(), box.data(), box.size()) == 3,
                 "Part-local AABB must collect all transformed prisms from retained source bytes.");
         require(output[3].mIdx == 123456, "Unwritten capacity must remain unchanged.");
         const auto& first = output[0];

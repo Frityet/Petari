@@ -57,59 +57,6 @@ target("smg-pc-mario-model-demo-surface-tests")
         realtime_output = true
     })
 
-target("smg-pc-binder-kcl-mario-walk-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    set_rundir(os.projectdir())
-    add_files {
-        "BinderKclMarioWalkTests.cpp",
-        "../src/Game/Player/MarioMapCode.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("binder_kcl_mario_walk", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
-target("smg-pc-collision-triangle-filter-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    set_rundir(os.projectdir())
-    add_files {
-        "CollisionTriangleFilterTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("collision_triangle_filter", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
 target("smg-pc-original-camera-runtime-tests")
     set_kind("binary")
     set_default(false)
@@ -3052,3 +2999,21 @@ target("smg-pc-original-process-player-owner-tests")
               "OriginalMarioStateTests.cpp", "OriginalPlayerUtilTests.cpp", "MarioWalkParameterTests.cpp")
     add_deps("smg-pc-app", "aurora-main")
     add_tests("original_process_player_owner", {group = "original-process", rundir = os.projectdir(), realtime_output = true})
+
+target("smg-pc-original-sphere-query-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("OriginalSphereQueryTests.cpp")
+    add_deps("smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd", "aurora-gd",
+             "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi")
+    add_tests("original_sphere_queries", {group = "aurora", rundir = os.projectdir(), realtime_output = true})
+
+target("smg-pc-original-binder-sphere-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("OriginalBinderSphereTests.cpp")
+    add_deps("smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd", "aurora-gd",
+             "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi")
+    add_tests("original_binder_spheres", {group = "aurora", rundir = os.projectdir(), realtime_output = true})

@@ -17,6 +17,7 @@
 #include "Game/AreaObj/LightArea.hpp"
 #include "Game/AreaObj/LightAreaHolder.hpp"
 #include "Game/AreaObj/MessageArea.hpp"
+#include "Game/AreaObj/RestartCube.hpp"
 #include "Game/AreaObj/SwitchArea.hpp"
 #include "Game/Map/LightFunction.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
@@ -295,6 +296,14 @@ namespace smgpc::scene {
                     .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cylinder>,
                     .manager_name = "PullBackCylinder",
                     .retail_manager_order = 17,
+                    .manager_capacity = 0x40,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "RestartCube",
+                    .object_creator = create_area_obj<RestartCube, AreaForm::Type_Cube2>,
+                    .manager_name = "RestartCube",
+                    .retail_manager_order = 18,
                     .manager_capacity = 0x40,
                     .manager_creator = create_area_obj_manager,
                 },
@@ -651,6 +660,15 @@ namespace smgpc::scene {
                     .manager_creator = create_area_obj_manager,
                 },
             };
+
+        static_assert([] {
+            s32 previous = -1;
+            for (const auto& descriptor : cCompleteAreaObjPlacementDescriptors) {
+                if (descriptor.retail_manager_order < previous) return false;
+                previous = descriptor.retail_manager_order;
+            }
+            return true;
+        }(), "AreaObj placement descriptors must retain original manager order");
 
         [[nodiscard]] bool equal_string_case(std::string_view left, std::string_view right) noexcept {
             return left.size() == right.size() &&

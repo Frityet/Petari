@@ -37,8 +37,8 @@ namespace {
     void test_actual_queue_membership_and_strict_boundary() {
         using namespace smgpc::scene;
         using Availability = OriginalPlacementAvailability;
-        require(nameobj::original_name_obj_registered("rEsTaRtCuBe") &&
-                    NameObjFactory::getCreator("RestartCube") == nullptr,
+        require(nameobj::original_name_obj_registered("cHaNgEbGmCuBe") &&
+                    NameObjFactory::getCreator("ChangeBgmCube") == nullptr,
                 "null-archive retail actors must remain distinguishable from genuinely unknown names");
         require(!nameobj::original_name_obj_registered("UnregisteredCoverageProbe") &&
                     NameObjFactory::getCreator("UnregisteredCoverageProbe") == nullptr,
@@ -52,14 +52,14 @@ namespace {
         auto first = Queue{};
         auto second = Queue{};
         first.insert({"Mario", -1}, {&actors, 0});
-        first.insert({"RestartCube", -1}, {&areas, 0});
-        first.insert({"RestartCube", -1}, {&areas, 0});
+        first.insert({"ChangeBgmCube", -1}, {&areas, 0});
+        first.insert({"ChangeBgmCube", -1}, {&areas, 0});
         first.insert({"UnregisteredCoverageProbe", -1}, {&actors, 0});
         first.insert({"DemoGroup", -1}, {&demos, 0});
         first.insert({"UnregisteredCoverageProbe", -1}, {&zones, 0});
         second.insert({"AssemblyBlock", 2}, {&actors, 0});
         second.insert({"UnregisteredCoverageProbe", 2}, {&actors, 0});
-        second.insert({"RestartCube", -1}, {&misleading, 0});
+        second.insert({"ChangeBgmCube", -1}, {&misleading, 0});
         const auto queues = std::array{
             OriginalPlacementQueue{"first", &first}, OriginalPlacementQueue{"second", &second},
         };
@@ -81,7 +81,7 @@ namespace {
         bool rejected = false;
         try { require_original_placement_closure(entries); }
         catch (const std::runtime_error& error) {
-            rejected = std::string_view(error.what()).find("RestartCube") != std::string_view::npos;
+            rejected = std::string_view(error.what()).find("ChangeBgmCube") != std::string_view::npos;
         }
         require(rejected, "strict validation must reject a known-unlinked real actor before construction");
         std::vector<OriginalPlacementCoverageEntry> no_unlinked;

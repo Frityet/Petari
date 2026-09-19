@@ -39,6 +39,10 @@ namespace {
         bool camera = false;
         bool utilities = false;
         std::uint64_t normal_frames_after_restore = 0;
+        std::uint64_t cadence_samples = 0;
+        std::uint64_t last_observed_frame = 0;
+        u16 last_movement_counter = 0;
+        bool cadence_started = false;
         const MarioActor* identity = nullptr;
 
         void after_frame(GameSystem& system, std::uint64_t frame) {
@@ -80,9 +84,25 @@ namespace {
                              static_cast<unsigned long long>(frame));
             }
 
+            // _378 is incremented at entry to the canonical MarioActor::movement
+            // and otherwise only reset by construction/init. Observe it after
+            // the retained early injected checks, without changing any state.
+            // This checks actual process cadence, not host wall-clock FPS.
+            if (cadence_started) {
+                require(frame == last_observed_frame + 1 &&
+                            static_cast<u16>(actor->_378 - last_movement_counter) == 1,
+                        "each observed original process frame executes exactly one MarioActor movement");
+                ++cadence_samples;
+            }
+            cadence_started = true;
+            last_observed_frame = frame;
+            last_movement_counter = actor->_378;
+
             if (frame == frame_count - 1) {
-                require(stack_and_walk && camera && normal_frames_after_restore >= 100,
+                require(stack_and_walk && camera && normal_frames_after_restore >= 100 && cadence_samples >= 100,
                         "restored test fields survive at least one hundred ordinary original scene frames");
+                std::fprintf(stderr, "[original-player-owner] PASS actual process cadence: %llu consecutive frames with exactly one original movement each\n",
+                             static_cast<unsigned long long>(cadence_samples));
                 // This retained module ends with the original public control
                 // reset, which legitimately changes animation and statuses.
                 // Run only after the final game frame; ordinary teardown is
