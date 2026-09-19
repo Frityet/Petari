@@ -11,11 +11,11 @@ namespace NrvPlantMember {
     NERVE_DECL(HostTypeNrvShakeMiddle, PlantMember, exeShakeMiddle);
     NERVE_DECL(HostTypeNrvShakeStrong, PlantMember, exeShakeStrong);
 
-    HostTypeNrvWait HostTypeNrvWait::sInstance;
-    HostTypeNrvHint HostTypeNrvHint::sInstance;
-    HostTypeNrvShakeWeak HostTypeNrvShakeWeak::sInstance;
-    HostTypeNrvShakeMiddle HostTypeNrvShakeMiddle::sInstance;
-    HostTypeNrvShakeStrong HostTypeNrvShakeStrong::sInstance;
+    INIT_NERVE(HostTypeNrvWait);
+    INIT_NERVE(HostTypeNrvHint);
+    INIT_NERVE(HostTypeNrvShakeWeak);
+    INIT_NERVE(HostTypeNrvShakeMiddle);
+    INIT_NERVE(HostTypeNrvShakeStrong);
 };  // namespace NrvPlantMember
 
 PlantGroup::PlantGroup(const char* pName)
