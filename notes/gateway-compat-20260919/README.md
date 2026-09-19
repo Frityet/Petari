@@ -75,15 +75,24 @@ math and passes winding, polar-normal and inclined-plane tests. This adds real
 plant/scenery placement; rabbit reveal still follows its authored area/pipe
 switches and is not inferred from visible plants.
 
-`input-light-plant-ui.json` records a 4500-frame original opening with exit0 and
-normal Mario colors. The later live debugger process PID6264 is a separate
-diagnostic session, possibly relaunched by Computer Use; it is not covered by
-that runner's exit status. It received actual SDL Return events and published
-A to original KPAD/WPad. TalkStateEvent requires a held A sample after the
-trigger frame, which the short automated tap did not establish. That process
-later exposed a FIFO breakpoint exactly one byte before the end of a vertex
-command, despite the following byte being present in the retained stream.
-See ../original-fifo-command-boundary-20260919/ for its boundary capture.
+`input-light-plant-ui.json` is a debugger diagnostic, not a completed bounded
+run. Attaching LLDB on macOS reparents the original inferior; Python's wait
+reported zero at that point even while it remained alive. Its log has no
+completed-frame marker and later contains the captured FIFO abort. The earlier
+interpretation of a separate relaunched PID6264 was incorrect. The retained
+JSON is the raw wait observation, superseded for completion claims by
+`debugger-run-classification.json`. The no-debugger direct-GX360 run has both
+the actual completed-frame marker and clean process exit.
+
+The debugger received actual SDL Return events and published A to original
+KPAD/WPad. TalkStateEvent requires a held A sample after the trigger frame,
+which the short automated tap did not establish. The process later exposed a
+FIFO breakpoint exactly one byte before the end of a vertex command, despite
+the following byte being present in the retained stream. See
+../original-fifo-command-boundary-20260919/ for its boundary capture.
 
 The runner now records start time and PID before waiting, as well as final
-status, so later live app launches can be distinguished from bounded runs.
+status. It now also requires the actual completed-frame log marker and verifies
+that the PID is gone; a wait returning while the process remains alive is
+recorded with an unknown exit status. This prevents debugger reparenting from
+being mistaken for a successful run.

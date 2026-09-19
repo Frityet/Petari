@@ -4,6 +4,7 @@ import argparse
 from datetime import datetime, timezone
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import time
@@ -58,5 +59,23 @@ with (notes / (label + ".log")).open("w") as output:
         record["exit_code"] = process.returncode
         record["timeout_terminated"] = True
 record["elapsed_seconds"] = time.monotonic() - start
+try:
+    os.kill(process.pid, 0)
+    record["process_still_exists_after_wait"] = True
+except ProcessLookupError:
+    record["process_still_exists_after_wait"] = False
+completed = re.findall(r"Original GameSystem stopped after (\d+) completed frames",
+                       (notes / (label + ".log")).read_text(errors="replace"))
+record["completed_frames"] = int(completed[-1]) if completed else None
+if record["process_still_exists_after_wait"]:
+    # macOS debugger attachment can reparent the inferior. Python's wait then
+    # reports zero for ECHILD, which is not the game's eventual exit status.
+    record["reported_wait_exit_code"] = record["exit_code"]
+    record["exit_code"] = None
+    record["exit_status_note"] = "Process still exists; wait status cannot establish completion (possible debugger reparenting)."
+record["verified_bounded_completion"] = (
+    record["exit_code"] == 0 and not record["timeout_terminated"]
+    and not record["process_still_exists_after_wait"]
+    and record["completed_frames"] == options.frames)
 (notes / (label + ".json")).write_text(json.dumps(record, indent=2) + "\n")
 print(json.dumps(record, indent=2))

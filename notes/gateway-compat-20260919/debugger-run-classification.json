@@ -1,0 +1,12 @@
+{
+  "input-light-plant-ui": {
+    "verified_bounded_completion": false,
+    "actual_exit_status": "debugger-killed after FIFO abort",
+    "reason": "LLDB reparenting caused Python wait to report zero before process ended; no completion marker; runtime log contains the captured abort"
+  },
+  "held-input-fifo": {
+    "verified_bounded_completion": false,
+    "actual_exit_status": "SIGTERM requested by root after read-only held-button trace; no bounded completion claim",
+    "reason": "same PID13202 observed alive with PPID1 after recorded wait returned zero; no completion marker at observation"
+  }
+}
