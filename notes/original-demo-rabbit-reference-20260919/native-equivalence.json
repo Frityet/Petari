@@ -1,0 +1,10 @@
+{
+  "result": "PASS",
+  "normalizations": [
+    "Remove native CP932 helper include",
+    "Unwrap nine CP932 literals",
+    "Map native zeroInline to equivalent three-component zero set"
+  ],
+  "native_source_sha256": "f7f0b27154424610be2ce8b66b468a176983f7f98e55355ed597dfe55a269704",
+  "native_header_sha256": "c19da9e38146b772b0807713d0daf71da90ca7587d72c46bfd3129e8f7876f28"
+}

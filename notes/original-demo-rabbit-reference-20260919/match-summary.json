@@ -1,0 +1,393 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "retail_start": "0x80270b94",
+  "retail_end": "0x80271dd0",
+  "retail_text_bytes": 4668,
+  "retail_reference_comparison": "PASS (only ELF relocation bits masked)",
+  "relocations": 334,
+  "sections": [
+    {
+      "name": ".text",
+      "size": "4668",
+      "match_percent": 99.45844
+    },
+    {
+      "name": ".ctors",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": ".data",
+      "size": "688",
+      "match_percent": 47.61905
+    },
+    {
+      "name": ".sdata",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": ".sbss",
+      "size": "40",
+      "match_percent": 100.0
+    },
+    {
+      "name": ".sdata2",
+      "size": "104",
+      "match_percent": 100.0
+    }
+  ],
+  "functions": [
+    {
+      "name": "__ct__10DemoRabbitFPCc",
+      "size": "60",
+      "match_percent": 100.0
+    },
+    {
+      "name": "makeArchiveList__10DemoRabbitFP27NameObjArchiveListCollectorRC12JMapInfoIter",
+      "size": "92",
+      "match_percent": 100.0
+    },
+    {
+      "name": "init__10DemoRabbitFRC12JMapInfoIter",
+      "size": "608",
+      "match_percent": 99.67105
+    },
+    {
+      "name": "initAfterPlacement__10DemoRabbitFv",
+      "size": "108",
+      "match_percent": 100.0
+    },
+    {
+      "name": "control__10DemoRabbitFv",
+      "size": "116",
+      "match_percent": 99.655174
+    },
+    {
+      "name": "fadeOut__10DemoRabbitFv",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "fadeIn__10DemoRabbitFv",
+      "size": "196",
+      "match_percent": 99.67347
+    },
+    {
+      "name": "updateStopVelocity__10DemoRabbitFv",
+      "size": "176",
+      "match_percent": 99.318184
+    },
+    {
+      "name": "updateNormalVelocity__10DemoRabbitFv",
+      "size": "144",
+      "match_percent": 99.02778
+    },
+    {
+      "name": "updateRun__10DemoRabbitFRCQ29JGeometry8TVec3<f>b",
+      "size": "428",
+      "match_percent": 98.23364
+    },
+    {
+      "name": "updateJump__10DemoRabbitFv",
+      "size": "188",
+      "match_percent": 99.78723
+    },
+    {
+      "name": "tryGuide__10DemoRabbitFv",
+      "size": "88",
+      "match_percent": 100.0
+    },
+    {
+      "name": "tryWait__10DemoRabbitFv",
+      "size": "92",
+      "match_percent": 100.0
+    },
+    {
+      "name": "tryGoal__10DemoRabbitFv",
+      "size": "104",
+      "match_percent": 99.80769
+    },
+    {
+      "name": "exeAppear__10DemoRabbitFv",
+      "size": "236",
+      "match_percent": 99.45763
+    },
+    {
+      "name": "exeDemo__10DemoRabbitFv",
+      "size": "92",
+      "match_percent": 99.78261
+    },
+    {
+      "name": "exeTalk__10DemoRabbitFv",
+      "size": "140",
+      "match_percent": 99.85714
+    },
+    {
+      "name": "exeWait__10DemoRabbitFv",
+      "size": "108",
+      "match_percent": 99.37037
+    },
+    {
+      "name": "exeGoal__10DemoRabbitFv",
+      "size": "164",
+      "match_percent": 99.46342
+    },
+    {
+      "name": "exeGuide__10DemoRabbitFv",
+      "size": "356",
+      "match_percent": 98.29214
+    },
+    {
+      "name": "exeRunaway__10DemoRabbitFv",
+      "size": "260",
+      "match_percent": 99.41538
+    },
+    {
+      "name": "exeChange__10DemoRabbitFv",
+      "size": "164",
+      "match_percent": 99.60976
+    },
+    {
+      "name": "exeStartBGM__10DemoRabbitFv",
+      "size": "92",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__sinit_\\DemoRabbit_cpp",
+      "size": "108",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__Q213NrvDemoRabbit19DemoRabbitNrvAppearFv",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__Q213NrvDemoRabbit17DemoRabbitNrvDemoFv",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__Q213NrvDemoRabbit18DemoRabbitNrvTalk0Fv",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__Q213NrvDemoRabbit18DemoRabbitNrvTalk1Fv",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__Q213NrvDemoRabbit17DemoRabbitNrvWaitFv",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__Q213NrvDemoRabbit18DemoRabbitNrvGuideFv",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__Q213NrvDemoRabbit17DemoRabbitNrvGoalFv",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__Q213NrvDemoRabbit20DemoRabbitNrvRunawayFv",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__Q213NrvDemoRabbit19DemoRabbitNrvChangeFv",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__Q213NrvDemoRabbit21DemoRabbitNrvStartBGMFv",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "execute__Q213NrvDemoRabbit21DemoRabbitNrvStartBGMCFP5Spine",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "execute__Q213NrvDemoRabbit19DemoRabbitNrvChangeCFP5Spine",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "execute__Q213NrvDemoRabbit20DemoRabbitNrvRunawayCFP5Spine",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "execute__Q213NrvDemoRabbit17DemoRabbitNrvGoalCFP5Spine",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "execute__Q213NrvDemoRabbit18DemoRabbitNrvGuideCFP5Spine",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "execute__Q213NrvDemoRabbit17DemoRabbitNrvWaitCFP5Spine",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "execute__Q213NrvDemoRabbit18DemoRabbitNrvTalk1CFP5Spine",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "execute__Q213NrvDemoRabbit18DemoRabbitNrvTalk0CFP5Spine",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "execute__Q213NrvDemoRabbit17DemoRabbitNrvDemoCFP5Spine",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "execute__Q213NrvDemoRabbit19DemoRabbitNrvAppearCFP5Spine",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "Functor<10DemoRabbit>__2MRFP10DemoRabbitM10DemoRabbitFPCvPv_v_Q22MR47FunctorV0M<P10DemoRabbit,M10DemoRabbitFPCvPv_v>",
+      "size": "64",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__cl__Q22MR47FunctorV0M<P10DemoRabbit,M10DemoRabbitFPCvPv_v>CFv",
+      "size": "48",
+      "match_percent": 100.0
+    },
+    {
+      "name": "clone__Q22MR47FunctorV0M<P10DemoRabbit,M10DemoRabbitFPCvPv_v>CFP7JKRHeap",
+      "size": "104",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__dt__10DemoRabbitFv",
+      "size": "88",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__Q22MR47FunctorV0M<P10DemoRabbit,M10DemoRabbitFPCvPv_v>",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__10DemoRabbit",
+      "size": "120",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__Q213NrvDemoRabbit21DemoRabbitNrvStartBGM",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__Q213NrvDemoRabbit19DemoRabbitNrvChange",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__Q213NrvDemoRabbit20DemoRabbitNrvRunaway",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__Q213NrvDemoRabbit17DemoRabbitNrvGoal",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__Q213NrvDemoRabbit18DemoRabbitNrvGuide",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__Q213NrvDemoRabbit17DemoRabbitNrvWait",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__Q213NrvDemoRabbit18DemoRabbitNrvTalk1",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__Q213NrvDemoRabbit18DemoRabbitNrvTalk0",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__Q213NrvDemoRabbit17DemoRabbitNrvDemo",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__Q213NrvDemoRabbit19DemoRabbitNrvAppear",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "sInstance__Q213NrvDemoRabbit19DemoRabbitNrvAppear",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "sInstance__Q213NrvDemoRabbit17DemoRabbitNrvDemo",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "sInstance__Q213NrvDemoRabbit18DemoRabbitNrvTalk0",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "sInstance__Q213NrvDemoRabbit18DemoRabbitNrvTalk1",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "sInstance__Q213NrvDemoRabbit17DemoRabbitNrvWait",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "sInstance__Q213NrvDemoRabbit18DemoRabbitNrvGuide",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "sInstance__Q213NrvDemoRabbit17DemoRabbitNrvGoal",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "sInstance__Q213NrvDemoRabbit20DemoRabbitNrvRunaway",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "sInstance__Q213NrvDemoRabbit19DemoRabbitNrvChange",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "sInstance__Q213NrvDemoRabbit21DemoRabbitNrvStartBGM",
+      "size": "4",
+      "match_percent": 100.0
+    }
+  ],
+  "canonical_source_sha256": "cdb8e023b6655c6cd79950660df60dac76c91e574751238796e296886f060427"
+}
