@@ -37,6 +37,9 @@ void DisabledAudioBackend::initialize(std::span<const std::uint8_t> baa) {
     _phase = Phase::Initialized;
 }
 bool DisabledAudioBackend::initialized() const noexcept { return _phase == Phase::Initialized; }
+AudSceneMgr* DisabledAudioBackend::scene_manager() noexcept {
+    return _objects ? _objects->scene_manager() : nullptr;
+}
 void DisabledAudioBackend::request_banks(BankGroup group) {
     if (!initialized()) return;
     // A new stage invalidates the previous scenario's bank request even though

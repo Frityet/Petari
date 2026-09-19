@@ -2,9 +2,6 @@
 #include "scene/GameSceneBinding.hpp"
 #endif
 #include "Game/Scene/GameScene.hpp"
-#if defined(TARGET_PC)
-#include "compat/DisabledObjectAudio.hpp"
-#endif
 #include "Game/AudioLib/AudSceneMgr.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
 #include "Game/LiveActor/AllLiveActorGroup.hpp"
@@ -160,13 +157,7 @@ void GameScene::init() {
 }
 
 void GameScene::start() {
-#if defined(TARGET_PC)
-    if constexpr (aurora::audio::DisabledObjectAudio::enabled()) {
-        AudWrap::getSceneMgr()->startScene();
-    }
-#else
     AudWrap::getSceneMgr()->startScene();
-#endif
 
     if (MR::isGlobalTimerEnd()) {
         MR::forceCloseWipeCircle();

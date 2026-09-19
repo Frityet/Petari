@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Game/AudioLib/AudSoundObject.hpp"
+#include "Game/AudioLib/AudSceneMgr.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include <memory>
 #include <cstdint>
@@ -23,10 +24,14 @@ public:
     DisabledObjectAudioService(const DisabledObjectAudioService&) = delete;
     DisabledObjectAudioService& operator=(const DisabledObjectAudioService&) = delete;
     AudSoundObject* system_object() noexcept { return &_system_object; }
+    AudSceneMgr* scene_manager() noexcept { return &_scene_manager; }
 
 private:
     std::shared_ptr<smgpc::compat::JkrHeapRuntime> _heaps;
     AudSoundObject _system_object;
+    // Scene flags and player selection remain actual original fields even when
+    // this backend has no JAU wave heap or output device.
+    AudSceneMgr _scene_manager{nullptr};
     std::unique_ptr<OriginalAudioNameLifetime> _names;
     DisabledObjectAudioService* _previous;
 };
@@ -37,4 +42,5 @@ std::unique_ptr<DisabledObjectAudioService> make_disabled_object_audio_service(
 // Borrowed only for the currently active service lifetime, like AudWrap's
 // ordinary system owner. It never creates an owner as a query side effect.
 AudSoundObject* disabled_system_sound_object() noexcept;
+AudSceneMgr* disabled_audio_scene_manager() noexcept;
 }

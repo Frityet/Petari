@@ -6,6 +6,7 @@
 #include <span>
 
 class JKRHeap;
+class AudSceneMgr;
 namespace aurora::audio { class DisabledObjectAudioService; }
 
 namespace smgpc::compat {
@@ -34,6 +35,7 @@ public:
     void resume_reset() noexcept;
     void stop_all() noexcept;
     [[nodiscard]] bool has_output_device() const noexcept { return false; }
+    [[nodiscard]] AudSceneMgr* scene_manager() noexcept;
 
 private:
     JKRHeap& _owner_heap; // Borrowed until the original object's heap finalizer.

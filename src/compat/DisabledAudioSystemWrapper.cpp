@@ -1,4 +1,5 @@
 #include "Game/System/AudSystemWrapper.hpp"
+#include "Game/AudioLib/AudSceneMgr.hpp"
 #include "Game/Util/FileUtil.hpp"
 #include "compat/DisabledAudioBackend.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -82,7 +83,14 @@ void AudSystemWrapper::stopAllSound(u32) { backend(*this).stop_all(); }
 bool AudSystemWrapper::isLoadDoneWaveDataAtSystemInit() const { return backend(*this).initialized(); }
 void AudSystemWrapper::loadStaticWaveData() { backend(*this).request_banks(Backend::BankGroup::Static); }
 bool AudSystemWrapper::isLoadDoneStaticWaveData() const { return backend(*this).banks_complete(Backend::BankGroup::Static); }
-void AudSystemWrapper::loadStageWaveData(const char*, const char*, bool) { backend(*this).request_banks(Backend::BankGroup::Stage); }
+void AudSystemWrapper::loadStageWaveData(const char*, const char*, bool isPlayerLuigi) {
+    auto& output = backend(*this);
+    if (auto* scene = output.scene_manager()) {
+        if (isPlayerLuigi) scene->setPlayerModeLuigi();
+        else scene->setPlayerModeMario();
+    }
+    output.request_banks(Backend::BankGroup::Stage);
+}
 bool AudSystemWrapper::isLoadDoneStageWaveData() const { return backend(*this).banks_complete(Backend::BankGroup::Stage); }
 void AudSystemWrapper::loadScenarioWaveData(const char*, const char*, s32) { backend(*this).request_banks(Backend::BankGroup::Scenario); }
 bool AudSystemWrapper::isLoadDoneScenarioWaveData() const { return backend(*this).banks_complete(Backend::BankGroup::Scenario); }

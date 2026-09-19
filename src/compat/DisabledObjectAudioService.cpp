@@ -122,4 +122,33 @@ std::unique_ptr<DisabledObjectAudioService> make_disabled_object_audio_service(
 AudSoundObject* disabled_system_sound_object() noexcept {
     return active_service == nullptr ? nullptr : active_service->system_object();
 }
+AudSceneMgr* disabled_audio_scene_manager() noexcept {
+    return active_service == nullptr ? nullptr : active_service->scene_manager();
+}
+}
+
+// Original state construction and player selection from AudSceneMgr.cpp. The
+// disabled backend owns this object; its deliberately absent wave heap is never
+// exposed as a loaded hardware resource.
+AudSceneMgr::AudSceneMgr(JAUSectionHeap* pSectionHeap)
+    : _4(), mSeWaveSetId(), mSeScenarioWaveSetId(-1), mBgmWaveSetId(), mPlayerMode(), mPrevPlayerMode(), mIsNewPlayerMode(), _1D() {
+    mSectionHeap = pSectionHeap;
+}
+
+void AudSceneMgr::setPlayerModeMario() {
+    mPlayerMode = PlayerMode_Mario;
+}
+
+void AudSceneMgr::setPlayerModeLuigi() {
+    mPlayerMode = PlayerMode_Luigi;
+}
+
+void AudSceneMgr::startScene() {
+    if (aurora::audio::disabled_audio_scene_manager() != this)
+        aurora::throw_host_exception<std::logic_error>("Audio scene start requires its active disabled backend owner");
+    // Keep the original scene-local flags. The remaining retail operations
+    // reset AudSystem voice/volume/effect state and reconnect a Wii speaker;
+    // none of those output owners exist under the explicit disabled policy.
+    _4 = 0;
+    _1D = false;
 }

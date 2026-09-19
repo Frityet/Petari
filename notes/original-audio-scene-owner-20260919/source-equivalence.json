@@ -1,0 +1,42 @@
+{
+  "created_utc": "2026-09-19T11:26:16.329764+00:00",
+  "checks": [
+    {
+      "signature": "AudSceneMgr::AudSceneMgr(JAUSectionHeap* pSectionHeap)",
+      "exact_source_equal": true,
+      "reference_sha256": "29385c6bb82083fed449d0512e99337051d1bd7af5797374719f3873046de586",
+      "native_sha256": "29385c6bb82083fed449d0512e99337051d1bd7af5797374719f3873046de586"
+    },
+    {
+      "signature": "void AudSceneMgr::setPlayerModeMario()",
+      "exact_source_equal": true,
+      "reference_sha256": "d3043a059cac38ab58520f9fa792f48d486732980470535e5ca8f27b83724e77",
+      "native_sha256": "d3043a059cac38ab58520f9fa792f48d486732980470535e5ca8f27b83724e77"
+    },
+    {
+      "signature": "void AudSceneMgr::setPlayerModeLuigi()",
+      "exact_source_equal": true,
+      "reference_sha256": "02dd4b43702ba939074178407c00f2cdb87527acf8ddb371265b9366172a590a",
+      "native_sha256": "02dd4b43702ba939074178407c00f2cdb87527acf8ddb371265b9366172a590a"
+    },
+    {
+      "signature": "void GameScene::start()",
+      "exact_source_equal": true,
+      "reference_sha256": "8d296c36a879988f2bad7cda96c5126c39f4d01316801a9c7a909fb6ae2a95a9",
+      "native_sha256": "8d296c36a879988f2bad7cda96c5126c39f4d01316801a9c7a909fb6ae2a95a9"
+    }
+  ],
+  "disabled_start_semantics": {
+    "retained_original_field_assignments": [
+      "_4 = 0;",
+      "_1D = false;"
+    ],
+    "omitted_output_operations": [
+      "AudSystem _82A, _82B, _82C writes",
+      "AudSystem::initSceneVolume",
+      "AudEffector::initParams",
+      "SpkSystem::reconnect"
+    ],
+    "ownership": "Only the currently published, actually constructed disabled audio service can start its scene state; absent and nonactive owners throw."
+  }
+}

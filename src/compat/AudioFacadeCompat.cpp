@@ -768,7 +768,9 @@ namespace AudWrap {
     }
 
     AudSceneMgr *getSceneMgr() {
-        unavailable("AudSceneMgr access");
+        auto* scene = aurora::audio::disabled_audio_scene_manager();
+        if (scene == nullptr) unavailable("AudSceneMgr access without its owner");
+        return scene;
     }
 
     AudBgmMgr *getBgmMgr() {

@@ -2,6 +2,8 @@
 #include "Game/AudioLib/AudSoundId.hpp"
 #include "Game/AudioLib/AudSoundNameConverter.hpp"
 #include "Game/AudioLib/AudSpeakerWrap.hpp"
+#include "Game/AudioLib/AudSceneMgr.hpp"
+#include "Game/AudioLib/AudWrap.hpp"
 #include "JSystem/JAudio2/JAUSoundTable.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/GameAudio/AudTalkSoundData.hpp"
@@ -43,6 +45,56 @@ std::vector<u8> read(const std::filesystem::path& path) {
 #include <cassert>
 #include <cstdio>
 #include <fstream>
+
+void test_disabled_audio_scene_state() {
+    const aurora::os::GuestThreadExecutionScope execution;
+    const auto require_absent = [] {
+        bool rejected = false;
+        try { (void)AudWrap::getSceneMgr(); }
+        catch (const std::logic_error&) { rejected = true; }
+        assert(rejected && aurora::audio::disabled_audio_scene_manager() == nullptr);
+    };
+    require_absent();
+    const auto heaps = smgpc::compat::JkrHeapRuntime::create(2U * 1024U * 1024U);
+    const auto initial_free = heaps->root_heap().getFreeSize();
+    for (int cycle = 0; cycle != 3; ++cycle) {
+        {
+            aurora::audio::DisabledObjectAudioService output(heaps);
+            auto* scene = AudWrap::getSceneMgr();
+            assert(scene == output.scene_manager());
+            assert(scene->mSectionHeap == nullptr && scene->_4 == 0 && scene->mSeWaveSetId == 0 &&
+                   scene->mSeScenarioWaveSetId == -1 && scene->mBgmWaveSetId == 0 &&
+                   scene->mPlayerMode == 0 && scene->mPrevPlayerMode == 0 && !scene->mIsNewPlayerMode);
+            assert(!MR::isCubeBgmChangeInvalid());
+            MR::setCubeBgmChangeInvalid();
+            scene->_4 = 1;
+            assert(scene->_1D && MR::isCubeBgmChangeInvalid());
+            scene->setPlayerModeLuigi();
+            scene->startScene();
+            assert(scene->_4 == 0 && !MR::isCubeBgmChangeInvalid() && scene->isPlayerModeLuigi());
+            scene->setPlayerModeMario();
+            assert(scene->isPlayerModeMario() && !scene->isPlayerModeLuigi());
+            MR::setCubeBgmChangeInvalid();
+            {
+                aurora::audio::DisabledObjectAudioService nested(heaps);
+                assert(AudWrap::getSceneMgr() == nested.scene_manager() && !MR::isCubeBgmChangeInvalid());
+                bool rejected = false;
+                try { scene->startScene(); }
+                catch (const std::logic_error&) { rejected = true; }
+                assert(rejected && scene->_1D);
+                MR::setCubeBgmChangeInvalid();
+                AudWrap::getSceneMgr()->startScene();
+                assert(!MR::isCubeBgmChangeInvalid());
+            }
+            assert(AudWrap::getSceneMgr() == scene && MR::isCubeBgmChangeInvalid());
+            scene->startScene();
+            assert(!MR::isCubeBgmChangeInvalid() && output.system_object()->getNumHandles() == 0);
+        }
+        require_absent();
+        assert(heaps->root_heap().getFreeSize() == initial_free);
+    }
+    std::puts("[pass] disabled audio scene owner: original flags, SoundUtil mutations, scene resets, player mode, nested publication and three heap retirements");
+}
 
 void test_original_talk_sound_dispatch() {
     using aurora::audio::DisabledObjectAudio;
@@ -390,6 +442,7 @@ void test_disabled_backend_wrapper_owner() {
         wrapper->resumeReset();
         assert(!wrapper->_29);
         auto& backend = *wrapper->mDisabledBackend;
+        assert(backend.scene_manager() == nullptr);
         backend.request_initialize();
         backend.receive_initialize();
         struct Work { smgpc::compat::DisabledAudioBackend* output; const std::vector<u8>* baa; } work{&backend, &baa};
@@ -406,6 +459,11 @@ void test_disabled_backend_wrapper_owner() {
         assert(OSJoinThread(&thread, &result) && result == &work);
         assert(wrapper->isLoadDoneWaveDataAtSystemInit());
         assert(wrapper->mAudSystem == nullptr && !backend.has_output_device());
+        assert(AudWrap::getSceneMgr() == backend.scene_manager());
+        MR::setCubeBgmChangeInvalid();
+        assert(MR::isCubeBgmChangeInvalid());
+        AudWrap::getSceneMgr()->startScene();
+        assert(!MR::isCubeBgmChangeInvalid());
         // Main guest sees the actual service published by the original OS worker.
         assert(aurora::audio::disabled_system_sound_object() != nullptr);
         assert(u32(AudSingletonHolder<AudSoundNameConverter>::get()->getSoundID("SE_SY_GAME_START")) == SE_SY_GAME_START);
@@ -415,10 +473,12 @@ void test_disabled_backend_wrapper_owner() {
         wrapper->loadStaticWaveData();
         assert(wrapper->isLoadDoneStaticWaveData());
         wrapper->loadStageWaveData("Game", "AnyStage", false);
+        assert(backend.scene_manager()->isPlayerModeMario());
         assert(wrapper->isLoadDoneStageWaveData() && !wrapper->isLoadDoneScenarioWaveData());
         wrapper->loadScenarioWaveData("Game", "AnyStage", 2);
         assert(wrapper->isLoadDoneScenarioWaveData());
         wrapper->loadStageWaveData("Game", "AnotherStage", true);
+        assert(backend.scene_manager()->isPlayerModeLuigi());
         assert(!wrapper->isLoadDoneScenarioWaveData());
         wrapper->requestReset(false);
         assert(wrapper->isResetDone());
@@ -429,14 +489,17 @@ void test_disabled_backend_wrapper_owner() {
         domain.reset();
         assert(AudSingletonHolder<AudSoundNameConverter>::get() == previous_names);
         assert(aurora::audio::disabled_system_sound_object() == nullptr);
+        assert(aurora::audio::disabled_audio_scene_manager() == nullptr);
         assert(heaps->root_heap().getFreeSize() == initial_free);
     }
     std::puts("[pass] actual wrapper heap lifetime and OS-worker disabled backend: readiness, named requests, bank/reset state, three retirements; no AudSystem/device");
 }
 
 int main(int argc, char** argv) {
+    if (argc == 2 && std::strcmp(argv[1], "--scene-only") == 0) { test_disabled_audio_scene_state(); return 0; }
     if (argc == 2 && std::strcmp(argv[1], "--backend-only") == 0) { test_disabled_backend_wrapper_owner(); return 0; }
     if (argc == 2 && std::strcmp(argv[1], "--names-only") == 0) { test_original_name_owner(); return 0; }
+    test_disabled_audio_scene_state();
     test_original_name_owner();
     test_original_talk_sound_dispatch();
     test_native_and_stream_owners();
