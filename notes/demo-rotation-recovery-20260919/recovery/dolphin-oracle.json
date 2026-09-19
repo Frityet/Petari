@@ -1,0 +1,36 @@
+{
+  "scope": "Read-only source, help/version and named checkpoint existence; no GPU/game boot",
+  "binary_version": "Dolphin 2606-374",
+  "source_head": "d681903c67",
+  "state_version": 192,
+  "environment": [
+    "SMGPC_DOLPHIN_WPAD_BUTTON_SCRIPT",
+    "SMGPC_DOLPHIN_WPAD_POINTER_SCRIPT",
+    "SMGPC_DOLPHIN_WPAD_POINTER_WIDTH",
+    "SMGPC_DOLPHIN_WPAD_POINTER_HEIGHT",
+    "SMGPC_DOLPHIN_NUNCHUK_STICK_SCRIPT",
+    "SMGPC_DOLPHIN_NUNCHUK_BUTTON_SCRIPT",
+    "SMGPC_DOLPHIN_CAPTURE_FRAME",
+    "SMGPC_DOLPHIN_CAPTURE_PATH",
+    "SMGPC_DOLPHIN_TRACE_FRAME",
+    "SMGPC_DOLPHIN_TRACE_WINDOW",
+    "SMGPC_DOLPHIN_TRACE_PATH",
+    "SMGPC_DOLPHIN_SAVE_STATE_FRAME",
+    "SMGPC_DOLPHIN_SAVE_STATE_PATH"
+  ],
+  "sha256": {
+    "dolphin/build-macos-upstream-20260907/Binaries/dolphin-emu-nogui": "a292a9ec7ce641ac439249815ea06e2c51aed5dfe5536c49e753cbd47b553faf",
+    "dolphin/Source/Core/Core/HW/WiimoteEmu/ScriptedInput.cpp": "d49b3f4975a94f49e7652cdccf6e256d1af092d7c41c85af8979574efeb6d101",
+    "dolphin/Source/Core/VideoCommon/FrameDumper.cpp": "9416d73de080b2d68a01d4b56f913618f91c4806859b14beafcfbd14dfdaa1cb",
+    "dolphin/Source/Core/VideoCommon/BPStructs.cpp": "11e915911291ee0a323de240a74e8b406449c3cf8790068d5e91cdb12bf4264f",
+    "dolphin/Source/Core/VideoCommon/Present.cpp": "e3922ed4a9c2283ef39cf2a644eda657c2818cf4c7784c09ebbcd17b4f03f0bb",
+    "dolphin/Source/Core/Core/Config/MainSettings.cpp": "b66a7cd93abb24af463ddaa3199462ef9a1bb10465f925508379f29bbe950e29",
+    "dolphin/Source/Core/Core/Core.cpp": "bdfaf4b30e62c7e63699ef93b83f257ff70832fd8044a6f487fa11c497171774",
+    "dolphin/Source/Core/Core/PowerPC/GDBStub.cpp": "43925ad7da1ed078f7e42380b50a5a3ef0d61498e60ab0281edf067ae3f318c0",
+    "dolphin/Source/Core/Core/State.cpp": "cfcb3068e4ca862dafe25f140ecedb18d59e506c560a1e509c7cc27ed3454158"
+  },
+  "named_paths": {
+    "/Users/frityet/Projects/petari/notes/dolphin-oracle-20260806T201750Z/seed-dolphin-user": true,
+    "/tmp/dolphin-gateway-safe-f11400/frame-11400.sav": false
+  }
+}

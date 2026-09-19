@@ -1,0 +1,19 @@
+{
+  "scope": "Source/retail proof, failed and successful focused-test provenance, bounded live guide observation; no whole-demo or all-Mario-rotation parity claim.",
+  "files": {
+    "README.md": "14b02150ad7f74694d3c7ffdff6f01c76b984936b1e68a2e3d3f8223d247db08",
+    "after-guide-complete-npc-trace.json": "b56a1ebeed90aeec84f02c0aaf6f54e430535c5a343a55bcffa4a7f91d3c1f14",
+    "after-npc-trace.json": "cefd0f884332a9e445aacc84898f9a68dd6abce054e768a1df8841c34e4f90b8",
+    "analyze_npc_trace.py": "0ac36e7a37a3a9a23297829ad3bcb050650e821458889b5b4f7f9920c61cde63",
+    "baseline-npc-trace.json": "320907b4b962e065159ddce7f68204728e6a981610f189fd807e33905a196984",
+    "evidence-before.json": "a56ad99643fbf356cda7f12dd27c97cfb5dd817df86804c8a5a61f8bdd7106cd",
+    "mario-camera-update-retail.s": "c5606656bfd71f3c9b0c02a55b98e7b322f7d20fd01daf8b6918dd24aabf6f81",
+    "npc-base-matrix-after.txt": "ec7bc14d1ec1c6b7feb5a4e34c95c42ec7c96944a3726bf36dd96fa703111e46",
+    "npc-base-matrix-before.txt": "d354de2fca4725d94cd263addd6f931fd8c03c7b1fdfee9f65d6b640d3b546a7",
+    "npc-base-matrix-retail.s": "3a63aa6e249d41bef113be9c97bea0722a57070d7de83e09ea97a74b350f13c3",
+    "npc-object-after.json": "c3e64dd71c211b8f2d03b9fcf06b076a0a7c45414b6da86275629fdd50c07f62",
+    "retail-equality-proof.json": "f5543c3887e3d9dc7721e0d7454d4f35b240b01649ce95f2e0a465b963c875cb",
+    "retail-mario-camera-equality-proof.json": "f3c03485105f9c183c1d71cb59d0ec5261a238aaaf84497c16d44f36fd536361",
+    "validation.json": "8e3d48c9198439cac3a232321011fdb4cb75a746d3a17a8cc579b54d789deab1"
+  }
+}

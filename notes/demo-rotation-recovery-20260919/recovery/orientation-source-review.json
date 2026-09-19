@@ -1,0 +1,55 @@
+{
+  "normalizer": "Only remove whitespace and unwrap CP932 narrow literals; function bodies otherwise unchanged.",
+  "methods": {
+    "createMtxDir": {
+      "native_line": 508,
+      "donor_line": 719,
+      "normalized_body_equal": true,
+      "native_normalized_sha256": "7e8a0742fbcc72787ce05ef930427ee3f2e5eba1f32ebcac63e80ced8ed2e935",
+      "donor_normalized_sha256": "7e8a0742fbcc72787ce05ef930427ee3f2e5eba1f32ebcac63e80ced8ed2e935"
+    },
+    "createDirectionMtx": {
+      "native_line": 1629,
+      "donor_line": 787,
+      "normalized_body_equal": true,
+      "native_normalized_sha256": "f717efd23590f8c5f170ae8e6e064d3c092d941d99314c91182ec684041645c2",
+      "donor_normalized_sha256": "f717efd23590f8c5f170ae8e6e064d3c092d941d99314c91182ec684041645c2"
+    },
+    "createCorrectionMtx": {
+      "native_line": 1665,
+      "donor_line": 823,
+      "normalized_body_equal": true,
+      "native_normalized_sha256": "e9b40faacc5976038c99ef245e37c1e85cae819edc2c766eb535f12c7db44c2f",
+      "donor_normalized_sha256": "e9b40faacc5976038c99ef245e37c1e85cae819edc2c766eb535f12c7db44c2f"
+    },
+    "createAngleMtx": {
+      "native_line": 1723,
+      "donor_line": 1882,
+      "normalized_body_equal": true,
+      "native_normalized_sha256": "ec8c10ba9419d80cf7f2c9fc668e3d7380e228d96ef78ddeaf6ec6b69d6032a4",
+      "donor_normalized_sha256": "ec8c10ba9419d80cf7f2c9fc668e3d7380e228d96ef78ddeaf6ec6b69d6032a4"
+    },
+    "fixHeadFrontVecByGravity": {
+      "native_line": 1799,
+      "donor_line": 577,
+      "normalized_body_equal": true,
+      "native_normalized_sha256": "0a764cd16521e52790cb0bd3da75f7a8b71485dc93f182e9fb65daffef8fbda9",
+      "donor_normalized_sha256": "0a764cd16521e52790cb0bd3da75f7a8b71485dc93f182e9fb65daffef8fbda9"
+    },
+    "postureCtrl": {
+      "native_line": 1940,
+      "donor_line": 1810,
+      "normalized_body_equal": true,
+      "native_normalized_sha256": "cd8e3d9ff5e0415fcba64785eeaedf246827725adb6e1ecc6d4787c12b99cfd7",
+      "donor_normalized_sha256": "cd8e3d9ff5e0415fcba64785eeaedf246827725adb6e1ecc6d4787c12b99cfd7"
+    },
+    "setHeadVec": {
+      "native_line": 662,
+      "donor_line": 965,
+      "normalized_body_equal": true,
+      "native_normalized_sha256": "285967e5256cad2534affbcc99b5c937fdaf58f0a9de7bc5a28725eacd223941",
+      "donor_normalized_sha256": "285967e5256cad2534affbcc99b5c937fdaf58f0a9de7bc5a28725eacd223941"
+    }
+  },
+  "limits": "Canonical-source comparison only. This does not prove retail matching or shared math correctness."
+}

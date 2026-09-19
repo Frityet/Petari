@@ -19,7 +19,7 @@ one cause.
   import used 30 while both canonical source and retail use 5. This is an
   original-source correction, not a new recovery policy. See `recovery/`.
 
-## Validation in progress
+## Validation
 
 `owners-green-final.json` records clean exit 0 for both final owner tests:
 120 original frames for all three real DemoRabbit owners, and 360 original
@@ -51,6 +51,59 @@ gameplay evidence.
 and bounded completion. The copied operator scripts are notes-only test drivers
 that read actor observations and write ordinary, expiring controller commands.
 No actor position, nerve, stage switch, or catch is written by these drivers.
+
+## Corrected live run
+
+`after.json` records 12,000 completed original frames, exit 0, process 33155
+reaped, and an unchanged bundle SHA
+`4658f1cc3d770857e5e5c1a5d36d64103dab2e6a61bffb8f62c8bfd3a9f475f6`.
+Elapsed time was 250.949 seconds. The source correction is published as
+`a37e1c799398e9f20f4ffc6651d6d40964b174ed` on `origin/pcp-aurora`.
+
+The notes operator initially failed because its optional manual-input file was
+missing. Its first attempt published no nonempty command. The native trace
+nevertheless records ordinary live controller input before the resumed
+operator's first accepted command at frame 6829. The file was then created and
+the same notes-only driver resumed from observed scene state. This is a mixed
+ordinary-input run, not an identical-input before/after replay. The user
+confirmed they were not controlling the window when asked later in the run.
+
+| Original observation | Frame |
+| --- | ---: |
+| Bush rabbit caught | 7350 |
+| First original Tico dialogue completed | 7720 |
+| Pipe rabbit caught | 8970 |
+| Second original Tico dialogue completed | 9340 |
+| Crater mode-3 MarioWarp first observed | 9770 |
+| Last active warp sample, within 0.00846 units of target | 9920 |
+| Normal Mario state resumed | 9930 |
+| Hole rabbit caught | 10590 |
+| Third original Tico dialogue completed | 11080 |
+| Rosetta alive and model not hidden | 11550 |
+
+The corrected guide now changes its control quaternion and model basis while
+retaining its authored Euler placement, and stays aligned with local gravity.
+`after-frame1800.png` visibly shows it upright and facing Mario during Talk0.
+The read-only matrix analysis observes no inverted grounded Mario model basis
+in this sampled run, and the original camera-up timer now reaches zero for a
+stable head direction. This establishes the repaired cache behavior; it does
+not prove every Mario animation, camera transition, or GX upload matches Wii.
+
+Exactly one crater recovery occurred. Its destination matches the original
+saved point plus cached KCL normal times 160 within 0.0003874 units; Mario
+reached that target and resumed normal motion outside the authored cylinder.
+The original unbound ground flag first returns at frame 9940, with actual
+collision host 722 / prism 2076. No second recovery was observed through frame
+11990. See `recovery/` for the
+sampled trajectory and grounding limits. Rosetta's scene state is verified;
+this run does not include an unobstructed Rosetta pixel capture. A requested
+late live screenshot failed with Computer Use `timeoutReached`, so no image
+from that attempt is claimed.
+
+Raw trace/log hashes and compressed evidence are listed in
+`runtime-artifacts.json`. Raw diagnostic logs retain their original whitespace.
+Both live operators and all game processes have ended; the controller file is
+neutral. Earlier unrelated staged notes and workspace edits were preserved.
 
 ## Scope
 

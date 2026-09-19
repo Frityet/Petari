@@ -1,0 +1,316 @@
+{
+  "scope": "Curated evidence; raw game saves and uncompressed traces excluded. Existing earlier validation records remain committed.",
+  "source_commit": "a37e1c799398e9f20f4ffc6651d6d40964b174ed",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 6428,
+      "sha256": "903f963119541dce3417e704113ec95432edd638576a3fb9a552d996fb0bdef8"
+    },
+    {
+      "path": "after-actors.jsonl.gz",
+      "bytes": 12119948,
+      "sha256": "b3c9aaf99a646aedefc1311ce2c122385cf13260aba710e66a7e92ab54457fc0"
+    },
+    {
+      "path": "after-build.json",
+      "bytes": 228,
+      "sha256": "934ca8450de8753d91a6ad66693548badf34f915d499c21acb46985d9b0a0911"
+    },
+    {
+      "path": "after-frame1800.png",
+      "bytes": 14748233,
+      "sha256": "4f883071fbc47d443000e8fad40b79ad94580fb5e29f76bb86e9c731d360d48b"
+    },
+    {
+      "path": "after-launch.json",
+      "bytes": 1754,
+      "sha256": "796633938f99cd7034cf358863677bc5a9bbce0d086220d9a1b612d80234fc66"
+    },
+    {
+      "path": "after-operator-resumed.jsonl.gz",
+      "bytes": 24247,
+      "sha256": "79fc6e7f9b52f23401231a337823f4aeb7fc033b4d4b53452747b535a3bd390e"
+    },
+    {
+      "path": "after-placements.json",
+      "bytes": 179167,
+      "sha256": "031fbd727a70f1c55e65c6d2b97d9b635b9e56b0dea6c07b2f87829e6d35d1e7"
+    },
+    {
+      "path": "after.json",
+      "bytes": 2122,
+      "sha256": "031d4f94b13cd539b1b8c8c1320344deae7e8e75e89fcc3ba134c9f3116ad5c0"
+    },
+    {
+      "path": "after.log.gz",
+      "bytes": 10552,
+      "sha256": "6d12039c4df020d3ef6abbbc6e5a0b759fb52e998a2d7c5ac8e11c4ddd084ee4"
+    },
+    {
+      "path": "follow_actor.py",
+      "bytes": 7444,
+      "sha256": "bc85f106c9507206aad24af8175cd6abf83dcb651256b0019fbea25d07494d3c"
+    },
+    {
+      "path": "observations/README.md",
+      "bytes": 13638,
+      "sha256": "a6e459f1b4d882073788df42914e626a850d62a4956c6b7767f4f6fcf1234a82"
+    },
+    {
+      "path": "observations/after-matrix-analysis.json",
+      "bytes": 268934,
+      "sha256": "5ea79291855bd2240ff2232209c4bb2c78831754ccb66d391425670dd0688f2b"
+    },
+    {
+      "path": "observations/after-matrix-samples.json.gz",
+      "bytes": 759892,
+      "sha256": "d9f36e9c1f2185f81ecf8af6cc4b178c98bdc8353eeeb8043131eb6697851cc8"
+    },
+    {
+      "path": "observations/after-preoperator-controller.json",
+      "bytes": 13151,
+      "sha256": "4a75f231491481e947b625929ae4b6e04be0a01b3a6e9e0927282a150e310fc8"
+    },
+    {
+      "path": "observations/after-preoperator-matrix-analysis.json",
+      "bytes": 195409,
+      "sha256": "ff647859fe6e420c09a9f20971b12a069e2f7d3166da84d09ee314b316138f92"
+    },
+    {
+      "path": "observations/after-resumed-matrix-analysis.json",
+      "bytes": 105961,
+      "sha256": "c7d43acde0a5eefd5e753c413cbb04e2da35f597fa9e08191c2ba03028e7a9c7"
+    },
+    {
+      "path": "observations/after-summary.json",
+      "bytes": 57676,
+      "sha256": "06617c09b3d407ca98ff61f2b2084bd9c6aa440dc2e5c8a52777fb1ed255bdc9"
+    },
+    {
+      "path": "observations/analyze_final2.py",
+      "bytes": 4201,
+      "sha256": "64b4a8831d9c7d731c18916a7a72ef4533fea86ae394bb34de54335eaa3280b0"
+    },
+    {
+      "path": "observations/analyze_matrices.py",
+      "bytes": 14592,
+      "sha256": "f87e24764182987dc46241f268e8156361ea841f51e7b66840e3268e4a214c8e"
+    },
+    {
+      "path": "observations/analyzer-tests.log",
+      "bytes": 1245,
+      "sha256": "1be9b91c4f9245a4be93a9f4d28c7fad7a25b9448484f941aeed8eb83696dc95"
+    },
+    {
+      "path": "observations/before2-matrix-analysis.json",
+      "bytes": 40966,
+      "sha256": "195ab658d6f7ef323a886a752ab7328804af9868984eb97dbf186adfbea61eaa"
+    },
+    {
+      "path": "observations/before2-matrix-samples.json.gz",
+      "bytes": 183945,
+      "sha256": "f131cfb16432e4c04b108b7ab33a6c3caa0f188668deec613774b3e913f6e49e"
+    },
+    {
+      "path": "observations/final2-vector-analysis.json",
+      "bytes": 63113,
+      "sha256": "6abf2ad8aac139e9d27c6ab02ace1bd34dcbac3b949249418bd13366daaabcb4"
+    },
+    {
+      "path": "observations/test_analyze_matrices.py",
+      "bytes": 3958,
+      "sha256": "412afc8fd3c0c7091029488b3877ffe2b04987bb94f5a5f5d917d030e8e133d2"
+    },
+    {
+      "path": "operate_first_catch.py",
+      "bytes": 20107,
+      "sha256": "ccdd26dab668af298e0533722e01ce1b84e0412a3513ff6c92e19581d6520f1c"
+    },
+    {
+      "path": "orientation/README.md",
+      "bytes": 8997,
+      "sha256": "14b02150ad7f74694d3c7ffdff6f01c76b984936b1e68a2e3d3f8223d247db08"
+    },
+    {
+      "path": "orientation/after-guide-complete-npc-trace.json",
+      "bytes": 2839,
+      "sha256": "b56a1ebeed90aeec84f02c0aaf6f54e430535c5a343a55bcffa4a7f91d3c1f14"
+    },
+    {
+      "path": "orientation/after-npc-trace.json",
+      "bytes": 1442,
+      "sha256": "cefd0f884332a9e445aacc84898f9a68dd6abce054e768a1df8841c34e4f90b8"
+    },
+    {
+      "path": "orientation/analyze_npc_trace.py",
+      "bytes": 3133,
+      "sha256": "0ac36e7a37a3a9a23297829ad3bcb050650e821458889b5b4f7f9920c61cde63"
+    },
+    {
+      "path": "orientation/baseline-npc-trace.json",
+      "bytes": 3674,
+      "sha256": "320907b4b962e065159ddce7f68204728e6a981610f189fd807e33905a196984"
+    },
+    {
+      "path": "orientation/evidence-before.json",
+      "bytes": 1185,
+      "sha256": "a56ad99643fbf356cda7f12dd27c97cfb5dd817df86804c8a5a61f8bdd7106cd"
+    },
+    {
+      "path": "orientation/mario-camera-update-retail.s",
+      "bytes": 5346,
+      "sha256": "c5606656bfd71f3c9b0c02a55b98e7b322f7d20fd01daf8b6918dd24aabf6f81"
+    },
+    {
+      "path": "orientation/note-manifest.json",
+      "bytes": 1579,
+      "sha256": "be30df57bebd81c999c8e56465621b8b76cf624b89381186f104dffb18ed4610"
+    },
+    {
+      "path": "orientation/npc-base-matrix-after.txt",
+      "bytes": 3753,
+      "sha256": "ec7bc14d1ec1c6b7feb5a4e34c95c42ec7c96944a3726bf36dd96fa703111e46"
+    },
+    {
+      "path": "orientation/npc-base-matrix-before.txt",
+      "bytes": 2640,
+      "sha256": "d354de2fca4725d94cd263addd6f931fd8c03c7b1fdfee9f65d6b640d3b546a7"
+    },
+    {
+      "path": "orientation/npc-base-matrix-retail.s",
+      "bytes": 3024,
+      "sha256": "3a63aa6e249d41bef113be9c97bea0722a57070d7de83e09ea97a74b350f13c3"
+    },
+    {
+      "path": "orientation/npc-object-after.json",
+      "bytes": 444,
+      "sha256": "c3e64dd71c211b8f2d03b9fcf06b076a0a7c45414b6da86275629fdd50c07f62"
+    },
+    {
+      "path": "orientation/retail-equality-proof.json",
+      "bytes": 862,
+      "sha256": "f5543c3887e3d9dc7721e0d7454d4f35b240b01649ce95f2e0a465b963c875cb"
+    },
+    {
+      "path": "orientation/retail-mario-camera-equality-proof.json",
+      "bytes": 1386,
+      "sha256": "f3c03485105f9c183c1d71cb59d0ec5261a238aaaf84497c16d44f36fd536361"
+    },
+    {
+      "path": "orientation/validation.json",
+      "bytes": 2683,
+      "sha256": "8e3d48c9198439cac3a232321011fdb4cb75a746d3a17a8cc579b54d789deab1"
+    },
+    {
+      "path": "orientation-before-launch.json",
+      "bytes": 1788,
+      "sha256": "8f2d5f90795f4413b47208a09edf724ae3002bc2ba7ede03e58c3b057676baf7"
+    },
+    {
+      "path": "orientation-before.json",
+      "bytes": 2158,
+      "sha256": "3f071f58cceec7349652639894ab2dd10e6b18fd43196303127674c352d30afc"
+    },
+    {
+      "path": "orientation-before2-actors.jsonl.gz",
+      "bytes": 3458772,
+      "sha256": "0693db63acc6b612ad311ae751a652c23dd6ac0f8bc1a06ba9b86e518635cdb9"
+    },
+    {
+      "path": "orientation-before2-frame2300.png",
+      "bytes": 14748233,
+      "sha256": "78e2255b4a6274ab9a861e32de35f74837f745fcd3af04d5f060c8a60b229ec4"
+    },
+    {
+      "path": "orientation-before2-launch.json",
+      "bytes": 1793,
+      "sha256": "d3c2e6415c9c14c1b1f07f9bd5e701901a6bb3edc6153b7865e0cf9b18096eb0"
+    },
+    {
+      "path": "orientation-before2-operator.jsonl.gz",
+      "bytes": 13232,
+      "sha256": "62f82ee91c355991eaa779025bebb2775221d0234bd4dcd098cabd8eed420c5c"
+    },
+    {
+      "path": "orientation-before2-placements.json",
+      "bytes": 179167,
+      "sha256": "031fbd727a70f1c55e65c6d2b97d9b635b9e56b0dea6c07b2f87829e6d35d1e7"
+    },
+    {
+      "path": "orientation-before2.json",
+      "bytes": 2161,
+      "sha256": "ffff1b1fc9e40c03ac0bd705928b72c35a479f5c245517cc4ffa806721596c46"
+    },
+    {
+      "path": "orientation-before2.log.gz",
+      "bytes": 6652,
+      "sha256": "e6b9f2c89ebe81037748d6c11818134c281ff673fe1e498062094ca1a115ef8e"
+    },
+    {
+      "path": "recovery/README.md",
+      "bytes": 6662,
+      "sha256": "a79ae41ebd9a7e08401f3d39a043ac964435b4c9decef5fc56de8a9b78bd1b7f"
+    },
+    {
+      "path": "recovery/after-recovery-observation.json",
+      "bytes": 137371,
+      "sha256": "77f3ff8fbe365a31b28d6ea0e8afa280304ae9e323f89affeb641c17beaaf0bf"
+    },
+    {
+      "path": "recovery/after-recovery-observation.md",
+      "bytes": 3172,
+      "sha256": "f00b6c94842e44c2d907bfb3413f85133c8b206186de0cee67c16108de462891"
+    },
+    {
+      "path": "recovery/analyze_live_recovery.py",
+      "bytes": 7622,
+      "sha256": "0e9831e1e14b0a37d5fd5932039050c1d0edb9ea1cf61f95b4e51da303fbc6db"
+    },
+    {
+      "path": "recovery/dolphin-oracle.json",
+      "bytes": 2007,
+      "sha256": "cb38a7dd1ecd7ddef8c182bff1b7323b7c0645180a4e02f8092f749bad4d6292"
+    },
+    {
+      "path": "recovery/dolphin-oracle.md",
+      "bytes": 2843,
+      "sha256": "e3553ee79c694e714b04514e64c7c672c3befe6f4d9f85b5e1c10327b53b81f4"
+    },
+    {
+      "path": "recovery/manifest.json",
+      "bytes": 2246,
+      "sha256": "7797dfd79b1f8bf54ab3ab5cb4d515abcdcd35306ad9ec2ec856d15467b55bb5"
+    },
+    {
+      "path": "recovery/orientation-source-review.json",
+      "bytes": 2512,
+      "sha256": "c812a27180862fa3d14b52729615b73a7019192e0b5600b207394ed8ac8c5a71"
+    },
+    {
+      "path": "recovery/retail-safety-proof.json",
+      "bytes": 1702,
+      "sha256": "e966f4d27e8ae9da0025da85e56ff3e9789472319017c364eaf0ac4b05db86e3"
+    },
+    {
+      "path": "recovery/validation.json",
+      "bytes": 3584,
+      "sha256": "e0fc93120b781c27af206bc001b49623b9d491b1af9fe66bdc4ab28c79ecb47f"
+    },
+    {
+      "path": "run_original.py",
+      "bytes": 6768,
+      "sha256": "975135cbb58b0bb5167812aaa254c6a9cc65323de00f70b9876462336bd58f19"
+    },
+    {
+      "path": "runtime-artifacts.json",
+      "bytes": 1947,
+      "sha256": "b1b126fb5b05c73a8d7844f3b2f6ab8687b5066d8c023ce4189d75a8b68b28f5"
+    },
+    {
+      "path": "three-rabbit-route.json",
+      "bytes": 1755,
+      "sha256": "13c7e0bfe3e49d103e2e7f3d6386e37d8a071a0da6625cbe81a2b611c336f292"
+    }
+  ]
+}

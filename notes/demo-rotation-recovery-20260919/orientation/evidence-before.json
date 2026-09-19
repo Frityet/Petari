@@ -1,0 +1,22 @@
+{
+  "stage": "test-only RED prepared; shared vector header unchanged",
+  "files": {
+    "src/JSystem/JGeometry/TVec.hpp": "56e9e134529b7982397673353971b14c6d540ada6538b72c8148d7000582bafd",
+    "decomp/libs/JSystem/include/JSystem/JGeometry/TVec.hpp": "9e0c680741f49188c6a370b7d0166c25d1ff72ca75259dfa62ebd0c12bafad85",
+    "src/Game/NPC/NPCActor.cpp": "010c1677b140a413bab67e0441d53fb44d72dc2f77f4f0bc4a8a36fc4b0037f1",
+    "src/Game/NPC/DemoRabbit.cpp": "f7f0b27154424610be2ce8b66b468a176983f7f98e55355ed597dfe55a269704",
+    "src/JSystem/JGeometry/TUtil.hpp": "ccd261998baa70aad7e31370d19f749edc681d77085de895fa5b8a3d70ba06c7",
+    "tests/OriginalNpcOrientationTests.cpp": "6019c796f167e994c9082ae71dab8285a8f963ec98690ffbe6e70a212c097d42",
+    "notes/demo-rotation-recovery-20260919/orientation/npc-base-matrix-before.txt": "d354de2fca4725d94cd263addd6f931fd8c03c7b1fdfee9f65d6b640d3b546a7"
+  },
+  "target": "smg-pc-original-npc-orientation-tests",
+  "pure_arguments": [
+    "--vectors-only"
+  ],
+  "owner_arguments": [
+    "--owner-only"
+  ],
+  "owner_environment": "SMGPC_REAL_DISC=<actual disc image>",
+  "owner_frames": 120,
+  "result": "pending parent serialized build/run"
+}

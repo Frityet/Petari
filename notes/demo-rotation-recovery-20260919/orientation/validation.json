@@ -1,0 +1,68 @@
+{
+  "parent_validation_record": "notes/demo-rotation-recovery-20260919/owners-green-final.json",
+  "record_sha256": "4bd66f95afb177cfb1c80468aafa4a04b0a49a9ab6221bd2984d5a23dd9cd29a",
+  "owner_tests": [
+    {
+      "target": "smg-pc-original-npc-orientation-tests",
+      "build": {
+        "command": [
+          "xmake",
+          "build",
+          "-j",
+          "8",
+          "smg-pc-original-npc-orientation-tests"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 6.246586499968544
+      },
+      "binary_sha256": "f02da3ea225d8520c95614f8955074187192a7e338b667783523acf9c429527c",
+      "test": {
+        "command": [
+          "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-npc-orientation-tests"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 3.120054166065529
+      }
+    },
+    {
+      "target": "smg-pc-original-process-player-owner-tests",
+      "build": {
+        "command": [
+          "xmake",
+          "build",
+          "-j",
+          "8",
+          "smg-pc-original-process-player-owner-tests"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 5.148039749939926
+      },
+      "binary_sha256": "83fb8b40d37d90035a748401d6a9bad605c7fbc746c6bdac348cb34cb3f45ef1",
+      "test": {
+        "command": [
+          "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-player-owner-tests",
+          "-ApplePersistenceIgnoreState",
+          "YES"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 7.027388625079766
+      }
+    }
+  ],
+  "source_files": {
+    "src/JSystem/JGeometry/TVec.hpp": "5c3cfdecbc6e81205eba4ccb001a0bb83e8bc08dbca245e2814497e718ad6d97",
+    "tests/OriginalNpcOrientationTests.cpp": "4e81f0ce11b2114b5c0297fe7246f1a9250e3e84ebb41516e69a3ed12cdb133b",
+    "tests/OriginalProcessPlayerOwnerTests.cpp": "b06caf5b06c81084ac08d4a2f0e08f736f874971fb5cc1acad1bce3b0f611786"
+  },
+  "production_change": "Canonical TVec3<float> equality and inequality only; no actor or stage-specific change.",
+  "observed_assertions": [
+    "all component epsilon boundaries, mutable/const/alias, signed zero, unordered values",
+    "3 authored DemoRabbit original cache callbacks and matrix axis/invalidation checks at frame38",
+    "120 completed frames and actual NPC retirement; exit0",
+    "actual Mario stable-head camera timer completion, changed-head timer reset(table16),360 completed frames and retirement; exit0"
+  ],
+  "limits": [
+    "NPC injected field test restores original fields; it is not physical-input gameplay evidence.",
+    "A corrected original gameplay replay is in progress; do not claim visual parity from these focused tests."
+  ]
+}

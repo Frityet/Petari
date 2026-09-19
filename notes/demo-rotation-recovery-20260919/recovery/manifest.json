@@ -1,0 +1,21 @@
+{
+  "scope": "Owned recovery, source-review and read-only Dolphin/actual-process observation evidence. Native source checkpoint a37e1c799; no subagent build or gameplay input.",
+  "files": {
+    "notes/demo-rotation-recovery-20260919/recovery/README.md": "a79ae41ebd9a7e08401f3d39a043ac964435b4c9decef5fc56de8a9b78bd1b7f",
+    "notes/demo-rotation-recovery-20260919/recovery/after-recovery-observation.json": "77f3ff8fbe365a31b28d6ea0e8afa280304ae9e323f89affeb641c17beaaf0bf",
+    "notes/demo-rotation-recovery-20260919/recovery/after-recovery-observation.md": "f00b6c94842e44c2d907bfb3413f85133c8b206186de0cee67c16108de462891",
+    "notes/demo-rotation-recovery-20260919/recovery/analyze_live_recovery.py": "0e9831e1e14b0a37d5fd5932039050c1d0edb9ea1cf61f95b4e51da303fbc6db",
+    "notes/demo-rotation-recovery-20260919/recovery/dolphin-oracle.json": "cb38a7dd1ecd7ddef8c182bff1b7323b7c0645180a4e02f8092f749bad4d6292",
+    "notes/demo-rotation-recovery-20260919/recovery/dolphin-oracle.md": "e3553ee79c694e714b04514e64c7c672c3befe6f4d9f85b5e1c10327b53b81f4",
+    "notes/demo-rotation-recovery-20260919/recovery/orientation-source-review.json": "c812a27180862fa3d14b52729615b73a7019192e0b5600b207394ed8ac8c5a71",
+    "notes/demo-rotation-recovery-20260919/recovery/retail-safety-proof.json": "e966f4d27e8ae9da0025da85e56ff3e9789472319017c364eaf0ac4b05db86e3",
+    "notes/demo-rotation-recovery-20260919/recovery/validation.json": "e0fc93120b781c27af206bc001b49623b9d491b1af9fe66bdc4ab28c79ecb47f"
+  },
+  "external_result_sha256": {
+    "notes/demo-rotation-recovery-20260919/after.json": "031d4f94b13cd539b1b8c8c1320344deae7e8e75e89fcc3ba134c9f3116ad5c0",
+    "notes/demo-rotation-recovery-20260919/after-launch.json": "796633938f99cd7034cf358863677bc5a9bbce0d086220d9a1b612d80234fc66",
+    "notes/demo-rotation-recovery-20260919/after-placements.json": "031fbd727a70f1c55e65c6d2b97d9b635b9e56b0dea6c07b2f87829e6d35d1e7",
+    "notes/demo-rotation-recovery-20260919/owners-green-final.json": "4bd66f95afb177cfb1c80468aafa4a04b0a49a9ab6221bd2984d5a23dd9cd29a",
+    "notes/demo-rotation-recovery-20260919/owners-green-final-smg-pc-original-process-player-owner-tests-test.log": "6000e63d41db08d2a8d91e9f8a69dcf6fdf5d67f7025eb453ff0decba9517d00"
+  }
+}

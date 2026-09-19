@@ -1,0 +1,131 @@
+{
+  "trace": "notes/demo-rotation-recovery-20260919/orientation-before2-actors.jsonl",
+  "trace_prefix_bytes": 18007997,
+  "trace_prefix_sha256": "68b3da8addc7cb43526cbd1823b9b8346581990e4440dc40d6563c4198fce167",
+  "requested_frame_range": [
+    2000,
+    2690
+  ],
+  "scope": "Observed live, visible, unclipped DemoRabbit bases; alignment can lag changing targets by original smoothing.",
+  "actors": {
+    "874": {
+      "sample_count": 70,
+      "frame_range": [
+        2000,
+        2690
+      ],
+      "unique_quaternions": 1,
+      "unique_euler_rotations": 1,
+      "front_alignment_range": [
+        -0.9142360335957662,
+        0.7838760939585044
+      ],
+      "gravity_up_alignment_range": [
+        -0.9228737924936522,
+        -0.47193410393222845
+      ],
+      "nerve_samples": {
+        "N13NrvDemoRabbit18DemoRabbitNrvGuideE": 16,
+        "N13NrvDemoRabbit17DemoRabbitNrvGoalE": 13,
+        "N13NrvDemoRabbit18DemoRabbitNrvTalk1E": 25,
+        "N13NrvDemoRabbit20DemoRabbitNrvRunawayE": 12,
+        "N13NrvDemoRabbit19DemoRabbitNrvChangeE": 4
+      },
+      "frame2300": {
+        "frame": 2300,
+        "nerve": "N13NrvDemoRabbit18DemoRabbitNrvTalk1E",
+        "front_alignment": 0.12066436430552412,
+        "gravity_up_alignment": -0.9228737924936522,
+        "quaternion": [
+          0.7609956860542297,
+          0.16230592131614685,
+          -0.6269705295562744,
+          -0.03808264806866646
+        ],
+        "rotation": [
+          231.11000061035156,
+          70.3699951171875,
+          61.338714599609375
+        ]
+      }
+    },
+    "877": {
+      "sample_count": 70,
+      "frame_range": [
+        2000,
+        2690
+      ],
+      "unique_quaternions": 1,
+      "unique_euler_rotations": 1,
+      "front_alignment_range": [
+        -0.9837021506615021,
+        0.9976837200083329
+      ],
+      "gravity_up_alignment_range": [
+        0.7777314546212906,
+        0.9957395434553769
+      ],
+      "nerve_samples": {
+        "N13NrvDemoRabbit17DemoRabbitNrvDemoE": 54,
+        "N13NrvDemoRabbit20DemoRabbitNrvRunawayE": 12,
+        "N13NrvDemoRabbit19DemoRabbitNrvChangeE": 4
+      },
+      "frame2300": {
+        "frame": 2300,
+        "nerve": "N13NrvDemoRabbit17DemoRabbitNrvDemoE",
+        "front_alignment": 0.9648493791393803,
+        "gravity_up_alignment": 0.9948588050969628,
+        "quaternion": [
+          -0.16489093005657196,
+          -0.14927415549755096,
+          0.03988344967365265,
+          -0.9741342663764954
+        ],
+        "rotation": [
+          18.948028564453125,
+          17.696746826171875,
+          358.28717041015625
+        ]
+      }
+    },
+    "879": {
+      "sample_count": 70,
+      "frame_range": [
+        2000,
+        2690
+      ],
+      "unique_quaternions": 1,
+      "unique_euler_rotations": 1,
+      "front_alignment_range": [
+        -0.5884457578955511,
+        0.9998318314179212
+      ],
+      "gravity_up_alignment_range": [
+        0.7736903537014048,
+        0.9906941853532373
+      ],
+      "nerve_samples": {
+        "N13NrvDemoRabbit17DemoRabbitNrvDemoE": 54,
+        "N13NrvDemoRabbit20DemoRabbitNrvRunawayE": 12,
+        "N13NrvDemoRabbit19DemoRabbitNrvChangeE": 4
+      },
+      "frame2300": {
+        "frame": 2300,
+        "nerve": "N13NrvDemoRabbit17DemoRabbitNrvDemoE",
+        "front_alignment": 0.8217945654799845,
+        "gravity_up_alignment": 0.9906941853532373,
+        "quaternion": [
+          -0.158711239695549,
+          -0.02796252630650997,
+          0.059920039027929306,
+          -0.9851083159446716
+        ],
+        "rotation": [
+          18.071136474609375,
+          4.250213623046875,
+          353.7146301269531
+        ]
+      }
+    }
+  }
+}

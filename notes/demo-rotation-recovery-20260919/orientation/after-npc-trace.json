@@ -1,0 +1,51 @@
+{
+  "trace": "notes/demo-rotation-recovery-20260919/after-actors.jsonl",
+  "trace_prefix_bytes": 26632648,
+  "trace_prefix_sha256": "f04edef1548cbf5f8586170d4841404eaadf2aaafb13e6f0885de4f45b2f731b",
+  "requested_frame_range": [
+    2000,
+    2690
+  ],
+  "scope": "Observed live, visible, unclipped DemoRabbit bases; alignment can lag changing targets by original smoothing.",
+  "actors": {
+    "874": {
+      "sample_count": 70,
+      "frame_range": [
+        2000,
+        2690
+      ],
+      "unique_quaternions": 27,
+      "unique_euler_rotations": 1,
+      "front_alignment_range": [
+        0.5475482912215024,
+        0.9999999012479421
+      ],
+      "gravity_up_alignment_range": [
+        0.9983005453517932,
+        0.9999999386934126
+      ],
+      "nerve_samples": {
+        "N13NrvDemoRabbit18DemoRabbitNrvTalk0E": 44,
+        "N13NrvDemoRabbit18DemoRabbitNrvGuideE": 18,
+        "N13NrvDemoRabbit17DemoRabbitNrvWaitE": 8
+      },
+      "frame2300": {
+        "frame": 2300,
+        "nerve": "N13NrvDemoRabbit18DemoRabbitNrvTalk0E",
+        "front_alignment": 0.9999998550226883,
+        "gravity_up_alignment": 0.9999999386934126,
+        "quaternion": [
+          0.7736280560493469,
+          0.07895034551620483,
+          -0.6149035692214966,
+          -0.1309964656829834
+        ],
+        "rotation": [
+          231.11000061035156,
+          70.3699951171875,
+          61.338714599609375
+        ]
+      }
+    }
+  }
+}

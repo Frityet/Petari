@@ -1,0 +1,33 @@
+# Original recovery return-position audit
+
+The earlier PullBackCylinder audit explained when recovery begins. It did not validate the return point or body orientation. This follow-up found concrete native source drift in `Mario::saveLastSafetyTrans`.
+
+The native function multiplied Mario's world position by 30; the canonical donor uses 5. Preserved retail assembly confirms 5 at `802D1F38` (`@72927`), then adds the three world-space triangle vertices, multiplies by 0.125 (`@74467`) and caps displacement from Mario at 50 (`@73035`). `retail-safety-proof.json` records addresses, constants and hashes. No new decompilation was needed. The only production edit owned by this audit restores that scalar in `src/Game/Player/MarioCollision.cpp`; it changes no authored area, recovery timing or eligibility guard.
+
+With the original factor 5, translating Mario and every triangle vertex equally translates the saved point equally. Factor 30 introduces an extra 25/8 of the global translation before the clamp. The clamp limits the distance but leaves the wrong direction. `getLastSafetyTrans` retrieves the saved point and actual KCL face normal; `doRecovery` adds 160 along the normal before starting mode 3 `MarioWarp`. This is a general return-position error.
+
+## Actual-owner regression and results
+
+The existing `OriginalProcessPlayerOwnerTests.cpp` target now obtains a real stationary KCL identity under actual Mario at frame 358. Local copied Triangle caches and temporary player query inputs exercise the original five-eighths blend for a 16-unit centroid offset, the 50-unit cap for a 160-unit offset, translation invariance, the real saved-face normal and recovery target inputs, and delay/eligibility rejection. Every altered player field is restored before the next normal frame. Actual scene geometry is never moved or republished. The test does not inject recovery or establish rendered bubble correctness.
+
+The parent first ran the test with the incorrect factor 30. Its build passed, but the exact blend assertion failed: expected `(14446.1,-12769.7,6018.74)`, actual `(14486.7,-12800.9,6030.23)`, error 52.5351. Process exit was -6; this was the intended RED assertion, not a passing test. See `../recovery-red.json` and its test log.
+
+After restoring the retail factor 5, the actual 360-frame process passed in 7.090 seconds and exited 0. Errors for the base and translated cases were 0.000488281 and 0.00218366 units. The original state stack, walking parameters, real-demo camera checks, 321-frame movement cadence, terminal PlayerUtil checks and retirement also passed. Binary SHA256 was `aa7e20e0ee21c00492aa0125b30ab822f05ecdba6c11431f3e5145bb082ba9aa`. `validation.json` includes exact parent commands, results and evidence hashes.
+
+A later test addition exercises `MarioActor::updateForCamera` under the same actual owner: stable equal-valued head vectors permit timer `2 → 1 → 0` and remain at 0; a changed head copies its target and starts the authored table timer minus one, then continues counting down. The test restores head, target, up vector, front/side caches, timer and freeze flag. Native and canonical bodies match, and the separate retail proof is `../orientation/retail-mario-camera-equality-proof.json`. The final parent 360-frame process then passed this new case, all recovery checks and teardown, exiting 0 in 7.027 seconds. See `../owners-green-final.json`; player binary SHA256 is `83fb8b40d37d90035a748401d6a9bad605c7fbc746c6bdac348cb34cb3f45ef1`. Harness-local assertion exceptions now retain host-owned message storage when unwinding beyond the scene allocation domain.
+
+## Source and trace review
+
+`orientation-source-review.json` compares seven complete native methods with canonical Mario.cpp after only unwrapping CP932 strings and removing whitespace: `createMtxDir`, `createDirectionMtx`, `createCorrectionMtx`, `createAngleMtx`, `fixHeadFrontVecByGravity`, `postureCtrl`, and `setHeadVec`. All seven are identical. `_1FC` is the original direction-up input. Warp and Recovery inherit `MarioState::postureCtrl`, which invokes the original player posture path.
+
+The inspected native `MR::vecBlendSphere`, `vecRotAxis`, `diffAngleAbs`, and `turnVecToVecCos` preserve donor formulas at source level. `PSVECCrossProduct`, `TMatrix::mult` and `mult33` cache inputs before outputs, supporting the inspected aliased calls. No second concrete alias bug was found. These checks are not comprehensive numerical parity proof. The separate agent owns the shared TVec3 equality restoration.
+
+`MarioWarp` retains the inspected canonical 40-frame start delay, at least 120 travel ticks, gravity-derived arc and falling state on close. `_F44` selects Binder enablement in `MarioActor::control2`, not a facing override. Status 19 aliases Warp and Recovery; new trace fields use the concrete active type. They read both saved safety candidates and cached triangle data plus active warp destination/start/mode without calling the mutating normal query. Cached normals should not be described as newly recomputed normals.
+
+The read-only matrix review found no transposition in trace serialization: it emits the stored three matrix rows. Sampled baseline frame 3990 had body-up aligned with `_1FC` while differing from anti-gravity by about 5.332 degrees; this identifies an original posture input difference in that sample, not by itself a rendering fault. An earlier actor-bound sample at frame 3790 differed by about 0.351 degrees. Neither proves retail pose equivalence.
+
+`dolphin-oracle.md` records the available local retail debugging path and its missing checkpoint. No Dolphin game boot, GPU comparison or new runtime test was performed by this read-only audit.
+
+## Live corrected recovery
+
+The parent 12,000-frame run produced one natural mode 3 recovery at sampled frame 9770, ending by 9930. Its destination matched the latest saved point plus the original 160-unit KCL-normal lift within 0.0003874 units and the last active sample reached within 0.0084573 units. No repeated entry appeared through frame 11990. See `after-recovery-observation.md` and the reproducible JSON for provenance and sampling limits. The original ground flag is first set after recovery at sampled frame 9940 (unbound Mario; `0x40000000` in the movement word). The notes operator failed before its first command, while the native trace records ordinary live controller input before the scripted operator resumed at accepted frame 6829; the input source is not inferred. This is not an uninterrupted replay of the prepared notes operator. The parent independently records all three catches and Rosalina appearing in this completed process.

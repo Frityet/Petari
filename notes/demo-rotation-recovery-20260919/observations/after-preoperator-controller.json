@@ -1,0 +1,818 @@
+{
+  "through_frame": 6820,
+  "input_active_samples": 126,
+  "runs": [
+    {
+      "start": 2440,
+      "end": 2440,
+      "samples": 1,
+      "controller": {
+        "hold": 2048,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2550,
+      "end": 2580,
+      "samples": 4,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2590,
+      "end": 2600,
+      "samples": 2,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2610,
+      "end": 2640,
+      "samples": 4,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2650,
+      "end": 2650,
+      "samples": 1,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2660,
+      "end": 2660,
+      "samples": 1,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2670,
+      "end": 2670,
+      "samples": 1,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2710,
+      "end": 2720,
+      "samples": 2,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2730,
+      "end": 2730,
+      "samples": 1,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2740,
+      "end": 2760,
+      "samples": 3,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2770,
+      "end": 2790,
+      "samples": 3,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2800,
+      "end": 2810,
+      "samples": 2,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2820,
+      "end": 2830,
+      "samples": 2,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          -1.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2840,
+      "end": 2860,
+      "samples": 3,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          -1.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2870,
+      "end": 2870,
+      "samples": 1,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          -1.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2880,
+      "end": 2880,
+      "samples": 1,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          -1.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2890,
+      "end": 2890,
+      "samples": 1,
+      "controller": {
+        "hold": 16384,
+        "release": 0,
+        "stick": [
+          -1.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2900,
+      "end": 2910,
+      "samples": 2,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          -1.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2920,
+      "end": 2920,
+      "samples": 1,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2930,
+      "end": 2940,
+      "samples": 2,
+      "controller": {
+        "hold": 16384,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2950,
+      "end": 2960,
+      "samples": 2,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 2970,
+      "end": 2990,
+      "samples": 3,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3000,
+      "end": 3000,
+      "samples": 1,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3010,
+      "end": 3030,
+      "samples": 3,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3040,
+      "end": 3040,
+      "samples": 1,
+      "controller": {
+        "hold": 8192,
+        "release": 0,
+        "stick": [
+          1.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3050,
+      "end": 3050,
+      "samples": 1,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3060,
+      "end": 3070,
+      "samples": 2,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3080,
+      "end": 3080,
+      "samples": 1,
+      "controller": {
+        "hold": 8192,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3090,
+      "end": 3090,
+      "samples": 1,
+      "controller": {
+        "hold": 10240,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3100,
+      "end": 3160,
+      "samples": 7,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3170,
+      "end": 3220,
+      "samples": 6,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3230,
+      "end": 3250,
+      "samples": 3,
+      "controller": {
+        "hold": 10240,
+        "release": 0,
+        "stick": [
+          1.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3260,
+      "end": 3260,
+      "samples": 1,
+      "controller": {
+        "hold": 2048,
+        "release": 0,
+        "stick": [
+          1.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3270,
+      "end": 3300,
+      "samples": 4,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3320,
+      "end": 3340,
+      "samples": 3,
+      "controller": {
+        "hold": 8192,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3350,
+      "end": 3380,
+      "samples": 4,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3390,
+      "end": 3400,
+      "samples": 2,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          -1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3410,
+      "end": 3410,
+      "samples": 1,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3420,
+      "end": 3430,
+      "samples": 2,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3440,
+      "end": 3450,
+      "samples": 2,
+      "controller": {
+        "hold": 2048,
+        "release": 0,
+        "stick": [
+          1.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3460,
+      "end": 3460,
+      "samples": 1,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3470,
+      "end": 3480,
+      "samples": 2,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          -1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3490,
+      "end": 3490,
+      "samples": 1,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          -1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3500,
+      "end": 3500,
+      "samples": 1,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          1.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 3510,
+      "end": 3550,
+      "samples": 5,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          -1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 4630,
+      "end": 4650,
+      "samples": 3,
+      "controller": {
+        "hold": 2048,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 5280,
+      "end": 5280,
+      "samples": 1,
+      "controller": {
+        "hold": 2147485696,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 2048
+      }
+    },
+    {
+      "start": 5300,
+      "end": 5300,
+      "samples": 1,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 5330,
+      "end": 5370,
+      "samples": 5,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 5380,
+      "end": 5380,
+      "samples": 1,
+      "controller": {
+        "hold": 2147485696,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 2048
+      }
+    },
+    {
+      "start": 5390,
+      "end": 5410,
+      "samples": 3,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 5420,
+      "end": 5420,
+      "samples": 1,
+      "controller": {
+        "hold": 16384,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 5430,
+      "end": 5430,
+      "samples": 1,
+      "controller": {
+        "hold": 2048,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 5440,
+      "end": 5450,
+      "samples": 2,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 5460,
+      "end": 5510,
+      "samples": 6,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          -1.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 5520,
+      "end": 5520,
+      "samples": 1,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 5530,
+      "end": 5530,
+      "samples": 1,
+      "controller": {
+        "hold": 18432,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    },
+    {
+      "start": 5540,
+      "end": 5550,
+      "samples": 2,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          -1.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    }
+  ]
+}

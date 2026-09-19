@@ -1,0 +1,1453 @@
+{
+  "source": "notes/demo-rotation-recovery-20260919/orientation-before2-actors.jsonl",
+  "source_file_sha256": "68b3da8addc7cb43526cbd1823b9b8346581990e4440dc40d6563c4198fce167",
+  "complete_prefix_sha256": "68b3da8addc7cb43526cbd1823b9b8346581990e4440dc40d6563c4198fce167",
+  "ignored_incomplete_tail_bytes": 0,
+  "last_frame": 3990,
+  "selection": {
+    "start_frame": 0,
+    "end_frame": null,
+    "first_selected_frame": 0,
+    "last_selected_frame": 3990
+  },
+  "record_count": 400,
+  "player_all_alive": {
+    "samples": 396,
+    "angles": {
+      "base_front_vs_front_degrees": {
+        "count": 396,
+        "min": 8.537736462515939e-07,
+        "median": 0.0672475382035386,
+        "max": 19.156865592263003,
+        "max_frame": 3900,
+        "max_actor_id": 339
+      },
+      "base_side_vs_side_degrees": {
+        "count": 396,
+        "min": 8.537736462515939e-07,
+        "median": 0.016864778463807323,
+        "max": 138.71065775713234,
+        "max_frame": 3890,
+        "max_actor_id": 339
+      },
+      "base_up_vs_direction_up_degrees": {
+        "count": 396,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 0.35118004898191735,
+        "max_frame": 3790,
+        "max_actor_id": 339
+      },
+      "base_up_vs_ground_normal_degrees": {
+        "count": 396,
+        "min": 0.0356584538322536,
+        "median": 6.610560008473039,
+        "max": 150.53753656149993,
+        "max_frame": 3970,
+        "max_actor_id": 339
+      },
+      "base_up_vs_head_degrees": {
+        "count": 396,
+        "min": 0.0,
+        "median": 0.10276621439942857,
+        "max": 135.53990465743834,
+        "max_frame": 3890,
+        "max_actor_id": 339
+      },
+      "base_up_vs_inverse_gravity_degrees": {
+        "count": 396,
+        "min": 4.436338000413295e-06,
+        "median": 0.028841593813902274,
+        "max": 135.53990424883452,
+        "max_frame": 3890,
+        "max_actor_id": 339
+      },
+      "base_up_vs_movement_up_degrees": {
+        "count": 396,
+        "min": 0.00022184318787346976,
+        "median": 6.880424981939256,
+        "max": 159.91057342906035,
+        "max_frame": 40,
+        "max_actor_id": 339
+      },
+      "camera_target_vs_head_degrees": {
+        "count": 0
+      },
+      "camera_up_vs_head_degrees": {
+        "count": 0
+      },
+      "camera_up_vs_target_degrees": {
+        "count": 0
+      },
+      "joint0_vs_base_front_degrees": {
+        "count": 396,
+        "min": 0.0,
+        "median": 1.5462498375200197e-05,
+        "max": 53.22373887831096,
+        "max_frame": 3560,
+        "max_actor_id": 339
+      },
+      "joint0_vs_base_side_degrees": {
+        "count": 396,
+        "min": 0.0,
+        "median": 7.3444386094852035e-06,
+        "max": 138.71065416742692,
+        "max_frame": 3890,
+        "max_actor_id": 339
+      },
+      "joint0_vs_base_up_degrees": {
+        "count": 396,
+        "min": 0.0,
+        "median": 1.9167170820781278e-05,
+        "max": 135.53990416081882,
+        "max_frame": 3890,
+        "max_actor_id": 339
+      }
+    },
+    "base": {
+      "determinant": {
+        "count": 396,
+        "min": 0.9999996048237142,
+        "median": 0.999999857242277,
+        "max": 1.0000000941404303,
+        "max_frame": 3790,
+        "max_actor_id": 339
+      },
+      "normalized_determinant": {
+        "count": 396,
+        "min": 0.9999999999999977,
+        "median": 0.9999999999999996,
+        "max": 1.0000000000000002,
+        "max_frame": 1500,
+        "max_actor_id": 339
+      },
+      "max_normalized_axis_dot": {
+        "count": 396,
+        "min": 1.0463898829447121e-09,
+        "median": 2.555421720062956e-08,
+        "max": 6.512877111924942e-08,
+        "max_frame": 3620,
+        "max_actor_id": 339
+      }
+    },
+    "joint0": {
+      "determinant": {
+        "count": 396,
+        "min": 0.7780672584559581,
+        "median": 0.9999999317797792,
+        "max": 1.0560376706382977,
+        "max_frame": 3720,
+        "max_actor_id": 339
+      },
+      "normalized_determinant": {
+        "count": 396,
+        "min": 0.999999999999968,
+        "median": 0.9999999999999996,
+        "max": 1.0000000000000002,
+        "max_frame": 1490,
+        "max_actor_id": 339
+      },
+      "max_normalized_axis_dot": {
+        "count": 396,
+        "min": 1.3875203648799211e-09,
+        "median": 3.516452663776537e-08,
+        "max": 2.53068248461108e-07,
+        "max_frame": 3180,
+        "max_actor_id": 339
+      }
+    },
+    "invalid_base_frames": [],
+    "invalid_joint0_frames": [],
+    "reflected_base_frames": [],
+    "reflected_joint0_frames": []
+  },
+  "player_grounded_moving_status0": {
+    "samples": 150,
+    "angles": {
+      "base_front_vs_front_degrees": {
+        "count": 150,
+        "min": 1.0173887179578492e-05,
+        "median": 3.504339007070165,
+        "max": 8.9241263634398,
+        "max_frame": 1940,
+        "max_actor_id": 339
+      },
+      "base_side_vs_side_degrees": {
+        "count": 150,
+        "min": 1.2074182697257333e-06,
+        "median": 0.7925795797382915,
+        "max": 6.056392694183257,
+        "max_frame": 2820,
+        "max_actor_id": 339
+      },
+      "base_up_vs_direction_up_degrees": {
+        "count": 150,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 1.4787793334710982e-06,
+        "max_frame": 3700,
+        "max_actor_id": 339
+      },
+      "base_up_vs_ground_normal_degrees": {
+        "count": 150,
+        "min": 0.36279936799453566,
+        "median": 6.103382881176401,
+        "max": 51.369364936593705,
+        "max_frame": 2780,
+        "max_actor_id": 339
+      },
+      "base_up_vs_head_degrees": {
+        "count": 150,
+        "min": 0.0,
+        "median": 4.030714987119698,
+        "max": 9.509339834941125,
+        "max_frame": 1940,
+        "max_actor_id": 339
+      },
+      "base_up_vs_inverse_gravity_degrees": {
+        "count": 150,
+        "min": 0.0010197481866501905,
+        "median": 3.199434806483407,
+        "max": 10.907766945731384,
+        "max_frame": 2780,
+        "max_actor_id": 339
+      },
+      "base_up_vs_movement_up_degrees": {
+        "count": 150,
+        "min": 0.00022184318787346976,
+        "median": 2.7414145336820464,
+        "max": 13.150644021953232,
+        "max_frame": 1700,
+        "max_actor_id": 339
+      },
+      "camera_target_vs_head_degrees": {
+        "count": 0
+      },
+      "camera_up_vs_head_degrees": {
+        "count": 0
+      },
+      "camera_up_vs_target_degrees": {
+        "count": 0
+      },
+      "joint0_vs_base_front_degrees": {
+        "count": 150,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 53.22373887831096,
+        "max_frame": 3560,
+        "max_actor_id": 339
+      },
+      "joint0_vs_base_side_degrees": {
+        "count": 150,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 53.22373551096781,
+        "max_frame": 3560,
+        "max_actor_id": 339
+      },
+      "joint0_vs_base_up_degrees": {
+        "count": 150,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 1.899746071137601,
+        "max_frame": 3810,
+        "max_actor_id": 339
+      }
+    },
+    "base": {
+      "determinant": {
+        "count": 150,
+        "min": 0.9999996048237142,
+        "median": 0.9999998448847998,
+        "max": 1.0000000028386455,
+        "max_frame": 3710,
+        "max_actor_id": 339
+      },
+      "normalized_determinant": {
+        "count": 150,
+        "min": 0.9999999999999977,
+        "median": 0.9999999999999998,
+        "max": 1.0000000000000002,
+        "max_frame": 1500,
+        "max_actor_id": 339
+      },
+      "max_normalized_axis_dot": {
+        "count": 150,
+        "min": 1.3875203648799211e-09,
+        "median": 2.0548309017428407e-08,
+        "max": 6.512877111924942e-08,
+        "max_frame": 3620,
+        "max_actor_id": 339
+      }
+    },
+    "joint0": {
+      "determinant": {
+        "count": 150,
+        "min": 0.7780672584559581,
+        "median": 0.9999998183629737,
+        "max": 1.0560376706382977,
+        "max_frame": 3720,
+        "max_actor_id": 339
+      },
+      "normalized_determinant": {
+        "count": 150,
+        "min": 0.9999999999999977,
+        "median": 0.9999999999999997,
+        "max": 1.0000000000000002,
+        "max_frame": 1490,
+        "max_actor_id": 339
+      },
+      "max_normalized_axis_dot": {
+        "count": 150,
+        "min": 1.3875203648799211e-09,
+        "median": 2.2156781555315863e-08,
+        "max": 6.512877111924942e-08,
+        "max_frame": 3620,
+        "max_actor_id": 339
+      }
+    },
+    "invalid_base_frames": [],
+    "invalid_joint0_frames": [],
+    "reflected_base_frames": [],
+    "reflected_joint0_frames": []
+  },
+  "player_grounded_unbound_moving_status0": {
+    "samples": 149,
+    "angles": {
+      "base_front_vs_front_degrees": {
+        "count": 149,
+        "min": 1.0173887179578492e-05,
+        "median": 3.506631554811313,
+        "max": 8.9241263634398,
+        "max_frame": 1940,
+        "max_actor_id": 339
+      },
+      "base_side_vs_side_degrees": {
+        "count": 149,
+        "min": 1.2074182697257333e-06,
+        "median": 0.790422962170652,
+        "max": 6.056392694183257,
+        "max_frame": 2820,
+        "max_actor_id": 339
+      },
+      "base_up_vs_direction_up_degrees": {
+        "count": 149,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 1.4787793334710982e-06,
+        "max_frame": 3700,
+        "max_actor_id": 339
+      },
+      "base_up_vs_ground_normal_degrees": {
+        "count": 149,
+        "min": 0.36279936799453566,
+        "median": 6.226399163509928,
+        "max": 51.369364936593705,
+        "max_frame": 2780,
+        "max_actor_id": 339
+      },
+      "base_up_vs_head_degrees": {
+        "count": 149,
+        "min": 0.0,
+        "median": 4.045356825119947,
+        "max": 9.509339834941125,
+        "max_frame": 1940,
+        "max_actor_id": 339
+      },
+      "base_up_vs_inverse_gravity_degrees": {
+        "count": 149,
+        "min": 0.0010197481866501905,
+        "median": 3.201859943714226,
+        "max": 10.907766945731384,
+        "max_frame": 2780,
+        "max_actor_id": 339
+      },
+      "base_up_vs_movement_up_degrees": {
+        "count": 149,
+        "min": 0.00022184318787346976,
+        "median": 2.7891524821869442,
+        "max": 13.150644021953232,
+        "max_frame": 1700,
+        "max_actor_id": 339
+      },
+      "camera_target_vs_head_degrees": {
+        "count": 0
+      },
+      "camera_up_vs_head_degrees": {
+        "count": 0
+      },
+      "camera_up_vs_target_degrees": {
+        "count": 0
+      },
+      "joint0_vs_base_front_degrees": {
+        "count": 149,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 53.22373887831096,
+        "max_frame": 3560,
+        "max_actor_id": 339
+      },
+      "joint0_vs_base_side_degrees": {
+        "count": 149,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 53.22373551096781,
+        "max_frame": 3560,
+        "max_actor_id": 339
+      },
+      "joint0_vs_base_up_degrees": {
+        "count": 149,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 1.7075472925031877e-06,
+        "max_frame": 3720,
+        "max_actor_id": 339
+      }
+    },
+    "base": {
+      "determinant": {
+        "count": 149,
+        "min": 0.9999996048237142,
+        "median": 0.9999998452071851,
+        "max": 1.0000000028386455,
+        "max_frame": 3710,
+        "max_actor_id": 339
+      },
+      "normalized_determinant": {
+        "count": 149,
+        "min": 0.9999999999999977,
+        "median": 0.9999999999999998,
+        "max": 1.0000000000000002,
+        "max_frame": 1500,
+        "max_actor_id": 339
+      },
+      "max_normalized_axis_dot": {
+        "count": 149,
+        "min": 1.3875203648799211e-09,
+        "median": 2.0564867447836477e-08,
+        "max": 6.512877111924942e-08,
+        "max_frame": 3620,
+        "max_actor_id": 339
+      }
+    },
+    "joint0": {
+      "determinant": {
+        "count": 149,
+        "min": 0.7780672584559581,
+        "median": 0.9999998180671684,
+        "max": 1.0560376706382977,
+        "max_frame": 3720,
+        "max_actor_id": 339
+      },
+      "normalized_determinant": {
+        "count": 149,
+        "min": 0.9999999999999977,
+        "median": 0.9999999999999997,
+        "max": 1.0000000000000002,
+        "max_frame": 1490,
+        "max_actor_id": 339
+      },
+      "max_normalized_axis_dot": {
+        "count": 149,
+        "min": 1.3875203648799211e-09,
+        "median": 2.2244973349461183e-08,
+        "max": 6.512877111924942e-08,
+        "max_frame": 3620,
+        "max_actor_id": 339
+      }
+    },
+    "invalid_base_frames": [],
+    "invalid_joint0_frames": [],
+    "reflected_base_frames": [],
+    "reflected_joint0_frames": []
+  },
+  "player_by_status_and_active_state": {
+    "0:no_active_state": {
+      "samples": 396,
+      "angles": {
+        "base_front_vs_front_degrees": {
+          "count": 396,
+          "min": 8.537736462515939e-07,
+          "median": 0.0672475382035386,
+          "max": 19.156865592263003,
+          "max_frame": 3900,
+          "max_actor_id": 339
+        },
+        "base_side_vs_side_degrees": {
+          "count": 396,
+          "min": 8.537736462515939e-07,
+          "median": 0.016864778463807323,
+          "max": 138.71065775713234,
+          "max_frame": 3890,
+          "max_actor_id": 339
+        },
+        "base_up_vs_direction_up_degrees": {
+          "count": 396,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.35118004898191735,
+          "max_frame": 3790,
+          "max_actor_id": 339
+        },
+        "base_up_vs_ground_normal_degrees": {
+          "count": 396,
+          "min": 0.0356584538322536,
+          "median": 6.610560008473039,
+          "max": 150.53753656149993,
+          "max_frame": 3970,
+          "max_actor_id": 339
+        },
+        "base_up_vs_head_degrees": {
+          "count": 396,
+          "min": 0.0,
+          "median": 0.10276621439942857,
+          "max": 135.53990465743834,
+          "max_frame": 3890,
+          "max_actor_id": 339
+        },
+        "base_up_vs_inverse_gravity_degrees": {
+          "count": 396,
+          "min": 4.436338000413295e-06,
+          "median": 0.028841593813902274,
+          "max": 135.53990424883452,
+          "max_frame": 3890,
+          "max_actor_id": 339
+        },
+        "base_up_vs_movement_up_degrees": {
+          "count": 396,
+          "min": 0.00022184318787346976,
+          "median": 6.880424981939256,
+          "max": 159.91057342906035,
+          "max_frame": 40,
+          "max_actor_id": 339
+        },
+        "camera_target_vs_head_degrees": {
+          "count": 0
+        },
+        "camera_up_vs_head_degrees": {
+          "count": 0
+        },
+        "camera_up_vs_target_degrees": {
+          "count": 0
+        },
+        "joint0_vs_base_front_degrees": {
+          "count": 396,
+          "min": 0.0,
+          "median": 1.5462498375200197e-05,
+          "max": 53.22373887831096,
+          "max_frame": 3560,
+          "max_actor_id": 339
+        },
+        "joint0_vs_base_side_degrees": {
+          "count": 396,
+          "min": 0.0,
+          "median": 7.3444386094852035e-06,
+          "max": 138.71065416742692,
+          "max_frame": 3890,
+          "max_actor_id": 339
+        },
+        "joint0_vs_base_up_degrees": {
+          "count": 396,
+          "min": 0.0,
+          "median": 1.9167170820781278e-05,
+          "max": 135.53990416081882,
+          "max_frame": 3890,
+          "max_actor_id": 339
+        }
+      },
+      "base": {
+        "determinant": {
+          "count": 396,
+          "min": 0.9999996048237142,
+          "median": 0.999999857242277,
+          "max": 1.0000000941404303,
+          "max_frame": 3790,
+          "max_actor_id": 339
+        },
+        "normalized_determinant": {
+          "count": 396,
+          "min": 0.9999999999999977,
+          "median": 0.9999999999999996,
+          "max": 1.0000000000000002,
+          "max_frame": 1500,
+          "max_actor_id": 339
+        },
+        "max_normalized_axis_dot": {
+          "count": 396,
+          "min": 1.0463898829447121e-09,
+          "median": 2.555421720062956e-08,
+          "max": 6.512877111924942e-08,
+          "max_frame": 3620,
+          "max_actor_id": 339
+        }
+      },
+      "joint0": {
+        "determinant": {
+          "count": 396,
+          "min": 0.7780672584559581,
+          "median": 0.9999999317797792,
+          "max": 1.0560376706382977,
+          "max_frame": 3720,
+          "max_actor_id": 339
+        },
+        "normalized_determinant": {
+          "count": 396,
+          "min": 0.999999999999968,
+          "median": 0.9999999999999996,
+          "max": 1.0000000000000002,
+          "max_frame": 1490,
+          "max_actor_id": 339
+        },
+        "max_normalized_axis_dot": {
+          "count": 396,
+          "min": 1.3875203648799211e-09,
+          "median": 3.516452663776537e-08,
+          "max": 2.53068248461108e-07,
+          "max_frame": 3180,
+          "max_actor_id": 339
+        }
+      },
+      "invalid_base_frames": [],
+      "invalid_joint0_frames": [],
+      "reflected_base_frames": [],
+      "reflected_joint0_frames": []
+    }
+  },
+  "player_status19_recovery_or_warp": {
+    "samples": 0,
+    "angles": {},
+    "base": {
+      "determinant": {
+        "count": 0
+      },
+      "normalized_determinant": {
+        "count": 0
+      },
+      "max_normalized_axis_dot": {
+        "count": 0
+      }
+    },
+    "joint0": {
+      "determinant": {
+        "count": 0
+      },
+      "normalized_determinant": {
+        "count": 0
+      },
+      "max_normalized_axis_dot": {
+        "count": 0
+      }
+    },
+    "invalid_base_frames": [],
+    "invalid_joint0_frames": [],
+    "reflected_base_frames": [],
+    "reflected_joint0_frames": []
+  },
+  "stable_head_snapshot_intervals": [],
+  "alive_unclipped_rabbits": {
+    "874": {
+      "samples": 165,
+      "angles": {
+        "base_front_vs_front_degrees": {
+          "count": 165,
+          "min": 14.445529805374898,
+          "median": 83.06955353029507,
+          "max": 179.28526430281568,
+          "max_frame": 1460,
+          "max_actor_id": 874
+        },
+        "base_up_vs_inverse_gravity_degrees": {
+          "count": 165,
+          "min": 3.8948233144193285,
+          "median": 85.94519847926358,
+          "max": 157.3498940389037,
+          "max_frame": 2230,
+          "max_actor_id": 874
+        },
+        "joint0_vs_base_front_degrees": {
+          "count": 165,
+          "min": 8.537736462515939e-07,
+          "median": 8.537736462515939e-07,
+          "max": 8.537736462515939e-07,
+          "max_frame": 1050,
+          "max_actor_id": 874
+        },
+        "joint0_vs_base_side_degrees": {
+          "count": 165,
+          "min": 8.537736462515939e-07,
+          "median": 8.537736462515939e-07,
+          "max": 8.537736462515939e-07,
+          "max_frame": 1050,
+          "max_actor_id": 874
+        },
+        "joint0_vs_base_up_degrees": {
+          "count": 165,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0,
+          "max_frame": 1050,
+          "max_actor_id": 874
+        }
+      },
+      "base": {
+        "determinant": {
+          "count": 165,
+          "min": 0.999999878583326,
+          "median": 0.999999878583326,
+          "max": 0.999999878583326,
+          "max_frame": 1050,
+          "max_actor_id": 874
+        },
+        "normalized_determinant": {
+          "count": 165,
+          "min": 0.9999999999999997,
+          "median": 0.9999999999999997,
+          "max": 0.9999999999999997,
+          "max_frame": 1050,
+          "max_actor_id": 874
+        },
+        "max_normalized_axis_dot": {
+          "count": 165,
+          "min": 2.0321774159282047e-08,
+          "median": 2.0321774159282047e-08,
+          "max": 2.0321774159282047e-08,
+          "max_frame": 1050,
+          "max_actor_id": 874
+        }
+      },
+      "joint0": {
+        "determinant": {
+          "count": 165,
+          "min": 0.999999878583326,
+          "median": 0.999999878583326,
+          "max": 0.999999878583326,
+          "max_frame": 1050,
+          "max_actor_id": 874
+        },
+        "normalized_determinant": {
+          "count": 165,
+          "min": 0.9999999999999997,
+          "median": 0.9999999999999997,
+          "max": 0.9999999999999997,
+          "max_frame": 1050,
+          "max_actor_id": 874
+        },
+        "max_normalized_axis_dot": {
+          "count": 165,
+          "min": 2.0321774159282047e-08,
+          "median": 2.0321774159282047e-08,
+          "max": 2.0321774159282047e-08,
+          "max_frame": 1050,
+          "max_actor_id": 874
+        }
+      },
+      "invalid_base_frames": [],
+      "invalid_joint0_frames": [],
+      "reflected_base_frames": [],
+      "reflected_joint0_frames": [],
+      "type": "10DemoRabbit",
+      "first_frame": 1050,
+      "last_frame": 2690,
+      "unique_quaternions": 1,
+      "unique_base_rotations": 1,
+      "quaternion_base_rotation_max_abs_delta": {
+        "count": 165,
+        "min": 5.2609385625679295e-08,
+        "median": 5.2609385625679295e-08,
+        "max": 5.2609385625679295e-08,
+        "max_frame": 1050,
+        "max_actor_id": 874
+      }
+    },
+    "877": {
+      "samples": 124,
+      "angles": {
+        "base_front_vs_front_degrees": {
+          "count": 124,
+          "min": 3.900470725254146,
+          "median": 16.859083755966722,
+          "max": 169.64155918843056,
+          "max_frame": 2560,
+          "max_actor_id": 877
+        },
+        "base_up_vs_inverse_gravity_degrees": {
+          "count": 124,
+          "min": 5.290783760787448,
+          "median": 5.8145075433966245,
+          "max": 38.94666375767836,
+          "max_frame": 2670,
+          "max_actor_id": 877
+        },
+        "joint0_vs_base_front_degrees": {
+          "count": 124,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0,
+          "max_frame": 770,
+          "max_actor_id": 877
+        },
+        "joint0_vs_base_side_degrees": {
+          "count": 124,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0,
+          "max_frame": 770,
+          "max_actor_id": 877
+        },
+        "joint0_vs_base_up_degrees": {
+          "count": 124,
+          "min": 8.537736462515939e-07,
+          "median": 8.537736462515939e-07,
+          "max": 8.537736462515939e-07,
+          "max_frame": 770,
+          "max_actor_id": 877
+        }
+      },
+      "base": {
+        "determinant": {
+          "count": 124,
+          "min": 0.999999963063453,
+          "median": 0.999999963063453,
+          "max": 0.999999963063453,
+          "max_frame": 770,
+          "max_actor_id": 877
+        },
+        "normalized_determinant": {
+          "count": 124,
+          "min": 0.9999999999999997,
+          "median": 0.9999999999999997,
+          "max": 0.9999999999999997,
+          "max_frame": 770,
+          "max_actor_id": 877
+        },
+        "max_normalized_axis_dot": {
+          "count": 124,
+          "min": 1.511868689962892e-08,
+          "median": 1.511868689962892e-08,
+          "max": 1.511868689962892e-08,
+          "max_frame": 770,
+          "max_actor_id": 877
+        }
+      },
+      "joint0": {
+        "determinant": {
+          "count": 124,
+          "min": 0.999999963063453,
+          "median": 0.999999963063453,
+          "max": 0.999999963063453,
+          "max_frame": 770,
+          "max_actor_id": 877
+        },
+        "normalized_determinant": {
+          "count": 124,
+          "min": 0.9999999999999997,
+          "median": 0.9999999999999997,
+          "max": 0.9999999999999997,
+          "max_frame": 770,
+          "max_actor_id": 877
+        },
+        "max_normalized_axis_dot": {
+          "count": 124,
+          "min": 1.511868689962892e-08,
+          "median": 1.511868689962892e-08,
+          "max": 1.511868689962892e-08,
+          "max_frame": 770,
+          "max_actor_id": 877
+        }
+      },
+      "invalid_base_frames": [],
+      "invalid_joint0_frames": [],
+      "reflected_base_frames": [],
+      "reflected_joint0_frames": [],
+      "type": "10DemoRabbit",
+      "first_frame": 770,
+      "last_frame": 2690,
+      "unique_quaternions": 1,
+      "unique_base_rotations": 1,
+      "quaternion_base_rotation_max_abs_delta": {
+        "count": 124,
+        "min": 3.2659263293766116e-08,
+        "median": 3.2659263293766116e-08,
+        "max": 3.2659263293766116e-08,
+        "max_frame": 770,
+        "max_actor_id": 877
+      }
+    },
+    "879": {
+      "samples": 122,
+      "angles": {
+        "base_front_vs_front_degrees": {
+          "count": 122,
+          "min": 1.0507905244553677,
+          "median": 36.142745483679,
+          "max": 126.04679187034726,
+          "max_frame": 2570,
+          "max_actor_id": 879
+        },
+        "base_up_vs_inverse_gravity_degrees": {
+          "count": 122,
+          "min": 7.82261927888602,
+          "median": 7.82261927888602,
+          "max": 39.313554051928655,
+          "max_frame": 2670,
+          "max_actor_id": 879
+        },
+        "joint0_vs_base_front_degrees": {
+          "count": 122,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0,
+          "max_frame": 780,
+          "max_actor_id": 879
+        },
+        "joint0_vs_base_side_degrees": {
+          "count": 122,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0,
+          "max_frame": 780,
+          "max_actor_id": 879
+        },
+        "joint0_vs_base_up_degrees": {
+          "count": 122,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0,
+          "max_frame": 780,
+          "max_actor_id": 879
+        }
+      },
+      "base": {
+        "determinant": {
+          "count": 122,
+          "min": 1.000000085126571,
+          "median": 1.000000085126571,
+          "max": 1.000000085126571,
+          "max_frame": 780,
+          "max_actor_id": 879
+        },
+        "normalized_determinant": {
+          "count": 122,
+          "min": 1.0000000000000002,
+          "median": 1.0000000000000002,
+          "max": 1.0000000000000002,
+          "max_frame": 780,
+          "max_actor_id": 879
+        },
+        "max_normalized_axis_dot": {
+          "count": 122,
+          "min": 2.0719600514473857e-09,
+          "median": 2.0719600514473857e-09,
+          "max": 2.0719600514473857e-09,
+          "max_frame": 780,
+          "max_actor_id": 879
+        }
+      },
+      "joint0": {
+        "determinant": {
+          "count": 122,
+          "min": 1.000000085126571,
+          "median": 1.000000085126571,
+          "max": 1.000000085126571,
+          "max_frame": 780,
+          "max_actor_id": 879
+        },
+        "normalized_determinant": {
+          "count": 122,
+          "min": 1.0000000000000002,
+          "median": 1.0000000000000002,
+          "max": 1.0000000000000002,
+          "max_frame": 780,
+          "max_actor_id": 879
+        },
+        "max_normalized_axis_dot": {
+          "count": 122,
+          "min": 2.0719600514473857e-09,
+          "median": 2.0719600514473857e-09,
+          "max": 2.0719600514473857e-09,
+          "max_frame": 780,
+          "max_actor_id": 879
+        }
+      },
+      "invalid_base_frames": [],
+      "invalid_joint0_frames": [],
+      "reflected_base_frames": [],
+      "reflected_joint0_frames": [],
+      "type": "10DemoRabbit",
+      "first_frame": 780,
+      "last_frame": 2690,
+      "unique_quaternions": 1,
+      "unique_base_rotations": 1,
+      "quaternion_base_rotation_max_abs_delta": {
+        "count": 122,
+        "min": 3.387213554084667e-08,
+        "median": 3.387213554084667e-08,
+        "max": 3.387213554084667e-08,
+        "max_frame": 780,
+        "max_actor_id": 879
+      }
+    },
+    "906": {
+      "samples": 73,
+      "angles": {
+        "base_front_vs_front_degrees": {
+          "count": 73,
+          "min": 8.537736462515939e-07,
+          "median": 8.537736462515939e-07,
+          "max": 2.932270105703832,
+          "max_frame": 3990,
+          "max_actor_id": 906
+        },
+        "base_up_vs_inverse_gravity_degrees": {
+          "count": 73,
+          "min": 1.4971454838838805,
+          "median": 4.606387219833713,
+          "max": 4.606387219833713,
+          "max_frame": 750,
+          "max_actor_id": 906
+        },
+        "joint0_vs_base_front_degrees": {
+          "count": 73,
+          "min": 0.0,
+          "median": 8.537736462515939e-07,
+          "max": 8.537736462515939e-07,
+          "max_frame": 750,
+          "max_actor_id": 906
+        },
+        "joint0_vs_base_side_degrees": {
+          "count": 73,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 1.2074182697257333e-06,
+          "max_frame": 3970,
+          "max_actor_id": 906
+        },
+        "joint0_vs_base_up_degrees": {
+          "count": 73,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 1.2074182697257333e-06,
+          "max_frame": 3970,
+          "max_actor_id": 906
+        }
+      },
+      "base": {
+        "determinant": {
+          "count": 73,
+          "min": 0.9999998148152612,
+          "median": 0.9999998148152612,
+          "max": 1.000000348540672,
+          "max_frame": 3970,
+          "max_actor_id": 906
+        },
+        "normalized_determinant": {
+          "count": 73,
+          "min": 0.9999999999999909,
+          "median": 0.9999999999999961,
+          "max": 0.9999999999999996,
+          "max_frame": 3990,
+          "max_actor_id": 906
+        },
+        "max_normalized_axis_dot": {
+          "count": 73,
+          "min": 2.37161254879395e-08,
+          "median": 7.452892092276592e-08,
+          "max": 1.0520950140605057e-07,
+          "max_frame": 3970,
+          "max_actor_id": 906
+        }
+      },
+      "joint0": {
+        "determinant": {
+          "count": 73,
+          "min": 0.9999998148152612,
+          "median": 0.9999998148152612,
+          "max": 1.000000348540672,
+          "max_frame": 3970,
+          "max_actor_id": 906
+        },
+        "normalized_determinant": {
+          "count": 73,
+          "min": 0.9999999999999909,
+          "median": 0.9999999999999961,
+          "max": 0.9999999999999996,
+          "max_frame": 3990,
+          "max_actor_id": 906
+        },
+        "max_normalized_axis_dot": {
+          "count": 73,
+          "min": 2.37161254879395e-08,
+          "median": 7.452892092276592e-08,
+          "max": 1.0520950140605057e-07,
+          "max_frame": 3970,
+          "max_actor_id": 906
+        }
+      },
+      "invalid_base_frames": [],
+      "invalid_joint0_frames": [],
+      "reflected_base_frames": [],
+      "reflected_joint0_frames": [],
+      "type": "13RunawayRabbit",
+      "first_frame": 750,
+      "last_frame": 3990,
+      "unique_quaternions": 9,
+      "unique_base_rotations": 4,
+      "quaternion_base_rotation_max_abs_delta": {
+        "count": 73,
+        "min": 4.015702415038902e-08,
+        "median": 0.07752507738275138,
+        "max": 0.07752507738275138,
+        "max_frame": 1510,
+        "max_actor_id": 906
+      }
+    },
+    "911": {
+      "samples": 102,
+      "angles": {
+        "base_front_vs_front_degrees": {
+          "count": 102,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 48.00011322698905,
+          "max_frame": 3180,
+          "max_actor_id": 911
+        },
+        "base_up_vs_inverse_gravity_degrees": {
+          "count": 102,
+          "min": 0.022773478674685054,
+          "median": 21.449277783330928,
+          "max": 21.450800389180387,
+          "max_frame": 720,
+          "max_actor_id": 911
+        },
+        "joint0_vs_base_front_degrees": {
+          "count": 102,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 1.2074182697257333e-06,
+          "max_frame": 3020,
+          "max_actor_id": 911
+        },
+        "joint0_vs_base_side_degrees": {
+          "count": 102,
+          "min": 0.0,
+          "median": 8.537736462515939e-07,
+          "max": 1.4787793334710982e-06,
+          "max_frame": 3020,
+          "max_actor_id": 911
+        },
+        "joint0_vs_base_up_degrees": {
+          "count": 102,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 1.2074182697257333e-06,
+          "max_frame": 3030,
+          "max_actor_id": 911
+        }
+      },
+      "base": {
+        "determinant": {
+          "count": 102,
+          "min": 0.999999957358943,
+          "median": 1.00000013151266,
+          "max": 1.0000007584938149,
+          "max_frame": 3030,
+          "max_actor_id": 911
+        },
+        "normalized_determinant": {
+          "count": 102,
+          "min": 0.9999999999999323,
+          "median": 0.9999999999999942,
+          "max": 0.9999999999999998,
+          "max_frame": 3080,
+          "max_actor_id": 911
+        },
+        "max_normalized_axis_dot": {
+          "count": 102,
+          "min": 2.2950788080991838e-08,
+          "median": 6.955616613235627e-08,
+          "max": 3.6720868257233974e-07,
+          "max_frame": 3030,
+          "max_actor_id": 911
+        }
+      },
+      "joint0": {
+        "determinant": {
+          "count": 102,
+          "min": 0.999999957358943,
+          "median": 1.00000013151266,
+          "max": 1.0000007584938149,
+          "max_frame": 3030,
+          "max_actor_id": 911
+        },
+        "normalized_determinant": {
+          "count": 102,
+          "min": 0.9999999999999323,
+          "median": 0.9999999999999942,
+          "max": 0.9999999999999998,
+          "max_frame": 3080,
+          "max_actor_id": 911
+        },
+        "max_normalized_axis_dot": {
+          "count": 102,
+          "min": 2.2950788080991838e-08,
+          "median": 6.955616613235627e-08,
+          "max": 3.6720868257233974e-07,
+          "max_frame": 3030,
+          "max_actor_id": 911
+        }
+      },
+      "invalid_base_frames": [],
+      "invalid_joint0_frames": [],
+      "reflected_base_frames": [],
+      "reflected_joint0_frames": [],
+      "type": "13RunawayRabbit",
+      "first_frame": 720,
+      "last_frame": 3370,
+      "unique_quaternions": 32,
+      "unique_base_rotations": 25,
+      "quaternion_base_rotation_max_abs_delta": {
+        "count": 102,
+        "min": 4.350997784285937e-08,
+        "median": 1.0971784991653522e-07,
+        "max": 0.3197848526855501,
+        "max_frame": 2730,
+        "max_actor_id": 911
+      }
+    },
+    "916": {
+      "samples": 131,
+      "angles": {
+        "base_front_vs_front_degrees": {
+          "count": 131,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0,
+          "max_frame": 40,
+          "max_actor_id": 916
+        },
+        "base_up_vs_inverse_gravity_degrees": {
+          "count": 131,
+          "min": 2.735134957409932,
+          "median": 2.735134957409932,
+          "max": 2.735134957409932,
+          "max_frame": 40,
+          "max_actor_id": 916
+        },
+        "joint0_vs_base_front_degrees": {
+          "count": 131,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0,
+          "max_frame": 40,
+          "max_actor_id": 916
+        },
+        "joint0_vs_base_side_degrees": {
+          "count": 131,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0,
+          "max_frame": 40,
+          "max_actor_id": 916
+        },
+        "joint0_vs_base_up_degrees": {
+          "count": 131,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0,
+          "max_frame": 40,
+          "max_actor_id": 916
+        }
+      },
+      "base": {
+        "determinant": {
+          "count": 131,
+          "min": 1.0000001782554713,
+          "median": 1.0000001782554713,
+          "max": 1.0000001782554713,
+          "max_frame": 40,
+          "max_actor_id": 916
+        },
+        "normalized_determinant": {
+          "count": 131,
+          "min": 0.999999999999996,
+          "median": 0.999999999999996,
+          "max": 0.999999999999996,
+          "max_frame": 40,
+          "max_actor_id": 916
+        },
+        "max_normalized_axis_dot": {
+          "count": 131,
+          "min": 7.314211417086547e-08,
+          "median": 7.314211417086547e-08,
+          "max": 7.314211417086547e-08,
+          "max_frame": 40,
+          "max_actor_id": 916
+        }
+      },
+      "joint0": {
+        "determinant": {
+          "count": 131,
+          "min": 1.0000001782554713,
+          "median": 1.0000001782554713,
+          "max": 1.0000001782554713,
+          "max_frame": 40,
+          "max_actor_id": 916
+        },
+        "normalized_determinant": {
+          "count": 131,
+          "min": 0.999999999999996,
+          "median": 0.999999999999996,
+          "max": 0.999999999999996,
+          "max_frame": 40,
+          "max_actor_id": 916
+        },
+        "max_normalized_axis_dot": {
+          "count": 131,
+          "min": 7.314211417086547e-08,
+          "median": 7.314211417086547e-08,
+          "max": 7.314211417086547e-08,
+          "max_frame": 40,
+          "max_actor_id": 916
+        }
+      },
+      "invalid_base_frames": [],
+      "invalid_joint0_frames": [],
+      "reflected_base_frames": [],
+      "reflected_joint0_frames": [],
+      "type": "13RunawayRabbit",
+      "first_frame": 40,
+      "last_frame": 3990,
+      "unique_quaternions": 6,
+      "unique_base_rotations": 1,
+      "quaternion_base_rotation_max_abs_delta": {
+        "count": 131,
+        "min": 9.265545630743333e-08,
+        "median": 0.034245340595745244,
+        "max": 0.034245340595745244,
+        "max_frame": 1850,
+        "max_actor_id": 916
+      }
+    },
+    "921": {
+      "samples": 113,
+      "angles": {
+        "base_front_vs_front_degrees": {
+          "count": 113,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0,
+          "max_frame": 710,
+          "max_actor_id": 921
+        },
+        "base_up_vs_inverse_gravity_degrees": {
+          "count": 113,
+          "min": 1.012778855985448,
+          "median": 1.012778855985448,
+          "max": 1.012778855985448,
+          "max_frame": 710,
+          "max_actor_id": 921
+        },
+        "joint0_vs_base_front_degrees": {
+          "count": 113,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0,
+          "max_frame": 710,
+          "max_actor_id": 921
+        },
+        "joint0_vs_base_side_degrees": {
+          "count": 113,
+          "min": 8.537736462515939e-07,
+          "median": 8.537736462515939e-07,
+          "max": 8.537736462515939e-07,
+          "max_frame": 710,
+          "max_actor_id": 921
+        },
+        "joint0_vs_base_up_degrees": {
+          "count": 113,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0,
+          "max_frame": 710,
+          "max_actor_id": 921
+        }
+      },
+      "base": {
+        "determinant": {
+          "count": 113,
+          "min": 0.9999993843447975,
+          "median": 0.9999993843447975,
+          "max": 0.9999993843447975,
+          "max_frame": 710,
+          "max_actor_id": 921
+        },
+        "normalized_determinant": {
+          "count": 113,
+          "min": 0.9999999999999394,
+          "median": 0.9999999999999394,
+          "max": 0.9999999999999394,
+          "max_frame": 710,
+          "max_actor_id": 921
+        },
+        "max_normalized_axis_dot": {
+          "count": 113,
+          "min": 2.2953865347341562e-07,
+          "median": 2.2953865347341562e-07,
+          "max": 2.2953865347341562e-07,
+          "max_frame": 710,
+          "max_actor_id": 921
+        }
+      },
+      "joint0": {
+        "determinant": {
+          "count": 113,
+          "min": 0.9999993843447975,
+          "median": 0.9999993843447975,
+          "max": 0.9999993843447975,
+          "max_frame": 710,
+          "max_actor_id": 921
+        },
+        "normalized_determinant": {
+          "count": 113,
+          "min": 0.9999999999999394,
+          "median": 0.9999999999999394,
+          "max": 0.9999999999999394,
+          "max_frame": 710,
+          "max_actor_id": 921
+        },
+        "max_normalized_axis_dot": {
+          "count": 113,
+          "min": 2.2953865347341562e-07,
+          "median": 2.2953865347341562e-07,
+          "max": 2.2953865347341562e-07,
+          "max_frame": 710,
+          "max_actor_id": 921
+        }
+      },
+      "invalid_base_frames": [],
+      "invalid_joint0_frames": [],
+      "reflected_base_frames": [],
+      "reflected_joint0_frames": [],
+      "type": "13RunawayRabbit",
+      "first_frame": 710,
+      "last_frame": 3990,
+      "unique_quaternions": 5,
+      "unique_base_rotations": 1,
+      "quaternion_base_rotation_max_abs_delta": {
+        "count": 113,
+        "min": 2.2759714690678834e-07,
+        "median": 0.015343313955169524,
+        "max": 0.015343313955169524,
+        "max_frame": 2750,
+        "max_actor_id": 921
+      }
+    }
+  },
+  "limitations": [
+    "Post-frame stored matrices; no GX upload or pixel verification.",
+    "Ground contact may be cached; movement_low_word on-ground flag retained separately.",
+    "Joint0/base differences can be intentional animation; not automatically errors.",
+    "Basis scale and orthogonality are reported separately; authored scale is not a defect."
+  ]
+}

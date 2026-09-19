@@ -1,0 +1,93 @@
+{
+  "red": [
+    {
+      "target": "smg-pc-original-process-player-owner-tests",
+      "build": {
+        "command": [
+          "xmake",
+          "build",
+          "-j",
+          "8",
+          "smg-pc-original-process-player-owner-tests"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 6.072595874895342
+      },
+      "binary_sha256": "5ace61b7966d0df67b17ddb773f6fa84dfa2bbcfca46d387bbb0e8b3031b225a",
+      "test": {
+        "command": [
+          "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-player-owner-tests",
+          "-ApplePersistenceIgnoreState",
+          "YES"
+        ],
+        "exit_code": -6,
+        "elapsed_seconds": 7.224478082964197
+      }
+    }
+  ],
+  "red_expected_assertion_error_units": 52.5351,
+  "evidence_sha256": {
+    "notes/demo-rotation-recovery-20260919/recovery-red.json": "a9a23fe870e76c73eb7308a02ecb0d2b20b335c18989950feeb630027a9a8d17",
+    "notes/demo-rotation-recovery-20260919/recovery-red-smg-pc-original-process-player-owner-tests-test.log": "93cad915f73d3c86ba897c14ec31aea7f3c24b69f8fd86bb3839b7108dcee909",
+    "notes/demo-rotation-recovery-20260919/recovery-green.json": "ddc5218389d31d1d06552a9b36bca27c53205242d46ec6aa1676d9ed3b6f658a",
+    "notes/demo-rotation-recovery-20260919/recovery-green-smg-pc-original-process-player-owner-tests-test.log": "a6b11924570db0294ecfb23dea62dcb02bf278a75f6165150fd2a6806d5608eb",
+    "notes/demo-rotation-recovery-20260919/owners-green-final.json": "4bd66f95afb177cfb1c80468aafa4a04b0a49a9ab6221bd2984d5a23dd9cd29a",
+    "notes/demo-rotation-recovery-20260919/owners-green-final-smg-pc-original-process-player-owner-tests-test.log": "6000e63d41db08d2a8d91e9f8a69dcf6fdf5d67f7025eb453ff0decba9517d00"
+  },
+  "green": [
+    {
+      "target": "smg-pc-original-process-player-owner-tests",
+      "build": {
+        "command": [
+          "xmake",
+          "build",
+          "-j",
+          "8",
+          "smg-pc-original-process-player-owner-tests"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 5.269163458026014
+      },
+      "binary_sha256": "aa7e20e0ee21c00492aa0125b30ab822f05ecdba6c11431f3e5145bb082ba9aa",
+      "test": {
+        "command": [
+          "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-player-owner-tests",
+          "-ApplePersistenceIgnoreState",
+          "YES"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 7.08991637500003
+      }
+    }
+  ],
+  "green_observed_blend_error_units": [
+    0.000488281,
+    0.00218366
+  ],
+  "green_scope": "360 actual-process frames, original safety arithmetic/getter/KCL inputs, prior state/walk/camera/PlayerUtil checks and retirement; does not execute a recovery arc.",
+  "subsequent_camera_timer_test": "PASS in parent final360 process: stable-head timer expiry and changed-head reset table16; source is checkpoint a37e1c799.",
+  "final_player_owner": {
+    "target": "smg-pc-original-process-player-owner-tests",
+    "build": {
+      "command": [
+        "xmake",
+        "build",
+        "-j",
+        "8",
+        "smg-pc-original-process-player-owner-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 5.148039749939926
+    },
+    "binary_sha256": "83fb8b40d37d90035a748401d6a9bad605c7fbc746c6bdac348cb34cb3f45ef1",
+    "test": {
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-player-owner-tests",
+        "-ApplePersistenceIgnoreState",
+        "YES"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 7.027388625079766
+    }
+  }
+}

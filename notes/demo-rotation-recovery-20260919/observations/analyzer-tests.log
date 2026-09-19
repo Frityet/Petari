@@ -1,0 +1,12 @@
+test_absent_nonfinite_and_degenerate_are_not_clean_rotations (test_analyze_matrices.MatrixAnalysisTests.test_absent_nonfinite_and_degenerate_are_not_clean_rotations) ... ok
+test_frame_window_keeps_file_extent_separate (test_analyze_matrices.MatrixAnalysisTests.test_frame_window_keeps_file_extent_separate) ... ok
+test_live_read_excludes_only_incomplete_tail (test_analyze_matrices.MatrixAnalysisTests.test_live_read_excludes_only_incomplete_tail) ... ok
+test_quaternion_reference_rotates_up_and_ignores_global_sign (test_analyze_matrices.MatrixAnalysisTests.test_quaternion_reference_rotates_up_and_ignores_global_sign) ... ok
+test_scale_and_reflection_are_distinct_from_shear (test_analyze_matrices.MatrixAnalysisTests.test_scale_and_reflection_are_distinct_from_shear) ... ok
+test_stable_head_intervals_expose_reset_and_countdown_without_merging_motion (test_analyze_matrices.MatrixAnalysisTests.test_stable_head_intervals_expose_reset_and_countdown_without_merging_motion) ... ok
+test_translated_quarter_turn_uses_columns_as_world_axes (test_analyze_matrices.MatrixAnalysisTests.test_translated_quarter_turn_uses_columns_as_world_axes) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK

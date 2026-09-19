@@ -1,0 +1,3882 @@
+{
+  "source": "notes/demo-rotation-recovery-20260919/after-actors.jsonl",
+  "source_file_sha256": "0f76c15e19b1a563a6ae5e557d4924945fb91d45b2275dd0950d1ef2edb556e2",
+  "complete_prefix_sha256": "0f76c15e19b1a563a6ae5e557d4924945fb91d45b2275dd0950d1ef2edb556e2",
+  "ignored_incomplete_tail_bytes": 0,
+  "last_frame": 11990,
+  "selection": {
+    "start_frame": 6830,
+    "end_frame": null,
+    "first_selected_frame": 6830,
+    "last_selected_frame": 11990
+  },
+  "record_count": 1200,
+  "player_all_alive": {
+    "samples": 517,
+    "angles": {
+      "base_front_vs_front_degrees": {
+        "count": 517,
+        "min": 0.0,
+        "median": 0.8207528730727269,
+        "max": 26.061617594424074,
+        "max_frame": 8210,
+        "max_actor_id": 339
+      },
+      "base_side_vs_side_degrees": {
+        "count": 517,
+        "min": 1.2074182697257333e-06,
+        "median": 0.7345324159168624,
+        "max": 78.9726757240296,
+        "max_frame": 8210,
+        "max_actor_id": 339
+      },
+      "base_up_vs_direction_up_degrees": {
+        "count": 517,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 0.07872987539083613,
+        "max_frame": 9770,
+        "max_actor_id": 339
+      },
+      "base_up_vs_ground_normal_degrees": {
+        "count": 517,
+        "min": 0.026438673587422187,
+        "median": 6.824412615328254,
+        "max": 150.53753656149993,
+        "max_frame": 8280,
+        "max_actor_id": 339
+      },
+      "base_up_vs_head_degrees": {
+        "count": 517,
+        "min": 0.0,
+        "median": 1.2543774136465202,
+        "max": 80.10585347323588,
+        "max_frame": 8210,
+        "max_actor_id": 339
+      },
+      "base_up_vs_inverse_gravity_degrees": {
+        "count": 517,
+        "min": 1.0526028440638427e-05,
+        "median": 1.1986837547228864,
+        "max": 80.10585306483236,
+        "max_frame": 8210,
+        "max_actor_id": 339
+      },
+      "base_up_vs_movement_up_degrees": {
+        "count": 517,
+        "min": 0.02201212073614956,
+        "median": 3.380978854565017,
+        "max": 148.996560333885,
+        "max_frame": 8280,
+        "max_actor_id": 339
+      },
+      "camera_target_vs_head_degrees": {
+        "count": 517,
+        "min": 0.0,
+        "median": 0.05533674355898338,
+        "max": 147.60147294350767,
+        "max_frame": 8210,
+        "max_actor_id": 339
+      },
+      "camera_up_vs_head_degrees": {
+        "count": 517,
+        "min": 0.0,
+        "median": 0.3485888566308804,
+        "max": 147.51963178155194,
+        "max_frame": 8210,
+        "max_actor_id": 339
+      },
+      "camera_up_vs_target_degrees": {
+        "count": 517,
+        "min": 0.0,
+        "median": 1.591147688109995,
+        "max": 138.33638328142584,
+        "max_frame": 8280,
+        "max_actor_id": 339
+      },
+      "joint0_vs_base_front_degrees": {
+        "count": 517,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 87.97056016967107,
+        "max_frame": 6830,
+        "max_actor_id": 339
+      },
+      "joint0_vs_base_side_degrees": {
+        "count": 517,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 87.97056449894943,
+        "max_frame": 6830,
+        "max_actor_id": 339
+      },
+      "joint0_vs_base_up_degrees": {
+        "count": 517,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 80.10585408512536,
+        "max_frame": 8210,
+        "max_actor_id": 339
+      }
+    },
+    "base": {
+      "determinant": {
+        "count": 517,
+        "min": 0.999999601896705,
+        "median": 0.9999998085579156,
+        "max": 1.000000043867008,
+        "max_frame": 9770,
+        "max_actor_id": 339
+      },
+      "normalized_determinant": {
+        "count": 517,
+        "min": 0.9999999999999979,
+        "median": 0.9999999999999997,
+        "max": 1.0000000000000002,
+        "max_frame": 6920,
+        "max_actor_id": 339
+      },
+      "max_normalized_axis_dot": {
+        "count": 517,
+        "min": 1.2111591438969393e-09,
+        "median": 1.9966284126038403e-08,
+        "max": 5.411550405010068e-08,
+        "max_frame": 7220,
+        "max_actor_id": 339
+      }
+    },
+    "joint0": {
+      "determinant": {
+        "count": 517,
+        "min": 0.778067111003203,
+        "median": 0.9999998240699106,
+        "max": 1.0560378002121622,
+        "max_frame": 8040,
+        "max_actor_id": 339
+      },
+      "normalized_determinant": {
+        "count": 517,
+        "min": 0.9999998053503677,
+        "median": 0.9999999999999996,
+        "max": 1.0000000000000002,
+        "max_frame": 6920,
+        "max_actor_id": 339
+      },
+      "max_normalized_axis_dot": {
+        "count": 517,
+        "min": 1.2111591438969393e-09,
+        "median": 2.4750103772008814e-08,
+        "max": 0.000524216363937402,
+        "max_frame": 8970,
+        "max_actor_id": 339
+      }
+    },
+    "invalid_base_frames": [],
+    "invalid_joint0_frames": [],
+    "reflected_base_frames": [],
+    "reflected_joint0_frames": []
+  },
+  "player_grounded_moving_status0": {
+    "samples": 255,
+    "angles": {
+      "base_front_vs_front_degrees": {
+        "count": 255,
+        "min": 0.01814202000470342,
+        "median": 2.700967823406141,
+        "max": 7.696609645558465,
+        "max_frame": 7730,
+        "max_actor_id": 339
+      },
+      "base_side_vs_side_degrees": {
+        "count": 255,
+        "min": 0.0007023563595007453,
+        "median": 2.3543006346439403,
+        "max": 12.920914547876379,
+        "max_frame": 9550,
+        "max_actor_id": 339
+      },
+      "base_up_vs_direction_up_degrees": {
+        "count": 255,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 1.2074182697257333e-06,
+        "max_frame": 6900,
+        "max_actor_id": 339
+      },
+      "base_up_vs_ground_normal_degrees": {
+        "count": 255,
+        "min": 0.2011378600105944,
+        "median": 5.485480313143261,
+        "max": 49.16914167991776,
+        "max_frame": 9540,
+        "max_actor_id": 339
+      },
+      "base_up_vs_head_degrees": {
+        "count": 255,
+        "min": 0.3454477492489432,
+        "median": 4.348604798742738,
+        "max": 14.000374496823477,
+        "max_frame": 9550,
+        "max_actor_id": 339
+      },
+      "base_up_vs_inverse_gravity_degrees": {
+        "count": 255,
+        "min": 0.02461174444789153,
+        "median": 2.9274069557310534,
+        "max": 13.38181411491726,
+        "max_frame": 9550,
+        "max_actor_id": 339
+      },
+      "base_up_vs_movement_up_degrees": {
+        "count": 255,
+        "min": 0.02201212073614956,
+        "median": 1.7697280656550713,
+        "max": 26.67840108890567,
+        "max_frame": 9550,
+        "max_actor_id": 339
+      },
+      "camera_target_vs_head_degrees": {
+        "count": 255,
+        "min": 0.0,
+        "median": 0.06597530920347822,
+        "max": 2.6747200678603456,
+        "max_frame": 10020,
+        "max_actor_id": 339
+      },
+      "camera_up_vs_head_degrees": {
+        "count": 255,
+        "min": 0.0,
+        "median": 3.6012721516430695,
+        "max": 26.32929325862463,
+        "max_frame": 9550,
+        "max_actor_id": 339
+      },
+      "camera_up_vs_target_degrees": {
+        "count": 255,
+        "min": 0.0,
+        "median": 3.374329628096895,
+        "max": 23.97161351278418,
+        "max_frame": 9550,
+        "max_actor_id": 339
+      },
+      "joint0_vs_base_front_degrees": {
+        "count": 255,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 87.97056016967107,
+        "max_frame": 6830,
+        "max_actor_id": 339
+      },
+      "joint0_vs_base_side_degrees": {
+        "count": 255,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 87.97056449894943,
+        "max_frame": 6830,
+        "max_actor_id": 339
+      },
+      "joint0_vs_base_up_degrees": {
+        "count": 255,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 1.4787793334710982e-06,
+        "max_frame": 7960,
+        "max_actor_id": 339
+      }
+    },
+    "base": {
+      "determinant": {
+        "count": 255,
+        "min": 0.9999996129024733,
+        "median": 0.9999998301589833,
+        "max": 1.0000000075149906,
+        "max_frame": 7100,
+        "max_actor_id": 339
+      },
+      "normalized_determinant": {
+        "count": 255,
+        "min": 0.9999999999999979,
+        "median": 0.9999999999999998,
+        "max": 1.0000000000000002,
+        "max_frame": 6920,
+        "max_actor_id": 339
+      },
+      "max_normalized_axis_dot": {
+        "count": 255,
+        "min": 1.2111591438969393e-09,
+        "median": 1.785889069960689e-08,
+        "max": 5.411550405010068e-08,
+        "max_frame": 7220,
+        "max_actor_id": 339
+      }
+    },
+    "joint0": {
+      "determinant": {
+        "count": 255,
+        "min": 0.778067111003203,
+        "median": 0.9999998154353186,
+        "max": 1.0560378002121622,
+        "max_frame": 8040,
+        "max_actor_id": 339
+      },
+      "normalized_determinant": {
+        "count": 255,
+        "min": 0.9999999999999907,
+        "median": 0.9999999999999998,
+        "max": 1.0000000000000002,
+        "max_frame": 6920,
+        "max_actor_id": 339
+      },
+      "max_normalized_axis_dot": {
+        "count": 255,
+        "min": 1.2111591438969393e-09,
+        "median": 1.853847406488307e-08,
+        "max": 1.237241835753966e-07,
+        "max_frame": 9960,
+        "max_actor_id": 339
+      }
+    },
+    "invalid_base_frames": [],
+    "invalid_joint0_frames": [],
+    "reflected_base_frames": [],
+    "reflected_joint0_frames": []
+  },
+  "player_grounded_unbound_moving_status0": {
+    "samples": 255,
+    "angles": {
+      "base_front_vs_front_degrees": {
+        "count": 255,
+        "min": 0.01814202000470342,
+        "median": 2.700967823406141,
+        "max": 7.696609645558465,
+        "max_frame": 7730,
+        "max_actor_id": 339
+      },
+      "base_side_vs_side_degrees": {
+        "count": 255,
+        "min": 0.0007023563595007453,
+        "median": 2.3543006346439403,
+        "max": 12.920914547876379,
+        "max_frame": 9550,
+        "max_actor_id": 339
+      },
+      "base_up_vs_direction_up_degrees": {
+        "count": 255,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 1.2074182697257333e-06,
+        "max_frame": 6900,
+        "max_actor_id": 339
+      },
+      "base_up_vs_ground_normal_degrees": {
+        "count": 255,
+        "min": 0.2011378600105944,
+        "median": 5.485480313143261,
+        "max": 49.16914167991776,
+        "max_frame": 9540,
+        "max_actor_id": 339
+      },
+      "base_up_vs_head_degrees": {
+        "count": 255,
+        "min": 0.3454477492489432,
+        "median": 4.348604798742738,
+        "max": 14.000374496823477,
+        "max_frame": 9550,
+        "max_actor_id": 339
+      },
+      "base_up_vs_inverse_gravity_degrees": {
+        "count": 255,
+        "min": 0.02461174444789153,
+        "median": 2.9274069557310534,
+        "max": 13.38181411491726,
+        "max_frame": 9550,
+        "max_actor_id": 339
+      },
+      "base_up_vs_movement_up_degrees": {
+        "count": 255,
+        "min": 0.02201212073614956,
+        "median": 1.7697280656550713,
+        "max": 26.67840108890567,
+        "max_frame": 9550,
+        "max_actor_id": 339
+      },
+      "camera_target_vs_head_degrees": {
+        "count": 255,
+        "min": 0.0,
+        "median": 0.06597530920347822,
+        "max": 2.6747200678603456,
+        "max_frame": 10020,
+        "max_actor_id": 339
+      },
+      "camera_up_vs_head_degrees": {
+        "count": 255,
+        "min": 0.0,
+        "median": 3.6012721516430695,
+        "max": 26.32929325862463,
+        "max_frame": 9550,
+        "max_actor_id": 339
+      },
+      "camera_up_vs_target_degrees": {
+        "count": 255,
+        "min": 0.0,
+        "median": 3.374329628096895,
+        "max": 23.97161351278418,
+        "max_frame": 9550,
+        "max_actor_id": 339
+      },
+      "joint0_vs_base_front_degrees": {
+        "count": 255,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 87.97056016967107,
+        "max_frame": 6830,
+        "max_actor_id": 339
+      },
+      "joint0_vs_base_side_degrees": {
+        "count": 255,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 87.97056449894943,
+        "max_frame": 6830,
+        "max_actor_id": 339
+      },
+      "joint0_vs_base_up_degrees": {
+        "count": 255,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 1.4787793334710982e-06,
+        "max_frame": 7960,
+        "max_actor_id": 339
+      }
+    },
+    "base": {
+      "determinant": {
+        "count": 255,
+        "min": 0.9999996129024733,
+        "median": 0.9999998301589833,
+        "max": 1.0000000075149906,
+        "max_frame": 7100,
+        "max_actor_id": 339
+      },
+      "normalized_determinant": {
+        "count": 255,
+        "min": 0.9999999999999979,
+        "median": 0.9999999999999998,
+        "max": 1.0000000000000002,
+        "max_frame": 6920,
+        "max_actor_id": 339
+      },
+      "max_normalized_axis_dot": {
+        "count": 255,
+        "min": 1.2111591438969393e-09,
+        "median": 1.785889069960689e-08,
+        "max": 5.411550405010068e-08,
+        "max_frame": 7220,
+        "max_actor_id": 339
+      }
+    },
+    "joint0": {
+      "determinant": {
+        "count": 255,
+        "min": 0.778067111003203,
+        "median": 0.9999998154353186,
+        "max": 1.0560378002121622,
+        "max_frame": 8040,
+        "max_actor_id": 339
+      },
+      "normalized_determinant": {
+        "count": 255,
+        "min": 0.9999999999999907,
+        "median": 0.9999999999999998,
+        "max": 1.0000000000000002,
+        "max_frame": 6920,
+        "max_actor_id": 339
+      },
+      "max_normalized_axis_dot": {
+        "count": 255,
+        "min": 1.2111591438969393e-09,
+        "median": 1.853847406488307e-08,
+        "max": 1.237241835753966e-07,
+        "max_frame": 9960,
+        "max_actor_id": 339
+      }
+    },
+    "invalid_base_frames": [],
+    "invalid_joint0_frames": [],
+    "reflected_base_frames": [],
+    "reflected_joint0_frames": []
+  },
+  "player_by_status_and_active_state": {
+    "0:no_active_state": {
+      "samples": 501,
+      "angles": {
+        "base_front_vs_front_degrees": {
+          "count": 501,
+          "min": 0.0,
+          "median": 0.8207528730727269,
+          "max": 26.061617594424074,
+          "max_frame": 8210,
+          "max_actor_id": 339
+        },
+        "base_side_vs_side_degrees": {
+          "count": 501,
+          "min": 1.2074182697257333e-06,
+          "median": 0.7612675737231157,
+          "max": 78.9726757240296,
+          "max_frame": 8210,
+          "max_actor_id": 339
+        },
+        "base_up_vs_direction_up_degrees": {
+          "count": 501,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 1.2074182697257333e-06,
+          "max_frame": 6900,
+          "max_actor_id": 339
+        },
+        "base_up_vs_ground_normal_degrees": {
+          "count": 501,
+          "min": 0.026438673587422187,
+          "median": 6.824412615328254,
+          "max": 150.53753656149993,
+          "max_frame": 8280,
+          "max_actor_id": 339
+        },
+        "base_up_vs_head_degrees": {
+          "count": 501,
+          "min": 0.0,
+          "median": 1.3424841341074518,
+          "max": 80.10585347323588,
+          "max_frame": 8210,
+          "max_actor_id": 339
+        },
+        "base_up_vs_inverse_gravity_degrees": {
+          "count": 501,
+          "min": 1.0526028440638427e-05,
+          "median": 0.7032247779235733,
+          "max": 80.10585306483236,
+          "max_frame": 8210,
+          "max_actor_id": 339
+        },
+        "base_up_vs_movement_up_degrees": {
+          "count": 501,
+          "min": 0.02201212073614956,
+          "median": 3.380978854565017,
+          "max": 148.996560333885,
+          "max_frame": 8280,
+          "max_actor_id": 339
+        },
+        "camera_target_vs_head_degrees": {
+          "count": 501,
+          "min": 0.0,
+          "median": 0.06576144313547518,
+          "max": 147.60147294350767,
+          "max_frame": 8210,
+          "max_actor_id": 339
+        },
+        "camera_up_vs_head_degrees": {
+          "count": 501,
+          "min": 0.0,
+          "median": 0.43864789370844237,
+          "max": 147.51963178155194,
+          "max_frame": 8210,
+          "max_actor_id": 339
+        },
+        "camera_up_vs_target_degrees": {
+          "count": 501,
+          "min": 0.0,
+          "median": 1.827131456828435,
+          "max": 138.33638328142584,
+          "max_frame": 8280,
+          "max_actor_id": 339
+        },
+        "joint0_vs_base_front_degrees": {
+          "count": 501,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 87.97056016967107,
+          "max_frame": 6830,
+          "max_actor_id": 339
+        },
+        "joint0_vs_base_side_degrees": {
+          "count": 501,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 87.97056449894943,
+          "max_frame": 6830,
+          "max_actor_id": 339
+        },
+        "joint0_vs_base_up_degrees": {
+          "count": 501,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 80.10585408512536,
+          "max_frame": 8210,
+          "max_actor_id": 339
+        }
+      },
+      "base": {
+        "determinant": {
+          "count": 501,
+          "min": 0.999999601896705,
+          "median": 0.99999981090271,
+          "max": 1.0000000075149906,
+          "max_frame": 7100,
+          "max_actor_id": 339
+        },
+        "normalized_determinant": {
+          "count": 501,
+          "min": 0.9999999999999979,
+          "median": 0.9999999999999998,
+          "max": 1.0000000000000002,
+          "max_frame": 6920,
+          "max_actor_id": 339
+        },
+        "max_normalized_axis_dot": {
+          "count": 501,
+          "min": 1.2111591438969393e-09,
+          "median": 1.9966284126038403e-08,
+          "max": 5.411550405010068e-08,
+          "max_frame": 7220,
+          "max_actor_id": 339
+        }
+      },
+      "joint0": {
+        "determinant": {
+          "count": 501,
+          "min": 0.778067111003203,
+          "median": 0.9999998240699106,
+          "max": 1.0560378002121622,
+          "max_frame": 8040,
+          "max_actor_id": 339
+        },
+        "normalized_determinant": {
+          "count": 501,
+          "min": 0.9999998053503677,
+          "median": 0.9999999999999996,
+          "max": 1.0000000000000002,
+          "max_frame": 6920,
+          "max_actor_id": 339
+        },
+        "max_normalized_axis_dot": {
+          "count": 501,
+          "min": 1.2111591438969393e-09,
+          "median": 2.439713694957213e-08,
+          "max": 0.000524216363937402,
+          "max_frame": 8970,
+          "max_actor_id": 339
+        }
+      },
+      "invalid_base_frames": [],
+      "invalid_joint0_frames": [],
+      "reflected_base_frames": [],
+      "reflected_joint0_frames": []
+    },
+    "19:9MarioWarp": {
+      "samples": 16,
+      "angles": {
+        "base_front_vs_front_degrees": {
+          "count": 16,
+          "min": 0.03386138981020367,
+          "median": 0.09048004773806798,
+          "max": 0.5867863369023149,
+          "max_frame": 9770,
+          "max_actor_id": 339
+        },
+        "base_side_vs_side_degrees": {
+          "count": 16,
+          "min": 0.04135136257869471,
+          "median": 0.14134923663431478,
+          "max": 0.17413256097478105,
+          "max_frame": 9810,
+          "max_actor_id": 339
+        },
+        "base_up_vs_direction_up_degrees": {
+          "count": 16,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.07872987539083613,
+          "max_frame": 9770,
+          "max_actor_id": 339
+        },
+        "base_up_vs_ground_normal_degrees": {
+          "count": 16,
+          "min": 4.77853394476322,
+          "median": 5.066967500833076,
+          "max": 7.025908494184142,
+          "max_frame": 9770,
+          "max_actor_id": 339
+        },
+        "base_up_vs_head_degrees": {
+          "count": 16,
+          "min": 0.03403912882460848,
+          "median": 0.06391126438605407,
+          "max": 0.5446943813222456,
+          "max_frame": 9770,
+          "max_actor_id": 339
+        },
+        "base_up_vs_inverse_gravity_degrees": {
+          "count": 16,
+          "min": 0.09862637554642198,
+          "median": 3.6765868755233377,
+          "max": 6.727253996895315,
+          "max_frame": 9770,
+          "max_actor_id": 339
+        },
+        "base_up_vs_movement_up_degrees": {
+          "count": 16,
+          "min": 0.09236877685349879,
+          "median": 3.7173951103218434,
+          "max": 6.192988498272423,
+          "max_frame": 9800,
+          "max_actor_id": 339
+        },
+        "camera_target_vs_head_degrees": {
+          "count": 16,
+          "min": 0.0,
+          "median": 8.537736462515939e-07,
+          "max": 0.05533674355898338,
+          "max_frame": 9810,
+          "max_actor_id": 339
+        },
+        "camera_up_vs_head_degrees": {
+          "count": 16,
+          "min": 8.537736462515939e-07,
+          "median": 0.023574010620822324,
+          "max": 0.9505606208701021,
+          "max_frame": 9770,
+          "max_actor_id": 339
+        },
+        "camera_up_vs_target_degrees": {
+          "count": 16,
+          "min": 8.537736462515939e-07,
+          "median": 0.023574010620822324,
+          "max": 0.9505606208701021,
+          "max_frame": 9770,
+          "max_actor_id": 339
+        },
+        "joint0_vs_base_front_degrees": {
+          "count": 16,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 1.2074182697257333e-06,
+          "max_frame": 9770,
+          "max_actor_id": 339
+        },
+        "joint0_vs_base_side_degrees": {
+          "count": 16,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 1.2074182697257333e-06,
+          "max_frame": 9840,
+          "max_actor_id": 339
+        },
+        "joint0_vs_base_up_degrees": {
+          "count": 16,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 8.537736462515939e-07,
+          "max_frame": 9780,
+          "max_actor_id": 339
+        }
+      },
+      "base": {
+        "determinant": {
+          "count": 16,
+          "min": 0.9999996191018455,
+          "median": 0.9999997617283001,
+          "max": 1.000000043867008,
+          "max_frame": 9770,
+          "max_actor_id": 339
+        },
+        "normalized_determinant": {
+          "count": 16,
+          "min": 0.9999999999999986,
+          "median": 0.9999999999999994,
+          "max": 1.0,
+          "max_frame": 9910,
+          "max_actor_id": 339
+        },
+        "max_normalized_axis_dot": {
+          "count": 16,
+          "min": 9.235018333386691e-09,
+          "median": 2.8573762939076985e-08,
+          "max": 4.503932191091131e-08,
+          "max_frame": 9800,
+          "max_actor_id": 339
+        }
+      },
+      "joint0": {
+        "determinant": {
+          "count": 16,
+          "min": 0.9999996191018455,
+          "median": 0.9999997617283001,
+          "max": 1.000000043867008,
+          "max_frame": 9770,
+          "max_actor_id": 339
+        },
+        "normalized_determinant": {
+          "count": 16,
+          "min": 0.9999999999999986,
+          "median": 0.9999999999999994,
+          "max": 1.0,
+          "max_frame": 9910,
+          "max_actor_id": 339
+        },
+        "max_normalized_axis_dot": {
+          "count": 16,
+          "min": 9.235018333386691e-09,
+          "median": 2.8573762939076985e-08,
+          "max": 4.503932191091131e-08,
+          "max_frame": 9800,
+          "max_actor_id": 339
+        }
+      },
+      "invalid_base_frames": [],
+      "invalid_joint0_frames": [],
+      "reflected_base_frames": [],
+      "reflected_joint0_frames": []
+    }
+  },
+  "player_status19_recovery_or_warp": {
+    "samples": 16,
+    "angles": {
+      "base_front_vs_front_degrees": {
+        "count": 16,
+        "min": 0.03386138981020367,
+        "median": 0.09048004773806798,
+        "max": 0.5867863369023149,
+        "max_frame": 9770,
+        "max_actor_id": 339
+      },
+      "base_side_vs_side_degrees": {
+        "count": 16,
+        "min": 0.04135136257869471,
+        "median": 0.14134923663431478,
+        "max": 0.17413256097478105,
+        "max_frame": 9810,
+        "max_actor_id": 339
+      },
+      "base_up_vs_direction_up_degrees": {
+        "count": 16,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 0.07872987539083613,
+        "max_frame": 9770,
+        "max_actor_id": 339
+      },
+      "base_up_vs_ground_normal_degrees": {
+        "count": 16,
+        "min": 4.77853394476322,
+        "median": 5.066967500833076,
+        "max": 7.025908494184142,
+        "max_frame": 9770,
+        "max_actor_id": 339
+      },
+      "base_up_vs_head_degrees": {
+        "count": 16,
+        "min": 0.03403912882460848,
+        "median": 0.06391126438605407,
+        "max": 0.5446943813222456,
+        "max_frame": 9770,
+        "max_actor_id": 339
+      },
+      "base_up_vs_inverse_gravity_degrees": {
+        "count": 16,
+        "min": 0.09862637554642198,
+        "median": 3.6765868755233377,
+        "max": 6.727253996895315,
+        "max_frame": 9770,
+        "max_actor_id": 339
+      },
+      "base_up_vs_movement_up_degrees": {
+        "count": 16,
+        "min": 0.09236877685349879,
+        "median": 3.7173951103218434,
+        "max": 6.192988498272423,
+        "max_frame": 9800,
+        "max_actor_id": 339
+      },
+      "camera_target_vs_head_degrees": {
+        "count": 16,
+        "min": 0.0,
+        "median": 8.537736462515939e-07,
+        "max": 0.05533674355898338,
+        "max_frame": 9810,
+        "max_actor_id": 339
+      },
+      "camera_up_vs_head_degrees": {
+        "count": 16,
+        "min": 8.537736462515939e-07,
+        "median": 0.023574010620822324,
+        "max": 0.9505606208701021,
+        "max_frame": 9770,
+        "max_actor_id": 339
+      },
+      "camera_up_vs_target_degrees": {
+        "count": 16,
+        "min": 8.537736462515939e-07,
+        "median": 0.023574010620822324,
+        "max": 0.9505606208701021,
+        "max_frame": 9770,
+        "max_actor_id": 339
+      },
+      "joint0_vs_base_front_degrees": {
+        "count": 16,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 1.2074182697257333e-06,
+        "max_frame": 9770,
+        "max_actor_id": 339
+      },
+      "joint0_vs_base_side_degrees": {
+        "count": 16,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 1.2074182697257333e-06,
+        "max_frame": 9840,
+        "max_actor_id": 339
+      },
+      "joint0_vs_base_up_degrees": {
+        "count": 16,
+        "min": 0.0,
+        "median": 0.0,
+        "max": 8.537736462515939e-07,
+        "max_frame": 9780,
+        "max_actor_id": 339
+      }
+    },
+    "base": {
+      "determinant": {
+        "count": 16,
+        "min": 0.9999996191018455,
+        "median": 0.9999997617283001,
+        "max": 1.000000043867008,
+        "max_frame": 9770,
+        "max_actor_id": 339
+      },
+      "normalized_determinant": {
+        "count": 16,
+        "min": 0.9999999999999986,
+        "median": 0.9999999999999994,
+        "max": 1.0,
+        "max_frame": 9910,
+        "max_actor_id": 339
+      },
+      "max_normalized_axis_dot": {
+        "count": 16,
+        "min": 9.235018333386691e-09,
+        "median": 2.8573762939076985e-08,
+        "max": 4.503932191091131e-08,
+        "max_frame": 9800,
+        "max_actor_id": 339
+      }
+    },
+    "joint0": {
+      "determinant": {
+        "count": 16,
+        "min": 0.9999996191018455,
+        "median": 0.9999997617283001,
+        "max": 1.000000043867008,
+        "max_frame": 9770,
+        "max_actor_id": 339
+      },
+      "normalized_determinant": {
+        "count": 16,
+        "min": 0.9999999999999986,
+        "median": 0.9999999999999994,
+        "max": 1.0,
+        "max_frame": 9910,
+        "max_actor_id": 339
+      },
+      "max_normalized_axis_dot": {
+        "count": 16,
+        "min": 9.235018333386691e-09,
+        "median": 2.8573762939076985e-08,
+        "max": 4.503932191091131e-08,
+        "max_frame": 9800,
+        "max_actor_id": 339
+      }
+    },
+    "invalid_base_frames": [],
+    "invalid_joint0_frames": [],
+    "reflected_base_frames": [],
+    "reflected_joint0_frames": []
+  },
+  "stable_head_snapshot_intervals": [
+    {
+      "from_frame": 6830,
+      "to_frame": 6840,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 1.4787793334710982e-06,
+      "camera_up_vs_head_after_degrees": 1.4787793334710982e-06
+    },
+    {
+      "from_frame": 7360,
+      "to_frame": 7370,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7370,
+      "to_frame": 7380,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7380,
+      "to_frame": 7390,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7390,
+      "to_frame": 7400,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7400,
+      "to_frame": 7410,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7410,
+      "to_frame": 7420,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7420,
+      "to_frame": 7430,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7430,
+      "to_frame": 7440,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7440,
+      "to_frame": 7450,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7450,
+      "to_frame": 7460,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7460,
+      "to_frame": 7470,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7470,
+      "to_frame": 7480,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7480,
+      "to_frame": 7490,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7490,
+      "to_frame": 7500,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7500,
+      "to_frame": 7510,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7510,
+      "to_frame": 7520,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7520,
+      "to_frame": 7530,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7530,
+      "to_frame": 7540,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7540,
+      "to_frame": 7550,
+      "timer_before": 15,
+      "timer_after": 10,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7550,
+      "to_frame": 7560,
+      "timer_before": 10,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7560,
+      "to_frame": 7570,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7570,
+      "to_frame": 7580,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7580,
+      "to_frame": 7590,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7590,
+      "to_frame": 7600,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7600,
+      "to_frame": 7610,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7610,
+      "to_frame": 7620,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7620,
+      "to_frame": 7630,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7630,
+      "to_frame": 7640,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7640,
+      "to_frame": 7650,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7650,
+      "to_frame": 7660,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7660,
+      "to_frame": 7670,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7670,
+      "to_frame": 7680,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7680,
+      "to_frame": 7690,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7690,
+      "to_frame": 7700,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7700,
+      "to_frame": 7710,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7730,
+      "to_frame": 7740,
+      "timer_before": 10,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 1.656099711057143,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 7770,
+      "to_frame": 7780,
+      "timer_before": 12,
+      "timer_after": 2,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.1525991201774872,
+      "camera_up_vs_head_after_degrees": 3.818191820832846e-06
+    },
+    {
+      "from_frame": 8130,
+      "to_frame": 8140,
+      "timer_before": 14,
+      "timer_after": 14,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 5.0121087716549155,
+      "camera_up_vs_head_after_degrees": 5.0121087716549155
+    },
+    {
+      "from_frame": 8140,
+      "to_frame": 8150,
+      "timer_before": 14,
+      "timer_after": 14,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 5.0121087716549155,
+      "camera_up_vs_head_after_degrees": 5.0121087716549155
+    },
+    {
+      "from_frame": 8150,
+      "to_frame": 8160,
+      "timer_before": 14,
+      "timer_after": 14,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 5.0121087716549155,
+      "camera_up_vs_head_after_degrees": 5.0121087716549155
+    },
+    {
+      "from_frame": 8160,
+      "to_frame": 8170,
+      "timer_before": 14,
+      "timer_after": 14,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 5.0121087716549155,
+      "camera_up_vs_head_after_degrees": 5.0121087716549155
+    },
+    {
+      "from_frame": 8170,
+      "to_frame": 8180,
+      "timer_before": 14,
+      "timer_after": 14,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 5.0121087716549155,
+      "camera_up_vs_head_after_degrees": 5.0121087716549155
+    },
+    {
+      "from_frame": 8180,
+      "to_frame": 8190,
+      "timer_before": 14,
+      "timer_after": 14,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 5.0121087716549155,
+      "camera_up_vs_head_after_degrees": 5.0121087716549155
+    },
+    {
+      "from_frame": 8190,
+      "to_frame": 8200,
+      "timer_before": 14,
+      "timer_after": 14,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 5.0121087716549155,
+      "camera_up_vs_head_after_degrees": 5.0121087716549155
+    },
+    {
+      "from_frame": 8210,
+      "to_frame": 8220,
+      "timer_before": 14,
+      "timer_after": 14,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 147.51963178155194,
+      "camera_up_vs_head_after_degrees": 147.51963178155194
+    },
+    {
+      "from_frame": 8220,
+      "to_frame": 8230,
+      "timer_before": 14,
+      "timer_after": 14,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 147.51963178155194,
+      "camera_up_vs_head_after_degrees": 147.51963178155194
+    },
+    {
+      "from_frame": 8230,
+      "to_frame": 8240,
+      "timer_before": 14,
+      "timer_after": 14,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 147.51963178155194,
+      "camera_up_vs_head_after_degrees": 147.51963178155194
+    },
+    {
+      "from_frame": 8240,
+      "to_frame": 8250,
+      "timer_before": 14,
+      "timer_after": 14,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 147.51963178155194,
+      "camera_up_vs_head_after_degrees": 147.51963178155194
+    },
+    {
+      "from_frame": 8250,
+      "to_frame": 8260,
+      "timer_before": 14,
+      "timer_after": 14,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 147.51963178155194,
+      "camera_up_vs_head_after_degrees": 147.51963178155194
+    },
+    {
+      "from_frame": 8260,
+      "to_frame": 8270,
+      "timer_before": 14,
+      "timer_after": 14,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 147.51963178155194,
+      "camera_up_vs_head_after_degrees": 147.51963178155194
+    },
+    {
+      "from_frame": 8270,
+      "to_frame": 8280,
+      "timer_before": 14,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 147.51963178155194,
+      "camera_up_vs_head_after_degrees": 138.33638328142584
+    },
+    {
+      "from_frame": 8280,
+      "to_frame": 8290,
+      "timer_before": 15,
+      "timer_after": 5,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 138.33638328142584,
+      "camera_up_vs_head_after_degrees": 0.45832224353786255
+    },
+    {
+      "from_frame": 8540,
+      "to_frame": 8550,
+      "timer_before": 13,
+      "timer_after": 3,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 2.507660552631317,
+      "camera_up_vs_head_after_degrees": 0.0005492373047334929
+    },
+    {
+      "from_frame": 8980,
+      "to_frame": 8990,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 8990,
+      "to_frame": 9000,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9000,
+      "to_frame": 9010,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9010,
+      "to_frame": 9020,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9020,
+      "to_frame": 9030,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9030,
+      "to_frame": 9040,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9040,
+      "to_frame": 9050,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9050,
+      "to_frame": 9060,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9060,
+      "to_frame": 9070,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9070,
+      "to_frame": 9080,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9080,
+      "to_frame": 9090,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9090,
+      "to_frame": 9100,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9100,
+      "to_frame": 9110,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9110,
+      "to_frame": 9120,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9120,
+      "to_frame": 9130,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9130,
+      "to_frame": 9140,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9140,
+      "to_frame": 9150,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9150,
+      "to_frame": 9160,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9160,
+      "to_frame": 9170,
+      "timer_before": 15,
+      "timer_after": 9,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 1.2074182697257333e-06
+    },
+    {
+      "from_frame": 9170,
+      "to_frame": 9180,
+      "timer_before": 9,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 1.2074182697257333e-06,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9180,
+      "to_frame": 9190,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9190,
+      "to_frame": 9200,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9200,
+      "to_frame": 9210,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9210,
+      "to_frame": 9220,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9220,
+      "to_frame": 9230,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9230,
+      "to_frame": 9240,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9240,
+      "to_frame": 9250,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9250,
+      "to_frame": 9260,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9260,
+      "to_frame": 9270,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9270,
+      "to_frame": 9280,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9280,
+      "to_frame": 9290,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9290,
+      "to_frame": 9300,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9300,
+      "to_frame": 9310,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9310,
+      "to_frame": 9320,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9320,
+      "to_frame": 9330,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9340,
+      "to_frame": 9350,
+      "timer_before": 11,
+      "timer_after": 1,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.3485888566308804,
+      "camera_up_vs_head_after_degrees": 1.2074182697257333e-06
+    },
+    {
+      "from_frame": 9350,
+      "to_frame": 9360,
+      "timer_before": 1,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 1.2074182697257333e-06,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9360,
+      "to_frame": 9370,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 9770,
+      "to_frame": 9780,
+      "timer_before": 15,
+      "timer_after": 5,
+      "status": 19,
+      "state_type": "9MarioWarp",
+      "camera_up_vs_head_before_degrees": 0.9505606208701021,
+      "camera_up_vs_head_after_degrees": 0.0031414865546774786
+    },
+    {
+      "from_frame": 9780,
+      "to_frame": 9790,
+      "timer_before": 5,
+      "timer_after": 0,
+      "status": 19,
+      "state_type": "9MarioWarp",
+      "camera_up_vs_head_before_degrees": 0.0031414865546774786,
+      "camera_up_vs_head_after_degrees": 1.2074182697257333e-06
+    },
+    {
+      "from_frame": 9790,
+      "to_frame": 9800,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 19,
+      "state_type": "9MarioWarp",
+      "camera_up_vs_head_before_degrees": 1.2074182697257333e-06,
+      "camera_up_vs_head_after_degrees": 1.2074182697257333e-06
+    },
+    {
+      "from_frame": 9850,
+      "to_frame": 9860,
+      "timer_before": 13,
+      "timer_after": 3,
+      "status": 19,
+      "state_type": "9MarioWarp",
+      "camera_up_vs_head_before_degrees": 0.22008858462808092,
+      "camera_up_vs_head_after_degrees": 4.7773194090564826e-05
+    },
+    {
+      "from_frame": 9860,
+      "to_frame": 9870,
+      "timer_before": 3,
+      "timer_after": 0,
+      "status": 19,
+      "state_type": "9MarioWarp",
+      "camera_up_vs_head_before_degrees": 4.7773194090564826e-05,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 9870,
+      "to_frame": 9880,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 19,
+      "state_type": "9MarioWarp",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 9880,
+      "to_frame": 9890,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 19,
+      "state_type": "9MarioWarp",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 9890,
+      "to_frame": 9900,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 19,
+      "state_type": "9MarioWarp",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 9930,
+      "to_frame": 9940,
+      "timer_before": 9,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.010738447229041881,
+      "camera_up_vs_head_after_degrees": 1.4787793334710982e-06
+    },
+    {
+      "from_frame": 9940,
+      "to_frame": 9950,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 1.4787793334710982e-06,
+      "camera_up_vs_head_after_degrees": 1.4787793334710982e-06
+    },
+    {
+      "from_frame": 9950,
+      "to_frame": 9960,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 1.4787793334710982e-06,
+      "camera_up_vs_head_after_degrees": 1.4787793334710982e-06
+    },
+    {
+      "from_frame": 9960,
+      "to_frame": 9970,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 1.4787793334710982e-06,
+      "camera_up_vs_head_after_degrees": 1.4787793334710982e-06
+    },
+    {
+      "from_frame": 10600,
+      "to_frame": 10610,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10610,
+      "to_frame": 10620,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10620,
+      "to_frame": 10630,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10630,
+      "to_frame": 10640,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10640,
+      "to_frame": 10650,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10650,
+      "to_frame": 10660,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10660,
+      "to_frame": 10670,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10670,
+      "to_frame": 10680,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10680,
+      "to_frame": 10690,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10690,
+      "to_frame": 10700,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10700,
+      "to_frame": 10710,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10710,
+      "to_frame": 10720,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10720,
+      "to_frame": 10730,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10730,
+      "to_frame": 10740,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10740,
+      "to_frame": 10750,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10750,
+      "to_frame": 10760,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10760,
+      "to_frame": 10770,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10770,
+      "to_frame": 10780,
+      "timer_before": 15,
+      "timer_after": 15,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10780,
+      "to_frame": 10790,
+      "timer_before": 15,
+      "timer_after": 9,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 10790,
+      "to_frame": 10800,
+      "timer_before": 9,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10800,
+      "to_frame": 10810,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10810,
+      "to_frame": 10820,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10820,
+      "to_frame": 10830,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10830,
+      "to_frame": 10840,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10840,
+      "to_frame": 10850,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10850,
+      "to_frame": 10860,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10860,
+      "to_frame": 10870,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10870,
+      "to_frame": 10880,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10880,
+      "to_frame": 10890,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10890,
+      "to_frame": 10900,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10900,
+      "to_frame": 10910,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10910,
+      "to_frame": 10920,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10920,
+      "to_frame": 10930,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10930,
+      "to_frame": 10940,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10940,
+      "to_frame": 10950,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10950,
+      "to_frame": 10960,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10960,
+      "to_frame": 10970,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10970,
+      "to_frame": 10980,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10980,
+      "to_frame": 10990,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 10990,
+      "to_frame": 11000,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11000,
+      "to_frame": 11010,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11010,
+      "to_frame": 11020,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11020,
+      "to_frame": 11030,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11030,
+      "to_frame": 11040,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11040,
+      "to_frame": 11050,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11050,
+      "to_frame": 11060,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11060,
+      "to_frame": 11070,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11070,
+      "to_frame": 11080,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11080,
+      "to_frame": 11090,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11090,
+      "to_frame": 11100,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11100,
+      "to_frame": 11110,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11110,
+      "to_frame": 11120,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11120,
+      "to_frame": 11130,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11130,
+      "to_frame": 11140,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11140,
+      "to_frame": 11150,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11150,
+      "to_frame": 11160,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11160,
+      "to_frame": 11170,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11170,
+      "to_frame": 11180,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11180,
+      "to_frame": 11190,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11190,
+      "to_frame": 11200,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11200,
+      "to_frame": 11210,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11210,
+      "to_frame": 11220,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11220,
+      "to_frame": 11230,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11230,
+      "to_frame": 11240,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11250,
+      "to_frame": 11260,
+      "timer_before": 9,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.15652850492869064,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11260,
+      "to_frame": 11270,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11270,
+      "to_frame": 11280,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11280,
+      "to_frame": 11290,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11290,
+      "to_frame": 11300,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11300,
+      "to_frame": 11310,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11310,
+      "to_frame": 11320,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11320,
+      "to_frame": 11330,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11330,
+      "to_frame": 11340,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11340,
+      "to_frame": 11350,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11350,
+      "to_frame": 11360,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11360,
+      "to_frame": 11370,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11370,
+      "to_frame": 11380,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11380,
+      "to_frame": 11390,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11390,
+      "to_frame": 11400,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11400,
+      "to_frame": 11410,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11410,
+      "to_frame": 11420,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11420,
+      "to_frame": 11430,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11430,
+      "to_frame": 11440,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11440,
+      "to_frame": 11450,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11450,
+      "to_frame": 11460,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11460,
+      "to_frame": 11470,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11470,
+      "to_frame": 11480,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11480,
+      "to_frame": 11490,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11490,
+      "to_frame": 11500,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11500,
+      "to_frame": 11510,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11510,
+      "to_frame": 11520,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11520,
+      "to_frame": 11530,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11530,
+      "to_frame": 11540,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11540,
+      "to_frame": 11550,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11550,
+      "to_frame": 11560,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11560,
+      "to_frame": 11570,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11570,
+      "to_frame": 11580,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11580,
+      "to_frame": 11590,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11590,
+      "to_frame": 11600,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11600,
+      "to_frame": 11610,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11610,
+      "to_frame": 11620,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11620,
+      "to_frame": 11630,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11630,
+      "to_frame": 11640,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11640,
+      "to_frame": 11650,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11650,
+      "to_frame": 11660,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11660,
+      "to_frame": 11670,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11670,
+      "to_frame": 11680,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11680,
+      "to_frame": 11690,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11690,
+      "to_frame": 11700,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11700,
+      "to_frame": 11710,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11710,
+      "to_frame": 11720,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 0.0,
+      "camera_up_vs_head_after_degrees": 0.0
+    },
+    {
+      "from_frame": 11730,
+      "to_frame": 11740,
+      "timer_before": 11,
+      "timer_after": 1,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 7.091976543484069e-06,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11740,
+      "to_frame": 11750,
+      "timer_before": 1,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11750,
+      "to_frame": 11760,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11760,
+      "to_frame": 11770,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11770,
+      "to_frame": 11780,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11780,
+      "to_frame": 11790,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11790,
+      "to_frame": 11800,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11800,
+      "to_frame": 11810,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11810,
+      "to_frame": 11820,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11820,
+      "to_frame": 11830,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11830,
+      "to_frame": 11840,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11840,
+      "to_frame": 11850,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11850,
+      "to_frame": 11860,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11860,
+      "to_frame": 11870,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11870,
+      "to_frame": 11880,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11880,
+      "to_frame": 11890,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11890,
+      "to_frame": 11900,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11900,
+      "to_frame": 11910,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11910,
+      "to_frame": 11920,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11920,
+      "to_frame": 11930,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11930,
+      "to_frame": 11940,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11940,
+      "to_frame": 11950,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11950,
+      "to_frame": 11960,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11960,
+      "to_frame": 11970,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11970,
+      "to_frame": 11980,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    },
+    {
+      "from_frame": 11980,
+      "to_frame": 11990,
+      "timer_before": 0,
+      "timer_after": 0,
+      "status": 0,
+      "state_type": "",
+      "camera_up_vs_head_before_degrees": 8.537736462515939e-07,
+      "camera_up_vs_head_after_degrees": 8.537736462515939e-07
+    }
+  ],
+  "alive_unclipped_rabbits": {
+    "906": {
+      "samples": 99,
+      "angles": {
+        "base_front_vs_front_degrees": {
+          "count": 99,
+          "min": 8.537736462515939e-07,
+          "median": 4.434378310818115,
+          "max": 33.521391284802256,
+          "max_frame": 8610,
+          "max_actor_id": 906
+        },
+        "base_up_vs_inverse_gravity_degrees": {
+          "count": 99,
+          "min": 0.024432508582776794,
+          "median": 2.9905774297789556,
+          "max": 4.606387219833713,
+          "max_frame": 7760,
+          "max_actor_id": 906
+        },
+        "joint0_vs_base_front_degrees": {
+          "count": 99,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 1.2074182697257333e-06,
+          "max_frame": 8290,
+          "max_actor_id": 906
+        },
+        "joint0_vs_base_side_degrees": {
+          "count": 99,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 1.4787793334710982e-06,
+          "max_frame": 8800,
+          "max_actor_id": 906
+        },
+        "joint0_vs_base_up_degrees": {
+          "count": 99,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 1.4787793334710982e-06,
+          "max_frame": 8610,
+          "max_actor_id": 906
+        }
+      },
+      "base": {
+        "determinant": {
+          "count": 99,
+          "min": 0.9999997176917717,
+          "median": 1.0000001974500563,
+          "max": 1.0000009001302723,
+          "max_frame": 8760,
+          "max_actor_id": 906
+        },
+        "normalized_determinant": {
+          "count": 99,
+          "min": 0.9999999999998908,
+          "median": 0.9999999999999949,
+          "max": 1.0,
+          "max_frame": 8660,
+          "max_actor_id": 906
+        },
+        "max_normalized_axis_dot": {
+          "count": 99,
+          "min": 5.995980636910175e-09,
+          "median": 7.97795265961021e-08,
+          "max": 4.324830511978628e-07,
+          "max_frame": 8760,
+          "max_actor_id": 906
+        }
+      },
+      "joint0": {
+        "determinant": {
+          "count": 99,
+          "min": 0.9999997176917717,
+          "median": 1.0000001974500563,
+          "max": 1.0000009001302723,
+          "max_frame": 8760,
+          "max_actor_id": 906
+        },
+        "normalized_determinant": {
+          "count": 99,
+          "min": 0.9999999999998908,
+          "median": 0.9999999999999949,
+          "max": 1.0,
+          "max_frame": 8660,
+          "max_actor_id": 906
+        },
+        "max_normalized_axis_dot": {
+          "count": 99,
+          "min": 5.995980636910175e-09,
+          "median": 7.97795265961021e-08,
+          "max": 4.324830511978628e-07,
+          "max_frame": 8760,
+          "max_actor_id": 906
+        }
+      },
+      "invalid_base_frames": [],
+      "invalid_joint0_frames": [],
+      "reflected_base_frames": [],
+      "reflected_joint0_frames": [],
+      "type": "13RunawayRabbit",
+      "first_frame": 7760,
+      "last_frame": 9160,
+      "unique_quaternions": 74,
+      "unique_base_rotations": 75,
+      "quaternion_base_rotation_max_abs_delta": {
+        "count": 99,
+        "min": 2.7878875208386944e-08,
+        "median": 1.4513770896229516e-07,
+        "max": 0.07752507738275138,
+        "max_frame": 7760,
+        "max_actor_id": 906
+      }
+    },
+    "911": {
+      "samples": 72,
+      "angles": {
+        "base_front_vs_front_degrees": {
+          "count": 72,
+          "min": 0.0,
+          "median": 0.0958051307945784,
+          "max": 36.381266649651465,
+          "max_frame": 7320,
+          "max_actor_id": 911
+        },
+        "base_up_vs_inverse_gravity_degrees": {
+          "count": 72,
+          "min": 0.02639160560641366,
+          "median": 2.646085963834383,
+          "max": 21.449277783330928,
+          "max_frame": 6830,
+          "max_actor_id": 911
+        },
+        "joint0_vs_base_front_degrees": {
+          "count": 72,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 1.2074182697257333e-06,
+          "max_frame": 7210,
+          "max_actor_id": 911
+        },
+        "joint0_vs_base_side_degrees": {
+          "count": 72,
+          "min": 0.0,
+          "median": 8.537736462515939e-07,
+          "max": 1.4787793334710982e-06,
+          "max_frame": 7220,
+          "max_actor_id": 911
+        },
+        "joint0_vs_base_up_degrees": {
+          "count": 72,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 1.4787793334710982e-06,
+          "max_frame": 7310,
+          "max_actor_id": 911
+        }
+      },
+      "base": {
+        "determinant": {
+          "count": 72,
+          "min": 0.9999997093613407,
+          "median": 1.00000013151266,
+          "max": 1.0000010643717683,
+          "max_frame": 7260,
+          "max_actor_id": 911
+        },
+        "normalized_determinant": {
+          "count": 72,
+          "min": 0.9999999999998135,
+          "median": 0.9999999999999942,
+          "max": 0.9999999999999999,
+          "max_frame": 7270,
+          "max_actor_id": 911
+        },
+        "max_normalized_axis_dot": {
+          "count": 72,
+          "min": 1.3094095696608576e-08,
+          "median": 6.955616613235627e-08,
+          "max": 4.6210577306360356e-07,
+          "max_frame": 7260,
+          "max_actor_id": 911
+        }
+      },
+      "joint0": {
+        "determinant": {
+          "count": 72,
+          "min": 0.9999997093613407,
+          "median": 1.00000013151266,
+          "max": 1.0000010643717683,
+          "max_frame": 7260,
+          "max_actor_id": 911
+        },
+        "normalized_determinant": {
+          "count": 72,
+          "min": 0.9999999999998135,
+          "median": 0.9999999999999942,
+          "max": 0.9999999999999999,
+          "max_frame": 7270,
+          "max_actor_id": 911
+        },
+        "max_normalized_axis_dot": {
+          "count": 72,
+          "min": 1.3094095696608576e-08,
+          "median": 6.955616613235627e-08,
+          "max": 4.6210577306360356e-07,
+          "max_frame": 7260,
+          "max_actor_id": 911
+        }
+      },
+      "invalid_base_frames": [],
+      "invalid_joint0_frames": [],
+      "reflected_base_frames": [],
+      "reflected_joint0_frames": [],
+      "type": "13RunawayRabbit",
+      "first_frame": 6830,
+      "last_frame": 7540,
+      "unique_quaternions": 26,
+      "unique_base_rotations": 26,
+      "quaternion_base_rotation_max_abs_delta": {
+        "count": 72,
+        "min": 2.9318796279653725e-08,
+        "median": 3.121198943745185e-07,
+        "max": 0.3197848526855501,
+        "max_frame": 6830,
+        "max_actor_id": 911
+      }
+    },
+    "916": {
+      "samples": 292,
+      "angles": {
+        "base_front_vs_front_degrees": {
+          "count": 292,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 54.25502095884172,
+          "max_frame": 9910,
+          "max_actor_id": 916
+        },
+        "base_up_vs_inverse_gravity_degrees": {
+          "count": 292,
+          "min": 0.02260799155754136,
+          "median": 2.735134957409932,
+          "max": 3.6247614720291077,
+          "max_frame": 10170,
+          "max_actor_id": 916
+        },
+        "joint0_vs_base_front_degrees": {
+          "count": 292,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 1.4787793334710982e-06,
+          "max_frame": 10320,
+          "max_actor_id": 916
+        },
+        "joint0_vs_base_side_degrees": {
+          "count": 292,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 1.4787793334710982e-06,
+          "max_frame": 10590,
+          "max_actor_id": 916
+        },
+        "joint0_vs_base_up_degrees": {
+          "count": 292,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 1.2074182697257333e-06,
+          "max_frame": 9780,
+          "max_actor_id": 916
+        }
+      },
+      "base": {
+        "determinant": {
+          "count": 292,
+          "min": 0.9999998046791208,
+          "median": 1.0000001782554713,
+          "max": 1.0000007988137853,
+          "max_frame": 10200,
+          "max_actor_id": 916
+        },
+        "normalized_determinant": {
+          "count": 292,
+          "min": 0.9999999999999178,
+          "median": 0.999999999999996,
+          "max": 1.0,
+          "max_frame": 9910,
+          "max_actor_id": 916
+        },
+        "max_normalized_axis_dot": {
+          "count": 292,
+          "min": 1.1049113506078623e-08,
+          "median": 7.314211417086547e-08,
+          "max": 3.963206019821919e-07,
+          "max_frame": 10200,
+          "max_actor_id": 916
+        }
+      },
+      "joint0": {
+        "determinant": {
+          "count": 292,
+          "min": 0.9999998046791208,
+          "median": 1.0000001782554713,
+          "max": 1.0000007988137853,
+          "max_frame": 10200,
+          "max_actor_id": 916
+        },
+        "normalized_determinant": {
+          "count": 292,
+          "min": 0.9999999999999178,
+          "median": 0.999999999999996,
+          "max": 1.0,
+          "max_frame": 9910,
+          "max_actor_id": 916
+        },
+        "max_normalized_axis_dot": {
+          "count": 292,
+          "min": 1.1049113506078623e-08,
+          "median": 7.314211417086547e-08,
+          "max": 3.963206019821919e-07,
+          "max_frame": 10200,
+          "max_actor_id": 916
+        }
+      },
+      "invalid_base_frames": [],
+      "invalid_joint0_frames": [],
+      "reflected_base_frames": [],
+      "reflected_joint0_frames": [],
+      "type": "13RunawayRabbit",
+      "first_frame": 6830,
+      "last_frame": 10780,
+      "unique_quaternions": 90,
+      "unique_base_rotations": 90,
+      "quaternion_base_rotation_max_abs_delta": {
+        "count": 292,
+        "min": 1.5378072482086225e-08,
+        "median": 0.034245340595745244,
+        "max": 0.034245340595745244,
+        "max_frame": 6830,
+        "max_actor_id": 916
+      }
+    },
+    "921": {
+      "samples": 242,
+      "angles": {
+        "base_front_vs_front_degrees": {
+          "count": 242,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0,
+          "max_frame": 6830,
+          "max_actor_id": 921
+        },
+        "base_up_vs_inverse_gravity_degrees": {
+          "count": 242,
+          "min": 1.012778855985448,
+          "median": 1.012778855985448,
+          "max": 1.012778855985448,
+          "max_frame": 6830,
+          "max_actor_id": 921
+        },
+        "joint0_vs_base_front_degrees": {
+          "count": 242,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0,
+          "max_frame": 6830,
+          "max_actor_id": 921
+        },
+        "joint0_vs_base_side_degrees": {
+          "count": 242,
+          "min": 8.537736462515939e-07,
+          "median": 8.537736462515939e-07,
+          "max": 8.537736462515939e-07,
+          "max_frame": 6830,
+          "max_actor_id": 921
+        },
+        "joint0_vs_base_up_degrees": {
+          "count": 242,
+          "min": 0.0,
+          "median": 0.0,
+          "max": 0.0,
+          "max_frame": 6830,
+          "max_actor_id": 921
+        }
+      },
+      "base": {
+        "determinant": {
+          "count": 242,
+          "min": 0.9999993843447975,
+          "median": 0.9999993843447975,
+          "max": 0.9999993843447975,
+          "max_frame": 6830,
+          "max_actor_id": 921
+        },
+        "normalized_determinant": {
+          "count": 242,
+          "min": 0.9999999999999394,
+          "median": 0.9999999999999394,
+          "max": 0.9999999999999394,
+          "max_frame": 6830,
+          "max_actor_id": 921
+        },
+        "max_normalized_axis_dot": {
+          "count": 242,
+          "min": 2.2953865347341562e-07,
+          "median": 2.2953865347341562e-07,
+          "max": 2.2953865347341562e-07,
+          "max_frame": 6830,
+          "max_actor_id": 921
+        }
+      },
+      "joint0": {
+        "determinant": {
+          "count": 242,
+          "min": 0.9999993843447975,
+          "median": 0.9999993843447975,
+          "max": 0.9999993843447975,
+          "max_frame": 6830,
+          "max_actor_id": 921
+        },
+        "normalized_determinant": {
+          "count": 242,
+          "min": 0.9999999999999394,
+          "median": 0.9999999999999394,
+          "max": 0.9999999999999394,
+          "max_frame": 6830,
+          "max_actor_id": 921
+        },
+        "max_normalized_axis_dot": {
+          "count": 242,
+          "min": 2.2953865347341562e-07,
+          "median": 2.2953865347341562e-07,
+          "max": 2.2953865347341562e-07,
+          "max_frame": 6830,
+          "max_actor_id": 921
+        }
+      },
+      "invalid_base_frames": [],
+      "invalid_joint0_frames": [],
+      "reflected_base_frames": [],
+      "reflected_joint0_frames": [],
+      "type": "13RunawayRabbit",
+      "first_frame": 6830,
+      "last_frame": 11240,
+      "unique_quaternions": 1,
+      "unique_base_rotations": 1,
+      "quaternion_base_rotation_max_abs_delta": {
+        "count": 242,
+        "min": 0.015343313955169524,
+        "median": 0.015343313955169524,
+        "max": 0.015343313955169524,
+        "max_frame": 6830,
+        "max_actor_id": 921
+      }
+    }
+  },
+  "limitations": [
+    "Post-frame stored matrices; no GX upload or pixel verification.",
+    "Ground contact may be cached; movement_low_word on-ground flag retained separately.",
+    "Joint0/base differences can be intentional animation; not automatically errors.",
+    "Basis scale and orthogonality are reported separately; authored scale is not a defect."
+  ]
+}

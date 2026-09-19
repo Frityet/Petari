@@ -1,0 +1,8 @@
+{
+  "path": "build/.objs/smg-pc-game/macosx/arm64/debug/src/Game/NPC/NPCActor.cpp.o",
+  "sha256": "a489b2a3dcbd5f89f7cd6c6cfefa3e4f08a96e9a0824b44a147bb284ddc14a4f",
+  "function_start": "0xd44",
+  "function_end": "0xe50",
+  "source_header_sha256": "5c3cfdecbc6e81205eba4ccb001a0bb83e8bc08dbca245e2814497e718ad6d97",
+  "scope": "Read-only disassembly of root-built equality GREEN production object, before test fixture allocation correction."
+}
