@@ -56,7 +56,12 @@ void LogoScene::init() {
     if (MR::isEqualString(MR::getCurrentRegionPrefix(), "Cn")) {
         initNerve(&LogoSceneCensorshipFadein::sInstance);
     } else {
+#if defined(TARGET_PC)
+        // The native keyboard/mouse platform has no Wii Remote strap screen.
+        initNerve(&LogoSceneWaitReadDoneSystemArchive::sInstance);
+#else
         initNerve(&LogoSceneStrapFadein::sInstance);
+#endif
     }
 
     SceneFunction::createHioBasicNode(this);
@@ -142,7 +147,11 @@ void LogoScene::exeCensorshipFadeout() {
     mIsbnManager->calc(true);
 
     if (tryFadeoutLayout()) {
+#if defined(TARGET_PC)
+        setNerve(&LogoSceneWaitReadDoneSystemArchive::sInstance);
+#else
         setNerve(&LogoSceneStrapFadein::sInstance);
+#endif
     }
 }
 
@@ -205,8 +214,10 @@ void LogoScene::exeDeactive() {
 }
 
 void LogoScene::initLayout() {
+#if !defined(TARGET_PC)
     mStrapLayout = MR::createSimpleLayout("ストラップ着用画面", "WiiRemoteStrap", 1);
     mStrapLayout->kill();
+#endif
 
     mLogoFader = new LogoFader("ロゴフェーダ");
     mLogoFader->initWithoutIter();

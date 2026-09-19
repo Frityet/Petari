@@ -1,0 +1,21 @@
+{
+  "command": [
+    "lldb",
+    "--batch",
+    "--source",
+    "/Users/frityet/Projects/petari/notes/native-startup-without-wii-strap-20260919/startup.lldb",
+    "--",
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc",
+    "--original",
+    "--disc",
+    "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--max-frames",
+    "300"
+  ],
+  "binary_sha256": "b7b125b3360e22f0f26cd6f7129f450746c20dd80a03541b08d0d7cc713c165d",
+  "no_stage_override": true,
+  "no_input_injection": true,
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed_seconds": 15.369401000090875
+}

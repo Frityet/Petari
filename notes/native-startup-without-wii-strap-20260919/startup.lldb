@@ -1,0 +1,35 @@
+settings set target.env-vars AURORA_BACKEND=metal SMGPC_WINDOW_WIDTH=1280 SMGPC_WINDOW_HEIGHT=720 SMGPC_SAVE_DIR=/Users/frityet/Projects/petari/notes/native-startup-without-wii-strap-20260919/private-nand
+breakpoint set --name 'LogoScene::exeStrapFadein'
+breakpoint set --name 'LogoScene::exeStrapDisplay'
+breakpoint set --name 'LogoScene::exeStrapFadeout'
+breakpoint set --name 'LogoScene::exeWaitReadDoneSystemArchive' --one-shot true
+breakpoint command add 4
+frame variable this->mStrapLayout this->mLogoFader
+continue
+DONE
+breakpoint set --name 'GameSequenceFunction::startPreLoadSaveDataSequence' --one-shot true
+breakpoint command add 5
+thread backtrace
+continue
+DONE
+breakpoint set --name 'LogoScene::exeDeactive' --one-shot true
+breakpoint command add 6
+frame variable this->mStrapLayout
+continue
+DONE
+breakpoint set --name 'MR::requestChangeSceneAfterBoot' --one-shot true
+breakpoint command add 7
+thread backtrace
+continue
+DONE
+breakpoint set --name 'GameSystemSceneController::startScene'
+breakpoint command add 8
+frame variable this->mCurrSceneControlInfo.mScene this->mCurrSceneControlInfo.mStage
+continue
+DONE
+breakpoint set --name __cxa_throw
+run
+script p=lldb.debugger.GetSelectedTarget().GetProcess(); lldb.debugger.HandleCommand('thread backtrace') if p.GetState() == lldb.eStateStopped else None
+breakpoint list
+script p=lldb.debugger.GetSelectedTarget().GetProcess(); p.Kill() if p.GetState() in (lldb.eStateStopped, lldb.eStateRunning) else None
+quit
