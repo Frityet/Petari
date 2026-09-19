@@ -1,8 +1,11 @@
 #include "Game/Util/JMapUtil.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/SceneUtil.hpp"
 
 #include <array>
+#include <cmath>
 #include <cstdio>
 #include <cstring>
 #include <type_traits>
@@ -245,10 +248,45 @@ namespace MR {
     }
 
     bool getJMapInfoTrans(const JMapInfoIter& rIter, TVec3f* pOut) {
-        return getJMapInfoTransLocal(rIter, pOut);
+        if (!getJMapInfoTransLocal(rIter, pOut)) {
+            return false;
+        }
+
+        if (isPlacementLocalStage()) {
+            getZonePlacementMtx(rIter)->mult(*pOut, *pOut);
+        }
+
+        return true;
     }
     bool getJMapInfoRotate(const JMapInfoIter& rIter, TVec3f* pOut) {
-        return getJMapInfoRotateLocal(rIter, pOut);
+        if (!getJMapInfoRotateLocal(rIter, pOut)) {
+            return false;
+        }
+
+        if (isPlacementLocalStage()) {
+            TMtx34f rotateMtx;
+            makeMtxRotate(rotateMtx.toMtxPtr(), *pOut);
+            rotateMtx.concat(*getZonePlacementMtx(rIter), rotateMtx);
+
+            // TODO: getEuler but for std?
+            if (-0.001f <= rotateMtx.mMtx[2][0] - 1.0f) {
+                pOut->x = std::atan2(-rotateMtx.mMtx[0][1], rotateMtx.mMtx[1][1]);
+                pOut->y = -1.5707964f;
+                pOut->z = 0.0f;
+            } else if (rotateMtx.mMtx[2][0] + 1.0f <= 0.001f) {
+                pOut->x = std::atan2(rotateMtx.mMtx[0][1], rotateMtx.mMtx[1][1]);
+                pOut->y = 1.5707964f;
+                pOut->z = 0.0f;
+            } else {
+                pOut->x = std::atan2(rotateMtx.mMtx[2][1], rotateMtx.mMtx[2][2]);
+                pOut->z = std::atan2(rotateMtx.mMtx[1][0], rotateMtx.mMtx[0][0]);
+                pOut->y = ::asin(-rotateMtx.mMtx[2][0]);
+            }
+
+            *pOut = *pOut * _180_PI;
+        }
+
+        return true;
     }
     bool getJMapInfoTransLocal(const JMapInfoIter& rIter, TVec3f* pOut) {
         return get_vec3_components(rIter, "pos_x", "pos_y", "pos_z", pOut);
@@ -305,20 +343,32 @@ namespace MR {
     }
 
     void getRailPointPos0(const JMapInfoIter& rIter, TVec3f* pOut) {
-        if (pOut != nullptr) {
-            (void)get_vec3_components(rIter, "pnt0_x", "pnt0_y", "pnt0_z", pOut);
+        rIter.getValue< f32 >("pnt0_x", &pOut->x);
+        rIter.getValue< f32 >("pnt0_y", &pOut->y);
+        rIter.getValue< f32 >("pnt0_z", &pOut->z);
+
+        if (isPlacementLocalStage()) {
+            getZonePlacementMtx(rIter)->mult(*pOut, *pOut);
         }
     }
 
     void getRailPointPos1(const JMapInfoIter& rIter, TVec3f* pOut) {
-        if (pOut != nullptr) {
-            (void)get_vec3_components(rIter, "pnt1_x", "pnt1_y", "pnt1_z", pOut);
+        rIter.getValue< f32 >("pnt1_x", &pOut->x);
+        rIter.getValue< f32 >("pnt1_y", &pOut->y);
+        rIter.getValue< f32 >("pnt1_z", &pOut->z);
+
+        if (isPlacementLocalStage()) {
+            getZonePlacementMtx(rIter)->mult(*pOut, *pOut);
         }
     }
 
     void getRailPointPos2(const JMapInfoIter& rIter, TVec3f* pOut) {
-        if (pOut != nullptr) {
-            (void)get_vec3_components(rIter, "pnt2_x", "pnt2_y", "pnt2_z", pOut);
+        rIter.getValue< f32 >("pnt2_x", &pOut->x);
+        rIter.getValue< f32 >("pnt2_y", &pOut->y);
+        rIter.getValue< f32 >("pnt2_z", &pOut->z);
+
+        if (isPlacementLocalStage()) {
+            getZonePlacementMtx(rIter)->mult(*pOut, *pOut);
         }
     }
 

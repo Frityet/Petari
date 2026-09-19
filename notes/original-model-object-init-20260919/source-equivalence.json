@@ -1,0 +1,10 @@
+{
+  "method": "ModelObj::init",
+  "native_method_equals_canonical": true,
+  "removed_native_behavior": [
+    "getJMapInfoTrans",
+    "getJMapInfoRotate",
+    "getJMapInfoScale"
+  ],
+  "other_behavior_changed": false
+}

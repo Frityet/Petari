@@ -1,6 +1,6 @@
 # Dummy display model table and selection recovery — 2026-09-19
 
-This recovers the original shared dummy-item model data and creation path in the decompilation. It does not yet import the actor into the native port or prove CrystalCage gameplay.
+This recovers the original shared dummy-item model data and creation path in the decompilation. This note records decompilation proof. The later native import and bounded original-process model/retirement proof are recorded in `notes/original-crystal-cage-20260919/`; cage gameplay is not established.
 
 ## Problem and original evidence
 
@@ -15,7 +15,7 @@ The real Gateway center `CrystalCageM` placement (`l_id72`, HeavensDoorMysteriou
 - Populate the 15 original table rows, including names, three-component offsets, draw categories, optional animations, and color-change flags.
 - Select the table row by model ID and honor its default draw category when the caller passes a negative category.
 - Replace only the table-record offset type, `TVec3f`, with the SDK aggregate `Vec`. Both occupy the original 12 bytes, but `TVec3f` construction introduced a global initializer absent from retail. `Vec` preserves literal static table data and converts through the existing `TVec3f(const Vec&)` constructor at the unchanged use site.
-- Retain all existing actor methods and archive collection behavior. No shared vector implementation or native source was changed.
+- Retain all existing actor methods and archive collection behavior. No shared vector implementation was changed in this recovery.
 
 ## Validation
 
@@ -38,4 +38,6 @@ Result:
 
 `verification.json` records the table, function results, hashes, relocation evidence and the bounded claim. The intermediate attempt to initialize the existing nontrivial `TVec3f` field was rejected during verification because it emitted a new `__sinit` and moved the table to writable data; that attempt was not published.
 
-Native import, linkage closure, actual model construction and cage activation remain separate validation steps. No actor behavior or full Gateway progression is claimed by this decompilation proof.
+Native import, linkage closure and actual model construction were subsequently validated separately in the CrystalCage notes; cage activation remains a gameplay validation step. No actor behavior or full Gateway progression is claimed by this decompilation proof.
+
+Published decomp checkpoint: `d1ddacad6a59a61ae2bc26e433bc2ce9a9fbab29`; remote `pcp-decomp` SHA was verified equal.

@@ -1,0 +1,52 @@
+{
+  "NPC/RunawayRabbitCollect.cpp": {
+    "exact_after_encoding": true,
+    "equal_without_whitespace": true,
+    "diff": ""
+  },
+  "NPC/RunawayRabbit.cpp": {
+    "exact_after_encoding": false,
+    "equal_without_whitespace": false,
+    "diff": "--- decomp/NPC/RunawayRabbit.cpp\n+++ native/NPC/RunawayRabbit.cpp\n@@ -49,8 +49,8 @@\n         static RunawayRabbitNrvBlowDamage sInstance;\n     };\n \n-    RunawayRabbitNrvNoActive RunawayRabbitNrvNoActive::sInstance;\n-    RunawayRabbitNrvTryCaughtDemo RunawayRabbitNrvTryCaughtDemo::sInstance;\n+    INIT_NERVE(RunawayRabbitNrvNoActive);\n+    INIT_NERVE(RunawayRabbitNrvTryCaughtDemo);\n     RunawayRabbitNrvBlowDamage RunawayRabbitNrvBlowDamage::sInstance;\n \n     void RunawayRabbitNrvBlowDamage::execute(Spine* pSpine) const {\n"
+  },
+  "NPC/RunawayTico.cpp": {
+    "exact_after_encoding": true,
+    "equal_without_whitespace": true,
+    "diff": ""
+  },
+  "NPC/Rosetta.cpp": {
+    "exact_after_encoding": true,
+    "equal_without_whitespace": true,
+    "diff": ""
+  },
+  "NPC/RosettaDemoHeavensDoor.cpp": {
+    "exact_after_encoding": true,
+    "equal_without_whitespace": true,
+    "diff": ""
+  },
+  "MapObj/HeavensDoorDemoObj.cpp": {
+    "exact_after_encoding": true,
+    "equal_without_whitespace": true,
+    "diff": ""
+  },
+  "Demo/DemoActionKeeper.cpp": {
+    "exact_after_encoding": true,
+    "equal_without_whitespace": true,
+    "diff": ""
+  },
+  "Demo/DemoTimeKeeper.cpp": {
+    "exact_after_encoding": true,
+    "equal_without_whitespace": true,
+    "diff": ""
+  },
+  "Demo/DemoExecutor.cpp": {
+    "exact_after_encoding": true,
+    "equal_without_whitespace": true,
+    "diff": ""
+  },
+  "NPC/TalkMessageCtrl.cpp": {
+    "exact_after_encoding": true,
+    "equal_without_whitespace": true,
+    "diff": ""
+  }
+}

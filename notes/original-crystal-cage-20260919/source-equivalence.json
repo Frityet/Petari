@@ -1,0 +1,38 @@
+[
+  {
+    "native": "src/Game/MapObj/CrystalCage.cpp",
+    "donor": "decomp/src/Game/MapObj/CrystalCage.cpp",
+    "native_sha256": "660650307af6bfe2da9d1a05755ccece6d98319abbfe158f0d1711bcc8e49814",
+    "donor_sha256": "4b5e233353baf755ecd52d20ba4c95e0f3a5ae8548a488fd387520c075ec37f3",
+    "exact_except_listed_compile_changes": true,
+    "compile_changes": [
+      "explicit CP932 encoding of the two original Japanese names",
+      "direct RumbleCalculator include supplied by original umbrella",
+      "nullptr passed to bool normalized to false for standard C++"
+    ]
+  },
+  {
+    "native": "src/Game/MapObj/CrystalCage.hpp",
+    "donor": "decomp/include/Game/MapObj/CrystalCage.hpp",
+    "native_sha256": "47943fe0bc50b547191bfcc14415f919ac62b109bbffcb5c15b3e18568354c81",
+    "donor_sha256": "47943fe0bc50b547191bfcc14415f919ac62b109bbffcb5c15b3e18568354c81",
+    "exact_except_listed_compile_changes": true,
+    "compile_changes": []
+  },
+  {
+    "native": "src/Game/MapObj/DummyDisplayModel.cpp",
+    "donor": "decomp/src/Game/MapObj/DummyDisplayModel.cpp",
+    "native_sha256": "fc602f5d9f051b2cdd2c9e9838f568e9687ad3faed8008dbc4ed50b021e31218",
+    "donor_sha256": "fc602f5d9f051b2cdd2c9e9838f568e9687ad3faed8008dbc4ed50b021e31218",
+    "exact_except_listed_compile_changes": true,
+    "compile_changes": []
+  },
+  {
+    "native": "src/Game/MapObj/DummyDisplayModel.hpp",
+    "donor": "decomp/include/Game/MapObj/DummyDisplayModel.hpp",
+    "native_sha256": "390419c4f70c5a545cc08848a48c894d01252e6911e3fe7ea3130c2c83c0016c",
+    "donor_sha256": "390419c4f70c5a545cc08848a48c894d01252e6911e3fe7ea3130c2c83c0016c",
+    "exact_except_listed_compile_changes": true,
+    "compile_changes": []
+  }
+]

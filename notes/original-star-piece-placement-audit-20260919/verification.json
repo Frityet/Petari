@@ -1,0 +1,14 @@
+{
+  "scope": "Read-only standalone StarPiece placement readiness; not placement runtime or collection proof.",
+  "native_source_sha256": "6d5bb83f8545287ca7282d94acf3a66fff42d993c0087946987f4c5cc40de449",
+  "donor_source_sha256": "70ebab383d00a6d6c92c1ab17b8e43878a4a6507452f6484b6af214ae10c65dc",
+  "native_equals_donor_except_explicit_encoding": true,
+  "verified_retail_init_address": "0x8023D25C",
+  "verified_retail_init_bytes": 1044,
+  "verified_retail_init_instruction_count": 261,
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "stage_archive_sha256": "6004cbf1a9669b500ae45a2c54dabd64b019fa0699f50a1cf17e211b7544be97",
+  "fresh_authored_placements": 7,
+  "default_argument_rows": true,
+  "no_stage_switches": true
+}

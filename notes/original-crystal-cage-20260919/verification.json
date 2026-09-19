@@ -1,0 +1,86 @@
+{
+  "scope": "Original CrystalCageM and standalone StarPiece natural scene initialization and retirement only",
+  "decomp_recoveries": {
+    "dummy_display_model": "d1ddacad6a59a61ae2bc26e433bc2ce9a9fbab29",
+    "actor_excluding_map_query": "d97d7e19a5d80e85c8d73327718c050a2b9e1c70"
+  },
+  "runtime": {
+    "crystal-cage": {
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-crystal-cage-tests"
+      ],
+      "binary_sha256": "66e3aace775020f610a298ec2c97b9b7463bdee10b07abd9bd458a1cc2d8f6b4",
+      "binary_unchanged": true,
+      "pid": 80612,
+      "exit_code": 0,
+      "timeout_terminated": false,
+      "process_still_exists": false,
+      "elapsed_seconds": 3.0990593750029802,
+      "original_completed_120_frames": true,
+      "probe_and_retirement_pass": true,
+      "debugger_attached": false
+    },
+    "star-piece-placement": {
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-star-piece-placement-tests"
+      ],
+      "binary_sha256": "aa85e9550e534e1589d5f67fa61e4d8003a6599c8cdad0c1d36679f7af487ae2",
+      "binary_unchanged": true,
+      "pid": 80725,
+      "exit_code": 0,
+      "timeout_terminated": false,
+      "process_still_exists": false,
+      "elapsed_seconds": 3.693747292039916,
+      "original_completed_120_frames": true,
+      "probe_and_retirement_pass": true,
+      "debugger_attached": false
+    }
+  },
+  "assertion_frames": {
+    "crystal_cage": 57,
+    "star_piece_placement": 56
+  },
+  "limitations": [
+    "No natural cage activation or breaking tested",
+    "No natural StarPiece collection tested",
+    "No rabbit or Rosalina progression claim",
+    "Prior failed probes were test assumptions about raw model storage and predate the general zone transform restoration"
+  ],
+  "source_sha256": {
+    "src/Game/MapObj/CrystalCage.cpp": "660650307af6bfe2da9d1a05755ccece6d98319abbfe158f0d1711bcc8e49814",
+    "src/Game/MapObj/CrystalCage.hpp": "47943fe0bc50b547191bfcc14415f919ac62b109bbffcb5c15b3e18568354c81",
+    "src/Game/MapObj/DummyDisplayModel.cpp": "fc602f5d9f051b2cdd2c9e9838f568e9687ad3faed8008dbc4ed50b021e31218",
+    "src/Game/MapObj/DummyDisplayModel.hpp": "390419c4f70c5a545cc08848a48c894d01252e6911e3fe7ea3130c2c83c0016c",
+    "src/compat/SceneConnectionCompat.cpp": "04376901ed5ba6d8430d4ae93c2ee453d21c1c9adf611ea9fd026bdaeb26dae4",
+    "src/compat/OriginalMapQueries.cpp": "b15d201d21a2287ba498d1bbffe7d736b4f67788b2899bb109f259a51a1a8367",
+    "tests/OriginalProcessCrystalCageTests.cpp": "f4f65e182e1e8ebef2e0b0df1ad77ad96d527a3ed451efd2a8db065c75859ebd",
+    "tests/OriginalProcessStarPiecePlacementTests.cpp": "2c501b46de78237e8e9fe5eeaaac5f95a0f7819f87724bd219ac8dc0b577f3de"
+  },
+  "evidence_sha256": {
+    "MapUtil-command.json": "d9a7e1de0393ac5e88ff7ed3e414590b3688c3f32e5916335b875817cd5fdd21",
+    "MapUtil-compile.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "MapUtil-verification.json": "c6183aa2fe8de9bbe384069eef7a243e294b8f6f1bd584cf48cabbd64e6f0faa",
+    "coordinated-diagnostic-build.log.gz": "81c0e0afbc869af6777a56b7176f05f06feddcb4e605741505392968bb1ff636",
+    "coordinated-focused-builds.json": "88e73ee7c25b0fa82bb61219e41f2caff8292bea0f100933e271e1b2882bc908",
+    "coordinated-focused-builds2.json": "bcf771edd572ef9159bea054fe432853ac587a8a228d427d3e816172818e0465",
+    "coordinated-smg-pc-original-process-crystal-cage-tests-build.log.gz": "9617451cce324a4839a4cb929a9b79ec33faf5675f68b01bac37691800716014",
+    "coordinated-smg-pc-original-process-crystal-cage-tests-build2.log.gz": "5465ed800633c2e0536f7316164a604940ca65882f700c93570e4284e4eabfbe",
+    "coordinated-smg-pc-original-process-star-piece-placement-tests-build2.log.gz": "b33c3beab6ca764261a82ee5d9378c6ade4a5df442e1ebc5ece43341fae0a4f9",
+    "crystal-cage-run.json": "59de9872dd8f1ea42be560625f9a03c4d64dc5fc5799400acd264490f5926b3d",
+    "crystal-cage-run.log.gz": "dba468ce31caa20ad4efb76c51bc143c428065e7e26122a2d3f23bee3e7cab34",
+    "donor-command.json": "9dcdc1ab272248bc062af4df412f92d6019f929f531f97f807900abc010bb336",
+    "donor-compile.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "donor-match.json": "01b0d3d117cdc249df7b69bacd95e2752ac607bbc28eece8bbbaba7be9e8c0ab",
+    "getter-corrected-builds.json": "7fe4bcf49e256f8b6370f0f5fa97c00d7f53755c820cd595c0a0fbcccbcb3e75",
+    "getter-corrected-smg-pc-original-process-crystal-cage-tests-build.log.gz": "1cbd035981327139d3233794c233d9431cc373532ff708096a0b9db96b754e6e",
+    "getter-corrected-smg-pc-original-process-star-piece-placement-tests-build.log.gz": "13300dbea375c25214e80b1237ad9eeeaf74c4774c52cc999d9f06be85c666a7",
+    "initial-break-model-assertion.json": "b6880bde7a0a3647daa0c639d32c3c4e1fe5412c304d8fc95476b6c405e33146",
+    "initial-break-model-assertion.log.gz": "30e1bae53c94d57628b73f6473d1e5c1f9fe259e603ddcf387d8ee22922fd93f",
+    "raw-model-storage-diagnostic.json": "6c7d06e9d60f57946ae8a38b373fd5c740c33e806aaecc643042c22282ad3702",
+    "raw-model-storage-diagnostic.log.gz": "ea0bd6d2e1a89d5eb3e074a8e67a0b77433de5f4fbff0fecef5f4fb47fd58980",
+    "run_probe.py": "bea7cf238183f529dfbc0028d11596d274011221062dd9ad05158673844aecd2",
+    "source-equivalence.json": "f2de08a768262766dcf6fc3d779325fac8ef8fa137ced3b3b050f4198d28d2f3",
+    "star-piece-placement-run.json": "4aa52ae31214ade635e9dea7f0d10e54e905c933bf13dc9c63298245311ee0d1",
+    "star-piece-placement-run.log.gz": "4ffd6ebeaf8b6f01080efe5d3e4e8ba2479159eb1ebce9483162bcd312c095db"
+  }
+}

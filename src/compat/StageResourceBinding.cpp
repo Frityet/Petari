@@ -108,11 +108,6 @@ namespace smgpc::compat {
                     auto& destination = table->category == "start" ? catalog.starts :
                                         table->category == "path" ? catalog.paths : catalog.general_positions;
                     destination.push_back(table->jmap_info);
-                    if (table->category == "generalpos" && !root->children.empty()) {
-                        // Original isPlacementLocalStage tests the root's child
-                        // count. Native readers consume transformed fields.
-                        scene::apply_stage_zone_transform(destination.back(), table->zone_transform);
-                    }
                 }
             }
         }

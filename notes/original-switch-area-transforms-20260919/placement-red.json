@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-placement-transform-tests"
+  ],
+  "binary_sha256": "96cbe9865cb38719bf85849c04277690b34c72964ed0110cbda885a554591680",
+  "pid": 79154,
+  "exit_code": 1,
+  "wall_seconds": 1.8587705000536516,
+  "timed_out": false,
+  "pid_reaped": true,
+  "completed_120_frames": false,
+  "placement_assertions_passed": false,
+  "scope": "Read-only actual-owner nonidentity placement, rotation, rail, actor and area checks"
+}

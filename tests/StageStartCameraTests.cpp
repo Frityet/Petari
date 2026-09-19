@@ -359,11 +359,14 @@ namespace {
         require(selected_iter.getValue("pos_x", &iter_position[0]) &&
                     selected_iter.getValue("pos_y", &iter_position[1]) &&
                     selected_iter.getValue("pos_z", &iter_position[2]),
-                "the retained StartInfo row must expose its transformed position to exact Game init");
+                "the retained StartInfo row must preserve authored local position for original Game getters");
         for (auto axis = std::size_t{}; axis < 3U; ++axis) {
-            require_near(iter_position[axis], selected->world_position[axis], 0.0001F,
-                         "the retained JMap row and derived world position must agree");
+            require_near(iter_position[axis], selected->local_position[axis], 0.0001F,
+                         "raw JMap fields must not bake in the separately retained world transform");
         }
+        float local_yaw = -1.0f;
+        require(selected_iter.getValue("dir_y", &local_yaw) && local_yaw == 0.0f,
+                "retained StartInfo rotation remains local while world front includes the zone rotation");
 
         auto typed_tables = std::vector<smgpc::scene::StagePlacementTable>{};
         typed_tables.push_back({
@@ -1295,7 +1298,19 @@ namespace {
 
 }  // namespace
 
-int main() {
+int main(int argc, char** argv) {
+    // This descriptor case has no Game owner dependencies. Keep it runnable
+    // independently of the broader original-camera integration fixtures.
+    if (argc == 2 && std::string_view(argv[1]) == "--placement-only") {
+        try {
+            test_rigid_zone_matrix_and_start_selection();
+            std::cout << "[ok] rigid zone matrix and raw StartInfo selection\n";
+            return 0;
+        } catch (const std::exception& error) {
+            std::cerr << "[fail] rigid zone matrix and raw StartInfo selection: " << error.what() << '\n';
+            return 1;
+        }
+    }
     constexpr auto tests = std::array{
         TestCase{"rigid zone matrix and StartInfo selection", test_rigid_zone_matrix_and_start_selection},
         TestCase{"camera migration, key, and XZ_PARA pose", test_camera_version_key_and_xz_parallel_pose},

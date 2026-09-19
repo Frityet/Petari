@@ -1,0 +1,47 @@
+{
+  "scope": "Two original helper recoveries only; exact native copied bodies, no replacement collision algorithm.",
+  "source_sha256": "e1650f90a2b0ee86bd7c94da67f0ef9eb32becd7271c95e6a49f9e5126937639",
+  "functions": [
+    {
+      "symbol": "getFirstPolyOnLineCategoryExceptActor__21@unnamed@MapUtil_cpp@FPQ29JGeometry8TVec3<f>P8TriangleRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PC9LiveActorl",
+      "address": "0x803e1ba0",
+      "size": 60,
+      "match_percent": 100,
+      "references": [
+        {
+          "offset": "0xa",
+          "kind": 6,
+          "symbol": "__vt__25CollisionPartsFilterActor",
+          "addend": 0
+        },
+        {
+          "offset": "0x16",
+          "kind": 4,
+          "symbol": "__vt__25CollisionPartsFilterActor",
+          "addend": 0
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "getFirstPolyOnLineCategory__21@unnamed@MapUtil_cpp@FPQ29JGeometry8TVec3<f>P8TriangleRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PC18TriangleFilterBasePC24CollisionPartsFilterBasel",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "symbol": "getFirstPolyOnLineToMapExceptActor__2MRFPQ29JGeometry8TVec3<f>P8TriangleRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PC9LiveActor",
+      "address": "0x803e2074",
+      "size": 8,
+      "match_percent": 100,
+      "references": [
+        {
+          "offset": "0x4",
+          "kind": 10,
+          "symbol": "getFirstPolyOnLineCategoryExceptActor__21@unnamed@MapUtil_cpp@FPQ29JGeometry8TVec3<f>P8TriangleRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PC9LiveActorl",
+          "addend": 0
+        }
+      ]
+    }
+  ],
+  "native_body_source_equivalence": true
+}

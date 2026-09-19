@@ -1,0 +1,14 @@
+[
+  {
+    "target": "smg-pc-original-process-crystal-cage-tests",
+    "exit_code": 0,
+    "wall_seconds": 5.242606792016886,
+    "log": "notes/original-crystal-cage-20260919/getter-corrected-smg-pc-original-process-crystal-cage-tests-build.log"
+  },
+  {
+    "target": "smg-pc-original-process-star-piece-placement-tests",
+    "exit_code": 0,
+    "wall_seconds": 5.304054374922998,
+    "log": "notes/original-crystal-cage-20260919/getter-corrected-smg-pc-original-process-star-piece-placement-tests-build.log"
+  }
+]

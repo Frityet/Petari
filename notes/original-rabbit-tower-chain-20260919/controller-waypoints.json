@@ -1,0 +1,622 @@
+{
+  "scope": "Read-only navigation candidates, not observed reachable paths or gameplay completion.",
+  "rotation_convention": "Column vectors; Rz * Ry * Rx in degrees. Zone matrix uses native makeMtxTR float trig. Original getJMapInfoRotate composes zone with short-angle JMath local rotation, extracts Euler, then AreaFormCube uses short-angle JMath again.",
+  "numerical_limit": "Python float32 rounding model with double intermediates for dot products; not a bit-exact native capture. FMA/libm rounding may differ by a few thousandths. Candidates have 75 or 225 units margin to the upper face.",
+  "world_formula": "world = zone_translation + zone_rotation * local_origin + world_form_rotation * [0, 0.75*1000*scale_y, 0]",
+  "assumptions": [
+    "The common stageobj row is zone5 under the restored original holder placement matrix.",
+    "Cube2 means x/z centered and y from0 to1000*scale_y; no attached external form matrix for these ordinary SwitchCube placements.",
+    "Surface accessibility is unproven; especially hole75% may be inside the crater shaft and requires walking into the opening. Use this direction for navigation, not teleportation.",
+    "Initial rabbit positions are transformed authored spawns, not their later moving pursuit positions. Select live actor by zone/type/l_id or collector group, then follow current world position."
+  ],
+  "zone_source_path": "notes/original-switch-area-transforms-20260919/raw-galaxy.json",
+  "zone_source_sha256": "ac56109c2fc93a930d9ece886dae6e329f1149348f7cc932d13d2d20220bd2c6",
+  "zone_row": {
+    "table": "/jmp/placement/common/stageobjinfo",
+    "row": 0,
+    "name": "HeavensDoorMysteriousZone",
+    "l_id": 3,
+    "pos_x": 14760.0,
+    "pos_y": -10676.2255859375,
+    "pos_z": 6770.0,
+    "dir_x": 65.57914733886719,
+    "dir_y": 70.13896179199219,
+    "dir_z": 56.55928421020508
+  },
+  "zone_matrix_3x4": [
+    [
+      0.18722188472747803,
+      0.12693116068840027,
+      0.9740822911262512,
+      14760.0
+    ],
+    [
+      0.2834983170032501,
+      0.9424405694007874,
+      -0.17729729413986206,
+      -10676.2255859375
+    ],
+    [
+      -0.9405193328857422,
+      0.30934464931488037,
+      0.14046074450016022,
+      6770.0
+    ]
+  ],
+  "switch_cubes": [
+    {
+      "label": "bush",
+      "raw_row": {
+        "table": "/jmp/placement/common/areaobjinfo",
+        "row": 1,
+        "name": "SwitchCube",
+        "l_id": 8,
+        "Obj_arg0": -1,
+        "Obj_arg1": -1,
+        "Obj_arg2": -1,
+        "Obj_arg3": -1,
+        "Obj_arg4": -1,
+        "Obj_arg5": -1,
+        "Obj_arg6": -1,
+        "Obj_arg7": -1,
+        "SW_APPEAR": -1,
+        "SW_A": 1113,
+        "SW_B": 1111,
+        "SW_SLEEP": -1,
+        "pos_x": 1550.0,
+        "pos_y": -760.6881103515625,
+        "pos_z": -1090.0,
+        "dir_x": -48.83539962768555,
+        "dir_y": 40.37636947631836,
+        "dir_z": -150.4726104736328,
+        "scale_x": 0.30000001192092896,
+        "scale_y": 0.30000001192092896,
+        "scale_z": 0.30000001192092896,
+        "hash_15d780cc": -1,
+        "CommonPath_ID": -1,
+        "hash_4b5830b8": -1,
+        "GroupId": -1,
+        "DemoGroupId": -1,
+        "hash_81497c36": -1,
+        "Obj_ID": -1,
+        "hash_c6ae1cd6": -1
+      },
+      "world_origin": [
+        13891.8896484375,
+        -10760.4521484375,
+        4923.77783203125
+      ],
+      "world_euler_degrees": [
+        -102.5447006225586,
+        -24.60634994506836,
+        -151.98353576660156
+      ],
+      "local_short_indices": [
+        14161,
+        1837,
+        9536
+      ],
+      "world_short_indices": [
+        11717,
+        15264,
+        9467
+      ],
+      "world_form_rotation": [
+        [
+          -0.8026348948478699,
+          -0.4608886241912842,
+          0.37862756848335266
+        ],
+        [
+          -0.427040696144104,
+          0.0008474737405776978,
+          -0.9042320251464844
+        ],
+        [
+          0.41642940044403076,
+          -0.887457549571991,
+          -0.19749842584133148
+        ]
+      ],
+      "local_candidate": [
+        0,
+        225.0,
+        0
+      ],
+      "world_candidate_y75_percent": [
+        13788.189453125,
+        -10760.26171875,
+        4724.10009765625
+      ],
+      "world_candidate_y90_percent": [
+        13767.4501953125,
+        -10760.2236328125,
+        4684.1640625
+      ],
+      "form_bounds_min": [
+        -150.00000596046448,
+        0,
+        -150.00000596046448
+      ],
+      "form_bounds_max": [
+        150.00000596046448,
+        300.0,
+        150.00000596046448
+      ]
+    },
+    {
+      "label": "hole",
+      "raw_row": {
+        "table": "/jmp/placement/common/areaobjinfo",
+        "row": 2,
+        "name": "SwitchCube",
+        "l_id": 11,
+        "Obj_arg0": -1,
+        "Obj_arg1": -1,
+        "Obj_arg2": -1,
+        "Obj_arg3": -1,
+        "Obj_arg4": -1,
+        "Obj_arg5": -1,
+        "Obj_arg6": -1,
+        "Obj_arg7": -1,
+        "SW_APPEAR": -1,
+        "SW_A": 1114,
+        "SW_B": 1111,
+        "SW_SLEEP": -1,
+        "pos_x": -670.0,
+        "pos_y": 377.11883544921875,
+        "pos_z": -590.0,
+        "dir_x": -67.52164459228516,
+        "dir_y": 47.212223052978516,
+        "dir_z": -7.348283767700195,
+        "scale_x": 0.8999999761581421,
+        "scale_y": 0.8999999761581421,
+        "scale_z": 0.8999999761581421,
+        "hash_15d780cc": -1,
+        "CommonPath_ID": -1,
+        "hash_4b5830b8": -1,
+        "GroupId": -1,
+        "DemoGroupId": -1,
+        "hash_81497c36": -1,
+        "Obj_ID": -1,
+        "hash_c6ae1cd6": -1
+      },
+      "world_origin": [
+        14107.720703125,
+        -10406.15234375,
+        7433.93603515625
+      ],
+      "world_euler_degrees": [
+        95.70263671875,
+        49.79850387573242,
+        158.25987243652344
+      ],
+      "local_short_indices": [
+        13311,
+        2148,
+        16049
+      ],
+      "world_short_indices": [
+        4355,
+        2266,
+        7202
+      ],
+      "world_form_rotation": [
+        [
+          -0.5996183156967163,
+          -0.6690564751625061,
+          0.43911415338516235
+        ],
+        [
+          0.23925895988941193,
+          0.37373077869415283,
+          0.8961475491523743
+        ],
+        [
+          -0.7636837959289551,
+          0.6424084901809692,
+          -0.06401807814836502
+        ]
+      ],
+      "local_candidate": [
+        0,
+        675.0,
+        0
+      ],
+      "world_candidate_y75_percent": [
+        13656.107421875,
+        -10153.8837890625,
+        7867.5615234375
+      ],
+      "world_candidate_y90_percent": [
+        13565.78515625,
+        -10103.4306640625,
+        7954.287109375
+      ],
+      "form_bounds_min": [
+        -449.99998807907104,
+        0,
+        -449.99998807907104
+      ],
+      "form_bounds_max": [
+        449.99998807907104,
+        900.0,
+        449.99998807907104
+      ]
+    }
+  ],
+  "rabbit_spawns": [
+    {
+      "raw_row": {
+        "table": "/jmp/childobj/layera/childobjinfo",
+        "row": 3,
+        "name": "RunawayRabbit",
+        "l_id": 6,
+        "Obj_arg0": 1,
+        "Obj_arg1": 0,
+        "Obj_arg2": -1,
+        "Obj_arg3": 600,
+        "Obj_arg4": -1,
+        "Obj_arg5": -1,
+        "Obj_arg6": -1,
+        "Obj_arg7": 2,
+        "hash_dd7658d8": 15,
+        "SW_APPEAR": 1112,
+        "SW_DEAD": -1,
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_SLEEP": -1,
+        "pos_x": 760.0,
+        "pos_y": 301.2020263671875,
+        "pos_z": 1930.0,
+        "dir_x": 75.0204849243164,
+        "dir_y": 22.7607364654541,
+        "dir_z": -18.24913215637207,
+        "scale_x": 1.0,
+        "scale_y": 1.0,
+        "scale_z": 1.0,
+        "CastId": -1,
+        "hash_74550d75": -1,
+        "MessageId": -1,
+        "ParentID": 4,
+        "hash_1176d409": -1,
+        "CommonPath_ID": -1,
+        "hash_4b5830b8": -1,
+        "GroupId": -1,
+        "DemoGroupId": -1,
+        "hash_81497c36": -1
+      },
+      "world_spawn": [
+        16820.5,
+        -10519.0859375,
+        6419.4697265625
+      ]
+    },
+    {
+      "raw_row": {
+        "table": "/jmp/childobj/layera/childobjinfo",
+        "row": 4,
+        "name": "RunawayRabbit",
+        "l_id": 7,
+        "Obj_arg0": 2,
+        "Obj_arg1": -1,
+        "Obj_arg2": -1,
+        "Obj_arg3": -1,
+        "Obj_arg4": -1,
+        "Obj_arg5": -1,
+        "Obj_arg6": -1,
+        "Obj_arg7": 1,
+        "hash_dd7658d8": 17,
+        "SW_APPEAR": 1113,
+        "SW_DEAD": -1,
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_SLEEP": -1,
+        "pos_x": 1300.0,
+        "pos_y": -933.8270874023438,
+        "pos_z": -1350.0,
+        "dir_x": -142.65338134765625,
+        "dir_y": 33.90339660644531,
+        "dir_z": 100.76496124267578,
+        "scale_x": 1.0,
+        "scale_y": 1.0,
+        "scale_z": 1.0,
+        "CastId": -1,
+        "hash_74550d75": -1,
+        "MessageId": -1,
+        "ParentID": 4,
+        "hash_1176d409": -1,
+        "CommonPath_ID": -1,
+        "hash_4b5830b8": -1,
+        "GroupId": -1,
+        "DemoGroupId": -1,
+        "hash_81497c36": -1
+      },
+      "world_spawn": [
+        13569.845703125,
+        -10948.4033203125,
+        5068.82861328125
+      ]
+    },
+    {
+      "raw_row": {
+        "table": "/jmp/childobj/layera/childobjinfo",
+        "row": 5,
+        "name": "RunawayRabbit",
+        "l_id": 8,
+        "Obj_arg0": 0,
+        "Obj_arg1": 0,
+        "Obj_arg2": 0,
+        "Obj_arg3": 800,
+        "Obj_arg4": -1,
+        "Obj_arg5": -1,
+        "Obj_arg6": -1,
+        "Obj_arg7": 0,
+        "hash_dd7658d8": 16,
+        "SW_APPEAR": 1114,
+        "SW_DEAD": -1,
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_SLEEP": -1,
+        "pos_x": -1215.6785888671875,
+        "pos_y": 779.9697265625,
+        "pos_z": -1145.4390869140625,
+        "dir_x": -136.32431030273438,
+        "dir_y": -32.337196350097656,
+        "dir_z": -149.72813415527344,
+        "scale_x": 1.0,
+        "scale_y": 1.0,
+        "scale_z": 1.0,
+        "CastId": -1,
+        "hash_74550d75": -1,
+        "MessageId": -1,
+        "ParentID": 4,
+        "hash_1176d409": -1,
+        "CommonPath_ID": -1,
+        "hash_4b5830b8": -1,
+        "GroupId": -1,
+        "DemoGroupId": -1,
+        "hash_81497c36": -1
+      },
+      "world_spawn": [
+        13515.6484375,
+        -10082.7099609375,
+        7993.75927734375
+      ]
+    },
+    {
+      "raw_row": {
+        "table": "/jmp/childobj/layera/childobjinfo",
+        "row": 6,
+        "name": "RunawayRabbit",
+        "l_id": 10,
+        "Obj_arg0": 1,
+        "Obj_arg1": 0,
+        "Obj_arg2": -1,
+        "Obj_arg3": 600,
+        "Obj_arg4": -1,
+        "Obj_arg5": -1,
+        "Obj_arg6": -1,
+        "Obj_arg7": 3,
+        "hash_dd7658d8": 18,
+        "SW_APPEAR": 1118,
+        "SW_DEAD": -1,
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_SLEEP": -1,
+        "pos_x": 260.0,
+        "pos_y": -1250.7486572265625,
+        "pos_z": -1940.0,
+        "dir_x": 123.0887222290039,
+        "dir_y": -174.31637573242188,
+        "dir_z": 22.205015182495117,
+        "scale_x": 1.0,
+        "scale_y": 1.0,
+        "scale_z": 1.0,
+        "CastId": -1,
+        "hash_74550d75": -1,
+        "MessageId": -1,
+        "ParentID": 4,
+        "hash_1176d409": -1,
+        "CommonPath_ID": -1,
+        "hash_4b5830b8": -1,
+        "GroupId": -1,
+        "DemoGroupId": -1,
+        "hash_81497c36": -1
+      },
+      "world_spawn": [
+        12760.19921875,
+        -11437.3154296875,
+        5866.05859375
+      ]
+    }
+  ],
+  "pipes": [
+    {
+      "raw_row": {
+        "table": "/jmp/placement/common/objinfo",
+        "row": 18,
+        "name": "EarthenPipe",
+        "l_id": 56,
+        "Obj_arg0": 10,
+        "Obj_arg1": -1,
+        "Obj_arg2": -1,
+        "Obj_arg3": 1050,
+        "Obj_arg4": -1,
+        "Obj_arg5": -1,
+        "Obj_arg6": -1,
+        "Obj_arg7": -1,
+        "hash_dd7658d8": 17,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1,
+        "SW_A": -1,
+        "SW_B": 1112,
+        "SW_SLEEP": -1,
+        "MessageId": -1,
+        "pos_x": 139.8388671875,
+        "pos_y": -995.8084716796875,
+        "pos_z": -1838.017822265625,
+        "dir_x": 115.84469604492188,
+        "dir_y": -175.55528259277344,
+        "dir_z": 18.601593017578125,
+        "scale_x": 1.0,
+        "scale_y": 1.2000000476837158,
+        "scale_z": 1.0,
+        "CastId": -1,
+        "hash_74550d75": 3,
+        "hash_1176d409": -1,
+        "CommonPath_ID": -1,
+        "hash_4b5830b8": -1,
+        "GroupId": -1,
+        "DemoGroupId": -1,
+        "hash_81497c36": -1
+      },
+      "world_authored_base": [
+        12869.4013671875,
+        -11249.1962890625,
+        6072.26123046875
+      ],
+      "warning": "Actual top matrix/actor translation is raised120 along gravity-up by original calcTrans; use real runtime binder/top as the approach target."
+    },
+    {
+      "raw_row": {
+        "table": "/jmp/placement/common/objinfo",
+        "row": 19,
+        "name": "EarthenPipe",
+        "l_id": 57,
+        "Obj_arg0": 10,
+        "Obj_arg1": -1,
+        "Obj_arg2": -1,
+        "Obj_arg3": 1050,
+        "Obj_arg4": -1,
+        "Obj_arg5": -1,
+        "Obj_arg6": -1,
+        "Obj_arg7": -1,
+        "hash_dd7658d8": 18,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1,
+        "SW_A": -1,
+        "SW_B": 1118,
+        "SW_SLEEP": -1,
+        "MessageId": -1,
+        "pos_x": 810.3023071289062,
+        "pos_y": 527.1614990234375,
+        "pos_z": 1830.673828125,
+        "dir_x": 72.4462890625,
+        "dir_y": 22.528100967407227,
+        "dir_z": -6.126314163208008,
+        "scale_x": 1.0,
+        "scale_y": 1.2000000476837158,
+        "scale_z": 1.0,
+        "CastId": -1,
+        "hash_74550d75": 3,
+        "hash_1176d409": -1,
+        "CommonPath_ID": -1,
+        "hash_4b5830b8": -1,
+        "GroupId": -1,
+        "DemoGroupId": -1,
+        "hash_81497c36": -1
+      },
+      "world_authored_base": [
+        16761.845703125,
+        -10274.26171875,
+        6428.107421875
+      ],
+      "warning": "Actual top matrix/actor translation is raised120 along gravity-up by original calcTrans; use real runtime binder/top as the approach target."
+    }
+  ],
+  "warp_pods": [
+    {
+      "raw_row": {
+        "table": "/jmp/placement/common/objinfo",
+        "row": 16,
+        "name": "WarpPod",
+        "l_id": 52,
+        "Obj_arg0": 31,
+        "Obj_arg1": 0,
+        "Obj_arg2": 0,
+        "Obj_arg3": -1,
+        "Obj_arg4": -1,
+        "Obj_arg5": -1,
+        "Obj_arg6": -1,
+        "Obj_arg7": -1,
+        "hash_dd7658d8": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1,
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_SLEEP": -1,
+        "MessageId": -1,
+        "pos_x": 1580.0,
+        "pos_y": 538.292724609375,
+        "pos_z": 440.0,
+        "dir_x": 4.460934162139893,
+        "dir_y": 0.2615930140018463,
+        "dir_z": -81.69800567626953,
+        "scale_x": 2.25,
+        "scale_y": 2.25,
+        "scale_z": 2.25,
+        "CastId": -1,
+        "hash_74550d75": 3,
+        "hash_1176d409": -1,
+        "CommonPath_ID": -1,
+        "hash_4b5830b8": -1,
+        "GroupId": 0,
+        "DemoGroupId": -1,
+        "hash_81497c36": -1
+      },
+      "world_sensor_center": [
+        15552.732421875,
+        -9799.0,
+        5512.30029296875
+      ],
+      "sensor_radius": 270.0
+    },
+    {
+      "raw_row": {
+        "table": "/jmp/placement/common/objinfo",
+        "row": 17,
+        "name": "WarpPod",
+        "l_id": 53,
+        "Obj_arg0": 30,
+        "Obj_arg1": 0,
+        "Obj_arg2": 0,
+        "Obj_arg3": -1,
+        "Obj_arg4": -1,
+        "Obj_arg5": -1,
+        "Obj_arg6": -1,
+        "Obj_arg7": -1,
+        "hash_dd7658d8": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1,
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_SLEEP": -1,
+        "MessageId": -1,
+        "pos_x": -1530.0,
+        "pos_y": -908.0077514648438,
+        "pos_z": -210.0,
+        "dir_x": -9.89044189453125,
+        "dir_y": 5.504155158996582,
+        "dir_z": 130.58518981933594,
+        "scale_x": 2.25,
+        "scale_y": 2.25,
+        "scale_z": 2.25,
+        "CastId": -1,
+        "hash_74550d75": 3,
+        "hash_1176d409": -1,
+        "CommonPath_ID": -1,
+        "hash_4b5830b8": -1,
+        "GroupId": 0,
+        "DemoGroupId": -1,
+        "hash_81497c36": -1
+      },
+      "world_sensor_center": [
+        14153.73828125,
+        -11928.4892578125,
+        7898.6103515625
+      ],
+      "sensor_radius": 270.0
+    }
+  ]
+}

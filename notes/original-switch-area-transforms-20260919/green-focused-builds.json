@@ -1,0 +1,20 @@
+[
+  {
+    "target": "smg-pc-original-process-placement-transform-tests",
+    "exit_code": 0,
+    "wall_seconds": 12.727238457999192,
+    "log": "notes/original-switch-area-transforms-20260919/green-smg-pc-original-process-placement-transform-tests-build.log"
+  },
+  {
+    "target": "smg-pc-original-process-crystal-cage-tests",
+    "exit_code": 0,
+    "wall_seconds": 5.318585959030315,
+    "log": "notes/original-switch-area-transforms-20260919/green-smg-pc-original-process-crystal-cage-tests-build.log"
+  },
+  {
+    "target": "smg-pc-original-process-star-piece-placement-tests",
+    "exit_code": 0,
+    "wall_seconds": 5.384842333034612,
+    "log": "notes/original-switch-area-transforms-20260919/green-smg-pc-original-process-star-piece-placement-tests-build.log"
+  }
+]

@@ -15,6 +15,8 @@
 #include "Game/MapObj/CollisionBlocker.hpp"
 #include "Game/MapObj/EarthenPipe.hpp"
 #include "Game/MapObj/Coin.hpp"
+#include "Game/MapObj/CrystalCage.hpp"
+#include "Game/MapObj/DummyDisplayModel.hpp"
 #include "Game/MapObj/FlipPanel.hpp"
 #include "Game/MapObj/HeavensDoorDemoObj.hpp"
 #include "Game/MapObj/InvisiblePolygonObj.hpp"
@@ -24,6 +26,7 @@
 #include "Game/Map/Butterfly.hpp"
 #include "Game/MapObj/PunchingKinoko.hpp"
 #include "Game/MapObj/PowerStarAppearPoint.hpp"
+#include "Game/MapObj/StarPiece.hpp"
 #include "Game/MapObj/StarPieceGroup.hpp"
 #include "Game/MapObj/ShockWaveGenerator.hpp"
 #include "Game/MapObj/SimpleMapObj.hpp"
@@ -169,6 +172,16 @@ namespace {
             "FlipPanelReverse",
             create_supported_name_obj<FlipPanel>,
             "FlipPanelReverse",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "CrystalCageM",
+            create_supported_name_obj<CrystalCage>,
+            "CrystalCageM",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "StarPiece",
+            create_supported_name_obj<StarPiece>,
+            "StarPiece",
         },
         NameObjFactory::Name2CreateFunc{
             "StarPieceFlow",
@@ -595,6 +608,10 @@ namespace {
     // makes actor construction and its complete preload description one
     // atomic compatibility capability.
     constexpr auto cSupportedMakeArchiveListFuncTable = std::array{
+        NameObjFactory::Name2MakeArchiveListFunc{
+            "CrystalCageM",
+            MR::makeArchiveListDummyDisplayModel,
+        },
         NameObjFactory::Name2MakeArchiveListFunc{
             "Coin",
             Coin::makeArchiveList,

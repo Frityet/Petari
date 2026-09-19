@@ -176,10 +176,6 @@ namespace smgpc::scene {
             return value;
         }
 
-        [[nodiscard]] std::array<f32, 3U> transform_point(const StageZoneTransform &transform, const std::array<f32, 3U> &point) {
-            return transform.transform_point(point);
-        }
-
         [[nodiscard]] std::array<f32, 3U> rotation_degrees(const StageZoneTransform &transform) {
             constexpr auto cRadToDeg = f32{180.0F / 3.14159265358979323846F};
             const auto &m = transform.matrix;
@@ -201,46 +197,10 @@ namespace smgpc::scene {
             return result;
         }
 
-        void apply_point_transform(JMapInfo &info, int entry_index, const StageZoneTransform &transform, std::string_view prefix) {
-            const auto base = std::string(prefix);
-            const auto iter = JMapInfoIter(&info, entry_index);
-            auto local_point = std::array<f32, 3U>{};
-            if (!iter.getValue((base + "_x").c_str(), &local_point[0]) || !iter.getValue((base + "_y").c_str(), &local_point[1]) ||
-                !iter.getValue((base + "_z").c_str(), &local_point[2])) {
-                return;
-            }
-
-            const auto world_point = transform_point(transform, local_point);
-            info.setValue(entry_index, (base + "_x").c_str(), world_point[0]);
-            info.setValue(entry_index, (base + "_y").c_str(), world_point[1]);
-            info.setValue(entry_index, (base + "_z").c_str(), world_point[2]);
-        }
-
         [[nodiscard]] StageZoneTransform compose_zone_transform(const StageZoneTransform &parent, const JMapInfoIter &zone_iter) {
             const auto local_translation = read_vec3_or(zone_iter, "pos", {0.0F, 0.0F, 0.0F});
             const auto local_rotation = read_vec3_or(zone_iter, "dir", {0.0F, 0.0F, 0.0F});
             return parent.concatenated(StageZoneTransform::from_translation_rotation(local_translation, local_rotation));
-        }
-
-        void apply_zone_transform(JMapInfo &info, const StageZoneTransform &transform) {
-            for (auto entry_index = 0; entry_index < info.getNumEntries(); ++entry_index) {
-                apply_point_transform(info, entry_index, transform, "pos");
-                apply_point_transform(info, entry_index, transform, "pnt0");
-                apply_point_transform(info, entry_index, transform, "pnt1");
-                apply_point_transform(info, entry_index, transform, "pnt2");
-
-                const auto iter = JMapInfoIter(&info, entry_index);
-                auto local_rotation = std::array<f32, 3U>{};
-                if (iter.getValue("dir_x", &local_rotation[0]) && iter.getValue("dir_y", &local_rotation[1]) &&
-                    iter.getValue("dir_z", &local_rotation[2])) {
-                    const auto world_rotation = transform.concatenated(
-                        StageZoneTransform::from_translation_rotation({0.0F, 0.0F, 0.0F}, local_rotation));
-                    const auto world_euler = rotation_degrees(world_rotation);
-                    info.setValue(entry_index, "dir_x", world_euler[0]);
-                    info.setValue(entry_index, "dir_y", world_euler[1]);
-                    info.setValue(entry_index, "dir_z", world_euler[2]);
-                }
-            }
         }
 
         [[nodiscard]] const StagePlacementTable *find_path_table(const std::vector<StagePlacementTable> &tables,
@@ -288,7 +248,6 @@ namespace smgpc::scene {
                     }
 
                     auto point_info = point_info_table->jmap_info;
-                    apply_zone_transform(point_info, point_info_table->zone_transform);
                     table.jmap_info.setRailInfo(entry_index, path_info_table->jmap_info, std::move(point_info), path_iter.mIndex);
                 }
             }
@@ -596,7 +555,6 @@ namespace smgpc::scene {
             }
 
             auto info = child_table->jmap_info;
-            apply_zone_transform(info, parent_table.zone_transform);
             return info;
         }
 
@@ -630,7 +588,6 @@ namespace smgpc::scene {
             }
 
             auto info = table.jmap_info;
-            apply_zone_transform(info, table.zone_transform);
             if (auto child_info = find_child_info(tables, table)) {
                 info.setChildObjInfo(std::move(*child_info));
             }
@@ -678,6 +635,16 @@ namespace smgpc::scene {
             };
             read_object_args(object, iter);
             read_standard_placement_fields(object, iter);
+            // Keep borrowed JMap fields in authored zone-local space. The
+            // original utility getters resolve their StageDataHolder transform;
+            // only the native inventory descriptor stores world-space metadata.
+            if (object.has_translation) {
+                object.translation = table.zone_transform.transform_point(object.translation);
+            }
+            if (object.has_rotation) {
+                object.rotation = rotation_degrees(table.zone_transform.concatenated(
+                    StageZoneTransform::from_translation_rotation({0.0F, 0.0F, 0.0F}, object.rotation)));
+            }
             read_optional_ids(object, iter);
             const auto object_archive =
                 dvd.find_object_archive(object.creator_identifier);
@@ -700,10 +667,6 @@ namespace smgpc::scene {
         }
 
     }  // namespace
-
-    void apply_stage_zone_transform(JMapInfo& info, const StageZoneTransform& transform) {
-        apply_zone_transform(info, transform);
-    }
 
     std::vector<StageHolderOccurrence>
     discover_stage_holder_occurrences(
@@ -962,7 +925,6 @@ namespace smgpc::scene {
                 auto camera_id = s32{-1};
                 (void)iter.getValue("Camera_id", &camera_id);
                 auto start_jmap_info = table->jmap_info;
-                apply_zone_transform(start_jmap_info, table->zone_transform);
                 start_jmap_info.setName(table->table_name.c_str());
                 start_jmap_info.setPlacedZoneId(table->zone_id);
 

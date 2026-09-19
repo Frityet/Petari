@@ -1,0 +1,575 @@
+{
+  "archive": "build/original-warp-pod-audit-20260919/DemoSheet.arc",
+  "archive_sha256": "975b6c99ec882c5e56f24e4684859692fc98613dc0e021834e9895b46eae8b6d",
+  "tables": {
+    "/demoticoguidedemo/demoticoguidedemoaction.bcsv": [
+      {
+        "row": 0,
+        "PartName": "ウサギ追いかけ[会話]",
+        "CastName": "デモウサギ",
+        "CastID": 0,
+        "ActionType": 3,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 1,
+        "PartName": "ウサギ追いかけ[逃走]",
+        "CastName": "デモウサギ",
+        "CastID": 0,
+        "ActionType": 3,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 2,
+        "PartName": "ウサギ追いかけ[逃走]",
+        "CastName": "デモウサギ",
+        "CastID": 1,
+        "ActionType": 3,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 3,
+        "PartName": "ウサギ追いかけ[逃走]",
+        "CastName": "デモウサギ",
+        "CastID": 2,
+        "ActionType": 3,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 4,
+        "PartName": "ウサギ追いかけ[フェードアウト]",
+        "CastName": "デモウサギ",
+        "CastID": 0,
+        "ActionType": 2,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 5,
+        "PartName": "ウサギ追いかけ[フェードイン]",
+        "CastName": "デモウサギ",
+        "CastID": 0,
+        "ActionType": 2,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 6,
+        "PartName": "ウサギ追いかけ[開始]",
+        "CastName": "逃げチコ",
+        "CastID": 0,
+        "ActionType": 2,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 7,
+        "PartName": "チコとの出会い[チコ変身]",
+        "CastName": "逃げチコ",
+        "CastID": 0,
+        "ActionType": 3,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 8,
+        "PartName": "チコとの出会い[ウサギ出現]",
+        "CastName": "デモウサギ",
+        "CastID": 0,
+        "ActionType": 0,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 9,
+        "PartName": "チコとの出会い[ウサギ会話]",
+        "CastName": "デモウサギ",
+        "CastID": 0,
+        "ActionType": 3,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 10,
+        "PartName": "チコとの出会い[ウサギ逃走]",
+        "CastName": "デモウサギ",
+        "CastID": 0,
+        "ActionType": 3,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 11,
+        "PartName": "チコとの出会い[開始]",
+        "CastName": "逃げチコ",
+        "CastID": 0,
+        "ActionType": 2,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 12,
+        "PartName": "スピンゲット[デモ1]",
+        "CastName": "ロゼッタ",
+        "CastID": -1,
+        "ActionType": 2,
+        "PosName": "MarioDemoPos4",
+        "AnimName": ""
+      },
+      {
+        "row": 13,
+        "PartName": "スピンゲット[デモ1]",
+        "CastName": "ベビチコ",
+        "CastID": 0,
+        "ActionType": 2,
+        "PosName": "MarioDemoPos4",
+        "AnimName": ""
+      },
+      {
+        "row": 14,
+        "PartName": "高楼出現[フェードアウト]",
+        "CastName": "ロゼッタ",
+        "CastID": -1,
+        "ActionType": 2,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 15,
+        "PartName": "高楼出現[フェードイン]",
+        "CastName": "ロゼッタ",
+        "CastID": -1,
+        "ActionType": 2,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 16,
+        "PartName": "高楼出現[デモ後]",
+        "CastName": "ロゼッタ",
+        "CastID": -1,
+        "ActionType": 2,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 17,
+        "PartName": "高楼出現[フェードイン]",
+        "CastName": "逃げチコ",
+        "CastID": 0,
+        "ActionType": 1,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 18,
+        "PartName": "高楼出現[フェードイン]",
+        "CastName": "逃げチコ",
+        "CastID": 1,
+        "ActionType": 2,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 19,
+        "PartName": "高楼出現[フェードイン]",
+        "CastName": "逃げチコ",
+        "CastID": 2,
+        "ActionType": 2,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 20,
+        "PartName": "高楼出現[デモ]",
+        "CastName": "ロゼッタ",
+        "CastID": -1,
+        "ActionType": 2,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 21,
+        "PartName": "スピンゲット[デモ8]",
+        "CastName": "チコ",
+        "CastID": 0,
+        "ActionType": 0,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 22,
+        "PartName": "高楼出現[フェードイン]",
+        "CastName": "ヘブンズドアミステリアス惑星階段（デモ後）",
+        "CastID": -1,
+        "ActionType": 0,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 23,
+        "PartName": "高楼出現[フェードイン]",
+        "CastName": "ヘブンズドアミステリアス惑星階段（デモ中）",
+        "CastID": -1,
+        "ActionType": 1,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 24,
+        "PartName": "スピンゲット[会話2]",
+        "CastName": "ロゼッタ",
+        "CastID": -1,
+        "ActionType": 9,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 25,
+        "PartName": "スピンゲット[会話1]",
+        "CastName": "ロゼッタ",
+        "CastID": -1,
+        "ActionType": 9,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 26,
+        "PartName": "スピンゲット[会話4]",
+        "CastName": "ロゼッタ",
+        "CastID": -1,
+        "ActionType": 9,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 27,
+        "PartName": "スピンゲット[デモ8]",
+        "CastName": "ロゼッタ",
+        "CastID": -1,
+        "ActionType": 13,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 28,
+        "PartName": "スピンゲット[デモ8]",
+        "CastName": "ライトドーム",
+        "CastID": -1,
+        "ActionType": 1,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 29,
+        "PartName": "スピンゲット[デモ8]",
+        "CastName": "ロゼッタ",
+        "CastID": -1,
+        "ActionType": 1,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 30,
+        "PartName": "スピンゲット[会話3]",
+        "CastName": "ロゼッタ",
+        "CastID": -1,
+        "ActionType": 9,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 31,
+        "PartName": "高楼出現[デモ後]",
+        "CastName": "ライト後光",
+        "CastID": -1,
+        "ActionType": 0,
+        "PosName": "",
+        "AnimName": "appear"
+      },
+      {
+        "row": 32,
+        "PartName": "スピンゲット[デモ8]",
+        "CastName": "ベビチコ",
+        "CastID": -1,
+        "ActionType": 1,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 33,
+        "PartName": "高楼出現[デモ]",
+        "CastName": "ロゼッタ",
+        "CastID": -1,
+        "ActionType": 4,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 34,
+        "PartName": "高楼出現[デモ]",
+        "CastName": "ロゼッタ",
+        "CastID": -1,
+        "ActionType": 5,
+        "PosName": "",
+        "AnimName": ""
+      },
+      {
+        "row": 35,
+        "PartName": "高楼出現[デモ後]",
+        "CastName": "ロゼッタ",
+        "CastID": -1,
+        "ActionType": 0,
+        "PosName": "",
+        "AnimName": ""
+      }
+    ],
+    "/demoticoguidedemo/demoticoguidedemocamera.bcsv": [
+      {
+        "row": 0,
+        "PartName": "ウサギ追いかけ[フェードイン]",
+        "CameraTargetName": "",
+        "CameraTargetCastID": -1,
+        "AnimCameraName": "",
+        "AnimCameraStartFrame": -1,
+        "AnimCameraEndFrame": -1,
+        "IsContinuous": 0
+      },
+      {
+        "row": 1,
+        "PartName": "高楼出現[デモ]",
+        "CameraTargetName": "ロゼッタ",
+        "CameraTargetCastID": -1,
+        "AnimCameraName": "",
+        "AnimCameraStartFrame": -1,
+        "AnimCameraEndFrame": -1,
+        "IsContinuous": 0
+      }
+    ],
+    "/demoticoguidedemo/demoticoguidedemoplayer.bcsv": [
+      {
+        "row": 0,
+        "PartName": "チコとの出会い[開始]",
+        "PosName": "MarioDemoPos",
+        "BckName": "demomeettico"
+      },
+      {
+        "row": 1,
+        "PartName": "ウサギ追いかけ[フェードイン]",
+        "PosName": "MarioDemoPos3",
+        "BckName": "watch"
+      },
+      {
+        "row": 2,
+        "PartName": "高楼出現[フェードイン]",
+        "PosName": "MarioDemoPos2",
+        "BckName": ""
+      },
+      {
+        "row": 3,
+        "PartName": "スピンゲット[デモ1]",
+        "PosName": "MarioDemoPos4",
+        "BckName": ""
+      },
+      {
+        "row": 4,
+        "PartName": "チコとの出会い[マリオアニメ]",
+        "PosName": "",
+        "BckName": "demomeetticowatch"
+      }
+    ],
+    "/demoticoguidedemo/demoticoguidedemosound.bcsv": [],
+    "/demoticoguidedemo/demoticoguidedemosubpart.bcsv": [],
+    "/demoticoguidedemo/demoticoguidedemotime.bcsv": [
+      {
+        "row": 0,
+        "PartName": "チコとの出会い[開始]",
+        "TotalStep": 930,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 1,
+        "PartName": "チコとの出会い[チコ変身]",
+        "TotalStep": 75,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 2,
+        "PartName": "チコとの出会い[ウサギ出現]",
+        "TotalStep": 75,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 3,
+        "PartName": "チコとの出会い[マリオアニメ]",
+        "TotalStep": 15,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 4,
+        "PartName": "チコとの出会い[ウサギ会話]",
+        "TotalStep": 1,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 5,
+        "PartName": "チコとの出会い[ウサギ逃走]",
+        "TotalStep": 30,
+        "SuspendFlag": 1
+      },
+      {
+        "row": 6,
+        "PartName": "ウサギ追いかけ[フェードアウト]",
+        "TotalStep": 60,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 7,
+        "PartName": "ウサギ追いかけ[フェードイン]",
+        "TotalStep": 60,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 8,
+        "PartName": "ウサギ追いかけ[会話]",
+        "TotalStep": 5,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 9,
+        "PartName": "ウサギ追いかけ[逃走]",
+        "TotalStep": 78,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 10,
+        "PartName": "ウサギ追いかけ[開始]",
+        "TotalStep": 2,
+        "SuspendFlag": 1
+      },
+      {
+        "row": 11,
+        "PartName": "高楼出現[デモ]",
+        "TotalStep": 300,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 12,
+        "PartName": "高楼出現[デモ後]",
+        "TotalStep": 120,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 13,
+        "PartName": "高楼出現[フェードアウト]",
+        "TotalStep": 60,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 14,
+        "PartName": "高楼出現[フェードイン]",
+        "TotalStep": 1,
+        "SuspendFlag": 1
+      },
+      {
+        "row": 15,
+        "PartName": "スピンゲット[デモ1]",
+        "TotalStep": 420,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 16,
+        "PartName": "スピンゲット[会話1]",
+        "TotalStep": 120,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 17,
+        "PartName": "スピンゲット[デモ2]",
+        "TotalStep": 150,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 18,
+        "PartName": "スピンゲット[会話2]",
+        "TotalStep": 120,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 19,
+        "PartName": "スピンゲット[デモ3]",
+        "TotalStep": 240,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 20,
+        "PartName": "スピンゲット[会話3]",
+        "TotalStep": 120,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 21,
+        "PartName": "スピンゲット[デモ4]",
+        "TotalStep": 500,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 22,
+        "PartName": "スピンゲット[デモ5]",
+        "TotalStep": 60,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 23,
+        "PartName": "スピンゲット[会話4]",
+        "TotalStep": 120,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 24,
+        "PartName": "スピンゲット[デモ6]",
+        "TotalStep": 370,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 25,
+        "PartName": "スピンゲット[デモ7]",
+        "TotalStep": 330,
+        "SuspendFlag": 0
+      },
+      {
+        "row": 26,
+        "PartName": "スピンゲット[デモ8]",
+        "TotalStep": 1,
+        "SuspendFlag": 0
+      }
+    ],
+    "/demoticoguidedemo/demoticoguidedemowipe.bcsv": [
+      {
+        "row": 0,
+        "PartName": "スピンゲット[デモ8]",
+        "WipeName": "フェードワイプ",
+        "WipeType": 0,
+        "WipeFrame": 60
+      },
+      {
+        "row": 1,
+        "PartName": "スピンゲット[デモ7]",
+        "WipeName": "フェードワイプ",
+        "WipeType": 1,
+        "WipeFrame": 120
+      },
+      {
+        "row": 2,
+        "PartName": "スピンゲット[デモ1]",
+        "WipeName": "フェードワイプ",
+        "WipeType": 0,
+        "WipeFrame": -1
+      }
+    ]
+  }
+}

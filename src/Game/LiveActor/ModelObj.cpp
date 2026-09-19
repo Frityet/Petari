@@ -1,7 +1,6 @@
 #include "Game/LiveActor/ModelObj.hpp"
 
 #include "Game/Scene/SceneFunction.hpp"
-#include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 
 ModelObj::ModelObj(const char* pName, const char* pModelName, MtxPtr pMtx, int drawBufferType, int movementType, int calcAnimType, bool useScale)
@@ -26,10 +25,7 @@ ModelObj::ModelObj(const char* pName, const char* pModelName, MtxPtr pMtx, int d
     }
 }
 
-void ModelObj::init(const JMapInfoIter& rIter) {
-    (void)MR::getJMapInfoTrans(rIter, &mPosition);
-    (void)MR::getJMapInfoRotate(rIter, &mRotation);
-    (void)MR::getJMapInfoScale(rIter, &mScale);
+void ModelObj::init(const JMapInfoIter&) {
     makeActorAppeared();
 }
 

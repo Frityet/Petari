@@ -1,0 +1,38 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "retail_start": "0x8016a0e8",
+  "retail_end": "0x8016a468",
+  "retail_text_bytes": 896,
+  "retail_reference_comparison": "PASS (only ELF relocation bits masked)",
+  "relocations": 37,
+  "sections": [
+    {
+      "name": ".text",
+      "size": "896",
+      "match_percent": 100.0
+    },
+    {
+      "name": ".data",
+      "size": "248",
+      "match_percent": 100.0
+    }
+  ],
+  "functions": [
+    {
+      "name": "__ct__8ModelObjFPCcPCcPA4_fiiib",
+      "size": "244",
+      "match_percent": 100.0
+    },
+    {
+      "name": "init__8ModelObjFRC12JMapInfoIter",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "calcAndSetBaseMtx__8ModelObjFv",
+      "size": "92",
+      "match_percent": 100.0
+    }
+  ],
+  "canonical_source_sha256": "300afefd0ca295f8ad3e472f1420c386fae79bfa08ca5cd1bcf01b70ae1826ca"
+}

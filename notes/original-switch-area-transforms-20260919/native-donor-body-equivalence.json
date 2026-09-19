@@ -1,0 +1,10 @@
+{
+  "comparison": "Complete function bodies equal after whitespace removal only",
+  "functions": {
+    "getJMapInfoTrans": true,
+    "getJMapInfoRotate": true,
+    "getRailPointPos0": true,
+    "getRailPointPos1": true,
+    "getRailPointPos2": true
+  }
+}

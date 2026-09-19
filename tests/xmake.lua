@@ -3425,3 +3425,30 @@ target("smg-pc-original-process-butterfly-tests")
     add_files("OriginalProcessButterflyTests.cpp", "../aurora/lib/compat.cpp")
     add_deps {"smg-pc-app", "aurora-main"}
     add_tests("original_process_butterfly", {group = "original-process", rundir = os.projectdir(), realtime_output = true})
+
+target("smg-pc-original-process-crystal-cage-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/original-process")
+    set_rundir(os.projectdir())
+    add_files("OriginalProcessCrystalCageTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-app", "aurora-main"}
+    add_tests("original_process_crystal_cage", {group = "original-process", rundir = os.projectdir(), realtime_output = true})
+
+target("smg-pc-original-process-star-piece-placement-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/original-process")
+    set_rundir(os.projectdir())
+    add_files("OriginalProcessStarPiecePlacementTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-app", "aurora-main"}
+    add_tests("original_process_star_piece_placement", {group = "original-process", rundir = os.projectdir(), realtime_output = true})
+
+target("smg-pc-original-process-placement-transform-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/original-process")
+    set_rundir(os.projectdir())
+    add_files("OriginalProcessPlacementTransformTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-app", "aurora-main"}
+    add_tests("original_process_placement_transform", {group = "original-process", rundir = os.projectdir(), realtime_output = true})

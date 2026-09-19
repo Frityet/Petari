@@ -1,0 +1,5 @@
+# Original ModelObj initialization
+
+The native ModelObj::init had added map translation, rotation and scale reads that the original method never performs. Original callers set these fields or supply an attached matrix before initialization; the method only makes the actor appear. This extra reconstruction behavior is being removed rather than propagated into the restored zone-transform contract. The constructor and base-matrix behavior are semantically unchanged, and this checkpoint does not import ModelObjNpc.
+
+The existing canonical ModelObj donor compiles to 100% text and data match. Its 896-byte text reference matches the retail RMGK01 DOL with only explicit ELF relocation fields masked; init itself is 16 bytes and matches 100%. The proof script and command capture are reproducible. No new decompilation was required. The restored body was included in the passing actual-process placement and CrystalCage probes: the latter constructs all three real animated break ModelObjs and verifies their normal scene retirement. These probes cover those real initialization paths; they do not claim every ModelObj caller is exercised.

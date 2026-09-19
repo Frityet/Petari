@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-crystal-cage-tests"
+  ],
+  "binary_sha256": "66e3aace775020f610a298ec2c97b9b7463bdee10b07abd9bd458a1cc2d8f6b4",
+  "binary_unchanged": true,
+  "pid": 80612,
+  "exit_code": 0,
+  "timeout_terminated": false,
+  "process_still_exists": false,
+  "elapsed_seconds": 3.0990593750029802,
+  "original_completed_120_frames": true,
+  "probe_and_retirement_pass": true,
+  "debugger_attached": false
+}

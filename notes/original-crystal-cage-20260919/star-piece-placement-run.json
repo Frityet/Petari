@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-star-piece-placement-tests"
+  ],
+  "binary_sha256": "aa85e9550e534e1589d5f67fa61e4d8003a6599c8cdad0c1d36679f7af487ae2",
+  "binary_unchanged": true,
+  "pid": 80725,
+  "exit_code": 0,
+  "timeout_terminated": false,
+  "process_still_exists": false,
+  "elapsed_seconds": 3.693747292039916,
+  "original_completed_120_frames": true,
+  "probe_and_retirement_pass": true,
+  "debugger_attached": false
+}

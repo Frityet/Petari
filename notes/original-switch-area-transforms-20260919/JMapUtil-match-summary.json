@@ -1,0 +1,58 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "retail_start": "0x803d5470",
+  "retail_end": "0x803d6740",
+  "retail_text_bytes": 4816,
+  "retail_reference_comparison": "PASS (only ELF relocation bits masked)",
+  "relocations": 329,
+  "sections": [
+    {
+      "name": ".text",
+      "size": "4816",
+      "match_percent": 98.57309
+    },
+    {
+      "name": ".rodata",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": ".data",
+      "size": "496",
+      "match_percent": 67.91209
+    },
+    {
+      "name": ".sdata2",
+      "size": "32",
+      "match_percent": 100.0
+    }
+  ],
+  "functions": [
+    {
+      "name": "getJMapInfoTrans__2MRFRC12JMapInfoIterPQ29JGeometry8TVec3<f>",
+      "size": "108",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getJMapInfoRotate__2MRFRC12JMapInfoIterPQ29JGeometry8TVec3<f>",
+      "size": "360",
+      "match_percent": 99.55556
+    },
+    {
+      "name": "getRailPointPos0__2MRFRC12JMapInfoIterPQ29JGeometry8TVec3<f>",
+      "size": "136",
+      "match_percent": 99.47059
+    },
+    {
+      "name": "getRailPointPos1__2MRFRC12JMapInfoIterPQ29JGeometry8TVec3<f>",
+      "size": "136",
+      "match_percent": 99.47059
+    },
+    {
+      "name": "getRailPointPos2__2MRFRC12JMapInfoIterPQ29JGeometry8TVec3<f>",
+      "size": "136",
+      "match_percent": 99.47059
+    }
+  ],
+  "canonical_source_sha256": "96d0251e910428b2e2c8af90fbcee7c6726e3436ae0ae235c9cf978a7c5b9dd6"
+}
