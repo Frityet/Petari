@@ -7,6 +7,7 @@
 #include "Game/Util/JMapInfo.hpp"
 #include "JSystem/JKernel/JKRMemArchive.hpp"
 #include "compat/JkrAllocationDomain.hpp"
+#include "compat/LanguageOwnership.hpp"
 #include "resource/NativeBmgResource.hpp"
 #include "resource/RarcArchive.hpp"
 #include "runtime/ArchiveMountService.hpp"
@@ -24,6 +25,7 @@ namespace smgpc::runtime {
     }
 
     struct MessageHolderOwnership::Storage {
+        std::unique_ptr<compat::LanguageOwnership> language;
         std::shared_ptr<compat::JkrAllocationDomain> domain;
         ArchiveMountService *mounts = nullptr;
         std::vector<std::shared_ptr<const MountedArchive>> archives;
@@ -51,6 +53,7 @@ namespace smgpc::runtime {
             aurora::throw_host_exception<std::logic_error>("A standalone MessageHolder cannot coexist with another message or GameSystem owner");
 
         auto storage = std::make_unique<Storage>();
+        storage->language = std::make_unique<compat::LanguageOwnership>(language_prefix);
         storage->domain = compat::JkrAllocationDomain::create(std::move(runtime), byte_budget);
         storage->mounts = &mounts;
         auto *embedded = mounts.mount_memory("ErrorMessageArchive.arc", cErrorArchive, &storage->domain->heap());

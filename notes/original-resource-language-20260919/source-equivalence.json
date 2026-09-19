@@ -1,0 +1,13 @@
+{
+  "donor": "decomp/src/Game/System/Language.cpp",
+  "donor_sha256": "47f401f2758ae6a6f46e2041222853a7e11b1cc1aebd37882aee95c85096bc19",
+  "native": "src/compat/OriginalLanguage.cpp",
+  "native_sha256": "8c5a91bd1c3a4b36b8a32ae1ecbd3a779eac92de628c31c9f916f643fb251691",
+  "normalized_exact_match": true,
+  "normalization": [
+    "Remove three native support includes",
+    "Replace only MR::getLanguage with the donor body",
+    "Remove appended LanguageOwnership implementation"
+  ],
+  "binary_sha256": "b3baa0398e3ff65e2c29005439e80be5811152c2b30fa65c7d1cc121db4ddebb"
+}

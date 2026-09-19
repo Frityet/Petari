@@ -3329,3 +3329,14 @@ target("smg-pc-source-mirror-encoding-tests")
     add_tests("source_mirror_encoding", {
         group = "source-boundary", rundir = os.projectdir(), realtime_output = true
     })
+
+target("smg-pc-language-ownership-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("LanguageOwnershipTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("language_ownership", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
