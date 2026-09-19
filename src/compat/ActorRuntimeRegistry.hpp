@@ -27,6 +27,7 @@ class NameObj;
 class Nerve;
 class RailRider;
 class Spine;
+class ShadowController;
 class StageSwitchCtrl;
 class TalkMessageCtrl;
 
@@ -131,12 +132,17 @@ namespace smgpc::compat {
         const TVec3f* drop_direction = nullptr;
         float drop_length = 1000.0F;
         float drop_start_offset = 0.0F;
-        float volume_start_offset = 100.0F;
-        float volume_end_offset = 100.0F;
+        float volume_start_offset = 0.0F;
+        float volume_end_offset = 0.0F;
         float line_start_radius = 100.0F;
         float line_end_radius = 100.0F;
         std::optional<std::size_t> line_start_controller_index{};
         std::optional<std::size_t> line_end_controller_index{};
+        // Programmatic endpoints may belong to another actor. These are
+        // borrowed, like drop_position/drop_direction; their owner must outlive
+        // this line. An index instead binds a preceding or this new controller.
+        const ShadowController* line_start_controller = nullptr;
+        const ShadowController* line_end_controller = nullptr;
         bool volume_cut_drop_length = false;
         bool follow_host_scale = false;
         bool valid = true;
@@ -262,6 +268,10 @@ namespace smgpc::compat {
     [[nodiscard]] ActorShadowControllerRuntimeState make_actor_shadow_controller_runtime_state(
         LiveActor* actor, std::string_view name, ActorShadowControllerKind kind, float radius);
     void replace_actor_shadow_runtime_state(LiveActor* actor, ActorShadowRuntimeState state);
+    // Publish only a complete definition so the original drawer sees all of
+    // its shape parameters and endpoint bindings at construction.
+    [[nodiscard]] ActorShadowControllerRuntimeState& add_actor_shadow_controller(
+        LiveActor* actor, ActorShadowControllerRuntimeState definition);
     [[nodiscard]] ActorShadowControllerRuntimeState& add_actor_shadow_controller(
         LiveActor* actor, std::string_view name, ActorShadowControllerKind kind, float radius);
     [[nodiscard]] ActorShadowControllerRuntimeState* actor_shadow_controller_runtime_state(

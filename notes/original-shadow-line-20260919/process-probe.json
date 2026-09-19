@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-shadow-line-tests"
+  ],
+  "binary_sha256": "84d05e611aff06a53846831d78c80b5df143ef24e5bf6d1db29241518eda42e1",
+  "exit_code": 0,
+  "timeout_terminated": false,
+  "elapsed_seconds": 8.114226374891587,
+  "pid": 56851,
+  "log": "process-probe.log"
+}

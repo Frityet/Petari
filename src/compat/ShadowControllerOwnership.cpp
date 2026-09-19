@@ -4,6 +4,7 @@
 #include "Game/LiveActor/ShadowController.hpp"
 #include "Game/LiveActor/ShadowSurfaceCircle.hpp"
 #include "Game/LiveActor/ShadowVolumeSphere.hpp"
+#include "Game/LiveActor/ShadowVolumeLine.hpp"
 #include "Game/LiveActor/ShadowVolumeCylinder.hpp"
 #include "Game/LiveActor/ShadowVolumeOval.hpp"
 #include "Game/LiveActor/ShadowVolumeOvalPole.hpp"
@@ -66,6 +67,18 @@ namespace smgpc::compat {
         if (scene::current_scene_allocation_domain() != _domain) {
             aurora::throw_host_exception<std::logic_error>("Adding a shadow requires its active owning scene");
         }
+        // CSV resolution observes only preceding controllers plus the line
+        // itself. Programmatic callers may instead borrow a foreign controller.
+        const auto validate_endpoint = [&](const auto& index, const ShadowController* borrowed) {
+            if (index && borrowed) {
+                aurora::throw_host_exception<std::invalid_argument>("Shadow line endpoint has both an index and a borrowed controller");
+            }
+            if (index && *index > _entries.size()) {
+                aurora::throw_host_exception<std::out_of_range>("Shadow line endpoint is not yet present in the original controller list");
+            }
+        };
+        validate_endpoint(definition.line_start_controller_index, definition.line_start_controller);
+        validate_endpoint(definition.line_end_controller_index, definition.line_end_controller);
         if (!_holder) {
             JkrAllocationScope game(_domain);
             _holder = static_cast<ShadowControllerHolder*>(MR::createSceneObj(SceneObj_ShadowControllerHolder));
@@ -129,10 +142,22 @@ namespace smgpc::compat {
         if (definition.kind == ActorShadowControllerKind::VolumeSphere ||
             definition.kind == ActorShadowControllerKind::VolumeCylinder ||
             definition.kind == ActorShadowControllerKind::VolumeOval ||
-            definition.kind == ActorShadowControllerKind::VolumeOvalPole) {
+            definition.kind == ActorShadowControllerKind::VolumeOvalPole ||
+            definition.kind == ActorShadowControllerKind::VolumeLine) {
             JkrAllocationScope game(_domain);
             std::unique_ptr<ShadowVolumeDrawer> volume;
-            if (definition.kind == ActorShadowControllerKind::VolumeSphere) {
+            if (definition.kind == ActorShadowControllerKind::VolumeLine) {
+                const auto endpoint = [&](const auto& index, const ShadowController* borrowed) -> const ShadowController* {
+                    if (!index) return borrowed;
+                    return *index == _entries.size() ? &controller : _entries[*index]->controller.get();
+                };
+                auto line = std::make_unique<ShadowVolumeLine>();
+                line->setFromShadowController(endpoint(definition.line_start_controller_index, definition.line_start_controller));
+                line->setToShadowController(endpoint(definition.line_end_controller_index, definition.line_end_controller));
+                line->setFromWidth(definition.line_start_radius);
+                line->setToWidth(definition.line_end_radius);
+                volume = std::move(line);
+            } else if (definition.kind == ActorShadowControllerKind::VolumeSphere) {
                 auto sphere = std::make_unique<ShadowVolumeSphere>();
                 sphere->setRadius(definition.radius);
                 volume = std::move(sphere);

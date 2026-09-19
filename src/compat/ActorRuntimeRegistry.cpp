@@ -802,8 +802,8 @@ namespace smgpc::compat {
             .drop_direction = &actor->mGravity,
             .drop_length = 1000.0F,
             .drop_start_offset = 50.0F,
-            .volume_start_offset = 100.0F,
-            .volume_end_offset = 100.0F,
+            .volume_start_offset = 0.0F,
+            .volume_end_offset = 0.0F,
             .line_start_radius = 100.0F,
             .line_end_radius = 100.0F,
             .line_start_controller_index = {},
@@ -825,15 +825,6 @@ namespace smgpc::compat {
         if (state.controllers.size() > state.capacity) {
             aurora::throw_host_exception<std::length_error>("Actor shadow controller list exceeds its retail capacity.");
         }
-        const auto index_is_valid = [&state](const std::optional<std::size_t>& index) {
-            return !index.has_value() || *index < state.controllers.size();
-        };
-        for (const auto& controller : state.controllers) {
-            if (!index_is_valid(controller.line_start_controller_index) ||
-                !index_is_valid(controller.line_end_controller_index)) {
-                aurora::throw_host_exception<std::out_of_range>("Actor shadow line endpoint index is outside the controller list.");
-            }
-        }
         state.controllers.reserve(state.capacity);
         auto owner = std::make_unique<ShadowControllerOwnership>(*actor, state);
         auto& actor_state = require_actor_state(actor);
@@ -845,6 +836,11 @@ namespace smgpc::compat {
 
     ActorShadowControllerRuntimeState& add_actor_shadow_controller(
         LiveActor* actor, std::string_view name, ActorShadowControllerKind kind, float radius) {
+        return add_actor_shadow_controller(actor, make_actor_shadow_controller_runtime_state(actor, name, kind, radius));
+    }
+
+    ActorShadowControllerRuntimeState& add_actor_shadow_controller(
+        LiveActor* actor, ActorShadowControllerRuntimeState definition) {
         JkrHostAllocationScope host;
         if (actor == nullptr) {
             aurora::throw_host_exception<std::invalid_argument>("Actor shadow ownership requires a LiveActor.");
@@ -856,7 +852,6 @@ namespace smgpc::compat {
         if (shadow->controllers.size() >= shadow->capacity) {
             aurora::throw_host_exception<std::length_error>("Actor shadow controller list has reached its retail capacity.");
         }
-        auto definition = make_actor_shadow_controller_runtime_state(actor, name, kind, radius);
         auto& actor_state = require_actor_state(actor);
         if (!actor_state.shadow_owner) {
             aurora::throw_host_exception<std::logic_error>("Adding a shadow requires its original controller list owner");

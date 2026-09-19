@@ -16,6 +16,7 @@
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
 
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/Binder.hpp"
@@ -110,6 +111,35 @@ namespace {
         smgpc::compat::replace_actor_shadow_runtime_state(actor, std::move(shadow));
     }
 
+    void bind_line_endpoint(smgpc::compat::ActorShadowControllerRuntimeState& definition,
+                            LiveActor* owner, LiveActor* endpoint_actor, const char* name, bool start) {
+        auto& actor = require_actor(endpoint_actor);
+        auto* list = actor.mShadowControllerList;
+        if (!list) {
+            aurora::throw_host_exception<std::logic_error>("Shadow line endpoint requires an original controller list");
+        }
+        auto& index = start ? definition.line_start_controller_index : definition.line_end_controller_index;
+        auto& borrowed = start ? definition.line_start_controller : definition.line_end_controller;
+        if (&actor != owner) {
+            borrowed = list->getController(name);
+            return;
+        }
+        // Retail adds the new controller before resolving endpoints. Resolve
+        // the same post-add sequence without publishing a partial owner.
+        const auto count = list->getControllerCount();
+        if (count == 0) {
+            index = 0;
+            return;
+        }
+        for (u32 item = 0; item < count; ++item) {
+            if (MR::isEqualString(name, list->getController(item)->mName)) {
+                index = item;
+                return;
+            }
+        }
+        if (MR::isEqualString(name, definition.name_raw.c_str())) index = count;
+    }
+
 
 }  // namespace
 
@@ -150,6 +180,31 @@ namespace MR {
             return false;
         }
         return MR::isGroundCodeDamageFire(&actor.mBinder->mGroundInfo.mParentTriangle);
+    }
+
+    void initShadowController(LiveActor* actor, u32 count) {
+        require_actor(actor).initShadowControllerList(count);
+    }
+
+    void addShadowVolumeSphere(LiveActor* actor, const char* name, f32 radius) {
+        (void)smgpc::compat::add_actor_shadow_controller(actor, name, smgpc::compat::ActorShadowControllerKind::VolumeSphere, radius);
+    }
+
+    void addShadowVolumeLine(LiveActor* actor, const char* name, LiveActor* from_actor, const char* from_name, f32 from_width,
+                             LiveActor* to_actor, const char* to_name, f32 to_width) {
+        const smgpc::compat::JkrHostAllocationScope host;
+        auto definition = smgpc::compat::make_actor_shadow_controller_runtime_state(
+            actor, name, smgpc::compat::ActorShadowControllerKind::VolumeLine, 0.0F);
+        definition.calculation_mode = smgpc::compat::ActorShadowCalculationMode::Disabled;
+        definition.line_start_radius = from_width;
+        definition.line_end_radius = to_width;
+        bind_line_endpoint(definition, actor, from_actor, from_name, true);
+        bind_line_endpoint(definition, actor, to_actor, to_name, false);
+        (void)smgpc::compat::add_actor_shadow_controller(actor, std::move(definition));
+    }
+
+    void setShadowDropDirectionPtr(LiveActor* actor, const char* name, const TVec3f* direction) {
+        require_shadow_controller(actor, name).setDropDirPtr(direction);
     }
 
     void initShadowSurfaceCircle(LiveActor *actor, f32 radius) {
