@@ -1,0 +1,36 @@
+{
+  "sources": [
+    "src/Game/Util/CameraUtil.cpp:112",
+    "src/Game/Util/MathUtil.hpp:470",
+    "src/JSystem/JMath/JMATrigonometric.hpp:57",
+    "src/JSystem/JGeometry/TMatrix.hpp:626"
+  ],
+  "measured": {
+    "projection_valid": true,
+    "depth": 63.3210449,
+    "fovy": 31.8907909,
+    "aspect": 1.33333337,
+    "viewport": [
+      608,
+      456
+    ],
+    "pointer": [
+      247,
+      180
+    ],
+    "projected": [
+      247.057892,
+      180.048737
+    ]
+  },
+  "independent_quantization_explanation": {
+    "table_index": 725,
+    "table_tan_to_sdk_tan_ratio": 0.9989944643712902,
+    "projected_approximation": [
+      247.05731553083646,
+      180.04826571017807
+    ]
+  },
+  "final_test_contract": "Independent double pinhole ray at the original 14-bit quantized angle; actual inverse camera matrix and projection matrix. Float world-product bound is 32 epsilon times sum absolute terms. Existing 0.05-pixel projection tolerance retained.",
+  "production_changed_for_roundtrip": false
+}

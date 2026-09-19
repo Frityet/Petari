@@ -1,0 +1,62 @@
+{
+  "decomp_commit": "ecc9ed4f6de94cc991bfe0b15205c27ab05286bb",
+  "actors": [
+    {
+      "native": "src/Game/Map/Butterfly.cpp",
+      "donor": "decomp/src/Game/Map/Butterfly.cpp",
+      "byte_identical": true
+    },
+    {
+      "native": "src/Game/Map/Butterfly.hpp",
+      "donor": "decomp/include/Game/Map/Butterfly.hpp",
+      "byte_identical": true
+    }
+  ],
+  "helpers": [
+    {
+      "provider": "src/compat/OriginalStarPointerOwnerQueries.cpp",
+      "donor": "decomp/src/Game/Util/StarPointerUtil.cpp",
+      "function": "tryStarPointerCheckWithoutRumble",
+      "exact_body": true,
+      "body_sha256": "3c0e35e6c555e0968ba382162f2622f6c813d7417912345cc105d21e9cf3c38f"
+    },
+    {
+      "provider": "src/compat/OriginalStarPointerOwnerQueries.cpp",
+      "donor": "decomp/src/Game/Util/StarPointerUtil.cpp",
+      "function": "calcStarPointerWorldPointingPos",
+      "exact_body": true,
+      "body_sha256": "06ace31b57900078c6a0e75007a0797c5eabe608d464f39f286564da4450742d"
+    },
+    {
+      "provider": "src/compat/OriginalStarPointerOwnerQueries.cpp",
+      "donor": "decomp/src/Game/Util/StarPointerUtil.cpp",
+      "function": "calcStarPointerScreenDistanceToTarget",
+      "exact_body": true,
+      "body_sha256": "43acc0358f1c1b54266bc4cddd603a8216fc48f180e985077bd04968d879c71f"
+    },
+    {
+      "provider": "src/compat/GameMathCompat.cpp",
+      "donor": "decomp/src/Game/Util/MathUtil.cpp",
+      "function": "makeQuatUpNoSupport",
+      "exact_body": true,
+      "body_sha256": "81a5cd9227140b48bdb4f6767a842994ba39c242dd4fe029d657a17262d7bd2b"
+    }
+  ],
+  "declarations": [
+    {
+      "native": "src/Game/Util/StarPointerUtil.hpp",
+      "donor": "decomp/include/Game/Util/StarPointerUtil.hpp",
+      "name": "initStarPointerTarget",
+      "exact_declaration": true,
+      "restored_default": "TVec3f(0.0f)"
+    }
+  ],
+  "generic_inline_imports": [
+    {
+      "native": "src/JSystem/JGeometry/TVec.hpp",
+      "donor": "decomp/libs/JSystem/include/JSystem/JGeometry/TVec.hpp",
+      "name": "TVec2::operator-=",
+      "exact_body": true
+    }
+  ]
+}

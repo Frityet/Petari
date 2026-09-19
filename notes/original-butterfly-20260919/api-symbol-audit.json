@@ -1,0 +1,195 @@
+{
+  "addHitSensorMtxAnimal": [
+    "0000000000000688 T MR::addHitSensorMtxAnimal(LiveActor*, char const*, unsigned short, float, float (*) [4], JGeometry::TVec3<float> const&)"
+  ],
+  "appearStarPiece": [
+    "0000000000001d10 T MR::appearStarPiece(NameObj const*, JGeometry::TVec3<float> const&, int, float, float, bool)"
+  ],
+  "calcDistanceToPlayer": [
+    "00000000000001bc T MR::calcDistanceToPlayer(JGeometry::TVec3<float> const&)",
+    "00000000000001e8 T MR::calcDistanceToPlayer(LiveActor const*)"
+  ],
+  "calcGravityVector": [
+    "00000000000003c0 T MR::calcGravityVector(NameObj const*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*, GravityInfo*, unsigned int)",
+    "0000000000000300 T MR::calcGravityVector(LiveActor const*, JGeometry::TVec3<float>*, GravityInfo*, unsigned int)"
+  ],
+  "calcPlayerJointMtx": [
+    "000000000000115c T MR::calcPlayerJointMtx(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, char const*)"
+  ],
+  "calcScreenPosition": [
+    "0000000000000008 T MR::calcScreenPosition(JGeometry::TVec2<float>*, JGeometry::TVec3<float> const&)",
+    "000000000000017c T MR::calcScreenPosition(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&)"
+  ],
+  "calcStarPointerScreenDistanceToTarget": [],
+  "calcStarPointerWorldPointingPos": [],
+  "checkPassBckFrame": [
+    "0000000000000600 T MR::checkPassBckFrame(LiveActor const*, float)"
+  ],
+  "connectToSceneMapObj": [
+    "0000000000000314 T MR::connectToSceneMapObj(LiveActor*)"
+  ],
+  "converge": [],
+  "declareStarPiece": [
+    "0000000000001c10 T MR::declareStarPiece(NameObj const*, int)"
+  ],
+  "getBckRate": [
+    "0000000000000f1c T MR::getBckRate(LiveActor const*)"
+  ],
+  "getCamXdir": [
+    "000000000000083c T MR::getCamXdir()"
+  ],
+  "getCamYdir": [
+    "0000000000000890 T MR::getCamYdir()"
+  ],
+  "getJMapInfoArg0NoInit": [
+    "00000000000010a0 T MR::getJMapInfoArg0NoInit(JMapInfoIter const&, bool*)",
+    "0000000000000fc0 T MR::getJMapInfoArg0NoInit(JMapInfoIter const&, float*)",
+    "0000000000000ec0 T MR::getJMapInfoArg0NoInit(JMapInfoIter const&, int*)"
+  ],
+  "getJMapInfoArg1NoInit": [
+    "00000000000013a4 T MR::getJMapInfoArg1NoInit(JMapInfoIter const&, bool*)",
+    "00000000000012c0 T MR::getJMapInfoArg1NoInit(JMapInfoIter const&, float*)",
+    "00000000000011c0 T MR::getJMapInfoArg1NoInit(JMapInfoIter const&, int*)"
+  ],
+  "getJointMtx": [
+    "0000000000000094 T MR::getJointMtx(J3DModel*, char const*)",
+    "00000000000000cc T MR::getJointMtx(LiveActor const*, char const*)",
+    "0000000000000118 T MR::getJointMtx(LiveActor const*, int)"
+  ],
+  "getStarPointerLastPointedPort": [
+    "000000000000207c T MR::getStarPointerLastPointedPort(LiveActor const*)"
+  ],
+  "getStarPointerScreenPosition": [
+    "0000000000000350 T MR::getStarPointerScreenPosition(int)"
+  ],
+  "getStarPointerScreenSpeed": [
+    "00000000000003c0 T MR::getStarPointerScreenSpeed(int)"
+  ],
+  "getStarPointerScreenVelocity": [
+    "0000000000000488 T MR::getStarPointerScreenVelocity(int)"
+  ],
+  "initDefaultPos": [
+    "0000000000000378 T MR::initDefaultPos(LiveActor*, JMapInfoIter const&)"
+  ],
+  "initStarPointerTarget": [
+    "0000000000000100 T MR::initStarPointerTarget(LiveActor*, float, JGeometry::TVec3<float> const&)"
+  ],
+  "invalidateClipping": [
+    "0000000000000034 T MR::invalidateClipping(LiveActor*)"
+  ],
+  "isEqualStageName": [
+    "0000000000000088 T MR::isEqualStageName(char const*)"
+  ],
+  "isFirstStep": [
+    "0000000000000cc4 T MR::isFirstStep(LayoutActor const*)",
+    "0000000000000028 T MR::isFirstStep(NerveExecutor const*)",
+    "0000000000000838 T MR::isFirstStep(LiveActor const*)"
+  ],
+  "isInvalidClipping": [
+    "00000000000004e4 T MR::isInvalidClipping(LiveActor const*)"
+  ],
+  "isLessStep": [
+    "0000000000001840 T MR::isLessStep(LayoutActor const*, int)",
+    "0000000000000030 T MR::isLessStep(NerveExecutor const*, int)",
+    "0000000000000840 T MR::isLessStep(LiveActor const*, int)"
+  ],
+  "isNear": [
+    "00000000000002c4 T MR::isNear(HitSensor const*, HitSensor const*, float)",
+    "0000000000000334 T MR::isNear(LiveActor const*, JGeometry::TVec3<float> const&, float)",
+    "00000000000002fc T MR::isNear(LiveActor const*, LiveActor const*, float)"
+  ],
+  "isNearZero": [
+    "0000000000002c1c T MR::isNearZero(JGeometry::TVec2<float> const&, float)",
+    "000000000000101c T MR::isNearZero(JGeometry::TVec3<float> const&, float)",
+    "0000000000001af0 T MR::isNearZero(float, float)"
+  ],
+  "isPlayerSleeping": [
+    "0000000000000878 T MR::isPlayerSleeping()"
+  ],
+  "isSensorNpc": [
+    "0000000000001550 T MR::isSensorNpc(HitSensor const*)"
+  ],
+  "isStarPointerInScreen": [
+    "00000000000003ec T MR::isStarPointerInScreen(int)"
+  ],
+  "isStarPointerInScreenAnyPort": [
+    "000000000000041c T MR::isStarPointerInScreenAnyPort(int*)"
+  ],
+  "isStarPointerPointing2P": [
+    "0000000000001d14 T MR::isStarPointerPointing2P(LiveActor const*, char const*, bool, bool)"
+  ],
+  "isStep": [
+    "0000000000000d70 T MR::isStep(LayoutActor const*, int)",
+    "0000000000000000 T MR::isStep(NerveExecutor const*, int)",
+    "00000000000006cc T MR::isStep(LiveActor const*, int)"
+  ],
+  "makeQuatUpNoSupport": [],
+  "normalize": [
+    "0000000000000410 T MR::normalize(JGeometry::TVec2<float>*)",
+    "0000000000000454 T MR::normalize(JGeometry::TVec3<float>*)",
+    "0000000000001f20 T MR::normalize(JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*)",
+    "0000000000002040 T MR::normalize(float, float, float)",
+    "00000000000000b8 T MR::normalize(JGeometry::TVec2<float> const&, JGeometry::TVec2<float>*)"
+  ],
+  "normalizeOrZero": [
+    "0000000000001f38 T MR::normalizeOrZero(JGeometry::TVec3<float>*)",
+    "0000000000001fb4 T MR::normalizeOrZero(JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*)",
+    "0000000000000000 T MR::normalizeOrZero(JGeometry::TVec2<float>*)"
+  ],
+  "setBaseTRMtx": [
+    "000000000000007c T MR::setBaseTRMtx(LiveActor*, float (*) [4])",
+    "00000000000000a4 T MR::setBaseTRMtx(LiveActor*, JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>> const&)",
+    "00000000000000cc T MR::setBaseTRMtx(LiveActor*, JGeometry::TQuat4<float> const&)"
+  ],
+  "setBckFrameAtRandom": [
+    "0000000000000fb8 T MR::setBckFrameAtRandom(LiveActor const*)"
+  ],
+  "setBckRate": [
+    "0000000000000ccc T MR::setBckRate(LiveActor const*, float)"
+  ],
+  "setBrkFrameAndStop": [
+    "00000000000006bc T MR::setBrkFrameAndStop(LiveActor const*, float)"
+  ],
+  "setClippingFar50m": [
+    "000000000000007c T MR::setClippingFar50m(LiveActor*)"
+  ],
+  "setClippingTypeSphere": [
+    "0000000000000000 T MR::setClippingTypeSphere(LiveActor*, float)",
+    "000000000000003c T MR::setClippingTypeSphere(LiveActor*, float, JGeometry::TVec3<float> const*)"
+  ],
+  "setStarPointerTargetRadius3d": [
+    "000000000000016c T MR::setStarPointerTargetRadius3d(LiveActor*, float)"
+  ],
+  "startBck": [
+    "0000000000000228 T MR::startBck(LiveActor const*, char const*, char const*)"
+  ],
+  "startBrk": [
+    "00000000000008c0 T MR::startBrk(LiveActor const*, char const*)"
+  ],
+  "startSound": [
+    "00000000000004b4 T MR::startSound(LiveActor const*, JAISoundID, int, int)",
+    "000000000000038c T MR::startSound(LiveActor const*, char const*, int, int)"
+  ],
+  "syncStageSwitchAppear": [
+    "000000000000044c T MR::syncStageSwitchAppear(LiveActor*)"
+  ],
+  "testCorePadButtonB": [
+    "0000000000000180 T MR::testCorePadButtonB(int)"
+  ],
+  "tryStarPointerCheckWithoutRumble": [],
+  "turnVecToVecCos": [
+    "0000000000002dfc T MR::turnVecToVecCos(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, float, JGeometry::TVec3<float> const&, float)"
+  ],
+  "useStageSwitchReadAppear": [
+    "00000000000000a0 T MR::useStageSwitchReadAppear(LiveActor*, JMapInfoIter const&)"
+  ],
+  "validateClipping": [
+    "0000000000000000 T MR::validateClipping(LiveActor*)"
+  ],
+  "vecBlend": [
+    "0000000000000ec8 T MR::vecBlend(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*, float)"
+  ],
+  "vecKillElement": [
+    "0000000000002124 T MR::vecKillElement(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*)"
+  ]
+}

@@ -21,6 +21,7 @@
 #include "Game/MapObj/InvisiblePolygonObjGCapture.hpp"
 #include "Game/MapObj/PlantGroup.hpp"
 #include "Game/MapObj/PowerStar.hpp"
+#include "Game/Map/Butterfly.hpp"
 #include "Game/MapObj/PunchingKinoko.hpp"
 #include "Game/MapObj/PowerStarAppearPoint.hpp"
 #include "Game/MapObj/StarPieceGroup.hpp"
@@ -473,6 +474,11 @@ namespace {
             "Rosetta",
             create_supported_name_obj<Rosetta>,
             nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "Butterfly",
+            create_supported_name_obj<Butterfly>,
+            "Butterfly",
         },
         NameObjFactory::Name2CreateFunc{
             "PunchingKinoko",

@@ -148,6 +148,11 @@ namespace JGeometry {
             y += value.y;
         }
 
+        inline void operator-=(const TVec2< T >& rOther) {
+            x = x - rOther.x;
+            y = y - rOther.y;
+        }
+
         [[nodiscard]] TVec2 operator+(const TVec2& value) const {
             return TVec2{x + value.x, y + value.y};
         }

@@ -1035,3 +1035,11 @@ namespace MR {
         pDst->mult(rot, rSrc);
     }
 }  // namespace MR
+
+namespace MR {
+    void makeQuatUpNoSupport(TQuat4f* pQuat, const TVec3f& rUp) {
+        TPos3f mtx;
+        makeMtxUpNoSupport(&mtx, rUp);
+        mtx.getQuat(*pQuat);
+    }
+}

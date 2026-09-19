@@ -624,3 +624,35 @@ namespace MR {
         return &pActor->mStarPointerTarget->mLastPointedChannel;
     }
 }
+
+namespace MR {
+    bool tryStarPointerCheckWithoutRumble(LiveActor* pActor, bool enableTouch) {
+        return MR::isStarPointerPointing1Por2P(pActor, nullptr, enableTouch, false);
+    }
+
+    void calcStarPointerWorldPointingPos(TVec3f* pPos, const TVec3f& rPos, s32 channel) {
+        f32 camZ = MR::calcCameraDistanceZ(rPos);
+        MR::calcWorldPositionFromScreen(pPos, ::getStarPointerController(channel)->mPastInfo.mPos, camZ);
+    }
+
+    bool calcStarPointerScreenDistanceToTarget(const LiveActor* pActor, f32* pDistance, s32 channel) {
+        TVec2f screenPos;
+        if (!pActor->mStarPointerTarget->calcScreenPosition(&screenPos)) {
+            return false;
+        }
+
+        StarPointerController* controller = ::getStarPointerController(channel);
+        if (!::getStarPointerLayout(channel)->mIsPointerValid) {
+            return false;
+        }
+
+        if (!controller->isInScreen()) {
+            return false;
+        }
+
+        TVec2f targetPos(controller->mPastInfo.mPos);
+        screenPos -= targetPos;
+        *pDistance = screenPos.length();
+        return true;
+    }
+}

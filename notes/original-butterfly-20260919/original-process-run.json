@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-butterfly-tests"
+  ],
+  "binary_sha256": "1eff471f32c9824b6020821e450b3717dc1c5144f6411e424bd14f5347f6e626",
+  "exit_code": 0,
+  "timeout_terminated": false,
+  "elapsed_seconds": 7.959117875085212,
+  "pid": 75819,
+  "log": "original-process-run.log"
+}

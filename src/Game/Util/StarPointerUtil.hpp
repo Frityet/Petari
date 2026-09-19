@@ -9,7 +9,7 @@ class LiveActor;
 namespace MR {
     bool isStarPointerPointingPane(const LayoutActor* pLayout, const char* pPaneName, s32, bool, const char*);
     bool isStarPointerPointingPaneForMeterLayout(const LayoutActor* pLayout, const char* pPaneName, s32, bool, const char*);
-    void initStarPointerTarget(LiveActor* pActor, f32 radius, const TVec3f& rOffset);
+    void initStarPointerTarget(LiveActor*, f32, const TVec3f& rOffset = TVec3f(0.0f));
     void initStarPointerTargetAtPos(LiveActor*, f32, const TVec3f*, const TVec3f&);
     void initStarPointerTargetAtMtx(LiveActor*, f32, MtxPtr, const TVec3f&);
     void initStarPointerTargetAtJoint(LiveActor*, const char*, f32, const TVec3f&);

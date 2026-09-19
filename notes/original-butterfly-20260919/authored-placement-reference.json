@@ -1,0 +1,110 @@
+[
+  {
+    "args": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+    ],
+    "cast_id": -1,
+    "common_path_id": -1,
+    "creator": "Butterfly",
+    "demo_group_id": -1,
+    "holder": 1,
+    "ignored": false,
+    "l_id": 29,
+    "name": "Butterfly",
+    "position": [
+      14493.3349609375,
+      -12706.1826171875,
+      5701.0
+    ],
+    "reason": "retail_creator_not_linked",
+    "row": 2,
+    "supported": false,
+    "switch_a": -1,
+    "switch_appear": -1,
+    "switch_b": -1,
+    "switch_dead": -1,
+    "switch_sleep": -1,
+    "table": "jmp/placement/common/objinfo",
+    "zone": "HeavensDoorMysteriousZone",
+    "zone_id": 5
+  },
+  {
+    "args": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+    ],
+    "cast_id": -1,
+    "common_path_id": -1,
+    "creator": "Butterfly",
+    "demo_group_id": -1,
+    "holder": 1,
+    "ignored": false,
+    "l_id": 30,
+    "name": "Butterfly",
+    "position": [
+      16451.720703125,
+      -12052.8837890625,
+      5830.56884765625
+    ],
+    "reason": "retail_creator_not_linked",
+    "row": 3,
+    "supported": false,
+    "switch_a": -1,
+    "switch_appear": -1,
+    "switch_b": -1,
+    "switch_dead": -1,
+    "switch_sleep": -1,
+    "table": "jmp/placement/common/objinfo",
+    "zone": "HeavensDoorMysteriousZone",
+    "zone_id": 5
+  },
+  {
+    "args": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+    ],
+    "cast_id": -1,
+    "common_path_id": -1,
+    "creator": "Butterfly",
+    "demo_group_id": -1,
+    "holder": 1,
+    "ignored": false,
+    "l_id": 31,
+    "name": "Butterfly",
+    "position": [
+      16504.1953125,
+      -12138.6533203125,
+      6070.33984375
+    ],
+    "reason": "retail_creator_not_linked",
+    "row": 4,
+    "supported": false,
+    "switch_a": -1,
+    "switch_appear": -1,
+    "switch_b": -1,
+    "switch_dead": -1,
+    "switch_sleep": -1,
+    "table": "jmp/placement/common/objinfo",
+    "zone": "HeavensDoorMysteriousZone",
+    "zone_id": 5
+  }
+]
