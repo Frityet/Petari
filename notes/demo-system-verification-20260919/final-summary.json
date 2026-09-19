@@ -1,0 +1,293 @@
+{
+  "trace": "notes/demo-system-verification-20260919/final-route-actors.jsonl",
+  "sha256": "da80667464631a60ec058cb826eb6069c94137bf61ac1258c7533ffe86fd07f6",
+  "scope": "Sampled trace only. No retail parity claim; live/unhidden actor flags are not proof of rendered visibility.",
+  "first_frame": 0,
+  "last_frame": 26970,
+  "samples": 2698,
+  "actor_samples": 113148,
+  "invalid_sampled_vectors": [],
+  "player_status_sample_counts": {
+    "0": 2682,
+    "19": 12
+  },
+  "binder_contact_sample_counts": {
+    "ground": 663,
+    "wall": 68,
+    "roof": 3
+  },
+  "binder_feature_sample_counts": {
+    "1": 569,
+    "2": 27,
+    "3": 56,
+    "4": 80,
+    "5": 2
+  },
+  "player_cached_ground_triangle_host_sample_counts": {
+    "722": 2673,
+    "701": 21
+  },
+  "player_gravity_transitions": [
+    {
+      "frame": 40,
+      "actor_id": 339,
+      "field_actor_id": 418,
+      "field_gravity_id": -1,
+      "field_type": "12PointGravity",
+      "largest_priority": 0
+    }
+  ],
+  "gravity_field_transitions": [
+    {
+      "frame": 40,
+      "actor_id": 418,
+      "position": [
+        14760.0,
+        -10676.2255859375,
+        6770.0
+      ],
+      "activated": true,
+      "appeared": true,
+      "distant": 0.0,
+      "gravity_id": -1,
+      "gravity_type": 1,
+      "inverse": false,
+      "power": 1,
+      "priority": 0,
+      "range": 8200.0,
+      "registered": true,
+      "type": "12PointGravity",
+      "valid_follower": true
+    },
+    {
+      "frame": 40,
+      "actor_id": 425,
+      "position": [
+        6680.0,
+        2078.29248046875,
+        -5310.0
+      ],
+      "activated": true,
+      "appeared": true,
+      "distant": 800.0,
+      "gravity_id": -1,
+      "gravity_type": 1,
+      "inverse": false,
+      "power": 1,
+      "priority": 0,
+      "range": 2000.0,
+      "registered": true,
+      "type": "12PointGravity",
+      "valid_follower": true
+    },
+    {
+      "frame": 40,
+      "actor_id": 426,
+      "position": [
+        2856.892333984375,
+        6490.8212890625,
+        -7048.84716796875
+      ],
+      "activated": true,
+      "appeared": true,
+      "distant": 800.0,
+      "gravity_id": -1,
+      "gravity_type": 1,
+      "inverse": false,
+      "power": 1,
+      "priority": 0,
+      "range": 4000.0,
+      "registered": true,
+      "type": "12PointGravity",
+      "valid_follower": true
+    },
+    {
+      "frame": 40,
+      "actor_id": 427,
+      "position": [
+        42840.0,
+        -14537.6064453125,
+        -2530.0
+      ],
+      "activated": true,
+      "appeared": true,
+      "distant": 0.0,
+      "gravity_id": -1,
+      "gravity_type": 1,
+      "inverse": true,
+      "power": 1,
+      "priority": 1,
+      "range": 4000.0,
+      "registered": true,
+      "type": "12PointGravity",
+      "valid_follower": true
+    },
+    {
+      "frame": 40,
+      "actor_id": 428,
+      "position": [
+        13917.0625,
+        -1896.3616943359375,
+        -4606.8095703125
+      ],
+      "activated": true,
+      "appeared": true,
+      "distant": 0.0,
+      "gravity_id": -1,
+      "gravity_type": 1,
+      "inverse": false,
+      "power": 1,
+      "priority": 1000,
+      "range": 5000.0,
+      "registered": true,
+      "type": "12PointGravity",
+      "valid_follower": true
+    },
+    {
+      "frame": 40,
+      "actor_id": 452,
+      "position": [
+        15179.5380859375,
+        -7561.232421875,
+        7792.45849609375
+      ],
+      "activated": true,
+      "appeared": false,
+      "distant": 0.0,
+      "gravity_id": -1,
+      "gravity_type": 1,
+      "inverse": false,
+      "power": 1,
+      "priority": 1,
+      "range": 2300.0,
+      "registered": true,
+      "type": "15ParallelGravity",
+      "valid_follower": true
+    },
+    {
+      "frame": 40,
+      "actor_id": 453,
+      "position": [
+        6680.0,
+        2747.101318359375,
+        -5310.0
+      ],
+      "activated": true,
+      "appeared": true,
+      "distant": 0.0,
+      "gravity_id": -1,
+      "gravity_type": 1,
+      "inverse": false,
+      "power": 1,
+      "priority": 1,
+      "range": -1.0,
+      "registered": true,
+      "type": "15ParallelGravity",
+      "valid_follower": true
+    }
+  ],
+  "events": [
+    {
+      "kind": "rabbit_caught",
+      "frame": 10130,
+      "actor_id": 911,
+      "actor_type": "13RunawayRabbit",
+      "name": "\u7403\u9762\u9003\u3052\u30a6\u30b5\u30ae",
+      "position": [
+        14194.9560546875,
+        -8836.7734375,
+        7557.20703125
+      ],
+      "nerve": {
+        "step": 6,
+        "type": "N16NrvRunawayRabbit22RunawayRabbitNrvCaughtE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "tico_Talk",
+      "frame": 10390,
+      "actor_id": 896,
+      "actor_type": "11RunawayTico",
+      "name": "\u9003\u3052\u30c1\u30b3",
+      "position": [
+        14198.7744140625,
+        -8711.1396484375,
+        7736.88232421875
+      ],
+      "nerve": {
+        "step": 5,
+        "type": "N14NrvRunawayTico18RunawayTicoNrvTalkE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "pipe_PlayerIn",
+      "frame": 23380,
+      "actor_id": 701,
+      "actor_type": "11EarthenPipe",
+      "name": "\u571f\u7ba1",
+      "position": [
+        12761.115234375,
+        -11282.013671875,
+        6032.2978515625
+      ],
+      "nerve": {
+        "step": 2,
+        "type": "N14NrvEarthenPipe22EarthenPipeNrvPlayerInE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "pipe_PlayerOut",
+      "frame": 23460,
+      "actor_id": 701,
+      "actor_type": "11EarthenPipe",
+      "name": "\u571f\u7ba1",
+      "position": [
+        12761.115234375,
+        -11282.013671875,
+        6032.2978515625
+      ],
+      "nerve": {
+        "step": 7,
+        "type": "N14NrvEarthenPipe23EarthenPipeNrvPlayerOutE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "rabbit_caught",
+      "frame": 23770,
+      "actor_id": 906,
+      "actor_type": "13RunawayRabbit",
+      "name": "\u7403\u9762\u9003\u3052\u30a6\u30b5\u30ae",
+      "position": [
+        15771.5341796875,
+        -12181.54296875,
+        5621.76708984375
+      ],
+      "nerve": {
+        "step": 2,
+        "type": "N16NrvRunawayRabbit22RunawayRabbitNrvCaughtE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "tico_Talk",
+      "frame": 24030,
+      "actor_id": 890,
+      "actor_type": "11RunawayTico",
+      "name": "\u9003\u3052\u30c1\u30b3",
+      "position": [
+        15791.7568359375,
+        -12221.5654296875,
+        5429.10400390625
+      ],
+      "nerve": {
+        "step": 3,
+        "type": "N14NrvRunawayTico18RunawayTicoNrvTalkE"
+      },
+      "clipped": false
+    }
+  ]
+}

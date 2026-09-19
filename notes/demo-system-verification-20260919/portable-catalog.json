@@ -1,0 +1,24 @@
+[
+  {
+    "target": "smg-pc-nameobj-factory-placement-tests",
+    "build": {
+      "command": [
+        "xmake",
+        "build",
+        "-j",
+        "8",
+        "smg-pc-nameobj-factory-placement-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 5.426527917035855
+    },
+    "binary_sha256": "1e93f492305a0e541158872de1a416348c6eba52e2232a0bb3b56542e4543237",
+    "test": {
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-nameobj-factory-placement-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.37454812496434897
+    }
+  }
+]

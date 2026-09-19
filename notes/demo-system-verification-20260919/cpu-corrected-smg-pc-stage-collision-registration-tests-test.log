@@ -1,0 +1,7 @@
+[ok] collision absent without registration
+[ok] only explicit valid KCL registers
+[ok] triangle source matrix lifetime
+[ok] host owner/zone/resource separation and retirement
+[ok] line traversal Game heap ownership
+[fail] generated original geometry publication and retirement: An original JKR root heap already exists
+1 stage collision registration test(s) failed

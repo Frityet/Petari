@@ -1,0 +1,122 @@
+[
+  {
+    "path": "notes/demo-system-verification-20260919/final2-approach.jsonl",
+    "bytes": 141276,
+    "sha256": "ba0e411dd112f5d7c9a5712b7cbb638254b3f1bc63f9f08f5f6817fcb5d52257",
+    "compressed_path": "notes/demo-system-verification-20260919/final2-approach.jsonl.gz",
+    "compressed_bytes": 13878,
+    "compressed_sha256": "6098e330928b70d048919a6e4c10c4e02fd7841496fd5d70bedc9313115c9f0e"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final2-operator.jsonl",
+    "bytes": 941950,
+    "sha256": "590f32b56963d30afde0cf650decb04f7c86f1cee981e2db5a69abc05cff1fe8",
+    "compressed_path": "notes/demo-system-verification-20260919/final2-operator.jsonl.gz",
+    "compressed_bytes": 58151,
+    "compressed_sha256": "de1eb1a642c4ee32e74870b40dabd5aa0b5afc3c2298efb94cf351d54937a8a7"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final2-return-stairs.jsonl",
+    "bytes": 74805,
+    "sha256": "f827083fe06abf1d71bd9516487bce4adae353b5a0cdff2d50428b9bbd1fcafe",
+    "compressed_path": "notes/demo-system-verification-20260919/final2-return-stairs.jsonl.gz",
+    "compressed_bytes": 8978,
+    "compressed_sha256": "c093a5570cc8d676032e79648b52b565bed99b598608804749e818c33bd83d25"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final2-rosetta-appearance-ui.png",
+    "bytes": 218667,
+    "sha256": "7da07f7baf6695dafbde9848373d48c804f464aa5a564385266e4d718a53eda8",
+    "compressed_path": "notes/demo-system-verification-20260919/final2-rosetta-appearance-ui.png.gz",
+    "compressed_bytes": 216321,
+    "compressed_sha256": "8d7224c690b0fd75bee367c0eab82b41509a5e24b9168f939952c334d4f199c8"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final2-route-actors.jsonl",
+    "bytes": 60772058,
+    "sha256": "fbce0694c4202948a318fc75d0b0417cec19ddf1a329815a94b42958b7e20e50",
+    "compressed_path": "notes/demo-system-verification-20260919/final2-route-actors.jsonl.gz",
+    "compressed_bytes": 1354161,
+    "compressed_sha256": "1e390c99dcca67dc0971e69659c49c085d395480b737896c658869a799c3d971"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final2-route-frame28500.png",
+    "bytes": 14748233,
+    "sha256": "f6a3ae4a6ac672f4ed56210a7b200ed1be734d541971edea0199e441f03b2b72",
+    "compressed_path": "notes/demo-system-verification-20260919/final2-route-frame28500.png.gz",
+    "compressed_bytes": 7432581,
+    "compressed_sha256": "92b666009ba496388c1bb1a52899dc6649d965dbc9e3726a6b7704a8f8e24484"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final2-route.log",
+    "bytes": 199810,
+    "sha256": "895e41d4f23ca5b8f84cb97327da942357b887e56f8575fb63d58d5821e9e7a8",
+    "compressed_path": "notes/demo-system-verification-20260919/final2-route.log.gz",
+    "compressed_bytes": 32017,
+    "compressed_sha256": "b0601b2b91ec9cdc6e772d08af8d708417c8888a557d0bb911d919eaa329c684"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final2-stairs-walk.jsonl",
+    "bytes": 14045,
+    "sha256": "5c032c4f106d797cdd214ee24e66631f2a5ab472de3fdddb474047ce2e422e51",
+    "compressed_path": "notes/demo-system-verification-20260919/final2-stairs-walk.jsonl.gz",
+    "compressed_bytes": 2637,
+    "compressed_sha256": "9aec190f89a4cd2822755dc8fb6a91cafc2d8889d7fdfe686b545fe95b93b160"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final2-summary.log",
+    "bytes": 10121,
+    "sha256": "420bc9ba609efa5417441eb724e5a55472c4002821c1965b87e75fc9d9bb2bf8",
+    "compressed_path": "notes/demo-system-verification-20260919/final2-summary.log.gz",
+    "compressed_bytes": 1711,
+    "compressed_sha256": "e808c5a8777ca4ec7ecfda2518878ec9dc3cf745d92afc26ee52dc82ff8f1b02"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final2-third-chase-ui.png",
+    "bytes": 244710,
+    "sha256": "d698b19af49478f6e8900b694096ad0717ddcd5705d4b4983a4f235156412150",
+    "compressed_path": "notes/demo-system-verification-20260919/final2-third-chase-ui.png.gz",
+    "compressed_bytes": 242489,
+    "compressed_sha256": "1ae7ec2030761909ac4a8fd79f02bccb8588084d3fb243f523a2db437770d167"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final2-tower-ascent-ui.png",
+    "bytes": 210186,
+    "sha256": "6e74992921adf4edfd762d46ae0caf865fb69f9532540f832a010815666d8326",
+    "compressed_path": "notes/demo-system-verification-20260919/final2-tower-ascent-ui.png.gz",
+    "compressed_bytes": 208262,
+    "compressed_sha256": "b7a61c5fa5435427e7375a4ce0b498ffd5b6fc5852a5f0e20e12b8e3e869635d"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final2-tower-block-ui.png",
+    "bytes": 225737,
+    "sha256": "309cfaacb535a5018ad31b6439d6e1cba2ca7f9616bc9b96e57fa469e7debdc9",
+    "compressed_path": "notes/demo-system-verification-20260919/final2-tower-block-ui.png.gz",
+    "compressed_bytes": 223334,
+    "compressed_sha256": "fe01c93ff9acdfe946c196d00f1afb81a599e8c9ccf63461308dc56e37d3049d"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final2-tower-jump-ui.png",
+    "bytes": 208244,
+    "sha256": "0aa1045a263e48f6be0c43f0673d54f466bbaaf5e48e5651e8c0fec04dc6edbc",
+    "compressed_path": "notes/demo-system-verification-20260919/final2-tower-jump-ui.png.gz",
+    "compressed_bytes": 205675,
+    "compressed_sha256": "a7e8108ef3e3969705f3ff5f343c3af16461f372b00b7a95671f5a7d17496de4"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final2-tower-return-ui.png",
+    "bytes": 213127,
+    "sha256": "c4562339da87af0ba5a4d6007c40167769edadcf6b1d4b73638739afb386b0ed",
+    "compressed_path": "notes/demo-system-verification-20260919/final2-tower-return-ui.png.gz",
+    "compressed_bytes": 210832,
+    "compressed_sha256": "531d3b454b40f9473f34da07704e9102953399089e1265013e2f26125ad229d0"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final2-tower-stairs-ui.png",
+    "bytes": 192519,
+    "sha256": "b6e6c514cfca2cfce1f781cf416880c505efbd894251e036cdc3d4e011db44c2",
+    "compressed_path": "notes/demo-system-verification-20260919/final2-tower-stairs-ui.png.gz",
+    "compressed_bytes": 189353,
+    "compressed_sha256": "f60b9277b817e46049f7af605b5e8d1389515d14c72b4dfc9a718da724e97e07"
+  }
+]

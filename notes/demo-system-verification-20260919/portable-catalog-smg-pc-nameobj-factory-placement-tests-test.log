@@ -1,0 +1,7 @@
+[ok] factory-only placement support
+[ok] DemoRabbit creator/archive callback atomicity
+[skip] real-disc placement support test (set SMGPC_REAL_DISC or place RMGK01.iso in a workspace ancestor)
+[ok] optional real-disc archive-only rejection
+[skip] real FileSelect InvisiblePolygonObj test (set SMGPC_REAL_DISC or place RMGK01.iso in a workspace ancestor)
+[ok] real FileSelect invisible wall collision lifecycle
+4 NameObj placement test(s) passed

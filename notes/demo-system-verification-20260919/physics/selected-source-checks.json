@@ -1,0 +1,92 @@
+[
+  {
+    "file": "Player/Mario.cpp",
+    "anchor": "void Mario::update(",
+    "tokens_equal": true
+  },
+  {
+    "file": "Player/Mario.cpp",
+    "anchor": "void Mario::actionMain(",
+    "tokens_equal": true
+  },
+  {
+    "file": "Player/Mario.cpp",
+    "anchor": "void Mario::writeBackPhyisicalVector(",
+    "tokens_equal": true
+  },
+  {
+    "file": "Player/Mario.cpp",
+    "anchor": "void Mario::inputStick(",
+    "tokens_equal": true
+  },
+  {
+    "file": "Player/Mario.cpp",
+    "anchor": "void Mario::updateTimers(",
+    "tokens_equal": true
+  },
+  {
+    "file": "Player/Mario.cpp",
+    "anchor": "void Mario::updateGroundInfo(",
+    "tokens_equal": false
+  },
+  {
+    "file": "Player/MarioActor.cpp",
+    "anchor": "void MarioActor::movement(",
+    "tokens_equal": true
+  },
+  {
+    "file": "Player/MarioActor.cpp",
+    "anchor": "void MarioActor::control(",
+    "tokens_equal": true
+  },
+  {
+    "file": "Player/MarioActor.cpp",
+    "anchor": "void MarioActor::control2(",
+    "tokens_equal": true
+  },
+  {
+    "file": "Player/MarioActor.cpp",
+    "anchor": "void MarioActor::controlMain(",
+    "tokens_equal": true
+  },
+  {
+    "file": "Player/MarioActor.cpp",
+    "anchor": "void MarioActor::calcAndSetBaseMtx(",
+    "tokens_equal": true
+  },
+  {
+    "file": "Player/MarioMove.cpp",
+    "anchor": "bool Mario::retainMoveDir(",
+    "tokens_equal": true
+  },
+  {
+    "file": "Player/MarioMove.cpp",
+    "anchor": "void Mario::mainMove(",
+    "tokens_equal": false
+  },
+  {
+    "file": "Player/MarioMove.cpp",
+    "anchor": "void Mario::calcMoveDir(",
+    "tokens_equal": false
+  },
+  {
+    "file": "LiveActor/LiveActor.cpp",
+    "anchor": "void LiveActor::calcAndSetBaseMtx(",
+    "tokens_equal": true
+  },
+  {
+    "file": "LiveActor/LiveActor.cpp",
+    "anchor": "void LiveActor::calcAnmMtx(",
+    "tokens_equal": true
+  },
+  {
+    "file": "LiveActor/LiveActor.cpp",
+    "anchor": "void LiveActor::movement(",
+    "tokens_equal": false
+  },
+  {
+    "file": "LiveActor/LiveActor.cpp",
+    "anchor": "void LiveActor::updateBinder(",
+    "tokens_equal": false
+  }
+]

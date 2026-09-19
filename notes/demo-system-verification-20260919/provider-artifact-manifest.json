@@ -1,0 +1,26 @@
+[
+  {
+    "path": "notes/demo-system-verification-20260919/providers/source-closeness.tsv",
+    "sha256": "d41424e3ca1a0fdcf0077ca22f47fa69d6fd5e7ded1b3518c4ab8504e1efab7b",
+    "compressed_path": "notes/demo-system-verification-20260919/providers/source-closeness.tsv.gz",
+    "compressed_sha256": "fdab5bb72b5fac3936f4f80fa7408fe717d7818d87520f396f3e1a3cd025c716"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/providers/compat-inventory.tsv",
+    "sha256": "45199be1fe9e0b7824e53477eb8181878e866959078d3bd0a8c4745c8bd25c09",
+    "compressed_path": "notes/demo-system-verification-20260919/providers/compat-inventory.tsv.gz",
+    "compressed_sha256": "8f50e928c3a90fd6bed9af6d671f77bf4d9f2aba119340fda77b3c1956762bcf"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/providers/configured-provider-build-map.json",
+    "sha256": "3bba123b50c9f3ebb3d10ace4e418cfbe9c7e429dfacd2c4b1d38b021fed70c3",
+    "compressed_path": "notes/demo-system-verification-20260919/providers/configured-provider-build-map.json.gz",
+    "compressed_sha256": "a73696cb42742b611550e4ebc84dce9c6954f4c0252c40e2f76cb1c85d0175b9"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/providers/symbol-providers.tsv",
+    "sha256": "8e9126637078f806dd4f177e89389dcccfd7ae74a10cb3792dff02f4fdcade0b",
+    "compressed_path": "notes/demo-system-verification-20260919/providers/symbol-providers.tsv.gz",
+    "compressed_sha256": "b36706418d8a14ca4708553506347b232fae0edb1f811eec04e29fc1230b9246"
+  }
+]

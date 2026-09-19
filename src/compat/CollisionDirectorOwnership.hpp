@@ -12,6 +12,10 @@ class CollisionZone;
 class HitInfo;
 
 namespace smgpc::compat {
+    // Validate native generated-resource publication before original queries
+    // can return from broad-phase culling without reaching CollisionParts.
+    void require_published_collision_geometry(int category);
+
     // SceneObjHolder owns the original NameObjs. This owner reclaims the
     // original raw arrays and non-NameObj children after those objects retire.
     class CollisionDirectorOwnership final {

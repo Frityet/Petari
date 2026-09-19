@@ -1,0 +1,154 @@
+{
+  "trace": "notes/demo-system-verification-20260919/baseline2-route-actors.jsonl",
+  "sha256": "1bcb8bce241a9b663da8591488314187aa667672be57e396f82f506f46c4382f",
+  "scope": "Sampled trace only. No retail parity claim; live/unhidden actor flags are not proof of rendered visibility.",
+  "first_frame": 0,
+  "last_frame": 29990,
+  "samples": 3000,
+  "actor_samples": 104860,
+  "invalid_sampled_vectors": [],
+  "player_status_sample_counts": {
+    "0": 2968,
+    "19": 28
+  },
+  "binder_contact_sample_counts": {},
+  "binder_feature_sample_counts": {},
+  "events": [
+    {
+      "kind": "rabbit_caught",
+      "frame": 3560,
+      "actor_id": 907,
+      "actor_type": "13RunawayRabbit",
+      "name": "\u7403\u9762\u9003\u3052\u30a6\u30b5\u30ae",
+      "position": [
+        13600.810546875,
+        -10333.578125,
+        5063.9189453125
+      ],
+      "nerve": {
+        "step": 1,
+        "type": "N16NrvRunawayRabbit22RunawayRabbitNrvCaughtE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "tico_Talk",
+      "frame": 3820,
+      "actor_id": 892,
+      "actor_type": "11RunawayTico",
+      "name": "\u9003\u3052\u30c1\u30b3",
+      "position": [
+        13455.2607421875,
+        -10197.2255859375,
+        4971.5185546875
+      ],
+      "nerve": {
+        "step": 3,
+        "type": "N14NrvRunawayTico18RunawayTicoNrvTalkE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "pipe_PlayerIn",
+      "frame": 11610,
+      "actor_id": 697,
+      "actor_type": "11EarthenPipe",
+      "name": "\u571f\u7ba1",
+      "position": [
+        12761.115234375,
+        -11282.013671875,
+        6032.2978515625
+      ],
+      "nerve": {
+        "step": 2,
+        "type": "N14NrvEarthenPipe22EarthenPipeNrvPlayerInE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "pipe_PlayerOut",
+      "frame": 11690,
+      "actor_id": 697,
+      "actor_type": "11EarthenPipe",
+      "name": "\u571f\u7ba1",
+      "position": [
+        12761.115234375,
+        -11282.013671875,
+        6032.2978515625
+      ],
+      "nerve": {
+        "step": 7,
+        "type": "N14NrvEarthenPipe23EarthenPipeNrvPlayerOutE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "rabbit_caught",
+      "frame": 12190,
+      "actor_id": 902,
+      "actor_type": "13RunawayRabbit",
+      "name": "\u7403\u9762\u9003\u3052\u30a6\u30b5\u30ae",
+      "position": [
+        16729.654296875,
+        -10105.0146484375,
+        6361.79736328125
+      ],
+      "nerve": {
+        "step": 2,
+        "type": "N16NrvRunawayRabbit22RunawayRabbitNrvCaughtE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "tico_Talk",
+      "frame": 12450,
+      "actor_id": 886,
+      "actor_type": "11RunawayTico",
+      "name": "\u9003\u3052\u30c1\u30b3",
+      "position": [
+        16867.234375,
+        -9936.80078125,
+        6390.7607421875
+      ],
+      "nerve": {
+        "step": 5,
+        "type": "N14NrvRunawayTico18RunawayTicoNrvTalkE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "pipe_PlayerIn",
+      "frame": 18250,
+      "actor_id": 699,
+      "actor_type": "11EarthenPipe",
+      "name": "\u571f\u7ba1",
+      "position": [
+        16877.8828125,
+        -10250.9619140625,
+        6408.28955078125
+      ],
+      "nerve": {
+        "step": 9,
+        "type": "N14NrvEarthenPipe22EarthenPipeNrvPlayerInE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "pipe_PlayerOut",
+      "frame": 18320,
+      "actor_id": 699,
+      "actor_type": "11EarthenPipe",
+      "name": "\u571f\u7ba1",
+      "position": [
+        16877.8828125,
+        -10250.9619140625,
+        6408.28955078125
+      ],
+      "nerve": {
+        "step": 4,
+        "type": "N14NrvEarthenPipe23EarthenPipeNrvPlayerOutE"
+      },
+      "clipped": false
+    }
+  ]
+}

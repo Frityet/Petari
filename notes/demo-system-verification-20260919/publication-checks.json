@@ -1,0 +1,70 @@
+[
+  {
+    "target": "smg-pc-original-sphere-query-tests",
+    "build": {
+      "command": [
+        "xmake",
+        "build",
+        "-j",
+        "8",
+        "smg-pc-original-sphere-query-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 5.136155916959979
+    },
+    "binary_sha256": "5dd62fc2a71f0ad70ee8224680651a8e355648c88fa199e98be17bc3d6250923",
+    "test": {
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-sphere-query-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.3781644169939682
+    }
+  },
+  {
+    "target": "smg-pc-original-binder-sphere-tests",
+    "build": {
+      "command": [
+        "xmake",
+        "build",
+        "-j",
+        "8",
+        "smg-pc-original-binder-sphere-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 4.576226916979067
+    },
+    "binary_sha256": "4cbc1413e2287144b334f66e0a037b59017a4c50f79896d136108e61111446d1",
+    "test": {
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-binder-sphere-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.4351055830484256
+    }
+  },
+  {
+    "target": "smg-pc-original-process-collision-area-tests",
+    "build": {
+      "command": [
+        "xmake",
+        "build",
+        "-j",
+        "8",
+        "smg-pc-original-process-collision-area-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 4.489209125051275
+    },
+    "binary_sha256": "f96df51ac9d4fbb36c76660b13ab97728f87f47c6ecf2f2f18d795390695ac09",
+    "test": {
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-collision-area-tests",
+        "-ApplePersistenceIgnoreState",
+        "YES"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 7.221255416981876
+    }
+  }
+]

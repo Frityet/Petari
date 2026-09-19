@@ -1,0 +1,198 @@
+[
+  {
+    "function": "CollisionParts::checkStrikeBall(",
+    "donor_commit": "1419b6e601aee71b3e1483cd776cb47a4d648dc6",
+    "body_sha256": "49b270cf84dcd288de8d018d80d6cb54972820a8d7be17e1ff3f1f7bcb64353e",
+    "historical_instruction_proof": "notes/original-collision-parts-owner-20260903/source-evidence.json"
+  },
+  {
+    "function": "CollisionParts::checkStrikeBallCore(",
+    "donor_commit": "1419b6e601aee71b3e1483cd776cb47a4d648dc6",
+    "body_sha256": "b7401b764c4d96905c33151b73f9dff5d62c3a8c30e9c4fdf1494bc763d3b14c",
+    "historical_instruction_proof": "notes/original-collision-parts-owner-20260903/source-evidence.json"
+  },
+  {
+    "function": "CollisionParts::checkStrikeBallWithThickness(",
+    "donor_commit": "1419b6e601aee71b3e1483cd776cb47a4d648dc6",
+    "body_sha256": "0d3fcf03ab6b3f9da9ed587eb7e35bdade4934377a79833eb53e3b5ddb98597f",
+    "historical_instruction_proof": "notes/original-collision-parts-owner-20260903/source-evidence.json"
+  },
+  {
+    "function": "CollisionParts::calcCollidePosition(",
+    "donor_commit": "1419b6e601aee71b3e1483cd776cb47a4d648dc6",
+    "body_sha256": "016fd3cd162948265043d0be37c2a530bfc4039ce0836eefd05bd68e2dc99169",
+    "historical_instruction_proof": "notes/original-collision-parts-owner-20260903/source-evidence.json"
+  },
+  {
+    "function": "CollisionCategorizedKeeper::checkStrikeBall(",
+    "donor_commit": "b10d8d4e7",
+    "body_sha256": "f35be8d819713b28a85d91bd5362a877edf7c821b0222bb91af0fd826f21d430",
+    "historical_instruction_proof": "notes/original-collision-keeper-query-20260903/source-evidence.json"
+  },
+  {
+    "function": "CollisionCategorizedKeeper::checkStrikeBallWithThickness(",
+    "donor_commit": "b10d8d4e7",
+    "body_sha256": "97c24580a42872b3a034a92340164c507164c14e0ff5e8f138daa9322b889f4b",
+    "historical_instruction_proof": "notes/original-collision-keeper-query-20260903/source-evidence.json"
+  },
+  {
+    "function": "KCollisionServer::checkSphere(",
+    "body_sha256": "13ed619b039ef0edbbb51601d3ee7fc11c264754f24158c46af22452c0542776",
+    "historical_instruction_proof": "notes/original-kcollision-traversal-20260903/source-evidence.json",
+    "donor_commit": "104a86bec087f85d96675f0e8f8eaed46c43f9ac"
+  },
+  {
+    "function": "KCollisionServer::checkSphereWithThickness(",
+    "body_sha256": "c2641fbb4472e30c27caa5d0dcd679cb703b9b96d38cfe10c4ac715d44f10d99",
+    "historical_instruction_proof": "notes/original-kcollision-traversal-20260903/source-evidence.json",
+    "donor_commit": "104a86bec087f85d96675f0e8f8eaed46c43f9ac"
+  },
+  {
+    "function": "KCollisionServer::KCHitSphere(",
+    "body_sha256": "16cac8122911fe70977dbce74724d6c638f7454cd5436361c7ff01836a3920cf",
+    "historical_instruction_proof": "notes/original-kcollision-query-20260903/source-evidence.json",
+    "donor_commit": "104a86bec087f85d96675f0e8f8eaed46c43f9ac"
+  },
+  {
+    "function": "KCollisionServer::KCHitSphereWithThickness(",
+    "body_sha256": "3abe48006b4a031aacc485d3fcd903dbabc9b5d5ced443cfc9218752fb869536",
+    "historical_instruction_proof": "notes/original-kcollision-query-20260903/source-evidence.json",
+    "donor_commit": "104a86bec087f85d96675f0e8f8eaed46c43f9ac"
+  },
+  {
+    "function": "s32 checkStrikeBallToMap(",
+    "donor_source": "notes/original-map-query-access-20260903/root.patch",
+    "body_sha256": "911dbd8bef9a35eb1c0562c6d1a7c3f153eac0027d9f0bc54cd2743451156a70",
+    "historical_instruction_proof": "notes/original-map-query-access-20260903/compiler-evidence.json"
+  },
+  {
+    "function": "s32 checkStrikeBallToMapWithMovingReaction(",
+    "donor_source": "notes/original-map-query-access-20260903/root.patch",
+    "body_sha256": "cf023a2c4586e958885548b6a787a06adb18800cb1206addba49fd405fc2311e",
+    "historical_instruction_proof": "notes/original-map-query-access-20260903/compiler-evidence.json"
+  },
+  {
+    "function": "s32 checkStrikeBallToMapWithThickness(",
+    "donor_source": "notes/original-map-query-access-20260903/root.patch",
+    "body_sha256": "09dec423e451379d686b61c72711d6ab776fdb586c5203810f8b2247d8e34e49",
+    "historical_instruction_proof": "notes/original-map-query-access-20260903/compiler-evidence.json"
+  },
+  {
+    "function": "CollisionParts::checkStrikePoint(",
+    "canonical": "decomp/src/Game/Map/CollisionParts.cpp",
+    "native": "src/compat/OriginalCollisionPartsCompat.cpp",
+    "donor_commit": "4ba3e14250f6d67fbf7c963bf894169b674ab81c",
+    "body_sha256": "99ff8639658bf2e51fcc9a1b3d8ea20c2b44bcb60f4dd7a04de9b1126e74fbc3",
+    "historical_instruction_proof": "notes/original-collision-point-query-20260903/compiler-evidence.json"
+  },
+  {
+    "function": "CollisionCategorizedKeeper::checkStrikePoint(",
+    "canonical": "decomp/src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "native": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "donor_commit": "4ba3e14250f6d67fbf7c963bf894169b674ab81c",
+    "body_sha256": "400420b26757d2806d246acebfa9272a383759caecb0cfe0172bed68d8125737",
+    "historical_instruction_proof": "notes/original-collision-point-query-20260903/compiler-evidence.json"
+  },
+  {
+    "function": "KCollisionServer::checkPoint(",
+    "canonical": "decomp/src/Game/Map/KCollision.cpp",
+    "native": "src/compat/OriginalKCollisionCompat.cpp",
+    "donor_commit": "4ba3e14250f6d67fbf7c963bf894169b674ab81c",
+    "body_sha256": "9aa23e30f89d9703242ef7d0eb6de50463faf3a605f8110f944c63e90367d5bd",
+    "historical_instruction_proof": "notes/original-collision-point-query-20260903/compiler-evidence.json"
+  },
+  {
+    "function": "bool getFirstPolyOnLineCategoryExceptSensor(",
+    "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+    "native": "src/compat/OriginalMapQueries.cpp",
+    "donor_commit": "0ccf9ac9b4f63f42e4892193505a4798c865ed1c",
+    "body_sha256": "2af73451acd66586d9694efb1eec6dc1772de99d03fb3c6d8dbcc9165e26b467",
+    "historical_instruction_proof": "notes/original-map-query-access-20260903/compiler-evidence.json"
+  },
+  {
+    "function": "bool getFirstPolyNormalOnLineToMap(",
+    "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+    "native": "src/compat/OriginalMapQueries.cpp",
+    "donor_commit": "0ccf9ac9b4f63f42e4892193505a4798c865ed1c",
+    "body_sha256": "b9014d02adb9b360bc1dd57ef40b18d7c5dbd23f0709c047b00fc23442c2877f",
+    "historical_instruction_proof": "notes/original-map-query-access-20260903/compiler-evidence.json"
+  },
+  {
+    "function": "const Triangle* getCameraPolyFast(",
+    "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+    "native": "src/compat/OriginalMapQueries.cpp",
+    "donor_commit": "0ccf9ac9b4f63f42e4892193505a4798c865ed1c",
+    "body_sha256": "6e76f7419729f06aea7483cfd7ea92e3723ff24b9ed9bd7600ec850ea0adea4e",
+    "historical_instruction_proof": "historical:0ccf9ac9b:pc-port/notes/original-map-fast-query-20260903/compiler-evidence.json"
+  },
+  {
+    "function": "bool getFirstPolyOnLineBFast(",
+    "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+    "native": "src/compat/OriginalMapQueries.cpp",
+    "donor_commit": "0ccf9ac9b4f63f42e4892193505a4798c865ed1c",
+    "body_sha256": "b8db24c6c9143002968300105110fc7b62feec4e52e71bd0d64fdc73c3a22e11",
+    "historical_instruction_proof": "historical:0ccf9ac9b:pc-port/notes/original-map-fast-query-20260903/compiler-evidence.json"
+  },
+  {
+    "function": "bool checkStrikePointToMap(",
+    "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+    "native": "src/compat/GameMapCollisionCompat.cpp",
+    "donor_commit": "0ccf9ac9b4f63f42e4892193505a4798c865ed1c",
+    "body_sha256": "f9a468cda70635d59341cae610d2854bc83b3e57744806432205238034ccb0c3",
+    "historical_instruction_proof": "notes/original-map-query-access-20260903/compiler-evidence.json"
+  },
+  {
+    "function": "s32 checkStrikePointToMap(",
+    "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+    "native": "src/compat/GameMapCollisionCompat.cpp",
+    "donor_commit": "0ccf9ac9b4f63f42e4892193505a4798c865ed1c",
+    "body_sha256": "3617c9acc29c670a10eb71ac5122931f4139c884ca2b13eacab2edda101400fb",
+    "historical_instruction_proof": "notes/original-map-query-access-20260903/compiler-evidence.json"
+  },
+  {
+    "function": "CollisionParts::createAreaPolygonList(",
+    "canonical": "decomp/src/Game/Map/CollisionParts.cpp",
+    "native": "src/compat/OriginalCollisionPartsCompat.cpp",
+    "donor_commit": "6ad1afcfb5ea7e90ce0e87074ed16897930d0135",
+    "body_sha256": "dd885df0c71df0ca3593be635ac8ca0e99b40a833da829c78d62e8d4ee09cd16",
+    "historical_instruction_proof": "historical:6ad1afcfb:pc-port/notes/original-collision-area-query-20260903/compiler-evidence.json"
+  },
+  {
+    "function": "CollisionParts::createAreaPolygonListArray(",
+    "canonical": "decomp/src/Game/Map/CollisionParts.cpp",
+    "native": "src/compat/OriginalCollisionPartsCompat.cpp",
+    "donor_commit": "6ad1afcfb5ea7e90ce0e87074ed16897930d0135",
+    "body_sha256": "6d82afd9f328176fc12fe5b30a7be387145b549372ae25327410ca1369d39350",
+    "historical_instruction_proof": "historical:6ad1afcfb:pc-port/notes/original-collision-area-query-20260903/compiler-evidence.json"
+  },
+  {
+    "function": "CollisionCategorizedKeeper::createAreaPolygonList(",
+    "canonical": "decomp/src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "native": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "donor_commit": "6ad1afcfb5ea7e90ce0e87074ed16897930d0135",
+    "body_sha256": "62a5c021f0264704882d580f03a120eca5c5885b81b10af086c8d56bea8988da",
+    "historical_instruction_proof": "historical:6ad1afcfb:pc-port/notes/original-collision-area-query-20260903/compiler-evidence.json"
+  },
+  {
+    "function": "CollisionCategorizedKeeper::createAreaPolygonListArray(",
+    "canonical": "decomp/src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "native": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "donor_commit": "6ad1afcfb5ea7e90ce0e87074ed16897930d0135",
+    "body_sha256": "7e08222aa98b245776c93b50163ecb072104925259021bd3433675c54f60fdaf",
+    "historical_instruction_proof": "historical:6ad1afcfb:pc-port/notes/original-collision-area-query-20260903/compiler-evidence.json"
+  },
+  {
+    "function": "u32 createAreaPolygonList(",
+    "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+    "native": "src/compat/GameMapCollisionCompat.cpp",
+    "donor_source": "existing canonical MapUtil",
+    "body_sha256": "e88986fc0ff592282e03d470a3344de7eb71df7e40b3590b3e91783e8fe0f46c"
+  },
+  {
+    "function": "u32 createAreaPolygonListArray(",
+    "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+    "native": "src/compat/GameMapCollisionCompat.cpp",
+    "donor_source": "existing canonical MapUtil",
+    "body_sha256": "e9d4932018eb3f849c0885daa65d9861cd4f0c92b0eb180fbeef676e9f00dbcb"
+  }
+]

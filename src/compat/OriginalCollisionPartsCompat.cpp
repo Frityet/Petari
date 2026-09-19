@@ -1,7 +1,5 @@
 #include "compat/CollisionPartsCompat.hpp"
 #include "compat/CollisionDirectorOwnership.hpp"
-#include "scene/StageCollisionService.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 #include "Game/Map/CollisionParts.hpp"
 #include "Game/Camera/CameraPolygonCodeUtil.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
@@ -17,15 +15,7 @@
 
 namespace {
     void requirePublishedGeometry(const CollisionParts& parts) {
-        auto* service = smgpc::scene::StageCollisionService::active();
-        if (parts.mKeeperIndex != 0) {
-            if (auto* owner = smgpc::scene::current_collision_director_ownership()) {
-                service = &owner->category_service(parts.mKeeperIndex);
-            }
-        }
-        // Standalone original query fixtures can own typed KCL without a host
-        // service. A scene's generated geometry must finish publication first.
-        if (service) service->require_published_geometry();
+        smgpc::compat::require_published_collision_geometry(parts.mKeeperIndex);
     }
 }
 

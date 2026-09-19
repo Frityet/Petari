@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/operate_first_catch.py", line 296, in <module>
+    if __name__ == "__main__":
+                         ^^^^^
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/operate_first_catch.py", line 270, in main
+    if snapshot is None:
+        ^^^^^^^^^^^^^^^^
+KeyboardInterrupt

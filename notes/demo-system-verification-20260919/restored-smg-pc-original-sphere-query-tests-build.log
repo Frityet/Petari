@@ -1,0 +1,27 @@
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-original-sphere-query-tests>[0m cache compiling.debug tests/OriginalSphereQueryTests.cpp[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/CollisionCategorizedKeeper.cpp[0m
+[0m[38;5;2;1m[ 59%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/OriginalProcessTrace.cpp[0m
+[0m[38;5;2;1m[ 61%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/scene/AreaObjRuntime.cpp[0m
+[0m[38;5;2;1m[ 67%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/OriginalKCollisionCompat.cpp[0m
+[0m[38;5;2;1m[ 67%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/OriginalCollisionPartsCompat.cpp[0m
+[0m[38;5;2;1m[ 71%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/OriginalMapQueries.cpp[0m
+[0m[38;5;2;1m[ 77%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/GameMapCollisionCompat.cpp[0m
+[0m[38;5;3;1msrc/compat/OriginalMapQueries.cpp:54:130: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   54 |                                                 const TVec3f& rDirection, const HitSensor* pSensor, s32 category) __attribute__((noinline)) {
+      |                                                                                                                                  ^
+src/compat/OriginalMapQueries.cpp:60:101: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   60 |                                               const LiveActor* pActor, s32 category) __attribute__((noinline)) {
+      |                                                                                                     ^
+2 warnings generated.[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[1;38;5;1;1merror: [0mtests/OriginalSphereQueryTests.cpp:114:10: error: no matching constructor for initialization of 'Fxyz'
+  114 |     Fxyz huge{1.0e30f,0,0};
+      |          ^   ~~~~~~~~~~~~~
+src/Game/Map/KCollision.hpp:17:7: note: candidate constructor (the implicit copy constructor) not viable: requires 1 argument, but 3 were provided
+   17 | class Fxyz {
+      |       ^~~~
+src/Game/Map/KCollision.hpp:19:12: note: candidate constructor not viable: requires 0 arguments, but 3 were provided
+   19 |     inline Fxyz() {
+      |            ^
+1 error generated.
+  [38;5;3m> in [1mtests/OriginalSphereQueryTests.cpp[0m

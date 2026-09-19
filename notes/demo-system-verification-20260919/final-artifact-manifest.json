@@ -1,0 +1,50 @@
+[
+  {
+    "path": "notes/demo-system-verification-20260919/final-route-actors.jsonl",
+    "bytes": 54976526,
+    "sha256": "da80667464631a60ec058cb826eb6069c94137bf61ac1258c7533ffe86fd07f6",
+    "compressed_path": "notes/demo-system-verification-20260919/final-route-actors.jsonl.gz",
+    "compressed_bytes": 1884918,
+    "compressed_sha256": "8d0c95ad5539198ae5718ad791f333c619635a3f6901d90158b8b12a2b738ace"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final-route.log",
+    "bytes": 320291,
+    "sha256": "fa812efadb1757655c715a400b327c500bc82ff6bfde7418ef34ff1ed5e9a132",
+    "compressed_path": "notes/demo-system-verification-20260919/final-route.log.gz",
+    "compressed_bytes": 46158,
+    "compressed_sha256": "4f4ee8fe83b837563b7cf6c33d30f7f85c7bdcded277d4467483f2d02a364935"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final-operator.jsonl",
+    "bytes": 992813,
+    "sha256": "4d770a91782f37ff0e3a2e6e7539ad6ae0ce4a3e5dc1d35449d8406bf2a86a31",
+    "compressed_path": "notes/demo-system-verification-20260919/final-operator.jsonl.gz",
+    "compressed_bytes": 78813,
+    "compressed_sha256": "3f8d7638ca351fde1a987cd0ac6270175f38ea2d45eb808d4c91b933ab48e398"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final-operator-revised.jsonl",
+    "bytes": 1071566,
+    "sha256": "d963a55d08f0bf2fff4892cc664727a8042e9bb87f2de9c10c20a795009abe13",
+    "compressed_path": "notes/demo-system-verification-20260919/final-operator-revised.jsonl.gz",
+    "compressed_bytes": 50412,
+    "compressed_sha256": "486b86c872764b084a467082ba310d8e1323cfcd9097e869c8a51e52abfebb4d"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final-pipe-ui.png",
+    "bytes": 125155,
+    "sha256": "0a6738dc192ddb2fa06dd245ee8210a131ea749b8cc9854ccf0835184d8d764f",
+    "compressed_path": "notes/demo-system-verification-20260919/final-pipe-ui.png.gz",
+    "compressed_bytes": 114041,
+    "compressed_sha256": "f9e13ef66df03e7828337bd16492d2c5c0a230e0d825e01c7ba4eae0459606e8"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/final-hole-approach-ui.png",
+    "bytes": 222303,
+    "sha256": "ad225517b249ef34378c07e2928fa0ee1a7c927bfae04b8a9b8ab44448aea87d",
+    "compressed_path": "notes/demo-system-verification-20260919/final-hole-approach-ui.png.gz",
+    "compressed_bytes": 213217,
+    "compressed_sha256": "5a0bdbf3a408d56b3dfebde147b1711c3e3065aa45b7e936382e8f8e6d88b263"
+  }
+]

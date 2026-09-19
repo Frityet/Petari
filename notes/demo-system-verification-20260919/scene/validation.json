@@ -1,0 +1,59 @@
+{
+  "process": {
+    "target": "smg-pc-original-process-placement-transform-tests",
+    "build": {
+      "command": [
+        "xmake",
+        "build",
+        "-j",
+        "8",
+        "smg-pc-original-process-placement-transform-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 4.603290124912746
+    },
+    "binary_sha256": "6d39a91f3acbf2405424c709334529b7685defba33f119826eff25ad7002a2ce",
+    "test": {
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-placement-transform-tests",
+        "-ApplePersistenceIgnoreState",
+        "YES"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.6445921669946983
+    }
+  },
+  "log": "notes/demo-system-verification-20260919/restored-smg-pc-original-process-placement-transform-tests-test.log",
+  "observed": [
+    "[original-process] Placement coverage HeavensDoorGalaxy: 179 supported, 59 known-unlinked, 0 unknown, 5 metadata rows",
+    "[placement-transform] zone=5 translation=(14760,-10676.2256,6770)",
+    "[placement-transform] coverage provenance PASS rows=243 attached_zones=6",
+    "[placement-transform] restart dispatch PASS authored_areas=4 owner=GameSequenceDirector restored=true",
+    "[placement-transform] PASS frame=38 positions=84 rotations=84 rail_points=48 areas=2",
+    "[src/app/OriginalGameApplication.cpp:563][APP - INFO] Original GameSystem stopped after 120 completed frames",
+    "PASS original-process zone transforms: actual raw rows, matrices, actors, switch volumes, rail controls and retirement"
+  ],
+  "limits": "120-frame initialized-owner/provenance/dispatch and teardown probe. Does not establish whole-scene completeness, checkpoint-respawn lifecycle, three catches, or final route completion.",
+  "original_placement_coverage_cpu": {
+    "target": "smg-pc-original-placement-coverage-tests",
+    "build": {
+      "command": [
+        "xmake",
+        "build",
+        "-j",
+        "8",
+        "smg-pc-original-placement-coverage-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 4.525506625068374
+    },
+    "binary_sha256": "b8fde296858c667f5e26e665dd1732379a44c7095db307c7c75754da7edc4b28",
+    "test": {
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-placement-coverage-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.4336366670904681
+    }
+  }
+}

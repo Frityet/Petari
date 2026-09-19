@@ -1,0 +1,61 @@
+{
+  "owned_source_test_paths": [
+    "src/scene/OriginalPlacementCoverage.cpp",
+    "src/scene/OriginalPlacementCoverage.hpp",
+    "src/scene/AreaObjRuntime.cpp",
+    "src/scene/nameobj/NameObjFactory.cpp",
+    "tests/OriginalProcessPlacementTransformTests.cpp",
+    "tests/OriginalPlacementCoverageTests.cpp",
+    "tests/AreaObjRealOrAbsentTests.cpp",
+    "tests/NameObjFactoryPlacementTests.cpp"
+  ],
+  "evidence_paths": [
+    "notes/demo-system-verification-20260919/scene/README.md",
+    "notes/demo-system-verification-20260919/scene/analyze_pullback.py",
+    "notes/demo-system-verification-20260919/scene/classify_placements.py",
+    "notes/demo-system-verification-20260919/scene/final-route-report-verification.json",
+    "notes/demo-system-verification-20260919/scene/fresh-disc-provenance.json",
+    "notes/demo-system-verification-20260919/scene/hash-verification.json",
+    "notes/demo-system-verification-20260919/scene/omitted-geometry-resources.json",
+    "notes/demo-system-verification-20260919/scene/omitted-placement-classification.json",
+    "notes/demo-system-verification-20260919/scene/pullback-final2.json",
+    "notes/demo-system-verification-20260919/scene/pullback-final2.md",
+    "notes/demo-system-verification-20260919/scene/validation.json",
+    "notes/demo-system-verification-20260919/scene/verify_live_report.py"
+  ],
+  "excluded": "Raw archives in ignored build/demo-system-verification-20260919; no binaries or game assets for commit.",
+  "validation_status": "Actual-process placement-transform120 passed with243row provenance,4real RestartCube dispatch/restoration and retirement. Fresh final-route placement report independently matches all243 retail identities,179supported/59known-unlinked/5metadata, zones/layers/holder paths and authored matrices. Logs/results in validation.json and final-route-report-verification.json. Whole-scene/route correctness remains unproven; legacy fixture debt documented.",
+  "native_source_checkpoint": "eda37d29cf809c75dea8d32ab9ab1bb858b2a23c",
+  "decomp_checkpoint": "4ae0d93c3e9b451da9fc05ec9a31533ce44ae843",
+  "owned_source_test_sha256": {
+    "src/scene/OriginalPlacementCoverage.cpp": "facec51b78392ad471e4dfebccbb52a3442147428ce031ecc5310c80ebd5a220",
+    "src/scene/OriginalPlacementCoverage.hpp": "f057073369d7e7c60bb548a38c28718395036a460b1957d88349a24d86c71c0a",
+    "src/scene/AreaObjRuntime.cpp": "56f5639df00d2d7067bef2b07d201cbf6197508247c5b398102c3b4ee61d6ddb",
+    "src/scene/nameobj/NameObjFactory.cpp": "445386e2972e7ccac440f7457ee76727f1656f553c07ad9b139ec4bcbf57a96f",
+    "tests/OriginalProcessPlacementTransformTests.cpp": "2ec956c20b1457a39dfcfda2885984d50a2e9840abb231175100e8557e07ddb5",
+    "tests/OriginalPlacementCoverageTests.cpp": "8eafa44791efb09602f58c820043a0757326c1f2407881bb3bd687ff940a7f4b",
+    "tests/AreaObjRealOrAbsentTests.cpp": "6832f788f5c92f974af76ccf6dd84c1b478c0be4cd0bfdcf10367f261717abcc",
+    "tests/NameObjFactoryPlacementTests.cpp": "af652c59634c8e9c182bbe333a1a24ea0d2ded9cde13dcb6ed03d84089fa13e7"
+  },
+  "evidence_sha256": {
+    "notes/demo-system-verification-20260919/scene/README.md": "1ad32788f5cc1141a390ffa0c6cdaa46a8fd9f35ddbdd5368c22293bc2d71a29",
+    "notes/demo-system-verification-20260919/scene/analyze_pullback.py": "590423a1842ac4193e80d9429f4d20be22742ad0bcae9f4b530aca4102545c37",
+    "notes/demo-system-verification-20260919/scene/classify_placements.py": "aac0725296ea2eb6293e3348959b46accbeec1c90605717603a9868efb3a1867",
+    "notes/demo-system-verification-20260919/scene/final-route-report-verification.json": "914bacf1075618f19c0a556449754415c1d789d05b7c8c5243b1fbfcba33b211",
+    "notes/demo-system-verification-20260919/scene/fresh-disc-provenance.json": "8152b01405f80e39d9c6aa77d5113a2d40cd1012119241e9ba6f8ad930d91569",
+    "notes/demo-system-verification-20260919/scene/hash-verification.json": "398531e3c436cb4f59e935ada63ef4b36bd013b6871e737ca48453207d6a2cd3",
+    "notes/demo-system-verification-20260919/scene/omitted-geometry-resources.json": "5d3f811c0ceefb05fa1cd14964cab181cdee75662b36b9cd4d990bad87f5258c",
+    "notes/demo-system-verification-20260919/scene/omitted-placement-classification.json": "b7f5b31252c50d9f5ad43ab4892fc5ded5ac0da8e16941fa0585eb9d38696df5",
+    "notes/demo-system-verification-20260919/scene/pullback-final2.json": "f9153054507d4ab0321e605d4d496dca134c3118afa3b03a185e95b47eb50855",
+    "notes/demo-system-verification-20260919/scene/pullback-final2.md": "24e1a07f3da0024e0b83cc1851db42b577dc6b1d838579c9d455ed0bae4066fb",
+    "notes/demo-system-verification-20260919/scene/validation.json": "2473ae023e658cb1c3e9a4004318864f36a666586bdd2f56b0e2d71e731f3780",
+    "notes/demo-system-verification-20260919/scene/verify_live_report.py": "d537099496018745817f14fee81d4c3ada6f5f2048f2df8fdad3e08d73a10b28"
+  },
+  "manifest_hash_scope": "Manifest intentionally does not hash itself; all listed evidence/source hashes were checked after the final README update.",
+  "referenced_runtime_evidence_sha256": {
+    "notes/demo-system-verification-20260919/restored.json": "8a7c7a6dd5a82230ac659dd47b033a011bec024bcbc9b3483c840491efa4fa30",
+    "notes/demo-system-verification-20260919/restored-smg-pc-original-process-placement-transform-tests-test.log": "83f7a5aec0248ce8ce89d05e434bf42556b900bfed211f4fcf1dfd23e5507dcb",
+    "notes/demo-system-verification-20260919/restored-smg-pc-original-placement-coverage-tests-test.log": "5ec256e81a52150d33b3a93f34f2d5eee05e96fb30d7a26910c79ef2b800dac9",
+    "notes/demo-system-verification-20260919/final-route-placements.json": "031fbd727a70f1c55e65c6d2b97d9b635b9e56b0dea6c07b2f87829e6d35d1e7"
+  }
+}

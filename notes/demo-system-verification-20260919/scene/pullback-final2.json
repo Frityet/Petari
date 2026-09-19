@@ -1,0 +1,1217 @@
+{
+  "scope": "Original source/data reconstruction and sampled runtime correlation, not a live AreaForm field capture or retail-console differential run.",
+  "raw_area_row": {
+    "row": 0,
+    "name": "PullBackCylinder",
+    "l_id": 6,
+    "Obj_arg0": -1,
+    "Obj_arg1": -1,
+    "Obj_arg2": -1,
+    "Obj_arg3": -1,
+    "Obj_arg4": -1,
+    "Obj_arg5": -1,
+    "Obj_arg6": -1,
+    "Obj_arg7": -1,
+    "SW_APPEAR": -1,
+    "SW_A": -1,
+    "SW_B": -1,
+    "SW_SLEEP": -1,
+    "pos_x": -855.8916015625,
+    "pos_y": 529.9878540039062,
+    "pos_z": -792.8311157226562,
+    "dir_x": -68.83787536621094,
+    "dir_y": 49.11631393432617,
+    "dir_z": -6.430681228637695,
+    "scale_x": 0.8999999761581421,
+    "scale_y": 0.8999999761581421,
+    "scale_z": 0.8999999761581421,
+    "hash_15d780cc": -1,
+    "CommonPath_ID": -1,
+    "hash_4b5830b8": -1,
+    "GroupId": -1,
+    "DemoGroupId": -1,
+    "hash_81497c36": -1,
+    "Obj_ID": -1,
+    "hash_c6ae1cd6": -1
+  },
+  "actual_placement_report_entry": {
+    "availability": "supported",
+    "holder_path": [
+      0
+    ],
+    "l_id": 6,
+    "layer": "common",
+    "model_no": -1,
+    "object": "PullBackCylinder",
+    "phase": "common_priority",
+    "reason": "compiled_retail_area_creator_and_manager",
+    "row": 0,
+    "table": "areaobjinfo",
+    "table_path": "/jmp/placement/common/areaobjinfo",
+    "zone": 5,
+    "zone_name": "HeavensDoorMysteriousZone",
+    "zone_placement_matrix": [
+      0.18722188472747803,
+      0.12693114578723907,
+      0.9740822911262512,
+      14760.0,
+      0.2834983170032501,
+      0.9424405694007874,
+      -0.17729729413986206,
+      -10676.2255859375,
+      -0.9405193328857422,
+      0.30934464931488037,
+      0.14046074450016022,
+      6770.0
+    ]
+  },
+  "world_origin": [
+    13894.748046875,
+    -10278.8203125,
+    7627.56982421875
+  ],
+  "world_euler_degrees": [
+    93.66790771484375,
+    47.790382385253906,
+    158.22157287597656
+  ],
+  "local_short_indices": [
+    13251,
+    2235,
+    16091
+  ],
+  "degree_table_indices": [
+    4262,
+    2174,
+    7200
+  ],
+  "world_up": [
+    -0.7097287774085999,
+    -0.21531057357788086,
+    -0.6707655787467957
+  ],
+  "radius": 450.0,
+  "height": 450.0,
+  "containment": "0 <= dot(position-origin,up) <= height; length(delta-up*dot(delta,up)) < radius",
+  "numeric_limit": "Float32 intermediate model with double dot sums/libm table reconstruction; not bit-exact. No threshold changed. Closest first-status19 axial margin is about0.133units.",
+  "reported_crater": {
+    "position": [
+      13739,
+      -10139,
+      7740
+    ],
+    "axial": 5.019787283643382,
+    "radial": 237.53425027955058,
+    "inside": true
+  },
+  "reported_rabbit_ground": {
+    "position": [
+      12820,
+      -10770,
+      7545
+    ],
+    "axial": 923.9207935054146,
+    "radial": 741.3022520564401,
+    "inside": false
+  },
+  "trace_path": "notes/demo-system-verification-20260919/final2-route-actors.jsonl",
+  "trace_prefix_last_frame": 11000,
+  "trace_prefix_byte_count": 22407144,
+  "trace_prefix_sha256": "41752c303055f2c06685b401f16db31719e985e6bd58043b4f744a88bbbbcf68",
+  "source_sha256": {
+    "notes/original-rabbit-tower-chain-20260919/zone-metadata.json": "275b4ffef839463c76f1a2d5d070717c12a5eecb94b52884068d7b8af81d1a05",
+    "notes/demo-system-verification-20260919/final2-route-placements.json": "031fbd727a70f1c55e65c6d2b97d9b635b9e56b0dea6c07b2f87829e6d35d1e7",
+    "notes/original-rabbit-tower-chain-20260919/compute_waypoints.py": "5349d5c85a3e9587ef3c2313331d67c2ad16f1732e698bc552626f3fc57a346c",
+    "build/demo-system-verification-20260919/HeavensDoorMysteriousZone.arc": "6004cbf1a9669b500ae45a2c54dabd64b019fa0699f50a1cf17e211b7544be97"
+  },
+  "status19_transition_frame_range": [
+    5000,
+    11000
+  ],
+  "transition_count": 17,
+  "all_first_status19_samples_inside": true,
+  "all_preceding_samples_outside": true,
+  "transitions": [
+    {
+      "before": {
+        "frame": 5970,
+        "actor_id": 339,
+        "status": 0,
+        "position": [
+          13723.646484375,
+          -10105.419921875,
+          7777.30712890625
+        ],
+        "axial": -16.337864636967424,
+        "radial": 285.478151115443,
+        "inside": false
+      },
+      "first_status19": {
+        "frame": 5980,
+        "actor_id": 339,
+        "status": 19,
+        "position": [
+          13759.2705078125,
+          -10164.2783203125,
+          7729.3798828125
+        ],
+        "axial": 3.1995232536282856,
+        "radial": 204.52159457367065,
+        "inside": true
+      }
+    },
+    {
+      "before": {
+        "frame": 6230,
+        "actor_id": 339,
+        "status": 0,
+        "position": [
+          13663.6123046875,
+          -9998.13671875,
+          7836.154296875
+        ],
+        "axial": -36.30174236491439,
+        "radial": 417.6082816553822,
+        "inside": false
+      },
+      "first_status19": {
+        "frame": 6240,
+        "actor_id": 339,
+        "status": 19,
+        "position": [
+          13724.16015625,
+          -10113.7294921875,
+          7754.875
+        ],
+        "axial": 0.1334059296932537,
+        "radial": 269.3729707355487,
+        "inside": true
+      }
+    },
+    {
+      "before": {
+        "frame": 6490,
+        "actor_id": 339,
+        "status": 0,
+        "position": [
+          13674.7060546875,
+          -10019.6748046875,
+          7819.14111328125
+        ],
+        "axial": -28.12606041273102,
+        "radial": 389.20862798422036,
+        "inside": false
+      },
+      "first_status19": {
+        "frame": 6500,
+        "actor_id": 339,
+        "status": 19,
+        "position": [
+          13738.8115234375,
+          -10138.939453125,
+          7740.5
+        ],
+        "axial": 4.805135352158686,
+        "radial": 237.934842842465,
+        "inside": true
+      }
+    },
+    {
+      "before": {
+        "frame": 6750,
+        "actor_id": 339,
+        "status": 0,
+        "position": [
+          13674.818359375,
+          -10019.505859375,
+          7819.37548828125
+        ],
+        "axial": -28.3993526759441,
+        "radial": 389.3532362925099,
+        "inside": false
+      },
+      "first_status19": {
+        "frame": 6760,
+        "actor_id": 339,
+        "status": 19,
+        "position": [
+          13738.8251953125,
+          -10138.7021484375,
+          7740.65185546875
+        ],
+        "axial": 4.6424783992697485,
+        "radial": 238.14077501863275,
+        "inside": true
+      }
+    },
+    {
+      "before": {
+        "frame": 7010,
+        "actor_id": 339,
+        "status": 0,
+        "position": [
+          13675.0205078125,
+          -10019.685546875,
+          7819.31005859375
+        ],
+        "axial": -28.4602466384531,
+        "radial": 389.0827033570527,
+        "inside": false
+      },
+      "first_status19": {
+        "frame": 7020,
+        "actor_id": 339,
+        "status": 19,
+        "position": [
+          13739.037109375,
+          -10138.896484375,
+          7740.556640625
+        ],
+        "axial": 4.5977863127191085,
+        "radial": 237.84334083135042,
+        "inside": true
+      }
+    },
+    {
+      "before": {
+        "frame": 7270,
+        "actor_id": 339,
+        "status": 0,
+        "position": [
+          13675.2255859375,
+          -10019.6904296875,
+          7819.42431640625
+        ],
+        "axial": -28.681385371950455,
+        "radial": 389.00376780034725,
+        "inside": false
+      },
+      "first_status19": {
+        "frame": 7280,
+        "actor_id": 339,
+        "status": 19,
+        "position": [
+          13739.1865234375,
+          -10138.865234375,
+          7740.5966796875
+        ],
+        "axial": 4.458157572458731,
+        "radial": 237.78563109705019,
+        "inside": true
+      }
+    },
+    {
+      "before": {
+        "frame": 7530,
+        "actor_id": 339,
+        "status": 0,
+        "position": [
+          13675.4501953125,
+          -10019.8662109375,
+          7819.3720703125
+        ],
+        "axial": -28.7679046659905,
+        "radial": 388.7277758517349,
+        "inside": false
+      },
+      "first_status19": {
+        "frame": 7540,
+        "actor_id": 339,
+        "status": 19,
+        "position": [
+          13739.4462890625,
+          -10139.0615234375,
+          7740.5068359375
+        ],
+        "axial": 4.376321638614172,
+        "radial": 237.45898914455444,
+        "inside": true
+      }
+    },
+    {
+      "before": {
+        "frame": 7790,
+        "actor_id": 339,
+        "status": 0,
+        "position": [
+          13675.619140625,
+          -10019.9599609375,
+          7819.375
+        ],
+        "axial": -28.869589783338597,
+        "radial": 388.56393481997094,
+        "inside": false
+      },
+      "first_status19": {
+        "frame": 7800,
+        "actor_id": 339,
+        "status": 19,
+        "position": [
+          13739.568359375,
+          -10139.1396484375,
+          7740.4716796875
+        ],
+        "axial": 4.33008756590425,
+        "radial": 237.31730370179105,
+        "inside": true
+      }
+    },
+    {
+      "before": {
+        "frame": 8050,
+        "actor_id": 339,
+        "status": 0,
+        "position": [
+          13675.7138671875,
+          -10020.013671875,
+          7819.3876953125
+        ],
+        "axial": -28.933770996605745,
+        "radial": 388.47623055363795,
+        "inside": false
+      },
+      "first_status19": {
+        "frame": 8060,
+        "actor_id": 339,
+        "status": 19,
+        "position": [
+          13739.6748046875,
+          -10139.1962890625,
+          7740.451171875
+        ],
+        "axial": 4.280491524579702,
+        "radial": 237.2055109081387,
+        "inside": true
+      }
+    },
+    {
+      "before": {
+        "frame": 8280,
+        "actor_id": 339,
+        "status": 0,
+        "position": [
+          13631.96875,
+          -9905.6376953125,
+          7924.052734375
+        ],
+        "axial": -92.71866507604136,
+        "radial": 536.3055007746219,
+        "inside": false
+      },
+      "first_status19": {
+        "frame": 8290,
+        "actor_id": 339,
+        "status": 19,
+        "position": [
+          13759.458984375,
+          -10154.8564453125,
+          7729.82421875
+        ],
+        "axial": 0.7390814506507013,
+        "radial": 210.06090964240335,
+        "inside": true
+      }
+    },
+    {
+      "before": {
+        "frame": 8540,
+        "actor_id": 339,
+        "status": 0,
+        "position": [
+          13626.4599609375,
+          -9918.646484375,
+          7902.82666015625
+        ],
+        "axial": -71.77026915724855,
+        "radial": 521.8419664372116,
+        "inside": false
+      },
+      "first_status19": {
+        "frame": 8550,
+        "actor_id": 339,
+        "status": 19,
+        "position": [
+          13739.81640625,
+          -10139.0576171875,
+          7740.60888671875
+        ],
+        "axial": 4.04434561135713,
+        "radial": 237.27388644331268,
+        "inside": true
+      }
+    },
+    {
+      "before": {
+        "frame": 8800,
+        "actor_id": 339,
+        "status": 0,
+        "position": [
+          13588.9033203125,
+          -9881.2236328125,
+          7916.84912109375
+        ],
+        "axial": -62.57856028393144,
+        "radial": 575.6653125064848,
+        "inside": false
+      },
+      "first_status19": {
+        "frame": 8810,
+        "actor_id": 339,
+        "status": 19,
+        "position": [
+          13679.61328125,
+          -10065.994140625,
+          7779.83154296875
+        ],
+        "axial": 4.7316891480004415,
+        "radial": 338.73173593707827,
+        "inside": true
+      }
+    },
+    {
+      "before": {
+        "frame": 9070,
+        "actor_id": 339,
+        "status": 0,
+        "position": [
+          13759.5009765625,
+          -10146.2138671875,
+          7736.65185546875
+        ],
+        "axial": -5.731303761654999,
+        "radial": 218.50007109091618,
+        "inside": false
+      },
+      "first_status19": {
+        "frame": 9080,
+        "actor_id": 339,
+        "status": 19,
+        "position": [
+          13761.728515625,
+          -10158.109375,
+          7728.5830078125
+        ],
+        "axial": 0.661281540960772,
+        "radial": 206.07899478740023,
+        "inside": true
+      }
+    },
+    {
+      "before": {
+        "frame": 9330,
+        "actor_id": 339,
+        "status": 0,
+        "position": [
+          13690.1875,
+          -10065.802734375,
+          7783.7939453125
+        ],
+        "axial": -5.472193088295171,
+        "radial": 334.06217541592844,
+        "inside": false
+      },
+      "first_status19": {
+        "frame": 9340,
+        "actor_id": 339,
+        "status": 19,
+        "position": [
+          13703.08203125,
+          -10089.796875,
+          7767.88671875
+        ],
+        "axial": 1.2123992243141402,
+        "radial": 303.5672618201047,
+        "inside": true
+      }
+    },
+    {
+      "before": {
+        "frame": 9590,
+        "actor_id": 339,
+        "status": 0,
+        "position": [
+          13761.84375,
+          -10144.138671875,
+          7739.578125
+        ],
+        "axial": -9.803689857915742,
+        "radial": 219.6643884711613,
+        "inside": false
+      },
+      "first_status19": {
+        "frame": 9600,
+        "actor_id": 339,
+        "status": 19,
+        "position": [
+          13760.0830078125,
+          -10162.970703125,
+          7729.34375
+        ],
+        "axial": 2.36556146221119,
+        "radial": 204.71477920799174,
+        "inside": true
+      }
+    },
+    {
+      "before": {
+        "frame": 9850,
+        "actor_id": 339,
+        "status": 0,
+        "position": [
+          13676.822265625,
+          -10042.15625,
+          7799.2158203125
+        ],
+        "axial": -11.422302659164416,
+        "radial": 364.46317179505485,
+        "inside": false
+      },
+      "first_status19": {
+        "frame": 9860,
+        "actor_id": 339,
+        "status": 19,
+        "position": [
+          13702.0888671875,
+          -10089.564453125,
+          7767.73486328125
+        ],
+        "axial": 1.9690928743220866,
+        "radial": 304.2658388226294,
+        "inside": true
+      }
+    },
+    {
+      "before": {
+        "frame": 10110,
+        "actor_id": 339,
+        "status": 0,
+        "position": [
+          13576.6845703125,
+          -9950.0986328125,
+          7841.9716796875
+        ],
+        "axial": 11.148164290148998,
+        "radial": 505.0407823990491,
+        "inside": false
+      },
+      "first_status19": {
+        "frame": 10120,
+        "actor_id": 339,
+        "status": 19,
+        "position": [
+          13609.9013671875,
+          -10013.7060546875,
+          7802.33740234375
+        ],
+        "axial": 27.853907123033423,
+        "radial": 425.6654400804368,
+        "inside": true
+      }
+    }
+  ],
+  "sidestep_samples": [
+    {
+      "frame": 9840,
+      "actor_id": 339,
+      "status": 0,
+      "position": [
+        13584.7333984375,
+        -9848.1650390625,
+        7954.01025390625
+      ],
+      "axial": -91.66332026955206,
+      "radial": 616.2258003294841,
+      "inside": false
+    },
+    {
+      "frame": 9850,
+      "actor_id": 339,
+      "status": 0,
+      "position": [
+        13676.822265625,
+        -10042.15625,
+        7799.2158203125
+      ],
+      "axial": -11.422302659164416,
+      "radial": 364.46317179505485,
+      "inside": false
+    },
+    {
+      "frame": 9860,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13702.0888671875,
+        -10089.564453125,
+        7767.73486328125
+      ],
+      "axial": 1.9690928743220866,
+      "radial": 304.2658388226294,
+      "inside": true
+    },
+    {
+      "frame": 9870,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13702.0888671875,
+        -10089.564453125,
+        7767.73486328125
+      ],
+      "axial": 1.9690928743220866,
+      "radial": 304.2658388226294,
+      "inside": true
+    },
+    {
+      "frame": 9880,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13702.0888671875,
+        -10089.564453125,
+        7767.73486328125
+      ],
+      "axial": 1.9690928743220866,
+      "radial": 304.2658388226294,
+      "inside": true
+    },
+    {
+      "frame": 9890,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13702.0888671875,
+        -10089.564453125,
+        7767.73486328125
+      ],
+      "axial": 1.9690928743220866,
+      "radial": 304.2658388226294,
+      "inside": true
+    },
+    {
+      "frame": 9900,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13678.044921875,
+        -10053.4970703125,
+        7807.35205078125
+      ],
+      "axial": -15.305761797528248,
+      "radial": 360.3029149314611,
+      "inside": false
+    },
+    {
+      "frame": 9910,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13625.341796875,
+        -10011.013671875,
+        7866.93505859375
+      ],
+      "axial": -27.014192929607816,
+      "radial": 448.1808486989074,
+      "inside": false
+    },
+    {
+      "frame": 9920,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13558.9091796875,
+        -9963.259765625,
+        7937.72119140625
+      ],
+      "axial": -37.62787504156586,
+      "radial": 554.2059338420371,
+      "inside": false
+    },
+    {
+      "frame": 9930,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13493.73828125,
+        -9902.302734375,
+        8017.67626953125
+      ],
+      "axial": -58.130020585202146,
+      "radial": 671.8469009286833,
+      "inside": false
+    },
+    {
+      "frame": 9940,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13445.0771484375,
+        -9826.2939453125,
+        8100.1005859375
+      ],
+      "axial": -95.24670455392334,
+      "radial": 788.1607807589332,
+      "inside": false
+    },
+    {
+      "frame": 9950,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13422.8359375,
+        -9742.0205078125,
+        8174.68017578125
+      ],
+      "axial": -147.631861016911,
+      "radial": 887.9130816733997,
+      "inside": false
+    },
+    {
+      "frame": 9960,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13426.8984375,
+        -9662.1220703125,
+        8232.064453125
+      ],
+      "axial": -206.209510584682,
+      "radial": 960.2558902840437,
+      "inside": false
+    },
+    {
+      "frame": 9970,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13447.681640625,
+        -9598.427734375,
+        8268.51171875
+      ],
+      "axial": -259.1215831542795,
+      "radial": 1003.2272684231658,
+      "inside": false
+    },
+    {
+      "frame": 9980,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13471.978515625,
+        -9556.552734375,
+        8286.83984375
+      ],
+      "axial": -297.67578018442146,
+      "radial": 1022.9519163911391,
+      "inside": false
+    },
+    {
+      "frame": 9990,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13489.8837890625,
+        -9534.58984375,
+        8293.716796875
+      ],
+      "axial": -319.72533403118723,
+      "radial": 1029.2334828124826,
+      "inside": false
+    },
+    {
+      "frame": 10000,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13498.177734375,
+        -9526.4169921875,
+        8295.4111328125
+      ],
+      "axial": -328.5079892811191,
+      "radial": 1030.2782576427,
+      "inside": false
+    },
+    {
+      "frame": 10010,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13499.6845703125,
+        -9525.099609375,
+        8295.5947265625
+      ],
+      "axial": -329.98422892575036,
+      "radial": 1030.3095322477345,
+      "inside": false
+    },
+    {
+      "frame": 10020,
+      "actor_id": 339,
+      "status": 0,
+      "position": [
+        13513.5576171875,
+        -9537.7705078125,
+        8278.8017578125
+      ],
+      "axial": -325.8380057104805,
+      "radial": 1006.1777112224362,
+      "inside": false
+    },
+    {
+      "frame": 10030,
+      "actor_id": 339,
+      "status": 0,
+      "position": [
+        13567.3994140625,
+        -9586.9453125,
+        8213.6279296875
+      ],
+      "axial": -309.7468624358007,
+      "radial": 912.8905363051831,
+      "inside": false
+    },
+    {
+      "frame": 10040,
+      "actor_id": 339,
+      "status": 0,
+      "position": [
+        13572.9052734375,
+        -9591.97265625,
+        8206.9638671875
+      ],
+      "axial": -308.10206527260016,
+      "radial": 903.3897564834092,
+      "inside": false
+    },
+    {
+      "frame": 10050,
+      "actor_id": 339,
+      "status": 0,
+      "position": [
+        13572.8994140625,
+        -9591.974609375,
+        8206.958984375
+      ],
+      "axial": -308.09421095452853,
+      "radial": 903.3899060947489,
+      "inside": false
+    },
+    {
+      "frame": 10060,
+      "actor_id": 339,
+      "status": 0,
+      "position": [
+        13565.208984375,
+        -9594.8095703125,
+        8201.1875
+      ],
+      "axial": -298.1543815721234,
+      "radial": 903.663596484562,
+      "inside": false
+    },
+    {
+      "frame": 10070,
+      "actor_id": 339,
+      "status": 0,
+      "position": [
+        13528.4296875,
+        -9608.8896484375,
+        8167.1259765625
+      ],
+      "axial": -246.17216898841434,
+      "radial": 901.9514079881317,
+      "inside": false
+    },
+    {
+      "frame": 10080,
+      "actor_id": 339,
+      "status": 0,
+      "position": [
+        13472.7138671875,
+        -9634.6201171875,
+        8118.4521484375
+      ],
+      "axial": -168.44027747862856,
+      "radial": 897.6079716758402,
+      "inside": false
+    },
+    {
+      "frame": 10090,
+      "actor_id": 339,
+      "status": 0,
+      "position": [
+        13469.17578125,
+        -9674.4482421875,
+        8067.38525390625
+      ],
+      "axial": -123.09986456850311,
+      "radial": 851.2704557407296,
+      "inside": false
+    },
+    {
+      "frame": 10100,
+      "actor_id": 339,
+      "status": 0,
+      "position": [
+        13500.037109375,
+        -9778.3974609375,
+        7967.68798828125
+      ],
+      "axial": -55.74817725940375,
+      "radial": 720.2723519174873,
+      "inside": false
+    },
+    {
+      "frame": 10110,
+      "actor_id": 339,
+      "status": 0,
+      "position": [
+        13576.6845703125,
+        -9950.0986328125,
+        7841.9716796875
+      ],
+      "axial": 11.148164290148998,
+      "radial": 505.0407823990491,
+      "inside": false
+    },
+    {
+      "frame": 10120,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13609.9013671875,
+        -10013.7060546875,
+        7802.33740234375
+      ],
+      "axial": 27.853907123033423,
+      "radial": 425.6654400804368,
+      "inside": true
+    },
+    {
+      "frame": 10130,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13609.9013671875,
+        -10013.7060546875,
+        7802.33740234375
+      ],
+      "axial": 27.853907123033423,
+      "radial": 425.6654400804368,
+      "inside": true
+    },
+    {
+      "frame": 10140,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13609.9013671875,
+        -10013.7060546875,
+        7802.33740234375
+      ],
+      "axial": 27.853907123033423,
+      "radial": 425.6654400804368,
+      "inside": true
+    },
+    {
+      "frame": 10150,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13609.9013671875,
+        -10013.7060546875,
+        7802.33740234375
+      ],
+      "axial": 27.853907123033423,
+      "radial": 425.6654400804368,
+      "inside": true
+    },
+    {
+      "frame": 10160,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13595.97265625,
+        -9986.8408203125,
+        7835.57275390625
+      ],
+      "axial": 9.662015259324107,
+      "radial": 466.57327626520106,
+      "inside": false
+    },
+    {
+      "frame": 10170,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13555.830078125,
+        -9947.4287109375,
+        7889.5263671875
+      ],
+      "axial": -6.52371235951432,
+      "radial": 541.5389687831984,
+      "inside": false
+    },
+    {
+      "frame": 10180,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13502.533203125,
+        -9902.513671875,
+        7953.0048828125
+      ],
+      "axial": -20.947272520075785,
+      "radial": 633.1732469006546,
+      "inside": false
+    },
+    {
+      "frame": 10190,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13450.6640625,
+        -9848.0634765625,
+        8026.5986328125
+      ],
+      "axial": -45.2221078541188,
+      "radial": 734.8067691717029,
+      "inside": false
+    },
+    {
+      "frame": 10200,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13414.5185546875,
+        -9784.37109375,
+        8106.2158203125
+      ],
+      "axial": -86.68671311307116,
+      "radial": 834.6782606205545,
+      "inside": false
+    },
+    {
+      "frame": 10210,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13402.9296875,
+        -9717.4091796875,
+        8182.95068359375
+      ],
+      "axial": -144.3504736761097,
+      "radial": 919.063979956355,
+      "inside": false
+    },
+    {
+      "frame": 10220,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13415.2255859375,
+        -9656.703125,
+        8246.50390625
+      ],
+      "axial": -208.7771962719562,
+      "radial": 977.9892982967178,
+      "inside": false
+    },
+    {
+      "frame": 10230,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13441.7431640625,
+        -9610.1318359375,
+        8290.7529296875
+      ],
+      "axial": -267.30549734979286,
+      "radial": 1010.3055518114534,
+      "inside": false
+    },
+    {
+      "frame": 10240,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13469.759765625,
+        -9580.5,
+        8315.9697265625
+      ],
+      "axial": -310.4842926657584,
+      "radial": 1022.6241888756173,
+      "inside": false
+    },
+    {
+      "frame": 10250,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13489.9189453125,
+        -9565.396484375,
+        8327.2685546875
+      ],
+      "axial": -335.6226542176155,
+      "radial": 1024.5954870866533,
+      "inside": false
+    },
+    {
+      "frame": 10260,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13499.46875,
+        -9559.7978515625,
+        8330.9091796875
+      ],
+      "axial": -346.04787620020215,
+      "radial": 1023.8047388313333,
+      "inside": false
+    },
+    {
+      "frame": 10270,
+      "actor_id": 339,
+      "status": 19,
+      "position": [
+        13501.455078125,
+        -9558.7919921875,
+        8331.4921875
+      ],
+      "axial": -348.0652641636261,
+      "radial": 1023.4634394270528,
+      "inside": false
+    },
+    {
+      "frame": 10280,
+      "actor_id": 339,
+      "status": 0,
+      "position": [
+        13511.8232421875,
+        -9567.9892578125,
+        8318.6396484375
+      ],
+      "axial": -344.82253922798554,
+      "radial": 1005.2796216763903,
+      "inside": false
+    },
+    {
+      "frame": 10290,
+      "actor_id": 339,
+      "status": 0,
+      "position": [
+        13571.30078125,
+        -9620.798828125,
+        8244.8447265625
+      ],
+      "axial": -326.16590795564116,
+      "radial": 901.2516394329477,
+      "inside": false
+    }
+  ],
+  "limits": [
+    "Status19 is shared by Recovery and Warp; trace does not identify concrete Mario state.",
+    "Sampling every10frames brackets activation but does not record the exact query/call frame.",
+    "No debug query, actor manipulation, controller input or gameplay state write performed."
+  ]
+}

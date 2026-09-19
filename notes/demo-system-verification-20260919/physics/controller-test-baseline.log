@@ -1,0 +1,15 @@
+test_controls_maps_normal_camera_and_stop (test_controller_mapping.ControllerMappingTests.test_controls_maps_normal_camera_and_stop) ... FAIL
+
+======================================================================
+FAIL: test_controls_maps_normal_camera_and_stop (test_controller_mapping.ControllerMappingTests.test_controls_maps_normal_camera_and_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_controller_mapping.py", line 76, in test_controls_maps_normal_camera_and_stop
+    self.assertLess(math.degrees(angular_error(px, py, angle)), 0.1)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 3.5127654888136184 not less than 0.1
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (failures=1)

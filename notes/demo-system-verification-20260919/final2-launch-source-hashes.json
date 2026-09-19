@@ -1,0 +1,8 @@
+{
+  "notes/demo-system-verification-20260919/run_original.py": "975135cbb58b0bb5167812aaa254c6a9cc65323de00f70b9876462336bd58f19",
+  "notes/demo-system-verification-20260919/operate_first_catch.py": "ccdd26dab668af298e0533722e01ce1b84e0412a3513ff6c92e19581d6520f1c",
+  "notes/demo-system-verification-20260919/follow_actor.py": "bc85f106c9507206aad24af8175cd6abf83dcb651256b0019fbea25d07494d3c",
+  "notes/demo-system-verification-20260919/three-rabbit-route.json": "13c7e0bfe3e49d103e2e7f3d6386e37d8a071a0da6625cbe81a2b611c336f292",
+  "build/macosx/arm64/debug/smg-pc": "404bbc3207069cbcf70bbb579143c49d9e239353d534e85762e3352d0009e1dd",
+  "build/macosx/arm64/debug/smg-pc.app/Contents/MacOS/smg-pc": "dc02030efc629c57d77b7c848b0e348dce2ed2ef33db352259f7cd9148e44a0b"
+}

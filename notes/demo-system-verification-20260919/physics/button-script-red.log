@@ -1,0 +1,167 @@
+FFFFFFFFFFFFFFFFFF
+======================================================================
+FAIL: test_extra_buttons_reject_invalid_native_syntax (test_sequential_route.RouteTests.test_extra_buttons_reject_invalid_native_syntax) (text='23350-23380:A,27040-27070:A')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_sequential_route.py", line 202, in test_extra_buttons_reject_invalid_native_syntax
+    with self.subTest(text=text), self.assertRaises(argparse.ArgumentTypeError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ArgumentTypeError not raised
+
+======================================================================
+FAIL: test_extra_buttons_reject_invalid_native_syntax (test_sequential_route.RouteTests.test_extra_buttons_reject_invalid_native_syntax) (text='10:A|B')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_sequential_route.py", line 202, in test_extra_buttons_reject_invalid_native_syntax
+    with self.subTest(text=text), self.assertRaises(argparse.ArgumentTypeError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ArgumentTypeError not raised
+
+======================================================================
+FAIL: test_extra_buttons_reject_invalid_native_syntax (test_sequential_route.RouteTests.test_extra_buttons_reject_invalid_native_syntax) (text='10:A+')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_sequential_route.py", line 202, in test_extra_buttons_reject_invalid_native_syntax
+    with self.subTest(text=text), self.assertRaises(argparse.ArgumentTypeError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ArgumentTypeError not raised
+
+======================================================================
+FAIL: test_extra_buttons_reject_invalid_native_syntax (test_sequential_route.RouteTests.test_extra_buttons_reject_invalid_native_syntax) (text='10:+')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_sequential_route.py", line 202, in test_extra_buttons_reject_invalid_native_syntax
+    with self.subTest(text=text), self.assertRaises(argparse.ArgumentTypeError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ArgumentTypeError not raised
+
+======================================================================
+FAIL: test_extra_buttons_reject_invalid_native_syntax (test_sequential_route.RouteTests.test_extra_buttons_reject_invalid_native_syntax) (text='10:A++B')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_sequential_route.py", line 202, in test_extra_buttons_reject_invalid_native_syntax
+    with self.subTest(text=text), self.assertRaises(argparse.ArgumentTypeError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ArgumentTypeError not raised
+
+======================================================================
+FAIL: test_extra_buttons_reject_invalid_native_syntax (test_sequential_route.RouteTests.test_extra_buttons_reject_invalid_native_syntax) (text='10:a')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_sequential_route.py", line 202, in test_extra_buttons_reject_invalid_native_syntax
+    with self.subTest(text=text), self.assertRaises(argparse.ArgumentTypeError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ArgumentTypeError not raised
+
+======================================================================
+FAIL: test_extra_buttons_reject_invalid_native_syntax (test_sequential_route.RouteTests.test_extra_buttons_reject_invalid_native_syntax) (text='10:BOGUS')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_sequential_route.py", line 202, in test_extra_buttons_reject_invalid_native_syntax
+    with self.subTest(text=text), self.assertRaises(argparse.ArgumentTypeError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ArgumentTypeError not raised
+
+======================================================================
+FAIL: test_extra_buttons_reject_invalid_native_syntax (test_sequential_route.RouteTests.test_extra_buttons_reject_invalid_native_syntax) (text='10:')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_sequential_route.py", line 202, in test_extra_buttons_reject_invalid_native_syntax
+    with self.subTest(text=text), self.assertRaises(argparse.ArgumentTypeError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ArgumentTypeError not raised
+
+======================================================================
+FAIL: test_extra_buttons_reject_invalid_native_syntax (test_sequential_route.RouteTests.test_extra_buttons_reject_invalid_native_syntax) (text='10')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_sequential_route.py", line 202, in test_extra_buttons_reject_invalid_native_syntax
+    with self.subTest(text=text), self.assertRaises(argparse.ArgumentTypeError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ArgumentTypeError not raised
+
+======================================================================
+FAIL: test_extra_buttons_reject_invalid_native_syntax (test_sequential_route.RouteTests.test_extra_buttons_reject_invalid_native_syntax) (text=':A')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_sequential_route.py", line 202, in test_extra_buttons_reject_invalid_native_syntax
+    with self.subTest(text=text), self.assertRaises(argparse.ArgumentTypeError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ArgumentTypeError not raised
+
+======================================================================
+FAIL: test_extra_buttons_reject_invalid_native_syntax (test_sequential_route.RouteTests.test_extra_buttons_reject_invalid_native_syntax) (text='-10:A')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_sequential_route.py", line 202, in test_extra_buttons_reject_invalid_native_syntax
+    with self.subTest(text=text), self.assertRaises(argparse.ArgumentTypeError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ArgumentTypeError not raised
+
+======================================================================
+FAIL: test_extra_buttons_reject_invalid_native_syntax (test_sequential_route.RouteTests.test_extra_buttons_reject_invalid_native_syntax) (text='+10:A')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_sequential_route.py", line 202, in test_extra_buttons_reject_invalid_native_syntax
+    with self.subTest(text=text), self.assertRaises(argparse.ArgumentTypeError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ArgumentTypeError not raised
+
+======================================================================
+FAIL: test_extra_buttons_reject_invalid_native_syntax (test_sequential_route.RouteTests.test_extra_buttons_reject_invalid_native_syntax) (text='20-10:A')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_sequential_route.py", line 202, in test_extra_buttons_reject_invalid_native_syntax
+    with self.subTest(text=text), self.assertRaises(argparse.ArgumentTypeError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ArgumentTypeError not raised
+
+======================================================================
+FAIL: test_extra_buttons_reject_invalid_native_syntax (test_sequential_route.RouteTests.test_extra_buttons_reject_invalid_native_syntax) (text='1-2-3:A')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_sequential_route.py", line 202, in test_extra_buttons_reject_invalid_native_syntax
+    with self.subTest(text=text), self.assertRaises(argparse.ArgumentTypeError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ArgumentTypeError not raised
+
+======================================================================
+FAIL: test_extra_buttons_reject_invalid_native_syntax (test_sequential_route.RouteTests.test_extra_buttons_reject_invalid_native_syntax) (text='1 2:A')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_sequential_route.py", line 202, in test_extra_buttons_reject_invalid_native_syntax
+    with self.subTest(text=text), self.assertRaises(argparse.ArgumentTypeError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ArgumentTypeError not raised
+
+======================================================================
+FAIL: test_extra_buttons_reject_invalid_native_syntax (test_sequential_route.RouteTests.test_extra_buttons_reject_invalid_native_syntax) (text='18446744073709551616:A')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_sequential_route.py", line 202, in test_extra_buttons_reject_invalid_native_syntax
+    with self.subTest(text=text), self.assertRaises(argparse.ArgumentTypeError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ArgumentTypeError not raised
+
+======================================================================
+FAIL: test_extra_buttons_reject_invalid_native_syntax (test_sequential_route.RouteTests.test_extra_buttons_reject_invalid_native_syntax) (text='0-18446744073709551616:A')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_sequential_route.py", line 202, in test_extra_buttons_reject_invalid_native_syntax
+    with self.subTest(text=text), self.assertRaises(argparse.ArgumentTypeError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ArgumentTypeError not raised
+
+======================================================================
+FAIL: test_extra_buttons_reject_invalid_native_syntax (test_sequential_route.RouteTests.test_extra_buttons_reject_invalid_native_syntax) (text='１:A')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/test_sequential_route.py", line 202, in test_extra_buttons_reject_invalid_native_syntax
+    with self.subTest(text=text), self.assertRaises(argparse.ArgumentTypeError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ArgumentTypeError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=18)

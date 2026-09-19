@@ -1,0 +1,24 @@
+[
+  {
+    "target": "smg-pc-original-sphere-query-tests",
+    "build": {
+      "command": [
+        "xmake",
+        "build",
+        "-j",
+        "8",
+        "smg-pc-original-sphere-query-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 5.472968374961056
+    },
+    "binary_sha256": "0a82953c3e0d8b860f3ce2c73d986580e69bc3ad31f9cc8832718784f178337e",
+    "test": {
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-sphere-query-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.4575339159928262
+    }
+  }
+]

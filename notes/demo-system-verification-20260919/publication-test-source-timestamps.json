@@ -1,0 +1,10 @@
+{
+  "source_mtime_ns": 1789842628013317507,
+  "objects": [
+    {
+      "path": "build/.objs/smg-pc-original-sphere-query-tests/macosx/arm64/debug/tests/OriginalSphereQueryTests.cpp.o",
+      "mtime_ns": 1789842572364558836,
+      "newer_than_source": false
+    }
+  ]
+}

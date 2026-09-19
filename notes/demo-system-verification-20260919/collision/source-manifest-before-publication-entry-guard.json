@@ -1,0 +1,25 @@
+{
+  "scope": "collision restoration and shared build files at validated source freeze; shared files also contain peer-owned changes",
+  "files": {
+    "src/compat/GameMapCollisionCompat.cpp": "1f6ffea41b23b22632582eff343bc7f5edec69125fec49399fad3fb1e7994dbf",
+    "src/compat/OriginalMapQueries.cpp": "68a3b7b3b3a81393c0b0741bdfc5943c577ccdc81187bf15c3d9a4ad11ed48d5",
+    "src/compat/OriginalCollisionPartsCompat.cpp": "49d59d16c8b6ff39d2bb2778e7945846dd1d196b29db530d28dee88588268749",
+    "src/compat/OriginalKCollisionCompat.cpp": "11db2f489c776ad40a5c3439d4dcd940528eee13ca4a9770ec4c9986a9510f52",
+    "src/compat/HitInfoCompat.cpp": "72603a305919f62249d365ea81f955aec88429fef0fd12d816ba781362f53ef3",
+    "src/Game/Map/CollisionParts.cpp": "1443eed76c2540f3124483b77615ac09e7015f1abf8a2d3a6a693d1089275b94",
+    "src/Game/Map/CollisionCategorizedKeeper.cpp": "7da8f2b054068249577bea37a503a7f88c34905261bd6a18baf3c589ee5eadf3",
+    "src/Game/Util/MapUtil.cpp": "e932d1e880b359d67940fa8a58a7911c963461f95a147ec21eafd9349f0c6a47",
+    "src/Game/xmake.lua": "3836fbe7d30afcee5c54685480440c1198707496f18ee5dd1f41d8eb293b0f3f",
+    "src/scene/StageCollisionService.hpp": "d6802bc8f6015d5215c5665d8e3e4d73dc36dee3878638136525b4fbd3d458eb",
+    "tests/OriginalSphereQueryFixture.hpp": "8dc60a1ec9c6e71ee06a140727a517493d94769df646be4ece3eba92800adaca",
+    "tests/OriginalSphereQueryTests.cpp": "34ded854cd744ebdd5175b98dd60e545da84c33e10d1744ce4ecf81123ef1cff",
+    "tests/AreaPolygonQueryTests.cpp": "8bd87e0264605ba2c584f972c38027434b35942f871606bcca2fc373d9e78955",
+    "tests/xmake.lua": "8a1bac607a113e72acb4949cd95b72ee6756c9058fdf51fce271e2a492e50bb5",
+    "decomp/src/Game/Map/CollisionParts.cpp": "43e98936bc5fc997e936ed8e91a74b89dca1f0325b32de82a44ce813ae60032e",
+    "decomp/src/Game/Map/CollisionCategorizedKeeper.cpp": "8d58d78d1899b009a42ec70c50454dbe025abdc6b5aaa1bfab74ac95daf11631",
+    "decomp/src/Game/Map/KCollision.cpp": "7bf02a79a38d28f621781b3696cf9ff624b791a99387ef9e8eafe6ae62f94503",
+    "decomp/src/Game/Map/HitInfo.cpp": "934e8865bf472b97cef5c9204b0514940e353e2a20e5c4c7ee05e1cd9b93f8af",
+    "decomp/src/Game/Util/MapUtil.cpp": "ae888e69dedca4789f15181a533d95aedc33a402e7d8aaeb82cce918397071e7",
+    "decomp/include/Game/Map/CollisionParts.hpp": "f7c1a8c229bda949618b4410ae0c94085f56b29a7a30d4a0b68906ddb714f8b2"
+  }
+}

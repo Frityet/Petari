@@ -1,0 +1,225 @@
+{
+  "status": "PASS",
+  "scope": "Exact retained placement identities, source availability and owner provenance; does not establish actor behavior, physics parity, rendered visibility or route completion.",
+  "report": "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/final-route-placements.json",
+  "report_sha256": "031fbd727a70f1c55e65c6d2b97d9b635b9e56b0dea6c07b2f87829e6d35d1e7",
+  "raw_inventory": "notes/gateway-content-inventory-20260919/source-placement-inventory.json",
+  "raw_inventory_sha256": "eb2b3e718b76e8df4c95332fbcca6f12a1c958e887f1e07a1e7fa5d0d63b7574",
+  "row_count": 243,
+  "availability_counts": {
+    "supported": 179,
+    "known_unlinked": 59,
+    "metadata": 5
+  },
+  "zone_counts": {
+    "0": 38,
+    "1": 24,
+    "2": 44,
+    "4": 30,
+    "5": 84,
+    "6": 23
+  },
+  "layer_counts": {
+    "layera": 38,
+    "common": 205
+  },
+  "holder_paths": {
+    "0": [],
+    "5": [
+      0
+    ],
+    "6": [
+      1
+    ],
+    "4": [
+      2
+    ],
+    "2": [
+      3
+    ],
+    "1": [
+      4
+    ]
+  },
+  "max_rotation_matrix_absolute_error_by_zone": {
+    "0": 0.0,
+    "1": 5.562008820181319e-08,
+    "2": 2.8209264812950607e-08,
+    "4": 2.8209264812950607e-08,
+    "5": 7.669579638047708e-08,
+    "6": 1.6957331207430088e-07
+  },
+  "translations": "Every reported translation equals the authored float exactly",
+  "selected_start": {
+    "availability": "supported",
+    "holder_path": [],
+    "l_id": -1,
+    "layer": "layera",
+    "model_no": -1,
+    "object": "Mario",
+    "phase": "player",
+    "reason": "compiled_retail_creator",
+    "row": 0,
+    "table": "startinfo",
+    "table_path": "/jmp/start/layera/startinfo",
+    "zone": 0,
+    "zone_name": "HeavensDoorGalaxy",
+    "zone_placement_matrix": [
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ]
+  },
+  "restart_rows": [
+    {
+      "availability": "supported",
+      "holder_path": [],
+      "l_id": 0,
+      "layer": "common",
+      "model_no": -1,
+      "object": "RestartCube",
+      "phase": "common_priority",
+      "reason": "compiled_retail_area_creator_and_manager",
+      "row": 0,
+      "table": "areaobjinfo",
+      "table_path": "/jmp/placement/common/areaobjinfo",
+      "zone": 0,
+      "zone_name": "HeavensDoorGalaxy",
+      "zone_placement_matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "availability": "supported",
+      "holder_path": [],
+      "l_id": 2,
+      "layer": "common",
+      "model_no": -1,
+      "object": "RestartCube",
+      "phase": "common_priority",
+      "reason": "compiled_retail_area_creator_and_manager",
+      "row": 1,
+      "table": "areaobjinfo",
+      "table_path": "/jmp/placement/common/areaobjinfo",
+      "zone": 0,
+      "zone_name": "HeavensDoorGalaxy",
+      "zone_placement_matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "availability": "supported",
+      "holder_path": [],
+      "l_id": 3,
+      "layer": "common",
+      "model_no": -1,
+      "object": "RestartCube",
+      "phase": "common_priority",
+      "reason": "compiled_retail_area_creator_and_manager",
+      "row": 2,
+      "table": "areaobjinfo",
+      "table_path": "/jmp/placement/common/areaobjinfo",
+      "zone": 0,
+      "zone_name": "HeavensDoorGalaxy",
+      "zone_placement_matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "availability": "supported",
+      "holder_path": [],
+      "l_id": 4,
+      "layer": "common",
+      "model_no": -1,
+      "object": "RestartCube",
+      "phase": "common_priority",
+      "reason": "compiled_retail_area_creator_and_manager",
+      "row": 3,
+      "table": "areaobjinfo",
+      "table_path": "/jmp/placement/common/areaobjinfo",
+      "zone": 0,
+      "zone_name": "HeavensDoorGalaxy",
+      "zone_placement_matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ]
+    }
+  ],
+  "known_unlinked_by_name": {
+    "AudioEffectSphere": 1,
+    "BenefitItemOneUp": 1,
+    "BlackHole": 1,
+    "CapsuleCage": 2,
+    "ChangeBgmCube": 3,
+    "CrystalCageS": 7,
+    "ExterminationKuriboKeySwitch": 1,
+    "HeavensDoorInsideRotatePartsA": 1,
+    "HeavensDoorInsideRotatePartsB": 1,
+    "HeavensDoorInsideRotatePartsC": 1,
+    "HeavensDoorMiddleRotatePartsA": 1,
+    "HeavensDoorMiddleRotatePartsB": 1,
+    "KoopaJrNormalShipA": 3,
+    "Kuribo": 8,
+    "KuriboChief": 1,
+    "KuriboMini": 8,
+    "MeteorCannon": 2,
+    "RailCoin": 2,
+    "SpinDriver": 1,
+    "SpinGuidanceCube": 5,
+    "SuperSpinDriver": 2,
+    "YellowChip": 5,
+    "YellowChipGroup": 1
+  }
+}

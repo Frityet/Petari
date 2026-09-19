@@ -1,0 +1,186 @@
+{
+  "status": "PASS",
+  "native_source_checkpoint": "eda37d29cf809c75dea8d32ab9ab1bb858b2a23c",
+  "decomp_checkpoint": "4ae0d93c3e9b451da9fc05ec9a31533ce44ae843",
+  "recorded_digest_checks": 25,
+  "checks": [
+    {
+      "kind": "classified_source",
+      "path": "src/scene/nameobj/NameObjFactory.cpp",
+      "recorded_sha256": "445386e2972e7ccac440f7457ee76727f1656f553c07ad9b139ec4bcbf57a96f",
+      "current_sha256": "445386e2972e7ccac440f7457ee76727f1656f553c07ad9b139ec4bcbf57a96f",
+      "matches": true
+    },
+    {
+      "kind": "classified_source",
+      "path": "src/scene/AreaObjRuntime.cpp",
+      "recorded_sha256": "56f5639df00d2d7067bef2b07d201cbf6197508247c5b398102c3b4ee61d6ddb",
+      "current_sha256": "56f5639df00d2d7067bef2b07d201cbf6197508247c5b398102c3b4ee61d6ddb",
+      "matches": true
+    },
+    {
+      "kind": "classified_source",
+      "path": "src/Game/Scene/StageDataHolder.cpp",
+      "recorded_sha256": "3a99b6f8a6131abcb2337bdc519574d96ebdd81ead4fc21a11864b0b209d4710",
+      "current_sha256": "3a99b6f8a6131abcb2337bdc519574d96ebdd81ead4fc21a11864b0b209d4710",
+      "matches": true
+    },
+    {
+      "kind": "classified_source",
+      "path": "src/Game/Util/JMapUtil.cpp",
+      "recorded_sha256": "94231305d1bb5005c0afa8e227434dbaa1f2d67562ee2b852dd9e7840cc93d72",
+      "current_sha256": "94231305d1bb5005c0afa8e227434dbaa1f2d67562ee2b852dd9e7840cc93d72",
+      "matches": true
+    },
+    {
+      "kind": "classified_source",
+      "path": "src/Game/Util/SceneUtil.cpp",
+      "recorded_sha256": "05bfa4758bc87aaa54a669b2239bb04f89d76649a969c777ac199916bbc5bbf0",
+      "current_sha256": "05bfa4758bc87aaa54a669b2239bb04f89d76649a969c777ac199916bbc5bbf0",
+      "matches": true
+    },
+    {
+      "kind": "classified_source",
+      "path": "src/Game/AreaObj/RestartCube.cpp",
+      "recorded_sha256": "753183be99857638a3b44f452a643470b34bf5b6b31bfd954bd62c0320dcfbba",
+      "current_sha256": "753183be99857638a3b44f452a643470b34bf5b6b31bfd954bd62c0320dcfbba",
+      "matches": true
+    },
+    {
+      "kind": "classified_source",
+      "path": "src/compat/StageSessionGameCompat.cpp",
+      "recorded_sha256": "e9e030ff460118e84cdf4ed627a1ee41c2c01d4c32956824c3b51cddfefe145c",
+      "current_sha256": "e9e030ff460118e84cdf4ed627a1ee41c2c01d4c32956824c3b51cddfefe145c",
+      "matches": true
+    },
+    {
+      "kind": "stage_archive",
+      "path": "build/demo-system-verification-20260919/HeavensDoorGalaxyScenario.arc",
+      "recorded_sha256": "03eba87db26d2ce0dde6d331fc829372c580954e1af049f657adeaeb515c5813",
+      "current_sha256": "03eba87db26d2ce0dde6d331fc829372c580954e1af049f657adeaeb515c5813",
+      "matches": true
+    },
+    {
+      "kind": "stage_archive",
+      "path": "build/demo-system-verification-20260919/HeavensDoorGalaxy.arc",
+      "recorded_sha256": "9c80464cbdc9e73f3d440476eb7a6755ad19dc87c3a9d764501a7dda9b164f56",
+      "current_sha256": "9c80464cbdc9e73f3d440476eb7a6755ad19dc87c3a9d764501a7dda9b164f56",
+      "matches": true
+    },
+    {
+      "kind": "stage_archive",
+      "path": "build/demo-system-verification-20260919/HeavensDoorMysteriousZone.arc",
+      "recorded_sha256": "6004cbf1a9669b500ae45a2c54dabd64b019fa0699f50a1cf17e211b7544be97",
+      "current_sha256": "6004cbf1a9669b500ae45a2c54dabd64b019fa0699f50a1cf17e211b7544be97",
+      "matches": true
+    },
+    {
+      "kind": "stage_archive",
+      "path": "build/demo-system-verification-20260919/HeavensDoorSmallZone.arc",
+      "recorded_sha256": "3fea500809a7bf71cb6fb8a2736b82476dc2891a918d940fd37fb4d3d34a1418",
+      "current_sha256": "3fea500809a7bf71cb6fb8a2736b82476dc2891a918d940fd37fb4d3d34a1418",
+      "matches": true
+    },
+    {
+      "kind": "stage_archive",
+      "path": "build/demo-system-verification-20260919/HeavensDoorMiddleZone.arc",
+      "recorded_sha256": "79d2d631996a73f40c63751ec7b25e73a81a28e9b0b542a6e8d7e78811062a0d",
+      "current_sha256": "79d2d631996a73f40c63751ec7b25e73a81a28e9b0b542a6e8d7e78811062a0d",
+      "matches": true
+    },
+    {
+      "kind": "stage_archive",
+      "path": "build/demo-system-verification-20260919/HeavensDoorInsideZone.arc",
+      "recorded_sha256": "ecb3b7f72e22187ad2b4ca7c7f4f34e90cbc63f55304ad2695ee2f804a2a0fa0",
+      "current_sha256": "ecb3b7f72e22187ad2b4ca7c7f4f34e90cbc63f55304ad2695ee2f804a2a0fa0",
+      "matches": true
+    },
+    {
+      "kind": "stage_archive",
+      "path": "build/demo-system-verification-20260919/HeavensBlackHoleZone.arc",
+      "recorded_sha256": "d7dd8f6245ab8c9fb36b34ceaf1d1983a1efa733a837fddc3a32c48bd44e01bd",
+      "current_sha256": "d7dd8f6245ab8c9fb36b34ceaf1d1983a1efa733a837fddc3a32c48bd44e01bd",
+      "matches": true
+    },
+    {
+      "kind": "geometry_archive",
+      "path": "build/demo-system-verification-20260919/HeavensDoorMiddleRotatePartsA.arc",
+      "recorded_sha256": "a6b0f4aa2cdcdb4c7161d454e7c17abe3d08a6ee092d6f366b77ef672c6d8d69",
+      "current_sha256": "a6b0f4aa2cdcdb4c7161d454e7c17abe3d08a6ee092d6f366b77ef672c6d8d69",
+      "matches": true
+    },
+    {
+      "kind": "geometry_archive",
+      "path": "build/demo-system-verification-20260919/HeavensDoorMiddleRotatePartsB.arc",
+      "recorded_sha256": "14cbcedb93d5106932d6960887def4b39824fe234c8dcbe562be45251bcd8919",
+      "current_sha256": "14cbcedb93d5106932d6960887def4b39824fe234c8dcbe562be45251bcd8919",
+      "matches": true
+    },
+    {
+      "kind": "geometry_archive",
+      "path": "build/demo-system-verification-20260919/HeavensDoorInsideRotatePartsA.arc",
+      "recorded_sha256": "e64bfc5fc5f5a39fc5b81a711f51b36f4e83be172c545d61a99516d5af8189d6",
+      "current_sha256": "e64bfc5fc5f5a39fc5b81a711f51b36f4e83be172c545d61a99516d5af8189d6",
+      "matches": true
+    },
+    {
+      "kind": "geometry_archive",
+      "path": "build/demo-system-verification-20260919/HeavensDoorInsideRotatePartsB.arc",
+      "recorded_sha256": "19dca6e30d712136735b41ffcfe9708c37e7eb4e28d9afbeb979a29c60f36e1d",
+      "current_sha256": "19dca6e30d712136735b41ffcfe9708c37e7eb4e28d9afbeb979a29c60f36e1d",
+      "matches": true
+    },
+    {
+      "kind": "geometry_archive",
+      "path": "build/demo-system-verification-20260919/HeavensDoorInsideRotatePartsC.arc",
+      "recorded_sha256": "f7fbdfefdc714460c0eb85933bfca8766783d83cc70153c73271802e6ba52089",
+      "current_sha256": "f7fbdfefdc714460c0eb85933bfca8766783d83cc70153c73271802e6ba52089",
+      "matches": true
+    },
+    {
+      "kind": "geometry_archive",
+      "path": "build/demo-system-verification-20260919/KoopaJrNormalShipA.arc",
+      "recorded_sha256": "3e83d469f53392c35a6e6e55d4e85b80a4b9e936f007c05e3bed2eceb150ef76",
+      "current_sha256": "3e83d469f53392c35a6e6e55d4e85b80a4b9e936f007c05e3bed2eceb150ef76",
+      "matches": true
+    },
+    {
+      "kind": "baseline_report",
+      "path": "notes/compat-original-runtime-20260919/gateway-opening-placements.json",
+      "recorded_sha256": "02c9416665b1cb133c464ecdea7528de0fc90a3db89f499998bcf74f970dc4d0",
+      "current_sha256": "02c9416665b1cb133c464ecdea7528de0fc90a3db89f499998bcf74f970dc4d0",
+      "matches": true
+    },
+    {
+      "kind": "current_report",
+      "path": "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/final-route-placements.json",
+      "recorded_sha256": "031fbd727a70f1c55e65c6d2b97d9b635b9e56b0dea6c07b2f87829e6d35d1e7",
+      "current_sha256": "031fbd727a70f1c55e65c6d2b97d9b635b9e56b0dea6c07b2f87829e6d35d1e7",
+      "matches": true
+    },
+    {
+      "kind": "parsed_inventory",
+      "path": "notes/gateway-content-inventory-20260919/source-placement-inventory.json",
+      "recorded_sha256": "eb2b3e718b76e8df4c95332fbcca6f12a1c958e887f1e07a1e7fa5d0d63b7574",
+      "current_sha256": "eb2b3e718b76e8df4c95332fbcca6f12a1c958e887f1e07a1e7fa5d0d63b7574",
+      "matches": true
+    },
+    {
+      "kind": "probe_binary",
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-placement-transform-tests",
+      "recorded_sha256": "6d39a91f3acbf2405424c709334529b7685defba33f119826eff25ad7002a2ce",
+      "current_sha256": "6d39a91f3acbf2405424c709334529b7685defba33f119826eff25ad7002a2ce",
+      "matches": true
+    },
+    {
+      "kind": "probe_binary",
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-placement-coverage-tests",
+      "recorded_sha256": "b8fde296858c667f5e26e665dd1732379a44c7095db307c7c75754da7edc4b28",
+      "current_sha256": "b8fde296858c667f5e26e665dd1732379a44c7095db307c7c75754da7edc4b28",
+      "matches": true
+    }
+  ],
+  "probe_records_equal_original_restored_json": true,
+  "all_copied_probe_observations_present_in_original_log": true,
+  "scope": "Read-only digest and existing evidence verification; no build or game run."
+}

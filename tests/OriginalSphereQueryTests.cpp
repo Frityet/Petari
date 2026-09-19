@@ -2,6 +2,9 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Util/MapUtil.hpp"
 #include "Game/Util/TriangleFilter.hpp"
+#include "compat/CollisionDirectorOwnership.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
+#include "scene/StageCollisionService.hpp"
 #include <iostream>
 
 namespace {
@@ -216,6 +219,109 @@ void area_transform_and_contract(Fixture& owner) {
     rejects([&] { MR::createAreaPolygonListArray(&array,1,box.data(),33); });
     rejects([&] { MR::createAreaPolygonListArray(&array,1,nullptr,1); });
 }
+void publication_before_culling(Fixture& owner) {
+    require(MR::createSceneObj(SceneObj_SensorHitChecker)!=nullptr,
+            "Publication fixture requires the original sensor checker");
+    auto* director=static_cast<CollisionDirector*>(MR::getSceneObjHolder()->getObj(SceneObj_CollisionDirector));
+    auto* native_owner=smgpc::scene::current_collision_director_ownership();
+    require(director && native_owner,"Publication fixture requires actual original and native scene owners");
+    require(director->getCategoryKeeper(0)==owner.keeper,"Publication fixture must use the same original director");
+    smgpc::scene::StageCollisionService map_service;
+    map_service.activate();
+    for (int category=0;category<4;++category) {
+        auto* keeper=director->getCategoryKeeper(category);
+        if (category!=0) {
+            keeper->mZones[0]=new CollisionZone(0);
+            keeper->mZoneNum=1;
+            keeper->_A0=true;
+        }
+        auto& service=category==0 ? map_service : native_owner->category_service(category);
+        struct Geometry {
+            KCLFile file{};
+            std::array<TVec3f,1> positions;
+            std::array<TVec3f,4> normals;
+            std::array<KC_PrismData,2> prisms;
+            std::array<u16,4> octree{0x8000,2,1,0};
+            explicit Geometry(const KCLFile& source) : file(source) {
+                std::copy_n(source.mPos,positions.size(),positions.begin());
+                std::copy_n(source.mNorms,normals.size(),normals.begin());
+                std::copy_n(source.mPrisms,prisms.size(),prisms.begin());
+                file.mPos=positions.data(); file.mNorms=normals.data();
+                file.mPrisms=prisms.data(); file.mOctree=octree.data();
+            }
+        };
+        smgpc::resource::KCollisionResource original(Fixture::triangles());
+        auto geometry=std::make_shared<Geometry>(*original.native_file());
+        auto resource=std::make_shared<smgpc::resource::GeneratedKCollisionResource>(
+            geometry->file,geometry->positions,geometry->normals,geometry->prisms,geometry->octree,geometry);
+        HitSensor sensor(0,0,1,nullptr);
+        CollisionParts parts;
+        std::unique_ptr<KCollisionServer> server(parts.mServer);
+        std::unique_ptr<JMapInfo> attributes(parts.mServer->mapInfo);
+        parts.mServer->init(resource->native_file(),nullptr);
+        parts.mHitSensor=&sensor; parts._CC=true; parts._D4=2; parts._D8=10;
+        parts.mKeeperIndex=category; parts.mZone=keeper->mZones[0];
+        keeper->addToZone(&parts,0);
+        struct Cleanup {
+            CollisionCategorizedKeeper& keeper;
+            CollisionParts& parts;
+            smgpc::scene::StageCollisionService& service;
+            ~Cleanup() { service.clear(); keeper.removeFromZone(&parts,0); }
+        } cleanup{*keeper,parts,service};
+        auto registration=std::make_shared<smgpc::scene::StageCollisionRegistrationState>(nullptr,&parts);
+        require(service.register_generated_kcl(resource,*parts.mServer,Fixture::matrix(),
+                    "publication boundary triangle",registration,&sensor,0).accepted,
+                "Generated geometry must register against its actual original part and keeper");
+        service.build();
+        // These queries are outside the part sphere. Without the entry guard,
+        // original culling never calls a CollisionParts narrow-phase guard.
+        std::array box{TVec3f(10000),TVec3f(10001)};
+        const TVec3f offset(1,0,0);
+        HitInfo hit;
+        Triangle triangle;
+        const auto queries=[&](bool unavailable) {
+            const auto check=[&](auto query) {
+                bool rejected=false;
+                unsigned result=1;
+                try { result=query(); } catch (const std::logic_error&) { rejected=true; }
+                require(rejected==unavailable && (rejected || result==0),
+                        "Every off-bounds original query must honor category publication before culling");
+            };
+            check([&] { return keeper->checkStrikePoint(box[0],&hit); });
+            check([&] { return keeper->checkStrikeBall(box[0],1,false,nullptr,nullptr); });
+            check([&] { return keeper->checkStrikeBallWithThickness(box[0],1,2,nullptr,nullptr); });
+            check([&] { return keeper->checkStrikeLine(box[0],offset,1,nullptr,nullptr); });
+            check([&] { return keeper->createAreaPolygonList(&triangle,1,box[0],box[1]); });
+            check([&] { return keeper->createAreaPolygonListArray(&triangle,1,box.data(),box.size()); });
+        };
+        queries(false);
+        const auto invalidate=[&] {
+            geometry->prisms[1].mNormalIndex=99;
+            bool rejected=false;
+            try { service.update_registered_geometry(*registration); }
+            catch (const std::invalid_argument&) { rejected=true; }
+            require(rejected,"Invalid generated index must fail publication");
+        };
+        invalidate();
+        queries(true);
+        for (int other=0;other<4;++other)
+            if (other!=category)
+                require(director->getCategoryKeeper(other)->checkStrikeBall(box[0],1,false,nullptr,nullptr)==0,
+                        "Failed publication must not quarantine an unrelated collision category");
+        registration->set_enabled(false); parts._CC=false;
+        queries(false);
+        registration->set_enabled(true); parts._CC=true;
+        queries(true);
+        geometry->prisms[1].mNormalIndex=0;
+        service.update_registered_geometry(*registration);
+        queries(false);
+        invalidate();
+        registration->release_owner(); parts._CC=false;
+        queries(false);
+        std::cout<<"PASS off-bounds publication boundary category "<<category<<'\n';
+    }
+    map_service.deactivate();
+}
 }
 int main() {
     try {
@@ -232,6 +338,7 @@ int main() {
         excluded_sensor_line(fixture);
         area_original_membership(fixture);
         area_transform_and_contract(fixture);
+        publication_before_culling(fixture);
         require(fixture.keeper->mZoneCount==0,"All synthetic parts retire from original keeper");
         std::cout<<"PASS original map queries: sphere features/translation/thickness/order/filtering/motion, point boundaries/scale/output, segmented fast lines/exclusion/enclosure and retirement\n";
     } catch (const std::exception& error) {

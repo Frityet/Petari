@@ -1,0 +1,185 @@
+{
+  "status": "physics source/fixture and controller evidence; final2 original process completed30000 frames and reached three catches/Rosalina activation; rendered visibility remains independent",
+  "files": [
+    {
+      "path": "notes/demo-system-verification-20260919/physics/BinderKclMarioWalkTests.cpp.before.gz",
+      "bytes": 7021,
+      "sha256": "e89f73c588c1c769c9df05c2ff8bdf40334d92074ba611749b14128be169e8e4"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/CollisionTriangleFilterTests.cpp.before.gz",
+      "bytes": 4434,
+      "sha256": "533acab1aa3f3f23edcb81864ebf1d0c4a64671b0953a94a1daea47c1e0087d0"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/README.md",
+      "bytes": 6986,
+      "sha256": "efdc8eeddb7c8d8fe17b9886f004002cab43d617cabfc4c05db88086a1be163c"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/analyze_controller.py",
+      "bytes": 5135,
+      "sha256": "b19c36ea4f3af9fd60d44d0c7b6a6454939de40077d9b2edde7a98399d615037"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/binder-restoration-provenance.json",
+      "bytes": 1136,
+      "sha256": "afdd200774756aae7c9c7af55361f76c0fbeeedd494765a23e106fb9a2742bdc"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/button-script-green.log",
+      "bytes": 120,
+      "sha256": "3489cd54abd135d488e06b831c89af30d666bc40eb80bb7a613ad89a61c9935b"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/button-script-red.log",
+      "bytes": 12845,
+      "sha256": "64a3639b72087caaa5f05d6565c52f594e078917cf4c27eb59bf16c91a63aea6"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/check_sources.py",
+      "bytes": 3860,
+      "sha256": "cb830af93d447599afc6cc4df3922dd67388d4a8da887163af102ae256358237"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/controller-analysis.log",
+      "bytes": 4828,
+      "sha256": "24b579e75a20b50a6f966993d4b00d550ce2f43d78536a6b70f9cf8f90564c71"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/controller-full-speed-test.log",
+      "bytes": 118,
+      "sha256": "2d9cda1f175b9d7f88ad1e7b877e17af7d6bda03024f8ddfde1a88dddd36a33e"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/controller-mapping-baseline.json",
+      "bytes": 4828,
+      "sha256": "24b579e75a20b50a6f966993d4b00d550ce2f43d78536a6b70f9cf8f90564c71"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/controller-mapping.md",
+      "bytes": 5293,
+      "sha256": "311b2dba27d54380cd1d8c28f3fd7858138dfc619fab2854f6fbfb3db4b50b13"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/controller-route-test.log",
+      "bytes": 113,
+      "sha256": "5588b256ee4b948aa406c335ef3d6d9593702e739835e5d99e2b8255b3339813"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/controller-stall-jump-test.log",
+      "bytes": 124,
+      "sha256": "2cbaff0c0250b605b760d188f4fe8f55d7ce6f05d50f9d865d45c5b9f8d5bac2"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/controller-test-baseline.log",
+      "bytes": 926,
+      "sha256": "2268139d9bf300c920a5b374aa7fb37a349acccfc941040ef5524eac6c5a026e"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/controller-test-initial.log",
+      "bytes": 1976,
+      "sha256": "e60337944a1573b905f415e82ad3e4803bd084284013a0a9051de4f33c3bba89"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/controller-test.log",
+      "bytes": 101,
+      "sha256": "7ba600c131d14938fa296eb6eb208c575bf239a15b65439f37d0578df0fff9bf"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/current-source-checks.json",
+      "bytes": 7417,
+      "sha256": "b905c95ca95760870654284efd0d0023a3aaf838becde70d88b5b9f61fc8408b"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/current-token-differences.txt",
+      "bytes": 5417,
+      "sha256": "cc59b546cd9c2d7ebda657253d72931205af736be8274db9fc144bab950d92ba"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/final-route-first-stall.json",
+      "bytes": 4970,
+      "sha256": "16cf49bd163da030e9251eb3da4f403d689a4c09ae2ea9a7f67b871a21432633"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/final-route-late-monitor.json",
+      "bytes": 15112,
+      "sha256": "30e57847fdf9c19aa2f78423f45000b5be4c61f31892a670febb2693538f918d"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/final-route-monitor.md",
+      "bytes": 7199,
+      "sha256": "ee5a6722c2cde7eb5b49b8dee24788255498d20ab1209c1564d3b2437ccb8adb"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/final2-live-events.jsonl",
+      "bytes": 33786,
+      "sha256": "51854accbb5775bb9667713e4d1c6bf0bc42868d328685f25965b4c9c078d8c1"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/final2-milestone-snapshots.json",
+      "bytes": 371951,
+      "sha256": "d564d749c0c286c6bce1ea49486ee664f2e5f57f90439fa7f1d1c10b620305e8"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/final2-milestone-snapshots.json.gz",
+      "bytes": 27481,
+      "sha256": "b3ce22f5cffa0c7642d56925520330ddb7bcb9438c0c01e4f675488c117bbc17"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/final2-monitor.md",
+      "bytes": 5408,
+      "sha256": "872ee971ec970b48e939798e4b0ca141b45bf3ece71b36d5a0f9a5ea7f36c411"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/final2-summary.json",
+      "bytes": 3127,
+      "sha256": "ad6255f571ca148b373b8e3fdf0b05eb13268d529675668fe419b34d3e5f31bc"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/monitor_live_route.py",
+      "bytes": 4063,
+      "sha256": "fddfdbd1cbc7a86758c7a8af8f56b476cfcc21e900fe05584eeb829f32bf91b0"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/read_step_kcl.py",
+      "bytes": 4278,
+      "sha256": "e15f4f74867604cefeb952b42d9ef3b7ea0b4be04c52b939209a23acbb79f144"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/selected-source-checks.json",
+      "bytes": 2068,
+      "sha256": "3546534ae1eb4f44d26f6f7f8329709a3ee8c3fbed28b09cc443c0631c46af89"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/selected-token-differences.txt",
+      "bytes": 5760,
+      "sha256": "00e8764a5501177c0b37461bb31a1874c94969983636e06f85aade92d8e53f9d"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/steps-geometry.json",
+      "bytes": 374160,
+      "sha256": "a60ed414b58d9f5f4bbf8c9eb0d0393dad61786330ac6062c15c646c53bdd870"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/steps-geometry.json.gz",
+      "bytes": 60250,
+      "sha256": "aece4c79295f8446fed2392acbfd3ed8f2a9a7983a98955e838743c21ff4aab5"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/steps-read.log",
+      "bytes": 30018,
+      "sha256": "2cd31e20ccd7a4524d15289caf0de905f21023f7423e35d52eb201c49b1b74e3"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/test-migration.md",
+      "bytes": 4645,
+      "sha256": "740080d24e5533f7856d8c8f7dc8aa26d5c9c2f5d9a1e804f6ed3c203f9cbeec"
+    },
+    {
+      "path": "notes/demo-system-verification-20260919/physics/validation.md",
+      "bytes": 2153,
+      "sha256": "4d8d4a97c4724d406859b7fc971b0184a60372ec5f9b8da16bcd7b371be3bccb"
+    }
+  ]
+}

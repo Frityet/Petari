@@ -1,0 +1,5 @@
+PASS off-bounds publication boundary category 0
+PASS off-bounds publication boundary category 1
+PASS off-bounds publication boundary category 2
+PASS off-bounds publication boundary category 3
+PASS original map queries: sphere features/translation/thickness/order/filtering/motion, point boundaries/scale/output, segmented fast lines/exclusion/enclosure and retirement

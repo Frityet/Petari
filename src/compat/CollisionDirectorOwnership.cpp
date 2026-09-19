@@ -6,9 +6,22 @@
 #include <aurora/exception.hpp>
 #include <stdexcept>
 #include "scene/StageCollisionService.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 #include <aurora/allocation.hpp>
 
 namespace smgpc::compat {
+    void require_published_collision_geometry(int category) {
+        auto* service = scene::StageCollisionService::active();
+        if (category != 0) {
+            service = nullptr;
+            if (auto* owner = scene::current_collision_director_ownership()) {
+                service = &owner->category_service(category);
+            }
+        }
+        // Typed original CPU fixtures need no native scene resource service.
+        if (service) service->require_published_geometry();
+    }
+
     CollisionDirectorOwnership::CollisionDirectorOwnership() {
         const aurora::allocation::HostAllocationScope host;
         for (auto& service : _category_services) service = std::make_unique<scene::StageCollisionService>();

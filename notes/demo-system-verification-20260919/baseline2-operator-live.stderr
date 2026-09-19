@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/operate_first_catch.py", line 286, in <module>
+    publish(args.input, result["command"])
+     ^^^^^^
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/operate_first_catch.py", line 269, in main
+    if snapshot is None:
+        ^^^^^^^^^^^^^^^^
+KeyboardInterrupt

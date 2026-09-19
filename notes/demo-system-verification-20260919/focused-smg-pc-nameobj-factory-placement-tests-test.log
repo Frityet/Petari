@@ -1,0 +1,8 @@
+[fail] factory-only placement support: a retail creator with a mandatory unavailable init dependency must remain absent
+[ok] DemoRabbit creator/archive callback atomicity
+[info] real-disc fixture: /Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz
+[info] direct archive-only candidate: AirBubble
+[info] alias-only candidate: Bomb -> BombHei
+[fail] optional real-disc archive-only rejection: Scene initialization requires the original GameSystem scene controller.
+[fail] real FileSelect invisible wall collision lifecycle: Language query requires an original GameSystem or explicit resource-language owner
+3 NameObj placement test(s) failed

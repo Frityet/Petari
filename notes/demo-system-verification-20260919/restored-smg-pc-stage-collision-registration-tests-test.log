@@ -1,0 +1,7 @@
+[ok] collision absent without registration
+[ok] only explicit valid KCL registers
+[ok] triangle source matrix lifetime
+[ok] host owner/zone/resource separation and retirement
+[ok] line traversal Game heap ownership
+[ok] generated original geometry publication and retirement
+6 stage collision registration test(s) passed

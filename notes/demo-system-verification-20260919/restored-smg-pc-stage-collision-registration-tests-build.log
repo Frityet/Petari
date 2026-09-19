@@ -1,0 +1,20 @@
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-stage-collision-registration-tests>[0m cache compiling.debug tests/StageCollisionRegistrationTests.cpp[0m
+[0m[38;5;3;1mtests/StageCollisionRegistrationTests.cpp:369:35: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  369 |         require_unavailable([&] { collision.line_hits(TVec3f(3, 1, 10), TVec3f(0, 0, -20)); },
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/StageCollisionRegistrationTests.cpp:371:35: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  371 |         require_unavailable([&] { collision.area_polygons(area, 512); },
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/StageCollisionRegistrationTests.cpp:373:35: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  373 |         require_unavailable([&] { collision.line_cast(TVec3f(3, 1, 10), TVec3f(0, 0, -20)); },
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/StageCollisionRegistrationTests.cpp:375:35: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  375 |         require_unavailable([&] { collision.sphere_contacts(TVec3f(3, 1, 3), 1); },
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/StageCollisionRegistrationTests.cpp:382:35: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  382 |         require_unavailable([&] { collision.line_hits(TVec3f(3, 1, 10), TVec3f(0, 0, -20)); },
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+5 warnings generated.[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-stage-collision-registration-tests>[0m [38;5;5;1mlinking.debug smg-pc-stage-collision-registration-tests[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[38;5;2;1m[100%]:[0m [38;5;2;1mbuild ok, spent 4.262s[0m

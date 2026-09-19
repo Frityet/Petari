@@ -1,0 +1,102 @@
+{
+  "process": {
+    "binary_sha256": "dc02030efc629c57d77b7c848b0e348dce2ed2ef33db352259f7cd9148e44a0b",
+    "pid": 79773,
+    "exit_code": 0,
+    "completed_frames": 30000,
+    "verified_bounded_completion": true,
+    "elapsed_seconds": 734.5850647499319,
+    "binary_unchanged": true,
+    "process_still_exists_after_wait": false
+  },
+  "completed_catches": [
+    {
+      "label": "bush",
+      "rabbit_id": 911,
+      "caught_frame": 3190,
+      "tico_id": 896,
+      "tico_talk_frame": 3450,
+      "completed_frame": 3560
+    },
+    {
+      "label": "pipe",
+      "rabbit_id": 906,
+      "caught_frame": 4690,
+      "tico_id": 890,
+      "tico_talk_frame": 4950,
+      "completed_frame": 5060
+    },
+    {
+      "label": "hole",
+      "rabbit_id": 916,
+      "caught_frame": 10480,
+      "tico_id": 902,
+      "tico_talk_frame": 10730,
+      "completed_frame": 10970
+    }
+  ],
+  "operator_finished_reason": "rosetta_alive_not_hidden",
+  "plane_appeared_frame": 11140,
+  "rosetta_alive_not_hidden_frame": 11440,
+  "selected_gravity_changes": [
+    {
+      "event": "selected_gravity",
+      "frame": 40,
+      "owner": 418
+    },
+    {
+      "event": "selected_gravity",
+      "frame": 14440,
+      "owner": 452
+    },
+    {
+      "event": "selected_gravity",
+      "frame": 17300,
+      "owner": 418
+    },
+    {
+      "event": "selected_gravity",
+      "frame": 22110,
+      "owner": 452
+    }
+  ],
+  "automatic_jumps": [
+    {
+      "event": "driver_jump",
+      "frame": 3980,
+      "jump": {
+        "reason": "nonzero_input_with_small_position_bounds",
+        "observed_first_frame": 3740,
+        "observed_last_frame": 3980,
+        "position_bounds_diagonal": 19.254959532705858,
+        "first_frame": 3981,
+        "last_frame": 4010,
+        "script": "3981-4010:A"
+      }
+    },
+    {
+      "event": "driver_jump",
+      "frame": 5760,
+      "jump": {
+        "reason": "nonzero_input_with_small_position_bounds",
+        "observed_first_frame": 5520,
+        "observed_last_frame": 5760,
+        "position_bounds_diagonal": 18.34391122386469,
+        "first_frame": 5761,
+        "last_frame": 5790,
+        "script": "5761-5790:A"
+      }
+    }
+  ],
+  "evidence_hashes": {
+    "notes/demo-system-verification-20260919/final2-route-actors.jsonl": "fbce0694c4202948a318fc75d0b0417cec19ddf1a329815a94b42958b7e20e50",
+    "notes/demo-system-verification-20260919/final2-operator.jsonl": "590f32b56963d30afde0cf650decb04f7c86f1cee981e2db5a69abc05cff1fe8",
+    "notes/demo-system-verification-20260919/final2-route.json": "fb081f3ce35787e71bf75780c7304e111fc8d812d72b67737148228cbe50e0e7",
+    "notes/demo-system-verification-20260919/final2-route.log": "895e41d4f23ca5b8f84cb97327da942357b887e56f8575fb63d58d5821e9e7a8"
+  },
+  "verification_limits": [
+    "Root owns screenshot inspection; trace flags alone do not prove visible rendered Rosalina.",
+    "Three catches required ordinary external sidestep around the authored crater recovery region; straight-target navigation alone was insufficient.",
+    "No complete equivalence proof for every collision primitive, physics frame, or scene placement."
+  ]
+}

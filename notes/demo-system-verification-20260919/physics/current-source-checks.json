@@ -1,0 +1,170 @@
+[
+  {
+    "file": "Player/Mario.cpp",
+    "anchor": "void Mario::update(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "6ae11727799d4b775b073776805bc7d1d68e4fa4ba8b495fea8b7543a3984064",
+    "native_file_sha256": "323a13ccd5f9b0fa7d31545503c7ff3d74324e9cc71e00d5f86b9c05b0b32134"
+  },
+  {
+    "file": "Player/Mario.cpp",
+    "anchor": "void Mario::actionMain(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "6ae11727799d4b775b073776805bc7d1d68e4fa4ba8b495fea8b7543a3984064",
+    "native_file_sha256": "323a13ccd5f9b0fa7d31545503c7ff3d74324e9cc71e00d5f86b9c05b0b32134"
+  },
+  {
+    "file": "Player/Mario.cpp",
+    "anchor": "void Mario::writeBackPhyisicalVector(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "6ae11727799d4b775b073776805bc7d1d68e4fa4ba8b495fea8b7543a3984064",
+    "native_file_sha256": "323a13ccd5f9b0fa7d31545503c7ff3d74324e9cc71e00d5f86b9c05b0b32134"
+  },
+  {
+    "file": "Player/Mario.cpp",
+    "anchor": "void Mario::inputStick(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "6ae11727799d4b775b073776805bc7d1d68e4fa4ba8b495fea8b7543a3984064",
+    "native_file_sha256": "323a13ccd5f9b0fa7d31545503c7ff3d74324e9cc71e00d5f86b9c05b0b32134"
+  },
+  {
+    "file": "Player/Mario.cpp",
+    "anchor": "void Mario::updateTimers(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "6ae11727799d4b775b073776805bc7d1d68e4fa4ba8b495fea8b7543a3984064",
+    "native_file_sha256": "323a13ccd5f9b0fa7d31545503c7ff3d74324e9cc71e00d5f86b9c05b0b32134"
+  },
+  {
+    "file": "Player/Mario.cpp",
+    "anchor": "void Mario::updateGroundInfo(",
+    "tokens_equal": false,
+    "canonical_file_sha256": "6ae11727799d4b775b073776805bc7d1d68e4fa4ba8b495fea8b7543a3984064",
+    "native_file_sha256": "323a13ccd5f9b0fa7d31545503c7ff3d74324e9cc71e00d5f86b9c05b0b32134"
+  },
+  {
+    "file": "Player/MarioActor.cpp",
+    "anchor": "void MarioActor::movement(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "ca600322bb1507727f1d6f431065abf8765ff30f6763870cbdc314304837cd8c",
+    "native_file_sha256": "d2638c2aa10a7e5399bdd36ba22fa5e23d15a848e0ceb8039fb357bf1578f6fa"
+  },
+  {
+    "file": "Player/MarioActor.cpp",
+    "anchor": "void MarioActor::control(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "ca600322bb1507727f1d6f431065abf8765ff30f6763870cbdc314304837cd8c",
+    "native_file_sha256": "d2638c2aa10a7e5399bdd36ba22fa5e23d15a848e0ceb8039fb357bf1578f6fa"
+  },
+  {
+    "file": "Player/MarioActor.cpp",
+    "anchor": "void MarioActor::control2(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "ca600322bb1507727f1d6f431065abf8765ff30f6763870cbdc314304837cd8c",
+    "native_file_sha256": "d2638c2aa10a7e5399bdd36ba22fa5e23d15a848e0ceb8039fb357bf1578f6fa"
+  },
+  {
+    "file": "Player/MarioActor.cpp",
+    "anchor": "void MarioActor::controlMain(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "ca600322bb1507727f1d6f431065abf8765ff30f6763870cbdc314304837cd8c",
+    "native_file_sha256": "d2638c2aa10a7e5399bdd36ba22fa5e23d15a848e0ceb8039fb357bf1578f6fa"
+  },
+  {
+    "file": "Player/MarioActor.cpp",
+    "anchor": "void MarioActor::calcAndSetBaseMtx(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "ca600322bb1507727f1d6f431065abf8765ff30f6763870cbdc314304837cd8c",
+    "native_file_sha256": "d2638c2aa10a7e5399bdd36ba22fa5e23d15a848e0ceb8039fb357bf1578f6fa"
+  },
+  {
+    "file": "Player/MarioMove.cpp",
+    "anchor": "bool Mario::retainMoveDir(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "f9788d532e8fdbdb7c052ad92ecba69ad69e874f84e49e24a98dd41fd912bf18",
+    "native_file_sha256": "14397b92a59090a6e94a57f129a38968f86942f9370d8cb2f5be9fc2f2cbb43a"
+  },
+  {
+    "file": "Player/MarioMove.cpp",
+    "anchor": "void Mario::mainMove(",
+    "tokens_equal": false,
+    "canonical_file_sha256": "f9788d532e8fdbdb7c052ad92ecba69ad69e874f84e49e24a98dd41fd912bf18",
+    "native_file_sha256": "14397b92a59090a6e94a57f129a38968f86942f9370d8cb2f5be9fc2f2cbb43a"
+  },
+  {
+    "file": "Player/MarioMove.cpp",
+    "anchor": "void Mario::calcMoveDir(",
+    "tokens_equal": false,
+    "canonical_file_sha256": "f9788d532e8fdbdb7c052ad92ecba69ad69e874f84e49e24a98dd41fd912bf18",
+    "native_file_sha256": "14397b92a59090a6e94a57f129a38968f86942f9370d8cb2f5be9fc2f2cbb43a"
+  },
+  {
+    "file": "LiveActor/LiveActor.cpp",
+    "anchor": "void LiveActor::calcAndSetBaseMtx(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "d5c29c64ffa3e1a6014cb0b336bf1197d220dd273dd150569cd1de07395e5a04",
+    "native_file_sha256": "2289c460a59643d4abd24968f4e74fa8c9f51a9920bbd9bb851b3a99c6030634"
+  },
+  {
+    "file": "LiveActor/LiveActor.cpp",
+    "anchor": "void LiveActor::calcAnmMtx(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "d5c29c64ffa3e1a6014cb0b336bf1197d220dd273dd150569cd1de07395e5a04",
+    "native_file_sha256": "2289c460a59643d4abd24968f4e74fa8c9f51a9920bbd9bb851b3a99c6030634"
+  },
+  {
+    "file": "LiveActor/LiveActor.cpp",
+    "anchor": "void LiveActor::movement(",
+    "tokens_equal": false,
+    "canonical_file_sha256": "d5c29c64ffa3e1a6014cb0b336bf1197d220dd273dd150569cd1de07395e5a04",
+    "native_file_sha256": "2289c460a59643d4abd24968f4e74fa8c9f51a9920bbd9bb851b3a99c6030634"
+  },
+  {
+    "file": "LiveActor/LiveActor.cpp",
+    "anchor": "void LiveActor::updateBinder(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "d5c29c64ffa3e1a6014cb0b336bf1197d220dd273dd150569cd1de07395e5a04",
+    "native_file_sha256": "2289c460a59643d4abd24968f4e74fa8c9f51a9920bbd9bb851b3a99c6030634"
+  },
+  {
+    "file": "LiveActor/Spine.cpp",
+    "anchor": "void Spine::update(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "d18c12b878b5821cb8d79f1c052db451679e90e3053d7fb2b78b6b75d0fcd449",
+    "native_file_sha256": "d18c12b878b5821cb8d79f1c052db451679e90e3053d7fb2b78b6b75d0fcd449"
+  },
+  {
+    "file": "Scene/SceneExecutor.cpp",
+    "anchor": "void SceneFunction::executeMovementList(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "473eb6eb6692b2c7b5e53554b16557763f98cc707c6af60ea0f682c936fc58de",
+    "native_file_sha256": "473eb6eb6692b2c7b5e53554b16557763f98cc707c6af60ea0f682c936fc58de"
+  },
+  {
+    "file": "Scene/SceneExecutor.cpp",
+    "anchor": "void SceneFunction::executeCalcAnimList(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "473eb6eb6692b2c7b5e53554b16557763f98cc707c6af60ea0f682c936fc58de",
+    "native_file_sha256": "473eb6eb6692b2c7b5e53554b16557763f98cc707c6af60ea0f682c936fc58de"
+  },
+  {
+    "file": "System/GameSystem.cpp",
+    "anchor": "void GameSystem::frameLoop(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "4c911e97d1ceadf8cc60e54d28de1632be2f6a0678b20b6e8dda6228a11afec8",
+    "native_file_sha256": "c83f44f96a42d0f53e1fdd42e61d4db07890f0a7805d16a5c214ffa4d71fa51d"
+  },
+  {
+    "file": "System/GameSystemFrameControl.cpp",
+    "anchor": "void GameSystemFrameControl::setMovement60fps(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "1445347d94544292c24a9ea2ef24bb247027ae613d45ecb6efc8a2b7fdfce6e6",
+    "native_file_sha256": "1445347d94544292c24a9ea2ef24bb247027ae613d45ecb6efc8a2b7fdfce6e6"
+  },
+  {
+    "file": "System/MainLoopFramework.cpp",
+    "anchor": "void MainLoopFramework::waitForRetrace(",
+    "tokens_equal": true,
+    "canonical_file_sha256": "e3e8dfdfcf4726d7e2a5cd0eb962b49ec636e4a01d3ef8244fbe62aeb23b42d8",
+    "native_file_sha256": "de7c7e5e513f8400adbe07a655afb8268003ee28e416ed9939d6065b6944ec2c"
+  }
+]

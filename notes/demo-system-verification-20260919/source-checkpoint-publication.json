@@ -1,0 +1,40 @@
+[
+  {
+    "command": [
+      "git",
+      "ls-remote",
+      "origin",
+      "refs/heads/pcp-aurora"
+    ],
+    "output": "eda37d29cf809c75dea8d32ab9ab1bb858b2a23c\trefs/heads/pcp-aurora"
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "decomp",
+      "ls-remote",
+      "origin",
+      "refs/heads/pcp-decomp"
+    ],
+    "output": "4ae0d93c3e9b451da9fc05ec9a31533ce44ae843\trefs/heads/pcp-decomp"
+  },
+  {
+    "command": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "output": "eda37d29cf809c75dea8d32ab9ab1bb858b2a23c"
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "decomp",
+      "rev-parse",
+      "HEAD"
+    ],
+    "output": "4ae0d93c3e9b451da9fc05ec9a31533ce44ae843"
+  }
+]

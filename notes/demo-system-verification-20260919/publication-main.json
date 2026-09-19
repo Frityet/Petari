@@ -1,0 +1,16 @@
+[
+  {
+    "target": "smg-pc",
+    "build": {
+      "command": [
+        "xmake",
+        "build",
+        "-j",
+        "8",
+        "smg-pc"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 5.839435999980196
+    }
+  }
+]

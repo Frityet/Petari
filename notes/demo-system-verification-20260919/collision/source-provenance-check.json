@@ -1,0 +1,346 @@
+{
+  "allowed_native_boundaries": [
+    "generated geometry publication guard at Parts and TARGET_PC Keeper entries before culling",
+    "three PPC saturating point-grid conversions",
+    "existing native area finite/null/fixed-buffer contract"
+  ],
+  "function_checks": [
+    {
+      "function": "CollisionParts::checkStrikeBall(",
+      "canonical": "decomp/src/Game/Map/CollisionParts.cpp",
+      "native": "src/compat/OriginalCollisionPartsCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "notes/original-collision-parts-owner-20260903/source-evidence.json"
+      ]
+    },
+    {
+      "function": "CollisionParts::checkStrikeBallCore(",
+      "canonical": "decomp/src/Game/Map/CollisionParts.cpp",
+      "native": "src/compat/OriginalCollisionPartsCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "notes/original-collision-parts-owner-20260903/source-evidence.json"
+      ]
+    },
+    {
+      "function": "CollisionParts::checkStrikeBallWithThickness(",
+      "canonical": "decomp/src/Game/Map/CollisionParts.cpp",
+      "native": "src/compat/OriginalCollisionPartsCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "notes/original-collision-parts-owner-20260903/source-evidence.json"
+      ]
+    },
+    {
+      "function": "CollisionParts::calcCollidePosition(",
+      "canonical": "decomp/src/Game/Map/CollisionParts.cpp",
+      "native": "src/compat/OriginalCollisionPartsCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "notes/original-collision-parts-owner-20260903/source-evidence.json"
+      ]
+    },
+    {
+      "function": "CollisionCategorizedKeeper::checkStrikeBall(",
+      "canonical": "decomp/src/Game/Map/CollisionCategorizedKeeper.cpp",
+      "native": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "notes/original-collision-keeper-query-20260903/source-evidence.json"
+      ]
+    },
+    {
+      "function": "CollisionCategorizedKeeper::checkStrikeBallWithThickness(",
+      "canonical": "decomp/src/Game/Map/CollisionCategorizedKeeper.cpp",
+      "native": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "notes/original-collision-keeper-query-20260903/source-evidence.json"
+      ]
+    },
+    {
+      "function": "KCollisionServer::checkSphere(",
+      "canonical": "decomp/src/Game/Map/KCollision.cpp",
+      "native": "src/compat/OriginalKCollisionCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "notes/original-kcollision-traversal-20260903/source-evidence.json"
+      ]
+    },
+    {
+      "function": "KCollisionServer::checkSphereWithThickness(",
+      "canonical": "decomp/src/Game/Map/KCollision.cpp",
+      "native": "src/compat/OriginalKCollisionCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "notes/original-kcollision-traversal-20260903/source-evidence.json"
+      ]
+    },
+    {
+      "function": "KCollisionServer::KCHitSphere(",
+      "canonical": "decomp/src/Game/Map/KCollision.cpp",
+      "native": "src/compat/OriginalKCollisionCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "notes/original-kcollision-query-20260903/source-evidence.json"
+      ]
+    },
+    {
+      "function": "KCollisionServer::KCHitSphereWithThickness(",
+      "canonical": "decomp/src/Game/Map/KCollision.cpp",
+      "native": "src/compat/OriginalKCollisionCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "notes/original-kcollision-query-20260903/source-evidence.json"
+      ]
+    },
+    {
+      "function": "s32 checkStrikeBallToMap(",
+      "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+      "native": "src/compat/GameMapCollisionCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "notes/original-map-query-access-20260903/compiler-evidence.json"
+      ]
+    },
+    {
+      "function": "s32 checkStrikeBallToMapWithMovingReaction(",
+      "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+      "native": "src/compat/GameMapCollisionCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "notes/original-map-query-access-20260903/compiler-evidence.json"
+      ]
+    },
+    {
+      "function": "s32 checkStrikeBallToMapWithThickness(",
+      "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+      "native": "src/compat/GameMapCollisionCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "notes/original-map-query-access-20260903/compiler-evidence.json"
+      ]
+    },
+    {
+      "function": "CollisionParts::checkStrikePoint(",
+      "canonical": "decomp/src/Game/Map/CollisionParts.cpp",
+      "native": "src/compat/OriginalCollisionPartsCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "notes/original-collision-point-query-20260903/compiler-evidence.json"
+      ]
+    },
+    {
+      "function": "CollisionCategorizedKeeper::checkStrikePoint(",
+      "canonical": "decomp/src/Game/Map/CollisionCategorizedKeeper.cpp",
+      "native": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "notes/original-collision-point-query-20260903/compiler-evidence.json"
+      ]
+    },
+    {
+      "function": "KCollisionServer::checkPoint(",
+      "canonical": "decomp/src/Game/Map/KCollision.cpp",
+      "native": "src/compat/OriginalKCollisionCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "notes/original-collision-point-query-20260903/compiler-evidence.json"
+      ]
+    },
+    {
+      "function": "bool getFirstPolyOnLineCategoryExceptSensor(",
+      "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+      "native": "src/compat/OriginalMapQueries.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true
+    },
+    {
+      "function": "bool getFirstPolyNormalOnLineToMap(",
+      "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+      "native": "src/compat/OriginalMapQueries.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true
+    },
+    {
+      "function": "const Triangle* getCameraPolyFast(",
+      "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+      "native": "src/compat/OriginalMapQueries.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true
+    },
+    {
+      "function": "bool getFirstPolyOnLineBFast(",
+      "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+      "native": "src/compat/OriginalMapQueries.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true
+    },
+    {
+      "function": "bool checkStrikePointToMap(",
+      "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+      "native": "src/compat/GameMapCollisionCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true
+    },
+    {
+      "function": "s32 checkStrikePointToMap(",
+      "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+      "native": "src/compat/GameMapCollisionCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "notes/original-map-query-access-20260903/compiler-evidence.json"
+      ]
+    },
+    {
+      "function": "CollisionParts::createAreaPolygonList(",
+      "canonical": "decomp/src/Game/Map/CollisionParts.cpp",
+      "native": "src/compat/OriginalCollisionPartsCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "historical:6ad1afcfb5ea7e90ce0e87074ed16897930d0135:pc-port/notes/original-collision-area-query-20260903/compiler-evidence.json"
+      ]
+    },
+    {
+      "function": "CollisionParts::createAreaPolygonListArray(",
+      "canonical": "decomp/src/Game/Map/CollisionParts.cpp",
+      "native": "src/compat/OriginalCollisionPartsCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "historical:6ad1afcfb5ea7e90ce0e87074ed16897930d0135:pc-port/notes/original-collision-area-query-20260903/compiler-evidence.json"
+      ]
+    },
+    {
+      "function": "CollisionCategorizedKeeper::createAreaPolygonList(",
+      "canonical": "decomp/src/Game/Map/CollisionCategorizedKeeper.cpp",
+      "native": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "historical:6ad1afcfb5ea7e90ce0e87074ed16897930d0135:pc-port/notes/original-collision-area-query-20260903/compiler-evidence.json"
+      ]
+    },
+    {
+      "function": "CollisionCategorizedKeeper::createAreaPolygonListArray(",
+      "canonical": "decomp/src/Game/Map/CollisionCategorizedKeeper.cpp",
+      "native": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true,
+      "matching_instruction_reports": [
+        "historical:6ad1afcfb5ea7e90ce0e87074ed16897930d0135:pc-port/notes/original-collision-area-query-20260903/compiler-evidence.json"
+      ]
+    },
+    {
+      "function": "u32 createAreaPolygonList(",
+      "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+      "native": "src/compat/GameMapCollisionCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true
+    },
+    {
+      "function": "u32 createAreaPolygonListArray(",
+      "canonical": "decomp/src/Game/Util/MapUtil.cpp",
+      "native": "src/compat/GameMapCollisionCompat.cpp",
+      "canonical_recovered_bytes_equal": true,
+      "native_tokens_equal_excluding_listed_host_boundaries": true
+    }
+  ],
+  "historical_source_proofs": [
+    {
+      "proof": "notes/original-collision-parts-owner-20260903/source-evidence.json",
+      "source": "src/Game/Map/CollisionParts.cpp",
+      "recorded_sha256": "ef6e7b150e04209d923005855ae0567da68467e92a4b4ad7879085d33daec96b",
+      "matching_history_commit": "1419b6e601aee71b3e1483cd776cb47a4d648dc6"
+    },
+    {
+      "proof": "notes/original-collision-keeper-query-20260903/source-evidence.json",
+      "source": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+      "recorded_sha256": "ebb3fb4ccc2df1d522d095b963a3dca4da76b88cb054c921c96661d60fa0659f",
+      "matching_history_commit": "b10d8d4e7af8a270e734241406458d082356cd0e"
+    },
+    {
+      "proof": "notes/original-kcollision-query-20260903/source-evidence.json",
+      "source": "src/Game/Map/KCollision.cpp",
+      "recorded_sha256": "78871c96ae82e5b3e33040a135684daf2666d51ac6fb2d0d6e1636e546f70fe0",
+      "matching_history_commit": "104a86bec087f85d96675f0e8f8eaed46c43f9ac"
+    },
+    {
+      "proof": "notes/original-kcollision-traversal-20260903/source-evidence.json",
+      "source": "src/Game/Map/KCollision.cpp",
+      "recorded_sha256": "78871c96ae82e5b3e33040a135684daf2666d51ac6fb2d0d6e1636e546f70fe0",
+      "matching_history_commit": "104a86bec087f85d96675f0e8f8eaed46c43f9ac"
+    },
+    {
+      "proof": "notes/original-map-query-access-20260903/compiler-evidence.json",
+      "source": "src/Game/Util/MapUtil.cpp",
+      "recorded_sha256": "0e3eac22b2e41539b5430118ab669db89c2c29717856d07c1991ed4ffb80e741",
+      "matching_history_commit": "da9a51993e0216fc7355db4101fa7ffba18637d8"
+    },
+    {
+      "proof": "historical:0ccf9ac9b:pc-port/notes/original-map-fast-query-20260903/compiler-evidence.json",
+      "source": "src/Game/Util/MapUtil.cpp",
+      "recorded_sha256": "5a61a1a12022ed095e88d115c2e23c0f75b13954a5431bb3a121ff511e19ff74",
+      "matching_history_commit": "0ccf9ac9b4f63f42e4892193505a4798c865ed1c"
+    }
+  ],
+  "point_recovery_proofs": [
+    {
+      "function": "CollisionParts::checkStrikePoint(",
+      "commit": "4ba3e14250f6d67fbf7c963bf894169b674ab81c",
+      "same_commit_source_and_instruction_report": true
+    },
+    {
+      "function": "CollisionCategorizedKeeper::checkStrikePoint(",
+      "commit": "4ba3e14250f6d67fbf7c963bf894169b674ab81c",
+      "same_commit_source_and_instruction_report": true
+    },
+    {
+      "function": "KCollisionServer::checkPoint(",
+      "commit": "4ba3e14250f6d67fbf7c963bf894169b674ab81c",
+      "same_commit_source_and_instruction_report": true
+    }
+  ],
+  "area_recovery_proofs": [
+    {
+      "function": "CollisionParts::createAreaPolygonList(",
+      "commit": "6ad1afcfb5ea7e90ce0e87074ed16897930d0135",
+      "same_commit_source_and_instruction_report": true
+    },
+    {
+      "function": "CollisionParts::createAreaPolygonListArray(",
+      "commit": "6ad1afcfb5ea7e90ce0e87074ed16897930d0135",
+      "same_commit_source_and_instruction_report": true
+    },
+    {
+      "function": "CollisionCategorizedKeeper::createAreaPolygonList(",
+      "commit": "6ad1afcfb5ea7e90ce0e87074ed16897930d0135",
+      "same_commit_source_and_instruction_report": true
+    },
+    {
+      "function": "CollisionCategorizedKeeper::createAreaPolygonListArray(",
+      "commit": "6ad1afcfb5ea7e90ce0e87074ed16897930d0135",
+      "same_commit_source_and_instruction_report": true
+    }
+  ],
+  "limits": "Source/token and historical proof association only; no new MWCC or native build/run performed by this script."
+}

@@ -1,0 +1,46 @@
+{
+  "status": "source-restoration-only; no fresh MWCC/native build in this audit yet",
+  "native_source_sha256": "7bd6ede6772644e0bedefbb16cba5833b92472e4a38c10aa5751da50b3355b51",
+  "canonical_source_equal": true,
+  "historical_retail_proof": "notes/original-binder-reaction-20260903/runtime-evidence.json",
+  "historical_source_equal": true,
+  "historical_dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "historical_matches": [
+    {
+      "method": "copyPlaneArrayAndSortingSensor",
+      "percent": 99.797295
+    },
+    {
+      "method": "compSensor",
+      "percent": 100.0
+    },
+    {
+      "method": "bind",
+      "percent": 97.340065
+    },
+    {
+      "method": "moveAlongHittedPlanes",
+      "percent": 99.84615
+    },
+    {
+      "method": "findBindedPos",
+      "percent": 99.896904
+    },
+    {
+      "method": "moveWithCollisionParts",
+      "percent": 99.86487
+    },
+    {
+      "method": "storeCurrentHitInfo",
+      "percent": 99.649124
+    },
+    {
+      "method": "obtainMomentFixReaction",
+      "percent": 99.44538
+    },
+    {
+      "method": "storeContactPlane",
+      "percent": 98.828125
+    }
+  ]
+}

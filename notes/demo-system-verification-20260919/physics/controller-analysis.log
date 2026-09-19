@@ -1,0 +1,162 @@
+{
+  "scope": "actual accepted input receipts; ordinary 3D forward-model comparison; no game writes",
+  "input_sha256": {
+    "baseline2-route.log": "11e3a2134724dbe89772ab267ebf8adf74b010c79cf957ef1d0a2b00c06105c1",
+    "baseline2-route-actors.jsonl": "1bcb8bce241a9b663da8591488314187aa667672be57e396f82f506f46c4382f"
+  },
+  "frame_range": [
+    19000,
+    29500
+  ],
+  "target_id": 912,
+  "count": 1043,
+  "excluded": {
+    "missing_or_inactive_span": 0,
+    "zero_raw_or_processed_stick": 8,
+    "zero_pad": 0
+  },
+  "stats": {
+    "raw_to_stick_deg": {
+      "min": 0.0,
+      "median": 0.01039496304876213,
+      "max": 0.048527619235948304
+    },
+    "basis_from_stick_to_pad_deg": {
+      "min": 0.0,
+      "median": 0.09538933238616364,
+      "max": 24.38614501359497
+    },
+    "linear_raw_to_pad_deg": {
+      "min": 0.13942903768336679,
+      "median": 5.787270331393566,
+      "max": 28.430377151065372
+    },
+    "shaped_raw_to_pad_deg": {
+      "min": 0.0,
+      "median": 0.100332071128792,
+      "max": 24.367658397386553
+    },
+    "distance": {
+      "min": 172.32536181922848,
+      "median": 2059.9552182983275,
+      "max": 2273.552585989062
+    },
+    "radial_cos": {
+      "min": -0.9999997726566667,
+      "median": -0.999473524970862,
+      "max": 0.8850675988281602
+    },
+    "tangent_distance": {
+      "min": 1.3810408618432215,
+      "median": 66.76634712292916,
+      "max": 1247.6121963868247
+    },
+    "velocity_pad_dot": {
+      "min": -0.9994227600778828,
+      "median": 0.03182507762997407,
+      "max": 0.999997672220444
+    },
+    "target_tangent_pad_dot": {
+      "min": -0.9998765509551243,
+      "median": 0.4428731533284418,
+      "max": 0.9999939859066027
+    }
+  },
+  "late_stats": {
+    "raw_to_stick_deg": {
+      "min": 0.0,
+      "median": 0.010719098257101408,
+      "max": 0.048527619235948304
+    },
+    "basis_from_stick_to_pad_deg": {
+      "min": 0.000556174392263493,
+      "median": 0.09099444516457285,
+      "max": 24.38614501359497
+    },
+    "linear_raw_to_pad_deg": {
+      "min": 0.2403836373763387,
+      "median": 5.924034087273744,
+      "max": 28.430377151065372
+    },
+    "shaped_raw_to_pad_deg": {
+      "min": 0.000556174392263493,
+      "median": 0.0973385471239457,
+      "max": 24.367658397386553
+    },
+    "distance": {
+      "min": 2047.7244120876464,
+      "median": 2055.99308384673,
+      "max": 2063.6034749984783
+    },
+    "radial_cos": {
+      "min": -0.9999997726566667,
+      "median": -0.9995014339587606,
+      "max": -0.9989597058824631
+    },
+    "tangent_distance": {
+      "min": 1.3810408618432215,
+      "median": 64.9822830685565,
+      "max": 93.61637018011642
+    },
+    "velocity_pad_dot": {
+      "min": -0.9541774988592885,
+      "median": -0.008378736958082403,
+      "max": 0.9980970837507194
+    },
+    "target_tangent_pad_dot": {
+      "min": -0.8569431032652571,
+      "median": 0.32861282110399026,
+      "max": 0.9997254590489744
+    }
+  },
+  "samples": [
+    {
+      "frame": 20000,
+      "raw_to_stick_deg": 0.02817481776125045,
+      "basis_from_stick_to_pad_deg": 0.19475333784421653,
+      "linear_raw_to_pad_deg": 10.001225537423673,
+      "shaped_raw_to_pad_deg": 0.17952624163334757,
+      "distance": 2096.641812046234,
+      "radial_cos": -0.9992326913954368,
+      "tangent_distance": 82.11848887411504,
+      "velocity_pad_dot": -0.31301762410649747,
+      "target_tangent_pad_dot": 0.7870210763126688
+    },
+    {
+      "frame": 24000,
+      "raw_to_stick_deg": 0.02551363688418478,
+      "basis_from_stick_to_pad_deg": 0.0798926816815488,
+      "linear_raw_to_pad_deg": 0.40493580140813323,
+      "shaped_raw_to_pad_deg": 0.09984618645612622,
+      "distance": 2049.004067524903,
+      "radial_cos": -0.999755767729128,
+      "tangent_distance": 45.28275311311636,
+      "velocity_pad_dot": 0.06038010439144717,
+      "target_tangent_pad_dot": 0.1340746707338397
+    },
+    {
+      "frame": 26000,
+      "raw_to_stick_deg": 0.0015884499415874736,
+      "basis_from_stick_to_pad_deg": 0.1744763144315698,
+      "linear_raw_to_pad_deg": 9.561010702877734,
+      "shaped_raw_to_pad_deg": 0.17577436335674682,
+      "distance": 2052.2857201523934,
+      "radial_cos": -0.9992971304566819,
+      "tangent_distance": 76.93321063278356,
+      "velocity_pad_dot": -0.5799548736785806,
+      "target_tangent_pad_dot": 0.8189860515402063
+    },
+    {
+      "frame": 28000,
+      "raw_to_stick_deg": 0.010077556260649469,
+      "basis_from_stick_to_pad_deg": 0.044313890775010106,
+      "linear_raw_to_pad_deg": 0.7966633384058402,
+      "shaped_raw_to_pad_deg": 0.04989247377219565,
+      "distance": 2052.4992742774134,
+      "radial_cos": -0.999506758344298,
+      "tangent_distance": 64.45762862001332,
+      "velocity_pad_dot": 0.4223960217719051,
+      "target_tangent_pad_dot": 0.14565660649123277
+    }
+  ]
+}

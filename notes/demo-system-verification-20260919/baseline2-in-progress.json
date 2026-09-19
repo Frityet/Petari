@@ -1,0 +1,178 @@
+{
+  "trace": "notes/demo-system-verification-20260919/baseline2-route-actors.jsonl",
+  "sha256": "9acd978c061a51df8117ca1193a736ad0dada8b5330bdc033857f7e56e37bbbd",
+  "scope": "Sampled trace only. No retail parity claim; live/unhidden actor flags are not proof of rendered visibility.",
+  "first_frame": 0,
+  "last_frame": 27560,
+  "samples": 2757,
+  "actor_samples": 96355,
+  "invalid_sampled_vectors": [],
+  "player_status_sample_counts": {
+    "0": 2725,
+    "19": 28
+  },
+  "binder_contact_sample_counts": {},
+  "binder_feature_sample_counts": {},
+  "events": [
+    {
+      "kind": "tower_actor_alive_not_hidden",
+      "frame": 40,
+      "actor_id": 923,
+      "actor_type": "18HeavensDoorDemoObj",
+      "position": [
+        42840.0,
+        -14537.6064453125,
+        -2530.0
+      ],
+      "nerve": {
+        "step": 3,
+        "type": "N21NrvHeavensDoorDemoObj25HeavensDoorDemoObjNrvWaitE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "tower_actor_alive_not_hidden",
+      "frame": 40,
+      "actor_id": 928,
+      "actor_type": "18HeavensDoorDemoObj",
+      "position": [
+        42840.0,
+        -14537.6064453125,
+        -2530.0
+      ],
+      "nerve": {
+        "step": 1,
+        "type": "N21NrvHeavensDoorDemoObj25HeavensDoorDemoObjNrvWaitE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "rabbit_caught",
+      "frame": 3560,
+      "actor_id": 907,
+      "actor_type": "13RunawayRabbit",
+      "position": [
+        13600.810546875,
+        -10333.578125,
+        5063.9189453125
+      ],
+      "nerve": {
+        "step": 1,
+        "type": "N16NrvRunawayRabbit22RunawayRabbitNrvCaughtE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "tico_Talk",
+      "frame": 3820,
+      "actor_id": 892,
+      "actor_type": "11RunawayTico",
+      "position": [
+        13455.2607421875,
+        -10197.2255859375,
+        4971.5185546875
+      ],
+      "nerve": {
+        "step": 3,
+        "type": "N14NrvRunawayTico18RunawayTicoNrvTalkE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "pipe_PlayerIn",
+      "frame": 11610,
+      "actor_id": 697,
+      "actor_type": "11EarthenPipe",
+      "position": [
+        12761.115234375,
+        -11282.013671875,
+        6032.2978515625
+      ],
+      "nerve": {
+        "step": 2,
+        "type": "N14NrvEarthenPipe22EarthenPipeNrvPlayerInE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "pipe_PlayerOut",
+      "frame": 11690,
+      "actor_id": 697,
+      "actor_type": "11EarthenPipe",
+      "position": [
+        12761.115234375,
+        -11282.013671875,
+        6032.2978515625
+      ],
+      "nerve": {
+        "step": 7,
+        "type": "N14NrvEarthenPipe23EarthenPipeNrvPlayerOutE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "rabbit_caught",
+      "frame": 12190,
+      "actor_id": 902,
+      "actor_type": "13RunawayRabbit",
+      "position": [
+        16729.654296875,
+        -10105.0146484375,
+        6361.79736328125
+      ],
+      "nerve": {
+        "step": 2,
+        "type": "N16NrvRunawayRabbit22RunawayRabbitNrvCaughtE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "tico_Talk",
+      "frame": 12450,
+      "actor_id": 886,
+      "actor_type": "11RunawayTico",
+      "position": [
+        16867.234375,
+        -9936.80078125,
+        6390.7607421875
+      ],
+      "nerve": {
+        "step": 5,
+        "type": "N14NrvRunawayTico18RunawayTicoNrvTalkE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "pipe_PlayerIn",
+      "frame": 18250,
+      "actor_id": 699,
+      "actor_type": "11EarthenPipe",
+      "position": [
+        16877.8828125,
+        -10250.9619140625,
+        6408.28955078125
+      ],
+      "nerve": {
+        "step": 9,
+        "type": "N14NrvEarthenPipe22EarthenPipeNrvPlayerInE"
+      },
+      "clipped": false
+    },
+    {
+      "kind": "pipe_PlayerOut",
+      "frame": 18320,
+      "actor_id": 699,
+      "actor_type": "11EarthenPipe",
+      "position": [
+        16877.8828125,
+        -10250.9619140625,
+        6408.28955078125
+      ],
+      "nerve": {
+        "step": 4,
+        "type": "N14NrvEarthenPipe23EarthenPipeNrvPlayerOutE"
+      },
+      "clipped": false
+    }
+  ]
+}

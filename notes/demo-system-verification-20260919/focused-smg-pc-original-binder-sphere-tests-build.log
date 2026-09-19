@@ -1,0 +1,20 @@
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-original-binder-sphere-tests>[0m cache compiling.debug tests/OriginalBinderSphereTests.cpp[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[1;38;5;1;1merror: [0mtests/OriginalBinderSphereTests.cpp:143:47: error: no matching member function for call to 'set'
+  143 |         planes[1].mParentTriangle.mNormals[0].set(0.6f, 0.8f, 0);
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+src/JSystem/JGeometry/TVec.hpp:239:14: note: candidate template ignored: deduced conflicting types for parameter 'T' ('float' vs. 'int')
+  239 |         void set(T newX, T newY, T newZ) {
+      |              ^
+src/JSystem/JGeometry/TVec.hpp:252:14: note: candidate function not viable: requires single argument 'value', but 3 arguments were provided
+  252 |         void set(const Vec &value) {
+      |              ^   ~~~~~~~~~~~~~~~~
+src/JSystem/JGeometry/TVec.hpp:262:14: note: candidate function not viable: requires single argument 'value', but 3 arguments were provided
+  262 |         void set(f32 value) {
+      |              ^   ~~~~~~~~~
+src/JSystem/JGeometry/TVec.hpp:246:14: note: candidate function template not viable: requires single argument 'value', but 3 arguments were provided
+  246 |         void set(const TVec3<T> &value) {
+      |              ^   ~~~~~~~~~~~~~~~~~~~~~
+tests/OriginalBinderSphereTests.cpp:145:23: error: no matching member function for call to 'set'
+  145 |         planes[1]._7C.set(4, -3, 0.5f);
+  [38;5;3m> in [1mtests/OriginalBinderSphereTests.cpp[0m

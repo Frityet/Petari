@@ -1,0 +1,591 @@
+{
+  "scope": "Read-only offline analysis of completed trace samples7000-10000; no runtime query or input write.",
+  "sample_count": 301,
+  "selected_trace_bytes_sha256": "bdf21492dddd1217b10197e1ea99b10e73cdd7535d19179e2f2223cf2fb4c996",
+  "input_sha256": {
+    "notes/demo-system-verification-20260919/final2-route-placements.json": "031fbd727a70f1c55e65c6d2b97d9b635b9e56b0dea6c07b2f87829e6d35d1e7",
+    "notes/gateway-content-inventory-20260919/source-placement-inventory.json": "eb2b3e718b76e8df4c95332fbcca6f12a1c958e887f1e07a1e7fa5d0d63b7574",
+    "notes/original-rabbit-tower-chain-20260919/zone-metadata.json": "275b4ffef839463c76f1a2d5d070717c12a5eecb94b52884068d7b8af81d1a05",
+    "notes/original-rabbit-tower-chain-20260919/compute_waypoints.py": "5349d5c85a3e9587ef3c2313331d67c2ad16f1732e698bc552626f3fc57a346c"
+  },
+  "blockers": [
+    {
+      "zone": "HeavensDoorGalaxy",
+      "l_id": 12,
+      "world_center": [
+        2859.016357421875,
+        4830.50634765625,
+        -6677.56591796875
+      ],
+      "sensor_radius": 94.9999988079071,
+      "scale": [
+        1.899999976158142,
+        1.899999976158142,
+        1.899999976158142
+      ],
+      "SW_APPEAR": -1,
+      "SW_B": 1008,
+      "closest_trace_samples": {
+        "mario": [
+          23304.68134165029,
+          8250
+        ],
+        "rabbit": [
+          22781.333848835904,
+          10000
+        ]
+      }
+    },
+    {
+      "zone": "HeavensDoorMysteriousZone",
+      "l_id": 91,
+      "world_center": [
+        14861.041714811592,
+        -9086.408906098357,
+        8082.130250597049
+      ],
+      "sensor_radius": 150.0,
+      "scale": [
+        3.0,
+        3.0,
+        3.0
+      ],
+      "SW_APPEAR": 1015,
+      "SW_B": -1,
+      "closest_trace_samples": {
+        "mario": [
+          1389.4148512573033,
+          7200
+        ],
+        "rabbit": [
+          2319.9983048330128,
+          9910
+        ]
+      }
+    },
+    {
+      "zone": "HeavensDoorMysteriousZone",
+      "l_id": 94,
+      "world_center": [
+        13889.185787781702,
+        -9047.558442768743,
+        7706.057390046039
+      ],
+      "sensor_radius": 50.0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "SW_APPEAR": 1015,
+      "SW_B": -1,
+      "closest_trace_samples": {
+        "mario": [
+          804.5666525754832,
+          7200
+        ],
+        "rabbit": [
+          1557.6106258644647,
+          9910
+        ]
+      }
+    },
+    {
+      "zone": "HeavensDoorMysteriousZone",
+      "l_id": 95,
+      "world_center": [
+        16032.57678159023,
+        -9192.833831350872,
+        7350.8682110727805
+      ],
+      "sensor_radius": 100.0,
+      "scale": [
+        2.0,
+        2.0,
+        2.0
+      ],
+      "SW_APPEAR": 1015,
+      "SW_B": -1,
+      "closest_trace_samples": {
+        "mario": [
+          2493.474103122616,
+          9590
+        ],
+        "rabbit": [
+          3304.4310307650317,
+          9910
+        ]
+      }
+    },
+    {
+      "zone": "HeavensDoorMysteriousZone",
+      "l_id": 188,
+      "world_center": [
+        15028.692771524446,
+        -8884.92709505467,
+        5962.462619238809
+      ],
+      "sensor_radius": 100.0,
+      "scale": [
+        2.0,
+        2.0,
+        2.0
+      ],
+      "SW_APPEAR": 1015,
+      "SW_B": -1,
+      "closest_trace_samples": {
+        "mario": [
+          2519.0023363683704,
+          9080
+        ],
+        "rabbit": [
+          2879.6086294269044,
+          10000
+        ]
+      }
+    },
+    {
+      "zone": "HeavensDoorMysteriousZone",
+      "l_id": 189,
+      "world_center": [
+        13642.420065054968,
+        -8987.492624414157,
+        6892.302344984195
+      ],
+      "sensor_radius": 50.0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "SW_APPEAR": 1015,
+      "SW_B": -1,
+      "closest_trace_samples": {
+        "mario": [
+          1360.8541310994365,
+          8800
+        ],
+        "rabbit": [
+          1503.2962046750913,
+          10000
+        ]
+      }
+    },
+    {
+      "zone": "HeavensDoorMysteriousZone",
+      "l_id": 190,
+      "world_center": [
+        14107.961888292317,
+        -8826.920288811827,
+        6240.881031046967
+      ],
+      "sensor_radius": 50.0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "SW_APPEAR": 1015,
+      "SW_B": -1,
+      "closest_trace_samples": {
+        "mario": [
+          2021.6713920779864,
+          8810
+        ],
+        "rabbit": [
+          2137.3982865269636,
+          10000
+        ]
+      }
+    },
+    {
+      "zone": "HeavensDoorMysteriousZone",
+      "l_id": 191,
+      "world_center": [
+        14443.573877645744,
+        -8803.22260147343,
+        6060.824914839632
+      ],
+      "sensor_radius": 50.0,
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "SW_APPEAR": 1015,
+      "SW_B": -1,
+      "closest_trace_samples": {
+        "mario": [
+          2253.9933255134797,
+          8290
+        ],
+        "rabbit": [
+          2452.695166217966,
+          10000
+        ]
+      }
+    }
+  ],
+  "pull_back_cylinder": {
+    "raw_row": {
+      "row": 0,
+      "name": "PullBackCylinder",
+      "l_id": 6,
+      "Obj_arg0": -1,
+      "Obj_arg1": -1,
+      "Obj_arg2": -1,
+      "Obj_arg3": -1,
+      "Obj_arg4": -1,
+      "Obj_arg5": -1,
+      "Obj_arg6": -1,
+      "Obj_arg7": -1,
+      "SW_APPEAR": -1,
+      "SW_A": -1,
+      "SW_B": -1,
+      "SW_SLEEP": -1,
+      "pos_x": -855.8916015625,
+      "pos_y": 529.9878540039062,
+      "pos_z": -792.8311157226562,
+      "dir_x": -68.83787536621094,
+      "dir_y": 49.11631393432617,
+      "dir_z": -6.430681228637695,
+      "scale_x": 0.8999999761581421,
+      "scale_y": 0.8999999761581421,
+      "scale_z": 0.8999999761581421,
+      "hash_15d780cc": -1,
+      "CommonPath_ID": -1,
+      "hash_4b5830b8": -1,
+      "GroupId": -1,
+      "DemoGroupId": -1,
+      "hash_81497c36": -1,
+      "Obj_ID": -1,
+      "hash_c6ae1cd6": -1
+    },
+    "world_origin": [
+      13894.748046875,
+      -10278.8203125,
+      7627.56982421875
+    ],
+    "world_euler_degrees": [
+      93.66790771484375,
+      47.790382385253906,
+      158.22157287597656
+    ],
+    "approx_world_up": [
+      -0.7097287774085999,
+      -0.21531057357788086,
+      -0.6707655787467957
+    ],
+    "radius": 449.99998807907104,
+    "height": 449.99998807907104,
+    "inside_samples": [
+      {
+        "frame": 7020,
+        "axis_height": 4.5977863127191085,
+        "axis_distance": 237.84334083135042,
+        "player_status": 19
+      },
+      {
+        "frame": 7030,
+        "axis_height": 4.5977863127191085,
+        "axis_distance": 237.84334083135042,
+        "player_status": 19
+      },
+      {
+        "frame": 7040,
+        "axis_height": 4.5977863127191085,
+        "axis_distance": 237.84334083135042,
+        "player_status": 19
+      },
+      {
+        "frame": 7050,
+        "axis_height": 4.5977863127191085,
+        "axis_distance": 237.84334083135042,
+        "player_status": 19
+      },
+      {
+        "frame": 7280,
+        "axis_height": 4.458157572458731,
+        "axis_distance": 237.78563109705019,
+        "player_status": 19
+      },
+      {
+        "frame": 7290,
+        "axis_height": 4.458157572458731,
+        "axis_distance": 237.78563109705019,
+        "player_status": 19
+      },
+      {
+        "frame": 7300,
+        "axis_height": 4.458157572458731,
+        "axis_distance": 237.78563109705019,
+        "player_status": 19
+      },
+      {
+        "frame": 7310,
+        "axis_height": 4.458157572458731,
+        "axis_distance": 237.78563109705019,
+        "player_status": 19
+      },
+      {
+        "frame": 7540,
+        "axis_height": 4.376321638614172,
+        "axis_distance": 237.45898914455444,
+        "player_status": 19
+      },
+      {
+        "frame": 7550,
+        "axis_height": 4.376321638614172,
+        "axis_distance": 237.45898914455444,
+        "player_status": 19
+      },
+      {
+        "frame": 7560,
+        "axis_height": 4.376321638614172,
+        "axis_distance": 237.45898914455444,
+        "player_status": 19
+      },
+      {
+        "frame": 7570,
+        "axis_height": 4.376321638614172,
+        "axis_distance": 237.45898914455444,
+        "player_status": 19
+      },
+      {
+        "frame": 7800,
+        "axis_height": 4.33008756590425,
+        "axis_distance": 237.31730370179105,
+        "player_status": 19
+      },
+      {
+        "frame": 7810,
+        "axis_height": 4.33008756590425,
+        "axis_distance": 237.31730370179105,
+        "player_status": 19
+      },
+      {
+        "frame": 7820,
+        "axis_height": 4.33008756590425,
+        "axis_distance": 237.31730370179105,
+        "player_status": 19
+      },
+      {
+        "frame": 7830,
+        "axis_height": 4.33008756590425,
+        "axis_distance": 237.31730370179105,
+        "player_status": 19
+      },
+      {
+        "frame": 8060,
+        "axis_height": 4.280491524579702,
+        "axis_distance": 237.2055109081387,
+        "player_status": 19
+      },
+      {
+        "frame": 8070,
+        "axis_height": 4.280491524579702,
+        "axis_distance": 237.2055109081387,
+        "player_status": 19
+      },
+      {
+        "frame": 8080,
+        "axis_height": 4.280491524579702,
+        "axis_distance": 237.2055109081387,
+        "player_status": 19
+      },
+      {
+        "frame": 8090,
+        "axis_height": 4.280491524579702,
+        "axis_distance": 237.2055109081387,
+        "player_status": 19
+      },
+      {
+        "frame": 8290,
+        "axis_height": 0.7390814506507013,
+        "axis_distance": 210.06090964240335,
+        "player_status": 19
+      },
+      {
+        "frame": 8300,
+        "axis_height": 0.7390814506507013,
+        "axis_distance": 210.06090964240335,
+        "player_status": 19
+      },
+      {
+        "frame": 8310,
+        "axis_height": 0.7390814506507013,
+        "axis_distance": 210.06090964240335,
+        "player_status": 19
+      },
+      {
+        "frame": 8320,
+        "axis_height": 0.7390814506507013,
+        "axis_distance": 210.06090964240335,
+        "player_status": 19
+      },
+      {
+        "frame": 8550,
+        "axis_height": 4.04434561135713,
+        "axis_distance": 237.27388644331268,
+        "player_status": 19
+      },
+      {
+        "frame": 8560,
+        "axis_height": 4.04434561135713,
+        "axis_distance": 237.27388644331268,
+        "player_status": 19
+      },
+      {
+        "frame": 8570,
+        "axis_height": 4.04434561135713,
+        "axis_distance": 237.27388644331268,
+        "player_status": 19
+      },
+      {
+        "frame": 8580,
+        "axis_height": 4.04434561135713,
+        "axis_distance": 237.27388644331268,
+        "player_status": 19
+      },
+      {
+        "frame": 8590,
+        "axis_height": 2.6398959108337294,
+        "axis_distance": 240.58512830971006,
+        "player_status": 19
+      },
+      {
+        "frame": 8810,
+        "axis_height": 4.7316891480004415,
+        "axis_distance": 338.73173593707827,
+        "player_status": 19
+      },
+      {
+        "frame": 8820,
+        "axis_height": 4.7316891480004415,
+        "axis_distance": 338.73173593707827,
+        "player_status": 19
+      },
+      {
+        "frame": 8830,
+        "axis_height": 4.7316891480004415,
+        "axis_distance": 338.73173593707827,
+        "player_status": 19
+      },
+      {
+        "frame": 8840,
+        "axis_height": 4.7316891480004415,
+        "axis_distance": 338.73173593707827,
+        "player_status": 19
+      },
+      {
+        "frame": 8850,
+        "axis_height": 1.3444283713179175,
+        "axis_distance": 346.1876767778946,
+        "player_status": 19
+      },
+      {
+        "frame": 9080,
+        "axis_height": 0.661281540960772,
+        "axis_distance": 206.07899478740023,
+        "player_status": 19
+      },
+      {
+        "frame": 9090,
+        "axis_height": 0.661281540960772,
+        "axis_distance": 206.07899478740023,
+        "player_status": 19
+      },
+      {
+        "frame": 9100,
+        "axis_height": 0.661281540960772,
+        "axis_distance": 206.07899478740023,
+        "player_status": 19
+      },
+      {
+        "frame": 9110,
+        "axis_height": 0.661281540960772,
+        "axis_distance": 206.07899478740023,
+        "player_status": 19
+      },
+      {
+        "frame": 9340,
+        "axis_height": 1.2123992243141402,
+        "axis_distance": 303.5672618201047,
+        "player_status": 19
+      },
+      {
+        "frame": 9350,
+        "axis_height": 1.2123992243141402,
+        "axis_distance": 303.5672618201047,
+        "player_status": 19
+      },
+      {
+        "frame": 9360,
+        "axis_height": 1.2123992243141402,
+        "axis_distance": 303.5672618201047,
+        "player_status": 19
+      },
+      {
+        "frame": 9370,
+        "axis_height": 1.182280833745608,
+        "axis_distance": 303.5289725239413,
+        "player_status": 19
+      },
+      {
+        "frame": 9600,
+        "axis_height": 2.36556146221119,
+        "axis_distance": 204.71477920799174,
+        "player_status": 19
+      },
+      {
+        "frame": 9610,
+        "axis_height": 2.36556146221119,
+        "axis_distance": 204.71477920799174,
+        "player_status": 19
+      },
+      {
+        "frame": 9620,
+        "axis_height": 2.36556146221119,
+        "axis_distance": 204.71477920799174,
+        "player_status": 19
+      },
+      {
+        "frame": 9630,
+        "axis_height": 2.36556146221119,
+        "axis_distance": 204.71477920799174,
+        "player_status": 19
+      },
+      {
+        "frame": 9860,
+        "axis_height": 1.9690928743220866,
+        "axis_distance": 304.2658388226294,
+        "player_status": 19
+      },
+      {
+        "frame": 9870,
+        "axis_height": 1.9690928743220866,
+        "axis_distance": 304.2658388226294,
+        "player_status": 19
+      },
+      {
+        "frame": 9880,
+        "axis_height": 1.9690928743220866,
+        "axis_distance": 304.2658388226294,
+        "player_status": 19
+      },
+      {
+        "frame": 9890,
+        "axis_height": 1.9690928743220866,
+        "axis_distance": 304.2658388226294,
+        "player_status": 19
+      }
+    ]
+  },
+  "limitations": [
+    "Offline float32/trigonometric reconstruction is approximate, not a captured AreaForm matrix or branch execution.",
+    "Trace samples every10frames and records post-frame state. Containment correlates with status19 but does not capture the exact entry call.",
+    "Mario ground_triangle is the stored mGroundPolygon, not proof of current-frame contact during recovery.",
+    "Trace omits the actor record for contact host722; its exact authored identity is not asserted here.",
+    "All8 blocker scales are uniform. Current native scale.y versus canonical scale.x source drift cannot affect these placements."
+  ]
+}

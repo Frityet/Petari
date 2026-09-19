@@ -1,0 +1,5 @@
+[ok] octree order, capacity and boundary geometry
+[ok] zone order and owner lifetime
+[ok] zone erase swap and revalidation append
+[ok] affine geometry, attributes and retention
+[ok] host allocation and invalid query contracts

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/operate_first_catch.py", line 297, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/frityet/Projects/petari/notes/demo-system-verification-20260919/operate_first_catch.py", line 271, in main
+    time.sleep(0.08)
+    ~~~~~~~~~~^^^^^^
+KeyboardInterrupt

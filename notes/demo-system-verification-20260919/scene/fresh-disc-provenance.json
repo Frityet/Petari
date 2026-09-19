@@ -1,0 +1,44 @@
+[
+  {
+    "disc_path": "StageData/HeavensDoorGalaxy/HeavensDoorGalaxyScenario.arc",
+    "extracted_path": "build/demo-system-verification-20260919/HeavensDoorGalaxyScenario.arc",
+    "sha256": "03eba87db26d2ce0dde6d331fc829372c580954e1af049f657adeaeb515c5813",
+    "matches_prior_disc_extraction": true
+  },
+  {
+    "disc_path": "StageData/HeavensDoorGalaxy.arc",
+    "extracted_path": "build/demo-system-verification-20260919/HeavensDoorGalaxy.arc",
+    "sha256": "9c80464cbdc9e73f3d440476eb7a6755ad19dc87c3a9d764501a7dda9b164f56",
+    "matches_prior_disc_extraction": true
+  },
+  {
+    "disc_path": "StageData/HeavensDoorMysteriousZone.arc",
+    "extracted_path": "build/demo-system-verification-20260919/HeavensDoorMysteriousZone.arc",
+    "sha256": "6004cbf1a9669b500ae45a2c54dabd64b019fa0699f50a1cf17e211b7544be97",
+    "matches_prior_disc_extraction": true
+  },
+  {
+    "disc_path": "StageData/HeavensDoorSmallZone.arc",
+    "extracted_path": "build/demo-system-verification-20260919/HeavensDoorSmallZone.arc",
+    "sha256": "3fea500809a7bf71cb6fb8a2736b82476dc2891a918d940fd37fb4d3d34a1418",
+    "matches_prior_disc_extraction": true
+  },
+  {
+    "disc_path": "StageData/HeavensDoorMiddleZone.arc",
+    "extracted_path": "build/demo-system-verification-20260919/HeavensDoorMiddleZone.arc",
+    "sha256": "79d2d631996a73f40c63751ec7b25e73a81a28e9b0b542a6e8d7e78811062a0d",
+    "matches_prior_disc_extraction": true
+  },
+  {
+    "disc_path": "StageData/HeavensDoorInsideZone.arc",
+    "extracted_path": "build/demo-system-verification-20260919/HeavensDoorInsideZone.arc",
+    "sha256": "ecb3b7f72e22187ad2b4ca7c7f4f34e90cbc63f55304ad2695ee2f804a2a0fa0",
+    "matches_prior_disc_extraction": true
+  },
+  {
+    "disc_path": "StageData/HeavensBlackHoleZone.arc",
+    "extracted_path": "build/demo-system-verification-20260919/HeavensBlackHoleZone.arc",
+    "sha256": "d7dd8f6245ab8c9fb36b34ceaf1d1983a1efa733a837fddc3a32c48bd44e01bd",
+    "matches_prior_disc_extraction": true
+  }
+]
