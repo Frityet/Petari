@@ -72,6 +72,9 @@ namespace smgpc::runtime {
                     {"velocity_after", vector(mario.mVelocityAfter)}, {"stick_position", vector(mario.mStickPos)},
                     {"world_pad_direction", vector(mario.mWorldPadDir)}, {"front", vector(mario.mFrontVec)},
                     {"up", vector(mario.mHeadVec)}, {"air_gravity", vector(mario.mAirGravityVec)},
+                    {"movement_up", vector(mario._398)}, {"camera_position", vector(player->mCamPos)},
+                    {"camera_x", vector(player->mCamDirX)}, {"camera_y", vector(player->mCamDirY)},
+                    {"camera_z", vector(player->mCamDirZ)},
                     {"movement_low_word", mario.mMovementStates_LOW_WORD},
                     {"movement_high_word", mario.mMovementStates_HIGH_WORD}, {"draw_word", mario.mDrawStates_WORD}};
             }

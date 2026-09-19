@@ -47,6 +47,7 @@
 #include "runtime/ConsoleNandImport.hpp"
 #include "runtime/SystemConfigService.hpp"
 #include "runtime/DebugWpadInputScript.hpp"
+#include "runtime/DebugWpadInputFile.hpp"
 #include "runtime/OriginalProcessTrace.hpp"
 #include <JSystem/JKernel/JKRExpHeap.hpp>
 #include <JSystem/JKernel/JKRThread.hpp>
@@ -314,7 +315,11 @@ private:
         float x = float(window.is_input_pressed(Button::SUB_STICK_RIGHT)) - float(window.is_input_pressed(Button::SUB_STICK_LEFT));
         float y = float(window.is_input_pressed(Button::SUB_STICK_UP)) - float(window.is_input_pressed(Button::SUB_STICK_DOWN));
 #ifndef NDEBUG
-        const auto applied = input_script.apply(frame_index, mask, pointer, x, y);
+        auto applied = input_script.apply(frame_index, mask, pointer, x, y);
+        const auto file_applied = input_file.apply(frame_index, mask, pointer, x, y);
+        applied.buttons |= file_applied.buttons;
+        applied.pointer |= file_applied.pointer;
+        applied.stick |= file_applied.stick;
         if (applied.buttons != script_applied.buttons || applied.pointer != script_applied.pointer || applied.stick != script_applied.stick) {
             std::fprintf(stderr, "[original-process] Debug controller script frame %llu: buttons=%s pointer=%s stick=%s hold=0x%08x axes=%g,%g\n",
                          static_cast<unsigned long long>(frame_index), applied.buttons ? "active" : "inactive",
@@ -433,6 +438,7 @@ private:
 #ifndef NDEBUG
     OriginalGameDebugObserver debug_observer;
     runtime::DebugWpadInputScript input_script = runtime::DebugWpadInputScript::from_environment();
+    runtime::DebugWpadInputFile input_file = runtime::DebugWpadInputFile::from_environment();
     runtime::DebugWpadInputScript::Applied script_applied;
     runtime::OriginalProcessTrace frame_trace;
 #endif

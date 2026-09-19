@@ -5,12 +5,16 @@
 #include "Game/System/WPad.hpp"
 #include "Game/System/WPadButton.hpp"
 #include "runtime/DebugWpadInputScript.hpp"
+#include "runtime/DebugWpadInputFile.hpp"
 #include <aurora/exception.hpp>
 #include <aurora/wpad.hpp>
 
 #include <iostream>
 #include <stdexcept>
 #include <limits>
+#include <filesystem>
+#include <fstream>
+#include <unistd.h>
 
 namespace {
     using Button = smgpc::render::core::InputButton;
@@ -154,10 +158,10 @@ namespace {
         float stick_x = 0.25F;
         float stick_y = -0.5F;
         const Script script{
-            " 2-4: A + B ; 3:C; 7-:PLUS; 6-2:A; nope:A; 9:unknown; 18446744073709551616:A",
-            "2-4:10.5,20;3:90,80,false;5-:6,7,off;bad;5-2:0,0;6:not-a-number,7"};
+            " 2-4: A + B ; 3:C; 7-:PLUS",
+            "2-4:10.5,20;3:90,80,false;5-:6,7,off"};
         require(script.button_span_count() == 3 && script.pointer_span_count() == 3,
-                "shared parser retains valid spans and ignores malformed entries as before");
+                "shared parser retains every valid button and pointer span");
         for (std::uint64_t frame = 0; frame != 9; ++frame) {
             u32 mask = WPAD_BUTTON_Z;
             Pointer pointer{1, 2, true};
@@ -211,6 +215,17 @@ namespace {
             require(rejected, "invalid scripted stick ranges, coordinates and syntax are rejected");
         }
 
+        for (const char* invalid : {"6-2:A", "nope:A", "9:unknown", "9:A+unknown", "9:A+", "18446744073709551616:A"}) {
+            bool rejected = false;
+            try { (void)Script{invalid}; } catch (const std::invalid_argument&) { rejected = true; }
+            require(rejected, "malformed button spans must fail instead of silently losing intended input");
+        }
+        for (const char* invalid : {"bad", "5-2:0,0", "6:not-a-number,7", "1:nan,0", "1:0,inf", "1:0,0,maybe", "1:0,0,true,false"}) {
+            bool rejected = false;
+            try { (void)Script{{}, invalid}; } catch (const std::invalid_argument&) { rejected = true; }
+            require(rejected, "malformed pointer spans and nonfinite coordinates must fail explicitly");
+        }
+
         auto heaps = smgpc::compat::JkrHeapRuntime::create(2U << 20);
         auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 512U << 10);
         aurora::wpad_service().clear();
@@ -241,6 +256,55 @@ namespace {
         }
         std::cout << "Shared debug controller script: parsing, overlap, pointer precedence and original WPad hold/trigger/release passed\n";
     }
+    void test_live_controller_file() {
+        namespace fs = std::filesystem;
+        using smgpc::runtime::DebugWpadInputFile;
+        const auto path = fs::temp_directory_path() / ("petari-controller-file-" + std::to_string(getpid()) + ".json");
+        const auto pending = fs::path(path.string() + ".pending");
+        require(!fs::exists(path) && !fs::exists(pending), "test owns fresh controller files");
+        struct Cleanup { fs::path a, b; ~Cleanup() { std::error_code e; fs::remove(a, e); fs::remove(b, e); } } cleanup{path, pending};
+        auto replace = [&](const std::string& text) {
+            { std::ofstream output(pending, std::ios::binary); output << text; require(bool(output), "write controller update"); }
+            fs::rename(pending, path);
+        };
+        u32 mask = WPAD_BUTTON_B;
+        smgpc::render::core::InputPointerState pointer{12, 34, true};
+        float x = 0.25F, y = -0.5F;
+        DebugWpadInputFile disabled;
+        require(!disabled.apply(0, mask, pointer, x, y).stick && mask == WPAD_BUTTON_B && x == .25F && pointer.x == 12,
+                "disabled live source preserves physical input without opening a file");
+        replace(R"({"buttons":"2-4:A","pointer":"2-4:100,200,false","stick":"2-4:1:-1"})");
+        DebugWpadInputFile file(path.string());
+        auto applied = file.apply(2, mask, pointer, x, y);
+        require(file.revision() == 1 && applied.buttons && applied.pointer && applied.stick &&
+                mask == (WPAD_BUTTON_A | WPAD_BUTTON_B) && pointer.x == 100 && !pointer.valid && x == 1 && y == -1,
+                "an atomic revision applies every input channel through the shared parser");
+        file.apply(3, mask, pointer, x, y);
+        require(file.revision() == 1, "unchanged bytes do not create phantom input revisions");
+        replace(R"({"buttons":"","pointer":"","stick":"3-:0:0"})");
+        mask = WPAD_BUTTON_B; pointer = {12, 34, true};
+        applied = file.apply(3, mask, pointer, x, y);
+        require(file.revision() == 2 && !applied.buttons && !applied.pointer && applied.stick &&
+                mask == WPAD_BUTTON_B && pointer.x == 12 && x == 0 && y == 0,
+                "replacement releases scripted buttons/pointer and can explicitly center the stick");
+        for (const auto& invalid : {std::string("{}"), std::string("{"),
+                std::string(R"({"buttons":"5:A+typo","pointer":"","stick":"5-:1:0"})"),
+                std::string(R"({"buttons":"","pointer":"1:nan,0","stick":""})"),
+                std::string(R"({"buttons":"","pointer":"","stick":"3-:4:0"})"), std::string(65537, ' ')}) {
+            replace(invalid);
+            mask = WPAD_BUTTON_B; x = .25F; y = -.5F;
+            bool rejected = false;
+            try { file.apply(5, mask, pointer, x, y); } catch (const std::exception&) { rejected = true; }
+            require(rejected && file.revision() == 2 && mask == WPAD_BUTTON_B && x == .25F && y == -.5F,
+                    "invalid revisions cannot partially publish controls or replace prior parser state");
+        }
+        fs::remove(path);
+        bool rejected = false;
+        try { file.apply(6, mask, pointer, x, y); } catch (const std::exception&) { rejected = true; }
+        require(rejected && file.revision() == 2, "a vanished explicit replay source fails rather than holding stale input silently");
+        std::cout << "Live controller file: atomic revisions, release, bounded reads and failed-update rollback passed\n";
+    }
+
 #endif
 }
 
@@ -250,6 +314,7 @@ int main() {
         test_debug_input();
 #ifndef NDEBUG
         test_shared_controller_script();
+        test_live_controller_file();
 #endif
         std::cout << "Frame input: quick key/mouse taps, physical aliases, repeat, focus reset and original WPad edges passed\n";
     } catch (const std::exception& error) {

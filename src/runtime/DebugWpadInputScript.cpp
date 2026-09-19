@@ -155,6 +155,8 @@ namespace smgpc::runtime {
                 const auto token = trim(text.substr(0U, plus));
                 if (const auto button = debug_wpad_button_mask(token)) {
                     mask |= *button;
+                } else {
+                    throw std::invalid_argument("Debug WPAD button script contains an unknown or empty button");
                 }
                 if (plus == std::string_view::npos) {
                     break;
@@ -171,17 +173,13 @@ namespace smgpc::runtime {
                 const auto entry = trim(text.substr(0U, separator));
                 if (!entry.empty()) {
                     const auto colon = entry.find(':');
-                    if (colon != std::string_view::npos) {
-                        const auto range = parse_debug_frame_range(entry.substr(0U, colon));
-                        const auto mask = parse_debug_wpad_button_mask(entry.substr(colon + 1U));
-                        if (range.has_value() && mask != 0U) {
-                            spans.push_back(DebugWpadButtonScriptSpan{
-                                .first_frame = range->first_frame,
-                                .last_frame = range->last_frame,
-                                .button_mask = mask,
-                            });
-                        }
-                    }
+                    if (colon == std::string_view::npos)
+                        throw std::invalid_argument("Debug WPAD button script requires frame-range:buttons entries");
+                    const auto range = parse_debug_frame_range(entry.substr(0U, colon));
+                    const auto mask = parse_debug_wpad_button_mask(entry.substr(colon + 1U));
+                    if (!range || !mask)
+                        throw std::invalid_argument("Debug WPAD button script requires valid frame ranges and buttons");
+                    spans.push_back({range->first_frame, range->last_frame, mask});
                 }
                 if (separator == std::string_view::npos) {
                     break;
@@ -198,32 +196,22 @@ namespace smgpc::runtime {
                 const auto entry = trim(text.substr(0U, separator));
                 if (!entry.empty()) {
                     const auto colon = entry.find(':');
-                    if (colon != std::string_view::npos) {
-                        const auto range = parse_debug_frame_range(entry.substr(0U, colon));
-                        auto values = entry.substr(colon + 1U);
-                        const auto first_comma = values.find(',');
-                        if (range.has_value() && first_comma != std::string_view::npos) {
-                            const auto x = parse_float(values.substr(0U, first_comma));
-                            values.remove_prefix(first_comma + 1U);
-                            const auto second_comma = values.find(',');
-                            const auto y = parse_float(values.substr(0U, second_comma));
-                            auto valid = true;
-                            if (second_comma != std::string_view::npos) {
-                                if (const auto parsed_valid = parse_bool(values.substr(second_comma + 1U))) {
-                                    valid = *parsed_valid;
-                                }
-                            }
-                            if (x.has_value() && y.has_value()) {
-                                spans.push_back(DebugWpadPointerScriptSpan{
-                                    .first_frame = range->first_frame,
-                                    .last_frame = range->last_frame,
-                                    .x = *x,
-                                    .y = *y,
-                                    .valid = valid,
-                                });
-                            }
-                        }
-                    }
+                    if (colon == std::string_view::npos)
+                        throw std::invalid_argument("Debug WPAD pointer script requires frame-range:x,y[,valid] entries");
+                    const auto range = parse_debug_frame_range(entry.substr(0U, colon));
+                    auto values = entry.substr(colon + 1U);
+                    const auto first_comma = values.find(',');
+                    if (!range || first_comma == std::string_view::npos)
+                        throw std::invalid_argument("Debug WPAD pointer script requires a valid frame range and two coordinates");
+                    const auto x = parse_float(values.substr(0U, first_comma));
+                    values.remove_prefix(first_comma + 1U);
+                    const auto second_comma = values.find(',');
+                    const auto y = parse_float(values.substr(0U, second_comma));
+                    const auto valid = second_comma == std::string_view::npos ? std::optional<bool>(true) :
+                        parse_bool(values.substr(second_comma + 1U));
+                    if (!x || !y || !std::isfinite(*x) || !std::isfinite(*y) || !valid)
+                        throw std::invalid_argument("Debug WPAD pointer script requires finite coordinates and optional Boolean validity");
+                    spans.push_back({range->first_frame, range->last_frame, *x, *y, *valid});
                 }
                 if (separator == std::string_view::npos) {
                     break;

@@ -16,6 +16,7 @@
 #include "Logger.hpp"
 #include "runtime/ArchiveMountService.hpp"
 #include "runtime/DebugWpadInputScript.hpp"
+#include "runtime/DebugWpadInputFile.hpp"
 #include "runtime/ScenarioCatalogOwnership.hpp"
 #include "runtime/ParticleResourceOwnership.hpp"
 #include "runtime/MessageHolderOwnership.hpp"
@@ -405,6 +406,7 @@ namespace smgpc::runtime {
         HostInputTraceState _host_input_trace = {};
         std::optional<std::uint64_t> _j3d_packet_trace_frame = {};
         DebugWpadInputScript _debug_wpad_input_script;
+        DebugWpadInputFile _debug_wpad_input_file = DebugWpadInputFile::from_environment();
         std::uint64_t _next_semantic_trace_event_index = 0U;
         std::size_t _next_star_pointer_target_trace_event_index = 0U;
         bool _emitted_wpad_buttons_held_event = false;

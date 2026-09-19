@@ -528,7 +528,11 @@ namespace smgpc::runtime {
 #ifndef NDEBUG
         const auto raw_stick_x = sub_stick_x;
         const auto raw_stick_y = sub_stick_y;
-        const auto debug_script_applied = _debug_wpad_input_script.apply(_frame_index, hold_mask, pointer, sub_stick_x, sub_stick_y);
+        auto debug_script_applied = _debug_wpad_input_script.apply(_frame_index, hold_mask, pointer, sub_stick_x, sub_stick_y);
+        const auto file_applied = _debug_wpad_input_file.apply(_frame_index, hold_mask, pointer, sub_stick_x, sub_stick_y);
+        debug_script_applied.buttons |= file_applied.buttons;
+        debug_script_applied.pointer |= file_applied.pointer;
+        debug_script_applied.stick |= file_applied.stick;
         const auto debug_button_script_applied = debug_script_applied.buttons;
         const auto debug_pointer_script_applied = debug_script_applied.pointer;
 #endif
