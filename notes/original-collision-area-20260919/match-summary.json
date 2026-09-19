@@ -1,0 +1,108 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "retail_start": "0x800207b0",
+  "retail_end": "0x80021db4",
+  "retail_text_bytes": 5636,
+  "retail_reference_comparison": "PASS (only ELF relocation bits masked)",
+  "relocations": 241,
+  "sections": [
+    {
+      "name": ".text",
+      "size": "5636",
+      "match_percent": 97.965225
+    },
+    {
+      "name": ".rodata",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": ".data",
+      "size": "184",
+      "match_percent": 89.13043
+    },
+    {
+      "name": ".sdata2",
+      "size": "32",
+      "match_percent": 100.0
+    }
+  ],
+  "functions": [
+    {
+      "name": "__ct__13CollisionAreaFiPCc",
+      "size": "120",
+      "match_percent": 99.833336
+    },
+    {
+      "name": "init__13CollisionAreaFRC12JMapInfoIter",
+      "size": "280",
+      "match_percent": 99.92857
+    },
+    {
+      "name": "movement__13CollisionAreaFv",
+      "size": "580",
+      "match_percent": 99.868965
+    },
+    {
+      "name": "hitCheck__13CollisionAreaFRCQ29JGeometry8TVec3<f>fPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+      "size": "1992",
+      "match_percent": 95.75703
+    },
+    {
+      "name": "setMtx__11AreaPolygonFPA4_fRCQ29JGeometry8TVec3<f>f",
+      "size": "72",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setSurfaceAndSync__11AreaPolygonFl",
+      "size": "72",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setSurface__11AreaPolygonFl",
+      "size": "1264",
+      "match_percent": 97.8481
+    },
+    {
+      "name": "invalidate__11AreaPolygonFv",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "validate__11AreaPolygonFv",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__dt__11AreaPolygonFv",
+      "size": "88",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__dt__13CollisionAreaFv",
+      "size": "92",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__11AreaPolygonFv",
+      "size": "88",
+      "match_percent": 100.0
+    },
+    {
+      "name": "init__11AreaPolygonFRC12JMapInfoIter",
+      "size": "408",
+      "match_percent": 99.803925
+    },
+    {
+      "name": "__vt__13CollisionArea",
+      "size": "44",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__11AreaPolygon",
+      "size": "120",
+      "match_percent": 100.0
+    }
+  ],
+  "canonical_source_sha256": "ecc334f59fd67a008fe97af67bf225566eb1c407b71dcd5aa5131a4d65e8c208"
+}

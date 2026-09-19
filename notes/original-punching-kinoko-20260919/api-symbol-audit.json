@@ -1,0 +1,226 @@
+{
+  "Functor": [],
+  "addHitSensorAtJointEnemy": [
+    "MR::addHitSensorAtJointEnemy(LiveActor*, char const*, char const*, unsigned short, float, JGeometry::TVec3<float> const&)"
+  ],
+  "addHitSensorEnemy": [
+    "MR::addHitSensorEnemy(LiveActor*, char const*, unsigned short, float, JGeometry::TVec3<float> const&)"
+  ],
+  "addShadowVolumeLine": [],
+  "addShadowVolumeSphere": [],
+  "addVelocity": [
+    "MR::addVelocity(LiveActor*, JGeometry::TVec3<float> const&)"
+  ],
+  "addVelocityKeepHeight": [
+    "MR::addVelocityKeepHeight(LiveActor*, JGeometry::TVec3<float> const&, float, float)",
+    "MR::addVelocityKeepHeight(LiveActor*, JGeometry::TVec3<float> const&, float, float, float)"
+  ],
+  "attenuateVelocity": [
+    "MR::attenuateVelocity(LiveActor*, float)"
+  ],
+  "calcGravity": [
+    "MR::calcGravity(LiveActor*)",
+    "MR::calcGravity(LiveActor*, JGeometry::TVec3<float> const&)"
+  ],
+  "calcPositionUpOffset": [
+    "MR::calcPositionUpOffset(JGeometry::TVec3<float>*, LiveActor const*, float)"
+  ],
+  "calcSensorDirectionNormalize": [
+    "MR::calcSensorDirectionNormalize(JGeometry::TVec3<float>*, HitSensor const*, HitSensor const*)"
+  ],
+  "calcSensorHorizonNormalize": [
+    "MR::calcSensorHorizonNormalize(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&, HitSensor const*, HitSensor const*)"
+  ],
+  "calcStarPointerWorldVelocityDirectionOnPlane": [],
+  "calcVelocityLength": [
+    "MR::calcVelocityLength(LiveActor const*)"
+  ],
+  "connectToSceneNoSilhouettedMapObj": [
+    "MR::connectToSceneNoSilhouettedMapObj(LiveActor*)"
+  ],
+  "createJointDelegatorWithNullChildFunc": [],
+  "declareCameraRegisterVec": [
+    "MR::declareCameraRegisterVec(NameObj const*, unsigned int, JGeometry::TVec3<float>*)"
+  ],
+  "emitEffectHitBetweenSensors": [
+    "MR::emitEffectHitBetweenSensors(LiveActor*, HitSensor const*, HitSensor const*, float, char const*)"
+  ],
+  "getJMapInfoArg7WithInit": [
+    "MR::getJMapInfoArg7WithInit(JMapInfoIter const&, bool*)",
+    "MR::getJMapInfoArg7WithInit(JMapInfoIter const&, int*)"
+  ],
+  "getShadowProjectionNormal": [
+    "MR::getShadowProjectionNormal(LiveActor const*, char const*, JGeometry::TVec3<float>*)"
+  ],
+  "getShadowProjectionPos": [
+    "MR::getShadowProjectionPos(LiveActor const*, char const*, JGeometry::TVec3<float>*)"
+  ],
+  "getStarPointerScreenSpeed": [
+    "MR::getStarPointerScreenSpeed(int)"
+  ],
+  "initDefaultPos": [
+    "MR::initDefaultPos(LiveActor*, JMapInfoIter const&)"
+  ],
+  "initShadowController": [],
+  "initStarPointerTargetAtPos": [
+    "MR::initStarPointerTargetAtPos(LiveActor*, float, JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const&)"
+  ],
+  "invalidateClipping": [
+    "MR::invalidateClipping(LiveActor*)"
+  ],
+  "isFirstStep": [
+    "MR::isFirstStep(LayoutActor const*)",
+    "MR::isFirstStep(LiveActor const*)",
+    "MR::isFirstStep(NerveExecutor const*)"
+  ],
+  "isGreaterStep": [
+    "MR::isGreaterStep(LayoutActor const*, int)",
+    "MR::isGreaterStep(LiveActor const*, int)",
+    "MR::isGreaterStep(NerveExecutor const*, int)"
+  ],
+  "isMsgInvincibleAttack": [
+    "MR::isMsgInvincibleAttack(unsigned int)"
+  ],
+  "isMsgLockOnStarPieceShoot": [
+    "MR::isMsgLockOnStarPieceShoot(unsigned int)"
+  ],
+  "isMsgPlayerHipDrop": [
+    "MR::isMsgPlayerHipDrop(unsigned int)"
+  ],
+  "isMsgPlayerSpinAttack": [
+    "MR::isMsgPlayerSpinAttack(unsigned int)"
+  ],
+  "isMsgPlayerTrample": [
+    "MR::isMsgPlayerTrample(unsigned int)"
+  ],
+  "isMsgStarPieceAttack": [
+    "MR::isMsgStarPieceAttack(unsigned int)"
+  ],
+  "isMsgToEnemyAttackBlow": [
+    "MR::isMsgToEnemyAttackBlow(unsigned int)"
+  ],
+  "isMsgToEnemyAttackTrample": [
+    "MR::isMsgToEnemyAttackTrample(unsigned int)"
+  ],
+  "isSensorPlayer": [
+    "MR::isSensorPlayer(HitSensor const*)"
+  ],
+  "isShadowProjected": [
+    "MR::isShadowProjected(LiveActor const*, char const*)"
+  ],
+  "isStarPointerPointing2POnPressButton": [
+    "MR::isStarPointerPointing2POnPressButton(LiveActor const*, char const*, bool, bool)"
+  ],
+  "isStep": [
+    "MR::isStep(LayoutActor const*, int)",
+    "MR::isStep(LiveActor const*, int)",
+    "MR::isStep(NerveExecutor const*, int)"
+  ],
+  "listenStageSwitchOnB": [
+    "MR::listenStageSwitchOnB(LiveActor*, MR::FunctorBase const&)"
+  ],
+  "makeMtxUpNoSupportPos": [
+    "MR::makeMtxUpNoSupportPos(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)"
+  ],
+  "normalizeOrZero": [
+    "MR::normalizeOrZero(JGeometry::TVec2<float>*)",
+    "MR::normalizeOrZero(JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*)",
+    "MR::normalizeOrZero(JGeometry::TVec3<float>*)"
+  ],
+  "offBind": [
+    "MR::offBind(LiveActor*)"
+  ],
+  "onBind": [
+    "MR::onBind(LiveActor*)"
+  ],
+  "onCalcGravity": [
+    "MR::onCalcGravity(LiveActor*)"
+  ],
+  "onCalcShadowOneTime": [
+    "MR::onCalcShadowOneTime(LiveActor*, char const*)",
+    "void (anonymous namespace)::for_each_shadow_controller<MR::onCalcShadowOneTime(LiveActor*, char const*)::$_0>(LiveActor*, char const*, MR::onCalcShadowOneTime(LiveActor*, char const*)::$_0&&)"
+  ],
+  "orthogonalize": [],
+  "reboundVelocityFromCollision": [
+    "MR::reboundVelocityFromCollision(LiveActor*, float, float, float)"
+  ],
+  "resetPosition": [
+    "MR::resetPosition(LiveActor*)",
+    "MR::resetPosition(LiveActor*, JGeometry::TVec3<float> const&)",
+    "MR::resetPosition(LiveActor*, char const*)"
+  ],
+  "scaleMtxToDir": [],
+  "scatterStarPiecePlayer": [
+    "MR::scatterStarPiecePlayer(unsigned int)"
+  ],
+  "sendMsgEnemyAttackFlipMaximumToDir": [],
+  "sendMsgEnemyAttackFlipToDir": [],
+  "sendMsgEnemyAttackFlipWeak": [],
+  "sendMsgEnemyAttackFlipWeakJump": [],
+  "sendMsgEnemyAttackToBindedSensor": [],
+  "sendMsgPush": [
+    "MR::sendMsgPush(HitSensor*, HitSensor*)"
+  ],
+  "sendMsgToEnemyAttackBlow": [],
+  "separateScalarAndDirection": [
+    "MR::separateScalarAndDirection(float*, JGeometry::TVec2<float>*, JGeometry::TVec2<float> const&)",
+    "MR::separateScalarAndDirection(float*, JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&)"
+  ],
+  "setBaseTRMtx": [
+    "MR::setBaseTRMtx(LiveActor*, JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>> const&)",
+    "MR::setBaseTRMtx(LiveActor*, JGeometry::TQuat4<float> const&)",
+    "MR::setBaseTRMtx(LiveActor*, float (*) [4])"
+  ],
+  "setShadowDropDirectionPtr": [],
+  "setShadowDropPositionPtr": [
+    "MR::setShadowDropPositionPtr(LiveActor*, char const*, JGeometry::TVec3<float> const*)"
+  ],
+  "start2PAttackAssistSound": [
+    "MR::start2PAttackAssistSound()"
+  ],
+  "startBlowHitSound": [
+    "MR::startBlowHitSound(LiveActor const*)"
+  ],
+  "startBrk": [
+    "MR::startBrk(LiveActor const*, char const*)"
+  ],
+  "startLevelSound": [
+    "MR::startLevelSound(LiveActor const*, JAISoundID, int, int, int)",
+    "MR::startLevelSound(LiveActor const*, char const*, int, int, int)"
+  ],
+  "startSound": [
+    "MR::startSound(LiveActor const*, JAISoundID, int, int)",
+    "MR::startSound(LiveActor const*, char const*, int, int)"
+  ],
+  "startSoundPlayer": [
+    "MR::startSoundPlayer(char const*, int)"
+  ],
+  "startSpinHitSound": [
+    "MR::startSpinHitSound(LiveActor const*)"
+  ],
+  "stopScene": [
+    "MR::stopScene(int)"
+  ],
+  "tryRumblePadStrong": [
+    "MR::tryRumblePadStrong(void const*, int)"
+  ],
+  "tryRumblePadWeak": [
+    "MR::tryRumblePadWeak(void const*, int)"
+  ],
+  "turnMtxToYDirRate": [],
+  "useStageSwitchReadB": [
+    "MR::useStageSwitchReadB(LiveActor*, JMapInfoIter const&)"
+  ],
+  "useStageSwitchSleep": [
+    "MR::useStageSwitchSleep(LiveActor*, JMapInfoIter const&)"
+  ],
+  "validateClipping": [
+    "MR::validateClipping(LiveActor*)"
+  ],
+  "vecBlend": [
+    "MR::vecBlend(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*, float)"
+  ],
+  "zeroVelocity": [
+    "MR::zeroVelocity(LiveActor*)"
+  ]
+}

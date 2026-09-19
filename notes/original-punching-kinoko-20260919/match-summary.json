@@ -1,0 +1,73 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "retail_start": "0x8016ef38",
+  "retail_end": "0x8016f32c",
+  "retail_text_bytes": 1012,
+  "retail_reference_comparison": "PASS (only ELF relocation bits masked)",
+  "relocations": 62,
+  "sections": [
+    {
+      "name": ".text",
+      "size": "1012",
+      "match_percent": 98.114624
+    },
+    {
+      "name": ".data",
+      "size": "80",
+      "match_percent": 100.0
+    },
+    {
+      "name": ".sdata2",
+      "size": "8",
+      "match_percent": 100.0
+    }
+  ],
+  "functions": [
+    {
+      "name": "__ct__16ShadowVolumeLineFv",
+      "size": "92",
+      "match_percent": 100.0
+    },
+    {
+      "name": "loadModelDrawMtx__16ShadowVolumeLineCFv",
+      "size": "88",
+      "match_percent": 100.0
+    },
+    {
+      "name": "drawShape__16ShadowVolumeLineCFv",
+      "size": "712",
+      "match_percent": 97.91011
+    },
+    {
+      "name": "setFromShadowController__16ShadowVolumeLineFPC16ShadowController",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setToShadowController__16ShadowVolumeLineFPC16ShadowController",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setFromWidth__16ShadowVolumeLineFf",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setToWidth__16ShadowVolumeLineFf",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__dt__16ShadowVolumeLineFv",
+      "size": "88",
+      "match_percent": 95.22727
+    },
+    {
+      "name": "__vt__16ShadowVolumeLine",
+      "size": "48",
+      "match_percent": 100.0
+    }
+  ],
+  "canonical_source_sha256": "8ad75ee66335bd28392b80417a86b8fcab019617360a9c1b82f90dc73bddbb63"
+}
