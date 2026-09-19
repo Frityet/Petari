@@ -43,6 +43,7 @@
 #include "scene/SceneNameObjRegistry.hpp"
 #include "resource/GameResourceRuntime.hpp"
 #include "runtime/ArchiveMountService.hpp"
+#include "runtime/RuntimeServices.hpp"
 #include "runtime/MessageHolderOwnership.hpp"
 #include "runtime/ConsoleNandImport.hpp"
 #include "runtime/SystemConfigService.hpp"

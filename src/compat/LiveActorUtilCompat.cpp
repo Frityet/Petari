@@ -338,17 +338,8 @@ namespace MR {
                                 0.0F, 1.0F);
     }
 
-    f32 calcNerveEaseInRate(const LiveActor *pActor, s32 stepMax) {
-        if (pActor == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("A LiveActor nerve rate requires a real actor.");
-        }
-        const auto rate = stepMax <= 0
-                              ? 1.0F
-                              : std::clamp(static_cast<f32>(pActor->getNerveStep()) /
-                                               static_cast<f32>(stepMax),
-                                           0.0F, 1.0F);
-        constexpr auto cHalfPi = 1.57079632679489661923F;
-        return 1.0F - std::cos(rate * cHalfPi);
+    f32 calcNerveEaseInRate(const LiveActor* pActor, s32 stepMax) {
+        return getEaseInValue(calcNerveRate(pActor, stepMax), 0.0f, 1.0f, 1.0f);
     }
 
     void setNerveAtStep(LiveActor* pActor, const Nerve* pNerve, s32 step) {

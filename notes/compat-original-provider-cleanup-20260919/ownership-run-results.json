@@ -1,0 +1,74 @@
+[
+  {
+    "target": "smg-pc-original-jpa-manager-tests",
+    "sha256": "4bdbe37bdd9eaa48a73f350ebaf34c817602bbba3fcc5c48d54fbc15f37b488f",
+    "log": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-jpa-manager-tests-ownership-run.log",
+    "timeout_seconds": 120,
+    "exit": -6,
+    "seconds": 0.44693445903249085
+  },
+  {
+    "target": "smg-pc-original-particle-resource-owner-tests",
+    "sha256": "c95614b7596d041b06e0bc440cffd029f67fe51956eae779a317f0746b098557",
+    "log": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-particle-resource-owner-tests-ownership-run.log",
+    "timeout_seconds": 120,
+    "exit": -6,
+    "seconds": 0.40581116604153067
+  },
+  {
+    "target": "smg-pc-original-auto-effect-metadata-tests",
+    "sha256": "487c852b3ef0e21ce80f116015722c7796d3cd471696fb92022e3037fc6d43d0",
+    "log": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-auto-effect-metadata-tests-ownership-run.log",
+    "timeout_seconds": 120,
+    "exit": 1,
+    "seconds": 0.296413250034675
+  },
+  {
+    "target": "smg-pc-original-effect-ownership-tests",
+    "sha256": "6fc5158b085a23f40ff2a716a0e8c6376abdca952883f03bbe84d818da85fc74",
+    "log": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-effect-ownership-tests-ownership-run.log",
+    "timeout_seconds": 120,
+    "exit": -11,
+    "seconds": 0.8380307080224156
+  },
+  {
+    "target": "smg-pc-original-image-effect-ownership-tests",
+    "sha256": "0490baf11e5da019161b5e01693baa451ff5b377e63e0832fdee12e0e6e78749",
+    "log": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-image-effect-ownership-tests-ownership-run.log",
+    "timeout_seconds": 120,
+    "exit": -11,
+    "seconds": 0.849397666985169
+  },
+  {
+    "target": "smg-pc-original-layout-group-tests",
+    "sha256": "a2b1f50a3153c0d75ec86984dda3cbcc0d220593f688303c3ad7c8631b387b0d",
+    "log": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-layout-group-tests-ownership-run.log",
+    "timeout_seconds": 120,
+    "exit": -11,
+    "seconds": 0.893689458956942
+  },
+  {
+    "target": "smg-pc-original-scene-execution-owner-tests",
+    "sha256": "a780f548a10800fa3c010bd5fa480676546e1e40bb5852d3a24ba48e3f999cf6",
+    "log": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-scene-execution-owner-tests-ownership-run.log",
+    "timeout_seconds": 120,
+    "exit": 0,
+    "seconds": 0.35430399992037565
+  },
+  {
+    "target": "smg-pc-layout-real-or-absent-tests",
+    "sha256": "4da81d12d6a9882a8e3d2106b7598a5b7e7fcc696898130689f205c9dc359539",
+    "log": "notes/compat-original-provider-cleanup-20260919/smg-pc-layout-real-or-absent-tests-ownership-run.log",
+    "timeout_seconds": 120,
+    "exit": -6,
+    "seconds": 0.4070894999895245
+  },
+  {
+    "target": "smg-pc-story-sequence-real-or-absent-tests",
+    "sha256": "9e37fb9d0c6cf374dab1c4b7d9c0ed1951f02c16a4a231e69cb2bfac3b5f06d9",
+    "log": "notes/compat-original-provider-cleanup-20260919/smg-pc-story-sequence-real-or-absent-tests-ownership-run.log",
+    "timeout_seconds": 120,
+    "exit": 77,
+    "seconds": 0.3569046249613166
+  }
+]

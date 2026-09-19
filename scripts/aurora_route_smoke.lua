@@ -736,9 +736,9 @@ end
 local function normalize_args(args)
     args = args or {}
     args.scenarios = args.scenarios or {}
-    args.pc_bin = path.absolute(args.pc_bin or path.join(common.project_root(), "build/linux/x86_64/debug/smg-pc"))
-    args.stats_bin = path.absolute(args.stats_bin or path.join(common.project_root(), "build/linux/x86_64/debug/smg-pc-png-stats"))
-    args.validate_bin = path.absolute(args.validate_bin or path.join(common.project_root(), "build/linux/x86_64/debug/smg-pc-trace-validate-sqlite"))
+    args.pc_bin = path.absolute(args.pc_bin or common.targetfile("smg-pc"))
+    args.stats_bin = path.absolute(args.stats_bin or common.targetfile("smg-pc-png-stats"))
+    args.validate_bin = path.absolute(args.validate_bin or common.targetfile("smg-pc-trace-validate-sqlite"))
     args.work_dir = path.absolute(args.work_dir or path.join(common.project_root(), ".cache/aurora-route-smoke/latest"))
     args.width = tonumber(args.width or 640)
     args.height = tonumber(args.height or 480)

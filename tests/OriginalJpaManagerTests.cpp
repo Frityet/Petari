@@ -1,3 +1,4 @@
+#include "compat/LanguageOwnership.hpp"
 #include "resource/JpcResource.hpp"
 #include "resource/RarcArchive.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -24,6 +25,9 @@ namespace aurora { extern AuroraConfig g_config; }
 int main(int argc, char** argv) {
     if (argc > 2 || (argc == 2 && std::string_view(argv[1]) != "--ownership-only")) return 2;
     bool ownershipOnly = argc == 2;
+    // This standalone resource fixture uses the supplied Korean retail data.
+    // It does not create a GameSystem; publish its language explicitly.
+    const smgpc::compat::LanguageOwnership language("KrKorean");
     const char* disc = std::getenv("SMGPC_REAL_DISC");
     if (!disc || !aurora_dvd_open(disc)) throw std::runtime_error("SMGPC_REAL_DISC must name the actual RMGK01 disc");
     struct DiscGuard { ~DiscGuard() { aurora_dvd_close(); } } disc_guard;

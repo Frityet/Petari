@@ -59,11 +59,9 @@ void LiveActor::movement() {
             mAnimKeeper->update();
         }
     }
-    // Keep physics ownership at the retail virtual-call boundary. Derived
-    // actors such as MarioActor call LiveActor::movement() and immediately
-    // inspect the displacement and contact planes after it returns, so the
-    // scheduler cannot legally run either phase outside this call.
-    smgpc::compat::update_live_actor_gravity(*this);
+    if (MR::isCalcGravity(this)) {
+        MR::calcGravity(this);
+    }
     if (mSensorKeeper) mSensorKeeper->doObjCol();
     if (mFlag.mIsDead) return;
     smgpc::compat::update_actor_nerve(this);

@@ -61,6 +61,10 @@
 
 namespace {
 
+    constexpr auto cOriginalNames = std::to_array<std::string_view>({
+#include "scene/nameobj/OriginalNameObjNames.inc"
+    });
+
     template <typename T>
     NameObj *create_supported_name_obj(const char *pName) {
         return new T(pName);
@@ -961,6 +965,13 @@ namespace MR {
 }  // namespace MR
 
 namespace smgpc::scene::nameobj {
+
+    bool original_name_obj_registered(std::string_view object_name) {
+        return find_planet_map_entry(object_name) != nullptr ||
+               std::ranges::any_of(cOriginalNames, [&](auto name) {
+                   return equal_string_case(name, object_name);
+               });
+    }
 
     NameObjCreatorSupport describe_model_changing_creator_support(std::string_view object_name) {
         const auto *entry = find_model_changing_entry(object_name);

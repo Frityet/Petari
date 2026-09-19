@@ -8,6 +8,7 @@
       "type": "string",
       "proposals": [
         "latest",
+        "23",
         "22",
         "21",
         "20",

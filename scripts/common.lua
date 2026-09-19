@@ -1,6 +1,10 @@
 import("core.base.json")
 import("core.base.process")
+import("core.project.config")
 import("lib.detect.find_tool")
+
+-- Custom tasks do not pass through the built-in build/run config loader.
+config.load()
 
 local function tostring_or_empty(value)
     if value == nil then
@@ -352,4 +356,12 @@ function stop_xvfb(server)
     end
     kill_process(server.proc)
     close_process(server.proc, server.log)
+end
+
+-- Resolve products through the configured target graph, including custom -o,
+-- architecture, mode, executable suffixes and target-specific directories.
+function targetfile(name)
+    import("core.project.project")
+    local target = assert(project.target(name), "Target %s is unavailable; configure a debug build for developer tools", name)
+    return path.absolute(target:targetfile(), project_root())
 end

@@ -1,0 +1,30 @@
+[
+  {
+    "target": "smg-pc-original-jpa-manager-tests",
+    "sha256": "fd5ddcb910bbfb80dada42c8688f3e5a85b76790ffcf5df1dd6c30563ad09933",
+    "log": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-jpa-manager-tests-fixed-owner-run.log",
+    "exit": -11,
+    "seconds": 0.4586533328983933
+  },
+  {
+    "target": "smg-pc-original-particle-resource-owner-tests",
+    "sha256": "4e67cd23bb5779403c03edf1f16dc811ddb1b50fb980250ed22da40d08d301da",
+    "log": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-particle-resource-owner-tests-fixed-owner-run.log",
+    "exit": -11,
+    "seconds": 0.40564604091923684
+  },
+  {
+    "target": "smg-pc-original-auto-effect-metadata-tests",
+    "sha256": "8744188255e46c086fe43f933e3d80182ca926ed6e14a00fc89ce14c9257910c",
+    "log": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-auto-effect-metadata-tests-fixed-owner-run.log",
+    "exit": -11,
+    "seconds": 0.400741207995452
+  },
+  {
+    "target": "smg-pc-layout-real-or-absent-tests",
+    "sha256": "23bd0cfc0f2a843eb335ebceebb3e44b04369afc0a23afcb20e33cf15025b885",
+    "log": "notes/compat-original-provider-cleanup-20260919/smg-pc-layout-real-or-absent-tests-fixed-owner-run.log",
+    "exit": -6,
+    "seconds": 0.40469758305698633
+  }
+]

@@ -20,7 +20,7 @@
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
-#include "scene/StageInitializationService.hpp"
+#include "scene/StagePlacementPreflight.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 
 #include <algorithm>
@@ -738,7 +738,7 @@ namespace {
 #endif
         try {
             smgpc::scene::preflight_stage_placements_or_throw(
-                "PreflightProbeGalaxy", 7, placements, &placements[0]);
+                "PreflightProbeGalaxy", 7, placements);
             construction_reached = true;
             (void)creator.createFromJMap(JMapInfoIter(&jmap, 0));
         } catch (const std::runtime_error&) {

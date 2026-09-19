@@ -191,7 +191,7 @@ local function resolve_compare(args)
     local config = scenario_config(scenario, env)
     local pc_frame = common.env_value("SMGPC_PARITY_PC_FRAME", common.env_value("SMGPC_PARITY_FRAME", config.pc_frame or config.frame, env), env)
     local dolphin_frame = common.env_value("SMGPC_PARITY_DOLPHIN_FRAME", common.env_value("SMGPC_PARITY_FRAME", config.dolphin_frame or config.frame, env), env)
-    local build_mode = common.env_value("SMGPC_PARITY_XMAKE_MODE", "debug", env)
+    local build_mode = get_config("mode") or "debug"
     local default_work_dir = scenario == "custom_frame"
         and path.join(pc_root, ".cache/render-parity")
         or path.join(pc_root, ".cache/render-parity", scenario)
@@ -249,10 +249,10 @@ local function resolve_compare(args)
         reset_pc_save = common.env_value("SMGPC_PARITY_RESET_PC_SAVE", pc_save_dir_is_default and "1" or "0", env),
         dolphin_bin = common.env_value("SMGPC_DOLPHIN_BIN", path.join(pc_root, "dolphin/build-nogui-libcxx/Binaries/dolphin-emu-nogui"), env),
         game_image = common.env_value("SMGPC_DOLPHIN_GAME", path.join(repo_root, "Super Mario Wii - Galaxy Adventure (Korea).rvz"), env),
-        pc_bin = common.env_value("SMGPC_PC_BIN", path.join(pc_root, "build/linux/x86_64/" .. build_mode .. "/smg-pc"), env),
-        visual_diff_bin = common.env_value("SMGPC_VISUAL_DIFF_BIN", path.join(pc_root, "build/linux/x86_64/" .. build_mode .. "/smg-pc-visual-diff"), env),
-        trace_pack_bin = common.env_value("SMGPC_TRACE_PACK_BIN", path.join(pc_root, "build/linux/x86_64/" .. build_mode .. "/smg-pc-trace-pack-sqlite"), env),
-        trace_compare_bin = common.env_value("SMGPC_TRACE_COMPARE_BIN", path.join(pc_root, "build/linux/x86_64/" .. build_mode .. "/smg-pc-trace-compare-sqlite"), env),
+        pc_bin = common.env_value("SMGPC_PC_BIN", common.targetfile("smg-pc"), env),
+        visual_diff_bin = common.env_value("SMGPC_VISUAL_DIFF_BIN", common.targetfile("smg-pc-visual-diff"), env),
+        trace_pack_bin = common.env_value("SMGPC_TRACE_PACK_BIN", common.targetfile("smg-pc-trace-pack-sqlite"), env),
+        trace_compare_bin = common.env_value("SMGPC_TRACE_COMPARE_BIN", common.targetfile("smg-pc-trace-compare-sqlite"), env),
         dolphin_platform = common.env_value("SMGPC_DOLPHIN_PLATFORM", "x11", env),
         dolphin_video_backend = common.env_value("SMGPC_DOLPHIN_VIDEO_BACKEND", "Software", env),
         timeout_seconds = tonumber(common.env_value("SMGPC_PARITY_TIMEOUT_SECONDS", "240", env)),
@@ -344,11 +344,6 @@ local function build_targets(ctx)
     if common.env_value("SMGPC_PARITY_BUILD", "1", ctx.env) ~= "1" then
         return
     end
-    local env_extra = {
-        CC = common.env_value("CC", "clang-22", ctx.env),
-        CXX = common.env_value("CXX", "clang++-22", ctx.env),
-    }
-    common.runv("xmake", {"f", "-m", ctx.build_mode}, {curdir = ctx.pc_root, env_extra = env_extra})
     for _, target in ipairs({
         "smg-pc",
         "smg-pc-visual-diff",
@@ -356,7 +351,7 @@ local function build_targets(ctx)
         "smg-pc-trace-compare-sqlite",
         "smg-pc-trace-inspect-sqlite",
     }) do
-        common.runv("xmake", {"build", target}, {curdir = ctx.pc_root, env_extra = env_extra})
+        common.runv("xmake", {"build", target}, {curdir = ctx.pc_root})
     end
 end
 

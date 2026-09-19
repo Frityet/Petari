@@ -1,0 +1,5 @@
+{
+  "path": "build/macosx/arm64/debug/libsmg-pc-game.a",
+  "sha256": "917d5a9f0608482a77845acfd55038ef70d851c967eca2e1e3008eeeaf4d7822",
+  "scratch_retirement": "notes/compat-original-provider-cleanup-20260919/archive-before/libsmg-pc-game-before-final-duplicates.a"
+}

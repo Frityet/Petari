@@ -58,7 +58,6 @@ public:
     ~LayoutRuntime();
 
     void initWithoutIter();
-    void initEffectKeeper(int effectNum, const char* pEffectName, const void* pSystem);
     void appear();
     void kill();
     void update();

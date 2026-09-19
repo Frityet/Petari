@@ -42,7 +42,6 @@ class JUTTexture;
 namespace smgpc::scene {
     class NameObjLifecycleService;
     class SceneExecutionService;
-    class SceneLifecycleService;
 }  // namespace smgpc::scene
 
 namespace smgpc::layout {
@@ -212,8 +211,6 @@ namespace smgpc::runtime {
         [[nodiscard]] const AudioEventService &audio() const;
         [[nodiscard]] JAudioPlaybackService &j_audio_playback();
         [[nodiscard]] const JAudioPlaybackService &j_audio_playback() const;
-        [[nodiscard]] EffectService &effects();
-        [[nodiscard]] const EffectService &effects() const;
         [[nodiscard]] WipeService &scene_wipe();
         [[nodiscard]] const WipeService &scene_wipe() const;
         [[nodiscard]] WipeService &system_wipe();
@@ -251,11 +248,8 @@ namespace smgpc::runtime {
         [[nodiscard]] const smgpc::scene::NameObjLifecycleService &name_obj_lifecycle() const;
         [[nodiscard]] smgpc::scene::SceneExecutionService &scene_execution();
         [[nodiscard]] const smgpc::scene::SceneExecutionService &scene_execution() const;
-        [[nodiscard]] smgpc::scene::SceneLifecycleService &scene_lifecycle();
-        [[nodiscard]] const smgpc::scene::SceneLifecycleService &scene_lifecycle() const;
         void attach_name_obj_lifecycle(smgpc::scene::NameObjLifecycleService &service);
         void attach_scene_execution(smgpc::scene::SceneExecutionService &service);
-        void attach_scene_lifecycle(smgpc::scene::SceneLifecycleService &service);
 
         [[nodiscard]] JAISoundHandle *start_sub_bgm(std::string_view name, bool prepared);
         [[nodiscard]] JAISoundHandle *start_sub_bgm(u32 sound_id, bool prepared);
@@ -280,15 +274,6 @@ namespace smgpc::runtime {
         [[nodiscard]] JAISoundHandle *start_atmosphere_level_sound(
             std::string_view name, s32 parameter_1, s32 parameter_2);
         void start_system_me(std::string_view name);
-        void register_effect_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
-                                    std::string_view resource_group_name, bool sort_enabled,
-                                    const void *host_identity = nullptr);
-        void unregister_effect_keeper(std::string_view host_name, const void *host_identity = nullptr);
-        void emit_effect(std::string_view actor_name, std::string_view effect_name,
-                         const void *host_identity = nullptr);
-        void delete_effect(std::string_view actor_name, std::string_view effect_name,
-                           const void *host_identity = nullptr);
-        void delete_effect_all(std::string_view actor_name, const void *host_identity = nullptr);
         void note_layout_archive(std::string_view layout_name, const std::filesystem::path &path);
         void note_missing_layout_archive(std::string_view layout_name);
         void note_layout_texture_decode_failed(std::string_view layout_name, std::string_view texture_name, std::string_view reason);
@@ -317,8 +302,6 @@ namespace smgpc::runtime {
 #ifndef NDEBUG
         void emit_star_pointer_target_trace_events();
 #endif
-        void refresh_effect_host_bindings();
-        void refresh_effect_host_binding(std::string_view host_name, const void *host_identity = nullptr);
 
         void retire_owned_runtime_objects();
         struct Registration;
@@ -344,7 +327,6 @@ namespace smgpc::runtime {
         WiiPlatformService _wii_platform;
         std::unique_ptr<OriginalDisplayLifetime> _display;
         AudioEventService _audio;
-        EffectService _effects;
         WipeService _scene_wipe;
         WipeService _system_wipe;
         StarPointerService _star_pointer;
@@ -368,22 +350,13 @@ namespace smgpc::runtime {
         std::unique_ptr<CaptureScreenDirector> _capture_screen_director;
         std::unique_ptr<smgpc::scene::NameObjLifecycleService> _owned_name_obj_lifecycle;
         std::unique_ptr<smgpc::scene::SceneExecutionService> _owned_scene_execution;
-        std::unique_ptr<smgpc::scene::SceneLifecycleService> _owned_scene_lifecycle;
         smgpc::scene::NameObjLifecycleService *_name_obj_lifecycle = nullptr;
         smgpc::scene::SceneExecutionService *_scene_execution = nullptr;
-        smgpc::scene::SceneLifecycleService *_scene_lifecycle = nullptr;
-        std::map<const void *, LiveActor *, std::less<>> _effect_live_actor_hosts;
         std::optional<std::size_t> _active_scene_registration_scope;
         std::size_t _scene_scheduler_registration_marker = 0U;
         std::size_t _next_scene_registration_scope_id = 1U;
-        std::set<std::string, std::less<>> _scene_effect_emission_hosts;
-        std::set<std::string, std::less<>> _scene_effect_keeper_hosts;
-        std::map<const void *, std::string, std::less<>> _scene_effect_emission_instances;
-        std::map<const void *, std::string, std::less<>> _scene_effect_keeper_instances;
         bool _application_exit_requested = false;
         std::string _application_exit_reason;
-        std::map<const void *, smgpc::layout::LayoutRuntime *, std::less<>> _effect_simple_layout_hosts;
-        std::map<const void *, LayoutActor *, std::less<>> _effect_layout_actor_hosts;
         std::uint64_t _frame_index = 0;
         std::optional<smgpc::camera::CameraPose> _scene_camera_pose = {};
         std::optional<smgpc::camera::CameraPose> _last_camera_pose = {};

@@ -1,0 +1,35 @@
+{
+  "new_tests": [
+    "tests/OriginalProcessPlayerOwnerTests.cpp",
+    "tests/OriginalProcessMarioCameraTests.cpp",
+    "tests/OriginalProcessMarioCameraTests.hpp"
+  ],
+  "adapted_tests": [
+    "tests/OriginalPlayerUtilTests.cpp"
+  ],
+  "resource_fixture_language_only": [
+    "tests/OriginalJpaManagerTests.cpp",
+    "tests/OriginalParticleResourceOwnerTests.cpp",
+    "tests/OriginalAutoEffectMetadataTests.cpp",
+    "tests/LayoutRealOrAbsentTests.cpp"
+  ],
+  "retired_tests": [
+    "tests/MarioCameraTargetTests.cpp",
+    "tests/MarioCameraTargetTests.hpp"
+  ],
+  "parent_owned_target": "tests/xmake.lua: smg-pc-original-process-player-owner-tests",
+  "notes": [
+    "notes/compat-original-provider-cleanup-20260919/retained-player-owner-tests.md",
+    "notes/compat-original-provider-cleanup-20260919/resource-fixture-language.md",
+    "notes/compat-original-provider-cleanup-20260919/run_player_owner.py",
+    "notes/compat-original-provider-cleanup-20260919/player-owner-360-result.json",
+    "notes/compat-original-provider-cleanup-20260919/player-owner-360-run.log.gz",
+    "notes/compat-original-provider-cleanup-20260919/player-owner-fixed-build.log.gz",
+    "notes/compat-original-provider-cleanup-20260919/player-owner-fixed-360-result.json",
+    "notes/compat-original-provider-cleanup-20260919/player-owner-fixed-360-run.log.gz",
+    "notes/compat-original-provider-cleanup-20260919/player-owner-npc-build.log.gz",
+    "notes/compat-original-provider-cleanup-20260919/player-owner-npc-360-result.json",
+    "notes/compat-original-provider-cleanup-20260919/player-owner-npc-360-run.log.gz"
+  ],
+  "validation": "Player-owner360 passes all assertions and retirement; four standalone resource fixtures still fail absent FileLoader/SC owners and are not claimed passing. Production/main unchanged by this test subtask."
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "target": "smg-pc",
+    "exit": 0,
+    "seconds": 6.767897707992233,
+    "log": "notes/compat-original-provider-cleanup-20260919/finalowners-smg-pc.log",
+    "binary_sha256": "6fd4824a3217cb18bb7f6533936202a4854c6475a7fbef895176a2ba91ffbb43"
+  },
+  {
+    "target": "smg-pc-original-jpa-manager-tests",
+    "exit": 0,
+    "seconds": 4.882780584041029,
+    "log": "notes/compat-original-provider-cleanup-20260919/finalowners-smg-pc-original-jpa-manager-tests.log",
+    "binary_sha256": "fd5ddcb910bbfb80dada42c8688f3e5a85b76790ffcf5df1dd6c30563ad09933"
+  },
+  {
+    "target": "smg-pc-original-particle-resource-owner-tests",
+    "exit": 0,
+    "seconds": 5.065686083049513,
+    "log": "notes/compat-original-provider-cleanup-20260919/finalowners-smg-pc-original-particle-resource-owner-tests.log",
+    "binary_sha256": "4e67cd23bb5779403c03edf1f16dc811ddb1b50fb980250ed22da40d08d301da"
+  },
+  {
+    "target": "smg-pc-original-auto-effect-metadata-tests",
+    "exit": 0,
+    "seconds": 4.966490457998589,
+    "log": "notes/compat-original-provider-cleanup-20260919/finalowners-smg-pc-original-auto-effect-metadata-tests.log",
+    "binary_sha256": "8744188255e46c086fe43f933e3d80182ca926ed6e14a00fc89ce14c9257910c"
+  },
+  {
+    "target": "smg-pc-layout-real-or-absent-tests",
+    "exit": 0,
+    "seconds": 4.96712112496607,
+    "log": "notes/compat-original-provider-cleanup-20260919/finalowners-smg-pc-layout-real-or-absent-tests.log",
+    "binary_sha256": "23bd0cfc0f2a843eb335ebceebb3e44b04369afc0a23afcb20e33cf15025b885"
+  },
+  {
+    "target": "smg-pc-original-process-player-owner-tests",
+    "exit": 0,
+    "seconds": 5.155068999971263,
+    "log": "notes/compat-original-provider-cleanup-20260919/finalowners-smg-pc-original-process-player-owner-tests.log",
+    "binary_sha256": "06f96dceae52c19db672a6eed085ef1a98c398a13e982e8aa4cc2974d15b9485"
+  }
+]

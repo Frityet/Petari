@@ -1,0 +1,9 @@
+[
+  {
+    "target": "smg-pc",
+    "exit": 255,
+    "seconds": 12.937175833038054,
+    "log": "notes/compat-original-provider-cleanup-20260919/green2-smg-pc.log",
+    "binary_sha256": "b38e90868eb8ab1f1cdc72487c293cf0f15a3e50c6fd8b14adc846bec7a7d123"
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "verified_at": "2026-09-19T17:28:52.493269+00:00",
+  "change": "Remove redundant executable input aurora/lib/compat.cpp; Aurora base owns the shim",
+  "build_provenance": "Coordinator reported actual final main relink and app regeneration; hashes independently checked after bounded repeated startup",
+  "artifacts": [
+    {
+      "path": "build/macosx/arm64/debug/smg-pc",
+      "sha256": "6fd4824a3217cb18bb7f6533936202a4854c6475a7fbef895176a2ba91ffbb43",
+      "previous_smoke_checkpoint_sha256": "6fd4824a3217cb18bb7f6533936202a4854c6475a7fbef895176a2ba91ffbb43",
+      "byte_identical_to_previous_checkpoint": true
+    },
+    {
+      "path": "build/macosx/arm64/debug/smg-pc.app/Contents/MacOS/smg-pc",
+      "sha256": "7e9c0bcb9351f43e9eaf87f3eebc5ef2c34f60d6da6da4704d7d75ebfb1b6aa0",
+      "previous_smoke_checkpoint_sha256": "7e9c0bcb9351f43e9eaf87f3eebc5ef2c34f60d6da6da4704d7d75ebfb1b6aa0",
+      "byte_identical_to_previous_checkpoint": true
+    }
+  ],
+  "prior_checks_apply_to_exact_final_artifact": true,
+  "additional_startup_repeat": "Timed out in AppKit persistent-state crash-restoration modal; explicitly failed, PID reaped; see final-ordinary-startup.json and sample"
+}

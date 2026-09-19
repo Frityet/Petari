@@ -1,0 +1,11 @@
+# Standalone resource fixture language
+
+The coordinated ownership batch reported `Language query requires an original GameSystem or explicit resource-language owner` from four standalone fixtures: `OriginalJpaManagerTests`, `OriginalParticleResourceOwnerTests`, `OriginalAutoEffectMetadataTests`, and `LayoutRealOrAbsentTests`.
+
+These tests intentionally create resource owners without booting GameSystem. Their data and authored counts are Korean retail fixtures (the layout search is explicitly limited to RMGK01/RMGK02 archives). Each now scopes the existing `compat::LanguageOwnership("KrKorean")` before its resource operations. The language object outlives those resources and retires at test exit. Original GameSystem precedence and rejection of absent owners remain production requirements, independently covered by `LanguageOwnershipTests`.
+
+The AutoEffect missing-resource assertion executes with a valid language owner, so it must still reject the absent particle resource owner for the intended reason. No missing-resource, missing-effect, resource lifetime, allocation budget or metadata assertion was removed. No GameSystem singleton or fake effect system was created.
+
+The four test-only diffs pass `git diff --check` and were handed back to the shared build owner in a coherent frozen state. Rebuild/run evidence is pending that serialized validation; this fixture correction alone is not a passing-test claim.
+
+The subsequent serialized builds passed, but all four executions still failed; see `fixed-owner-run-results.json`. The first three terminated with SIGSEGV, and the layout fixture rejected its absent system-configuration owner. `debugger-resource-file-owner.log` confirms the first JPA failure calls original `FileLoader::requestMountArchive` through a null FileLoader singleton during `ParticleResourceHolder` construction. Explicit resource language resolves only the language dependency; it does not construct those required process services. The three resource tests are therefore not passing. The bounded cleanup deliberately does not restore a production fallback or create another miniature GameSystem bootstrap to make these old fixtures green. Actual-process validation uses the normal original startup owners separately.

@@ -1,0 +1,200 @@
+[
+  {
+    "provider": "src/compat/GameActorPhysicsCompat.cpp",
+    "original": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "anchor": "void onCalcGravity(",
+    "symbol_prefix": "MR::onCalcGravity(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "c522c29cc610096445a938eb6d814b9a8f4f5aca024e5d30b21d379a82b0dd67",
+    "provider_tokens_sha256": "c522c29cc610096445a938eb6d814b9a8f4f5aca024e5d30b21d379a82b0dd67"
+  },
+  {
+    "provider": "src/compat/GameActorPhysicsCompat.cpp",
+    "original": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "anchor": "void offCalcGravity(",
+    "symbol_prefix": "MR::offCalcGravity(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "ddb75b1dab99b49d1254b101652aa4c2f01a3b75e2f452cf801fb43fd3c96a7a",
+    "provider_tokens_sha256": "ddb75b1dab99b49d1254b101652aa4c2f01a3b75e2f452cf801fb43fd3c96a7a"
+  },
+  {
+    "provider": "src/compat/LiveActorUtilCompat.cpp",
+    "original": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "anchor": "f32 calcNerveEaseInRate(",
+    "symbol_prefix": "MR::calcNerveEaseInRate(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "79d3b8a2b3152871e5a15fac48b7e69744d688f3cb14aa55ddbc12baf7cbf886",
+    "provider_tokens_sha256": "79d3b8a2b3152871e5a15fac48b7e69744d688f3cb14aa55ddbc12baf7cbf886"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "u32 getStrikeInfoNumCategory(s32 category)",
+    "symbol_prefix": "",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "1e4a92321967ffff738830911a90ed6f462440c2985e828cecd39f56dc6bae6d",
+    "provider_tokens_sha256": "1e4a92321967ffff738830911a90ed6f462440c2985e828cecd39f56dc6bae6d"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool getFirstPolyOnLineCategory(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset, const TriangleFilterBase* pTriangleFilter, const CollisionPartsFilterBase* pPartsFilter, s32 category)",
+    "symbol_prefix": "",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "ff3c3c2b816f44673168fdde6a73412e12c0ac880a588b481fd3ebd2c59ef8de",
+    "provider_tokens_sha256": "ff3c3c2b816f44673168fdde6a73412e12c0ac880a588b481fd3ebd2c59ef8de"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool getFirstPolyOnLineCategoryExceptActor(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset, const LiveActor* pActor, s32 category)",
+    "symbol_prefix": "",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "0ad57bdbe4b872c4e8c1e4c3b88c5026ff28c8eeae9a7382024222cc06b219d0",
+    "provider_tokens_sha256": "0ad57bdbe4b872c4e8c1e4c3b88c5026ff28c8eeae9a7382024222cc06b219d0"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool getFirstPolyOnLineToMapExceptActor(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset, const LiveActor* pActor)",
+    "symbol_prefix": "MR::getFirstPolyOnLineToMapExceptActor(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "16ad8af803822e14b18ec488f3c3d5ae0be30198e72c1fd9df4c2b030ddaeaab",
+    "provider_tokens_sha256": "16ad8af803822e14b18ec488f3c3d5ae0be30198e72c1fd9df4c2b030ddaeaab"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool getFirstPolyOnLineToMap(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset)",
+    "symbol_prefix": "MR::getFirstPolyOnLineToMap(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "a55700ad0fb5f7f8b29106ecee57e48256f85602531d465e30e2f2a95f61c8f8",
+    "provider_tokens_sha256": "a55700ad0fb5f7f8b29106ecee57e48256f85602531d465e30e2f2a95f61c8f8"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool getFirstPolyOnLineToWaterSurface(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset)",
+    "symbol_prefix": "MR::getFirstPolyOnLineToWaterSurface(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "013952d40067258a7d4bfb2d244f0116a51ed3cae7f14fd4c63f3be628fd1af1",
+    "provider_tokens_sha256": "013952d40067258a7d4bfb2d244f0116a51ed3cae7f14fd4c63f3be628fd1af1"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool getFirstPolyOnLineToMap(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset, const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter)",
+    "symbol_prefix": "MR::getFirstPolyOnLineToMap(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "ee8cf65ab9aa8364c89768e7af3a25588920eed903b43faa098c7be1bec17e79",
+    "provider_tokens_sha256": "ee8cf65ab9aa8364c89768e7af3a25588920eed903b43faa098c7be1bec17e79"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool getFirstPolyOnLineToWaterSurface(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset, const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter)",
+    "symbol_prefix": "MR::getFirstPolyOnLineToWaterSurface(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "34321e91f931c06ea443835818d07577fd361dbc0154a0bab0fcfd8da61cb71e",
+    "provider_tokens_sha256": "34321e91f931c06ea443835818d07577fd361dbc0154a0bab0fcfd8da61cb71e"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "u32 getNearPolyOnLineSort(const TVec3f& rReference, const TVec3f& rStart, const TVec3f& rOffset, const HitSensor* pExceptSensor)",
+    "symbol_prefix": "MR::getNearPolyOnLineSort(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "9dbab70dc2cf781dc62113a1afe43b23db65986a6cf1dffdde864bc3af707af2",
+    "provider_tokens_sha256": "9dbab70dc2cf781dc62113a1afe43b23db65986a6cf1dffdde864bc3af707af2"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool getSortedPoly(TVec3f* pDst, Triangle* pTriangle, u32 sortIndex)",
+    "symbol_prefix": "MR::getSortedPoly(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "559a8fdff3d915d072cda1020e2a904cb3aa516bf9a3524d42f722445d7adf21",
+    "provider_tokens_sha256": "559a8fdff3d915d072cda1020e2a904cb3aa516bf9a3524d42f722445d7adf21"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "const Triangle* getSortedPoly(u32 sortIndex)",
+    "symbol_prefix": "MR::getSortedPoly(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "3625ba89a648e74c401a3de73400ea3b818a0a5bdef9907b0c7d7add454ac319",
+    "provider_tokens_sha256": "3625ba89a648e74c401a3de73400ea3b818a0a5bdef9907b0c7d7add454ac319"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool isExistMapCollision(const TVec3f& rParam1, const TVec3f& rParam2)",
+    "symbol_prefix": "MR::isExistMapCollision(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "2c1763f71d2931f7f49d91d22cd85b8d0111ab7a06b38668beed67823f83e107",
+    "provider_tokens_sha256": "2c1763f71d2931f7f49d91d22cd85b8d0111ab7a06b38668beed67823f83e107"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool isExistMoveLimitCollision(const TVec3f& rParam1, const TVec3f& rParam2)",
+    "symbol_prefix": "MR::isExistMoveLimitCollision(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "cefbef3af0a4aa5685553300160e9933add4373beced2a1ecfd1bf1b0233f1cc",
+    "provider_tokens_sha256": "cefbef3af0a4aa5685553300160e9933add4373beced2a1ecfd1bf1b0233f1cc"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool isExistMapCollisionExceptActor(const TVec3f& rStart, const TVec3f& rOffset, const LiveActor* pActor)",
+    "symbol_prefix": "MR::isExistMapCollisionExceptActor(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "85be809fc85ffc15c97ddf723cdf7a0b8ea07823bdc39d3f9af19bb9868d043e",
+    "provider_tokens_sha256": "85be809fc85ffc15c97ddf723cdf7a0b8ea07823bdc39d3f9af19bb9868d043e"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool trySetMoveLimitCollision(LiveActor* pActor)",
+    "symbol_prefix": "MR::trySetMoveLimitCollision(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "d55b9f38193eddbd80d6ae296b96bdc43adaefc3460b0802571ff3e0ffea80e4",
+    "provider_tokens_sha256": "d55b9f38193eddbd80d6ae296b96bdc43adaefc3460b0802571ff3e0ffea80e4"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "s32 checkStrikeLineToMap(const TVec3f& rStart, const TVec3f& rOffset, s32 maxCount, const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter)",
+    "symbol_prefix": "Collision::checkStrikeLineToMap(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "2d73110b2d0a964b0cff67bcb3103715bad58107248185f40d4d3053da20c1dd",
+    "provider_tokens_sha256": "2d73110b2d0a964b0cff67bcb3103715bad58107248185f40d4d3053da20c1dd"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "s32 checkStrikeLineToSunshade(const TVec3f& rStart, const TVec3f& rOffset, s32 maxCount, const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter)",
+    "symbol_prefix": "Collision::checkStrikeLineToSunshade(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "f86ba9f123637727996c4c4187cb100c2d264d02a0c497302cc97e23762ef0ad",
+    "provider_tokens_sha256": "f86ba9f123637727996c4c4187cb100c2d264d02a0c497302cc97e23762ef0ad"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "const HitInfo* getStrikeInfoMap(u32 index)",
+    "symbol_prefix": "Collision::getStrikeInfoMap(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "dd1e40db67c75a26c1405373020bfa3c9cb21b187cd86a65ea306bda5c768e93",
+    "provider_tokens_sha256": "dd1e40db67c75a26c1405373020bfa3c9cb21b187cd86a65ea306bda5c768e93"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "u32 getStrikeInfoNumMap()",
+    "symbol_prefix": "Collision::getStrikeInfoNumMap(",
+    "status": "source-tokens-exact",
+    "original_tokens_sha256": "236343efa732bef25d2ff436e9700b1c636556820ed4b2790906666d6dd584ef",
+    "provider_tokens_sha256": "236343efa732bef25d2ff436e9700b1c636556820ed4b2790906666d6dd584ef"
+  }
+]

@@ -1,0 +1,416 @@
+[
+  {
+    "path": "notes/compat-cleanup-20260919/package-dry-run.log.gz",
+    "sha256": "c05a8729db79c2418136533a563d7020d831a870e972e32395bd6f330feab53c",
+    "original_path": "notes/compat-cleanup-20260919/package-dry-run.log",
+    "original_sha256": "24a75025ba83ced341c95ad6452f894de91804473bd8ca1ed6f172a3438d8de2"
+  },
+  {
+    "path": "notes/compat-cleanup-20260919/package-existing-output-rejected.log.gz",
+    "sha256": "74889b956403d80aeaeb7c5ca1b906453f06b9cbe7a55f9f4df5520d44bed53a",
+    "original_path": "notes/compat-cleanup-20260919/package-existing-output-rejected.log",
+    "original_sha256": "5e9d0e2ed6730a020332b3d8506894a5b51488543ebaf620a5f5fae753388947"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/baseline-compile.log.gz",
+    "sha256": "b93973beff9065b6e5ee2a9ae7d6be1186976c304fc62e0d2caa7ad94f5f10de",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/baseline-compile.log",
+    "original_sha256": "36b944460e85537349de22cac89076491d8ee0a103ab60ae1066ddd1315a0f06"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/baseline2-compile.log.gz",
+    "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/baseline2-compile.log",
+    "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/baseline2-link.log.gz",
+    "sha256": "6217c556fe3f875f5660d26441bf1de24d7eb8e845217a491c7d21378af9eaa5",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/baseline2-link.log",
+    "original_sha256": "91928e87bfcf5643aef43c1b545aedab5032fd135f7afed0e1fd4c92e4537561"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/baseline3-compile.log.gz",
+    "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/baseline3-compile.log",
+    "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/baseline3-debugger.log.gz",
+    "sha256": "17801c700ffc00e1a74dbac854a47bc793c3117fa467ab295445326e8f0dd338",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/baseline3-debugger.log",
+    "original_sha256": "24684e6198c3f937e545ce6d7cba6304e0ccfb4e6eedd6e935c05360d9964c59"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/baseline3-link.log.gz",
+    "sha256": "6271f72fdc6442f27926dba6c3f36c649858b37aa032bb7bcdf12ba50ff6997d",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/baseline3-link.log",
+    "original_sha256": "e3eccee5b8800a428d6cbb801d38ad2ab92cb5c051bf9d8b611f4fd5562f2218"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/baseline3-run.log.gz",
+    "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/baseline3-run.log",
+    "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/baseline4-compile.log.gz",
+    "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/baseline4-compile.log",
+    "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/baseline4-link.log.gz",
+    "sha256": "6271f72fdc6442f27926dba6c3f36c649858b37aa032bb7bcdf12ba50ff6997d",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/baseline4-link.log",
+    "original_sha256": "e3eccee5b8800a428d6cbb801d38ad2ab92cb5c051bf9d8b611f4fd5562f2218"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/baseline4-run.log.gz",
+    "sha256": "b961a73086914cc2aaa40226e7fbf179ad5198081e34a767facbd598a8070729",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/baseline4-run.log",
+    "original_sha256": "7d745748f5074f72e3096a52207f646efbe10e7bac09190f684e7c61a61523a4"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/debugger-effect.log.gz",
+    "sha256": "fab658a349a7c65a555c82bd9d9f1fdcf2badcff12aa03ecb3e70b9b381f32b0",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/debugger-effect.log",
+    "original_sha256": "b629c16d83ba1fc541b951a7c1b801ef5c09d7f2a7d2cf454820effc26b24a54"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/debugger-image-effect.log.gz",
+    "sha256": "9eafe6b195017b2cc5285d83ed06e59e1088db3e5c93b344594a438861aacca6",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/debugger-image-effect.log",
+    "original_sha256": "6e98508e7ca681409861134275f2d238ee2a3abbab8bb45cce7039fc54548857"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/debugger-layout-group.log.gz",
+    "sha256": "0e9049fd64ff8d1a6d58c00ce3485e51b6de0cdb4c3258a2c4612ad1ab97c828",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/debugger-layout-group.log",
+    "original_sha256": "f60f64b8dbcb6e554380d386e429374fe7af6cdb6c25f2e8325999d41133f14d"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/debugger-resource-file-owner.log.gz",
+    "sha256": "7a156a046de0d19b5a47f52d52f7748af7e3d05c98a7e4e12727de4bf7ca8276",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/debugger-resource-file-owner.log",
+    "original_sha256": "06c99d1b6f7f3c2ec6cf1123c3560f0ea292883a6dc3c4c1fb1f12dde1085370"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/finalowners-smg-pc-layout-real-or-absent-tests.log.gz",
+    "sha256": "35d87cb995a3dc043ea44494896b63c2296331ace7468f102da3ea5accfb5c77",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/finalowners-smg-pc-layout-real-or-absent-tests.log",
+    "original_sha256": "fa0180ea8f16b4d8d6cf7402b735563c9fb74bb16ee66708385e5b26e858b71f"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/finalowners-smg-pc-original-auto-effect-metadata-tests.log.gz",
+    "sha256": "9f3f270307f386724350275362301269580960d2360a480408c3243c41ec4083",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/finalowners-smg-pc-original-auto-effect-metadata-tests.log",
+    "original_sha256": "f60f7ccfe5a439398f65659e7581382a58bf4c4b3c636e0bb0d7ce9227ef396d"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/finalowners-smg-pc-original-jpa-manager-tests.log.gz",
+    "sha256": "b94e8a551ce13233d7ead6ff1858832b6883c523ae3b27136b0707c36eb52e86",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/finalowners-smg-pc-original-jpa-manager-tests.log",
+    "original_sha256": "e12673ce2da843472f472a03a9a40a09638add76461c24d4271b00b4d22ed984"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/finalowners-smg-pc-original-particle-resource-owner-tests.log.gz",
+    "sha256": "3efceab3fdfea31574297cca16e2fc3ecfac7c840b9443d571ff3c4e2b5a4c1c",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/finalowners-smg-pc-original-particle-resource-owner-tests.log",
+    "original_sha256": "91a0a5a166c577e68d3b59411250b0779f77760620459f48ab381a5ef84c43bc"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/finalowners-smg-pc-original-process-player-owner-tests.log.gz",
+    "sha256": "dd43f6721137ce47a3a3d85e5028112e0d7ac24f258a8cb4b43b630f81cb5dcf",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/finalowners-smg-pc-original-process-player-owner-tests.log",
+    "original_sha256": "624a2522756f9e28787869e06e08ee8bb977eadcbf45e66e8bf79628a01c4fe5"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/finalowners-smg-pc.log.gz",
+    "sha256": "34a5db64a7ae54669bac620f83d71c8f1e829819a225b20c4a5c6f1df4fe84c9",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/finalowners-smg-pc.log",
+    "original_sha256": "1067a9f447aca3c2d08c2596e273e6670708b234340bff401de85ab1e3cfba88"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/green1-smg-pc.log.gz",
+    "sha256": "18286a963c2d774ca1322bf002a0e9037fd0549eb49c2e65df3c871ddeaf254f",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/green1-smg-pc.log",
+    "original_sha256": "817eda0358d21fd1b131359fa19d6bcb01098199ab9d01ce1fa4ed3fe8aad412"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/green2-smg-pc.log.gz",
+    "sha256": "47a4f15ab359d7833754e05a39cc6d3e455c362aedbe5a17e301fdb8273f44c1",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/green2-smg-pc.log",
+    "original_sha256": "e2345f98cf78441a2aca6ba16515895a9fda3faf1af545619ace887479f9390e"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/green3-smg-pc-original-actor-utility-tests.log.gz",
+    "sha256": "3646f5b83b2b39ce79ce54834b62ae98f6e08e8a69e01ca76975b19f030066c3",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/green3-smg-pc-original-actor-utility-tests.log",
+    "original_sha256": "763c46b0b121049c79bd10d79d46d5437488e94c8d1e127d5704e4bd1a6504b8"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/green3-smg-pc-original-placement-coverage-tests.log.gz",
+    "sha256": "556cf0296947be7eeec933f107719c8a996a08ff2558c7a3aed2fecec6b955ae",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/green3-smg-pc-original-placement-coverage-tests.log",
+    "original_sha256": "69fe2c1afff353afd4ebfd1f04e87af6325afea7115a3dd1910b3adf08f41f9c"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/green3-smg-pc.log.gz",
+    "sha256": "dc2d835b15c857b19fc2a90376a686cefc06b156167909aed3651f2c83f2b74c",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/green3-smg-pc.log",
+    "original_sha256": "79cd234785ff715f143b426ebe4b86234cea3e3e5ff0ef070aab0848d5db79a2"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-layout-real-or-absent-tests.log.gz",
+    "sha256": "712480b4eb9be343cb9bc7a9eca9849b18daeb7ef8f6b189fb168468ed3f2e7a",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-layout-real-or-absent-tests.log",
+    "original_sha256": "2a4b40a80fbf2be5e4e6e99223e11c4b372bdd5cb7b79abca5940e8f7a657ab2"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-auto-effect-metadata-tests.log.gz",
+    "sha256": "d53dd53a27220f6182919a4d992be63ecf539ab755b98ea74a90ba65df69572e",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-auto-effect-metadata-tests.log",
+    "original_sha256": "9302462d60157fb6a3e8ff295d4911da46ba8c117dcc8a869d74bc78e9dcc1ac"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-effect-ownership-tests.log.gz",
+    "sha256": "65cdb4357a6f8b244258bef7fa65bfc6e4b865bc67186b2683ad1e282ca71c24",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-effect-ownership-tests.log",
+    "original_sha256": "748040cb3e445e5b4f664f43658d3ca74b71b14008daf68e3ca1c89ea40b3394"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-image-effect-ownership-tests.log.gz",
+    "sha256": "bc4ece6f2cb2746dedcb5fe3e1bd8c3d4deff44393fb3a0787a5d75976120857",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-image-effect-ownership-tests.log",
+    "original_sha256": "4f4c12059d64e4240b06ea96dbca0f35dd9175810b605f6081c01a0775f0710b"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-jpa-manager-tests.log.gz",
+    "sha256": "119b5d8af25ad2ce58aa8881812813c70c012aeb67d3aaa876a49930d08009ac",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-jpa-manager-tests.log",
+    "original_sha256": "78b0e06fd82e935a1534b30ddb05a970666ad272e5bf6f7f2021c3b206a469a2"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-layout-group-tests.log.gz",
+    "sha256": "1b06ae64f000472c6208feba3a555bf19604055f9dc1ff064b1d05647c08a2de",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-layout-group-tests.log",
+    "original_sha256": "b2ce83d4940faa99a5646a2587fdaf9275ecb26d9ebfa3eb012b89df90fee311"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-particle-resource-owner-tests.log.gz",
+    "sha256": "6c89aea2c714716cef818e5fba0c606c38776b51e752bcdd65f8621cb69b8be5",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-particle-resource-owner-tests.log",
+    "original_sha256": "a3d6e970eb25f068be7622149895edc33aa60366e2bd0a5faadf11a76db60733"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-scene-execution-owner-tests.log.gz",
+    "sha256": "6e79d58bf4972a0c25eab54499b5b15b081e112cfbbfb05db65aa1910e99761d",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-scene-execution-owner-tests.log",
+    "original_sha256": "a004bc0f3b349981bf787d3b7bda45e4e587b5ced6d7c280efdf10b26ebf49a5"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-story-sequence-real-or-absent-tests.log.gz",
+    "sha256": "f3bd46f21a6f79af15a3019ace01913918a01acff24049d378cb997466ffb500",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-story-sequence-real-or-absent-tests.log",
+    "original_sha256": "75385ae84c28953a38dc5f753f16b06ebd9fb1106c419f7e92e723bd0224c275"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/player-owner-360-run.log.gz",
+    "sha256": "d6785c1df88f4b451885a5e7e63f3c65ed4fa2c71c558714cea63041669c815e",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/player-owner-360-run.log",
+    "original_sha256": "7c34aac481fffd26332cb68aed14f51a57418df4b01b75a933452cfebad68aa0"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/player-owner-fixed-360-run.log.gz",
+    "sha256": "dfcdc5a76a3a5ed70e016dcfa91fb5fd6f1cb1b6b5e9aa6a30d0db8200ecfa85",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/player-owner-fixed-360-run.log",
+    "original_sha256": "42222241fe3c38dc8dd9576a741906c78ba0c73775651b3f08a50b182025ff96"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/player-owner-fixed-build.log.gz",
+    "sha256": "700be03c42548fcfa77c2b1355fab0cab8be88664e9294b646d3a8e2f6dc2b13",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/player-owner-fixed-build.log",
+    "original_sha256": "1fdc8d56fcc6a8026197d2f1ac983fe80601e6e7ce3be2ff5b9287fa90766352"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/player-owner-npc-360-run.log.gz",
+    "sha256": "150799c5beb625e1921a6ad89324d9622d755cff96b4945bb058e264c283a12b",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/player-owner-npc-360-run.log",
+    "original_sha256": "c2298da9a7529f711d472995b89ffa83556ff98b09fe40f3ea0e8fbbeab74949"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/player-owner-npc-build.log.gz",
+    "sha256": "3fe519fcad9a9f051fe6931e9ad877ecd308a42bbe84a97c314cf3eb2371b93c",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/player-owner-npc-build.log",
+    "original_sha256": "65a367a912493505e4c7f0e35ac1649d79517a6e792c5aa00e7ad497e4febc77"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc-original-actor-utility-tests.log.gz",
+    "sha256": "ad590f59786247a1bbaaa04235f51b227ca02834007571ee5ab9ad502253dcb9",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc-original-actor-utility-tests.log",
+    "original_sha256": "97ca68d59c5b538b61eb19b79249462072199aad8ca289d8c1ddbf0844c3994b"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc-original-placement-coverage-tests.log.gz",
+    "sha256": "aec11519940d7428010e598929035972ed9b12022830d6bbed6c82909d8aafae",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc-original-placement-coverage-tests.log",
+    "original_sha256": "3197f392f33d0c8f96db329de701979b7fbc05b0b2dcff573fc55fd4e92d817d"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc-original-process-player-owner-tests.log.gz",
+    "sha256": "7f6b4bba06f2e9d700079f9c57a315b903edaa75c5d1b5cd86cc711782ff14fe",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc-original-process-player-owner-tests.log",
+    "original_sha256": "46ddad32cce4a92f3b97e628671f808b63366849b483b496a39a1e1fa643b2e0"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc-original-scene-execution-owner-tests.log.gz",
+    "sha256": "101ab5727255defbfd9510c65c609862040347dd962c9a069b7148712cf74a96",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc-original-scene-execution-owner-tests.log",
+    "original_sha256": "92703ffaef9346e5992130c5baac898e2f31ac67c0d06c048cd82dd4c5751b6b"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc.log.gz",
+    "sha256": "b5da24056646c27174c3a491a6057e24f8e4ce71c82f7308ac0ca1a4b9d33e5c",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc.log",
+    "original_sha256": "262b7919df8351e410a732f3782cf0f2128cbdf6d33596be2dae6243eb38612a"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/smg-pc-layout-real-or-absent-tests-fixed-owner-run.log.gz",
+    "sha256": "19efbd1b5ea7c3452e19b3cb67a1ba389025c23a8f815d9fa71d9116365dae8a",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/smg-pc-layout-real-or-absent-tests-fixed-owner-run.log",
+    "original_sha256": "2938dd225044a21835068f0a4843f681084b4f5d2a4679f6c4c155825f5eb378"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/smg-pc-layout-real-or-absent-tests-ownership-run.log.gz",
+    "sha256": "e6bcfad66bebea26edcfa0ee4ece6f7425bf2e27f5edb65bb2b714802dd1d1da",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/smg-pc-layout-real-or-absent-tests-ownership-run.log",
+    "original_sha256": "1eeb959b01ba6428bf28ed5af04be9ea96d12f1736d51e373ae2b5a9203b5b87"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-actor-utility-tests-green.log.gz",
+    "sha256": "997c21f821516a706ee3fcd0b92f5c880c96d6a1dde1baa071e34703f40f072d",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-actor-utility-tests-green.log",
+    "original_sha256": "3c1e88c26768a017139afa829b91be5e24ca2a9816e371a8ea3cf33a16098bbb"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-auto-effect-metadata-tests-fixed-owner-run.log.gz",
+    "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-auto-effect-metadata-tests-fixed-owner-run.log",
+    "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-auto-effect-metadata-tests-ownership-run.log.gz",
+    "sha256": "e33ab6fffc549faf8a73ef49504b746323bf07660202b7f91c79cf76e9584f25",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-auto-effect-metadata-tests-ownership-run.log",
+    "original_sha256": "b2147afae36ee0a8f2067c026e230cbec2c69bb057339b101f56ad748ea0d71d"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-effect-ownership-tests-ownership-run.log.gz",
+    "sha256": "27894f94824054cff1074def46c61508a77fc9caef8e7f915f26627de86a59fb",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-effect-ownership-tests-ownership-run.log",
+    "original_sha256": "a30c0d7f9c4d35465ac9fd1aaeb591fc1e80ced0e5f859752ebe4bced2e5abfb"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-image-effect-ownership-tests-ownership-run.log.gz",
+    "sha256": "27894f94824054cff1074def46c61508a77fc9caef8e7f915f26627de86a59fb",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-image-effect-ownership-tests-ownership-run.log",
+    "original_sha256": "a30c0d7f9c4d35465ac9fd1aaeb591fc1e80ced0e5f859752ebe4bced2e5abfb"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-jpa-manager-tests-fixed-owner-run.log.gz",
+    "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-jpa-manager-tests-fixed-owner-run.log",
+    "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-jpa-manager-tests-ownership-run.log.gz",
+    "sha256": "e6bcfad66bebea26edcfa0ee4ece6f7425bf2e27f5edb65bb2b714802dd1d1da",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-jpa-manager-tests-ownership-run.log",
+    "original_sha256": "1eeb959b01ba6428bf28ed5af04be9ea96d12f1736d51e373ae2b5a9203b5b87"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-layout-group-tests-ownership-run.log.gz",
+    "sha256": "27894f94824054cff1074def46c61508a77fc9caef8e7f915f26627de86a59fb",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-layout-group-tests-ownership-run.log",
+    "original_sha256": "a30c0d7f9c4d35465ac9fd1aaeb591fc1e80ced0e5f859752ebe4bced2e5abfb"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-particle-resource-owner-tests-fixed-owner-run.log.gz",
+    "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-particle-resource-owner-tests-fixed-owner-run.log",
+    "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-particle-resource-owner-tests-ownership-run.log.gz",
+    "sha256": "e6bcfad66bebea26edcfa0ee4ece6f7425bf2e27f5edb65bb2b714802dd1d1da",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-particle-resource-owner-tests-ownership-run.log",
+    "original_sha256": "1eeb959b01ba6428bf28ed5af04be9ea96d12f1736d51e373ae2b5a9203b5b87"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-placement-coverage-tests-green.log.gz",
+    "sha256": "6142a17bf5c0a477a98499494b75036a4e119d213980fc0f6b9f7748c6365b74",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-placement-coverage-tests-green.log",
+    "original_sha256": "5ec256e81a52150d33b3a93f34f2d5eee05e96fb30d7a26910c79ef2b800dac9"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-scene-execution-owner-tests-ownership-run.log.gz",
+    "sha256": "182e0bcb7237427cf35072fb8b8a759f3ae3aa85e171af5ec5c1bc79ffc8e949",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/smg-pc-original-scene-execution-owner-tests-ownership-run.log",
+    "original_sha256": "51aa8d4ddbbce2261c287b0a021abf39877f0bd67490ce178f7b2a8a213634d7"
+  },
+  {
+    "path": "notes/compat-original-provider-cleanup-20260919/smg-pc-story-sequence-real-or-absent-tests-ownership-run.log.gz",
+    "sha256": "b820421a7c98a2b4d175f31348cf3642108e21e36d83db86bdc467593fe3d336",
+    "original_path": "notes/compat-original-provider-cleanup-20260919/smg-pc-story-sequence-real-or-absent-tests-ownership-run.log",
+    "original_sha256": "bc713931a27b6d1744d7ccefdd6031c785b21a7e4b80796481dc22966c080314"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/baseline-check.log.gz",
+    "sha256": "b8c0b3a2707fac71fe69768e30d7a20ad682f216cbd1d7eb45dc4ebf6b56cb14",
+    "original_path": "notes/compat-provider-audit-20260919/baseline-check.log",
+    "original_sha256": "d3f042d848d9abcfc74a2fa32a6b4d05c7cbcfdf55b7c9f8c8834cd2924c8ec4"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/complete-check.log.gz",
+    "sha256": "6f30baa44a030d6063416e8f0549459a198ca7d724803ecd3cfc8a45a436c30b",
+    "original_path": "notes/compat-provider-audit-20260919/complete-check.log",
+    "original_sha256": "5b084f208b4dee8f8c1b70247fc9adc1e51a03a61fd0fbcd631290ad47aeff10"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final-check.log.gz",
+    "sha256": "7afe093a776279a2f64d6b7801493130663761b3b5d401581d920168a17f8a10",
+    "original_path": "notes/compat-provider-audit-20260919/final-check.log",
+    "original_sha256": "0312b75ccab3f9248ec955cdd586aebd46f11a3b505c863b7119723ca93913a1"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final-program-check.log.gz",
+    "sha256": "08b93c6248d488c6821d6a17089f463e0ef54baa8dcedb23320f0758e7b87fb6",
+    "original_path": "notes/compat-provider-audit-20260919/final-program-check.log",
+    "original_sha256": "53716ae8ef3f9eb544c70e00428439dd24e4997bf53936dad5943620be25c552"
+  },
+  {
+    "path": "notes/compat-shim-provider-20260919/smg-pc-original-actor-utility-tests.log.gz",
+    "sha256": "997c21f821516a706ee3fcd0b92f5c880c96d6a1dde1baa071e34703f40f072d",
+    "original_path": "notes/compat-shim-provider-20260919/smg-pc-original-actor-utility-tests.log",
+    "original_sha256": "3c1e88c26768a017139afa829b91be5e24ca2a9816e371a8ea3cf33a16098bbb"
+  },
+  {
+    "path": "notes/compat-shim-provider-20260919/smg-pc-original-placement-coverage-tests.log.gz",
+    "sha256": "6142a17bf5c0a477a98499494b75036a4e119d213980fc0f6b9f7748c6365b74",
+    "original_path": "notes/compat-shim-provider-20260919/smg-pc-original-placement-coverage-tests.log",
+    "original_sha256": "5ec256e81a52150d33b3a93f34f2d5eee05e96fb30d7a26910c79ef2b800dac9"
+  },
+  {
+    "path": "notes/compat-shim-provider-20260919/smg-pc-original-process-player-owner-tests.log.gz",
+    "sha256": "150799c5beb625e1921a6ad89324d9622d755cff96b4945bb058e264c283a12b",
+    "original_path": "notes/compat-shim-provider-20260919/smg-pc-original-process-player-owner-tests.log",
+    "original_sha256": "c2298da9a7529f711d472995b89ffa83556ff98b09fe40f3ea0e8fbbeab74949"
+  },
+  {
+    "path": "notes/compat-shim-provider-20260919/smg-pc-original-scene-execution-owner-tests.log.gz",
+    "sha256": "182e0bcb7237427cf35072fb8b8a759f3ae3aa85e171af5ec5c1bc79ffc8e949",
+    "original_path": "notes/compat-shim-provider-20260919/smg-pc-original-scene-execution-owner-tests.log",
+    "original_sha256": "51aa8d4ddbbce2261c287b0a021abf39877f0bd67490ce178f7b2a8a213634d7"
+  }
+]

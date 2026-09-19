@@ -4,8 +4,8 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "camera/CameraDirectorRuntime.hpp"
-#include "scene/StageInitializationService.hpp"
 #include "scene/OriginalSceneSupport.hpp"
+#include "scene/OriginalPlacementCoverage.hpp"
 #include "scene/SceneExecutionBinding.hpp"
 #include <aurora/exception.hpp>
 #include <stdexcept>
@@ -34,7 +34,11 @@ void SceneFunction::startActorFileLoadScenario() {
 }
 
 void SceneFunction::startActorPlacement() {
-    ::getSceneDataInitializer()->startActorPlacement();
+    auto* initializer = ::getSceneDataInitializer();
+    if (!initializer->mDataHolder)
+        aurora::throw_host_exception<std::logic_error>("Original placement requires its loaded stage holder");
+    smgpc::scene::report_original_placement_coverage(*initializer->mDataHolder);
+    initializer->startActorPlacement();
 }
 
 void SceneFunction::initAfterScenarioSelected() {
@@ -42,15 +46,11 @@ void SceneFunction::initAfterScenarioSelected() {
     ::getSceneDataInitializer()->initAfterScenarioSelected();
     // The original holder tree now includes the selected scenario's zones.
     // Retain their authored lighting before original Game creates any actors.
-    if (!smgpc::scene::current_stage_initialization_service())
-        smgpc::scene::initialize_original_scene_lights();
+    smgpc::scene::initialize_original_scene_lights();
 }
 
 void SceneFunction::initEffectSystem(u32 particles, u32 emitters) {
-    if (auto* initializer = smgpc::scene::current_stage_initialization_service())
-        initializer->initialize_effect_system(particles, emitters);
-    else
-        smgpc::scene::initialize_original_scene_effects(particles, emitters);
+    smgpc::scene::initialize_original_scene_effects(particles, emitters);
 }
 
 void SceneFunction::allocateDrawBufferActorList() {

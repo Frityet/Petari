@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-player-owner-tests"
+  ],
+  "cwd": "/Users/frityet/Projects/petari",
+  "environment": {
+    "SMGPC_REAL_DISC": "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "AURORA_BACKEND": "metal"
+  },
+  "sha256": "06f96dceae52c19db672a6eed085ef1a98c398a13e982e8aa4cc2974d15b9485",
+  "timeout_seconds": 180,
+  "pid": 5432,
+  "exit_code": 1,
+  "elapsed_seconds": 9.708168874960393,
+  "reaped": true
+}

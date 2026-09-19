@@ -1,0 +1,348 @@
+[
+  {
+    "path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/compat-inventory.tsv.gz",
+    "sha256": "599b37968c28d300cc9f67582b51bb56450367c559a03de21879f9d8fa0ecc73",
+    "original_path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/compat-inventory.tsv",
+    "original_sha256": "407730b4f6db786603b77e8053782059d287820b73a1377736d28882867bba78"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/compile-only-allowlist.tsv",
+    "sha256": "11092e4ba94defa55019acb9b1a3a95b3e418a4c2e262df3aaf24ae8b1a214b5",
+    "original_path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/compile-only-allowlist.tsv",
+    "original_sha256": "11092e4ba94defa55019acb9b1a3a95b3e418a4c2e262df3aaf24ae8b1a214b5"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/configured-provider-build-map.json.gz",
+    "sha256": "704a01a8d8cb4953c1e4780fa4d4b5f1ca75fe44f86a332c95837c14ac4c48cd",
+    "original_path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/configured-provider-build-map.json",
+    "original_sha256": "696158ca150da6e8d9244ae450f7ddf9906ac885e0ae96ab124b358ddbacb73d"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/decomp-declarations.tsv",
+    "sha256": "d6f17ac14725523a4c47405ab2fd11c294b992cd45ab162b6b0eacccca769d24",
+    "original_path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/decomp-declarations.tsv",
+    "original_sha256": "d6f17ac14725523a4c47405ab2fd11c294b992cd45ab162b6b0eacccca769d24"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/duplicate-removal-proof.json",
+    "sha256": "a0831d54a8530f5bb844b0fef39f1781883b518734b185dd48aab68185ea8696",
+    "original_path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/duplicate-removal-proof.json",
+    "original_sha256": "a0831d54a8530f5bb844b0fef39f1781883b518734b185dd48aab68185ea8696"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/duplicate-strong-providers.tsv",
+    "sha256": "288e94d08a98c37139fc73d11f235f4960dd143383f807a43ad5d45c620036f3",
+    "original_path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/duplicate-strong-providers.tsv",
+    "original_sha256": "288e94d08a98c37139fc73d11f235f4960dd143383f807a43ad5d45c620036f3"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/excluded-original-units.tsv.gz",
+    "sha256": "b980a220c8e4cf788ff9a85fb38206137b4002a822b78952dcf5e897b53eb38d",
+    "original_path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/excluded-original-units.tsv",
+    "original_sha256": "1ae8f81da60c0cc4ebe8aab055c10f680ebecd0eeb3106acc1c4968e0049ff4d"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/provider-audit.json",
+    "sha256": "0126ccb3a16752244760e75e958bce28311cdd3e3afb345835183b7ec2f2e474",
+    "original_path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/provider-audit.json",
+    "original_sha256": "0126ccb3a16752244760e75e958bce28311cdd3e3afb345835183b7ec2f2e474"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/release-boundary.tsv",
+    "sha256": "897b265fae831dd8572a3334daefadacae6ce6243b73e745f7357d97dfaed733",
+    "original_path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/release-boundary.tsv",
+    "original_sha256": "897b265fae831dd8572a3334daefadacae6ce6243b73e745f7357d97dfaed733"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/relocated-source-provenance.json",
+    "sha256": "53b3860072c2e6c4dcb223759696b4aff3ce4272520a3cc12baf3f32a61b6d8e",
+    "original_path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/relocated-source-provenance.json",
+    "original_sha256": "53b3860072c2e6c4dcb223759696b4aff3ce4272520a3cc12baf3f32a61b6d8e"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/required-migration.tsv",
+    "sha256": "ebf57b22d08043447142f874662c351641bb78d8075d61e41fa7e2fee3c2725d",
+    "original_path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/required-migration.tsv",
+    "original_sha256": "ebf57b22d08043447142f874662c351641bb78d8075d61e41fa7e2fee3c2725d"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/source-closeness-summary.md",
+    "sha256": "d569aea2d60e8fed526bd82dd951b41e2cfe5458ad743758f8daf2112494487d",
+    "original_path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/source-closeness-summary.md",
+    "original_sha256": "d569aea2d60e8fed526bd82dd951b41e2cfe5458ad743758f8daf2112494487d"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/source-closeness.tsv.gz",
+    "sha256": "3cf99364091f007e432859d49f28ae35ebea70b7307fd8e1a555b47887125b56",
+    "original_path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/source-closeness.tsv",
+    "original_sha256": "df94751a1ee0803664b5c89a31391a15ae6eea1cc7676a7729ed07f9a9448c19"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/symbol-providers.tsv.gz",
+    "sha256": "979902aa259730fb6fa1ed1170b09e80e3430732464c213d435c0a35f2011421",
+    "original_path": "notes/compat-provider-audit-20260919/before-final-owner-cleanup/symbol-providers.tsv",
+    "original_sha256": "2f2b9d97ca798979e3959fecd1ec476347309a00e08d2ed1071e75ef12bdfabd"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final/compat-inventory.tsv.gz",
+    "sha256": "667b748d59557e2f6d77f25a4fbe4f00d9de06fb9432ddf05b5c4fe45addf631",
+    "original_path": "notes/compat-provider-audit-20260919/final/compat-inventory.tsv",
+    "original_sha256": "95bbfaabc355013cc88c14ca99f18478505da0c4341d99a23b17d58313f50906"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final/compile-only-allowlist.tsv",
+    "sha256": "11092e4ba94defa55019acb9b1a3a95b3e418a4c2e262df3aaf24ae8b1a214b5",
+    "original_path": "notes/compat-provider-audit-20260919/final/compile-only-allowlist.tsv",
+    "original_sha256": "11092e4ba94defa55019acb9b1a3a95b3e418a4c2e262df3aaf24ae8b1a214b5"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final/configured-provider-build-map.json.gz",
+    "sha256": "622c0c41a954eca916745bbe8c143b655756495e4c58a0dee9e62a2dcee3a03f",
+    "original_path": "notes/compat-provider-audit-20260919/final/configured-provider-build-map.json",
+    "original_sha256": "922ba44d4b2ffdee47d16aeb9109e044480fc7b5436311b0ca9c6f5b581e7223"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final/decomp-declarations.tsv",
+    "sha256": "d6f17ac14725523a4c47405ab2fd11c294b992cd45ab162b6b0eacccca769d24",
+    "original_path": "notes/compat-provider-audit-20260919/final/decomp-declarations.tsv",
+    "original_sha256": "d6f17ac14725523a4c47405ab2fd11c294b992cd45ab162b6b0eacccca769d24"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final/duplicate-strong-providers.tsv",
+    "sha256": "d99174697030a8742cff0940e523dc7001faecb2a918d6e766e80b8d033d10bd",
+    "original_path": "notes/compat-provider-audit-20260919/final/duplicate-strong-providers.tsv",
+    "original_sha256": "d99174697030a8742cff0940e523dc7001faecb2a918d6e766e80b8d033d10bd"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final/excluded-original-units.tsv.gz",
+    "sha256": "b980a220c8e4cf788ff9a85fb38206137b4002a822b78952dcf5e897b53eb38d",
+    "original_path": "notes/compat-provider-audit-20260919/final/excluded-original-units.tsv",
+    "original_sha256": "1ae8f81da60c0cc4ebe8aab055c10f680ebecd0eeb3106acc1c4968e0049ff4d"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final/provider-audit.json",
+    "sha256": "095dd68afb1ad9d821f4c438e0a56dbc016a447ed0accbef367218c9b665b0ed",
+    "original_path": "notes/compat-provider-audit-20260919/final/provider-audit.json",
+    "original_sha256": "095dd68afb1ad9d821f4c438e0a56dbc016a447ed0accbef367218c9b665b0ed"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final/release-boundary.tsv",
+    "sha256": "897b265fae831dd8572a3334daefadacae6ce6243b73e745f7357d97dfaed733",
+    "original_path": "notes/compat-provider-audit-20260919/final/release-boundary.tsv",
+    "original_sha256": "897b265fae831dd8572a3334daefadacae6ce6243b73e745f7357d97dfaed733"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final/relocated-source-provenance.json",
+    "sha256": "53b3860072c2e6c4dcb223759696b4aff3ce4272520a3cc12baf3f32a61b6d8e",
+    "original_path": "notes/compat-provider-audit-20260919/final/relocated-source-provenance.json",
+    "original_sha256": "53b3860072c2e6c4dcb223759696b4aff3ce4272520a3cc12baf3f32a61b6d8e"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final/required-migration.tsv",
+    "sha256": "ebf57b22d08043447142f874662c351641bb78d8075d61e41fa7e2fee3c2725d",
+    "original_path": "notes/compat-provider-audit-20260919/final/required-migration.tsv",
+    "original_sha256": "ebf57b22d08043447142f874662c351641bb78d8075d61e41fa7e2fee3c2725d"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final/source-closeness-summary.md",
+    "sha256": "a507e697b8d65cf5ccfc9784a98ccb774ad068b8db7635ca46eb2936c7a24946",
+    "original_path": "notes/compat-provider-audit-20260919/final/source-closeness-summary.md",
+    "original_sha256": "a507e697b8d65cf5ccfc9784a98ccb774ad068b8db7635ca46eb2936c7a24946"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final/source-closeness.tsv.gz",
+    "sha256": "f821de8e17f72ae5610dd30b7db0e77d618a4e02317af2b01c0ab3b64a826003",
+    "original_path": "notes/compat-provider-audit-20260919/final/source-closeness.tsv",
+    "original_sha256": "1aea57fc2e43bd8dc61fb0c976744fff75c3dde8150fcbc5a2ee82033fedb86b"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final/symbol-providers.tsv.gz",
+    "sha256": "134ee951f63e4a74479304d5baf435a2616ca61ee27b6640d1db03522778de15",
+    "original_path": "notes/compat-provider-audit-20260919/final/symbol-providers.tsv",
+    "original_sha256": "572ec1d741fe59852aeaad9228d70fe4cb0d73197371aaf91d014fce425bf463"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/complete-linked-surface/compat-inventory.tsv.gz",
+    "sha256": "667b748d59557e2f6d77f25a4fbe4f00d9de06fb9432ddf05b5c4fe45addf631",
+    "original_path": "notes/compat-provider-audit-20260919/complete-linked-surface/compat-inventory.tsv",
+    "original_sha256": "95bbfaabc355013cc88c14ca99f18478505da0c4341d99a23b17d58313f50906"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/complete-linked-surface/compile-only-allowlist.tsv",
+    "sha256": "11092e4ba94defa55019acb9b1a3a95b3e418a4c2e262df3aaf24ae8b1a214b5",
+    "original_path": "notes/compat-provider-audit-20260919/complete-linked-surface/compile-only-allowlist.tsv",
+    "original_sha256": "11092e4ba94defa55019acb9b1a3a95b3e418a4c2e262df3aaf24ae8b1a214b5"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/complete-linked-surface/configured-provider-build-map.json.gz",
+    "sha256": "3c28235d69cb1ab7a1fb98117ce47a7012b367922c659a417674903b6eb5be61",
+    "original_path": "notes/compat-provider-audit-20260919/complete-linked-surface/configured-provider-build-map.json",
+    "original_sha256": "c3be7f5cff3115b0862a67503bb0c1d144dde7fbc4941bd2d39c3c0c96205822"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/complete-linked-surface/decomp-declarations.tsv",
+    "sha256": "d6f17ac14725523a4c47405ab2fd11c294b992cd45ab162b6b0eacccca769d24",
+    "original_path": "notes/compat-provider-audit-20260919/complete-linked-surface/decomp-declarations.tsv",
+    "original_sha256": "d6f17ac14725523a4c47405ab2fd11c294b992cd45ab162b6b0eacccca769d24"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/complete-linked-surface/duplicate-strong-providers.tsv",
+    "sha256": "01c5abb40a2c882dc6acf8698c05f6cbef88c77a0df701224e2045150919e04d",
+    "original_path": "notes/compat-provider-audit-20260919/complete-linked-surface/duplicate-strong-providers.tsv",
+    "original_sha256": "01c5abb40a2c882dc6acf8698c05f6cbef88c77a0df701224e2045150919e04d"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/complete-linked-surface/excluded-original-units.tsv.gz",
+    "sha256": "c45fc7e0ab1e4a7ee00ac7ffd77e1a9c932c86e1b05cb82dee39f46729e81cd4",
+    "original_path": "notes/compat-provider-audit-20260919/complete-linked-surface/excluded-original-units.tsv",
+    "original_sha256": "0eede0079d20f4a76d458ef4d8c28f545f5f2a23a48748c8235132be3b6717b0"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/complete-linked-surface/provider-audit.json",
+    "sha256": "34083e64fd90677c9201c4849b8cdce7cd08c995ed5f8717b0a57d58f6889996",
+    "original_path": "notes/compat-provider-audit-20260919/complete-linked-surface/provider-audit.json",
+    "original_sha256": "34083e64fd90677c9201c4849b8cdce7cd08c995ed5f8717b0a57d58f6889996"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/complete-linked-surface/release-boundary.tsv",
+    "sha256": "897b265fae831dd8572a3334daefadacae6ce6243b73e745f7357d97dfaed733",
+    "original_path": "notes/compat-provider-audit-20260919/complete-linked-surface/release-boundary.tsv",
+    "original_sha256": "897b265fae831dd8572a3334daefadacae6ce6243b73e745f7357d97dfaed733"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/complete-linked-surface/relocated-source-provenance.json",
+    "sha256": "aae8c2195df9c44f81db10a6503af8151de77db1efee673d63b223fa7cf55b41",
+    "original_path": "notes/compat-provider-audit-20260919/complete-linked-surface/relocated-source-provenance.json",
+    "original_sha256": "aae8c2195df9c44f81db10a6503af8151de77db1efee673d63b223fa7cf55b41"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/complete-linked-surface/required-migration.tsv",
+    "sha256": "ebf57b22d08043447142f874662c351641bb78d8075d61e41fa7e2fee3c2725d",
+    "original_path": "notes/compat-provider-audit-20260919/complete-linked-surface/required-migration.tsv",
+    "original_sha256": "ebf57b22d08043447142f874662c351641bb78d8075d61e41fa7e2fee3c2725d"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/complete-linked-surface/source-closeness-summary.md",
+    "sha256": "93f573453c163ba9382aaa9c1f7fe9387c0c7aa1f440ba0e1778ff2c0afc9622",
+    "original_path": "notes/compat-provider-audit-20260919/complete-linked-surface/source-closeness-summary.md",
+    "original_sha256": "93f573453c163ba9382aaa9c1f7fe9387c0c7aa1f440ba0e1778ff2c0afc9622"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/complete-linked-surface/source-closeness.tsv.gz",
+    "sha256": "f821de8e17f72ae5610dd30b7db0e77d618a4e02317af2b01c0ab3b64a826003",
+    "original_path": "notes/compat-provider-audit-20260919/complete-linked-surface/source-closeness.tsv",
+    "original_sha256": "1aea57fc2e43bd8dc61fb0c976744fff75c3dde8150fcbc5a2ee82033fedb86b"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/complete-linked-surface/symbol-providers.tsv.gz",
+    "sha256": "1fba4d25394d60ad78c7884539aa62f10ee789c474ecc6cace0e491b01d23f06",
+    "original_path": "notes/compat-provider-audit-20260919/complete-linked-surface/symbol-providers.tsv",
+    "original_sha256": "a824ff05057346445613acc124f0394c90a1080456aa22f46ce793dc094bd738"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final-program/compat-inventory.tsv.gz",
+    "sha256": "667b748d59557e2f6d77f25a4fbe4f00d9de06fb9432ddf05b5c4fe45addf631",
+    "original_path": "notes/compat-provider-audit-20260919/final-program/compat-inventory.tsv",
+    "original_sha256": "95bbfaabc355013cc88c14ca99f18478505da0c4341d99a23b17d58313f50906"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final-program/compile-only-allowlist.tsv",
+    "sha256": "11092e4ba94defa55019acb9b1a3a95b3e418a4c2e262df3aaf24ae8b1a214b5",
+    "original_path": "notes/compat-provider-audit-20260919/final-program/compile-only-allowlist.tsv",
+    "original_sha256": "11092e4ba94defa55019acb9b1a3a95b3e418a4c2e262df3aaf24ae8b1a214b5"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final-program/configured-provider-build-map.json.gz",
+    "sha256": "bb3e1c0f2f2fd6715045e27039c538b2ddce8e5f00c01dc1b91e8583560e46c0",
+    "original_path": "notes/compat-provider-audit-20260919/final-program/configured-provider-build-map.json",
+    "original_sha256": "af5236a3aecb464bdecf60df224b40248058524083d82a8e1261a1d8ba910584"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final-program/decomp-declarations.tsv",
+    "sha256": "d6f17ac14725523a4c47405ab2fd11c294b992cd45ab162b6b0eacccca769d24",
+    "original_path": "notes/compat-provider-audit-20260919/final-program/decomp-declarations.tsv",
+    "original_sha256": "d6f17ac14725523a4c47405ab2fd11c294b992cd45ab162b6b0eacccca769d24"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final-program/duplicate-strong-providers.tsv",
+    "sha256": "d99174697030a8742cff0940e523dc7001faecb2a918d6e766e80b8d033d10bd",
+    "original_path": "notes/compat-provider-audit-20260919/final-program/duplicate-strong-providers.tsv",
+    "original_sha256": "d99174697030a8742cff0940e523dc7001faecb2a918d6e766e80b8d033d10bd"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final-program/excluded-original-units.tsv.gz",
+    "sha256": "b980a220c8e4cf788ff9a85fb38206137b4002a822b78952dcf5e897b53eb38d",
+    "original_path": "notes/compat-provider-audit-20260919/final-program/excluded-original-units.tsv",
+    "original_sha256": "1ae8f81da60c0cc4ebe8aab055c10f680ebecd0eeb3106acc1c4968e0049ff4d"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final-program/provider-audit.json",
+    "sha256": "5e831043af3ffde9e2d013db9ae94f96ea0d98e79b8b16e50f438fb390bfafff",
+    "original_path": "notes/compat-provider-audit-20260919/final-program/provider-audit.json",
+    "original_sha256": "5e831043af3ffde9e2d013db9ae94f96ea0d98e79b8b16e50f438fb390bfafff"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final-program/release-boundary.tsv",
+    "sha256": "897b265fae831dd8572a3334daefadacae6ce6243b73e745f7357d97dfaed733",
+    "original_path": "notes/compat-provider-audit-20260919/final-program/release-boundary.tsv",
+    "original_sha256": "897b265fae831dd8572a3334daefadacae6ce6243b73e745f7357d97dfaed733"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final-program/relocated-source-provenance.json",
+    "sha256": "aae8c2195df9c44f81db10a6503af8151de77db1efee673d63b223fa7cf55b41",
+    "original_path": "notes/compat-provider-audit-20260919/final-program/relocated-source-provenance.json",
+    "original_sha256": "aae8c2195df9c44f81db10a6503af8151de77db1efee673d63b223fa7cf55b41"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final-program/required-migration.tsv",
+    "sha256": "ebf57b22d08043447142f874662c351641bb78d8075d61e41fa7e2fee3c2725d",
+    "original_path": "notes/compat-provider-audit-20260919/final-program/required-migration.tsv",
+    "original_sha256": "ebf57b22d08043447142f874662c351641bb78d8075d61e41fa7e2fee3c2725d"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final-program/source-closeness-summary.md",
+    "sha256": "f440cdbcfd5657a385ddba22294f479276288c46e09bc14e1ce8b1a7c363a84d",
+    "original_path": "notes/compat-provider-audit-20260919/final-program/source-closeness-summary.md",
+    "original_sha256": "f440cdbcfd5657a385ddba22294f479276288c46e09bc14e1ce8b1a7c363a84d"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final-program/source-closeness.tsv.gz",
+    "sha256": "f821de8e17f72ae5610dd30b7db0e77d618a4e02317af2b01c0ab3b64a826003",
+    "original_path": "notes/compat-provider-audit-20260919/final-program/source-closeness.tsv",
+    "original_sha256": "1aea57fc2e43bd8dc61fb0c976744fff75c3dde8150fcbc5a2ee82033fedb86b"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final-program/symbol-providers.tsv.gz",
+    "sha256": "860f0f08af55f46bd4468d54d8b466d000553360b3766e538b704dd459b5f96a",
+    "original_path": "notes/compat-provider-audit-20260919/final-program/symbol-providers.tsv",
+    "original_sha256": "b371aa1626c55113f29d5b6427969c62c71be54d34d6e8581f3db60583200418"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/baseline-check.log.gz",
+    "sha256": "b8c0b3a2707fac71fe69768e30d7a20ad682f216cbd1d7eb45dc4ebf6b56cb14",
+    "original_path": "notes/compat-provider-audit-20260919/baseline-check.log",
+    "original_sha256": "d3f042d848d9abcfc74a2fa32a6b4d05c7cbcfdf55b7c9f8c8834cd2924c8ec4"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final-check.log.gz",
+    "sha256": "7afe093a776279a2f64d6b7801493130663761b3b5d401581d920168a17f8a10",
+    "original_path": "notes/compat-provider-audit-20260919/final-check.log",
+    "original_sha256": "0312b75ccab3f9248ec955cdd586aebd46f11a3b505c863b7119723ca93913a1"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/complete-check.log.gz",
+    "sha256": "6f30baa44a030d6063416e8f0549459a198ca7d724803ecd3cfc8a45a436c30b",
+    "original_path": "notes/compat-provider-audit-20260919/complete-check.log",
+    "original_sha256": "5b084f208b4dee8f8c1b70247fc9adc1e51a03a61fd0fbcd631290ad47aeff10"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/final-program-check.log.gz",
+    "sha256": "08b93c6248d488c6821d6a17089f463e0ef54baa8dcedb23320f0758e7b87fb6",
+    "original_path": "notes/compat-provider-audit-20260919/final-program-check.log",
+    "original_sha256": "53716ae8ef3f9eb544c70e00428439dd24e4997bf53936dad5943620be25c552"
+  },
+  {
+    "path": "notes/compat-provider-audit-20260919/duplicate-removal.md",
+    "sha256": "325931e7cae6ec3549e749bc2daf3dc8fd65c0f95fadb72171c8799d52ad6cb1"
+  }
+]

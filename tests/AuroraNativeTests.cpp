@@ -43,7 +43,6 @@
 #include "resource/BcsvTable.hpp"
 #include "resource/TplTexture.hpp"
 #include "scene/StageCollisionService.hpp"
-#include "scene/StageInitializationService.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 #include "compat/ActorMotionCompat.hpp"
@@ -818,32 +817,6 @@ namespace {
                 "an absent StarPiece group factory must not synthesize archive requests");
     }
 
-    void test_stage_host_preserves_placement_appearance_state() {
-        auto placement = smgpc::scene::StagePlacementObject{};
-        require(smgpc::scene::should_apply_host_appear(nullptr),
-                "an explicit non-placement stage root should retain the requested host-level appear pass");
-        require(!smgpc::scene::should_apply_host_appear(&placement),
-                "a placement root should retain the appeared/dead state chosen by its own initialization");
-        require(smgpc::scene::should_apply_host_appear(&placement, true),
-                "an explicit placement-backed root should still receive its requested host appear call");
-
-        auto explicit_root = LiveActor("explicit-root");
-        auto placement_root = LiveActor("placement-root");
-        if (smgpc::scene::should_apply_host_appear(nullptr)) {
-            explicit_root.makeActorAppeared();
-        }
-        if (smgpc::scene::should_apply_host_appear(&placement)) {
-            placement_root.makeActorAppeared();
-        }
-        auto explicit_placement_root = LiveActor("explicit-placement-root");
-        if (smgpc::scene::should_apply_host_appear(&placement, true)) {
-            explicit_placement_root.makeActorAppeared();
-        }
-        require(!MR::isDead(&explicit_root) && MR::isDead(&placement_root) &&
-                    !MR::isDead(&explicit_placement_root),
-                "the generic host appear policy should not revive a placement actor that initialized dead");
-    }
-
     void test_kcl_collision_service_queries_and_binder_resolution() {
         auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
         auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20);
@@ -1538,7 +1511,6 @@ int main(int argc, char** argv) {
         TestCase{"story-event spin entitlement boundary", test_story_event_spin_entitlement_boundary},
         TestCase{"StarPieceGroup factory absent without real director",
                  test_star_piece_group_factory_is_absent_without_real_director},
-        TestCase{"stage host preserves placement appearance state", test_stage_host_preserves_placement_appearance_state},
         TestCase{"KCL collision queries and binder resolution", test_kcl_collision_service_queries_and_binder_resolution},
         TestCase{"derived actor same-frame Binder ownership",
                  test_derived_actor_consumes_same_frame_binder_before_scheduler_returns},

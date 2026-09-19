@@ -1,0 +1,20 @@
+target("smg-pc-showcase")
+    set_kind("binary")
+    set_default(true)
+    set_group("applications")
+    set_rundir(os.projectdir())
+    on_run("build.run")
+    if is_plat("macosx") then
+        add_rules("xcode.application")
+        add_files("../app/Info.plist")
+        set_values("xcode.bundle_identifier", "org.petari.smg-pc.showcase")
+    end
+    add_files {
+        "Showcase.cpp",
+        "../../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-app",
+        "smg-pc-game",
+        "aurora-main"
+    }

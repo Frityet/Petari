@@ -1,0 +1,12 @@
+{
+  "main_sha256": "6fd4824a3217cb18bb7f6533936202a4854c6475a7fbef895176a2ba91ffbb43",
+  "main_shim_symbols": [],
+  "base_definitions": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-base.a:compat.cpp.o: 0000000000000010 T __ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE15_M_replace_coldEPcmPKcmm",
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-base.a:compat.cpp.o: 0000000000000000 T ___isoc23_strtol",
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-base.a:compat.cpp.o: 0000000000000004 T ___isoc23_strtoll",
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-base.a:compat.cpp.o: 0000000000000008 T ___isoc23_strtoul",
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-base.a:compat.cpp.o: 000000000000000c T ___isoc23_strtoull"
+  ],
+  "shim_source_sha256": "9e6e394f56ce9f9c08a02af598fa820a34bc4ab56ce9a2b480362bb056712d4b"
+}

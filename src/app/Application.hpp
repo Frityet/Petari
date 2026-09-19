@@ -1,25 +1,13 @@
 #pragma once
 
+#include "Logger.hpp"
+#include "RendererService.hpp"
+#include "resource/GameResourceRuntime.hpp"
+
 #include <filesystem>
-#include <memory>
 #include <optional>
 #include <string>
 #include <vector>
-
-#include "Logger.hpp"
-#include "RendererService.hpp"
-#include "ServiceProvider.hpp"
-#include "runtime/RuntimeContext.hpp"
-#include "runtime/RuntimeServices.hpp"
-#include "runtime/SceneScheduler.hpp"
-#include "scene/GameSystemSceneControllerService.hpp"
-#include "scene/GameSystemService.hpp"
-#include "scene/NameObjLifecycleService.hpp"
-#include "scene/SceneTransitionRequestService.hpp"
-#include "scene/SceneExecutionService.hpp"
-#include "scene/SceneLifecycleService.hpp"
-#include "scene/SequenceBootService.hpp"
-#include "scene/StageHostService.hpp"
 
 namespace smgpc::app {
 
@@ -32,63 +20,6 @@ namespace smgpc::app {
         resource::GameResourceBudget resource_budget = {};
     };
 
-    class IApplication {
-    public:
-        virtual ~IApplication() = default;
-        [[nodiscard]] virtual int run() = 0;
-    };
-
-    struct ServiceGraphOverrides {
-        std::unique_ptr<logging::ILogger> logger = {};
-        std::unique_ptr<render::AuroraWindow> window_service = {};
-        std::unique_ptr<render::AuroraRenderer> aurora_renderer = {};
-        std::unique_ptr<resource::GameResourceRuntime> resource_runtime = {};
-        std::unique_ptr<smgpc::runtime::RuntimeContext> runtime_context = {};
-        std::unique_ptr<smgpc::scene::GameSystemSceneControllerService> scene_controller = {};
-        std::unique_ptr<smgpc::scene::SceneTransitionRequestService> scene_transitions = {};
-        std::unique_ptr<smgpc::scene::StageHostService> stage_host = {};
-        std::unique_ptr<smgpc::scene::SequenceBootService> sequence_boot = {};
-        std::unique_ptr<smgpc::scene::GameSystemService> game_system = {};
-        std::unique_ptr<IApplication> application = {};
-    };
-
-    using ServiceGraph = di::ServiceProvider<
-        di::SingletonService<logging::ILogger>,
-        di::SingletonService<render::AuroraWindow>,
-        di::SingletonService<render::AuroraRenderer>,
-        di::SingletonService<resource::GameResourceRuntime>,
-        di::SingletonService<smgpc::runtime::RuntimeContext>,
-        di::SingletonService<smgpc::runtime::DvdFileSystemService>,
-        di::SingletonService<smgpc::runtime::WiiIosService>,
-        di::SingletonService<smgpc::runtime::WiiPlatformService>,
-        di::SingletonService<smgpc::runtime::OriginalDisplayLifetime>,
-        di::SingletonService<smgpc::runtime::WpadService>,
-        di::SingletonService<smgpc::runtime::AudioEventService>,
-        di::SingletonService<smgpc::runtime::EffectService>,
-        di::SingletonService<smgpc::runtime::StarPointerService>,
-        di::SingletonService<smgpc::runtime::CameraSystemService>,
-        di::SingletonService<smgpc::runtime::PlayerSystemService>,
-        di::SingletonService<smgpc::runtime::GameLayoutService>,
-        di::SingletonService<smgpc::runtime::RumbleService>,
-        di::SingletonService<smgpc::runtime::SequenceRequestService>,
-        di::SingletonService<smgpc::runtime::SaveDataService>,
-        di::SingletonService<smgpc::runtime::NandFileSystemService>,
-        di::SingletonService<smgpc::runtime::MessageService>,
-        di::SingletonService<smgpc::runtime::SceneLightService>,
-        di::SingletonService<smgpc::runtime::RflService>,
-        di::SingletonService<smgpc::runtime::SceneScheduler>,
-        di::SingletonService<smgpc::scene::NameObjLifecycleService>,
-        di::SingletonService<smgpc::scene::SceneExecutionService>,
-        di::SingletonService<smgpc::scene::SceneLifecycleService>,
-        di::SingletonService<smgpc::scene::GameSystemSceneControllerService>,
-        di::SingletonService<smgpc::scene::SceneTransitionRequestService>,
-        di::SingletonService<smgpc::scene::StageHostService>,
-        di::SingletonService<smgpc::scene::SequenceBootService>,
-        di::SingletonService<smgpc::scene::GameSystemService>,
-        di::SingletonService<IApplication>>;
-
-    [[nodiscard]] ServiceGraph build_service_graph(const BootstrapConfiguration &configuration);
-    [[nodiscard]] ServiceGraph build_service_graph(const BootstrapConfiguration &configuration, ServiceGraphOverrides &&overrides);
     [[nodiscard]] std::filesystem::path required_disc_image(const BootstrapConfiguration &configuration);
     void ensure_disc_image_open(const BootstrapConfiguration &configuration, logging::ILogger &logger);
     void close_disc_image();

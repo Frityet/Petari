@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+demo_bin_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+demo_log_dir="$HOME/Library/Logs/PetariDemo"
+mkdir -p "$demo_log_dir"
+demo_log="$demo_log_dir/movement-$(date +%Y%m%d-%H%M%S)-$$.log"
+exec >"$demo_log" 2>&1
+demo_disc=${SMGPC_DEMO_DISC:-@DISC@}
+if [ ! -r "$demo_disc" ]; then
+    printf 'Disc image is unavailable: %s\n' "$demo_disc"
+    /usr/bin/osascript -e 'display alert "Game disc unavailable" message "Restore the game disc to its original location, then reopen the demo." as critical' || true
+    exit 1
+fi
+# Relative runtime outputs go beside the log, never into the app or game disc.
+cd "$demo_log_dir"
+exec "$demo_bin_dir/@EXECUTABLE@" --stage HeavensDoorGalaxy --scenario 1 --disc "$demo_disc" "$@"

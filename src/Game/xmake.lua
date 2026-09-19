@@ -13,13 +13,6 @@ target("smg-pc-game")
     add_files("LiveActor/Binder.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("LiveActor/HitSensorInfo.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("Map/CollisionCategorizedKeeper.cpp", {cxxflags = "-ffp-contract=off"})
-    -- Original Player sources move into the normal archive as their native
-    -- provider dependencies become available.
-    -- Xmake's broad-remove/explicit-re-add order drops the re-added object from
-    -- the archive, so keep the provider-incomplete set explicit here.
-    remove_files {
-        "Player/MarioState.cpp",
-    }
     -- The retail source explicitly narrows its opaque host pointer to u32.
     -- Clang accepts this legacy cast in its extension mode; -fpermissive is GCC-only.
     add_files("Gravity/PlanetGravityManager.cpp", {
@@ -111,7 +104,6 @@ target("smg-pc-game")
     add_files("../compat/OriginalJPAFields.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("../compat/OriginalJPAEmitterInit.cpp", {cxxflags = "-ffp-contract=off"})
     add_files {
-        "../render/effects/JpcBillboard.cpp",
         "../render/effects/EffectResource.cpp",
         "../render/GXState.cpp",
         "../render/J3dAnimation.cpp",
@@ -142,7 +134,6 @@ target("smg-pc-game")
     add_headerfiles("../scene/**.hpp")
     add_headerfiles("../compat/**.hpp")
     add_headerfiles {
-        "../render/effects/JpcBillboard.hpp",
         "../render/effects/EffectResource.hpp",
         "../render/GXState.hpp",
         "../render/J3dAnimation.hpp",

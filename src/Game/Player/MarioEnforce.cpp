@@ -15,7 +15,7 @@
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/RailUtil.hpp"
 
-void FORCE_SCALE() {
+[[maybe_unused]] static void FORCE_SCALE() {
     TVec3f vec;
     vec.scale(1.0f);
 }

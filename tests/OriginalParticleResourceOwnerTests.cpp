@@ -1,3 +1,4 @@
+#include "compat/LanguageOwnership.hpp"
 #include "runtime/ParticleResourceOwnership.hpp"
 #include "runtime/ArchiveMountService.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -92,6 +93,9 @@ static void verify_authored(ParticleResourceOwnership& owner, smgpc::runtime::Ar
 }
 
 int main() {
+    // This standalone resource fixture uses the supplied Korean retail data.
+    // It does not create a GameSystem; publish its language explicitly.
+    const smgpc::compat::LanguageOwnership language("KrKorean");
     const char* disc = std::getenv("SMGPC_REAL_DISC");
     if (!disc || !aurora_dvd_open(disc)) throw std::runtime_error("SMGPC_REAL_DISC must name the actual supplied disc");
     struct DiscGuard { ~DiscGuard() { aurora_dvd_close(); } } disc_guard;

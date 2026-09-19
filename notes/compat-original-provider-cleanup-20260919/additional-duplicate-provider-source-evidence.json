@@ -1,0 +1,87 @@
+{
+  "warning_log": "baseline3-link.log",
+  "definitions": [
+    {
+      "symbol": "MR::startMovieEpilogueA",
+      "retained_provider": "src/Game/Screen/MoviePlayingSequence.cpp",
+      "donor": "decomp/src/Game/Screen/MoviePlayingSequence.cpp",
+      "retained_line": 484,
+      "donor_line": 483,
+      "exact_definition_matches_donor": true,
+      "definition_sha256": "f623d60dd884ee946b989e0aeb85ee69d0bd43219890da8ee1b2154d2887902e"
+    },
+    {
+      "symbol": "MR::startMovieEndingA",
+      "retained_provider": "src/Game/Screen/MoviePlayingSequence.cpp",
+      "donor": "decomp/src/Game/Screen/MoviePlayingSequence.cpp",
+      "retained_line": 488,
+      "donor_line": 487,
+      "exact_definition_matches_donor": true,
+      "definition_sha256": "330a5a6abc709c098642fa66c0d27f37c5e70e3b199d76088ff3bab0d4135a23"
+    },
+    {
+      "symbol": "MR::startMovieEndingB",
+      "retained_provider": "src/Game/Screen/MoviePlayingSequence.cpp",
+      "donor": "decomp/src/Game/Screen/MoviePlayingSequence.cpp",
+      "retained_line": 492,
+      "donor_line": 491,
+      "exact_definition_matches_donor": true,
+      "definition_sha256": "41e6e7670ecb0bbca79900675f3a94947cee0db36e9457b8f6484d5c979d4839"
+    },
+    {
+      "symbol": "MR::isEndMovieEpilogueA",
+      "retained_provider": "src/Game/Screen/MoviePlayingSequence.cpp",
+      "donor": "decomp/src/Game/Screen/MoviePlayingSequence.cpp",
+      "retained_line": 496,
+      "donor_line": 495,
+      "exact_definition_matches_donor": true,
+      "definition_sha256": "b303f2540c3834b8a6b2109dd7212afe742a494ceed53858602e1446c45dff4d"
+    },
+    {
+      "symbol": "MR::isEndMovieEndingA",
+      "retained_provider": "src/Game/Screen/MoviePlayingSequence.cpp",
+      "donor": "decomp/src/Game/Screen/MoviePlayingSequence.cpp",
+      "retained_line": 500,
+      "donor_line": 499,
+      "exact_definition_matches_donor": true,
+      "definition_sha256": "f4a738c5e67bb1acc388f2d677f994d4464733c47bff7e2d6b3c7dc1dbc60f80"
+    },
+    {
+      "symbol": "MR::isEndMovieEndingB",
+      "retained_provider": "src/Game/Screen/MoviePlayingSequence.cpp",
+      "donor": "decomp/src/Game/Screen/MoviePlayingSequence.cpp",
+      "retained_line": 504,
+      "donor_line": 503,
+      "exact_definition_matches_donor": true,
+      "definition_sha256": "f39e47719d2b9039b2e615443da832744f8ac7e18fbcf00c51f7accba387ccec"
+    },
+    {
+      "symbol": "MR::requestEffectStopSceneStart",
+      "retained_provider": "src/Game/Util/EffectUtil.cpp",
+      "donor": "decomp/src/Game/Util/EffectUtil.cpp",
+      "retained_line": 25,
+      "donor_line": 25,
+      "exact_definition_matches_donor": true,
+      "definition_sha256": "cecf5789d4b49869f356549be341d9bef2a4b98474a414336e51dd3d3e55d3c0"
+    },
+    {
+      "symbol": "MR::requestEffectStopSceneEnd",
+      "retained_provider": "src/Game/Util/EffectUtil.cpp",
+      "donor": "decomp/src/Game/Util/EffectUtil.cpp",
+      "retained_line": 29,
+      "donor_line": 29,
+      "exact_definition_matches_donor": true,
+      "definition_sha256": "e28a1838d328fe117968422bd3806ac90c9c2302478b86d9f3a33fb8312e7342"
+    },
+    {
+      "symbol": "MR::extractString",
+      "retained_provider": "src/Game/Util/StringUtil.cpp",
+      "donor": "decomp/src/Game/Util/StringUtil.cpp",
+      "retained_line": 206,
+      "donor_line": 189,
+      "exact_definition_matches_donor": true,
+      "definition_sha256": "62a9037420b71d582fdb2c53af3ae0cfbb95676c3d2bea7274d7f07cb339c43b"
+    }
+  ],
+  "verification": "Source-only before rebuild; does not establish movie playback support."
+}

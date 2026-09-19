@@ -15,19 +15,6 @@ target("smg-pc-title-probe")
     set_default(false)
     add_files {
         "TitleSequenceProbe.cpp",
-        "../../aurora/lib/compat.cpp"
-    }
-    add_deps {
-        "smg-pc-game",
-        "smg-pc-common"
-    }
-
-target("smg-pc-stage-construction-probe")
-    set_kind("binary")
-    set_default(false)
-    add_files {
-        "StageConstructionProbe.cpp",
-        "../../aurora/lib/compat.cpp"
     }
     add_deps {
         "smg-pc-game",

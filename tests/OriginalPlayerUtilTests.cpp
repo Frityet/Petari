@@ -1,7 +1,6 @@
 #include "OriginalPlayerUtilTests.hpp"
 
 #include "Game/Animation/XanimePlayer.hpp"
-#include <JSystem/JKernel/JKRHeap.hpp>
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/NPC/NPCActor.hpp"
@@ -17,7 +16,7 @@
 #include "Game/Util/PlayerUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "runtime/RuntimeContext.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageCollisionService.hpp"
 
 #include <cmath>
@@ -53,16 +52,30 @@ namespace smgpc::tests {
                 player.mPosition = position;
                 player.mUpVec = up;
             }};
-            auto npc = NPCActor("NPC float-height owner proof");
-            auto controller = TalkMessageCtrl(&npc, TVec3f{}, nullptr);
-            require(controller.mNodeCtrl != nullptr,
-                    "NPC float-height checks require the scene-owned talk controller node state");
-            npc.mMsgCtrl = &controller;
-            const auto clear_borrow = Restore{[&] { npc.mMsgCtrl = nullptr; }};
+            NPCActor* npc_owner = nullptr;
+            for (auto* object : compat::snapshot_name_obj_runtime_objects()) {
+                auto* candidate = dynamic_cast<NPCActor*>(object);
+                if (candidate && candidate->mMsgCtrl && candidate->mMsgCtrl->mNodeCtrl) {
+                    npc_owner = candidate;
+                    break;
+                }
+            }
+            require(npc_owner != nullptr,
+                    "NPC float-height checks require an actual placed NPC and initialized message-node owner");
+            auto& npc = *npc_owner;
+            auto& controller = *npc.mMsgCtrl;
+            const auto npc_position = npc.mPosition;
+            const auto talk_state = controller._18;
+            const auto talk_type = controller.mNodeCtrl->mMessageInfo.mTalkType;
+            const auto restore_npc = Restore{[&] {
+                npc.mPosition = npc_position;
+                controller._18 = talk_state;
+                controller.mNodeCtrl->mMessageInfo.mTalkType = talk_type;
+            }};
             controller._18 = 3U;
             controller.mNodeCtrl->mMessageInfo.mTalkType = 0U;
             npc.mPosition.zero();
-            player.mPosition.set(0.0F, 100.0F, 0.0F);
+            player.mPosition.set(0.0F, -100.0F, 0.0F);
             player.mUpVec.set(0.0F, 1.0F, 0.0F);
             TVec3f actual_up;
             MR::getPlayerUpVec(&actual_up);
@@ -74,11 +87,11 @@ namespace smgpc::tests {
             };
             require_offset(0.0F, 5.5F, "first talk-near rise must retain the retail 5.5 cap");
             require_offset(20.0F, 25.0F, "later talk-near rise must retain the decayed-plus-5.5 cap");
-            player.mPosition.y = 200.0F;
+            player.mPosition.y = -200.0F;
             require_offset(20.0F, 19.5F, "talk-near rise must exclude the strict 200-unit boundary");
-            player.mPosition.y = -50.0F;
+            player.mPosition.y = 50.0F;
             require_offset(20.0F, 19.5F, "talk-near rise must require positive separation along actual Mario up");
-            player.mPosition.y = 100.0F;
+            player.mPosition.y = -100.0F;
             player.mUpVec.set(0.0F, -1.0F, 0.0F);
             require_offset(20.0F, 19.5F, "changing actual Mario up must immediately change the NPC height predicate");
             player.mUpVec.set(0.0F, 1.0F, 0.0F);
@@ -230,30 +243,6 @@ namespace smgpc::tests {
             actor._924 = rush_sensor;
         }
 
-#ifndef NDEBUG
-        void verify_process_trace_ownership() {
-            auto& runtime = runtime::RuntimeContext::instance();
-            require(compat::current_jkr_allocation_domain() != nullptr,
-                    "trace ownership regression must emit from an actual Game allocation scope");
-            constexpr auto category = std::string_view{"original-player-utility-scene-heap-ownership-regression"};
-            constexpr auto name = std::string_view{"long-semantic-event-name-retained-after-scene-retirement"};
-            constexpr auto detail = std::string_view{"long-event-detail-must-use-process-storage-despite-the-active-original-Game-heap"};
-            runtime.emit_semantic_trace_event(category, name, detail);
-            const auto events = runtime.semantic_trace_events();
-            require(!events.empty(), "semantic trace must retain the emitted event");
-            const auto& event = events.back();
-            require(event.category == category && event.name == name && event.detail == detail &&
-                        event.stage_name == runtime.current_stage_name(),
-                    "semantic trace must preserve complete long strings and the current stage identity");
-            require(JKRHeap::findFromRoot(const_cast<void*>(static_cast<const void*>(events.data()))) == nullptr &&
-                        JKRHeap::findFromRoot(const_cast<char*>(event.category.data())) == nullptr &&
-                        JKRHeap::findFromRoot(const_cast<char*>(event.name.data())) == nullptr &&
-                        JKRHeap::findFromRoot(const_cast<char*>(event.detail.data())) == nullptr &&
-                        JKRHeap::findFromRoot(const_cast<char*>(event.stage_name.data())) == nullptr,
-                    "process trace vector and retained event strings must not belong to the emitting scene's Game heap");
-        }
-#endif
-
         void verify_control_reset(MarioActor& actor) {
             auto& mario = *actor.mMario;
             require(mario.mSwim != nullptr && mario.getAnimator()->mXanimePlayer != nullptr,
@@ -296,11 +285,9 @@ namespace smgpc::tests {
     void verify_original_player_util(MarioActor& actor) {
         require(actor.mMario != nullptr && MR::getMarioHolder()->getMarioActor() == &actor,
                 "player utility checks require the initialized actual MarioHolder owner");
-        const auto domain = compat::JkrAllocationScope(
-            runtime::RuntimeContext::instance().scheduler().allocation_domain());
-#ifndef NDEBUG
-        verify_process_trace_ownership();
-#endif
+        const auto owner = scene::current_scene_allocation_domain();
+        require(owner != nullptr, "player utility checks require the actual original scene allocation owner");
+        const compat::JkrAllocationScope allocation(owner);
         verify_live_vectors(actor);
         verify_npc_float_uses_actual_player(actor);
         verify_translation(actor);

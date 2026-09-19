@@ -1139,10 +1139,6 @@ namespace smgpc::runtime {
             }
         }
 #endif
-        if (auto *runtime = RuntimeContext::try_instance()) {
-            const auto &camera_pose = runtime->last_camera_pose();
-            runtime->effects().draw(draw_type, camera_pose.has_value() ? &*camera_pose : nullptr);
-        }
     }
 
 #ifndef NDEBUG

@@ -1,3 +1,4 @@
+#include "compat/LanguageOwnership.hpp"
 #include "Game/Effect/AutoEffectGroup.hpp"
 #include "Game/Effect/AutoEffectGroupHolder.hpp"
 #include "Game/Effect/AutoEffectInfo.hpp"
@@ -137,6 +138,9 @@ struct GroupBatch {
 
 int main() {
     try {
+        // This standalone resource fixture uses the supplied Korean retail data.
+        // It does not create a GameSystem; publish its language explicitly.
+        const smgpc::compat::LanguageOwnership language("KrKorean");
         bool unbound_rejected = false;
         try { MR::Effect::getAutoEffectListBinary(); }
         catch (const std::logic_error&) { unbound_rejected = true; }

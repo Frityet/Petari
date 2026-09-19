@@ -70,6 +70,8 @@ namespace smgpc::scene::nameobj {
     [[nodiscard]] NameObjCreatorSupport describe_model_changing_creator_support(std::string_view object_name);
     [[nodiscard]] std::unique_ptr<NameObj> create_model_changing_name_obj(std::string_view object_name, const char *actor_name);
     [[nodiscard]] bool can_create_name_obj(std::string_view object_name);
+    // Original factory/catalog membership is independent of native closure.
+    [[nodiscard]] bool original_name_obj_registered(std::string_view object_name);
     [[nodiscard]] NameObjSceneVisualKind scene_visual_kind(std::string_view object_name);
     [[nodiscard]] NameObjCreatorSupport describe_name_obj_creator_support(std::string_view object_name);
     [[nodiscard]] NameObjPlacementSupport describe_name_obj_placement_support(smgpc::runtime::DvdFileSystemService &dvd,

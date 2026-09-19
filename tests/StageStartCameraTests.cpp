@@ -17,10 +17,8 @@
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
-#include "scene/StageHostService.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "scene/StagePlacementResolver.hpp"
-#include "scene/SceneTransitionRequestService.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 
 #include <aurora/dvd.h>
@@ -600,9 +598,7 @@ namespace {
         camera.clear_game_camera_pose();
         require(!camera.effective_camera_pose().has_value(), "clearing a stage should release its game camera pose");
 
-        const auto host_request = smgpc::scene::StageHostRequest{};
-        require(host_request.start_id == 0 && host_request.start_zone_id == 0,
-                "stage requests should preserve the original default start ID and root zone");
+
     }
 
     void test_runaway_tico_start_camera_handoff() {

@@ -1,0 +1,63 @@
+{
+  "MarioState_whole_file_exact": true,
+  "method_equivalence": [
+    {
+      "native": "src/compat/GameActorPhysicsCompat.cpp",
+      "donor": "decomp/src/Game/Util/LiveActorUtil.cpp",
+      "method": "void onCalcGravity(",
+      "exact_normalized": true
+    },
+    {
+      "native": "src/compat/GameActorPhysicsCompat.cpp",
+      "donor": "decomp/src/Game/Util/LiveActorUtil.cpp",
+      "method": "void offCalcGravity(",
+      "exact_normalized": true
+    },
+    {
+      "native": "src/compat/LiveActorUtilCompat.cpp",
+      "donor": "decomp/src/Game/Util/LiveActorUtil.cpp",
+      "method": "f32 calcNerveEaseInRate(",
+      "exact_normalized": true
+    },
+    {
+      "native": "src/Game/Player/MarioWait.cpp",
+      "donor": "decomp/src/Game/Player/MarioWait.cpp",
+      "method": "void MarioState::hitPoly(",
+      "exact_normalized": true
+    },
+    {
+      "native": "src/Game/Player/MarioWait.cpp",
+      "donor": "decomp/src/Game/Player/MarioWait.cpp",
+      "method": "bool MarioState::keep(",
+      "exact_normalized": true
+    },
+    {
+      "native": "src/Game/Player/MarioWait.cpp",
+      "donor": "decomp/src/Game/Player/MarioWait.cpp",
+      "method": "bool MarioState::notice(",
+      "exact_normalized": true
+    },
+    {
+      "native": "src/Game/Player/MarioWait.cpp",
+      "donor": "decomp/src/Game/Player/MarioWait.cpp",
+      "method": "void MarioState::init(",
+      "exact_normalized": true
+    },
+    {
+      "native": "src/Game/Player/MarioActorSpecialDraw.cpp",
+      "donor": "decomp/src/Game/Player/MarioActorSpecialDraw.cpp",
+      "method": "f32 MarioState::getBlurOffset(",
+      "exact_normalized": true
+    },
+    {
+      "native": "src/Game/Player/Mario.cpp",
+      "donor": "decomp/src/Game/Player/Mario.cpp",
+      "method": "void MarioState::draw3D(",
+      "exact_normalized": true
+    }
+  ],
+  "removed_providers": {
+    "src/compat/MarioStateCompat.cpp": true,
+    "src/compat/MarioStateAccessCompat.cpp": true
+  }
+}

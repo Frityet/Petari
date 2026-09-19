@@ -11,8 +11,16 @@ target("smg-pc-app")
 
 target("smg-pc")
     set_kind("binary")
+    set_default(true)
+    set_group("applications")
+    set_rundir(os.projectdir())
+    on_run("build.run")
+    if is_plat("macosx") then
+        add_rules("xcode.application")
+        add_files("Info.plist")
+        set_values("xcode.bundle_identifier", "org.petari.smg-pc.game")
+    end
     add_files("main.cpp")
-    add_files("../../aurora/lib/compat.cpp")
     add_headerfiles("**.hpp")
     add_deps {
         "smg-pc-app",

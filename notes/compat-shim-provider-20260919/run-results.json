@@ -1,0 +1,42 @@
+[
+  {
+    "target": "smg-pc-original-actor-utility-tests",
+    "pid": 9400,
+    "exit": 0,
+    "timed_out": false,
+    "reaped": true,
+    "seconds": 0.4343436670023948,
+    "binary_sha256": "374d583ef6184c894ce57ac519c087c9dad72626bc751a3f5056bd389e65ce31",
+    "log": "notes/compat-shim-provider-20260919/smg-pc-original-actor-utility-tests.log"
+  },
+  {
+    "target": "smg-pc-original-placement-coverage-tests",
+    "pid": 9401,
+    "exit": 0,
+    "timed_out": false,
+    "reaped": true,
+    "seconds": 0.41930883401073515,
+    "binary_sha256": "a843c9e8d7ca383d0127fb98e22e6fa3d1f27185fe166daa235e367782cb0632",
+    "log": "notes/compat-shim-provider-20260919/smg-pc-original-placement-coverage-tests.log"
+  },
+  {
+    "target": "smg-pc-original-scene-execution-owner-tests",
+    "pid": 9404,
+    "exit": 0,
+    "timed_out": false,
+    "reaped": true,
+    "seconds": 0.4175540000433102,
+    "binary_sha256": "79188e38cad29cd91872b52972994385ccabbadb7954c43eca435e8f9c6bf979",
+    "log": "notes/compat-shim-provider-20260919/smg-pc-original-scene-execution-owner-tests.log"
+  },
+  {
+    "target": "smg-pc-original-process-player-owner-tests",
+    "pid": 9405,
+    "exit": 0,
+    "timed_out": false,
+    "reaped": true,
+    "seconds": 7.117223875015043,
+    "binary_sha256": "6b016be040e3231150077742cb2e9b802bdbf7ede7b335938afe218ff71c5768",
+    "log": "notes/compat-shim-provider-20260919/smg-pc-original-process-player-owner-tests.log"
+  }
+]

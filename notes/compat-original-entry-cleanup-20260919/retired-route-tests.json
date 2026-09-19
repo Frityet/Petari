@@ -1,0 +1,15 @@
+[
+  "tests/GatewayDemoSceneTests.cpp",
+  "tests/GatewaySpinCheckpointTests.cpp",
+  "tests/TitleFileSelectRouteTests.cpp",
+  "tests/FileSelectFarVisualTests.cpp",
+  "tests/TitleFileSelectVisualTests.cpp",
+  "tests/StageInitializationResourceTests.cpp",
+  "tests/MarioGatewayWalkTests.cpp",
+  "tests/PlanetMapActorRouteTests.cpp",
+  "tests/AirActorRouteTests.cpp",
+  "tests/InformationObserverTests.cpp",
+  "tests/SkyActorRouteTests.cpp",
+  "tests/BrightSunRouteTests.cpp",
+  "tests/GatewayDemoSceneTestSupport.hpp"
+]

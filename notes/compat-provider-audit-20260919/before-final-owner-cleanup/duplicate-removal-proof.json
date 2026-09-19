@@ -1,0 +1,107 @@
+[
+  {
+    "compat": "src/compat/OriginalLayoutPaneQueries.cpp",
+    "canonical": "src/Game/Util/LayoutUtil.cpp",
+    "donor": "decomp/src/Game/Util/LayoutUtil.cpp",
+    "anchor": "void createAndAddGroupCtrl(",
+    "compat_tokens_equal_canonical": true,
+    "canonical_tokens_equal_donor": true,
+    "tokens_sha256": [
+      "88d2d4116af2f5cc8191e79b2a44b708370941e74c795e79ae590566a1ac087b",
+      "88d2d4116af2f5cc8191e79b2a44b708370941e74c795e79ae590566a1ac087b",
+      "88d2d4116af2f5cc8191e79b2a44b708370941e74c795e79ae590566a1ac087b"
+    ]
+  },
+  {
+    "compat": "src/compat/OriginalLayoutPaneQueries.cpp",
+    "canonical": "src/Game/Util/LayoutUtil.cpp",
+    "donor": "decomp/src/Game/Util/LayoutUtil.cpp",
+    "anchor": "nw4r::lyt::Pane* getRootPane(",
+    "compat_tokens_equal_canonical": true,
+    "canonical_tokens_equal_donor": true,
+    "tokens_sha256": [
+      "25850d841439ca6abb8c803d83847f2404ae9971493997f04c8693b73783f581",
+      "25850d841439ca6abb8c803d83847f2404ae9971493997f04c8693b73783f581",
+      "25850d841439ca6abb8c803d83847f2404ae9971493997f04c8693b73783f581"
+    ]
+  },
+  {
+    "compat": "src/compat/OriginalLayoutPaneQueries.cpp",
+    "canonical": "src/Game/Util/LayoutUtil.cpp",
+    "donor": "decomp/src/Game/Util/LayoutUtil.cpp",
+    "anchor": "void copyPaneRotate(",
+    "compat_tokens_equal_canonical": true,
+    "canonical_tokens_equal_donor": true,
+    "tokens_sha256": [
+      "dc1666e9e993026bcb0a177235f4bcaf4da00c818b6cc3d36ca802ef56b74b77",
+      "dc1666e9e993026bcb0a177235f4bcaf4da00c818b6cc3d36ca802ef56b74b77",
+      "dc1666e9e993026bcb0a177235f4bcaf4da00c818b6cc3d36ca802ef56b74b77"
+    ]
+  },
+  {
+    "compat": "src/compat/OriginalLayoutPaneQueries.cpp",
+    "canonical": "src/Game/Screen/LayoutCoreUtil.cpp",
+    "donor": "decomp/src/Game/Screen/LayoutCoreUtil.cpp",
+    "anchor": "void convertPaneLocalPosToScreenPos(",
+    "compat_tokens_equal_canonical": false,
+    "canonical_tokens_equal_donor": true,
+    "tokens_sha256": [
+      "aae2521b92f0d92ac6cd274fd5f0a42e071a344ebfb04ca256272cdbe4d34559",
+      "8ee5dcd45dc2f0a955fe61c7ad695b339fd6f3dbbcc296761fb86e2629461a26",
+      "8ee5dcd45dc2f0a955fe61c7ad695b339fd6f3dbbcc296761fb86e2629461a26"
+    ],
+    "token_diff": "  void   convertPaneLocalPosToScreenPos   (   TVec2f   *   pScreenPos   ,   const   nw4r   ::   lyt   ::   Pane   *   pPane   ,   const   TVec2f   &   rLocalPos   )   {   TVec3f   pos   (   rLocalPos   )   ;   TVec3f   layoutPos   ;   PSMTXMultVec   (   pPane   ->   mGlbMtx - . - m   ,   pos   ,   layoutPos   )   ;   convertLayoutPosToScreenPos   (   pScreenPos   ,   layoutPos   )   ;   }"
+  },
+  {
+    "compat": "src/compat/J3DModelXDrawCompat.cpp",
+    "canonical": "src/Game/Player/MarioActorDraw.cpp",
+    "donor": "decomp/src/Game/Player/MarioActorDraw.cpp",
+    "anchor": "void J3DModelX::copyExtraMtxBuffer(",
+    "compat_tokens_equal_canonical": true,
+    "canonical_tokens_equal_donor": true,
+    "tokens_sha256": [
+      "c7a1cb0f18a821ce43b41f4041218d564c37a1e3286cbb83e40a890ff15b85df",
+      "c7a1cb0f18a821ce43b41f4041218d564c37a1e3286cbb83e40a890ff15b85df",
+      "c7a1cb0f18a821ce43b41f4041218d564c37a1e3286cbb83e40a890ff15b85df"
+    ]
+  },
+  {
+    "compat": "src/compat/J3DModelXDrawCompat.cpp",
+    "canonical": "src/Game/Player/MarioActorDraw.cpp",
+    "donor": "decomp/src/Game/Player/MarioActorDraw.cpp",
+    "anchor": "void J3DModelX::swapDrawBuffer(",
+    "compat_tokens_equal_canonical": true,
+    "canonical_tokens_equal_donor": true,
+    "tokens_sha256": [
+      "dca1511d5b48cad5812a35cd134847d26a089baa931bd12719cd61d9ba3aefc3",
+      "dca1511d5b48cad5812a35cd134847d26a089baa931bd12719cd61d9ba3aefc3",
+      "dca1511d5b48cad5812a35cd134847d26a089baa931bd12719cd61d9ba3aefc3"
+    ]
+  },
+  {
+    "compat": "src/compat/J3DModelXDrawCompat.cpp",
+    "canonical": "src/Game/Player/MarioActorDraw.cpp",
+    "donor": "decomp/src/Game/Player/MarioActorDraw.cpp",
+    "anchor": "void J3DModelX::setDynamicDL(",
+    "compat_tokens_equal_canonical": true,
+    "canonical_tokens_equal_donor": true,
+    "tokens_sha256": [
+      "c38b5686c44f84695517d7d08031fddf7f4cb4a294849b6bbe3b755b9bfd51be",
+      "c38b5686c44f84695517d7d08031fddf7f4cb4a294849b6bbe3b755b9bfd51be",
+      "c38b5686c44f84695517d7d08031fddf7f4cb4a294849b6bbe3b755b9bfd51be"
+    ]
+  },
+  {
+    "compat": "src/compat/OriginalMarioAnimationAccess.cpp",
+    "canonical": "src/Game/Player/MarioAccess.cpp",
+    "donor": "decomp/src/Game/Player/MarioAccess.cpp",
+    "anchor": "void changeAnimationE(const char* pAnimName, const char* pChar2)",
+    "compat_tokens_equal_canonical": true,
+    "canonical_tokens_equal_donor": true,
+    "tokens_sha256": [
+      "20dfe1f2644c1332794fb275eeaa305e4cb0b8478b7c66403b13f2f7ec7df304",
+      "20dfe1f2644c1332794fb275eeaa305e4cb0b8478b7c66403b13f2f7ec7df304",
+      "20dfe1f2644c1332794fb275eeaa305e4cb0b8478b7c66403b13f2f7ec7df304"
+    ]
+  }
+]

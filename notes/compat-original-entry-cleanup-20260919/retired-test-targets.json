@@ -1,0 +1,15 @@
+[
+  "smg-pc-gateway-demo-scene-tests",
+  "smg-pc-information-observer-tests",
+  "smg-pc-gateway-spin-checkpoint-tests",
+  "smg-pc-mario-gateway-walk-tests",
+  "smg-pc-jpc-billboard-tests",
+  "smg-pc-sky-actor-route-tests",
+  "smg-pc-air-actor-route-tests",
+  "smg-pc-title-file-select-visual-tests",
+  "smg-pc-planet-map-actor-route-tests",
+  "smg-pc-bright-sun-route-tests",
+  "smg-pc-file-select-far-visual-tests",
+  "smg-pc-title-file-select-route-tests",
+  "smg-pc-stage-initialization-resource-tests"
+]

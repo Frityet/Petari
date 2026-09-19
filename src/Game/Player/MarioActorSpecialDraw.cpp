@@ -814,3 +814,7 @@ void MarioActor::drawSpinEffect() const {
     }
     TDDraw::close();
 }
+
+f32 MarioState::getBlurOffset() const {
+    return 0.0f;
+}

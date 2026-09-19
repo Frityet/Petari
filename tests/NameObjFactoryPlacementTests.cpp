@@ -31,7 +31,7 @@
 #include "scene/PlacementZoneScope.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageCollisionService.hpp"
-#include "scene/StageInitializationService.hpp"
+#include "scene/StagePlacementPreflight.hpp"
 #include "scene/StagePlacementResolver.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 

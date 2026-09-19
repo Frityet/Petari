@@ -1,7 +1,22 @@
 set_project("smg-pc")
-set_xmakever("3.0.0")
+set_xmakever("3.1.0")
+set_defaultmode("debug")
+set_policy("run.autobuild", true)
+-- Explicit `xmake f` options take precedence over these project defaults.
+set_config("toolchain", "llvm")
+set_config("runtimes", "c++_shared")
+if is_plat("macosx") or (not get_config("plat") and is_host("macosx")) then
+    set_config("target_minver", "26.0")
+end
+-- Build only the game and its dependency closure by default.
+set_default(false)
 
 add_repositories("local-repo $(projectdir)")
+
+option("disc")
+    set_showmenu(true)
+    set_description("Local game disc image used by xmake run")
+option_end()
 
 option("optimize_debug")
     set_default(true)
@@ -33,10 +48,6 @@ if is_plat("macosx", "iphoneos", "linux", "mingw") then
     end
 end
 includes("scripts")
-
-if not is_mode("debug") then
-    add_defines("NDEBUG")
-end
 
 if is_mode("debug") then
     add_defines("SMGPC_DEBUG_BUILD")

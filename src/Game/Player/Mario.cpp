@@ -2084,3 +2084,6 @@ void Mario::updateLookOfs() {
     combinedOffset += _154;
     _13C = combinedOffset;
 }
+
+void MarioState::draw3D() const {
+}

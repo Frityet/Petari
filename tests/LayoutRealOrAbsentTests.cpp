@@ -1,3 +1,4 @@
+#include "compat/LanguageOwnership.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Screen/LayoutManager.hpp"
 #include "layout/LayoutHost.hpp"
@@ -54,6 +55,9 @@ void require_unavailable(const std::function<void()>& operation, std::string_vie
 }  // namespace
 
 int main() {
+    // This standalone resource fixture uses the supplied Korean retail data.
+    // It does not create a GameSystem; publish its language explicitly.
+    const smgpc::compat::LanguageOwnership language("KrKorean");
     auto passed = 0;
 
     auto entries = std::vector<smgpc::resource::RarcEntry>{
@@ -145,11 +149,6 @@ int main() {
 
     require_unavailable([&] { (void)smgpc::layout::is_layout_actor_dead(nullptr); },
                         "a null LayoutActor must not be reported as an ordinary dead retail actor");
-    require_unavailable([&] { runtime.initEffectKeeper(1, "LayoutEffect", nullptr); },
-                        "layout-runtime effect initialization requires an active real RuntimeContext");
-    auto ownerless_runtime = smgpc::layout::LayoutRuntime("", "DefinitelyMissingLayout", 1U, 0);
-    require_unavailable([&] { ownerless_runtime.initEffectKeeper(1, "LayoutEffect", nullptr); },
-                        "layout-runtime effect initialization requires a real named effect owner");
     ++passed;
 
     auto actor = LayoutActor("uninitialized-layout-actor", true);

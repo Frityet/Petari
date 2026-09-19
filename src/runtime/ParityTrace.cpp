@@ -142,45 +142,6 @@ namespace smgpc::runtime {
             return "Unknown";
         }
 
-        [[nodiscard]] const char *effect_event_kind_name(EffectEventKind kind) {
-            switch (kind) {
-            case EffectEventKind::Emit:
-                return "Emit";
-            case EffectEventKind::Delete:
-                return "Delete";
-            case EffectEventKind::DeleteAll:
-                return "DeleteAll";
-            }
-
-            return "Unknown";
-        }
-
-        [[nodiscard]] const char *effect_keeper_host_kind_name(EffectKeeperHostKind kind) {
-            switch (kind) {
-            case EffectKeeperHostKind::LiveActor:
-                return "LiveActor";
-            case EffectKeeperHostKind::LayoutActor:
-                return "LayoutActor";
-            case EffectKeeperHostKind::SimpleLayout:
-                return "SimpleLayout";
-            }
-
-            return "Unknown";
-        }
-
-        [[nodiscard]] const char *effect_host_binding_source_name(EffectHostBindingSource source) {
-            switch (source) {
-            case EffectHostBindingSource::LiveActorBaseMatrix:
-                return "LiveActorBaseMatrix";
-            case EffectHostBindingSource::LayoutActorTransform:
-                return "LayoutActorTransform";
-            case EffectHostBindingSource::SimpleLayoutOrigin:
-                return "SimpleLayoutOrigin";
-            }
-
-            return "Unknown";
-        }
-
         [[nodiscard]] const char *wipe_event_kind_name(WipeEventKind kind) {
             switch (kind) {
             case WipeEventKind::Open:
@@ -929,309 +890,6 @@ namespace smgpc::runtime {
             return out;
         }
 
-        [[nodiscard]] Json effect_texture_metadata_json(const smgpc::render::effects::JpcTextureMetadata &texture) {
-            return Json{
-                {"index", texture.index},
-                {"name", texture.name},
-                {"width", texture.width},
-                {"height", texture.height},
-                {"format", texture_format_name(texture.format)},
-                {"format_raw", static_cast<std::uint32_t>(texture.format)},
-                {"wrap_s", texture.wrap_s},
-                {"wrap_t", texture.wrap_t},
-                {"min_filter", texture.min_filter},
-                {"mag_filter", texture.mag_filter},
-            };
-        }
-
-        [[nodiscard]] Json effect_texture_metadata_json(std::span<const smgpc::render::effects::JpcTextureMetadata> textures) {
-            auto out = Json::array();
-            for (const auto &texture : textures) {
-                out.push_back(effect_texture_metadata_json(texture));
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json effect_resource_block_tags_json(const smgpc::render::effects::JpcResourceMetadata *resource) {
-            auto out = Json::array();
-            if (resource == nullptr) {
-                return out;
-            }
-            for (const auto &tag : resource->block_tags) {
-                out.push_back(tag);
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json effect_dynamics_json(const smgpc::render::effects::JpcResourceMetadata *resource) {
-            if (resource == nullptr || !resource->dynamics.has_value()) {
-                return nullptr;
-            }
-
-            const auto &dynamics = *resource->dynamics;
-            return Json{
-                {"flags", dynamics.flags},
-                {"volume_type", dynamics.volume_type},
-                {"fixed_density", dynamics.fixed_density},
-                {"fixed_interval", dynamics.fixed_interval},
-                {"inherit_scale", dynamics.inherit_scale},
-                {"follow_emitter", dynamics.follow_emitter},
-                {"follow_emitter_child", dynamics.follow_emitter_child},
-                {"rate", dynamics.rate},
-                {"rate_random", dynamics.rate_random},
-                {"lifetime_random", dynamics.lifetime_random},
-                {"start_frame", dynamics.start_frame},
-                {"max_frame", dynamics.max_frame},
-                {"lifetime", dynamics.lifetime},
-                {"volume_size", dynamics.volume_size},
-                {"div_number", dynamics.div_number},
-                {"rate_step", dynamics.rate_step},
-            };
-        }
-
-        [[nodiscard]] Json effect_base_shape_json(const smgpc::render::effects::JpcResourceMetadata *resource) {
-            if (resource == nullptr || !resource->base_shape.has_value()) {
-                return nullptr;
-            }
-
-            const auto &base_shape = *resource->base_shape;
-            return Json{
-                {"flags", base_shape.flags},
-                {"shape_type", base_shape.shape_type},
-                {"direction_type", base_shape.direction_type},
-                {"rotation_type", base_shape.rotation_type},
-                {"base_plane_type", base_shape.base_plane_type},
-                {"base_size_x", base_shape.base_size_x},
-                {"base_size_y", base_shape.base_size_y},
-                {"texture_flags", base_shape.texture_flags},
-                {"texture_count", base_shape.texture_count},
-                {"texture_slot", base_shape.texture_slot},
-                {"texture_coordinate_animation", base_shape.texture_coordinate_animation},
-                {"blend_mode_config", base_shape.blend_mode_config},
-                {"alpha_compare_config", base_shape.alpha_compare_config},
-                {"alpha_ref0", base_shape.alpha_ref0},
-                {"alpha_ref1", base_shape.alpha_ref1},
-                {"z_mode_config", base_shape.z_mode_config},
-                {"prm_color", Json::array({base_shape.prm_color[0U], base_shape.prm_color[1U], base_shape.prm_color[2U], base_shape.prm_color[3U]})},
-                {"env_color", Json::array({base_shape.env_color[0U], base_shape.env_color[1U], base_shape.env_color[2U], base_shape.env_color[3U]})},
-            };
-        }
-
-        [[nodiscard]] Json effect_child_shape_json(const smgpc::render::effects::JpcResourceMetadata *resource) {
-            if (resource == nullptr || !resource->child_shape.has_value()) {
-                return nullptr;
-            }
-
-            const auto &child_shape = *resource->child_shape;
-            return Json{
-                {"flags", child_shape.flags},
-                {"shape_type", child_shape.shape_type},
-                {"direction_type", child_shape.direction_type},
-                {"rotation_type", child_shape.rotation_type},
-                {"base_plane_type", child_shape.base_plane_type},
-                {"position_random", child_shape.position_random},
-                {"base_velocity", child_shape.base_velocity},
-                {"base_velocity_random", child_shape.base_velocity_random},
-                {"velocity_inherit_rate", child_shape.velocity_inherit_rate},
-                {"gravity", child_shape.gravity},
-                {"scale_x", child_shape.scale_x},
-                {"scale_y", child_shape.scale_y},
-                {"inherit_scale", child_shape.inherit_scale},
-                {"inherit_alpha", child_shape.inherit_alpha},
-                {"inherit_rgb", child_shape.inherit_rgb},
-                {"prm_color", Json::array({child_shape.prm_color[0U], child_shape.prm_color[1U], child_shape.prm_color[2U], child_shape.prm_color[3U]})},
-                {"env_color", Json::array({child_shape.env_color[0U], child_shape.env_color[1U], child_shape.env_color[2U], child_shape.env_color[3U]})},
-                {"timing", child_shape.timing},
-                {"lifetime", child_shape.lifetime},
-                {"rate", child_shape.rate},
-                {"step", child_shape.step},
-                {"texture_slot", child_shape.texture_slot},
-                {"rotation_speed", child_shape.rotation_speed},
-            };
-        }
-
-        [[nodiscard]] Json effect_key_blocks_json(const smgpc::render::effects::JpcResourceMetadata *resource) {
-            auto out = Json::array();
-            if (resource == nullptr) {
-                return out;
-            }
-
-            for (const auto &key_block : resource->key_blocks) {
-                auto keys = Json::array();
-                for (const auto &key : key_block.keys) {
-                    keys.push_back(Json{
-                        {"time", key.time},
-                        {"value", key.value},
-                        {"tangent_in", key.tangent_in},
-                        {"tangent_out", key.tangent_out},
-                    });
-                }
-                out.push_back(Json{
-                    {"id", key_block.id},
-                    {"loop", key_block.loop},
-                    {"key_count", key_block.keys.size()},
-                    {"keys", std::move(keys)},
-                });
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json resolved_effect_resources_json(std::span<const smgpc::render::effects::ResolvedEffectResource> resources) {
-            auto out = Json::array();
-            for (const auto &resource : resources) {
-                out.push_back(Json{
-                    {"requested_name", resource.requested_name},
-                    {"particle_name", resource.particle_name},
-                    {"user_index", resource.user_index},
-                    {"auto_effect_group_name", resource.auto_effect_group_name},
-                    {"auto_effect_unique_name", resource.auto_effect_unique_name},
-                    {"auto_effect_parent_name", resource.auto_effect_parent_name},
-                    {"auto_effect_joint_name", resource.auto_effect_joint_name},
-                    {"auto_effect_draw_order", resource.auto_effect_draw_order},
-                    {"field_block_count", resource.resource != nullptr ? resource.resource->field_block_count : 0U},
-                    {"key_block_count", resource.resource != nullptr ? resource.resource->key_block_count : 0U},
-                    {"texture_reference_count", resource.resource != nullptr ? resource.resource->texture_reference_count : 0U},
-                    {"block_tags", effect_resource_block_tags_json(resource.resource)},
-                    {"dynamics", effect_dynamics_json(resource.resource)},
-                    {"base_shape", effect_base_shape_json(resource.resource)},
-                    {"child_shape", effect_child_shape_json(resource.resource)},
-                    {"key_blocks", effect_key_blocks_json(resource.resource)},
-                    {"textures", effect_texture_metadata_json(resource.textures)},
-                });
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json effect_keeper_registration_json(const EffectKeeperRegistration &keeper) {
-            return Json{
-                {"host_kind", effect_keeper_host_kind_name(keeper.host_kind)},
-                {"host_name", keeper.host_name},
-                {"resource_group_name", keeper.resource_group_name},
-                {"requested_capacity", keeper.requested_capacity},
-                {"sort_enabled", keeper.sort_enabled},
-                {"frame_index", keeper.frame_index},
-            };
-        }
-
-        [[nodiscard]] Json effect_keeper_registration_json(const std::optional<EffectKeeperRegistration> &keeper) {
-            return keeper.has_value() ? effect_keeper_registration_json(*keeper) : Json(nullptr);
-        }
-
-        [[nodiscard]] Json effect_host_binding_json(const EffectHostBinding &binding) {
-            return Json{
-                {"host_kind", effect_keeper_host_kind_name(binding.host_kind)},
-                {"source", effect_host_binding_source_name(binding.source)},
-                {"host_name", binding.host_name},
-                {"matrix", float_array_json(binding.matrix)},
-                {"translation", Json::array({binding.translation[0U], binding.translation[1U], binding.translation[2U]})},
-                {"host_dead", binding.host_dead},
-                {"frame_index", binding.frame_index},
-            };
-        }
-
-        [[nodiscard]] Json effect_host_binding_json(const std::optional<EffectHostBinding> &binding) {
-            return binding.has_value() ? effect_host_binding_json(*binding) : Json(nullptr);
-        }
-
-        [[nodiscard]] Json registered_effect_keepers_json(const EffectService &effects) {
-            auto out = Json::array();
-            const auto keepers = effects.registered_keepers();
-            for (auto i = std::size_t{}; i < keepers.size(); ++i) {
-                auto keeper = effect_keeper_registration_json(keepers[i]);
-                keeper["index"] = i;
-                out.push_back(std::move(keeper));
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json effect_events_json(std::span<const EffectEvent> events) {
-            auto out = Json::array();
-            for (auto i = std::size_t{}; i < events.size(); ++i) {
-                const auto &event = events[i];
-                out.push_back(Json{
-                    {"index", i},
-                    {"kind", effect_event_kind_name(event.kind)},
-                    {"actor_name", event.actor_name},
-                    {"effect_name", event.effect_name},
-                    {"frame_index", event.frame_index},
-                    {"keeper", effect_keeper_registration_json(event.keeper)},
-                    {"resolved_resources", resolved_effect_resources_json(event.resolved_resources)},
-                });
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json effect_particle_instance_json(const JpcEffectParticleInstance &particle, std::size_t index) {
-            return Json{
-                {"index", index},
-                {"id", particle.id},
-                {"age", particle.age},
-                {"lifetime", particle.lifetime},
-                {"child", particle.child},
-                {"position", Json::array({particle.x, particle.y, particle.z})},
-                {"velocity", Json::array({particle.velocity_x, particle.velocity_y, particle.velocity_z})},
-                {"momentum", particle.momentum},
-                {"scale", Json::array({particle.scale_x, particle.scale_y})},
-                {"alpha", particle.alpha},
-            };
-        }
-
-        [[nodiscard]] Json effect_particle_instances_json(std::span<const JpcEffectParticleInstance> particles) {
-            auto out = Json::array();
-            for (auto i = std::size_t{}; i < particles.size(); ++i) {
-                out.push_back(effect_particle_instance_json(particles[i], i));
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json effect_emitter_instance_json(const JpcEffectEmitterInstance &emitter, std::size_t index) {
-            return Json{
-                {"index", index},
-                {"user_index", emitter.user_index},
-                {"particle_name", emitter.particle_name},
-                {"start_frame_index", emitter.start_frame_index},
-                {"next_update_frame_index", emitter.next_update_frame_index},
-                {"random_seed", emitter.random_seed},
-                {"fractional_emit_count", emitter.fractional_emit_count},
-                {"rate_step_timer", emitter.rate_step_timer},
-                {"first_emit", emitter.first_emit},
-                {"rate_step_emit", emitter.rate_step_emit},
-                {"next_particle_id", emitter.next_particle_id},
-                {"live_particle_count", emitter.particles.size()},
-                {"particles", effect_particle_instances_json(emitter.particles)},
-            };
-        }
-
-        [[nodiscard]] Json effect_emitter_instances_json(std::span<const JpcEffectEmitterInstance> emitters) {
-            auto out = Json::array();
-            for (auto i = std::size_t{}; i < emitters.size(); ++i) {
-                out.push_back(effect_emitter_instance_json(emitters[i], i));
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json active_effect_instance_json(const ActiveEffectInstance &active, std::size_t index) {
-            return Json{
-                {"index", index},
-                {"actor_name", active.actor_name},
-                {"effect_name", active.effect_name},
-                {"start_frame_index", active.start_frame_index},
-                {"keeper", effect_keeper_registration_json(active.keeper)},
-                {"host_binding", effect_host_binding_json(active.host_binding)},
-                {"resolved_resources", resolved_effect_resources_json(active.resolved_resources)},
-                {"emitter_count", active.emitters.size()},
-                {"emitters", effect_emitter_instances_json(active.emitters)},
-            };
-        }
-
-        [[nodiscard]] Json active_effect_instances_json(std::span<const ActiveEffectInstance> active_effects) {
-            auto out = Json::array();
-            for (auto i = std::size_t{}; i < active_effects.size(); ++i) {
-                out.push_back(active_effect_instance_json(active_effects[i], i));
-            }
-            return out;
-        }
-
         [[nodiscard]] Json wipe_events_json(std::span<const WipeEvent> events) {
             auto out = Json::array();
             for (auto i = std::size_t{}; i < events.size(); ++i) {
@@ -1696,30 +1354,11 @@ namespace smgpc::runtime {
             };
         }
 
-        [[nodiscard]] Json effect_texture_binding_json(const EffectTextureBindingTrace &texture) {
-            return Json{
-                {"slot", texture.slot},
-                {"texture_index", texture.texture_index},
-                {"name", texture.name},
-                {"identity_name", texture.name},
-                {"width", texture.width},
-                {"height", texture.height},
-                {"format", texture.format_name},
-                {"format_raw", texture.format_raw},
-            };
-        }
-
         [[nodiscard]] Json render_texture_bindings_json(std::span<const RuntimeContext::RenderTextureBindingTrace> textures) {
             auto out = Json::array();
             for (const auto &texture : textures) {
                 out.push_back(render_texture_binding_json(texture));
             }
-            return out;
-        }
-
-        [[nodiscard]] Json effect_texture_bindings_json(const EffectTextureBindingTrace &texture) {
-            auto out = Json::array();
-            out.push_back(effect_texture_binding_json(texture));
             return out;
         }
 
@@ -1741,10 +1380,6 @@ namespace smgpc::runtime {
                 }
             }
             return mask;
-        }
-
-        [[nodiscard]] std::uint32_t used_textures_mask(const EffectTextureBindingTrace &texture) {
-            return texture.slot < 8U ? (1U << texture.slot) : 0U;
         }
 
         [[nodiscard]] Json used_texture_slots_json(std::span<const smgpc::render::J3dRendererTextureState> textures) {
@@ -1777,14 +1412,6 @@ namespace smgpc::runtime {
                 if (slots[slot]) {
                     out.push_back(slot);
                 }
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json used_texture_slots_json(const EffectTextureBindingTrace &texture) {
-            auto out = Json::array();
-            if (texture.slot < 8U) {
-                out.push_back(texture.slot);
             }
             return out;
         }
@@ -2191,56 +1818,6 @@ namespace smgpc::runtime {
             };
         }
 
-        [[nodiscard]] Json effect_packet_trace_json(const EffectDrawPacketTrace &packet, std::size_t index) {
-            const auto source_triangle_count = packet.primitive_type == "triangle_strip" ?
-                                                   (packet.index_count >= 3U ? packet.index_count - 2U : 0U) :
-                                                   packet.index_count / 3U;
-            return Json{
-                {"index", index},
-                {"model_name", packet.actor_name},
-                {"actor_name", packet.actor_name},
-                {"effect_name", packet.effect_name},
-                {"particle_name", packet.particle_name},
-                {"user_index", packet.user_index},
-                {"frame_index", packet.frame_index},
-                {"draw_pass", "effect"},
-                {"render_pass", "effect"},
-                {"view_id", 0},
-                {"material_name", packet.particle_name},
-                {"draw_type", packet.draw_type},
-                {"draw_order", packet.draw_order},
-                {"packet_mode", packet.packet_mode},
-                {"shape_type", packet.shape_type},
-                {"world_space", packet.world_space},
-                {"primitive_type", packet.primitive_type},
-                {"source_vertex_count", packet.vertex_count},
-                {"source_triangle_count", source_triangle_count},
-                {"num_indices", packet.index_count},
-                {"particle_id", packet.particle_id},
-                {"particle_age", packet.particle_age},
-                {"particle_lifetime", packet.particle_lifetime},
-                {"host_binding_found", packet.host_binding_found},
-                {"host_binding_source", packet.host_binding_source},
-                {"host_translation", Json::array({packet.host_translation[0U], packet.host_translation[1U], packet.host_translation[2U]})},
-                {"particle_position", Json::array({packet.particle_x, packet.particle_y, packet.particle_z})},
-                {"particle_scale", Json::array({packet.particle_scale_x, packet.particle_scale_y})},
-                {"particle_alpha", packet.particle_alpha},
-                {"live_particle_count", packet.live_particle_count},
-                {"child_particle", packet.child_particle},
-                {"texgen_count", 1U},
-                {"color_channel_count", packet.color_channel_count},
-                {"active_tev_stage_count", 1U},
-                {"tev_stage_count", 1U},
-                {"indirect_stage_count", 0U},
-                {"cull_mode", "None"},
-                {"used_textures_mask", used_textures_mask(packet.texture)},
-                {"used_texture_slots", used_texture_slots_json(packet.texture)},
-                {"texture_bindings", effect_texture_bindings_json(packet.texture)},
-                {"alpha_compare_enabled", packet.alpha_compare_enabled},
-                {"blend_enabled", packet.blend_enabled},
-            };
-        }
-
         [[nodiscard]] Json runtime_render_packets_json(const RuntimeContext &runtime) {
             auto out = Json::array();
             auto index = std::size_t{};
@@ -2252,10 +1829,7 @@ namespace smgpc::runtime {
                 out.push_back(layout_packet_trace_json(packet, index));
                 ++index;
             }
-            for (const auto &packet : runtime.effects().draw_packets()) {
-                out.push_back(effect_packet_trace_json(packet, index));
-                ++index;
-            }
+
             return out;
         }
 
@@ -2291,12 +1865,7 @@ namespace smgpc::runtime {
                  {"dropped_event_count", runtime.audio().dropped_event_count()},
                  {"events", audio_events_json(runtime.audio().events())},
              }},
-            {"effects",
-             Json{
-                 {"registered_keepers", registered_effect_keepers_json(runtime.effects())},
-                 {"active_effects", active_effect_instances_json(runtime.effects().active_effect_instances())},
-                 {"events", effect_events_json(runtime.effects().events())},
-             }},
+
             {"runtime_services", runtime_services_json(runtime)},
             {"scene_snapshot", scene_entries_json(runtime.scheduler().snapshot())},
             {"scene_trace", scene_entries_json(runtime.scheduler().last_execution_trace())},

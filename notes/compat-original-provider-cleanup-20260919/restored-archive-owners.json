@@ -1,0 +1,11 @@
+{
+  "archive": "build/macosx/arm64/debug/libsmg-pc-game.a",
+  "sha256": "917d5a9f0608482a77845acfd55038ef70d851c967eca2e1e3008eeeaf4d7822",
+  "removed_members_absent": true,
+  "selected_original_definitions": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:ObjUtil.cpp.o: 0000000000000a38 T MR::connectToSceneCrystal(LiveActor*)",
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:MarioState.cpp.o: 0000000000000020 T MarioState::MarioState(MarioActor*, unsigned int)",
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:MarioState.cpp.o: 0000000000000000 T MarioState::MarioState(MarioActor*, unsigned int)"
+  ],
+  "scope": "Selected restored providers only; separate archive-wide audit still reports other duplicates for pending cleanup."
+}

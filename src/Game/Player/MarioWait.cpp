@@ -325,3 +325,17 @@ namespace NrvMarioActor {
     INIT_NERVE(MarioActorNrvTimeWait);
     INIT_NERVE(MarioActorNrvNoRush);
 };  // namespace NrvMarioActor
+
+void MarioState::hitPoly(u8, const TVec3f&, HitSensor*) {
+}
+
+bool MarioState::keep() {
+    return true;
+}
+
+bool MarioState::notice() {
+    return false;
+}
+
+void MarioState::init() {
+}

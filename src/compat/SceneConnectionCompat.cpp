@@ -5,10 +5,6 @@
 #include <aurora/exception.hpp>
 #include <stdexcept>
 namespace MR {
-void connectToSceneCrystal(LiveActor* pActor) {
-    MR::connectToScene(pActor, MR::MovementType_MapObj, MR::CalcAnimType_MapObj, MR::DrawBufferType_Crystal, -1);
-}
-
 void disconnectToScene(NameObj* object) {
     if (auto* scheduler = smgpc::runtime::try_active_scene_scheduler()) scheduler->disconnect_name_obj(*object);
     else if (object->mExecutorIdx >= 0) aurora::throw_host_exception<std::logic_error>("Retiring a registered object needs its active scene scheduler");

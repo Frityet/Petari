@@ -1,0 +1,65 @@
+{
+  "entries": [
+    {
+      "availability": "supported",
+      "l_id": -1,
+      "model_no": -1,
+      "object": "Mario",
+      "phase": "player",
+      "reason": "compiled_retail_creator",
+      "row": 0,
+      "table": "startinfo",
+      "zone": -1
+    },
+    {
+      "availability": "supported",
+      "l_id": 0,
+      "model_no": -1,
+      "object": "GlobalPlaneGravityInBox",
+      "phase": "common_priority",
+      "reason": "compiled_retail_creator",
+      "row": 0,
+      "table": "planetobjinfo",
+      "zone": -1
+    },
+    {
+      "availability": "known_unlinked",
+      "l_id": 3,
+      "model_no": -1,
+      "object": "SphereSelectorHandle",
+      "phase": "common",
+      "reason": "me_and_multi_stage_bgm_playback_runtime_unavailable",
+      "row": 2,
+      "table": "objinfo",
+      "zone": -1
+    },
+    {
+      "availability": "supported",
+      "l_id": 0,
+      "model_no": -1,
+      "object": "InvisibleWall10x10",
+      "phase": "common",
+      "reason": "compiled_retail_creator",
+      "row": 0,
+      "table": "objinfo",
+      "zone": -1
+    },
+    {
+      "availability": "known_unlinked",
+      "l_id": 2,
+      "model_no": -1,
+      "object": "FileSelector",
+      "phase": "common",
+      "reason": "retail_file_select_actor_runtime_unavailable",
+      "row": 1,
+      "table": "objinfo",
+      "zone": -1
+    }
+  ],
+  "known_unlinked": 2,
+  "metadata": 0,
+  "scenario": 1,
+  "stage": "FileSelect",
+  "supported": 3,
+  "unknown": 0
+}

@@ -1,0 +1,730 @@
+[
+  {
+    "target": "smg-pc",
+    "build_file": "src/app/xmake.lua"
+  },
+  {
+    "target": "smg-pc-title-probe",
+    "build_file": "src/debug/xmake.lua"
+  },
+  {
+    "target": "smg-pc-mario-model-demo-surface-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-binder-kcl-mario-walk-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-collision-triangle-filter-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-camera-runtime-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-only-camera-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-camera-view-interpolator-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-camera-view-service-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-aurora-native-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-stage-start-camera-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-stationed-archive-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-lod-ctrl-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-demo-sheet-runtime-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-object-name-table-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-demo-scene-runtime-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-nameobj-factory-placement-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-stage-collision-registration-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-message-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-rfl-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-fixed-position-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-sceneobj-holder-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-camera-util-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-player-util-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-story-sequence-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-live-actor-util-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-btp-real-resource-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-save-data-core-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-save-config-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-layout-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-talk-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-game-actor-physics-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-actor-sensor-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-actor-runtime-registry-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-file-select-name-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-j3d-frame-ctrl-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-j3d-joint-traversal-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-xanime-core-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-xanime-player-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-j3d-vertex-buffer-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-jut-texture-ownership-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-runtime-context-construction-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-kcollision-resource-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-j3d-transform-animation-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-resource-table-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-hash-sort-table-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-area-obj-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-area-obj-core-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-npc-actor-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-game-data-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-gravity-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-gravity-math-foundation-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-scenario-catalog-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-scenario-publication-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-jpa-manager-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-vi-render-mode-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-camera-context-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-console-nand-import-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-system-config-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-particle-resource-owner-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-predraw-scheduler-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-scene-scheduler-heap-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-game-math-rotation-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-stage-zone-matrix-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-scene-movement-runtime-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-feedback-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-j3d-gx-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-player-actor-bridge-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-runtime-event-ownership-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-restart-stage-session-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-mii-font-compat-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-sphere-selector-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-j-audio-playback-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-jai-sound-ownership-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-center-screen-blur-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-planet-map-catalog-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-model-3d-for-2d-contract-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-bright-visibility-batch-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-brk-real-resource-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-picture-font-tag-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-authored-placement-instantiator-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-actor-event-camera-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-shadow-controller-owner-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-point-light-runtime-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-upstream-component-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-demo-start-request-holder-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-game-data-star-storage-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-auto-effect-metadata-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-effect-ownership-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-direct-draw-texture-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-aurora-texture-object-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-draw-sync-manager-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-jkr-thread-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-game-system-startup-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-jkr-aram-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-file-loader-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-aurora-draw-sync-pass-render-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-aurora-depth-snapshot-render-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-star-pointer-real-or-absent-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-scene-initialization-state-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-area-polygon-query-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-fur-drawer-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-fur-shader-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-scene-counter-owner-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-stage-camera-resource-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-camera-holder-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-camera-resource-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-aurora-clip-mode-render-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-jkr-exception-ownership-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-direct-draw-util-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-line-collision-query-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-camera-director-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-sound-permission-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-j2d-projection-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-pointer-input-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-wpad-acceleration-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-wpad-ownership-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-wpad-gesture-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-star-pointer-owner-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-collision-parts-owner-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-j2d-projection-owner-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-audio-category-volume-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-layout-group-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-image-effect-ownership-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-player-status-storage-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-name-obj-group-lifetime-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-scene-wipe-owner-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-scene-lifetime-binding-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-name-pos-owner-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-scene-name-obj-registry-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-scene-execution-owner-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-aurora-z-texture-render-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-wpad-pause-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-jsu-stream-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-save-owner-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-jut-video-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-frame-button-state-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-language-ownership-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-j3d-command-scheduling-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-process-collision-area-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-sensor-matrix-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-process-shadow-line-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-process-punching-kinoko-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-process-warp-pod-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-process-butterfly-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-process-trample-jump-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-process-crystal-cage-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-process-star-piece-placement-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-process-placement-transform-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-actor-utility-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-placement-coverage-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-process-player-owner-tests",
+    "build_file": "tests/xmake.lua"
+  },
+  {
+    "target": "smg-pc-original-j3d-packet-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-j3d-mtx-buffer-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-j3d-texture-mtx-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-j3d-material-animation-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-j3d-material-block-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-j3d-joint-resource-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-j3d-material-resource-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-j3d-geometry-resource-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-j3d-texture-resource-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-j3d-animation-resource-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-j3d-material-table-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-j3d-model-resource-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-jkr-heap-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-joint-controller-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-actor-broadcast-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-message-holder-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-jkr-heap-finalizer-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-jkr-allocation-domain-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-jkr-archive-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-jmap-resource-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-jmap-heap-lifetime-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-bck-ctrl-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-resource-holder-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  },
+  {
+    "target": "smg-pc-original-camera-vector-math-tests",
+    "build_file": "tests/xmake.lua",
+    "generated_from_fixture_table": true
+  }
+]

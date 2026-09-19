@@ -467,6 +467,9 @@ mkdir_p(output_dir)
 
 local pc_game_root = join(pc_root, "src", "Game")
 local compat_roots = {
+    { root = join(pc_root, "src", "compat"), prefix = "compat" },
+    { root = join(pc_root, "aurora", "include"), prefix = "aurora/include" },
+    { root = join(pc_root, "aurora", "lib"), prefix = "aurora/lib" },
     { root = join(pc_root, "src", "camera"), prefix = "camera" },
     { root = join(pc_root, "src", "layout"), prefix = "layout" },
     { root = join(pc_root, "src", "render"), prefix = "render", include = is_promoted_render_compat_file },
@@ -622,7 +625,7 @@ end
 
 local function write_compat_inventory(path)
     local lines = {
-        table.concat({ "rel_path", "pc_path", "group", "owned_contract", "sha256" }, "\t"),
+        table.concat({ "rel_path", "pc_path", "group", "suggested_contract_not_verified", "sha256" }, "\t"),
     }
     for _, row in ipairs(compat_rows) do
         table.insert(lines, table.concat({
@@ -728,7 +731,7 @@ local function write_summary(path)
     table.insert(lines, "")
     table.insert(lines, "## Compatibility-Layer Boundary")
     table.insert(lines, "")
-    table.insert(lines, "Promoted support directories (`src/camera`, `src/layout`, `src/resource`, `src/runtime`, `src/scene`, and selected compatibility files in `src/render`) are inventoried as custom compatibility-layer code and are not counted as failed original-source parity. The audited original game-code surface is `src/Game`.")
+    table.insert(lines, "The inventory includes `src/compat`, Aurora public headers and library sources, and host camera/layout/render/resource/runtime/scene code. Directory groups describe locations, not verified compatibility contracts. Relocated original bodies require explicit provenance checks; unreviewed symbols and excluded original units remain visible in the provider reports. `src/Game` is also compared file by file to decomp.")
     table.insert(lines, "")
     table.insert(lines, "## Classification Policy")
     table.insert(lines, "")
@@ -782,7 +785,7 @@ local function write_summary(path)
         table.insert(lines, string.format("| `%s` | %d |", key, compat_counts[key]))
     end
     table.insert(lines, "")
-    table.insert(lines, "Detailed artifacts: `source-closeness.tsv`, `required-migration.tsv`, `release-boundary.tsv`, `decomp-declarations.tsv`, `compile-only-allowlist.tsv`, and `compat-inventory.tsv`.")
+    table.insert(lines, "Detailed artifacts: `source-closeness.tsv`, `required-migration.tsv`, `release-boundary.tsv`, `decomp-declarations.tsv`, `compile-only-allowlist.tsv`, and `compat-inventory.tsv`. Provider artifacts include actual configured source/object mappings, strong symbol providers, duplicate providers, excluded original units, and explicit relocated-source checks. See `provider-audit.json` for limitations.")
     table.insert(lines, "")
     write_file(path, table.concat(lines, "\n"))
 end
@@ -794,6 +797,23 @@ write_decomp_declarations(join(output_dir, "decomp-declarations.tsv"))
 write_compile_only_allowlist(join(output_dir, "compile-only-allowlist.tsv"))
 write_compat_inventory(join(output_dir, "compat-inventory.tsv"))
 write_summary(join(output_dir, "source-closeness-summary.md"))
+if path.absolute(pc_root) == os.projectdir() and path.absolute(repo_root) == os.projectdir() then
+    import("scripts.source_provider_audit", {rootdir = os.projectdir(), alias = "provider_audit"})
+    local ownership = provider_audit.run(output_dir)
+    emit("duplicate_strong_symbols=" .. tostring(ownership.duplicate_strong_symbols))
+    emit("unreviewed_symbol_providers=" .. tostring(ownership.provider_provenance.unreviewed or 0))
+    if args["check-providers"] and (#ownership.unavailable_artifacts > 0 or ownership.duplicate_strong_symbols > 0 or
+        ownership.stale_source_providers > 0 or ownership.unavailable_owner_inputs > 0 or
+        #ownership.missing_reviewed_symbols > 0 or
+        ownership.provider_mapping["unresolved-member"] or ownership.provider_mapping.ambiguous or
+        ownership.source_checks["source-tokens-differ"] or ownership.source_checks.unresolved) then
+        raise("provider ownership check failed; inspect provider-audit.json and detailed artifacts")
+    end
+else
+    write_file(join(output_dir, "provider-audit-unavailable.txt"),
+        "Configured build ownership cannot be inferred for an alternate source root. Run the provider audit there with its actual build map.\n")
+    if args["check-providers"] then raise("provider ownership unavailable for alternate source root") end
+end
 
 emit("source closeness audit written to " .. output_dir)
 emit("audited_original_game_files=" .. tostring(#rows))

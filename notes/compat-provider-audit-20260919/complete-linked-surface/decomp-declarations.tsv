@@ -1,0 +1,8 @@
+rel_path	classification	target_surface	declaration_path	note
+Animation/MaterialAnmBuffer.cpp	decomp-needed	no	decomp/include/Game/Animation/MaterialAnmBuffer.hpp	no root implementation counterpart; declaration counterpart decomp/include/Game/Animation/MaterialAnmBuffer.hpp
+Effect/ParticleResourceHolder.cpp	decomp-needed	no	decomp/include/Game/Effect/ParticleResourceHolder.hpp	no root implementation counterpart; declaration counterpart decomp/include/Game/Effect/ParticleResourceHolder.hpp
+LiveActor/ActorPadAndCameraCtrl.cpp	decomp-needed	yes	decomp/include/Game/LiveActor/ActorPadAndCameraCtrl.hpp	no root implementation counterpart; declaration counterpart decomp/include/Game/LiveActor/ActorPadAndCameraCtrl.hpp
+Screen/THPDraw.cpp	decomp-needed	no		no root src/Game or include/Game counterpart
+System/GalaxyIDBCSV.cpp	decomp-needed	yes		no root src/Game or include/Game counterpart
+System/ShapePacketUserData.cpp	decomp-needed	yes	decomp/include/Game/System/ShapePacketUserData.hpp	no root implementation counterpart; declaration counterpart decomp/include/Game/System/ShapePacketUserData.hpp
+Util/TriangleFilter.cpp	decomp-needed	yes	decomp/include/Game/Util/TriangleFilter.hpp	no root implementation counterpart; declaration counterpart decomp/include/Game/Util/TriangleFilter.hpp

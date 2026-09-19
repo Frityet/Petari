@@ -1,0 +1,13 @@
+{
+  "command": [
+    "xmake",
+    "package-demo",
+    "--source-app=/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc.app",
+    "--disc=/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--expected-sha256=7e9c0bcb9351f43e9eaf87f3eebc5ef2c34f60d6da6da4704d7d75ebfb1b6aa0",
+    "--output=/Users/frityet/Projects/petari/build/playable-demo/Original Process Compat Check 20260919.app",
+    "--dry-run"
+  ],
+  "exit_code": 0,
+  "bundle_binary_sha256": "7e9c0bcb9351f43e9eaf87f3eebc5ef2c34f60d6da6da4704d7d75ebfb1b6aa0"
+}

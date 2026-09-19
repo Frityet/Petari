@@ -1,0 +1,14 @@
+[
+  {
+    "archive": "build/macosx/arm64/debug/libsmg-pc-game.a",
+    "size": 418615928,
+    "sha256": "8335d2b486a5ccd80b0e45053c44dbc1a7ee280b5b4a875897bb3c70b65aade2",
+    "preserved_at": "notes/compat-original-provider-cleanup-20260919/archive-before/libsmg-pc-game.a"
+  },
+  {
+    "archive": "build/macosx/arm64/debug/libsmg-pc-app.a",
+    "size": 18622704,
+    "sha256": "e968acc9a40dd769f78de747b756fa9017c542acd9a431dffcbc61269915632a",
+    "preserved_at": "notes/compat-original-provider-cleanup-20260919/archive-before/libsmg-pc-app.a"
+  }
+]

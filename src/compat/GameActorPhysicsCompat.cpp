@@ -162,16 +162,16 @@ namespace MR {
         require_actor(pActor).mFlag.mIsNoBind = false;
     }
 
-    void offCalcGravity(LiveActor *pActor) {
-        require_actor(pActor).mFlag.mIsCalcGravity = false;
+    void offCalcGravity(LiveActor* pActor) {
+        pActor->mFlag.mIsCalcGravity = false;
     }
 
-    void onCalcGravity(LiveActor *pActor) {
-        auto &actor = require_actor(pActor);
-        actor.mFlag.mIsCalcGravity = true;
-        if (!actor.mFlag.mIsDead) {
-            smgpc::compat::update_live_actor_gravity(actor);
+    void onCalcGravity(LiveActor* pActor) {
+        if (!isDead(pActor)) {
+            calcGravity(pActor);
         }
+
+        pActor->mFlag.mIsCalcGravity = true;
     }
 
     bool isBindedGroundDamageFire(const LiveActor *pActor) {

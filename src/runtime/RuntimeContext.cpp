@@ -50,45 +50,11 @@
 #include "camera/CameraParam.hpp"
 #include "scene/NameObjLifecycleService.hpp"
 #include "scene/SceneExecutionService.hpp"
-#include "scene/SceneLifecycleService.hpp"
 
 namespace smgpc::runtime {
     namespace {
 
         RuntimeContext *s_runtime_context = nullptr;
-
-        [[nodiscard]] std::array<float, 12U> effect_identity_matrix() {
-            return {
-                1.0F,
-                0.0F,
-                0.0F,
-                0.0F,
-                0.0F,
-                1.0F,
-                0.0F,
-                0.0F,
-                0.0F,
-                0.0F,
-                1.0F,
-                0.0F,
-            };
-        }
-
-        [[nodiscard]] std::array<float, 12U> effect_translation_matrix(float x, float y, float z) {
-            auto matrix = effect_identity_matrix();
-            matrix[3U] = x;
-            matrix[7U] = y;
-            matrix[11U] = z;
-            return matrix;
-        }
-
-        [[nodiscard]] std::array<float, 12U> live_actor_effect_matrix(const LiveActor &actor) {
-            auto matrix = actor.getBaseMtx() != nullptr ? smgpc::render::j3d_matrix_from_mtx(actor.getBaseMtx()).m : effect_identity_matrix();
-            matrix[3U] = actor.mPosition.x;
-            matrix[7U] = actor.mPosition.y;
-            matrix[11U] = actor.mPosition.z;
-            return matrix;
-        }
 
         [[nodiscard]] std::filesystem::path weakly_canonical_or_normal(const std::filesystem::path &path) {
             std::error_code error{};
@@ -299,10 +265,8 @@ namespace smgpc::runtime {
             if (scene_service_mode == RuntimeContextSceneServiceMode::RuntimeOwned) {
                 _owned_name_obj_lifecycle = std::make_unique<smgpc::scene::NameObjLifecycleService>(*this);
                 _owned_scene_execution = std::make_unique<smgpc::scene::SceneExecutionService>(*this);
-                _owned_scene_lifecycle = std::make_unique<smgpc::scene::SceneLifecycleService>(*this);
                 attach_name_obj_lifecycle(*_owned_name_obj_lifecycle);
                 attach_scene_execution(*_owned_scene_execution);
-                attach_scene_lifecycle(*_owned_scene_lifecycle);
             }
             _capture_screen_director = std::make_unique<CaptureScreenDirector>();
             _capture_screen_texture.reset(smgpc::compat::get_owned_jut_texture(_capture_screen_director->getResTIMG()));
@@ -322,20 +286,7 @@ namespace smgpc::runtime {
                                     error.what());
                 }
             }
-            if (const auto effect_archive = _dvd.find_first({
-                    std::filesystem::path("ParticleData") / "Effect.arc",
-                })) {
-                try {
-                    _effects.load_resources(_dvd.archive_for_path(*effect_archive));
-                    if (const auto *resources = _effects.resource_library(); resources != nullptr) {
-                        _logger.info(logging::Category::APP, logging::Message{"Loaded {} particle names, {} particle resources, and {} particle textures from {}"},
-                                     resources->particle_name_count(), resources->resource_count(), resources->texture_count(), effect_archive->string());
-                    }
-                } catch (const std::exception &error) {
-                    _logger.warning(logging::Category::APP, logging::Message{"Could not load original effect archive {}: {}"}, effect_archive->string(),
-                                    error.what());
-                }
-            }
+
 #ifndef NDEBUG
             if (_debug_wpad_input_script.button_span_count() != 0) {
                 _logger.info(logging::Category::APP, logging::Message{"Loaded {} debug WPAD button script spans"},
@@ -374,10 +325,8 @@ namespace smgpc::runtime {
                 SDL_SetWindowRelativeMouseMode(static_cast<SDL_Window *>(native_handle.window_handle), false);
             }
         }
-        _owned_scene_lifecycle.reset();
         _owned_scene_execution.reset();
         _owned_name_obj_lifecycle.reset();
-        _scene_lifecycle = nullptr;
         _scene_execution = nullptr;
         _name_obj_lifecycle = nullptr;
         _j_audio_playback->reset_scene();
@@ -473,8 +422,6 @@ namespace smgpc::runtime {
         }
         _audio.begin_frame(_frame_index);
         _j_audio_playback->begin_frame(_frame_index);
-        _effects.begin_frame(_frame_index);
-        refresh_effect_host_bindings();
         _scene_wipe.begin_frame(_frame_index);
         _system_wipe.begin_frame(_frame_index);
         _star_pointer.begin_frame(_frame_index);
@@ -654,15 +601,9 @@ namespace smgpc::runtime {
         }
 #endif
 
-        auto &lifecycle = scene_lifecycle();
-        if (lifecycle.active_scene() != nullptr) {
-            lifecycle.update_scene();
-            lifecycle.calc_anim_scene();
-        } else {
-            auto &execution = scene_execution();
-            execution.execute_movement();
-            execution.execute_calc_anim_and_view();
-        }
+        auto &scene_execution_service = scene_execution();
+        scene_execution_service.execute_movement();
+        scene_execution_service.execute_calc_anim_and_view();
         _j_audio_playback->end_frame();
         smgpc::compat::advance_audio_facade_state();
     }
@@ -693,17 +634,8 @@ namespace smgpc::runtime {
 
     void RuntimeContext::draw_scene() {
         const aurora::os::GuestThreadExecutionScope execution;
-        auto &lifecycle = scene_lifecycle();
-        if (!lifecycle.active_scene()) {
-            draw_3d_normal();
-            draw_2d_normal();
-            return;
-        }
-        _last_camera_pose = _scene_camera_pose;
-        _star_pointer_depth->set_camera(MR::getCameraViewMtx(), MR::getCameraProjectionMtx(), MR::getFovy());
-        lifecycle.draw_scene();
-        // Original GameSystem draws its pointer after the complete Scene draw.
-        _star_pointer_depth->draw();
+        draw_3d_normal();
+        draw_2d_normal();
     }
 
     void RuntimeContext::draw_3d_normal(const smgpc::camera::CameraPose &camera_pose) {
@@ -983,14 +915,6 @@ namespace smgpc::runtime {
         return *_j_audio_playback;
     }
 
-    EffectService &RuntimeContext::effects() {
-        return _effects;
-    }
-
-    const EffectService &RuntimeContext::effects() const {
-        return _effects;
-    }
-
     WipeService &RuntimeContext::scene_wipe() {
         return _scene_wipe;
     }
@@ -1111,8 +1035,6 @@ namespace smgpc::runtime {
         return *_capture_screen_director;
     }
 
-
-
     SceneScheduler &RuntimeContext::scheduler() {
         return _scheduler;
     }
@@ -1129,10 +1051,6 @@ namespace smgpc::runtime {
         const auto scope_id = _next_scene_registration_scope_id++;
         _active_scene_registration_scope = scope_id;
         _scene_scheduler_registration_marker = _scheduler.registration_marker();
-        _scene_effect_emission_hosts.clear();
-        _scene_effect_keeper_hosts.clear();
-        _scene_effect_emission_instances.clear();
-        _scene_effect_keeper_instances.clear();
         return scope_id;
     }
 
@@ -1140,64 +1058,13 @@ namespace smgpc::runtime {
         if (!_active_scene_registration_scope.has_value() || *_active_scene_registration_scope != scope_id) {
             aurora::throw_host_exception<std::logic_error>("RuntimeContext scene registration scope does not match the active scope.");
         }
-
         const auto registrations = _scheduler.remove_registrations_since(_scene_scheduler_registration_marker);
         for (const auto &registration : registrations) {
             if (registration.live_actor != nullptr) {
                 _star_pointer.unregister_target(*registration.live_actor);
                 _star_pointer.clear_mode_requests(registration.live_actor);
-                _effect_live_actor_hosts.erase(registration.live_actor);
-            }
-
-            switch (registration.kind) {
-            case SceneEntryKind::NameObj:
-                break;
-            case SceneEntryKind::Layout:
-                _effect_simple_layout_hosts.erase(registration.layout);
-                break;
-            case SceneEntryKind::LayoutActor:
-                _effect_layout_actor_hosts.erase(registration.layout_actor);
-                break;
-            case SceneEntryKind::LiveActorModel:
-                break;
             }
         }
-
-        for (const auto &host_name : _scene_effect_emission_hosts) {
-            _effects.release_host_state(host_name);
-        }
-        for (const auto &host_name : _scene_effect_keeper_hosts) {
-            _effects.release_host_state(host_name);
-        }
-        for (const auto &[host_identity, host_name] : _scene_effect_emission_instances) {
-            _effects.release_host_state(host_name, host_identity);
-        }
-        for (const auto &[host_identity, host_name] : _scene_effect_keeper_instances) {
-            _effects.release_host_state(host_name, host_identity);
-        }
-        for (const auto &registration : registrations) {
-            const void *host_identity = nullptr;
-            switch (registration.kind) {
-            case SceneEntryKind::NameObj:
-            case SceneEntryKind::LiveActorModel:
-                host_identity = registration.live_actor;
-                break;
-            case SceneEntryKind::Layout:
-                host_identity = registration.layout;
-                break;
-            case SceneEntryKind::LayoutActor:
-                host_identity = registration.layout_actor;
-                break;
-            }
-            if (host_identity != nullptr) {
-                _effects.release_host_state(registration.name, host_identity);
-            }
-        }
-
-        _scene_effect_emission_hosts.clear();
-        _scene_effect_keeper_hosts.clear();
-        _scene_effect_emission_instances.clear();
-        _scene_effect_keeper_instances.clear();
         _j_audio_playback->reset_scene();
         smgpc::compat::retire_audio_facade_state();
         _active_scene_registration_scope.reset();
@@ -1233,20 +1100,6 @@ namespace smgpc::runtime {
         return *_scene_execution;
     }
 
-    smgpc::scene::SceneLifecycleService &RuntimeContext::scene_lifecycle() {
-        if (_scene_lifecycle == nullptr) {
-            aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::SceneLifecycleService has not been attached.");
-        }
-        return *_scene_lifecycle;
-    }
-
-    const smgpc::scene::SceneLifecycleService &RuntimeContext::scene_lifecycle() const {
-        if (_scene_lifecycle == nullptr) {
-            aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::SceneLifecycleService has not been attached.");
-        }
-        return *_scene_lifecycle;
-    }
-
     void RuntimeContext::attach_name_obj_lifecycle(smgpc::scene::NameObjLifecycleService &service) {
         if (_name_obj_lifecycle != nullptr && _name_obj_lifecycle != &service) {
             aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::NameObjLifecycleService has already been attached.");
@@ -1259,13 +1112,6 @@ namespace smgpc::runtime {
             aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::SceneExecutionService has already been attached.");
         }
         _scene_execution = &service;
-    }
-
-    void RuntimeContext::attach_scene_lifecycle(smgpc::scene::SceneLifecycleService &service) {
-        if (_scene_lifecycle != nullptr && _scene_lifecycle != &service) {
-            aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::SceneLifecycleService has already been attached.");
-        }
-        _scene_lifecycle = &service;
     }
 
     JAISoundHandle *RuntimeContext::start_sub_bgm(std::string_view name, bool prepared) {
@@ -1425,68 +1271,6 @@ namespace smgpc::runtime {
             "JAudio ME scheduler is unavailable for " + std::string(name));
     }
 
-    void RuntimeContext::register_effect_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
-                                                std::string_view resource_group_name, bool sort_enabled,
-                                                const void *host_identity) {
-        if (_active_scene_registration_scope.has_value() && !host_name.empty()) {
-            if (host_identity != nullptr) {
-                _scene_effect_keeper_instances[host_identity] = std::string(host_name);
-            } else {
-                _scene_effect_keeper_hosts.insert(std::string(host_name));
-            }
-        }
-        if (host_identity != nullptr && host_kind == EffectKeeperHostKind::LiveActor) {
-            _effect_live_actor_hosts[host_identity] = const_cast<LiveActor *>(static_cast<const LiveActor *>(host_identity));
-        }
-        _effects.register_keeper(host_kind, host_name, requested_capacity, resource_group_name, sort_enabled, host_identity);
-        refresh_effect_host_binding(host_name, host_identity);
-        _logger.info(logging::Category::APP, logging::Message{"Registered effect keeper {} group {} capacity {}"}, host_name,
-                     resource_group_name, requested_capacity);
-    }
-
-    void RuntimeContext::unregister_effect_keeper(std::string_view host_name, const void *host_identity) {
-        _effects.unregister_keeper(host_name, host_identity);
-        if (host_identity != nullptr) {
-            _scene_effect_keeper_instances.erase(host_identity);
-            _scene_effect_emission_instances.erase(host_identity);
-            _effect_live_actor_hosts.erase(host_identity);
-            _effect_layout_actor_hosts.erase(host_identity);
-            _effect_simple_layout_hosts.erase(host_identity);
-        } else {
-            if (const auto keeper = _scene_effect_keeper_hosts.find(host_name);
-                keeper != _scene_effect_keeper_hosts.end()) {
-                _scene_effect_keeper_hosts.erase(keeper);
-            }
-            if (const auto emission = _scene_effect_emission_hosts.find(host_name);
-                emission != _scene_effect_emission_hosts.end()) {
-                _scene_effect_emission_hosts.erase(emission);
-            }
-        }
-    }
-
-    void RuntimeContext::emit_effect(std::string_view actor_name, std::string_view effect_name, const void *host_identity) {
-        if (_active_scene_registration_scope.has_value() && !actor_name.empty()) {
-            if (host_identity != nullptr) {
-                _scene_effect_emission_instances[host_identity] = std::string(actor_name);
-            } else {
-                _scene_effect_emission_hosts.insert(std::string(actor_name));
-            }
-        }
-        refresh_effect_host_binding(actor_name, host_identity);
-        _effects.emit(actor_name, effect_name, host_identity);
-        _logger.info(logging::Category::APP, logging::Message{"{} emitted effect {}"}, actor_name, effect_name);
-    }
-
-    void RuntimeContext::delete_effect(std::string_view actor_name, std::string_view effect_name, const void *host_identity) {
-        _effects.delete_effect(actor_name, effect_name, host_identity);
-        _logger.info(logging::Category::APP, logging::Message{"{} deleted effect {}"}, actor_name, effect_name);
-    }
-
-    void RuntimeContext::delete_effect_all(std::string_view actor_name, const void *host_identity) {
-        _effects.delete_all(actor_name, host_identity);
-        _logger.info(logging::Category::APP, logging::Message{"{} deleted all effects"}, actor_name);
-    }
-
     void RuntimeContext::note_layout_archive(std::string_view layout_name, const std::filesystem::path &path) {
         _logger.info(logging::Category::APP, logging::Message{"Resolved original layout archive {} -> {}"}, layout_name, path.string());
     }
@@ -1582,90 +1366,27 @@ namespace smgpc::runtime {
     }
 #endif
 
-    void RuntimeContext::refresh_effect_host_bindings() {
-        for (const auto &[identity, layout] : _effect_simple_layout_hosts) {
-            if (layout != nullptr) {
-                refresh_effect_host_binding(layout->getName(), identity);
-            }
-        }
-        for (const auto &[identity, layout] : _effect_layout_actor_hosts) {
-            if (layout != nullptr) {
-                refresh_effect_host_binding(layout->getName(), identity);
-            }
-        }
-        for (const auto &[identity, actor] : _effect_live_actor_hosts) {
-            if (actor != nullptr) {
-                refresh_effect_host_binding(actor->getName(), identity);
-            }
-        }
-    }
-
-    void RuntimeContext::refresh_effect_host_binding(std::string_view host_name, const void *host_identity) {
-        if (auto it = _effect_live_actor_hosts.find(host_identity); it != _effect_live_actor_hosts.end() && it->second != nullptr) {
-            const auto &actor = *it->second;
-            _effects.bind_host_transform(EffectKeeperHostKind::LiveActor, host_name, EffectHostBindingSource::LiveActorBaseMatrix,
-                                         live_actor_effect_matrix(actor), actor.mFlag.mIsDead, host_identity);
-            return;
-        }
-
-        if (auto it = _effect_layout_actor_hosts.find(host_identity); it != _effect_layout_actor_hosts.end() && it->second != nullptr) {
-            const auto &layout = *it->second;
-            const auto *layout_runtime = smgpc::layout::layout_runtime(&layout);
-            Mtx root_pane_matrix{};
-            if (layout_runtime == nullptr || !layout_runtime->copyPaneMatrix({}, root_pane_matrix)) {
-                _effects.unbind_host_transform(host_name, host_identity);
-                return;
-            }
-            const auto trans = layout.getTrans();
-            _effects.bind_host_transform(EffectKeeperHostKind::LayoutActor, host_name, EffectHostBindingSource::LayoutActorTransform,
-                                         effect_translation_matrix(trans.x, trans.y, 0.0F),
-                                         smgpc::layout::is_layout_actor_dead(&layout), host_identity);
-            return;
-        }
-
-        if (auto it = _effect_simple_layout_hosts.find(host_identity); it != _effect_simple_layout_hosts.end() && it->second != nullptr) {
-            const auto &layout = *it->second;
-            _effects.bind_host_transform(EffectKeeperHostKind::SimpleLayout, host_name, EffectHostBindingSource::SimpleLayoutOrigin,
-                                         effect_identity_matrix(), layout.isDead(), host_identity);
-            return;
-        }
-
-        _effects.unbind_host_transform(host_name, host_identity);
-    }
-
     void RuntimeContext::register_layout(smgpc::layout::LayoutRuntime &layout) {
-        _effect_simple_layout_hosts[&layout] = &layout;
-        refresh_effect_host_binding(layout.getName(), &layout);
         _scheduler.register_layout(layout, MR::MovementType_Layout, -1, MR::DrawType_Layout);
     }
 
     void RuntimeContext::unregister_layout(smgpc::layout::LayoutRuntime &layout) {
-        _effect_simple_layout_hosts.erase(&layout);
-        refresh_effect_host_binding(layout.getName(), &layout);
         _scheduler.unregister_layout(layout);
     }
 
     void RuntimeContext::register_layout_actor(LayoutActor &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type) {
-        _effect_layout_actor_hosts[&layout] = &layout;
-        refresh_effect_host_binding(layout.getName(), &layout);
         _scheduler.register_layout_actor(layout, movement_type, calc_anim_type, draw_type);
     }
 
     void RuntimeContext::unregister_layout_actor(LayoutActor &layout) {
-        _effect_layout_actor_hosts.erase(&layout);
-        refresh_effect_host_binding(layout.getName(), &layout);
         _scheduler.unregister_layout_actor(layout);
     }
 
     void RuntimeContext::register_live_actor_model(LiveActor &actor, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type) {
-        _effect_live_actor_hosts[&actor] = &actor;
-        refresh_effect_host_binding(actor.getName(), &actor);
         _scheduler.register_live_actor_model(actor, movement_type, calc_anim_type, draw_buffer_type, draw_type);
     }
 
     void RuntimeContext::unregister_live_actor_model(LiveActor &actor) {
-        _effect_live_actor_hosts.erase(&actor);
-        refresh_effect_host_binding(actor.getName(), &actor);
         _scheduler.unregister_live_actor_model(actor);
     }
 

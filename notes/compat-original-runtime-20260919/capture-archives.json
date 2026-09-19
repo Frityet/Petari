@@ -1,0 +1,18 @@
+[
+  {
+    "path": "notes/compat-original-runtime-20260919/ordinary-startup-frame179.png.gz",
+    "sha256": "6206027d78337ea47437cbb2889fb3b1e2cdc388f3512c5cc25ed77dce9f4946",
+    "original_path": "notes/compat-original-runtime-20260919/ordinary-startup-frame179.png",
+    "original_sha256": "43f3d6f774b0abf6db5fea1789a313c09cc387c09c4e0d98b2a2c2fc3ef48ac4",
+    "original_bytes": 14748233,
+    "gzip_bytes": 528164
+  },
+  {
+    "path": "notes/compat-original-runtime-20260919/gateway-opening-frame1000.png.gz",
+    "sha256": "2ecb163ab16cb8506ae5daa6ebdef15c6fa86f45c80f70f286c6a2282ef69f89",
+    "original_path": "notes/compat-original-runtime-20260919/gateway-opening-frame1000.png",
+    "original_sha256": "40f615b6c1d026b439c655a18b09a1599bc298d7f1b0066535ebef2544bc1552",
+    "original_bytes": 14748233,
+    "gzip_bytes": 2436861
+  }
+]

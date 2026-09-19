@@ -1,0 +1,37 @@
+[
+  {
+    "target": "smg-pc",
+    "exit": 0,
+    "seconds": 6.062940042000264,
+    "log": "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc.log",
+    "binary_sha256": "6fd4824a3217cb18bb7f6533936202a4854c6475a7fbef895176a2ba91ffbb43"
+  },
+  {
+    "target": "smg-pc-original-process-player-owner-tests",
+    "exit": 0,
+    "seconds": 4.239840041962452,
+    "log": "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc-original-process-player-owner-tests.log",
+    "binary_sha256": "6b016be040e3231150077742cb2e9b802bdbf7ede7b335938afe218ff71c5768"
+  },
+  {
+    "target": "smg-pc-original-actor-utility-tests",
+    "exit": 0,
+    "seconds": 4.198698583059013,
+    "log": "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc-original-actor-utility-tests.log",
+    "binary_sha256": "374d583ef6184c894ce57ac519c087c9dad72626bc751a3f5056bd389e65ce31"
+  },
+  {
+    "target": "smg-pc-original-placement-coverage-tests",
+    "exit": 0,
+    "seconds": 4.19571612495929,
+    "log": "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc-original-placement-coverage-tests.log",
+    "binary_sha256": "a843c9e8d7ca383d0127fb98e22e6fa3d1f27185fe166daa235e367782cb0632"
+  },
+  {
+    "target": "smg-pc-original-scene-execution-owner-tests",
+    "exit": 0,
+    "seconds": 4.2375365409534425,
+    "log": "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc-original-scene-execution-owner-tests.log",
+    "binary_sha256": "79188e38cad29cd91872b52972994385ccabbadb7954c43eca435e8f9c6bf979"
+  }
+]

@@ -5,7 +5,7 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util.hpp"
 
-void FORCE_SCALE() {
+[[maybe_unused]] static void FORCE_SCALE() {
     TVec3f vec;
     vec.scale(1.0f);
 }

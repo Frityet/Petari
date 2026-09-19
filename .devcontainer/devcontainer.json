@@ -29,7 +29,7 @@
     "initializeCommand": "bash .devcontainer/prepare-x11.sh",
     "features": {
         "./llvm": {
-            "version": "22"
+            "version": "23"
         },
         "ghcr.io/devcontainers/features/common-utils:2": {
             "installZsh": true,
@@ -42,7 +42,7 @@
             "userUid": "automatic",
             "userGid": "automatic"
         },
-		"./xmake": {}
+		"./xmake": {"version": "3.1.1"}
     },
     "onCreateCommand": "mkdir -p /tmp/xdg-runtime && chmod 700 /tmp/xdg-runtime && sudo apt update && sudo apt install -y ninja-build",
     "customizations": {

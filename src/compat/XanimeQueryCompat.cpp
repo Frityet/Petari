@@ -1,10 +1,6 @@
 #include "Game/Util/HashUtil.hpp"
-#include "Game/Util/StringUtil.hpp"
-
-#include <cstring>
-
-// Original string helpers retained from the initial resource-query extraction.
-// Player and resource methods now come from their complete original units.
+// Original byte-preserving hash helper retained from the resource-query
+// extraction. String operations come from the complete original StringUtil.
 namespace {
 
 const unsigned char __lower_mapC[0x100] = {
@@ -29,12 +25,6 @@ const unsigned char __lower_mapC[0x100] = {
 }  // namespace
 
 namespace MR {
-
-    void extractString(char* pDst, const char* pSrc, u32 num, u32) {
-        strncpy(pDst, pSrc, num);
-
-        pDst[num] = '\0';
-    }
 
     // Original MSL C-locale lower-case table. Preserve resource-name bytes on
     // hosts with signed char, without depending on the host process locale.

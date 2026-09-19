@@ -3,13 +3,10 @@
 struct JMapData;
 
 #include "Game/Scene/GameSceneFunction.hpp"
-#include "Game/Screen/MoviePlayingSequence.hpp"
 #include "Game/Screen/StaffRoll.hpp"
 #include "Game/System/GameDataConst.hpp"
 #include "Game/System/GameDataFunction.hpp"
 #include "Game/System/GameDataHolder.hpp"
-#include "Game/System/GameEventFlag.hpp"
-#include "Game/System/GameEventFlagTable.hpp"
 #include "Game/System/GameSequenceFunction.hpp"
 #include "Game/System/GameSystemFunction.hpp"
 #include "Game/System/SaveDataHandleSequence.hpp"
@@ -36,72 +33,6 @@ namespace {
 
     [[nodiscard]] GameDataHolder &require_current_game_data() {
         return *GameDataFunction::getCurrentGameDataHolder();
-    }
-
-    [[nodiscard]] const GameEventFlag &require_retail_flag(std::string_view name) {
-        if (name.empty()) {
-            aurora::throw_host_exception<std::invalid_argument>("Game event flag name must not be empty");
-        }
-
-        for (auto index = s32{}; index < GameEventFlagTable::getTableSize(); ++index) {
-            const auto *flag = GameEventFlagTable::getFlag(index);
-            if (flag != nullptr && name == flag->mName) {
-                return *flag;
-            }
-        }
-
-        aurora::throw_host_exception<std::invalid_argument>("Game event flag is absent from the retail table: " + std::string(name));
-    }
-
-    [[nodiscard]] bool has_retail_special_star(const GameEventFlag &flag) {
-        auto &holder = require_current_game_data();
-        if (holder.calcCurrentPowerStarNum() == 0) {
-            return false;
-        }
-        return holder.hasPowerStar(flag.mGalaxyName, flag.mStarID);
-    }
-
-    [[nodiscard]] bool is_retail_flag_on(const GameEventFlag &flag, unsigned depth);
-
-    [[nodiscard]] bool can_turn_on_retail_flag(const GameEventFlag &flag, unsigned depth) {
-        if (depth > 32U) {
-            aurora::throw_host_exception<std::logic_error>("Retail game event flag dependency graph exceeded its recursion bound");
-        }
-
-        switch (flag.mType) {
-        case GameEventFlag::Type_0:
-            return true;
-        case GameEventFlag::Type_1:
-            return require_current_game_data().calcCurrentPowerStarNum() >= flag.mStarNum;
-        case GameEventFlag::Type_SpecialStar:
-            return has_retail_special_star(flag);
-        case GameEventFlag::Type_4:
-            return (flag.mRequirement1 == nullptr || is_retail_flag_on(require_retail_flag(flag.mRequirement1), depth + 1U)) &&
-                   (flag.mRequirement2 == nullptr || is_retail_flag_on(require_retail_flag(flag.mRequirement2), depth + 1U));
-        case GameEventFlag::Type_EventValueIsZero:
-            if (flag.mRequirement == nullptr) {
-                aurora::throw_host_exception<std::logic_error>("Retail event-value flag has no requirement: " + std::string(flag.mName));
-            }
-            return is_retail_flag_on(require_retail_flag(flag.mRequirement), depth + 1U) &&
-                   require_current_game_data().getGameEventValue(flag.mEventValueName) == 0U;
-        case GameEventFlag::Type_10:
-            return require_current_game_data().isCompleteMarioAndLuigi();
-        case GameEventFlag::Type_GalaxyOpenStar:
-        case GameEventFlag::Type_5:
-        case GameEventFlag::Type_Galaxy:
-        case GameEventFlag::Type_Comet:
-        case GameEventFlag::Type_StarPiece:
-        case GameEventFlag::Type_11:
-        default:
-            unavailable("event-flag predicate for " + std::string(flag.mName));
-        }
-    }
-
-    [[nodiscard]] bool is_retail_flag_on(const GameEventFlag &flag, unsigned depth) {
-        if ((flag.mSaveFlag & 0x1U) != 0U) {
-            return can_turn_on_retail_flag(flag, depth);
-        }
-        return require_current_game_data().isOnGameEventFlag(flag.mName);
     }
 
 }  // namespace
@@ -152,30 +83,6 @@ namespace MR {
             hash = static_cast<u8>(*text) + hash * 31U;
         }
         return hash;
-    }
-
-    void startMovieEpilogueA() {
-        unavailable("epilogue movie playback");
-    }
-
-    void startMovieEndingA() {
-        unavailable("ending A movie playback");
-    }
-
-    void startMovieEndingB() {
-        unavailable("ending B movie playback");
-    }
-
-    bool isEndMovieEpilogueA() {
-        unavailable("epilogue movie completion");
-    }
-
-    bool isEndMovieEndingA() {
-        unavailable("ending A movie completion");
-    }
-
-    bool isEndMovieEndingB() {
-        unavailable("ending B movie completion");
     }
 
     StaffRoll *getStaffRoll() {

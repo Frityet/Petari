@@ -1,0 +1,65 @@
+[
+  {
+    "target": "smg-pc-original-jpa-manager-tests",
+    "exit": 0,
+    "seconds": 6.544301624991931,
+    "log": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-jpa-manager-tests.log",
+    "binary_sha256": "4bdbe37bdd9eaa48a73f350ebaf34c817602bbba3fcc5c48d54fbc15f37b488f"
+  },
+  {
+    "target": "smg-pc-original-particle-resource-owner-tests",
+    "exit": 0,
+    "seconds": 4.964663750026375,
+    "log": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-particle-resource-owner-tests.log",
+    "binary_sha256": "c95614b7596d041b06e0bc440cffd029f67fe51956eae779a317f0746b098557"
+  },
+  {
+    "target": "smg-pc-original-auto-effect-metadata-tests",
+    "exit": 0,
+    "seconds": 5.077114624902606,
+    "log": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-auto-effect-metadata-tests.log",
+    "binary_sha256": "487c852b3ef0e21ce80f116015722c7796d3cd471696fb92022e3037fc6d43d0"
+  },
+  {
+    "target": "smg-pc-original-effect-ownership-tests",
+    "exit": 0,
+    "seconds": 5.013183958013542,
+    "log": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-effect-ownership-tests.log",
+    "binary_sha256": "6fc5158b085a23f40ff2a716a0e8c6376abdca952883f03bbe84d818da85fc74"
+  },
+  {
+    "target": "smg-pc-original-image-effect-ownership-tests",
+    "exit": 0,
+    "seconds": 5.028647792059928,
+    "log": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-image-effect-ownership-tests.log",
+    "binary_sha256": "0490baf11e5da019161b5e01693baa451ff5b377e63e0832fdee12e0e6e78749"
+  },
+  {
+    "target": "smg-pc-original-layout-group-tests",
+    "exit": 0,
+    "seconds": 5.594992375001311,
+    "log": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-layout-group-tests.log",
+    "binary_sha256": "a2b1f50a3153c0d75ec86984dda3cbcc0d220593f688303c3ad7c8631b387b0d"
+  },
+  {
+    "target": "smg-pc-original-scene-execution-owner-tests",
+    "exit": 0,
+    "seconds": 4.973848041030578,
+    "log": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-original-scene-execution-owner-tests.log",
+    "binary_sha256": "a780f548a10800fa3c010bd5fa480676546e1e40bb5852d3a24ba48e3f999cf6"
+  },
+  {
+    "target": "smg-pc-layout-real-or-absent-tests",
+    "exit": 0,
+    "seconds": 4.967479209066369,
+    "log": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-layout-real-or-absent-tests.log",
+    "binary_sha256": "4da81d12d6a9882a8e3d2106b7598a5b7e7fcc696898130689f205c9dc359539"
+  },
+  {
+    "target": "smg-pc-story-sequence-real-or-absent-tests",
+    "exit": 0,
+    "seconds": 4.7773767079925165,
+    "log": "notes/compat-original-provider-cleanup-20260919/ownership-smg-pc-story-sequence-real-or-absent-tests.log",
+    "binary_sha256": "9e37fb9d0c6cf374dab1c4b7d9c0ed1951f02c16a4a231e69cb2bfac3b5f06d9"
+  }
+]

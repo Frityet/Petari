@@ -1,0 +1,41 @@
+# Compatibility boundary cleanup
+
+The user requested implementation of the compatibility review, then clarified that edits required for actual host compatibility or compilation are allowed, including narrow changes in Game. Gameplay decisions should still use their original implementations. The separately authorized strap-screen skip remains intentional.
+
+## Ownership changes
+
+- Removed the retired Linux title-showcase packaging collateral; it could only launch the deleted replica target. The macOS packager now launches the original process with explicit stage/scenario arguments.
+- The application enters the existing original GameSystem process unconditionally. Removed the alternate application/scene lifecycle, title/file-select/Gateway showcases and synthetic story checkpoints. The real disc lifetime still covers original process teardown.
+- Removed the dormant native EffectService simulation, its helper particle renderer and its fabricated particle trace fields. Original ParticleResourceHolder, EffectSystem, JPA manager, calc/draw executors and keeper release remain connected. A separate read-only review checked these owners.
+- Preserved generic stage preflight as a small independent diagnostic. Runtime placement coverage instead reads the actual original StageDataHolder queues, preserving original ordering and retained BCSV rows. It distinguishes available creators, retail names without linked creators, unknown names, and exact non-actor StageObjInfo metadata. DemoObjInfo remains actor content: DemoGroup has an original DemoExecutor creator. Strict rejection is opt-in; reporting never supplies a replacement actor.
+- Restored original gravity phase/order and table-based easing. Canonical MarioState now owns its lifecycle and accessor implementation; original base defaults are back in their original translation units. Removed duplicate movie/effect/string/Crystal wrappers.
+- Fixed Aurora's GX destination-alpha handling at the draw boundary and removed the copy-time global-alpha repair. Actual stored EFB alpha is copied; TEV source alpha still controls blending and alpha tests. Hardware without the required optional dual-source feature fails explicitly for draws requiring it.
+
+## Audit
+
+The old source audit missed src/compat and Aurora. The expanded inventory includes both and does not infer correctness from directory names. The provider report uses the configured Xmake source/object graph and actual LLVM archive symbols, filters weak definitions, resolves repeated member basenames through object symbols, and records final-executable symbol presence separately from archive ownership. It records excluded original units and explicitly reviewed imports; unknown provenance is retained as unreviewed, not approved. Artifact hashes and timestamp checks are not a complete build attestation.
+
+The first expanded audit found 14 additional duplicate strong symbols, including original layout, rumble, Mario rendering/animation and unused decomp template-instantiation helpers. Evidence before the final ownership cleanup is retained under `../compat-provider-audit-20260919/before-final-owner-cleanup/`.
+
+Twenty-two explicitly anchored original function signatures/bodies (including all nineteen OriginalMapQueries definitions) match donor tokens. Whole MapUtil consolidation still requires missing original keeper point/sphere/area APIs and an undecompiled overload. That exact original import remains documented rather than replacing those dependencies with stubs. Unreviewed APIs remain work; this checkpoint is not an assertion that the whole compatibility layer is complete or accurate.
+
+## Validation
+
+- Aurora: both pre-fix alpha errors reproduced on Metal; 333 FIFO checks and four renderer suites pass. Published Aurora commit `8c19ab45d233eb43d0c817256e8a348cc98746cf`, remote verified.
+- Gravity/easing: old archives fail setter order, dead-actor phase, 65/128 exact gravity vectors, and 5/27 easing values. Rebuilt original implementation passes all of these checks.
+- Actual placement queue unit test passes; canonical creator-name inventory check covers 1,183 names.
+- Main and new focused tests build. The Game archive was recreated so removed object members cannot remain stale.
+- Legacy standalone JPA/effect/layout fixture failures identify absent original FileLoader/SC owners. They remain documented and are not green; no production fallback was added. Full standalone emitter lifetime rollback and image/layout assertions remain unvalidated. Raw failures are retained under `../compat-original-provider-cleanup-20260919/`.
+- Final ownership gate passes: 23,351 strong symbol rows across the configured program archive dependencies and direct objects, zero duplicates, no ambiguous/missing mapped providers, zero directly stale source/object pairs; all 22 explicit source checks remain exact. Main SHA256 is `6fd4824a3217cb18bb7f6533936202a4854c6475a7fbef895176a2ba91ffbb43`.
+- Signed app real-disc checks: no-stage original startup completes 180 frames, Gateway opening completes 1,200 frames in 24.91 seconds, and the strict Gateway run rejects the known missing RestartCube creator before construction. Gateway reports 175 supported creator rows, 63 known-unlinked, zero unknown, and 5 metadata rows. The inspected frame1000 shows Mario in the authored opening with the glowing Luma/effect. This is not full-route/Rosalina validation. The normal FileSelect screenshot remains visibly incomplete (Mario/HUD against blue); startup success is not menu completeness.
+- The corrected original-process player probe passes all 360 frames, retained state-stack/walking/camera checks, original PlayerUtil vectors, NPC float behavior, authored KCL and control reset, plus real player retirement. Initial stale RuntimeContext and artificial NPC-controller fixture failures are preserved; the fixture now borrows actual original scene/NPC owners. After the shared-shim build cleanup, all four focused executions pass again.
+- Complete ABI identity matching prevents unreviewed overloads from inheriting source approval. The actual program dependency graph includes app/render archives and direct objects; external package libraries are excluded. Removing redundant shim inputs from 176 concrete targets leaves the main and signed bundle byte-identical after actual relink.
+- CP932 literal tests pass all 9,408 compiled codepoints (9,280 non-ASCII mappings) and malformed/unrepresentable input cases.
+- One redundant startup repeat after the deliberate strict crash timed out in macOS's crash-restoration NSAlert before scene placement. The sampled stack, timeout and process retirement are preserved; this is not counted as a successful run. Both final executable hashes remain identical to the three earlier validated artifacts. No production workaround was added for the OS prompt.
+- Packager dry-run passes against the final signed bundle, preserving the executable hash and recording original-process stage arguments. An existing-output path was correctly rejected first; no package or game assets were overwritten.
+
+## Scope and workspace preservation
+
+The original review is commit `1375f880016de688e99a9cf711202d95eb50fb1b`. Existing staged Gateway-controller work, unrelated editor formatter preferences, prior unrelated notes and decomp's untracked NPCUtil.d are preserved. The original-entry retirement integrates the existing coupled Xmake/toolchain/launcher migration: otherwise published launch commands would call deleted files and the container Xmake version would be below the new project minimum. LLVM/Xmake version pins, launch actions, run/package documentation and retired showcase references are updated together. Linux container execution remains unvalidated here. No game assets are committed. Notes include source hashes, failures and bounded observations; builds and scripted test probes are not full gameplay proof.
+
+Raw diagnostic logs are published as deterministic `.log.gz` to preserve exact bytes (including debugger whitespace/line endings). Historical execution records retain the actual raw `.log` paths used during the run; append `.gz` for the published artifact. `log-archives.json` records compressed and original SHA256 values. The raw local logs remain untouched. Captures use the same byte-preserving wrapping, documented in the runtime notes.

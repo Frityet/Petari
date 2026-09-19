@@ -98,18 +98,10 @@ void test_source_is_exact_and_scene_shims_are_absent() {
                 !std::filesystem::exists(project / "src/compat/StorySequencePlatformCompat.hpp"),
             "duplicate event providers and synthetic scene state must be absent");
 
-    const auto boot = read_file(project / "src/scene/SequenceBootService.cpp");
-    require(boot.find("ACTMES_AUTORUSH_BEGIN") == std::string::npos &&
-                boot.find("sendMsgToAllLiveActor") == std::string::npos,
-            "SequenceBootService must not broadcast a fabricated global auto-rush message");
+    require(!std::filesystem::exists(project / "src/scene/SequenceBootService.cpp") &&
+                !std::filesystem::exists(project / "src/scene/SceneTransitionRequestService.cpp"),
+            "original GameSystem must own scene sequencing without duplicate host routes");
 
-    const auto transitions = read_file(project / "src/scene/SceneTransitionRequestService.cpp");
-    require(transitions.find("\"PeachCastleGardenGalaxy\"") == std::string::npos &&
-                transitions.find("\"PrologueDirector\"") == std::string::npos,
-            "the scene service must not own a hardcoded after-save route");
-    require(transitions.find("GalaxyMoveArgument(7") != std::string::npos &&
-                transitions.find("GalaxyMoveArgument(6") != std::string::npos,
-            "the scene service must delegate initial and after-load moves to the retail executor");
 }
 
 struct TestCase {

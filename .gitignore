@@ -1,4 +1,4 @@
-build/
+/build/
 .cache/
 .xmake/
 container/orig/RMGK01/files/*

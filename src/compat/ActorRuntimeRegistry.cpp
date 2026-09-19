@@ -513,7 +513,6 @@ namespace smgpc::compat {
         unregister_player_light_controller(actor->mActorLightCtrl);
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->star_pointer().unregister_target(*actor);
-            runtime->unregister_effect_keeper(actor->getName(), actor);
             runtime->unregister_live_actor_model(*const_cast<LiveActor*>(actor));
         }
 

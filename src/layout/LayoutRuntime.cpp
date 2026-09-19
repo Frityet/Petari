@@ -306,22 +306,9 @@ smgpc::layout::LayoutRuntime::LayoutRuntime(const char* pName, const char* pLayo
 smgpc::layout::LayoutRuntime::~LayoutRuntime() {
     const smgpc::compat::JkrHostAllocationScope host;
     mNativeRecords.reset();
-    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-        runtime->unregister_effect_keeper(getName(), this);
-    }
 }
 
 void smgpc::layout::LayoutRuntime::initWithoutIter() {
-}
-
-void smgpc::layout::LayoutRuntime::initEffectKeeper(int effectNum, const char* pEffectName, const void*) {
-    const smgpc::compat::JkrHostAllocationScope host;
-    if (mName.empty()) {
-        aurora::throw_host_exception<std::logic_error>("Initializing layout effects requires a real named effect owner");
-    }
-    auto& runtime = smgpc::runtime::RuntimeContext::instance();
-    const auto group_name = pEffectName != nullptr ? std::string_view(pEffectName) : std::string_view(mLayoutName);
-    runtime.register_effect_keeper(smgpc::runtime::EffectKeeperHostKind::SimpleLayout, mName, effectNum, group_name, false, this);
 }
 
 void smgpc::layout::LayoutRuntime::appear() {
@@ -458,7 +445,6 @@ bool smgpc::layout::LayoutRuntime::isAnimStopped(u32 animLayer) {
     auto& anim = animationControl(animLayer);
     return anim.name.empty() || anim.stopped;
 }
-
 
 void smgpc::layout::LayoutRuntime::setPaneScale(std::string_view paneName, f32 x, f32 y) {
     smgpc::compat::JkrHostAllocationScope host;

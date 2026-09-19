@@ -1,0 +1,23 @@
+[
+  {
+    "target": "smg-pc",
+    "exit": 0,
+    "seconds": 8.038542209076695,
+    "log": "notes/compat-original-provider-cleanup-20260919/green3-smg-pc.log",
+    "binary_sha256": "92a09cc0d5d0a6a2d56f849ccba3c63a6bb1916df6e51c4e614f51454b92eb2b"
+  },
+  {
+    "target": "smg-pc-original-actor-utility-tests",
+    "exit": 0,
+    "seconds": 4.769687624997459,
+    "log": "notes/compat-original-provider-cleanup-20260919/green3-smg-pc-original-actor-utility-tests.log",
+    "binary_sha256": "2c93589501f90747cdfa23edeebfd9226101ac345735f6c7dbf8e0865d521e3a"
+  },
+  {
+    "target": "smg-pc-original-placement-coverage-tests",
+    "exit": 0,
+    "seconds": 4.667873416910879,
+    "log": "notes/compat-original-provider-cleanup-20260919/green3-smg-pc-original-placement-coverage-tests.log",
+    "binary_sha256": "8f20740d8b9b221c8e9af3143e090de47206521cc6fe281accdee944e2f1d9f4"
+  }
+]

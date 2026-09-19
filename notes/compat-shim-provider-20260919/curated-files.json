@@ -1,0 +1,21 @@
+{
+  "files": [
+    "notes/compat-shim-provider-20260919/README.md",
+    "notes/compat-shim-provider-20260919/affected-targets.json",
+    "notes/compat-shim-provider-20260919/artifact-symbols.json",
+    "notes/compat-shim-provider-20260919/check_graph.lua",
+    "notes/compat-shim-provider-20260919/configured-shim-dependencies.json.gz",
+    "notes/compat-shim-provider-20260919/run-results.json",
+    "notes/compat-shim-provider-20260919/smg-pc-original-actor-utility-tests.log.gz",
+    "notes/compat-shim-provider-20260919/smg-pc-original-placement-coverage-tests.log.gz",
+    "notes/compat-shim-provider-20260919/smg-pc-original-process-player-owner-tests.log.gz",
+    "notes/compat-shim-provider-20260919/smg-pc-original-scene-execution-owner-tests.log.gz",
+    "notes/compat-original-provider-cleanup-20260919/single-shim-build-results.json",
+    "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc-original-actor-utility-tests.log.gz",
+    "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc-original-placement-coverage-tests.log.gz",
+    "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc-original-process-player-owner-tests.log.gz",
+    "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc-original-scene-execution-owner-tests.log.gz",
+    "notes/compat-original-provider-cleanup-20260919/single-shim-smg-pc.log.gz"
+  ],
+  "excluded": "raw configured-shim-dependencies.json duplicates its compressed artifact"
+}

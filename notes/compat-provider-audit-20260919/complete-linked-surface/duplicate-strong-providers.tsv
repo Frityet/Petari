@@ -1,0 +1,11 @@
+symbol	name	archive	member	sources	mapping	present_in_executable	source_newer_than_object	provenance
+__ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE15_M_replace_coldEPcmPKcmm	std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char>>::_M_replace_cold(char*, unsigned long, char const*, unsigned long, unsigned long)	/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-base.a	compat.cpp.o	aurora/lib/compat.cpp	unique	no	false	unreviewed
+__ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE15_M_replace_coldEPcmPKcmm	std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char>>::_M_replace_cold(char*, unsigned long, char const*, unsigned long, unsigned long)	/Users/frityet/Projects/petari/build/.objs/smg-pc/macosx/arm64/debug/aurora/lib/compat.cpp.o	compat.cpp.o	aurora/lib/compat.cpp	unique	no	false	unreviewed
+___isoc23_strtol	___isoc23_strtol	/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-base.a	compat.cpp.o	aurora/lib/compat.cpp	unique	no	false	unreviewed
+___isoc23_strtol	___isoc23_strtol	/Users/frityet/Projects/petari/build/.objs/smg-pc/macosx/arm64/debug/aurora/lib/compat.cpp.o	compat.cpp.o	aurora/lib/compat.cpp	unique	no	false	unreviewed
+___isoc23_strtoll	___isoc23_strtoll	/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-base.a	compat.cpp.o	aurora/lib/compat.cpp	unique	no	false	unreviewed
+___isoc23_strtoll	___isoc23_strtoll	/Users/frityet/Projects/petari/build/.objs/smg-pc/macosx/arm64/debug/aurora/lib/compat.cpp.o	compat.cpp.o	aurora/lib/compat.cpp	unique	no	false	unreviewed
+___isoc23_strtoul	___isoc23_strtoul	/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-base.a	compat.cpp.o	aurora/lib/compat.cpp	unique	no	false	unreviewed
+___isoc23_strtoul	___isoc23_strtoul	/Users/frityet/Projects/petari/build/.objs/smg-pc/macosx/arm64/debug/aurora/lib/compat.cpp.o	compat.cpp.o	aurora/lib/compat.cpp	unique	no	false	unreviewed
+___isoc23_strtoull	___isoc23_strtoull	/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-base.a	compat.cpp.o	aurora/lib/compat.cpp	unique	no	false	unreviewed
+___isoc23_strtoull	___isoc23_strtoull	/Users/frityet/Projects/petari/build/.objs/smg-pc/macosx/arm64/debug/aurora/lib/compat.cpp.o	compat.cpp.o	aurora/lib/compat.cpp	unique	no	false	unreviewed

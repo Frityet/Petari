@@ -1,0 +1,150 @@
+[
+  {
+    "provider": "src/compat/GameActorPhysicsCompat.cpp",
+    "original": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "anchor": "void onCalcGravity(",
+    "abi_symbol": "_ZN2MR13onCalcGravityEP9LiveActor",
+    "demangled_signature": "MR::onCalcGravity(LiveActor*)"
+  },
+  {
+    "provider": "src/compat/GameActorPhysicsCompat.cpp",
+    "original": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "anchor": "void offCalcGravity(",
+    "abi_symbol": "_ZN2MR14offCalcGravityEP9LiveActor",
+    "demangled_signature": "MR::offCalcGravity(LiveActor*)"
+  },
+  {
+    "provider": "src/compat/LiveActorUtilCompat.cpp",
+    "original": "decomp/src/Game/Util/LiveActorUtil.cpp",
+    "anchor": "f32 calcNerveEaseInRate(",
+    "abi_symbol": "_ZN2MR19calcNerveEaseInRateEPK9LiveActori",
+    "demangled_signature": "MR::calcNerveEaseInRate(LiveActor const*, int)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "u32 getStrikeInfoNumCategory(s32 category)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool getFirstPolyOnLineCategory(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset, const TriangleFilterBase* pTriangleFilter, const CollisionPartsFilterBase* pPartsFilter, s32 category)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool getFirstPolyOnLineCategoryExceptActor(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset, const LiveActor* pActor, s32 category)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool getFirstPolyOnLineToMapExceptActor(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset, const LiveActor* pActor)",
+    "abi_symbol": "_ZN2MR34getFirstPolyOnLineToMapExceptActorEPN9JGeometry5TVec3IfEEP8TriangleRKS2_S7_PK9LiveActor",
+    "demangled_signature": "MR::getFirstPolyOnLineToMapExceptActor(JGeometry::TVec3<float>*, Triangle*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, LiveActor const*)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool getFirstPolyOnLineToMap(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset)",
+    "abi_symbol": "_ZN2MR23getFirstPolyOnLineToMapEPN9JGeometry5TVec3IfEEP8TriangleRKS2_S7_",
+    "demangled_signature": "MR::getFirstPolyOnLineToMap(JGeometry::TVec3<float>*, Triangle*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool getFirstPolyOnLineToWaterSurface(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset)",
+    "abi_symbol": "_ZN2MR32getFirstPolyOnLineToWaterSurfaceEPN9JGeometry5TVec3IfEEP8TriangleRKS2_S7_",
+    "demangled_signature": "MR::getFirstPolyOnLineToWaterSurface(JGeometry::TVec3<float>*, Triangle*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool getFirstPolyOnLineToMap(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset, const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter)",
+    "abi_symbol": "_ZN2MR23getFirstPolyOnLineToMapEPN9JGeometry5TVec3IfEEP8TriangleRKS2_S7_PK24CollisionPartsFilterBasePK18TriangleFilterBase",
+    "demangled_signature": "MR::getFirstPolyOnLineToMap(JGeometry::TVec3<float>*, Triangle*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, CollisionPartsFilterBase const*, TriangleFilterBase const*)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool getFirstPolyOnLineToWaterSurface(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset, const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter)",
+    "abi_symbol": "_ZN2MR32getFirstPolyOnLineToWaterSurfaceEPN9JGeometry5TVec3IfEEP8TriangleRKS2_S7_PK24CollisionPartsFilterBasePK18TriangleFilterBase",
+    "demangled_signature": "MR::getFirstPolyOnLineToWaterSurface(JGeometry::TVec3<float>*, Triangle*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, CollisionPartsFilterBase const*, TriangleFilterBase const*)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "u32 getNearPolyOnLineSort(const TVec3f& rReference, const TVec3f& rStart, const TVec3f& rOffset, const HitSensor* pExceptSensor)",
+    "abi_symbol": "_ZN2MR21getNearPolyOnLineSortERKN9JGeometry5TVec3IfEES4_S4_PK9HitSensor",
+    "demangled_signature": "MR::getNearPolyOnLineSort(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, HitSensor const*)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool getSortedPoly(TVec3f* pDst, Triangle* pTriangle, u32 sortIndex)",
+    "abi_symbol": "_ZN2MR13getSortedPolyEPN9JGeometry5TVec3IfEEP8Trianglej",
+    "demangled_signature": "MR::getSortedPoly(JGeometry::TVec3<float>*, Triangle*, unsigned int)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "const Triangle* getSortedPoly(u32 sortIndex)",
+    "abi_symbol": "_ZN2MR13getSortedPolyEj",
+    "demangled_signature": "MR::getSortedPoly(unsigned int)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool isExistMapCollision(const TVec3f& rParam1, const TVec3f& rParam2)",
+    "abi_symbol": "_ZN2MR19isExistMapCollisionERKN9JGeometry5TVec3IfEES4_",
+    "demangled_signature": "MR::isExistMapCollision(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool isExistMoveLimitCollision(const TVec3f& rParam1, const TVec3f& rParam2)",
+    "abi_symbol": "_ZN2MR25isExistMoveLimitCollisionERKN9JGeometry5TVec3IfEES4_",
+    "demangled_signature": "MR::isExistMoveLimitCollision(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool isExistMapCollisionExceptActor(const TVec3f& rStart, const TVec3f& rOffset, const LiveActor* pActor)",
+    "abi_symbol": "_ZN2MR30isExistMapCollisionExceptActorERKN9JGeometry5TVec3IfEES4_PK9LiveActor",
+    "demangled_signature": "MR::isExistMapCollisionExceptActor(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, LiveActor const*)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "bool trySetMoveLimitCollision(LiveActor* pActor)",
+    "abi_symbol": "_ZN2MR24trySetMoveLimitCollisionEP9LiveActor",
+    "demangled_signature": "MR::trySetMoveLimitCollision(LiveActor*)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "s32 checkStrikeLineToMap(const TVec3f& rStart, const TVec3f& rOffset, s32 maxCount, const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter)",
+    "abi_symbol": "_ZN9Collision20checkStrikeLineToMapERKN9JGeometry5TVec3IfEES4_iPK24CollisionPartsFilterBasePK18TriangleFilterBase",
+    "demangled_signature": "Collision::checkStrikeLineToMap(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, int, CollisionPartsFilterBase const*, TriangleFilterBase const*)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "s32 checkStrikeLineToSunshade(const TVec3f& rStart, const TVec3f& rOffset, s32 maxCount, const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter)",
+    "abi_symbol": "_ZN9Collision25checkStrikeLineToSunshadeERKN9JGeometry5TVec3IfEES4_iPK24CollisionPartsFilterBasePK18TriangleFilterBase",
+    "demangled_signature": "Collision::checkStrikeLineToSunshade(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, int, CollisionPartsFilterBase const*, TriangleFilterBase const*)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "const HitInfo* getStrikeInfoMap(u32 index)",
+    "abi_symbol": "_ZN9Collision16getStrikeInfoMapEj",
+    "demangled_signature": "Collision::getStrikeInfoMap(unsigned int)"
+  },
+  {
+    "provider": "src/compat/OriginalMapQueries.cpp",
+    "original": "decomp/src/Game/Util/MapUtil.cpp",
+    "anchor": "u32 getStrikeInfoNumMap()",
+    "abi_symbol": "_ZN9Collision19getStrikeInfoNumMapEv",
+    "demangled_signature": "Collision::getStrikeInfoNumMap()"
+  }
+]

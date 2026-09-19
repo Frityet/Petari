@@ -5,7 +5,7 @@ task("validate-trace-sqlite")
         import("common")
         import("core.base.option")
         common.runv("xmake", {"build", "smg-pc-trace-validate-sqlite"}, {curdir = common.project_root()})
-        local bin = path.join(common.project_root(), "build/linux/x86_64/debug/smg-pc-trace-validate-sqlite")
+        local bin = common.targetfile("smg-pc-trace-validate-sqlite")
         local argv = {}
         local function append_option(name, value)
             if value ~= nil and value ~= false then
@@ -46,7 +46,7 @@ task("pack-trace-sqlite")
         import("common")
         import("core.base.option")
         common.runv("xmake", {"build", "smg-pc-trace-pack-sqlite"}, {curdir = common.project_root()})
-        local bin = path.join(common.project_root(), "build/linux/x86_64/debug/smg-pc-trace-pack-sqlite")
+        local bin = common.targetfile("smg-pc-trace-pack-sqlite")
         local argv = {}
         if option.get("output") then
             table.insert(argv, "--output")
@@ -76,7 +76,7 @@ task("inspect-trace-sqlite")
         import("common")
         import("core.base.option")
         common.runv("xmake", {"build", "smg-pc-trace-inspect-sqlite"}, {curdir = common.project_root()})
-        local bin = path.join(common.project_root(), "build/linux/x86_64/debug/smg-pc-trace-inspect-sqlite")
+        local bin = common.targetfile("smg-pc-trace-inspect-sqlite")
         local argv = {}
         if option.get("database") then
             table.insert(argv, "--database")
@@ -107,7 +107,7 @@ task("compare-trace-sqlite")
         import("common")
         import("core.base.option")
         common.runv("xmake", {"build", "smg-pc-trace-compare-sqlite"}, {curdir = common.project_root()})
-        local bin = path.join(common.project_root(), "build/linux/x86_64/debug/smg-pc-trace-compare-sqlite")
+        local bin = common.targetfile("smg-pc-trace-compare-sqlite")
         local argv = {}
         local function append_option(name, value)
             if value ~= nil and value ~= false then
@@ -302,35 +302,34 @@ task("source-closeness-audit")
             table.insert(argv, "--pc-root")
             table.insert(argv, option.get("pc-root"))
         end
+        if option.get("check-providers") then table.insert(argv, "--check-providers") end
         source_closeness_audit.run(argv)
     end)
     set_menu {
         usage = "xmake source-closeness-audit --output DIR [options]",
-        description = "Audit pc-port src/Game source closeness and compat inventory.",
+        description = "Audit original source closeness, compatibility inventory, and actual symbol ownership.",
         options = {
             {"o", "output", "kv", nil, "Artifact output directory."},
             {"-", "repo-root", "kv", nil, "Repository root containing src/Game and decomp/."},
             {"-", "pc-root", "kv", nil, "PC source root (defaults to the repository root)."},
+            {"-", "check-providers", "k", nil, "Fail on duplicate/unmapped providers, missing builds, or changed reviewed imports; unreviewed sources remain reported."},
         },
     }
 
-task("build-wine-shims")
-    on_run(function()
-        import("wine_shims")
-        import("core.base.option")
-        local positional = option.get("contents") or {}
-        wine_shims.run({
-            output_dir = option.get("output-dir") or positional[1],
-            cc = option.get("cc"),
-        })
-    end)
+task("package-demo")
+    on_run("package.demo")
     set_menu {
-        usage = "xmake build-wine-shims [options] [output-dir]",
-        description = "Build Wine compatibility shim DLLs with llvm-mingw.",
+        usage = "xmake package-demo --disc=PATH --expected-sha256=HASH [options]",
+        description = "Package a selected macOS game without rebuilding or copying game assets.",
         options = {
-            {"o", "output-dir", "kv", nil, "Output directory."},
-            {"-", "cc", "kv", nil, "MinGW clang executable."},
-            {},
-            {nil, "contents", "vs", nil, "Optional output directory."},
-        },
+            {nil, "binary", "kv", nil, "Selected executable (defaults to the configured game target)."},
+            {nil, "source-app", "kv", nil, "Copy an existing app, including its bundled dependencies."},
+            {nil, "disc", "kv", nil, "External game disc image."},
+            {nil, "expected-sha256", "kv", nil, "SHA256 of the selected executable."},
+            {"o", "output", "kv", nil, "New output .app path."},
+            {nil, "name", "kv", nil, "Application display name."},
+            {nil, "validation-note", "kv", nil, "Caller-supplied runtime validation report."},
+            {nil, "manifest", "kv", nil, "Optional external provenance JSON path."},
+            {nil, "dry-run", "k", nil, "Inspect provenance without creating the package."},
+        }
     }

@@ -21,4 +21,4 @@ jobs:
       - name: Build native PC targets
         run: |
           docker run --rm -v "$GITHUB_WORKSPACE:/workspaces/pcport" petari-build \
-            bash -c 'xmake f -y -m release --toolchain=clang --runtimes=c++_shared && xmake build -y smg-pc && xmake build -y smg-pc-showcase'
+            bash -c 'xmake f -y -m release && xmake -y && xmake build -y smg-pc'
