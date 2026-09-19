@@ -1,0 +1,15 @@
+settings set interpreter.stop-command-source-on-error false
+thread select 1
+thread backtrace -c 18
+frame select 8
+frame variable target processed stream *stream
+target variable -r sBreakPoint
+target variable -r sDrawSyncToken
+expr -- *DrawSyncManager::sInstance->mFifo
+expr -- DrawSyncManager::sInstance->mQueue
+expr -- DrawSyncManager::sInstance->mTokenRanges
+expr -- DrawSyncManager::sInstance->_36C
+memory read --format x --size 8 --count 4 `DrawSyncManager::sInstance->mFifo->mArray + DrawSyncManager::sInstance->mFifo->mLoopIdx`
+memory read --format x --size 1 --count 96 `stream->data + stream->decoded.__a_.__a_value - stream->bufferBase`
+process kill
+quit

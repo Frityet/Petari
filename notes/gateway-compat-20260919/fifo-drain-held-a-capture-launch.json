@@ -1,0 +1,28 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc",
+    "--original",
+    "--disc",
+    "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--stage",
+    "HeavensDoorGalaxy",
+    "--scenario",
+    "1",
+    "--max-frames",
+    "2600"
+  ],
+  "environment": {
+    "SMGPC_SAVE_DIR": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/fifo-drain-held-a-capture-nand",
+    "AURORA_BACKEND": "metal",
+    "SMGPC_WINDOW_WIDTH": "1280",
+    "SMGPC_WINDOW_HEIGHT": "720",
+    "SMGPC_SCREENSHOT_PATH": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/fifo-drain-held-a-capture-frame1400.png",
+    "SMGPC_SCREENSHOT_FRAME": "1400",
+    "SMGPC_DEBUG_WPAD_BUTTON_SCRIPT": "1400-1410:A;1500-1510:A;1600-1610:A;1700-1710:A;1800-1810:A;1900-1910:A;2000-2010:A;2100-2110:A",
+    "SMGPC_DEBUG_WPAD_POINTER_SCRIPT": "",
+    "SMGPC_DEBUG_WPAD_STICK_SCRIPT": ""
+  },
+  "binary_sha256": "ef39e877fc05b8911f1fb3fc7d1a11d2bc5025e7b7578b8f9bd69f13fa5fb3c0",
+  "started_at": "2026-09-19T12:56:31.414651+00:00",
+  "pid": 31558
+}

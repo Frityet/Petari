@@ -1,0 +1,32 @@
+[
+  {
+    "mode": "Drain",
+    "exit": 0,
+    "source_delta": "kProcessingMode selector only",
+    "cases": [
+      "GXFifoBreakpointTest.BlockedProducerResumesStrictlyBelowLowWatermark",
+      "GXFifoBreakpointTest.HighWaterWaitYieldsGuestExecutionToTheBreakpointCallback",
+      "GXFifoBreakpointTest.BackpressureFetchesDrawLargerThanRingWithoutDecodingPartialVertices",
+      "GXFifoBreakpointTest.IndexedDrawStreamsItsIndexArrayAndPayloadAcrossRingWraps",
+      "GXFifoBreakpointTest.ShutdownCancelsBlockedProducerBeforeRetiringItsStream",
+      "GXFifoTest.AutoSizedDrawLargerThanRingStagesUntilItsLengthIsFinal",
+      "GXFifoTest.AbortDuringPatchableSubmissionDropsTheRemainingPayload",
+      "GXFifoTest.ShutdownRetiresBlockedPatchableSubmissionBeforeItsFifoOwner"
+    ]
+  },
+  {
+    "mode": "Inline",
+    "exit": 0,
+    "source_delta": "kProcessingMode selector only",
+    "cases": [
+      "GXFifoBreakpointTest.BlockedProducerResumesStrictlyBelowLowWatermark",
+      "GXFifoBreakpointTest.HighWaterWaitYieldsGuestExecutionToTheBreakpointCallback",
+      "GXFifoBreakpointTest.BackpressureFetchesDrawLargerThanRingWithoutDecodingPartialVertices",
+      "GXFifoBreakpointTest.IndexedDrawStreamsItsIndexArrayAndPayloadAcrossRingWraps",
+      "GXFifoBreakpointTest.ShutdownCancelsBlockedProducerBeforeRetiringItsStream",
+      "GXFifoTest.AutoSizedDrawLargerThanRingStagesUntilItsLengthIsFinal",
+      "GXFifoTest.AbortDuringPatchableSubmissionDropsTheRemainingPayload",
+      "GXFifoTest.ShutdownRetiresBlockedPatchableSubmissionBeforeItsFifoOwner"
+    ]
+  }
+]
