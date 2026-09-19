@@ -11,6 +11,7 @@
 #include "compat/ClippingDirectorOwnership.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 #include "Game/Map/CollisionDirector.hpp"
+#include "Game/MapObj/EarthenPipe.hpp"
 #include "Game/Map/SunshadeMapHolder.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
 #include "Game/LiveActor/ShadowSurfaceDrawer.hpp"
@@ -641,6 +642,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new StarPieceDirector(cStarPieceDirectorName.c_str());
     case SceneObj_CoinHolder:
         return new CoinHolder(cCoinHolderName.c_str());
+    case SceneObj_EarthenPipeMediator:
+        return new EarthenPipeMediator();
     case SceneObj_ResourceShare:
         return new ResourceShare();
     case SceneObj_ClipAreaHolder:

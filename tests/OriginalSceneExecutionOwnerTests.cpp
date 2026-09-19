@@ -1,9 +1,12 @@
 #include "SceneExecutionFixture.hpp"
+#include "OriginalSceneControllerFixture.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObjCategoryList.hpp"
 #include "Game/NameObj/NameObjExecuteHolder.hpp"
 #include "Game/NameObj/NameObjFinder.hpp"
 #include "Game/Scene/SceneNameObjMovementController.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "layout/LayoutRuntime.hpp"
@@ -36,22 +39,102 @@ struct Object final : NameObj {
     JKRHeap* expected = nullptr;
     std::function<void()> hook;
 };
+
+struct VisibilityActor final : LiveActor {
+    VisibilityActor() : LiveActor("original model visibility fixture") {}
+    void draw() const override { ++draws; }
+    mutable unsigned draws = 0;
+};
+
+void verify_model_visibility(smgpc::runtime::SceneScheduler& scheduler,
+                             const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps,
+                             smgpc::test::OriginalSceneControllerFixture& original) {
+    const auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 1U << 20);
+    smgpc::test::SceneExecutionFixture scene(scheduler, domain, nullptr, nullptr, &original.scene, original.controller().mObjHolder);
+    require(MR::createSceneObj(SceneObj_ClippingDirector) != nullptr,
+            "the original LiveActor constructor requires its scene clipping director");
+    VisibilityActor actor;
+    actor.mFlag.mIsDead = false;
+    MR::connectToScene(&actor, -1, -1, -1, 72);
+    MR::connectToDrawTemporarily(&actor);
+    MR::hideModel(&actor);
+    scene.complete_initialization();
+    const auto member_count = [&] { return scene.executor().mDrawList->mCategoryInfo[72].mNameObjArr.size(); };
+    require(member_count() == 0 && actor.mFlag.mIsNoCalcAnim && actor.mFlag.mIsNoCalcView,
+            "hiding before scene initialization cancels pending draw membership and stops model calculation");
+    MR::showModel(&actor);
+    require(member_count() == 0 && !actor.mFlag.mIsNoCalcAnim && !actor.mFlag.mIsNoCalcView,
+            "showing restores model calculation while draw membership waits for its original requirement phase");
+    scene.apply_connections();
+    scheduler.execute_draw_type(72);
+    require(member_count() == 1 && actor.draws == 1, "showing reconnects the original draw category exactly once");
+    MR::hideModel(&actor);
+    MR::hideModel(&actor);
+    require(member_count() == 1, "hiding a live actor queues removal without mutating an active draw batch");
+    scene.apply_connections();
+    scheduler.execute_draw_type(72);
+    require(member_count() == 0 && actor.draws == 1, "hidden actors stop receiving actual original draw callbacks");
+    MR::showModel(&actor);
+    MR::showModel(&actor);
+    scene.apply_connections();
+    scheduler.execute_draw_type(72);
+    require(member_count() == 1 && actor.draws == 2, "repeated visibility requests never duplicate original category entries");
+    MR::hideModelAndOnCalcAnim(&actor);
+    scene.apply_connections();
+    scheduler.execute_draw_type(72);
+    require(member_count() == 0 && actor.draws == 2 && !actor.mFlag.mIsNoCalcAnim && actor.mFlag.mIsNoCalcView,
+            "hidden animated models retain animation but leave the original draw category and stop view calculation");
+    MR::showModel(&actor);
+    scene.apply_connections();
+    MR::offEntryDrawBuffer(&actor);
+    scene.apply_connections();
+    require(member_count() == 0 && !actor.mFlag.mIsNoCalcAnim && !actor.mFlag.mIsNoCalcView,
+            "entry-only hiding removes draw membership while preserving animation and view calculation");
+    MR::onEntryDrawBuffer(&actor);
+    scene.apply_connections();
+    require(member_count() == 1, "entry-only showing restores original draw membership");
+    MR::hideModel(&actor);
+    scene.apply_connections();
+    for (bool dead : {true, false}) {
+        actor.mFlag.mIsDead = dead;
+        actor.mFlag.mIsClipped = !dead;
+        MR::showModel(&actor);
+        scene.apply_connections();
+        require(member_count() == 0 && !actor.mFlag.mIsHiddenModel,
+                "showing a dead or clipped actor changes visibility without reconnecting draw execution");
+        MR::hideModel(&actor);
+        scene.apply_connections();
+        require(member_count() == 0, "hiding a dead or clipped actor leaves draw execution disconnected");
+    }
+    actor.mFlag.mIsDead = false;
+    actor.mFlag.mIsClipped = false;
+    MR::showModel(&actor);
+    scene.apply_connections();
+    MR::hideModel(&actor);
+    MR::showModel(&actor);
+    scene.apply_connections();
+    scheduler.execute_draw_type(72);
+    require(member_count() == 1 && actor.draws == 3,
+            "same-phase hide and show cancel removal without duplicating the original draw category");
+}
 }
 
 int main() {
     try {
         using namespace smgpc;
         const auto heaps = compat::JkrHeapRuntime::create(16U << 20);
+        test::OriginalSceneControllerFixture original(heaps);
         const auto free = heaps->root_heap().getFreeSize();
         NameObj outside("outside the scene NameObjHolder");
         const auto identities = compat::name_obj_runtime_state_count();
         runtime::SceneScheduler scheduler;
         runtime::SceneSchedulerBinding active(scheduler);
+        verify_model_visibility(scheduler, heaps, original);
         for (int generation = 0; generation < 16; ++generation) {
             auto domain = compat::JkrAllocationDomain::create(heaps, 1U << 20);
             std::weak_ptr<compat::JkrAllocationDomain> weak = domain;
             {
-                test::SceneExecutionFixture scene(scheduler, domain);
+                test::SceneExecutionFixture scene(scheduler, domain, nullptr, nullptr, &original.scene, original.controller().mObjHolder);
                 auto* original_holder = &scene.execution().requirements();
                 require(JKRHeap::findFromRoot(original_holder) == &domain->heap(), "actual requirement holder must use the scene heap");
                 require(scene.executor().mBufferHolder != nullptr, "the real executor owns one draw holder");
@@ -125,7 +208,7 @@ int main() {
         }
         {
             auto domain = compat::JkrAllocationDomain::create(heaps, 1U << 20);
-            test::SceneExecutionFixture scene(scheduler, domain);
+            test::SceneExecutionFixture scene(scheduler, domain, nullptr, nullptr, &original.scene, original.controller().mObjHolder);
             layout::LayoutRuntime native_layout("scheduler-owned layout adaptor", "ownership fixture", 1, 72);
             const auto before = compat::name_obj_runtime_state_count();
             const auto marker = compat::mark_name_obj_runtime_registrations();
@@ -155,6 +238,6 @@ int main() {
         try { (void)NameObjFinder::find(outside.getName()); }
         catch (const std::logic_error&) { rejected = true; }
         require(rejected, "original name lookup requires the owning scene holder");
-        std::cout << "original_queue=pass deferred_connections=pass category_swap_order=pass callback_retirement=pass sixteen_scene_domains=pass layout_adaptor_ownership=pass\n";
+        std::cout << "original_queue=pass deferred_connections=pass category_swap_order=pass callback_retirement=pass sixteen_scene_domains=pass layout_adaptor_ownership=pass model_visibility=pass\n";
     } catch (const std::exception& error) { std::cerr << error.what() << '\n'; return 1; }
 }

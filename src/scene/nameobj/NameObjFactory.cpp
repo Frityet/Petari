@@ -1,6 +1,8 @@
 #include <aurora/exception.hpp>
 #include "scene/nameobj/NameObjFactory.hpp"
 
+#include "Game/Demo/DemoCastSubGroup.hpp"
+#include "Game/Demo/DemoExecutor.hpp"
 #include "Game/Demo/PrologueDirector.hpp"
 #include "Game/Effect/SimpleEffectObj.hpp"
 #include "Game/Gravity/GlobalGravityObj.hpp"
@@ -11,8 +13,10 @@
 #include "Game/Map/SwitchSynchronizer.hpp"
 #include "Game/MapObj/BrightObj.hpp"
 #include "Game/MapObj/CollisionBlocker.hpp"
+#include "Game/MapObj/EarthenPipe.hpp"
 #include "Game/MapObj/Coin.hpp"
 #include "Game/MapObj/FlipPanel.hpp"
+#include "Game/MapObj/HeavensDoorDemoObj.hpp"
 #include "Game/MapObj/InvisiblePolygonObj.hpp"
 #include "Game/MapObj/InvisiblePolygonObjGCapture.hpp"
 #include "Game/MapObj/PowerStar.hpp"
@@ -393,6 +397,41 @@ namespace {
             "PolygonCodeRecoveryBowl",
         },
         NameObjFactory::Name2CreateFunc{
+            "DemoGroup",
+            create_supported_name_obj<DemoExecutor>,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "EarthenPipe",
+            create_supported_name_obj<EarthenPipe>,
+            "EarthenPipe",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "EarthenPipeInWater",
+            create_supported_name_obj<EarthenPipe>,
+            "EarthenPipe",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "DemoSubGroup",
+            create_supported_name_obj<DemoCastSubGroup>,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "HeavensDoorAppearStepA",
+            create_supported_name_obj<HeavensDoorDemoObj>,
+            "HeavensDoorAppearStepA",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "HeavensDoorInsideCage",
+            create_supported_name_obj<HeavensDoorDemoObj>,
+            "HeavensDoorInsideCage",
+        },
+        NameObjFactory::Name2CreateFunc{
+            "HeavensDoorInsidePlanetPartsA",
+            create_supported_name_obj<HeavensDoorDemoObj>,
+            "HeavensDoorInsidePlanetPartsA",
+        },
+        NameObjFactory::Name2CreateFunc{
             "Rosetta",
             create_supported_name_obj<Rosetta>,
             nullptr,
@@ -564,6 +603,9 @@ namespace {
 
     [[nodiscard]] const std::vector<NameObjFactory::Name2CreateFunc> &area_obj_create_table() {
         static const auto table = [] {
+            // This native catalog outlives every original Game heap, including
+            // whichever scene first asks the factory for an area creator.
+            const aurora::allocation::HostAllocationScope host;
             auto result = std::vector<NameObjFactory::Name2CreateFunc>{};
             const auto descriptors = smgpc::scene::complete_area_obj_placement_descriptors();
             result.reserve(descriptors.size());

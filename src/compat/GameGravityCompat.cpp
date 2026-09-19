@@ -39,9 +39,9 @@ namespace {
 
     bool query_gravity(const NameObj* object, const TVec3f& position, TVec3f* destination,
                        GravityInfo* info, u32 host, u32 type_mask) {
-        if (object == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("gravity queries require a real requesting NameObj");
-        }
+        // Position-only queries (including original name-position placement)
+        // have no requesting actor. Retail passes host zero in that case;
+        // the scene's actual gravity manager still owns the query.
         return gravity_manager().calcTotalGravityVector(
             destination, info, position, type_mask, host_id(object, host));
     }

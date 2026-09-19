@@ -12,6 +12,7 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
+#include "Game/NameObj/NameObjExecuteHolder.hpp"
 #include "Game/Map/LightFunction.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/JMapUtil.hpp"
@@ -208,27 +209,63 @@ namespace MR {
     }
 
     void onEntryDrawBuffer(LiveActor* pActor) {
-        if (pActor != nullptr) {
-            pActor->mFlag.mIsHiddenModel = false;
+        if (!isNoEntryDrawBuffer(pActor)) {
+            return;
         }
+
+        if (!isDead(pActor) && !pActor->mFlag.mIsClipped) {
+            connectToDrawTemporarily(pActor);
+        }
+
+        pActor->mFlag.mIsHiddenModel = false;
     }
 
     void offEntryDrawBuffer(LiveActor* pActor) {
-        if (pActor != nullptr) {
-            pActor->mFlag.mIsHiddenModel = true;
+        if (isNoEntryDrawBuffer(pActor)) {
+            return;
         }
+
+        if (!isDead(pActor) && !pActor->mFlag.mIsClipped) {
+            disconnectToDrawTemporarily(pActor);
+        }
+
+        pActor->mFlag.mIsHiddenModel = true;
     }
 
     void showModel(LiveActor* pActor) {
-        onEntryDrawBuffer(pActor);
+        if (isNoCalcAnim(pActor)) {
+            onCalcAnim(pActor);
+        }
+
+        if (isNoCalcView(pActor)) {
+            pActor->mFlag.mIsNoCalcView = false;
+        }
+
+        if (isNoEntryDrawBuffer(pActor)) {
+            onEntryDrawBuffer(pActor);
+        }
     }
 
     void hideModel(LiveActor* pActor) {
-        offEntryDrawBuffer(pActor);
+        if (!isNoCalcAnim(pActor)) {
+            offCalcAnim(pActor);
+        }
+
+        if (!isNoCalcView(pActor)) {
+            pActor->mFlag.mIsNoCalcView = true;
+        }
+
+        if (!isNoEntryDrawBuffer(pActor)) {
+            offEntryDrawBuffer(pActor);
+        }
     }
 
     bool isNoCalcAnim(const LiveActor* pActor) {
         return pActor != nullptr && pActor->mFlag.mIsNoCalcAnim;
+    }
+
+    bool isNoCalcView(const LiveActor* pActor) {
+        return pActor->mFlag.mIsNoCalcView;
     }
 
     void offCalcAnim(LiveActor* pActor) {

@@ -46,13 +46,8 @@ namespace MR {
 
 
     void hideModelAndOnCalcAnim(LiveActor* pActor) {
-        if (pActor == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("Model hiding requires a LiveActor.");
-        }
-        pActor->mFlag.mIsNoCalcAnim = true;
-        pActor->mFlag.mIsNoCalcView = true;
-        pActor->mFlag.mIsHiddenModel = true;
-        pActor->mFlag.mIsNoCalcAnim = false;
+        hideModel(pActor);
+        onCalcAnim(pActor);
     }
 
 

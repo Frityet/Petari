@@ -1,4 +1,6 @@
 #include "Game/Gravity/GravityInfo.hpp"
+#include "OriginalSceneControllerFixture.hpp"
+#include "SceneExecutionFixture.hpp"
 #include "Game/Gravity/GraviryFollower.hpp"
 #include "Game/Gravity/GravityCreator.hpp"
 #include "Game/Gravity/GlobalGravityObj.hpp"
@@ -292,6 +294,10 @@ namespace {
     }
 
     void test_absent_manager_is_explicit() {
+        const auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+        smgpc::test::OriginalSceneControllerFixture original(heaps);
+        smgpc::runtime::SceneScheduler scheduler;
+        smgpc::runtime::SceneSchedulerBinding active(scheduler);
         auto actor = LiveActor("gravity-absence-probe");
         auto destination = TVec3f{3.0F, 4.0F, 5.0F};
         require_throws<std::logic_error>(
@@ -309,8 +315,9 @@ namespace {
             [&] { (void)MR::calcGravityVector(static_cast<const LiveActor*>(nullptr), &destination, nullptr, 0U); },
             "a null actor must not be treated as zero gravity");
 
-        auto holder = SceneObjHolder{};
-        const auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        const auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 1U << 20);
+        smgpc::test::SceneExecutionFixture binding(scheduler, domain, nullptr, nullptr,
+                                                  &original.scene, original.controller().mObjHolder);
         destination.set(3.0F, 4.0F, 5.0F);
         require_throws<std::logic_error>(
             [&] { (void)MR::calcGravityVector(&actor, &destination, nullptr, 0U); },
@@ -320,13 +327,24 @@ namespace {
     }
 
     void test_real_manager_rules_and_info() {
-        auto scene = GravityScene{};
+        const auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+        smgpc::test::OriginalSceneControllerFixture original(heaps);
+        smgpc::runtime::SceneScheduler scheduler;
+        smgpc::runtime::SceneSchedulerBinding active(scheduler);
+        const auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 1U << 20);
+        smgpc::test::SceneExecutionFixture scene(scheduler, domain, nullptr, nullptr,
+                                                &original.scene, original.controller().mObjHolder);
+        require(MR::createSceneObj(SceneObj_PlanetGravityManager) != nullptr,
+                "gravity query coverage requires the original scene-owned manager");
 
         auto caller = NameObj("gravity-caller");
         auto destination = TVec3f{9.0F, 9.0F, 9.0F};
         require(!MR::calcGravityVector(&caller, TVec3f{}, &destination, nullptr, 0U) &&
                     destination.epsilonEquals(TVec3f{}, 0.0F),
                 "a real empty manager should retain retail false-and-zero behavior");
+        require(!MR::calcGravityVector(nullptr, TVec3f{}, &destination, nullptr, 0U) &&
+                    destination.epsilonEquals(TVec3f{}, 0.0F),
+                "position-only queries permit no requesting actor and still use the real empty manager");
 
         auto low = ConstantGravity(TVec3f{1.0F, 0.0F, 0.0F}, 100.0F);
         low.mPriority = 1;
@@ -345,6 +363,10 @@ namespace {
                 "registered normal gravities should be queryable through MR");
         require(destination.epsilonEquals(TVec3f{0.0F, 0.24253562F, 0.97014248F}, 0.0001F),
                 "only equal highest-priority vectors should combine before normalization");
+        auto position_only = TVec3f{};
+        require(MR::calcGravityVector(nullptr, TVec3f{}, &position_only, nullptr, 0U) &&
+                    position_only.epsilonEquals(destination, 0.0001F),
+                "original named-position placement can query registered gravity without an actor");
         require(info.mGravityInstance == &strongest && info.mLargestPriority == 5 &&
                     MR::isLightGravity(info),
                 "GravityInfo should identify the strongest winning field and expose its real power");
@@ -791,7 +813,12 @@ namespace {
     };
 }  // namespace
 
-int main() {
+int main(int argc, char** argv) {
+    const bool queries_only = argc == 2 && std::string_view(argv[1]) == "--queries-only";
+    if (argc > 1 && !queries_only) {
+        std::cerr << "Usage: gravity-real-or-absent-tests [--queries-only]\n";
+        return 2;
+    }
     const auto tests = std::array{
         TestCase{"absent manager is explicit", test_absent_manager_is_explicit},
         TestCase{"real manager rules and info", test_real_manager_rules_and_info},
@@ -806,7 +833,12 @@ int main() {
     };
 
     auto failures = 0;
+    auto executed = 0;
     for (const auto& test : tests) {
+        if (queries_only && test.run != test_absent_manager_is_explicit && test.run != test_real_manager_rules_and_info) {
+            continue;
+        }
+        ++executed;
         try {
             test.run();
             std::cout << "[ok] " << test.name << '\n';
@@ -819,6 +851,6 @@ int main() {
         std::cerr << failures << " gravity real-or-absent test(s) failed\n";
         return 1;
     }
-    std::cout << tests.size() << " gravity real-or-absent test(s) passed\n";
+    std::cout << executed << " gravity real-or-absent test(s) passed\n";
     return 0;
 }

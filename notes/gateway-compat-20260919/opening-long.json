@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc",
+    "--original",
+    "--disc",
+    "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--stage",
+    "HeavensDoorGalaxy",
+    "--scenario",
+    "1",
+    "--max-frames",
+    "1800"
+  ],
+  "environment": {
+    "SMGPC_SAVE_DIR": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/opening-long-nand",
+    "AURORA_BACKEND": "metal",
+    "SMGPC_WINDOW_WIDTH": "1280",
+    "SMGPC_WINDOW_HEIGHT": "720",
+    "SMGPC_SCREENSHOT_PATH": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/opening-long-frame240.png",
+    "SMGPC_SCREENSHOT_FRAME": "240"
+  },
+  "binary_sha256": "f9eea69eb30c517d9e45a610656b7b3000e94549a2890a8bfafd638b9ef46588",
+  "exit_code": 1,
+  "timeout_terminated": false,
+  "elapsed_seconds": 64.3568435839843
+}
