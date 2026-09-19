@@ -1,0 +1,2 @@
+[aurora:aurora::gpu] Device lost: Device was destroyed.
+[fail] GX destination-alpha proof: copied left region: expected rgba(252,0,0,84), got rgba(252,0,0,40)

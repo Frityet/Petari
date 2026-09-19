@@ -1,0 +1,53 @@
+{
+  "status": "pass",
+  "renderer_backend": "Metal",
+  "red_copy": {
+    "expected": [
+      252,
+      0,
+      0,
+      84
+    ],
+    "actual": [
+      252,
+      0,
+      0,
+      40
+    ]
+  },
+  "red_draw": {
+    "expected": [
+      84,
+      0,
+      171,
+      168
+    ],
+    "actual": [
+      84,
+      0,
+      171,
+      55
+    ]
+  },
+  "fifo_tests": {
+    "passed": 333,
+    "total": 333,
+    "seconds": 1.619
+  },
+  "renderer_tests": {
+    "passed": 4,
+    "total": 4,
+    "seconds": 5.6
+  },
+  "native_main_integration": "pending parent validation",
+  "files": {
+    "red-copy.log": "eb2aee4214b38f75f274eee29e89e65b8cafd1f971835403552684fbe70d9339",
+    "red-draw.log": "33f344834e1caadab215af2086180529811b5a9e2076efa07ac862c40d1d7949",
+    "green-build2.log": "929486fb9337209b13c156c6f9ed428733c807aea37f32d94c8cef6fe7246bc9",
+    "gx-fifo-suite.log": "7f082b29f9578c0833dad01e9f90671f88528cbed15c7e6331ce23b9d812a5e5",
+    "gpu-suite.log": "555106a84f884e49b5ec36337d9cf1011ce93af8ed2fca079d0c620ad2c61477"
+  },
+  "aurora_commit": "8c19ab45d233eb43d0c817256e8a348cc98746cf",
+  "remote_branch": "refs/heads/codex/macos-compat",
+  "remote_sha_verified": "8c19ab45d233eb43d0c817256e8a348cc98746cf"
+}

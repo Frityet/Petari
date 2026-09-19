@@ -1,0 +1,2 @@
+[aurora:aurora::gpu] Device lost: Device was destroyed.
+[fail] GX destination-alpha proof: TEV alpha blends RGB while dstAlpha replaces fragment alpha: expected rgba(84,0,171,168), got rgba(84,0,171,55)

@@ -1,0 +1,12 @@
+[1/8] Building CXX object tests/CMakeFiles/gx_z_texture_render_test.dir/gx_z_texture_render_test.cpp.o
+[2/8] Building CXX object tests/CMakeFiles/gx_copy_alpha_render_test.dir/gx_copy_alpha_render_test.cpp.o
+[3/8] Building CXX object CMakeFiles/aurora_gx.dir/lib/gx/shader.cpp.o
+[4/8] Linking CXX static library libaurora_gx.a
+[5/8] Linking CXX executable tests/gx_copy_filter_render_test
+ld: warning: ignoring duplicate libraries: 'extern/libimgui.a', 'extern/libimgui_backends.a'
+[6/8] Linking CXX executable tests/gx_z_texture_render_test
+ld: warning: ignoring duplicate libraries: 'extern/libimgui.a', 'extern/libimgui_backends.a'
+[7/8] Linking CXX executable tests/gx_copy_alpha_render_test
+ld: warning: ignoring duplicate libraries: 'extern/libimgui.a', 'extern/libimgui_backends.a'
+[8/8] Linking CXX executable tests/gx_clip_mode_render_test
+ld: warning: ignoring duplicate libraries: 'extern/libimgui.a', 'extern/libimgui_backends.a'

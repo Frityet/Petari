@@ -1,0 +1,16 @@
+Test project /Users/frityet/Projects/petari/build/aurora-fifo-tests-20260919
+    Start 368: gx_clip_mode_render
+1/4 Test #368: gx_clip_mode_render ..............   Passed    1.68 sec
+    Start 369: gx_z_texture_render
+2/4 Test #369: gx_z_texture_render ..............   Passed    2.17 sec
+    Start 374: gx_copy_filter_render
+3/4 Test #374: gx_copy_filter_render ............   Passed    0.81 sec
+    Start 375: gx_copy_alpha_render
+4/4 Test #375: gx_copy_alpha_render .............   Passed    0.82 sec
+
+100% tests passed out of 4
+
+Label Time Summary:
+gpu    =   5.47 sec*proc (4 tests)
+
+Total Test time (real) =   5.60 sec
