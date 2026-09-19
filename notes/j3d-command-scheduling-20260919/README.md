@@ -74,3 +74,11 @@ that the main executable build passed with this fix. Its first replay was
 intentionally terminated after a separate FIFO write-limit race was identified;
 that is neither a J3D failure nor a completed runtime run. Final original
 Gateway integration remains pending the FIFO correction and clean replay.
+
+## Subsequent integrated runtime
+
+After the final Aurora interrupt-abort correction, the fresh original-process
+`fifo-j3d-final-held-a-2600` replay completed all 2,600 frames and exited 0 with
+the PID gone and no debugger attached. See
+`../original-fifo-interrupt-abort-20260919/README.md` for binary provenance,
+input spans, screenshot review and explicit gameplay/rendering limits.

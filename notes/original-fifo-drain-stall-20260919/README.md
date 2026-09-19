@@ -12,6 +12,51 @@ Published Aurora commit `cead297129094e289e18e940d477b83359de7662`
 The Aurora worktree is clean after publication. Root owns the parent gitlink
 and notes checkpoint.
 
+## First original replay after publication
+
+The rebuilt original held-A replay did **not** complete. It aborted after about
+4.7 seconds with `Aurora OS thread boundary: blocking host wait while scheduler
+is disabled` (exit -6, process verified gone). Root retains the exact command,
+environment, binary hash, and result in
+`notes/gateway-compat-20260919/fifo-backpressure-held-a-2600.json` and its log.
+The executable SHA256 was
+`fd9fdb264eb8a8bfca0c13d8afc4284b5f4944eb613c1e5fb2e5f28cd278d349`.
+
+A separate diagnostic replay captured the failure at frame 62 in
+`scheduler-disabled-capture2.log`: original GameSystem::draw, Planet draw buffer,
+J3DShapeDraw::draw, GXCallDisplayList (77920 bytes), write_data_throttled, then
+GuestThreadWaitScope. The debugger process and inferior were terminated after
+the capture. This capture establishes the stack, not a completed run.
+
+Root traced the scheduler prohibition to the native
+`src/runtime/SceneScheduler.cpp` SceneJ3dScope and its J3dCommandScope member.
+`src/compat/J3dCommandScope.cpp` disables scheduling for the entire draw phase.
+That broad compatibility scope conflicts with genuine FIFO producer
+suspension. The repair is being made in the native shared J3D ownership
+boundary using the original mutex mechanism. No Aurora scheduler guard or
+Game source was changed in response to this abort.
+
+The SDK evidence supports retaining the guard: GXFifo.c's overflow interrupt
+calls OSSuspendThread; OSThread.c's SelectThread returns without switching when
+`Reschedule > 0`, and OSSuspendThread updates suspend/ready state then requests
+rescheduling. A disabled scheduler is not permission for a host wait to run
+other guest threads. See the contract addendum for exact source paths.
+
+The stack also identifies a separate display-list fidelity gap. Aurora
+GXCallDisplayList currently copies every list byte into its CPU ring. The Wii
+CALL_DL command contains a one-byte opcode, four-byte address, and four-byte
+length (9 bytes); list data is fetched separately. Aurora's raw CALL_DL decoder
+currently warns and skips the command, so nested list execution is also
+incomplete. These deserve a general retained out-of-line display-list solution;
+they have not been changed or disguised by relaxing ring capacity. Their extra
+ring pressure does not justify the blanket native scheduler prohibition.
+
+A subsequent bounded interrupt audit found and fixed immediate recovery-write
+capacity after GXAbortFrame. See
+`notes/original-fifo-interrupt-abort-20260919/README.md` for the separate failing
+regression, SDK FIFO-clean semantics, concurrency review, and checked 322-test
+result. This does not change the original-run completion boundary above.
+
 ## Captured failures
 
 The first stopped process (PID 29307) was attached and detached for observation,

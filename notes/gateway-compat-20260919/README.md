@@ -96,3 +96,20 @@ status. It now also requires the actual completed-frame log marker and verifies
 that the PID is gone; a wait returning while the process remains alive is
 recorded with an unknown exit status. This prevents debugger reparenting from
 being mistaken for a successful run.
+
+## Explicit encoding and bounded original replay
+
+Game literals now use the explicit constexpr `CP932(...)` helper; the build
+preprocessor is removed. All 3,580 literal runs across 330 files match strict
+CP932 bytes, and source normalization preserves the original surrounding
+code. See `../explicit-game-encoding-20260919/README.md`.
+
+After linked FIFO backpressure, correct interrupt-abort capacity recovery and
+J3D context mutex ownership, `fifo-j3d-final-held-a-2600` completed exactly
+2,600 original GameSystem frames, exited 0, and left no process behind. It
+used fresh save storage and the recorded debug controller spans; no debugger
+attached. This passed the earlier frame-1543/1578 FIFO stalls. The frame-2300
+image shows Mario, a rabbit, flower-field terrain and the HUD; the tutorial
+prompt still overlaps/clips at the left. Full chase/Rosalina progression and
+rendering parity remain unverified. See the final FIFO note for complete
+provenance and the distinction from physical keyboard input.

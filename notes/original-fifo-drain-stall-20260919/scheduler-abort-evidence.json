@@ -1,0 +1,20 @@
+{
+  "purpose": "Diagnose early original-process abort after linked FIFO backpressure",
+  "binary_sha256": "fd9fdb264eb8a8bfca0c13d8afc4284b5f4944eb613c1e5fb2e5f28cd278d349",
+  "diagnostic_log": "scheduler-disabled-capture2.log.gz",
+  "diagnostic_input": "neutral; no debug controller script",
+  "diagnostic_frame_index": 62,
+  "stop": "SIGABRT: blocking host wait while scheduler is disabled",
+  "call_path": [
+    "SceneScheduler::execute_draw_buffer",
+    "J3DShapeDraw::draw",
+    "GXCallDisplayList",
+    "fifo::write_data_throttled",
+    "GuestThreadWaitScope"
+  ],
+  "display_list_payload_bytes": 77920,
+  "retail_call_command_bytes": 9,
+  "diagnostic_termination": "LLDB process kill after all-thread backtraces",
+  "verified_bounded_completion": false,
+  "original_run_record": "../gateway-compat-20260919/fifo-backpressure-held-a-2600.json"
+}

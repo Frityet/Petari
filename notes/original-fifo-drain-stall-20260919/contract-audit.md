@@ -120,3 +120,33 @@ five added cases. This is isolated FIFO/encoder/decoder validation. Native
 Gateway progression remains a separate runtime claim. A subsequent correction
 to the non-worker processing-mode wait loop is owned and revalidated by the
 FIFO implementation agent before publication.
+
+## Scheduler-disabled replay follow-up
+
+The post-publication original-game replay aborted within 4.7 seconds; it did
+not validate completion. The separate `scheduler-disabled-capture2.log` stops
+at original frame 62 inside a 77920-byte GXCallDisplayList append. Its
+GuestThreadWaitScope correctly rejects a blocking wait with `Reschedule > 0`.
+Root identified the native J3dCommandScope created by SceneJ3dScope around
+the draw phase as the broad scheduler prohibition. The original shared J3D
+mutex is the candidate ownership mechanism; weakening the Aurora scheduler
+guard would permit a guest switch prohibited by the current guest context.
+
+Additional source evidence:
+
+* `decomp/src/RVL_SDK/os/OSThread.c:303-312`: SelectThread returns when
+  Reschedule is positive.
+* `decomp/src/RVL_SDK/os/OSThread.c:574-608`: OSSuspendThread increments the
+  suspend count, changes running state to ready, and invokes __OSReschedule.
+* `aurora/lib/dolphin/os/OSExecution.cpp:503-517`: the native host-wait scope
+  rejects scheduler-disabled blocking, otherwise releases guest CPU ownership
+  and checks scheduling when ownership returns.
+* `aurora/lib/dolphin/gx/GXDispList.cpp:49-62` currently inlines a display-list
+  payload into FIFO storage, unlike the retail 9-byte address/length call.
+  `aurora/lib/gx/command_processor.cpp:437-442` skips raw nested CALL_DL. This is
+  a separate unresolved list ownership/execution gap, with extra ring pressure,
+  and has not been fixed by changing scheduler or FIFO safety semantics.
+
+No Aurora or Game production changes accompanied this follow-up audit. The
+native J3D boundary repair and fresh original completion evidence belong to
+the subsequent coordinated checkpoint.
