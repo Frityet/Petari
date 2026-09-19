@@ -46,9 +46,9 @@ void Triangle::fillData(CollisionParts* pParts, u32 index, HitSensor* pSensor) {
     mPos[1].set< f32 >(server->getPos(prism, 1));
     mPos[2].set< f32 >(server->getPos(prism, 2));
 
-    PSMTXMultVecSR(matrix, &mPos[0], &mPos[0]);
-    PSMTXMultVecSR(matrix, &mPos[1], &mPos[1]);
-    PSMTXMultVecSR(matrix, &mPos[2], &mPos[2]);
+    mParts->mBaseMatrix.mult(mPos[0], mPos[0]);
+    mParts->mBaseMatrix.mult(mPos[1], mPos[1]);
+    mParts->mBaseMatrix.mult(mPos[2], mPos[2]);
 }
 
 const char* Triangle::getHostName() const {
