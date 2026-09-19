@@ -50,7 +50,11 @@ namespace {
         return true;
     }
     // getFirstPolyOnLineCategoryExceptSensor
-    // getFirstPolyOnLineCategoryExceptActor
+    bool getFirstPolyOnLineCategoryExceptActor(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset,
+                                              const LiveActor* pActor, s32 category) NO_INLINE {
+        CollisionPartsFilterActor filter(pActor);
+        return getFirstPolyOnLineCategory(pPos, pTriangle, rStart, rOffset, nullptr, &filter, category);
+    }
 };  // namespace
 
 namespace MR {
@@ -150,7 +154,10 @@ namespace MR {
         return ::getFirstPolyOnLineCategory(pPos, pTriangle, rStart, rOffset, nullptr, nullptr, 2);
     }
     // getFirstPolyOnLineToMapExceptSensor
-    // getFirstPolyOnLineToMapExceptActor
+    bool getFirstPolyOnLineToMapExceptActor(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset,
+                                          const LiveActor* pActor) {
+        return ::getFirstPolyOnLineCategoryExceptActor(pPos, pTriangle, rStart, rOffset, pActor, 0);
+    }
     bool getFirstPolyOnLineToMap(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset,
                                 const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter) {
         return ::getFirstPolyOnLineCategory(pPos, pTriangle, rStart, rOffset, pTriangleFilter, pPartsFilter, 0);
