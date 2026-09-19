@@ -1,0 +1,14 @@
+{
+  "frame": 4800,
+  "action": "Remove future scripted dialogue buttons to avoid competing with observed unscripted input",
+  "controller": {
+    "hold": 0,
+    "release": 0,
+    "stick": [
+      -1.0,
+      1.0
+    ],
+    "trigger": 0
+  },
+  "user_clarification_pending": true
+}

@@ -1,0 +1,36 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc",
+    "--original",
+    "--disc",
+    "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--stage",
+    "HeavensDoorGalaxy",
+    "--scenario",
+    "1",
+    "--max-frames",
+    "12000"
+  ],
+  "environment": {
+    "SMGPC_SAVE_DIR": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/content-o2-guide-12000-nand",
+    "SMGPC_NAND_DIR": "",
+    "AURORA_BACKEND": "metal",
+    "SMGPC_WINDOW_WIDTH": "1280",
+    "SMGPC_WINDOW_HEIGHT": "720",
+    "SMGPC_SCREENSHOT_PATH": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/content-o2-guide-12000-frame5500.png",
+    "SMGPC_SCREENSHOT_FRAME": "5500",
+    "SMGPC_DEBUG_WPAD_INPUT_FILE": "/Users/frityet/Projects/petari/notes/original-gateway-chase-20260919/live-input-o2.json",
+    "SMGPC_DEBUG_FRAME_TIMING": "1",
+    "SMGPC_DEBUG_ACTOR_TRACE_PATH": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/content-o2-guide-12000-actors.jsonl",
+    "SMGPC_DEBUG_ACTOR_TRACE_TYPES": "MarioActor,Rabbit,Tico,Rosetta,WarpPod,EarthenPipe",
+    "SMGPC_DEBUG_ACTOR_TRACE_INTERVAL": "10",
+    "SMGPC_DEBUG_LAYOUT_DUMP_PATH": "/Users/frityet/Projects/petari/notes/gateway-compat-20260919/content-o2-guide-12000-layout.txt",
+    "SMGPC_DEBUG_LAYOUT_DUMP_FRAME": "5500",
+    "SMGPC_DEBUG_WPAD_BUTTON_SCRIPT": "1400-1410:A;1500-1510:A;1600-1610:A;1700-1710:A;1800-1810:A;1900-1910:A;2000-2010:A;2100-2110:A",
+    "SMGPC_DEBUG_WPAD_POINTER_SCRIPT": "",
+    "SMGPC_DEBUG_WPAD_STICK_SCRIPT": ""
+  },
+  "binary_sha256": "d71704b6e2ed0e6805a00c450e46c30e930c4fecba81d85bdd6becfea765b877",
+  "started_at": "2026-09-19T15:08:34.545547+00:00",
+  "pid": 68211
+}

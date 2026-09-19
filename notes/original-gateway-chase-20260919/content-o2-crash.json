@@ -1,0 +1,158 @@
+{
+  "pid": 68211,
+  "capture_time": "2026-09-19 16:10:26.2249 +0100",
+  "exception": {
+    "codes": "0x0000000000000001, 0x0000000000000008",
+    "rawCodes": [
+      1,
+      8
+    ],
+    "type": "EXC_BAD_ACCESS",
+    "signal": "SIGSEGV",
+    "subtype": "KERN_INVALID_ADDRESS at 0x0000000000000008"
+  },
+  "triggered_frames": [
+    {
+      "imageOffset": 565268,
+      "symbol": "MultiEmitter::create(EffectSystem*)",
+      "symbolLocation": 24,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 540032,
+      "symbol": "EffectKeeper::createEmitter(char const*)",
+      "symbolLocation": 24,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 1418684,
+      "symbol": "MarioActor::trampleJump(float, float)",
+      "symbolLocation": 484,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 1443128,
+      "symbol": "MarioActor::tryTrampleAttack(HitSensor*)",
+      "symbolLocation": 292,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 1441404,
+      "symbol": "MarioActor::checkAndTryTrampleAttack(HitSensor*, float, bool)",
+      "symbolLocation": 184,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 1275068,
+      "symbol": "MarioActor::receiveMsgPush(HitSensor*, HitSensor*)",
+      "symbolLocation": 716,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 1455320,
+      "symbol": "PunchingKinoko::attackSensor(HitSensor*, HitSensor*)",
+      "symbolLocation": 380,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 535316,
+      "symbol": "HitSensorInfo::doObjCol()",
+      "symbolLocation": 104,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 534344,
+      "symbol": "HitSensorKeeper::doObjCol()",
+      "symbolLocation": 44,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 549756,
+      "symbol": "LiveActor::movement()",
+      "symbolLocation": 68,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 2263736,
+      "symbol": "smgpc::runtime::SceneScheduler::execute_movement_entry(smgpc::runtime::SceneScheduler::Entry const&, int)",
+      "symbolLocation": 356,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 2262432,
+      "symbol": "smgpc::runtime::SceneScheduler::execute_movement_category(int)",
+      "symbolLocation": 320,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 965140,
+      "symbol": "SceneFunction::executeMovementList()",
+      "symbolLocation": 264,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 506796,
+      "symbol": "Spine::update()",
+      "symbolLocation": 92,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 959164,
+      "symbol": "GameScene::update()",
+      "symbolLocation": 32,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 676824,
+      "symbol": "GameSystemSceneController::updateScene()",
+      "symbolLocation": 84,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 714772,
+      "symbol": "GameSystem::updateSceneController()",
+      "symbolLocation": 148,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 715532,
+      "symbol": "NrvGameSystem::GameSystemNormal::execute(Spine*) const",
+      "symbolLocation": 24,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 506796,
+      "symbol": "Spine::update()",
+      "symbolLocation": 92,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 715040,
+      "symbol": "GameSystem::frameLoop()",
+      "symbolLocation": 56,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 167376,
+      "symbol": "smgpc::app::run_original_game(smgpc::app::BootstrapConfiguration const&, smgpc::logging::ILogger&, smgpc::app::OriginalGameDebugObserver)",
+      "symbolLocation": 4752,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 6556,
+      "sourceLine": 56,
+      "sourceFile": "main.cpp",
+      "symbol": "aurora_main",
+      "imageIndex": 0,
+      "symbolLocation": 732
+    },
+    {
+      "imageOffset": 132324,
+      "symbol": "start",
+      "symbolLocation": 6992,
+      "imageIndex": 7
+    }
+  ],
+  "source_report_name": "smg-pc-2026-09-19-161027.ips",
+  "binary_sha256": "d71704b6e2ed0e6805a00c450e46c30e930c4fecba81d85bdd6becfea765b877"
+}

@@ -1,0 +1,244 @@
+{
+  "last_trace_frame": 4800,
+  "state_transitions": [
+    {
+      "frame": 40,
+      "id": 843,
+      "type": "10DemoRabbit",
+      "nerve": "N13NrvDemoRabbit19DemoRabbitNrvAppearE",
+      "dead": true,
+      "clipped": false,
+      "invalid_clipping": true,
+      "position": [
+        10.0,
+        -2384.429931640625,
+        210.0
+      ]
+    },
+    {
+      "frame": 40,
+      "id": 858,
+      "type": "20RunawayRabbitCollect",
+      "nerve": "N23NrvRunawayRabbitCollect27RunawayRabbitCollectNrvWaitE",
+      "dead": false,
+      "clipped": false,
+      "invalid_clipping": true,
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "frame": 1050,
+      "id": 843,
+      "type": "10DemoRabbit",
+      "nerve": "N13NrvDemoRabbit19DemoRabbitNrvAppearE",
+      "dead": false,
+      "clipped": false,
+      "invalid_clipping": true,
+      "position": [
+        10.493568420410156,
+        -2502.117919921875,
+        220.36495971679688
+      ]
+    },
+    {
+      "frame": 1090,
+      "id": 843,
+      "type": "10DemoRabbit",
+      "nerve": "N13NrvDemoRabbit17DemoRabbitNrvDemoE",
+      "dead": false,
+      "clipped": false,
+      "invalid_clipping": true,
+      "position": [
+        9.08087158203125,
+        -2228.529052734375,
+        198.19432067871094
+      ]
+    },
+    {
+      "frame": 1140,
+      "id": 843,
+      "type": "10DemoRabbit",
+      "nerve": "N13NrvDemoRabbit18DemoRabbitNrvTalk0E",
+      "dead": false,
+      "clipped": false,
+      "invalid_clipping": true,
+      "position": [
+        9.044386863708496,
+        -2228.013427734375,
+        198.06837463378906
+      ]
+    },
+    {
+      "frame": 1410,
+      "id": 843,
+      "type": "10DemoRabbit",
+      "nerve": "N13NrvDemoRabbit18DemoRabbitNrvGuideE",
+      "dead": false,
+      "clipped": false,
+      "invalid_clipping": true,
+      "position": [
+        47.01215362548828,
+        -2229.84619140625,
+        180.07308959960938
+      ]
+    },
+    {
+      "frame": 1490,
+      "id": 843,
+      "type": "10DemoRabbit",
+      "nerve": "N13NrvDemoRabbit17DemoRabbitNrvWaitE",
+      "dead": false,
+      "clipped": false,
+      "invalid_clipping": true,
+      "position": [
+        184.69447326660156,
+        -1827.5030517578125,
+        1005.4227294921875
+      ]
+    },
+    {
+      "frame": 1940,
+      "id": 843,
+      "type": "10DemoRabbit",
+      "nerve": "N13NrvDemoRabbit18DemoRabbitNrvGuideE",
+      "dead": false,
+      "clipped": false,
+      "invalid_clipping": false,
+      "position": [
+        186.6476287841797,
+        -1829.5552978515625,
+        1002.521240234375
+      ]
+    },
+    {
+      "frame": 2400,
+      "id": 843,
+      "type": "10DemoRabbit",
+      "nerve": "N13NrvDemoRabbit17DemoRabbitNrvWaitE",
+      "dead": false,
+      "clipped": false,
+      "invalid_clipping": false,
+      "position": [
+        -1846.095703125,
+        726.1556396484375,
+        1153.1153564453125
+      ]
+    },
+    {
+      "frame": 2440,
+      "id": 843,
+      "type": "10DemoRabbit",
+      "nerve": "N13NrvDemoRabbit18DemoRabbitNrvGuideE",
+      "dead": false,
+      "clipped": false,
+      "invalid_clipping": false,
+      "position": [
+        -1845.3665771484375,
+        724.5973510742188,
+        1154.698974609375
+      ]
+    },
+    {
+      "frame": 2670,
+      "id": 843,
+      "type": "10DemoRabbit",
+      "nerve": "N13NrvDemoRabbit17DemoRabbitNrvGoalE",
+      "dead": false,
+      "clipped": false,
+      "invalid_clipping": false,
+      "position": [
+        -214.11380004882812,
+        2277.57568359375,
+        153.31178283691406
+      ]
+    },
+    {
+      "frame": 2790,
+      "id": 843,
+      "type": "10DemoRabbit",
+      "nerve": "N13NrvDemoRabbit18DemoRabbitNrvTalk1E",
+      "dead": false,
+      "clipped": false,
+      "invalid_clipping": true,
+      "position": [
+        -150.29153442382812,
+        2203.42919921875,
+        135.33937072753906
+      ]
+    },
+    {
+      "frame": 4280,
+      "id": 843,
+      "type": "10DemoRabbit",
+      "nerve": "N13NrvDemoRabbit20DemoRabbitNrvRunawayE",
+      "dead": false,
+      "clipped": false,
+      "invalid_clipping": true,
+      "position": [
+        -158.1988067626953,
+        2189.639404296875,
+        136.0663604736328
+      ]
+    },
+    {
+      "frame": 4360,
+      "id": 858,
+      "type": "20RunawayRabbitCollect",
+      "nerve": "N23NrvRunawayRabbitCollect29RunawayRabbitCollectNrvActiveE",
+      "dead": false,
+      "clipped": false,
+      "invalid_clipping": true,
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "frame": 4400,
+      "id": 843,
+      "type": "10DemoRabbit",
+      "nerve": "N13NrvDemoRabbit19DemoRabbitNrvChangeE",
+      "dead": false,
+      "clipped": false,
+      "invalid_clipping": true,
+      "position": [
+        775.19873046875,
+        1475.1668701171875,
+        660.9683837890625
+      ]
+    },
+    {
+      "frame": 4440,
+      "id": 843,
+      "type": "10DemoRabbit",
+      "nerve": "N13NrvDemoRabbit19DemoRabbitNrvChangeE",
+      "dead": true,
+      "clipped": false,
+      "invalid_clipping": true,
+      "position": [
+        833.1650390625,
+        1417.1982421875,
+        699.7553100585938
+      ]
+    }
+  ],
+  "first_unscripted_movement": [
+    {
+      "frame": 4400,
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          1.0
+        ],
+        "trigger": 0
+      }
+    }
+  ],
+  "result": "Original guide reached destination and minigame activated; subsequent SIGSEGV in stomp effect; no catch or Rosalina completion"
+}
