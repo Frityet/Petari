@@ -1,0 +1,11 @@
+{
+  "operation": "read-only symbol inspection of existing archive; no rebuild",
+  "archive": "build/macosx/arm64/debug/libsmg-pc-game.a",
+  "archive_sha256": "8335d2b486a5ccd80b0e45053c44dbc1a7ee280b5b4a875897bb3c70b65aade2",
+  "symbol": "MR::connectToSceneCrystal(LiveActor*)",
+  "strong_definitions": [
+    "build/macosx/arm64/debug/libsmg-pc-game.a:ObjUtil.cpp.o: 0000000000000a38 T MR::connectToSceneCrystal(LiveActor*)",
+    "build/macosx/arm64/debug/libsmg-pc-game.a:SceneConnectionCompat.cpp.o: 0000000000000000 T MR::connectToSceneCrystal(LiveActor*)"
+  ],
+  "count": 2
+}

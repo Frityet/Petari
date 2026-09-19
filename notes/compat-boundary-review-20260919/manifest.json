@@ -1,0 +1,64 @@
+{
+  "files": [
+    {
+      "path": "notes/compat-boundary-review-20260919/README.md",
+      "sha256": "6ebf796ed43abb01bb2092e152bdd431376738a185a02cdccc84850cb4404bc5"
+    },
+    {
+      "path": "notes/compat-boundary-review-20260919/build-audit.md",
+      "sha256": "d293604fc36b5729309040b18efe127b5921c73f2e2256db8c1bc009d9502757"
+    },
+    {
+      "path": "notes/compat-boundary-review-20260919/duplicate-provider.json",
+      "sha256": "b118e86cd3e0f048e8ddb18e248488028d72f0421901e2248fd9757866d7fb81"
+    },
+    {
+      "path": "notes/compat-boundary-review-20260919/review-inputs.json",
+      "sha256": "ba75b38405aea2f35c7bb57c02ff01c38a45ddf04246f8720472b0977a4037b3"
+    },
+    {
+      "path": "notes/compat-boundary-review-20260919/root-audit.md",
+      "sha256": "11a596605c69f96ae3af5180faad05f0cd196ffca9d751cbe38464f402eb8f08"
+    },
+    {
+      "path": "notes/compat-boundary-review-20260919/runtime-audit.md",
+      "sha256": "eddac8241ea2f635a782b6d5c2f87377a446bbf5c07595d35a6541b56dd7b15d"
+    },
+    {
+      "path": "notes/compat-boundary-review-20260919/scene-audit.md",
+      "sha256": "3fe3adeab679b170b7490ef052abc182f9986352aba8d24a4fa9abcb2af64d0e"
+    },
+    {
+      "path": "notes/compat-boundary-review-20260919/source-audit/compat-inventory.tsv",
+      "sha256": "955b98887ea100ed0f0ebb148c4c060ac3b259fef86c51390030c51e9177820f"
+    },
+    {
+      "path": "notes/compat-boundary-review-20260919/source-audit/compile-only-allowlist.tsv",
+      "sha256": "11092e4ba94defa55019acb9b1a3a95b3e418a4c2e262df3aaf24ae8b1a214b5"
+    },
+    {
+      "path": "notes/compat-boundary-review-20260919/source-audit/decomp-declarations.tsv",
+      "sha256": "d6f17ac14725523a4c47405ab2fd11c294b992cd45ab162b6b0eacccca769d24"
+    },
+    {
+      "path": "notes/compat-boundary-review-20260919/source-audit/release-boundary.tsv",
+      "sha256": "897b265fae831dd8572a3334daefadacae6ce6243b73e745f7357d97dfaed733"
+    },
+    {
+      "path": "notes/compat-boundary-review-20260919/source-audit/required-migration.tsv",
+      "sha256": "8b353b6028dd2bdd937eef462c7ef91a47f0ffc61f165ccff2d814a4678d722c"
+    },
+    {
+      "path": "notes/compat-boundary-review-20260919/source-audit/source-closeness-summary.md",
+      "sha256": "03efb40f40abe8a61a0bb46c80373643c561765a2efc595c6428187780504e52"
+    },
+    {
+      "path": "notes/compat-boundary-review-20260919/source-audit/source-closeness.tsv",
+      "sha256": "d3dbbf178e81bc9643405bdda3ad2e315c5bfc9522fd032fe04a3f4acf093b3b"
+    },
+    {
+      "path": "notes/compat-boundary-review-20260919/validation.json",
+      "sha256": "dd026ff77f7464d415f1c7e43eb7c55a02bf84afc45dccec9cd16a9b2b423e88"
+    }
+  ]
+}
