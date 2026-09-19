@@ -1,13 +1,11 @@
 #include "Game/LiveActor/ShadowVolumeOval.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
+#include "JSystem/JMath/JMath.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
-#include <JSystem/JMath/JMath.hpp>
-
-ShadowVolumeOval::~ShadowVolumeOval() {
-}
+#include "JSystem/JGeometry/TMatrix.hpp"
 
 ShadowVolumeOval::ShadowVolumeOval() : ShadowVolumeModel("影描画[ボリューム楕球]"), mSize(100.0f, 100.0f, 200.0f) {
     initVolumeModel("ShadowVolumeSphere");
@@ -15,6 +13,7 @@ ShadowVolumeOval::ShadowVolumeOval() : ShadowVolumeModel("影描画[ボリュー
 
 bool ShadowVolumeOval::isDraw() const {
     ShadowController* controller = getController();
+
     return controller->isProjected() && controller->isDraw();
 }
 
@@ -71,4 +70,7 @@ void ShadowVolumeOval::loadModelDrawMtx() const {
 
 void ShadowVolumeOval::setSize(const TVec3f& rSize) {
     mSize = rSize;
+}
+
+ShadowVolumeOval::~ShadowVolumeOval() {
 }

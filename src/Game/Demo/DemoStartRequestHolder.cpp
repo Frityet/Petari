@@ -2,6 +2,7 @@
 #include "Game/Demo/DemoStartRequestUtil.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Util/StringUtil.hpp"
+#include "revolution/types.h"
 
 DemoStartInfo::DemoStartInfo() {
     _0 = nullptr;
@@ -9,15 +10,15 @@ DemoStartInfo::DemoStartInfo() {
     _8 = nullptr;
     _C = nullptr;
     _10 = nullptr;
-    _14 = nullptr;
+    mDemoExecutor = nullptr;
     mDemoName = nullptr;
     _1C = nullptr;
     _20 = nullptr;
     _24 = 0;
-    _28 = 0;
-    _2C = 0;
-    _30 = 0;
-    _34 = 0;
+    mDemoType = DemoType_0;
+    mFrameType = CinemaFrameType_0;
+    mPointerType = StarPointerType_0;
+    mDeleteEffectType = DeleteEffectType_0;
 }
 
 DemoStartInfo& DemoStartInfo::operator=(const DemoStartInfo& rOther) {
@@ -26,15 +27,15 @@ DemoStartInfo& DemoStartInfo::operator=(const DemoStartInfo& rOther) {
     _8 = rOther._8;
     _C = rOther._C;
     _10 = rOther._10;
-    _14 = rOther._14;
+    mDemoExecutor = rOther.mDemoExecutor;
     mDemoName = rOther.mDemoName;
     _1C = rOther._1C;
     _20 = rOther._20;
     _24 = rOther._24;
-    _28 = rOther._28;
-    _2C = rOther._2C;
-    _30 = rOther._30;
-    _34 = rOther._34;
+    mDemoType = rOther.mDemoType;
+    mFrameType = rOther.mFrameType;
+    mPointerType = rOther.mPointerType;
+    mDeleteEffectType = rOther.mDeleteEffectType;
     return *this;
 }
 

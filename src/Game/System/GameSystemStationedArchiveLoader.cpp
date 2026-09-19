@@ -24,17 +24,18 @@ namespace {
 };  // namespace
 
 bool ConditionIfIsNotPlayer::isExecute(const MR::StationedFileInfo* pInfo) const {
-    return pInfo->mLoadType != 2 && pInfo->mLoadType != 3;
+    return pInfo->mLoadType != MR::StationedFileInfo::LOAD_TYPE_MOUNT_RESOURCE_MARIO &&
+           pInfo->mLoadType != MR::StationedFileInfo::LOAD_TYPE_MOUNT_RESOURCE_LUIGI;
 }
 
 ConditionUsePlayerHeap::ConditionUsePlayerHeap() : mNapaHeap(nullptr), mGDDRHeap(nullptr), mIsDataMario(true) {
 }
 
 bool ConditionUsePlayerHeap::isExecute(const MR::StationedFileInfo* pInfo) const {
-    s32 type = 3;
+    MR::StationedFileInfo::LoadType type = MR::StationedFileInfo::LOAD_TYPE_MOUNT_RESOURCE_LUIGI;
 
     if (mIsDataMario) {
-        type = 2;
+        type = MR::StationedFileInfo::LOAD_TYPE_MOUNT_RESOURCE_MARIO;
     }
 
     return pInfo->mLoadType == type;
@@ -42,11 +43,11 @@ bool ConditionUsePlayerHeap::isExecute(const MR::StationedFileInfo* pInfo) const
 
 JKRHeap* ConditionUsePlayerHeap::getProperHeap(const MR::StationedFileInfo* pInfo) const {
     switch (pInfo->mHeapType) {
-    case 0:
+    case MR::StationedFileInfo::HEAP_TYPE_NAPA:
         return mNapaHeap;
-    case 1:
+    case MR::StationedFileInfo::HEAP_TYPE_GDDR:
         return mGDDRHeap;
-    case 2:
+    case MR::StationedFileInfo::HEAP_TYPE_NONE:
         return nullptr;
     default:
         return nullptr;
@@ -106,7 +107,7 @@ JKRExpHeap* PlayerHeapHolder::createHeap(u32 size, JKRHeap* pParent) {
 }
 
 GameSystemStationedArchiveLoader::GameSystemStationedArchiveLoader() : NerveExecutor("常駐データ初期化"), mHeapHolder(nullptr), _C(false) {
-    initNerve(&::GameSystemStationedArchiveLoaderLoadAudio1stWaveData::sInstance);
+    initNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderLoadAudio1stWaveData));
 }
 
 void GameSystemStationedArchiveLoader::update() {
@@ -114,11 +115,11 @@ void GameSystemStationedArchiveLoader::update() {
 }
 
 bool GameSystemStationedArchiveLoader::isDone() const {
-    return isNerve(&::GameSystemStationedArchiveLoaderEnd::sInstance);
+    return isNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderEnd));
 }
 
 bool GameSystemStationedArchiveLoader::isPreparedReset() const {
-    return isNerve(&::GameSystemStationedArchiveLoaderEnd::sInstance) || isNerve(&::GameSystemStationedArchiveLoaderSuspended::sInstance);
+    return isNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderEnd)) || isNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderSuspended));
 }
 
 void GameSystemStationedArchiveLoader::prepareReset() {
@@ -126,9 +127,9 @@ void GameSystemStationedArchiveLoader::prepareReset() {
         return;
     }
 
-    if (isNerve(&::GameSystemStationedArchiveLoaderEnd::sInstance) || isNerve(&::GameSystemStationedArchiveLoaderSuspended::sInstance) ||
-        isNerve(&::GameSystemStationedArchiveLoaderChangeArchivePlayer::sInstance) ||
-        isNerve(&::GameSystemStationedArchiveLoaderInitializeGameData::sInstance)) {
+    if (isNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderEnd)) || isNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderSuspended)) ||
+        isNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderChangeArchivePlayer)) ||
+        isNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderInitializeGameData))) {
         return;
     }
 
@@ -140,7 +141,7 @@ void GameSystemStationedArchiveLoader::requestChangeArchivePlayer(bool isDataMar
         return;
     }
 
-    if (isNerve(&::GameSystemStationedArchiveLoaderChangeArchivePlayer::sInstance)) {
+    if (isNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderChangeArchivePlayer))) {
         return;
     }
 
@@ -149,7 +150,7 @@ void GameSystemStationedArchiveLoader::requestChangeArchivePlayer(bool isDataMar
     }
 
     mHeapHolder->setIsDataMario(isDataMario);
-    setNerve(&::GameSystemStationedArchiveLoaderChangeArchivePlayer::sInstance);
+    setNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderChangeArchivePlayer));
 }
 
 void GameSystemStationedArchiveLoader::exeLoadAudio1stWaveData() {
@@ -159,9 +160,9 @@ void GameSystemStationedArchiveLoader::exeLoadAudio1stWaveData() {
 
     if (GameSystemFunction::isLoadedAudioStaticWaveData()) {
         if (trySuspend()) {
-            setNerve(&::GameSystemStationedArchiveLoaderSuspended::sInstance);
+            setNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderSuspended));
         } else {
-            setNerve(&::GameSystemStationedArchiveLoaderLoadStationedArchiveOthers::sInstance);
+            setNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderLoadStationedArchiveOthers));
         }
     }
 }
@@ -169,7 +170,7 @@ void GameSystemStationedArchiveLoader::exeLoadAudio1stWaveData() {
 void GameSystemStationedArchiveLoader::exeLoadStationedArchivePlayer() {
     if (MR::isFirstStep(this)) {
         if (trySuspend()) {
-            setNerve(&::GameSystemStationedArchiveLoaderSuspended::sInstance);
+            setNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderSuspended));
             return;
         }
 
@@ -179,7 +180,7 @@ void GameSystemStationedArchiveLoader::exeLoadStationedArchivePlayer() {
                                       "常駐リソース読み込み");
     } else if (trySuspend()) {
         MR::suspendAsyncExecuteThread("常駐リソース読み込み");
-        setNerve(&::GameSystemStationedArchiveLoaderSuspended::sInstance);
+        setNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderSuspended));
         return;
     }
 
@@ -190,26 +191,26 @@ void GameSystemStationedArchiveLoader::exeLoadStationedArchivePlayer() {
             mHeapHolder->adjust();
         }
 
-        setNerve(&::GameSystemStationedArchiveLoaderInitializeGameData::sInstance);
+        setNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderInitializeGameData));
     }
 }
 
 void GameSystemStationedArchiveLoader::exeLoadStationedArchiveOthers() {
     if (MR::isFirstStep(this)) {
-        if (!tryAsyncExecuteIfNotSuspend(MR::Functor_Inline(this, &GameSystemStationedArchiveLoader::startToLoadStationedArchiveOthers),
+        if (!tryAsyncExecuteIfNotSuspend(MR::Functor(this, &GameSystemStationedArchiveLoader::startToLoadStationedArchiveOthers),
                                          "常駐リソース読み込み")) {
-            setNerve(&::GameSystemStationedArchiveLoaderSuspended::sInstance);
+            setNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderSuspended));
             return;
         }
     } else if (trySuspend()) {
         MR::suspendAsyncExecuteThread("常駐リソース読み込み");
-        setNerve(&::GameSystemStationedArchiveLoaderSuspended::sInstance);
+        setNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderSuspended));
         return;
     }
 
     if (MR::tryEndFunctionAsyncExecute("常駐リソース読み込み")) {
         createAndAddOtherArchives();
-        setNerve(&::GameSystemStationedArchiveLoaderLoadStationedArchivePlayer::sInstance);
+        setNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderLoadStationedArchivePlayer));
     }
 }
 
@@ -219,7 +220,7 @@ void GameSystemStationedArchiveLoader::exeInitializeGameData() {
     SingletonHolder< HeapMemoryWatcher >::get()->adjustStationedHeaps();
     GameSystemFunction::setSceneNameObjHolderToNameObjRegister();
     MR::clearFileLoaderRequestFileInfo(false);
-    setNerve(&::GameSystemStationedArchiveLoaderEnd::sInstance);
+    setNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderEnd));
 }
 
 void GameSystemStationedArchiveLoader::exeEnd() {
@@ -232,13 +233,13 @@ void GameSystemStationedArchiveLoader::exeChangeArchivePlayer() {
     if (MR::isFirstStep(this)) {
         mHeapHolder->dispose();
         MR::startFunctionAsyncExecute(
-            MR::Functor_Inline(this, &GameSystemStationedArchiveLoader::startToLoadStationedArchivePlayer, mHeapHolder->mIsDataMario), 14,
+            MR::Functor(this, &GameSystemStationedArchiveLoader::startToLoadStationedArchivePlayer, mHeapHolder->mIsDataMario), 14,
             "プレイヤーリソース読み込み");
     }
 
     if (MR::tryEndFunctionAsyncExecute("プレイヤーリソース読み込み")) {
         createAndAddPlayerArchives(mHeapHolder->mIsDataMario);
-        setNerve(&::GameSystemStationedArchiveLoaderEnd::sInstance);
+        setNerve(GET_NERVE_ANON(GameSystemStationedArchiveLoaderEnd));
     }
 }
 
@@ -292,5 +293,5 @@ void GameSystemStationedArchiveLoader::createAndAddOtherArchives() {
 }
 
 bool ConditionIsEqualType::isExecute(const MR::StationedFileInfo* pStationedFileInfo) const {
-    return pStationedFileInfo->mLoadType == _4;
+    return pStationedFileInfo->mLoadType == mLoadType;
 }

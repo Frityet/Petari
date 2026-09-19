@@ -2,25 +2,25 @@
 #include "Game/Demo/DemoFunction.hpp"
 #include "Game/Screen/SceneWipeHolder.hpp"
 #include "Game/Util/DemoUtil.hpp"
-#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/ObjUtil.hpp"
 
 template void MR::Vector< MR::AssignableArray< DemoWipeInfo > >::push_back(const DemoWipeInfo&) NO_INLINE;
 
-DemoWipeInfo::DemoWipeInfo() : mPartName(nullptr), mWipeName("フェードワイプ"), mWipeType(0), mWipeFrame(-1) {
+DemoWipeInfo::DemoWipeInfo() : mPartName(), mWipeName("フェードワイプ"), mWipeType(), mWipeFrame(-1) {
 }
 
 DemoWipeKeeper::DemoWipeKeeper(DemoExecutor* pExecutor) : DemoSheetKeeperBase(pExecutor) {
-    JMapInfo* map = nullptr;
-    DemoExecutor* executor = mExecutor;
-    s32 count = DemoFunction::createSheetParser(executor, getTypeString(), &map);
-    mInfo.mArray.init(count);
+    JMapInfo* pMap = nullptr;
+    const DemoExecutor* pSheetExecutor = mExecutor;
+    s32 count = DemoFunction::createSheetParser(pSheetExecutor, getTypeString(), &pMap);
+    mInfo.init(count);
+
     for (s32 i = 0; i < count; i++) {
         DemoWipeInfo info;
-        MR::getCsvDataStrOrNULL(&info.mPartName, map, "PartName", i);
-        MR::getCsvDataStrOrNULL(&info.mWipeName, map, "WipeName", i);
-        MR::getCsvDataS32(&info.mWipeType, map, "WipeType", i);
-        MR::getCsvDataS32(&info.mWipeFrame, map, "WipeFrame", i);
+        MR::getCsvDataStrOrNULL(&info.mPartName, pMap, "PartName", i);
+        MR::getCsvDataStrOrNULL(&info.mWipeName, pMap, "WipeName", i);
+        MR::getCsvDataS32(&info.mWipeType, pMap, "WipeType", i);
+        MR::getCsvDataS32(&info.mWipeFrame, pMap, "WipeFrame", i);
         mInfo.push_back(info);
     }
 }
@@ -44,4 +44,10 @@ void DemoWipeKeeper::executeType(const DemoWipeInfo* pInfo) {
             SceneWipeHolderFunction::forceCloseWipe(pInfo->mWipeName);
         }
     }
+}
+
+void DemoWipeKeeper::addInfo(const char* pPartName) {
+    DemoWipeInfo info;
+    info.mPartName = pPartName;
+    mInfo.push_back(info);
 }

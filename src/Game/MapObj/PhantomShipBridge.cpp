@@ -26,7 +26,7 @@ void PhantomShipBridge::init(const JMapInfoIter& rIter) {
     }
 
     MR::connectToSceneCollisionMapObj(this);
-    initNerve(&NrvPhantomShipBridge::HostTypeWait::sInstance);
+    initNerve(GET_NERVE(PhantomShipBridge, HostTypeWait));
     initEffectKeeper(0, nullptr, false);
     initHitSensor(2);
     MR::addBodyMessageSensorMapObj(this);
@@ -39,11 +39,11 @@ void PhantomShipBridge::init(const JMapInfoIter& rIter) {
     makeActorAppeared();
 
     if (MR::useStageSwitchReadB(this, rIter)) {
-        MR::listenStageSwitchOnB(this, MR::Functor_Inline(this, &PhantomShipBridge::startMoveB));
+        MR::listenStageSwitchOnB(this, MR::Functor(this, &PhantomShipBridge::startMoveB));
     }
 
     if (MR::useStageSwitchReadA(this, rIter)) {
-        MR::listenStageSwitchOnA(this, MR::Functor_Inline(this, &PhantomShipBridge::startMoveA));
+        MR::listenStageSwitchOnA(this, MR::Functor(this, &PhantomShipBridge::startMoveA));
     } else {
         setStateMoveA();
     }
@@ -55,11 +55,11 @@ void PhantomShipBridge::calcAnim() {
 }
 
 void PhantomShipBridge::startMoveA() {
-    setNerve(&NrvPhantomShipBridge::HostTypeMoveA::sInstance);
+    setNerve(GET_NERVE(PhantomShipBridge, HostTypeMoveA));
 }
 
 void PhantomShipBridge::startMoveB() {
-    setNerve(&NrvPhantomShipBridge::HostTypeMoveB::sInstance);
+    setNerve(GET_NERVE(PhantomShipBridge, HostTypeMoveB));
 }
 
 void PhantomShipBridge::setStateMoveA() {
@@ -67,7 +67,7 @@ void PhantomShipBridge::setStateMoveA() {
     MR::setBckFrameAndStop(this, MR::getBckCtrl(this)->getEnd());
     MR::calcAnimDirect(this);
     _8C->forceResetAllMtxAndSetUpdateMtxOneTime();
-    setNerve(&NrvPhantomShipBridge::HostTypeWait::sInstance);
+    setNerve(GET_NERVE(PhantomShipBridge, HostTypeWait));
 }
 
 void PhantomShipBridge::exeMoveA() {
@@ -129,7 +129,4 @@ void PhantomShipBridge::exeMoveB() {
 }
 
 void PhantomShipBridge::exeWait() {
-}
-
-PhantomShipBridge::~PhantomShipBridge() {
 }

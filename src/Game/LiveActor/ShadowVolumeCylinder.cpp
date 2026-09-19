@@ -1,8 +1,17 @@
 #include "Game/LiveActor/ShadowVolumeCylinder.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
+#include "JSystem/JMath/JMath.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
+#include "revolution/gx.h"
+
+namespace {
+    const f32 sModelScale = 100.0f;
+}
+
+ShadowVolumeCylinder::~ShadowVolumeCylinder() {
+}
 
 ShadowVolumeCylinder::ShadowVolumeCylinder() : ShadowVolumeModel("影描画[ボリューム円柱]") {
     mRadius = 100.0f;

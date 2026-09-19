@@ -629,7 +629,7 @@ namespace MarioAccess {
     }
 
     void preventRush() {
-        getPlayerActor()->setNerve(&NrvMarioActor::MarioActorNrvNoRush::sInstance);
+        getPlayerActor()->setNerve(GET_NERVE(MarioActor, MarioActorNrvNoRush));
     }
 
     MarioActor* getPlayerActor() {
@@ -670,7 +670,7 @@ namespace MarioAccess {
     }
 
     void startDownWipe() {
-        if (getPlayerActor()->isNerve(&NrvMarioActor::MarioActorNrvGameOverSink::sInstance)) {
+        if (getPlayerActor()->isNerve(GET_NERVE(MarioActor, MarioActorNrvGameOverSink))) {
             return;
         }
 

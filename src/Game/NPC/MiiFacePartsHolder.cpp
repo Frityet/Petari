@@ -8,7 +8,6 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/System/GameSequenceFunction.hpp"
 #include "Game/Util/FileUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/LightUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MemoryUtil.hpp"
@@ -34,8 +33,9 @@ void MiiFacePartsHolder::init(const JMapInfoIter& rIter) {
     u32 resSize = pArchive->getResSize(pResBuffer);
     _38 = RFLInitResAsync(mRFLWorkBuffer, pResBuffer, resSize, false);
 
-    MR::connectToScene(this, -1, MR::CalcAnimType_NPC, -1, MR::DrawType_MiiFacePartsHolder);
-    MR::connectToScene(MR::createDrawAdaptor("Miiモデル再作成", MR::Functor_Inline(this, &MiiFacePartsHolder::reinitCharModel)), -1, -1, -1, 80);
+    MR::connectToScene(this, MR::MovementType_None, MR::CalcAnimType_NPC, MR::DrawBufferType_None, MR::DrawType_MiiFacePartsHolder);
+    MR::connectToScene(MR::createDrawAdaptor("Miiモデル再作成", MR::Functor(this, &MiiFacePartsHolder::reinitCharModel)), MR::MovementType_None,
+                       MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_MiiFaceNew);
 }
 
 void MiiFacePartsHolder::calcAnim() {
@@ -133,7 +133,7 @@ MiiFaceParts* MiiFacePartsHolder::createPartsFromReceipe(const char* pName, cons
 
     MR::getSceneObj< MiiFacePartsHolder >(SceneObj_MiiFacePartsHolder)->registerActor(pParts);
 
-    if (MR::startFunctionAsyncExecuteOnMainThread(MR::Functor_Inline< NameObj >(pParts, &NameObj::initWithoutIter), "initNameObjOnMainThread")) {
+    if (MR::startFunctionAsyncExecuteOnMainThread(MR::Functor< NameObj >(pParts, &NameObj::initWithoutIter), "initNameObjOnMainThread")) {
         MR::waitForEndFunctionAsyncExecute("initNameObjOnMainThread");
     }
 

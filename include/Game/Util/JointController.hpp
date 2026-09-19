@@ -6,11 +6,12 @@
 class J3DJoint;
 class J3DModel;
 class LiveActor;
+
 class JointController;
 
 struct JointControllerInfo {
-    JointController* mController;
-    J3DJoint* mJoint;
+    /* 0x00 */ JointController* mController;
+    /* 0x04 */ J3DJoint* mJoint;
 };
 
 class JointController {
@@ -25,8 +26,8 @@ public:
     void calcJointMatrixAfterChildAndSetSystem(J3DJoint*);
     static int staticCallBack(J3DJoint*, int);
 
-    J3DModel* mModel;  // 0x4
-    J3DJoint* mJoint;  // 0x8
+    /* 0x04 */ J3DModel* mModel;
+    /* 0x08 */ J3DJoint* mJoint;
 };
 
 template < typename T >
@@ -49,25 +50,25 @@ public:
     virtual ~JointControlDelegator() {
     }
 
-    virtual bool calcJointMatrix(TPos3f* a1, const JointControllerInfo& a2) {
+    virtual bool calcJointMatrix(TPos3f* pMtx, const JointControllerInfo& rInfo) {
         if (mMtxCalcFunc != nullptr) {
-            return (mHost->*mMtxCalcFunc)(a1, a2);
+            return (mHost->*mMtxCalcFunc)(pMtx, rInfo);
         } else {
             return false;
         }
     }
 
-    virtual bool calcJointMatrixAfterChild(TPos3f* a1, const JointControllerInfo& a2) {
+    virtual bool calcJointMatrixAfterChild(TPos3f* pMtx, const JointControllerInfo& rInfo) {
         if (mMtxCalcAfterChildFunc != nullptr) {
-            return (mHost->*mMtxCalcAfterChildFunc)(a1, a2);
+            return (mHost->*mMtxCalcAfterChildFunc)(pMtx, rInfo);
         } else {
             return false;
         }
     }
 
-    T* mHost;                     // 0xC
-    func mMtxCalcFunc;            // 0x10
-    func mMtxCalcAfterChildFunc;  // 0x14
+    /* 0x0C */ T* mHost;
+    /* 0x10 */ func mMtxCalcFunc;
+    /* 0x1C */ func mMtxCalcAfterChildFunc;
 };
 
 namespace MR {
@@ -81,6 +82,15 @@ namespace MR {
         JointControlDelegator< T >* delegator = new JointControlDelegator< T >(pHost, calcFunc, calcAfterChild);
         setJointControllerParam(delegator, pActor, pName);
         return delegator;
+    }
+
+    template < class T >
+    JointController* createJointController(T* pHost, const LiveActor* pActor, u16 jointIndex,
+                                           bool (T::*calcFunc)(TPos3f*, const JointControllerInfo&),
+                                           bool (T::*calcChild)(TPos3f*, const JointControllerInfo&)) {
+        JointControlDelegator< T >* controller = new JointControlDelegator< T >(pHost, calcFunc, calcChild);
+        setJointControllerParam(controller, pActor, jointIndex);
+        return controller;
     }
 
     template < class T >

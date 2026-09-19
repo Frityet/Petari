@@ -1,8 +1,8 @@
 #include "Game/LiveActor/ShadowVolumeLine.hpp"
+#include "JSystem/JMath/JMath.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DirectDraw.hpp"
 #include "Game/Util/MathUtil.hpp"
-#include "JSystem/JMath/JMath.hpp"
 
 ShadowVolumeLine::ShadowVolumeLine() : ShadowVolumeDrawer("影描画[ボリュームライン]") {
     mFromShadowController = 0;

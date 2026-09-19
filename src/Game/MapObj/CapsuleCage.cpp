@@ -24,7 +24,7 @@ void CapsuleCage::init(const JMapInfoIter& rIter) {
     MapObjActorInitInfo info;
     MapObjActorUtil::setupInitInfoSimpleMapObj(&info);
     info.setupProjmapMtx(false);
-    info.setupNerve(&NrvCapsuleCage::CapsuleCageNrvWait::sInstance);
+    info.setupNerve(GET_NERVE(CapsuleCage, CapsuleCageNrvWait));
     initialize(rIter, info);
     MR::setBodySensorType(this, ATYPE_KEY_SWITCH_AVOID);
 
@@ -42,7 +42,7 @@ void CapsuleCage::exeStartCamera() {
     }
 
     if (MR::isStep(this, ::sStepForStartCamera)) {
-        setNerve(&NrvCapsuleCage::CapsuleCageNrvOpen::sInstance);
+        setNerve(GET_NERVE(CapsuleCage, CapsuleCageNrvOpen));
     }
 }
 
@@ -59,7 +59,7 @@ void CapsuleCage::exeOpen() {
         MR::shakeCameraWeak();
 
         if (mCameraInfo != nullptr) {
-            setNerve(&NrvCapsuleCage::CapsuleCageNrvEndCamera::sInstance);
+            setNerve(GET_NERVE(CapsuleCage, CapsuleCageNrvEndCamera));
         } else {
             kill();
         }
@@ -86,15 +86,15 @@ void CapsuleCage::connectToScene(const MapObjActorInitInfo& rInfo) {
 }
 
 void CapsuleCage::initCaseUseSwitchB(const MapObjActorInitInfo& rInfo) {
-    MR::listenStageSwitchOnB(this, MR::Functor_Inline(this, &CapsuleCage::startOpen));
+    MR::listenStageSwitchOnB(this, MR::Functor(this, &CapsuleCage::startOpen));
 }
 
 void CapsuleCage::startOpen() {
     MR::invalidateClipping(this);
 
     if (mCameraInfo != nullptr) {
-        MR::requestStartDemoWithoutCinemaFrame(this, ::cDemoCameraName, &NrvCapsuleCage::CapsuleCageNrvStartCamera::sInstance, nullptr);
+        MR::requestStartDemoWithoutCinemaFrame(this, ::cDemoCameraName, GET_NERVE(CapsuleCage, CapsuleCageNrvStartCamera), nullptr);
     } else {
-        setNerve(&NrvCapsuleCage::CapsuleCageNrvOpen::sInstance);
+        setNerve(GET_NERVE(CapsuleCage, CapsuleCageNrvOpen));
     }
 }

@@ -2,7 +2,6 @@
 #include "Game/Screen/MoviePlayingSequence.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
@@ -15,7 +14,7 @@ void MovieStarter::init(const JMapInfoIter& rIter) {
     MR::invalidateClipping(this);
 
     if (MR::useStageSwitchReadAppear(this, rIter)) {
-        MR::listenStageSwitchOnAppear(this, MR::Functor_Inline(this, &MovieStarter::appear));
+        MR::listenStageSwitchOnAppear(this, MR::Functor(this, &MovieStarter::appear));
     }
 
     MR::useStageSwitchWriteDead(this, rIter);

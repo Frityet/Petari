@@ -48,7 +48,7 @@ void ShockWaveGenerator::init(const JMapInfoIter& rIter) {
 
     MR::setClippingTypeSphereContainsModelBoundingBox(this, 100.0f);
     MR::useStageSwitchSleep(this, rIter);
-    initNerve(&NrvShockWaveGenerator::ShockWaveGeneratorNrvWait::sInstance);
+    initNerve(GET_NERVE(ShockWaveGenerator, ShockWaveGeneratorNrvWait));
     makeActorAppeared();
 }
 
@@ -71,7 +71,7 @@ void ShockWaveGenerator::exeDemoEcho() {
 
     if (MR::isStep(this, ::sStepForDemoEcho)) {
         MR::endDemo(this, ::cDemoCameraName);
-        setNerve(&NrvShockWaveGenerator::ShockWaveGeneratorNrvGenerate::sInstance);
+        setNerve(GET_NERVE(ShockWaveGenerator, ShockWaveGeneratorNrvGenerate));
     }
 }
 
@@ -88,13 +88,13 @@ void ShockWaveGenerator::exeGenerate() {
         if (mCameraInfo != nullptr) {
             MR::endActorCamera(this, mCameraInfo, false, -1);
         }
-        setNerve(&NrvShockWaveGenerator::ShockWaveGeneratorNrvWait::sInstance);
+        setNerve(GET_NERVE(ShockWaveGenerator, ShockWaveGeneratorNrvWait));
     }
 }
 
 bool ShockWaveGenerator::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
-    bool isActive = isNerve(&NrvShockWaveGenerator::ShockWaveGeneratorNrvGenerate::sInstance) ||
-                    isNerve(&NrvShockWaveGenerator::ShockWaveGeneratorNrvDemoEcho::sInstance);
+    bool isActive = isNerve(GET_NERVE(ShockWaveGenerator, ShockWaveGeneratorNrvGenerate)) ||
+                    isNerve(GET_NERVE(ShockWaveGenerator, ShockWaveGeneratorNrvDemoEcho));
 
     if (isActive) {
         return false;
@@ -129,16 +129,16 @@ void ShockWaveGenerator::startShockWave() {
     if (mCameraInfo != nullptr) {
         if (isPlayerInCameraStartRange()) {
             if (MR::tryStartDemoWithoutCinemaFrame(this, ::cDemoCameraName)) {
-                setNerve(&NrvShockWaveGenerator::ShockWaveGeneratorNrvDemoEcho::sInstance);
+                setNerve(GET_NERVE(ShockWaveGenerator, ShockWaveGeneratorNrvDemoEcho));
             }
         } else {
-            setNerve(&NrvShockWaveGenerator::ShockWaveGeneratorNrvGenerate::sInstance);
+            setNerve(GET_NERVE(ShockWaveGenerator, ShockWaveGeneratorNrvGenerate));
         }
         return;
     }
 
     MR::stopSceneForDefaultHit(1);
-    setNerve(&NrvShockWaveGenerator::ShockWaveGeneratorNrvGenerate::sInstance);
+    setNerve(GET_NERVE(ShockWaveGenerator, ShockWaveGeneratorNrvGenerate));
 }
 
 void ShockWaveGenerator::sendMsgShockWaveToNearEnemy() {

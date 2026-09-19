@@ -1,15 +1,28 @@
 #include "Game/LiveActor/ShadowVolumeOvalPole.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
+#include "JSystem/JMath/JMath.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
-#include <JSystem/JMath/JMath.hpp>
+#include "revolution/gx.h"
+
+namespace {
+    const f32 sModelScale = 100.0f;
+}
+
+void ShadowVolumeOvalPole_FORCE_MATCH_SDATA2() {
+    1.0f;
+    0.0f;
+}
 
 ShadowVolumeOvalPole::~ShadowVolumeOvalPole() {
 }
 
-ShadowVolumeOvalPole::ShadowVolumeOvalPole() : ShadowVolumeModel("影描画[ボリューム楕円柱]"), mSize(100.0f, 100.0f, 200.0f) {
+ShadowVolumeOvalPole::ShadowVolumeOvalPole() : ShadowVolumeModel("影描画[ボリューム楕円柱]") {
+    mSize.x = 100.0f;
+    mSize.y = 100.0f;
+    mSize.z = 200.0f;
     initVolumeModel("ShadowVolumeCylinder");
 }
 

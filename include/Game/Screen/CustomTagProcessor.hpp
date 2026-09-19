@@ -1,24 +1,13 @@
 #pragma once
 
 #include "Game/Screen/MessageTagSkipTagProcessor.hpp"
-#include <nw4r/lyt/textBox.h>
-#include <nw4r/ut/TagProcessorBase.h>
 #include <revolution/gx/GXStruct.h>
 
-namespace {
-    u8 clampU8(s32 val) {
-        if (val < 0) {
-            return 0;
-        }
-
-        u8 ret = 0xFF;
-        if (val <= 255) {
-            ret = val;
-        }
-
-        return ret;
+namespace nw4r {
+    namespace lyt {
+        class TextBox;
     }
-};  // namespace
+}  // namespace nw4r
 
 class CustomTagAlphaCtrl {
 public:
@@ -29,74 +18,70 @@ public:
     void update();
     bool isEnd() const;
 
-    /* 0x00 */ s32 mDelay;
+    /* 0x00 */ s32 mStartDelay;
     /* 0x04 */ s32 mEndDelay;
     /* 0x08 */ s32 mFrame;
     /* 0x0C */ s32 mCharIndex;
-    /* 0x10 */ s32 mWaitFrames;
-    /* 0x14 */ u32 mLength;
-    /* 0x18 */ bool mIsActive;
-    /* 0x1C */ f32 mCharAlphaStep;
-    /* 0x20 */ f32 mFrameAlphaStep;
+    /* 0x10 */ s32 mWaitTime;
+    /* 0x14 */ u32 mCharCount;
+    /* 0x18 */ bool mEnabled;
+    /* 0x1C */ f32 mCharInterval;
+    /* 0x20 */ f32 mFadeSpeed;
 };
 
 class CustomTagProcessor : public MessageTagSkipTagProcessor {
 public:
     CustomTagProcessor(nw4r::lyt::TextBox*);
 
-    virtual nw4r::ut::TagProcessorBase< wchar_t >::Operation Process(u16, nw4r::ut::PrintContext< wchar_t >*);
-    virtual nw4r::ut::TagProcessorBase< wchar_t >::Operation CalcRect(nw4r::ut::Rect*, u16, nw4r::ut::PrintContext< wchar_t >*);
+    virtual ~CustomTagProcessor();
+    virtual Operation Process(u16, ContextType*) override;
+    virtual Operation CalcRect(nw4r::ut::Rect*, u16, ContextType*) override;
 
-    typedef nw4r::ut::TagProcessorBase< wchar_t >::Operation Operation;
-    typedef nw4r::ut::PrintContext< wchar_t > Context;
-    typedef Operation (CustomTagProcessor::*GroupFunction)(nw4r::ut::Rect*, const MessageEditorMessageTag&, Context*);
+    void setArgNumber(s32, s32);
+    void setArgString(const wchar_t*, s32);
+    void initAlpha(f32, f32, s32, s32);
+    void reset(const wchar_t*);
+    MessageEditorMessageTag getReplaceTag(const wchar_t*, s32, s32, s32) const;
+    bool isIgnoreTag(u16, ContextType*) const;
+    bool writeString(nw4r::ut::Rect*, const wchar_t*, ContextType*);
+    Operation exeDisplayGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, ContextType*);
+    Operation exeSoundGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, ContextType*);
+    Operation exePictureGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, ContextType*);
+    Operation exeFontSizeGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, ContextType*);
+    Operation exeSystemGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, ContextType*);
+    Operation exeLocalizeGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, ContextType*);
+    Operation exeNumberGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, ContextType*);
+    Operation exeStringGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, ContextType*);
+    Operation exeSystemGroupColor(nw4r::ut::Rect*, int, ContextType*);
+    Operation exeSystemGroupRuby(nw4r::ut::Rect*, const MessageEditorMessageTag&, ContextType*);
+    Operation exeDisplayGroupWait(nw4r::ut::Rect*, u16, ContextType*) NO_INLINE;
+    Operation exeDisplayGroupOffset(nw4r::ut::Rect*, const MessageEditorMessageTag&, ContextType*);
+    Operation exeDisplayGroupCenter(nw4r::ut::Rect*, const MessageEditorMessageTag&, ContextType*);
+    Operation exeFontGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, ContextType*);
+    Operation exePatchimuGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, ContextType*);
 
     struct Impl {
         struct GroupFunctionInfo {
             u8 mGroup;
-            GroupFunction mFunction;
+            Operation (CustomTagProcessor::*mFunction)(nw4r::ut::Rect*, const MessageEditorMessageTag&, ContextType*);
         };
-        static const GroupFunctionInfo sGroupFunctionTable[];
-        static const GroupFunctionInfo* findGroupFunctionInfo(int);
+
+        static GroupFunctionInfo* findGroupFunctionInfo(int);
+        static GroupFunctionInfo sGroupFunctionTable[];
     };
-
-    void setArgNumber(s32, s32);
-    void setArgString(const wchar_t*, s32);
-    MessageEditorMessageTag getReplaceTag(const wchar_t*, s32, s32, s32) const;
-    bool isIgnoreTag(u16, Context*) const;
-    bool writeString(nw4r::ut::Rect*, const wchar_t*, Context*);
-
-    Operation exeDisplayGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, Context*);
-    Operation exeSoundGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, Context*);
-    Operation exePictureGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, Context*);
-    Operation exeFontSizeGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, Context*);
-    Operation exeSystemGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, Context*);
-    Operation exeLocalizeGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, Context*);
-    Operation exeNumberGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, Context*);
-    Operation exeStringGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, Context*);
-    Operation exeSystemGroupRuby(nw4r::ut::Rect*, const MessageEditorMessageTag&, Context*);
-    Operation exeDisplayGroupOffset(nw4r::ut::Rect*, const MessageEditorMessageTag&, Context*);
-    Operation exeDisplayGroupCenter(nw4r::ut::Rect*, const MessageEditorMessageTag&, Context*);
-    Operation exeFontGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, Context*);
-    Operation exePatchimuGroup(nw4r::ut::Rect*, const MessageEditorMessageTag&, Context*);
-    Operation exeSystemGroupColor(nw4r::ut::Rect*, int, Context*);
-    Operation exeDisplayGroupWait(nw4r::ut::Rect*, u16, Context*);
-
-    void initAlpha(f32, f32, s32, s32);
-    void reset(const wchar_t*);
 
     /* 0x04 */ bool mIsShadow;
     /* 0x05 */ bool mIsText;
-    /* 0x06 */ bool mIsInf;
-    /* 0x07 */ bool _7;
+    /* 0x06 */ bool mIsInfo;
+    /* 0x07 */ bool mNoCharSpace;
     /* 0x08 */ CustomTagAlphaCtrl mAlphaCtrl;
     /* 0x2C */ nw4r::lyt::TextBox* mTextBox;
-    /* 0x30 */ u8 _30;
-    /* 0x31 */ u8 _31;
-    /* 0x32 */ u8 _32;
-    /* 0x34 */ u16 mLastChar;
-    /* 0x36 */ GXColor mColorMin;
-    /* 0x3A */ GXColor mColorMax;
+    /* 0x30 */ u8 mPlayedSounds;
+    /* 0x31 */ u8 mSoundIndex;
+    /* 0x32 */ u8 mColorIndex;
+    /* 0x34 */ u16 mPreviousChar;
+    /* 0x36 */ GXColor mColorMappingMin;
+    /* 0x3A */ GXColor mColorMappingMax;
     /* 0x40 */ f32 mRubyFontWidth;
     /* 0x44 */ f32 mRubyFontHeight;
     /* 0x48 */ f32 mFontWidth;

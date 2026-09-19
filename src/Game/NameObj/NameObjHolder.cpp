@@ -1,7 +1,7 @@
 #include "Game/NameObj/NameObjHolder.hpp"
 #include "Game/NameObj/NameObj.hpp"
-#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/HashUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include <algorithm>
 #include <cstring>
 
@@ -10,12 +10,12 @@ namespace {
         equal_fullname(const char* pName) : mHash(MR::getHashCode(pName)), mName(pName) {
         }
 
-        bool operator()(NameObj* pObj) const {
-            return strcmp(pObj->mName, mName) == 0;
+        bool operator()(const NameObj* pObj) const {
+            return strcmp(pObj->getName(), mName) == 0;
         }
 
-        u32 mHash;
-        const char* mName;
+        /* 0x00 */ u32 mHash;
+        /* 0x04 */ const char* mName;
     };
 }  // namespace
 
@@ -43,15 +43,8 @@ void NameObjHolder::syncWithFlags() {
     callMethodAllObj(&NameObj::syncWithFlags);
 }
 
-// Missing stack variables?
 void NameObjHolder::callMethodAllObj(NameObjMethod pMethod) {
-    NameObjMethod method = pMethod;
-    NameObj** begin = mObjArray1.begin();
-    NameObj** end = mObjArray1.end();
-
-    for (NameObj** p = begin; p != end; p++) {
-        (*p->*method)();
-    }
+    std::for_each(mObjArray1.begin(), mObjArray1.end(), std::mem_fun(pMethod));
 }
 
 void NameObjHolder::clearArray() {
@@ -60,25 +53,22 @@ void NameObjHolder::clearArray() {
 }
 
 NameObj* NameObjHolder::find(const char* pName) {
-    NameObj** cached = std::find_if(mObjArray2.begin(), mObjArray2.end(), equal_fullname(pName));
-
-    if (cached != mObjArray2.end()) {
-        NameObj* pObj = *cached;
-        mObjArray2.erase(cached);
+    NameObj** pCached = std::find_if(mObjArray2.begin(), mObjArray2.end(), equal_fullname(pName));
+    if (pCached != mObjArray2.end()) {
+        NameObj* pObj = *pCached;
+        mObjArray2.erase(pCached);
         mObjArray2.insert(mObjArray2.begin(), pObj);
         return pObj;
     }
 
-    NameObj** found = std::find_if(mObjArray1.begin(), mObjArray1.end(), equal_fullname(pName));
-
-    if (found == mObjArray1.end()) {
+    NameObj** pFound = std::find_if(mObjArray1.begin(), mObjArray1.end(), equal_fullname(pName));
+    if (pFound == mObjArray1.end()) {
         return nullptr;
     }
 
-    NameObj* pObj = *found;
-
-    if (mObjArray2.size() >= 16) {
-        mObjArray2.mCount--;
+    NameObj* pObj = *pFound;
+    if (mObjArray2.size() >= mObjArray2.capacity()) {
+        mObjArray2.pop_back();
     }
 
     mObjArray2.insert(mObjArray2.begin(), pObj);

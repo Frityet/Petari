@@ -4,13 +4,12 @@
 #include "Game/NameObj/NameObjAdaptor.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/ObjUtil.hpp"
 
 MiiFaceIconHolder::MiiFaceIconHolder(u32 iconNum, const char* pName)
     : NameObj(pName), mIconNumMax(iconNum), mIconNum(0), mIcon(new MiiFaceIcon*[iconNum]) {
-    MR::connectToScene(MR::createDrawAdaptor("Miiアイコン生成", MR::Functor_Inline(this, &MiiFaceIconHolder::drawIcons)), -1, -1, -1,
-                       MR::DrawType_MiiFaceIcon);
+    MR::connectToScene(MR::createDrawAdaptor("Miiアイコン生成", MR::Functor(this, &MiiFaceIconHolder::drawIcons)), MR::MovementType_None,
+                       MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_MiiFaceIcon);
 }
 
 void MiiFaceIconHolder::drawIcons() {

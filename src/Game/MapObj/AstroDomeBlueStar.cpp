@@ -10,7 +10,6 @@
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
@@ -18,6 +17,12 @@
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
+
+void AstroDomeBlueStar_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)0.5f;
+}
 
 namespace {
     const Vec cZoomInOffset = {400.0f, 2550.0f, -7600.0f};
@@ -239,16 +244,16 @@ bool AstroDomeBlueStar::tryStartBind(const LiveActor* pActor) {
 }
 
 bool AstroDomeBlueStar::isActiveBind() const {
-    return isNerve(&NrvAstroDomeBlueStar::AstroDomeBlueStarNrvBindTraction::sInstance) ||
-           isNerve(&NrvAstroDomeBlueStar::AstroDomeBlueStarNrvBindHold::sInstance) ||
-           isNerve(&NrvAstroDomeBlueStar::AstroDomeBlueStarNrvGalaxySelect::sInstance) ||
-           isNerve(&NrvAstroDomeBlueStar::AstroDomeBlueStarNrvGalaxyConfirmStart::sInstance) ||
-           isNerve(&NrvAstroDomeBlueStar::AstroDomeBlueStarNrvGalaxyConfirm::sInstance) ||
-           isNerve(&NrvAstroDomeBlueStar::AstroDomeBlueStarNrvGalaxyConfirmCancel::sInstance);
+    return isNerve(GET_NERVE(AstroDomeBlueStar, AstroDomeBlueStarNrvBindTraction)) ||
+           isNerve(GET_NERVE(AstroDomeBlueStar, AstroDomeBlueStarNrvBindHold)) ||
+           isNerve(GET_NERVE(AstroDomeBlueStar, AstroDomeBlueStarNrvGalaxySelect)) ||
+           isNerve(GET_NERVE(AstroDomeBlueStar, AstroDomeBlueStarNrvGalaxyConfirmStart)) ||
+           isNerve(GET_NERVE(AstroDomeBlueStar, AstroDomeBlueStarNrvGalaxyConfirm)) ||
+           isNerve(GET_NERVE(AstroDomeBlueStar, AstroDomeBlueStarNrvGalaxyConfirmCancel));
 }
 
 bool AstroDomeBlueStar::isValidBindStart() const {
-    return !isNerve(&NrvAstroDomeBlueStar::AstroDomeBlueStarNrvAppear::sInstance) && !isActiveBind() && !MR::isDemoActive();
+    return !isNerve(GET_NERVE(AstroDomeBlueStar, AstroDomeBlueStarNrvAppear)) && !isActiveBind() && !MR::isDemoActive();
 }
 
 void AstroDomeBlueStar::calcZoomInPos(TVec3f* pZoomVec) const {

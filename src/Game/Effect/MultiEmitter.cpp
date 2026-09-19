@@ -186,7 +186,7 @@ void MultiEmitter::addSyncBck(const XanimePlayer* pPlayer, const char* pName) {
 }
 
 void MultiEmitter::setContinueBckEnd(bool continueBckEnd) {
-    _24->mContinueBckEnd = continueBckEnd;
+    _24->mContinueAnimEnd = continueBckEnd;
 }
 
 void MultiEmitter::onCreateSyncClipping() {

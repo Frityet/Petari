@@ -5,7 +5,6 @@
 #include "Game/MapObj/MapObjActorInitInfo.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
@@ -29,14 +28,14 @@ void AstroCore::init(const JMapInfoIter& rIter) {
     MapObjActor::init(rIter);
     MapObjActorInitInfo info;
     MapObjActorUtil::setupInitInfoSimpleMapObj(&info);
-    info.setupNerve(&NrvAstroCore::AstroCoreNrvWait::sInstance);
+    info.setupNerve(GET_NERVE(AstroCore, AstroCoreNrvWait));
     info.setupHitSensor();
     info.setupHitSensorParam(8, ::sSensorSizeTable[0], TVec3f(0.0f, 0.0f, 0.0f));
     info.setupFarClipping(-1.0f);
     info.setupSound(4);
     info.setupNoAppearRiddleSE();
     initialize(rIter, info);
-    AstroDemoFunction::tryRegisterGrandStarReturnWithFunctionAndSimpleCast(this, rIter, MR::Functor_Inline(this, &AstroCore::startDemo));
+    AstroDemoFunction::tryRegisterGrandStarReturnWithFunctionAndSimpleCast(this, rIter, MR::Functor(this, &AstroCore::startDemo));
 }
 
 void AstroCore::exeWait() {
@@ -65,7 +64,7 @@ bool AstroCore::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceive
 }
 
 void AstroCore::startDemo() {
-    setNerve(&::NrvAstroCore::AstroCoreNrvGrow::sInstance);
+    setNerve(GET_NERVE_ANON(NrvAstroCore::AstroCoreNrvGrow));
 }
 
 void AstroCore::startAnimGrow() {

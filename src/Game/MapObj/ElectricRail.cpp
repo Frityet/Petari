@@ -8,7 +8,6 @@
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
@@ -334,7 +333,7 @@ void ElectricRail::initMapToolInfo(const JMapInfoIter& iter) {
     MR::getJMapInfoArg0NoInit(iter, &mRailHeight);
 
     if (MR::useStageSwitchReadA(this, iter)) {
-        MR::listenStageSwitchOnA(this, MR::Functor_Inline(this, &ElectricRail::disappear));
+        MR::listenStageSwitchOnA(this, MR::Functor(this, &ElectricRail::disappear));
     }
 }
 

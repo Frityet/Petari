@@ -5,64 +5,62 @@
 #include "JSystem/J3DGraphAnimator/J3DModel.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 
-JointController::JointController() {
-    mModel = 0;
-    mJoint = 0;
+JointController::JointController() : mModel(), mJoint() {
 }
 
-bool JointController::calcJointMatrix(TPos3f*, const JointControllerInfo&) {
-    return 0;
+bool JointController::calcJointMatrix(TPos3f* pMtx, const JointControllerInfo& rInfo) {
+    return false;
 }
 
-bool JointController::calcJointMatrixAfterChild(TPos3f*, const JointControllerInfo&) {
-    return 0;
+bool JointController::calcJointMatrixAfterChild(TPos3f* pMtx, const JointControllerInfo& rInfo) {
+    return false;
 }
 
 void JointController::registerCallBack() {
-    mJoint->mCallBack = JointController::staticCallBack;
+    mJoint->setCallBack(staticCallBack);
     mJoint->mCallBackUserData = this;
 }
 
 void JointController::calcJointMatrixAndSetSystem(J3DJoint* pJoint) {
-    MtxPtr anmMtx = mModel->getAnmMtx(pJoint->mJntNo);
-    TPos3f jointMtx;
-    PSMTXCopy(anmMtx, jointMtx);
-
+    MtxPtr pJointMtx = mModel->getAnmMtx(pJoint->getJntNo());
+    TPos3f mtx;
+    PSMTXCopy(pJointMtx, mtx);
     JointControllerInfo info = {this, pJoint};
-    if (calcJointMatrix(&jointMtx, info)) {
-        PSMTXCopy(jointMtx, anmMtx);
-        PSMTXCopy(jointMtx, J3DSys::mCurrentMtx);
+
+    if (calcJointMatrix(&mtx, info)) {
+        PSMTXCopy(mtx, pJointMtx);
+        PSMTXCopy(mtx, J3DSys::mCurrentMtx);
     }
 }
 
 void JointController::calcJointMatrixAfterChildAndSetSystem(J3DJoint* pJoint) {
-    MtxPtr anmMtx = mModel->getAnmMtx(pJoint->mJntNo);
-    TPos3f jointMtx;
-    PSMTXCopy(anmMtx, jointMtx);
-
+    MtxPtr pJointMtx = mModel->getAnmMtx(pJoint->getJntNo());
+    TPos3f mtx;
+    PSMTXCopy(pJointMtx, mtx);
     JointControllerInfo info = {this, pJoint};
-    if (calcJointMatrixAfterChild(&jointMtx, info)) {
-        PSMTXCopy(jointMtx, anmMtx);
+
+    if (calcJointMatrixAfterChild(&mtx, info)) {
+        PSMTXCopy(mtx, pJointMtx);
     }
 }
 
 int JointController::staticCallBack(J3DJoint* pJoint, int timing) {
-    if (pJoint == nullptr) {
+    if (!pJoint) {
         return 0;
     }
 
-    JointController* controller = static_cast< JointController* >(pJoint->mCallBackUserData);
-    if (controller == nullptr) {
+    JointController* pController = static_cast< JointController* >(pJoint->mCallBackUserData);
+    if (!pController) {
         return 0;
     }
 
     if (timing == 0) {
-        controller->calcJointMatrixAndSetSystem(pJoint);
+        pController->calcJointMatrixAndSetSystem(pJoint);
     }
 
     if (timing == 1) {
-        controller->calcJointMatrixAfterChildAndSetSystem(pJoint);
-        pJoint->mCallBack = nullptr;
+        pController->calcJointMatrixAfterChildAndSetSystem(pJoint);
+        pJoint->setCallBack(nullptr);
         pJoint->mCallBackUserData = nullptr;
     }
 
@@ -71,14 +69,14 @@ int JointController::staticCallBack(J3DJoint* pJoint, int timing) {
 
 namespace MR {
     void setJointControllerParam(JointController* pController, const LiveActor* pActor, const char* pJointName) {
-        J3DJoint* joint = MR::getJoint(pActor, pJointName);
-        pController->mModel = MR::getJ3DModel(pActor);
-        pController->mJoint = joint;
+        J3DJoint* pJoint = getJoint(pActor, pJointName);
+        pController->mModel = getJ3DModel(pActor);
+        pController->mJoint = pJoint;
     }
 
     void setJointControllerParam(JointController* pController, const LiveActor* pActor, u16 jointIndex) {
-        J3DJoint* joint = MR::getJoint(pActor, jointIndex);
-        pController->mModel = MR::getJ3DModel(pActor);
-        pController->mJoint = joint;
+        J3DJoint* pJoint = getJoint(pActor, jointIndex);
+        pController->mModel = getJ3DModel(pActor);
+        pController->mJoint = pJoint;
     }
-};  // namespace MR
+}  // namespace MR

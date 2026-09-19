@@ -2,7 +2,6 @@
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/MapObjActorInitInfo.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 
 namespace NrvSandCapsuleInsidePlanet {
@@ -16,7 +15,7 @@ void SandCapsuleInsidePlanet::init(const JMapInfoIter& rIter) {
     MapObjActor::init(rIter);
     MapObjActorInitInfo info;
     MapObjActorUtil::setupInitInfoPlanet(&info);
-    info.setupNerve(&NrvSandCapsuleInsidePlanet::SandCapsuleInsidePlanetNrvWait::sInstance);
+    info.setupNerve(GET_NERVE(SandCapsuleInsidePlanet, SandCapsuleInsidePlanetNrvWait));
     initialize(rIter, info);
     MR::startBrk(this, "Off");
     MR::setBrkFrameEndAndStop(this);

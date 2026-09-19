@@ -66,7 +66,7 @@ NPCActorCaps::NPCActorCaps(const char* pName) {
     mSensor = false;
     mBinder = false;
     mShadow = false;
-    _5D = false;
+    mUseShadow = false;
     mRailRider = false;
     mSwitchDead = true;
     mSwitchAppear = false;
@@ -85,7 +85,7 @@ NPCActorCaps::NPCActorCaps(const char* pName) {
     mSensor = false;
     mBinder = false;
     mShadow = false;
-    _5D = false;
+    mUseShadow = false;
     mRailRider = false;
     mSwitchDead = true;
     mSwitchAppear = false;
@@ -119,9 +119,9 @@ NPCActorCaps::NPCActorCaps(const char* pName) {
     mSensorJoint = nullptr;
     mSensorJoint = nullptr;
     mSensorMax = 1;
-    mWaitNerve = &NrvNPCActor::NPCActorNrvWait::sInstance;
-    mTalkNerve = &NrvNPCActor::NPCActorNrvTalk::sInstance;
-    mReactionNerve = &NrvNPCActor::NPCActorNrvReaction::sInstance;
+    mWaitNerve = GET_NERVE(NPCActor, NPCActorNrvWait);
+    mTalkNerve = GET_NERVE(NPCActor, NPCActorNrvTalk);
+    mReactionNerve = GET_NERVE(NPCActor, NPCActorNrvReaction);
     _70 = nullptr;
     _6C = nullptr;
     _70 = nullptr;
@@ -231,9 +231,9 @@ NPCActor::NPCActor(const char* pName) : LiveActor(pName) {
     _B0.set< f32 >(0.0f, 0.0f, 0.0f, 1.0f);
     _C0.zero();
     _CC.zero();
-    mWaitNerve = &NrvNPCActor::NPCActorNrvWait::sInstance;
-    mTalkNerve = &NrvNPCActor::NPCActorNrvTalk::sInstance;
-    mReactionNerve = &NrvNPCActor::NPCActorNrvReaction::sInstance;
+    mWaitNerve = GET_NERVE(NPCActor, NPCActorNrvWait);
+    mTalkNerve = GET_NERVE(NPCActor, NPCActorNrvTalk);
+    mReactionNerve = GET_NERVE(NPCActor, NPCActorNrvReaction);
 }
 
 void NPCActor::makeArchiveList(NameObjArchiveListCollector* pCollector, const JMapInfoIter& rIter) {
@@ -381,7 +381,7 @@ void NPCActor::initialize(const JMapInfoIter& rIter, const NPCActorCaps& rCaps) 
         initEffectKeeper(0, nullptr, false);
     }
 
-    if (rCaps._5D) {
+    if (rCaps.mUseShadow) {
         MR::initShadowFromCSV(this, "Shadow");
     } else if (rCaps.mShadow) {
         MR::initShadowVolumeSphere(this, rCaps.mShadowSize);
@@ -734,7 +734,7 @@ const Nerve* NPCActor::popNerve() {
 
 bool NPCActor::tryPushNullNerve() {
     if (isEmptyNerve()) {
-        pushNerve(&NrvNPCActor::NPCActorNrvNull::sInstance);
+        pushNerve(GET_NERVE(NPCActor, NPCActorNrvNull));
         return true;
     }
 

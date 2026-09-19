@@ -84,7 +84,7 @@ namespace MR {
     };
 
     template < class T >
-    static FunctorV0M< T*, void (T::*)() > Functor(T* a1, void (T::*a2)()) NO_INLINE {
+    static FunctorV0M< T*, void (T::*)() > Functor(T* a1, void (T::*a2)()) {
         return FunctorV0M< T*, void (T::*)() >(a1, a2);
     }
 
@@ -114,18 +114,23 @@ namespace MR {
     }
 
     template < class T, typename U >
-    static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) NO_INLINE {
+    static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) {
         return FunctorV1M< T*, void (T::*)(U), U >(a1, a2, arg_0);
     }
 
     template < class T, typename U >
-    inline static FunctorV1M< T*, void (T::*)(U), U > Functor_Inline(T* a1, void (T::*a2)(U), U arg_0) {
-        return FunctorV1M< T*, void (T::*)(U), U >(a1, a2, arg_0);
+    static FunctorV1M< const T*, void (T::*)(U) const, U > Functor(const T* a1, void (T::*a2)(U) const, U arg_0) {
+        return FunctorV1M< const T*, void (T::*)(U) const, U >(a1, a2, arg_0);
     }
 
     template < class T, typename U, typename V >
     static FunctorV2M< T*, void (T::*)(U, V), U, V > Functor(T* a1, void (T::*a2)(U, V), U arg_0, V arg_1) {
         return FunctorV2M< T*, void (T::*)(U, V), U, V >(a1, a2, arg_0, arg_1);
+    }
+
+    template < class T, typename U, typename V >
+    static FunctorV2M< const T*, void (T::*)(U, V) const, U, V > Functor(const T* a1, void (T::*a2)(U, V) const, U arg_0, V arg_1) {
+        return FunctorV2M< const T*, void (T::*)(U, V) const, U, V >(a1, a2, arg_0, arg_1);
     }
 
     class FunctorV0F : public FunctorBase {
@@ -147,11 +152,16 @@ namespace MR {
         void (*mFunc)();  // 0x4
     };
 
-    static FunctorV0F Functor(void (*a1)()) NO_INLINE {
+    static FunctorV0F Functor(void (*a1)()) {
         return FunctorV0F(a1);
+    }
+    template < class T, typename U >
+    inline static FunctorV1M< T*, void (T::*)(U), U > Functor_Inline(T* a1, void (T::*a2)(U), U arg_0) {
+        return FunctorV1M< T*, void (T::*)(U), U >(a1, a2, arg_0);
     }
 
     inline static FunctorV0F Functor_Inline(void (*a1)()) {
         return FunctorV0F(a1);
     }
+
 };  // namespace MR

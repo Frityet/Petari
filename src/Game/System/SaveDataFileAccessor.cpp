@@ -2,7 +2,7 @@
 #include "Game/Util/StringUtil.hpp"
 #include <cstring>
 
-SaveDataFileAccessor::SaveDataFileAccessor(u8* pData) : mFile(reinterpret_cast< SaveDataFile* >(pData)) {
+SaveDataFileAccessor::SaveDataFileAccessor(u8* pSaveDataFile) : mFile(reinterpret_cast< SaveDataFile* >(pSaveDataFile)) {
 }
 
 SaveDataFileHeader* SaveDataFileAccessor::getHeader() {
@@ -13,27 +13,32 @@ SaveDataFileInfo* SaveDataFileAccessor::getFileInfo(int index) {
     return &mFile->mInfo[index];
 }
 
-void SaveDataFileAccessor::makeUserFileInfo(SaveDataUserFileInfo* pInfo, const char* pName) {
-    pInfo->mData = nullptr;
-    pInfo->mDataSize = 0;
-    pInfo->mKind = 1;
+void SaveDataFileAccessor::makeUserFileInfo(SaveDataUserFileInfo* pUserFileInfo, const char* pName) {
+    pUserFileInfo->mData = nullptr;
+    pUserFileInfo->mDataSize = 0;
+    pUserFileInfo->mKind = 1;
 
     SaveDataFile* pFile = mFile;
-    for (u32 i = 0; i < pFile->mHeader.mUserFileInfoNum; i++) {
+    for (s32 i = 0; i < pFile->mHeader.mUserFileInfoNum; i++) {
+        if (!MR::isEqualString(pFile->mInfo[i].mName, pName)) {
+            continue;
+        }
+
+        if (i == pFile->mHeader.mUserFileInfoNum - 1) {
+            pUserFileInfo->mDataSize = pFile->mHeader.mFileSize - pFile->mInfo[i].mOffset;
+        } else {
+            pUserFileInfo->mDataSize = pFile->mInfo[i + 1].mOffset - pFile->mInfo[i].mOffset;
+        }
+
         SaveDataFileInfo* pFileInfo = &pFile->mInfo[i];
-        if (MR::isEqualString(pFileInfo->mName, pName)) {
-            if (i == pFile->mHeader.mUserFileInfoNum - 1) {
-                pInfo->mDataSize = pFile->mHeader.mFileSize - pFileInfo->mOffset;
-            } else {
-                pInfo->mDataSize = pFile->mInfo[i + 1].mOffset - pFileInfo->mOffset;
-            }
-            pInfo->mData = reinterpret_cast< u8* >(mFile) + pFileInfo->mOffset;
-            if (strstr(pFileInfo->mName, "mario") != nullptr || strstr(pFileInfo->mName, "luigi") != nullptr) {
-                pInfo->mKind = 0;
-            }
-            if (strstr(pFileInfo->mName, "sysconf") != nullptr) {
-                pInfo->mKind = 2;
-            }
+        pUserFileInfo->mData = (u8*)(&mFile->mHeader) + pFileInfo->mOffset;
+
+        if (strstr(pFile->mInfo[i].mName, "mario") != nullptr || strstr(pFile->mInfo[i].mName, "luigi") != nullptr) {
+            pUserFileInfo->mKind = 0;
+        }
+
+        if (strstr(pFile->mInfo[i].mName, "sysconf")) {
+            pUserFileInfo->mKind = 2;
         }
     }
 }

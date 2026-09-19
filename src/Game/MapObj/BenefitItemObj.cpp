@@ -11,7 +11,6 @@
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MapUtil.hpp"
@@ -116,7 +115,7 @@ void BenefitItemObj::init(const JMapInfoIter& rIter) {
     MR::setClippingFar100m(this);
     MR::setClippingTypeSphere(this, 100.0f);
 
-    initNerve(&NrvBenefitItemObj::HostTypeNrvWait::sInstance);
+    initNerve(GET_NERVE(BenefitItemObj, HostTypeNrvWait));
 
     _DF = 1;
     _D9 = 0;
@@ -231,7 +230,7 @@ void BenefitItemObj::init(const JMapInfoIter& rIter) {
         MR::useStageSwitchWriteDead(this, rIter);
 
         if (MR::useStageSwitchReadAppear(this, rIter)) {
-            MR::listenStageSwitchOnAppear(this, MR::Functor_Inline(this, &BenefitItemObj::appear));
+            MR::listenStageSwitchOnAppear(this, MR::Functor(this, &BenefitItemObj::appear));
             _E1 = 1;
         }
     }
@@ -318,7 +317,7 @@ void BenefitItemObj::appear() {
     switch (_D9) {
     case 0:
         if (_DA) {
-            setNerve(&NrvBenefitItemObj::HostTypeNrvPreEscape::sInstance);
+            setNerve(GET_NERVE(BenefitItemObj, HostTypeNrvPreEscape));
         }
 
         MR::validateHitSensors(this);

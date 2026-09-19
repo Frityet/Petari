@@ -3,6 +3,12 @@
 #include "Game/MapObj/Coin.hpp"
 #include "Game/Util.hpp"
 
+namespace {
+    static const s32 sAppearCameraTime = 30;
+    static const s32 sAppearDelayTime = 3;
+    static const s32 sDemoAppearTime = 90;
+};  // namespace
+
 namespace NrvCoinGroup {
     NEW_NERVE(CoinGroupNrvAppear, CoinGroup, Appear);
     NEW_NERVE(CoinGroupNrvTryStartDemo, CoinGroup, TryStartDemo);
@@ -10,12 +16,7 @@ namespace NrvCoinGroup {
     NEW_NERVE(CoinGroupNrvKill, CoinGroup, Kill);
 };  // namespace NrvCoinGroup
 
-CoinGroup::CoinGroup(const char* pName) : LiveActor(pName) {
-    mCoinArray = nullptr;
-    mCameraInfo = nullptr;
-    mCoinCount = 0;
-    mTimeLimit = -1;
-    mIsPurpleCoinGroup = false;
+CoinGroup::CoinGroup(const char* pName) : LiveActor(pName), mCoinArray(), mCameraInfo(), mCoinCount(), mTimeLimit(-1), mIsPurpleCoinGroup() {
 }
 
 void CoinGroup::init(const JMapInfoIter& rIter) {
@@ -40,10 +41,7 @@ void CoinGroup::init(const JMapInfoIter& rIter) {
         }
 
         Coin* coin = mCoinArray[i];
-
-        coin->mScale.x = 1.0f;
-        coin->mScale.y = 1.0f;
-        coin->mScale.z = 1.0f;
+        coin->mScale.set(1.0f);
         mCoinArray[i]->initWithoutIter();
     }
 
@@ -58,9 +56,9 @@ void CoinGroup::init(const JMapInfoIter& rIter) {
         MR::initActorCamera(this, rIter, &mCameraInfo);
 
         if (MR::isExistActorCamera(mCameraInfo)) {
-            initNerve(&NrvCoinGroup::CoinGroupNrvDemoAppear::sInstance);
+            initNerve(GET_NERVE(CoinGroup, CoinGroupNrvDemoAppear));
         } else {
-            initNerve(&NrvCoinGroup::CoinGroupNrvAppear::sInstance);
+            initNerve(GET_NERVE(CoinGroup, CoinGroupNrvAppear));
         }
     } else {
         appearCoinFix();
@@ -110,13 +108,13 @@ void CoinGroup::setCoinTrans(s32 coinIndex, const TVec3f& rPos) {
 void CoinGroup::appear() {
     LiveActor::appear();
 
-    if (isNerve(&NrvCoinGroup::CoinGroupNrvDemoAppear::sInstance)) {
-        MR::requestStartDemo(this, "出現", &NrvCoinGroup::CoinGroupNrvDemoAppear::sInstance, &NrvCoinGroup::CoinGroupNrvTryStartDemo::sInstance);
+    if (isNerve(GET_NERVE(CoinGroup, CoinGroupNrvDemoAppear))) {
+        MR::requestStartDemo(this, "出現", GET_NERVE(CoinGroup, CoinGroupNrvDemoAppear), GET_NERVE(CoinGroup, CoinGroupNrvTryStartDemo));
     }
 }
 
 void CoinGroup::exeAppear() {
-    if (MR::isStep(this, 3)) {
+    if (MR::isStep(this, ::sAppearDelayTime)) {
         if (mIsPurpleCoinGroup) {
             MR::startSystemSE("SE_SY_PURPLE_COIN_APPEAR");
         } else {
@@ -124,7 +122,7 @@ void CoinGroup::exeAppear() {
         }
 
         appearCoinAll();
-        setNerve(&NrvCoinGroup::CoinGroupNrvKill::sInstance);
+        setNerve(GET_NERVE(CoinGroup, CoinGroupNrvKill));
         kill();
     }
 }
@@ -134,26 +132,19 @@ void CoinGroup::exeTryStartDemo() {
 
 void CoinGroup::exeDemoAppear() {
     if (MR::isFirstStep(this)) {
-        MR::startActorCameraTargetSelf(this, mCameraInfo, 30);
+        MR::startActorCameraTargetSelf(this, mCameraInfo, ::sAppearCameraTime);
         MR::startSystemSE("SE_SY_COIN_APPEAR");
         appearCoinAll();
     }
 
-    if (MR::isGreaterStep(this, 90)) {
+    if (MR::isGreaterStep(this, ::sDemoAppearTime)) {
         MR::endDemo(this, "出現");
         MR::endActorCamera(this, mCameraInfo, false, -1);
-        setNerve(&NrvCoinGroup::CoinGroupNrvKill::sInstance);
+        setNerve(GET_NERVE(CoinGroup, CoinGroupNrvKill));
         kill();
     }
 }
 
 void CoinGroup::exeKill() {
     kill();
-}
-
-const char* CoinGroup::getCoinName() const {
-    return "コイン(グループ配置)";
-}
-
-void CoinGroup::placementCoin() {
 }

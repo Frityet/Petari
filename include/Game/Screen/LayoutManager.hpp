@@ -2,6 +2,8 @@
 
 #include <JSystem/JGeometry/TVec.hpp>
 #include <nw4r/lyt/drawInfo.h>
+#include <nw4r/lyt/layout.h>
+#include <nw4r/lyt/pane.h>
 
 namespace nw4r {
     namespace lyt {
@@ -9,6 +11,7 @@ namespace nw4r {
         class Group;
         class Layout;
         class Pane;
+        class TexMap;
     };  // namespace lyt
 };  // namespace nw4r
 
@@ -61,8 +64,16 @@ public:
     void initGroupCtrlList();
     void initTextBoxRecursive(nw4r::lyt::Pane*, nw4r::lyt::Pane*, const char*, u32);
     void animateRecursive(u32&, nw4r::lyt::Pane*);
-    nw4r::lyt::Pane* getPane(const char*) const;
-    nw4r::lyt::Pane* findPaneByName(const char*) const;
+    nw4r::lyt::Pane* getPane(const char* pName) const {
+        if (!pName) {
+            return mLayout->mpRootPane;
+        } else {
+            return findPaneByName(pName);
+        }
+    }
+    nw4r::lyt::Pane* findPaneByName(const char* pName) const {
+        return mLayout->mpRootPane->FindPaneByName(pName, true);
+    }
     void replaceIndDummyTexture();
     void removeUnnecessaryPanes(nw4r::lyt::Pane*);
 
@@ -72,10 +83,10 @@ public:
     /* 0x0C */ nw4r::lyt::DrawInfo mDrawInfo;
     /* 0x60 */ bool mIsScreenHidden;
     /* 0x61 */ bool _61;
-    /* 0x64 */ u32 _64;
+    /* 0x64 */ nw4r::lyt::TexMap* mIndDummyTexMap;
     /* 0x68 */ u32 mPaneCount;
-    /* 0x6C */ LayoutPaneInfo* mPaneInfos;
-    /* 0x70 */ u32 _70;
-    /* 0x74 */ u32 _74;
-    /* 0x78 */ const char* _78;
+    /* 0x6C */ LayoutPaneInfo* mPaneInfoList;
+    /* 0x70 */ u32 mGroupCtrlCount;
+    /* 0x74 */ LayoutGroupCtrl** mGroupCtrlList;
+    /* 0x78 */ char* mLayoutName;
 };

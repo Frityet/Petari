@@ -3,26 +3,47 @@
 #include "Game/Util/StringUtil.hpp"
 #include <JSystem/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3DGraphAnimator/J3DModelData.hpp>
-#include <JSystem/JGeometry/TQuat.hpp>
+#include <JSystem/JGeometry/TMatrix.hpp>
 
-namespace JGeometry {
-    template <>
-    void TQuat4< f32 >::setEuler(f32 rx, f32 ry, f32 rz) {
-        f32 cosX = cos(static_cast< f64 >(0.5f * rx));
-        f32 cosY = cos(static_cast< f64 >(0.5f * ry));
-        f32 cosZ = cos(static_cast< f64 >(0.5f * rz));
-        f32 sinX = sin(static_cast< f64 >(0.5f * rx));
-        f32 sinY = sin(static_cast< f64 >(0.5f * ry));
-        f32 sinZ = sin(static_cast< f64 >(0.5f * rz));
+void AnmPlayer_FORCE_EMIT(TQuat4f& rQuat, const TQuat4f& rOther, TPos3f& rMtx, const TPos3f& rSrc, TVec3f& rVec, f32 value) {
+    1.0f;
+    0.0f;
+    3.814697265625e-6f;
+    -3.814697265625e-6f;
+    0.5f;
+    3.0f;
+    -1.0f;
+    3.1415927f;
+    1023.5f;
+    1.5707964f;
+    2.0f;
+    -1.5707964f;
 
-        x = (cosY * cosZ) * sinX - (sinY * sinZ) * cosX;
-        y = (sinY * cosZ) * cosX + (cosY * sinZ) * sinX;
-        z = (cosY * sinZ) * cosX - (sinY * cosZ) * sinX;
-        w = (cosY * cosZ) * cosX + (sinY * sinZ) * sinX;
-    }
-}  // namespace JGeometry
+    rQuat.setEuler(value, value, value);
+    rQuat.setRotate(rVec, rVec);
+    rQuat.slerp(rOther, value);
+    rQuat.normalize(rOther);
+    rQuat.getEuler(rVec);
 
-AnmPlayerBase::AnmPlayerBase(const ResTable* pResTable) : mResTable(pResTable), mAnmRes(nullptr), mFrameCtrl(0) {
+    delete[] new TPos3f[1];
+    rMtx.identity();
+    rMtx.mult(rVec, rVec);
+    rMtx.multTranspose(rVec, rVec);
+    rMtx.invert(rSrc);
+    rMtx.concat(rSrc, rSrc);
+    rMtx.concat(rSrc);
+
+    TVec3f vectors[2] = {value, value};
+    rVec.set< f32 >(value, value, value);
+    JGeometry::TUtil< f32 >::epsilonEquals(value, value, value);
+    JGeometry::TUtil< f32 >::sqrt(value);
+    rMtx.set(value, value, value, value, value, value, value, value, value, value, value, value);
+    rMtx.getQuat(rQuat);
+    rQuat.set< f32 >(value, value, value, value);
+    (rQuat.*&TQuat4f::operator=)(rOther);
+}
+
+AnmPlayerBase::AnmPlayerBase(const ResTable* pResTable) : mResTable(pResTable), mAnmRes(), mFrameCtrl(0) {
 }
 
 void AnmPlayerBase::update() {

@@ -2,7 +2,6 @@
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
@@ -31,7 +30,7 @@ void StarPieceSpot::init(const JMapInfoIter& rIter) {
     initSound(1, false);
 
     if (MR::useStageSwitchReadAppear(this, rIter)) {
-        MR::listenStageSwitchOnAppear(this, MR::Functor_Inline(this, &StarPieceSpot::emit));
+        MR::listenStageSwitchOnAppear(this, MR::Functor(this, &StarPieceSpot::emit));
         kill();
     } else {
         initHitSensor(1);

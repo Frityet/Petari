@@ -3,57 +3,68 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util.hpp"
 #include "Game/Util/MtxUtil.hpp"
+#include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
+#include "JSystem/JGeometry/TPartition3.hpp"
 
-#include <JSystem/J3DGraphAnimator/J3DModelData.hpp>
+void MirrorCamera_FORCE_MATCH_SDATA2() {
+    1.0f;
+    0.0f;
+    -1.0f;
+    2.0f;
+}
 
-namespace {
-    const GXVtxAttrFmtList* getVertexFormat(const J3DModelData* pModelData, GXAttr attr) {
-        const GXVtxAttrFmtList* pFormat = pModelData->mVertexData.getVtxAttrFmtList();
-        while (pFormat->attr != GX_VA_NULL) {
-            if (pFormat->attr == attr) {
-                return pFormat;
-            }
-            pFormat++;
-        }
-        return nullptr;
-    }
-};
-
-MirrorCamera::MirrorCamera(const char* pName) : NameObj(pName), _C(0.0f, 0.0f, 0.0f), _18(0.0f, 1.0f, 0.0f), _24(0.0f) {
+MirrorCamera::MirrorCamera(const char* pName) : NameObj(pName), _C(0.0f, 0.0f, 0.0f), _18(0.0f, 1.0f, 0.0f), _24() {
     mViewMtx.identity();
     mModelTexMtx.identity();
+}
+
+void MirrorCamera::init(const JMapInfoIter& rIter) {
+    MR::connectToScene(this, MR::MovementType_MirrorCamera, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_None);
+}
+
+namespace {
+    const GXVtxAttrFmtList* getVertexFormat(const J3DModelData* pModelData, GXAttr attribute) {
+        const GXVtxAttrFmtList* format = pModelData->mVertexData.getVtxAttrFmtList();
+        for (; format->attr != GX_VA_NULL; format++) {
+            if (format->attr == attribute) {
+                return format;
+            }
+        }
+
+        return nullptr;
+    }
+}  // namespace
+
+void MirrorCamera::setMirrorMapInfo(const TVec3f& rNormal, const TVec3f& rPosition) {
+    _18.set< f32 >(rNormal);
+    _C.set< f32 >(rPosition);
+    _24 = -PSVECDotProduct(_18, _C);
 }
 
 void MirrorCamera::setMirrorMapInfo(J3DModelData* pModelData) {
     TVec3f position;
     TVec3f normal;
-    const GXVtxAttrFmtList* pPositionFormat = getVertexFormat(pModelData, GX_VA_POS);
-    if (pPositionFormat->type == GX_S16) {
-        const s16* pPosition = static_cast<const s16*>(pModelData->mVertexData.getVtxPosArray());
-        MR::fixed16ToFloat(&position, TVec3s(pPosition[0], pPosition[1], pPosition[2]), pPositionFormat->frac);
+    const GXVtxAttrFmtList* format = getVertexFormat(pModelData, GX_VA_POS);
+    if (format->type == GX_S16) {
+        const s16* data = static_cast< const s16* >(pModelData->getVtxPosArray());
+        TVec3s fixed(data[0], data[1], data[2]);
+        MR::fixed16ToFloat(&position, fixed, format->frac);
     } else {
-        const f32* pPosition = static_cast<const f32*>(pModelData->mVertexData.getVtxPosArray());
-        position.set(pPosition[0], pPosition[1], pPosition[2]);
+        const f32* data = static_cast< const f32* >(pModelData->getVtxPosArray());
+        position.set< f32 >(data[0], data[1], data[2]);
     }
-    const GXVtxAttrFmtList* pNormalFormat = getVertexFormat(pModelData, GX_VA_NRM);
-    if (pNormalFormat->type == GX_S16) {
-        const s16* pNormal = static_cast<const s16*>(pModelData->mVertexData.getVtxNrmArray());
-        MR::fixed16ToFloat(&normal, TVec3s(pNormal[0], pNormal[1], pNormal[2]), pNormalFormat->frac);
+
+    format = getVertexFormat(pModelData, GX_VA_NRM);
+    if (format->type == GX_S16) {
+        const s16* data = static_cast< const s16* >(pModelData->getVtxNrmArray());
+        TVec3s fixed(data[0], data[1], data[2]);
+        MR::fixed16ToFloat(&normal, fixed, format->frac);
     } else {
-        const f32* pNormal = static_cast<const f32*>(pModelData->mVertexData.getVtxNrmArray());
-        normal.set(pNormal[0], pNormal[1], pNormal[2]);
+        const f32* data = static_cast< const f32* >(pModelData->getVtxNrmArray());
+        normal.set< f32 >(data[0], data[1], data[2]);
     }
+
     setMirrorMapInfo(normal, position);
-}
-
-void MirrorCamera::init(const JMapInfoIter& rIter) {
-    MR::connectToScene(this, MR::MovementType_MirrorCamera, -1, -1, -1);
-}
-
-void MirrorCamera::setMirrorMapInfo(const TVec3f& a1, const TVec3f& a2) {
-    _18.set< f32 >(a1);
-    _C.set< f32 >(a2);
-    _24 = -PSVECDotProduct((const Vec*)&_18, (const Vec*)&_C);
 }
 
 void MirrorCamera::updateViewMtx() {
@@ -86,13 +97,11 @@ void MirrorCamera::updateModelTexMtx() {
     MR::multMtx(mModelTexMtx.mMtx, mViewMtx.mMtx, mtx);
 }
 
-f32 MirrorCamera::getDistance(const TVec3f& a1) const {
-    TVec3f stack_14;
-    TVec3f stack_8;
-
-    stack_8.set< f32 >(_18);
-    stack_14.x = stack_8.dot(_C);
-    return stack_8.dot(a1) - stack_14.x;
+f32 MirrorCamera::getDistance(const TVec3f& rPosition) const {
+    JGeometry::TPartition3< f32 > plane;
+    plane.mNormal.set< f32 >(_18);
+    plane.mDot = plane.mNormal.dot(_C);
+    return plane.mNormal.dot(rPosition) - plane.mDot;
 }
 
 namespace MR {

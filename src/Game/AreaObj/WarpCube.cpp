@@ -10,34 +10,46 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include <cstdio>
-#include <cstring>
+
+void WarpCube_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+}
 
 WarpCube::~WarpCube() {
 }
 
-WarpCube* WarpCubeMgr::getPairCube(const AreaObj* pAreaObj) {
-    const WarpCube* pSource = static_cast< const WarpCube* >(pAreaObj);
-    if (pSource->mMapIdInfo == nullptr) {
+WarpCube* WarpCubeMgr::getPairCube(const AreaObj* pObj) {
+    if (static_cast< const WarpCube* >(pObj)->mMapIdInfo == nullptr) {
         return nullptr;
     }
-    for (AreaObj** pIter = mArray.begin(); pIter != mArray.end(); ++pIter) {
-        WarpCube* pCube = static_cast< WarpCube* >(*pIter);
-        if (pCube != pSource && pCube->mMapIdInfo != nullptr && *pCube->mMapIdInfo == *pSource->mMapIdInfo) {
-            return pCube;
+
+    for (WarpCube** pCube = reinterpret_cast< WarpCube** >(mArray.begin()); pCube != reinterpret_cast< WarpCube** >(mArray.end()); pCube++) {
+        if (*pCube == pObj) {
+            continue;
+        }
+
+        if ((*pCube)->mMapIdInfo == nullptr) {
+            continue;
+        }
+
+        if (*(*pCube)->mMapIdInfo == *static_cast< const WarpCube* >(pObj)->mMapIdInfo) {
+            return *pCube;
         }
     }
+
     return nullptr;
 }
 
 void WarpCubeMgr::setInvalidateTimer(AreaObj* pAreaObj, u16 a2) {
     WarpCube* pWarpCube = static_cast< WarpCube* >(pAreaObj);
 
-    pWarpCube->_48 = a2;
+    pWarpCube->mInvalidateTimer = a2;
     pWarpCube->mIsValid = false;
 }
 
 void WarpCubeMgr::startEventCamera(const AreaObj* pAreaObj) {
-    WarpCube* pWarpCube = (WarpCube*)pAreaObj;
+    const WarpCube* pWarpCube = static_cast< const WarpCube* >(pAreaObj);
 
     MR::startEventCameraNoTarget(pWarpCube->mCameraInfo, pWarpCube->mEventName, -1);
 
@@ -45,26 +57,32 @@ void WarpCubeMgr::startEventCamera(const AreaObj* pAreaObj) {
 }
 
 void WarpCubeMgr::endEventCamera() {
-    if (mWarpCube != nullptr) {
-        MR::endEventCamera(mWarpCube->mCameraInfo, mWarpCube->mEventName, true, -1);
-        mWarpCube = nullptr;
+    if (mWarpCube == nullptr) {
+        return;
     }
+
+    MR::endEventCamera(mWarpCube->mCameraInfo, mWarpCube->mEventName, true, -1);
+    mWarpCube = nullptr;
 }
 
 void WarpCube::movement() {
-    if (_48 != 0) {
-        if (_48 == 1) {
-            TVec3f pos;
-            MR::calcCubePos(this, &pos);
+    if (mInvalidateTimer == 0) {
+        return;
+    }
 
-            if (MR::calcDistanceToPlayer(pos) < 300.0f) {
-                return;
-            }
-        }
+    if (mInvalidateTimer == 1) {
+        TVec3f pos;
+        MR::calcCubePos(this, &pos);
 
-        if (--_48 == 0) {
-            mIsValid = true;
+        if (MR::calcDistanceToPlayer(pos) < 300.0f) {
+            return;
         }
+    }
+
+    mInvalidateTimer--;
+
+    if (mInvalidateTimer == 0) {
+        mIsValid = true;
     }
 }
 
@@ -73,22 +91,23 @@ void WarpCube::draw() const {
     GXSetCullMode(GX_CULL_NONE);
     GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
 
-    TVec3f rotate;
-    TVec3f up;
-    up.x = 0.0f;
-    up.y = 1.0f;
-    up.z = 0.0f;
-    MR::calcCubeRotate(this, &rotate);
+    TVec3f cubeRotate;
+    TVec3f up(0.0f, 1.0f, 0.0f);
+    MR::calcCubeRotate(this, &cubeRotate);
+
     Mtx matrix;
-    MR::makeMtxTR(matrix, 0.0f, 0.0f, 0.0f, rotate.x, rotate.y, rotate.z);
+    MR::makeMtxTR(matrix, 0.0f, 0.0f, 0.0f, cubeRotate.x, cubeRotate.y, cubeRotate.z);
     PSMTXMultVecSR(matrix, &up, &up);
-    TVec3f pos;
-    MR::calcCubePos(this, &pos);
-    u32 color = 0x1FFF0080;
+
+    TVec3f cubePos;
+    MR::calcCubePos(this, &cubePos);
+
+    u32 flags = 0x1FFF0080;
     if (!isValid()) {
-        color = 0x1FCF0010;
+        flags = 0x1FCF0010;
     }
-    TDDraw::drawSphere(pos + up * 120.0f, 120.0f, color, 16);
+
+    TDDraw::drawSphere(cubePos + up * 120.0f, 120.0f, flags, 16);
 }
 
 void WarpCube::init(const JMapInfoIter& rIter) {
@@ -103,18 +122,17 @@ void WarpCube::init(const JMapInfoIter& rIter) {
 
     mCameraInfo = new ActorCameraInfo(rIter);
 
-    s32 local118;
-    MR::getJMapInfoArg0WithInit(rIter, &local118);
+    s32 arg0;
+    MR::getJMapInfoArg0WithInit(rIter, &arg0);
 
     char eventName[0x100];
-    sprintf(eventName, "ワープカメラ %d-%c", groupID, local118 + 65);
+    sprintf(eventName, "ワープカメラ %d-%c", groupID, arg0 + 65);
 
     MR::declareEventCamera(mCameraInfo, eventName);
 
-    s32 eventNameLength = strlen(&eventName[0]);
-    mEventName = new char[eventNameLength + 1];
+    mEventName = new char[strlen(&eventName[0]) + 1];
     strcpy(mEventName, &eventName[0]);
 
-    MR::connectToScene(this, MR::MovementType_AreaObj, -1, -1, MR::DrawType_WarpPodPath);
-    _48 = 0;
+    MR::connectToScene(this, MR::MovementType_AreaObj, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_WarpPodPath);
+    mInvalidateTimer = 0;
 }

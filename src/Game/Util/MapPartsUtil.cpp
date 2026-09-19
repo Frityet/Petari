@@ -1,4 +1,9 @@
-#include "Game/Util/MapPartsUtil.hpp"
+#include <revolution.h>
+
+namespace JMathInlineVEC {
+    void PSVECSubtract(const Vec* pA, const Vec* pB, Vec* pOut) NO_INLINE;
+}
+
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/MapObj/MapPartsRailGuideHolder.hpp"
@@ -8,20 +13,27 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
-#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MapPartsUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ModelUtil.hpp"
 #include "Game/Util/RailUtil.hpp"
 #include <cstdio>
 
+template TVec3f::TVec3(f32, f32, f32);
+
+void MapPartsUtil_FORCE_MATCH_SDATA2() {
+    0.0f;
+    0.5f;
+}
+
 namespace {
     const char* cFollowJointName = "Move";
 
-    bool getJMapInfoArgNoInit(const JMapInfoIter&, const char*, s32*);
-    bool getJMapInfoArgNoInit(const JMapInfoIter&, const char*, f32*);
+    bool getJMapInfoArgNoInit(const JMapInfoIter& rIter, const char* pName, s32* pValue);
+    bool getJMapInfoArgNoInit(const JMapInfoIter& rIter, const char* pName, f32* pValue);
 }  // namespace
 
 namespace MR {
@@ -34,70 +46,81 @@ namespace MR {
     }
 
     void setBodySensorTypeMapObj(LiveActor* pActor) {
-        setBodySensorType(pActor, 0x46);
+        pActor->getSensor("body")->setType(ATYPE_MAP_OBJ);
     }
 
     void setBodySensorTypePress(LiveActor* pActor) {
-        setBodySensorType(pActor, 0x76);
+        pActor->getSensor("body")->setType(ATYPE_MAP_OBJ_PRESS);
     }
 
     void setBodySensorTypeMoveCollision(LiveActor* pActor) {
-        setBodySensorType(pActor, 0x48);
+        pActor->getSensor("body")->setType(ATYPE_MAP_OBJ_MOVE_COLLISION);
     }
 
     bool isBodySensorTypeMapObj(const LiveActor* pActor) {
-        return pActor->getSensor("body")->isType(0x46);
+        return pActor->getSensor("body")->isType(ATYPE_MAP_OBJ);
     }
 
     bool receiveMapPartsRotateMsg(LiveActor* pActor, u32 msg, MapPartsRailMover* pMover, MapPartsRailRotator* pRotator) {
-        if (msg == 0xCB) {
+        if (msg == ACTMES_MAPPARTS_START_ROTATE_AT_POINT) {
             return tryStartMapPartsRotateAtPoint(pActor, pMover, pRotator);
         }
-        if (msg == 0xCC) {
+
+        if (msg == ACTMES_MAPPARTS_END_ROTATE_AT_POINT) {
             return tryEndMapPartsRotateAtPoint(pActor, pMover, pRotator);
         }
-        if (msg == 0xCD) {
+
+        if (msg == ACTMES_MAPPARTS_START_ROTATE_BETWEEN_POINTS) {
             return tryStartMapPartsRotateBetweenPoints(pActor, pMover, pRotator);
         }
+
         return false;
     }
 
     bool tryStartMapPartsRotateAtPoint(LiveActor* pActor, MapPartsRailMover*, MapPartsRailRotator* pRotator) {
-        if (pRotator == nullptr) {
+        if (!pRotator) {
             return false;
         }
+
         s32 point = getCurrentRailPointNo(pActor);
         if (!pRotator->hasRotation(point)) {
             return false;
         }
+
         if (pRotator->hasRotationBetweenPoints(point)) {
             return false;
         }
+
         pRotator->rotateAtPoint(point);
         return true;
     }
 
     bool tryEndMapPartsRotateAtPoint(LiveActor*, MapPartsRailMover* pMover, MapPartsRailRotator* pRotator) {
-        if (pMover == nullptr) {
+        if (!pMover) {
             return false;
         }
-        if (pRotator == nullptr) {
+
+        if (!pRotator) {
             return false;
         }
+
         pMover->endRotateAtPoint();
         return true;
     }
 
     bool tryStartMapPartsRotateBetweenPoints(LiveActor* pActor, MapPartsRailMover* pMover, MapPartsRailRotator* pRotator) {
-        if (pMover == nullptr) {
+        if (!pMover) {
             return false;
         }
-        if (pRotator == nullptr) {
+
+        if (!pRotator) {
             return false;
         }
+
         if (!pRotator->hasRotationBetweenPoints(getCurrentRailPointNo(pActor))) {
             return false;
         }
+
         f32 time = 0.0f;
         pMover->calcTimeToNextRailPoint(&time);
         pRotator->rotateBetweenPoints(getCurrentRailPointNo(pActor), time);
@@ -108,6 +131,7 @@ namespace MR {
         if (pMover->mMoveStopType == 2) {
             return pMover->mRailPointPassChecker->isPassedStartPoint();
         }
+
         return false;
     }
 
@@ -115,36 +139,37 @@ namespace MR {
         if (pMover->mMoveStopType == 2) {
             return pMover->mRailPointPassChecker->isPassedEndPoint();
         }
+
         return false;
     }
 
-    void getMapPartsObjectName(char* pName, u32 size, const JMapInfoIter& rIter) {
-        const char* objectName = "";
-        getObjectName(&objectName, rIter);
+    void getMapPartsObjectName(char* pBuffer, u32 size, const JMapInfoIter& rIter) {
+        const char* pName = "";
+        getObjectName(&pName, rIter);
         s32 shapeId = -1;
         getJMapInfoShapeIdWithInit(rIter, &shapeId);
-        snprintf(pName, size, "%s%02d", objectName, shapeId);
+        getMapPartsObjectName(pBuffer, size, pName, shapeId);
     }
 
-    void getMapPartsObjectNameIfExistShapeID(char* pName, u32 size, const JMapInfoIter& rIter) {
-        const char* objectName = "";
-        getObjectName(&objectName, rIter);
+    void getMapPartsObjectNameIfExistShapeID(char* pBuffer, u32 size, const JMapInfoIter& rIter) {
+        const char* pName = "";
+        getObjectName(&pName, rIter);
         s32 shapeId = -1;
         getJMapInfoShapeIdWithInit(rIter, &shapeId);
         if (shapeId >= 0) {
-            snprintf(pName, size, "%s%02d", objectName, shapeId);
+            getMapPartsObjectName(pBuffer, size, pName, shapeId);
         } else {
-            snprintf(pName, size, "%s", objectName);
+            snprintf(pBuffer, size, "%s", pName);
         }
     }
 
-    void getMapPartsObjectName(char* pName, u32 size, const char* pObjectName, s32 modelNo) {
-        snprintf(pName, size, "%s%02d", pObjectName, modelNo);
+    void getMapPartsObjectName(char* pBuffer, u32 size, const char* pName, s32 shapeId) {
+        snprintf(pBuffer, size, "%s%02d", pName, shapeId);
     }
 
-    void initMapPartsClipping(LiveActor* pActor, const JMapInfoIter& rIter, TVec3f* pCenter, bool noRailClipping) {
+    void initMapPartsClipping(LiveActor* pActor, const JMapInfoIter& rIter, TVec3f* pCenter, bool ignoreRail) {
         f32 radius = 0.0f;
-        if (getJ3DModel(pActor) != nullptr) {
+        if (getJ3DModel(pActor)) {
             calcModelBoundingRadius(&radius, pActor);
             if (isNearZero(radius)) {
                 radius = getCollisionBoundingSphereRange(pActor);
@@ -152,11 +177,13 @@ namespace MR {
         } else {
             radius = getCollisionBoundingSphereRange(pActor);
         }
-        if (isConnectedWithRail(rIter) && !noRailClipping) {
+
+        if (isConnectedWithRail(rIter) && !ignoreRail) {
             initAndSetRailClipping(pCenter, pActor, 0.5f * radius, radius);
         } else {
             setClippingTypeSphere(pActor, radius);
         }
+
         setGroupClipping(pActor, rIter, 64);
         s32 farClip = -1;
         ::getJMapInfoArgNoInit(rIter, "FarClip", &farClip);
@@ -176,27 +203,30 @@ namespace MR {
     }
 
     MapPartsRailGuideDrawer* createMapPartsRailGuideDrawer(LiveActor* pActor, const char* pName, const JMapInfoIter& rIter) {
-        MapPartsRailGuideHolder* holder = static_cast< MapPartsRailGuideHolder* >(createSceneObj(SceneObj_MapPartsRailGuideHolder));
-        return holder->createRailGuide(pActor, pName, rIter);
+        MapPartsRailGuideHolder* pHolder = static_cast< MapPartsRailGuideHolder* >(MR::createSceneObj(SceneObj_MapPartsRailGuideHolder));
+        return pHolder->createRailGuide(pActor, pName, rIter);
     }
 
     void initMapPartsShadow(LiveActor* pActor, const JMapInfoIter& rIter) {
         s32 shadowType = 0;
-        ::getJMapInfoArgNoInit(rIter, "ShadowType", &shadowType);
-        if (shadowType != 0) {
-            if (shadowType == 2) {
-                TBox3f box;
-                calcModelBoundingBox(&box, pActor);
-                TVec3f size;
-                JMathInlineVEC::PSVECSubtract(&box.f, &box.i, &size);
-                initShadowVolumeBox(pActor, size, pActor->getBaseMtx());
-            } else {
-                initShadowVolumeSphere(pActor, 0.70710677f * pActor->getSensor("body")->mRadius);
-            }
-            if (isExistJoint(pActor, cFollowJointName)) {
-                TVec3f offset(0.0f, 0.0f, 0.0f);
-                setShadowDropPositionAtJoint(pActor, nullptr, cFollowJointName, offset);
-            }
+        getMapPartsArgShadowType(&shadowType, rIter);
+        if (!hasMapPartsShadow(shadowType)) {
+            return;
+        }
+
+        if (shadowType == 2) {
+            TBox3f bounds;
+            calcModelBoundingBox(&bounds, pActor);
+            TVec3f size;
+            size.sub(bounds.f, bounds.i);
+            initShadowVolumeBox(pActor, size, pActor->getBaseMtx());
+        } else {
+            initShadowVolumeSphere(pActor, 0.70710677f * pActor->getSensor("body")->mRadius);
+        }
+
+        if (isExistJoint(pActor, cFollowJointName)) {
+            TVec3f offset(0.0f, 0.0f, 0.0f);
+            setShadowDropPositionAtJoint(pActor, nullptr, cFollowJointName, offset);
         }
     }
 }  // namespace MR
@@ -207,10 +237,12 @@ namespace {
         if (!rIter.getValue(pName, &value)) {
             return false;
         }
+
         if (value != -1) {
             *pValue = value;
             return true;
         }
+
         return false;
     }
 
@@ -219,6 +251,7 @@ namespace {
         if (!getJMapInfoArgNoInit(rIter, pName, &value)) {
             return false;
         }
+
         *pValue = value;
         return true;
     }
@@ -257,7 +290,7 @@ namespace MR {
         return ::getJMapInfoArgNoInit(rIter, "RotateType", pValue);
     }
 
-    bool getMapPartsArgShadowType(s32* pValue, const JMapInfoIter& rIter) {
+    s32 getMapPartsArgShadowType(s32* pValue, const JMapInfoIter& rIter) {
         return ::getJMapInfoArgNoInit(rIter, "ShadowType", pValue);
     }
 
@@ -297,29 +330,56 @@ namespace MR {
         return getCurrentRailPointArg7NoInit(pActor, pValue);
     }
 
+    bool getMapPartsArgRailRotateSpeed(f32* pValue, const LiveActor* pActor, s32 point) {
+        return getRailPointArg2WithInit(pActor, point, pValue);
+    }
+
+    bool getMapPartsArgRailRotateTime(s32* pValue, const LiveActor* pActor, s32 point) {
+        return getRailPointArg2WithInit(pActor, point, pValue);
+    }
+
+    bool getMapPartsArgRailRotateAngle(f32* pValue, const LiveActor* pActor, s32 point) {
+        return getRailPointArg3WithInit(pActor, point, pValue);
+    }
+
+    bool getMapPartsArgRailRotateAxis(s32* pValue, const LiveActor* pActor, s32 point) {
+        return getRailPointArg4NoInit(pActor, point, pValue);
+    }
+
+    bool getMapPartsArgRailRotateType(s32* pValue, const LiveActor* pActor, s32 point) {
+        return getRailPointArg6NoInit(pActor, point, pValue);
+    }
+
+    bool getMapPartsArgSpeedCalcType(s32* pValue, const LiveActor* pActor, s32 point) {
+        return getRailPointArg7NoInit(pActor, point, pValue);
+    }
+
     bool getMapPartsArgMoveTimeToNextPoint(s32* pValue, const LiveActor* pActor) {
         return getCurrentRailPointArg0NoInit(pActor, pValue);
     }
 
-    bool isMapPartsSignMotionTypeMoveStart(s32 signMotion) {
-        if (signMotion == 1) {
+    bool isMapPartsSignMotionTypeMoveStart(s32 type) {
+        if (type == 1) {
             return true;
         }
-        return signMotion == 4;
+
+        return type == 4;
     }
 
-    bool isMapPartsSignMotionTypeMoveWait(s32 signMotion) {
-        if (signMotion == 2) {
+    bool isMapPartsSignMotionTypeMoveWait(s32 type) {
+        if (type == 2) {
             return true;
         }
-        return signMotion == 5;
+
+        return type == 5;
     }
 
-    bool hasMapPartsMoveStartSignMotion(s32 signMotion) {
-        if (isMapPartsSignMotionTypeMoveStart(signMotion)) {
+    bool hasMapPartsMoveStartSignMotion(s32 type) {
+        if (isMapPartsSignMotionTypeMoveStart(type)) {
             return true;
         }
-        return isMapPartsSignMotionTypeMoveWait(signMotion);
+
+        return isMapPartsSignMotionTypeMoveWait(type);
     }
 
     bool hasMapPartsVanishSignMotion(s32 signMotion) {
@@ -365,28 +425,4 @@ namespace MR {
     bool isMapPartsRailSpeedCalcTypeTime(s32 calcType) {
         return calcType == 1;
     }
-    bool getMapPartsArgRailRotateSpeed(f32* pValue, const LiveActor* pActor, s32 point) {
-        return getRailPointArg2WithInit(pActor, point, pValue);
-    }
-
-    bool getMapPartsArgRailRotateTime(s32* pValue, const LiveActor* pActor, s32 point) {
-        return getRailPointArg2WithInit(pActor, point, pValue);
-    }
-
-    bool getMapPartsArgRailRotateAngle(f32* pValue, const LiveActor* pActor, s32 point) {
-        return getRailPointArg3WithInit(pActor, point, pValue);
-    }
-
-    bool getMapPartsArgRailRotateAxis(s32* pValue, const LiveActor* pActor, s32 point) {
-        return getRailPointArg4NoInit(pActor, point, pValue);
-    }
-
-    bool getMapPartsArgRailRotateType(s32* pValue, const LiveActor* pActor, s32 point) {
-        return getRailPointArg6NoInit(pActor, point, pValue);
-    }
-
-    bool getMapPartsArgSpeedCalcType(s32* pValue, const LiveActor* pActor, s32 point) {
-        return getRailPointArg7NoInit(pActor, point, pValue);
-    }
-
 };  // namespace MR

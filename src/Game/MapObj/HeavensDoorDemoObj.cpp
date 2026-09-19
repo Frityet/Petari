@@ -5,7 +5,6 @@
 #include "Game/Util.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
@@ -20,9 +19,6 @@ HeavensDoorDemoObj::HeavensDoorDemoObj(const char* pName) : MapObjActor(pName) {
     _C4 = false;
 }
 
-HeavensDoorDemoObj::~HeavensDoorDemoObj() {
-}
-
 void HeavensDoorDemoObj::init(const JMapInfoIter& rIter) {
     MapObjActor::init(rIter);
     MapObjActorInitInfo info;
@@ -31,9 +27,9 @@ void HeavensDoorDemoObj::init(const JMapInfoIter& rIter) {
         info.setupProjmapMtx(false);
     }
     if (MapObjActor::isObjectName("HeavensDoorAppearStepA")) {
-        info.setupNerve(&NrvHeavensDoorDemoObj::HeavensDoorDemoObjNrvAppear::sInstance);
+        info.setupNerve(GET_NERVE(HeavensDoorDemoObj, HeavensDoorDemoObjNrvAppear));
     } else {
-        info.setupNerve(&NrvHeavensDoorDemoObj::HeavensDoorDemoObjNrvWait::sInstance);
+        info.setupNerve(GET_NERVE(HeavensDoorDemoObj, HeavensDoorDemoObjNrvWait));
     }
     MapObjActorUtil::setupInitInfoTypical(&info, mObjectName);
     MapObjActor::initialize(rIter, info);
@@ -41,9 +37,9 @@ void HeavensDoorDemoObj::init(const JMapInfoIter& rIter) {
         MR::registerDemoSimpleCastAll(this);
     }
     if (MR::isDemoCast(this, nullptr)) {
-        MR::tryRegisterDemoActionNerve(this, &NrvHeavensDoorDemoObj::HeavensDoorDemoObjNrvVanish::sInstance, nullptr);
+        MR::tryRegisterDemoActionNerve(this, GET_NERVE(HeavensDoorDemoObj, HeavensDoorDemoObjNrvVanish), nullptr);
         if (MapObjActor::isObjectName("HeavensDoorInsideCage")) {
-            MR::tryRegisterDemoActionFunctor(this, MR::Functor_Inline(this, &HeavensDoorDemoObj::startInsideCageDemo), "ミニ太陽消失");
+            MR::tryRegisterDemoActionFunctor(this, MR::Functor(this, &HeavensDoorDemoObj::startInsideCageDemo), "ミニ太陽消失");
         }
     }
 }
@@ -62,7 +58,7 @@ void HeavensDoorDemoObj::exeAppear() {
     if (MR::isBtkStopped(this)) {
         MR::StageEffect::tryStageEffectStop(this, mObjectName);
         MR::StageEffect::stopShakingCameraMoving(this, mObjectName);
-        setNerve(&NrvHeavensDoorDemoObj::HeavensDoorDemoObjNrvWait::sInstance);
+        setNerve(GET_NERVE(HeavensDoorDemoObj, HeavensDoorDemoObjNrvWait));
     }
 }
 

@@ -2,6 +2,7 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
 #include "Game/Util/DirectDraw.hpp"
+#include "JSystem/JGeometry/TVec.hpp"
 
 ShadowSurfaceCircle::~ShadowSurfaceCircle() {
 }
@@ -24,10 +25,9 @@ void ShadowSurfaceCircle::draw() const {
         radius *= controller->getHost()->mScale.x;
     }
 
-    TVec3f position;
-    TVec3f normal;
-    controller->getProjectionPos(&position);
+    TVec3f pos, normal;
+    controller->getProjectionPos(&pos);
     controller->getProjectionNormal(&normal);
     TDDraw::resetViewMtx();
-    TDDraw::drawFillCircle(position + normal * 1.0f, -normal, radius, 0x00000080, 20);
+    TDDraw::drawFillCircle(pos + normal * 1.0f, -normal, radius, 128, 20);
 }

@@ -48,7 +48,7 @@ bool Mario::doObjWarp(LiveActor* pActor) {
         MR::getRotatedAxisZ(&mWarp->_38, pPod->mRotation);
         MR::getRotatedAxisY(&mWarp->_2C, pPod->mRotation);
 
-        mWarp->_45 = pPod->mArg1;
+        mWarp->_45 = pPod->mVisibilityState;
         mWarp->_44 = pPod->mArg2;
 
         stopWalk();
@@ -136,25 +136,24 @@ MarioWarp::MarioWarp(MarioActor* pActor) : MarioState(pActor, MarioStatus_Warp),
 }
 
 void MarioWarp::calcAxis() {
-    TVec3f difference(_14 - getTrans());
-    f32 distance = difference.length();
     TVec3f axis;
-    axis.cross(difference, getGravityVec());
-    MR::normalizeOrZero(&axis);
-    TVec3f half(difference * 0.5f);
-    TVec3f center(getTrans() + half);
     TVec3f normal;
-    normal.cross(axis, difference);
+    TVec3f displacement = _14 - getTrans();
+    f32 distance = displacement.length();
+    axis.cross(displacement, getGravityVec());
+    MR::normalizeOrZero(&axis);
+    TVec3f midpoint = getTrans() + displacement * 0.5f;
+    normal.cross(axis, displacement);
     MR::normalizeOrZero(&normal);
-
-    f32 angle = MR::pi() * 0.25f;
+    f32 angle = PI / 4.0f;
     if (_45 == 3) {
-        angle = MR::pi() * 0.4f;
+        angle = PI * 0.4f;
     }
+
     f32 radius = (0.5f * distance) / MR::sin(angle);
-    f32 height = MR::sqrt< f32 >(radius * radius - 0.5f * (0.5f * distance * distance));
+    f32 height = MR::sqrt(radius * radius - 0.5f * (0.5f * distance * distance));
     _5C = axis;
-    _68 = center + normal * height;
+    _68 = midpoint + normal * height;
     _74 = -normal * radius;
     _84 = angle;
     _80 = -angle;
@@ -162,12 +161,15 @@ void MarioWarp::calcAxis() {
     if (_88 == 0) {
         _88 = 1;
     }
+
     if (_88 < 120) {
         _88 = 120;
     }
+
     if (_45 == 2) {
         _88 = _48;
     }
+
     _8C = _88;
 }
 
@@ -266,6 +268,7 @@ bool Mario::doPointWarpRecovery(const TVec3f& rVec1, const TVec3f& rVec2) {
 
     return true;
 }
+
 void MarioWarp::updateJump() {
     if (_88 != 0) {
         f32 ratio = (1.0f + MR::sin(((static_cast< f32 >(_8C - _88) - 0.5f * static_cast< f32 >(_8C)) / static_cast< f32 >(_8C)) * MR::pi())) * 0.5f;

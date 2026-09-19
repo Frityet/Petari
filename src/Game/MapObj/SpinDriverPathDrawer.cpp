@@ -8,7 +8,7 @@
 SpinDriverPathDrawInit::SpinDriverPathDrawInit()
     : NameObj("スピンドライバーレール描画初期化"), mOrangeTexture(nullptr), mGreenTexture(nullptr), mPinkTexture(nullptr), mMaskTexture(nullptr),
       mIsPathAtOpa(false) {
-    MR::registerPreDrawFunction(MR::Functor_Inline(this, &SpinDriverPathDrawInit::initDraw), MR::DrawType_SpinDriverPathDrawer);
+    MR::registerPreDrawFunction(MR::Functor(this, &SpinDriverPathDrawInit::initDraw), MR::DrawType_SpinDriverPathDrawer);
     mOrangeTexture = new JUTTexture(MR::loadTexFromArc("SpinDriverPath.arc", "NormalColor.bti"), 0);
     mGreenTexture = new JUTTexture(MR::loadTexFromArc("SpinDriverPath.arc", "Green.bti"), 0);
     mPinkTexture = new JUTTexture(MR::loadTexFromArc("SpinDriverPath.arc", "Pink.bti"), 0);
@@ -97,7 +97,7 @@ namespace MR {
 };  // namespace MR
 
 void SpinDriverPathDrawer::init(const JMapInfoIter& rIter) {
-    MR::connectToScene(this, -1, -1, -1, MR::DrawType_SpinDriverPathDrawer);
+    MR::connectToScene(this, MR::MovementType_None, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_SpinDriverPathDrawer);
     initPositionList(75.0f, 20.0f);
     initClipping();
     initPathEnd();

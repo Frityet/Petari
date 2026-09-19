@@ -7,12 +7,12 @@ class DemoRabbit : public NPCActor {
 public:
     DemoRabbit(const char*);
     virtual ~DemoRabbit();
-    virtual void init(const JMapInfoIter&);
+
+    virtual void init(const JMapInfoIter& rIter);
     virtual void initAfterPlacement();
     virtual void control();
 
     static void makeArchiveList(NameObjArchiveListCollector*, const JMapInfoIter&);
-
     void fadeOut();
     void fadeIn();
     void updateStopVelocity();
@@ -22,6 +22,7 @@ public:
     bool tryGuide();
     bool tryWait();
     bool tryGoal();
+
     void exeAppear();
     void exeDemo();
     void exeTalk();
@@ -33,5 +34,5 @@ public:
     void exeStartBGM();
 
     /* 0x15C */ TVec3f mFrontVec;
-    /* 0x168 */ s32 mNoGroundTimer;
+    /* 0x168 */ s32 mAirTimer;
 };

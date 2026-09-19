@@ -12,7 +12,6 @@
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
@@ -24,6 +23,12 @@
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 #include "Game/Util/VectorUtil.hpp"
+
+void NokonokoLand_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)2.0f;
+}
 
 namespace {
     const Vec sSensorOffsetNormal = {0.0f, 0.0f, 30.0f};
@@ -90,9 +95,6 @@ NokonokoLand::NokonokoLand(const char* pName)
     mTargetQuat.set(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-NokonokoLand::~NokonokoLand() {
-}
-
 void NokonokoLand::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
     const char* pObjectName = nullptr;
@@ -129,7 +131,7 @@ void NokonokoLand::init(const JMapInfoIter& rIter) {
     mBindStarPointerState = new WalkerStateBindStarPointer(this, mAnimScaleController);
 
     if (MR::tryRegisterDemoCast(this, rIter)) {
-        MR::registerDemoActionFunctor(this, MR::FunctorV0M< NokonokoLand*, void (NokonokoLand::*)() >(this, &NokonokoLand::appear), nullptr);
+        MR::registerDemoActionFunctor(this, MR::Functor(this, &NokonokoLand::appear), nullptr);
         makeActorDead();
     } else if (MR::useStageSwitchReadAppear(this, rIter)) {
         MR::syncStageSwitchAppear(this);

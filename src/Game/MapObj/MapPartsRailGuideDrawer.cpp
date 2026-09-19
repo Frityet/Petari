@@ -5,11 +5,19 @@
 #include <algorithm>
 
 namespace NrvMapPartsRailGuideDrawer {
-    NERVE_DECL_NULL(HostTypeHideAll);
-    NERVE_DECL_NULL(HostTypeDrawAll);
+    class HostTypeHideAll : public Nerve {
+    public:
+        virtual void execute(Spine*) const {}
+        static HostTypeHideAll sInstance;
+    };
+    class HostTypeDrawAll : public Nerve {
+    public:
+        virtual void execute(Spine*) const {}
+        static HostTypeDrawAll sInstance;
+    };
     NEW_NERVE(HostTypeDrawForward, MapPartsRailGuideDrawer, DrawForward);
-    INIT_NERVE(HostTypeHideAll);
-    INIT_NERVE(HostTypeDrawAll);
+    HostTypeHideAll HostTypeHideAll::sInstance;
+    HostTypeDrawAll HostTypeDrawAll::sInstance;
 }
 
 MapPartsRailGuideDrawer::MapPartsRailGuideDrawer(LiveActor* pHost, const char* pName)

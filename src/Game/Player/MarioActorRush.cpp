@@ -13,6 +13,11 @@
 #include "Game/Screen/GameSceneLayoutHolder.hpp"
 #include "Game/Util.hpp"
 
+void MarioActorRush_FORCE_MATCH_SDATA2() {
+    (void)0.0f;
+    (void)0.001f;
+}
+
 void MarioActor::settingRush() {
     rushDropThrowMemoSensor();
 
@@ -84,7 +89,7 @@ void MarioActor::resetCondition() {
         if (!_468) {
             mMario->mSwim->resetJet();
         }
-    } else if (mMario->isStatusActive(MarioStatus_Teresa) && mPlayerMode == PlayerMode_Teresa) {
+    } else if (mMario->isStatusActive(MarioStatus_Teresa) && mPlayerMode == 6) {
         if (mMario->isStatusActive(MarioStatus_Wait)) {
             mMario->closeStatus(mMario->mWait);
         }

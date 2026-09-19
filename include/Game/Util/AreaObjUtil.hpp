@@ -18,10 +18,7 @@ namespace MR {
     s32 getAreaObjArg(const AreaObj*, s32);
     void tryToUpdatePlayerRestartIdInfo(const TVec3f&);
 
-    bool calcAreaMoveVelocity(TVec3f*, const TVec3f&);
-
-    void calcSpherePos(TVec3f*, const AreaObj*);
-    f32 getSphereRadius(const AreaObj*);
+    bool calcAreaMoveVelocity(TVec3f* pVelocity, const TVec3f& rPos);
 
     void calcCylinderPos(TVec3f*, const AreaObj*);
     void calcCylinderCenterPos(TVec3f*, const AreaObj*);
@@ -29,9 +26,9 @@ namespace MR {
     void calcCylinderUpVec(TVec3f*, const AreaObj*);
     f32 getCylinderRadius(const AreaObj*);
 
-    void calcCubeAxisZ(const AreaObj*, TVec3f*);
+    void calcCubeWorldBox(TDirBox3f* pBox, const AreaObj* pArea);
     void calcCubePos(const AreaObj*, TVec3f*);
-    void calcCubeWorldBox(TDirBox3f*, const AreaObj*);
+    void calcCubeAxisZ(const AreaObj*, TVec3f*);
     void calcCubeLocalPos(TVec3f*, const AreaObj*, const TVec3f&);
 
     void calcCubeRotate(const AreaObj*, TVec3f*);
@@ -44,9 +41,6 @@ namespace MR {
 
     AreaObj* getAreaIn(const char*, const TVec3f&);
 
-    void tryToUpdatePlayerRestartIdInfo(const TVec3f&);
-
     bool getWaterAreaObj(WaterInfo*, const TVec3f&);
-    bool getWaterAreaInfo(WaterInfo*, const TVec3f&, const TVec3f&, bool);
-
+    bool getWaterAreaInfo(WaterInfo* pInfo, const TVec3f& rPos, const TVec3f& rGravity, bool skipConnectedArea);
 };  // namespace MR

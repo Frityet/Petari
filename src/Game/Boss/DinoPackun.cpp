@@ -23,7 +23,6 @@
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/FootPrint.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/JointController.hpp"
@@ -128,7 +127,7 @@ void DinoPackun::init(const JMapInfoIter& rIter) {
     MR::stopBck(this);
     MR::startBtp(this, "FlowerAll");
     MR::startBrk(this, "Normal");
-    MR::listenStageSwitchOnA(this, MR::Functor_Inline(this, &DinoPackun::startSequence));
+    MR::listenStageSwitchOnA(this, MR::Functor(this, &DinoPackun::startSequence));
     MR::addBaseMatrixFollowTarget(this, rIter, nullptr, nullptr);
 
     if (mSequence != nullptr) {

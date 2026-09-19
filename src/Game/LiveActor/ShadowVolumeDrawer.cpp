@@ -2,7 +2,6 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/DrawUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/ObjUtil.hpp"
 
 namespace {
@@ -11,7 +10,7 @@ namespace {
 };  // namespace
 
 ShadowVolumeDrawInit::ShadowVolumeDrawInit() : NameObj("シャドウボリューム描画初期化") {
-    MR::registerPreDrawFunction(MR::Functor_Inline(&MR::setupShadowVolumeDraw), MR::DrawType_ShadowVolume);
+    MR::registerPreDrawFunction(MR::Functor(&MR::setupShadowVolumeDraw), MR::DrawType_ShadowVolume);
 }
 
 ShadowVolumeDrawer::ShadowVolumeDrawer(const char* pName) : ShadowDrawer(pName) {
@@ -19,7 +18,7 @@ ShadowVolumeDrawer::ShadowVolumeDrawer(const char* pName) : ShadowDrawer(pName) 
     mEndDrawShapeOffset = 0.0f;
     mIsCutDropShadow = false;
     MR::createSceneObj(SceneObj_ShadowVolumeDrawInit);
-    MR::connectToScene(this, -1, -1, -1, MR::DrawType_ShadowVolume);
+    MR::connectToScene(this, MR::MovementType_None, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_ShadowVolume);
 }
 
 void ShadowVolumeDrawer::setStartDrawShepeOffset(f32 offs) {
@@ -42,11 +41,18 @@ void ShadowVolumeDrawer::calcBaseDropPosition(TVec3f* pVec) const {
     calcBaseDropPosition(pVec, getController());
 }
 
+void ShadowVolumeDrawer::calcBaseDropPosition(TVec3f* pPosition, const ShadowController* pController) const {
+    TVec3f position;
+    TVec3f direction;
+    pController->getDropPos(&position);
+    pController->getDropDir(&direction);
+    pPosition->set(position + direction * mStartDrawShapeOffset);
+}
+
 f32 ShadowVolumeDrawer::calcBaseDropLength() const {
     return calcBaseDropLength(getController());
 }
 
-// reg usage issues at the bottom
 f32 ShadowVolumeDrawer::calcBaseDropLength(const ShadowController* pController) const {
     f32 length = pController->getDropLength();
 
@@ -56,8 +62,9 @@ f32 ShadowVolumeDrawer::calcBaseDropLength(const ShadowController* pController) 
         }
     }
 
-    f32 negStart = -mStartDrawShapeOffset;
-    length += mEndDrawShapeOffset + negStart;
+    f32 endOffset = mEndDrawShapeOffset;
+    f32 startOffset = mStartDrawShapeOffset;
+    length += -startOffset + endOffset;
     return length;
 }
 
@@ -91,12 +98,4 @@ void ShadowVolumeDrawer::draw() const {
 }
 
 ShadowVolumeDrawInit::~ShadowVolumeDrawInit() {
-}
-
-void ShadowVolumeDrawer::calcBaseDropPosition(TVec3f* pPosition, const ShadowController* pController) const {
-    TVec3f dropPosition;
-    TVec3f dropDirection;
-    pController->getDropPos(&dropPosition);
-    pController->getDropDir(&dropDirection);
-    pPosition->set(dropPosition + dropDirection * mStartDrawShapeOffset);
 }

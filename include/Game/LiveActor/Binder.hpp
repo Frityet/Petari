@@ -65,11 +65,11 @@ public:
     /* 0x15C */ HitInfo mRoofInfo;
     /* 0x1E8 */ f32 _1E8;
     /* 0x1EC */ struct {
-        bool _0 : 1;
-        bool _1 : 1;
-        bool _2 : 1;
-        bool _3 : 1;
-        bool _4 : 1;
-        bool _5 : 1;
+        u8 _0 : 1;
+        u8 _1 : 1;
+        u8 _2 : 1;
+        u8 _3 : 1;
+        u8 _4 : 1;
+        u8 _5 : 1;
     } _1EC;
 };

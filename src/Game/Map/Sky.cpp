@@ -6,7 +6,6 @@
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
@@ -61,7 +60,7 @@ void Sky::init(const JMapInfoIter& rIter) {
 
     MR::invalidateClipping(this);
     MR::registerDemoSimpleCastAll(this);
-    initNerve(&NrvSky::HostTypeWait::sInstance);
+    initNerve(GET_NERVE(Sky, HostTypeWait));
 
     if (MR::isValidSwitchAppear(this)) {
         MR::syncStageSwitchAppear(this);
@@ -106,7 +105,7 @@ void Sky::disappearSpaceInner() {
 
 void Sky::exeWait() {
     if (MR::isValidSwitchA(this) && MR::isOnSwitchA(this)) {
-        setNerve(&NrvSky::HostTypeChange::sInstance);
+        setNerve(GET_NERVE(Sky, HostTypeChange));
     }
 }
 

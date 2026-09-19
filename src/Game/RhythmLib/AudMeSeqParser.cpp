@@ -212,6 +212,7 @@ s32 AudMeSeqParser::cmdOpenTrack(AudMeTrack* pTrack, u32* pArgs) {
     if (child == nullptr) {
         return 0;
     }
+
     child->setSeqData(pTrack->getSeqCtrl()->getBase(), addr);
     return 0;
 }
@@ -222,12 +223,12 @@ s32 AudMeSeqParser::cmdCloseTrack(AudMeTrack* pTrack, u32* pArgs) {
 }
 
 s32 AudMeSeqParser::cmdStart(AudMeTrack* pTrack, u32* pArgs) {
-    s32 time = pArgs[0];
-    if (time == 6) {
+    s32 type = pArgs[0];
+    if (type == 6) {
         return 0;
     }
 
-    pTrack->getSeqCtrl()->wait(time, 1);
+    pTrack->getSeqCtrl()->wait(type, 1);
     return 0;
 }
 
@@ -267,6 +268,7 @@ s32 AudMeSeqParser::cmdJumpZ(AudMeTrack* pTrack, u32* pArgs) {
     if (pTrack->getFlagZ()) {
         pTrack->getSeqCtrl()->jump(addr);
     }
+
     pTrack->clearJumpFlag();
     return 0;
 }
@@ -276,6 +278,7 @@ s32 AudMeSeqParser::cmdJumpNZ(AudMeTrack* pTrack, u32* pArgs) {
     if (pTrack->getFlagNZ()) {
         pTrack->getSeqCtrl()->jump(addr);
     }
+
     pTrack->clearJumpFlag();
     return 0;
 }
@@ -285,6 +288,7 @@ s32 AudMeSeqParser::cmdCallZ(AudMeTrack* pTrack, u32* pArgs) {
     if (pTrack->getFlagZ()) {
         pTrack->getSeqCtrl()->call(addr);
     }
+
     pTrack->clearJumpFlag();
     return 0;
 }
@@ -294,6 +298,7 @@ s32 AudMeSeqParser::cmdCallNZ(AudMeTrack* pTrack, u32* pArgs) {
     if (pTrack->getFlagNZ()) {
         pTrack->getSeqCtrl()->call(addr);
     }
+
     pTrack->clearJumpFlag();
     return 0;
 }
@@ -319,7 +324,7 @@ s32 AudMeSeqParser::cmdLock(AudMeTrack* pTrack, u32* pArgs) {
 }
 
 s32 AudMeSeqParser::cmdNoWait(AudMeTrack* pTrack, u32* pArgs) {
-    pTrack->getSeqCtrl()->mWaitTime = -1;
+    pTrack->getSeqCtrl()->mType = -1;
     pTrack->getSeqCtrl()->mTime = 0;
     return 0;
 }
@@ -433,6 +438,7 @@ s32 AudMeSeqParser::cmdCmpNI(AudMeTrack* pTrack, u32* pArgs) {
     } else {
         pTrack->setJumpFlag(false);
     }
+
     return 0;
 }
 
@@ -444,6 +450,7 @@ s32 AudMeSeqParser::cmdCmpCI(AudMeTrack* pTrack, u32* pArgs) {
     } else {
         pTrack->setJumpFlag(false);
     }
+
     return 0;
 }
 
@@ -532,9 +539,6 @@ s32 AudMeSeqParser::cmdModifyRnd(AudMeTrack* pTrack, u32* pArgs) {
 }
 
 s32 AudMeSeqParser::parse(AudMeTrack* pTrack) {
-    // FIXME: regswap in read16
-    // https://decomp.me/scratch/rnZki
-
     if (pTrack == nullptr) {
         return 0;
     }
@@ -557,6 +561,7 @@ s32 AudMeSeqParser::parse(AudMeTrack* pTrack) {
             arg = pTrack->getSeqCtrl()->read24();
             break;
         }
+
         args[i] = arg;
         readType = (u16)readType >> 2;
     }

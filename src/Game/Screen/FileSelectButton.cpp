@@ -2,7 +2,6 @@
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/ButtonPaneController.hpp"
 #include "Game/Screen/GalaxyMapGalaxyPlain.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/LayoutUtil.hpp"
 #include "Game/Util/MessageUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
@@ -27,7 +26,7 @@ void FileSelectButton::init(const JMapInfoIter& rIter) {
     createButtonController();
     createOthers();
     MR::connectToSceneLayout(this);
-    initNerve(&FileSelectButtonNrvSelect::sInstance);
+    initNerve(GET_NERVE_GLOBAL(FileSelectButtonNrvSelect));
 }
 
 void FileSelectButton::appear() {
@@ -37,7 +36,7 @@ void FileSelectButton::appear() {
         mButtonCtrl[i]->appear();
     }
 
-    setNerve(&FileSelectButtonNrvSelect::sInstance);
+    setNerve(GET_NERVE_GLOBAL(FileSelectButtonNrvSelect));
 }
 
 void FileSelectButton::kill() {
@@ -49,7 +48,7 @@ void FileSelectButton::disappear() {
         mButtonCtrl[i]->disappear();
     }
 
-    setNerve(&FileSelectButtonNrvDisappear::sInstance);
+    setNerve(GET_NERVE_GLOBAL(FileSelectButtonNrvDisappear));
 }
 
 void FileSelectButton::setCallbackFunctor(const MR::FunctorBase& rStartFunctor, const MR::FunctorBase& rCopyFunctor,
@@ -63,7 +62,7 @@ void FileSelectButton::setCallbackFunctor(const MR::FunctorBase& rStartFunctor, 
 }
 
 void FileSelectButton::shiftSelect() {
-    setNerve(&FileSelectButtonNrvSelect::sInstance);
+    setNerve(GET_NERVE_GLOBAL(FileSelectButtonNrvSelect));
 }
 
 void FileSelectButton::exeSelect() {
@@ -77,7 +76,7 @@ void FileSelectButton::exeSelect() {
                 (*mCallbackFunctor[i])();
             }
 
-            setNerve(&FileSelectButtonNrvWait::sInstance);
+            setNerve(GET_NERVE_GLOBAL(FileSelectButtonNrvWait));
             break;
         }
     }

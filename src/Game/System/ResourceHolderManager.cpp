@@ -46,10 +46,9 @@ LayoutHolder* ResourceHolderManager::createAndAddLayoutHolderStationed(const cha
 }
 
 LayoutHolder* ResourceHolderManager::createAndAddLayoutHolderRawData(const char* pParam1) {
-    FuncPtrC create = &ResourceHolderManager::createLayoutHolder;
     CreateResourceHolderArgs args = CreateResourceHolderArgs();
 
-    (this->*create)(pParam1, &args);
+    // TODO: Pointer-to-member-function call. Might be an inlined functor?
 
     return add(pParam1, args)->mLayoutHolder;
 }
@@ -77,12 +76,13 @@ void ResourceHolderManager::removeIfIsEqualHeap(JKRHeap* pHeap) {
         pIter->mResourceHolder = nullptr;
     }
 
-    for (ResourceHolderManagerName2Resource* pIter = mResourceArray.begin(); pIter != mResourceArray.end();) {
-        if (pIter->mHeap == nullptr) {
-            pIter = mResourceArray.erase(pIter);
-        } else {
-            pIter++;
+    for (ResourceHolderManagerName2Resource* pIter = mResourceArray.begin(); pIter != mResourceArray.end(); pIter++) {
+        if (pIter->mHeap != nullptr) {
+            continue;
         }
+
+        // FIXME: Supposed inline of MR::Vector::erase.
+        mResourceArray.erase(pIter);
     }
 }
 
@@ -125,9 +125,8 @@ ResourceHolderManagerName2Resource* ResourceHolderManager::createAndAddInner(con
 
 ResourceHolderManagerName2Resource* ResourceHolderManager::createAndAddInnerStationed(const char* pParam1, FuncPtrC pParam2) {
     CreateResourceHolderArgs args = CreateResourceHolderArgs();
-    MR::FunctorV2M< ResourceHolderManager*, FuncPtrC, const char*, CreateResourceHolderArgs* > func = MR::Functor(this, pParam2, pParam1, &args);
 
-    MR::startFunctionAsyncExecuteOnMainThread(func, pParam1);
+    MR::startFunctionAsyncExecuteOnMainThread(MR::Functor(this, pParam2, pParam1, &args), pParam1);
 
     ResourceHolderManagerName2Resource* pName2Resource = add(pParam1, args);
 

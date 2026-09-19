@@ -6,8 +6,8 @@
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 
-PartsModel::PartsModel(LiveActor* pActor, const char* pName, const char* pModelName, MtxPtr mtx, int drawBufferType, bool a6)
-    : LiveActor(pName), mHost(pActor), mFixedPosition(), mMtx(mtx), mIsCalcOwnMtx(true), _99(), mIsDead() {
+PartsModel::PartsModel(LiveActor* pActor, const char* pName, const char* pModelName, MtxPtr pMtx, int drawBufferType, bool a6)
+    : LiveActor(pName), mHost(pActor), mFixedPosition(), mMtx(pMtx), mIsCalcOwnMtx(true), _99(), mIsDead() {
     if (drawBufferType < 0) {
         drawBufferType = MR::DrawBufferType_MapObj;
     }
@@ -37,7 +37,7 @@ PartsModel::PartsModel(LiveActor* pActor, const char* pName, const char* pModelN
         calcAnimType = MR::CalcAnimType_NPC;
     }
 
-    MR::connectToScene(this, movementType, calcAnimType, drawBufferType, -1);
+    MR::connectToScene(this, movementType, calcAnimType, drawBufferType, MR::DrawType_None);
 }
 
 void PartsModel::makeActorAppeared() {
@@ -137,7 +137,7 @@ void PartsModel::offFixedPosNormalizeScale() {
 
 void PartsModel::calcAndSetBaseMtx() {
     if (mMtx != nullptr && mIsCalcOwnMtx) {
-        mPosition.set(mMtx[0][3], mMtx[1][3], mMtx[2][3]);
+        mPosition.set< f32 >(mMtx[0][3], mMtx[1][3], mMtx[2][3]);
         MR::setBaseTRMtx(this, mMtx);
     } else {
         LiveActor::calcAndSetBaseMtx();

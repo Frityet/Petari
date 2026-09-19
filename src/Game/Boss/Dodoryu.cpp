@@ -20,7 +20,6 @@
 #include "Game/Util/AreaObjUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/JointController.hpp"
 #include "Game/Util/JointRumbler.hpp"
@@ -397,7 +396,7 @@ void Dodoryu::nextState() {
     if (_CC >= mState.size()) {
         MR::startAfterBossBGM();
         MR::requestAppearPowerStar(this, mPosition);
-        mRabbit->setNerve(&::DodoryuRabbitNrvRabbitReturn::sInstance);
+        mRabbit->setNerve(GET_NERVE_ANON(DodoryuRabbitNrvRabbitReturn));
 
         if (MR::isValidSwitchB(this)) {
             MR::onSwitchB(this);
@@ -483,7 +482,7 @@ void Dodoryu::reactJumpOutCommon() const {
 }
 
 void Dodoryu::startSpinOutCamera() {
-    MR::startGlobalEventCamera(::sSpinOutCamera, CameraTargetArg(this), 120);
+    MR::startGlobalEventCamera(::sSpinOutCamera, CameraTargetArg(_14C), 120);
 }
 
 void Dodoryu::endSpinOutCamera() {
@@ -519,17 +518,15 @@ void Dodoryu::validateStarPieceSensor() {
 }
 
 bool Dodoryu::isHeadNeedle(HitSensor* pReceiver, HitSensor* pSender) const {
-    HitSensor* pSensor = getSensor(::sHeadSensorName);
-
-    if (pReceiver != pSensor) {
+    if (pReceiver != getSensor(::sHeadSensorName)) {
         return false;
     }
 
     TVec3f deltaPos = pSender->mPosition - pReceiver->mPosition;
 
     TVec3f xDir;
-    TRot3f jointMtx;
-    jointMtx.setInline(MR::getJointMtx(this, ::sHeadJointName));
+    TPos3f jointMtx;
+    jointMtx.set(MR::getJointMtx(this, ::sHeadJointName));
     jointMtx.getXDir(xDir);
 
     return xDir.dot(deltaPos) >= 105.0f;
@@ -607,7 +604,7 @@ void Dodoryu::leaveRabbit() {
         return;
     }
 
-    rabbit->setNerve(&::DodoryuRabbitNrvRabbitJump::sInstance);
+    rabbit->setNerve(GET_NERVE_ANON(DodoryuRabbitNrvRabbitJump));
 }
 
 void Dodoryu::resetRabbit() {
@@ -684,7 +681,7 @@ void Dodoryu::initHitSensor() {
 
 void Dodoryu::initSwitch(const JMapInfoIter& rIter) {
     if (MR::useStageSwitchReadA(this, rIter)) {
-        MR::listenStageSwitchOnA(this, MR::Functor_Inline(this, &Dodoryu::notifyOnSwitchA));
+        MR::listenStageSwitchOnA(this, MR::Functor(this, &Dodoryu::notifyOnSwitchA));
     }
 
     MR::useStageSwitchWriteB(this, rIter);
@@ -700,7 +697,29 @@ void Dodoryu::createDodoryuBank() {
     mBank->initWithoutIter();
 }
 
-// Dodoryu::turnUpVecTo
+void Dodoryu::turnUpVecTo(const TVec3f& rVec) {
+    TVec3f dir;
+    mBaseMtx.getYDir(dir);
+
+    TQuat4f q;
+    q.setRotate(dir, rVec);
+
+    TPos3f mtx;
+    mtx.setQuat(q);
+    mBaseMtx.concat(mtx, mBaseMtx);
+
+    // FIXME: probably an inline
+    TVec3f xDir, yDir, zDir;
+    mBaseMtx.getXYZDir(xDir, yDir, zDir);
+
+    yDir.cross(zDir, xDir);
+    zDir.cross(xDir, yDir);
+
+    yDir.normalize();
+    zDir.normalize();
+
+    mBaseMtx.setXYZDir2(xDir, yDir, zDir);
+}
 
 void Dodoryu::checkHipDrop() {
     if (MR::isPlayerHipDropLand()) {
@@ -749,7 +768,7 @@ DodoryuBank::DodoryuBank() : ModelObj("ドドリュウ盛土", "DodoryuBank", _9
 }
 
 void DodoryuBank::init(const JMapInfoIter& rIter) {
-    initNerve(&::DodoryuBankNrvBankAppear::sInstance);
+    initNerve(GET_NERVE_ANON(DodoryuBankNrvBankAppear));
     makeActorDead();
 }
 
@@ -775,7 +794,7 @@ DodoryuRabbit::DodoryuRabbit(Dodoryu* pHost, const JMapInfoIter& rIter)
 }
 
 void DodoryuRabbit::init(const JMapInfoIter& rIter) {
-    initNerve(&::DodoryuRabbitNrvRabbitEscape::sInstance);
+    initNerve(GET_NERVE_ANON(DodoryuRabbitNrvRabbitEscape));
     initHitSensor(4);
     MR::addHitSensorAtJointEnemy(this, "body", "Spine", 8, 50.0f, TVec3f(0.0f, 0.0f, 0.0f));
     MR::initShadowFromCSV(this, "Shadow");
@@ -790,8 +809,8 @@ void DodoryuRabbit::init(const JMapInfoIter& rIter) {
 }
 
 void DodoryuRabbit::control() {
-    bool isEscape = isNerve(&::DodoryuRabbitNrvRabbitEscapeWaiting::sInstance) || isNerve(&::DodoryuRabbitNrvRabbitEscape::sInstance) ||
-                    isNerve(&::DodoryuRabbitNrvRabbitEscapeSlow::sInstance);
+    bool isEscape = isNerve(GET_NERVE_ANON(DodoryuRabbitNrvRabbitEscapeWaiting)) || isNerve(GET_NERVE_ANON(DodoryuRabbitNrvRabbitEscape)) ||
+                    isNerve(GET_NERVE_ANON(DodoryuRabbitNrvRabbitEscapeSlow));
 
     if (isEscape) {
         _CC--;
@@ -812,7 +831,7 @@ void DodoryuRabbit::control() {
         _D8->update();
     }
 
-    if (isNerve(&::DodoryuRabbitNrvRabbitPleasure::sInstance) && getNerveStep() > 30) {
+    if (isNerve(GET_NERVE_ANON(DodoryuRabbitNrvRabbitPleasure)) && getNerveStep() > 30) {
         return;
     }
 
@@ -848,7 +867,7 @@ void DodoryuRabbit::exeEscape() {
     tryTalk();
 
     if (calcCoordDiff() > ::sRabbitDistMax) {
-        setNerve(&::DodoryuRabbitNrvRabbitEscapeSlow::sInstance);
+        setNerve(GET_NERVE_ANON(DodoryuRabbitNrvRabbitEscapeSlow));
     }
 }
 
@@ -868,9 +887,9 @@ void DodoryuRabbit::exeEscapeSlow() {
     f32 coordDiff = calcCoordDiff();
 
     if (coordDiff < ::sRabbitDistMin) {
-        setNerve(&::DodoryuRabbitNrvRabbitEscape::sInstance);
+        setNerve(GET_NERVE_ANON(DodoryuRabbitNrvRabbitEscape));
     } else if (coordDiff > ::sRabbitRestDist) {
-        setNerve(&::DodoryuRabbitNrvRabbitRest::sInstance);
+        setNerve(GET_NERVE_ANON(DodoryuRabbitNrvRabbitRest));
     }
 }
 
@@ -883,7 +902,7 @@ void DodoryuRabbit::exeRest() {
     tryTalk();
 
     if (calcCoordDiff() < ::sRabbitDistMin) {
-        setNerve(&::DodoryuRabbitNrvRabbitEscape::sInstance);
+        setNerve(GET_NERVE_ANON(DodoryuRabbitNrvRabbitEscape));
     }
 }
 
@@ -894,7 +913,7 @@ void DodoryuRabbit::exeJump() {
         _94.setInline(mHost->_148->mMatrix);
     }
 
-    MR::setNerveAtBckStopped(this, &::DodoryuRabbitNrvRabbitWait::sInstance);
+    MR::setNerveAtBckStopped(this, GET_NERVE_ANON(DodoryuRabbitNrvRabbitWait));
 }
 
 void DodoryuRabbit::exeWait() {
@@ -910,7 +929,7 @@ void DodoryuRabbit::exeReturn() {
         MR::startBtp(this, "blink");
     }
 
-    MR::setNerveAtBckStopped(this, &::DodoryuRabbitNrvRabbitPleasure::sInstance);
+    MR::setNerveAtBckStopped(this, GET_NERVE_ANON(DodoryuRabbitNrvRabbitPleasure));
 }
 
 void DodoryuRabbit::exePleasure() {
@@ -938,7 +957,7 @@ bool DodoryuRabbit::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSenso
             _D8->reset();
         }
 
-        _D8->start();
+        _D4->start();
 
         return true;
     }
@@ -948,7 +967,7 @@ bool DodoryuRabbit::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSenso
             _D4->reset();
         }
 
-        _D4->start();
+        _D8->start();
 
         return false;
     }
@@ -959,14 +978,42 @@ bool DodoryuRabbit::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSenso
 void DodoryuRabbit::reset(bool param1) {
     _C4 = MR::getRailCoord(mHost) + 1075.0f;
 
-    setNerve(&::DodoryuRabbitNrvRabbitEscape::sInstance);
+    setNerve(GET_NERVE_ANON(DodoryuRabbitNrvRabbitEscape));
 
     if (param1) {
         updatePos(0.0f);
     }
 }
 
-// DodoryuRabbit::updatePos
+void DodoryuRabbit::updatePos(f32 f1) {
+    _C4 += f1;
+
+    if (_C4 >= MR::getRailTotalLength(mHost)) {
+        _C4 -= MR::getRailTotalLength(mHost);
+    }
+
+    TVec3f railPos;
+    MR::calcRailPosAtCoord(&railPos, mHost, _C4);
+    mPosition.set(railPos);
+
+    MR::calcGravityVector(this, &mGravity, nullptr, 0);
+
+    TVec3f upVec(-mGravity);
+    TVec3f railDir;
+    MR::calcRailDirectionAtCoord(&railDir, mHost, _C4);
+
+    TVec3f vec98;
+    vec98.cross(upVec, railDir);
+
+    Triangle triangle = Triangle();
+    TVec3f vecA4;
+    if (!MR::getFirstPolyOnLineToMap(&vecA4, &triangle, mPosition - mGravity * 200.0f, mGravity * 1200.0f)) {
+        vecA4.set(railPos);
+    }
+
+    _94.setXYZDir(vec98, upVec, railDir);
+    _94.setTrans(vecA4);
+}
 
 f32 DodoryuRabbit::calcCoordDiff() const {
     f32 coord = MR::getRailCoord(mHost);
@@ -986,7 +1033,7 @@ bool DodoryuRabbit::tryTalk() {
     return false;
 }
 
-DodoryuLeadHill::DodoryuLeadHill(Dodoryu* pHost) : LiveActor("ドドリュウ塚先頭"), mHostBaseMtx(getBaseMtx()), _90() {
+DodoryuLeadHill::DodoryuLeadHill(Dodoryu* pHost) : LiveActor("ドドリュウ塚先頭"), mHostBaseMtx(pHost->getBaseMtx()), _90() {
     for (int i = 0; i < ARRAY_SIZE(_94); i++) {
         _94[i] = nullptr;
     }
@@ -1002,14 +1049,20 @@ void DodoryuLeadHill::init(const JMapInfoIter& rIter) {
     initEffectKeeper(8, nullptr, false);
     mPosition.setTrans(mHostBaseMtx);
     initJoint();
-    makeActorAppeared();
+    makeActorDead();
 }
 
 void DodoryuLeadHill::control() {
     _90 += 0.07f;
 }
 
-// DodoryuLeadHill::calcJoint
+bool DodoryuLeadHill::calcJoint(TPos3f* pDst, const JointControllerInfo&) {
+    TPos3f rotateMtx;
+    rotateMtx.makeRotate(TVec3f(1.0f, 0.0f, 0.0f), _90);
+    pDst->concat(rotateMtx);
+
+    return true;
+}
 
 void DodoryuLeadHill::calcAndSetBaseMtx() {
     for (int i = 0; i < ARRAY_SIZE(_94); i++) {

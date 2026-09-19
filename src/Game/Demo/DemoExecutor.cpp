@@ -39,7 +39,7 @@ void DemoExecutor::init(const JMapInfoIter& rIter) {
     _40 = MR::createStageSwitchCtrl(this, rIter);
 
     if (_40->isValidSwitchAppear()) {
-        MR::listenNameObjStageSwitchOnAppear(this, _40, MR::Functor_Inline(this, &DemoExecutor::startProperDemoSystem));
+        MR::listenNameObjStageSwitchOnAppear(this, _40, MR::Functor(this, &DemoExecutor::startProperDemoSystem));
     }
 
     DemoFunction::registerDemoExecutor(this);
@@ -96,13 +96,13 @@ void DemoExecutor::start(NameObj* pParam1, const char* pParam2, s32 param3) {
             continue;
         }
 
+        MR::invalidateClipping(actor);
         mActor.push_back(actor);
     }
 }
 
 void DemoExecutor::startPart(NameObj* pParam1, const char* pParam2, const char* pParam3, s32 param4) {
-    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(),
-                  std::bind2nd(std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam3));
+    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(), std::bind2nd(std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam3));
     start(pParam1, pParam2, param4);
     mTimeKeeper->setStartPart(pParam3);
 }
@@ -116,8 +116,7 @@ void DemoExecutor::startProperDemoSystem() {
 }
 
 void DemoExecutor::startDemoSystemPart(const char* pParam1, s32 param2) {
-    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(),
-                  std::bind2nd(std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam1));
+    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(), std::bind2nd(std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam1));
 
     switch (param2) {
     case 1:
@@ -140,8 +139,7 @@ bool DemoExecutor::tryStartProperDemoSystem() {
 }
 
 bool DemoExecutor::tryStartDemoSystemPart(const char* pParam1, s32 param2) {
-    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(),
-                  std::bind2nd(std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam1));
+    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(), std::bind2nd(std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam1));
 
     bool result = false;
 
@@ -154,13 +152,12 @@ bool DemoExecutor::tryStartDemoSystemPart(const char* pParam1, s32 param2) {
         break;
     }
 
-    if (result) {
-        mTimeKeeper->setStartPart(pParam1);
-
-        return true;
+    if (!result) {
+        return false;
     }
 
-    return false;
+    mTimeKeeper->setStartPart(pParam1);
+    return true;
 }
 
 bool DemoExecutor::tryStartProperDemoSystemPart(const char* pParam1) {
@@ -234,9 +231,13 @@ void DemoExecutor::end() {
     _48 = nullptr;
     _4C = -1;
 
-    for (LiveActor** it = mActor.begin(); it != mActor.end(); it++) {
-        MR::validateClipping(*it);
-    }
+    std::for_each(mActor.begin(), mActor.end(), std::ptr_fun(MR::validateClipping));
 
     mActor.clear();
+}
+
+void DemoExecutor_EmitUnused(DemoSheetKeeperBase* pKeeper) {
+    pKeeper->DemoSheetKeeperBase::update();
+    pKeeper->DemoSheetKeeperBase::start();
+    pKeeper->DemoSheetKeeperBase::end();
 }

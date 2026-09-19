@@ -39,22 +39,25 @@ namespace MR {
     bool getMapPartsArgRotateAccelType(s32*, const JMapInfoIter&);
     bool getMapPartsArgRotateStopTime(s32*, const JMapInfoIter&);
     bool getMapPartsArgRotateType(s32*, const JMapInfoIter&);
-    bool getMapPartsArgShadowType(s32*, const JMapInfoIter&);
+    s32 getMapPartsArgShadowType(s32*, const JMapInfoIter&);
     bool getMapPartsArgSignMotionType(s32*, const JMapInfoIter&);
     bool getMapPartsArgMovePosture(s32*, const LiveActor*);
     bool getMapPartsArgMoveStopType(s32*, const LiveActor*);
     bool getMapPartsArgRailGuideType(s32*, const LiveActor*);
     bool getMapPartsArgRailInitPosType(s32*, const LiveActor*);
+    bool getMapPartsArgMoveSpeed(f32*, const JMapInfoIter&);
     bool getMapPartsArgMoveSpeed(f32*, const LiveActor*);
     bool getMapPartsArgStopTime(s32*, const LiveActor*);
     bool getMapPartsArgAccelTime(s32*, const LiveActor*);
     bool getMapPartsArgSpeedCalcType(s32*, const LiveActor*);
+    bool getMapPartsArgRailRotateSpeed(f32*, const JMapInfoIter&);
+    bool getMapPartsArgRailRotateTime(s32*, const JMapInfoIter&);
+    bool getMapPartsArgSpeedCalcType(s32*, const LiveActor*, s32);
     bool getMapPartsArgRailRotateSpeed(f32*, const LiveActor*, s32);
     bool getMapPartsArgRailRotateTime(s32*, const LiveActor*, s32);
     bool getMapPartsArgRailRotateAngle(f32*, const LiveActor*, s32);
     bool getMapPartsArgRailRotateAxis(s32*, const LiveActor*, s32);
     bool getMapPartsArgRailRotateType(s32*, const LiveActor*, s32);
-    bool getMapPartsArgSpeedCalcType(s32*, const LiveActor*, s32);
 
     bool getMapPartsArgMoveTimeToNextPoint(s32*, const LiveActor*);
 

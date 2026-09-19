@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Game/Util/Array.hpp"
+#include <revolution/types.h>
 
 class AutoEffectInfo;
 class EffectKeeper;
@@ -13,19 +13,24 @@ class PaneEffectKeeper;
 
 class AutoEffectGroup {
 public:
-    AutoEffectGroup(const char*, int);
-    void add(const JMapInfoIter&);
-    const char* getName() const { return mName; }
+    AutoEffectGroup(const char* pName, int capacity);
+    void add(const JMapInfoIter& rIter);
+
+    const char* getName() const {
+        return mName;
+    }
 
     /* 0x00 */ const char* mName;
-    /* 0x04 */ MR::Vector< MR::AssignableArray< AutoEffectInfo* > > mInfos;
+    /* 0x04 */ AutoEffectInfo** mEffects;
+    /* 0x08 */ s32 mCapacity;
+    /* 0x0C */ s32 mCount;
 };
 
 namespace MR {
     namespace Effect {
-        void addAutoEffectsFromGroup(const AutoEffectGroup*, EffectKeeper*, const LiveActor*);
-        void addAutoEffectsFromGroup(const AutoEffectGroup*, PaneEffectKeeper*, const LayoutActor*);
-        void addAutoEffectsFromGroup(const AutoEffectGroup*, MultiSceneEffectKeeper*, const MultiSceneActor*);
-        AutoEffectGroup* createAutoEffectGroup(const char*);
-    }
-}
+        void addAutoEffectsFromGroup(const AutoEffectGroup* pGroup, EffectKeeper* pKeeper, const LiveActor* pActor);
+        void addAutoEffectsFromGroup(const AutoEffectGroup* pGroup, PaneEffectKeeper* pKeeper, const LayoutActor* pActor);
+        void addAutoEffectsFromGroup(const AutoEffectGroup* pGroup, MultiSceneEffectKeeper* pKeeper, const MultiSceneActor* pActor);
+        AutoEffectGroup* createAutoEffectGroup(const char* pName);
+    }  // namespace Effect
+}  // namespace MR

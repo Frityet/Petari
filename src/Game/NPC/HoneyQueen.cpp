@@ -8,7 +8,6 @@
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
@@ -16,8 +15,15 @@
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/TalkUtil.hpp"
 
+void HoneyQueen_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)-1.0f;
+    (void)2.0f;
+}
+
 namespace {
-    static const f32 sTalkBalloonOffset = 95.0f;
+    static const f32 sTalkBalloonOffset = 950.0f;
 };  // namespace
 
 namespace NrvHoneyQueen {
@@ -37,8 +43,8 @@ HoneyQueen::HoneyQueen(const char* pName) : NPCActor(pName), mWing() {
 void HoneyQueen::init(const JMapInfoIter& rIter) {
     NPCActorCaps caps = "HoneyQueen";
     caps.setDefault();
-    caps.mWaitNerve = &NrvHoneyQueen::HoneyQueenNrvWait::sInstance;
-    caps._5D = true;
+    caps.mWaitNerve = GET_NERVE(HoneyQueen, HoneyQueenNrvWait);
+    caps.mUseShadow = true;
     caps.mMessageOffset.x = 0.0f;
     caps.mMessageOffset.y = ::sTalkBalloonOffset;
     caps.mMessageOffset.z = 0.0f;
@@ -91,7 +97,7 @@ void HoneyQueen::init(const JMapInfoIter& rIter) {
     }
 
     if (_188 == 1) {
-        setNerve(&NrvHoneyQueen::HoneyQueenNrvDemo::sInstance);
+        setNerve(GET_NERVE(HoneyQueen, HoneyQueenNrvDemo));
         MR::listenStageSwitchOnA(this, MR::Functor(this, &HoneyQueen::switchFunc));
         MR::needStageSwitchWriteB(this, rIter);
     } else {
@@ -148,22 +154,22 @@ void HoneyQueen::fadeOut() {
 
 void HoneyQueen::fadeIn() {
     MR::openWipeFade();
-    setNerve(&NrvHoneyQueen::HoneyQueenNrvFade::sInstance);
+    setNerve(GET_NERVE(HoneyQueen, HoneyQueenNrvFade));
 }
 
 void HoneyQueen::talkEntry() {
     MR::tryStartBckAndBtp(this, "Talk", nullptr);
     MR::tryTalkTimeKeepDemoMarioPuppetable(mMsgCtrl);
-    setNerve(&NrvHoneyQueen::HoneyQueenNrvTalk::sInstance);
+    setNerve(GET_NERVE(HoneyQueen, HoneyQueenNrvTalk));
 }
 
 void HoneyQueen::switchFunc() {
-    setNerve(&NrvHoneyQueen::HoneyQueenNrvEvent::sInstance);
+    setNerve(GET_NERVE(HoneyQueen, HoneyQueenNrvEvent));
 }
 
 void HoneyQueen::exeWait() {
     if (MR::tryTalkNearPlayerAtEnd(mMsgCtrl)) {
-        setNerve(&NrvHoneyQueen::HoneyQueenNrvReady::sInstance);
+        setNerve(GET_NERVE(HoneyQueen, HoneyQueenNrvReady));
     }
 
     if (MR::isTalkTalking(mMsgCtrl)) {
@@ -175,7 +181,7 @@ void HoneyQueen::exeWait() {
 
 void HoneyQueen::exeReady() {
     if (!MR::isNearPlayer(mMsgCtrl, -1.0f)) {
-        setNerve(&NrvHoneyQueen::HoneyQueenNrvWait::sInstance);
+        setNerve(GET_NERVE(HoneyQueen, HoneyQueenNrvWait));
     }
 }
 
@@ -195,7 +201,7 @@ void HoneyQueen::exeTalk() {
     }
 
     if (MR::isDemoLastStep()) {
-        setNerve(&NrvHoneyQueen::HoneyQueenNrvItch::sInstance);
+        setNerve(GET_NERVE(HoneyQueen, HoneyQueenNrvItch));
     }
 }
 
@@ -214,7 +220,7 @@ void HoneyQueen::exeItch() {
 void HoneyQueen::exeEvent() {
     if (MR::tryTalkForceAtEnd(mMsgCtrl)) {
         MR::onSwitchB(this);
-        setNerve(&NrvHoneyQueen::HoneyQueenNrvAfter::sInstance);
+        setNerve(GET_NERVE(HoneyQueen, HoneyQueenNrvAfter));
     }
 }
 

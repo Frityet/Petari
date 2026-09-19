@@ -11,28 +11,28 @@ class NerveExecutor;
 
 class DemoStartInfo {
 public:
-    enum DemoType {};
-    enum CinemaFrameType {};
-    enum StarPointerType {};
-    enum DeleteEffectType {};
+    enum DemoType { DemoType_0, DemoType_TimeKeep };
+    enum CinemaFrameType { CinemaFrameType_0 };
+    enum StarPointerType { StarPointerType_0, StarPointerType_1, StarPointerType_2 };
+    enum DeleteEffectType { DeleteEffectType_0, DeleteEffectType_1 };
 
     DemoStartInfo();
     DemoStartInfo& operator=(const DemoStartInfo&);
 
-    LiveActor* _0;
-    LayoutActor* _4;
-    NerveExecutor* _8;
-    NameObj* _C;
-    NameObj* _10;
-    DemoExecutor* _14;
-    const char* mDemoName;  // 0x18
-    const char* _1C;
-    const Nerve* _20;
-    u32 _24;
-    u32 _28;
-    u32 _2C;
-    u32 _30;
-    u32 _34;
+    /* 0x00 */ LiveActor* _0;
+    /* 0x04 */ LayoutActor* _4;
+    /* 0x08 */ NerveExecutor* _8;
+    /* 0x0C */ NameObj* _C;
+    /* 0x10 */ NameObj* _10;
+    /* 0x14 */ DemoExecutor* mDemoExecutor;
+    /* 0x18 */ const char* mDemoName;
+    /* 0x1C */ const char* _1C;
+    /* 0x20 */ const Nerve* _20;
+    /* 0x24 */ u32 _24;
+    /* 0x28 */ DemoType mDemoType;
+    /* 0x2C */ CinemaFrameType mFrameType;
+    /* 0x30 */ StarPointerType mPointerType;
+    /* 0x34 */ DeleteEffectType mDeleteEffectType;
 };
 
 class DemoStartRequestHolder {
@@ -53,10 +53,10 @@ public:
     DemoStartInfo* find(const NameObj*, const char*) const;
     DemoStartInfo* findEmpty() const;
 
-    DemoStartInfo* mStartInfos[0x10];                                // 0x0
-    s32 mNumInfos;                                                   // 0x40
-    MR::FixedRingBuffer< const DemoStartInfo*, 16 > mRequestBuffer;  // 0x44
-    NameObj* mProxyObj;                                              // 0xA0
+    /* 0x00 */ DemoStartInfo* mStartInfos[0x10];
+    /* 0x40 */ s32 mNumInfos;
+    /* 0x44 */ MR::FixedRingBuffer< const DemoStartInfo*, 16 > mRequestBuffer;
+    /* 0xA0 */ NameObj* mProxyObj;
 };
 
 namespace MR {

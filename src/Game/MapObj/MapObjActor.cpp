@@ -51,9 +51,9 @@ MapObjActor::MapObjActor(const char* pName) : LiveActor(pName) {
     _B4 = 0;
     _B5 = 0;
     _B6 = 0;
-    mWaitNrv = &NrvMapObjActor::HostTypeWait::sInstance;
-    mMoveNrv = &NrvMapObjActor::HostTypeMove::sInstance;
-    mDoneNrv = &NrvMapObjActor::HostTypeDone::sInstance;
+    mWaitNrv = GET_NERVE(MapObjActor, HostTypeWait);
+    mMoveNrv = GET_NERVE(MapObjActor, HostTypeMove);
+    mDoneNrv = GET_NERVE(MapObjActor, HostTypeDone);
 }
 
 MapObjActor::MapObjActor(const char* pName, const char* pObjName) : LiveActor(pName) {
@@ -69,9 +69,9 @@ MapObjActor::MapObjActor(const char* pName, const char* pObjName) : LiveActor(pN
     mRailGuideDrawer = 0;
     _B4 = 0;
     _B6 = 0;
-    mWaitNrv = &NrvMapObjActor::HostTypeWait::sInstance;
-    mMoveNrv = &NrvMapObjActor::HostTypeMove::sInstance;
-    mDoneNrv = &NrvMapObjActor::HostTypeDone::sInstance;
+    mWaitNrv = GET_NERVE(MapObjActor, HostTypeWait);
+    mMoveNrv = GET_NERVE(MapObjActor, HostTypeMove);
+    mDoneNrv = GET_NERVE(MapObjActor, HostTypeDone);
 }
 
 void MapObjActor::init(const JMapInfoIter& rIter) {
@@ -743,11 +743,11 @@ bool MapObjActorUtil::isRailMoverReachedEnd(const MapObjActor* pActor) {
 }
 
 f32 MapObjActorUtil::getSeesaw1AxisAngularSpeed(const MapObjActor* pActor) {
-    return static_cast< MapPartsSeesaw1AxisRotator* >(pActor->mRotator)->mAngularSpeed;
+    return static_cast< MapPartsSeesaw1AxisRotator* >(pActor->mRotator)->mAngularVelocity;
 }
 
 void MapObjActorUtil::forceRotateSeesaw1Axis(const MapObjActor* pActor, f32 a2) {
-    static_cast< MapPartsSeesaw1AxisRotator* >(pActor->mRotator)->mForce = a2;
+    static_cast< MapPartsSeesaw1AxisRotator* >(pActor->mRotator)->mAngularAccel = a2;
 }
 
 void MapObjActorUtil::startRotator(const MapObjActor* pActor) {

@@ -2,7 +2,6 @@
 #include "Game/Demo/DemoFunction.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/DemoUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/SoundUtil.hpp"
 
 namespace NrvButlerExplain {
@@ -21,7 +20,7 @@ void ButlerExplain::init(const JMapInfoIter& rIter) {
 
     if (MR::tryRegisterDemoCast(this, rIter)) {
         DemoFunction::tryCreateDemoTalkAnimCtrlForActor(this, "DemoWithButler", nullptr);
-        MR::registerDemoActionFunctor(this, MR::Functor_Inline(this, &ButlerExplain::startDemo), "状況説明[開始]");
+        MR::registerDemoActionFunctor(this, MR::Functor(this, &ButlerExplain::startDemo), "状況説明[開始]");
         DemoFunction::registerDemoTalkMessageCtrl(this, mMsgCtrl);
     }
 
@@ -38,7 +37,7 @@ void ButlerExplain::control() {
 }
 
 void ButlerExplain::startDemo() {
-    setNerve(&NrvButlerExplain::ButlerExplainNrvDemo::sInstance);
+    setNerve(GET_NERVE(ButlerExplain, ButlerExplainNrvDemo));
 }
 
 void ButlerExplain::exeDemo() {

@@ -14,7 +14,6 @@
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
@@ -217,7 +216,7 @@ void BossKameck::init(const JMapInfoIter& rIter) {
     MR::startBrk(this, "Star");
     MR::setBrkFrameAndStop(this, hasPowerStar);
     MR::needStageSwitchReadA(this, rIter);
-    MR::listenStageSwitchOnA(this, MR::Functor_Inline(this, &BossKameck::startSequence));
+    MR::listenStageSwitchOnA(this, MR::Functor(this, &BossKameck::startSequence));
     makeActorDead();
 }
 

@@ -23,7 +23,7 @@ namespace NrvPlayTimerScene {
 
 PlayTimerScene::PlayTimerScene()
     : Scene("PlayTimerScene"), mTimeLimitLayout(nullptr), mTimeUpLayout(nullptr), mTimeUpWaitFrame(::sTimeUpWaitFrame), _20(nullptr) {
-    initNerve(&NrvPlayTimerScene::PlayTimerSceneNormal::sInstance);
+    initNerve(GET_NERVE(PlayTimerScene, PlayTimerSceneNormal));
 
     _20 = new ValueControl(30);
     _20->setZero();
@@ -126,11 +126,11 @@ void PlayTimerScene::stop() {
         mTimeLimitLayout->kill();
     }
 
-    setNerve(&NrvPlayTimerScene::PlayTimerSceneNormal::sInstance);
+    setNerve(GET_NERVE(PlayTimerScene, PlayTimerSceneNormal));
 }
 
 void PlayTimerScene::startTimeUp() {
-    setNerve(&NrvPlayTimerScene::PlayTimerSceneTimeUp::sInstance);
+    setNerve(GET_NERVE(PlayTimerScene, PlayTimerSceneTimeUp));
 }
 
 void PlayTimerScene::exeNormal() {
@@ -147,7 +147,7 @@ void PlayTimerScene::exeTimeUp() {
     }
 
     if (MR::isGreaterStep(this, 120)) {
-        setNerve(&NrvPlayTimerScene::PlayTimerSceneFadeoutAfterTimeUp::sInstance);
+        setNerve(GET_NERVE(PlayTimerScene, PlayTimerSceneFadeoutAfterTimeUp));
     }
 }
 
@@ -159,7 +159,7 @@ void PlayTimerScene::exeFadeoutAfterTimeUp() {
     if (_20->mFrame == _20->mMaxFrame) {
         mTimeLimitLayout->kill();
         mTimeUpLayout->kill();
-        setNerve(&NrvPlayTimerScene::PlayTimerSceneNormal::sInstance);
+        setNerve(GET_NERVE(PlayTimerScene, PlayTimerSceneNormal));
         MR::requestChangeSceneAfterBoot();
     }
 }

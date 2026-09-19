@@ -1,6 +1,15 @@
 #include "Game/LiveActor/ShadowVolumeSphere.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/CameraUtil.hpp"
+#include "revolution/gx.h"
+
+namespace {
+    const f32 sModelScale = 100.0f;
+}
+
+void ShadowVolumeSphere_FORCE_MATCH_SDATA2() {
+    0.0f;
+}
 
 ShadowVolumeSphere::~ShadowVolumeSphere() {
 }
@@ -20,20 +29,27 @@ bool ShadowVolumeSphere::isDraw() const {
 }
 
 void ShadowVolumeSphere::loadModelDrawMtx() const {
-    ShadowController* pController = getController();
-    f32 scale = mRadius / 100.0f;
-    if (pController->isFollowHostScale()) {
-        scale *= pController->getHost()->mScale.x;
+    ShadowController* controller = getController();
+    f32 radius = mRadius / sModelScale;
+    if (controller->isFollowHostScale()) {
+        radius *= controller->getHost()->mScale.x;
     }
 
     TPos3f mtx;
     mtx.identity();
-    mtx.mMtx[0][0] = scale;
-    mtx.mMtx[1][1] = scale;
-    mtx.mMtx[2][2] = scale;
+    mtx.mMtx[0][0] = radius;
+    mtx.mMtx[0][1] = 0.0f;
+    mtx.mMtx[0][2] = 0.0f;
+    mtx.mMtx[1][0] = 0.0f;
+    mtx.mMtx[1][1] = radius;
+    mtx.mMtx[1][2] = 0.0f;
+    mtx.mMtx[2][0] = 0.0f;
+    mtx.mMtx[2][1] = 0.0f;
+    mtx.mMtx[2][2] = radius;
     TVec3f position;
-    pController->getProjectionPos(&position);
+    controller->getProjectionPos(&position);
     mtx.setTrans(position);
-    PSMTXConcat(MR::getCameraViewMtx(), mtx.mMtx, mtx.mMtx);
-    GXLoadPosMtxImm(mtx.mMtx, GX_PNMTX0);
+
+    PSMTXConcat(MR::getCameraViewMtx(), mtx, mtx);
+    GXLoadPosMtxImm(mtx, 0);
 }

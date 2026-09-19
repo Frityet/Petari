@@ -6,29 +6,19 @@
 #include "Game/Util/MathUtil.hpp"
 #include <algorithm>
 
-HitInfo& HitInfo::operator=(const HitInfo& rOther) {
-    mParentTriangle.mParts = rOther.mParentTriangle.mParts;
-    mParentTriangle.mIdx = rOther.mParentTriangle.mIdx;
-    mParentTriangle.mSensor = rOther.mParentTriangle.mSensor;
-    mParentTriangle.mNormals[0] = rOther.mParentTriangle.mNormals[0];
-    mParentTriangle.mNormals[1] = rOther.mParentTriangle.mNormals[1];
-    mParentTriangle.mNormals[2] = rOther.mParentTriangle.mNormals[2];
-    mParentTriangle.mNormals[3] = rOther.mParentTriangle.mNormals[3];
-    mParentTriangle.mPos[0] = rOther.mParentTriangle.mPos[0];
-    mParentTriangle.mPos[1] = rOther.mParentTriangle.mPos[1];
-    mParentTriangle.mPos[2] = rOther.mParentTriangle.mPos[2];
-    _60 = rOther._60;
-    mHitPos = rOther.mHitPos;
-    _70 = rOther._70;
-    _7C = rOther._7C;
-    _88 = rOther._88;
-
-    return *this;
+void Binder_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
 }
 
-Binder::Binder(MtxPtr mtx, const TVec3f* v1, const TVec3f* v2, f32 radius, f32 offsetY, u32 planeNum)
-    : mTriangleFilter(), mCollisionPartsFilter(), mExCollisionParts(), _C(mtx), _10(v1), _14(v2), mRadius(radius), mOffsetY(offsetY), mOffsetVec(),
-      _24(planeNum), mPlaneNum(), mPlane(), mFixReactionVector(0, 0, 0), mGroundInfo(), mWallInfo(), mRoofInfo(), _C8(), _158(), _1E8() {
+namespace {
+    // hPrintFixReactionLength
+    const f32 hOverlapAddValue = 1.2f;
+}  // namespace
+
+Binder::Binder(MtxPtr pMtx, const TVec3f* pPosition, const TVec3f* pGravity, f32 radius, f32 offsetY, u32 planeNum)
+    : mTriangleFilter(), mCollisionPartsFilter(), mExCollisionParts(), _C(pMtx), _10(pPosition), _14(pGravity), mRadius(radius), mOffsetY(offsetY),
+      mOffsetVec(), _24(planeNum), mPlaneNum(), mPlane(), mFixReactionVector(0, 0, 0), mGroundInfo(), _C8(), mWallInfo(), _158(), mRoofInfo(),
+      _1E8() {
     if (_24 == 0) {
         mPlane = nullptr;
     } else {
@@ -64,29 +54,41 @@ const HitInfo* Binder::getPlane(int index) const {
     return &mPlane[index];
 }
 
-u32 Binder::copyPlaneArrayAndSortingSensor(HitInfo** pPlane, u32) {
+u32 Binder::copyPlaneArrayAndSortingSensor(HitInfo** pPlanes, u32 capacity) {
     if (_24 == 0) {
         u32 count = 0;
         if (isBindedGround()) {
-            pPlane[count++] = &mGroundInfo;
+            pPlanes[count++] = &mGroundInfo;
         }
+
         if (isBindedWall()) {
-            pPlane[count++] = &mWallInfo;
+            pPlanes[count++] = &mWallInfo;
         }
+
         if (isBindedRoof()) {
-            pPlane[count++] = &mRoofInfo;
+            pPlanes[count++] = &mRoofInfo;
         }
-        std::sort(pPlane, pPlane + count, compSensor);
+
+        std::sort(pPlanes, pPlanes + count, compSensor);
         return count;
     }
 
     for (u32 i = 0; i < mPlaneNum; i++) {
-        pPlane[i] = &mPlane[i];
+        pPlanes[i] = &mPlane[i];
     }
-    std::sort(pPlane, pPlane + mPlaneNum, compSensor);
+
+    std::sort(pPlanes, pPlanes + mPlaneNum, compSensor);
     return mPlaneNum;
 }
 
+bool Binder::compSensor(const HitInfo* pPlane1, const HitInfo* pPlane2) {
+    return pPlane1->mParentTriangle.mSensor > pPlane2->mParentTriangle.mSensor;
+}
+
+// takes the desired movement and returns the collision-adjusted displacement
+// collision sphere starts from the host position + binder offset, transformed by the host matrix when applicable
+// checks our movement in small steps, pushes the sphere out of overlapping geometry, then slides the remaining movement along the contact surface
+// records ground, wall, and roof contacts, stores our push-out vector, and optionally follows moving ground before returning the result
 const TVec3f Binder::bind(const TVec3f& rMovement) {
     bool noMargin = _1EC._5;
     _1EC._5 = false;
@@ -341,6 +343,22 @@ void Binder::storeContactPlane(HitInfo* pPlane, u32) {
     }
 }
 
-bool Binder::compSensor(const HitInfo* pPlane1, const HitInfo* pPlane2) {
-    return pPlane1->mParentTriangle.mSensor > pPlane2->mParentTriangle.mSensor;
+HitInfo& HitInfo::operator=(const HitInfo& rOther) {
+    mParentTriangle.mParts = rOther.mParentTriangle.mParts;
+    mParentTriangle.mIdx = rOther.mParentTriangle.mIdx;
+    mParentTriangle.mSensor = rOther.mParentTriangle.mSensor;
+    mParentTriangle.mNormals[0] = rOther.mParentTriangle.mNormals[0];
+    mParentTriangle.mNormals[1] = rOther.mParentTriangle.mNormals[1];
+    mParentTriangle.mNormals[2] = rOther.mParentTriangle.mNormals[2];
+    mParentTriangle.mNormals[3] = rOther.mParentTriangle.mNormals[3];
+    mParentTriangle.mPos[0] = rOther.mParentTriangle.mPos[0];
+    mParentTriangle.mPos[1] = rOther.mParentTriangle.mPos[1];
+    mParentTriangle.mPos[2] = rOther.mParentTriangle.mPos[2];
+    _60 = rOther._60;
+    mHitPos = rOther.mHitPos;
+    _70 = rOther._70;
+    _7C = rOther._7C;
+    _88 = rOther._88;
+
+    return *this;
 }

@@ -1,12 +1,11 @@
+#include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioTeresa.hpp"
-
 #include "Game/Animation/XanimePlayer.hpp"
 #include "Game/Animation/XanimeResource.hpp"
 #include "Game/LiveActor/ModelManager.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/MapObj/BigFanHolder.hpp"
 #include "Game/Player/Mario.hpp"
-#include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioAnimator.hpp"
 #include "Game/Player/MarioConst.hpp"
 #include "Game/Player/MarioParts.hpp"
@@ -18,15 +17,41 @@
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 
-XanimeGroupInfo teresaAnimeTable[] = {
-    {{"基本"}, 1.0f, 16},
-    {{""}},
-};
-
-XanimeBckTable2 teresaAnime2[] = {
-    {{"基本"}, {{"wait", 1.0f}, {"run", 0.0f}}},
-    {{""}, {{"", 0.0f}, {nullptr, 0.0f}}},
-};
+void MarioTeresa_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)0.5f;
+    (void)3.14159274f;
+    (void)2.0f;
+    (void)100.0f;
+    (void)10.0f;
+    (void)0.00100000005f;
+    (void)0.00999999978f;
+    (void)120.0f;
+    (void)110.0f;
+    (void)-0.100000001f;
+    (void)0.100000001f;
+    (void)50.0f;
+    (void)0.939999998f;
+    (void)1.5f;
+    (void)0.200000003f;
+    (void)200.0f;
+    (void)0.99000001f;
+    (void)60.0f;
+    (void)-2.0f;
+    (void)-0.400000006f;
+    (void)-0.25f;
+    (void)0.25f;
+    (void)0.75f;
+    (void)-0.5f;
+    (void)0.0399999991f;
+    (void)0.300000012f;
+    (void)20.0f;
+    (void)-2607.59448f;
+    (void)2607.59448f;
+    (void)0.707000017f;
+    (void)-10.0f;
+}
 
 void Mario::startTeresaMode() {
     _418 = 0;
@@ -39,36 +64,32 @@ void Mario::startTeresaMode() {
 }
 
 void MarioTeresa::updateDropFlag() {
-    _58 = false;
-
-    if (_34.dot(getAirGravityVec()) <= 1.0f) {
-        return;
-    }
-
-    TVec3f horizontal;
-    const f32 vertical = MR::vecKillElement(_34, getAirGravityVec(), &horizontal);
-    if (MR::isNearZero(getStickP(), 0.001f) && horizontal.length() < vertical) {
-        _58 = true;
+    _58 = 0;
+    if (_34.dot(getAirGravityVec()) > 1.0f) {
+        TVec3f horizontal;
+        f32 vertical = MR::vecKillElement(_34, getAirGravityVec(), &horizontal);
+        if (MR::isNearZero(getStickP()) && horizontal.length() < vertical) {
+            _58 = 1;
+        }
     }
 }
 
-bool Mario::getHitWallNorm(TVec3f* pNorm) {
+bool Mario::getHitWallNorm(TVec3f* pNormal) {
     if (getPlayer()->mMovementStates._8) {
         if (!isThroughWall(mFrontWallTriangle)) {
-            *pNorm = *mFrontWallTriangle->getNormal(0);
+            *pNormal = *mFrontWallTriangle->getNormal(0);
             return true;
         }
     } else if (getPlayer()->mMovementStates._19) {
         if (!isThroughWall(mBackWallTriangle)) {
-            *pNorm = *mBackWallTriangle->getNormal(0);
+            *pNormal = *mBackWallTriangle->getNormal(0);
             return true;
         }
-    } else if (getPlayer()->mMovementStates._1A) {
-        if (!isThroughWall(mSideWallTriangle)) {
-            *pNorm = *mSideWallTriangle->getNormal(0);
-            return true;
-        }
+    } else if (getPlayer()->mMovementStates._1A && !isThroughWall(mSideWallTriangle)) {
+        *pNormal = *mSideWallTriangle->getNormal(0);
+        return true;
     }
+
     return false;
 }
 
@@ -99,8 +120,8 @@ MarioTeresa::MarioTeresa(MarioActor* pActor) : MarioState(pActor, MarioStatus_Te
     _24 = 0.0f;
     _4C = 0.0f;
     _54 = 0.0f;
-    _58 = false;
-    _59 = false;
+    _58 = 0;
+    _59 = 0;
     resetTeresaMode();
 }
 
@@ -109,25 +130,27 @@ bool MarioTeresa::close() {
 }
 
 bool MarioTeresa::update() {
-    if (getPlayerMode() != 6) {
+    if (getPlayerMode() != PlayerMode_Teresa) {
         return false;
     }
 
-    if (getPlayer()->isStatusActive(MarioStatus_Recovery) || mActor->_EA4) {
+    if (getPlayer()->isStatusActive(MarioStatus_Recovery)) {
+        return true;
+    }
+
+    if (mActor->_EA4) {
         return true;
     }
 
     _50 = 0.0f;
     _14 = getJumpVec();
-
-    if (getPlayer()->_418 == 0) {
-        _58 = false;
+    if (!getPlayer()->_418) {
+        _58 = 0;
     }
 
     getPlayer()->mMovementStates._B = false;
     _20 = checkHeight();
-    _24 = mActor->mConst->getTable()->mTeresaWaitHeight;
-
+    _24 = mActor->getConst().getTable()->mTeresaWaitHeight;
     checkAccel();
     checkWind();
     checkGroundReflect();
@@ -137,18 +160,17 @@ bool MarioTeresa::update() {
     procNearGroundControl();
     procAirControl();
     procDrop();
-
-    getPlayer()->_3BC = 1;
+    Mario* player = getPlayer();
+    player->_3BC = 1;
     procControl();
-
-    f32 speedRatio = _14.length() / 10.0f;
-    if (speedRatio < 0.01f) {
-        speedRatio = 0.0f;
+    f32 speed = _14.length() / 10.0f;
+    if (speed < 0.01f) {
+        speed = 0.0f;
     }
-    getPlayer()->mWalkSpeed = MR::clamp(speedRatio, 0.0f, 1.0f);
-    setJumpVec(_14);
 
-    if (_42 == 0) {
+    getPlayer()->mWalkSpeed = MR::clamp(speed, 0.0f, 1.0f);
+    setJumpVec(_14);
+    if (!_42) {
         getPlayer()->playSoundTeresaFlying();
     }
 
@@ -156,49 +178,54 @@ bool MarioTeresa::update() {
 }
 
 f32 MarioTeresa::checkHeight() {
-    const MarioConstTable* pTable = mActor->mConst->getTable();
-    f32 nearestHeight = getPlayer()->mVerticalSpeed;
-
-    for (f32 searchOffset = 0.0f; searchOffset < 2.0f * pTable->mTeresaWaitHeight; searchOffset += 120.0f) {
-        const TVec3f center = mActor->_2A0 + getGravityVec() * searchOffset;
-        const u32 strikeCount = Collision::checkStrikeBallToMapWithThickness(center, 120.0f, 120.0f, nullptr, nullptr);
-        bool foundGround = false;
-
-        for (u32 i = 0; i < strikeCount; i++) {
-            const HitInfo* pHit = Collision::getStrikeInfoMap(i);
-            TVec3f normal(*pHit->mParentTriangle.getNormal(0));
-            TVec3f toHit(pHit->mHitPos - mActor->_2A0);
-            f32 height = toHit.length() - 110.0f;
-            if (height < 0.0f) {
-                height = 0.0f;
+    f32 offset = 0.0f;
+    f32 height = getPlayer()->mVerticalSpeed;
+    MarioActor* actor;
+    while (offset < 2.0f * (actor = mActor)->getConst().getTable()->mTeresaWaitHeight) {
+        const TVec3f& position = actor->_2A0;
+        bool found = false;
+        f32 radius = 120.0f;
+        s32 count = Collision::checkStrikeBallToMapWithThickness(position + getGravityVec() * offset, radius, radius, nullptr, nullptr);
+        for (u32 i = 0; i < count; i++) {
+            const HitInfo* hit = Collision::getStrikeInfoMap(i);
+            TVec3f normal(*hit->mParentTriangle.getNormal(0));
+            TVec3f direction(hit->mHitPos);
+            direction.sub(direction, position);
+            f32 distance = direction.length() - 110.0f;
+            if (distance < 0.0f) {
+                distance = 0.0f;
             }
 
-            MR::normalizeOrZero(&toHit);
-            if (normal.dot(getGravityVec()) < -0.1f && toHit.dot(getGravityVec()) > 0.1f) {
-                if (nearestHeight > height) {
-                    nearestHeight = height;
+            MR::normalizeOrZero(&direction);
+            if (normal.dot(getGravityVec()) < -0.1f && direction.dot(getGravityVec()) > 0.1f) {
+                if (height > distance) {
+                    height = distance;
                 }
-                foundGround = true;
+
+                found = true;
             }
         }
 
-        if (foundGround) {
+        if (found) {
             break;
         }
+
+        offset += radius;
     }
 
-    return nearestHeight;
+    return height;
 }
 
 void MarioTeresa::checkAccel() {
     if (checkTrgA()) {
-        if (_44 == 0) {
+        if (!_44) {
             getPlayer()->_1C._4 = true;
         }
-        _44 = mActor->mConst->getTable()->mTeresaAccelTime;
+
+        _44 = mActor->getConst().getTable()->mTeresaAccelTime;
     }
 
-    if (_44 != 0) {
+    if (_44) {
         _44--;
     }
 }
@@ -208,77 +235,94 @@ void MarioTeresa::checkGroundReflect() {
         getPlayer()->mMovementStates.jumping = false;
     }
 
-    if (getPlayer()->mMovementStates.jumping || getPlayer()->_3CE == 0) {
-        return;
-    }
-
-    getPlayer()->mDrawStates._C = false;
-    getPlayer()->tryJump();
-    cutGravityElementFromJumpVec(true);
-
-    const f32 vertical = MR::vecKillElement(_34, getAirGravityVec(), &_34);
-    if (vertical < 0.0f) {
-        _34 += getAirGravityVec() * vertical;
+    if (!getPlayer()->mMovementStates.jumping && getPlayer()->_3CE) {
+        getPlayer()->mDrawStates._C = false;
+        getPlayer()->tryJump();
+        cutGravityElementFromJumpVec(true);
+        f32 vertical = MR::vecKillElement(_34, getAirGravityVec(), &_34);
+        if (vertical < 0.0f) {
+            _34 += getAirGravityVec() * vertical;
+        }
     }
 }
 
 void MarioTeresa::procNoControl() {
-    if (_46 != 0) {
+    if (_46) {
         _46--;
         _48 = 0;
-        _34.scale(mActor->mConst->getTable()->mTeresaWallReflectReduction);
+        _34.scale(mActor->getConst().getTable()->mTeresaWallReflectReduction);
     }
 
-    if (MR::isNearZero(getStickP(), 0.001f)) {
-        _34 *= 0.99f;
+    if (MR::isNearZero(getStickP())) {
+        _34.x *= 0.99f;
+        _34.y *= 0.99f;
+        _34.z *= 0.99f;
     }
 }
 
 void MarioTeresa::procNearGroundControl() {
-    if (MR::isNearZero(getVelocity(), 0.001f)) {
+    if (MR::isNearZero(getVelocity())) {
         return;
     }
 
-    if (calcAngleD(getPlayer()->getShadowNorm()) >= 60.0f || _20 >= _24 + 50.0f || _46 != 0 ||
-        _34.dot(getPlayer()->getShadowNorm()) >= 0.0f) {
-        return;
+    if (calcAngleD(getPlayer()->getShadowNorm()) < 60.0f) {
+        if (!(_20 < 50.0f + _24)) {
+            return;
+        }
+
+        if (_46) {
+            return;
+        }
+
+        if (_34.dot(getPlayer()->getShadowNorm()) >= 0.0f) {
+            return;
+        }
+
+        f32 speed = _34.length();
+        TVec3f direction(_34);
+        if (MR::normalizeOrZero(&direction)) {
+            return;
+        }
+
+        TVec3f side;
+        side.cross(direction, getPlayer()->getShadowNorm());
+        direction.cross(getPlayer()->getShadowNorm(), side);
+        direction.setLength(speed);
+        f32 blend = MR::clamp((50.0f + _24 - _20) / 50.0f, 0.0f, 1.0f);
+        blend *= 0.5f;
+        f32 reduction = MR::diffAngleAbs(_34, direction) / 3.1415927f;
+        MR::vecBlendSphere(_34, direction, &_34, blend);
+        _34.scale(1.0f - reduction);
     }
-
-    const f32 speed = _34.length();
-    TVec3f tangent(_34);
-    if (MR::normalizeOrZero(&tangent)) {
-        return;
-    }
-
-    TVec3f side;
-    PSVECCrossProduct(&tangent, &getPlayer()->getShadowNorm(), &side);
-    PSVECCrossProduct(&getPlayer()->getShadowNorm(), &side, &tangent);
-    tangent.setLength(speed);
-
-    const f32 blend = 0.5f * MR::clamp((_24 + 50.0f - _20) / 50.0f, 0.0f, 1.0f);
-    const f32 angleRatio = MR::diffAngleAbs(_34, tangent) / MR::pi();
-    MR::vecBlendSphere(_34, tangent, &_34, blend);
-    _34.scale(1.0f - angleRatio);
 }
 
 void MarioTeresa::procDrop() {
-    const bool movingDown = mActor->getLastMove().dot(getGravityVec()) >= 0.0f;
-    const f32 dropDownHeight = mActor->mConst->getTable()->mTeresaDropDownHeight;
-    const bool nearGround = _20 < _24 + dropDownHeight;
-    if (movingDown) {
+    MarioActor* actor = mActor;
+    bool descending = actor->getLastMove().dot(getGravityVec()) >= 0.0f;
+    f32 ratio = 1.0f;
+    bool nearGround = _20 < _24 + mActor->getConst().getTable()->mTeresaDropDownHeight;
+    if (descending) {
         if (nearGround) {
-            f32 heightRatio = (_20 - _24) / dropDownHeight;
-            if (heightRatio < 0.0f) {
-                heightRatio = 0.0f;
+            ratio = (_20 - _24) / mActor->getConst().getTable()->mTeresaDropDownHeight;
+            if (ratio < 0.0f) {
+                ratio = 0.0f;
             }
+        }
+    } else {
+        if (nearGround) {
+            ratio = 0.0f;
+        }
+
+        if (nearGround) {
+            ratio = 0.0f;
         }
     }
 
     if (_20 > _24) {
+        f32 distance = _20 - _24;
         f32 ratio = 1.0f;
-        const f32 excessHeight = _20 - _24;
-        if (excessHeight < 100.0f) {
-            ratio = excessHeight / 100.0f;
+        if (distance < 100.0f) {
+            ratio = distance / 100.0f;
         }
 
         if (_58) {
@@ -291,133 +335,85 @@ void MarioTeresa::procDrop() {
         if (1.5f * vertical > _20 - _24) {
             vertical *= 0.75f;
         }
+
         _34 += getAirGravityVec() * vertical;
     } else {
-        const f32 vertical = MR::vecKillElement(_34, getAirGravityVec(), &_34);
+        f32 vertical = MR::vecKillElement(_34, getAirGravityVec(), &_34);
         if (vertical < 0.0f) {
             _34 += getAirGravityVec() * vertical;
         }
     }
 
-    if (_20 > _24 + 10.0f) {
+    if (_20 > 10.0f + _24) {
         TVec3f horizontal;
-        const f32 vertical = MR::vecKillElement(mActor->getLastMove(), getGravityVec(), &horizontal);
+        MarioActor* actor = mActor;
+        f32 vertical = MR::vecKillElement(actor->getLastMove(), getGravityVec(), &horizontal);
         f32 brake;
         if (vertical > -0.5f) {
-            brake = (vertical + 0.5f) / mActor->mConst->getTable()->mTeresaDropBase + 0.04f;
+            f32 dropSpeed = vertical;
+            dropSpeed += 0.5f;
+            brake = dropSpeed / mActor->getConst().getTable()->mTeresaDropBase;
+            brake += 0.04f;
         } else {
-            brake = mActor->mConst->getTable()->mTeresaRisingBrake;
+            brake = mActor->getConst().getTable()->mTeresaRisingBrake;
         }
+
         MR::clamp(brake, 0.0f, 1.0f);
         getPlayer()->mDrawStates._1C = true;
     }
 }
 
-void MarioTeresa::addTeresaVerticalVelocity(f32 acceleration) {
-    _34 += getAirGravityVec() * acceleration;
-
+void MarioTeresa::addTeresaVerticalVelocity(f32 amount) {
+    _34 += getAirGravityVec() * amount;
     TVec3f horizontal;
     f32 vertical = MR::vecKillElement(_34, getAirGravityVec(), &horizontal);
-    const MarioConstTable* pTable = mActor->mConst->getTable();
-    f32 maxDropSpeed = 20.0f * pTable->mTeresaDropSpeedMax;
-    const f32 maxRiseSpeed = 10.0f * pTable->mTeresaRiseSpeedMax;
-
+    f32 minimum = -mActor->getConst().getTable()->mTeresaRiseSpeedMax;
+    f32 maximum = mActor->getConst().getTable()->mTeresaDropSpeedMax;
+    minimum = 10.0f * minimum;
+    maximum = 20.0f * maximum;
     if (_58) {
-        const f32 disappearRatio = static_cast< f32 >(getPlayer()->_418) / pTable->mTeresaWallThroughTime;
-        maxDropSpeed *= 1.0f + 0.5f * MR::sin(MR::pi() * disappearRatio);
+        f32 angle = 3.1415927f * (static_cast< f32 >(getPlayer()->_418) / mActor->getConst().getTable()->mTeresaWallThroughTime);
+        maximum *= 1.0f + 0.5f * JMath::sSinCosTable.sinRadian(angle);
     }
 
     if (getPlayer()->mDrawStates._1F && _28.dot(getAirGravityVec()) > 0.707f) {
-        maxDropSpeed *= 2.0f;
+        maximum *= 2.0f;
     }
 
-    vertical = MR::clamp(vertical, -maxRiseSpeed, maxDropSpeed);
+    vertical = MR::clamp(vertical, minimum, maximum);
     _34 = horizontal + getAirGravityVec() * vertical;
-    _50 += acceleration;
+    _50 += amount;
 }
 
 void MarioTeresa::addTeresaHorizontalVelocity(const TVec3f& rVelocity) {
-    TVec3f addVelocityHorizontal;
-    MR::vecKillElement(rVelocity, getAirGravityVec(), &addVelocityHorizontal);
-    _34 += addVelocityHorizontal;
-
+    TVec3f addition;
+    MR::vecKillElement(rVelocity, getAirGravityVec(), &addition);
+    _34 += addition;
     TVec3f horizontal;
-    const f32 vertical = MR::vecKillElement(_34, getAirGravityVec(), &horizontal);
-    f32 maxSpeed = mActor->mConst->getTable()->mTeresaHorizontalSpeedMax;
-
+    f32 vertical = MR::vecKillElement(_34, getAirGravityVec(), &horizontal);
+    f32 maximum = mActor->getConst().getTable()->mTeresaHorizontalSpeedMax;
     if (getPlayer()->mDrawStates._1F && _28.dot(horizontal) > 0.707f) {
-        maxSpeed *= 2.0f;
+        maximum *= 2.0f;
     }
 
-    if (horizontal.length() >= maxSpeed) {
-        horizontal.setLength(maxSpeed);
+    if (horizontal.length() >= maximum) {
+        horizontal.setLength(maximum);
     }
 
     _34 = horizontal + getAirGravityVec() * vertical;
 }
 
-void Mario::doTeresaReflection(const TVec3f& rNormal, bool emitEffect) {
-    mTeresa->doTeresaReflection(rNormal, emitEffect);
-}
-
-void MarioTeresa::doTeresaReflection(const TVec3f& rNormal, bool emitEffect) {
-    TVec3f normal(rNormal);
-    MR::normalizeOrZero(&normal);
-
-    TVec3f tangent;
-    f32 normalSpeed = MR::vecKillElement(_34, normal, &tangent);
-    if (normalSpeed < 0.0f) {
-        if (normalSpeed > -10.0f) {
-            normalSpeed = -10.0f;
-        }
-
-        const TVec3f reflection = normal * -normalSpeed;
-        TVec3f horizontal;
-        const f32 vertical = MR::vecKillElement(reflection, getAirGravityVec(), &horizontal);
-        addTeresaHorizontalVelocity(horizontal * 2.0f);
-        addTeresaVerticalVelocity(vertical * 2.0f);
-    } else {
-        TVec3f horizontal;
-        const f32 vertical = MR::vecKillElement(normal, getAirGravityVec(), &horizontal);
-        addTeresaHorizontalVelocity(horizontal);
-        addTeresaVerticalVelocity(vertical);
-    }
-
-    _46 = mActor->mConst->getTable()->mTeresaWallReflectTime;
-    _14.zero();
-
-    if (_42 == 0) {
-        mActor->changeTeresaAnimation("hit", -1);
-        playSound("声壁反射", -1);
-
-        if (emitEffect) {
-            playSound("テレサ壁反射", -1);
-            MR::emitEffectHit(mActor->_9A4, getPlayer()->_25C, getPlayer()->_268, "WallHit");
-        }
-    }
-
-    getPlayer()->_418 = 0;
-    mActor->_946 = 5;
-    _42++;
-}
-
-void MarioActor::initTeresaMarioAnimation() {
-    _9B0 = 0.0f;
-    _9BC = new XanimeResourceTable(MR::getResourceHolder(_9A4), teresaAnimeTable, nullptr, nullptr, nullptr, teresaAnime2, nullptr, nullptr, nullptr);
-    _9B8 = new XanimePlayer(MR::getJ3DModel(_9A4), _9BC);
-    _9B8->setDefaultAnimation("基本");
-    _9B8->changeAnimation("基本");
-    _9A4->mModelManager->mXanimePlayer = _9B8;
+void Mario::doTeresaReflection(const TVec3f& rNormal, bool effect) {
+    mTeresa->doTeresaReflection(rNormal, effect);
 }
 
 void Mario::startTeresaDisappear() {
-    _418 = mActor->mConst->getTable()->mTeresaWallThroughTime;
-    playSound("テレサ消える", -1);
-    playSound("声トルネード", -1);
+    _418 = mActor->getConst().getTable()->mTeresaWallThroughTime;
+    playSound("テレサ消える");
+    playSound("声トルネード");
     MR::startCSSound("CS_TERESA", nullptr, 0);
     mTeresa->updateDropFlag();
     resetSleepTimer();
-
     if (_962 == 5 && mVerticalSpeed < 100.0f) {
         mTeresa->_34 += getAirGravityVec() * 10.0f;
     }
@@ -425,11 +421,13 @@ void Mario::startTeresaDisappear() {
 
 bool MarioTeresa::start() {
     if (getPlayer()->_430 == 4) {
-        getPlayer()->setFrontVecKeepUp(-getPlayer()->_220);
+        TVec3f direction(-getPlayer()->_220);
+        getPlayer()->setFrontVecKeepUp(direction);
     }
 
-    getPlayer()->_42A = 0;
-    getPlayer()->_430 = 0;
+    Mario* player = getPlayer();
+    player->_42A = 0;
+    player->_430 = 0;
     getPlayer()->cancelSquatMode();
     changeAnimation("落下", "落下");
     return true;
@@ -440,184 +438,184 @@ void MarioTeresa::checkWind() {
     f32 strength;
     BigFanFunction::calcWindInfo(&wind, mActor->_2A0, &strength);
     strength = MR::clamp(strength, 0.0f, 10.0f);
-
     if (strength > 0.0f) {
-        playSound("テレサ風に乗る", static_cast< s32 >(50.0f * strength));
+        playSound("テレサ風に乗る", 50.0f * strength);
     }
 
-    if (!MR::isNearZero(strength, 0.001f)) {
+    if (!MR::isNearZero(strength)) {
         getPlayer()->mDrawStates._1F = true;
     }
 
     wind.scale(strength);
-    _28 *= 0.94f;
+    _28.x *= 0.94f;
+    _28.y *= 0.94f;
+    _28.z *= 0.94f;
     _28 += wind * 0.1f * 1.5f;
     _34 += wind * 0.2f;
-
     if (_28.length() > 0.2f) {
         getPlayer()->mDrawStates._1F = true;
     }
 }
 
 void MarioTeresa::checkWallCeilReflect() {
-    TVec3f collisionNormal;
-    bool hasCollision = false;
-
+    MarioParts* actor;
+    TVec3f normal;
+    TVec3f wallNormal;
+    bool hit = false;
     if (getPlayer()->calcDistToCeil(false) < 200.0f) {
-        collisionNormal = getPlayer()->_3B0;
-        hasCollision = true;
-    } else {
-        hasCollision = getPlayer()->getHitWallNorm(&collisionNormal);
+        normal = getPlayer()->_3B0;
+        hit = true;
     }
 
-    if (!hasCollision) {
-        _42 = 0;
+    if (!hit) {
+        hit = getPlayer()->getHitWallNorm(&wallNormal);
+        normal = wallNormal;
+    }
+
+    if (hit) {
+        f32 speed = MR::vecKillElement(_34, normal, &_34);
+        if (speed < 0.0f) {
+            _34 += normal * -speed;
+        } else {
+            _34 += normal * speed * 1.5f;
+        }
+
+        if (!_42) {
+            playSound("テレサ壁反射");
+            playSound("声壁反射");
+            mActor->changeTeresaAnimation("hit", -1);
+            actor = mActor->_9A4;
+            MR::emitEffectHit(actor, getPlayer()->getWallPos(), getPlayer()->getWallNorm(), "WallHit");
+            mActor->_946 = 10;
+            _46 = mActor->getConst().getTable()->mTeresaWallReflectTime;
+            _14.zero();
+            Mario* player = getPlayer();
+            player->_418 = 0;
+        }
+
+        _42++;
         return;
     }
 
-    const f32 normalSpeed = MR::vecKillElement(_34, collisionNormal, &_34);
-    if (normalSpeed < 0.0f) {
-        _34 += collisionNormal * -normalSpeed;
-    } else {
-        _34 += collisionNormal * normalSpeed * 1.5f;
-    }
-
-    if (_42 == 0) {
-        playSound("テレサ壁反射", -1);
-        playSound("声壁反射", -1);
-        mActor->changeTeresaAnimation("hit", -1);
-        MR::emitEffectHit(mActor->_9A4, getPlayer()->getWallPos(), getPlayer()->getWallNorm(), "WallHit");
-        mActor->_946 = 10;
-        _46 = mActor->mConst->getTable()->mTeresaWallReflectTime;
-        _14.zero();
-        getPlayer()->_418 = 0;
-    }
-
-    _42++;
+    _42 = 0;
 }
 
 void MarioTeresa::procAirControl() {
-    const MarioConstTable* pTable = mActor->mConst->getTable();
-    if (getPlayer()->_418 >= pTable->mTeresaWallThroughTime - 30) {
-        return;
-    }
-
-    if ((!isTeresaAccel() || _46 != 0) && _48 == 0) {
-        return;
-    }
-
-    if (getPlayer()->_1C._4) {
-        if (_34.dot(getAirGravityVec()) > 0.0f) {
-            addTeresaVerticalVelocity(-2.0f);
-        } else {
-            addTeresaVerticalVelocity(-0.4f);
-        }
-    } else {
-        addTeresaVerticalVelocity(-0.25f);
-    }
-
-    if (isTeresaAccel()) {
-        playSound("テレサ踏ん張り", -1);
+    if (getPlayer()->_418 < mActor->getConst().getTable()->mTeresaWallThroughTime - 30 && ((isTeresaAccel() && !_46) || _48)) {
         if (getPlayer()->_1C._4) {
-            _48 = pTable->mTeresaTrgOnPushTime1;
-        } else if (_48 < 15) {
-            _48 = pTable->mTeresaTrgOnPushTime2;
+            if (_34.dot(getAirGravityVec()) > 0.0f) {
+                addTeresaVerticalVelocity(-2.0f);
+            } else {
+                addTeresaVerticalVelocity(-0.4f);
+            }
+        } else {
+            addTeresaVerticalVelocity(-0.25f);
         }
-    }
 
-    if (_48 != 0) {
-        _48--;
+        if (isTeresaAccel()) {
+            playSound("テレサ踏ん張り");
+            if (getPlayer()->_1C._4) {
+                _48 = mActor->getConst().getTable()->mTeresaTrgOnPushTime1;
+            } else if (_48 < 15) {
+                _48 = mActor->getConst().getTable()->mTeresaTrgOnPushTime2;
+            }
+        }
+
+        if (_48) {
+            _48--;
+        }
     }
 }
 
 void MarioTeresa::procControl() {
-    if (_46 == 0) {
-        if (!MR::isNearZero(getStickP(), 0.001f)) {
-            getPlayer()->setFrontVecKeepUp(getWorldPadDir(), mActor->mConst->getTable()->mTeresaAirWalkTurnSpd);
+    if (!_46) {
+        if (!MR::isNearZero(getStickP())) {
+            getPlayer()->setFrontVecKeepUp(getWorldPadDir(), mActor->getConst().getTable()->mTeresaAirWalkTurnSpd);
         }
 
-        if (getPlayer()->_402 < (mActor->mConst->getTable()->mAirWalkTime >> 1)) {
+        if (getPlayer()->_402 < (mActor->getConst().getTable()->mAirWalkTime / 2)) {
             getAnimator()->setSpeed(1.5f);
         }
 
         TVec3f velocity(_14);
-        f32 directionRatio = 1.0f;
-        if (!MR::isNearZero(getStickP(), 0.001f)) {
+        f32 alignment = 1.0f;
+        if (!MR::isNearZero(getStickP())) {
             velocity.dot(getWorldPadDir());
         }
-        if (directionRatio < 0.0f) {
-            directionRatio *= 0.3f;
+
+        if (alignment < 0.0f) {
+            alignment *= 0.3f;
         }
 
         f32 acceleration = 0.3f;
-        if (getPlayer()->_418 > (mActor->mConst->getTable()->mTeresaWallThroughTime >> 1)) {
+        if (getPlayer()->_418 > (mActor->getConst().getTable()->mTeresaWallThroughTime / 2)) {
             acceleration = 2.0f;
         }
-        addTeresaHorizontalVelocity(getWorldPadDir() * directionRatio * acceleration);
+
+        addTeresaHorizontalVelocity(getWorldPadDir() * alignment * acceleration);
     }
 
     if (checkTrgZ()) {
         if (_34.dot(getAirGravityVec()) < 0.0f) {
             MR::vecKillElement(_34, getAirGravityVec(), &_34);
         }
+
         mActor->changeTeresaAnimation("fallquicklystart", -1);
-        playSound("声壁押し", -1);
+        playSound("声壁押し");
     }
 }
 
 void MarioActor::runTeresaBaseAnimation() {
-    if (mMario->isStatusActive(MarioStatus_Wait)) {
-        return;
+    if (!mMario->isStatusActive(MarioStatus_Wait) && !_9B8->isRun("基本")) {
+        _9B8->changeAnimation("基本");
+        _9B4 = MR::getRandom(60L, 180L);
+        MR::startBtp(_9A4, "blink");
     }
-
-    if (_9B8->isRun("基本")) {
-        return;
-    }
-
-    _9B8->changeAnimation("基本");
-    _9B4 = MR::getRandom(60L, 180L);
-    MR::startBtp(_9A4, "blink");
 }
 
-void MarioActor::changeTeresaAnimation(const char* pName, s32 interpolation) {
+void MarioActor::changeTeresaAnimation(const char* pAnimation, s32 interpolation) {
     if (MR::isBckPlaying(_9A4, "sleep")) {
         MR::deleteEffect(_9A4, "Sleep");
     }
 
     if (interpolation == -1) {
-        MR::startBck(_9A4, pName, nullptr);
+        MR::startBck(_9A4, pAnimation, nullptr);
     } else {
-        MR::startBckWithInterpole(_9A4, pName, interpolation);
+        MR::startBckWithInterpole(_9A4, pAnimation, interpolation);
     }
 
-    if (MR::isEqualString(pName, "wait") || MR::isEqualString(pName, "run")) {
+    if (MR::isEqualString(pAnimation, "wait") || MR::isEqualString(pAnimation, "run")) {
         _9B4 = MR::getRandom(60L, 180L);
         MR::stopBtp(_9A4);
-    } else {
-        _9B4 = 0;
-        if (MR::isExistBtp(_9A4, pName)) {
-            MR::startBtp(_9A4, pName);
-        } else {
-            MR::startBtp(_9A4, "blink");
-        }
+        return;
     }
+
+    _9B4 = 0;
+    if (MR::isExistBtp(_9A4, pAnimation)) {
+        MR::startBtp(_9A4, pAnimation);
+        return;
+    }
+
+    MR::startBtp(_9A4, "blink");
 }
 
 void MarioActor::updateTeresaAnimation() {
-    bool canSelectMovementAnimation = true;
+    bool canChange = true;
     if (MR::isBckPlaying(_9A4, "sleep")) {
-        bool shouldWake = false;
+        bool moving = false;
         if (mMario->mTeresa->isTeresaAccel()) {
-            shouldWake = true;
-        }
-        if (mMario->getStickP() != 0.0f) {
-            shouldWake = true;
-        }
-        if (mMario->mJumpVec.length() > 1.0f) {
-            shouldWake = true;
+            moving = true;
         }
 
-        if (shouldWake) {
+        if (mMario->getStickP() != 0.0f) {
+            moving = true;
+        }
+
+        if (mMario->mJumpVec.length() > 1.0f) {
+            moving = true;
+        }
+
+        if (moving) {
             runTeresaBaseAnimation();
             MR::deleteEffect(_9A4, "Sleep");
         }
@@ -628,30 +626,28 @@ void MarioActor::updateTeresaAnimation() {
     }
 
     if (MR::isBckPlaying(_9A4, "hit")) {
-        canSelectMovementAnimation = false;
-    }
-    if (MR::isBckPlaying(_9A4, "spin") && !mMario->mTeresa->isTeresaAccel()) {
-        canSelectMovementAnimation = false;
+        canChange = false;
     }
 
-    if (canSelectMovementAnimation) {
+    if (MR::isBckPlaying(_9A4, "spin") && !mMario->mTeresa->isTeresaAccel()) {
+        canChange = false;
+    }
+
+    if (canChange) {
         if (mMario->mTeresa->isTeresaAccel()) {
             if (!MR::isBckPlaying(_9A4, "fly") && !MR::isBckPlaying(_9A4, "spin")) {
                 changeTeresaAnimation("fly", 16);
             }
         } else if (MR::isBckPlaying(_9A4, "fly") || _9B8->isRun("基本")) {
-            const TVec3f& rGravity = getGravityVec();
-            if (getLastMove().dot(rGravity) >= 1.0f) {
+            if (getLastMove().dot(getGravityVec()) >= 1.0f) {
                 changeTeresaAnimation("fall", 16);
             } else if (!mMario->mDrawStates._1C) {
-                const TVec3f& rCurrentGravity = getGravityVec();
-                if (MR::abs(getLastMove().dot(rCurrentGravity)) < 1.0f) {
+                if (__fabsf(getLastMove().dot(getGravityVec())) < 1.0f) {
                     runTeresaBaseAnimation();
                 }
             }
         } else if (MR::isBckPlaying(_9A4, "fall")) {
-            const TVec3f& rGravity = getGravityVec();
-            if (getLastMove().dot(rGravity) < 1.0f) {
+            if (getLastMove().dot(getGravityVec()) < 1.0f) {
                 runTeresaBaseAnimation();
             }
         }
@@ -664,43 +660,95 @@ void MarioActor::updateTeresaAnimation() {
         }
     }
 
-    if (mMario->_418 != 0) {
-        if (!MR::isBckPlaying(_9A4, "spin") && mMario->_418 > mConst->getTable()->mTeresaWallThroughTime - 3) {
-            changeTeresaAnimation("spin", -1);
+    if (mMario->_418) {
+        if (!MR::isBckPlaying(_9A4, "spin")) {
+            if (mMario->_418 > getConst().getTable()->mTeresaWallThroughTime - 3) {
+                changeTeresaAnimation("spin", -1);
+            }
         }
 
-        if (_9A8 < mConst->getTable()->mTeresaAlphaLevelMax) {
-            _9A8 += mConst->getTable()->mTeresaAlphaLevelInc;
+        if (_9A8 < getConst().getTable()->mTeresaAlphaLevelMax) {
+            _9A8 += getConst().getTable()->mTeresaAlphaLevelInc;
         }
 
         mMario->_418--;
-        if (mMario->_418 == 0) {
+        if (!mMario->_418) {
             playSound("テレサ現れる", -1);
         }
     } else {
         if (_9A8 > 0.0f) {
-            _9A8 -= mConst->getTable()->mTeresaAlphaLevelDec;
+            _9A8 -= getConst().getTable()->mTeresaAlphaLevelDec;
         }
-        if (_9A8 > 0.0f && mMario->mTeresa->_46 != 0) {
-            _9A8 -= mConst->getTable()->mTeresaAlphaLevelDec;
+
+        if (_9A8 > 0.0f && mMario->mTeresa->_46) {
+            _9A8 -= getConst().getTable()->mTeresaAlphaLevelDec;
         }
     }
 
     MR::setBrkFrameAndStop(_9A4, _9A8);
-
-    if (_9B4 != 0) {
+    if (_9B4) {
         _9B4--;
-        if (_9B4 == 0) {
+        if (!_9B4) {
             _9B4 = MR::getRandom(90L, 240L);
             MR::startBtp(_9A4, "blink");
         }
     }
 }
 
-bool MarioTeresa::keep() {
-    return update();
+void MarioTeresa::doTeresaReflection(const TVec3f& rNormal, bool effect) {
+    TVec3f direction(rNormal);
+    MR::normalizeOrZero(&direction);
+    TVec3f tangent;
+    f32 speed = MR::vecKillElement(_34, direction, &tangent);
+    if (speed < 0.0f) {
+        if (speed > -10.0f) {
+            speed = -10.0f;
+        }
+
+        TVec3f horizontal;
+        f32 vertical = MR::vecKillElement(direction * -speed, getAirGravityVec(), &horizontal);
+        addTeresaHorizontalVelocity(horizontal * 2.0f);
+        addTeresaVerticalVelocity(2.0f * vertical);
+    } else {
+        TVec3f horizontal;
+        f32 vertical = MR::vecKillElement(direction, getAirGravityVec(), &horizontal);
+        addTeresaHorizontalVelocity(horizontal);
+        addTeresaVerticalVelocity(vertical);
+    }
+
+    _46 = mActor->getConst().getTable()->mTeresaWallReflectTime;
+    _14.zero();
+    if (!_42) {
+        mActor->changeTeresaAnimation("hit", -1);
+        playSound("声壁反射");
+        if (effect) {
+            playSound("テレサ壁反射");
+            Mario* player = getPlayer();
+            MR::emitEffectHit(mActor->_9A4, getPlayer()->_25C, player->_268, "WallHit");
+        }
+    }
+
+    Mario* player = getPlayer();
+    player->_418 = 0;
+    mActor->_946 = 5;
+    _42++;
 }
 
-bool MarioTeresa::notice() {
-    return true;
+XanimeGroupInfo teresaAnimeTable[] = {
+    {{"基本"}, 1.0f, 16},
+    {{""}},
+};
+
+XanimeBckTable2 teresaAnime2[] = {
+    {{"基本"}, {{"wait", 1.0f}, {"run", 0.0f}}},
+    {{""}, {{"", 0.0f}, {nullptr, 0.0f}}},
+};
+
+void MarioActor::initTeresaMarioAnimation() {
+    _9B0 = 0.0f;
+    _9BC = new XanimeResourceTable(MR::getResourceHolder(_9A4), teresaAnimeTable, nullptr, nullptr, nullptr, teresaAnime2, nullptr, nullptr, nullptr);
+    _9B8 = new XanimePlayer(MR::getJ3DModel(_9A4), _9BC);
+    _9B8->setDefaultAnimation("基本");
+    _9B8->changeAnimation("基本");
+    _9A4->mModelManager->mXanimePlayer = _9B8;
 }

@@ -10,7 +10,6 @@
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
@@ -48,7 +47,7 @@ void GCaptureTarget::init(const JMapInfoIter& rIter) {
     MR::getJMapInfoArg1NoInit(rIter, &mPointableRange);
     initEffectKeeper(0, nullptr, false);
     initSound(4, false);
-    initNerve(&NrvGCaptureTarget::GCaptureTargetNrvWait::sInstance);
+    initNerve(GET_NERVE(GCaptureTarget, GCaptureTargetNrvWait));
     MR::initShadowVolumeSphere(this, 50.0f);
     MR::setShadowDropLength(this, nullptr, 300.0f);
     MR::onCalcShadowOneTime(this, nullptr);
@@ -77,7 +76,7 @@ void GCaptureTarget::init(const JMapInfoIter& rIter) {
     }
 
     if (MR::useStageSwitchReadB(this, rIter)) {
-        MR::listenStageSwitchOnB(this, MR::Functor_Inline(this, &GCaptureTarget::exeActive));
+        MR::listenStageSwitchOnB(this, MR::Functor(this, &GCaptureTarget::exeActive));
     }
 
     s32 arg;
@@ -97,18 +96,18 @@ void GCaptureTarget::appear() {
     MR::deleteEffectAll(this);
     MR::hideModel(this);
     MR::startSystemSE("SE_SY_GCAPTURE_APPEAR");
-    setNerve(&NrvGCaptureTarget::GCaptureTargetNrvAppear::sInstance);
+    setNerve(GET_NERVE(GCaptureTarget, GCaptureTargetNrvAppear));
 
     if (MR::isExistActorCamera(mCameraInfo)) {
-        MR::requestStartDemo(this, "出現", &NrvGCaptureTarget::GCaptureTargetNrvAppear::sInstance,
-                             &NrvGCaptureTarget::GCaptureTargetNrvTryDemoAppear::sInstance);
+        MR::requestStartDemo(this, "出現", GET_NERVE(GCaptureTarget, GCaptureTargetNrvAppear),
+                             GET_NERVE(GCaptureTarget, GCaptureTargetNrvTryDemoAppear));
     }
 }
 
 void GCaptureTarget::makeActorAppeared() {
     LiveActor::makeActorAppeared();
     MR::emitEffect(this, "TargetLight");
-    setNerve(&NrvGCaptureTarget::GCaptureTargetNrvWait::sInstance);
+    setNerve(GET_NERVE(GCaptureTarget, GCaptureTargetNrvWait));
 
     if (mRailMover != nullptr) {
         mRailMover->start();
@@ -170,7 +169,7 @@ void GCaptureTarget::exeAppear() {
             MR::endDemoWaitCameraInterpolating(this, "出現");
             MR::endActorCamera(this, mCameraInfo, false, -1);
         }
-        setNerve(&NrvGCaptureTarget::GCaptureTargetNrvWait::sInstance);
+        setNerve(GET_NERVE(GCaptureTarget, GCaptureTargetNrvWait));
     }
 }
 
@@ -196,7 +195,7 @@ void GCaptureTarget::exeWait() {
     MR::setBckRate(this, mStarAnimSpeed);
 
     if (MR::isNearPlayer(this, mPointableRange)) {
-        setNerve(&NrvGCaptureTarget::GCaptureTargetNrvPointable::sInstance);
+        setNerve(GET_NERVE(GCaptureTarget, GCaptureTargetNrvPointable));
     }
 }
 
@@ -218,9 +217,9 @@ void GCaptureTarget::exePointable() {
 
     if (MR::isStarPointerPointing(this, 0, true, "弱") && MR::requestGCaptureTarget(this)) {
         MR::invalidateClipping(this);
-        setNerve(&NrvGCaptureTarget::GCaptureTargetNrvHitPointer::sInstance);
+        setNerve(GET_NERVE(GCaptureTarget, GCaptureTargetNrvHitPointer));
     } else if (!MR::isNearPlayer(this, mPointableRange)) {
-        setNerve(&NrvGCaptureTarget::GCaptureTargetNrvWait::sInstance);
+        setNerve(GET_NERVE(GCaptureTarget, GCaptureTargetNrvWait));
     }
 }
 
@@ -230,7 +229,7 @@ void GCaptureTarget::exeHitPointer() {
     }
 
     if (!MR::isRequestedGCaptureTarget(this)) {
-        setNerve(&NrvGCaptureTarget::GCaptureTargetNrvWait::sInstance);
+        setNerve(GET_NERVE(GCaptureTarget, GCaptureTargetNrvWait));
     } else {
         MR::requestStarPointerModeBlueStarReady(this);
         if (MR::isFirstStep(this)) {
@@ -275,37 +274,37 @@ void GCaptureTarget::exeActive() {
 }
 
 void GCaptureTarget::decidedTarget() {
-    if (!isNerve(&NrvGCaptureTarget::GCaptureTargetNrvActive::sInstance)) {
-        setNerve(&NrvGCaptureTarget::GCaptureTargetNrvActive::sInstance);
+    if (!isNerve(GET_NERVE(GCaptureTarget, GCaptureTargetNrvActive))) {
+        setNerve(GET_NERVE(GCaptureTarget, GCaptureTargetNrvActive));
     }
 }
 
 void GCaptureTarget::releasedTarget() {
-    if (!isNerve(&NrvGCaptureTarget::GCaptureTargetNrvWait::sInstance)) {
+    if (!isNerve(GET_NERVE(GCaptureTarget, GCaptureTargetNrvWait))) {
         MR::startBck(this, "Wait", nullptr);
-        setNerve(&NrvGCaptureTarget::GCaptureTargetNrvWait::sInstance);
+        setNerve(GET_NERVE(GCaptureTarget, GCaptureTargetNrvWait));
     }
 }
 
 void GCaptureTarget::emitNerveEffect() {
-    if (isNerve(&NrvGCaptureTarget::GCaptureTargetNrvAppear::sInstance)) {
+    if (isNerve(GET_NERVE(GCaptureTarget, GCaptureTargetNrvAppear))) {
         MR::emitEffect(this, "TargetLight");
         MR::deleteEffect(this, "Touch");
         MR::deleteEffect(this, "Active");
-    } else if (isNerve(&NrvGCaptureTarget::GCaptureTargetNrvWait::sInstance)) {
+    } else if (isNerve(GET_NERVE(GCaptureTarget, GCaptureTargetNrvWait))) {
         MR::deleteEffect(this, "TargetLight");
         MR::deleteEffect(this, "Touch");
         MR::deleteEffect(this, "Active");
-    } else if (isNerve(&NrvGCaptureTarget::GCaptureTargetNrvPointable::sInstance)) {
+    } else if (isNerve(GET_NERVE(GCaptureTarget, GCaptureTargetNrvPointable))) {
         MR::emitEffect(this, "TargetLight");
         MR::emitEffect(this, "TouchAble");
         MR::deleteEffect(this, "Touch");
         MR::deleteEffect(this, "Active");
-    } else if (isNerve(&NrvGCaptureTarget::GCaptureTargetNrvHitPointer::sInstance)) {
+    } else if (isNerve(GET_NERVE(GCaptureTarget, GCaptureTargetNrvHitPointer))) {
         MR::emitEffect(this, "TargetLight");
         MR::emitEffect(this, "Touch");
         MR::deleteEffect(this, "Active");
-    } else if (isNerve(&NrvGCaptureTarget::GCaptureTargetNrvActive::sInstance)) {
+    } else if (isNerve(GET_NERVE(GCaptureTarget, GCaptureTargetNrvActive))) {
         MR::emitEffect(this, "TargetLight");
         MR::deleteEffect(this, "Touch");
         MR::emitEffect(this, "Active");

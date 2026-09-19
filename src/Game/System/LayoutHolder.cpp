@@ -1,11 +1,13 @@
 #include "Game/System/LayoutHolder.hpp"
 #include "Game/Util/SystemUtil.hpp"
+#include "JSystem/JKernel/JKRFileFinder.hpp"
 #include <JSystem/JKernel/JKRArchive.hpp>
-#include <JSystem/JKernel/JKRFileFinder.hpp>
 #include <cstdio>
 #include <cstring>
 
-extern "C" int strncasecmp(const char*, const char*, size_t);
+extern "C" {
+int strncasecmp(const char* s1, const char* s2, size_t n);
+}
 
 namespace {
     const char* sLayoutExt[] = {
@@ -25,146 +27,150 @@ LayoutHolder::LayoutHolder(JKRArchive& rArchive) : nw4r::lyt::ResourceAccessor()
 LayoutHolder::~LayoutHolder() {
 }
 
-void* LayoutHolder::GetResource(u32 type, const char* pName, u32* pSize) {
-    void* resource = nullptr;
-    switch (type) {
+void* LayoutHolder::GetResource(u32 resourceKind, const char* pName, u32* pResourceInfo) {
+    void* pResource = nullptr;
+
+    switch (resourceKind) {
     case 'blyt':
-        resource = mLayoutRes.getRes(pName);
+        pResource = mLayoutRes.getRes(pName);
         break;
     case 'anim':
-        resource = mAnimRes.getRes(pName);
+        pResource = mAnimRes.getRes(pName);
         break;
     default:
-        if (strstr(pName, ".brfnt") == nullptr) {
-            resource = mResOther.getRes(pName);
+        if (strstr(pName, ".brfnt") == 0) {
+            pResource = mResOther.getRes(pName);
         }
         break;
     }
 
-    if (pSize != nullptr) {
-        *pSize = resource != nullptr ? static_cast< const u32* >(resource)[1] : 0;
+    if (pResourceInfo != nullptr) {
+        if (pResource != nullptr) {
+            *pResourceInfo = static_cast< u32* >(pResource)[1];
+        } else {
+            *pResourceInfo = 0;
+        }
     }
-    return resource;
+
+    return pResource;
 }
 
 nw4r::ut::Font* LayoutHolder::GetFont(const char* pName) {
     if (strncasecmp(pName, "MessageFont26", strlen("MessageFont26")) == 0) {
         return MR::getFontOnCurrentLanguage();
     }
+
     if (strncasecmp(pName, "MenuFont64", strlen("MenuFont64")) == 0) {
         return MR::getMenuFontNW4R();
     }
+
     if (strncasecmp(pName, "NumberFont", strlen("NumberFont")) == 0) {
         return MR::getNumberFontNW4R();
     }
+
     if (strncasecmp(pName, "PictureFont", strlen("PictureFont")) == 0) {
         return MR::getPictureFontNW4R();
     }
+
     if (strncasecmp(pName, "CinemaFont26", strlen("CinemaFont26")) == 0) {
         return MR::getCinemaFontNW4R();
     }
+
     return MR::getFontOnCurrentLanguage();
 }
 
-bool LayoutHolder::isAnimationHashEqual(u32 hash, u32 index) const {
-    return mAnimRes.getFileInfo(index)->mHashCode == hash;
+bool LayoutHolder::isAnimationHashEqual(u32 hash, u32 fileID) const {
+    return mAnimRes.getFileInfo(fileID)->isEqualHashCode(hash);
 }
 
 void LayoutHolder::initializeArc() {
-    u32 resourceCount = mArchive->countResource();
-    resourceCount -= initEachResTable(&mLayoutRes, sLayoutExt);
-    resourceCount -= initEachResTable(&mAnimRes, sAnimationExt);
-    if (resourceCount != 0) {
-        mResOther.newFileInfoTable(resourceCount);
+    u32 resCount = mArchive->countResource();
+    resCount -= initEachResTable(&mLayoutRes, sLayoutExt);
+    resCount -= initEachResTable(&mAnimRes, sAnimationExt);
+
+    if (resCount > 0) {
+        mResOther.newFileInfoTable(resCount);
     }
 
     mount(nullptr);
 }
 
-JKRFileFinder* LayoutHolder::getFileFinder(const char* pPath) {
-    if (pPath == nullptr) {
+JKRArcFinder* LayoutHolder::getFileFinder(const char* pRoot) {
+    if (pRoot == nullptr) {
         return mArchive->getFirstFile("/");
     }
-    return mArchive->getFirstFile(pPath);
+
+    return mArchive->getFirstFile(pRoot);
 }
 
-u32 LayoutHolder::initEachResTable(ResTable* pTable, const char* const* pExtensions) {
-    s32 resourceCount = 0;
-    for (u32 i = 0; pExtensions[i] != nullptr; i++) {
-        resourceCount += count(pExtensions[i], nullptr);
+u32 LayoutHolder::initEachResTable(ResTable* pResTable, const char* const* pExtensionTable) {
+    u32 resCount = 0;
+
+    for (s32 i = 0; pExtensionTable[i] != nullptr; i++) {
+        resCount += count(pExtensionTable[i], nullptr);
     }
-    if (resourceCount != 0) {
-        pTable->newFileInfoTable(resourceCount);
+
+    if (resCount > 0) {
+        pResTable->newFileInfoTable(resCount);
     }
-    return resourceCount;
+
+    return resCount;
 }
 
-s32 LayoutHolder::count(const char* pExtension, const char* pPath) {
-    s32 resourceCount = 0;
-    JKRFileFinder* finder = getFileFinder(pPath);
-    while (finder->mHasMoreFiles) {
-        if (finder->mFileIsFolder) {
-            if (finder->mName[0] != '.') {
+u32 LayoutHolder::count(const char* pExtension, const char* pRoot) {
+    u32 resCount = 0;
+    JKRArcFinder* pFinder = getFileFinder(pRoot);
+
+    while (pFinder->mHasMoreFiles) {
+        if (pFinder->mFileIsFolder) {
+            if (pFinder->mName[0] != '.') {
                 char path[128];
-                sprintf(path, "%s%s%s", pPath, "/", finder->mName);
-                resourceCount += count(pExtension, path);
+                sprintf(path, "%s%s%s", pRoot, "/", pFinder->mName);
+                resCount += count(pExtension, path);
             }
-        } else if (pExtension == nullptr || strstr(finder->mName, pExtension) != nullptr) {
-            resourceCount++;
+        } else {
+            if (pExtension == nullptr || strstr(pFinder->mName, pExtension) != nullptr) {
+                resCount++;
+            }
         }
-        finder->findNextFile();
+        pFinder->findNextFile();
     }
-    delete finder;
-    return resourceCount;
+
+    delete pFinder;
+    return resCount;
 }
 
-void LayoutHolder::mount(char* pPath) {
-    JKRFileFinder* finder = getFileFinder(pPath);
-    while (finder->mHasMoreFiles) {
-        if (finder->mFileIsFolder) {
-            if (finder->mName[0] != '.') {
+void LayoutHolder::mount(char* pRoot) {
+    JKRFileFinder* pFinder = getFileFinder(pRoot);
+
+    while (pFinder->mHasMoreFiles) {
+        if (pFinder->mFileIsFolder) {
+            if (pFinder->mName[0] != '.') {
                 char path[128];
-                snprintf(path, 128, "%s/%s", pPath, finder->mName);
+                snprintf(path, 128, "%s/%s", pRoot, pFinder->mName);
                 mount(path);
             }
         } else {
-            mArchive->getFileAttribute(finder->mFileID);
-            ResFileInfo* info = createAndRegisterObject(finder->mName, mArchive->getResource(finder->mFileID));
-            info->_8 = mArchive->getResource(finder->mFileID);
-            info->_4 = mArchive->getResSize(info->_8);
-            info->_C = finder->mFileID;
+            u32 fileID = mArchive->getFileAttribute(pFinder->mFileID);
+            ResFileInfo* pInfo = createAndRegisterObject(pFinder->mName, mArchive->getResource(pFinder->mFileID));
+            pInfo->_8 = mArchive->getResource(pFinder->mFileID);
+            pInfo->_4 = mArchive->getResSize(pInfo->_8);
+            pInfo->_C = pFinder->mFileID;
         }
-        finder->findNextFile();
+        pFinder->findNextFile();
     }
-    delete finder;
+
+    delete pFinder;
 }
 
 ResFileInfo* LayoutHolder::createAndRegisterObject(const char* pName, void* pResource) {
     if (strstr(pName, ".brlyt") != nullptr) {
         return mLayoutRes.add(pName, pResource, false);
     }
+
     if (strstr(pName, ".brlan") != nullptr) {
         return mAnimRes.add(pName, pResource, false);
     }
+
     return mResOther.add(pName, pResource, false);
-}
-
-void* LayoutHolder::getResOther(const char* pName) const {
-    return mResOther.getRes(pName);
-}
-
-u32 LayoutHolder::getResOtherNum() const {
-    return mResOther.mCount;
-}
-
-const char* LayoutHolder::getResOtherName(u32 index) const {
-    return mResOther.getResName(index);
-}
-
-void* LayoutHolder::getResOther(u32 index) const {
-    return mResOther.getRes(index);
-}
-
-bool LayoutHolder::isExistResOther(const char* pName) const {
-    return mResOther.isExistRes(pName);
 }

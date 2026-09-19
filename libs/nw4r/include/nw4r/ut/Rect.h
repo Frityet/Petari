@@ -16,16 +16,16 @@ namespace nw4r {
             ~Rect() {
             }
 
-            void SetHeight(f32 height) {
-                bottom = top + height;
-            }
-
             f32 GetWidth() const {
                 return right - left;
             }
 
             f32 GetHeight() const {
                 return bottom - top;
+            }
+
+            void SetHeight(f32 height) {
+                bottom = top + height;
             }
 
             void MoveTo(f32 x, f32 y) {

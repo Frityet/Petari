@@ -3,10 +3,29 @@
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
 #include "Game/Util.hpp"
 
-namespace MR {
-    void timeKeepDemoFadeOut();
-    void timeKeepDemoFadeIn();
-};  // namespace MR
+namespace {
+    static const f32 sUpVecBlendRate = 0.1f;
+    static const f32 sFrontVecBlendRate = 0.2f;
+    static const f32 sGroundGravityAccel = 0.1f;
+    static const f32 sAirGravityAccel = 1.0f;
+    static const f32 sGroundFric = 0.9f;
+    static const f32 sAirFric = 0.99f;
+    static const s32 sIsAirTime = 5;
+    static const f32 sInRunawayRange = 800.0f;
+    static const f32 sOutRunawayRange = 1100.0f;
+    static const f32 sTalkRunawayRange = 1300.0f;
+    static const f32 sRunawayAccel = 1.55f;
+    static const f32 sRunawayEndAccel = 1.2f;
+    static const s32 sRunawayDeccelTime = 900;
+    static const f32 sRunawayTurnStartLimit = 10.0f;
+    static const f32 sRunawayTurnLimit = 1.5f;
+    static const s32 sRunawayTurnDeccelTime = 30;
+    // static const f32 sAwayTargetVelocityRate;
+    static const f32 sWallJumpPowerV = 30.0f;
+    static const f32 sAppearJumpPowerV = 20.0f;
+    static const f32 sNearGoalDistance = 130.0f;
+    static const f32 sReachGoalDistance = 100.0f;
+};  // namespace
 
 namespace NrvDemoRabbit {
     NEW_NERVE(DemoRabbitNrvAppear, DemoRabbit, Appear);
@@ -21,8 +40,18 @@ namespace NrvDemoRabbit {
     NEW_NERVE(DemoRabbitNrvStartBGM, DemoRabbit, StartBGM);
 };  // namespace NrvDemoRabbit
 
+void DemoRabbit_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)MR::epsilon();
+    (void)0.5f;
+    (void)3.0f;
+    (void)2.0f;
+}
+
 DemoRabbit::DemoRabbit(const char* pName) : NPCActor(pName) {
 }
+
 DemoRabbit::~DemoRabbit() {
 }
 
@@ -41,40 +70,38 @@ void DemoRabbit::init(const JMapInfoIter& rIter) {
     caps.mRailRider = true;
     caps.mMessage = true;
     caps.mMakeActor = false;
-    caps.mWaitNerve = &NrvDemoRabbit::DemoRabbitNrvAppear::sInstance;
+    caps.mWaitNerve = GET_NERVE(DemoRabbit, DemoRabbitNrvAppear);
 
     if (MR::tryRegisterDemoCast(this, rIter)) {
         if (MR::getDemoCastID(rIter) == 0) {
+            caps.mWaitNerve = GET_NERVE(DemoRabbit, DemoRabbitNrvAppear);
             caps.mObjectName = "TrickRabbitBaby";
-            caps.mWaitNerve = &NrvDemoRabbit::DemoRabbitNrvAppear::sInstance;
-
             MR::invalidateClipping(this);
-            MR::registerDemoActionNerve(this, &NrvDemoRabbit::DemoRabbitNrvTalk0::sInstance, "チコとの出会い[ウサギ会話]");
-            MR::registerDemoActionNerve(this, &NrvDemoRabbit::DemoRabbitNrvGuide::sInstance, "チコとの出会い[ウサギ逃走]");
+            MR::registerDemoActionNerve(this, GET_NERVE(DemoRabbit, DemoRabbitNrvTalk0), "チコとの出会い[ウサギ会話]");
+            MR::registerDemoActionNerve(this, GET_NERVE(DemoRabbit, DemoRabbitNrvGuide), "チコとの出会い[ウサギ逃走]");
             MR::registerDemoActionFunctor(this, MR::Functor(this, &DemoRabbit::fadeOut), "ウサギ追いかけ[フェードアウト]");
             MR::registerDemoActionFunctor(this, MR::Functor(this, &DemoRabbit::fadeIn), "ウサギ追いかけ[フェードイン]");
-            MR::registerDemoActionNerve(this, &NrvDemoRabbit::DemoRabbitNrvTalk1::sInstance, "ウサギ追いかけ[会話]");
-            MR::registerDemoActionNerve(this, &NrvDemoRabbit::DemoRabbitNrvRunaway::sInstance, "ウサギ追いかけ[逃走]");
+            MR::registerDemoActionNerve(this, GET_NERVE(DemoRabbit, DemoRabbitNrvTalk1), "ウサギ追いかけ[会話]");
+            MR::registerDemoActionNerve(this, GET_NERVE(DemoRabbit, DemoRabbitNrvRunaway), "ウサギ追いかけ[逃走]");
         } else {
-            MR::registerDemoActionNerve(this, &NrvDemoRabbit::DemoRabbitNrvRunaway::sInstance, "ウサギ追いかけ[逃走]");
-            caps.mWaitNerve = &NrvDemoRabbit::DemoRabbitNrvDemo::sInstance;
+            MR::registerDemoActionNerve(this, GET_NERVE(DemoRabbit, DemoRabbitNrvRunaway), "ウサギ追いかけ[逃走]");
+            caps.mWaitNerve = GET_NERVE(DemoRabbit, DemoRabbitNrvDemo);
         }
     }
 
     initialize(rIter, caps);
 
     if (mMsgCtrl != nullptr) {
-        MR::setDistanceToTalk(mMsgCtrl, 1300.0f);
+        MR::setDistanceToTalk(mMsgCtrl, ::sTalkRunawayRange);
         MR::offRootNodeAutomatic(mMsgCtrl);
     }
 
     MR::onCalcShadow(this, nullptr);
     MR::onCalcGravity(this);
 
-    mFrontVec.set< f32 >((2.0f * (_A0.x * _A0.z)) + (2.0f * (_A0.w * _A0.y)), (2.0f * (_A0.y * _A0.z)) - (2.0f * (_A0.w * _A0.x)),
-                         (1.0f - (2.0f * (_A0.x * _A0.x))) - (2.0f * (_A0.y * _A0.y)));
+    _A0.getZDir(mFrontVec);
 
-    if (isNerve(&NrvDemoRabbit::DemoRabbitNrvAppear::sInstance)) {
+    if (isNerve(GET_NERVE(DemoRabbit, DemoRabbitNrvAppear))) {
         makeActorDead();
     } else {
         makeActorAppeared();
@@ -82,20 +109,20 @@ void DemoRabbit::init(const JMapInfoIter& rIter) {
 }
 
 void DemoRabbit::initAfterPlacement() {
-    if (isNerve(&NrvDemoRabbit::DemoRabbitNrvAppear::sInstance) && MR::isOnGameEventFlagEndTicoGuideDemo()) {
+    if (isNerve(GET_NERVE(DemoRabbit, DemoRabbitNrvAppear)) && MR::isOnGameEventFlagEndTicoGuideDemo()) {
         MR::forwardNode(mMsgCtrl);
         makeActorAppeared();
-        setNerve(&NrvDemoRabbit::DemoRabbitNrvStartBGM::sInstance);
+        setNerve(GET_NERVE(DemoRabbit, DemoRabbitNrvStartBGM));
     }
 }
 
 void DemoRabbit::control() {
-    MR::blendQuatUpFront(&_A0, -mGravity, mFrontVec, 0.1f, 0.2f);
+    MR::blendQuatUpFront(&_A0, -mGravity, mFrontVec, ::sUpVecBlendRate, ::sFrontVecBlendRate);
 
     if (MR::isBindedGround(this)) {
-        mNoGroundTimer = 0;
+        mAirTimer = 0;
     } else {
-        mNoGroundTimer++;
+        mAirTimer++;
     }
 }
 
@@ -107,104 +134,82 @@ void DemoRabbit::fadeIn() {
     TVec3f railEndPos;
     MR::calcRailEndPos(&railEndPos, this);
 
-    TVec3f gravity;
-    MR::calcGravityVector(this, railEndPos, &gravity, nullptr, 0);
+    TVec3f gravityVector;
+    MR::calcGravityVector(this, railEndPos, &gravityVector, nullptr, 0);
 
-    TVec3f startOffset(gravity);
-    startOffset.scale(100.0f);
+    TVec3f poly;
 
-    TVec3f startPos(railEndPos);
-    startPos.sub(startOffset);
+    MR::getFirstPolyOnLineToMap(&railEndPos, nullptr, railEndPos - gravityVector * 100.0f, gravityVector * 1000.0f);
+    mPosition.set(railEndPos);
 
-    TVec3f endOffset(gravity);
-    endOffset.scale(1000.0f);
-
-    MR::getFirstPolyOnLineToMap(&railEndPos, nullptr, startPos, endOffset);
-    mPosition.x = railEndPos.x;
-    mPosition.y = railEndPos.y;
-    mPosition.z = railEndPos.z;
     MR::timeKeepDemoFadeIn();
 }
 
 void DemoRabbit::updateStopVelocity() {
-    MR::attenuateVelocity(this, mNoGroundTimer < 5 ? 0.9f : 0.99f);
+    MR::attenuateVelocity(this, mAirTimer < ::sIsAirTime ? ::sGroundFric : ::sAirFric);
+    MR::addVelocityToGravityOrGround(this, ::sGroundGravityAccel);
+    MR::reboundVelocityFromCollision(this);
 
-    MR::addVelocityToGravityOrGround(this, 0.1f);
-    MR::reboundVelocityFromCollision(this, 1.0f, 1.0f, 0.0f);
-
-    TVec3f hitNormal;
-    TVec3f gravityOffset(mGravity);
-    gravityOffset.scale(10.0f);
-
-    MR::getFirstPolyNormalOnLineToMap(&hitNormal, mPosition, gravityOffset, nullptr, nullptr);
-    MR::vecKillElement(mVelocity, hitNormal, &hitNormal);
-    mVelocity.sub(hitNormal);
+    TVec3f normal;
+    MR::getFirstPolyNormalOnLineToMap(&normal, mPosition, mGravity * 10.0f, nullptr, nullptr);
+    MR::vecKillElement(mVelocity, normal, &normal);
+    mVelocity.sub(normal);
 }
 
 void DemoRabbit::updateNormalVelocity() {
-    MR::attenuateVelocity(this, 0.9f);
+    MR::attenuateVelocity(this, ::sGroundFric);
 
     if (MR::isBindedWall(this)) {
-        MR::addVelocityToGravityOrGround(this, 0.1f);
+        MR::addVelocityToGravityOrGround(this, ::sGroundGravityAccel);
     } else if (MR::isBindedGround(this)) {
-        MR::addVelocityToGravityOrGround(this, 0.1f);
+        MR::addVelocityToGravityOrGround(this, ::sGroundGravityAccel);
     } else {
-        MR::addVelocityToGravityOrGround(this, 1.0f);
+        MR::addVelocityToGravityOrGround(this, ::sAirGravityAccel);
     }
 
-    MR::reboundVelocityFromCollision(this, -0.05f, 0.0f, 1.0f);
+    MR::reboundVelocityFromCollision(this, -0.05f);
 }
 
-void DemoRabbit::updateRun(const TVec3f& rTargetPos, bool) {
-    f32 turnDegree = MR::calcNerveValue(this, 30, 10.0f, 1.5f);
-    TVec3f targetDir(rTargetPos);
-    targetDir.sub(mPosition);
-    MR::turnDirectionDegree(this, &mFrontVec, targetDir, turnDegree);
+void DemoRabbit::updateRun(const TVec3f& targetDir, bool unused) {
+    f32 turnAngle = MR::calcNerveValue(this, ::sRunawayTurnDeccelTime, ::sRunawayTurnStartLimit, ::sRunawayTurnLimit);
 
-    f32 speed = MR::calcNerveValue(this, 900, 1.55f, 1.2f);
-    f32 halfScale = 0.5f;
+    MR::turnDirectionDegree(this, &mFrontVec, targetDir - mPosition, turnAngle);
 
-    while (MR::isExistMapCollision(mPosition, mFrontVec.scaleInline(200.0f))) {
-        f32 frontLength = mFrontVec.length();
-        TVec3f frontAndUp(mFrontVec + -mGravity);
-        TVec3f newFront(frontAndUp);
-        newFront.scale(halfScale);
-        mFrontVec = newFront;
-        mFrontVec.setLength(frontLength);
+    f32 accel = MR::calcNerveValue(this, ::sRunawayDeccelTime, ::sRunawayAccel, ::sRunawayEndAccel);
+
+    while (MR::isExistMapCollision(mPosition, mFrontVec * 200.0f)) {
+        f32 oldLength = mFrontVec.length();
+        mFrontVec = (mFrontVec + -mGravity) / 2.0f;
+        mFrontVec.setLength(oldLength);
     }
 
-    MR::addVelocityMoveToDirection(this, mFrontVec, mNoGroundTimer < 5 ? speed : speed * halfScale);
+    MR::addVelocityMoveToDirection(this, mFrontVec, mAirTimer < ::sIsAirTime ? accel : accel / 2.0f);
 }
 
 void DemoRabbit::updateJump() {
     if (MR::isOnGround(this)) {
-        f32 gravitySpeed = mVelocity.dot(*MR::getGroundNormal(this));
-        TVec3f normalVelocity(*MR::getGroundNormal(this));
-        normalVelocity.scale(gravitySpeed);
-        mVelocity.sub(normalVelocity);
+        mVelocity -= *MR::getGroundNormal(this) * mVelocity.dot(*MR::getGroundNormal(this));
     }
 
-    if (MR::isBindedWall(this) && MR::calcHitPowerToWall(this) <= 0.0f) {
-        MR::addVelocityJump(this, 30.0f);
+    if (MR::isBindedWall(this) && MR::calcHitPowerToWall(this) >= 0.0f) {
+        MR::addVelocityJump(this, ::sWallJumpPowerV);
     }
 }
 
 bool DemoRabbit::tryGuide() {
-    if (MR::isNearPlayer(this, 800.0f)) {
+    if (MR::isNearPlayer(this, ::sInRunawayRange)) {
         MR::invalidateClipping(this);
-        setNerve(&NrvDemoRabbit::DemoRabbitNrvGuide::sInstance);
+        setNerve(GET_NERVE(DemoRabbit, DemoRabbitNrvGuide));
         return true;
     }
-
     return false;
 }
 
 bool DemoRabbit::tryWait() {
-    bool shouldWait = !MR::isNearPlayer(this, 1100.0f);
-
-    if (shouldWait) {
+    bool isFar = !MR::isNearPlayer(this, ::sOutRunawayRange);
+    if (isFar) {
         MR::validateClipping(this);
-        setNerve(&NrvDemoRabbit::DemoRabbitNrvWait::sInstance);
+        setNerve(GET_NERVE(DemoRabbit, DemoRabbitNrvWait));
         return true;
     }
 
@@ -212,9 +217,9 @@ bool DemoRabbit::tryWait() {
 }
 
 bool DemoRabbit::tryGoal() {
-    if (MR::isOnGround(this) && MR::isRailReachedNearGoal(this, 100.0f)) {
+    if (MR::isOnGround(this) && MR::isRailReachedNearGoal(this, ::sReachGoalDistance)) {
         MR::validateClipping(this);
-        setNerve(&NrvDemoRabbit::DemoRabbitNrvGoal::sInstance);
+        setNerve(GET_NERVE(DemoRabbit, DemoRabbitNrvGoal));
         return true;
     }
 
@@ -224,18 +229,18 @@ bool DemoRabbit::tryGoal() {
 void DemoRabbit::exeAppear() {
     if (MR::isFirstStep(this)) {
         MR::startAction(this, "Appear");
-        MR::addVelocityJump(this, 20.0f);
+        MR::addVelocityJump(this, ::sAppearJumpPowerV);
         MR::calcVecToPlayerH(&mFrontVec, this, &mGravity);
-        MR::startSound(this, "SE_SM_DEMORABBIT_APPEAR", -1, -1);
-        MR::startSound(this, "SE_SM_DEMORABBIT_SMOKE", -1, -1);
+        MR::startSound(this, "SE_SM_DEMORABBIT_APPEAR");
+        MR::startSound(this, "SE_SM_DEMORABBIT_SMOKE");
     }
 
-    MR::addVelocityToGravity(this, 1.0f);
-    MR::attenuateVelocity(this, 0.99f);
+    MR::addVelocityToGravity(this, ::sAirGravityAccel);
+    MR::attenuateVelocity(this, ::sAirFric);
 
     if (MR::isGreaterStep(this, 5) && MR::isBindedGround(this)) {
-        mVelocity.set(0.0f, 0.0f, 0.0f);
-        setNerve(&NrvDemoRabbit::DemoRabbitNrvDemo::sInstance);
+        mVelocity.zero();
+        setNerve(GET_NERVE(DemoRabbit, DemoRabbitNrvDemo));
     }
 }
 
@@ -250,13 +255,13 @@ void DemoRabbit::exeDemo() {
 
 void DemoRabbit::exeTalk() {
     if (MR::isFirstStep(this)) {
-        if (isNerve(&NrvDemoRabbit::DemoRabbitNrvTalk1::sInstance)) {
+        if (isNerve(GET_NERVE(DemoRabbit, DemoRabbitNrvTalk1))) {
             MR::forwardNode(mMsgCtrl);
         }
 
         MR::tryTalkTimeKeepDemoMarioPuppetable(mMsgCtrl);
 
-        if (isNerve(&NrvDemoRabbit::DemoRabbitNrvTalk0::sInstance)) {
+        if (isNerve(GET_NERVE(DemoRabbit, DemoRabbitNrvTalk0))) {
             MR::forwardNode(mMsgCtrl);
         }
     }
@@ -273,102 +278,90 @@ void DemoRabbit::exeWait() {
     MR::tryTalkNearPlayer(mMsgCtrl);
     MR::turnDirectionToPlayerDegree(this, &mFrontVec, 10.0f);
     updateStopVelocity();
-    tryGuide();
+
+    if (tryGuide()) {
+        (void)0.0f;
+    }
 }
 
 void DemoRabbit::exeGoal() {
     if (MR::isFirstStep(this)) {
-        MR::startAction(this, "Change");
+        MR::startAction(this, "Wait");
     }
 
     MR::turnDirectionToPlayerDegree(this, &mFrontVec, 10.0f);
     updateStopVelocity();
 
-    if (!MR::isDemoActive()) {
-        if (MR::isNearPlayer(mMsgCtrl, 500.0f)) {
-            MR::startTimeKeepDemoMarioPuppetable(this, "チコガイドデモ", "ウサギ追いかけ[フェードアウト]");
-        } else {
-            MR::tryTalkNearPlayer(mMsgCtrl);
-        }
+    if (MR::isDemoActive()) {
+        return;
+    }
+
+    if (MR::isNearPlayer(mMsgCtrl, 500.0f)) {
+        MR::startTimeKeepDemoMarioPuppetable(this, "チコガイドデモ", "ウサギ追いかけ[フェードアウト]");
+    } else {
+        MR::tryTalkNearPlayer(mMsgCtrl);
     }
 }
 
 void DemoRabbit::exeGuide() {
     if (MR::isFirstStep(this)) {
         MR::startAction(this, "Run");
-        MR::startSound(this, "SE_SM_RABBIT_JUMP", -1, -1);
+        MR::startSound(this, "SE_SM_RABBIT_JUMP");
     }
 
     if (MR::checkPassBckFrame(this, 3.0f)) {
-        MR::startSound(this, "SE_SM_RABBIT_JUMP", -1, -1);
+        MR::startSound(this, "SE_SM_RABBIT_JUMP");
     }
 
-    TVec3f railFrontPos;
-    MR::calcRailPosFrontCoord(&railFrontPos, this, 200.0f);
+    TVec3f railPosFrontCoord;
+    MR::calcRailPosFrontCoord(&railPosFrontCoord, this, 200.0f);
 
-    if (MR::isRailReachedNearGoal(this, 130.0f)) {
-        TVec3f targetOffset(mGravity);
-        targetOffset.scale(2.0f);
-
-        TVec3f targetPos(railFrontPos);
-        targetPos.sub(targetOffset);
-
-        updateRun(targetPos, true);
+    if (MR::isRailReachedNearGoal(this, ::sNearGoalDistance)) {
+        updateRun(railPosFrontCoord - mGravity * 2.0f, true);
     } else {
-        TVec3f targetOffset(mGravity);
-        targetOffset.scale(2.0f);
-
-        TVec3f targetPos(railFrontPos);
-        targetPos.sub(targetOffset);
-
-        updateRun(targetPos, false);
+        updateRun(railPosFrontCoord - mGravity * 2.0f, false);
     }
+
     updateNormalVelocity();
     updateJump();
     MR::moveCoordToNearestPos(this, mPosition);
 
-    if (!tryGoal()) {
-        tryWait();
+    if (tryGoal() || tryWait()) {
+        (void)0.0f;
     }
 }
 
 void DemoRabbit::exeRunaway() {
     if (MR::isFirstStep(this)) {
         MR::startAction(this, "Run");
-        MR::startSound(this, "SE_SM_RABBIT_JUMP", -1, -1);
+        MR::startSound(this, "SE_SM_RABBIT_JUMP");
     }
 
     MR::invalidateClipping(this);
-
     if (MR::checkPassBckFrame(this, 3.0f)) {
-        MR::startSound(this, "SE_SM_RABBIT_JUMP", -1, -1);
+        MR::startSound(this, "SE_SM_RABBIT_JUMP");
     }
 
-    const TVec3f* playerPos = MR::getPlayerPos();
-    TVec3f twicePosition(mPosition + mPosition);
-    TVec3f targetPos(twicePosition);
-    targetPos.sub(*playerPos);
-
-    updateRun(targetPos, false);
+    updateRun(mPosition + mPosition - *MR::getPlayerPos(), false);
     updateNormalVelocity();
     updateJump();
 
     if (MR::isGreaterEqualStep(this, 120)) {
-        setNerve(&NrvDemoRabbit::DemoRabbitNrvChange::sInstance);
+        setNerve(GET_NERVE(DemoRabbit, DemoRabbitNrvChange));
     }
 }
 
 void DemoRabbit::exeChange() {
     if (MR::isFirstStep(this)) {
         MR::startAction(this, "Change");
-        MR::startSound(this, "SE_SM_RABBIT_HIDE", -1, -1);
+        MR::startSound(this, "SE_SM_RABBIT_HIDE");
     }
 
     updateNormalVelocity();
 
     if (MR::isBckStopped(this)) {
-        MR::startSound(this, "SE_SM_METAMORPHOSE_SMOKE", -1, -1);
-        kill();
+        MR::startSound(this, "SE_SM_METAMORPHOSE_SMOKE");
+        return kill();
     }
 }
 
@@ -377,5 +370,5 @@ void DemoRabbit::exeStartBGM() {
         MR::startStageBGM("MBGM_GALAXY_24", false);
     }
 
-    setNerve(&NrvDemoRabbit::DemoRabbitNrvGuide::sInstance);
+    setNerve(GET_NERVE(DemoRabbit, DemoRabbitNrvGuide));
 }

@@ -48,20 +48,21 @@ void JAISeq::playSeqData_(const JASSoundParams& params, JAISoundActivity activit
 }
 
 void JAISeq::reserveChildTracks_(int n) {
-    // FIXME: regswap for the ages here
     for (int i = 0; i < 2; i++) {
-        JASTrack* track = new JASTrack();
+        JASTrack* const track = new JASTrack();
         if (track != nullptr) {
             track->setAutoDelete(true);
             inner_.outputTrack.connectChild(i, track);
 
             for (int j = 0; j < JASTrack::MAX_CHILDREN; j++) {
-                if (j + i * JASTrack::MAX_CHILDREN < n) {
-                    JASTrack* track2 = new JASTrack();
-                    if (track2 != nullptr) {
-                        track2->setAutoDelete(true);
-                        track->connectChild(j, track2);
-                    }
+                if (i * JASTrack::MAX_CHILDREN + j >= n) {
+                    continue;
+                }
+
+                JASTrack* child = new JASTrack();
+                if (child != nullptr) {
+                    child->setAutoDelete(true);
+                    track->connectChild(j, child);
                 }
             }
         }
@@ -78,6 +79,7 @@ void JAISeq::releaseChildTracks_() {
                     delete track2;
                 }
             }
+
             delete track;
         }
     }
@@ -117,11 +119,13 @@ bool JAISeq::prepare_(const JASSoundParams& params, JAISoundActivity activity) {
             playSeqData_(params, activity);
             return true;
         }
+
         break;
     case JAISoundStatus_::State_LOCK_PREPARE:
         if (prepare_getSeqData_()) {
             mStatus.setReadyLocked();
         }
+
         return false;
     case JAISoundStatus_::State_READY:
         mStatus.setPlaying();
@@ -149,6 +153,7 @@ void JAISeq::JAISeqMgr_calc_() {
                 inner_.mSoundChild[i]->calc();
             }
         }
+
         if (soundStrategy) {
             soundStrategy->calc(this);
         }
@@ -248,6 +253,7 @@ void JAISeq::releaseChild(int index) {
         if (track) {
             track->assignExtBuffer(0, nullptr);
         }
+
         delete inner_.mSoundChild[index];
         inner_.mSoundChild[index] = nullptr;
     }

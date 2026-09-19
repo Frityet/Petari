@@ -1,4 +1,3 @@
-#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioParalyze.hpp"
@@ -45,28 +44,6 @@ bool Mario::doParalyze() {
 }
 
 MarioParalyze::MarioParalyze(MarioActor* pActor) : MarioState(pActor, MarioStatus_Paralyze), _12(), mTimer(), _16(), mNotDecLife() {
-}
-
-bool MarioParalyze::close() {
-    if (mActor->mHealth == 0) {
-        if (!getPlayer()->mMovementStates._1) {
-            mActor->forceGameOverNonStop();
-        } else {
-            mActor->forceGameOver();
-        }
-        mActor->changeGameOverAnimation();
-    }
-
-    stopAnimation("電気ダメージ");
-    stopEffect("ビリビリ");
-
-    _16 = 120;
-
-    if (!getPlayer()->isStatusActive(MarioStatus_Swim) && !getPlayer()->getMovementStates()._1) {
-        getPlayer()->tryFreeJump(getFrontVec() * -10.0f, true);
-    }
-
-    return true;
 }
 
 bool MarioParalyze::start() {
@@ -121,6 +98,7 @@ bool MarioParalyze::update() {
             } else {
                 mActor->forceGameOver();
             }
+
             mActor->changeGameOverAnimation();
         }
     }
@@ -128,15 +106,25 @@ bool MarioParalyze::update() {
     return true;
 }
 
-namespace NrvMarioActor {
-    INIT_NERVE(MarioActorNrvWait);
-    INIT_NERVE(MarioActorNrvGameOver);
-    INIT_NERVE(MarioActorNrvGameOverAbyss);
-    INIT_NERVE(MarioActorNrvGameOverAbyss2);
-    INIT_NERVE(MarioActorNrvGameOverFire);
-    INIT_NERVE(MarioActorNrvGameOverBlackHole);
-    INIT_NERVE(MarioActorNrvGameOverNonStop);
-    INIT_NERVE(MarioActorNrvGameOverSink);
-    INIT_NERVE(MarioActorNrvTimeWait);
-    INIT_NERVE(MarioActorNrvNoRush);
-};  // namespace NrvMarioActor
+bool MarioParalyze::close() {
+    if (mActor->mHealth == 0) {
+        if (!getPlayer()->mMovementStates._1) {
+            mActor->forceGameOverNonStop();
+        } else {
+            mActor->forceGameOver();
+        }
+
+        mActor->changeGameOverAnimation();
+    }
+
+    stopAnimation("電気ダメージ");
+    stopEffect("ビリビリ");
+
+    _16 = 120;
+
+    if (!getPlayer()->isStatusActive(MarioStatus_Swim) && !getPlayer()->getMovementStates()._1) {
+        getPlayer()->tryFreeJump(getFrontVec() * -10.0f, true);
+    }
+
+    return true;
+}

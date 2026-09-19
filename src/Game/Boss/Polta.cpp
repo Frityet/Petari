@@ -18,7 +18,6 @@
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
 #include "Game/Util/CameraUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
@@ -68,7 +67,7 @@ void Polta::init(const JMapInfoIter& rIter) {
     MR::useStageSwitchWriteDead(this, rIter);
 
     if (MR::useStageSwitchReadA(this, rIter)) {
-        MR::listenStageSwitchOnA(this, MR::Functor_Inline(this, &Polta::start));
+        MR::listenStageSwitchOnA(this, MR::Functor(this, &Polta::start));
     }
 
     MR::startBva(this, "BreakLevel");

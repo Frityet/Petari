@@ -1,21 +1,19 @@
 #include "Game/LiveActor/ShadowSurfaceDrawer.hpp"
-#include "Game/LiveActor/ShadowVolumeDrawer.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Util/Color.hpp"
 #include "Game/Util/DirectDraw.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/ObjUtil.hpp"
-#include <JSystem/JUtility/TColor.hpp>
 
 ShadowSurfaceDrawInit::ShadowSurfaceDrawInit(const char* pName) : NameObj(pName) {
-    MR::registerPreDrawFunction(MR::Functor_Inline(&ShadowSurfaceDrawInit::initDraw), MR::DrawType_ShadowSurface);
+    MR::registerPreDrawFunction(MR::Functor(&ShadowSurfaceDrawInit::initDraw), MR::DrawType_ShadowSurface);
 }
 
 void ShadowSurfaceDrawInit::initDraw() {
     TDDraw::setup(0, 1, 1);
     GXSetChanCtrl(GX_COLOR0A0, 0, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
     GXSetChanCtrl(GX_COLOR1A1, 0, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
-    GXSetChanMatColor(GX_COLOR0A0, JUtility::TColor(0x00000080));
+    GXSetChanMatColor(GX_COLOR0A0, Color8(128));
     GXSetZMode(1, GX_LEQUAL, 0);
     GXSetCullMode(GX_CULL_BACK);
     GXSetColorUpdate(1);
@@ -25,11 +23,8 @@ void ShadowSurfaceDrawInit::initDraw() {
 
 ShadowSurfaceDrawer::ShadowSurfaceDrawer(const char* pName) : ShadowDrawer(pName) {
     MR::createSceneObj(SceneObj_ShadowSurfaceDrawInit);
-    MR::connectToScene(this, -1, -1, -1, MR::DrawType_ShadowSurface);
+    MR::connectToScene(this, MR::MovementType_None, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_ShadowSurface);
 }
 
 ShadowSurfaceDrawInit::~ShadowSurfaceDrawInit() {
-}
-
-ShadowSurfaceDrawer::~ShadowSurfaceDrawer() {
 }

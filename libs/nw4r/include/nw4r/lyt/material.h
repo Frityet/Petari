@@ -1,7 +1,6 @@
 #pragma once
 
 #include "nw4r/lyt/animation.h"
-#include "nw4r/db/assert.h"
 #include "nw4r/lyt/texMap.h"
 #include "nw4r/lyt/types.h"
 #include "nw4r/ut/Color.h"
@@ -90,9 +89,7 @@ namespace nw4r {
 
             void SetTexCoordGenNum(u8 num);
             void SetTexture(u8 texMapIdx, const TexMap& texMap) {
-                if (texMapIdx >= mGXMemNum.texMap) {
-                    db::Panic("material.h", 135, "NW4R:Failed assertion texMapIdx < mGXMemNum.texMap");
-                }
+                NW4R_ASSERT_AT(135, texMapIdx < mGXMemNum.texMap);
                 GetTexMapAry()[texMapIdx].Set(texMap);
             }
 
@@ -121,9 +118,7 @@ namespace nw4r {
             }
 
             const TexMap& GetTexture(u8 texMapIdx) const {
-                if (texMapIdx >= mGXMemNum.texMap) {
-                    db::Panic("material.h", 120, "NW4R:Failed assertion texMapIdx < mGXMemNum.texMap");
-                }
+                NW4R_ASSERT_AT(120, texMapIdx < mGXMemNum.texMap);
                 return GetTexMapAry()[texMapIdx];
             }
 

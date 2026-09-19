@@ -6,7 +6,6 @@
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
@@ -14,6 +13,11 @@
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
+
+void StarPieceGroup_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+}
 
 namespace NrvStarPieceGroup {
     NEW_NERVE(HostTypeNrvGroup, StarPieceGroup, Group);
@@ -74,10 +78,10 @@ void StarPieceGroup::init(const JMapInfoIter& rIter) {
     bool isFlow;
 
     if (MR::isEqualString(objectName, "StarPieceFlow")) {
-        initNerve(&NrvStarPieceGroup::HostTypeNrvFlow::sInstance);
+        initNerve(GET_NERVE(StarPieceGroup, HostTypeNrvFlow));
         isFlow = true;
     } else {
-        initNerve(&NrvStarPieceGroup::HostTypeNrvGroup::sInstance);
+        initNerve(GET_NERVE(StarPieceGroup, HostTypeNrvGroup));
         isFlow = false;
     }
 

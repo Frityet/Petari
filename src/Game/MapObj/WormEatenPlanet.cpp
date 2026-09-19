@@ -7,6 +7,10 @@
 #include "Game/Util.hpp"
 #include <cstdio>
 
+void WormEatenPlanet_FORCE_MATCH_SDATA2() {
+    (void)-1.0f;
+}
+
 namespace {
     static const s32 sNumWormEatenHill = 5;
 };  // namespace
@@ -56,12 +60,12 @@ void WormEatenPlanet::init(const JMapInfoIter& rIter) {
 
     if (MR::tryRegisterDemoCast(this, rIter)) {
         MR::tryRegisterDemoCast(mCaterpillar, rIter);
-        MR::registerDemoActionNerve(this, &NrvWormEatenPlanet::WormEatenPlanetNrvSecondWait::sInstance, "オオムイムイ出現１回目");
-        MR::registerDemoActionNerve(this, &NrvWormEatenPlanet::WormEatenPlanetNrvThirdWait::sInstance, "オオムイムイ出現２回目");
-        MR::registerDemoActionNerve(this, &NrvWormEatenPlanet::WormEatenPlanetNrvFourthWait::sInstance, "オオムイムイ出現３回目");
+        MR::registerDemoActionNerve(this, GET_NERVE(WormEatenPlanet, WormEatenPlanetNrvSecondWait), "オオムイムイ出現１回目");
+        MR::registerDemoActionNerve(this, GET_NERVE(WormEatenPlanet, WormEatenPlanetNrvThirdWait), "オオムイムイ出現２回目");
+        MR::registerDemoActionNerve(this, GET_NERVE(WormEatenPlanet, WormEatenPlanetNrvFourthWait), "オオムイムイ出現３回目");
     }
 
-    initNerve(&NrvWormEatenPlanet::WormEatenPlanetNrvFirstWait::sInstance);
+    initNerve(GET_NERVE(WormEatenPlanet, WormEatenPlanetNrvFirstWait));
     makeActorAppeared();
 }
 

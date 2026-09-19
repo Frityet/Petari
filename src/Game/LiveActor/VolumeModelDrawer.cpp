@@ -4,20 +4,16 @@
 #include "Game/System/ResourceHolder.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DrawUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include <cstdio>
 
 VolumeModelDrawInit::VolumeModelDrawInit() : NameObj("ボリュームモデル描画初期化") {
-    MR::registerPreDrawFunction(MR::Functor_Inline(&MR::setupShadowVolumeDraw), MR::DrawType_VolumeModel);
+    MR::registerPreDrawFunction(MR::Functor(&MR::setupShadowVolumeDraw), MR::DrawType_VolumeModel);
 }
 
-VolumeModelDrawer::VolumeModelDrawer(const char* pName, const char* pFileName, MtxPtr mtx) : NameObj(pName), mMtx(), mModelData() {
-    mColor.r = 0xFF;
-    mColor.g = 0xA9;
-    mColor.b = 0;
-    mColor.a = 0xFF;
+VolumeModelDrawer::VolumeModelDrawer(const char* pName, const char* pFileName, MtxPtr mtx)
+    : NameObj(pName), mMtx(), mModelData(), mColor(0xFF, 0xA9, 0, 0xFF) {
     MR::createSceneObj(SceneObj_VolumeModelDrawInit);
     mMtx = mtx;
     char buf[0x100];

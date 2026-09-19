@@ -29,7 +29,7 @@ void ClippingActorInfo::judgeClipping() {
 
 bool ClippingActorInfo::isJudgedToClip() const {
     s32 farClipLevel = mFarClipLevel;
-    if (_14->_0 == true) {
+    if (_14->_0 == 1) {
         farClipLevel = 0;
     }
 
@@ -42,19 +42,17 @@ bool ClippingActorInfo::isGroupClipping() const {
     return mInfo;
 }
 
-void ClippingActorInfo::setTypeToSphere(f32 a1, const TVec3f* a2) {
-    _8 = a1;
-    if (!a2) {
+void ClippingActorInfo::setTypeToSphere(f32 radius, const TVec3f* pCenter) {
+    _8 = radius;
+    if (!pCenter) {
         _4 = &mActor->mPosition;
     } else {
-        _4 = a2;
+        _4 = pCenter;
     }
 }
 
 void ClippingActorInfo::setGroupClippingNo(const JMapInfoIter& rIter) {
-    JMapIdInfo* id_info = new JMapIdInfo();
-    *id_info = MR::createJMapIdInfoFromClippingGroupId(rIter);
-    mInfo = id_info;
+    mInfo = new JMapIdInfo(MR::createJMapIdInfoFromClippingGroupId(rIter));
 }
 
 ClippingActorInfoList::ClippingActorInfoList(int a1) {
@@ -76,10 +74,11 @@ void ClippingActorInfoList::add(ClippingActorInfo* pInfo) {
 
 ClippingActorInfo* ClippingActorInfoList::remove(LiveActor* pActor) {
     s32 index = 0;
-    ClippingActorInfo* pInfo = find(pActor, &index);
-    mClippingActorList[index] = mClippingActorList[_4 - 1];
+    ClippingActorInfo* info = find(pActor, &index);
+    s32 lastIndex = _4 - 1;
+    mClippingActorList[index] = mClippingActorList[lastIndex];
     _4--;
-    return pInfo;
+    return info;
 }
 
 ClippingActorInfo* ClippingActorInfoList::find(const LiveActor* pActor, s32* pIndex) const {
@@ -100,11 +99,12 @@ ClippingActorInfo* ClippingActorInfoList::find(const LiveActor* pActor, s32* pIn
 
 ClippingActorInfo* ClippingActorInfoList::findOrNone(const LiveActor* pActor) const {
     for (s32 i = _4 - 1; i >= 0; i--) {
-        ClippingActorInfo* pInfo = mClippingActorList[i];
-        if (pInfo->mActor == pActor) {
-            return pInfo;
+        ClippingActorInfo* info = mClippingActorList[i];
+        if (info->mActor == pActor) {
+            return info;
         }
     }
+
     return nullptr;
 }
 

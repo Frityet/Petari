@@ -6,7 +6,6 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/ModelUtil.hpp"
@@ -161,13 +160,13 @@ u32 ElectricRailFunction::calcDisplayListSize(u32 size, s32 count) {
 }
 
 void ElectricRailHolder::init(const JMapInfoIter& rIter) {
-    MR::connectToScene(this, MR::MovementType_MapObjDecoration, MR::CalcAnimType_MapObj, -1, MR::DrawType_ElectricRailHolder);
+    MR::connectToScene(this, MR::MovementType_MapObjDecoration, MR::CalcAnimType_MapObj, MR::DrawBufferType_None, MR::DrawType_ElectricRailHolder);
 
     MR::invalidateClipping(this);
 
     MR::registerDemoSimpleCastAll(this);
 
-    MR::createAdaptorAndConnectToDrawBloomModel("電撃レールブルーム描画", MR::Functor_InlineC(this, &ElectricRailHolder::draw));
+    MR::createAdaptorAndConnectToDrawBloomModel("電撃レールブルーム描画", MR::Functor(this, &ElectricRailHolder::draw));
 
     makeActorAppeared();
 }
@@ -198,7 +197,7 @@ ModelObj* ElectricRailHolder::createModel(ElectricRailType railType) const {
     case ElectricRail_Red:
         pModelName = "ElectricRail";
         pName = "電撃レールモデル(黄)";
-        pModel = new ModelObj(pName, pModelName, nullptr, -1, -1, -1, false);
+        pModel = new ModelObj(pName, pModelName, nullptr, MR::DrawBufferType_None, MR::MovementType_None, MR::CalcAnimType_None, false);
         pModel->initWithoutIter();
 
         MR::startBtk(pModel, "ElectricRail");
@@ -209,7 +208,7 @@ ModelObj* ElectricRailHolder::createModel(ElectricRailType railType) const {
     case ElectricRail_Yellow:
         pModelName = "ElectricRail";
         pName = "電撃レールモデル(赤)";
-        pModel = new ModelObj(pName, pModelName, nullptr, -1, -1, -1, false);
+        pModel = new ModelObj(pName, pModelName, nullptr, MR::DrawBufferType_None, MR::MovementType_None, MR::CalcAnimType_None, false);
         pModel->initWithoutIter();
 
         MR::startBtk(pModel, "ElectricRail");
@@ -220,7 +219,7 @@ ModelObj* ElectricRailHolder::createModel(ElectricRailType railType) const {
     case ElectricRail_YellowMoving:
         pModelName = "ElectricRailMoving";
         pName = "移動電撃レールモデル(黄)";
-        pModel = new ModelObj(pName, pModelName, nullptr, -1, -1, -1, false);
+        pModel = new ModelObj(pName, pModelName, nullptr, MR::DrawBufferType_None, MR::MovementType_None, MR::CalcAnimType_None, false);
         pModel->initWithoutIter();
 
         MR::startBtk(pModel, "ElectricRailMoving");
@@ -231,7 +230,7 @@ ModelObj* ElectricRailHolder::createModel(ElectricRailType railType) const {
     case ElectricRail_RedMoving:;
         pModelName = "ElectricRailMoving";
         pName = "移動電撃レールモデル(赤)";
-        pModel = new ModelObj(pName, pModelName, nullptr, -1, -1, -1, false);
+        pModel = new ModelObj(pName, pModelName, nullptr, MR::DrawBufferType_None, MR::MovementType_None, MR::CalcAnimType_None, false);
         pModel->initWithoutIter();
 
         MR::startBtk(pModel, "ElectricRailMoving");

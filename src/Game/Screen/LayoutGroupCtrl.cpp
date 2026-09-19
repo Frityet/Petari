@@ -1,14 +1,14 @@
 #include "Game/Screen/LayoutGroupCtrl.hpp"
 #include "Game/Animation/LayoutAnmPlayer.hpp"
 #include "Game/Screen/LayoutManager.hpp"
-#include <nw4r/lyt/group.h>
+#include "nw4r/lyt/group.h"
 
-LayoutGroupCtrl::LayoutGroupCtrl(LayoutManager* pHost, const char* pGroupName, u32 animLayerNum)
-    : mHost(pHost), mGroup(nullptr), mAnmPlayerArray(animLayerNum), _10(true) {
-    mGroup = pHost->getGroup(pGroupName);
+LayoutGroupCtrl::LayoutGroupCtrl(LayoutManager* pManager, const char* pName, u32 animLayerCount)
+    : mManager(pManager), mGroup(), mAnmPlayerArray(animLayerCount), _10(true) {
+    mGroup = pManager->getGroup(pName);
 
     for (u32 i = 0; i < mAnmPlayerArray.size(); i++) {
-        mAnmPlayerArray[i] = new LayoutAnmPlayer(pHost);
+        mAnmPlayerArray[i] = new LayoutAnmPlayer(pManager);
     }
 }
 
@@ -25,7 +25,7 @@ void LayoutGroupCtrl::calcAnim() {
 }
 
 u32 LayoutGroupCtrl::getPaneNum() const {
-    return mGroup->GetPaneList().GetSize();
+    return mGroup->mPaneLinkList.GetSize();
 }
 
 nw4r::lyt::Pane* LayoutGroupCtrl::getPane(u32 index) const {

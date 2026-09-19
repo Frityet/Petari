@@ -2,24 +2,26 @@
 #include "Game/Animation/XanimePlayer.hpp"
 #include "Game/Animation/XanimeResource.hpp"
 #include "Game/Util/StringUtil.hpp"
-#include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
 
-SyncBckEffectInfo::BckResourceInfo::BckResourceInfo(const XanimePlayer* pPlayer, const char* pName) : mName(pName), mResource(nullptr) {
+SyncBckEffectInfo::BckResourceInfo::BckResourceInfo(const XanimePlayer* pPlayer, const char* pName) : mName(pName), mResource() {
     mResource = static_cast< J3DAnmTransform* >(pPlayer->mResourceTable->findResMotion(pName));
 }
 
 bool SyncBckEffectInfo::BckResourceInfo::isLoop() const {
-    return mResource->getAttribute() == 2 || mResource->getAttribute() == 4;
+    return mResource->getAttribute() == J3DFrameCtrl::EMode_LOOP || mResource->getAttribute() == J3DFrameCtrl::EMode_LOOP_REVERSE;
 }
 
-SyncBckEffectInfo::SyncBckEffectInfo(const XanimePlayer* pPlayer, const char* pName, s32 count, f32 startFrame, f32 endFrame, bool continueBckEnd)
-    : mBckResources(), mStartFrame(startFrame), mEndFrame(endFrame), mContinueBckEnd(continueBckEnd) {
-    mBckResources.init(count);
+SyncBckEffectInfo::SyncBckEffectInfo(const XanimePlayer* pPlayer, const char* pName, s32 capacity, f32 startFrame, f32 endFrame, bool continueAnimEnd)
+    : mBckResources(), mCapacity(), mCount(), mStartFrame(startFrame), mEndFrame(endFrame), mContinueAnimEnd(continueAnimEnd) {
+    mBckResources = new BckResourceInfo*[capacity];
+    mCapacity = capacity;
     addBck(pPlayer, pName);
 }
 
 void SyncBckEffectInfo::addBck(const XanimePlayer* pPlayer, const char* pName) {
-    mBckResources.push_back(new BckResourceInfo(pPlayer, pName));
+    BckResourceInfo* pInfo = new BckResourceInfo(pPlayer, pName);
+    const s32 index = mCount++;
+    mBckResources[index] = pInfo;
 }
 
 bool SyncBckEffectInfo::isRegisteredBck(const char* pName) const {
@@ -27,7 +29,7 @@ bool SyncBckEffectInfo::isRegisteredBck(const char* pName) const {
         return false;
     }
 
-    for (BckResourceInfo* const* pInfo = mBckResources.begin(); pInfo != mBckResources.end(); pInfo++) {
+    for (BckResourceInfo** pInfo = mBckResources; pInfo != mBckResources + mCount; pInfo++) {
         if (MR::isEqualStringCase(pName, (*pInfo)->mName)) {
             return true;
         }
@@ -42,7 +44,8 @@ bool SyncBckEffectInfo::isBckLoop(const char* pName) const {
     }
 
     BckResourceInfo* pResource = nullptr;
-    for (BckResourceInfo* const* pInfo = mBckResources.begin(); pInfo != mBckResources.end(); pInfo++) {
+
+    for (BckResourceInfo** pInfo = mBckResources; pInfo != mBckResources + mCount; pInfo++) {
         if (MR::isEqualStringCase((*pInfo)->mName, pName)) {
             pResource = *pInfo;
             break;
@@ -59,8 +62,8 @@ bool SyncBckEffectInfo::isBckLoop(const char* pName) const {
 namespace MR {
     namespace Effect {
         bool isExistSyncBckDeleteFrame(const SyncBckEffectInfo* pInfo) {
-            f32 endFrame = pInfo->mEndFrame;
+            const f32 endFrame = pInfo->mEndFrame;
             return 0.0f <= endFrame;
         }
-    }
-}
+    }  // namespace Effect
+}  // namespace MR

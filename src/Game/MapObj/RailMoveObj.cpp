@@ -11,7 +11,6 @@
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MapPartsUtil.hpp"
@@ -51,7 +50,7 @@ void RailMoveObj::init(const JMapInfoIter& rIter) {
     info.setupRailPosture();
     info.setupShadow(0);
     info.setupBaseMtxFollowTarget();
-    info.setupNerve(&NrvRailMoveObj::HostTypeMove::sInstance);
+    info.setupNerve(GET_NERVE(RailMoveObj, HostTypeMove));
     MapObjActorUtil::setupInitInfoTypical(&info, mObjectName);
     setupInitInfo(rIter, &info);
     initialize(rIter, info);
@@ -61,18 +60,18 @@ void RailMoveObj::init(const JMapInfoIter& rIter) {
         MR::calcModelBoundingRadius(&radius, this);
         MR::initAndSetRailClipping(&_C4, this, 100.0f, radius);
     } else {
-        setNerve(&NrvRailMoveObj::HostTypeDone::sInstance);
+        setNerve(GET_NERVE(RailMoveObj, HostTypeDone));
     }
 
     s32 condition_type = 0;
     MR::getMapPartsArgMoveConditionType(&condition_type, rIter);
 
     if (!MR::isMoveStartTypeUnconditional(condition_type)) {
-        setNerve(&NrvRailMoveObj::HostTypeWaitForPlayerOn::sInstance);
+        setNerve(GET_NERVE(RailMoveObj, HostTypeWaitForPlayerOn));
     }
 
-    if (MR::isDemoCast(this, 0) && MR::tryRegisterDemoActionNerve(this, &NrvRailMoveObj::HostTypeMove::sInstance, 0)) {
-        setNerve(&NrvRailMoveObj::HostTypeWait::sInstance);
+    if (MR::isDemoCast(this, 0) && MR::tryRegisterDemoActionNerve(this, GET_NERVE(RailMoveObj, HostTypeMove), 0)) {
+        setNerve(GET_NERVE(RailMoveObj, HostTypeWait));
     }
 }
 
@@ -95,7 +94,7 @@ void RailMoveObj::endClipped() {
 
     if (mRailMover) {
         if (MapObjActorUtil::isRailMoverWorking(this)) {
-            if (!isNerve(&NrvRailMoveObj::HostTypeDone::sInstance)) {
+            if (!isNerve(GET_NERVE(RailMoveObj, HostTypeDone))) {
                 if (MR::StageEffect::isExistStageEffectData(mObjectName)) {
                     MR::StageEffect::shakeCameraMoving(this, mObjectName);
                 }
@@ -106,7 +105,7 @@ void RailMoveObj::endClipped() {
 
 void RailMoveObj::initCaseUseSwitchB(const MapObjActorInitInfo& rInitInfo) {
     MapObjActor::initCaseUseSwitchB(rInitInfo);
-    setNerve(&NrvRailMoveObj::HostTypeWait::sInstance);
+    setNerve(GET_NERVE(RailMoveObj, HostTypeWait));
 }
 
 void RailMoveObj::initCaseNoUseSwitchB(const MapObjActorInitInfo&) {
@@ -152,7 +151,7 @@ bool RailMoveObj::isMoving() const {
 }
 
 bool RailMoveObj::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
-    if (msg == ACTMES_MAPPARTS_DISAPPEAR_WITH_BLINK && isNerve(&NrvRailMoveObj::HostTypeMove::sInstance)) {
+    if (msg == ACTMES_MAPPARTS_DISAPPEAR_WITH_BLINK && isNerve(GET_NERVE(RailMoveObj, HostTypeMove))) {
         kill();
 
         return true;
@@ -162,15 +161,14 @@ bool RailMoveObj::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pRecei
 }
 
 void RailMoveObj::exeWait() {
-    if (!isNerve(&NrvRailMoveObj::HostTypeDone::sInstance) && (!MR::isDemoCast(this, 0) || !MR::isRegisteredDemoActionNerve(this)) &&
-        (!MR::isValidSwitchB(this) || MR::isOnSwitchB(this)) &&
-        (!isNerve(&NrvRailMoveObj::HostTypeWaitForPlayerOn::sInstance) || MR::isOnPlayer(this))) {
+    if (!isNerve(GET_NERVE(RailMoveObj, HostTypeDone)) && (!MR::isDemoCast(this, 0) || !MR::isRegisteredDemoActionNerve(this)) &&
+        (!MR::isValidSwitchB(this) || MR::isOnSwitchB(this)) && (!isNerve(GET_NERVE(RailMoveObj, HostTypeWaitForPlayerOn)) || MR::isOnPlayer(this))) {
         tryStartMove();
     }
 }
 
 bool RailMoveObj::tryStartMove() {
-    setNerve(&NrvRailMoveObj::HostTypeMove::sInstance);
+    setNerve(GET_NERVE(RailMoveObj, HostTypeMove));
     return true;
 }
 
@@ -188,7 +186,7 @@ void RailMoveObj::exeMove() {
 
     if (mRailMover->isReachedEnd()) {
         if (mRailMover->isDone() && endMove()) {
-            setNerve(&NrvRailMoveObj::HostTypeDone::sInstance);
+            setNerve(GET_NERVE(RailMoveObj, HostTypeDone));
         } else {
             doAtEndPoint();
         }
@@ -226,7 +224,7 @@ void RailMoveObjSwitchShadow::init(const JMapInfoIter& rIter) {
 }
 
 void RailMoveObjSwitchShadow::initCaseUseSwitchA(const MapObjActorInitInfo& rInfo) {
-    MR::listenStageSwitchOnA(this, MR::Functor_Inline(this, &RailMoveObjSwitchShadow::startOnShadow));
+    MR::listenStageSwitchOnA(this, MR::Functor(this, &RailMoveObjSwitchShadow::startOnShadow));
 }
 
 void RailMoveObjSwitchShadow::startOnShadow() {
@@ -249,7 +247,7 @@ bool RailDemoMoveObj::tryStartMove() {
         return false;
     }
 
-    setNerve(&NrvRailMoveObj::HostTypeMove::sInstance);
+    setNerve(GET_NERVE(RailMoveObj, HostTypeMove));
     return true;
 }
 
@@ -314,8 +312,8 @@ bool RailRotateMoveObj::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* 
 }
 
 void RailRotateMoveObj::initCaseUseSwitchB(const MapObjActorInitInfo& rInfo) {
-    setNerve(&NrvRailMoveObj::HostTypeWait::sInstance);
-    MR::listenStageSwitchOffB(this, MR::Functor_Inline< MapObjActor >(this, &MapObjActor::pauseMapPartsFunctions));
+    setNerve(GET_NERVE(RailMoveObj, HostTypeWait));
+    MR::listenStageSwitchOffB(this, MR::Functor< MapObjActor >(this, &MapObjActor::pauseMapPartsFunctions));
 }
 
 bool RailRotateMoveObj::tryStartRotateAtPoint() {

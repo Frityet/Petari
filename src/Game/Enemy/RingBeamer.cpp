@@ -5,7 +5,6 @@
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
@@ -38,11 +37,11 @@ void RingBeamer::init(const JMapInfoIter& rIter) {
     MR::initShadowVolumeSphere(this, 120.0f);
     initEffectKeeper(1, nullptr, false);
     initSound(8, false);
-    initNerve(&NrvRingBeamer::RingBeamerNrvWait::sInstance);
+    initNerve(GET_NERVE(RingBeamer, RingBeamerNrvWait));
     makeActorAppeared();
     MR::useStageSwitchReadA(this, rIter);
     if (MR::useStageSwitchReadB(this, rIter)) {
-        MR::listenStageSwitchOffB(this, MR::Functor_Inline(this, &RingBeamer::syncSwitchOffB));
+        MR::listenStageSwitchOffB(this, MR::Functor(this, &RingBeamer::syncSwitchOffB));
     }
     MR::joinToGroupArray(this, rIter, nullptr, 32);
     // initializes to 5 long, but only uses 3?
@@ -66,7 +65,7 @@ void RingBeamer::init(const JMapInfoIter& rIter) {
 }
 
 void RingBeamer::syncSwitchOffB() {
-    setNerve(&NrvRingBeamer::RingBeamerNrvInter::sInstance);
+    setNerve(GET_NERVE(RingBeamer, RingBeamerNrvInter));
 
     for (int i = 0; i < 3; i++) {
         mBeams[i]->kill();
@@ -89,7 +88,7 @@ void RingBeamer::exeAttack() {
     }
 
     if (MR::isGreaterEqualStep(this, 240)) {
-        setNerve(&NrvRingBeamer::RingBeamerNrvInter::sInstance);
+        setNerve(GET_NERVE(RingBeamer, RingBeamerNrvInter));
         return;
     }
 
@@ -123,7 +122,7 @@ void RingBeamer::exeInter() {
             }
         }
 
-        setNerve(&NrvRingBeamer::RingBeamerNrvWait::sInstance);
+        setNerve(GET_NERVE(RingBeamer, RingBeamerNrvWait));
     }
 }
 
@@ -138,13 +137,13 @@ void RingBeamer::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
 bool RingBeamer::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
     if (msg == ACTMES_GROUP_ATTACK) {
         MR::invalidateClipping(this);
-        setNerve(&NrvRingBeamer::RingBeamerNrvAttack::sInstance);
+        setNerve(GET_NERVE(RingBeamer, RingBeamerNrvAttack));
 
         return true;
     }
 
     if (msg == ACTMES_GROUP_HIDE) {
-        setNerve(&NrvRingBeamer::RingBeamerNrvInter::sInstance);
+        setNerve(GET_NERVE(RingBeamer, RingBeamerNrvInter));
 
         return true;
     }

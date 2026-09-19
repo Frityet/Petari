@@ -5,19 +5,15 @@
 
 class MapPartsRailRotator : public MapPartsFunction {
 public:
+    enum AxisType { AxisType_X, AxisType_Y, AxisType_Z };
+
     MapPartsRailRotator(LiveActor*);
 
-    enum AxisType {
-        Axis_X,
-        Axis_Y,
-        Axis_Z
-    };
-
     virtual ~MapPartsRailRotator();
-    virtual void init(const JMapInfoIter&);
-    virtual bool isWorking() const;
-    virtual void start();
-    virtual void end();
+    virtual void init(const JMapInfoIter&) override;
+    virtual bool isWorking() const override;
+    virtual void start() override;
+    virtual void end() override;
     virtual f32 getJMapArgAngleFactor() const;
 
     bool hasRotation(s32) const;
@@ -33,13 +29,18 @@ public:
     void initWithRotateMtx(const JMapInfoIter&, MtxPtr);
 
     void exeRotate();
+    void exeWait() {
+    }
 
-    s32 mRotateAxis;
-    s32 mRotateType;
-    f32 mRotateSpeed;
-    f32 mTargetAngle;
-    f32 mAngle;
+    void exeDone() {
+    }
+
+    /* 0x18 */ s32 mRotateAxis;
+    /* 0x1C */ s32 mRotateType;
+    /* 0x20 */ f32 mRotateSpeed;
+    /* 0x24 */ f32 mTargetAngle;
+    /* 0x28 */ f32 mAngle;
     TPos3f _2C;
     TPos3f _5C;
-    MtxPtr mHostRotateMtx;
+    /* 0x8C */ MtxPtr mHostRotateMtx;
 };

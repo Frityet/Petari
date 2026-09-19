@@ -27,7 +27,7 @@ NoteCounter::NoteCounter(const char* pName)
 }
 
 void NoteCounter::init(const JMapInfoIter& rIter) {
-    initNerve(&NrvNoteCounter::NoteCounterNrvHide::sInstance);
+    initNerve(GET_NERVE(NoteCounter, NoteCounterNrvHide));
     appear();
 }
 
@@ -39,10 +39,10 @@ void NoteCounter::declareNoteNumMaxAndMelody(LiveActor* pHost, s32 noteNum, s32 
     mMelodyNo = melodyNo;
     mRailLength = railLength;
 
-    if (isNerve(&NrvNoteCounter::NoteCounterNrvHide::sInstance) || isNerve(&NrvNoteCounter::NoteCounterNrvShowToHide::sInstance)) {
-        setNerve(&NrvNoteCounter::NoteCounterNrvHideToShow::sInstance);
-    } else if (isNerve(&NrvNoteCounter::NoteCounterNrvShowWait::sInstance)) {
-        setNerve(&NrvNoteCounter::NoteCounterNrvShow::sInstance);
+    if (isNerve(GET_NERVE(NoteCounter, NoteCounterNrvHide)) || isNerve(GET_NERVE(NoteCounter, NoteCounterNrvShowToHide))) {
+        setNerve(GET_NERVE(NoteCounter, NoteCounterNrvHideToShow));
+    } else if (isNerve(GET_NERVE(NoteCounter, NoteCounterNrvShowWait))) {
+        setNerve(GET_NERVE(NoteCounter, NoteCounterNrvShow));
     }
 }
 
@@ -77,7 +77,7 @@ void NoteCounter::exeShow() {
 
 void NoteCounter::exeShowWait() {
     if (MR::isStep(this, ::sStepShowWait)) {
-        setNerve(&NrvNoteCounter::NoteCounterNrvShowToHide::sInstance);
+        setNerve(GET_NERVE(NoteCounter, NoteCounterNrvShowToHide));
     }
 }
 
@@ -86,7 +86,7 @@ void NoteCounter::exeShowToHide() {
     setTrans(TVec2f(getTrans().x, y));
 
     if (MR::isStep(this, ::sStepMove)) {
-        setNerve(&NrvNoteCounter::NoteCounterNrvHide::sInstance);
+        setNerve(GET_NERVE(NoteCounter, NoteCounterNrvHide));
     }
 }
 
@@ -99,7 +99,7 @@ void NoteCounter::exeHideToShow() {
     setTrans(TVec2f(getTrans().x, y));
 
     if (MR::isStep(this, ::sStepMove)) {
-        setNerve(&NrvNoteCounter::NoteCounterNrvShow::sInstance);
+        setNerve(GET_NERVE(NoteCounter, NoteCounterNrvShow));
     }
 }
 
@@ -114,7 +114,7 @@ void NoteCounter::tryEndDisp() {
         return;
     }
 
-    setNerve(&NrvNoteCounter::NoteCounterNrvShowWait::sInstance);
+    setNerve(GET_NERVE(NoteCounter, NoteCounterNrvShowWait));
 }
 
 namespace MR {

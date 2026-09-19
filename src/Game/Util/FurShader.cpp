@@ -1,15 +1,15 @@
 #include "Game/Util/FurShader.hpp"
 #include "Game/Util/MathUtil.hpp"
-#include <JSystem/J3DGraphAnimator/J3DModel.hpp>
+#include "JSystem/J3DGraphBase/J3DMaterial.hpp"
+#include "JSystem/J3DGraphBase/J3DShape.hpp"
+#include "JSystem/J3DGraphBase/J3DShapeDraw.hpp"
+#include "JSystem/JUtility/JUTNameTab.hpp"
+#include "JSystem/JUtility/JUTTexture.hpp"
+#include "revolution/gx/GXEnum.h"
 #include <JSystem/J3DGraphAnimator/J3DModelData.hpp>
-#include <JSystem/J3DGraphBase/J3DMaterial.hpp>
-#include <JSystem/J3DGraphBase/J3DShape.hpp>
-#include <JSystem/J3DGraphBase/J3DShapeDraw.hpp>
-#include <JSystem/JUtility/JUTNameTab.hpp>
-#include <JSystem/JUtility/JUTTexture.hpp>
 #include <cstring>
 
-CShader::CShader(const J3DModelData* pModelData, const ResTIMG* pTimg) : _4(0), mIndexArray(nullptr), mLengthMap(pTimg) {
+CShader::CShader(const J3DModelData* pModelData, const ResTIMG* pTimg) : mIndexArray(), mLengthMap(pTimg) {
     _1C = 0.0f;
     _8 = 0.0f;
     mIndexArray = new CIndex[pModelData->mVertexData.mVtxNum];
@@ -43,233 +43,289 @@ CShader::~CShader() {
 }
 
 void CShader::calc(J3DModel* pModel) {
-    J3DVertexBuffer* pBuffer = pModel->getVertexBuffer();
-    pBuffer->swapTransformedVtxPos();
-    void* pOutput = pBuffer->getTransformedVtxPos(0);
-    void* pPosition = pBuffer->getCurrentVtxPos();
-    void* pNormal = pBuffer->getCurrentVtxNrm();
-    u32 vertexCount = pBuffer->getVertexData()->getVtxNum();
-    void* pTexCoord = pBuffer->getVertexData()->getVtxTexCoordArray(0);
-    f32 minS = 0.0f;
-    f32 minT = 0.0f;
-    f32 maxS = 0.0f;
-    f32 maxT = 0.0f;
-    f32 s;
-    f32 t;
+    pModel->mVertexBuffer.swapTransformedVtxPos();
+    J3DVertexData* pData = pModel->mVertexBuffer.getVertexData();
+    u32 count;
+    void* pPositions = pModel->mVertexBuffer.mCurrentVtxPos;
+    count = pData->mVtxNum;
+    void* pNormals = pModel->mVertexBuffer.mCurrentVtxNrm;
+    void* pTexCoords = pData->mVtxTexCoordArray[0];
+    void* pOutput = pModel->mVertexBuffer.mTransformedVtxPosArray[0];
+    f32 maxV;
+    f32 maxU;
+    f32 minV;
+    f32 minU;
+    minU = 0.0f;
+    minV = 0.0f;
+    maxU = 0.0f;
+    maxV = 0.0f;
 
-    for (u32 i = 0; i < vertexCount; i++) {
+    for (u32 i = 0; i < count; i++) {
         u16 index = mIndexArray[i]._2;
-        if (index == 0xFFFF) {
-            continue;
-        }
 
-        const TVec2s* pTexFixed = static_cast< const TVec2s* >(pTexCoord) + index;
-        const TVec2f* pTexFloat = static_cast< const TVec2f* >(pTexCoord) + index;
-        switch (_23) {
-        case GX_S16: {
-            f32 fraction = 1 << _20;
-            s = pTexFixed->x / fraction;
-            t = pTexFixed->y / fraction;
-            break;
-        }
-        case GX_F32:
-            s = pTexFloat->x;
-            t = pTexFloat->y;
-            break;
-        }
+        if (index != 0xFFFF) {
+            TVec2s* pFixed = static_cast< TVec2s* >(pTexCoords) + index;
+            TVec2f* pFloat = static_cast< TVec2f* >(pTexCoords) + index;
+            f32 u;
+            f32 v;
 
-        if (s > maxS) {
-            maxS = s;
-        }
-        if (s < minS) {
-            minS = s;
-        }
-        if (t > maxT) {
-            maxT = t;
-        }
-        if (t < minT) {
-            minT = t;
+            switch (_23) {
+            case GX_S16: {
+                f32 scale = 1 << _20;
+                u = f32(pFixed->x) / scale;
+                v = f32(pFixed->y) / scale;
+            } break;
+            case GX_F32:
+                u = pFloat->x;
+                v = pFloat->y;
+                break;
+            }
+
+            if (u > maxU) {
+                maxU = u;
+            }
+
+            if (u < minU) {
+                minU = u;
+            }
+
+            if (v > maxV) {
+                maxV = v;
+            }
+
+            if (v < minV) {
+                minV = v;
+            }
         }
     }
 
-    s32 rangeS = 0.45f + (maxS - minS);
-    s32 rangeT = 0.45f + (maxT - minT);
-    f32 length;
-    for (u32 i = 0; i < vertexCount; i++) {
+    f32 rangeU = maxU - minU;
+    f32 rangeV = maxV - minV;
+    s32 spanU = 0.45f + rangeU;
+    s32 spanV = 0.45f + rangeV;
+
+    for (u32 i = 0; i < count; i++) {
         u16 normalIndex = mIndexArray[i]._0;
-        u16 texIndex = mIndexArray[i]._2;
-        if (normalIndex == 0xFFFF || texIndex == 0xFFFF) {
-            continue;
-        }
+        u16 texCoordIndex = mIndexArray[i]._2;
 
-        TVec3s* pOutputFixed = static_cast< TVec3s* >(pOutput) + i;
-        const TVec3s* pPositionFixed = static_cast< const TVec3s* >(pPosition) + i;
-        const TVec3s* pNormalFixed = static_cast< const TVec3s* >(pNormal) + normalIndex;
-        const TVec2s* pTexFixed = static_cast< const TVec2s* >(pTexCoord) + texIndex;
-        TVec3f* pOutputFloat = static_cast< TVec3f* >(pOutput) + i;
-        const TVec3f* pPositionFloat = static_cast< const TVec3f* >(pPosition) + i;
-        const TVec3f* pNormalFloat = static_cast< const TVec3f* >(pNormal) + normalIndex;
-        const TVec2f* pTexFloat = static_cast< const TVec2f* >(pTexCoord) + texIndex;
-        switch (_23) {
-        case GX_S16: {
-            f32 fraction = 1 << _20;
-            s = (pTexFixed->x / fraction) / rangeS;
-            t = (pTexFixed->y / fraction) / rangeT;
-            if (s < 0.0f) {
-                s += 1.0f;
-            }
-            if (t < 0.0f) {
-                t += 1.0f;
-            }
-            length = mLengthMap.refer(s, t);
-            break;
-        }
-        case GX_F32:
-            length = mLengthMap.refer(pTexFloat->x, pTexFloat->y);
-            break;
-        }
+        if (normalIndex != 0xFFFF && texCoordIndex != 0xFFFF) {
+            u32 offset = i * 3;
+            s32 normalOffset = normalIndex * 3;
+            TVec3s* pFixedOutput = reinterpret_cast< TVec3s* >(static_cast< s16* >(pOutput) + offset);
+            TVec3s* pFixedPosition = reinterpret_cast< TVec3s* >(static_cast< s16* >(pPositions) + offset);
+            TVec3s* pFixedNormal = reinterpret_cast< TVec3s* >(static_cast< s16* >(pNormals) + normalOffset);
+            TVec2s* pFixed = static_cast< TVec2s* >(pTexCoords) + texCoordIndex;
+            TVec3f* pFloatOutput = reinterpret_cast< TVec3f* >(static_cast< f32* >(pOutput) + offset);
+            TVec3f* pFloatPosition = reinterpret_cast< TVec3f* >(static_cast< f32* >(pPositions) + offset);
+            TVec3f* pFloatNormal = reinterpret_cast< TVec3f* >(static_cast< f32* >(pNormals) + normalOffset);
+            TVec2f* pFloat = static_cast< TVec2f* >(pTexCoords) + texCoordIndex;
+            f32 length;
 
-        TVec3f position;
-        TVec3f normal;
-        TVec3f output;
-        switch (_25) {
-        case GX_S16:
-            MR::fixed16ToFloat(&normal, *pNormalFixed, _22);
-            break;
-        case GX_F32:
-            normal = *pNormalFloat;
-            break;
-        }
-        MR::normalize(&normal);
-        MR::isNan(normal);
-        switch (_24) {
-        case GX_S16:
-            MR::fixed16ToFloat(&position, *pPositionFixed, _21);
-            break;
-        case GX_F32:
-            position = *pPositionFloat;
-            break;
-        }
-        MR::isNan(position);
-        if (length == 0.0f) {
-            output = position + normal * -1.0f;
-        } else {
-            output = position + normal * (_1C * length);
-        }
-        MR::isNan(output);
-        switch (_24) {
-        case GX_S16:
-            MR::floatToFixed16(pOutputFixed, output, _21);
-            break;
-        case GX_F32:
-            *pOutputFloat = output;
-            break;
+            switch (_23) {
+            case GX_S16: {
+                f32 scale = 1 << _20;
+                f32 u = f32(pFixed->x) / scale;
+                f32 v = f32(pFixed->y) / scale;
+                u = u / f32(spanU);
+                v = v / f32(spanV);
+
+                if (u < 0.0f) {
+                    u += 1.0f;
+                }
+
+                if (v < 0.0f) {
+                    v += 1.0f;
+                }
+
+                length = mLengthMap.refer(u, v);
+                break;
+            }
+
+            case GX_F32:
+                length = mLengthMap.refer(pFloat->x, pFloat->y);
+                break;
+            }
+
+            TVec3f position;
+            TVec3f normal;
+            TVec3f result;
+
+            switch (_25) {
+            case GX_S16:
+                MR::fixed16ToFloat(&normal, *pFixedNormal, _22);
+                break;
+            case GX_F32:
+                normal = *pFloatNormal;
+                break;
+            }
+
+            MR::normalize(&normal);
+            MR::isNan(normal);
+
+            switch (_24) {
+            case GX_S16:
+                MR::fixed16ToFloat(&position, *pFixedPosition, _21);
+                break;
+            case GX_F32:
+                position = *pFloatPosition;
+                break;
+            }
+
+            MR::isNan(position);
+
+            if (length == 0.0f) {
+                result = position + normal * -1.0f;
+            } else {
+                result = position + normal * (_1C * length);
+            }
+
+            MR::isNan(result);
+
+            switch (_24) {
+            case GX_S16:
+                MR::floatToFixed16(pFixedOutput, result, _21);
+                break;
+            case GX_F32:
+                *pFloatOutput = result;
+                break;
+            }
         }
     }
 
     switch (_24) {
     case GX_S16:
-        DCStoreRange(pOutput, vertexCount * sizeof(TVec3s));
+        DCStoreRange(pOutput, count * sizeof(TVec3s));
         break;
     case GX_F32:
-        DCStoreRange(pOutput, vertexCount * sizeof(TVec3f));
+        DCStoreRange(pOutput, count * sizeof(TVec3f));
         break;
     }
-    pBuffer->setCurrentVtxPos(pOutput);
+
+    pModel->mVertexBuffer.setCurrentVtxPos(pOutput);
 }
 
 void CShader::setup(J3DModelData* pData) {
 }
 
 void CShader::makeIndexData(J3DShape* pShape) const {
-    s32 attrSize[] = {0, 1, 1, 2};
+    GXVtxDescList* pDesc = pShape->getVtxDesc();
     s32 stride = 0;
     s32 posOffset = -1;
-    s32 normalOffset = -1;
+    s32 nrmOffset = -1;
     s32 texOffset = -1;
-    GXVtxDescList* pDesc = pShape->getVtxDesc();
+    s32 sizes[4] = {0, 1, 1, 2};
+
     while (pDesc->attr != GX_VA_NULL) {
         switch (pDesc->attr) {
         case GX_VA_POS:
             posOffset = stride;
             break;
         case GX_VA_NRM:
-            normalOffset = stride;
+            nrmOffset = stride;
             break;
         case GX_VA_TEX0:
             texOffset = stride;
             break;
         }
-        stride += attrSize[pDesc->type];
+
+        stride += sizes[pDesc->type];
         pDesc++;
     }
-    if (posOffset == -1 || normalOffset == -1 || texOffset == -1) {
+
+    if (posOffset == -1) {
         return;
     }
 
-    for (u16 i = 0; i < pShape->getMtxGroupNum(); i++) {
-        const u8* pBegin = pShape->getShapeDraw(i)->getDisplayList();
-        const u8* pCommand = pBegin;
-        while (pCommand - pBegin < pShape->getShapeDraw(i)->getDisplayListSize()) {
-            if (*pCommand == 0) {
+    if (nrmOffset == -1) {
+        return;
+    }
+
+    if (texOffset == -1) {
+        return;
+    }
+
+    for (u16 group = 0; group < pShape->getMtxGroupNum(); group++) {
+        s32 count;
+        u8* pStart;
+        u8* pRead;
+        pStart = pShape->getShapeDraw(group)->getDisplayList();
+        pRead = pStart;
+
+        while (u32(pRead - pStart) < pShape->getShapeDraw(group)->getDisplayListSize()) {
+            if (*pRead == 0) {
                 break;
             }
-            u16 count = *reinterpret_cast< const u16* >(pCommand + 1);
-            for (s32 j = 0; j < count; j++) {
-                const u8* pVertex = pCommand + stride * j + 3;
-                u16 posIndex = *reinterpret_cast< const u16* >(pVertex + posOffset);
-                mIndexArray[posIndex]._0 = *reinterpret_cast< const u16* >(pVertex + normalOffset);
-                mIndexArray[posIndex]._2 = *reinterpret_cast< const u16* >(pVertex + texOffset);
+
+            count = *reinterpret_cast< u16* >(pRead + 1);
+
+            for (s32 i = 0; i < count; i++) {
+                u8* pVertex = pRead + stride * i + 3;
+                u16 pos = *reinterpret_cast< u16* >(pVertex + posOffset);
+                u16 nrm = *reinterpret_cast< u16* >(pVertex + nrmOffset);
+                u16 tex = *reinterpret_cast< u16* >(pVertex + texOffset);
+                mIndexArray[pos]._0 = nrm;
+                mIndexArray[pos]._2 = tex;
             }
-            pCommand += stride * count + 3;
+
+            pRead = pRead + stride * count + 3;
         }
     }
 }
 
-void CShader::checkBorderVtx(J3DModelData* pModelData, u32 shapeIndex) {
-    for (u32 i = 0; i < pModelData->getShapeNum(); i++) {
-        if (i == shapeIndex) {
-            continue;
-        }
-        J3DShape* pShape = pModelData->getShapeNodePointer(i);
-        if (strstr(pModelData->getMaterialName()->getName(pShape->getMaterial()->getIndex()), "Fur") != nullptr) {
+void CShader::checkBorderVtx(J3DModelData* pData, u32 shapeIndex) {
+    for (u32 shape = 0; shape < pData->getShapeNum(); shape++) {
+        if (shape == shapeIndex) {
             continue;
         }
 
-        s32 attrSize[] = {0, 1, 1, 2};
+        J3DShape* pShape = pData->getShapeNodePointer(shape);
+
+        if (strstr(pData->getMaterialName()->getName(pShape->mMaterial->mIndex), "Fur")) {
+            continue;
+        }
+
+        GXVtxDescList* pDesc = pShape->getVtxDesc();
         s32 stride = 0;
         s32 posOffset = -1;
-        GXVtxDescList* pDesc = pShape->getVtxDesc();
+        s32 sizes[4] = {0, 1, 1, 2};
+
         while (pDesc->attr != GX_VA_NULL) {
             switch (pDesc->attr) {
             case GX_VA_POS:
                 posOffset = stride;
                 break;
             case GX_VA_NRM:
+                break;
             case GX_VA_TEX0:
                 break;
             }
-            stride += attrSize[pDesc->type];
+
+            stride += sizes[pDesc->type];
             pDesc++;
         }
+
         if (posOffset == -1) {
             continue;
         }
 
-        for (u16 j = 0; j < pShape->getMtxGroupNum(); j++) {
-            const u8* pBegin = pShape->getShapeDraw(j)->getDisplayList();
-            const u8* pCommand = pBegin;
-            while (pCommand - pBegin < pShape->getShapeDraw(j)->getDisplayListSize()) {
-                if (*pCommand == 0) {
+        for (u16 group = 0; group < pShape->getMtxGroupNum(); group++) {
+            u8* pStart = pShape->getShapeDraw(group)->getDisplayList();
+            u8* pRead = pStart;
+
+            while (u32(pRead - pStart) < pShape->getShapeDraw(group)->getDisplayListSize()) {
+                if (*pRead == 0) {
                     break;
                 }
-                u16 count = *reinterpret_cast< const u16* >(pCommand + 1);
-                for (s32 k = 0; k < count; k++) {
-                    u16 posIndex = *reinterpret_cast< const u16* >(pCommand + stride * k + posOffset + 3);
-                    mIndexArray[posIndex]._0 = 0xFFFF;
-                    mIndexArray[posIndex]._2 = 0xFFFF;
+
+                s32 count = *reinterpret_cast< u16* >(pRead + 1);
+
+                for (s32 i = 0; i < count; i++) {
+                    u16 pos = *reinterpret_cast< u16* >(pRead + stride * i + posOffset + 3);
+                    mIndexArray[pos]._0 = 0xFFFF;
+                    mIndexArray[pos]._2 = 0xFFFF;
                 }
-                pCommand += stride * count + 3;
+
+                pRead = pRead + stride * count + 3;
             }
         }
     }
@@ -277,42 +333,43 @@ void CShader::checkBorderVtx(J3DModelData* pModelData, u32 shapeIndex) {
 
 CShader::CLengthMap::CLengthMap(const ResTIMG* pTimg) {
     _0 = pTimg;
-    _4 = reinterpret_cast< const u8* >(pTimg) + 0x20;
+    _4 = reinterpret_cast< const u8* >(pTimg) + sizeof(ResTIMG);
     setLengthMap(pTimg);
 }
 
 void CShader::CLengthMap::setLengthMap(const ResTIMG* pTimg) {
-    if (pTimg == nullptr) {
-        _8 = true;
+    if (!pTimg) {
+        _8 = 1;
         return;
     }
+
     if (pTimg->mFormat != GX_TF_I8) {
-        _8 = true;
+        _8 = 1;
         return;
     }
+
     _0 = pTimg;
-    _4 = reinterpret_cast< const u8* >(pTimg) + 0x20;
-    _8 = false;
+    _4 = reinterpret_cast< const u8* >(pTimg) + sizeof(ResTIMG);
+    _8 = 0;
 }
 
-f32 CShader::CLengthMap::refer(f32 s, f32 t) const {
+f32 CShader::CLengthMap::refer(f32 u, f32 v) const {
     if (_8) {
         return 1.0f;
     }
+
     if (_0->mFormat != GX_TF_I8) {
         return 1.0f;
     }
-    s32 texelS = getTexelOrder(_0->mWidth, s, static_cast< GXTexWrapMode >(_0->mWrapS));
-    s32 texelT = getTexelOrder(_0->mHeight, t, static_cast< GXTexWrapMode >(_0->mWrapT));
-    u16 x = texelS;
-    u16 y = texelT;
-    u32 tile = (static_cast< u32 >(x) / 8) + (_0->mWidth / 8) * (static_cast< u32 >(y) / 4);
+
+    u16 x = getTexelOrder(_0->mWidth, u, static_cast< GXTexWrapMode >(_0->mWrapS));
+    u16 y = getTexelOrder(_0->mHeight, v, static_cast< GXTexWrapMode >(_0->mWrapT));
+    u32 tile = x / 8 + (_0->mWidth / 8) * (y / 4);
     const u8* pTile = _4 + tile * 32;
-    s32 offset = (x % 8) + (y % 4) * 8;
-    return pTile[offset] / 255.0f;
+    return f32(pTile[(x % 8) + (y % 4) * 8]) / 255.0f;
 }
 
-s32 CShader::CLengthMap::getTexelOrder(u16 a1, f32 a2, _GXTexWrapMode mode) const {
+u16 CShader::CLengthMap::getTexelOrder(u16 a1, f32 a2, _GXTexWrapMode mode) const {
     if (a2 > 1.0f) {
         switch (mode) {
         case GX_CLAMP:

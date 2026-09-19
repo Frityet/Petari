@@ -23,11 +23,7 @@ namespace MR {
         }
 
         /// @brief Destroys the `AssignableArray`.
-        ~AssignableArray() {
-            if (mArr != nullptr) {
-                delete[] mArr;
-            }
-        }
+        ~AssignableArray();
 
         /// @brief Returns the element at the given position.
         /// @param idx The position of the element.
@@ -193,13 +189,10 @@ namespace MR {
         typedef typename T::Item Item;
 
         /// @brief Creates a new `Vector`.
-        Vector() {
-            clear();
-        }
+        Vector();
 
         /// @brief Destroys the `Vector`.
-        ~Vector() {
-        }
+        ~Vector();
 
         /// @brief Returns the element at the given position.
         /// @param idx The position of the element.
@@ -235,11 +228,10 @@ namespace MR {
 
         /// @brief Appends a copy of `rItem` to the end of the container.
         /// @param rItem The reference to the value to append.
-        void push_back(const Item& rItem) {
-            u32 index = mCount;
+        void push_back(const Item& rItem);
 
-            mCount++;
-            mArray[index] = rItem;
+        void pop_back() {
+            mCount--;
         }
 
         /// @brief Removes the value at the given position from the container.
@@ -357,4 +349,28 @@ namespace MR {
         iterator mEnd;   // 0x4C for S=16
         s32 mCount;      // 0x58 for S=16
     };
+
+    template < class T >
+    AssignableArray< T >::~AssignableArray() {
+        if (mArr != nullptr) {
+            delete[] mArr;
+        }
+    }
+
+    template < class T >
+    Vector< T >::Vector() {
+        clear();
+    }
+
+    template < class T >
+    Vector< T >::~Vector() {
+    }
+
+    template < class T >
+    void Vector< T >::push_back(const Item& rItem) {
+        u32 index = mCount;
+
+        mCount++;
+        mArray[index] = rItem;
+    }
 };  // namespace MR

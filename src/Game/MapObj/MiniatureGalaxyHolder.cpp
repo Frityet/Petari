@@ -5,7 +5,6 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/StringUtil.hpp"
 
 namespace {
@@ -27,7 +26,7 @@ void MiniatureGalaxyHolder::registerActor(LiveActor* pActor, const JMapInfoIter&
     }
 
     MR::tryRegisterDemoCast(this, rIter);
-    MR::registerDemoActionFunctor(this, MR::Functor_Inline(this, &MiniatureGalaxyHolder::killAllMiniatureGalaxy), "飛び出す");
+    MR::registerDemoActionFunctor(this, MR::Functor(this, &MiniatureGalaxyHolder::killAllMiniatureGalaxy), "飛び出す");
 
     _90 = true;
 }

@@ -21,6 +21,7 @@ bool Mario::doFlipWeak(const TVec3f& rVec) {
             mSwim->mDamageType = 1;
             mFaint->mNoDamage = false;
         }
+
         return true;
     }
 
@@ -79,6 +80,7 @@ bool MarioFaint::update() {
         if (mTimer == mActor->getConst().getTable()->mFaintTimer1) {
             _16++;
         }
+
         break;
     case 1:
         if (!getPlayer()->getMovementStates()._1) {
@@ -93,7 +95,7 @@ bool MarioFaint::update() {
             return false;
         }
 
-        if (mTimer == mActor->getConst().getTable()->mFaintTimer1 + mActor->getConst().getTable()->mFaintTimer2) {
+        if (mTimer == mActor->mConst->getTable()->mFaintTimer1 + mActor->getConst().getTable()->mFaintTimer2) {
             return false;
         }
 
@@ -162,16 +164,3 @@ bool MarioFaint::close() {
 
     return true;
 }
-
-namespace NrvMarioActor {
-    INIT_NERVE(MarioActorNrvWait);
-    INIT_NERVE(MarioActorNrvGameOver);
-    INIT_NERVE(MarioActorNrvGameOverAbyss);
-    INIT_NERVE(MarioActorNrvGameOverAbyss2);
-    INIT_NERVE(MarioActorNrvGameOverFire);
-    INIT_NERVE(MarioActorNrvGameOverBlackHole);
-    INIT_NERVE(MarioActorNrvGameOverNonStop);
-    INIT_NERVE(MarioActorNrvGameOverSink);
-    INIT_NERVE(MarioActorNrvTimeWait);
-    INIT_NERVE(MarioActorNrvNoRush);
-};  // namespace NrvMarioActor

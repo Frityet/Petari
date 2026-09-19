@@ -33,11 +33,19 @@ namespace {
 };  // namespace
 
 namespace NrvRunawayRabbit {
-    NERVE_DECL_NULL(RunawayRabbitNrvNoActive);
+    class RunawayRabbitNrvNoActive : public Nerve {
+    public:
+        virtual void execute(Spine*) const {}
+        static RunawayRabbitNrvNoActive sInstance;
+    };
     NEW_NERVE(RunawayRabbitNrvHide, RunawayRabbit, Hide);
     NEW_NERVE(RunawayRabbitNrvAppear, RunawayRabbit, Appear);
     NEW_NERVE(RunawayRabbitNrvRunaway, RunawayRabbit, Runaway);
-    NERVE_DECL_NULL(RunawayRabbitNrvTryCaughtDemo);
+    class RunawayRabbitNrvTryCaughtDemo : public Nerve {
+    public:
+        virtual void execute(Spine*) const {}
+        static RunawayRabbitNrvTryCaughtDemo sInstance;
+    };
     NEW_NERVE(RunawayRabbitNrvCaught, RunawayRabbit, Caught);
     NEW_NERVE(RunawayRabbitNrvCaughtTalk, RunawayRabbit, CaughtTalk);
     NEW_NERVE(RunawayRabbitNrvCaughtEnd, RunawayRabbit, CaughtEnd);

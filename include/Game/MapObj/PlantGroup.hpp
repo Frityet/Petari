@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/MapObj/CutBushModelObj.hpp"
 
 class PlantMember;
@@ -8,16 +7,17 @@ class PlantMember;
 class PlantGroup : public LiveActor {
 public:
     PlantGroup(const char*);
+
     virtual ~PlantGroup();
     virtual void init(const JMapInfoIter&);
     virtual void initAfterPlacement();
     virtual void makeActorAppeared();
     virtual void makeActorDead();
+    virtual void startClipped();
+    virtual void endClipped();
     virtual void control();
     virtual void attackSensor(HitSensor*, HitSensor*);
     virtual bool receiveOtherMsg(u32, HitSensor*, HitSensor*);
-    virtual void startClipped();
-    virtual void endClipped();
 
     void initMember(s32, const JMapInfoIter&);
     s32 placeOnCollisionFormCircle(TVec3f*, const TVec3f&, const TVec3f&, const TVec3f&);
@@ -31,13 +31,14 @@ public:
     /* 0x9C */ TVec3f mHintPosition;
     /* 0xA8 */ TVec3f mHintRotation;
     /* 0xB4 */ s32 mHintTimer;
-    /* 0xB8 */ s32 mHintMember;
+    /* 0xB8 */ s32 mHintIndex;
 };
 
 class PlantMember : public CutBushModelObj {
 public:
-    PlantMember(const char* pName, const char* pModelName, bool useLight) : CutBushModelObj(pName, pModelName, useLight, nullptr) {
+    PlantMember(const char* pName, const char* pModelName, bool useLight, MtxPtr pMtx) : CutBushModelObj(pName, pModelName, useLight, pMtx) {
     }
+
     virtual ~PlantMember();
     virtual void init(const JMapInfoIter&);
 
@@ -55,7 +56,7 @@ public:
 
     /* 0x90 */ f32 _90;
     /* 0x94 */ f32 _94;
-    /* 0x98 */ s32 mPushType;
+    /* 0x98 */ s32 mTouchType;
     /* 0x9C */ bool _9C;
     /* 0x9D */ bool mHasItem;
 };

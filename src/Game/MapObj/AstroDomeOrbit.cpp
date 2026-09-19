@@ -4,7 +4,6 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/Color.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
@@ -29,11 +28,11 @@ AstroDomeOrbit::AstroDomeOrbit() : LiveActor("天文ドームの軌道"), mOrbit
 }
 
 void AstroDomeOrbit::init(const JMapInfoIter& rIter) {
-    MR::connectToScene(this, -1, -1, -1, MR::DrawType_AstroDomeOrbit);
+    MR::connectToScene(this, MR::MovementType_None, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_AstroDomeOrbit);
 
     MR::invalidateClipping(this);
 
-    MR::createAdaptorAndConnectToDrawBloomModel("天文ドーム軌道ブルーム描画", MR::Functor_InlineC(this, &AstroDomeOrbit::drawBloom));
+    MR::createAdaptorAndConnectToDrawBloomModel("天文ドーム軌道ブルーム描画", MR::Functor(this, &AstroDomeOrbit::drawBloom));
 
     makeActorDead();
 }

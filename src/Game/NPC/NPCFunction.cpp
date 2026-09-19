@@ -1,33 +1,38 @@
 #include "Game/NPC/NPCFunction.hpp"
+#include "Game/NPC/NPCActorItem.hpp"
 #include "Game/NPC/NPCDirector.hpp"
 #include "Game/NPC/NPCParameter.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/System/ResourceHolder.hpp"
+#include "Game/Util/JMapInfo.hpp"
 #include <cstdio>
 
-namespace NPCFunction {
-    void createNPCData() {
+void NPCFunction::createNPCData() {
+}
+
+void NPCFunction::deleteNPCData() {
+}
+
+bool NPCFunction::getNPCItemData(NPCActorItem* pItem, s32 idx) {
+    NPCDirector* pDirector = MR::getSceneObj< NPCDirector >(SceneObj_NPCDirector);
+
+    ResourceHolder* pHolder = pDirector->mDataResourceHolder;
+    NPCItemParameterReader* pItemReader = pDirector->mItemParameterReader;
+
+    char resName[256];
+    snprintf(resName, sizeof(resName), "%sItem.bcsv", pItem->mActor);
+
+    if (!pHolder->mFileInfoTable->isExistRes(resName)) {
+        return false;
     }
 
-    void deleteNPCData() {
-    }
+    pItemReader->copy(pItem);
 
-    bool getNPCItemData(NPCActorItem* pItem, s32 itemType) {
-        NPCDirector* pDirector = MR::getSceneObj< NPCDirector >(SceneObj_NPCDirector);
-        ResourceHolder* pResourceHolder = pDirector->mDataResourceHolder;
-        NPCItemParameterReader* pReader = pDirector->mItemParameterReader;
-        char name[256];
-        snprintf(name, sizeof(name), "%sItem.bcsv", pItem->mActor);
+    JMapInfo mapInfo = JMapInfo();
+    mapInfo.attach(pHolder->mFileInfoTable->getRes(resName));
 
-        if (!pResourceHolder->mFileInfoTable->isExistRes(name)) {
-            return false;
-        }
+    pItemReader->read(&mapInfo, idx);
+    *pItem = pItemReader->mItem;
 
-        pReader->copy(pItem);
-        JMapInfo info;
-        info.attach(pResourceHolder->mFileInfoTable->getRes(name));
-        pReader->read(&info, itemType);
-        *pItem = pReader->mItem;
-        return true;
-    }
-};  // namespace NPCFunction
+    return true;
+}

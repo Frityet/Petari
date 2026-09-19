@@ -15,7 +15,7 @@ public:
 
 class DemoWipeKeeper : public DemoSheetKeeperBase, public DemoSheetKeeperInfoHolder< DemoWipeInfo > {
 public:
-    DemoWipeKeeper(DemoExecutor*);
+    DemoWipeKeeper(DemoExecutor* pExecutor);
 
     virtual const char* getName() const {
         return "ワイプ";
@@ -28,5 +28,7 @@ public:
     virtual void start();
     virtual void update();
 
-    virtual void executeType(const DemoWipeInfo*);
+    void addInfo(const char* pPartName);
+
+    virtual void executeType(const DemoWipeInfo* pInfo);
 };

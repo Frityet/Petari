@@ -3,6 +3,7 @@
 #include "revolution/types.h"
 
 class NPCActorItem;
+
 namespace NPCFunction {
     void createNPCData();
     void deleteNPCData();

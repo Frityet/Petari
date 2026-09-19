@@ -8,7 +8,6 @@
 #include "Game/Screen/ScreenAlphaCapture.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/Color.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
@@ -28,7 +27,7 @@ namespace {
 
 FallOutFieldDraw::FallOutFieldDraw(const char* pName) : NameObj(pName), _C() {
     MR::createClipAreaHolder();
-    MR::connectToScene(this, -1, -1, -1, MR::DrawType_FallOutFieldDraw);
+    MR::connectToScene(this, MR::MovementType_None, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_FallOutFieldDraw);
     MR::createScreenAlphaSceneObj(2, 0.5f);
     MR::createScreenAlphaSceneObj(3, 0.25f);
     MR::createScreenAlphaSceneObj(4, 0.25f);

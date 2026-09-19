@@ -16,20 +16,20 @@ void ImageEffectAreaMgr::sort() {
     }
 
     for (u32 i = 0; i < mArray.size() - 1; i++) {
-        int swapIndex = i;
-        AreaObj* swapObj = getAreaObj(i);
-        AreaObj* curObj = swapObj;
+        AreaObj* pOriginal = getAreaObj(i);
+        u32 selected = i;
+        AreaObj* pSelected = pOriginal;
         for (u32 j = i + 1; j < mArray.size(); j++) {
-            AreaObj* nextObj = getAreaObj(j);
-            if (swapObj->mObjArg7 > nextObj->mObjArg7) {
-                swapIndex = j;
-                swapObj = nextObj;
+            AreaObj* pCandidate = getAreaObj(j);
+            if (pSelected->mObjArg7 > pCandidate->mObjArg7) {
+                selected = j;
+                pSelected = pCandidate;
             }
         }
 
-        if (swapIndex != i) {
-            mArray[i] = swapObj;
-            mArray[swapIndex] = curObj;
+        if (selected != i) {
+            mArray[i] = pSelected;
+            mArray[selected] = pOriginal;
         }
     }
 }

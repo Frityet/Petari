@@ -6,7 +6,6 @@
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
@@ -92,7 +91,7 @@ void PunchBox::init(const JMapInfoIter& rIter) {
     MR::addToAttributeGroupSearchTurtle(this);
 
     if (MR::useStageSwitchReadA(this, rIter)) {
-        MR::listenStageSwitchOnA(this, MR::Functor_Inline(this, &PunchBox::kill));
+        MR::listenStageSwitchOnA(this, MR::Functor(this, &PunchBox::kill));
     }
 
     getSensor("body")->invalidate();

@@ -28,7 +28,7 @@ namespace NrvGameSystemResetAndPowerProcess {
 };  // namespace NrvGameSystemResetAndPowerProcess
 
 void GameSystemResetAndPowerProcess::init(const JMapInfoIter& rIter) {
-    initNerve(&NrvGameSystemResetAndPowerProcess::GameSystemResetAndPowerProcessPolling::sInstance);
+    initNerve(GET_NERVE(GameSystemResetAndPowerProcess, GameSystemResetAndPowerProcessPolling));
     OSSetPowerCallback(GameSystemResetAndPowerProcess::handleOSPowerCallback);
     appear();
 }
@@ -55,7 +55,7 @@ void GameSystemResetAndPowerProcess::draw() const {
 }
 
 bool GameSystemResetAndPowerProcess::isActive() const {
-    return !isNerve(&NrvGameSystemResetAndPowerProcess::GameSystemResetAndPowerProcessPolling::sInstance);
+    return !isNerve(GET_NERVE(GameSystemResetAndPowerProcess, GameSystemResetAndPowerProcessPolling));
 }
 
 void GameSystemResetAndPowerProcess::setResetOperationApplicationReset() {
@@ -70,7 +70,7 @@ void GameSystemResetAndPowerProcess::requestReset(bool param1) {
     if (tryPermitReset()) {
         _5E = param1;
 
-        setNerve(&NrvGameSystemResetAndPowerProcess::GameSystemResetAndPowerProcessWaitResetPermitted::sInstance);
+        setNerve(GET_NERVE(GameSystemResetAndPowerProcess, GameSystemResetAndPowerProcessWaitResetPermitted));
     }
 }
 
@@ -78,7 +78,7 @@ void GameSystemResetAndPowerProcess::requestGoWiiMenu(bool param1) {
     if (tryPermitReset()) {
         _5E = param1;
         setResetOperationReturnToMenu();
-        setNerve(&NrvGameSystemResetAndPowerProcess::GameSystemResetAndPowerProcessWaitResetPermitted::sInstance);
+        setNerve(GET_NERVE(GameSystemResetAndPowerProcess, GameSystemResetAndPowerProcessWaitResetPermitted));
     }
 }
 
@@ -96,9 +96,9 @@ void GameSystemResetAndPowerProcess::notifyCheckDiskResult(bool param1) {
 
 void GameSystemResetAndPowerProcess::exePolling() {
     if (tryAcceptPowerOff()) {
-        setNerve(&NrvGameSystemResetAndPowerProcess::GameSystemResetAndPowerProcessWaitResetPermitted::sInstance);
+        setNerve(GET_NERVE(GameSystemResetAndPowerProcess, GameSystemResetAndPowerProcessWaitResetPermitted));
     } else if (mResetTriggerChecker->getOnTrigger()) {
-        setNerve(&NrvGameSystemResetAndPowerProcess::GameSystemResetAndPowerProcessWaitResetPermitted::sInstance);
+        setNerve(GET_NERVE(GameSystemResetAndPowerProcess, GameSystemResetAndPowerProcessWaitResetPermitted));
     }
 }
 
@@ -113,7 +113,7 @@ void GameSystemResetAndPowerProcess::exeWaitResetPermitted() {
         _5E = false;
 
         GameSystemFunction::activateScreenPreserver();
-        setNerve(&NrvGameSystemResetAndPowerProcess::GameSystemResetAndPowerProcessPrepareReset::sInstance);
+        setNerve(GET_NERVE(GameSystemResetAndPowerProcess, GameSystemResetAndPowerProcessPrepareReset));
     }
 }
 
@@ -147,7 +147,7 @@ void GameSystemResetAndPowerProcess::exePrepareReset() {
 
     if (b) {
         GameSequenceFunction::resetNWC24();
-        setNerve(&NrvGameSystemResetAndPowerProcess::GameSystemResetAndPowerProcessReset::sInstance);
+        setNerve(GET_NERVE(GameSystemResetAndPowerProcess, GameSystemResetAndPowerProcessReset));
     }
 }
 
@@ -166,7 +166,7 @@ void GameSystemResetAndPowerProcess::exeReset() {
         }
     }
 
-    MR::setNerveAtStep(this, &NrvGameSystemResetAndPowerProcess::GameSystemResetAndPowerProcessWaitPrepareFadein::sInstance, ::sResetWaitFrame);
+    MR::setNerveAtStep(this, GET_NERVE(GameSystemResetAndPowerProcess, GameSystemResetAndPowerProcessWaitPrepareFadein), ::sResetWaitFrame);
 }
 
 void GameSystemResetAndPowerProcess::exeWaitPrepareFadein() {
@@ -177,7 +177,7 @@ void GameSystemResetAndPowerProcess::exeWaitPrepareFadein() {
     }
 
     if (GameSystemFunction::isPreparedFadeinSystem()) {
-        setNerve(&NrvGameSystemResetAndPowerProcess::GameSystemResetAndPowerProcessFadein::sInstance);
+        setNerve(GET_NERVE(GameSystemResetAndPowerProcess, GameSystemResetAndPowerProcessFadein));
     }
 }
 
@@ -189,7 +189,7 @@ void GameSystemResetAndPowerProcess::exeFadein() {
     if (tryAcceptPowerOff()) {
         GameSystemFunction::restartControllerLeaveWatcher();
         GameSystemFunction::restartSceneController();
-        setNerve(&NrvGameSystemResetAndPowerProcess::GameSystemResetAndPowerProcessWaitResetPermitted::sInstance);
+        setNerve(GET_NERVE(GameSystemResetAndPowerProcess, GameSystemResetAndPowerProcessWaitResetPermitted));
     } else {
         if (MR::isFirstStep(this)) {
             mFadeinoutControl->setDirToOneResetFrame();
@@ -198,7 +198,7 @@ void GameSystemResetAndPowerProcess::exeFadein() {
         if (mFadeinoutControl->mFrame == mFadeinoutControl->mMaxFrame) {
             GameSystemFunction::restartControllerLeaveWatcher();
             GameSystemFunction::restartSceneController();
-            setNerve(&NrvGameSystemResetAndPowerProcess::GameSystemResetAndPowerProcessPolling::sInstance);
+            setNerve(GET_NERVE(GameSystemResetAndPowerProcess, GameSystemResetAndPowerProcessPolling));
         }
     }
 }

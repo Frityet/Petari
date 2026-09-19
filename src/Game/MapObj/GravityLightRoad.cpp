@@ -4,7 +4,6 @@
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ModelUtil.hpp"
@@ -66,7 +65,7 @@ void GravityLightRoad::init(const JMapInfoIter& rIter) {
     MR::useStageSwitchReadA(this, rIter);
 
     if (MR::isValidSwitchA(this)) {
-        MR::listenStageSwitchOnA(this, MR::Functor_Inline(this, &GravityLightRoad::startDisappear));
+        MR::listenStageSwitchOnA(this, MR::Functor(this, &GravityLightRoad::startDisappear));
     }
 
     MR::startAllAnim(this, "GravityLightRoad");

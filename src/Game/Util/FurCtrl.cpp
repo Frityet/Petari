@@ -1,38 +1,76 @@
 #include "Game/Util/FurCtrl.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
-#include "Game/Util/FurMulti.hpp"
-#include "Game/Util/FurParam.hpp"
 #include "Game/Util/FurDrawer.hpp"
+#include "Game/Util/FurMulti.hpp"
 #include "Game/Util/FurShader.hpp"
-#include "Game/Util.hpp"
-#include <JSystem/J3DGraphAnimator/J3DModel.hpp>
-#include <JSystem/J3DGraphBase/J3DShape.hpp>
-#include <JSystem/JKernel/JKRHeap.hpp>
+#include "Game/Util/LightUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ModelUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SceneUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
+#include "JSystem/J3DGraphAnimator/J3DModel.hpp"
+#include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
+#include "JSystem/J3DGraphBase/J3DShape.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include <cmath>
 #include <cstdio>
 #include <cstring>
 
-FurMulti* FurBank::check(J3DModelData* pModelData, u32 layer) {
-    for (u32 i = 0; i < mCount; i++) {
-        if (mFurMulti[i]->mModel->getModelData() == pModelData && (mLayerMask[i] & (1 << layer))) {
-            return mFurMulti[i];
+class J3DModel2 : public J3DModel {
+public:
+    J3DModel2(J3DModel* pModel);
+
+    virtual ~J3DModel2() {
+    }
+
+    void setVtxShader(J3DVtxShader* pShader, s32 componentSize) {
+        mUnkCalc1 = pShader;
+
+        if (pShader) {
+            mUnkCalc1->setup(getModelData());
+
+            if (!mVertexBuffer.mTransformedVtxPosArray[0] || !mVertexBuffer.mTransformedVtxPosArray[1]) {
+                u32 size = (componentSize * 3 * getVertexBuffer()->getVertexData()->getVtxNum() + 31) & ~31;
+                mVertexBuffer.mTransformedVtxPosArray[0] = new (32) u8[size];
+
+                if (mVertexBuffer.mTransformedVtxPosArray[0]) {
+                    mVertexBuffer.mTransformedVtxPosArray[1] = mVertexBuffer.mTransformedVtxPosArray[0];
+                }
+            }
+
+            for (s32 j = 0; j < 2; j++) {
+                memcpy(mVertexBuffer.mTransformedVtxPosArray[j], getVertexBuffer()->getVertexData()->getVtxPosArray(),
+                       componentSize * getVertexBuffer()->getVertexData()->getVtxNum() * 3);
+                DCStoreRange(mVertexBuffer.mTransformedVtxPosArray[j], componentSize * 3 * getVertexBuffer()->getVertexData()->getVtxNum());
+            }
         }
     }
+};
+
+FurMulti* FurBank::check(J3DModelData* pModelData, u32 layer) {
+    for (u32 i = 0; i < mCount; i++) {
+        if (mEntries[i]->mModel->getModelData() == pModelData && ((1 << layer) & mLayerMasks[i])) {
+            return mEntries[i];
+        }
+    }
+
     return nullptr;
 }
 
-void FurDrawManager::add(FurCtrl* pCtrl, u8 idx) {
-    if (mCapacity != mNumFurCtrls[idx]) {
-        mFurCtrls[idx][mNumFurCtrls[idx]] = pCtrl;
-        mNumFurCtrls[idx]++;
+void FurDrawManager::add(FurCtrl* pCtrl, u8 index) {
+    if (mCapacity != mCounts[index]) {
+        mFurCtrls[index][mCounts[index]] = pCtrl;
+        mCounts[index]++;
     }
 }
 
 void FurDrawManager::draw() const {
-    for (u32 i = 0; i < mNumFurCtrls[1]; i++) {
-        if (!MR::isClipped(mFurCtrls[1][i]->_0) && !MR::isDead(mFurCtrls[1][i]->_0) && !MR::isHiddenModel(mFurCtrls[1][i]->_0)) {
-            if (mFurCtrls[1][i]->_1C == 1) {
+    for (u32 i = 0; i < mCounts[1]; i++) {
+        if (!MR::isClipped(mFurCtrls[1][i]->mActor) && !MR::isDead(mFurCtrls[1][i]->mActor) && !MR::isHiddenModel(mFurCtrls[1][i]->mActor)) {
+            if (mFurCtrls[1][i]->mVisible == 1) {
                 mFurCtrls[1][i]->drawFur();
             }
         }
@@ -41,76 +79,288 @@ void FurDrawManager::draw() const {
     GXSetClipMode(GX_CLIP_ENABLE);
 }
 
-FurCtrl::FurCtrl(LiveActor* pActor, FurParam* pParam, bool add, u8 idx) : _18(pParam), _1C(0), _20(1.0f) {
-    if (add) {
-        MR::getSceneObj< FurDrawManager >(SceneObj_FurDrawManager)->add(this, idx);
+FurCtrl::FurCtrl(LiveActor* pActor, FurParam* pParam, bool addToManager, u8 drawOrder) : mParam(pParam), mVisible(), mFurUVScale(1.0f) {
+    if (addToManager) {
+        MR::getFurDrawManager()->add(this, drawOrder);
     }
-    _0 = pActor;
-    _10 = nullptr;
-    _14 = 0xFFFF;
-    _24 = 0;
-    _28 = nullptr;
-    _2C = nullptr;
-    _30 = nullptr;
-    _34 = nullptr;
-    _38 = nullptr;
-    _3C = nullptr;
-    _C = 0;
+
+    mActor = pActor;
+    mModel = nullptr;
+    mShapeIndex = -1;
+    mNumLayers = 0;
+    mDrawer = nullptr;
+    mShader = nullptr;
+    mLayerModels = nullptr;
+    mLengthMap = nullptr;
+    mBodyMap = nullptr;
+    mIndirectMap = nullptr;
+    mIsClone = 0;
     mDynamicParam.mFogCtrl = nullptr;
     mDynamicParam.mLightParam = nullptr;
 }
 
-namespace MR {
-    FurDrawManager* getFurDrawManager() {
-        return getSceneObj< FurDrawManager >(SceneObj_FurDrawManager);
+void FurCtrl::calcLayerForm() {
+    mDrawer->mFurUVScale = mParam->mFurUVScale;
+    mDrawer->mBodyUVScale = mParam->mBodyUVScale;
+    mDrawer->mLength.mTip = mParam->mLength;
+    mDrawer->mLength.mRoot = 0.0f;
+    mDrawer->mLength.mCurve = mParam->mLengthCurve;
+    mDrawer->mNumLayers = mParam->mNumLayers;
+
+    if (mDrawer->mNumLayers > mNumLayers) {
+        mDrawer->mNumLayers = mNumLayers;
+    }
+
+    for (s32 i = 0; i < mDrawer->mNumLayers; i++) {
+        f32 length = mDrawer->mLength.calcValue(i, mDrawer->mNumLayers);
+        mShader->_8 = pow(1.0f * i / mDrawer->mNumLayers, 4.0);
+        mLayerModels[i]->mVertexBuffer.frameInit();
+        mShader->_1C = length;
+        mShader->calc(mLayerModels[i]);
     }
 }
 
+void FurCtrl::drawFur() {
+    J3DModelData* pModelData = mModel->getModelData();
+
+    if (MR::getJ3DModel(mActor)->getShapePacket(mShapeIndex)->checkFlag(0x10)) {
+        return;
+    }
+
+    if (pModelData->getShapeNodePointer(mShapeIndex)->checkFlag(1)) {
+        return;
+    }
+
+    if (mDynamicParam.mLightParam->mLightType == -1) {
+        if (MR::getLightCtrl(mActor)) {
+            MR::loadActorLight(mActor);
+        }
+    } else {
+        MR::loadLight(mDynamicParam.mLightParam->mLightType);
+    }
+
+    mDrawer->mFurUVScale = mParam->mFurUVScale * mFurUVScale;
+    mDrawer->mBodyUVScale = mParam->mBodyUVScale;
+    mDrawer->mColor = mParam->mColor;
+    mDrawer->mIndirect.mTip = mParam->mIndirect;
+    mDrawer->mIndirect.mRoot = 0.0f;
+    mDrawer->mIndirect.mCurve = mParam->mIndirectCurve;
+    mDrawer->mBrightness.mTip = mParam->mBrightnessTip;
+    mDrawer->mBrightness.mRoot = mParam->mBrightnessRoot;
+    mDrawer->mBrightness.mCurve = mParam->mBrightnessCurve;
+    mDrawer->mAlpha.mTip = mParam->mAlphaTip;
+    mDrawer->mAlpha.mRoot = mParam->mAlphaRoot;
+    mDrawer->mAlpha.mCurve = mParam->mAlphaCurve;
+    mDrawer->mColorBlend.mTip = mParam->mSkinAlphaTip;
+    mDrawer->mColorBlend.mRoot = mParam->mSkinAlphaRoot;
+    mDrawer->mColorBlend.mCurve = mParam->mSkinAlphaCurve;
+    mDrawer->update();
+    mDrawer->setupMaterial(&mDynamicParam);
+
+    if (mDrawer->mMixFog) {
+        mDrawer->mMixFog--;
+    }
+
+    J3DShape* pShape = pModelData->getShapeNodePointer(mShapeIndex);
+    pShape->mCurrentMtx.mMtxIdxRegA = 0x3C921780;
+    pShape->mCurrentMtx.mMtxIdxRegB = 0x00F3CF3C;
+    J3DShape::sOldVcdVatCmd = nullptr;
+    J3DShapePacket* pPacket;
+
+    for (s32 i = 0; i < mDrawer->mNumLayers; i++) {
+        mDrawer->setupLayerMaterial(i);
+        pPacket = &mLayerModels[i]->mShapePacket[mShapeIndex];
+        pPacket->setModel(mLayerModels[i]);
+        pPacket->prepareDraw();
+        pPacket->getShape()->drawFast();
+    }
+
+    mModel->mShapePacket[mShapeIndex].setModel(mModel);
+    GXColor fogColor = {0, 0, 0, 0};
+    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, fogColor);
+    J3DShape::sOldVcdVatCmd = nullptr;
+    GXSetClipMode(GX_CLIP_ENABLE);
+}
+
+void FurCtrl::createFurMap() {
+    if (mIsClone) {
+        return;
+    }
+
+    for (u32 i = 0; i < 4; i++) {
+        mDrawer->mDensity[i] = mParam->mDensity[i];
+        mDrawer->mThickness[i] = mParam->mThickness[i];
+        mDrawer->mLengthMap[i] = mParam->mLengthMap[i];
+    }
+
+    mDrawer->createFurMap();
+}
+
+namespace MR {
+    FurDrawManager* getFurDrawManager() {
+        return static_cast< FurDrawManager* >(getSceneObjHolder()->getObj(SceneObj_FurDrawManager));
+    }
+}  // namespace MR
+
 FurDrawManager::FurDrawManager(u8 capacity) : NameObj("ファー描画マネージャ") {
-    mNumFurCtrls[0] = 0;
-    mNumFurCtrls[1] = 0;
+    mCounts[0] = 0;
+    mCounts[1] = 0;
     mFurCtrls[0] = new FurCtrl*[capacity];
     mFurCtrls[1] = new FurCtrl*[capacity];
     mCapacity = capacity;
     mBank = new FurBank;
-    MR::connectToScene(this, -1, -1, -1, 49);
+    MR::connectToScene(this, MR::MovementType_None, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_Fur);
 }
 
-FurDrawManager::~FurDrawManager() {
+void FurCtrl::setupFur(J3DModel* pModel, ResTIMG* pLength, ResTIMG* pIndirect, ResTIMG* pBody, u16 shape, u8 numLayers) {
+    J3DModelData* pData = pModel->getModelData();
+    mModel = pModel;
+    mLengthMap = pLength;
+    mBodyMap = pBody;
+    mIndirectMap = pIndirect;
+    mShapeIndex = shape;
+    mShader = new CShader(pData, pLength);
+    mShader->makeIndexData(pData->getShapeNodePointer(shape));
+    mShader->checkBorderVtx(pData, shape);
+    mDrawer = new FurDrawer(numLayers, pBody, pIndirect);
+    s32 componentSize;
+
+    switch (mShader->_24) {
+    case GX_S16:
+        componentSize = sizeof(s16);
+        break;
+    case GX_F32:
+        componentSize = sizeof(f32);
+        break;
+    }
+
+    mNumLayers = numLayers;
+    mLayerModels = new J3DModel*[numLayers];
+
+    for (s32 i = 0; i < mNumLayers; i++) {
+        char name[16];
+        sprintf(name, "レイヤ %d", i);
+        J3DModel2* pLayer = new J3DModel2(mModel);
+        pLayer->setVtxShader(mShader, componentSize);
+        mLayerModels[i] = pLayer;
+    }
+
+    mVisible = 1;
 }
 
-void FurCtrl::calcLayerForm() {
-    _28->mFurScale = _18->_38;
-    _28->mBaseScale = _18->_3C;
-    _28->mLength.mEnd = _18->_4;
-    _28->mLength.mStart = 0.0f;
-    _28->mLength.mExponent = _18->_8;
-    _28->mLayerCount = _18->mLayerCount;
-    if (static_cast< s32 >(_28->mLayerCount) > _24) {
-        _28->mLayerCount = _24;
+void FurCtrl::setupFurClone(J3DModel* pModel, FurCtrl* pOther) {
+    mModel = pModel;
+    mIsClone = 1;
+    mLengthMap = pOther->mLengthMap;
+    mBodyMap = pOther->mBodyMap;
+    mIndirectMap = pOther->mIndirectMap;
+    mShapeIndex = pOther->mShapeIndex;
+    mShader = nullptr;
+    mDrawer = pOther->mDrawer;
+    mNumLayers = pOther->mNumLayers;
+    mLayerModels = new J3DModel*[mNumLayers];
+
+    for (u32 i = 0; i < mNumLayers; i++) {
+        char name[32];
+        sprintf(name, "レイヤ(コピー) %d", i);
+        J3DModel2* pLayer = new J3DModel2(mModel);
+        *pLayer->getVertexBuffer() = *pOther->mLayerModels[i]->getVertexBuffer();
+        mLayerModels[i] = pLayer;
     }
-    for (s32 i = 0; i < static_cast< s32 >(_28->mLayerCount); i++) {
-        f32 length = _28->mLength.calcValue(i, _28->mLayerCount);
-        _2C->_8 = pow(1.0f * i / static_cast< s32 >(_28->mLayerCount), 4.0);
-        _30[i]->getVertexBuffer()->frameInit();
-        _2C->_1C = length;
-        _2C->calc(_30[i]);
-    }
+
+    mVisible = 1;
 }
 
-void FurCtrl::createFurMap() {
-    if (_C != 0) {
-        return;
-    }
-    for (u32 i = 0; i < 4; i++) {
-        _28->mDensity[i] = _18->_44[i];
-        _28->mIntensity[i] = _18->_54[i];
-        _28->mTransparency[i] = reinterpret_cast< u8* >(&_18->_64)[i];
-    }
-    _28->createFurMap();
-}
+namespace MR {
+    void initFurParamFromDvd(FurParam* pParam, DynamicFurParam* pDynamic, char* pText, u32 size) {
+        char line[256];
+        FurLightParam* pLight = pDynamic->mLightParam;
+        s32 lightMask = 0;
+        s32 matIntensity = 0;
+        s32 ambIntensity = 0;
+        s32 specularLightMask = 0;
+        s32 specularMatIntensity = 0;
+        s32 specularAmbIntensity = 0;
+        s32 colorSource = 0;
+        char* pRead = pText;
+        u32 position = 0;
 
-J3DModel2::J3DModel2(J3DModel* pModel) : J3DModel() {
+        while (true) {
+            if (position >= size) {
+                break;
+            }
+
+            u32 length = 0;
+
+            while (true) {
+                if (*pRead == '\n' || *pRead == '\r') {
+                    break;
+                }
+
+                position++;
+                line[length] = *pRead;
+                length++;
+                pRead++;
+
+                if (position >= size) {
+                    break;
+                }
+            }
+
+            line[length] = '\0';
+
+            while (true) {
+                if (position >= size) {
+                    break;
+                }
+
+                if (*pRead != '\n' && *pRead != '\r') {
+                    break;
+                }
+
+                pRead++;
+                position++;
+            }
+
+            scan32(line, "レイヤ数", &pParam->mNumLayers);
+            scanf32(line, "毛長さ", &pParam->mLength);
+            scanf32(line, "長さ偏差", &pParam->mLengthCurve);
+            scanf32(line, "ズレ(indirect)", &pParam->mIndirect);
+            scanf32(line, "ズレ偏差", &pParam->mIndirectCurve);
+            scanf32(line, "明るさ(毛先)", &pParam->mBrightnessTip);
+            scanf32(line, "明るさ(毛元)", &pParam->mBrightnessRoot);
+            scanf32(line, "明るさ偏差", &pParam->mBrightnessCurve);
+            scanf32(line, "透明度(毛先)", &pParam->mAlphaTip);
+            scanf32(line, "透明度(毛元)", &pParam->mAlphaRoot);
+            scanf32(line, "透明度偏差", &pParam->mAlphaCurve);
+            scanf32(line, "透明度・地肌(毛先)", &pParam->mSkinAlphaTip);
+            scanf32(line, "透明度・地肌(毛元)", &pParam->mSkinAlphaRoot);
+            scanf32(line, "透明度・地肌偏差", &pParam->mSkinAlphaCurve);
+            scanf32(line, "密度マップスケール", &pParam->mFurUVScale);
+            scanf32(line, "ベースマップスケール", &pParam->mBodyUVScale);
+            scanu8x4(line, "混合カラー", &pParam->mColor.r);
+            scanf32x4(line, "植毛密度", pParam->mDensity);
+            scanf32x4(line, "植毛太さ", pParam->mThickness);
+            scanu8x4(line, "混合比", pParam->mLengthMap);
+            scan32(line, "ライト0スイッチ", &lightMask);
+            scan32(line, "ライト0マテリアル", &matIntensity);
+            scan32(line, "ライト0アンビエント", &ambIntensity);
+            scan32(line, "ライト1スイッチ", &specularLightMask);
+            scan32(line, "ライト1マテリアル", &specularMatIntensity);
+            scan32(line, "ライト1アンビエント", &specularAmbIntensity);
+            scan32(line, "ライトカラーソース", &colorSource);
+            pLight->mLightMask = lightMask;
+            pLight->mMatIntensity = matIntensity;
+            pLight->mAmbIntensity = ambIntensity;
+            pLight->mSpecularLightMask = specularLightMask;
+            pLight->mSpecularMatIntensity = specularMatIntensity;
+            pLight->mSpecularAmbIntensity = specularAmbIntensity;
+            pLight->mColorSource = colorSource;
+        }
+    }
+}  // namespace MR
+
+J3DModel2::J3DModel2(J3DModel* pModel) {
     mModelData = pModel->mModelData;
     mMtxBuffer = pModel->mMtxBuffer;
     mShapePacket = pModel->mShapePacket;
@@ -119,212 +369,5 @@ J3DModel2::J3DModel2(J3DModel* pModel) : J3DModel() {
     mFlags |= J3DMdlFlag_UseDefaultJ3D;
 }
 
-J3DModel2::~J3DModel2() {
-}
-
-void FurCtrl::setupFur(J3DModel* pModel, ResTIMG* pLength, ResTIMG* pIndirect, ResTIMG* pBody, u16 shapeIndex, u8 count) {
-    J3DModelData* modelData = pModel->getModelData();
-    _10 = pModel;
-    _34 = pLength;
-    _38 = pBody;
-    _3C = pIndirect;
-    _14 = shapeIndex;
-    _2C = new CShader(modelData, pLength);
-    _2C->makeIndexData(modelData->getShapeNodePointer(shapeIndex));
-    _2C->checkBorderVtx(modelData, shapeIndex);
-    _28 = new FurDrawer(count, pBody, pIndirect);
-    u32 componentSize;
-    switch (_2C->_24) {
-    case GX_S16:
-        componentSize = 2;
-        break;
-    case GX_F32:
-        componentSize = 4;
-        break;
-    }
-    _24 = count;
-    _30 = new J3DModel*[count];
-    for (s32 i = 0; i < _24; i++) {
-        char name[32];
-        sprintf(name, "レイヤ %d", i);
-        J3DModel2* model = new J3DModel2(_10);
-        model->mUnkCalc1 = _2C;
-        if (model->mUnkCalc1 != nullptr) {
-            model->mUnkCalc1->setup(model->getModelData());
-            J3DVertexBuffer* buffer = model->getVertexBuffer();
-            if (buffer->mTransformedVtxPosArray[0] == nullptr || buffer->mTransformedVtxPosArray[1] == nullptr) {
-                void* positions = new (32) u8[(componentSize * 3 * buffer->mVtxData->mVtxNum + 31) & ~31];
-                buffer->mTransformedVtxPosArray[0] = positions;
-                if (positions != nullptr) {
-                    buffer->mTransformedVtxPosArray[1] = positions;
-                }
-            }
-            for (s32 j = 0; j < 2; j++) {
-                memcpy(buffer->mTransformedVtxPosArray[j], buffer->mVtxData->mVtxPosArray, componentSize * buffer->mVtxData->mVtxNum * 3);
-                DCStoreRange(buffer->mTransformedVtxPosArray[j], componentSize * 3 * buffer->mVtxData->mVtxNum);
-            }
-        }
-        _30[i] = model;
-    }
-    _1C = 1;
-}
-
-void FurCtrl::setupFurClone(J3DModel* pModel, FurCtrl* pOriginal) {
-    _10 = pModel;
-    _C = 1;
-    _34 = pOriginal->_34;
-    _38 = pOriginal->_38;
-    _3C = pOriginal->_3C;
-    _14 = pOriginal->_14;
-    _2C = nullptr;
-    _28 = pOriginal->_28;
-    _24 = pOriginal->_24;
-    _30 = new J3DModel*[_24];
-    for (u32 i = 0; i < _24; i++) {
-        char name[32];
-        sprintf(name, "レイヤ(コピー) %d", i);
-        J3DModel2* model = new J3DModel2(_10);
-        J3DVertexBuffer& destination = model->mVertexBuffer;
-        const J3DVertexBuffer& source = pOriginal->_30[i]->mVertexBuffer;
-        destination.mVtxData = source.mVtxData;
-        for (u32 j = 0; j < 2; j++) {
-            destination.mVtxPosArray[j] = source.mVtxPosArray[j];
-            destination.mVtxNrmArray[j] = source.mVtxNrmArray[j];
-            destination.mVtxColArray[j] = source.mVtxColArray[j];
-            destination.mTransformedVtxPosArray[j] = source.mTransformedVtxPosArray[j];
-            destination.mTransformedVtxNrmArray[j] = source.mTransformedVtxNrmArray[j];
-        }
-        destination.mCurrentVtxPos = source.mCurrentVtxPos;
-        destination.mCurrentVtxNrm = source.mCurrentVtxNrm;
-        destination.mCurrentVtxCol = source.mCurrentVtxCol;
-        _30[i] = model;
-    }
-    _1C = 1;
-}
-
-void FurCtrl::drawFur() {
-    J3DModelData* modelData = _10->getModelData();
-    u16 shapeIndex = _14;
-    if (MR::getJ3DModel(_0)->getShapePacket(shapeIndex)->checkFlag(0x10)) {
-        return;
-    }
-    if (modelData->getShapeNodePointer(_14)->checkFlag(1)) {
-        return;
-    }
-    if (mDynamicParam.mLightParam->mLightType == -1) {
-        if (MR::getLightCtrl(_0) != nullptr) {
-            MR::loadActorLight(_0);
-        }
-    } else {
-        MR::loadLight(mDynamicParam.mLightParam->mLightType);
-    }
-    _28->mFurScale = _18->_38 * _20;
-    _28->mBaseScale = _18->_3C;
-    _28->mColor = _18->_40;
-    _28->mIndirect.mEnd = _18->_C;
-    _28->mIndirect.mStart = 0.0f;
-    _28->mIndirect.mExponent = _18->_10;
-    _28->mBrightness.mEnd = _18->_14;
-    _28->mBrightness.mStart = _18->_18;
-    _28->mBrightness.mExponent = _18->_1C;
-    _28->mAlpha.mEnd = _18->_20;
-    _28->mAlpha.mStart = _18->_24;
-    _28->mAlpha.mExponent = _18->_28;
-    _28->mOffset.mEnd = _18->_2C;
-    _28->mOffset.mStart = _18->_30;
-    _28->mOffset.mExponent = _18->_34;
-    _28->update();
-    _28->setupMaterial(&mDynamicParam);
-    if (_28->mMixFog != 0) {
-        _28->mMixFog--;
-    }
-    modelData->getShapeNodePointer(_14)->mCurrentMtx.setCurrentTexMtx(
-        GX_TEXMTX0, GX_TEXMTX1, GX_TEXMTX2, GX_IDENTITY, GX_IDENTITY, GX_IDENTITY, GX_IDENTITY, GX_IDENTITY);
-    J3DShape::resetVcdVatCache();
-    for (s32 i = 0; i < static_cast< s32 >(_28->mLayerCount); i++) {
-        _28->setupLayerMaterial(i);
-        J3DModel* model = _30[i];
-        J3DShapePacket* packet = model->getShapePacket(_14);
-        packet->setModel(model);
-        packet->prepareDraw();
-        packet->getShape()->draw();
-    }
-    _10->getShapePacket(_14)->setModel(_10);
-    GXColor color = {0, 0, 0, 0};
-    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, color);
-    J3DShape::resetVcdVatCache();
-    GXSetClipMode(GX_CLIP_DISABLE);
-}
-
-namespace MR {
-    void initFurParamFromDvd(FurParam* pParam, DynamicFurParam* pDynamic, char* pData, u32 size) {
-        FurLightParam* light = pDynamic->mLightParam;
-        s32 light0Enabled = 0;
-        s32 light0Material = 0;
-        s32 light0Ambient = 0;
-        s32 light1Enabled = 0;
-        s32 light1Material = 0;
-        s32 light1Ambient = 0;
-        s32 lightColorSource = 0;
-        u32 offset = 0;
-        while (offset < size) {
-            char line[256];
-            u32 length = 0;
-            while (true) {
-                char character = *pData;
-                if (character == '\n' || character == '\r') {
-                    break;
-                }
-                offset++;
-                line[length] = character;
-                length++;
-                pData++;
-                if (offset >= size) {
-                    break;
-                }
-            }
-            line[length] = '\0';
-            while (offset < size) {
-                if (*pData != '\n' && *pData != '\r') {
-                    break;
-                }
-                pData++;
-                offset++;
-            }
-            scan32(line, "レイヤ数", &pParam->mLayerCount);
-            scanf32(line, "毛長さ", &pParam->_4);
-            scanf32(line, "長さ偏差", &pParam->_8);
-            scanf32(line, "ズレ(indirect)", &pParam->_C);
-            scanf32(line, "ズレ偏差", &pParam->_10);
-            scanf32(line, "明るさ(毛先)", &pParam->_14);
-            scanf32(line, "明るさ(毛元)", &pParam->_18);
-            scanf32(line, "明るさ偏差", &pParam->_1C);
-            scanf32(line, "透明度(毛先)", &pParam->_20);
-            scanf32(line, "透明度(毛元)", &pParam->_24);
-            scanf32(line, "透明度偏差", &pParam->_28);
-            scanf32(line, "透明度・地肌(毛先)", &pParam->_2C);
-            scanf32(line, "透明度・地肌(毛元)", &pParam->_30);
-            scanf32(line, "透明度・地肌偏差", &pParam->_34);
-            scanf32(line, "密度マップスケール", &pParam->_38);
-            scanf32(line, "ベースマップスケール", &pParam->_3C);
-            scanu8x4(line, "混合カラー", &pParam->_40.r);
-            scanf32x4(line, "植毛密度", pParam->_44);
-            scanf32x4(line, "植毛太さ", pParam->_54);
-            scanu8x4(line, "混合比", &pParam->_64.r);
-            scan32(line, "ライト0スイッチ", &light0Enabled);
-            scan32(line, "ライト0マテリアル", &light0Material);
-            scan32(line, "ライト0アンビエント", &light0Ambient);
-            scan32(line, "ライト1スイッチ", &light1Enabled);
-            scan32(line, "ライト1マテリアル", &light1Material);
-            scan32(line, "ライト1アンビエント", &light1Ambient);
-            scan32(line, "ライトカラーソース", &lightColorSource);
-            light->mLight0Enabled = light0Enabled;
-            light->mLight0Material = light0Material;
-            light->mLight0Ambient = light0Ambient;
-            light->mLight1Enabled = light1Enabled;
-            light->mLight1Material = light1Material;
-            light->mLight1Ambient = light1Ambient;
-            light->mLightColorSource = lightColorSource;
-        }
-    }
+FurDrawManager::~FurDrawManager() {
 }

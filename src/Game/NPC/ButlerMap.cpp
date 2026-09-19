@@ -10,7 +10,6 @@
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
@@ -45,12 +44,12 @@ void ButlerMap::init(const JMapInfoIter& rIter) {
     NPCActorCaps caps("ButlerMap");
     caps.mObjectName = "Butler";
     caps.setDefault();
-    caps.mTalkNerve = &NrvButlerMap::ButlerMapNrvTalk::sInstance;
+    caps.mTalkNerve = GET_NERVE(ButlerMap, ButlerMapNrvTalk);
     caps.mSensorJoint = "Body";
     caps.mSensorOffset.x = 0.0f;
     caps.mSensorOffset.y = 0.0f;
     caps.mSensorOffset.z = 0.0f;
-    caps._5D = true;
+    caps.mUseShadow = true;
     caps.mBinder = false;
     NPCActor::initialize(rIter, caps);
     setDefaults2();
@@ -112,7 +111,7 @@ void ButlerMap::kill() {
 void ButlerMap::startLectureDemo() {
     MR::invalidateClipping(this);
     LiveActor::appear();
-    setNerve(&NrvButlerMap::ButlerMapNrvLectureDemoShowMapBefore::sInstance);
+    setNerve(GET_NERVE(ButlerMap, ButlerMapNrvLectureDemoShowMapBefore));
 }
 
 void ButlerMap::resetStatus() {
@@ -144,8 +143,8 @@ bool ButlerMap::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* p
     }
 
     if (MR::isMsgStarPieceAttack(msg)) {
-        if (isNerve(mWaitNerve) || isNerve(&NrvButlerMap::ButlerMapNrvStarPieceReaction::sInstance)) {
-            setNerve(&NrvButlerMap::ButlerMapNrvStarPieceReaction::sInstance);
+        if (isNerve(mWaitNerve) || isNerve(GET_NERVE(ButlerMap, ButlerMapNrvStarPieceReaction))) {
+            setNerve(GET_NERVE(ButlerMap, ButlerMapNrvStarPieceReaction));
         }
 
         return true;
@@ -187,7 +186,7 @@ void ButlerMap::exeLectureDemoShowMap() {
         MR::startAstroMapLayoutForNewDomeDiscover();
         MR::forceOpenWipeFade();
     } else {
-        setNerve(&NrvButlerMap::ButlerMapNrvLectureDemoShowMapAfter::sInstance);
+        setNerve(GET_NERVE(ButlerMap, ButlerMapNrvLectureDemoShowMapAfter));
     }
 }
 
@@ -214,13 +213,13 @@ void ButlerMap::exeStarPieceReaction() {
 
 void ButlerMap::exeTalk() {
     if (MR::tryTalkNearPlayerAtEndAndStartTalkAction(this)) {
-        setNerve(&NrvButlerMap::ButlerMapNrvShowGalaxyMap::sInstance);
+        setNerve(GET_NERVE(ButlerMap, ButlerMapNrvShowGalaxyMap));
     }
 }
 
 void ButlerMap::exeLectureDemoShowMapBefore() {
     if (MR::isDemoPartLastStep("マップ表示開始")) {
         MR::pauseTimeKeepDemo(this);
-        setNerve(&NrvButlerMap::ButlerMapNrvLectureDemoShowMap::sInstance);
+        setNerve(GET_NERVE(ButlerMap, ButlerMapNrvLectureDemoShowMap));
     }
 }

@@ -18,7 +18,7 @@ void RotateMoveObj::init(const JMapInfoIter& rIter) {
     MapObjActorUtil::setupInitInfoSimpleMapObj(&info);
     info.setupRotator();
     info.setupBaseMtxFollowTarget();
-    info.setupNerve(&NrvRotateMoveObj::HostTypeWait::sInstance);
+    info.setupNerve(GET_NERVE(RotateMoveObj, HostTypeWait));
     MapObjActorUtil::setupInitInfoColorChangeArg0(&info, rIter);
     MapObjActorUtil::setupInitInfoTextureChangeArg1(&info, rIter);
     MapObjActorUtil::setupInitInfoTypical(&info, mObjectName);
@@ -29,7 +29,7 @@ void RotateMoveObj::init(const JMapInfoIter& rIter) {
     MR::getMapPartsArgMoveConditionType(&condType, rIter);
 
     if (!MR::isMoveStartTypeUnconditional(condType)) {
-        setNerve(&NrvRotateMoveObj::HostTypeWaitForPlayerOn::sInstance);
+        setNerve(GET_NERVE(RotateMoveObj, HostTypeWaitForPlayerOn));
         v5 = false;
     }
 
@@ -45,13 +45,13 @@ void RotateMoveObj::init(const JMapInfoIter& rIter) {
 
     if (v5) {
         startMapPartsFunctions();
-        setNerve(&NrvRotateMoveObj::HostTypeMove::sInstance);
+        setNerve(GET_NERVE(RotateMoveObj, HostTypeMove));
     }
 }
 
 void RotateMoveObj::initCaseUseSwitchB(const MapObjActorInitInfo& rInfo) {
     MR::listenStageSwitchOnOffB(this, MR::Functor(this, &RotateMoveObj::setStateMove),
-                                MR::Functor_Inline< MapObjActor >(this, &MapObjActor::pauseMapPartsFunctions));
+                                MR::Functor< MapObjActor >(this, &MapObjActor::pauseMapPartsFunctions));
 }
 
 void RotateMoveObj::initCaseNoUseSwitchB(const MapObjActorInitInfo& rInfo) {
@@ -63,7 +63,7 @@ void RotateMoveObj::setStateMove() {
     }
 
     startMapPartsFunctions();
-    setNerve(&NrvRotateMoveObj::HostTypeMove::sInstance);
+    setNerve(GET_NERVE(RotateMoveObj, HostTypeMove));
 }
 
 void RotateMoveObj::exeWaitForPlayerOn() {
@@ -81,7 +81,7 @@ void RotateMoveObj::exeMove() {
     }
 
     if (!MapObjActorUtil::isRotatorMoving(this)) {
-        setNerve(&NrvRotateMoveObj::HostTypeStop::sInstance);
+        setNerve(GET_NERVE(RotateMoveObj, HostTypeStop));
     } else {
         if (mRotator->mIsActive) {
             if (MR::isEqualString(mObjectName, "OceanRingRuinsGearBig") || MR::isEqualString(mObjectName, "OceanRingRuinsGearSmall")) {
@@ -97,7 +97,7 @@ void RotateMoveObj::exeMove() {
 
 void RotateMoveObj::exeStop() {
     if (MapObjActorUtil::isRotatorMoving(this)) {
-        setNerve(&NrvRotateMoveObj::HostTypeMove::sInstance);
+        setNerve(GET_NERVE(RotateMoveObj, HostTypeMove));
     } else if (MR::isFirstStep(this)) {
         MR::StageEffect::tryStageEffectStop(this, mObjectName);
     }

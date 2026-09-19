@@ -1,4 +1,3 @@
-#include "Game/LiveActor/Nerve.hpp"
 #include "Game/Player/MarioBlown.hpp"
 #include "Game/Player/FireMarioBall.hpp"
 #include "Game/Player/Mario.hpp"
@@ -17,7 +16,7 @@ bool Mario::blown(const TVec3f& rVec) {
         return false;
     }
 
-    if (getCurrentStatus() == MarioStatus_Recovery) {
+    if (getCurrentStatus() == MarioStatus_13) {
         return false;
     }
 
@@ -36,27 +35,6 @@ MarioBlown::MarioBlown(MarioActor* pActor) : MarioState(pActor, MarioStatus_Blow
     _18.zero();
     _24 = false;
     _25 = false;
-}
-
-bool MarioBlown::close() {
-    if (!_24) {
-        getPlayer()->stopJump();
-    }
-
-    stopAnimation("壁ヒット");
-
-    if (_25) {
-        stopAnimation("壁ヒット着地", "基本");
-    }
-
-    mActor->setBlendMtxTimer(6);
-    getPlayer()->unlockGroundCheck(this);
-
-    if (!_24) {
-        getPlayer()->mMovementStates._36 = false;
-    }
-
-    return true;
 }
 
 bool MarioBlown::start() {
@@ -125,6 +103,7 @@ bool MarioBlown::update() {
             _14 = 1;
             mTimer = 0;
         }
+
         break;
     case 1:
         if (!getPlayer()->getMovementStates()._1 && !MR::isNearZero(getPlayer()->mVerticalSpeed)) {
@@ -145,6 +124,7 @@ bool MarioBlown::update() {
             _24 = true;
             return false;
         }
+
         break;
     }
 
@@ -159,15 +139,23 @@ bool MarioBlown::update() {
     return true;
 }
 
-namespace NrvMarioActor {
-    INIT_NERVE(MarioActorNrvWait);
-    INIT_NERVE(MarioActorNrvGameOver);
-    INIT_NERVE(MarioActorNrvGameOverAbyss);
-    INIT_NERVE(MarioActorNrvGameOverAbyss2);
-    INIT_NERVE(MarioActorNrvGameOverFire);
-    INIT_NERVE(MarioActorNrvGameOverBlackHole);
-    INIT_NERVE(MarioActorNrvGameOverNonStop);
-    INIT_NERVE(MarioActorNrvGameOverSink);
-    INIT_NERVE(MarioActorNrvTimeWait);
-    INIT_NERVE(MarioActorNrvNoRush);
-};  // namespace NrvMarioActor
+bool MarioBlown::close() {
+    if (!_24) {
+        getPlayer()->stopJump();
+    }
+
+    stopAnimation("壁ヒット");
+
+    if (_25) {
+        stopAnimation("壁ヒット着地", "基本");
+    }
+
+    mActor->setBlendMtxTimer(6);
+    getPlayer()->unlockGroundCheck(this);
+
+    if (!_24) {
+        getPlayer()->mMovementStates._36 = false;
+    }
+
+    return true;
+}

@@ -6,7 +6,6 @@
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
@@ -37,7 +36,7 @@ void Air::init(const JMapInfoIter& rIter) {
     MR::setClippingTypeSphereContainsModelBoundingBox(this, 100.0f);
     setFarClipping();
     MR::setGroupClipping(this, rIter, 0x10);
-    initNerve(&NrvAir::HostTypeOut::sInstance);
+    initNerve(GET_NERVE(Air, HostTypeOut));
     MR::registerDemoSimpleCastAll(this);
     bool registered = MR::tryRegisterDemoCast(this, rIter);
 
@@ -71,12 +70,12 @@ void Air::appear() {
     if (dist < val) {
         MR::tryStartAllAnim(this, "Appear");
         MR::setAllAnimFrameAtEnd(this, "Appear");
-        setNerve(&NrvAir::HostTypeIn::sInstance);
+        setNerve(GET_NERVE(Air, HostTypeIn));
     } else {
         MR::tryStartAllAnim(this, "Disappear");
         MR::setAllAnimFrameAtEnd(this, "Disappear");
         MR::hideModel(this);
-        setNerve(&NrvAir::HostTypeOut::sInstance);
+        setNerve(GET_NERVE(Air, HostTypeOut));
     }
 }
 
@@ -113,13 +112,13 @@ bool Air::tryChange() {
 void Air::appearFadeIn() {
     makeActorAppeared();
     MR::tryStartAllAnim(this, "Appear");
-    setNerve(&NrvAir::HostTypeIn::sInstance);
+    setNerve(GET_NERVE(Air, HostTypeIn));
 }
 
 void Air::appearFadeOut() {
     makeActorAppeared();
     MR::tryStartAllAnim(this, "Disappear");
-    setNerve(&NrvAir::HostTypeOut::sInstance);
+    setNerve(GET_NERVE(Air, HostTypeOut));
 }
 
 void Air::exeIn() {
@@ -130,7 +129,7 @@ void Air::exeIn() {
         f32 val = (100.0f * (20.0f + mDistance));
         if (val < MR::calcDistanceToPlayer(this)) {
             MR::tryStartAllAnim(this, "Disappear");
-            setNerve(&NrvAir::HostTypeOut::sInstance);
+            setNerve(GET_NERVE(Air, HostTypeOut));
         }
     }
 }
@@ -150,7 +149,7 @@ void Air::exeOut() {
         if (MR::calcDistanceToPlayer(this) < distMult) {
             MR::showModel(this);
             MR::tryStartAllAnim(this, "Appear");
-            setNerve(&NrvAir::HostTypeIn::sInstance);
+            setNerve(GET_NERVE(Air, HostTypeIn));
         }
     }
 }

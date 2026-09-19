@@ -4,7 +4,6 @@
 #include "Game/Util.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
@@ -37,7 +36,7 @@ void StarPieceFollowGroup::init(const JMapInfoIter& rIter) {
     MR::getJMapInfoArg1NoInit(rIter, &mTimeLimit);
     MR::getJMapInfoArg2NoInit(rIter, &mRadius);
 
-    initNerve(&NrvStarPieceFollowGroup::HostTypeNrvFollowEnd::sInstance);
+    initNerve(GET_NERVE(StarPieceFollowGroup, HostTypeNrvFollowEnd));
 
     mPieces = new StarPiece*[mNumPiecesTotal];
     _90 = new TVec3f[mNumPiecesTotal];
@@ -48,7 +47,7 @@ void StarPieceFollowGroup::init(const JMapInfoIter& rIter) {
     }
 
     MR::needStageSwitchWriteA(this, rIter);
-    MR::listenStageSwitchOnA(this, MR::Functor_Inline(this, &StarPieceFollowGroup::onSwitchA));
+    MR::listenStageSwitchOnA(this, MR::Functor(this, &StarPieceFollowGroup::onSwitchA));
     MR::useStageSwitchReadB(this, rIter);
 
     MR::connectToSceneMapObjMovement(this);
@@ -183,7 +182,7 @@ void StarPieceFollowGroup::allKillPieces() {
 
 void StarPieceFollowGroup::onSwitchA() {
     if (beginFollowPieces()) {
-        setNerve(&NrvStarPieceFollowGroup::HostTypeNrvFollowToPlayer::sInstance);
+        setNerve(GET_NERVE(StarPieceFollowGroup, HostTypeNrvFollowToPlayer));
         appear();
     } else {
         kill();
@@ -201,7 +200,7 @@ void StarPieceFollowGroup::exeFollowToPlayer() {
     mAngle += 0.025f;
 
     if (MR::isGreaterStep(this, mTimeLimit)) {
-        setNerve(&NrvStarPieceFollowGroup::HostTypeNrvFollowEnd::sInstance);
+        setNerve(GET_NERVE(StarPieceFollowGroup, HostTypeNrvFollowEnd));
     }
 }
 

@@ -236,8 +236,8 @@ void MarioActor::attackOrPushSensorInDamage(HitSensor* pReceiver, f32 radius) {
 void MarioActor::attackOrPushSensorInRush(HitSensor* pSensor, f32 radius) {
     f32 sensorRadius = pSensor->mRadius;
     if (radius < sensorRadius + mSensorRadiusAttack) {
-        f32 height = _4B4;
         f32 width = 20.0f + _4B0;
+        f32 height = _4B4;
         if (cylinderPushCheck(pSensor->mPosition - _2A0, sensorRadius, width, height)) {
             if (tryGetItem(pSensor)) {
                 return;
@@ -566,7 +566,6 @@ bool MarioActor::cylinderPushCheck(const TVec3f& rOffset, f32 sensorRadius, f32 
 }
 
 void MarioActor::attackOrPushPolygons() {
-    // FIXME: if chain has a mistake
     HitSensor* bodySensor = getSensor("body");
 
     _FCC = true;
@@ -600,8 +599,8 @@ void MarioActor::attackOrPushPolygons() {
                     HitSensor* groundSensor = mMario->mGroundPolygon->mSensor;
 
                     if (groundSensor != nullptr && !MR::isDead(groundSensor->mHost)) {
-                        groundSensor = mMario->mGroundPolygon->mSensor;
-                        if (!groundSensor->receiveMessage(ACTMES_PLAYER_HIP_DROP_FLOOR, getSensor("body"))) {
+                        HitSensor* hitSensor = mMario->mGroundPolygon->mSensor;
+                        if (!hitSensor->receiveMessage(ACTMES_PLAYER_HIP_DROP_FLOOR, getSensor("body"))) {
                             _3E8 = false;
                         }
                     }

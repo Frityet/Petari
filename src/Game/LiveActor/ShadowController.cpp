@@ -1,26 +1,49 @@
 #include "Game/LiveActor/ShadowController.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowDrawer.hpp"
+#include "Game/Map/HitInfo.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/GravityUtil.hpp"
-#include "Game/Util/MapUtil.hpp"
-#include "Game/Map/HitInfo.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 
-ShadowControllerHolder::ShadowControllerHolder() : NameObj("影管理"), _C(), _18(), _24(false) {
+namespace {
+    const s32 sCollisionCountLimit = 1;
+    const s32 sGravityCountLimit = 1;
+}  // namespace
+
+void ShadowController_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)-1.0f;
+}
+
+ShadowControllerHolder::ShadowControllerHolder() : NameObj("影管理"), _C(), _18(), _24() {
     mFarClip = 4000.0f;
     _C.init(0x500);
     _18.init(0x400);
-    MR::connectToScene(this, MR::MovementType_ShadowControllerHolder, -1, -1, -1);
+    MR::connectToScene(this, MR::MovementType_ShadowControllerHolder, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_None);
 
     if (MR::isEqualStageName("AstroGalaxy") || MR::isEqualStageName("PeachCastleGardenGalaxy") || MR::isEqualStageName("PeachCastleFinalGalaxy")) {
         _24 = true;
     }
 }
+
+ShadowController::ShadowController(LiveActor* pActor, const char* pName)
+    : mActor(pActor), mName(pName), mGroupName(""), mDrawer(), mProjectedSensor(), mCollisionPartsFilter(), _18(), _1C(), mDropPos(), mDropDir(),
+      mProjPos(), mProjNorm(), _30(0.0f, 0.0f, 0.0f), _3C(0.0f, -1.0f, 0.0f), _48(0.0f, 0.0f, 0.0f), _54(0.0f, 1.0f, 0.0f), _60(1), _61(), _62(),
+      _63(), _64(), _65(), _66(), _67(), mStartOffset(50.0f), mDropLength(), _70(), _71(1), _72(1) {
+    MR::createSceneObj(SceneObj_ShadowControllerHolder);
+    MR::addShadowController(this);
+}
+
+template MR::Vector< MR::AssignableArray< ShadowController* > >::Vector();
+template MR::Vector< MR::AssignableArray< ShadowController* > >::~Vector();
+template void MR::Vector< MR::AssignableArray< ShadowController* > >::push_back(ShadowController* const&);
 
 void ShadowControllerHolder::movement() {
     updateController();
@@ -96,15 +119,6 @@ void ShadowControllerList::requestCalc() {
     }
 }
 
-ShadowController::ShadowController(LiveActor* pActor, const char* pName)
-    : mActor(pActor), mName(pName), mGroupName(""), mDrawer(nullptr), mProjectedSensor(nullptr), mCollisionPartsFilter(nullptr), _18(nullptr),
-      _1C(nullptr), mDropPos(nullptr), mDropDir(nullptr), mProjPos(nullptr), mProjNorm(nullptr), _30(0.0f, 0.0f, 0.0f),
-      _3C(0.0f, -1.0f, 0.0f), _48(0.0f, 0.0f, 0.0f), _54(0.0f, 1.0f, 0.0f), _60(1), _61(0), _62(0), _63(0), _64(0), _65(0), _66(0),
-      _67(0), mStartOffset(50.0f), mDropLength(0.0f), _70(0), _71(1), _72(1) {
-    MR::createSceneObj(SceneObj_ShadowControllerHolder);
-    MR::addShadowController(this);
-}
-
 void ShadowController::requestCalc() {
     if (!_64) {
         _64 = 1;
@@ -126,6 +140,50 @@ void ShadowController::updateFarClipping(f32 clip) {
     getDropPos(&dropPos);
     f32 cameraDistZ = MR::calcCameraDistanceZ(dropPos);
     _67 = cameraDistZ >= clip;
+}
+
+void ShadowController::updateDirection() {
+    if (isCalcGravity()) {
+        TVec3f dropPos;
+        getDropPos(&dropPos);
+        TVec3f oldDir(_3C);
+        if (!isCalcShadowGravity() || !MR::calcDropShadowVectorOrZero(mActor, dropPos, &_3C, nullptr, 0)) {
+            if (!MR::calcGravityVectorOrZero(mActor, dropPos, &_3C, nullptr, 0)) {
+                _3C = oldDir;
+            }
+        }
+        if (_61 == 2 || _61 == 5) {
+            _66++;
+        }
+    }
+}
+
+void ShadowController::updateProjection() {
+    if (isCalcCollision()) {
+        Triangle triangle;
+        TVec3f dropPos;
+        getDropPos(&dropPos);
+        TVec3f dropDir;
+        getDropDir(&dropDir);
+        dropPos -= dropDir * mStartOffset;
+        switch (_62) {
+        case 0:
+            _63 = MR::getFirstPolyOnLineToMap(&_48, &triangle, dropPos, dropDir * (mDropLength + mStartOffset), mCollisionPartsFilter, nullptr);
+            break;
+        case 1:
+            _63 = MR::getFirstPolyOnLineToWaterSurface(&_48, &triangle, dropPos, dropDir * (mDropLength + mStartOffset), mCollisionPartsFilter, nullptr);
+            break;
+        }
+        if (_63 != 0) {
+            mProjectedSensor = triangle.mSensor;
+            _54.set< f32 >(*triangle.getNormal(0));
+        } else {
+            mProjectedSensor = nullptr;
+        }
+        if (_60 == 2) {
+            _65++;
+        }
+    }
 }
 
 ShadowDrawer* ShadowController::getShadowDrawer() {
@@ -181,6 +239,22 @@ void ShadowController::getProjectionNormal(TVec3f* pOut) const {
     }
 }
 
+f32 ShadowController::getProjectionLength() const {
+    if (_63 == 0) {
+        return -1.0f;
+    }
+    TVec3f dropPos;
+    getDropPos(&dropPos);
+    TVec3f dropDir;
+    getDropDir(&dropDir);
+    TVec3f delta(_48);
+    delta -= dropPos;
+    if (dropDir.dot(delta) < 0.0f) {
+        return 0.0f;
+    }
+    return PSVECDistance(&dropPos, &_48);
+}
+
 bool ShadowController::isProjected() const {
     return _63 != 0;
 }
@@ -207,14 +281,25 @@ bool ShadowController::isCalcCollision() const {
     }
 
     if (_60 == 2) {
-        return _65 < 1;
+        return _65 < sCollisionCountLimit;
     }
 
     return true;
 }
 
+bool ShadowController::isCalcGravity() const {
+    if (_61 == 0 || _61 == 3) {
+        return false;
+    }
+    if (_61 == 0 || _61 == 3) {
+        return _66 < 1;
+    }
+    return true;
+}
+
 bool ShadowController::isCalcShadowGravity() const {
-    return static_cast< u8 >(_61 + 0xFC) <= 1;
+    const u8 offset = static_cast< u8 >(-4);
+    return static_cast< u8 >(_61 + offset) <= 1;
 }
 
 void ShadowController::setGroupName(const char* pName) {
@@ -224,6 +309,13 @@ void ShadowController::setGroupName(const char* pName) {
 void ShadowController::setDropPosPtr(const TVec3f* pDropPos) {
     mDropPos = pDropPos;
     _1C = 0;
+}
+
+void ShadowController::setDropPosMtxPtr(MtxPtr pMtx, const TVec3f& rOffset) {
+    _18 = pMtx;
+    mDropPos = nullptr;
+    _1C = pMtx;
+    _30.set< f32 >(rOffset);
 }
 
 void ShadowController::setDropPosFix(const TVec3f& rPos) {
@@ -237,8 +329,16 @@ void ShadowController::setDropDirPtr(const TVec3f* pDropDir) {
     _61 = 0;
 }
 
-void ShadowController::setDropDirFix(const TVec3f& a1) {
-    _3C.set< f32 >(a1);
+void ShadowController::setProjectionPtr(const TVec3f* pPosition, const TVec3f* pNormal) {
+    mProjPos = pPosition;
+    mProjNorm = pNormal;
+    _60 = 0;
+    _63 = 1;
+    mProjectedSensor = nullptr;
+}
+
+void ShadowController::setDropDirFix(const TVec3f& rDirection) {
+    _3C.set< f32 >(rDirection);
     mDropDir = 0;
     _61 = 0;
 }
@@ -259,10 +359,10 @@ void ShadowController::setDropTypeSurface() {
     _62 = 1;
 }
 
-void ShadowController::setProjectionFix(const TVec3f& a1, const TVec3f& a2, bool a3) {
-    _48.set< f32 >(a1);
-    _54.set< f32 >(a2);
-    _63 = a3;
+void ShadowController::setProjectionFix(const TVec3f& rPosition, const TVec3f& rNormal, bool projected) {
+    _48.set< f32 >(rPosition);
+    _54.set< f32 >(rNormal);
+    _63 = projected;
     mProjectedSensor = 0;
 }
 
@@ -349,86 +449,6 @@ void ShadowController::invalidate() {
     _71 = 0;
 }
 
-ShadowControllerHolder::~ShadowControllerHolder() {
-}
-
-void ShadowController::updateDirection() {
-    if (isCalcGravity()) {
-        TVec3f dropPos;
-        getDropPos(&dropPos);
-        TVec3f oldDir(_3C);
-        if (!isCalcShadowGravity() || !MR::calcDropShadowVectorOrZero(mActor, dropPos, &_3C, nullptr, 0)) {
-            if (!MR::calcGravityVectorOrZero(mActor, dropPos, &_3C, nullptr, 0)) {
-                _3C = oldDir;
-            }
-        }
-        if (_61 == 2 || _61 == 5) {
-            _66++;
-        }
-    }
-}
-
-void ShadowController::updateProjection() {
-    if (isCalcCollision()) {
-        Triangle triangle;
-        TVec3f dropPos;
-        getDropPos(&dropPos);
-        TVec3f dropDir;
-        getDropDir(&dropDir);
-        dropPos -= dropDir * mStartOffset;
-        switch (_62) {
-        case 0:
-            _63 = MR::getFirstPolyOnLineToMap(&_48, &triangle, dropPos, dropDir * (mDropLength + mStartOffset), mCollisionPartsFilter, nullptr);
-            break;
-        case 1:
-            _63 = MR::getFirstPolyOnLineToWaterSurface(&_48, &triangle, dropPos, dropDir * (mDropLength + mStartOffset), mCollisionPartsFilter, nullptr);
-            break;
-        }
-        if (_63 != 0) {
-            mProjectedSensor = triangle.mSensor;
-            _54.set< f32 >(*triangle.getNormal(0));
-        } else {
-            mProjectedSensor = nullptr;
-        }
-        if (_60 == 2) {
-            _65++;
-        }
-    }
-}
-
-f32 ShadowController::getProjectionLength() const {
-    if (_63 == 0) {
-        return -1.0f;
-    }
-    TVec3f dropPos;
-    getDropPos(&dropPos);
-    TVec3f dropDir;
-    getDropDir(&dropDir);
-    TVec3f delta(_48);
-    delta -= dropPos;
-    if (dropDir.dot(delta) < 0.0f) {
-        return 0.0f;
-    }
-    return PSVECDistance(&dropPos, &_48);
-}
-
-bool ShadowController::isCalcGravity() const {
-    if (_61 == 0 || _61 == 3) {
-        return false;
-    }
-    if (_61 == 0 || _61 == 3) {
-        return _66 < 1;
-    }
-    return true;
-}
-
-void ShadowController::setDropPosMtxPtr(MtxPtr pMtx, const TVec3f& rPos) {
-    _18 = pMtx;
-    mDropPos = nullptr;
-    _1C = pMtx;
-    _30.set< f32 >(rPos);
-}
-
 namespace MR {
     void addShadowController(ShadowController* pController) {
         getSceneObj< ShadowControllerHolder >(SceneObj_ShadowControllerHolder)->_C.push_back(pController);
@@ -436,18 +456,22 @@ namespace MR {
 
     void requestCalcActorShadowAppear(LiveActor* pActor) {
         if (!isInitializeStatePlacementSomething()) {
-            if (pActor->mShadowControllerList != nullptr) {
+            if (pActor->mShadowControllerList) {
                 pActor->mShadowControllerList->resetCalcCount();
             }
-            if (pActor->mShadowControllerList != nullptr) {
-                pActor->mShadowControllerList->requestCalc();
-            }
+
+            requestCalcActorShadow(pActor);
         }
     }
 
     void requestCalcActorShadow(LiveActor* pActor) {
-        if (pActor->mShadowControllerList != nullptr) {
+        if (pActor->mShadowControllerList) {
             pActor->mShadowControllerList->requestCalc();
         }
     }
+}  // namespace MR
+
+template MR::AssignableArray< ShadowController* >::~AssignableArray();
+
+ShadowControllerHolder::~ShadowControllerHolder() {
 }

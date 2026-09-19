@@ -30,7 +30,7 @@ CounterLayoutController::CounterLayoutController()
 
 void CounterLayoutController::init(const JMapInfoIter& rIter) {
     MR::connectToSceneLayout(this);
-    initNerve(&NrvCounterLayoutController::CounterLayoutControllerNrvPlayerMoving::sInstance);
+    initNerve(GET_NERVE(CounterLayoutController, CounterLayoutControllerNrvPlayerMoving));
 
     mCoinCounter = new CoinCounter("コインカウンタ");
     mCoinCounter->initWithoutIter();
@@ -51,7 +51,7 @@ void CounterLayoutController::appear() {
         appearAllCounterWithoutStar();
     }
 
-    setNerve(&NrvCounterLayoutController::CounterLayoutControllerNrvPlayerMoving::sInstance);
+    setNerve(GET_NERVE(CounterLayoutController, CounterLayoutControllerNrvPlayerMoving));
     LayoutActor::appear();
 }
 
@@ -61,7 +61,7 @@ void CounterLayoutController::kill() {
 }
 
 void CounterLayoutController::forceAppear() {
-    setNerve(&NrvCounterLayoutController::CounterLayoutControllerNrvPlayerNotMoving::sInstance);
+    setNerve(GET_NERVE(CounterLayoutController, CounterLayoutControllerNrvPlayerNotMoving));
 }
 
 void CounterLayoutController::setHPMeter(MarioMeter* pHPMeter) {
@@ -125,7 +125,7 @@ bool CounterLayoutController::isPlayerMoving() const {
         return true;
     }
 
-    if (isNerve(&NrvCounterLayoutController::CounterLayoutControllerNrvPlayerMoving::sInstance) && !isHiddenOrWaitAllLayout()) {
+    if (isNerve(GET_NERVE(CounterLayoutController, CounterLayoutControllerNrvPlayerMoving)) && !isHiddenOrWaitAllLayout()) {
         return true;
     }
 
@@ -170,12 +170,12 @@ void CounterLayoutController::exePlayerMoving() {
     mHPMeter->requestPlayerMoving();
 
     if (tryEndTicoEatStarPiece()) {
-        setNerve(&NrvCounterLayoutController::CounterLayoutControllerNrvPlayerMoving::sInstance);
+        setNerve(GET_NERVE(CounterLayoutController, CounterLayoutControllerNrvPlayerMoving));
     } else if (!isPlayerMoving()) {
         mPlayerNotMovingFrame++;
 
         if (mPlayerNotMovingFrame > ::cJudgeNotMovingFrame) {
-            setNerve(&NrvCounterLayoutController::CounterLayoutControllerNrvPlayerNotMoving::sInstance);
+            setNerve(GET_NERVE(CounterLayoutController, CounterLayoutControllerNrvPlayerNotMoving));
         }
     } else {
         mPlayerNotMovingFrame = 0;
@@ -190,9 +190,9 @@ void CounterLayoutController::exePlayerNotMoving() {
     mHPMeter->requestPlayerStopped();
 
     if (tryEndTicoEatStarPiece()) {
-        setNerve(&NrvCounterLayoutController::CounterLayoutControllerNrvPlayerNotMoving::sInstance);
+        setNerve(GET_NERVE(CounterLayoutController, CounterLayoutControllerNrvPlayerNotMoving));
     } else if (isPlayerMoving() && isWaitToDisappearCounter(this)) {
         hideAllLayout();
-        setNerve(&NrvCounterLayoutController::CounterLayoutControllerNrvPlayerMoving::sInstance);
+        setNerve(GET_NERVE(CounterLayoutController, CounterLayoutControllerNrvPlayerMoving));
     }
 }

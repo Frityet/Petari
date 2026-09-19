@@ -76,12 +76,12 @@ void StarPieceMother::init(const JMapInfoIter& rIter) {
     }
 
     if (isRailNotConnected) {
-        initNerve(&NrvStarPieceMother::HostTypeNrvWait::sInstance);
+        initNerve(GET_NERVE(StarPieceMother, HostTypeNrvWait));
         initHitSensor(1);
         MR::addHitSensorMapObj(this, "body", 8, 100.0f, TVec3f(0.0f, 0.0f, 0.0f));
         makeActorAppeared();
     } else {
-        initNerve(&NrvStarPieceMother::HostTypeNrvMoveOnRail::sInstance);
+        initNerve(GET_NERVE(StarPieceMother, HostTypeNrvMoveOnRail));
 
         arg = -1;
         MR::getJMapInfoArg1NoInit(rIter, &arg);
@@ -143,7 +143,8 @@ void StarPieceMother::placementPieceOnRail(f32 distance) {
     f32 step;
     f32 difference = MR::getRailTotalLength(this) - distance;
     if (1 < _94) {
-        step = 1.0f / (_94 - 1.0f) * difference;
+        step = 1.0f / (_94 - 1.0f);
+        step *= difference;
     }
 
     for (int idx = 1; idx < _94; idx++) {

@@ -4,7 +4,6 @@
 #include "Game/NPC/Tico.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 
@@ -26,15 +25,15 @@ namespace NrvTicoDemoGetPower {
 };  // namespace NrvTicoDemoGetPower
 
 TicoDemoGetPower::TicoDemoGetPower(Tico* pHost, const JMapInfoIter& rIter) : NerveExecutor("チコゲットパワーデモ実行者"), mHost(pHost) {
-    initNerve(&NrvTicoDemoGetPower::TicoDemoGetPowerNrvWait::sInstance);
+    initNerve(GET_NERVE(TicoDemoGetPower, TicoDemoGetPowerNrvWait));
     DemoFunction::tryCreateDemoTalkAnimCtrlForScene(mHost, rIter, "DemoGetPower", "スピンゲット[デモ1]", 0, 0);
-    MR::registerDemoActionFunctor(mHost, MR::Functor_Inline(this, &TicoDemoGetPower::startDemo), "スピンゲット[デモ1]");
+    MR::registerDemoActionFunctor(mHost, MR::Functor(this, &TicoDemoGetPower::startDemo), "スピンゲット[デモ1]");
     mHost->makeActorDead();
 }
 
 void TicoDemoGetPower::startDemo() {
     mHost->makeActorAppeared();
-    setNerve(&NrvTicoDemoGetPower::TicoDemoGetPowerNrvDemo::sInstance);
+    setNerve(GET_NERVE(TicoDemoGetPower, TicoDemoGetPowerNrvDemo));
     exeDemo();
 }
 

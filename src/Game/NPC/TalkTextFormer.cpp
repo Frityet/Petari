@@ -51,8 +51,8 @@ namespace MR {
         nw4r::lyt::TextBox* textBox = getTextBoxPane(actor, paneName);
         if (textBox != nullptr) {
             CustomTagProcessor* processor = static_cast< CustomTagProcessor* >(textBox->mpTagProcessor);
-            processor->_32 = false;
-            processor->_31 = false;
+            processor->mColorIndex = 0;
+            processor->mSoundIndex = 0;
             processor->mAlphaCtrl.update();
         }
 
