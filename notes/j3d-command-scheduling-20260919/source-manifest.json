@@ -1,0 +1,7 @@
+{
+  "src/compat/J3dCommandScope.hpp": "e42ff92b5007ad28b8e4eff210cc7d57d647e0e45cc5c72207163ce1b8c8c17d",
+  "src/compat/J3dCommandScope.cpp": "d352fd1e61bceeec234478a78fab82ad0632aba43530936d68541c7206187e79",
+  "src/compat/SceneJ3dScope.hpp": "9b73410f4baca433deb7ceb73d3a3000eaecc78e836c0fe502cde3b6ef8fd648",
+  "tests/J3dCommandSchedulingTests.cpp": "728677fe634786937ad8e208bd92618b4373c5405a99708fbf32f6feea2a9490",
+  "tests/xmake.lua": "645a5e8b44a78ae77d7f95ae3a189a493a93f9133ba08c08a5511b6f5a94dea6"
+}

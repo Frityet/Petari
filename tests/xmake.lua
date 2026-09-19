@@ -3340,3 +3340,14 @@ target("smg-pc-language-ownership-tests")
     add_tests("language_ownership", {
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
+
+target("smg-pc-j3d-command-scheduling-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("J3dCommandSchedulingTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("j3d_command_scheduling", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
