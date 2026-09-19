@@ -1,0 +1,90 @@
+[
+  {
+    "path": "notes/demo-system-verification-20260919/baseline2-route-frame28500.png",
+    "bytes": 14748233,
+    "sha256": "74101c97382d726970a742006ddba0977b3346cf75f447880307f7e513a60d4e",
+    "compressed_path": "notes/demo-system-verification-20260919/baseline2-route-frame28500.png.gz",
+    "compressed_bytes": 4811417,
+    "compressed_sha256": "1ca5ae7cf361393ca44623e33cc513ccf57b12044e8e0d4789696dd5a969a6cb"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/baseline2-operator.jsonl",
+    "bytes": 530623,
+    "sha256": "ad0283583c8c0cb8b09c16b98ce0fda63cd18d6c01286f669e3f4e78dfc5aa93",
+    "compressed_path": "notes/demo-system-verification-20260919/baseline2-operator.jsonl.gz",
+    "compressed_bytes": 33460,
+    "compressed_sha256": "6f70cdb1dd33dbf9a6eda5590a01a5751aae0f7eb6f1833160f065c35aeb04a9"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/baseline2-operator-live.jsonl",
+    "bytes": 661730,
+    "sha256": "97eab652731bf40547fb3044182a8cfe2620b90a08411daf8cb6090157cfcc90",
+    "compressed_path": "notes/demo-system-verification-20260919/baseline2-operator-live.jsonl.gz",
+    "compressed_bytes": 18837,
+    "compressed_sha256": "6bb528cb6aecf3892a36c5379d2689ec31ed5116ee5344be17d54303f32e131b"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/baseline-startup-after-escape.txt",
+    "bytes": 234789,
+    "sha256": "ddf2ad29469c14a37fc7231478bb3d6011f19eaf70270ead3b3eaefe7bf36897",
+    "compressed_path": "notes/demo-system-verification-20260919/baseline-startup-after-escape.txt.gz",
+    "compressed_bytes": 63132,
+    "compressed_sha256": "1d4c9ee68e4af7023472fed111f6c885dc6c3d0316824d9ae7908e206b5efba0"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/baseline2-operator-pipe-jump.jsonl",
+    "bytes": 225464,
+    "sha256": "41946643f46f90d05a9833c18d337e1f0254f3947d28933833e99cea054116aa",
+    "compressed_path": "notes/demo-system-verification-20260919/baseline2-operator-pipe-jump.jsonl.gz",
+    "compressed_bytes": 12211,
+    "compressed_sha256": "fea9bae5a4716eccf6b64cd67f0c66b60213a5d68b37fe8df2a3d217e8ce76c9"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/baseline2-pipe-exit-ui.png",
+    "bytes": 250235,
+    "sha256": "478ddda6a36e85bdd8213bf413b2006abfab42e9a102df886718db7f92c1b317",
+    "compressed_path": "notes/demo-system-verification-20260919/baseline2-pipe-exit-ui.png.gz",
+    "compressed_bytes": 247278,
+    "compressed_sha256": "badc132fcdbc75eacdcec3624e6ca618f3b2918db300935b0387b5b159021d0e"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/baseline2-third-chase-ui.png",
+    "bytes": 177454,
+    "sha256": "56055943f195bce8ab3b70351c4de365052ff3cfd06d6841f2857275958f3c0b",
+    "compressed_path": "notes/demo-system-verification-20260919/baseline2-third-chase-ui.png.gz",
+    "compressed_bytes": 174170,
+    "compressed_sha256": "f9a847a92759703fe5ae549a74e706cd92ec45477217e1110f210fb85cebd829"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/baseline2-route.log",
+    "bytes": 374103,
+    "sha256": "11e3a2134724dbe89772ab267ebf8adf74b010c79cf957ef1d0a2b00c06105c1",
+    "compressed_path": "notes/demo-system-verification-20260919/baseline2-route.log.gz",
+    "compressed_bytes": 57339,
+    "compressed_sha256": "1d1eb722c3647baa65c9139db66b4a097ab45a09f0a75600a9ebf966ed4496e3"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/baseline-startup-sample.txt",
+    "bytes": 232978,
+    "sha256": "f5bb37c1346a46414c8d9e982a7e0587b36017578ad4f680c183383689409b68",
+    "compressed_path": "notes/demo-system-verification-20260919/baseline-startup-sample.txt.gz",
+    "compressed_bytes": 62781,
+    "compressed_sha256": "901b76978e0d03a7786de8754b1823bc6f5ecb243760e5b394ba3c3e7e8e0444"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/baseline2-route-actors.jsonl",
+    "bytes": 45398403,
+    "sha256": "1bcb8bce241a9b663da8591488314187aa667672be57e396f82f506f46c4382f",
+    "compressed_path": "notes/demo-system-verification-20260919/baseline2-route-actors.jsonl.gz",
+    "compressed_bytes": 1571978,
+    "compressed_sha256": "318a3d472c93e39a95a352274a4ee719dbf259ae65c21f983e59a9b274a2a984"
+  },
+  {
+    "path": "notes/demo-system-verification-20260919/baseline2-operator-manual.jsonl",
+    "bytes": 1192732,
+    "sha256": "bc2ec496cfa3e88ab03fc02ca142ce185c022b56cbc98b2cd2564ca9b034d079",
+    "compressed_path": "notes/demo-system-verification-20260919/baseline2-operator-manual.jsonl.gz",
+    "compressed_bytes": 82358,
+    "compressed_sha256": "3de26180b91733b8a2cb096872b3e5183d95978f073b8e9d6ee29ee33f97075d"
+  }
+]

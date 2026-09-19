@@ -1,0 +1,11 @@
+{
+  "parent_head": "65098a7d5914df7e76b635d06b007086d02ec341",
+  "staged_controller_diff_sha256": "288c9971c3f77f8e8440c8e9e0f63892204d46e6f2f8fbf2064959988601e096",
+  "copied_operator_sources": {
+    "notes/original-gateway-chase-20260919/operate_first_catch.py": "b57b3ebb909eb1c77ee7abab8f745bb328dbe6e4b27efc62804402900d386b3a",
+    "notes/original-gateway-chase-20260919/follow_actor.py": "44af1fab56b2964b2c700042ba6959495e34ac307706f3b8ef596f157dab2901",
+    "notes/original-gateway-chase-20260919/three-rabbit-route.json": "13c7e0bfe3e49d103e2e7f3d6386e37d8a071a0da6625cbe81a2b611c336f292",
+    "notes/original-gateway-chase-20260919/test_sequential_route.py": "6295c04b4c17e143f9ea642354beb13f967a345e3ea711e5ac6a75c1094b5621",
+    "notes/gateway-compat-20260919/run_original.py": "86fcb244188bc6e150f31d011570d876f98bfa61f31b855f0c7aa9e66d5fd7de"
+  }
+}

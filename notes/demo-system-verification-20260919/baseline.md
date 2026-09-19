@@ -1,0 +1,11 @@
+# Published-binary demo baseline
+
+Parent65098a7d5914df7e76b635d06b007086d02ec341. The unchanged bundled executable SHA2567e9c0bcb9351f43e9eaf87f3eebc5ef2c34f60d6da6da4704d7d75ebfb1b6aa0 completed30,000 original GameSystem frames, exit0, in670.58 seconds. The process was reaped and the binary hash was unchanged.
+
+This was **not a completed demo**: two catches and their Tico dialogues completed; the third rabbit was revealed but not caught. No Rosetta reveal was observed. First catch3560/dialogue complete3930, pipe catch12190/dialogue complete12560. The external route controller used ordinary WPAD input only; no actor/switch/position/nerve writes. Its direct target hit the house wall; a supervised rightward stick span let it continue. A recorded ordinary A span11580–11610 initiated pipe entry. Earlier8000–8030 was missed because the controller restart finished after8310. Operator restarts, raw accepted input revisions, manual override and bounded expiry are preserved. The final operator exits2 on its29,500-frame limit and publishes neutral input; the game itself then finishes30,000.
+
+The sampled trace contains no nonfinite vectors in its checked actor/player fields. That does not prove collision or physics parity. Binder contact details and gravity-owner details were not available in this baseline binary. The screenshot28500 shows the unresolved third chase, not Rosalina. The baseline placement report has175 supported63 known-unlinked0 unknown5 metadata rows and the already-identified invalid zone=-1 diagnostic; these numbers describe creator availability, not observed actor constructions.
+
+The first attempted run completed zero frames: a sampled macOS AppKit crash-restoration modal blocked the SDL event loop. Normal Escape/Return did not unblock it; the process was explicitly stopped and reaped. A fresh second run used process-only `-ApplePersistenceIgnoreState YES`, without changing application code or persistent macOS preferences. Its launch record includes this argument.
+
+The artifact manifest hashes raw files and their deterministic gzip representations. Published `.gz` files preserve captured bytes; no image transformation or recompression was performed. This checkpoint records the pre-fix evidence; current working-tree collision/scene changes are still under verification and are excluded from this commit.

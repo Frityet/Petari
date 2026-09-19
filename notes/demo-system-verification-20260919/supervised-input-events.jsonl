@@ -1,0 +1,2 @@
+{"run": "baseline2-route", "observed_frame": 11080, "buttons": "11580-11610:A", "reason": "ordinary jump at pipe approach; earlier8000 span missed because operator restarted after8310", "input_file": "baseline2-extra-buttons.txt"}
+{"run": "baseline2-route", "observed_frame": 18190, "manual": {"until_frame": 18590, "stick": [1, 0], "reason": "Supervised sidestep around visible house, direct route target intersects its wall"}}
