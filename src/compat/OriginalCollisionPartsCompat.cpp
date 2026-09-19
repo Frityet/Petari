@@ -227,6 +227,7 @@ void CollisionParts::updateBoundingSphereRange(TVec3f a1) {
 void CollisionParts::updateBoundingSphereRangePrivate(f32 scale) {
     _DC = scale;
     _D8 = scale * mServer->mMaxVertexDistance;
+    smgpc::compat::publish_collision_parts_geometry(*this);
 }
 
 const char* CollisionParts::getHostName() const {

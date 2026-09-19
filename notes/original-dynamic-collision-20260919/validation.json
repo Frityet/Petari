@@ -1,0 +1,35 @@
+{
+  "scope": "focused generated collision foundation; no complete actor or process integration claim",
+  "checks": [
+    {
+      "command": "xmake build smg-pc-stage-collision-registration-tests",
+      "exit_code": 0,
+      "log": "registration-build4.log"
+    },
+    {
+      "command": "build/macosx/arm64/debug/smg-pc-stage-collision-registration-tests --generated-only",
+      "exit_code": 0,
+      "log": "registration-generated-test3.log",
+      "cases_passed": 1
+    },
+    {
+      "command": "xmake build smg-pc-original-kcollision-resource-tests",
+      "exit_code": 0,
+      "log": "resource-build2.log"
+    },
+    {
+      "command": "build/macosx/arm64/debug/smg-pc-original-kcollision-resource-tests",
+      "exit_code": 0,
+      "log": "resource-test2.log",
+      "cases_passed": 12
+    }
+  ],
+  "binaries": {
+    "smg-pc-stage-collision-registration-tests": "f6962de775e36c1ffd27af8e9842392f910db592a6e1686a3d54b827b68646d6",
+    "smg-pc-original-kcollision-resource-tests": "0375ea128806c014d23ff0acb23bf05d3aec8402b2481fa3c9ed27fece60cb42"
+  },
+  "default_registration_suite": "blocked by unchanged absent-scene first test, see default-suite-frontier.json",
+  "area_polygon_integration": "not reached: original FileLoader ownership missing during fixture message initialization",
+  "collision_area_factory_enabled": false,
+  "failed_mutation_queries": "Original line and area, native ray and sphere all reject until corrected publication; disabled sources remain absent"
+}

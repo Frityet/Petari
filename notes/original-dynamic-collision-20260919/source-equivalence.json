@@ -1,0 +1,48 @@
+[
+  {
+    "native": "src/Game/AreaObj/CollisionArea.cpp",
+    "donor": "decomp/src/Game/AreaObj/CollisionArea.cpp",
+    "normalized_exact_match": true,
+    "normalization": "Only CP932 narrow-literal wrappers and helper include",
+    "native_sha256": "086e7b598da3134d8f67b13d9dbfd1e184ac5058069dd9af6f53cc043bffe73d",
+    "donor_sha256": "ecc334f59fd67a008fe97af67bf225566eb1c407b71dcd5aa5131a4d65e8c208"
+  },
+  {
+    "native": "src/Game/AreaObj/CollisionArea.hpp",
+    "donor": "decomp/include/Game/AreaObj/CollisionArea.hpp",
+    "normalized_exact_match": true,
+    "normalization": "Only CP932 narrow-literal wrappers and helper include",
+    "native_sha256": "ef66ae6e1eff6b09faa62f35859276f593050e9ffd2ef79ecd15a760d44e6ac6",
+    "donor_sha256": "ef66ae6e1eff6b09faa62f35859276f593050e9ffd2ef79ecd15a760d44e6ac6"
+  },
+  {
+    "native": "src/Game/MapObj/DynamicCollisionObj.cpp",
+    "donor": "decomp/src/Game/MapObj/DynamicCollisionObj.cpp",
+    "normalized_exact_match": true,
+    "normalization": "Only CP932 narrow-literal wrappers and helper include",
+    "native_sha256": "037a3eb6fb814061cd139212cd7dd15abe6b1c2c0ce83c6cd59577277fc16068",
+    "donor_sha256": "037a3eb6fb814061cd139212cd7dd15abe6b1c2c0ce83c6cd59577277fc16068"
+  },
+  {
+    "native": "src/Game/MapObj/DynamicCollisionObj.hpp",
+    "donor": "decomp/include/Game/MapObj/DynamicCollisionObj.hpp",
+    "normalized_exact_match": true,
+    "normalization": "Only CP932 narrow-literal wrappers and helper include",
+    "native_sha256": "fadb927a6ca936e3d3a3bcde13552e51cf6b2143e1869ac308aae7ed1604cc6d",
+    "donor_sha256": "fadb927a6ca936e3d3a3bcde13552e51cf6b2143e1869ac308aae7ed1604cc6d"
+  },
+  {
+    "native": "src/compat/OriginalDynamicCollisionObj.cpp",
+    "donor": "decomp/src/Game/MapObj/DynamicCollisionObj.cpp",
+    "unchanged_methods": [
+      "constructor",
+      "init",
+      "syncCollision",
+      "updateTriangle",
+      "updateCollisionHeader"
+    ],
+    "only_replaced_method": "createCollision",
+    "native_sha256": "efbd9a21fef686698b3048a58d3a494dcb52f97e06159f79408b84860939b7c3",
+    "unchanged_prefix_exact_match": true
+  }
+]

@@ -1,9 +1,14 @@
 #include "Game/Util/MapUtil.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
+#include "Game/Map/CollisionParts.hpp"
+#include "Game/MapObj/DynamicCollisionObj.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/HitInfoCompat.hpp"
 #include "compat/JkrAllocationDomain.hpp"
+#include "resource/KCollisionResource.hpp"
 #include "scene/StageCollisionService.hpp"
 
+#include <algorithm>
 #include <array>
 #include <bit>
 #include <cstddef>
@@ -227,22 +232,208 @@ namespace {
                 "native collision geometry must remain valid after unrelated Game heap retirement");
     }
 
+    void test_generated_geometry_publication_and_retirement() {
+        // Run the original geometry writer against separately allocated arrays.
+        // This fixture exercises publication below CollisionParts::init; it does
+        // not claim full AreaPolygon/Mario/process initialization coverage.
+        struct Geometry {
+            KCLFile file{};
+            std::vector<TVec3f> positions = std::vector<TVec3f>(2);
+            std::vector<TVec3f> normals = std::vector<TVec3f>(8);
+            std::vector<KC_PrismData> prisms = std::vector<KC_PrismData>(3);
+            std::array<u16, 5> octree{0x8000, 2, 2, 1, 0};
+            Geometry() {
+                file.mPos = positions.data();
+                file.mNorms = normals.data();
+                file.mPrisms = prisms.data();
+                file.mOctree = octree.data();
+                file.mThickness = 40;
+                file.mBlockXShift = file.mBlockXYShift = -1;
+            }
+        };
+        auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+        auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20);
+        const smgpc::compat::JkrAllocationScope game(domain);
+        DynamicCollisionObj actor("generated geometry publication fixture");
+        // StageCollisionService retains this field solely as opaque identity;
+        // no method dereferences it. This is deliberately not a constructed
+        // HitSensor and proves neither actor nor sensor initialization.
+        alignas(HitSensor) std::array<std::byte, sizeof(HitSensor)> sensor_identity{};
+        auto* sensor = reinterpret_cast<HitSensor*>(sensor_identity.data());
+        std::array<TVec3f, 4> vertices{TVec3f(0, 0, 0), TVec3f(4, 0, 0), TVec3f(4, 4, 0), TVec3f(0, 4, 0)};
+        std::array<TVec3f, 2> face_normals;
+        std::array<DynamicCollisionObj::TriangleIndexing, 2> indices;
+        const std::array<std::array<u16, 3>, 2> values{{{0, 1, 2}, {0, 2, 3}}};
+        for (std::size_t i = 0; i < indices.size(); ++i)
+            std::copy(values[i].begin(), values[i].end(), indices[i].mIndex);
+        auto allocation = std::make_shared<Geometry>();
+        const auto retired = std::weak_ptr(allocation);
+        const auto* identity = &allocation->file;
+        actor.mKCLFile = &allocation->file;
+        actor.mPositions = vertices.data();
+        actor.mPositionNum = vertices.size();
+        actor._94 = indices.size();
+        actor._9C = face_normals.data();
+        actor.mIndices = indices.data();
+        actor.updateCollisionHeader();
+        actor.updateTriangle();
+        auto resource = std::make_shared<smgpc::resource::GeneratedKCollisionResource>(
+            allocation->file, allocation->positions, allocation->normals, allocation->prisms,
+            allocation->octree, allocation);
+        CollisionParts parts;
+        std::unique_ptr<KCollisionServer> server_owner(parts.mServer);
+        std::unique_ptr<JMapInfo> map_owner(parts.mServer->mapInfo);
+        parts.mServer->init(resource->native_file(), nullptr);
+        parts.mHitSensor = sensor;
+        actor.mParts = &parts;
+        actor.syncCollision();
+        auto registration = std::make_shared<smgpc::scene::StageCollisionRegistrationState>(nullptr, &parts);
+        smgpc::scene::StageCollisionService collision;
+        require(collision.register_generated_kcl(resource, *parts.mServer, cIdentity,
+                    "original generated square", registration, sensor, 0).accepted,
+                "the original writer's separate arrays must register as generated geometry");
+        collision.build();
+        const auto first = collision.surface(&parts, 0);
+        const auto second = collision.surface(&parts, 1);
+        require(first && second && first->sensor == sensor && first->parts == &parts,
+                "generated surfaces retain their actual original part and opaque sensor identity");
+        const auto first_id = first->triangle_index;
+        const auto second_id = second->triangle_index;
+        const auto check_hit = [&](float z, float fraction) {
+            const auto start = TVec3f(3, 1, 10);
+            const auto offset = TVec3f(0, 0, -20);
+            const auto hits = collision.line_hits(start, offset);
+            require(!hits.empty() && hits.front().triangle_index == first_id &&
+                        std::abs(hits.front().position.z - z) < 0.001F,
+                    "original authored octree traversal must reach the live generated face");
+            smgpc::scene::StageCollisionHit hit;
+            require(collision.line_cast(start, offset, &hit) && hit.triangle_index == first_id &&
+                        std::abs(hit.fraction - fraction) < 0.001F,
+                    "refitted native broad phase must agree with original generated traversal");
+        };
+        check_hit(0, 0.5F);
+        for (auto& vertex : vertices) vertex.z = 3;
+        actor.syncCollision();
+        collision.update_registered_geometry(*registration);
+        check_hit(3, 0.35F);
+        require(collision.surface(&parts, 0)->triangle_index == first_id &&
+                    collision.surface(&parts, 1)->triangle_index == second_id,
+                "geometry refresh must preserve global surface and original local prism identities");
+        registration->set_enabled(false);
+        require(!collision.surface(first_id) && collision.line_hits(TVec3f(3, 1, 10), TVec3f(0, 0, -20)).empty(),
+                "disabled generated membership must leave all query paths");
+        registration->set_enabled(true);
+        check_hit(3, 0.35F);
+        // Original KCollision represents a collapsed/near-parallel face by a
+        // nonpositive height. Its stable slot must survive deactivation.
+        const auto saved = vertices;
+        for (auto& vertex : vertices) vertex.z = 5;
+        vertices[3] = vertices[0];
+        actor.syncCollision();
+        collision.update_registered_geometry(*registration);
+        check_hit(5, 0.25F);
+        require(!collision.surface(second_id) && !collision.surface(&parts, 1) &&
+                    collision.stats().triangle_count == 2,
+                "collapsed original prism must retain its identity slot without exposing stale geometry");
+        require(collision.line_hits(TVec3f(1, 3, 10), TVec3f(0, 0, -20)).empty() &&
+                    !collision.line_cast(TVec3f(1, 3, 10), TVec3f(0, 0, -20)),
+                "original and native queries must skip the collapsed face");
+        vertices = saved;
+        actor.syncCollision();
+        collision.update_registered_geometry(*registration);
+        require(collision.surface(&parts, 1)->triangle_index == second_id,
+                "restored original geometry must reactivate its prior stable prism identity");
+        check_hit(3, 0.35F);
+        for (std::size_t i = 1; i < allocation->prisms.size(); ++i)
+            allocation->prisms[i].mHeight = -std::abs(allocation->prisms[i].mHeight);
+        collision.update_registered_geometry(*registration);
+        require(!collision.surface(first_id) && !collision.surface(second_id) &&
+                    collision.line_hits(TVec3f(3, 1, 10), TVec3f(0, 0, -20)).empty() &&
+                    !collision.line_cast(TVec3f(3, 1, 10), TVec3f(0, 0, -20)) &&
+                    collision.sphere_contacts(TVec3f(3, 1, 3), 1).empty(),
+                "all-inactive generated resources must build an empty query index while retaining prism slots");
+        auto shifted = cIdentity;
+        shifted[3] = 20;
+        collision.update_registered_transform(*registration, shifted, cIdentity);
+        actor.syncCollision();
+        collision.update_registered_geometry(*registration);
+        require(collision.surface(&parts, 0)->triangle_index == first_id &&
+                    collision.surface(&parts, 0)->vertices[0].x == 20 &&
+                    collision.line_cast(TVec3f(23, 1, 10), TVec3f(0, 0, -20)) &&
+                    !collision.line_hits(TVec3f(23, 1, 10), TVec3f(0, 0, -20)).empty(),
+                "reactivated geometry must use a transform committed while all its prisms were inactive");
+        collision.update_registered_transform(*registration, cIdentity, shifted);
+        check_hit(3, 0.35F);
+        // Malformed references remain errors. No partial cache mutation may
+        // escape before the full retained resource passes validation.
+        allocation->prisms[2].mNormalIndex = 99;
+        bool rejected = false;
+        try { collision.update_registered_geometry(*registration); }
+        catch (const std::invalid_argument&) { rejected = true; }
+        require(rejected, "invalid generated references must fail before publication");
+        require(collision.surface(first_id)->vertices[0].z == 3,
+                "failed geometry publication must leave the previous cached surface intact");
+        const std::array<TVec3f, 2> area{TVec3f(0, 0, 2), TVec3f(4, 4, 4)};
+        require_unavailable([&] { collision.line_hits(TVec3f(3, 1, 10), TVec3f(0, 0, -20)); },
+                            "rejected mutations must quarantine original line traversal of the live arrays");
+        require_unavailable([&] { collision.area_polygons(area, 512); },
+                            "rejected mutations must quarantine original area traversal of the live arrays");
+        require_unavailable([&] { collision.line_cast(TVec3f(3, 1, 10), TVec3f(0, 0, -20)); },
+                            "quarantined geometry cannot silently succeed using the previous native ray cache");
+        require_unavailable([&] { collision.sphere_contacts(TVec3f(3, 1, 3), 1); },
+                            "quarantined geometry cannot silently succeed using the previous native sphere cache");
+        registration->set_enabled(false);
+        require(collision.line_hits(TVec3f(3, 1, 10), TVec3f(0, 0, -20)).empty() &&
+                    collision.area_polygons(area, 512).empty(),
+                "disabled quarantined geometry is absent without reading its rejected arrays");
+        registration->set_enabled(true);
+        require_unavailable([&] { collision.line_hits(TVec3f(3, 1, 10), TVec3f(0, 0, -20)); },
+                            "membership reactivation cannot clear failed-publication quarantine");
+        actor.syncCollision();
+        collision.update_registered_geometry(*registration);
+        check_hit(3, 0.35F);
+        require(!collision.area_polygons(area, 512).empty(),
+                "corrected successful publication restores actual original area traversal");
+        resource.reset();
+        allocation.reset();
+        require(!retired.expired(), "registered generated geometry retains the actual independent allocations");
+        registration->release_owner();
+        require(!collision.surface(first_id) && !collision.surface(&parts, 0),
+                "retirement makes retained generated surfaces inert before original part destruction");
+        require_unavailable([&] { collision.update_registered_geometry(*registration); },
+                            "retired generated owner cannot mutate the scene cache");
+        map_owner.reset();
+        server_owner.reset();
+        require(collision.line_hits(TVec3f(3, 1, 10), TVec3f(0, 0, -20)).empty() &&
+                    collision.sphere_contacts(TVec3f(3, 1, 3), 1).empty(),
+                "retired registrations must not dereference a destroyed original server");
+        collision.clear();
+        require(retired.expired() && !smgpc::resource::is_native_kcollision_file(identity),
+                "final service retirement releases generated arrays and typed file identity");
+    }
+
     struct TestCase {
         std::string_view name;
         void (*run)();
     };
 }  // namespace
 
-int main() {
+int main(int argc, char** argv) {
+    const bool generated_only = argc == 2 && std::string_view(argv[1]) == "--generated-only";
+    if (argc > 1 && !generated_only) return 2;
     constexpr auto tests = std::array{
         TestCase{"collision absent without registration", test_collision_is_absent_without_explicit_registration},
         TestCase{"only explicit valid KCL registers", test_only_explicit_valid_kcl_registration_adds_collision},
         TestCase{"triangle source matrix lifetime", test_triangle_source_matrix_lifetime},
         TestCase{"line traversal Game heap ownership", test_repeated_line_queries_preserve_game_heap},
+        TestCase{"generated original geometry publication and retirement", test_generated_geometry_publication_and_retirement},
     };
 
     auto failures = 0;
+    auto executed = 0;
     for (const auto &test : tests) {
+        if (generated_only && test.run != test_generated_geometry_publication_and_retirement) continue;
+        ++executed;
         try {
             test.run();
             std::cout << "[ok] " << test.name << '\n';
@@ -255,6 +446,6 @@ int main() {
         std::cerr << failures << " stage collision registration test(s) failed\n";
         return 1;
     }
-    std::cout << tests.size() << " stage collision registration test(s) passed\n";
+    std::cout << executed << " stage collision registration test(s) passed\n";
     return 0;
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <memory>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -26,15 +27,20 @@ namespace MR {
 }  // namespace MR
 
 namespace smgpc::scene { class StageCollisionService; }
+namespace smgpc::resource { class GeneratedKCollisionResource; }
 
 namespace smgpc::compat {
 
     CollisionParts* create_collision_parts(ResourceHolder* resources, const char* name,
                                            HitSensor* sensor, const TPos3f& matrix,
                                            int scale_type, s32 category);
+    CollisionParts* create_generated_collision_parts(
+        std::shared_ptr<resource::GeneratedKCollisionResource> resource, HitSensor* sensor,
+        const TPos3f& matrix, s32 category);
     scene::StageCollisionService* collision_service_for_parts(const CollisionParts* parts) noexcept;
     void publish_collision_parts(CollisionParts& parts);
     void publish_collision_parts_membership(CollisionParts& parts, bool enabled);
+    void publish_collision_parts_geometry(CollisionParts& parts);
 
     struct ActorCollisionPartsResource {
         std::string resource_name;

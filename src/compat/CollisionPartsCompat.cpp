@@ -46,6 +46,7 @@ namespace {
         std::string source;
         std::string attributes_source;
         std::unique_ptr<smgpc::resource::KCollisionResource> decoded;
+        std::shared_ptr<smgpc::resource::GeneratedKCollisionResource> generated;
         std::unique_ptr<CollisionParts, PartsDeleter> parts;
         std::shared_ptr<smgpc::scene::StageCollisionRegistrationState> registration;
         std::array<float, 12> published_current;
@@ -165,6 +166,64 @@ namespace smgpc::compat {
             for (auto& state : entries) if (state->parts.get() == parts) return state->service;
         }
         return nullptr;
+    }
+
+    CollisionParts* create_generated_collision_parts(
+        std::shared_ptr<resource::GeneratedKCollisionResource> resource, HitSensor* sensor,
+        const TPos3f& matrix, s32 category) {
+        const aurora::allocation::HostAllocationScope host;
+        auto* collision = scene::StageCollisionService::active();
+        auto* holder = scene::current_scene_obj_holder();
+        if (!resource || !sensor || !sensor->mHost || !collision || !holder) {
+            aurora::throw_host_exception<std::logic_error>("Generated CollisionParts requires its geometry, actor, scene and collision owners.");
+        }
+        const auto zone = MR::getCurrentPlacementZoneId();
+        if (zone < 0 || zone >= MR::getZoneNum() || MR::getZoneNum() > 32) {
+            aurora::throw_host_exception<std::logic_error>("Generated CollisionParts requires a valid original placement zone.");
+        }
+        {
+            const aurora::allocation::ClientAllocationScope client;
+            if (!MR::createSceneObj(SceneObj_CollisionDirector)) {
+                aurora::throw_host_exception<std::logic_error>("Generated CollisionParts requires its original CollisionDirector.");
+            }
+        }
+        if (category != 0) collision = &scene::current_collision_director_ownership()->category_service(category);
+        auto state = std::make_unique<ActorCollisionPartsState>();
+        state->scene_holder = holder;
+        state->service = collision;
+        state->service_generation = collision->generation();
+        state->resource_name = sensor->mHost->mName;
+        state->source = "generated:" + state->resource_name;
+        state->generated = std::move(resource);
+        {
+            const aurora::allocation::ClientAllocationScope client;
+            state->parts.reset(new CollisionParts());
+            state->parts->init(matrix, sensor, state->generated->native_file(), nullptr, category, true);
+        }
+        state->registration = std::make_shared<scene::StageCollisionRegistrationState>(nullptr, state->parts.get());
+        state->registration->set_enabled(false);
+        state->published_current = copy_matrix(state->parts->mBaseMatrix);
+        state->published_previous = copy_matrix(state->parts->mPrevBaseMatrix);
+        const auto result = collision->register_generated_kcl(state->generated, *state->parts->mServer,
+            state->published_current, state->source, state->registration, sensor, zone);
+        if (!result.accepted) aurora::throw_host_exception<std::logic_error>("Generated CollisionParts geometry was not registered.");
+        collision->build();
+        auto* parts = state->parts.get();
+        actor_collision_parts()[sensor->mHost].push_back(std::move(state));
+        return parts;
+    }
+
+    void publish_collision_parts_geometry(CollisionParts& parts) {
+        const aurora::allocation::HostAllocationScope host;
+        auto* state = find_state(parts);
+        // Initial bounds are established before publication. Decoded resource
+        // geometry retains its existing immutable-source behavior.
+        if (!state || !state->generated) return;
+        if (scene::current_scene_obj_holder() != state->scene_holder ||
+            state->service->generation() != state->service_generation) {
+            aurora::throw_host_exception<std::logic_error>("Generated CollisionParts geometry publication requires its live collision owner.");
+        }
+        state->service->update_registered_geometry(*state->registration);
     }
 
     void publish_collision_parts(CollisionParts& parts) {

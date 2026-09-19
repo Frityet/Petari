@@ -1,0 +1,16 @@
+{
+  "baseline_commit": "1876d6ec419459a1a08334530f84d055465e030e",
+  "preexisting_first_test_body_exact_match": true,
+  "unchanged_test_sha256": "08c069172b970a30ebaa311dac938372f78ee6f58ab868db47f8ea3d4d588c5b",
+  "failure_stack": [
+    "test_collision_is_absent_without_explicit_registration",
+    "MR::isExistMapCollision",
+    "MR::getCollisionDirector",
+    "SceneObjHolder::getObj(this=null)"
+  ],
+  "stack_log": "registration-debug2.log",
+  "new_case_reached": false,
+  "initial_new_case_fixture_frontier": "SceneInitializationBinding requires original GameSystem scene controller",
+  "final_focused_fixture": "No scene initialization: actual DynamicCollisionObj writer and CollisionParts/KCollisionServer, with an explicitly opaque non-dereferenced sensor identity",
+  "final_focused_log": "registration-generated-test3.log"
+}

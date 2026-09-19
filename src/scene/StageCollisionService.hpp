@@ -17,8 +17,10 @@
 
 class HitSensor;
 class CollisionParts;
+class KCollisionServer;
 namespace smgpc::resource {
     class OwnedKCollisionServer;
+    class GeneratedKCollisionResource;
 }
 
 namespace smgpc::scene {
@@ -137,6 +139,14 @@ namespace smgpc::scene {
             std::string source_name, std::shared_ptr<StageCollisionRegistrationState> registration,
             std::span<const std::uint8_t> attributes = {}, HitSensor* sensor = nullptr,
             std::optional<std::int32_t> placement_zone_id = std::nullopt);
+        [[nodiscard]] StageCollisionRegistrationResult register_generated_kcl(
+            std::shared_ptr<resource::GeneratedKCollisionResource> resource, KCollisionServer& server,
+            const std::array<float, 12U>& matrix, std::string source_name,
+            std::shared_ptr<StageCollisionRegistrationState> registration, HitSensor* sensor,
+            std::int32_t placement_zone_id);
+        // Regenerates cached geometry from the same actual mutable server;
+        // registration, zone order and prism-to-Triangle identities are stable.
+        void update_registered_geometry(const StageCollisionRegistrationState& registration);
         void build();
         // The caller supplies the collision owner's two committed transforms.
         // Refits all geometry owned by this registration without replacing
@@ -206,6 +216,7 @@ namespace smgpc::scene {
             std::uint32_t triangle_index = 0U;
             std::uint32_t source_index = 0U;
             std::uint32_t prism_index = 0U;
+            bool geometry_enabled = true;
             std::shared_ptr<StageCollisionRegistrationState> registration{};
         };
 
@@ -222,6 +233,9 @@ namespace smgpc::scene {
             // Decoding is required by original octree queries. Earlier
             // geometry-only consumers do not require the octree to exist.
             mutable std::unique_ptr<resource::OwnedKCollisionServer> area_server{};
+            std::shared_ptr<resource::GeneratedKCollisionResource> generated_resource{};
+            KCollisionServer* generated_server = nullptr;
+            bool generated_geometry_published = true;
             mutable float area_bounding_radius = 0.0F;
             std::shared_ptr<StageCollisionAreaMembership> area_membership{};
         };
@@ -236,6 +250,11 @@ namespace smgpc::scene {
 
         [[nodiscard]] std::uint32_t build_node(std::uint32_t first, std::uint32_t count);
         void prepare_kcl_source(const Source& source) const;
+        void require_published_geometry() const;
+        [[nodiscard]] KCollisionServer& source_server(const Source& source) const;
+        [[nodiscard]] static bool load_native_triangle(Triangle& triangle, const KCollisionServer& server,
+                                                       std::uint32_t prism_index,
+                                                       const std::array<float, 12U>& matrix);
         [[nodiscard]] static bool transform_triangle_geometry(Triangle& triangle,
                                                               const std::array<float, 12U>& matrix);
         [[nodiscard]] std::vector<StageCollisionContact> sphere_contacts_impl(
@@ -250,6 +269,7 @@ namespace smgpc::scene {
         std::vector<Source> _sources{};
         std::shared_ptr<StageCollisionAreaOrder> _area_order{};
         StageCollisionStats _stats{};
+        std::size_t _unpublished_generated_sources = 0U;
         const std::uint64_t _generation;
         std::uint64_t _revision = 0U;
         bool _built = false;

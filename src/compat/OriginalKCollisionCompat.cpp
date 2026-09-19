@@ -112,7 +112,7 @@ KC_PrismData* KCollisionServer::getPrismData(u32 index) const {
 }
 
 s32 KCollisionServer::getTriangleNum() const {
-    return (reinterpret_cast< u8* >(mFile->mOctree) - reinterpret_cast< u8* >(mFile->mPrisms + 1)) / sizeof(KC_PrismData);
+    return smgpc::resource::native_kcollision_triangle_count(mFile);
 }
 
 JMapInfoIter KCollisionServer::getAttributes(u32 index) const {

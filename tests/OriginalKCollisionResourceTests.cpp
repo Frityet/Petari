@@ -301,10 +301,89 @@ namespace {
         put32(tree, 0, 0x80000000U);
         rejects([&] { smgpc::resource::KCollisionResource resource(kcl(tree)); });
     }
+
+    struct GeneratedGeometry {
+        KCLFile file{};
+        std::vector<TVec3f> positions;
+        std::vector<TVec3f> normals;
+        std::vector<KC_PrismData> prisms;
+        std::array<u16, 5> octree{0x8000, 2, 2, 1, 0};
+
+        GeneratedGeometry() {
+            smgpc::resource::KCollisionResource decoded(kcl());
+            file = *decoded.native_file();
+            positions.assign(file.mPos, file.mPos + 1);
+            normals.assign(file.mNorms, file.mNorms + 4);
+            prisms.assign(file.mPrisms, file.mPrisms + 3);
+            file.mPos = positions.data();
+            file.mNorms = normals.data();
+            file.mPrisms = prisms.data();
+            file.mOctree = octree.data();
+            file.mBlockXShift = file.mBlockXYShift = -1;
+        }
+    };
+
+    void generated_separate_arrays_endian_and_retirement() {
+        auto allocation = std::make_shared<GeneratedGeometry>();
+        const auto* identity = &allocation->file;
+        const auto weak = std::weak_ptr(allocation);
+        KCollisionServer server;
+        std::unique_ptr<JMapInfo> map_owner(server.mapInfo);
+        auto resource = std::make_unique<smgpc::resource::GeneratedKCollisionResource>(
+            allocation->file, allocation->positions, allocation->normals, allocation->prisms,
+            allocation->octree, allocation);
+        server.init(resource->native_file(), nullptr);
+        require(server.getTriangleNum() == 2, "Generated triangle count comes from explicit prism extent.");
+        const u32 coordinate = 0;
+        s32 shift = -1;
+        const auto* leaf = reinterpret_cast<const u16*>(server.searchBlock(&shift, coordinate, coordinate, coordinate));
+        require(leaf[1] == 2 && leaf[2] == 1 && leaf[3] == 0,
+                "Original numeric halfword root is converted without reversing the authored leaf order.");
+        require(allocation->octree == std::array<u16, 5>{0x8000, 2, 2, 1, 0},
+                "Native node relocation does not rewrite the authored halfwords.");
+        allocation->positions[0].z += 7;
+        allocation->prisms[1].mHeight = 3;
+        resource->validate();
+        equal_vector(server.getPos(server.getPrismData(0), 1), {9, 4, 12});
+        require(!server.getAttributes(0).isValid(), "Generated geometry does not acquire invented PA rows.");
+        auto retained = std::make_unique<smgpc::resource::GeneratedKCollisionResource>(*resource);
+        resource.reset();
+        allocation.reset();
+        require(!weak.expired() && smgpc::resource::is_native_kcollision_file(identity),
+                "Generated resource copies retain the actual separate allocations.");
+        retained.reset();
+        require(weak.expired() && !smgpc::resource::is_native_kcollision_file(identity),
+                "The final generated owner retires its file identity and arrays.");
+        rejects([&] { server.getTriangleNum(); });
+    }
+
+    void generated_invalid_geometry_and_duplicate_owners() {
+        auto allocation = std::make_shared<GeneratedGeometry>();
+        auto make_resource = [&] {
+            return smgpc::resource::GeneratedKCollisionResource(allocation->file,
+                allocation->positions, allocation->normals, allocation->prisms,
+                allocation->octree, allocation);
+        };
+        allocation->octree[2] = 3;
+        rejects(make_resource);
+        require(allocation->file.mOctree == allocation->octree.data() &&
+                !smgpc::resource::is_native_kcollision_file(&allocation->file),
+                "Malformed generated octree never publishes or relocates the source file.");
+        allocation->octree[2] = 2;
+        auto resource = make_resource();
+        const auto* native_octree = allocation->file.mOctree;
+        rejects(make_resource);
+        require(allocation->file.mOctree == native_octree && smgpc::resource::is_native_kcollision_file(&allocation->file),
+                "Rejected duplicate owner preserves the existing live resource.");
+        allocation->prisms[1].mNormalIndex = 99;
+        rejects([&] { resource.validate(); });
+        allocation->prisms[1].mNormalIndex = 0;
+        resource.validate();
+    }
 }
 
 int main() {
-    const std::array<std::pair<std::string_view, std::function<void()>>, 10> tests{{
+    const std::array<std::pair<std::string_view, std::function<void()>>, 12> tests{{
         {"actual constructor, init, and geometry", actual_constructor_init_and_geometry},
         {"retained mutable resource lifetime", retained_mutable_resource_lifetime},
         {"JMap attach identity and null semantics", jmap_attach_identity_and_null_semantics},
@@ -315,6 +394,8 @@ int main() {
         {"absent and out-of-range attributes", absent_and_out_of_range_attributes},
         {"empty original prism array", empty_prism_array},
         {"incompatible live node/leaf alias is explicit", incompatible_live_node_leaf_alias_is_explicit},
+        {"generated separate arrays, endian boundary and retirement", generated_separate_arrays_endian_and_retirement},
+        {"generated invalid geometry and duplicate owners", generated_invalid_geometry_and_duplicate_owners},
     }};
     std::size_t failures = 0;
     for (const auto& [name, test] : tests) {

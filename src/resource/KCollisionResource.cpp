@@ -1,4 +1,5 @@
 #include <aurora/exception.hpp>
+#include <aurora/allocation.hpp>
 #include "resource/KCollisionResource.hpp"
 
 #include "resource/JMapResource.hpp"
@@ -66,8 +67,12 @@ namespace {
     };
 
     struct Registry {
+        struct Entry {
+            std::weak_ptr<void> owner;
+            s32 triangle_count;
+        };
         std::mutex mutex;
-        std::map<const void*, std::weak_ptr<void>> files;
+        std::map<const void*, Entry> files;
     };
 
     Registry& registry() {
@@ -181,6 +186,7 @@ namespace smgpc::resource {
         std::vector<TVec3f> normals;
         std::unique_ptr<std::byte[], NativeAllocationDeleter> geometry;
         std::size_t octree_size = 0;
+        s32 triangle_count = 0;
         std::optional<JMapResource> attributes;
 
         Storage(Bytes bytes, Bytes pa) : source(bytes.begin(), bytes.end()) {
@@ -203,6 +209,7 @@ namespace smgpc::resource {
                     (octree_offset - prism_offset) % 16 == 0, "KCL array has a partial record.");
             const auto prism_count = (octree_offset - prism_offset) / 16;
             require(prism_count <= static_cast<std::size_t>(std::numeric_limits<s32>::max()), "KCL prism count exceeds its signed API.");
+            triangle_count = static_cast<s32>(prism_count);
             file.mThickness = bef32(bytes, 0x10);
             require(std::isfinite(file.mThickness), "KCL thickness is non-finite.");
             file.mMin = vector_at(bytes, 0x14);
@@ -251,11 +258,12 @@ namespace smgpc::resource {
         }
     };
 
-    KCollisionResource::KCollisionResource(Bytes bytes, Bytes attributes)
-        : _storage(std::make_shared<Storage>(bytes, attributes)) {
+    KCollisionResource::KCollisionResource(Bytes bytes, Bytes attributes) {
+        const aurora::allocation::HostAllocationScope host;
+        _storage = std::make_shared<Storage>(bytes, attributes);
         auto& owners = registry();
         const std::lock_guard lock(owners.mutex);
-        owners.files.emplace(&_storage->file, _storage);
+        owners.files.emplace(&_storage->file, Registry::Entry{_storage, _storage->triangle_count});
     }
 
     KCLFile* KCollisionResource::native_file() const { return &_storage->file; }
@@ -270,12 +278,115 @@ namespace smgpc::resource {
         auto& owners = registry();
         const std::lock_guard lock(owners.mutex);
         const auto found = owners.files.find(data);
-        return found != owners.files.end() && !found->second.expired();
+        return found != owners.files.end() && !found->second.owner.expired();
     }
 
     KCLFile* require_native_kcollision_file(void* data) {
-        require(is_native_kcollision_file(data), "KCollisionServer requires a retained, decoded native KCL resource.");
+        require(is_native_kcollision_file(data), "KCollisionServer requires a retained typed native KCL resource.");
         return static_cast<KCLFile*>(data);
+    }
+
+    s32 native_kcollision_triangle_count(const KCLFile* file) {
+        auto& owners = registry();
+        const std::lock_guard lock(owners.mutex);
+        const auto found = owners.files.find(file);
+        require(found != owners.files.end() && !found->second.owner.expired(),
+                "KCollision triangle count requires its retained typed resource.");
+        return found->second.triangle_count;
+    }
+
+    struct GeneratedKCollisionResource::Storage {
+        std::shared_ptr<void> allocation_owner;
+        KCLFile& file;
+        std::span<TVec3f> positions;
+        std::span<TVec3f> normals;
+        std::span<KC_PrismData> prisms;
+        void* original_octree;
+        std::vector<std::uint8_t> source_octree;
+        std::unique_ptr<std::byte[], NativeAllocationDeleter> native_octree;
+        bool registered = false;
+
+        Storage(KCLFile& header, std::span<TVec3f> pos, std::span<TVec3f> norm,
+                std::span<KC_PrismData> prism, std::span<const std::uint16_t> octree,
+                std::shared_ptr<void> owner)
+            : allocation_owner(std::move(owner)), file(header), positions(pos), normals(norm),
+              prisms(prism), original_octree(header.mOctree) {
+            require(allocation_owner != nullptr, "Generated KCL requires its actual allocation owner.");
+            require(prisms.size() > 1 && prisms.size() <= 65536,
+                    "Generated KCL requires a sentinel and addressable prism records.");
+            require(!octree.empty(), "Generated KCL requires its authored octree.");
+            validate_geometry();
+            source_octree.reserve(octree.size_bytes());
+            for (const auto word : octree) {
+                source_octree.push_back(static_cast<std::uint8_t>(word >> 8));
+                source_octree.push_back(static_cast<std::uint8_t>(word));
+            }
+            native_octree.reset(static_cast<std::byte*>(::operator new(source_octree.size(),
+                                std::align_val_t(alignof(std::max_align_t)))));
+            std::memcpy(native_octree.get(), source_octree.data(), source_octree.size());
+            OctreeDecoder(source_octree, reinterpret_cast<std::uint8_t*>(native_octree.get()),
+                          file, prisms.size() - 1).decode();
+        }
+
+        void validate_geometry() const {
+            require(file.mPos == positions.data() && file.mNorms == normals.data() && file.mPrisms == prisms.data(),
+                    "Generated KCL geometry allocations changed outside their typed owner.");
+            require(std::isfinite(file.mThickness) && std::isfinite(file.mMin.x) &&
+                    std::isfinite(file.mMin.y) && std::isfinite(file.mMin.z),
+                    "Generated KCL header contains non-finite geometry.");
+            for (const auto vectors : {positions, normals}) {
+                for (const auto& value : vectors) {
+                    require(std::isfinite(value.x) && std::isfinite(value.y) && std::isfinite(value.z),
+                            "Generated KCL vector contains a non-finite component.");
+                }
+            }
+            for (const auto& prism : prisms.subspan(1)) {
+                require(std::isfinite(prism.mHeight) && prism.mPositionIndex < positions.size() &&
+                        prism.mNormalIndex < normals.size() && prism.mEdgeIndices[0] < normals.size() &&
+                        prism.mEdgeIndices[1] < normals.size() && prism.mEdgeIndices[2] < normals.size(),
+                        "Generated KCL prism references an invalid vector or has non-finite height.");
+            }
+        }
+
+        ~Storage() {
+            if (!registered) return;
+            auto& owners = registry();
+            const std::lock_guard lock(owners.mutex);
+            owners.files.erase(&file);
+            file.mOctree = original_octree;
+        }
+    };
+
+    GeneratedKCollisionResource::GeneratedKCollisionResource(KCLFile& file, std::span<TVec3f> positions,
+        std::span<TVec3f> normals, std::span<KC_PrismData> prisms,
+        std::span<const std::uint16_t> octree_halfwords, std::shared_ptr<void> allocation_owner) {
+        const aurora::allocation::HostAllocationScope host;
+        _storage = std::make_shared<Storage>(file, positions, normals, prisms, octree_halfwords,
+                                             std::move(allocation_owner));
+        auto& owners = registry();
+        const std::lock_guard lock(owners.mutex);
+        require(owners.files.emplace(&file, Registry::Entry{_storage, static_cast<s32>(prisms.size() - 1)}).second,
+                "Generated KCL header already belongs to another resource owner.");
+        file.mOctree = _storage->native_octree.get();
+        _storage->registered = true;
+    }
+
+    KCLFile* GeneratedKCollisionResource::native_file() const { return &_storage->file; }
+
+    void GeneratedKCollisionResource::validate() const {
+        const aurora::allocation::HostAllocationScope host;
+        _storage->validate_geometry();
+        require(_storage->file.mOctree == _storage->native_octree.get(),
+                "Generated KCL octree changed outside its typed owner.");
+        // Header bounds can change with the same authored topology. Validate
+        // their reachable cells before publishing a new geometry snapshot.
+        const auto size = _storage->source_octree.size();
+        std::unique_ptr<std::byte[], NativeAllocationDeleter> decoded(
+            static_cast<std::byte*>(::operator new(size, std::align_val_t(alignof(std::max_align_t)))));
+        std::memcpy(decoded.get(), _storage->source_octree.data(), size);
+        OctreeDecoder(_storage->source_octree, reinterpret_cast<std::uint8_t*>(decoded.get()),
+                      _storage->file, _storage->prisms.size() - 1).decode();
+        std::memcpy(_storage->native_octree.get(), decoded.get(), size);
     }
 
     OwnedKCollisionServer::OwnedKCollisionServer(KCollisionResource resource)

@@ -365,6 +365,7 @@ namespace smgpc::scene {
         _triangle_indices.clear();
         _nodes.clear();
         _sources.clear();
+        _unpublished_generated_sources = 0U;
         _area_order->zones.clear();
         _stats = {};
         ++_revision;
@@ -532,6 +533,154 @@ namespace smgpc::scene {
         };
     }
 
+    bool StageCollisionService::load_native_triangle(Triangle& triangle, const KCollisionServer& server,
+        std::uint32_t prism_index, const std::array<float, 12U>& matrix) {
+        const auto* prism = server.getPrismData(prism_index);
+        triangle.attribute = prism->mAttribute;
+        // Original KCollision skips nonpositive heights. Dynamic writers can
+        // collapse a face temporarily; keep its identity for later reactivation
+        // without reconstructing undefined vertices or inserting stale bounds.
+        triangle.geometry_enabled = prism->mHeight > 0.0F;
+        if (!triangle.geometry_enabled) return true;
+        for (int i = 0; i < 3; ++i) triangle.local_vertices[i] = server.getPos(prism, i);
+        triangle.local_normals = {*server.getFaceNormal(prism), *server.getEdgeNormal1(prism),
+                                  *server.getEdgeNormal2(prism), *server.getEdgeNormal3(prism)};
+        const auto ab = triangle.local_vertices[1] - triangle.local_vertices[0];
+        const auto ac = triangle.local_vertices[2] - triangle.local_vertices[0];
+        const auto bc = triangle.local_vertices[2] - triangle.local_vertices[1];
+        const auto twice_area = std::sqrt(length_squared(cross(ab, ac)));
+        const auto ab_length = std::sqrt(length_squared(ab));
+        const auto ac_length = std::sqrt(length_squared(ac));
+        const auto bc_length = std::sqrt(length_squared(bc));
+        if (!std::isfinite(twice_area) || !(twice_area > 1.0e-8F) ||
+            !(ab_length > 1.0e-8F) || !(ac_length > 1.0e-8F) || !(bc_length > 1.0e-8F)) return false;
+        triangle.local_thickness = std::max(0.0F, server.mFile->mThickness);
+        triangle.arrow_edge_tolerances = {cArrowEdgeTolerance * ac_length / twice_area,
+            cArrowEdgeTolerance * ab_length / twice_area, cArrowEdgeTolerance * bc_length / twice_area};
+        return transform_triangle_geometry(triangle, matrix);
+    }
+
+    StageCollisionRegistrationResult StageCollisionService::register_generated_kcl(
+        std::shared_ptr<resource::GeneratedKCollisionResource> resource, KCollisionServer& server,
+        const std::array<float, 12U>& matrix, std::string source_name,
+        std::shared_ptr<StageCollisionRegistrationState> registration, HitSensor* sensor,
+        std::int32_t placement_zone_id) {
+        const aurora::allocation::HostAllocationScope host;
+        if (!resource || !registration || !registration->parts() || !sensor || placement_zone_id < 0 ||
+            registration->parts()->mServer != &server || registration->parts()->mHitSensor != sensor ||
+            server.mFile != resource->native_file()) {
+            aurora::throw_host_exception<std::invalid_argument>("Generated collision requires its typed resource, original server and live part registration.");
+        }
+        resource->validate();
+        const auto count = server.getTriangleNum();
+        const auto source_index = static_cast<std::uint32_t>(_sources.size());
+        std::vector<Triangle> triangles;
+        triangles.reserve(count);
+        auto radius_squared = 0.0F;
+        for (s32 i = 0; i < count; ++i) {
+            Triangle triangle;
+            if (!load_native_triangle(triangle, server, i, matrix)) {
+                aurora::throw_host_exception<std::invalid_argument>("Generated collision contains a degenerate prism.");
+            }
+            if (triangle.geometry_enabled) {
+                for (const auto& vertex : triangle.local_vertices) radius_squared = std::max(radius_squared, vertex.squared());
+            }
+            const auto identity = sNextTriangleIndex.fetch_add(1U, std::memory_order_relaxed);
+            if (identity >= std::numeric_limits<std::uint32_t>::max()) {
+                aurora::throw_host_exception<std::overflow_error>("Stage collision exhausted stable Triangle identities.");
+            }
+            triangle.triangle_index = static_cast<std::uint32_t>(identity);
+            triangle.source_index = source_index;
+            triangle.prism_index = i;
+            triangle.registration = registration;
+            triangles.push_back(std::move(triangle));
+        }
+        Source source;
+        source.name = std::move(source_name);
+        source.sensor = sensor;
+        source.placement_zone_id = placement_zone_id;
+        source.matrix = matrix;
+        source.registration = registration;
+        source.generated_resource = std::move(resource);
+        source.generated_server = &server;
+        source.prism_triangles.reserve(count);
+        for (auto& triangle : triangles) {
+            source.prism_triangles.push_back(triangle.triangle_index);
+            _triangle_lookup.emplace(triangle.triangle_index, static_cast<std::uint32_t>(_triangles.size()));
+            _triangles.push_back(std::move(triangle));
+        }
+        auto& zone = _area_order->zones[placement_zone_id];
+        zone.parts.reserve(++zone.registered_count);
+        auto membership = std::make_shared<StageCollisionAreaMembership>();
+        membership->owner = _area_order;
+        membership->zone = placement_zone_id;
+        membership->source = source_index;
+        std::erase_if(registration->_area_memberships, [](const auto& weak) { return weak.expired(); });
+        registration->_area_memberships.push_back(membership);
+        membership->set_enabled(!registration->_released && registration->_enabled);
+        source.area_membership = std::move(membership);
+        _sources.push_back(std::move(source));
+        ++_revision;
+        ++_stats.mesh_count;
+        _stats.triangle_count = _triangles.size();
+        _built = false;
+        return {.accepted = true, .local_bounding_radius = std::sqrt(radius_squared)};
+    }
+
+    void StageCollisionService::update_registered_geometry(const StageCollisionRegistrationState& registration) {
+        const aurora::allocation::HostAllocationScope host;
+        if (registration._released) {
+            aurora::throw_host_exception<std::logic_error>("Generated collision update requires its live registration.");
+        }
+        std::vector<std::pair<std::size_t, Triangle>> updates;
+        bool found = false;
+        for (auto& source : _sources) {
+            if (source.registration.get() != &registration) continue;
+            if (!source.generated_resource || !source.generated_server) {
+                aurora::throw_host_exception<std::logic_error>("Geometry mutation requires a generated collision resource.");
+            }
+            found = true;
+            if (source.generated_geometry_published) {
+                source.generated_geometry_published = false;
+                ++_unpublished_generated_sources;
+            }
+        }
+        if (!found) aurora::throw_host_exception<std::logic_error>("Generated collision registration is absent from this service.");
+        for (const auto& source : _sources) {
+            if (source.registration.get() != &registration) continue;
+            source.generated_resource->validate();
+            if (source.prism_triangles.size() != static_cast<std::size_t>(source.generated_server->getTriangleNum())) {
+                aurora::throw_host_exception<std::logic_error>("Generated collision changed its retained prism count.");
+            }
+            for (const auto identity : source.prism_triangles) {
+                const auto index = _triangle_lookup.at(identity);
+                auto triangle = _triangles[index];
+                if (!load_native_triangle(triangle, *source.generated_server, triangle.prism_index, source.matrix)) {
+                    aurora::throw_host_exception<std::invalid_argument>("Generated collision update contains a degenerate prism.");
+                }
+                updates.emplace_back(index, std::move(triangle));
+            }
+        }
+        for (auto& [index, triangle] : updates) _triangles[index] = std::move(triangle);
+        ++_revision;
+        if (_built) build();
+        for (auto& source : _sources) {
+            if (source.registration.get() != &registration) continue;
+            source.generated_geometry_published = true;
+            --_unpublished_generated_sources;
+        }
+    }
+
+    void StageCollisionService::require_published_geometry() const {
+        if (_unpublished_generated_sources == 0U) return;
+        for (const auto& source : _sources) {
+            if (!source.generated_geometry_published && source.registration->enabled()) {
+                aurora::throw_host_exception<std::logic_error>(
+                    "Generated collision queries require a successful geometry publication after mutation.");
+            }
+        }
+    }
+
     bool StageCollisionService::transform_triangle_geometry(Triangle& triangle,
                                                              const std::array<float, 12U>& matrix) {
         triangle.vertices[0] = transform_point(matrix, triangle.local_vertices[0]);
@@ -594,13 +743,15 @@ namespace smgpc::scene {
 
     void StageCollisionService::build() {
         const aurora::allocation::HostAllocationScope host_allocations;
-        _triangle_indices.resize(_triangles.size());
-        for (auto index = std::size_t{}; index < _triangle_indices.size(); ++index) {
-            _triangle_indices[index] = static_cast<std::uint32_t>(index);
+        _triangle_indices.clear();
+        _triangle_indices.reserve(_triangles.size());
+        for (auto index = std::size_t{}; index < _triangles.size(); ++index) {
+            if (_triangles[index].geometry_enabled)
+                _triangle_indices.push_back(static_cast<std::uint32_t>(index));
         }
         _nodes.clear();
-        if (!_triangles.empty()) {
-            _nodes.reserve(_triangles.size() * 2U);
+        if (!_triangle_indices.empty()) {
+            _nodes.reserve(_triangle_indices.size() * 2U);
             (void)build_node(0U, static_cast<std::uint32_t>(_triangle_indices.size()));
         }
         _stats.triangle_count = _triangles.size();
@@ -638,6 +789,7 @@ namespace smgpc::scene {
         for (auto i = std::size_t{}; i < _triangles.size(); ++i) {
             if (_triangles[i].registration.get() != &registration) continue;
             auto triangle = _triangles[i];
+            if (!triangle.geometry_enabled) continue;
             if (!transform_triangle_geometry(triangle, current)) {
                 aurora::throw_host_exception<std::invalid_argument>("Collision transform produces a degenerate registered prism.");
             }
@@ -667,7 +819,15 @@ namespace smgpc::scene {
     }
 
     void StageCollisionService::prepare_kcl_source(const Source& source) const {
-            if (source.area_server == nullptr) {
+            if (source.generated_resource) {
+                if (!source.generated_geometry_published) {
+                    aurora::throw_host_exception<std::logic_error>(
+                        "Original generated collision queries require a successful geometry publication.");
+                }
+                if (!source.generated_server || source.generated_server->mFile != source.generated_resource->native_file()) {
+                    aurora::throw_host_exception<std::logic_error>("Generated collision query requires its original retained server.");
+                }
+            } else if (source.area_server == nullptr) {
                 auto owner = std::make_unique<resource::OwnedKCollisionServer>(
                     resource::KCollisionResource(source.kcl_bytes, source.attributes));
                 auto& server = owner->server();
@@ -697,9 +857,15 @@ namespace smgpc::scene {
             }
     }
 
+    KCollisionServer& StageCollisionService::source_server(const Source& source) const {
+        prepare_kcl_source(source);
+        return source.generated_server ? *source.generated_server : source.area_server->server();
+    }
+
     std::vector<std::uint32_t> StageCollisionService::area_polygons(
         std::span<const TVec3f> points, std::size_t maximum) const {
         const aurora::allocation::HostAllocationScope host_allocations;
+        require_published_geometry();
         auto result = std::vector<std::uint32_t>{};
         if (maximum == 0U || points.empty()) {
             return result;
@@ -800,7 +966,7 @@ namespace smgpc::scene {
                 TVec3f local_min, local_max;
                 MR::createBoundingBox(local_points.data(), static_cast<u32>(points.size()), &local_min, &local_max);
                 auto prisms = std::array<KC_PrismData*, 512U>{};
-                auto& server = source.area_server->server();
+                auto& server = source_server(source);
                 const auto found = server.checkArea3D(reinterpret_cast<Fxyz*>(&local_min),
                                                       reinterpret_cast<Fxyz*>(&local_max), prisms.data(),
                                                       static_cast<u32>(maximum - result.size()));
@@ -825,6 +991,7 @@ namespace smgpc::scene {
         const TVec3f& start, const TVec3f& offset, std::size_t maximum,
         const StageCollisionTriangleFilter& filter) const {
         const aurora::allocation::HostAllocationScope host_allocations;
+        require_published_geometry();
         auto result = std::vector<StageCollisionHit>{};
         if (maximum > 32U) {
             aurora::throw_host_exception<std::invalid_argument>("All-hit line queries exceed the original 32-hit capacity.");
@@ -907,7 +1074,7 @@ namespace smgpc::scene {
                 auto flags = std::array<u8, 32U>{};
                 auto prisms = std::array<KC_PrismData*, 32U>{};
                 auto count = u32{};
-                auto& server = source->area_server->server();
+                auto& server = source_server(*source);
                 server.checkArrow(local_start, local_offset, fractions.data(), flags.data(), &count,
                                   prisms.data(), static_cast<u32>(maximum - result.size()));
                 for (auto i = 0U; i < count; ++i) {
@@ -981,6 +1148,7 @@ namespace smgpc::scene {
     bool StageCollisionService::line_cast(const TVec3f& start, const TVec3f& offset, StageCollisionHit* hit,
                                           const StageCollisionTriangleFilter& filter) const {
         const aurora::allocation::HostAllocationScope host_allocations;
+        require_published_geometry();
         if (!_built || _nodes.empty() || length_squared(offset) <= 1.0e-12F) {
             return false;
         }
@@ -1054,6 +1222,7 @@ namespace smgpc::scene {
         const TVec3f& center, float radius, std::size_t maximum,
         std::optional<float> thickness_override,
         const StageCollisionTriangleFilter& filter) const {
+        require_published_geometry();
         auto contacts = std::vector<StageCollisionContact>{};
         if (!_built || _nodes.empty() || radius < 0.0F || !std::isfinite(radius) ||
             maximum == 0U) {
@@ -1153,8 +1322,9 @@ namespace smgpc::scene {
 
     StageCollisionMoveResult StageCollisionService::move_sphere(const TVec3f& center, const TVec3f& movement,
                                                                 float radius, std::size_t maximum_contacts,
-                                                                bool skip_initial_check,
-                                                                const StageCollisionTriangleFilter& filter) const {
+                                                           bool skip_initial_check,
+                                                           const StageCollisionTriangleFilter& filter) const {
+        require_published_geometry();
         auto result = StageCollisionMoveResult{};
         if (!_built || _nodes.empty() || radius < 0.0F || !std::isfinite(radius) || maximum_contacts == 0U) {
             result.displacement = movement;
@@ -1221,6 +1391,7 @@ namespace smgpc::scene {
             return std::nullopt;
         }
         const auto& triangle = _triangles[lookup->second];
+        if (!triangle.geometry_enabled) return std::nullopt;
         if (require_enabled && triangle.registration != nullptr && !triangle.registration->enabled()) {
             return std::nullopt;
         }
