@@ -1,0 +1,368 @@
+{
+  "scope": "Retail donor code/table proof only; no native import, actor runtime or cage progression claimed.",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "source_sha256": "fc602f5d9f051b2cdd2c9e9838f568e9687ad3faed8008dbc4ed50b021e31218",
+  "header_sha256": "390419c4f70c5a545cc08848a48c894d01252e6911e3fe7ea3130c2c83c0016c",
+  "retail_object_sha256": "a7116fa55848baa3682ef3e1a5698ce5821880580e95e051fa10f019f1e52831",
+  "candidate_object_sha256": "746cf940f51d978721ef4234823290caa2a701b858abf3868cffba459d78c642",
+  "retail_asm_instructions_verified_against_dol": 592,
+  "table_address": "0x80533150",
+  "table_rows": 15,
+  "table_bytes": 420,
+  "relocation_normalized_table_sha256": "27a449b086c9fcad28603bc633cfb05a2a328a16fce053866eddc8f7a4a8c8ca",
+  "table_string_pointer_count": 19,
+  "table_exact_including_float_and_padding_bytes": true,
+  "added_dynamic_initializers": 0,
+  "creation_function_address": "0x801D085C",
+  "creation_function_exact_after_register_29_30_swap": true,
+  "creation_function_references": [
+    {
+      "offset": "0x10",
+      "kind": 10,
+      "symbol": "_savegpr_26",
+      "addend": 0
+    },
+    {
+      "offset": "0x28",
+      "kind": 10,
+      "symbol": "getDummyDisplayModelId__2MRFRC12JMapInfoIterl",
+      "addend": 0
+    },
+    {
+      "offset": "0x48",
+      "kind": 10,
+      "symbol": "isGalaxyDarkCometAppearInCurrentStage__2MRFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x62",
+      "kind": 6,
+      "symbol": "cDummyDisplayModelInfoTable__31@unnamed@DummyDisplayModel_cpp@",
+      "addend": 0,
+      "value_hex": "00"
+    },
+    {
+      "offset": "0x6a",
+      "kind": 4,
+      "symbol": "cDummyDisplayModelInfoTable__31@unnamed@DummyDisplayModel_cpp@",
+      "addend": 0,
+      "value_hex": "00"
+    },
+    {
+      "offset": "0x70",
+      "kind": 10,
+      "symbol": "__nw__FUl",
+      "addend": 0
+    },
+    {
+      "offset": "0x98",
+      "kind": 10,
+      "symbol": "isValidInfo__2MRFRC12JMapInfoIter",
+      "addend": 0
+    },
+    {
+      "offset": "0xac",
+      "kind": 10,
+      "symbol": "getJMapInfoArg6NoInit__2MRFRC12JMapInfoIterPl",
+      "addend": 0
+    },
+    {
+      "offset": "0xc8",
+      "kind": 10,
+      "symbol": "__ct__17DummyDisplayModelFP9LiveActorPC21DummyDisplayModelInfoill",
+      "addend": 0
+    },
+    {
+      "offset": "0xd4",
+      "kind": 10,
+      "symbol": "initWithoutIter__7NameObjFv",
+      "addend": 0
+    },
+    {
+      "offset": "0xe0",
+      "kind": 10,
+      "symbol": "_restgpr_26",
+      "addend": 0
+    }
+  ],
+  "rows": [
+    {
+      "id": 0,
+      "model": "Coin",
+      "offset": [
+        0.0,
+        70.0,
+        0.0
+      ],
+      "default_draw_category": 15,
+      "animation": null,
+      "color_change": false
+    },
+    {
+      "id": 1,
+      "model": "Kinopio",
+      "offset": [
+        0.0,
+        50.0,
+        0.0
+      ],
+      "default_draw_category": 16,
+      "animation": "Freeze",
+      "color_change": true
+    },
+    {
+      "id": 2,
+      "model": "SpinDriver",
+      "offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "default_draw_category": 11,
+      "animation": null,
+      "color_change": false
+    },
+    {
+      "id": 3,
+      "model": "SuperSpinDriver",
+      "offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "default_draw_category": 11,
+      "animation": "Freeze",
+      "color_change": false
+    },
+    {
+      "id": 4,
+      "model": "StarPieceDummy",
+      "offset": [
+        -30.0,
+        100.0,
+        -30.0
+      ],
+      "default_draw_category": 13,
+      "animation": "Freeze",
+      "color_change": false
+    },
+    {
+      "id": 5,
+      "model": "Tico",
+      "offset": [
+        0.0,
+        50.0,
+        0.0
+      ],
+      "default_draw_category": 16,
+      "animation": null,
+      "color_change": true
+    },
+    {
+      "id": 6,
+      "model": "KeySwitch",
+      "offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "default_draw_category": 10,
+      "animation": "InRotation",
+      "color_change": false
+    },
+    {
+      "id": 7,
+      "model": "PowerStar",
+      "offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "default_draw_category": 13,
+      "animation": null,
+      "color_change": false
+    },
+    {
+      "id": 8,
+      "model": "KinokoOneUp",
+      "offset": [
+        0.0,
+        40.0,
+        0.0
+      ],
+      "default_draw_category": 13,
+      "animation": null,
+      "color_change": false
+    },
+    {
+      "id": 9,
+      "model": "Kuribo",
+      "offset": [
+        0.0,
+        80.0,
+        0.0
+      ],
+      "default_draw_category": 18,
+      "animation": null,
+      "color_change": false
+    },
+    {
+      "id": 10,
+      "model": "BlueChip",
+      "offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "default_draw_category": 11,
+      "animation": null,
+      "color_change": false
+    },
+    {
+      "id": 11,
+      "model": "YellowChip",
+      "offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "default_draw_category": 11,
+      "animation": null,
+      "color_change": false
+    },
+    {
+      "id": 12,
+      "model": "StrayTico",
+      "offset": [
+        0.0,
+        50.0,
+        0.0
+      ],
+      "default_draw_category": 16,
+      "animation": null,
+      "color_change": false
+    },
+    {
+      "id": 13,
+      "model": "GrandStar",
+      "offset": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "default_draw_category": 13,
+      "animation": null,
+      "color_change": false
+    },
+    {
+      "id": 14,
+      "model": "KinokoLifeUp",
+      "offset": [
+        0.0,
+        40.0,
+        0.0
+      ],
+      "default_draw_category": 13,
+      "animation": null,
+      "color_change": false
+    }
+  ],
+  "functions": [
+    {
+      "name": "tryCreateDummyModel__31@unnamed@DummyDisplayModel_cpp@FP9LiveActorRC12JMapInfoIterli",
+      "retail_size": 244,
+      "match_percent": 99.508194,
+      "baseline_match_percent": 64.81967
+    },
+    {
+      "name": "__ct__17DummyDisplayModelFP9LiveActorPC21DummyDisplayModelInfoill",
+      "retail_size": 184,
+      "match_percent": 100.0,
+      "baseline_match_percent": 100.0
+    },
+    {
+      "name": "init__17DummyDisplayModelFRC12JMapInfoIter",
+      "retail_size": 416,
+      "match_percent": 99.75961,
+      "baseline_match_percent": 99.49039
+    },
+    {
+      "name": "makeActorAppeared__17DummyDisplayModelFv",
+      "retail_size": 60,
+      "match_percent": 100.0,
+      "baseline_match_percent": 100.0
+    },
+    {
+      "name": "makeActorDead__17DummyDisplayModelFv",
+      "retail_size": 68,
+      "match_percent": 100.0,
+      "baseline_match_percent": 100.0
+    },
+    {
+      "name": "control__17DummyDisplayModelFv",
+      "retail_size": 60,
+      "match_percent": 100.0,
+      "baseline_match_percent": 100.0
+    },
+    {
+      "name": "calcAndSetBaseMtx__17DummyDisplayModelFv",
+      "retail_size": 532,
+      "match_percent": 99.55639,
+      "baseline_match_percent": 99.55639
+    },
+    {
+      "name": "createDummyDisplayModel__2MRFP9LiveActorRC12JMapInfoIterlRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "retail_size": 100,
+      "match_percent": 100.0,
+      "baseline_match_percent": 100.0
+    },
+    {
+      "name": "createDummyDisplayModel__2MRFP9LiveActorRC12JMapInfoIterPCcl",
+      "retail_size": 92,
+      "match_percent": 100.0,
+      "baseline_match_percent": 100.0
+    },
+    {
+      "name": "createDummyDisplayModel__2MRFP9LiveActorRC12JMapInfoIterPA4_flRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "retail_size": 108,
+      "match_percent": 100.0,
+      "baseline_match_percent": 100.0
+    },
+    {
+      "name": "createDummyDisplayModelCrystalItem__2MRFP9LiveActorRC12JMapInfoIterRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "retail_size": 104,
+      "match_percent": 100.0,
+      "baseline_match_percent": 100.0
+    },
+    {
+      "name": "createDummyDisplayModelCrystalItem__2MRFP9LiveActorlRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "retail_size": 108,
+      "match_percent": 100.0,
+      "baseline_match_percent": 100.0
+    },
+    {
+      "name": "getDummyDisplayModelId__2MRFRC12JMapInfoIterl",
+      "retail_size": 112,
+      "match_percent": 100.0,
+      "baseline_match_percent": 100.0
+    },
+    {
+      "name": "getDummyDisplayModelId__2MRFPC9LiveActor",
+      "retail_size": 8,
+      "match_percent": 100.0,
+      "baseline_match_percent": 100.0
+    },
+    {
+      "name": "makeArchiveListDummyDisplayModel__2MRFP27NameObjArchiveListCollectorRC12JMapInfoIter",
+      "retail_size": 84,
+      "match_percent": 100.0,
+      "baseline_match_percent": 99.28571
+    },
+    {
+      "name": "__dt__17DummyDisplayModelFv",
+      "retail_size": 88,
+      "match_percent": 100.0,
+      "baseline_match_percent": 100.0
+    }
+  ]
+}
