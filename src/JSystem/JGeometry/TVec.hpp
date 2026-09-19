@@ -496,6 +496,16 @@ namespace JGeometry {
             return squared() <= TUtil<f32>::epsilon();
         }
 
+        bool operator==(const TVec3& rVec) const {
+            return TUtil<f32>::epsilonEquals(x, rVec.x, TUtil<f32>::epsilon()) &&
+                   TUtil<f32>::epsilonEquals(y, rVec.y, TUtil<f32>::epsilon()) &&
+                   TUtil<f32>::epsilonEquals(z, rVec.z, TUtil<f32>::epsilon());
+        }
+
+        bool operator!=(const TVec3& rVec) const {
+            return !(*this == rVec);
+        }
+
         [[nodiscard]] constexpr TVec3 operator+(const TVec3 &value) const {
             return TVec3{x + value.x, y + value.y, z + value.z};
         }

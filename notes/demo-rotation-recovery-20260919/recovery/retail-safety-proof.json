@@ -1,0 +1,27 @@
+{
+  "scope": "Read-only retail/donor confirmation before correction; runtime regression prepared but not built or run by this agent.",
+  "native_sha256_before": "0d7fa692df230363430e889ceefde735138e8f1ce110dfc6250453104766fce5",
+  "donor_sha256": "9a3b94fe0f8259ea78264516e42ccc03db863fdcf8e0a85e7403c9f7ce64f747",
+  "retail_assembly_path": "notes/gateway-audit-20260907/restoration/retail/asm/Game/Player/MarioCollision.s",
+  "retail_assembly_sha256": "f53fc2b5d7ad90cce931ab9e30971e92d56c5057c19e6707c3639e968f5648f7",
+  "retail_instructions": [
+    "802D1F38 lfs f1,@72927; scale Mario position",
+    "802D1F50..802D1F88 add all three triangle world vertices",
+    "802D1F98 lfs f1,@74467; scale the sum",
+    "802D1FD0/802D1FF4 @73035 controls distance cap"
+  ],
+  "retail_constants": {
+    "72927": 5.0,
+    "74467": 0.125,
+    "73035": 50.0
+  },
+  "native_before_formula": "clamp50((30*P+V0+V1+V2)/8 - P) + P",
+  "retail_formula": "clamp50((5*P+V0+V1+V2)/8 - P) + P",
+  "consequence": "Retail weighted blend is translation equivariant. Native30 changes the pre-clamp result by25/8 times a common translation, biasing the capped displacement toward the global position vector.",
+  "test_path": "tests/OriginalProcessPlayerOwnerTests.cpp",
+  "probe_limits": [
+    "Test directly invokes original save/get safety methods under actual original process owners, using translated local copies of a real KCL Triangle world-coordinate cache.",
+    "It restores touched player fields before the next original frame and never republishes translated scene geometry.",
+    "Target assertion verifies inputs to doRecovery (point+normal160), not execution of the warp/bubble state or visual orientation."
+  ]
+}

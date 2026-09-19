@@ -1,0 +1,48 @@
+[
+  {
+    "target": "smg-pc-original-npc-orientation-tests",
+    "build": {
+      "command": [
+        "xmake",
+        "build",
+        "-j",
+        "8",
+        "smg-pc-original-npc-orientation-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 6.246586499968544
+    },
+    "binary_sha256": "f02da3ea225d8520c95614f8955074187192a7e338b667783523acf9c429527c",
+    "test": {
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-npc-orientation-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.120054166065529
+    }
+  },
+  {
+    "target": "smg-pc-original-process-player-owner-tests",
+    "build": {
+      "command": [
+        "xmake",
+        "build",
+        "-j",
+        "8",
+        "smg-pc-original-process-player-owner-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 5.148039749939926
+    },
+    "binary_sha256": "83fb8b40d37d90035a748401d6a9bad605c7fbc746c6bdac348cb34cb3f45ef1",
+    "test": {
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-player-owner-tests",
+        "-ApplePersistenceIgnoreState",
+        "YES"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 7.027388625079766
+    }
+  }
+]

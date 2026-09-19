@@ -4,12 +4,21 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/ModelManager.hpp"
+#include "Game/Enemy/WalkerStateRunaway.hpp"
 #include "Game/Gravity/GlobalGravityObj.hpp"
 #include "Game/Gravity/PlanetGravity.hpp"
 #include "Game/Gravity/GravityInfo.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/Mario.hpp"
+#include "Game/Player/MarioState.hpp"
+#include "Game/Player/MarioRecovery.hpp"
+#include "Game/Player/MarioWarp.hpp"
+#include "Game/Player/J3DModelX.hpp"
+#include "Game/NPC/DemoRabbit.hpp"
+#include "Game/NPC/RunawayRabbit.hpp"
+#include "JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemObjHolder.hpp"
 #include "Game/System/GameSystemSceneController.hpp"
@@ -53,7 +62,31 @@ namespace smgpc::runtime {
             return value;
         }
 
-        Json vector(const TVec3f& v) { return {v.x, v.y, v.z}; }
+        template <class Vector>
+        Json vector(const Vector& v) { return {v.x, v.y, v.z}; }
+
+        Json quaternion(const TQuat4f& q) { return {q.x, q.y, q.z, q.w}; }
+
+        Json matrix(const float (*value)[4]) {
+            if (!value) return nullptr;
+            return {{value[0][0], value[0][1], value[0][2], value[0][3]},
+                    {value[1][0], value[1][1], value[1][2], value[1][3]},
+                    {value[2][0], value[2][1], value[2][2], value[2][3]}};
+        }
+
+        Json model(const J3DModel* value) {
+            if (!value) return nullptr;
+            Json result{{"base_matrix", matrix(value->mBaseTransformMtx)},
+                        {"base_scale", vector(value->mBaseScale)}, {"flags", value->mFlags},
+                        {"internal_view", matrix(value->mInternalView)}};
+            const auto* buffer = value->mMtxBuffer;
+            if (value->mModelData && value->mModelData->getJointNum() != 0 && buffer && buffer->mpAnmMtx) {
+                result["joint0_animation_matrix"] = matrix(buffer->mpAnmMtx[0]);
+            } else {
+                result["joint0_animation_matrix"] = nullptr;
+            }
+            return result;
+        }
 
         Json spine(const Spine* state) {
             if (!state) return nullptr;
@@ -85,7 +118,12 @@ namespace smgpc::runtime {
                         {"gravity", vector(value.mGravity)}, {"dead", value.mFlag.mIsDead},
                         {"hidden", value.mFlag.mIsHiddenModel}, {"clipped", value.mFlag.mIsClipped},
                         {"invalid_clipping", value.mFlag.mIsInvalidClipping},
+                        {"no_calc_anim", value.mFlag.mIsNoCalcAnim},
+                        {"no_calc_view", value.mFlag.mIsNoCalcView},
                         {"nerve", spine(value.mSpine)}};
+            // These are borrowed stored matrices; tracing must not invoke
+            // animation, model calculation, or matrix-generation functions.
+            result["model"] = model(value.mModelManager ? value.mModelManager->getJ3DModel() : nullptr);
             if (const auto* binder = value.mBinder) {
                 result["binder"] = {{"radius", binder->mRadius}, {"offset_y", binder->mOffsetY},
                     {"plane_count", binder->mPlaneNum}, {"fix_reaction", vector(binder->mFixReactionVector)},
@@ -108,9 +146,31 @@ namespace smgpc::runtime {
                 try { result["name"] = resource::decode_cp932(value.mName); }
                 catch (const std::exception& error) { result["name_decode_error"] = error.what(); }
             }
+            if (const auto* npc = dynamic_cast<const NPCActor*>(&value)) {
+                result["npc_pose"] = {{"quaternion_a0", quaternion(npc->_A0)},
+                                      {"quaternion_b0", quaternion(npc->_B0)},
+                                      {"cached_euler_cc", vector(npc->_CC)}};
+            }
+            if (const auto* rabbit = dynamic_cast<const DemoRabbit*>(&value)) {
+                result["demo_rabbit"] = {{"front", vector(rabbit->mFrontVec)},
+                    {"actor_base_matrix", matrix(rabbit->getBaseMtx())},
+                    {"no_ground_timer", rabbit->mNoGroundTimer}};
+            }
+            if (const auto* rabbit = dynamic_cast<const RunawayRabbit*>(&value)) {
+                result["runaway_rabbit"] = {{"pose_quaternion_a4", quaternion(rabbit->_A4)},
+                    {"front_b4", vector(rabbit->_B4)}, {"player_bind_quaternion_c0", quaternion(rabbit->_C0)},
+                    {"actor_base_matrix", matrix(rabbit->getBaseMtx())},
+                    {"player_bind_translation_d0", vector(rabbit->_D0)}};
+                if (const auto* walker = rabbit->mStateRunaway) {
+                    result["runaway_rabbit"]["walker"] = {{"nerve", spine(walker->mSpine)},
+                        {"dead", walker->mIsDead}, {"direction", walker->mDirection ? vector(*walker->mDirection) : Json(nullptr)},
+                        {"runaway_speed", walker->mRunawaySpeed}, {"counter_18", walker->_18}};
+                }
+            }
             if (const auto* player = dynamic_cast<const MarioActor*>(&value); player && player->mMario) {
                 const auto& mario = *player->mMario;
                 result["player"] = {{"status", mario.getCurrentStatus()},
+                    {"state_type", mario._97C ? typeid(*mario._97C).name() : ""},
                     {"position", vector(mario.mPosition)}, {"velocity", vector(mario.mVelocity)},
                     {"velocity_after", vector(mario.mVelocityAfter)}, {"stick_position", vector(mario.mStickPos)},
                     {"world_pad_direction", vector(mario.mWorldPadDir)}, {"front", vector(mario.mFrontVec)},
@@ -118,10 +178,43 @@ namespace smgpc::runtime {
                     {"movement_up", vector(mario._398)}, {"camera_position", vector(player->mCamPos)},
                     {"camera_x", vector(player->mCamDirX)}, {"camera_y", vector(player->mCamDirY)},
                     {"camera_z", vector(player->mCamDirZ)},
+                    {"camera_up_actor", vector(player->mUpVec)},
+                    {"camera_up_target_300", vector(player->_300)}, {"camera_up_timer_330", player->_330},
+                    {"side", vector(mario.mSideVec)}, {"direction_up_1fc", vector(mario._1FC)},
+                    {"posture_matrix_c4", matrix(mario._C4.mMtx)},
+                    {"posture_matrix_f4", matrix(mario._F4.mMtx)},
+                    {"yaw_angle_offset", mario.mYAngleOffset},
+                    {"active_model_index", player->mCurrModel}, {"player_mode", player->mPlayerMode},
+                    {"model_update_requested_1c0", player->_1C0}, {"model_update_skipped_1c1", player->_1C1},
+                    {"bound_actor_934", player->_934}, {"fixed_matrix_ea4", player->_EA4},
+                    {"fixed_matrix_ea5", player->_EA5}, {"fixed_matrix_ea6", player->_EA6},
                     {"movement_low_word", mario.mMovementStates_LOW_WORD},
                     {"movement_high_word", mario.mMovementStates_HIGH_WORD}, {"draw_word", mario.mDrawStates_WORD}};
+                result["player"]["active_model"] = player->mCurrModel < 6 ? model(player->getJ3DModel()) : Json(nullptr);
+                result["player"]["model0"] = model(player->mModels[0]);
+                result["player"]["actor_base_matrix"] = matrix(player->getBaseMtx());
                 result["player"]["ground_triangle"] = triangle(mario.mGroundPolygon);
                 result["player"]["ground_position"] = vector(mario.mGroundPos);
+                // getLastSafetyTrans can recalculate triangle normals. Capture
+                // both saved candidates directly instead of invoking it.
+                result["player"]["safety"] = {{"latest_position_7d4", vector(mario._7D4)},
+                    {"latest_triangle_7e0", triangle(mario._7E0)},
+                    {"latest_saved_matrix_7e4", matrix(mario._7E4.mMtx)},
+                    {"previous_position_814", vector(mario._814)},
+                    {"previous_triangle_820", triangle(mario._820)},
+                    {"previous_saved_matrix_824", matrix(mario._824.mMtx)},
+                    {"flags_1c", mario._1C_WORD}, {"not_safety_timer_96a", mario._96A},
+                    {"recovery_jump_path_12", mario.mRecovery ? Json(mario.mRecovery->_12) : Json(nullptr)}};
+                if (const auto* warp = dynamic_cast<const MarioWarp*>(mario._97C)) {
+                    result["player"]["warp"] = {{"destination_14", vector(warp->_14)},
+                        {"start_position_20", vector(warp->_20)}, {"direction_38", vector(warp->_38)},
+                        {"mode_45", warp->_45}, {"timer_52", warp->_52}, {"timer_54", warp->_54}};
+                }
+                if (const auto* recovery = dynamic_cast<const MarioRecovery*>(mario._97C)) {
+                    result["player"]["recovery"] = {{"saved_position_34", vector(recovery->_34)},
+                        {"timer_14", recovery->_14}, {"timer_16", recovery->_16},
+                        {"duration_18", recovery->_18}, {"phase_1a", recovery->_1A}};
+                }
                 if (const auto* info = player->mGravityInfo) {
                     const auto owner = gravity_owners.find(info->mGravityInstance);
                     result["player"]["gravity_info"] = {{"vector", vector(info->mGravityVector)},

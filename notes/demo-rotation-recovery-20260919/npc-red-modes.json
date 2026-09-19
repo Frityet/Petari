@@ -1,0 +1,20 @@
+[
+  {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-npc-orientation-tests",
+      "--vectors-only"
+    ],
+    "exit_code": 1,
+    "elapsed_seconds": 0.4479084169724956,
+    "binary_sha256": "74b6896703ca6a80d062510084095f4d2240ecd8025855108a57f0cc1a4777f6"
+  },
+  {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-npc-orientation-tests",
+      "--owner-only"
+    ],
+    "exit_code": -6,
+    "elapsed_seconds": 1.4797602080507204,
+    "binary_sha256": "74b6896703ca6a80d062510084095f4d2240ecd8025855108a57f0cc1a4777f6"
+  }
+]

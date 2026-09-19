@@ -1,0 +1,54 @@
+
+build/.objs/smg-pc-game/macosx/arm64/debug/src/Game/NPC/NPCActor.cpp.o:	file format mach-o arm64
+
+Disassembly of section __TEXT,__text:
+
+0000000000000d44 <__ZN8NPCActor17calcAndSetBaseMtxEv>:
+     d44: a9be4ff4     	stp	x20, x19, [sp, #-0x20]!
+     d48: a9017bfd     	stp	x29, x30, [sp, #0x10]
+     d4c: 910043fd     	add	x29, sp, #0x10
+     d50: aa0003f3     	mov	x19, x0
+     d54: aa0003f4     	mov	x20, x0
+     d58: 3ccf4e80     	ldr	q0, [x20, #0xf4]!
+     d5c: 6e20dc01     	fmul.4s	v1, v0, v0
+     d60: 5e0c0421     	mov	s1, v1[1]
+     d64: 1f000401     	fmadd	s1, s0, s0, s1
+     d68: 5e140402     	mov	s2, v0[2]
+     d6c: 5f801841     	fmla.s	s1, s2, v0[2]
+     d70: 5e1c0402     	mov	s2, v0[3]
+     d74: 5fa01841     	fmla.s	s1, s2, v0[3]
+     d78: 52a6d008     	mov	w8, #0x36800000         ; =914358272
+     d7c: 1e270102     	fmov	s2, w8
+     d80: 1e222020     	fcmp	s1, s2
+     d84: 540000c9     	b.ls	0xd9c <__ZN8NPCActor17calcAndSetBaseMtxEv+0x58>
+     d88: 1e21c021     	fsqrt	s1, s1
+     d8c: 1e2e1002     	fmov	s2, #1.00000000
+     d90: 1e211841     	fdiv	s1, s2, s1
+     d94: 4f819000     	fmul.4s	v0, v0, v1[0]
+     d98: 14000003     	b	0xda4 <__ZN8NPCActor17calcAndSetBaseMtxEv+0x60>
+     d9c: 90000008     	adrp	x8, 0x0 <ltmp0>
+		0000000000000d9c:  ARM64_RELOC_PAGE21	lCPI19_0
+     da0: 3dc00100     	ldr	q0, [x8]
+		0000000000000da0:  ARM64_RELOC_PAGEOFF12	lCPI19_0
+     da4: 3c8f4260     	stur	q0, [x19, #0xf4]
+     da8: 91008261     	add	x1, x19, #0x20
+     dac: aa1403e0     	mov	x0, x20
+     db0: 94000000     	bl	0xdb0 <__ZN8NPCActor17calcAndSetBaseMtxEv+0x6c>
+		0000000000000db0:  ARM64_RELOC_BRANCH26	__ZN2MR20makeQuatRotateDegreeEPN9JGeometry6TQuat4IfEERKNS0_5TVec3IfEE
+     db4: f9401268     	ldr	x8, [x19, #0x20]
+     db8: f9009268     	str	x8, [x19, #0x120]
+     dbc: b9402a68     	ldr	w8, [x19, #0x28]
+     dc0: b9012a68     	str	w8, [x19, #0x128]
+     dc4: aa1303e0     	mov	x0, x19
+     dc8: aa1403e1     	mov	x1, x20
+     dcc: 94000000     	bl	0xdcc <__ZN8NPCActor17calcAndSetBaseMtxEv+0x88>
+		0000000000000dcc:  ARM64_RELOC_BRANCH26	__ZN2MR12setBaseTRMtxEP9LiveActorRKN9JGeometry6TQuat4IfEE
+     dd0: f940ea60     	ldr	x0, [x19, #0x1d0]
+     dd4: b4000080     	cbz	x0, 0xde4 <__ZN8NPCActor17calcAndSetBaseMtxEv+0xa0>
+     dd8: a9417bfd     	ldp	x29, x30, [sp, #0x10]
+     ddc: a8c24ff4     	ldp	x20, x19, [sp], #0x20
+     de0: 14000000     	b	0xde0 <__ZN8NPCActor17calcAndSetBaseMtxEv+0x9c>
+		0000000000000de0:  ARM64_RELOC_BRANCH26	__ZN15JointController16registerCallBackEv
+     de4: a9417bfd     	ldp	x29, x30, [sp, #0x10]
+     de8: a8c24ff4     	ldp	x20, x19, [sp], #0x20
+     dec: d65f03c0     	ret

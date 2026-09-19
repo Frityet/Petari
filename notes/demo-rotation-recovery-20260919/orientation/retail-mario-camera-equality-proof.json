@@ -1,0 +1,29 @@
+{
+  "assembly_path": "decomp/build/RMGK01/asm/Game/Player/MarioActorCamera.s",
+  "assembly_sha256": "fc457987987ca236d301b04bdad768fdc3aef00f290773751313b1e54b30f74d",
+  "function_address": "0x802B8AF8",
+  "function_size": "0x168",
+  "component_checks": [
+    "0x802B8B30",
+    "0x802B8B48",
+    "0x802B8B60"
+  ],
+  "skip_timer_reset": "0x802B8B74 bne 0x802B8BA0 when all components equal",
+  "epsilon_address": "0x806BF65C",
+  "epsilon": 3.814697265625e-06,
+  "native_source": "src/Game/Player/MarioActorCamera.cpp:136",
+  "relevant_fields": {
+    "cached_head": "_300",
+    "head": "mMario->mHeadVec",
+    "timer": "_330",
+    "camera_up": "mUpVec"
+  },
+  "semantic_difference_before": "Native pointer comparison restarts timer each update even when head components are unchanged",
+  "search_scope": [
+    "src/Game/Player/MarioActor.cpp and Mario.cpp equality sites; no vector equality in those inspected files",
+    "src/Game/Player/MarioActorCamera.cpp; actual TVec3 equality confirmed",
+    "src/Game/NPC/NPCActor.cpp; actual TVec3 equality confirmed",
+    "src/Game/**/*.{cpp,hpp}, src/compat, src/JSystem regex scans for named vector members and unnamed numeric member comparisons; inspected likely hits (not a complete type-resolved AST inventory)"
+  ],
+  "limits": "Camera up interpolation is affected; this is not proof that it explains all reported Mario mesh rotations."
+}

@@ -976,7 +976,7 @@ void Mario::saveLastSafetyTrans() {
     PSMTXCopy(mGroundPolygon->getBaseMtx()->toMtxPtr(), _7E4.toMtxPtr());
 
     TVec3f safety = mPosition;
-    safety.scale(30.0f);
+    safety.scale(5.0f);
     safety += *mGroundPolygon->getPos(0);
     safety += *mGroundPolygon->getPos(1);
     safety += *mGroundPolygon->getPos(2);

@@ -3017,3 +3017,11 @@ target("smg-pc-original-binder-sphere-tests")
     add_deps("smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd", "aurora-gd",
              "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi")
     add_tests("original_binder_spheres", {group = "aurora", rundir = os.projectdir(), realtime_output = true})
+
+target("smg-pc-original-npc-orientation-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/original-process")
+    add_files("OriginalNpcOrientationTests.cpp")
+    add_deps("smg-pc-app", "aurora-main")
+    add_tests("original_npc_orientation", {group = "original-process", rundir = os.projectdir(), realtime_output = true})

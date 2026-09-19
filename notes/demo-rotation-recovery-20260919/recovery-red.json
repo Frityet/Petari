@@ -1,0 +1,26 @@
+[
+  {
+    "target": "smg-pc-original-process-player-owner-tests",
+    "build": {
+      "command": [
+        "xmake",
+        "build",
+        "-j",
+        "8",
+        "smg-pc-original-process-player-owner-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 6.072595874895342
+    },
+    "binary_sha256": "5ace61b7966d0df67b17ddb773f6fa84dfa2bbcfca46d387bbb0e8b3031b225a",
+    "test": {
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-process-player-owner-tests",
+        "-ApplePersistenceIgnoreState",
+        "YES"
+      ],
+      "exit_code": -6,
+      "elapsed_seconds": 7.224478082964197
+    }
+  }
+]

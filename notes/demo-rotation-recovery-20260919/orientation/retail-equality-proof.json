@@ -1,0 +1,20 @@
+{
+  "assembly_path": "decomp/build/RMGK01/asm/Game/NPC/NPCActor.s",
+  "assembly_sha256": "23ef270e7a542accc17463cf679c02f10c33eea34c296e0336d89bf204fa7636",
+  "function_address": "0x8029B500",
+  "function_size": "0xC4",
+  "instructions": 49,
+  "component_checks": [
+    "0x8029B520..0x8029B538: cached X versus Euler X",
+    "0x8029B53C..0x8029B550: cached Y versus Euler Y",
+    "0x8029B554..0x8029B568: cached Z versus Euler Z"
+  ],
+  "skip_euler_replacement": "0x8029B574 bne 0x8029B590 when all components equal",
+  "epsilon_constant": {
+    "address": "0x806BF2A8",
+    "value": 3.814697265625e-06,
+    "label": "@63384"
+  },
+  "canonical_header": "decomp/libs/JSystem/include/JSystem/JGeometry/TVec.hpp:576",
+  "note": "The existing retail assembly independently confirms canonical value-comparison semantics; no canonical source recovery is necessary."
+}

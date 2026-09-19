@@ -1,0 +1,90 @@
+[
+  {
+    "target": "smg-pc-original-npc-orientation-tests",
+    "build": {
+      "command": [
+        "xmake",
+        "build",
+        "-j",
+        "8",
+        "smg-pc-original-npc-orientation-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 75.21520333294757
+    },
+    "binary_sha256": "cc2bc79b99f268ed8a5da2b6c4c67838358ed0cbd4da8d029bda412d4f4831e0",
+    "test": {
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-npc-orientation-tests"
+      ],
+      "exit_code": -6,
+      "elapsed_seconds": 3.8925265000434592
+    }
+  },
+  {
+    "target": "smg-pc-game-math-rotation-tests",
+    "build": {
+      "command": [
+        "xmake",
+        "build",
+        "-j",
+        "8",
+        "smg-pc-game-math-rotation-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 4.853503125021234
+    },
+    "binary_sha256": "9483c8e698e3f74a1587cfb92aa7e305fa1e024dea4de6d2f33fa26dcc2ac32c",
+    "test": {
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-game-math-rotation-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.2846838750410825
+    }
+  },
+  {
+    "target": "smg-pc-original-xanime-core-tests",
+    "build": {
+      "command": [
+        "xmake",
+        "build",
+        "-j",
+        "8",
+        "smg-pc-original-xanime-core-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 5.105305208009668
+    },
+    "binary_sha256": "c5c80fb052af8847b93a9576cbba948156bf0091448f7ce840f64c7977bcfbf7",
+    "test": {
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-xanime-core-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.2924926250707358
+    }
+  },
+  {
+    "target": "smg-pc-original-j3d-joint-traversal-tests",
+    "build": {
+      "command": [
+        "xmake",
+        "build",
+        "-j",
+        "8",
+        "smg-pc-original-j3d-joint-traversal-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 5.083191999932751
+    },
+    "binary_sha256": "7cde7027599e28c762007601ac5c603e5ba6de5ff6dd0e8d0569a8ed7593dc37",
+    "test": {
+      "command": [
+        "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-j3d-joint-traversal-tests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.2935033339308575
+    }
+  }
+]
