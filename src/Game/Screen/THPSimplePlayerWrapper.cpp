@@ -1,13 +1,13 @@
 #include "Game/Screen/THPSimplePlayerWrapper.hpp"
 #include "Game/LiveActor/Nerve.hpp"
+#include "Game/System/AudSystemWrapper.hpp"
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/NerveUtil.hpp"
 #include <JSystem/JAudio2/JASAiCtrl.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
+#include <aurora/endian.hpp>
 #include <cstring>
 #include <revolution/sc.h>
-#include <aurora/endian.hpp>
-#include "compat/DisabledObjectAudio.hpp"
 
 static u16 VolumeTable[] = {0,     2,     8,     18,    32,    50,    73,    99,    130,   164,   203,   245,   292,   343,   398,   457,
                             520,   587,   658,   733,   812,   895,   983,   1074,  1170,  1269,  1373,  1481,  1592,  1708,  1828,  1952,
@@ -112,7 +112,7 @@ bool THPSimplePlayerWrapper::init(s32 audio) {
 
 void THPSimplePlayerWrapper::quit() {
     LCDisable();
-    if constexpr (aurora::audio::DisabledObjectAudio::enabled()) {
+    if (!AudSystemWrapper::isOutputDisabled()) {
         JASDriver::registerMixCallback(nullptr, (JASMixMode)3);
     }
     THPSimplePlayerStaticAudio::mPlayer = nullptr;
@@ -276,7 +276,7 @@ bool THPSimplePlayerWrapper::loadStop() {
 s32 THPSimplePlayerWrapper::decode(s32 audio) {
     bool isValid = mReadBuffer[mNextDecodeIndex].isValid == true;
     if (isValid) {
-        const auto* compSize = reinterpret_cast<const aurora::endian::BigEndian<u32>*>(mReadBuffer[mNextDecodeIndex].ptr + 8);
+        const auto* compSize = reinterpret_cast< const aurora::endian::BigEndian< u32 >* >(mReadBuffer[mNextDecodeIndex].ptr + 8);
         u8* ptr = mReadBuffer[mNextDecodeIndex].ptr + mFrameComp.numComponents * 4 + 8;
 
         if (mAudioExist) {
@@ -579,17 +579,17 @@ void THPSimplePlayerWrapper::exeReadAudioComp() {
 
 void THPSimplePlayerWrapper::endReadHeader() {
     memcpy(&mHeader, WorkBuffer, sizeof(mHeader));
-    mHeader.version = aurora::endian::read_big<decltype(mHeader.version)>(&mHeader.version);
-    mHeader.bufSize = aurora::endian::read_big<decltype(mHeader.bufSize)>(&mHeader.bufSize);
-    mHeader.audioMaxSamples = aurora::endian::read_big<decltype(mHeader.audioMaxSamples)>(&mHeader.audioMaxSamples);
-    mHeader.frameRate = aurora::endian::read_big<decltype(mHeader.frameRate)>(&mHeader.frameRate);
-    mHeader.numFrames = aurora::endian::read_big<decltype(mHeader.numFrames)>(&mHeader.numFrames);
-    mHeader.firstFrameSize = aurora::endian::read_big<decltype(mHeader.firstFrameSize)>(&mHeader.firstFrameSize);
-    mHeader.movieDataSize = aurora::endian::read_big<decltype(mHeader.movieDataSize)>(&mHeader.movieDataSize);
-    mHeader.compInfoDataOffsets = aurora::endian::read_big<decltype(mHeader.compInfoDataOffsets)>(&mHeader.compInfoDataOffsets);
-    mHeader.offsetDataOffsets = aurora::endian::read_big<decltype(mHeader.offsetDataOffsets)>(&mHeader.offsetDataOffsets);
-    mHeader.movieDataOffsets = aurora::endian::read_big<decltype(mHeader.movieDataOffsets)>(&mHeader.movieDataOffsets);
-    mHeader.finalFrameDataOffsets = aurora::endian::read_big<decltype(mHeader.finalFrameDataOffsets)>(&mHeader.finalFrameDataOffsets);
+    mHeader.version = aurora::endian::read_big< decltype(mHeader.version) >(&mHeader.version);
+    mHeader.bufSize = aurora::endian::read_big< decltype(mHeader.bufSize) >(&mHeader.bufSize);
+    mHeader.audioMaxSamples = aurora::endian::read_big< decltype(mHeader.audioMaxSamples) >(&mHeader.audioMaxSamples);
+    mHeader.frameRate = aurora::endian::read_big< decltype(mHeader.frameRate) >(&mHeader.frameRate);
+    mHeader.numFrames = aurora::endian::read_big< decltype(mHeader.numFrames) >(&mHeader.numFrames);
+    mHeader.firstFrameSize = aurora::endian::read_big< decltype(mHeader.firstFrameSize) >(&mHeader.firstFrameSize);
+    mHeader.movieDataSize = aurora::endian::read_big< decltype(mHeader.movieDataSize) >(&mHeader.movieDataSize);
+    mHeader.compInfoDataOffsets = aurora::endian::read_big< decltype(mHeader.compInfoDataOffsets) >(&mHeader.compInfoDataOffsets);
+    mHeader.offsetDataOffsets = aurora::endian::read_big< decltype(mHeader.offsetDataOffsets) >(&mHeader.offsetDataOffsets);
+    mHeader.movieDataOffsets = aurora::endian::read_big< decltype(mHeader.movieDataOffsets) >(&mHeader.movieDataOffsets);
+    mHeader.finalFrameDataOffsets = aurora::endian::read_big< decltype(mHeader.finalFrameDataOffsets) >(&mHeader.finalFrameDataOffsets);
     if (strcmp(mHeader.magic, "THP")) {
         DVDClose(&mFileInfo);
         return;
@@ -602,27 +602,27 @@ void THPSimplePlayerWrapper::endReadHeader() {
 
 void THPSimplePlayerWrapper::endReadFrameComp() {
     memcpy(&mFrameComp, WorkBuffer, sizeof(mFrameComp));
-    mFrameComp.numComponents = aurora::endian::read_big<decltype(mFrameComp.numComponents)>(&mFrameComp.numComponents);
+    mFrameComp.numComponents = aurora::endian::read_big< decltype(mFrameComp.numComponents) >(&mFrameComp.numComponents);
     mAudioExist = 0;
     _C += 0x14;
 }
 
 void THPSimplePlayerWrapper::endReadVideoComp() {
     memcpy(&mVideoInfo, WorkBuffer, sizeof(mVideoInfo));
-    mVideoInfo.xSize = aurora::endian::read_big<decltype(mVideoInfo.xSize)>(&mVideoInfo.xSize);
-    mVideoInfo.ySize = aurora::endian::read_big<decltype(mVideoInfo.ySize)>(&mVideoInfo.ySize);
-    mVideoInfo.videoType = aurora::endian::read_big<decltype(mVideoInfo.videoType)>(&mVideoInfo.videoType);
+    mVideoInfo.xSize = aurora::endian::read_big< decltype(mVideoInfo.xSize) >(&mVideoInfo.xSize);
+    mVideoInfo.ySize = aurora::endian::read_big< decltype(mVideoInfo.ySize) >(&mVideoInfo.ySize);
+    mVideoInfo.videoType = aurora::endian::read_big< decltype(mVideoInfo.videoType) >(&mVideoInfo.videoType);
     _C += 12;
     _10++;
 }
 
 void THPSimplePlayerWrapper::endReadAudioComp() {
     memcpy(&mAudioInfo, WorkBuffer, sizeof(mAudioInfo));
-    mAudioInfo.sndChannels = aurora::endian::read_big<decltype(mAudioInfo.sndChannels)>(&mAudioInfo.sndChannels);
-    mAudioInfo.sndFrequency = aurora::endian::read_big<decltype(mAudioInfo.sndFrequency)>(&mAudioInfo.sndFrequency);
-    mAudioInfo.sndNumSamples = aurora::endian::read_big<decltype(mAudioInfo.sndNumSamples)>(&mAudioInfo.sndNumSamples);
-    mAudioInfo.sndNumTracks = aurora::endian::read_big<decltype(mAudioInfo.sndNumTracks)>(&mAudioInfo.sndNumTracks);
-    mAudioExist = aurora::audio::DisabledObjectAudio::enabled();
+    mAudioInfo.sndChannels = aurora::endian::read_big< decltype(mAudioInfo.sndChannels) >(&mAudioInfo.sndChannels);
+    mAudioInfo.sndFrequency = aurora::endian::read_big< decltype(mAudioInfo.sndFrequency) >(&mAudioInfo.sndFrequency);
+    mAudioInfo.sndNumSamples = aurora::endian::read_big< decltype(mAudioInfo.sndNumSamples) >(&mAudioInfo.sndNumSamples);
+    mAudioInfo.sndNumTracks = aurora::endian::read_big< decltype(mAudioInfo.sndNumTracks) >(&mAudioInfo.sndNumTracks);
+    mAudioExist = !AudSystemWrapper::isOutputDisabled();
     _C += 0x10;
     _10++;
 }
@@ -640,7 +640,7 @@ void THPSimplePlayerWrapper::exeReadPreLoad() {
 
 void THPSimplePlayerWrapper::endReadPreLoadOne() {
     mCurOffset += mReadSize;
-    mReadSize = aurora::endian::read_big<s32>(mReadBuffer[mReadIndex].ptr);
+    mReadSize = aurora::endian::read_big< s32 >(mReadBuffer[mReadIndex].ptr);
     mReadBuffer[mReadIndex].isValid = 1;
     mReadBuffer[mReadIndex].frameNumber = mTotalReadFrame;
     mReadIndex = getNextBuffer(mReadIndex);
@@ -691,7 +691,7 @@ void THPSimplePlayerWrapper::initAudio() {
     }
 
     THPSimplePlayerStaticAudio::mPlayer = this;
-    if constexpr (aurora::audio::DisabledObjectAudio::enabled()) {
+    if (!AudSystemWrapper::isOutputDisabled()) {
         JASDriver::registerMixCallback(THPSimplePlayerStaticAudio::audioCallback, (JASMixMode)3);
     }
 }

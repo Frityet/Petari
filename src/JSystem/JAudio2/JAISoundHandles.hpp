@@ -7,20 +7,20 @@ class JAISeqDataUser;
 
 class JAISoundHandles {
 public:
-    JAISoundHandles(JAISoundHandle* handles, int handleNum) {
+    JAISoundHandles(JAISoundHandle *handles, int handleNum) {
         mHandles = handles;
         mNumHandles = handleNum;
     };
 
-    JAISoundHandle& operator[](int n) {
+    JAISoundHandle &operator[](int n) {
         return mHandles[n];
     }
 
-    JAISoundHandle* getHandle(int n) {
+    JAISoundHandle *getHandle(int n) {
         return &mHandles[n];
     }
 
-    JAISound* getSound(int n) {
+    JAISound *getSound(int n) {
         return getHandle(n)->getSound();
     }
 
@@ -28,12 +28,12 @@ public:
         return mNumHandles;
     }
 
-    JAISoundHandle* getHandleSoundID(JAISoundID);
-    JAISoundHandle* getFreeHandle();
-    JAISoundHandle* getHandleUserData(u32);
+    JAISoundHandle *getHandleSoundID(JAISoundID);
+    JAISoundHandle *getFreeHandle();
+    JAISoundHandle *getHandleUserData(uintptr_t);
 
-    void setPos(const TVec3f&);
+    void setPos(const TVec3f &);
 
-    /* 0x00 */ JAISoundHandle* mHandles;
+    /* 0x00 */ JAISoundHandle *mHandles;
     /* 0x04 */ int mNumHandles;
 };

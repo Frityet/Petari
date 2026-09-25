@@ -1,0 +1,116 @@
+{
+  "owned_paths": [
+    {
+      "path": "src/JSystem/JAudio2/JASMutex.hpp",
+      "before_exists": false,
+      "before_sha256": null,
+      "before_status": "",
+      "after_sha256": "a8465ad869f86cf71ae6e53173f20155c6e6f79f86f8ec048c7e0f63f2a5bf26",
+      "change": "create"
+    },
+    {
+      "path": "src/JSystem/JAudio2/JASWaveArcLoader.hpp",
+      "before_exists": false,
+      "before_sha256": null,
+      "before_status": "",
+      "after_sha256": "22a8a462a4e17a613dcb5e9de8742fa7395acc481667acf95d1267a14f2093c9",
+      "change": "create"
+    },
+    {
+      "path": "src/JSystem/JAudio2/JASHeapCtrl.cpp",
+      "before_exists": false,
+      "before_sha256": null,
+      "before_status": "",
+      "after_sha256": "7e9867845f24781672f038c2538cdd934fe7eed8fa077f01d373cbf824c24637",
+      "change": "create"
+    },
+    {
+      "path": "src/JSystem/JAudio2/JASReport.cpp",
+      "before_exists": false,
+      "before_sha256": null,
+      "before_status": "",
+      "after_sha256": "3d518002d2d0c2c4b7560709037bca0412a9d21de50c7bf4ff0178a0216a4da6",
+      "change": "create"
+    },
+    {
+      "path": "src/JSystem/JAudio2/JASHeapCtrl.hpp",
+      "before_exists": true,
+      "before_sha256": "d53c1282d75bff979f82fe4cf9d0cad78cc362a3396d229178f3260794cf3f24",
+      "before_status": "",
+      "after_sha256": "7f63d818ae6e30475946b3dfdeecef8752e6645f74748e314ef52e340b66c236",
+      "change": "modify"
+    },
+    {
+      "path": "src/JSystem/JAudio2/JASAramStream.cpp",
+      "before_exists": false,
+      "before_sha256": null,
+      "before_status": "",
+      "after_sha256": "c94622ecfec4b04604713d0d86edd2ba2f988c7f0a3d4788dd85979fd4fdbbb0",
+      "change": "create"
+    },
+    {
+      "path": "src/compat/jaudio/JasAramStreamPlatform.cpp",
+      "before_exists": true,
+      "before_sha256": "04ed089b4eb77fc740210740c0ce825cd5413fc8af1c70997f5edff04fd46ae6",
+      "before_status": "",
+      "after_sha256": null,
+      "change": "delete"
+    },
+    {
+      "path": "src/compat/jaudio/JasGenericPoolPlatform.cpp",
+      "before_exists": true,
+      "before_sha256": "c5b7deb2dbefa2aa03903b828e5cddec4150ae2241ac81fb1f02b8ffc7bf4ce7",
+      "before_status": "",
+      "after_sha256": null,
+      "change": "delete"
+    },
+    {
+      "path": "tests/JAudioPlaybackTests.cpp",
+      "before_exists": true,
+      "before_sha256": "26b4b4ce420f22fe71545f52128913cb84d2190aecaf317aa258cfc5d849f3f9",
+      "before_status": "",
+      "after_sha256": null,
+      "change": "delete"
+    },
+    {
+      "path": "tests/OriginalAudioCategoryVolumeTests.cpp",
+      "before_exists": true,
+      "before_sha256": "067d9c90516903c0a4e76f8576c7666d0c090061e7809aa742df1fd3f256dbc5",
+      "before_status": "",
+      "after_sha256": null,
+      "change": "delete"
+    },
+    {
+      "path": "tests/OriginalJaiSoundOwnershipTests.cpp",
+      "before_exists": true,
+      "before_sha256": "e0ecf353f46a256c33707d64b80063b433d8b82b9fe51871dac5bdf5847413b3",
+      "before_status": "",
+      "after_sha256": "1800e96b0bf21523e8a9b03621ed976eb41402f01f23918a6834d47ef00e38dd",
+      "change": "modify"
+    },
+    {
+      "path": "tests/RuntimeContextFailureTests.cpp",
+      "before_exists": true,
+      "before_sha256": "13a2c17d6e2949e5595e97811f51aad6d00a95962827121fa913f13090bb8aec",
+      "before_status": "",
+      "after_sha256": "0ed72926d4cad92f377bcab3e718942b0e49de962e478f733399de4c8bda89df",
+      "change": "modify"
+    },
+    {
+      "path": "tests/xmake.lua",
+      "before_exists": true,
+      "before_sha256": "cf5c27da2e59e86b396eb0e915bc8557e947165b92c89530b39943bf0efd0f46",
+      "before_status": "",
+      "after_sha256": "47f90c66a35a258a98546d5d0221c603356558579fe1431f17ac5469b3492fa2",
+      "change": "modify"
+    },
+    {
+      "path": "tests/SoundPermissionTests.cpp",
+      "before_exists": true,
+      "before_sha256": "b8e6d111233bc45806aeb054a7bb6a8f812b7484713ec33427606eddac270a8c",
+      "before_status": "",
+      "after_sha256": null,
+      "change": "delete"
+    }
+  ]
+}

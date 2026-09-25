@@ -1,0 +1,15 @@
+# Canonical JAS pool/report and unavailable native ARAM output
+
+Imported complete donor JASHeapCtrl.cpp and JASReport.cpp into src/JSystem/JAudio2. Imported the existing donor JASMutex.hpp and JASWaveArcLoader.hpp dependencies; OS mutex includes use the available canonical Dolphin header, weak methods use the donor attribute expansion, and the unused missing JASCalc.hpp include is removed from Report. Report now follows the actual donor circular-buffer contract (uninitialized reporting buffer means no output), replacing the old unconditional stderr provider.
+
+Heap native adaptations preserve the actual algorithm: root-alignment differences retain pointer width; child gap size derives from pointers within the original parent block; null next-child insertion avoids dereferencing a null pointer; free-list deletion uses its actual u8 array type. Generic pool slots allocate at least sizeof(void*) with native pointer alignment, retaining pointer-sized links. JASMemChunkPool inherits its intended threading policy directly (the donor spelling names a nonexistent nested base), checks addresses relative to the actual payload member instead of offset 0xC, aligns payload/records for native pointers, and preserves the original chunk list. No process-global pool retirement API, weak owner, or replacement pool registry remains.
+
+Canonical JASAramStream.cpp retains the donor implementation in the non-native branch. TARGET_PC preserves donor object construction, initialization, message queues and sample-count arithmetic; prepare/start/stop/pause/cancel and load operations return false. Internal driver/task output operations explicitly throw unavailable. It constructs no thread, voice, backend map or synthetic completion. Cancel still records the original cancellation flag while reporting failure to submit it. This is an explicit unavailable-output boundary, not native ARAM/DSP playback implementation.
+
+Deleted JasAramStreamPlatform.cpp and JasGenericPoolPlatform.cpp. Root removes JasStreamPcmBackend pair and preview runtime. Production wiring must compile the new JASHeapCtrl.cpp, JASReport.cpp and JASAramStream.cpp (root already added them while this lane ran); no other provider changes from this lane.
+
+Fixture changes follow the agreed contract: JAudioPlaybackTests and OriginalAudioCategoryVolumeTests and both targets deleted; OriginalJaiSoundOwnershipTests retains exactly its initial existing JAISoundHandle/ID/status layout and preparation-state assertions with no old service modes; RuntimeContextFailureTests drops only two always-null orphan catalog/resource publication assertions. No new test cases.
+
+All 14 paths have before/after snapshots and exact owned-manifest/patch. No build, tests, staging or commits performed. Audio output and full DSP initialization remain intentionally unavailable.
+
+Follow-up: SoundPermissionTests.cpp and smg-pc-sound-permission-tests removed because the entire fixture constructs the deleted preview JAudioPlaybackService and asserts its private permission-state contract. No replacement test or runtime execution.

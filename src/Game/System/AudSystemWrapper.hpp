@@ -1,23 +1,35 @@
 #pragma once
 
 #include <revolution/types.h>
+#include <JSystem/JAudio2/JAUSoundTable.hpp>
+#include <memory>
+#include <vector>
 
 class AudSystem;
+class AudSceneMgr;
+class AudBgmMgr;
+class AudSoundObject;
+class AudSoundObjHolder;
+class AudSoundNameConverter;
 class JKRExpHeap;
 class JKRHeap;
 class JKRMemArchive;
 class JKRSolidHeap;
-
-#if defined(TARGET_PC)
-namespace smgpc { namespace compat { class DisabledAudioBackend; } }
-#endif
 
 class AudSystemWrapper {
 public:
     AudSystemWrapper(JKRSolidHeap*, JKRHeap*);
 #if defined(TARGET_PC)
     ~AudSystemWrapper();
+    static AudSystemWrapper* getCurrent() noexcept;
     static bool isOutputDisabled();
+    AudSceneMgr* getSceneMgr() const noexcept;
+    AudBgmMgr* getBgmMgr() const noexcept;
+    AudSoundObject* getSystemSeObject() const noexcept;
+    AudSoundObjHolder* getSoundObjHolder() const noexcept;
+    void setTriggerSePermitted(bool) noexcept;
+    void setLevelSePermitted(bool) noexcept;
+    bool isSePermitted() const noexcept;
 #endif
 
     void requestResourceForInitialize();
@@ -54,7 +66,27 @@ public:
     /* 0x29 */ bool _29;
     /* 0x2A */ bool _2A;
 #if defined(TARGET_PC)
-    // Own the explicit native disabled-output backend; original AudSystem stays absent.
-    smgpc::compat::DisabledAudioBackend* mDisabledBackend;
+private:
+    enum class InitializePhase { Created, Requested, Received, Initialized };
+    void releaseResources() noexcept;
+
+    // Bytes precede all original borrowers; destruction releases the converter
+    // and its arrays before the native table and decoded byte storage.
+    std::vector< u8 > mSoundNameBytes;
+    JAUSoundNameTable mSoundNameTable{false};
+    JAUSoundNameTable* mPreviousNameTable = nullptr;
+    AudSoundNameConverter* mPreviousNameConverter = nullptr;
+    std::unique_ptr< AudSoundNameConverter > mSoundNameConverter;
+    std::unique_ptr< AudSceneMgr > mSceneMgr;
+    std::unique_ptr< AudBgmMgr > mBgmMgr;
+    std::unique_ptr< AudSoundObjHolder > mSoundObjHolder;
+    std::unique_ptr< AudSoundObject > mSystemSeObject;
+    InitializePhase mInitializePhase = InitializePhase::Created;
+    bool mStaticWaveRequested = false;
+    bool mStageWaveRequested = false;
+    bool mScenarioWaveRequested = false;
+    bool mResetRequested = false;
+    bool mTriggerSePermitted = true;
+    bool mLevelSePermitted = true;
 #endif
 };

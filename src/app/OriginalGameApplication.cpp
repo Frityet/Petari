@@ -1,3 +1,4 @@
+#include "Game/System/AudSystemWrapper.hpp"
 #include <MSL_C/stdio.h>
 #include "Game/Effect/ParticleResourceHolder.hpp"
 #include "app/OriginalGameApplication.hpp"
@@ -431,6 +432,9 @@ private:
             object->detachNativeHolder();
             compat::release_name_obj_runtime_state(object);
         }
+        // Actor sound resources are retired. Destroy the actual audio owner
+        // before its name resources, GameSystem publication and heaps disappear.
+        if (objects) delete std::exchange(objects->mAudioSystem, nullptr);
         if (objects) delete std::exchange(objects->mWPadHolder, nullptr);
         if (objects) runtime::destroy_message_holder(objects->mMessageHolder);
         if (objects) delete std::exchange(objects->mParticleResHolder, nullptr);

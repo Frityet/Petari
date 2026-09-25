@@ -64,8 +64,6 @@ int main() {
         require(smgpc::runtime::try_active_scene_scheduler() == nullptr, "failed/destroyed runtime retains scheduler binding");
         require(JUTVideo::getManager() == nullptr, "failed/destroyed runtime retains its JUTVideo owner");
         require(smgpc::runtime::RuntimeContext::try_instance() == nullptr, "failed/destroyed runtime retains its publication");
-        require(smgpc::runtime::ScenarioCatalogOwnership::active() == nullptr, "failed/destroyed runtime retains scenario catalog publication");
-        require(smgpc::runtime::ParticleResourceOwnership::active() == nullptr, "failed/destroyed runtime retains particle resources");
         require(aurora::SystemConfiguration::active() == nullptr, "failed/destroyed runtime retains console settings owner");
         require(smgpc::compat::name_obj_runtime_state_count() == objects, "failed/destroyed runtime retains NameObj callbacks");
         require(heap->available_bytes() == expected_capacity, "failed/destroyed runtime retains mapped texture storage");

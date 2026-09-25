@@ -1,7 +1,11 @@
 #include "Game/AudioLib/AudSoundNameConverter.hpp"
 #include <JSystem/JAudio2/JAUSoundTable.hpp>
 #include <JSystem/JGadget/hashcode.hpp>
+#include <aurora/exception.hpp>
+#include <array>
 #include <cstring>
+#include <limits>
+#include <stdexcept>
 
 namespace {
     static const char* sCategoryNamePrefix[] = {
@@ -15,11 +19,59 @@ namespace {
 
 AudSoundNameConverter::AudSoundNameConverter()
     : mNumItems(), mNumNameDatas(), mGroupItemOffsets(), mNumItemsSection0(), mNumItemsSection1(), mNumItemsSection2(), mSoundNameData() {
-    init();
+    try {
+        init();
+    } catch (...) {
+        delete[] mSoundNameData;
+        delete[] mGroupItemOffsets;
+        throw;
+    }
+}
+
+AudSoundNameConverter::~AudSoundNameConverter() {
+    if (AudSingletonHolder< AudSoundNameConverter >::get() == this) {
+        AudSingletonHolder< AudSoundNameConverter >::exchange(nullptr);
+    }
+    delete[] mSoundNameData;
+    delete[] mGroupItemOffsets;
+}
+
+void AudSoundNameConverter::validateTable(const JAUSoundNameTable* table) {
+    const auto invalid = [] {
+        aurora::throw_host_exception< std::runtime_error >(
+            "The sound-name resource does not satisfy the original converter's category/count contract");
+    };
+    constexpr std::array< int, 3 > groups = {14, 2, 1};
+    if (!table || !table->mTable.mData || !table->mTable.mRoot || table->mTable.mRoot->mSectionNumber != groups.size()) {
+        invalid();
+    }
+    std::size_t items = 0;
+    for (u8 section = 0; section < groups.size(); section++) {
+        if (table->getNumGroups_inSection(section) != groups[section]) {
+            invalid();
+        }
+        for (u8 group = 0; group < groups[section]; group++) {
+            const int count = table->getNumItems_inGroup(section, group);
+            if (count < 0 || count >= 65536) {
+                invalid();
+            }
+            items += count;
+            for (int item = 0; item < count; item++) {
+                JAISoundID id;
+                id.set(section, group, item);
+                if (!table->getName(id)) {
+                    invalid();
+                }
+            }
+        }
+    }
+    if (items > static_cast< std::size_t >(std::numeric_limits< s32 >::max())) {
+        invalid();
+    }
 }
 
 JAISoundID AudSoundNameConverter::getSoundID(const char* pName) const {
-    return getSoundID(pName, JGadget::getHashCode(pName));
+    return pName ? getSoundID(pName, JGadget::getHashCode(pName)) : JAISoundID(-1);
 }
 
 inline s32 AudSoundNameConverter::getSeSoundCategory(const char* pName) const {
@@ -41,6 +93,9 @@ inline s32 AudSoundNameConverter::getOtherSoundCategory(const char* pName) const
 }
 
 JAISoundID AudSoundNameConverter::getSoundID(const char* pName, u32 hash) const {
+    if (!pName || std::strlen(pName) < 2) {
+        return -1;
+    }
     bool isSE;
     if (pName[0] == 'S' && pName[1] == 'E') {
         isSE = true;
@@ -48,12 +103,14 @@ JAISoundID AudSoundNameConverter::getSoundID(const char* pName, u32 hash) const 
         isSE = false;
     }
 
-    s32 startingOffset;
-    if (isSE) {
-        startingOffset = mGroupItemOffsets[getSeSoundCategory(pName)];
-    } else {
-        startingOffset = mGroupItemOffsets[getOtherSoundCategory(pName)];
+    if (isSE && std::strlen(pName) < 5) {
+        return -1;
     }
+    const s32 category = isSE ? getSeSoundCategory(pName) : getOtherSoundCategory(pName);
+    if (category < 0 || category >= 17) {
+        return -1;
+    }
+    const s32 startingOffset = mGroupItemOffsets[category];
 
     for (s32 i = startingOffset; i < mNumItems; i++) {
         const AudSoundNameData& data = mSoundNameData[i];
@@ -66,6 +123,7 @@ JAISoundID AudSoundNameConverter::getSoundID(const char* pName, u32 hash) const 
 
 void AudSoundNameConverter::init() {
     const JAUSoundNameTable* table = JAUSoundNameTable::getInstance();
+    validateTable(table);
     initDataTable(table);
     addSectionInfo(table, 0);
     addSectionInfo(table, 1);

@@ -1,0 +1,11 @@
+Source checks only, 2026-09-25:
+- Six assigned compat providers are absent.
+- rg across src/tests found no AudioFacadeCompat, DisabledObjectAudio, OriginalObjectSoundState, OriginalAudioVolumeController or disabled_object_audio_service references.
+- JAU source has no Game output-policy dependency.
+- AudSoundObject teardown uses its holder back-reference, not AudWrap.
+- JAISoundHandles lookup and animation user-data store both retain uintptr_t.
+- AudAnmSoundObject increments/decrements the original cue cursor before declining absent starts.
+- BGM direct starts/prepare and manager start decline before rhythm/AudSystem accesses.
+- AudSystem remains unconstructed; wrapper lane provides its real child owners.
+- All edited existing files and both new canonical files have exact scoped before/after evidence.
+No compilation, tests or runtime verification performed by this lane.

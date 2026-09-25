@@ -17,6 +17,8 @@ public:
 class AudSoundNameConverter : public AudSingletonHolder< AudSoundNameConverter > {
 public:
     AudSoundNameConverter();
+    ~AudSoundNameConverter();
+    static void validateTable(const JAUSoundNameTable*);
 
     JAISoundID getSoundID(const char*) const;
     JAISoundID getSoundID(const char*, u32) const;

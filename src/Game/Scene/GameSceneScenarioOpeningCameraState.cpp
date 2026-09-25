@@ -1,9 +1,9 @@
-#include "resource/TextEncoding.hpp"
 #include "Game/Scene/GameSceneScenarioOpeningCameraState.hpp"
 #include "Game/AudioLib/AudSystem.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/ScenarioTitle.hpp"
+#include "Game/System/AudSystemWrapper.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
@@ -14,6 +14,7 @@
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
+#include "resource/TextEncoding.hpp"
 
 namespace {
     NEW_NERVE(GameSceneScenarioOpeningCameraStateWait, GameSceneScenarioOpeningCameraState, Wait);
@@ -84,7 +85,9 @@ void GameSceneScenarioOpeningCameraState::exePlay() {
         }
 
         if (MR::isStep(this, MR::getStartAnimCameraFrame() - 20)) {
-            AudWrap::getSystem()->set830(30);
+            if (!AudSystemWrapper::isOutputDisabled()) {
+                AudWrap::getSystem()->set830(30);
+            }
         }
 
         if (MR::isStartAnimCameraEnd() && MR::isStopCinemaFrame()) {

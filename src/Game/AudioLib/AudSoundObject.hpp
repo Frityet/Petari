@@ -3,6 +3,7 @@
 #include <JSystem/JAudio2/JAUSoundObject.hpp>
 #include <JSystem/JKernel/JKRDisposer.hpp>
 
+class AudSoundObjHolder;
 class JAISoundID;
 class JAISoundHandle;
 
@@ -82,4 +83,5 @@ public:
     /* 0x3C */ AudSoundObjHashData* mHashDatas;
     /* 0x40 */ s32 mNumHandles;
     /* 0x44 */ s32 mNumSounds;
+    AudSoundObjHolder* mNativeHolder = nullptr;
 };

@@ -162,7 +162,7 @@ namespace JASKernel {
 };  // namespace JASKernel
 
 template < u32 ChunkSize, template < typename > class T >
-class JASMemChunkPool : public T< JASMemChunkPool< ChunkSize, T > >::ObjectLevelLockable {
+class JASMemChunkPool : public T< JASMemChunkPool< ChunkSize, T > > {
 public:
     struct MemoryChunk {
         MemoryChunk(MemoryChunk* nextChunk) {
@@ -172,7 +172,8 @@ public:
         }
 
         bool checkArea(const void* ptr) const {
-            return (u8*)this + 0xc <= (u8*)ptr && (u8*)ptr < (u8*)this + (0xc + ChunkSize);
+            return reinterpret_cast<uintptr_t>(mBuffer) <= reinterpret_cast<uintptr_t>(ptr) &&
+                   reinterpret_cast<uintptr_t>(ptr) < reinterpret_cast<uintptr_t>(mBuffer) + ChunkSize;
         }
 
         MemoryChunk* getNextChunk() {
@@ -209,7 +210,7 @@ public:
         /* 0x0 */ MemoryChunk* mNextChunk;
         /* 0x4 */ u32 mUsedSize;
         /* 0x8 */ u32 mChunks;
-        /* 0xC */ u8 mBuffer[ChunkSize];
+        /* 0xC */ alignas(void*) u8 mBuffer[ChunkSize];
     };
 
     JASMemChunkPool() {
@@ -239,6 +240,10 @@ public:
 
     void* alloc(u32 size) {
         typename T< JASMemChunkPool< ChunkSize, T > >::Lock lock(*this);
+        if (size > ChunkSize) {
+            return nullptr;
+        }
+        size = (size + alignof(void*) - 1) & ~(alignof(void*) - 1);
         u32 freeSize = mChunk->getFreeSize();
         if (freeSize < size) {
             if (ChunkSize < size) {

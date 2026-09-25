@@ -1,3 +1,34 @@
+#if defined(TARGET_PC)
+#include "Game/RhythmLib/AudChordInfo.hpp"
+#include <JSystem/JAudio2/JASCriticalSection.hpp>
+#include <aurora/exception.hpp>
+#include <stdexcept>
+
+// The native output path has no chord archive owner. Do not reinterpret the
+// original big-endian, 32-bit CITS relocation table as native pointers.
+bool AudChordInfo::loadChordInfo(s16, bool) {
+    aurora::throw_host_exception< std::logic_error >("Chord resource loading requires the original audio output owner.");
+}
+
+void AudChordInfo::invalidiate() {
+    initParams();
+}
+
+void AudChordInfo::initParams() {
+    JASCriticalSection crit;
+
+    mFlags = 0;
+    mCurChord = nullptr;
+    mCurScale = nullptr;
+    mTableId = -1;
+    _2C = 0;
+
+    for (s32 i = 0; i < NUM_CHORD_NOTES; i++) {
+        mChordNoteList[i] = NULL_NOTE;
+    }
+}
+
+#else
 #include "Game/RhythmLib/AudChordInfo.hpp"
 #include <JSystem/JAudio2/JASCriticalSection.hpp>
 #include <JSystem/JKernel/JKRArchive.hpp>
@@ -846,3 +877,4 @@ void AudChordInfo::initParams() {
         mChordNoteList[i] = NULL_NOTE;
     }
 }
+#endif

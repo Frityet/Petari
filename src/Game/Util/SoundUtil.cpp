@@ -1,5 +1,4 @@
-#include "compat/DisabledObjectAudioService.hpp"
-#include "Game/System/AudSystemWrapper.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include "Game/AudioLib/AudAnmSoundObject.hpp"
 #include "Game/AudioLib/AudMeNameConverter.hpp"
 #include "Game/AudioLib/AudMicWrap.hpp"
@@ -17,10 +16,10 @@
 #include "Game/GameAudio/AudTalkSoundData.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
-#include "Game/LiveActor/Binder.hpp"
 #include "Game/RhythmLib/AudChordInfo.hpp"
 #include "Game/RhythmLib/AudMeObject.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/System/AudSystemWrapper.hpp"
 #include "Game/System/ResourceHolder.hpp"
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
@@ -29,7 +28,6 @@
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
-#include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include <JSystem/JAudio2/JAISound.hpp>
 
@@ -257,6 +255,9 @@ namespace MR {
     }
 
     bool hasME() {
+        if (AudSystemWrapper::isOutputDisabled()) {
+            return false;
+        }
         AudChordInfo* pChordInfo = AudWrap::getSystem()->getChordInfo();
 
         return pChordInfo->mTable.mLoaded && pChordInfo->mCurChord != nullptr && pChordInfo->mCurScale != nullptr;
@@ -357,8 +358,7 @@ namespace MR {
     void limitedSound(const char* pName, s32 param2) {
         JAISoundID id = AudSingletonHolder< AudSoundNameConverter >::get()->getSoundID(pName);
 
-        if (auto* output = aurora::audio::disabled_object_audio_service()) {
-            output->register_limited_sound(id, param2);
+        if (AudSystemWrapper::isOutputDisabled()) {
             return;
         }
         AudWrap::getSystem()->registerLimitedSound(id, param2);
@@ -567,8 +567,8 @@ namespace MR {
     }
 
     void submitTrigSE() {
-        if (auto* output = aurora::audio::disabled_object_audio_service()) {
-            output->set_trigger_sound_permitted(false);
+        if (auto* output = AudSystemWrapper::getCurrent()) {
+            output->setTriggerSePermitted(false);
             return;
         }
         AudSystem* pSystem = AudWrap::getSystem();
@@ -577,8 +577,8 @@ namespace MR {
     }
 
     void permitTrigSE() {
-        if (auto* output = aurora::audio::disabled_object_audio_service()) {
-            output->set_trigger_sound_permitted(true);
+        if (auto* output = AudSystemWrapper::getCurrent()) {
+            output->setTriggerSePermitted(true);
             return;
         }
         AudSystem* pSystem = AudWrap::getSystem();
@@ -587,8 +587,8 @@ namespace MR {
     }
 
     void submitLevelSE() {
-        if (auto* output = aurora::audio::disabled_object_audio_service()) {
-            output->set_level_sound_permitted(false);
+        if (auto* output = AudSystemWrapper::getCurrent()) {
+            output->setLevelSePermitted(false);
             return;
         }
         AudSystem* pSystem = AudWrap::getSystem();
@@ -597,8 +597,8 @@ namespace MR {
     }
 
     void permitLevelSE() {
-        if (auto* output = aurora::audio::disabled_object_audio_service()) {
-            output->set_level_sound_permitted(true);
+        if (auto* output = AudSystemWrapper::getCurrent()) {
+            output->setLevelSePermitted(true);
             return;
         }
         AudSystem* pSystem = AudWrap::getSystem();
@@ -617,8 +617,8 @@ namespace MR {
     }
 
     bool isPermitSE() {
-        if (auto* output = aurora::audio::disabled_object_audio_service()) {
-            return output->is_sound_permitted();
+        if (auto* output = AudSystemWrapper::getCurrent()) {
+            return output->isSePermitted();
         }
         return !AudWrap::getSystem()->_82B && !AudWrap::getSystem()->_82C;
     }
@@ -645,16 +645,14 @@ namespace MR {
     }
 
     void setSoundVolumeSetting(s32 param1, u32 param2) {
-        if (auto* output = aurora::audio::disabled_object_audio_service()) {
-            output->set_sound_volume_setting(param1, param2);
+        if (AudSystemWrapper::isOutputDisabled()) {
             return;
         }
         AudWrap::getSystem()->setSeVolumeSet(param1, param2);
     }
 
     void recoverSoundVolumeSetting(u32 param1) {
-        if (auto* output = aurora::audio::disabled_object_audio_service()) {
-            output->recover_sound_volume_setting(param1);
+        if (AudSystemWrapper::isOutputDisabled()) {
             return;
         }
         AudWrap::getSystem()->recoverSeVolumeSet(param1);

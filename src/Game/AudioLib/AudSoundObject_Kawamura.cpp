@@ -1,5 +1,6 @@
 #include "Game/AudioLib/AudSoundId.hpp"
 #include "Game/AudioLib/AudSoundObject.hpp"
+#include "Game/AudioLib/AudSystem.hpp"
 #include "Game/AudioLib/AudUtil.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
 #include "Game/Util/MathUtil.hpp"

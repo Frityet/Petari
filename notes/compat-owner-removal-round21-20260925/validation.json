@@ -1,0 +1,70 @@
+{
+  "build": {
+    "command": "xmake build -y -j 16 smg-pc",
+    "passed": true,
+    "attempts": 4,
+    "final_log": "build-retry3.log",
+    "final_incremental_seconds": 5.05,
+    "diagnostics": [
+      "AudioLib wildcard file configuration suppressed existing narrowing flag; combined flags restore it",
+      "Original audio owners expose SDK/rhythm/speaker missing symbols; exact donor leaf algorithms or explicit actual-owner unavailable-output boundaries resolve them"
+    ]
+  },
+  "smoke": {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc",
+      "--disc",
+      "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--stage",
+      "HeavensDoorGalaxy",
+      "--scenario",
+      "1",
+      "--max-frames",
+      "120"
+    ],
+    "environment": {
+      "SMGPC_SAVE_DIR": "/Users/frityet/Projects/petari/notes/compat-owner-removal-round21-20260925/gateway-120-nand",
+      "SMGPC_NAND_DIR": "",
+      "AURORA_BACKEND": "metal",
+      "SMGPC_WINDOW_WIDTH": "1280",
+      "SMGPC_WINDOW_HEIGHT": "720",
+      "SMGPC_SCREENSHOT_PATH": "/Users/frityet/Projects/petari/notes/compat-owner-removal-round21-20260925/gateway-120-frame9999.png",
+      "SMGPC_SCREENSHOT_FRAME": "9999",
+      "SMGPC_DEBUG_WPAD_INPUT_FILE": "",
+      "SMGPC_DEBUG_FRAME_TIMING": "",
+      "SMGPC_DEBUG_ACTOR_TRACE_PATH": "",
+      "SMGPC_DEBUG_ACTOR_TRACE_TYPES": "",
+      "SMGPC_DEBUG_ACTOR_TRACE_INTERVAL": "60",
+      "SMGPC_DEBUG_LAYOUT_DUMP_PATH": "",
+      "SMGPC_DEBUG_LAYOUT_DUMP_FRAME": "",
+      "SMGPC_DEBUG_WPAD_BUTTON_SCRIPT": "",
+      "SMGPC_DEBUG_WPAD_POINTER_SCRIPT": "",
+      "SMGPC_DEBUG_WPAD_STICK_SCRIPT": ""
+    },
+    "binary_sha256": "8deec99ea0987ed2be7af943f74a8f45f42d0292107f97793a76a4e329352ebf",
+    "started_at": "2026-09-25T19:31:42.843289+00:00",
+    "pid": 48222,
+    "exit_code": 0,
+    "timeout_terminated": false,
+    "inherited_smgpc_environment_removed": true,
+    "binary_sha256_after": "8deec99ea0987ed2be7af943f74a8f45f42d0292107f97793a76a4e329352ebf",
+    "binary_unchanged": true,
+    "elapsed_seconds": 3.1319229580112733,
+    "process_still_exists_after_wait": false,
+    "completed_frames": 120,
+    "verified_bounded_completion": true
+  },
+  "compat_files_remaining": [
+    "src/compat/ActorRuntimeRegistry.cpp",
+    "src/compat/ActorRuntimeRegistry.hpp",
+    "src/compat/JkrAllocationDomain.cpp",
+    "src/compat/JkrAllocationDomain.hpp"
+  ],
+  "scene_directory_exists": false,
+  "fixture_suites_run": false,
+  "limitations": [
+    "120-frame opening and shutdown only",
+    "Full wakeup-to-Rosalina demo not validated",
+    "Audio output disabled"
+  ]
+}

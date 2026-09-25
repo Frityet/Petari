@@ -9,6 +9,7 @@ class AudSoundObjHolder {
 public:
     /// @brief Creates a new AudSoundObjHolder
     AudSoundObjHolder(JKRHeap* pHeap, s32 capacity);
+    ~AudSoundObjHolder();
     void update();
     void add(AudSoundObject* pSound);
     void remove(AudSoundObject* pSsound);

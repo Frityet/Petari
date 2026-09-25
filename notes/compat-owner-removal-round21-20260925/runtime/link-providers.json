@@ -1,0 +1,24 @@
+{
+  "additional_paths": [
+    "src/Game/Speaker/SpkSystem.cpp",
+    "src/Game/Speaker/SpkSpeakerCtrl.cpp",
+    "aurora/include/revolution.h",
+    "aurora/lib/wpad.cpp",
+    "src/JSystem/JAudio2/JAUSectionHeap.cpp"
+  ],
+  "donor_restored": [
+    "SpkSystem::reconnect",
+    "SpkSystem::getDeviceVolume",
+    "SpkSpeakerCtrl::reconnect",
+    "SpkSpeakerCtrl::getDeviceVolume",
+    "JAUSectionHeap::isWaveLoaded"
+  ],
+  "explicit_unavailable": [
+    "JAUSection::loadWaveArc both overloads",
+    "JAUSection::eraseWaveArc both overloads"
+  ],
+  "sdk_queries": [
+    "WPADIsSpeakerEnabled reflects unsupported host speaker output",
+    "WPADGetSpeakerVolume reads canonical SC configuration"
+  ]
+}

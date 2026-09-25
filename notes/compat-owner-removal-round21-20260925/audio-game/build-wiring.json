@@ -1,0 +1,49 @@
+{
+  "enable_existing_Game_AudioLib": [
+    "AudFader.cpp",
+    "AudTrackController.cpp",
+    "AudBgm.cpp",
+    "AudBgmKeeper.cpp",
+    "AudBgmMgr.cpp",
+    "AudBgmRhythmStrategy.cpp",
+    "AudWrap.cpp",
+    "AudSystemVolumeController.cpp",
+    "AudSoundObject.cpp",
+    "AudAnmSoundObject.cpp",
+    "AudSoundObject_Kawamura.cpp",
+    "AudSoundObject_Takezawa.cpp",
+    "AudSoundObject_Gohara.cpp",
+    "AudSoundInfo.cpp",
+    "AudUtil.cpp",
+    "AudSpeakerWrap.cpp",
+    "AudLimitedSound.cpp"
+  ],
+  "enable_existing_Game_RhythmLib": [
+    "AudMeObject.cpp",
+    "AudMeHandles.cpp",
+    "AudChordInfo.cpp",
+    "AudRhythmMeSystem.cpp",
+    "AudBgmTempoAdjuster.cpp",
+    "AudMePlayer.cpp"
+  ],
+  "add_canonical_JSystem": [
+    "src/JSystem/JAudio2/JAUSoundObject.cpp",
+    "src/JSystem/JAudio2/JAUSoundAnimator.cpp",
+    "src/JSystem/JAudio2/JAISeMgr.cpp",
+    "src/JSystem/JAudio2/JAISeqMgr.cpp",
+    "src/JSystem/JAudio2/JASTrack.cpp",
+    "src/JSystem/JAudio2/JASTrackPort.cpp",
+    "src/JSystem/JAudio2/JASSeqCtrl.cpp"
+  ],
+  "preserve_flags": [
+    "-ffp-contract=off for restored fade/volume/modifier/scheduler scalar arithmetic"
+  ],
+  "other_lane_dependencies": [
+    "AudSystemWrapper actual typed owners and permission methods",
+    "AudSoundObjHolder mNativeHolder membership updates",
+    "JAISeMgr/SeqMgr startSound; JASTrack mute/writePort; JASDriver registerMixCallback",
+    "Original rhythm/chord and speaker output-facing providers may explicitly reject unavailable output; no synthetic owners"
+  ],
+  "no_enable_needed": [],
+  "root_owns_build_wiring": true
+}

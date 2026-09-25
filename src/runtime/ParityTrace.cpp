@@ -78,40 +78,6 @@ namespace smgpc::runtime {
             return "Unknown";
         }
 
-        [[nodiscard]] const char *audio_event_kind_name(AudioEventKind kind) {
-            switch (kind) {
-            case AudioEventKind::StageBgmStart:
-                return "StageBgmStart";
-            case AudioEventKind::StageBgmUnlock:
-                return "StageBgmUnlock";
-            case AudioEventKind::StageBgmStop:
-                return "StageBgmStop";
-            case AudioEventKind::SubBgmStart:
-                return "SubBgmStart";
-            case AudioEventKind::SubBgmStop:
-                return "SubBgmStop";
-            case AudioEventKind::SystemSoundStart:
-                return "SystemSoundStart";
-            case AudioEventKind::SystemSoundStop:
-                return "SystemSoundStop";
-            case AudioEventKind::SystemLevelSoundStart:
-                return "SystemLevelSoundStart";
-            case AudioEventKind::ActorSoundStart:
-                return "ActorSoundStart";
-            case AudioEventKind::ActorLevelSoundStart:
-                return "ActorLevelSoundStart";
-            case AudioEventKind::LimitedSoundRegister:
-                return "LimitedSoundRegister";
-            case AudioEventKind::LevelSoundSubmit:
-                return "LevelSoundSubmit";
-            case AudioEventKind::LevelSoundPermit:
-                return "LevelSoundPermit";
-            case AudioEventKind::AtmosphereSoundStart:
-                return "AtmosphereSoundStart";
-            }
-
-            return "Unknown";
-        }
 
         [[nodiscard]] const char *rumble_request_kind_name(RumbleRequestKind kind) {
             switch (kind) {
@@ -720,28 +686,6 @@ namespace smgpc::runtime {
             return out;
         }
 
-        [[nodiscard]] Json audio_events_json(std::span<const AudioEvent> events) {
-            auto out = Json::array();
-            for (auto i = std::size_t{}; i < events.size(); ++i) {
-                const auto &event = events[i];
-                out.push_back(Json{
-                    {"index", i},
-                    {"kind", audio_event_kind_name(event.kind)},
-                    {"name", event.name},
-                    {"sound_id", event.sound_id.has_value() ? Json(*event.sound_id) : Json(nullptr)},
-                    {"source_identity_present", event.source_identity != nullptr},
-                    {"source_name", event.source_name},
-                    {"parameter_1", event.parameter_1},
-                    {"parameter_2", event.parameter_2},
-                    {"parameter_3", event.parameter_3},
-                    {"prepared", event.prepared},
-                    {"fade_frames", event.fade_frames},
-                    {"delay_frames", event.delay_frames},
-                    {"frame_index", event.frame_index},
-                });
-            }
-            return out;
-        }
 
         [[nodiscard]] Json wipe_events_json(std::span<const WipeEvent> events) {
             auto out = Json::array();
@@ -1170,19 +1114,6 @@ namespace smgpc::runtime {
             {"camera_pose", runtime.last_camera_pose().has_value() ? camera_pose_json(*runtime.last_camera_pose()) : Json(nullptr)},
             {"host_input", host_input_json(runtime.host_input_trace(), frame_context)},
             {"wpad0", wpad_channel_json(runtime.wpad(), WPAD_CHAN0, frame_context)},
-            {"audio",
-             Json{
-                 {"stage_bgm", runtime.current_stage_bgm_name()},
-                 {"stage_bgm_active", runtime.j_audio_playback().has_active_bgm(smgpc::runtime::BgmLane::Stage)},
-                 {"stage_bgm_prepared", runtime.is_stage_bgm_prepared()},
-                 {"sub_bgm", runtime.audio().current_sub_bgm_name()},
-                 {"sub_bgm_active", runtime.audio().has_active_sub_bgm()},
-                 {"sub_bgm_stopping", runtime.audio().is_sub_bgm_stopping()},
-                 {"sub_bgm_fade_frames_remaining", runtime.audio().sub_bgm_fade_frames_remaining()},
-                 {"dropped_event_count", runtime.audio().dropped_event_count()},
-                 {"events", audio_events_json(runtime.audio().events())},
-             }},
-
             {"runtime_services", runtime_services_json(runtime)},
             {"scene_snapshot", scene_entries_json(runtime.scheduler().snapshot())},
             {"scene_trace", scene_entries_json(runtime.scheduler().last_execution_trace())},

@@ -1,78 +1,153 @@
 #include "Game/System/AudSystemWrapper.hpp"
+#include "Game/AudioLib/AudBgmMgr.hpp"
+#include "Game/AudioLib/AudParams.hpp"
 #include "Game/AudioLib/AudSceneMgr.hpp"
+#include "Game/AudioLib/AudSoundNameConverter.hpp"
+#include "Game/AudioLib/AudSoundObject.hpp"
+#include "Game/AudioLib/AudSoundObjHolder.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemObjHolder.hpp"
-#include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/FileUtil.hpp"
-#include "compat/DisabledAudioBackend.hpp"
-#include "compat/JkrAllocationDomain.hpp"
-#include "JSystem/JKernel/JKRHeap.hpp"
+#include "Game/Util/MemoryUtil.hpp"
+#include "Game/Util/SingletonHolder.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
+#include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
+#include <aurora/j_audio_sound_archive.hpp>
+#include <new>
 #include <stdexcept>
 
 namespace {
-using Backend = smgpc::compat::DisabledAudioBackend;
-Backend& backend(const AudSystemWrapper& wrapper) {
-    if (!wrapper.mDisabledBackend)
-        aurora::throw_host_exception<std::logic_error>("The original audio wrapper has no disabled backend owner");
-    return *wrapper.mDisabledBackend;
-}
-void retire_wrapper(void* object) noexcept { static_cast<AudSystemWrapper*>(object)->~AudSystemWrapper(); }
+    void retireWrapper(void* object) noexcept {
+        static_cast< AudSystemWrapper* >(object)->~AudSystemWrapper();
+    }
 }
 
-// Complete subsystem adapter for the explicitly disabled output policy. The
-// original process still constructs this wrapper and executes its async worker.
-// AudSystem, rhythm/speaker graphs and GameSystem globals are never fabricated.
-AudSystemWrapper::AudSystemWrapper(JKRSolidHeap* audio_heap, JKRHeap* resource_heap)
-    : mAudSystem(nullptr), _4(audio_heap), _8(resource_heap), mSmrRes(nullptr),
-      mJaiSeqRes(nullptr), mJaiCordRes(nullptr), mJaiMeRes(nullptr), mJaiRemixSeqRes(nullptr),
-      mSpkHeap(nullptr), mSpkRes(nullptr), _28(false), _29(false), _2A(false), mDisabledBackend(nullptr) {
-    auto* owner_heap = JKRHeap::findFromRoot(this);
-    if (!owner_heap || !audio_heap || !resource_heap)
-        aurora::throw_host_exception<std::logic_error>("An audio wrapper requires its actual original process heaps");
-    smgpc::compat::JkrHostAllocationScope host;
-    auto instance = std::make_unique<Backend>(*owner_heap);
-    JKRHeap::registerFinalizer(this, retire_wrapper);
-    mDisabledBackend = instance.release();
+AudSystemWrapper::AudSystemWrapper(JKRSolidHeap* audioHeap, JKRHeap* resourceHeap)
+    : mAudSystem(nullptr), _4(audioHeap), _8(resourceHeap), mSmrRes(nullptr), mJaiSeqRes(nullptr), mJaiCordRes(nullptr),
+      mJaiMeRes(nullptr), mJaiRemixSeqRes(nullptr), mSpkHeap(nullptr), mSpkRes(nullptr), _28(false), _29(false), _2A(false) {
+    if (!JKRHeap::findFromRoot(this) || !audioHeap || !resourceHeap) {
+        aurora::throw_host_exception< std::logic_error >("An audio wrapper requires its actual original process heaps");
+    }
+    JKRHeap::registerFinalizer(this, retireWrapper);
 }
+
 AudSystemWrapper::~AudSystemWrapper() {
     JKRHeap::unregisterFinalizer(this);
-    delete mDisabledBackend;
-    mDisabledBackend = nullptr;
+    mInitializePhase = InitializePhase::Created;
+    releaseResources();
 }
+
+AudSystemWrapper* AudSystemWrapper::getCurrent() noexcept {
+    auto* system = SingletonHolder< GameSystem >::get();
+    return system && system->mObjHolder ? system->mObjHolder->mAudioSystem : nullptr;
+}
+
 bool AudSystemWrapper::isOutputDisabled() {
-    const GameSystem* system = SingletonHolder<GameSystem>::get();
-    const AudSystemWrapper* wrapper = system && system->mObjHolder ? system->mObjHolder->mAudioSystem : nullptr;
-    return wrapper && wrapper->mDisabledBackend && !wrapper->mDisabledBackend->has_output_device();
+    auto* wrapper = getCurrent();
+    return !wrapper || !wrapper->mAudSystem;
 }
+
+AudSceneMgr* AudSystemWrapper::getSceneMgr() const noexcept {
+    return mInitializePhase == InitializePhase::Initialized ? mSceneMgr.get() : nullptr;
+}
+
+AudBgmMgr* AudSystemWrapper::getBgmMgr() const noexcept {
+    return mInitializePhase == InitializePhase::Initialized ? mBgmMgr.get() : nullptr;
+}
+
+AudSoundObject* AudSystemWrapper::getSystemSeObject() const noexcept {
+    return mInitializePhase == InitializePhase::Initialized ? mSystemSeObject.get() : nullptr;
+}
+
+AudSoundObjHolder* AudSystemWrapper::getSoundObjHolder() const noexcept {
+    return mInitializePhase == InitializePhase::Initialized ? mSoundObjHolder.get() : nullptr;
+}
+
+void AudSystemWrapper::setTriggerSePermitted(bool permitted) noexcept {
+    mTriggerSePermitted = permitted;
+}
+
+void AudSystemWrapper::setLevelSePermitted(bool permitted) noexcept {
+    mLevelSePermitted = permitted;
+}
+
+bool AudSystemWrapper::isSePermitted() const noexcept {
+    return mTriggerSePermitted && mLevelSePermitted;
+}
+
 void AudSystemWrapper::requestResourceForInitialize() {
-    // Names remain required for ordinary Game requests; disabled output has no
-    // sequence/chord/ME/remix/speaker bank consumers and queues none of them.
+    if (mInitializePhase != InitializePhase::Created) {
+        aurora::throw_host_exception< std::logic_error >("Audio initialization was already requested");
+    }
+    // Name conversion remains required with output disabled. The absent DSP,
+    // rhythm and speaker owners have no bank requests to enqueue.
     MR::loadAsyncToMainRAM("/AudioRes/SMR.szs", nullptr, _8, JKRDvdRipper::ALLOC_DIRECTION_BACKWARD);
-    backend(*this).request_initialize();
+    mInitializePhase = InitializePhase::Requested;
 }
+
 void AudSystemWrapper::receiveResourceForInitialize() {
-    auto& output = backend(*this);
-    if (output.phase() == Backend::Phase::Received) return;
-    if (output.phase() != Backend::Phase::Requested)
-        aurora::throw_host_exception<std::logic_error>("Audio name resources were not requested");
+    if (mInitializePhase == InitializePhase::Received) {
+        return;
+    }
+    if (mInitializePhase != InitializePhase::Requested) {
+        aurora::throw_host_exception< std::logic_error >("Audio name resources were not requested");
+    }
     mSmrRes = MR::receiveFile("/AudioRes/SMR.szs");
-    if (!mSmrRes)
-        aurora::throw_host_exception<std::runtime_error>("Audio initialization received no name resource");
-    output.receive_initialize();
+    if (!mSmrRes) {
+        aurora::throw_host_exception< std::runtime_error >("Audio initialization received no name resource");
+    }
+    mInitializePhase = InitializePhase::Received;
 }
+
 void AudSystemWrapper::createAudioSystem() {
     receiveResourceForInitialize();
-    if (_29) OSSuspendThread(OSGetCurrentThread());
+    if (_29) {
+        OSSuspendThread(OSGetCurrentThread());
+    }
     _2A = true;
     try {
-        // FileRipper already decompressed the requested allocation. Its actual
-        // heap block extent bounds the archive; the compressed DVD size does not.
         const auto size = JKRHeap::getSize(mSmrRes, JKRHeap::findFromRoot(mSmrRes));
-        if (size <= 0)
-            aurora::throw_host_exception<std::logic_error>("Audio name resource requires a bounded original heap allocation");
-        backend(*this).initialize({static_cast<const std::uint8_t*>(mSmrRes), static_cast<std::size_t>(size)});
+        if (size <= 0) {
+            aurora::throw_host_exception< std::logic_error >("Audio name resource requires a bounded original heap allocation");
+        }
+        const aurora::allocation::HostAllocationScope host;
+        aurora::audio::JAudioSoundArchive archive(
+            {static_cast< const u8* >(mSmrRes), static_cast< std::size_t >(size)},
+            [](std::string_view) -> std::vector< u8 > {
+                aurora::throw_host_exception< std::logic_error >("Disabled audio output does not load wave banks");
+            });
+        mSoundNameBytes = archive.native_sound_name_table();
+        if (mSoundNameBytes.size() < 16) {
+            aurora::throw_host_exception< std::runtime_error >("Audio initialization received no sound-name table");
+        }
+        mSoundNameTable.init(mSoundNameBytes.data());
+        AudSoundNameConverter::validateTable(&mSoundNameTable);
+        createSoundNameConverter();
+
+        auto* heap = JKRHeap::findFromRoot(this);
+        const MR::CurrentHeapRestorer current(heap);
+        const aurora::allocation::ClientAllocationScope game({true, true});
+        mSceneMgr = std::make_unique< AudSceneMgr >(nullptr);
+        mBgmMgr = std::make_unique< AudBgmMgr >();
+        mSoundObjHolder = std::make_unique< AudSoundObjHolder >(heap, AudParams::numInspectableSoundObj);
+        // The wrapper's finalizer owns this object. Host object storage keeps
+        // JKRDisposer from destroying it first during bulk heap retirement;
+        // its original constructor still allocates arrays in the selected heap.
+        void* storage;
+        {
+            const aurora::allocation::HostAllocationScope objectStorage;
+            storage = ::operator new(sizeof(AudSoundObject));
+        }
+        try {
+            mSystemSeObject.reset(new (storage) AudSoundObject(nullptr, 10, heap));
+        } catch (...) {
+            ::operator delete(storage);
+            throw;
+        }
+        mInitializePhase = InitializePhase::Initialized;
     } catch (...) {
+        releaseResources();
         _2A = false;
         throw;
     }
@@ -80,38 +155,129 @@ void AudSystemWrapper::createAudioSystem() {
     MR::removeFileConsideringLanguage("/AudioRes/SMR.szs");
     mSmrRes = nullptr;
 }
+
 void AudSystemWrapper::createSoundNameConverter() {
-    if (!backend(*this).initialized())
-        aurora::throw_host_exception<std::logic_error>("Audio name publication requires completed backend initialization");
-}
-void AudSystemWrapper::updateRhythm() { (void)backend(*this); }
-void AudSystemWrapper::movement() { backend(*this).movement(); }
-void AudSystemWrapper::stopAllSound(u32) { backend(*this).stop_all(); }
-bool AudSystemWrapper::isLoadDoneWaveDataAtSystemInit() const { return backend(*this).initialized(); }
-void AudSystemWrapper::loadStaticWaveData() { backend(*this).request_banks(Backend::BankGroup::Static); }
-bool AudSystemWrapper::isLoadDoneStaticWaveData() const { return backend(*this).banks_complete(Backend::BankGroup::Static); }
-void AudSystemWrapper::loadStageWaveData(const char*, const char*, bool isPlayerLuigi) {
-    auto& output = backend(*this);
-    if (auto* scene = output.scene_manager()) {
-        if (isPlayerLuigi) scene->setPlayerModeLuigi();
-        else scene->setPlayerModeMario();
+    if (mSoundNameConverter) {
+        return;
     }
-    output.request_banks(Backend::BankGroup::Stage);
+    if (mInitializePhase != InitializePhase::Received || mSoundNameBytes.empty()) {
+        aurora::throw_host_exception< std::logic_error >("Audio name publication requires its received sound-name table");
+    }
+    AudSoundNameConverter::validateTable(&mSoundNameTable);
+    const MR::CurrentHeapRestorer current(JKRHeap::findFromRoot(this));
+    const aurora::allocation::ClientAllocationScope game({true, true});
+    mPreviousNameTable = JAUSoundNameTable::sInstance;
+    JAUSoundNameTable::sInstance = &mSoundNameTable;
+    try {
+        mSoundNameConverter = std::make_unique< AudSoundNameConverter >();
+    } catch (...) {
+        JAUSoundNameTable::sInstance = mPreviousNameTable;
+        throw;
+    }
+    mPreviousNameConverter = AudSingletonHolder< AudSoundNameConverter >::exchange(mSoundNameConverter.get());
 }
-bool AudSystemWrapper::isLoadDoneStageWaveData() const { return backend(*this).banks_complete(Backend::BankGroup::Stage); }
-void AudSystemWrapper::loadScenarioWaveData(const char*, const char*, s32) { backend(*this).request_banks(Backend::BankGroup::Scenario); }
-bool AudSystemWrapper::isLoadDoneScenarioWaveData() const { return backend(*this).banks_complete(Backend::BankGroup::Scenario); }
-bool AudSystemWrapper::isPermitToReset() const { return !_2A; }
+
+void AudSystemWrapper::releaseResources() noexcept {
+    const aurora::allocation::HostAllocationScope host;
+    mSystemSeObject.reset();
+    mSoundObjHolder.reset();
+    mBgmMgr.reset();
+    mSceneMgr.reset();
+    if (mSoundNameConverter && AudSingletonHolder< AudSoundNameConverter >::get() == mSoundNameConverter.get()) {
+        AudSingletonHolder< AudSoundNameConverter >::exchange(mPreviousNameConverter);
+    }
+    mSoundNameConverter.reset();
+    if (JAUSoundNameTable::sInstance == &mSoundNameTable) {
+        JAUSoundNameTable::sInstance = mPreviousNameTable;
+    }
+    mPreviousNameConverter = nullptr;
+    mPreviousNameTable = nullptr;
+    mSoundNameTable.init(nullptr);
+    mSoundNameBytes.clear();
+}
+
+void AudSystemWrapper::updateRhythm() {
+    // No rhythm owner exists while output is disabled.
+}
+
+void AudSystemWrapper::movement() {
+    if (mInitializePhase != InitializePhase::Initialized) {
+        return;
+    }
+    mBgmMgr->movement();
+    mSoundObjHolder->update();
+}
+
+void AudSystemWrapper::stopAllSound(u32) {
+    // Disabled starts create no voices requiring a stop acknowledgement.
+}
+
+bool AudSystemWrapper::isLoadDoneWaveDataAtSystemInit() const {
+    return mInitializePhase == InitializePhase::Initialized && mSceneMgr->isLoadDoneSystemInit();
+}
+
+void AudSystemWrapper::loadStaticWaveData() {
+    if (mInitializePhase == InitializePhase::Initialized) {
+        mSceneMgr->loadStaticResource();
+        mStaticWaveRequested = true;
+    }
+}
+
+bool AudSystemWrapper::isLoadDoneStaticWaveData() const {
+    return mInitializePhase == InitializePhase::Initialized && mStaticWaveRequested && mSceneMgr->isLoadDoneStaticResource();
+}
+
+void AudSystemWrapper::loadStageWaveData(const char* sceneName, const char* stageName, bool isPlayerLuigi) {
+    if (mInitializePhase != InitializePhase::Initialized) {
+        return;
+    }
+    if (isPlayerLuigi) {
+        mSceneMgr->setPlayerModeLuigi();
+    } else {
+        mSceneMgr->setPlayerModeMario();
+    }
+    mScenarioWaveRequested = false;
+    mSceneMgr->loadStageResource(sceneName, stageName);
+    mStageWaveRequested = true;
+}
+
+bool AudSystemWrapper::isLoadDoneStageWaveData() const {
+    return mInitializePhase == InitializePhase::Initialized && mStageWaveRequested && mSceneMgr->isLoadDoneStageResource();
+}
+
+void AudSystemWrapper::loadScenarioWaveData(const char* sceneName, const char* stageName, s32 scenarioNo) {
+    if (mInitializePhase == InitializePhase::Initialized) {
+        mSceneMgr->loadScenarioResource(sceneName, stageName, scenarioNo);
+        mScenarioWaveRequested = true;
+    }
+}
+
+bool AudSystemWrapper::isLoadDoneScenarioWaveData() const {
+    return mInitializePhase == InitializePhase::Initialized && mScenarioWaveRequested && mSceneMgr->isLoadDoneScenarioResource();
+}
+
+bool AudSystemWrapper::isPermitToReset() const {
+    return !_2A;
+}
+
 void AudSystemWrapper::prepareReset() {
-    if (!backend(*this).initialized()) _29 = true;
-    else backend(*this).prepare_reset();
+    if (mInitializePhase != InitializePhase::Initialized) {
+        _29 = true;
+    } else {
+        mResetRequested = true;
+    }
 }
+
 void AudSystemWrapper::requestReset(bool) {
-    if (!backend(*this).initialized()) _29 = true;
-    else { backend(*this).request_reset(); backend(*this).stop_all(); }
+    prepareReset();
+    stopAllSound(10);
 }
-bool AudSystemWrapper::isResetDone() { return _29 || backend(*this).reset_complete(); }
+
+bool AudSystemWrapper::isResetDone() {
+    return _29 || mResetRequested || mInitializePhase != InitializePhase::Initialized;
+}
+
 void AudSystemWrapper::resumeReset() {
-    if (_29) _29 = false;
-    backend(*this).resume_reset();
+    _29 = false;
+    mResetRequested = false;
 }

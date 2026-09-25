@@ -1,0 +1,82 @@
+{
+  "kind": "read-only manifest and retired-provider search; no build or tests",
+  "files": [
+    {
+      "path": "src/Game/System/AudSystemWrapper.hpp",
+      "snapshot_matches": true,
+      "current_matches": true
+    },
+    {
+      "path": "src/Game/System/AudSystemWrapper.cpp",
+      "snapshot_matches": true,
+      "current_matches": true
+    },
+    {
+      "path": "src/Game/AudioLib/AudSoundNameConverter.hpp",
+      "snapshot_matches": true,
+      "current_matches": true
+    },
+    {
+      "path": "src/Game/AudioLib/AudSoundNameConverter.cpp",
+      "snapshot_matches": true,
+      "current_matches": true
+    },
+    {
+      "path": "src/Game/AudioLib/AudSoundObjHolder.hpp",
+      "snapshot_matches": true,
+      "current_matches": true
+    },
+    {
+      "path": "src/Game/AudioLib/AudSoundObjHolder.cpp",
+      "snapshot_matches": true,
+      "current_matches": true
+    },
+    {
+      "path": "src/Game/AudioLib/AudSceneMgr.cpp",
+      "snapshot_matches": true,
+      "current_matches": true
+    },
+    {
+      "path": "src/compat/DisabledAudioBackend.cpp",
+      "snapshot_matches": true,
+      "current_matches": true
+    },
+    {
+      "path": "src/compat/DisabledAudioBackend.hpp",
+      "snapshot_matches": true,
+      "current_matches": true
+    },
+    {
+      "path": "src/compat/DisabledObjectAudioService.cpp",
+      "snapshot_matches": true,
+      "current_matches": true
+    },
+    {
+      "path": "src/compat/DisabledObjectAudioService.hpp",
+      "snapshot_matches": true,
+      "current_matches": true
+    },
+    {
+      "path": "src/compat/JAudioCategoryVolumeOwnership.cpp",
+      "snapshot_matches": true,
+      "current_matches": true
+    },
+    {
+      "path": "src/compat/JAudioCategoryVolumeOwnership.hpp",
+      "snapshot_matches": true,
+      "current_matches": true
+    },
+    {
+      "path": "src/compat/JAudioLimitedSoundOwnership.cpp",
+      "snapshot_matches": true,
+      "current_matches": true
+    },
+    {
+      "path": "src/compat/JAudioLimitedSoundOwnership.hpp",
+      "snapshot_matches": true,
+      "current_matches": true
+    }
+  ],
+  "retired_provider_refs": "",
+  "rg_status": 1
+}

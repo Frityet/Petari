@@ -1,0 +1,9 @@
+{
+  "head": "d08e14ef77d4d9457ffad577e431c8e830e9de56",
+  "remote": "d08e14ef77d4d9457ffad577e431c8e830e9de56",
+  "paths": [
+    "include/revolution.h",
+    "lib/wpad.cpp"
+  ],
+  "original_index_preserved": true
+}

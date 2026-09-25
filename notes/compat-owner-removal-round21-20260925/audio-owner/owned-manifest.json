@@ -1,0 +1,140 @@
+{
+  "scope": "Actual AudSystemWrapper/name converter/scene manager/nonowning sound holder; remove eight audio compat files",
+  "files": [
+    {
+      "path": "src/Game/System/AudSystemWrapper.hpp",
+      "before": "notes/compat-owner-removal-round21-20260925/audio-owner/before/src/Game/System/AudSystemWrapper.hpp",
+      "before_sha256": "0e6578bda2d96e8d75f7e7aa9b48d31033642073f0042f99424f4d59deefed4e",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "modify",
+      "after_sha256": "0ca642ee65156197510265cdf321312a5bc0c4b50aa20f72238fef1905890810"
+    },
+    {
+      "path": "src/Game/System/AudSystemWrapper.cpp",
+      "before": "notes/compat-owner-removal-round21-20260925/audio-owner/before/src/Game/System/AudSystemWrapper.cpp",
+      "before_sha256": "e6091320c43e51b2252e97792a71cccce285b53d56b5ac758f0b3174fb498c85",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "modify",
+      "after_sha256": "1d7040e53ea983c230e36da5d0d47a2c5b1aa25840af26e47842e07b61bb06aa"
+    },
+    {
+      "path": "src/Game/AudioLib/AudSoundNameConverter.hpp",
+      "before": "notes/compat-owner-removal-round21-20260925/audio-owner/before/src/Game/AudioLib/AudSoundNameConverter.hpp",
+      "before_sha256": "3986781f74faedf5b80b9a72d07b4681563224bc760a7b7c06fad78192d07f09",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "modify",
+      "after_sha256": "b2f3bf06dc47d333ebee7ae3d4e43f4ebb9d4c84b1de5d9cef4152c3e7ccc8ff"
+    },
+    {
+      "path": "src/Game/AudioLib/AudSoundNameConverter.cpp",
+      "before": "notes/compat-owner-removal-round21-20260925/audio-owner/before/src/Game/AudioLib/AudSoundNameConverter.cpp",
+      "before_sha256": "af4cb036b540a3e60cb281ec087330c2779315b7c0d5f372e4c8cd03180a6022",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "modify",
+      "after_sha256": "5e79903e2393eda51b6221ca8a7805cb7db09b697465acccb5e3ab78d352fe32"
+    },
+    {
+      "path": "src/Game/AudioLib/AudSoundObjHolder.hpp",
+      "before": "notes/compat-owner-removal-round21-20260925/audio-owner/before/src/Game/AudioLib/AudSoundObjHolder.hpp",
+      "before_sha256": "232096ebb98e862e1e652d5252efd9a498ed986092cb93bf3e334d95e86bad80",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "modify",
+      "after_sha256": "20dc0d1d0a97096cfa0aef5d5305bb8ce1984604638abf8ac5675930ef09073c"
+    },
+    {
+      "path": "src/Game/AudioLib/AudSoundObjHolder.cpp",
+      "before": "notes/compat-owner-removal-round21-20260925/audio-owner/before/src/Game/AudioLib/AudSoundObjHolder.cpp",
+      "before_sha256": "79db650b0cae8abce97c7c7f0c79d6388290f0f59cf22db28e5507b389616056",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "modify",
+      "after_sha256": "71d79ced3b94a74d637f979a8f788b076476b20d073ce1ba23b5041f24c7c6c7"
+    },
+    {
+      "path": "src/Game/AudioLib/AudSceneMgr.cpp",
+      "before": "notes/compat-owner-removal-round21-20260925/audio-owner/before/src/Game/AudioLib/AudSceneMgr.cpp",
+      "before_sha256": "e3061d0a95521fb11b4fff65436ebfe19227a51db480091633056b9959a2d90c",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "modify",
+      "after_sha256": "637ce5b9ffa585868bdc4f3d0565fa4409afbd92e629ed6fa41c67eb3d2c8c12"
+    },
+    {
+      "path": "src/compat/DisabledAudioBackend.cpp",
+      "before": "notes/compat-owner-removal-round21-20260925/audio-owner/before/src/compat/DisabledAudioBackend.cpp",
+      "before_sha256": "55704492fb3f13a942b757b79fb8fb15535114f351ae99f03763f3d2313cd087",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/DisabledAudioBackend.hpp",
+      "before": "notes/compat-owner-removal-round21-20260925/audio-owner/before/src/compat/DisabledAudioBackend.hpp",
+      "before_sha256": "7ea7aad07eb172dc7764e43644cd8691c90c76218d728a472fd0c591cd192101",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/DisabledObjectAudioService.cpp",
+      "before": "notes/compat-owner-removal-round21-20260925/audio-owner/before/src/compat/DisabledObjectAudioService.cpp",
+      "before_sha256": "ecd1719324ed9ddc80d0dab12613b9ef868613ba9e13619065cc6a47856b2aad",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/DisabledObjectAudioService.hpp",
+      "before": "notes/compat-owner-removal-round21-20260925/audio-owner/before/src/compat/DisabledObjectAudioService.hpp",
+      "before_sha256": "6e0b7c109b4024d1624a75f2b261a33f402532e1f60ac2e65d862e9c4c42c1cd",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/JAudioCategoryVolumeOwnership.cpp",
+      "before": "notes/compat-owner-removal-round21-20260925/audio-owner/before/src/compat/JAudioCategoryVolumeOwnership.cpp",
+      "before_sha256": "eea0d8b8325b4425eb76692e4bc350ba22ddae32aa1f5357434ad45201e881e1",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/JAudioCategoryVolumeOwnership.hpp",
+      "before": "notes/compat-owner-removal-round21-20260925/audio-owner/before/src/compat/JAudioCategoryVolumeOwnership.hpp",
+      "before_sha256": "3b8da31501bd41d94b7b4fbf4dca976ef4bc378ddd71b4f2e289dbdf6ba22bd2",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/JAudioLimitedSoundOwnership.cpp",
+      "before": "notes/compat-owner-removal-round21-20260925/audio-owner/before/src/compat/JAudioLimitedSoundOwnership.cpp",
+      "before_sha256": "d1d1b645181bc21317fc7c3cd1774e36d963dc60e31d83498ca028b3ce03b505",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/JAudioLimitedSoundOwnership.hpp",
+      "before": "notes/compat-owner-removal-round21-20260925/audio-owner/before/src/compat/JAudioLimitedSoundOwnership.hpp",
+      "before_sha256": "5c8c8a2c9b3adff6369534add516c51752f113420eca46486ae6647fe2e69416",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "delete",
+      "after_sha256": null
+    }
+  ]
+}

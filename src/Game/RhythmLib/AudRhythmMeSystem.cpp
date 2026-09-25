@@ -1,7 +1,26 @@
+#if defined(TARGET_PC)
 #include "Game/RhythmLib/AudRhythmMeSystem.hpp"
+#include <aurora/exception.hpp>
+#include <stdexcept>
+
+// No sequence/rhythm graph is constructed by the disabled native output path.
+bool AudRhythmMeSystem::setSeq(JAISoundHandle&, s32) {
+    return false;
+}
+
+void AudRhythmMeSystem::rejectSeq(s32) {
+    aurora::throw_host_exception< std::logic_error >("Rhythm sequence retirement requires an initialized audio output owner.");
+}
+
+void AudRhythmMeSystem::setUsingRhythmParser(u32) {
+    aurora::throw_host_exception< std::logic_error >("Rhythm parser selection requires an initialized audio output owner.");
+}
+
+#else
 #include "Game/RhythmLib/AudMePlayer.hpp"
 #include "Game/RhythmLib/AudMeTrack.hpp"
 #include "Game/RhythmLib/AudRhythmHolder.hpp"
+#include "Game/RhythmLib/AudRhythmMeSystem.hpp"
 #include "Game/RhythmLib/AudRhythmSeqParser.hpp"
 #include <JSystem/JAudio2/JAISound.hpp>
 #include <JSystem/JAudio2/JASCriticalSection.hpp>
@@ -104,3 +123,4 @@ void AudRhythmMeSystem::setUsingRhythmParser(u32 parserNo) {
 
     mBgmIdx = parserNo;
 }
+#endif

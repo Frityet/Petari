@@ -1,9 +1,9 @@
-#include "resource/TextEncoding.hpp"
 #include "Game/Screen/HomeButtonLayout.hpp"
 #include "Game/AudioLib/AudSystem.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Speaker/SpkSystem.hpp"
+#include "Game/System/AudSystemWrapper.hpp"
 #include "Game/System/GameSystemFunction.hpp"
 #include "Game/System/HomeButtonMenuWrapper.hpp"
 #include "Game/System/Language.hpp"
@@ -16,6 +16,7 @@
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 #include "Game/Util/SystemUtil.hpp"
+#include "resource/TextEncoding.hpp"
 
 namespace {
     int SoundCallback(int evt, int num) {
@@ -119,7 +120,9 @@ void HomeButtonLayout::exeDeactive() {
 
 void HomeButtonLayout::exeActive() {
     if (MR::isFirstStep(this)) {
-        AudWrap::getSystem()->enterHomeButtonMenu();
+        if (!AudSystemWrapper::isOutputDisabled()) {
+            AudWrap::getSystem()->enterHomeButtonMenu();
+        }
         MR::startStarPointerModeHomeButton(this);
         GameSystemFunction::onHomeButtonMenuBeginAllRumble();
         MR::setWPadHolderModeHomeButton();
@@ -149,7 +152,9 @@ void HomeButtonLayout::exeActive() {
         GameSystemFunction::onHomeButtonMenuCloseAllRumble();
         break;
     case HBM_SELECT_BTN1:
-        AudWrap::getSystem()->preProcessToReset();
+        if (!AudSystemWrapper::isOutputDisabled()) {
+            AudWrap::getSystem()->preProcessToReset();
+        }
         bVar1 = true;
         GameSystemFunction::requestGoWiiMenu(true);
         GameSystemFunction::onHomeButtonMenuEndAllRumble();
@@ -157,7 +162,9 @@ void HomeButtonLayout::exeActive() {
         break;
     case HBM_SELECT_BTN2:
         if (!_25) {
-            AudWrap::getSystem()->preProcessToReset();
+            if (!AudSystemWrapper::isOutputDisabled()) {
+                AudWrap::getSystem()->preProcessToReset();
+            }
         }
 
         bVar1 = true;
@@ -168,8 +175,12 @@ void HomeButtonLayout::exeActive() {
     }
 
     if (!bVar1) {
-        AudWrap::getSystem()->exitHomeButtonMenu();
-        SpkSystem::reconnect(-1);
+        if (!AudSystemWrapper::isOutputDisabled()) {
+            AudWrap::getSystem()->exitHomeButtonMenu();
+        }
+        if (!AudSystemWrapper::isOutputDisabled()) {
+            SpkSystem::reconnect(-1);
+        }
     }
 
     if (MR::isStarPointerModeHomeButton()) {

@@ -1,0 +1,47 @@
+{
+  "delete": [
+    "src/compat/NativePcmSound.cpp",
+    "src/compat/NativePcmSound.hpp",
+    "src/compat/JaiStreamPlayback.cpp",
+    "src/compat/JaiStreamPlayback.hpp",
+    "src/compat/JAudioSoundParameterSemantics.cpp",
+    "src/compat/JAudioSoundParameterSemantics.hpp",
+    "src/compat/jaudio/JasStreamPcmBackend.cpp",
+    "src/compat/jaudio/JasStreamPcmBackend.hpp",
+    "src/runtime/JAudioPlaybackService.cpp",
+    "src/runtime/JAudioPlaybackService.hpp",
+    "src/runtime/ScenarioCatalogOwnership.cpp",
+    "src/runtime/ScenarioCatalogOwnership.hpp",
+    "src/runtime/ParticleResourceOwnership.cpp",
+    "src/runtime/ParticleResourceOwnership.hpp"
+  ],
+  "modify": [
+    "src/runtime/RuntimeContext.cpp",
+    "src/runtime/RuntimeContext.hpp",
+    "src/runtime/RuntimeServices.cpp",
+    "src/runtime/RuntimeServices.hpp",
+    "src/runtime/ParityTrace.cpp",
+    "src/app/OriginalGameApplication.cpp",
+    "src/Game/xmake.lua"
+  ],
+  "enabled_audio_sources": [
+    "AudAnmSoundObject",
+    "AudSceneMgr",
+    "AudSoundInfo",
+    "AudSoundObjHolder",
+    "AudSoundObject",
+    "AudSoundObject_Gohara",
+    "AudSoundObject_Kawamura",
+    "AudSoundObject_Takezawa",
+    "AudSpeakerWrap",
+    "AudUtil",
+    "AudBgm",
+    "AudBgmKeeper",
+    "AudBgmMgr",
+    "AudBgmRhythmStrategy",
+    "AudFader",
+    "AudTrackController",
+    "AudSystemVolumeController",
+    "AudWrap"
+  ]
+}

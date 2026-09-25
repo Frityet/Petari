@@ -1,7 +1,7 @@
-#include "resource/TextEncoding.hpp"
 #include "Game/Scene/GameScenePauseControl.hpp"
+#include "resource/TextEncoding.hpp"
 #if defined(TARGET_PC)
-#include "compat/DisabledObjectAudio.hpp"
+#include "Game/System/AudSystemWrapper.hpp"
 #endif
 #include "Game/AudioLib/AudSystem.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
@@ -36,7 +36,7 @@ void GameScenePauseControl::exeNormal() {
 
     if (mPauseMenuOff) {
 #if defined(TARGET_PC)
-        if constexpr (aurora::audio::DisabledObjectAudio::enabled()) {
+        if (!AudSystemWrapper::isOutputDisabled()) {
             AudWrap::getSystem()->exitPauseMenu();
         }
 #else

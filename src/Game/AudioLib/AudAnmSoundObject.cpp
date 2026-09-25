@@ -7,6 +7,7 @@
 #include "Game/NPC/Rabbit.hpp"
 #include "Game/Player/Mario.hpp"
 #include <JSystem/JAudio2/JAISound.hpp>
+#include <JSystem/JAudio2/JAISoundStarter.hpp>
 #include <JSystem/JAudio2/JAUSoundAnimator.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
 
@@ -234,7 +235,7 @@ void AudAnmSoundObject::startAnimSound(const TVec3f& rPos, f32 speed, JAISoundSt
         mLoopSoundIndex++;
     }
 
-    JAISoundHandle* handle = getAnimatorHandles()->getHandleUserData((u32)sound);
+    JAISoundHandle* handle = getAnimatorHandles()->getHandleUserData(reinterpret_cast< uintptr_t >(sound));
     if (handle == nullptr) {
         handle = getFreeHandle(sound);
     }
@@ -252,7 +253,7 @@ void AudAnmSoundObject::startAnimSound(const TVec3f& rPos, f32 speed, JAISoundSt
         return;
     }
 
-    if (!pStarter->startSound(soundID, handle, &rPos)) {
+    if (pStarter == nullptr || !pStarter->startSound(soundID, handle, &rPos)) {
         return;
     }
 
@@ -261,7 +262,7 @@ void AudAnmSoundObject::startAnimSound(const TVec3f& rPos, f32 speed, JAISoundSt
     }
 
     handle->getSound()->setAnimationState(1);
-    handle->getSound()->setUserData((u32)sound);
+    handle->getSound()->setUserData(reinterpret_cast< uintptr_t >(sound));
 
     setMapCodeToPort(handle, soundID);
     setCutoffToPort(handle, soundID);

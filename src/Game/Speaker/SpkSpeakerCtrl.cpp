@@ -88,3 +88,17 @@ void SpkSpeakerCtrl::initReconnect(s32 padChannel) {
 
 void SpkSpeakerCtrl::extensionProcess(s32, s32) {
 }
+
+void SpkSpeakerCtrl::reconnect(s32 padChannel) {
+    if (sSpeakerInfo[padChannel].mIsConnected) {
+        sSpeakerInfo[padChannel].mReconnectState = SpeakerInfo::Reconnect_OFF;
+    }
+}
+
+f32 SpkSpeakerCtrl::getDeviceVolume(s32 padChannel) {
+    if (padChannel >= WPAD_CHAN0 && !WPADIsSpeakerEnabled(padChannel)) {
+        return 0.0f;
+    }
+
+    return WPADGetSpeakerVolume() / 127.0f;
+}

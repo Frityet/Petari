@@ -4,8 +4,12 @@
 #include "Game/AudioLib/AudSoundInfo.hpp"
 #include "Game/AudioLib/AudSoundNameConverter.hpp"
 #include "Game/AudioLib/AudSoundObjHolder.hpp"
+#include "Game/AudioLib/AudSystem.hpp"
+#include "Game/AudioLib/AudWrap.hpp"
+#include "Game/System/AudSystemWrapper.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include <JSystem/JAudio2/JAISound.hpp>
+#include <JSystem/JAudio2/JASTrack.hpp>
 #include <JSystem/JGadget/hashcode.hpp>
 
 void FORCE_MATCH_SDATA2() {
@@ -25,7 +29,11 @@ AudSoundObject::AudSoundObject(TVec3f* pPos, u8 numHandles, JKRHeap* pHeap)
 }
 
 AudSoundObject::~AudSoundObject() {
-    AudWrap::getSoundObjHolder()->remove(this);
+    if (mNativeHolder != nullptr) {
+        mNativeHolder->remove(this);
+    }
+    delete[] mHashDatas;
+    mHashDatas = nullptr;
 }
 
 void AudSoundObject::addToSoundObjHolder() {
@@ -58,6 +66,9 @@ bool AudSoundObject::writePort(JAISoundHandle* pHandle, u32 port, u16 value) {
 }
 
 bool AudSoundObject::isLimitedSound(JAISoundID soundID) {
+    if (AudSystemWrapper::isOutputDisabled()) {
+        return true;
+    }
     if (soundID == -1) {
         return true;
     }
@@ -434,4 +445,8 @@ void AudSoundObjHashData::init() {
     mName = nullptr;
     mHash = 0;
     mID = 0;
+}
+
+bool AudSoundObject::isEnableStartSound(JAISoundID soundID) {
+    return !AudSystemWrapper::isOutputDisabled() && AudWrap::getSystem()->isEnableStartSound(soundID);
 }

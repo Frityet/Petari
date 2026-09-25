@@ -114,8 +114,8 @@ class JAUSoundAnimation;
 class JAUSoundAnimationControl {
 public:
     virtual ~JAUSoundAnimationControl() = 0;
-    virtual JAUSoundAnimationSound* getSound(const JAUSoundAnimation*, int) = 0;
-    virtual u16 getNumSounds(const JAUSoundAnimation*) = 0;
+    virtual JAUSoundAnimationSound *getSound(const JAUSoundAnimation *, int) = 0;
+    virtual u16 getNumSounds(const JAUSoundAnimation *) = 0;
 };
 
 class JAUSoundAnimation {
@@ -130,7 +130,7 @@ public:
         }
     }
 
-    const JAUSoundAnimationSound* getSound(int i_index) const {
+    const JAUSoundAnimationSound *getSound(int i_index) const {
         if (mControl != nullptr) {
             return mControl->getSound(this, i_index);
         } else {
@@ -139,18 +139,18 @@ public:
     }
 
     /* 0x0 */ u16 mNumSounds;
-    /* 0x4 */ JAUSoundAnimationControl* mControl;
+    /* 0x4 */ JAUSoundAnimationControl *mControl;
     /* 0x8 */ JAUSoundAnimationSound mSounds;
 };
 
 class JAUSoundAnimator {
 public:
-    JAUSoundAnimator(JAISoundHandles*);
+    JAUSoundAnimator(JAISoundHandles *);
 
-    virtual JAISoundHandle* getFreeHandle(const JAUSoundAnimationSound* pAnimation);
-    virtual u32 getSoundID(const JAUSoundAnimationSound* pAnimation, const TVec3f& rPos, f32);
-    virtual bool playsSound(const JAUSoundAnimationSound* pAnimation, const TVec3f& rPos, f32);
-    virtual void modifySoundParams(JASSoundParams* pParams, const JAUSoundAnimationSound* pAnimation, f32 time);
+    virtual JAISoundHandle *getFreeHandle(const JAUSoundAnimationSound *pAnimation);
+    virtual u32 getSoundID(const JAUSoundAnimationSound *pAnimation, const TVec3f &rPos, f32);
+    virtual bool playsSound(const JAUSoundAnimationSound *pAnimation, const TVec3f &rPos, f32);
+    virtual void modifySoundParams(JASSoundParams *pParams, const JAUSoundAnimationSound *pAnimation, f32 time);
 
     void ageSounds_();
     void setLoopFrame(f32 loopStartFrame, f32 loopEndFrame) {
@@ -159,18 +159,20 @@ public:
         mLoopEndFrame = loopEndFrame;
         mLoopEndSoundIndex = mSoundAnimation->getEndSoundIndex(loopEndFrame);
     }
-    void startAnimation(const JAUSoundAnimation* pAnimation, bool reversed, f32 loopStartFrame, f32 loopEndFrame);
+    void startAnimation(const JAUSoundAnimation *pAnimation, bool reversed, f32 loopStartFrame, f32 loopEndFrame);
     void removeAnimation();
     void updateSoundLifeTime_(f32 time, f32 speed);
 
-    JAISound* getSound(int index);
+    JAISound *getSound(int index) {
+        return mHandles->getHandle(index)->getSound();
+    }
 
     s32 getNumHandles() const {
         return mHandles->mNumHandles;
     }
 
-    /* 0x04 */ JAISoundHandles* mHandles;
-    /* 0x08 */ const JAUSoundAnimation* mSoundAnimation;
+    /* 0x04 */ JAISoundHandles *mHandles;
+    /* 0x08 */ const JAUSoundAnimation *mSoundAnimation;
     /* 0x0C */ bool mIsReversed;
     /* 0x10 */ s32 mLoopSoundIndex;
     /* 0x14 */ f32 mLifeTime;

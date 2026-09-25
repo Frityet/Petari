@@ -1,0 +1,289 @@
+[0mchecking for Xcode SDK ... [38;5;2;1m/Applications/Xcode.app (sdk: 27.0, arm64-apple-macos26.0)[0m
+[0mchecking for disc ... [38;5;1;1mno[0m
+[0mchecking for Xcode SDK ... [38;5;2;1m/Applications/Xcode.app (sdk: 27.0, arm64-apple-macos26.0)[0m
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc>[0m cache compiling.debug src/app/main.cpp[0m
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-app>[0m cache compiling.debug src/app/Application.cpp[0m
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-render>[0m cache compiling.debug src/render/RendererService.cpp[0m
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-app>[0m cache compiling.debug src/app/OriginalGameApplication.cpp[0m
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-render>[0m cache compiling.debug src/render/BrightVisibilityService.cpp[0m
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-render>[0m cache compiling.debug src/render/AuroraBrightVisibilityService.cpp[0m
+[0m[38;5;2;1m[  3%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/rfl/CharacterModel.cpp[0m
+[0m[38;5;2;1m[  5%]:[0m [38;5;5;1m<aurora-os>[0m cache compiling.debug aurora/lib/nand.cpp[0m
+[0m[38;5;2;1m[  5%]:[0m [38;5;5;1m<aurora-os>[0m cache compiling.debug aurora/lib/dolphin/sc/SCSystem.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoExecutorFunction.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoSoundKeeper.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/StarReturnDemoStarter.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoSimpleCastHolder.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoCameraFunction.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoStartRequestHolder.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoCtrlBase.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoParamCommonDataTable.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoCastGroupHolder.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoPlayerKeeper.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/AstroDomeDemoStarter.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/AstroDemoFunction.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoCameraKeeper.cpp[0m
+[0m[38;5;3;1msrc/Game/Demo/DemoSoundKeeper.cpp:22:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   22 |         map->getValue(i, "PartName", &info.mPartName);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Demo/DemoSoundKeeper.cpp:23:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   23 |         map->getValue(i, "Bgm", &info.mBgm);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Demo/DemoSoundKeeper.cpp:24:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   24 |         map->getValue(i, "SystemSe", &info.mSystemSe);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Demo/DemoSoundKeeper.cpp:26:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   26 |         map->getValue(i, "ReturnBgm", &returnBgm);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Demo/DemoSoundKeeper.cpp:28:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   28 |         map->getValue(i, "BgmWipeoutFrame", &info.mBgmWipeoutFrame);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+5 warnings generated.[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoTalkAnimCtrl.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoCastGroup.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoDirector.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoExecutor.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoPadRumbler.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoWipeKeeper.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoKoopaJrShip.cpp[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoSubPartKeeper.cpp[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/ReturnDemoRailMove.cpp[0m
+[0m[38;5;3;1mIn file included from src/app/OriginalGameApplication.cpp:12:
+In file included from src/Game/System/FileLoader.hpp:3:
+In file included from src/Game/System/ArchiveHolder.hpp:4:
+In file included from src/JSystem/JKernel/JKRMemArchive.hpp:3:
+src/JSystem/JKernel/JKRArchive.hpp:122:33: warning: 'getResource' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  122 |     [[nodiscard]] virtual void *getResource(const char *pPath) const;
+      |                                 ^
+src/JSystem/JKernel/JKRFileLoader.hpp:15:19: note: overridden virtual function is here
+   15 |     virtual void* getResource(const char*) const = 0;
+      |                   ^
+In file included from src/app/OriginalGameApplication.cpp:12:
+In file included from src/Game/System/FileLoader.hpp:3:
+In file included from src/Game/System/ArchiveHolder.hpp:4:
+In file included from src/JSystem/JKernel/JKRMemArchive.hpp:3:
+src/JSystem/JKernel/JKRArchive.hpp:124:33: warning: 'getResource' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  124 |     [[nodiscard]] virtual void *getResource(std::uint32_t, const char *pPath) const;[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/PrologueDirector.cpp[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/ScenarioStarter.cpp[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoStartRequestUtil.cpp[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoActionKeeper.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Demo/AstroDomeDemoStarter.cpp:6:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoPositionController.cpp[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoCastSubGroup.cpp[0m
+[0m[38;5;3;1msrc/Game/Demo/DemoCameraKeeper.cpp:128:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  128 |             map->getValue< const char* >(i, "PartName", &curInfo->mPartName);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Demo/DemoCameraKeeper.cpp:129:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  129 |             map->getValue< const char* >(i, "CameraTargetName", &curInfo->mCameraTargetName);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Demo/DemoCameraKeeper.cpp:130:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  130 |             map->getValue< s32 >(i, "CameraTargetCastID", &curInfo->mCameraTargetCastID);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Demo/DemoCameraKeeper.cpp:131:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  131 |             map->getValue< const char* >(i, "AnimCameraName", &curInfo->mAnimCameraName);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Demo/DemoCameraKeeper.cpp:132:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  132 |             map->getValue< s32 >(i, "AnimCameraStartFrame", &curInfo->mAnimCameraStartFrame);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Demo/DemoCameraKeeper.cpp:133:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result][0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/GrandStarReturnDemoStarter.cpp[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoTimeKeeper.cpp[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoFunction.cpp[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudWrap.cpp[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudBgmRhythmStrategy.cpp[0m
+[0m[38;5;3;1msrc/Game/Demo/ReturnDemoRailMove.cpp:14:81: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   14 |     void setResultFlyStartFrame(LiveActor* liveActor, s32 frame) __attribute__((noinline)) {
+      |                                                                                 ^
+1 warning generated.[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudSoundObjHolder.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Demo/DemoSubPartKeeper.cpp:4:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudSoundObject.cpp[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudBgmVolumeController.cpp[0m
+[0m[38;5;3;1msrc/Game/Demo/DemoTalkAnimCtrl.cpp:251:5: warning: deleting pointer to incomplete type 'ActorCameraInfo' is incompatible with C++2c and may cause undefined behavior [-Wdelete-incomplete]
+  251 |     delete mCameraInfo;
+      |     ^      ~~~~~~~~~~~
+src/Game/Demo/DemoTalkAnimCtrl.hpp:6:7: note: forward declaration of 'ActorCameraInfo'
+    6 | class ActorCameraInfo;
+      |       ^
+1 warning generated.[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudBgmMgr.cpp[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudLimitedSound.cpp[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudAnmSoundObject.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Demo/DemoExecutor.cpp:17:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudRemixMgr.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudAudience.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudUtil.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Demo/DemoActionKeeper.cpp:10:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+src/Game/Demo/DemoActionKeeper.cpp:241:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  241 |             jmap->getValue< const char* >(i, "PartName", &info->mPartName);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Demo/DemoActionKeeper.cpp:242:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  242 |             jmap->getValue< const char* >(i, "CastName", &info->mCastName);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Demo/DemoActionKeeper.cpp:243:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  243 |             jmap->getValue< s32 >(i, "CastID", &info->mCastID);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Demo/DemoActionKeeper.cpp:244:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  244 |             jmap->getValue< s32 >(i, "ActionType", &info->mActionType);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudMicWrap.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudSoundNameConverter.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudSceneMgr.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/CSSoundNameConverter.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudSoundObject_Takezawa.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudSoundInfo.cpp[0m
+[0m[38;5;3;1msrc/Game/Demo/DemoFunction.cpp:121:59: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  121 |     DemoTimeKeeper* getCurrentTimeKeeper() __attribute__((noinline)) {
+      |                                                           ^
+src/Game/Demo/DemoFunction.cpp:125:65: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  125 |     DemoSubPartKeeper* getCurrentSubPartKeeper() __attribute__((noinline)) {
+      |                                                                 ^
+src/Game/Demo/DemoFunction.cpp:129:66: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  129 |     bool isCurrentMainPart(const char* pPartName) __attribute__((noinline)) {
+      |                                                                  ^
+3 warnings generated.[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudRemixSequencer.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudMeNameConverter.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudParams.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudSoundObject_Gohara.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudEffector.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudFader.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudSpeakerWrap.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudBgm.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudBgmSetting.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudSoundObject_Kawamura.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudTrackController.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudSystemVolumeController.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudBgmKeeper.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/AudioLib/AudSystem.cpp[0m
+[0m[38;5;2;1m[  9%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Gravity/PlanetGravity.cpp[0m
+[0m[38;5;2;1m[  9%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Gravity/ParallelGravity.cpp[0m
+[0m[38;5;2;1m[  9%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Gravity/GlobalGravityObj.cpp[0m
+[0m[38;5;2;1m[  9%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Gravity/PlanetGravityManager.cpp[0m
+[0m[38;5;2;1m[  9%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Gravity/CubeGravity.cpp[0m
+[0m[38;5;2;1m[  9%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Gravity/DiskTorusGravity.cpp[0m
+[0m[38;5;2;1m[  9%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Gravity/WireGravity.cpp[0m
+[0m[38;5;2;1m[  9%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Gravity/SegmentGravity.cpp[0m
+[0m[38;5;2;1m[  9%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Gravity/GravityCreator.cpp[0m
+[0m[38;5;2;1m[  9%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Gravity/GraviryFollower.cpp[0m
+[0m[38;5;2;1m[  9%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Gravity/PointGravity.cpp[0m
+[0m[38;5;2;1m[  9%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Gravity/DiskGravity.cpp[0m
+[0m[38;5;2;1m[  9%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Gravity/GravityInfo.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Gravity/WireGravity.cpp:2:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) NO_INLINE {
+      |                                                                                          ^
+src/Inline.hpp:5:34: note: expanded from macro 'NO_INLINE'
+    5 | #define NO_INLINE __attribute__((noinline))
+      |                                  ^
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/Gravity/PlanetGravity.cpp:2:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) NO_INLINE {
+      |                                                                                          ^
+src/Inline.hpp:5:34: note: expanded from macro 'NO_INLINE'
+    5 | #define NO_INLINE __attribute__((noinline))
+      |                                  ^
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/Gravity/DiskGravity.cpp:2:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) NO_INLINE {
+      |                                                                                          ^
+src/Inline.hpp:5:34: note: expanded from macro 'NO_INLINE'
+    5 | #define NO_INLINE __attribute__((noinline))
+      |                                  ^
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/Gravity/DiskTorusGravity.cpp:2:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) NO_INLINE {
+      |                                                                                          ^
+src/Inline.hpp:5:34: note: expanded from macro 'NO_INLINE'
+    5 | #define NO_INLINE __attribute__((noinline))
+      |                                  ^
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/Gravity/PointGravity.cpp:2:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) NO_INLINE {
+      |                                                                                          ^
+src/Inline.hpp:5:34: note: expanded from macro 'NO_INLINE'
+    5 | #define NO_INLINE __attribute__((noinline))
+      |                                  ^
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/Gravity/SegmentGravity.cpp:2:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) NO_INLINE {
+      |                                                                                          ^
+src/Inline.hpp:5:34: note: expanded from macro 'NO_INLINE'
+    5 | #define NO_INLINE __attribute__((noinline))
+      |                                  ^
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/Gravity/GlobalGravityObj.cpp:2:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) NO_INLINE {
+      |                                                                                          ^
+src/Inline.hpp:5:34: note: expanded from macro 'NO_INLINE'
+    5 | #define NO_INLINE __attribute__((noinline))
+      |                                  ^
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/Gravity/ParallelGravity.cpp:2:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) NO_INLINE {
+      |                                                                                          ^
+src/Inline.hpp:5:34: note: expanded from macro 'NO_INLINE'
+    5 | #define NO_INLINE __attribute__((noinline))
+      |                                  ^
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/Gravity/GravityCreator.cpp:2:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) NO_INLINE {
+      |                                                                                          ^
+src/Inline.hpp:5:34: note: expanded from macro 'NO_INLINE'
+    5 | #define NO_INLINE __attribute__((noinline))
+      |                                  ^
+1 warning generated.[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[1;38;5;1;1merror: [0msrc/Game/AudioLib/AudBgmSetting.cpp:215:10: error: constant expression evaluates to -1 which cannot be narrowed to type 'u16' (aka 'unsigned short') [-Wc++11-narrowing]
+  215 |         {-1, -1, -1, -1, 0, 0, 0, 0},
+      |          ^~
+src/Game/AudioLib/AudBgmSetting.cpp:215:10: note: insert an explicit cast to silence this issue
+  215 |         {-1, -1, -1, -1, 0, 0, 0, 0},
+      |          ^~
+      |          static_cast<u16>( )
+src/Game/AudioLib/AudBgmSetting.cpp:215:14: error: constant expression evaluates to -1 which cannot be narrowed to type 'u16' (aka 'unsigned short') [-Wc++11-narrowing]
+  215 |         {-1, -1, -1, -1, 0, 0, 0, 0},
+      |              ^~
+src/Game/AudioLib/AudBgmSetting.cpp:215:14: note: insert an explicit cast to silence this issue
+  215 |         {-1, -1, -1, -1, 0, 0, 0, 0},
+      |              ^~
+      |              static_cast<u16>( )
+src/Game/AudioLib/AudBgmSetting.cpp:215:18: error: constant expression evaluates to -1 which cannot be narrowed to type 'u16' (aka 'unsigned short') [-Wc++11-narrowing]
+  215 |         {-1, -1, -1, -1, 0, 0, 0, 0},
+      |                  ^~
+  [38;5;3m> in [1msrc/Game/AudioLib/AudBgmSetting.cpp[0m

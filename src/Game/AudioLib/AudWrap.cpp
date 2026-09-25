@@ -5,10 +5,28 @@
 #include "Game/AudioLib/AudSoundNameConverter.hpp"
 #include "Game/AudioLib/AudSystem.hpp"
 #include "Game/RhythmLib/AudRhythmWrap.hpp"
+#include "Game/System/AudSystemWrapper.hpp"
+#include <aurora/exception.hpp>
+#include <stdexcept>
+#include <string>
+
+namespace {
+    template < typename T >
+    T* requireOwner(T* owner, const char* name) {
+        if (owner == nullptr) {
+            aurora::throw_host_exception< std::logic_error >(std::string("Audio owner is unavailable: ") + name);
+        }
+        return owner;
+    }
+
+    AudSystemWrapper* getWrapper() {
+        return requireOwner(AudSystemWrapper::getCurrent(), "AudSystemWrapper");
+    }
+}  // namespace
 
 namespace AudWrap {
     AudSystem* getSystem() {
-        return AudSystem::msBasic;
+        return requireOwner(AudSystem::msBasic, "AudSystem");
     }
 
     AudSoundInfo* getSoundInfo() {
@@ -16,11 +34,11 @@ namespace AudWrap {
     }
 
     AudSceneMgr* getSceneMgr() {
-        return getSystem()->mSceneMgr;
+        return requireOwner(getWrapper()->getSceneMgr(), "AudSceneMgr");
     }
 
     AudBgmMgr* getBgmMgr() {
-        return &getSystem()->mBgmMgr;
+        return requireOwner(getWrapper()->getBgmMgr(), "AudBgmMgr");
     }
 
     AudBgm* getStageBgm() {
@@ -48,7 +66,7 @@ namespace AudWrap {
     }
 
     AudSoundObject* getSystemSeObject() {
-        return getSystem()->mSystemSeObject;
+        return requireOwner(getWrapper()->getSystemSeObject(), "system sound object");
     }
 
     AudSoundObject* getAtmosphereSeObject() {
@@ -56,7 +74,7 @@ namespace AudWrap {
     }
 
     AudSoundObjHolder* getSoundObjHolder() {
-        return getSystem()->mSoundObjHolder;
+        return requireOwner(getWrapper()->getSoundObjHolder(), "AudSoundObjHolder");
     }
 
     AudRhythmMeSystem* getRhythmMeSystem() {

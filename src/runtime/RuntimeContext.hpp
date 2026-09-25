@@ -17,12 +17,9 @@
 #include "Logger.hpp"
 #include "runtime/DebugWpadInputScript.hpp"
 #include "runtime/DebugWpadInputFile.hpp"
-#include "runtime/ScenarioCatalogOwnership.hpp"
-#include "runtime/ParticleResourceOwnership.hpp"
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
 #include "resource/GameResourceRuntime.hpp"
-#include "runtime/JAudioPlaybackService.hpp"
 #include "runtime/RflService.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -40,7 +37,6 @@ namespace smgpc::layout {
     class LayoutRuntime;
 }
 
-namespace aurora::audio { class DisabledObjectAudioService; }
 
 namespace smgpc::runtime {
 
@@ -109,11 +105,6 @@ namespace smgpc::runtime {
 
         RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
                        resource::GameResourceRuntime &resources);
-        // Allows a host to supply a fully concrete playback service (for
-        // example an explicit SDL test sink backed by retail fixtures).
-        RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
-                       resource::GameResourceRuntime &resources,
-                       std::unique_ptr<JAudioPlaybackService> audio_playback);
         ~RuntimeContext();
 
         RuntimeContext(const RuntimeContext &) = delete;
@@ -156,15 +147,9 @@ namespace smgpc::runtime {
         [[nodiscard]] std::string_view current_stage_name() const;
         [[nodiscard]] std::string_view current_sequence_scene_name() const;
         [[nodiscard]] std::string_view next_sequence_scene_name() const;
-        [[nodiscard]] bool is_stage_bgm_prepared() const;
-        [[nodiscard]] std::string_view current_stage_bgm_name() const;
         [[nodiscard]] std::optional<std::filesystem::path> find_layout_archive(std::string_view layout_name) const;
         [[nodiscard]] std::optional<std::filesystem::path> find_object_archive(std::string_view object_name) const;
         [[nodiscard]] const std::shared_ptr<compat::JkrHeapRuntime>& host_heaps() const noexcept { return _host_heaps; }
-        void initialize_particle_resources(const resource::GameResourceRuntime &resources);
-        [[nodiscard]] std::shared_ptr<ParticleResourceOwnership> retain_particle_resources() const;
-        void initialize_scenario_catalog(const resource::GameResourceRuntime &resources);
-        [[nodiscard]] std::shared_ptr<ScenarioCatalogOwnership> retain_scenario_catalog() const;
         [[nodiscard]] DvdFileSystemService &dvd();
         [[nodiscard]] const DvdFileSystemService &dvd() const;
         [[nodiscard]] WiiIosService &ios();
@@ -175,10 +160,6 @@ namespace smgpc::runtime {
         [[nodiscard]] const OriginalDisplayLifetime& display() const;
         [[nodiscard]] WpadService &wpad();
         [[nodiscard]] const WpadService &wpad() const;
-        [[nodiscard]] AudioEventService &audio();
-        [[nodiscard]] const AudioEventService &audio() const;
-        [[nodiscard]] JAudioPlaybackService &j_audio_playback();
-        [[nodiscard]] const JAudioPlaybackService &j_audio_playback() const;
         [[nodiscard]] WipeService &scene_wipe();
         [[nodiscard]] const WipeService &scene_wipe() const;
         [[nodiscard]] WipeService &system_wipe();
@@ -209,29 +190,6 @@ namespace smgpc::runtime {
         [[nodiscard]] SceneScheduler &scheduler();
         [[nodiscard]] const SceneScheduler &scheduler() const;
 
-        [[nodiscard]] JAISoundHandle *start_sub_bgm(std::string_view name, bool prepared);
-        [[nodiscard]] JAISoundHandle *start_sub_bgm(u32 sound_id, bool prepared);
-        void stop_sub_bgm(u32 fade_frames);
-        void unlock_sub_bgm();
-        [[nodiscard]] JAISoundHandle *start_stage_bgm(
-            std::string_view name, bool prepared);
-        [[nodiscard]] JAISoundHandle *start_stage_bgm(
-            u32 sound_id, bool prepared);
-        void unlock_stage_bgm();
-        void stop_stage_bgm(s32 fade_frames);
-        void set_stage_bgm_state(s32 state, u32 change_frames);
-        [[nodiscard]] JAISoundHandle *start_system_sound(
-            std::string_view name, s32 parameter_1, s32 parameter_2);
-        void stop_system_sound(std::string_view name, u32 delay_frames);
-        [[nodiscard]] JAISoundHandle *start_system_level_sound(
-            std::string_view name, s32 parameter_1, s32 parameter_2);
-        void submit_level_sound();
-        void permit_level_sound();
-        [[nodiscard]] JAISoundHandle *start_atmosphere_sound(
-            std::string_view name, s32 parameter_1, s32 parameter_2);
-        [[nodiscard]] JAISoundHandle *start_atmosphere_level_sound(
-            std::string_view name, s32 parameter_1, s32 parameter_2);
-        void start_system_me(std::string_view name);
         void note_layout_archive(std::string_view layout_name, const std::filesystem::path &path);
         void note_missing_layout_archive(std::string_view layout_name);
         void note_layout_texture_decode_failed(std::string_view layout_name, std::string_view texture_name, std::string_view reason);
@@ -273,14 +231,9 @@ namespace smgpc::runtime {
         std::filesystem::path _disc_files_root;
         DvdFileSystemService _dvd;
         std::shared_ptr<compat::JkrHeapRuntime> _host_heaps;
-        std::shared_ptr<ScenarioCatalogOwnership> _scenario_catalog;
-        std::shared_ptr<ParticleResourceOwnership> _particle_resources;
-        std::unique_ptr<JAudioPlaybackService> _j_audio_playback;
-        std::unique_ptr<aurora::audio::DisabledObjectAudioService> _disabled_object_audio;
         WiiIosService _ios;
         WiiPlatformService _wii_platform;
         std::unique_ptr<OriginalDisplayLifetime> _display;
-        AudioEventService _audio;
         WipeService _scene_wipe;
         WipeService _system_wipe;
         StarPointerService _star_pointer;

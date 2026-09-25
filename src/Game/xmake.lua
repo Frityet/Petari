@@ -16,7 +16,8 @@ target("smg-pc-game")
     add_files("Map/CollisionCategorizedKeeper.cpp", {cxxflags = "-ffp-contract=off"})
     add_files({"Screen/LayoutActor.cpp", "Screen/LayoutManager.cpp", "Screen/LayoutPaneCtrl.cpp", "Screen/LayoutGroupCtrl.cpp",
                "Screen/StarPointerDirector.cpp", "Util/StarPointerUtil.cpp"}, {cxxflags = "-ffp-contract=off"})
-    add_files("AudioLib/AudBgmSetting.cpp", {cxxflags = "-Wno-narrowing"})
+    add_files("AudioLib/**.cpp", {cxxflags = {"-ffp-contract=off", "-Wno-narrowing"}})
+    add_files({"RhythmLib/AudMeObject.cpp", "RhythmLib/AudMeHandles.cpp", "RhythmLib/AudBgmTempoAdjuster.cpp"}, {cxxflags = "-ffp-contract=off"})
     add_files("GameAudio/AudStageBgmTable.cpp", {cxxflags = "-Wno-narrowing"})
     add_files("GameAudio/AudStageBgmWrap.cpp", {cxxflags = "-Wno-narrowing"})
     add_files("Map/FileSelectSky.cpp", {
@@ -24,50 +25,25 @@ target("smg-pc-game")
             cxxflags = "-include " .. path.join(os.projectdir(), "src/JSystem/JMath/JMATrigonometric.hpp")
         }
     })
-    -- These imported DSP/rhythm/speaker owners are inactive while audio output
-    -- uses the existing disabled backend. Gameplay sources below remain enabled.
-    remove_files("AudioLib/AudAnmSoundObject.cpp")
-    remove_files("AudioLib/AudSceneMgr.cpp")
+    -- DSP/rhythm/speaker rendering remains unavailable; actual audio request
+    -- and animation owners are compiled with explicit disabled-output starts.
     remove_files("AudioLib/AudSeStrategy.cpp")
-    remove_files("AudioLib/AudSoundInfo.cpp")
-    remove_files("AudioLib/AudSoundObjHolder.cpp")
-    remove_files("AudioLib/AudSoundObject.cpp")
-    remove_files("AudioLib/AudSoundObject_Gohara.cpp")
-    remove_files("AudioLib/AudSoundObject_Kawamura.cpp")
-    remove_files("AudioLib/AudSoundObject_Takezawa.cpp")
-    remove_files("AudioLib/AudSpeakerWrap.cpp")
-    remove_files("AudioLib/AudUtil.cpp")
     remove_files("AudioLib/OverwriteJAudio.cpp")
-    remove_files("RhythmLib/AudBgmTempoAdjuster.cpp")
-    remove_files("RhythmLib/AudChordInfo.cpp")
     remove_files("RhythmLib/AudMeChannelMgr.cpp")
-    remove_files("RhythmLib/AudMeHandles.cpp")
-    remove_files("RhythmLib/AudMeObject.cpp")
-    remove_files("RhythmLib/AudMePlayer.cpp")
     remove_files("RhythmLib/AudMeSeqCtrl.cpp")
     remove_files("RhythmLib/AudMeSeqParser.cpp")
     remove_files("RhythmLib/AudMeSeqReader.cpp")
     remove_files("RhythmLib/AudMeTrack.cpp")
     remove_files("RhythmLib/AudMeTrackCallback.cpp")
     remove_files("RhythmLib/AudRhythmHolder.cpp")
-    remove_files("RhythmLib/AudRhythmMeSystem.cpp")
     remove_files("RhythmLib/AudRhythmSeqParser.cpp")
     remove_files("RhythmLib/AudRhythmWrap.cpp")
     remove_files("Speaker/SpkData.cpp")
     remove_files("Speaker/SpkMixingBuffer.cpp")
-    remove_files("Speaker/SpkSound.cpp")
     remove_files("Speaker/SpkTable.cpp")
     remove_files("Speaker/SpkWave.cpp")
     -- WiiConnect24 is unavailable on the native host; no IOS mail worker exists.
     remove_files("NWC24/NWC24SendThread.cpp")
-    remove_files("AudioLib/AudBgm.cpp")
-    remove_files("AudioLib/AudBgmKeeper.cpp")
-    remove_files("AudioLib/AudBgmMgr.cpp")
-    remove_files("AudioLib/AudBgmRhythmStrategy.cpp")
-    remove_files("AudioLib/AudFader.cpp")
-    remove_files("AudioLib/AudTrackController.cpp")
-    remove_files("AudioLib/AudSystemVolumeController.cpp")
-    remove_files("AudioLib/AudWrap.cpp")
     add_files({"../nw4r/ut/ut_CharWriter.cpp", "../nw4r/ut/ut_TextWriterBase.cpp",
                "../nw4r/ut/ut_TagProcessorBase.cpp", "../nw4r/ut/ut_CharStrmReader.cpp",
                "../nw4r/ut/ut_Font.cpp", "../nw4r/ut/ut_ResFont.cpp"}, {cxxflags = "-ffp-contract=off"})
@@ -130,6 +106,18 @@ target("smg-pc-game")
         "../JSystem/JAudio2/JAIStreamDataMgr.cpp",
         "../JSystem/JAudio2/JAIStreamMgr.cpp",
         "../JSystem/JAudio2/JASSoundParams.cpp",
+        "../JSystem/JAudio2/JAUSoundObject.cpp",
+        "../JSystem/JAudio2/JAUSoundAnimator.cpp",
+        "../JSystem/JAudio2/JAUSectionHeap.cpp",
+        "../JSystem/JAudio2/JASHeapCtrl.cpp",
+        "../JSystem/JAudio2/JASReport.cpp",
+        "../JSystem/JAudio2/JASAramStream.cpp",
+        "../JSystem/JAudio2/JASAiCtrl.cpp",
+        "../JSystem/JAudio2/JAISeMgr.cpp",
+        "../JSystem/JAudio2/JAISeqMgr.cpp",
+        "../JSystem/JAudio2/JASTrack.cpp",
+        "../JSystem/JAudio2/JASTrackPort.cpp",
+        "../JSystem/JAudio2/JASSeqCtrl.cpp",
     })
     add_files("../JSystem/J3DGraphBase/J3DPacket.cpp", "../nw4r/ut/ut_LinkList.cpp")
     add_files("../JSystem/JKernel/JKRThread.cpp")

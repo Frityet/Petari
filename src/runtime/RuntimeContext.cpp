@@ -1,12 +1,8 @@
-#include "Game/System/FileLoader.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include <aurora/guest_thread.hpp>
-#include "Game/AudioLib/AudBgm.hpp"
-#include "Game/AudioLib/AudWrap.hpp"
 #include <aurora/exception.hpp>
 #include "RuntimeContext.hpp"
-#include "compat/DisabledObjectAudioService.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "Game/Util/DrawUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
@@ -42,7 +38,6 @@
 #include "Game/Screen/LayoutActor.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "layout/LayoutRuntime.hpp"
-#include "compat/AudioFacadeCompat.hpp"
 #include "camera/CameraParam.hpp"
 #include "camera/CameraDirectorRuntime.hpp"
 
@@ -217,19 +212,9 @@ namespace smgpc::runtime {
 
     RuntimeContext::RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
                                    resource::GameResourceRuntime &resources)
-        : RuntimeContext(logger, window_service, resources, nullptr) {
-    }
-
-    RuntimeContext::RuntimeContext(
-        logging::ILogger &logger, render::AuroraWindow &window_service,
-        resource::GameResourceRuntime &resources,
-        std::unique_ptr<JAudioPlaybackService> audio_playback)
         : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root),
           _host_heaps(resources.host_heaps()),
-          _j_audio_playback(audio_playback != nullptr
-                                ? std::move(audio_playback)
-                                : std::make_unique<JAudioPlaybackService>(_dvd)),
-          _disabled_object_audio(aurora::audio::make_disabled_object_audio_service(resources.host_heaps(), _j_audio_playback.get())), _rfl(_save_data.nand()),
+          _rfl(_save_data.nand()),
           _current_stage_name(default_stage_name())
 #ifndef NDEBUG
           ,
@@ -304,12 +289,9 @@ namespace smgpc::runtime {
                 SDL_SetWindowRelativeMouseMode(static_cast<SDL_Window *>(native_handle.window_handle), false);
             }
         }
-        _j_audio_playback->reset_scene();
-        smgpc::compat::retire_audio_facade_state();
         _display.reset();
         _scheduler.clear();
         _capture_screen_director.reset();
-        _disabled_object_audio.reset();
     }
 
     RuntimeContext &RuntimeContext::instance() {
@@ -373,8 +355,6 @@ namespace smgpc::runtime {
             _freecam_target_pose.reset();
             _freecam_look_initialized = false;
         }
-        _audio.begin_frame(_frame_index);
-        _j_audio_playback->begin_frame(_frame_index);
         _scene_wipe.begin_frame(_frame_index);
         _system_wipe.begin_frame(_frame_index);
         _star_pointer.begin_frame(_frame_index);
@@ -562,8 +542,6 @@ namespace smgpc::runtime {
             CategoryList::execute(MR::CalcAnimType_AnimParticleIgnorePause);
             SceneFunction::executeCalcViewAndEntryList();
         }
-        _j_audio_playback->end_frame();
-        smgpc::compat::advance_audio_facade_state();
     }
 
     void RuntimeContext::set_scene_camera_pose(const smgpc::camera::CameraPose &camera_pose) {
@@ -708,13 +686,7 @@ namespace smgpc::runtime {
         return _next_sequence_scene_name;
     }
 
-    bool RuntimeContext::is_stage_bgm_prepared() const {
-        return _j_audio_playback->is_bgm_prepared(smgpc::runtime::BgmLane::Stage);
-    }
 
-    std::string_view RuntimeContext::current_stage_bgm_name() const {
-        return _j_audio_playback->bgm_name(smgpc::runtime::BgmLane::Stage);
-    }
 
     std::optional<std::filesystem::path> RuntimeContext::find_layout_archive(std::string_view layout_name) const {
         return _dvd.find_layout_archive(layout_name);
@@ -725,41 +697,9 @@ namespace smgpc::runtime {
     }
 
 
-    void RuntimeContext::initialize_particle_resources(const resource::GameResourceRuntime &resources) {
-        if (!SingletonHolder<FileLoader>::get())
-            aurora::throw_host_exception<std::logic_error>("Resources require the original FileLoader");
-        compat::JkrHostAllocationScope host;
-        if (_particle_resources) {
-            aurora::throw_host_exception<std::logic_error>("The process particle resources are already initialized.");
-        }
-        _particle_resources = std::make_shared<ParticleResourceOwnership>(
-            resources.host_heaps(), resources.budget().particle_resource_bytes, *SingletonHolder<FileLoader>::get());
-    }
 
-    std::shared_ptr<ParticleResourceOwnership> RuntimeContext::retain_particle_resources() const {
-        if (!_particle_resources) {
-            aurora::throw_host_exception<std::logic_error>("The process particle resources have not reached resource-ready startup.");
-        }
-        return _particle_resources;
-    }
 
-    void RuntimeContext::initialize_scenario_catalog(const resource::GameResourceRuntime &resources) {
-        if (!SingletonHolder<FileLoader>::get())
-            aurora::throw_host_exception<std::logic_error>("Resources require the original FileLoader");
-        compat::JkrHostAllocationScope host;
-        if (_scenario_catalog) {
-            aurora::throw_host_exception<std::logic_error>("The process scenario catalog is already initialized.");
-        }
-        _scenario_catalog = std::make_shared<ScenarioCatalogOwnership>(
-            resources.host_heaps(), resources.budget().scenario_catalog_bytes, *SingletonHolder<FileLoader>::get(), _dvd);
-    }
 
-    std::shared_ptr<ScenarioCatalogOwnership> RuntimeContext::retain_scenario_catalog() const {
-        if (!_scenario_catalog) {
-            aurora::throw_host_exception<std::logic_error>("The process scenario catalog has not reached resource-ready startup.");
-        }
-        return _scenario_catalog;
-    }
 
     DvdFileSystemService &RuntimeContext::dvd() {
         return _dvd;
@@ -801,21 +741,9 @@ namespace smgpc::runtime {
         return aurora::wpad_service();
     }
 
-    AudioEventService &RuntimeContext::audio() {
-        return _audio;
-    }
 
-    const AudioEventService &RuntimeContext::audio() const {
-        return _audio;
-    }
 
-    JAudioPlaybackService &RuntimeContext::j_audio_playback() {
-        return *_j_audio_playback;
-    }
 
-    const JAudioPlaybackService &RuntimeContext::j_audio_playback() const {
-        return *_j_audio_playback;
-    }
 
     WipeService &RuntimeContext::scene_wipe() {
         return _scene_wipe;
@@ -935,163 +863,6 @@ namespace smgpc::runtime {
 
     const SceneScheduler &RuntimeContext::scheduler() const {
         return _scheduler;
-    }
-
-    JAISoundHandle *RuntimeContext::start_sub_bgm(std::string_view name, bool prepared) {
-        auto *handle = _j_audio_playback->start_bgm(BgmLane::Sub, name, prepared);
-        if (handle == nullptr) {
-            _audio.stop_sub_bgm(0);
-            return nullptr;
-        }
-        _audio.start_sub_bgm(name, prepared, _j_audio_playback->bgm_id(BgmLane::Sub));
-        return handle;
-    }
-
-    JAISoundHandle *RuntimeContext::start_sub_bgm(u32 sound_id, bool prepared) {
-        auto *handle = _j_audio_playback->start_bgm(BgmLane::Sub, sound_id, prepared);
-        if (handle == nullptr) {
-            _audio.stop_sub_bgm(0);
-            return nullptr;
-        }
-        _audio.start_sub_bgm({}, prepared, sound_id);
-        return handle;
-    }
-
-    void RuntimeContext::stop_sub_bgm(u32 fade_frames) {
-        _j_audio_playback->stop_bgm(BgmLane::Sub, fade_frames);
-        _audio.stop_sub_bgm(fade_frames);
-    }
-
-    void RuntimeContext::unlock_sub_bgm() {
-        _j_audio_playback->unlock_bgm(BgmLane::Sub);
-        _audio.unlock_sub_bgm();
-    }
-
-    JAISoundHandle *RuntimeContext::start_stage_bgm(
-        std::string_view name, bool prepared) {
-        auto *handle = _j_audio_playback->start_bgm(smgpc::runtime::BgmLane::Stage, name, prepared);
-        if (handle == nullptr) {
-            _audio.resolve_stage_bgm_absent();
-            return nullptr;
-        }
-        const auto sound_id = _j_audio_playback->bgm_id(smgpc::runtime::BgmLane::Stage);
-        if (!sound_id.has_value()) {
-            aurora::throw_host_exception<std::logic_error>(
-                "A concrete stage-BGM voice has no retail sound ID");
-        }
-        _audio.start_stage_bgm(name, *sound_id);
-        _logger.info(logging::Category::APP,
-                     logging::Message{"SMG started retail stage BGM {} ({:#010x})"},
-                     name, *sound_id);
-        return handle;
-    }
-
-    JAISoundHandle *RuntimeContext::start_stage_bgm(
-        u32 sound_id, bool prepared) {
-        auto *handle = _j_audio_playback->start_bgm(smgpc::runtime::BgmLane::Stage, sound_id, prepared);
-        if (handle == nullptr) {
-            _audio.resolve_stage_bgm_absent();
-            return nullptr;
-        }
-        _audio.start_stage_bgm(sound_id);
-        _logger.info(logging::Category::APP,
-                     logging::Message{"SMG started retail stage BGM {:#010x}"},
-                     sound_id);
-        return handle;
-    }
-
-    void RuntimeContext::unlock_stage_bgm() {
-        _j_audio_playback->unlock_bgm(smgpc::runtime::BgmLane::Stage);
-        _audio.unlock_stage_bgm();
-        _logger.info(logging::Category::APP, logging::Message{"SMG unlocked stage BGM"});
-    }
-
-    void RuntimeContext::stop_stage_bgm(s32 fade_frames) {
-        if (fade_frames < 0) {
-            aurora::throw_host_exception<std::invalid_argument>(
-                "A stage-BGM fade cannot use negative frames");
-        }
-        _j_audio_playback->stop_bgm(smgpc::runtime::BgmLane::Stage, static_cast<u32>(fade_frames));
-        _audio.stop_stage_bgm(fade_frames);
-        _logger.info(logging::Category::APP, logging::Message{"SMG stopped stage BGM over {} frames"}, fade_frames);
-    }
-
-    void RuntimeContext::set_stage_bgm_state(s32 state, u32 change_frames) {
-        if (!_j_audio_playback->has_active_bgm(smgpc::runtime::BgmLane::Stage)) {
-            return;
-        }
-        auto *bgm = AudWrap::getStageBgm();
-        if (bgm != nullptr) {
-            bgm->changeTrackMuteState(state, static_cast<s32>(change_frames));
-        }
-    }
-
-    JAISoundHandle *RuntimeContext::start_system_sound(
-        std::string_view name, s32 parameter_1, s32 parameter_2) {
-        auto *handle = _j_audio_playback->start_sound_effect(
-            name, parameter_1, parameter_2);
-        if (handle == nullptr) {
-            return nullptr;
-        }
-        _audio.start_system_sound(name);
-        _logger.info(logging::Category::APP,
-                     logging::Message{"SMG started retail system sound {}"}, name);
-        return handle;
-    }
-
-    void RuntimeContext::stop_system_sound(std::string_view name, u32 delay_frames) {
-        _j_audio_playback->stop_sound_effect(name, delay_frames);
-        _audio.stop_system_sound(name, delay_frames);
-        _logger.info(logging::Category::APP, logging::Message{"SMG stopped system sound {} after {} frames"}, name, delay_frames);
-    }
-
-    JAISoundHandle *RuntimeContext::start_system_level_sound(
-        std::string_view name, s32 parameter_1, s32 parameter_2) {
-        auto *handle = _j_audio_playback->start_level_sound(
-            name, parameter_1, parameter_2);
-        if (handle == nullptr) {
-            return nullptr;
-        }
-        _audio.start_system_level_sound(name);
-        _logger.info(logging::Category::APP,
-                     logging::Message{"SMG started retail system level sound {}"}, name);
-        return handle;
-    }
-
-    void RuntimeContext::submit_level_sound() {
-        _j_audio_playback->set_level_sound_permitted(false);
-        _audio.submit_level_sound();
-        _logger.info(logging::Category::APP, logging::Message{"SMG submitted level sounds"});
-    }
-
-    void RuntimeContext::permit_level_sound() {
-        _j_audio_playback->set_level_sound_permitted(true);
-        _audio.permit_level_sound();
-        _logger.info(logging::Category::APP, logging::Message{"SMG permitted level sounds"});
-    }
-
-    JAISoundHandle *RuntimeContext::start_atmosphere_sound(
-        std::string_view name, s32 parameter_1, s32 parameter_2) {
-        auto *handle = _j_audio_playback->start_sound_effect(
-            name, parameter_1, parameter_2);
-        if (handle == nullptr) {
-            return nullptr;
-        }
-        _audio.start_atmosphere_sound(name);
-        _logger.info(logging::Category::APP,
-                     logging::Message{"SMG started retail atmosphere sound {}"}, name);
-        return handle;
-    }
-
-    JAISoundHandle *RuntimeContext::start_atmosphere_level_sound(
-        std::string_view name, s32 parameter_1, s32 parameter_2) {
-        return _j_audio_playback->start_level_sound(
-            name, parameter_1, parameter_2);
-    }
-
-    void RuntimeContext::start_system_me(std::string_view name) {
-        aurora::throw_host_exception<std::logic_error>(
-            "JAudio ME scheduler is unavailable for " + std::string(name));
     }
 
     void RuntimeContext::note_layout_archive(std::string_view layout_name, const std::filesystem::path &path) {
