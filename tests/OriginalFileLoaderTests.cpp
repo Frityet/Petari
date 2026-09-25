@@ -1,5 +1,4 @@
 #include "compat/MetrowerksStdCompat.hpp"
-#include "compat/FileLoaderOwnership.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "Game/System/FileLoader.hpp"
 #include "Game/System/FileRipper.hpp"
@@ -61,7 +60,7 @@ struct OriginalFileProcess {
 
     ~OriginalFileProcess() {
         const aurora::allocation::ClientAllocationScope allocations({true, true});
-        smgpc::compat::destroy_file_loader(SingletonHolder<FileLoader>::get());
+        FileLoader::destroy(SingletonHolder<FileLoader>::get());
         delete SingletonHolder<HeapMemoryWatcher>::release();
         heaps->root_heap().becomeCurrentHeap();
         heaps->root_heap().becomeSystemHeap();
@@ -175,7 +174,7 @@ void cycle(OriginalFileProcess& process, smgpc::runtime::DvdFileSystemService& d
                     loader->mFileHolder->findEntry(archive_name)->mState == 2,
                 "original worker and receive methods must reach their actual completion states");
         loader->clearRequestFileInfo(false);
-        smgpc::compat::destroy_file_loader(loader);
+        FileLoader::destroy(loader);
     }
     const auto free_after = process.heap().getTotalFreeSize();
     const auto volumes_after = JKRFileLoader::sVolumeList.getNumLinks();

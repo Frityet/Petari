@@ -56,6 +56,7 @@ public:
 class FunctionAsyncExecutor {
 public:
     FunctionAsyncExecutor();
+    ~FunctionAsyncExecutor();
 
     void update();
     void start(const MR::FunctorBase&, int, const char*);

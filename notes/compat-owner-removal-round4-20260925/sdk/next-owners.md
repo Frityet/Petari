@@ -1,0 +1,27 @@
+# Next SDK batch recommendation (read-only)
+
+Choose the J3D animation closure first: six compat files, 1,809 lines, two canonical compiled owners. No production changes were made for this recommendation.
+
+| Retired provider | Actual owner / necessary treatment |
+|---|---|
+| J3DFrameCtrlCompat.cpp | JSystem/J3DGraphAnimator/J3DAnimation.cpp: init/checkPass/update, matching the donor's ownership. |
+| J3DTransformAnimationCompat.cpp | Same J3DAnimation.cpp: transform constructors/destructor, full/lerp/key sampling. |
+| J3DAdditionalAnimationCompat.cpp | Same J3DAnimation.cpp: cluster, visibility, vertex-color sampling and constructors. |
+| J3DMaterialAnimationCompat.cpp | Same J3DAnimation.cpp: color/TEV/texture-pattern/SRT families and material-name resolution. These are J3DAnm* methods, not J3DMaterialAnm methods. Existing J3DMaterialAnm.cpp remains its separate canonical owner. |
+| J3DAnimationInterpolation.hpp | Inline its implementation once into the combined J3DAnimation.cpp. Its only consumers are the transform/additional/material providers, so no replacement header is needed. Retain Aurora ppc_math primitives for truncation/halfword/shift behavior. |
+| J3DAnmLoaderCompat.cpp | JSystem/J3DGraphLoader/J3DAnmLoader.cpp: both v15 loader families, setters, native type dispatch, and public bounded-load entry point. |
+
+The first five files form a complete and narrow sampler owner (1,373 lines before shared includes disappear). Current decomp J3DAnimation.cpp owns the same method families. Retain contraction-off around all samplers; ordinary BCA lerp uses separate operations, while signed-16 Hermite uses the existing explicit fma sequence. Do not replace PPC conversion helpers with undefined out-of-range casts, or change rotation wrap/clamps. Constructors currently initialize native pointer/count state that the loaders depend on.
+
+The 436-line loader is also bounded, but preserve the existing resource boundary: public J3DAnmLoaderDataBase::load delegates to load_registered_j3d_animation; resource/J3dAnimationResource.cpp validates/decodes original-width bytes, owns independent mutable native tables per load, and invokes detail::load_native_animation under its current_load scope. first_animation_block/next_animation_block traverse those separately allocated blocks; replacing them with original contiguous pointer increments breaks native layout. Native vertex-color table pointer rebasing uses uintptr_t. Keep this format adapter in its existing resource owner during consolidation, with no Game policy or fabricated archive fallback.
+
+Build: add the two canonical CPPs and regenerate compat glob. Important extra consumer: tests/xmake.lua's smg-pc-fixed-step-clock-tests directly compiles J3DFrameCtrlCompat.cpp. Remove that explicit source and link the canonical Game/SDK library plus its required dependencies, rather than adding the whole J3DAnimation.cpp a second time or retaining a compatibility copy. Other focused targets already link smg-pc-game: smg-pc-j3d-frame-ctrl-tests, smg-pc-original-j3d-transform-animation-tests, smg-pc-original-j3d-material-animation-tests, smg-pc-original-j3d-animation-resource-tests. Check donor/symbol inventory for constructors and inherited virtual definitions before activating the combined source.
+
+JUT is a useful later closure, but larger ownership work:
+
+- OriginalJutCapture.cpp is only the 12-line original captureDolTexture SDK extension (donor Game/System/Overwrite.cpp:184). Combine it with the actual implementation currently in runtime/jut/JutTexture.cpp at canonical JSystem/JUtility/JUTTexture.cpp; retaining a separate capture provider has no benefit.
+- JutTextureAllocation.cpp/.hpp owns mapped MEM1 storage leases, allocation rollback and copy-texture retirement. A canonical JUTTexture native allocation owner must preserve GXDestroyTexObj/GXDestroyCopyTex and GPU-drain-before-reuse ordering, and keep live allocations valid after process allocation-service retirement. Its explicit mapped-heap installation comes from resource/GameResourceRuntime, not from original Game callers.
+- JutTextureConstruction.cpp/.hpp is a general construction transaction with nested disabled scopes and exact generation records. Preserve list splice/adoption, destruction outside registry locks and address-reuse invalidation. Actual consumers are JUTTexture constructors/destructor, ImageEffectOwnership, SceneObjHolder construction and dedicated ownership tests. Their APIs should become targeted JUTTexture ownership facilities, with Game-specific adoption remaining in the actual effect owner.
+- CapturedFrameBlurService.cpp/.hpp is not SDK machinery: it replaces MR::drawFullScreenBlur with custom offscreen history and scene publication. Restore the existing original Game/Screen/FullScreenBlur.cpp when its actual getFullScreenBlurTexture/nonFilteredCapture and EFB/scissor behavior work; resolve any general GX gap in Aurora. Do not fold this service into JUTTexture or merely rename it. The original source's scissor-offset scratch-region draw and subsequent capture differ from the custom 128x64 history pass.
+
+For the next checkpoint, the animation closure is the safer independent batch. JUT allocation/construction should be assigned as a whole owner/lifetime task with JutTextureOwnershipTests, OriginalImageEffectOwnershipTests and actual GX capture validation; full-screen blur restoration is a separate Game/Aurora behavior task.

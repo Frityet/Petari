@@ -1,0 +1,34 @@
+{
+  "add_sources": [
+    "src/JSystem/J3DGraphAnimator/J3DJoint.cpp",
+    "src/JSystem/J3DGraphAnimator/J3DJointTree.cpp",
+    "src/JSystem/J3DGraphAnimator/J3DModelData.cpp",
+    "src/JSystem/J3DGraphAnimator/J3DModel.cpp",
+    "src/JSystem/J3DGraphAnimator/J3DSkinDeform.cpp",
+    "src/JSystem/J3DGraphAnimator/J3DCluster.cpp",
+    "src/JSystem/J3DGraphBase/J3DTransform.cpp",
+    "src/JSystem/J3DGraphBase/J3DSys.cpp",
+    "src/JSystem/JMath/JMath.cpp"
+  ],
+  "removed_sources": [
+    "src/compat/J3DJointCompat.cpp",
+    "src/compat/J3DJointEntryCompat.cpp",
+    "src/compat/J3DJointTreeCompat.cpp",
+    "src/compat/J3DHierarchyCompat.cpp",
+    "src/compat/J3DModelDataCompat.cpp",
+    "src/compat/J3DModelCompat.cpp",
+    "src/compat/J3DSkinDeformCompat.cpp",
+    "src/compat/J3DClusterCompat.cpp",
+    "src/compat/J3DTransformMtxCompat.cpp",
+    "src/compat/J3DTextureMtxCompat.cpp",
+    "src/compat/J3DSysCompat.cpp",
+    "src/compat/J3DDrawInitCompat.cpp",
+    "src/compat/JMathVectorCompat.cpp",
+    "src/compat/JMathQuaternionCompat.cpp"
+  ],
+  "extra_flags": {},
+  "notes": [
+    "Joint, Transform, and JMath preserve FP contraction settings with in-source compiler pragmas.",
+    "OriginalJ3dJointTree and its native renderer/test ownership remain pending a separate migration."
+  ]
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "name": "original-jsu-stream",
+    "target": "smg-pc-original-jsu-stream-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-jsu-stream-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-jsu-stream-tests-run.log"
+  },
+  {
+    "name": "original-jkr-archive",
+    "target": "smg-pc-original-jkr-archive-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-jkr-archive-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-jkr-archive-tests-run.log"
+  },
+  {
+    "name": "original-file-loader",
+    "target": "smg-pc-original-file-loader-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-file-loader-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-file-loader-tests-run.log"
+  },
+  {
+    "name": "original-j3d-joint-traversal",
+    "target": "smg-pc-original-j3d-joint-traversal-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-joint-traversal-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-j3d-joint-traversal-tests-run.log"
+  },
+  {
+    "name": "original-j3d-joint-resource",
+    "target": "smg-pc-original-j3d-joint-resource-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-joint-resource-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-j3d-joint-resource-tests-run.log"
+  },
+  {
+    "name": "original-j3d-model-resource",
+    "target": "smg-pc-original-j3d-model-resource-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-model-resource-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-j3d-model-resource-tests-run.log"
+  },
+  {
+    "name": "original-j3d-mtx-buffer",
+    "target": "smg-pc-original-j3d-mtx-buffer-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-mtx-buffer-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-j3d-mtx-buffer-tests-run.log"
+  },
+  {
+    "name": "original-j3d-texture-mtx",
+    "target": "smg-pc-original-j3d-texture-mtx-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-texture-mtx-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-j3d-texture-mtx-tests-run.log"
+  },
+  {
+    "name": "original-j3d-transform-animation",
+    "target": "smg-pc-original-j3d-transform-animation-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-transform-animation-tests-build.log",
+    "run": 1,
+    "run_log": "smg-pc-original-j3d-transform-animation-tests-run.log"
+  },
+  {
+    "name": "original-save-owner",
+    "target": "smg-pc-original-save-owner-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-save-owner-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-save-owner-tests-run.log"
+  }
+]

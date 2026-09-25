@@ -1200,7 +1200,13 @@ bool StorySequenceExecutor::tryNextDemoInfo() {
     return true;
 }
 
-// StorySequenceExecutor::addDynamicDemoSequenceInfo
+const StorySequenceExecutorType::DemoSequenceInfo* StorySequenceExecutor::addDynamicDemoSequenceInfo(u16 type, u16 event, const char* pName) {
+    StorySequenceExecutorType::DemoSequenceInfo& rInfo = _6C[_6C.mCount++];
+    rInfo._0 = type;
+    rInfo._2 = event;
+    rInfo._4 = pName;
+    return &_6C[_6C.size() - 1];
+}
 
 void StorySequenceExecutor::setBeforeStageScenario(const GalaxyMoveArgument& rMoveArgument, bool param2) {
     const char* pStageName = nullptr;

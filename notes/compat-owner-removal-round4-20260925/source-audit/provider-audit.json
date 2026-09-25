@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "scope": "Configured project archive dependencies and direct executable objects of smg-pc; external package libraries excluded",
+  "artifacts": [
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-base.a",
+      "sha256": "1da142b50f18d43cb37c39ad42e7d787c5a741333f0bff187ee610381cd5c282",
+      "mtime_ns": 1790338538133115406
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-card.a",
+      "sha256": "4b4c825e643f6ae280749015abce0f11f9902dc64ce91b257d71fa360ff9583e",
+      "mtime_ns": 1790338538154639937
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-core.a",
+      "sha256": "ae6d715bf50b273a80d4182c734956f89be910fed893b7edc68de6733578dbfc",
+      "mtime_ns": 1790338574717657510
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-dvd.a",
+      "sha256": "0837b24f41beac86e0634a0be9913d58e8ec4d806fd7edec0295a6b132e50227",
+      "mtime_ns": 1790338574590157615
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-gd.a",
+      "sha256": "36d57c42379c4b424a446e3cdebb5796b1dfaae4d041eb9c996a8b120a75c236",
+      "mtime_ns": 1790338574720431134
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-gx.a",
+      "sha256": "40739f91450faa03f23b66910cfff0b588a80bdc1b84bee6046a67f24ba32011",
+      "mtime_ns": 1790338574699383103
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-main.a",
+      "sha256": "63a217514e67b29794139088435978b2a316f9723638c0ae6ddd52f290b3dfa6",
+      "mtime_ns": 1790339232969315298
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-ms.a",
+      "sha256": "4e2a178023fa8862bf68f9ab2c6334dc0f15ac082dc68aa5f36306428aa24a45",
+      "mtime_ns": 1790338538149450107
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-mtx.a",
+      "sha256": "a177be6ec4bec6cabeedca3d4dd42c760b49ef672542c9b1eeae283c58acf13f",
+      "mtime_ns": 1790338537762815755
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-nw4r.a",
+      "sha256": "284c72c4a36933db4036c025888d581b4050e528e681367b65cdd0d138f47867",
+      "mtime_ns": 1790338537777998414
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-os.a",
+      "sha256": "657ae2d751f23fd5926ee36840d43ae63bb14d2bc438335a76dbc0bbc6e99332",
+      "mtime_ns": 1790338538156323603
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-pad.a",
+      "sha256": "ccf3c5b2c18fa70836f7848187fb8efe89d8ef63015831233931929bc8fc7666",
+      "mtime_ns": 1790338574584377160
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-platform.a",
+      "sha256": "0e9fa79a93986ac442955e7f67225db5f9c7b8a3ebf32c9957d560655e162168",
+      "mtime_ns": 1790338574594343363
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-si.a",
+      "sha256": "2d7ee07676a8a0b155a22a7f4e1c456c1baf0af48bf2a0ad55785a46d872ac5a",
+      "mtime_ns": 1790338538150443523
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-thp.a",
+      "sha256": "d3f64cbdc2732d800692832b492694cec26aab34d81e6cddbe47bbf6cd3a0a7d",
+      "mtime_ns": 1790338574737699167
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libaurora-vi.a",
+      "sha256": "bd75211d06e7b45f426674c9dc1a27b783dce1ac9dc996bc47dc18d8a69a4139",
+      "mtime_ns": 1790338574611399313
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-app.a",
+      "sha256": "0875d787a8f0da4fbdca1846f80beca13d8d6639d0e01fb26a1230eb3783f615",
+      "mtime_ns": 1790344283734180896
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-common.a",
+      "sha256": "6b0af3fad91b37bdc0cfa4b01983ab7b7f9fbd81265171dcd05bb81ab4930eb9",
+      "mtime_ns": 1790338537745738764
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a",
+      "sha256": "d204afbe2d4fdba44bfec6199cde79ee9f12f58a776a7d04f51adb7cbe4043c5",
+      "mtime_ns": 1790344236994553101
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-render.a",
+      "sha256": "8f27f16c71c056e08a7b82e1fd63f25fb5fa08c37f20d506943df502ace04f83",
+      "mtime_ns": 1790343683065454520
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/.objs/smg-pc/macosx/arm64/debug/src/app/main.cpp.o",
+      "kind": "executable-object",
+      "sha256": "41501f57cad310b510e201a15d302388861cbbbb42d2577f5849ad38d6246b9c",
+      "mtime_ns": 1790343648236862466
+    },
+    {
+      "path": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc",
+      "sha256": "17bc0458d2b17d6efb3bdabd99abde042e654dd8d5a5a1071d44fa4cc9672202",
+      "mtime_ns": 1790344511773354743
+    }
+  ],
+  "unavailable_artifacts": [],
+  "strong_symbols": 23350,
+  "duplicate_strong_symbols": 0,
+  "stale_source_providers": 0,
+  "unavailable_owner_inputs": 0,
+  "provider_mapping": {
+    "unique": 23350
+  },
+  "provider_provenance": {
+    "unreviewed": 7781,
+    "canonical-path-see-source-closeness-report": 15550,
+    "source-tokens-exact": 8,
+    "source-tokens-differ": 2,
+    "unresolved": 9
+  },
+  "source_checks": {
+    "source-tokens-exact": 9,
+    "unresolved": 11,
+    "source-tokens-differ": 2
+  },
+  "excluded_original_units": 813,
+  "missing_reviewed_symbols": [],
+  "limits": [
+    "No inferred compatibility approval from directories or filenames.",
+    "Explicit provenance checks compare complete anchored signatures/bodies as tokens; no preprocessor or semantic equivalence claim.",
+    "Unlisted source imports remain unreviewed. Excluded-TU mappings are partial, not complete API coverage.",
+    "Executable symbol presence does not identify which duplicate archive member the linker selected.",
+    "Artifact hashes and source/object timestamps are not a full build attestation; header/flag freshness requires a successful build."
+  ]
+}

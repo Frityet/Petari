@@ -13,6 +13,8 @@ class JKRArchive;
 class FileLoader {
 public:
     FileLoader();
+    ~FileLoader();
+    static void destroy(FileLoader*);
 
     void requestLoadToMainRAM(const char*, u8*, JKRHeap*, JKRDvdRipper::EAllocDirection, bool);
     void requestMountArchive(const char*, JKRHeap*, bool);

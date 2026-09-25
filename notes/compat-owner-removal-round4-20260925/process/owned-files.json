@@ -1,0 +1,18 @@
+[
+  "src/Game/System/FileLoader.cpp",
+  "src/Game/System/FileLoader.hpp",
+  "src/Game/System/FunctionAsyncExecutor.cpp",
+  "src/Game/System/FunctionAsyncExecutor.hpp",
+  "src/Game/Util/SystemUtil.cpp",
+  "src/compat/FileLoaderOwnership.cpp",
+  "src/compat/FileLoaderOwnership.hpp",
+  "src/compat/FunctionAsyncExecutorOwnership.cpp",
+  "src/compat/FunctionAsyncExecutorOwnership.hpp",
+  "src/compat/OriginalFunctionAsyncUtil.cpp",
+  "src/compat/OriginalParticleResourceLookup.cpp",
+  "src/compat/StageSessionGameCompat.cpp",
+  "src/compat/SceneSystemUtilCompat.cpp",
+  "src/scene/PlacementZoneScope.cpp",
+  "src/app/OriginalGameApplication.cpp",
+  "tests/OriginalFileLoaderTests.cpp"
+]

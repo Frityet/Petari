@@ -11,6 +11,7 @@
 void JMAEulerToQuat(s16, s16, s16, Quaternion*);
 void JMAQuatLerp(const Quaternion*, const Quaternion*, f32, Quaternion*);
 void JMAVECScaleAdd(const Vec*, const Vec*, Vec*, f32);
+void JMAVECLerp(const Vec*, const Vec*, Vec*, f32);
 
 void JMAMTXApplyScale(const Mtx, Mtx, f32, f32, f32);
 
@@ -49,7 +50,9 @@ inline f32 JMAHermiteInterpolation(f32 p1, f32 p2, f32 p3, f32 p4, f32 p5, f32 p
 }
 
 namespace JMath {
-    [[nodiscard]] f32 fastReciprocal(f32 value);
+    [[nodiscard]] inline f32 fastReciprocal(f32 value) {
+        return ppc_fres(value);
+    }
 
     template <typename T>
     [[nodiscard]] inline T fastSqrt(T value) {

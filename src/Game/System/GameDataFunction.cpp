@@ -13,6 +13,7 @@
 #include "Game/System/UserFile.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include <cstdio>
+#include <cstring>
 
 namespace {
     SaveDataHandleSequence* getSaveDataHandleSequence() NO_INLINE {

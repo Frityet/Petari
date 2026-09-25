@@ -1,6 +1,7 @@
 #pragma once
 
 #include "JSystem/JKernel/JKRDisposer.hpp"
+#include <revolution/os.h>
 
 class JKRArcFinder;
 
@@ -26,10 +27,21 @@ public:
     static JSUList<JKRFileLoader> sFileLoaderList;
     static JSUList<JKRFileLoader>& sVolumeList;
     static JKRFileLoader* gCurrentFileLoader;
+    static OSMutex sVolumeListMutex;
 
     JSULink<JKRFileLoader> mLoaderLink;
     char* mLoaderName;
     u32 mLoaderType;
     bool mIsMounted;
     u32 _34;
+
+protected:
+    // One recursive SDK lock covers list mutation and nested mount publication.
+    class VolumeLock {
+    public:
+        VolumeLock();
+        ~VolumeLock();
+        VolumeLock(const VolumeLock&) = delete;
+        VolumeLock& operator=(const VolumeLock&) = delete;
+    };
 };

@@ -4,6 +4,7 @@
 #include "Game/Util/MutexHolder.hpp"
 #include <JSystem/JKernel/JKRExpHeap.hpp>
 #include <JSystem/JKernel/JKRUnitHeap.hpp>
+#include <aurora/guest_thread.hpp>
 
 FunctionAsyncExecInfo::FunctionAsyncExecInfo(MR::FunctorBase* pFunc, int priority, const char* pName)
     : mFunc(pFunc), mPriority(priority), mName(pName), mIsEnd(false) {
@@ -76,8 +77,8 @@ FunctionAsyncExecutor::FunctionAsyncExecutor() : mMainThreadExec(nullptr), mHold
 
     mMainThreadExec = new FunctionAsyncExecutorOnMainThread(OSGetCurrentThread());
     _410 = JKRUnitHeap::create(sizeof(FunctionAsyncExecInfo),
-                              JKRUnitHeap::calcHeapSize(sizeof(FunctionAsyncExecInfo), 256, alignof(FunctionAsyncExecInfo)),
-                              alignof(FunctionAsyncExecInfo), MR::getCurrentHeap(), false);
+                               JKRUnitHeap::calcHeapSize(sizeof(FunctionAsyncExecInfo), 256, alignof(FunctionAsyncExecInfo)),
+                               alignof(FunctionAsyncExecInfo), MR::getCurrentHeap(), false);
     _414 = JKRExpHeap::create(0x2800, MR::getCurrentHeap(), false);
 }
 
@@ -182,4 +183,21 @@ FunctionAsyncExecutorThread* FunctionAsyncExecutor::getSuspendThread() {
     }
 
     return nullptr;
+}
+
+FunctionAsyncExecutor::~FunctionAsyncExecutor() {
+    const aurora::os::GuestThreadExecutionScope execution;
+    for (auto*& thread : mThreads) {
+        delete thread;
+        thread = nullptr;
+    }
+    for (auto* info : mHolders)
+        delete info;
+    mHolders.mCount = 0;
+    delete mMainThreadExec;
+    mMainThreadExec = nullptr;
+    if (_410 != nullptr)
+        _410->destroy();
+    if (_414 != nullptr)
+        _414->destroy();
 }

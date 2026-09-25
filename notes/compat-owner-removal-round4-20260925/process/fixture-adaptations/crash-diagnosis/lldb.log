@@ -1,0 +1,66 @@
+(lldb) target create "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-runtime-context-construction-tests"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-runtime-context-construction-tests' (arm64).
+(lldb) run
+[aurora:info:aurora] Aurora initializing
+[aurora:info:aurora::system_info] CPU model: Apple M5 Max
+[aurora:info:aurora::system_info] Memory: 131072 MiB
+[aurora:info:aurora::system_info] Architecture: aarch64
+[aurora:info:aurora::system_info] OS: macOS Version 27.0 (Build 26A428)
+2026-09-25 14:55:42.409444+0100 smg-pc-runtime-context-construction-tests[29002:5849950] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:55:42.409617+0100 smg-pc-runtime-context-construction-tests[29002:5849950] [Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:55:42.409775+0100 smg-pc-runtime-context-construction-tests[29002:5849951] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:55:42.409790+0100 smg-pc-runtime-context-construction-tests[29002:5849951] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:55:42.410062+0100 smg-pc-runtime-context-construction-tests[29002:5849954] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:55:42.410072+0100 smg-pc-runtime-context-construction-tests[29002:5849954] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:55:42.410297+0100 smg-pc-runtime-context-construction-tests[29002:5849954] [Connection] Will NOT re-try to establish the connection
+2026-09-25 14:55:42.410322+0100 smg-pc-runtime-context-construction-tests[29002:5849951] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:55:42.410330+0100 smg-pc-runtime-context-construction-tests[29002:5849951] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:55:43.198703+0100 smg-pc-runtime-context-construction-tests[29002:5849924] [WindowTab] Cannot index window tabs due to missing main bundle identifier
+[aurora:info:aurora::gpu] Creating WebGPU instance
+[aurora:info:aurora::gpu] Attempting to initialize Metal
+[aurora:info:aurora::gpu] Requesting adapter
+  Feature level: Compatibility
+  Power preference: HighPerformance
+  Backend: Metal
+  Compatible surface: true
+[aurora:info:aurora::gpu] Graphics adapter information
+  API: Metal
+  Device: Apple M5 Max (IntegratedGPU)
+  Driver: Metal driver on macOS Version 27.0 (Build 26A428)
+[aurora:info:aurora::gpu] Using limits:
+  maxTextureDimension1D: 16384
+  maxTextureDimension2D: 16384
+  maxTextureDimension3D: 2048
+  maxTextureArrayLayers: 2048
+  maxStorageBuffersPerShaderStage: 2
+  minUniformBufferOffsetAlignment: 256
+  minStorageBufferOffsetAlignment: 256
+  maxImmediateSize: 64
+[aurora:info:aurora::gpu] Enabling features: 
+  CoreFeaturesAndLimits
+  DepthClipControl
+  TextureCompressionBC
+  TextureCompressionASTC
+  ClipDistances
+  DualSourceBlending
+  TextureComponentSwizzle
+[aurora:info:aurora::gpu] Using surface format BGRA8Unorm, present mode Fifo
+[aurora:info:aurora::gfx::pipeline_cache] No bundled initial pipeline cache found at '/Users/frityet/Projects/petari/build/macosx/arm64/debug/initial_pipeline_cache.db'
+[aurora:info:aurora] Using framebuffer size 1280x960 scale 2
+[aurora:info:aurora::gpu::cache] Pruned 83 stale Dawn cache entries
+RuntimeContext: real mapped capture allocation failure restores video/context/scene/heap owners
+RuntimeContext: injected logger failure retires the actual capture director before global registration
+warning: smg-pc-runtime-context-construction-tests was compiled with optimization - stepping may behave oddly; variables may not be available.
+Process 29002 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-runtime-context-construction-tests' (arm64)
+Process 29002 stopped
+* thread #1, name = 'Main thread', queue = 'com.apple.main-thread', stop reason = EXC_BAD_ACCESS (code=1, address=0x40)
+       frame #0: 0x00000001000099a8 smg-pc-runtime-context-construction-tests`FileLoader::getRequestFileInfoConst(this=0x0000000000000000, pName="KrKorean/MessageData/Message.arc") const at FileLoader.cpp:125:25 [opt]
+   122 	}
+   123 	
+   124 	const RequestFileInfo* FileLoader::getRequestFileInfoConst(const char* pName) const {
+-> 125 	    for (u32 i = 0; i < mRequestedFileCount; i++) {
+    	                        ^
+   126 	        RequestFileInfo* info = &mRequestFileInfos[i];
+   127 	
+   128 	        if (MR::isEqualStringCase(info->mFileName, pName)) {
+Target 0: (smg-pc-runtime-context-construction-tests) stopped.

@@ -536,6 +536,7 @@ target("smg-pc-player-util-real-or-absent-tests")
     })
 
 target("smg-pc-story-sequence-real-or-absent-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -686,6 +687,7 @@ target("smg-pc-layout-real-or-absent-tests")
     })
 
 target("smg-pc-talk-real-or-absent-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -1005,7 +1007,7 @@ target("smg-pc-jut-texture-ownership-tests")
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
 
-target("smg-pc-runtime-context-construction-tests")
+target("smg-pc-runtime-context-failure-tests")
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -1014,12 +1016,12 @@ target("smg-pc-runtime-context-construction-tests")
     else
         add_ldflags("-Wl,--gc-sections", {force = true})
     end
-    add_files("RuntimeContextConstructionTests.cpp")
+    add_files("RuntimeContextFailureTests.cpp")
     add_deps {
         "smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
         "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"
     }
-    add_tests("runtime_context_construction", {
+    add_tests("runtime_context_failure", {
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
 
@@ -1202,6 +1204,7 @@ target("smg-pc-npc-actor-real-or-absent-tests")
     })
 
 target("smg-pc-game-data-real-or-absent-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -1389,6 +1392,7 @@ target("smg-pc-original-system-config-tests")
     })
 
 target("smg-pc-original-particle-resource-owner-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -2127,6 +2131,7 @@ target("smg-pc-demo-start-request-holder-tests")
     })
 
 target("smg-pc-game-data-star-storage-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -2143,6 +2148,7 @@ target("smg-pc-game-data-star-storage-tests")
     })
 
 target("smg-pc-original-auto-effect-metadata-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -2341,6 +2347,7 @@ target("smg-pc-original-fur-shader-tests")
     })
 
 target("smg-pc-original-scene-counter-owner-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")

@@ -4,6 +4,7 @@
 #include "JSystem/J3DGraphAnimator/J3DJointTree.hpp"
 #include "JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
+#include "JSystem/JMath/JMath.hpp"
 #include "compat/OriginalJ3dJointTree.hpp"
 #include "render/J3dMaterialRuntime.hpp"
 #include "render/J3dModel.hpp"
@@ -14,6 +15,7 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
+#include <limits>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -32,6 +34,31 @@ namespace {
     void require(bool condition, std::string_view message) {
         if (!condition) {
             throw std::runtime_error(std::string(message));
+        }
+    }
+
+    void test_original_vector_lerp_instruction_boundaries() {
+        const Vec left{-1.0F, -1.0F, -1.0F};
+        const Vec right{0x1p-23F, 0x1p-23F, 0x1p-23F};
+        Vec result{};
+        JMAVECLerp(&left, &right, &result, 1.0F - 0x1p-23F);
+        require(result.x == -0x1p-46F && result.y == -0x1p-46F && result.z == -0x1p-46F,
+                "JMA vector interpolation retains the fused residual that a rounded multiply/add loses");
+
+        const auto tiny = std::numeric_limits<float>::denorm_min();
+        const Vec denormal{tiny, -tiny, tiny};
+        JMAVECLerp(&denormal, &denormal, &result, 0.5F);
+        require(result.x == 0.0F && !std::signbit(result.x) && result.y == 0.0F && std::signbit(result.y) &&
+                    result.z == tiny,
+                "Original paired XY stores flush signed denormals while the scalar Z store retains them");
+
+        for (const bool replace_left : {false, true}) {
+            Vec a{1.0F, 2.0F, 3.0F};
+            Vec b{9.0F, 10.0F, 11.0F};
+            Vec* output = replace_left ? &a : &b;
+            JMAVECLerp(&a, &b, output, 0.25F);
+            require(output->x == 3.0F && output->y == 4.0F && output->z == 5.0F,
+                    "Original vector interpolation supports either input as destination");
         }
     }
 
@@ -709,6 +736,7 @@ namespace {
 
 int main() {
     try {
+        test_original_vector_lerp_instruction_boundaries();
         test_tree_initialization_and_empty_root();
         test_inherited_override_and_subtree_restoration();
         test_original_callback_matrix_effects_and_cached_function();
@@ -718,7 +746,7 @@ int main() {
         test_owner_raw_animation_and_exception_cleanup();
         test_owner_nested_traversal_and_rejected_self_reentry();
         test_owner_base_transform_and_scale_reach_original_calculators();
-        std::cout << "9/9 original J3D joint-traversal groups passed\n";
+        std::cout << "10/10 original J3D joint-traversal groups passed\n";
         return 0;
     } catch (const std::exception& error) {
         std::cerr << "[fail] " << error.what() << '\n';

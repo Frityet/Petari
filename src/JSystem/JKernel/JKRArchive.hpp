@@ -119,39 +119,13 @@ public:
     JKRArchive(const JKRArchive&) = delete;
     JKRArchive& operator=(const JKRArchive&) = delete;
 
-    [[nodiscard]] virtual void *getResource(const char *pPath) const {
-        const auto data = resource_data(pPath == nullptr ? std::string_view{} : std::string_view(pPath));
-        return data.empty() ? nullptr : const_cast<std::uint8_t *>(data.data());
-    }
+    [[nodiscard]] virtual void *getResource(const char *pPath) const;
 
-    [[nodiscard]] virtual void *getResource(std::uint32_t, const char *pPath) const {
-        return getResource(pPath);
-    }
+    [[nodiscard]] virtual void *getResource(std::uint32_t, const char *pPath) const;
 
-    [[nodiscard]] virtual void *getResource(std::uint16_t id) const {
-        const auto *entry = mArchive == nullptr ? nullptr : mArchive->find_by_file_id(id);
-        if (entry == nullptr) {
-            return nullptr;
-        }
+    [[nodiscard]] virtual void *getResource(std::uint16_t id) const;
 
-        const auto data = resource_data(*entry);
-        return data.empty() ? nullptr : const_cast<std::uint8_t *>(data.data());
-    }
-
-    [[nodiscard]] virtual std::uint32_t getResSize(const void *pResource) const {
-        if (pResource == nullptr || mArchive == nullptr) {
-            return 0U;
-        }
-
-        for (const auto &entry : mArchive->entries()) {
-            const auto data = resource_data(entry);
-            if (!data.empty() && data.data() == pResource) {
-                return static_cast<std::uint32_t>(data.size());
-            }
-        }
-
-        return 0U;
-    }
+    [[nodiscard]] virtual std::uint32_t getResSize(const void *pResource) const;
 
     [[nodiscard]] void* getIdxResource(u32);
     virtual void* fetchResource(SDIFileEntry*, u32*) = 0;
@@ -177,57 +151,19 @@ public:
     SDIFileEntry* mFiles = nullptr;
     char* mStringTable = nullptr;
 
-    [[nodiscard]] virtual std::uint32_t readResource(void *pBuffer, std::uint32_t bufferSize, const char *pPath) const {
-        const auto data = resource_data(pPath == nullptr ? std::string_view{} : std::string_view(pPath));
-        if (data.empty() || pBuffer == nullptr || bufferSize == 0U) {
-            return 0U;
-        }
+    [[nodiscard]] virtual std::uint32_t readResource(void *pBuffer, std::uint32_t bufferSize, const char *pPath) const;
 
-        const auto copy_size = std::min<std::size_t>(bufferSize, data.size());
-        std::memcpy(pBuffer, data.data(), copy_size);
-        return static_cast<std::uint32_t>(copy_size);
-    }
+    [[nodiscard]] virtual std::uint32_t readResource(void *pBuffer, std::uint32_t bufferSize, std::uint16_t fileId) const;
 
-    [[nodiscard]] virtual std::uint32_t readResource(void *pBuffer, std::uint32_t bufferSize, std::uint16_t fileId) const {
-        const auto *entry = mArchive == nullptr ? nullptr : mArchive->find_by_file_id(fileId);
-        if (entry == nullptr || pBuffer == nullptr || bufferSize == 0U) {
-            return 0U;
-        }
-
-        const auto data = resource_data(*entry);
-        const auto copy_size = std::min<std::size_t>(bufferSize, data.size());
-        std::memcpy(pBuffer, data.data(), copy_size);
-        return static_cast<std::uint32_t>(copy_size);
-    }
-
-    [[nodiscard]] virtual bool contains(const char *pPath) const {
-        return mArchive != nullptr && pPath != nullptr && mArchive->contains_resource(pPath);
-    }
+    [[nodiscard]] virtual bool contains(const char *pPath) const;
 
 protected:
     explicit JKRArchive(const smgpc::resource::RarcArchive* archive);
     void attach_archive(const smgpc::resource::RarcArchive* archive);
 
-    [[nodiscard]] std::span<const std::uint8_t> resource_data(std::string_view path) const {
-        if (mArchive == nullptr || path.empty()) {
-            return {};
-        }
+    [[nodiscard]] std::span<const std::uint8_t> resource_data(std::string_view path) const;
 
-        const auto *entry = mArchive->find_resource(path);
-        if (entry == nullptr) {
-            return {};
-        }
-
-        return resource_data(*entry);
-    }
-
-    [[nodiscard]] std::span<const std::uint8_t> resource_data(const smgpc::resource::RarcEntry& entry) const {
-        const auto& native = mNativeFiles.at(entry.file_entry_index);
-        if (native.mFileData != nullptr) {
-            return {static_cast<const std::uint8_t*>(native.mFileData), native.mDataSize};
-        }
-        return mArchive->file_data(entry);
-    }
+    [[nodiscard]] std::span<const std::uint8_t> resource_data(const smgpc::resource::RarcEntry& entry) const;
 
     const smgpc::resource::RarcArchive *mArchive = nullptr;
 

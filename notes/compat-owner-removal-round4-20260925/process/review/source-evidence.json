@@ -1,0 +1,19 @@
+{
+  "review_kind": "read-only source audit; no builds or runtime tests executed",
+  "system_util_donor_exact_without_native_execution_scopes": true,
+  "execution_scope_count": 8,
+  "reviewed_sha256": {
+    "src/Game/System/FileLoader.cpp": "482ffa34349e401ce23d2b52d26a8fbfc8e381deec80367c1370e73afbd58564",
+    "src/Game/System/FileLoader.hpp": "741a7382ed5640edf72ea61a64d3a75a49c31e576b9f0592ce95c50a57880007",
+    "src/Game/System/FunctionAsyncExecutor.cpp": "de3c7af75d96d1d2d32e09ffe8f4f3506b79990a8a3304f1e1a0c3ae8b093284",
+    "src/Game/System/FunctionAsyncExecutor.hpp": "6ae5b5b8a352a43b076e0098badb30501d55bb6b056a06de4ef4d1f7096f8278",
+    "src/Game/Util/SystemUtil.cpp": "27d15b85f32a3749bbbfd5dc160eeed4176204a6ea404c850c52a68488e7bdb1",
+    "src/scene/PlacementZoneScope.cpp": "fdb1bbc76a58f57947378937bc59a551b05286ad8341b6a58688dcbb7ef1cf7c",
+    "src/scene/PlacementZoneScope.hpp": "5d56b2bf16c5a00d0246bae7f62a4cc95d6e90ba45e1e861e15f305973bd8374",
+    "src/app/OriginalGameApplication.cpp": "332b7a75e42d92d62e81832b4b4c5be2bbd743c9ba46f2a60e5bfbdf4c265682",
+    "aurora/lib/dolphin/os/OSExecution.cpp": "fc35ac445d3911aaf2d5d7e1ff5c9a8baca3d86725912f17aba4ba76b248ec02",
+    "src/JSystem/JKernel/JKRArchivePri.cpp": "849d3c58cae459405b105efbc2a4924849110476f46116884e4c3527cfe7abb9",
+    "src/JSystem/JKernel/JKRMemArchive.cpp": "d79e0a15dbc908dd7dbcef8ee72d77695c0361c0d12001d91210c8272ded85d5",
+    "src/JSystem/JKernel/JKRFileLoader.cpp": "3af684678918811c28b3ece3815e413602e411e6ccb098f631390e6109b137b8"
+  }
+}

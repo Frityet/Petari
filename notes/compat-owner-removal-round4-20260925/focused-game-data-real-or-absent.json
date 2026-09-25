@@ -1,0 +1,50 @@
+[
+  {
+    "name": "game-data-real-or-absent",
+    "target": "smg-pc-game-data-real-or-absent-tests",
+    "build": 0,
+    "build_log": "smg-pc-game-data-real-or-absent-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-game-data-real-or-absent-tests-run.log"
+  },
+  {
+    "name": "game-data-star-storage",
+    "target": "smg-pc-game-data-star-storage-tests",
+    "build": 0,
+    "build_log": "smg-pc-game-data-star-storage-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-game-data-star-storage-tests-run.log"
+  },
+  {
+    "name": "original-scene-counter-owner",
+    "target": "smg-pc-original-scene-counter-owner-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-scene-counter-owner-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-scene-counter-owner-tests-run.log"
+  },
+  {
+    "name": "story-sequence-real-or-absent",
+    "target": "smg-pc-story-sequence-real-or-absent-tests",
+    "build": 0,
+    "build_log": "smg-pc-story-sequence-real-or-absent-tests-build.log",
+    "run": 1,
+    "run_log": "smg-pc-story-sequence-real-or-absent-tests-run.log"
+  },
+  {
+    "name": "talk-real-or-absent",
+    "target": "smg-pc-talk-real-or-absent-tests",
+    "build": 0,
+    "build_log": "smg-pc-talk-real-or-absent-tests-build.log",
+    "run": -6,
+    "run_log": "smg-pc-talk-real-or-absent-tests-run.log"
+  },
+  {
+    "name": "original-particle-resource-owner",
+    "target": "smg-pc-original-particle-resource-owner-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-particle-resource-owner-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-particle-resource-owner-tests-run.log"
+  }
+]

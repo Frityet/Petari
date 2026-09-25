@@ -1,0 +1,10 @@
+[
+  {
+    "name": "original-j3d-transform-animation",
+    "target": "smg-pc-original-j3d-transform-animation-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-transform-animation-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-j3d-transform-animation-tests-run.log"
+  }
+]

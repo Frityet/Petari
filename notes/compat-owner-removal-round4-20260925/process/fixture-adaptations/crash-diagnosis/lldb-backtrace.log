@@ -1,0 +1,205 @@
+(lldb) target create "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-runtime-context-construction-tests"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-runtime-context-construction-tests' (arm64).
+(lldb) run
+[aurora:info:aurora] Aurora initializing
+[aurora:info:aurora::system_info] CPU model: Apple M5 Max
+[aurora:info:aurora::system_info] Memory: 131072 MiB
+[aurora:info:aurora::system_info] Architecture: aarch64
+[aurora:info:aurora::system_info] OS: macOS Version 27.0 (Build 26A428)
+2026-09-25 14:56:24.966550+0100 smg-pc-runtime-context-construction-tests[29057:5850781] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:56:24.966897+0100 smg-pc-runtime-context-construction-tests[29057:5850781] [Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:56:24.967197+0100 smg-pc-runtime-context-construction-tests[29057:5850780] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:56:24.967219+0100 smg-pc-runtime-context-construction-tests[29057:5850780] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:56:24.967534+0100 smg-pc-runtime-context-construction-tests[29057:5850782] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:56:24.967547+0100 smg-pc-runtime-context-construction-tests[29057:5850782] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:56:24.967783+0100 smg-pc-runtime-context-construction-tests[29057:5850782] [Connection] Will NOT re-try to establish the connection
+2026-09-25 14:56:24.967807+0100 smg-pc-runtime-context-construction-tests[29057:5850781] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:56:24.967818+0100 smg-pc-runtime-context-construction-tests[29057:5850781] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:56:25.747465+0100 smg-pc-runtime-context-construction-tests[29057:5850760] [WindowTab] Cannot index window tabs due to missing main bundle identifier
+[aurora:info:aurora::gpu] Creating WebGPU instance
+[aurora:info:aurora::gpu] Attempting to initialize Metal
+[aurora:info:aurora::gpu] Requesting adapter
+  Feature level: Compatibility
+  Power preference: HighPerformance
+  Backend: Metal
+  Compatible surface: true
+[aurora:info:aurora::gpu] Graphics adapter information
+  API: Metal
+  Device: Apple M5 Max (IntegratedGPU)
+  Driver: Metal driver on macOS Version 27.0 (Build 26A428)
+[aurora:info:aurora::gpu] Using limits:
+  maxTextureDimension1D: 16384
+  maxTextureDimension2D: 16384
+  maxTextureDimension3D: 2048
+  maxTextureArrayLayers: 2048
+  maxStorageBuffersPerShaderStage: 2
+  minUniformBufferOffsetAlignment: 256
+  minStorageBufferOffsetAlignment: 256
+  maxImmediateSize: 64
+[aurora:info:aurora::gpu] Enabling features: 
+  CoreFeaturesAndLimits
+  DepthClipControl
+  TextureCompressionBC
+  TextureCompressionASTC
+  ClipDistances
+  DualSourceBlending
+  TextureComponentSwizzle
+[aurora:info:aurora::gpu] Using surface format BGRA8Unorm, present mode Fifo
+[aurora:info:aurora::gfx::pipeline_cache] No bundled initial pipeline cache found at '/Users/frityet/Projects/petari/build/macosx/arm64/debug/initial_pipeline_cache.db'
+[aurora:info:aurora] Using framebuffer size 1280x960 scale 2
+[aurora:info:aurora::gpu::cache] Pruned 4 stale Dawn cache entries
+RuntimeContext: real mapped capture allocation failure restores video/context/scene/heap owners
+RuntimeContext: injected logger failure retires the actual capture director before global registration
+warning: smg-pc-runtime-context-construction-tests was compiled with optimization - stepping may behave oddly; variables may not be available.
+Process 29057 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-runtime-context-construction-tests' (arm64)
+Process 29057 stopped
+* thread #1, name = 'Main thread', queue = 'com.apple.main-thread', stop reason = EXC_BAD_ACCESS (code=1, address=0x40)
+       frame #0: 0x00000001000099a8 smg-pc-runtime-context-construction-tests`FileLoader::getRequestFileInfoConst(this=0x0000000000000000, pName="KrKorean/MessageData/Message.arc") const at FileLoader.cpp:125:25 [opt]
+   122 	}
+   123 	
+   124 	const RequestFileInfo* FileLoader::getRequestFileInfoConst(const char* pName) const {
+-> 125 	    for (u32 i = 0; i < mRequestedFileCount; i++) {
+    	                        ^
+   126 	        RequestFileInfo* info = &mRequestFileInfos[i];
+   127 	
+   128 	        if (MR::isEqualStringCase(info->mFileName, pName)) {
+Target 0: (smg-pc-runtime-context-construction-tests) stopped.
+(lldb) thread backtrace all
+* thread #1, name = 'Main thread', queue = 'com.apple.main-thread', stop reason = EXC_BAD_ACCESS (code=1, address=0x40)
+   * frame #0: 0x00000001000099a8 smg-pc-runtime-context-construction-tests`FileLoader::getRequestFileInfoConst(this=0x0000000000000000, pName="KrKorean/MessageData/Message.arc") const at FileLoader.cpp:125:25 [opt]
+     frame #1: 0x00000001000099a8 smg-pc-runtime-context-construction-tests`FileLoader::isNeedToLoad(this=0x0000000000000000, pName="KrKorean/MessageData/Message.arc") const at FileLoader.cpp:117:9 [opt] [inlined]
+     frame #2: 0x00000001000099a8 smg-pc-runtime-context-construction-tests`FileLoader::requestMountArchive(this=0x0000000000000000, pName="KrKorean/MessageData/Message.arc", pHeap=0x0000000000000000, jam=false) at FileLoader.cpp:45:9 [opt]
+     frame #3: 0x000000010006e400 smg-pc-runtime-context-construction-tests`MR::mountAsyncArchive(pFilePath="/MessageData/Message.arc", pHeap=<unavailable>) at FileUtilCompat.cpp:79:47 [opt] [inlined]
+     frame #4: 0x000000010006e3a4 smg-pc-runtime-context-construction-tests`MR::mountArchive(pFilePath="/MessageData/Message.arc", pHeap=0x0000000000000000) at FileUtilCompat.cpp:70:9 [opt]
+     frame #5: 0x00000001000079c0 smg-pc-runtime-context-construction-tests`MessageHolder::initGameData(this=0x00000076356f9680) at MessageHolder.cpp:183:5 [opt]
+     frame #6: 0x00000001000507d8 smg-pc-runtime-context-construction-tests`smgpc::runtime::MessageHolderOwnership::MessageHolderOwnership(this=0x0000007951d4e8c0, runtime=<unavailable>, byte_budget=2097152, mounts=0x000000016fdfcec8, game_archive_path=<unavailable>, language_prefix=<unavailable>) at MessageHolderOwnership.cpp:81:30 [opt]
+     frame #7: 0x0000000100050ba0 smg-pc-runtime-context-construction-tests`smgpc::runtime::MessageHolderOwnership::MessageHolderOwnership(this=<unavailable>, runtime=<unavailable>, byte_budget=<unavailable>, mounts=<unavailable>, game_archive_path=<unavailable>, language_prefix=<unavailable>) at MessageHolderOwnership.cpp:48:43 [opt] [artificial]
+     frame #8: 0x00000001000605b0 smg-pc-runtime-context-construction-tests`std::__1::unique_ptr<smgpc::runtime::MessageHolderOwnership, std::__1::default_delete<smgpc::runtime::MessageHolderOwnership>> std::__1::make_unique[abi:nqe230101]<smgpc::runtime::MessageHolderOwnership, std::__1::shared_ptr<smgpc::compat::JkrHeapRuntime>&, unsigned long const&, smgpc::runtime::ArchiveMountService&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, char const (&) [9], 0>(__args=std::__1::shared_ptr<smgpc::compat::JkrHeapRuntime>::element_type @ 0x0000007951d4e5a0 strong=9 weak=0, __args=0x000000016fdfcc18, __args=0x000000016fdfcec8, __args="/KrKorean/MessageData/Message.arc", __args={[H\xa8\0\x01\0\0\0}) at unique_ptr.h:708:30 [opt]
+     frame #9: 0x000000010005f33c smg-pc-runtime-context-construction-tests`smgpc::runtime::RuntimeContext::RuntimeContext(this=0x000000016fdfcd30, logger=<unavailable>, window_service=0x000000016fdfcc58, resources=0x000000016fdfcbe8, audio_playback=<unavailable>) at RuntimeContext.cpp:266:35 [opt]
+     frame #10: 0x0000000100060074 smg-pc-runtime-context-construction-tests`smgpc::runtime::RuntimeContext::RuntimeContext(this=0x000000016fdfcd30, logger=<unavailable>, window_service=<unavailable>, resources=<unavailable>, audio_playback=nullptr) at RuntimeContext.cpp:241:5 [opt] [inlined]
+     frame #11: 0x000000010006006c smg-pc-runtime-context-construction-tests`smgpc::runtime::RuntimeContext::RuntimeContext(this=0x000000016fdfcd30, logger=<unavailable>, window_service=<unavailable>, resources=<unavailable>) at RuntimeContext.cpp:222:11 [opt]
+     frame #12: 0x0000000100001f50 smg-pc-runtime-context-construction-tests`main at RuntimeContextConstructionTests.cpp:136:44 [opt]
+     frame #13: 0x000000018a03be80 dyld`start + 6688
+  thread #2
+       frame #0: 0x000000018a3ce9ec libsystem_kernel.dylib`__workq_kernreturn + 8
+  thread #3
+       frame #0: 0x000000018a3ce9ec libsystem_kernel.dylib`__workq_kernreturn + 8
+  thread #4
+       frame #0: 0x000000018a3ce9ec libsystem_kernel.dylib`__workq_kernreturn + 8
+  thread #5, name = 'com.apple.NSEventThread'
+       frame #0: 0x000000018a3ccc20 libsystem_kernel.dylib`mach_msg2_trap + 8
+       frame #1: 0x000000018a3df8e0 libsystem_kernel.dylib`mach_msg2_internal + 76
+       frame #2: 0x000000018a3d5a28 libsystem_kernel.dylib`mach_msg_overwrite + 480
+       frame #3: 0x000000018a3ccfac libsystem_kernel.dylib`mach_msg + 24
+       frame #4: 0x000000018a4d2aec CoreFoundation`__CFRunLoopServiceMachPort + 160
+       frame #5: 0x000000018a4d1334 CoreFoundation`__CFRunLoopRun + 1172
+       frame #6: 0x000000018a5ab82c CoreFoundation`_CFRunLoopRunSpecificWithOptions + 536
+       frame #7: 0x000000018ebac844 AppKit`_NSEventThread + 184
+       frame #8: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #6, name = 'Aurora render worker'
+       frame #0: 0x000000018a3d050c libsystem_kernel.dylib`__psynch_cvwait + 8
+       frame #1: 0x000000018a4121d0 libsystem_pthread.dylib`_pthread_cond_wait + 980
+       frame #2: 0x0000000101450fd4 libc++.1.dylib`std::__1::condition_variable::__do_timed_wait(std::__1::unique_lock<std::__1::mutex>&, std::__1::chrono::time_point<std::__1::chrono::system_clock, std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000000000l>>>) + 96
+       frame #3: 0x00000001001cfb8c smg-pc-runtime-context-construction-tests`std::__1::cv_status std::__1::condition_variable::wait_for[abi:nqe230101]<long long, std::__1::ratio<1l, 1000000000l>>(this=0x0000000100bb3ff8, __lk=0x00000001700b6e20, __d=<unavailable>) at condition_variable.h:0 [opt] [inlined]
+       frame #4: 0x00000001001cfb40 smg-pc-runtime-context-construction-tests`void std::__1::condition_variable::__do_timed_wait[abi:nqe230101]<std::__1::chrono::steady_clock>(this=0x0000000100bb3ff8, __lk=0x00000001700b6e20, __tp=<unavailable>) at condition_variable.h:224:3 [opt] [inlined]
+       frame #5: 0x00000001001cfb40 smg-pc-runtime-context-construction-tests`std::__1::cv_status std::__1::condition_variable::wait_until[abi:nqe230101]<std::__1::chrono::steady_clock, std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000000000l>>>(this=0x0000000100bb3ff8, __lk=0x00000001700b6e20, __t=0x00000001700b6e30) at condition_variable.h:128:5 [opt]
+       frame #6: 0x00000001001b058c smg-pc-runtime-context-construction-tests`bool std::__1::condition_variable::wait_until[abi:nqe230101]<std::__1::chrono::steady_clock, std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000000000l>>, aurora::gfx::render_worker::BoundedQueue::pop_for(std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000l>>, bool&)::$_0>(this=<unavailable>, __lk=0x00000001700b6e20, __t=0x00000001700b6e30, __pred=(unnamed class) @ x20) at condition_variable.h:136:11 [opt] [inlined]
+       frame #7: 0x00000001001b0580 smg-pc-runtime-context-construction-tests`bool std::__1::condition_variable::wait_for[abi:nqe230101]<long long, std::__1::ratio<1l, 1000l>, aurora::gfx::render_worker::BoundedQueue::pop_for(std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000l>>, bool&)::$_0>(this=<unavailable>, __lk=0x00000001700b6e20, __d=<unavailable>, __pred=(unnamed class) @ x20) at condition_variable.h:194:10 [opt] [inlined]
+       frame #8: 0x00000001001b0580 smg-pc-runtime-context-construction-tests`aurora::gfx::render_worker::BoundedQueue::pop_for(this=0x0000000100bb3fb0, timeout=1 ms, closed=0x00000001700b6eb7) at render_worker.cpp:103:14 [opt]
+    ﹍ frame #9: 0x00000001001b0f0c smg-pc-runtime-context-construction-tests`aurora::gfx::render_worker::(anonymous namespace)::worker_main(token=stop_token @ 0x00000001700b6f78) at render_worker.cpp:39:25 [opt]
+    ﹉ frame #12: 0x00000001001b2c14 smg-pc-runtime-context-construction-tests`aurora::thread::Thread::Thread<void (&)(std::__1::stop_token)>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token)::operator()(this=0x0000007950459a88, token=<unavailable>) at thread.hpp:34:5 [opt] [inlined]
+    ﹉ frame #14: 0x00000001001b2bac smg-pc-runtime-context-construction-tests`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token)>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token, 0ul, 1ul>(__t=<unavailable>, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #15: 0x00000001001b2ba0 smg-pc-runtime-context-construction-tests`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token)>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token>>(__vp=0x0000007950459a80) at thread.h:178:3 [opt]
+       frame #16: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #7
+       frame #0: 0x000000018a3d050c libsystem_kernel.dylib`__psynch_cvwait + 8
+       frame #1: 0x000000018a4121d0 libsystem_pthread.dylib`_pthread_cond_wait + 980
+       frame #2: 0x0000000101450f44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #3: 0x00000001001a8600 smg-pc-runtime-context-construction-tests`void std::__1::condition_variable::wait[abi:nqe230101]<aurora::gfx::pipeline_worker()::$_0>(this=<unavailable>, __lk=0x0000000170142ec8, __pred=<unavailable>) at condition_variable.h:113:7 [opt] [inlined]
+    ﹍ frame #4: 0x00000001001a85dc smg-pc-runtime-context-construction-tests`aurora::gfx::pipeline_worker() at pipeline_cache.cpp:978:29 [opt]
+    ﹉ frame #6: 0x00000001001aed70 smg-pc-runtime-context-construction-tests`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)(), 0ul>(__t=size=2, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #7: 0x00000001001aed70 smg-pc-runtime-context-construction-tests`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)()>>(__vp=0x0000007951d4da20) at thread.h:178:3 [opt]
+       frame #8: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #8
+       frame #0: 0x000000018a3d050c libsystem_kernel.dylib`__psynch_cvwait + 8
+       frame #1: 0x000000018a4121d0 libsystem_pthread.dylib`_pthread_cond_wait + 980
+       frame #2: 0x0000000101450f44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #3: 0x00000001001ac3e8 smg-pc-runtime-context-construction-tests`void std::__1::condition_variable::wait[abi:nqe230101]<aurora::gfx::pipeline_cache_writer()::$_0>(this=<unavailable>, __lk=0x00000001701ceee8, __pred=<unavailable>) at condition_variable.h:113:7 [opt] [inlined]
+    ﹍ frame #4: 0x00000001001ac3c8 smg-pc-runtime-context-construction-tests`aurora::gfx::pipeline_cache_writer() at pipeline_cache.cpp:931:31 [opt]
+    ﹉ frame #6: 0x00000001001aed70 smg-pc-runtime-context-construction-tests`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)(), 0ul>(__t=size=2, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #7: 0x00000001001aed70 smg-pc-runtime-context-construction-tests`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)()>>(__vp=0x0000007951d4de80) at thread.h:178:3 [opt]
+       frame #8: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #9, name = 'Aurora FIFO processor'
+       frame #0: 0x000000018a3dad9c libsystem_kernel.dylib`__ulock_wait2 + 8
+       frame #1: 0x000000018a41f0b4 libsystem_platform.dylib`os_sync_wait_on_address + 104
+    ﹍ frame #2: 0x0000000101450acc libc++.1.dylib`std::__1::__libcpp_atomic_wait(void const volatile*, long long) + 88
+    ﹉ frame #4: 0x00000001001c36dc smg-pc-runtime-context-construction-tests`std::__1::__poll_with_backoff_results std::__1::__libcpp_thread_poll_with_backoff[abi:nqe230101]<void std::__1::__atomic_wait_unless[abi:nqe230101]<std::__1::__atomic_base<unsigned int, false>, void std::__1::__atomic_wait[abi:nqe230101]<std::__1::__atomic_base<unsigned int, false> const, unsigned int>(std::__1::__atomic_base<unsigned int, false> const&, unsigned int, std::__1::memory_order)::'lambda'(unsigned int const&)>(std::__1::__atomic_base<unsigned int, false> const const&, std::__1::memory_order, unsigned int&&)::'lambda'(), std::__1::__atomic_wait_backoff_impl<std::__1::__atomic_base<unsigned int, false>, void std::__1::__atomic_wait[abi:nqe230101]<std::__1::__atomic_base<unsigned int, false> const, unsigned int>(std::__1::__atomic_base<unsigned int, false> const&, unsigned int, std::__1::memory_order)::'lambda'(unsigned int const&)>&>(__poll=0x000000017025aee0, __backoff=0x000000017025af00, __max_elapsed=0 ns) at poll_with_backoff.h:65:30 [opt]
+       frame #5: 0x00000001001dc420 smg-pc-runtime-context-construction-tests`void std::__1::__atomic_wait_unless[abi:nqe230101]<std::__1::__atomic_base<unsigned int, false>, void std::__1::__atomic_wait[abi:nqe230101]<std::__1::__atomic_base<unsigned int, false> const, unsigned int>(std::__1::__atomic_base<unsigned int, false> const&, unsigned int, std::__1::memory_order)::'lambda'(unsigned int const&)>(__a=0x0000000100bb4430, __order=acquire, __poll=0x000000017025af28) at atomic_sync.h:173:3 [opt] [inlined]
+       frame #6: 0x00000001001dc3f8 smg-pc-runtime-context-construction-tests`void std::__1::__atomic_wait[abi:nqe230101]<std::__1::__atomic_base<unsigned int, false> const, unsigned int>(__a=0x0000000100bb4430, __val=<unavailable>, __order=acquire) at atomic_sync.h:257:3 [opt] [inlined]
+       frame #7: 0x00000001001dc3ec smg-pc-runtime-context-construction-tests`std::__1::__atomic_base<unsigned int, false>::wait[abi:nqe230101](this=0x0000000100bb4430, __v=<unavailable>, __m=acquire) const at atomic.h:120:5 [opt] [inlined]
+    ﹍ frame #8: 0x00000001001dc3ec smg-pc-runtime-context-construction-tests`aurora::gx::fifo::(anonymous namespace)::worker_main(token=stop_token @ 0x000000017025afa8) at fifo.cpp:323:17 [opt]
+    ﹉ frame #11: 0x00000001001dd384 smg-pc-runtime-context-construction-tests`aurora::thread::Thread::Thread<void (&)(std::__1::stop_token) noexcept>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token)::operator()(this=<unavailable>, token=<unavailable>) at thread.hpp:34:5 [opt] [inlined]
+    ﹉ frame #13: 0x00000001001dd380 smg-pc-runtime-context-construction-tests`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token) noexcept>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token, 0ul, 1ul>(__t=size=3, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #14: 0x00000001001dd374 smg-pc-runtime-context-construction-tests`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token) noexcept>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token>>(__vp=<unavailable>) at thread.h:178:3 [opt]
+       frame #15: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #10, name = 'Preloader 0'
+       frame #0: 0x000000018a3ccb9c libsystem_kernel.dylib`semaphore_wait_trap + 8
+       frame #1: 0x000000018a25249c libdispatch.dylib`_dispatch_sema4_wait + 28
+       frame #2: 0x000000018a252b28 libdispatch.dylib`_dispatch_semaphore_wait_slow + 132
+       frame #3: 0x000000010016d360 smg-pc-runtime-context-construction-tests`<std::sys::sync::thread_parking::darwin::Parker>::park at darwin.rs:74:15 [opt] [inlined]
+       frame #4: 0x000000010016d340 smg-pc-runtime-context-construction-tests`<std::thread::thread::Thread>::park at thread.rs:121:47 [opt] [inlined]
+       frame #5: 0x000000010016d340 smg-pc-runtime-context-construction-tests`std::thread::functions::park at functions.rs:533:19 [opt]
+       frame #6: 0x00000001000ac1f8 smg-pc-runtime-context-construction-tests`crossbeam_channel::flavors::list::Channel$LT$T$GT$::recv::_$u7b$$u7b$closure$u7d$$u7d$::h859e3c9833fb63cc + 204
+       frame #7: 0x00000001000abbd8 smg-pc-runtime-context-construction-tests`crossbeam_channel::flavors::list::Channel$LT$T$GT$::recv::hdb946b39f0b08934 + 588
+       frame #8: 0x00000001000c0968 smg-pc-runtime-context-construction-tests`crossbeam_channel::channel::Receiver$LT$T$GT$::recv::hf871fda17557fdba + 72
+       frame #9: 0x00000001000a491c smg-pc-runtime-context-construction-tests`std::sys::backtrace::__rust_begin_short_backtrace::he60433a33bb0cd3b + 56
+       frame #10: 0x00000001000c18cc smg-pc-runtime-context-construction-tests`core::ops::function::FnOnce::call_once$u7b$$u7b$vtable.shim$u7d$$u7d$::hde877fe98d6056ce + 252
+       frame #11: 0x0000000100172088 smg-pc-runtime-context-construction-tests`<alloc::boxed::Box<dyn core::ops::function::FnOnce<(), Output = ()> + core::marker::Send> as core::ops::function::FnOnce<()>>::call_once at boxed.rs:2249:9 [opt] [inlined]
+       frame #12: 0x000000010017207c smg-pc-runtime-context-construction-tests`<std::sys::thread::unix::Thread>::new::thread_start at unix.rs:118:17 [opt]
+       frame #13: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #11
+       frame #0: 0x000000018a3d050c libsystem_kernel.dylib`__psynch_cvwait + 8
+       frame #1: 0x000000018a4121d0 libsystem_pthread.dylib`_pthread_cond_wait + 980
+       frame #2: 0x0000000101450f44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #3: 0x0000000100094b0c smg-pc-runtime-context-construction-tests`void std::__1::condition_variable::wait[abi:nqe230101]<(anonymous namespace)::DvdWorker::run()::'lambda'()>(this=<unavailable>, __lk=0x00000001704f2f70, __pred=(unnamed class) @ x20) at condition_variable.h:113:7 [opt] [inlined]
+       frame #4: 0x0000000100094ad8 smg-pc-runtime-context-construction-tests`(anonymous namespace)::DvdWorker::run(this=0x0000000100bb3218) at dvd.cpp:622:12 [opt]
+    ﹍ frame #5: 0x0000000100094ac0 smg-pc-runtime-context-construction-tests`(anonymous namespace)::DvdWorker::start()::'lambda'()::operator()(this=0x0000007951d4e4e8) const at dvd.cpp:437:37 [opt] [inlined]
+    ﹉ frame #7: 0x0000000100094ac0 smg-pc-runtime-context-construction-tests`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, (anonymous namespace)::DvdWorker::start()::'lambda'(), 0ul>(__t=size=2, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #8: 0x0000000100094ac0 smg-pc-runtime-context-construction-tests`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, (anonymous namespace)::DvdWorker::start()::'lambda'()>>(__vp=0x0000007951d4e4e0) at thread.h:178:3 [opt]
+       frame #9: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #12
+       frame #0: 0x000000018a3d050c libsystem_kernel.dylib`__psynch_cvwait + 8
+       frame #1: 0x000000018a4121d0 libsystem_pthread.dylib`_pthread_cond_wait + 980
+       frame #2: 0x0000000101450fd4 libc++.1.dylib`std::__1::condition_variable::__do_timed_wait(std::__1::unique_lock<std::__1::mutex>&, std::__1::chrono::time_point<std::__1::chrono::system_clock, std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000000000l>>>) + 96
+       frame #3: 0x00000001001cfb8c smg-pc-runtime-context-construction-tests`std::__1::cv_status std::__1::condition_variable::wait_for[abi:nqe230101]<long long, std::__1::ratio<1l, 1000000000l>>(this=0x0000000100bb4aa8, __lk=0x000000017060af48, __d=<unavailable>) at condition_variable.h:0 [opt] [inlined]
+       frame #4: 0x00000001001cfb40 smg-pc-runtime-context-construction-tests`void std::__1::condition_variable::__do_timed_wait[abi:nqe230101]<std::__1::chrono::steady_clock>(this=0x0000000100bb4aa8, __lk=0x000000017060af48, __tp=<unavailable>) at condition_variable.h:224:3 [opt] [inlined]
+       frame #5: 0x00000001001cfb40 smg-pc-runtime-context-construction-tests`std::__1::cv_status std::__1::condition_variable::wait_until[abi:nqe230101]<std::__1::chrono::steady_clock, std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000000000l>>>(this=0x0000000100bb4aa8, __lk=0x000000017060af48, __t=0x000000017060af40) at condition_variable.h:128:5 [opt]
+       frame #6: 0x000000010022019c smg-pc-runtime-context-construction-tests`bool std::__1::condition_variable::wait_until[abi:nqe230101]<std::__1::chrono::steady_clock, std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000000000l>>, aurora::vi::(anonymous namespace)::RetraceClock::run()::'lambda'()>(this=<unavailable>, __lk=<unavailable>, __t=<unavailable>, __pred=<unavailable>) at condition_variable.h:136:11 [opt] [inlined]
+       frame #7: 0x0000000100220180 smg-pc-runtime-context-construction-tests`aurora::vi::(anonymous namespace)::RetraceClock::run(this=0x0000000100bb4a68) at vi.cpp:117:20 [opt]
+    ﹍ frame #8: 0x00000001002200e0 smg-pc-runtime-context-construction-tests`aurora::vi::(anonymous namespace)::RetraceClock::start()::'lambda'()::operator()(this=<unavailable>) const at vi.cpp:80:36 [opt] [inlined]
+    ﹉ frame #10: 0x00000001002200e0 smg-pc-runtime-context-construction-tests`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::vi::(anonymous namespace)::RetraceClock::start()::'lambda'(), 0ul>(__t=<unavailable>, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #11: 0x00000001002200e0 smg-pc-runtime-context-construction-tests`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::vi::(anonymous namespace)::RetraceClock::start()::'lambda'()>>(__vp=<unavailable>) at thread.h:178:3 [opt]
+       frame #12: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #13
+       frame #0: 0x000000018a3d050c libsystem_kernel.dylib`__psynch_cvwait + 8
+       frame #1: 0x000000018a4121d0 libsystem_pthread.dylib`_pthread_cond_wait + 980
+       frame #2: 0x0000000101450f44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #3: 0x0000000100695fb4 smg-pc-runtime-context-construction-tests`void std::__1::condition_variable::wait[abi:nqe230101]<OSSleepThread::$_0>(this=0x0000000100b9ebc0, __lk=0x000000017057ee90, __pred=<unavailable>) at condition_variable.h:113:7 [opt] [inlined]
+       frame #4: 0x0000000100695f84 smg-pc-runtime-context-construction-tests`OSSleepThread(queue=0x000000763540e1d8) at OSExecution.cpp:291:15 [opt]
+       frame #5: 0x00000001006986b0 smg-pc-runtime-context-construction-tests`OSReceiveMessage(mq=0x000000763540e1c8, msg=0x000000017057ef18, flags=1) at OSMessage.cpp:45:13 [opt]
+       frame #6: 0x0000000100008488 smg-pc-runtime-context-construction-tests`DrawSyncManager::threadFunc(pArg=0x000000763540de20) at DrawSyncManager.cpp:80:9 [opt]
+    ﹍ frame #7: 0x000000010069763c smg-pc-runtime-context-construction-tests`(anonymous namespace)::run_managed_thread(record=0x00000079504efa40) at OSExecution.cpp:422:13 [opt]
+    ﹉ frame #9: 0x00000001006981f8 smg-pc-runtime-context-construction-tests`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*, 0ul, 1ul>(__t=size=3, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #10: 0x00000001006981f8 smg-pc-runtime-context-construction-tests`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*>>(__vp=0x0000007950541580) at thread.h:178:3 [opt]
+       frame #11: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+(lldb) frame variable
+(const FileLoader *) this = nullptr
+(const char *) pName = 0x000000016fdfc548 "KrKorean/MessageData/Message.arc"
+(u32) i = 0
+(lldb) register read pc x0 x1 x2
+      pc = 0x00000001000099a8  smg-pc-runtime-context-construction-tests`FileLoader::requestMountArchive(char const*, JKRHeap*, bool) + 40 [inlined] FileLoader::getRequestFileInfoConst(char const*) const at FileLoader.cpp:125:25
+smg-pc-runtime-context-construction-tests`FileLoader::requestMountArchive(char const*, JKRHeap*, bool) + 40 [inlined] FileLoader::isNeedToLoad(char const*) const at FileLoader.cpp:117:9
+smg-pc-runtime-context-construction-tests`FileLoader::requestMountArchive(char const*, JKRHeap*, bool) + 40 at FileLoader.cpp:45:9
+      x0 = 0x0000000000000000
+      x1 = 0x000000016fdfc548
+      x2 = 0x0000000000000000

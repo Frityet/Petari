@@ -1,146 +1,50 @@
-#include "SourceMirrorEncoding.hpp"
+#include "OriginalSaveDataSnapshot.hpp"
+#include "OriginalStageResourceProcessFixture.hpp"
+#include "Game/System/GameDataFunction.hpp"
 #include "Game/System/GalaxyMoveArgument.hpp"
 #include "Game/System/StorySequenceExecutor.hpp"
-#include "Game/Util/JMapIdInfo.hpp"
-#include "Game/System/GameSystem.hpp"
-#include "Game/System/GameSystemSceneController.hpp"
-#include "Game/Util/SceneUtil.hpp"
-#include "Game/Util/SingletonHolder.hpp"
-
-#include <array>
-#include <filesystem>
-#include <fstream>
-#include <iostream>
-#include <sstream>
+#include "resource/TextEncoding.hpp"
 #include <stdexcept>
-#include <string>
 #include <string_view>
 
 namespace {
-struct MissingOriginalProcess : std::runtime_error { using std::runtime_error::runtime_error; };
-void require(bool condition, std::string_view message) {
-    if (!condition) {
-        throw std::runtime_error(std::string(message));
-    }
+void require(bool condition, const char* message) {
+    if (!condition) throw std::runtime_error(message);
 }
-
-[[nodiscard]] std::string read_file(const std::filesystem::path& path) {
-    auto stream = std::ifstream(path, std::ios::binary);
-    if (!stream) {
-        throw std::runtime_error("Could not open source evidence: " + path.string());
-    }
-    auto buffer = std::ostringstream{};
-    buffer << stream.rdbuf();
-    return buffer.str();
-}
-
-[[nodiscard]] std::filesystem::path find_project_root() {
-    for (auto path = std::filesystem::current_path(); !path.empty(); path = path.parent_path()) {
-        if (std::filesystem::is_regular_file(path / "src/Game/System/StorySequenceExecutor.cpp") &&
-            std::filesystem::is_regular_file(path / "decomp/src/Game/System/StorySequenceExecutor.cpp")) {
-            return path;
-        }
-        if (path == path.root_path()) {
-            break;
-        }
-    }
-    throw std::runtime_error("Could not locate the pc-port project root");
-}
-
-void test_initial_file_select_comes_from_retail_executor() {
+void verify_story_sequence() {
+    auto& sequence = smgpc::test::original_save_sequence();
+    auto& file = *sequence.mCurrentUserFile;
+    const smgpc::test::OriginalUserFileSnapshot restore_current(file);
     auto executor = StorySequenceExecutor{};
-    auto* system = SingletonHolder<GameSystem>::get();
-    if (system == nullptr || system->mSceneController == nullptr) {
-        throw MissingOriginalProcess("the full story move requires the original GameSystem scene controller");
-    }
-    const auto start = JMapIdInfo(19, 4);
-    auto move = GalaxyMoveArgument(7, nullptr, 9, &start);
-
-    executor.moveGalaxy(&move, true);
-
-    require(move.mStageName != nullptr && std::string_view(move.mStageName) == "FileSelect" && move.mScenarioNo == 1,
-            "retail StorySequenceExecutor move type 7 must choose FileSelect scenario 1");
-    require(move.mIDInfo._0 == 19 && move.mIDInfo.mZoneID == 4,
-            "the retail FileSelect move must preserve an explicit start ID");
-}
-
-void test_after_loading_requires_retail_save_backing() {
-    auto executor = StorySequenceExecutor{};
-    const auto start = JMapIdInfo(7, 2);
+    auto independent = StorySequenceExecutor{};
+    const auto* first = executor.addDynamicDemoSequenceInfo(6, 12, "first");
+    const auto* second = executor.addDynamicDemoSequenceInfo(10, 17, "second");
+    require(executor._6C.size() == 2 && independent._6C.size() == 0 &&
+                first == &executor._6C[0] && second == &executor._6C[1] &&
+                first->_0 == 6 && first->_2 == 12 && std::string_view(first->_4) == "first" &&
+                second->_0 == 10 && second->_2 == 17 && std::string_view(second->_4) == "second",
+            "original dynamic sequence records append in the executor's own stable fixed array");
+    file.mGameDataHolder->resetAllData();
+    file.mIsPlayerMario = true;
+    const JMapIdInfo start(7, 2);
     auto move = GalaxyMoveArgument(6, nullptr, 1, &start);
-    auto unavailable = false;
-    try {
-        executor.overwriteGalaxyNameAfterLoading(&move);
-    } catch (const std::logic_error&) {
-        unavailable = true;
-    }
-    require(unavailable,
-            "after-loading route selection must stop when the retail save sequence has no real backing");
+    executor.overwriteGalaxyNameAfterLoading(&move);
+    require(std::string_view(move.mStageName) == "PeachCastleGardenGalaxy" && move.mScenarioNo == 1 &&
+                executor.getCurrentDemoInfo() && executor.getCurrentDemoInfo()->_0 == 8 &&
+                std::string_view(executor.getCurrentDemoInfo()->_4) == "Prologue" && !executor.hasNextDemo(),
+            "a fresh original Mario file selects the authored opening stage and prologue sequence");
+    const auto event = smgpc::resource::encode_cp932("ピーチ城浮上後");
+    GameDataFunction::followStoryEventByName(event.c_str());
+    executor.overwriteGalaxyNameAfterLoading(&move);
+    require(std::string_view(move.mStageName) == "HeavensDoorGalaxy" && move.mScenarioNo == 1,
+            "after-loading stage selection reads the actual saved story milestone");
+    file.mGameDataHolder->resetAllData();
+    std::array<u8, 4096> luigi_data{};
+    const auto luigi_size = file.mGameDataHolder->makeFileBinary(luigi_data.data(), luigi_data.size());
+    file.loadFromGameDataBinary("luigi1", luigi_data.data(), luigi_size);
+    independent.overwriteGalaxyNameAfterLoading(&move);
+    require(std::string_view(move.mStageName) == "HeavensDoorGalaxy" && !independent.hasNextDemo(),
+            "original Luigi save selection bypasses the Mario opening without invented story state");
 }
-
-void test_source_is_exact_and_scene_shims_are_absent() {
-    const auto project = find_project_root();
-    const auto port_executor = read_file(project / "src/Game/System/StorySequenceExecutor.cpp");
-    const auto decomp_executor = read_file(project / "decomp/src/Game/System/StorySequenceExecutor.cpp");
-    require(smgpc::test::source_matches_with_cp932(decomp_executor, port_executor),
-            "pc-port StorySequenceExecutor.cpp must retain the decompiled source except explicit CP932 encoding");
-
-    const auto port_event_util = read_file(project / "src/Game/Util/EventUtil.cpp");
-    const auto decomp_event_util = read_file(project / "decomp/src/Game/Util/EventUtil.cpp");
-    require(smgpc::test::source_matches_with_cp932(decomp_event_util, port_event_util),
-            "pc-port EventUtil.cpp must retain the decompiled source except explicit CP932 encoding");
-
-    const auto game_xmake = read_file(project / "src/Game/xmake.lua");
-    require(game_xmake.find("remove_files(\"Util/EventUtil.cpp\")") == std::string::npos,
-            "the original EventUtil TU must be active");
-
-    require(!std::filesystem::exists(project / "src/compat/EventUtilCompat.cpp") &&
-                !std::filesystem::exists(project / "src/compat/StorySequencePlatformCompat.hpp"),
-            "duplicate event providers and synthetic scene state must be absent");
-
-    require(!std::filesystem::exists(project / "src/scene/SequenceBootService.cpp") &&
-                !std::filesystem::exists(project / "src/scene/SceneTransitionRequestService.cpp"),
-            "original GameSystem must own scene sequencing without duplicate host routes");
-
 }
-
-struct TestCase {
-    std::string_view name;
-    void (*run)();
-};
-}  // namespace
-
-int main() {
-    constexpr auto tests = std::array{
-        TestCase{"initial FileSelect comes from retail executor", test_initial_file_select_comes_from_retail_executor},
-        TestCase{"after-loading requires retail save backing", test_after_loading_requires_retail_save_backing},
-        TestCase{"exact source and absent scene shims", test_source_is_exact_and_scene_shims_are_absent},
-    };
-
-    auto failures = 0;
-    auto unavailable = 0;
-    for (const auto& test : tests) {
-        try {
-            test.run();
-            std::cout << "[ok] " << test.name << '\n';
-        } catch (const MissingOriginalProcess& error) {
-            ++unavailable;
-            std::cerr << "[unavailable] " << test.name << ": " << error.what() << '\n';
-        } catch (const std::exception& error) {
-            ++failures;
-            std::cerr << "[fail] " << test.name << ": " << error.what() << '\n';
-        }
-    }
-
-    if (failures != 0) {
-        std::cerr << failures << " StorySequence real-or-absent test(s) failed\n";
-        return 1;
-    }
-
-    if (unavailable != 0) {
-        std::cerr << "Original process prerequisite absent; full story movement was not exercised\n";
-        return 77;
-    }
-    std::cout << tests.size() << " StorySequence real-or-absent test(s) passed\n";
-    return 0;
-}
+int main() { return smgpc::test::run_stage_resource_process("story-sequence-owner", verify_story_sequence); }

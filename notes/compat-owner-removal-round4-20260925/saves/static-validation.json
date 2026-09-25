@@ -1,0 +1,23 @@
+{
+  "baseline_head": "3b37917cdcc04ac7e2ce190cab9f9835fe2b95fa",
+  "decomp_head": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "game_data_function_matches_donor_except_cstring": true,
+  "staff_roll_matches_donor_except_cp932": true,
+  "staff_roll_header_exact_donor": true,
+  "deleted_compat_files": 9,
+  "deleted_compat_lines": 843,
+  "agent_builds_run": 0,
+  "agent_runtime_tests_run": 0,
+  "agent_debugger_runs_authorized_by_root": 4,
+  "root_reported_passed_fixtures": [
+    "GameDataRealOrAbsentTests",
+    "GameDataStarStorageTests",
+    "OriginalSceneCounterOwnerTests",
+    "OriginalParticleResourceOwnerTests",
+    "StorySequenceRealOrAbsentTests",
+    "TalkRealOrAbsentTests",
+    "OriginalJ3DTransformAnimationTests"
+  ],
+  "pending_root_rerun": [],
+  "staged_review_deleted_header_refs": []
+}

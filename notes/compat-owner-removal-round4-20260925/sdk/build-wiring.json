@@ -1,0 +1,23 @@
+{
+  "add_to_smg_pc_game": [
+    "../JSystem/JSupport/JSUInputStream.cpp",
+    "../JSystem/JSupport/JSUOutputStream.cpp",
+    "../JSystem/JSupport/JSUMemoryStream.cpp",
+    "../JSystem/JKernel/JKRFileLoader.cpp",
+    "../JSystem/JKernel/JKRArchivePub.cpp",
+    "../JSystem/JKernel/JKRArchivePri.cpp",
+    "../JSystem/JKernel/JKRMemArchive.cpp"
+  ],
+  "remove_compat_glob_sources": [
+    "src/compat/JSUStreamCompat.cpp",
+    "src/compat/JKRArchiveCompat.cpp",
+    "src/compat/OriginalArchiveIndex.cpp"
+  ],
+  "focused_targets": [
+    "smg-pc-original-jsu-stream-tests",
+    "smg-pc-original-jkr-archive-tests",
+    "smg-pc-original-file-loader-tests"
+  ],
+  "builds_run_by_agent": false,
+  "source_state": "frozen"
+}

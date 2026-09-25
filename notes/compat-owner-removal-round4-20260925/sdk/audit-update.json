@@ -1,0 +1,51 @@
+{
+  "baseline": "3b37917cdcc04ac7e2ce190cab9f9835fe2b95fa",
+  "removed_files": [
+    {
+      "path": "src/compat/JSUStreamCompat.cpp",
+      "disposition": "restore-original-owner",
+      "destinations": [
+        "src/JSystem/JSupport/JSUInputStream.cpp",
+        "src/JSystem/JSupport/JSUOutputStream.cpp",
+        "src/JSystem/JSupport/JSUMemoryStream.cpp"
+      ],
+      "evidence": "All 19 prior methods preserved, including two default destructors; original donor partitions."
+    },
+    {
+      "path": "src/compat/JKRArchiveCompat.cpp",
+      "disposition": "restore-original-owner",
+      "destinations": [
+        "src/JSystem/JKernel/JKRFileLoader.cpp",
+        "src/JSystem/JKernel/JKRArchivePub.cpp",
+        "src/JSystem/JKernel/JKRArchivePri.cpp",
+        "src/JSystem/JKernel/JKRMemArchive.cpp"
+      ],
+      "evidence": "All 28 prior owner methods retained; two CArcName bounds guards prevent terminator overflow; volume lock now owned by JKRFileLoader."
+    },
+    {
+      "path": "src/compat/OriginalArchiveIndex.cpp",
+      "disposition": "restore-original-owner",
+      "destinations": [
+        "src/JSystem/JKernel/JKRArchivePub.cpp",
+        "src/JSystem/JKernel/JKRMemArchive.cpp"
+      ],
+      "evidence": "Both indexed lookup/fetch methods preserved byte-for-token after formatting."
+    }
+  ],
+  "added": [
+    "src/JSystem/JSupport/JSUInputStream.cpp",
+    "src/JSystem/JSupport/JSUOutputStream.cpp",
+    "src/JSystem/JSupport/JSUMemoryStream.cpp",
+    "src/JSystem/JKernel/JKRFileLoader.cpp",
+    "src/JSystem/JKernel/JKRArchivePub.cpp",
+    "src/JSystem/JKernel/JKRArchivePri.cpp",
+    "src/JSystem/JKernel/JKRMemArchive.cpp"
+  ],
+  "modified": [
+    "src/JSystem/JKernel/JKRArchive.hpp",
+    "src/JSystem/JKernel/JKRFileLoader.hpp",
+    "tests/OriginalJkrArchiveTests.cpp"
+  ],
+  "complete_sdk_claim": false,
+  "remaining_dependency": "Existing generic resource/RarcArchive parser and current native SDK API subset are retained; no unsupported DVD/ARAM archive APIs were invented."
+}

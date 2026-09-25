@@ -467,13 +467,20 @@ namespace {
         rejected(bad, "a zero-size block cannot advance the original block chain");
         bad = valid.bytes;
         write32(bad, Block + 4, 0xFFFFFFFC);
-        rejected(bad, "a block outside the resource span must be rejected without integer overflow");
+        animation = smgpc::resource::load_j3d_transform_animation(bad);
+        near(sample(*animation, 1).mTranslate.x, 14.4375F,
+             "the original final block's unused next cursor does not bound its valid file-backed arrays");
+        write32(bad, Block + 0x14, 0xFFFFFFFC);
+        rejected(bad, "an unused oversized final cursor must not permit an out-of-file joint table");
+        bad = with_unknown;
+        write32(bad, Block + 4, 0xFFFFFFFC);
+        rejected(bad, "an oversized non-final next cursor cannot lead to a block outside the retained file");
         bad = valid.bytes;
         tag(bad, Block, "EXT1");
         rejected(bad, "a transform file needs an actual matching transform block");
         bad = valid.bytes;
         write32(bad, Block + 0x14, 0xFFFFFFFC);
-        rejected(bad, "joint tables must fit within the actual transform block");
+        rejected(bad, "joint tables must fit within the retained animation file");
         bad = valid.bytes;
         write16(bad, Block + 0xC, 0xFFFF);
         rejected(bad, "the declared joint count must fit its complete axis table");
@@ -494,7 +501,7 @@ namespace {
         rejected(bad, "full channels require a sample because the original full sampler has no zero-count fallback");
         bad = encode(full_input()).bytes;
         write16(bad, Table + 4 + 2, 0xFFFF);
-        rejected(bad, "full channel reads must fit the actual transform block");
+        rejected(bad, "full channel reads must fit the retained animation file");
     }
 
     void check_real_native_arrays(const J3DAnmTransformKey& key, std::span<const std::uint8_t> data) {

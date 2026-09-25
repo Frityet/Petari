@@ -1,0 +1,1 @@
+[fail] a block outside the resource span must be rejected without integer overflow

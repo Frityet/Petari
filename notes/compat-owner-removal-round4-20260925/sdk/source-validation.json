@@ -1,0 +1,297 @@
+{
+  "status": "passed-static-source-only",
+  "total_methods": 58,
+  "preserved_methods": 56,
+  "bounded_name_methods": 2,
+  "unchanged_typed_endian_headers": true,
+  "methods": [
+    {
+      "method": "s32 JSUInputStream::read(void* destination, s32 length)",
+      "result": "body-preserved",
+      "source": "src/compat/JSUStreamCompat.cpp"
+    },
+    {
+      "method": "s32 JSUInputStream::skip(s32 amount)",
+      "result": "body-preserved",
+      "source": "src/compat/JSUStreamCompat.cpp"
+    },
+    {
+      "method": "s32 JSURandomInputStream::skip(s32 amount)",
+      "result": "body-preserved",
+      "source": "src/compat/JSUStreamCompat.cpp"
+    },
+    {
+      "method": "s32 JSURandomInputStream::seek(s32 offset, JSUStreamSeekFrom whence)",
+      "result": "body-preserved",
+      "source": "src/compat/JSUStreamCompat.cpp"
+    },
+    {
+      "method": "s32 JSUOutputStream::write(const void* source, s32 length)",
+      "result": "body-preserved",
+      "source": "src/compat/JSUStreamCompat.cpp"
+    },
+    {
+      "method": "s32 JSUOutputStream::skip(s32 amount, s8 fill)",
+      "result": "body-preserved",
+      "source": "src/compat/JSUStreamCompat.cpp"
+    },
+    {
+      "method": "s32 JSURandomOutputStream::seek(s32 offset, JSUStreamSeekFrom whence)",
+      "result": "body-preserved",
+      "source": "src/compat/JSUStreamCompat.cpp"
+    },
+    {
+      "method": "s32 JSURandomOutputStream::getAvailable() const",
+      "result": "body-preserved",
+      "source": "src/compat/JSUStreamCompat.cpp"
+    },
+    {
+      "method": "void JSUMemoryInputStream::setBuffer(const void* buffer, s32 length)",
+      "result": "body-preserved",
+      "source": "src/compat/JSUStreamCompat.cpp"
+    },
+    {
+      "method": "u32 JSUMemoryInputStream::readData(void* destination, s32 length)",
+      "result": "body-preserved",
+      "source": "src/compat/JSUStreamCompat.cpp"
+    },
+    {
+      "method": "s32 JSUMemoryInputStream::getLength() const",
+      "result": "body-preserved",
+      "source": "src/compat/JSUStreamCompat.cpp"
+    },
+    {
+      "method": "s32 JSUMemoryInputStream::getPosition() const",
+      "result": "body-preserved",
+      "source": "src/compat/JSUStreamCompat.cpp"
+    },
+    {
+      "method": "s32 JSUMemoryInputStream::seekPos(s32 offset, JSUStreamSeekFrom whence)",
+      "result": "body-preserved",
+      "source": "src/compat/JSUStreamCompat.cpp"
+    },
+    {
+      "method": "void JSUMemoryOutputStream::setBuffer(void* buffer, s32 length)",
+      "result": "body-preserved",
+      "source": "src/compat/JSUStreamCompat.cpp"
+    },
+    {
+      "method": "s32 JSUMemoryOutputStream::writeData(const void* source, s32 length)",
+      "result": "body-preserved",
+      "source": "src/compat/JSUStreamCompat.cpp"
+    },
+    {
+      "method": "s32 JSUMemoryOutputStream::getLength() const",
+      "result": "body-preserved",
+      "source": "src/compat/JSUStreamCompat.cpp"
+    },
+    {
+      "method": "s32 JSUMemoryOutputStream::seekPos(s32 offset, JSUStreamSeekFrom whence)",
+      "result": "body-preserved",
+      "source": "src/compat/JSUStreamCompat.cpp"
+    },
+    {
+      "method": "JKRFileLoader::JKRFileLoader()\n    : JKRDisposer(), mLoaderLink(this), mLoaderName(nullptr), mLoaderType(0), mIsMounted(false), _34(0)",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "JKRFileLoader::~JKRFileLoader()",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "void JKRFileLoader::unmount()",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "void* JKRFileLoader::getGlbResource(const char* name, JKRFileLoader* loader)",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "void JKRFileLoader::initializeVolumeList()",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "void JKRFileLoader::prependVolumeList(JSULink<JKRFileLoader>* loader)",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "void JKRFileLoader::removeVolumeList(JSULink<JKRFileLoader>* loader)",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "JKRArchive* JKRArchive::check_mount_already(std::uintptr_t identity)",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "JKRMemArchive::JKRMemArchive() : JKRArchive(nullptr)",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "JKRMemArchive::JKRMemArchive(const smgpc::resource::RarcArchive& archive)\n    : JKRArchive(&archive), mHeader(reinterpret_cast<RarcHeader*>(const_cast<u8*>(archive.bytes().data()))),\n      mFileDataStart(const_cast<u8*>(archive.file_data_start()))",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "JKRMemArchive::JKRMemArchive(smgpc::resource::RarcArchive&& archive) : JKRArchive(nullptr)",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "void JKRMemArchive::publish_mount(const void* identity)",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "JKRMemArchive::~JKRMemArchive()",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "s32 JKRMemArchive::fetchResource_subroutine(u8* pSrc, u32 srcSize, u8* pDst, u32 dstSize, int compression)",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "bool JKRMemArchive::mountFixed(void* data, JKRMemBreakFlag breakFlag)",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "bool JKRMemArchive::mountFixed(Bytes bytes, JKRMemBreakFlag breakFlag)",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "JKRArchive::JKRArchive(const smgpc::resource::RarcArchive* archive)",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "void JKRArchive::attach_archive(const smgpc::resource::RarcArchive* archive)",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "void JKRArchive::CArcName::store(const char* name)",
+      "result": "bounded-name-correction",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "const char* JKRArchive::CArcName::store(const char* name, char endChar)",
+      "result": "bounded-name-correction",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "bool JKRArchive::isSameName(CArcName& rName, u32 nameOffset, u16 hash) const",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "JKRArchive::SDIDirEntry* JKRArchive::findDirectory(const char* name, u32 directoryId) const",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "JKRArchive::SDIFileEntry* JKRArchive::findIdxResource(u32 index) const",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "s32 JKRArchive::countFile(const char* pName) const",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "JKRArcFinder* JKRArchive::getFirstFile(const char* pName) const",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "bool JKRArchive::getDirEntry(SDirEntry* pDir, u32 fileIndex) const",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "u32 JKRArchive::countResource() const",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "u32 JKRArchive::getFileAttribute(u32 fileIndex) const",
+      "result": "body-preserved",
+      "source": "src/compat/JKRArchiveCompat.cpp"
+    },
+    {
+      "method": "void* JKRArchive::getIdxResource(u32 fileIndex)",
+      "result": "body-preserved",
+      "source": "src/compat/OriginalArchiveIndex.cpp"
+    },
+    {
+      "method": "void* JKRMemArchive::fetchResource(SDIFileEntry* pFile, u32* pSize)",
+      "result": "body-preserved",
+      "source": "src/compat/OriginalArchiveIndex.cpp"
+    },
+    {
+      "method": "void *JKRArchive::getResource(const char *pPath) const",
+      "result": "body-preserved",
+      "source": "src/JSystem/JKernel/JKRArchive.hpp"
+    },
+    {
+      "method": "void *JKRArchive::getResource(std::uint32_t, const char *pPath) const",
+      "result": "body-preserved",
+      "source": "src/JSystem/JKernel/JKRArchive.hpp"
+    },
+    {
+      "method": "void *JKRArchive::getResource(std::uint16_t id) const",
+      "result": "body-preserved",
+      "source": "src/JSystem/JKernel/JKRArchive.hpp"
+    },
+    {
+      "method": "std::uint32_t JKRArchive::getResSize(const void *pResource) const",
+      "result": "body-preserved",
+      "source": "src/JSystem/JKernel/JKRArchive.hpp"
+    },
+    {
+      "method": "std::uint32_t JKRArchive::readResource(void *pBuffer, std::uint32_t bufferSize, const char *pPath) const",
+      "result": "body-preserved",
+      "source": "src/JSystem/JKernel/JKRArchive.hpp"
+    },
+    {
+      "method": "std::uint32_t JKRArchive::readResource(void *pBuffer, std::uint32_t bufferSize, std::uint16_t fileId) const",
+      "result": "body-preserved",
+      "source": "src/JSystem/JKernel/JKRArchive.hpp"
+    },
+    {
+      "method": "bool JKRArchive::contains(const char *pPath) const",
+      "result": "body-preserved",
+      "source": "src/JSystem/JKernel/JKRArchive.hpp"
+    },
+    {
+      "method": "std::span<const std::uint8_t> JKRArchive::resource_data(std::string_view path) const",
+      "result": "body-preserved",
+      "source": "src/JSystem/JKernel/JKRArchive.hpp"
+    },
+    {
+      "method": "std::span<const std::uint8_t> JKRArchive::resource_data(const smgpc::resource::RarcEntry& entry) const",
+      "result": "body-preserved",
+      "source": "src/JSystem/JKernel/JKRArchive.hpp"
+    },
+    {
+      "method": "JSUInputStream::~JSUInputStream()",
+      "result": "default-destructor-preserved"
+    },
+    {
+      "method": "JSUOutputStream::~JSUOutputStream()",
+      "result": "default-destructor-preserved"
+    }
+  ]
+}

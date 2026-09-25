@@ -1,0 +1,8 @@
+{
+  "status": "passed-source-only",
+  "field_validation_body": "unchanged",
+  "authored_group_iteration_constructor_reinit_and_unique_lookup_bodies": "unchanged; added post-loop actual reclaiming-heap assertion",
+  "removed_alternate_process_bootstrap": true,
+  "build_run_by_agent": false,
+  "temporary_heap_ownership": "unique_ptr destroys actual JKRExpHeap only after borrowed routing domain is reset"
+}

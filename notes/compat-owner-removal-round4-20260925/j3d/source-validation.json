@@ -1,0 +1,340 @@
+{
+  "validation": "source-only; no compilation or executable tests in this lane",
+  "comparisons": [
+    {
+      "path": "src/JSystem/J3DGraphAnimator/J3DJoint.cpp",
+      "donor_function_definitions": 10,
+      "native_function_definitions": 10,
+      "adapted_or_extra": []
+    },
+    {
+      "path": "src/JSystem/J3DGraphAnimator/J3DJointTree.cpp",
+      "donor_function_definitions": 6,
+      "native_function_definitions": 6,
+      "adapted_or_extra": []
+    },
+    {
+      "path": "src/JSystem/J3DGraphAnimator/J3DModelData.cpp",
+      "donor_function_definitions": 5,
+      "native_function_definitions": 6,
+      "adapted_or_extra": [
+        "J3DModelData::~J3DModelData"
+      ]
+    },
+    {
+      "path": "src/JSystem/J3DGraphAnimator/J3DModel.cpp",
+      "donor_function_definitions": 21,
+      "native_function_definitions": 21,
+      "adapted_or_extra": [
+        "J3DModel::createMatPacket",
+        "J3DModel::~J3DModel"
+      ]
+    },
+    {
+      "path": "src/JSystem/J3DGraphAnimator/J3DSkinDeform.cpp",
+      "donor_function_definitions": 2,
+      "native_function_definitions": 2,
+      "adapted_or_extra": []
+    },
+    {
+      "path": "src/JSystem/J3DGraphAnimator/J3DCluster.cpp",
+      "donor_function_definitions": 7,
+      "native_function_definitions": 7,
+      "adapted_or_extra": []
+    },
+    {
+      "path": "src/JSystem/J3DGraphBase/J3DTransform.cpp",
+      "donor_function_definitions": 13,
+      "native_function_definitions": 14,
+      "adapted_or_extra": [
+        "J3DMtxProjConcat",
+        "J3DPSCalcInverseTranspose",
+        "J3DPSMtxArrayConcat",
+        "J3DScaleNrmMtx",
+        "J3DScaleNrmMtx33"
+      ]
+    },
+    {
+      "path": "src/JSystem/J3DGraphBase/J3DSys.cpp",
+      "donor_function_definitions": 12,
+      "native_function_definitions": 12,
+      "adapted_or_extra": []
+    },
+    {
+      "path": "src/JSystem/JMath/JMath.cpp",
+      "donor_function_definitions": 5,
+      "native_function_definitions": 5,
+      "adapted_or_extra": [
+        "JMAQuatLerp",
+        "JMAVECLerp",
+        "JMAVECScaleAdd"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DJoint.cpp: complete donor functions present",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DJoint.cpp: only original empty out-of-line lifecycle additions",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DJoint.cpp: all other original function bodies exact",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DJointTree.cpp: complete donor functions present",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DJointTree.cpp: only original empty out-of-line lifecycle additions",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DJointTree.cpp: all other original function bodies exact",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DModelData.cpp: complete donor functions present",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DModelData.cpp: only original empty out-of-line lifecycle additions",
+      "passed": true,
+      "evidence": [
+        "J3DModelData::~J3DModelData"
+      ]
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DModelData.cpp: all other original function bodies exact",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "model calcNrmMtx retains original inline header body",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DModel.cpp: complete donor functions present",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DModel.cpp: only original empty out-of-line lifecycle additions",
+      "passed": true,
+      "evidence": [
+        "J3DModel::~J3DModel"
+      ]
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DModel.cpp: all other original function bodies exact",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DSkinDeform.cpp: complete donor functions present",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DSkinDeform.cpp: only original empty out-of-line lifecycle additions",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DSkinDeform.cpp: all other original function bodies exact",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DCluster.cpp: complete donor functions present",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DCluster.cpp: only original empty out-of-line lifecycle additions",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DCluster.cpp: all other original function bodies exact",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DTransform.cpp: complete donor functions present",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DTransform.cpp: only original empty out-of-line lifecycle additions",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DTransform.cpp: all other original function bodies exact",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DSys.cpp: complete donor functions present",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DSys.cpp: only original empty out-of-line lifecycle additions",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DSys.cpp: all other original function bodies exact",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/JMath/JMath.cpp: complete donor functions present",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/JMath/JMath.cpp: only original empty out-of-line lifecycle additions",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/JMath/JMath.cpp: all other original function bodies exact",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "fourteen retired providers deleted",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "each restored symbol belongs to one CPP provider",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "name": "J3DPSCalcInverseTranspose: native scalar branch unchanged",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "J3DPSCalcInverseTranspose: original MW branch unchanged",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "J3DScaleNrmMtx: native scalar branch unchanged",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "J3DScaleNrmMtx: original MW branch unchanged",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "J3DScaleNrmMtx33: native scalar branch unchanged",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "J3DScaleNrmMtx33: original MW branch unchanged",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "J3DMtxProjConcat: native scalar branch unchanged",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "J3DMtxProjConcat: original MW branch unchanged",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "matrix array scalar branch unchanged",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "matrix array original MW branch unchanged",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "quaternion interpolation native instructions unchanged",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "vector scale-add native instructions unchanged",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "model native allocation failure handling unchanged",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "reciprocal retains Wii estimate in canonical header",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "complete vector interpolation interface declared",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "J3DGraphAnimator/J3DJoint.cpp: FP contraction-off retained",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "J3DGraphBase/J3DTransform.cpp: FP contraction-off retained",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "JMath/JMath.cpp: FP contraction-off retained",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "null GX IA8 upload retains complete native tile",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "joint traversal globals reunited with actual J3DSys owner",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "native transform padding layout retained",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "touched existing files initially clean",
+      "passed": true,
+      "evidence": null
+    }
+  ]
+}

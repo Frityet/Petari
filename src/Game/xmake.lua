@@ -43,7 +43,6 @@ target("smg-pc-game")
     remove_files("NameObj/NameObjFactory.cpp")
     remove_files("Scene/SceneFunction.cpp")
     remove_files("Scene/SceneObjHolder.cpp")
-    remove_files("System/GameDataFunction.cpp")
     remove_files("System/Language.cpp")
     remove_files("Util/FileUtil.cpp")
     remove_files("Util/ActorShadowUtil.cpp")
@@ -124,6 +123,24 @@ target("smg-pc-game")
     })
     add_files("../JSystem/J3DGraphBase/J3DPacket.cpp", "../nw4r/ut/ut_LinkList.cpp")
     add_files("../JSystem/JKernel/JKRThread.cpp")
+    add_files({
+        "../JSystem/J3DGraphAnimator/J3DJoint.cpp",
+        "../JSystem/J3DGraphAnimator/J3DJointTree.cpp",
+        "../JSystem/J3DGraphAnimator/J3DModelData.cpp",
+        "../JSystem/J3DGraphAnimator/J3DModel.cpp",
+        "../JSystem/J3DGraphAnimator/J3DSkinDeform.cpp",
+        "../JSystem/J3DGraphAnimator/J3DCluster.cpp",
+        "../JSystem/J3DGraphBase/J3DTransform.cpp",
+        "../JSystem/J3DGraphBase/J3DSys.cpp",
+        "../JSystem/JMath/JMath.cpp",
+        "../JSystem/JSupport/JSUInputStream.cpp",
+        "../JSystem/JSupport/JSUOutputStream.cpp",
+        "../JSystem/JSupport/JSUMemoryStream.cpp",
+        "../JSystem/JKernel/JKRFileLoader.cpp",
+        "../JSystem/JKernel/JKRArchivePub.cpp",
+        "../JSystem/JKernel/JKRArchivePri.cpp",
+        "../JSystem/JKernel/JKRMemArchive.cpp",
+    })
     add_files("../JSystem/JKernel/JKRHeap.cpp", "../JSystem/JKernel/JKRExpHeap.cpp",
               "../JSystem/JKernel/JKRSolidHeap.cpp", "../JSystem/JKernel/JKRUnitHeap.cpp")
     add_files("../JSystem/J3DGraphBase/J3DShape.cpp", "../JSystem/J3DGraphBase/J3DShapeDraw.cpp",

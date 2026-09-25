@@ -1,0 +1,23 @@
+{
+  "command": [
+    "/usr/bin/lldb",
+    "--batch",
+    "-o",
+    "run",
+    "-k",
+    "thread backtrace all",
+    "-k",
+    "frame variable",
+    "-k",
+    "register read pc x0 x1 x2",
+    "--",
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-runtime-context-construction-tests"
+  ],
+  "environment": {
+    "SMGPC_REAL_DISC": "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "AURORA_BACKEND": "metal"
+  },
+  "binary_sha256": "1f16fc944c2370defa27bf75d3ce224bc9d2055c8eb8e28f1b73254264c60eb5",
+  "lldb_exit_code": 0,
+  "elapsed_seconds": 2.5651792499702424
+}

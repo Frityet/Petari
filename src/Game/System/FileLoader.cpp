@@ -1,7 +1,11 @@
 #include "Game/System/FileLoader.hpp"
 #include "Game/Util/MemoryUtil.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include <JSystem/JKernel/JKRExpHeap.hpp>
+#include <aurora/exception.hpp>
+#include <aurora/guest_thread.hpp>
+#include <stdexcept>
 
 FileLoader::FileLoader() {
     mLoaderThread = nullptr;
@@ -141,4 +145,47 @@ RequestFileInfo* FileLoader::addRequest(const char* pName) {
     snprintf(info->mFileName, sizeof(info->mFileName), "%s", pName);
     OSUnlockMutex(mutex);
     return info;
+}
+
+void FileLoader::destroy(FileLoader* loader) {
+    if (loader == nullptr)
+        return;
+    const aurora::os::GuestThreadExecutionScope execution;
+    if (loader->mLoaderThread && loader->mLoaderThread->mThread == OSGetCurrentThread())
+        aurora::throw_host_exception< std::logic_error >("A file loader cannot retire its own executing worker");
+    delete loader;
+}
+
+FileLoader::~FileLoader() {
+    const aurora::os::GuestThreadExecutionScope execution;
+    // Request indices can already have been cleared by the original process.
+    // The actual file entries retain their completion queues independently.
+    if (mFileHolder) {
+        for (auto* entry : mFileHolder->mEntries)
+            entry->waitReadDone();
+    }
+    delete mLoaderThread;
+    mLoaderThread = nullptr;
+    if (SingletonHolder< FileLoader >::get() == this)
+        SingletonHolder< FileLoader >::release();
+
+    // Preserve original FileLoader removal order. Archive native backing must
+    // therefore release metadata without dereferencing these retired bytes.
+    if (mFileHolder) {
+        for (auto* entry : mFileHolder->mEntries)
+            delete entry;
+        mFileHolder->mEntries.clear();
+        delete mFileHolder;
+        mFileHolder = nullptr;
+    }
+    if (mArchiveHolder) {
+        for (auto* entry : mArchiveHolder->mEntries)
+            delete entry;
+        mArchiveHolder->mEntries.clear();
+        delete mArchiveHolder;
+        mArchiveHolder = nullptr;
+    }
+    delete[] mRequestFileInfos;
+    mRequestFileInfos = nullptr;
+    mRequestedFileCount = 0;
 }

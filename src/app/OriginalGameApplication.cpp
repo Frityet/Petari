@@ -33,8 +33,8 @@
 #include "Game/Util/SystemUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/DrawSyncManagerLifetime.hpp"
-#include "compat/FileLoaderOwnership.hpp"
-#include "compat/FunctionAsyncExecutorOwnership.hpp"
+#include "Game/System/FileLoader.hpp"
+#include "Game/System/FunctionAsyncExecutor.hpp"
 #include "compat/NandSdkBinding.hpp"
 #include "compat/ResourceHolderCompat.hpp"
 #include "compat/StarPointerDepthOwnership.hpp"
@@ -412,7 +412,7 @@ private:
         // Stop producers before releasing the queues, files and resources that
         // original worker callbacks borrow, including failed partial startup.
         if (objects) {
-            compat::destroy_function_async_executor(objects->mFunctionAsyncExecutor);
+            delete objects->mFunctionAsyncExecutor;
             objects->mFunctionAsyncExecutor = nullptr;
         }
         delete SingletonHolder<NANDManager>::release();
@@ -438,7 +438,7 @@ private:
         if (objects) delete std::exchange(objects->mWPadHolder, nullptr);
         if (objects) runtime::destroy_message_holder(objects->mMessageHolder);
         holders.reset();
-        compat::destroy_file_loader(SingletonHolder<FileLoader>::get());
+        FileLoader::destroy(SingletonHolder<FileLoader>::get());
         archives.reset();
         AuroraDrainGXCommands();
         GXSetDrawDoneCallback(nullptr);

@@ -1,0 +1,10 @@
+[
+  {
+    "name": "original-auto-effect-metadata",
+    "target": "smg-pc-original-auto-effect-metadata-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-auto-effect-metadata-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-auto-effect-metadata-tests-run.log"
+  }
+]

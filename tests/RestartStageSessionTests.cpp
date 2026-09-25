@@ -1,16 +1,4 @@
-#include "Game/AreaObj/RestartCube.hpp"
-#include "Game/AudioLib/AudBgmMgr.hpp"
-#include "Game/AudioLib/AudSoundId.hpp"
-#include "Game/AudioLib/AudWrap.hpp"
-#include "Game/GameAudio/AudStageBgmWrap.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
-#include "Game/Util/DemoUtil.hpp"
-#include "Game/Util/EventUtil.hpp"
-#include "Game/Util/PlayerUtil.hpp"
-#include "Game/Util/SceneUtil.hpp"
-#include "Game/Util/SoundUtil.hpp"
-#include "Game/Util/SystemUtil.hpp"
-#include "compat/AudioFacadeCompat.hpp"
 #include "compat/StageScenarioMetadataResolver.hpp"
 #include "compat/StageSessionState.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -22,7 +10,6 @@
 
 #include <cstdlib>
 #include <filesystem>
-#include <functional>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -41,14 +28,6 @@ namespace {
         }
     }
 
-    void require_unavailable(const std::function<void()> &operation, std::string_view message) {
-        try {
-            operation();
-        } catch (const std::exception &) {
-            return;
-        }
-        throw std::runtime_error(std::string(message));
-    }
 }  // namespace
 
 int main() {
@@ -93,107 +72,73 @@ int main() {
             "Game", "FileSelect", 1, JMapIdInfo(0, 0), file_select_metadata);
         const auto file_select_session_binding =
             smgpc::compat::StageSessionBinding(file_select_session);
-        require(!MR::isGalaxyRedCometAppearInCurrentStage() &&
-                    !MR::isGalaxyDarkCometAppearInCurrentStage() &&
-                    !MR::isGalaxyGhostCometAppearInCurrentStage() &&
-                    !MR::isGalaxyQuickCometAppearInCurrentStage() &&
-                    !MR::isGalaxyBlackCometAppearInCurrentStage() &&
-                    static_cast<u32>(AudStageBgmWrap::getCometEventBgm(
-                        MR::getCurrentStageName())) == static_cast<u32>(-1),
-                "the schema-level absence must flow through the exact retail comet queries as no event");
-
-        auto file_select_audio = smgpc::runtime::AudioEventService{};
-        smgpc::compat::begin_stage_audio(
-            file_select_audio, "Game", "FileSelect", 1);
-        require(file_select_audio.is_stage_bgm_identity_resolved() &&
-                    !file_select_audio.has_active_stage_bgm(),
-                "the exact stage BGM table must prove FileSelect has no initial stage BGM");
-        smgpc::compat::end_stage_audio(file_select_audio);
+        require(smgpc::compat::try_active_stage_session() == &file_select_session &&
+                    file_select_session.metadata().comet_type == smgpc::compat::StageCometType::None,
+                "the native session retains the explicit no-comet value from the retail schema");
     }
     ++passed;
 
     auto session = smgpc::compat::StageSessionState("Game", "HeavensDoorGalaxy", 1, JMapIdInfo(0, 0), metadata);
     const auto session_binding = smgpc::compat::StageSessionBinding(session);
-    require(std::string_view(MR::getCurrentStageName()) == "HeavensDoorGalaxy" && MR::getCurrentScenarioNo() == 1,
-            "SceneUtil queries must use the full-lifetime stage session");
-    require(MR::getInitializeStartIdInfo()._0 == 0 && MR::getInitializeStartIdInfo().mZoneID == 0,
+    require(smgpc::compat::try_active_stage_session() == &session &&
+                session.scene_name() == "Game" && session.stage_name() == "HeavensDoorGalaxy" && session.scenario_no() == 1,
+            "the native binding exposes the selected full-lifetime stage session");
+    require(session.initial_start_id()._0 == 0 && session.initial_start_id().mZoneID == 0,
             "the immutable initial start ID must remain queryable");
-    MR::setPlayerRestartIdInfo(JMapIdInfo(3, 7));
-    require(MR::getPlayerRestartIdInfo()->_0 == 3 && MR::getPlayerRestartIdInfo()->mZoneID == 7 &&
-                MR::getInitializeStartIdInfo()._0 == 0 && MR::getInitializeStartIdInfo().mZoneID == 0,
+    session.set_restart_id(JMapIdInfo(3, 7));
+    require(session.restart_id()._0 == 3 && session.restart_id().mZoneID == 7 &&
+                session.initial_start_id()._0 == 0 && session.initial_start_id().mZoneID == 0,
             "restart mutation must not overwrite the immutable initial start ID");
-    require(!MR::isGalaxyRedCometAppearInCurrentStage() && !MR::isGalaxyDarkCometAppearInCurrentStage() &&
-                !MR::isGalaxyGhostCometAppearInCurrentStage() && !MR::isGalaxyQuickCometAppearInCurrentStage() &&
-                !MR::isGalaxyBlackCometAppearInCurrentStage() &&
-                static_cast<u32>(AudStageBgmWrap::getCometEventBgm(MR::getCurrentStageName())) == static_cast<u32>(-1),
-            "an explicit no-comet row must produce the retail no-override result");
     ++passed;
 
     session.set_metadata({});
-    require_unavailable([] { (void)MR::isGalaxyDarkCometAppearInCurrentStage(); },
-                        "missing comet metadata must throw rather than become false");
-    session.set_metadata(metadata);
+    require(!session.metadata().comet_type.has_value(),
+            "unresolved native metadata remains distinct from explicit no comet");
     auto purple_metadata = metadata;
     purple_metadata.comet_type = smgpc::compat::StageCometType::Purple;
     session.set_metadata(purple_metadata);
-    require(!MR::isGalaxyRedCometAppearInCurrentStage() && !MR::isGalaxyDarkCometAppearInCurrentStage() &&
-                !MR::isGalaxyGhostCometAppearInCurrentStage() && !MR::isGalaxyQuickCometAppearInCurrentStage() &&
-                !MR::isGalaxyBlackCometAppearInCurrentStage() &&
-                static_cast<u32>(AudStageBgmWrap::getCometEventBgm(MR::getCurrentStageName())) == static_cast<u32>(-1),
-            "Purple must remain a resolved comet type while producing no five-predicate BGM override");
+    require(session.metadata().comet_type == smgpc::compat::StageCometType::Purple,
+            "native metadata preserves Purple without collapsing it into no comet");
     session.set_metadata(metadata);
+    require(session.metadata().comet_type == smgpc::compat::StageCometType::None,
+            "replacing metadata restores the exact retail no-comet value");
     ++passed;
 
     auto audio = smgpc::runtime::AudioEventService{};
-    const auto audio_binding = smgpc::compat::ScopedAudioEventServiceOverride(audio);
-    smgpc::compat::begin_stage_audio(audio, "Game", "HeavensDoorGalaxy", 1);
-    require(audio.is_stage_bgm_identity_resolved() && !audio.has_active_stage_bgm() && !MR::isPlayingStageBgmID(STM_STAR_EXIST),
-            "the exact stage table must prove HeavensDoor scenario 1 starts with no current BGM");
-    require(AudWrap::getBgmMgr()->mCurrentBGM[AudBgmMgr::BgmType_Stage] == static_cast<u32>(-1),
-            "the genuine AudBgmMgr facade must expose the proven known-empty current ID");
+    require(!audio.is_stage_bgm_identity_resolved(), "new native audio state has no established BGM identity");
+    audio.resolve_stage_bgm_absent();
+    require(audio.is_stage_bgm_identity_resolved() && !audio.has_active_stage_bgm() &&
+                !audio.current_stage_bgm_id().has_value(),
+            "native audio distinguishes known absence from unresolved identity");
     ++passed;
 
     auto player = smgpc::runtime::PlayerSystemService{};
     auto player_actor = StatePlayer{};
     player.attach_actor(player_actor);
-    require_unavailable([] { (void)MR::isPlayerDead(); },
-                        "generic LiveActor death must not substitute for Mario nerve-change/death state");
+    require(!player.player_dead_state().has_value(),
+            "generic LiveActor death must not substitute for an explicit nerve-change capability");
     player.attach_actor(player_actor, {
         .read_nerve_change_enabled = +[](const LiveActor& actor) {
             return static_cast<const StatePlayer&>(actor).nerve_change_enabled;
         },
     });
-    require(!MR::isPlayerDead(), "the attached player nerve-change capability must be queried");
+    require(player.player_dead_state() == false, "the attached player nerve-change capability must be queried");
     player_actor.nerve_change_enabled = false;
-    require(MR::isPlayerDead(), "a nerve change must be visible immediately without frame synchronization");
+    require(player.player_dead_state() == true, "a nerve change must be visible immediately without frame synchronization");
     player_actor.nerve_change_enabled = true;
-    require(!MR::isPlayerDead(), "returning to a changeable nerve must clear the death query");
+    require(player.player_dead_state() == false, "returning to a changeable nerve must clear the death query");
 
-    auto restart_cube = RestartCube(0, "RestartCube");
-    restart_cube._40 = 1;
-    restart_cube._44 = -1;
-    require_unavailable(
-        [&] { restart_cube.changeBgm(); },
-        "RestartCube multi-BGM must stay unavailable without the concrete retail scheduler");
-    require(!audio.current_stage_bgm_id().has_value() &&
-                !audio.has_active_stage_bgm() &&
-                AudWrap::getBgmMgr()->mCurrentBGM[AudBgmMgr::BgmType_Stage] ==
-                    static_cast<u32>(-1),
-            "failed multi-BGM playback must not leave an event-only current ID");
-    MR::setCubeBgmChangeInvalid();
-    require(MR::isCubeBgmChangeInvalid(), "cube BGM invalidation must be retained as real stage-audio state");
+    audio.set_cube_bgm_change_invalid(true);
+    require(audio.is_cube_bgm_change_invalid(), "native audio retains cube BGM invalidation state");
     ++passed;
 
-    smgpc::compat::end_stage_audio(audio);
-    require(!audio.has_active_stage_bgm() && !audio.is_stage_bgm_identity_resolved() && !audio.is_cube_bgm_change_invalid(),
-            "stage-audio teardown must clear active IDs, resolution, handles, and cube-local state");
-    require(!MR::isPlayingStageBgmID(MBGM_GALAXY_25),
-            "a torn-down stage must report no concrete raw-ID playback");
-    require_unavailable([] { (void)AudWrap::getStageBgm(); },
-                        "a torn-down stage must not turn unknown facade identity into a null BGM fallback");
-    smgpc::compat::begin_stage_audio(audio, "Game", "HeavensDoorGalaxy", 1);
-    require(audio.is_stage_bgm_identity_resolved() && !audio.has_active_stage_bgm() && AudWrap::getStageBgm() == nullptr,
-            "a second stage-audio lifetime must reconstruct the exact known-empty state without stale BGM objects");
+    audio.reset_stage_state();
+    require(!audio.has_active_stage_bgm() && !audio.is_stage_bgm_identity_resolved() &&
+                !audio.current_stage_bgm_id().has_value() && !audio.is_cube_bgm_change_invalid(),
+            "native stage reset clears identity, activity and cube-local state");
+    audio.resolve_stage_bgm_absent();
+    require(audio.is_stage_bgm_identity_resolved() && !audio.has_active_stage_bgm(),
+            "a second native audio lifetime reconstructs known absence without stale activity");
     ++passed;
 
     std::cout << "Restart/stage-session tests passed: " << passed << "/8\n";

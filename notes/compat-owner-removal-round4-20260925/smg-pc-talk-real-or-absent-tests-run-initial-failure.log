@@ -1,0 +1,65 @@
+[src/app/Application.cpp:59][APP - INFO] Opened Aurora disc image /Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz
+[aurora:info:aurora] Aurora initializing
+[aurora:info:aurora::system_info] CPU model: Apple M5 Max
+[aurora:info:aurora::system_info] Memory: 131072 MiB
+[aurora:info:aurora::system_info] Architecture: aarch64
+[aurora:info:aurora::system_info] OS: macOS Version 27.0 (Build 26A428)
+[aurora:info:aurora::gpu] Creating WebGPU instance
+[aurora:info:aurora::gpu] Attempting to initialize Metal
+[aurora:info:aurora::gpu] Requesting adapter
+  Feature level: Compatibility
+  Power preference: HighPerformance
+  Backend: Metal
+  Compatible surface: true
+[aurora:info:aurora::gpu] Graphics adapter information
+  API: Metal
+  Device: Apple M5 Max (IntegratedGPU)
+  Driver: Metal driver on macOS Version 27.0 (Build 26A428)
+[aurora:info:aurora::gpu] Using limits:
+  maxTextureDimension1D: 16384
+  maxTextureDimension2D: 16384
+  maxTextureDimension3D: 2048
+  maxTextureArrayLayers: 2048
+  maxStorageBuffersPerShaderStage: 2
+  minUniformBufferOffsetAlignment: 256
+  minStorageBufferOffsetAlignment: 256
+  maxImmediateSize: 64
+[aurora:info:aurora::gpu] Enabling features: 
+  CoreFeaturesAndLimits
+  DepthClipControl
+  TextureCompressionBC
+  TextureCompressionASTC
+  ClipDistances
+  DualSourceBlending
+  TextureComponentSwizzle
+[aurora:info:aurora::gpu] Using surface format BGRA8Unorm, present mode Fifo
+[aurora:info:aurora::gfx::pipeline_cache] No bundled initial pipeline cache found at '/Users/frityet/Projects/petari/build/macosx/arm64/debug/initial_pipeline_cache.db'
+[aurora:info:aurora] Using framebuffer size 1280x960 scale 2
+[original-process] Preparing original heap arenas
+[original-process] Initializing SDK, layout allocator and original heap watcher
+[original-process] Initialized console language 9 for disc region K
+<< NW4R    - LYT 	final   build: Jul 17 2007 12:25:23 (0x4199_60831) >>
+[original-process] Initializing original file and exception services
+[original-process] Constructing GameSystem
+[original-process] Entering GameSystem::init
+[original-process] GameSystem::init completed
+[original-process] Requesting authored stage HeavensDoorGalaxy scenario 1 through GameSequence
+[original-process] Placement coverage HeavensDoorGalaxy: 187 supported, 51 known-unlinked, 0 unknown, 5 metadata rows
+Aurora: native C++ termination
+No active C++ exception.
+Native stack (most recent call first):
+0   smg-pc-talk-real-or-absent-tests    0x0000000102c23334 _ZN12_GLOBAL__N_119report_native_stackEv + 108
+1   smg-pc-talk-real-or-absent-tests    0x0000000102c231d0 _ZN12_GLOBAL__N_126report_unhandled_exceptionEv + 252
+2   libc++abi.1.0.dylib                 0x0000000103beada8 _ZSt11__terminatePFvvE + 12
+3   libc++abi.1.0.dylib                 0x0000000103bead44 _ZSt9terminatev + 40
+4   smg-pc-talk-real-or-absent-tests    0x0000000102588a00 _ZN5smgpc6compat20TalkDirectorLifetime16release_name_objEPK7NameObj + 116
+5   smg-pc-talk-real-or-absent-tests    0x0000000102582148 _ZN5smgpc6compat30release_name_obj_runtime_stateEPK7NameObj + 64
+6   smg-pc-talk-real-or-absent-tests    0x000000010240be84 _ZN7NameObjD2Ev + 72
+7   smg-pc-talk-real-or-absent-tests    0x0000000102414e4c _ZN15TalkMessageCtrlD0Ev + 12
+8   smg-pc-talk-real-or-absent-tests    0x000000010233e8a8 _ZN12_GLOBAL__N_120verify_original_talkEv + 1704
+9   smg-pc-talk-real-or-absent-tests    0x000000010233ead8 _ZZN5smgpc4test26run_stage_resource_processIPFvvEEEiPKcT_ENUlPvR10GameSystemyE_8__invokeES7_S9_y + 144
+10  smg-pc-talk-real-or-absent-tests    0x00000001023404cc _ZN5smgpc3app17run_original_gameERKNS0_22BootstrapConfigurationERNS_7logging7ILoggerENS0_25OriginalGameDebugObserverE + 5068
+11  smg-pc-talk-real-or-absent-tests    0x000000010233db44 _ZN5smgpc4test26run_stage_resource_processIPFvvEEEiPKcT_ + 1136
+12  dyld                                0x000000018a03be80 start + 6688
+[src/app/OriginalGameApplication.cpp:511][APP - INFO] Booting the original GameSystem
+[src/app/OriginalGameApplication.cpp:513][APP - INFO] Running the original GameSystem frame loop

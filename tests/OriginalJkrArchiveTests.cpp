@@ -129,6 +129,63 @@ namespace {
         for (int i = 0; i < 32; ++i) { auto unrelated = archive(); require(unrelated.countResource() == 2, "independent catalog"); }
         require(std::strcmp(name, "b.pa") == 0 && *resource == 7, "catalog and payload survive source destruction and unrelated owners");
     }
+    void test_bounded_lookup_names() {
+        struct GuardedName {
+            JKRArchive::CArcName name;
+            std::array<u8, 8> guard;
+        } value{};
+        value.guard.fill(0xCD);
+        const std::string maximum(255, 'A');
+        value.name.store(maximum.c_str());
+        require(value.name.mLength == 255 && std::strlen(value.name.mName) == 255 &&
+                    value.name.mName[0] == 'a' && value.name.mName[254] == 'a',
+                "the original maximum name remains lowercased and terminated");
+        const std::string path = maximum + "/tail";
+        require(value.name.store(path.c_str(), '/') == path.c_str() + 256 && value.name.mLength == 255,
+                "maximum-length path component preserves the original next-component pointer");
+        const std::string oversized(256, 'A');
+        bool whole_rejected = false, component_rejected = false;
+        try { value.name.store(oversized.c_str()); }
+        catch (const std::invalid_argument&) { whole_rejected = true; }
+        try { (void)value.name.store((oversized + "/tail").c_str(), '/'); }
+        catch (const std::invalid_argument&) { component_rejected = true; }
+        require(whole_rejected && component_rejected, "both lookup overloads must reject an oversized name before writing its terminator");
+        require(std::all_of(value.guard.begin(), value.guard.end(), [](u8 byte) { return byte == 0xCD; }),
+                "lookup names must never overwrite neighboring storage");
+    }
+    void test_fixed_mount_volume_and_byte_identity() {
+        auto bytes = fixture();
+        auto parsed = smgpc::resource::RarcArchive::from_borrowed(bytes);
+        const auto count = JKRFileLoader::sVolumeList.getNumLinks();
+        auto* current = JKRFileLoader::gCurrentFileLoader;
+        {
+            JKRMemArchive mounted;
+            require(mounted.mountFixed(std::span<const u8>(bytes), JKR_MEM_BREAK_FLAG_0),
+                    "a borrowed fixed mount must publish successfully");
+            require(JKRFileLoader::sVolumeList.getNumLinks() == count + 1 &&
+                        mounted.mEntryNum == reinterpret_cast<std::uintptr_t>(bytes.data()),
+                    "the volume list retains native-width buffer identity");
+            JKRFileLoader::initializeVolumeList();
+            require(JKRFileLoader::sVolumeList.getNumLinks() == count + 1,
+                    "process initialization cannot reset a pre-existing mounted volume");
+            auto* data = static_cast<u8*>(mounted.getIdxResource(0));
+            require(data == parsed.file_data_start() && mounted.getResource(u16(42)) == data && mounted.getResSize(data) == 1,
+                    "indexed, ID and size lookups share the original borrowed resource bytes");
+            *data = 0xA5;
+            require(*parsed.file_data_start() == 0xA5 && JKRFileLoader::getGlbResource("a.bck") == data,
+                    "global lookup observes the mounted buffer without a payload copy");
+            JKRMemArchive duplicate;
+            require(!duplicate.mountFixed(std::span<const u8>(bytes), JKR_MEM_BREAK_FLAG_0) &&
+                        mounted._34 == 2 && !duplicate.mIsMounted,
+                    "duplicate fixed mount preserves the original reference-count increment and rejects publication");
+            mounted.unmount();
+            require(mounted._34 == 1 && mounted.mIsMounted,
+                    "releasing the duplicate reference preserves the first mount");
+        }
+        require(JKRFileLoader::sVolumeList.getNumLinks() == count && JKRFileLoader::gCurrentFileLoader == current,
+                "archive retirement removes the volume while preserving the prior current loader");
+        require(*parsed.file_data_start() == 0xA5, "borrowed bytes remain owned by their caller after archive retirement");
+    }
     void test_missing_string_extent() {
         auto bytes = fixture();
         put32(bytes, 0x30, 1);
@@ -143,6 +200,8 @@ int main() {
         std::pair{"full typed catalog", test_catalog}, std::pair{"original finder", test_finder},
         std::pair{"IDs and resource bytes", test_ids_and_data}, std::pair{"relative directories", test_relative_directory},
         std::pair{"retained archive lifetime", test_lifetime}, std::pair{"bounded string table", test_missing_string_extent},
+        std::pair{"bounded lookup names", test_bounded_lookup_names},
+        std::pair{"fixed mount volume and byte identity", test_fixed_mount_volume_and_byte_identity},
     };
     for (const auto& [name, test] : tests) {
         try { test(); std::cout << "PASS " << name << '\n'; }

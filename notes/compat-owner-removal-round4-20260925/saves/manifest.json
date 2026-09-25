@@ -1,0 +1,30 @@
+{
+  "head": "3b37917cdcc04ac7e2ce190cab9f9835fe2b95fa",
+  "files": [
+    "src/compat/GameDataFunctionCompat.cpp",
+    "src/compat/GameDataFunctionCompat.hpp",
+    "src/compat/StorySequencePlatformCompat.cpp",
+    "src/compat/OriginalSceneCounterQueries.cpp",
+    "src/compat/OriginalPlayerEventUtil.cpp",
+    "src/compat/GameDataSession.cpp",
+    "src/compat/GameDataSession.hpp",
+    "src/compat/GameDataOwnership.cpp",
+    "src/compat/GameDataOwnership.hpp",
+    "src/Game/System/GameDataFunction.cpp",
+    "src/Game/System/StorySequenceExecutor.cpp",
+    "src/Game/Screen/StaffRoll.cpp",
+    "src/Game/Screen/StaffRoll.hpp",
+    "tests/GameDataRealOrAbsentTests.cpp",
+    "tests/GameDataStarStorageTests.cpp",
+    "tests/TalkRealOrAbsentTests.cpp",
+    "tests/OriginalSceneCounterOwnerTests.cpp",
+    "tests/StorySequenceRealOrAbsentTests.cpp",
+    "tests/OriginalParticleResourceOwnerTests.cpp",
+    "tests/OriginalSaveDataSnapshot.hpp",
+    "tests/OriginalJ3dTransformAnimationTests.cpp"
+  ],
+  "initially_absent": [
+    "src/Game/Screen/StaffRoll.cpp",
+    "tests/OriginalSaveDataSnapshot.hpp"
+  ]
+}

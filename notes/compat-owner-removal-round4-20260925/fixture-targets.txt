@@ -1,0 +1,7 @@
+story-sequence-real-or-absent
+talk-real-or-absent
+game-data-real-or-absent
+original-particle-resource-owner
+game-data-star-storage
+original-scene-counter-owner
+original-auto-effect-metadata

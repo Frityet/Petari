@@ -1,0 +1,8 @@
+PASS full typed catalog
+PASS original finder
+PASS IDs and resource bytes
+PASS relative directories
+PASS retained archive lifetime
+PASS bounded string table
+PASS bounded lookup names
+PASS fixed mount volume and byte identity

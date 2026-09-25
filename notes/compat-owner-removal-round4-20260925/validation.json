@@ -1,0 +1,214 @@
+{
+  "base_commit": "3b37917cdcc04ac7e2ce190cab9f9835fe2b95fa",
+  "compat_files_removed_this_batch": 34,
+  "compat_files_removed_total": 132,
+  "compat_files_remaining": 198,
+  "goal_complete": false,
+  "app_build": {
+    "exit_code": 0,
+    "log": "build-app-final.log",
+    "binary_sha256": "17bc0458d2b17d6efb3bdabd99abde042e654dd8d5a5a1071d44fa4cc9672202"
+  },
+  "focused_tests": [
+    {
+      "name": "game-data-real-or-absent",
+      "target": "smg-pc-game-data-real-or-absent-tests",
+      "build": 0,
+      "build_log": "smg-pc-game-data-real-or-absent-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-game-data-real-or-absent-tests-run.log"
+    },
+    {
+      "name": "game-data-star-storage",
+      "target": "smg-pc-game-data-star-storage-tests",
+      "build": 0,
+      "build_log": "smg-pc-game-data-star-storage-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-game-data-star-storage-tests-run.log"
+    },
+    {
+      "name": "original-auto-effect-metadata",
+      "target": "smg-pc-original-auto-effect-metadata-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-auto-effect-metadata-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-auto-effect-metadata-tests-run.log"
+    },
+    {
+      "name": "original-file-loader",
+      "target": "smg-pc-original-file-loader-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-file-loader-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-file-loader-tests-run.log"
+    },
+    {
+      "name": "original-j3d-joint-resource",
+      "target": "smg-pc-original-j3d-joint-resource-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-j3d-joint-resource-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-j3d-joint-resource-tests-run.log"
+    },
+    {
+      "name": "original-j3d-joint-traversal",
+      "target": "smg-pc-original-j3d-joint-traversal-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-j3d-joint-traversal-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-j3d-joint-traversal-tests-run.log"
+    },
+    {
+      "name": "original-j3d-model-resource",
+      "target": "smg-pc-original-j3d-model-resource-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-j3d-model-resource-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-j3d-model-resource-tests-run.log"
+    },
+    {
+      "name": "original-j3d-mtx-buffer",
+      "target": "smg-pc-original-j3d-mtx-buffer-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-j3d-mtx-buffer-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-j3d-mtx-buffer-tests-run.log"
+    },
+    {
+      "name": "original-j3d-texture-mtx",
+      "target": "smg-pc-original-j3d-texture-mtx-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-j3d-texture-mtx-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-j3d-texture-mtx-tests-run.log"
+    },
+    {
+      "name": "original-j3d-transform-animation",
+      "target": "smg-pc-original-j3d-transform-animation-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-j3d-transform-animation-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-j3d-transform-animation-tests-run.log"
+    },
+    {
+      "name": "original-jkr-archive",
+      "target": "smg-pc-original-jkr-archive-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-jkr-archive-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-jkr-archive-tests-run.log"
+    },
+    {
+      "name": "original-jsu-stream",
+      "target": "smg-pc-original-jsu-stream-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-jsu-stream-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-jsu-stream-tests-run.log"
+    },
+    {
+      "name": "original-particle-resource-owner",
+      "target": "smg-pc-original-particle-resource-owner-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-particle-resource-owner-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-particle-resource-owner-tests-run.log"
+    },
+    {
+      "name": "original-save-owner",
+      "target": "smg-pc-original-save-owner-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-save-owner-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-save-owner-tests-run.log"
+    },
+    {
+      "name": "original-scene-counter-owner",
+      "target": "smg-pc-original-scene-counter-owner-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-scene-counter-owner-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-scene-counter-owner-tests-run.log"
+    },
+    {
+      "name": "restart-stage-session",
+      "target": "smg-pc-restart-stage-session-tests",
+      "build": 0,
+      "run": 0,
+      "build_log": "smg-pc-restart-stage-session-tests-build.log",
+      "run_log": "smg-pc-restart-stage-session-tests-run.log",
+      "result_source": "Root exec session74173; original grouped JSON was superseded by isolated RuntimeContext retry."
+    },
+    {
+      "name": "runtime-context-failure",
+      "target": "smg-pc-runtime-context-failure-tests",
+      "build": 0,
+      "build_log": "smg-pc-runtime-context-failure-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-runtime-context-failure-tests-run.log"
+    },
+    {
+      "name": "story-sequence-real-or-absent",
+      "target": "smg-pc-story-sequence-real-or-absent-tests",
+      "build": 0,
+      "build_log": "smg-pc-story-sequence-real-or-absent-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-story-sequence-real-or-absent-tests-run.log"
+    },
+    {
+      "name": "talk-real-or-absent",
+      "target": "smg-pc-talk-real-or-absent-tests",
+      "build": 0,
+      "build_log": "smg-pc-talk-real-or-absent-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-talk-real-or-absent-tests-run.log"
+    }
+  ],
+  "focused_pass_count": 19,
+  "retired_obsolete_fixture": {
+    "name": "runtime-context-construction",
+    "target": "smg-pc-runtime-context-construction-tests",
+    "build": 0,
+    "build_log": "smg-pc-runtime-context-construction-tests-build.log",
+    "run": -11,
+    "run_log": "smg-pc-runtime-context-construction-tests-run.log"
+  },
+  "retirement_reason": "Standalone RuntimeContext successful bootstrap calls original MessageHolder without FileLoader in both HEAD and working sources. Preserve constructor failures in RuntimeContextFailureTests; original process tests cover actual resource owners.",
+  "bounded_real_run": "gateway-final-600.json",
+  "screenshot": "gateway-final-600-frame480.png",
+  "screenshot_visually_inspected": true,
+  "source_checks": {
+    "j3d": {
+      "passed": 52,
+      "unique_function_names": 79
+    },
+    "sdk": {
+      "preserved_methods": 56,
+      "name_boundary_corrections": 2
+    }
+  },
+  "provider_audit": {
+    "duplicate_strong_symbols": 0,
+    "stale_source_providers": 0,
+    "unavailable_owner_inputs": 0,
+    "provider_provenance": {
+      "unreviewed": 7781,
+      "canonical-path-see-source-closeness-report": 15550,
+      "source-tokens-exact": 8,
+      "source-tokens-differ": 2,
+      "unresolved": 9
+    },
+    "source_checks": {
+      "source-tokens-exact": 9,
+      "unresolved": 11,
+      "source-tokens-differ": 2
+    }
+  },
+  "limits": [
+    "Full Gateway encounter and endgame not demonstrated.",
+    "Full test suite and clean temporary-index checkout not built; validation used working tree with unrelated pending work preserved.",
+    "Broad provider provenance approval remains failing.",
+    "StaffRoll factory integration remains pending.",
+    "Production FileUtilCompat and standalone preview resource wrappers remain for subsequent removal."
+  ]
+}
