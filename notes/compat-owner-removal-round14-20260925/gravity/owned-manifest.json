@@ -1,0 +1,187 @@
+{
+  "scope": "Canonical gravity, follower and rail ownership",
+  "files": [
+    {
+      "path": "src/compat/GlobalGravityOwnership.cpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/compat/GlobalGravityOwnership.cpp",
+      "before_sha256": "1c0966e95f80a8877a2215032bdac30db04b14754c22a22f021addeaa21a6b61",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/GlobalGravityOwnership.hpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/compat/GlobalGravityOwnership.hpp",
+      "before_sha256": "91b0921242493e1a5b1d73cbb1525f333fd672d022ec4b4228918f215e8d5ca4",
+      "initial_git_status": " M",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/Game/Gravity/GlobalGravityObj.cpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/Game/Gravity/GlobalGravityObj.cpp",
+      "before_sha256": "39db50205e63788b230efc85400f95362b690f354febfd477ecb8c51e5101336",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "modify",
+      "after_sha256": "e8f29964109873b47c2a4b41c7190ad09bbea25686845ac9da11e71a01d6b543"
+    },
+    {
+      "path": "src/Game/Gravity/GlobalGravityObj.hpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/Game/Gravity/GlobalGravityObj.hpp",
+      "before_sha256": "2ffa020a486512f4038ba62dc3951bc331acdfb705d8bfab5b6da14cf9f2800f",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "modify",
+      "after_sha256": "8ab92e0841c6328316b7ef4a64d5684f140339d2ea7d00abf59d4d252ae11f20"
+    },
+    {
+      "path": "src/Game/Gravity/GravityCreator.hpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/Game/Gravity/GravityCreator.hpp",
+      "before_sha256": "86b79014dcc6b280ccdaa02075557c1ca46cd90ed55395d989022b9e15ce2bb9",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "modify",
+      "after_sha256": "25c89d4a680891774ac8244f6cc7f3068aa212ad3ffb6fa1a40a3d755a3ed5a3"
+    },
+    {
+      "path": "src/Game/Gravity/PlanetGravity.cpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/Game/Gravity/PlanetGravity.cpp",
+      "before_sha256": "3e4e96585bd58207d259cebeb7856f3ab750419be18abe32623b0748afb10c6e",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "modify",
+      "after_sha256": "a60e15b2e2b92efb76b3a4e4818e45d295e6429ad44ca2b663bd73c802c1f1c2"
+    },
+    {
+      "path": "src/Game/Gravity/PlanetGravity.hpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/Game/Gravity/PlanetGravity.hpp",
+      "before_sha256": "bfb56ffc87587872ce7708a9e794a91a6e52a65aaa96f42a1d95fbe26aad223f",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "modify",
+      "after_sha256": "c039c3c3b295c104f6f32baf0e1305fb7a49d0f402675ff5bb33608aada0e1bd"
+    },
+    {
+      "path": "src/Game/Gravity/PlanetGravityManager.cpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/Game/Gravity/PlanetGravityManager.cpp",
+      "before_sha256": "3500a18ab2366a02f0422bf6bc75f0e205682d8f0c256bc2ecb2cc0aefc488f4",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "modify",
+      "after_sha256": "07707a9eb36e0597cf92d721b1f43e2f9477e3ff9194cdee474325e16d3d6f64"
+    },
+    {
+      "path": "src/Game/Gravity/PlanetGravityManager.hpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/Game/Gravity/PlanetGravityManager.hpp",
+      "before_sha256": "56b1f2205a8513a330748376820212c123ffbac0eb072e88348acc53731a1c7c",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "modify",
+      "after_sha256": "013046f59c26ceefffd3583c7e80850e076c815279ba718dea36be0b3bd3d1de"
+    },
+    {
+      "path": "src/Game/Gravity/GraviryFollower.cpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/Game/Gravity/GraviryFollower.cpp",
+      "before_sha256": "a8f794a871d64306845dca8d7645637e3c8b419f2681c94a2057ba2b9df68a86",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "modify",
+      "after_sha256": "4b9e1ce2f39bed1adc3b6673b75b7c5b955bd7f5a69ab5ade4bd462aaa7f32a4"
+    },
+    {
+      "path": "src/Game/Util/BaseMatrixFollowTargetHolder.cpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/Game/Util/BaseMatrixFollowTargetHolder.cpp",
+      "before_sha256": "7f5a349cc713fa444f316df1b47472aea728a87b4a3c025c7083a9860d32ef0d",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "modify",
+      "after_sha256": "caa26c020116b6ddec9001b5d37d3a41ae048049728963532358d518cd367cfd"
+    },
+    {
+      "path": "src/Game/Util/BaseMatrixFollowTargetHolder.hpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/Game/Util/BaseMatrixFollowTargetHolder.hpp",
+      "before_sha256": "5eb173e46825212c96145456aa46bb0b9a970769e12eeaabe590edf81ebe6f80",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "modify",
+      "after_sha256": "96e1147791a9e760e152f7fb78ca12d87d1fcaa40213f13cadf35b827c0ca8fd"
+    },
+    {
+      "path": "src/Game/LiveActor/RailRider.cpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/Game/LiveActor/RailRider.cpp",
+      "before_sha256": "2582ad495cfba758964c971146177ba919d6b5d961c80111b5ce5634444ddbd2",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "modify",
+      "after_sha256": "dd19c6eb44df25a4f6df96714848057995ce630e6b6f228b5c64439698744382"
+    },
+    {
+      "path": "src/Game/LiveActor/RailRider.hpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/Game/LiveActor/RailRider.hpp",
+      "before_sha256": "cf289872d1bfae96444c4841ee4443cab4dd3c742ce0d6f175a37631cd0d6060",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "modify",
+      "after_sha256": "933a84ec85751ac49a9844de06dc03c86fd7f6d3173cd458f43057de627b766b"
+    },
+    {
+      "path": "src/Game/Map/BezierRail.cpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/Game/Map/BezierRail.cpp",
+      "before_sha256": "aa87e74c70eca64ea5f876ab463592187ec12051b2d7fe6d1ecb12c71fbde294",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "modify",
+      "after_sha256": "1232a3d20b11d6a0088717475afcb5e3ba99711ca162e44b12dec6ed2cf1a0de"
+    },
+    {
+      "path": "src/Game/Map/BezierRail.hpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/Game/Map/BezierRail.hpp",
+      "before_sha256": "53e50d3ebe4760140cee7e2b4bbe656978099f11d09b229fe2ddbe0edbfccf04",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "modify",
+      "after_sha256": "a20554f8c2fe266957a7d2562cad0718fde8ca27d52d834b599a198052b58605"
+    },
+    {
+      "path": "src/Game/Map/RailPart.cpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/Game/Map/RailPart.cpp",
+      "before_sha256": "928fcb5eaa42a5f96ae5d5e91852fe7c063c973a4bcb92b8e07feee48dbac194",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "modify",
+      "after_sha256": "47723523efe04d782c674ce24e2daf39f00a921dcc2e27d203dabb9251f8734c"
+    },
+    {
+      "path": "src/Game/Map/RailPart.hpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/Game/Map/RailPart.hpp",
+      "before_sha256": "1f313054bc4a73c1bedc9d71ea010a14bbbe5613deddaeccadf798e92916c89d",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "modify",
+      "after_sha256": "870178032915d6d74fbde0ab701b1ef66a06263fce345d35240a68792fa20c45"
+    },
+    {
+      "path": "src/compat/ActorRuntimeRegistry.cpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/compat/ActorRuntimeRegistry.cpp",
+      "before_sha256": "599b5852f0fbfa4ed6b75f52f6d78ecf82b1d6b59a847a29a5dbfcaee0d39671",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "modify",
+      "after_sha256": "7b200c7f2fae8d916da90bcbcef1f6a5ba8394f25fe2253bd18da3058b67c080"
+    },
+    {
+      "path": "src/scene/nameobj/NameObjFactory.cpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/scene/nameobj/NameObjFactory.cpp",
+      "before_sha256": "6427cef75c8a01927155a0e53bd94afdf6addb2fe2fb6eafda2e455c416a80c8",
+      "initial_git_status": " M",
+      "action": "modify",
+      "after_sha256": "85037fb442f16b0c10105542bce0fec750a806775396f95763ff9f9fad7b32f7"
+    },
+    {
+      "path": "tests/GravityRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/tests/GravityRealOrAbsentTests.cpp",
+      "before_sha256": "1354c8abe3e51e1c961003d2e1bfbbe421beec0e9db82bc8bfdd91e26916ddb5",
+      "initial_git_status": " M",
+      "action": "modify",
+      "after_sha256": "8c408a3c1f43838fc2df7ce838e6c1d2b6fa7b0dad9c4fee34e4b866124165f8"
+    }
+  ],
+  "inspected_unchanged": [
+    {
+      "path": "src/Game/Gravity/GravityCreator.cpp",
+      "before": "notes/compat-owner-removal-round14-20260925/gravity/before/src/Game/Gravity/GravityCreator.cpp",
+      "before_sha256": "1b4aecdfb5a286c97b55c7cb606aecb1ff9a7aa31ea2795ff5c3da3222902718",
+      "initial_git_status": "clean (parent round14 baseline)",
+      "action": "modify"
+    }
+  ],
+  "frozen": true,
+  "build_wiring": "No new source additions. All canonical Game owners already compile; regenerate compat source glob after GlobalGravityOwnership pair deletion.",
+  "shared_integration": "Root owns SceneObjHolderCompat.cpp/SceneObjHolderRuntime.hpp: remove all GlobalGravityOwnership include/member/constructor/reclaim/accessor/friend references. No replacement scene API. Completed by root during source review.",
+  "coordinated_edit": "ActorRuntimeRegistry.cpp also applies effect agent request: include actual EffectKeeper.hpp and delete/null mEffectKeeper instead of old service call.",
+  "validation": "Read-only source/reference review. No builds, tests, runs, Git operations or new fixture framework."
+}

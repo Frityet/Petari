@@ -46,7 +46,6 @@
 #include "Game/Util/FileUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "runtime/RuntimeServices.hpp"
-#include "compat/GlobalGravityOwnership.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include <aurora/allocation.hpp>
 #include "scene/AreaObjRuntime.hpp"
@@ -1146,10 +1145,6 @@ namespace smgpc::scene::nameobj {
         }
         if (retained_name != nullptr) {
             smgpc::compat::retain_name_obj_host_name(result.get(), std::move(retained_name));
-        }
-        if (auto *gravity = dynamic_cast<GlobalGravityObj *>(result.get());
-            gravity != nullptr) {
-            smgpc::compat::adopt_global_gravity_children(*gravity);
         }
         return result;
     }

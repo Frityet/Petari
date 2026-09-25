@@ -50,6 +50,8 @@ RailRider::RailRider(s32 a1, s32 a2) {
     initBezierRail(iter, info);
 }
 
+RailRider::~RailRider() = default;
+
 void RailRider::move() {
     if (mIsNotReverse) {
         mCoord += mSpeed;
@@ -230,7 +232,8 @@ f32 RailRider::getPointCoord(s32 idx) const {
 
 // Second call to setCoord gets inlined
 void RailRider::initBezierRail(const JMapInfoIter& rIter, const JMapInfo* pInfo) {
-    mBezierRail = new BezierRail(rIter, pInfo);
+    mNativeRail.reset(new BezierRail(rIter, pInfo));
+    mBezierRail = mNativeRail.get();
     syncPosDir();
     setCoord(mBezierRail->getTotalLength());
     mEndPos.set(mCurPos);

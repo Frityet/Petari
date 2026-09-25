@@ -10,7 +10,7 @@
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/J3dCommandScope.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "scene/NameObjChildOwner.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -39,7 +39,7 @@ namespace {
         require(std::isfinite(actual) && std::abs(actual - expected) < 0.0001F, message);
     }
     std::vector<u8> shape_bytes(const ShadowVolumeLine& line) {
-        const smgpc::compat::J3dCommandScope commands;
+        const J3DSys::CommandScope commands;
         alignas(32) std::array<u8, 4096> bytes{};
         const auto save_context = __gx->dlSaveContext;
         __gx->dlSaveContext = 1;

@@ -1,5 +1,4 @@
-#include "compat/J3dCommandScope.hpp"
-#include "compat/SceneJ3dScope.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "Game/Util/MutexHolder.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
@@ -42,7 +41,7 @@ namespace {
             OSRestoreInterrupts(interrupts);
             GDSetCurrent(&caller);
             {
-                smgpc::compat::J3dCommandScope commands;
+                J3DSys::CommandScope commands;
                 require_scheduler_enabled();
                 // This actual original routine captures its interrupt state
                 // once in a function-static, even on later calls by a caller
@@ -69,14 +68,14 @@ namespace {
         J3DSys::mCurrentMtx[0][3] = 4;
         J3DSys::sTexCoordScaleTable[2].field_0x00 = 11;
         {
-            smgpc::compat::SceneJ3dScope outer;
+            J3DSys::ContextScope outer;
             require(heap.count == 2 && model.count == 2, "Scope must recurse through the original mutexes");
             GDSetCurrent(&outer_dl);
             j3dSys.mFlags = 0x5678;
             J3DSys::mCurrentMtx[0][3] = 8;
             J3DSys::sTexCoordScaleTable[2].field_0x00 = 22;
             try {
-                smgpc::compat::SceneJ3dScope nested;
+                J3DSys::ContextScope nested;
                 OSLockMutex(&model); // Original manually paired acquisition.
                 GDSetCurrent(&nested_dl);
                 j3dSys.mFlags = 0x9999;
@@ -108,7 +107,7 @@ namespace {
         j3dSys.mFlags = 0x42;
         {
             const smgpc::compat::JkrAllocationScope allocation(first);
-            const smgpc::compat::SceneJ3dScope scene;
+            const J3DSys::ContextScope scene;
             require_scheduler_enabled();
             GDSetCurrent(&scene_dl);
             j3dSys.mFlags = 0x84;
@@ -118,7 +117,7 @@ namespace {
                     const aurora::os::GuestThreadExecutionScope guest;
                     competing.store(true, std::memory_order_release);
                     const smgpc::compat::JkrAllocationScope allocation(second);
-                    const smgpc::compat::SceneJ3dScope commands;
+                    const J3DSys::ContextScope commands;
                     entered.store(true, std::memory_order_release);
                     require(JKRHeap::sCurrentHeap == &second->heap(), "Resource owner must select its actual retained heap");
                     GDSetCurrent(&resource_dl);
@@ -167,7 +166,7 @@ namespace {
                 require(wait_until([&] { return release_resource.load(std::memory_order_acquire); }),
                         "Test observer must release the resource owner");
             }
-            const smgpc::compat::J3dCommandScope commands;
+            const J3DSys::CommandScope commands;
             require_scheduler_enabled();
         });
         require(wait_until([&] { return heap_owned.load(std::memory_order_acquire); }), "Resource owner must hold the heap first");
@@ -184,7 +183,7 @@ namespace {
         {
             // Matches SceneScheduler: J3D scope precedes the nested callback's
             // allocation scope, while another resource already owns heap1.
-            const smgpc::compat::SceneJ3dScope scene;
+            const J3DSys::ContextScope scene;
             require(observed_order.load(std::memory_order_acquire), "Scene scope must acquire heap1 before J3D0");
         }
         observer.get();

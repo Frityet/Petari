@@ -7,7 +7,7 @@
 #include "Game/Util/ModelUtil.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModel.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/J3dCommandScope.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 
@@ -162,7 +162,7 @@ namespace {
             const auto domain = smgpc::scene::current_scene_allocation_domain();
             require(domain != nullptr, "the ordinary original scene owns all NPC allocations");
             const smgpc::compat::JkrAllocationScope allocation(domain);
-            const smgpc::compat::J3dCommandScope commands;
+            const J3DSys::CommandScope commands;
             for (auto* actor : actors) verify_original_npc_cache(*actor);
             exercised = true;
             std::fprintf(stderr, "[npc-orientation] PASS original NPC cache/control pose, Euler invalidation and model basis; actors=%zu frame=%llu\n",

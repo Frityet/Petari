@@ -9,6 +9,9 @@ GraviryFollower::GraviryFollower(GlobalGravityObj* pGravityObj, const JMapInfoIt
 
 void GraviryFollower::setGravityFollowHost(const NameObj* pHost) {
     mGravity->mHost = pHost;
+    if (pHost == nullptr) {
+        mGravity->mValidFollower = false;
+    }
 }
 
 void GraviryFollower::update() {

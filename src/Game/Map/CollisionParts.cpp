@@ -1,5 +1,4 @@
 #include "compat/CollisionPartsCompat.hpp"
-#include "compat/CollisionDirectorOwnership.hpp"
 #include "Game/Map/CollisionParts.hpp"
 #include "Game/Camera/CameraPolygonCodeUtil.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
@@ -12,10 +11,24 @@
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/TriangleFilter.hpp"
+#include "scene/StageCollisionService.hpp"
+#include <aurora/exception.hpp>
+#include <stdexcept>
 
 namespace {
     void requirePublishedGeometry(const CollisionParts& parts) {
-        smgpc::compat::require_published_collision_geometry(parts.mKeeperIndex);
+        auto* service = smgpc::compat::collision_service_for_parts(&parts);
+        if (!service && parts.mKeeperIndex == 0)
+            service = smgpc::scene::StageCollisionService::active();
+        if (!service && parts.mKeeperIndex != 0) {
+            if (auto* director = MR::getCollisionDirector()) {
+                if (parts.mKeeperIndex < 1 || parts.mKeeperIndex > 3)
+                    aurora::throw_host_exception<std::invalid_argument>("Auxiliary collision category must be 1, 2 or 3.");
+                service = director->getCategoryKeeper(parts.mKeeperIndex)->nativeService();
+            }
+        }
+        if (service)
+            service->require_published_geometry();
     }
 }
 

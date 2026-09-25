@@ -3,7 +3,7 @@
 #include "Game/NPC/TalkDirector.hpp"
 #include <aurora/exception.hpp>
 #include "Game/Screen/StarPointerTarget.hpp"
-#include "compat/EffectSystemOwnership.hpp"
+#include "Game/LiveActor/EffectKeeper.hpp"
 #include "Game/AudioLib/AudAnmSoundObject.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 
@@ -15,6 +15,7 @@
 #include "Game/LiveActor/ClippingGroupHolder.hpp"
 #include "Game/LiveActor/ViewGroupCtrl.hpp"
 #include "Game/Util/JMapIdInfo.hpp"
+#include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/HitSensorInfo.hpp"
 #include "Game/LiveActor/HitSensorKeeper.hpp"
@@ -220,6 +221,8 @@ namespace smgpc::compat {
         // Scan actual groups so direct original registerObj calls are covered.
         for (const auto& [registered, state] : name_obj_states()) {
             if (registered == object) continue;
+            if (auto* followers = dynamic_cast<BaseMatrixFollowTargetHolder*>(const_cast<NameObj*>(registered)))
+                followers->releaseNativeReference(object);
             if (auto* talk = dynamic_cast<TalkDirector*>(const_cast<NameObj*>(registered)))
                 talk->releaseNativeReference(object);
             if (auto* director = dynamic_cast<DemoDirector*>(const_cast<NameObj*>(registered)))
@@ -474,7 +477,8 @@ namespace smgpc::compat {
             state.clipping_holder = nullptr;
             state.clipping_groups = nullptr;
         }
-        release_actor_effect_keeper(actor);
+        delete actor->mEffectKeeper;
+        const_cast<LiveActor*>(actor)->mEffectKeeper = nullptr;
         release_actor_collision_parts(actor);
 
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {

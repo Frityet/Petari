@@ -8,7 +8,7 @@
 #include "Game/Util/SingletonHolder.hpp"
 #include "JSystem/J3DGraphAnimator/J3DMaterialAnm.hpp"
 #include "camera/CameraAnimation.hpp"
-#include "compat/J3dCommandScope.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "resource/BasResource.hpp"
 #include "resource/BtiTextureData.hpp"
@@ -198,7 +198,7 @@ ResourceHolder::ResourceHolder(JKRArchive& rArchive)
             mNativeResources->prepare(rArchive, *mHeap);
         }
         const smgpc::compat::JkrAllocationScope original(mNativeResources->domain);
-        const smgpc::compat::J3dCommandScope commands;
+        const J3DSys::CommandScope commands;
         const LoadMutexRecovery recovery;
         initializeArc(*mArchive);
 

@@ -1,11 +1,15 @@
 #pragma once
 
 #include "Game/Map/BezierRail.hpp"
+#include <memory>
 
 class RailRider {
 public:
     RailRider(const JMapInfoIter&);
     RailRider(s32, s32);
+    ~RailRider();
+    RailRider(const RailRider&) = delete;
+    RailRider& operator=(const RailRider&) = delete;
 
     void move();
     void moveToNearestPos(const TVec3f&);
@@ -59,4 +63,7 @@ public:
     TVec3f mStartPos;      // 0x28
     TVec3f mEndPos;        // 0x34
     s32 mCurPoint;         // 0x40
+
+private:
+    std::unique_ptr< BezierRail > mNativeRail;
 };

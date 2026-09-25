@@ -14,6 +14,7 @@ class PaneEffectKeeper;
 class AutoEffectGroup {
 public:
     AutoEffectGroup(const char*, int);
+    ~AutoEffectGroup();
     void add(const JMapInfoIter&);
     const char* getName() const { return mName; }
 

@@ -6,7 +6,7 @@
 #include "Game/Util/SystemUtil.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "OriginalStageResourceProcessFixture.hpp"
-#include "compat/J3dCommandScope.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "resource/GameResourceRuntime.hpp"
 #include "resource/RarcArchive.hpp"
 #include "resource/BcsvTable.hpp"

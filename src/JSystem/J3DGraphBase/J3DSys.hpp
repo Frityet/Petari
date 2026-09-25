@@ -1,6 +1,8 @@
 #pragma once
 
 #include <revolution.h>
+#include <dolphin/gd.h>
+#include <aurora/guest_thread.hpp>
 
 enum J3DSysDrawBuf {
     /* 0x0 */ J3DSysDrawBuf_Opa,
@@ -22,6 +24,8 @@ enum J3DError {
 };
 
 class J3DMtxCalc;
+class J3DMtxBuffer;
+class J3DJoint;
 class J3DModel;
 class J3DMatPacket;
 class J3DShapePacket;
@@ -37,6 +41,10 @@ enum J3DSysFlag {
 
 class J3DSys {
 public:
+    class CommandScope;
+    class ContextScope;
+    static OSMutex sNativeCommandMutex;
+
     /* 0x000 */ Mtx mViewMtx;
     /* 0x030 */ J3DMtxCalc* mCurrentMtxCalc;
     /* 0x034 */ u32 mFlags;
@@ -173,3 +181,52 @@ public:
 
 extern u32 j3dDefaultViewNo;
 extern J3DSys j3dSys;
+
+// Serialize the SDK's current heap and J3D command context in that order.
+// Native exceptions must restore recursive lock, GD and interrupt state.
+class J3DSys::CommandScope final {
+public:
+    CommandScope();
+    ~CommandScope();
+    CommandScope(const CommandScope&) = delete;
+    CommandScope& operator=(const CommandScope&) = delete;
+
+private:
+    class MutexScope final {
+    public:
+        explicit MutexScope(OSMutex& mutex);
+        ~MutexScope();
+        MutexScope(const MutexScope&) = delete;
+        MutexScope& operator=(const MutexScope&) = delete;
+    private:
+        OSMutex& _mutex;
+        OSThread* _thread;
+        s32 _count;
+        int _exceptions;
+    };
+
+    aurora::os::GuestThreadExecutionScope _execution;
+    BOOL _interrupts;
+    MutexScope _heap;
+    MutexScope _commands;
+    GDLObj* _previous;
+};
+
+// Preserve the complete shared J3D context around nested scene phases.
+class J3DSys::ContextScope final {
+public:
+    ContextScope();
+    ~ContextScope();
+    ContextScope(const ContextScope&) = delete;
+    ContextScope& operator=(const ContextScope&) = delete;
+
+private:
+    CommandScope _commands;
+    J3DSys _system;
+    J3DMtxBuffer* _buffer;
+    J3DJoint* _joint;
+    J3DMtxCalc* _calculator;
+    Vec _current_scale, _parent_scale;
+    Mtx _matrix;
+    J3DTexCoordScaleInfo _tex_scale[8];
+};

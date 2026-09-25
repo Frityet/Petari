@@ -6,6 +6,7 @@
 class AutoEffectGroupHolder {
 public:
     AutoEffectGroupHolder();
+    ~AutoEffectGroupHolder();
     AutoEffectGroup* find(const char*) const;
     bool isExist(const char*) const;
 

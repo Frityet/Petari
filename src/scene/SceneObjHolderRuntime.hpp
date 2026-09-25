@@ -14,10 +14,7 @@ namespace smgpc::runtime { class SceneScheduler; class SceneSchedulerAllocationB
 namespace smgpc::camera { class CameraDirectorRuntime; }
 
 namespace smgpc::compat {
-    class CollisionDirectorOwnership;
-    class EffectSystemOwnership;
     class JkrAllocationDomain;
-    class GlobalGravityOwnership;
 }
 
 namespace smgpc::scene {
@@ -39,8 +36,7 @@ namespace smgpc::scene {
         SceneObjHolderBinding(SceneObjHolderBinding &&) = delete;
         SceneObjHolderBinding &operator=(SceneObjHolderBinding &&) = delete;
 
-        void initialize_effect_system(unsigned particles = 3072, unsigned emitters = 256,
-                                      std::size_t byte_budget = 8U * 1024U * 1024U);
+        void initialize_effect_system(unsigned particles = 3072, unsigned emitters = 256);
         void initialize_camera_system();
         void init_after_placement();
         void acknowledge_scene_postpass(std::span<NameObj *const> objects);
@@ -51,10 +47,6 @@ namespace smgpc::scene {
     private:
         friend class ::SceneObjHolder;
         friend std::shared_ptr<smgpc::compat::JkrAllocationDomain> current_scene_allocation_domain() noexcept;
-        friend smgpc::compat::CollisionDirectorOwnership* current_collision_director_ownership() noexcept;
-        friend smgpc::compat::EffectSystemOwnership* current_effect_system_ownership() noexcept;
-        friend smgpc::compat::GlobalGravityOwnership *
-        current_global_gravity_ownership() noexcept;
         friend bool current_scene_obj_holder_binding_owns(
             const NameObj *object) noexcept;
         friend void adopt_current_scene_obj_holder_descendant(
@@ -65,10 +57,6 @@ namespace smgpc::scene {
         std::shared_ptr<smgpc::compat::JkrAllocationDomain> _game_allocation_domain;
         std::unique_ptr<smgpc::runtime::SceneSchedulerAllocationBinding> _game_allocation_binding;
         std::unique_ptr<smgpc::camera::CameraDirectorRuntime> _camera_runtime;
-        std::unique_ptr<smgpc::compat::EffectSystemOwnership> _effect_system_ownership;
-        std::unique_ptr<smgpc::compat::CollisionDirectorOwnership> _collision_director_ownership;
-        smgpc::runtime::SceneScheduler* _effect_scheduler = nullptr;
-        std::size_t _effect_registration_marker = 0U;
         SceneObjHolder *_holder;
         std::vector<std::unique_ptr<NameObj>> _owned_objects;
         std::vector<NameObj *> _owned_registration_objects;
@@ -81,18 +69,12 @@ namespace smgpc::scene {
         std::size_t _construction_depth = 0U;
         SceneObjFactoryOverride _factory_override;
         void *_factory_context;
-        std::unique_ptr<smgpc::compat::GlobalGravityOwnership>
-            _global_gravity_ownership;
     };
 
-    [[nodiscard]] smgpc::compat::CollisionDirectorOwnership* current_collision_director_ownership() noexcept;
-    [[nodiscard]] smgpc::compat::EffectSystemOwnership* current_effect_system_ownership() noexcept;
     [[nodiscard]] SceneObjHolder *current_scene_obj_holder() noexcept;
     [[nodiscard]] std::shared_ptr<smgpc::compat::JkrAllocationDomain> current_scene_allocation_domain() noexcept;
     [[nodiscard]] bool current_scene_obj_holder_binding_owns(
         const NameObj *object) noexcept;
     void adopt_current_scene_obj_holder_descendant(NameObj *object);
-    [[nodiscard]] smgpc::compat::GlobalGravityOwnership *
-    current_global_gravity_ownership() noexcept;
 
 }  // namespace smgpc::scene

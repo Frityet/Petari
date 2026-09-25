@@ -1,0 +1,350 @@
+[
+  {
+    "path": "src/Game/Effect/AutoEffectGroup.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Effect/AutoEffectGroup.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Effect/AutoEffectGroupHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Effect/AutoEffectGroupHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Effect/EffectSystem.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Effect/EffectSystem.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Effect/MultiEmitter.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Effect/MultiEmitter.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Effect/ParticleCalcExecutor.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Effect/ParticleCalcExecutor.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Effect/ParticleDrawExecutor.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Effect/ParticleDrawExecutor.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Effect/ParticleResourceHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Effect/ParticleResourceHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Effect/SyncBckEffectInfo.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Effect/SyncBckEffectInfo.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Gravity/GlobalGravityObj.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Gravity/GlobalGravityObj.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Gravity/GraviryFollower.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Gravity/GravityCreator.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Gravity/PlanetGravity.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Gravity/PlanetGravity.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Gravity/PlanetGravityManager.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Gravity/PlanetGravityManager.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/EffectKeeper.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/EffectKeeper.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/LiveActor.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/RailRider.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/RailRider.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/BezierRail.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/BezierRail.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/CollisionCategorizedKeeper.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/CollisionCode.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/CollisionCode.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/CollisionDirector.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/CollisionDirector.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/CollisionParts.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/RailPart.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/RailPart.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/NameObj/NameObjListExecutor.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Player/MarioAnimator.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Scene/ScenarioSelectScene.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/LayoutActor.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/PaneEffectKeeper.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/PaneEffectKeeper.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/ResourceHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/BaseMatrixFollowTargetHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/BaseMatrixFollowTargetHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/MutexHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/JSystem/J3DGraphBase/J3DSys.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/JSystem/J3DGraphBase/J3DSys.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/CollisionDirectorOwnership.cpp",
+    "mode": "intentional-owner-removal"
+  },
+  {
+    "path": "src/compat/CollisionDirectorOwnership.hpp",
+    "mode": "intentional-owner-removal"
+  },
+  {
+    "path": "src/compat/CollisionPartsCompat.cpp",
+    "mode": "scoped-delta-on-HEAD"
+  },
+  {
+    "path": "src/compat/EffectSystemOwnership.cpp",
+    "mode": "intentional-owner-removal"
+  },
+  {
+    "path": "src/compat/EffectSystemOwnership.hpp",
+    "mode": "intentional-owner-removal"
+  },
+  {
+    "path": "src/compat/GlobalGravityOwnership.cpp",
+    "mode": "intentional-owner-removal"
+  },
+  {
+    "path": "src/compat/GlobalGravityOwnership.hpp",
+    "mode": "intentional-owner-removal"
+  },
+  {
+    "path": "src/compat/J3dCommandScope.cpp",
+    "mode": "intentional-owner-removal"
+  },
+  {
+    "path": "src/compat/J3dCommandScope.hpp",
+    "mode": "intentional-owner-removal"
+  },
+  {
+    "path": "src/compat/SceneJ3dScope.hpp",
+    "mode": "intentional-owner-removal"
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/resource/J3dModelResource.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.cpp",
+    "mode": "mechanical-sdk-api-migration-on-HEAD"
+  },
+  {
+    "path": "src/runtime/SceneScheduler.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/scene/SceneObjHolderRuntime.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/scene/nameobj/NameObjFactory.cpp",
+    "mode": "scoped-delta-on-HEAD"
+  },
+  {
+    "path": "tests/CenterScreenBlurRealOrAbsentTests.cpp",
+    "mode": "mechanical-sdk-api-migration-on-HEAD"
+  },
+  {
+    "path": "tests/GravityRealOrAbsentTests.cpp",
+    "mode": "actual-owner-contract-adaptation-on-HEAD-preserving-dirty-fixture-work"
+  },
+  {
+    "path": "tests/J3dCommandSchedulingTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalCameraDirectorTests.cpp",
+    "mode": "mechanical-sdk-api-migration-on-HEAD"
+  },
+  {
+    "path": "tests/OriginalCollisionPartsOwnerTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalEffectOwnershipTests.cpp",
+    "mode": "intentional-owner-removal"
+  },
+  {
+    "path": "tests/OriginalJointControllerTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalNpcOrientationTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalProcessPlayerOwnerTests.cpp",
+    "mode": "mechanical-sdk-api-migration-on-HEAD"
+  },
+  {
+    "path": "tests/OriginalProcessShadowVolumeLineTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalProcessTrampleJumpTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalResourceHolderTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalSphereQueryTests.cpp",
+    "mode": "scoped-delta-on-HEAD"
+  },
+  {
+    "path": "tests/UpstreamComponentTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "mode": "scoped-delta-on-HEAD"
+  },
+  {
+    "path": "src/scene/NameObjLifecycleService.cpp",
+    "mode": "retired-API-adaptation-on-HEAD-preserving-preexisting-working-deletion"
+  },
+  {
+    "path": "src/scene/SceneExecutionService.cpp",
+    "mode": "retired-API-adaptation-on-HEAD-preserving-preexisting-working-deletion"
+  },
+  {
+    "path": "tests/LineCollisionQueryTests.cpp",
+    "mode": "retired-API-adaptation-on-HEAD-preserving-preexisting-working-deletion"
+  }
+]

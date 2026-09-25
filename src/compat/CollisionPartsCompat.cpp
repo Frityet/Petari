@@ -1,9 +1,10 @@
 #include "compat/CollisionPartsCompat.hpp"
-#include "compat/CollisionDirectorOwnership.hpp"
 
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/CollisionParts.hpp"
+#include "Game/Map/CollisionCategorizedKeeper.hpp"
+#include "Game/Map/CollisionDirector.hpp"
 #include "Game/Map/KCollision.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
@@ -38,6 +39,7 @@ namespace {
     struct ActorCollisionPartsState {
         std::shared_ptr<const void> resource_owner;
         SceneObjHolder* scene_holder = nullptr;
+        std::shared_ptr<smgpc::scene::StageCollisionService> category_owner;
         smgpc::scene::StageCollisionService* service = nullptr;
         std::uint64_t service_generation = 0;
         std::span<const std::uint8_t> kcl;
@@ -93,7 +95,8 @@ namespace smgpc::compat {
         if (!resources || !name || !sensor || !sensor->mHost || !collision || !holder) {
             aurora::throw_host_exception<std::logic_error>("CollisionParts requires its actor, resources, scene and collision owners.");
         }
-        if (category != 0) collision = &scene::current_collision_director_ownership()->category_service(category);
+        if (category < 0 || category > 3)
+            aurora::throw_host_exception<std::invalid_argument>("Collision category must be 0, 1, 2 or 3.");
         if (scale_type < MR::CollisionScaleType_AutoEqualScale || scale_type > MR::CollisionScaleType_Unk2) {
             aurora::throw_host_exception<std::invalid_argument>("CollisionParts scale policy is outside the original enum.");
         }
@@ -113,8 +116,6 @@ namespace smgpc::compat {
         auto state = std::make_unique<ActorCollisionPartsState>();
         state->resource_owner = resources->retainNativeResources();
         state->scene_holder = holder;
-        state->service = collision;
-        state->service_generation = collision->generation();
         state->resource_name = name;
         state->source = resources->nativeResourcePath().generic_string() + ":/" + kcl_entry->path;
         state->kcl = archive.file_data(*kcl_entry);
@@ -125,9 +126,15 @@ namespace smgpc::compat {
         state->decoded = std::make_unique<resource::KCollisionResource>(state->kcl, state->attributes);
         {
             const aurora::allocation::ClientAllocationScope client;
-            if (MR::createSceneObj(SceneObj_CollisionDirector) == nullptr) {
+            auto* director = static_cast<CollisionDirector*>(MR::createSceneObj(SceneObj_CollisionDirector));
+            if (director == nullptr) {
                 aurora::throw_host_exception<std::logic_error>("CollisionParts requires its original CollisionDirector.");
             }
+            auto* keeper = director->getCategoryKeeper(category);
+            state->category_owner = keeper->retainNativeService();
+            collision = keeper->nativeService();
+            state->service = collision;
+            state->service_generation = collision->generation();
             state->parts.reset(new CollisionParts());
             auto* data = state->decoded->native_file();
             auto* attrs = state->decoded->attributes_data();
@@ -176,19 +183,25 @@ namespace smgpc::compat {
         if (!resource || !sensor || !sensor->mHost || !collision || !holder) {
             aurora::throw_host_exception<std::logic_error>("Generated CollisionParts requires its geometry, actor, scene and collision owners.");
         }
+        if (category < 0 || category > 3)
+            aurora::throw_host_exception<std::invalid_argument>("Collision category must be 0, 1, 2 or 3.");
         const auto zone = MR::getCurrentPlacementZoneId();
         if (zone < 0 || zone >= MR::getZoneNum() || MR::getZoneNum() > 32) {
             aurora::throw_host_exception<std::logic_error>("Generated CollisionParts requires a valid original placement zone.");
         }
+        CollisionCategorizedKeeper* keeper = nullptr;
         {
             const aurora::allocation::ClientAllocationScope client;
-            if (!MR::createSceneObj(SceneObj_CollisionDirector)) {
+            auto* director = static_cast<CollisionDirector*>(MR::createSceneObj(SceneObj_CollisionDirector));
+            if (!director) {
                 aurora::throw_host_exception<std::logic_error>("Generated CollisionParts requires its original CollisionDirector.");
             }
+            keeper = director->getCategoryKeeper(category);
         }
-        if (category != 0) collision = &scene::current_collision_director_ownership()->category_service(category);
+        collision = keeper->nativeService();
         auto state = std::make_unique<ActorCollisionPartsState>();
         state->scene_holder = holder;
+        state->category_owner = keeper->retainNativeService();
         state->service = collision;
         state->service_generation = collision->generation();
         state->resource_name = sensor->mHost->mName;

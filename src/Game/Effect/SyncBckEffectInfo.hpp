@@ -18,6 +18,7 @@ public:
     };
 
     SyncBckEffectInfo(const XanimePlayer*, const char*, s32, f32, f32, bool);
+    ~SyncBckEffectInfo();
 
     void addBck(const XanimePlayer*, const char*);
     bool isRegisteredBck(const char*) const;

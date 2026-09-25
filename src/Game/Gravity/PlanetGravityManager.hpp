@@ -15,8 +15,7 @@ public:
     /// @param pName The new name assigned to the object.
     PlanetGravityManager(const char* pName);
 
-    virtual ~PlanetGravityManager() {
-    }
+    virtual ~PlanetGravityManager();
 
     /// @brief Effectively does nothing.
     /// @param rIter Reference to the JMapInfoIter that supplies BCSV information.
@@ -39,6 +38,7 @@ public:
     ///
     /// @param pGravity The PlanetGravity instance to be registered.
     void registerGravity(PlanetGravity* pGravity);
+    void unregisterGravity(PlanetGravity* pGravity) noexcept;
 
 private:
     /// @brief Sorts all PlanetGravity instances by their priority in reverse order. The higher the priority is, the lower

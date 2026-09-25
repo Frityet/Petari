@@ -14,7 +14,6 @@
 #include "Game/Animation/BrkPlayer.hpp"
 #include "Game/System/ResourceInfo.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
-#include "compat/SceneJ3dScope.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 
 #include <algorithm>
@@ -750,7 +749,7 @@ namespace smgpc::runtime {
 
     void SceneScheduler::execute_movement() {
         smgpc::compat::JkrHostAllocationScope host;
-        smgpc::compat::SceneJ3dScope j3d_scope;
+        J3DSys::ContextScope j3d_scope;
         begin_frame();
         invoke_game_callback(_allocation_domain, [] { MR::getSceneNameObjMovementController()->movement(); });
         apply_execution_requirements(false, true, true);
@@ -776,7 +775,7 @@ namespace smgpc::runtime {
 
     void SceneScheduler::execute_movement_category(s32 movement_type) {
         smgpc::compat::JkrHostAllocationScope host;
-        smgpc::compat::SceneJ3dScope j3d_scope;
+        J3DSys::ContextScope j3d_scope;
         if (movement_type < 0)
             aurora::throw_host_exception<std::out_of_range>("Movement category must be nonnegative");
         for (const auto& registered : category_entries(movement_type, false))
@@ -809,7 +808,7 @@ namespace smgpc::runtime {
 
     void SceneScheduler::execute_calc_anim() {
         smgpc::compat::JkrHostAllocationScope host;
-        smgpc::compat::SceneJ3dScope j3d_scope;
+        J3DSys::ContextScope j3d_scope;
         std::vector<s32> categories;
         for (const auto& entry : sorted_entries_for_calc_anim())
             if (entry.calc_anim_type >= 0 && std::ranges::find(categories, entry.calc_anim_type) == categories.end())
@@ -819,7 +818,7 @@ namespace smgpc::runtime {
 
     void SceneScheduler::execute_calc_anim_category(s32 calc_anim_type) {
         smgpc::compat::JkrHostAllocationScope host;
-        smgpc::compat::SceneJ3dScope j3d_scope;
+        J3DSys::ContextScope j3d_scope;
         if (calc_anim_type < 0)
             aurora::throw_host_exception<std::out_of_range>("Animation category must be nonnegative");
         for (const auto& registered : category_entries(calc_anim_type, true))
@@ -859,7 +858,7 @@ namespace smgpc::runtime {
         if (!_draw_buffers->has_draw_buffers() || !_draw_buffers->is_allocated())
             aurora::throw_host_exception<std::logic_error>("Original category view entry requires allocated scene draw buffers");
         refresh_draw_buffer_activation();
-        smgpc::compat::SceneJ3dScope commands;
+        J3DSys::ContextScope commands;
         // The original SceneExecutor has already selected the view matrix.
         invoke_game_callback(_allocation_domain, [&] { _draw_buffers->entry(camera_type); });
     }
@@ -873,7 +872,7 @@ namespace smgpc::runtime {
         // entry consumes the resulting original draw membership without
         // reevaluating actor positions after their movement callbacks.
         refresh_draw_buffer_activation();
-        smgpc::compat::SceneJ3dScope commands;
+        J3DSys::ContextScope commands;
         // SceneFunction::executeCalcViewAndEntryList: the actual holder invokes
         // each active actor once, in its original camera-category list.
         TMtx34f mtx;
@@ -1068,7 +1067,7 @@ namespace smgpc::runtime {
         if (!_draw_buffers->has_draw_buffers()) return;
         if (!_draw_buffers->is_allocated()) aurora::throw_host_exception<std::logic_error>("Draw lists have not completed scene construction");
         refresh_draw_buffer_activation();
-        smgpc::compat::SceneJ3dScope commands;
+        J3DSys::ContextScope commands;
         invoke_game_callback(_allocation_domain, [&] {
             if (pass == SceneDrawBufferPass::Translucent) _draw_buffers->draw_translucent(draw_buffer_type);
             else _draw_buffers->draw_opaque(draw_buffer_type);
@@ -1100,7 +1099,7 @@ namespace smgpc::runtime {
 
     void SceneScheduler::execute_draw_type(s32 draw_type) {
         smgpc::compat::JkrHostAllocationScope host;
-        smgpc::compat::SceneJ3dScope j3d_scope;
+        J3DSys::ContextScope j3d_scope;
         std::vector<Entry> draw_entries;
         std::vector<NameObj*> objects;
         {

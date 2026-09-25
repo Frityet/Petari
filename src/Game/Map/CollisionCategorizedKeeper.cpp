@@ -7,16 +7,40 @@
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include <algorithm>
-#if defined(TARGET_PC)
-#include "compat/CollisionDirectorOwnership.hpp"
-#endif
+#include "scene/StageCollisionService.hpp"
+#include <aurora/allocation.hpp>
 
 CollisionCategorizedKeeper::CollisionCategorizedKeeper(s32 category)
-    : NameObj(CP932("地形コリジョンカテゴリキーパー")), mHitInfoArray(nullptr), _10(0), mZoneCount(0), mZoneNum(0), _9C(category), _A0(false), _A1(true) {
+    : NameObj(CP932("地形コリジョンカテゴリキーパー")), mHitInfoArray(nullptr), _10(0), mZoneCount(0), mZones{}, mZoneNum(0), _9C(category), _A0(false), _A1(true) {
     mHitInfoArray = new HitInfo[32];
+    try {
+        if (category != 0) {
+            const aurora::allocation::HostAllocationScope host;
+            mNativeService = std::make_shared<smgpc::scene::StageCollisionService>();
+        }
+    } catch (...) {
+        delete[] mHitInfoArray;
+        throw;
+    }
 }
 
 CollisionCategorizedKeeper::~CollisionCategorizedKeeper() {
+    for (s32 i = 0; i < mZoneNum; i++)
+        delete mZones[i];
+    delete[] mHitInfoArray;
+}
+
+smgpc::scene::StageCollisionService* CollisionCategorizedKeeper::nativeService() const noexcept {
+    return _9C == 0 ? smgpc::scene::StageCollisionService::active() : mNativeService.get();
+}
+
+std::shared_ptr<smgpc::scene::StageCollisionService> CollisionCategorizedKeeper::retainNativeService() const noexcept {
+    return mNativeService;
+}
+
+void CollisionCategorizedKeeper::requireNativeGeometryPublished() const {
+    if (auto* service = nativeService())
+        service->require_published_geometry();
 }
 
 CollisionZone* CollisionCategorizedKeeper::getZone(int zoneID) {
@@ -80,9 +104,7 @@ void CollisionCategorizedKeeper::removeFromGlobal(CollisionParts* pParts) {
 }
 
 s32 CollisionCategorizedKeeper::checkStrikePoint(const TVec3f& rPos, HitInfo* pHitInfo) {
-#if defined(TARGET_PC)
-    smgpc::compat::require_published_collision_geometry(_9C);
-#endif
+    requireNativeGeometryPublished();
     MR::getCollisionDirector();
     _10 = 0;
 
@@ -146,9 +168,7 @@ s32 CollisionCategorizedKeeper::checkStrikePoint(const TVec3f& rPos, HitInfo* pH
 
 s32 CollisionCategorizedKeeper::checkStrikeBall(const TVec3f& rPos, f32 radius, bool movingReaction, const CollisionPartsFilterBase* pPartsFilter,
                                                 const TriangleFilterBase* pTriangleFilter) {
-#if defined(TARGET_PC)
-    smgpc::compat::require_published_collision_geometry(_9C);
-#endif
+    requireNativeGeometryPublished();
     MR::getCollisionDirector();
     _10 = 0;
     s32 count = 0;
@@ -221,9 +241,7 @@ s32 CollisionCategorizedKeeper::checkStrikeBall(const TVec3f& rPos, f32 radius, 
 s32 CollisionCategorizedKeeper::checkStrikeBallWithThickness(const TVec3f& rPos, f32 radius, f32 thickness,
                                                              const CollisionPartsFilterBase* pPartsFilter,
                                                              const TriangleFilterBase* pTriangleFilter) {
-#if defined(TARGET_PC)
-    smgpc::compat::require_published_collision_geometry(_9C);
-#endif
+    requireNativeGeometryPublished();
     MR::getCollisionDirector();
     _10 = 0;
     s32 count = 0;
@@ -295,9 +313,7 @@ s32 CollisionCategorizedKeeper::checkStrikeBallWithThickness(const TVec3f& rPos,
 
 s32 CollisionCategorizedKeeper::checkStrikeLine(const TVec3f& rStart, const TVec3f& rOffset, s32 maxCount,
                                                const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter) {
-#if defined(TARGET_PC)
-    smgpc::compat::require_published_collision_geometry(_9C);
-#endif
+    requireNativeGeometryPublished();
     MR::getCollisionDirector();
 
     if (maxCount == 0) {
@@ -465,9 +481,7 @@ void CollisionZone::eraseParts(CollisionParts* pParts) {
 }
 
 u32 CollisionCategorizedKeeper::createAreaPolygonList(Triangle* pTriangles, u32 capacity, const TVec3f& rStart, const TVec3f& rEnd) {
-#if defined(TARGET_PC)
-    smgpc::compat::require_published_collision_geometry(_9C);
-#endif
+    requireNativeGeometryPublished();
     MR::getCollisionDirector();
     u32 count = 0;
     TVec3f minimum;
@@ -519,9 +533,7 @@ u32 CollisionCategorizedKeeper::createAreaPolygonList(Triangle* pTriangles, u32 
 }
 
 u32 CollisionCategorizedKeeper::createAreaPolygonListArray(Triangle* pTriangles, u32 capacity, TVec3f* pPoints, u32 pointCount) {
-#if defined(TARGET_PC)
-    smgpc::compat::require_published_collision_geometry(_9C);
-#endif
+    requireNativeGeometryPublished();
     MR::getCollisionDirector();
     u32 count = 0;
     TVec3f minimum;

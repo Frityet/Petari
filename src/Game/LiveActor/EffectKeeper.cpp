@@ -1,3 +1,5 @@
+#include "Game/Effect/EffectSystem.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/EffectKeeper.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/Effect/AutoEffectInfo.hpp"
@@ -73,7 +75,25 @@ EffectKeeper::EffectKeeper(const char* pParam1, ResourceHolder* pParam2, int par
     _C.init(MR::Effect::getAutoEffectNum(_8) + param3);
 }
 
+EffectKeeper::~EffectKeeper() {
+    if (mNativeSystem) {
+        for (auto* multi : _C)
+            mNativeSystem->retireNativeEmitter(*multi);
+        mNativeSystem->unregisterNativeKeeper(this);
+    }
+    if (mNativeHost && mNativeHost->mEffectKeeper == this)
+        mNativeHost->mEffectKeeper = nullptr;
+    for (auto* multi : _C)
+        delete multi;
+    delete _20;
+    delete _18;
+}
+
 void EffectKeeper::init(LiveActor* pActor) {
+    auto* system = MR::getEffectSystem();
+    system->registerNativeKeeper(this);
+    mNativeSystem = system;
+    mNativeHost = pActor;
     if (_8 != nullptr) {
         MR::Effect::registerAutoEffectInfoGroup(this, pActor, _8);
     }

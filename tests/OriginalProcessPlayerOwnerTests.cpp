@@ -18,7 +18,7 @@
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/J3dCommandScope.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageCollisionService.hpp"
@@ -253,7 +253,7 @@ namespace {
             const auto domain = smgpc::scene::current_scene_allocation_domain();
             require(domain != nullptr, "the actual original scene owns test allocations");
             const smgpc::compat::JkrAllocationScope allocation(domain);
-            const smgpc::compat::J3dCommandScope commands;
+            const J3DSys::CommandScope commands;
 
             if (!stack_and_walk) {
                 auto* active = actor->mMario->_97C;

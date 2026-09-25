@@ -1,0 +1,7 @@
+{
+  "paths": [
+    "src/compat/SceneObjHolderCompat.cpp",
+    "src/scene/SceneObjHolderRuntime.hpp",
+    "tests/xmake.lua"
+  ]
+}

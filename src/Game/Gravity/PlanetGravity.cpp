@@ -21,6 +21,12 @@ PlanetGravity::PlanetGravity() {
     mAppeared = true;
 }
 
+PlanetGravity::~PlanetGravity() {
+    if (mNativeManager != nullptr) {
+        mNativeManager->unregisterGravity(this);
+    }
+}
+
 void PlanetGravity::setPriority(s32 priority) {
     mPriority = priority;
 }

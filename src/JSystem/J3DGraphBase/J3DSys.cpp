@@ -2,6 +2,11 @@
 #include "JSystem/J3DGraphBase/J3DFifo.hpp"
 #include "JSystem/J3DGraphBase/J3DTevs.hpp"
 #include <revolution/gx.h>
+#include "JSystem/J3DGraphAnimator/J3DJoint.hpp"
+#include "JSystem/J3DGraphAnimator/J3DMtxCalc.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
+#include <cstring>
+#include <exception>
 
 J3DSys j3dSys;
 
@@ -348,4 +353,52 @@ void J3DSys::reinitPixelProc() {
     GXSetFogRangeAdj(GX_FALSE, 0, nullptr);
     GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
     GXSetZCompLoc(GX_TRUE);
+}
+
+OSMutex J3DSys::sNativeCommandMutex;
+
+J3DSys::CommandScope::MutexScope::MutexScope(OSMutex& mutex)
+    : _mutex(mutex), _thread(OSGetCurrentThread()), _exceptions(std::uncaught_exceptions()) {
+    OSLockMutex(&_mutex);
+    _count = _mutex.count;
+}
+
+J3DSys::CommandScope::MutexScope::~MutexScope() {
+    // Recover acquisitions made by original manual locking after this scope
+    // only when an exception bypassed their corresponding unlocks.
+    if (std::uncaught_exceptions() > _exceptions)
+        while (_mutex.thread == _thread && _mutex.count > _count) OSUnlockMutex(&_mutex);
+    OSUnlockMutex(&_mutex);
+}
+
+J3DSys::CommandScope::CommandScope()
+    : _interrupts([] {
+          const auto enabled = OSDisableInterrupts();
+          OSRestoreInterrupts(enabled);
+          return enabled;
+      }()),
+      _heap(JKRHeap::sCurrentHeapMutex), _commands(J3DSys::sNativeCommandMutex), _previous(__GDCurrentDL) {
+}
+
+J3DSys::CommandScope::~CommandScope() {
+    GDSetCurrent(_previous);
+    OSRestoreInterrupts(_interrupts);
+}
+
+J3DSys::ContextScope::ContextScope()
+    : _system(j3dSys), _buffer(J3DMtxCalc::mMtxBuffer), _joint(J3DMtxCalc::mJoint),
+      _calculator(J3DJoint::mCurrentMtxCalc), _current_scale(J3DSys::mCurrentS), _parent_scale(J3DSys::mParentS) {
+    std::memcpy(_matrix, J3DSys::mCurrentMtx, sizeof(_matrix));
+    std::memcpy(_tex_scale, J3DSys::sTexCoordScaleTable, sizeof(_tex_scale));
+}
+
+J3DSys::ContextScope::~ContextScope() {
+    j3dSys = _system;
+    J3DMtxCalc::mMtxBuffer = _buffer;
+    J3DMtxCalc::mJoint = _joint;
+    J3DJoint::mCurrentMtxCalc = _calculator;
+    J3DSys::mCurrentS = _current_scale;
+    J3DSys::mParentS = _parent_scale;
+    std::memcpy(J3DSys::mCurrentMtx, _matrix, sizeof(_matrix));
+    std::memcpy(J3DSys::sTexCoordScaleTable, _tex_scale, sizeof(_tex_scale));
 }

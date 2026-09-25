@@ -6,6 +6,7 @@ class NameObjAdaptor;
 class ParticleCalcExecutor {
 public:
     ParticleCalcExecutor(const EffectSystem*, bool);
+    ~ParticleCalcExecutor();
 
     void movementNormal();
     void movementIgnorePause3D();

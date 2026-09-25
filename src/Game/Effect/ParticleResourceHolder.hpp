@@ -3,6 +3,7 @@
 #include "Game/Util/JMapInfo.hpp"
 #include "JSystem/JParticle/JPAResourceManager.hpp"
 #include <revolution.h>
+#include <memory>
 
 class ResTIMG;
 
@@ -18,6 +19,7 @@ public:
 
     ParticleResourceHolder(const char*);
     ~ParticleResourceHolder();
+    std::shared_ptr<const void> retainNativeResources() const;
 
     u16 getUserIndex(const char*) const;
     void countAutoEffectNum();
@@ -31,4 +33,7 @@ public:
     JMapInfo* mParticleNames;          // 0x8
     Particle* mParticles[1024];        // 0xC
     int mNumParticles;                 // 0x100C
+
+private:
+    std::shared_ptr<const void> mNativeLifetime;
 };

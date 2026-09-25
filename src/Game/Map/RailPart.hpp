@@ -8,6 +8,9 @@ class BezierRailPart;
 class RailPart {
 public:
     RailPart();
+    ~RailPart();
+    RailPart(const RailPart&) = delete;
+    RailPart& operator=(const RailPart&) = delete;
 
     void init(const TVec3f&, const TVec3f&, const TVec3f&, const TVec3f&);
     void initForBezier(const TVec3f&, const TVec3f&, const TVec3f&, const TVec3f&);

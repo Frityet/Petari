@@ -1,7 +1,6 @@
 #include "OriginalStageResourceProcessFixture.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CollisionPartsCompat.hpp"
-#include "compat/CollisionDirectorOwnership.hpp"
 #include "compat/HitInfoCompat.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"

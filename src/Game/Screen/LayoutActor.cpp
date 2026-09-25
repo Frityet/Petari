@@ -1,5 +1,4 @@
 #include "Game/Screen/LayoutActor.hpp"
-#include "compat/EffectSystemOwnership.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include <utility>
 #include "Game/LiveActor/Spine.hpp"
@@ -19,7 +18,7 @@ LayoutActor::~LayoutActor() {
 void LayoutActor::releaseNativeResources() {
     if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance())
         runtime->unregister_layout_actor(*this);
-    smgpc::compat::release_layout_effect_keeper(this);
+    delete std::exchange(mEffectKeeper, nullptr);
     if (auto* targets = std::exchange(mPointingTarget, nullptr)) {
         for (s32 i = 0; i < targets->mNumTargets; ++i)
             delete targets->mTargets[i];
@@ -142,7 +141,8 @@ void LayoutActor::initNerve(const Nerve* pNerve) {
 }
 
 void LayoutActor::initEffectKeeper(int param1, const char* pParam2, const EffectSystem* pEffectSystem) {
-    smgpc::compat::initialize_layout_effect_keeper(this, param1, pParam2, pEffectSystem);
+    mEffectKeeper = new PaneEffectKeeper(this, mLayoutManager, param1, pParam2);
+    mEffectKeeper->init(this, pEffectSystem);
 }
 
 void LayoutActor::initPointingTarget(int maxNumTargets) {

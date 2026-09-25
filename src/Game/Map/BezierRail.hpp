@@ -3,6 +3,7 @@
 #include "Game/Map/RailPart.hpp"
 #include <JSystem/JGeometry/TVec.hpp>
 #include <revolution/types.h>
+#include <memory>
 
 class JMapInfo;
 class JMapInfoIter;
@@ -38,6 +39,9 @@ public:
 class BezierRail {
 public:
     BezierRail(const JMapInfoIter&, const JMapInfo*);
+    ~BezierRail();
+    BezierRail(const BezierRail&) = delete;
+    BezierRail& operator=(const BezierRail&) = delete;
 
     f32 normalizePos(f32, int) const;
     f32 getPartLength(int) const;
@@ -64,4 +68,9 @@ public:
     /* 0x10 */ f32* mPointCoords;
     /* 0x14 */ JMapInfoIter* mIter;
     /* 0x18 */ const JMapInfo* mInfo;
+
+private:
+    std::unique_ptr< JMapInfoIter > mNativeIter;
+    std::unique_ptr< RailPart[] > mNativeParts;
+    std::unique_ptr< f32[] > mNativePointCoords;
 };

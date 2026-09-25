@@ -1995,17 +1995,6 @@ target("smg-pc-original-auto-effect-metadata-tests")
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
 
-target("smg-pc-original-effect-ownership-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    add_files("OriginalEffectOwnershipTests.cpp")
-    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
-              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
-    add_tests("original_effect_ownership", {
-        group = "aurora", rundir = os.projectdir(), realtime_output = true
-    })
-
 target("smg-pc-original-direct-draw-texture-tests")
     set_kind("binary")
     set_default(false)

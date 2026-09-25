@@ -43,6 +43,13 @@ MultiEmitter::MultiEmitter(const char* pName) : mEmitters(), mCallBack(), mParti
     allocateEmitter(pName);
 }
 
+MultiEmitter::~MultiEmitter() {
+    // mChildren and _28 are borrowed from their keeper/group.
+    delete _24;
+    delete mParticleCallBack;
+    delete mCallBack;
+}
+
 void MultiEmitter::createEmitter() {
     create(MR::getEffectSystem());
 }

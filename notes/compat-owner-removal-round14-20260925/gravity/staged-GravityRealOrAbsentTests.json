@@ -1,0 +1,15 @@
+{
+  "artifact": "notes/compat-owner-removal-round14-20260925/gravity/staged-GravityRealOrAbsentTests.cpp",
+  "source": "git show HEAD:tests/GravityRealOrAbsentTests.cpp",
+  "source_sha256": "082c5c87fb4615d684d80634304903f59fa5d4201f74c26f26b65b4bd45fc9e6",
+  "artifact_sha256": "3505ddc5b2d4a082fa45333ac67cf041b2fa29639f6b8e70e87316ea4ad206c2",
+  "working_tree_sha256_unchanged": "8c408a3c1f43838fc2df7ce838e6c1d2b6fa7b0dad9c4fee34e4b866124165f8",
+  "removed_groups": [
+    "transactional rejection and duplicate rules",
+    "partial follower capture preserves original failure",
+    "deferred field follower and same-holder recreation"
+  ],
+  "preserved": "All unrelated HEAD fixture structures, BCSV builders, preflight coverage, query tests, standalone GravityScene and CLI remain. No working-tree real-process refactor imported.",
+  "changes": "Remove sidecar hooks/counters and three sidecar-only groups, directly initialize remaining actual actors, leave creators to destroy their fields, transfer existing follower fixture allocation to actual holder ownership.",
+  "validation": "Source text review only, no builds/tests or index/git-state mutations."
+}

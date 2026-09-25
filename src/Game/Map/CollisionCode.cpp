@@ -3,18 +3,46 @@
 #include "Game/Util/HashUtil.hpp"
 
 CollisionCode::CollisionCode() : mFloorTable(nullptr), mWallTable(nullptr), mSoundTable(nullptr), mCameraTable(nullptr) {
-    createFloorTable();
-    createWallTable();
-    createSoundTable();
-    createCameraTable();
+    try {
+        createFloorTable();
+        createWallTable();
+        createSoundTable();
+        createCameraTable();
+    } catch (...) {
+        delete mFloorTable;
+        delete mWallTable;
+        delete mSoundTable;
+        delete mCameraTable;
+        throw;
+    }
 }
 
-CodeTable::CodeTable(u32 numMax) {
+CollisionCode::~CollisionCode() {
+    delete mFloorTable;
+    delete mWallTable;
+    delete mSoundTable;
+    delete mCameraTable;
+}
+
+CodeTable::CodeTable(u32 numMax) : mHashTable(nullptr), mCodeTable(nullptr), mNameTable(nullptr) {
     mCodeNumMax = numMax;
     mCodeNum = 0;
-    mHashTable = new u32[numMax];
-    mCodeTable = new u32[numMax];
-    mNameTable = new const char*[numMax];
+    try {
+        mHashTable = new u32[numMax];
+        mCodeTable = new u32[numMax];
+        mNameTable = new const char*[numMax];
+    } catch (...) {
+        delete[] mHashTable;
+        delete[] mCodeTable;
+        delete[] mNameTable;
+        throw;
+    }
+}
+
+CodeTable::~CodeTable() {
+    delete[] mHashTable;
+    delete[] mCodeTable;
+    delete[] mNameTable;
 }
 
 void CodeTable::add(const char* pName, u32 code) {

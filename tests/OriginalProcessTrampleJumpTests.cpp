@@ -16,7 +16,7 @@
 #include "Game/Util/DemoUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/Cp932Literal.hpp"
-#include "compat/J3dCommandScope.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 
@@ -90,7 +90,7 @@ namespace {
             require(domain != nullptr, "Actual scene owns allocations performed by the original action");
             {
                 const smgpc::compat::JkrAllocationScope allocation(domain);
-                const smgpc::compat::J3dCommandScope commands;
+                const J3DSys::CommandScope commands;
                 const auto* table = actor->getConst().getTable();
                 // This intentionally injects one public action. It proves its
                 // real animation/effect closure, not a sensor-driven stomp.

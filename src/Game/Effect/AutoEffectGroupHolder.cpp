@@ -16,6 +16,11 @@ namespace MR {
 AutoEffectGroupHolder::AutoEffectGroupHolder() {
 }
 
+AutoEffectGroupHolder::~AutoEffectGroupHolder() {
+    for (auto* group : mGroups)
+        delete group;
+}
+
 AutoEffectGroup* AutoEffectGroupHolder::find(const char* pName) const {
     AutoEffectGroup* const* pGroup = std::find_if(mGroups.begin(), mGroups.end(), MR::eq_ptr_case< AutoEffectGroup* >(pName));
     return pGroup != mGroups.end() ? *pGroup : nullptr;

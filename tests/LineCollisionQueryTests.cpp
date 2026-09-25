@@ -10,7 +10,8 @@
 #include "resource/KCollisionResource.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
-#include "compat/CollisionDirectorOwnership.hpp"
+#include "Game/Map/CollisionDirector.hpp"
+#include "Game/Map/CollisionCategorizedKeeper.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/CollisionPartsFilter.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -384,7 +385,7 @@ namespace {
         SceneObjHolder holder;
         smgpc::scene::SceneObjHolderBinding binding(holder);
         holder.create(SceneObj_CollisionDirector);
-        auto& water = smgpc::scene::current_collision_director_ownership()->category_service(2);
+        auto& water = *static_cast<CollisionDirector*>(holder.getObj(SceneObj_CollisionDirector))->getCategoryKeeper(2)->nativeService();
         Collision map;
         auto map_matrix=identity; map_matrix[11]=4;
         require(map.add_kcl(kcl({1}), map_matrix, "ordinary map"), "Map control registration failed");

@@ -1,3 +1,5 @@
+#include "compat/ActorRuntimeRegistry.hpp"
+#include <utility>
 #include "compat/Cp932Literal.hpp"
 #include "Game/Effect/ParticleCalcExecutor.hpp"
 #include "Game/Effect/EffectSystem.hpp"
@@ -9,9 +11,24 @@
 
 ParticleCalcExecutor::ParticleCalcExecutor(const EffectSystem* pHost, bool createAdaptor)
     : mHost(pHost), _4(nullptr), _8(nullptr), _C(nullptr), _10(nullptr), _14(true), _15(false) {
-    if (createAdaptor) {
-        initMovementAdaptor();
+    try {
+        if (createAdaptor) {
+            initMovementAdaptor();
+        }
+    } catch (...) {
+        delete std::exchange(_10, nullptr);
+        delete std::exchange(_C, nullptr);
+        delete std::exchange(_8, nullptr);
+        delete std::exchange(_4, nullptr);
+        throw;
     }
+}
+
+ParticleCalcExecutor::~ParticleCalcExecutor() {
+    delete _10;
+    delete _C;
+    delete _8;
+    delete _4;
 }
 
 void ParticleCalcExecutor::movementNormal() {
@@ -56,6 +73,7 @@ void ParticleCalcExecutor::requestMovementOnPauseIgnore() {
 
 void ParticleCalcExecutor::initMovementAdaptor() {
     _4 = new NameObjAdaptor(CP932("パーティクル"));
+    smgpc::compat::claim_name_obj_runtime_ownership(_4, this);
     {
         const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementNormal);
         NameObjAdaptor* pAdaptor = _4;
@@ -63,6 +81,7 @@ void ParticleCalcExecutor::initMovementAdaptor() {
         MR::connectToScene(pAdaptor, -1, 19, -1, -1);
     }
     _8 = new NameObjAdaptor(CP932("ポーズ無効3Dパーティクル"));
+    smgpc::compat::claim_name_obj_runtime_ownership(_8, this);
     {
         const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementIgnorePause3D);
         NameObjAdaptor* pAdaptor = _8;
@@ -70,6 +89,7 @@ void ParticleCalcExecutor::initMovementAdaptor() {
         MR::connectToScene(pAdaptor, -1, 20, -1, -1);
     }
     _C = new NameObjAdaptor(CP932("ポーズ無効2Dパーティクル"));
+    smgpc::compat::claim_name_obj_runtime_ownership(_C, this);
     {
         const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementIgnorePause2D);
         NameObjAdaptor* pAdaptor = _C;
@@ -77,6 +97,7 @@ void ParticleCalcExecutor::initMovementAdaptor() {
         MR::connectToScene(pAdaptor, -1, 20, -1, -1);
     }
     _10 = new NameObjAdaptor(CP932("更新チェック"));
+    smgpc::compat::claim_name_obj_runtime_ownership(_10, this);
     {
         const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementCheckUpdate);
         NameObjAdaptor* pAdaptor = _10;

@@ -7,7 +7,7 @@
 #include "Game/Util/StarPointerUtil.hpp"
 #include "Game/NPC/TalkDirector.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "compat/SceneJ3dScope.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 
 namespace smgpc::scene {
 
@@ -19,7 +19,7 @@ namespace smgpc::scene {
     void SceneExecutionService::execute_movement() {
         auto &scheduler = _runtime.scheduler();
         const smgpc::compat::JkrAllocationScope game(scheduler.allocation_domain());
-        const smgpc::compat::SceneJ3dScope commands;
+        const J3DSys::ContextScope commands;
         scheduler.begin_frame();
         SceneFunction::movementStopSceneController();
         SceneFunction::executeMovementList();
@@ -27,7 +27,7 @@ namespace smgpc::scene {
 
     void SceneExecutionService::execute_calc_anim_and_view() {
         const smgpc::compat::JkrAllocationScope game(_runtime.scheduler().allocation_domain());
-        const smgpc::compat::SceneJ3dScope commands;
+        const J3DSys::ContextScope commands;
         SceneFunction::executeCalcAnimList();
         CategoryList::execute(MR::CalcAnimType_AnimParticleIgnorePause);
         SceneFunction::executeCalcViewAndEntryList();

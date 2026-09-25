@@ -1,3 +1,5 @@
+#include <aurora/allocation.hpp>
+#include <exception>
 #include "Game/Effect/ParticleResourceHolder.hpp"
 #include "Game/Util/FileUtil.hpp"
 #include "Game/Util/MemoryUtil.hpp"
@@ -7,6 +9,10 @@
 
 ParticleResourceHolder::ParticleResourceHolder(const char* pArchiveName)
     : mResourceMgr(), mAutoEffectList(), mParticleNames(), mParticles{}, mNumParticles() {
+    {
+        const aurora::allocation::HostAllocationScope host;
+        mNativeLifetime = std::make_shared<unsigned char>(0);
+    }
     try {
         mAutoEffectList = new JMapInfo();
         mParticleNames = new JMapInfo();
@@ -27,7 +33,13 @@ ParticleResourceHolder::ParticleResourceHolder(const char* pArchiveName)
 
 }
 
+std::shared_ptr<const void> ParticleResourceHolder::retainNativeResources() const {
+    return mNativeLifetime;
+}
+
 ParticleResourceHolder::~ParticleResourceHolder() {
+    if (mNativeLifetime.use_count() != 1)
+        std::terminate();
     for (int i = 0; i < mNumParticles; i++) {
         delete mParticles[i];
     }

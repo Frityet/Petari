@@ -92,6 +92,7 @@ class CollisionCode {
 public:
     /// @brief Creates a new `CollisionCode`.
     CollisionCode();
+    ~CollisionCode();
 
     const char* getFloorCodeString(const Triangle&);
     const char* getWallCodeString(const Triangle&);
@@ -118,6 +119,7 @@ public:
 class CodeTable {
 public:
     CodeTable(u32);
+    ~CodeTable();
 
     void add(const char*, u32);
     const char* getString(u32);

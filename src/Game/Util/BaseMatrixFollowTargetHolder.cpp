@@ -4,11 +4,17 @@
 #include "Game/Util/JMapLinkInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include <aurora/exception.hpp>
+#include <stdexcept>
 
 BaseMatrixFollower::BaseMatrixFollower(NameObj* pObj, const JMapInfoIter& rIter)
     : mLinkInfo(nullptr), mFollowerObj(pObj), mFollowTarget(nullptr), mFollowID(-1) {
     MR::getJMapInfoFollowID(rIter, &mFollowID);
     mLinkInfo = new JMapLinkInfo(rIter, false);
+}
+
+BaseMatrixFollower::~BaseMatrixFollower() {
+    delete mLinkInfo;
 }
 
 NameObj* BaseMatrixFollower::getFollowTargetActor() const {
@@ -34,9 +40,16 @@ bool BaseMatrixFollower::isValid() const {
     return mFollowTarget->isValid(mFollowID);
 }
 
-BaseMatrixFollowTarget::BaseMatrixFollowTarget(const JMapLinkInfo* pInfo) : _30(nullptr), mActor(nullptr), mLinkInfo(pInfo), mValidater(nullptr) {
+BaseMatrixFollowTarget::BaseMatrixFollowTarget(const JMapLinkInfo* pInfo)
+    : _30(nullptr), mActor(nullptr), mLinkInfo(nullptr), mValidater(nullptr),
+      mNativeLinkInfo(pInfo != nullptr ? new JMapLinkInfo(*pInfo) : nullptr) {
+    // Several followers may share this target; its link cannot borrow the
+    // first follower's allocation after that follower has retired.
+    mLinkInfo = mNativeLinkInfo.get();
     _0.identity();
 }
+
+BaseMatrixFollowTarget::~BaseMatrixFollowTarget() = default;
 
 void BaseMatrixFollowTarget::set(LiveActor* pActor, const TPos3f& a2, const TPos3f* a3, BaseMatrixFollowValidater* pValidator) {
     mValidater = pValidator;
@@ -88,15 +101,49 @@ void BaseMatrixFollowTargetHolder::movement() {
 }
 
 void BaseMatrixFollowTargetHolder::addFollower(BaseMatrixFollower* pFollower) {
-    mFollowers.push_back(pFollower);
+    std::unique_ptr< BaseMatrixFollower > follower(pFollower);
+    if (mFollowers.size() == mFollowers.capacity()) {
+        aurora::throw_host_exception< std::length_error >("BaseMatrix follower capacity exceeded");
+    }
 
     BaseMatrixFollowTarget* target = findFollowTarget(pFollower);
     if (target == nullptr) {
-        target = new BaseMatrixFollowTarget(pFollower->mLinkInfo);
-        mTargets.push_back(target);
+        if (mTargets.size() == mTargets.capacity()) {
+            aurora::throw_host_exception< std::length_error >("BaseMatrix follow target capacity exceeded");
+        }
+        auto newTarget = std::make_unique< BaseMatrixFollowTarget >(pFollower->mLinkInfo);
+        target = newTarget.get();
+        mTargets.push_back(newTarget.release());
     }
 
     pFollower->mFollowTarget = target;
+    mFollowers.push_back(follower.release());
+}
+
+void BaseMatrixFollowTargetHolder::releaseNativeReference(const NameObj* pObject) noexcept {
+    for (s32 i = 0; i < mFollowers.size();) {
+        BaseMatrixFollower* follower = mFollowers[i];
+        if (follower->mFollowerObj == pObject) {
+            mFollowers.erase(mFollowers.begin() + i);
+            delete follower;
+        } else {
+            ++i;
+        }
+    }
+    for (s32 i = 0; i < mTargets.size(); ++i) {
+        BaseMatrixFollowTarget* target = mTargets[i];
+        if (target->mActor != pObject) {
+            continue;
+        }
+        target->mActor = nullptr;
+        target->_30 = nullptr;
+        target->mValidater = nullptr;
+        for (s32 j = 0; j < mFollowers.size(); ++j) {
+            if (mFollowers[j]->mFollowTarget == target) {
+                mFollowers[j]->setGravityFollowHost(nullptr);
+            }
+        }
+    }
 }
 
 void BaseMatrixFollowTargetHolder::setFollowTargetInfo(LiveActor* pActor, const JMapInfoIter& rIter, const TPos3f* pBaseMtx,
@@ -155,8 +202,9 @@ namespace MR {
     }
 
     void addBaseMatrixFollower(BaseMatrixFollower* pFollower) {
+        std::unique_ptr< BaseMatrixFollower > follower(pFollower);
         MR::createSceneObj(SceneObj_BaseMatrixFollowTargetHolder);
-        MR::getSceneObj< BaseMatrixFollowTargetHolder >(SceneObj_BaseMatrixFollowTargetHolder)->addFollower(pFollower);
+        MR::getSceneObj< BaseMatrixFollowTargetHolder >(SceneObj_BaseMatrixFollowTargetHolder)->addFollower(follower.release());
     }
 
     void addBaseMatrixFollowTarget(LiveActor* pActor, const JMapInfoIter& rIter, const TPos3f* pBaseMtx, BaseMatrixFollowValidater* pValidater) {
@@ -175,4 +223,12 @@ void BaseMatrixFollower::update() {
 }
 
 BaseMatrixFollowTargetHolder::~BaseMatrixFollowTargetHolder() {
+    for (s32 i = mFollowers.size(); i > 0; --i) {
+        delete mFollowers[i - 1];
+    }
+    mFollowers.clear();
+    for (s32 i = mTargets.size(); i > 0; --i) {
+        delete mTargets[i - 1];
+    }
+    mTargets.clear();
 }

@@ -87,12 +87,6 @@ int main() {
     require(collision.getFloorCode(absent) == CollisionFloorCode_Normal &&
                 collision.getCameraID(absent) == static_cast<u32>(-1),
             "Missing collision attributes use retail defaults");
-    for (auto* table : {collision.mFloorTable, collision.mWallTable, collision.mSoundTable, collision.mCameraTable}) {
-        delete[] table->mHashTable;
-        delete[] table->mCodeTable;
-        delete[] table->mNameTable;
-        delete table;
-    }
 
     RumbleData::initHashValue();
     require(RumbleData::getPattern("missing rumble pattern") == nullptr, "Unknown rumble names remain absent");

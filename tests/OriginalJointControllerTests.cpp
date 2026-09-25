@@ -12,7 +12,6 @@
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/J3dCommandScope.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "OriginalStageResourceProcessFixture.hpp"
 #include "OriginalAsyncHeapSelection.hpp"

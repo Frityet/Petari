@@ -363,4 +363,6 @@ void ScenarioSelectScene::exeWaitResumeInitializeThreadIfCanceledSelect() {
 }
 
 ScenarioSelectScene::~ScenarioSelectScene() {
+    delete mEffectSystem;
+    mEffectSystem = nullptr;
 }

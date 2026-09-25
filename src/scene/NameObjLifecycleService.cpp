@@ -11,8 +11,7 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/DrawSyncManagerLifetime.hpp"
-#include "compat/GlobalGravityOwnership.hpp"
+#include "Game/System/DrawSyncManager.hpp"
 #include "scene/PlacementZoneScope.hpp"
 
 #include <array>
@@ -151,7 +150,7 @@ namespace smgpc::scene {
         // Roll back borrowed callback addresses before the returned object's
         // destruction, including a failure in post-construction tracing.
         auto object = std::unique_ptr<NameObj>{};
-        smgpc::compat::DrawSyncRegistrationTransaction callbacks;
+        DrawSyncManager::CallbackRegistration callbacks;
         object = smgpc::scene::nameobj::create_name_obj(_runtime.dvd(), object_name, actor_name);
 #ifndef NDEBUG
         _runtime.emit_semantic_trace_event("name_obj_lifecycle", "construct",
@@ -165,7 +164,7 @@ namespace smgpc::scene {
     std::unique_ptr<NameObj> NameObjLifecycleService::construct_and_init(
         std::string_view object_name, const char *actor_name,
         const NameObjPlacementContext *placement) {
-        smgpc::compat::DrawSyncRegistrationTransaction callbacks;
+        DrawSyncManager::CallbackRegistration callbacks;
         if (placement == nullptr) {
             auto object = construct(object_name, actor_name);
             try {
@@ -195,7 +194,7 @@ namespace smgpc::scene {
     }
 
     void NameObjLifecycleService::init(NameObj &object, const NameObjPlacementContext *placement) {
-        smgpc::compat::DrawSyncRegistrationTransaction callbacks;
+        DrawSyncManager::CallbackRegistration callbacks;
         if (placement != nullptr) {
             require_valid_placement_context(*placement);
 #ifndef NDEBUG
@@ -207,15 +206,12 @@ namespace smgpc::scene {
                     ";table=" + std::string(placement->table_path) + ";row=" +
                     std::to_string(placement->row) + ";local_id=" + std::to_string(placement->local_id));
 #endif
-            smgpc::compat::prepare_global_gravity_init(object);
             try {
                 object.init(placement->iter);
             } catch (...) {
                 callbacks.rollback();
-                smgpc::compat::capture_failed_global_gravity_children(object);
                 throw;
             }
-            smgpc::compat::capture_global_gravity_children(object);
             callbacks.commit();
             return;
         }
@@ -223,15 +219,12 @@ namespace smgpc::scene {
 #ifndef NDEBUG
         _runtime.emit_semantic_trace_event("name_obj_lifecycle", "init_without_iter", "object=" + object_name(object));
 #endif
-        smgpc::compat::prepare_global_gravity_init(object);
         try {
             object.initWithoutIter();
         } catch (...) {
             callbacks.rollback();
-            smgpc::compat::capture_failed_global_gravity_children(object);
             throw;
         }
-        smgpc::compat::capture_global_gravity_children(object);
         callbacks.commit();
     }
 
@@ -257,7 +250,6 @@ namespace smgpc::scene {
 #ifndef NDEBUG
         _runtime.emit_semantic_trace_event("name_obj_lifecycle", "destroy", "object=" + object_name(object));
 #endif
-        smgpc::compat::capture_failed_global_gravity_children(object);
         if (auto *live_actor = dynamic_cast<LiveActor *>(&object)) {
             smgpc::compat::release_actor_runtime_state(live_actor);
         }

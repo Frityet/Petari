@@ -6,13 +6,12 @@
 #include "J3dMaterialTableData.hpp"
 #include "J3dTextureData.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "compat/J3dCommandScope.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "JSystem/J3DGraphAnimator/J3DJoint.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
 #include "JSystem/J3DGraphBase/J3DMaterial.hpp"
 #include "JSystem/J3DGraphBase/J3DPacket.hpp"
 #include "JSystem/J3DGraphBase/J3DShapeMtx.hpp"
-#include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "JSystem/J3DGraphBase/J3DTevs.hpp"
 #include "JSystem/J3DGraphBase/J3DTexture.hpp"
 #include "JSystem/J3DGraphLoader/J3DModelLoader.hpp"
@@ -273,7 +272,7 @@ namespace smgpc::resource {
             ~LoadedData() {
                 compat::JkrHostAllocationScope host;
                 compat::JkrAllocationScope original(domain);
-                compat::J3dCommandScope commands;
+                J3DSys::CommandScope commands;
                 const auto* texture = textures ? &textures->texture() : empty_texture.get();
                 if (texture && j3dSys.getTexture() == texture) j3dSys.setTexture(nullptr);
                 model.reset();
@@ -369,7 +368,7 @@ namespace smgpc::resource {
             validate_shape_matrices(model);
             {
                 compat::JkrAllocationScope original(domain);
-                compat::J3dCommandScope commands;
+                J3DSys::CommandScope commands;
                 if (binary) validate_display_lists(model.mMaterialTable, *result->materials);
                 J3DModelLoader::finalizeNativeModel(model, result->geometry->shape_block(), binary);
             }

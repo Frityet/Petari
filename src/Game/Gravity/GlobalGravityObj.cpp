@@ -1,8 +1,13 @@
 #include "Game/Gravity.hpp"
 #include "Game/Util.hpp"
+#include <memory>
 
 GlobalGravityObj::GlobalGravityObj(const char* pName) : LiveActor(pName) {
     mGravityCreator = nullptr;
+}
+
+GlobalGravityObj::~GlobalGravityObj() {
+    delete mGravityCreator;
 }
 
 void GlobalGravityObj::init(const JMapInfoIter& rIter) {
@@ -64,62 +69,62 @@ PlanetGravity* GlobalGravityObj::getGravity() {
 
 namespace MR {
     NameObj* createGlobalCubeGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
+        auto ret = std::make_unique< GlobalGravityObj >(pName);
         ret->mGravityCreator = new CubeGravityCreator();
-        return ret;
+        return ret.release();
     }
 
     NameObj* createGlobalConeGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
+        auto ret = std::make_unique< GlobalGravityObj >(pName);
         ret->mGravityCreator = new ConeGravityCreator();
-        return ret;
+        return ret.release();
     }
 
     NameObj* createGlobalDiskGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
+        auto ret = std::make_unique< GlobalGravityObj >(pName);
         ret->mGravityCreator = new DiskGravityCreator();
-        return ret;
+        return ret.release();
     }
 
     NameObj* createGlobalDiskTorusGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
+        auto ret = std::make_unique< GlobalGravityObj >(pName);
         ret->mGravityCreator = new DiskTorusGravityCreator();
-        return ret;
+        return ret.release();
     }
 
     NameObj* createGlobalPlaneGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
+        auto ret = std::make_unique< GlobalGravityObj >(pName);
         ret->mGravityCreator = new PlaneGravityCreator();
-        return ret;
+        return ret.release();
     }
 
     NameObj* createGlobalPlaneInBoxGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
+        auto ret = std::make_unique< GlobalGravityObj >(pName);
         ret->mGravityCreator = new PlaneInBoxGravityCreator();
-        return ret;
+        return ret.release();
     }
 
     NameObj* createGlobalPlaneInCylinderGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
+        auto ret = std::make_unique< GlobalGravityObj >(pName);
         ret->mGravityCreator = new PlaneInCylinderGravityCreator();
-        return ret;
+        return ret.release();
     }
 
     NameObj* createGlobalPointGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
+        auto ret = std::make_unique< GlobalGravityObj >(pName);
         ret->mGravityCreator = new PointGravityCreator();
-        return ret;
+        return ret.release();
     }
 
     NameObj* createGlobalSegmentGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
+        auto ret = std::make_unique< GlobalGravityObj >(pName);
         ret->mGravityCreator = new SegmentGravityCreator();
-        return ret;
+        return ret.release();
     }
 
     NameObj* createGlobalWireGravityObj(const char* pName) {
-        GlobalGravityObj* ret = new GlobalGravityObj(pName);
+        auto ret = std::make_unique< GlobalGravityObj >(pName);
         ret->mGravityCreator = new WireGravityCreator();
-        return ret;
+        return ret.release();
     }
 };  // namespace MR

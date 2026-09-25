@@ -20,6 +20,7 @@ public:
     MultiEmitter(const char*, MtxPtr, const TVec3f&);
     MultiEmitter(const char*, MtxPtr, const TVec3f*, const TVec3f&);
     MultiEmitter(const char*);
+    ~MultiEmitter();
 
     void createEmitter();
     void createEmitterWithCallBack(MultiEmitterCallBackBase*);

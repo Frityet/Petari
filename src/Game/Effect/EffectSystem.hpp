@@ -1,6 +1,12 @@
 #pragma once
 
 #include "Game/NameObj/NameObj.hpp"
+#include <memory>
+
+namespace smgpc::compat { class JkrAllocationDomain; }
+class EffectKeeper;
+class PaneEffectKeeper;
+class MultiEmitter;
 
 class AutoEffectGroupHolder;
 class JPAEmitterManager;
@@ -16,6 +22,15 @@ class SingleEmitter;
 class EffectSystem : public NameObj {
 public:
     EffectSystem(const char*, bool);
+    ~EffectSystem() override;
+
+    void retireNativeResources() noexcept;
+    void registerNativeKeeper(EffectKeeper*);
+    void registerNativeKeeper(PaneEffectKeeper*);
+    void unregisterNativeKeeper(EffectKeeper*) noexcept;
+    void unregisterNativeKeeper(PaneEffectKeeper*) noexcept;
+    void retireNativeEmitter(const MultiEmitter&) const noexcept;
+    std::shared_ptr<smgpc::compat::JkrAllocationDomain> nativeAllocationDomain() const noexcept;
 
     virtual void init(const JMapInfoIter& rIter);
 
@@ -31,6 +46,10 @@ public:
     /* 0x18 */ ParticleCalcExecutor* mCalcExec;
     /* 0x1C */ AutoEffectGroupHolder* mGroupHolder;
     /* 0x20 */ bool _20;
+
+private:
+    struct NativeState;
+    std::unique_ptr<NativeState> mNativeState;
 };
 
 namespace MR {

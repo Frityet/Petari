@@ -1,0 +1,5 @@
+{
+  "src/scene/NameObjLifecycleService.cpp": "staged-adaptations/src/scene/NameObjLifecycleService.cpp",
+  "src/scene/SceneExecutionService.cpp": "staged-adaptations/src/scene/SceneExecutionService.cpp",
+  "tests/LineCollisionQueryTests.cpp": "staged-adaptations/tests/LineCollisionQueryTests.cpp"
+}

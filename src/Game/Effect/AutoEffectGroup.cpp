@@ -7,6 +7,11 @@ AutoEffectGroup::AutoEffectGroup(const char* pName, int num) : mName(pName), mIn
     mInfos.init(num);
 }
 
+AutoEffectGroup::~AutoEffectGroup() {
+    for (auto* info : mInfos)
+        delete info;
+}
+
 void AutoEffectGroup::add(const JMapInfoIter& rIter) {
     AutoEffectInfo* pInfo = new AutoEffectInfo();
     pInfo->init(rIter);

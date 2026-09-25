@@ -7,7 +7,7 @@
 #include <aurora/exception.hpp>
 #include "RuntimeContext.hpp"
 #include "compat/DisabledObjectAudioService.hpp"
-#include "compat/SceneJ3dScope.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "compat/NandSdkBinding.hpp"
 #include "Game/Util/DrawUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
@@ -608,7 +608,7 @@ namespace smgpc::runtime {
         if (!_game_layout.is_game_scene_draw_3d_active()) {
             return;
         }
-        smgpc::compat::SceneJ3dScope j3d_scope;
+        J3DSys::ContextScope j3d_scope;
         MR::drawInit();
         MR::loadViewMtx();
         MR::loadProjectionMtx();

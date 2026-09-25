@@ -7,8 +7,7 @@ class GlobalGravityObj : public LiveActor {
 public:
     GlobalGravityObj(const char* pName);
 
-    virtual ~GlobalGravityObj() {
-    }
+    virtual ~GlobalGravityObj();
     virtual void init(const JMapInfoIter& rIter);
     virtual void movement();
     virtual void makeActorAppeared();

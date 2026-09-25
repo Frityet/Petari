@@ -1,0 +1,26 @@
+{
+  "paths": [
+    "src/JSystem/J3DGraphBase/J3DSys.cpp",
+    "src/JSystem/J3DGraphBase/J3DSys.hpp",
+    "src/Game/Util/MutexHolder.hpp",
+    "src/compat/J3dCommandScope.cpp",
+    "src/compat/J3dCommandScope.hpp",
+    "src/compat/SceneJ3dScope.hpp",
+    "tests/OriginalJointControllerTests.cpp",
+    "tests/OriginalCameraDirectorTests.cpp",
+    "tests/OriginalProcessShadowVolumeLineTests.cpp",
+    "tests/CenterScreenBlurRealOrAbsentTests.cpp",
+    "src/resource/J3dModelResource.cpp",
+    "tests/J3dCommandSchedulingTests.cpp",
+    "tests/OriginalNpcOrientationTests.cpp",
+    "tests/OriginalProcessPlayerOwnerTests.cpp",
+    "tests/OriginalResourceHolderTests.cpp",
+    "tests/OriginalProcessTrampleJumpTests.cpp",
+    "src/runtime/SceneScheduler.cpp",
+    "src/runtime/RuntimeContext.cpp",
+    "src/Game/LiveActor/LiveActor.cpp",
+    "src/Game/Player/MarioAnimator.cpp",
+    "src/Game/System/ResourceHolder.cpp",
+    "src/Game/NameObj/NameObjListExecutor.cpp"
+  ]
+}

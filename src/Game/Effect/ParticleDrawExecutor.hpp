@@ -8,6 +8,7 @@ class NameObjAdaptor;
 class ParticleDrawExecutor {
 public:
     ParticleDrawExecutor(const EffectSystem*, bool);
+    ~ParticleDrawExecutor();
 
     static void initDraw();
     void draw3D() const;

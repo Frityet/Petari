@@ -10,6 +10,11 @@ void DUMMY() {
 RailPart::RailPart() : mRailPartLinear(nullptr), mRailPartBezier(nullptr) {
 }
 
+RailPart::~RailPart() {
+    delete mRailPartLinear;
+    delete mRailPartBezier;
+}
+
 void RailPart::init(const TVec3f& rPoint1, const TVec3f& rPoint1Ctrl, const TVec3f& rPoint2Ctrl, const TVec3f& rPoint2) {
     if ((rPoint1.epsilonEquals(rPoint1Ctrl, 0.1f)) && (rPoint2.epsilonEquals(rPoint2Ctrl, 0.1f))) {
         mRailPartLinear = new LinearRailPart();

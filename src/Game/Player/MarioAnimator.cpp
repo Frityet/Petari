@@ -23,7 +23,7 @@
 #include "Game/Util/StringUtil.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/J3dCommandScope.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include <aurora/exception.hpp>
 #include <cstring>
@@ -37,7 +37,7 @@ MarioAnimator::MarioAnimator(MarioActor* actor)
     : MarioModule(actor), mResourceTable(nullptr), mXanimePlayer(nullptr), mXanimePlayerUpper(nullptr), _120(nullptr),
       mNativeResources(MR::getResourceHolder(actor)->retainNativeResources()) {
     // The command scope restores recursive SDK locks and GD state on unwind.
-    const smgpc::compat::J3dCommandScope commands;
+    const J3DSys::CommandScope commands;
     const J3DSys previousSystem = j3dSys;
     try {
         init();

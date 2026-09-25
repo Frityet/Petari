@@ -3,6 +3,7 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Util/Array.hpp"
 #include <JSystem/JGeometry/TMatrix.hpp>
+#include <memory>
 
 class JMapLinkInfo;
 class LiveActor;
@@ -15,6 +16,9 @@ public:
 class BaseMatrixFollowTarget {
 public:
     BaseMatrixFollowTarget(const JMapLinkInfo*);
+    ~BaseMatrixFollowTarget();
+    BaseMatrixFollowTarget(const BaseMatrixFollowTarget&) = delete;
+    BaseMatrixFollowTarget& operator=(const BaseMatrixFollowTarget&) = delete;
 
     void set(LiveActor*, const TPos3f&, const TPos3f*, BaseMatrixFollowValidater*);
     const MtxPtr getHostBaseMtx() const;
@@ -25,11 +29,17 @@ public:
     LiveActor* mActor;                      // 0x34
     const JMapLinkInfo* mLinkInfo;          // 0x38
     BaseMatrixFollowValidater* mValidater;  // 0x3C
+
+private:
+    std::unique_ptr< JMapLinkInfo > mNativeLinkInfo;
 };
 
 class BaseMatrixFollower {
 public:
     BaseMatrixFollower(NameObj*, const JMapInfoIter&);
+    virtual ~BaseMatrixFollower();
+    BaseMatrixFollower(const BaseMatrixFollower&) = delete;
+    BaseMatrixFollower& operator=(const BaseMatrixFollower&) = delete;
 
     virtual void setGravityFollowHost(const NameObj*) {
     }
@@ -60,6 +70,7 @@ public:
     void setFollowTargetInfo(LiveActor*, const JMapInfoIter&, const TPos3f*, BaseMatrixFollowValidater*);
     BaseMatrixFollowTarget* findFollowTarget(const JMapLinkInfo*);
     BaseMatrixFollowTarget* findFollowTarget(const BaseMatrixFollower*);
+    void releaseNativeReference(const NameObj*) noexcept;
 
     MR::Vector< MR::AssignableArray< BaseMatrixFollowTarget* > > mTargets;  // 0xC
     MR::Vector< MR::AssignableArray< BaseMatrixFollower* > > mFollowers;    // 0x18

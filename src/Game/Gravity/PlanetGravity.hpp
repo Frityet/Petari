@@ -3,6 +3,7 @@
 #include "JSystem/JGeometry.hpp"
 
 class NameObj;
+class PlanetGravityManager;
 
 // Gravity vector calculation flags
 #define GRAVITY_TYPE_NORMAL 1
@@ -18,6 +19,9 @@ class NameObj;
 class PlanetGravity {
 public:
     PlanetGravity();
+    virtual ~PlanetGravity();
+    PlanetGravity(const PlanetGravity&) = delete;
+    PlanetGravity& operator=(const PlanetGravity&) = delete;
 
     virtual void updateMtx(const TPos3f& rMtx);
 
@@ -50,4 +54,8 @@ public:
     bool mValidFollower;  // 0x22
     bool mIsRegistered;   // 0x23, is registered by PlanetGravityManager?
     bool mAppeared;       // 0x24, corresponding GlobalGravityObj has appeared?
+
+private:
+    friend class PlanetGravityManager;
+    PlanetGravityManager* mNativeManager = nullptr;
 };

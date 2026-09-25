@@ -5,6 +5,7 @@
 #include <revolution/types.h>
 
 class Binder;
+class EffectSystem;
 class HashSortTable;
 class LiveActor;
 class MultiEmitter;
@@ -16,6 +17,7 @@ class XanimePlayer;
 class EffectKeeper {
 public:
     EffectKeeper(const char*, ResourceHolder*, int, const char*);
+    ~EffectKeeper();
 
     void init(LiveActor*);
     void initAfterPlacementForAttributeEffect(MtxPtr);
@@ -64,4 +66,8 @@ public:
     /* 0x28 */ s32 _28;
     /* 0x2C */ s32 _2C;
     /* 0x30 */ bool _30;
+
+private:
+    EffectSystem* mNativeSystem = nullptr;
+    LiveActor* mNativeHost = nullptr;
 };

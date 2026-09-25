@@ -2,7 +2,6 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Util/MapUtil.hpp"
 #include "Game/Util/TriangleFilter.hpp"
-#include "compat/CollisionDirectorOwnership.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageCollisionService.hpp"
 #include <iostream>
@@ -223,8 +222,7 @@ void publication_before_culling(Fixture& owner) {
     require(MR::createSceneObj(SceneObj_SensorHitChecker)!=nullptr,
             "Publication fixture requires the original sensor checker");
     auto* director=static_cast<CollisionDirector*>(MR::getSceneObjHolder()->getObj(SceneObj_CollisionDirector));
-    auto* native_owner=smgpc::scene::current_collision_director_ownership();
-    require(director && native_owner,"Publication fixture requires actual original and native scene owners");
+    require(director,"Publication fixture requires the actual original CollisionDirector");
     require(director->getCategoryKeeper(0)==owner.keeper,"Publication fixture must use the same original director");
     smgpc::scene::StageCollisionService map_service;
     map_service.activate();
@@ -235,7 +233,7 @@ void publication_before_culling(Fixture& owner) {
             keeper->mZoneNum=1;
             keeper->_A0=true;
         }
-        auto& service=category==0 ? map_service : native_owner->category_service(category);
+        auto& service=*keeper->nativeService();
         struct Geometry {
             KCLFile file{};
             std::array<TVec3f,1> positions;

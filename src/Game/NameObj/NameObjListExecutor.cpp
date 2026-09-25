@@ -1,14 +1,14 @@
 #include "Game/NameObj/NameObjListExecutor.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "compat/SceneJ3dScope.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include <optional>
 
 namespace {
     struct NativeExecutionScope {
-        smgpc::compat::SceneJ3dScope mCommands;
+        J3DSys::ContextScope mCommands;
         std::optional<smgpc::compat::JkrAllocationScope> mHeap;
 
         NativeExecutionScope() {

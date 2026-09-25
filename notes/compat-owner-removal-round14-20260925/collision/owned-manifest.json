@@ -1,0 +1,112 @@
+{
+  "state": "applied-and-frozen",
+  "parent_checkpoint": "e7b214efc",
+  "files": [
+    {
+      "path": "src/compat/CollisionDirectorOwnership.cpp",
+      "before_exists": true,
+      "before_sha256": "14279c598146916c62326462129cff0948b6ec26bed92cca3b774db3827c97ef",
+      "initially_dirty": false,
+      "action": "deleted",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/CollisionDirectorOwnership.hpp",
+      "before_exists": true,
+      "before_sha256": "4194229fa5aeb71ff2ae1e2a180b5ae20ae8527ce6ca7dbdd802d6e4b5f92fd3",
+      "initially_dirty": false,
+      "action": "deleted",
+      "after_sha256": null
+    },
+    {
+      "path": "src/Game/Map/CollisionDirector.cpp",
+      "before_exists": true,
+      "before_sha256": "3baab33c7599fd286223f96466335b7a0e620f84a00eb66dd43f4c411bfba8fc",
+      "initially_dirty": false,
+      "action": "modified",
+      "after_sha256": "0df432cf36c56017468b048dfa80bed2cc8a9872a4ff19055614b20f4a6c0303"
+    },
+    {
+      "path": "src/Game/Map/CollisionDirector.hpp",
+      "before_exists": true,
+      "before_sha256": "935594008c31ba06a632c3fedb6faf3784cedad6e66ce58f5978afae30aaa6a6",
+      "initially_dirty": false,
+      "action": "modified",
+      "after_sha256": "4c77539cdaa2ff38954834c1d629c9645c66de1faeacdf9bd9659a4f7bc06aa7"
+    },
+    {
+      "path": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+      "before_exists": true,
+      "before_sha256": "910c447e011aecf7a12a8af3dc59b22f304eb223412c859157c336e880f866e0",
+      "initially_dirty": false,
+      "action": "modified",
+      "after_sha256": "89c23d234dec03986f1e6972e9d2d225baa664711424cc25281a8822a56e29b0"
+    },
+    {
+      "path": "src/Game/Map/CollisionCategorizedKeeper.hpp",
+      "before_exists": true,
+      "before_sha256": "4a2cfd91bfc1385579a2df188219179b79d3ce5a9b85a94e3f9ff164d9daf77c",
+      "initially_dirty": false,
+      "action": "modified",
+      "after_sha256": "f6d0b99846790d9d1afd48924425d624c78d8ec4eeabb3c7a4ed61f6eed14de0"
+    },
+    {
+      "path": "src/Game/Map/CollisionCode.cpp",
+      "before_exists": true,
+      "before_sha256": "a3182a3e7599fb153f85047c0b2eeaed9efb90631606fbbff953c1cf8a5790ab",
+      "initially_dirty": false,
+      "action": "modified",
+      "after_sha256": "f5754ef36b4e3c869e97ba2f730f43aad37003886e83d8757bf6980a984b290d"
+    },
+    {
+      "path": "src/Game/Map/CollisionCode.hpp",
+      "before_exists": true,
+      "before_sha256": "c565b53765aa8a5b5b0ed44a546ab0b6d7d24f6e8b3ea08a84fc38e450df03ac",
+      "initially_dirty": false,
+      "action": "modified",
+      "after_sha256": "cd664b78946d138aeacea49a6e991885fa39922b819813e5df3c813a81b4297a"
+    },
+    {
+      "path": "src/Game/Map/CollisionParts.cpp",
+      "before_exists": true,
+      "before_sha256": "435c1b47606f17045340a8c33040b29c5a5cd7defdc2e9b4664a37f3cd287445",
+      "initially_dirty": false,
+      "action": "modified",
+      "after_sha256": "bddcdbbc662c753f8a5d72562bcd8f121a6e6dac4e4136c86f63f134cea74c10"
+    },
+    {
+      "path": "src/compat/CollisionPartsCompat.cpp",
+      "before_exists": true,
+      "before_sha256": "a919950cbbc1106789a3fbcd1e7a93436fc53d695bda365188518082d150a7af",
+      "initially_dirty": true,
+      "action": "modified",
+      "after_sha256": "4c62d8a44cd494911029e47c54685c3f82b1a5372bef85131611ec49ffb567df"
+    },
+    {
+      "path": "tests/OriginalCollisionPartsOwnerTests.cpp",
+      "before_exists": true,
+      "before_sha256": "c1edc011f5dd1989514975055f9367af861abf0c18e34a3c5d58e502e0d8d93b",
+      "initially_dirty": false,
+      "action": "modified",
+      "after_sha256": "3a9a7bc6e010931b9db257163a6b16f12f97348ab810b6e46e692db0bb62c520"
+    },
+    {
+      "path": "tests/OriginalSphereQueryTests.cpp",
+      "before_exists": true,
+      "before_sha256": "801960596663fde0ef39a89b663acf61c9d653ed5424dbfe8825b86ba4c78678",
+      "initially_dirty": true,
+      "action": "modified",
+      "after_sha256": "a846f3644cf89a66219e93a557f8ef363ff53f60dfe6973d265f93f11f7241a1"
+    },
+    {
+      "path": "tests/UpstreamComponentTests.cpp",
+      "before_exists": true,
+      "before_sha256": "d3ed40d6e2efc6abad78671bf23546e7c0e239d54c2a120c9bc55bd8441e3f4c",
+      "initially_dirty": false,
+      "action": "modified",
+      "after_sha256": "9b836893fbb963219bca7d63239d22be1ab12b8c4642cdf763e7f03ef5e6383f"
+    }
+  ],
+  "shared_file_integration": "Root owns SceneObjHolderCompat.cpp and SceneObjHolderRuntime.hpp; remove CollisionDirectorOwnership wiring and construct actual CollisionDirector directly.",
+  "dirty_overlap": "CollisionPartsCompat.cpp and OriginalSphereQueryTests.cpp baseline edits preserved byte-for-byte outside lane delta. No StageCollisionService/HitInfo/ActorRuntimeRegistry edits."
+}

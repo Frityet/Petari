@@ -1,6 +1,5 @@
 #include "Game/Screen/StarPointerTarget.hpp"
 #include "Game/LiveActor/EffectKeeper.hpp"
-#include "compat/EffectSystemOwnership.hpp"
 #include "Game/AudioLib/AudAnmSoundObject.hpp"
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
@@ -10,7 +9,7 @@
 #include "Game/LiveActor/ActorPadAndCameraCtrl.hpp"
 #include "Game/Util/ModelUtil.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "compat/J3dCommandScope.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
 #include "Game/LiveActor/Binder.hpp"
@@ -328,7 +327,7 @@ void LiveActor::initModelManagerWithAnm(const char* pModelName, const char* pAni
     smgpc::compat::initialize_actor_model(this, pModelName, pAnimName, a3);
     const auto owner = smgpc::compat::retain_actor_model(this);
     smgpc::compat::JkrAllocationScope heap(owner->nativeAllocationDomain());
-    smgpc::compat::J3dCommandScope commands;
+    J3DSys::CommandScope commands;
 
     MR::getJ3DModel(this)->setBaseScale(mScale);
     LiveActor::calcAndSetBaseMtx();
@@ -346,7 +345,14 @@ void LiveActor::initModelManagerWithAnm(const char* pModelName, const char* pAni
 }
 
 void LiveActor::initEffectKeeper(int effectNum, const char* pEffectName, bool sort) {
-    smgpc::compat::initialize_actor_effect_keeper(this, effectNum, pEffectName, sort);
+    mEffectKeeper = new EffectKeeper(getName(), MR::getModelResourceHolder(this), effectNum, pEffectName);
+    if (sort) {
+        mEffectKeeper->enableSort();
+    }
+    mEffectKeeper->init(this);
+    if (mBinder != nullptr) {
+        mEffectKeeper->setBinder(mBinder);
+    }
 }
 
 void LiveActor::initActorLightCtrl() {

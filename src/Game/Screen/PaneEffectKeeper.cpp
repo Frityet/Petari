@@ -1,3 +1,4 @@
+#include "Game/Effect/EffectSystem.hpp"
 #include "Game/Screen/PaneEffectKeeper.hpp"
 #include "Game/Effect/EffectSystemUtil.hpp"
 #include "Game/Effect/MultiEmitter.hpp"
@@ -22,7 +23,22 @@ PaneEffectKeeper::PaneEffectKeeper(LayoutActor* pActor, const LayoutManager* pMa
     }
 }
 
+PaneEffectKeeper::~PaneEffectKeeper() {
+    if (mNativeSystem) {
+        for (auto* multi : mEmitters)
+            mNativeSystem->retireNativeEmitter(*multi);
+        mNativeSystem->unregisterNativeKeeper(this);
+    }
+    if (mHost && mHost->mEffectKeeper == this)
+        mHost->mEffectKeeper = nullptr;
+    for (auto* multi : mEmitters)
+        delete multi;
+}
+
 void PaneEffectKeeper::init(const LayoutActor* pActor, const EffectSystem* pSystem) {
+    auto* system = pSystem ? const_cast<EffectSystem*>(pSystem) : MR::getEffectSystem();
+    system->registerNativeKeeper(this);
+    mNativeSystem = system;
     if (mName == nullptr) {
         return;
     }

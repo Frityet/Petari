@@ -10,6 +10,7 @@ class MultiEmitter;
 class PaneEffectKeeper {
 public:
     PaneEffectKeeper(LayoutActor*, const LayoutManager*, int, const char*);
+    ~PaneEffectKeeper();
 
     void init(const LayoutActor*, const EffectSystem*);
     void add(const char*, const char*, const char*);
@@ -27,4 +28,7 @@ public:
     /* 0x00 */ LayoutActor* mHost;
     /* 0x04 */ const char* mName;
     /* 0x08 */ MR::Vector< MR::AssignableArray< MultiEmitter* > > mEmitters;
+
+private:
+    EffectSystem* mNativeSystem = nullptr;
 };

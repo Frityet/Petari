@@ -6,8 +6,7 @@
 #include "Game/System/GameSystem.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Effect/EffectSystem.hpp"
-#include "compat/EffectSystemOwnership.hpp"
-#include "compat/CollisionDirectorOwnership.hpp"
+#include "Game/Util/SystemUtil.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 #include "Game/Map/CollisionDirector.hpp"
 #include "Game/MapObj/EarthenPipe.hpp"
@@ -84,7 +83,6 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "Game/System/DrawSyncManager.hpp"
-#include "compat/GlobalGravityOwnership.hpp"
 #include "Game/NPC/TalkDirector.hpp"
 #include "Game/NPC/EventDirector.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -153,10 +151,6 @@ namespace smgpc::scene {
         return sCurrentSceneObjHolderBinding ? sCurrentSceneObjHolderBinding->_game_allocation_domain : nullptr;
     }
 
-    smgpc::compat::CollisionDirectorOwnership* current_collision_director_ownership() noexcept {
-        return sCurrentSceneObjHolderBinding ? sCurrentSceneObjHolderBinding->_collision_director_ownership.get() : nullptr;
-    }
-
     SceneObjHolderBinding::SceneObjHolderBinding(
         SceneObjHolder &holder,
         SceneObjFactoryOverride factory_override,
@@ -167,8 +161,6 @@ namespace smgpc::scene {
           _provisional_slots(), _factory_override(factory_override),
           _factory_context(factory_context) {
         smgpc::compat::JkrHostAllocationScope host;
-        _global_gravity_ownership = std::make_unique<smgpc::compat::GlobalGravityOwnership>(holder);
-        _collision_director_ownership = std::make_unique<smgpc::compat::CollisionDirectorOwnership>();
         if (sCurrentSceneObjHolder != nullptr) {
             aurora::throw_host_exception<std::logic_error>("a SceneObjHolder is already bound to the active scene");
         }
@@ -208,12 +200,9 @@ namespace smgpc::scene {
         if (_game_allocation_domain)
             DrawSyncManager::retireNativeCallbacks(_game_allocation_domain->heap());
         prepare_retirement();
-        _collision_director_ownership->prepare_retirement();
         if (_camera_runtime) _camera_runtime->unpublish();
-        if (_effect_scheduler) {
-            (void)_effect_scheduler->remove_registrations_since(_effect_registration_marker);
-        }
-        if (_effect_system_ownership) _effect_system_ownership->retire();
+        if (auto* effects = static_cast<EffectSystem*>(_holder->getObj(SceneObj_EffectSystem)))
+            effects->retireNativeResources();
         if (sCurrentSceneObjHolder == _holder) {
             sCurrentSceneObjHolder = nullptr;
             sCurrentSceneObjHolderBinding = nullptr;
@@ -225,39 +214,23 @@ namespace smgpc::scene {
             _owned_objects.pop_back();
         }
         smgpc::compat::release_scene_collision_parts(_holder);
-        _collision_director_ownership->reclaim();
-        _collision_director_ownership.reset();
         _owned_registration_objects.clear();
         _camera_runtime.reset();
         // The external holder storage outlives this binding in test and scene
         // hosts. Reconstruct its exact empty value so no slot retains a freed
         // SceneObj and a later generation can bind/recreate normally.
         *_holder = SceneObjHolder{};
-        // PlanetGravityManager and BaseMatrixFollowTargetHolder retain raw
-        // pointers into the retail scene heap. Only reclaim their registered
-        // children after both SceneObjs have retired.
-        _global_gravity_ownership->reclaim();
-        _global_gravity_ownership.reset();
-        _effect_system_ownership.reset();
         _scene_messages.reset();
         _game_allocation_binding.reset();
         _game_allocation_domain.reset();
     }
 
-    void SceneObjHolderBinding::initialize_effect_system(unsigned particles, unsigned emitters, std::size_t byte_budget) {
-        smgpc::compat::JkrHostAllocationScope host;
-        if (_effect_system_ownership || _holder->isExist(SceneObj_EffectSystem))
+    void SceneObjHolderBinding::initialize_effect_system(unsigned particles, unsigned emitters) {
+        if (_holder->isExist(SceneObj_EffectSystem))
             aurora::throw_host_exception<std::logic_error>("scene effect system already initialized");
-        _effect_scheduler = smgpc::runtime::try_active_scene_scheduler();
-        if (!_effect_scheduler) aurora::throw_host_exception<std::logic_error>("EffectSystem requires the active scene scheduler");
-        _effect_registration_marker = _effect_scheduler->registration_marker();
-        _effect_system_ownership = std::make_unique<smgpc::compat::EffectSystemOwnership>(byte_budget);
-        _holder->create(SceneObj_EffectSystem);
-        _effect_system_ownership->entry(particles, emitters);
-    }
-
-    smgpc::compat::EffectSystemOwnership* current_effect_system_ownership() noexcept {
-        return sCurrentSceneObjHolderBinding ? sCurrentSceneObjHolderBinding->_effect_system_ownership.get() : nullptr;
+        const smgpc::compat::JkrAllocationScope game(_game_allocation_domain);
+        auto* effects = static_cast<EffectSystem*>(_holder->create(SceneObj_EffectSystem));
+        effects->entry(MR::getParticleResourceHolder(), particles, emitters);
     }
 
     void SceneObjHolderBinding::initialize_camera_system() {
@@ -362,12 +335,6 @@ namespace smgpc::scene {
     }
 
 
-    smgpc::compat::GlobalGravityOwnership *
-    current_global_gravity_ownership() noexcept {
-        return sCurrentSceneObjHolderBinding != nullptr ?
-                   sCurrentSceneObjHolderBinding->_global_gravity_ownership.get() :
-                   nullptr;
-    }
 
 }  // namespace smgpc::scene
 
@@ -483,7 +450,6 @@ NameObj *SceneObjHolder::create(int id) {
         if (binding->_camera_runtime && smgpc::compat::name_obj_runtime_object_was_registered_since(
                 &binding->_camera_runtime->director(), marker))
             binding->_camera_runtime.reset();
-        const bool collision_rollback = binding->_collision_director_ownership->prepare_rollback(marker);
         if (object != nullptr &&
             smgpc::compat::name_obj_runtime_object_was_registered_since(
                 object.get(), marker)) {
@@ -497,7 +463,6 @@ NameObj *SceneObjHolder::create(int id) {
             }
         }
         rollback_scene_obj_registrations(marker);
-        if (collision_rollback) binding->_collision_director_ownership->reclaim();
         --binding->_construction_depth;
         if (outermost) {
             binding->_provisional_slots.clear();
@@ -552,7 +517,7 @@ NameObj *SceneObjHolder::newEachObj(int id) {
     case SceneObj_OceanHomeMapCtrl:
         return new OceanHomeMapCtrl();
     case SceneObj_CollisionDirector:
-        return sCurrentSceneObjHolderBinding->_collision_director_ownership->construct();
+        return new CollisionDirector();
     case SceneObj_MirrorCamera:
         return new MirrorCamera(cMirrorCameraName.c_str());
     case SceneObj_CameraContext:
@@ -560,9 +525,7 @@ NameObj *SceneObjHolder::newEachObj(int id) {
     case SceneObj_CameraDirector:
         return new CameraDirector(cCameraDirectorName.c_str());
     case SceneObj_EffectSystem:
-        if (!sCurrentSceneObjHolderBinding->_effect_system_ownership)
-            aurora::throw_host_exception<std::logic_error>("EffectSystem requires scene heap initialization");
-        return sCurrentSceneObjHolderBinding->_effect_system_ownership->construct();
+        return new EffectSystem(CP932("エフェクトシステム"), true);
     case SceneObj_ClippingDirector:
         return new ClippingDirector();
     case SceneObj_LightDirector:

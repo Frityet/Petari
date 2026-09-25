@@ -14,6 +14,9 @@
 class GravityCreator {
 public:
     GravityCreator();
+    virtual ~GravityCreator() = default;
+    GravityCreator(const GravityCreator&) = delete;
+    GravityCreator& operator=(const GravityCreator&) = delete;
 
     virtual PlanetGravity* getGravity() = 0;
     virtual PlanetGravity* createInstance() = 0;
@@ -32,6 +35,10 @@ public:
     inline CubeGravityCreator() : GravityCreator(), mGravityInstance(nullptr) {
     }
 
+    virtual ~CubeGravityCreator() {
+        delete mGravityInstance;
+    }
+
     virtual PlanetGravity* getGravity();
     virtual PlanetGravity* createInstance();
     virtual void settingFromSRT(const TVec3f& rTrans, const TVec3f& rRotate, const TVec3f& rScale);
@@ -43,6 +50,10 @@ public:
 class DiskGravityCreator : public GravityCreator {
 public:
     inline DiskGravityCreator() : GravityCreator(), mGravityInstance(nullptr) {
+    }
+
+    virtual ~DiskGravityCreator() {
+        delete mGravityInstance;
     }
 
     virtual PlanetGravity* getGravity();
@@ -58,6 +69,10 @@ public:
     inline DiskTorusGravityCreator() : GravityCreator(), mGravityInstance(nullptr) {
     }
 
+    virtual ~DiskTorusGravityCreator() {
+        delete mGravityInstance;
+    }
+
     virtual PlanetGravity* getGravity();
     virtual PlanetGravity* createInstance();
     virtual void settingFromSRT(const TVec3f& rTrans, const TVec3f& rRotate, const TVec3f& rScale);
@@ -69,6 +84,10 @@ public:
 class ConeGravityCreator : public GravityCreator {
 public:
     inline ConeGravityCreator() : GravityCreator(), mGravityInstance(nullptr) {
+    }
+
+    virtual ~ConeGravityCreator() {
+        delete mGravityInstance;
     }
 
     virtual PlanetGravity* getGravity();
@@ -84,6 +103,10 @@ public:
     inline PlaneGravityCreator() : GravityCreator(), mGravityInstance(nullptr) {
     }
 
+    virtual ~PlaneGravityCreator() {
+        delete mGravityInstance;
+    }
+
     virtual PlanetGravity* getGravity();
     virtual PlanetGravity* createInstance();
     virtual void settingFromSRT(const TVec3f& rTrans, const TVec3f& rRotate, const TVec3f& rScale);
@@ -94,6 +117,10 @@ public:
 class PlaneInBoxGravityCreator : public GravityCreator {
 public:
     inline PlaneInBoxGravityCreator() : GravityCreator(), mGravityInstance(nullptr) {
+    }
+
+    virtual ~PlaneInBoxGravityCreator() {
+        delete mGravityInstance;
     }
 
     virtual PlanetGravity* getGravity();
@@ -109,6 +136,10 @@ public:
     inline PlaneInCylinderGravityCreator() : GravityCreator(), mGravityInstance(nullptr) {
     }
 
+    virtual ~PlaneInCylinderGravityCreator() {
+        delete mGravityInstance;
+    }
+
     virtual PlanetGravity* getGravity();
     virtual PlanetGravity* createInstance();
     virtual void settingFromSRT(const TVec3f& rTrans, const TVec3f& rRotate, const TVec3f& rScale);
@@ -120,6 +151,10 @@ public:
 class PointGravityCreator : public GravityCreator {
 public:
     inline PointGravityCreator() : GravityCreator(), mGravityInstance(nullptr) {
+    }
+
+    virtual ~PointGravityCreator() {
+        delete mGravityInstance;
     }
 
     virtual PlanetGravity* getGravity();
@@ -134,6 +169,10 @@ public:
     inline SegmentGravityCreator() : GravityCreator(), mGravityInstance(nullptr) {
     }
 
+    virtual ~SegmentGravityCreator() {
+        delete mGravityInstance;
+    }
+
     virtual PlanetGravity* getGravity();
     virtual PlanetGravity* createInstance();
     virtual void settingFromSRT(const TVec3f& rTrans, const TVec3f& rRotate, const TVec3f& rScale);
@@ -145,6 +184,11 @@ public:
 class WireGravityCreator : public GravityCreator {
 public:
     inline WireGravityCreator() : GravityCreator(), mRailRider(nullptr), mGravityInstance(nullptr) {
+    }
+
+    virtual ~WireGravityCreator() {
+        delete mRailRider;
+        delete mGravityInstance;
     }
 
     virtual PlanetGravity* getGravity();

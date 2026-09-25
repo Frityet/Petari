@@ -18,6 +18,11 @@ SyncBckEffectInfo::SyncBckEffectInfo(const XanimePlayer* pPlayer, const char* pN
     addBck(pPlayer, pName);
 }
 
+SyncBckEffectInfo::~SyncBckEffectInfo() {
+    for (auto* resource : mBckResources)
+        delete resource;
+}
+
 void SyncBckEffectInfo::addBck(const XanimePlayer* pPlayer, const char* pName) {
     mBckResources.push_back(new BckResourceInfo(pPlayer, pName));
 }
