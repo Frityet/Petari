@@ -1,0 +1,50 @@
+{
+  "head": "e027464426599e3dacb0394f2fb90ecd8f7a1f70",
+  "paths": [
+    {
+      "path": "src/compat/StageSessionState.cpp",
+      "before_status": "",
+      "existed": true
+    },
+    {
+      "path": "src/compat/StageSessionState.hpp",
+      "before_status": "",
+      "existed": true
+    },
+    {
+      "path": "src/compat/StageScenarioMetadataResolver.cpp",
+      "before_status": "",
+      "existed": true
+    },
+    {
+      "path": "src/compat/StageScenarioMetadataResolver.hpp",
+      "before_status": "",
+      "existed": true
+    },
+    {
+      "path": "tests/RestartStageSessionTests.cpp",
+      "before_status": "",
+      "existed": true
+    },
+    {
+      "path": "tests/OriginalStageSessionTests.cpp",
+      "before_status": "",
+      "existed": false
+    },
+    {
+      "path": "tests/OriginalShadowControllerOwnerTests.cpp",
+      "before_status": "",
+      "existed": true
+    },
+    {
+      "path": "tests/PlayerActorBridgeTests.cpp",
+      "before_status": "",
+      "existed": true
+    },
+    {
+      "path": "tests/JAudioPlaybackTests.cpp",
+      "before_status": "",
+      "existed": true
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "scope": "Obsolete pointer scene binding removal and actual-process test migrations",
+  "files": [
+    {
+      "path": "src/compat/StarPointerDepthOwnership.hpp",
+      "before": "notes/compat-owner-removal-round8-20260925/pointer/before/src/compat/StarPointerDepthOwnership.hpp",
+      "before_sha256": "6ee446ee2d7bb891b498bcc49546ab28781638a6d91d06fed9d591d3d3a623c6",
+      "after_sha256": "1ddc2d1b309eb50bd00b8d0402e376888fb17dc3f69c03829cb2594c9685b9f6"
+    },
+    {
+      "path": "src/compat/StarPointerDepthOwnership.cpp",
+      "before": "notes/compat-owner-removal-round8-20260925/pointer/before/src/compat/StarPointerDepthOwnership.cpp",
+      "before_sha256": "147319c32cc7369c3eab4216d8ffce2264113c6ff8d1c9fbf84b558e2885c7b7",
+      "after_sha256": "1e65a7f2a9f6f250984c1d0c277ebfb385c3aea110345b779b4deb421693c74f"
+    },
+    {
+      "path": "tests/OriginalStarPointerOwnerTests.cpp",
+      "before": "notes/compat-owner-removal-round8-20260925/pointer/before/tests/OriginalStarPointerOwnerTests.cpp",
+      "before_sha256": "ba3bb28106c9eb0469ae1a4c1c9a1424a90ae50de227d71ba0540c2f87ce30da",
+      "after_sha256": "4da5fd3a006e120d8456436d71eea7f79ec37bf1c53e2877826dffc5706078b0"
+    },
+    {
+      "path": "tests/OriginalImageEffectOwnershipTests.cpp",
+      "before": "notes/compat-owner-removal-round8-20260925/pointer/before/tests/OriginalImageEffectOwnershipTests.cpp",
+      "before_sha256": "8d80fb5aab047beb6f22a123984fbf550272c3fc7b904832225b32d32f9b3245",
+      "after_sha256": "d5c0dbd128c972b8ec779c2cd4dccf75e47174c1b57fa2695fd16780e3f9b1a7"
+    }
+  ],
+  "build_wiring": "Both migrated test executables now require the actual OriginalGameApplication/app sources and Aurora main dependency, matching other OriginalStageResourceProcessFixture targets. No production source-list change for the retained StarPointerDepthOwnership file."
+}

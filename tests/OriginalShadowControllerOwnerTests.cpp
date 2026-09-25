@@ -1,5 +1,6 @@
 #include "resource/TextEncoding.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/ModelManager.hpp"
 #include "Game/LiveActor/ClippingActorHolder.hpp"
 #include "Game/LiveActor/ClippingActorInfo.hpp"
 #include "Game/LiveActor/ClippingDirector.hpp"
@@ -8,14 +9,12 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "compat/StageSessionState.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/ActorShadowCsvCompat.hpp"
-#include "compat/ModelManagerOwner.hpp"
 #include "Game/System/ResourceHolder.hpp"
 #include "Game/System/ResourceHolderManager.hpp"
 #include "Game/Util/SingletonHolder.hpp"
@@ -671,8 +670,8 @@ namespace {
             actor.initModelManagerWithAnm("Tico", nullptr, false);
             state->controllers[0U].drop_position_matrix = MR::getJointMtx(&actor, "Body");
         }
-        auto model_lifetime = std::weak_ptr<smgpc::compat::ModelManagerOwner>(
-            smgpc::compat::retain_actor_model_owner(&actor));
+        auto model_lifetime = std::weak_ptr<ModelManager>(
+            smgpc::compat::retain_actor_model(&actor));
         const auto* original_manager = actor.mModelManager;
         const auto original_joint_matrix = state->controllers[0U].drop_position_matrix;
         auto replacement_rejected = false;

@@ -42,6 +42,11 @@ namespace JGeometry {
 
     template <>
     struct TBox<TVec3<f32>> {
+        void add(const TVec3f& rOffset) {
+            i.add(rOffset);
+            f.add(rOffset);
+        }
+
         void extend(const TVec3f &position) {
             if (i.x >= position.x) {
                 i.x = position.x;

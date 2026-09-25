@@ -13,7 +13,6 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/J3dCommandScope.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "compat/ModelManagerOwner.hpp"
 #include "Game/System/ResourceHolder.hpp"
 
 #include <exception>
@@ -113,7 +112,7 @@ namespace smgpc::compat {
 
     struct MarioAnimatorConstructionScope::Storage {
         MarioAnimator& animator;
-        std::shared_ptr<ModelManagerOwner> owner;
+        std::shared_ptr<ModelManager> owner;
         std::shared_ptr<MarioAnimatorLifetime> lifetime;
         std::optional<JkrAllocationScope> heap;
         std::optional<J3dCommandScope> commands;
@@ -123,12 +122,12 @@ namespace smgpc::compat {
         int exceptions;
         int mutex_count;
 
-        Storage(MarioAnimator& value, std::shared_ptr<ModelManagerOwner> model_owner)
+        Storage(MarioAnimator& value, std::shared_ptr<ModelManager> model_owner)
             : animator(value), owner(std::move(model_owner)), lifetime(std::make_shared<MarioAnimatorLifetime>()),
-              system(j3dSys), previous_player(owner->manager().mXanimePlayer), thread(OSGetCurrentThread()),
+              system(j3dSys), previous_player(owner->mXanimePlayer), thread(OSGetCurrentThread()),
               exceptions(std::uncaught_exceptions()),
               mutex_count(MR::MutexHolder<0>::sMutex.thread == thread ? MR::MutexHolder<0>::sMutex.count : 0) {
-            lifetime->domain = owner->allocation_domain();
+            lifetime->domain = owner->nativeAllocationDomain();
             lifetime->resources = MR::getResourceHolder(animator.mActor)->retainNativeResources();
             // Original init assigns each pointer only after a successful complete
             // child construction. Known null slots permit capture during unwind.
@@ -138,7 +137,7 @@ namespace smgpc::compat {
             animator._120 = nullptr;
             // Reserve/store host metadata before entering the original init body;
             // the scope destructor never allocates or throws during capture.
-            owner->retain_lifetime_dependency(lifetime);
+            owner->retainNativeDependency(lifetime);
 
         }
 
@@ -146,7 +145,7 @@ namespace smgpc::compat {
             const bool complete = std::uncaught_exceptions() == exceptions;
             lifetime->capture(animator, complete);
             if (!complete) {
-                owner->manager().mXanimePlayer = previous_player;
+                owner->mXanimePlayer = previous_player;
                 auto& mutex = MR::MutexHolder<0>::sMutex;
                 while (mutex.thread == thread && mutex.count > mutex_count) OSUnlockMutex(&mutex);
             }
@@ -159,8 +158,8 @@ namespace smgpc::compat {
     MarioAnimatorConstructionScope::MarioAnimatorConstructionScope(MarioAnimator& animator) {
         {
             JkrHostAllocationScope host;
-            auto owner = retain_actor_model_owner(animator.mActor);
-            if (!owner || &owner->manager() != animator.mActor->mModelManager) {
+            auto owner = retain_actor_model(animator.mActor);
+            if (!owner || owner.get() != animator.mActor->mModelManager) {
                 aurora::throw_host_exception<std::logic_error>("MarioAnimator requires the actor's actual ModelManager owner");
             }
             _storage = std::make_unique<Storage>(animator, std::move(owner));

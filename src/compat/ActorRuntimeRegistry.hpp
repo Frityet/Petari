@@ -21,6 +21,7 @@ class HitSensor;
 class HitSensorKeeper;
 class JMapInfoIter;
 class LiveActor;
+class ModelManager;
 class ClippingActorHolder;
 class ClippingGroupHolder;
 class LodCtrl;
@@ -233,14 +234,13 @@ namespace smgpc::compat {
     void adopt_actor_lod_ctrl(LiveActor* actor, LodCtrl* lod_ctrl);
     [[nodiscard]] std::size_t actor_lod_ctrl_runtime_state_count();
 
-    class ModelManagerOwner;
     class JkrAllocationDomain;
     [[nodiscard]] std::shared_ptr<JkrAllocationDomain> actor_scene_allocation_domain(const LiveActor*);
     void adopt_actor_sound_object(LiveActor*, std::shared_ptr<JkrAllocationDomain>);
     void initialize_actor_model(LiveActor* actor, const char* model_archive,
                                 const char* animation_archive, bool create_display_list);
     void adopt_actor_animation_helpers(LiveActor* actor);
-    [[nodiscard]] std::shared_ptr<ModelManagerOwner> retain_actor_model_owner(const LiveActor* actor);
+    [[nodiscard]] std::shared_ptr<ModelManager> retain_actor_model(const LiveActor* actor);
     [[nodiscard]] std::optional<std::span<const std::uint8_t>>
     actor_model_resource_data_if_present(const LiveActor* actor, std::string_view resource_name);
 

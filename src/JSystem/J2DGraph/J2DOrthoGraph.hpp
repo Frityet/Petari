@@ -16,6 +16,10 @@ public:
 
     void setOrtho(TBox2f const& bounds, f32 far, f32 near);
 
+    void setOrtho(f32 x, f32 y, f32 width, f32 height, f32 far, f32 near) {
+        setOrtho(TBox2f(x, y, x + width, y + height), far, near);
+    }
+
     TBox2f mOrtho;  // 0xBC
     f32 mNear;      // 0xCC
     f32 mFar;       // 0xD0

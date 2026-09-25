@@ -43,7 +43,7 @@ namespace MR {
     bool isEnvelope(J3DMaterial*);
     void hideMaterial(J3DModel*, const char*);
     void hideMaterial(const LiveActor*, const char*);
-    void showMaterial(const J3DModel*, const char*);
+    void showMaterial(J3DModel*, const char*);
     void showMaterial(const LiveActor*, const char*);
     void calcFogStartEnd(TVec3f, f32, f32*, f32*);
     bool isUseTex(J3DMaterial*, u16);

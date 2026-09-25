@@ -12,7 +12,6 @@ class StarPointerTransformHolder;
 
 namespace smgpc::compat {
 class JkrHeapRuntime;
-class StarPointerSceneBinding;
 
 // GameSystem's original pointer records and native GPU callback lifetime.
 class StarPointerDepthOwnership final {
@@ -35,22 +34,9 @@ public:
     [[nodiscard]] StarPointerGuidance* guidance() const noexcept;
 
 private:
-    friend class StarPointerSceneBinding;
     struct State;
     std::unique_ptr<State> _state;
     StarPointerDepthOwnership* _previous = nullptr;
-};
-
-class StarPointerSceneBinding final {
-public:
-    StarPointerSceneBinding();
-    ~StarPointerSceneBinding();
-    StarPointerSceneBinding(const StarPointerSceneBinding&) = delete;
-    StarPointerSceneBinding& operator=(const StarPointerSceneBinding&) = delete;
-private:
-    StarPointerDepthOwnership* _owner = nullptr;
-    StarPointerSceneBinding* _previous = nullptr;
-    bool _previous_transform_update = false;
 };
 
 [[nodiscard]] StarPointerDepthOwnership* try_star_pointer_depth() noexcept;

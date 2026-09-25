@@ -36,8 +36,6 @@ target("smg-pc-game")
     remove_files("Screen/LayoutPaneCtrl.cpp")
     remove_files("Screen/FullScreenBlur.cpp")
     remove_files("Map/FileSelectEffect.cpp")
-    remove_files("Map/CollisionParts.cpp")
-    remove_files("MapObj/DynamicCollisionObj.cpp")
     remove_files("Map/FileSelectItem.cpp")
     remove_files("Map/FileSelector.cpp")
     remove_files("NameObj/NameObjFactory.cpp")
@@ -77,7 +75,7 @@ target("smg-pc-game")
     add_files("Util/MtxUtil.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("System/Overwrite.cpp", {cxxflags = "-ffp-contract=off"})
     add_files({"Util/ActorMovementUtil.cpp", "../compat/OriginalMapQueries.cpp",
-               "../compat/OriginalCollisionPartsCompat.cpp", "../compat/OriginalKCollisionCompat.cpp"},
+               "Map/CollisionParts.cpp", "Map/KCollision.cpp"},
               {cxxflags = "-ffp-contract=off"})
     add_files({"../JSystem/J3DGraphBase/J3DMaterial.cpp", "../JSystem/J3DGraphBase/J3DMatBlock.cpp",
                "../JSystem/J3DGraphBase/J3DTevs.cpp", "../JSystem/J3DGraphAnimator/J3DMaterialAnm.cpp",

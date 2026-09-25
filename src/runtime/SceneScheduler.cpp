@@ -588,7 +588,7 @@ namespace smgpc::runtime {
         validate(*executor.mMovementList, entry.movement_type);
         validate(*executor.mCalcAnimList, entry.calc_anim_type);
         validate(*executor.mDrawList, entry.draw_type);
-        auto owner = entry.has_draw_buffer_registration ? smgpc::compat::retain_actor_model_owner(entry.live_actor) : nullptr;
+        auto owner = entry.has_draw_buffer_registration ? smgpc::compat::retain_actor_model(entry.live_actor) : nullptr;
         if (entry.has_draw_buffer_registration)
             _draw_buffers->validate_actor_registration(*entry.live_actor, entry.draw_buffer_type, owner);
         const smgpc::compat::JkrAllocationScope game(_execution->_domain);

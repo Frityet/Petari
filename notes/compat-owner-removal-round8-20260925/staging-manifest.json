@@ -1,0 +1,282 @@
+[
+  {
+    "path": "src/Game/LiveActor/LiveActor.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ModelManager.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ModelManager.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/CollisionParts.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/KCollision.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/MapObj/DynamicCollisionObj.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/MapObj/SpiderThread.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/MapObj/SpinDriverPathDrawer.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/DrawUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/JMapUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/JMapUtil.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/JointUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/JointUtil.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/ModelUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/ModelUtil.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/xmake.lua",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/JSystem/J2DGraph/J2DOrthoGraph.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/JSystem/JGeometry/TBox.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/JMapUtilCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/LiveActorUtilCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/MarioAnimatorLifetime.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/MaterialTextureModeCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ModelCreationCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ModelFogCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ModelManagerOwner.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ModelManagerOwner.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ModelPostLoadCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalAlphaClear.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalClearZBuffer.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalCollisionPartsCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalDynamicCollisionObj.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalImageEffectUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalJ2DProjection.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalJointAccess.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalJutCapture.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalKCollisionCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalModelAccess.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalModelBounds.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalModelLightAccess.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalModelMaterialHelpers.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalPlacementJMap.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalSceneDrawInit.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalSceneDrawUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalShadowTextureAccess.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalShadowVolumeDraw.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/StageScenarioMetadataResolver.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/StageScenarioMetadataResolver.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/StageSessionState.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/StageSessionState.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/StageZoneMatrixRegistry.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/StageZoneMatrixRegistry.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/StarPointerDepthOwnership.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/StarPointerDepthOwnership.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/SceneScheduler.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/jut/JutTexture.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/scene/SceneDrawBufferService.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/scene/SceneDrawBufferService.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/GameActorPhysicsRealOrAbsentTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/JAudioPlaybackTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalCollisionPartsOwnerTests.cpp",
+    "mode": "necessary-existing-test-migration"
+  },
+  {
+    "path": "tests/OriginalImageEffectOwnershipTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalShadowControllerOwnerTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalStageSessionTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalStarPointerOwnerTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/PlayerActorBridgeTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/RestartStageSessionTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/StageZoneMatrixRegistryTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "mode": "scoped-delta-on-HEAD"
+  }
+]

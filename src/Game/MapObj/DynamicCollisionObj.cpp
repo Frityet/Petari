@@ -1,4 +1,9 @@
 #include "Game/MapObj/DynamicCollisionObj.hpp"
+#include "compat/CollisionPartsCompat.hpp"
+#include "resource/KCollisionResource.hpp"
+#include <aurora/allocation.hpp>
+#include <memory>
+#include <vector>
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Map/CollisionParts.hpp"
 #include "Game/Map/KCollision.hpp"
@@ -145,18 +150,36 @@ void DynamicCollisionObj::updateCollisionHeader() {
     this->mKCLFile->mMin = min;
 }
 
+namespace {
+    struct GeneratedCollisionAllocation {
+        KCLFile file{};
+        std::unique_ptr<TVec3f[]> positions;
+        std::unique_ptr<TVec3f[]> normals;
+        std::unique_ptr<KC_PrismData[]> prisms;
+        std::vector<u16> octree;
+    };
+}
+
 void DynamicCollisionObj::createCollision() {
-    s32 v = _94;
-    mKCLFile = new KCLFile();
-    mKCLFile->mPos = new TVec3f[v];
-    mKCLFile->mNorms = new TVec3f[v * 4];
-    mKCLFile->mPrisms = new KC_PrismData[(v + 1) * 1];
-    u16* u16array = new (4) u16[v + 3];
+    const s32 v = _94;
+    std::shared_ptr<GeneratedCollisionAllocation> allocation;
+    {
+        const aurora::allocation::HostAllocationScope host;
+        allocation = std::make_shared<GeneratedCollisionAllocation>();
+        allocation->positions = std::make_unique<TVec3f[]>(v);
+        allocation->normals = std::make_unique<TVec3f[]>(v * 4);
+        allocation->prisms = std::make_unique<KC_PrismData[]>(v + 1);
+        allocation->octree.resize(v + 3);
+    }
+    mKCLFile = &allocation->file;
+    mKCLFile->mPos = allocation->positions.get();
+    mKCLFile->mNorms = allocation->normals.get();
+    mKCLFile->mPrisms = allocation->prisms.get();
+    auto* u16array = allocation->octree.data();
     mKCLFile->mOctree = u16array;
 
     u16array[0] = 0x8000;
     u16array[1] = 2;
-
     s32 count = v;
     for (s32 i = 0; i <= v; i++) {
         u16array[i + 2] = count--;
@@ -168,10 +191,16 @@ void DynamicCollisionObj::createCollision() {
     updateCollisionHeader();
     updateTriangle();
 
-    mParts = new CollisionParts();
+    std::shared_ptr<smgpc::resource::GeneratedKCollisionResource> resource;
+    {
+        const aurora::allocation::HostAllocationScope host;
+        resource = std::make_shared<smgpc::resource::GeneratedKCollisionResource>(
+            *mKCLFile, std::span(mKCLFile->mPos, v), std::span(mKCLFile->mNorms, v * 4),
+            std::span(mKCLFile->mPrisms, v + 1), allocation->octree, allocation);
+    }
     TPos3f posmtx;
     PSMTXTrans(posmtx, mPosition.x, mPosition.y, mPosition.z);
-    mParts->init(posmtx, getSensor("body"), mKCLFile, nullptr, 0, true);
+    mParts = smgpc::compat::create_generated_collision_parts(std::move(resource), getSensor("body"), posmtx, 0);
     MR::validateCollisionParts(mParts);
     mParts->mServer->calcFarthestVertexDistance();
     mParts->updateBoundingSphereRange(TVec3f(mScale));

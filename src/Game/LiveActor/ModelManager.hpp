@@ -2,6 +2,11 @@
 
 #include <JSystem/J3DGraphAnimator/J3DModel.hpp>
 #include <revolution/types.h>
+#include <memory>
+
+namespace smgpc::compat {
+    class JkrAllocationDomain;
+}
 
 class BpkPlayer;
 class BrkPlayer;
@@ -21,6 +26,12 @@ class ModelManager {
 public:
     /// @brief Creates a new `ModelManager`.
     ModelManager();
+    ~ModelManager();
+
+    static std::shared_ptr<ModelManager> createNative(std::shared_ptr<smgpc::compat::JkrAllocationDomain>,
+                                                    const char*, const char*, bool);
+    void retainNativeDependency(std::shared_ptr<void>);
+    std::shared_ptr<smgpc::compat::JkrAllocationDomain> nativeAllocationDomain() const noexcept;
 
     void update();
     void calcAnim();
@@ -81,4 +92,8 @@ public:
     /* 0x1C */ J3DModel* mModel;
     /* 0x20 */ ResourceHolder* mModelResourceHolder;
     /* 0x24 */ DisplayListMaker* mDisplayListMaker;
+
+private:
+    struct NativeState;
+    std::unique_ptr<NativeState> mNativeState;
 };

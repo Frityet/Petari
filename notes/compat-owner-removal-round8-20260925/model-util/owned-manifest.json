@@ -1,0 +1,66 @@
+{
+  "head": "e027464426599e3dacb0394f2fb90ecd8f7a1f70",
+  "donor_head": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "paths": [
+    {
+      "path": "src/Game/Util/ModelUtil.cpp",
+      "before_status": "",
+      "existed": false
+    },
+    {
+      "path": "src/Game/Util/ModelUtil.hpp",
+      "before_status": "",
+      "existed": true
+    },
+    {
+      "path": "src/JSystem/JGeometry/TBox.hpp",
+      "before_status": "",
+      "existed": true
+    },
+    {
+      "path": "src/compat/LiveActorUtilCompat.cpp",
+      "before_status": "",
+      "existed": true
+    },
+    {
+      "path": "src/compat/ModelCreationCompat.cpp",
+      "before_status": "",
+      "existed": true
+    },
+    {
+      "path": "src/compat/ModelFogCompat.cpp",
+      "before_status": "",
+      "existed": true
+    },
+    {
+      "path": "src/compat/ModelPostLoadCompat.cpp",
+      "before_status": "",
+      "existed": true
+    },
+    {
+      "path": "src/compat/OriginalModelAccess.cpp",
+      "before_status": "",
+      "existed": true
+    },
+    {
+      "path": "src/compat/OriginalModelBounds.cpp",
+      "before_status": "",
+      "existed": true
+    },
+    {
+      "path": "src/compat/OriginalModelLightAccess.cpp",
+      "before_status": "",
+      "existed": true
+    },
+    {
+      "path": "src/compat/OriginalModelMaterialHelpers.cpp",
+      "before_status": "",
+      "existed": true
+    },
+    {
+      "path": "src/compat/MaterialTextureModeCompat.cpp",
+      "before_status": "",
+      "existed": true
+    }
+  ]
+}

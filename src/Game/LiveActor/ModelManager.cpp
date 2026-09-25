@@ -10,11 +10,50 @@
 #include "Game/Animation/XanimeResource.hpp"
 #include "Game/LiveActor/DisplayListMaker.hpp"
 #include "Game/System/ResourceHolder.hpp"
+#include "Game/System/ResourceHolderManager.hpp"
 #include "Game/Util/MutexHolder.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/SingletonHolder.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 #include <JSystem/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/JUtility/JUTNameTab.hpp>
 #include <cstdio>
+#include <aurora/exception.hpp>
+#include <exception>
+#include <stdexcept>
+#include <utility>
+#include <vector>
+
+namespace {
+    class LoadMutexRecovery final {
+    public:
+        LoadMutexRecovery() : mThread(OSGetCurrentThread()), mExceptions(std::uncaught_exceptions()) {
+            mCount = mutex().thread == mThread ? mutex().count : 0;
+        }
+        ~LoadMutexRecovery() {
+            if (std::uncaught_exceptions() > mExceptions) {
+                while (mutex().thread == mThread && mutex().count > mCount) {
+                    OSUnlockMutex(&mutex());
+                }
+            }
+        }
+    private:
+        static OSMutex& mutex() { return MR::MutexHolder<0>::sMutex; }
+        OSThread* mThread;
+        int mExceptions;
+        int mCount;
+    };
+}
+
+struct ModelManager::NativeState {
+    std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain;
+    std::shared_ptr<const void> modelResources;
+    std::shared_ptr<const void> animationResources;
+    std::vector<std::shared_ptr<void>> dependencies;
+    J3DModel* createdModel = nullptr;
+    XanimePlayer* createdPlayer = nullptr;
+    XanimeCore* createdCore = nullptr;
+};
 
 namespace MR {
     J3DModel* newJ3DModel(const ResourceHolder*, const char*, J3DMdlFlag);
@@ -25,6 +64,69 @@ namespace MR {
 ModelManager::ModelManager()
     : mBtkPlayer(nullptr), mBrkPlayer(nullptr), mBtpPlayer(nullptr), mBpkPlayer(nullptr), mBvaPlayer(nullptr), mXanimeResourceTable(nullptr),
       mXanimePlayer(nullptr), mModel(nullptr), mModelResourceHolder(nullptr), mDisplayListMaker(nullptr) {
+}
+
+ModelManager::~ModelManager() {
+    const smgpc::compat::JkrHostAllocationScope host;
+    if (mNativeState == nullptr) {
+        return;
+    }
+    // Authored animators can replace this pointer while queued packets still
+    // borrow the original model. Restore it before retiring their graphs.
+    mXanimePlayer = mNativeState->createdPlayer;
+    mNativeState->dependencies.clear();
+    delete mNativeState->createdCore;
+    delete mNativeState->createdPlayer;
+    delete mNativeState->createdModel;
+    // Original raw child arrays retire with the retained Game heap. The
+    // resource holder owns shared material-animation storage.
+    mNativeState.reset();
+}
+
+std::shared_ptr<ModelManager> ModelManager::createNative(std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain,
+                                                       const char* model, const char* animation, bool createDL) {
+    const smgpc::compat::JkrHostAllocationScope host;
+    if (!domain) {
+        aurora::throw_host_exception<std::invalid_argument>("A ModelManager requires its actual retained Game heap");
+    }
+    if (!SingletonHolder<ResourceHolderManager>::get()) {
+        aurora::throw_host_exception<std::invalid_argument>("ModelManager requires the original ResourceHolderManager");
+    }
+    auto state = std::make_unique<NativeState>();
+    state->domain = domain;
+    ModelManager* original;
+    {
+        const aurora::allocation::ClientAllocationScope game({true, true});
+        original = new ModelManager();
+    }
+    original->mNativeState = std::move(state);
+    auto manager = std::shared_ptr<ModelManager>(original, [](ModelManager* value) {
+        const smgpc::compat::JkrHostAllocationScope host;
+        // Keep the object allocation alive through operator delete. Holding
+        // this locally also lets weak references outlive the retired heap.
+        const auto domain = value->nativeAllocationDomain();
+        delete value;
+    });
+    {
+        // File/resource waits may switch heaps on the main thread; inherit the
+        // caller's selected heap without holding a heap-selection mutex here.
+        const aurora::allocation::ClientAllocationScope game({true, true});
+        LoadMutexRecovery recovery;
+        manager->init(model, animation, createDL);
+    }
+    return manager;
+}
+
+void ModelManager::retainNativeDependency(std::shared_ptr<void> dependency) {
+    const smgpc::compat::JkrHostAllocationScope host;
+    if (!dependency || !mNativeState) {
+        aurora::throw_host_exception<std::invalid_argument>("Model lifetime dependency requires a retained native model");
+    }
+    mNativeState->dependencies.push_back(std::move(dependency));
+}
+
+std::shared_ptr<smgpc::compat::JkrAllocationDomain> ModelManager::nativeAllocationDomain() const noexcept {
+    return mNativeState ? mNativeState->domain : nullptr;
 }
 
 void ModelManager::update() {
@@ -337,6 +439,10 @@ const char* ModelManager::getPlayingBckName() const {
 }
 
 void ModelManager::initModelAndAnimation(ResourceHolder* pModelResource, const char* pModelName, ResourceHolder* pAnimResource, J3DMdlFlag flags) {
+    if (mNativeState != nullptr) {
+        mNativeState->modelResources = pModelResource->retainNativeResources();
+        mNativeState->animationResources = (pAnimResource->mMotionResTable->mCount == 0 ? pModelResource : pAnimResource)->retainNativeResources();
+    }
     mModelResourceHolder = pModelResource;
 
     if (pAnimResource->mMotionResTable->mCount == 0) {
@@ -345,6 +451,11 @@ void ModelManager::initModelAndAnimation(ResourceHolder* pModelResource, const c
     else {
         mXanimeResourceTable = MR::newXanimeResourceTable(pAnimResource);
         mXanimePlayer = MR::newXanimePlayer(pModelResource, pModelName, pAnimResource, flags, mXanimeResourceTable);
+    }
+    if (mNativeState != nullptr) {
+        mNativeState->createdModel = getJ3DModel();
+        mNativeState->createdPlayer = mXanimePlayer;
+        mNativeState->createdCore = mXanimePlayer ? mXanimePlayer->mCore : nullptr;
     }
 }
 

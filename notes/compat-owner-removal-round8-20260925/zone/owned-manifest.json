@@ -1,0 +1,43 @@
+{
+  "head": "e027464426599e3dacb0394f2fb90ecd8f7a1f70",
+  "paths": [
+    {
+      "path": "src/compat/StageZoneMatrixRegistry.cpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "7a42f1beefc1b90bcbbb32e4ecb2be641428bff23d293c9136d6793f5a8ffda3",
+      "action": "deleted"
+    },
+    {
+      "path": "src/compat/StageZoneMatrixRegistry.hpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "9503ab358db3b2c69e2db6f7ebbe72ec68264b90c745c843ad04eb17d752b8e2",
+      "action": "deleted"
+    },
+    {
+      "path": "tests/StageZoneMatrixRegistryTests.cpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "868113124a1278f8d05d3059f5da0f7be92836e340b8277daec5da311f45b828",
+      "action": "deleted"
+    },
+    {
+      "path": "tests/GameActorPhysicsRealOrAbsentTests.cpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "f5f7e3af86e92f8bd7d9bad4ac2c27e1dfd1fce1540e1f3c5f717b413ddc133a",
+      "action": "modified",
+      "after_sha256": "d35720bd9793085d6eaeecd86e85cab259d32d32064251ec8e699091a20a9279"
+    }
+  ],
+  "validation": "Source-only review; no builds or runtime tests per root/user speed instruction.",
+  "wiring": {
+    "remove_target": "smg-pc-stage-zone-matrix-tests",
+    "add_dependencies_to_smg-pc-game-actor-physics-real-or-absent-tests": [
+      "smg-pc-app",
+      "aurora-main"
+    ],
+    "replacement_zone_target": null
+  }
+}

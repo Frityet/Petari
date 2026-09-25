@@ -13,6 +13,12 @@ namespace {
         TVec3f center{40.0F, 50.0F, 60.0F};
     };
 
+    class StatePlayer final : public LiveActor {
+    public:
+        StatePlayer() : LiveActor("nerve-change-capability-owner") {}
+        bool nerve_change_enabled = true;
+    };
+
     class MatrixPlayer final : public LiveActor {
     public:
         MatrixPlayer() : LiveActor("matrix-update-owner") {}
@@ -111,6 +117,23 @@ int main() {
             "detached snapshots cannot retain an actor callback");
     ++passed;
 
-    std::cout << "Player actor bridge tests passed: " << passed << "/2\n";
+    auto state_actor = StatePlayer{};
+    player.attach_actor(state_actor);
+    require(!player.player_dead_state().has_value(),
+            "generic LiveActor death must not substitute for an explicit nerve-change capability");
+    player.attach_actor(state_actor, {
+        .read_nerve_change_enabled = +[](const LiveActor& actor) {
+            return static_cast<const StatePlayer&>(actor).nerve_change_enabled;
+        },
+    });
+    require(player.player_dead_state() == false, "the attached player nerve-change capability must be queried");
+    state_actor.nerve_change_enabled = false;
+    require(player.player_dead_state() == true, "a nerve change must be visible immediately without frame synchronization");
+    state_actor.nerve_change_enabled = true;
+    require(player.player_dead_state() == false, "returning to a changeable nerve must clear the death query");
+    player.detach_actor(&state_actor);
+    ++passed;
+
+    std::cout << "Player actor bridge tests passed: " << passed << "/3\n";
     return 0;
 }

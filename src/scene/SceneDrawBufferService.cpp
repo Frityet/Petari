@@ -1,6 +1,5 @@
 #include <aurora/exception.hpp>
 #include "SceneDrawBufferService.hpp"
-#include "compat/ModelManagerOwner.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "Game/LiveActor/ModelManager.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
@@ -37,7 +36,7 @@ void require_category(int category) {
 struct SceneDrawBufferService::State {
     struct Registration { int category; int executor = -1; };
     std::shared_ptr<compat::JkrAllocationDomain> domain;
-    std::vector<std::vector<std::shared_ptr<compat::ModelManagerOwner>>> prototypes;
+    std::vector<std::vector<std::shared_ptr<ModelManager>>> prototypes;
     NameObjListExecutor* executor = nullptr;
     DrawBufferHolder* holder = nullptr;
     struct Callback {
@@ -95,12 +94,12 @@ SceneDrawBufferService::~SceneDrawBufferService() {
     if (_state->executor) std::terminate();
 }
 void SceneDrawBufferService::validate_actor_registration(LiveActor& actor, int category,
-                                                        const std::shared_ptr<compat::ModelManagerOwner>& owner) {
+                                                        const std::shared_ptr<ModelManager>& owner) {
     compat::JkrHostAllocationScope host;
     if (!_state->holder) aurora::throw_host_exception<std::logic_error>("Construct original draw buffers before registering a model");
     require_category(category);
     if (_state->allocated) aurora::throw_host_exception<std::logic_error>("Original model registration must precede actor-list allocation");
-    if (!owner || &owner->manager() != actor.mModelManager)
+    if (!owner || owner.get() != actor.mModelManager)
         aurora::throw_host_exception<std::invalid_argument>("Draw registration must retain the actor's actual ModelManager owner");
     auto& group = *_state->holder->getDrawBufferGroup(category);
     auto index = group.findExecuterIndex(MR::getModelResName(&actor));
@@ -117,7 +116,7 @@ void SceneDrawBufferService::validate_actor_registration(LiveActor& actor, int c
     if (!prototype) prototype = owner;
 }
 int SceneDrawBufferService::register_actor(LiveActor& actor, int category,
-                                          std::shared_ptr<compat::ModelManagerOwner> owner) {
+                                          std::shared_ptr<ModelManager> owner) {
     const auto& registration = _state->actors.at(&actor);
     const auto index = _state->holder->getDrawBufferGroup(category)->findExecuterIndex(MR::getModelResName(&actor));
     if (index != registration.executor)

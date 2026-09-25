@@ -1,0 +1,94 @@
+{
+  "scope": "Canonical full DrawUtil restoration and original scene-draw method ownership",
+  "files": [
+    {
+      "path": "src/Game/Util/DrawUtil.cpp",
+      "existed_before": true,
+      "before": "notes/compat-owner-removal-round8-20260925/draw-util/before/src/Game/Util/DrawUtil.cpp",
+      "before_sha256": "fb5afbb986a7a8176d976fe45915cdd2f012fab67bde416032e788d1992bc27d",
+      "action": "modify",
+      "after_sha256": "1068da03e46919055c7f5fb5f0126a2339e320aa41ac4176291798b13248d2ed"
+    },
+    {
+      "path": "src/JSystem/J2DGraph/J2DOrthoGraph.hpp",
+      "existed_before": true,
+      "before": "notes/compat-owner-removal-round8-20260925/draw-util/before/src/JSystem/J2DGraph/J2DOrthoGraph.hpp",
+      "before_sha256": "666a032dd192f9db60ecb7a15451efa622e37ec0a5821e1256f418f9eda5d5d9",
+      "action": "modify",
+      "after_sha256": "12f695414d4416aff72dba2f5310230eb9a5a5a9be1ec7d231c57b7633c0c5be"
+    },
+    {
+      "path": "src/Game/MapObj/SpinDriverPathDrawer.cpp",
+      "existed_before": false,
+      "action": "add",
+      "after_sha256": "7aae68e7ac001bb1abec683086d149c1dfa54927d86861c2da8765cb62ec490d"
+    },
+    {
+      "path": "src/Game/MapObj/SpiderThread.cpp",
+      "existed_before": false,
+      "action": "add",
+      "after_sha256": "9061bc291201ad9142dfb2d8b42078222b9abf0f2d351586d7c20f2e93070517"
+    },
+    {
+      "path": "src/compat/OriginalClearZBuffer.cpp",
+      "existed_before": true,
+      "before": "notes/compat-owner-removal-round8-20260925/draw-util/before/src/compat/OriginalClearZBuffer.cpp",
+      "before_sha256": "b1995be522d03c3005153b54ef3c035b39455f3582c93478fb4d15a0efed368e",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/OriginalAlphaClear.cpp",
+      "existed_before": true,
+      "before": "notes/compat-owner-removal-round8-20260925/draw-util/before/src/compat/OriginalAlphaClear.cpp",
+      "before_sha256": "f393ca3aa11635903bed290d70f38bd7542e5f0f4a5bf81986737c3a721ecc29",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/OriginalJ2DProjection.cpp",
+      "existed_before": true,
+      "before": "notes/compat-owner-removal-round8-20260925/draw-util/before/src/compat/OriginalJ2DProjection.cpp",
+      "before_sha256": "1bc6eeeb7716f9e924c291d334c0b34f95b75e59fc5dac9b31a9efd4ee4b1b8c",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/OriginalSceneDrawInit.cpp",
+      "existed_before": true,
+      "before": "notes/compat-owner-removal-round8-20260925/draw-util/before/src/compat/OriginalSceneDrawInit.cpp",
+      "before_sha256": "08a4c66500f3c341f7361826c2935b486bd61034d602e9bd183287b1a632cf43",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/OriginalImageEffectUtil.cpp",
+      "existed_before": true,
+      "before": "notes/compat-owner-removal-round8-20260925/draw-util/before/src/compat/OriginalImageEffectUtil.cpp",
+      "before_sha256": "9d62a47ec17f5211fa18863817ae1027f637328a85c08bd029232ae1aee081d5",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/OriginalShadowVolumeDraw.cpp",
+      "existed_before": true,
+      "before": "notes/compat-owner-removal-round8-20260925/draw-util/before/src/compat/OriginalShadowVolumeDraw.cpp",
+      "before_sha256": "438de1e46a2abb39c5d85db7bf2fbe1ad71b57b1b7fbb810a819f4042f7c4a28",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/OriginalShadowTextureAccess.cpp",
+      "existed_before": true,
+      "before": "notes/compat-owner-removal-round8-20260925/draw-util/before/src/compat/OriginalShadowTextureAccess.cpp",
+      "before_sha256": "9c800f408ee126a5c596cd9e354c91075d525db32b8f70d0e53f4761e41cc067",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/OriginalSceneDrawUtil.cpp",
+      "existed_before": true,
+      "before": "notes/compat-owner-removal-round8-20260925/draw-util/before/src/compat/OriginalSceneDrawUtil.cpp",
+      "before_sha256": "d2fd020e1221274dad228a2b57d78f15ae2a92dbc8458f6f9be60b9734fecd06",
+      "action": "delete"
+    }
+  ],
+  "donor": {
+    "path": "decomp/src/Game/Util/DrawUtil.cpp",
+    "sha256": "9de5a6f8e1e73b1569acb91871a3d9850e5cc21ab9e9b00a489935029cea1caf"
+  },
+  "build_wiring": "Canonical Game CPPs are included by existing recursive Game source glob; eight retired compat CPPs must no longer be in the regenerated source graph. No build-file edits required."
+}

@@ -1,0 +1,101 @@
+{
+  "head": "e027464426599e3dacb0394f2fb90ecd8f7a1f70",
+  "paths": [
+    {
+      "path": "src/compat/ModelManagerOwner.cpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "fad3c71b1e232ff3710a3c66ad6a164b299a7994ca1ac5651ebb49bb6fdf76d5",
+      "action": "deleted"
+    },
+    {
+      "path": "src/compat/ModelManagerOwner.hpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "75e0201a1ab11409633a0ca3936c4457a733d795b9f60c139b438a8f81542fc2",
+      "action": "deleted"
+    },
+    {
+      "path": "src/Game/LiveActor/ModelManager.cpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "c1a617db9357dd59d1d7edb9a658b91919ba504e81297e763e053cf662f3287e",
+      "action": "modified",
+      "after_sha256": "021439a12483ae67a298e5b39c1cd664a7e457efecb03ea36c39cef5b06dc2a1"
+    },
+    {
+      "path": "src/Game/LiveActor/ModelManager.hpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "0743be3cfc6b0206dea6cecbe850731c6d0b1330dea02df1ae5289aaf2af5cb1",
+      "action": "modified",
+      "after_sha256": "e668c1303a5bcfebf90dc7f56dc8c9f7e303092f5d4e02f0dae316e60f539af4"
+    },
+    {
+      "path": "src/compat/ActorRuntimeRegistry.cpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "591ebef0796c01f422a5bb1fa37d3d93c6007ff9df3d54a35f9c9e2668a7e397",
+      "action": "modified",
+      "after_sha256": "7fac0a21415e3cb8a124d147658d5fa16d2f78baa38be5e4e9a28e68a92528e6"
+    },
+    {
+      "path": "src/compat/ActorRuntimeRegistry.hpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "9c2bf6fe6eef6ad196062b35577fab64fb35c523d0df1af45cc10571ebf5d0fa",
+      "action": "modified",
+      "after_sha256": "2c2905eb4e4d075053a1df56bedb0513646f45995f0d106e6a7410b6c0c0a091"
+    },
+    {
+      "path": "src/scene/SceneDrawBufferService.cpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "7c95c9885d10845302b56c9e4c719623e14848eeaa06008e46b8a95c4fa16d10",
+      "action": "modified",
+      "after_sha256": "1d53d04df8aceb7efba3f4c79a38e9074a5ded8257e571587c264ab809a01d32"
+    },
+    {
+      "path": "src/scene/SceneDrawBufferService.hpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "e2457f6b301203944145e8d29bd116b3955a774f238a4c9301452a8d34b2f290",
+      "action": "modified",
+      "after_sha256": "6419ef071c39b39c8e492a6c3505ed8e28fb30f38433a43af7af225f35ed6fb3"
+    },
+    {
+      "path": "src/compat/MarioAnimatorLifetime.cpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "0f36e244b1eb1c0de409924713fc096651d410633da9053de4943599d682cba0",
+      "action": "modified",
+      "after_sha256": "7782e0811216f2b2636a548d8d0aeffe6e41051c8fdb397736f8eb817bc8c025"
+    },
+    {
+      "path": "src/Game/LiveActor/LiveActor.cpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "99ea531cb43cd6a8e2039e6b53feadbce611724eba7f7150440ba54183c7838d",
+      "action": "modified",
+      "after_sha256": "6477410281db04e03764a75fff9bfc3f13dc5a18b0086dcb56b1e379c9fd9ae9"
+    },
+    {
+      "path": "src/runtime/SceneScheduler.cpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "0dc934018ea0ba0019e193e11b6e137272bfa6499f28f1af38903418617fc487",
+      "action": "modified",
+      "after_sha256": "f3e98572ecb46ea3b4ce9e02f809f36ce546e1a8268b7c4fc39050158f8984fd"
+    },
+    {
+      "path": "tests/OriginalShadowControllerOwnerTests.cpp",
+      "before_status": "M tests/OriginalShadowControllerOwnerTests.cpp",
+      "existed": true,
+      "before_sha256": "9f0019f0f4bc9df1cdc561b72d2a89fd3a505919e5b0d4bdd0805dec6c7e3e9c",
+      "action": "modified",
+      "after_sha256": "cfc6c0b1d7da92ff0ca17ab3a6ee9204f3628f00fe82cc0b08930256e787dfa8"
+    }
+  ],
+  "validation": "No builds or test runs. Source consumer scan finds no ModelManagerOwner or retain_actor_model_owner references in src/tests. Owned diff whitespace check passed.",
+  "wiring": "No new sources or targets. Existing canonical ModelManager.cpp is already selected; compat source glob drops removed pair."
+}

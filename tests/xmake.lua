@@ -716,6 +716,7 @@ target("smg-pc-talk-real-or-absent-tests")
     })
 
 target("smg-pc-game-actor-physics-real-or-absent-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -1480,31 +1481,6 @@ target("smg-pc-game-math-rotation-tests")
         realtime_output = true
     })
 
-target("smg-pc-stage-zone-matrix-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    add_files {
-        "StageZoneMatrixRegistryTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("stage_zone_matrices", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
 target("smg-pc-scene-movement-runtime-tests")
     set_kind("binary")
     set_default(false)
@@ -1633,13 +1609,14 @@ target("smg-pc-runtime-event-ownership-tests")
         realtime_output = true
     })
 
-target("smg-pc-restart-stage-session-tests")
+target("smg-pc-original-stage-session-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
     set_rundir(os.projectdir())
     add_files {
-        "RestartStageSessionTests.cpp"
+        "OriginalStageSessionTests.cpp"
     }
     add_deps {
         "smg-pc-common",
@@ -1653,7 +1630,7 @@ target("smg-pc-restart-stage-session-tests")
         "aurora-si",
         "aurora-vi"
     }
-    add_tests("restart_stage_session", {
+    add_tests("original_stage_session", {
         group = "aurora",
         rundir = os.projectdir(),
         realtime_output = true
@@ -2520,6 +2497,7 @@ target("smg-pc-original-wpad-gesture-tests")
     })
 
 target("smg-pc-original-star-pointer-owner-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -2551,6 +2529,7 @@ target("smg-pc-original-event-sequence-tests")
     })
 
 target("smg-pc-original-collision-parts-owner-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -2598,6 +2577,7 @@ target("smg-pc-original-layout-group-tests")
     })
 
 target("smg-pc-original-image-effect-ownership-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")

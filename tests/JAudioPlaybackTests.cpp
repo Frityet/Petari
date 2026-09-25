@@ -1578,6 +1578,30 @@ namespace {
                 "fresh-process RuntimeContext/SoundUtil binding proof must pass on the native window backend");
     }
 
+    void test_stage_audio_identity_and_sound_ids() {
+        const auto constructed = JAISoundID(0x12U, 0x34U, 0x5678U);
+        require(static_cast<u32>(constructed) == 0x12345678U,
+                "JAISoundID section/group/wave composition must be endian-correct");
+        const auto composite = JAISoundID(0x89ABCDEFU);
+        require(composite.getSectionID() == 0x89U && composite.getGroupID() == 0xABU && composite.getWaveID() == 0xCDEFU,
+                "JAISoundID composite accessors must round-trip on the host");
+        auto audio = smgpc::runtime::AudioEventService{};
+        require(!audio.is_stage_bgm_identity_resolved(), "new native audio state has no established BGM identity");
+        audio.resolve_stage_bgm_absent();
+        require(audio.is_stage_bgm_identity_resolved() && !audio.has_active_stage_bgm() &&
+                    !audio.current_stage_bgm_id().has_value(),
+                "native audio distinguishes known absence from unresolved identity");
+        audio.set_cube_bgm_change_invalid(true);
+        require(audio.is_cube_bgm_change_invalid(), "native audio retains cube BGM invalidation state");
+        audio.reset_stage_state();
+        require(!audio.has_active_stage_bgm() && !audio.is_stage_bgm_identity_resolved() &&
+                    !audio.current_stage_bgm_id().has_value() && !audio.is_cube_bgm_change_invalid(),
+                "native stage reset clears identity, activity and cube-local state");
+        audio.resolve_stage_bgm_absent();
+        require(audio.is_stage_bgm_identity_resolved() && !audio.has_active_stage_bgm(),
+                "a second native audio lifetime reconstructs known absence without stale activity");
+    }
+
     void test_logical_actor_and_sub_bgm_requests() {
         auto audio = smgpc::runtime::AudioEventService{};
         const auto binding =
@@ -1723,6 +1747,11 @@ namespace {
 
 int main(int argc, char **argv) {
     try {
+        if (argc == 2 && std::string_view(argv[1]) == "--stage-state-probe") {
+            test_stage_audio_identity_and_sound_ids();
+            std::cout << "[ok] stage audio identity/reset and JAISoundID endian semantics\n";
+            return 0;
+        }
         if (argc == 2 && std::string_view(argv[1]) == "--playback-service-probe") {
             const auto fixture = load_retail_audio_fixture();
             require(fixture.has_value(), "Playback service probe requires the audited retail fixture");
@@ -1757,6 +1786,7 @@ int main(int argc, char **argv) {
         test_deterministic_mixer_release();
         test_recovered_parameter_semantics();
         test_missing_device_fails_in_fresh_process(argv[0]);
+        test_stage_audio_identity_and_sound_ids();
         test_logical_actor_and_sub_bgm_requests();
 
         const auto fixture = load_retail_audio_fixture();

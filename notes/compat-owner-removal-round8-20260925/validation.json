@@ -1,0 +1,59 @@
+{
+  "baseline": "e027464426599e3dacb0394f2fb90ecd8f7a1f70",
+  "compat_files_before": 160,
+  "compat_files_after": 129,
+  "removed_compat_files": [
+    "src/compat/JMapUtilCompat.cpp",
+    "src/compat/MaterialTextureModeCompat.cpp",
+    "src/compat/ModelCreationCompat.cpp",
+    "src/compat/ModelFogCompat.cpp",
+    "src/compat/ModelManagerOwner.cpp",
+    "src/compat/ModelManagerOwner.hpp",
+    "src/compat/ModelPostLoadCompat.cpp",
+    "src/compat/OriginalAlphaClear.cpp",
+    "src/compat/OriginalClearZBuffer.cpp",
+    "src/compat/OriginalCollisionPartsCompat.cpp",
+    "src/compat/OriginalDynamicCollisionObj.cpp",
+    "src/compat/OriginalImageEffectUtil.cpp",
+    "src/compat/OriginalJ2DProjection.cpp",
+    "src/compat/OriginalJointAccess.cpp",
+    "src/compat/OriginalJutCapture.cpp",
+    "src/compat/OriginalKCollisionCompat.cpp",
+    "src/compat/OriginalModelAccess.cpp",
+    "src/compat/OriginalModelBounds.cpp",
+    "src/compat/OriginalModelLightAccess.cpp",
+    "src/compat/OriginalModelMaterialHelpers.cpp",
+    "src/compat/OriginalPlacementJMap.cpp",
+    "src/compat/OriginalSceneDrawInit.cpp",
+    "src/compat/OriginalSceneDrawUtil.cpp",
+    "src/compat/OriginalShadowTextureAccess.cpp",
+    "src/compat/OriginalShadowVolumeDraw.cpp",
+    "src/compat/StageScenarioMetadataResolver.cpp",
+    "src/compat/StageScenarioMetadataResolver.hpp",
+    "src/compat/StageSessionState.cpp",
+    "src/compat/StageSessionState.hpp",
+    "src/compat/StageZoneMatrixRegistry.cpp",
+    "src/compat/StageZoneMatrixRegistry.hpp"
+  ],
+  "build": {
+    "command": "xmake build smg-pc",
+    "result": "passed",
+    "log": "build.log",
+    "compile_fixes": [
+      "Restore missing isLoopRailPathIter declaration",
+      "Correct JointUtil search/parent return types to J3DJoint*",
+      "Use Aurora dolphin/gx.h rather than unavailable fine-grained revolution GX headers"
+    ]
+  },
+  "runtime": {
+    "record": "gateway-120.json",
+    "log": "gateway-120.log",
+    "frames": 120,
+    "exit_code": 0,
+    "binary_sha256": "deb0f63a076c34136cc283bb74678fd4c0a080f59cb63c093189ca3aa6697f87",
+    "process_exited": true
+  },
+  "focused_tests": "not run, per user request for substantially less testing",
+  "scope": "Working tree app build and bounded opening smoke only. Unrelated existing changes remain; no clean-checkout or full Gateway/Rosalina completion claim.",
+  "index_preservation": "Preexisting staged route-note binary patch preserved; scoped temporary index used."
+}

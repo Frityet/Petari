@@ -27,7 +27,6 @@
 namespace smgpc::compat {
 namespace {
 thread_local StarPointerDepthOwnership* current_owner = nullptr;
-thread_local StarPointerSceneBinding* current_scene_binding = nullptr;
 }
 
 struct StarPointerDepthOwnership::State {
@@ -200,23 +199,6 @@ TVec3f& StarPointerDepthOwnership::world_position(s32 channel) {
 void StarPointerDepthOwnership::clear_depth_result() {
     quiesce_draw_sync();
     for (s32 port = 0; port < 2; ++port) _state->controllers[port].mInfo.mDrawReady = false;
-}
-
-StarPointerSceneBinding::StarPointerSceneBinding() : _owner(current_owner), _previous(current_scene_binding) {
-    if (!_owner) return;
-    _owner->initialize_layouts();
-    _previous_transform_update = _owner->director().mIsUpdateTransHolder;
-    if (!_previous || _previous->_owner != _owner) _owner->modes().setStateToBase(this);
-    _owner->modes().incModeCounter(this, StarPointerMode_Game);
-    _owner->director().init();
-    current_scene_binding = this;
-}
-StarPointerSceneBinding::~StarPointerSceneBinding() {
-    if (!_owner) return;
-    _owner->modes().popState(this);
-    _owner->clear_depth_result();
-    _owner->director().mIsUpdateTransHolder = _previous_transform_update;
-    current_scene_binding = _previous;
 }
 
 StarPointerDepthOwnership* try_star_pointer_depth() noexcept { return current_owner; }

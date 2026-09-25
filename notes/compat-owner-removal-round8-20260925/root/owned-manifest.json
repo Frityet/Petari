@@ -1,0 +1,20 @@
+[
+  "tests/OriginalCollisionPartsOwnerTests.cpp",
+  "tests/xmake.lua",
+  "src/Game/Util/JMapUtil.cpp",
+  "src/compat/JMapUtilCompat.cpp",
+  "src/compat/OriginalPlacementJMap.cpp",
+  "src/compat/OriginalJutCapture.cpp",
+  "src/runtime/jut/JutTexture.cpp",
+  "src/Game/Util/JointUtil.cpp",
+  "src/compat/OriginalJointAccess.cpp",
+  "src/compat/OriginalCollisionPartsCompat.cpp",
+  "src/Game/Map/CollisionParts.cpp",
+  "src/compat/OriginalKCollisionCompat.cpp",
+  "src/Game/Map/KCollision.cpp",
+  "src/compat/OriginalDynamicCollisionObj.cpp",
+  "src/Game/MapObj/DynamicCollisionObj.cpp",
+  "src/Game/xmake.lua",
+  "src/Game/Util/JMapUtil.hpp",
+  "src/Game/Util/JointUtil.hpp"
+]

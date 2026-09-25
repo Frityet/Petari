@@ -29,7 +29,6 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjGroup.hpp"
 #include "compat/CollisionPartsCompat.hpp"
-#include "compat/ModelManagerOwner.hpp"
 #include "Game/System/ResourceHolder.hpp"
 #include "resource/RarcArchive.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -59,7 +58,7 @@ namespace {
     };
 
     struct LiveActorRuntimeState {
-        std::shared_ptr<smgpc::compat::ModelManagerOwner> model_owner{};
+        std::shared_ptr<ModelManager> model{};
         std::unique_ptr<ActorAnimKeeper> anim_keeper{};
         std::unique_ptr<ActorPadAndCameraCtrl> camera_ctrl{};
         std::shared_ptr<smgpc::compat::JkrAllocationDomain> sound_domain{};
@@ -561,22 +560,22 @@ namespace smgpc::compat {
     void initialize_actor_model(LiveActor* actor, const char* model_archive,
                                 const char* animation_archive, bool create_display_list) {
         auto& state = require_actor_state(actor);
-        if (state.model_owner) {
+        if (state.model) {
             aurora::throw_host_exception<std::logic_error>("Actor model replacement requires scene draw retirement first");
         }
         JkrHostAllocationScope host;
         auto* heap = JKRHeap::getCurrentHeap();
         if (!heap)
             aurora::throw_host_exception<std::logic_error>("Actor ModelManager requires the original caller's Game heap");
-        auto owner = std::make_shared<ModelManagerOwner>(JkrAllocationDomain::retain_heap(*heap),
+        auto owner = ModelManager::createNative(JkrAllocationDomain::retain_heap(*heap),
                                                         model_archive, animation_archive, create_display_list);
-        actor->mModelManager = &owner->manager();
-        state.model_owner = std::move(owner);
+        actor->mModelManager = owner.get();
+        state.model = std::move(owner);
     }
 
     std::shared_ptr<JkrAllocationDomain> actor_scene_allocation_domain(const LiveActor* actor) {
         const auto& state = require_actor_state(actor);
-        if (state.model_owner) return state.model_owner->allocation_domain();
+        if (state.model) return state.model->nativeAllocationDomain();
         auto* heap = JKRHeap::getCurrentHeap();
         if (!heap)
             aurora::throw_host_exception<std::logic_error>("Actor sound construction requires the original caller's Game heap");
@@ -597,8 +596,8 @@ namespace smgpc::compat {
         state.camera_ctrl.reset(actor->mCameraCtrl);
     }
 
-    std::shared_ptr<ModelManagerOwner> retain_actor_model_owner(const LiveActor* actor) {
-        return require_actor_state(actor).model_owner;
+    std::shared_ptr<ModelManager> retain_actor_model(const LiveActor* actor) {
+        return require_actor_state(actor).model;
     }
 
     std::optional<std::span<const std::uint8_t>>

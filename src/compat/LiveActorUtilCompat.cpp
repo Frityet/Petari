@@ -10,6 +10,12 @@
 
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/ModelManager.hpp"
+#include "Game/LiveActor/DisplayListMaker.hpp"
+#include "Game/Util/ModelUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
+#include <JSystem/J3DGraphBase/J3DMaterial.hpp>
+#include <JSystem/J3DGraphBase/J3DTexture.hpp>
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
 #include "Game/NameObj/NameObjExecuteHolder.hpp"
@@ -426,5 +432,42 @@ namespace MR {
 
     f32 calcNerveEaseOutValue(const LiveActor* pActor, s32 stepMax, f32 valueStart, f32 valueEnd) {
         return getEaseOutValue(calcNerveRate(pActor, stepMax), valueStart, valueEnd, 1.0f);
+    }
+}  // namespace MR
+
+// LiveActorUtil remains excluded; these original methods stay here until its full import.
+namespace MR {
+    const GXColor* getLightAmbientColor(const LiveActor* pActor) {
+        return &pActor->mActorLightCtrl->getActorLight()->mColor;
+    }
+
+    bool isExistIndirectTexture(const LiveActor* pActor) {
+        const char* name = "IndDummy";
+        return MR::getJ3DModelData(pActor)->mMaterialTable.mTextureName->getIndex(name) != -1;
+    }
+
+    void initDLMakerMatColor0(LiveActor* pActor, const char* pMatName, const J3DGXColor* pColor) {
+        pActor->mModelManager->mDisplayListMaker->addMatColorCtrl(pMatName, 0, pColor);
+    }
+
+    void initDLMakerChangeTex(LiveActor* pActor, const char* pTexName) {
+        J3DModelData* pModelData = getJ3DModelData(pActor);
+        DisplayListMaker* pDLMaker = pActor->mModelManager->mDisplayListMaker;
+
+        for (u16 texIndex = 0; texIndex < pModelData->mMaterialTable.getTexture()->getNum(); texIndex++) {
+            if (!MR::isEqualString(pModelData->mMaterialTable.getTextureName()->getName(texIndex), pTexName)) {
+                continue;
+            }
+
+            for (u16 matIndex = 0; matIndex < pModelData->mMaterialTable.getMaterialNum(); matIndex++) {
+                if (isUseTex(pModelData->mMaterialTable.getMaterialNodePointer(matIndex), texIndex)) {
+                    pDLMaker->onPrgFlag(matIndex, 0x4020000);
+                }
+            }
+        }
+    }
+
+    ProjmapEffectMtxSetter* initDLMakerProjmapEffectMtxSetter(LiveActor* pActor) {
+        return pActor->mModelManager->mDisplayListMaker->addProjmapEffectMtxSetter();
     }
 }  // namespace MR

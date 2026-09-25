@@ -1,3 +1,5 @@
+#include "compat/CollisionPartsCompat.hpp"
+#include "compat/CollisionDirectorOwnership.hpp"
 #include "Game/Map/CollisionParts.hpp"
 #include "Game/Camera/CameraPolygonCodeUtil.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
@@ -11,13 +13,18 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/TriangleFilter.hpp"
 
-void FORCE_SCALE() {
+namespace {
+    void requirePublishedGeometry(const CollisionParts& parts) {
+        smgpc::compat::require_published_collision_geometry(parts.mKeeperIndex);
+    }
+}
+
+[[maybe_unused]] static void FORCE_SCALE() {
     TVec3f vec;
     vec.scale(1.0f);
 }
 
-CollisionParts::CollisionParts()
-    : _0(), mHitSensor(), _CC(), _CD(true), _CE(), _CF(), _D0(), _D4(), _D8(-1.0f), _DC(1.0f), mKeeperIndex(-1), mZone() {
+CollisionParts::CollisionParts() : _0(), mHitSensor(), _CC(), _CD(true), _CE(), _CF(), _D0(), _D4(), _D8(-1.0f), _DC(1.0f), mKeeperIndex(-1), mZone() {
     mServer = new KCollisionServer();
 
     mPrevBaseMatrix.identity();
@@ -49,12 +56,14 @@ void CollisionParts::addToBelongZone() {
     s32 zoneID = mZone->mZoneID;
 
     MR::getCollisionDirector()->getCategoryKeeper(mKeeperIndex)->addToZone(this, zoneID);
+    smgpc::compat::publish_collision_parts_membership(*this, true);
 }
 
 void CollisionParts::removeFromBelongZone() {
     s32 zoneID = mZone->mZoneID;
 
     MR::getCollisionDirector()->getCategoryKeeper(mKeeperIndex)->removeFromZone(this, zoneID);
+    smgpc::compat::publish_collision_parts_membership(*this, false);
 }
 
 void CollisionParts::initWithAutoEqualScale(const TPos3f& a1, HitSensor* pHitSensor, const void* pKclData, const void* pMapInfo, s32 keeperIndex,
@@ -115,6 +124,7 @@ void CollisionParts::resetAllMtxPrivate(const TPos3f& a1) {
     mBaseMatrix.setInline(a1);
     mMatrix.setInline(a1);
     PSMTXInverse(reinterpret_cast< MtxPtr >(&mBaseMatrix), reinterpret_cast< MtxPtr >(&mInvBaseMatrix));
+    smgpc::compat::publish_collision_parts(*this);
 }
 
 void CollisionParts::setMtx(const TPos3f& matrix) {
@@ -165,6 +175,7 @@ void CollisionParts::updateMtx() {
             PSMTXInverse(reinterpret_cast< MtxPtr >(&mBaseMatrix), reinterpret_cast< MtxPtr >(&mInvBaseMatrix));
         }
     }
+    smgpc::compat::publish_collision_parts(*this);
 }
 
 // Issues with assignments of scaleDiff
@@ -223,6 +234,7 @@ void CollisionParts::updateBoundingSphereRange(TVec3f a1) {
 void CollisionParts::updateBoundingSphereRangePrivate(f32 scale) {
     _DC = scale;
     _D8 = scale * mServer->mMaxVertexDistance;
+    smgpc::compat::publish_collision_parts_geometry(*this);
 }
 
 const char* CollisionParts::getHostName() const {
@@ -245,6 +257,7 @@ s32 CollisionParts::getPlacementZoneID() const {
 
 // Instruction order
 bool CollisionParts::checkStrikePoint(HitInfo* pHitInfo, const TVec3f& rPos) {
+    requirePublishedGeometry(*this);
     TVec3f localPos;
     mInvBaseMatrix.mult(rPos, localPos);
     TVec3f scale;
@@ -290,6 +303,7 @@ bool CollisionParts::checkStrikePoint(HitInfo* pHitInfo, const TVec3f& rPos) {
 
 u32 CollisionParts::checkStrikeBall(HitInfo* pHitInfo, u32 capacity, const TVec3f& rPos, f32 radius, bool movingReaction,
                                    const TriangleFilterBase* pFilter) {
+    requirePublishedGeometry(*this);
     KC_PrismData* prisms[64];
     f32 distances[64];
     u8 features[64];
@@ -381,6 +395,7 @@ u32 CollisionParts::checkStrikeBallCore(HitInfo* pHitInfo, u32 capacity, const T
 
 u32 CollisionParts::checkStrikeBallWithThickness(HitInfo* pHitInfo, u32 capacity, const TVec3f& rPos, f32 radius, f32 thickness,
                                                 const TriangleFilterBase* pFilter) {
+    requirePublishedGeometry(*this);
     KC_PrismData* prisms[64];
     f32 distances[64];
     u8 features[64];
@@ -469,6 +484,7 @@ void CollisionParts::projectToPlane(TVec3f* pProjected, const TVec3f& rPos, cons
 
 u32 CollisionParts::checkStrikeLine(HitInfo* pInfos, u32 maxCount, const TVec3f& rStart, const TVec3f& rOffset,
                                   const TriangleFilterBase* pFilter) {
+    requirePublishedGeometry(*this);
     f32 length = PSVECMag(&rOffset);
     TVec3f localStart;
     TVec3f localOffset;
@@ -478,7 +494,8 @@ u32 CollisionParts::checkStrikeLine(HitInfo* pInfos, u32 maxCount, const TVec3f&
 
     f32 fractions[64];
     KC_PrismData* prisms[64];
-    u8 flags[64];
+    // Retail checkArrow leaves all-hit flags unwritten; define those stack bytes on PC.
+    u8 flags[64] = {};
     u32 foundCount = 0;
     mServer->checkArrow(localStart, localOffset, fractions, flags, &foundCount, prisms, maxCount);
 
@@ -513,6 +530,7 @@ void CollisionParts::calcForceMovePower(TVec3f* a1, const TVec3f& a2) const {
 }
 
 u32 CollisionParts::createAreaPolygonList(Triangle* pTriangles, u32 capacity, const TVec3f& rStart, const TVec3f& rEnd) {
+    requirePublishedGeometry(*this);
     KC_PrismData* prisms[512];
     TPos3f rotation;
     PSMTXCopy(mInvBaseMatrix.toMtxPtr(), rotation.toMtxPtr());
@@ -532,6 +550,7 @@ u32 CollisionParts::createAreaPolygonList(Triangle* pTriangles, u32 capacity, co
 }
 
 u32 CollisionParts::createAreaPolygonListArray(Triangle* pTriangles, u32 capacity, TVec3f* pPoints, u32 pointCount) {
+    requirePublishedGeometry(*this);
     KC_PrismData* prisms[512];
     TVec3f localPoints[32];
     TPos3f rotation;

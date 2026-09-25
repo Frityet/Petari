@@ -4,11 +4,12 @@
 #include <span>
 #include <vector>
 class LiveActor;
+class ModelManager;
 class DrawBufferHolder;
 class NameObj;
 class NameObjListExecutor;
 namespace MR { class FunctorBase; }
-namespace smgpc::compat { class JkrAllocationDomain; class ModelManagerOwner; }
+namespace smgpc::compat { class JkrAllocationDomain; }
 namespace smgpc::scene {
 // Native lifetime owner for the original scene draw holder. Registration and
 // allocation are separate, matching NameObjListExecutor's construction phases.
@@ -21,8 +22,8 @@ public:
     void bind_executor(NameObjListExecutor&, std::shared_ptr<compat::JkrAllocationDomain>);
     void unbind_executor();
     void retire_draw_buffers();
-    void validate_actor_registration(LiveActor&, int category, const std::shared_ptr<compat::ModelManagerOwner>&);
-    int register_actor(LiveActor&, int category, std::shared_ptr<compat::ModelManagerOwner>);
+    void validate_actor_registration(LiveActor&, int category, const std::shared_ptr<ModelManager>&);
+    int register_actor(LiveActor&, int category, std::shared_ptr<ModelManager>);
     void allocate_actor_lists();
     void set_active(LiveActor&, bool);
     void remove_actor(LiveActor&);

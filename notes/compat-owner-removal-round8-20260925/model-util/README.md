@@ -1,0 +1,11 @@
+# Complete canonical ModelUtil owner
+
+Restored the complete current decomp Game/Util/ModelUtil.cpp and deleted eight partial providers: ModelCreationCompat, ModelFogCompat, ModelPostLoadCompat, OriginalModelAccess, OriginalModelBounds, OriginalModelLightAccess, OriginalModelMaterialHelpers, and MaterialTextureModeCompat. All executable donor bodies are unchanged. Only the two unused uninitialized-pointer compiler-order matching helpers are omitted, and includes are explicit for native compilation.
+
+This restores the donor model bounds algorithm instead of the prior fragment's incorrect Y-direction/cumulative minimum arithmetic: each joint contributes translation plus scaled min/max bounds, then actor position is removed. Creation/Xanime dispatch, fog, texture-mode checks, post-load vertex/display-list updates, model/material access, animation synchronization, and lighting channel counting all use the complete original owner.
+
+Native compile integration: correct ModelUtil.hpp's showMaterial declaration to the actual non-const J3DModel implementation; add the donor TBox3f::add primitive to canonical JGeometry/TBox.hpp. Existing native J3DTexCoord::getTexGenSrc and matrix getScale implementations support the unchanged donor. Host-decoded model data, pointer ownership and underlying J3D/device behavior remain with their existing canonical providers.
+
+Five methods found in the mixed deleted fragments belong to LiveActorUtil rather than ModelUtil: getLightAmbientColor, isExistIndirectTexture, initDLMakerMatColor0, initDLMakerChangeTex, initDLMakerProjmapEffectMtxSetter. Root confirmed canonical LiveActorUtil.cpp remains excluded. Its exact five donor functions are therefore retained in the existing LiveActorUtilCompat provider until full owner restoration; they are not incorrectly copied into ModelUtil or dropped. This is explicitly pending closure, not a claimed complete deletion of all Game utility shims.
+
+Twelve paths were clean before editing. Snapshots, owned manifest, cumulative patch and build-wiring.json are present. Full donor-body comparison after removing includes/two matching-only anchors passed, and whitespace checks passed. No test changes, builds, index operations or commits were performed. Root owns app build and short smoke validation under the user's latest faster iteration instruction.

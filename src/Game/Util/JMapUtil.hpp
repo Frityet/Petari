@@ -14,9 +14,6 @@ namespace MR {
     bool getObjectName(const char** pDest, const JMapInfoIter& rIter);
     bool isExistJMapArg(const JMapInfoIter& rIter);
 
-    bool getJMapInfoArgNoInit(const JMapInfoIter& rIter, const char* pFieldName, s32* pOut);
-    bool getJMapInfoArgNoInit(const JMapInfoIter& rIter, const char* pFieldName, f32* pOut);
-    bool getJMapInfoArgNoInit(const JMapInfoIter& rIter, const char* pFieldName, bool* pOut);
 
     bool getJMapInfoArg0WithInit(const JMapInfoIter& rIter, s32* pOut);
     bool getJMapInfoArg0WithInit(const JMapInfoIter& rIter, f32* pOut);
@@ -90,6 +87,7 @@ namespace MR {
     bool isConnectedWithRail(const JMapInfoIter& rIter);
     bool getRailId(const JMapInfoIter& rIter, s32*);
     bool getNextLinkRailID(const JMapInfoIter& rIter, s32*);
+    bool isLoopRailPathIter(const JMapInfoIter& rIter);
     bool isEqualRailUsage(const JMapInfoIter& rIter, const char*);
     void getRailPointPos0(const JMapInfoIter& rIter, TVec3f* pOut);
     void getRailPointPos1(const JMapInfoIter& rIter, TVec3f* pOut);

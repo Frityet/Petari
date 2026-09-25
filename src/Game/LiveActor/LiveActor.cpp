@@ -11,7 +11,6 @@
 #include "Game/Util/ModelUtil.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/J3dCommandScope.hpp"
-#include "compat/ModelManagerOwner.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
 #include "Game/LiveActor/Binder.hpp"
@@ -325,8 +324,8 @@ void LiveActor::initSound(int param1, bool is2D) {
 
 void LiveActor::initModelManagerWithAnm(const char* pModelName, const char* pAnimName, bool a3) {
     smgpc::compat::initialize_actor_model(this, pModelName, pAnimName, a3);
-    const auto owner = smgpc::compat::retain_actor_model_owner(this);
-    smgpc::compat::JkrAllocationScope heap(owner->allocation_domain());
+    const auto owner = smgpc::compat::retain_actor_model(this);
+    smgpc::compat::JkrAllocationScope heap(owner->nativeAllocationDomain());
     smgpc::compat::J3dCommandScope commands;
 
     MR::getJ3DModel(this)->setBaseScale(mScale);
