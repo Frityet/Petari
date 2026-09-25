@@ -1,0 +1,70 @@
+(lldb) target create "/Users/frityet/Projects/petari/notes/comet-observatory-20260925T224134Z/stage-probe"
+Current executable set to '/Users/frityet/Projects/petari/notes/comet-observatory-20260925T224134Z/stage-probe' (arm64).
+(lldb) settings set -- target.run-args  "--disc" "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz" "--stage" "AstroGalaxy" "--scenario" "1" "--max-frames" "600"
+(lldb) run
+[src/app/Application.cpp:59][APP - INFO] Opened Aurora disc image /Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz
+[aurora:info:aurora] Aurora initializing
+[aurora:info:aurora::system_info] CPU model: Apple M5 Max
+[aurora:info:aurora::system_info] Memory: 131072 MiB
+[aurora:info:aurora::system_info] Architecture: aarch64
+[aurora:info:aurora::system_info] OS: macOS Version 27.0 (Build 26A428)
+2026-09-25 23:55:40.463744+0100 stage-probe[17623:6999938] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 23:55:40.463954+0100 stage-probe[17623:6999938] [Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 23:55:40.464167+0100 stage-probe[17623:6999939] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 23:55:40.464190+0100 stage-probe[17623:6999939] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 23:55:40.464475+0100 stage-probe[17623:6999940] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 23:55:40.464485+0100 stage-probe[17623:6999940] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 23:55:40.464791+0100 stage-probe[17623:6999940] [Connection] Will NOT re-try to establish the connection
+2026-09-25 23:55:40.464815+0100 stage-probe[17623:6999939] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 23:55:40.464824+0100 stage-probe[17623:6999939] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 23:55:41.880482+0100 stage-probe[17623:6999899] [WindowTab] Cannot index window tabs due to missing main bundle identifier
+[aurora:info:aurora::gpu] Creating WebGPU instance
+[aurora:info:aurora::gpu] Attempting to initialize Metal
+[aurora:info:aurora::gpu] Requesting adapter
+  Feature level: Compatibility
+  Power preference: HighPerformance
+  Backend: Metal
+  Compatible surface: true
+[aurora:info:aurora::gpu] Graphics adapter information
+  API: Metal
+  Device: Apple M5 Max (IntegratedGPU)
+  Driver: Metal driver on macOS Version 27.0 (Build 26A428)
+[aurora:info:aurora::gpu] Using limits:
+  maxTextureDimension1D: 16384
+  maxTextureDimension2D: 16384
+  maxTextureDimension3D: 2048
+  maxTextureArrayLayers: 2048
+  maxStorageBuffersPerShaderStage: 2
+  minUniformBufferOffsetAlignment: 256
+  minStorageBufferOffsetAlignment: 256
+  maxImmediateSize: 64
+[aurora:info:aurora::gpu] Enabling features: 
+  CoreFeaturesAndLimits
+  DepthClipControl
+  TextureCompressionBC
+  TextureCompressionASTC
+  ClipDistances
+  DualSourceBlending
+  TextureComponentSwizzle
+[aurora:info:aurora::gpu] Using surface format BGRA8Unorm, present mode Fifo
+[aurora:info:aurora::gfx::pipeline_cache] No bundled initial pipeline cache found at '/Users/frityet/Projects/petari/notes/comet-observatory-20260925T224134Z/initial_pipeline_cache.db'
+[aurora:info:aurora] Using framebuffer size 1280x960 scale 2
+[src/app/OriginalGameApplication.cpp:513][APP - INFO] Booting the original GameSystem
+[original-process] Preparing original heap arenas
+[original-process] Initializing SDK, layout allocator and original heap watcher
+[original-process] Initialized console language 9 for disc region K
+<< NW4R    - LYT 	final   build: Jul 17 2007 12:25:23 (0x4199_60831) >>
+[original-process] Initializing original file and exception services
+[original-process] Constructing GameSystem
+[original-process] Entering GameSystem::init
+[original-process] GameSystem::init completed
+[src/app/OriginalGameApplication.cpp:515][APP - INFO] Running the original GameSystem frame loop
+2026-09-25 23:55:42.196925+0100 stage-probe[17623:7000030] [plugin] AddInstanceForFactory: No factory registered for id <CFUUID 0x771b460260> F8BB1C28-BAE8-11D6-9C31-00039315CD46
+[original-process] Requesting authored stage AstroGalaxy scenario 1 through GameSequence
+[src/app/OriginalGameApplication.cpp:552][APP - INFO] Original GameSystem stopped after 600 completed frames
+[original-audio] Playback frames=680960 nonzero_samples=0 device_callbacks=665
+2026-09-25 23:55:56.656123+0100 stage-probe[17623:7000033] [aqsrv]        AQ_Server_Common.h:49    Exception caught in AudioQueueInternalStop_Sync - error -66671
+2026-09-25 23:55:56.683168+0100 stage-probe[17623:7000033] AudioHardware-mac-imp.cpp:726    AudioObjectGetPropertyData: no object with given ID 0
+[aurora:warning:aurora::gpu] Device lost: Device was destroyed.
+Process 17623 launched: '/Users/frityet/Projects/petari/notes/comet-observatory-20260925T224134Z/stage-probe' (arm64)
+Process 17623 exited with status = 0 (0x00000000)

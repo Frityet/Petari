@@ -61,6 +61,7 @@ public:
     JMapInfo& operator=(const JMapInfo& info);
     JMapInfo& operator=(JMapInfo&& info) noexcept;
     ~JMapInfo() override;
+    void releaseNativeResourceReferences() noexcept override;
 
     [[nodiscard]] bool operator==(const JMapInfo& rInfo) const {
         return mSourceData == rInfo.mSourceData;

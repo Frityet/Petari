@@ -1,0 +1,9 @@
+{
+  "exit_code": -6,
+  "timed_out": false,
+  "command": [
+    "build/aurora-fifo-tests-20260919/tests/gx_fifo_tests",
+    "--gtest_filter=GXFifoBreakpointTest.CompletedDrainCannotRetireReprogrammedStorage"
+  ],
+  "seconds": 0.5677826249739155
+}

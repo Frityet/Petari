@@ -1,0 +1,29 @@
+# Original Comet Observatory integration
+
+Use the original AstroGalaxy stage, factory, actors and story sequence. The player owns the running Gateway session; diagnostic runs use separate saves and do not inject input.
+
+Starting checkpoint: ff1a9a74d, Aurora 3767682. Existing StarPiece donor restoration remains pending runtime verification.
+
+## First Observatory bootstrap
+
+The existing original factory entries are linked, including AstroCore, AstroMapObj, Rosetta and GrandStarReturnDemoStarter. A direct AstroGalaxy/scenario1 diagnostic with a separate NAND fails during BrightSun construction in DrawSyncManager callback registration: the older FIFO drain observes target89246 with replacement storage base0/size1467. Full LLDB stack is in stage-lldb.log. This is a direct stage diagnostic, not proof of a normal Grand Star handoff. SDL window activation is disabled; controls are not injected. An initial dummy-audio diagnostic was rejected by the playback-device guard and is not stage evidence.
+
+The regression CompletedDrainCannotRetireReprogrammedStorage reproduces the same assertion with target5/base0/size1 and SIGABRT before the fix. Aurora now tracks GP storage replacement independently of CPU write-pointer changes, uses a monotonically changing completion notification to wake even when the processed cursor resets to the same value, and rejects retirement of an obsolete storage snapshot after regaining guest ownership. Both replacement regressions and all40 FIFO breakpoint tests pass. The test renderer is stubbed; a rebuilt live stage run remains necessary.
+
+The user-controlled Gateway process11421 separately exited1 with an uncaught Area polygon queries require finite points exception. Last complete frame46320 has finite player transforms near [41461,-14341,-2635]. No stack was captured at the throw. This is not established as the queue failure or as the StarPiece issue. The earlier core-flow-2 supervisor result has been corrected to avoid claiming its reparented child wait result as the game exit code.
+
+## Original actors and resource retirement
+
+Aurora FIFO fix published as 2d2d295. Rebuilding gets through the FIFO failure and exposes a donor mismatch in NPCParameterJoint::read: the port erased its shared column name after an empty accessory field. The pinned donor clears the output string instead. NPCParameter.cpp is restored byte-for-byte from the donor. The focused populated/empty/populated joint-column regression passes; the older full NPC fixture crashes during setup and is not counted as passing.
+
+The stage then reaches its frame limit, but archive retirement detects ten live AstroNamePlateData borrowers. Original arena-owned JMap parsers survive actor retirement. Added a generic JKRDisposer resource-release phase, traversed by the owning heap, before archive removal. It releases host leases without destroying or freeing the original arena objects. JMap lifetime tests cover independent live host copies, repeated retirement and eventual heap destruction (six cases pass). The lifetime-fixed diagnostic runs the actual AstroGalaxy for 600 frames and exits normally (game exit 0), with the original core, Rosalina, 27 map objects and return-demo starter.
+
+StarPiece.cpp is restored from the pinned donor with only existing CP932 text adaptation. Its affine rotation initializes translation and uses the correct degree conversion. The real Gateway placement test validates all seven authored starbits, distinct from the seventy-piece pool, with finite render matrices at their actual positions. It runs 120 frames and shuts down normally. The matrix test also passes its five utility cases. This is matrix/actor evidence; visible rendering remains to be checked.
+
+## Original arrival diagnostic
+
+OriginalProcessObservatoryTests bootstraps the real Gateway and submits a synthetic Grand Star clear result through the original stage-result API. It does not simulate playing or collecting that star. The existing GameSequence loads AstroGalaxy, creates its full original actor graph and starts STM_FIRST_ASTRO through the native JAI stream path. The first run fails later in the cutscene with the finite area-query exception (original-arrival-1.log). The user reports that the earlier Gateway exception happened on touching a moving platform. An LLDB run targeting the failed finite-coordinate check is in progress to find the cause; the arrival sequence is not yet passing.
+
+The Observatory stack leads from Mario's shadow to a NaN joint correction matrix, while his world position remains finite. The invalid rotation originates in the Grand Star rail-return blend: its target direction is vertical because the Grand Star model never appeared and remained at the origin. DemoActionInfo::executeActionFirst had replaced the donor's virtual appear()/kill() calls with makeActorAppeared()/makeActorDead(), bypassing actor-specific initialization. Restored those two original calls for every demo. Added arrival assertions that the Grand Star child is alive in the movement phase and that the return transform stays finite. No changes to the rail, interpolation or collision validation were needed. The earlier moving-platform failure still lacks its own throw stack, so a common cause is not established.
+
+After restoring dispatch, the original arrival test passes 2400 frames and exits0: Move at148, FlyWait867, RushToCore1083, Revival1117. Original streamed arrival music produces 4,011,226 nonzero output samples. Screenshots show the actual Mario/Grand Star arrival and revived core. This confirms arrival/core revival, not later result-screen dismissal, Rosalina dialogue or free movement. The rebuilt main application includes the same changes. validation.json records the diagnostic binary hash and limits. SFX/sequence playback remains separate unfinished work.

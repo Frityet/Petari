@@ -1,0 +1,6 @@
+PASS reusable disposer copy/move identity
+PASS JMap range, tail and explicit deletion
+PASS JMap copy/move registration
+PASS host metadata and nested ownership
+PASS actual domain retirement
+PASS native references before arena retirement

@@ -26,6 +26,7 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "NativeHeapFixture.hpp"
 #include <memory>
+#include <limits>
 
 #include <aurora/allocation.hpp>
 #include <array>
@@ -57,6 +58,19 @@ namespace {
         near(actual.x, expected.x, message);
         near(actual.y, expected.y, message);
         near(actual.z, expected.z, message);
+    }
+
+    void verify_affine_rotation() {
+        TPos3f rotation;
+        for (auto& row : rotation.mMtx)
+            for (auto& value : row) value = std::numeric_limits<float>::quiet_NaN();
+        rotation.makeRotate(TVec3f(0, 1, 0), MR::toRadian(90.0f));
+        TPos3f position;
+        position.makeTrans(120, -40, 350);
+        position.concat(position, rotation);
+        TVec3f transformed;
+        position.mult(TVec3f(0, 0, 1), transformed);
+        near(transformed, TVec3f(121, -40, 350), "Initialized affine rotation preserves translation and degree conversion");
     }
 
     void verify_directional_scale() {
@@ -475,11 +489,12 @@ namespace {
 }
 
 int main(int argc, char* argv[]) try {
+    verify_affine_rotation();
     verify_directional_scale();
     verify_orthogonalize();
     verify_quaternion_turn();
     verify_matrix_turn();
-    std::puts("PASS four original matrix/quaternion utility cases");
+    std::puts("PASS five original matrix/quaternion utility cases");
     if (argc == 1) return 0;
     require(argc == 2 && std::strcmp(argv[1], "--original-sensors") == 0, "Expected --original-sensors or no argument");
 #ifdef NDEBUG

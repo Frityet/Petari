@@ -229,6 +229,34 @@ namespace {
         heap.domain.reset();
         require(data.expired(), "actual domain/solid-heap destruction invokes JMap metadata cleanup");
     }
+
+    void test_resource_retirement_before_arena_release() {
+        Heap heap;
+        const auto bytes = fixture();
+        JMapInfo survivor;
+        JMapInfo* info;
+        std::weak_ptr<JMapInfo::DataCompat> data;
+        {
+            const JKRHeap::CurrentHeapScope original(*heap.domain);
+            const aurora::allocation::ClientAllocationScope routing({true, true});
+            info = new JMapInfo(JMapInfo::from_bcsv(bytes));
+            survivor = *info;
+            data = info->mData;
+        }
+        const auto used = heap.get().getFreeSize();
+        heap.runtime->retireNativeResourceReferences();
+        require(!info->dataExists() && registered(heap.get(), info) && heap.count() == 1 &&
+                    heap.get().getFreeSize() == used && data.use_count() == 1,
+                "retired scene parsers release native resources without destroying their original arena identity");
+        const char* value = nullptr;
+        require(survivor.getValue(0, "name", &value) && std::string_view(value) == name,
+                "an independent live host parser keeps its own resource borrow");
+        heap.runtime->retireNativeResourceReferences();
+        heap.get().freeAll();
+        require(heap.count() == 0 && !data.expired(), "repeat retirement and eventual destruction are safe");
+        survivor = JMapInfo();
+        require(data.expired(), "only the final independent borrower releases its retained metadata");
+    }
 }
 
 int main() {
@@ -238,6 +266,7 @@ int main() {
         std::pair{"JMap copy/move registration", test_copy_move_registration_and_metadata},
         std::pair{"host metadata and nested ownership", test_host_metadata_and_nested_owners},
         std::pair{"actual domain retirement", test_domain_retirement_releases_parser},
+        std::pair{"native references before arena retirement", test_resource_retirement_before_arena_release},
     };
     for (const auto& [label, test] : tests) {
         try { test(); std::cout << "PASS " << label << '\n'; }

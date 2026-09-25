@@ -1,0 +1,33 @@
+{
+  "game_exit": 0,
+  "frames": 2400,
+  "diagnostic_stimulus": "Original stage-result API with synthetic Gateway Grand Star clear; no gameplay input or actual collection simulated",
+  "phases": [
+    [
+      "148",
+      "N29NrvGrandStarReturnDemoStarter33GrandStarReturnDemoStarterNrvMoveE"
+    ],
+    [
+      "867",
+      "N29NrvGrandStarReturnDemoStarter36GrandStarReturnDemoStarterNrvFlyWaitE"
+    ],
+    [
+      "1083",
+      "N29NrvGrandStarReturnDemoStarter39GrandStarReturnDemoStarterNrvRushToCoreE"
+    ],
+    [
+      "1117",
+      "N29NrvGrandStarReturnDemoStarter36GrandStarReturnDemoStarterNrvRevivalE"
+    ]
+  ],
+  "passed": true,
+  "binary_sha256": "91ab9dc074d875d69ced5a5f75d4ed9ce2373ba096e1ec9ba4850ab9fa871a79",
+  "donor_commit": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "aurora_commit": "2d2d295",
+  "limits": [
+    "Only through core revival within 2400 frames; later result/dialog/free movement not yet verified",
+    "Gateway moving-platform crash has not been reproduced with a throw stack",
+    "StarPiece matrix and placement verification passed; visible starbit rendering not yet verified",
+    "Streamed music works; sequenced sound effects remain absent"
+  ]
+}

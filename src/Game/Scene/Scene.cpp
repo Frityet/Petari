@@ -34,6 +34,9 @@ Scene::~Scene() {
     if (mListExecutor != nullptr) {
         delete mListExecutor;
     }
+    // Original arena-owned parsers outlive actor retirement, but their host
+    // archive leases must end before the controller removes scene resources.
+    if (mNativeHeap) mNativeHeap->retireNativeResourceReferences();
 }
 
 void Scene::init() {

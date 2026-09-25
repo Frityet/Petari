@@ -96,6 +96,14 @@ struct Probe {
             remaining_positions.push_back(position);
         }
         for (auto* piece : placed) {
+            const auto* matrix = piece->getBaseMtx();
+            for (unsigned row = 0; row < 3; ++row)
+                for (unsigned column = 0; column < 4; ++column)
+                    require(std::isfinite(matrix[row][column]), "Placed StarPiece render transform is finite");
+            require(std::abs(matrix[0][3] - piece->mPosition.x) < 0.01f &&
+                        std::abs(matrix[1][3] - piece->mPosition.y) < 0.01f &&
+                        std::abs(matrix[2][3] - piece->mPosition.z) < 0.01f,
+                    "StarPiece rotation preserves its actor translation");
             const auto position = std::ranges::find_if(remaining_positions, [&](const auto& value) {
                 return value.x == piece->mPosition.x && value.y == piece->mPosition.y && value.z == piece->mPosition.z;
             });

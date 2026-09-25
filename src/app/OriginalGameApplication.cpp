@@ -440,6 +440,7 @@ private:
         if (objects) delete std::exchange(objects->mParticleResHolder, nullptr);
         if (system && system->mSceneController)
             delete std::exchange(system->mSceneController->mScenarioParser, nullptr);
+        resources.root_heap()->retireNativeResourceReferences();
         if (auto* manager = SingletonHolder<ResourceHolderManager>::get()) {
             manager->validateRetirement();
             delete SingletonHolder<ResourceHolderManager>::release();

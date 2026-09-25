@@ -1,0 +1,122 @@
+(lldb) target create "notes/comet-observatory-20260925T224134Z/Observatory Probe.app/Contents/MacOS/observatory-probe"
+Current executable set to '/Users/frityet/Projects/petari/notes/comet-observatory-20260925T224134Z/Observatory Probe.app/Contents/MacOS/observatory-probe' (arm64).
+(lldb) run
+[src/app/Application.cpp:59][APP - INFO] Opened Aurora disc image /Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz
+[aurora:info:aurora] Aurora initializing
+[aurora:info:aurora::system_info] CPU model: Apple M5 Max
+[aurora:info:aurora::system_info] Memory: 131072 MiB
+[aurora:info:aurora::system_info] Architecture: aarch64
+[aurora:info:aurora::system_info] OS: macOS Version 27.0 (Build 26A428)
+2026-09-26 00:07:45.545696+0100 observatory-probe[18623:7016973] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 00:07:45.545882+0100 observatory-probe[18623:7016973] [Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 00:07:45.546125+0100 observatory-probe[18623:7016964] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 00:07:45.546140+0100 observatory-probe[18623:7016964] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 00:07:45.546427+0100 observatory-probe[18623:7016963] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 00:07:45.546442+0100 observatory-probe[18623:7016963] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 00:07:45.546721+0100 observatory-probe[18623:7016963] [Connection] Will NOT re-try to establish the connection
+2026-09-26 00:07:45.546748+0100 observatory-probe[18623:7016964] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-26 00:07:45.546760+0100 observatory-probe[18623:7016964] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+[aurora:info:aurora::gpu] Creating WebGPU instance
+[aurora:info:aurora::gpu] Attempting to initialize Metal
+[aurora:info:aurora::gpu] Requesting adapter
+  Feature level: Compatibility
+  Power preference: HighPerformance
+  Backend: Metal
+  Compatible surface: true
+[aurora:info:aurora::gpu] Graphics adapter information
+  API: Metal
+  Device: Apple M5 Max (IntegratedGPU)
+  Driver: Metal driver on macOS Version 27.0 (Build 26A428)
+[aurora:info:aurora::gpu] Using limits:
+  maxTextureDimension1D: 16384
+  maxTextureDimension2D: 16384
+  maxTextureDimension3D: 2048
+  maxTextureArrayLayers: 2048
+  maxStorageBuffersPerShaderStage: 2
+  minUniformBufferOffsetAlignment: 256
+  minStorageBufferOffsetAlignment: 256
+  maxImmediateSize: 64
+[aurora:info:aurora::gpu] Enabling features: 
+  CoreFeaturesAndLimits
+  DepthClipControl
+  TextureCompressionBC
+  TextureCompressionASTC
+  ClipDistances
+  DualSourceBlending
+  TextureComponentSwizzle
+[aurora:info:aurora::gpu] Using surface format BGRA8Unorm, present mode Fifo
+2026-09-26 00:07:46.414760+0100 observatory-probe[18623:7016792] fopen failed for data file: errno = 2 (No such file or directory)
+2026-09-26 00:07:46.506611+0100 observatory-probe[18623:7016792] fopen failed for data file: errno = 2 (No such file or directory)
+[aurora:info:aurora::gfx::pipeline_cache] No bundled initial pipeline cache found at '/Users/frityet/Projects/petari/notes/comet-observatory-20260925T224134Z/Observatory Probe.app/Contents/Resources/initial_pipeline_cache.db'
+[aurora:info:aurora] Using framebuffer size 1280x960 scale 2
+[src/app/OriginalGameApplication.cpp:513][APP - INFO] Booting the original GameSystem
+[original-process] Preparing original heap arenas
+[original-process] Initializing SDK, layout allocator and original heap watcher
+[original-process] Initialized console language 9 for disc region K
+<< NW4R    - LYT 	final   build: Jul 17 2007 12:25:23 (0x4199_60831) >>
+[original-process] Initializing original file and exception services
+[original-process] Constructing GameSystem
+[original-process] Entering GameSystem::init
+[original-process] GameSystem::init completed
+[src/app/OriginalGameApplication.cpp:515][APP - INFO] Running the original GameSystem frame loop
+2026-09-26 00:07:48.531865+0100 observatory-probe[18623:7017194] [plugin] AddInstanceForFactory: No factory registered for id <CFUUID 0x77ae86c2a0> F8BB1C28-BAE8-11D6-9C31-00039315CD46
+[original-process] Requesting authored stage HeavensDoorGalaxy scenario 1 through GameSequence
+[observatory-probe] Submitted diagnostic Grand Star result at frame 109
+[observatory-probe] Original Observatory ready at frame 148: 27 map objects
+[observatory-probe] frame=148 return=N29NrvGrandStarReturnDemoStarter33GrandStarReturnDemoStarterNrvMoveE step=-1
+[aurora:warning:aurora::gpu] WebGPU message: Calling [RenderPassEncoder "EFB 2"].Draw with a vertex count of 0 is unusual.
+[original-audio] Prepared stream id=02000041 rate=32000 channels=2 samples=1351680 loop=0 path=/AudioRes/Stream/SMG_first_astro_strm.ast
+2026-09-26 00:08:10.788481+0100 observatory-probe[18623:7018061] [Common] Unable to obtain a task name port right for pid 605: (os/kern) failure (0x5)
+2026-09-26 00:08:11.793228+0100 observatory-probe[18623:7016792] [AppKit] Invalid view geometry: width is negative.
+2026-09-26 00:08:11.793265+0100 observatory-probe[18623:7016792] [AppKit] Invalid view geometry: height is negative.
+2026-09-26 00:08:11.793304+0100 observatory-probe[18623:7016792] [AppKit] Invalid view geometry: width is negative.
+2026-09-26 00:08:11.793312+0100 observatory-probe[18623:7016792] [AppKit] Invalid view geometry: height is negative.
+2026-09-26 00:08:11.793692+0100 observatory-probe[18623:7016792] [AppKit] Invalid view geometry: width is negative.
+2026-09-26 00:08:11.793707+0100 observatory-probe[18623:7016792] [AppKit] Invalid view geometry: height is negative.
+2026-09-26 00:08:21.917708+0100 observatory-probe[18623:7017184] [Metal Compiler Warning] Warning: Compilation succeeded with: 
+
+program_source:23:24: warning: stack nearly exhausted; compilation time may suffer, and crashes due to stack overflow are likely [-Wstack-exhausted]
+  tint_array<float, 2> clip_distances;
+                       ^
+[observatory-probe] frame=867 return=N29NrvGrandStarReturnDemoStarter36GrandStarReturnDemoStarterNrvFlyWaitE step=0
+2026-09-26 00:08:24.252576+0100 observatory-probe[18623:7017184] [Metal Compiler Warning] Warning: Compilation succeeded with: 
+
+program_source:32:25: warning: stack nearly exhausted; compilation time may suffer, and crashes due to stack overflow are likely [-Wstack-exhausted]
+  /* 0x0030 */ float4x4 proj;
+                        ^
+[observatory-probe] frame=1083 return=N29NrvGrandStarReturnDemoStarter39GrandStarReturnDemoStarterNrvRushToCoreE step=0
+[observatory-probe] frame=1117 return=N29NrvGrandStarReturnDemoStarter36GrandStarReturnDemoStarterNrvRevivalE step=0
+2026-09-26 00:08:28.250784+0100 observatory-probe[18623:7017184] [Metal Compiler Warning] Warning: Compilation succeeded with: 
+
+program_source:25:24: warning: stack nearly exhausted; compilation time may suffer, and crashes due to stack overflow are likely [-Wstack-exhausted]
+  tint_array<float, 2> clip_distances;
+                       ^
+2026-09-26 00:08:28.431329+0100 observatory-probe[18623:7017184] [Metal Compiler Warning] Warning: Compilation succeeded with: 
+
+program_source:25:24: warning: stack nearly exhausted; compilation time may suffer, and crashes due to stack overflow are likely [-Wstack-exhausted]
+  tint_array<float, 2> clip_distances;
+                       ^
+2026-09-26 00:08:28.548459+0100 observatory-probe[18623:7017184] [Metal Compiler Warning] Warning: Compilation succeeded with: 
+
+program_source:32:25: warning: stack nearly exhausted; compilation time may suffer, and crashes due to stack overflow are likely [-Wstack-exhausted]
+  /* 0x0020 */ float4x4 proj;
+                        ^
+2026-09-26 00:08:44.509242+0100 observatory-probe[18623:7017184] [Metal Compiler Warning] Warning: Compilation succeeded with: 
+
+program_source:33:25: warning: stack nearly exhausted; compilation time may suffer, and crashes due to stack overflow are likely [-Wstack-exhausted]
+  /* 0x0030 */ float4x4 proj;
+                        ^
+2026-09-26 00:08:46.603616+0100 observatory-probe[18623:7016792] [AppKit] Invalid view geometry: width is negative.
+2026-09-26 00:08:46.603644+0100 observatory-probe[18623:7016792] [AppKit] Invalid view geometry: height is negative.
+2026-09-26 00:08:46.603666+0100 observatory-probe[18623:7016792] [AppKit] Invalid view geometry: width is negative.
+2026-09-26 00:08:46.603678+0100 observatory-probe[18623:7016792] [AppKit] Invalid view geometry: height is negative.
+2026-09-26 00:08:46.607266+0100 observatory-probe[18623:7016792] [AppKit] Invalid view geometry: width is negative.
+2026-09-26 00:08:46.607297+0100 observatory-probe[18623:7016792] [AppKit] Invalid view geometry: height is negative.
+[src/app/OriginalGameApplication.cpp:552][APP - INFO] Original GameSystem stopped after 2400 completed frames
+[original-audio] Playback frames=2992128 nonzero_samples=4011226 device_callbacks=2922
+2026-09-26 00:08:51.118882+0100 observatory-probe[18623:7018052] [aqsrv]        AQ_Server_Common.h:49    Exception caught in AudioQueueInternalStop_Sync - error -66671
+2026-09-26 00:08:51.141918+0100 observatory-probe[18623:7018052] AudioHardware-mac-imp.cpp:726    AudioObjectGetPropertyData: no object with given ID 0
+[aurora:warning:aurora::gpu] Device lost: Device was destroyed.
+PASS original Observatory handoff and Grand Star arrival from diagnostic clear result
+Process 18623 launched: '/Users/frityet/Projects/petari/notes/comet-observatory-20260925T224134Z/Observatory Probe.app/Contents/MacOS/observatory-probe' (arm64)
+Process 18623 exited with status = 0 (0x00000000)

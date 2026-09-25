@@ -213,6 +213,25 @@ void JKRHeap::bindNativeBackingStorage(std::shared_ptr<void> backing) {
     mNativeBacking = std::move(backing);
 }
 
+void JKRHeap::retireNativeResourceReferences() noexcept {
+    const aurora::allocation::HostAllocationScope host;
+    for (auto* child = mChildTree.getFirstChild(); child; child = child->getNextChild())
+        child->getObject()->retireNativeResourceReferences();
+    // Releasing a native aggregate may unlink other disposers. Restart from
+    // the actual list instead of retaining a potentially destroyed next link.
+    while (true) {
+        JKRDisposer* pending = nullptr;
+        for (auto* link = mDisposerList.getFirst(); link; link = link->getNext()) {
+            if (!link->getObject()->nativeResourcesRetired()) {
+                pending = link->getObject();
+                break;
+            }
+        }
+        if (!pending) break;
+        pending->retireNativeResourceReferences();
+    }
+}
+
 void JKRHeap::validateNativeRetirement() const {
     const CurrentHeapLock lock;
     if (const auto count = mNativeLifetime.use_count(); count != 0) {

@@ -105,6 +105,10 @@ JMapInfo& JMapInfo::operator=(JMapInfo&& info) noexcept {
 
 JMapInfo::~JMapInfo() = default;
 
+void JMapInfo::releaseNativeResourceReferences() noexcept {
+    *this = JMapInfo();
+}
+
 JMapInfo JMapInfo::from_bcsv(std::span< const std::uint8_t > data) {
     aurora::allocation::HostAllocationScope host;
     JMapInfo info;

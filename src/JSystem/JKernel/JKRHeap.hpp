@@ -23,6 +23,7 @@ public:
     Handle adoptNativeOwnership(std::shared_ptr<void> backing = {});
     void bindNativeBackingStorage(std::shared_ptr<void> backing);
     void validateNativeRetirement() const;
+    void retireNativeResourceReferences() noexcept;
 
     // Native callers and original MR heap wrappers share one recursive lock.
     static OSMutex sCurrentHeapMutex;

@@ -96,9 +96,9 @@ void DemoActionInfo::executeActionFirst() const {
         } else if (mActionType == 3) {
             actor->setNerve(mNerves[i]);
         } else if (mActionType == 0) {
-            actor->makeActorAppeared();
+            actor->appear();
         } else if (mActionType == 1) {
-            actor->makeActorDead();
+            actor->kill();
         } else if (mActionType == 4) {
             MR::onSwitchA(actor);
         } else if (mActionType == 5) {

@@ -1,0 +1,104 @@
+Running main() from /Users/frityet/Projects/petari/decomp/build/aurora-upstream-merge-tests/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = GXFifoBreakpointTest.*
+[==========] Running 40 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 40 tests from GXFifoBreakpointTest
+[ RUN      ] GXFifoBreakpointTest.StopsBeforeFollowingCommandsAndDisableResumes
+[       OK ] GXFifoBreakpointTest.StopsBeforeFollowingCommandsAndDisableResumes (0 ms)
+[ RUN      ] GXFifoBreakpointTest.CallbackCanRearmAtTheNextBoundary
+[       OK ] GXFifoBreakpointTest.CallbackCanRearmAtTheNextBoundary (0 ms)
+[ RUN      ] GXFifoBreakpointTest.UnhandledHitStopsAndRearmingCurrentAddressIssuesOneNewInterrupt
+[       OK ] GXFifoBreakpointTest.UnhandledHitStopsAndRearmingCurrentAddressIssuesOneNewInterrupt (0 ms)
+[ RUN      ] GXFifoBreakpointTest.SavedDefaultAddressesSurviveGrowthDrainAndWrap
+[       OK ] GXFifoBreakpointTest.SavedDefaultAddressesSurviveGrowthDrainAndWrap (2 ms)
+[ RUN      ] GXFifoBreakpointTest.PassedAddressRefersToNextLapOfSuppliedRing
+[       OK ] GXFifoBreakpointTest.PassedAddressRefersToNextLapOfSuppliedRing (0 ms)
+[ RUN      ] GXFifoBreakpointTest.PassedAddressCanStopOneByteBeforeDrawPayloadCompletes
+[       OK ] GXFifoBreakpointTest.PassedAddressCanStopOneByteBeforeDrawPayloadCompletes (0 ms)
+[ RUN      ] GXFifoBreakpointTest.SplitBpWritesHaveNoEffectBeforeTheirPayloadCompletes
+[       OK ] GXFifoBreakpointTest.SplitBpWritesHaveNoEffectBeforeTheirPayloadCompletes (0 ms)
+[ RUN      ] GXFifoBreakpointTest.RearmingInsideTheSamePartialCommandRetainsItsPrefix
+[       OK ] GXFifoBreakpointTest.RearmingInsideTheSamePartialCommandRetainsItsPrefix (0 ms)
+[ RUN      ] GXFifoBreakpointTest.PublicationCanPauseInsideACommandWithoutABreakpoint
+[       OK ] GXFifoBreakpointTest.PublicationCanPauseInsideACommandWithoutABreakpoint (0 ms)
+[ RUN      ] GXFifoBreakpointTest.ActiveProducerStopsAboveHighWatermarkBeforeReusingRingBytes
+[0] aurora::gx::fifo: Unhandled BP register 0x45 (value 0x000002)
+[       OK ] GXFifoBreakpointTest.ActiveProducerStopsAboveHighWatermarkBeforeReusingRingBytes (55 ms)
+[ RUN      ] GXFifoBreakpointTest.BlockedProducerResumesStrictlyBelowLowWatermark
+[       OK ] GXFifoBreakpointTest.BlockedProducerResumesStrictlyBelowLowWatermark (53 ms)
+[ RUN      ] GXFifoBreakpointTest.LinkedPreFrameProducerUsesGPWatermarksAndPublishesForProgress
+[0] aurora::gx::fifo: Unhandled BP register 0x45 (value 0x000002)
+[       OK ] GXFifoBreakpointTest.LinkedPreFrameProducerUsesGPWatermarksAndPublishesForProgress (50 ms)
+[ RUN      ] GXFifoBreakpointTest.HighWaterWaitYieldsGuestExecutionToTheBreakpointCallback
+[       OK ] GXFifoBreakpointTest.HighWaterWaitYieldsGuestExecutionToTheBreakpointCallback (0 ms)
+[ RUN      ] GXFifoBreakpointTest.BackpressureFetchesDrawLargerThanRingWithoutDecodingPartialVertices
+[       OK ] GXFifoBreakpointTest.BackpressureFetchesDrawLargerThanRingWithoutDecodingPartialVertices (0 ms)
+[ RUN      ] GXFifoBreakpointTest.IndexedDrawStreamsItsIndexArrayAndPayloadAcrossRingWraps
+[       OK ] GXFifoBreakpointTest.IndexedDrawStreamsItsIndexArrayAndPayloadAcrossRingWraps (0 ms)
+[ RUN      ] GXFifoBreakpointTest.UnbindingGPReleasesBlockedProducerWithoutDecodingDetachedBytes
+[0] aurora::gx::fifo: Unhandled BP register 0x45 (value 0x000002)
+[       OK ] GXFifoBreakpointTest.UnbindingGPReleasesBlockedProducerWithoutDecodingDetachedBytes (29 ms)
+[ RUN      ] GXFifoBreakpointTest.ShutdownCancelsBlockedProducerBeforeRetiringItsStream
+[       OK ] GXFifoBreakpointTest.ShutdownCancelsBlockedProducerBeforeRetiringItsStream (27 ms)
+[ RUN      ] GXFifoBreakpointTest.RebindingASavedReadCursorRetainsThePartialCommand
+[       OK ] GXFifoBreakpointTest.RebindingASavedReadCursorRetainsThePartialCommand (0 ms)
+[ RUN      ] GXFifoBreakpointTest.AbortRetiresAnIncompleteCommandPrefix
+[       OK ] GXFifoBreakpointTest.AbortRetiresAnIncompleteCommandPrefix (0 ms)
+[ RUN      ] GXFifoBreakpointTest.SplitXfHeadersAndPayloadsDoNotPartiallyUpdateRegisters
+[       OK ] GXFifoBreakpointTest.SplitXfHeadersAndPayloadsDoNotPartiallyUpdateRegisters (0 ms)
+[ RUN      ] GXFifoBreakpointTest.SplitAuroraHeadersAndPointersKeepThePreviousArrayBinding
+[       OK ] GXFifoBreakpointTest.SplitAuroraHeadersAndPointersKeepThePreviousArrayBinding (0 ms)
+[ RUN      ] GXFifoBreakpointTest.IndependentBindingsRetainPendingCommandsAndResumeTheirOwnCursor
+[       OK ] GXFifoBreakpointTest.IndependentBindingsRetainPendingCommandsAndResumeTheirOwnCursor (0 ms)
+[ RUN      ] GXFifoBreakpointTest.PrefilledWrappedRingPreservesItsReadAndWriteOffsets
+[       OK ] GXFifoBreakpointTest.PrefilledWrappedRingPreservesItsReadAndWriteOffsets (0 ms)
+[ RUN      ] GXFifoBreakpointTest.CanArmAgainstDecodedCursorWhileEarlierCallbackIsRunning
+[0] aurora::gx::fifo: Unhandled BP register 0x45 (value 0x000002)
+[       OK ] GXFifoBreakpointTest.CanArmAgainstDecodedCursorWhileEarlierCallbackIsRunning (0 ms)
+[ RUN      ] GXFifoBreakpointTest.UnregisterWaitsForAnInFlightBreakpointCallback
+[       OK ] GXFifoBreakpointTest.UnregisterWaitsForAnInFlightBreakpointCallback (30 ms)
+[ RUN      ] GXFifoBreakpointTest.ShutdownRetiresTheDefaultAddressSpaceAndAttachment
+[       OK ] GXFifoBreakpointTest.ShutdownRetiresTheDefaultAddressSpaceAndAttachment (0 ms)
+[ RUN      ] GXFifoBreakpointTest.DrainYieldsGuestExecutionAndRestoresCapturedCallbackRouting
+[       OK ] GXFifoBreakpointTest.DrainYieldsGuestExecutionAndRestoresCapturedCallbackRouting (0 ms)
+[ RUN      ] GXFifoBreakpointTest.GuestDisableCancelsAnInterruptWaitingForCpuOwnership
+[       OK ] GXFifoBreakpointTest.GuestDisableCancelsAnInterruptWaitingForCpuOwnership (0 ms)
+[ RUN      ] GXFifoBreakpointTest.GuestRearmReplacesAnInterruptWaitingForCpuOwnership
+[       OK ] GXFifoBreakpointTest.GuestRearmReplacesAnInterruptWaitingForCpuOwnership (0 ms)
+[ RUN      ] GXFifoBreakpointTest.GuestUnregisterYieldsWhileCallbackSleepsOnAFullSdkQueue
+[0] aurora::gx::fifo: Unhandled BP register 0x48 (value 0x000001)
+[       OK ] GXFifoBreakpointTest.GuestUnregisterYieldsWhileCallbackSleepsOnAFullSdkQueue (0 ms)
+[ RUN      ] GXFifoBreakpointTest.OlderDrainCanResumeAfterANewerDrainRetiresItsStorage
+[       OK ] GXFifoBreakpointTest.OlderDrainCanResumeAfterANewerDrainRetiresItsStorage (0 ms)
+[ RUN      ] GXFifoBreakpointTest.CompletedDrainCannotRetireReprogrammedStorage
+[       OK ] GXFifoBreakpointTest.CompletedDrainCannotRetireReprogrammedStorage (12 ms)
+[ RUN      ] GXFifoBreakpointTest.ReprogrammingWakesDrainWhoseOldCursorNeverCompleted
+[       OK ] GXFifoBreakpointTest.ReprogrammingWakesDrainWhoseOldCursorNeverCompleted (0 ms)
+[ RUN      ] GXFifoBreakpointTest.AllCallbacksEnterWithInterruptsDisabledAndRestoreWorkerState
+[0] aurora::gx::fifo: Unhandled BP register 0x48 (value 0x000001)
+[0] aurora::gx::fifo: Unhandled BP register 0x45 (value 0x000002)
+[       OK ] GXFifoBreakpointTest.AllCallbacksEnterWithInterruptsDisabledAndRestoreWorkerState (0 ms)
+[ RUN      ] GXFifoBreakpointTest.AlarmAbortDiscardsStoppedCommandsAndPreservesRingAddresses
+[0] aurora::gx::fifo: Unhandled BP register 0x48 (value 0x000009)
+[0] aurora::gx::fifo: Unhandled BP register 0x45 (value 0x000002)
+[       OK ] GXFifoBreakpointTest.AlarmAbortDiscardsStoppedCommandsAndPreservesRingAddresses (0 ms)
+[ RUN      ] GXFifoBreakpointTest.AbortRevokesDrawCallbacksWaitingForGuestCpu
+[0] aurora::gx::fifo: Unhandled BP register 0x45 (value 0x000002)
+[       OK ] GXFifoBreakpointTest.AbortRevokesDrawCallbacksWaitingForGuestCpu (0 ms)
+[ RUN      ] GXFifoBreakpointTest.AlarmAbortRestoresRingCapacityBeforeInterruptRecoveryWrites
+[0] aurora::gx::fifo: Unhandled BP register 0x58 (value 0x00000F)
+[0] aurora::gx::fifo: Unhandled BP register 0x45 (value 0x000002)
+[       OK ] GXFifoBreakpointTest.AlarmAbortRestoresRingCapacityBeforeInterruptRecoveryWrites (0 ms)
+[ RUN      ] GXFifoBreakpointTest.EmptyRecordingCleanupDoesNotWaitInsideAnInterrupt
+[       OK ] GXFifoBreakpointTest.EmptyRecordingCleanupDoesNotWaitInsideAnInterrupt (0 ms)
+[ RUN      ] GXFifoBreakpointTest.AlreadyRetiredFifoShutdownDoesNotWaitInsideAnInterrupt
+[       OK ] GXFifoBreakpointTest.AlreadyRetiredFifoShutdownDoesNotWaitInsideAnInterrupt (0 ms)
+[ RUN      ] GXFifoBreakpointTest.InterruptStillRejectsAProducerWriteThatReallyNeedsToWait
+
+[WARNING] /Users/frityet/Projects/petari/decomp/build/aurora-upstream-merge-tests/_deps/googletest-src/googletest/src/gtest-death-test.cc:1104:: Death tests use fork(), which is unsafe particularly in a threaded context. For this test, Google Test detected 2 threads. See https://github.com/google/googletest/blob/main/docs/advanced.md#death-tests-and-threads for more explanation and suggested solutions, especially if this is the last message you see before your test times out.
+[       OK ] GXFifoBreakpointTest.InterruptStillRejectsAProducerWriteThatReallyNeedsToWait (81 ms)
+[----------] 40 tests from GXFifoBreakpointTest (347 ms total)
+
+[----------] Global test environment tear-down
+[==========] 40 tests from 1 test suite ran. (347 ms total)
+[  PASSED  ] 40 tests.

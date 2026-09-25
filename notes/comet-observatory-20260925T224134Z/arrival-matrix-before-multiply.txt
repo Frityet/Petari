@@ -1,0 +1,19 @@
+(TMtx34f) fixedMtx = {
+  JGeometry::SMatrix34C<float> = {
+    mMtx = ([0] = (NaN, NaN, NaN, 4860.01953), [1] = (NaN, NaN, NaN, 1679.08813), [2] = (NaN, NaN, NaN, -3586.94556))
+  }
+}
+(TMtx34f) inverseMtx = {
+  JGeometry::SMatrix34C<float> = {
+    mMtx = ([0] = (0.287266284, 0.205217212, -0.935608923, -5096.67578), [1] = (-0.889152824, -0.306117177, -0.340146512, 3615.21094), [2] = (-0.356209874, 0.929611921, 0.0945323035, 509.368774))
+  }
+}
+(TPos3f) mtx2 = {
+  JGeometry::TRotation3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > > = {
+    JGeometry::TMatrix34<JGeometry::SMatrix34C<float> > = {
+      JGeometry::SMatrix34C<float> = {
+        mMtx = ([0] = (0.287266254, -0.889152705, -0.356209844, 4860.01953), [1] = (0.205217183, -0.306117147, 0.929611802, 1679.08813), [2] = (-0.935608863, -0.340146512, 0.0945322886, -3586.94556))
+      }
+    }
+  }
+}

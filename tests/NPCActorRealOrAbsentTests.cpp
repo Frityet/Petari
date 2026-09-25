@@ -204,11 +204,12 @@ namespace {
         // the authored field hashes, independently of their physical order.
         constexpr auto names = std::array<std::string_view, 4>{
             "mGoods1", "mGoodsJoint0", "mGoods0", "mGoodsJoint1"};
-        constexpr auto values = std::array<std::array<std::string_view, 4>, 2>{
+        constexpr auto values = std::array<std::array<std::string_view, 4>, 3>{
             std::array<std::string_view, 4>{"Lantern", "HandL", "AuthoredNpcItemNameLongEnoughToRequireRetainedStorage", "HandR"},
-            std::array<std::string_view, 4>{"Book", "Head", "Glasses", "Spine"}};
+            std::array<std::string_view, 4>{"Book", "Head", "Glasses", "Spine"},
+            std::array<std::string_view, 4>{"", "", "", ""}};
         const auto fields = sparse ? 1U : 4U;
-        const auto rows = sparse ? 1U : 2U;
+        const auto rows = sparse ? 1U : 3U;
         const auto data_offset = 0x10U + fields * 0x0cU;
         const auto entry_size = fields * 4U;
         const auto string_offset = data_offset + rows * entry_size;
@@ -277,7 +278,13 @@ namespace {
                     std::string_view(item.mGoodsJoint1) == "Spine" &&
                     std::string_view(retained_name) == "AuthoredNpcItemNameLongEnoughToRequireRetainedStorage",
                 "row selection must use the original reader while prior borrowed strings outlive its local JMapInfo");
-        for (const auto row : {-1, 2}) {
+        require(MR::getNPCItemData(&item, 2) && std::string_view(item.mGoodsJoint0).empty() &&
+                    std::string_view(item.mGoodsJoint1).empty(),
+                "empty accessory joints are valid authored NPC data");
+        require(MR::getNPCItemData(&item, 1) && std::string_view(item.mGoodsJoint0) == "Head" &&
+                    std::string_view(item.mGoodsJoint1) == "Spine",
+                "reading empty joints must preserve the shared reader's column names for later NPCs");
+        for (const auto row : {-1, 3}) {
             const auto old_goods = item.mGoods0;
             require(MR::getNPCItemData(&item, row) && item.mGoods0 == old_goods,
                     "an existing NPC table returns true and preserves input for an out-of-range row");
@@ -627,6 +634,28 @@ namespace {
 }  // namespace
 
 int main(int argc, char** argv) {
+    if (argc == 2 && std::string_view(argv[1]) == "--item-columns-only") {
+        const auto heap = smgpc::test::create_native_root_heap(8U << 20);
+        auto table = JMapInfo::from_bcsv(make_npc_item_table(false));
+        const char* left = "";
+        const char* right = "";
+        NPCParameterJoint left_parameter("mGoodsJoint0", "TestNpc", &left);
+        NPCParameterJoint right_parameter("mGoodsJoint1", "TestNpc", &right);
+        NPCParameterReader reader("items");
+        reader.mVector.push_back(&left_parameter);
+        reader.mVector.push_back(&right_parameter);
+        reader.read(&table, 0);
+        require(std::string_view(left) == "HandL" && std::string_view(right) == "HandR",
+                "authored shuffled joint columns must be read by name");
+        reader.read(&table, 2);
+        require(std::string_view(left).empty() && std::string_view(right).empty(),
+                "empty accessory joints must clear their values");
+        reader.read(&table, 1);
+        require(std::string_view(left) == "Head" && std::string_view(right) == "Spine",
+                "empty reads must preserve column names for subsequent NPCs");
+        std::cout << "PASS original NPC joint reader: populated, empty, populated rows\n";
+        return 0;
+    }
     auto passed = 0;
 
     auto caps = NPCActorCaps("TestNpc");

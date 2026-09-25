@@ -1,0 +1,25 @@
+{
+  "command": [
+    "lldb",
+    "--batch",
+    "-o",
+    "run",
+    "-k",
+    "bt 30",
+    "--",
+    "/Users/frityet/Projects/petari/notes/comet-observatory-20260925T224134Z/stage-probe",
+    "--disc",
+    "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--stage",
+    "AstroGalaxy",
+    "--scenario",
+    "1",
+    "--max-frames",
+    "600"
+  ],
+  "debugger_exit": 0,
+  "game_exit": 0,
+  "stopped_before_exit": false,
+  "seconds": 18.49834645795636,
+  "binary_sha256": "154173fd18b956fcb0f933a6eb9e5e04657e9000bcff3ae693f3b2905c2d0f49"
+}
