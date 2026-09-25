@@ -1,0 +1,11 @@
+{
+  "implementation_commit": "f7d319b67390bd894248daf7f15d264918b2e514",
+  "verified_origin_branch": "pcp-aurora",
+  "verified_remote_commit": "f7d319b67390bd894248daf7f15d264918b2e514",
+  "verified_at": "2026-09-25T14:00:49.581892+00:00",
+  "preexisting_index_preserved_exactly": true,
+  "submodule_pointers_unchanged": true,
+  "remaining_compat_files": 198,
+  "complete_removal_finished": false,
+  "validation": "validation.json"
+}
