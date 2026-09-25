@@ -1,7 +1,7 @@
 #include "render/core/FrameButtonState.hpp"
 #include "render/core/RenderTypes.hpp"
-#include "compat/JkrAllocationDomain.hpp"
-#include "compat/WPadOwnership.hpp"
+#include "OriginalStageResourceProcessFixture.hpp"
+#include "Game/System/WPadHolder.hpp"
 #include "Game/System/WPad.hpp"
 #include "Game/System/WPadButton.hpp"
 #include "runtime/DebugWpadInputScript.hpp"
@@ -30,7 +30,7 @@ namespace {
         if (!value) aurora::throw_host_exception<std::runtime_error>(message);
     }
 
-    void sample(Buttons& buttons, smgpc::compat::WPadOwnership& owner,
+    void sample(Buttons& buttons, WPadHolder& owner,
                 u32 hold, u32 trigger, u32 release, const char* message) {
         auto& input = aurora::wpad_service();
         input.begin_frame();
@@ -38,22 +38,21 @@ namespace {
         input.set_connected(0, true);
         input.set_button_mask(0, (buttons.is_pressed(a) ? WPAD_BUTTON_A : 0U) |
                                 (buttons.is_pressed(b) ? WPAD_BUTTON_B : 0U));
-        owner.update_samples();
-        const auto& original = *owner.pad(0).mButton;
+        aurora::wpad_service().dispatch_callbacks();
+        owner.update();
+        const auto& original = *owner.getWPad(0)->mButton;
         const auto observed_hold = (original.testButtonA() ? WPAD_BUTTON_A : 0U) |
                                    (original.testButtonB() ? WPAD_BUTTON_B : 0U);
         const auto observed_trigger = (original.testTriggerA() ? WPAD_BUTTON_A : 0U) |
                                       (original.testTriggerB() ? WPAD_BUTTON_B : 0U);
         require(observed_hold == hold && observed_trigger == trigger &&
-                    owner.pad(0).getKPadStatus(0)->release == release &&
+                    owner.getWPad(0)->getKPadStatus(0)->release == release &&
                     original.isChangeAnyState() == ((trigger | release) != 0), message);
     }
 
     void test_controller_samples() {
-        auto heaps = smgpc::compat::JkrHeapRuntime::create(2U << 20);
-        auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 512U << 10);
+        auto& owner = *MR::getGameSystemObjHolder()->mWPadHolder;
         aurora::wpad_service().clear();
-        smgpc::compat::WPadOwnership owner(domain);
         Buttons buttons;
         sample(buttons, owner, 0, 0, 0, "initial controller sample is neutral");
 
@@ -226,10 +225,8 @@ namespace {
             require(rejected, "malformed pointer spans and nonfinite coordinates must fail explicitly");
         }
 
-        auto heaps = smgpc::compat::JkrHeapRuntime::create(2U << 20);
-        auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 512U << 10);
+        auto& owner = *MR::getGameSystemObjHolder()->mWPadHolder;
         aurora::wpad_service().clear();
-        smgpc::compat::WPadOwnership owner(domain);
         const Script held{"3-5:A", {}, "3-5:0.5:-0.25"};
         for (std::uint64_t frame = 0; frame != 8; ++frame) {
             auto& input = aurora::wpad_service();
@@ -241,17 +238,18 @@ namespace {
             const auto applied = held.apply(frame, mask, pointer, stick_x, stick_y);
             input.set_button_mask(0, mask);
             input.set_sub_stick(0, stick_x, stick_y);
-            owner.update_samples();
-            const auto& original = *owner.pad(0).mButton;
+            aurora::wpad_service().dispatch_callbacks();
+            owner.update();
+            const auto& original = *owner.getWPad(0)->mButton;
             const bool active = frame >= 3 && frame <= 5;
             require(applied.buttons == active && original.testButtonA() == active && original.testButtonB(),
                     "script is applied before original WPad sampling and keeps physical B held");
-            const auto& stick = owner.pad(0).getKPadStatus(0)->ex_status.fs.stick;
+            const auto& stick = owner.getWPad(0)->getKPadStatus(0)->ex_status.fs.stick;
             require(applied.stick == active && stick.x == (active ? 0.5F : 0.0F) && stick.y == (active ? -0.25F : 0.0F),
                     "scripted Nunchuk axes reach the original KPAD record and release to physical input");
             require(original.testTriggerA() == (frame == 3),
                     "a scripted hold has one original trigger and subsequent non-trigger held samples");
-            require((owner.pad(0).getKPadStatus(0)->release & WPAD_BUTTON_A) == (frame == 6 ? WPAD_BUTTON_A : 0),
+            require((owner.getWPad(0)->getKPadStatus(0)->release & WPAD_BUTTON_A) == (frame == 6 ? WPAD_BUTTON_A : 0),
                     "leaving a script range creates the normal original release edge");
         }
         std::cout << "Shared debug controller script: parsing, overlap, pointer precedence and original WPad hold/trigger/release passed\n";
@@ -309,7 +307,7 @@ namespace {
 }
 
 int main() {
-    try {
+    return smgpc::test::run_stage_resource_process("frame-button-state", [] {
         test_controller_samples();
         test_debug_input();
 #ifndef NDEBUG
@@ -317,8 +315,5 @@ int main() {
         test_live_controller_file();
 #endif
         std::cout << "Frame input: quick key/mouse taps, physical aliases, repeat, focus reset and original WPad edges passed\n";
-    } catch (const std::exception& error) {
-        std::cerr << error.what() << '\n';
-        return 1;
-    }
+    });
 }

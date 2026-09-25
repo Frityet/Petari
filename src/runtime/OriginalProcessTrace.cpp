@@ -26,7 +26,6 @@
 #include "Game/System/WPadHolder.hpp"
 #include "Game/System/WPadStick.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "layout/LayoutHost.hpp"
 #include "resource/TextEncoding.hpp"
 #include "scene/SceneNameObjRegistry.hpp"
 #include <aurora/allocation.hpp>
@@ -232,8 +231,6 @@ namespace smgpc::runtime {
         FILE* output = nullptr;
         std::uint64_t interval = 60;
         std::vector<std::string> types;
-        std::string layout_path;
-        std::uint64_t layout_frame = 0;
 
         ~State() { if (output) std::fclose(output); }
 
@@ -247,12 +244,9 @@ namespace smgpc::runtime {
     OriginalProcessTrace::OriginalProcessTrace() {
         const aurora::allocation::HostAllocationScope host;
         const auto path = environment("SMGPC_DEBUG_ACTOR_TRACE_PATH");
-        const auto layout_path = environment("SMGPC_DEBUG_LAYOUT_DUMP_PATH");
-        if (path.empty() && layout_path.empty()) return;
+        if (path.empty()) return;
         _state = std::make_unique<State>();
         _state->interval = number("SMGPC_DEBUG_ACTOR_TRACE_INTERVAL", 60, false);
-        _state->layout_path = layout_path;
-        _state->layout_frame = number("SMGPC_DEBUG_LAYOUT_DUMP_FRAME", 0, true);
         auto filters = environment("SMGPC_DEBUG_ACTOR_TRACE_TYPES");
         std::string_view remaining(filters);
         while (!remaining.empty()) {
@@ -274,8 +268,6 @@ namespace smgpc::runtime {
     void OriginalProcessTrace::capture(const GameSystem& system, std::uint64_t frame_index) {
         if (!_state) return;
         const aurora::allocation::HostAllocationScope host;
-        if (!_state->layout_path.empty() && frame_index == _state->layout_frame)
-            layout::debug_dump_layout_text(_state->layout_path.c_str());
         if (!_state->output || frame_index % _state->interval) return;
         Json record{{"frame_index", frame_index}, {"system_nerve", spine(system.mSpine)},
                     {"actors", Json::array()}};

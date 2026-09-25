@@ -22,8 +22,6 @@
 #include "resource/BmgMessageArchive.hpp"
 #include "resource/TplTexture.hpp"
 
-class LayoutManager;
-
 namespace nw4r::lyt {
     class TexMap;
 }
@@ -70,7 +68,7 @@ public:
     [[nodiscard]] const std::optional< std::filesystem::path >& getArchivePath() const;
 
     void draw();
-    [[nodiscard]] Nw4rLayoutRecords& native_records(LayoutManager* manager = nullptr);
+    [[nodiscard]] Nw4rLayoutRecords& native_records();
 
     void startAnim(const char* pAnimName, u32 animLayer);
     void setAnimFrameAndStop(f32 frame, u32 animLayer);
@@ -183,7 +181,6 @@ public:
         std::size_t rgba_byte_count = 0U;
     };
 
-
     [[nodiscard]] std::vector< DebugPaneState > debugPanes() const;
     [[nodiscard]] std::vector< DebugMaterialState > debugMaterials() const;
     [[nodiscard]] std::vector< DebugTextureState > debugTextures() const;
@@ -204,7 +201,6 @@ public:
             return *native_font->GetHostResourceState().lock()->font;
         }
     };
-
 
 private:
     struct AnimationState {
@@ -236,7 +232,6 @@ private:
         std::string pane_name;
         std::array< AnimationState, 4 > animations = {};
     };
-
 
 
     [[nodiscard]] AnimationState& animation(u32 animLayer);

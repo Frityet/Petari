@@ -5,6 +5,10 @@
 #include "Game/Util/SingletonHolder.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "resource/RarcArchive.hpp"
+#include "resource/GameResourceRuntime.hpp"
+#include "layout/LytTexMap.hpp"
+#include "layout/NativeLayoutResource.hpp"
+#include <map>
 #include <JSystem/JKernel/JKRArchive.hpp>
 #include <JSystem/JKernel/JKRFileFinder.hpp>
 #include <cstdio>
@@ -31,6 +35,7 @@ struct LayoutHolder::NativeResources {
     std::shared_ptr<const void> archiveLifetime;
     std::shared_ptr<const smgpc::resource::RarcArchive> source;
     std::filesystem::path path;
+    std::map<std::string, std::shared_ptr<const nw4r::lyt::HostTextureResourceState>, std::less<>> textures;
 };
 
 LayoutHolder::LayoutHolder(JKRArchive& rArchive) : nw4r::lyt::ResourceAccessor(), mArchive(&rArchive) {
@@ -111,12 +116,41 @@ void* LayoutHolder::GetResource(u32 type, const char* pName, u32* pSize) {
         break;
     }
 
-    if (pSize != nullptr) {
-        // Wii resources retain their original byte order and may be unaligned on the host.
-        const u8* bytes = static_cast< const u8* >(resource);
-        *pSize = bytes != nullptr ? aurora::endian::read_u32(bytes + 4) : 0;
+    if (resource == nullptr) {
+        if (pSize) *pSize = 0;
+        return nullptr;
+    }
+    const u32 size = mArchive->getResSize(resource);
+    // Preserve the original accessor's metadata word, not a host object size.
+    if (pSize) {
+        if (size < 8)
+            aurora::throw_host_exception<std::runtime_error>("Layout resource has no metadata word");
+        *pSize = aurora::endian::read_u32(static_cast<const u8*>(resource) + 4);
+    }
+    if (type == 'timg') {
+        // NW4R consumes widened descriptors; packed Wii offsets never become
+        // native pointers. The cached backing is also retained by materials.
+        const aurora::allocation::HostAllocationScope host;
+        auto it = mNativeResources->textures.find(pName);
+        if (it == mNativeResources->textures.end()) {
+            auto* runtime = smgpc::resource::GameResourceRuntime::active();
+            auto texture = smgpc::layout::make_tex_map(pName,
+                std::span(static_cast<const std::uint8_t*>(resource), size),
+                runtime ? runtime->mem1_heap() : nullptr);
+            auto state = texture.GetHostResourceState();
+            if (!state || !state->tpl_palette)
+                aurora::throw_host_exception<std::runtime_error>("Layout material requires a native TPL palette");
+            it = mNativeResources->textures.emplace(pName, std::move(state)).first;
+        }
+        return const_cast<TPLPalette*>(it->second->tpl_palette);
     }
     return resource;
+}
+
+std::shared_ptr<const nw4r::lyt::HostTextureResourceState> LayoutHolder::GetHostTextureResourceState(const char* pName) {
+    GetResource('timg', pName, nullptr);
+    const auto it = mNativeResources->textures.find(pName);
+    return it == mNativeResources->textures.end() ? nullptr : it->second;
 }
 
 nw4r::ut::Font* LayoutHolder::GetFont(const char* pName) {
@@ -210,6 +244,10 @@ void LayoutHolder::mount(char* pPath) {
 }
 
 ResFileInfo* LayoutHolder::createAndRegisterObject(const char* pName, void* pResource) {
+    if (strstr(pName, ".brlyt") != nullptr || strstr(pName, ".brlan") != nullptr) {
+        smgpc::layout::NativeLayoutResource::validate_archive_span(
+            std::span(static_cast<const std::uint8_t*>(pResource), mArchive->getResSize(pResource)));
+    }
     if (strstr(pName, ".brlyt") != nullptr) {
         return mLayoutRes.add(pName, pResource, false);
     }

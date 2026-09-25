@@ -1,0 +1,198 @@
+{
+  "baseline": "497ca5d2f8e782c0674b80021382520e15f34a7a",
+  "donor": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "files": [
+    {
+      "path": "src/Game/Screen/LayoutManager.cpp",
+      "before_exists": true,
+      "before_sha256": "010da658f16c10db5ebe9545b31200f546b1a0b9161eb0bd3a2bd542664d9147",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "c60cfcbb358a24116849b3694cdd575174a6f225be9193bb770b512404824f94"
+    },
+    {
+      "path": "src/Game/Screen/LayoutManager.hpp",
+      "before_exists": true,
+      "before_sha256": "2d4769bb508d6fef6b524cd5c7784256f707fd6ef8f1ef4f3d43b972909c3af4",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "35ee4f45555ed621a9ad62a045c5dc50e559f62c82116414397c8843605f9223"
+    },
+    {
+      "path": "src/Game/Screen/LayoutActor.cpp",
+      "before_exists": true,
+      "before_sha256": "b3a77ab8d38fa1f7e124bd95d43cb25bc67c8f35ae8e6119bb0a2f84cbb50d92",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "514f127435d92a01f36ac7a45564e99636c6ebc98a112c434e9bf075e682d74c"
+    },
+    {
+      "path": "src/Game/Screen/LayoutActor.hpp",
+      "before_exists": true,
+      "before_sha256": "5db08f177910050a46da6a178667ed3752a4cd5c0625a97e7185e6c471da3ab9",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "17aced9142c68f1c0fa387aa9434a7c2d6010ef7a14dfeaac959851b3113ab42"
+    },
+    {
+      "path": "src/Game/Screen/LayoutPaneCtrl.cpp",
+      "before_exists": true,
+      "before_sha256": "6264f345a10b0b73e8f9bca26c44bfb8fcb9befe4e91368f78f35500eceb1917",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "ede16c0727e1252013e34bc2e829fa51f987a8cf64b67631f50034babf5a342c"
+    },
+    {
+      "path": "src/Game/Screen/LayoutPaneCtrl.hpp",
+      "before_exists": true,
+      "before_sha256": "e5af8a2a5db8faae18a328851c8253526d0edb75dba365836b4803e318a99aa3",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "9f2d9fa93fde6f028df6d11c600bac1ae604eaee24ddae473ec8c1f3a68aeb2b"
+    },
+    {
+      "path": "src/Game/Screen/LayoutGroupCtrl.cpp",
+      "before_exists": true,
+      "before_sha256": "2051be76e8cd86920cbaf45be57a537c5af3d58644ea2ade32fe2536e5fa3346",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "ebaedc4d766542fdc4ec511c267a09cdeffea9de1e6541e1129bc7998d633a5a"
+    },
+    {
+      "path": "src/Game/Screen/LayoutGroupCtrl.hpp",
+      "before_exists": true,
+      "before_sha256": "458a3df75eb444e20b283539ca11fafd00f8dd01496e604b390a309dd44b544c",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "da483b9a13bd343da80f4a9c97888ddf27a66b8c74c8cfca6b64b3ba6e17a538"
+    },
+    {
+      "path": "src/Game/Screen/PaneEffectKeeper.cpp",
+      "before_exists": true,
+      "before_sha256": "0320d86c7744bbaa951fe8dc7e7709df29b4259a87a35881403b10aeb6bb2eba",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "cd6934190cea2540a400504d716e80c29463713b9c9c476220fd2a0311fb803e"
+    },
+    {
+      "path": "src/Game/Util/LayoutUtil.cpp",
+      "before_exists": true,
+      "before_sha256": "7e15464b3dc9d4af8dbc87f79b75caf4ef09f4b3c97681ac0af9871f44589ba6",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "f40a72a6e0e2e9365684e9b217c883fe557a66bee1f6e63a3ae69551d56cc033"
+    },
+    {
+      "path": "src/Game/System/LayoutHolder.cpp",
+      "before_exists": true,
+      "before_sha256": "8e7d9fc24c8a189a8def3ec98c30909aee95502b1db2ac746e70efc9012d54ca",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "f64aa171b4c4e619284c8e27cbc1eddfbf64de2aae962c957d8f91dee5a5ddf5"
+    },
+    {
+      "path": "src/Game/System/LayoutHolder.hpp",
+      "before_exists": true,
+      "before_sha256": "43b4d82e1fe5321cf52dadda1e9fbfdb218c3c415182027bc35bc3135896f16f",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "d85e6b497633b4aadc682059514cfd0cf0fcf01cfd6773677fef759ae9d948b8"
+    },
+    {
+      "path": "src/compat/OriginalLayoutLocale.cpp",
+      "before_exists": true,
+      "before_sha256": "f7e7c9982147bc1dfd7f657f505b73abfa340d9eb48d5d3987417e0d5e5f9984",
+      "before_status": "",
+      "action": "deleted",
+      "after_sha256": null
+    },
+    {
+      "path": "src/layout/LayoutManagerCompat.cpp",
+      "before_exists": true,
+      "before_sha256": "71194f71969475490ee09390828774b646ebe2be9557bfd378e4bb3aaa0009a5",
+      "before_status": "",
+      "action": "deleted",
+      "after_sha256": null
+    },
+    {
+      "path": "src/layout/LayoutHost.hpp",
+      "before_exists": true,
+      "before_sha256": "ce20a8b8c5e214326bd5b6df9cc95e53a15ffc0ff488c565a6721b2da78a7fc4",
+      "before_status": "",
+      "action": "deleted",
+      "after_sha256": null
+    },
+    {
+      "path": "src/layout/LayoutUtilCompat.cpp",
+      "before_exists": true,
+      "before_sha256": "47a0ed76f9d999e53cd9a5eee4719623a3c5e4deaee0aa6cfc2f51121098b985",
+      "before_status": "",
+      "action": "deleted",
+      "after_sha256": null
+    },
+    {
+      "path": "src/layout/LayoutRuntime.cpp",
+      "before_exists": true,
+      "before_sha256": "254228ccdbb3f737c138fc1863b4c602d57ac22ac61efa30aa83962e11518e34",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "5c34d94807c61b820d06aecd4980fcd4762e2ab2df55cb74450c488055cc62ac"
+    },
+    {
+      "path": "src/layout/LayoutRuntime.hpp",
+      "before_exists": true,
+      "before_sha256": "7d0a7c1513821faaad98d3157e79846299bf9ebb6d1273a8306544e3ba292112",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "f6debaf6d49b7f402b8176c41c50e8263564421bd1c55bc254dfcbdf8db72773"
+    },
+    {
+      "path": "src/layout/Nw4rLayoutRecords.cpp",
+      "before_exists": true,
+      "before_sha256": "fcbb37a0d0fc5fa16ec177061b01177e76bf52d1bbce285ac6c403d545dfd184",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "38ee61ac1b049f95b4b5dd2dea6a110c5bdc7382543f257debb012897f4648d3"
+    },
+    {
+      "path": "src/layout/Nw4rLayoutRecords.hpp",
+      "before_exists": true,
+      "before_sha256": "1166c29321c847c4cb26adbdb10785828f6d8ebbd72f268d39fa24b5d8e990a5",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "335bbdc828ffe6cfcf7792c2d0bd7db48fb70cb5eaf8300e9314cd0d4aaec8cd"
+    },
+    {
+      "path": "src/runtime/OriginalProcessTrace.cpp",
+      "before_exists": true,
+      "before_sha256": "04f3bd0fec9c92929bb75e0ee7d7c91672aa1c76af5d54c942e2e66ff502245c",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "7c6f38eb536afa3fcac758d1a1eaa4066876793910d16d8879737ce5413fd815"
+    },
+    {
+      "path": "src/nw4r/math/types.h",
+      "before_exists": true,
+      "before_sha256": "12380ae39f04085138df1797d571c42e8480b54a239b39bd3624f900c1d561b6",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "cc746558938c0cb1655e5febfce2cb042136220848e6124038f6f388c0a41355"
+    },
+    {
+      "path": "src/nw4r/math/math_types.cpp",
+      "before_exists": false,
+      "before_sha256": null,
+      "before_status": "",
+      "action": "added",
+      "after_sha256": "ca9b3889ca3b1747bd06ccc2617ca6505336834e1f8ede2ca58d21cc699c5aea"
+    },
+    {
+      "path": "src/nw4r/lyt/drawInfo.h",
+      "before_exists": true,
+      "before_sha256": "f485d9d2296b94afdd4362daaee455aff6bab205b466e6c67d95159de0bf1f6f",
+      "before_status": "",
+      "action": "modified",
+      "after_sha256": "e962b58a2cddfc4aebbd9ee19682bcdc26ce5d61c76cb426e2fd578c4c221571"
+    }
+  ]
+}

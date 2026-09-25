@@ -16,6 +16,7 @@ public:
     LayoutActor(const char*, bool);
 
     virtual ~LayoutActor();
+    void releaseNativeResources();
 
     virtual void movement();
     virtual void draw() const;

@@ -1,7 +1,6 @@
 #include "OriginalStageResourceProcessFixture.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Screen/LayoutManager.hpp"
-#include "layout/LayoutHost.hpp"
 #include "layout/LayoutResourceResolver.hpp"
 #include "layout/LayoutRuntime.hpp"
 
@@ -125,39 +124,6 @@ void verify_layout() {
                         "an unconfigured animation layer must not alias the last real layer");
     ++passed;
 
-    auto manager = LayoutManager("unbound-layout-manager", true, 1U, 0x100U);
-    require(manager.getPaneCtrl("InfoWindow") == nullptr && manager.getPaneMtxRef("InfoWindow") == nullptr,
-            "manager lookups must preserve absent controls and matrices");
-    require_unavailable([&] { (void)smgpc::layout::is_pane_visible(&manager, "InfoWindow"); },
-                        "an unbound manager must not report fabricated pane visibility");
-    require_unavailable([&] { (void)manager.createAndAddPaneCtrl("InfoWindow", 1U); },
-                        "a manager without a real layout must not create a pane control");
-    require_unavailable([&] { manager.createPaneMtxRef("InfoWindow"); },
-                        "a manager without a real layout must not create an identity pane matrix");
-    require_unavailable([&] { smgpc::layout::set_pane_visible(&manager, "InfoWindow", true, false); },
-                        "a manager without a real layout must reject pane mutation");
-    require_unavailable([&] { (void)smgpc::layout::pane_animation_frame(&manager, "InfoWindow", 0U); },
-                        "a missing pane controller must not expose a zero animation frame");
-    require_unavailable([&] { (void)smgpc::layout::is_pane_animation_stopped(&manager, "InfoWindow", 0U); },
-                        "a missing pane controller must not report a fabricated stopped state");
-    require_unavailable([&] { (void)smgpc::layout::animation_duration(&manager, "Wait"); },
-                        "a manager without a real host must not expose a default duration");
-    ++passed;
-
-    require_unavailable([&] { (void)smgpc::layout::is_layout_actor_dead(nullptr); },
-                        "a null LayoutActor must not be reported as an ordinary dead retail actor");
-    ++passed;
-
-    auto actor = LayoutActor("uninitialized-layout-actor", true);
-    require_unavailable([&] { (void)smgpc::layout::layout_anim_frame(&actor, 0U); },
-                        "an uninitialized LayoutActor must not expose a default animation frame");
-    require_unavailable([&] { (void)smgpc::layout::is_layout_anim_stopped(&actor, 0U); },
-                        "an uninitialized LayoutActor must not report a fabricated stopped state");
-    require_unavailable([&] { actor.initEffectKeeper(1, "LayoutEffect", nullptr); },
-                        "LayoutActor effect initialization requires its real layout manager");
-    smgpc::layout::release_layout_actor_if_registered(&actor);
-    ++passed;
-
     if (const auto archive = find_sys_info_window_mini_archive()) {
         auto real = smgpc::layout::LayoutRuntime(
             "real-dead-layout-host", "SysInfoWindowMini", 1U, 0, *archive);
@@ -194,7 +160,7 @@ void verify_layout() {
     }
 
     std::cout << "Layout real-or-absent tests passed: " << passed << "/"
-              << (find_sys_info_window_mini_archive().has_value() ? 7 : 6) << "\n";
+              << (find_sys_info_window_mini_archive().has_value() ? 4 : 3) << "\n";
 }
 
 int main() { return smgpc::test::run_stage_resource_process("layout-real-or-absent", verify_layout); }

@@ -1,0 +1,127 @@
+{
+  "LayoutManager": {
+    "donor_methods": 36,
+    "missing": [],
+    "exact": [
+      "LayoutManager::addPaneCtrl(LayoutPaneCtrl* pPaneCtrl)",
+      "LayoutManager::animateRecursive(u32& rIndex, nw4r::lyt::Pane* pPane)",
+      "LayoutManager::bindPaneCtrlAnim(LayoutPaneCtrl* pPaneCtrl, nw4r::lyt::AnimTransform* pAnimTransform)",
+      "LayoutManager::bindPaneCtrlAnimSub(u32& rIndex, nw4r::lyt::AnimTransform* pAnimTransform)",
+      "LayoutManager::calcAnim()",
+      "LayoutManager::calcAnimWithoutLocationAdjust(const nw4r::lyt::DrawInfo& rDrawInfo)",
+      "LayoutManager::countPanes(nw4r::lyt::Pane* pPane)",
+      "LayoutManager::createAndAddGroupCtrl(const char* pName, u32 animLayerNum)",
+      "LayoutManager::createAndAddPaneCtrl(const char* pName, u32 animLayerNum)",
+      "LayoutManager::createAndAddRootPaneCtrl(u32 animLayerNum)",
+      "LayoutManager::draw()",
+      "LayoutManager::findPaneByName(const char* pName)",
+      "LayoutManager::getAnimTransform(const char* pName)",
+      "LayoutManager::getGroup(const char* pName)",
+      "LayoutManager::getIndexOfGroupCtrl(const char* pName)",
+      "LayoutManager::getIndexOfPane(const char* pName)",
+      "LayoutManager::getPaneCtrl(const char* pName)",
+      "LayoutManager::getPaneMtxRef(const char* pName)",
+      "LayoutManager::initDrawInfo()",
+      "LayoutManager::initPaneInfoRecursive(u32& rIndex, nw4r::lyt::Pane* pPane)",
+      "LayoutManager::initTextBoxRecursive(nw4r::lyt::Pane* pPane, nw4r::lyt::Pane* pUserDataPane, const char* pLayoutName, u32 textBoxBufferLength)",
+      "LayoutManager::isExistPaneCtrl(const char* pName)",
+      "LayoutManager::isExistPaneMtxRef(const char* pName)",
+      "LayoutManager::isPointing(const char* pName, const TVec2f& rPos)",
+      "LayoutManager::movement()",
+      "LayoutManager::removeUnnecessaryPanes(nw4r::lyt::Pane* pPane)",
+      "LayoutManager::unbindPaneCtrlAnim(LayoutPaneCtrl* pPaneCtrl, nw4r::lyt::AnimTransform* pAnimTransform)",
+      "LayoutManager::unbindPaneCtrlAnimSub(u32& rIndex, nw4r::lyt::AnimTransform* pAnimTransform)"
+    ],
+    "native_adapted": [
+      "LayoutManager::LayoutManager(const char* pLayoutName, bool useArchiveNamePrefix, u32 rootPaneAnimLayerNum, u32 textBoxBufferLength)",
+      "LayoutManager::addGroupCtrl(LayoutGroupCtrl* pGroupCtrl)",
+      "LayoutManager::createPaneMtxRef(const char* pName)",
+      "LayoutManager::initArc(const char* pArchiveName, const char* pLayoutName)",
+      "LayoutManager::initGroupCtrlList()",
+      "LayoutManager::initPaneInfo()",
+      "LayoutManager::isPointing(const nw4r::lyt::Pane* pPane, const TVec2f& rPos)",
+      "LayoutManager::replaceIndDummyTexture()"
+    ],
+    "added_native_lifetime_methods": [
+      "LayoutManager::destroyNativeResources()",
+      "LayoutManager::~LayoutManager()"
+    ]
+  },
+  "LayoutActor": {
+    "donor_methods": 21,
+    "missing": [],
+    "exact": [
+      "LayoutActor::LayoutActor(const char* pName, bool)",
+      "LayoutActor::appear()",
+      "LayoutActor::calcAnim()",
+      "LayoutActor::createPaneMtxRef(const char* pParam1)",
+      "LayoutActor::draw()",
+      "LayoutActor::getLayoutManager()",
+      "LayoutActor::getNerveStep()",
+      "LayoutActor::getPaneMtxRef(const char* pParam1)",
+      "LayoutActor::getTrans()",
+      "LayoutActor::initLayoutManager(const char* pName, u32 rootPaneAnimLayerNum)",
+      "LayoutActor::initLayoutManagerNoConvertFilename(const char* pName, u32 rootPaneAnimLayerNum)",
+      "LayoutActor::initLayoutManagerWithTextBoxBufferLength(const char* pName, u32 textBoxBufferLength, u32 rootPaneAnimLayerNum)",
+      "LayoutActor::initNerve(const Nerve* pNerve)",
+      "LayoutActor::initPointingTarget(int maxNumTargets)",
+      "LayoutActor::isNerve(const Nerve* pNerve)",
+      "LayoutActor::kill()",
+      "LayoutActor::movement()",
+      "LayoutActor::setNerve(const Nerve* pNerve)",
+      "LayoutActor::setTrans(const TVec2f& rTrans)",
+      "LayoutActor::updateSpine()"
+    ],
+    "native_adapted": [
+      "LayoutActor::initEffectKeeper(int param1, const char* pParam2, const EffectSystem* pEffectSystem)"
+    ],
+    "added_native_lifetime_methods": [
+      "LayoutActor::releaseNativeResources()",
+      "LayoutActor::~LayoutActor()"
+    ]
+  },
+  "LayoutPaneCtrl": {
+    "donor_methods": 9,
+    "missing": [],
+    "exact": [
+      "LayoutPaneCtrl::calcAnim()",
+      "LayoutPaneCtrl::getFrameCtrl(u32 layer)",
+      "LayoutPaneCtrl::isAnimStopped(u32 layer)",
+      "LayoutPaneCtrl::movement()",
+      "LayoutPaneCtrl::recalcChildGlobalMtx(nw4r::lyt::Pane* pPane)",
+      "LayoutPaneCtrl::reflectFollowPos()",
+      "LayoutPaneCtrl::start(const char* pAnimName, u32 layer)",
+      "LayoutPaneCtrl::stop(u32 layer)"
+    ],
+    "native_adapted": [
+      "LayoutPaneCtrl::LayoutPaneCtrl(LayoutManager* pHost, const char* pPaneName, u32 animLayerNum)"
+    ],
+    "added_native_lifetime_methods": [
+      "LayoutPaneCtrl::~LayoutPaneCtrl()"
+    ]
+  },
+  "LayoutGroupCtrl": {
+    "donor_methods": 5,
+    "missing": [],
+    "exact": [
+      "LayoutGroupCtrl::calcAnim()",
+      "LayoutGroupCtrl::getPane(u32 idx)",
+      "LayoutGroupCtrl::getPaneNum()",
+      "LayoutGroupCtrl::movement()"
+    ],
+    "native_adapted": [
+      "LayoutGroupCtrl::LayoutGroupCtrl(LayoutManager* pManager, const char* pName, u32 animLayerCount)"
+    ],
+    "added_native_lifetime_methods": [
+      "LayoutGroupCtrl::~LayoutGroupCtrl()"
+    ]
+  },
+  "sdk_math_types_exact_donor": true,
+  "sdk_drawinfo_exact_donor": true,
+  "sdk_member_calls_without_declaration": [],
+  "diff_check": {
+    "exit": 0,
+    "output": ""
+  },
+  "validation_scope": "source only; no builds or tests in this lane; parent integrates app build/smoke"
+}

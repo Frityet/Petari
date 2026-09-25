@@ -34,7 +34,6 @@
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/Screen/LensFlare.hpp"
-#include "layout/LayoutHost.hpp"
 #include "layout/LayoutRuntime.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
@@ -621,12 +620,7 @@ namespace smgpc::runtime {
         if (!_execution || object.mExecutorIdx < 0) return;
         auto& holder = _execution->requirements();
         auto* info = holder.getConnectToSceneInfo(&object);
-        holder.disconnectToScene(&object);
-        holder.disconnectToDraw(&object);
-        info->executeRequirementDisconnectMovement();
-        info->executeRequirementDisconnectDraw();
-        info->executeRequirementDisconnectDrawDelay();
-        info->setConnectInfo(nullptr, -1, -1, -1, -1);
+        info->retireNativeRegistration(_execution->executor());
         object.mExecutorIdx = -1;
     }
 
@@ -1193,12 +1187,10 @@ namespace smgpc::runtime {
         smgpc::compat::JkrHostAllocationScope host;
         auto states = std::vector<SceneLayoutRuntimeDebugState>{};
         for (const auto &entry : _entries) {
-            if ((entry.kind != SceneEntryKind::Layout || entry.layout == nullptr) &&
-                (entry.kind != SceneEntryKind::LayoutActor || entry.layout_actor == nullptr ||
-                 smgpc::layout::layout_runtime(entry.layout_actor) == nullptr)) {
+            if (entry.kind != SceneEntryKind::Layout || entry.layout == nullptr) {
                 continue;
             }
-            const auto *layout = entry.kind == SceneEntryKind::Layout ? entry.layout : smgpc::layout::layout_runtime(entry.layout_actor);
+            const auto *layout = entry.layout;
 
             auto state = SceneLayoutRuntimeDebugState {
                 .name = entry_name(entry),
@@ -1325,49 +1317,6 @@ namespace smgpc::runtime {
                 });
             }
 
-            if (entry.kind == SceneEntryKind::LayoutActor && entry.layout_actor->getLayoutManager() != nullptr) {
-                const auto pane_controls = smgpc::layout::debug_pane_controls(entry.layout_actor->getLayoutManager());
-                state.pane_controls.reserve(pane_controls.size());
-                for (const auto &pane_control : pane_controls) {
-                    auto pane_state = SceneLayoutPaneControlDebugState {
-                        .pane_name = pane_control.pane_name,
-                        .exists_in_layout = pane_control.exists_in_layout,
-                        .visible = pane_control.visible,
-                        .animations = {},
-                    };
-                    pane_state.animations.reserve(pane_control.animations.size());
-                    for (const auto &animation : pane_control.animations) {
-                        pane_state.animations.push_back(SceneLayoutPaneControlAnimationDebugState {
-                            .layer_index = animation.layer_index,
-                            .name = animation.name,
-                            .frame = animation.frame,
-                            .end_frame = animation.end_frame,
-                            .rate = animation.rate,
-                            .stopped = animation.stopped,
-                            .looping = animation.looping,
-                        });
-                    }
-                    state.pane_controls.push_back(std::move(pane_state));
-                }
-
-                const auto button_controllers = smgpc::layout::debug_button_controllers(entry.layout_actor->getLayoutManager());
-                state.button_controllers.reserve(button_controllers.size());
-                for (const auto &button : button_controllers) {
-                    state.button_controllers.push_back(SceneLayoutButtonControllerDebugState {
-                        .pane_name = button.pane_name,
-                        .bounding_pane_name = button.bounding_pane_name,
-                        .nerve = button.nerve,
-                        .anim_layer = button.anim_layer,
-                        .active = button.active,
-                        .selected = button.selected,
-                        .pointing = button.pointing,
-                        .appearance_enabled = button.appearance_enabled,
-                        .decide_enabled = button.decide_enabled,
-                        .pointing_anim_start_frame = button.pointing_anim_start_frame,
-                    });
-                }
-            }
-
             states.push_back(std::move(state));
         }
 
@@ -1470,7 +1419,7 @@ namespace smgpc::runtime {
         case SceneEntryKind::Layout:
             return entry.layout == nullptr || entry.layout->isDead();
         case SceneEntryKind::LayoutActor:
-            return smgpc::layout::is_layout_actor_dead(entry.layout_actor);
+            return entry.layout_actor == nullptr || entry.layout_actor->mFlag.mIsDead;
         case SceneEntryKind::LiveActorModel:
             return entry.live_actor == nullptr || entry.live_actor->mFlag.mIsDead;
         }

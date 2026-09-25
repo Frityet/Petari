@@ -1,0 +1,282 @@
+[
+  {
+    "path": "src/Game/NameObj/NameObjCategoryList.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/NameObj/NameObjCategoryList.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/NameObj/NameObjExecuteHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/NameObj/NameObjExecuteHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/NameObj/NameObjListExecutor.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Scene/SceneFunction.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Scene/SceneFunction.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/LayoutActor.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/LayoutActor.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/LayoutGroupCtrl.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/LayoutGroupCtrl.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/LayoutManager.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/LayoutManager.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/LayoutPaneCtrl.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/LayoutPaneCtrl.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/PaneEffectKeeper.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerDirector.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerDirector.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/LayoutHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/LayoutHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/WPadHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/LayoutUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/MemoryUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/StarPointerUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/xmake.lua",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/app/OriginalGameApplication.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/J3dSystemCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/J3dSystemCompat.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalLayoutLocale.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalNameObjExecuteHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalStarPointerDepth.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalStarPointerDirector.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalStarPointerOwnerQueries.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/SceneConnectionCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/SceneInitializationCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/SceneMovementCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/StarPointerDepthOwnership.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/StarPointerDepthOwnership.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/StarPointerServiceCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/WPadOwnership.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/WPadOwnership.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/layout/LayoutHost.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/layout/LayoutManagerCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/layout/LayoutRuntime.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/layout/LayoutRuntime.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/layout/LayoutUtilCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/layout/Nw4rLayoutRecords.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/layout/Nw4rLayoutRecords.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/nw4r/lyt/drawInfo.h",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/nw4r/math/math_types.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/nw4r/math/types.h",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/OriginalProcessTrace.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.cpp",
+    "mode": "scoped-delta-on-HEAD"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.hpp",
+    "mode": "scoped-delta-on-HEAD"
+  },
+  {
+    "path": "src/runtime/SceneScheduler.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/scene/OriginalSceneSupport.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/scene/SceneDrawBufferService.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/FrameButtonStateTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/LayoutRealOrAbsentTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalCameraDirectorTests.cpp",
+    "mode": "scoped-delta-on-HEAD"
+  },
+  {
+    "path": "tests/OriginalLayoutGroupTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalPointerInputTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalSceneWipeOwnerTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalStarPointerOwnerTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalWPadAccelerationTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalWPadGestureTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalWPadOwnershipTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalWPadPauseTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/SphereSelectorRealOrAbsentTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "mode": "scoped-delta-on-HEAD"
+  }
+]

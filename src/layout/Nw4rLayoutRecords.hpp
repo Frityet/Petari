@@ -5,8 +5,6 @@
 #include <string_view>
 #include <revolution/types.h>
 
-class LayoutManager;
-
 namespace nw4r::lyt {
 class Pane;
 class Group;
@@ -21,7 +19,7 @@ class LayoutRuntime;
 // kind remains explicit; a base record never claims a derived NW4R type.
 class Nw4rLayoutRecords final {
 public:
-    explicit Nw4rLayoutRecords(LayoutRuntime& runtime, LayoutManager* manager = nullptr);
+    explicit Nw4rLayoutRecords(LayoutRuntime& runtime);
     ~Nw4rLayoutRecords();
     Nw4rLayoutRecords(const Nw4rLayoutRecords&) = delete;
     Nw4rLayoutRecords& operator=(const Nw4rLayoutRecords&) = delete;
@@ -43,7 +41,6 @@ public:
 #endif
 
 private:
-    void retain_reachable_panes();
     void import_pane(u32 index);
     void publish_pane(u32 index, bool matrices);
     struct State;

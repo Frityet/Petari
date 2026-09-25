@@ -1,8 +1,10 @@
 #include "Game/System/WPadHolder.hpp"
+#include "Game/System/GameSystem.hpp"
+#include "Game/System/GameSystemObjHolder.hpp"
 #include "Game/System/WPad.hpp"
 #include "Game/System/WPadPointer.hpp"
 #include "Game/Util/MemoryUtil.hpp"
-#include "compat/WPadOwnership.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include <revolution/wpad.h>
 
 #define KPAD_STATUS_ARRAY_SIZE 120
@@ -151,7 +153,7 @@ void WPadHolder::setConnectCallback() {
 
 namespace {
     WPadHolder* getWPadHolder() NO_INLINE {
-        return &smgpc::compat::require_wpad_holder();
+        return SingletonHolder< GameSystem >::get()->mObjHolder->mWPadHolder;
     }
 };  // namespace
 

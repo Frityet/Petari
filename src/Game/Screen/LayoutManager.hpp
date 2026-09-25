@@ -1,7 +1,10 @@
 #pragma once
 
 #include <JSystem/JGeometry/TVec.hpp>
+#include <memory>
 #include <nw4r/lyt/drawInfo.h>
+#include <nw4r/lyt/layout.h>
+#include <nw4r/lyt/pane.h>
 
 namespace nw4r {
     namespace lyt {
@@ -9,6 +12,7 @@ namespace nw4r {
         class Group;
         class Layout;
         class Pane;
+        class TexMap;
     };  // namespace lyt
 };  // namespace nw4r
 
@@ -16,18 +20,26 @@ class LayoutGroupCtrl;
 class LayoutHolder;
 class LayoutPaneCtrl;
 
+struct LayoutGroupCtrlLink {
+    /* 0x00 */ LayoutGroupCtrl* mGroupCtrl;
+    /* 0x04 */ LayoutGroupCtrlLink* mNext;
+};
+
 struct LayoutPaneInfo {
     /* 0x00 */ const char* mName;
     /* 0x04 */ LayoutPaneCtrl* mPaneCtrl;
-    /* 0x08 */ void* mGroupCtrlList;
+    /* 0x08 */ LayoutGroupCtrlLink* mGroupCtrlLink;
     /* 0x0C */ MtxPtr mMtxRef;
-    /* 0x10 */ u32 mSubtreeSize;
+    /* 0x10 */ u32 mChildCount;
     /* 0x14 */ nw4r::lyt::Pane* mPane;
 };
 
 class LayoutManager {
 public:
     LayoutManager(const char*, bool, u32, u32);
+    ~LayoutManager();
+    LayoutManager(const LayoutManager&) = delete;
+    LayoutManager& operator=(const LayoutManager&) = delete;
 
     void movement();
     void calcAnim();
@@ -61,7 +73,14 @@ public:
     void initGroupCtrlList();
     void initTextBoxRecursive(nw4r::lyt::Pane*, nw4r::lyt::Pane*, const char*, u32);
     void animateRecursive(u32&, nw4r::lyt::Pane*);
-    nw4r::lyt::Pane* getPane(const char*) const;
+    nw4r::lyt::Pane* getPane(const char* pName) const {
+        if (pName == nullptr) {
+            return mLayout->mpRootPane;
+        } else {
+            return mLayout->mpRootPane->FindPaneByName(pName, true);
+        }
+    }
+
     nw4r::lyt::Pane* findPaneByName(const char*) const;
     void replaceIndDummyTexture();
     void removeUnnecessaryPanes(nw4r::lyt::Pane*);
@@ -72,10 +91,15 @@ public:
     /* 0x0C */ nw4r::lyt::DrawInfo mDrawInfo;
     /* 0x60 */ bool mIsScreenHidden;
     /* 0x61 */ bool _61;
-    /* 0x64 */ u32 _64;
+    /* 0x64 */ nw4r::lyt::TexMap* mIndDummyTexMap;
     /* 0x68 */ u32 mPaneCount;
-    /* 0x6C */ LayoutPaneInfo* mPaneInfos;
-    /* 0x70 */ u32 _70;
-    /* 0x74 */ u32 _74;
-    /* 0x78 */ const char* _78;
+    /* 0x6C */ LayoutPaneInfo* mPaneInfoList;
+    /* 0x70 */ u32 mGroupCtrlCount;
+    /* 0x74 */ LayoutGroupCtrl** mGroupCtrlList;
+    /* 0x78 */ char* mLayoutName;
+
+private:
+    struct NativeResources;
+    std::unique_ptr<NativeResources> mNativeResources;
+    void destroyNativeResources() noexcept;
 };

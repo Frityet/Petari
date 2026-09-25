@@ -1,0 +1,180 @@
+{
+  "scope": "Canonical WPad and original StarPointer owner closure",
+  "files": [
+    {
+      "path": "src/compat/WPadOwnership.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/src/compat/WPadOwnership.cpp",
+      "before_sha256": "1445081dd8222f4e54854098bb6fadbcc075ff0e36d0ca5c81def0752e316618",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/WPadOwnership.hpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/src/compat/WPadOwnership.hpp",
+      "before_sha256": "af49d33c0615a343a4f0709f770f0ebc377a784d6e3b53821238a514e18d991d",
+      "action": "delete"
+    },
+    {
+      "path": "src/Game/System/WPadHolder.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/src/Game/System/WPadHolder.cpp",
+      "before_sha256": "022206f444fcea2e05d12a9d320c53ca9864bd94877070f788f7acf6dbd2bf41",
+      "action": "modify",
+      "after_sha256": "1532d22bb4476c0748e973e79272c927d3a92cf4fc902b9fb9a81d4c235adce4"
+    },
+    {
+      "path": "src/Game/Util/MemoryUtil.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/src/Game/Util/MemoryUtil.cpp",
+      "before_sha256": "4df0b2427c09159768e20028e639c61f5026d8b4c28b222a63ef344075e2a5fa",
+      "action": "modify",
+      "after_sha256": "1db741f84b8e2acd0cda0a8a51c28ca85687724d7218784f2c310c76d4ba8586"
+    },
+    {
+      "path": "src/compat/StarPointerDepthOwnership.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/src/compat/StarPointerDepthOwnership.cpp",
+      "before_sha256": "1e65a7f2a9f6f250984c1d0c277ebfb385c3aea110345b779b4deb421693c74f",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/StarPointerDepthOwnership.hpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/src/compat/StarPointerDepthOwnership.hpp",
+      "before_sha256": "1ddc2d1b309eb50bd00b8d0402e376888fb17dc3f69c03829cb2594c9685b9f6",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/OriginalStarPointerDirector.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/src/compat/OriginalStarPointerDirector.cpp",
+      "before_sha256": "a5d24c593477cd248dd421478318006ceaa48eb711210cc78f7c53dfed82aa36",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/OriginalStarPointerDepth.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/src/compat/OriginalStarPointerDepth.cpp",
+      "before_sha256": "3722771b42325d08f687820e5a826f49c5f86f49930db2eda80617dc5b269807",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/OriginalStarPointerOwnerQueries.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/src/compat/OriginalStarPointerOwnerQueries.cpp",
+      "before_sha256": "41a3588b2f48231612c355183dbb56b9759db974eef6c69e734c03ea5dbfc7d6",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/StarPointerServiceCompat.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/src/compat/StarPointerServiceCompat.cpp",
+      "before_sha256": "6f63f8cd794ffc92e0f49706262ad23c2a1fdf489df532ab2ca63a3736d7ad30",
+      "action": "delete"
+    },
+    {
+      "path": "src/Game/Screen/StarPointerDirector.cpp",
+      "before": null,
+      "before_sha256": null,
+      "action": "add",
+      "after_sha256": "f0ed08fab396d35450597e7dbd4af5317f747463dcde6c22f451c1ff2098cfb2"
+    },
+    {
+      "path": "src/Game/Screen/StarPointerDirector.hpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/src/Game/Screen/StarPointerDirector.hpp",
+      "before_sha256": "0f57046c9eadfabdde1c242a18a940c30246079e1e4534ad4f2b38fa40573a86",
+      "action": "modify",
+      "after_sha256": "b9e4be783bb076e19e355c20e9cf5861cd8b53bc9fed3cd1bbdeb24860260742"
+    },
+    {
+      "path": "src/Game/Util/StarPointerUtil.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/src/Game/Util/StarPointerUtil.cpp",
+      "before_sha256": "877549b6ad76bc7b07bf8c928655c6fad1686b20f2717534b263475b16a6efc2",
+      "action": "modify",
+      "after_sha256": "0e882ba1c12262a1bedde1badfd1700bd0397370b2a47daf890cd04828de7ee2"
+    },
+    {
+      "path": "src/runtime/RuntimeContext.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/src/runtime/RuntimeContext.cpp",
+      "before_sha256": "5f0e364b346483b9590bc9c7c9f683e3462aea62f1515e4950d99610023d5d2d",
+      "action": "modify",
+      "after_sha256": "c476eb85d456b9cde48755dae2c30a594a876f3ffbeaacf74082ff2d9ffb9ff1"
+    },
+    {
+      "path": "src/runtime/RuntimeContext.hpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/src/runtime/RuntimeContext.hpp",
+      "before_sha256": "81e40201f3338ecfd0da7d12cdbe16f1d626435c9c76ee1d8d18db5c2dbd2082",
+      "action": "modify",
+      "after_sha256": "cf19cc931effd56d4f6dc7b466122571fcb4058627ead95bcc6395d6b0811a55"
+    },
+    {
+      "path": "src/app/OriginalGameApplication.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/src/app/OriginalGameApplication.cpp",
+      "before_sha256": "8456be681bc96469c105acb1edf7d3042d4a1b45ca0b8c77183b28ac7b07675a",
+      "action": "modify",
+      "after_sha256": "b2ba6894e36f37b4f404dd49fa690a965eb14776b64d6872d9c70016c7fabc56"
+    },
+    {
+      "path": "tests/SphereSelectorRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/tests/SphereSelectorRealOrAbsentTests.cpp",
+      "before_sha256": "ede75b0219018a316ba2d1e5a31037bf8f36dfe6bd3c5910be76c5a0df335edd",
+      "action": "modify",
+      "after_sha256": "4195045c4610aa18ae32d8d216fe8560cae901d0553900f02e44bab8267cc90f"
+    },
+    {
+      "path": "tests/OriginalWPadOwnershipTests.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/tests/OriginalWPadOwnershipTests.cpp",
+      "before_sha256": "6da665c3e4cf388016f59f3fc35405baf9fd43eb7a907b30d903094a6042788d",
+      "action": "modify",
+      "after_sha256": "0a1e9343b374a57c42190d4238c1021dddad2b67b531f2267aecd547b471d5eb"
+    },
+    {
+      "path": "tests/OriginalPointerInputTests.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/tests/OriginalPointerInputTests.cpp",
+      "before_sha256": "98f563fe2ab0b1596031c0dfb8283232aed00954833570f46236b054bbdcbe5c",
+      "action": "modify",
+      "after_sha256": "15d6c2d7178b7887fd48c9ec890af56b68763c5207e271c9feead44e8acc80a5"
+    },
+    {
+      "path": "tests/FrameButtonStateTests.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/tests/FrameButtonStateTests.cpp",
+      "before_sha256": "927c3f60593f9f4b645e8ae25482163022909e4f0ba2023a7895138d7f0c130b",
+      "action": "modify",
+      "after_sha256": "c0eb5f79639fc8b63801642375940800b79660d3489bda28a9b707cc474f83da"
+    },
+    {
+      "path": "tests/OriginalWPadAccelerationTests.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/tests/OriginalWPadAccelerationTests.cpp",
+      "before_sha256": "c073fb0f95676c496eb9b4007227eddd1e5341d5a432e66db178afd60e9d441e",
+      "action": "modify",
+      "after_sha256": "733b37f9888f999cda9263840479d6598f8ade444c77a6ff42f4fa71ebdf8a07"
+    },
+    {
+      "path": "tests/OriginalWPadPauseTests.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/tests/OriginalWPadPauseTests.cpp",
+      "before_sha256": "288568f26a19ca950f21bf22ed937db29e447e03ab83e1bd5f9e4136b93a45d2",
+      "action": "modify",
+      "after_sha256": "afcad3ce4e7b63f7872f0c02e20c1ae633c94919f7859ac34175e9b4f847e3c5"
+    },
+    {
+      "path": "tests/OriginalWPadGestureTests.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/tests/OriginalWPadGestureTests.cpp",
+      "before_sha256": "9c69f82c1547aec1807c5fcb3dfea57182c61935470b91fab1ec758d30c5d429",
+      "action": "modify",
+      "after_sha256": "695eb39e6fd545efe11cc5ea8b9c8be28b243b858a6a1687e22d0a87049b2140"
+    },
+    {
+      "path": "tests/xmake.lua",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/tests/xmake.lua",
+      "before_sha256": "cddfd9209d7163b2acee9bc9958a8d8369d34f293d4b5e4706a622bd2053e7b6",
+      "action": "modify",
+      "after_sha256": "fb1ebe5680aea113e293edf1d44538cdbfe4535eeabcdb6ec483432b81b54990"
+    },
+    {
+      "path": "tests/OriginalStarPointerOwnerTests.cpp",
+      "before": "notes/compat-owner-removal-round11-20260925/wpad/before/tests/OriginalStarPointerOwnerTests.cpp",
+      "before_sha256": "4da5fd3a006e120d8456436d71eea7f79ec37bf1c53e2877826dffc5706078b0",
+      "action": "modify",
+      "after_sha256": "b3af077d2baedd47313f570189114898bae734b54c8099350e4bf6d684bf7c09"
+    }
+  ],
+  "build_wiring": "Enable canonical Util/StarPointerUtil.cpp in src/Game/xmake.lua (root owns). StarPointerDirector.cpp is picked up by Game glob. Remove deleted compat paths from generated graph. tests/xmake.lua adds app/aurora-main to existing acceleration, pause and frame-button targets.",
+  "donor_sources": [
+    "decomp/src/Game/Screen/StarPointerDirector.cpp",
+    "decomp/src/Game/Util/StarPointerUtil.cpp",
+    "decomp/src/Game/System/WPadHolder.cpp",
+    "decomp/src/Game/Util/MemoryUtil.cpp"
+  ],
+  "validation": "Source-only comparison/reference inspection. No builds or test runs. Native texture/layout teardown integration depends on the concurrent actual LayoutActor owner restoration."
+}

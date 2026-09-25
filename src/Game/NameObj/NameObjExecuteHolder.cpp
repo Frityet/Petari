@@ -1,38 +1,24 @@
-#include <aurora/allocation.hpp>
-#include "resource/TextEncoding.hpp"
 #include "Game/NameObj/NameObjExecuteHolder.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObjListExecutor.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/System/GameSystem.hpp"
+#include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/ObjUtil.hpp"
-#include "scene/SceneExecutionBinding.hpp"
+#include "Game/Util/SingletonHolder.hpp"
+#include "compat/Cp932Literal.hpp"
 #include "runtime/SceneScheduler.hpp"
-#include "Game/NameObj/NameObjCategoryList.hpp"
-#include "compat/JkrAllocationDomain.hpp"
 #include <aurora/exception.hpp>
-#include <algorithm>
 #include <stdexcept>
 
 namespace {
-    // These stable Game names outlive every owner that borrows their bytes.
-    std::string encode_owner_name(std::string_view name) {
-        aurora::allocation::HostAllocationScope host;
-        return smgpc::resource::encode_cp932(name);
-    }
-
-    const std::string cNameObjExecuteHolderName = encode_owner_name("connectToScene情報保持");
-}  // namespace
-
-namespace {
     NameObjExecuteHolder* getNameObjExecuteHolder() {
-        auto* binding = smgpc::scene::current_scene_execution_binding();
-        if (!binding) aurora::throw_host_exception<std::logic_error>("Execution requirements need an active scene executor");
-        return &binding->requirements();
+        return MR::getSceneObj< NameObjExecuteHolder >(SceneObj_NameObjExecuteHolder);
     }
 };  // namespace
 
 NameObjExecuteInfo::NameObjExecuteInfo()
-    : mExecutedObj(nullptr), _4(0), _5(0), mMovementType(-1), mCalcAnimType(-1), mDrawType(-1), mDrawBufferType(-1), _A(-1) {
+    : mExecutedObj(), _4(), _5(), mMovementType(-1), mCalcAnimType(-1), mDrawType(-1), mDrawBufferType(-1), _A(-1) {
 }
 
 void NameObjExecuteInfo::setConnectInfo(NameObj* pObj, int movementType, int calcAnimType, int drawBufferType, int drawType) {
@@ -43,7 +29,7 @@ void NameObjExecuteInfo::setConnectInfo(NameObj* pObj, int movementType, int cal
     mCalcAnimType = calcAnimType;
     mDrawBufferType = drawBufferType;
     mDrawType = drawType;
-    NameObjListExecutor* pListExecutor = (&smgpc::scene::current_scene_name_obj_list_executor());
+    NameObjListExecutor* pListExecutor = SingletonHolder< GameSystem >::get()->mSceneController->getNameObjListExecutor();
 
     if (drawBufferType != -1) {
         _A = pListExecutor->registerDrawBuffer(static_cast< LiveActor* >(pObj), drawBufferType);
@@ -169,13 +155,13 @@ void NameObjExecuteInfo::requestMovementOff(int a1) {
 }
 
 void NameObjExecuteInfo::findLightInfo() const {
-    (&smgpc::scene::current_scene_name_obj_list_executor())->findLightInfo(static_cast< LiveActor* >(mExecutedObj),
+    SingletonHolder< GameSystem >::get()->mSceneController->getNameObjListExecutor()->findLightInfo(static_cast< LiveActor* >(mExecutedObj),
                                                                                                     mDrawBufferType, _A);
 }
 
 void NameObjExecuteInfo::connectToScene() {
     _4 = 3;
-    NameObjListExecutor* pListExecutor = (&smgpc::scene::current_scene_name_obj_list_executor());
+    NameObjListExecutor* pListExecutor = SingletonHolder< GameSystem >::get()->mSceneController->getNameObjListExecutor();
 
     if (mMovementType != -1) {
         pListExecutor->addToMovement(mExecutedObj, mMovementType);
@@ -187,21 +173,24 @@ void NameObjExecuteInfo::connectToScene() {
 }
 
 void NameObjExecuteInfo::disconnectToScene() {
+    disconnectToScene(*SingletonHolder< GameSystem >::get()->mSceneController->getNameObjListExecutor());
+}
+
+void NameObjExecuteInfo::disconnectToScene(NameObjListExecutor& rExecutor) {
     _4 = 5;
-    NameObjListExecutor* pListExecutor = (&smgpc::scene::current_scene_name_obj_list_executor());
 
     if (mMovementType != -1) {
-        pListExecutor->removeToMovement(mExecutedObj, mMovementType);
+        rExecutor.removeToMovement(mExecutedObj, mMovementType);
     }
 
     if (mCalcAnimType != -1) {
-        pListExecutor->removeToCalcAnim(mExecutedObj, mCalcAnimType);
+        rExecutor.removeToCalcAnim(mExecutedObj, mCalcAnimType);
     }
 }
 
 void NameObjExecuteInfo::connectToDraw() {
     _5 = 3;
-    NameObjListExecutor* pListExecutor = (&smgpc::scene::current_scene_name_obj_list_executor());
+    NameObjListExecutor* pListExecutor = SingletonHolder< GameSystem >::get()->mSceneController->getNameObjListExecutor();
 
     if (mDrawType != -1) {
         pListExecutor->addToDraw(mExecutedObj, mDrawType);
@@ -213,21 +202,39 @@ void NameObjExecuteInfo::connectToDraw() {
 }
 
 void NameObjExecuteInfo::disconnectToDraw() {
+    disconnectToDraw(*SingletonHolder< GameSystem >::get()->mSceneController->getNameObjListExecutor());
+}
+
+void NameObjExecuteInfo::disconnectToDraw(NameObjListExecutor& rExecutor) {
     _5 = 5;
-    NameObjListExecutor* pListExecutor = (&smgpc::scene::current_scene_name_obj_list_executor());
 
     if (mDrawType != -1) {
-        pListExecutor->removeToDraw(mExecutedObj, mDrawType);
+        rExecutor.removeToDraw(mExecutedObj, mDrawType);
     }
 
     if (mDrawBufferType != -1) {
-        pListExecutor->removeToDrawBuffer(static_cast< LiveActor* >(mExecutedObj), mDrawBufferType, _A);
+        rExecutor.removeToDrawBuffer(static_cast< LiveActor* >(mExecutedObj), mDrawBufferType, _A);
     }
 }
 
+void NameObjExecuteInfo::retireNativeRegistration(NameObjListExecutor& rExecutor) {
+    // The actual executor outlives native registrations even after mScene is unpublished.
+    requestDisconnect(reinterpret_cast< u8* >(&_4), false);
+    requestDisconnect(reinterpret_cast< u8* >(&_5), false);
+    if (_4 == 6) {
+        disconnectToScene(rExecutor);
+    }
+    if (_5 == 6 || _5 == 7) {
+        disconnectToDraw(rExecutor);
+    }
+    *this = NameObjExecuteInfo();
+}
+
 void NameObjExecuteHolder::registerActor(NameObj* pObj, int movementType, int calcAnimType, int drawBufferType, int drawType) {
-    if (mExecuteArraySize >= mExecuteArrayMaxSize)
+    if (mExecuteArraySize >= mExecuteArrayMaxSize) {
         aurora::throw_host_exception<std::length_error>("Original execution registration capacity exceeded");
+    }
+
     mExecuteArray[mExecuteArraySize].setConnectInfo(pObj, movementType, calcAnimType, drawBufferType, drawType);
     pObj->mExecutorIdx = mExecuteArraySize;
     mExecuteArraySize++;
@@ -376,8 +383,11 @@ NameObjExecuteInfo* NameObjExecuteHolder::getConnectToSceneInfo(const NameObj* p
 
 namespace MR {
     void registerNameObjToExecuteHolder(NameObj* pObj, int movementType, int calcAnimType, int drawBufferType, int drawType) {
+        // Native registration retains model resources and retires pending callbacks before their owners.
         auto* scheduler = smgpc::runtime::try_active_scene_scheduler();
-        if (!scheduler) aurora::throw_host_exception<std::logic_error>("Execution registration needs an active scheduler");
+        if (!scheduler) {
+            aurora::throw_host_exception<std::logic_error>("Execution registration needs an active scheduler");
+        }
         scheduler->register_name_obj(*pObj, movementType, calcAnimType, drawBufferType, drawType);
     }
 
@@ -386,23 +396,23 @@ namespace MR {
     }
 
     void connectToSceneTemporarily(NameObj* pObj) {
-        if (pObj->mExecutorIdx >= 0) ::getNameObjExecuteHolder()->connectToScene(pObj);
+        ::getNameObjExecuteHolder()->connectToScene(pObj);
     }
 
     void disconnectToSceneTemporarily(NameObj* pObj) {
-        if (pObj->mExecutorIdx >= 0) ::getNameObjExecuteHolder()->disconnectToScene(pObj);
+        ::getNameObjExecuteHolder()->disconnectToScene(pObj);
     }
 
     void connectToDrawTemporarily(NameObj* pObj) {
-        if (pObj->mExecutorIdx >= 0) ::getNameObjExecuteHolder()->connectToDraw(pObj);
+        ::getNameObjExecuteHolder()->connectToDraw(pObj);
     }
 
     void disconnectToDrawTemporarily(NameObj* pObj) {
-        if (pObj->mExecutorIdx >= 0) ::getNameObjExecuteHolder()->disconnectToDraw(pObj);
+        ::getNameObjExecuteHolder()->disconnectToDraw(pObj);
     }
 
     bool isConnectToDrawTemporarily(const NameObj* pObj) {
-        return pObj->mExecutorIdx >= 0 && ::getNameObjExecuteHolder()->isConnectToDraw(pObj);
+        return ::getNameObjExecuteHolder()->isConnectToDraw(pObj);
     }
 
     void executeRequirementConnectMovement() {
@@ -439,7 +449,10 @@ namespace MR {
 };  // namespace MR
 
 NameObjExecuteHolder::NameObjExecuteHolder(int size)
-    : NameObj(cNameObjExecuteHolderName.c_str()), mExecuteArray(nullptr), mExecuteArrayMaxSize(size), mExecuteArraySize(0), _18(false), _19(false), _1A(false),
-      _1B(false), _1C(false) {
+    : NameObj(CP932("connectToScene情報保持")), mExecuteArray(), mExecuteArrayMaxSize(size), mExecuteArraySize(), _18(), _19(), _1A(), _1B(), _1C() {
     mExecuteArray = new NameObjExecuteInfo[mExecuteArrayMaxSize];
+}
+
+NameObjExecuteHolder::~NameObjExecuteHolder() {
+    delete[] mExecuteArray;
 }

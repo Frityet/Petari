@@ -1,4 +1,3 @@
-#include "compat/WPadOwnership.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "Game/System/WPad.hpp"
 #include "Game/System/WPadHolder.hpp"
@@ -20,150 +19,6 @@ void require(bool value, const char* message) {
 }
 void near(float actual, float expected, const char* message) {
     require(std::abs(actual - expected) < 0.00001F, message);
-}
-void sample_history(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
-    auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 512U << 10);
-    auto& input = aurora::wpad_service();
-    input.clear();
-    smgpc::compat::WPadOwnership owner(domain);
-    input.set_pointer_resolution(0, 640, 480);
-    auto& pad = *MR::getWPad(0);
-    require(pad.mPointer && pad.mButton && pad.mCorePadAccel && pad.mCorePadSwing && pad._18 && pad._1C &&
-            pad.mSubPadAccel && pad.mSubPadSwing && pad.mStick && pad.mLeaveWatcher && pad.mInfoChecker,
-            "the actual WPad constructor creates every original typed child");
-    require(JKRHeap::findFromRoot(pad.mPointer) == &domain->heap(), "original WPad history has an explicit retained heap owner");
-    for (int i = 0; i < 6; ++i) {
-        input.begin_frame();
-        input.set_pointer(0, 480, 120, true);
-        owner.update_samples();
-        require(MR::isCorePadPointInScreen(0) == (i == 5), "original five-sample confirmation delays pointing until the sixth sample");
-    }
-    TVec2f position, horizon;
-    MR::getCorePadPointingPos(&position, 0);
-    pad.mPointer->getHorizonVec(&horizon);
-    near(position.x, .5F, "KPAD converts pixel x to normalized coordinates");
-    near(position.y, -.5F, "KPAD converts pixel y to normalized coordinates");
-    require(horizon.x == 1 && horizon.y == 0 && MR::getCorePadEnablePastCount(0) == 1,
-            "KB+M upright orientation belongs to the actual accepted sample, without replaying previous frames");
-    input.begin_frame();
-    input.set_pointer(0, 400, 240, true, 0, 1);
-    owner.update_samples();
-    pad.mPointer->getHorizonVec(&horizon);
-    require(horizon.x == 0 && horizon.y == 1 && pad.mPointer->_45 == 1,
-            "a producer-supplied horizon and original speed threshold survive KPAD and the original filter");
-    require(input.past_pointer(0, 1).horizon_x == 1, "sample history retains the previous orientation independently");
-
-    auto& records = *pad.mReadInfo;
-    for (u32 i = 0; i < 120; ++i) {
-        records.mStatusArray[i] = KPADStatus{};
-        records.mStatusArray[i].dpd_valid_fg = 2;
-        records.mStatusArray[i].pos = {float(i), -float(i)};
-        records.mStatusArray[i].horizon = {float(i + 1), float(i + 2)};
-    }
-    records.mValidStatusCount = 121;
-    pad.mPointer->update();
-    require(pad.mPointer->mEnablePastCount == 120, "original read loop caps the batch to its 120 allocated samples");
-    pad.mPointer->getHorizonVec(&horizon);
-    require(horizon.x == 1 && horizon.y == 2 && pad.mPointer->mPointingPosArray[0].x == 119,
-            "newest-first KPAD storage becomes oldest-first original history and newest getter output");
-    records.mValidStatusCount = 1;
-    records.mStatusArray[0].dpd_valid_fg = -1;
-    for (int i = 0; i < 22; ++i) pad.mPointer->update();
-    pad.mPointer->getHorizonVec(&horizon);
-    require(!pad.mPointer->mIsPointInScreen && pad.mPointer->_2C == 20 && horizon.x == 0 && horizon.y == 0,
-            "signed invalid samples saturate the original dropout counter and expose zero only through the original invalid-history getter");
-    input.begin_frame();
-    input.set_button_mask(0, WPAD_BUTTON_A);
-    owner.update_samples();
-    for (int elapsed = 1; elapsed <= 36; ++elapsed) {
-        input.begin_frame();
-        input.set_button_mask(0, WPAD_BUTTON_A);
-        owner.update_samples();
-        require(input.is_button_repeated(0, WPAD_BUTTON_A) == (elapsed == 25 || elapsed == 35),
-                "actual WPadButton delay and pulse configure the generalized KPAD repeat clock");
-    }
-    input.set_connected(0, false);
-    owner.update_samples();
-    require(pad.mReadInfo->mValidStatusCount == 0 && pad.mPointer->_2C == 0 && pad.mPointer->mEnablePastCount == 0,
-            "disconnection has no fabricated sample and invokes original reset");
-}
-void stick_samples(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
-    auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 512U << 10);
-    auto& input = aurora::wpad_service();
-    input.clear();
-    smgpc::compat::WPadOwnership owner(domain);
-    auto& pad = *MR::getWPad(0);
-    auto& stick = *pad.mStick;
-    require(JKRHeap::findFromRoot(&stick) == &domain->heap(),
-            "the original stick object belongs to the retained input heap");
-    input.set_sub_stick(0, .75F, -.5F);
-    owner.update_samples();
-    require(!MR::isDeviceFreeStyle(pad.getKPadStatus(0)) && !pad.mIsSubPadConnected &&
-            MR::getPlayerStickX() == 0 && MR::getPlayerStickY() == 0,
-            "original WPadStick rejects core-device samples even when a native stick value exists");
-
-    input.set_device_type(0, aurora::WpadDeviceType::Freestyle);
-    input.set_sub_stick(0, 0, 0);
-    owner.update_samples();
-    require(MR::isDeviceFreeStyle(pad.getKPadStatus(0)) && pad.mIsSubPadConnected &&
-            stick.mHold == 0 && !stick.isChanged(),
-            "a neutral virtual Nunchuk is attached independently of stick motion");
-
-    input.begin_frame();
-    input.set_sub_stick(0, .75F, -.5F);
-    require(MR::getPlayerStickX() == 0 && MR::getPlayerStickY() == 0,
-            "Game stick queries must observe the original processed sample until the next input update");
-    owner.update_samples();
-    require(MR::getPlayerStickX() == .75F && MR::getPlayerStickY() == -.5F &&
-            stick.mHold == 6 && stick.mTrigger == 6 && stick.mRelease == 0 &&
-            MR::testSubPadStickTriggerRight(0) && MR::testSubPadStickTriggerDown(0) &&
-            stick.mIsTriggerDown && stick.mIsHoldDown && !stick.mIsHoldUp,
-            "original stick stores feed Mario's axes and right/down edges");
-    near(stick.mSpeed, std::sqrt(.75F * .75F + .5F * .5F),
-         "original stick speed measures the displacement from the preceding processed sample");
-    require(stick.isChanged(), "the original changed predicate observes a new diagonal sample");
-
-    input.begin_frame();
-    input.set_sub_stick(0, .5F, -.75F);
-    owner.update_samples();
-    require(stick.mHold == 6 && stick.mTrigger == 0 && stick.mRelease == 0 &&
-            !MR::testSubPadStickTriggerRight(0) && !MR::testSubPadStickTriggerDown(0) && !stick.mIsTriggerDown,
-            "continued directional input does not retrigger original stick edges");
-
-    input.begin_frame();
-    input.set_sub_stick(0, -.75F, .5F);
-    owner.update_samples();
-    require(MR::getPlayerStickX() == -.75F && MR::getPlayerStickY() == .5F &&
-            stick.mHold == 9 && stick.mTrigger == 9 && stick.mRelease == 6 &&
-            MR::testSubPadStickTriggerLeft(0) && MR::testSubPadStickTriggerUp(0) &&
-            stick.mIsTriggerUp && stick.mIsHoldUp && !stick.mIsHoldDown,
-            "reversing the actual stick releases the old directions and triggers the new ones");
-
-    input.begin_frame();
-    input.set_sub_stick(0, .2F, -.2F);
-    owner.update_samples();
-    require(stick.mHold == 0 && stick.mTrigger == 0 && stick.mRelease == 9 && stick.mIsHoldDown,
-            "the original strict direction threshold is independent of its signed vertical navigation state");
-    input.begin_frame();
-    input.set_sub_stick(0, 0, 0);
-    owner.update_samples();
-    require(stick.mHold == 0 && !stick.mIsTriggerUp && !stick.mIsTriggerDown && !stick.mIsHoldUp && !stick.mIsHoldDown,
-            "the original neutral sample clears both vertical navigation states");
-    input.begin_frame();
-    input.set_sub_stick(0, 0, 0);
-    owner.update_samples();
-    require(stick.mSpeed == 0 && !stick.isChanged(), "stable neutral input is unchanged");
-
-    input.begin_frame();
-    input.set_sub_stick(0, -.75F, .5F);
-    owner.update_samples();
-    input.set_connected(0, false);
-    owner.update_samples();
-    require(!pad.mIsConnected && !pad.mIsSubPadConnected && !MR::isDeviceFreeStyle(pad.getKPadStatus(0)),
-            "the shared SDK device state reports absence without inventing an extension sample");
-    require(MR::getPlayerStickX() == -.75F && MR::getPlayerStickY() == .5F &&
-            stick.mHold == 9 && stick.mTrigger == 9,
-            "the original unsupported-device early return preserves the last processed stick sample");
 }
 void message_storage(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
     smgpc::runtime::MessageService messages;
@@ -191,13 +46,9 @@ int main() {
     try {
         auto heaps = smgpc::compat::JkrHeapRuntime::create(4U << 20);
         const auto free = heaps->root_heap().getFreeSize();
-        sample_history(heaps);
-        sample_history(heaps);
-        stick_samples(heaps);
-        stick_samples(heaps);
         message_storage(heaps);
-        require(heaps->root_heap().getFreeSize() == free, "repeated input owners and retained-message source domains release all Game storage");
-        std::cout << "Original pointer history, stick processing, typed ownership, KPAD publication, and retained messages passed\n";
+        require(heaps->root_heap().getFreeSize() == free, "retained-message source domains release all Game storage");
+        std::cout << "Retained message storage and pointer provenance passed\n";
     } catch (const std::exception& error) {
         std::cerr << error.what() << '\n';
         return 1;

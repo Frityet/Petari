@@ -1,0 +1,64 @@
+{
+  "build": {
+    "command": "xmake build smg-pc",
+    "exit_code": 0,
+    "log": "build.log"
+  },
+  "opening_smoke": {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc",
+      "--disc",
+      "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--stage",
+      "HeavensDoorGalaxy",
+      "--scenario",
+      "1",
+      "--max-frames",
+      "120"
+    ],
+    "environment": {
+      "SMGPC_SAVE_DIR": "/Users/frityet/Projects/petari/notes/compat-owner-removal-round11-20260925/gateway-fixed-120-nand",
+      "SMGPC_NAND_DIR": "",
+      "SMGPC_ORIGINAL_PLACEMENT_REPORT_PATH": "/Users/frityet/Projects/petari/notes/compat-owner-removal-round11-20260925/gateway-fixed-120-placements.json",
+      "AURORA_BACKEND": "metal",
+      "SMGPC_WINDOW_WIDTH": "1280",
+      "SMGPC_WINDOW_HEIGHT": "720",
+      "SMGPC_SCREENSHOT_PATH": "/Users/frityet/Projects/petari/notes/compat-owner-removal-round11-20260925/gateway-fixed-120-frame9999.png",
+      "SMGPC_SCREENSHOT_FRAME": "9999",
+      "SMGPC_DEBUG_WPAD_INPUT_FILE": "",
+      "SMGPC_DEBUG_FRAME_TIMING": "",
+      "SMGPC_DEBUG_ACTOR_TRACE_PATH": "",
+      "SMGPC_DEBUG_ACTOR_TRACE_TYPES": "",
+      "SMGPC_DEBUG_ACTOR_TRACE_INTERVAL": "60",
+      "SMGPC_DEBUG_LAYOUT_DUMP_PATH": "",
+      "SMGPC_DEBUG_LAYOUT_DUMP_FRAME": "",
+      "SMGPC_DEBUG_WPAD_BUTTON_SCRIPT": "",
+      "SMGPC_DEBUG_WPAD_POINTER_SCRIPT": "",
+      "SMGPC_DEBUG_WPAD_STICK_SCRIPT": ""
+    },
+    "binary_sha256": "40c44faed865d59688352d52709bdd59a4b528258ceb88e085944219776e3d58",
+    "started_at": "2026-09-25T16:50:49.368832+00:00",
+    "pid": 90192,
+    "exit_code": 0,
+    "timeout_terminated": false,
+    "inherited_smgpc_environment_removed": true,
+    "binary_sha256_after": "40c44faed865d59688352d52709bdd59a4b528258ceb88e085944219776e3d58",
+    "binary_unchanged": true,
+    "elapsed_seconds": 2.863521082967054,
+    "process_still_exists_after_wait": false,
+    "completed_frames": 120,
+    "verified_bounded_completion": true
+  },
+  "compat_files_before": 91,
+  "compat_files_after": 76,
+  "compat_files_removed": 15,
+  "focused_tests_run": false,
+  "full_gateway_to_rosalina_verified": false,
+  "initial_failure": {
+    "record": "gateway-120.json",
+    "backtrace": "startup-backtrace2.log",
+    "cause": "Native permanent registration retirement resolved the cleared current scene instead of its retained executor."
+  },
+  "preexisting_index_preserved": true,
+  "scope": "Integrated working checkout; unrelated preexisting changes preserved and not represented as validation of an isolated clean checkout."
+}

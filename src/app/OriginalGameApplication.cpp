@@ -37,8 +37,8 @@
 #include "Game/System/FileLoader.hpp"
 #include "Game/System/FunctionAsyncExecutor.hpp"
 #include "compat/NandSdkBinding.hpp"
-#include "compat/StarPointerDepthOwnership.hpp"
-#include "layout/LayoutHost.hpp"
+#include "Game/Screen/StarPointerDirector.hpp"
+#include "Game/Screen/LayoutActor.hpp"
 #include "scene/OriginalSceneSupport.hpp"
 #include "scene/SceneNameObjRegistry.hpp"
 #include "resource/GameResourceRuntime.hpp"
@@ -421,13 +421,13 @@ private:
             delete std::exchange(controller->mPlayTimerScene, nullptr);
             delete std::exchange(controller->mIntermissionScene, nullptr);
         }
-        if (objects) compat::destroy_star_pointer_director(objects->mStarPointerDirector);
+        if (objects) delete std::exchange(objects->mStarPointerDirector, nullptr);
         if (DrawSyncManager::sInstance) DrawSyncManager::end();
         // Original heap retirement releases raw Game arrays as arrays. Remove
         // native sidecars while all borrowed original records are still alive;
         // never individually delete an array element through NameObj*.
         while (auto* object = compat::newest_name_obj_runtime_object_since_if(marker, nullptr, nullptr)) {
-            layout::release_layout_actor_if_registered(object);
+            if (auto* actor = dynamic_cast<LayoutActor*>(object)) actor->releaseNativeResources();
             if (auto* actor = dynamic_cast<LiveActor*>(object)) compat::release_actor_runtime_state(actor);
             scene::unregister_scene_name_obj(*object);
             compat::release_name_obj_runtime_state(object);

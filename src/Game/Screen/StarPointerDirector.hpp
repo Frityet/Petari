@@ -41,6 +41,7 @@ public:
 class StarPointerDirector {
 public:
     StarPointerDirector();
+    ~StarPointerDirector();
 
     void update();
     void draw();

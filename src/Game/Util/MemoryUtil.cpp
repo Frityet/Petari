@@ -129,4 +129,13 @@ namespace MR {
         return (static_cast<u32>(sum) << 16) | inverse_sum;
     }
 
+    void* allocFromWPadHeap(u32 size) {
+        return SingletonHolder< HeapMemoryWatcher >::get()->mWPadHeap->alloc(size, 0);
+    }
+
+    u8 freeFromWPadHeap(void* pPtr) {
+        SingletonHolder< HeapMemoryWatcher >::get()->mWPadHeap->free(pPtr);
+
+        return 1;
+    }
 };  // namespace MR

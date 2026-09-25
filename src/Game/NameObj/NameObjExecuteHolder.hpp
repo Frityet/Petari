@@ -3,6 +3,7 @@
 #include "Game/NameObj/NameObj.hpp"
 
 class LiveActor;
+class NameObjListExecutor;
 
 class NameObjExecuteInfo {
     friend class NameObjExecuteHolder;
@@ -26,8 +27,12 @@ public:
     void disconnectToScene();
     void connectToDraw();
     void disconnectToDraw();
+    void retireNativeRegistration(NameObjListExecutor&);
 
 private:
+    void disconnectToScene(NameObjListExecutor&);
+    void disconnectToDraw(NameObjListExecutor&);
+
     /* 0x0 */ NameObj* mExecutedObj;
     /* 0x4 */ s8 _4;
     /* 0x5 */ s8 _5;
@@ -41,6 +46,7 @@ private:
 class NameObjExecuteHolder : public NameObj {
 public:
     NameObjExecuteHolder(int);
+    ~NameObjExecuteHolder() override;
 
     void registerActor(NameObj*, int, int, int, int);
     void initConnectting();

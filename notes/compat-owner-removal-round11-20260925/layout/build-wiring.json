@@ -1,0 +1,29 @@
+{
+  "enable": [
+    "src/Game/Screen/LayoutActor.cpp",
+    "src/Game/Screen/LayoutPaneCtrl.cpp"
+  ],
+  "add": [
+    "src/nw4r/math/math_types.cpp"
+  ],
+  "preserve_scalar_flags": [
+    "src/Game/Screen/LayoutManager.cpp",
+    "src/Game/Screen/LayoutActor.cpp",
+    "src/Game/Screen/LayoutPaneCtrl.cpp",
+    "src/Game/Screen/LayoutGroupCtrl.cpp",
+    "src/nw4r/math/math_types.cpp"
+  ],
+  "remove_globbed_sources": [
+    "src/compat/OriginalLayoutLocale.cpp",
+    "src/layout/LayoutManagerCompat.cpp",
+    "src/layout/LayoutHost.hpp",
+    "src/layout/LayoutUtilCompat.cpp"
+  ],
+  "native_runtime_prerequisites": [
+    "original GameSystem resource/file loader and language/font holders",
+    "MR::initLayoutSystem NewDeleteAllocator",
+    "original ResourceHolderManager LayoutHolder and resource lifetime",
+    "SDK Layout::Build / NativeLayoutResource / LytTexMap / NW4R material+draw support"
+  ],
+  "owner": "root integrates all build files"
+}

@@ -1,0 +1,54 @@
+{
+  "base_head": "497ca5d2f8e782c0674b80021382520e15f34a7a",
+  "paths": [
+    {
+      "path": "src/Game/NameObj/NameObjExecuteHolder.cpp",
+      "existed_before": false,
+      "before_sha256": null,
+      "status_before": "",
+      "action": "restore-donor",
+      "after_sha256": "c34177bdf658fc2a87e8438907da6688e36ee837c0f2e5ccfe3eb67f55678478"
+    },
+    {
+      "path": "src/Game/NameObj/NameObjExecuteHolder.hpp",
+      "existed_before": true,
+      "before_sha256": "c64a8d278cfb0874830ef98d20182b35b8b9f71d7416d7704998c8f808927705",
+      "status_before": "",
+      "action": "add-owned-array-destructor",
+      "after_sha256": "3662ab38ea857e9483934ba5821582365879147076d7dd70fb08da24e5598ff9"
+    },
+    {
+      "path": "src/compat/OriginalNameObjExecuteHolder.cpp",
+      "existed_before": true,
+      "before_sha256": "343ca94a801427ba808a4732b29169713c7ad7c43d82f507bcd6b9f4d5331e38",
+      "status_before": "",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/Game/NameObj/NameObjCategoryList.cpp",
+      "existed_before": true,
+      "before_sha256": "ec55f4e87b0570f12287e3682ffdcf548d9c42087758b694cf0d4ac1ca3e8758",
+      "status_before": "",
+      "action": "native-category-retirement-safety",
+      "after_sha256": "4dee8301e442d5fab3dd86e0f1755f82c9bb8403bbb5b08e7d811bf97c34df05"
+    },
+    {
+      "path": "src/Game/NameObj/NameObjCategoryList.hpp",
+      "existed_before": true,
+      "before_sha256": "cbb46040759184cc5fe334e3360c97e062e9a703bf60c9bd1590ca4d1556c49b",
+      "status_before": "",
+      "action": "native-category-retirement-safety",
+      "after_sha256": "db54ac63a4b50eb72fae9e4e724d5d96b09a054587ddc16cd6f285909564922c"
+    },
+    {
+      "path": "src/runtime/SceneScheduler.cpp",
+      "existed_before": true,
+      "before_sha256": "b2be7715d730feab1ef59df77b8e46a80ae0afa5fa3691187c915f3e99bcdf21",
+      "status_before": "M src/runtime/SceneScheduler.cpp",
+      "action": "explicit-executor-retirement-only",
+      "shared_with_root": true,
+      "after_sha256": "e7c413c175ff5f92c7e204734065b881107c6d8ec52d36666912a61ef1a91edd"
+    }
+  ]
+}

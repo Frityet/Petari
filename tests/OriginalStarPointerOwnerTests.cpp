@@ -11,8 +11,6 @@
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/System/LayoutHolder.hpp"
 #include "Game/Animation/LayoutAnmPlayer.hpp"
-#include "layout/LayoutHost.hpp"
-#include "layout/LayoutRuntime.hpp"
 #include "layout/LayoutResourceResolver.hpp"
 #include "layout/BrlytLayout.hpp"
 #include <nw4r/lyt/group.h>
@@ -146,9 +144,8 @@ void original_gpu_depth(StarPointerDirector& director) {
 
 void group_resource_and_dispatch(StarPointerLayout& layout) {
     auto* manager = layout.getLayoutManager();
-    const auto* native = smgpc::layout::layout_runtime(&layout);
     const auto& archive = manager->mLayoutHolder->nativeResourceSource();
-    const auto* entry = smgpc::layout::find_layout_brlyt(archive.entries(), native->getLayoutName());
+    const auto* entry = smgpc::layout::find_layout_brlyt(archive.entries(), manager->mLayoutName);
     require(entry, "actual pointer archive contains its named BRLYT");
     const auto resource = smgpc::layout::parse_brlyt_layout(archive.file_data(*entry));
     u32 catalog_index = 0;

@@ -1,0 +1,6 @@
+[
+  "tests/LayoutRealOrAbsentTests.cpp",
+  "tests/OriginalSceneWipeOwnerTests.cpp",
+  "tests/OriginalLayoutGroupTests.cpp",
+  "tests/OriginalCameraDirectorTests.cpp"
+]

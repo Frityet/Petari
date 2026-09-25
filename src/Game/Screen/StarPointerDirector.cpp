@@ -1,30 +1,29 @@
-#include <aurora/allocation.hpp>
-#include "resource/TextEncoding.hpp"
+#include "compat/Cp932Literal.hpp"
 #include "Game/Screen/StarPointerDirector.hpp"
 #include "Game/Screen/LayoutCoreUtil.hpp"
 #include "Game/Screen/StarPointerController.hpp"
+#include "Game/Screen/StarPointerGuidance.hpp"
 #include "Game/Screen/StarPointerLayout.hpp"
-#include "Game/Util/CameraUtil.hpp"
-#include "Game/Util/GamePadUtil.hpp"
-#include "Game/Util/LayoutUtil.hpp"
-#include "Game/Util/ScreenUtil.hpp"
-#include "Game/Util/StarPointerUtil.hpp"
-#include "compat/StarPointerDepthOwnership.hpp"
+#include "Game/Screen/StarPointerBlur.hpp"
+#include "Game/Screen/StarPointerCommandStream.hpp"
+#include "Game/LiveActor/Spine.hpp"
+#include "compat/DrawSyncManagerLifetime.hpp"
+#include "Game/System/DrawSyncManager.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemObjHolder.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/GamePadUtil.hpp"
+#include "Game/Util/JMapInfo.hpp"
+#include "Game/Util/LayoutUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
-#include <aurora/exception.hpp>
-#include <stdexcept>
-
-namespace {
-    // These stable Game names outlive every owner that borrows their bytes.
-    std::string encode_owner_name(std::string_view name) {
-        aurora::allocation::HostAllocationScope host;
-        return smgpc::resource::encode_cp932(name);
-    }
-
-    const std::string cStarPointerGuidanceName = encode_owner_name("スターポインタガイダンス");
-}  // namespace
+#include "Game/Util/StarPointerUtil.hpp"
+#include <JSystem/JGeometry/TMatrix.hpp>
+#include <JSystem/JMath/JMath.hpp>
+#include <JSystem/JUtility/JUTTexture.hpp>
+#include <aurora/guest_thread.hpp>
+#include <revolution/gx/GXGet.h>
 
 StarPointerDirector::StarPointerDirector()
     : mIsUpdateTransHolder(false), mIsAllowP1StarPieceShot(false), mIsAllowP2StarPieceShot(false), mControllers(nullptr),
@@ -35,6 +34,50 @@ StarPointerDirector::StarPointerDirector()
     for (s32 channel = 0; channel < StarPointerFunction::getNumStarPointer(); channel++) {
         mControllers[channel].initAndSetPort(channel);
         mPeekZ->mInfos[channel] = &mControllers[channel].mInfo;
+    }
+}
+
+StarPointerDirector::~StarPointerDirector() {
+    const aurora::os::GuestThreadExecutionScope execution;
+    smgpc::compat::quiesce_draw_sync();
+    if (auto* manager = DrawSyncManager::sInstance) {
+        for (auto& range : manager->mTokenRanges) {
+            if (range.mCallback == mPeekZ) {
+                range = {};
+            }
+        }
+    }
+
+    if (auto* guidance = mGuidance) {
+        delete guidance->mSpineFrame1P;
+        delete guidance->mSpineGuidance;
+        delete guidance->mSpineFrame2P;
+        delete guidance;
+        mGuidance = nullptr;
+    }
+    if (auto* layouts = mStarPointerLayouts) {
+        for (s32 port = 0; port < 2; ++port) {
+            auto& layout = layouts[port];
+            delete layout.mNumber;
+            delete layout.mCommandStream;
+            if (auto* blur = layout.mBlur) {
+                delete blur->mTexture;
+                delete[] blur->mBlurPoints;
+                delete[] blur->mBlurThicks;
+                delete[] blur->mBlurTexCoords;
+                delete blur;
+            }
+        }
+        // Each original layout is an array element, not a separately owned
+        // NameObj allocation. Its real destructor releases the native layout.
+        delete[] layouts;
+        mStarPointerLayouts = nullptr;
+    }
+    delete[] mControllers;
+    delete mTransHolder;
+    if (auto* peek = mPeekZ) {
+        delete[] peek->mInfos;
+        delete peek;
     }
 }
 
@@ -130,7 +173,7 @@ StarPointerController* StarPointerDirector::getStarPointerController(s32 channel
 }
 
 StarPointerLayout* StarPointerDirector::getStarPointerLayout(s32 channel) const {
-    // Preserve the retail null-array test without native null-pointer arithmetic.
+    // Preserve the original null-array check without native null-pointer arithmetic.
     return mStarPointerLayouts ? &mStarPointerLayouts[channel] : nullptr;
 }
 
@@ -142,8 +185,52 @@ void StarPointerDirector::createLayout() {
         mStarPointerLayouts[channel].mDirector = this;
     }
 
-    mGuidance = new StarPointerGuidance(cStarPointerGuidanceName.c_str());
+    mGuidance = new StarPointerGuidance(CP932("スターポインタガイダンス"));
     mGuidance->initWithoutIter();
+}
+
+namespace {
+    static f32 mtx_identity[3][4] = {{1.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f, 0.0f}};
+};  // namespace
+
+StarPointerTransformHolder::StarPointerTransformHolder() : mViewMtx(mtx_identity) {
+    // Retail copies 16 floats from its 12-float identity symbol, reading into
+    // the adjacent vtable. Copy the defined rows on native hosts; the real
+    // camera supplies all 16 projection elements before depth submission.
+    for (s32 row = 0; row < 3; ++row) {
+        for (s32 column = 0; column < 4; ++column) {
+            mProjMtx.mMtx[row][column] = mtx_identity[row][column];
+        }
+    }
+}
+
+void StarPointerTransformHolder::movement() {
+    f32 fovyRad = PI_180 * getFovy();
+    mFocalLength = ((MR::getScreenHeight() * 0.5f) / MR::tan(fovyRad * 0.5f));
+}
+
+StarPointerPeekZ::StarPointerPeekZ() {
+    mInfos = new DpdInfo*[2];
+    mToken = DrawSyncManager::sInstance->setCallback(2, 1, this);
+}
+
+void StarPointerPeekZ::setDrawSyncToken() {
+    GXGetProjectionv(mProjectionParameters);
+    GXGetViewportv(mViewportParameters);
+    DrawSyncManager::sInstance->pushBreakPoint();
+    GXSetDrawSync(mToken);
+}
+
+void StarPointerPeekZ::drawSyncCallback(u16 token) {
+    for (s32 channel = 0; channel < StarPointerFunction::getNumStarPointer(); channel++) {
+        if (MR::isInRange(mInfos[channel]->mPos.x, 0.0f, MR::getScreenWidth() - 1) &&
+            MR::isInRange(mInfos[channel]->mPos.y, 0.0f, MR::getScreenHeight() - 1)) {
+            TVec2f pos;
+            MR::convertScreenPosToFrameBufferPos(&pos, mInfos[channel]->mPos);
+            GXPeekZ(pos.x, pos.y, &mInfos[channel]->mZDepth);
+            mInfos[channel]->mDrawReady = true;
+        }
+    }
 }
 
 namespace StarPointerFunction {
@@ -173,13 +260,38 @@ namespace StarPointerFunction {
         return isOnScreenEdge(pos, 0.0f, 0.0f);
     }
 
-    StarPointerDirector* getStarPointerDirector() {
-        if (auto* system = SingletonHolder<GameSystem>::get()) {
-            if (!system->mObjHolder || !system->mObjHolder->mStarPointerDirector)
-                aurora::throw_host_exception<std::logic_error>("The original process has not created its pointer director.");
-            return system->mObjHolder->mStarPointerDirector;
+    bool forceInsideScreenEdge(TVec2f* pPos) {
+        bool forced = false;
+
+        f32 margin = 0.0f;
+        f32 width = MR::getScreenWidth() - margin;
+        f32 height = MR::getScreenHeight() - margin;
+
+        if (pPos->x < margin) {
+            pPos->x = margin;
+            forced = true;
+        } else if (width < pPos->x) {
+            pPos->x = width;
+            forced = true;
         }
-        return &smgpc::compat::require_star_pointer_depth().director();
+
+        if (pPos->y < margin) {
+            pPos->y = margin;
+            forced = true;
+        } else if (height < pPos->y) {
+            pPos->y = height;
+            forced = true;
+        }
+
+        return forced;
+    }
+
+    StarPointerDirector* getStarPointerDirector() {
+        return SingletonHolder< GameSystem >::get()->mObjHolder->mStarPointerDirector;
+    }
+
+    s32 getNumStarPointer() {
+        return 2;
     }
 
     s32 getPastPointNum(s32 channel) {
@@ -197,5 +309,4 @@ namespace StarPointerFunction {
     bool canShoot(s32 channel) {
         return getStarPointerDirector()->getStarPointerLayout(channel)->mShootDisabled == false;
     }
-
-} // namespace StarPointerFunction
+};  // namespace StarPointerFunction

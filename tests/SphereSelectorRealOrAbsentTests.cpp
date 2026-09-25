@@ -12,7 +12,6 @@
 #include "Game/Util/StarPointerUtil.hpp"
 #include "Game/Demo/DemoDirector.hpp"
 #include "Game/Demo/DemoSimpleCastHolder.hpp"
-#include "compat/StarPointerDepthOwnership.hpp"
 #include "camera/CameraDirectorRuntime.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -147,12 +146,6 @@ namespace {
         require(layouts.is_default_game_layout_active(),
                 "Sphere teardown must restore the default layout through the inverse operation");
 
-        require(smgpc::compat::try_star_pointer_depth() == nullptr,
-                "the absent-pointer query must have no original controller owner");
-        require_logic_error(
-            [] { (void)MR::getStarPointerScreenPositionOrEdge(WPAD_CHAN0); },
-            "Original pointer controllers require their runtime owner",
-            "a pointer-edge query must require its original controller owner");
         require(smgpc::camera::current_original_camera_context() == nullptr,
                 "the absent-camera query must have no original CameraContext owner");
         require_logic_error(

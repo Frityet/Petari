@@ -28,6 +28,7 @@ public:
     virtual ~LayoutHolder();
     virtual void* GetResource(u32, const char*, u32*);
     virtual nw4r::ut::Font* GetFont(const char*);
+    std::shared_ptr<const nw4r::lyt::HostTextureResourceState> GetHostTextureResourceState(const char*) override;
     virtual void* getResOther(const char*) const;
     virtual u32 getResOtherNum() const;
     virtual const char* getResOtherName(u32) const;

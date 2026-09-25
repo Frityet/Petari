@@ -47,7 +47,7 @@ namespace smgpc::layout {
 }
 
 namespace aurora::audio { class DisabledObjectAudioService; }
-namespace smgpc::compat { class StarPointerDepthOwnership; class DrawSyncManagerLifetime; class NandSdkBinding; }
+namespace smgpc::compat { class DrawSyncManagerLifetime; class NandSdkBinding; }
 
 namespace smgpc::runtime {
 
@@ -322,7 +322,6 @@ namespace smgpc::runtime {
         WipeService _system_wipe;
         StarPointerService _star_pointer;
         std::unique_ptr<compat::DrawSyncManagerLifetime> _draw_sync;
-        std::unique_ptr<compat::StarPointerDepthOwnership> _star_pointer_depth;
         PlayerSystemService _player_system;
         GameLayoutService _game_layout;
         RumbleService _rumble;

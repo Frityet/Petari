@@ -127,7 +127,14 @@ namespace nw4r {
         };
 
         struct VEC3 : public _VEC3 {
+            VEC3() {
+            }
 
+            VEC3(f32 fx, f32 fy, f32 fz) {
+                x = fx;
+                y = fy;
+                z = fz;
+            }
         };
 
         struct VEC4 : public _VEC4 {
@@ -167,6 +174,8 @@ namespace nw4r {
 
         };
 
+
+        VEC3* VEC3TransformNormal(VEC3* pOut, const MTX34* pM, const VEC3* pV);
 
         inline MTX34* MTX34Mult(MTX34* pOut, const MTX34* pA, const MTX34* pB) {
             PSMTXConcat(*pA, *pB, *pOut);

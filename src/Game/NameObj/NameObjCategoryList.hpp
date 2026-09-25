@@ -3,6 +3,7 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjHolder.hpp"
 #include "Game/Util/Array.hpp"
+#include <memory>
 
 namespace MR {
     class FunctorBase;
@@ -69,4 +70,7 @@ public:
 
     u8 _C;
     u8 _D;
+
+private:
+    std::shared_ptr<bool> mNativeLifetime;
 };

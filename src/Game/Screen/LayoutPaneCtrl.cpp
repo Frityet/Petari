@@ -6,12 +6,25 @@
 #include <nw4r/lyt/pane.h>
 
 LayoutPaneCtrl::LayoutPaneCtrl(LayoutManager* pHost, const char* pPaneName, u32 animLayerNum)
-    : mHost(pHost), mPane(nullptr), mPaneIndex(-1), mAnmPlayerArray(animLayerNum), mFollowType(0), mFollowPos(nullptr) {
-    mPane = mHost->getPane(pPaneName);
+    : mHost(pHost), mPane(), mPaneIndex(-1), mAnmPlayerArray(animLayerNum), mFollowType(), mFollowPos() {
+    LayoutManager* pManager = mHost;
+    mPane = pPaneName == nullptr ? pManager->mLayout->mpRootPane : pManager->mLayout->mpRootPane->FindPaneByName(pPaneName, true);
 
-    for (u32 i = 0; i < mAnmPlayerArray.size(); i++) {
-        mAnmPlayerArray[i] = new LayoutAnmPlayer(pHost);
+    for (u32 i = 0; i < mAnmPlayerArray.size(); i++)
+        mAnmPlayerArray[i] = nullptr;
+    try {
+        for (u32 i = 0; i < mAnmPlayerArray.size(); i++)
+            mAnmPlayerArray[i] = new LayoutAnmPlayer(pHost);
+    } catch (...) {
+        for (auto* player : mAnmPlayerArray)
+            delete player;
+        throw;
     }
+}
+
+LayoutPaneCtrl::~LayoutPaneCtrl() {
+    for (auto* player : mAnmPlayerArray)
+        delete player;
 }
 
 void LayoutPaneCtrl::movement() {
@@ -60,49 +73,50 @@ void LayoutPaneCtrl::reflectFollowPos() {
         return;
     }
 
-    nw4r::math::MTX34 matrix;
-    PSMTXCopy(mPane->mGlbMtx, matrix);
+    nw4r::math::MTX34 global;
+    nw4r::math::MTX34Copy(&global, &mPane->mGlbMtx);
+
     switch (mFollowType) {
     case 0: {
         TVec2f position;
         MR::convertScreenPosToLayoutPos(&position, *mFollowPos);
-        matrix._03 = position.x;
-        matrix._13 = position.y;
+        global._03 = position.x;
+        global._13 = position.y;
         break;
     }
     case 1: {
-        TVec2f origin;
-        MR::convertLayoutPosToScreenPos(&origin, TVec2f(0.0f, 0.0f));
-        TVec2f offset(origin + *mFollowPos);
+        TVec2f screenOrigin;
+        MR::convertLayoutPosToScreenPos(&screenOrigin, TVec2f(0.0f, 0.0f));
+        TVec2f offset(screenOrigin + *mFollowPos);
         MR::convertScreenPosToLayoutPos(&offset, offset);
-        matrix._03 += offset.x;
-        matrix._13 += offset.y;
+        global._03 += offset.x;
+        global._13 += offset.y;
         break;
     }
     case 2: {
         nw4r::math::MTX34 local = mPane->mMtx;
         nw4r::math::MTX34 inverse;
         PSMTXInverse(local, inverse);
-        PSMTXConcat(matrix, inverse, matrix);
+        nw4r::math::MTX34Mult(&global, &global, &inverse);
+
         nw4r::math::MTX34 replacement;
-        PSMTXCopy(local, replacement);
+        nw4r::math::MTX34Copy(&replacement, &local);
         replacement._03 = mFollowPos->x;
         replacement._13 = mFollowPos->y;
-        PSMTXConcat(matrix, replacement, matrix);
+        MtxPtr pGlobal = global;
+        PSMTXConcat(pGlobal, replacement, pGlobal);
         break;
     }
     case 3: {
-        nw4r::math::VEC3 offset;
-        offset.x = mFollowPos->x;
-        offset.y = mFollowPos->y;
-        offset.z = 0.0f;
+        nw4r::math::VEC3 offset(mFollowPos->x, mFollowPos->y, 0.0f);
         nw4r::math::VEC3TransformNormal(&offset, &mPane->mMtx, &offset);
-        matrix._03 += offset.x;
-        matrix._13 += offset.y;
+        global._03 += offset.x;
+        global._13 += offset.y;
         break;
     }
     }
-    mPane->mGlbMtx = matrix;
+
+    mPane->mGlbMtx = global;
     recalcChildGlobalMtx(mPane);
 }
 
@@ -111,10 +125,12 @@ J3DFrameCtrl* LayoutPaneCtrl::getFrameCtrl(u32 layer) const {
 }
 
 void LayoutPaneCtrl::recalcChildGlobalMtx(nw4r::lyt::Pane* pPane) {
-    for (nw4r::lyt::PaneList::Iterator it = pPane->mChildList.GetBeginIter(); it != pPane->mChildList.GetEndIter(); ++it) {
-        nw4r::math::MTX34 matrix;
-        PSMTXConcat(it->mpParent->mGlbMtx, it->mMtx, matrix);
-        it->mGlbMtx = matrix;
-        recalcChildGlobalMtx(&*it);
+    nw4r::lyt::PaneList& rChildren = pPane->GetChildList();
+    for (nw4r::lyt::PaneList::Iterator iter = rChildren.GetBeginIter(); iter != rChildren.GetEndIter(); iter++) {
+        nw4r::lyt::Pane& rChild = *iter;
+        nw4r::math::MTX34 global;
+        nw4r::math::MTX34Mult(&global, &rChild.GetParent()->mGlbMtx, &rChild.mMtx);
+        rChild.mGlbMtx = global;
+        recalcChildGlobalMtx(&rChild);
     }
 }

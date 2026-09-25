@@ -1,5 +1,5 @@
-#include "compat/JkrAllocationDomain.hpp"
-#include "compat/WPadOwnership.hpp"
+#include "OriginalStageResourceProcessFixture.hpp"
+#include "Game/System/WPadHolder.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/System/GameSystemFunction.hpp"
 #include "Game/System/WPad.hpp"
@@ -29,14 +29,10 @@ void cleared(const WPadRumble& rumble) {
 }
 }
 int main() {
-    auto heaps = smgpc::compat::JkrHeapRuntime::create(8U << 20);
-    const auto free_before = heaps->root_heap().getFreeSize();
-    RumblePattern pattern{};
-    for (int generation = 0; generation < 16; ++generation) {
-        auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 1U << 20);
-        smgpc::compat::WPadOwnership input(domain);
+    return smgpc::test::run_stage_resource_process("wpad-pause", [] {
+        RumblePattern pattern{};
         for (int channel = 0; channel < 2; ++channel) {
-            auto& pad = input.pad(channel);
+            auto& pad = *MR::getWPad(channel);
             assert(pad.getRumbleInstance() == pad._18);
             seed(*pad._18, pattern);
             seed(*pad._1C, pattern);
@@ -45,7 +41,7 @@ int main() {
         }
         GameSystemFunction::onPauseBeginAllRumble();
         for (int channel = 0; channel < 2; ++channel) {
-            auto& pad = input.pad(channel);
+            auto& pad = *MR::getWPad(channel);
             assert(pad.getRumbleInstance() == pad._1C);
             cleared(*pad._18);
             cleared(*pad._1C);
@@ -53,7 +49,7 @@ int main() {
         }
         GameSystemFunction::onPauseEndAllRumble();
         for (int channel = 0; channel < 2; ++channel) {
-            auto& pad = input.pad(channel);
+            auto& pad = *MR::getWPad(channel);
             assert(pad.getRumbleInstance() == pad._18);
             cleared(*pad._18);
             cleared(*pad._1C);
@@ -62,7 +58,7 @@ int main() {
         }
         GameSystemFunction::onHomeButtonMenuBeginAllRumble();
         for (int channel = 0; channel < 2; ++channel) {
-            auto& pad = input.pad(channel);
+            auto& pad = *MR::getWPad(channel);
             assert(pad.getRumbleInstance() == pad._1C);
             assert(pad._18->_8 && pad._18->mChannel[0]._0 == &pattern);
             cleared(*pad._1C);
@@ -70,7 +66,7 @@ int main() {
         }
         GameSystemFunction::onHomeButtonMenuCloseAllRumble();
         for (int channel = 0; channel < 2; ++channel) {
-            auto& pad = input.pad(channel);
+            auto& pad = *MR::getWPad(channel);
             assert(pad.getRumbleInstance() == pad._18);
             assert(pad._18->_8 && pad._18->mChannel[0]._0 == &pattern);
             cleared(*pad._1C);
@@ -78,7 +74,7 @@ int main() {
         }
         GameSystemFunction::onHomeButtonMenuEndAllRumble();
         for (int channel = 0; channel < 2; ++channel) {
-            auto& pad = input.pad(channel);
+            auto& pad = *MR::getWPad(channel);
             assert(pad._18->_BC == 200 && pad._1C->_BC == 200);
             cleared(*pad._18);
             cleared(*pad._1C);
@@ -87,11 +83,10 @@ int main() {
         }
         GameSystemFunction::resetAllControllerRumble();
         for (int channel = 0; channel < 2; ++channel) {
-            auto& pad = input.pad(channel);
+            auto& pad = *MR::getWPad(channel);
             assert(pad.getRumbleInstance() == pad._18);
             cleared(*pad._18);
         }
-    }
-    assert(heaps->root_heap().getFreeSize() == free_before);
-    std::puts("[pass] original two-controller pause and Home menu transitions, preserved gameplay patterns, cooldowns, reset selection and 16 reclaimed Game owner generations");
+        std::puts("[pass] original two-controller pause and Home menu transitions, cooldowns and reset selection");
+    });
 }

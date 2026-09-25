@@ -1,9 +1,19 @@
 #include "Game/NameObj/NameObjCategoryList.hpp"
 #include "Game/Util/Functor.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
+#include <aurora/allocation.hpp>
 #include <algorithm>
+#include <vector>
+
+namespace {
+    std::shared_ptr<bool> createNativeLifetime() {
+        const aurora::allocation::HostAllocationScope host;
+        return std::make_shared<bool>(true);
+    }
+}
 
 NameObjCategoryList::NameObjCategoryList(u32 count, const CategoryListInitialTable* pTable, NameObjMethod pMethod, bool a4,
-                                         const char* /* unused */) {
+                                         const char* /* unused */) : mNativeLifetime(createNativeLifetime()) {
     NameObjMethod method;
     method = pMethod;
     mDelegator = new NameObjRealDelegator< NameObjMethod >(method);
@@ -13,7 +23,7 @@ NameObjCategoryList::NameObjCategoryList(u32 count, const CategoryListInitialTab
 }
 
 NameObjCategoryList::NameObjCategoryList(u32 count, const CategoryListInitialTable* pTable, NameObjMethodConst pMethod, bool a4,
-                                         const char* /* unused */) {
+                                         const char* /* unused */) : mNativeLifetime(createNativeLifetime()) {
     NameObjMethodConst method;
     method = pMethod;
     mDelegatorConst = new NameObjRealDelegator< NameObjMethodConst >(method);
@@ -23,10 +33,12 @@ NameObjCategoryList::NameObjCategoryList(u32 count, const CategoryListInitialTab
 }
 
 NameObjCategoryList::~NameObjCategoryList() {
+    *mNativeLifetime = false;
     delete mDelegator;
 }
 
 void NameObjCategoryList::execute(int idx) {
+    const auto lifetime = mNativeLifetime;
     CategoryInfo* pCategoryInfo = &mCategoryInfo[idx];
 
     if (pCategoryInfo->mNameObjArr.size() == 0) {
@@ -35,10 +47,47 @@ void NameObjCategoryList::execute(int idx) {
 
     if (pCategoryInfo->_C != nullptr) {
         (*pCategoryInfo->_C)();
+        if (!*lifetime) {
+            return;
+        }
     }
 
-    for (NameObj** pNameObj = pCategoryInfo->mNameObjArr.begin(); pNameObj != pCategoryInfo->mNameObjArr.end(); pNameObj++) {
-        (*mDelegator)(*pNameObj);
+    struct Entry {
+        NameObj* mObject;
+        std::uint64_t mGeneration;
+        s16 mExecutorIdx;
+    };
+    std::vector<Entry> entries;
+    {
+        const aurora::allocation::HostAllocationScope host;
+        const auto& objects = mCategoryInfo[idx].mNameObjArr;
+        entries.reserve(objects.size());
+        for (s32 i = 0; i < objects.size(); i++) {
+            NameObj* object = objects[i];
+            const auto generation = smgpc::compat::name_obj_runtime_generation(object);
+            if (generation != 0) {
+                entries.push_back({object, generation, object->mExecutorIdx});
+            }
+        }
+    }
+
+    // Native retirement can remove a member or destroy this list during a callback.
+    // Keep the original batch order, and consult the actual list before each call.
+    for (const Entry& entry : entries) {
+        if (!*lifetime) {
+            return;
+        }
+        if (smgpc::compat::name_obj_runtime_generation(entry.mObject) != entry.mGeneration) {
+            continue;
+        }
+        if (entry.mObject->mExecutorIdx != entry.mExecutorIdx) {
+            continue;
+        }
+        const auto& objects = mCategoryInfo[idx].mNameObjArr;
+        if (objects.size() == 0 || std::find(objects.begin(), objects.end(), entry.mObject) == objects.end()) {
+            continue;
+        }
+        (*mDelegator)(entry.mObject);
     }
 }
 

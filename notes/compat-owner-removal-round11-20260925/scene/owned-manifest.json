@@ -1,0 +1,14 @@
+[
+  "src/Game/Scene/SceneFunction.cpp",
+  "src/Game/Scene/SceneFunction.hpp",
+  "src/Game/NameObj/NameObjListExecutor.cpp",
+  "src/Game/xmake.lua",
+  "src/runtime/SceneScheduler.cpp",
+  "src/scene/OriginalSceneSupport.cpp",
+  "src/compat/SceneInitializationCompat.cpp",
+  "src/compat/SceneMovementCompat.cpp",
+  "src/compat/SceneConnectionCompat.cpp",
+  "src/compat/J3dSystemCompat.cpp",
+  "src/compat/J3dSystemCompat.hpp",
+  "src/scene/SceneDrawBufferService.cpp"
+]

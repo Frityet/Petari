@@ -1,4 +1,7 @@
 #include "Game/Screen/LayoutActor.hpp"
+#include "compat/EffectSystemOwnership.hpp"
+#include "runtime/RuntimeContext.hpp"
+#include <utility>
 #include "Game/LiveActor/Spine.hpp"
 #include "Game/Screen/LayoutCoreUtil.hpp"
 #include "Game/Screen/LayoutManager.hpp"
@@ -7,6 +10,24 @@
 #include "Game/Util/LayoutUtil.hpp"
 
 LayoutActor::LayoutActor(const char* pName, bool) : NameObj(pName), mLayoutManager(), mSpine(), mEffectKeeper(), mPointingTarget() {
+}
+
+LayoutActor::~LayoutActor() {
+    releaseNativeResources();
+}
+
+void LayoutActor::releaseNativeResources() {
+    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance())
+        runtime->unregister_layout_actor(*this);
+    smgpc::compat::release_layout_effect_keeper(this);
+    if (auto* targets = std::exchange(mPointingTarget, nullptr)) {
+        for (s32 i = 0; i < targets->mNumTargets; ++i)
+            delete targets->mTargets[i];
+        delete[] targets->mTargets;
+        delete targets;
+    }
+    delete std::exchange(mLayoutManager, nullptr);
+    delete std::exchange(mSpine, nullptr);
 }
 
 void LayoutActor::movement() {
@@ -74,16 +95,22 @@ TVec2f LayoutActor::getTrans() const {
     return trans;
 }
 
+namespace {
+    inline void setRootTranslation(LayoutActor* pActor, const TVec2f& rTrans) {
+        f32 y = rTrans.y;
+        f32 x = rTrans.x;
+        TVec2f trans(x, y);
+        nw4r::lyt::Pane* pRootPane = MR::getRootPane(pActor);
+        TVec3f translation(trans.x, trans.y, 0.0f);
+        pRootPane->mTranslate.x = translation.x;
+        pRootPane->mTranslate.y = translation.y;
+        pRootPane->mTranslate.z = translation.z;
+    }
+}  // namespace
 void LayoutActor::setTrans(const TVec2f& rTrans) {
     TVec2f trans;
-    nw4r::lyt::Pane* rootPane;
-
     MR::convertScreenPosToLayoutPos(&trans, rTrans);
-
-    rootPane = MR::getRootPane(this);
-    rootPane->mTranslate.x = trans.x;
-    rootPane->mTranslate.y = trans.y;
-    rootPane->mTranslate.z = 0.0f;
+    ::setRootTranslation(this, trans);
 }
 
 LayoutManager* LayoutActor::getLayoutManager() const {
@@ -98,16 +125,16 @@ MtxPtr LayoutActor::getPaneMtxRef(const char* pParam1) {
     return mLayoutManager->getPaneMtxRef(pParam1);
 }
 
-void LayoutActor::initLayoutManager(const char* pName, u32 a2) {
-    mLayoutManager = new LayoutManager(pName, true, a2, 0x100);
+void LayoutActor::initLayoutManager(const char* pName, u32 rootPaneAnimLayerNum) {
+    mLayoutManager = new LayoutManager(pName, true, rootPaneAnimLayerNum, 0x100);
 }
 
-void LayoutActor::initLayoutManagerNoConvertFilename(const char* pName, u32 a2) {
-    mLayoutManager = new LayoutManager(pName, false, a2, 0x100);
+void LayoutActor::initLayoutManagerNoConvertFilename(const char* pName, u32 rootPaneAnimLayerNum) {
+    mLayoutManager = new LayoutManager(pName, false, rootPaneAnimLayerNum, 0x100);
 }
 
-void LayoutActor::initLayoutManagerWithTextBoxBufferLength(const char* pName, u32 textBoxBufferLength, u32 a3) {
-    mLayoutManager = new LayoutManager(pName, false, a3, textBoxBufferLength);
+void LayoutActor::initLayoutManagerWithTextBoxBufferLength(const char* pName, u32 textBoxBufferLength, u32 rootPaneAnimLayerNum) {
+    mLayoutManager = new LayoutManager(pName, false, rootPaneAnimLayerNum, textBoxBufferLength);
 }
 
 void LayoutActor::initNerve(const Nerve* pNerve) {
@@ -115,8 +142,7 @@ void LayoutActor::initNerve(const Nerve* pNerve) {
 }
 
 void LayoutActor::initEffectKeeper(int param1, const char* pParam2, const EffectSystem* pEffectSystem) {
-    mEffectKeeper = new PaneEffectKeeper(this, mLayoutManager, param1, pParam2);
-    mEffectKeeper->init(this, pEffectSystem);
+    smgpc::compat::initialize_layout_effect_keeper(this, param1, pParam2, pEffectSystem);
 }
 
 void LayoutActor::initPointingTarget(int maxNumTargets) {

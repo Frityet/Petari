@@ -21,6 +21,7 @@ public:
     /// @param pPaneName A pointer to the null-terminated name of the pane to associate with.
     /// @param animLayerNum The maximum number of animations to support at once.
     LayoutPaneCtrl(LayoutManager* pHost, const char* pPaneName, u32 animLayerNum);
+    ~LayoutPaneCtrl();
 
     void movement();
     void calcAnim();

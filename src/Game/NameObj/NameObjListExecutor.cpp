@@ -1,5 +1,24 @@
 #include "Game/NameObj/NameObjListExecutor.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+#include "compat/SceneJ3dScope.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
+#include "runtime/RuntimeContext.hpp"
+#include <optional>
+
+namespace {
+    struct NativeExecutionScope {
+        smgpc::compat::SceneJ3dScope mCommands;
+        std::optional<smgpc::compat::JkrAllocationScope> mHeap;
+
+        NativeExecutionScope() {
+            if (auto domain = smgpc::scene::current_scene_allocation_domain()) {
+                mHeap.emplace(std::move(domain));
+            }
+        }
+    };
+}
+
 
 NameObjListExecutor::NameObjListExecutor() : mBufferHolder(), mMovementList(), mCalcAnimList(), mDrawList() {
 }
@@ -82,33 +101,49 @@ void NameObjListExecutor::removeToDraw(NameObj* pObj, int category) {
 }
 
 void NameObjListExecutor::executeMovement(int category) {
+    const NativeExecutionScope native;
     mMovementList->execute(category);
+    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+        if (category == MR::MovementType_Camera) {
+            runtime->refresh_scene_camera_pose();
+        }
+        if (category == MR::MovementType_Player && runtime->player_system().attached_actor()) {
+            runtime->player_system().synchronize_attached_actor();
+        }
+    }
 }
 
 void NameObjListExecutor::executeCalcAnim(int category) {
+    const NativeExecutionScope native;
     mCalcAnimList->execute(category);
 }
 
 void NameObjListExecutor::entryDrawBuffer2D() {
+    const NativeExecutionScope native;
     mBufferHolder->entry(MR::CameraType_2D);
 }
 
 void NameObjListExecutor::entryDrawBuffer3D() {
+    const NativeExecutionScope native;
     mBufferHolder->entry(MR::CameraType_3D);
 }
 
 void NameObjListExecutor::entryDrawBufferMirror() {
+    const NativeExecutionScope native;
     mBufferHolder->entry(MR::CameraType_Mirror);
 }
 
 void NameObjListExecutor::drawOpa(int drawBufferType) {
+    const NativeExecutionScope native;
     mBufferHolder->drawOpa(drawBufferType);
 }
 
 void NameObjListExecutor::drawXlu(int drawBufferType) {
+    const NativeExecutionScope native;
     mBufferHolder->drawXlu(drawBufferType);
 }
 
 void NameObjListExecutor::executeDraw(int category) {
+    const NativeExecutionScope native;
     mDrawList->execute(category);
 }

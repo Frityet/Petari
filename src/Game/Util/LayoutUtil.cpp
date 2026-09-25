@@ -819,3 +819,42 @@ namespace MR {
         getEffect(pActor, pName)->setDirectionalSpeed(speed, -1);
     }
 }
+
+namespace MR {
+    void startAnim(LayoutActor* pActor, const char* pAnimName, u32 animLayer) {
+        pActor->getLayoutManager()->getPaneCtrl(nullptr)->start(pAnimName, animLayer);
+        if (pActor->mEffectKeeper) {
+            pActor->mEffectKeeper->changeAnim();
+        }
+    }
+
+    void showPane(LayoutActor* pActor, const char* pPaneName) {
+        pActor->getLayoutManager()->getPane(pPaneName)->SetVisible(true);
+    }
+
+    void hidePane(LayoutActor* pActor, const char* pPaneName) {
+        pActor->getLayoutManager()->getPane(pPaneName)->SetVisible(false);
+    }
+
+    void copyPaneScale(TVec2f* pScale, const LayoutActor* pActor, const char* pPaneName) {
+        nw4r::lyt::Pane* pPane = pActor->getLayoutManager()->getPane(pPaneName);
+        pScale->set< f32 >(pPane->mScale.x, pPane->mScale.y);
+    }
+
+    void setLayoutScaleAtPaneScale(LayoutActor* pActor, const LayoutActor* pFollowActor, const char* pPaneName) {
+        TVec2f scale;
+        copyPaneScale(&scale, pFollowActor, pPaneName);
+        setPaneScale(pActor, scale.x, scale.y, nullptr);
+    }
+
+    void setLayoutScalePosAtPaneScaleTrans(LayoutActor* pActor, const LayoutActor* pFollowActor, const char* pPaneName) {
+        setLayoutPosAtPaneTrans(pActor, pFollowActor, pPaneName);
+        setLayoutScaleAtPaneScale(pActor, pFollowActor, pPaneName);
+    }
+
+    void setLayoutScalePosAtPaneScaleTransIfExecCalcAnim(LayoutActor* pActor, const LayoutActor* pFollowActor, const char* pPaneName) {
+        if (isExecuteCalcAnimLayout(pActor)) {
+            setLayoutScalePosAtPaneScaleTrans(pActor, pFollowActor, pPaneName);
+        }
+    }
+}

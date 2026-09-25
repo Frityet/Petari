@@ -38,6 +38,7 @@ struct SceneDrawBufferService::State {
     std::shared_ptr<compat::JkrAllocationDomain> domain;
     std::vector<std::vector<std::shared_ptr<ModelManager>>> prototypes;
     NameObjListExecutor* executor = nullptr;
+    std::size_t binding_generation = 0;
     DrawBufferHolder* holder = nullptr;
     struct Callback {
         std::shared_ptr<compat::JkrAllocationDomain> domain;
@@ -65,6 +66,7 @@ void SceneDrawBufferService::bind_executor(NameObjListExecutor& executor, std::s
         _state->prototypes.at(row.mDrawBufferType).resize(row.mCapacity);
     }
     _state->domain = std::move(domain);
+    ++_state->binding_generation;
     _state->executor = &executor;
     _state->holder = executor.mBufferHolder;
 }
@@ -87,6 +89,7 @@ void SceneDrawBufferService::unbind_executor() {
     compat::JkrHostAllocationScope host;
     clear_draw_categories();
     retire_draw_buffers();
+    ++_state->binding_generation;
     _state->executor = nullptr;
     _state->domain.reset();
 }
@@ -199,7 +202,8 @@ void SceneDrawBufferService::rollback_pre_draw_functions(std::size_t marker) {
 std::vector<NameObj*> SceneDrawBufferService::execute_draw_category(int category, std::span<NameObj* const> objects) {
     require_draw_category(category);
     auto state = _state;
-    auto& array = state->executor->mDrawList->mCategoryInfo[category].mNameObjArr;
+    auto* executor = state->executor;
+    const auto generation = state->binding_generation;
     if (state->executing[category]) aurora::throw_host_exception<std::logic_error>("A draw category cannot rebuild its active batch recursively");
     (void)objects; // Actual original category membership is authoritative.
     // Retain an executing callback even when it replaces itself or clears its
@@ -207,8 +211,10 @@ std::vector<NameObj*> SceneDrawBufferService::execute_draw_category(int category
     const auto callback = state->callbacks[category].empty() ? nullptr : state->callbacks[category].back();
     struct Guard { unsigned& value; explicit Guard(unsigned& n) : value(n) { ++value; } ~Guard() { --value; } } guard(state->executing[category]);
     // Original callbacks inherit the caller's current heap and routing.
-    state->executor->executeDraw(category);
+    executor->executeDraw(category);
     compat::JkrHostAllocationScope host;
+    if (state->binding_generation != generation || state->executor != executor) return {};
+    auto& array = executor->mDrawList->mCategoryInfo[category].mNameObjArr;
     if (array.size() == 0) return {};
     return {array.begin(), array.end()};
 }

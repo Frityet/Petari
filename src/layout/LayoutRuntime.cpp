@@ -380,9 +380,9 @@ const std::optional< std::filesystem::path >& smgpc::layout::LayoutRuntime::getA
     return mArchivePath;
 }
 
-smgpc::layout::Nw4rLayoutRecords& smgpc::layout::LayoutRuntime::native_records(LayoutManager* manager) {
+smgpc::layout::Nw4rLayoutRecords& smgpc::layout::LayoutRuntime::native_records() {
     const smgpc::compat::JkrHostAllocationScope host;
-    if (!mNativeRecords) mNativeRecords = std::make_unique<Nw4rLayoutRecords>(*this, manager);
+    if (!mNativeRecords) mNativeRecords = std::make_unique<Nw4rLayoutRecords>(*this);
     return *mNativeRecords;
 }
 

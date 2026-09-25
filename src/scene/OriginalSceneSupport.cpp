@@ -11,7 +11,7 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/DrawSyncManagerLifetime.hpp"
-#include "layout/LayoutHost.hpp"
+#include "Game/Screen/LayoutActor.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "scene/GameSceneBinding.hpp"
@@ -81,7 +81,7 @@ public:
             // stationed initialization. Earlier scene objects can therefore be
             // listed in the process holder while allocated in this scene heap.
             if (!belongs_to_heap && std::find(holder_objects.begin(), holder_objects.end(), object) == holder_objects.end()) continue;
-            layout::release_layout_actor_if_registered(object);
+            if (auto* layout = dynamic_cast<LayoutActor*>(object)) layout->releaseNativeResources();
             if (auto* actor = dynamic_cast<LiveActor*>(object)) compat::release_actor_runtime_state(actor);
             unregister_scene_name_obj(*object);
             compat::release_name_obj_runtime_state(object);

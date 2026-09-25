@@ -1,5 +1,4 @@
-#include "compat/JkrAllocationDomain.hpp"
-#include "compat/WPadOwnership.hpp"
+#include "OriginalStageResourceProcessFixture.hpp"
 #include "Game/System/WPad.hpp"
 #include "Game/System/WPadAcceleration.hpp"
 #include "Game/System/WPadHolder.hpp"
@@ -167,26 +166,15 @@ void rotation_and_stability(WPad& pad) {
 } // namespace
 
 int main() {
-    try {
-        auto heaps = smgpc::compat::JkrHeapRuntime::create(8U << 20);
-        const auto free_before = heaps->root_heap().getFreeSize();
-        for (int generation = 0; generation < 2; ++generation) {
-            auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 512U << 10);
-            aurora::wpad_service().clear();
-            smgpc::compat::WPadOwnership owner(domain);
-            auto& pad = owner.pad(0);
-            require(JKRHeap::findFromRoot(pad.mCorePadAccel) == &domain->heap() &&
-                    JKRHeap::findFromRoot(pad.mSubPadAccel) == &domain->heap(),
-                    "the original WPad owns both actual acceleration children in its retained Game heap");
-            getters_and_axes(pad);
-            history_and_average(pad);
-            rotation_and_stability(pad);
-        }
-        require(heaps->root_heap().getFreeSize() == free_before,
-                "repeated actual input owner generations reclaim both acceleration histories");
-        std::cout << "Original acceleration axes, history, averaging, rotation, stability and ownership passed\n";
-    } catch (const std::exception& error) {
-        std::cerr << error.what() << '\n';
-        return 1;
-    }
+    return smgpc::test::run_stage_resource_process("wpad-acceleration", [] {
+        auto& pad = *MR::getWPad(0);
+        auto* heap = JKRHeap::findFromRoot(&pad);
+        require(heap && JKRHeap::findFromRoot(pad.mCorePadAccel) == heap &&
+                    JKRHeap::findFromRoot(pad.mSubPadAccel) == heap,
+                "the original WPad owns both acceleration children on its actual Game heap");
+        getters_and_axes(pad);
+        history_and_average(pad);
+        rotation_and_stability(pad);
+        std::cout << "Original acceleration axes, history, averaging, rotation and stability passed\n";
+    });
 }

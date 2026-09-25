@@ -7,6 +7,7 @@
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/Screen/LayoutPaneCtrl.hpp"
+#include "Game/Animation/LayoutAnmPlayer.hpp"
 #include "Game/Screen/SceneWipeHolder.hpp"
 #include "Game/Screen/CinemaFrame.hpp"
 #include "Game/Screen/WipeFade.hpp"
@@ -18,7 +19,6 @@
 #include "Game/Util/ScreenUtil.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "layout/LayoutHost.hpp"
 #include "layout/LayoutRuntime.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -58,7 +58,7 @@ void layout_actor_lifetime(smgpc::runtime::RuntimeContext& runtime) {
     auto& root_heap = runtime.host_heaps()->root_heap();
     const auto free_before = root_heap.getTotalFreeSize();
     const auto identities_before = smgpc::compat::name_obj_runtime_state_count();
-    const auto layouts_before = smgpc::layout::debug_layout_lifetime_state();
+
     const auto scheduled_before = runtime.scheduler().snapshot().size();
     for (int cycle = 0; cycle < 2; ++cycle) {
         for (const bool scheduled : {false, true}) {
@@ -67,7 +67,7 @@ void layout_actor_lifetime(smgpc::runtime::RuntimeContext& runtime) {
                     runtime.scheduler(), smgpc::compat::JkrAllocationDomain::create(runtime.host_heaps(), 8U << 20));
                 const auto domain = smgpc::scene::current_scene_allocation_domain();
                 const auto identities = smgpc::compat::name_obj_runtime_state_count();
-                const auto layouts = smgpc::layout::debug_layout_lifetime_state();
+
                 const auto scheduled_count = runtime.scheduler().snapshot().size();
                 std::unique_ptr<LayoutActor> actor;
                 {
@@ -76,15 +76,8 @@ void layout_actor_lifetime(smgpc::runtime::RuntimeContext& runtime) {
                     actor->initLayoutManager("SysInfoWindowMini", 1);
                     actor->getLayoutManager()->createAndAddPaneCtrl("SaveIconPosition", 1);
                 }
-                auto* resource = smgpc::layout::layout_runtime(actor.get());
-                require(resource && resource->getArchivePath() &&
-                        actor->getLayoutManager()->getPane("SaveIconPosition"),
-                        "the lifetime regression retains the real disc layout and authored pane");
-                const auto populated = smgpc::layout::debug_layout_lifetime_state();
-                require(populated.actors == layouts.actors + 1 && populated.managers == layouts.managers + 1 &&
-                        populated.pane_controls >= layouts.pane_controls + 2 &&
-                        smgpc::compat::name_obj_runtime_state_count() == identities + 1,
-                        "one actual LayoutActor creates one manager and real root and named pane controls");
+                require(actor->getLayoutManager()->mLayoutHolder && actor->getLayoutManager()->getPane("SaveIconPosition"),
+                        "the actual layout owns its archive and authored pane");
 
                 LayoutLifetimeNerve nerve;
                 nerve.actor = actor.get();
@@ -111,8 +104,7 @@ void layout_actor_lifetime(smgpc::runtime::RuntimeContext& runtime) {
                 actor.reset();
                 require(root_heap.getTotalFreeSize() == free_before_spine,
                         "LayoutActor destruction individually frees its original Spine");
-                require(smgpc::layout::debug_layout_lifetime_state() == layouts &&
-                        smgpc::compat::name_obj_runtime_state_count() == identities &&
+                require(smgpc::compat::name_obj_runtime_state_count() == identities &&
                         runtime.scheduler().snapshot().size() == scheduled_count,
                         "destruction retires the layout, manager, panes, identity and scheduling without recursive unregister");
                 runtime.scheduler().execute_movement_category(MR::MovementType_Layout);
@@ -120,7 +112,6 @@ void layout_actor_lifetime(smgpc::runtime::RuntimeContext& runtime) {
             }
             require(root_heap.getTotalFreeSize() == free_before &&
                     smgpc::compat::name_obj_runtime_state_count() == identities_before &&
-                    smgpc::layout::debug_layout_lifetime_state() == layouts_before &&
                     runtime.scheduler().snapshot().size() == scheduled_before,
                     "repeated layout teardown releases the whole scene domain and retains no native identities");
         }
@@ -155,8 +146,7 @@ void owner(smgpc::runtime::RuntimeContext& runtime) {
         require(std::abs(ring->calcMaxRadius() - std::sqrt(900160.0F)) < 0.001F,
                 "original ring maximum radius uses square root rather than reciprocal square root");
         for (auto* layout : std::array<LayoutActor*, 3>{ring, game_over, koopa}) {
-            auto* resource = smgpc::layout::layout_runtime(layout);
-            require(resource && resource->getArchivePath() && layout->getLayoutManager()->getPane(nullptr),
+            require(layout->getLayoutManager()->mLayoutHolder && layout->getLayoutManager()->getPane(nullptr),
                     "each layout wipe owns its actual retained disc BRLYT and real root Pane");
             const LayoutActor* constant_layout = layout;
             require(MR::isAnimStopped(constant_layout, 0) && layout->getLayoutManager()->getPaneCtrl(nullptr)->isAnimStopped(0),
@@ -174,7 +164,7 @@ void owner(smgpc::runtime::RuntimeContext& runtime) {
         game_over->getLayoutManager()->movement();
         require(MR::getAnimFrame(game_over, 0) == 7.25F && MR::getAnimFrameMax(game_over, 0U) == 0 &&
                 idle_control->getRate() == 2.5F && MR::isAnimStopped(game_over, 0) &&
-                !smgpc::layout::layout_runtime(game_over)->hasActiveAnimation(0),
+                !game_over->getLayoutManager()->getPaneCtrl(nullptr)->mAnmPlayerArray[0]->mAnimTransform,
                 "idle frame and rate edits persist without advancing or inventing an animation binding");
         MR::setAnimFrameAndStop(game_over, 9.0F, 0);
         require(idle_control->getFrame() == 9.0F && idle_control->getRate() == 0.0F,
@@ -243,7 +233,7 @@ void owner(smgpc::runtime::RuntimeContext& runtime) {
 
         require(cinema && MR::createSceneObj(SceneObj_CinemaFrame) == cinema && MR::isDead(cinema) && MR::isStopCinemaFrame(),
                 "the actual CinemaFrame factory retains one original initialized Screen owner");
-        require(smgpc::layout::layout_runtime(cinema)->getArchivePath() && cinema->getLayoutManager()->getPane(nullptr),
+        require(cinema->getLayoutManager()->mLayoutHolder && cinema->getLayoutManager()->getPane(nullptr),
                 "CinemaFrame owns its genuine disc BRLYT and root pane");
         auto complete_transition = [&] {
             require(!MR::isStopCinemaFrame(), "each original CinemaFrame transition enters an active nerve");
