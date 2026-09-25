@@ -4,6 +4,7 @@
 #include "Game/NameObj/NameObjHolder.hpp"
 #include "Game/Util/Array.hpp"
 #include <memory>
+#include <vector>
 
 namespace MR {
     class FunctorBase;
@@ -47,6 +48,11 @@ public:
         MR::Vector< MR::AssignableArray< NameObj* > > mNameObjArr;  // 0x0
         MR::FunctorBase* _C;
         u32 mCheck;  // 0x10
+
+    private:
+        friend class NameObjCategoryList;
+        struct NativeCallback;
+        std::shared_ptr< NativeCallback > mNativeCallback;
     };
 
     NameObjCategoryList(u32, const CategoryListInitialTable*, NameObjMethod, bool, const char*);
@@ -60,6 +66,8 @@ public:
     void remove(NameObj*, int);
     void registerExecuteBeforeFunction(const MR::FunctorBase&, int);
     void initTable(u32, const CategoryListInitialTable*);
+    void clearNativeCallbacks();
+    std::shared_ptr< bool > nativeLifetime() const noexcept { return mNativeLifetime; }
 
     MR::AssignableArray< NameObjCategoryList::CategoryInfo > mCategoryInfo;  // 0x0
 
@@ -72,5 +80,7 @@ public:
     u8 _D;
 
 private:
-    std::shared_ptr<bool> mNativeLifetime;
+    void requireNativeCategory(int) const;
+    std::shared_ptr< bool > mNativeLifetime;
+    std::shared_ptr< std::vector< unsigned > > mNativeExecuting;
 };

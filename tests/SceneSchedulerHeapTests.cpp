@@ -158,7 +158,7 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
         create_clipping_fixture(scheduler);
         CallbackObject object(scheduler);
         scheduler.connect_name_obj(object, 34, 0, -1, 72);
-        scheduler.register_pre_draw_function(MR::Functor(static_cast<const CallbackObject*>(&object), &CallbackObject::pre_draw), 72);
+        execution.executor().registerPreDrawFunction(MR::Functor(static_cast<const CallbackObject*>(&object), &CallbackObject::pre_draw), 72);
         execution.complete_initialization();
         {
             JkrAllocationScope outer(caller);

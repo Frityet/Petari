@@ -4,6 +4,9 @@
 #include "Game/System/DrawBufferHolder.hpp"
 
 class LiveActor;
+class NameObjExecuteHolder;
+namespace smgpc::compat { class JkrAllocationDomain; }
+namespace smgpc::runtime { class SceneScheduler; }
 
 /// @brief Class that executes NameObjCategoryList instances.
 class NameObjListExecutor {
@@ -19,6 +22,16 @@ public:
     }
     virtual void initDrawList() {
     }
+
+    void bindNativeExecution(smgpc::runtime::SceneScheduler&, std::shared_ptr< smgpc::compat::JkrAllocationDomain >);
+    void unbindNativeExecution();
+    void prepareNativeRetirement();
+    NameObjExecuteHolder& nativeRequirements() const;
+    bool nativeInitialized() const noexcept { return mNativeInitialized; }
+    bool nativeRetiring() const noexcept { return mNativeRetiring; }
+    void notifyNativeObjectRetired(NameObj*) noexcept;
+    std::shared_ptr< smgpc::compat::JkrAllocationDomain > nativeAllocationDomain() const noexcept { return mNativeDomain; }
+    void retireNativeDrawBuffers();
 
     void init();
     s32 registerDrawBuffer(LiveActor*, int);
@@ -49,4 +62,11 @@ public:
     NameObjCategoryList* mMovementList;  // 0x8
     NameObjCategoryList* mCalcAnimList;  // 0xC
     NameObjCategoryList* mDrawList;      // 0x10
+
+private:
+    smgpc::runtime::SceneScheduler* mNativeScheduler = nullptr;
+    std::shared_ptr< smgpc::compat::JkrAllocationDomain > mNativeDomain;
+    NameObjExecuteHolder* mNativeRequirements = nullptr;
+    bool mNativeInitialized = false;
+    bool mNativeRetiring = false;
 };

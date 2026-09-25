@@ -18,9 +18,7 @@
 class LiveActor;
 class LayoutActor;
 class NameObj;
-namespace MR { class FunctorBase; }
-
-namespace smgpc::scene { class SceneDrawBufferService; class SceneExecutionBinding; }
+class NameObjListExecutor;
 namespace smgpc::compat { class JkrAllocationDomain; }
 
 namespace smgpc::layout {
@@ -250,8 +248,6 @@ namespace smgpc::runtime {
         SceneScheduler();
         ~SceneScheduler();
         [[nodiscard]] const std::shared_ptr<smgpc::compat::JkrAllocationDomain>& allocation_domain() const noexcept;
-        void allocate_draw_buffers();
-        void retire_draw_buffers();
         void find_actor_light_info(LiveActor &actor);
         void connect_name_obj(NameObj &obj, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type);
         void register_name_obj(NameObj&, s32, s32, s32, s32);
@@ -298,7 +294,6 @@ namespace smgpc::runtime {
                                              s32 interleaved_draw_type = -1, s32 interleaved_light_type = -1);
         void execute_draw_after_indirect(const smgpc::camera::CameraPose &camera_pose);
         void execute_draw_type(s32 draw_type);
-        void register_pre_draw_function(const MR::FunctorBase&, s32 draw_type);
         void execute_draw_list_2d_normal();
 
         [[nodiscard]] std::size_t registration_marker() const;
@@ -349,15 +344,15 @@ namespace smgpc::runtime {
 
         void refresh_draw_buffer_activation();
         friend class SceneSchedulerAllocationBinding;
-        friend class smgpc::scene::SceneExecutionBinding;
-        void attach_execution(smgpc::scene::SceneExecutionBinding&);
-        void detach_execution(smgpc::scene::SceneExecutionBinding&);
+        friend class ::NameObjListExecutor;
+        void attach_execution(NameObjListExecutor&);
+        void detach_execution(NameObjListExecutor&) noexcept;
         void register_execution_entry(Entry&);
         void retire_execution_entry(NameObj&);
         [[nodiscard]] std::vector<Entry> category_entries(s32 category, bool animation) const;
-        smgpc::scene::SceneExecutionBinding* _execution = nullptr;
+        NameObjListExecutor* _execution = nullptr;
+        bool _owns_execution_allocation_binding = false;
         std::shared_ptr<smgpc::compat::JkrAllocationDomain> _allocation_domain;
-        std::unique_ptr<smgpc::scene::SceneDrawBufferService> _draw_buffers;
         std::vector<Entry> _entries;
         std::unordered_map<smgpc::layout::LayoutRuntime*, std::unique_ptr<NameObj>> _layout_draw_adaptors;
 #ifndef NDEBUG

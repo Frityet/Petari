@@ -1,0 +1,28 @@
+{
+  "owned_paths": [
+    {
+      "path": "src/runtime/SceneScheduler.cpp",
+      "before_sha256": "ae61c2f347eba50d1ca2dc0da4e4c7b31a3e85ea008366aabcc93cad97d682d7",
+      "before_status": "",
+      "after_sha256": "039c5491072b5f9c165d87e20c7013ab482c579d7a6ddb4ebe888a567818262f"
+    },
+    {
+      "path": "src/runtime/SceneScheduler.hpp",
+      "before_sha256": "f96e1b68a9da054eb330b7afa49a04e8878353e3c11142288d1ce7c3437662a5",
+      "before_status": "",
+      "after_sha256": "9615b32892619c719de46beb8e21c563db12ff814564c8c39916fd613db9a948"
+    },
+    {
+      "path": "src/runtime/RuntimeContext.cpp",
+      "before_sha256": "ae0ab5ceff66948b58a074f75f9b5168bb006886bb8c67e80c8e572430cffbcc",
+      "before_status": "",
+      "after_sha256": "8b87eab283f2268585a75bbd75c442eb40ddc86e9e52df3eaa5a1321f8f67061"
+    },
+    {
+      "path": "src/runtime/RuntimeContext.hpp",
+      "before_sha256": "9512282dcdc78281eb456242778a6fa20388af17b95e9f904927152ea2dc4f1f",
+      "before_status": "",
+      "after_sha256": "0633e64ae9412969c09c365d9497d3569cfe11543bf9179af1e5340c0e12fc4a"
+    }
+  ]
+}

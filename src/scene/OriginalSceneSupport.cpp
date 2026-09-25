@@ -15,7 +15,7 @@
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "scene/GameSceneBinding.hpp"
-#include "scene/SceneExecutionBinding.hpp"
+#include "Game/NameObj/NameObjListExecutor.hpp"
 #include "scene/SceneLifetimeBinding.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Effect/EffectSystem.hpp"
@@ -36,20 +36,22 @@ extern std::unique_ptr<OriginalSceneSupport> active_support;
 class OriginalSceneSupport final {
 public:
     OriginalSceneSupport(Scene& scene, NameObjHolder& names, JKRHeap& heap)
-        : _scene(&scene), _names(&names), _domain(compat::JkrAllocationDomain::retain_heap(heap)), _objects(scene.mSceneObjHolder) {
+        : _scene(&scene), _names(&names), _domain(compat::JkrAllocationDomain::retain_heap(heap)), _objects(scene.mSceneObjHolder), _executor(scene.mListExecutor) {
         auto* game = dynamic_cast<GameScene*>(&scene);
         _scheduler_binding = std::make_unique<runtime::SceneSchedulerBinding>(_scheduler);
         _allocation_binding = std::make_unique<runtime::SceneSchedulerAllocationBinding>(_scheduler, _domain);
         _objects->initializeNative(_domain);
         try {
-        _execution = std::make_unique<SceneExecutionBinding>(_scheduler, *scene.mListExecutor, _domain);
+        _executor->bindNativeExecution(_scheduler, _domain);
         _lifetime = std::make_unique<SceneLifetimeBinding>(scene, [](void* context) noexcept {
             if (active_support.get() != context) std::terminate();
             active_support.reset();
         }, this);
         if (game) _game = std::make_unique<GameSceneBinding>(*game);
         } catch (...) {
+            _executor->prepareNativeRetirement();
             _objects->retireNativeResources();
+            _executor->unbindNativeExecution();
             throw;
         }
     }
@@ -60,7 +62,7 @@ public:
         // boundary. Other scenes still leave Game arrays to their real heap;
         // release their native sidecars before that storage can be recycled.
         _game.reset();
-        _execution->prepare_retirement();
+        _executor->prepareNativeRetirement();
         const auto holder_objects = _names->snapshotNativeObjects();
         auto objects = compat::snapshot_name_obj_runtime_objects();
         for (auto it = objects.rbegin(); it != objects.rend(); ++it) {
@@ -83,7 +85,7 @@ public:
             compat::release_name_obj_runtime_state(object);
         }
         _objects->retireNativeResources();
-        _execution.reset();
+        _executor->unbindNativeExecution();
         _allocation_binding.reset();
         _scheduler_binding.reset();
     }
@@ -100,7 +102,7 @@ public:
         auto* effects = static_cast<EffectSystem*>(_objects->create(SceneObj_EffectSystem));
         effects->entry(MR::getParticleResourceHolder(), particles, emitters);
     }
-    void begin_frame() { if (_execution->initialized()) _scheduler.begin_frame(); }
+    void begin_frame() { if (_executor->nativeInitialized()) _scheduler.begin_frame(); }
 
 private:
     Scene* _scene;
@@ -111,7 +113,7 @@ private:
     SceneInitializationBinding _initialization_state;
     std::unique_ptr<runtime::SceneSchedulerAllocationBinding> _allocation_binding;
     SceneObjHolder* _objects;
-    std::unique_ptr<SceneExecutionBinding> _execution;
+    NameObjListExecutor* _executor;
     std::unique_ptr<SceneLifetimeBinding> _lifetime;
     std::unique_ptr<GameSceneBinding> _game;
 };

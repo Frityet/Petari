@@ -8,6 +8,9 @@ class LiveActor;
 class DrawBufferGroup {
 public:
     DrawBufferGroup();
+    ~DrawBufferGroup();
+    DrawBufferGroup(const DrawBufferGroup&) = delete;
+    DrawBufferGroup& operator=(const DrawBufferGroup&) = delete;
 
     void init(s32);
     s32 registerDrawBuffer(LiveActor*);
@@ -22,13 +25,15 @@ public:
     void setLightType(s32);
     s32 findExecuterIndex(const char*) const;
 
-    bool isExecutorEmpty(int index) const {
-        return mExecutors[index]->mNumActors == 0;
-    }
+    bool isExecutorEmpty(int index) const;
 
     /* 0x00 */ MR::Vector< MR::AssignableArray< DrawBufferExecuter* > > mExecutors;
     /* 0x0C */ MR::Vector< MR::AssignableArray< DrawBufferExecuter* > > mActiveExecutors;
     /* 0x18 */ s32 mDrawCameraType;
     /* 0x1C */ s32 mLightType;
     /* 0x20 */ s32 mLightLoadType;
+
+private:
+    DrawBufferExecuter* requireNativeExecuter(s32) const;
+    bool mActorListsAllocated;
 };

@@ -1,0 +1,56 @@
+{
+  "paths": [
+    {
+      "path": "src/Game/System/DrawBuffer.hpp",
+      "before_sha256": "45329aa64df240b2adfd3b6b9624ff49a9693a63ab756877ed6f5895bb27ac86",
+      "after_sha256": "4b1f6be191f6b2385c39491b4cfd3133cff6133c687cbf456a3361b0b6172bb4",
+      "reason": "Actual original draw owner native lifetime, allocation rollback, and bounds checks."
+    },
+    {
+      "path": "src/Game/System/DrawBuffer.cpp",
+      "before_sha256": "5d6e8bb02bf651650646c686d878d2bb01a874f997e1fa1215b41570f7e04373",
+      "after_sha256": "6a1e16a1c4848806b84db74c18a26ab082585af75684321eab32483d5d9ad492",
+      "reason": "Actual original draw owner native lifetime, allocation rollback, and bounds checks."
+    },
+    {
+      "path": "src/Game/System/DrawBufferExecuter.hpp",
+      "before_sha256": "d7884616d289631bcecdc6049fd91d18169e762ac6a6fa160c1132c4203b0418",
+      "after_sha256": "81277d9c083ac1e4f0b573dd4acb3f6454aa8b46fa10c479b6863c189aa6e34c",
+      "reason": "Actual original draw owner native lifetime, allocation rollback, and bounds checks."
+    },
+    {
+      "path": "src/Game/System/DrawBufferExecuter.cpp",
+      "before_sha256": "ef4f4b93a93453cb76ed85cfd0616f0d19cbef6c456f26b27e35c6ca5d85585c",
+      "after_sha256": "8235cf52e5d4a0cd7f2f9597104135674dfb7169ccd71088e693921e14ebba73",
+      "reason": "Actual original draw owner native lifetime, allocation rollback, and bounds checks."
+    },
+    {
+      "path": "src/Game/System/DrawBufferGroup.hpp",
+      "before_sha256": "02d3cb894fb5f71b1e754fc5e61f1d82768b21b25ebfb70a495b0958d8ff0817",
+      "after_sha256": "9cc04581ff15db6d5c69456f655912e55335db2622d849de533638f30e72538f",
+      "reason": "Actual original draw owner native lifetime, allocation rollback, and bounds checks."
+    },
+    {
+      "path": "src/Game/System/DrawBufferGroup.cpp",
+      "before_sha256": "30f4d3b829fd12c09b6d2e5157b6281953ab7d4df30d092103cbf3efac2e8ca6",
+      "after_sha256": "0ad7249f2b710c846415914363d6b7d30e4aed93d9991aa45b68be698e6942ac",
+      "reason": "Actual original draw owner native lifetime, allocation rollback, and bounds checks."
+    },
+    {
+      "path": "src/Game/System/DrawBufferHolder.hpp",
+      "before_sha256": "8e472785ab55d588b86c14076b69080a57277a7887c852ed618fe596752fcb6d",
+      "after_sha256": "279778041fc953893c592bea757975a999c8b0ca33cb347d9bbc0bf27d93f4f9",
+      "reason": "Actual original draw owner native lifetime, allocation rollback, and bounds checks."
+    },
+    {
+      "path": "src/Game/System/DrawBufferHolder.cpp",
+      "before_sha256": "80d7fcd0d6ffbd28a2d942c9af76d5024836f212aab3cabc2ad3f42671040cc8",
+      "after_sha256": "6b98ba865ae6e130fddafe41f96c60ba8dc71ea34a5863cb3eb203fe37cd57bd",
+      "reason": "Actual original draw owner native lifetime, allocation rollback, and bounds checks."
+    }
+  ],
+  "build_changes": [],
+  "tests_changed": [],
+  "builds_run": false,
+  "tests_run": false
+}

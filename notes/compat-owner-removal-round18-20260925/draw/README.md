@@ -1,0 +1,17 @@
+# Actual draw-buffer ownership
+
+Eight files only: the existing DrawBuffer, DrawBufferExecuter, DrawBufferGroup and DrawBufferHolder source/header pairs. DrawBufferShapeDrawer is declared and implemented inside DrawBuffer, so there is no extra owner file. No scheduler, NameObj, service, test, build or Git changes in this lane. Before snapshots were captured before this lane's edits; scoped patch and hashes preserve the exact delta.
+
+Each original DrawBufferExecuter now retains its first actor's existing shared ModelManager through ActorRuntimeRegistry::retain_actor_model. That retains the prototype J3DModel, model name/resource holder, material packets and shapes even after the original registering actor is retired. Group registration creates an executer under a temporary unique_ptr and establishes model ownership before publishing it in the original mExecutors array. There is no parallel prototype/actor map.
+
+Destruction follows actual owned storage: holder's existing AssignableArray destroys groups; each group deletes its executers; each executer drains GX, deletes its DrawBuffer/actor array, then releases its prototype owner. DrawBuffer deletes unique mShapeDrawers and the material-index array. Material aliases remain indices in mMaterialNos and are not deleted as separate objects. Every shape drawer deletes all its PacketInfo objects in the reordered mPackets pool exactly once, then the pointer array. Existing original packet/light sorting and draw order remain unchanged.
+
+Table and group initialization publish arrays only after all allocations succeed. Packet allocation cleans up partial PacketInfo construction. DrawBuffer::init cleans all partial material/drawer allocations on failure. Actor-list allocation guards the new list until the corresponding DrawBuffer initializes. A failed group allocation seals the registration phase; the already-owned partial state is destroyed during normal initialization unwinding rather than becoming a second mutable registration path.
+
+Holder/group checks derive bounds and capacities from original arrays. They reject invalid/repeated table categories, invalid cameras, late registrations, duplicate active actors, missing active membership and overflow. The original mTableInitialized flag seals holder registration before actor-list allocation; a private group flag covers direct group calls. Active-list publication follows all packet additions and preflight capacity checks. GXDrawDone occurs before active actor packet removal, so any later actor/model retirement cannot race already recorded draws.
+
+## Integration contract
+
+No source additions or build flags are required. Original public Holder operations remain available. getDrawBufferGroup now validates and has a const overload for diagnostics. DrawBufferExecuter::retainNativeModel(LiveActor*) is called by the group only; other lanes need not call it. NameObjListExecutor's explicit early retirement should reject nonempty original active counts, disconnect registrations first, delete/null its holder and retain its actual scene allocation domain through destruction. The executor lane agreed to that preflight. Destructors do not introduce a throwing active-membership preflight.
+
+The prototype shared owner is deliberately not released when the first actor becomes inactive. The allocation-domain lifetime is supplied by actual NameObjListExecutor during holder retirement (coordinated with that lane). No new tests, build, runtime or visual validation were performed here; root owns the integrated build and smoke.

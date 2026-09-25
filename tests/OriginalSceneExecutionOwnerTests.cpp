@@ -134,7 +134,7 @@ int main() {
             std::weak_ptr<compat::JkrAllocationDomain> weak = domain;
             {
                 test::SceneExecutionFixture scene(scheduler, domain, &original.scene);
-                auto* original_holder = &scene.execution().requirements();
+                auto* original_holder = &scene.executor().nativeRequirements();
                 require(JKRHeap::findFromRoot(original_holder) == &domain->heap(), "actual requirement holder must use the scene heap");
                 require(scene.executor().mBufferHolder != nullptr, "the real executor owns one draw holder");
                 std::vector<int> log;
@@ -195,7 +195,7 @@ int main() {
                 scheduler.execute_movement_category(34);
                 require(!victim && log == std::vector<int>({1}), "a callback cannot execute a deleted later list member");
                 a.hook = {};
-                scene.execution().prepare_retirement();
+                scene.executor().prepareNativeRetirement();
                 require(a.mExecutorIdx == -1 && c.mExecutorIdx == -1, "scene retirement applies each remaining original disconnection");
                 MR::disconnectToSceneTemporarily(&a);
                 MR::disconnectToDrawTemporarily(&a);

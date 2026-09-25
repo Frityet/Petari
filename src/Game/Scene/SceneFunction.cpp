@@ -9,8 +9,6 @@
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/SystemUtil.hpp"
 #include "scene/OriginalSceneSupport.hpp"
-#include "scene/SceneExecutionBinding.hpp"
-#include "runtime/SceneScheduler.hpp"
 
 namespace {
     SceneDataInitializer* getSceneDataInitializer() {
@@ -74,7 +72,10 @@ void SceneFunction::initEffectSystem(u32 a1, u32 a2) {
 }
 
 void SceneFunction::allocateDrawBufferActorList() {
-    smgpc::scene::current_scene_execution_binding()->complete_initialization();
+    NameObjListExecutor* pListExecutor = SingletonHolder< GameSystem >::get()->mSceneController->getNameObjListExecutor();
+
+    pListExecutor->allocateDrawBufferActorList();
+    MR::initConnectting();
 }
 
 void CategoryList::execute(MR::MovementType type) {
@@ -90,8 +91,9 @@ void CategoryList::execute(MR::CalcAnimType type) {
 }
 
 void CategoryList::execute(MR::DrawType type) {
-    // Retain native pre-draw callback storage while the original category runs.
-    smgpc::runtime::try_active_scene_scheduler()->execute_draw_type(type);
+    NameObjListExecutor* pListExecutor = SingletonHolder< GameSystem >::get()->mSceneController->getNameObjListExecutor();
+
+    pListExecutor->executeDraw(type);
 }
 
 void CategoryList::entryDrawBuffer2D() {

@@ -6,22 +6,42 @@
 #include <JSystem/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/J3DGraphBase/J3DMaterial.hpp>
 #include <cstring>
+#include <aurora/exception.hpp>
+#include <limits>
+#include <memory>
+#include <stdexcept>
 
 DrawBufferShapeDrawer::DrawBufferShapeDrawer(J3DMaterial* pMaterial, J3DMatPacket* pMatPacket)
     : mMaterial(pMaterial), mMatPacket(pMatPacket), _8(1), mMaxPackets(0), mNumPackets(0), mPackets(nullptr) {
 }
 
-void DrawBufferShapeDrawer::init(s32 a1) {
-    mMaxPackets = a1 * _8;
-    mPackets = new PacketInfo*[mMaxPackets];
-
+DrawBufferShapeDrawer::~DrawBufferShapeDrawer() {
     for (s32 idx = 0; idx < mMaxPackets; idx++) {
-        PacketInfo* packet = new PacketInfo();
-        mPackets[idx] = packet;
-        mPackets[idx]->mShapePacket = nullptr;
-        mPackets[idx]->mLightLoader = nullptr;
-        mPackets[idx]->mLightCtrl = nullptr;
+        delete mPackets[idx];
     }
+    delete[] mPackets;
+}
+
+void DrawBufferShapeDrawer::init(s32 a1) {
+    if (mPackets != nullptr || a1 <= 0 || _8 <= 0 || a1 > std::numeric_limits< s32 >::max() / _8) {
+        aurora::throw_host_exception< std::logic_error >("Invalid draw shape packet allocation");
+    }
+
+    const s32 capacity = a1 * _8;
+    std::unique_ptr< PacketInfo*[] > packets(new PacketInfo*[capacity]());
+    s32 initialized = 0;
+    try {
+        for (; initialized < capacity; initialized++) {
+            packets[initialized] = new PacketInfo();
+        }
+    } catch (...) {
+        for (s32 idx = 0; idx < initialized; idx++) {
+            delete packets[idx];
+        }
+        throw;
+    }
+    mPackets = packets.release();
+    mMaxPackets = capacity;
 }
 
 void DrawBufferShapeDrawer::swap(DrawBufferShapeDrawer* pOther) {
@@ -64,6 +84,9 @@ void DrawBufferShapeDrawer::draw() const {
 }
 
 void DrawBufferShapeDrawer::add(const J3DShapePacket* pShapePacket, const ActorLightCtrl* pLightCtrl) {
+    if (pShapePacket == nullptr || mNumPackets >= mMaxPackets) {
+        aurora::throw_host_exception< std::length_error >("Draw shape packet capacity exceeded");
+    }
     bool setLightLoader = false;
     s32 index = findLightSortIndex(pLightCtrl, &setLightLoader);
 
@@ -148,16 +171,57 @@ s32 DrawBufferShapeDrawer::findLightSortIndex(const ActorLightCtrl* pLightCtrl, 
 }
 
 DrawBuffer::DrawBuffer(J3DModel* pModel)
-    : mModelData(pModel->mModelData), mModel(pModel), _8(0), mNumActors(0), mNumMaterials(0), mMaterialNos(nullptr), mNumShapeDrawers(0),
-      mNumOpaShapeDrawers(0), mShapeDrawers(nullptr) {
+    : mModelData(pModel != nullptr ? pModel->mModelData : nullptr), mModel(pModel), _8(0), mNumActors(0), _10(0), mNumMaterials(0),
+      mMaterialNos(nullptr), mNumShapeDrawers(0), mNumOpaShapeDrawers(0), mShapeDrawers(nullptr) {
+    if (mModelData == nullptr) {
+        aurora::throw_host_exception< std::invalid_argument >("Draw buffer requires an original model");
+    }
+}
+
+DrawBuffer::~DrawBuffer() {
+    clearNativeStorage();
+}
+
+void DrawBuffer::clearNativeStorage() noexcept {
+    if (mShapeDrawers != nullptr) {
+        for (s32 idx = 0; idx < mNumShapeDrawers; idx++) {
+            delete mShapeDrawers[idx];
+        }
+    }
+    delete[] mShapeDrawers;
+    delete[] mMaterialNos;
+    mShapeDrawers = nullptr;
+    mMaterialNos = nullptr;
+    mNumShapeDrawers = 0;
+    mNumOpaShapeDrawers = 0;
+    mNumMaterials = 0;
+    mNumActors = 0;
 }
 
 void DrawBuffer::init(int a1) {
+    if (_8 != 0 || a1 <= 0) {
+        aurora::throw_host_exception< std::logic_error >("Draw buffer actor storage can only be initialized once");
+    }
     _8 = a1;
-    initTable();
+    try {
+        initTable();
+    } catch (...) {
+        clearNativeStorage();
+        _8 = 0;
+        throw;
+    }
 }
 
 void DrawBuffer::add(const LiveActor* pActor) {
+    if (pActor == nullptr || mNumActors >= _8) {
+        aurora::throw_host_exception< std::length_error >("Draw buffer actor capacity exceeded");
+    }
+    for (s32 idx = 0; idx < mNumShapeDrawers; idx++) {
+        const DrawBufferShapeDrawer* drawer = mShapeDrawers[idx];
+        if (drawer->mMaxPackets - drawer->mNumPackets < drawer->_8) {
+            aurora::throw_host_exception< std::length_error >("Draw buffer material packet capacity exceeded");
+        }
+    }
     J3DModel* model = MR::getJ3DModel(pActor);
     ActorLightCtrl* lightCtrl = MR::getLightCtrl(pActor);
 
@@ -218,6 +282,9 @@ namespace {
 void DrawBuffer::initTable() {
     mNumMaterials = MR::getMaterialNum(mModel);
     mNumShapeDrawers = mModelData->mMaterialTable.mUniqueMatNum;
+    if (mNumShapeDrawers < 0 || mNumShapeDrawers > mNumMaterials) {
+        aurora::throw_host_exception< std::logic_error >("Original model has an invalid unique-material count");
+    }
 
     J3DModel* model = mModel;
     s32 idx, numOpaMaterials;
@@ -230,13 +297,16 @@ void DrawBuffer::initTable() {
         }
     }
     mNumOpaShapeDrawers = numOpaMaterials;
+    if (mNumOpaShapeDrawers > mNumShapeDrawers) {
+        aurora::throw_host_exception< std::logic_error >("Original opaque material count exceeds its drawer table");
+    }
 
     mMaterialNos = new s32[mNumMaterials];
     for (s32 idx = 0; idx < mNumMaterials; idx++) {
         mMaterialNos[idx] = -1;
     }
 
-    mShapeDrawers = new DrawBufferShapeDrawer*[mNumShapeDrawers];
+    mShapeDrawers = new DrawBufferShapeDrawer*[mNumShapeDrawers]();
 
     for (s32 idx = 0; idx < mNumShapeDrawers; idx++) {
         mShapeDrawers[idx] = nullptr;
@@ -250,20 +320,33 @@ void DrawBuffer::initTable() {
 
         if (index >= 0) {
             s32 matNo = mMaterialNos[index];
+            if (matNo < 0 || matNo >= mNumShapeDrawers || mShapeDrawers[matNo] == nullptr) {
+                aurora::throw_host_exception< std::logic_error >("Original material alias has no draw owner");
+            }
             mMaterialNos[idx] = matNo;
             mShapeDrawers[matNo]->_8++;
             continue;
         }
 
         if (!material->isDrawModeOpaTexEdge()) {
+            if (opaIndex >= mNumOpaShapeDrawers) {
+                aurora::throw_host_exception< std::length_error >("Original opaque material drawer capacity exceeded");
+            }
             mMaterialNos[idx] = opaIndex;
             mShapeDrawers[opaIndex] = new DrawBufferShapeDrawer(material, mModel->getMatPacket(idx));
             opaIndex++;
         } else {
+            if (xluIndex + mNumOpaShapeDrawers >= mNumShapeDrawers) {
+                aurora::throw_host_exception< std::length_error >("Original translucent material drawer capacity exceeded");
+            }
             mMaterialNos[idx] = xluIndex + mNumOpaShapeDrawers;
             mShapeDrawers[xluIndex + mNumOpaShapeDrawers] = new DrawBufferShapeDrawer(material, mModel->getMatPacket(idx));
             xluIndex++;
         }
+    }
+
+    if (opaIndex + xluIndex != mNumShapeDrawers) {
+        aurora::throw_host_exception< std::logic_error >("Original unique material table does not match its drawers");
     }
 
     // sort Opa

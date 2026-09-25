@@ -1,14 +1,21 @@
 #pragma once
 
 #include "revolution.h"
+#include <memory>
 
 class J3DModel;
+class ModelManager;
 class LiveActor;
 class DrawBuffer;
 
 class DrawBufferExecuter {
 public:
     DrawBufferExecuter(const char*, J3DModel*, s32);
+    ~DrawBufferExecuter();
+    DrawBufferExecuter(const DrawBufferExecuter&) = delete;
+    DrawBufferExecuter& operator=(const DrawBufferExecuter&) = delete;
+
+    void retainNativeModel(LiveActor*);
 
     void allocateActorListBuffer();
     void add(LiveActor*);
@@ -31,4 +38,7 @@ public:
     /* 0x10 */ DrawBuffer* mDrawBuffer;
     /* 0x14 */ s32 mLightType;
     /* 0x18 */ s32 mDrawBufferCount;
+
+private:
+    std::shared_ptr< ModelManager > mNativeModel;
 };

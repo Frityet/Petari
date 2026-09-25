@@ -1,0 +1,37 @@
+{
+  "scope": "Actual category callback ownership and executor lifecycle; four files only",
+  "files": [
+    {
+      "path": "src/Game/NameObj/NameObjCategoryList.hpp",
+      "before": "notes/compat-owner-removal-round18-20260925/executor/before/src/Game/NameObj/NameObjCategoryList.hpp",
+      "before_sha256": "db54ac63a4b50eb72fae9e4e724d5d96b09a054587ddc16cd6f285909564922c",
+      "initial_git_status": "clean",
+      "action": "modify",
+      "after_sha256": "f89522b9b08c5eaa589e24e2f0dff11cc77e320db980201f9d2a280b4a5c268e"
+    },
+    {
+      "path": "src/Game/NameObj/NameObjCategoryList.cpp",
+      "before": "notes/compat-owner-removal-round18-20260925/executor/before/src/Game/NameObj/NameObjCategoryList.cpp",
+      "before_sha256": "4dee8301e442d5fab3dd86e0f1755f82c9bb8403bbb5b08e7d811bf97c34df05",
+      "initial_git_status": "clean",
+      "action": "modify",
+      "after_sha256": "8ff376c05e74738678af3ba46ef561a7d64e0de1a89e93a7ce9e95ceb92a8a93"
+    },
+    {
+      "path": "src/Game/NameObj/NameObjListExecutor.hpp",
+      "before": "notes/compat-owner-removal-round18-20260925/executor/before/src/Game/NameObj/NameObjListExecutor.hpp",
+      "before_sha256": "7063fc367b71c64f7a7c8a8a1e59f0e2393ce6c9f7b1aee7301ffdce1e378963",
+      "initial_git_status": "clean",
+      "action": "modify",
+      "after_sha256": "abdaaf84aa6b9e12218de98bf34e3597c93135dcabc8e30439b1a57759f938c9"
+    },
+    {
+      "path": "src/Game/NameObj/NameObjListExecutor.cpp",
+      "before": "notes/compat-owner-removal-round18-20260925/executor/before/src/Game/NameObj/NameObjListExecutor.cpp",
+      "before_sha256": "9df7ee7dc28793fae22a75e9b0b291775a6241c38b9a5814e0f841f9e74a31cc",
+      "initial_git_status": "clean",
+      "action": "modify",
+      "after_sha256": "fc53cc03aa65daaa3c4062558f34828810af54cad35c14061e4b7eb5ccca1367"
+    }
+  ]
+}

@@ -208,8 +208,6 @@ namespace smgpc::runtime {
         [[nodiscard]] const CaptureScreenDirector &capture_screen_director() const;
         [[nodiscard]] SceneScheduler &scheduler();
         [[nodiscard]] const SceneScheduler &scheduler() const;
-        [[nodiscard]] std::size_t begin_scene_registration_scope();
-        [[nodiscard]] std::size_t end_scene_registration_scope(std::size_t scope_id);
 
         [[nodiscard]] JAISoundHandle *start_sub_bgm(std::string_view name, bool prepared);
         [[nodiscard]] JAISoundHandle *start_sub_bgm(u32 sound_id, bool prepared);
@@ -298,9 +296,6 @@ namespace smgpc::runtime {
         aurora::WpadShakeGesture _core_pad_gesture;
         aurora::WpadShakeGesture _sub_pad_gesture;
         std::unique_ptr<CaptureScreenDirector> _capture_screen_director;
-        std::optional<std::size_t> _active_scene_registration_scope;
-        std::size_t _scene_scheduler_registration_marker = 0U;
-        std::size_t _next_scene_registration_scope_id = 1U;
         bool _application_exit_requested = false;
         std::string _application_exit_reason;
         std::uint64_t _frame_index = 0;

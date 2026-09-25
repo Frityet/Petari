@@ -5,7 +5,7 @@
 #include "Game/Scene/SceneNameObjListExecutor.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "runtime/SceneScheduler.hpp"
-#include "scene/SceneExecutionBinding.hpp"
+#include "Game/NameObj/NameObjExecuteHolder.hpp"
 #include "scene/SceneInitializationState.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include <aurora/allocation.hpp>
@@ -34,14 +34,15 @@ public:
             }
             _allocation = std::make_unique<runtime::SceneSchedulerAllocationBinding>(_scheduler, _domain);
             _holder->initializeNative(_domain);
-            _execution = std::make_unique<scene::SceneExecutionBinding>(_scheduler, *_executor, _domain);
+            _executor->bindNativeExecution(_scheduler, _domain);
         } catch (...) { retire(); throw; }
     }
     ~SceneExecutionFixture() { retire(); }
     SceneExecutionFixture(const SceneExecutionFixture&) = delete;
     SceneExecutionFixture& operator=(const SceneExecutionFixture&) = delete;
     void complete_initialization() {
-        _execution->complete_initialization();
+        _executor->allocateDrawBufferActorList();
+        _executor->nativeRequirements().initConnectting();
         _initialization.complete();
     }
     void init_after_placement() {
@@ -62,9 +63,9 @@ public:
         _scheduler.apply_execution_requirements(false, true);
     }
     void retire() {
-        if (_execution) _execution->prepare_retirement();
+        if (_executor) _executor->prepareNativeRetirement();
         if (_holder) _holder->retireNativeResources();
-        _execution.reset();
+        if (_executor) _executor->unbindNativeExecution();
         _allocation.reset();
         if (_original_scene) {
             _original_scene->mSceneObjHolder = nullptr;
@@ -76,7 +77,6 @@ public:
     }
     SceneNameObjListExecutor& executor() { return *_executor; }
     SceneObjHolder& holder() { return *_holder; }
-    scene::SceneExecutionBinding& execution() { return *_execution; }
 private:
     runtime::SceneScheduler& _scheduler;
     std::shared_ptr<compat::JkrAllocationDomain> _domain;
@@ -86,6 +86,5 @@ private:
     scene::SceneInitializationBinding _initialization;
     std::unique_ptr<runtime::SceneSchedulerAllocationBinding> _allocation;
     std::vector<NameObj*> _completed;
-    std::unique_ptr<scene::SceneExecutionBinding> _execution;
 };
 }

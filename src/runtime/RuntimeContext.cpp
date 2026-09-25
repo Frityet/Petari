@@ -937,35 +937,6 @@ namespace smgpc::runtime {
         return _scheduler;
     }
 
-    std::size_t RuntimeContext::begin_scene_registration_scope() {
-        if (_active_scene_registration_scope.has_value()) {
-            aurora::throw_host_exception<std::logic_error>("RuntimeContext scene registration scope is already active.");
-        }
-
-        const auto scope_id = _next_scene_registration_scope_id++;
-        _active_scene_registration_scope = scope_id;
-        _scene_scheduler_registration_marker = _scheduler.registration_marker();
-        return scope_id;
-    }
-
-    std::size_t RuntimeContext::end_scene_registration_scope(std::size_t scope_id) {
-        if (!_active_scene_registration_scope.has_value() || *_active_scene_registration_scope != scope_id) {
-            aurora::throw_host_exception<std::logic_error>("RuntimeContext scene registration scope does not match the active scope.");
-        }
-        const auto registrations = _scheduler.remove_registrations_since(_scene_scheduler_registration_marker);
-        for (const auto &registration : registrations) {
-            if (registration.live_actor != nullptr) {
-                _star_pointer.unregister_target(*registration.live_actor);
-                _star_pointer.clear_mode_requests(registration.live_actor);
-            }
-        }
-        _j_audio_playback->reset_scene();
-        smgpc::compat::retire_audio_facade_state();
-        _active_scene_registration_scope.reset();
-        _scene_scheduler_registration_marker = 0U;
-        return registrations.size();
-    }
-
     JAISoundHandle *RuntimeContext::start_sub_bgm(std::string_view name, bool prepared) {
         auto *handle = _j_audio_playback->start_bgm(BgmLane::Sub, name, prepared);
         if (handle == nullptr) {
