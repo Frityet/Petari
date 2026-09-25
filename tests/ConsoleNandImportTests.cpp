@@ -1,5 +1,5 @@
 #include "runtime/ConsoleNandImport.hpp"
-#include "runtime/SystemConfigService.hpp"
+#include <aurora/system_config.hpp>
 #include "runtime/RuntimeServices.hpp"
 #include "resource/GameResourceRuntime.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -81,7 +81,7 @@ namespace {
                 "absolute console paths retain distinct same-basename resources after Game heap retirement");
         require(!nand.exists(title + "/shared2/sys/SYSCONF"), "console resources are not nested under title save data");
         {
-            smgpc::runtime::SystemConfigService settings(nand);
+            aurora::SystemConfiguration settings(nand);
             require(SCGetAspectRatio() == 1 && SCGetLanguage() == 9 && SCGetProductArea() == 6 && SCGetProductGameRegion() == 4,
                     "actual imported bytes feed original SDK config and encrypted product accessors");
         }

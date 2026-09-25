@@ -12,6 +12,7 @@
 
 #include <revolution.h>
 #include <aurora/wpad_motion.hpp>
+#include <aurora/system_config.hpp>
 
 #include "Logger.hpp"
 #include "runtime/ArchiveMountService.hpp"
@@ -53,7 +54,6 @@ namespace smgpc::compat { class StarPointerDepthOwnership; class DrawSyncManager
 
 namespace smgpc::runtime {
 
-    class SystemConfigService;
 
     enum class RuntimeContextSceneServiceMode {
         RuntimeOwned,
@@ -339,7 +339,7 @@ namespace smgpc::runtime {
         SequenceRequestService _sequence_requests;
         SaveDataService _save_data;
         std::unique_ptr<compat::NandSdkBinding> _nand_sdk;
-        std::unique_ptr<SystemConfigService> _system_config;
+        std::unique_ptr<aurora::SystemConfiguration> _system_config;
         MessageService _messages;
         std::unique_ptr<MessageHolderOwnership> _message_holder;
         SceneLightService _scene_lights;

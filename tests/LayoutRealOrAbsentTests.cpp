@@ -1,4 +1,4 @@
-#include "compat/LanguageOwnership.hpp"
+#include "OriginalStageResourceProcessFixture.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Screen/LayoutManager.hpp"
 #include "layout/LayoutHost.hpp"
@@ -54,10 +54,7 @@ void require_unavailable(const std::function<void()>& operation, std::string_vie
 }
 }  // namespace
 
-int main() {
-    // This standalone resource fixture uses the supplied Korean retail data.
-    // It does not create a GameSystem; publish its language explicitly.
-    const smgpc::compat::LanguageOwnership language("KrKorean");
+void verify_layout() {
     auto passed = 0;
 
     auto entries = std::vector<smgpc::resource::RarcEntry>{
@@ -156,9 +153,8 @@ int main() {
                         "an uninitialized LayoutActor must not expose a default animation frame");
     require_unavailable([&] { (void)smgpc::layout::is_layout_anim_stopped(&actor, 0U); },
                         "an uninitialized LayoutActor must not report a fabricated stopped state");
-    actor.initLayoutManager("DefinitelyMissingLayout", 1U);
     require_unavailable([&] { actor.initEffectKeeper(1, "LayoutEffect", nullptr); },
-                        "LayoutActor effect initialization requires an active real RuntimeContext");
+                        "LayoutActor effect initialization requires its real layout manager");
     smgpc::layout::release_layout_actor_if_registered(&actor);
     ++passed;
 
@@ -199,5 +195,6 @@ int main() {
 
     std::cout << "Layout real-or-absent tests passed: " << passed << "/"
               << (find_sys_info_window_mini_archive().has_value() ? 7 : 6) << "\n";
-    return 0;
 }
+
+int main() { return smgpc::test::run_stage_resource_process("layout-real-or-absent", verify_layout); }

@@ -1,0 +1,5 @@
+[resource] wait.bck: joints=30, frames=180
+[resource] run.bck: joints=30, frames=60
+[resource] jump.bck: joints=30, frames=24
+[skip] no authored BCA in MarioAnime.arc; full sampling is covered by byte fixtures
+7/7 original J3D transform-animation groups passed, plus available real-disc resources

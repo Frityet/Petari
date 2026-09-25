@@ -1,6 +1,6 @@
 #include "Game/Util/CameraUtil.hpp"
 #include "resource/GameResourceRuntime.hpp"
-#include "runtime/SystemConfigService.hpp"
+#include <aurora/system_config.hpp>
 #include <aurora/aurora.h>
 
 #include <cmath>
@@ -43,7 +43,7 @@ int main() {
     aurora::g_config.mem1Size = 24U << 20;
     smgpc::resource::GameResourceRuntime resources;
     aurora::NandFileSystem nand;
-    smgpc::runtime::SystemConfigService settings(nand);
+    aurora::SystemConfiguration settings(nand);
     auto passed = 0;
 
     require_unavailable([] { (void)MR::getCamPos(); }, "missing camera state must not manufacture an origin");

@@ -46,7 +46,7 @@
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/MessageHolderOwnership.hpp"
 #include "runtime/ConsoleNandImport.hpp"
-#include "runtime/SystemConfigService.hpp"
+#include <aurora/system_config.hpp>
 #include "runtime/DebugWpadInputScript.hpp"
 #include "runtime/DebugWpadInputFile.hpp"
 #include "runtime/OriginalProcessTrace.hpp"
@@ -198,7 +198,7 @@ private:
 };
 #endif
 
-void initialize_console_language(runtime::SystemConfigService& settings) {
+void initialize_console_language(aurora::SystemConfiguration& settings) {
     // A newly created native console has no IPL settings. Select its initial
     // language from the mounted disc's region before original Game boot; an
     // imported/configured console keeps its authored setting unchanged.
@@ -252,7 +252,7 @@ public:
         }
         if (const char* source = std::getenv("SMGPC_NAND_DIR"); source && *source)
             (void)runtime::import_console_nand_directory(save.nand(), source, runtime::NandImportExisting::Preserve);
-        settings = std::make_unique<runtime::SystemConfigService>(save.nand());
+        settings = std::make_unique<aurora::SystemConfiguration>(save.nand());
         nand = std::make_unique<compat::NandSdkBinding>(save);
 #ifndef NDEBUG
         if (input_script.button_span_count() || input_script.pointer_span_count() || input_script.stick_span_count()) {
@@ -477,7 +477,7 @@ private:
     runtime::DvdFileSystemService dvd;
     std::unique_ptr<runtime::ArchiveMountService> archives;
     runtime::SaveDataService save;
-    std::unique_ptr<runtime::SystemConfigService> settings;
+    std::unique_ptr<aurora::SystemConfiguration> settings;
     std::unique_ptr<compat::NandSdkBinding> nand;
     std::shared_ptr<compat::JkrAllocationDomain> root;
     std::shared_ptr<compat::JkrAllocationDomain> stationed;

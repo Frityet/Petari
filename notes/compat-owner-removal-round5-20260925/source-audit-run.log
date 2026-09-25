@@ -1,0 +1,3 @@
+duplicate_strong_symbols=0.0
+unreviewed_symbol_providers=7768.0
+[0m[1;38;5;1;1merror: [0mprovider ownership check failed; inspect provider-audit.json and detailed artifacts[0m

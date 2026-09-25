@@ -18,7 +18,7 @@
 #include "runtime/ArchiveMountService.hpp"
 #include "runtime/ConsoleNandImport.hpp"
 #include "runtime/RuntimeServices.hpp"
-#include "runtime/SystemConfigService.hpp"
+#include <aurora/system_config.hpp>
 #include <JSystem/JKernel/JKRExpHeap.hpp>
 #include <aurora/allocation.hpp>
 #include <aurora/aurora.h>
@@ -51,7 +51,7 @@ struct Bootstrap {
     smgpc::runtime::DvdFileSystemService dvd{"/"};
     smgpc::runtime::ArchiveMountService archives{dvd};
     smgpc::runtime::SaveDataService save;
-    std::unique_ptr<smgpc::runtime::SystemConfigService> settings;
+    std::unique_ptr<aurora::SystemConfiguration> settings;
     std::unique_ptr<smgpc::compat::NandSdkBinding> nand;
     std::shared_ptr<smgpc::compat::JkrAllocationDomain> root;
     std::shared_ptr<smgpc::compat::JkrAllocationDomain> stationed;
@@ -69,7 +69,7 @@ struct Bootstrap {
             std::fprintf(stderr, "[original-startup] imported NAND files: %zu (%zu bytes)\n",
                 imported.imported_files, imported.imported_bytes);
         }
-        settings = std::make_unique<smgpc::runtime::SystemConfigService>(save.nand());
+        settings = std::make_unique<aurora::SystemConfiguration>(save.nand());
         nand = std::make_unique<smgpc::compat::NandSdkBinding>(save);
         std::fprintf(stderr, "[original-startup] private NAND: %s\n", directory.c_str());
     }

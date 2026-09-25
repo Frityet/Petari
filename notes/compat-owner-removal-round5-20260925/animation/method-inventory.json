@@ -1,0 +1,408 @@
+[
+  {
+    "method": "J3DFrameCtrl::init",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DFrameCtrlCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DFrameCtrl::checkPass",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DFrameCtrlCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DFrameCtrl::update",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DFrameCtrlCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmTransform::J3DAnmTransform",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DTransformAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmTransformFull::~J3DAnmTransformFull",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DTransformAnimationCompat.cpp",
+    "result": "native-definition-preserved"
+  },
+  {
+    "method": "J3DAnmTransformFull::getTransform",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DTransformAnimationCompat.cpp",
+    "result": "native-definition-preserved"
+  },
+  {
+    "method": "J3DAnmTransformFullWithLerp::getTransform",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DTransformAnimationCompat.cpp",
+    "result": "native-definition-preserved"
+  },
+  {
+    "method": "J3DAnmTransformKey::calcTransform",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DTransformAnimationCompat.cpp",
+    "result": "native-definition-preserved"
+  },
+  {
+    "method": "J3DAnmTextureSRTKey::J3DAnmTextureSRTKey",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmTextureSRTKey::calcTransform",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "native-definition-preserved"
+  },
+  {
+    "method": "J3DAnmClusterFull::getWeight",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DAdditionalAnimationCompat.cpp",
+    "result": "native-definition-preserved"
+  },
+  {
+    "method": "J3DAnmClusterKey::getWeight",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DAdditionalAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmVtxColor::J3DAnmVtxColor",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DAdditionalAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmVtxColorFull::J3DAnmVtxColorFull",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DAdditionalAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmVtxColorFull::getColor",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DAdditionalAnimationCompat.cpp",
+    "result": "native-definition-preserved"
+  },
+  {
+    "method": "J3DAnmVtxColorKey::J3DAnmVtxColorKey",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DAdditionalAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmVtxColorKey::getColor",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DAdditionalAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmColor::J3DAnmColor",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmColor::searchUpdateMaterialID",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmColor::searchUpdateMaterialID",
+    "overload": 1,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmColorFull::J3DAnmColorFull",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmColorFull::getColor",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "native-definition-preserved"
+  },
+  {
+    "method": "J3DAnmColorKey::J3DAnmColorKey",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmColorKey::getColor",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmTevRegKey::J3DAnmTevRegKey",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmTexPattern::J3DAnmTexPattern",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmTexPattern::getTexNo",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "native-definition-preserved"
+  },
+  {
+    "method": "J3DAnmVisibilityFull::getVisibility",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DAdditionalAnimationCompat.cpp",
+    "result": "native-definition-preserved"
+  },
+  {
+    "method": "J3DAnmTexPattern::searchUpdateMaterialID",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmTexPattern::searchUpdateMaterialID",
+    "overload": 1,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmTextureSRTKey::searchUpdateMaterialID",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmTextureSRTKey::searchUpdateMaterialID",
+    "overload": 1,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmTevRegKey::getTevColorReg",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmTevRegKey::getTevKonstReg",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmTevRegKey::searchUpdateMaterialID",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "J3DAnmTevRegKey::searchUpdateMaterialID",
+    "overload": 1,
+    "owner": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "previous_provider": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "result": "donor-definition-restored"
+  },
+  {
+    "method": "smgpc::resource::detail::load_native_animation",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "native-dispatch-definition-preserved"
+  },
+  {
+    "method": "J3DAnmFullLoader_v15::J3DAnmFullLoader_v15",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmFullLoader_v15::~J3DAnmFullLoader_v15",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmKeyLoader_v15::J3DAnmKeyLoader_v15",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmKeyLoader_v15::~J3DAnmKeyLoader_v15",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmFullLoader_v15::load",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmFullLoader_v15::setResource",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmFullLoader_v15::setAnmTransform",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmFullLoader_v15::setAnmColor",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmFullLoader_v15::setAnmTexPattern",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmFullLoader_v15::setAnmVisibility",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmFullLoader_v15::setAnmCluster",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmFullLoader_v15::setAnmVtxColor",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmKeyLoader_v15::load",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmKeyLoader_v15::setResource",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmKeyLoader_v15::setAnmTransform",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmKeyLoader_v15::setAnmTextureSRT",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmKeyLoader_v15::setAnmColor",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmKeyLoader_v15::setAnmCluster",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmKeyLoader_v15::setAnmTevReg",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmKeyLoader_v15::setAnmVtxColor",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "donor-definition-with-existing-native-traversal-and-width-adaptations"
+  },
+  {
+    "method": "J3DAnmLoaderDataBase::load",
+    "overload": 0,
+    "owner": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+    "previous_provider": "src/compat/J3DAnmLoaderCompat.cpp",
+    "result": "bounded-public-entry-preserved"
+  }
+]

@@ -14,7 +14,7 @@
 #include "Game/Util/CameraUtil.hpp"
 #include "compat/JutTextureAllocation.hpp"
 #include "runtime/ConsoleNandImport.hpp"
-#include "runtime/SystemConfigService.hpp"
+#include <aurora/system_config.hpp>
 #include "Game/System/RenderMode.hpp"
 #include "JSystem/JUtility/JUTTexture.hpp"
 
@@ -254,7 +254,7 @@ namespace smgpc::runtime {
                 _logger.info(logging::Category::APP, logging::Message{"Loaded {} console NAND files from {} ({} existing files preserved)"},
                              imported.imported_files, nand_directory->string(), imported.preserved_files);
             }
-            _system_config = std::make_unique<SystemConfigService>(_save_data.nand());
+            _system_config = std::make_unique<aurora::SystemConfiguration>(_save_data.nand());
             _nand_sdk = std::make_unique<compat::NandSdkBinding>(_save_data);
             aurora::wpad_service().clear();
             _draw_sync = std::make_unique<compat::DrawSyncManagerLifetime>(_host_heaps);

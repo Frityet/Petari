@@ -1,0 +1,30 @@
+{
+  "files": [
+    "aurora/cmake/aurora_os.cmake",
+    "aurora/include/aurora/system_config.hpp",
+    "aurora/include/revolution/sc.h",
+    "aurora/lib/dolphin/sc/SCProductInfo.cpp",
+    "aurora/lib/dolphin/sc/SCSystem.cpp",
+    "aurora/lib/dolphin/sc/SCapi.cpp",
+    "aurora/xmake.lua",
+    "src/app/OriginalGameApplication.cpp",
+    "src/compat/OriginalSystemConfigAccessors.cpp",
+    "src/compat/OriginalSystemProductInfo.cpp",
+    "src/compat/SystemConfigSdkCompat.cpp",
+    "src/revolution/sc.h",
+    "src/runtime/RuntimeContext.cpp",
+    "src/runtime/RuntimeContext.hpp",
+    "src/runtime/SystemConfigService.cpp",
+    "src/runtime/SystemConfigService.hpp",
+    "tests/CameraUtilRealOrAbsentTests.cpp",
+    "tests/ConsoleNandImportTests.cpp",
+    "tests/GxCopyFifoOrderTests.cpp",
+    "tests/OriginalCameraContextTests.cpp",
+    "tests/OriginalGameSystemStartupTests.cpp",
+    "tests/OriginalSystemConfigTests.cpp",
+    "tests/OriginalViRenderModeTests.cpp",
+    "tests/RuntimeContextFailureTests.cpp"
+  ],
+  "aurora_base": "edffbd164d373e48de30d4be9997d952cdea7800",
+  "initial_aurora_status": ""
+}

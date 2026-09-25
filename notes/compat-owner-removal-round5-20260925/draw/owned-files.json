@@ -1,0 +1,48 @@
+[
+  {
+    "path": "src/compat/J3DDrawBufferCompat.cpp",
+    "before_status": "",
+    "before_sha256": "afc661f9501d018da49961d35259472191f5f0495f9de696f916bb02ac1aa333",
+    "change": "remove",
+    "after_sha256": null
+  },
+  {
+    "path": "src/compat/J3DStructCompat.cpp",
+    "before_status": "",
+    "before_sha256": "a0dcf5cbb9225a16774ccf0686bc9b14dd00fd03f34c0843568b39776ae44fd3",
+    "change": "remove",
+    "after_sha256": null
+  },
+  {
+    "path": "src/compat/J3DGDCompat.cpp",
+    "before_status": "",
+    "before_sha256": "bab47e0ac52a68901044fa832fc5027abd3d68ecb52f6a8e8e0a4f022cd0a37e",
+    "change": "remove",
+    "after_sha256": null
+  },
+  {
+    "path": "src/JSystem/J3DGraphBase/J3DGD.hpp",
+    "before_status": "",
+    "before_sha256": "dc5d09f2dcbab48bdc7725bbed388c3d188be0bfd4ef509a8e9b6e5d889cd0f9",
+    "change": "modify",
+    "after_sha256": "0175d49d3bf15bdb5cd5319c56aac6b41c1cc41d7c426ec1e85c1846362f736a"
+  },
+  {
+    "path": "src/JSystem/J3DGraphBase/J3DDrawBuffer.cpp",
+    "before_status": "absent",
+    "change": "add",
+    "after_sha256": "c1716b93afd28a55ce8f06079e5119dd97a3be882f4329841d8fa5158587ce47"
+  },
+  {
+    "path": "src/JSystem/J3DGraphBase/J3DStruct.cpp",
+    "before_status": "absent",
+    "change": "add",
+    "after_sha256": "b855fc6baa81d99c266e18657151f796a10789c46eb51277d331c41ce1ea3194"
+  },
+  {
+    "path": "src/JSystem/J3DGraphBase/J3DGD.cpp",
+    "before_status": "absent",
+    "change": "add",
+    "after_sha256": "232d30038bef088797d0209573ae9f658e839c0fa3660748f08552179e1f7ed5"
+  }
+]

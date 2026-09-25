@@ -1,0 +1,10 @@
+[
+  {
+    "name": "original-layout-group",
+    "target": "smg-pc-original-layout-group-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-layout-group-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-layout-group-tests-run.log"
+  }
+]

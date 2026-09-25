@@ -2,7 +2,7 @@
 #include "compat/JkrAllocationDomain.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/System/RenderMode.hpp"
-#include "runtime/SystemConfigService.hpp"
+#include <aurora/system_config.hpp>
 
 #include <dolphin/gx.h>
 #include <dolphin/gx/GXAurora.h>
@@ -223,7 +223,7 @@ namespace {
         });
         auto renderer = smgpc::render::AuroraRenderer(window);
         aurora::NandFileSystem nand;
-        smgpc::runtime::SystemConfigService configuration(nand);
+        aurora::SystemConfiguration configuration(nand);
         const auto &render_mode = *MR::getSuitableRenderMode();
         constexpr auto RetailVFilter = std::array<std::uint8_t, 7U>{32U, 0U, 32U, 0U, 0U, 0U, 0U};
         require(render_mode.viTVmode == VI_TVMODE_NTSC_INT && render_mode.fbWidth == CopyWidth &&

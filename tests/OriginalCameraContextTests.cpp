@@ -8,7 +8,7 @@
 #include "Game/Util/SystemUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "resource/GameResourceRuntime.hpp"
-#include "runtime/SystemConfigService.hpp"
+#include <aurora/system_config.hpp>
 #include <aurora/aurora.h>
 #include <cmath>
 #include <iostream>
@@ -131,7 +131,7 @@ int main() {
         aurora::g_config.mem1Size = 24U * 1024U * 1024U;
         smgpc::resource::GameResourceRuntime process;
         aurora::NandFileSystem nand;
-        smgpc::runtime::SystemConfigService settings(nand);
+        aurora::SystemConfiguration settings(nand);
         const auto objects = smgpc::compat::name_obj_runtime_state_count();
         for (u8 flag : {0, 1, 2, 255}) {
             require(SCReplaceU8Item(flag, SC_ITEM_ID_IPL_ASPECT_RATIO), "set original SC aspect item");

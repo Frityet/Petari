@@ -1,0 +1,26 @@
+# Canonical J3D animation owners
+
+Baseline `2fef93f2c570db367556b9f556770bb16a0b8289`; donor is the current decomp snapshot recorded in `before.json`. All owned sources were clean before this batch. Production implementation is frozen for root's build.
+
+## Complete owner restoration
+
+Added `src/JSystem/J3DGraphAnimator/J3DAnimation.cpp` and `src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp`. Deleted all six former providers (1,809 lines): `J3DFrameCtrlCompat.cpp`, `J3DTransformAnimationCompat.cpp`, `J3DMaterialAnimationCompat.cpp`, `J3DAdditionalAnimationCompat.cpp`, `J3DAnimationInterpolation.hpp`, and `J3DAnmLoaderCompat.cpp`.
+
+The animation owner starts from the complete donor file and retains its method order. All 35 donor class methods are present, plus the already-required native out-of-line `J3DAnmTransformFull` destructor. Twenty-six definitions use donor text modulo infrastructure formatting, including original FrameCtrl branches and constructor initialization. The previous FrameCtrl provider was a condensed expression of the same branches; state bits, interval comparisons, loop limits, reset behavior, and both reverse modes remain original. `BOOL` is `int` in Aurora, so the original `int checkPass` definition matches the existing header.
+
+Nine sampler definitions retain their verified native arithmetic adaptations: transform full/full-with-lerp/key, texture SRT, cluster full, vertex-color full, material-color full, texture pattern, and visibility. The original current native interpolation definitions are now private implementation in this canonical owner, with no replacement header. PPC truncation, halfword narrowing and shift behavior still use Aurora's general PPC primitives. FP contraction remains disabled; ordinary BCA lerp keeps separate multiply/add, while signed-16 Hermite keeps the existing explicit single-precision FMA order. Color channel clamps, rotation wrapping, track endpoints/defaults, key-type interpretation, name-table resolution, and post-texture/TEV counts are preserved.
+
+The loader contains every current donor method for both v15 loader classes and all twelve original animation formats. Its original type-dispatch body remains the private native callback from the bounded resource owner. Its public entry remains `load_registered_j3d_animation`, which rejects unknown unbounded identities before interpreting native headers. The four traversal sites still use the validated resource owner's first/next block APIs; native decoded blocks have separate allocations and pointer-bearing layouts, so original guest contiguous pointer increments would be incorrect. Full/key vertex-color relocation still uses `uintptr_t`, and each load receives separate mutable decoded tables. The two `load` methods now use the donor's direct `setAnm*` calls; these match the former inline `readAnm*` wrappers exactly.
+
+No SDK headers or `resource/J3dAnimationResource` code changed. That resource owner continues to validate original-width/endian bytes, retain table/source lifetimes, serialize loaded-object retention, and destroy the actual animation before its retained JKR allocation domain. No Game code, build files, tests, Git index or commits were touched by this lane. The declared but undefined `J3DAnmLoaderDataBase::setResource` remains unchanged: neither current donor nor existing native implementation defines it, and there are no callers; no stub was introduced.
+
+## Evidence and build handoff
+
+- `before.json` and `before/`: hashes and exact clean pre-edit sources, including current donor files.
+- `manifest.json`, `build-wiring.json`: exact additions/deletions and root-owned target changes.
+- `method-inventory.json`, `source-validation.json`: 36 sampler class methods and 22 loader definitions, each accounted for; preserved interpolation/conversion helpers, all FP pragmas, unchanged headers/resource decoder.
+- `validate-source.py`: repeatable read-only source verification. Passed; this is not a runtime test.
+- `source-changes.patch`, `owned-patches/`: exact per-file patches without unrelated working edits. `J3DAnimation-donor.diff` and `J3DAnmLoader-donor.diff` show the canonical result against decomp, including infrastructure formatting.
+- The retired interpolation header has no remaining consumers. The sole direct build consumer of a retired CPP was fixed-step-clock; root owns its migration to `smg-pc-game` and SDK dependencies.
+
+Root should add the two canonical CPPs to the SDK/Game library and regenerate its compat glob. Requested focused targets are `smg-pc-j3d-frame-ctrl-tests`, `smg-pc-original-j3d-transform-animation-tests`, `smg-pc-original-j3d-material-animation-tests`, `smg-pc-original-j3d-animation-resource-tests`, and `smg-pc-fixed-step-clock-tests`. Existing fixtures cover exact transform math/endpoints/wraps, material binding/clamps, all twelve format families, independent repeated/concurrent loads, malformed bounds, alias lifetime and JKR retirement. Root can also run the transform fixture with the real-disc option and animation-resource fixture with a real archive argument. No new mirror tests were added for this owner consolidation. Build/runtime results are pending root's integrated validation.

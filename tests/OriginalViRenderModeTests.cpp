@@ -1,6 +1,6 @@
 #include "Game/System/RenderMode.hpp"
 #include "resource/GameResourceRuntime.hpp"
-#include "runtime/SystemConfigService.hpp"
+#include <aurora/system_config.hpp>
 #include <aurora/aurora.h>
 #include <aurora/sysconf.hpp>
 #include <aurora/vi.hpp>
@@ -65,7 +65,7 @@ void original_selection() {
                             document.replace_integer("IPL.E60", aurora::SysConf::Type::Byte, rgb60);
                             aurora::NandFileSystem nand;
                             nand.write_file("/shared2/sys/SYSCONF", document.encode());
-                            smgpc::runtime::SystemConfigService configuration(nand);
+                            aurora::SystemConfiguration configuration(nand);
                             auto initial = boot_mode(tv, scan);
                             VIConfigure(&initial);
                             aurora::vi::set_dtv_connected(connected);
@@ -97,7 +97,7 @@ void original_selection() {
 void defaults_and_invalid_config() {
     RestoreCapability restore;
     aurora::NandFileSystem nand;
-    smgpc::runtime::SystemConfigService configuration(nand);
+    aurora::SystemConfiguration configuration(nand);
     const auto initial = boot_mode(VI_NTSC, VI_PROGRESSIVE);
     VIConfigure(&initial);
     aurora::vi::set_dtv_connected(true);

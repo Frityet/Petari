@@ -1,0 +1,227 @@
+{
+  "application_build": {
+    "exit": 0,
+    "log": "build-app.log"
+  },
+  "focused_targets": [
+    {
+      "name": "fixed-step-clock",
+      "target": "smg-pc-fixed-step-clock-tests",
+      "build": 0,
+      "build_log": "smg-pc-fixed-step-clock-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-fixed-step-clock-tests-run.log",
+      "completed_at": 1790345388.918314
+    },
+    {
+      "name": "j3d-frame-ctrl",
+      "target": "smg-pc-j3d-frame-ctrl-tests",
+      "build": 0,
+      "build_log": "smg-pc-j3d-frame-ctrl-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-j3d-frame-ctrl-tests-run.log",
+      "completed_at": 1790345393.7584388
+    },
+    {
+      "name": "original-j3d-transform-animation",
+      "target": "smg-pc-original-j3d-transform-animation-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-j3d-transform-animation-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-j3d-transform-animation-tests-run.log",
+      "completed_at": 1790345398.5715258
+    },
+    {
+      "name": "original-j3d-material-animation",
+      "target": "smg-pc-original-j3d-material-animation-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-j3d-material-animation-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-j3d-material-animation-tests-run.log",
+      "completed_at": 1790345403.194603
+    },
+    {
+      "name": "original-j3d-animation-resource",
+      "target": "smg-pc-original-j3d-animation-resource-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-j3d-animation-resource-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-j3d-animation-resource-tests-run.log",
+      "completed_at": 1790345408.147277
+    },
+    {
+      "name": "original-j3d-packet",
+      "target": "smg-pc-original-j3d-packet-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-j3d-packet-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-j3d-packet-tests-run.log",
+      "completed_at": 1790345412.82163
+    },
+    {
+      "name": "original-j3d-texture-mtx",
+      "target": "smg-pc-original-j3d-texture-mtx-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-j3d-texture-mtx-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-j3d-texture-mtx-tests-run.log",
+      "completed_at": 1790345417.17369
+    },
+    {
+      "name": "original-j3d-material-block",
+      "target": "smg-pc-original-j3d-material-block-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-j3d-material-block-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-j3d-material-block-tests-run.log",
+      "completed_at": 1790345421.899887
+    },
+    {
+      "name": "original-system-config",
+      "target": "smg-pc-original-system-config-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-system-config-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-system-config-tests-run.log",
+      "completed_at": 1790345426.869266
+    },
+    {
+      "name": "console-nand-import",
+      "target": "smg-pc-console-nand-import-tests",
+      "build": 0,
+      "build_log": "smg-pc-console-nand-import-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-console-nand-import-tests-run.log",
+      "completed_at": 1790345431.842816
+    },
+    {
+      "name": "original-vi-render-mode",
+      "target": "smg-pc-original-vi-render-mode-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-vi-render-mode-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-vi-render-mode-tests-run.log",
+      "completed_at": 1790345436.5389812
+    },
+    {
+      "name": "original-language",
+      "target": "smg-pc-original-language-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-language-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-language-tests-run.log",
+      "completed_at": 1790345444.574244
+    },
+    {
+      "name": "layout-real-or-absent",
+      "target": "smg-pc-layout-real-or-absent-tests",
+      "build": 0,
+      "build_log": "smg-pc-layout-real-or-absent-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-layout-real-or-absent-tests-run.log",
+      "completed_at": 1790345452.544798
+    },
+    {
+      "name": "original-jpa-manager",
+      "target": "smg-pc-original-jpa-manager-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-jpa-manager-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-jpa-manager-tests-run.log",
+      "completed_at": 1790345460.604092
+    },
+    {
+      "name": "original-layout-group",
+      "target": "smg-pc-original-layout-group-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-layout-group-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-layout-group-tests-run.log",
+      "completed_at": 1790345756.684
+    },
+    {
+      "name": "runtime-context-failure",
+      "target": "smg-pc-runtime-context-failure-tests",
+      "build": 0,
+      "build_log": "smg-pc-runtime-context-failure-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-runtime-context-failure-tests-run.log",
+      "completed_at": 1790345472.550935
+    }
+  ],
+  "focused_target_count": 16,
+  "initial_fixture_failure": "smg-pc-original-layout-group-tests-initial-failure.log",
+  "runtime": {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc",
+      "--disc",
+      "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--stage",
+      "HeavensDoorGalaxy",
+      "--scenario",
+      "1",
+      "--max-frames",
+      "600"
+    ],
+    "environment": {
+      "SMGPC_SAVE_DIR": "/Users/frityet/Projects/petari/notes/compat-owner-removal-round5-20260925/gateway-600-nand",
+      "SMGPC_NAND_DIR": "",
+      "SMGPC_ORIGINAL_PLACEMENT_REPORT_PATH": "/Users/frityet/Projects/petari/notes/compat-owner-removal-round5-20260925/gateway-600-placements.json",
+      "AURORA_BACKEND": "metal",
+      "SMGPC_WINDOW_WIDTH": "1280",
+      "SMGPC_WINDOW_HEIGHT": "720",
+      "SMGPC_SCREENSHOT_PATH": "/Users/frityet/Projects/petari/notes/compat-owner-removal-round5-20260925/gateway-600-frame480.png",
+      "SMGPC_SCREENSHOT_FRAME": "480",
+      "SMGPC_DEBUG_WPAD_INPUT_FILE": "",
+      "SMGPC_DEBUG_FRAME_TIMING": "",
+      "SMGPC_DEBUG_ACTOR_TRACE_PATH": "",
+      "SMGPC_DEBUG_ACTOR_TRACE_TYPES": "",
+      "SMGPC_DEBUG_ACTOR_TRACE_INTERVAL": "60",
+      "SMGPC_DEBUG_LAYOUT_DUMP_PATH": "",
+      "SMGPC_DEBUG_LAYOUT_DUMP_FRAME": "",
+      "SMGPC_DEBUG_WPAD_BUTTON_SCRIPT": "",
+      "SMGPC_DEBUG_WPAD_POINTER_SCRIPT": "",
+      "SMGPC_DEBUG_WPAD_STICK_SCRIPT": ""
+    },
+    "binary_sha256": "54c3b2ff08b29d6f3dfbc7f3a6b75e2f12e8ba8fab1851520e1d69b6d3da4eed",
+    "started_at": "2026-09-25T14:09:43.804244+00:00",
+    "pid": 35907,
+    "exit_code": 0,
+    "timeout_terminated": false,
+    "inherited_smgpc_environment_removed": true,
+    "binary_sha256_after": "54c3b2ff08b29d6f3dfbc7f3a6b75e2f12e8ba8fab1851520e1d69b6d3da4eed",
+    "binary_unchanged": true,
+    "elapsed_seconds": 12.065685874957126,
+    "process_still_exists_after_wait": false,
+    "completed_frames": 600,
+    "verified_bounded_completion": true
+  },
+  "screenshot_visually_inspected": true,
+  "provider_audit": {
+    "duplicate_strong_symbols": 0,
+    "stale_source_providers": 0,
+    "unavailable_owner_inputs": 0,
+    "provider_provenance": {
+      "unreviewed": 7768,
+      "canonical-path-see-source-closeness-report": 15557,
+      "source-tokens-exact": 8,
+      "source-tokens-differ": 2,
+      "unresolved": 9
+    },
+    "source_checks": {
+      "source-tokens-exact": 9,
+      "unresolved": 11,
+      "source-tokens-differ": 2
+    }
+  },
+  "provider_gate_exit": 255,
+  "remaining_compat_files": 184,
+  "removed_this_batch": 14,
+  "complete_removal_finished": false,
+  "full_gateway_completed": false,
+  "limits": [
+    "Working-tree build includes unrelated preexisting edits.",
+    "No CMake build or full-suite claim.",
+    "600 frames prove only bounded opening regression."
+  ]
+}

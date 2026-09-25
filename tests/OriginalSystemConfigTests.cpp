@@ -1,4 +1,4 @@
-#include "runtime/SystemConfigService.hpp"
+#include <aurora/system_config.hpp>
 #include "runtime/RuntimeServices.hpp"
 #include "compat/NandSdkBinding.hpp"
 #include <aurora/aurora.h>
@@ -22,7 +22,7 @@
 namespace aurora { extern AuroraConfig g_config; }
 namespace {
     using Type = aurora::SysConf::Type;
-    using Service = smgpc::runtime::SystemConfigService;
+    using Service = aurora::SystemConfiguration;
     constexpr auto config_path = "/shared2/sys/SYSCONF";
     constexpr auto product_path = "/title/00000001/00000002/data/setting.txt";
     void require(bool good, const char* message) { if (!good) throw std::runtime_error(message); }

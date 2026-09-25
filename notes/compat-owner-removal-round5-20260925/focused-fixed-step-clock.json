@@ -1,0 +1,130 @@
+[
+  {
+    "name": "fixed-step-clock",
+    "target": "smg-pc-fixed-step-clock-tests",
+    "build": 0,
+    "build_log": "smg-pc-fixed-step-clock-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-fixed-step-clock-tests-run.log"
+  },
+  {
+    "name": "j3d-frame-ctrl",
+    "target": "smg-pc-j3d-frame-ctrl-tests",
+    "build": 0,
+    "build_log": "smg-pc-j3d-frame-ctrl-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-j3d-frame-ctrl-tests-run.log"
+  },
+  {
+    "name": "original-j3d-transform-animation",
+    "target": "smg-pc-original-j3d-transform-animation-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-transform-animation-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-j3d-transform-animation-tests-run.log"
+  },
+  {
+    "name": "original-j3d-material-animation",
+    "target": "smg-pc-original-j3d-material-animation-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-material-animation-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-j3d-material-animation-tests-run.log"
+  },
+  {
+    "name": "original-j3d-animation-resource",
+    "target": "smg-pc-original-j3d-animation-resource-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-animation-resource-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-j3d-animation-resource-tests-run.log"
+  },
+  {
+    "name": "original-j3d-packet",
+    "target": "smg-pc-original-j3d-packet-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-packet-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-j3d-packet-tests-run.log"
+  },
+  {
+    "name": "original-j3d-texture-mtx",
+    "target": "smg-pc-original-j3d-texture-mtx-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-texture-mtx-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-j3d-texture-mtx-tests-run.log"
+  },
+  {
+    "name": "original-j3d-material-block",
+    "target": "smg-pc-original-j3d-material-block-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-material-block-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-j3d-material-block-tests-run.log"
+  },
+  {
+    "name": "original-system-config",
+    "target": "smg-pc-original-system-config-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-system-config-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-system-config-tests-run.log"
+  },
+  {
+    "name": "console-nand-import",
+    "target": "smg-pc-console-nand-import-tests",
+    "build": 0,
+    "build_log": "smg-pc-console-nand-import-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-console-nand-import-tests-run.log"
+  },
+  {
+    "name": "original-vi-render-mode",
+    "target": "smg-pc-original-vi-render-mode-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-vi-render-mode-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-vi-render-mode-tests-run.log"
+  },
+  {
+    "name": "original-language",
+    "target": "smg-pc-original-language-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-language-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-language-tests-run.log"
+  },
+  {
+    "name": "layout-real-or-absent",
+    "target": "smg-pc-layout-real-or-absent-tests",
+    "build": 0,
+    "build_log": "smg-pc-layout-real-or-absent-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-layout-real-or-absent-tests-run.log"
+  },
+  {
+    "name": "original-jpa-manager",
+    "target": "smg-pc-original-jpa-manager-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-jpa-manager-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-jpa-manager-tests-run.log"
+  },
+  {
+    "name": "original-layout-group",
+    "target": "smg-pc-original-layout-group-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-layout-group-tests-build.log",
+    "run": 1,
+    "run_log": "smg-pc-original-layout-group-tests-run.log"
+  },
+  {
+    "name": "runtime-context-failure",
+    "target": "smg-pc-runtime-context-failure-tests",
+    "build": 0,
+    "build_log": "smg-pc-runtime-context-failure-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-runtime-context-failure-tests-run.log"
+  }
+]

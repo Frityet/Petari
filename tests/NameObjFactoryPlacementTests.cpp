@@ -1,5 +1,5 @@
 #include "compat/StageZoneMatrixRegistry.hpp"
-#include "runtime/SystemConfigService.hpp"
+#include <aurora/system_config.hpp>
 #include "compat/StageSessionState.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "runtime/ArchiveMountService.hpp"
@@ -604,7 +604,7 @@ namespace {
         auto execution = smgpc::test::SceneExecutionFixture{
             scheduler, smgpc::compat::JkrAllocationDomain::create(resource_runtime.host_heaps(), 8U << 20)};
         aurora::NandFileSystem nand;
-        smgpc::runtime::SystemConfigService settings(nand);
+        aurora::SystemConfiguration settings(nand);
         auto& scene_objects = execution.holder();
         scene_objects.create(SceneObj_NameObjGroup);
         scene_objects.create(SceneObj_AreaObjContainer);

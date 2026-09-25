@@ -1,0 +1,452 @@
+{
+  "kind": "source verification, not compilation or runtime test",
+  "checks": [
+    {
+      "check": "J3DDrawBuffer.cpp: complete donor function set",
+      "passed": true
+    },
+    {
+      "check": "J3DStruct.cpp: complete donor function set",
+      "passed": true
+    },
+    {
+      "check": "J3DGD.cpp: complete donor function set",
+      "passed": true
+    },
+    {
+      "check": "DrawBuffer is byte-exact complete donor",
+      "passed": true
+    },
+    {
+      "check": "Struct retains every donor statement on its original architecture",
+      "passed": true
+    },
+    {
+      "check": "GD complete donor except native includes and original-byte GXBool boundary",
+      "passed": true
+    },
+    {
+      "check": "J3DGDWriteXFCmd: exact original inline header owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDWriteXFCmdHdr: exact original inline header owner",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::initialize: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::allocBuffer: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::frameInit: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::entryMatSort: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::entryMatAnmSort: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::entryZSort: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::entryModelSort: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::entryInvalidSort: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::entryNonSort: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::draw: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::drawHead: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::drawTail: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::calcZRatio: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DTexMtxInfo::operator=: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DTexMtxInfo::setEffectMtx: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DIndTexMtxInfo::operator=: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DFogInfo::operator=: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DNBTScaleInfo::operator=: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetGenMode: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetGenMode_3Param: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetLightAttn: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetLightColor: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetLightPos: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetLightDir: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetVtxAttrFmtv: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTexCoordGen: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTexCoordScale2: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTexLookupMode: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTexImgAttr: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTexImgPtr: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTexImgPtrRaw: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTexTlut: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDLoadTlut: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetIndTexMtx: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetIndTexCoordScale: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetIndTexOrder: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTevOrder: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTevKColor: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTevColorS10: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetFog: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetFogRangeAdj: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DFifoLoadPosMtxImm: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DFifoLoadNrmMtxImm: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DFifoLoadNrmMtxImm3x3: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DFifoLoadNrmMtxToTexMtx: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DFifoLoadNrmMtxToTexMtx3x3: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DFifoLoadTexCached: not an accidental extra local copy",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::initialize: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::allocBuffer: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::frameInit: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::entryMatSort: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::entryMatAnmSort: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::entryZSort: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::entryModelSort: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::entryInvalidSort: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::entryNonSort: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::draw: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::drawHead: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::drawTail: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBuffer::calcZRatio: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DTexMtxInfo::operator=: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DTexMtxInfo::setEffectMtx: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DIndTexMtxInfo::operator=: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DFogInfo::operator=: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DNBTScaleInfo::operator=: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetGenMode: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetGenMode_3Param: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetLightAttn: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetLightColor: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetLightPos: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetLightDir: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetVtxAttrFmtv: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTexCoordGen: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTexCoordScale2: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTexLookupMode: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTexImgAttr: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTexImgPtr: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTexImgPtrRaw: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTexTlut: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDLoadTlut: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetIndTexMtx: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetIndTexCoordScale: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetIndTexOrder: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTevOrder: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTevKColor: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetTevColorS10: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetFog: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDSetFogRangeAdj: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DFifoLoadPosMtxImm: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DFifoLoadNrmMtxImm: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DFifoLoadNrmMtxImm3x3: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DFifoLoadNrmMtxToTexMtx: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DFifoLoadNrmMtxToTexMtx3x3: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DFifoLoadTexCached: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDWriteXFCmd: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DGDWriteXFCmdHdr: one actual definition in correct owner",
+      "passed": true
+    },
+    {
+      "check": "J3DDrawBufferCompat.cpp: deleted with recorded snapshot",
+      "passed": true
+    },
+    {
+      "check": "J3DStructCompat.cpp: deleted with recorded snapshot",
+      "passed": true
+    },
+    {
+      "check": "J3DGDCompat.cpp: deleted with recorded snapshot",
+      "passed": true
+    },
+    {
+      "check": "Native matrix extension writes the exact homogeneous final row",
+      "passed": true
+    },
+    {
+      "check": "Native center copy retains previous architecture adapter",
+      "passed": true
+    },
+    {
+      "check": "Native indirect matrix loads six components before any store",
+      "passed": true
+    }
+  ],
+  "definition_count": 49,
+  "sha256": {
+    "src/JSystem/J3DGraphBase/J3DDrawBuffer.cpp": "c1716b93afd28a55ce8f06079e5119dd97a3be882f4329841d8fa5158587ce47",
+    "src/JSystem/J3DGraphBase/J3DStruct.cpp": "b855fc6baa81d99c266e18657151f796a10789c46eb51277d331c41ce1ea3194",
+    "src/JSystem/J3DGraphBase/J3DGD.cpp": "232d30038bef088797d0209573ae9f658e839c0fa3660748f08552179e1f7ed5",
+    "src/JSystem/J3DGraphBase/J3DGD.hpp": "0175d49d3bf15bdb5cd5319c56aac6b41c1cc41d7c426ec1e85c1846362f736a"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "head": "2fef93f2c570db367556b9f556770bb16a0b8289",
+  "files": [
+    "src/Game/System/Language.cpp",
+    "src/compat/OriginalLanguage.cpp",
+    "src/compat/LanguageOwnership.hpp",
+    "src/runtime/MessageHolderOwnership.cpp",
+    "tests/LanguageOwnershipTests.cpp",
+    "tests/OriginalLanguageTests.cpp",
+    "tests/LayoutRealOrAbsentTests.cpp",
+    "tests/OriginalJpaManagerTests.cpp",
+    "tests/OriginalLayoutGroupTests.cpp"
+  ],
+  "initially_absent": [
+    "tests/OriginalLanguageTests.cpp"
+  ]
+}

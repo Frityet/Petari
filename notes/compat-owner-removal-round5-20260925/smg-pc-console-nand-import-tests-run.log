@@ -1,0 +1,4 @@
+PASS console paths, title preservation, actual SC consumption and heap lifetime
+PASS unsupported/colliding input rejects without destination mutation
+PASS actual title reload preserves shared console and cross-title files
+PASS empty roots and exact opaque file ownership

@@ -1,0 +1,130 @@
+{
+  "review_scope": "Source comparison and ownership review only; no build or runtime execution",
+  "checks": [
+    {
+      "name": "SDK declarations copied byte for byte",
+      "passed": true
+    },
+    {
+      "name": "aurora/lib/dolphin/sc/SCapi.cpp body tokens preserved",
+      "passed": true
+    },
+    {
+      "name": "aurora/lib/dolphin/sc/SCProductInfo.cpp body tokens preserved",
+      "passed": true
+    },
+    {
+      "name": "Complete catalog body preserved except namespace and actual allocator alias",
+      "passed": true
+    },
+    {
+      "name": "Old allocator name is exactly new Aurora allocator alias",
+      "passed": true
+    },
+    {
+      "name": "All six C entry bodies preserve outer interrupt scope before lookup",
+      "passed": true
+    },
+    {
+      "name": "Catalog declaration/layout preserved except namespace",
+      "passed": true
+    },
+    {
+      "name": "src/app/OriginalGameApplication.cpp retains owner lifetime and all behavior",
+      "passed": true
+    },
+    {
+      "name": "src/runtime/RuntimeContext.cpp retains owner lifetime and all behavior",
+      "passed": true
+    },
+    {
+      "name": "src/runtime/RuntimeContext.hpp retains owner lifetime and all behavior",
+      "passed": true
+    },
+    {
+      "name": "tests/CameraUtilRealOrAbsentTests.cpp retains test logic",
+      "passed": true
+    },
+    {
+      "name": "tests/ConsoleNandImportTests.cpp retains test logic",
+      "passed": true
+    },
+    {
+      "name": "tests/GxCopyFifoOrderTests.cpp retains test logic",
+      "passed": true
+    },
+    {
+      "name": "tests/OriginalCameraContextTests.cpp retains test logic",
+      "passed": true
+    },
+    {
+      "name": "tests/OriginalGameSystemStartupTests.cpp retains test logic",
+      "passed": true
+    },
+    {
+      "name": "tests/OriginalSystemConfigTests.cpp retains test logic",
+      "passed": true
+    },
+    {
+      "name": "tests/OriginalViRenderModeTests.cpp retains test logic",
+      "passed": true
+    },
+    {
+      "name": "tests/RuntimeContextFailureTests.cpp retains test logic",
+      "passed": true
+    },
+    {
+      "name": "aurora/include/aurora/system_config.hpp has no Game/compat dependency",
+      "passed": true
+    },
+    {
+      "name": "aurora/include/revolution/sc.h has no Game/compat dependency",
+      "passed": true
+    },
+    {
+      "name": "aurora/lib/dolphin/sc/SCSystem.cpp has no Game/compat dependency",
+      "passed": true
+    },
+    {
+      "name": "aurora/lib/dolphin/sc/SCapi.cpp has no Game/compat dependency",
+      "passed": true
+    },
+    {
+      "name": "aurora/lib/dolphin/sc/SCProductInfo.cpp has no Game/compat dependency",
+      "passed": true
+    },
+    {
+      "name": "aurora/xmake.lua has one SCSystem source",
+      "passed": true
+    },
+    {
+      "name": "aurora/xmake.lua has one SCapi source",
+      "passed": true
+    },
+    {
+      "name": "aurora/xmake.lua has one SCProductInfo source",
+      "passed": true
+    },
+    {
+      "name": "aurora/cmake/aurora_os.cmake has one SCSystem source",
+      "passed": true
+    },
+    {
+      "name": "aurora/cmake/aurora_os.cmake has one SCapi source",
+      "passed": true
+    },
+    {
+      "name": "aurora/cmake/aurora_os.cmake has one SCProductInfo source",
+      "passed": true
+    }
+  ],
+  "check_count": 29,
+  "all_passed": true,
+  "source_sha256": {
+    "aurora/include/aurora/system_config.hpp": "fbbb0b0a62499c7db95bf204e4f2a7855e3d85da47a8f50bb3b37b2012c53882",
+    "aurora/include/revolution/sc.h": "d8fd423c4c0d76773eb345842eb5d78265c94250acc20092bdf65ff0c44154a7",
+    "aurora/lib/dolphin/sc/SCSystem.cpp": "b0fcc677d9c6dc98c67f1088801700df79829072945a930b9c0c695f1c957001",
+    "aurora/lib/dolphin/sc/SCapi.cpp": "38fa1c1ad4f96b6804bdda44a4f4ecc7fcb6cd723cb46176ed9c03d48b799a72",
+    "aurora/lib/dolphin/sc/SCProductInfo.cpp": "395e31c5c2c4f3582f1af7207546c41283737da3574e3a733d254395af73fb8f"
+  }
+}

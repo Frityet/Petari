@@ -1,0 +1,31 @@
+{
+  "add_files": [
+    {
+      "path": "src/JSystem/J3DGraphBase/J3DDrawBuffer.cpp",
+      "cxxflags": "-ffp-contract=off"
+    },
+    {
+      "path": "src/JSystem/J3DGraphBase/J3DStruct.cpp",
+      "cxxflags": "-ffp-contract=off"
+    },
+    {
+      "path": "src/JSystem/J3DGraphBase/J3DGD.cpp",
+      "cxxflags": "-ffp-contract=off"
+    }
+  ],
+  "remove_files": [
+    "src/compat/J3DDrawBufferCompat.cpp",
+    "src/compat/J3DStructCompat.cpp",
+    "src/compat/J3DGDCompat.cpp"
+  ],
+  "header_changes": [
+    "src/JSystem/J3DGraphBase/J3DGD.hpp"
+  ],
+  "tests_unchanged": [
+    "smg-pc-original-j3d-packet-tests",
+    "smg-pc-original-j3d-texture-mtx-tests",
+    "smg-pc-original-j3d-material-block-tests"
+  ],
+  "reason_for_flags": "decomp/configure.py cflags_jsys specifies -fp_contract off; explicit original std::fma boundary in J3DCalcZValue remains explicit",
+  "no_game_or_resource_changes": true
+}

@@ -1,0 +1,55 @@
+{
+  "baseline": "2fef93f2c570db367556b9f556770bb16a0b8289",
+  "source_state": "frozen",
+  "files": [
+    {
+      "path": "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+      "action": "add",
+      "sha256": "ffc445b00afc84363304925486ed42939b19ad33b227973e702ca1bab44e14dd",
+      "owner": "JSystem/J3DGraphAnimator/J3DAnimation.cpp"
+    },
+    {
+      "path": "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+      "action": "add",
+      "sha256": "b9c29fb3d426f44edb640edd0465cfa6f648d79f852a160efe4852c6af9c189b",
+      "owner": "JSystem/J3DGraphLoader/J3DAnmLoader.cpp"
+    },
+    {
+      "path": "src/compat/J3DFrameCtrlCompat.cpp",
+      "action": "delete",
+      "sha256": null,
+      "owner": "JSystem/J3DGraphAnimator/J3DAnimation.cpp"
+    },
+    {
+      "path": "src/compat/J3DTransformAnimationCompat.cpp",
+      "action": "delete",
+      "sha256": null,
+      "owner": "JSystem/J3DGraphAnimator/J3DAnimation.cpp"
+    },
+    {
+      "path": "src/compat/J3DMaterialAnimationCompat.cpp",
+      "action": "delete",
+      "sha256": null,
+      "owner": "JSystem/J3DGraphAnimator/J3DAnimation.cpp"
+    },
+    {
+      "path": "src/compat/J3DAdditionalAnimationCompat.cpp",
+      "action": "delete",
+      "sha256": null,
+      "owner": "JSystem/J3DGraphAnimator/J3DAnimation.cpp"
+    },
+    {
+      "path": "src/compat/J3DAnimationInterpolation.hpp",
+      "action": "delete",
+      "sha256": null,
+      "owner": "JSystem/J3DGraphAnimator/J3DAnimation.cpp"
+    },
+    {
+      "path": "src/compat/J3DAnmLoaderCompat.cpp",
+      "action": "delete",
+      "sha256": null,
+      "owner": "JSystem/J3DGraphLoader/J3DAnmLoader.cpp"
+    }
+  ],
+  "headers_resource_tests_changed": false
+}

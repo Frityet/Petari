@@ -1,0 +1,10 @@
+{
+  "canonical_language_identical_to_current_donor": true,
+  "deleted_compat_files": [
+    "src/compat/OriginalLanguage.cpp",
+    "src/compat/LanguageOwnership.hpp"
+  ],
+  "production_publication_removed": true,
+  "agent_builds": 0,
+  "agent_runtime_tests": 0
+}

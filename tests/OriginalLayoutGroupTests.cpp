@@ -15,10 +15,13 @@
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/Util/LayoutUtil.hpp"
 #include "Game/System/Language.hpp"
-#include "SceneExecutionFixture.hpp"
-#include "compat/LanguageOwnership.hpp"
+#include "Game/System/LayoutHolder.hpp"
+#include "Game/Util/FileUtil.hpp"
+#include <JSystem/JKernel/JKRArchive.hpp>
+#include "OriginalStageResourceProcessFixture.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 #include "layout/LayoutHost.hpp"
-#include "runtime/RuntimeContext.hpp"
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <nw4r/lyt/group.h>
 #include <nw4r/lyt/animation.h>
@@ -152,7 +155,6 @@ void locale_graph_and_size_animation() {
     { std::ofstream out(path, std::ios::binary); out.write(reinterpret_cast<const char*>(bytes.data()), bytes.size()); }
     const auto before = smgpc::layout::debug_layout_lifetime_state();
     for (int cycle = 0; cycle < 16; ++cycle) {
-        smgpc::compat::LanguageOwnership language("KrKorean");
         LayoutActor actor("locale fixture", false);
         actor.mLayoutManager = new LayoutManager("Fixture", false, 2, 256);
         smgpc::layout::LayoutRuntime runtime("Locale and size", "Fixture", 2, 0, path);
@@ -210,7 +212,6 @@ void locale_graph_and_size_animation() {
 void retail_locale_and_window_size() {
     const auto* path = std::getenv("SMGPC_LAYOUT_FIXTURE");
     require(path && *path, "retail layout mode requires extracted TalkBalloonStretch archive through SMGPC_LAYOUT_FIXTURE");
-    smgpc::compat::LanguageOwnership language("KrKorean");
     LayoutActor actor("Retail locale fixture", false);
     actor.mLayoutManager = new LayoutManager("TalkBalloonStretch", false, 2, 256);
     smgpc::layout::LayoutRuntime runtime("Retail layout", "TalkBalloonStretch", 2, 0, std::filesystem::path(path));
@@ -334,8 +335,7 @@ void materials_and_text(const std::filesystem::path& path) {
     }
 }
 void host_heap_boundary(const std::filesystem::path& path) {
-    auto heaps = smgpc::compat::JkrHeapRuntime::create(1U << 20);
-    auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 64U << 10);
+    auto domain = smgpc::compat::JkrAllocationDomain::create(smgpc::scene::current_scene_allocation_domain(), 64U << 10);
     const auto retired = std::weak_ptr(domain);
     auto archive_path = path;
     std::optional<smgpc::layout::LayoutRuntime> layout;
@@ -465,25 +465,9 @@ void records() {
     materials_and_text(path);
 }
 
-class Logger final : public smgpc::logging::ILogger {
-    void write(std::FILE*, std::source_location, smgpc::logging::Level,
-               smgpc::logging::Category, std::string_view) override {}
-};
 void fly_meter() {
-    const auto* disc = std::getenv("SMGPC_REAL_DISC");
-    if (!disc) return;
-    smgpc::render::AuroraWindow window({.width = 640, .height = 456, .title = "Original 3D layout regression"});
-    smgpc::render::AuroraRenderer renderer(window);
-    require(aurora_dvd_open(disc), "real FlyMeter regression requires the supplied disc");
-    struct Disc { ~Disc() { aurora_dvd_close(); } } close_disc;
-    DVDInit();
-    smgpc::resource::GameResourceRuntime resources({96U << 20, 32U << 20, 4U << 20});
-    Logger logger;
-    smgpc::runtime::RuntimeContext runtime(logger, window, resources);
-    smgpc::runtime::SceneSchedulerBinding scheduler_binding(runtime.scheduler());
+    // The observer runs inside the actual Aurora frame after original scene initialization.
     {
-        smgpc::test::SceneExecutionFixture execution(runtime.scheduler(),
-            smgpc::compat::JkrAllocationDomain::create(runtime.host_heaps(), 8U << 20));
         std::unique_ptr<SubMeterLayout> meter;
         {
             const smgpc::compat::JkrAllocationScope game(smgpc::scene::current_scene_allocation_domain());
@@ -491,8 +475,15 @@ void fly_meter() {
             meter->initWithoutIter();
         }
         auto* layout = smgpc::layout::layout_runtime(meter.get());
-        require(layout && layout->getArchivePath() && meter->getLayoutManager()->getPane("Count"),
-                "actual SubMeterLayout initializes its real FlyMeter archive and Count controller");
+        auto* manager = meter->getLayoutManager();
+        char archive_path[256];
+        require(MR::makeLayoutArchiveFileNameFromPrefix(archive_path, sizeof(archive_path), "FlyMeter", false),
+                "actual FlyMeter layout archive resolves through the original language and aspect selection");
+        require(layout && manager->mLayoutHolder && manager->mLayoutHolder->mArchive == MR::receiveArchive(archive_path) &&
+                    manager->mLayoutHolder->mLayoutRes.isExistRes("FlyMeter.brlyt") &&
+                    manager->mLayoutHolder->mAnimRes.isExistRes("Count.brlan") &&
+                    manager->getPane("Count") && manager->getPaneCtrl("Count"),
+                "actual SubMeterLayout borrows its mounted FlyMeter archive and authored Count animation/controller");
 #ifndef NDEBUG
         auto three_dimensional = 0U;
         for (const auto& state : layout->debugPanes()) {
@@ -507,18 +498,18 @@ void fly_meter() {
         MR::showLayout(meter.get());
         MR::startAnim(meter.get(), "Wait", 0);
         for (const auto ratio : {1.0F, 0.5F, 0.125F}) {
-            (void)renderer.begin_frame();
             {
-                const smgpc::render::ScopedAuroraRendererContext context(renderer);
                 const auto domain = smgpc::scene::current_scene_allocation_domain();
                 const smgpc::compat::JkrAllocationScope game(domain);
                 const auto free_before = domain->heap().getFreeSize();
                 meter->setLifeRatio(ratio);
+                require(MR::getPaneAnimFrame(meter.get(), "Count", 0) == 128.0F * (1.0F - ratio) &&
+                            MR::isPaneAnimStopped(meter.get(), "Count", 0),
+                        "original life ratio selects and stops the authored Count animation frame");
                 meter->draw();
                 require(domain->heap().getFreeSize() == free_before,
                         "original layout animation and first texture/text draw keep all native work outside its Game heap");
             }
-            renderer.end_frame();
         }
     }
     std::cout << "Actual FlyMeter SubMeterLayout initialization and three rendered life ratios passed\n";
@@ -606,10 +597,23 @@ void tags() {
 }
 }
 int main(int argc, char** argv) {
-    try {
-        if (argc == 2 && std::string_view(argv[1]) == "--retail-layout-only") { retail_locale_and_window_size(); std::cout << "Retail locale text owners and animated window sizes passed\n"; return 0; }
+    const bool retail_only = argc == 2 && std::string_view(argv[1]) == "--retail-layout-only";
+    const bool locale_only = argc == 2 && std::string_view(argv[1]) == "--locale-only";
+    if (argc > 2 || (argc == 2 && !retail_only && !locale_only)) return 2;
+    return smgpc::test::run_stage_resource_process("original-layout-groups", [&] {
+        require(std::string_view(MR::getCurrentLanguagePrefix()) == "KrKorean",
+                "Korean layout fixtures require the actual process's Korean language selection");
+        if (retail_only) {
+            retail_locale_and_window_size();
+            std::cout << "Retail locale text owners and animated window sizes passed\n";
+            return;
+        }
         locale_graph_and_size_animation();
-        if (argc == 2 && std::string_view(argv[1]) == "--locale-only") { std::cout << "Original locale graph, group lifetime and animated pane sizes passed\n"; return 0; }
-        tags(); unbound_panes(); records(); fly_meter(); std::cout << "Original typed layout groups, transforms, tag lines and repeated teardown passed\n"; }
-    catch (const std::exception& e) { std::cerr << e.what() << '\n'; return 1; }
+        if (locale_only) {
+            std::cout << "Original locale graph, group lifetime and animated pane sizes passed\n";
+            return;
+        }
+        tags(); unbound_panes(); records(); fly_meter();
+        std::cout << "Original typed layout groups, transforms, tag lines and repeated teardown passed\n";
+    });
 }

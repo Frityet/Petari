@@ -1,7 +1,7 @@
 #include "runtime/RuntimeContext.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "Game/Screen/CaptureScreenDirector.hpp"
-#include "runtime/SystemConfigService.hpp"
+#include <aurora/system_config.hpp>
 #include "JSystem/JUtility/JUTVideo.hpp"
 #include <aurora/dvd.h>
 #include <cstdlib>
@@ -66,7 +66,7 @@ int main() {
         require(smgpc::compat::ResourceHolderService::active() == nullptr, "failed/destroyed runtime retains archive service");
         require(smgpc::runtime::ScenarioCatalogOwnership::active() == nullptr, "failed/destroyed runtime retains scenario catalog publication");
         require(smgpc::runtime::ParticleResourceOwnership::active() == nullptr, "failed/destroyed runtime retains particle resources");
-        require(smgpc::runtime::SystemConfigService::active() == nullptr, "failed/destroyed runtime retains console settings owner");
+        require(aurora::SystemConfiguration::active() == nullptr, "failed/destroyed runtime retains console settings owner");
         require(smgpc::compat::name_obj_runtime_state_count() == objects, "failed/destroyed runtime retains NameObj callbacks");
         require(heap->available_bytes() == expected_capacity, "failed/destroyed runtime retains mapped texture storage");
     };

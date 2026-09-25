@@ -1,0 +1,24 @@
+{
+  "add_to_smg_pc_game": [
+    "../JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+    "../JSystem/J3DGraphLoader/J3DAnmLoader.cpp"
+  ],
+  "remove_compat_glob_sources": [
+    "src/compat/J3DFrameCtrlCompat.cpp",
+    "src/compat/J3DTransformAnimationCompat.cpp",
+    "src/compat/J3DMaterialAnimationCompat.cpp",
+    "src/compat/J3DAdditionalAnimationCompat.cpp",
+    "src/compat/J3DAnimationInterpolation.hpp",
+    "src/compat/J3DAnmLoaderCompat.cpp"
+  ],
+  "fixed_step_clock": "Remove direct ../src/compat/J3DFrameCtrlCompat.cpp and use smg-pc-game plus SDK dependencies, root owns this wiring.",
+  "focused_targets": [
+    "smg-pc-j3d-frame-ctrl-tests",
+    "smg-pc-original-j3d-transform-animation-tests",
+    "smg-pc-original-j3d-material-animation-tests",
+    "smg-pc-original-j3d-animation-resource-tests",
+    "smg-pc-fixed-step-clock-tests"
+  ],
+  "builds_run_by_agent": false,
+  "source_state": "frozen"
+}

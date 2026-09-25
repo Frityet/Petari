@@ -43,7 +43,6 @@ target("smg-pc-game")
     remove_files("NameObj/NameObjFactory.cpp")
     remove_files("Scene/SceneFunction.cpp")
     remove_files("Scene/SceneObjHolder.cpp")
-    remove_files("System/Language.cpp")
     remove_files("Util/FileUtil.cpp")
     remove_files("Util/ActorShadowUtil.cpp")
     remove_files("Util/LiveActorUtil.cpp")
@@ -123,6 +122,11 @@ target("smg-pc-game")
     })
     add_files("../JSystem/J3DGraphBase/J3DPacket.cpp", "../nw4r/ut/ut_LinkList.cpp")
     add_files("../JSystem/JKernel/JKRThread.cpp")
+    add_files("../JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+              "../JSystem/J3DGraphLoader/J3DAnmLoader.cpp")
+    add_files("../JSystem/J3DGraphBase/J3DDrawBuffer.cpp",
+              "../JSystem/J3DGraphBase/J3DStruct.cpp",
+              "../JSystem/J3DGraphBase/J3DGD.cpp", {cxxflags = "-ffp-contract=off"})
     add_files({
         "../JSystem/J3DGraphAnimator/J3DJoint.cpp",
         "../JSystem/J3DGraphAnimator/J3DJointTree.cpp",

@@ -662,6 +662,7 @@ target("smg-pc-save-config-real-or-absent-tests")
     })
 
 target("smg-pc-layout-real-or-absent-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -1044,8 +1045,9 @@ target("smg-pc-fixed-step-clock-tests")
     set_group("tests/runtime")
     add_includedirs("../src", "../aurora/include")
     add_defines("TARGET_PC")
-    add_files("FixedStepClockTests.cpp", "../src/compat/J3DFrameCtrlCompat.cpp")
-    add_deps("smg-pc-common")
+    add_files("FixedStepClockTests.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
     add_tests("fixed_step_clock", {
         group = "runtime",
         rundir = os.projectdir(),
@@ -1312,6 +1314,7 @@ target("smg-pc-scenario-publication-tests")
     })
 
 target("smg-pc-original-jpa-manager-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -2599,6 +2602,7 @@ target("smg-pc-original-audio-category-volume-tests")
 
 
 target("smg-pc-original-layout-group-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -2809,14 +2813,15 @@ target("smg-pc-source-mirror-encoding-tests")
         group = "source-boundary", rundir = os.projectdir(), realtime_output = true
     })
 
-target("smg-pc-language-ownership-tests")
+target("smg-pc-original-language-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
-    add_files("LanguageOwnershipTests.cpp")
+    add_files("OriginalLanguageTests.cpp")
     add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
               "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
-    add_tests("language_ownership", {
+    add_tests("original_language", {
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
 

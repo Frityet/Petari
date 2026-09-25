@@ -1,9 +1,9 @@
-#include "compat/LanguageOwnership.hpp"
+#include "OriginalStageResourceProcessFixture.hpp"
+#include "Game/Util/SystemUtil.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 #include "resource/JpcResource.hpp"
 #include "resource/RarcArchive.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "runtime/RuntimeServices.hpp"
-#include "runtime/ArchiveMountService.hpp"
 #include "Game/Effect/ParticleResourceHolder.hpp"
 #include <aurora/aurora.h>
 #include <aurora/dvd.h>
@@ -20,41 +20,19 @@
 #include <cstdlib>
 #include <stdexcept>
 
-namespace aurora { extern AuroraConfig g_config; }
-
-int main(int argc, char** argv) {
-    if (argc > 2 || (argc == 2 && std::string_view(argv[1]) != "--ownership-only")) return 2;
-    bool ownershipOnly = argc == 2;
-    // This standalone resource fixture uses the supplied Korean retail data.
-    // It does not create a GameSystem; publish its language explicitly.
-    const smgpc::compat::LanguageOwnership language("KrKorean");
-    const char* disc = std::getenv("SMGPC_REAL_DISC");
-    if (!disc || !aurora_dvd_open(disc)) throw std::runtime_error("SMGPC_REAL_DISC must name the actual RMGK01 disc");
-    struct DiscGuard { ~DiscGuard() { aurora_dvd_close(); } } disc_guard;
-    DVDInit();
-    aurora::g_config.mem1Size = 24U * 1024U * 1024U;
-    smgpc::runtime::DvdFileSystemService dvd({});
-    smgpc::runtime::ArchiveMountService mounts(dvd);
-    auto runtime = smgpc::compat::JkrHeapRuntime::create(32 * 1024 * 1024);
-    auto domain = smgpc::compat::JkrAllocationDomain::create(runtime, 16 * 1024 * 1024);
-    JPAResourceManager* manager;
-    {
-        smgpc::compat::JkrAllocationScope scope(domain);
-        auto* holder = new ParticleResourceHolder("/ParticleData/Effect.arc");
-        manager = holder->mResourceMgr;
-        assert(holder->mParticleNames->getNumEntries() == 3327);
-        assert(holder->mNumParticles > 0 && holder->mNumParticles <= 1024);
-        for (int i = 0; i < holder->mParticleNames->getNumEntries(); ++i) {
-            const char* name = nullptr;
-            assert(holder->mParticleNames->getValue(i, "name", &name));
-            assert(holder->getUserIndex(name) == i);
-        }
-        // Original ParticleResourceHolder requests this mount with a null heap.
-        // Its actual managers/tables must retain storage after unpublication.
-        mounts.remove_for_heap(nullptr);
-        assert(mounts.size() == 0);
+namespace {
+void verify_jpa(bool ownershipOnly, std::weak_ptr<const smgpc::resource::JpcResource>& backing) {
+    auto& holder = *MR::getParticleResourceHolder();
+    auto* manager = holder.mResourceMgr;
+    assert(holder.mParticleNames->getNumEntries() == 3327 && holder.mNumParticles == 612);
+    for (int i = 0; i < holder.mParticleNames->getNumEntries(); ++i) {
+        const char* name = nullptr;
+        assert(holder.mParticleNames->getValue(i, "name", &name));
+        assert(holder.getUserIndex(name) == i);
     }
-    std::weak_ptr<const smgpc::resource::JpcResource> backing = manager->mNativeResource;
+    auto domain = smgpc::compat::JkrAllocationDomain::create(smgpc::scene::current_scene_allocation_domain(), 2U << 20);
+    const std::weak_ptr<smgpc::compat::JkrAllocationDomain> retired = domain;
+    backing = manager->mNativeResource;
     assert(manager->mResNum == 3327 && manager->mTexNum == 225);
     size_t functions = 0, frames = 0, particleObservations = 0;
     {
@@ -104,9 +82,17 @@ int main(int argc, char** argv) {
         assert(emitters.getEmitterNumber() == 0 && emitters.mPtclPool.getNum() == 32);
     }
     domain.reset();
-    assert(backing.expired());
-    runtime.reset();
+    assert(retired.expired() && !backing.expired());
     std::cout << "Actual original manager loaded 3327 resources and 225 textures; " << functions
               << " function entries; all 3327 emitter IDs constructed; " << frames << " CPU frames; "
-              << particleObservations << " particle-frame observations; pool reuse, exhaustion, and heap retirement passed\n";
+              << particleObservations << " particle-frame observations; pool reuse, exhaustion, and emitter heap retirement passed\n";
+}
+}
+int main(int argc, char** argv) {
+    if (argc > 2 || (argc == 2 && std::string_view(argv[1]) != "--ownership-only")) return 2;
+    std::weak_ptr<const smgpc::resource::JpcResource> backing;
+    const auto result = smgpc::test::run_stage_resource_process("original-jpa-manager", [&] { verify_jpa(argc == 2, backing); });
+    if (result != 0) return result;
+    if (!backing.expired()) throw std::runtime_error("Original particle resource backing survived process retirement");
+    return 0;
 }
