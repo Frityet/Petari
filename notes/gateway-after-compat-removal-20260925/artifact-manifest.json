@@ -1,0 +1,34 @@
+[
+  {
+    "path": "route-actors.jsonl",
+    "size": 113610139,
+    "sha256": "4e0b38cbc0c0d0bdf31fe3fe21ccf1b0d77183486476ec585049f93d330836d1",
+    "archived_path": "route-actors.jsonl.gz",
+    "archived_size": 22201954,
+    "archived_sha256": "eb397be7239ae2d2380a3f1fbaeb9baf8f6dad65898fc9f331e1616149ef3cda"
+  },
+  {
+    "path": "operator.jsonl",
+    "size": 517215,
+    "sha256": "4793324b48a8c994b4c67747e405abec92931809598fe6c237f800c0db0086e3",
+    "archived_path": "operator.jsonl.gz",
+    "archived_size": 29429,
+    "archived_sha256": "2bd83417ff88db862adad1d41b4f462598802a60fcbd579bd7d35661064dc41b"
+  },
+  {
+    "path": "rosetta-approach.jsonl",
+    "size": 150179,
+    "sha256": "dd082d72f4c81b87a99c5a2807bff123a46a26c928615e791e9aff6261aa3ce0",
+    "archived_path": "rosetta-approach.jsonl.gz",
+    "archived_size": 9694,
+    "archived_sha256": "b25173d2e965920e88c2750f9d0fcf8dbe440c54fd69578fedda562d91cb7e7f"
+  },
+  {
+    "path": "route-frame16000.png",
+    "size": 14758474,
+    "sha256": "c7bc5f7375cc51bbd3a23a104e9b5dba004cf272162178364916a249ff27d442",
+    "archived_path": "route-frame16000.png.gz",
+    "archived_size": 5353747,
+    "archived_sha256": "fdec42a9f8f3b23307e7042ecb14ada404a17c667e24c060201cd50fb79f14cb"
+  }
+]

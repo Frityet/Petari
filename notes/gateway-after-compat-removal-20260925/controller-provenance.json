@@ -1,0 +1,9 @@
+{
+  "source": "notes/demo-system-verification-20260919",
+  "files": {
+    "operate_first_catch.py": "ccdd26dab668af298e0533722e01ce1b84e0412a3513ff6c92e19581d6520f1c",
+    "follow_actor.py": "bc85f106c9507206aad24af8175cd6abf83dcb651256b0019fbea25d07494d3c",
+    "three-rabbit-route.json": "13c7e0bfe3e49d103e2e7f3d6386e37d8a071a0da6625cbe81a2b611c336f292"
+  },
+  "scope": "Read-only actor traces; only ordinary controller input is published. No game-memory, switch, nerve or actor position writes."
+}

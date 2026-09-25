@@ -1,0 +1,39 @@
+{
+  "runner_pid": 53948,
+  "operator_pid": 53949,
+  "runner_command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "/Users/frityet/Projects/petari/notes/gateway-after-compat-removal-20260925/run_original.py",
+    "route",
+    "18000",
+    "--ignore-restoration",
+    "--input-file",
+    "/Users/frityet/Projects/petari/notes/gateway-after-compat-removal-20260925/input.json",
+    "--trace-types",
+    "MarioActor,Rabbit,Tico,Rosetta,EarthenPipe,CrystalCage,HeavensDoorDemoObj,GlobalGravityObj,SpinDriver",
+    "--trace-interval",
+    "10",
+    "--screenshot-frame",
+    "16000",
+    "--timeout",
+    "650"
+  ],
+  "operator_command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "/Users/frityet/Projects/petari/notes/gateway-after-compat-removal-20260925/operate_first_catch.py",
+    "/Users/frityet/Projects/petari/notes/gateway-after-compat-removal-20260925/route-actors.jsonl",
+    "/Users/frityet/Projects/petari/notes/gateway-after-compat-removal-20260925/input.json",
+    "--plan",
+    "/Users/frityet/Projects/petari/notes/gateway-after-compat-removal-20260925/three-rabbit-route.json",
+    "--start",
+    "1400",
+    "--end",
+    "17800",
+    "--timeout",
+    "640",
+    "--extra-buttons-file",
+    "/Users/frityet/Projects/petari/notes/gateway-after-compat-removal-20260925/extra-buttons.txt",
+    "--manual-input-file",
+    "/Users/frityet/Projects/petari/notes/gateway-after-compat-removal-20260925/manual-input.json"
+  ]
+}

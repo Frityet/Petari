@@ -1,0 +1,530 @@
+{
+  "schema_version": 1,
+  "scope": "Observed original GameSystem route, input-only navigation, fresh save; pre-donor-restoration executable.",
+  "binary_sha256": "c08e1e4cd27cfa9d059ed3b627bcbc0be301d73f95ab3912ea823fab1488ad55",
+  "binary_sha256_after": "c08e1e4cd27cfa9d059ed3b627bcbc0be301d73f95ab3912ea823fab1488ad55",
+  "binary_unchanged": true,
+  "before_donor_restorations": [
+    "XanimePlayer: two donor conditions",
+    "DemoExecutor: donor clipping behavior",
+    "TalkBalloon: donor vector behavior",
+    "RunawayTico::init: colorID=arg0",
+    "RosettaDemoHeavensDoor1::exeDemo: spin demo1 sound condition"
+  ],
+  "process": {
+    "started_at": "2026-09-25T19:48:59.296695+00:00",
+    "elapsed_seconds": 327.15088679199107,
+    "completed_frames": 18000,
+    "exit_code": 0,
+    "timeout_terminated": false,
+    "process_still_exists_after_wait": false,
+    "verified_bounded_completion": true
+  },
+  "sampling": {
+    "interval_frames": 10,
+    "snapshots": 1800,
+    "first_frame": 0,
+    "last_frame": 17990,
+    "timing_note": "Milestones are first sampled observations, with 10-frame granularity."
+  },
+  "inputs": {
+    "provenance": {
+      "source": "notes/demo-system-verification-20260919",
+      "files": {
+        "operate_first_catch.py": "ccdd26dab668af298e0533722e01ce1b84e0412a3513ff6c92e19581d6520f1c",
+        "follow_actor.py": "bc85f106c9507206aad24af8175cd6abf83dcb651256b0019fbea25d07494d3c",
+        "three-rabbit-route.json": "13c7e0bfe3e49d103e2e7f3d6386e37d8a071a0da6625cbe81a2b611c336f292"
+      },
+      "scope": "Read-only actor traces; only ordinary controller input is published. No game-memory, switch, nerve or actor position writes."
+    },
+    "operator_completed_frame": 7100,
+    "operator_finished_reason": "rosetta_alive_not_hidden",
+    "operator_rows": 571,
+    "approach_rows": 471
+  },
+  "catches": [
+    {
+      "label": "bush",
+      "rabbit_id": 1090,
+      "caught_frame": 3170,
+      "tico_id": 1075,
+      "tico_talk_frame": 3430,
+      "completed_frame": 3540,
+      "actor_nerve_first_samples": {
+        "Caught": 3170,
+        "CaughtTalk": 3180,
+        "CaughtEnd": 3300,
+        "Stop": 3370
+      },
+      "tico_nerve_first_samples": {
+        "Appear": 3370,
+        "Talk": 3430
+      }
+    },
+    {
+      "label": "pipe",
+      "rabbit_id": 1085,
+      "caught_frame": 4360,
+      "tico_id": 1069,
+      "tico_talk_frame": 4620,
+      "completed_frame": 4730,
+      "actor_nerve_first_samples": {
+        "Caught": 4360,
+        "CaughtTalk": 4370,
+        "CaughtEnd": 4490,
+        "Stop": 4560
+      },
+      "tico_nerve_first_samples": {
+        "Appear": 4560,
+        "Talk": 4620
+      }
+    },
+    {
+      "label": "hole",
+      "rabbit_id": 1095,
+      "caught_frame": 6140,
+      "tico_id": 1081,
+      "tico_talk_frame": 6390,
+      "completed_frame": 6630,
+      "actor_nerve_first_samples": {
+        "CaughtTalk": 6140,
+        "CaughtEnd": 6270,
+        "Stop": 6340
+      },
+      "tico_nerve_first_samples": {
+        "Appear": 6340,
+        "Talk": 6390,
+        "WhiteOut": 6630,
+        "WhiteIn": 6720
+      }
+    }
+  ],
+  "first_rosetta_live_unhidden": {
+    "frame": 7100,
+    "actor_id": 1060,
+    "position": [
+      14732.419921875,
+      -8280.5517578125,
+      7561.1328125
+    ],
+    "dead": false,
+    "hidden": false,
+    "clipped": false,
+    "no_calc_anim": false,
+    "no_calc_view": false,
+    "nerve": {
+      "step": 5,
+      "type": "N10NrvRosetta14RosettaNrvDemoE"
+    }
+  },
+  "first_tower_plane_appeared_active": {
+    "frame": 6800,
+    "actor_id": 459,
+    "name": "平面重力[球範囲]",
+    "position": [
+      15178.890625,
+      -7561.1474609375,
+      7792.4658203125
+    ],
+    "field": {
+      "activated": true,
+      "appeared": true,
+      "distant": 0.0,
+      "gravity_id": -1,
+      "gravity_type": 1,
+      "inverse": false,
+      "power": 1,
+      "priority": 1,
+      "range": 2300.0,
+      "registered": true,
+      "type": "15ParallelGravity",
+      "valid_follower": true
+    },
+    "preceding_sample": {
+      "frame": 6790,
+      "dead": true,
+      "field": {
+        "activated": true,
+        "appeared": false,
+        "distant": 0.0,
+        "gravity_id": -1,
+        "gravity_type": 1,
+        "inverse": false,
+        "power": 1,
+        "priority": 1,
+        "range": 2300.0,
+        "registered": true,
+        "type": "15ParallelGravity",
+        "valid_follower": true
+      }
+    }
+  },
+  "unrelated_plane_already_active_at_initial_sample": {
+    "frame": 80,
+    "actor_id": 460,
+    "name": "平面重力[ボックス範囲]",
+    "position": [
+      6680.0,
+      2747.101318359375,
+      -5310.0
+    ],
+    "field": {
+      "activated": true,
+      "appeared": true,
+      "distant": 0.0,
+      "gravity_id": -1,
+      "gravity_type": 1,
+      "inverse": false,
+      "power": 1,
+      "priority": 1,
+      "range": -1.0,
+      "registered": true,
+      "type": "15ParallelGravity",
+      "valid_follower": true
+    },
+    "preceding_sample": null
+  },
+  "first_mario_selected_tower_plane": {
+    "frame": 13620,
+    "actor_id": 343,
+    "position": [
+      15254.7607421875,
+      -9660.4521484375,
+      8538.203125
+    ],
+    "actor_position": [
+      15253.603515625,
+      -9648.4287109375,
+      8535.2548828125
+    ],
+    "gravity_info": {
+      "field_actor_id": 459,
+      "field_gravity_id": -1,
+      "field_type": "15ParallelGravity",
+      "largest_priority": 1,
+      "vector": [
+        -0.12673531472682953,
+        -0.9424661993980408,
+        -0.3093468248844147
+      ]
+    },
+    "ground_triangle": {
+      "host_id": 741,
+      "normal": [
+        0.3230400085449219,
+        0.2546226382255554,
+        0.9114890694618225
+      ],
+      "prism_index": 534,
+      "vertices": [
+        [
+          15517.7373046875,
+          -9683.78125,
+          8451.5185546875
+        ],
+        [
+          15263.400390625,
+          -9272.2294921875,
+          8426.69140625
+        ],
+        [
+          15242.8125,
+          -9678.2900390625,
+          8547.419921875
+        ]
+      ]
+    },
+    "movement_low_word": 1610612736,
+    "ground_flag_mask": "0x40000000",
+    "ground_flag": true,
+    "bound_actor_934": false,
+    "authored_stairs_vertex_max_residual": 0.4073942501368562
+  },
+  "first_mario_grounded_on_tower_stairs_with_plane": {
+    "frame": 13620,
+    "actor_id": 343,
+    "position": [
+      15254.7607421875,
+      -9660.4521484375,
+      8538.203125
+    ],
+    "actor_position": [
+      15253.603515625,
+      -9648.4287109375,
+      8535.2548828125
+    ],
+    "gravity_info": {
+      "field_actor_id": 459,
+      "field_gravity_id": -1,
+      "field_type": "15ParallelGravity",
+      "largest_priority": 1,
+      "vector": [
+        -0.12673531472682953,
+        -0.9424661993980408,
+        -0.3093468248844147
+      ]
+    },
+    "ground_triangle": {
+      "host_id": 741,
+      "normal": [
+        0.3230400085449219,
+        0.2546226382255554,
+        0.9114890694618225
+      ],
+      "prism_index": 534,
+      "vertices": [
+        [
+          15517.7373046875,
+          -9683.78125,
+          8451.5185546875
+        ],
+        [
+          15263.400390625,
+          -9272.2294921875,
+          8426.69140625
+        ],
+        [
+          15242.8125,
+          -9678.2900390625,
+          8547.419921875
+        ]
+      ]
+    },
+    "movement_low_word": 1610612736,
+    "ground_flag_mask": "0x40000000",
+    "ground_flag": true,
+    "bound_actor_934": false,
+    "authored_stairs_vertex_max_residual": 0.4073942501368562
+  },
+  "grounding_evidence": {
+    "actual_flag_source": "src/Game/Player/Mario.hpp MovementStates::_1 (second PPC bit); src/Game/Player/MarioAccess.cpp MR::isOnGround returns it when not bound.",
+    "ground_flag_mask": "0x40000000",
+    "selected_plane_samples": 438,
+    "grounded_plane_host741_samples": 411,
+    "stair_identity": "Host741 is not independently named in the filtered trace. Traced prism vertices match the archived original HeavensDoorAppearStepAAfter KCL at the authored zone transform within 0.41 world units for first selection/frame16000/last; screenshot inspection independently shows Mario on stairs.",
+    "geometry_reference": "notes/demo-system-verification-20260919/physics/steps-geometry.json",
+    "geometry_kcl_sha256": "18fc69957ae8f8b266718b104dec8c9562b0b44d05ade4c617ddc4d762c63628",
+    "frame16000": {
+      "actor_id": 343,
+      "position": [
+        14916.3291015625,
+        -9164.1875,
+        8240.884765625
+      ],
+      "actor_position": [
+        14916.3935546875,
+        -9164.2373046875,
+        8240.9775390625
+      ],
+      "gravity_info": {
+        "field_actor_id": 459,
+        "field_gravity_id": -1,
+        "field_type": "15ParallelGravity",
+        "largest_priority": 1,
+        "vector": [
+          -0.12673531472682953,
+          -0.9424661993980408,
+          -0.3093468248844147
+        ]
+      },
+      "ground_triangle": {
+        "host_id": 741,
+        "normal": [
+          0.12673531472682953,
+          0.9424661993980408,
+          0.3093468248844147
+        ],
+        "prism_index": 236,
+        "vertices": [
+          [
+            14835.1591796875,
+            -9136.7060546875,
+            8189.2470703125
+          ],
+          [
+            14782.2763671875,
+            -9216.779296875,
+            8454.865234375
+          ],
+          [
+            15017.8623046875,
+            -9163.791015625,
+            8196.912109375
+          ]
+        ]
+      },
+      "movement_low_word": 1612709888,
+      "ground_flag_mask": "0x40000000",
+      "ground_flag": true,
+      "bound_actor_934": false,
+      "authored_stairs_vertex_max_residual": 0.40548726416877906
+    }
+  },
+  "approach_stopped": {
+    "frame": 17700,
+    "player": [
+      14916.27734375,
+      -9164.56640625,
+      8240.8955078125
+    ],
+    "target": [
+      14732.419921875,
+      -8280.5517578125,
+      7561.1328125
+    ],
+    "nerve": "N10NrvRosetta14RosettaNrvDemoE",
+    "distance": 1130.2047478970849,
+    "command": {
+      "buttons": "",
+      "pointer": "",
+      "stick": "17701-17790:0.000000:0.000000"
+    },
+    "finished": true
+  },
+  "last_sample": {
+    "frame": 17990,
+    "actor_id": 343,
+    "position": [
+      14916.8310546875,
+      -9164.08984375,
+      8241.5634765625
+    ],
+    "actor_position": [
+      14916.8310546875,
+      -9164.08984375,
+      8241.5634765625
+    ],
+    "gravity_info": {
+      "field_actor_id": 459,
+      "field_gravity_id": -1,
+      "field_type": "15ParallelGravity",
+      "largest_priority": 1,
+      "vector": [
+        -0.12673531472682953,
+        -0.9424661993980408,
+        -0.3093468248844147
+      ]
+    },
+    "ground_triangle": {
+      "host_id": 741,
+      "normal": [
+        0.12673531472682953,
+        0.9424661993980408,
+        0.3093468248844147
+      ],
+      "prism_index": 236,
+      "vertices": [
+        [
+          14835.1591796875,
+          -9136.7060546875,
+          8189.2470703125
+        ],
+        [
+          14782.2763671875,
+          -9216.779296875,
+          8454.865234375
+        ],
+        [
+          15017.8623046875,
+          -9163.791015625,
+          8196.912109375
+        ]
+      ]
+    },
+    "movement_low_word": 1612709888,
+    "ground_flag_mask": "0x40000000",
+    "ground_flag": true,
+    "bound_actor_934": false,
+    "authored_stairs_vertex_max_residual": 0.40548726416877906,
+    "distance_to_rosetta": 1130.3242471980443
+  },
+  "visual": {
+    "frame": 16000,
+    "path": "route-frame16000.png",
+    "sha256": "c7bc5f7375cc51bbd3a23a104e9b5dba004cf272162178364916a249ff27d442",
+    "inspection_source": "Root supervisor visual inspection reported in task instruction.",
+    "observed": "Mario and a Luma on stairs; partial Rosalina torso visible at the top behind the parapet.",
+    "unobstructed_rosetta_proven": false,
+    "full_visual_parity_proven": false
+  },
+  "source_artifacts": [
+    {
+      "path": "route-actors.jsonl",
+      "size": 113610139,
+      "sha256": "4e0b38cbc0c0d0bdf31fe3fe21ccf1b0d77183486476ec585049f93d330836d1",
+      "archived_path": "route-actors.jsonl.gz",
+      "archived_size": 22201954,
+      "archived_sha256": "eb397be7239ae2d2380a3f1fbaeb9baf8f6dad65898fc9f331e1616149ef3cda"
+    },
+    {
+      "path": "operator.jsonl",
+      "size": 517215,
+      "sha256": "4793324b48a8c994b4c67747e405abec92931809598fe6c237f800c0db0086e3",
+      "archived_path": "operator.jsonl.gz",
+      "archived_size": 29429,
+      "archived_sha256": "2bd83417ff88db862adad1d41b4f462598802a60fcbd579bd7d35661064dc41b"
+    },
+    {
+      "path": "rosetta-approach.jsonl",
+      "size": 150179,
+      "sha256": "dd082d72f4c81b87a99c5a2807bff123a46a26c928615e791e9aff6261aa3ce0",
+      "archived_path": "rosetta-approach.jsonl.gz",
+      "archived_size": 9694,
+      "archived_sha256": "b25173d2e965920e88c2750f9d0fcf8dbe440c54fd69578fedda562d91cb7e7f"
+    },
+    {
+      "path": "route-frame16000.png",
+      "size": 14758474,
+      "sha256": "c7bc5f7375cc51bbd3a23a104e9b5dba004cf272162178364916a249ff27d442",
+      "archived_path": "route-frame16000.png.gz",
+      "archived_size": 5353747,
+      "archived_sha256": "fdec42a9f8f3b23307e7042ecb14ada404a17c667e24c060201cd50fb79f14cb"
+    }
+  ],
+  "milestone_snapshots": {
+    "selection": "Exact unmodified source JSONL lines at the first-sampled milestones and requested frame16000/approachstop/last.",
+    "requested_to_actual_frame": {
+      "80": 80,
+      "3170": 3170,
+      "3180": 3180,
+      "3300": 3300,
+      "3370": 3370,
+      "3430": 3430,
+      "3540": 3540,
+      "4360": 4360,
+      "4370": 4370,
+      "4490": 4490,
+      "4560": 4560,
+      "4620": 4620,
+      "4730": 4730,
+      "6140": 6140,
+      "6270": 6270,
+      "6340": 6340,
+      "6390": 6390,
+      "6630": 6630,
+      "6720": 6720,
+      "6790": 6790,
+      "6800": 6800,
+      "7090": 7090,
+      "7100": 7100,
+      "13620": 13620,
+      "16000": 16000,
+      "17700": 17700,
+      "17990": 17990
+    },
+    "count": 27,
+    "path": "milestone-snapshots.jsonl",
+    "size": 1709055,
+    "sha256": "15752cb96910e960befd17a1cb52082bae8f792284ee5e87c7d7af8d9c6f8efb",
+    "gzip_path": "milestone-snapshots.jsonl.gz",
+    "gzip_size": 332994,
+    "gzip_sha256": "8c4be28ed5862966ced6cbd241b2ef77a390c29d498aff11cfe68109654661f0",
+    "gzip_mtime": 0,
+    "source_full_trace_sha256": "4e0b38cbc0c0d0bdf31fe3fe21ccf1b0d77183486476ec585049f93d330836d1"
+  },
+  "limits": [
+    "No claim of unobstructed Rosalina, complete ascent or spin-get/Grand Star progression.",
+    "Cached ground triangles alone are not used as grounding proof.",
+    "This run predates all five source restoration groups in this batch (including both XanimePlayer conditions); post-change smoke is separate."
+  ]
+}

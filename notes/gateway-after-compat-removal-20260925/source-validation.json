@@ -1,0 +1,14 @@
+{
+  "source_diff_check": 0,
+  "source_paths": [
+    "src/Game/Animation/XanimePlayer.cpp",
+    "src/Game/Demo/DemoExecutor.cpp",
+    "src/Game/NPC/RosettaDemoHeavensDoor.cpp",
+    "src/Game/NPC/RunawayTico.cpp",
+    "src/Game/NPC/TalkBalloon.cpp",
+    "tests/OriginalXanimePlayerTests.cpp"
+  ],
+  "missing_compat_scene_sources": true,
+  "real_index_matches_before": true,
+  "all_live_processes_reaped": true
+}

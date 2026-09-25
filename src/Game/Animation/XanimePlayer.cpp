@@ -295,7 +295,7 @@ void XanimePlayer::runNextAnimation() {
     _7C = true;
 
     if (!cond) {
-        _24[_55]._14 = 1;
+        _24[_55]._14 = 0;
         _08 = 1.0f;
         updateBeforeMovement();
         calcAnm(0);
@@ -372,7 +372,7 @@ void XanimePlayer::calcAnm(u16 arg) {
         f32 currentFrame;
         if (_20->checkState(1) != 0) {
             currentFrame = _20->getEnd();
-        } else if (!_88) {
+        } else if (_88) {
             currentFrame = _84;
         } else {
             currentFrame = _20->getFrame();

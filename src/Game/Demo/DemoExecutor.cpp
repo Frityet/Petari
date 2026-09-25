@@ -100,6 +100,7 @@ void DemoExecutor::start(NameObj* pParam1, const char* pParam2, s32 param3) {
             continue;
         }
 
+        MR::invalidateClipping(actor);
         mActor.push_back(actor);
     }
 }

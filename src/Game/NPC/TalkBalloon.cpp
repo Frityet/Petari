@@ -119,7 +119,7 @@ void TalkBalloon::updateBalloon() {
         MR::copyPaneTrans(&paneTrans, this, "PicBeak");
 
         TVec2f v2(mMessageCtrl->_1C.x - paneTrans.x, mMessageCtrl->_1C.y - paneTrans.y);
-        TVec2f v3(1.0f, 0.0f);
+        TVec2f v3(0.0f, 1.0f);
 
         MR::normalizeOrZero(&v2);
 

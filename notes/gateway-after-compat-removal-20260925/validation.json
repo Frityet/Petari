@@ -1,0 +1,44 @@
+{
+  "baseline_commit": "a71fc2ea75c626d5968bc72829d864ff2ebc254c",
+  "donor_commit": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "removed_directories_remain_absent": [
+    "src/compat",
+    "src/scene"
+  ],
+  "build": {
+    "command": [
+      "xmake",
+      "build",
+      "-y",
+      "-j",
+      "16",
+      "smg-pc"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 4.567181791004259,
+    "log": "build.log"
+  },
+  "before_changes_route": {
+    "record": "route.json",
+    "binary_sha256": "c08e1e4cd27cfa9d059ed3b627bcbc0be301d73f95ab3912ea823fab1488ad55",
+    "completed_frames": 18000,
+    "exit_code": 0,
+    "elapsed_seconds": 327.15088679199107,
+    "verified_bounded_completion": true
+  },
+  "after_changes_smoke": {
+    "record": "donor-fixes-120.json",
+    "binary_sha256": "cf10b92ae16f3416ca90079444cd24a457f73bd1e614ef02cfa7ced919531d42",
+    "completed_frames": 120,
+    "exit_code": 0,
+    "elapsed_seconds": 3.0307732920045964,
+    "verified_bounded_completion": true
+  },
+  "fixture_suites_run": false,
+  "limits": [
+    "Route precedes this donor restoration patch.",
+    "Screenshot shows partial Rosalina behind tower parapet; unobstructed model and visual parity not established.",
+    "Spin tutorial, first launch, Grand Star and stage handoff not reached.",
+    "Audio remains disabled."
+  ]
+}

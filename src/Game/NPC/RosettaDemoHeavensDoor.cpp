@@ -128,8 +128,8 @@ void RosettaDemoHeavensDoor1::exeDemo() {
     }
 
     if (MR::isDemoPartActive(CP932("スピンゲット[会話1]")) || MR::isDemoPartActive(CP932("スピンゲット[会話2]")) || MR::isDemoPartActive(CP932("スピンゲット[会話3]")) ||
-        MR::isDemoPartActive(CP932("スピンゲット[会話4]")) || MR::isDemoPartActive(CP932("スピンゲット[デモ2]")) || MR::isDemoPartActive(CP932("スピンゲット[デモ3]")) ||
-        MR::isDemoPartActive(CP932("スピンゲット[デモ4]")) || MR::isDemoPartActive(CP932("スピンゲット[デモ5]"))) {
+        MR::isDemoPartActive(CP932("スピンゲット[会話4]")) || MR::isDemoPartActive(CP932("スピンゲット[デモ1]")) || MR::isDemoPartActive(CP932("スピンゲット[デモ2]")) ||
+        MR::isDemoPartActive(CP932("スピンゲット[デモ3]")) || MR::isDemoPartActive(CP932("スピンゲット[デモ4]")) || MR::isDemoPartActive(CP932("スピンゲット[デモ5]"))) {
         MR::startLevelSound(mHost, "SE_SM_LV_TICO_OP_WAIT");
     }
 

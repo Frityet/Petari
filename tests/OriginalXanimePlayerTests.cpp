@@ -231,7 +231,7 @@ namespace {
         player.updateAfterMovement();
         near(player._20->getFrame(), 2.5F, "Repeated movement update before calculation must not advance the same phase twice");
         fixture.calculate();
-        near(fixture.model.object->getAnmMtx(0)[0][3], 25, "Actual model calculation must sample the authored BCK frame");
+        near(fixture.model.object->getAnmMtx(0)[0][3], 20, "Actual model calculation must sample the saved pre-advance BCK frame");
         near(fixture.model.object->getAnmMtx(1)[1][3], 3, "Child joint calculation must retain the actual BCK offset");
         require(!player._88 && !player.checkPass(2.25F) && player.checkPass(2.75F),
                 "After calculation, pass queries must address the next interval");
@@ -241,7 +241,7 @@ namespace {
         near(player._20->getFrame(), 2.5F, "Re-requesting the current group must not restart time");
         player.updateAfterMovement();
         fixture.calculate();
-        near(fixture.model.object->getAnmMtx(0)[0][3], 30, "Next calculation phase must advance by the authored half-frame");
+        near(fixture.model.object->getAnmMtx(0)[0][3], 25, "Next calculation phase must sample the next saved authored half-frame");
         require(player.getNameStringPointer("Cycle") == fixture.groups.groups[0].mParent.mAnimationName &&
                     player.getNameStringPointer("Missing") == nullptr &&
                     std::string_view(player.getCurrentBckName()) == "FixtureFirst",
@@ -253,18 +253,18 @@ namespace {
         auto& player = fixture.player.object;
         player.changeAnimationByHash(MR::getHashCode("Blend"));
         fixture.calculate();
-        near(fixture.first.animation.getFrame(), 2.5F, "Primary BCK must use its own duration");
-        near(fixture.second.animation.getFrame(), 5, "Secondary BCK must preserve phase with its different duration");
-        near(fixture.model.object->getAnmMtx(0)[0][3], 88.75F, "Actual Core must blend 25 and 110 using authored quarter/three-quarter weights");
+        near(fixture.first.animation.getFrame(), 2, "Primary BCK must sample its saved pre-advance frame");
+        near(fixture.second.animation.getFrame(), 4, "Secondary BCK must preserve the saved phase with its different duration");
+        near(fixture.model.object->getAnmMtx(0)[0][3], 86, "Actual Core must blend 20 and 108 using authored quarter/three-quarter weights");
         near(fixture.model.object->getAnmMtx(1)[1][3], 6, "Child transform must use the same actual track weights");
         TVec3f translation;
         player.getMainAnimationTrans(0, &translation);
-        near(translation.x, 110, "Main-animation translation query must select the higher-weight real track");
+        near(translation.x, 108, "Main-animation translation query must select the higher-weight real track");
         require(player.changeTrackWeight(0, 0.75F) && player.changeTrackWeight(1, 0.25F) && !player.changeTrackWeight(2, 1),
                 "Track weight changes must enforce the current group's declared track count");
         player.updateAfterMovement();
         fixture.calculate();
-        near(fixture.model.object->getAnmMtx(0)[0][3], 50.5F, "Changed weights must combine next-phase translations 30 and 112");
+        near(fixture.model.object->getAnmMtx(0)[0][3], 46.25F, "Changed weights must combine saved-phase translations 25 and 110");
         player.changeInterpoleFrame(4);
         near(player._08, 0.25F, "Original four-frame interpolation starts with one quarter");
         require(player._20->_14 == 3, "Interpolation must retain its original decreasing divisor");
@@ -285,7 +285,7 @@ namespace {
         player.changeAnimation("Once");
         player.changeInterpoleFrame(0);
         fixture.calculate();
-        near(fixture.model.object->getAnmMtx(0)[0][3], 20, "One-shot animation must start at its authored two-frame rate");
+        near(fixture.model.object->getAnmMtx(0)[0][3], 0, "One-shot calculation must sample its authored start before the first rate step");
         player.updateAfterMovement();
         require(player.isTerminate() && player.isTerminate("Once") && player._20->getRate() == 2,
                 "Original player must retain the authored rate when its frame controller reports termination");
@@ -337,7 +337,7 @@ namespace {
         other.object.updateAfterMovement();
         other.object.calcAnm(0);
         fixture.model.object->calc();
-        near(fixture.model.object->getAnmMtx(0)[0][3], 102, "Direct typed simple animation must calculate through the real model at frame one");
+        near(fixture.model.object->getAnmMtx(0)[0][3], 100, "Direct typed simple animation must calculate through the real model at its saved frame zero");
         near(other.object._20->getEnd(), 20, "Simple animation controller must use its actual BCK duration");
         other.object.clearAnm(0);
         require(fixture.model.joints[0].mMtxCalc == nullptr, "Original clearAnm must remove the active joint calculator");

@@ -53,7 +53,7 @@ void RunawayTico::init(const JMapInfoIter& rIter) {
     MR::getJMapInfoArg1NoInit(rIter, &arg1);
     mObjArg1 = arg1;
 
-    s32 colorID;
+    s32 colorID = arg0;
 
     if (MR::tryRegisterDemoCast(this, rIter)) {
         mDemoCastID = MR::getDemoCastID(rIter);
