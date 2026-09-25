@@ -1,0 +1,56 @@
+[0mchecking for Xcode SDK ... [38;5;2;1m/Applications/Xcode.app (sdk: 27.0, arm64-apple-macos26.0)[0m
+[0mchecking for disc ... [38;5;1;1mno[0m
+[0mchecking for Xcode SDK ... [38;5;2;1m/Applications/Xcode.app (sdk: 27.0, arm64-apple-macos26.0)[0m
+[0m[38;5;2;1m[  5%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/StarReturnDemoStarter.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoCtrlBase.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoParamCommonDataTable.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/AstroDomeDemoStarter.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/DemoKoopaJrShip.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/ReturnDemoRailMove.cpp[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/ScenarioStarter.cpp[0m
+[0m[38;5;2;1m[  7%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Demo/GrandStarReturnDemoStarter.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/GameAudio/AudSeKeeper.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/GameAudio/AudCameraWatcher.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/GameAudio/AudTamakoroBgmCtrl.cpp[0m
+[0m[38;5;2;1m[  8%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/GameAudio/AudEffectDirector.cpp[0m
+[0m[38;5;2;1m[  9%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/PostureHolder.cpp[0m
+[0m[38;5;2;1m[  9%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/GeometryBindUtil.cpp[0m
+[0m[38;5;2;1m[  9%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/RailGraphUtil.cpp[0m
+[0m[38;5;2;1m[ 10%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/OctahedronBezierSurface.cpp[0m
+[0m[38;5;2;1m[ 10%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/BezierSurface.cpp[0m
+[0m[38;5;2;1m[ 10%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/IKJoint.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/GameAudio/AudSeKeeper.cpp:7:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 11%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/MultiEventCamera.cpp[0m
+[0m[38;5;2;1m[ 11%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/JointRumbler.cpp[0m
+[0m[38;5;2;1m[ 12%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/ParabolicPath.cpp[0m
+[0m[38;5;2;1m[ 12%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/NWC24/ReceiverTagMail.cpp[0m
+[0m[38;5;2;1m[ 13%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamPoseSphereInterpolator.cpp[0m
+[0m[38;5;2;1m[ 15%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraTestObj.cpp[0m
+[0m[38;5;2;1m[ 19%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/IKJointCtrl.cpp[0m
+[0m[38;5;2;1m[ 19%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ActiveActorList.cpp[0m
+[0m[38;5;2;1m[ 19%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ActorJointCtrl.cpp[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[1;38;5;1;1merror: [0msrc/Game/Demo/StarReturnDemoStarter.cpp:174:9: error: no matching function for call to 'startBckPlayer'
+  174 |         MR::startBckPlayer("ResultWait");
+      |         ^~~~~~~~~~~~~~~~~~
+src/Game/Util/PlayerUtil.hpp:54:10: note: candidate function not viable: requires 2 arguments, but 1 was provided
+   54 |     void startBckPlayer(const char*, const char*);
+      |          ^              ~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Util/PlayerUtil.hpp:55:10: note: candidate function not viable: requires 2 arguments, but 1 was provided
+   55 |     void startBckPlayer(const char*, const BckCtrlData&);
+      |          ^              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Util/PlayerUtil.hpp:56:10: note: candidate function not viable: requires 2 arguments, but 1 was provided
+   56 |     void startBckPlayer(const char*, s32);
+      |          ^              ~~~~~~~~~~~~~~~~
+src/Game/Demo/StarReturnDemoStarter.cpp:265:9: error: no matching function for call to 'startBckPlayer'
+  265 |         MR::startBckPlayer("ResultFlyGrandStarFlyAway");
+      |         ^~~~~~~~~~~~~~~~~~
+src/Game/Util/PlayerUtil.hpp:54:10: note: candidate function not viable: requires 2 arguments, but 1 was provided
+   54 |     void startBckPlayer(const char*, const char*);
+  [38;5;3m> in [1msrc/Game/Demo/StarReturnDemoStarter.cpp[0m

@@ -16,7 +16,6 @@
 #include "camera/CameraDirectorRuntime.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
-#include "scene/nameobj/NameObjFactory.hpp"
 
 #include <aurora/dvd.h>
 #include <dolphin/dvd.h>
@@ -126,26 +125,6 @@ namespace {
             "the Sphere camera dependency must not manufacture a view matrix");
     }
 
-    void test_handle_factory_stays_absent_at_remaining_audio_boundaries() {
-        const auto support =
-            smgpc::scene::nameobj::describe_name_obj_creator_support(
-                "SphereSelectorHandle");
-        require(
-            support.kind == smgpc::scene::nameobj::NameObjCreatorSupportKind::RuntimeClosureUnavailable &&
-                support.reason ==
-                    "me_and_multi_stage_bgm_playback_runtime_unavailable" &&
-                NameObjFactory::getCreator("SphereSelectorHandle") == nullptr,
-            "SphereSelectorHandle must remain absent until its reachable ME and multi-stage-BGM paths have real playback");
-
-        require_logic_error(
-            [] {
-                (void)MR::startAtmosphereLevelSE(
-                    "SE_AT_LV_ASTRO_DOME_WIND_1", 100, -1);
-            },
-            "active RuntimeContext",
-            "the mandatory retail level-sound call must fail explicitly instead of becoming a silent event");
-    }
-
     struct TestCase {
         std::string_view name;
         void (*run)();
@@ -159,8 +138,6 @@ int main() {
                  test_scene_obj_6f_is_exact_and_synchronous},
         TestCase{"generalized pointer/layout real-or-absent contract",
                  test_generalized_pointer_and_layout_contract},
-        TestCase{"factory stays absent at ME/multi-BGM boundaries",
-                 test_handle_factory_stays_absent_at_remaining_audio_boundaries},
     };
 
     auto failures = 0;

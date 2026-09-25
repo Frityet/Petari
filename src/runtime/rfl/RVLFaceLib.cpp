@@ -1,4 +1,7 @@
 #include <RVLFaceLib.h>
+#include <aurora/exception.hpp>
+#include <aurora/rfl/CharacterModel.hpp>
+#include <stdexcept>
 
 #include "runtime/RuntimeContext.hpp"
 
@@ -7,6 +10,26 @@
 
 namespace {
     RFLCallback s_icon_draw_done_callback = nullptr;
+
+    const RFLDrawCoreSetting s_default_draw_setting = {
+        1, GX_TEXCOORD0, GX_TEXMAP0, 2, GX_TEV_SWAP0, GX_KCOLOR0, GX_TEVPREV, GX_PNMTX0, FALSE
+    };
+
+    aurora::rfl::CharacterModel& require_model(const RFLCharModel* model) {
+        if (!model || !model->initialized || !model->nativeModel) {
+            aurora::throw_host_exception<std::logic_error>(
+                "RFL character rendering requires a successfully initialized native model");
+        }
+        return *model->nativeModel;
+    }
+
+    const RFLDrawCoreSetting& require_draw_setting(const RFLDrawCoreSetting* setting) {
+        if (!setting) {
+            aurora::throw_host_exception<std::invalid_argument>("RFL drawing requires a draw setting");
+        }
+        return *setting;
+    }
+
 
     [[nodiscard]] smgpc::runtime::RuntimeContext *active_runtime() {
         return smgpc::runtime::RuntimeContext::try_instance();
@@ -116,6 +139,47 @@ extern "C" RFLErrcode RFLInitCharModel(RFLCharModel *model, RFLDataSource source
         return runtime->rfl().init_char_model(*model, source, db, index, work, resolution, expressionFlags);
     }
     return RFLErrcode_NotAvailable;
+}
+
+extern "C" void RFLSetMtx(RFLCharModel* model, const Mtx matrix) {
+    auto& native_model = require_model(model);
+    native_model.set_matrix(matrix);
+    PSMTXCopy(matrix, model->matrix);
+}
+
+extern "C" void RFLSetExpression(RFLCharModel* model, RFLExpression expression) {
+    if (!require_model(model).set_expression(expression)) {
+        aurora::throw_host_exception<std::invalid_argument>("RFL expression was not built for this character model");
+    }
+    model->expression = expression;
+}
+
+extern "C" RFLExpression RFLGetExpression(const RFLCharModel* model) {
+    return require_model(model).expression();
+}
+
+extern "C" void RFLLoadVertexSetting(const RFLDrawCoreSetting* setting) {
+    aurora::rfl::load_vertex_setting(require_draw_setting(setting));
+}
+
+extern "C" void RFLLoadMaterialSetting(const RFLDrawCoreSetting* setting) {
+    aurora::rfl::load_material_setting(require_draw_setting(setting));
+}
+
+extern "C" void RFLDrawOpaCore(const RFLCharModel* model, const RFLDrawCoreSetting* setting) {
+    require_model(model).draw_opaque(require_draw_setting(setting));
+}
+
+extern "C" void RFLDrawXluCore(const RFLCharModel* model, const RFLDrawCoreSetting* setting) {
+    require_model(model).draw_translucent(require_draw_setting(setting));
+}
+
+extern "C" void RFLDrawOpa(const RFLCharModel* model) {
+    RFLDrawOpaCore(model, &s_default_draw_setting);
+}
+
+extern "C" void RFLDrawXlu(const RFLCharModel* model) {
+    RFLDrawXluCore(model, &s_default_draw_setting);
 }
 
 GXColor RFLGetFavoriteColor(RFLFavoriteColor color) {

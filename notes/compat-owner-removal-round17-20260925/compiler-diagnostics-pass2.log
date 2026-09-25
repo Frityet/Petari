@@ -1,0 +1,5 @@
+Compile diagnostics for 720 active imported/factory translation units
+src/Game/Screen/GalaxyNamePlate.cpp
+src/Game/Screen/GalaxyMapController.cpp
+src/Game/MapObj/ElectricRail.cpp
+Finished: 3 failed in 14.3 seconds

@@ -1,0 +1,21 @@
+Undefined symbols for architecture arm64:
+  "_RFLDrawOpa", referenced from:
+      MiiFaceParts::drawOpa(RFLDrawCoreSetting const*) const in libsmg-pc-game.a[1086](MiiFaceParts.cpp.o)
+  "_RFLDrawOpaCore", referenced from:
+      MiiFaceParts::drawOpa(RFLDrawCoreSetting const*) const in libsmg-pc-game.a[1086](MiiFaceParts.cpp.o)
+  "_RFLDrawXlu", referenced from:
+      MiiFaceParts::drawXlu(RFLDrawCoreSetting const*) const in libsmg-pc-game.a[1086](MiiFaceParts.cpp.o)
+  "_RFLDrawXluCore", referenced from:
+      MiiFaceParts::drawXlu(RFLDrawCoreSetting const*) const in libsmg-pc-game.a[1086](MiiFaceParts.cpp.o)
+  "_RFLLoadMaterialSetting", referenced from:
+      MiiFacePartsHolder::drawExtra() const in libsmg-pc-game.a[1143](MiiFacePartsHolder.cpp.o)
+  "_RFLLoadVertexSetting", referenced from:
+      MiiFacePartsHolder::drawExtra() const in libsmg-pc-game.a[1143](MiiFacePartsHolder.cpp.o)
+  "_RFLSetExpression", referenced from:
+      MiiFaceParts::changeExpressionNormal() in libsmg-pc-game.a[1086](MiiFaceParts.cpp.o)
+      MiiFaceParts::changeExpressionBlink() in libsmg-pc-game.a[1086](MiiFaceParts.cpp.o)
+  "_RFLSetMtx", referenced from:
+      MiiFaceParts::calcViewAndEntry() in libsmg-pc-game.a[1086](MiiFaceParts.cpp.o)
+ld: symbol(s) not found for architecture arm64
+clang++: error: linker command failed with exit code 1 (use -v to see invocation)
+

@@ -73,6 +73,10 @@ namespace JGeometry {
             return (x >= other.x) && (y >= other.y) ? true : false;
         }
 
+        inline bool isZero() const {
+            return dot(*this) <= JGeometry::TUtil< f32 >::epsilon();
+        }
+
         void add(const TVec2& value) {
             x += value.x;
             y += value.y;
@@ -127,6 +131,18 @@ namespace JGeometry {
             f32 lengthinv = JGeometry::TUtil< f32 >::inv_sqrt(oldlength);
             scale(lengthinv * newlength);
             return lengthinv * oldlength;
+        }
+
+        f32 normalize() {
+            f32 lengthSq = squared();
+
+            if (lengthSq <= JGeometry::TUtil< f32 >::epsilon()) {
+                return 0.0f;
+            }
+
+            f32 invLength = JGeometry::TUtil< f32 >::inv_sqrt(lengthSq);
+            scale(invLength);
+            return invLength * lengthSq;
         }
 
         [[nodiscard]] T squareDist(const TVec2& value) const {
@@ -218,6 +234,9 @@ namespace JGeometry {
         template <typename T>
         constexpr TVec3(T newX, T newY, T newZ)
             : Vec{static_cast<f32>(newX), static_cast<f32>(newY), static_cast<f32>(newZ)} {
+        }
+
+        constexpr TVec3(f32 xz, f32 y) : Vec{xz, y, xz} {
         }
 
         constexpr TVec3(f32 value) : Vec{value, value, value} {
@@ -312,6 +331,20 @@ namespace JGeometry {
             auto result = *this;
             result.scale(value);
             return result;
+        }
+
+        inline TVec3 multInLine(f32 val) const {
+            TVec3 ret(*this);
+            ret.x *= val;
+            ret.y *= val;
+            ret.z *= val;
+            return ret;
+        }
+
+        inline TVec3 multInLine2(f32 val) const {
+            TVec3 ret(*this);
+            ret.mult(val);
+            return ret;
         }
 
         [[nodiscard]] TVec3 multiplyOperatorInline(f32 value) const {
@@ -432,6 +465,40 @@ namespace JGeometry {
             return result;
         }
 
+        template <typename T>
+        void cubic(const TVec3& rP0, const TVec3& rV0, const TVec3& rV1, const TVec3& rP1, T t) {
+            // cubic hermite spline interpolation over a unit interval
+            // p(t) = h00(t) * p0 + h01(t) * p1 + h10(t) * v0 + h11(t) * v1
+
+            T h00, h01, h10, h11;
+
+            T t2 = t * t;
+            T t3 = t2 * t;
+            h00 = 2 * t3 - 3 * t2 + 1;
+            h01 = -2 * t3 + 3 * t2;
+            h10 = t3 - 2 * t2 + t;
+            h11 = t3 - t2;
+
+            x = h00 * rP0.x + h01 * rP1.x + h10 * rV0.x + h11 * rV1.x;
+            y = h00 * rP0.y + h01 * rP1.y + h10 * rV0.y + h11 * rV1.y;
+            z = h00 * rP0.z + h01 * rP1.z + h10 * rV0.z + h11 * rV1.z;
+        }
+
+        inline TVec3 copy() const {
+            TVec3 ret(*this);
+            return ret;
+        }
+
+        f32 turnRate(const TVec3& rB, f32 maxAngle) const {
+            f32 a = angle(rB);
+            f32 rate = 1.0f;
+            if (a > maxAngle) {
+                rate = maxAngle / a;
+            }
+
+            return rate;
+        }
+
         [[nodiscard]] f32 angle(const TVec3 &value) const {
             const f32 crossPart = cross(value).length();
             const f32 dotPart = dot(value);
@@ -445,6 +512,12 @@ namespace JGeometry {
         void orthogonalize(const TVec3 &killDirection) {
             const TVec3 &kill = killDirection;
             JMAVECScaleAdd(&kill, this, this, -kill.dot(*this));
+        }
+
+        void orthogonalize2(const TVec3& rKillDir) {
+            // TODO: sometimes this pattern specifically is used?
+            // is this just written directly instead?
+            JMAVECScaleAdd(&rKillDir, this, this, -rKillDir.dot(*this));
         }
 
         void negate() {
@@ -522,6 +595,12 @@ namespace JGeometry {
             return TVec3{x * scaleValue, y * scaleValue, z * scaleValue};
         }
 
+        [[nodiscard]] TVec3 operator*(const TVec3& value) const {
+            TVec3 result;
+            result.mul(*this, value);
+            return result;
+        }
+
         [[nodiscard]] constexpr TVec3 operator/(f32 divisor) const {
             return *this * (1.0F / divisor);
         }
@@ -579,7 +658,12 @@ namespace JGeometry {
             w = _w;
         }
 
-        void scale(T val);
+        void scale(T val) {
+            x *= val;
+            y *= val;
+            z *= val;
+            w *= val;
+        }
 
         inline TVec3< T >* toTVec3() {
             return (TVec3< T >*)this;
@@ -606,6 +690,7 @@ namespace JGeometry {
 using TVec2s = JGeometry::TVec2<s16>;
 using TVec2f = JGeometry::TVec2<f32>;
 using TVec3s = JGeometry::TVec3<s16>;
+using TVec3Sc = JGeometry::TVec3<s8>;
 using TVec3f = JGeometry::TVec3<f32>;
 using TVec4f = JGeometry::TVec4<f32>;
 

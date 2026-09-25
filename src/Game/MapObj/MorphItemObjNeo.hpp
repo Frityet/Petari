@@ -157,8 +157,8 @@ public:
         return 50.0f;
     }
 
-    virtual TVec3f* getClippingCenterOffset() const {
-        return &(TVec3f(0.0f, 200.0f, 0.0f));
+    virtual TVec3f getClippingCenterOffset() const {
+        return TVec3f(0.0f, 200.0f, 0.0f);
     }
 
     virtual bool isSyncClipping() const {
@@ -177,8 +177,8 @@ public:
     virtual f32 getFarClipDistance() const {
         return 50.0f;
     };
-    virtual TVec3f* getClippingCenterOffset() const {
-        return &(TVec3f(0.0f, 200.0f, 0.0f));
+    virtual TVec3f getClippingCenterOffset() const {
+        return TVec3f(0.0f, 200.0f, 0.0f);
     };
     virtual bool isSyncClipping() const {
         return true;
@@ -198,8 +198,8 @@ public:
         return 50.0f;
     }
 
-    virtual TVec3f* getClippingCenterOffset() const {
-        return &TVec3f(0.0f, 580.0f, 0.0f);
+    virtual TVec3f getClippingCenterOffset() const {
+        return TVec3f(0.0f, 580.0f, 0.0f);
     }
 
     virtual bool isSyncClipping() const {

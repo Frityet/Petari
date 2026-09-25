@@ -1,0 +1,261 @@
+{
+  "scope": "Boss Enemy NPC donor portability and exact provider consolidation",
+  "files": [
+    {
+      "path": "src/compat/OriginalTripodBossQuery.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/compat/OriginalTripodBossQuery.cpp",
+      "before_sha256": "674c5aadcd5b5813b56f8df72f207875f74def9800f87256487bea45d9e35fe7",
+      "initial_git_status": "clean (parent round17 baseline)",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/Game/Boss/TripodBossAccesser.hpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/Boss/TripodBossAccesser.hpp",
+      "before_sha256": "89e40205b6f49b760a1db488ce695216740f453373d260cc7ac7bb547782c6ac",
+      "initial_git_status": "clean (parent round17 baseline)",
+      "action": "modify",
+      "after_sha256": "683114fc4deeb7fb812a2cab6dc5eb2227c93cba2aab90d7722cbe2068735fd9"
+    },
+    {
+      "path": "src/Game/Boss/TripodBossAccesser.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/Boss/TripodBossAccesser.cpp",
+      "before_sha256": "4086afcc6fd9d94167d80427e5d383052637f18f909a3f7f74ddf6a0ff9d403f",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "4b72f0b4c44f7098f4961b647739032e57facc52bd842c8593363a48439b24ec"
+    },
+    {
+      "path": "src/Game/NPC/NPCActor.hpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/NPC/NPCActor.hpp",
+      "before_sha256": "3b320db0ce8420b6bd0a5322c0805298904eefd84da9fbfd9fe2e6899331c55b",
+      "initial_git_status": "clean (parent round17 baseline)",
+      "action": "modify",
+      "after_sha256": "aafcd580085f12a63a78d58fae41d6958beaa893e48b9bdd08ce1fae0382b41b"
+    },
+    {
+      "path": "src/Game/NPC/NPCActor.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/NPC/NPCActor.cpp",
+      "before_sha256": "e56594dd7be49ca7fb70109e9c1ae73670890e40ab8283e21648475cd4fb29bd",
+      "initial_git_status": "clean (parent round17 baseline)",
+      "action": "modify",
+      "after_sha256": "15be88b84a39a2c7197b60c5be16f7300663d647e167e95b36e6c77b02c53d5a"
+    },
+    {
+      "path": "src/Game/NPC/Tico.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/NPC/Tico.cpp",
+      "before_sha256": "944a0a28e632fcab733d0b1c532ef9b2e3d340b45daaaf4e45c9199c3c82ea3d",
+      "initial_git_status": "clean (parent round17 baseline)",
+      "action": "modify",
+      "after_sha256": "645a6a39a745b941f2d89170c8aec2ea516914f69261f9a11a0fc2821696dcc6"
+    },
+    {
+      "path": "src/Game/NPC/Rosetta.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/NPC/Rosetta.cpp",
+      "before_sha256": "24fcec1b9a8af5e1f3072e7388e0933bb363a50a45c2d19f3c42d482fdca874e",
+      "initial_git_status": "clean (parent round17 baseline)",
+      "action": "modify",
+      "after_sha256": "6c8bdeab18dc8b4c98c5a74de38c9826ddd2edce9f706db417c1efaa28db8fe0"
+    },
+    {
+      "path": "src/Game/Boss/OtaKing.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/Boss/OtaKing.cpp",
+      "before_sha256": "782453d960934430794d8ae4e5eedef6d00d50c1f845b8333a3a1b1f0bc2f73e",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "2714450b5474fe2e4417c6ed7d39b56624c75b47be224414f02d9d59208305d8"
+    },
+    {
+      "path": "src/Game/Enemy/CocoSambo.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/Enemy/CocoSambo.cpp",
+      "before_sha256": "cc469169b6e934d6ce9460c0d65532f82ab548b9d85590ecb615c3900bb622e8",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "de58dfdbbd286d6ffe650137721f5a43b515c3999f114cddd7b1261aa39f3833"
+    },
+    {
+      "path": "src/Game/Enemy/OtaRock.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/Enemy/OtaRock.cpp",
+      "before_sha256": "9d8dcf5cc866e7cab6040581f0246efe327af7df4762ea831210829df2037381",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "5359a67b7e3362b6817cd61f0eb02d39162c0c3ccbe3eadfa59aef6908cf9f87"
+    },
+    {
+      "path": "src/Game/Enemy/FireBall.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/Enemy/FireBall.cpp",
+      "before_sha256": "2c787b7ec0c08399da1daaef10c68391f957fac0d80106b6e69e3242025f64fe",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "b61209ef08e6cafe9ad539a565395feddb20b70e83348fa4788df7051b53a9c0"
+    },
+    {
+      "path": "src/Game/NPC/TrickRabbitSnow.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/NPC/TrickRabbitSnow.cpp",
+      "before_sha256": "b527c0f25c1a7811ea6d125c2c206355cec84ccdf311f6f69b48661d1fd34c0f",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "8af1d0320fcea3a2befa6bdd2445a8310ae80d2b13bff18c6b05b16c4eb97087"
+    },
+    {
+      "path": "src/Game/NPC/TrickRabbitFreeRun.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/NPC/TrickRabbitFreeRun.cpp",
+      "before_sha256": "a54db5fe5ee0f326d8878f69f8ea011fc2c11bb2d9c0dbdc1bc62806496d5fc0",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "86d42eadfb2264e563b239d1f4b8ae56e360d94a86944a93f10a43eb4ff3ba62"
+    },
+    {
+      "path": "src/Game/NPC/Kinopio.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/NPC/Kinopio.cpp",
+      "before_sha256": "e99b22605b0d8f74a3b20271363bbebf9e556cf0b4a680bbd2a5fcb392c8a08f",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "e5d4492f639b8439a0260671059e0d70636e9c2c3f1b1820abf2336e76383484"
+    },
+    {
+      "path": "src/Game/NPC/KinopioAstro.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/NPC/KinopioAstro.cpp",
+      "before_sha256": "6e064a160e2ff33221c96705dd3dd461c2faf1d1bf3630932806017688bf1f92",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "c9be0cc91201a2fceabe9b1902dbff24fada85c7b4c1bb42fda874abf3309b19"
+    },
+    {
+      "path": "src/Game/NPC/CareTaker.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/NPC/CareTaker.cpp",
+      "before_sha256": "a912cd5be63a53571c96ea8bffb1cd5ab46445a7476caea996bd95428b4b5da2",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "e3fc96db476cd7a8d4c932d75afccec20c0fcae6491e773a7bc34222bf6d0fb6"
+    },
+    {
+      "path": "src/Game/NPC/Syati.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/NPC/Syati.cpp",
+      "before_sha256": "76f572c53a5c126829651b8a275ac4ddb713ec34d079a89dc642c4d5ca12b8fd",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "448b6844e1cdadedd20659c58fd5af1f970ddaf2386cffcf25996348e1c60d15"
+    },
+    {
+      "path": "src/Game/Boss/BossKameckStateBattle.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/Boss/BossKameckStateBattle.cpp",
+      "before_sha256": "dee3439293c693975b2235a0aa3505de4e6b06de01180596a27cad0339b88f5f",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "36e450a525806192d2744d45a175423ac73fd68e06a729aa3f8b4010fb899d11"
+    },
+    {
+      "path": "src/Game/Enemy/BallBeamer.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/Enemy/BallBeamer.cpp",
+      "before_sha256": "d10d6603f2e28b2627f2c60301ac9ae9de87980648ec4cfa88979668eb2566e5",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "e5396113d5af3d8847b657ff020723cdd270e88ae648dca7c500f1edfb68e490"
+    },
+    {
+      "path": "src/Game/Enemy/HammerHeadPackun.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/Enemy/HammerHeadPackun.cpp",
+      "before_sha256": "9f2ff92fb4da994d538050f9ae8ec80c5347dea80de8d7956bd3e6ccd39fb62f",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "150a5923095a142e2df2da25c4bd9f5b4ed437b91901c54ebcf4ae71e1107c8c"
+    },
+    {
+      "path": "src/Game/Enemy/BegomanBase.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/Enemy/BegomanBase.cpp",
+      "before_sha256": "2c848f4be4adc2d880808c2de4f2f04fadbb58b08447c8cf619e5d517f871c34",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "c162cc40f11e0c9a4ed6fad60932e8cffa51697d27c2ef5a85c712da2169494d"
+    },
+    {
+      "path": "src/Game/Enemy/KirairaChain.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/Enemy/KirairaChain.cpp",
+      "before_sha256": "fba9bdac712f36af27f3191bc5f09b4dd41f73500aa1270fa8ca3e3a54c5b073",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "a4df7dd3993793f34287a7e80f845f836184e5037ff2199bcb83d993ada35bb2"
+    },
+    {
+      "path": "src/Game/NPC/TicoRail.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/NPC/TicoRail.cpp",
+      "before_sha256": "30fd37aaa25a5c02b8bfe0a9e1bcf9bb4cf90770ac29eb19861a0f456c4ca436",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "e0ba810722789ed13e43a3cf0ebc31ca40727a79bb23a7fcb4ca84a08ec13df5"
+    },
+    {
+      "path": "src/Game/Enemy/KoopaJrShip.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/Enemy/KoopaJrShip.cpp",
+      "before_sha256": "ee3b805b6f91fe3dd09debc528e6e91adf70af50362747ec82245527ca948d9e",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "e7e65ac56316692cb654bf0d4054349175f374de0a4c08cf0f8a4ad8c76de764"
+    },
+    {
+      "path": "src/Game/Boss/BossStinkBug.hpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/Boss/BossStinkBug.hpp",
+      "before_sha256": "c84e6249ac5d40ce441d4134b786e9ffaa5907175bff9cbc77ab5ba570678c3e",
+      "initial_git_status": "clean (parent round17 baseline)",
+      "action": "modify",
+      "after_sha256": "081a47e2311b8968f3d90cf53717a26c6d7c1385e1f5d77f1f557c9ef55c75de"
+    },
+    {
+      "path": "src/Game/LiveActor/ModelObj.hpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/LiveActor/ModelObj.hpp",
+      "before_sha256": "2ec30f36938c5faea7670a0282ae79d7624b3a9e67bfc32e92901dd229a71c77",
+      "initial_git_status": "clean (parent round17 baseline)",
+      "action": "modify",
+      "after_sha256": "2d15b8951f8300b12f08c7d25a2b0c0d02f4ba255f9a2fe79999718ba86febc5"
+    },
+    {
+      "path": "src/Game/LiveActor/ModelObj.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/LiveActor/ModelObj.cpp",
+      "before_sha256": "d52bbc7a0b844a5e570d3073d519549684054eb6086d4ba999356f15d6fc74a5",
+      "initial_git_status": "clean (parent round17 baseline)",
+      "action": "modify",
+      "after_sha256": "1a2047bc7ddeea14cc4f157c73037e20f1826bdf7ee0b279f98532fdb9c2afea"
+    },
+    {
+      "path": "src/Game/Util/NPCUtil.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/Util/NPCUtil.cpp",
+      "before_sha256": "a22f84a501a12b3dd73095b18817df0fcf4d19a2bf5014892b987d72c322fa81",
+      "initial_git_status": "clean (parent round17 baseline)",
+      "action": "modify",
+      "after_sha256": "6f1fbbdf3b60a82d6a36d9856120fa71f5c6b806ea134f2cc488f5d55a3ebe3e"
+    },
+    {
+      "path": "src/Game/LiveActor/DynamicJointCtrl.hpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/LiveActor/DynamicJointCtrl.hpp",
+      "before_sha256": "b6029c454ab47957e8d2fff6216a6e7a269cf0b7e83422852dc684ae86f3a109",
+      "initial_git_status": "clean (parent round17 baseline)",
+      "action": "modify",
+      "after_sha256": "880143deaf6838f51049b74057319e203403f23455c46b53c479b22da94703f5"
+    },
+    {
+      "path": "src/Game/LiveActor/DynamicJointCtrl.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/LiveActor/DynamicJointCtrl.cpp",
+      "before_sha256": "f48b9776844a30684e214b39f4cd7f8bbca647c313e9c1ce7e7e56e4837769bc",
+      "initial_git_status": "clean (parent round17 baseline)",
+      "action": "modify",
+      "after_sha256": "6eb61eafd1b72c1342b955d350a55221a43f92b11c79b0e11f693253a29d664c"
+    },
+    {
+      "path": "src/Game/Boss/TripodBoss.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/Boss/TripodBoss.cpp",
+      "before_sha256": "0652b4ff81abcaf07a6e05acd9f96a673326b36ec0f4eeacff785a30599462a5",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "4f5953c33649c75374a78bc4ba9e4f40692c876645ec9ddbc48da933ef299134"
+    },
+    {
+      "path": "src/Game/Boss/SkeletalFishGuard.cpp",
+      "before": "notes/compat-owner-removal-round17-20260925/actors/before/src/Game/Boss/SkeletalFishGuard.cpp",
+      "before_sha256": "03e90bdf2944f1a3c8d013aadea834bf7d626eb4cc7325ee3118383ec6592868",
+      "initial_git_status": "new central donor import before this lane",
+      "action": "modify",
+      "after_sha256": "f5d6e20816a6736b65e2b82af94d479373768475b1e55e88542e82794c9e32fd"
+    }
+  ]
+}

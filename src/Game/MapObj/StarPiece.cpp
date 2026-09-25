@@ -25,8 +25,7 @@
 #include "Game/Util/TriangleFilter.hpp"
 #include "JSystem/J3DGraphBase/J3DStruct.hpp"
 #include "JSystem/JGeometry/TMatrix.hpp"
-#include "revolution/gx/GXEnum.h"
-#include "revolution/gx/GXStruct.h"
+#include <revolution/gx.h>
 #include "revolution/mtx.h"
 #include <JSystem/JMath/JMATrigonometric.hpp>
 

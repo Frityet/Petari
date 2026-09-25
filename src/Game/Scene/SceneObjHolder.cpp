@@ -1,4 +1,3 @@
-#include "Game/Scene/SceneObjAvailability.hpp"
 #include "compat/Cp932Literal.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/AreaObj/AreaObjContainer.hpp"
@@ -391,478 +390,242 @@ bool SceneObjHolder::isExist(int id) const {
 
 NameObj* SceneObjHolder::newEachObj(int id) {
     switch (id) {
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_SensorHitChecker
     case SceneObj_SensorHitChecker:
         return new SensorHitChecker(CP932("センサー当たり"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_CollisionDirector
     case SceneObj_CollisionDirector:
         return new CollisionDirector();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_ClippingDirector
     case SceneObj_ClippingDirector:
         return new ClippingDirector();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_DemoDirector
     case SceneObj_DemoDirector:
         return new DemoDirector(CP932("デモ指揮"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_EventDirector
     case SceneObj_EventDirector:
         return new EventDirector();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_EffectSystem
     case SceneObj_EffectSystem:
         return new EffectSystem(CP932("エフェクトシステム"), true);
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_LightDirector
     case SceneObj_LightDirector:
         return new LightDirector();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_SceneDataInitializer
     case SceneObj_SceneDataInitializer:
         return new SceneDataInitializer();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_StageDataHolder
     case SceneObj_StageDataHolder:
         return new StageDataHolder(MR::getCurrentStageName(), 0, true);
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_MessageSensorHolder
     case SceneObj_MessageSensorHolder:
         return new MessageSensorHolder(CP932("システム汎用センサー"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_StageSwitchContainer
     case SceneObj_StageSwitchContainer:
         return new StageSwitchContainer();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_SwitchWatcherHolder
     case SceneObj_SwitchWatcherHolder:
         return new SwitchWatcherHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_SleepControllerHolder
     case SceneObj_SleepControllerHolder:
         return new SleepControllerHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_AreaObjContainer
     case SceneObj_AreaObjContainer:
         return new AreaObjContainer(CP932("エリアオブジェクトコンテナ管理"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_LiveActorGroupArray
     case SceneObj_LiveActorGroupArray:
         return new LiveActorGroupArray(CP932("オブジェクトグループ"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_MovementOnOffGroupHolder
     case SceneObj_MovementOnOffGroupHolder:
         return new MovementOnOffGroupHolder(CP932("Movementグループ管理"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_CaptureScreenActor
     case SceneObj_CaptureScreenActor:
         return new CaptureScreenActor(MR::DrawType_CaptureScreenIndirect, "Indirect");
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_AudCameraWatcher
     case SceneObj_AudCameraWatcher:
         return new AudCameraWatcher();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_AudEffectDirector
     case SceneObj_AudEffectDirector:
         return new AudEffectDirector();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_AudBgmConductor
     case SceneObj_AudBgmConductor:
         return new AudBgmConductor();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_MarioHolder
     case SceneObj_MarioHolder:
         return new MarioHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_MirrorCamera
     case SceneObj_MirrorCamera:
         return new MirrorCamera(CP932("鏡用カメラ"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_CameraContext
     case SceneObj_CameraContext:
         return new CameraContext();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_NameObjGroup
     case SceneObj_NameObjGroup:
         return new NameObjGroup("IgnorePauseNameObj", 16);
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_TalkDirector
     case SceneObj_TalkDirector:
         return new TalkDirector(CP932("会話ディレクター"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_EventSequencer
     case SceneObj_EventSequencer:
         return new EventSequencer();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_StopSceneController
     case SceneObj_StopSceneController:
         return new StopSceneController();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_SceneNameObjMovementController
     case SceneObj_SceneNameObjMovementController:
         return new SceneNameObjMovementController();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_ImageEffectSystemHolder
     case SceneObj_ImageEffectSystemHolder:
         return new ImageEffectSystemHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_BloomEffect
     case SceneObj_BloomEffect:
         return new BloomEffect(CP932("ブルーム"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_BloomEffectSimple
     case SceneObj_BloomEffectSimple:
         return new BloomEffectSimple();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_ScreenBlurEffect
     case SceneObj_ScreenBlurEffect:
         return new ScreenBlurEffect(CP932("画面ブラー"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_DepthOfFieldBlur
     case SceneObj_DepthOfFieldBlur:
         return new DepthOfFieldBlur(CP932("被写界深度ブラー"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_SceneWipeHolder
     case SceneObj_SceneWipeHolder:
         return new SceneWipeHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_PlayerActionGuidance
     case SceneObj_PlayerActionGuidance:
         return new PlayerActionGuidance();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_ScenePlayingResult
     case SceneObj_ScenePlayingResult:
         return new ScenePlayingResult();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_LensFlareDirector
     case SceneObj_LensFlareDirector:
         return new LensFlareDirector();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_FurDrawManager
     case SceneObj_FurDrawManager:
         return new FurDrawManager(64);
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_PlacementStateChecker
     case SceneObj_PlacementStateChecker:
         return new PlacementStateChecker(CP932("オブジェクト配置状態の監視"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_NamePosHolder
     case SceneObj_NamePosHolder:
         return new NamePosHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_NPCDirector
     case SceneObj_NPCDirector:
         return new NPCDirector();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_ResourceShare
     case SceneObj_ResourceShare:
         return new ResourceShare();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_MoviePlayerSimple
     case SceneObj_MoviePlayerSimple:
         return new MoviePlayerSimple();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_InformationObserver
     case SceneObj_InformationObserver:
         return new InformationObserver();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_CenterScreenBlur
     case SceneObj_CenterScreenBlur:
         return new CenterScreenBlur();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_OdhConverter
     case SceneObj_OdhConverter:
         return new OdhConverter();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_CometRetryButton
     case SceneObj_CometRetryButton:
         return new CometRetryButton(CP932("コメットリトライボタン"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_AllLiveActorGroup
     case SceneObj_AllLiveActorGroup:
         return new AllLiveActorGroup();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_CameraDirector
     case SceneObj_CameraDirector:
         return new CameraDirector(CP932("カメラ管理"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_PlanetGravityManager
     case SceneObj_PlanetGravityManager:
         return new PlanetGravityManager(CP932("重力"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_BaseMatrixFollowTargetHolder
     case SceneObj_BaseMatrixFollowTargetHolder:
         return new BaseMatrixFollowTargetHolder(CP932("行列追随先リスト"), 256, 256);
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_GameSceneLayoutHolder
     case SceneObj_GameSceneLayoutHolder:
         return new GameSceneLayoutHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_TripodBossAccesser
     case SceneObj_TripodBossAccesser:
         return new TripodBossAccesser(CP932("三脚ボスアクセサ"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_KameckBeamHolder
     case SceneObj_KameckBeamHolder:
         return new KameckBeamHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_KameckFireBallHolder
     case SceneObj_KameckFireBallHolder:
         return new KameckFireBallHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_KameckBeamTurtleHolder
     case SceneObj_KameckBeamTurtleHolder:
         return new KameckBeamTurtleHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_KabokuriFireHolder
     case SceneObj_KabokuriFireHolder:
         return new KabokuriFireHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_TakoHeiInkHolder
     case SceneObj_TakoHeiInkHolder:
         return new TakoHeiInkHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_SwingRopeGroup
     case SceneObj_SwingRopeGroup:
         return new SwingRopeGroup(CP932("スイングロープ描画"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_CoinHolder
     case SceneObj_CoinHolder:
         return new CoinHolder(CP932("コイン管理"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_PurpleCoinHolder
     case SceneObj_PurpleCoinHolder:
         return new PurpleCoinHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_CoinRotater
     case SceneObj_CoinRotater:
         return new CoinRotater(CP932("コイン回転管理"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_AirBubbleHolder
     case SceneObj_AirBubbleHolder:
         return new AirBubbleHolder(CP932("空気アワ管理"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_StarPieceDirector
     case SceneObj_StarPieceDirector:
         return new StarPieceDirector(CP932("スターピース指揮"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_BegomanAttackPermitter
     case SceneObj_BegomanAttackPermitter:
         return new BegomanAttackPermitter(CP932("ベーゴマン攻撃許可者"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_BigFanHolder
     case SceneObj_BigFanHolder:
         return new BigFanHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_KarikariDirector
     case SceneObj_KarikariDirector:
         return new KarikariDirector(CP932("カリカリディレクター"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_ShadowControllerHolder
     case SceneObj_ShadowControllerHolder:
         return new ShadowControllerHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_ShadowVolumeDrawInit
     case SceneObj_ShadowVolumeDrawInit:
         return new ShadowVolumeDrawInit();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_ShadowSurfaceDrawInit
     case SceneObj_ShadowSurfaceDrawInit:
         return new ShadowSurfaceDrawInit(CP932("水面影描画初期化"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_PlantStalkDrawInit
     case SceneObj_PlantStalkDrawInit:
         return new PlantStalkDrawInit(CP932("植物の茎描画初期化"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_PlantLeafDrawInit
     case SceneObj_PlantLeafDrawInit:
         return new PlantLeafDrawInit(CP932("描画初期化[植物の葉]"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_TrapezeRopeDrawInit
     case SceneObj_TrapezeRopeDrawInit:
         return new TrapezeRopeDrawInit(CP932("空中ブランコロープ描画"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_VolumeModelDrawInit
     case SceneObj_VolumeModelDrawInit:
         return new VolumeModelDrawInit();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_SpinDriverPathDrawInit
     case SceneObj_SpinDriverPathDrawInit:
         return new SpinDriverPathDrawInit();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_NoteGroup
     case SceneObj_NoteGroup:
         return new NoteGroup();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_ClipAreaHolder
     case SceneObj_ClipAreaHolder:
         return new ClipAreaHolder(CP932("クリップエリアホルダー"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_ArrowSwitchMultiHolder
     case SceneObj_ArrowSwitchMultiHolder:
         return new ArrowSwitchMultiHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_ClipAreaDropHolder
     case SceneObj_ClipAreaDropHolder:
         return new ClipAreaDropHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_FallOutFieldDraw
     case SceneObj_FallOutFieldDraw:
         return new FallOutFieldDraw(CP932("クリップエリア描画[抜き]"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_ClipFieldFillDraw
     case SceneObj_ClipFieldFillDraw:
         return new ClipFieldFillDraw(CP932("クリップエリア描画[塗りつぶし]"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_ScreenAlphaCapture
     case SceneObj_ScreenAlphaCapture:
         return new ScreenAlphaCapture(CP932("アルファテクスチャ取り込み"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_MapPartsRailGuideHolder
     case SceneObj_MapPartsRailGuideHolder:
         return new MapPartsRailGuideHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_GCapture
     case SceneObj_GCapture:
         return new GCapture(CP932("Gキャプチャー"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_NameObjExecuteHolder
     case SceneObj_NameObjExecuteHolder:
         return new NameObjExecuteHolder(4096);
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_ElectricRailHolder
     case SceneObj_ElectricRailHolder:
         return new ElectricRailHolder(CP932("電撃レール保持"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_SpiderThread
     case SceneObj_SpiderThread:
         return new SpiderThread(CP932("クモの巣"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_QuakeEffectGenerator
     case SceneObj_QuakeEffectGenerator:
         return new QuakeEffectGenerator();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_HeatHazeDirector
     case SceneObj_HeatHazeDirector:
         return new HeatHazeDirector(CP932("陽炎制御"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_BlueChipHolder
     case SceneObj_BlueChipHolder:
         return new ChipHolder(CP932("ブルーチップホルダー"), 0);
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_YellowChipHolder
     case SceneObj_YellowChipHolder:
         return new ChipHolder(CP932("イエローーチップホルダー"), 1);
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_BigBubbleHolder
     case SceneObj_BigBubbleHolder:
         return new BigBubbleHolder(CP932("オオアワホルダー"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_EarthenPipeMediator
     case SceneObj_EarthenPipeMediator:
         return new EarthenPipeMediator();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_WaterAreaHolder
     case SceneObj_WaterAreaHolder:
         return new WaterAreaHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_WaterPlantDrawInit
     case SceneObj_WaterPlantDrawInit:
         return new WaterPlantDrawInit();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_OceanHomeMapCtrl
     case SceneObj_OceanHomeMapCtrl:
         return new OceanHomeMapCtrl();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_RaceManager
     case SceneObj_RaceManager:
         return new RaceManager();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_GroupCheckManager
     case SceneObj_GroupCheckManager:
         return new GroupCheckManager(CP932("属性グループマネージャー"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_SkeletalFishBabyRailHolder
     case SceneObj_SkeletalFishBabyRailHolder:
         return new SkeletalFishBabyRailHolder(CP932("スカルシャークベビーレール管理"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_SkeletalFishBossRailHolder
     case SceneObj_SkeletalFishBossRailHolder:
         return new SkeletalFishBossRailHolder(CP932("スカルシャークボスレール管理"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_WaterPressureBulletHolder
     case SceneObj_WaterPressureBulletHolder:
         return new WaterPressureBulletHolder(CP932("ウォータープレッシャー玉ホルダ−"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_FirePressureBulletHolder
     case SceneObj_FirePressureBulletHolder:
         return new FirePressureBulletHolder(CP932("ファイアプレッシャー玉ホルダ−"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_SunshadeMapHolder
     case SceneObj_SunshadeMapHolder:
         return new SunshadeMapHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_MiiFacePartsHolder
     case SceneObj_MiiFacePartsHolder:
         return new MiiFacePartsHolder(128);
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_MiiFaceIconHolder
     case SceneObj_MiiFaceIconHolder:
         return new MiiFaceIconHolder(16, CP932("Miiアイコン保持管理"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_FluffWindHolder
     case SceneObj_FluffWindHolder:
         return new FluffWindHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_SphereSelector
     case SceneObj_SphereSelector:
         return new SphereSelector();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_GalaxyNamePlateDrawer
     case SceneObj_GalaxyNamePlateDrawer:
         return new GalaxyNamePlateDrawer();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_CinemaFrame
     case SceneObj_CinemaFrame:
         return new CinemaFrame(true);
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_BossAccessor
     case SceneObj_BossAccessor:
         return new BossAccessor();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_MiniatureGalaxyHolder
     case SceneObj_MiniatureGalaxyHolder:
         return new MiniatureGalaxyHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_PlanetMapCreator
     case SceneObj_PlanetMapCreator:
         return new PlanetMapCreator(CP932("惑星クリエイタ"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_WarpPodMgr
     case SceneObj_WarpPodMgr:
         return new WarpPodMgr(CP932("ワープポッド管理局"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_PriorDrawAirHolder
     case SceneObj_PriorDrawAirHolder:
         return new PriorDrawAirHolder();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_GalaxyMapController
     case SceneObj_GalaxyMapController:
         return new GalaxyMapController();
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_MoviePlayingSequenceHolder
     case SceneObj_MoviePlayingSequenceHolder:
         return new MoviePlayingSequenceHolder(CP932("ムービー管理保持"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_PrologueHolder
     case SceneObj_PrologueHolder:
         return new PrologueHolder(CP932("プロローグ保持"));
-#endif
-#if !defined(TARGET_PC) || SMGPC_SCENEOBJ_StaffRoll
     case SceneObj_StaffRoll:
         return new StaffRoll(CP932("スタッフロール"));
-#endif
     default:
         return nullptr;
     }

@@ -33,6 +33,11 @@ namespace MR {
     };
     MEMAllocator NewDeleteAllocator::sAllocator = {&sAllocatorFunc};
 
+    MEMAllocator* getHomeButtonLayoutAllocator() {
+        // The native Home Button Menu has no recovered implementation yet.
+        aurora::throw_host_exception<std::logic_error>("Native Home Button Menu allocator is unavailable");
+    }
+
     JKRHeap* getCurrentHeap() {
         return JKRHeap::sCurrentHeap;
     }

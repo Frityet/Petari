@@ -7,14 +7,23 @@
 
 namespace JGeometry {
     template <typename T>
-    struct TQuat4 {
-        T x{};
-        T y{};
-        T z{};
-        T w{1};
+    struct TQuat4 : public TVec4<T> {
+        using TVec4<T>::x;
+        using TVec4<T>::y;
+        using TVec4<T>::z;
+        using TVec4<T>::w;
+        using TVec4<T>::set;
 
-        TQuat4() = default;
-        TQuat4(T x_, T y_, T z_, T w_) : x(x_), y(y_), z(z_), w(w_) {
+        TQuat4() : TVec4<T>(T(0), T(0), T(0), T(1)) {
+        }
+
+        TQuat4(T xyz, T w_) : TVec4<T>(xyz, xyz, xyz, w_) {
+        }
+
+        TQuat4(T x_, T y_, T z_, T w_) : TVec4<T>(x_, y_, z_, w_) {
+        }
+
+        TQuat4(const Quaternion& source) : TVec4<T>(source.x, source.y, source.z, source.w) {
         }
 
         template <typename U>
@@ -89,6 +98,33 @@ namespace JGeometry {
         void setEuler(const TVec3<T>& rpy) { setEuler(rpy.x, rpy.y, rpy.z); }
         void setEulerDegree(T rx, T ry, T rz) { setEuler(rx * PI_180, ry * PI_180, rz * PI_180); }
 
+        void setEulerX(T _x) {
+            f32 s = sin(_x * 0.5f);
+            f32 c = cos(_x * 0.5f);
+            this->x = s;
+            this->y = 0.0f;
+            this->z = 0.0f;
+            this->w = c;
+        }
+
+        void setEulerY(T _y) {
+            f32 s = sin(_y * 0.5f);
+            f32 c = cos(_y * 0.5f);
+            this->x = 0.0f;
+            this->y = s;
+            this->z = 0.0f;
+            this->w = c;
+        }
+
+        void setEulerZ(T _z) {
+            f32 s = sin(_z * 0.5f);
+            f32 c = cos(_z * 0.5f);
+            this->x = 0.0f;
+            this->y = 0.0f;
+            this->z = s;
+            this->w = c;
+        }
+
         void getEuler(TVec3f& out) const {
             const auto sin_x = 2.0F * ((w * x) + (y * z));
             const auto cos_x = 1.0F - (2.0F * ((x * x) + (y * y)));
@@ -130,6 +166,11 @@ namespace JGeometry {
             const auto half_angle = angle * static_cast<T>(0.5);
             const auto axis_scale = std::sin(half_angle);
             set(axis.x * axis_scale, axis.y * axis_scale, axis.z * axis_scale, std::cos(half_angle));
+        }
+
+        void setRotate(f32 x, f32 y, f32 z, f32 pAngle) {
+            TVec3< T > pVec(x, y, z);
+            setRotate(pVec, pAngle);
         }
 
         void rotate(TVec3f& vector) const {
@@ -191,4 +232,7 @@ namespace JGeometry {
 
 using TQuat4f = JGeometry::TQuat4<f32>;
 
-static_assert(sizeof(TQuat4f) == sizeof(f32) * 4U);
+static_assert(sizeof(TQuat4f) == sizeof(Quaternion));
+static_assert(alignof(TQuat4f) == alignof(Quaternion));
+static_assert(std::is_standard_layout_v<TQuat4f>);
+static_assert(std::is_trivially_copyable_v<TQuat4f>);

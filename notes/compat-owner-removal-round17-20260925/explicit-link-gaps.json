@@ -1,0 +1,34 @@
+[
+  {
+    "owner": "Game/System/HomeButtonMenuWrapper.cpp",
+    "functions": [
+      "RSO::setupRsoHomeButtonMenu",
+      "RSO::HBMCreate",
+      "RSO::HBMInit",
+      "RSO::HBMCalc",
+      "RSO::HBMDraw",
+      "RSO::HBMGetSelectBtnNum",
+      "RSO::HBMSetAdjustFlag",
+      "RSO::HBMStartBlackOut"
+    ],
+    "reason": "The actual Home Button Menu is only present as a Wii RSO binary, with no recovered native C++ implementation. Explicitly throws if reached; original RSO code retained for non-PC builds."
+  },
+  {
+    "owner": "Game/Util/MemoryUtil.cpp",
+    "functions": [
+      "MR::getHomeButtonLayoutAllocator"
+    ],
+    "reason": "Required by imported Home Button Menu layout; explicit unavailable until its native subsystem and heap are implemented."
+  },
+  {
+    "owner": "Game/AudioLib/AudSystem.cpp",
+    "functions": [
+      "AudSystem::getChordInfo",
+      "AudSystem::setSeVolumeSet",
+      "AudSystem::recoverSeVolumeSet",
+      "AudSystem::registerLimitedSound"
+    ],
+    "reason": "Pre-existing throwing disabled-audio accessors moved from compat/AudioFacadeCompat.cpp to their actual Game owner. Full original DSP implementation is retained in the non-PC branch; native AudSystem construction remains unavailable.",
+    "status": "relocated existing gaps; not new successful stubs"
+  }
+]

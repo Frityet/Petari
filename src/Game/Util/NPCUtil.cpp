@@ -1,6 +1,8 @@
 #include "compat/Cp932Literal.hpp"
 #include "Game/Util/NPCUtil.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
+#include "Game/LiveActor/LodCtrl.hpp"
+#include "Game/Map/HitInfo.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NPC/NPCActor.hpp"
@@ -57,6 +59,143 @@ namespace {
 };  // namespace
 
 namespace MR {
+    void initDefaultPose(NPCActor* pActor, const JMapInfoIter& rIter) {
+        initDefaultPosAndQuat(pActor, rIter);
+        pActor->setInitPose();
+    }
+
+    void turnPlayerToActor(const LiveActor* pActor, f32 turnSpeed) {
+        LiveActor* pPlayer = getPlayerDemoActor();
+        TPos3f playerMtx;
+        playerMtx.set(getPlayerBaseMtx());
+        if (isPlayerInWaterMode()) {
+            if (isNearPlayer(pActor, 10.0f)) {
+                if (!isBckPlaying(pPlayer, "SwimWait")) {
+                    startBckPlayer("SwimWait");
+                }
+
+                return;
+            }
+
+            if (faceToPoint(playerMtx, pActor->mPosition, turnSpeed)) {
+                if (!isBckPlaying(pPlayer, "SwimWait")) {
+                    startBckPlayer("SwimWait");
+                }
+            } else {
+                if (!isBckPlaying(pPlayer, "WatchTurnSwim")) {
+                    startBckPlayer("WatchTurnSwim");
+                }
+
+                setPlayerBaseMtx(playerMtx);
+            }
+        } else if (isOnGroundPlayer()) {
+            if (isNearPlayer(pActor, 10.0f)) {
+                if (!isBckPlaying(pPlayer, "Watch")) {
+                    startBckPlayer("Watch");
+                }
+
+                return;
+            }
+
+            if (faceToPoint(playerMtx, pActor->mPosition, turnSpeed)) {
+                if (!isBckPlaying(pPlayer, "Watch")) {
+                    startBckPlayer("Watch");
+                }
+            } else {
+                if (!isBckPlaying(pPlayer, "WatchTurn")) {
+                    startBckPlayer("WatchTurn");
+                }
+
+                setPlayerBaseMtx(playerMtx);
+            }
+        }
+
+        TVec3f separation(*getPlayerCenterPos() - pActor->mPosition);
+        if (separation.length() < 100.0f && isOnGroundPlayer()) {
+            vecKillElement(separation, *getPlayerGroundNormal(), &separation);
+            if (!normalizeOrZero(&separation)) {
+                pushPlayer(separation * 10.0f);
+            }
+        }
+    }
+
+    void setNPCActorPos(NPCActor* pActor, const TVec3f& rPos) {
+        pActor->mPosition.set(rPos);
+        resetPosition(pActor);
+        onCalcShadowOneTimeAll(pActor);
+    }
+
+    void setNPCActorPose(NPCActor* pActor, const TVec3f& rFront, const TVec3f& rUp, const TVec3f& rPos) {
+        TPos3f mtx;
+        makeMtxUpFrontPos(&mtx, rUp, rFront, rPos);
+        pActor->setBaseMtx(mtx);
+        pActor->mPosition.set(rPos);
+        resetPosition(pActor);
+        onCalcShadowOneTimeAll(pActor);
+    }
+
+    void setDefaultPose(NPCActor* pActor) {
+        pActor->setToDefault();
+    }
+
+    bool convertPosOnGround(TVec3f* pPos, const TVec3f& rDirection) {
+        Triangle triangle;
+        TVec3f hitPos;
+        if (getFirstPolyOnLineToMap(&hitPos, &triangle, *pPos, rDirection)) {
+            *pPos = hitPos;
+            return true;
+        }
+
+        return false;
+    }
+
+    bool isActionContinuous(const LiveActor* pActor) {
+        return getBckCtrl(pActor)->getAttribute() == 0 && !isBckStopped(pActor);
+    }
+
+    void invalidateLodCtrl(const NPCActor* pActor) {
+        pActor->mLodCtrl->invalidate();
+    }
+
+    bool tryTalkNearPlayerAndStartMoveTalkAction(NPCActor* pActor) {
+        tryStartMoveTalkAction(pActor);
+        return tryTalkNearPlayer(pActor->mMsgCtrl);
+    }
+
+    bool tryTalkForceAtEndAndStartTalkAction(NPCActor* pActor) {
+        tryStartTalkAction(pActor);
+        return tryTalkForceAtEnd(pActor->mMsgCtrl);
+    }
+
+    bool tryChangeTalkActionRandom(NPCActor* pActor, const char* pAction0, const char* pAction1, const char* pAction2) {
+        if (getBckCtrl(pActor)->getAttribute() != 2 || !isBckLooped(pActor)) {
+            return false;
+        }
+
+        switch (getRandom(0L, 3L)) {
+        case 0:
+            if (pAction0) {
+                pActor->mParam._1C = pAction0;
+            }
+
+            break;
+        case 1:
+            if (pAction1) {
+                pActor->mParam._1C = pAction1;
+            }
+
+            break;
+        case 2:
+            if (pAction2) {
+                pActor->mParam._1C = pAction2;
+            }
+
+            break;
+        }
+
+        return true;
+    }
+
     bool getNPCItemData(NPCActorItem* pItem, s32 itemType) {
         return NPCFunction::getNPCItemData(pItem, itemType);
     }

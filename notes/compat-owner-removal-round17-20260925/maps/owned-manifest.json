@@ -1,0 +1,478 @@
+{
+  "baseline": "6711b79ad",
+  "paths": [
+    {
+      "path": "src/Game/MapObj/BenefitItemObj.hpp",
+      "reason": "Restore complete existing donor declaration; remove obsolete placeholder/duplicate class.",
+      "initial_import_this_round": false,
+      "before_sha256": "25a46b50e6e4e818f2400c7e7bfb1f3fc670c4473534c82eb9664eb0245af3e9",
+      "after_sha256": "bb3690f907659e692e5d89c4b8cf043958901ee7df2de2fe619d86f596b327fe",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/MapObj/BenefitItemLifeUp.hpp",
+      "reason": "Restore complete existing donor declaration; remove obsolete placeholder/duplicate class.",
+      "initial_import_this_round": false,
+      "before_sha256": "1f075baf2371fc45587a0769a39c160e67505b781d9ce7e386f95d0e675354b3",
+      "after_sha256": "95180e4ea071097e6b10583b563ac251cb7acd3f2d0b1ce5fda47f0db135f69f",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/MapObj/ChipBase.hpp",
+      "reason": "Restore complete existing donor declaration; remove obsolete placeholder/duplicate class.",
+      "initial_import_this_round": false,
+      "before_sha256": "b73d7f26aaf7f600bb20948f4f344a84c21816b8c2b269eea60718464cf5e36f",
+      "after_sha256": "aacb1406ae0cfa4ccfe5e832c514749e8d1eece0f9bff513a5c408d206d067f7",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/MapObj/ClipArea.hpp",
+      "reason": "Restore complete existing donor declaration; remove obsolete placeholder/duplicate class.",
+      "initial_import_this_round": false,
+      "before_sha256": "015137cfbb3a9aa6f3d679b9344a58635ce88c0cf14e2da3c1b74b81667eb075",
+      "after_sha256": "c2f9fdd46a42051b0c766571b0cab7ae175e42ab11d09b243bffb95e6547261b",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Map/WhirlPoolAccelerator.hpp",
+      "reason": "Restore complete existing donor declaration; remove obsolete placeholder/duplicate class.",
+      "initial_import_this_round": false,
+      "before_sha256": "894b2f398ff478b48604804cd5ee1a50400662ab4b2a868112c3040101f24575",
+      "after_sha256": "fb0379cf06cfd2db61f6b9e6ff5d9eb23e820af1ed7ff758691f2c056fb3242a",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Map/WhirlPoolAccelerator.cpp",
+      "reason": "Restore complete donor owner instead of 29-line constructor/calcInfo fragment.",
+      "initial_import_this_round": false,
+      "before_sha256": "dc8f5515ab4e23d6f1c6760b1eb0bcc78d9bf5cd335c26be973455a7f33ffa23",
+      "after_sha256": "b1c33222cc741300fd9724781b4f30d68ebb75d13ba710a9318b3cfb03d81b7f",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Map/GravityDust.cpp",
+      "reason": "Preserve float user-work bit representation without reference type punning on host.",
+      "initial_import_this_round": true,
+      "before_sha256": "1139cf93385b33b7798090eff55954c4f9c2701b24a62f20ab8c7d32d0945482",
+      "after_sha256": "f5071e67119375cb66328d6cbba2519fb7cba62050b043390be71e9611d1883a",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Map/OceanSphere.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations. Restore complete existing donor owner after native fragment left unresolved actual methods; preserve CP932 and SDK include boundaries.",
+      "initial_import_this_round": false,
+      "before_sha256": "2ecb444108bddcb17f132247e89e027c285b78c5c9553205007fb2785c0abc4c",
+      "after_sha256": "78363b765d5807745aa319d463f8b5dd438cc62c9687a339377fa52bee99e305",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Map/OceanBowlBloomDrawer.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations.",
+      "initial_import_this_round": true,
+      "before_sha256": "52e8de91e171de9d1d156a2122182f47fc9bc13c3aa3cc11d5c2249e0e993bfa",
+      "after_sha256": "eaf08fc70f274bb81971efa9c1d0124c417055760caccb81fd6211ae5b31de56",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Map/WaterRoad.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations.",
+      "initial_import_this_round": true,
+      "before_sha256": "7139359f113d592fa677c7167e813fe76a928710078601065aebdfa2ac37d868",
+      "after_sha256": "44e4ea9b4328e67d2f9c4f4668814ee82cf73e6d477bde2ee20a42a6e81af4c1",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Map/OceanRingDrawer.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations. Explicit declaration include for imported original owner.",
+      "initial_import_this_round": true,
+      "before_sha256": "5e750edb30bc07ab8d857d1e7ab119f0b4df0e2fd13a1acdea7cbd517fa583c6",
+      "after_sha256": "3e2083f2e8f30dfbd565c01570487d7fbd7edab9186bc5b8dc36f7d0bc5ac782",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Map/OceanBowl.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations.",
+      "initial_import_this_round": false,
+      "before_sha256": "8b24b688b44ca14f2bc55a9094cc11571010b304ff9c2296ca6891921c9cad67",
+      "after_sha256": "40dfd5c01e36f773ef183dcee73aaa275c74e7d8cbf18b215fcba76d6e8aec34",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/MapObj/SpiderThreadPart.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations.",
+      "initial_import_this_round": true,
+      "before_sha256": "7a0ff8e5d91ea171bbf28b4c595d75d86390dfecd517b39a55ce4e871b2525f4",
+      "after_sha256": "dc0e9cb4541c10de593a0a2a376781b06249dd850fb9ddd951795fb26310fead",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/MapObj/ElectricRailMoving.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations.",
+      "initial_import_this_round": true,
+      "before_sha256": "1ad617d218cfcf9b7356a067a9a4cc84715dc81fea8f5d35c6ce82ceb8587b8c",
+      "after_sha256": "8ca41c79b1f982513374eb576c86fd342c98cf5edc918d8eaed8f1727e01164e",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/MapObj/NormalMapBase.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations. Explicit declaration include for imported original owner. Dereference actual Mtx array returned by J3DModel before matrix-row decay.",
+      "initial_import_this_round": true,
+      "before_sha256": "6f56fdc5c1282c0684e109108257c5be3bdd4eff221feb26dcd00527acda40a9",
+      "after_sha256": "557a9598840ba407299b8459c60afee382939bc5ee61e3d1a5bcb28c7a0c6cd8",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/MapObj/StarPiece.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations.",
+      "initial_import_this_round": false,
+      "before_sha256": "6d5bb83f8545287ca7282d94acf3a66fff42d993c0087946987f4c5cc40de449",
+      "after_sha256": "8a8c11a06223b5972189659e81b2bef2627e02aff438cf31901379addf76bbe5",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/MapObj/GCaptureRibbon.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations.",
+      "initial_import_this_round": false,
+      "before_sha256": "164680b3bd60c567a0c14759bf5904382d0594b6f5d6b0e78bd11a73c33aa191",
+      "after_sha256": "06b21a0e32e4f291281bdf8d8e2f32546b1a1e36ce35fc224436698d87f6932b",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/MapObj/ClipAreaDropLaser.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations.",
+      "initial_import_this_round": true,
+      "before_sha256": "e207b13cc1f2538edd61dd699172bf87e8341396845d713b6437985377143dcb",
+      "after_sha256": "1c50854d7e06a2107b01e530f0f808e088d740f6ce044f6e9669c71e4d9fb0a1",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/MapObj/FlexibleSphere.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations.",
+      "initial_import_this_round": true,
+      "before_sha256": "7e4dffde4577d7d6ec3dae9186589263832534fc7b6c83a8da950be91e576c3d",
+      "after_sha256": "8a30297bc0fbb8685823d6d25d56df713ebff84f0844d07c9e381727a5c0186b",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/MapObj/WhirlPool.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations.",
+      "initial_import_this_round": true,
+      "before_sha256": "23cfa1498c23bab8ce1373ccb54e6ab3c884cad672677c36984ff72d29bb5d43",
+      "after_sha256": "8ffea2a0de2502eee7fc90ebbfd8ec02086158666d52f9732d2499d4f6c3f179",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Ride/Creeper.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations.",
+      "initial_import_this_round": true,
+      "before_sha256": "290a8ec500bb3711718af2a27ba4277a7dd98f83d7246785bc1575a424925995",
+      "after_sha256": "81dd36c0dca4e31a33ba5658e47ad05cead6a9834a9ead3035508c8252cf428e",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Ride/SpaceCocoon.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations.",
+      "initial_import_this_round": true,
+      "before_sha256": "09f69a4769ddcbf76a5b67cd29df767b6151424f96f55969992653e09f831bbb",
+      "after_sha256": "9bdd1abafd618e71757888edb82e8b68e8221cac8632dbec97987a09825214e4",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Ride/BigBubble.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations.",
+      "initial_import_this_round": true,
+      "before_sha256": "de539d7cec3297f7c150bdb5f3f70343a3d677310b0383ef25fe5d716c5d1b2c",
+      "after_sha256": "1cc9e04ddc2f9e19582d05fc3fc3e16b524e68be7c9753476a52c28b14683b78",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Ride/Trapeze.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations.",
+      "initial_import_this_round": true,
+      "before_sha256": "7dfb95b0c156e3deaa70caf3b28753d4aad02249dc749b4c594ba42bbed994e0",
+      "after_sha256": "00425a4167e64be78b14c5021a4beda11fdfe58a8a3473fb01b4abdb9647aa9f",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Ride/SwingRope.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations. Select original s32 animation overload explicitly on LP64.",
+      "initial_import_this_round": true,
+      "before_sha256": "7cbf44930dca7184de59cbb284291b04d6f4dff8e959286d91a12b5ee2d137e6",
+      "after_sha256": "af3b032d9e68563678d368b60883383038c7485b917cf7a1e45f1d156e1d901e",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Ride/PlantStalk.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations.",
+      "initial_import_this_round": true,
+      "before_sha256": "34e20bf99e1bc849b4152a3e5e32a859b136e43a2302ae7eebd6cc373959c200",
+      "after_sha256": "64b0d3abdee54622d60566fffdfebd8ec6927f2becc79f1a8f8a3d050824eb48",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Ride/Plant.cpp",
+      "reason": "Use existing Aurora Revolution GX umbrella for original specialized GX declarations.",
+      "initial_import_this_round": true,
+      "before_sha256": "f3c78217dce822a47d2512667480084f824543502d8197e6cb83b2297b1faaca",
+      "after_sha256": "06873d72dd8abd18f7286d7449a91d5202941de3b02be7d65c6a3d78c24c146b",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Ride/Fluff.cpp",
+      "reason": "Explicit declaration include for imported original owner.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "e521782ef53919eb6d3e86171603c9eb99cf1ca9bb441022bc9cf218de2b7bd3",
+      "after_sha256": "099c8739875bb0944c19229c494c6e8aea122165b1b9e808ebd6737c35784814"
+    },
+    {
+      "path": "src/Game/MapObj/JumpHole.cpp",
+      "reason": "Explicit declaration include for imported original owner.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "2b8a8d1e5c36a5127e34799fb62cd9058d89748042f45876a5f8c0be6f9e9feb",
+      "after_sha256": "2abfc886871bc80d03e7bd76f84d103d05a626ba76d05a529314cefbca1172e2"
+    },
+    {
+      "path": "src/Game/MapObj/BallOpener.cpp",
+      "reason": "Explicit declaration include for imported original owner.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "ec36d744a3ce0fbdfee46eebfa08071487044b7484c58e169f393c719ae1fdc9",
+      "after_sha256": "ec977f360968e5f8fa1959ce049152978c17c8db65b9de6fd548b0a7bf16dfc1"
+    },
+    {
+      "path": "src/Game/MapObj/MagicBell.cpp",
+      "reason": "Explicit declaration include for imported original owner.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "6768882001a2ce6f43cc48d742859bfb87d2439620b5b1136d199cf56a2e7719",
+      "after_sha256": "49d9f7c829410ccc3e08c13a28ce40fac1e5e99a4ee57a10512e2193e7bb81ea"
+    },
+    {
+      "path": "src/Game/MapObj/ShootingStar.cpp",
+      "reason": "Explicit declaration include for imported original owner.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "7f21ee5f68404af652600d1a1abe723a2824702a401f3db37cc8cce8a551976d",
+      "after_sha256": "f3846a3b7d33095f22c5f2d935d422cdf7ea7af5675ebddf21b3a3fc1ff08f68"
+    },
+    {
+      "path": "src/Game/MapObj/TrampleStar.cpp",
+      "reason": "Explicit declaration include for imported original owner.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "95a52ab1edb546b020197044847ff36332a821c2811292b983c9dea4e0b056e7",
+      "after_sha256": "d155f3a7e8d1c66034797d58bc0fb2171502980baaf027737692d241449a4e2d"
+    },
+    {
+      "path": "src/Game/MapObj/FloaterFloatingForceTypeSpring.cpp",
+      "reason": "Explicit declaration include for imported original owner.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "c40a06f4908d216407fc8395925e5123dd3cbdb07ab8b9e92336444bff85d803",
+      "after_sha256": "1b11789270fc038b332457c2750c0c326cb2bdbe0d19abef7bad836d9581d305"
+    },
+    {
+      "path": "src/Game/MapObj/ElectricRail.cpp",
+      "reason": "Explicit declaration include for imported original owner.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "b9dda0cd6f434bdaf22dacb9ef26cc3fe26ea2876ba25c4a994d2c22addfa03a",
+      "after_sha256": "59fda3c966b04d538757fd55778435a3b18d1b292d59471b47ae9fbc6f699197"
+    },
+    {
+      "path": "src/Game/Ride/SurfRay.cpp",
+      "reason": "Select original s32 animation overload explicitly on LP64. Give switch-local rotation temporary its original case lifetime.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "30ecc9aa6f67d4abf08f996a243993b5cb81ce582c09c21d7b5f26f1323c9317",
+      "after_sha256": "ddef7a518f6ed574db6e32f6e6516900a3ae68638247315105c128b53cd02d61"
+    },
+    {
+      "path": "src/Game/Map/RaceRail.cpp",
+      "reason": "Select original s32 animation overload explicitly on LP64.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "8c5e53923598b7c3eb77039771206c6589b62845371b1cec823d2610fb4b0907",
+      "after_sha256": "fa2c315a2028331453fffde5e2b697ec57a1e699679dd85c1f99b2e9f8761d42"
+    },
+    {
+      "path": "src/Game/MapObj/WaterPressureBullet.cpp",
+      "reason": "Select original s32 animation overload explicitly on LP64.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "5c91d207e53e8e643bd63048006e7debcfb7e0ca16f37c24449455b8380e9297",
+      "after_sha256": "967cd040897387e14f6eb654f374a5077fdfe891a71b7796c7512c3075b4c45d"
+    },
+    {
+      "path": "src/Game/MapObj/PalmIsland.cpp",
+      "reason": "Use s32 random range arguments consistently on LP64.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "f889a1c21467e8afe5d4ec3bb4576de38ac55d516b19a486ffc7e19a950c3674",
+      "after_sha256": "a67d4a75a40b4c8f4c3c324f5e499fc85ea610d284f4366cf6f4b3c58e331040"
+    },
+    {
+      "path": "src/Game/MapObj/GreenCaterpillarBig.hpp",
+      "reason": "Declare actual LodCtrl before pointer fields.",
+      "initial_import_this_round": false,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "c1315342dcc99699eed3e175c4bb3a672b78a3205739e79b80e59048d516b5a9",
+      "after_sha256": "1c00d06d4731f20d147d0171a58080e45e1d9be85327beeef41711548f6f2d4a"
+    },
+    {
+      "path": "src/Game/MapObj/LavaFloater.cpp",
+      "reason": "Use integer zero for original effect count.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "44c2c794d168e6034c3e59fdd66daaa8ab8ff3fd398a0540227a754b20cedef5",
+      "after_sha256": "526051c8339cc818ec59b8feeaded4730436d2c8990fe96946a8504950e8fdda"
+    },
+    {
+      "path": "src/Game/MapObj/MarioLauncherAttractor.cpp",
+      "reason": "Use bool false for original model flag.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "eaec9211b941dba3d9294381655a92f99fb8ae5a3ff58681673c070aeaafdc23",
+      "after_sha256": "cabe21a87dab1d72ed2ff736868f36d63c8674135d29774ada75f7972d978706"
+    },
+    {
+      "path": "src/Game/MapObj/Sandstorm.cpp",
+      "reason": "Invoke original name predicate instead of ill-formed member-function value.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "33f4dac6bbada6dbe98ff1725dd949c0215e7fbe5e35f2693d6a8a6927d605b4",
+      "after_sha256": "72b5435fb7747545ed756969bd00f7f2030c2244f6d8b5eb8ce124e0b76c3246"
+    },
+    {
+      "path": "src/Game/MapObj/Note.cpp",
+      "reason": "Keep all gravity vector literals f32.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "273283f079ec8c20ea885f15c068d3eb2f44c4a59e436f93ca999503940c3477",
+      "after_sha256": "0d7ce1065cc96fb6c9709a318002ce6d8c3124560c0bb29ddaad70924c413221"
+    },
+    {
+      "path": "src/Game/Map/WaterPlant.cpp",
+      "reason": "Use palette number zero, not null pointer, for actual JUTTexture constructor.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "592e359b96a30d04e770e0520cea0c9af812f7865835eb8b7b62a08d67b3217a",
+      "after_sha256": "c94bd1e92f651dbddb60fa7dc940d1853106202154d6e03e94b98a355a8f09fa"
+    },
+    {
+      "path": "src/Game/MapObj/MapPartsRotator.hpp",
+      "reason": "Restore donor destructor declaration now actual imported definition is active.",
+      "initial_import_this_round": false,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "f1d01ba4de5b653eff1c4d81907ce95a3afc03de0b0181ac7b8de0f4c56d0c6b",
+      "after_sha256": "31a1397b3595352d0a499c0bd5378e7f9c474d351b8d5d4d20a757c66c5a0384"
+    },
+    {
+      "path": "src/Game/MapObj/MapPartsFunction.hpp",
+      "reason": "Restore donor declarations now actual imported definitions are active.",
+      "initial_import_this_round": false,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "159cda231b0dcd0b4ba8444cc17a7abcb722f85f009c9a159e4cae4a8bdff81f",
+      "after_sha256": "22c0b9fa2cece711f3d6a9ee5ff1c30dd8161fcc653f65494b652e8fdf71f219"
+    },
+    {
+      "path": "src/Game/MapObj/MapPartsBreaker.cpp",
+      "reason": "Remove misplaced duplicate TVec2::squared body already provided generically by actual JGeometry header.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "1fd199cfb357aa67160e1398c6fc262cfba1f11dbaad88088b8ff1d62172c17a",
+      "after_sha256": "ff729f9d1bbd9b41735f45cdf686f6ef0f98ccd625ac12d5b6c5e98db2ef0920"
+    },
+    {
+      "path": "src/Game/MapObj/ElectricBall.cpp",
+      "reason": "Replace obsolete MSL member adaptors with equivalent ordered iteration.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "0849c99e86ad61822ecde5dbd9970e808882f8cf13e10f3c886c73007edb2cab",
+      "after_sha256": "ac73c8f3430b904bbf036938e248bd4cef12194f575f3c08690c52cf92d8a115"
+    },
+    {
+      "path": "src/Game/MapObj/GeneralMapParts.cpp",
+      "reason": "Replace obsolete standard-library member adaptors with equivalent ordered lambdas.",
+      "initial_import_this_round": true,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "2c1fdd1c0ed98c5a2314b8c7ed7818d4f90fb7c79b6895fc80fdf38bc43accff",
+      "after_sha256": "6f0c7615a9944d10df02de3dadcc46577ee6059bc6528cd9c70d3c293e229299"
+    },
+    {
+      "path": "src/Game/MapObj/SpiderThread.cpp",
+      "reason": "Restore complete existing donor owner after native fragment left unresolved actual methods; preserve CP932 and SDK include boundaries.",
+      "initial_import_this_round": false,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "9061bc291201ad9142dfb2d8b42078222b9abf0f2d351586d7c20f2e93070517",
+      "after_sha256": "4e31fbe5017fef50890fa772367cc82aa5e8adeee39ceb8f5924fdd564cd7822"
+    },
+    {
+      "path": "src/Game/MapObj/SpinDriverPathDrawer.cpp",
+      "reason": "Restore complete existing donor owner after native fragment left unresolved actual methods; preserve CP932 and SDK include boundaries.",
+      "initial_import_this_round": false,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "7aae68e7ac001bb1abec683086d149c1dfa54927d86861c2da8765cb62ec490d",
+      "after_sha256": "23a56a620b5d66f32e5b15c29266247393881d885fb2a8e41776ec43273be70b"
+    },
+    {
+      "path": "src/Game/MapObj/ChipGroup.cpp",
+      "reason": "Restore complete existing donor owner after native fragment left unresolved actual methods; preserve CP932 and SDK include boundaries.",
+      "initial_import_this_round": false,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "1ecca94d83f1004246549b5148e2462b57674dfe9743f8a61c48cd0a36454abc",
+      "after_sha256": "e849c65d63e3809e1766e15e391b5d7da43c419d5345a5f96dee68d608c118ef"
+    },
+    {
+      "path": "src/Game/MapObj/BlackHole.cpp",
+      "reason": "Restore complete existing donor owner after native fragment left unresolved actual methods; preserve CP932 and SDK include boundaries.",
+      "initial_import_this_round": false,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "7a62d32595218ba9c7bf4d2f1e2352eeafee18eabe234414d52387696b25c00e",
+      "after_sha256": "097fe21662d5d89bd4deb6ae5eaeefc47b85922f20dc12daca84111c8e8495a9"
+    },
+    {
+      "path": "src/Game/AreaObj/MercatorTransformCube.cpp",
+      "reason": "Restore complete existing donor owner after native fragment left unresolved actual methods; preserve CP932 and SDK include boundaries.",
+      "initial_import_this_round": false,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "86c955c0da8a4d04f4bae73c9e21817ca2675d2fd29fb9905b0ab734f6595c2d",
+      "after_sha256": "305bd008b66b20507f2db6718bbf668df392be661ee6edc60e759b358f20899a"
+    },
+    {
+      "path": "src/Game/MapObj/SpinDriverPathDrawer.hpp",
+      "reason": "Restore coherent current donor declarations for complete owner source.",
+      "initial_import_this_round": false,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "fd858859c5744c509f041163568043f18177514171b0f56e091c1f92ef455f14",
+      "after_sha256": "5f93af1d19c7334be752bafda752759acf54752a58930900bc918d1205a2207f"
+    },
+    {
+      "path": "src/Game/MapObj/ChipGroup.hpp",
+      "reason": "Restore coherent current donor declarations for complete owner source.",
+      "initial_import_this_round": false,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "c638931beb2eb519d5c318edbccedb5b44d124946821a9b8b99f8ac4691d95e6",
+      "after_sha256": "026e517e560356d4e8712181292676a5e214c8f7f557599dea37632b2f060fa5"
+    },
+    {
+      "path": "src/Game/MapObj/BlackHole.hpp",
+      "reason": "Restore coherent current donor declarations for complete owner source.",
+      "initial_import_this_round": false,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "fa97337b8a05246096e136b16b0ba229810e47449b3d103ea6418a69cce54450",
+      "after_sha256": "f51afc8a034d21deeb88dadefc79c2bd9d98072fc27abbdb6b4c65b95cbf78d5"
+    },
+    {
+      "path": "src/Game/MapObj/ChipHolder.cpp",
+      "reason": "Use restored donor ChipGroup field name at existing holder lookup.",
+      "initial_import_this_round": false,
+      "lane_patch": "lane-only.patch",
+      "before_sha256": "231e0047924889769283e96e299ef891af33a749df1425f857f2b7577fcdb107",
+      "after_sha256": "8bef4b60ca61dd4bd20371791d37780aa7c7dc89ef43c9c786d8e1444f9b4c25"
+    }
+  ],
+  "baseline_note": "Before snapshots are after root imported missing sources and headers this round."
+}

@@ -9,13 +9,17 @@
 #include <RVLFaceLib.h>
 
 MiiFaceParts::MiiFaceParts(const char* pName, const MiiFaceRecipe& rRecipe)
-    : LiveActor(pName), mCharModel(nullptr), _90(nullptr), mRecipe(nullptr), _CC(nullptr), _D0(false) {
+    : LiveActor(pName), mCharModel(nullptr), _90(nullptr), mRecipe(nullptr), _C8(nullptr), _CC(nullptr), _D0(false), _D1(true) {
     mRecipe = new MiiFaceRecipe(rRecipe);
 
     MR::createSceneObj(SceneObj_MiiFacePartsHolder);
 }
 
 MiiFaceParts::~MiiFaceParts() {
+    delete mCharModel;
+    delete[] static_cast<u8*>(_90);
+    delete mRecipe;
+    delete _CC;
 }
 
 void MiiFaceParts::init(const JMapInfoIter& rIter) {

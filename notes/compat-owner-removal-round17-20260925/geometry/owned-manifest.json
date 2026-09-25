@@ -1,0 +1,33 @@
+{
+  "base": "6711b79ad079450a523bed95613c8873de1405f9",
+  "files": [
+    {
+      "path": "src/JSystem/JGeometry/TVec.hpp",
+      "before_sha256": "5c3cfdecbc6e81205eba4ccb001a0bb83e8bc08dbca245e2814497e718ad6d97",
+      "before_status": "",
+      "after_sha256": "bc3fca1d604eec40b2ca817c4b80902a1eedf01942a1351f433420dc7e1b7a75",
+      "action": "modify"
+    },
+    {
+      "path": "src/JSystem/JGeometry/TQuat.hpp",
+      "before_sha256": "f1266c8c271fabcb91a7ab54aa80cf1c9d2d52380a3b467dc927aab7e757184a",
+      "before_status": "",
+      "after_sha256": "7ecb5a8c7f861527113d5e46c823cf5740c67c699a8b573c9066c8353c572b80",
+      "action": "modify"
+    },
+    {
+      "path": "src/JSystem/JGeometry/TMatrix.hpp",
+      "before_sha256": "bc98b49d31018e5cb336683a86bceb0add65705fb8e1b78ea81ac26f3aace01a",
+      "before_status": "M src/JSystem/JGeometry/TMatrix.hpp",
+      "after_sha256": "e211183e9aedbafa1d452c60e04de5fe71e7a4c69c0d166e515eda0cc1891a2c",
+      "action": "modify"
+    },
+    {
+      "path": "src/Game/NameObj/NameObjFactory.cpp",
+      "before_sha256": "bbedf01c5c1487cf0fdb19cd3634012b50a0e6cfbaf8642f342fcc7f4e7b7595",
+      "before_status": "M src/Game/NameObj/NameObjFactory.cpp",
+      "after_sha256": "3bceb4630892ff0b74dd3c7f3ad8303b0cf9897e5edb506cf110c11db385ec36",
+      "action": "modify"
+    }
+  ]
+}

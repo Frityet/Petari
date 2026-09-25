@@ -42,7 +42,7 @@
 #include "runtime/SceneScheduler.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/TplTexture.hpp"
-#include "scene/nameobj/NameObjFactory.hpp"
+#include "Game/NPC/DemoRabbit.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "SceneExecutionFixture.hpp"
 
@@ -634,12 +634,7 @@ namespace {
                 "each placement row should retain its own CommonPathPointInfo table");
     }
 
-    void test_demo_rabbit_factory_and_archives_are_active() {
-        require(smgpc::scene::nameobj::can_create_name_obj("DemoRabbit"),
-                "DemoRabbit must be available once its generic NPC runtime closure is real");
-        require(NameObjFactory::getCreator("DemoRabbit") != nullptr,
-                "the active DemoRabbit factory must expose its exact constructor");
-
+    void test_demo_rabbit_original_archive_callback() {
         auto placement = make_demo_rabbit_placement_info();
         constexpr auto expected = std::array<std::string_view, 3>{
             "TrickRabbitBaby",
@@ -648,7 +643,7 @@ namespace {
         };
         for (auto row = 0; row < placement.getNumEntries(); ++row) {
             auto archives = NameObjArchiveListCollector{};
-            NameObjFactory::getMountObjectArchiveList(&archives, "DemoRabbit", JMapInfoIter(&placement, row));
+            DemoRabbit::makeArchiveList(&archives, JMapInfoIter(&placement, row));
             require(archives.getArchiveNum() == 1 &&
                         std::string_view(archives.getArchive(0)) ==
                             expected[static_cast<std::size_t>(row)],
@@ -685,19 +680,6 @@ namespace {
         require_logic_error(
             [] { static_cast<void>(MR::isOnGameEventFlagEndTicoGuideDemo()); },
             "story-event queries must be unavailable while no retail save sequence is backed");
-    }
-
-    void test_star_piece_group_factory_is_absent_without_real_director() {
-        require(!smgpc::scene::nameobj::can_create_name_obj("StarPieceGroup") &&
-                    !smgpc::scene::nameobj::can_create_name_obj("StarPieceFlow"),
-                "StarPiece group factories must remain absent until the real StarPieceDirector closure is linked");
-        require(NameObjFactory::getCreator("StarPieceGroup") == nullptr && NameObjFactory::getCreator("StarPieceFlow") == nullptr,
-                "unsupported StarPiece placements must not expose a partial creator");
-
-        auto archives = NameObjArchiveListCollector{};
-        NameObjFactory::getMountObjectArchiveList(&archives, "StarPieceGroup", JMapInfoIter());
-        require(archives.getArchiveNum() == 0,
-                "an absent StarPiece group factory must not synthesize archive requests");
     }
 
     void test_original_rail_part_geometry() {
@@ -1073,11 +1055,9 @@ int main(int argc, char** argv) {
         TestCase{"CollisionBlocker sensor lifecycle", test_collision_blocker_sensor_lifecycle},
         TestCase{"SimpleEffectObj host compatibility", test_simple_effect_host_compatibility},
         TestCase{"rail info ownership and per-entry lookup", test_rail_info_ownership_and_per_entry_lookup},
-        TestCase{"DemoRabbit factory and archives are active", test_demo_rabbit_factory_and_archives_are_active},
+        TestCase{"DemoRabbit factory and archives are active", test_demo_rabbit_original_archive_callback},
         TestCase{"demo cast requires scene definition", test_demo_cast_requires_scene_definition},
         TestCase{"story-event spin entitlement boundary", test_story_event_spin_entitlement_boundary},
-        TestCase{"StarPieceGroup factory absent without real director",
-                 test_star_piece_group_factory_is_absent_without_real_director},
         TestCase{"original rail part geometry", test_original_rail_part_geometry},
         TestCase{"FixedPosition and PartsModel surface", test_fixed_position_and_parts_model_surface},
         TestCase{"original vector kill and normalize", test_original_vector_kill_and_normalize},

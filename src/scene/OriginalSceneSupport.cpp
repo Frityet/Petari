@@ -21,7 +21,6 @@
 #include "Game/Effect/EffectSystem.hpp"
 #include "Game/Util/SystemUtil.hpp"
 #include "scene/SceneInitializationState.hpp"
-#include "scene/nameobj/PlanetMapCatalog.hpp"
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <memory>
 #include <algorithm>
@@ -39,13 +38,6 @@ public:
     OriginalSceneSupport(Scene& scene, NameObjHolder& names, JKRHeap& heap)
         : _scene(&scene), _names(&names), _domain(compat::JkrAllocationDomain::retain_heap(heap)), _objects(scene.mSceneObjHolder) {
         auto* game = dynamic_cast<GameScene*>(&scene);
-        if (game) {
-            runtime::DvdFileSystemService dvd("/");
-            // StageDataHolder partitions authored placements during loading.
-            // Its archive predicate and NameObjFactory share this retained
-            // table, before any planet actor is constructed.
-            _planet_map_catalog = std::make_unique<nameobj::PlanetMapCatalog>(dvd);
-        }
         _scheduler_binding = std::make_unique<runtime::SceneSchedulerBinding>(_scheduler);
         _allocation_binding = std::make_unique<runtime::SceneSchedulerAllocationBinding>(_scheduler, _domain);
         _objects->initializeNative(_domain);
@@ -94,7 +86,6 @@ public:
         _execution.reset();
         _allocation_binding.reset();
         _scheduler_binding.reset();
-        _planet_map_catalog.reset();
     }
 
     void prepare_retirement() noexcept {
@@ -115,7 +106,6 @@ private:
     Scene* _scene;
     NameObjHolder* _names;
     std::shared_ptr<compat::JkrAllocationDomain> _domain;
-    std::unique_ptr<nameobj::PlanetMapCatalog> _planet_map_catalog;
     runtime::SceneScheduler _scheduler;
     std::unique_ptr<runtime::SceneSchedulerBinding> _scheduler_binding;
     SceneInitializationBinding _initialization_state;

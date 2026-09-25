@@ -1,0 +1,41 @@
+{
+  "base": "6711b79ad079450a523bed95613c8873de1405f9",
+  "aurora_base": "9c5b87b5f46bf92e2fbbe71620bc9fd0fdf08b3c",
+  "files": [
+    {
+      "path": "aurora/include/RVLFaceLib.h",
+      "before_sha256": "ab48f90b44cc5e259034b62c643928214703367c5bd60efda976257cb317a413",
+      "before_status": "",
+      "after_sha256": "e7326aa53df814549e028162075ce4a75922c6ca717d5523bb6a3654036803bd",
+      "action": "modify"
+    },
+    {
+      "path": "aurora/lib/rfl/CharacterModel.cpp",
+      "before_sha256": "1c3aba907e365981137e7e3db275d4a0f2e870c2a7dae6fbff32c51775657bb5",
+      "before_status": "",
+      "after_sha256": "3813bf3be434066ace4944708b9bb3b7db6d2632715495e68958de95ee285233",
+      "action": "modify"
+    },
+    {
+      "path": "src/runtime/RflService.cpp",
+      "before_sha256": "a4955111b8feb6ffcb645a83a402aff6ea4c9fdf19e2ddd017535f717071b9bd",
+      "before_status": "",
+      "after_sha256": "5a66611f1e72ce8f28e33f91e3593667b755222702cbb5ccb7e402fa56cdb577",
+      "action": "modify"
+    },
+    {
+      "path": "src/runtime/rfl/RVLFaceLib.cpp",
+      "before_sha256": "c0d39dbc29f9fb50cb611cf96db3ae67974052873c13ff8a22afbfe0af2ea555",
+      "before_status": "",
+      "after_sha256": "bccfb2579d9c3dbd2b8a81e2feffd2e4c12b62da42a32b35ad4fe055d6cd9c7b",
+      "action": "modify"
+    },
+    {
+      "path": "src/Game/NPC/MiiFaceParts.cpp",
+      "before_sha256": "f3b4a31096c4d797e43b26a4a01cca1df624fa6caaaaf4117359e59a2312e393",
+      "before_status": "",
+      "after_sha256": "b4086627d4f6382087381a529c985975e80aaa2e9bf29f75a3f22dcc140ce892",
+      "action": "modify"
+    }
+  ]
+}

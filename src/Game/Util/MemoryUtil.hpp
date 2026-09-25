@@ -25,6 +25,7 @@ namespace MR {
         static MEMAllocator sAllocator;
     };
 
+    MEMAllocator* getHomeButtonLayoutAllocator();
     JKRHeap* getCurrentHeap();
     JKRHeap* getAproposHeapForSceneArchive(f32);
     JKRExpHeap* getStationedHeapNapa();

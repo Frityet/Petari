@@ -1,0 +1,57 @@
+#include "compat/Cp932Literal.hpp"
+#include "Game/Boss/BossStinkBugOpeningDemo.hpp"
+#include "Game/Boss/BossStinkBug.hpp"
+#include "Game/Boss/BossStinkBugActionBase.hpp"
+#include "Game/Demo/DemoPositionController.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/JointUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/NerveUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include <revolution/types.h>
+
+namespace NrvBossStinkBugOpeningDemo {
+    NEW_NERVE(BossStinkBugOpeningDemoNrvTryStart, BossStinkBugOpeningDemo, TryStart);
+    NEW_NERVE(BossStinkBugOpeningDemoNrvDemo, BossStinkBugOpeningDemo, Demo);
+};  // namespace NrvBossStinkBugOpeningDemo
+
+BossStinkBugOpeningDemo::BossStinkBugOpeningDemo(BossStinkBug* pStinkBug, const JMapInfoIter& rIter)
+    : BossStinkBugActionBase(CP932("オープニングデモ"), pStinkBug), mDemoPositionController(nullptr) {
+    initNerve(GET_NERVE(BossStinkBugOpeningDemo, BossStinkBugOpeningDemoNrvDemo));
+    mDemoPositionController = new DemoPositionController("BossStinkBugDemo", rIter);
+    mDemoPositionController->initAnimCamera("OpeningDemo");
+}
+
+void BossStinkBugOpeningDemo::appear() {
+    ActorStateBase::appear();
+    setNerve(GET_NERVE(BossStinkBugOpeningDemo, BossStinkBugOpeningDemoNrvTryStart));
+    MR::requestStartDemoMarioPuppetable(this, getHost(), CP932("ボスカメムシオープニングデモ"),
+                                        GET_NERVE(BossStinkBugOpeningDemo, BossStinkBugOpeningDemoNrvDemo), nullptr);
+}
+
+void BossStinkBugOpeningDemo::exeDemo() {
+    if (MR::isFirstStep(this)) {
+        MR::overlayWithPreviousScreen(2);
+        MR::stopStageBGM(60);
+        MR::startBckPlayer("BattleWait");
+        mDemoPositionController->startDemo("OpeningDemo");
+        getHost()->reuestMovementOnParts();
+        MR::startBck(getHost(), "OpeningDemo");
+        MR::tryStartAllAnim(getHost()->getWingModel(), "OpeningDemo");
+    }
+    mDemoPositionController->movement();
+    MR::setPlayerBaseMtx(MR::getJointMtx(mDemoPositionController, "MarioPosition"));
+    getHost()->setPose(MR::getJointMtx(mDemoPositionController, "Boss"));
+
+    if (MR::isBckStopped(getHost())) {
+        mDemoPositionController->endDemo("OpeningDemo");
+        MR::endDemo(getHost(), CP932("ボスカメムシオープニングデモ"));
+        kill();
+    }
+}
+
+void BossStinkBugOpeningDemo::exeTryStart() {
+}

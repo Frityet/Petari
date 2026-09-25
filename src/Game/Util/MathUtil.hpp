@@ -451,6 +451,10 @@ namespace MR {
         return JGeometry::TUtil< f32 >::epsilon();
     }
 
+    inline f32 fabs(f64 x) {
+        return std::fabs(x);
+    }
+
     inline f32 abs(f32 x) {
 #if defined(__MWERKS__)
         return __fabsf(x);

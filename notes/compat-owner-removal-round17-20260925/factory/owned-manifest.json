@@ -1,0 +1,159 @@
+{
+  "base": "6711b79ad079450a523bed95613c8873de1405f9",
+  "files": [
+    {
+      "path": "src/Game/NameObj/NameObjFactory.cpp",
+      "before_sha256": "8ea39fc6e387e718d7beed4b59f800b836aff6bf921f97c10645c56b180ab013",
+      "before_status": "",
+      "after_sha256": "bbedf01c5c1487cf0fdb19cd3634012b50a0e6cfbaf8642f342fcc7f4e7b7595",
+      "action": "modify"
+    },
+    {
+      "path": "src/Game/NameObj/ModelChangableObjFactory.cpp",
+      "before_sha256": "8d4370c848d96f290d4b3089ef528cc77540aa6872263cdcce811ac8e9e7fd0d",
+      "before_status": "?? src/Game/NameObj/ModelChangableObjFactory.cpp",
+      "after_sha256": "8d4370c848d96f290d4b3089ef528cc77540aa6872263cdcce811ac8e9e7fd0d",
+      "action": "retained-import"
+    },
+    {
+      "path": "src/Game/Map/PlanetMapCreator.cpp",
+      "before_sha256": "b1ca9b659ceca2c6142930a3fec69ecc3534d3929bfce3a66efd5165a53a1463",
+      "before_status": "?? src/Game/Map/PlanetMapCreator.cpp",
+      "after_sha256": "7085b48f88af6fc0e978350b3865daac80b0d34d5080040e0c574512b43bba79",
+      "action": "modify"
+    },
+    {
+      "path": "src/Game/Map/PlanetMapCreator.hpp",
+      "before_sha256": "639e1d05db9c1427e764cee38e7402d07a6fe4c6d7be5759b17fc5f9d38e5606",
+      "before_status": "",
+      "after_sha256": "6349926a6ba4f27a6c3fd8bb627d88587ac25c5f1cb35ca65184a6d31e81b98a",
+      "action": "modify"
+    },
+    {
+      "path": "src/Game/Map/PlanetMapWithoutHighModel.cpp",
+      "before_sha256": "116fda5f21c355338b46398a86a432d9ad68afc8e58c82a7b80c3800b23ac1cc",
+      "before_status": "?? src/Game/Map/PlanetMapWithoutHighModel.cpp",
+      "after_sha256": "116fda5f21c355338b46398a86a432d9ad68afc8e58c82a7b80c3800b23ac1cc",
+      "action": "retained-import"
+    },
+    {
+      "path": "src/Game/Map/PlanetMapWithoutHighModel.hpp",
+      "before_sha256": "542a134518b7d4f52e525af02a81404d11be67841574a4e72d11919673be31aa",
+      "before_status": "",
+      "after_sha256": "542a134518b7d4f52e525af02a81404d11be67841574a4e72d11919673be31aa",
+      "action": "retained-import"
+    },
+    {
+      "path": "src/Game/Map/PlanetMap.hpp",
+      "before_sha256": "2fa4acb1e40655035e6548c4c16de96a359b65b046c6eb57380961b5fd6075a2",
+      "before_status": "",
+      "after_sha256": "74c83838830d68c3f259a7d8f76880a4f3a59ce67bb8705e5c4898f62b9d45db",
+      "action": "modify"
+    },
+    {
+      "path": "src/scene/OriginalSceneSupport.cpp",
+      "before_sha256": "354ff033c917f12537da3de75b72682246b82ba9359d1f9faa7e57940c574e27",
+      "before_status": "",
+      "after_sha256": "aecbdc66d6964442e194de500a1d10f762c657082d59b0955ac0d18eb8915f6e",
+      "action": "modify"
+    },
+    {
+      "path": "src/scene/nameobj/NameObjFactory.cpp",
+      "before_sha256": "85037fb442f16b0c10105542bce0fec750a806775396f95763ff9f9fad7b32f7",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "src/scene/nameobj/NameObjFactory.hpp",
+      "before_sha256": "41a4d0aa14b28ea38a8b237fb65db0670e9c1a487ae24d6eb0f91cce2d539536",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "src/scene/nameobj/NameObjArchiveTable.inc",
+      "before_sha256": "70e9942ec630e508bef9753b38e1d12e518166c18e062864e1bfc00b1bff7bdd",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "src/scene/nameobj/OriginalNameObjNames.inc",
+      "before_sha256": "fd0f23344154676fb3a30599aecfddb6b780b3df406e08844f82b2c9a40ceb1a",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "src/scene/nameobj/PlanetMapCatalog.cpp",
+      "before_sha256": "ec0f849021e9ec391c30e139708a1439389effab22d19638cbc54aa95f8dce2b",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "src/scene/nameobj/PlanetMapCatalog.hpp",
+      "before_sha256": "bc351fd879286c4225bab653d7c0a4fe4ecac70bb128786c260f5ae1942845ae",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "src/scene/AreaObjRuntime.cpp",
+      "before_sha256": "18e71f2b8cb3959ce9b8c44b8d95dcb64ad1152f806f9421d3f0995bbd700ee8",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "src/scene/AreaObjRuntime.hpp",
+      "before_sha256": "2be659185f4e43886d5df23a3c5f94b6d875b77e27267910d0420e2e9531a275",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "tests/NameObjFactoryPlacementTests.cpp",
+      "before_sha256": "96d38f9a427f57c460a95769c9e8b8ed8ab0e51a8049dee2243ba95b4a4a4b2f",
+      "before_status": "",
+      "after_sha256": "a6ecdbd7a1d6acdfdafcfc90694ecc3fcbb4de01690b53bf2c18e37aa3af9a5e",
+      "action": "modify"
+    },
+    {
+      "path": "tests/AreaObjRealOrAbsentTests.cpp",
+      "before_sha256": "be98317c9dd531c0026468fa89077f3d6ed3b4a1848d5baedeef7d25a46ecab8",
+      "before_status": "",
+      "after_sha256": "0f31d81223b624348af7f6caa44098c1ac67058504f12988a504ff04c4616970",
+      "action": "modify"
+    },
+    {
+      "path": "tests/SphereSelectorRealOrAbsentTests.cpp",
+      "before_sha256": "9c96edda67fb99a0e4d2df3b32fa0812599da03baaa4ea9e147e3b1bcdc5e4ce",
+      "before_status": "",
+      "after_sha256": "8fbda1bdb8a4187cebb1c045e54fbb0cf132db6816733e54d9f36e6f6fd27802",
+      "action": "modify"
+    },
+    {
+      "path": "tests/GravityRealOrAbsentTests.cpp",
+      "before_sha256": "cf751cbd4751cf3864dd1bea4d53dcb459f782be2c491bc0b0e09c7c8d25ff04",
+      "before_status": "",
+      "after_sha256": "7b68a1d397dcdf5c1841cd7a1c4dcf0097a2ed1560a7e43984b72360a1f78fcc",
+      "action": "modify"
+    },
+    {
+      "path": "tests/AuroraNativeTests.cpp",
+      "before_sha256": "5a385ab4b2298ffba8872c2970a69f3a05c4ae10711ceef94c184056001ac3d5",
+      "before_status": "",
+      "after_sha256": "a7fb7145a4a285e3943a8e4482e2be443791332438fbd26b86349374d4b21b42",
+      "action": "modify"
+    },
+    {
+      "path": "tests/PlanetMapCatalogTests.cpp",
+      "before_sha256": "8341a5ccb3596f87e14f6511d98ea17c2e79e8189200542b82dd734758cad0d8",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    }
+  ]
+}

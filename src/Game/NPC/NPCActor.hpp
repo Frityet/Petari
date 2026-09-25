@@ -5,8 +5,7 @@
 #include <JSystem/JGeometry/TMatrix.hpp>
 
 class AnimScaleController;
-template < typename T >
-class JointControlDelegator;
+class JointController;
 class JointControllerInfo;
 class LodCtrl;
 class NameObjArchiveListCollector;
@@ -55,7 +54,7 @@ public:
     TVec3f mSensorOffset;        // 0x4C
     s32 mSensorMax;              // 0x58
     bool mShadow;                // 0x5C
-    u8 _5D;
+    bool mUseShadow;  // 0x5D
     u8 _5E;
     u8 _5F;
     f32 mShadowSize;
@@ -110,6 +109,22 @@ public:
     void updateReaction();
     void updateScaleCtrl();
 
+    bool isTrampledStart() const {
+        return !_DD && _E2;
+    }
+
+    bool isReactionStart() const {
+        return !_E0 && _E5;
+    }
+
+    bool isSpinAttackedStart() const {
+        return !_DE && _E3;
+    }
+
+    bool isPointingStart() const {
+        return !_DF && _E4;
+    }
+
     bool tryPushNullNerve();
 
     void exeReaction();
@@ -133,6 +148,34 @@ public:
         _13C = "Reaction";
     }
 
+    inline void setDefaults(const char* pReaction, const char* pPointing, const char* pTrampled, const char* pSpin) {
+        _130 = pSpin;
+        _134 = pTrampled;
+        _138 = pPointing;
+        _13C = pReaction;
+    }
+
+    inline void setDefaults2(const char* pReaction, const char* pPointing, const char* pSpin, const char* pTrampled) {
+        _134 = pTrampled;
+        _130 = pSpin;
+        _138 = pPointing;
+        _13C = pReaction;
+    }
+
+    inline void setDefaults3(const char* pReaction, const char* pPointing, const char* pSpin, const char* pTrampled) {
+        _134 = pTrampled;
+        _130 = pSpin;
+        _13C = pPointing;
+        _138 = pReaction;
+    }
+
+    inline void setDefaults4(const char* a1, const char* a2, const char* a3, const char* a4) {
+        _130 = a4;
+        _13C = a2;
+        _134 = a3;
+        _138 = a1;
+    }
+
     inline void setDefaultsParam() {
         mParam._14 = "Wait";
         mParam._18 = "Turn";
@@ -153,6 +196,11 @@ public:
     inline void setTalkAction(const char* pActionName) {
         _11C = pActionName;
         _120 = pActionName;
+    }
+
+    inline void setTalkAction(const char* pActionName, const char* pActionName2) {
+        _11C = pActionName;
+        _120 = pActionName2;
     }
 
     TalkMessageCtrl* getMsgCtrl() const {
@@ -202,7 +250,7 @@ public:
     const char* _138;
     const char* _13C;
     AnimScaleController* mScaleController;          // 0x140
-    JointControlDelegator< NPCActor >* mDelegator;  // 0x144
+    JointController* mDelegator;  // 0x144
     const Nerve* mCurNerve;                         // 0x148
     Nerve* mWaitNerve;                              // 0x14C
     Nerve* mTalkNerve;                              // 0x150

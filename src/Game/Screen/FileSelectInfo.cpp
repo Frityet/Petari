@@ -98,7 +98,10 @@ void FileSelectInfo::setInfo(u16* pName, s32 number, s32 starNum, s32 starPieceN
     mStarNum = starNum;
     mStarPieceNum = starPieceNum;
 
-    MR::copyMemory(mName, pName, mNameBufferSize * sizeof(u16));
+    // RFL supplies 16-bit units; native layout text uses wchar_t-sized slots.
+    for (s32 i = 0; i < mNameBufferSize; i++) {
+        mName[i] = static_cast<wchar_t>(pName[i]);
+    }
 
     mIsSelectedMario = isSelectedMario;
     mIsViewNormalEnding = isViewNormalEnding;

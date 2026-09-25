@@ -136,11 +136,11 @@ namespace MR {
 
     ProjmapEffectMtxSetter* initDLMakerProjmapEffectMtxSetter(LiveActor*);
 
-    void startBck(const LiveActor*, const char*, const char*);
+    void startBck(const LiveActor*, const char*, const char* pBrkName = nullptr);
     void startBckWithInterpole(const LiveActor*, const char*, s32);
     void startBckNoInterpole(const LiveActor*, const char*);
     void startBckAtFirstStep(const LiveActor*, const char*);
-    bool tryStartBck(const LiveActor*, const char*, const char*);
+    bool tryStartBck(const LiveActor*, const char*, const char* pBrkName = nullptr);
     bool tryStartBckAndBtp(const LiveActor*, const char*, const char*);
     void setAllAnimFrame(const LiveActor*, const char*, f32);
     void setAllAnimFrameAndStop(const LiveActor*, const char*, f32);

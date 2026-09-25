@@ -26,6 +26,45 @@ namespace JGeometry {
             set(source.mMtx);
         }
 
+        void set(T xx, T xy, T xz, T tx, T yx, T yy, T yz, T ty, T zx, T zy, T zz, T tz) {
+            mMtx[0][0] = xx;
+            mMtx[0][1] = xy;
+            mMtx[0][2] = xz;
+            mMtx[0][3] = tx;
+            mMtx[1][0] = yx;
+            mMtx[1][1] = yy;
+            mMtx[1][2] = yz;
+            mMtx[1][3] = ty;
+            mMtx[2][0] = zx;
+            mMtx[2][1] = zy;
+            mMtx[2][2] = zz;
+            mMtx[2][3] = tz;
+        }
+
+        void scale(T scale) {
+            mMtx[0][0] *= scale;
+            mMtx[0][1] *= scale;
+            mMtx[0][2] *= scale;
+            mMtx[1][0] *= scale;
+            mMtx[1][1] *= scale;
+            mMtx[1][2] *= scale;
+            mMtx[2][0] *= scale;
+            mMtx[2][1] *= scale;
+            mMtx[2][2] *= scale;
+        }
+
+        inline void scaleInline(T scalar) {
+            mMtx[0][0] *= scalar;
+            mMtx[0][1] *= scalar;
+            mMtx[0][2] *= scalar;
+            mMtx[1][0] *= scalar;
+            mMtx[1][1] *= scalar;
+            mMtx[1][2] *= scalar;
+            mMtx[2][0] *= scalar;
+            mMtx[2][1] *= scalar;
+            mMtx[2][2] *= scalar;
+        }
+
         void setInline(const SMatrix34C &source) {
             set(source);
         }
@@ -109,6 +148,25 @@ namespace JGeometry {
             this->mMtx[2][3] = 0.0F;
         }
 
+        void scale(f32 scalar) {
+            this->mMtx[0][0] *= scalar;
+            this->mMtx[1][0] *= scalar;
+            this->mMtx[2][0] *= scalar;
+            this->mMtx[0][1] *= scalar;
+            this->mMtx[1][1] *= scalar;
+            this->mMtx[2][1] *= scalar;
+            this->mMtx[0][2] *= scalar;
+            this->mMtx[1][2] *= scalar;
+            this->mMtx[2][2] *= scalar;
+            this->mMtx[0][3] *= scalar;
+            this->mMtx[1][3] *= scalar;
+            this->mMtx[2][3] *= scalar;
+        }
+
+        void scaleXYZ(f32 scalar) {
+            T::scale(scalar);
+        }
+
         void concat(const T &lhs, const T &rhs) {
             T result;
 
@@ -188,6 +246,43 @@ namespace JGeometry {
             this->mMtx[2][2] = source.z;
         }
 
+        void setXDir(f32 x, f32 y, f32 z) {
+            this->mMtx[0][0] = x;
+            this->mMtx[1][0] = y;
+            this->mMtx[2][0] = z;
+        }
+
+        void setYDir(f32 x, f32 y, f32 z) {
+            this->mMtx[0][1] = x;
+            this->mMtx[1][1] = y;
+            this->mMtx[2][1] = z;
+        }
+
+        void setZDir(f32 x, f32 y, f32 z) {
+            this->mMtx[0][2] = x;
+            this->mMtx[1][2] = y;
+            this->mMtx[2][2] = z;
+        }
+
+        inline void getYDir2(TVec3f& rDest) const {
+            f32 x = this->mMtx[0][1];
+            f32 y = this->mMtx[1][1];
+            f32 z = this->mMtx[2][1];
+            rDest.set< f32 >(x, y, z);
+        }
+
+        inline void setXYZDir2(const TVec3f& rSrcX, const TVec3f& rSrcY, const TVec3f& rSrcZ) {
+            this->mMtx[0][0] = rSrcX.x;
+            this->mMtx[0][1] = rSrcX.y;
+            this->mMtx[0][2] = rSrcX.z;
+            this->mMtx[1][0] = rSrcY.x;
+            this->mMtx[1][1] = rSrcY.y;
+            this->mMtx[1][2] = rSrcY.z;
+            this->mMtx[2][0] = rSrcZ.x;
+            this->mMtx[2][1] = rSrcZ.y;
+            this->mMtx[2][2] = rSrcZ.z;
+        }
+
         inline void getZDir2(TVec3f& rDest) const {
             rDest.set< f32 >(this->mMtx[0][2], this->mMtx[1][2], this->mMtx[2][2]);
         }
@@ -229,6 +324,36 @@ namespace JGeometry {
             this->mMtx[0][2] = z_direction.x;
             this->mMtx[1][2] = z_direction.y;
             this->mMtx[2][2] = z_direction.z;
+        }
+
+        void setEulerX(f32 angle) {
+            f32 s = sin(angle);
+            f32 c = cos(angle);
+
+            this->mMtx[0][0] = 1.0f;
+            this->mMtx[2][1] = s;
+            this->mMtx[1][1] = c;
+            this->mMtx[1][2] = -s;
+            this->mMtx[2][2] = c;
+            this->mMtx[2][0] = 0.0f;
+            this->mMtx[0][2] = 0.0f;
+            this->mMtx[1][0] = 0.0f;
+            this->mMtx[0][1] = 0.0f;
+        }
+
+        void setEulerY(f32 angle) {
+            f32 s = sin(angle);
+            f32 c = cos(angle);
+
+            this->mMtx[0][2] = s;
+            this->mMtx[1][1] = 1.0f;
+            this->mMtx[0][0] = c;
+            this->mMtx[2][0] = -s;
+            this->mMtx[2][2] = c;
+            this->mMtx[2][1] = 0.0f;
+            this->mMtx[1][2] = 0.0f;
+            this->mMtx[1][0] = 0.0f;
+            this->mMtx[0][1] = 0.0f;
         }
 
         void setEulerZ(f32 angle) {
@@ -320,6 +445,10 @@ namespace JGeometry {
             f32 y = rRot.y;
             f32 x = rRot.x;
             setRotate(x, y, z);
+        }
+
+        void setEuler(const TVec3f& rRot) {
+            setRotate(rRot);
         }
 
         void setRotate(f32 rx, f32 ry, f32 rz) {
@@ -486,6 +615,12 @@ namespace JGeometry {
             setTrans(0.0F, 0.0F, 0.0F);
         }
 
+        inline void zeroTransInline2() {
+            this->mMtx[0][3] = 0.0f;
+            this->mMtx[1][3] = 0.0f;
+            this->mMtx[2][3] = 0.0f;
+        }
+
         void makeTrans(const TVec3f &translation) {
             this->identity();
             setTrans(translation);
@@ -501,9 +636,78 @@ namespace JGeometry {
             this->setRotate(axis, angle);
         }
 
+        void makeRotate(const TVec3f& rFrom, const TVec3f& rTo, f32 angle) {
+            TQuat4f q;
+            q.setRotate(rFrom, rTo, rFrom.turnRate(rTo, angle));
+            makeQuat(q);
+        }
+
         void makeQuat(const TQuat4f& quaternion) {
             zeroTrans();
             this->setQuat(quaternion);
+        }
+
+        void setRT(f32 rx, f32 ry, f32 rz, const TVec3f& rSrcTrans) {
+            // nonmatching, see
+            // see Mogucchi::updateReferenceMtx
+
+            f32 sinX, sinY, sinZ;
+            f32 cosX, cosY, cosZ;
+
+            cosZ = cos(rz);
+            cosY = cos(ry);
+            cosX = cos(rx);
+            sinZ = sin(rz);
+            sinY = sin(ry);
+            sinX = sin(rx);
+
+            this->mMtx[0][3] = rSrcTrans.x;
+            this->mMtx[1][3] = rSrcTrans.y;
+            this->mMtx[2][3] = rSrcTrans.z;
+
+            f32 sXsY = sinX * sinY;
+            f32 cXcZ = cosX * cosZ;
+            f32 cXsZ = cosX * sinZ;
+
+            this->mMtx[0][0] = cosY * cosZ;
+            this->mMtx[1][0] = cosY * sinZ;
+            this->mMtx[2][0] = -sinY;
+
+            this->mMtx[0][1] = sXsY * cosZ - cosX * sinZ;
+            this->mMtx[1][1] = cosX * cosZ + sXsY * sinZ;
+            this->mMtx[2][1] = sinX * cosY;
+
+            this->mMtx[0][2] = cXcZ * sinY + sinX * sinZ;
+            this->mMtx[1][2] = cXsZ * sinY - sinX * cosZ;
+            this->mMtx[2][2] = cosX * cosY;
+        }
+
+        inline void normalizeBasis() {
+            f32 scale = JGeometry::TUtil< f32 >::sqrt(
+                (this->get(0, 0) * this->get(0, 0)) + (this->get(1, 0) * this->get(1, 0)) + (this->get(2, 0) * this->get(2, 0)) +
+                (this->get(0, 1) * this->get(0, 1)) + (this->get(1, 1) * this->get(1, 1)) + (this->get(2, 1) * this->get(2, 1)) +
+                (this->get(0, 2) * this->get(0, 2)) + (this->get(1, 2) * this->get(1, 2)) + (this->get(2, 2) * this->get(2, 2)));
+
+            f32 invLenX = JGeometry::TUtil< f32 >::inv_sqrt((this->get(0, 0) * this->get(0, 0)) + (this->get(1, 0) * this->get(1, 0)) +
+                                                            (this->get(2, 0) * this->get(2, 0)));
+
+            this->mMtx[0][0] = invLenX * this->get(0, 0);
+            this->mMtx[1][0] = invLenX * this->get(1, 0);
+            this->mMtx[2][0] = invLenX * this->get(2, 0);
+
+            f32 invLenY = JGeometry::TUtil< f32 >::inv_sqrt((this->get(0, 1) * this->get(0, 1)) + (this->get(1, 1) * this->get(1, 1)) +
+                                                            (this->get(2, 1) * this->get(2, 1)));
+
+            this->mMtx[0][1] = invLenY * this->get(0, 1);
+            this->mMtx[1][1] = invLenY * this->get(1, 1);
+            this->mMtx[2][1] = invLenY * this->get(2, 1);
+
+            f32 invLenZ = JGeometry::TUtil< f32 >::inv_sqrt((this->get(0, 2) * this->get(0, 2)) + (this->get(1, 2) * this->get(1, 2)) +
+                                                            (this->get(2, 2) * this->get(2, 2)));
+
+            this->mMtx[0][2] = invLenZ * this->get(0, 2);
+            this->mMtx[1][2] = invLenZ * this->get(1, 2);
+            this->mMtx[2][2] = invLenZ * this->get(2, 2);
         }
 
         void setQT(const TQuat4f& quaternion, const TVec3f& translation) {

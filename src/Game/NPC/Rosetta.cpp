@@ -51,7 +51,7 @@ void Rosetta::init(const JMapInfoIter& rIter) {
     caps.mBinder = false;
     caps.mMessageOffset.set(0.0f, 0.0f, 0.0f);
     caps.mTalkJointName = "Chin";
-    caps._5D = true;
+    caps.mUseShadow = true;
     caps.mReactionNerve = &NrvRosetta::RosettaNrvReaction::sInstance;
     initialize(rIter, caps);
 

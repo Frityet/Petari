@@ -1,0 +1,119 @@
+[0m[38;5;2;1m[  4%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/rfl/CharacterModel.cpp[0m
+[0m[38;5;2;1m[ 12%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/DrawUtil.cpp[0m
+[0m[38;5;2;1m[ 22%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/LiveActor.cpp[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/UserFile.cpp[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/ConfigDataMii.cpp[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/FileSelector.cpp[0m
+[0m[38;5;2;1m[ 45%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/FileSelectFunc.cpp[0m
+[0m[38;5;2;1m[ 46%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/FileSelectItem.cpp[0m
+[0m[38;5;2;1m[ 50%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/MiiSelect.cpp[0m
+[0m[38;5;2;1m[ 51%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/MiiSelectIcon.cpp[0m
+[0m[38;5;2;1m[ 53%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/LayoutActor.cpp[0m
+[0m[38;5;2;1m[ 55%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/NameObj/NameObjListExecutor.cpp[0m
+[0m[38;5;2;1m[ 55%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/NameObj/NameObj.cpp[0m
+[0m[38;5;2;1m[ 55%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/NameObj/NameObjFactory.cpp[0m
+[0m[38;5;2;1m[ 56%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Scene/SceneObjHolder.cpp[0m
+[0m[38;5;2;1m[ 57%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/NPC/MiiFaceIconHolder.cpp[0m
+[0m[38;5;2;1m[ 57%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/NPC/MiiFaceParts.cpp[0m
+[0m[38;5;2;1m[ 58%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/NPC/MiiFaceIcon.cpp[0m
+[0m[38;5;2;1m[ 59%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/NPC/MiiDatabase.cpp[0m
+[0m[38;5;2;1m[ 60%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/NPC/MiiFaceRecipe.cpp[0m
+[0m[38;5;2;1m[ 60%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/NPC/MiiFacePartsHolder.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/NPC/MiiFaceIconHolder.cpp:1:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 82%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/layout/LayoutRuntime.cpp[0m
+[0m[38;5;2;1m[ 83%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/SceneScheduler.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Map/FileSelector.cpp:29:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+src/Game/Map/FileSelector.cpp:64:54: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   64 |     int getItemArrayIndex(s32 param1) __attribute__((noinline)) {
+      |                                                      ^
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/rfl/RVLFaceLib.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Util/DrawUtil.cpp:10:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/RuntimeContext.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/ParityTrace.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/WiiPlatformService.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/RflService.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/ActorRuntimeRegistry.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Screen/LayoutActor.cpp:5:
+In file included from src/Game/Screen/LayoutCoreUtil.hpp:4:
+src/nw4r/lyt/pane.h:37:37: warning: 'offsetof' on non-standard-layout type 'detail::PaneBase' [-Winvalid-offsetof]
+   37 |         typedef ut::LinkList< Pane, __builtin_offsetof(detail::PaneBase, mLink) > PaneList;
+      |                                     ^                                    ~~~~~
+In file included from src/Game/Screen/LayoutActor.cpp:5:
+In file included from src/Game/Screen/LayoutCoreUtil.hpp:5:
+In file included from src/nw4r/lyt/textBox.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/AudioFacadeCompat.cpp[0m
+[0m[38;5;2;1m[ 93%]:[0m [38;5;5;1m<aurora-gx>[0m [38;5;5;1marchiving.debug libaurora-gx.a[0m
+[0m[38;5;3;1mIn file included from src/Game/NameObj/NameObjFactory.cpp:7:
+src/Game/Enemy.hpp:23:10: warning: non-portable path to file '"Game/Enemy/KarikariDirector.hpp"'; specified path differs in case from file name on disk [-Wnonportable-include-path]
+   23 | #include "Game/Enemy/KariKariDirector.hpp"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |          "Game/Enemy/KarikariDirector.hpp"
+1 warning generated.
+In file included from src/Game/NameObj/NameObjFactory.cpp:11:
+In file included from src/Game/MapObj.hpp:99:
+src/Game/MapObj/FloaterFloatingForce.hpp:21:16: warning: returning reference to local temporary object [-Wreturn-stack-address]
+   21 |         return TVec3f(0.0f, 0.0f, 0.0f);
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from src/Game/NameObj/NameObjFactory.cpp:17:
+In file included from src/Game/Screen.hpp:20:
+In file included from src/Game/Screen/CustomTagProcessor.hpp:4:
+In file included from src/nw4r/lyt/textBox.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare][0m
+[0m[38;5;2;1m[ 93%]:[0m [38;5;5;1m<aurora-core>[0m [38;5;5;1marchiving.debug libaurora-core.a[0m
+[0m[38;5;2;1m[ 93%]:[0m [38;5;5;1m<aurora-gd>[0m [38;5;5;1marchiving.debug libaurora-gd.a[0m
+[0m[38;5;2;1m[ 93%]:[0m [38;5;5;1m<smg-pc-render>[0m [38;5;5;1marchiving.debug libsmg-pc-render.a[0m
+[0m[38;5;2;1m[ 93%]:[0m [38;5;5;1m<aurora-thp>[0m [38;5;5;1marchiving.debug libaurora-thp.a[0m
+[0m[38;5;3;1mIn file included from src/Game/NPC/MiiFacePartsHolder.cpp:12:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/runtime/SceneScheduler.cpp:34:
+In file included from src/Game/Screen/LayoutManager.hpp:6:
+In file included from src/nw4r/lyt/layout.h:3:
+In file included from src/nw4r/lyt/animation.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                                              ~~~ ^  ~~~~~~~~~~~
+In file included from src/runtime/SceneScheduler.cpp:34:
+In file included from src/Game/Screen/LayoutManager.hpp:6:
+In file included from src/nw4r/lyt/layout.h:4:[0m
+[0m[38;5;3;1mIn file included from src/layout/LayoutRuntime.cpp:27:
+src/nw4r/lyt/pane.h:37:37: warning: 'offsetof' on non-standard-layout type 'detail::PaneBase' [-Winvalid-offsetof]
+   37 |         typedef ut::LinkList< Pane, __builtin_offsetof(detail::PaneBase, mLink) > PaneList;
+      |                                     ^                                    ~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-game>[0m [38;5;5;1marchiving.debug libsmg-pc-game.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-app>[0m [38;5;5;1marchiving.debug libsmg-pc-app.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc>[0m [38;5;5;1mlinking.debug smg-pc[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc>[0m [38;5;5;1mgenerating.xcode.debug smg-pc.app[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[38;5;2;1m[100%]:[0m [38;5;2;1mbuild ok, spent 7.064s[0m

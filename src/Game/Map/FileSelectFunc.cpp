@@ -33,4 +33,13 @@ namespace FileSelectFunc {
             }
         }
     }
+    void copyMiiName(wchar_t* pName, const FileSelectIconID& rIcon) {
+        u16 name[RFL_NAME_LEN + 1] = {};
+        copyMiiName(name, rIcon);
+
+        // Game text keeps Wii UTF-16 units in native wchar_t slots.
+        for (u32 i = 0; i < getMiiNameBufferSize(); i++) {
+            pName[i] = static_cast<wchar_t>(name[i]);
+        }
+    }
 };  // namespace FileSelectFunc

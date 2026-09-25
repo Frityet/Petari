@@ -1,0 +1,2565 @@
+[0m[38;5;2;1m[ 25%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/Dodoryu.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaPlanetShadow.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DinoPackunStateFire.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TripodBossAccesser.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DodoryuDemo.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaBattleMain.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossStinkBugActionFlyHigh.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TripodBossKillerGenerater.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DinoPackunVs1.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TombSpiderActionBase.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TripodBossFixPartsBase.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaRockBreak.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaSensorCtrl.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaBattleStairsBase.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DinoPackunVs2.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaDemoPowerUp.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TripodBossStepSequence.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaFigureBall.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossStinkBugBombHolder.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/PoltaGroundRockHolder.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DinoPackunVs1.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaFireStairs.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossStinkBugActionFlyHigh.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaDemoFallToPlanetVs3Lv3.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TripodBossStepSequence.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/SkeletalFishBaby.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DinoPackunVs2.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/Koopa.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaSensorCtrl.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DinoPackunTailPart.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaPlanetShadow.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DodoryuMove.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/PoltaGroundRockHolder.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TombSpiderParts.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DinoPackunStateFire.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossKameckVs1.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaBattleStairsBase.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DinoPackunDemo.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaFigureBall.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaDemoJumpToPlanet.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TombSpiderActionBase.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaSequencer.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaBattleMain.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaDemoFallToPlanetVs3Lv2.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaRockBreak.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossKameckAction.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TripodBossAccesser.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+src/Game/Boss/TripodBossAccesser.cpp:13:53: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   13 |     s32 convertBoneIDToIndex(s32 id) __attribute__((noinline)) {[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TripodBossGuardWall.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TripodBossKillerGenerater.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+src/Game/Boss/TripodBossKillerGenerater.cpp:319:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  319 |         mPosition.distance(*MR::getPlayerPos());[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TombSpiderFunction.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossStinkBugBombHolder.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossKameckVs2.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaDemoPowerUp.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/SkeletalFishGuardHolder.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TripodBossFixPartsBase.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DinoPackunTrackFire.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DodoryuDemo.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/PoltaActionSequencer.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/Dodoryu.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Boss/Dodoryu.cpp:1:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat][0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/SkeletalFishBossInfo.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossKameckAction.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossKameckStateBattle.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaSequencer.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossStinkBugBomb.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DinoPackunTailPart.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/PoltaStateAttackGround.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/PoltaActionSequencer.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossKameckSequencer.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/Koopa.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaStateGuard.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DinoPackunTrackFire.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaSwitchKeeper.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaDemoJumpToPlanet.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaStateJumpAway.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/SkeletalFishBossInfo.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+src/Game/Boss/SkeletalFishBossInfo.cpp:77:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   77 |         rIter.getValue< s32 >(paramName, &getLevelStatus(i)->mEnergyLevel);[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaShockWave.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DodoryuMove.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DinoPackunSequencer.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaDemoFallToPlanetVs3Lv2.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/PoltaWaitStart.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TombSpiderParts.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TombSpiderStateSwoon.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaFireStairs.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossBegoman.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/SkeletalFishGuardHolder.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/OtaKingMagma.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaDemoFallToPlanetVs3Lv3.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/PoltaRockHolder.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossKameckVs2.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DodoryuHill.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DinoPackunDemo.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TripodBossMovableArea.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossKameckVs1.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossKameckBarrier.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TripodBossGuardWall.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Boss/TripodBossGuardWall.cpp:1:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat][0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/SkeletalFishBossRail.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TombSpiderFunction.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TombSpiderActionCocoon.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/SkeletalFishBaby.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Boss/SkeletalFishBaby.cpp:21:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/SkeletalFishRailControl.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TripodBossMovableArea.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossStinkBugFlyDemo.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaSwitchKeeper.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaFireShort.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/SkeletalFishRailControl.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaBattleStairsVs3.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DinoPackunSequencer.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/PoltaStateGenerateRock.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossKameckBarrier.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossStinkBug.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossStinkBugBomb.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/SkeletalFishBossFunc.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/SkeletalFishBossRail.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TombSpiderAcid.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/PoltaRockHolder.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/PoltaBattleLv2.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DodoryuHill.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossKameckBattlePattarn.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/PoltaWaitStart.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/PoltaFunction.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossKameckSequencer.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DodoryuStateLv2.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/PoltaStateAttackGround.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossStinkBugActionGround.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaStateGuard.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TripodBossCore.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TombSpiderStateSwoon.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DinoPackunBattleVs2Lv1.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TombSpiderActionCocoon.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TripodBossCoin.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaStateJumpAway.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DinoPackunTail.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossKameckStateBattle.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/PoltaBattleLv1.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaShockWave.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+src/Game/Boss/KoopaShockWave.cpp:85:132: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   85 |     void makeShockWaveMtx(TPos3f* pDest, const TVec3f& rUp, const TVec3f& rFront, const TVec3f& r6, f32 f1, f32 f2) __attribute__((noinline)) {[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaBattleStairsVs1.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/OtaKingMagma.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Boss/OtaKingMagma.cpp:7:
+In file included from src/Game/Util.hpp:18:[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/PoltaSensorCtrl.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossBegoman.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DodoryuStateBase.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossKameckBattlePattarn.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DodoryuStateLv1.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/PoltaSensorCtrl.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/SkeletalFishBossRailHolder.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DodoryuStateBase.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TombSpiderGland.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/SkeletalFishBossFunc.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/OtaKing.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TombSpiderAcid.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/SkeletalFishBoss.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossStinkBugFlyDemo.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaStateAttackFireLong.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DinoPackunTail.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+src/Game/Boss/DinoPackunTail.cpp:19:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   19 |     pVec[0] + pVec[1];[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DinoPackunStateAwake.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaBattleStairsVs3.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/PoltaGroundRock.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TripodBossCore.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DinoPackunAction.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/PoltaFunction.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaPowerUpSwitch.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/PoltaStateGenerateRock.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaStateAttackFireShort.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/PoltaBattleLv1.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/PoltaStateGroundRockAttack.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossStinkBugActionGround.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DinoPackun.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/PoltaBattleLv2.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TripodBossStepPoint.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaBattleStairsVs1.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaStateChaseRoll.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TripodBossCoin.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TripodBossBaseJointPosition.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaFireShort.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TombSpiderAction2nd.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DinoPackunBattleVs2Lv1.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossStinkBugAngryDemo.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossStinkBug.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Boss/BossStinkBug.cpp:1:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat][0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/PoltaStatePunch.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DodoryuStateLv2.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Boss/DodoryuStateLv2.cpp:6:
+In file included from src/Game/Util.hpp:18:[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TripodBossShell.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/SkeletalFishBossRailHolder.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossAccessor.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TombSpiderGland.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TripodBossGuardWallPart.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DodoryuStateLv1.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DinoPackunDemoPosition.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaStateAttackFireLong.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossStinkBugActionSequencer.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaPowerUpSwitch.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaBattleBase.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaStateAttackFireShort.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaStateAttackShockWave.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TripodBossStepPoint.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DodoryuStateWait.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/PoltaStateGroundRockAttack.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossStinkBugOpeningDemo.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DinoPackunStateAwake.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Boss/DinoPackunStateAwake.cpp:6:
+In file included from src/Game/Util.hpp:18:[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/SkeletalFishGuard.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DinoPackunAction.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Boss/DinoPackunAction.cpp:5:
+In file included from src/Game/Util.hpp:18:[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaViewSwitchKeeper.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TripodBossBaseJointPosition.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossStinkBugActionFlyLow.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossStinkBugAngryDemo.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TripodBossBreakMovement.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/PoltaGroundRock.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DodoryuUtil.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/PoltaStatePunch.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaStateAttackRoll.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TombSpiderAction2nd.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/BossKameckBattleDemo.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaStateChaseRoll.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TripodBossKinokoOneUp.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TripodBossShell.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaStateAttackSpin.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/OtaKing.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Boss/OtaKing.cpp:15:
+In file included from src/Game/Util.hpp:18:[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DinoPackunBattleEggVs2.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DinoPackun.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Boss/DinoPackun.cpp:1:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat][0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TripodBossRotateParts.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/SkeletalFishBoss.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Boss/SkeletalFishBoss.cpp:1:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat][0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TombSpiderEnvironment.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossAccessor.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TombSpiderSensorCtrl.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DinoPackunDemoPosition.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/DinoPackunStateDamage.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TripodBossGuardWallPart.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/SkeletalFishBabyRail.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaBattleBase.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/KoopaRestarterVs3.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DodoryuStateWait.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TombSpiderThreadAttacher.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossStinkBugActionSequencer.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Boss/TripodBossKillerGeneraterCircle.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaViewSwitchKeeper.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/Unizo.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaStateAttackShockWave.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/JumpGuarder.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossStinkBugOpeningDemo.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/KoopaJrShipCannonMainShell.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TripodBossBreakMovement.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/FireBall.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TripodBossRotateParts.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/MechanicKoopaMini.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TripodBossKinokoOneUp.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/KoopaJrShip.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossStinkBugActionFlyLow.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/OnimasuPivot.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DodoryuUtil.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/StinkBugBase.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaStateAttackRoll.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/BasaBasa.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaStateAttackSpin.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/Mogucchi.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/BossKameckBattleDemo.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/WalkerStateWander.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DinoPackunBattleEggVs2.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/Metbo.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/SkeletalFishGuard.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+src/Game/Boss/SkeletalFishGuard.cpp:545:59: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  545 | bool SkeletalFishGuard::isInScreen() const __attribute__((noinline)) {[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/Balloonfish.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TombSpiderEnvironment.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/Mogu.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/SkeletalFishBabyRail.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/BallBeamer.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TombSpiderSensorCtrl.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/KameckHolder.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/KoopaRestarterVs3.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/CocoSambo.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/TombSpiderThreadAttacher.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/BombBirdBomb.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Enemy/WalkerStateWander.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/CocoNutBall.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Enemy/StinkBugBase.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/KameckBeam.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Enemy/OnimasuPivot.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Enemy/OnimasuPivot.cpp:2:
+In file included from src/Game/Util.hpp:18:[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/SamboHead.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Enemy/Balloonfish.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Enemy/Balloonfish.cpp:1:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat][0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/ElectricPressureBullet.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Boss/DinoPackunStateDamage.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Boss/DinoPackunStateDamage.cpp:8:
+In file included from src/Game/Util.hpp:18:[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/TakoHeiInkHolder.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Enemy/FireBall.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/Meramera.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Enemy/Mogucchi.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/PackunPetit.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Enemy/MechanicKoopaMini.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Enemy/MechanicKoopaMini.cpp:1:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat][0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/ItemGenerator.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Enemy/KoopaJrShipCannonMainShell.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/Poihana.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Enemy/Metbo.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/IceMerameraKing.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Enemy/JumpGuarder.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/Kabokuri.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Enemy/BasaBasa.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/AnimScaleController.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Enemy/Unizo.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/KarikariDirector.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Enemy/KoopaJrShip.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Enemy/KoopaJrShip.cpp:1:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat][0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/Birikyu.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Enemy/Mogu.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/KuriboMini.cpp[0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+src/Game/Enemy/Birikyu.cpp:27:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   27 |     vec * 1.0f;
+      |     ^~~~~~~~~~[0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Enemy/BallBeamer.cpp:1:
+src/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) NO_INLINE {[0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Enemy/KuriboMini.cpp:1:
+src/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) NO_INLINE {[0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Enemy/KameckBeam.cpp:7:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat][0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Enemy/SamboHead.cpp:7:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat][0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Enemy/CocoSambo.cpp:7:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat][0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+In file included from src/Game/Enemy/CocoNutBall.cpp:6:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat][0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+src/Game/Enemy/Poihana.cpp:398:28: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  398 | void Poihana::endShootUp() NO_INLINE {
+      |                            ^[0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:9:
+In file included from src/Game/LiveActor/LiveActor.hpp:4:
+In file included from src/Game/NameObj/NameObj.hpp:3:
+In file included from src/Game/Util/JMapInfo.hpp:3:
+In file included from src/JSystem/JKernel/JKRDisposer.hpp:3:
+In file included from src/JSystem/JSupport/JSUList.hpp:4:
+In file included from src/revolution.h:5:
+In file included from aurora/include/revolution.h:7:
+In file included from aurora/include/dolphin/gd.h:7:
+aurora/include/dolphin/gd/GDGeometry.h:526:23: warning: bitwise operation between different enumeration types ('GXVtxFmt' and 'GXPrimitive') is deprecated [-Wdeprecated-enum-enum-conversion]
+  526 |     GDWrite_u8(vtxfmt | type);
+      |                ~~~~~~ ^ ~~~~
+1 warning generated.[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[1;38;5;1;1merror: [0msrc/Game/Boss/TripodBossKillerGeneraterCircle.cpp:30:138: error: constant expression evaluates to 16777216 which cannot be narrowed to type 'bool' [-Wc++11-narrowing]
+   30 |         {"TripodBossUpperKillerCannon", sUpperHorizonAngleTable, ARRAY_SIZE(sUpperHorizonAngleTable), 2150.0f, 49.0f, -29.0f, 975.0f, 1, 0x1000000},
+      |                                                                                                                                          ^~~~~~~~~
+src/Game/Boss/TripodBossKillerGeneraterCircle.cpp:30:138: note: insert an explicit cast to silence this issue
+   30 |         {"TripodBossUpperKillerCannon", sUpperHorizonAngleTable, ARRAY_SIZE(sUpperHorizonAngleTable), 2150.0f, 49.0f, -29.0f, 975.0f, 1, 0x1000000},
+      |                                                                                                                                          ^~~~~~~~~
+      |                                                                                                                                          static_cast<bool>( )
+src/Game/Boss/TripodBossKillerGeneraterCircle.cpp:31:136: error: constant expression evaluates to 16777216 which cannot be narrowed to type 'bool' [-Wc++11-narrowing]
+   31 |         {"TripodBossUnderKillerCannon", sUnderHorizonAngleTable, ARRAY_SIZE(sUnderHorizonAngleTable), 2150.0f, 5.8f, 39.2f, 975.0f, 0, 0x1000000},
+      |                                                                                                                                        ^~~~~~~~~
+src/Game/Boss/TripodBossKillerGeneraterCircle.cpp:31:136: note: insert an explicit cast to silence this issue
+   31 |         {"TripodBossUnderKillerCannon", sUnderHorizonAngleTable, ARRAY_SIZE(sUnderHorizonAngleTable), 2150.0f, 5.8f, 39.2f, 975.0f, 0, 0x1000000},
+      |                                                                                                                                        ^~~~~~~~~
+      |                                                                                                                                        static_cast<bool>( )
+1 warning and 2 errors generated.
+  [38;5;3m> in [1msrc/Game/Boss/TripodBossKillerGeneraterCircle.cpp[0m

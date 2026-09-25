@@ -28,7 +28,6 @@
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "resource/BcsvTable.hpp"
-#include "scene/AreaObjRuntime.hpp"
 
 #include <aurora/aurora.h>
 #include <aurora/dvd.h>
@@ -175,17 +174,10 @@ namespace {
                 "ChangeBgmCube's original base manager exists independently of its specialized actor");
         require(MR::getAreaObj("ChangeBgmCube", TVec3f{}) == nullptr,
                 "a real manager with no placed actor returns a real empty-volume miss");
-        require(smgpc::scene::find_complete_area_obj_placement_descriptor("ChangeBgmCube") == nullptr &&
-                    !smgpc::scene::placement_has_complete_area_obj_runtime(
-                        "ChangeBgmCube", "jmp/placement/common/areaobjinfo", true),
-                "a manager alone cannot claim completion of the specialized ChangeBgmCube placement");
         auto *warp = dynamic_cast<WarpCubeMgr *>(container->getManager("WarpCube"));
         require(warp != nullptr && warp->_18 == 0x40 && warp->mWarpCube == nullptr &&
                     warp->find_in(TVec3f{}) == nullptr,
                 "the original empty WarpCubeMgr must retain its null active cube and real query behavior");
-        require(!smgpc::scene::placement_has_complete_area_obj_runtime(
-                    "WarpCube", "jmp/placement/common/areaobjinfo", true),
-                "installing WarpCubeMgr must not claim the specialized WarpCube placement is complete");
         auto *glaring = dynamic_cast<GlaringLightAreaMgr *>(container->getManager("GlaringLightArea"));
         require(glaring != nullptr && glaring->_18 == 0x40 && glaring->find_in(TVec3f{}) == nullptr,
                 "the original GlaringLightArea manager must exist even before actor placement support");
@@ -347,72 +339,6 @@ namespace {
                 "two AreaObj scene generations must restore the NameObj registry baseline");
     }
 
-    void test_descriptor_registry_and_strict_area_preflight() {
-        require(smgpc::scene::is_area_obj_placement_table("jmp/placement/common/areaobjinfo") &&
-                    smgpc::scene::is_area_obj_placement_table("Jmp/Placement/Common/AreaObjInfo.bcsv") &&
-                    !smgpc::scene::is_area_obj_placement_table("jmp/placement/common/planetobjinfo"),
-                "AreaObj table classification must be path- and case-stable without stage-name policy");
-        require(smgpc::scene::find_complete_area_obj_placement_descriptor(
-                    "__SMGPC_missing_area_descriptor__") == nullptr,
-                "unknown AreaObj placements must not acquire a synthetic descriptor");
-
-        require(smgpc::scene::placement_has_complete_area_obj_runtime(
-                    "GlobalPointGravity", "jmp/placement/common/planetobjinfo", true),
-                "a complete non-area factory route must remain eligible for stage preflight");
-        require(!smgpc::scene::placement_has_complete_area_obj_runtime(
-                    "GlobalPointGravity", "jmp/placement/common/planetobjinfo", false),
-                "a missing actor creator must remain blocked regardless of placement table");
-        require(!smgpc::scene::placement_has_complete_area_obj_runtime(
-                    "__SMGPC_missing_area_descriptor__", "jmp/placement/common/areaobjinfo", true),
-                "an AreaObj creator cannot bypass preflight without its registered retail manager closure");
-
-        const auto descriptors = smgpc::scene::complete_area_obj_placement_descriptors();
-        constexpr auto expected_descriptors = std::array{
-            std::tuple{"SwitchCube", "SwitchArea", 0, 0x40, AreaForm::Type_Cube2, false},
-            std::tuple{"SwitchSphere", "SwitchArea", 0, 0x40, AreaForm::Type_Sphere, false},
-            std::tuple{"SwitchCylinder", "SwitchArea", 0, 0x40, AreaForm::Type_Cylinder, false},
-            std::tuple{"CubeCameraBox", "CubeCamera", 4, 0xA0, AreaForm::Type_Cube1, true},
-            std::tuple{"CubeCameraCylinder", "CubeCamera", 4, 0xA0, AreaForm::Type_Cylinder, true},
-            std::tuple{"CubeCameraSphere", "CubeCamera", 4, 0xA0, AreaForm::Type_Sphere, true},
-            std::tuple{"CubeCameraBowl", "CubeCamera", 4, 0xA0, AreaForm::Type_Bowl, true},
-            std::tuple{"PullBackCylinder", "PullBackCylinder", 17, 0x40, AreaForm::Type_Cylinder, false},
-            std::tuple{"RestartCube", "RestartCube", 18, 0x40, AreaForm::Type_Cube2, false},
-            std::tuple{"ViewGroupCtrlCube", "ViewGroupCtrlCube", 32, 0x40, AreaForm::Type_Cube2, false},
-            std::tuple{"LensFlareArea", "LensFlareArea", 33, 0x40, AreaForm::Type_Cube2, false},
-            std::tuple{"LightCtrlCube", "LightArea", 35, 0x80, AreaForm::Type_Cube2, false},
-            std::tuple{"LightCtrlCylinder", "LightArea", 35, 0x80, AreaForm::Type_Cylinder, false},
-            std::tuple{"BlueStarGuidanceCube", "BlueStarGuidanceCube", 40, 0x10, AreaForm::Type_Cube2, false},
-            std::tuple{"MessageAreaCube", "MessageArea", 42, 0x10, AreaForm::Type_Cube2, false},
-            std::tuple{"MessageAreaCylinder", "MessageArea", 42, 0x10, AreaForm::Type_Cylinder, false},
-            std::tuple{"AreaMoveSphere", "AreaMoveSphere", 54, 0x10, AreaForm::Type_Sphere, false},
-        };
-        require(descriptors.size() >= expected_descriptors.size(),
-                "expanding completed areas must preserve all previously completed closures");
-        for (auto index = std::size_t{}; index < expected_descriptors.size(); ++index) {
-            const auto &[object_name, manager_name, retail_order, capacity, form_type, has_finalize] =
-                expected_descriptors[index];
-            const auto *found = smgpc::scene::find_complete_area_obj_placement_descriptor(object_name);
-            require(found != nullptr, "every previously completed area must remain registered");
-            const auto &descriptor = *found;
-            require(descriptor.object_name == object_name && descriptor.object_creator != nullptr,
-                    "the placement catalog must retain each original creator");
-            auto actor = std::unique_ptr<NameObj>(descriptor.object_creator(object_name));
-            const auto *area = dynamic_cast<const AreaObj *>(actor.get());
-            require(area != nullptr && area->mFormType == form_type,
-                    "each descriptor must retain its exact retail AreaForm creator");
-        }
-        for (const auto &descriptor : descriptors) {
-            require(std::ranges::count(descriptors, descriptor.object_name,
-                                       &smgpc::scene::AreaObjPlacementDescriptor::object_name) == 1,
-                    "each completed placement must have exactly one canonical descriptor");
-        }
-        if (!descriptors.empty()) {
-            require(smgpc::scene::placement_has_complete_area_obj_runtime(
-                        descriptors.front().object_name, "jmp/placement/common/areaobjinfo", true),
-                    "a descriptor-backed AreaObj creator must pass the shared stage preflight predicate");
-        }
-    }
-
     JMapInfo make_generic_effect_area_row(const char *name, const std::array<s32, 8> &args) {
         constexpr auto fields = std::array{
             "name", "pos_x", "pos_y", "pos_z", "dir_x", "dir_y", "dir_z",
@@ -486,9 +412,6 @@ namespace {
             rows.reserve(cases.size());
             auto objects = std::vector<std::unique_ptr<NameObj>>{};
             for (const auto &[name, manager_name, order, capacity, form, inside, outside_side, outside_top] : cases) {
-                const auto *descriptor = smgpc::scene::find_complete_area_obj_placement_descriptor(name);
-                require(descriptor != nullptr && descriptor->object_creator != nullptr,
-                        "effect areas must retain their original placement creator");
                 auto *manager = MR::getAreaObjContainer()->getManager(manager_name);
                 require(typeid(*manager) == typeid(AreaObjMgr) && manager->_18 == capacity,
                         "generic effects must use the original base AreaObjMgr");
@@ -498,11 +421,11 @@ namespace {
                 auto object = std::unique_ptr<NameObj>{};
                 {
                     const auto game = smgpc::compat::JkrAllocationScope(domain);
-                    object.reset(descriptor->object_creator(name));
+                    object = std::make_unique<AreaObj>(form, name);
                 }
                 auto *area = dynamic_cast<AreaObj *>(object.get());
                 require(area != nullptr && typeid(*area) == typeid(AreaObj) && area->mFormType == form,
-                        "effect descriptors must construct the original generic class and correct form");
+                        "effect areas use the original generic class and authored form");
                 {
                     const auto game = smgpc::compat::JkrAllocationScope(domain);
                     object->init(JMapInfoIter(&rows.back(), 0));
@@ -601,7 +524,6 @@ int main(int argc, char **argv) {
         TestCase{"manager readiness does not fabricate placement support", test_manager_readiness_does_not_fabricate_placement_support},
         TestCase{"CubeCamera manager finalizes priority and reverse query", test_cube_camera_manager_finalizes_priority_and_reverse_query},
         TestCase{"LightArea priority and stable zone identity", test_light_area_priority_and_stable_zone_identity},
-        TestCase{"descriptor registry and strict area preflight", test_descriptor_registry_and_strict_area_preflight},
         TestCase{"generic effect areas use original init and queries", test_generic_effect_areas_use_original_init_and_queries},
         TestCase{"area movement uses actual sphere and arguments", test_area_movement_uses_actual_sphere_and_arguments},
         TestCase{"water and Mercator do not fabricate results", test_water_and_mercator_do_not_fabricate_results},

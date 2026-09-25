@@ -2,6 +2,8 @@
 
 #include "Game/LiveActor/ModelObj.hpp"
 
+class LodCtrl;
+
 class GreenCaterpillarBigBody : public ModelObj {
 public:
     GreenCaterpillarBigBody(LiveActor*, MtxPtr);

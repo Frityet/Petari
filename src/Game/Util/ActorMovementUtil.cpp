@@ -63,6 +63,64 @@ namespace {
 };  // namespace
 
 namespace MR {
+    bool faceToVector(MtxPtr pMtx, TVec3f direction, f32 degree) {
+        TVec3f front(pMtx[0][2], pMtx[1][2], pMtx[2][2]);
+        TVec3f up(pMtx[0][1], pMtx[1][1], pMtx[2][1]);
+        TVec3f axis(0.0f, 1.0f, 0.0f);
+        normalizeOrZero(&direction);
+        if (vecKillElement(direction, up, &direction) > 0.95f) {
+            return true;
+        }
+
+        normalizeOrZero(&direction);
+        if (direction.dot(front) > MR::cos(PI_180 * (degree / 2.0f))) {
+            return true;
+        }
+
+        TVec3f cross;
+        cross.cross(direction, front);
+        Mtx rotate;
+        if (up.dot(cross) < 0.0f) {
+            PSMTXRotAxisRad(rotate, &axis, PI_180 * degree);
+        } else {
+            PSMTXRotAxisRad(rotate, &axis, -(PI_180 * degree));
+        }
+
+        PSMTXConcat(pMtx, rotate, pMtx);
+        return false;
+    }
+
+    bool makeMtxOnMapCollision(TPos3f* pMtx, LiveActor* pActor, f32 length) {
+        calcGravity(pActor);
+        TVec3f direction(pActor->mGravity);
+        direction.scale(length);
+        TVec3f normal = -pActor->mGravity;
+        TVec3f position(pActor->mPosition);
+        if (!getFirstPolyNormalOnLineToMap(&normal, pActor->mPosition, direction, &position, nullptr)) {
+            return false;
+        }
+
+        MtxPtr pBaseMtx = pActor->getBaseMtx();
+        TVec3f front(pBaseMtx[0][2], pBaseMtx[1][2], pBaseMtx[2][2]);
+        makeMtxUpFrontPos(pMtx, normal, front, position);
+        return true;
+    }
+
+    bool calcVelocityRailMoveOnGround(TVec3f* pVelocity, const LiveActor* pActor) {
+        pVelocity->zero();
+        if (!isOnGround(pActor) || !isBindedGroundRailMove(pActor)) {
+            return false;
+        }
+
+        LiveActor* pGroundActor = getGroundSensor(pActor)->mHost;
+        isExistRail(pGroundActor);
+        calcNearestRailDirection(pVelocity, pGroundActor, pActor->mPosition);
+        s32 railArg = -1;
+        getRailArg3NoInit(pGroundActor, &railArg);
+        pVelocity->scale(railArg == -1 ? 10 : railArg);
+        return true;
+    }
+
     f32 calcDistance(const HitSensor* pSensor1, const HitSensor* pSensor2, TVec3f* a3) {
         TVec3f sensor2_pos = pSensor2->mPosition - pSensor1->mPosition;
 

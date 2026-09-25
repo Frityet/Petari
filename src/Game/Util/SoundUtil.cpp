@@ -1,4 +1,5 @@
 #include "compat/DisabledObjectAudioService.hpp"
+#include "Game/System/AudSystemWrapper.hpp"
 #include "Game/AudioLib/AudAnmSoundObject.hpp"
 #include "Game/AudioLib/AudMeNameConverter.hpp"
 #include "Game/AudioLib/AudMicWrap.hpp"
@@ -66,12 +67,22 @@ namespace MR {
     }
 
     JAISoundHandle* startAtmosphereSE(const char* pName, s32 param2, s32 param3) {
+#if defined(TARGET_PC)
+        if (AudSystemWrapper::isOutputDisabled()) {
+            return nullptr;
+        }
+#endif
         JAISoundID id = AudSingletonHolder< AudSoundNameConverter >::get()->getSoundID(pName);
 
         return AudWrap::getAtmosphereSeObject()->startSoundParam(id, param2, param3);
     }
 
     JAISoundHandle* startAtmosphereLevelSE(const char* pName, s32 param2, s32 param3) {
+#if defined(TARGET_PC)
+        if (AudSystemWrapper::isOutputDisabled()) {
+            return nullptr;
+        }
+#endif
         return AudWrap::getAtmosphereSeObject()->startLevelSoundParam(pName, param2, param3);
     }
 
@@ -314,6 +325,11 @@ namespace MR {
     }
 
     void startRemixSound(s32 melodyNo, s32 param2, f32 param3) {
+#if defined(TARGET_PC)
+        if (AudSystemWrapper::isOutputDisabled()) {
+            return;
+        }
+#endif
         AudWrap::getRemixMgr()->getRemixNoteGroupDataFromMelodyNo(melodyNo);
 
         AudRemixSequencer* pRemixSequencer = AudWrap::getRemixSequencer();

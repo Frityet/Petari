@@ -1,0 +1,40 @@
+{
+  "base": "6711b79ad079450a523bed95613c8873de1405f9",
+  "files": [
+    {
+      "path": "src/Game/Screen/WipeFade.hpp",
+      "before_sha256": "d140f2636b8bf57e0838bbb21e9262ab69d2b10a43d848be7709712b7b4f0c14",
+      "before_status": "",
+      "after_sha256": "683a8093bd211ed0987323eca61eb03c21596eb67d0ead4d7ea2b0550a950658",
+      "action": "modify"
+    },
+    {
+      "path": "src/Game/Map/FileSelectFunc.hpp",
+      "before_sha256": "8d28b62718ee044c10bf5b82505cedcda243c44632e4decf8016840be86bf83a",
+      "before_status": "",
+      "after_sha256": "81c1ca0c4a74ba0fa0582a2c2a0a31c987233d4aeff70da077add42a62447175",
+      "action": "modify"
+    },
+    {
+      "path": "src/Game/Map/FileSelectFunc.cpp",
+      "before_sha256": "1b144fe03375caf2279bda55b1e2296db35ac7acdec3d1aef0cd105f0fca4106",
+      "before_status": "",
+      "after_sha256": "edb05aa8838dbbba82f5bdf1a6cce16ec5ebf36e5b394333b2ba698d5c469a3b",
+      "action": "modify"
+    },
+    {
+      "path": "src/Game/Screen/FileSelectInfo.cpp",
+      "before_sha256": "cd3c339aafa695bbf02be96947de6b0f7a83b4e37163ea67012d82c6f4c3ffa6",
+      "before_status": "",
+      "after_sha256": "760159aa1d93eae8d3aeb8d98ab4616ab5c63bdbea8aa5ea252de53e9a1ec7f7",
+      "action": "modify"
+    },
+    {
+      "path": "src/Game/Map/FileSelector.cpp",
+      "before_sha256": "ab5220e9b68f5d95e1b3b6696fb874f23e32f8e0574d35bbefd7a22bae5da010",
+      "before_status": "",
+      "after_sha256": "c3778dbf6428759560388ad63aacee4ea5d09f03c072ce8b012798dbf1c7ee24",
+      "action": "modify"
+    }
+  ]
+}

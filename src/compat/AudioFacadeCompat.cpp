@@ -867,10 +867,3 @@ namespace AudWrap {
     }
 
 }  // namespace AudWrap
-
-// The bounded runtime does not construct an AudSystem. AudWrap::getSystem
-// already rejects that missing owner; direct member entry must do the same.
-AudChordInfo* AudSystem::getChordInfo() { unavailable("the original rhythm/chord owner"); }
-void AudSystem::setSeVolumeSet(s32, u32) { unavailable("AudSystem volume-owner access"); }
-void AudSystem::recoverSeVolumeSet(u32) { unavailable("AudSystem volume-owner access"); }
-void AudSystem::registerLimitedSound(JAISoundID, s32) { unavailable("the original AudSystem limited-sound owner"); }

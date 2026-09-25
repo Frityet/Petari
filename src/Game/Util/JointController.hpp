@@ -84,6 +84,15 @@ namespace MR {
     }
 
     template < class T >
+    JointController* createJointController(T* pHost, const LiveActor* pActor, u16 jointIndex,
+                                           bool (T::*calcFunc)(TPos3f*, const JointControllerInfo&),
+                                           bool (T::*calcChild)(TPos3f*, const JointControllerInfo&)) {
+        JointControlDelegator< T >* controller = new JointControlDelegator< T >(pHost, calcFunc, calcChild);
+        setJointControllerParam(controller, pActor, jointIndex);
+        return controller;
+    }
+
+    template < class T >
     JointControlDelegator< T >* createJointDelegator(T* pHost, const LiveActor* pActor, bool (T::*calcFunc)(TPos3f*, const JointControllerInfo&),
                                                      bool (T::*calcChild)(TPos3f*, const JointControllerInfo&), const char* pName) {
         JointControlDelegator< T >* delegator = new JointControlDelegator< T >(pHost, calcFunc, calcChild);

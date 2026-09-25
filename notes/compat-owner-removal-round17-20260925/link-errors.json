@@ -1,0 +1,538 @@
+[
+  {
+    "symbol": "AudMicWrap::getMicPos()",
+    "references": "SoundEmitterCube::movement() in libsmg-pc-game.a[865](SoundEmitterCube.cpp.o)\n      SoundEmitterSphere::movement() in libsmg-pc-game.a[874](SoundEmitterSphere.cpp.o)"
+  },
+  {
+    "symbol": "AudMicWrap::setMicMtx(float (*) [4], int)",
+    "references": "MR::setMicMtx(float (*) [4], int) in libsmg-pc-game.a[121](SoundUtil.cpp.o)"
+  },
+  {
+    "symbol": "AudEffector::setSpecialFx(int)",
+    "references": "AudEffectDirector::setAudioEffectParam(int) in libsmg-pc-game.a[59](AudEffectDirector.cpp.o)"
+  },
+  {
+    "symbol": "AudEffector::setCutoff(int)",
+    "references": "AudCameraWatcher::playAtmosphereSE() in libsmg-pc-game.a[55](AudCameraWatcher.cpp.o)\n      AudCameraWatcher::playAtmosphereSE() in libsmg-pc-game.a[55](AudCameraWatcher.cpp.o)\n      AudEffectDirector::setAudioEffectParam(int) in libsmg-pc-game.a[59](AudEffectDirector.cpp.o)"
+  },
+  {
+    "symbol": "AudEffector::setFxSend(float)",
+    "references": "AudEffectDirector::setAudioEffectParam(int) in libsmg-pc-game.a[59](AudEffectDirector.cpp.o)"
+  },
+  {
+    "symbol": "FileSelector::FileSelector(char const*)",
+    "references": "NameObj* (anonymous namespace)::createNameObj<FileSelector>(char const*) in libsmg-pc-game.a[1029](NameObjFactory.cpp.o)"
+  },
+  {
+    "symbol": "SpiderThread::SpiderThread(char const*)",
+    "references": "SceneObjHolder::newEachObj(int) in libsmg-pc-game.a[1039](SceneObjHolder.cpp.o)"
+  },
+  {
+    "symbol": "DynamicJointCtrl::setCallBackFunction()",
+    "references": "DynamicJointCtrlKeeper::setCallBackFunction() in libsmg-pc-game.a[313](DynamicJointCtrl.cpp.o)"
+  },
+  {
+    "symbol": "DynamicJointCtrl::reset()",
+    "references": "DynamicJointCtrlKeeper::reset() in libsmg-pc-game.a[313](DynamicJointCtrl.cpp.o)"
+  },
+  {
+    "symbol": "DynamicJointCtrl::update()",
+    "references": "DynamicJointCtrlKeeper::update() in libsmg-pc-game.a[313](DynamicJointCtrl.cpp.o)"
+  },
+  {
+    "symbol": "AudRemixSequencer::addNoteData(RemixNoteTrackData const*, RemixNoteData const*)",
+    "references": "MR::startRemixSound(int, int, float) in libsmg-pc-game.a[121](SoundUtil.cpp.o)"
+  },
+  {
+    "symbol": "AudRemixSequencer::setTempo(float)",
+    "references": "MR::startRemixSound(int, int, float) in libsmg-pc-game.a[121](SoundUtil.cpp.o)"
+  },
+  {
+    "symbol": "MiiFacePartsHolder::MiiFacePartsHolder(int)",
+    "references": "SceneObjHolder::newEachObj(int) in libsmg-pc-game.a[1039](SceneObjHolder.cpp.o)"
+  },
+  {
+    "symbol": "SpinDriverPathDrawer::setColorPink()",
+    "references": "SuperSpinDriver::initColor() in libsmg-pc-game.a[1274](SuperSpinDriver.cpp.o)"
+  },
+  {
+    "symbol": "SpinDriverPathDrawer::setFadeScale(float)",
+    "references": "ReturnDemoRailMove::setupPathDrawForGraneStarReturnDemo() in libsmg-pc-game.a[23](ReturnDemoRailMove.cpp.o)"
+  },
+  {
+    "symbol": "SpinDriverPathDrawer::setColorGreen()",
+    "references": "SuperSpinDriver::initColor() in libsmg-pc-game.a[1274](SuperSpinDriver.cpp.o)"
+  },
+  {
+    "symbol": "SpinDriverPathDrawer::setMaskLength(float)",
+    "references": "ReturnDemoRailMove::setupPathDrawForGraneStarReturnDemo() in libsmg-pc-game.a[23](ReturnDemoRailMove.cpp.o)"
+  },
+  {
+    "symbol": "SpinDriverPathDrawer::setColorNormal()",
+    "references": "AstroDomeDemoStarter::init(JMapInfoIter const&) in libsmg-pc-game.a[12](AstroDomeDemoStarter.cpp.o)\n      ReturnDemoRailMove::ReturnDemoRailMove(LiveActor*, LiveActor*, JMapInfoIter const&, bool, JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*) in libsmg-pc-game.a[23](ReturnDemoRailMove.cpp.o)\n      SuperSpinDriver::initColor() in libsmg-pc-game.a[1274](SuperSpinDriver.cpp.o)"
+  },
+  {
+    "symbol": "SpinDriverPathDrawer::setCoord(float)",
+    "references": "AstroDomeDemoStarter::movePlayer() in libsmg-pc-game.a[12](AstroDomeDemoStarter.cpp.o)\n      ReturnDemoRailMove::update(int, int) in libsmg-pc-game.a[23](ReturnDemoRailMove.cpp.o)\n      SuperSpinDriver::initShootPathDraw(JMapInfoIter const&) in libsmg-pc-game.a[1274](SuperSpinDriver.cpp.o)\n      SuperSpinDriver::exeShoot() in libsmg-pc-game.a[1274](SuperSpinDriver.cpp.o)"
+  },
+  {
+    "symbol": "SpinDriverPathDrawer::SpinDriverPathDrawer(SpinDriverShootPath*)",
+    "references": "AstroDomeDemoStarter::init(JMapInfoIter const&) in libsmg-pc-game.a[12](AstroDomeDemoStarter.cpp.o)\n      ReturnDemoRailMove::ReturnDemoRailMove(LiveActor*, LiveActor*, JMapInfoIter const&, bool, JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*) in libsmg-pc-game.a[23](ReturnDemoRailMove.cpp.o)\n      SuperSpinDriver::initShootPathDraw(JMapInfoIter const&) in libsmg-pc-game.a[1274](SuperSpinDriver.cpp.o)"
+  },
+  {
+    "symbol": "MercatorTransformCube::MercatorTransformCube(int, char const*)",
+    "references": "NameObj* (anonymous namespace)::createBaseOriginCube<MercatorTransformCube>(char const*) in libsmg-pc-game.a[1029](NameObjFactory.cpp.o)"
+  },
+  {
+    "symbol": "DynamicJointCtrlKeeper::DynamicJointCtrlKeeper(LiveActor*)",
+    "references": "ActorJointCtrl::ActorJointCtrl(LiveActor*) in libsmg-pc-game.a[295](ActorJointCtrl.cpp.o)"
+  },
+  {
+    "symbol": "SpinDriverPathDrawInit::SpinDriverPathDrawInit()",
+    "references": "SceneObjHolder::newEachObj(int) in libsmg-pc-game.a[1039](SceneObjHolder.cpp.o)"
+  },
+  {
+    "symbol": "MR::faceToVector(float (*) [4], JGeometry::TVec3<float>, float)",
+    "references": "MR::faceToPoint(float (*) [4], JGeometry::TVec3<float>, float) in libsmg-pc-game.a[75](ActorMovementUtil.cpp.o)"
+  },
+  {
+    "symbol": "MR::getPaneAlpha(LayoutActor const*, char const*)",
+    "references": "GalaxyInfoLayoutSetter::updateCometPos() in libsmg-pc-game.a[892](GalaxyInfoLayoutSetter.cpp.o)\n      GalaxyMapMarioIcon::control() in libsmg-pc-game.a[905](GalaxyMapMarioIcon.cpp.o)"
+  },
+  {
+    "symbol": "MR::setPaneAlpha(LayoutActor const*, char const*, unsigned char)",
+    "references": "PowerStarList::updateButtonAppearance() in libsmg-pc-game.a[955](PowerStarList.cpp.o)\n      PowerStarList::updateButtonAppearance() in libsmg-pc-game.a[955](PowerStarList.cpp.o)"
+  },
+  {
+    "symbol": "MR::getMessageLine(wchar_t*, unsigned int, wchar_t const*, unsigned int)",
+    "references": "StaffRoll::tryGenerateLine() in libsmg-pc-game.a[937](StaffRoll.cpp.o)\n      StaffRoll::makeLine() in libsmg-pc-game.a[937](StaffRoll.cpp.o)"
+  },
+  {
+    "symbol": "MR::setDefaultPose(NPCActor*)",
+    "references": "Caretaker::exePreWipeOut() in libsmg-pc-game.a[1093](CareTaker.cpp.o)\n      ButlerMap::resetStatus() in libsmg-pc-game.a[1100](ButlerMap.cpp.o)\n      ButlerMap::appear() in libsmg-pc-game.a[1100](ButlerMap.cpp.o)\n      TeresaRacer::resetRacer(RaceManager const*) in libsmg-pc-game.a[1114](TeresaRacer.cpp.o)\n      PenguinRacer::resetRacer(RaceManager const*) in libsmg-pc-game.a[1117](PenguinRacer.cpp.o)\n      non-virtual thunk to PenguinRacer::resetRacer(RaceManager const*) in libsmg-pc-game.a[1117](PenguinRacer.cpp.o)\n      Butler::appear() in libsmg-pc-game.a[1127](Butler.cpp.o)\n      ..."
+  },
+  {
+    "symbol": "MR::setLayoutAlpha(LayoutActor const*, unsigned char)",
+    "references": "GalaxyInfoLayoutSetter::updateCometPos() in libsmg-pc-game.a[892](GalaxyInfoLayoutSetter.cpp.o)\n      GalaxyMapMarioIcon::control() in libsmg-pc-game.a[905](GalaxyMapMarioIcon.cpp.o)"
+  },
+  {
+    "symbol": "MR::setNPCActorPos(NPCActor*, JGeometry::TVec3<float> const&)",
+    "references": "TicoFat::exeDemo() in libsmg-pc-game.a[1099](TicoFat.cpp.o)\n      TicoFat::exeFly() in libsmg-pc-game.a[1099](TicoFat.cpp.o)"
+  },
+  {
+    "symbol": "MR::initDefaultPose(NPCActor*, JMapInfoIter const&)",
+    "references": "PenguinRacerLeader::init(JMapInfoIter const&) in libsmg-pc-game.a[1097](PenguinRacerLeader.cpp.o)\n      PenguinRacer::init(JMapInfoIter const&) in libsmg-pc-game.a[1117](PenguinRacer.cpp.o)\n      Rabbit::init(JMapInfoIter const&) in libsmg-pc-game.a[1123](Rabbit.cpp.o)"
+  },
+  {
+    "symbol": "MR::setNPCActorPose(NPCActor*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+    "references": "Butler::exeDemoDomeLecture2() in libsmg-pc-game.a[1127](Butler.cpp.o)"
+  },
+  {
+    "symbol": "MR::initSpiderThread(JGeometry::TVec3<float> const&)",
+    "references": "TombSpiderEnvironment::TombSpiderEnvironment(LiveActor*) in libsmg-pc-game.a[554](TombSpiderEnvironment.cpp.o)"
+  },
+  {
+    "symbol": "MR::invalidateLodCtrl(NPCActor const*)",
+    "references": "Caretaker::setAnim(int) in libsmg-pc-game.a[1093](CareTaker.cpp.o)"
+  },
+  {
+    "symbol": "MR::turnPlayerToActor(LiveActor const*, float)",
+    "references": "TicoFat::exeDemo() in libsmg-pc-game.a[1099](TicoFat.cpp.o)"
+  },
+  {
+    "symbol": "MR::appearSpiderThread()",
+    "references": "TombSpiderDemo::updateGateOpen() in libsmg-pc-game.a[430](TombSpiderDemo.cpp.o)"
+  },
+  {
+    "symbol": "MR::convertPosOnGround(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&)",
+    "references": "PlayerRacer::prepRacer(RaceManager const*) in libsmg-pc-game.a[817](RaceRail.cpp.o)"
+  },
+  {
+    "symbol": "MR::isActionContinuous(LiveActor const*)",
+    "references": "TeresaRacer::exePre() in libsmg-pc-game.a[1114](TeresaRacer.cpp.o)\n      NrvTeresaRacer::TeresaRacerNrvPost::execute(Spine*) const in libsmg-pc-game.a[1114](TeresaRacer.cpp.o)\n      Kinopio::exeJump() in libsmg-pc-game.a[1132](Kinopio.cpp.o)\n      Kinopio::exeAction() in libsmg-pc-game.a[1132](Kinopio.cpp.o)"
+  },
+  {
+    "symbol": "MR::getSpiderThreadPosZ()",
+    "references": "SlingShooter::endBind() in libsmg-pc-game.a[345](SlingShooter.cpp.o)\n      SlingShooter::updateHitSensor(HitSensor*) in libsmg-pc-game.a[345](SlingShooter.cpp.o)\n      SlingShooter::updateHitSensor(HitSensor*) in libsmg-pc-game.a[345](SlingShooter.cpp.o)\n      SlingShooter::startCancelAim() in libsmg-pc-game.a[345](SlingShooter.cpp.o)"
+  },
+  {
+    "symbol": "MR::onSpiderThreadBloom()",
+    "references": "TombSpiderDemo::updateDeath() in libsmg-pc-game.a[430](TombSpiderDemo.cpp.o)"
+  },
+  {
+    "symbol": "MR::tryPushSpiderThread(JGeometry::TVec3<float> const&, float)",
+    "references": "NrvTombSpiderThreadAttacher::TombSpiderThreadAttacherNrvFree::execute(Spine*) const in libsmg-pc-game.a[559](TombSpiderThreadAttacher.cpp.o)"
+  },
+  {
+    "symbol": "MR::pauseOffSpiderThread()",
+    "references": "TombSpiderFunction::pauseOffTombSpiderParts(TombSpider const*) in libsmg-pc-game.a[469](TombSpiderFunction.cpp.o)"
+  },
+  {
+    "symbol": "MR::makeMtxOnMapCollision(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, LiveActor*, float)",
+    "references": "Plant::initAfterPlacement() in libsmg-pc-game.a[355](Plant.cpp.o)"
+  },
+  {
+    "symbol": "MR::sendMsgToSpiderThread(unsigned int, HitSensor*)",
+    "references": "SlingShooter::updateWait() in libsmg-pc-game.a[345](SlingShooter.cpp.o)\n      SlingShooter::exeAim() in libsmg-pc-game.a[345](SlingShooter.cpp.o)\n      SlingShooter::tryRelease() in libsmg-pc-game.a[345](SlingShooter.cpp.o)\n      SlingShooter::receiveMsgEnemyAttack(unsigned int, HitSensor*, HitSensor*) in libsmg-pc-game.a[345](SlingShooter.cpp.o)\n      SlingShooter::receiveOtherMsg(unsigned int, HitSensor*, HitSensor*) in libsmg-pc-game.a[345](SlingShooter.cpp.o)\n      SlingShooter::startCancelAim() in libsmg-pc-game.a[345](SlingShooter.cpp.o)"
+  },
+  {
+    "symbol": "MR::startSpiderThreadBattle()",
+    "references": "TombSpiderActionBase::updateChanceEndDemo() in libsmg-pc-game.a[444](TombSpiderActionBase.cpp.o)\n      TombSpiderActionBase::updateChanceEndNoDemo() in libsmg-pc-game.a[444](TombSpiderActionBase.cpp.o)\n      TombSpiderActionBase::startChanceDamage() in libsmg-pc-game.a[444](TombSpiderActionBase.cpp.o)"
+  },
+  {
+    "symbol": "MR::startSpiderThreadChance()",
+    "references": "TombSpiderActionBase::updateChanceWait(int) in libsmg-pc-game.a[444](TombSpiderActionBase.cpp.o)"
+  },
+  {
+    "symbol": "MR::touchActorToSpiderThread(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+    "references": "SlingShooter::receiveOtherMsg(unsigned int, HitSensor*, HitSensor*) in libsmg-pc-game.a[345](SlingShooter.cpp.o)"
+  },
+  {
+    "symbol": "MR::initDefaultPosForMercator(LiveActor*, JMapInfoIter const&, bool)",
+    "references": "MercatorRailMoveParts::init(JMapInfoIter const&) in libsmg-pc-game.a[1271](MercatorRailMoveParts.cpp.o)\n      MercatorFixParts::init(JMapInfoIter const&) in libsmg-pc-game.a[1386](MercatorFixParts.cpp.o)\n      OceanSmallTurtle::init(JMapInfoIter const&) in libsmg-pc-game.a[1532](OceanSmallTurtle.cpp.o)"
+  },
+  {
+    "symbol": "MR::onDrawSpinDriverPathAtOpa()",
+    "references": "StarReturnDemoStarter::appear() in libsmg-pc-game.a[4](StarReturnDemoStarter.cpp.o)"
+  },
+  {
+    "symbol": "MR::tryChangeTalkActionRandom(NPCActor*, char const*, char const*, char const*)",
+    "references": "Penguin::exeWait() in libsmg-pc-game.a[1085](Penguin.cpp.o)"
+  },
+  {
+    "symbol": "MR::offDrawSpinDriverPathAtOpa()",
+    "references": "StarReturnDemoStarter::kill() in libsmg-pc-game.a[4](StarReturnDemoStarter.cpp.o)"
+  },
+  {
+    "symbol": "MR::startSpiderThreadBattleEnd()",
+    "references": "TombSpiderDemo::updateDeath() in libsmg-pc-game.a[430](TombSpiderDemo.cpp.o)"
+  },
+  {
+    "symbol": "MR::calcVelocityRailMoveOnGround(JGeometry::TVec3<float>*, LiveActor const*)",
+    "references": "MR::calcVelocityAreaOrRailMoveOnGround(JGeometry::TVec3<float>*, LiveActor const*) in libsmg-pc-game.a[75](ActorMovementUtil.cpp.o)"
+  },
+  {
+    "symbol": "MR::copyLayoutDrawInfoWithAspect(nw4r::lyt::DrawInfo*, LayoutActor const*, bool)",
+    "references": "PowerStarList::drawForMessageBoardCapture() in libsmg-pc-game.a[955](PowerStarList.cpp.o)\n      GalaxyMapController::drawForCapture() in libsmg-pc-game.a[1010](GalaxyMapController.cpp.o)"
+  },
+  {
+    "symbol": "MR::startActorBindToSpiderThread(LiveActor*, JGeometry::TVec3<float> const**, JGeometry::TVec3<float> const**, JGeometry::TVec3<float> const**, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+    "references": "SlingShooter::initAfterPlacement() in libsmg-pc-game.a[345](SlingShooter.cpp.o)\n      SpiderCoin::exeWait() in libsmg-pc-game.a[1331](SpiderCoin.cpp.o)"
+  },
+  {
+    "symbol": "MR::calcNearestRailPosForMercator(JGeometry::TVec3<float>*, LiveActor const*, float)",
+    "references": "OceanSmallTurtle::init(JMapInfoIter const&) in libsmg-pc-game.a[1532](OceanSmallTurtle.cpp.o)"
+  },
+  {
+    "symbol": "MR::calcRailClippingInfoForMercator(JGeometry::TVec3<float>*, float*, LiveActor*, float, float)",
+    "references": "OceanSmallTurtle::init(JMapInfoIter const&) in libsmg-pc-game.a[1532](OceanSmallTurtle.cpp.o)"
+  },
+  {
+    "symbol": "MR::initAndSetRailClippingForMercator(JGeometry::TVec3<float>*, LiveActor*, float, float)",
+    "references": "OceanSmallTurtle::exeRailMove() in libsmg-pc-game.a[1532](OceanSmallTurtle.cpp.o)"
+  },
+  {
+    "symbol": "MR::createMapPartsRailMoverForMercator(LiveActor*, JMapInfoIter const&, bool)",
+    "references": "MercatorRailMoveParts::init(JMapInfoIter const&) in libsmg-pc-game.a[1271](MercatorRailMoveParts.cpp.o)\n      OceanSmallTurtle::init(JMapInfoIter const&) in libsmg-pc-game.a[1532](OceanSmallTurtle.cpp.o)"
+  },
+  {
+    "symbol": "MR::tryTalkForceAtEndAndStartTalkAction(NPCActor*)",
+    "references": "NrvPenguinRacerLeader::PenguinRacerLeaderNrvPost::execute(Spine*) const in libsmg-pc-game.a[1097](PenguinRacerLeader.cpp.o)\n      PenguinCoach::exePraise() in libsmg-pc-game.a[1101](PenguinCoach.cpp.o)\n      PenguinSkater::exeGiveUp() in libsmg-pc-game.a[1105](PenguinSkater.cpp.o)\n      NrvTeresaRacer::TeresaRacerNrvPost::execute(Spine*) const in libsmg-pc-game.a[1114](TeresaRacer.cpp.o)"
+  },
+  {
+    "symbol": "MR::tryTalkNearPlayerAndStartMoveTalkAction(NPCActor*)",
+    "references": "Penguin::exeWait() in libsmg-pc-game.a[1085](Penguin.cpp.o)\n      NrvPenguin::PenguinNrvFlow::execute(Spine*) const in libsmg-pc-game.a[1085](Penguin.cpp.o)\n      NrvCaretaker::CaretakerNrvTalk::execute(Spine*) const in libsmg-pc-game.a[1093](CareTaker.cpp.o)\n      NrvCaretaker::CaretakerNrvWait::execute(Spine*) const in libsmg-pc-game.a[1093](CareTaker.cpp.o)\n      NrvHoneyBee::HoneyBeeNrvWait::execute(Spine*) const in libsmg-pc-game.a[1116](HoneyBee.cpp.o)\n      Kinopio::exeWait() in libsmg-pc-game.a[1132](Kinopio.cpp.o)"
+  },
+  {
+    "symbol": "MR::convertMercatorPlaneToSphereTransAndRotate(JGeometry::TVec3<float>*, JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, JGeometry::TVec3<float> const&, bool)",
+    "references": "EyeBeamer::updatePoseAndTrans() in libsmg-pc-game.a[664](EyeBeamer.cpp.o)\n      EyeBeamer::updateWaterSurfaceMtx() in libsmg-pc-game.a[664](EyeBeamer.cpp.o)\n      MercatorRailMoveParts::initAfterPlacement() in libsmg-pc-game.a[1271](MercatorRailMoveParts.cpp.o)\n      MercatorRailMoveParts::control() in libsmg-pc-game.a[1271](MercatorRailMoveParts.cpp.o)\n      MercatorRailMoveParts::calcAndSetBaseMtx() in libsmg-pc-game.a[1271](MercatorRailMoveParts.cpp.o)\n      MercatorRotateParts::initAfterPlacement() in libsmg-pc-game.a[1276](MercatorRotateParts.cpp.o)\n      MercatorRotateParts::calcAndSetBaseMtx() in libsmg-pc-game.a[1276](MercatorRotateParts.cpp.o)\n      ..."
+  },
+  {
+    "symbol": "MR::convertMercatorPlaneToSphereTransAndRotate(JGeometry::TVec3<float>*, JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&, bool)",
+    "references": "OceanSmallTurtle::exeCatchRail() in libsmg-pc-game.a[1532](OceanSmallTurtle.cpp.o)\n      OceanSmallTurtle::exeRailMove() in libsmg-pc-game.a[1532](OceanSmallTurtle.cpp.o)"
+  },
+  {
+    "symbol": "TDDraw::tileConversion8(unsigned char*, unsigned int, unsigned int)",
+    "references": "SnowFloorTile::control() in libsmg-pc-game.a[1301](SnowFloorTile.cpp.o)\n      SnowFloor::control() in libsmg-pc-game.a[1463](SnowFloor.cpp.o)"
+  },
+  {
+    "symbol": "TDDraw::tileConversion16(unsigned short*, unsigned int, unsigned int)",
+    "references": "NormalMapBase::createGradTexture() in libsmg-pc-game.a[1275](NormalMapBase.cpp.o)"
+  },
+  {
+    "symbol": "WipeFade::setColor(GXColor)",
+    "references": "MR::startGalaxyMapLayout() in libsmg-pc-game.a[1010](GalaxyMapController.cpp.o)\n      MR::startAstroMapLayout() in libsmg-pc-game.a[1010](GalaxyMapController.cpp.o)\n      MR::startAstroMapLayoutForNewGalaxyDiscover() in libsmg-pc-game.a[1010](GalaxyMapController.cpp.o)\n      MR::startAstroMapLayoutForNewTicoGalaxyDiscover() in libsmg-pc-game.a[1010](GalaxyMapController.cpp.o)\n      MR::startAstroMapLayoutForNewDomeDiscover() in libsmg-pc-game.a[1010](GalaxyMapController.cpp.o)\n      MR::startGalaxyMapLayoutForTicoComet() in libsmg-pc-game.a[1010](GalaxyMapController.cpp.o)\n      MR::startAstroMapLayoutForChallengeGalaxyDiscover() in libsmg-pc-game.a[1010](GalaxyMapController.cpp.o)\n      ..."
+  },
+  {
+    "symbol": "AudSystem::setFarCamera(bool)",
+    "references": "AudCameraWatcher::movement() in libsmg-pc-game.a[55](AudCameraWatcher.cpp.o)"
+  },
+  {
+    "symbol": "BlackHole::BlackHole(char const*)",
+    "references": "NameObj* (anonymous namespace)::createNameObj<BlackHole>(char const*) in libsmg-pc-game.a[1029](NameObjFactory.cpp.o)"
+  },
+  {
+    "symbol": "ChipGroup::updateUIRange()",
+    "references": "ChipGroup::registerChip(ChipBase*) in libsmg-pc-game.a[1529](ChipGroup.cpp.o)"
+  },
+  {
+    "symbol": "ChipGroup::init(JMapInfoIter const&)",
+    "references": "vtable for BlueChipGroup in libsmg-pc-game.a[1529](ChipGroup.cpp.o)\n      vtable for YellowChipGroup in libsmg-pc-game.a[1529](ChipGroup.cpp.o)"
+  },
+  {
+    "symbol": "ChipGroup::movement()",
+    "references": "vtable for BlueChipGroup in libsmg-pc-game.a[1529](ChipGroup.cpp.o)\n      vtable for YellowChipGroup in libsmg-pc-game.a[1529](ChipGroup.cpp.o)"
+  },
+  {
+    "symbol": "ChipGroup::noticeGet(ChipBase*)",
+    "references": "MR::noticeGetChip(int, ChipBase*, int) in libsmg-pc-game.a[1490](ChipHolder.cpp.o)"
+  },
+  {
+    "symbol": "ChipGroup::ChipGroup(char const*, int)",
+    "references": "BlueChipGroup::BlueChipGroup(char const*) in libsmg-pc-game.a[1529](ChipGroup.cpp.o)\n      YellowChipGroup::YellowChipGroup(char const*) in libsmg-pc-game.a[1529](ChipGroup.cpp.o)"
+  },
+  {
+    "symbol": "AudRemixMgr::getRemixNoteGroupDataFromMelodyNo(int) const",
+    "references": "MR::startRemixSound(int, int, float) in libsmg-pc-game.a[121](SoundUtil.cpp.o)\n      MR::startRemixSound(int, int, float) in libsmg-pc-game.a[121](SoundUtil.cpp.o)\n      MR::getRemixMelodyNoteNum(int) in libsmg-pc-game.a[121](SoundUtil.cpp.o)"
+  },
+  {
+    "symbol": "MiiFaceRecipe::makeIconWithFavoriteColor(void*, int, int) const",
+    "references": "MiiFaceIcon::drawIcon() in libsmg-pc-game.a[1094](MiiFaceIcon.cpp.o)"
+  },
+  {
+    "symbol": "MiiFaceRecipe::makeIcon(void*, int, int, GXColor) const",
+    "references": "MiiFaceIcon::drawIcon() in libsmg-pc-game.a[1094](MiiFaceIcon.cpp.o)"
+  },
+  {
+    "symbol": "vtable for TripodBoss",
+    "references": "TripodBoss::TripodBoss(char const*) in libsmg-pc-game.a[423](TripodBoss.cpp.o)\n   NOTE: a missing vtable usually means the first non-inline virtual member function has no definition."
+  },
+  {
+    "symbol": "vtable for SkeletalFishGuard",
+    "references": "SkeletalFishGuard::SkeletalFishGuard(SkeletalFishBoss*, char const*) in libsmg-pc-game.a[543](SkeletalFishGuard.cpp.o)\n   NOTE: a missing vtable usually means the first non-inline virtual member function has no definition."
+  },
+  {
+    "symbol": "_sOceanSphereFogBackA",
+    "references": "OceanSphere::loadMaterialBack() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereFogBackB",
+    "references": "OceanSphere::loadMaterialBack() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereFogBackG",
+    "references": "OceanSphere::loadMaterialBack() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereFogBackR",
+    "references": "OceanSphere::loadMaterialBack() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereFogFaceA",
+    "references": "OceanSphere::loadMaterialFace() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereFogFaceB",
+    "references": "OceanSphere::loadMaterialFace() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereFogFaceG",
+    "references": "OceanSphere::loadMaterialFace() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereFogFaceR",
+    "references": "OceanSphere::loadMaterialFace() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereKColor0BackA",
+    "references": "OceanSphere::draw() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereKColor0BackB",
+    "references": "OceanSphere::draw() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereKColor0BackG",
+    "references": "OceanSphere::draw() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereKColor0BackR",
+    "references": "OceanSphere::draw() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereKColor0FaceA",
+    "references": "OceanSphere::loadMaterialFace() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereKColor0FaceB",
+    "references": "OceanSphere::loadMaterialFace() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereKColor0FaceG",
+    "references": "OceanSphere::loadMaterialFace() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereKColor0FaceR",
+    "references": "OceanSphere::loadMaterialFace() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg0BackA",
+    "references": "OceanSphere::draw() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg0BackB",
+    "references": "OceanSphere::draw() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg0BackG",
+    "references": "OceanSphere::draw() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg0BackR",
+    "references": "OceanSphere::draw() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg0EnvA",
+    "references": "OceanSphere::loadMaterialBack() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg0EnvB",
+    "references": "OceanSphere::loadMaterialBack() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg0EnvG",
+    "references": "OceanSphere::loadMaterialBack() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg0EnvR",
+    "references": "OceanSphere::loadMaterialBack() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg0FaceA",
+    "references": "OceanSphere::loadMaterialFace() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg0FaceB",
+    "references": "OceanSphere::loadMaterialFace() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg0FaceG",
+    "references": "OceanSphere::loadMaterialFace() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg0FaceR",
+    "references": "OceanSphere::loadMaterialFace() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1BackDefaultA",
+    "references": "OceanSphere::OceanSphere(char const*) in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1BackDefaultB",
+    "references": "OceanSphere::OceanSphere(char const*) in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1BackDefaultG",
+    "references": "OceanSphere::OceanSphere(char const*) in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1BackDefaultR",
+    "references": "OceanSphere::OceanSphere(char const*) in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1BackTearA",
+    "references": "OceanSphere::init(JMapInfoIter const&) in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1BackTearB",
+    "references": "OceanSphere::init(JMapInfoIter const&) in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1BackTearG",
+    "references": "OceanSphere::init(JMapInfoIter const&) in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1BackTearR",
+    "references": "OceanSphere::init(JMapInfoIter const&) in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1EnvA",
+    "references": "OceanSphere::loadMaterialBack() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1EnvB",
+    "references": "OceanSphere::loadMaterialBack() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1EnvG",
+    "references": "OceanSphere::loadMaterialBack() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1EnvR",
+    "references": "OceanSphere::loadMaterialBack() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1FrontDefaultA",
+    "references": "OceanSphere::OceanSphere(char const*) in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1FrontDefaultB",
+    "references": "OceanSphere::OceanSphere(char const*) in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1FrontDefaultG",
+    "references": "OceanSphere::OceanSphere(char const*) in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1FrontDefaultR",
+    "references": "OceanSphere::OceanSphere(char const*) in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1FrontTearA",
+    "references": "OceanSphere::init(JMapInfoIter const&) in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1FrontTearB",
+    "references": "OceanSphere::init(JMapInfoIter const&) in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1FrontTearG",
+    "references": "OceanSphere::init(JMapInfoIter const&) in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg1FrontTearR",
+    "references": "OceanSphere::init(JMapInfoIter const&) in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg2BackA",
+    "references": "OceanSphere::draw() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg2BackB",
+    "references": "OceanSphere::draw() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg2BackG",
+    "references": "OceanSphere::draw() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg2BackR",
+    "references": "OceanSphere::draw() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg2FaceA",
+    "references": "OceanSphere::loadMaterialFace() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg2FaceB",
+    "references": "OceanSphere::loadMaterialFace() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg2FaceG",
+    "references": "OceanSphere::loadMaterialFace() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  },
+  {
+    "symbol": "_sOceanSphereTevReg2FaceR",
+    "references": "OceanSphere::loadMaterialFace() const in libsmg-pc-game.a[770](OceanSphere.cpp.o)"
+  }
+]

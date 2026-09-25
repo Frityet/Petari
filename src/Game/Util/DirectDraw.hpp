@@ -31,7 +31,9 @@ namespace TDDraw {
     void cameraInit3D();
     void cameraInit2D();
     void mixFogColor(TVec3f, f32, u32);
+    // In-place row-major conversion; dimensions must contain complete GX blocks.
     void tileConversion8(u8*, u32, u32);
+    // Input contains native u16 values; output is GX big-endian 4x4 texture data.
     void tileConversion16(u16*, u32, u32);
     u32 getTexel32(const JUTTexture*, u32, u32);
     u32 getTexel32(const u8*, u32, u32, u32);

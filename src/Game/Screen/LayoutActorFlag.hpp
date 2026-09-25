@@ -2,7 +2,7 @@
 
 class LayoutActorFlag {
 public:
-    LayoutActorFlag() = default;
+    LayoutActorFlag();
 
     /* 0x0 */ bool mIsDead = true;
     /* 0x1 */ bool mIsStopAnimFrame = false;

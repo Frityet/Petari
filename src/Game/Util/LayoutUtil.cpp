@@ -121,6 +121,29 @@ namespace {
 };  // namespace
 
 namespace MR {
+    u8 getPaneAlpha(const LayoutActor* pActor, const char* pPaneName) {
+        return pActor->getLayoutManager()->getPane(pPaneName)->mAlpha;
+    }
+
+    void setLayoutAlpha(const LayoutActor* pActor, u8 alpha) {
+        pActor->getLayoutManager()->getPane(nullptr)->mAlpha = alpha;
+    }
+
+    void setPaneAlpha(const LayoutActor* pActor, const char* pPaneName, u8 alpha) {
+        pActor->getLayoutManager()->getPane(pPaneName)->mAlpha = alpha;
+    }
+
+    void copyLayoutDrawInfoWithAspect(nw4r::lyt::DrawInfo* pDrawInfo, const LayoutActor* pActor, bool aspect) {
+        *pDrawInfo = pActor->getLayoutManager()->mDrawInfo;
+        if (aspect) {
+            pDrawInfo->mFlag.locationAdjust = true;
+            pDrawInfo->mLocationAdjustScale = nw4r::math::VEC2(0.75f, 1.0f);
+        } else {
+            pDrawInfo->mFlag.locationAdjust = false;
+            pDrawInfo->mLocationAdjustScale = nw4r::math::VEC2(1.0f, 1.0f);
+        }
+    }
+
     nw4r::lyt::TexMap* createLytTexMap(const char* pArchiveName, const char* pTextureName) {
         if (pArchiveName == nullptr || pTextureName == nullptr) {
             throw std::invalid_argument("MR::createLytTexMap requires archive and texture names");

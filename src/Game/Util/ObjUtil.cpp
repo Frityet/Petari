@@ -12,6 +12,7 @@
 #include "Game/Map/WaterInfo.hpp"
 #include "Game/MapObj/BenefitItemLifeUp.hpp"
 #include "Game/MapObj/BenefitItemObj.hpp"
+#include "Game/MapObj/BenefitItemOneUp.hpp"
 #include "Game/MapObj/CoinHolder.hpp"
 #include "Game/MapObj/PowerStar.hpp"
 #include "Game/MapObj/StarPieceDirector.hpp"

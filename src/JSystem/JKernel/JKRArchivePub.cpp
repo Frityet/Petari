@@ -171,3 +171,7 @@ std::uint32_t JKRArchive::readResource(void *pBuffer, std::uint32_t bufferSize, 
 bool JKRArchive::contains(const char *pPath) const {
     return mArchive != nullptr && pPath != nullptr && mArchive->contains_resource(pPath);
 }
+
+std::uint32_t JKRArchive::getExpandedResSize(const void* resource) const {
+    return getResSize(resource);
+}

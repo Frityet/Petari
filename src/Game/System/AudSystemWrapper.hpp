@@ -17,6 +17,7 @@ public:
     AudSystemWrapper(JKRSolidHeap*, JKRHeap*);
 #if defined(TARGET_PC)
     ~AudSystemWrapper();
+    static bool isOutputDisabled();
 #endif
 
     void requestResourceForInitialize();

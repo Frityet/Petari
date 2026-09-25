@@ -1,0 +1,46 @@
+{
+  "scope": "Eight missing exact donor utility bodies, existing native implementations retained",
+  "files": [
+    {
+      "path": "src/Game/Util/ActorMovementUtil.cpp",
+      "action": "modify",
+      "initial_git_status": "clean",
+      "before": "notes/compat-owner-removal-round17-20260925/utilities/before/src/Game/Util/ActorMovementUtil.cpp",
+      "before_sha256": "90ba2839babeaa64c48ecd652b8cf8657cade5b9e4cfddaebe904e4a618540c5",
+      "after_sha256": "29eb9095beb8751aaba630a9f540a9de54a4192590e6fbfb4017fb87c08c5688",
+      "donor": "decomp/src/Game/Util/ActorMovementUtil.cpp",
+      "donor_bodies": [
+        "bool faceToVector(MtxPtr",
+        "bool makeMtxOnMapCollision(",
+        "bool calcVelocityRailMoveOnGround("
+      ]
+    },
+    {
+      "path": "src/Game/Util/LayoutUtil.cpp",
+      "action": "modify",
+      "initial_git_status": "clean",
+      "before": "notes/compat-owner-removal-round17-20260925/utilities/before/src/Game/Util/LayoutUtil.cpp",
+      "before_sha256": "f40a72a6e0e2e9365684e9b217c883fe557a66bee1f6e63a3ae69551d56cc033",
+      "after_sha256": "0a9875011cf9579ae623c5eaee22e9460d20ea332b93be7c01e57207b8a6a05b",
+      "donor": "decomp/src/Game/Util/LayoutUtil.cpp",
+      "donor_bodies": [
+        "u8 getPaneAlpha(",
+        "void setLayoutAlpha(",
+        "void setPaneAlpha(",
+        "void copyLayoutDrawInfoWithAspect("
+      ]
+    },
+    {
+      "path": "src/Game/Util/MessageUtil.cpp",
+      "action": "modify",
+      "initial_git_status": "clean",
+      "before": "notes/compat-owner-removal-round17-20260925/utilities/before/src/Game/Util/MessageUtil.cpp",
+      "before_sha256": "a973e64e2c2ad39a599b556dd7718b5668783e389228689caf54b7a5ff14f052",
+      "after_sha256": "fb68ed5b586e38acf7c85d7c983e4d5fdc69592df027e5a3ff2f536a0e3fa862",
+      "donor": "decomp/src/Game/Util/MessageUtil.cpp",
+      "donor_bodies": [
+        "const wchar_t* getMessageLine("
+      ]
+    }
+  ]
+}

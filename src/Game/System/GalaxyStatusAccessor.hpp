@@ -6,6 +6,8 @@ class ScenarioData;
 
 class GalaxyStatusAccessor {
 public:
+    GalaxyStatusAccessor() : mScenarioData() {
+    }
     GalaxyStatusAccessor(const ScenarioData*);
 
     const char* getName() const;

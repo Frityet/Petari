@@ -1036,7 +1036,7 @@ void FileSelector::exeDemo() {
     getIconId(&iconId, _B4->_140);
 
     if (iconId.isMii()) {
-        FileSelectFunc::copyMiiName(reinterpret_cast< u16* >(name), iconId);
+        FileSelectFunc::copyMiiName(name, iconId);
     } else if (isUserFileLuigi(_B4->_140)) {
         const wchar_t* pMessage = MR::getGameMessageDirect(::cLuigiNameMessageID);
 
@@ -1417,12 +1417,12 @@ void FileSelector::exeMiiConfirm() {
                                    SysInfoWindow::MessageType_System);
         }
 
-        u16 name[RFL_NAME_LEN + 1];
+        wchar_t name[RFL_NAME_LEN + 1];
         FileSelectIconID iconId = FileSelectIconID();
 
         mMiiSelect->getSelectedID(&iconId);
         FileSelectFunc::copyMiiName(name, iconId);
-        mMiiConfirmIcon->appear(mMiiSelect->getSelectedMiiTexMap(), reinterpret_cast< wchar_t* >(name));
+        mMiiConfirmIcon->appear(mMiiSelect->getSelectedMiiTexMap(), name);
         mSysInfoWindow->setYesNoSelectorSE("SE_SY_BUTTON_CURSOR_ON", "SE_SY_FILE_SEL_MII_CHANGE", "SE_SY_TALK_SELECT_NO");
     }
 

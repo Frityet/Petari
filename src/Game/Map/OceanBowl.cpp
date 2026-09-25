@@ -14,7 +14,6 @@
 #include <math_types.hpp>
 #include <revolution/gd/GDBase.h>
 #include <revolution/gx.h>
-#include <revolution/gx/GXVert.h>
 #include <revolution/mtx.h>
 #include <revolution/os/OSCache.h>
 

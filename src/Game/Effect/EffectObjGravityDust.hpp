@@ -15,7 +15,7 @@ public:
     virtual f32 getFarClipDistance() const {
         return 50.0f;
     }
-    virtual TVec3f* getClippingCenterOffset() const;
+    virtual TVec3f getClippingCenterOffset() const;
     virtual bool isSyncClipping() const {
         return true;
     }

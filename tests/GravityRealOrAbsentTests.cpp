@@ -28,7 +28,6 @@
 #include "Game/Util/JMapLinkInfo.hpp"
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeServices.hpp"
-#include "scene/nameobj/NameObjFactory.hpp"
 
 #include <algorithm>
 #include <array>
@@ -455,7 +454,6 @@ namespace {
                 "GlobalPlaneGravity", "GlobalPlaneGravityInBox", "GlobalPlaneGravityInCylinder",
                 "GlobalPointGravity", "GlobalSegmentGravity", "GlobalWireGravity",
             };
-            smgpc::runtime::DvdFileSystemService dvd("/");
             require(NameObjFactory::getCreator("GlobalPointGravity") == MR::createGlobalPointGravityObj &&
                         NameObjFactory::getCreator("GlobalCubeGravity") == MR::createGlobalCubeGravityObj &&
                         NameObjFactory::getCreator("GlobalConeGravity") == MR::createGlobalConeGravityObj &&
@@ -468,7 +466,7 @@ namespace {
                         NameObjFactory::getCreator("GlobalWireGravity") == MR::createGlobalWireGravityObj,
                     "the host factory must expose the exact retail gravity actor creators");
             for (const char* name : creators) {
-                auto object = smgpc::scene::nameobj::create_name_obj(dvd, name, name);
+                auto object = std::unique_ptr<NameObj>(NameObjFactory::getCreator(name)(name));
                 auto* actor = dynamic_cast<GlobalGravityObj*>(object.get());
                 require(actor && actor->mGravityCreator, "ordinary factory retains each exact gravity wrapper/creator");
                 remember(actor);
@@ -485,7 +483,7 @@ namespace {
                             "Wire creator retains its actual rail and original authored sampling count");
                 }
             }
-            auto followed = smgpc::scene::nameobj::create_name_obj(dvd, "GlobalPointGravity", "followed-gravity-probe");
+            auto followed = std::unique_ptr<NameObj>(NameObjFactory::getCreator("GlobalPointGravity")("followed-gravity-probe"));
             auto* actor = static_cast<GlobalGravityObj*>(followed.get());
             remember(actor);
             actor->init(point_row);

@@ -1,0 +1,3607 @@
+{
+  "seconds": 14.284497458022088,
+  "translation_units": 720,
+  "failed": 3,
+  "results": [
+    {
+      "file": "src/Game/Demo/StarReturnDemoStarter.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Demo/DemoCtrlBase.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Demo/DemoParamCommonDataTable.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Demo/AstroDomeDemoStarter.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Demo/DemoKoopaJrShip.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Demo/ReturnDemoRailMove.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Demo/ScenarioStarter.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Demo/GrandStarReturnDemoStarter.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/GameAudio/AudSeKeeper.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/GameAudio/AudCameraWatcher.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/GameAudio/AudTamakoroBgmCtrl.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/GameAudio/AudEffectDirector.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Util/PostureHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Util/GeometryBindUtil.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Util/RailGraphUtil.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Util/OctahedronBezierSurface.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Util/BezierSurface.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Util/IKJoint.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Util/MultiEventCamera.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Util/JointRumbler.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Util/ParabolicPath.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NWC24/ReceiverTagMail.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Camera/CamPoseSphereInterpolator.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Camera/CameraTestObj.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/LiveActor/IKJointCtrl.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/LiveActor/ActiveActorList.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/LiveActor/ActorJointCtrl.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/LiveActor/FaceJointCtrl.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/LiveActor/AnimationRandomPlayer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/LiveActor/SimpleJ3DModelDrawer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/LiveActor/VolumeModelDrawer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/SpherePadController.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/Creeper.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/SurfRay.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/SpaceCocoon.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/SledRopePoint.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/BigBubble.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/FluffWind.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/SphereAccelSensorController.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/Trapeze.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/SlingShooter.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/PlantLeaf.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/Pole.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/Fluff.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/SwingRope.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/PlantStalk.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/TamakoroTutorial.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/Tamakoro.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/SurfRayTutorial.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/Plant.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/SphereController.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Ride/JumpBranch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Effect/RandomEffectObj.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Effect/EffectObjGravityDust.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Effect/AstroEffectObj.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Effect/SpinPullParticleCallBack.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/PoltaActionBase.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossRailMoveParts.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossKameck.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaBattleVs3Lv2.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossStinkBugActionBase.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/PoltaStateStagger.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/Dodoryu.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunBattleVs1Lv2.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossStinkBugFunction.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunTailNode.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaStateAttackHipDrop.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/SkeletalFishJointCalc.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TombSpider.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossKameckMoveRail.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaBattleVs3Lv1.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunBattleVs1Lv1.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossStinkBugFinishDemo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossStepStartArea.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/PoltaRock.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaFunction.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaSequencerVs2.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaStateDamageEscape.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunBall.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/SkeletalFishBossBattleDirector.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/PoltaDemo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/PoltaArm.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossLeg.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaSubSequenceBattle.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/OtaKingLongFoot.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TombSpiderAction1st.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaSequencerVs3.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBoss.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/SkeletalFishBabyRailHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaSequencerVs1.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunTailRoot.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunBattleEgg.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossFixParts.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunEggShell.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TombSpiderDemo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaParts.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunFire.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TombSpiderVitalSpot.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossBegomanHead.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/Polta.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaPlanetShadow.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunStateFire.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossAccesser.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DodoryuDemo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaBattleMain.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossStinkBugActionFlyHigh.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossKillerGenerater.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunVs1.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TombSpiderActionBase.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossFixPartsBase.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaRockBreak.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaSensorCtrl.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaBattleStairsBase.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunVs2.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaDemoPowerUp.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossStepSequence.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaFigureBall.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossStinkBugBombHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/PoltaGroundRockHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaFireStairs.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaDemoFallToPlanetVs3Lv3.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/SkeletalFishBaby.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/Koopa.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunTailPart.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DodoryuMove.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TombSpiderParts.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossKameckVs1.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunDemo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaDemoJumpToPlanet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaSequencer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaDemoFallToPlanetVs3Lv2.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossKameckAction.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossGuardWall.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TombSpiderFunction.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossKameckVs2.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/SkeletalFishGuardHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunTrackFire.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/PoltaActionSequencer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/SkeletalFishBossInfo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossKameckStateBattle.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossStinkBugBomb.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/PoltaStateAttackGround.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossKameckSequencer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaStateGuard.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaSwitchKeeper.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaStateJumpAway.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaShockWave.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunSequencer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/PoltaWaitStart.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TombSpiderStateSwoon.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossBegoman.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/OtaKingMagma.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/PoltaRockHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DodoryuHill.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossMovableArea.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossKameckBarrier.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/SkeletalFishBossRail.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TombSpiderActionCocoon.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/SkeletalFishRailControl.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossStinkBugFlyDemo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaFireShort.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaBattleStairsVs3.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/PoltaStateGenerateRock.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossStinkBug.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/SkeletalFishBossFunc.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TombSpiderAcid.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/PoltaBattleLv2.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossKameckBattlePattarn.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/PoltaFunction.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DodoryuStateLv2.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossStinkBugActionGround.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossCore.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunBattleVs2Lv1.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossCoin.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunTail.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/PoltaBattleLv1.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaBattleStairsVs1.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/PoltaSensorCtrl.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DodoryuStateBase.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DodoryuStateLv1.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/SkeletalFishBossRailHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TombSpiderGland.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/OtaKing.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/SkeletalFishBoss.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaStateAttackFireLong.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunStateAwake.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/PoltaGroundRock.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunAction.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaPowerUpSwitch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaStateAttackFireShort.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/PoltaStateGroundRockAttack.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackun.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossStepPoint.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaStateChaseRoll.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossBaseJointPosition.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TombSpiderAction2nd.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossStinkBugAngryDemo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/PoltaStatePunch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossShell.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossAccessor.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossGuardWallPart.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunDemoPosition.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossStinkBugActionSequencer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaBattleBase.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaStateAttackShockWave.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DodoryuStateWait.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossStinkBugOpeningDemo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/SkeletalFishGuard.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaViewSwitchKeeper.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossStinkBugActionFlyLow.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossBreakMovement.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DodoryuUtil.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaStateAttackRoll.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/BossKameckBattleDemo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossKinokoOneUp.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaStateAttackSpin.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunBattleEggVs2.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossRotateParts.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TombSpiderEnvironment.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TombSpiderSensorCtrl.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/DinoPackunStateDamage.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/SkeletalFishBabyRail.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/KoopaRestarterVs3.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TombSpiderThreadAttacher.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Boss/TripodBossKillerGeneraterCircle.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Unizo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/JumpGuarder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/KoopaJrShipCannonMainShell.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/FireBall.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/MechanicKoopaMini.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/KoopaJrShip.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/OnimasuPivot.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/StinkBugBase.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/BasaBasa.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Mogucchi.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/WalkerStateWander.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Metbo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Balloonfish.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Mogu.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/BallBeamer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/KameckHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/CocoSambo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/BombBirdBomb.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/CocoNutBall.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/KameckBeam.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/SamboHead.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/ElectricPressureBullet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/TakoHeiInkHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Meramera.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/PackunPetit.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/ItemGenerator.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Poihana.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/IceMerameraKing.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Kabokuri.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Birikyu.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/KuriboMini.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Onimasu.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Pukupuku.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/JellyfishElectric.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Takobo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/NokonokoLand.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/WaterBazookaCapsule.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Jellyfish.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/TerritoryMover.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/BegomanSpringHead.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/WaterBazooka.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/BombBird.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/OnimasuJump.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/KameckTurtle.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/JumpSpider.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/KameckBeamHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/JumpBeamer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Kanina.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/RingBeamer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/KuriboChief.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Hanachan.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/HammerHeadPackun.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/SamboFunction.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/MogucchiShooter.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Teresa.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/RingBeam.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/KameckFireBall.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/KoteBug.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/BombHei.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/BegomanSpring.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/KirairaChain.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/FireBubble.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/AnimStampController.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Dossun.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/BegomanFunction.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/UnizoLauncher.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/HomingKiller.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/TakoHei.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/MogucchiHill.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/KabokuriFireHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Gesso.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Jiraira.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/StringSpider.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/BegomanBaby.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/TeresaWater.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/KabokuriFire.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/DharmaSambo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/CannonShellBase.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/OtaRock.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/WalkerStateFunction.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Snakehead.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/MoguStone.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/KoopaJrShipCannonShell.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/WalkerStateChase.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Petari.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/BegomanLauncher.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Kameck.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/WalkerStateFindPlayer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Karon.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/SpinHitController.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Kuribo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/BombHeiLauncher.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/StinkBugSmall.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/BombTeresa.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/StinkBugParent.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/SearchBeamer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/BegomanSpike.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/WalkerStateBindStarPointer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/EyeBeamer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/MogucchiRefuseTerritory.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/WalkerStateParam.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/TakoHeiInk.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/BegomanBase.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/WalkerStateStagger.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Enemy/Kiraira.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/System/HomeButtonMenuWrapper.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/System/AudSystemWrapper.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/PlanetMapCreator.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/SunshadeMapParts.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/KCollisionPlus.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/RailGraphNode.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/TimerSwitch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/KoopaBattleMapCoinPlate.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/OceanBowlBloomDrawer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/WaterRoad.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/OceanRingDrawer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/KoopaBattleMapPlate.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/OceanRingPipeInside.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/QuakeEffectGenerator.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/GravityDust.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/OceanRingPipe.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/OceanSpherePoint.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/KoopaBattleMapStair.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/KoopaBattleMapPlanet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/SeaGull.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/RailGraphEdge.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/RaceRail.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/KoopaBattleMapDamagePlate.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/RailGraph.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/LavaSunPlanet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/Halo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/FishGroup.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/OceanRingPipeOutside.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/OceanRingBloomDrawer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/RailGraphIter.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/PlanetMapWithoutHighModel.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/LavaShellTower.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Map/WaterPlant.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/AreaObj/AudioEffectArea.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/AreaObj/BgmProhibitArea.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/AreaObj/FollowCollisionArea.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/AreaObj/SunLightArea.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/AreaObj/SpinGuidanceArea.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/AreaObj/QuakeEffectArea.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/AreaObj/ChangeBgmCube.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/AreaObj/SoundEmitterCube.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/AreaObj/BigBubbleGoalArea.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/AreaObj/PlayerSeArea.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/AreaObj/BigBubbleCameraArea.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/AreaObj/HazeCube.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/AreaObj/AstroChangeStageCube.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/AreaObj/SoundEmitterSphere.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/AreaObj/AreaFormDrawer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/AreaObj/DeathArea.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/GalaxyMapSelectButton.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/GalaxyInfoLayoutSetter.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/FullnessMeter.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/GalaxyMapMarioIcon.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/HeatHazeEffect.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/GalaxyNamePlate.cpp",
+      "exit_code": 1,
+      "diagnostics": "src/Game/Screen/GalaxyNamePlate.cpp:34:34: error: cannot initialize a parameter of type 'const EffectSystem *' with an rvalue of type 'bool'\n   34 |     initEffectKeeper(0, nullptr, false);\n      |                                  ^~~~~\nsrc/Game/Screen/LayoutActor.hpp:42:64: note: passing argument to parameter here\n   42 |     void initEffectKeeper(int, const char*, const EffectSystem*);\n      |                                                                ^\n1 error generated.\n"
+    },
+    {
+      "file": "src/Game/Screen/LayoutActorFlag.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/GalaxySelectInfo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/GalaxyMap.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/GalaxyMapGalaxyDetail.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/GalaxyConfirmLayout.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/MiiSelectIcon.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/GalaxyMapBackground.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/PowerStarList.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/MovieStarter.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/CometRetryButton.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/GalaxyMapIcon.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/GalaxyMapDomeIcon.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/GalaxyMapCometIcon.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/GalaxyMapTitle.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/GalaxyNamePlateDrawer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/OdhConverter.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/odh.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/PlayerActionGuidance.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/BombTimerLayout.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/SurfingGuidance.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/PeachLetter.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/IconComet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/HomeButtonLayout.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/StageResultInformer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/GalaxyMapController.cpp",
+      "exit_code": 1,
+      "diagnostics": "src/Game/Screen/GalaxyMapController.cpp:101:90: error: reference to non-static member function must be called; did you mean to call it with no arguments?\n  101 |     if (MR::startFunctionAsyncExecuteOnMainThread(MR::Functor(this, GalaxyMapController::capture), \"GalaxyMapController::capture\")) {\n      |                                                                     ~~~~~~~~~~~~~~~~~~~~~^~~~~~~\n      |                                                                                                 ()\nsrc/Game/Screen/GalaxyMapController.cpp:101:51: error: no matching function for call to 'Functor'\n  101 |     if (MR::startFunctionAsyncExecuteOnMainThread(MR::Functor(this, GalaxyMapController::capture), \"GalaxyMapController::capture\")) {\n      |                                                   ^~~~~~~~~~~\nsrc/Game/Util/Functor.hpp:85:51: note: candidate template ignored: could not match 'void (T::*)()' against 'void'\n   85 |     [[nodiscard]] FunctorV0M< T*, void (T::*)() > Functor(T* pCaller, void (T::*pCallee)()) {\n      |                                                   ^\nsrc/Game/Util/Functor.hpp:90:57: note: candidate template ignored: could not match 'void (T::*)() const' against 'void'\n   90 |     [[nodiscard]] FunctorV0M< T*, void (T::*)() const > Functor(T* pCaller, void (T::*pCallee)() const) {\n      |                                                         ^\nsrc/Game/Util/Functor.hpp:104:63: note: candidate template ignored: could not match 'void (T::*)() const' against 'void'\n  104 |     inline static FunctorV0M< const T*, void (T::*)() const > Functor(const T* caller, void (T::*callee)() const) {\n      |                                                               ^\nsrc/Game/Util/Functor.hpp:136:30: note: candidate function not viable: requires single argument 'func', but 2 arguments were provided\n  136 |     inline static FunctorV0F Functor(void (*func)()) { return FunctorV0F(func); }\n      |                              ^       ~~~~~~~~~~~~~~\nsrc/Game/Util/Functor.hpp:114:48: note: candidate function template not viable: requires 3 arguments, but 2 were provided\n  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) NO_INLINE {\n      |                                                ^       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nsrc/Game/Util/Functor.hpp:124:54: note: candidate function template not viable: requires 4 arguments, but 2 were provided\n  124 |     static FunctorV2M< T*, void (T::*)(U, V), U, V > Functor(T* a1, void (T::*a2)(U, V), U arg_0, V arg_1) {\n      |                                                      ^       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n2 errors generated.\n"
+    },
+    {
+      "file": "src/Game/Screen/GalaxySelectBackButton.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Screen/GalaxyMapTicoIcon.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NameObj/ModelChangableObjFactory.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NameObj/NameObjFactory.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Scene/SceneObjHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/TrickRabbitSnow.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/KinopioAstro.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/TicoReading.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/TicoDomeLecture.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/TicoComet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/CollectTico.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/RosettaReading.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/MiiFaceIconHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/Syati.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/TicoAstro.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/TrickRabbitFreeRun.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/RabbitStateWaitStart.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/TicoShop.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/RabbitStateCaught.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/NPCSupportRail.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/Penguin.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/TrickRabbit.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/ButlerStateStarPieceReaction.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/SignBoard.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/CareTaker.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/MiiFaceIcon.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/LuigiNPC.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/TicoStarRing.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/PenguinRacerLeader.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/TicoFat.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/ButlerMap.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/PenguinCoach.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/HoneyQueen.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/TicoGalaxy.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/KoopaJr.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/PenguinSkater.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/ButlerExplain.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/PenguinStudent.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/PenguinMaster.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/TeresaRacer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/HoneyBee.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/PenguinRacer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/TrickRabbitSnowCollect.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/Peach.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/TicoRail.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/MiiDatabase.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/Rabbit.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/StrayTico.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/Butler.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/NPC/Kinopio.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Player/GhostPacket.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/Player/GhostPlayer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ChooChooTrain.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/FirePressure.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpiderThreadPart.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ElectricRailMoving.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/Candlestand.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MeteorStrikeLauncher.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpinDriverCamera.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MarblePlanet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SimpleBreakableObj.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ClipArea.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SurprisedGalaxy.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/FloaterFunction.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/WoodBox.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ClipAreaShape.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ChipBase.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/HatchWaterPlanet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/TreasureBoxCracked.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AstroDomeCameraController.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MercatorRailMoveParts.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/FallingSmallRock.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/HipDropMoveObj.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SuperSpinDriver.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/NormalMapBase.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MercatorRotateParts.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SnowMan.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/LavaHomeVolcanoFlow.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SeaBottomTriplePropeller.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/BeamGoRoundPlanet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/WaterPressureBullet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ElectricRailHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/NeedlePlant.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/StarPieceSpot.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SnowCapsulePlanet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/WaterPressure.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AstroDomeDemoAstroGalaxy.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SimpleClipPartsObj.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpiderMapBlock.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpinLeverSwitch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/BumpAppearPlanet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/FirePressureBullet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AstroMapObj.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MorphItemObjNeo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/LavaJamboSunPlanet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SnowFloorTile.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/FloaterFloatingForceTypeNormal.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ManholeCover.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MapObjConnector.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AstroDomeBlueStar.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/CrystalSwitch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/QuestionCoin.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/TreasureSpot.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/WaterfallCaveCover.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MechaKoopaPartsArm.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AstroDomeOrbit.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AnmModelObj.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/CircleCoinGroup.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/RainCloud.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/Tsukidashikun.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/JumpHole.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/BenefitItemInvincible.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MarioLauncher.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpiderThreadHangInfo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/WormEatenPlanet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/FirePressureBulletHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/UFOBase.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/LavaBallRisingPlanetLava.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpinDriverUtil.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AssemblyBlock.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/PressureBase.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/BattleShipElevator.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/StarPieceFollowGroup.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpiderCoin.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/KeySwitch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ValveSwitch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AirBubble.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SnowplowSwitch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ReverseGravityRoomPlanet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/PunchBox.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ElectricRail.cpp",
+      "exit_code": 1,
+      "diagnostics": "src/Game/MapObj/ElectricRail.cpp:340:44: error: no member named 'Functor' in namespace 'MR'\n  340 |         MR::listenStageSwitchOnA(this, MR::Functor(this, &ElectricRail::disappear));\n      |                                            ^~~~~~~\nsrc/Game/MapObj/ElectricRail.cpp:532:13: error: use of undeclared identifier 'GXCmd1f32'; did you mean 'GXCmd1u32'?\n  532 |             GXCmd1f32(v15);\n      |             ^~~~~~~~~\n      |             GXCmd1u32\naurora/include/dolphin/gx/GXVert.h:130:6: note: 'GXCmd1u32' declared here\n  130 | void GXCmd1u32(const u32 x);\n      |      ^\nsrc/Game/MapObj/ElectricRail.cpp:533:13: error: use of undeclared identifier 'GXCmd1f32'; did you mean 'GXCmd1u32'?\n  533 |             GXCmd1f32(0.0f);\n      |             ^~~~~~~~~\n      |             GXCmd1u32\naurora/include/dolphin/gx/GXVert.h:130:6: note: 'GXCmd1u32' declared here\n  130 | void GXCmd1u32(const u32 x);\n      |      ^\nsrc/Game/MapObj/ElectricRail.cpp:538:13: error: use of undeclared identifier 'GXCmd1f32'; did you mean 'GXCmd1u32'?\n  538 |             GXCmd1f32(v15);\n      |             ^~~~~~~~~\n      |             GXCmd1u32\naurora/include/dolphin/gx/GXVert.h:130:6: note: 'GXCmd1u32' declared here\n  130 | void GXCmd1u32(const u32 x);\n      |      ^\nsrc/Game/MapObj/ElectricRail.cpp:539:13: error: use of undeclared identifier 'GXCmd1f32'; did you mean 'GXCmd1u32'?\n  539 |             GXCmd1f32(1.0f);\n      |             ^~~~~~~~~\n      |             GXCmd1u32\naurora/include/dolphin/gx/GXVert.h:130:6: note: 'GXCmd1u32' declared here\n  130 | void GXCmd1u32(const u32 x);\n      |      ^\n5 errors generated.\n"
+    },
+    {
+      "file": "src/Game/MapObj/SandUpDownTriRock.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/GCaptureTarget.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/JetTurtle.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/PalmIsland.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SwingLight.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/WatchTowerRotateStep.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SubmarineVolcanoBigColumn.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/LavaHomeSeesaw.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/TimerMoveWall.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/RosettaChair.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AstroCountDownPlate.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/FallOutFieldDraw.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MiniatureGalaxyHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SoundEmitter.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/BeeFlowerHover.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/FlameGun.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpiderThreadWindCtrl.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpaceShipStep.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/FallDownBridge.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/PeachCastleGardenPlanet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ExterminationChecker.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/LavaProminenceTriple.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/LotusLeaf.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/BlueChip.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/FireBar.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/QuarterRollGravityRoomArrow.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ArrowSwitch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SandCapsuleInsidePlanet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ItemAppearStone.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpinDriverOperateRing.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpinningBox.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AstroDome.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/OceanWaveFloater.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ArrowSwitchMulti.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/WaterPressureBulletHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/FirePressureRadiate.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/StarPieceMother.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/RockCreator.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/PicketSwitch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MercatorFixParts.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/BallOpener.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/HipDropTimerSwitch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/LavaProminence.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpiderThreadMainPoint.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/CollapsePlane.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/RailMoveObj.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/BenefitItemObj.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/BlueStarCupsulePlanet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SandUpDownEffectObj.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/CapsuleCage.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/BallRail.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AstroDomeComet.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ScrewSwitch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/Shellfish.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ElectricBall.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MeteoContainer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ItemBubble.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/PlantPoint.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/TimeAppearObj.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/GreenCaterpillarBig.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MapPartsFloatingForce.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/CoconutTreeLeaf.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ClipFieldSwitch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/FloaterFloatingForce.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/NormalMapTestObj.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AstroOverlookObj.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/LavaFloater.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/UFOKinoko.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/IronCannonShell.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/CocoNut.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/CoinReplica.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/PhantomShipBridge.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/PhantomShipHandle.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpringJetWater.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpaceMine.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SphereRailDash.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MeteorStrike.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/HipDropSwitch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/KillerGunnerSingle.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/RailBlock.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/Sandstorm.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/LavaGeyser.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SideSpikeMoveStep.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/LargeChain.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/LavaHomeSeesawRotator.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpiderThreadPoint.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/NoteFairy.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/DeadLeaves.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/DesertLandMoveSwitch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ClipAreaDropLaser.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/GeneralMapParts.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/CoinBox.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/HitWallTimerSwitch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ClipFieldMapParts.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AstroDomeAsteroid.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ClipAreaMovable.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MiniatureGalaxy.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/CoconutTree.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/Fountain.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MagicBell.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SnowFloor.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/BigBubbleHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ItemBlock.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/GravityLightRoad.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpinDriver.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/DriftWood.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SandCapsulePressGround.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SwitchBox.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/QuestionBoxGalleryObj.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/HipDropRock.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpiderThreadRadialLine.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/Rock.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/BenefitItemLifeUp.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/CoinSpot.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SimpleNormalMapObj.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ClipAreaDrop.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ScrewSwitchReverse.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/BigBubbleDrawer.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/DesertMovingLand.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/Banekiti.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/BigBubbleGenerator.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/BreakableCage.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/TypicalDoor.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/PomponPlant.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/YellowChip.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/GravityLight.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ArrowSwitchMultiHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/FlexibleSphere.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SubmarineSteam.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ClipFieldFillDraw.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AstroDomeSky.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpringWaterFloaterSpot.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MapPartsBreaker.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/BigBubbleMoveLimitter.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/FountainBig.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/LargeChainParts.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/PrizeRing.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/TransparentWall.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/PhantomTorch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ShootingStar.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MarioLauncherAttractor.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/PhantomShipBoxFloater.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MechaKoopaPartsHead.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/TrampleStar.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/DashRing.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/RevolvingWay.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SimpleTimerObj.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/ClipAreaDropHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/PTimerSwitch.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AirBubbleHolder.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/DragonHeadFlower.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SmallStone.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/MapPartsAppearController.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AstroMapBoard.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SeesawMoveNut.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/LavaSteam.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/FloaterFloatingForceTypeSpring.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/Swinger.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/CannonFortressBreakStep.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SpinDriverShootPath.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/OceanSmallTurtle.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/LavaStrangeRock.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AstroMapObjFunction.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/LavaBreakColumn.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AirBubbleGenerator.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AstroDomeGalaxySelector.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/WaveFloatingForce.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/PlantRailInfo.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/RosettaPictureBook.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/CrystalCageMoving.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/LavaGalaxyParts.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/IceVolcanoUpDownPlane.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/JumpStand.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/OceanFloaterLandParts.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/WaterLeakPipe.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/SimpleFloaterObj.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/Note.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/WhirlPool.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    },
+    {
+      "file": "src/Game/MapObj/AstroCore.cpp",
+      "exit_code": 0,
+      "diagnostics": ""
+    }
+  ]
+}

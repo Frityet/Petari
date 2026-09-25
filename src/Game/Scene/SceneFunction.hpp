@@ -134,6 +134,7 @@ namespace MR {
     };
 
     enum DrawType {
+        DrawType_None = -1,
         DrawType_SwingRope = 0x00,
         DrawType_0x1 = 0x01,
         DrawType_Creeper = 0x02,

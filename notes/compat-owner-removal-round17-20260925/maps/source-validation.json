@@ -1,0 +1,14 @@
+{
+  "source_only": true,
+  "no_builds_or_tests": true,
+  "owned_paths": 27,
+  "headers_exact_donor": {
+    "MapObj/BenefitItemObj.hpp": true,
+    "MapObj/BenefitItemLifeUp.hpp": true,
+    "MapObj/ChipBase.hpp": true,
+    "MapObj/ClipArea.hpp": true,
+    "Map/WhirlPoolAccelerator.hpp": true
+  },
+  "whirlpool_exact_donor_except_sdk_include": true,
+  "mtx_vector_overload_preserved": true
+}

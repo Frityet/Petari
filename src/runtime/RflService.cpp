@@ -1,5 +1,8 @@
 #include "runtime/RflService.hpp"
 
+#include <aurora/allocation.hpp>
+#include <aurora/rfl/CharacterModel.hpp>
+
 #include "resource/TextEncoding.hpp"
 #include "runtime/RuntimeServices.hpp"
 
@@ -489,11 +492,7 @@ namespace smgpc::runtime {
 
     RFLErrcode RflService::init_char_model(RFLCharModel &model, RFLDataSource source, const RFLMiddleDB *db, u16 index, void *work,
                                            RFLResolution resolution, u32 expression_flags) const {
-        (void)model;
-        (void)db;
-        (void)work;
-        (void)resolution;
-        if (!is_supported_source(source) || expression_flags == 0U) {
+        if (!is_supported_source(source) || expression_flags == 0U || work == nullptr) {
             push_trace(RflOperationTrace {
                 .kind = RflOperationKind::InitCharModel,
                 .frame_index = _frame_index,
@@ -515,6 +514,53 @@ namespace smgpc::runtime {
                 .index = static_cast<s32>(index),
                 .result = result,
                 .async_pending = _async_pending,
+                .expression_flags = expression_flags,
+            });
+            return result;
+        }
+
+        if (source == RFLDataSource_Default) {
+            const aurora::allocation::HostAllocationScope host;
+            auto error = aurora::rfl::CharacterModelError::None;
+            auto native_model = aurora::rfl::CharacterModel::create_default(
+                *_resource_archive, index, resolution, expression_flags, error);
+            auto result = RFLErrcode_NotAvailable;
+            if (native_model) {
+                model.source = source;
+                model.middleDB = const_cast<RFLMiddleDB*>(db);
+                model.index = index;
+                model.resolution = resolution;
+                model.expressionFlags = expression_flags;
+                model.expression = native_model->expression();
+                model.work = work;
+                PSMTXIdentity(model.matrix);
+                model.nativeModel = std::move(native_model);
+                model.initialized = TRUE;
+                result = RFLErrcode_Success;
+            } else {
+                using Error = aurora::rfl::CharacterModelError;
+                switch (error) {
+                case Error::InvalidDefaultIndex:
+                case Error::InvalidResolution:
+                case Error::InvalidExpressionFlags:
+                    result = RFLErrcode_WrongParam;
+                    break;
+                case Error::ResourceMissing:
+                case Error::ResourceMalformed:
+                case Error::DisplayListOverflow:
+                    result = RFLErrcode_Broken;
+                    break;
+                default:
+                    break;
+                }
+            }
+            push_trace(RflOperationTrace {
+                .kind = RflOperationKind::InitCharModel,
+                .frame_index = _frame_index,
+                .path = std::string(RFL_RESOURCE_PATH),
+                .source = source,
+                .index = static_cast<s32>(index),
+                .result = result,
                 .expression_flags = expression_flags,
             });
             return result;

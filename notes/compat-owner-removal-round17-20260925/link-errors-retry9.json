@@ -1,0 +1,34 @@
+[
+  {
+    "symbol": "_RFLDrawOpa",
+    "references": "MiiFaceParts::drawOpa(RFLDrawCoreSetting const*) const in libsmg-pc-game.a[1086](MiiFaceParts.cpp.o)"
+  },
+  {
+    "symbol": "_RFLDrawOpaCore",
+    "references": "MiiFaceParts::drawOpa(RFLDrawCoreSetting const*) const in libsmg-pc-game.a[1086](MiiFaceParts.cpp.o)"
+  },
+  {
+    "symbol": "_RFLDrawXlu",
+    "references": "MiiFaceParts::drawXlu(RFLDrawCoreSetting const*) const in libsmg-pc-game.a[1086](MiiFaceParts.cpp.o)"
+  },
+  {
+    "symbol": "_RFLDrawXluCore",
+    "references": "MiiFaceParts::drawXlu(RFLDrawCoreSetting const*) const in libsmg-pc-game.a[1086](MiiFaceParts.cpp.o)"
+  },
+  {
+    "symbol": "_RFLLoadMaterialSetting",
+    "references": "MiiFacePartsHolder::drawExtra() const in libsmg-pc-game.a[1143](MiiFacePartsHolder.cpp.o)"
+  },
+  {
+    "symbol": "_RFLLoadVertexSetting",
+    "references": "MiiFacePartsHolder::drawExtra() const in libsmg-pc-game.a[1143](MiiFacePartsHolder.cpp.o)"
+  },
+  {
+    "symbol": "_RFLSetExpression",
+    "references": "MiiFaceParts::changeExpressionNormal() in libsmg-pc-game.a[1086](MiiFaceParts.cpp.o)\n      MiiFaceParts::changeExpressionBlink() in libsmg-pc-game.a[1086](MiiFaceParts.cpp.o)"
+  },
+  {
+    "symbol": "_RFLSetMtx",
+    "references": "MiiFaceParts::calcViewAndEntry() in libsmg-pc-game.a[1086](MiiFaceParts.cpp.o)"
+  }
+]

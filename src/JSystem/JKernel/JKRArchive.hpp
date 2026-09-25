@@ -126,6 +126,7 @@ public:
     [[nodiscard]] virtual void *getResource(std::uint16_t id) const;
 
     [[nodiscard]] virtual std::uint32_t getResSize(const void *pResource) const;
+    [[nodiscard]] std::uint32_t getExpandedResSize(const void *pResource) const;
 
     [[nodiscard]] void* getIdxResource(u32);
     virtual void* fetchResource(SDIFileEntry*, u32*) = 0;

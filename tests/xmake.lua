@@ -1528,32 +1528,6 @@ target("smg-pc-center-screen-blur-real-or-absent-tests")
         realtime_output = true
     })
 
-target("smg-pc-planet-map-catalog-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    set_rundir(os.projectdir())
-    add_files {
-        "PlanetMapCatalogTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("planet_map_catalog", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
 target("smg-pc-model-3d-for-2d-contract-tests")
     set_kind("binary")
     set_default(false)

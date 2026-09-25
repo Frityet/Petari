@@ -12,6 +12,11 @@
 #include "revolution/gx/GXVert.h"
 #include <revolution/gx/GXGeometry.h>
 #include <revolution/gx/GXTransform.h>
+#include <aurora/exception.hpp>
+#include <cstring>
+#include <limits>
+#include <stdexcept>
+#include <vector>
 
 namespace {
     static Mtx mViewMtx;
@@ -553,8 +558,67 @@ namespace TDDraw {
         GXSetFog(GX_FOG_PERSP_LIN, v11, v10, nearZ, farZ, color);
     }
 
-    // TDDraw::tileConversion8
-    // TDDraw::tileConversion16
+    namespace {
+        void validateTileConversion(const void* pTexture, u32 width, u32 height, u32 blockWidth, u32 bytesPerTexel) {
+            if (pTexture == nullptr || width % blockWidth != 0 || height % 4 != 0) {
+                aurora::throw_host_exception< std::invalid_argument >("Texture tiling requires a buffer and complete GX blocks");
+            }
+
+            if (static_cast< size_t >(width) > std::numeric_limits< size_t >::max() / height / bytesPerTexel) {
+                aurora::throw_host_exception< std::length_error >("Texture tiling dimensions overflow the native buffer size");
+            }
+        }
+    }  // namespace
+
+    void tileConversion8(u8* pTexture, u32 width, u32 height) {
+        if (width == 0 || height == 0) {
+            return;
+        }
+
+        validateTileConversion(pTexture, width, height, 8, 1);
+        const size_t bandSize = static_cast< size_t >(width) * 4;
+        std::vector< u8 > tileBuffer(bandSize);
+
+        for (u32 y = 0; y < height; y += 4) {
+            const size_t bandStart = static_cast< size_t >(y) * width;
+            size_t offset = 0;
+            for (u32 x = 0; x < width; x += 8) {
+                for (u32 row = 0; row < 4; row++) {
+                    for (u32 column = 0; column < 8; column++) {
+                        tileBuffer[offset++] = pTexture[bandStart + static_cast< size_t >(row) * width + x + column];
+                    }
+                }
+            }
+
+            std::memcpy(pTexture + bandStart, tileBuffer.data(), bandSize);
+        }
+    }
+
+    void tileConversion16(u16* pTexture, u32 width, u32 height) {
+        if (width == 0 || height == 0) {
+            return;
+        }
+
+        validateTileConversion(pTexture, width, height, 4, 2);
+        const size_t bandSize = static_cast< size_t >(width) * 8;
+        std::vector< u8 > tileBuffer(bandSize);
+
+        for (u32 y = 0; y < height; y += 4) {
+            const size_t bandStart = static_cast< size_t >(y) * width;
+            size_t offset = 0;
+            for (u32 x = 0; x < width; x += 4) {
+                for (u32 row = 0; row < 4; row++) {
+                    for (u32 column = 0; column < 4; column++) {
+                        const u16 texel = pTexture[bandStart + static_cast< size_t >(row) * width + x + column];
+                        tileBuffer[offset++] = static_cast< u8 >(texel >> 8);
+                        tileBuffer[offset++] = static_cast< u8 >(texel);
+                    }
+                }
+            }
+
+            std::memcpy(pTexture + bandStart, tileBuffer.data(), bandSize);
+        }
+    }
     // TDDraw::getTexel32
     // TDDraw::getTexel32
     // TDDraw::setTexel32

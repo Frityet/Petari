@@ -1,0 +1,96 @@
+{
+  "base": "6711b79ad079450a523bed95613c8873de1405f9",
+  "files": [
+    {
+      "path": "src/Game/AudioLib/AudSystem.cpp",
+      "before_sha256": "8d555ccd782ceef52ac0a7340032178b60a2c853972cd66be46fcca75936ea84",
+      "before_status": "?? src/Game/AudioLib/AudSystem.cpp",
+      "after_sha256": "eb4347cf31d9a3629bf7042e5bdfb870b4f931a5cae6b38adbc682667df367dd",
+      "action": "modify"
+    },
+    {
+      "path": "src/compat/AudioFacadeCompat.cpp",
+      "before_sha256": "8a34488002fe77c464fdbabf08d2b1bbf8245c27ffae9e3cfb918366f40bf9ca",
+      "before_status": "",
+      "after_sha256": "40f4a7272c3a11ee214b6d0b6a27f3070c54584e433251eb37e14c4fd0904aa5",
+      "action": "modify"
+    },
+    {
+      "path": "src/Game/System/AudSystemWrapper.hpp",
+      "before_sha256": "0b3d70aae9f1786e780c7741dfa9123d661c6ebc19fae0e2c19c200a18b5ce8c",
+      "before_status": "",
+      "after_sha256": "0e6578bda2d96e8d75f7e7aa9b48d31033642073f0042f99424f4d59deefed4e",
+      "action": "modify"
+    },
+    {
+      "path": "src/Game/System/AudSystemWrapper.cpp",
+      "before_sha256": "cb87e4b51597bedac89a188d7e0cef455d4fa25e0cc87b248c944fce0587ea35",
+      "before_status": "?? src/Game/System/AudSystemWrapper.cpp",
+      "after_sha256": "e6091320c43e51b2252e97792a71cccce285b53d56b5ac758f0b3174fb498c85",
+      "action": "modify"
+    },
+    {
+      "path": "src/Game/GameAudio/AudCameraWatcher.cpp",
+      "before_sha256": "4d6d979d4315983c6dc2f7075172a07c3902c969aa65cf2cfb8da1b44db76414",
+      "before_status": "?? src/Game/GameAudio/AudCameraWatcher.cpp",
+      "after_sha256": "449e64f2fc0d28b8d3003f36151488de6bb119a67b16db725f2fdbe1e2526440",
+      "action": "modify"
+    },
+    {
+      "path": "src/Game/GameAudio/AudEffectDirector.cpp",
+      "before_sha256": "c35f802d4c9180ac3c595e320d51a4306c61cb9c24ce1065ff8fcff55d411155",
+      "before_status": "?? src/Game/GameAudio/AudEffectDirector.cpp",
+      "after_sha256": "55d18759f7a9bdaf379d3dbdf28c38a298ca4fc06e4ff71437e4afdcf8043a74",
+      "action": "modify"
+    },
+    {
+      "path": "src/Game/AreaObj/SoundEmitterCube.cpp",
+      "before_sha256": "cb8bd4e3f775277668ac70aa50db2d93eaf055a08c82c8573351d61bf0a5c87a",
+      "before_status": "?? src/Game/AreaObj/SoundEmitterCube.cpp",
+      "after_sha256": "c15ef1b77e4d18601e511591bcd1b20b41a4dd008258cc6ff1404bad622e288a",
+      "action": "modify"
+    },
+    {
+      "path": "src/Game/AreaObj/SoundEmitterSphere.cpp",
+      "before_sha256": "18e9268993d51ed527cbbf84fa9f575235b3d4a673ff08845c85905aca39726a",
+      "before_status": "?? src/Game/AreaObj/SoundEmitterSphere.cpp",
+      "after_sha256": "e3424da8fd084c2a8626887b789ad1e67f92f6a9f81e6791db284069c1852000",
+      "action": "modify"
+    },
+    {
+      "path": "src/Game/Util/SoundUtil.cpp",
+      "before_sha256": "bc07411d9ab78a2ecdee4b1fd87dd4a0e70f6e3811bfdae71126897bb8fd0fff",
+      "before_status": "",
+      "after_sha256": "111278db7fe9c6a1fc38e353d41abbc234a8b9b262cfa2300c3ba35003dc4d06",
+      "action": "modify"
+    },
+    {
+      "path": "src/Game/AudioLib/AudMicWrap.cpp",
+      "before_sha256": "1fa15efb0ce92499afc3508c050891a8609dcffb12d285baac14bf6c8aafcf81",
+      "before_status": "?? src/Game/AudioLib/AudMicWrap.cpp",
+      "after_sha256": "b3dea3df32cd1b31d2f5cb4679fae6ffca51601789efbdf66e598c4ea9997c70",
+      "action": "modify"
+    },
+    {
+      "path": "src/Game/xmake.lua",
+      "before_sha256": "34c4f127aec32dcf7fe5635e5b3a4ceb4d36f218dc21a2a8c38a4cd94ab93a62",
+      "before_status": "M src/Game/xmake.lua",
+      "after_sha256": "630216fa043489da443726c5e042e0a55e3f95e4fef03778f44e85dc3a1e0f25",
+      "action": "modify"
+    },
+    {
+      "path": "notes/compat-owner-removal-round17-20260925/inactive-audio-sources.json",
+      "before_sha256": "6bb858ee8b32ff78da88cf22810573a28d3d5f4656aeda82ab6d2c1129ec066d",
+      "before_status": "",
+      "after_sha256": "5abc7b222cc1c0fceb8826abfa484515fed4d4018665d6a4cf26708d0324f13d",
+      "action": "modify"
+    },
+    {
+      "path": "notes/compat-owner-removal-round17-20260925/README.md",
+      "before_sha256": "249400aef1d2c57432a78592d11cbdb887771ae10afa39f5820ecec5021eeff1",
+      "before_status": "",
+      "after_sha256": "267c6ae5894c9a7c76caa37e2915e93daa36dce4eb59ab4c624f8572d47c89c4",
+      "action": "modify"
+    }
+  ]
+}

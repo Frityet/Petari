@@ -93,7 +93,59 @@ namespace MR {
                getStringLengthWithMessageTag(reinterpret_cast< wchar_t* >(messageInfo._0)) != 0;
     }
 
-    // getMessageLine
+    const wchar_t* getMessageLine(wchar_t* pDst, u32 capacity, const wchar_t* pMessage, u32 line) {
+        u32 currentLine = 0;
+
+        while (*pMessage != 0) {
+            if (currentLine == line) {
+                break;
+            }
+
+            if (*pMessage == 0x1A) {
+                pMessage++;
+                MessageEditorMessageTag tag(pMessage);
+                pMessage += tag.getSkipLength();
+
+                if (tag.isGroupTagId(1, 1)) {
+                    break;
+                }
+            } else {
+                if (*pMessage == L'\n') {
+                    currentLine++;
+                }
+
+                pMessage++;
+            }
+        }
+
+        for (u32 count = 0; count < capacity; count++) {
+            if (*pMessage == 0x1A) {
+                *pDst++ = *pMessage++;
+                MessageEditorMessageTag tag(pMessage);
+
+                for (s32 i = 0; i < static_cast< s32 >(tag.getSkipLength()); i++) {
+                    *pDst = *pMessage;
+                    pMessage++;
+                    pDst++;
+                }
+            }
+
+            if (*pMessage == L'\n' || *pMessage == 0) {
+                break;
+            }
+
+            *pDst = *pMessage;
+
+            if (count < capacity - 1) {
+                pDst++;
+                pMessage++;
+            }
+        }
+
+        *pDst = 0;
+        return pDst;
+    }
+
     s32 countMessageLine(const wchar_t* pMessage) {
         s32 count = 1;
         while (*pMessage != 0) {

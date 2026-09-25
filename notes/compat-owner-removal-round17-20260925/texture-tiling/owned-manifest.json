@@ -1,0 +1,19 @@
+{
+  "paths": [
+    {
+      "path": "src/Game/Util/DirectDraw.cpp",
+      "before_sha256": "8bd3de308bedd71e4b0736c16109d1669fe34021bf63714f1ce97d8d1cbbbdd8",
+      "after_sha256": "a914b0601f8d000802492c91d2c66441be9ab964cac79cc536ee35f396edc854",
+      "reason": "Actual DirectDraw owner GX8/GX16 in-place tiling and explicit native-u16-to-big-endian contract."
+    },
+    {
+      "path": "src/Game/Util/DirectDraw.hpp",
+      "before_sha256": "13259a1b6ecb6cdf1093bec332f404b1c7841ee871cd72599ee1ef0e2653ead4",
+      "after_sha256": "adb82b0b38d5eb304a2612b3c9cf9c02f85b11991876d957fa2b059ad1b45f52",
+      "reason": "Actual DirectDraw owner GX8/GX16 in-place tiling and explicit native-u16-to-big-endian contract."
+    }
+  ],
+  "builds_run": false,
+  "tests_run": false,
+  "decomp_changes": false
+}

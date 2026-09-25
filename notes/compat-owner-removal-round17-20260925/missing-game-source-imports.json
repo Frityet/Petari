@@ -1,0 +1,4544 @@
+[
+  {
+    "source": "decomp/src/Game/AreaObj/AreaFormDrawer.cpp",
+    "destination": "src/Game/AreaObj/AreaFormDrawer.cpp",
+    "donor_sha256": "60c3c23a0fa0334c9de036d64dc91f496397e13c6ac6d409dd84c0d63e28468d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AreaObj/AstroChangeStageCube.cpp",
+    "destination": "src/Game/AreaObj/AstroChangeStageCube.cpp",
+    "donor_sha256": "5b4b9b1fa6958c4cfb9c3a35bdcd4c67b66119f24d0879b4be43a783f9c17b11",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AreaObj/AudioEffectArea.cpp",
+    "destination": "src/Game/AreaObj/AudioEffectArea.cpp",
+    "donor_sha256": "62f86fdb4c0248880283df4f1e375a954b12f6185fbb91d42e4b41e4f59b0a7d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AreaObj/BgmProhibitArea.cpp",
+    "destination": "src/Game/AreaObj/BgmProhibitArea.cpp",
+    "donor_sha256": "af8669570d3e9d3df94309908cad5f0652a73bb2b013d725782d9fb7d150fad4",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AreaObj/BigBubbleCameraArea.cpp",
+    "destination": "src/Game/AreaObj/BigBubbleCameraArea.cpp",
+    "donor_sha256": "7c5b2e15eac19825cbfddeb8b13bd5df61c4ba603b8f953e534cd05e8d7f2877",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AreaObj/BigBubbleGoalArea.cpp",
+    "destination": "src/Game/AreaObj/BigBubbleGoalArea.cpp",
+    "donor_sha256": "e887e2f69098b6270cbaa2d2826e5a9a4308284ab70154bac165b3d017a9883d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AreaObj/ChangeBgmCube.cpp",
+    "destination": "src/Game/AreaObj/ChangeBgmCube.cpp",
+    "donor_sha256": "034104d912528cde43d09ca48db2b5b8c9f6d087d1cf1208915e9cfd1b3a33a4",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AreaObj/DeathArea.cpp",
+    "destination": "src/Game/AreaObj/DeathArea.cpp",
+    "donor_sha256": "39b599ad5d5a5ec94657461ee66f73c054eb7f66feb469fa84ea665341b2cd95",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AreaObj/FollowCollisionArea.cpp",
+    "destination": "src/Game/AreaObj/FollowCollisionArea.cpp",
+    "donor_sha256": "d7374fbd9d448ae762b5aa9e6d2e7655a1f0acd2cdc1cbabd949248774d53000",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/AreaObj/HazeCube.cpp",
+    "destination": "src/Game/AreaObj/HazeCube.cpp",
+    "donor_sha256": "0e78d764a444bff26e031a42a5ea48d8b958c65e6fc4b3450e64c4f69ac9a1cd",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AreaObj/PlayerSeArea.cpp",
+    "destination": "src/Game/AreaObj/PlayerSeArea.cpp",
+    "donor_sha256": "6df63e7d688301e7c032333126aa29ed38770f6875bfbb09493867759b64bc8c",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AreaObj/QuakeEffectArea.cpp",
+    "destination": "src/Game/AreaObj/QuakeEffectArea.cpp",
+    "donor_sha256": "e55c025f3237ea0d394d94ec13fb6da26b6067c38d12163c8d8ed5f3ef37a2ac",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AreaObj/SoundEmitterCube.cpp",
+    "destination": "src/Game/AreaObj/SoundEmitterCube.cpp",
+    "donor_sha256": "cb8bd4e3f775277668ac70aa50db2d93eaf055a08c82c8573351d61bf0a5c87a",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AreaObj/SoundEmitterSphere.cpp",
+    "destination": "src/Game/AreaObj/SoundEmitterSphere.cpp",
+    "donor_sha256": "18e9268993d51ed527cbbf84fa9f575235b3d4a673ff08845c85905aca39726a",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AreaObj/SpinGuidanceArea.cpp",
+    "destination": "src/Game/AreaObj/SpinGuidanceArea.cpp",
+    "donor_sha256": "fae191e1a0ec958abad48444bedca0e9e01da3a40701d18d6c9c9072d425569f",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AreaObj/SunLightArea.cpp",
+    "destination": "src/Game/AreaObj/SunLightArea.cpp",
+    "donor_sha256": "900414b338544e932d6db270bc9c1af21464e4c1fbcb87313934d32b0fcda645",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AudioLib/AudAnmSoundObject.cpp",
+    "destination": "src/Game/AudioLib/AudAnmSoundObject.cpp",
+    "donor_sha256": "85d1adc65a4361ec7a9bb6e517f3733107002fb9ebe03ad88e5e4f2a3ee8cc74",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AudioLib/AudAudience.cpp",
+    "destination": "src/Game/AudioLib/AudAudience.cpp",
+    "donor_sha256": "43b2b9af977be4d1e0118c4389b62d2a01b44b9c82e4f03663845c010fbf08d9",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AudioLib/AudEffector.cpp",
+    "destination": "src/Game/AudioLib/AudEffector.cpp",
+    "donor_sha256": "dbd8a86289bd8667dc74ed9fee001e18c75762f76bff8856a9c7c4491102199e",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AudioLib/AudMicWrap.cpp",
+    "destination": "src/Game/AudioLib/AudMicWrap.cpp",
+    "donor_sha256": "1fa15efb0ce92499afc3508c050891a8609dcffb12d285baac14bf6c8aafcf81",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AudioLib/AudRemixMgr.cpp",
+    "destination": "src/Game/AudioLib/AudRemixMgr.cpp",
+    "donor_sha256": "66799d86e003da6e82659b59d18080f41f0e87fd18026600c6847f32f0d35f90",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AudioLib/AudRemixSequencer.cpp",
+    "destination": "src/Game/AudioLib/AudRemixSequencer.cpp",
+    "donor_sha256": "836098f5b58274f0fbdc2c3e3ea7e488860094b0a03ca6e14d01a589446faa34",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AudioLib/AudSceneMgr.cpp",
+    "destination": "src/Game/AudioLib/AudSceneMgr.cpp",
+    "donor_sha256": "e3061d0a95521fb11b4fff65436ebfe19227a51db480091633056b9959a2d90c",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AudioLib/AudSeStrategy.cpp",
+    "destination": "src/Game/AudioLib/AudSeStrategy.cpp",
+    "donor_sha256": "a6a082981656d507b91dc8d920e0a52f7d1a336be2d59836762305c431514bc0",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AudioLib/AudSoundInfo.cpp",
+    "destination": "src/Game/AudioLib/AudSoundInfo.cpp",
+    "donor_sha256": "4c628a0ee404c1b1dfdadecb9cceede3a41bc987d4a8cb8adc9a1a972f708600",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AudioLib/AudSoundObjHolder.cpp",
+    "destination": "src/Game/AudioLib/AudSoundObjHolder.cpp",
+    "donor_sha256": "79db650b0cae8abce97c7c7f0c79d6388290f0f59cf22db28e5507b389616056",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AudioLib/AudSoundObject.cpp",
+    "destination": "src/Game/AudioLib/AudSoundObject.cpp",
+    "donor_sha256": "defe18d733b1aba1d0b322a08c6bbd6d3e43235798f723dd4104c00d07d147fe",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AudioLib/AudSoundObject_Gohara.cpp",
+    "destination": "src/Game/AudioLib/AudSoundObject_Gohara.cpp",
+    "donor_sha256": "8f511d82a320637c27e241ec13872db1a4a077756d81e1175022845ca8309cd3",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AudioLib/AudSoundObject_Kawamura.cpp",
+    "destination": "src/Game/AudioLib/AudSoundObject_Kawamura.cpp",
+    "donor_sha256": "42a7b3b573e886e7e18f4fcabec4e2ec6d074a677f45e97594aa97c16dd4ce69",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AudioLib/AudSoundObject_Takezawa.cpp",
+    "destination": "src/Game/AudioLib/AudSoundObject_Takezawa.cpp",
+    "donor_sha256": "2822eec102ce9f7ded1f7d016cd0f80fb25b116192ff4dd9d27ee0a0a2aa7ebc",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AudioLib/AudSpeakerWrap.cpp",
+    "destination": "src/Game/AudioLib/AudSpeakerWrap.cpp",
+    "donor_sha256": "421cff557ec320322a2a84244e00dadf8504bf4b63c2c16c60e22dfd888a9fe1",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AudioLib/AudSystem.cpp",
+    "destination": "src/Game/AudioLib/AudSystem.cpp",
+    "donor_sha256": "8d555ccd782ceef52ac0a7340032178b60a2c853972cd66be46fcca75936ea84",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AudioLib/AudUtil.cpp",
+    "destination": "src/Game/AudioLib/AudUtil.cpp",
+    "donor_sha256": "c8418d2bf4c228d617329e8f6b7ff29f83baec4cf82c86d38820899291c6db0e",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/AudioLib/OverwriteJAudio.cpp",
+    "destination": "src/Game/AudioLib/OverwriteJAudio.cpp",
+    "donor_sha256": "87ce154580bf86ebc72bf3bdb0b724e7622d2ad3440daeaa6cbf6a09da8e2f5e",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossAccessor.cpp",
+    "destination": "src/Game/Boss/BossAccessor.cpp",
+    "donor_sha256": "97d4a4eb959d1f346307a502796662f563d83088cc95c0e419334295da911c2b",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossBegoman.cpp",
+    "destination": "src/Game/Boss/BossBegoman.cpp",
+    "donor_sha256": "1c4f6ab40b8ce271d61f6aba570387d88031d453437986ab5d763e839ac656de",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossBegomanHead.cpp",
+    "destination": "src/Game/Boss/BossBegomanHead.cpp",
+    "donor_sha256": "c2599a8b59e6977844ad07b45ba53b12a6356839671d9fa4c4ebd2cc699521d3",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossKameck.cpp",
+    "destination": "src/Game/Boss/BossKameck.cpp",
+    "donor_sha256": "ac6462556479d4308ca2e3f08c63f85a34709ee61786a6ea702a9c9cad730242",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossKameckAction.cpp",
+    "destination": "src/Game/Boss/BossKameckAction.cpp",
+    "donor_sha256": "972b7f4524e12cba0ade586a83a5dd8a1519cd1902de230af6e1d984f999bd34",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossKameckBarrier.cpp",
+    "destination": "src/Game/Boss/BossKameckBarrier.cpp",
+    "donor_sha256": "f5ca1b8b6d20e04bb4b7dd36b39d34954cb52ba4e44512e6609b3e2fd53731b5",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossKameckBattleDemo.cpp",
+    "destination": "src/Game/Boss/BossKameckBattleDemo.cpp",
+    "donor_sha256": "d62dcfc8ed5a903378de0575d80a9669e693c30cda584413e4abed1112da16b0",
+    "cp932_literal_groups": 14
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossKameckBattlePattarn.cpp",
+    "destination": "src/Game/Boss/BossKameckBattlePattarn.cpp",
+    "donor_sha256": "d729506fe3dd0161ea9dc967b75dd45fc4038e9e91677af977454abe0e0b117f",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossKameckMoveRail.cpp",
+    "destination": "src/Game/Boss/BossKameckMoveRail.cpp",
+    "donor_sha256": "90c170c4ce494f6d86b5c3a4a0e583b4ec81a28938895d1283bb6eb5d864f162",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossKameckSequencer.cpp",
+    "destination": "src/Game/Boss/BossKameckSequencer.cpp",
+    "donor_sha256": "42e7784ba2f17203ad9735801318d9ec10a318d729cf80dfda542a866d776909",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossKameckStateBattle.cpp",
+    "destination": "src/Game/Boss/BossKameckStateBattle.cpp",
+    "donor_sha256": "34cf7a4e7c52957d69139e23a84f0d50f0c6a42736e54fb5316d227eebe9ef62",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossKameckVs1.cpp",
+    "destination": "src/Game/Boss/BossKameckVs1.cpp",
+    "donor_sha256": "4fcd4fe3d44cc6553922f9dc58e5b1d62469a96c6d99f8062922751b5908e4b5",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossKameckVs2.cpp",
+    "destination": "src/Game/Boss/BossKameckVs2.cpp",
+    "donor_sha256": "5309b4eaa50190ee67836e8654eab2ea0a21b19eeadbd690aa325c68c2823f76",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossStinkBug.cpp",
+    "destination": "src/Game/Boss/BossStinkBug.cpp",
+    "donor_sha256": "681a04166c969f1cdee546cc6ed21256da549482f94081405e93c47b77ee0a02",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossStinkBugActionBase.cpp",
+    "destination": "src/Game/Boss/BossStinkBugActionBase.cpp",
+    "donor_sha256": "feeb6ca186b077c0f611498399eba087b5407a29161e38bb02a220b0aa2b3295",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossStinkBugActionFlyHigh.cpp",
+    "destination": "src/Game/Boss/BossStinkBugActionFlyHigh.cpp",
+    "donor_sha256": "f0da3f97e758a2c4b15b3d17b9c5440fe8701e40ef3ed54e820b058194642c21",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossStinkBugActionFlyLow.cpp",
+    "destination": "src/Game/Boss/BossStinkBugActionFlyLow.cpp",
+    "donor_sha256": "021da0f1e37b3f3aac2decb1cd0894292ce3f774f064a8499a108fd068a059e1",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossStinkBugActionGround.cpp",
+    "destination": "src/Game/Boss/BossStinkBugActionGround.cpp",
+    "donor_sha256": "034ac993ee0467750452ac37ce98eabce9eea2625e91b8bf821cc28477f743d6",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossStinkBugActionSequencer.cpp",
+    "destination": "src/Game/Boss/BossStinkBugActionSequencer.cpp",
+    "donor_sha256": "d041989e6b6a03b434bf4a7860a1e0f924d8e0877093d45962151870f1f60f6c",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossStinkBugAngryDemo.cpp",
+    "destination": "src/Game/Boss/BossStinkBugAngryDemo.cpp",
+    "donor_sha256": "0dc0b7db8330920602276c158ba6dc5bf05e1f59bab27cc01331f06e6e6b6c73",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossStinkBugBomb.cpp",
+    "destination": "src/Game/Boss/BossStinkBugBomb.cpp",
+    "donor_sha256": "97878ad6c429c723a32b78ff0fcb7e5caff7b4e46f7f644de963043229b91c2f",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossStinkBugBombHolder.cpp",
+    "destination": "src/Game/Boss/BossStinkBugBombHolder.cpp",
+    "donor_sha256": "52bf2ebb59d42fab40476514850b376c5f399c5b2428823ef4d187bf9a126ff7",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossStinkBugFinishDemo.cpp",
+    "destination": "src/Game/Boss/BossStinkBugFinishDemo.cpp",
+    "donor_sha256": "86cfcbd033e42083c014a8bde959221a3c841ce903d70cadbc8d1d6731573d0c",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossStinkBugFlyDemo.cpp",
+    "destination": "src/Game/Boss/BossStinkBugFlyDemo.cpp",
+    "donor_sha256": "06c26cf679b7c9e8606d5f829531c196c5629af07160ba8a19fb2fd88bc532c6",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossStinkBugFunction.cpp",
+    "destination": "src/Game/Boss/BossStinkBugFunction.cpp",
+    "donor_sha256": "dfb955263efd6cc87619cc43a56ce5929f95be62e5a0feaac7699bd73518dfff",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/BossStinkBugOpeningDemo.cpp",
+    "destination": "src/Game/Boss/BossStinkBugOpeningDemo.cpp",
+    "donor_sha256": "b182c4e44d81f60ce0e4007b374ee461c1363a38588b73dd5ecbc13577ea9f32",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackun.cpp",
+    "destination": "src/Game/Boss/DinoPackun.cpp",
+    "donor_sha256": "64d4fd830aa92bc11c92982449ccf48f27c4e541c0d72c2982ec04d4ac7e47a5",
+    "cp932_literal_groups": 10
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunAction.cpp",
+    "destination": "src/Game/Boss/DinoPackunAction.cpp",
+    "donor_sha256": "3b8fde6756ce9510bf29868fecd8efa5251e044bf784c2abde105280ff21fc1e",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunBall.cpp",
+    "destination": "src/Game/Boss/DinoPackunBall.cpp",
+    "donor_sha256": "302e94906a256fc66c988536722b09e1af7480c6cd0159865f9cc83ad50b52c7",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunBattleEgg.cpp",
+    "destination": "src/Game/Boss/DinoPackunBattleEgg.cpp",
+    "donor_sha256": "e815193bcd47b3d48db520e75c1f3b4db749f3e7e7aeb1c53f0bc3857399c6ab",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunBattleEggVs2.cpp",
+    "destination": "src/Game/Boss/DinoPackunBattleEggVs2.cpp",
+    "donor_sha256": "9114c4a8d952a3a70029080be97be1f260eea57bf8862d4478f358a717650023",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunBattleVs1Lv1.cpp",
+    "destination": "src/Game/Boss/DinoPackunBattleVs1Lv1.cpp",
+    "donor_sha256": "d489a8b2f10646f3bbadc5af74efbfda2bb13941abcfc580f76d4d4750627351",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunBattleVs1Lv2.cpp",
+    "destination": "src/Game/Boss/DinoPackunBattleVs1Lv2.cpp",
+    "donor_sha256": "28a350356c5042ca3890306b9d7aa6850279e939306ed5de2d2c1ac811cb3045",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunBattleVs2Lv1.cpp",
+    "destination": "src/Game/Boss/DinoPackunBattleVs2Lv1.cpp",
+    "donor_sha256": "fa1e80697318842aaf30640c8afa558a1ab7cefd1a7896c5b33641efc2a850ae",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunDemo.cpp",
+    "destination": "src/Game/Boss/DinoPackunDemo.cpp",
+    "donor_sha256": "6c045836dc1c358eabcf8335f5c1de311001f927468727c2478ab07041080ee7",
+    "cp932_literal_groups": 9
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunDemoPosition.cpp",
+    "destination": "src/Game/Boss/DinoPackunDemoPosition.cpp",
+    "donor_sha256": "b84ab81a081cda41388e2e8da930deb5f71e1d14112c3d153f4f4724eea7f0e9",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunEggShell.cpp",
+    "destination": "src/Game/Boss/DinoPackunEggShell.cpp",
+    "donor_sha256": "c9ba339ac8c183ed6cb83713c072c22ccfd43b57e30f4f768860d82bf66acc62",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunFire.cpp",
+    "destination": "src/Game/Boss/DinoPackunFire.cpp",
+    "donor_sha256": "0cdd9c772f45c2da831cae8f9d46648656f2dc24c97362514be1861a673ef3b1",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunSequencer.cpp",
+    "destination": "src/Game/Boss/DinoPackunSequencer.cpp",
+    "donor_sha256": "325998e77dd7c4c423f76933ce218c4406c9d896bc25d6120e9a21776dd4b27e",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunStateAwake.cpp",
+    "destination": "src/Game/Boss/DinoPackunStateAwake.cpp",
+    "donor_sha256": "679fe9f8fe7d188a707f5352c622ba5b6a933fb83b42cd4b6144a6bc2293ea2c",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunStateDamage.cpp",
+    "destination": "src/Game/Boss/DinoPackunStateDamage.cpp",
+    "donor_sha256": "2a915678aee02d751a66bbc16ac60de780a990f0dcd0e72000d74de7676f5fd2",
+    "cp932_literal_groups": 8
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunStateFire.cpp",
+    "destination": "src/Game/Boss/DinoPackunStateFire.cpp",
+    "donor_sha256": "68370b8d9d63201a0f73e58f3e9206719c6d68991890a74c5796f8ed24eec3ef",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunTail.cpp",
+    "destination": "src/Game/Boss/DinoPackunTail.cpp",
+    "donor_sha256": "0e197192e2c5f1f75d507cb133c12c123f74b593778c745f4b070efb2d555923",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunTailNode.cpp",
+    "destination": "src/Game/Boss/DinoPackunTailNode.cpp",
+    "donor_sha256": "e5c0048070cd69342386191cc6b6357c37c6c7fe836fa41d7b2d18f8a1544b50",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunTailPart.cpp",
+    "destination": "src/Game/Boss/DinoPackunTailPart.cpp",
+    "donor_sha256": "41fe25a426a64ac632dde4bf1f8fcac17873368a8c32f317087d3c47b7c49725",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunTailRoot.cpp",
+    "destination": "src/Game/Boss/DinoPackunTailRoot.cpp",
+    "donor_sha256": "32b2ccec0834148023720a91b2196c6b6a7f08b3f75348cfea18c4ec85004e6d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunTrackFire.cpp",
+    "destination": "src/Game/Boss/DinoPackunTrackFire.cpp",
+    "donor_sha256": "c33116065c260d4b0223caa5fb6031805d0e97f2d3e3d741f8519d9ea0079873",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunVs1.cpp",
+    "destination": "src/Game/Boss/DinoPackunVs1.cpp",
+    "donor_sha256": "7cfe9ca195e0d2eacf0b7bf282d40715419f4bedf0317fcd6b9a3bd1989315ba",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/DinoPackunVs2.cpp",
+    "destination": "src/Game/Boss/DinoPackunVs2.cpp",
+    "donor_sha256": "cdabd82d4aab42e2f8bb13d2292d973ab90ff848f6f1859b91c567c4b145e6a9",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/Dodoryu.cpp",
+    "destination": "src/Game/Boss/Dodoryu.cpp",
+    "donor_sha256": "f1361dafe0baeb3db6b44ad10ef5b83e2981442062d96dd401113dd6a32fd696",
+    "cp932_literal_groups": 7
+  },
+  {
+    "source": "decomp/src/Game/Boss/DodoryuDemo.cpp",
+    "destination": "src/Game/Boss/DodoryuDemo.cpp",
+    "donor_sha256": "c4b4e25c796caf7b398c812b1f08b8fd6deb875d9073edaceae5259e825264a4",
+    "cp932_literal_groups": 10
+  },
+  {
+    "source": "decomp/src/Game/Boss/DodoryuHill.cpp",
+    "destination": "src/Game/Boss/DodoryuHill.cpp",
+    "donor_sha256": "b55c09abd0f38fa85eb477eff57032f0c6d8b3ddd89f9744bf4623a0d2ae37b6",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/DodoryuMove.cpp",
+    "destination": "src/Game/Boss/DodoryuMove.cpp",
+    "donor_sha256": "053040f10aed15ee25430c90a1378509ef1921f4138cd25ebca85ac3a2a02fd3",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/DodoryuStateBase.cpp",
+    "destination": "src/Game/Boss/DodoryuStateBase.cpp",
+    "donor_sha256": "88a8ac3c46a844e3a02bf067aa7ea3b3b56765a24839b48e765adf4e6f1b5e05",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/DodoryuStateLv1.cpp",
+    "destination": "src/Game/Boss/DodoryuStateLv1.cpp",
+    "donor_sha256": "9e01c35538ac2227edf9f3523e0c998a85f2ae7c3b3a44a1e213f1f2e76a8ae7",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/DodoryuStateLv2.cpp",
+    "destination": "src/Game/Boss/DodoryuStateLv2.cpp",
+    "donor_sha256": "3834bab396d4a7e0e074637ebcf16178d69fb287eaaa5a264543f6cc88c5d887",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/DodoryuStateWait.cpp",
+    "destination": "src/Game/Boss/DodoryuStateWait.cpp",
+    "donor_sha256": "face946726a748493cea9cab5c9efa7391fc00696a5ccfbc489ab471363ec2f7",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/DodoryuUtil.cpp",
+    "destination": "src/Game/Boss/DodoryuUtil.cpp",
+    "donor_sha256": "7b49ff7e88f421060553d90aba9aca8bcd8715160f0880ef872325295333ba2d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/Koopa.cpp",
+    "destination": "src/Game/Boss/Koopa.cpp",
+    "donor_sha256": "86fcd79bda674ab57c311fb4bd41a3974342e13cf671105631fff9bc3cd7f4a4",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaBattleBase.cpp",
+    "destination": "src/Game/Boss/KoopaBattleBase.cpp",
+    "donor_sha256": "42e5518513de2a70f58036355aa90b4f7e8fc7126100f82b30cd5133f96302af",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaBattleMain.cpp",
+    "destination": "src/Game/Boss/KoopaBattleMain.cpp",
+    "donor_sha256": "91ec8f4887f9f11e57b6802f9cef5f40cb26a8cf388ff18860fde4db1c77a8ad",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaBattleStairsBase.cpp",
+    "destination": "src/Game/Boss/KoopaBattleStairsBase.cpp",
+    "donor_sha256": "d5c35eb9360ab240f5f6ad391d2a63a5e71e8a68e8b838fa8cbcc73b557d1bdd",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaBattleStairsVs1.cpp",
+    "destination": "src/Game/Boss/KoopaBattleStairsVs1.cpp",
+    "donor_sha256": "9570807294660625fc6d546dbbe63c15b4e9d3d5059b95bebcdd9cd34fbaba0f",
+    "cp932_literal_groups": 6
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaBattleStairsVs3.cpp",
+    "destination": "src/Game/Boss/KoopaBattleStairsVs3.cpp",
+    "donor_sha256": "3d0abd863e043d98ab3f64b472e748d66e27b0190bb3be45628b3dfce756e500",
+    "cp932_literal_groups": 4
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaBattleVs3Lv1.cpp",
+    "destination": "src/Game/Boss/KoopaBattleVs3Lv1.cpp",
+    "donor_sha256": "5b941e1a73a2ccd51141ba608342027ce85e9fdaa6d8fb7d54ac2249592f58ce",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaBattleVs3Lv2.cpp",
+    "destination": "src/Game/Boss/KoopaBattleVs3Lv2.cpp",
+    "donor_sha256": "c8498129368368ab1286c54196734a40af7cd2cf14da726dba3805148c1cb2a8",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaDemoFallToPlanetVs3Lv2.cpp",
+    "destination": "src/Game/Boss/KoopaDemoFallToPlanetVs3Lv2.cpp",
+    "donor_sha256": "f9f088e49de79da2557571c43d96f3c9ae189e87d202f0299d5c5a623e32b49a",
+    "cp932_literal_groups": 9
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaDemoFallToPlanetVs3Lv3.cpp",
+    "destination": "src/Game/Boss/KoopaDemoFallToPlanetVs3Lv3.cpp",
+    "donor_sha256": "52da8d81d0898b1c3d2b7c8a2fbceb80f772c8857f2f83fbe891325befc331bf",
+    "cp932_literal_groups": 9
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaDemoJumpToPlanet.cpp",
+    "destination": "src/Game/Boss/KoopaDemoJumpToPlanet.cpp",
+    "donor_sha256": "5068044318bc0691ea3e5908a6966772f66573833d6aaf5682e2517b5f91da92",
+    "cp932_literal_groups": 14
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaDemoPowerUp.cpp",
+    "destination": "src/Game/Boss/KoopaDemoPowerUp.cpp",
+    "donor_sha256": "fa0b6b69fee0270863d9fcf299016b307a1d975b55fda0cf132cd77dbb9339e4",
+    "cp932_literal_groups": 16
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaFigureBall.cpp",
+    "destination": "src/Game/Boss/KoopaFigureBall.cpp",
+    "donor_sha256": "cac81422558184725ecb64cbdc97f213952a428cf1bd7802ad4ca4bb0df7d8af",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaFireShort.cpp",
+    "destination": "src/Game/Boss/KoopaFireShort.cpp",
+    "donor_sha256": "0ed16ca8304b0fbe2aeec011cd0cad51fad9da0949a22c473476f8f1e1fb3e64",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaFireStairs.cpp",
+    "destination": "src/Game/Boss/KoopaFireStairs.cpp",
+    "donor_sha256": "3b51b06a092cffcb576bd102208c03dd33a898d419ca926e024f5e5e48e44def",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaFunction.cpp",
+    "destination": "src/Game/Boss/KoopaFunction.cpp",
+    "donor_sha256": "3292aeaf80c8dd64e7901d235bd3f03eda5e75ac48214166c926684fa64a6263",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaParts.cpp",
+    "destination": "src/Game/Boss/KoopaParts.cpp",
+    "donor_sha256": "1ae2ffbf6152969a1991b11a619a3771a73ca0f0cc7358ee841bbb966a7daa9b",
+    "cp932_literal_groups": 32
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaPlanetShadow.cpp",
+    "destination": "src/Game/Boss/KoopaPlanetShadow.cpp",
+    "donor_sha256": "c0088b886a41f11c3db7a317cfb5ddf753426560d577bb8dd61991289d011e7d",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaPowerUpSwitch.cpp",
+    "destination": "src/Game/Boss/KoopaPowerUpSwitch.cpp",
+    "donor_sha256": "17f8a32c938068c8f7802a3cfba4d31621b3d2df6f6135f52fffb001436013c1",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaRestarterVs3.cpp",
+    "destination": "src/Game/Boss/KoopaRestarterVs3.cpp",
+    "donor_sha256": "4a38da5cc6b098d15ead8e617f4b9b17286b03adc1e00da5634a2ac1728df5c4",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaRockBreak.cpp",
+    "destination": "src/Game/Boss/KoopaRockBreak.cpp",
+    "donor_sha256": "28e9e601bd82212a0157a27d62ae630010d3984f3fe976cf80c4773d3a126d4a",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaSensorCtrl.cpp",
+    "destination": "src/Game/Boss/KoopaSensorCtrl.cpp",
+    "donor_sha256": "26ae82158c74c702c048170bdaf8af8f0ee76ef1eb0245f73f03749bd064634e",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaSequencer.cpp",
+    "destination": "src/Game/Boss/KoopaSequencer.cpp",
+    "donor_sha256": "b1cd9464364c68ceb855b416b49138f9c470e72292b2b9e9fe74dd444a019120",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaSequencerVs1.cpp",
+    "destination": "src/Game/Boss/KoopaSequencerVs1.cpp",
+    "donor_sha256": "ea323c196083bde9923be8d549216760366f95f10224166f2d1d4c6b3ed31fdf",
+    "cp932_literal_groups": 15
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaSequencerVs2.cpp",
+    "destination": "src/Game/Boss/KoopaSequencerVs2.cpp",
+    "donor_sha256": "c9b7d10bc75e4586880220c89c3bad6b3b539bdb69bf0230f8a891260a95221f",
+    "cp932_literal_groups": 11
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaSequencerVs3.cpp",
+    "destination": "src/Game/Boss/KoopaSequencerVs3.cpp",
+    "donor_sha256": "b0389559f570d60f2fc9246ba1c8d0a08e2529391a7c09ad555f540a16b693a3",
+    "cp932_literal_groups": 17
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaShockWave.cpp",
+    "destination": "src/Game/Boss/KoopaShockWave.cpp",
+    "donor_sha256": "9edc1ba10d90f48f559df1242665157f188e69fd3956b5ea2ec0424c37d5ec30",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaStateAttackFireLong.cpp",
+    "destination": "src/Game/Boss/KoopaStateAttackFireLong.cpp",
+    "donor_sha256": "486666cde4c263bcb3c11f2be8095e8c1f5aceb68d98045d052d4b753edf031a",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaStateAttackFireShort.cpp",
+    "destination": "src/Game/Boss/KoopaStateAttackFireShort.cpp",
+    "donor_sha256": "627fb53483bb9578fb894d5c20ddc8b9f60a6708be4321656346158faaef38b0",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaStateAttackHipDrop.cpp",
+    "destination": "src/Game/Boss/KoopaStateAttackHipDrop.cpp",
+    "donor_sha256": "6970cbce41506b19b634b976c9ab91007c28337fe614bae982a5fd81e069e8d3",
+    "cp932_literal_groups": 10
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaStateAttackRoll.cpp",
+    "destination": "src/Game/Boss/KoopaStateAttackRoll.cpp",
+    "donor_sha256": "c5ccbfc781f0a18ae31681a9c1bbb2095da82b409a97792040b149eac9a75919",
+    "cp932_literal_groups": 9
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaStateAttackShockWave.cpp",
+    "destination": "src/Game/Boss/KoopaStateAttackShockWave.cpp",
+    "donor_sha256": "4e1b7130de4426b98251804e73ed3cb8cab1dc0de5776aadda20308be4ea071d",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaStateAttackSpin.cpp",
+    "destination": "src/Game/Boss/KoopaStateAttackSpin.cpp",
+    "donor_sha256": "66b6eb146df9b5fc918d4eb8f5642dbc95895bea1eddec0b177450ac5cd1e946",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaStateChaseRoll.cpp",
+    "destination": "src/Game/Boss/KoopaStateChaseRoll.cpp",
+    "donor_sha256": "977db3842cdbc2129ddb62f63cf276ed2f89c5996ac6bf2952dafedec4963c68",
+    "cp932_literal_groups": 6
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaStateDamageEscape.cpp",
+    "destination": "src/Game/Boss/KoopaStateDamageEscape.cpp",
+    "donor_sha256": "7bea8baf1e5af28a26eeeec22a1703b46e9d710b70620116fb7f7a9dde70781f",
+    "cp932_literal_groups": 13
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaStateGuard.cpp",
+    "destination": "src/Game/Boss/KoopaStateGuard.cpp",
+    "donor_sha256": "f856d25c9111942b9af74420d1ce2a1c0f335a9d5d27876376b05b48a73fe9eb",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaStateJumpAway.cpp",
+    "destination": "src/Game/Boss/KoopaStateJumpAway.cpp",
+    "donor_sha256": "7c348b5ceca59c6a3be8a31b27f50a2615e40185839737ed082bd53e2bdaf348",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaSubSequenceBattle.cpp",
+    "destination": "src/Game/Boss/KoopaSubSequenceBattle.cpp",
+    "donor_sha256": "ba420ebcacc0d3b6e24dcf2d5e2bf7ddd168022341622ca837428ea1c6173eca",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaSwitchKeeper.cpp",
+    "destination": "src/Game/Boss/KoopaSwitchKeeper.cpp",
+    "donor_sha256": "b4dad61d0c1f1cbab97024f2960db3fb5433d31ba3289528267455029aefb779",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/KoopaViewSwitchKeeper.cpp",
+    "destination": "src/Game/Boss/KoopaViewSwitchKeeper.cpp",
+    "donor_sha256": "f3324ce14de01ac467c7dbb64a6e0e42f4f83ce5dddff81cdb0085ead4badeda",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/OtaKing.cpp",
+    "destination": "src/Game/Boss/OtaKing.cpp",
+    "donor_sha256": "97ac8ebbe99306e768fa36feab82332e1f5618dde13500d082f477bab922c368",
+    "cp932_literal_groups": 6
+  },
+  {
+    "source": "decomp/src/Game/Boss/OtaKingLongFoot.cpp",
+    "destination": "src/Game/Boss/OtaKingLongFoot.cpp",
+    "donor_sha256": "b7e67f58a849f57676f7db128411cc8d7cac7a2cc9058680d11f6b46d1a54494",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/OtaKingMagma.cpp",
+    "destination": "src/Game/Boss/OtaKingMagma.cpp",
+    "donor_sha256": "e2f609f6d290870dbde861e53051197c3bc7016a44aa263c88582e456c8f3664",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Boss/Polta.cpp",
+    "destination": "src/Game/Boss/Polta.cpp",
+    "donor_sha256": "cea4b537d53654cd6aa9e70cd1053fd1ea7b2312266882fb0c69df683046c70f",
+    "cp932_literal_groups": 6
+  },
+  {
+    "source": "decomp/src/Game/Boss/PoltaActionBase.cpp",
+    "destination": "src/Game/Boss/PoltaActionBase.cpp",
+    "donor_sha256": "05b7a7b6bf05a164ca9c8a73f4ffc34a01c99d2ae3f8105723c4d5de1003300b",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/PoltaActionSequencer.cpp",
+    "destination": "src/Game/Boss/PoltaActionSequencer.cpp",
+    "donor_sha256": "454d3671d3708cf95ff70f48db8cd04a447367598b14aa902de465a00e91c5f8",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/PoltaArm.cpp",
+    "destination": "src/Game/Boss/PoltaArm.cpp",
+    "donor_sha256": "b3044cf60305707b1f57f8f03ffdbdb753fab697f562ac4194666e37231cdd4f",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Boss/PoltaBattleLv1.cpp",
+    "destination": "src/Game/Boss/PoltaBattleLv1.cpp",
+    "donor_sha256": "818d6b4e8e4db88d3a9c3882568f41d834fe67945fb8e1edc1b442acbc4e3bfb",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/PoltaBattleLv2.cpp",
+    "destination": "src/Game/Boss/PoltaBattleLv2.cpp",
+    "donor_sha256": "c782f4f63fb283ead1c5d4a4be4b7ee69203cd4d23bcaca3aa7e0c9ddae046eb",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/PoltaDemo.cpp",
+    "destination": "src/Game/Boss/PoltaDemo.cpp",
+    "donor_sha256": "789b1b513305bb9d6e4afb2ff95e6b22559d5112068277fe109e77ad6c451238",
+    "cp932_literal_groups": 10
+  },
+  {
+    "source": "decomp/src/Game/Boss/PoltaFunction.cpp",
+    "destination": "src/Game/Boss/PoltaFunction.cpp",
+    "donor_sha256": "2afe8392de865ce88d6e82cb5558585a0964f67397409d65a07a9079889bcc70",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/PoltaGroundRock.cpp",
+    "destination": "src/Game/Boss/PoltaGroundRock.cpp",
+    "donor_sha256": "5e0c9d1f2c32663a5519100160ee13809fcb678c9599456f00b4bdc98661e4af",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/PoltaGroundRockHolder.cpp",
+    "destination": "src/Game/Boss/PoltaGroundRockHolder.cpp",
+    "donor_sha256": "00db31ebdb0dc026e2dcbc56d691c69eda23eb451a678879dc1f150a980976c1",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Boss/PoltaRock.cpp",
+    "destination": "src/Game/Boss/PoltaRock.cpp",
+    "donor_sha256": "c83b59c65530a48778b77932ad160a9582919ab87a2cfbe1eb4d522c0bf1dec6",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/PoltaRockHolder.cpp",
+    "destination": "src/Game/Boss/PoltaRockHolder.cpp",
+    "donor_sha256": "a468bf73b7b8a8866fea62d3df01e28ab6bfbfb82e1b9eeea5ce02f98cc23212",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Boss/PoltaSensorCtrl.cpp",
+    "destination": "src/Game/Boss/PoltaSensorCtrl.cpp",
+    "donor_sha256": "54d4a1ad80b7c70d73bbb0546379544a4371221eab7c86d92424a46f579a3576",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/PoltaStateAttackGround.cpp",
+    "destination": "src/Game/Boss/PoltaStateAttackGround.cpp",
+    "donor_sha256": "a6a9189c1787808a4015000c91a9a7d78db009a4cccb8774df17fe0a89dacf07",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/PoltaStateGenerateRock.cpp",
+    "destination": "src/Game/Boss/PoltaStateGenerateRock.cpp",
+    "donor_sha256": "bad79d354919644c6ff727932d210b6e8f13811a42b90d2937bb4749b17fdf61",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/PoltaStateGroundRockAttack.cpp",
+    "destination": "src/Game/Boss/PoltaStateGroundRockAttack.cpp",
+    "donor_sha256": "f2d98f6eb41fd8776c2b3f30b5ec4c4aea5e6c9819719d22d1b2c399da370c14",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/PoltaStatePunch.cpp",
+    "destination": "src/Game/Boss/PoltaStatePunch.cpp",
+    "donor_sha256": "9a4c468b788dec6aa41d59e06bb9ed23b02b057ef698876d28f2075926ac0390",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/PoltaStateStagger.cpp",
+    "destination": "src/Game/Boss/PoltaStateStagger.cpp",
+    "donor_sha256": "59d50cdf41cd3f62232638c8ed31d410a8c36d68603d3688520a3f4fea4d3433",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/PoltaWaitStart.cpp",
+    "destination": "src/Game/Boss/PoltaWaitStart.cpp",
+    "donor_sha256": "90fe5cfe8f93a949909cb283ffd8991fc6d7734be04f8ab4f2240f217c47c435",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/SkeletalFishBaby.cpp",
+    "destination": "src/Game/Boss/SkeletalFishBaby.cpp",
+    "donor_sha256": "de372fa73a0ed8f8b1aad3e01e40ccabb5180db4d3b38f83e533e98e979008da",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/SkeletalFishBabyRail.cpp",
+    "destination": "src/Game/Boss/SkeletalFishBabyRail.cpp",
+    "donor_sha256": "74ba371718e819e59f1f20757630fa58964e1778923756a0adc7f7f778a94590",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/SkeletalFishBabyRailHolder.cpp",
+    "destination": "src/Game/Boss/SkeletalFishBabyRailHolder.cpp",
+    "donor_sha256": "f9d140b5f82ccce34b7d617fabb9c31df5b2f8f94ed5a2af697623d8cb7687be",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/SkeletalFishBoss.cpp",
+    "destination": "src/Game/Boss/SkeletalFishBoss.cpp",
+    "donor_sha256": "f3d0a9c201afc6ad484d5799912ab86c639b3db4d20b340e1abc4c0b57cd5e1b",
+    "cp932_literal_groups": 36
+  },
+  {
+    "source": "decomp/src/Game/Boss/SkeletalFishBossBattleDirector.cpp",
+    "destination": "src/Game/Boss/SkeletalFishBossBattleDirector.cpp",
+    "donor_sha256": "9b43810dd2a8d7739c6a9d22d856da5cebd4a76f52ad6c19fe6af0649a2e9e5b",
+    "cp932_literal_groups": 6
+  },
+  {
+    "source": "decomp/src/Game/Boss/SkeletalFishBossFunc.cpp",
+    "destination": "src/Game/Boss/SkeletalFishBossFunc.cpp",
+    "donor_sha256": "df490a9ff297c09df4a1ea65dec2fd6fe6e6babc2c16d313af0ac407cb534318",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/SkeletalFishBossInfo.cpp",
+    "destination": "src/Game/Boss/SkeletalFishBossInfo.cpp",
+    "donor_sha256": "22b73139edd3e4d2b8bb7d32f7f7fe77d8046aa844de62a6deef8ffe5e4e7112",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/SkeletalFishBossRail.cpp",
+    "destination": "src/Game/Boss/SkeletalFishBossRail.cpp",
+    "donor_sha256": "78781f2027a0b7a3c55e753483949847f2348fc7a3b5f4e274d45ff408cf6e34",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/SkeletalFishBossRailHolder.cpp",
+    "destination": "src/Game/Boss/SkeletalFishBossRailHolder.cpp",
+    "donor_sha256": "38e652d89bda9cd3d6bc8e44e9400bc8f0ae78222a6c72f96b8879f294d792c3",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/SkeletalFishGuard.cpp",
+    "destination": "src/Game/Boss/SkeletalFishGuard.cpp",
+    "donor_sha256": "ed3a049719b2912212942ad705e1bcfd2efa8276ae131c9bc8fab9b69d307689",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Boss/SkeletalFishGuardHolder.cpp",
+    "destination": "src/Game/Boss/SkeletalFishGuardHolder.cpp",
+    "donor_sha256": "1c178d49611eec6b9ebd41758dacba4cfb7be5d9694a86a4535b47a6253d4764",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/SkeletalFishJointCalc.cpp",
+    "destination": "src/Game/Boss/SkeletalFishJointCalc.cpp",
+    "donor_sha256": "74362d810246a8624efed6a8d0ddb2a85d93ab8a99285544a43e3f846e0fabcb",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/SkeletalFishRailControl.cpp",
+    "destination": "src/Game/Boss/SkeletalFishRailControl.cpp",
+    "donor_sha256": "37f192f22cd490b710663eac01106bf1c92091bf6773aea8dcb99b46e0dbba85",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/TombSpider.cpp",
+    "destination": "src/Game/Boss/TombSpider.cpp",
+    "donor_sha256": "0647de86724d035872e6ba5a04cdeb89e5d5bfa646d6f35f92c30def7a3b8fcc",
+    "cp932_literal_groups": 4
+  },
+  {
+    "source": "decomp/src/Game/Boss/TombSpiderAcid.cpp",
+    "destination": "src/Game/Boss/TombSpiderAcid.cpp",
+    "donor_sha256": "7e513872958ddfb9e2d7a75855269bd54f41eadbfecc010651fca952f2ea8b56",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/TombSpiderAction1st.cpp",
+    "destination": "src/Game/Boss/TombSpiderAction1st.cpp",
+    "donor_sha256": "7c219fa9d5310470b9bf071d184ddef5a395f32545a12c626d57b9cb88da6dc5",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/TombSpiderAction2nd.cpp",
+    "destination": "src/Game/Boss/TombSpiderAction2nd.cpp",
+    "donor_sha256": "5994c299a3238b79d97d4bfd5a94e0742477deecb13f7eb989e14317f38a2a9a",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/TombSpiderActionBase.cpp",
+    "destination": "src/Game/Boss/TombSpiderActionBase.cpp",
+    "donor_sha256": "9964acd6f2c69e253e117e1276bb5979269a30ff0fe001b39d2370d450bd0e44",
+    "cp932_literal_groups": 10
+  },
+  {
+    "source": "decomp/src/Game/Boss/TombSpiderActionCocoon.cpp",
+    "destination": "src/Game/Boss/TombSpiderActionCocoon.cpp",
+    "donor_sha256": "676d25d27d6ad2aef8d85e172a0e48f609f9f423072be89bf6f749241bf9e14f",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/TombSpiderDemo.cpp",
+    "destination": "src/Game/Boss/TombSpiderDemo.cpp",
+    "donor_sha256": "6c6d26d4b4f4527994555f7e2bcbaa5341ec4687fc28801c58cc461f98510dda",
+    "cp932_literal_groups": 15
+  },
+  {
+    "source": "decomp/src/Game/Boss/TombSpiderEnvironment.cpp",
+    "destination": "src/Game/Boss/TombSpiderEnvironment.cpp",
+    "donor_sha256": "444f94855da8e45c40dd99bba5ccf9e543ea2628e174e8a79a448e86ae68b7d1",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Boss/TombSpiderFunction.cpp",
+    "destination": "src/Game/Boss/TombSpiderFunction.cpp",
+    "donor_sha256": "985c27fceabf8e9908369eab9c1cfbce9c56ea12437d38a6bc57dd1cd3c0a5a3",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/TombSpiderGland.cpp",
+    "destination": "src/Game/Boss/TombSpiderGland.cpp",
+    "donor_sha256": "11548ccc9d862a74fa9475544cbc494d573d95e7109fa8e3ef7e0b9fd2c6b7d2",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/TombSpiderParts.cpp",
+    "destination": "src/Game/Boss/TombSpiderParts.cpp",
+    "donor_sha256": "83068722f8cf4fa2197019c84f1b215b4a41830f12422d78c799869a8f9c5927",
+    "cp932_literal_groups": 7
+  },
+  {
+    "source": "decomp/src/Game/Boss/TombSpiderSensorCtrl.cpp",
+    "destination": "src/Game/Boss/TombSpiderSensorCtrl.cpp",
+    "donor_sha256": "d674442d2692d5b8a68d74b17bd11003a8ca409d1c6fd627d46c6a514318a4ce",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/TombSpiderStateSwoon.cpp",
+    "destination": "src/Game/Boss/TombSpiderStateSwoon.cpp",
+    "donor_sha256": "3bcb251dfcd8d2ef65ca4da5a1808b1270c3348269d945ac267aa9340f8b761a",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/TombSpiderThreadAttacher.cpp",
+    "destination": "src/Game/Boss/TombSpiderThreadAttacher.cpp",
+    "donor_sha256": "c065f1c59cc0b54b59791dfdeeed86a8874a781468bf1d8146d42a52ea56574a",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/TombSpiderVitalSpot.cpp",
+    "destination": "src/Game/Boss/TombSpiderVitalSpot.cpp",
+    "donor_sha256": "afba3437354785546805f832f6f8927a19bf80e8ccc53e5f94ad12aa6c8572c7",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBoss.cpp",
+    "destination": "src/Game/Boss/TripodBoss.cpp",
+    "donor_sha256": "fff510327f8b64ea12a9ce994b4d91aae585ad50a51f3d57abf78d8228d804d4",
+    "cp932_literal_groups": 9
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossAccesser.cpp",
+    "destination": "src/Game/Boss/TripodBossAccesser.cpp",
+    "donor_sha256": "2c7c6e02dd5729305110e484d71d059865b1a85e7b5767170ec7ce9ddf28e7c8",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossBaseJointPosition.cpp",
+    "destination": "src/Game/Boss/TripodBossBaseJointPosition.cpp",
+    "donor_sha256": "6760b1db6f1d5d57dc8e3e52b7995fddf58f084313f34eb63e9e763d36d708c3",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossBreakMovement.cpp",
+    "destination": "src/Game/Boss/TripodBossBreakMovement.cpp",
+    "donor_sha256": "fe4e4bc6018f9b035ab40dbe6343fcb6af884871bd05a7595edbe5b6d45639d4",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossCoin.cpp",
+    "destination": "src/Game/Boss/TripodBossCoin.cpp",
+    "donor_sha256": "9e0215a20a9b42b2ecba6df40946c03c4e4f1b674de0d75bfc96e1a128ff47a0",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossCore.cpp",
+    "destination": "src/Game/Boss/TripodBossCore.cpp",
+    "donor_sha256": "92a2772f8702c1a8a7d8a9fdeb786861c53644a8bdb5832152157954a4538ab0",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossFixParts.cpp",
+    "destination": "src/Game/Boss/TripodBossFixParts.cpp",
+    "donor_sha256": "82f2e44287cff067df85a822343be0bfffd8fcebb30d8568bdaf29ecc5cca09a",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossFixPartsBase.cpp",
+    "destination": "src/Game/Boss/TripodBossFixPartsBase.cpp",
+    "donor_sha256": "c242e798dc7690392effbff17995f93b90c23819fad573e9a5f2320771712e58",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossGuardWall.cpp",
+    "destination": "src/Game/Boss/TripodBossGuardWall.cpp",
+    "donor_sha256": "b74ac3b8235d748fd5be1db7d97b2c77bee234cf85edae2effe8c7901e3bbd45",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossGuardWallPart.cpp",
+    "destination": "src/Game/Boss/TripodBossGuardWallPart.cpp",
+    "donor_sha256": "a713b905d8d35534686fdd7c23f85f4a14949580fb19e69eaf6c62fa031f6c4e",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossKillerGenerater.cpp",
+    "destination": "src/Game/Boss/TripodBossKillerGenerater.cpp",
+    "donor_sha256": "33e137aa9b5941a242fa523ebab756506a9cdd9a332ad7d00ee86aff92c4643b",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossKillerGeneraterCircle.cpp",
+    "destination": "src/Game/Boss/TripodBossKillerGeneraterCircle.cpp",
+    "donor_sha256": "8444cf70b8eb2597e422ab42e39ccc55b35cd3b1a67debfea9331c2fa2023a7c",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossKinokoOneUp.cpp",
+    "destination": "src/Game/Boss/TripodBossKinokoOneUp.cpp",
+    "donor_sha256": "99958e0a7542a1fb0235558570cebe11ea3560ee04d062da981d5fcc93aee1bc",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossLeg.cpp",
+    "destination": "src/Game/Boss/TripodBossLeg.cpp",
+    "donor_sha256": "11c80666da30a50768e7d3ebd970aa739bbb0f17bb20fd3c4754e1bd220a0d9d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossMovableArea.cpp",
+    "destination": "src/Game/Boss/TripodBossMovableArea.cpp",
+    "donor_sha256": "f4c659c5539c2eff29a5e0b8019ee556eef6aacc131337dc919915c921d56388",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossRailMoveParts.cpp",
+    "destination": "src/Game/Boss/TripodBossRailMoveParts.cpp",
+    "donor_sha256": "edec3038f02588075fa2b6abd977e18725f327d471005476d55085685e1f0832",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossRotateParts.cpp",
+    "destination": "src/Game/Boss/TripodBossRotateParts.cpp",
+    "donor_sha256": "634f54c495280523fb67093224c83973b9c85b920297993bfd82269503cf71cf",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossShell.cpp",
+    "destination": "src/Game/Boss/TripodBossShell.cpp",
+    "donor_sha256": "4c548c9015d4f8090193761385b9ebeb06d72c833c8219e2ed6b1d6867ec34b6",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossStepPoint.cpp",
+    "destination": "src/Game/Boss/TripodBossStepPoint.cpp",
+    "donor_sha256": "f56933d0609cfb23347bc0b4963debba8f8d44cdeba435b490a8ab3eb7a5c7e5",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossStepSequence.cpp",
+    "destination": "src/Game/Boss/TripodBossStepSequence.cpp",
+    "donor_sha256": "3091e9e31cdd11773f67ea7721e93bb2174c6cfc972a0e04fd005cf151df9ef4",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Boss/TripodBossStepStartArea.cpp",
+    "destination": "src/Game/Boss/TripodBossStepStartArea.cpp",
+    "donor_sha256": "2269c186ad175de87f49d7d2dc94d0b4e56c059223694e89b62f57058bf5d893",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Camera/CamPoseSphereInterpolator.cpp",
+    "destination": "src/Game/Camera/CamPoseSphereInterpolator.cpp",
+    "donor_sha256": "958f67a47353e5e6c6056369c338b9d606e8202eda2503caf56d157662893ac2",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Camera/CameraTestObj.cpp",
+    "destination": "src/Game/Camera/CameraTestObj.cpp",
+    "donor_sha256": "4dfeaef95f1cb54abfb79cebba296b305d7d367e0951b5c9b2bcd7ac4494f905",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Demo/AstroDomeDemoStarter.cpp",
+    "destination": "src/Game/Demo/AstroDomeDemoStarter.cpp",
+    "donor_sha256": "d0fd33f58247ed3dce28b9b446ee2f6855ebfd966daff944515bdee7133c1773",
+    "cp932_literal_groups": 4
+  },
+  {
+    "source": "decomp/src/Game/Demo/DemoCtrlBase.cpp",
+    "destination": "src/Game/Demo/DemoCtrlBase.cpp",
+    "donor_sha256": "5cb670d0af6eb42b9ab53631c7be5735dc3be24ce7623360e6be70e752a84edf",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Demo/DemoKoopaJrShip.cpp",
+    "destination": "src/Game/Demo/DemoKoopaJrShip.cpp",
+    "donor_sha256": "19a5ee6971b9776d1922c7a289f7fae9b4e139b6948dc181fbb8143a1d99de9d",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Demo/DemoParamCommonDataTable.cpp",
+    "destination": "src/Game/Demo/DemoParamCommonDataTable.cpp",
+    "donor_sha256": "1848a13058d93772587199be8509ddd9df199dfcb001b2f327ae6b1d6af1aae1",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Demo/GrandStarReturnDemoStarter.cpp",
+    "destination": "src/Game/Demo/GrandStarReturnDemoStarter.cpp",
+    "donor_sha256": "4afcb8730ea59b9416f6e86ac96a8a2cbd98dee3bfb4f2caca8894113eb7fdd2",
+    "cp932_literal_groups": 14
+  },
+  {
+    "source": "decomp/src/Game/Demo/ReturnDemoRailMove.cpp",
+    "destination": "src/Game/Demo/ReturnDemoRailMove.cpp",
+    "donor_sha256": "bee70770c5175ef288a7aaf18b53897bff6f681dac79b7a2a76376ef6ed6a8af",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Demo/ScenarioStarter.cpp",
+    "destination": "src/Game/Demo/ScenarioStarter.cpp",
+    "donor_sha256": "b7bfdc7c6c9b24d1fa809b88e21d21f88100194bf21699079992869996b57cdd",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Demo/StarReturnDemoStarter.cpp",
+    "destination": "src/Game/Demo/StarReturnDemoStarter.cpp",
+    "donor_sha256": "a95475e8ff82f76dc18d2f7ee77734737d80407c032dbbba43d57f9e2496a044",
+    "cp932_literal_groups": 9
+  },
+  {
+    "source": "decomp/src/Game/Effect/AstroEffectObj.cpp",
+    "destination": "src/Game/Effect/AstroEffectObj.cpp",
+    "donor_sha256": "3a674debc10b98e67024ac5fed0cbd17f7dfed62278752801f0962ec2702776b",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Effect/EffectObjGravityDust.cpp",
+    "destination": "src/Game/Effect/EffectObjGravityDust.cpp",
+    "donor_sha256": "10a1a214196164ffb847e57b23304128d6527acd553f36a3b50bf7d663c60276",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Effect/RandomEffectObj.cpp",
+    "destination": "src/Game/Effect/RandomEffectObj.cpp",
+    "donor_sha256": "3bbcee519e55bb2ea03d74ccaddd9c04a1fd29da0a284ce62261f4540c71206b",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Effect/SpinPullParticleCallBack.cpp",
+    "destination": "src/Game/Effect/SpinPullParticleCallBack.cpp",
+    "donor_sha256": "0a559fc3a5f5f14ec1e9973a106d974008c7e607cf064e4adf003004b6274796",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/AnimStampController.cpp",
+    "destination": "src/Game/Enemy/AnimStampController.cpp",
+    "donor_sha256": "1b02eb193ec6812ba043d632755a86a4077dfa66c65c9d356abae549de47d457",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/BallBeamer.cpp",
+    "destination": "src/Game/Enemy/BallBeamer.cpp",
+    "donor_sha256": "5f954304c8969da40cdeeaa7d9853927127a395e0c134d0ccebe3c798c2d661f",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Balloonfish.cpp",
+    "destination": "src/Game/Enemy/Balloonfish.cpp",
+    "donor_sha256": "2fcaff01ab07521b6f62f765d85dbd973b5f18b8bf1594fb4e4118c434e0f096",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Enemy/BasaBasa.cpp",
+    "destination": "src/Game/Enemy/BasaBasa.cpp",
+    "donor_sha256": "e725b31d491fa6985b12191ff2a7227c2c75ac6090c532f3a34f49f95e2fef1d",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Enemy/BegomanBaby.cpp",
+    "destination": "src/Game/Enemy/BegomanBaby.cpp",
+    "donor_sha256": "1fa0a204707e6a57319cb4c62df85d066cec3fb4b28b19338901cda2aeb1ae40",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/BegomanBase.cpp",
+    "destination": "src/Game/Enemy/BegomanBase.cpp",
+    "donor_sha256": "2c848f4be4adc2d880808c2de4f2f04fadbb58b08447c8cf619e5d517f871c34",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/BegomanFunction.cpp",
+    "destination": "src/Game/Enemy/BegomanFunction.cpp",
+    "donor_sha256": "a6731ccc7980b36cace0306326d656564b9fc0b67ed5f47d0dd60ff716370d35",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/BegomanLauncher.cpp",
+    "destination": "src/Game/Enemy/BegomanLauncher.cpp",
+    "donor_sha256": "8bd1af62ccc088da1e57a99acefe6874026fab6befdc8bc31d36d8e58937230f",
+    "cp932_literal_groups": 5
+  },
+  {
+    "source": "decomp/src/Game/Enemy/BegomanSpike.cpp",
+    "destination": "src/Game/Enemy/BegomanSpike.cpp",
+    "donor_sha256": "e58856471e41459d354415f3c87ff6b88f3bc99446d907ff8381458407e7819b",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Enemy/BegomanSpring.cpp",
+    "destination": "src/Game/Enemy/BegomanSpring.cpp",
+    "donor_sha256": "24464bc27186167068e8c8d8ea9ba5ccca4b163f343a542e60c919bb354868e8",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Enemy/BegomanSpringHead.cpp",
+    "destination": "src/Game/Enemy/BegomanSpringHead.cpp",
+    "donor_sha256": "43bde408d02449719da06370b4f0f6baea1c7cd1a8f1884ccc56f40db36ab09d",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Birikyu.cpp",
+    "destination": "src/Game/Enemy/Birikyu.cpp",
+    "donor_sha256": "db5b2cf48a102f348d8e8a4b3c26091d2fd1f3f81e20eb0f9439664285e59523",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/BombBird.cpp",
+    "destination": "src/Game/Enemy/BombBird.cpp",
+    "donor_sha256": "e5accce7d7118e14b1c813204429ee50888addae4e48956286cee30e45a06b10",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/BombBirdBomb.cpp",
+    "destination": "src/Game/Enemy/BombBirdBomb.cpp",
+    "donor_sha256": "2b6dba285ea99aabe57f1eda00eef0710ae35459e3c3608142a71e843684539f",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/BombHei.cpp",
+    "destination": "src/Game/Enemy/BombHei.cpp",
+    "donor_sha256": "e8e48ab02832eaa1528f130c210fd9ddbc9fb855e4fb8f9269fb5e3bd88a3154",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/BombHeiLauncher.cpp",
+    "destination": "src/Game/Enemy/BombHeiLauncher.cpp",
+    "donor_sha256": "38271b35fcc003c9e44592f1126c8a96d968b5a0933728ba6c3cde3e4419c6d4",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Enemy/BombTeresa.cpp",
+    "destination": "src/Game/Enemy/BombTeresa.cpp",
+    "donor_sha256": "6e2cccbb28b06b529834846938a70c8a68a0c8b22a58de538e9ed59dde80aa84",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/CannonShellBase.cpp",
+    "destination": "src/Game/Enemy/CannonShellBase.cpp",
+    "donor_sha256": "e9633fc65d743deeed733b194851b8f822d1cc5ce72308a69ecd33eb529c8ae8",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/CocoNutBall.cpp",
+    "destination": "src/Game/Enemy/CocoNutBall.cpp",
+    "donor_sha256": "cd470611135294d5108c6761b3643198c7868501a62a06c3a6bfec2b956c4452",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/CocoSambo.cpp",
+    "destination": "src/Game/Enemy/CocoSambo.cpp",
+    "donor_sha256": "23078379786988f74463ee233a78517db3d4152db1ed7e5347bf0b450ffdbf32",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Enemy/DharmaSambo.cpp",
+    "destination": "src/Game/Enemy/DharmaSambo.cpp",
+    "donor_sha256": "c3a08f0e06ef630c23f16df3c8bdf876c3de230c89f15d353520e18fd2e0755c",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Dossun.cpp",
+    "destination": "src/Game/Enemy/Dossun.cpp",
+    "donor_sha256": "bf03363bc76bb23cd736b860a1e852b770b58008fb0cb05a307e07e007a753b3",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Enemy/ElectricPressureBullet.cpp",
+    "destination": "src/Game/Enemy/ElectricPressureBullet.cpp",
+    "donor_sha256": "b96c86bc491f68a0ba8a2f686cfd1016dbb44b832fbc1ce4ea79e89f6d649610",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/EyeBeamer.cpp",
+    "destination": "src/Game/Enemy/EyeBeamer.cpp",
+    "donor_sha256": "de84860f4743bf5e95bf5d4cad870985ee0710d8e5efdb50186600019bfeab1b",
+    "cp932_literal_groups": 9
+  },
+  {
+    "source": "decomp/src/Game/Enemy/FireBall.cpp",
+    "destination": "src/Game/Enemy/FireBall.cpp",
+    "donor_sha256": "0a9b9b88ba2717579b004e4b376a4f6ff8c1ccf781cbc2a1501e24a7012495d1",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/FireBubble.cpp",
+    "destination": "src/Game/Enemy/FireBubble.cpp",
+    "donor_sha256": "11eade939ccf9e5e0487719583a7c4f8fd35ae44d1328fe1bf2e711ca874d570",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Gesso.cpp",
+    "destination": "src/Game/Enemy/Gesso.cpp",
+    "donor_sha256": "67b9a694f8fae37e9f7e47c1f96e3c4cb34e0cc3fbd295bef2cde6d2a9b671b3",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/HammerHeadPackun.cpp",
+    "destination": "src/Game/Enemy/HammerHeadPackun.cpp",
+    "donor_sha256": "48cadaadfbc753f4e7e4e77ce3da5a0e00db49618280b78f88d7930664d935df",
+    "cp932_literal_groups": 4
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Hanachan.cpp",
+    "destination": "src/Game/Enemy/Hanachan.cpp",
+    "donor_sha256": "3dd847ee73c9e402cd89e5487894369d25026bae0fb2a8aa8c0d0302d2377922",
+    "cp932_literal_groups": 6
+  },
+  {
+    "source": "decomp/src/Game/Enemy/HomingKiller.cpp",
+    "destination": "src/Game/Enemy/HomingKiller.cpp",
+    "donor_sha256": "ae9ece323343d9f41c2daa3eaeddcbf886e3c890b2bdd345c883d69367d154cc",
+    "cp932_literal_groups": 10
+  },
+  {
+    "source": "decomp/src/Game/Enemy/IceMerameraKing.cpp",
+    "destination": "src/Game/Enemy/IceMerameraKing.cpp",
+    "donor_sha256": "9d67406fadac25ca8a8c2f2d514b967a3001b1c398b0f920bd28a8e878319383",
+    "cp932_literal_groups": 16
+  },
+  {
+    "source": "decomp/src/Game/Enemy/ItemGenerator.cpp",
+    "destination": "src/Game/Enemy/ItemGenerator.cpp",
+    "donor_sha256": "f55de514090de41512a0d5cef4ed70b542eb118be13c4f2c6c6a8a11e9e1c819",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Jellyfish.cpp",
+    "destination": "src/Game/Enemy/Jellyfish.cpp",
+    "donor_sha256": "d435416ef5f4295a34e3000db74a1898370d2dd8318307b150d804314ac3a113",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/JellyfishElectric.cpp",
+    "destination": "src/Game/Enemy/JellyfishElectric.cpp",
+    "donor_sha256": "dc0900be99aca79def0d1281328498f891655df84fc02b254831deff2fba5a6c",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Jiraira.cpp",
+    "destination": "src/Game/Enemy/Jiraira.cpp",
+    "donor_sha256": "d9eb334ec7338edae1256d2d03ae1dd272278df8289e2fcebb051fea9eeb8e84",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/JumpBeamer.cpp",
+    "destination": "src/Game/Enemy/JumpBeamer.cpp",
+    "donor_sha256": "41dc934b9bc4b4561e214bd8e12a400ed8647a5424a8dec8d670624e02597533",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Enemy/JumpGuarder.cpp",
+    "destination": "src/Game/Enemy/JumpGuarder.cpp",
+    "donor_sha256": "2f26f1e7566f19616c1d8b8f86420b4994d40cb0cf697454f4988823a47c15dc",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Enemy/JumpSpider.cpp",
+    "destination": "src/Game/Enemy/JumpSpider.cpp",
+    "donor_sha256": "3821dd57c0182242da0fae606b329443c8cca3fb6f4c210fd4d71916e562de8d",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Kabokuri.cpp",
+    "destination": "src/Game/Enemy/Kabokuri.cpp",
+    "donor_sha256": "a7e44e3a7e0ff4f1f49956c13edb5dd798b8faac0ae55a1f08cb18890856d9da",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Enemy/KabokuriFire.cpp",
+    "destination": "src/Game/Enemy/KabokuriFire.cpp",
+    "donor_sha256": "04e5ba03019946f765486cbd239bed2237b94754e88440e1bdd0ae2a208457aa",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/KabokuriFireHolder.cpp",
+    "destination": "src/Game/Enemy/KabokuriFireHolder.cpp",
+    "donor_sha256": "8423047f42b38658d51da5667b4634d0c6401f37d67a64a02fcb23eccb279def",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Kameck.cpp",
+    "destination": "src/Game/Enemy/Kameck.cpp",
+    "donor_sha256": "beaea93847051360502170b2a1b5ac627541f0db94529dccab3e41b2ddae9856",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Enemy/KameckBeam.cpp",
+    "destination": "src/Game/Enemy/KameckBeam.cpp",
+    "donor_sha256": "e1bdd8eefd8921dc931f983d09146f79d2e03f640d01f39a0d2e25a3b741787e",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/KameckBeamHolder.cpp",
+    "destination": "src/Game/Enemy/KameckBeamHolder.cpp",
+    "donor_sha256": "95bf56a7aeb79a3bfc0b86e85e852fa9078720803472d6d2b46c9ca9715273fb",
+    "cp932_literal_groups": 6
+  },
+  {
+    "source": "decomp/src/Game/Enemy/KameckFireBall.cpp",
+    "destination": "src/Game/Enemy/KameckFireBall.cpp",
+    "donor_sha256": "28abaa858ca8189259d1b3d1c979f38e291cb157868959e338ba5bdfa79a129d",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/KameckHolder.cpp",
+    "destination": "src/Game/Enemy/KameckHolder.cpp",
+    "donor_sha256": "6e613570736b411ac10d4d3b54914eba0c289bd07307715d13f7f6d3541daac5",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/KameckTurtle.cpp",
+    "destination": "src/Game/Enemy/KameckTurtle.cpp",
+    "donor_sha256": "2d3123b29ac30a13d2b9b85cf60be91e697d59031c694c08fdb3798a76176072",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Kanina.cpp",
+    "destination": "src/Game/Enemy/Kanina.cpp",
+    "donor_sha256": "210f18f3f0ef458f02252de648dceda7dc272c69873ff6a2f552cb79d14ca0e4",
+    "cp932_literal_groups": 6
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Karon.cpp",
+    "destination": "src/Game/Enemy/Karon.cpp",
+    "donor_sha256": "28a7d44da7257314f7528eeef84627312725e9692e5a273798c926f8126efd01",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Kiraira.cpp",
+    "destination": "src/Game/Enemy/Kiraira.cpp",
+    "donor_sha256": "cb02701fb30f9cb611089518d7a6552052e272fe472da9f1f13235ea895e907c",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Enemy/KirairaChain.cpp",
+    "destination": "src/Game/Enemy/KirairaChain.cpp",
+    "donor_sha256": "d604eddd2a8fbc1fe40fe084338ff360d84f6472747aa083958473ebc58194dd",
+    "cp932_literal_groups": 4
+  },
+  {
+    "source": "decomp/src/Game/Enemy/KoopaJrShip.cpp",
+    "destination": "src/Game/Enemy/KoopaJrShip.cpp",
+    "donor_sha256": "612764d7bae2c023c30a67b7aea2968b466f0fe2d738e347cdaa2d1374dd1443",
+    "cp932_literal_groups": 11
+  },
+  {
+    "source": "decomp/src/Game/Enemy/KoopaJrShipCannonMainShell.cpp",
+    "destination": "src/Game/Enemy/KoopaJrShipCannonMainShell.cpp",
+    "donor_sha256": "79780e333a098f984c0b6215424a7da63286eac75d4a9bdb12eb3c8fad24d5e9",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Enemy/KoopaJrShipCannonShell.cpp",
+    "destination": "src/Game/Enemy/KoopaJrShipCannonShell.cpp",
+    "donor_sha256": "071eb24d2a70cc02714e30d487a48b1434d9d410548b8a0dec52eff5c367ab92",
+    "cp932_literal_groups": 8
+  },
+  {
+    "source": "decomp/src/Game/Enemy/KoteBug.cpp",
+    "destination": "src/Game/Enemy/KoteBug.cpp",
+    "donor_sha256": "1a05d30cbd3c1c34229d2d422f21cd1abfb9dad8034991e12280059a5ec6c360",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Kuribo.cpp",
+    "destination": "src/Game/Enemy/Kuribo.cpp",
+    "donor_sha256": "71c3d65a6fffe4b510111da77c9fd8c123ca943e91a489e716b29b45b8ebfb1c",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/KuriboChief.cpp",
+    "destination": "src/Game/Enemy/KuriboChief.cpp",
+    "donor_sha256": "519904363ea48363c616b16c14f591e4d04c8c6591dabf3e5ab3f89db6c9dc79",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/KuriboMini.cpp",
+    "destination": "src/Game/Enemy/KuriboMini.cpp",
+    "donor_sha256": "3a6bdd28320639e61470b242427b27b32f18bf8eff8f36a9e0db6f8b5bdde6ec",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/MechanicKoopaMini.cpp",
+    "destination": "src/Game/Enemy/MechanicKoopaMini.cpp",
+    "donor_sha256": "b5738570413b08a9ff6ed24097089523e57bbb2322a5be385ec510e9aa8c1ff7",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Meramera.cpp",
+    "destination": "src/Game/Enemy/Meramera.cpp",
+    "donor_sha256": "c8b5722a27583ccdeefc6831b8552cae61c45178d89a3319f7be20f245541688",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Metbo.cpp",
+    "destination": "src/Game/Enemy/Metbo.cpp",
+    "donor_sha256": "33b6fec844a187798cdd364b4a51b896a289019166c6088ebcaf37e57d7cfb07",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Mogu.cpp",
+    "destination": "src/Game/Enemy/Mogu.cpp",
+    "donor_sha256": "8888cfb9867f03d6b3dc61779a2168e8f480ccd0873153148e926c9756222b75",
+    "cp932_literal_groups": 5
+  },
+  {
+    "source": "decomp/src/Game/Enemy/MoguStone.cpp",
+    "destination": "src/Game/Enemy/MoguStone.cpp",
+    "donor_sha256": "745692b6d6970847ba4b49cb2607c3d698b1bcf1ebf654ea2a6806b418efd8a5",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Mogucchi.cpp",
+    "destination": "src/Game/Enemy/Mogucchi.cpp",
+    "donor_sha256": "d4a9eceb9717496e51fb0719c27fd9148f9535251285c3e082bf491ec7c34393",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Enemy/MogucchiHill.cpp",
+    "destination": "src/Game/Enemy/MogucchiHill.cpp",
+    "donor_sha256": "6761180e6c959d46468bcf0fc88d212d31c1d44fe07476edc58041e8917d10c5",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/MogucchiRefuseTerritory.cpp",
+    "destination": "src/Game/Enemy/MogucchiRefuseTerritory.cpp",
+    "donor_sha256": "f35b944ecc2ddf8c3b6b2e23f88bf8970a21540ff2daaf4d26c1342fb0dd3738",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/MogucchiShooter.cpp",
+    "destination": "src/Game/Enemy/MogucchiShooter.cpp",
+    "donor_sha256": "8fcf06c8ad6e3803f176d1c40c463c5a846845cf3e250a4a49bd148e2eafbf48",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/NokonokoLand.cpp",
+    "destination": "src/Game/Enemy/NokonokoLand.cpp",
+    "donor_sha256": "287b079ccc08b7eac82d31fad0c418590634bcd21929fd60bd6f05324c82b12d",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Onimasu.cpp",
+    "destination": "src/Game/Enemy/Onimasu.cpp",
+    "donor_sha256": "6e5ab6762c5f2e4384fcc25e8187b8e10b1ff53212e7b422078086aa0c0e8561",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Enemy/OnimasuJump.cpp",
+    "destination": "src/Game/Enemy/OnimasuJump.cpp",
+    "donor_sha256": "89b29332c48d478d4edbf3d943bfaea342e1b422a62f2e90ed64498346099004",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/OnimasuPivot.cpp",
+    "destination": "src/Game/Enemy/OnimasuPivot.cpp",
+    "donor_sha256": "2f3ad6011fddfa78c796dd144303c5cbac492c193766c12a1362cf7c51bf7c2a",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/OtaRock.cpp",
+    "destination": "src/Game/Enemy/OtaRock.cpp",
+    "donor_sha256": "9d8dcf5cc866e7cab6040581f0246efe327af7df4762ea831210829df2037381",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/PackunPetit.cpp",
+    "destination": "src/Game/Enemy/PackunPetit.cpp",
+    "donor_sha256": "8a117e72b774c3bc20fd0605cef8e8a309cd57994c826cfc9ea21aca7cdbf7ca",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Petari.cpp",
+    "destination": "src/Game/Enemy/Petari.cpp",
+    "donor_sha256": "c5e2e185f141c9c25b1570f35813ab7e20b1ac15a3f79024a9a8c4ec06ec7471",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Poihana.cpp",
+    "destination": "src/Game/Enemy/Poihana.cpp",
+    "donor_sha256": "356c3370c94e403246187a14dae7d2ac0f885c63864326df942d6bfa7879c0d1",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Pukupuku.cpp",
+    "destination": "src/Game/Enemy/Pukupuku.cpp",
+    "donor_sha256": "69b13c2cb23da329dcb4e041eae188c05de761e2668352f85b6db3572f529ec8",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/RingBeam.cpp",
+    "destination": "src/Game/Enemy/RingBeam.cpp",
+    "donor_sha256": "4582e57d8d6e606462467c966a495dfdd004efa6c0ca75bf02f586f2edf902eb",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Enemy/RingBeamer.cpp",
+    "destination": "src/Game/Enemy/RingBeamer.cpp",
+    "donor_sha256": "79762697052e8c7a5f7c1712890be23d98bfcc5db68acb475e07dbf7845d97a2",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/SamboFunction.cpp",
+    "destination": "src/Game/Enemy/SamboFunction.cpp",
+    "donor_sha256": "51da218d5bc80015f1a104c9444875cc82448a872976b9c1ced9bca712c4ff53",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/SamboHead.cpp",
+    "destination": "src/Game/Enemy/SamboHead.cpp",
+    "donor_sha256": "7da9d9fbcbdfbde89d2703ffb0d7dbeebfdaf280ee7658ca1117f1cad79df985",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/SearchBeamer.cpp",
+    "destination": "src/Game/Enemy/SearchBeamer.cpp",
+    "donor_sha256": "7094dd6363e0f6010d9f74f19e068c50ac72f6238c1ecd00e019b7004d25eb1e",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Snakehead.cpp",
+    "destination": "src/Game/Enemy/Snakehead.cpp",
+    "donor_sha256": "4e642b43249fdd5a031366031f8bdf2f760e7f7b760f70e04d869fa9d774de51",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/SpinHitController.cpp",
+    "destination": "src/Game/Enemy/SpinHitController.cpp",
+    "donor_sha256": "b4c544f7cc3b58e3bae4ba6d71eba21c5b3bbe88c177a84db5fed6d3584c09b4",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/StinkBugBase.cpp",
+    "destination": "src/Game/Enemy/StinkBugBase.cpp",
+    "donor_sha256": "8bf841cb37d194d29451a91d2ab2f3672e2dcfdb7d1bf54910fe82fb4f2402cc",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/StinkBugParent.cpp",
+    "destination": "src/Game/Enemy/StinkBugParent.cpp",
+    "donor_sha256": "2d6126c1dcce2b683fedd076620e3eb7fddde410430b09996a8ea3b9ca72f8d7",
+    "cp932_literal_groups": 4
+  },
+  {
+    "source": "decomp/src/Game/Enemy/StinkBugSmall.cpp",
+    "destination": "src/Game/Enemy/StinkBugSmall.cpp",
+    "donor_sha256": "c48301724a6a6cc132557374e20306118707419fba446f466d559d15cc44207e",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/StringSpider.cpp",
+    "destination": "src/Game/Enemy/StringSpider.cpp",
+    "donor_sha256": "c8c7d7e8b7303675f065acc1761af78ee8f5df79f9438c84b368dc9c1a0559a2",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Enemy/TakoHei.cpp",
+    "destination": "src/Game/Enemy/TakoHei.cpp",
+    "donor_sha256": "677a3dd47954790b10c00aef5d4dac287fc16da377c86c01d918b4861b9316a8",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/TakoHeiInk.cpp",
+    "destination": "src/Game/Enemy/TakoHeiInk.cpp",
+    "donor_sha256": "881fd404ca48cb391607a0d323f1ffb66b81b4d6f6a36fe34e88316c15e2c45d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/TakoHeiInkHolder.cpp",
+    "destination": "src/Game/Enemy/TakoHeiInkHolder.cpp",
+    "donor_sha256": "6b4b97346ce9bc94611a0b0a171737c794d6040a11bb3e068ec2851616badd88",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Takobo.cpp",
+    "destination": "src/Game/Enemy/Takobo.cpp",
+    "donor_sha256": "1225a866ef9758093f99764ae47687021e1218dad0ee575e9575171e79236b8d",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Teresa.cpp",
+    "destination": "src/Game/Enemy/Teresa.cpp",
+    "donor_sha256": "a601003427583f83f09849c258d7f52fc2ce471f9809b4062fde8725c5d1e1e1",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Enemy/TeresaWater.cpp",
+    "destination": "src/Game/Enemy/TeresaWater.cpp",
+    "donor_sha256": "21825d3627d312a8cf5847f81ba48099a5362c6898393e706d574ffb1b6e5936",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/TerritoryMover.cpp",
+    "destination": "src/Game/Enemy/TerritoryMover.cpp",
+    "donor_sha256": "cc703b54b7d5fbe93476d5c93400853242a7cd710e59c22b6dc58aae4a927b3a",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/Unizo.cpp",
+    "destination": "src/Game/Enemy/Unizo.cpp",
+    "donor_sha256": "61ea81cfe9b015403df45be769d561037d8798b98e56f24e68ffeb2eb1035987",
+    "cp932_literal_groups": 6
+  },
+  {
+    "source": "decomp/src/Game/Enemy/UnizoLauncher.cpp",
+    "destination": "src/Game/Enemy/UnizoLauncher.cpp",
+    "donor_sha256": "3d88b4473048a33940ded6029ad3138f7bc6b0ce1e87c62a34442fa9779d9daf",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/WalkerStateBindStarPointer.cpp",
+    "destination": "src/Game/Enemy/WalkerStateBindStarPointer.cpp",
+    "donor_sha256": "f19ab3eac1e40e1a44ac7e89409e13b5d3d558797830151a578f3d38e3ef1965",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Enemy/WalkerStateChase.cpp",
+    "destination": "src/Game/Enemy/WalkerStateChase.cpp",
+    "donor_sha256": "35506661fc13432d7dd7900ca6a5f65154b1ae8900861d1f585f264bc168fc7c",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/WalkerStateFindPlayer.cpp",
+    "destination": "src/Game/Enemy/WalkerStateFindPlayer.cpp",
+    "donor_sha256": "cbde5475c8d0272d6ececf864404e3fd1cb42a64d140fca2f1cb4a7698000c96",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/WalkerStateFunction.cpp",
+    "destination": "src/Game/Enemy/WalkerStateFunction.cpp",
+    "donor_sha256": "f639529dc65fbe47d6f2599d0ee8a2895a3dcf27afe0cade07594062fa392e41",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/WalkerStateParam.cpp",
+    "destination": "src/Game/Enemy/WalkerStateParam.cpp",
+    "donor_sha256": "a8ab605a4e6cbbeef970d102ceb75b449976a6a14c4b356cccc7245105bfd741",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Enemy/WalkerStateStagger.cpp",
+    "destination": "src/Game/Enemy/WalkerStateStagger.cpp",
+    "donor_sha256": "acf2bc19152c46fee916eb0d7ff433b044a8cf994255469f1b4b4476f6c115fb",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/WalkerStateWander.cpp",
+    "destination": "src/Game/Enemy/WalkerStateWander.cpp",
+    "donor_sha256": "dc20387b7096c60ec9f1b6297562c2f2bab3d4af6aec5e2972d5a499dc725827",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Enemy/WaterBazooka.cpp",
+    "destination": "src/Game/Enemy/WaterBazooka.cpp",
+    "donor_sha256": "dc2bfbccf09d5d0b3de7a5428056034dc67525f72f40bfe2fad92530e1d92b69",
+    "cp932_literal_groups": 15
+  },
+  {
+    "source": "decomp/src/Game/Enemy/WaterBazookaCapsule.cpp",
+    "destination": "src/Game/Enemy/WaterBazookaCapsule.cpp",
+    "donor_sha256": "523ae61e676cdee5dfd77500e17de985ba28ec1613d36472f56478b361ed6c3e",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/GameAudio/AudCameraWatcher.cpp",
+    "destination": "src/Game/GameAudio/AudCameraWatcher.cpp",
+    "donor_sha256": "4d6d979d4315983c6dc2f7075172a07c3902c969aa65cf2cfb8da1b44db76414",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/GameAudio/AudEffectDirector.cpp",
+    "destination": "src/Game/GameAudio/AudEffectDirector.cpp",
+    "donor_sha256": "3af1916526a173fdfacbdc781e5e7ef6872f2a09fad0ad4d4358cdffa80befab",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/GameAudio/AudSeKeeper.cpp",
+    "destination": "src/Game/GameAudio/AudSeKeeper.cpp",
+    "donor_sha256": "901bf5be78ea2aa48a34430be92d85d63a3e8948fa9a066597380fc55d977872",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/GameAudio/AudTamakoroBgmCtrl.cpp",
+    "destination": "src/Game/GameAudio/AudTamakoroBgmCtrl.cpp",
+    "donor_sha256": "19b0c65687daa899d1220874aa1f7b166944e12bb6886ddf8b6c4a46115192ed",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/LiveActor/ActiveActorList.cpp",
+    "destination": "src/Game/LiveActor/ActiveActorList.cpp",
+    "donor_sha256": "b6f37b7cd861a4a7e5440bcc928aa656519badba7ff8732c7e4c94fcf35fa440",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/LiveActor/ActorJointCtrl.cpp",
+    "destination": "src/Game/LiveActor/ActorJointCtrl.cpp",
+    "donor_sha256": "8ed5cba8d00391732322d23e8288faad52202a34bd0101bee756db3cd5fc747c",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/LiveActor/AnimationRandomPlayer.cpp",
+    "destination": "src/Game/LiveActor/AnimationRandomPlayer.cpp",
+    "donor_sha256": "2cb890fdc61a646236e6c082837363d323341f367f64744ff5dbf30a1a6facd2",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/LiveActor/FaceJointCtrl.cpp",
+    "destination": "src/Game/LiveActor/FaceJointCtrl.cpp",
+    "donor_sha256": "c9311674a5eff59435d8106bdc7fdfb9ecdacbafe318dd5bdf5478f7e62f4efd",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/LiveActor/IKJointCtrl.cpp",
+    "destination": "src/Game/LiveActor/IKJointCtrl.cpp",
+    "donor_sha256": "4a8e43624605ea7408bb609fe1c78b9a09fa4c770a981c03eb58abd9e46328b7",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/LiveActor/SimpleJ3DModelDrawer.cpp",
+    "destination": "src/Game/LiveActor/SimpleJ3DModelDrawer.cpp",
+    "donor_sha256": "f5ec160fb22eda3050600538d3a967d997ae384c715eaed9fefe2e85979b3a93",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/LiveActor/VolumeModelDrawer.cpp",
+    "destination": "src/Game/LiveActor/VolumeModelDrawer.cpp",
+    "donor_sha256": "9b6ac1b1b67f7c36e132e20e1581bed3838ee6141cb352551d83c9d2f4be7817",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Map/FishGroup.cpp",
+    "destination": "src/Game/Map/FishGroup.cpp",
+    "donor_sha256": "daa86152f5b3554df84bad0166a62a26412bbc75e66da9d14509f02f4f3728fa",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Map/GravityDust.cpp",
+    "destination": "src/Game/Map/GravityDust.cpp",
+    "donor_sha256": "1139cf93385b33b7798090eff55954c4f9c2701b24a62f20ab8c7d32d0945482",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Map/Halo.cpp",
+    "destination": "src/Game/Map/Halo.cpp",
+    "donor_sha256": "46bb8544ca5ba45e57637388966e00513a8c300641fce1d5da580c4552814fd3",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Map/KCollisionPlus.cpp",
+    "destination": "src/Game/Map/KCollisionPlus.cpp",
+    "donor_sha256": "71bd809674feb015fde178078dd99b55aa3a2fc5cec97b1779053b7d394cfffa",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Map/KoopaBattleMapCoinPlate.cpp",
+    "destination": "src/Game/Map/KoopaBattleMapCoinPlate.cpp",
+    "donor_sha256": "e1e481b4ce93c98b38ee0bd563fef781df7064604fe623971cae9ff26b93c931",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Map/KoopaBattleMapDamagePlate.cpp",
+    "destination": "src/Game/Map/KoopaBattleMapDamagePlate.cpp",
+    "donor_sha256": "7b2b477fb010b1b5952f1b3a949f362f3e0f2e272c19d1f8a8b81aff4645d672",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Map/KoopaBattleMapPlanet.cpp",
+    "destination": "src/Game/Map/KoopaBattleMapPlanet.cpp",
+    "donor_sha256": "8c8b24f3899ca413149cb01dce03379931d73f0c3e6221f6fbaaef43ea3d877d",
+    "cp932_literal_groups": 6
+  },
+  {
+    "source": "decomp/src/Game/Map/KoopaBattleMapPlate.cpp",
+    "destination": "src/Game/Map/KoopaBattleMapPlate.cpp",
+    "donor_sha256": "6642169825bd18185d0f81db534fc863618e4ed388d0732828ab499c3d8e92b1",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Map/KoopaBattleMapStair.cpp",
+    "destination": "src/Game/Map/KoopaBattleMapStair.cpp",
+    "donor_sha256": "4c2ad810a0f88946ee0ea025de0b19969272eb2feae85333596ffc2f295cb3a9",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Map/LavaShellTower.cpp",
+    "destination": "src/Game/Map/LavaShellTower.cpp",
+    "donor_sha256": "45191721b513106189e1b72fec3eb7a9ee6ff6f241fcfef16e6bcd8481d37915",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Map/LavaSunPlanet.cpp",
+    "destination": "src/Game/Map/LavaSunPlanet.cpp",
+    "donor_sha256": "a41091a5a02b3f72289fa75198e0ce61ea0e8ff9e83195b296d7e42c5c82d71d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Map/OceanBowlBloomDrawer.cpp",
+    "destination": "src/Game/Map/OceanBowlBloomDrawer.cpp",
+    "donor_sha256": "e01a7c636d672760997e00cee9dec80060e1e5638408c1fd6875f738112d877f",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Map/OceanRingBloomDrawer.cpp",
+    "destination": "src/Game/Map/OceanRingBloomDrawer.cpp",
+    "donor_sha256": "f053b62a3e429dd881a412333f68aa2573e7169e8d57572631e59f127d94b604",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Map/OceanRingDrawer.cpp",
+    "destination": "src/Game/Map/OceanRingDrawer.cpp",
+    "donor_sha256": "5e750edb30bc07ab8d857d1e7ab119f0b4df0e2fd13a1acdea7cbd517fa583c6",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Map/OceanRingPipe.cpp",
+    "destination": "src/Game/Map/OceanRingPipe.cpp",
+    "donor_sha256": "88fe2cc14cc1396586660b5d385e59ab1b8d0a6b3bf186b5afc067ee949d3c84",
+    "cp932_literal_groups": 4
+  },
+  {
+    "source": "decomp/src/Game/Map/OceanRingPipeInside.cpp",
+    "destination": "src/Game/Map/OceanRingPipeInside.cpp",
+    "donor_sha256": "2655b756c3c6011cffd3268bea0de7b4a477815e5365b560d35ed3973449cdf7",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Map/OceanRingPipeOutside.cpp",
+    "destination": "src/Game/Map/OceanRingPipeOutside.cpp",
+    "donor_sha256": "7408f2a75e1e5366f492abdc7c0717926d35c3c4d3e3b9307ff8649af856d1c5",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Map/OceanSpherePoint.cpp",
+    "destination": "src/Game/Map/OceanSpherePoint.cpp",
+    "donor_sha256": "1d01e0c11b724583a2573d814cc1524318446c85522c715d95989d77d850401c",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Map/PlanetMapCreator.cpp",
+    "destination": "src/Game/Map/PlanetMapCreator.cpp",
+    "donor_sha256": "b1ca9b659ceca2c6142930a3fec69ecc3534d3929bfce3a66efd5165a53a1463",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Map/PlanetMapWithoutHighModel.cpp",
+    "destination": "src/Game/Map/PlanetMapWithoutHighModel.cpp",
+    "donor_sha256": "1a3c1b7b949d640ab6a3335b371b93492c00ca9ecef410b39e6933cb2bc0c906",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Map/QuakeEffectGenerator.cpp",
+    "destination": "src/Game/Map/QuakeEffectGenerator.cpp",
+    "donor_sha256": "5830a4d28e05c0303b83cd27cca6b2ab2c380b1e6fc6b0a962be5cedcf48f25f",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Map/RaceRail.cpp",
+    "destination": "src/Game/Map/RaceRail.cpp",
+    "donor_sha256": "4d5aca6a692eebb67f2a8fc39a11e7bcd861f8a8eaaa329041f36df2fa12ba4e",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Map/RailGraph.cpp",
+    "destination": "src/Game/Map/RailGraph.cpp",
+    "donor_sha256": "5d3da41c289cc21c976e28a3f66ae00cdebf3e2f6812dbea260014a6a40e8751",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Map/RailGraphEdge.cpp",
+    "destination": "src/Game/Map/RailGraphEdge.cpp",
+    "donor_sha256": "92d65ec52dd898c5996ae12346a8ed0eadbb226577c308df56c31230c7428f8c",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Map/RailGraphIter.cpp",
+    "destination": "src/Game/Map/RailGraphIter.cpp",
+    "donor_sha256": "8a3f9f527bd430b8649a6889868dcade17790477b2b5897701a78a85a318a31b",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Map/RailGraphNode.cpp",
+    "destination": "src/Game/Map/RailGraphNode.cpp",
+    "donor_sha256": "6984659bdc56ecddebaa9a00273a0f0fd50470381cbf8d5b2b11a26c5fcebad7",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Map/SeaGull.cpp",
+    "destination": "src/Game/Map/SeaGull.cpp",
+    "donor_sha256": "3defe79d6f22f6e4ec97ae063387c12bf867892e6a0266ad3c52a904e3efd317",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Map/SunshadeMapParts.cpp",
+    "destination": "src/Game/Map/SunshadeMapParts.cpp",
+    "donor_sha256": "4b37650c3e92070793004d892c1ef566cbd651121323eb4e146c87b13991a1ac",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Map/TimerSwitch.cpp",
+    "destination": "src/Game/Map/TimerSwitch.cpp",
+    "donor_sha256": "71fd79817dbfeff884877656dbb26ad10d7b8e387015572d3fde064e03caa7d8",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Map/WaterPlant.cpp",
+    "destination": "src/Game/Map/WaterPlant.cpp",
+    "donor_sha256": "5023dd28bed12dd03123cf0324428db073499cd09e8053127dd3db9f08f23227",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Map/WaterRoad.cpp",
+    "destination": "src/Game/Map/WaterRoad.cpp",
+    "donor_sha256": "cbdb57d840f791631fac0555bf3b36824362f0d01d974903605353337265311f",
+    "cp932_literal_groups": 7
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AirBubble.cpp",
+    "destination": "src/Game/MapObj/AirBubble.cpp",
+    "donor_sha256": "20c4a9f5627cf8df4b5e07b9798d58b076a784827c50b9feb0140e4d1d090a92",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AirBubbleGenerator.cpp",
+    "destination": "src/Game/MapObj/AirBubbleGenerator.cpp",
+    "donor_sha256": "caeea3b655656cc0058cac756aa10aeaa6b4e0eb9bd6095073cd365294f31da4",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AirBubbleHolder.cpp",
+    "destination": "src/Game/MapObj/AirBubbleHolder.cpp",
+    "donor_sha256": "9de1087b8c5275f104eeb3f13b89de0fbfeefe471cc685b4921f51d80aaf3888",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AnmModelObj.cpp",
+    "destination": "src/Game/MapObj/AnmModelObj.cpp",
+    "donor_sha256": "2fba64c3f01bff100664149ae2704c02eb19dc09031c34bd87c0613cde855b00",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ArrowSwitch.cpp",
+    "destination": "src/Game/MapObj/ArrowSwitch.cpp",
+    "donor_sha256": "aaffc5c5235ec3d1e1f9839146d4d4b6a023cbbe0f4c05f53e963e649018b7f7",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ArrowSwitchMulti.cpp",
+    "destination": "src/Game/MapObj/ArrowSwitchMulti.cpp",
+    "donor_sha256": "6bbf74abac5e7eb107f145cc2884e9d10b9832961a05750cdf50bf5f7d39454c",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ArrowSwitchMultiHolder.cpp",
+    "destination": "src/Game/MapObj/ArrowSwitchMultiHolder.cpp",
+    "donor_sha256": "d896bc4eb16baffa8cc869637115e3d62a9d2f59801480b7f77ef93a5374f9f8",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AssemblyBlock.cpp",
+    "destination": "src/Game/MapObj/AssemblyBlock.cpp",
+    "donor_sha256": "a7b018840b283aef10b24411c9450032f805145a22b86c20576a8a5e9f6afed4",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AstroCore.cpp",
+    "destination": "src/Game/MapObj/AstroCore.cpp",
+    "donor_sha256": "504005a75ce19cf9b893f189ff3b41b12504d50596091d3b949d90e49a7ee179",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AstroCountDownPlate.cpp",
+    "destination": "src/Game/MapObj/AstroCountDownPlate.cpp",
+    "donor_sha256": "c07d09eed9b01e77dfa807fd149f13067aecb199734350bc387ca68de82b38d4",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AstroDome.cpp",
+    "destination": "src/Game/MapObj/AstroDome.cpp",
+    "donor_sha256": "673ab11884b281c63c64dff64e181651a90a351848bb65b85a8d0b97d020db84",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AstroDomeAsteroid.cpp",
+    "destination": "src/Game/MapObj/AstroDomeAsteroid.cpp",
+    "donor_sha256": "cd76a5ac009620f6a9e2a24e66afcc95f77307bd6605a700bfbce99e79569894",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AstroDomeBlueStar.cpp",
+    "destination": "src/Game/MapObj/AstroDomeBlueStar.cpp",
+    "donor_sha256": "ed31e08b9414ff8350ea713004572eb656e42fe6c256690c751937686859af16",
+    "cp932_literal_groups": 10
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AstroDomeCameraController.cpp",
+    "destination": "src/Game/MapObj/AstroDomeCameraController.cpp",
+    "donor_sha256": "a3ac978e54595e0d68497e1c9204ee2e3b3bf0eda811af38bc293daa699b3a73",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AstroDomeComet.cpp",
+    "destination": "src/Game/MapObj/AstroDomeComet.cpp",
+    "donor_sha256": "77ac13924581d2b36e9a015d8424d2b633348809628a0283e7f4177d14707bf9",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AstroDomeDemoAstroGalaxy.cpp",
+    "destination": "src/Game/MapObj/AstroDomeDemoAstroGalaxy.cpp",
+    "donor_sha256": "da7603ceeedb048fb6c4511331cfb6fb8f0da3ad2732d229a3232d6a31237403",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AstroDomeGalaxySelector.cpp",
+    "destination": "src/Game/MapObj/AstroDomeGalaxySelector.cpp",
+    "donor_sha256": "51034ad175dfdf048c756902e1e4896be8ede11e0b534c9f648ee0062d6ec835",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AstroDomeOrbit.cpp",
+    "destination": "src/Game/MapObj/AstroDomeOrbit.cpp",
+    "donor_sha256": "aa37b73f714a77634e8ee2619bac3df4425072a205b7e0e2b186138cb09bf343",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AstroDomeSky.cpp",
+    "destination": "src/Game/MapObj/AstroDomeSky.cpp",
+    "donor_sha256": "bed9807498f61dbb1e3e1dd2a78d645f9877199693f81813d569b244e00b9d49",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AstroMapBoard.cpp",
+    "destination": "src/Game/MapObj/AstroMapBoard.cpp",
+    "donor_sha256": "6795c210fdfc3e27497ef07271575a7854943e26b3577235ab91b05395020ea8",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AstroMapObj.cpp",
+    "destination": "src/Game/MapObj/AstroMapObj.cpp",
+    "donor_sha256": "beadb83c666a9a47e42e82b906f5dda0af387a4ba3819ecda4c71ff587061304",
+    "cp932_literal_groups": 5
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AstroMapObjFunction.cpp",
+    "destination": "src/Game/MapObj/AstroMapObjFunction.cpp",
+    "donor_sha256": "1473526749ff760b37aef186f71bef0746c755016a829836f7bfc381aeef68a4",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/MapObj/AstroOverlookObj.cpp",
+    "destination": "src/Game/MapObj/AstroOverlookObj.cpp",
+    "donor_sha256": "c6d489453abba88740324b57b8b07bcce4de164c0dfe837ab4e575fb2cee7af5",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/BallOpener.cpp",
+    "destination": "src/Game/MapObj/BallOpener.cpp",
+    "donor_sha256": "ec36d744a3ce0fbdfee46eebfa08071487044b7484c58e169f393c719ae1fdc9",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/BallRail.cpp",
+    "destination": "src/Game/MapObj/BallRail.cpp",
+    "donor_sha256": "8bf5e2ef8595628e3f7f1726fa89a0c78132be7efcceb8f54b3b769434ff2c40",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/Banekiti.cpp",
+    "destination": "src/Game/MapObj/Banekiti.cpp",
+    "donor_sha256": "c89982bf6d2df970147f4b759867857aada5cb5656399348890772281b1d9745",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/BattleShipElevator.cpp",
+    "destination": "src/Game/MapObj/BattleShipElevator.cpp",
+    "donor_sha256": "e12afc40d80196b4fdb74d56dcc2ae3d8b15572bcb6ea757db6e02fc31cc18fe",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/BeamGoRoundPlanet.cpp",
+    "destination": "src/Game/MapObj/BeamGoRoundPlanet.cpp",
+    "donor_sha256": "c53a934fb04f148b5e4b734ca2c210e475bc53cb8597f085539a686f61b55fb1",
+    "cp932_literal_groups": 4
+  },
+  {
+    "source": "decomp/src/Game/MapObj/BeeFlowerHover.cpp",
+    "destination": "src/Game/MapObj/BeeFlowerHover.cpp",
+    "donor_sha256": "5d0155f273eb07692dc1c4ef118f318fcb33428fc65b6fe70b4b6cc5a1adf239",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/BenefitItemInvincible.cpp",
+    "destination": "src/Game/MapObj/BenefitItemInvincible.cpp",
+    "donor_sha256": "514fe3fc1ec8e52298e15bcf47a170affe1937746a21921a11f00d7fcc5ccdbd",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/BenefitItemLifeUp.cpp",
+    "destination": "src/Game/MapObj/BenefitItemLifeUp.cpp",
+    "donor_sha256": "4dde27a636d2bc828dda4f469dd2a029e195ee6983dafb4102821a17e64b76ae",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/BenefitItemObj.cpp",
+    "destination": "src/Game/MapObj/BenefitItemObj.cpp",
+    "donor_sha256": "4062e443389c18d9e93da6aafaef17ee5af1b159ab01f5b3f03cf5afd4926c37",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/MapObj/BigBubbleDrawer.cpp",
+    "destination": "src/Game/MapObj/BigBubbleDrawer.cpp",
+    "donor_sha256": "73664f164952c242b049d5791b25a7a340a03f05ec93d4b9ec58db029bc283bb",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/BigBubbleGenerator.cpp",
+    "destination": "src/Game/MapObj/BigBubbleGenerator.cpp",
+    "donor_sha256": "9c360731f2a74055027785fbbee84f06af975cc0bacc4e7369fabd42dc622b10",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/BigBubbleHolder.cpp",
+    "destination": "src/Game/MapObj/BigBubbleHolder.cpp",
+    "donor_sha256": "99d1d76be7e686d484931615261cea41a8b437a48bcca851c166a860192e54c3",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/BigBubbleMoveLimitter.cpp",
+    "destination": "src/Game/MapObj/BigBubbleMoveLimitter.cpp",
+    "donor_sha256": "6cf7e5e2558914387f2859a0d2ea222d7d4c77f47290e806d4b1777a183b1e37",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/BlueChip.cpp",
+    "destination": "src/Game/MapObj/BlueChip.cpp",
+    "donor_sha256": "41a6d0fbbdfcc3e10003e5a102b5869c557ecb7e08a4edf6bafa484231bbc36b",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/BlueStarCupsulePlanet.cpp",
+    "destination": "src/Game/MapObj/BlueStarCupsulePlanet.cpp",
+    "donor_sha256": "a7fb469f3749c8138731a62de2edcc0e15bfab361ee2d015cf34d408ff8465e9",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/BreakableCage.cpp",
+    "destination": "src/Game/MapObj/BreakableCage.cpp",
+    "donor_sha256": "8702cb8291bf014f015fe068ae5cc391b09ad08bc0b2ceb423ac86078d7ce0e7",
+    "cp932_literal_groups": 4
+  },
+  {
+    "source": "decomp/src/Game/MapObj/BumpAppearPlanet.cpp",
+    "destination": "src/Game/MapObj/BumpAppearPlanet.cpp",
+    "donor_sha256": "9c6b90d6e7bf216baab78147cd8a281bdafd00d4f89a5f7c25c89164eafd1c6a",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/Candlestand.cpp",
+    "destination": "src/Game/MapObj/Candlestand.cpp",
+    "donor_sha256": "186a6609a97848c5f7b0255bebb67a0b80a3927e83d7bb46267afc4f3bb1a9a0",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/CannonFortressBreakStep.cpp",
+    "destination": "src/Game/MapObj/CannonFortressBreakStep.cpp",
+    "donor_sha256": "0d8e61308002b1dd7a3aed9c0cd7f6f7fe57261b728754e750a244ec416eb37d",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/CapsuleCage.cpp",
+    "destination": "src/Game/MapObj/CapsuleCage.cpp",
+    "donor_sha256": "eab4d9df1c67e8aa70753dc755ba87184c7de402c44c39100f40758c9f2b062f",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ChipBase.cpp",
+    "destination": "src/Game/MapObj/ChipBase.cpp",
+    "donor_sha256": "5b4c0652d0f6a94a3ccdc88f128d2bc362d4d3d9a60224eebc0ea2a03b7410d0",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ChooChooTrain.cpp",
+    "destination": "src/Game/MapObj/ChooChooTrain.cpp",
+    "donor_sha256": "4f85fa8f31e1503033e678c51dc77eb8e45861511605636bda15e8a7a4b5bb81",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/CircleCoinGroup.cpp",
+    "destination": "src/Game/MapObj/CircleCoinGroup.cpp",
+    "donor_sha256": "042ed1af4db6329ed1c787ecd1b98cb83c9e8db2391aeaf4decfa0b70350c28e",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ClipArea.cpp",
+    "destination": "src/Game/MapObj/ClipArea.cpp",
+    "donor_sha256": "4da3d7e80a2d079beb11648724675624161459c3a3fb1f5314f61be0540f0782",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ClipAreaDrop.cpp",
+    "destination": "src/Game/MapObj/ClipAreaDrop.cpp",
+    "donor_sha256": "14227cf32954027a53f775d0e657d17633f10b44bbc0bb46a4187616839c4db1",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ClipAreaDropHolder.cpp",
+    "destination": "src/Game/MapObj/ClipAreaDropHolder.cpp",
+    "donor_sha256": "3efb896aaa181081ab74406c454bcd21f4e21428915213848dec2dd78c9b3ac5",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ClipAreaDropLaser.cpp",
+    "destination": "src/Game/MapObj/ClipAreaDropLaser.cpp",
+    "donor_sha256": "e207b13cc1f2538edd61dd699172bf87e8341396845d713b6437985377143dcb",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ClipAreaMovable.cpp",
+    "destination": "src/Game/MapObj/ClipAreaMovable.cpp",
+    "donor_sha256": "b8f74468b01dee499db443118bc7cc0aedea7fe777ffc667c4addd0d461e523d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ClipAreaShape.cpp",
+    "destination": "src/Game/MapObj/ClipAreaShape.cpp",
+    "donor_sha256": "bb47bda2992e0118bb6546c598dcf2a56b7ff0470d086c1860de5ccd2a1b656c",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ClipFieldFillDraw.cpp",
+    "destination": "src/Game/MapObj/ClipFieldFillDraw.cpp",
+    "donor_sha256": "84dee29da1e755168d96cc0e9b13b42d657a624ecac72be0bf339c50f1fab808",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ClipFieldMapParts.cpp",
+    "destination": "src/Game/MapObj/ClipFieldMapParts.cpp",
+    "donor_sha256": "a5cb4f6c12ac308f33e67a83f0073880d9cecef97959c015868c8d3ce54f643f",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ClipFieldSwitch.cpp",
+    "destination": "src/Game/MapObj/ClipFieldSwitch.cpp",
+    "donor_sha256": "650eb162025c8fd12391b2b057b4546277bfc42e7dfa6603f4ad1b87bab6cbab",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/CocoNut.cpp",
+    "destination": "src/Game/MapObj/CocoNut.cpp",
+    "donor_sha256": "cd4f7bcd4244018295c6bac963c576f96bac19436f200d63ac9a1186f9ffa17c",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/CoconutTree.cpp",
+    "destination": "src/Game/MapObj/CoconutTree.cpp",
+    "donor_sha256": "6602c3ef054548bce79f436ba3df68057f249d5301820a3d8af99a1e527aa06f",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/CoconutTreeLeaf.cpp",
+    "destination": "src/Game/MapObj/CoconutTreeLeaf.cpp",
+    "donor_sha256": "c2a9beddf9069d22b178e70eb03a22024796be4352300ae2eee20e6d49ad2d0a",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/CoinBox.cpp",
+    "destination": "src/Game/MapObj/CoinBox.cpp",
+    "donor_sha256": "148253bdc744773072cf3cda669a88a96a9f7f9ee95bfd370ddbbd84d610f4c7",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/CoinReplica.cpp",
+    "destination": "src/Game/MapObj/CoinReplica.cpp",
+    "donor_sha256": "538e4f815bfaa360baa86b1d34e63187e20c4c0439ca933a27af0d2fae556fb3",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/CoinSpot.cpp",
+    "destination": "src/Game/MapObj/CoinSpot.cpp",
+    "donor_sha256": "1758bb44f589fb6ed02339238492952b96c829b65be989354861be27da78f54d",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/CollapsePlane.cpp",
+    "destination": "src/Game/MapObj/CollapsePlane.cpp",
+    "donor_sha256": "60ec582bf37d770e17a98707510b2187d3b90579d53e1f467722987624fb908b",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/CrystalCageMoving.cpp",
+    "destination": "src/Game/MapObj/CrystalCageMoving.cpp",
+    "donor_sha256": "c7587c499c212805c9c3f604b39b7a42ccc41bec002de8df68360c3889d1cdee",
+    "cp932_literal_groups": 5
+  },
+  {
+    "source": "decomp/src/Game/MapObj/CrystalSwitch.cpp",
+    "destination": "src/Game/MapObj/CrystalSwitch.cpp",
+    "donor_sha256": "c644c2bd0288ddc626b566221fb6661a4e1e4df0922fc329371dec0889a28985",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/DashRing.cpp",
+    "destination": "src/Game/MapObj/DashRing.cpp",
+    "donor_sha256": "cd4f4ca86a728bf7849fec6ef5a3eb155ca342950396c247a74da30012f999b8",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/DeadLeaves.cpp",
+    "destination": "src/Game/MapObj/DeadLeaves.cpp",
+    "donor_sha256": "79c18de9fecd8f9b43b23595ccf1fca1b2e90f61607863e4fc4756b812926d3f",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/DesertLandMoveSwitch.cpp",
+    "destination": "src/Game/MapObj/DesertLandMoveSwitch.cpp",
+    "donor_sha256": "c196394e03993ea4326390af554b5d85a0ad8e500c354a76dcf1fb8d0260afc7",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/DesertMovingLand.cpp",
+    "destination": "src/Game/MapObj/DesertMovingLand.cpp",
+    "donor_sha256": "d32a50aefb34e87ff6713d0e760e6e6560821c63cab84c0742df1bcac7eb7797",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/MapObj/DragonHeadFlower.cpp",
+    "destination": "src/Game/MapObj/DragonHeadFlower.cpp",
+    "donor_sha256": "55b83fbe3e5a849dc0c4829cf2ce76345870054278adeeb4d81ef25dbe673cb6",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/DriftWood.cpp",
+    "destination": "src/Game/MapObj/DriftWood.cpp",
+    "donor_sha256": "64f15c19306b2564dd3da6cc545446b7fafb88fc3963297acfa202b335241c2a",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ElectricBall.cpp",
+    "destination": "src/Game/MapObj/ElectricBall.cpp",
+    "donor_sha256": "6cdedb2df7f7ed6e520459b1bfb03e4bf303c7a21f9fdb34dabbeefff511844e",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ElectricRail.cpp",
+    "destination": "src/Game/MapObj/ElectricRail.cpp",
+    "donor_sha256": "2f039c982b2285d2161d9e655d5dc5e0a2329c829740113a9d85cd41ccfc2fd2",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ElectricRailHolder.cpp",
+    "destination": "src/Game/MapObj/ElectricRailHolder.cpp",
+    "donor_sha256": "b077fb491d15be47ea8b1401213d463b9ea32d2a88e55dd13ce7eca18796cdf3",
+    "cp932_literal_groups": 5
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ElectricRailMoving.cpp",
+    "destination": "src/Game/MapObj/ElectricRailMoving.cpp",
+    "donor_sha256": "1ad617d218cfcf9b7356a067a9a4cc84715dc81fea8f5d35c6ce82ceb8587b8c",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ExterminationChecker.cpp",
+    "destination": "src/Game/MapObj/ExterminationChecker.cpp",
+    "donor_sha256": "d09983a53846cde943ab0e8c3094bff3c01ef00b458d160102c9a6f27cea287b",
+    "cp932_literal_groups": 4
+  },
+  {
+    "source": "decomp/src/Game/MapObj/FallDownBridge.cpp",
+    "destination": "src/Game/MapObj/FallDownBridge.cpp",
+    "donor_sha256": "64ea3f167b51612185fac31b4054bbd0c8a806dc0cd67d6dae32958c45dbd744",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/FallOutFieldDraw.cpp",
+    "destination": "src/Game/MapObj/FallOutFieldDraw.cpp",
+    "donor_sha256": "2cf5bfbbce3149937c20d23ef98aad8bc453653e9c8f342e95af30997cf7bfa3",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/FallingSmallRock.cpp",
+    "destination": "src/Game/MapObj/FallingSmallRock.cpp",
+    "donor_sha256": "a2a6216b7e85b85b838810c47cdfa4df11b3f0db76ff31032a3d4a16ca84eb0e",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/FireBar.cpp",
+    "destination": "src/Game/MapObj/FireBar.cpp",
+    "donor_sha256": "1dead419fe98c3b59daff35602befc0e3877c1b41902dbab5502042293a350f0",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/FirePressure.cpp",
+    "destination": "src/Game/MapObj/FirePressure.cpp",
+    "donor_sha256": "32e968a46eb58f6e1462fff61150f8ab80fef2acaa9e8d32ad703f9ec7227b23",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/FirePressureBullet.cpp",
+    "destination": "src/Game/MapObj/FirePressureBullet.cpp",
+    "donor_sha256": "ab506ffd2334a3561a85827b24aef24e3a40a874ae3a0dbe3abc4b1f8b723a6c",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/FirePressureBulletHolder.cpp",
+    "destination": "src/Game/MapObj/FirePressureBulletHolder.cpp",
+    "donor_sha256": "b59411d0fe4aff1e6f1eef37b538055cc07dedc0835ff623f459787dc779a651",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/FirePressureRadiate.cpp",
+    "destination": "src/Game/MapObj/FirePressureRadiate.cpp",
+    "donor_sha256": "783cb3ce46934ec07f8b78f224f310bd79a13a6b5ab11e40b7d4d53d52d5f0a7",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/FlameGun.cpp",
+    "destination": "src/Game/MapObj/FlameGun.cpp",
+    "donor_sha256": "a2eb71bb447d93e37bbc76837c1d102ce8e684d35e4dfb8d8bea0196aef2310f",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/FlexibleSphere.cpp",
+    "destination": "src/Game/MapObj/FlexibleSphere.cpp",
+    "donor_sha256": "af2f16c262abdbf59e875a1a77ed8566267001dd4a1a6a2f06d05a1eba728b69",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/FloaterFloatingForce.cpp",
+    "destination": "src/Game/MapObj/FloaterFloatingForce.cpp",
+    "donor_sha256": "d9274e8012198bf45ed25bc5a7443d1ebfbb32c54cdfc54df064f4239488ca0e",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/FloaterFloatingForceTypeNormal.cpp",
+    "destination": "src/Game/MapObj/FloaterFloatingForceTypeNormal.cpp",
+    "donor_sha256": "e05d6260b0152447c47129c033b17f9281d54e04b8a63ca32da0620f148b3366",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/FloaterFloatingForceTypeSpring.cpp",
+    "destination": "src/Game/MapObj/FloaterFloatingForceTypeSpring.cpp",
+    "donor_sha256": "c40a06f4908d216407fc8395925e5123dd3cbdb07ab8b9e92336444bff85d803",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/FloaterFunction.cpp",
+    "destination": "src/Game/MapObj/FloaterFunction.cpp",
+    "donor_sha256": "338b27210e651b39d765f1c773597e82c86be0b2c4ce0f3a59b43d6203c1abe3",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/Fountain.cpp",
+    "destination": "src/Game/MapObj/Fountain.cpp",
+    "donor_sha256": "dbd42cedd776455fcab02c6a4673eff00db9c6d97e753a8037fb73f2f348e6ac",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/FountainBig.cpp",
+    "destination": "src/Game/MapObj/FountainBig.cpp",
+    "donor_sha256": "67ce2007fca55f6adae7d1fb682173782ca9b2cae976debce2d9ba1dd35a9b05",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/GCaptureTarget.cpp",
+    "destination": "src/Game/MapObj/GCaptureTarget.cpp",
+    "donor_sha256": "3a2045e3d810982ef413fe28c997cbe665a9bf5ce8217129a1ff01d21bfe52dd",
+    "cp932_literal_groups": 5
+  },
+  {
+    "source": "decomp/src/Game/MapObj/GeneralMapParts.cpp",
+    "destination": "src/Game/MapObj/GeneralMapParts.cpp",
+    "donor_sha256": "2c1fdd1c0ed98c5a2314b8c7ed7818d4f90fb7c79b6895fc80fdf38bc43accff",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/GravityLight.cpp",
+    "destination": "src/Game/MapObj/GravityLight.cpp",
+    "donor_sha256": "0c112a764c4448f97c7a9408b4500725076f040dfc26015a6da797a587d7eace",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/GravityLightRoad.cpp",
+    "destination": "src/Game/MapObj/GravityLightRoad.cpp",
+    "donor_sha256": "463203cba8d7c56b76bd17337d19c25d4a86abdfab75170f3e4db058108031ef",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/GreenCaterpillarBig.cpp",
+    "destination": "src/Game/MapObj/GreenCaterpillarBig.cpp",
+    "donor_sha256": "dbca9f5eb2e3e624a253e2c5e380a9d59ead3e6a41567a2085c7acf9c1448606",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/HatchWaterPlanet.cpp",
+    "destination": "src/Game/MapObj/HatchWaterPlanet.cpp",
+    "donor_sha256": "cadc056a6a0b471ad242f5c1c1b0bb69609a124b757cf61180bcfb69022676b1",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/HipDropMoveObj.cpp",
+    "destination": "src/Game/MapObj/HipDropMoveObj.cpp",
+    "donor_sha256": "dc3caa60abcd939b43e5b30500fd9d28871b211385719ea674665bce3f39c2b9",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/HipDropRock.cpp",
+    "destination": "src/Game/MapObj/HipDropRock.cpp",
+    "donor_sha256": "e8ec28fa569ea6b3938f9e7b28c94142feb6d2bfc2b9c32c165d6750cd982d7f",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/HipDropSwitch.cpp",
+    "destination": "src/Game/MapObj/HipDropSwitch.cpp",
+    "donor_sha256": "77ff0031ccb508108b1560bf975283949c9cc68fbd66a6cc2ae1b175bef5862c",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/HipDropTimerSwitch.cpp",
+    "destination": "src/Game/MapObj/HipDropTimerSwitch.cpp",
+    "donor_sha256": "6dafdf8ee01236ca5b70cd38bc9d88c33c47e62a0d405ecd8acd35e0bbd4d189",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/HitWallTimerSwitch.cpp",
+    "destination": "src/Game/MapObj/HitWallTimerSwitch.cpp",
+    "donor_sha256": "28bf5d8228989e3ade93862726543c2e065cc7821886768fe960035addfd3dd1",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/IceVolcanoUpDownPlane.cpp",
+    "destination": "src/Game/MapObj/IceVolcanoUpDownPlane.cpp",
+    "donor_sha256": "65f6a804944fa695d0618881367dc7522eae7e382f5c57c714a0698dc216d1ab",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/IronCannonShell.cpp",
+    "destination": "src/Game/MapObj/IronCannonShell.cpp",
+    "donor_sha256": "adbc30652b1ae179330c02f6c9d2e6a20f6160124440decec98dc3979028f809",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ItemAppearStone.cpp",
+    "destination": "src/Game/MapObj/ItemAppearStone.cpp",
+    "donor_sha256": "8c642d0c540b409c45a803e6df8c86cad94c72ad9b3a22819ee9a57bc80a8f52",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ItemBlock.cpp",
+    "destination": "src/Game/MapObj/ItemBlock.cpp",
+    "donor_sha256": "789a5ab9c81b761240aa2e9cfc427bca787383e9db109da0816f2a896def07dd",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ItemBubble.cpp",
+    "destination": "src/Game/MapObj/ItemBubble.cpp",
+    "donor_sha256": "56bca27ad38d0a9ab7319bd9d53b743e876ee5cf8c6aa0c235a2074696434e15",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/MapObj/JetTurtle.cpp",
+    "destination": "src/Game/MapObj/JetTurtle.cpp",
+    "donor_sha256": "17130ee554fa80fc0ec05c4bda788fcbe8d87b529a01a44a20f149854c229eb0",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/JumpHole.cpp",
+    "destination": "src/Game/MapObj/JumpHole.cpp",
+    "donor_sha256": "2b8a8d1e5c36a5127e34799fb62cd9058d89748042f45876a5f8c0be6f9e9feb",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/JumpStand.cpp",
+    "destination": "src/Game/MapObj/JumpStand.cpp",
+    "donor_sha256": "25e652c37106ac19c046a16c049401c592405f2a1a863a28f43b64005f8b9f88",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/KeySwitch.cpp",
+    "destination": "src/Game/MapObj/KeySwitch.cpp",
+    "donor_sha256": "51138c8a7f5c107b8eb1b3ff4f83765c209a7ec9880acde33ea7e659f3e9f722",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/KillerGunnerSingle.cpp",
+    "destination": "src/Game/MapObj/KillerGunnerSingle.cpp",
+    "donor_sha256": "4695664e95c6eaa164f86b2e064251a80de3ebe109d980150ad8dd524ec8d890",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/LargeChain.cpp",
+    "destination": "src/Game/MapObj/LargeChain.cpp",
+    "donor_sha256": "a98f7da0ffca02164d3213eca66493ed1926742f58322c2c6caf95ad407e55e0",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/LargeChainParts.cpp",
+    "destination": "src/Game/MapObj/LargeChainParts.cpp",
+    "donor_sha256": "c2917e1c4c6d36d454628255a7c938a7a45e8903ab82d70458ef4a217d57227d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/LavaBallRisingPlanetLava.cpp",
+    "destination": "src/Game/MapObj/LavaBallRisingPlanetLava.cpp",
+    "donor_sha256": "8e854c946e05f1df5dabd26be56b3a88d9a7f4c53755855bc67878200cb23bd0",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/LavaBreakColumn.cpp",
+    "destination": "src/Game/MapObj/LavaBreakColumn.cpp",
+    "donor_sha256": "df6e6118e081749b4d3111f805031b3d89df4ecbba013d502f0071050189512e",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/LavaFloater.cpp",
+    "destination": "src/Game/MapObj/LavaFloater.cpp",
+    "donor_sha256": "44c2c794d168e6034c3e59fdd66daaa8ab8ff3fd398a0540227a754b20cedef5",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/LavaGalaxyParts.cpp",
+    "destination": "src/Game/MapObj/LavaGalaxyParts.cpp",
+    "donor_sha256": "0d67d854a2173608e19fdbd16d6251835fd232eb8b683d5085bea91267e58d50",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/LavaGeyser.cpp",
+    "destination": "src/Game/MapObj/LavaGeyser.cpp",
+    "donor_sha256": "5076876e82a43d3c23ae5b4f5385a417f454f3964f3f5ae4643d964d2c486cf7",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/LavaHomeSeesaw.cpp",
+    "destination": "src/Game/MapObj/LavaHomeSeesaw.cpp",
+    "donor_sha256": "8c43170a56195cbb1e6beffa78a27ad46113bf9642b156a15a6a06b2685ba965",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/LavaHomeSeesawRotator.cpp",
+    "destination": "src/Game/MapObj/LavaHomeSeesawRotator.cpp",
+    "donor_sha256": "69ca9f1ec893d3c99d2baa3d661e8cf7066398c6a175438499b1d010423c4ffc",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/LavaHomeVolcanoFlow.cpp",
+    "destination": "src/Game/MapObj/LavaHomeVolcanoFlow.cpp",
+    "donor_sha256": "e3e1e6326e62849accf97f35e1bb4ff3217abe7e7ff34070ab9ded464579fea1",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/LavaJamboSunPlanet.cpp",
+    "destination": "src/Game/MapObj/LavaJamboSunPlanet.cpp",
+    "donor_sha256": "143e53751bebb38278eeab61881c923af2f1b4d7eeda90184513e615d92cc185",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/LavaProminence.cpp",
+    "destination": "src/Game/MapObj/LavaProminence.cpp",
+    "donor_sha256": "9fba73225137e6e4d008b977399cb80c2c84dc2d9a2f7629f1bb08cfdb80c7af",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/LavaProminenceTriple.cpp",
+    "destination": "src/Game/MapObj/LavaProminenceTriple.cpp",
+    "donor_sha256": "88a61072784475bc008146f58000599478383cdb15abeb2981f3b77f5d0a6dc3",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/LavaSteam.cpp",
+    "destination": "src/Game/MapObj/LavaSteam.cpp",
+    "donor_sha256": "e73d652a35f4f3c42a419be1357ed3aeafd3018d33b9e589645cbb0c061c1787",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/LavaStrangeRock.cpp",
+    "destination": "src/Game/MapObj/LavaStrangeRock.cpp",
+    "donor_sha256": "0c82d4a1ffe8f6a792bbd733c5ace5cfde0388d34357cee4cf7f4882a23856e7",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/LotusLeaf.cpp",
+    "destination": "src/Game/MapObj/LotusLeaf.cpp",
+    "donor_sha256": "f81b8c88672ce051ef18f6a8c60e34c7af843cd8b057480c7dd992069c8a0d30",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MagicBell.cpp",
+    "destination": "src/Game/MapObj/MagicBell.cpp",
+    "donor_sha256": "9a541ea4addc8d4d455d15c7191a9ac5868eab915ac1674c933d717c09ff0dde",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ManholeCover.cpp",
+    "destination": "src/Game/MapObj/ManholeCover.cpp",
+    "donor_sha256": "ab2cbf7fb52ecf75fb1e661d8251b8ab1c7685c02f3715273ba078b2c8de09c5",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MapObjConnector.cpp",
+    "destination": "src/Game/MapObj/MapObjConnector.cpp",
+    "donor_sha256": "4b09f0300d494ccc0e7d532ebf09d94e4ccd646fad716c1be730318efc2d0bf5",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MapPartsAppearController.cpp",
+    "destination": "src/Game/MapObj/MapPartsAppearController.cpp",
+    "donor_sha256": "d83a8d0acd7e48fd692e3127725791a8a017348e7f6f1f6b8b39b943ed6521c4",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MapPartsBreaker.cpp",
+    "destination": "src/Game/MapObj/MapPartsBreaker.cpp",
+    "donor_sha256": "1fd199cfb357aa67160e1398c6fc262cfba1f11dbaad88088b8ff1d62172c17a",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MapPartsFloatingForce.cpp",
+    "destination": "src/Game/MapObj/MapPartsFloatingForce.cpp",
+    "donor_sha256": "252e84e0d88baae2ceaa1d6eac2e6dc9c1a2b753f2275a5468c568f1dfc84623",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MarblePlanet.cpp",
+    "destination": "src/Game/MapObj/MarblePlanet.cpp",
+    "donor_sha256": "a7a7f052129c19d2b8c0de77741e52a509140774319e8df58b38c6b9da99b0fb",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MarioLauncher.cpp",
+    "destination": "src/Game/MapObj/MarioLauncher.cpp",
+    "donor_sha256": "ce74a597ebb1f564ee4f9417b5a6e50b50b82001de01a092a75305d3b9784c7e",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MarioLauncherAttractor.cpp",
+    "destination": "src/Game/MapObj/MarioLauncherAttractor.cpp",
+    "donor_sha256": "eaec9211b941dba3d9294381655a92f99fb8ae5a3ff58681673c070aeaafdc23",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MechaKoopaPartsArm.cpp",
+    "destination": "src/Game/MapObj/MechaKoopaPartsArm.cpp",
+    "donor_sha256": "7c65cffff6db03ed90c2ab023c8f7410d2f2e2c4938224e78ce122a82d1c737f",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MechaKoopaPartsHead.cpp",
+    "destination": "src/Game/MapObj/MechaKoopaPartsHead.cpp",
+    "donor_sha256": "92521d68e9b3fc89ae10f0c295e1bd554877a31a1ac52ec3195c5aa62528989e",
+    "cp932_literal_groups": 6
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MercatorFixParts.cpp",
+    "destination": "src/Game/MapObj/MercatorFixParts.cpp",
+    "donor_sha256": "11dd476bb7e705fbd6691d037577dd0c0e809a6e2fc39d60e48eb5a9432a9434",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MercatorRailMoveParts.cpp",
+    "destination": "src/Game/MapObj/MercatorRailMoveParts.cpp",
+    "donor_sha256": "873174250c42e2dd7a62977a98ded14fc9811a802ef659173f57962155844a52",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MercatorRotateParts.cpp",
+    "destination": "src/Game/MapObj/MercatorRotateParts.cpp",
+    "donor_sha256": "1210b5ff510e5820c33cf584a5867cdbc7da6ceb7694c90c0f203c42d3c956eb",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MeteoContainer.cpp",
+    "destination": "src/Game/MapObj/MeteoContainer.cpp",
+    "donor_sha256": "18502d78a1844288208a902038234fd3aa5a2a69366ff8054fd7c18fe6c170f8",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MeteorStrike.cpp",
+    "destination": "src/Game/MapObj/MeteorStrike.cpp",
+    "donor_sha256": "9dc8301affcba7fbe8800220a183677fb109b8d2d7dfec02c57d6779eafbde20",
+    "cp932_literal_groups": 4
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MeteorStrikeLauncher.cpp",
+    "destination": "src/Game/MapObj/MeteorStrikeLauncher.cpp",
+    "donor_sha256": "d6498c5da3312005ba1fc9d92801a0f8bf4fbe3d6ac416b94c4dcbe30a87d6ff",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MiniatureGalaxy.cpp",
+    "destination": "src/Game/MapObj/MiniatureGalaxy.cpp",
+    "donor_sha256": "aa0f2598808ac9d140f881c581936eac4ae00f9d73f5baba9cd9ed5a9ffeaa37",
+    "cp932_literal_groups": 5
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MiniatureGalaxyHolder.cpp",
+    "destination": "src/Game/MapObj/MiniatureGalaxyHolder.cpp",
+    "donor_sha256": "5dbd029b062a39ba7f097d55bca0766ce838b6d7eb5fb31510b06f6c78219b04",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/MapObj/MorphItemObjNeo.cpp",
+    "destination": "src/Game/MapObj/MorphItemObjNeo.cpp",
+    "donor_sha256": "2afa65ecd3eb0da5292166f91fd868410564aaad9f3b7019684e3374847d6d2c",
+    "cp932_literal_groups": 15
+  },
+  {
+    "source": "decomp/src/Game/MapObj/NeedlePlant.cpp",
+    "destination": "src/Game/MapObj/NeedlePlant.cpp",
+    "donor_sha256": "b2729531971227262472bb871a64fe274b93125fc9a78d1f2b1f1473dccf388f",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/NormalMapBase.cpp",
+    "destination": "src/Game/MapObj/NormalMapBase.cpp",
+    "donor_sha256": "6f56fdc5c1282c0684e109108257c5be3bdd4eff221feb26dcd00527acda40a9",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/NormalMapTestObj.cpp",
+    "destination": "src/Game/MapObj/NormalMapTestObj.cpp",
+    "donor_sha256": "ef0d9f7b2edf7dec536cc70fda1169ea27cfbf7fd5cf8d2425d88cf0e178b75d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/Note.cpp",
+    "destination": "src/Game/MapObj/Note.cpp",
+    "donor_sha256": "289b868b56cdca4a24f2c86273e51692c7865f9f1eefd5f22e228bc9641b593d",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/NoteFairy.cpp",
+    "destination": "src/Game/MapObj/NoteFairy.cpp",
+    "donor_sha256": "d07c31a0bf3f05f85e561d8cc2d6d4d6647c4e9a0633687f376bc068d5eff13b",
+    "cp932_literal_groups": 5
+  },
+  {
+    "source": "decomp/src/Game/MapObj/OceanFloaterLandParts.cpp",
+    "destination": "src/Game/MapObj/OceanFloaterLandParts.cpp",
+    "donor_sha256": "401504d05e3d4330065e7feafa37ad620448143263889b9d7e82c453ed610093",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/OceanSmallTurtle.cpp",
+    "destination": "src/Game/MapObj/OceanSmallTurtle.cpp",
+    "donor_sha256": "96ea8fb69cf88ba799706d940e3146a32a96a2aa954339e70b788e40c9ec724a",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/OceanWaveFloater.cpp",
+    "destination": "src/Game/MapObj/OceanWaveFloater.cpp",
+    "donor_sha256": "9b26b2a8011a815c1a810b2b99b786234b8ebb9aec2755b4eb3875341ba583c6",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/PTimerSwitch.cpp",
+    "destination": "src/Game/MapObj/PTimerSwitch.cpp",
+    "donor_sha256": "01bec6983e785762960f3d29c9e8e6fc1ee81107815afa22fdcf88262f499c0a",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/PalmIsland.cpp",
+    "destination": "src/Game/MapObj/PalmIsland.cpp",
+    "donor_sha256": "f889a1c21467e8afe5d4ec3bb4576de38ac55d516b19a486ffc7e19a950c3674",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/PeachCastleGardenPlanet.cpp",
+    "destination": "src/Game/MapObj/PeachCastleGardenPlanet.cpp",
+    "donor_sha256": "bd7fb7dacb2fdd36043b74516d3ba84ed488ac6dd9d0263dbcc85561f597e909",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/PhantomShipBoxFloater.cpp",
+    "destination": "src/Game/MapObj/PhantomShipBoxFloater.cpp",
+    "donor_sha256": "87b4f5746923cd623f1f8263f3db0b46a191802786015d44c1902f33ecfefb8e",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/PhantomShipBridge.cpp",
+    "destination": "src/Game/MapObj/PhantomShipBridge.cpp",
+    "donor_sha256": "bc62972216b0ab3272f2682dc22ce4318383600b56d390b5bd0f94f6a35763f1",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/PhantomShipHandle.cpp",
+    "destination": "src/Game/MapObj/PhantomShipHandle.cpp",
+    "donor_sha256": "b8b4f8ebcad7d365d3b5aa56955368bc25dcc19e8f86e0f5517aec07ee1e5ee9",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/PhantomTorch.cpp",
+    "destination": "src/Game/MapObj/PhantomTorch.cpp",
+    "donor_sha256": "bbd7b2efa082d7defd9fd280ca47332a492c841dd1388e094c07b406a7c03bff",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/PicketSwitch.cpp",
+    "destination": "src/Game/MapObj/PicketSwitch.cpp",
+    "donor_sha256": "699ca70e8d4c122012d38674b70d8292d395d3255fedfcb4386320f6eb959636",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/PlantPoint.cpp",
+    "destination": "src/Game/MapObj/PlantPoint.cpp",
+    "donor_sha256": "be0f69681f35751e27ef55937bf38a4197e853b80e1241caf091043070b027bc",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/PlantRailInfo.cpp",
+    "destination": "src/Game/MapObj/PlantRailInfo.cpp",
+    "donor_sha256": "260bd3da60debde2d58c0a4d0369d40c62c687ef27fd95d84941e4fa732737dd",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/PomponPlant.cpp",
+    "destination": "src/Game/MapObj/PomponPlant.cpp",
+    "donor_sha256": "2de9a8bcee7500d3dc3f4f458e6db72accf7bd827276efe8919a657b65cbcb0b",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/PressureBase.cpp",
+    "destination": "src/Game/MapObj/PressureBase.cpp",
+    "donor_sha256": "8ff3d63d66dd440c4f56d7e0433d1339f6c5f0fce84207673dcca712546f77c3",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/PrizeRing.cpp",
+    "destination": "src/Game/MapObj/PrizeRing.cpp",
+    "donor_sha256": "615ad702d3d6c0871e841a2fef9043caf60348bfc724e0a5b4a860fa2fbfa3e6",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/PunchBox.cpp",
+    "destination": "src/Game/MapObj/PunchBox.cpp",
+    "donor_sha256": "b8f913bf81080d30fe3bfdcb41fe529d027ce51f6973a3436147268deb7abe17",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/QuarterRollGravityRoomArrow.cpp",
+    "destination": "src/Game/MapObj/QuarterRollGravityRoomArrow.cpp",
+    "donor_sha256": "0a70f37ae6f6a0937f49ead4a86920b31acfae03ef1bc4a95cd41898db022556",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/QuestionBoxGalleryObj.cpp",
+    "destination": "src/Game/MapObj/QuestionBoxGalleryObj.cpp",
+    "donor_sha256": "bf178d0a6112d9c385f2196dd0a09a8159ba59146820734380ee37d8bf9c6050",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/QuestionCoin.cpp",
+    "destination": "src/Game/MapObj/QuestionCoin.cpp",
+    "donor_sha256": "6d14277f5b4d43d744fdec980ed5c0615aaeb44927130aa2e1e7e39b363ca99d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/RailBlock.cpp",
+    "destination": "src/Game/MapObj/RailBlock.cpp",
+    "donor_sha256": "144adc82c1ffd8862e938b660d375d2fee40a6bdd84374b009a50d33715d6562",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/RailMoveObj.cpp",
+    "destination": "src/Game/MapObj/RailMoveObj.cpp",
+    "donor_sha256": "1f6864d2e0d98281e4cd704ff43b46fe04a4b2fd6885e46c77966c8e18ae52e3",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/RainCloud.cpp",
+    "destination": "src/Game/MapObj/RainCloud.cpp",
+    "donor_sha256": "e672be34d9cb61e21481457a335f368df93b6efed1deb9b890fdc11dcde0623e",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ReverseGravityRoomPlanet.cpp",
+    "destination": "src/Game/MapObj/ReverseGravityRoomPlanet.cpp",
+    "donor_sha256": "c8dc2e57f1f41a74e1deef53cebf226ef69edc6e6078b8b31f4376b18c5bc876",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/RevolvingWay.cpp",
+    "destination": "src/Game/MapObj/RevolvingWay.cpp",
+    "donor_sha256": "a6dac75c11777f11777960d058efdbbd6fc3dc46cd07ca59cbfff41fbcf3f425",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/Rock.cpp",
+    "destination": "src/Game/MapObj/Rock.cpp",
+    "donor_sha256": "f6e92b264af52f46ad60e928f7d2199478327611dd7247c66feff59e7dde3bc1",
+    "cp932_literal_groups": 10
+  },
+  {
+    "source": "decomp/src/Game/MapObj/RockCreator.cpp",
+    "destination": "src/Game/MapObj/RockCreator.cpp",
+    "donor_sha256": "3ae673dbe6ca4f335aacb19a8545cbaa683fbc5e0cce4deed3e889ffac2aa34f",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/RosettaChair.cpp",
+    "destination": "src/Game/MapObj/RosettaChair.cpp",
+    "donor_sha256": "7199d72f8bf0ec376a304012091facf89b54b7a5c856d3b13b329f93839061d2",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/RosettaPictureBook.cpp",
+    "destination": "src/Game/MapObj/RosettaPictureBook.cpp",
+    "donor_sha256": "02116606d0d64c7410404336395c9eb653d2a4ecc2cd25cd64f53c7ee8d47af2",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SandCapsuleInsidePlanet.cpp",
+    "destination": "src/Game/MapObj/SandCapsuleInsidePlanet.cpp",
+    "donor_sha256": "843c2aecd6819cf5407270fd783d34047e85983d7707878b0605e90f7d1ddb8b",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SandCapsulePressGround.cpp",
+    "destination": "src/Game/MapObj/SandCapsulePressGround.cpp",
+    "donor_sha256": "a541e0f8ce5150edf53337c80579ef7f4c771f7f973a67fd232ea9483de9ea99",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SandUpDownEffectObj.cpp",
+    "destination": "src/Game/MapObj/SandUpDownEffectObj.cpp",
+    "donor_sha256": "494160f3bf52de3822578f7e54f9edfcf99d589bd6d6418c55d024bc231a32ab",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SandUpDownTriRock.cpp",
+    "destination": "src/Game/MapObj/SandUpDownTriRock.cpp",
+    "donor_sha256": "ba35b4bce5e728001e01c890453bc4a253ae9597a8b915b5ba3e16cde3632374",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/Sandstorm.cpp",
+    "destination": "src/Game/MapObj/Sandstorm.cpp",
+    "donor_sha256": "6cf49c4e7d9ca3b0b6ced41af6b785a32529c10df8fe0d8388c9b04647e291ff",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ScrewSwitch.cpp",
+    "destination": "src/Game/MapObj/ScrewSwitch.cpp",
+    "donor_sha256": "cb4ec33510e74c7da3b5117067758e6d943ec05bae08953a022cbc4b0c961cf7",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ScrewSwitchReverse.cpp",
+    "destination": "src/Game/MapObj/ScrewSwitchReverse.cpp",
+    "donor_sha256": "89db26bc261e5eb22a36656e98fbd8e6cc24cdee6c718e44af2a21e62e020563",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SeaBottomTriplePropeller.cpp",
+    "destination": "src/Game/MapObj/SeaBottomTriplePropeller.cpp",
+    "donor_sha256": "e4a4f85c9bd19120ffe66eec5caabef12fe04b8c339af9b5c807a771fb1240fd",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SeesawMoveNut.cpp",
+    "destination": "src/Game/MapObj/SeesawMoveNut.cpp",
+    "donor_sha256": "c4230a667bcac01b8243fec02532070e7c2460d5df30d0d54e080d291faf94dc",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/Shellfish.cpp",
+    "destination": "src/Game/MapObj/Shellfish.cpp",
+    "donor_sha256": "f6ce35bbaea37f5aa85c9a0437200a520e107fff2885b0c2a0833c21ef086fa1",
+    "cp932_literal_groups": 4
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ShootingStar.cpp",
+    "destination": "src/Game/MapObj/ShootingStar.cpp",
+    "donor_sha256": "7f21ee5f68404af652600d1a1abe723a2824702a401f3db37cc8cce8a551976d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SideSpikeMoveStep.cpp",
+    "destination": "src/Game/MapObj/SideSpikeMoveStep.cpp",
+    "donor_sha256": "5b0bef94e4cf622049927d583caef9989ccdb05861618f3d235a56567d8e15e0",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SimpleBreakableObj.cpp",
+    "destination": "src/Game/MapObj/SimpleBreakableObj.cpp",
+    "donor_sha256": "a84c4410cc7df72bfe6c145ac097243dfd96b5f15be1d3330d7cd41123022c00",
+    "cp932_literal_groups": 5
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SimpleClipPartsObj.cpp",
+    "destination": "src/Game/MapObj/SimpleClipPartsObj.cpp",
+    "donor_sha256": "80bb7599460b1b96a343aac02c5b46abe5c098a2c49d85cf6f8b4da1949672a6",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SimpleFloaterObj.cpp",
+    "destination": "src/Game/MapObj/SimpleFloaterObj.cpp",
+    "donor_sha256": "3d9c7c886e5d8018e629cff10eb66dcbd1f10fedf94b7a8c04d02b63239319f0",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SimpleNormalMapObj.cpp",
+    "destination": "src/Game/MapObj/SimpleNormalMapObj.cpp",
+    "donor_sha256": "f888baeb22c70a18e15d653177ee9c0dbc3d6a3cb110189d2a5e75abf9334e79",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SimpleTimerObj.cpp",
+    "destination": "src/Game/MapObj/SimpleTimerObj.cpp",
+    "donor_sha256": "d3f442ff6cd76642d306699948c1b22dc626a14641cc47f4b8e750e7ab68d39a",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SmallStone.cpp",
+    "destination": "src/Game/MapObj/SmallStone.cpp",
+    "donor_sha256": "6c78e2c5d48955939452cec8bb729485f0e8b04c16621296a5551bd24b25f184",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SnowCapsulePlanet.cpp",
+    "destination": "src/Game/MapObj/SnowCapsulePlanet.cpp",
+    "donor_sha256": "159bdfa6135740f0f76b015b4f8cee48788961b48cf46f9dabd7af0633622de4",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SnowFloor.cpp",
+    "destination": "src/Game/MapObj/SnowFloor.cpp",
+    "donor_sha256": "cea11f39abc8d4494d82cfe20cae7ea4183f9de9053f195670585417381053a0",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SnowFloorTile.cpp",
+    "destination": "src/Game/MapObj/SnowFloorTile.cpp",
+    "donor_sha256": "77c95d70b454f37dc8593d097210903c98b92a19a2903d8ecace6624c16cda22",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SnowMan.cpp",
+    "destination": "src/Game/MapObj/SnowMan.cpp",
+    "donor_sha256": "7abed61b30ee8428329a59949e5df096a53a5e6a7256d4d07c0483e4586a2f8a",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SnowplowSwitch.cpp",
+    "destination": "src/Game/MapObj/SnowplowSwitch.cpp",
+    "donor_sha256": "4b5f245a6e2e9fd6a42b113606352d4e3d5c0cfa2d26119b416c19dd4b9672b7",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SoundEmitter.cpp",
+    "destination": "src/Game/MapObj/SoundEmitter.cpp",
+    "donor_sha256": "c7a7f242503ff12f67ed9b83eee505767e0b6410f8237765c00bb42d8791aa5c",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpaceMine.cpp",
+    "destination": "src/Game/MapObj/SpaceMine.cpp",
+    "donor_sha256": "4c150851208cf99af04478921ceba372c7a4ecb9d28c1f9ba15fc8c2d467eeea",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpaceShipStep.cpp",
+    "destination": "src/Game/MapObj/SpaceShipStep.cpp",
+    "donor_sha256": "89aef00800b038216e8879bbb60ec2d617499dea7f477faa6dc129ee9d97c1a0",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SphereRailDash.cpp",
+    "destination": "src/Game/MapObj/SphereRailDash.cpp",
+    "donor_sha256": "2219355f0bf8a194c0fa233f4931e06d3eba2687a2ed343cbd1c9d9336d9444a",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpiderCoin.cpp",
+    "destination": "src/Game/MapObj/SpiderCoin.cpp",
+    "donor_sha256": "65560da0a6823001e378f5e770f594c55b1dcd5287cd2cfde3820f91714680ba",
+    "cp932_literal_groups": 6
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpiderMapBlock.cpp",
+    "destination": "src/Game/MapObj/SpiderMapBlock.cpp",
+    "donor_sha256": "87dc0334aacf3b2f27b89ef709819484d97395333f96b53f5dd3b5481fbb1314",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpiderThreadHangInfo.cpp",
+    "destination": "src/Game/MapObj/SpiderThreadHangInfo.cpp",
+    "donor_sha256": "69f935e2b9a98cb9ae867b84a47da97d601c5e4c2d9d5525a3fbbed994c097cb",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpiderThreadMainPoint.cpp",
+    "destination": "src/Game/MapObj/SpiderThreadMainPoint.cpp",
+    "donor_sha256": "15c65415a0c8e15b27036b5a0b4af0ab0fb038c285487e4da753d8e478afe402",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpiderThreadPart.cpp",
+    "destination": "src/Game/MapObj/SpiderThreadPart.cpp",
+    "donor_sha256": "7a0ff8e5d91ea171bbf28b4c595d75d86390dfecd517b39a55ce4e871b2525f4",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpiderThreadPoint.cpp",
+    "destination": "src/Game/MapObj/SpiderThreadPoint.cpp",
+    "donor_sha256": "7538ed62604ea4a0fd230234323ded159f5cfc1de17ffa504b9d68c037588edc",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpiderThreadRadialLine.cpp",
+    "destination": "src/Game/MapObj/SpiderThreadRadialLine.cpp",
+    "donor_sha256": "c360317e654c02220e4628baa62e2c487355965213429ba54c6a678d43b0e9ca",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpiderThreadWindCtrl.cpp",
+    "destination": "src/Game/MapObj/SpiderThreadWindCtrl.cpp",
+    "donor_sha256": "68c2fd08429f9eec8034b930cd178dedaafdd31b1f90464997d808c8508551f5",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpinDriver.cpp",
+    "destination": "src/Game/MapObj/SpinDriver.cpp",
+    "donor_sha256": "c5faea34790ea5de3a531912961a530638aff4bffec4859e45419d36f5115f2e",
+    "cp932_literal_groups": 4
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpinDriverCamera.cpp",
+    "destination": "src/Game/MapObj/SpinDriverCamera.cpp",
+    "donor_sha256": "783032b3139cc6c69eb3e5b2299db6088d4384c8cac3aefb29fa65f9e6a3bff8",
+    "cp932_literal_groups": 7
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpinDriverOperateRing.cpp",
+    "destination": "src/Game/MapObj/SpinDriverOperateRing.cpp",
+    "donor_sha256": "f20e4c58ddfd3849d2f70d5b4fded2de5c4c89af06a67116f565398acd118697",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpinDriverShootPath.cpp",
+    "destination": "src/Game/MapObj/SpinDriverShootPath.cpp",
+    "donor_sha256": "c63a92b71e11bff02e4aa321b3232b264dd180c49ca490c5af071049865a33f8",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpinDriverUtil.cpp",
+    "destination": "src/Game/MapObj/SpinDriverUtil.cpp",
+    "donor_sha256": "53c637100bf8142f1d80341936d75b35c663e463beea0d82983eaabf622d2ab8",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpinLeverSwitch.cpp",
+    "destination": "src/Game/MapObj/SpinLeverSwitch.cpp",
+    "donor_sha256": "14ff627ad3d125fcbc46648e6cdbbc342a073110667229e6702bd8bdd9bc33aa",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpinningBox.cpp",
+    "destination": "src/Game/MapObj/SpinningBox.cpp",
+    "donor_sha256": "89f20629d0ee68de25618d7f2e45d76aafc9d5175d72358ab884dc4672809a19",
+    "cp932_literal_groups": 5
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpringJetWater.cpp",
+    "destination": "src/Game/MapObj/SpringJetWater.cpp",
+    "donor_sha256": "e57bd2dd54d0016800dd087725f38450e411df6428633eb12e21d0918f25fa7a",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SpringWaterFloaterSpot.cpp",
+    "destination": "src/Game/MapObj/SpringWaterFloaterSpot.cpp",
+    "donor_sha256": "d88d70c6151562ec020668ca284e8d8a60a112480e721e176e101b1b70ce6ed3",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/StarPieceFollowGroup.cpp",
+    "destination": "src/Game/MapObj/StarPieceFollowGroup.cpp",
+    "donor_sha256": "5a214baaa7259eab10d48d58ba273e7e0ff8d2a43a2a9823a17a887858e35e6b",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/StarPieceMother.cpp",
+    "destination": "src/Game/MapObj/StarPieceMother.cpp",
+    "donor_sha256": "94f1d3884df8845d27800ddae50f4b2c51805efa4449cd1b62c79e04cb43da47",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/StarPieceSpot.cpp",
+    "destination": "src/Game/MapObj/StarPieceSpot.cpp",
+    "donor_sha256": "374554b1709f7a955a1bcb28d64bc9491df87c114e642e30b90a3d08861e0709",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SubmarineSteam.cpp",
+    "destination": "src/Game/MapObj/SubmarineSteam.cpp",
+    "donor_sha256": "25e4389dd208e987267b8a4d69ceb8e4ccab7c185e7ffe0c85170dcff668e798",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SubmarineVolcanoBigColumn.cpp",
+    "destination": "src/Game/MapObj/SubmarineVolcanoBigColumn.cpp",
+    "donor_sha256": "4c751e73bfa0c369cd3ae9220fd3522161c9970687304f77ba2760a861f390b6",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SuperSpinDriver.cpp",
+    "destination": "src/Game/MapObj/SuperSpinDriver.cpp",
+    "donor_sha256": "999396e87e96be2bb7f98f41d6a87ca3ad987fdcfe45e0e3165bf3335cb35b13",
+    "cp932_literal_groups": 8
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SurprisedGalaxy.cpp",
+    "destination": "src/Game/MapObj/SurprisedGalaxy.cpp",
+    "donor_sha256": "8222f9315581be0228a1d36e85d3796a1ee09503dfc8d707ebeb24d57d47be6f",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SwingLight.cpp",
+    "destination": "src/Game/MapObj/SwingLight.cpp",
+    "donor_sha256": "a07f657f67fae09570cf1d089dcaa215764ca8b23ff91b7d655730c923377fde",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/Swinger.cpp",
+    "destination": "src/Game/MapObj/Swinger.cpp",
+    "donor_sha256": "7563ab08864034b20fda59b707158941230fe90dae0e68fe8b4e4897d6a51c16",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/SwitchBox.cpp",
+    "destination": "src/Game/MapObj/SwitchBox.cpp",
+    "donor_sha256": "def777c13a3b911391e597cecbc11dfd1d547d84890db69c6388df7288aa6e7f",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/TimeAppearObj.cpp",
+    "destination": "src/Game/MapObj/TimeAppearObj.cpp",
+    "donor_sha256": "a5043e7220e49baf44814652ac96d6dc168235c941d339220a3391262ebd2fc0",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/TimerMoveWall.cpp",
+    "destination": "src/Game/MapObj/TimerMoveWall.cpp",
+    "donor_sha256": "58adb5c3f1011b7cd73d55b3737465d9c3733e0da6612290d3ff0dd65580bbe5",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/TrampleStar.cpp",
+    "destination": "src/Game/MapObj/TrampleStar.cpp",
+    "donor_sha256": "95a52ab1edb546b020197044847ff36332a821c2811292b983c9dea4e0b056e7",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/TransparentWall.cpp",
+    "destination": "src/Game/MapObj/TransparentWall.cpp",
+    "donor_sha256": "9586eee59abda6627d07faf0526ebf034c5a8a10b3245516f511006d6c99e43e",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/TreasureBoxCracked.cpp",
+    "destination": "src/Game/MapObj/TreasureBoxCracked.cpp",
+    "donor_sha256": "0246a3f9a19418594f1fdd535739db6fed21a0ce2422ab08a30b7d74bf3e2bc3",
+    "cp932_literal_groups": 6
+  },
+  {
+    "source": "decomp/src/Game/MapObj/TreasureSpot.cpp",
+    "destination": "src/Game/MapObj/TreasureSpot.cpp",
+    "donor_sha256": "ac7b64fac61a0f6ffd603afec4fdb33fa8bc9ac13cbcc25459daa90db9c3ab97",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/Tsukidashikun.cpp",
+    "destination": "src/Game/MapObj/Tsukidashikun.cpp",
+    "donor_sha256": "a1ad27ac889ef024d13e6f02924f2acbb2d11e9fb012dcfa839788d7f0d766c3",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/TypicalDoor.cpp",
+    "destination": "src/Game/MapObj/TypicalDoor.cpp",
+    "donor_sha256": "411dacbd5dc7424f886b3be6eaa1204363117704033b4e805399b0ee2f0ed147",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/MapObj/UFOBase.cpp",
+    "destination": "src/Game/MapObj/UFOBase.cpp",
+    "donor_sha256": "2a010c972a23b15499b6b21fa24ba06c267b93329fcb18521b416d8387196c4e",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/UFOKinoko.cpp",
+    "destination": "src/Game/MapObj/UFOKinoko.cpp",
+    "donor_sha256": "f528fb1a56eb1800a058170bb4572b4b672e47cf2e4e49cc0e6da4f9d837f439",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/ValveSwitch.cpp",
+    "destination": "src/Game/MapObj/ValveSwitch.cpp",
+    "donor_sha256": "e204985d4127805505c8ae8a82aa57ab936fc27e6c61541a25c793bb65d433ca",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/WatchTowerRotateStep.cpp",
+    "destination": "src/Game/MapObj/WatchTowerRotateStep.cpp",
+    "donor_sha256": "62b44bcac5f3cee73463563c88c267ebe425a6f7cac8c3ccc0fe08c52f97dff7",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/WaterLeakPipe.cpp",
+    "destination": "src/Game/MapObj/WaterLeakPipe.cpp",
+    "donor_sha256": "522157cb441c50fe6a71e2da3866c2fee7e02955f042851b82902279a48f5afc",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/WaterPressure.cpp",
+    "destination": "src/Game/MapObj/WaterPressure.cpp",
+    "donor_sha256": "52a17ea20fd5f410a6ed291342a5c2f3893a95666ea0913c27917a63e2526787",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/WaterPressureBullet.cpp",
+    "destination": "src/Game/MapObj/WaterPressureBullet.cpp",
+    "donor_sha256": "2a2e50eb7eaf55c25c30e29bdcc88c10cc95c27f6398b874f6686e8084028cf6",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/WaterPressureBulletHolder.cpp",
+    "destination": "src/Game/MapObj/WaterPressureBulletHolder.cpp",
+    "donor_sha256": "d8f2e81bbc1cfc0e2fcc22b25104a289c3a099900309db1d22d68bc52d45ce29",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/MapObj/WaterfallCaveCover.cpp",
+    "destination": "src/Game/MapObj/WaterfallCaveCover.cpp",
+    "donor_sha256": "4e6455377b14e2ea559b4c68403b216518de51a78af5ab4e3b6eebaf02990450",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/MapObj/WaveFloatingForce.cpp",
+    "destination": "src/Game/MapObj/WaveFloatingForce.cpp",
+    "donor_sha256": "b7a41015f19b55b7f02364115c88100f1a2d3021d05dabef08a3a35f369b191d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/WhirlPool.cpp",
+    "destination": "src/Game/MapObj/WhirlPool.cpp",
+    "donor_sha256": "23cfa1498c23bab8ce1373ccb54e6ab3c884cad672677c36984ff72d29bb5d43",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/MapObj/WoodBox.cpp",
+    "destination": "src/Game/MapObj/WoodBox.cpp",
+    "donor_sha256": "b59b20c549adb37bcd29733cf40af05f7a7d010b67ea32675e06a69c6aa43201",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/MapObj/WormEatenPlanet.cpp",
+    "destination": "src/Game/MapObj/WormEatenPlanet.cpp",
+    "donor_sha256": "767582dd6742589db0f738ec3e5d6adb0095756c21d877754272fc0283822877",
+    "cp932_literal_groups": 9
+  },
+  {
+    "source": "decomp/src/Game/MapObj/YellowChip.cpp",
+    "destination": "src/Game/MapObj/YellowChip.cpp",
+    "donor_sha256": "cf158669c8b902239b7c288dea47fd6fb3ce55331aeadbd82a380f3516f1bce7",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NPC/Butler.cpp",
+    "destination": "src/Game/NPC/Butler.cpp",
+    "donor_sha256": "78717496848c423290d6671c00f3bbdf45f872c77d5a92295ba31114b9f9bba7",
+    "cp932_literal_groups": 23
+  },
+  {
+    "source": "decomp/src/Game/NPC/ButlerExplain.cpp",
+    "destination": "src/Game/NPC/ButlerExplain.cpp",
+    "donor_sha256": "e82e639c40daa6e0755d2c19e0480ac4e87c416bebb283bdd194886394cde0d9",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/NPC/ButlerMap.cpp",
+    "destination": "src/Game/NPC/ButlerMap.cpp",
+    "donor_sha256": "48c14ebdf4712ac75ab06c5af235fad96e3489e8fba2aeed9928ef6ded59815b",
+    "cp932_literal_groups": 6
+  },
+  {
+    "source": "decomp/src/Game/NPC/ButlerStateStarPieceReaction.cpp",
+    "destination": "src/Game/NPC/ButlerStateStarPieceReaction.cpp",
+    "donor_sha256": "928d47d75b20c376c86a306fbc2f1291ec7f6ca9d43787d31dfdf097ba829671",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/NPC/CareTaker.cpp",
+    "destination": "src/Game/NPC/CareTaker.cpp",
+    "donor_sha256": "4ee493742fd3ac1abba0180853a6f7afccbe1e4febcc18288c5ec9b9772c90b2",
+    "cp932_literal_groups": 7
+  },
+  {
+    "source": "decomp/src/Game/NPC/CollectTico.cpp",
+    "destination": "src/Game/NPC/CollectTico.cpp",
+    "donor_sha256": "4438f948be63ce31cc5174b3ea01090ca339fff19e7226ca484a76d5cfabe5cd",
+    "cp932_literal_groups": 4
+  },
+  {
+    "source": "decomp/src/Game/NPC/HoneyBee.cpp",
+    "destination": "src/Game/NPC/HoneyBee.cpp",
+    "donor_sha256": "2efbc234f07d00269f6afafd6c37427197ccd807817cbecb4ff34589650b02ea",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NPC/HoneyQueen.cpp",
+    "destination": "src/Game/NPC/HoneyQueen.cpp",
+    "donor_sha256": "b1a74bed01845e3487ef3169ffcd87e91a95aadf2240df15053185d2ba081635",
+    "cp932_literal_groups": 4
+  },
+  {
+    "source": "decomp/src/Game/NPC/Kinopio.cpp",
+    "destination": "src/Game/NPC/Kinopio.cpp",
+    "donor_sha256": "e99b22605b0d8f74a3b20271363bbebf9e556cf0b4a680bbd2a5fcb392c8a08f",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NPC/KinopioAstro.cpp",
+    "destination": "src/Game/NPC/KinopioAstro.cpp",
+    "donor_sha256": "66cf2ed7cd2b3c4ceb2a6084067fdf602c891a1882fef4d6d122125d0b4a77f7",
+    "cp932_literal_groups": 5
+  },
+  {
+    "source": "decomp/src/Game/NPC/KoopaJr.cpp",
+    "destination": "src/Game/NPC/KoopaJr.cpp",
+    "donor_sha256": "25bb04e37aacceabbe44a21797dc629defc2b19a078f75a858e01d2a6989ddf4",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/NPC/LuigiNPC.cpp",
+    "destination": "src/Game/NPC/LuigiNPC.cpp",
+    "donor_sha256": "721ec8948a129da33d63663c15a851f8c6a4dea39f723da758dfcc5488dc7c02",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NPC/MiiDatabase.cpp",
+    "destination": "src/Game/NPC/MiiDatabase.cpp",
+    "donor_sha256": "3e8c8ba900b60488b150508828503c18977512a8e5ada6997c2e9f6a04f53976",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NPC/MiiFaceIcon.cpp",
+    "destination": "src/Game/NPC/MiiFaceIcon.cpp",
+    "donor_sha256": "1456649e3010ec32031fadebeb3c3b6c1ce5d1ead71cdebb64d9a2e4bcd85126",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NPC/MiiFaceIconHolder.cpp",
+    "destination": "src/Game/NPC/MiiFaceIconHolder.cpp",
+    "donor_sha256": "57e4bc8912c328aa8635892af572e5d5b288cd207f5a624f8d45f3c9b5d468bb",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/NPC/NPCSupportRail.cpp",
+    "destination": "src/Game/NPC/NPCSupportRail.cpp",
+    "donor_sha256": "42500b65645288af034691da7ee9af5db2a320abd1dbf8d50d4a20b8386dc362",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NPC/Peach.cpp",
+    "destination": "src/Game/NPC/Peach.cpp",
+    "donor_sha256": "00bccce1c254f51f9f57b2bc6f7729d15963585d6e5fd9c5e16fc47a56aece13",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NPC/Penguin.cpp",
+    "destination": "src/Game/NPC/Penguin.cpp",
+    "donor_sha256": "3c95514164a0382707500643cd0eb1f0a9622f7547c58f9b05eb8fc530e68daf",
+    "cp932_literal_groups": 4
+  },
+  {
+    "source": "decomp/src/Game/NPC/PenguinCoach.cpp",
+    "destination": "src/Game/NPC/PenguinCoach.cpp",
+    "donor_sha256": "78660d3f5af26e56feda9346fa8deecdbe6c5c5fe6cc6e88e9f261cffa136ad3",
+    "cp932_literal_groups": 15
+  },
+  {
+    "source": "decomp/src/Game/NPC/PenguinMaster.cpp",
+    "destination": "src/Game/NPC/PenguinMaster.cpp",
+    "donor_sha256": "474e0f754050da7926f948473dbb5b1c8f0eecdfad1a08d05288809861e9bfdc",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NPC/PenguinRacer.cpp",
+    "destination": "src/Game/NPC/PenguinRacer.cpp",
+    "donor_sha256": "475c136047856e0d78ff7d4991b5302b6e9eb8d1a81c41fd0cb6886be9d4ffc2",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NPC/PenguinRacerLeader.cpp",
+    "destination": "src/Game/NPC/PenguinRacerLeader.cpp",
+    "donor_sha256": "408e51265a239ee83d9b26f431bd55187c08c8ed98a9f3a888462888a73ce66f",
+    "cp932_literal_groups": 6
+  },
+  {
+    "source": "decomp/src/Game/NPC/PenguinSkater.cpp",
+    "destination": "src/Game/NPC/PenguinSkater.cpp",
+    "donor_sha256": "69e4731e30ebae72e47341c1f1c83c2e9375a970c8eef276a7d9c908f6341429",
+    "cp932_literal_groups": 13
+  },
+  {
+    "source": "decomp/src/Game/NPC/PenguinStudent.cpp",
+    "destination": "src/Game/NPC/PenguinStudent.cpp",
+    "donor_sha256": "42f4d465094d52cc8bd45c29536ac97942b5b740e7413b3ab2ac8d8f07641062",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NPC/Rabbit.cpp",
+    "destination": "src/Game/NPC/Rabbit.cpp",
+    "donor_sha256": "11149505784a430be6af322d2799c97d29886a2915d91626faac23a75e1aa7e3",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NPC/RabbitStateCaught.cpp",
+    "destination": "src/Game/NPC/RabbitStateCaught.cpp",
+    "donor_sha256": "485f32450b0ee366e9e9325fa6572b2642c14523f87b7ca8af7fe1bc1bc540a1",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/NPC/RabbitStateWaitStart.cpp",
+    "destination": "src/Game/NPC/RabbitStateWaitStart.cpp",
+    "donor_sha256": "26baf554e1b97d5b35b52ab4694dd2eafafc65fcbbd33ba0b79a3d1bf6aef283",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/NPC/RosettaReading.cpp",
+    "destination": "src/Game/NPC/RosettaReading.cpp",
+    "donor_sha256": "9c30d0ca934a944022feb3c19c18bc36ffc285b50e98ba20031ba2abff34e082",
+    "cp932_literal_groups": 9
+  },
+  {
+    "source": "decomp/src/Game/NPC/SignBoard.cpp",
+    "destination": "src/Game/NPC/SignBoard.cpp",
+    "donor_sha256": "7869c43f94e3b5d4a27992b0dd4cbd0d0429bc23851cabd20e496b93b6a1e25b",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NPC/StrayTico.cpp",
+    "destination": "src/Game/NPC/StrayTico.cpp",
+    "donor_sha256": "2b7b6a695876cbb4626bd3626a85ae1185394b947b5f2c4d1668079f30c40745",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/NPC/Syati.cpp",
+    "destination": "src/Game/NPC/Syati.cpp",
+    "donor_sha256": "4db9a3bbd6470ac91d39ffc59adf5f5cc44b848ce0c60af4a901451390d5b4bb",
+    "cp932_literal_groups": 13
+  },
+  {
+    "source": "decomp/src/Game/NPC/TeresaRacer.cpp",
+    "destination": "src/Game/NPC/TeresaRacer.cpp",
+    "donor_sha256": "cbf4006d53c2b4c47eeaff58dbdf4d7db24f51031fea302298e19953b1e01b18",
+    "cp932_literal_groups": 6
+  },
+  {
+    "source": "decomp/src/Game/NPC/TicoAstro.cpp",
+    "destination": "src/Game/NPC/TicoAstro.cpp",
+    "donor_sha256": "3d0b0f26c2af89b365460ea4528b3bf6846db1726ef1ab35e74e650a3bf7399e",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NPC/TicoComet.cpp",
+    "destination": "src/Game/NPC/TicoComet.cpp",
+    "donor_sha256": "bcdac67cb29f25159c39e510ed19e38b34b052bd9741b2ed170875351677b3d1",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NPC/TicoDomeLecture.cpp",
+    "destination": "src/Game/NPC/TicoDomeLecture.cpp",
+    "donor_sha256": "b00d67b74d86736f81775e9bcbb71b8bd5d9f85655dfc828200cc2885051feaf",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/NPC/TicoFat.cpp",
+    "destination": "src/Game/NPC/TicoFat.cpp",
+    "donor_sha256": "d39667ce26f1a77e9754f951573b9e8f8818b9d35c4329699360d02cb6798c94",
+    "cp932_literal_groups": 15
+  },
+  {
+    "source": "decomp/src/Game/NPC/TicoGalaxy.cpp",
+    "destination": "src/Game/NPC/TicoGalaxy.cpp",
+    "donor_sha256": "cdcd9d77ff1ba25e3b2c8b1e254a11a961ba2aff9c93334448a70b683422487f",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/NPC/TicoRail.cpp",
+    "destination": "src/Game/NPC/TicoRail.cpp",
+    "donor_sha256": "acdc1f0e32ba7f411089b683646f7780716bf0bdd7ef53bb5f7e256fd0a8fe8e",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/NPC/TicoReading.cpp",
+    "destination": "src/Game/NPC/TicoReading.cpp",
+    "donor_sha256": "0ba20075559388e1e32e3d6a94f96da41e27e0b6d153cd5024056005384b705d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NPC/TicoShop.cpp",
+    "destination": "src/Game/NPC/TicoShop.cpp",
+    "donor_sha256": "627f543cea1c1e17601234f22d7e12a3514915339ee7f468f615b86831db339c",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NPC/TicoStarRing.cpp",
+    "destination": "src/Game/NPC/TicoStarRing.cpp",
+    "donor_sha256": "28c96678c42052325c5ff7339254822bdabc0032f3d4142d4bdc397eb0287f06",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NPC/TrickRabbit.cpp",
+    "destination": "src/Game/NPC/TrickRabbit.cpp",
+    "donor_sha256": "c8edd7cfbcdaed0d945eef5dedcec7e92a1df96128b8d79e6a984393be0d46c2",
+    "cp932_literal_groups": 4
+  },
+  {
+    "source": "decomp/src/Game/NPC/TrickRabbitFreeRun.cpp",
+    "destination": "src/Game/NPC/TrickRabbitFreeRun.cpp",
+    "donor_sha256": "a32a84e5f162cd8cb633ba59215a42b8b92613d6fccefb75b007a735ac3c3bb0",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/NPC/TrickRabbitSnow.cpp",
+    "destination": "src/Game/NPC/TrickRabbitSnow.cpp",
+    "donor_sha256": "2d31148f1b02e93104d48b144fb44f6faf7595467b9a93aef662e695087e21a8",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/NPC/TrickRabbitSnowCollect.cpp",
+    "destination": "src/Game/NPC/TrickRabbitSnowCollect.cpp",
+    "donor_sha256": "d20ce1739868fb80f513d8858286bfe95fcae2b7a67f8d83ebda924f82c455c2",
+    "cp932_literal_groups": 17
+  },
+  {
+    "source": "decomp/src/Game/NWC24/ReceiverTagMail.cpp",
+    "destination": "src/Game/NWC24/ReceiverTagMail.cpp",
+    "donor_sha256": "6ed950ad4fe11a0d2cdb680f42f9daf09f6a590f6f37f8f30b0fa175e2bbdb38",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/NameObj/ModelChangableObjFactory.cpp",
+    "destination": "src/Game/NameObj/ModelChangableObjFactory.cpp",
+    "donor_sha256": "8d4370c848d96f290d4b3089ef528cc77540aa6872263cdcce811ac8e9e7fd0d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Player/GhostPacket.cpp",
+    "destination": "src/Game/Player/GhostPacket.cpp",
+    "donor_sha256": "7eae75fdcefd7a0dd8df2145ffd17cdbfe8ab1c8c225a0f52a55a238ec624236",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Player/GhostPlayer.cpp",
+    "destination": "src/Game/Player/GhostPlayer.cpp",
+    "donor_sha256": "62a1887c905ceefa7eab32fd0bd2227b9980c1cf40175411133159fcc9fc8f73",
+    "cp932_literal_groups": 87
+  },
+  {
+    "source": "decomp/src/Game/RhythmLib/AudBgmTempoAdjuster.cpp",
+    "destination": "src/Game/RhythmLib/AudBgmTempoAdjuster.cpp",
+    "donor_sha256": "08f741fd211d75c51c97f4b99fe64c387a55cbcd8038002b03e6a5d841574722",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/RhythmLib/AudChordInfo.cpp",
+    "destination": "src/Game/RhythmLib/AudChordInfo.cpp",
+    "donor_sha256": "686875853061f60b133b3893dcdbb8d4914c9a8432a8891feb22ab8a8ec4f235",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/RhythmLib/AudMeChannelMgr.cpp",
+    "destination": "src/Game/RhythmLib/AudMeChannelMgr.cpp",
+    "donor_sha256": "982a81e276e8615d95ff094407552084f257f03246815bb55bd7dd564713d6fc",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/RhythmLib/AudMeHandles.cpp",
+    "destination": "src/Game/RhythmLib/AudMeHandles.cpp",
+    "donor_sha256": "d49f7f90ce4a60512336930e433c3c0fe48683bbf7642baeaa86ac709fcb3eda",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/RhythmLib/AudMeObject.cpp",
+    "destination": "src/Game/RhythmLib/AudMeObject.cpp",
+    "donor_sha256": "5ab5aef561320893da33e04bb78fb092efe71c91d9b69aa5f4da8058e44e09c3",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/RhythmLib/AudMePlayer.cpp",
+    "destination": "src/Game/RhythmLib/AudMePlayer.cpp",
+    "donor_sha256": "53fa4149c81b317eeea87b437401b1f45452e49767acee1dbb801f6d25a9d6a0",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/RhythmLib/AudMeSeqCtrl.cpp",
+    "destination": "src/Game/RhythmLib/AudMeSeqCtrl.cpp",
+    "donor_sha256": "258bd26d1cd447f1c1c023e4b3839e9d7f2c254c818ebf95f672af88d3839b27",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/RhythmLib/AudMeSeqParser.cpp",
+    "destination": "src/Game/RhythmLib/AudMeSeqParser.cpp",
+    "donor_sha256": "68c5a7b7f50ebb5316fd72cc84168209fb05212cbd76fc653073b48b4ee652ca",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/RhythmLib/AudMeSeqReader.cpp",
+    "destination": "src/Game/RhythmLib/AudMeSeqReader.cpp",
+    "donor_sha256": "8a7e00210476f20e7374685fbe5d972eba341aeb4a14a0fb3ee991f4f950e7f4",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/RhythmLib/AudMeTrack.cpp",
+    "destination": "src/Game/RhythmLib/AudMeTrack.cpp",
+    "donor_sha256": "8b05066c7da6dad7f6680d8c13699cbfac58115fc28c1b60bde5bf6b8fd0472a",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/RhythmLib/AudMeTrackCallback.cpp",
+    "destination": "src/Game/RhythmLib/AudMeTrackCallback.cpp",
+    "donor_sha256": "a366078e70f29b72c47b059ccc8c98c706dcc7388754ce6d93eee85c0d04eac4",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/RhythmLib/AudRhythmHolder.cpp",
+    "destination": "src/Game/RhythmLib/AudRhythmHolder.cpp",
+    "donor_sha256": "f9cbde5e9dd35e5e1998643d79ecf393814868f65337dbd2790ee292ce606286",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/RhythmLib/AudRhythmMeSystem.cpp",
+    "destination": "src/Game/RhythmLib/AudRhythmMeSystem.cpp",
+    "donor_sha256": "b15cadbe9ec36e0b7bbeb453ce51e9db97e4eeb68ac8c9d2a252c17cf9430d47",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/RhythmLib/AudRhythmSeqParser.cpp",
+    "destination": "src/Game/RhythmLib/AudRhythmSeqParser.cpp",
+    "donor_sha256": "ca1e7cdd68331d06e0ef5465245f757e8b82f1460cc4407b92c7d20381fb45ce",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/RhythmLib/AudRhythmWrap.cpp",
+    "destination": "src/Game/RhythmLib/AudRhythmWrap.cpp",
+    "donor_sha256": "f9a8f19f339601dc52fd83b489ca768b6707967c0740d36f8591f31011f76edc",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Ride/BigBubble.cpp",
+    "destination": "src/Game/Ride/BigBubble.cpp",
+    "donor_sha256": "fe973a8b55b7f2b60648bb0f56835b740579dce7baee9bc7c4bb70179baf8807",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Ride/Creeper.cpp",
+    "destination": "src/Game/Ride/Creeper.cpp",
+    "donor_sha256": "c3ff5b8e8084ec49fd7d3d4ee25d2afe6b25bd8178c577ea79b02e8b54b50d47",
+    "cp932_literal_groups": 7
+  },
+  {
+    "source": "decomp/src/Game/Ride/Fluff.cpp",
+    "destination": "src/Game/Ride/Fluff.cpp",
+    "donor_sha256": "4551bb725725611c151ed0e297018b6d855e50933e18c4482386f4bb3ef45cde",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Ride/FluffWind.cpp",
+    "destination": "src/Game/Ride/FluffWind.cpp",
+    "donor_sha256": "c048bb4133ddc76a53d4cbf3802f418c6d905128dbd5f2f9028cedfbe25ced96",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Ride/JumpBranch.cpp",
+    "destination": "src/Game/Ride/JumpBranch.cpp",
+    "donor_sha256": "a0da030cd1c65846b1c289f7ba7cf0f738c718fd5e8a0817769171bbd6c41a3d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Ride/Plant.cpp",
+    "destination": "src/Game/Ride/Plant.cpp",
+    "donor_sha256": "9650b68354edbaef8e2cc73fbfeeb5e47b7f393f5578c80ae5cb910dc57ff667",
+    "cp932_literal_groups": 12
+  },
+  {
+    "source": "decomp/src/Game/Ride/PlantLeaf.cpp",
+    "destination": "src/Game/Ride/PlantLeaf.cpp",
+    "donor_sha256": "8b37200abf126d19c7fe0386abe59688e7798a40b12f31661624d7b55d83129b",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Ride/PlantStalk.cpp",
+    "destination": "src/Game/Ride/PlantStalk.cpp",
+    "donor_sha256": "49f5954d792f0cbf0272917727b72cfb985f74809b6d6691851f68ff417dc306",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Ride/Pole.cpp",
+    "destination": "src/Game/Ride/Pole.cpp",
+    "donor_sha256": "7f307c6acc32de01b44ef572360c144f2e02f3b5f365aca0806fdd2d061964b8",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Ride/SledRopePoint.cpp",
+    "destination": "src/Game/Ride/SledRopePoint.cpp",
+    "donor_sha256": "efb3cb94e8a89e9b80da92709d9e7913e2deccec7d5e3e8dacbccbe8cd8ff465",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Ride/SlingShooter.cpp",
+    "destination": "src/Game/Ride/SlingShooter.cpp",
+    "donor_sha256": "0d730385e309f5fe3aedb643e1770b7dfa5aac092ed78aa207132cc5b37b9aec",
+    "cp932_literal_groups": 27
+  },
+  {
+    "source": "decomp/src/Game/Ride/SpaceCocoon.cpp",
+    "destination": "src/Game/Ride/SpaceCocoon.cpp",
+    "donor_sha256": "8bd87b37fad1d8670adb613c3459b791113fc9083204d5ca2945fe1ebbc13177",
+    "cp932_literal_groups": 22
+  },
+  {
+    "source": "decomp/src/Game/Ride/SphereAccelSensorController.cpp",
+    "destination": "src/Game/Ride/SphereAccelSensorController.cpp",
+    "donor_sha256": "dd3b7b2c78414e7ee31e631ea4c646f9969c2ad4249c290d1ad78b0cf765276c",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Ride/SphereController.cpp",
+    "destination": "src/Game/Ride/SphereController.cpp",
+    "donor_sha256": "284cc9406b4749bd38c913a6bf8b50a0ff2f7bc677cb5e43f6e6a34afd3385a8",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Ride/SpherePadController.cpp",
+    "destination": "src/Game/Ride/SpherePadController.cpp",
+    "donor_sha256": "f5b646a0124d95c27a426abb46789c3a07da70f8db59a6ed249a669fd4a08688",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Ride/SurfRay.cpp",
+    "destination": "src/Game/Ride/SurfRay.cpp",
+    "donor_sha256": "d7201ab645034c597e7157d86412c18398ca54a742d4675b7fc4012b8b246f31",
+    "cp932_literal_groups": 14
+  },
+  {
+    "source": "decomp/src/Game/Ride/SurfRayTutorial.cpp",
+    "destination": "src/Game/Ride/SurfRayTutorial.cpp",
+    "donor_sha256": "76906314dff41884c81b04f8507467ab7bf36dfb99e3aba68d36ff4dd42ff154",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Ride/SwingRope.cpp",
+    "destination": "src/Game/Ride/SwingRope.cpp",
+    "donor_sha256": "7cbf44930dca7184de59cbb284291b04d6f4dff8e959286d91a12b5ee2d137e6",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Ride/Tamakoro.cpp",
+    "destination": "src/Game/Ride/Tamakoro.cpp",
+    "donor_sha256": "9d0877c0f7fcb4bb66dbdf3b9df701f597ccda3f3dce0068c823e881dad3d7d4",
+    "cp932_literal_groups": 5
+  },
+  {
+    "source": "decomp/src/Game/Ride/TamakoroTutorial.cpp",
+    "destination": "src/Game/Ride/TamakoroTutorial.cpp",
+    "donor_sha256": "0749663d0663b9b7d63e421940c21095a875be6873b6f310fd0461aa4e42b987",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Ride/Trapeze.cpp",
+    "destination": "src/Game/Ride/Trapeze.cpp",
+    "donor_sha256": "5502eeecd6f2fa6749530f89beebbbfdbed831cfab613e7a7c5cf0bb2a774cb9",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/BombTimerLayout.cpp",
+    "destination": "src/Game/Screen/BombTimerLayout.cpp",
+    "donor_sha256": "73981f46abe87d66cb00766d143d034773e395b789c22fb0e66ef34ccced9d67",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/CometRetryButton.cpp",
+    "destination": "src/Game/Screen/CometRetryButton.cpp",
+    "donor_sha256": "bef0940be9076729d1a6accb1359c3416f38b51ee6a63b21e33edb59833b2eb5",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/FullnessMeter.cpp",
+    "destination": "src/Game/Screen/FullnessMeter.cpp",
+    "donor_sha256": "b61a4d7de378aa16f4534f829efd8a945d934275a8ebca0de98f704d2f3a18c6",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Screen/GalaxyConfirmLayout.cpp",
+    "destination": "src/Game/Screen/GalaxyConfirmLayout.cpp",
+    "donor_sha256": "1e4e3235b005ebe8242b8bba92a8ef3823a9bd88465b273a72abb2dc30f9818f",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Screen/GalaxyInfoLayoutSetter.cpp",
+    "destination": "src/Game/Screen/GalaxyInfoLayoutSetter.cpp",
+    "donor_sha256": "1b5a0bbbedcc406109b114407971e1f403e60d7bc893e02d8fdd8a9f3ebfe2b1",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Screen/GalaxyMap.cpp",
+    "destination": "src/Game/Screen/GalaxyMap.cpp",
+    "donor_sha256": "c26918845cec6e404647550aa65581722b839ba3d569a6fff4756149704b74a5",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/GalaxyMapBackground.cpp",
+    "destination": "src/Game/Screen/GalaxyMapBackground.cpp",
+    "donor_sha256": "0c40dbdb44fbd929d83a87f2bf1bdd3600d422c49bcf30ccf7440ae4d2ad18af",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/GalaxyMapCometIcon.cpp",
+    "destination": "src/Game/Screen/GalaxyMapCometIcon.cpp",
+    "donor_sha256": "e6e61a7a0d49d1b191fdb0119c0966cc56e1b755fdb2fb721bfc26f626c2da4b",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Screen/GalaxyMapController.cpp",
+    "destination": "src/Game/Screen/GalaxyMapController.cpp",
+    "donor_sha256": "e12bbf00eee1462df81718df285882b95bbf714daa275dec98f6a3eb90de325e",
+    "cp932_literal_groups": 2
+  },
+  {
+    "source": "decomp/src/Game/Screen/GalaxyMapDomeIcon.cpp",
+    "destination": "src/Game/Screen/GalaxyMapDomeIcon.cpp",
+    "donor_sha256": "a151ba9b3792e6eb9119f8bbbcd20efa128d4dbb21333ef8d4115a1bdc088764",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Screen/GalaxyMapGalaxyDetail.cpp",
+    "destination": "src/Game/Screen/GalaxyMapGalaxyDetail.cpp",
+    "donor_sha256": "cd17b79b3d67a90af2b63b90ec50fb6d447f4737cc43fb13ebc2fabcef5c14f5",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Screen/GalaxyMapIcon.cpp",
+    "destination": "src/Game/Screen/GalaxyMapIcon.cpp",
+    "donor_sha256": "2af17684a978c398f54073c1e2e9cb3c52ea3c1385ea3d1b3864cf2af34658bd",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/GalaxyMapMarioIcon.cpp",
+    "destination": "src/Game/Screen/GalaxyMapMarioIcon.cpp",
+    "donor_sha256": "3699f14fff96b9d003bc090b3ecf7ea192e48c98cf582acf85ac47911d7651d3",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/GalaxyMapSelectButton.cpp",
+    "destination": "src/Game/Screen/GalaxyMapSelectButton.cpp",
+    "donor_sha256": "08b239bf1dd13ab994224bb6d809c518b36978a33a98f2a9c2df3288ae3cb3ef",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/GalaxyMapTicoIcon.cpp",
+    "destination": "src/Game/Screen/GalaxyMapTicoIcon.cpp",
+    "donor_sha256": "7d42d94df685913f92920a289031bb512648dc83bc2710bb75da77662bffb93c",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Screen/GalaxyMapTitle.cpp",
+    "destination": "src/Game/Screen/GalaxyMapTitle.cpp",
+    "donor_sha256": "b3f578023e31243b1876686447da2a044d9dc346ae5f6906547705602d57e270",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Screen/GalaxyNamePlate.cpp",
+    "destination": "src/Game/Screen/GalaxyNamePlate.cpp",
+    "donor_sha256": "c7666f210981324fea28ffe7fda4bdd9b9a7251f40c9822eb9696e19014d3f4d",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/GalaxyNamePlateDrawer.cpp",
+    "destination": "src/Game/Screen/GalaxyNamePlateDrawer.cpp",
+    "donor_sha256": "0926c55114665cfb4e8875edcdb5d7595bbecfc15c59e6b16c94b6b20f7cccb4",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/GalaxySelectBackButton.cpp",
+    "destination": "src/Game/Screen/GalaxySelectBackButton.cpp",
+    "donor_sha256": "04c351061176f0e409a5b0f20e2fef4fe891899ba6cf8694e27093c455b31b55",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/GalaxySelectInfo.cpp",
+    "destination": "src/Game/Screen/GalaxySelectInfo.cpp",
+    "donor_sha256": "f7ac6c62eae53eebfaaa1843a0c3dc9b6d294574925d40f51aed9b1e3e7accd8",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/HeatHazeEffect.cpp",
+    "destination": "src/Game/Screen/HeatHazeEffect.cpp",
+    "donor_sha256": "efeafc8769a7b0552b970afaa9bd9b67b67cc5469356eb9d589a7a5dfc6406ed",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/HomeButtonLayout.cpp",
+    "destination": "src/Game/Screen/HomeButtonLayout.cpp",
+    "donor_sha256": "01bc661aff58a51628b21350aa035ff1398c7a1abdb94652e9b40316d8a75bdf",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/IconComet.cpp",
+    "destination": "src/Game/Screen/IconComet.cpp",
+    "donor_sha256": "a2b54b9e98c84fe92e29d6ca08fb7905bb083881ffbabbb53f7eef9269bbbf11",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/LayoutActorFlag.cpp",
+    "destination": "src/Game/Screen/LayoutActorFlag.cpp",
+    "donor_sha256": "60df85ac2b6d323651ff8709928b22513a4d5791956e16bbbf060033b15fc4ac",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Screen/MiiSelectIcon.cpp",
+    "destination": "src/Game/Screen/MiiSelectIcon.cpp",
+    "donor_sha256": "9a4586285fa5bc3387eace5089acc0f6b0fb52065f92b5d2db5f50dfd8b1d863",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/MovieStarter.cpp",
+    "destination": "src/Game/Screen/MovieStarter.cpp",
+    "donor_sha256": "fd83cfd036d4f30f71a5e497b4e5f84ca0909d4f7c0efc1c9f28240ef44a111a",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Screen/OdhConverter.cpp",
+    "destination": "src/Game/Screen/OdhConverter.cpp",
+    "donor_sha256": "787f13d5f1c0973d4a206f733a529ee4a20a623e3ceca7158e020d47a76db2c8",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/PeachLetter.cpp",
+    "destination": "src/Game/Screen/PeachLetter.cpp",
+    "donor_sha256": "3bc3af3fa88a11b89cb2b0812b2036c2e1c042cc72b33ece2088790c9d5e64e0",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Screen/PlayerActionGuidance.cpp",
+    "destination": "src/Game/Screen/PlayerActionGuidance.cpp",
+    "donor_sha256": "e20b261c09ee6ca5d456e7a059289c29ca17dab244f182cec1b08ee2e211b502",
+    "cp932_literal_groups": 3
+  },
+  {
+    "source": "decomp/src/Game/Screen/PowerStarList.cpp",
+    "destination": "src/Game/Screen/PowerStarList.cpp",
+    "donor_sha256": "be4d75d53c5cd73532320083174fe366d657ca4790c3a50e48a850d677832652",
+    "cp932_literal_groups": 5
+  },
+  {
+    "source": "decomp/src/Game/Screen/StageResultInformer.cpp",
+    "destination": "src/Game/Screen/StageResultInformer.cpp",
+    "donor_sha256": "1c33a8460adb79c5e199709c617b23061c8bebfc68f742d27321a8ce4956eed2",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/SurfingGuidance.cpp",
+    "destination": "src/Game/Screen/SurfingGuidance.cpp",
+    "donor_sha256": "d86160e229d7651f11393da3369f4345a5ac44cee423dfd5272b8ae356597c54",
+    "cp932_literal_groups": 1
+  },
+  {
+    "source": "decomp/src/Game/Screen/THPDraw.c",
+    "destination": "src/Game/Screen/THPDraw.c",
+    "donor_sha256": "851a23dde66a5e4612ee6129af2f49db2670fd5fd327cee7e653940eae5e8b36",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Screen/odh.cpp",
+    "destination": "src/Game/Screen/odh.cpp",
+    "donor_sha256": "cfac40023efa28bfb306a6fc3f55088664fa4d48dce87009396e266fb8ccfcdb",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Speaker/SpkData.cpp",
+    "destination": "src/Game/Speaker/SpkData.cpp",
+    "donor_sha256": "d76dfffe08886b88beb34b6f97dfef6fe1e3682da38604c02b2780ccc68a4b41",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Speaker/SpkMixingBuffer.cpp",
+    "destination": "src/Game/Speaker/SpkMixingBuffer.cpp",
+    "donor_sha256": "ae207d8276df1b889162d6616f51857889d609328ad1e3ce9455e5257208d0ed",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Speaker/SpkSound.cpp",
+    "destination": "src/Game/Speaker/SpkSound.cpp",
+    "donor_sha256": "3f0f241e9bc347687fb2b957222495c643a5624610f7236406bd1d5d2539edce",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Speaker/SpkTable.cpp",
+    "destination": "src/Game/Speaker/SpkTable.cpp",
+    "donor_sha256": "c0776187bd0a312ed88c9bc1b3e85493303d47c439d154e73790ce112311cafa",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Speaker/SpkWave.cpp",
+    "destination": "src/Game/Speaker/SpkWave.cpp",
+    "donor_sha256": "59b7f26603dd1881942a76a62cb0a3fc4ec0ad1bc53b3d00e8a45640c1a1a708",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/System/AudSystemWrapper.cpp",
+    "destination": "src/Game/System/AudSystemWrapper.cpp",
+    "donor_sha256": "71777ee8fbb23039094bbe8fd154739027dcc7e067b8b569a3109c1312f0c642",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/System/HomeButtonMenuWrapper.cpp",
+    "destination": "src/Game/System/HomeButtonMenuWrapper.cpp",
+    "donor_sha256": "6b4d9fc9f1e835ad1fb00b1567e0f120aac5aa89d10ea297e8fe4b61ca37ec4d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Util/BezierSurface.cpp",
+    "destination": "src/Game/Util/BezierSurface.cpp",
+    "donor_sha256": "f0d84627b91fc83f93de11070ad682d34f601fac45c5eb6858a80470e1c527db",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Util/GeometryBindUtil.cpp",
+    "destination": "src/Game/Util/GeometryBindUtil.cpp",
+    "donor_sha256": "3fea4e2269042ef2a85390a4d6262e886c5b49753b010952f8512b8bb7bd54fe",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Util/IKJoint.cpp",
+    "destination": "src/Game/Util/IKJoint.cpp",
+    "donor_sha256": "403778efe7a8c3964503147a92edffb75ef77f30dc2641e94159dae74ef3cc9f",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Util/JointRumbler.cpp",
+    "destination": "src/Game/Util/JointRumbler.cpp",
+    "donor_sha256": "35b5445abd66bf877a3b3538e06f82244c6e31cbbfd8f9c39f8b1ad379909dba",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Util/MultiEventCamera.cpp",
+    "destination": "src/Game/Util/MultiEventCamera.cpp",
+    "donor_sha256": "3354fe0711cdfab06dc06ba0e319ee84e0d09c1b5e2b3e96c6a7f476a05bea15",
+    "cp932_literal_groups": 5
+  },
+  {
+    "source": "decomp/src/Game/Util/OctahedronBezierSurface.cpp",
+    "destination": "src/Game/Util/OctahedronBezierSurface.cpp",
+    "donor_sha256": "16f5e867e7c95e6e5c2c2503c47516a6f822249976e17172e7bbf0f0b95f39d6",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Util/ParabolicPath.cpp",
+    "destination": "src/Game/Util/ParabolicPath.cpp",
+    "donor_sha256": "86cd478c7897155c3d07d2d587592adfb23422e1f641810bc917938047f09aae",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Util/PostureHolder.cpp",
+    "destination": "src/Game/Util/PostureHolder.cpp",
+    "donor_sha256": "7c298691d80c41ded48e66cb12051b672902e299c7d2f020ee4d7855ea3ec84d",
+    "cp932_literal_groups": 0
+  },
+  {
+    "source": "decomp/src/Game/Util/RailGraphUtil.cpp",
+    "destination": "src/Game/Util/RailGraphUtil.cpp",
+    "donor_sha256": "d8948816624b99fc10e18cc5dd6540224e582f05f47b6f6c262cc2554ec883e4",
+    "cp932_literal_groups": 0
+  }
+]
