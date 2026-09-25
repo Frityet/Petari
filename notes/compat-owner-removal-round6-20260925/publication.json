@@ -1,0 +1,13 @@
+{
+  "implementation_commit": "9fea1c5e17a80d5160a59dde0014a273335d074a",
+  "verified_origin_branch": "pcp-aurora",
+  "verified_remote_commit": "9fea1c5e17a80d5160a59dde0014a273335d074a",
+  "aurora_commit": "57080e9c7b9d18e3ef637f115d6c14858bb965a7",
+  "verified_aurora_remote_commit": "57080e9c7b9d18e3ef637f115d6c14858bb965a7",
+  "verified_at": "2026-09-25T14:40:05.898266+00:00",
+  "preexisting_index_preserved_exactly": true,
+  "decomp_pointer_unchanged": true,
+  "remaining_compat_files": 168,
+  "complete_removal_finished": false,
+  "validation": "validation.json"
+}
