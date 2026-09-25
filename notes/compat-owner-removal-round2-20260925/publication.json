@@ -1,0 +1,13 @@
+{
+  "commit": "7980f85e6d3b4972b81a398cef61f13c1513efff",
+  "verified_remote": "7980f85e6d3b4972b81a398cef61f13c1513efff",
+  "branch": "pcp-aurora",
+  "preexisting_staged_patch_preserved": true,
+  "preexisting_staged_patch_sha256": "288c9971c3f77f8e8440c8e9e0f63892204d46e6f2f8fbf2064959988601e096",
+  "removed_this_checkpoint": 28,
+  "total_compat_removed": 73,
+  "remaining_compat_files": 257,
+  "native_validation_uses_existing_working_tree_and_submodule_state": true,
+  "decomp_head": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "aurora_head": "edffbd164d373e48de30d4be9997d952cdea7800"
+}
