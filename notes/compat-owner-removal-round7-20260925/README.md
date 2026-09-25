@@ -29,3 +29,5 @@ The broad provider provenance gate remains failing. Its final artifact reports z
 Compatibility removal remains active. The next recommended closure removes the test-only StageSessionState, StageScenarioMetadataResolver and StageZoneMatrixRegistry services, after migrating their remaining fixtures. The original Gateway opening run is a bounded regression check; it does not establish progress through Rosalina or completion of Gateway.
 
 The migrated wall provenance assertion now compares the retained authored archive path and exact RARC entry path. The old DVD cache normalized its diagnostic path to lowercase; the canonical FileLoader mount preserves original spelling. The test continues to require the complete exact source identity.
+
+Publication: implementation commit `6a4f4a886899206e44fa0dd867230c9bfc9277f5` pushed to `origin/pcp-aurora`; the remote SHA was verified. The original staged route-note patch remains byte-for-byte unchanged. `publication.json` records the verification and validation scope.

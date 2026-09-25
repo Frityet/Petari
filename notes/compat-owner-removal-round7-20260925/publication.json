@@ -1,0 +1,15 @@
+{
+  "implementation_commit": "6a4f4a886899206e44fa0dd867230c9bfc9277f5",
+  "remote": "origin",
+  "branch": "pcp-aurora",
+  "verified_remote_commit": "6a4f4a886899206e44fa0dd867230c9bfc9277f5",
+  "verified_at_utc": "2026-09-25T15:45:24.112656+00:00",
+  "focused_targets_passed": 20,
+  "opening_frames_completed": 600,
+  "normal_process_exit": true,
+  "compat_files_remaining": 160,
+  "preexisting_index_preserved_byte_for_byte": true,
+  "unrelated_working_changes_preserved": true,
+  "validation_scope": "Existing working tree, not a clean-checkout claim",
+  "goal_status": "Active: complete compat removal and Gateway gameplay remain unfinished"
+}
