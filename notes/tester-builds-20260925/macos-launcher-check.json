@@ -1,0 +1,7 @@
+{
+  "exit": 1,
+  "output": "Game log: /Users/frityet/Library/Logs/Petari/game-20260925-223351-94555.log\n",
+  "log": "/Users/frityet/Library/Logs/Petari/game-20260925-223351-94555.log",
+  "log_text": "[src/app/main.cpp:59][APP - FATAL] Uncaught exception Aurora could not open disc image /Users/frityet/Projects/petari/notes/tester-builds-20260925/README.md\n",
+  "scope": "Packaged loader and relative --disc argument. No game assets read or GUI automation."
+}

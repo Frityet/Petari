@@ -1,0 +1,73 @@
+#!/bin/sh
+set -eu
+tester_bin_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+tester_package_dir=@PACKAGE_DIR@
+tester_binary="$tester_bin_dir/@BINARY@"
+tester_disc=${SMGPC_DISC_IMAGE:-}
+tester_explicit_disc=false
+tester_next_is_disc=false
+for tester_arg in "$@"; do
+    case "$tester_arg" in --disc|--disc=*) tester_explicit_disc=true ;; esac
+done
+if [ "$tester_explicit_disc" = true ]; then
+    # The loop expands the original arguments before rebuilding the argument list.
+    for tester_arg in "$@"; do
+        if [ "$tester_next_is_disc" = true ]; then
+            case "$tester_arg" in /*) ;; *) tester_arg="$PWD/$tester_arg" ;; esac
+            tester_next_is_disc=false
+        else
+            case "$tester_arg" in
+                --disc) tester_next_is_disc=true ;;
+                --disc=/*) ;;
+                --disc=*) tester_arg="--disc=$PWD/${tester_arg#--disc=}" ;;
+            esac
+        fi
+        shift
+        set -- "$@" "$tester_arg"
+    done
+fi
+if [ "$#" -gt 0 ]; then
+    case "$1" in
+        -*) ;;
+        *) tester_disc=$1; shift ;;
+    esac
+fi
+if [ "$tester_explicit_disc" = false ]; then
+    if [ -z "$tester_disc" ]; then
+        tester_count=0
+        for tester_image in "$tester_package_dir"/*.[rR][vV][zZ] "$tester_package_dir"/*.[iI][sS][oO] "$tester_package_dir"/*.[wW][bB][fF][sS]; do
+            [ -f "$tester_image" ] || continue
+            tester_count=$((tester_count + 1))
+            tester_disc=$tester_image
+        done
+        [ "$tester_count" -eq 1 ] || tester_disc=
+    fi
+    if [ -z "$tester_disc" ]; then
+        if [ "$(uname -s)" = Darwin ]; then
+            tester_disc=$(/usr/bin/osascript -e 'POSIX path of (choose file with prompt "Choose your Super Mario Galaxy disc image (RVZ, ISO or WBFS)")') || exit 0
+        else
+            printf 'Usage: %s /path/to/game.rvz [game options]\nOr place one RVZ, ISO or WBFS beside this launcher.\n' "$0" >&2
+            exit 2
+        fi
+    fi
+    if [ ! -f "$tester_disc" ]; then
+        printf 'Disc image not found: %s\n' "$tester_disc" >&2
+        exit 2
+    fi
+    # Resolve relative paths before switching to the writable log directory.
+    tester_disc_dir=$(CDPATH= cd -- "$(dirname -- "$tester_disc")" && pwd)
+    tester_disc="$tester_disc_dir/$(basename -- "$tester_disc")"
+    set -- --disc "$tester_disc" "$@"
+fi
+case "$(uname -s)" in
+    Darwin) tester_log_dir="$HOME/Library/Logs/Petari" ;;
+    *) tester_log_dir="${XDG_STATE_HOME:-$HOME/.local/state}/petari" ;;
+esac
+mkdir -p "$tester_log_dir"
+tester_log="$tester_log_dir/game-$(date +%Y%m%d-%H%M%S)-$$.log"
+printf 'Game log: %s\n' "$tester_log"
+export SMGPC_WINDOW_WIDTH=${SMGPC_WINDOW_WIDTH:-1280}
+export SMGPC_WINDOW_HEIGHT=${SMGPC_WINDOW_HEIGHT:-720}
+# Save data uses the game's per-user SDL preference directory.
+cd "$tester_log_dir"
+exec "$tester_binary" "$@" >"$tester_log" 2>&1

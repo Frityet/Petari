@@ -1,0 +1,22 @@
+{
+  "source_base": "c97beea7574709d6ecf4205bb964e497d1cdd302",
+  "aurora": "5bcaba96be3c95ac5ecc540f2413353170ca6d24",
+  "macos": {
+    "mode": "debug",
+    "optimized": true,
+    "architecture": "arm64",
+    "minimum_os": "26.0",
+    "runtimes": "c++_static",
+    "static_deps": true,
+    "compiler": "Homebrew clang version 23.1.1\nTarget: arm64-apple-darwin27.0.0\nThread model: posix\nInstalledDir: /opt/homebrew/Cellar/llvm/23.1.1/bin\nConfiguration file: /opt/homebrew/Cellar/llvm/23.1.1/etc/clang/arm64-apple-darwin27.cfg\n"
+  },
+  "linux": {
+    "status": "building",
+    "container": "petari-tester-linux",
+    "architecture": "x86_64",
+    "distro": "Ubuntu 24.04",
+    "compiler": "LLVM 23",
+    "runtimes": "stdc++_static",
+    "static_deps": true
+  }
+}
