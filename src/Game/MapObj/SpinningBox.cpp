@@ -14,7 +14,7 @@
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
-#include "JSystem/JGeometry/TUtil.hpp"
+#include <JSystem/JGeometry/TUtil.hpp>
 
 namespace {
     static const f32 hForceBindOffset = 65.0f;
@@ -542,7 +542,7 @@ void SpinningBox::calcAndSetBaseMtx() {
     MR::setBaseTRMtx(this, mtx);
 }
 
-void DUMMY() {
+void SpinningBox_DUMMY() {
     // This dummy is here to ensure that TVec3f::sub is the deepest call in the operator- chain.
     // Presumably one of the stripped functions would have used sub directly.
     TVec3f a, b;

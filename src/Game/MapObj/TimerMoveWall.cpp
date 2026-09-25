@@ -4,12 +4,11 @@
 #include "Game/MapObj/MapObjActorInitInfo.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
+#include <JSystem/JGeometry/TVec.hpp>
 
 void TimerMoveWall_FORCE_MATCH_SDATA2() {
     (void)0.0f;
@@ -64,7 +63,7 @@ void TimerMoveWall::exeMove() {
     MR::startLevelSound(this, "SE_OJ_LV_TRIBBL_T_MVWALL_MV");
 
     if (MR::isStep(this, mTimer)) {
-        mVelocity.set2(0.0f);
+        mVelocity.zero();
 
         if (isNerve(GET_NERVE(TimerMoveWall, TimerMoveWallNrvMoveFront))) {
             setNerve(GET_NERVE(TimerMoveWall, TimerMoveWallNrvMoveBack));

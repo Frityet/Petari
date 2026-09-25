@@ -1,6 +1,8 @@
 #pragma once
 
 #include <JSystem/JGeometry/TVec.hpp>
+#include <revolution/gx.h>
+#include <revolution/wpad.h>
 
 class BenefitItemLifeUp;
 class BenefitItemObj;
@@ -27,6 +29,7 @@ namespace MR {
     bool isJudgedToClipFrustum300m(const TVec3f&, f32);
     bool isJudgedToNearClip(const TVec3f&, f32);
     bool isInWater(const TVec3f&);
+    bool isInWater(const LiveActor*, const TVec3f&);
     bool isInDeath(const TVec3f&);
     bool isInDarkMatter(const TVec3f&);
     void connectToScene(LiveActor*, int, int, int, int);
@@ -127,7 +130,7 @@ namespace MR {
     void getCsvDataStr(const char**, const JMapInfo*, const char*, s32);
     void getCsvDataStrOrNULL(const char**, const JMapInfo*, const char*, s32);
     void getCsvDataS32(s32*, const JMapInfo*, const char*, s32);
-    void getCsvDataU8(u8*, const JMapInfo*, const char*, s32);
+    void getCsvDataU8(u8*, const JMapInfo*, const char*, s32) NO_INLINE;
     void getCsvDataF32(f32*, const JMapInfo*, const char*, s32);
     void getCsvDataBool(bool*, const JMapInfo*, const char*, s32);
     void getCsvDataVec(Vec*, const JMapInfo*, const char*, s32);

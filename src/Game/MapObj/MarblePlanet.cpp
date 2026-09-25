@@ -3,7 +3,7 @@
 #include "Game/LiveActor/ModelObj.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util.hpp"
-#include "JSystem/JMath.hpp"
+#include <JSystem/JMath.hpp>
 
 namespace NrvMarblePlanet {
     NEW_NERVE(MarblePlanetNrvWait, MarblePlanet, Wait);
@@ -152,7 +152,7 @@ bool MarblePlanet::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor*
 void MarblePlanet::initCoreAndElectron() {
     mCorePlanetModel = MR::createModelObjMapObj("ビー玉惑星コア", "MarblePlanetCore", getBaseMtx());
     MR::invalidateClipping(mCorePlanetModel);
-    MR::startBck(mCorePlanetModel, "MarblePlanetCore", 0);
+    MR::startBck(mCorePlanetModel, "MarblePlanetCore");
     MR::startBtk(mCorePlanetModel, "MarblePlanetCore");
     MR::setBckFrameAndStop(mCorePlanetModel, 0.0f);
     MR::setBtkFrameAndStop(mCorePlanetModel, 0.0f);
@@ -190,8 +190,8 @@ MarblePlanetElectron::MarblePlanetElectron(LiveActor* pPlanet, const TVec3f& rPo
     _94.x = 0.0f;
     _94.y = 0.0f;
     _94.z = 1.0f;
-    mPosition.set< f32 >(rPosition);
-    mRotation.set< f32 >(rRotation);
+    mPosition.set(rPosition);
+    mRotation.set(rRotation);
 }
 
 void MarblePlanetElectron::init(const JMapInfoIter& rIter) {
@@ -213,7 +213,7 @@ void MarblePlanetElectron::init(const JMapInfoIter& rIter) {
     MR::makeMtxUpNoSupportPos(&mtx, mGravity, mPosition);
     MR::setBaseTRMtx(this, mtx);
     MR::calcFrontVec(&_94, this);
-    MR::startBck(this, "MarblePlanetElectron", 0);
+    MR::startBck(this, "MarblePlanetElectron");
     initNerve(GET_NERVE(MarblePlanetElectron, MarblePlanetElectronNrvMove));
     makeActorAppeared();
 }
@@ -318,7 +318,7 @@ void MarblePlanetElectronShadow::init(const JMapInfoIter& rIter) {
 }
 
 void MarblePlanetElectronShadow::calcAndSetBaseMtx() {
-    mPosition.set< f32 >(*_90);
+    mPosition.set(*_90);
     TVec3f stack_8;
     stack_8.sub(mParentElectron->mPosition, *_90);
     MR::normalize(&stack_8);

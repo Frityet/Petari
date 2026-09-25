@@ -22,9 +22,50 @@
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/TalkUtil.hpp"
-#include "JSystem/JGeometry/TMatrix.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
-#include "revolution/mtx.h"
+#include <JSystem/JGeometry/TMatrix.hpp>
+#include <JSystem/JGeometry/TVec.hpp>
+#include <revolution/mtx.h>
+
+TalkMessageCtrl::TalkMessageCtrl(LiveActor* pHost, const TVec3f& rArg2, MtxPtr pArg3)
+    : NameObj("会話制御"), mHostActor(pHost), mNodeCtrl(), mZoneID(-1), _1C(0.0f, 0.0f, 0.0f), mMsgBalloonFollowOffs(rArg2), mTalkDistance(240.0f),
+      _3C(), mIsOnReadNodeAuto(true), mAlreadyDoneFlags(), mIsStartOnlyFront(), mCameraInfo(), mBranchFunc(), mEventFunc(), mAnimeFunc(), mKillFunc(),
+      mMtx(pArg3), mIsOnRootNodeAuto(), _18(), mTagArg(nullptr, CustomTagArg::Type_Uninitialized) {
+    mTagArg.mArgType = CustomTagArg::Type_Uninitialized;
+    mTagArg.mIntArg = 0;
+    MR::createSceneObj(SceneObj_TalkDirector);
+    TalkFunction::registerTalkSystem(this);
+    mZoneID = MR::getCurrentPlacementZoneId();
+}
+
+bool TalkMessageCtrl::inMessageArea() const {
+    s8 messageInfoEnumByte = mNodeCtrl->mMessageInfo._A;
+    s32 messageInfoEnum = mNodeCtrl->mMessageInfo._A;
+    s32 zoneID = mZoneID;
+
+    if (messageInfoEnumByte < 0) {
+        return false;
+    }
+
+    TVec3f* playerPos = MR::getPlayerCenterPos();
+    MessageArea* areaObj = (MessageArea*)MR::getAreaObj("MessageArea", *playerPos);
+    if (areaObj != nullptr && messageInfoEnum == areaObj->mObjArg0 && zoneID == areaObj->mZoneID) {
+        return true;
+    }
+
+    return false;
+}
+
+void TalkMessageCtrl::startCamera(s32 a1) {
+    TalkMessageInfo* inf = &mNodeCtrl->mMessageInfo;
+    if (inf->isCameraNormal()) {
+        MR::startNPCTalkCamera(this, mHostActor->getBaseMtx(), 1.0f, a1);
+    } else if (inf->isCameraEvent()) {
+        if (inf->mCameraSetID) {
+            mCameraInfo->mCameraSetID = inf->mCameraSetID;
+            MR::startMultiActorCameraNoTarget(mHostActor, mCameraInfo, "会話", a1);
+        }
+    }
+}
 
 TalkMessageCtrl::~TalkMessageCtrl() {
 }
@@ -41,12 +82,10 @@ void TalkMessageCtrl::createMessage(const JMapInfoIter& rIter, const char* pName
 }
 
 namespace {
-    bool isNodeEventContinue(const MessageSystem::FlowNodeEvent*) NO_INLINE;
-
-    bool isNodeEventContinue(const MessageSystem::FlowNodeEvent* pArg) {
+    bool isNodeEventContinue(const MessageSystem::FlowNodeEvent* pArg) NO_INLINE {
         return pArg->mEventType <= 4 && (1 << pArg->mEventType & 0x15);
     }
-};  // namespace
+}  // namespace
 
 void TalkMessageCtrl::createMessageDirect(const JMapInfoIter& rIter, const char* pName) {
     mNodeCtrl = new TalkNodeCtrl();
@@ -100,6 +139,7 @@ bool TalkMessageCtrl::rootNodeEve() {
 
     return true;
 }
+
 void TalkMessageCtrl::rootNodePre(bool arg) {
     TalkNodeCtrl* control = mNodeCtrl;
     control->resetTempFlowNode();
@@ -110,6 +150,7 @@ void TalkMessageCtrl::rootNodePre(bool arg) {
             if (arg) {
                 return;
             }
+
             if (!isCurrentNodeContinue()) {
                 return;
             }
@@ -129,6 +170,7 @@ void TalkMessageCtrl::rootNodePre(bool arg) {
             } else {
                 cond = mBranchFunc->operator()(branch->mNextIdx);
             }
+
             break;
         case 2:
             cond = MR::isNearPlayerAnyTime(mHostActor, mTalkDistance);
@@ -313,18 +355,6 @@ bool TalkMessageCtrl::isNearPlayer(const TalkMessageCtrl* pCtrl) {
     return hostPos->squared(*playerPos) < ctrlHostPos->squared(*playerPos);
 }
 
-void TalkMessageCtrl::startCamera(s32 a1) {
-    TalkMessageInfo* inf = &mNodeCtrl->mMessageInfo;
-    if (inf->isCameraNormal()) {
-        MR::startNPCTalkCamera(this, mHostActor->getBaseMtx(), 1.0f, a1);
-    } else if (inf->isCameraEvent()) {
-        if (inf->mCameraSetID) {
-            mCameraInfo->mCameraSetID = inf->mCameraSetID;
-            MR::startMultiActorCameraNoTarget(mHostActor, mCameraInfo, "会話", a1);
-        }
-    }
-}
-
 const char* TalkMessageCtrl::getBranchID() const {
     TalkNode* node = mNodeCtrl->getNextNodeBranch();
 
@@ -448,23 +478,6 @@ const wchar_t* TalkFunction::getSubMessage(const TalkMessageCtrl* pCtrl) {
     return (const wchar_t*)pCtrl->mNodeCtrl->getSubMessage();
 }
 
-bool TalkMessageCtrl::inMessageArea() const {
-    s8 messageInfoEnumByte = mNodeCtrl->mMessageInfo._A;
-    s32 messageInfoEnum = mNodeCtrl->mMessageInfo._A;
-    s32 zoneID = mZoneID;
-
-    if (messageInfoEnumByte < 0) {
-        return false;
-    }
-
-    TVec3f* playerPos = MR::getPlayerCenterPos();
-    MessageArea* areaObj = (MessageArea*)MR::getAreaObj("MessageArea", *playerPos);
-    if (areaObj != nullptr && messageInfoEnum == areaObj->mObjArg0 && zoneID == areaObj->mZoneID) {
-        return true;
-    }
-    return false;
-}
-
 bool TalkMessageCtrl::isNearPlayer(f32 distance) const {
     if (mNodeCtrl->mMessageInfo.isNullTalk()) {
         return false;
@@ -482,32 +495,26 @@ bool TalkMessageCtrl::isNearPlayer(f32 distance) const {
         }
     }
 
-    TVec3f v2(mHostActor->mPosition);  // 0x44
+    TVec3f v2(mHostActor->mPosition);
     if (mMtx != nullptr) {
         v2.set< f32 >(mMtx[0][3], mMtx[1][3], mMtx[2][3]);
     }
 
-    TVec3f v3;  // 0x38
+    TVec3f v3;
     f32 f2 = MR::vecKillElement(v2 - *MR::getPlayerCenterPos(), mHostActor->mGravity, &v3);
 
-    if (!(__fabs(f2) > distance) && v3.squared() < distance * distance) {
+    if (!(MR::abs(f2) > distance) && v3.squared() < distance * distance) {
         TalkMessageInfo* info = &mNodeCtrl->mMessageInfo;
         bool cond = info->mTalkType;
         if (mIsStartOnlyFront || info->isBalloonSign()) {
-            TMtx34f pos;
+            TPos3f pos;
             pos.set(mHostActor->getBaseMtx());
 
             TVec3f v3;  // 0x2C
-            f32 setZ = pos[2][2];
-            f32 setY = pos[1][2];
-            f32 setX = pos[0][2];
-            v3.set< f32 >(setX, setY, setZ);
+            pos.getZDir(v3);
 
             TVec3f v4;  // 0x20
-            setZ = pos[2][3];
-            setY = pos[1][3];
-            setX = pos[0][3];
-            v4.set< f32 >(setX, setY, setZ);
+            pos.getTrans(v4);
             v4 = *MR::getPlayerPos() - v4;
 
             f32 f3 = MR::vecKillElement(v4, v3, &v4);
@@ -519,6 +526,7 @@ bool TalkMessageCtrl::isNearPlayer(f32 distance) const {
             return true;
         }
     }
+
     return inMessageArea();
 }
 
@@ -539,16 +547,4 @@ void TalkMessageCtrl::updateBalloonPos() {
     v3.set< f32 >(pos[0][3], pos[1][3], pos[2][3]);
     v3.add(TVec3f(tPos[0][3], tPos[1][3], tPos[2][3]));
     MR::calcScreenPosition(&_1C, v3);
-}
-
-TalkMessageCtrl::TalkMessageCtrl(LiveActor* pHost, const TVec3f& arg2, MtxPtr pArg3)
-    : NameObj("会話制御"), mHostActor(pHost), mNodeCtrl(nullptr), mZoneID(-1), _1C(0.0f, 0.0f, 0.0f), mMsgBalloonFollowOffs(arg2),
-      mTalkDistance(240.0f), _3C(0), mIsOnReadNodeAuto(true), mAlreadyDoneFlags(0), mIsStartOnlyFront(false), mCameraInfo(nullptr),
-      mBranchFunc(nullptr), mEventFunc(nullptr), mAnimeFunc(nullptr), mKillFunc(nullptr), mMtx(pArg3), mIsOnRootNodeAuto(false), _18(false),
-      mTagArg(nullptr, CustomTagArg::Type_Uninitialized) {
-    mTagArg.mArgType = CustomTagArg::Type_Uninitialized;
-    mTagArg.mIntArg = 0;
-    MR::createSceneObj(SceneObj_TalkDirector);
-    TalkFunction::registerTalkSystem(this);
-    mZoneID = MR::getCurrentPlacementZoneId();
 }

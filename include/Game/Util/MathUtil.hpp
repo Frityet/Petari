@@ -1,10 +1,11 @@
 #pragma once
 
-#include "JSystem/JGeometry/TUtil.hpp"
-#include "JSystem/JMath/JMATrigonometric.hpp"
 #include <JSystem/JGeometry/TMatrix.hpp>
 #include <JSystem/JGeometry/TQuat.hpp>
+#include <JSystem/JGeometry/TUtil.hpp>
 #include <JSystem/JGeometry/TVec.hpp>
+#include <JSystem/JMath/JMATrigonometric.hpp>
+#include <revolution/gx.h>
 #include <revolution/types.h>
 
 namespace MR {
@@ -442,6 +443,10 @@ namespace MR {
         return JGeometry::TUtil< f32 >::epsilon();
     }
 
+    inline f32 fabs(f64 x) {
+        return __fabs(x);
+    }
+
     inline f32 abs(f32 x) {
         return __fabsf(x);
     }
@@ -594,9 +599,11 @@ namespace MR {
         if (x < 0.0f) {
             x = 0.0f;
         }
+
         if (x > 1.0f) {
             x = 1.0f;
         }
+
         return x;
     }
 
@@ -604,14 +611,15 @@ namespace MR {
         *value = clamp(*value, min, max);
     }
 
-    inline void clampMax(f32* val, f32 max) {
+    inline void clampMax(f32* pValue, f32 max) NO_INLINE {
         f32 ret;
-        if (*val >= max) {
+        if (*pValue >= max) {
             ret = max;
         } else {
-            ret = *val;
+            ret = *pValue;
         }
-        *val = ret;
+
+        *pValue = ret;
     }
 
     inline f32 repeat(f32 value, f32 min, f32 max) {
@@ -642,6 +650,7 @@ namespace MR {
             frsqrte recip, x
 
         }
+
         return recip * x;
     }
 
@@ -659,6 +668,7 @@ namespace MR {
 
         return x;
     }
+
 #else
     f32 frsqrte(f32);
     f32 fastSqrtf(f32);

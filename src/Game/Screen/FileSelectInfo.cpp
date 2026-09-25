@@ -9,49 +9,47 @@
 
 namespace {
     static const f32 sDisappearAnimRate = 0.25f;
-};  // namespace
+}  // namespace
 
 namespace {
     NEW_NERVE(FileSelectInfoNrvAppear, FileSelectInfo, Appear);
     NEW_NERVE(FileSelectInfoNrvDisplay, FileSelectInfo, Display);
     NEW_NERVE(FileSelectInfoNrvDisappear, FileSelectInfo, Disappear);
-};  // namespace
+}  // namespace
 
 namespace FileSelectInfoSub {
     NEW_NERVE(SlideStateNrvNormalPos, SlideState, NormalPos);
     NEW_NERVE(SlideStateNrvSliding, SlideState, Sliding);
     NEW_NERVE(SlideStateNrvSlidePos, SlideState, SlidePos);
     NEW_NERVE(SlideStateNrvSlidingBack, SlideState, SlidingBack);
-};  // namespace FileSelectInfoSub
+}  // namespace FileSelectInfoSub
 
 namespace FileSelectInfoSub {
     NEW_NERVE(CharaStateNrvMario, CharaState, Mario);
     NEW_NERVE(CharaStateNrvToLuigi, CharaState, ToLuigi);
     NEW_NERVE(CharaStateNrvLuigi, CharaState, Luigi);
     NEW_NERVE(CharaStateNrvToMario, CharaState, ToMario);
-};  // namespace FileSelectInfoSub
+}  // namespace FileSelectInfoSub
 
-// FIXME: Any issues are likely related to dynamically allocating memory for the wide character buffer.
 FileSelectInfo::FileSelectInfo(s32 nameBufferSize, const char* pName)
-    : LayoutActor(pName, 1), mNumber(0), mStarNum(0), mStarPieceNum(0), mNameBufferSize(nameBufferSize * sizeof(wchar_t)),
-      mName(new wchar_t[nameBufferSize]), mMissNum(-1), mIsSelectedMarioPrev(true), mIsSelectedMario(true), mIsViewNormalEnding(false),
-      mIsViewCompleteEnding(false) {
+    : LayoutActor(pName, 1), mNumber(), mStarNum(), mStarPieceNum(), mNameBufferSize(nameBufferSize), mName(new wchar_t[nameBufferSize]),
+      mMissNum(-1), mIsSelectedMarioPrev(true), mIsSelectedMario(true), mIsViewNormalEnding(), mIsViewCompleteEnding() {
     mSlideState = new FileSelectInfoSub::SlideState(this);
     mCharaState = new FileSelectInfoSub::CharaState(this);
 
-    MR::zeroMemory(mName, mNameBufferSize);
+    MR::zeroMemory(mName, nameBufferSize * sizeof(wchar_t));
 }
 
 void FileSelectInfo::init(const JMapInfoIter& rIter) {
     initLayoutManager("FileInfo", 3);
     MR::connectToSceneLayout(this);
-    initNerve(GET_NERVE_GLOBAL(FileSelectInfoNrvAppear));
+    initNerve(GET_NERVE_ANON(FileSelectInfoNrvAppear));
 }
 
 void FileSelectInfo::appear() {
     f32 animFrame;
 
-    if (!MR::isDead(this) && isNerve(GET_NERVE_GLOBAL(FileSelectInfoNrvDisappear))) {
+    if (!MR::isDead(this) && isNerve(GET_NERVE_ANON(FileSelectInfoNrvDisappear))) {
         animFrame = MR::getAnimFrame(this, 0);
 
         MR::startAnim(this, "Appear", 0);
@@ -60,15 +58,15 @@ void FileSelectInfo::appear() {
         MR::startAnim(this, "Appear", 0);
     }
 
-    setNerve(GET_NERVE_GLOBAL(FileSelectInfoNrvAppear));
+    setNerve(GET_NERVE_ANON(FileSelectInfoNrvAppear));
     LayoutActor::appear();
 }
 
 void FileSelectInfo::disappear() {
     f32 animFrame;
 
-    if (!MR::isDead(this) && !isNerve(GET_NERVE_GLOBAL(FileSelectInfoNrvDisappear))) {
-        if (isNerve(GET_NERVE_GLOBAL(FileSelectInfoNrvAppear))) {
+    if (!MR::isDead(this) && !isNerve(GET_NERVE_ANON(FileSelectInfoNrvDisappear))) {
+        if (isNerve(GET_NERVE_ANON(FileSelectInfoNrvAppear))) {
             animFrame = MR::getAnimFrame(this, 0);
         } else {
             MR::startAnim(this, "Appear", 0);
@@ -79,7 +77,7 @@ void FileSelectInfo::disappear() {
         MR::startAnim(this, "Appear", 0);
         MR::setAnimFrame(this, animFrame, 0);
         MR::setAnimRate(this, 0.0f, 0);
-        setNerve(GET_NERVE_GLOBAL(FileSelectInfoNrvDisappear));
+        setNerve(GET_NERVE_ANON(FileSelectInfoNrvDisappear));
     }
 }
 
@@ -149,7 +147,7 @@ void FileSelectInfo::exeAppear() {
     }
 
     if (MR::isAnimStopped(this, 0)) {
-        setNerve(GET_NERVE_GLOBAL(FileSelectInfoNrvDisplay));
+        setNerve(GET_NERVE_ANON(FileSelectInfoNrvDisplay));
     }
 }
 
@@ -255,7 +253,7 @@ namespace FileSelectInfoSub {
             setNerve(GET_NERVE_GLOBAL(SlideStateNrvNormalPos));
         }
     }
-};  // namespace FileSelectInfoSub
+}  // namespace FileSelectInfoSub
 
 namespace FileSelectInfoSub {
     CharaState::CharaState(FileSelectInfo* pHost) : NerveExecutor("キャラ選択状態"), mHost(pHost) {
@@ -301,4 +299,4 @@ namespace FileSelectInfoSub {
             setNerve(GET_NERVE_GLOBAL(CharaStateNrvMario));
         }
     }
-};  // namespace FileSelectInfoSub
+}  // namespace FileSelectInfoSub

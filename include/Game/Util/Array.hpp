@@ -167,9 +167,9 @@ namespace MR {
         }
 
         template < class U >
-        void callAllFunc(void (U::*func)()) {
-            for (T* it = begin(); it != end(); ++it) {
-                ((*it)->*func)();
+        void callAllFunc(void (U::*pFunction)()) {
+            for (T* it = begin(); it != end(); it++) {
+                ((*it)->*pFunction)();
             }
         }
 

@@ -3,10 +3,8 @@
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioState.hpp"
 #include "Game/Util/MathUtil.hpp"
-#include "revolution/mtx.h"
-#include "revolution/types.h"
-
-extern "C" {}
+#include <revolution/mtx.h>
+#include <revolution/types.h>
 
 static const f32 sOne = 1.0f;
 static const f32 sZero = 0.0f;
@@ -18,19 +16,9 @@ static const f32 sHipDropSlideLen = 10.0f;
 static const f32 sJumpDropSlideDotMin = 0.1f;
 static const f32 sHopperJumpSlideDotMin = 0.707f;
 
-static Mario::Task sTaskHandy = &Mario::taskOnHandy;
-static Mario::Task sTaskHipDropBlurHopper = &Mario::taskOnHipDropBlurHopper;
-static Mario::Task sTaskHipDropBlur = &Mario::taskOnHipDropBlur;
-static Mario::Task sTaskHipDropSlide = &Mario::taskOnHipDropSlide;
-static Mario::Task sTaskJumpDropSlide = &Mario::taskOnHipDropSlide;
-static struct {
-    Mario::Task task;
-    u8 gap_07_805CCD70_data[0xA0];
-} sTaskFreezeEnd = {&Mario::taskOnFreezeEnd};
-
 void Mario::delTask(MarioModuleTask* pTask) {
     MarioModuleTask* next = pTask->mNext;
-    if (!next) {
+    if (next == nullptr) {
         return;
     }
 
@@ -41,6 +29,7 @@ void Mario::delTask(MarioModuleTask* pTask) {
         } else {
             _974 = next;
         }
+
         pTask->mNext = nullptr;
         pTask->end();
         return;
@@ -58,6 +47,7 @@ void Mario::delTask(MarioModuleTask* pTask) {
             } else {
                 head->mNext = next;
             }
+
             pTask->mNext = nullptr;
             pTask->end();
             return;
@@ -184,7 +174,43 @@ void Mario::callExtraTasks(u32 flags) {
 }
 
 void Mario::startHandy() {
-    pushTask(sTaskHandy, 0x40);
+    pushTask(&Mario::taskOnHandy, 0x40);
+}
+
+bool Mario::taskOnHandy(u32) {
+    if (!mActor->_468) {
+        stopEffect("いい汗");
+        return false;
+    }
+
+    if (mTargetWalkSpeedIndex > 2) {
+        playEffect("いい汗");
+    } else {
+        stopEffect("いい汗");
+    }
+
+    return true;
+}
+
+void Mario::startHipDropBlur() {
+    if (isPlayerModeHopper()) {
+        if (gIsLuigi) {
+            playEffect("ホッパー尻落ルイージ");
+        } else {
+            playEffect("ホッパー尻落");
+        }
+
+        pushTask(&Mario::taskOnHipDropBlurHopper, 0x80);
+        return;
+    }
+
+    if (gIsLuigi) {
+        playEffect("尻落ルイージ");
+    } else {
+        playEffect("尻落");
+    }
+
+    pushTask(&Mario::taskOnHipDropBlur, 0x80);
 }
 
 bool Mario::taskOnHipDropBlurHopper(u32) {
@@ -194,6 +220,7 @@ bool Mario::taskOnHipDropBlurHopper(u32) {
         } else {
             stopEffect("ホッパー尻落");
         }
+
         return false;
     }
 
@@ -207,6 +234,7 @@ bool Mario::taskOnHipDropBlur(u32) {
         } else {
             stopEffect("尻落");
         }
+
         return false;
     }
 
@@ -267,44 +295,6 @@ bool Mario::taskOnFreezeEnd(u32) {
     return mActor->finalizeFreezeModel();
 }
 
-void Mario::startFreezeEnd() {
-    pushTask(sTaskFreezeEnd.task, 0x800);
-}
-
-bool Mario::taskOnHandy(u32) {
-    if (!mActor->_468) {
-        stopEffect("いい汗");
-        return false;
-    }
-
-    if (mTargetWalkSpeedIndex > 2) {
-        playEffect("いい汗");
-    } else {
-        stopEffect("いい汗");
-    }
-
-    return true;
-}
-
-void Mario::startHipDropBlur() {
-    if (isPlayerModeHopper()) {
-        if (gIsLuigi) {
-            playEffect("ホッパー尻落ルイージ");
-        } else {
-            playEffect("ホッパー尻落");
-        }
-        pushTask(sTaskHipDropBlurHopper, 0x80);
-        return;
-    }
-
-    if (gIsLuigi) {
-        playEffect("尻落ルイージ");
-    } else {
-        playEffect("尻落");
-    }
-    pushTask(sTaskHipDropBlur, 0x80);
-}
-
 void Mario::startHipDropSlide(const HitSensor* pSensor) {
     if (isActiveTaskID(0x100)) {
         return;
@@ -314,7 +304,7 @@ void Mario::startHipDropSlide(const HitSensor* pSensor) {
         return;
     }
 
-    pushTask(sTaskHipDropSlide, 0x100);
+    pushTask(&Mario::taskOnHipDropSlide, 0x100);
 
     TVec3f dir(mPosition - pSensor->mPosition);
 
@@ -332,7 +322,7 @@ void Mario::startHipDropSlide(const HitSensor* pSensor) {
     _A64 = pSensor->mRadius;
     _70C = getAirGravityVec();
 
-    changeAnimation("ヒップドロップ滑り", static_cast< const char* >(nullptr));
+    changeAnimation("ヒップドロップ滑り");
 }
 
 void Mario::startJumpDropSlide(const HitSensor* pSensor) {
@@ -352,7 +342,7 @@ void Mario::startJumpDropSlide(const HitSensor* pSensor) {
         return;
     }
 
-    pushTask(sTaskJumpDropSlide, 0x200);
+    pushTask(&Mario::taskOnHipDropSlide, 0x200);
 
     TVec3f slideDir(mPosition - pSensor->mPosition);
 
@@ -370,18 +360,21 @@ void Mario::startJumpDropSlide(const HitSensor* pSensor) {
     _A64 = pSensor->mRadius;
     _70C = getAirGravityVec();
 
-    if (isPlayerModeHopper()) {
+    bool changeSlideAnimation = !isPlayerModeHopper();
+    if (changeSlideAnimation) {
         if (dot > sHopperJumpSlideDotMin) {
             f32 frontDot = mFrontVec.dot(slideDir);
             if (frontDot > sZero) {
-                changeAnimation("ジャンプ順滑り", static_cast< const char* >(nullptr));
+                changeAnimation("ジャンプ順滑り");
             } else {
-                changeAnimation("ジャンプ逆滑り", static_cast< const char* >(nullptr));
+                changeAnimation("ジャンプ逆滑り");
             }
         }
     }
 
-    mJumpVec.x = sZero;
-    mJumpVec.y = sZero;
-    mJumpVec.z = sZero;
+    mJumpVec.zero();
+}
+
+void Mario::startFreezeEnd() {
+    pushTask(&Mario::taskOnFreezeEnd, 0x800);
 }

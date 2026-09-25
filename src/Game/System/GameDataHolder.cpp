@@ -48,7 +48,7 @@ extern const u8 StoryEventBCSV[0x1E0] ATTRIBUTE_ALIGN(8) = {
 
 namespace {
     const char cPictureBookChapterSuffix[] = "ABCDEFGHI";
-};  // namespace
+}  // namespace
 
 GameDataHolder::GameDataHolder(const UserFile* pUserFile)
     : mUserFile(pUserFile), mEventFlagChecker(), mEventValueChecker(), mPlayerStatus(), mAllGalaxyStorage(), mSpinDriverPathStorage(),
@@ -124,14 +124,16 @@ bool GameDataHolder::isOnGameEventValueForBit(const char* pName, int bit) const 
 }
 
 void GameDataHolder::setGameEventValueForBit(const char* pName, int bit, bool reset) {
+    u32 mask;
     u16 value = mEventValueChecker->getValue(pName);
-    s32 set = 1 << bit;
-    u16 newValue = value & ~set;
+    mask = 1 << bit;
+    u16 result = value & ~mask;
+
     if (reset) {
-        newValue = value | set;
+        result = value | mask;
     }
 
-    setGameEventValue(pName, newValue);
+    setGameEventValue(pName, result);
 }
 
 s32 GameDataHolder::getPictureBookChapterCanRead() const {

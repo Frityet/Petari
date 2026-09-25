@@ -1,6 +1,6 @@
 #pragma once
 
-#include "JSystem/JGeometry.hpp"
+#include <JSystem/JGeometry.hpp>
 #include <revolution.h>
 
 class LayoutActor;
@@ -104,6 +104,7 @@ namespace MR {
     void setStarPointerDrawSyncToken();
     bool requestBlueStarGuidance();
     bool requestTicoSeedGuidance(s32);
+    bool requestTicoSeedGuidance();
     bool requestBigBubbleGuidance();
     bool requestMarioLauncherGuidance();
     bool requestFileSelectGuidance();

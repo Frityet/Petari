@@ -10,7 +10,7 @@
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
-#include "JSystem/JMath/JMATrigonometric.hpp"
+#include <JSystem/JMath/JMATrigonometric.hpp>
 
 namespace {
     f32 cSensorRadius = 80.0f;
@@ -62,8 +62,8 @@ void FireMarioBall::kill() {
 }
 
 void FireMarioBall::appearAndThrow(const TVec3f& v1, const TVec3f& v2) {
-    mPosition.set< f32 >(v1);
-    mVelocity.set< f32 >(v2 * ::cThrowSpeed);
+    mPosition.set(v1);
+    mVelocity.set(v2 * ::cThrowSpeed);
     mRotation.set< f32 >(0.0f, MR::toDegree(MR::atan2(mVelocity.x, mVelocity.z)), 0.0f);
     MR::tryRumblePadWeak(this, WPAD_CHAN0);
     appear();
@@ -134,7 +134,7 @@ bool FireMarioBall::tryToKill() {
 
 void FireMarioBall::exeThrow() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Roll", 0);
+        MR::startBck(this, "Roll");
         MR::startBtk(this, "Roll");
         MR::startBrk(this, "Roll");
         MR::startSound(this, "SE_OJ_MARIO_FIRE_BALL_OUT");

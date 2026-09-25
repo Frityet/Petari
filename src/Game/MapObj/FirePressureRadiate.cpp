@@ -1,6 +1,9 @@
 #include "Game/MapObj/FirePressureRadiate.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/LiveActorGroupArray.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util.hpp"
+#include "Game/Util/JointController.hpp"
 #include "Game/Util/MathUtil.hpp"
 
 namespace NrvFirePressureRadiate {
@@ -90,8 +93,8 @@ void FirePressureRadiate::calcAndSetBaseMtx() {
 
 void FirePressureRadiate::exeRelax() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "FireShotStart", nullptr);
-        MR::setBckFrame(this, 1.0f);
+        MR::startBck(this, "FireShotStart");
+        MR::setBckFrame(this, 0.0f);
         MR::forceDeleteEffectAll(this);
         MR::invalidateHitSensor(this, "radiate");
     }
@@ -107,7 +110,7 @@ void FirePressureRadiate::exeSyncWait() {
 
 void FirePressureRadiate::exePrepareToRadiate() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "FireShotStart", nullptr);
+        MR::startBck(this, "FireShotStart");
     }
 
     if (MR::isStep(this, 34)) {
@@ -120,7 +123,7 @@ void FirePressureRadiate::exeRadiate() {
 
     if (MR::isBckOneTimeAndStopped(this)) {
         calcRadiateEffectMtx();
-        MR::startBck(this, "FireShot", nullptr);
+        MR::startBck(this, "FireShot");
     }
 
     if (MR::isStep(this, 25)) {
@@ -135,7 +138,7 @@ void FirePressureRadiate::exeRadiate() {
 
 void FirePressureRadiate::exeRadiateMargin() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "FireShotEnd", nullptr);
+        MR::startBck(this, "FireShotEnd");
     }
 
     if (MR::isStep(this, 50)) {
@@ -206,14 +209,24 @@ void FirePressureRadiate::startRelax() {
     }
 }
 
-// FirePressureRadiate::updateHitSensor
+void FirePressureRadiate::updateHitSensor(HitSensor* pSensor) {
+    TVec3f direction;
+    mRadiateMtx.getXDir(direction);
+    TVec3f position;
+    mRadiateMtx.getTrans(position);
+    TVec3f start;
+    JMAVECScaleAdd(&direction, &position, &start, 50.0f);
+    TVec3f end;
+    JMAVECScaleAdd(&direction, &start, &end, _D0 - 50.0f);
+    MR::calcPerpendicFootToLineInside(&pSensor->mPosition, *MR::getPlayerPos(), start, end);
+}
 
 void FirePressureRadiate::calcRadiateEffectMtx() {
     MtxPtr jointMtx = MR::getJointMtx(this, "Cannon3");
     TPos3f effectMtx(jointMtx);
     TVec3f trans;
     effectMtx.getTrans(trans);
-    mRadiateMtx.setInline(effectMtx);
+    mRadiateMtx.set(effectMtx);
     mRadiateMtx.mMtx[0][3] = trans.x;
     mRadiateMtx.mMtx[1][3] = trans.y;
     mRadiateMtx.mMtx[2][3] = trans.z;

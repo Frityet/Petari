@@ -1,37 +1,39 @@
 #include "Game/MapObj/MapPartsRailGuideHolder.hpp"
 #include "Game/MapObj/MapPartsRailGuideDrawer.hpp"
-#include "Game/LiveActor/Nerve.hpp"
-#include "Game/Util.hpp"
+#include "Game/Util/JMapInfo.hpp"
 
-MapPartsRailGuideHolder::~MapPartsRailGuideHolder() {
+MapPartsRailGuideHolder::MapPartsRailGuideHolder() : NameObj("レールガイド保持"), mNumRailGuides() {
 }
 
-MapPartsRailGuideHolder::MapPartsRailGuideHolder() : NameObj("レールガイド保持") {
-    mNumRailGuides = 0;
-}
-
-void MapPartsRailGuideHolder::init(const JMapInfoIter&) {
-}
-
-MapPartsRailGuideDrawer* MapPartsRailGuideHolder::createRailGuide(LiveActor* pActor, const char* pName, const JMapInfoIter& rIter) {
-    s32 id = -1;
-    rIter.getValue("CommonPath_ID", &id);
-    MapPartsRailGuideDrawer* pDrawer = find(id);
+MapPartsRailGuideDrawer* MapPartsRailGuideHolder::createRailGuide(LiveActor* pHost, const char* pModelName, const JMapInfoIter& rIter) {
+    s32 railId = -1;
+    rIter.getValue("CommonPath_ID", &railId);
+    MapPartsRailGuideDrawer* pDrawer = find(railId);
     if (pDrawer == nullptr) {
-        pDrawer = new MapPartsRailGuideDrawer(pActor, pName);
+        pDrawer = new MapPartsRailGuideDrawer(pHost, pModelName);
         pDrawer->init(rIter);
-        mDrawers[mNumRailGuides++] = pDrawer;
+
+        u32 index = mNumRailGuides;
+        mNumRailGuides++;
+        mDrawers[index] = pDrawer;
     }
+
     return pDrawer;
 }
 
-MapPartsRailGuideDrawer* MapPartsRailGuideHolder::find(s32 id) {
-    MapPartsRailGuideDrawer** pDrawer = &mDrawers[0];
-    MapPartsRailGuideDrawer** pEnd = &mDrawers[mNumRailGuides];
-    for (; pDrawer != pEnd; pDrawer++) {
-        if ((*pDrawer)->_420 == id) {
+void MapPartsRailGuideHolder::init(const JMapInfoIter& rIter) {
+}
+
+MapPartsRailGuideDrawer* MapPartsRailGuideHolder::find(s32 railId) {
+    MapPartsRailGuideDrawer** pEnd = mDrawers + mNumRailGuides;
+    for (MapPartsRailGuideDrawer** pDrawer = mDrawers; pDrawer != pEnd; pDrawer++) {
+        if (railId == (*pDrawer)->mRailId) {
             return *pDrawer;
         }
     }
+
     return nullptr;
+}
+
+MapPartsRailGuideHolder::~MapPartsRailGuideHolder() {
 }

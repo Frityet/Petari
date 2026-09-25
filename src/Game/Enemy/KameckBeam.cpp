@@ -14,12 +14,12 @@ namespace {
     const f32 sFireAngleLebel1[] = {0.0f};
     const f32 sFireAngleLebel2[] = {30.0f, -30.0f};
     const f32 sFireAngleLebel3[] = {0.0f, 120.0f, -120.0f};
-    const f32* sFireAngleList[] = {sFireAngleLebel1, sFireAngleLebel2, sFireAngleLebel3};
-    const s32 sMaxBeamLife = 360;
-    const f32 sBeamRadius = 80.0f;
+    const f32* sFireAngleList[] = {nullptr, sFireAngleLebel1, sFireAngleLebel2, sFireAngleLebel3, nullptr};
+    static const s32 sMaxBeamLife = 360;
+    static const f32 sBeamRadius = 80.0f;
     // const s32 sMorphTime =
-    const s32 sBurningTime = 40;
-    const f32 sStormRange = 500.0f;
+    static const s32 sBurningTime = 40;
+    static const f32 sStormRange = 500.0f;
 };  // namespace
 
 KameckBeamEventListener::KameckBeamEventListener() {
@@ -324,7 +324,7 @@ bool KameckBeam::tryChangeFire() {
             mKameckFireBalls[i]->setEventListener(mEventListener);
             mKameckFireBalls[i]->mPosition.set(mPosition);
             TVec3f result2;
-            MR::rotateVecDegree(&result2, result, mGravity, sFireAngleList[fireAngleListIndex][i]);
+            MR::rotateVecDegree(&result2, result, mGravity, ::sFireAngleList[fireAngleListIndex][i]);
             mKameckFireBalls[i]->appearDirection(result2);
             b1 = true;
         }

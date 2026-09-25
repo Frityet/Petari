@@ -21,7 +21,7 @@
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
-#include "revolution/mtx.h"
+#include <revolution/mtx.h>
 
 namespace NrvBasaBasa {
     NEW_NERVE(BasaBasaNrvWait, BasaBasa, Wait);
@@ -96,7 +96,7 @@ void BasaBasa::init(const JMapInfoIter& rIter) {
 
 void BasaBasa::exeWait() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Wait", nullptr);
+        MR::startBck(this, "Wait");
         mHangModel->appear();
         _B4 = MR::getPlayerCenterPos();
         MR::validateClipping(this);
@@ -112,7 +112,7 @@ void BasaBasa::exeWait() {
 
 void BasaBasa::exeAirWait() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Fly", nullptr);
+        MR::startBck(this, "Fly");
         if (MR::isExistRail(this)) {
             _B4 = &MR::getRailPos(this);
         } else {
@@ -134,11 +134,11 @@ void BasaBasa::exeAirWait() {
 
 void BasaBasa::exeChaseStart() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "FlyStart", nullptr);
+        MR::startBck(this, "FlyStart");
         MR::startSound(this, "SE_EV_BASABASA_FIND");
     }
 
-    if (MR::isLessStep(this, 15)) {
+    if (MR::isLessStep(this, 50)) {
         mVelocity.scaleAdd(15.0f, mGravity, mVelocity);
     }
 
@@ -157,7 +157,7 @@ void BasaBasa::exeChaseStart() {
 
 void BasaBasa::exeChase() {
     if (MR::isFirstStep(this)) {
-        MR::tryStartBck(this, "Fly", nullptr);
+        MR::tryStartBck(this, "Fly");
         MR::onBind(this);
     }
 
@@ -226,7 +226,7 @@ void BasaBasa::exeTrampleDown() {
 
 void BasaBasa::exePunchDown() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Blow", nullptr);
+        MR::startBck(this, "Blow");
         MR::invalidateClipping(this);
         MR::invalidateHitSensors(this);
         MR::startSound(this, "SE_EV_BASABASA_DAMAGE");
@@ -239,7 +239,7 @@ void BasaBasa::exePunchDown() {
 
 void BasaBasa::exeAttackStart() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "AttackStart", nullptr);
+        MR::startBck(this, "AttackStart");
     }
 
     MR::turnDirectionToTargetDegree(this, &_9C, *_B4, 2.55f);
@@ -261,7 +261,7 @@ void BasaBasa::exeAttackStart() {
 
 void BasaBasa::exeAttack() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Attack", nullptr);
+        MR::startBck(this, "Attack");
         MR::startSound(this, "SE_EV_BASABASA_ATTACK");
         TVec3f playerUp;
         MR::getPlayerUpVec(&playerUp);
@@ -292,7 +292,7 @@ void BasaBasa::exeAttack() {
 
 void BasaBasa::exeAttackEnd() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "AttackEnd", nullptr);
+        MR::startBck(this, "AttackEnd");
         if (MR::getShadowProjectionLength(this, nullptr) < 200.0f) {
             MR::emitEffect(this, "AttackEnd");
         }
@@ -328,7 +328,7 @@ void BasaBasa::exeAttackEndRecover() {
 
 void BasaBasa::exeHitBack() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Reaction", nullptr);
+        MR::startBck(this, "Reaction");
         MR::onBind(this);
         MR::turnDirectionToPlayerDegree(this, &_9C, 180.0f);
         MR::startSound(this, "SE_EM_ICEBASA_SPIN_BLOW");
@@ -354,7 +354,7 @@ void BasaBasa::exeHitBack() {
 
 void BasaBasa::exeHitBackEnd() {
     if (MR::isFirstStep(this)) {
-        MR::tryStartBck(this, "Fly", nullptr);
+        MR::tryStartBck(this, "Fly");
     }
 
     if (MR::isStep(this, 60)) {
@@ -366,7 +366,7 @@ void BasaBasa::exeHitBackEnd() {
 
 void BasaBasa::exeComeHome() {
     if (MR::isFirstStep(this)) {
-        MR::tryStartBck(this, "Fly", nullptr);
+        MR::tryStartBck(this, "Fly");
         _B4 = &_CC;
     }
 
@@ -389,7 +389,7 @@ void BasaBasa::exeComeHome() {
 
 void BasaBasa::exeAttachCelling() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Return", nullptr);
+        MR::startBck(this, "Return");
         MR::offBind(this);
         MR::invalidateHitSensors(this);
     }
@@ -437,7 +437,7 @@ void BasaBasa::endDPDSwoon() {
 
 void BasaBasa::exeStun() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Swoon", nullptr);
+        MR::startBck(this, "Swoon");
         MR::startSound(this, "SE_EV_BASABASA_DAMAGE");
     }
 
@@ -460,7 +460,7 @@ void BasaBasa::initAfterPlacement() {
         initNerve(GET_NERVE(BasaBasa, BasaBasaNrvAirWait));
     }
 
-    _CC.set< f32 >(mPosition);
+    _CC.set(mPosition);
     MR::calcFrontVec(&_D8, this);
 }
 
@@ -484,7 +484,7 @@ void BasaBasa::calcAndSetBaseMtx() {
     TPos3f v11;
     MR::calcMtxFromGravityAndZAxis(&v11, this, mGravity, _9C);
     TPos3f v10;
-    v11 = mStampController->_14;
+    v10 = mStampController->_14;
     v11.concat(v10, v11);
     v11.mMtx[0][3] = mPosition.x;
     v11.mMtx[1][3] = mPosition.y;
@@ -650,7 +650,7 @@ bool BasaBasa::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver
 }
 
 void BasaBasa::initHangModel() {
-    const char* modelName = mIsIceModel ? "BasaBasaIce" : "BasaBasaHang";
+    const char* modelName = mIsIceModel ? "BasaBasaIceHang" : "BasaBasaHang";
     mHangModel = MR::createModelObjEnemy("ぶら下がりモデル", modelName, MR::getJointMtx(this, "JointRoot"));
     mHangModel->initWithoutIter();
     mHangModel->kill();
@@ -675,7 +675,7 @@ bool BasaBasa::tryClippingAndResetPos() {
             return false;
         } else {
             MR::resetPosition(this, _CC);
-            _9C.set< f32 >(_D8);
+            _9C.set(_D8);
             mVelocity.zero();
             _E8 = 0;
             if (_EC != 0) {
@@ -776,7 +776,7 @@ void BasaBasa::tuneHeight() {
             return;
         } else {
             TVec3f v4;
-            v4.set< f32 >(v5);
+            v4.set(v5);
             MR::normalize(&v4);
             mVelocity.scaleAdd(2.0f, v4, mVelocity);
         }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "JSystem/JGeometry.hpp"
+#include <JSystem/JGeometry.hpp>
 #include <revolution.h>
 
 class J3DJoint;
@@ -76,12 +76,12 @@ namespace MR {
     void setJointControllerParam(JointController*, const LiveActor*, u16);
 
     template < class T >
-    JointController* createJointController(T* pHost, const LiveActor* pActor, const char* pName,
+    JointController* createJointController(T* pHost, const LiveActor* pActor, const char* pJointName,
                                            bool (T::*calcFunc)(TPos3f*, const JointControllerInfo&),
-                                           bool (T::*calcAfterChild)(TPos3f*, const JointControllerInfo&)) {
-        JointControlDelegator< T >* delegator = new JointControlDelegator< T >(pHost, calcFunc, calcAfterChild);
-        setJointControllerParam(delegator, pActor, pName);
-        return delegator;
+                                           bool (T::*calcChild)(TPos3f*, const JointControllerInfo&)) {
+        JointControlDelegator< T >* pController = new JointControlDelegator< T >(pHost, calcFunc, calcChild);
+        setJointControllerParam(pController, pActor, pJointName);
+        return pController;
     }
 
     template < class T >

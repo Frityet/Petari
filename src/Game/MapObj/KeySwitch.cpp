@@ -2,10 +2,10 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util.hpp"
-#include "JSystem/JMath/JMath.hpp"
+#include <JSystem/JMath/JMath.hpp>
 
 namespace {
-    static const char* cDemoName = "カギ出現";
+    static const char* const cDemoName = "カギ出現";
 };  // namespace
 
 namespace NrvKeySwitch {
@@ -95,7 +95,7 @@ void KeySwitch::exeDemoStart() {
 
 void KeySwitch::exeAppear() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Rotation", 0);
+        MR::startBck(this, "Rotation");
         mVelocity.scale(-40.0f, mGravity);
         MR::invalidateClipping(this);
         MR::startSound(this, "SE_OJ_KEY_SWITCH_APPEAR");
@@ -133,11 +133,9 @@ void KeySwitch::exeAppear() {
 
 void KeySwitch::exeWait() {
     if (MR::isFirstStep(this)) {
-        MR::tryStartBck(this, "Rotation", 0);
+        MR::tryStartBck(this, "Rotation");
         MR::setBckRate(this, 1.0f);
-        mVelocity.x = 0.0f;
-        mVelocity.y = 0.0f;
-        mVelocity.z = 0.0f;
+        mVelocity.zero();
         MR::offCalcGravity(this);
     }
 }

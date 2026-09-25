@@ -187,9 +187,11 @@ namespace GameSequenceFunction {
     }
 
     void reflectStageResultSequenceCoin() {
-        s32 coinNum = getClearedCoinNum();
+        u32 clearedCoinNum = getClearedCoinNum();
         GameDataHolder* pGameDataHolder = SingletonHolder< GameSystem >::get()->mSequenceDirector->getGameDataHolder();
-        pGameDataHolder->makeGalaxyScenarioAccessor(getClearedStageName(), getClearedPowerStarId()).updateMaxCoinNum(coinNum);
+
+        GameDataSomeScenarioAccessor accessor = pGameDataHolder->makeGalaxyScenarioAccessor(getClearedStageName(), getClearedPowerStarId());
+        accessor.updateMaxCoinNum(clearedCoinNum);
     }
 
     void resetStageResultSequenceParam() {

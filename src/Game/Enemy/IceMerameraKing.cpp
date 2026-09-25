@@ -24,6 +24,7 @@
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
+#include "JSystem/JGeometry/TVec.hpp"
 #include <JSystem/JGeometry/TUtil.hpp>
 
 // TODO: the symbol order for header funcs is out of order between JointControlDelegator funcs
@@ -88,8 +89,8 @@ IceMerameraKing::IceMerameraKing(const char* pName)
 void IceMerameraKing::init(const JMapInfoIter& rIter) {
     if (MR::isValidInfo(rIter)) {
         MR::initDefaultPos(this, rIter);
-        _C8.set< f32 >(mPosition);
-        _D4.set< f32 >(mRotation);
+        _C8.set(mPosition);
+        _D4.set(mRotation);
         MR::useStageSwitchWriteDead(this, rIter);
         MR::useStageSwitchReadA(this, rIter);
     }
@@ -127,11 +128,11 @@ void IceMerameraKing::init(const JMapInfoIter& rIter) {
     MR::initLightCtrl(this);
     _A8 = new IceMerameraKingShockWave();
     _A8->initWithoutIter();
-    _A8->mRotation.set< f32 >(mRotation);
+    _A8->mRotation.set(mRotation);
     _A8->makeActorDead();
     _AC = new ModelObj("壊れモデル", "IceMerameraKingBreak", nullptr, -2, -2, -2, false);
     _AC->initWithoutIter();
-    _AC->mScale.set< f32 >(mScale);
+    _AC->mScale.set(mScale);
     _AC->makeActorDead();
     s32 childNum = MR::getChildObjNum(rIter);
     _F0 = childNum;
@@ -152,8 +153,8 @@ void IceMerameraKing::init(const JMapInfoIter& rIter) {
     MR::emitEffect(this, "BodyIce");
     mCameraTarget = new CameraTargetDemoActor(getBaseMtx(), "アクター注目");
     mCameraTarget->initWithoutIter();
-    mCameraTarget->mPosition.set< f32 >(_C8);
-    mCameraTarget->mRotation.set< f32 >(_D4);
+    mCameraTarget->mPosition.set(_C8);
+    mCameraTarget->mRotation.set(_D4);
     mCameraTarget->setName("メラキン注目ターゲット");
     MR::tryRegisterDemoCast(mCameraTarget, rIter);
 }
@@ -274,14 +275,14 @@ void IceMerameraKing::exeThrow() {
     if (MR::isStep(this, 22)) {
         mThrowingIce = getDeadWeaponAndAppear();
         mFixedPos->mMtx.getTrans(mThrowingIce->mPosition);
-        ThrowingIce* ice = mThrowingIce;
-        if (!ice) {
+        if (!mThrowingIce) {
             setNerve(GET_NERVE(IceMerameraKing, HostTypeNrvSearch));
             return;
         }
 
         _E0 += 1;
-        mThrowingIce->emitIce(ice->mPosition, *MR::getPlayerCenterPos() + *MR::getPlayerVelocity() * 35.0f, -5.0f, mGravity);
+        TVec3f& icePos = mThrowingIce->mPosition;
+        mThrowingIce->emitIce(icePos, *MR::getPlayerCenterPos() + *MR::getPlayerVelocity() * 35.0f, -5.0f, mGravity);
         mThrowingIce = nullptr;
         MR::startSound(this, "SE_BM_ICEMERAKING_THROW");
     }
@@ -522,8 +523,8 @@ void IceMerameraKing::exeAttack() {
 void IceMerameraKing::exeAttackAfter() {
     if (MR::isFirstStep(this)) {
         _A8->appear();
-        _A8->mPosition.set< f32 >(mPosition);
-        _A8->mRotation.set< f32 >(_D4);
+        _A8->mPosition.set(mPosition);
+        _A8->mRotation.set(_D4);
         MR::emitEffect(this, "Land");
         MR::startAction(this, "AttackEnd");
         MR::startSound(this, "SE_BM_ICEMERAKING_HIP_DROP");
@@ -590,9 +591,9 @@ void IceMerameraKing::exeDeathDemo() {
     if (MR::isFirstStep(this)) {
         MR::startAction(this, "Death");
         MR::startSound(this, "SE_BM_ICEMERAKING_DEAD");
-        mCameraTarget->mPosition.set< f32 >(mPosition);
+        mCameraTarget->mPosition.set(mPosition);
         _AC->appear();
-        _AC->mRotation.set< f32 >(_D4);
+        _AC->mRotation.set(_D4);
         MR::resetPosition(_AC, mPosition);
         MR::startAction(_AC, "Break");
         MR::requestMovementOn(_AC);

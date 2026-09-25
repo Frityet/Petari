@@ -1,4 +1,3 @@
-#include "JSystem/JMath/JMATrigonometric.hpp"
 #include "Game/Animation/XanimeCore.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Map/HitInfo.hpp"
@@ -58,7 +57,7 @@ void MarioActor::initParts() {
 }
 
 void MarioActor::updateBeeWingAnimation() {
-    if (mPlayerMode != PlayerMode_Bee) {
+    if (mPlayerMode != 4) {
         getJointCtrl("HandR")->setLocalScale(1.0f);
         getJointCtrl("HandL")->setLocalScale(1.0f);
 
@@ -70,7 +69,7 @@ void MarioActor::updateBeeWingAnimation() {
 
     if (mMario->checkLvlA() && mMario->_402 && getMovementStates().jumping) {
         if (_9F0 != 1) {
-            MR::startBck(_9E8, "Fly", nullptr);
+            MR::startBck(_9E8, "Fly");
             MR::startBva(_9E8, "Fly");
             MR::startBtk(_9E8, "Fly");
         }
@@ -92,17 +91,17 @@ void MarioActor::updateBeeWingAnimation() {
 
     switch (val) {
     case 0:
-        MR::startBck(_9E8, "Wait", nullptr);
+        MR::startBck(_9E8, "Wait");
         MR::startBva(_9E8, "Wait");
         break;
 
     case 2:
-        MR::startBck(_9E8, "FlyWait", nullptr);
+        MR::startBck(_9E8, "FlyWait");
         MR::startBva(_9E8, "FlyWait");
         break;
 
     case 3:
-        MR::startBck(_9E8, "FlyFall", nullptr);
+        MR::startBck(_9E8, "FlyFall");
         MR::startBva(_9E8, "FlyFall");
         break;
     }
@@ -133,103 +132,109 @@ void MarioActor::updateTornado() {
 
 void MarioActor::updateTakingPosition() {
     if (_480) {
-        const HitSensor* pSensor = _424;
-        if (pSensor == nullptr) {
-            pSensor = getCarrySensor();
-        }
-        if (pSensor == nullptr) {
+        const HitSensor* sensor = _424;
+        if (!sensor)
+            sensor = getCarrySensor();
+        if (!sensor) {
             _480 = false;
         } else {
-            switch (pSensor->mType) {
-            case 0x19:
+            switch (sensor->mType) {
+            case ATYPE_BOMBHEI:
                 if (mMario->isAnimationTerminate("カブ抜き")) {
                     stopAnimation(nullptr);
                     _480 = false;
-                    mMario->changeAnimationUpper("カブウエイト", nullptr);
+                    mMario->changeAnimationUpper("カブウエイト");
                 }
                 break;
-            case 0xF:
-            case 0x10:
-                if (mMario->isAnimationTerminate(nullptr)) {
+            case ATYPE_JET_TURTLE:
+            case ATYPE_JET_TURTLE_SLOW:
+                if (mMario->isAnimationTerminate(nullptr))
                     _480 = false;
-                }
                 break;
             }
         }
     }
     if (_B92 < 0) {
+        Mtx base;
         TVec3f position;
         TVec3f rotation;
-        bool updateAnimation = false;
+        bool updateAnimation;
         if (_B92 == -3) {
             _494->calc();
             _494->copyTrans(&position);
             _494->copyRotate(&rotation);
-            MarioAnimator* pAnimator = mMarioAnim;
-            bool noAnimation = !isAnimationRun(nullptr);
-            bool terminated = mMario->isAnimationTerminate(nullptr);
-            bool landing = pAnimator->isLandingAnimationRun();
-            updateAnimation = noAnimation | terminated | landing;
+            MarioAnimator* animator = mMarioAnim;
+            s32 stopped = !isAnimationRun(nullptr);
+            s32 terminated = mMario->isAnimationTerminate(nullptr);
+            terminated |= stopped;
+            s32 landing = animator->isLandingAnimationRun();
+            landing |= terminated;
+            updateAnimation = landing;
         } else {
             f32 frame;
-            if (_B92 == -1) {
+            if (_B92 == -1)
                 frame = mMarioAnim->getUpperFrame();
-            }
-            if (_B92 == -2) {
+            if (_B92 == -2)
                 frame = mMarioAnim->getFrame();
-            }
-            Mtx matrix;
-            PSMTXConcat(getBaseMtx(), _E3C, matrix);
-            PSMTXCopy(matrix, MR::getJ3DModel(mNullAnimation)->mBaseTransformMtx);
+            PSMTXConcat(getBaseMtx(), _E3C.toMtxPtr(), base);
+            PSMTXCopy(base, MR::getJ3DModel(mNullAnimation)->getBaseTRMtx());
             if (mNullAnimation->getFramePos(frame, &position, &rotation)) {
                 clearNullAnimation(-3);
-                if (_424 != nullptr) {
-                    MR::sendArbitraryMsg(0x28, _424, getSensor("body"));
-                } else if (_428[0] != nullptr) {
-                    MR::sendArbitraryMsg(0x28, _428[0], getSensor("body"));
-                } else {
+                if (_424)
+                    MR::sendArbitraryMsg(ACTMES_TAKE_TOUCH, _424, getSensor("body"));
+                else if (_428[0])
+                    MR::sendArbitraryMsg(ACTMES_TAKE_TOUCH, _428[0], getSensor("body"));
+                else {
                     _480 = false;
                     clearNullAnimation(0);
                 }
             }
+            updateAnimation = false;
         }
         if (updateAnimation) {
-            if (_424 != nullptr) {
+            if (_424)
                 mMarioAnim->updateTakingAnimation(_424);
-            } else if (_468 != 0) {
+            else if (_468)
                 mMarioAnim->updateTakingAnimation(_428[0]);
-            }
         }
-        if (_424 != nullptr) {
+        if (_424) {
             _424->mHost->mPosition = position;
             _424->mHost->mRotation = rotation;
-        } else if (getCarrySensor() != nullptr) {
+            return;
+        }
+        if (getCarrySensor()) {
             getCarrySensor()->mHost->mPosition = position;
             getCarrySensor()->mHost->mRotation = rotation;
         }
-    } else if (_468 != 0) {
-        if (_428[0]->isType(0x4E) || _428[0]->isType(0xF) || _428[0]->isType(0x10) || _428[0]->isType(0x19)) {
+    } else if (_468) {
+        if (_428[0]->isType(ATYPE_COINTHROW) || _428[0]->isType(ATYPE_JET_TURTLE) || _428[0]->isType(ATYPE_JET_TURTLE_SLOW) ||
+            _428[0]->isType(ATYPE_BOMBHEI)) {
             TVec3f position;
             _494->calc();
             _494->copyTrans(&position);
-            _428[0]->mHost->mPosition = position + mVelocity;
+            TVec3f& carryPosition = _428[0]->mHost->mPosition;
+            const TVec3f& velocity = mVelocity;
+            carryPosition = position + velocity;
             _494->copyRotate(&_428[0]->mHost->mRotation);
-        } else {
-            TVec3f position;
-            mNullAnimation->getLastPos(&position);
-            PSMTXMultVec(_E3C, &position, &position);
-            PSMTXMultVec(getBaseMtx(), &position, &position);
-            f32 offset = 10.0f * (mMario->mWalkSpeed * mMario->mWalkSpeed) * JMath::sSinCosTable.sinRadian(_490);
-            _490 += MR::getRandom(0.1f, 1.0f);
-            position.y += offset;
-            _428[0]->mHost->mPosition = position;
-            _428[0]->mHost->mRotation = _438[0] + mRotation;
+            return;
         }
+        TVec3f position;
+        mNullAnimation->getLastPos(&position);
+        PSMTXMultVec(_E3C.toMtxPtr(), &position, &position);
+        PSMTXMultVec(getBaseMtx(), &position, &position);
+        f32 offset = 10.0f * (mMario->mWalkSpeed * mMario->mWalkSpeed);
+        offset *= JMASinRadian(_490);
+        _490 += MR::getRandom(0.1f, 1.0f);
+        position.y += offset;
+        _428[0]->mHost->mPosition = position;
+        TVec3f& carryRotation = _428[0]->mHost->mRotation;
+        const TVec3f& rotation = mRotation;
+        carryRotation = _438[0] + rotation;
     }
 }
 
 const HitSensor* MarioActor::getCarrySensor() const {
-    if (_468 == 0) {
+    if (_468 == nullptr) {
         return nullptr;
     }
 
@@ -254,7 +259,7 @@ void MarioActor::changeSpecialModeAnimation(const char* pAnimName) {
 }
 
 void MarioActor::updateSpecialModeAnimation() {
-    if (!mMario->mMovementStates._A && mMario->getCurrentStatus() == 0) {
+    if (!mMario->mMovementStates._A && mMario->getCurrentStatus() == MarioStatus_None) {
         if (mMario->mMovementStates._1 && mMario->_960 == 0x20 && mMarioAnim->isAnimationStop()) {
             mMarioAnim->mXanimePlayer->changeTrackAnimation(0, "泥低速歩行");
             mMarioAnim->mXanimePlayer->changeTrackAnimation(1, "泥高速歩行");
@@ -263,12 +268,11 @@ void MarioActor::updateSpecialModeAnimation() {
     } else {
         _B96 = 0;
     }
-
     switch (mPlayerMode) {
-    case 6:
+    case PlayerMode_Teresa:
         updateTeresaAnimation();
         break;
-    case 4:
+    case PlayerMode_Bee:
         if (mBeeWallWalk && !isJumping() && mMarioAnim->isAnimationStop()) {
             mMarioAnim->mXanimePlayer->changeTrackAnimation(0, "ハチ匍匐前進");
             mMarioAnim->mXanimePlayer->changeTrackAnimation(1, "ハチ匍匐前進");
@@ -280,10 +284,9 @@ void MarioActor::updateSpecialModeAnimation() {
         mMario->_418 = 0;
         break;
     }
-
-    if (_B96 != 0) {
-        --_B96;
-        if (_B96 == 0 && mMario->mMovementStates._1 && mMarioAnim->isAnimationStop()) {
+    if (_B96) {
+        _B96--;
+        if (!_B96 && mMario->mMovementStates._1 && mMarioAnim->isAnimationStop()) {
             mMarioAnim->mXanimePlayer->changeTrackAnimation(0, "鈍行");
             mMarioAnim->mXanimePlayer->changeTrackAnimation(1, "歩行");
         }
@@ -298,24 +301,25 @@ void MarioActor::initFireBall() {
 }
 
 void MarioActor::shootFireBall() {
-    if (isAnimationRun("ファイア投げ") || isAnimationRun("ファイアスピン空中") || isAnimationRun("ファイアスピン")) {
+    if (isAnimationRun("ファイア投げ"))
         return;
-    }
-    if (mMario->mMovementStates._8) {
-        sendMsgToSensor(mMario->getWallPolygon()->mSensor, 8);
-        changeAnimation("ファイアスピン", nullptr);
+    if (isAnimationRun("ファイアスピン空中"))
+        return;
+    if (isAnimationRun("ファイアスピン"))
+        return;
+    if (getMovementStates()._8) {
+        sendMsgToSensor(mMario->getWallPolygon()->mSensor, ACTMES_FIREBALL_ATTACK);
+        changeAnimation("ファイアスピン");
         return;
     }
     u32 index;
-    for (index = 0; index < 3; index++) {
-        if (MR::isDead(_B54[index])) {
+    for (index = 0; index < ARRAY_SIZE(_B54); index++) {
+        if (MR::isDead(_B54[index]))
             break;
-        }
     }
-    if (index == 3) {
+    if (index == ARRAY_SIZE(_B54))
         return;
-    }
-    FireMarioBall* pBall = _B54[index];
+    FireMarioBall* ball = _B54[index];
     TVec3f direction;
     direction = mMario->mFrontVec;
     direction += mMario->mHeadVec;
@@ -323,27 +327,29 @@ void MarioActor::shootFireBall() {
     TVec3f position;
     getRealPos("HandR", &position);
     position += mMario->mFrontVec * 30.0f;
-    pBall->appearAndThrow(position, direction);
+    ball->appearAndThrow(position, direction);
     playSound("声投げ", -1);
     if (!isJumping()) {
         mMario->_420 = 45;
-        changeAnimation("ファイアスピン", nullptr);
-    } else if (mMario->_42C >= 3) {
-        changeAnimation("ファイア投げ", nullptr);
-    } else {
-        if (mMario->_42C == 0) {
-            changeAnimation("ファイアスピン空中", nullptr);
-        } else {
-            changeAnimation("ファイア投げ", nullptr);
-        }
-        jumpHop();
-        mMario->_42C++;
-        f32 gravity = mMario->cutGravityElementFromJumpVec(true);
-        mMario->mJumpVec.x *= 0.5f;
-        mMario->mJumpVec.y *= 0.5f;
-        mMario->mJumpVec.z *= 0.5f;
-        mMario->mJumpVec += _240 * gravity;
+        changeAnimation("ファイアスピン");
+        return;
     }
+    if (mMario->_42C >= 3) {
+        changeAnimation("ファイア投げ");
+        return;
+    }
+    if (mMario->_42C == 0)
+        changeAnimation("ファイアスピン空中");
+    else
+        changeAnimation("ファイア投げ");
+    jumpHop();
+    mMario->_42C++;
+    f32 gravitySpeed = mMario->cutGravityElementFromJumpVec(true);
+    Mario* mario = mMario;
+    mario->mJumpVec.x *= 0.5f;
+    mario->mJumpVec.y *= 0.5f;
+    mario->mJumpVec.z *= 0.5f;
+    mMario->mJumpVec += _240 * gravitySpeed;
 }
 
 void MarioActor::showFreezeModel() {
@@ -353,33 +359,38 @@ void MarioActor::showFreezeModel() {
 }
 
 void MarioActor::hideFreezeModel() {
-    MR::startBck(_9C4, "Break", nullptr);
+    MR::startBck(_9C4, "Break");
     MR::startBva(_9C4, "Break");
 
     mMario->startFreezeEnd();
 }
 
 void MarioActor::updateFairyStar() {
-    if (_482 || !_EEB || !isEnableNerveChange()) {
+    if (_482)
         return;
-    }
-    bool isEnabled = true;
-    if (selectAction("スピン回復エフェクト") != 1) {
-        isEnabled = false;
-    }
-    if (_94C != 0 && isEnabled) {
+    if (!_EEB)
+        return;
+    if (!isEnableNerveChange())
+        return;
+    bool enabled = true;
+    if (selectAction("スピン回復エフェクト") != 1)
+        enabled = false;
+    if (_94C && enabled) {
         if (MR::isDead(_994)) {
             _994->appear();
             _994->mRotation.set(0.0f, 0.0f, 0.0f);
-            MR::startBck(_994, "SpinTimer", nullptr);
+            MR::startBck(_994, "SpinTimer");
             playSound("スピン許可", -1);
         }
         TVec3f position;
         MR::copyJointPos(_994, "Center", &position);
-        MR::requestPointLight(_994, position, Color8(255, 225, 225, 255), 0.001f, 0);
-    } else if (!MR::isDead(_994)) {
-        _994->kill();
+        Color8 color(255, 225, 225, 255);
+        f32 power = 0.001f;
+        MR::requestPointLight(_994, position, color, power, 0);
+        return;
     }
+    if (!MR::isDead(_994))
+        _994->kill();
 }
 
 void MarioActor::update2D() {
@@ -400,41 +411,41 @@ void MarioActor::update2D() {
 }
 
 void MarioActor::updateThrowVector() {
-    HitSensor* pSensor = _46C;
-    if (pSensor != nullptr && !MR::isExistInAttributeGroupSearchTurtle(pSensor->mHost)) {
-        pSensor = nullptr;
-    }
-    if (pSensor != nullptr && _468 != 0) {
-        if (!mMario->mDrawStates._5 && _470 != nullptr && _46C != _470) {
-            _470 = nullptr;
+    HitSensor* sensor = _46C;
+    if (sensor && !MR::isExistInAttributeGroupSearchTurtle(sensor->mHost))
+        sensor = nullptr;
+    if (sensor && _468) {
+        if (!getDrawStates()._5) {
+            if (_470 && _46C != _470)
+                _470 = nullptr;
         }
-        if (!mMario->mDrawStates._5) {
-            if (_47C == 0) {
+        if (!getDrawStates()._5) {
+            if (!_47C)
                 _484 = _2A0;
-            }
             _47C++;
-            TVec3f direction(_46C->mPosition);
-            direction -= _484;
-            if (direction.length() <= _46C->mRadius + 40.0f) {
+            TVec3f direction = _46C->mPosition - _484;
+            if (direction.length() <= 40.0f + _46C->getRadius()) {
                 _484 = _46C->mPosition;
                 _470 = _46C;
-                _47C = MR::isSensorEnemy(_470) ? 60 : 2;
-            } else {
-                MR::normalize(&direction);
-                _484 += direction * 40.0f;
-                if (MR::checkStrikePointToMap(_484, nullptr)) {
-                    _47C = 0;
-                    _470 = nullptr;
+                if (MR::isSensorEnemy(_46C)) {
+                    _47C = 60;
+                    return;
                 }
+                _47C = 2;
+                return;
+            }
+            MR::normalize(&direction);
+            _484 += direction * 40.0f;
+            if (MR::checkStrikePointToMap(_484, nullptr)) {
+                _47C = 0;
+                _470 = nullptr;
             }
         }
-    } else if (!mMario->mDrawStates._5) {
-        if (_47C != 0) {
+    } else if (!getDrawStates()._5) {
+        if (_47C)
             _47C--;
-        }
-        if (_47C == 0) {
+        if (!_47C)
             _470 = nullptr;
-        }
     }
 }
 
@@ -485,20 +496,17 @@ void MarioActor::createIceWall(const TVec3f& rVec1, const TVec3f& rVec2) {
 }
 
 void MarioActor::updateBaseMtxTeresa(MtxPtr mtx) {
-    TVec3f horizontalVelocity;
-    f32 tilt = MR::clamp(MR::vecKillElement(mVelocity, getGravityVec(), &horizontalVelocity) / 10.0f, -1.0f, 1.0f);
-
-    if (!MR::isNearZero(mMario->getWorldPadDir()) &&
-        MR::diffAngleAbsHorizontal(mMario->getWorldPadDir(), mMario->mFrontVec, getGravityVec()) > PI / 8.0f) {
-        tilt = 0.0f;
+    TVec3f horizontal;
+    f32 tilt = MR::clamp(MR::vecKillElement(mVelocity, getGravityVec(), &horizontal) / 10.0f, -1.0f, 1.0f);
+    if (!MR::isNearZero(mMario->getWorldPadDir())) {
+        const TVec3f& front = mMario->mFrontVec;
+        if (MR::diffAngleAbsHorizontal(mMario->getWorldPadDir(), front, getGravityVec()) > 0.3926991f)
+            tilt = 0.0f;
     }
-
     _9AC = 0.98f * _9AC + 0.02f * tilt;
     f32 angle = mConst->getTable()->mTeresaAngleDown;
-    if (_9AC > 0.0f) {
+    if (_9AC > 0.0f)
         angle = mConst->getTable()->mTeresaAngleUp;
-    }
-
     PSMTXConcat(mtx, MR::tmpMtxRotXRad(_9AC * angle), mtx);
 }
 

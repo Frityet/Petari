@@ -12,6 +12,8 @@
 #include <algorithm>
 #include <cstring>
 
+template JGeometry::TVec3< s16 >::TVec3(s16, s16, s16);
+
 MultiEmitter::MultiEmitter(const char* pName, const TVec3f* pScale, const TVec3f* pRotation, const TVec3f* pTranslation, const TVec3f& rVec)
     : mEmitters(), mCallBack(), mParticleCallBack(), _24(), _28(), _2C(), _30(), mHash(), mFlags() {
     mCallBack = new MultiEmitterCallBack(this, pScale, pRotation, pTranslation, rVec);
@@ -52,7 +54,9 @@ void MultiEmitter::createEmitterWithCallBack(MultiEmitterCallBackBase* pCallBack
         MR::getEffectSystem()->createSingleEmitter(pEmitter, pCallBackBase, nullptr);
     }
 
-    std::for_each(mChildren.begin(), mChildren.end(), std::bind2nd(std::mem_func(&MultiEmitter::createEmitterWithCallBack), pCallBackBase));
+    std::for_each(mChildren.begin(), mChildren.end(),
+                  std::binder2nd< std::mem_fun1_t< void, MultiEmitter, MultiEmitterCallBackBase* >, MultiEmitterCallBackBase* >(
+                      std::mem_func(&MultiEmitter::createEmitterWithCallBack), pCallBackBase));
 }
 
 void MultiEmitter::deleteEmitter() {
@@ -73,7 +77,9 @@ void MultiEmitter::forceDelete(EffectSystem* pSystem) {
         pSystem->forceDeleteSingleEmitter(pEmitter);
     }
 
-    std::for_each(mChildren.begin(), mChildren.end(), std::bind2nd(std::mem_func(&MultiEmitter::forceDelete), pSystem));
+    std::for_each(
+        mChildren.begin(), mChildren.end(),
+        std::binder2nd< std::mem_fun1_t< void, MultiEmitter, EffectSystem* >, EffectSystem* >(std::mem_func(&MultiEmitter::forceDelete), pSystem));
 }
 
 void MultiEmitter::deleteForeverEmitter() {
@@ -157,7 +163,9 @@ void MultiEmitter::create(EffectSystem* pSystem) {
 }
 
 void MultiEmitter::scanParticleEmitter(EffectSystem* pSystem) {
-    std::for_each_array(mEmitters.begin(), mEmitters.end(), std::bind2nd(std::mem_func(&SingleEmitter::scanParticleEmitter), pSystem));
+    std::for_each_array(mEmitters.begin(), mEmitters.end(),
+                        std::binder2nd< std::mem_fun1_t< void, SingleEmitter, EffectSystem* >, EffectSystem* >(
+                            std::mem_func(&SingleEmitter::scanParticleEmitter), pSystem));
 }
 
 void MultiEmitter::forceFollowOn() {
@@ -172,12 +180,12 @@ void MultiEmitter::forceScaleOn() {
     mCallBack->forceScaleOn();
 }
 
-void MultiEmitter::initSyncBck(XanimePlayer* pPlayer, const char* pName, s32 count, f32 startFrame) {
-    _24 = new SyncBckEffectInfo(pPlayer, pName, count, 0.0f, -1.0f, false);
+void MultiEmitter::initSyncBck(XanimePlayer* pPlayer, const char* pName, s32 capacity, f32 startFrame) {
+    _24 = new SyncBckEffectInfo(pPlayer, pName, capacity, 0.0f, -1.0f, false);
     _24->mStartFrame = startFrame;
 }
 
-void MultiEmitter::onDeleteSyncBck(bool, f32 endFrame) {
+void MultiEmitter::onDeleteSyncBck(bool deleteOnEnd, f32 endFrame) {
     _24->mEndFrame = endFrame;
 }
 
@@ -185,8 +193,8 @@ void MultiEmitter::addSyncBck(const XanimePlayer* pPlayer, const char* pName) {
     _24->addBck(pPlayer, pName);
 }
 
-void MultiEmitter::setContinueBckEnd(bool continueBckEnd) {
-    _24->mContinueAnimEnd = continueBckEnd;
+void MultiEmitter::setContinueBckEnd(bool continueAnimEnd) {
+    _24->mContinueAnimEnd = continueAnimEnd;
 }
 
 void MultiEmitter::onCreateSyncClipping() {
@@ -230,8 +238,11 @@ void MultiEmitter::playEmitterOffClipped() {
         }
     }
 }
-void MultiEmitter::setDrawOrder(s32 idx) {
-    std::for_each_array(mEmitters.begin(), mEmitters.end(), std::bind2nd(std::mem_func(&SingleEmitter::setGroupID), idx));
+
+void MultiEmitter::setDrawOrder(s32 index) {
+    std::for_each_array(
+        mEmitters.begin(), mEmitters.end(),
+        std::binder2nd< std::mem_fun1_t< void, SingleEmitter, u8 >, u8 >(std::mem_func(&SingleEmitter::setGroupID), static_cast< u8 >(index)));
 }
 
 void MultiEmitter::addChildEmitter(MultiEmitter* pChild) {
@@ -239,14 +250,15 @@ void MultiEmitter::addChildEmitter(MultiEmitter* pChild) {
 }
 
 void MultiEmitter::setGlobalRotationDegree(const TVec3f& rRotation, s32 idx) {
-    setGlobalRotation(TVec3s(rRotation.x * DEGREE_TO_S16, rRotation.y * DEGREE_TO_S16, rRotation.z * DEGREE_TO_S16), idx);
+    setGlobalRotation(TVec3s(static_cast< s16 >(DEGREE_TO_S16 * rRotation.x), static_cast< s16 >(DEGREE_TO_S16 * rRotation.y),
+                             static_cast< s16 >(DEGREE_TO_S16 * rRotation.z)),
+                      idx);
 }
 
 void MultiEmitter::allocateEmitter(const char* pName) {
     MR::Vector< MR::FixedArray< u16, 32 > > indices;
-    bool isNumbered = !MR::hasStringSpace(pName) && !MR::isDigitStringTail(pName, 2);
-
-    if (isNumbered) {
+    bool numbered = !MR::hasStringSpace(pName) && !MR::isDigitStringTail(pName, 2);
+    if (numbered) {
         u16 index = 0;
         while (MR::Effect::isExistInResource(&index, pName, indices.size())) {
             indices.push_back(index);
@@ -256,10 +268,8 @@ void MultiEmitter::allocateEmitter(const char* pName) {
         s32 nameLength = 0;
         char name[40];
         MR::zeroMemory(name, sizeof(name));
-
         for (u32 i = 0; i <= length; i++) {
-            char c = pName[i];
-            if (c == ' ' || c == '\0') {
+            if (pName[i] == ' ' || pName[i] == '\0') {
                 name[nameLength] = '\0';
                 u16 index;
                 MR::Effect::isExistInResource(&index, name);
@@ -267,7 +277,8 @@ void MultiEmitter::allocateEmitter(const char* pName) {
                 nameLength = 0;
                 MR::zeroMemory(name, sizeof(name));
             } else {
-                name[nameLength++] = c;
+                name[nameLength] = pName[i];
+                nameLength++;
             }
         }
     }
@@ -277,8 +288,8 @@ void MultiEmitter::allocateEmitter(const char* pName) {
         mEmitters[i].init(indices[i]);
     }
 
-    if (isNumbered) {
-        mHash = MR::getHashCode(pName);
+    if (numbered) {
+        setName(pName);
     }
 }
 

@@ -1,4 +1,3 @@
-#include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioTeresa.hpp"
 #include "Game/Animation/XanimePlayer.hpp"
 #include "Game/Animation/XanimeResource.hpp"
@@ -6,6 +5,7 @@
 #include "Game/Map/HitInfo.hpp"
 #include "Game/MapObj/BigFanHolder.hpp"
 #include "Game/Player/Mario.hpp"
+#include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioAnimator.hpp"
 #include "Game/Player/MarioConst.hpp"
 #include "Game/Player/MarioParts.hpp"
@@ -579,7 +579,7 @@ void MarioActor::changeTeresaAnimation(const char* pAnimation, s32 interpolation
     }
 
     if (interpolation == -1) {
-        MR::startBck(_9A4, pAnimation, nullptr);
+        MR::startBck(_9A4, pAnimation);
     } else {
         MR::startBckWithInterpole(_9A4, pAnimation, interpolation);
     }
@@ -642,7 +642,7 @@ void MarioActor::updateTeresaAnimation() {
             if (getLastMove().dot(getGravityVec()) >= 1.0f) {
                 changeTeresaAnimation("fall", 16);
             } else if (!mMario->mDrawStates._1C) {
-                if (__fabsf(getLastMove().dot(getGravityVec())) < 1.0f) {
+                if (MR::abs(getLastMove().dot(getGravityVec())) < 1.0f) {
                     runTeresaBaseAnimation();
                 }
             }

@@ -9,6 +9,33 @@
 #include "Game/Player/MarioState.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "revolution/os.h"
+
+void MarioModule_FORCE_EMIT_STRING() {
+    OSReport("P_PlanetMap");
+}
+
+bool MarioModule::isInputDisable() const {
+    if (mActor->mMario->mMovementStates._22) {
+        return true;
+    }
+    if (mActor->mMario->isStatusActive(MarioStatus_FpView)) {
+        return true;
+    }
+    if (isAnimationRun("ハード着地")) {
+        return true;
+    }
+    if (isAnimationRun("中ダメージ着地")) {
+        return true;
+    }
+    if (isAnimationRun("中後ダメージ着地")) {
+        return true;
+    }
+    if (isAnimationRun("ステージインB")) {
+        return true;
+    }
+    return mActor->_3C0;
+}
 
 Mario* MarioModule::getPlayer() const {
     return mActor->mMario;
@@ -84,7 +111,7 @@ void MarioModule::changeAnimation(const char* pAnim1, const char* pAnim2) {
 void MarioModule::changeAnimationNonStop(const char* pAnim) {
     if (!mActor->_B90) {
         if (pAnim) {
-            changeAnimation(pAnim, static_cast< const char* >(nullptr));
+            changeAnimation(pAnim);
         }
         XanimeFrameCtrl* pFrameCtrl = mActor->mMarioAnim->mXanimePlayer->_20;
         if (pFrameCtrl->getAttribute() == 0) {
@@ -96,7 +123,7 @@ void MarioModule::changeAnimationNonStop(const char* pAnim) {
 void MarioModule::changeAnimationWithAttr(const char* pAnim, u32 attribute) {
     if (!mActor->_B90) {
         if (pAnim) {
-            changeAnimation(pAnim, static_cast< const char* >(nullptr));
+            changeAnimation(pAnim);
         }
         mActor->mMarioAnim->mXanimePlayer->_20->setAttribute(attribute);
     }
@@ -197,7 +224,7 @@ f32 MarioModule::getAnimationFrame() const {
 
 void MarioModule::changeAnimation(const char* pAnim, u32 index) {
     if (!mActor->_B90) {
-        changeAnimation(pAnim, static_cast< const char* >(nullptr));
+        changeAnimation(pAnim);
         getPlayer()->_A6C[index] = 1;
     }
 }
@@ -218,7 +245,7 @@ bool MarioModule::isAnimationRun(const char* pAnim, u32 index) {
 
 void MarioModule::stopAnimation(const char* pAnim, u32 index) {
     if (!mActor->_B90 && mActor->getMario()->_A6C[index]) {
-        stopAnimation(pAnim, static_cast< const char* >(nullptr));
+        stopAnimation(pAnim);
         getPlayer()->_A6C[index] = 0;
     }
 }
@@ -586,26 +613,4 @@ HitSensor* MarioModule::getSensor(const Triangle* pTri) const {
 
 f32 MarioModule::marioAcos(f32 a1) const {
     return MR::acosEx(a1);
-}
-
-bool MarioModule::isInputDisable() const {
-    if (mActor->mMario->mMovementStates._22) {
-        return true;
-    }
-    if (mActor->mMario->isStatusActive(MarioStatus_FpView)) {
-        return true;
-    }
-    if (isAnimationRun("ハード着地")) {
-        return true;
-    }
-    if (isAnimationRun("中ダメージ着地")) {
-        return true;
-    }
-    if (isAnimationRun("中後ダメージ着地")) {
-        return true;
-    }
-    if (isAnimationRun("ステージインB")) {
-        return true;
-    }
-    return mActor->_3C0;
 }

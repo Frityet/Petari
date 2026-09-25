@@ -8,6 +8,7 @@
 #include "Game/Effect/EffectSystemUtil.hpp"
 #include "Game/LiveActor/ClippingJudge.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
+#include "Game/Map/HitInfo.hpp"
 #include "Game/Map/NamePosHolder.hpp"
 #include "Game/Map/SwitchWatcherHolder.hpp"
 #include "Game/Map/WaterInfo.hpp"
@@ -38,14 +39,30 @@
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
+#include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/SwitchEventFunctorListener.hpp"
 #include <JSystem/JGeometry/TMatrix.hpp>
 #include <JSystem/JGeometry/TUtil.hpp>
 #include <cstdio>
 #include <va_list.h>
+
+void ObjUtil_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)3.81469727e-06f;
+    (void)-3.81469727e-06f;
+    (void)1.57079637f;
+    (void)-1.57079637f;
+    (void)57.2957802f;
+    (void)15.0f;
+    (void)100.0f;
+    (void)1000.0f;
+}
 
 namespace {
     static const TVec3f sDefaultPlayerPos = TVec3f(0, 0, 0);
@@ -554,10 +571,10 @@ namespace {
             return nullptr;
         }
 
-        JMapInfo* inf = new JMapInfo();
-        inf->attach(pHolder->mFileInfoTable->getRes(buf));
+        JMapInfo* pInfo = new JMapInfo();
+        pInfo->attach(pHolder->mFileInfoTable->getRes(buf));
 
-        return inf;
+        return pInfo;
     }
 };  // namespace
 
@@ -582,7 +599,6 @@ JMapInfo* MR::tryCreateCsvParser(const LiveActor* pActor, const char* pFormat, .
 }
 
 JMapInfo* MR::tryCreateCsvParser(const ResourceHolder* pHolder, const char* pFormat, ...) {
-    // exact same code as createCsvParser(const ResourceHolder*, const char*, ...)
     va_list list;
     va_start(list, pFormat);
 
@@ -613,45 +629,40 @@ void MR::getCsvDataS32(s32* pOut, const JMapInfo* pMapInfo, const char* pKey, s3
     pMapInfo->getValue< s32 >(idx, pKey, pOut);
 }
 
-void MR::getCsvDataU8(u8* pOut, const JMapInfo* pMapInfo, const char* pKey, s32 idx) {
+void MR::getCsvDataU8(u8* pOut, const JMapInfo* pMapInfo, const char* pKey, s32 idx) NO_INLINE {
     s32 val = 0;
     pMapInfo->getValue< s32 >(idx, pKey, &val);
     *pOut = val;
 }
 
-/*
 void MR::getCsvDataF32(f32* pOut, const JMapInfo* pMapInfo, const char* pKey, s32 idx) {
-    int v7 = pMapInfo->searchItemInfo(pKey);
-
-    if (v7 >= 0) {
-        *pOut = *((f32*)(pMapInfo->mData->mNumEntries + pMapInfo->mData->mDataOffset +
-                         idx * (pMapInfo->mData->mEntrySize + static_cast< const JMapItem* >(&pMapInfo->mData->mItems)[v7].mOffsData)));
-    }
+    pMapInfo->getValue(idx, pKey, pOut);
 }
-*/
 
 void MR::getCsvDataBool(bool* pOut, const JMapInfo* pMapInfo, const char* pKey, s32 idx) {
-    pMapInfo->getValue< bool >(idx, pKey, pOut);
+    pMapInfo->getValue(idx, pKey, pOut);
 }
+
 void MR::getCsvDataVec(Vec* pOut, const JMapInfo* pMapInfo, const char* pKey, s32 idx) {
-    char buf[0x100];
-    snprintf(buf, sizeof(buf), "%sX", pKey);
-    getCsvDataF32(&pOut->x, pMapInfo, buf, idx);
-    snprintf(buf, sizeof(buf), "%sY", pKey);
-    getCsvDataF32(&pOut->y, pMapInfo, buf, idx);
-    snprintf(buf, sizeof(buf), "%sZ", pKey);
-    getCsvDataF32(&pOut->z, pMapInfo, buf, idx);
+    char key[256];
+    snprintf(key, sizeof(key), "%sX", pKey);
+    getCsvDataF32(&pOut->x, pMapInfo, key, idx);
+    snprintf(key, sizeof(key), "%sY", pKey);
+    getCsvDataF32(&pOut->y, pMapInfo, key, idx);
+    snprintf(key, sizeof(key), "%sZ", pKey);
+    getCsvDataF32(&pOut->z, pMapInfo, key, idx);
 }
+
 void MR::getCsvDataColor(GXColor* pOut, const JMapInfo* pMapInfo, const char* pKey, s32 idx) {
-    char buf[0x100];
-    snprintf(buf, sizeof(buf), "%sR", pKey);
-    getCsvDataU8(&pOut->r, pMapInfo, buf, idx);
-    snprintf(buf, sizeof(buf), "%sG", pKey);
-    getCsvDataU8(&pOut->g, pMapInfo, buf, idx);
-    snprintf(buf, sizeof(buf), "%sB", pKey);
-    getCsvDataU8(&pOut->b, pMapInfo, buf, idx);
-    snprintf(buf, sizeof(buf), "%sA", pKey);
-    getCsvDataU8(&pOut->a, pMapInfo, buf, idx);
+    char key[256];
+    snprintf(key, sizeof(key), "%sR", pKey);
+    getCsvDataU8(&pOut->r, pMapInfo, key, idx);
+    snprintf(key, sizeof(key), "%sG", pKey);
+    getCsvDataU8(&pOut->g, pMapInfo, key, idx);
+    snprintf(key, sizeof(key), "%sB", pKey);
+    getCsvDataU8(&pOut->b, pMapInfo, key, idx);
+    snprintf(key, sizeof(key), "%sA", pKey);
+    getCsvDataU8(&pOut->a, pMapInfo, key, idx);
 }
 
 bool MR::isStageStateScenarioOpeningCamera() {
@@ -788,10 +799,10 @@ bool MR::appearStarPieceToDirection(const NameObj* pObj, const TVec3f& rVec1, co
 }
 
 void MR::initStarPieceGetCSSound() {
-    StarPieceDirector* director = getStarPieceDirector();
+    StarPieceDirector* pDirector = getStarPieceDirector();
 
-    if (director != nullptr) {
-        director->initCSSound();
+    if (pDirector != nullptr) {
+        pDirector->initCSSound();
     }
 }
 
@@ -805,25 +816,24 @@ BenefitItemOneUp* MR::createKinokoOneUp() {
     return pKinokoOneUp;
 }
 
-void MR::appearKinokoOneUpPop(BenefitItemObj* pBenefitObj, MtxPtr pMtx, f32 flt) {
-    TPos3f pos;
-    TVec3f vec1;
-    pos.setInline(pMtx);
-    pos.getEulerXYZ(vec1);
+void MR::appearKinokoOneUpPop(BenefitItemObj* pBenefitObj, MtxPtr pMtx, f32 speed) {
+    TPos3f mtx(pMtx);
+    TVec3f rotation;
+    mtx.getEulerXYZ(rotation);
 
-    TVec3f transVec;
-    TVec3f vec3;
-    TVec3f vec2 = vec1;
-    vec2.scale(_180_PI);
-    pBenefitObj->mRotation.set(vec2);
+    TVec3f position;
+    TVec3f up;
+    TVec3f rotationDegrees = rotation;
+    rotationDegrees.scale(_180_PI);
+    pBenefitObj->mRotation.set(rotationDegrees);
 
-    pos.getTrans(transVec);
-    pos.getYDir(vec3);
-    MR::normalize(&vec3);
+    mtx.getTrans(position);
+    mtx.getYDir(up);
+    MR::normalize(&up);
 
-    TVec3f vec4 = vec3;
-    vec4.scale(flt);
-    pBenefitObj->shoot(transVec, vec4, true);
+    TVec3f velocity = up;
+    velocity.scale(speed);
+    pBenefitObj->shoot(position, velocity, true);
 }
 
 BenefitItemLifeUp* MR::createKinokoSuper() {
@@ -932,25 +942,24 @@ bool MR::findNamePos(const char* pName, MtxPtr pMtx) {
     return MR::tryFindLinkNamePos(nullptr, pName, pMtx);
 }
 
-bool MR::findNamePos(const char* pName, TVec3f* a2, TVec3f* a3) {
-    return getNamePosHolder()->find(nullptr, pName, a2, a3);
+bool MR::findNamePos(const char* pName, TVec3f* pPosition, TVec3f* pRotation) {
+    return getNamePosHolder()->find(nullptr, pName, pPosition, pRotation);
 }
 
 void MR::findNamePosOnGround(const char* pName, MtxPtr pMtx) {
     Triangle triangle;
     TPos3f mtx;
-    findNamePos(pName, mtx.toMtxPtr());
-
-    TVec3f pos;
-    mtx.getTrans(pos);
-    TVec3f front;
-    mtx.getZDir(front);
+    TVec3f hitPos;
+    TVec3f position;
     TVec3f gravity;
-    calcGravityVector(nullptr, pos, &gravity, nullptr, 0);
+    TVec3f front;
+    findNamePos(pName, mtx.toMtxPtr());
+    mtx.getTrans(position);
+    mtx.getZDir(front);
+    calcGravityVector(nullptr, position, &gravity, nullptr, 0);
 
-    TVec3f groundPos;
-    if (getFirstPolyOnLineToMap(&groundPos, &triangle, pos - gravity * 100.0f, gravity * 1000.0f)) {
-        makeMtxUpFrontPos(&mtx, -gravity, front, groundPos);
+    if (getFirstPolyOnLineToMap(&hitPos, &triangle, position - gravity * 100.0f, gravity * 1000.0f)) {
+        makeMtxUpFrontPos(&mtx, -gravity, front, hitPos);
     }
 
     PSMTXCopy(mtx.toMtxPtr(), pMtx);
@@ -969,15 +978,21 @@ void MR::findLinkNamePos(const NameObj* pObj, const char* pName, MtxPtr pMtx) {
 }
 
 bool MR::tryFindLinkNamePos(const NameObj* pObj, const char* pName, MtxPtr pMtx) {
-    TVec3f pos(0.0f, 0.0f, 0.0f);
-    TVec3f rot(0.0f, 0.0f, 0.0f);
-    if (getNamePosHolder()->find(pObj, pName, &pos, &rot)) {
-        makeMtxTR(pMtx, pos, rot);
+    TVec3f position(0.0f, 0.0f, 0.0f);
+    TVec3f rotation(0.0f, 0.0f, 0.0f);
+
+    if (getNamePosHolder()->find(pObj, pName, &position, &rotation)) {
+        makeMtxTR(pMtx, position, rotation);
         return true;
     }
+
     return false;
 }
 
 bool MR::tryFindLinkNamePos(const NameObj* pObj, const char* pName, TVec3f* pParam3, TVec3f* pParam4) {
     return getNamePosHolder()->find(pObj, pName, pParam3, pParam4);
+}
+
+void ObjUtil_FORCE_MATCH(TVec3f* pOut, const TVec3f& rVec) {
+    pOut->add(rVec);
 }

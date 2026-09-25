@@ -79,10 +79,10 @@ void TripodBossKillerGenerater::init(const JMapInfoIter& rIter) {
     MR::useStageSwitchReadAppear(this, rIter);
 
     if (mActiveLabel > 0) {
-        MR::startBck(this, "Shoot", nullptr);
+        MR::startBck(this, "2ndDemo");
         MR::setBckFrameAndStop(this, 0.0f);
     } else {
-        MR::startBck(this, "2ndDemo", nullptr);
+        MR::startBck(this, "Shoot");
         MR::setBckFrameAndStop(this, 0.0f);
     }
 
@@ -131,8 +131,8 @@ void TripodBossKillerGenerater::activateTripodBoss() {
     _E1 = true;
 }
 
-void TripodBossKillerGenerater::setLocalMatrix(const TPos3f& pMtx) {
-    _E4.set(pMtx);
+void TripodBossKillerGenerater::setLocalMatrix(const TPos3f& rPMtx) {
+    _E4.set(rPMtx);
 }
 
 void TripodBossKillerGenerater::setActiveLebel(s32 label) {
@@ -241,7 +241,7 @@ bool TripodBossKillerGenerater::requestBreak() {
             MR::invalidateCollisionParts(this);
         }
 
-        MR::startBck(this, "2ndDemo", nullptr);
+        MR::startBck(this, "2ndDemo");
         MR::setBckFrameAndStop(this, 0.0f);
         setNerve(GET_NERVE(TripodBossKillerGenerater, TripodBossKillerGeneraterNrvStop));
 
@@ -269,7 +269,7 @@ void TripodBossKillerGenerater::exeShowDemo() {
             return;
         }
 
-        MR::startBck(this, "2ndDemo", nullptr);
+        MR::startBck(this, "2ndDemo");
 
         if (mHasCollision) {
             MR::validateCollisionParts(this);
@@ -304,8 +304,8 @@ void TripodBossKillerGenerater::exeShootSetting() {
     _8C.getTrans(trans);
 
     HomingKiller* killer = mKiller;
-    killer->mBasePos.set< f32 >(trans);
-    killer->mBaseFront.set< f32 >(front);
+    killer->mBasePos.set(trans);
+    killer->mBaseFront.set(front);
 
     if (!tryBreak() && !tryAbort() && !tryShoot()) {
         return;
@@ -314,7 +314,7 @@ void TripodBossKillerGenerater::exeShootSetting() {
 
 void TripodBossKillerGenerater::exeShoot() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Shoot", nullptr);
+        MR::startBck(this, "Shoot");
         mPosition.distance(*MR::getPlayerPos());
     }
 
@@ -357,7 +357,7 @@ void TripodBossKillerGenerater::exeRestart() {
 
     if (_121) {
         if (MR::getPlayerPos()->distance(mPosition) >= ::sCanRestartPlayerDistance) {
-            MR::startBck(this, "2ndDemo", nullptr);
+            MR::startBck(this, "2ndDemo");
             MR::startSound(this, "SE_BM_TRIPOD_CANNON_RESTART");
 
             if (mHasCollision) {

@@ -4,7 +4,7 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
-#include "revolution/gx.h"
+#include <revolution/gx.h>
 
 namespace {
     const f32 sModelScale = 100.0f;
@@ -23,21 +23,22 @@ void ShadowVolumeCylinder::setRadius(f32 radius) {
 }
 
 void ShadowVolumeCylinder::loadModelDrawMtx() const {
-    const ShadowController* pController = getController();
+    ShadowController* controller = getController();
     TVec3f position;
     calcBaseDropPosition(&position);
-    TVec3f dropDirection;
-    pController->getDropDir(&dropDirection);
+    TVec3f direction;
+    controller->getDropDir(&direction);
+    TVec3f up(-direction);
     TPos3f mtx;
-    MR::makeMtxUpNoSupportPos(&mtx, -dropDirection, position);
+    MR::makeMtxUpNoSupportPos(&mtx, up, position);
 
-    f32 radiusScale = mRadius / 100.0f;
-    if (pController->isFollowHostScale()) {
-        radiusScale *= pController->getHost()->mScale.x;
+    f32 radius = mRadius / ::sModelScale;
+    if (controller->isFollowHostScale()) {
+        radius *= controller->getHost()->mScale.x;
     }
 
-    TVec3f scale(radiusScale, calcBaseDropLength() / 100.0f, radiusScale);
-    MR::preScaleMtx(mtx.toMtxPtr(), scale);
-    PSMTXConcat(MR::getCameraViewMtx(), mtx.toMtxPtr(), mtx.toMtxPtr());
-    GXLoadPosMtxImm(mtx.toMtxPtr(), GX_PNMTX0);
+    TVec3f scale(radius, calcBaseDropLength() / ::sModelScale, radius);
+    MR::preScaleMtx(mtx, scale);
+    PSMTXConcat(MR::getCameraViewMtx(), mtx, mtx);
+    GXLoadPosMtxImm(mtx, 0);
 }

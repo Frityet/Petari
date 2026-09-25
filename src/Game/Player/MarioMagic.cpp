@@ -27,7 +27,7 @@ void Mario::startMagic() {
                     } else {
                         clearSlope();
                         changeStatus(mMagic);
-                        stopAnimationUpper(static_cast< const char* >(nullptr), static_cast< const char* >(nullptr));
+                        stopAnimationUpper(nullptr);
                         _10._1 = 1;
                     }
                 }
@@ -40,18 +40,8 @@ MarioMagic::MarioMagic(MarioActor* pActor) : MarioState(pActor, MarioStatus_Magi
     _12 = 0;
 }
 
-bool MarioMagic::close() {
-    stopEffect("スピンライト");
-
-    if (_12 < 0x1A) {
-        playEffect("スピンライト消去");
-    }
-
-    return true;
-}
-
 bool MarioMagic::start() {
-    changeAnimation("地上ひねり", static_cast< const char* >(nullptr));
+    changeAnimation("地上ひねり");
     stopEffect("パンチブラー左");
     stopEffect("パンチブラー右");
     playEffect("共通地上スピン");
@@ -59,6 +49,16 @@ bool MarioMagic::start() {
     playSound("スピンジャンプ");
     startPadVib(2);
     _12 = 0;
+    return true;
+}
+
+bool MarioMagic::close() {
+    stopEffect("スピンライト");
+
+    if (_12 < 0x1A) {
+        playEffect("スピンライト消去");
+    }
+
     return true;
 }
 

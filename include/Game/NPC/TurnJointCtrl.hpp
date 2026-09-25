@@ -4,20 +4,19 @@
 
 class LiveActor;
 class JointController;
-class JointControllerInfo;
 class JointCtrlRate;
+struct JointControllerInfo;
 
 class TurnJointCtrl {
 public:
     enum AXIS { X = 0, Y = 1, Z = 2 };
-
     struct Ctrl {
-        bool mEnabled;
-        JointController* mController;
-        f32 mRate;
-        AXIS mFrontAxis;
-        AXIS mPitchAxis;
-        AXIS mYawAxis;
+        /* 0x00 */ bool mEnabled;
+        /* 0x04 */ JointController* mJointController;
+        /* 0x08 */ f32 mBlendRate;
+        /* 0x0C */ AXIS mFrontAxis;
+        /* 0x10 */ AXIS mVerticalTurnAxis;
+        /* 0x14 */ AXIS mHorizontalTurnAxis;
     };
 
     TurnJointCtrl(LiveActor*);
@@ -37,17 +36,17 @@ public:
     void getMtxDir(TVec3f*, const TPos3f*, AXIS);
     bool updateJointMtxCallBack(TPos3f*, const Ctrl&);
 
-    /* 0x00 */ LiveActor* mHostActor;
+    /* 0x00 */ LiveActor* mActor;
     /* 0x04 */ Ctrl mFace;
     /* 0x1C */ Ctrl mWaist;
-    /* 0x34 */ JointCtrlRate* mControlRate;
-    /* 0x38 */ f32 mMaxYawDegree;
-    /* 0x3C */ f32 mMaxPitchUpDegree;
-    /* 0x40 */ f32 mMaxPitchDownDegree;
+    /* 0x34 */ JointCtrlRate* mCtrlRate;
+    /* 0x38 */ f32 mHorizontalDegreeMax;
+    /* 0x3C */ f32 mPositiveDegreeMax;
+    /* 0x40 */ f32 mNegativeDegreeMax;
     /* 0x44 */ TVec3f mStarePos;
     /* 0x50 */ TVec3f _50;
     /* 0x5C */ f32 _5C;
     /* 0x60 */ f32 _60;
-    /* 0x64 */ s32 _64;
+    /* 0x64 */ s32 mCtrlFrames;
     /* 0x68 */ bool mEnabled;
 };

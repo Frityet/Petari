@@ -5,8 +5,7 @@
 #include <JSystem/JGeometry/TMatrix.hpp>
 
 class AnimScaleController;
-template < typename T >
-class JointControlDelegator;
+class JointController;
 class JointControllerInfo;
 class LodCtrl;
 class NameObjArchiveListCollector;
@@ -149,11 +148,32 @@ public:
         _13C = "Reaction";
     }
 
-    inline void setDefaults(const char* a1, const char* a2, const char* a3, const char* a4) {
+    inline void setDefaults(const char* pReaction, const char* pPointing, const char* pTrampled, const char* pSpin) {
+        _130 = pSpin;
+        _134 = pTrampled;
+        _138 = pPointing;
+        _13C = pReaction;
+    }
+
+    inline void setDefaults2(const char* pReaction, const char* pPointing, const char* pSpin, const char* pTrampled) {
+        _134 = pTrampled;
+        _130 = pSpin;
+        _138 = pPointing;
+        _13C = pReaction;
+    }
+
+    inline void setDefaults3(const char* pReaction, const char* pPointing, const char* pSpin, const char* pTrampled) {
+        _134 = pTrampled;
+        _130 = pSpin;
+        _13C = pPointing;
+        _138 = pReaction;
+    }
+
+    inline void setDefaults4(const char* a1, const char* a2, const char* a3, const char* a4) {
         _130 = a4;
+        _13C = a2;
         _134 = a3;
-        _138 = a2;
-        _13C = a1;
+        _138 = a1;
     }
 
     inline void setDefaultsParam() {
@@ -176,6 +196,11 @@ public:
     inline void setTalkAction(const char* pActionName) {
         _11C = pActionName;
         _120 = pActionName;
+    }
+
+    inline void setTalkAction(const char* pActionName, const char* pActionName2) {
+        _11C = pActionName;
+        _120 = pActionName2;
     }
 
     TalkMessageCtrl* getMsgCtrl() const {
@@ -225,7 +250,7 @@ public:
     const char* _138;
     const char* _13C;
     /* 0x140 */ AnimScaleController* mScaleController;
-    /* 0x144 */ JointControlDelegator< NPCActor >* mDelegator;
+    /* 0x144 */ JointController* mDelegator;
     /* 0x148 */ const Nerve* mCurNerve;
     /* 0x14C */ Nerve* mWaitNerve;
     /* 0x150 */ Nerve* mTalkNerve;

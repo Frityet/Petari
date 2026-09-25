@@ -30,6 +30,15 @@
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 
+void PowerStar_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)0.5f;
+    (void)3.0f;
+    (void)MR::pi();
+    (void)2.0f;
+}
+
 const GXColor lightColor[] = {
     {0x96, 0x96, 0x32, 0}, {0x32, 0x32, 0x96, 0}, {0x32, 0x96, 0x32, 0}, {0x96, 0x32, 0x32, 0}, {0x64, 0x64, 0x64, 0},
 };
@@ -158,7 +167,7 @@ void PowerStar::appear() {
 }
 
 void PowerStar::makeActorAppeared() {
-    mInitPosition.set< f32 >(mPosition);
+    mInitPosition.set(mPosition);
     initPosture();
     LiveActor::makeActorAppeared();
 }
@@ -182,10 +191,10 @@ void PowerStar::setDemoAppearPos(const TVec3f& rVec) {
 
     if (isGroupExist) {
         mCameraActor = getNearestAppearPoint(rVec);
-        mAppearPosition.set< f32 >(mCameraActor->mPosition);
+        mAppearPosition.set(mCameraActor->mPosition);
     }
 
-    mPosition.set< f32 >(rVec);
+    mPosition.set(rVec);
 }
 
 bool PowerStar::isEndAppearDemo() const {
@@ -356,8 +365,8 @@ void PowerStar::initMapToolInfo(const JMapInfoIter& rIter) {
     MR::getJMapInfoArg1NoInit(rIter, &_125);
     MR::getJMapInfoArg2NoInit(rIter, &_126);
     MR::getJMapInfoArg4NoInit(rIter, &_127);
-    mAppearPosition.set< f32 >(mPosition);
-    mInitRotation.set< f32 >(mRotation);
+    mAppearPosition.set(mPosition);
+    mInitRotation.set(mRotation);
     MR::registerPowerStar(this, mPowerStarId);
     MR::joinToGroupArray(this, rIter, "パワースター出現ポイントグループ", 0x10);
 
@@ -561,7 +570,7 @@ void PowerStar::calcAppearDemoRiseTrans(TVec3f* pOutTrans, f32 a2) const {
 }
 
 void PowerStar::processWait(f32 val) {
-    mRotation.y = MR::repeatDegree(mRotation.y);
+    mRotation.y = MR::repeat(mRotation.y + val, 0.0f, 360.0f);
 
     if (mIsGrandStar) {
         if (MR::changeShowModelFlagSyncNearClipping(this, 250.0f)) {
@@ -612,7 +621,7 @@ void PowerStar::exeAppearDemoRise() {
 
     f32 easeOut = MR::calcNerveEaseOutValue(this, 60, 0.0f, 300.0f);
     calcAppearDemoRiseTrans(&mPosition, easeOut);
-    mRotation.y = MR::repeatDegree(mRotation.y + 10.0f);
+    mRotation.y = MR::repeat(mRotation.y + 10.0f, 0.0f, 360.0f);
 
     if (MR::isStep(this, 80)) {
         setNerve(GET_NERVE(PowerStar, PowerStarNrvAppearDemoMove));
@@ -628,7 +637,7 @@ void PowerStar::exeAppearDemoMove() {
         TVec3f vec;
         f32 step = getNerveStep() / 120.0f;
         calcAppearDemoRiseTrans(&vec, 300.0f);
-        vec.lerp(mAppearPosition, mPosition, step);
+        mPosition.lerp(vec, mAppearPosition, step);
 
         TVec3f vec2;
         MR::vecKillElement(vec, mGravity, &vec2);
@@ -661,8 +670,9 @@ void PowerStar::exeAppearDemoMove() {
         }
     }
 
-    mRotation.y = MR::repeatDegree(
-        mRotation.y + (MR::isLessStep(this, 120) ? 20.0f : MR::getEaseOutValue(getNerveStep() - 120, 20.0f, mIsGrandStar ? 2.0f : 3.0f, 90.0f)));
+    mRotation.y = MR::repeat(
+        mRotation.y + (MR::isLessStep(this, 120) ? 20.0f : MR::getEaseOutValue(getNerveStep() - 120, 20.0f, mIsGrandStar ? 2.0f : 3.0f, 90.0f)), 0.0f,
+        360.0f);
 
     if (MR::isStep(this, 210)) {
         MR::resetCameraLocalOffset();
@@ -678,8 +688,8 @@ void PowerStar::exeAppearDemoKoopa() {
         MR::moveVolumeStageBGM(0.0f, 5);
         MR::moveVolumeSubBGM(0.0f, 5);
 
-        MR::startAnimCameraTargetSelf(mPowerStarModelObj, mCameraInfo, MR::isStageKoopaVs3() ? "DemoKoopaGrandStarVs3" : "DemoKoopaGrandStar", 0,
-                                      1.0f);
+        bool isStageKoopaVs3 = MR::isStageKoopaVs3();
+        MR::startAnimCameraTargetSelf(mPowerStarModelObj, mCameraInfo, isStageKoopaVs3 ? "DemoKoopaGrandStarVs3" : "DemoKoopaGrandStar", 0, 1.0f);
 
         MR::hideModelAndOnCalcAnimIfShown(this);
 
@@ -689,11 +699,12 @@ void PowerStar::exeAppearDemoKoopa() {
 
         mBaseMtx.setTrans(mInitPosition);
 
-        mPowerStarModelObj->kill();
+        mPowerStarModelObj->appear();
 
         MR::requestMovementOn(mPowerStarModelObj);
 
-        MR::startBck(mPowerStarModelObj, MR::isStageKoopaVs3() ? "DemoKoopaGrandStarVs3" : "DemoKoopaGrandStar", nullptr);
+        isStageKoopaVs3 = MR::isStageKoopaVs3();
+        MR::startBck(mPowerStarModelObj, isStageKoopaVs3 ? "DemoKoopaGrandStarVs3" : "DemoKoopaGrandStar");
 
         _134.set(MR::getPlayerBaseMtx());
 
@@ -701,7 +712,7 @@ void PowerStar::exeAppearDemoKoopa() {
     }
 
     if (MR::isStep(this, 1)) {
-        MR::startBckPlayer(MR::isStageKoopaVs3() ? "DemoKoopaGrandStarVs3" : "DemoKoopaGrandStar", 0l);
+        MR::startBckPlayer(MR::isStageKoopaVs3() ? "DemoKoopaGrandStarVs3" : "DemoKoopaGrandStar", 0L);
     }
 
     if (MR::isStageKoopaVs3()) {
@@ -725,9 +736,10 @@ void PowerStar::exeAppearDemoKoopa() {
         mPosition.set(mAppearPosition);
 
         MR::showModelIfHidden(this);
-        mPowerStarModelObj->appear();
+        mPowerStarModelObj->kill();
 
-        MR::endAnimCamera(mPowerStarModelObj, mCameraInfo, MR::isStageKoopaVs3() ? "DemoKoopaGrandStarVs3" : "DemoKoopaGrandStar", 0, true);
+        bool isStageKoopaVs3 = MR::isStageKoopaVs3();
+        MR::endAnimCamera(mPowerStarModelObj, mCameraInfo, isStageKoopaVs3 ? "DemoKoopaGrandStarVs3" : "DemoKoopaGrandStar", 0, true);
         endAppearDemo();
 
         if (MR::isStageKoopaVs3()) {
@@ -797,7 +809,9 @@ void PowerStar::exeStageClearDemo() {
 
         MR::invalidateClipping(this);
 
-        MR::startAnimCameraTargetSelf(mPowerStarModelObj, mCameraInfo, mIsGrandStar ? "GrandStarGet" : "PowerStarGet", 0, 1.0f);
+        ModelObj* powerStarMdl = mPowerStarModelObj;
+        ActorCameraInfo* camInfo = mCameraInfo;
+        MR::startAnimCameraTargetSelf(powerStarMdl, camInfo, mIsGrandStar ? "GrandStarGet" : "PowerStarGet", 0, 1.0f);
     }
 
     if (MR::isStep(this, 1)) {
@@ -812,18 +826,19 @@ void PowerStar::exeStageClearDemo() {
 
         MR::hideModelIfShown(this);
 
-        MR::startBckPlayer(mIsGrandStar ? "GrandStarGet" : "PowerStarGet", 0l);
+        MR::startBckPlayer(mIsGrandStar ? "GrandStarGet" : "PowerStarGet", 0L);
 
         mBaseMtx.setTrans(mPosition);
 
         mPowerStarModelObj->makeActorAppeared();
 
-        MR::startBck(mPowerStarModelObj, mIsGrandStar ? "GrandStarGet" : "PowerStarGet", nullptr);
+        ModelObj* powerStarMdl = mPowerStarModelObj;
+        MR::startBck(powerStarMdl, mIsGrandStar ? "GrandStarGet" : "PowerStarGet");
 
         if (MR::isPowerStarGetDemoWithLuigiCurrentGalaxyAndScenario(mPowerStarId)) {
             mLuigiNPC->makeActorAppeared();
 
-            MR::startBck(mLuigiNPC, "PowerStarGet", nullptr);
+            MR::startBck(mLuigiNPC, "PowerStarGet");
             MR::startBva(mLuigiNPC, "PowerStarGet");
         }
 
@@ -832,8 +847,8 @@ void PowerStar::exeStageClearDemo() {
     }
 
     if (mIsGrandStar && MR::isStageKoopaVs3() && MR::isStep(this, 600)) {
-        MR::startBckPlayer(::cStageClearAnimNameKoopaVs3, static_cast< const char* >(nullptr));
-        MR::startBck(mPowerStarModelObj, ::cStageClearAnimNameKoopaVs3, nullptr);
+        MR::startBckPlayer(::cStageClearAnimNameKoopaVs3);
+        MR::startBck(mPowerStarModelObj, ::cStageClearAnimNameKoopaVs3);
         MR::startAnimCameraTargetSelf(mPowerStarModelObj, mCameraInfo, ::cStageClearAnimNameKoopaVs3, 1, 1.0f);
     }
 }

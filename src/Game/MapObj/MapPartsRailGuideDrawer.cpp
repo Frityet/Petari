@@ -1,63 +1,45 @@
 #include "Game/MapObj/MapPartsRailGuideDrawer.hpp"
 #include "Game/LiveActor/Nerve.hpp"
-#include "Game/Util.hpp"
+#include "Game/MapObj/MapPartsRailGuidePoint.hpp"
+#include "Game/Util/JMapInfo.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MapPartsUtil.hpp"
+#include "Game/Util/RailUtil.hpp"
 #include <algorithm>
 
-namespace NrvMapPartsRailGuideDrawer {
-    class HostTypeHideAll : public Nerve {
-    public:
-        virtual void execute(Spine*) const {}
-        static HostTypeHideAll sInstance;
-    };
-    class HostTypeDrawAll : public Nerve {
-    public:
-        virtual void execute(Spine*) const {}
-        static HostTypeDrawAll sInstance;
-    };
-    NEW_NERVE(HostTypeDrawForward, MapPartsRailGuideDrawer, DrawForward);
-    HostTypeHideAll HostTypeHideAll::sInstance;
-    HostTypeDrawAll HostTypeDrawAll::sInstance;
+void MapPartsRailGuideDrawer_FORCE_MATCH_SDATA2() {
+    (void)0.0f;
+    (void)2.0f;
+    (void)200.0f;
 }
 
-MapPartsRailGuideDrawer::MapPartsRailGuideDrawer(LiveActor* pHost, const char* pName)
-    : MapPartsFunction(pHost, "ガイド描画"), _41C(0), _420(-1), _424(pName) {
+namespace NrvMapPartsRailGuideDrawer {
+    NEW_NERVE(HostTypeHideAll, MapPartsRailGuideDrawer, HideAll);
+    NEW_NERVE(HostTypeDrawAll, MapPartsRailGuideDrawer, DrawAll);
+    NEW_NERVE(HostTypeDrawForward, MapPartsRailGuideDrawer, DrawForward);
+}  // namespace NrvMapPartsRailGuideDrawer
+
+MapPartsRailGuideDrawer::MapPartsRailGuideDrawer(LiveActor* pHost, const char* pModelName)
+    : MapPartsFunction(pHost, "ガイド描画"), mGuidePoints(), mGuideType(), mRailId(-1), mModelName(pModelName) {
 }
 
 void MapPartsRailGuideDrawer::init(const JMapInfoIter& rIter) {
-    MR::getMapPartsArgRailGuideType(&_41C, mHost);
-    rIter.getValue("CommonPath_ID", &_420);
-    if (_41C == -1) {
-        _41C = 0;
+    MR::getMapPartsArgRailGuideType(&mGuideType, mHost);
+    rIter.getValue("CommonPath_ID", &mRailId);
+    if (mGuideType == -1) {
+        mGuideType = 0;
     }
 
-    if (_41C == 0) {
-        initNerve(&NrvMapPartsRailGuideDrawer::HostTypeHideAll::sInstance);
+    if (mGuideType == 0) {
+        initNerve(GET_NERVE(MapPartsRailGuideDrawer, HostTypeHideAll));
     } else {
         initGuidePoints(rIter);
-        if (_41C == 1 || _41C == 3) {
-            initNerve(&NrvMapPartsRailGuideDrawer::HostTypeDrawAll::sInstance);
-        } else if (_41C == 2) {
-            initNerve(&NrvMapPartsRailGuideDrawer::HostTypeDrawForward::sInstance);
+        if (mGuideType == 1 || mGuideType == 3) {
+            initNerve(GET_NERVE(MapPartsRailGuideDrawer, HostTypeDrawAll));
+        } else if (mGuideType == 2) {
+            initNerve(GET_NERVE(MapPartsRailGuideDrawer, HostTypeDrawForward));
         }
     }
-}
-
-bool MapPartsRailGuideDrawer::isWorking() const {
-    for (MapPartsRailGuidePoint* const* pPoint = mGuidePoints.begin(); pPoint != mGuidePoints.end(); pPoint++) {
-        if (!MR::isDead(*pPoint)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-void MapPartsRailGuideDrawer::show() {
-    std::for_each(mGuidePoints.begin(), mGuidePoints.end(), std::mem_func(&LiveActor::appear));
-}
-
-void MapPartsRailGuideDrawer::hide() {
-    std::for_each(mGuidePoints.begin(), mGuidePoints.end(), std::mem_func(&LiveActor::kill));
 }
 
 void MapPartsRailGuideDrawer::start() {
@@ -68,6 +50,24 @@ void MapPartsRailGuideDrawer::end() {
     hide();
 }
 
+bool MapPartsRailGuideDrawer::isWorking() const {
+    for (MapPartsRailGuidePoint* const* pPoint = mGuidePoints.begin(); pPoint != mGuidePoints.end(); pPoint++) {
+        if (!MR::isDead(*pPoint)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void MapPartsRailGuideDrawer::show() {
+    std::for_each(mGuidePoints.begin(), mGuidePoints.end(), std::mem_fun(&LiveActor::appear));
+}
+
+void MapPartsRailGuideDrawer::hide() {
+    std::for_each(mGuidePoints.begin(), mGuidePoints.end(), std::mem_fun(&LiveActor::kill));
+}
+
 void MapPartsRailGuideDrawer::initGuidePoints(const JMapInfoIter& rIter) {
     s32 shadowType = 0;
     MR::getMapPartsArgShadowType(&shadowType, rIter);
@@ -76,34 +76,38 @@ void MapPartsRailGuideDrawer::initGuidePoints(const JMapInfoIter& rIter) {
     f32 curLen = 0.0f;
 
     while (curLen < railLength) {
-        MapPartsRailGuidePoint* pnt = new MapPartsRailGuidePoint(mHost, _424, curLen, hasShadow);
-        pnt->initWithoutIter();
-        mGuidePoints.push_back(pnt);
+        MapPartsRailGuidePoint* pPoint = new MapPartsRailGuidePoint(mHost, mModelName, curLen, hasShadow);
+        pPoint->initWithoutIter();
+        mGuidePoints.push_back(pPoint);
         curLen += 200.0f;
     }
 
-    if (_41C == 3) {
+    if (mGuideType == 3) {
         int curPointNum = 0;
 
         while (curPointNum < MR::getRailPointNum(mHost)) {
-            MapPartsRailGuidePoint* point = new MapPartsRailGuidePoint(mHost, _424, curPointNum, hasShadow);
-            point->initWithoutIter();
-            point->mScale.set(2.0f);
-            mGuidePoints.push_back(point);
+            MapPartsRailGuidePoint* pPoint = new MapPartsRailGuidePoint(mHost, mModelName, curPointNum, hasShadow);
+            pPoint->initWithoutIter();
+            pPoint->mScale.set(2.0f);
+            mGuidePoints.push_back(pPoint);
             curPointNum++;
         }
     }
 }
 
-MapPartsRailGuideDrawer::~MapPartsRailGuideDrawer() {
+void MapPartsRailGuideDrawer::exeHideAll() {
+}
+
+void MapPartsRailGuideDrawer::exeDrawAll() {
 }
 
 void MapPartsRailGuideDrawer::exeDrawForward() {
-    f32 coord = MR::getRailCoord(mHost);
+    const f32 coord = MR::getRailCoord(mHost);
     for (MapPartsRailGuidePoint** pPoint = mGuidePoints.begin(); pPoint != mGuidePoints.end(); pPoint++) {
         if (coord < (*pPoint)->_8C) {
             break;
         }
+
         if (!MR::isDead(*pPoint)) {
             (*pPoint)->kill();
         }

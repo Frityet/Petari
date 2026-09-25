@@ -52,7 +52,7 @@ void ChipBase::init(const JMapInfoIter& rIter) {
     initModel(rIter);
     initSensor();
     initShadow(rIter);
-    initEffectKeeper(0, 0, false);
+    initEffectKeeper(0, nullptr, false);
     initSound(4, false);
     initNerve(GET_NERVE(ChipBase, ChipBaseNrvWait));
 
@@ -80,7 +80,7 @@ void ChipBase::initModel(const JMapInfoIter& rIter) {
     if (isNeedBubble(rIter)) {
         mAirBubble = MR::createPartsModelNoSilhouettedMapObj(this, "アワ", "AirBubble", 0);
         mAirBubble->initFixedPosition(TVec3f(0.0f, 0.0f, 0.0f), TVec3f(0.0f, 0.0f, 0.0f), 0);
-        MR::startBck(mAirBubble, "Move", 0);
+        MR::startBck(mAirBubble, "Move");
     }
 }
 
@@ -127,6 +127,7 @@ void ChipBase::initShadow(const JMapInfoIter& rIter) {
     if (MR::isValidInfo(rIter)) {
         MR::getJMapInfoArg4NoInit(rIter, &dropLength);
     }
+
     MR::setShadowDropLength(this, 0, dropLength);
 
     if (mRailMover || mIsCalcShadow) {
@@ -263,7 +264,7 @@ bool ChipBase::requestGet(HitSensor* pSender, HitSensor* pReceiver) {
 
 bool ChipBase::requestShow() {
     if (isNerve(GET_NERVE(ChipBase, ChipBaseNrvHide))) {
-        MR::startBck(this, "Wait", 0);
+        MR::startBck(this, "Wait");
         MR::showModel(this);
 
         setNerve(GET_NERVE(ChipBase, ChipBaseNrvWait));
@@ -314,7 +315,7 @@ void ChipBase::exeDeactive() {
 
 void ChipBase::exeWait() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Wait", 0);
+        MR::startBck(this, "Wait");
         MR::validateHitSensors(this);
     }
 }
@@ -325,7 +326,7 @@ void ChipBase::exeControled() {
 
 void ChipBase::exeFlashing() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Wait", 0);
+        MR::startBck(this, "Wait");
         MR::validateHitSensors(this);
     }
 
@@ -339,8 +340,7 @@ void ChipBase::exeHide() {
 
 void ChipBase::exeGot() {
     if (MR::isFirstStep(this)) {
-        if (mAirBubble != nullptr) {
-            // FIXME
+        if (hasAirBubble()) {
             MR::emitEffect(mAirBubble, "RecoveryBubbleBreak");
 
             MR::incPlayerOxygen(8);

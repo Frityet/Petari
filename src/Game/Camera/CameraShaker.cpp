@@ -3,7 +3,7 @@
 #include "Game/Camera/CameraShakeTask.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
-#include "JSystem/JUtility/JUTVideo.hpp"
+#include <JSystem/JUtility/JUTVideo.hpp>
 
 namespace {
     static const f32 sInfinityIntensity = 1.0f;
@@ -99,7 +99,7 @@ void CameraShaker::createSinglyHorizontalTask() {
 
 void CameraShaker::createInfinityTask() {
     for (u32 i = 0; i < NR_INFINITY_TASKS; i++) {
-        CameraShakePatternVerticalSin* sin = new CameraShakePatternVerticalSin(::sInfinityIntensity, sInfinitySpeed);
+        CameraShakePatternVerticalSin* sin = new CameraShakePatternVerticalSin(::sInfinityIntensity, ::sInfinitySpeed);
         CameraShakeTask* task = new CameraShakeTask(sin);
 
         mInfinityTasks[i] = task;

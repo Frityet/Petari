@@ -19,12 +19,17 @@ class LayoutGroupCtrl;
 class LayoutHolder;
 class LayoutPaneCtrl;
 
+struct LayoutGroupCtrlLink {
+    /* 0x00 */ LayoutGroupCtrl* mGroupCtrl;
+    /* 0x04 */ LayoutGroupCtrlLink* mNext;
+};
+
 struct LayoutPaneInfo {
     /* 0x00 */ const char* mName;
     /* 0x04 */ LayoutPaneCtrl* mPaneCtrl;
-    /* 0x08 */ void* mGroupCtrlList;
+    /* 0x08 */ LayoutGroupCtrlLink* mGroupCtrlLink;
     /* 0x0C */ MtxPtr mMtxRef;
-    /* 0x10 */ u32 mSubtreeSize;
+    /* 0x10 */ u32 mChildCount;
     /* 0x14 */ nw4r::lyt::Pane* mPane;
 };
 
@@ -65,15 +70,14 @@ public:
     void initTextBoxRecursive(nw4r::lyt::Pane*, nw4r::lyt::Pane*, const char*, u32);
     void animateRecursive(u32&, nw4r::lyt::Pane*);
     nw4r::lyt::Pane* getPane(const char* pName) const {
-        if (!pName) {
+        if (pName == nullptr) {
             return mLayout->mpRootPane;
         } else {
-            return findPaneByName(pName);
+            return mLayout->mpRootPane->FindPaneByName(pName, true);
         }
     }
-    nw4r::lyt::Pane* findPaneByName(const char* pName) const {
-        return mLayout->mpRootPane->FindPaneByName(pName, true);
-    }
+
+    nw4r::lyt::Pane* findPaneByName(const char*) const;
     void replaceIndDummyTexture();
     void removeUnnecessaryPanes(nw4r::lyt::Pane*);
 

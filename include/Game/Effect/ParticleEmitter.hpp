@@ -14,12 +14,8 @@ public:
     void init(u16);
     void pauseOn();
     void pauseOff();
-    bool isValid() const {
-        return mEmitter != nullptr;
-    }
-    bool isContinuousParticle() const NO_INLINE {
-        return mEmitter != nullptr && mEmitter->mMaxFrame == 0;
-    }
+    bool isValid() const;
+    bool isContinuousParticle() const NO_INLINE;
 
     // In MultiEmitterAccess
     void setGlobalRotation(const TVec3s&);

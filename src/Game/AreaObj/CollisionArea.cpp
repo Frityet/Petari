@@ -8,7 +8,7 @@
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
+#include <JSystem/JGeometry/TVec.hpp>
 
 void CollisionArea_FORCE_MATCH_SDATA2() {
     (void)1.0f;
@@ -135,176 +135,189 @@ void CollisionArea::movement() {
     }
 }
 
-bool CollisionArea::hitCheck(const TVec3f& rPosition, f32 radius, TVec3f* pContact, TVec3f* pNormal) {
-    AreaFormCube* form = static_cast< AreaFormCube* >(mForm);
+bool CollisionArea::hitCheck(const TVec3f& rPos, f32 radius, TVec3f* pPoint, TVec3f* pNormal) {
+    AreaFormCube* pCube = static_cast< AreaFormCube* >(mForm);
     s32 surface = -1;
-    TPos3f worldMtx;
-    form->calcWorldMtx(&worldMtx);
-    form->calcWorldPos(&_44);
-
-    TVec3f localContact;
+    TPos3f matrix;
+    pCube->calcWorldMtx(&matrix);
+    pCube->calcWorldPos(&_44);
+    TVec3f localPoint;
     TVec3f axisX;
     TVec3f axisY;
     TVec3f axisZ;
-    worldMtx.getXDir(axisX);
-    worldMtx.getYDir(axisY);
-    worldMtx.getZDir(axisZ);
-    f32 sizeX = PSVECMag(&axisX);
+    matrix.getXDir(axisX);
+    matrix.getYDir(axisY);
+    matrix.getZDir(axisZ);
+    f32 sizeX = axisX.length();
     MR::normalizeOrZero(&axisX);
-    f32 sizeY = PSVECMag(&axisY);
+    f32 sizeY = axisY.length();
     MR::normalizeOrZero(&axisY);
-    f32 sizeZ = PSVECMag(&axisZ);
+    f32 sizeZ = axisZ.length();
     MR::normalizeOrZero(&axisZ);
-    sizeX *= 0.5f * (form->mScale.x * form->getBaseSize());
-    sizeY *= 0.5f * (form->mScale.y * form->getBaseSize());
-    sizeZ *= 0.5f * (form->mScale.z * form->getBaseSize());
-
-    TVec3f bounds(sizeX + radius, sizeY + radius, sizeZ + radius);
-    TVec3f relativePosition(rPosition - _44);
-    f32 localX = relativePosition.dot(axisX);
-    f32 localY = relativePosition.dot(axisY);
-    f32 localZ = relativePosition.dot(axisZ);
-    TVec3f distance;
-    distance.set< f32 >(MR::abs(localX), MR::abs(localY), MR::abs(localZ));
-    if (distance.x >= bounds.x || distance.y >= bounds.y || distance.z >= bounds.z) {
+    sizeX *= 0.5f * (pCube->mScale.x * pCube->getBaseSize());
+    sizeY *= 0.5f * (pCube->mScale.y * pCube->getBaseSize());
+    sizeZ *= 0.5f * (pCube->mScale.z * pCube->getBaseSize());
+    TVec3f expanded(sizeX + radius, sizeY + radius, sizeZ + radius);
+    TVec3f relative(rPos);
+    relative.sub(_44);
+    f32 x = relative.dot(axisX);
+    f32 y = relative.dot(axisY);
+    f32 z = relative.dot(axisZ);
+    TVec3f absolute;
+    f32 absX = MR::abs(x);
+    f32 absY = MR::abs(y);
+    f32 absZ = MR::abs(z);
+    absolute.set(absX, absY, absZ);
+    if (absolute.x >= expanded.x || absolute.y >= expanded.y || absolute.z >= expanded.z) {
         return false;
     }
 
-    u32 outsideCount = 0;
-    bool outsideX = false;
-    bool outsideY = false;
-    bool outsideZ = false;
-    if (distance.x >= sizeX) {
-        outsideX = true;
-        outsideCount++;
+    u32 count = 0;
+    bool outside[3] = {false, false, false};
+    if (absolute.x >= sizeX) {
+        outside[0] = true;
+        count++;
     }
-    if (distance.y >= sizeY) {
-        outsideY = true;
-        outsideCount++;
-    }
-    if (distance.z >= sizeZ) {
-        outsideZ = true;
-        outsideCount++;
-    }
-    _3C = outsideCount;
 
-    if (outsideCount == 3) {
-        TVec3f corner;
+    if (absolute.y >= sizeY) {
+        outside[1] = true;
+        count++;
+    }
+
+    if (absolute.z >= sizeZ) {
+        outside[2] = true;
+        count++;
+    }
+
+    _3C = count;
+    TVec3f corner;
+    TVec3f depth;
+    if (count == 3) {
         corner.zero();
-        if (localX < 0.0f) {
+        if (x < 0.0f) {
             corner.add(-axisX * sizeX);
         } else {
             corner.add(axisX * sizeX);
         }
-        if (localY < 0.0f) {
+
+        if (y < 0.0f) {
             corner.add(-axisY * sizeY);
         } else {
             corner.add(axisY * sizeY);
         }
-        if (localZ < 0.0f) {
+
+        if (z < 0.0f) {
             corner.add(-axisZ * sizeZ);
         } else {
             corner.add(axisZ * sizeZ);
         }
-        TVec3f difference(corner - rPosition);
-        if (PSVECMag(&difference) >= radius) {
+
+        if ((corner - rPos).length() >= radius) {
             return false;
         }
-        pContact->set(corner);
+
+        pPoint->set(corner);
         pNormal->set(axisX + axisY + axisZ);
         MR::normalizeOrZero(pNormal);
         return true;
     }
 
-    if (outsideCount == 0) {
-        TVec3f penetration(sizeX - distance.x, sizeY - distance.y, sizeZ - distance.z);
-        if (penetration.x < penetration.y && penetration.x < penetration.z) {
-            _40 = penetration.x;
-            outsideX = true;
-        } else if (penetration.y < penetration.x && penetration.y < penetration.z) {
-            _40 = penetration.y;
-            outsideY = true;
+    if (count == 0) {
+        depth.x = sizeX - absolute.x;
+        depth.y = sizeY - absolute.y;
+        depth.z = sizeZ - absolute.z;
+        if (depth.x < depth.y && depth.x < depth.z) {
+            _40 = depth.x;
+            outside[0] = true;
+        } else if (depth.y < depth.x && depth.y < depth.z) {
+            _40 = depth.y;
+            outside[1] = true;
         } else {
-            _40 = penetration.z;
-            outsideZ = true;
+            _40 = depth.z;
+            outside[2] = true;
         }
-        outsideCount = 1;
+
+        count = 1;
     }
 
-    if (outsideCount == 2) {
-        localContact.set(localX, localY, localZ);
+    if (count == 2) {
+        localPoint.set(x, y, z);
         pNormal->zero();
-        if (outsideX) {
-            if (localX < 0.0f) {
-                localContact.x = -sizeX;
+        if (outside[0]) {
+            if (x < 0.0f) {
+                localPoint.x = -sizeX;
                 pNormal->sub(axisX);
             } else {
-                localContact.x = sizeX;
+                localPoint.x = sizeX;
                 pNormal->add(axisX);
             }
         }
-        if (outsideY) {
-            if (localY < 0.0f) {
-                localContact.y = -sizeY;
+
+        if (outside[1]) {
+            if (y < 0.0f) {
+                localPoint.y = -sizeY;
                 pNormal->sub(axisY);
             } else {
-                localContact.y = sizeY;
+                localPoint.y = sizeY;
                 pNormal->add(axisY);
             }
         }
-        if (outsideZ) {
-            if (localZ < 0.0f) {
-                localContact.z = -sizeZ;
+
+        if (outside[2]) {
+            if (z < 0.0f) {
+                localPoint.z = -sizeZ;
                 pNormal->sub(axisZ);
             } else {
-                localContact.z = sizeZ;
+                localPoint.z = sizeZ;
                 pNormal->add(axisZ);
             }
         }
     }
 
-    if (outsideCount == 1) {
-        if (outsideX) {
-            if (localX >= 0.0f) {
+    if (count == 1) {
+        if (outside[0]) {
+            if (x >= 0.0f) {
                 pNormal->set(axisX);
-                localContact.set(sizeX, localY, localZ);
+                localPoint.set(sizeX, y, z);
                 surface = 0;
             } else {
                 pNormal->set(-axisX);
-                localContact.set(-sizeX, localY, localZ);
+                localPoint.set(-sizeX, y, z);
                 surface = 1;
             }
         }
-        if (outsideY) {
-            if (localY >= 0.0f) {
+
+        if (outside[1]) {
+            if (y >= 0.0f) {
                 pNormal->set(axisY);
-                localContact.set(localX, sizeY, localZ);
+                localPoint.set(x, sizeY, z);
                 surface = 2;
             } else {
                 pNormal->set(-axisY);
-                localContact.set(localX, -sizeY, localZ);
+                localPoint.set(x, -sizeY, z);
                 surface = 3;
             }
         }
-        if (outsideZ) {
-            if (localZ >= 0.0f) {
+
+        if (outside[2]) {
+            if (z >= 0.0f) {
                 pNormal->set(axisZ);
-                localContact.set(localX, localY, sizeZ);
+                localPoint.set(x, y, sizeZ);
                 surface = 4;
             } else {
                 pNormal->set(-axisZ);
-                localContact.set(localX, localY, -sizeZ);
+                localPoint.set(x, y, -sizeZ);
                 surface = 5;
             }
         }
     }
 
-    pContact->set(axisX * localContact.x + axisY * localContact.y + axisZ * localContact.z + _44);
+    pPoint->set(axisX * localPoint.x + axisY * localPoint.y + axisZ * localPoint.z + _44);
     MR::normalizeOrZero(pNormal);
-    // The retail shift produces zero for the -1 edge-contact sentinel.
-    if (mPolygon != nullptr && surface >= 0 && (_60 & (1U << surface))) {
+    if (mPolygon != nullptr && (_60 & (1 << surface))) {
         mPolygon->setSurfaceAndSync(surface);
     }
+
     return true;
 }
 
@@ -418,7 +431,7 @@ void AreaPolygon::setSurface(s32 surface) {
     }
 
     for (u32 i = 0; i < 4; i++) {
-        mPositions[i].set< f32 >(axisX * mPositions[i].x + axisY * mPositions[i].y + axisZ * mPositions[i].z);
+        mPositions[i].set(axisX * mPositions[i].x + axisY * mPositions[i].y + axisZ * mPositions[i].z);
     }
 }
 

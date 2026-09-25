@@ -100,7 +100,7 @@ void SearchBeamer::exeNonActive() {
 
 void SearchBeamer::exeCloseWaitFar() {
     if (MR::isFirstStep(this)) {
-        MR::tryStartBck(this, "Wait", nullptr);
+        MR::tryStartBck(this, "Wait");
         MR::startBrk(this, "Wait");
     }
 
@@ -128,7 +128,7 @@ void SearchBeamer::exeCloseSearch() {
 
 void SearchBeamer::exeCloseWaitNear() {
     if (MR::isFirstStep(this)) {
-        MR::tryStartBck(this, "Wait", nullptr);
+        MR::tryStartBck(this, "Wait");
         MR::startBrk(this, "Wait");
     }
 
@@ -148,7 +148,7 @@ void SearchBeamer::exeCloseWaitNear() {
 
 void SearchBeamer::exeOpenMouth() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Open", nullptr);
+        MR::startBck(this, "Open");
         MR::startSound(this, "SE_EM_SEARCHBEAMER_PRE_BEAM");
     }
 
@@ -161,7 +161,7 @@ void SearchBeamer::exeOpenMouth() {
 
 void SearchBeamer::exeBeamPrepare() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Attack", nullptr);
+        MR::startBck(this, "Attack");
     }
 
     if (MR::isStep(this, 10)) {
@@ -228,7 +228,7 @@ void SearchBeamer::exeBeamAim() {
 
 void SearchBeamer::exeCloseMouth() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Close", nullptr);
+        MR::startBck(this, "Close");
         MR::deleteEffectAll(this);
         MR::invalidateHitSensor(this, "beam");
         MR::invalidateShadow(this, "beam");
@@ -254,7 +254,7 @@ void SearchBeamer::exeCloseMouth() {
 
 void SearchBeamer::exeStopStart() {
     if (MR::isFirstStep(this)) {
-        MR::tryStartBck(this, "Close", nullptr);
+        MR::tryStartBck(this, "Close");
         MR::deleteEffectAll(this);
         MR::invalidateHitSensor(this, "beam");
         MR::invalidateShadow(this, "beam");
@@ -271,7 +271,7 @@ void SearchBeamer::exeStopStart() {
 
 void SearchBeamer::exeStop() {
     if (MR::isFirstStep(this)) {
-        MR::tryStartBck(this, "Stop", nullptr);
+        MR::tryStartBck(this, "Stop");
         MR::startBrk(this, "Stop");
     }
 
@@ -375,7 +375,7 @@ bool SearchBeamer::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pRece
 
 void SearchBeamer::updateHitSensor(HitSensor* pSensor) {
     if (!pSensor->mValidByHost) {
-        pSensor->mPosition.set< f32 >(mBeamStart);
+        pSensor->mPosition.set(mBeamStart);
         return;
     }
 
@@ -416,22 +416,8 @@ void SearchBeamer::updatePropeller() {
         _B0 += 0.30f;
     }
 
-    f32 v4 = 10.0f;
-
-    if (_B0 < 10.0f) {
-        v4 = v4;
-    } else {
-        v4 = 40.0f;
-
-        if (_B0 > 40.0f) {
-            v4 = v4;
-        } else {
-            v4 = _B0;
-        }
-    }
-
-    _B0 = v4;
-    _AC += v4;
+    _B0 = MR::clamp(_B0, 10.0f, 40.0f);
+    _AC += _B0;
 }
 
 void SearchBeamer::updateBeamEffect(bool a1) {
@@ -466,7 +452,7 @@ void SearchBeamer::updateBeamShadow() {
 
 void SearchBeamer::initBeamPos() {
     MR::copyJointPos(this, "Core", &mBeamStart);
-    mBeamEnd.set< f32 >(mBeamStart);
+    mBeamEnd.set(mBeamStart);
     MR::hideMaterial(this, "lambert5_v");
 }
 
@@ -497,12 +483,12 @@ void SearchBeamer::bowToPlayer() {
     MR::clampVecAngleDeg(&_94, v9, 35.0f);
 }
 
-bool SearchBeamer::checkBeamDistiny(TVec3f* a1, TVec3f a2) const {
+bool SearchBeamer::checkBeamDistiny(TVec3f* pPosition, TVec3f a2) const {
     TVec3f v12;
     v12.scale(_140, a2);
 
-    if (!MR::getFirstPolyOnLineToMap(a1, nullptr, mPosition, v12)) {
-        a1->add(v12, mPosition);
+    if (!MR::getFirstPolyOnLineToMap(pPosition, nullptr, mPosition, v12)) {
+        pPosition->add(v12, mPosition);
         return false;
     }
 

@@ -41,7 +41,7 @@ void RumbleChannel::setPattern(const void* pParam1, const RumblePattern& rParam2
     _4 = param4;
 }
 
-WPadRumble::WPadRumble(WPad* pPad) : mPad(pPad), _8(false), _C(1), _B0(0), _B4(0), _B8(false), _BC(0) {
+WPadRumble::WPadRumble(WPad* pPad) : mPad(pPad), _8(), _C(1), _B0(), _B4(), _B8(), _BC() {
     if (sInstanceForCallback == nullptr) {
         sInstanceForCallback = new WPadRumble*[MR::getWPadMaxCount()];
 
@@ -193,36 +193,36 @@ bool WPadRumble::setRumblePatternIfNotExist(const void* pParam1, const RumblePat
     return true;
 }
 
-bool WPadRumble::findRubmlePattern(const void*, s32* pExisting, s32* pFree, s32* pOldest, const RumblePattern& rPattern) {
-    u32 oldestSequence = 0xFFFFFFFF;
-    u8 oldestChannel = 0xFF;
-    u8 freeChannel = 0xFF;
+bool WPadRumble::findRubmlePattern(const void* pOwner, s32* pExisting, s32* pEmpty, s32* pOldest, const RumblePattern& rPattern) {
+    u32 oldest = -1;
+    u8 oldestIndex = 0xFF;
+    u8 emptyIndex = 0xFF;
 
     for (u8 i = 0; i < ARRAY_SIZE(mChannel); i++) {
-        const RumbleChannel& channel = mChannel[i];
+        const RumblePattern* pPattern = mChannel[i]._0;
 
-        if (channel._0 == nullptr) {
-            if (freeChannel == 0xFF) {
-                freeChannel = i;
+        if (pPattern == nullptr) {
+            if (emptyIndex == 0xFF) {
+                emptyIndex = i;
             }
         } else {
-            if (channel._0->mHash == rPattern.mHash) {
+            if (pPattern->mHash == rPattern.mHash) {
                 *pExisting = i;
                 return true;
             }
 
-            if (oldestSequence > channel._8) {
-                oldestSequence = channel._8;
-                oldestChannel = i;
+            if (oldest > mChannel[i]._8) {
+                oldest = mChannel[i]._8;
+                oldestIndex = i;
             }
         }
     }
 
-    if (freeChannel != 0xFF) {
-        *pFree = freeChannel;
+    if (emptyIndex != 0xFF) {
+        *pEmpty = emptyIndex;
         return false;
     }
 
-    *pOldest = oldestChannel;
+    *pOldest = oldestIndex;
     return false;
 }

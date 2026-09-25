@@ -8,6 +8,16 @@
 #include "Game/System/WPadStick.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/VectorUtil.hpp"
+
+void GamePadUtil_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)-1.0f;
+    (void)-2607.59448f;
+    (void)2607.59448f;
+    (void)0.0f;
+}
 
 namespace MR {
     void getCorePadPointingPosBasedOnScreen(TVec2f* pPos, s32 channel) {
@@ -224,32 +234,32 @@ namespace MR {
 
     f32 getPlayerStickX() {
         f32 stick = getSubPadStickX(WPAD_CHAN0);
-        f32 fallback = 0.0f;
-
         if (stick != 0.0f) {
             return stick;
         }
 
-        if (fallback != 0.0f) {
-            fallback *= 1.0f + MR::abs(MR::sin(MR::atan2(0.0f, 0.0f)));
+        f32 x = 0.0f;
+        f32 y = 0.0f;
+        if (x != 0.0f) {
+            x *= 1.0f + MR::abs(MR::sin(MR::atan2(x, y)));
         }
 
-        return fallback;
+        return x;
     }
 
     f32 getPlayerStickY() {
         f32 stick = getSubPadStickY(WPAD_CHAN0);
-        f32 fallback = 0.0f;
-
         if (stick != 0.0f) {
             return stick;
         }
 
-        if (fallback != 0.0f) {
-            fallback *= 1.0f + MR::abs(MR::cos(MR::atan2(0.0f, 0.0f)));
+        f32 x = 0.0f;
+        f32 y = 0.0f;
+        if (x != 0.0f) {
+            y *= 1.0f + MR::abs(MR::cos(MR::atan2(x, y)));
         }
 
-        return fallback;
+        return y;
     }
 
     bool getPlayerTriggerA() {
@@ -292,27 +302,24 @@ namespace MR {
     }
 
     void calcWorldStickDirectionXZ(f32* pDirX, f32* pDirZ, s32 channel) {
-        TPos3f cameraMtx;
-        cameraMtx.set(MR::getCameraInvViewMtx());
-        TVec3f right;
-        cameraMtx.getXDir(right);
-        right.y = 0.0f;
-        MR::normalizeOrZero(&right);
-
+        TPos3f mtx;
+        mtx.set(getCameraInvViewMtx());
+        TVec3f side;
+        mtx.getXDir(side);
+        side.y = 0.0f;
+        normalizeOrZero(&side);
         TVec3f front;
-        cameraMtx.getZDir(front);
+        mtx.getZDir(front);
         front.y = 0.0f;
-        MR::normalizeOrZero(&front);
+        normalizeOrZero(&front);
         front.scale(-1.0f);
 
-        f32 stickX = getSubPadStickX(channel);
-        f32 stickY = getSubPadStickY(channel);
-        right.scale(stickX);
-        front.scale(stickY);
-
-        TVec3f direction(right);
-        direction.add(front);
-        MR::normalizeOrZero(&direction);
+        f32 x = getSubPadStickX(channel);
+        f32 y = getSubPadStickY(channel);
+        side.scale(x);
+        front.scale(y);
+        TVec3f direction = side + front;
+        normalizeOrZero(&direction);
         *pDirX = direction.x;
         *pDirZ = direction.z;
     }
@@ -351,3 +358,9 @@ namespace WPadFunction {
         return MR::getWPad(channel)->getRumbleInstance();
     }
 };  // namespace WPadFunction
+
+void GamePadUtil_FORCE_MATCH(const TVec3f& rFirst, const TVec3f& rSecond, TVec3f* pOut) {
+    TVec3f value(rFirst);
+    value.add(rSecond);
+    *pOut = value;
+}

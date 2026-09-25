@@ -1,100 +1,86 @@
 #include "Game/Map/SeaGull.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/RailUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 
+void SeaGull_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)-1.0f;
+}
+
 namespace NrvSeaGull {
     NEW_NERVE(SeaGullNrvHoverFront, SeaGull, HoverFront);
     NEW_NERVE(SeaGullNrvHoverLeft, SeaGull, HoverLeft);
     NEW_NERVE(SeaGullNrvHoverRight, SeaGull, HoverRight);
-};  // namespace NrvSeaGull
+}  // namespace NrvSeaGull
 
-SeaGull::SeaGull(SeaGullGroup* pGroup) : LiveActor("カモメ") {
-    mSeaGullGroup = pGroup;
-    _90 = 0;
-    _94 = false;
-    _98 = MR::getRandom((s32)0, (s32)0xB4);
-    _9C = 0;
-    _A0.x = 0.0f;
-    _A0.y = 1.0f;
-    _A0.z = 0.0f;
-    _AC.x = 0.0f;
-    _AC.y = 0.0f;
-    _AC.z = 1.0f;
-    _B8.x = 0.0f;
-    _B8.y = 1.0f;
-    _B8.z = 0.0f;
-    _C4.x = 1.0f;
-    _C4.y = 0.0f;
-    _C4.z = 0.0f;
-    _D0 = 0;
-    _D4 = 0.0f;
-    _D8 = 0;
-    _DC = 0;
-    _E0 = 0;
+SeaGull::SeaGull(SeaGullGroup* pGroup)
+    : LiveActor("カモメ"), mSeaGullGroup(pGroup), mPointIndex(), mIsReverse(), mTargetUpdateTimer(MR::getRandom(0L, 180L)), mTargetPosition(),
+      mUp(0.0f, 1.0f, 0.0f), mFront(0.0f, 0.0f, 1.0f), mBankedUp(0.0f, 1.0f, 0.0f), mSide(1.0f, 0.0f, 0.0f), mHoverTimer(), mBankAngle(),
+      mGlideTimer(), mLiftTimer(), mChirpTimer() {
 }
 
 void SeaGull::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
-    MR::calcActorAxis(&_C4, &_B8, &_AC, this);
-    MR::calcActorAxisY(&_A0, this);
-    initModelManagerWithAnm("SeaGull", 0, false);
-    MR::startBck(this, "Fly", 0);
+    MR::calcActorAxis(&mSide, &mBankedUp, &mFront, this);
+    MR::calcActorAxisY(&mUp, this);
+    initModelManagerWithAnm("SeaGull", nullptr, false);
+    MR::startBck(this, "Fly");
     MR::setBckFrameAtRandom(this);
     MR::connectToSceneEnvironment(this);
     f32 railLength = MR::getRailTotalLength(mSeaGullGroup);
-    f32 diff = railLength - 1.0f;
-    f32 rnd = MR::getRandom(1.0f, diff);
-    f64 val = rnd / 500.0f;
-    _90 = val;
-    MR::calcRailPosAtCoord(&mPosition, mSeaGullGroup, rnd);
-    u8 a = MR::isHalfProbability();
-    _94 = a;
-    _9C = mSeaGullGroup->updatePosInfo(&_90, a);
+    f32 maxRailCoord = railLength - 1.0f;
+    f32 railCoord = MR::getRandom(1.0f, maxRailCoord);
+    mPointIndex = railCoord / 500.0f;
+    MR::calcRailPosAtCoord(&mPosition, mSeaGullGroup, railCoord);
+    mIsReverse = MR::isHalfProbability();
+    mTargetPosition = mSeaGullGroup->updatePosInfo(&mPointIndex, mIsReverse);
 
-    TVec3f stack_14(_C4);
-    TVec3f stack_8(_AC);
+    TVec3f side(mSide);
+    TVec3f forward(mFront);
     f32 scale = MR::getRandom(-1.0f, 1.0f);
-    stack_14.scale(scale);
+    side.scale(scale);
     scale = MR::getRandom(-1.0f, 1.0f);
-    stack_8.scale(scale);
-    _AC.set(stack_14);
-    _AC.add(stack_8);
+    forward.scale(scale);
+    mFront.set(side);
+    mFront.add(forward);
 
-    if (MR::isNearZero(_AC)) {
-        _AC.x = 0.0f;
-        _AC.y = 0.0f;
-        _AC.z = 1.0f;
+    if (MR::isNearZero(mFront)) {
+        mFront.x = 0.0f;
+        mFront.y = 0.0f;
+        mFront.z = 1.0f;
     } else {
-        MR::normalize(&_AC);
+        MR::normalize(&mFront);
     }
 
     initNerve(GET_NERVE(SeaGull, SeaGullNrvHoverFront));
     initSound(4, false);
-    _E0 = MR::getRandom((s32)0x3C, (s32)0x1E0);
+    mChirpTimer = MR::getRandom(60L, 480L);
     MR::invalidateClipping(this);
     makeActorAppeared();
 }
 
 void SeaGull::exeHoverFront() {
     if (MR::isFirstStep(this)) {
-        _D0 = MR::getRandom((s32)0, (s32)0x3C);
+        mHoverTimer = MR::getRandom(0L, 60L);
     }
 
-    _D4 *= 0.995f;
+    mBankAngle *= 0.995f;
 
-    if (_D0 >= 0) {
-        _D0 = _D0 - 1;
+    if (mHoverTimer >= 0) {
+        mHoverTimer--;
     } else {
-        TVec3f stack_8(*_9C);
-        stack_8.sub(mPosition);
+        TVec3f forward(*mTargetPosition);
+        forward.sub(mPosition);
 
-        if (mPosition.distance(*_9C) > 500.0f) {
-            f32 prod = _C4.dot(stack_8);
+        if (mPosition.distance(*mTargetPosition) > 500.0f) {
+            f32 prod = mSide.dot(forward);
 
             if (prod > 0.0f) {
                 setNerve(GET_NERVE(SeaGull, SeaGullNrvHoverLeft));
@@ -107,24 +93,24 @@ void SeaGull::exeHoverFront() {
 
 void SeaGull::exeHoverLeft() {
     if (MR::isFirstStep(this)) {
-        _D0 = MR::getRandom((s32)0x3C, (s32)0x78);
+        mHoverTimer = MR::getRandom(60L, 120L);
     }
 
-    _D4 -= 0.1f;
+    mBankAngle -= 0.1f;
 
-    if (MR::isStep(this, _D0)) {
+    if (MR::isStep(this, mHoverTimer)) {
         setNerve(GET_NERVE(SeaGull, SeaGullNrvHoverFront));
     }
 }
 
 void SeaGull::exeHoverRight() {
     if (MR::isFirstStep(this)) {
-        _D0 = MR::getRandom((s32)0x3C, (s32)0x78);
+        mHoverTimer = MR::getRandom(60L, 120L);
     }
 
-    _D4 += 0.1f;
+    mBankAngle += 0.1f;
 
-    if (MR::isStep(this, _D0)) {
+    if (MR::isStep(this, mHoverTimer)) {
         setNerve(GET_NERVE(SeaGull, SeaGullNrvHoverFront));
     }
 }
@@ -132,34 +118,31 @@ void SeaGull::exeHoverRight() {
 void SeaGull::control() {
     updateHover();
 
-    mVelocity.x *= 0.99f;
-    mVelocity.y *= 0.99f;
-    mVelocity.z *= 0.99f;
+    mVelocity.mult(0.99f);
 
     f32 mag = mVelocity.length();
 
-    if (mag > 0.0f) {
+    if (mag > 10.0f) {
         MR::normalize(&mVelocity);
-        mVelocity.x *= 10.0f;
-        mVelocity.y *= 10.0f;
-        mVelocity.z *= 10.0f;
-    }
-    _C4.cross(_B8, _AC);
-    MR::normalize(&_C4);
-    _B8.cross(_AC, _C4);
-    MR::normalize(&_B8);
-    _98 -= 1;
-
-    if (_98 <= 0) {
-        _9C = mSeaGullGroup->updatePosInfo(&_90, _94);
-        _98 = 0xB4;
+        mVelocity.mult(10.0f);
     }
 
-    if (_E0 <= 0) {
+    mSide.cross(mBankedUp, mFront);
+    MR::normalize(&mSide);
+    mBankedUp.cross(mFront, mSide);
+    MR::normalize(&mBankedUp);
+    mTargetUpdateTimer--;
+
+    if (mTargetUpdateTimer <= 0) {
+        mTargetPosition = mSeaGullGroup->updatePosInfo(&mPointIndex, mIsReverse);
+        mTargetUpdateTimer = 0xB4;
+    }
+
+    if (mChirpTimer <= 0) {
         MR::startSound(this, "SE_OJ_SEAGULL_CHIRP");
-        _E0 = MR::getRandom((s32)0x3C, (s32)0x1E0);
+        mChirpTimer = MR::getRandom(60L, 480L);
     } else {
-        _E0--;
+        mChirpTimer--;
     }
 
     if (MR::isJudgedToClipFrustum300m(mPosition, 200.0f)) {
@@ -173,45 +156,114 @@ void SeaGull::control() {
     }
 }
 
+void SeaGull::updateHover() {
+    if (MR::abs(mBankAngle) > 0.01f) {
+        mUp.set(mGravity);
+        mUp.mult(-1.0f);
+        mBankAngle = MR::clamp(mBankAngle, -30.0f, 30.0f);
+
+        TPos3f rotation;
+        rotation.identity();
+        const f32 angle = mBankAngle;
+        rotation.setRotate(mFront, PI_180 * angle);
+        mBankedUp.set(mUp);
+        rotation.mult(mBankedUp, mBankedUp);
+        rotation.setRotate(mUp, -(PI_180 * (0.01f * mBankAngle)));
+        rotation.mult(mFront, mFront);
+    }
+
+    TVec3f forward(mFront);
+    forward.scale(0.05f);
+    mVelocity.add(forward);
+
+    if (mLiftTimer > 0) {
+        TVec3f lift(mBankedUp);
+        lift.scale(0.04f);
+        mVelocity.add(lift);
+        mLiftTimer--;
+
+        if (mLiftTimer <= 0) {
+            mGlideTimer = MR::getRandom(60L, 300L);
+        }
+    } else {
+        mVelocity.y -= 0.005f;
+        TVec3f toTarget(*mTargetPosition);
+        toTarget.sub(mPosition);
+
+        f32 height = toTarget.dot(mUp);
+        if (height < 500.0f) {
+            mGlideTimer = 300;
+        } else {
+            mGlideTimer--;
+
+            if (height > 500.0f || mGlideTimer <= 0) {
+                mLiftTimer = MR::getRandom(30L, 180L);
+            }
+        }
+    }
+}
+
 void SeaGull::calcAndSetBaseMtx() {
     TPos3f mtx;
     mtx.identity();
-    mtx.mMtx[0][0] = _C4.x;
-    mtx.mMtx[1][0] = _C4.y;
-    mtx.mMtx[2][0] = _C4.z;
-    mtx.mMtx[0][1] = _B8.x;
-    mtx.mMtx[1][1] = _B8.y;
-    mtx.mMtx[2][1] = _B8.z;
-    mtx.mMtx[0][2] = _AC.x;
-    mtx.mMtx[1][2] = _AC.y;
-    mtx.mMtx[2][2] = _AC.z;
+    mtx.mMtx[0][0] = mSide.x;
+    mtx.mMtx[1][0] = mSide.y;
+    mtx.mMtx[2][0] = mSide.z;
+    mtx.mMtx[0][1] = mBankedUp.x;
+    mtx.mMtx[1][1] = mBankedUp.y;
+    mtx.mMtx[2][1] = mBankedUp.z;
+    mtx.mMtx[0][2] = mFront.x;
+    mtx.mMtx[1][2] = mFront.y;
+    mtx.mMtx[2][2] = mFront.z;
     mtx.mMtx[0][3] = mPosition.x;
     mtx.mMtx[1][3] = mPosition.y;
     mtx.mMtx[2][3] = mPosition.z;
     MR::setBaseTRMtx(this, mtx);
 }
 
-SeaGullGroup::SeaGullGroup(const char* pName) : LiveActor(pName) {
-    _8C = 0;
-    _90 = 0;
+SeaGullGroup::SeaGullGroup(const char* pName) : LiveActor(pName), mPointCount(), mPoints() {
 }
 
-TVec3f* SeaGullGroup::updatePosInfo(s32* a1, bool a2) const {
-    if (a2) {
-        if (--*a1 <= 0) {
-            *a1 = _8C - 1;
+void SeaGullGroup::init(const JMapInfoIter& rIter) {
+    s32 birdCount = 10;
+    MR::getJMapInfoArg0NoInit(rIter, &birdCount);
+    initRailRider(rIter);
+    mPosition.set(MR::getRailPos(this));
+    mPointCount = static_cast< s32 >(MR::getRailTotalLength(this) / 500.0f) + 1;
+    f32 interval = MR::getRailTotalLength(this) / mPointCount;
+    mPoints = new TVec3f[mPointCount];
+
+    for (s32 i = 0; i < mPointCount; i++) {
+        MR::calcRailPosAtCoord(&mPoints[i], this, interval * i);
+    }
+
+    for (s32 i = 0; i < birdCount; i++) {
+        SeaGull* pSeaGull = new SeaGull(this);
+        pSeaGull->init(rIter);
+    }
+
+    MR::invalidateClipping(this);
+    makeActorAppeared();
+}
+
+TVec3f* SeaGullGroup::updatePosInfo(s32* pPointIndex, bool isReverse) const {
+    if (isReverse) {
+        (*pPointIndex)--;
+
+        if (*pPointIndex <= 0) {
+            *pPointIndex = mPointCount - 1;
         }
     } else {
-        s32 val = _8C;
-        s32 next = *a1 + 1;
-        *a1 = next;
+        s32 val = mPointCount;
+        s32 next = *pPointIndex + 1;
+        *pPointIndex = next;
 
         if (next >= val) {
-            *a1 = 0;
+            *pPointIndex = 0;
         }
     }
 
-    return &_90[*a1];
+    return &mPoints[*pPointIndex];
 }
 
 SeaGull::~SeaGull() {

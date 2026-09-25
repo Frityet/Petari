@@ -19,9 +19,12 @@
 #include <revolution/gx/GXTransform.h>
 #include <revolution/gx/GXVert.h>
 
-void PlantStalk_DUMMY() {
-    s32 x;
-    s32 a = MR::clamp(x, 1, 2);
+void PlantStalk_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+}
+
+s32 PlantStalk_FORCE_MATCH_CLAMP(s32 a, s32 b, s32 c) {
+    return MR::clamp(a, b, c) + MR::clamp(b, c, a) + MR::clamp(c, a, b);
 }
 
 namespace {
@@ -38,9 +41,9 @@ namespace {
     static const f32 sDrawWidthX = 10.0f;
     static const f32 sDrawWidthZ = 10.0f;
     static const f32 sTexRate = 1.0f;
-    static const f32 sDrawWidthLongOffsetX = sDrawWidthX;
-    static const f32 sDrawWidthShortOffsetX = sDrawWidthX;
-    static const f32 sDrawWidthShortOffsetZ = sDrawWidthZ;
+    static const f32 sDrawWidthLongOffsetX = ::sDrawWidthX;
+    static const f32 sDrawWidthShortOffsetX = ::sDrawWidthX;
+    static const f32 sDrawWidthShortOffsetZ = ::sDrawWidthZ;
 
     static Color8 sColorPlusZ(0xFF, 0xFF, 0xFF, 0xFF);
     static Color8 sColorPlusX(0x64, 0x64, 0x64, 0xFF);
@@ -88,10 +91,8 @@ void PlantStalk::draw() const {
 }
 
 bool PlantStalk::updateGrowUp() {
-    // issues with float to int conversion
-    // https://decomp.me/scratch/pe9bX
-
-    if (--mGrowAccelTime <= 0) {
+    mGrowAccelTime--;
+    if (mGrowAccelTime <= 0) {
         mGrowSpeed += MR::getRandom(::sGrowAccelMin, ::sGrowAccelMax);
         mGrowAccelTime = MR::getRandom(::sGrowAccelTimeMin, ::sGrowAccelTimeMax);
     }
@@ -117,8 +118,8 @@ bool PlantStalk::updateGrowUp() {
         return true;
     }
 
-    // FIXME: float to int conversion not wanting to play nice here :(
-    mGrownPlantPoints = (mStalkLength / ::sInterval);
+    mGrownPlantPoints = mStalkLength / ::sInterval;
+    (void)static_cast< f32 >(mGrownPlantPoints);
     mGrownPlantPoints = MR::clamp(mGrownPlantPoints, 2, mNumPlantPoints);
 
     TVec3f stalkPos;
@@ -190,6 +191,7 @@ void PlantStalk::drawGrowUp() const {
         GXColor1u32(::sColorPlusX);
         GXTexCoord2f32(1.0f, idx * ::sTexRate);
     }
+
     GXEnd();
 
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, mGrownPlantPoints * 2);
@@ -211,6 +213,7 @@ void PlantStalk::drawGrowUp() const {
         GXColor1u32(::sColorPlusZ);
         GXTexCoord2f32(1.0f, idx * ::sTexRate);
     }
+
     GXEnd();
 
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, mGrownPlantPoints * 2);
@@ -233,6 +236,7 @@ void PlantStalk::drawGrowUp() const {
         GXColor1u32(::sColorMinusX);
         GXTexCoord2f32(1.0f, idx * ::sTexRate);
     }
+
     GXEnd();
 }
 

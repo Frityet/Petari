@@ -353,7 +353,7 @@ namespace {
         MR::startAction(pKoopa, pName);
 
         if (isMario) {
-            MR::startBckPlayer(pName, static_cast< const char* >(nullptr));
+            MR::startBckPlayer(pName);
         }
 
         MR::startAnimCameraTargetSelf(pKoopa, pKoopa->mParts->mActorCameraInfo, pName, 0, 1.0f);
@@ -363,11 +363,11 @@ namespace {
 };  // namespace
 
 bool KoopaFunction::tryStartKoopaAndMarioCameraDemo(Koopa* pKoopa, const char* pSmth, const char* pName, const char* pDemoName) {
-    return tryStartCameraDemo(pKoopa, pSmth, pName, pDemoName, true);
+    return ::tryStartCameraDemo(pKoopa, pSmth, pName, pDemoName, true);
 }
 
 bool KoopaFunction::tryStartKoopaCameraDemo(Koopa* pKoopa, const char* pSmth, const char* pName, const char* pDemoName) {
-    return tryStartCameraDemo(pKoopa, pSmth, pName, pDemoName, false);
+    return ::tryStartCameraDemo(pKoopa, pSmth, pName, pDemoName, false);
 }
 
 bool KoopaFunction::tryEndKoopaCameraDemo(Koopa* pKoopa, const char* pName, const char* pSmth) {

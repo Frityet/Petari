@@ -1,6 +1,6 @@
 #include "JSystem/JAudio2/JASCallback.hpp"
 #include "JSystem/JAudio2/JASTrack.hpp"
-#include <JSystem/JAudio2/JASCriticalSection.hpp>
+#include "JSystem/JAudio2/JASCriticalSection.hpp"
 
 bool JASCallbackMgr::regist(JASCallback* pCallback, void* pArgument) {
     JASCriticalSection criticalSection;
@@ -16,7 +16,6 @@ bool JASCallbackMgr::regist(JASCallback* pCallback, void* pArgument) {
 }
 
 s32 JASCallbackMgr::reject(JASCallback* pCallback, void* pArgument) {
-    // FIXME: regswap
     s32 rejectNum = 0;
     JASCriticalSection criticalSection;
     for (s32 i = 0; i < JASCALLBACK_MAX_CALLBACKS; i++) {

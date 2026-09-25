@@ -37,6 +37,24 @@ namespace NrvOtaKing {
 };  // namespace NrvOtaKing
 
 namespace {
+    inline void makeTranslationMatrix(TPos3f* pMtx, const TVec3f& rTrans) {
+        pMtx->mMtx[0][0] = 1.0f;
+        pMtx->mMtx[1][0] = 0.0f;
+        pMtx->mMtx[2][0] = 0.0f;
+
+        pMtx->mMtx[0][1] = 0.0f;
+        pMtx->mMtx[1][1] = 1.0f;
+        pMtx->mMtx[2][1] = 0.0f;
+
+        pMtx->mMtx[0][2] = 0.0f;
+        pMtx->mMtx[1][2] = 0.0f;
+        pMtx->mMtx[2][2] = 1.0f;
+
+        pMtx->mMtx[0][3] = rTrans.x;
+        pMtx->mMtx[1][3] = rTrans.y;
+        pMtx->mMtx[2][3] = rTrans.z;
+    }
+
     const s32 cHP = 3;
     const f32 cThrowDistance = 4000.0f;
     const s32 cWaitFrame = 75;
@@ -47,7 +65,7 @@ namespace {
     const f32 cThrowAngleMax = 5.0f;
     const s32 cThrowCocoNutWaitFrame = 45;
     const s32 cThrowFireBallStep = 94;
-    const f32 cFireBallThrowNum = 3.0f;
+    const f32 cFireBallThrowNum = 3;
     const f32 cFireBallThrowSpeed = 15.0f;
     const f32 cFireBallThrowAngle = 30.0f;
     const s32 cThrowFireBallWaitFrame = 60;
@@ -65,7 +83,7 @@ namespace {
     const f32 cBodySensorRadius = 400.0f;
     const f32 cEyeSensorRadius = 1500.0f;
     const f32 cTurnSpeedMax = 1.0f;
-    const f32 cTurnSpeedAccel = 0.03f;
+    const f32 cTurnSpeedAccel = 0.003f;
     const f32 cPowerStarAppearOffsetY = 100.0f;
     const f32 cStarPieceAppearOffsetY = 300.0f;
     const s32 cStarPieceAppearNum = 8;
@@ -73,7 +91,7 @@ namespace {
     const f32 cStarPieceAppearVelocity = 50.0f;
     const s32 cDamageCrownFallFrame = 73;
     // const s32 cDamageAngryRumbleFrame;
-    const f32 cDamageFrontFootClipingHeight = 600.0f;
+    const f32 cDamageFrontFootClipingHeight = -600.0f;
     const s32 cDownDemoFrame = 300;
     const f32 cDownDemoCocoNutScale = 1.5f;
     const s32 cDownDemoRumbleFrame1 = 105;
@@ -101,9 +119,8 @@ namespace {
 };  // namespace
 
 OtaKing::OtaKing(const char* pName)
-    : LiveActor(pName), mMagma(nullptr), mCocoNutBallArray(nullptr), mFireBallArray(nullptr), mFireBubbleArray(nullptr), mThrowPos(nullptr), mHits(0),
-      _EC(0), mTurnSpeed(0.0f), mSoundObj(nullptr), mSoundObjPos(gZeroVec), mBubbleAppearPos(nullptr), mDownCocoNut(nullptr), mAnimCamera(nullptr),
-      mIsLv2(false), mScaleController(nullptr) {
+    : LiveActor(pName), mMagma(), mCocoNutBallArray(), mFireBallArray(), mFireBubbleArray(), mThrowPos(), mHits(), _EC(), mTurnSpeed(), mSoundObj(),
+      mSoundObjPos(gZeroVec), mBubbleAppearPos(), mDownCocoNut(), mAnimCamera(), mIsLv2(), mScaleController() {
     MR::zeroMemory(mFeet, sizeof(mFeet));
     MR::zeroMemory(mLongFeet, sizeof(mLongFeet));
     mLongFootMtx.identity();
@@ -192,6 +209,7 @@ void OtaKing::control() {
     } else {
         dirToPlayer();
     }
+
     mScaleController->updateNerve();
 }
 
@@ -235,8 +253,9 @@ bool OtaKing::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* pRec
     s32 a1 = mHits;
 
     if (mIsLv2) {
-        a1 = MR::max(mHits, 1);
+        a1 = MR::max(a1, 1);
     }
+
     bool b1 = rallyBall->_9C <= a1;
 
     bool isReceiverBody = pReceiver == getSensor("body");
@@ -278,6 +297,7 @@ bool OtaKing::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver)
                         mHits > 0 && isValidThrowFireBall() ? setNerve(GET_NERVE(OtaKing, OtaKingNrvThrowFireBall)) :
                                                               setNerve(GET_NERVE(OtaKing, OtaKingNrvThrowFireBallWait));
                     }
+
                     return true;
                 } else if (isNerve(GET_NERVE(OtaKing, OtaKingNrvThrowCocoNut)) || isNerve(GET_NERVE(OtaKing, OtaKingNrvHitBack))) {
                     _EC = 2;
@@ -285,6 +305,7 @@ bool OtaKing::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver)
                 }
             }
         }
+
     return false;
 }
 
@@ -300,10 +321,10 @@ void OtaKing::initMapToolInfo(const JMapInfoIter& rIter) {
 }
 
 void OtaKing::initModel(const JMapInfoIter& rIter) {
-    initModelManagerWithAnm(mIsLv2 ? "OtaKing" : "OtaKingLv2", nullptr, false);
+    initModelManagerWithAnm(mIsLv2 ? "OtaKingLv2" : "OtaKing", nullptr, false);
 
     for (int i = 0; i < ARRAY_SIZE(mFeet); i++) {
-        mFeet[i] = new PartsModel(this, "前足モデル", mIsLv2 ? "OtaKingFoot" : "OtaKingFootLv2", nullptr, 18, false);
+        mFeet[i] = new PartsModel(this, "前足モデル", mIsLv2 ? "OtaKingFootLv2" : "OtaKingFoot", nullptr, 18, false);
         mFeet[i]->mPosition.set(mPosition);
         mFeet[i]->initWithoutIter();
         MR::initLightCtrl(mFeet[i]);
@@ -322,14 +343,13 @@ void OtaKing::initModel(const JMapInfoIter& rIter) {
         mCocoNutBallArray[i]._D8 = true;
         mCocoNutBallArray[i]._D4 = 5000.0f;
 
-        float arg0;
-        if (MR::getJMapInfoArg0NoInit(rIter, &arg0)) {
-            mCocoNutBallArray[i]._C0 = arg0;
+        float arg;
+        if (MR::getJMapInfoArg0NoInit(rIter, &arg)) {
+            mCocoNutBallArray[i]._C0 = arg;
         }
 
-        float arg2;
-        if (MR::getJMapInfoArg2NoInit(rIter, &arg2)) {
-            mCocoNutBallArray[i]._C4 = arg2;
+        if (MR::getJMapInfoArg2NoInit(rIter, &arg)) {
+            mCocoNutBallArray[i]._C4 = arg;
         }
     }
 
@@ -374,12 +394,13 @@ void OtaKing::dirToPlayer() {
         if (angleMinRotY * mTurnSpeed < 0.0f) {
             mTurnSpeed = 0.0f;
         }
+
         mRotation.y += mTurnSpeed;
 
         if (0.0f < angleMinRotY) {
-            mTurnSpeed = MR::max(mTurnSpeed + ::cTurnSpeedAccel, ::cTurnSpeedMax);
+            mTurnSpeed = MR::min(mTurnSpeed + ::cTurnSpeedAccel, ::cTurnSpeedMax);
         } else {
-            mTurnSpeed = MR::min(mTurnSpeed - ::cTurnSpeedAccel, -::cTurnSpeedMax);
+            mTurnSpeed = MR::max(mTurnSpeed - ::cTurnSpeedAccel, -::cTurnSpeedMax);
         }
 
     } else {
@@ -396,6 +417,7 @@ CocoNutBall* OtaKing::getDisappearedCocoNut() {
             return &mCocoNutBallArray[i];
         }
     }
+
     return nullptr;
 }
 
@@ -405,6 +427,7 @@ FireBall* OtaKing::getDisappearedFireBall() {
             return &mFireBallArray[i];
         }
     }
+
     return nullptr;
 }
 
@@ -414,6 +437,7 @@ FireBubble* OtaKing::getDisappearedBubble() {
             return &mFireBubbleArray[i];
         }
     }
+
     return nullptr;
 }
 
@@ -424,6 +448,7 @@ s32 OtaKing::getDisappearedCocoNutNum() const {
             dissappearedNum++;
         }
     }
+
     return dissappearedNum;
 }
 
@@ -434,6 +459,7 @@ s32 OtaKing::getDisappearedFireBallNum() const {
             dissappearedNum++;
         }
     }
+
     return dissappearedNum;
 }
 
@@ -444,6 +470,7 @@ s32 OtaKing::getDisappearedFireBubbleNum() const {
             dissappearedNum++;
         }
     }
+
     return dissappearedNum;
 }
 
@@ -498,6 +525,7 @@ void OtaKing::damage() {
     if (isDamageNerve()) {
         return;
     }
+
     MR::deleteEffectAll(this);
 
     mHits++;
@@ -565,6 +593,7 @@ void OtaKing::throwFireBall() {
             } else {
                 angleOffset = -::cFireBallThrowAngle * ((i + 1) / 2);
             }
+
             throwAngle += angleOffset;
         }
 
@@ -573,19 +602,19 @@ void OtaKing::throwFireBall() {
 }
 
 void OtaKing::startBckWaitIfNotPlaying() {
-    MR::tryStartBck(this, "Wait", nullptr);
+    MR::tryStartBck(this, "Wait");
 
     for (int i = 0; i < ARRAY_SIZE(mFeet); i++) {
-        MR::tryStartBck(mFeet[i], i == 0 ? "WaitR" : "WaitL", nullptr);
+        MR::tryStartBck(mFeet[i], i == 0 ? "WaitR" : "WaitL");
     }
 }
 
-void OtaKing::startBckWithFrontFoot(const char* bckName) {
-    MR::startBck(this, bckName, nullptr);
-    snprintf(mBckLBuffer, sizeof(mBckLBuffer), "%sR", bckName);
-    MR::startBck(mFeet[0], mBckLBuffer, nullptr);
-    snprintf(mBckRBuffer, sizeof(mBckRBuffer), "%sL", bckName);
-    MR::startBck(mFeet[1], mBckRBuffer, nullptr);
+void OtaKing::startBckWithFrontFoot(const char* pBckName) {
+    MR::startBck(this, pBckName);
+    snprintf(mBckLBuffer, sizeof(mBckLBuffer), "%sR", pBckName);
+    MR::startBck(mFeet[0], mBckLBuffer);
+    snprintf(mBckRBuffer, sizeof(mBckRBuffer), "%sL", pBckName);
+    MR::startBck(mFeet[1], mBckRBuffer);
 }
 
 bool OtaKing::isNerveValidNearAttack() const {
@@ -653,8 +682,7 @@ void OtaKing::initLongFoot(const JMapInfoIter& rIter) {
             mLongFeet[i]->mScale.set(::cLongFootScale);
         }
 
-        mLongFootMtx.identity33();
-        mLongFootMtx.setTrans(mPosition);
+        makeTranslationMatrix(&mLongFootMtx, mPosition);
         mLongFeet[0]->initFixedPosition(mLongFootMtx, TVec3f(735.0f, 80.0f, -55.0f), TVec3f(-9.0f, 266.0f, 0.0f));
         mLongFeet[1]->initFixedPosition(mLongFootMtx, TVec3f(-959.0f, 130.0f, 0.0f), TVec3f(0.0f, 107.0f, 14.0f));
         mLongFeet[2]->initFixedPosition(mLongFootMtx, TVec3f(0.0f, 43.0f, 884.0f), TVec3f(-8.0f, 159.0f, 0.0f));
@@ -763,16 +791,20 @@ void OtaKing::exeAppearDemo() {
         MR::tryRumblePadVeryStrong(this, WPAD_CHAN0);
         MR::shakeCameraWeak();
     }
+
     if (MR::isStep(this, ::cAppearDemoRumblePad03)) {
         MR::tryRumblePadStrong(this, WPAD_CHAN0);
         MR::shakeCameraNormal();
     }
+
     if (MR::isStep(this, ::cAppearDemoRumblePad04)) {
         MR::shakeCameraStrong();
     }
+
     if (MR::isGreaterStep(this, ::cAppearDemoRumblePad04) && MR::isLessStep(this, ::cAppearDemoRumblePad05)) {
         MR::tryRumblePadWeak(this, WPAD_CHAN0);
     }
+
     if (MR::isStep(this, ::cAppearDemoRumblePad06)) {
         MR::tryRumblePadMiddle(this, WPAD_CHAN0);
     }
@@ -856,6 +888,7 @@ void OtaKing::exeThrowFireBallWait() {
     if (MR::isFirstStep(this)) {
         startBckWaitIfNotPlaying();
     }
+
     if (MR::isGreaterStep(this, ::cThrowFireBallWaitFrame) && isValidThrowFireBall()) {
         setNerve(GET_NERVE(OtaKing, OtaKingNrvThrowFireBall));
     }
@@ -866,6 +899,7 @@ void OtaKing::exeThrowFireBall() {
         startBckWithFrontFoot("FireAttack");
         MR::startSound(this, "SE_BV_OTAKING_PRE_FIREBALL");
     }
+
     MR::startLevelSound(this, "SE_BM_LV_OTAKING_PRE_FIRE");
 
     if (MR::isStep(this, ::cThrowFireBallStep)) {
@@ -1007,7 +1041,7 @@ void OtaKing::exePowerUp() {
 
 void OtaKing::exeDown() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Down", 0);
+        MR::startBck(this, "Down");
         MR::startSound(this, "SE_BM_OTAKING_LAST_DAMAGE");
         MR::startSound(this, "SE_BM_OTAKING_DIE");
         MR::startSound(this, "SE_BV_OTAKING_DIE");

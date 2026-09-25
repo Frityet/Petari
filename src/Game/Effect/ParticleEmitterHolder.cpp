@@ -21,8 +21,9 @@ void ParticleEmitterHolder::update(bool isCalcFor2D) {
             mEffectSystem->forceDeleteEmitter(pEmitter);
         } else if (!pEmitter->mStopped) {
             if (MR::Effect::getLinkSingleEmitter(pBaseEmitter) != nullptr) {
-                static_cast< MultiEmitterCallBackBase* >(pBaseEmitter->mpEmtrCallBack)->init(pBaseEmitter);
+                pBaseEmitter->getEmitterCallBackPtr()->init(pBaseEmitter);
             }
+
             pEmitter->mStopped = true;
         }
     }
@@ -51,8 +52,12 @@ void ParticleEmitterHolder::requestMovementOnAllEmitters() {
 }
 
 ParticleEmitter* ParticleEmitterHolder::findAvailableParticleEmitter() {
-    ParticleEmitter* pEmitter = std::find_if(mEmitters.begin(), mEmitters.end(), std::not1(std::mem_fun_ref(&ParticleEmitter::isValid)));
-    return pEmitter == mEmitters.end() ? nullptr : pEmitter;
+    ParticleEmitter* res = std::find_if_array(mEmitters.begin(), mEmitters.end(), std::not1(std::mem_func(&ParticleEmitter::isValid)));
+    if (res == mEmitters.end()) {
+        return nullptr;
+    }
+
+    return res;
 }
 
 void ParticleEmitterHolder::requestMovementOffAllLoopEmitters() {
@@ -61,4 +66,12 @@ void ParticleEmitterHolder::requestMovementOffAllLoopEmitters() {
             pEmitter->pauseOn();
         }
     }
+}
+
+inline bool ParticleEmitter::isValid() const {
+    return mEmitter != nullptr;
+}
+
+inline bool ParticleEmitter::isContinuousParticle() const NO_INLINE {
+    return mEmitter != nullptr && mEmitter->mMaxFrame == 0;
 }

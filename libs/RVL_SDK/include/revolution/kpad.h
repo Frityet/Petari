@@ -1,9 +1,9 @@
 #ifndef KPAD_H
 #define KPAD_H
 
-#include <revolution/mtx.h>
-#include <revolution/types.h>
-#include <revolution/wpad.h>
+#include "revolution/mtx.h"
+#include "revolution/types.h"
+#include "revolution/wpad.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -184,7 +184,7 @@ void KPADInit();
 
 void KPADSetBtnRepeat(s32, f32, f32);
 void KPADSetSensorHeight(s32, f32);
-void KPADSetAccParam(s32, f32, f32);
+void KPADSetAccParam(s32 chan, f32 playRadius, f32 sensitivity);
 void KPADSetPosParam(s32, f32, f32);
 void KPADSetHoriParam(s32, f32, f32);
 void KPADSetDistParam(s32, f32, f32);

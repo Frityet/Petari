@@ -1,4 +1,3 @@
-#include "Game/Util/SoundUtil.hpp"
 #include "Game/AudioLib/AudAnmSoundObject.hpp"
 #include "Game/AudioLib/AudMeNameConverter.hpp"
 #include "Game/AudioLib/AudMicWrap.hpp"
@@ -14,6 +13,7 @@
 #include "Game/GameAudio/AudSeKeeper.hpp"
 #include "Game/GameAudio/AudStageBgmWrap.hpp"
 #include "Game/GameAudio/AudTalkSoundData.hpp"
+#include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/RhythmLib/AudChordInfo.hpp"
@@ -27,8 +27,13 @@
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
+#include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include <JSystem/JAudio2/JAISound.hpp>
+
+bool SoundUtil_FORCE_MATCH_DATA(const char* pName) {
+    return MR::isEqualString(pName, "SE_SY_READ_RIDDLE_S");
+}
 
 namespace {
     AudBgmConductor* getAudBgmConductor() {
@@ -119,13 +124,13 @@ namespace MR {
         pActor->mSoundObject->setMapCode(getMapSoundCodeFoot(pActor));
 
         if (param3 != -1) {
-            JAISoundID id = AudSingletonHolder< AudSoundNameConverter >::get()->getSoundID(pName);
+            AudAnmSoundObject* pSound = pActor->mSoundObject;
 
-            return pActor->mSoundObject->startSoundParam(id, param3, param4);
+            return pSound->startSoundParam(static_cast< u32 >(AudSingletonHolder< AudSoundNameConverter >::get()->getSoundID(pName)), param3, param4);
         } else {
-            JAISoundID id = AudSingletonHolder< AudSoundNameConverter >::get()->getSoundID(pName);
+            AudAnmSoundObject* pSound = pActor->mSoundObject;
 
-            return pActor->mSoundObject->startSound(id);
+            return pSound->startSound(static_cast< u32 >(AudSingletonHolder< AudSoundNameConverter >::get()->getSoundID(pName)));
         }
     }
 
@@ -140,10 +145,10 @@ namespace MR {
     }
 
     JAISoundHandle* startSoundSeVer(const LiveActor* pActor, const char* pName, s32 param3, s32 param4) {
-        JAISoundID id = AudSingletonHolder< AudSoundNameConverter >::get()->getSoundID(pName);
-        JAISoundID id2 = pActor->mSoundObject->convertSoundIdFromSeVersion(id);
-
-        return startSound(pActor, id2, param3, param4);
+        return startSound(pActor,
+                          pActor->mSoundObject->convertSoundIdFromSeVersion(
+                              static_cast< u32 >(AudSingletonHolder< AudSoundNameConverter >::get()->getSoundID(pName))),
+                          param3, param4);
     }
 
     JAISoundHandle* startLevelSound(const LiveActor* pActor, const char* pName, s32 param3, s32 param4, s32 param5) {
@@ -167,16 +172,16 @@ namespace MR {
     }
 
     JAISoundHandle* startLevelSoundSeVer(const LiveActor* pActor, const char* pName, s32 param3, s32 param4, s32 param5) {
-        JAISoundID id = AudSingletonHolder< AudSoundNameConverter >::get()->getSoundID(pName);
-        JAISoundID id2 = pActor->mSoundObject->convertSoundIdFromSeVersion(id);
-
-        return startLevelSound(pActor, id2, param3, param4, param5);
+        return startLevelSound(pActor,
+                               pActor->mSoundObject->convertSoundIdFromSeVersion(
+                                   static_cast< u32 >(AudSingletonHolder< AudSoundNameConverter >::get()->getSoundID(pName))),
+                               param3, param4, param5);
     }
 
     void stopSound(const LiveActor* pActor, const char* pName, u32 param3) {
-        JAISoundID id = AudSingletonHolder< AudSoundNameConverter >::get()->getSoundID(pName);
+        AudAnmSoundObject* pSound = pActor->mSoundObject;
 
-        stopSound(pActor, id, param3);
+        pSound->stopSound(static_cast< u32 >(AudSingletonHolder< AudSoundNameConverter >::get()->getSoundID(pName)), param3);
     }
 
     void stopSound(const LiveActor* pActor, JAISoundID id, u32 param3) {
@@ -256,19 +261,21 @@ namespace MR {
     }
 
     s32 getMapSoundCodeFoot(const LiveActor* pActor) {
-        if (pActor->mBinder == nullptr) {
+        const Binder* pBinder = pActor->mBinder;
+        if (pBinder == nullptr) {
             return -1;
         }
 
         s32 groundCode = -1;
         s32 wallCode = -1;
         s32 roofCode = -1;
-        if (const Triangle* pGround = &pActor->mBinder->mGroundInfo.mParentTriangle) {
+        const Triangle* pGround = &pBinder->mGroundInfo.mParentTriangle;
+        if (pGround != nullptr) {
             groundCode = getSoundCodeIndex(pGround->getAttributes());
-        } else if (const Triangle* pWall = &pActor->mBinder->mWallInfo.mParentTriangle) {
-            wallCode = getSoundCodeIndex(pWall->getAttributes());
-        } else if (const Triangle* pRoof = &pActor->mBinder->mRoofInfo.mParentTriangle) {
-            roofCode = getSoundCodeIndex(pRoof->getAttributes());
+        } else if (&pBinder->mWallInfo.mParentTriangle != nullptr) {
+            wallCode = getSoundCodeIndex(pBinder->mWallInfo.mParentTriangle.getAttributes());
+        } else if (&pBinder->mRoofInfo.mParentTriangle != nullptr) {
+            roofCode = getSoundCodeIndex(pBinder->mRoofInfo.mParentTriangle.getAttributes());
         }
 
         if (groundCode >= 0) {
@@ -298,9 +305,9 @@ namespace MR {
         JAISoundID id = AudTalkSoundData::getSoundIDFromTalkSoundNo(soundNo);
         if (!id.isAnonymous()) {
             if (pActor == nullptr) {
-                AudWrap::getSystemSeObject()->startSoundParam(id, -1, -1);
+                startSystemSE(id);
             } else {
-                startSound(pActor, id, -1, -1);
+                startSound(pActor, id);
             }
         }
     }
@@ -330,7 +337,7 @@ namespace MR {
         return AudWrap::getRemixMgr()->getRemixNoteGroupDataFromMelodyNo(melodyNo)->mNoteCount;
     }
 
-    void limitedSound(const char* pName, s32 param2) {
+    void limitedSound(const char* pName, s32 param2) NO_INLINE {
         JAISoundID id = AudSingletonHolder< AudSoundNameConverter >::get()->getSoundID(pName);
 
         AudWrap::getSystem()->registerLimitedSound(id, param2);
@@ -429,23 +436,28 @@ namespace MR {
     }
 
     bool isStopOrFadeoutStageBgmID(u32 id) {
-        AudBgm* pStageBgm = AudWrap::getStageBgm();
-        if (pStageBgm == nullptr) {
+        AudBgm* pBgm = AudWrap::getStageBgm();
+        if (pBgm == nullptr) {
             return true;
         }
-        if (pStageBgm != nullptr) {
-            if (pStageBgm->getSoundID() != id) {
+
+        if (pBgm != nullptr) {
+            if (id != pBgm->getSoundID()) {
                 return true;
             }
-            JAISoundHandle* pHandle = pStageBgm->getHandle();
+
+            JAISoundHandle* pHandle = pBgm->getHandle();
             if (pHandle == nullptr) {
                 return true;
             }
-            if ((*pHandle)->getFader()->mTransition.mRemainingSteps != 0) {
+
+            if (pHandle->getSound()->getFader()->mTransition.mRemainingSteps != 0) {
                 return true;
             }
-            return pStageBgm->isStopping();
+
+            return pBgm->isStopping();
         }
+
         return false;
     }
 

@@ -4,13 +4,25 @@
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util.hpp"
 
+void BlackHole_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)0.5f;
+    (void)500.0f;
+    (void)0.009999999776482582f;
+    (void)1000.0f;
+}
+
 namespace NrvBlackHole {
     NEW_NERVE(BlackHoleNrvWait, BlackHole, Wait);
     NEW_NERVE(BlackHoleNrvDemo, BlackHole, Demo);
     NEW_NERVE(BlackHoleNrvDisappear, BlackHole, Disappear);
 };  // namespace NrvBlackHole
 
-// BlackHole::BlackHole
+BlackHole::BlackHole(const char* pName) : LiveActor(pName), mBlackHoleModel(), _90(gZeroVec), _9C(1.0f), _A0(500.0f), _A4(), mCameraInfo() {
+    _A8.identity();
+    _D8.identity();
+}
 
 void BlackHole::init(const JMapInfoIter& rIter) {
     initMapToolInfo(rIter);
@@ -18,17 +30,18 @@ void BlackHole::init(const JMapInfoIter& rIter) {
     MR::connectToSceneMapObj(this);
     initHitSensor(1);
     MR::addHitSensorEye(this, "body", 16, _A0, TVec3f(0.0f, 0.0f, 0.0f));
-    initEffectKeeper(0, 0, false);
+    initEffectKeeper(0, nullptr, false);
     MR::setEffectHostMtx(this, "BlackHoleSuction", (MtxPtr)&_D8);
     f32 radius = _A0;
     f32 val = 500.0f * _9C;
+
     if (radius >= val) {
         radius = radius;
     } else {
         radius = val;
     }
 
-    f32 clippingRadius = 500.0f * radius;
+    f32 clippingRadius = 500.0f + radius;
     MR::setClippingTypeSphere(this, clippingRadius);
     MR::setClippingTypeSphere(mBlackHoleModel, clippingRadius);
     MR::setClippingFarMax(this);
@@ -40,12 +53,14 @@ void BlackHole::init(const JMapInfoIter& rIter) {
     }
 
     bool isCreated = MR::createActorCameraInfoIfExist(rIter, &mCameraInfo);
+
     if (isCreated) {
         MR::initActorCamera(this, rIter, &mCameraInfo);
     }
 
     initNerve(GET_NERVE(BlackHole, BlackHoleNrvWait));
     bool uses = MR::useStageSwitchReadAppear(this, rIter);
+
     if (uses) {
         MR::syncStageSwitchAppear(this);
         makeActorDead();
@@ -69,7 +84,7 @@ void BlackHole::kill() {
 }
 
 bool BlackHole::tryStartDemoCamera() {
-    if (mCameraInfo) {
+    if (mCameraInfo != nullptr) {
         MR::startActorCameraTargetSelf(this, mCameraInfo, -1);
         return true;
     }
@@ -77,12 +92,32 @@ bool BlackHole::tryStartDemoCamera() {
     return false;
 }
 
+void BlackHole::calcAndSetBaseMtx() {
+    LiveActor::calcAndSetBaseMtx();
+    TVec3f dirToCam;
+    dirToCam.sub(MR::getCamPos(), mPosition);
+    TVec3f camYDir;
+    camYDir.set(MR::getCamYdir());
+
+    if (MR::normalizeOrZero(&dirToCam)) {
+        return;
+    }
+
+    if (MR::isSameDirection(dirToCam, camYDir)) {
+        return;
+    }
+
+    MR::makeMtxFrontUpPos(&_D8, dirToCam, camYDir, mPosition);
+
+    _D8.scaleXYZ(mScale.x);
+}
+
 void BlackHole::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     if (!isNerve(GET_NERVE(BlackHole, BlackHoleNrvWait))) {
         return;
     }
 
-    if (_A4 && !isInCubeBox(pReceiver->mPosition)) {
+    if (_A4 != nullptr && !isInCubeBox(pReceiver->mPosition)) {
         return;
     }
 
@@ -97,7 +132,6 @@ void BlackHole::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     setNerve(GET_NERVE(BlackHole, BlackHoleNrvDemo));
 }
 
-// shrug
 void BlackHole::initMapToolInfo(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
     MR::useStageSwitchReadA(this, rIter);
@@ -109,9 +143,12 @@ void BlackHole::initMapToolInfo(const JMapInfoIter& rIter) {
     }
 
     if (_A4 == nullptr) {
-        _A0 = 500.0f * mScale.z;
+        _A0 = 500.0f * mScale.x;
     } else {
-        _A0 = (mScale * 500.0f).length();
+        TVec3f size(mScale);
+        size.scale(500.0f);
+
+        _A0 = size.length();
     }
 
     f32 arg0;
@@ -126,35 +163,26 @@ void BlackHole::initMapToolInfo(const JMapInfoIter& rIter) {
 }
 
 void BlackHole::initModel() {
-    initModelManagerWithAnm("BlackHoleRange", 0, false);
+    initModelManagerWithAnm("BlackHoleRange", nullptr, false);
     mBlackHoleModel = MR::createModelObjMapObj("コアモデル", "BlackHole", getBaseMtx());
     mBlackHoleModel->makeActorDead();
     updateModelScale(_9C, _9C);
 }
 
 void BlackHole::initCubeBox() {
-    MR::makeMtxRotate((MtxPtr)&_A8, mRotation.x, mRotation.y, mRotation.z);
-    _A8.mMtx[0][3] = mPosition.x;
-    _A8.mMtx[1][3] = mPosition.y;
-    _A8.mMtx[2][3] = mPosition.z;
+    MR::makeMtxRotate(_A8, mRotation.x, mRotation.y, mRotation.z);
+    _A8.setTrans(mPosition);
+
     _A4 = new TBox3f();
-    TVec3f stack_8(0.5f * (1000.0f * -mScale.x), 0.5f * (1000.0f * -mScale.y), 0.5f * (1000.0f * -mScale.z));
-    TVec3f stack_14(0.5f * (1000.0f * mScale.x), 0.5f * (1000.0f * mScale.z), 0.5f * (1000.0f * mScale.y));
-    _A4->i.set(stack_8);
-    _A4->f.set(stack_14);
+    TVec3f vecStart(0.5f * (1000.0f * -mScale.x), 0.5f * (1000.0f * -mScale.y), 0.5f * (1000.0f * -mScale.z));
+    TVec3f vecEnd(0.5f * (1000.0f * mScale.x), 0.5f * (1000.0f * mScale.y), 0.5f * (1000.0f * mScale.z));
+    _A4->set(vecStart, vecEnd);
 }
 
 bool BlackHole::isInCubeBox(const TVec3f& rVec) const {
-    TVec3f stack_8;
-    _A8.multTranspose(rVec, stack_8);
-    bool ret = false;
-    TBox3f* box = _A4;
-    if (stack_8.x >= box->i.x && stack_8.y >= box->i.y && stack_8.z >= box->i.z && stack_8.x < box->f.x && stack_8.y < box->f.y &&
-        stack_8.z < box->f.z) {
-        ret = true;
-    }
-
-    return ret;
+    TVec3f pos;
+    _A8.multTranspose(rVec, pos);
+    return _A4->intersectsPoint(pos);
 }
 
 void BlackHole::updateModelScale(f32 a1, f32 a2) {
@@ -164,13 +192,14 @@ void BlackHole::updateModelScale(f32 a1, f32 a2) {
 
 void BlackHole::exeWait() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "BlackHoleRange", 0);
+        MR::startBck(this, "BlackHoleRange");
         MR::startBtk(this, "BlackHoleRange");
         MR::startBtk(mBlackHoleModel, "BlackHole");
     }
 
     MR::startLevelSound(this, "SE_OJ_LV_BLACK_HOLE");
     bool isOnSwitch = false;
+
     if (MR::isValidSwitchA(this) && MR::isOnSwitchA(this)) {
         isOnSwitch = true;
     }

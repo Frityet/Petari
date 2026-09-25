@@ -26,8 +26,8 @@ void PomponPlant::init(const JMapInfoIter& rIter) {
     initModelManagerWithAnm(modelName, nullptr, false);
     MR::connectToSceneMapObj(this);
     initHitSensor(1);
-    MR::addHitSensorMapObj(this, "body", 8, sSensorRadius, TVec3f(sSensorOffset));
-    MR::initStarPointerTarget(this, sSensorRadius, TVec3f(sSensorOffset));
+    MR::addHitSensorMapObj(this, "body", 8, ::sSensorRadius, TVec3f(::sSensorOffset));
+    MR::initStarPointerTarget(this, ::sSensorRadius, TVec3f(::sSensorOffset));
     initEffectKeeper(0, nullptr, false);
     initSound(2, false);
     MR::getJMapInfoArg0NoInit(rIter, &mItemType);
@@ -69,7 +69,7 @@ bool PomponPlant::tryGenItem() {
     MR::calcGravityVector(this, &gravity, nullptr, 0);
     TVec3f playerMove(*MR::getPlayerLastMove());
     MR::vecKillElement(playerMove, -gravity, &playerMove);
-    TVec3f velocity(-gravity * sItemSpeed + playerMove * sPlayerVelFactor);
+    TVec3f velocity(-gravity * ::sItemSpeed + playerMove * ::sPlayerVelFactor);
 
     if (mItemType == 0) {
         MR::appearStarPiece(this, getSensor("body")->mPosition, mItemCount, 10.0f, 40.0f, false);
@@ -91,7 +91,7 @@ void PomponPlant::exeWait() {
 void PomponPlant::exeSwingDpd() {
     if (MR::isFirstStep(this)) {
         MR::startSound(this, "SE_OJ_POMPON_PLANT_DPD_HIT");
-        MR::startBck(this, "DpdHit", nullptr);
+        MR::startBck(this, "DpdHit");
     }
 
     if (MR::isBckStopped(this)) {
@@ -102,7 +102,7 @@ void PomponPlant::exeSwingDpd() {
 void PomponPlant::exeSwingPlayer() {
     if (MR::isFirstStep(this)) {
         MR::startSound(this, "SE_OJ_POMPON_PLANT_HIT");
-        MR::startBck(this, "Hit", nullptr);
+        MR::startBck(this, "Hit");
         tryGenItem();
     }
 

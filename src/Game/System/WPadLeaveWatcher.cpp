@@ -6,6 +6,11 @@
 #include "Game/System/WPadStick.hpp"
 
 namespace {
+    static bool sIsCheckPointerMoved = false;
+    static bool sIsCheckCoreAccel = true;
+    static bool sIsCheckSubAccel = true;
+    static bool sIsCheckButton = true;
+    static bool sIsCheckStick = true;
     static const s32 sLeaveLongTime = 3600;
     bool sWatchPointer = false;
     bool sWatchCoreAcceleration = true;
@@ -22,11 +27,11 @@ void WPadLeaveWatcher::update() {
         return;
     }
 
-    if ((mPad->mPointer->_45 && sWatchPointer) || (!mPad->mCorePadAccel->isStationary() && sWatchCoreAcceleration) ||
-        (!mPad->mSubPadAccel->isStationary() && sWatchSubAcceleration) || (mPad->mButton->isChangeAnyState() && sWatchButton) ||
-        (mPad->mStick->isChanged() && sWatchStick)) {
+    if (mPad->mPointer->mIsPointerMoved && ::sIsCheckPointerMoved || !mPad->mCorePadAccel->isStationary() && ::sIsCheckCoreAccel ||
+        !mPad->mSubPadAccel->isStationary() && ::sIsCheckSubAccel || mPad->mButton->isChangeAnyState() && ::sIsCheckButton ||
+        mPad->mStick->isChanged() && ::sIsCheckStick) {
         mStep = 0;
-    } else if (mStep < sLeaveLongTime) {
+    } else if (mStep < ::sLeaveLongTime) {
         mStep++;
     }
 }

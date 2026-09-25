@@ -50,10 +50,10 @@ void CrystalCageMoving::init(const JMapInfoIter& rIter) {
     vec.z = 0.0f;
     info.setupHitSensorParam(4, 350.0f, vec);
     initialize(rIter, info);
-    _FC.set< f32 >(mPosition);
+    _FC.set(mPosition);
     initDummyModel(rIter);
     MR::initActorCamera(this, rIter, &mCameraInfo);
-    MR::startBck(this, "Wait", nullptr);
+    MR::startBck(this, "Wait");
 
     if (MR::isDemoExist("脱出スピドラ出現")) {
         MR::registerDemoActionNerve(this, GET_NERVE(CrystalCageMoving, CrystalCageMovingNrvDemoTicoMove), nullptr);
@@ -65,7 +65,7 @@ void CrystalCageMoving::exeWaitBig() {
 
 void CrystalCageMoving::exeBreakBig() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "CoreWait", nullptr);
+        MR::startBck(this, "CoreWait");
         MR::startActorCameraNoTarget(this, mCameraInfo, -1);
         MR::setSensorRadius(this, "body", 30.0f);
         _108 = 1;
@@ -100,7 +100,7 @@ void CrystalCageMoving::exeBreakAll() {
 
 void CrystalCageMoving::exeDemoTicoMove() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(mTicoModel, "Fly", nullptr);
+        MR::startBck(mTicoModel, "Fly");
         MR::startSound(mTicoModel, "SE_SM_TICO_SPIN");
     }
 
@@ -131,7 +131,7 @@ void CrystalCageMoving::exeDemoTicoStop() {
 
 void CrystalCageMoving::exeDemoTicoChange() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(mTicoModel, "Metamorphosis", nullptr);
+        MR::startBck(mTicoModel, "Metamorphosis");
         MR::startSound(mTicoModel, "SE_SM_TICO_METAMORPHOSE");
         MR::setBckRate(mTicoModel, 1.5f);
     }
@@ -197,20 +197,17 @@ void CrystalCageMoving::crashMario(HitSensor* pSender, HitSensor* pReceiver) {
 
 void CrystalCageMoving::updateHitSensor(HitSensor* pSensor) {
     if (!_108) {
-        pSensor->mPosition.set< f32 >(mPosition);
+        pSensor->mPosition.set(mPosition);
     } else {
         f32 radius = pSensor->mRadius;
-        TMtx34f joint_mtx;
+        TPos3f joint_mtx;
         joint_mtx.set(MR::getJointMtx(this, nullptr));
-        TVec3f joint_pos;
-        f32 z = joint_mtx.mMtx[2][1];
-        f32 y = joint_mtx.mMtx[1][1];
-        f32 x = joint_mtx.mMtx[0][1];
-        joint_pos.set< f32 >(x, y, z);
+        TVec3f up;
+        joint_mtx.getYDir(up);
         TVec3f stack_14;
-        stack_14.scaleAdd(-450.0f + radius, joint_pos, mPosition);
+        stack_14.scaleAdd(-450.0f + radius, up, mPosition);
         TVec3f stack_8;
-        stack_8.scaleAdd(450.0f - radius, joint_pos, mPosition);
+        stack_8.scaleAdd(450.0f - radius, up, mPosition);
         MR::calcPerpendicFootToLineInside(&pSensor->mPosition, *MR::getPlayerPos(), stack_14, stack_8);
     }
 }

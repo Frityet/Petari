@@ -3,7 +3,7 @@
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util.hpp"
-#include "JSystem/JMath/JMath.hpp"
+#include <JSystem/JMath/JMath.hpp>
 
 namespace NrvFireBar {
     NEW_NERVE(FireBarNrvWait, FireBar, Wait);
@@ -120,6 +120,7 @@ void FireBar::init(const JMapInfoIter& rIter) {
 
         s32 rotateShadow = -1;
         MR::getJMapInfoArg4NoInit(rIter, &rotateShadow);
+
         if (rotateShadow == 0) {
             MR::calcUpVec(&drop_direction, this);
             drop_direction.negate();
@@ -175,11 +176,11 @@ void FireBar::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     }
 }
 
-void FireBar::updateHitSensor(HitSensor* sensor) {
+void FireBar::updateHitSensor(HitSensor* pSensor) {
+    s32 i;
     f32 minDistance = FLOAT_MAX;
 
-    TVec3f position;
-    position.z = mPosition.z;
+    TVec3f position = mPosition;
 
     s32 fireBallCount = mFireBallCount / mStickCount;
 
@@ -188,48 +189,46 @@ void FireBar::updateHitSensor(HitSensor* sensor) {
 
     TVec3f start;
     start.scale(mStickDistance, _94);
-    JMAVECScaleAdd(&up, &start, &start, 50.0f);
+    start.scaleAdd(50.0f, up, start);
 
     TVec3f end;
     end.scale(mStickDistance + 100.0f * (fireBallCount - 1), _94);
-    JMAVECScaleAdd(&up, &end, &end, 50.0f);
+    end.scaleAdd(50.0f, up, end);
 
-    for (s32 i = 0; i < mStickCount; ++i) {
+    for (i = 0; i < mStickCount; i++) {
+        const TVec3f& pos = mPosition;
+
         TVec3f startWorld;
+        startWorld.add(start, pos);
         TVec3f endWorld;
+        endWorld.add(end, pos);
 
-        JMathInlineVEC::PSVECAdd(&start, &mPosition, &startWorld);
-        JMathInlineVEC::PSVECAdd(&end, &mPosition, &endWorld);
+        TVec3f footPos;
+        MR::calcPerpendicFootToLineInside(&footPos, *MR::getPlayerCenterPos(), startWorld, endWorld);
 
-        MR::calcPerpendicFootToLineInside(&position, *MR::getPlayerCenterPos(), startWorld, endWorld);
-
-        const Vec* playerCenter = MR::getPlayerCenterPos();
-        f32 distance = PSVECDistance(&position, playerCenter);
+        f32 distance = footPos.distance(*MR::getPlayerCenterPos());
 
         if (minDistance > distance) {
-            position.set(position);
+            position.set(footPos);
             minDistance = distance;
         }
 
         if (i + 1 != mStickCount) {
+            TVec3f up;
             MR::calcUpVec(&up, this);
-
-            f32 angle = 360.0f / mStickCount;
-
-            MR::rotateVecDegree(&start, up, angle);
-            MR::rotateVecDegree(&end, up, angle);
+            MR::rotateVecDegree(&start, up, 360.0f / mStickCount);
+            MR::rotateVecDegree(&end, up, 360.0f / mStickCount);
         }
     }
 
-    sensor->mPosition.set(position);
+    pSensor->mPosition.set(position);
 }
 
 // meh
 void FireBar::initFireBarBall(const JMapInfoIter& rIter) {
     mFireBalls = new FireBarBall*[mFireBallCount];
-    s32 totalNum = mFireBallCount;
-    totalNum /= mStickCount;
-    f32 startVal = 25.0f;
+    s32 totalNum = mFireBallCount / mStickCount;
+    f32 startVal = 0.0f;
 
     for (s32 i = 0; i < mFireBallCount; i++) {
         mFireBalls[i] = new FireBarBall(this);
@@ -238,10 +237,8 @@ void FireBar::initFireBarBall(const JMapInfoIter& rIter) {
         s32 div = i / totalNum;
         div *= totalNum;
 
-        startVal = !(i - div) ? 0.0f : startVal + 25.0f;
-        s32 btkFrame = MR::getBtkFrameMax(mFireBalls[i]);
-        s32 derp = startVal;
-        startVal = (derp - (derp / (btkFrame * btkFrame)));
+        startVal = !(i - div) ? 0.0f : 25.0f + startVal;
+        startVal = static_cast< s32 >(startVal) % static_cast< s32 >(MR::getBtkFrameMax(mFireBalls[i]));
         MR::setBtkFrame(mFireBalls[i], startVal);
     }
 
@@ -257,11 +254,12 @@ void FireBar::fixFireBarBall() {
     final_pos.y = 0.0f;
     final_pos.x = 0.0f;
 
-    s32 totalNum = mFireBallCount;
-    totalNum /= mStickCount;
+    s32 totalNum = mFireBallCount / mStickCount;
+
     for (s32 i = 0; i < mFireBallCount; i++) {
         s32 div = i / totalNum;
         div *= totalNum;
+
         if (i - div == 0) {
             TVec3f up_vec;
             MR::calcUpVec(&up_vec, this);
@@ -274,6 +272,6 @@ void FireBar::fixFireBarBall() {
             final_pos.add(scaled);
         }
 
-        mFireBalls[i]->mPosition.set< f32 >(final_pos);
+        mFireBalls[i]->mPosition.set(final_pos);
     }
 }

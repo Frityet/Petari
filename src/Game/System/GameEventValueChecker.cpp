@@ -2,8 +2,8 @@
 #include "Game/System/FindingLuigiEventScheduler.hpp"
 #include "Game/Util/HashUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
-#include "JSystem/JSupport/JSUMemoryInputStream.hpp"
-#include "JSystem/JSupport/JSUMemoryOutputStream.hpp"
+#include <JSystem/JSupport/JSUMemoryInputStream.hpp>
+#include <JSystem/JSupport/JSUMemoryOutputStream.hpp>
 
 namespace {
     const GameEventValue cGameEventValueTable[] = {
@@ -33,9 +33,9 @@ namespace {
         {"Comet5Status", 0},
         {"Comet6Status", 0},
     };
-};  // namespace
+}  // namespace
 
-GameEventValueChecker::GameEventValueChecker() : mValues(nullptr), mNumValues(0) {
+GameEventValueChecker::GameEventValueChecker() : mValues(), mNumValues() {
     mValues = new u16[ARRAY_SIZE(::cGameEventValueTable)];
     mNumValues = ARRAY_SIZE(::cGameEventValueTable);
     initializeData();
@@ -58,17 +58,13 @@ u32 GameEventValueChecker::getSignature() const {
 }
 
 s32 GameEventValueChecker::serialize(u8* pData, u32 maxBufferSize) const {
-    // FIXME: regswap
-    // https://decomp.me/scratch/zhaby
-
     JSUMemoryOutputStream stream(pData, maxBufferSize);
 
     s32 hash;
-    u16 value;
 
     for (s32 idx = 0; idx < mNumValues; idx++) {
         hash = MR::getHashCode(::cGameEventValueTable[idx].mName);
-        value = mValues[idx];
+        const u16 value = mValues[idx];
 
         stream.writeU16(hash);
         stream.writeU16(value);
@@ -83,15 +79,13 @@ s32 GameEventValueChecker::deserialize(const u8* pData, u32 maxBufferSize) {
     JSUMemoryInputStream stream(pData, maxBufferSize);
 
     s32 numEntries = static_cast< s32 >(maxBufferSize) / 2;
-    u16 readHash;
-    u16 readValue;
+
     for (s32 idx = 0; idx < numEntries; idx++) {
-        stream.read(&readHash, sizeof(readHash));
-        u16 hash = readHash;
-        stream.read(&readValue, sizeof(readValue));
-        u16 value = readValue;
+        u16 hash = stream.readU16();
+        u16 value = stream.readU16();
 
         s32 valueIndex = findIndexFromHashCode(hash);
+
         if (valueIndex >= 0) {
             mValues[valueIndex] = value;
         } else {
@@ -118,6 +112,7 @@ s32 GameEventValueChecker::findIndex(const char* pName) const {
             return idx;
         }
     }
+
     return -1;
 }
 
@@ -127,5 +122,6 @@ s32 GameEventValueChecker::findIndexFromHashCode(u16 hash) const {
             return idx;
         }
     }
+
     return -1;
 }

@@ -15,7 +15,7 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
-#include "JSystem/JMath/JMath.hpp"
+#include <JSystem/JMath/JMath.hpp>
 
 namespace {
     struct WallPartPlacementAngle {
@@ -212,5 +212,5 @@ void TripodBossGuardWall::updateCameraTarget() {
     TPos3f mtx;
     mtx.identity();
     MR::makeMtxUpFrontPos(&mtx, up, front, mPosition);
-    mCameraTargetMtx->mMatrix.set(mtx);
+    mCameraTargetMtx->setMtx(mtx);
 }

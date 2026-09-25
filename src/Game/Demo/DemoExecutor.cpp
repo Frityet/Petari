@@ -12,7 +12,6 @@
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
@@ -102,7 +101,9 @@ void DemoExecutor::start(NameObj* pParam1, const char* pParam2, s32 param3) {
 }
 
 void DemoExecutor::startPart(NameObj* pParam1, const char* pParam2, const char* pParam3, s32 param4) {
-    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(), std::bind2nd(std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam3));
+    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(),
+                  std::binder2nd< std::mem_fun1_t< void, DemoTalkAnimCtrl, const char* >, const char* >(
+                      std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam3));
     start(pParam1, pParam2, param4);
     mTimeKeeper->setStartPart(pParam3);
 }
@@ -116,7 +117,9 @@ void DemoExecutor::startProperDemoSystem() {
 }
 
 void DemoExecutor::startDemoSystemPart(const char* pParam1, s32 param2) {
-    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(), std::bind2nd(std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam1));
+    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(),
+                  std::binder2nd< std::mem_fun1_t< void, DemoTalkAnimCtrl, const char* >, const char* >(
+                      std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam1));
 
     switch (param2) {
     case 1:
@@ -139,7 +142,9 @@ bool DemoExecutor::tryStartProperDemoSystem() {
 }
 
 bool DemoExecutor::tryStartDemoSystemPart(const char* pParam1, s32 param2) {
-    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(), std::bind2nd(std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam1));
+    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(),
+                  std::binder2nd< std::mem_fun1_t< void, DemoTalkAnimCtrl, const char* >, const char* >(
+                      std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam1));
 
     bool result = false;
 

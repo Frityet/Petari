@@ -1,7 +1,7 @@
 #include "Game/LiveActor/ShadowVolumeSphere.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/CameraUtil.hpp"
-#include "revolution/gx.h"
+#include <revolution/gx.h>
 
 namespace {
     const f32 sModelScale = 100.0f;
@@ -30,7 +30,7 @@ bool ShadowVolumeSphere::isDraw() const {
 
 void ShadowVolumeSphere::loadModelDrawMtx() const {
     ShadowController* controller = getController();
-    f32 radius = mRadius / sModelScale;
+    f32 radius = mRadius / ::sModelScale;
     if (controller->isFollowHostScale()) {
         radius *= controller->getHost()->mScale.x;
     }

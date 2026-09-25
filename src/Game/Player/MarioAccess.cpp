@@ -395,7 +395,7 @@ namespace MarioAccess {
             getPlayerActor()->getMario()->stopAnimationUpperForce();
         }
 
-        MR::startBck(getPlayerActor(), pAnimName, nullptr);
+        MR::startBck(getPlayerActor(), pAnimName);
 
         // unused
         getPlayerActor();
@@ -438,7 +438,7 @@ namespace MarioAccess {
             getPlayerActor()->getMario()->stopAnimationUpperForce();
         }
 
-        MR::startBck(getPlayerActor(), pAnimName, nullptr);
+        MR::startBck(getPlayerActor(), pAnimName);
 
         MR::reflectBckCtrlData(getPlayerActor(), rBckCtrlData);
 

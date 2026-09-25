@@ -17,7 +17,7 @@ WipeKoopa::WipeKoopa() : WipeLayoutBase("クッパ"), mFrame(::sAnimFrame) {
 }
 
 void WipeKoopa::init(const JMapInfoIter& rIter) {
-    initNerve(GET_NERVE_GLOBAL(WipeKoopaNrvWait));
+    initNerve(GET_NERVE_ANON(WipeKoopaNrvWait));
     initLayoutManager("WipeKoopa", 1);
 }
 
@@ -29,16 +29,14 @@ void WipeKoopa::exeWipeOut() {
         MR::startAnim(this, "out", 0);
 
         if (mFrame > 0) {
-            f32 animRate = static_cast< f32 >(MR::getAnimCtrl(this, 0)->getEnd()) / mFrame;
-
-            MR::setAnimRate(this, animRate, 0);
+            MR::setAnimRate(this, static_cast< f32 >(MR::getAnimCtrl(this, 0)->getEnd()) / mFrame, 0);
         }
 
         MR::showLayout(this);
     }
 
     if (MR::isAnimStopped(this, 0)) {
-        setNerve(GET_NERVE_GLOBAL(WipeKoopaNrvClose));
+        setNerve(GET_NERVE_ANON(WipeKoopaNrvClose));
     }
 }
 
@@ -46,7 +44,7 @@ void WipeKoopa::exeClose() {
 }
 
 void WipeKoopa::wipe(s32 frame) {
-    setNerve(GET_NERVE_GLOBAL(WipeKoopaNrvWipeOut));
+    setNerve(GET_NERVE_ANON(WipeKoopaNrvWipeOut));
     MR::hideLayout(this);
 
     if (frame > 0) {
@@ -57,23 +55,25 @@ void WipeKoopa::wipe(s32 frame) {
 }
 
 void WipeKoopa::forceClose() {
-    setNerve(GET_NERVE_GLOBAL(WipeKoopaNrvClose));
+    setNerve(GET_NERVE_ANON(WipeKoopaNrvClose));
+
     MR::showLayout(this);
+    
     MR::startAnim(this, "out", 0);
     MR::setAnimFrameAndStop(this, MR::getAnimCtrl(this, 0)->getEnd(), 0);
 }
 
 void WipeKoopa::forceOpen() {
-    setNerve(GET_NERVE_GLOBAL(WipeKoopaNrvWait));
+    setNerve(GET_NERVE_ANON(WipeKoopaNrvWait));
     MR::hideLayout(this);
 }
 
 bool WipeKoopa::isOpen() const {
-    return isNerve(GET_NERVE_GLOBAL(WipeKoopaNrvWait));
+    return isNerve(GET_NERVE_ANON(WipeKoopaNrvWait));
 }
 
 bool WipeKoopa::isClose() const {
-    return isNerve(GET_NERVE_GLOBAL(WipeKoopaNrvClose));
+    return isNerve(GET_NERVE_ANON(WipeKoopaNrvClose));
 }
 
 bool WipeKoopa::isWipeIn() const {
@@ -81,5 +81,5 @@ bool WipeKoopa::isWipeIn() const {
 }
 
 bool WipeKoopa::isWipeOut() const {
-    return isNerve(GET_NERVE_GLOBAL(WipeKoopaNrvWipeOut));
+    return isNerve(GET_NERVE_ANON(WipeKoopaNrvWipeOut));
 }

@@ -9,7 +9,7 @@
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
-#include "JSystem/JMath/JMATrigonometric.hpp"
+#include <JSystem/JMath/JMATrigonometric.hpp>
 
 void CameraLocalUtil_FORCE_SDATA2() {
     (void)1.0f;
@@ -464,7 +464,7 @@ namespace CameraLocalUtil {
     }
 };  // namespace CameraLocalUtil
 
-void DUMMY() {
+void CameraLocalUtil_DUMMY() {
     TPos3f m;
     TVec3f a, b, c, d;
     m.setXDir(a);

@@ -3,10 +3,9 @@
 #include <cstdio>
 #include <cstring>
 
-DotCamReader::~DotCamReader() {
-}
+template bool JMapInfoIter::getValue< s32 >(const char*, s32*) const;
 
-DotCamReaderInBin::DotCamReaderInBin(const void* pData) : mVersion(0), _8(nullptr), mMapInfo() {
+DotCamReaderInBin::DotCamReaderInBin(const void* pData) : mVersion(), _8(), mMapInfo() {
     init(pData);
 }
 
@@ -14,10 +13,6 @@ DotCamReaderInBin::~DotCamReaderInBin() {
     if (_8 != nullptr) {
         delete[] _8;
     }
-}
-
-u32 DotCamReaderInBin::getVersion() const {
-    return mVersion;
 }
 
 bool DotCamReaderInBin::hasMoreChunk() const {
@@ -36,6 +31,24 @@ bool DotCamReaderInBin::getValueInt(const char* pName, s32* pOut) {
 
 bool DotCamReaderInBin::getValueFloat(const char* pName, f32* pOut) {
     return mMapIter.getValue< f32 >(pName, pOut);
+}
+
+bool DotCamReaderInBin::getValueString(const char* pName, const char** pOut) {
+    return mMapIter.getValue(pName, pOut);
+}
+
+DotCamReader::~DotCamReader() {
+}
+
+u32 DotCamReaderInBin::getVersion() const {
+    return mVersion;
+}
+
+void DotCamReaderInBin::init(const void* pData) {
+    mMapInfo.attach(pData);
+    mMapInfo.begin().getValue("version", &mVersion);
+
+    mMapIter = mMapInfo.begin();
 }
 
 bool DotCamReaderInBin::getValueVec(const char* pName, TVec3f* pOut) {
@@ -62,16 +75,4 @@ bool DotCamReaderInBin::getValueVec(const char* pName, TVec3f* pOut) {
     }
 
     return success;
-}
-
-bool DotCamReaderInBin::getValueString(const char* pName, const char** pOut) {
-    return mMapIter.getValue(pName, pOut);
-}
-
-// Stack issues
-void DotCamReaderInBin::init(const void* pData) {
-    mMapInfo.attach(pData);
-    mMapInfo.getValue(0, "version", &mVersion);
-
-    mMapIter = JMapInfoIter(&mMapInfo, 0);
 }

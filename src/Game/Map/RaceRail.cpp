@@ -4,6 +4,7 @@
 #include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MapUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/NPCUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
@@ -61,7 +62,7 @@ bool PlayerRacer::updateRacer(const RaceManager* pRaceManager) {
     if ((railPos - *MR::getPlayerCenterPos()).length() > ::sRaceJudgeLength) {
         return false;
     }
-    if ((f32)__fabs(mRailCoord - railCoord) < ::sRaceJudgeLength) {
+    if (MR::fabs(mRailCoord - railCoord) < ::sRaceJudgeLength) {
         mRailCoord = railCoord;
     }
 
@@ -74,7 +75,7 @@ bool PlayerRacer::updateRacer(const RaceManager* pRaceManager) {
         mRailCoord = railCoord;
     }
 
-    if ((f32)__fabs(mRailCoord - railLength) < 100.0f) {
+    if (MR::fabs(mRailCoord - railLength) < 100.0f) {
         if (pRaceManager->isGoal(this)) {
             MR::tryRumblePadVeryStrong(this, WPAD_CHAN0);
             return true;
@@ -109,7 +110,7 @@ void RaceRail::init(const JMapInfoIter& rIter) {
 
 void PlayerRacer::initRacer() {
     AbstractRacer::initRacer();
-    MR::startBckPlayer("Watch", (char*)nullptr);
+    MR::startBckPlayer("Watch");
 }
 
 void PlayerRacer::prepRacer(const RaceManager* pRaceManager) {
@@ -129,20 +130,20 @@ void PlayerRacer::prepRacer(const RaceManager* pRaceManager) {
         MR::getFirstPolyOnLineToWaterSurface(&pos, nullptr, s, grav * 1000.0f);
         pos -= grav * 15.0f;
         MR::makeMtxFrontUpPos(&mtx, MR::getRailDirection(this), -grav, pos);
-        MR::startBckPlayer("SwimDrift", 1);
+        MR::startBckPlayer("SwimDrift", 1L);
         break;
     }
     case RaceID_TeresaPhantom: {
         pos = mPosition;
         MR::convertPosOnGround(&pos, grav * 1000.0f);
         MR::makeMtxFrontUpPos(&mtx, MR::getRailDirection(this), -grav, pos);
-        MR::startBckPlayer("BattleWait", 1);
+        MR::startBckPlayer("BattleWait", 1L);
         break;
     }
     case RaceID_TeresaDeathPromenade: {
         pos = mPosition;
         MR::makeMtxFrontUpPos(&mtx, MR::getRailDirection(this), -grav, pos);
-        MR::startBckPlayer("Wait", 1);
+        MR::startBckPlayer("Wait", 1L);
         MR::onFollowDemoEffect();
         break;
     }

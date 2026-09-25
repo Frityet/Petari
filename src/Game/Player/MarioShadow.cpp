@@ -29,10 +29,11 @@ void CollisionShadow::setMode(u32 mode) {
     if (_C == mode) {
         return;
     }
+
     switch (mode) {
     case 0:
-        _30C = cCheckOffset0;
-        _310 = cDrawOffset0;
+        _30C = ::cCheckOffset0;
+        _310 = ::cDrawOffset0;
         break;
     case 1:
         _30C = 50.0f;
@@ -43,6 +44,7 @@ void CollisionShadow::setMode(u32 mode) {
         _310 = 0.0f;
         break;
     }
+
     _C = mode;
 }
 
@@ -100,20 +102,23 @@ CollisionShadow::CollisionShadow(f32 radius, f32 length) : NameObj("投影シャ
     for (u32 i = 0; i < 128; i++) {
         _70[i] = 0;
     }
+
     for (u32 i = 0; i < 128; i++) {
         _F0[i] = 0;
     }
+
     createDL();
 }
 
-void CollisionShadow::create(const TVec3f& position, const TVec3f& direction, const TVec3f& up) {
+void CollisionShadow::create(const TVec3f& rPosition, const TVec3f& rDirection, const TVec3f& rUp) {
     TVec3f corners[8];
     TVec3f blended;
-    TVec3f vertical(up);
-    bool success = MR::vecBlendSphere(_24, direction, &blended, 0.1f);
+    TVec3f vertical(rUp);
+    bool success = MR::vecBlendSphere(_24, rDirection, &blended, 0.1f);
     if (MR::isNearZero(_24) || !success || _305) {
-        blended = direction;
+        blended = rDirection;
     }
+
     _305 = false;
     if (!MR::isNearZero(blended)) {
         _24 = blended;
@@ -123,35 +128,41 @@ void CollisionShadow::create(const TVec3f& position, const TVec3f& direction, co
             _30 = vertical;
         }
     }
-    _2F0 = position;
+
+    _2F0 = rPosition;
     if (_C == 3) {
         return;
     }
+
     _E++;
     TVec3f side;
     side.cross(vertical, blended);
     if (MR::isNearZero(side)) {
         return;
     }
+
     MR::normalize(&side);
     for (u32 i = 0; i < 8; i++) {
-        corners[i] = position;
+        corners[i] = rPosition;
         if (i & 1) {
             corners[i] += vertical * _10;
         } else {
             corners[i] -= vertical * _10;
         }
+
         if (i & 2) {
             corners[i] += side * _10;
         } else {
             corners[i] -= side * _10;
         }
+
         if (i & 4) {
             corners[i] -= blended * _30C;
         } else {
             corners[i] += blended * _20;
         }
     }
+
     TVec3f minimum;
     TVec3f maximum;
     MR::createBoundingBox(corners, 8, &minimum, &maximum);
@@ -160,16 +171,19 @@ void CollisionShadow::create(const TVec3f& position, const TVec3f& direction, co
     if (MR::isInitializeStatePlacementSomething()) {
         return;
     }
+
     u32 count = MR::createAreaPolygonListArray(_32C, _58, corners, 8);
     for (u32 i = 0; i < _338; i++) {
         _32C[count] = _330[i];
         count++;
     }
+
     _338 = 0;
     for (u32 i = 0; i < _33A; i++) {
         _32C[count] = _334[i];
         count++;
     }
+
     _33A = 0;
     _33C = count;
     _54 = 0;
@@ -177,28 +191,32 @@ void CollisionShadow::create(const TVec3f& position, const TVec3f& direction, co
         _10 = _14;
         return;
     }
-    _6E = 0;
+
     u32 polygonCount = 0;
+    _6E = 0;
     for (u32 i = 0; i < count; i++) {
         TVec3f normal(*_32C[i].getNormal(0));
         f32 facing = normal.dot(_24);
         if (facing > 0.0f) {
             continue;
         }
+
         if (normal.dot(MR::getCamZdir()) > 0.707f) {
             continue;
         }
+
         if (MR::isNearZero(facing, 0.15f)) {
             _70[_6E] = i;
             _6E++;
         } else {
             const char* code = MR::getFloorCodeString(&_32C[i]);
-            if (!code || (strcmp(code, "PullBack") != 0 && strcmp(code, "Glass") != 0)) {
+            if (code == nullptr || (strcmp(code, "PullBack") != 0 && strcmp(code, "Glass") != 0)) {
                 _5C[polygonCount] = i;
                 polygonCount++;
             }
         }
     }
+
     _54 = polygonCount;
     f32 tolerance = 2.0f + _310;
     _6C = 0;
@@ -208,26 +226,30 @@ void CollisionShadow::create(const TVec3f& position, const TVec3f& direction, co
             const TVec3f& point = *_32C[_5C[i]].getPos(j);
             u32 k;
             for (k = 0; k < _6C; k++) {
-                if (__fabsf(_60[k].x - point.x) < tolerance && __fabsf(_60[k].y - point.y) < tolerance && __fabsf(_60[k].z - point.z) < tolerance) {
+                if (MR::abs(_60[k].x - point.x) < tolerance && MR::abs(_60[k].y - point.y) < tolerance && MR::abs(_60[k].z - point.z) < tolerance) {
                     break;
                 }
             }
+
             if (k == _6C) {
                 const TVec3f& normal = *_32C[_5C[i]].getNormal(0);
                 _60[_6C] = point + normal * _310;
                 _6C++;
             }
+
             _68[index] = k;
             index++;
         }
     }
+
     for (u32 i = 0; i < _6C; i++) {
-        TVec3f relative(_60[i] - position);
+        TVec3f relative(_60[i] - rPosition);
         f32 s = relative.dot(side);
         f32 t = relative.dot(_30);
         _64[i].x = 0.5f + s * 0.0033333334f;
         _64[i].y = 0.5f + t * 0.0033333334f;
     }
+
     if (_33C > 40) {
         _10 -= 10.0f;
     } else if (_33C > 10) {
@@ -237,13 +259,15 @@ void CollisionShadow::create(const TVec3f& position, const TVec3f& direction, co
     } else {
         _10 += 1.0f;
     }
-    _10 = MR::clamp(_10, 1.0f, _14);
+
+    MR::clampBoth(&_10, 1.0f, _14);
 }
 
 void CollisionShadow::draw1() const {
     if (_308 & 8) {
         return;
     }
+
     TDDraw::setup(1, 1, 0);
     GXSetZMode(GX_TRUE, GX_GEQUAL, GX_FALSE);
     _300->load(GX_TEXMAP0);
@@ -259,20 +283,23 @@ void CollisionShadow::sendVtx() const {
     if (!_54) {
         return;
     }
+
     u16 vertexCount = _54 * _5A;
     if (_5A == 4) {
         GXBegin(GX_QUADS, GX_VTXFMT0, vertexCount);
     } else {
         GXBegin(GX_TRIANGLES, GX_VTXFMT0, vertexCount);
     }
+
+    const TVec2f* pTex;
     u32 index = 0;
     for (u32 i = 0; i < _54; i++) {
         for (u32 j = 0; j < _5A; j++) {
             const TVec3f& point = getDrawPos(index);
-            const TVec2f& tex = _64[_68[index]];
+            pTex = &_64[_68[index]];
             index++;
             GXPosition3f32(point.x, point.y, point.z);
-            GXTexCoord2f32(tex.x, tex.y);
+            GXTexCoord2f32(pTex->x, pTex->y);
         }
     }
 }
@@ -284,6 +311,7 @@ void CollisionShadow::sendZsortedVtx(bool offset) const {
     } else {
         GXBegin(GX_TRIANGLES, GX_VTXFMT0, vertexCount);
     }
+
     TVec3f shift(-_24 * 5.0f);
     for (u32 i = 0; i < _54; i++) {
         for (u32 j = 0; j < _5A; j++) {
@@ -294,6 +322,7 @@ void CollisionShadow::sendZsortedVtx(bool offset) const {
             } else {
                 GXPosition3f32(point.x, point.y, point.z);
             }
+
             GXTexCoord2f32(tex.x, tex.y);
         }
     }
@@ -308,6 +337,7 @@ void CollisionShadow::initCaptureTex() {
         MR::zeroMemory(_300->mImage, _2FC * _2FE);
         MR::setMarioShadowTex(_300);
     }
+
     _300->mWrapS = GX_CLAMP;
     _300->mWrapT = GX_CLAMP;
     _300->mMinType = GX_LINEAR;
@@ -315,45 +345,17 @@ void CollisionShadow::initCaptureTex() {
     _300->init();
 }
 
-void CollisionShadow::setViewMtx(const TVec3f& direction) {
-    TVec3f normal(direction);
+void CollisionShadow::setViewMtx(const TVec3f& rDirection) {
+    TVec3f normal = rDirection;
     MR::normalize(&normal);
-    TVec3f eye(_2F0 - normal * 10000.0f);
+    TVec3f eye = _2F0 - normal * 10000.0f;
+
     TPos3f matrix;
     matrix.identity();
-    TVec3f side;
-    TVec3f up;
-    TVec3f forward;
-    TVec3f delta;
-    delta.sub(_2F0, eye);
-    forward.set(delta.x, delta.y, delta.z);
-    forward.length();
-    PSVECNormalize(&forward, &forward);
-    forward.negate();
-    side.cross(_30, forward);
-    up.cross(forward, side);
-    side.length();
-    PSVECNormalize(&side, &side);
-    up.length();
-    PSVECNormalize(&up, &up);
-    matrix.mMtx[0][0] = side.x;
-    matrix.mMtx[0][1] = side.y;
-    matrix.mMtx[0][2] = side.z;
-
-    matrix.mMtx[1][0] = up.x;
-    matrix.mMtx[1][1] = up.y;
-    matrix.mMtx[1][2] = up.z;
-
-    matrix.mMtx[2][0] = forward.x;
-    matrix.mMtx[2][1] = forward.y;
-    matrix.mMtx[2][2] = forward.z;
-
-    matrix.mMtx[0][3] = eye.x * -side.x - eye.y * side.y - eye.z * side.z;
-    matrix.mMtx[1][3] = eye.x * -up.x - eye.y * up.y - eye.z * up.z;
-    matrix.mMtx[2][3] = eye.x * -forward.x - eye.y * forward.y - eye.z * forward.z;
-    PSMTXCopy(matrix.toMtxPtr(), j3dSys.mViewMtx);
-    TDDraw::setViewMtx(matrix.toMtxPtr());
-    MR::setMarioShadowVec(direction);
+    matrix.setPositionFromLookAt(eye, _30, _2F0);
+    PSMTXCopy(matrix, j3dSys.mViewMtx);
+    TDDraw::setViewMtx(matrix);
+    MR::setMarioShadowVec(rDirection);
 }
 
 void CollisionShadow::setUpdateFlag() {
@@ -362,39 +364,44 @@ void CollisionShadow::setUpdateFlag() {
     }
 }
 
-void CollisionShadow::calcView(J3DModelX* model, u32 view, J3DModelX* reference) {
+void CollisionShadow::calcView(J3DModelX* pModel, u32 view, J3DModelX* pReference) {
     if (!_304) {
         return;
     }
+
+    const TVec3f& rDirection = _24;
     _304 = 0;
     _306 = 1;
     if (_C == 3) {
         Mtx matrix;
-        PSMTXCopy(reference->getBaseTRMtx(), matrix);
-        if (reference) {
-            model->viewCalcRefPos(view, reference, _48, _24);
+        PSMTXCopy(pReference->getBaseTRMtx(), matrix);
+        if (pReference != nullptr) {
+            pModel->viewCalcRefPos(view, pReference, _48, _24);
         }
     } else {
-        setViewMtx(_24);
-        if (reference) {
-            model->viewCalcRef(view, reference);
+        setViewMtx(rDirection);
+        if (pReference != nullptr) {
+            pModel->viewCalcRef(view, pReference);
         } else {
-            model->viewCalc3(view, nullptr);
+            pModel->viewCalc3(view, nullptr);
         }
     }
+
     if (_C == 2) {
         doSortPolygons();
     }
 }
 
-void CollisionShadow::drawAndCaptureTex(J3DModelX* model, const TVec3f& position) {
+void CollisionShadow::drawAndCaptureTex(J3DModelX* pModel, const TVec3f& rPosition) {
     if (!_306) {
         return;
     }
+
     if (_C == 3) {
-        _340 = model;
+        _340 = pModel;
         return;
     }
+
     if (!(_308 & 2)) {
         setViewMtx(_24);
         TDDraw::setup(0, 0, 1);
@@ -403,28 +410,34 @@ void CollisionShadow::drawAndCaptureTex(J3DModelX* model, const TVec3f& position
         GXSetProjection(projection, GX_ORTHOGRAPHIC);
         if (_307) {
             GXSetViewport(608 - (_2FC + 32), -32.0f, 64.0f + _2FC, 64.0f + _2FE, 0.0f, 1.0f);
-            GXSetScissor(608 - _2FC + 1, 1, _2FC - 2, _2FE - 2);
-            model->setDrawView(2);
-            model->mFlags.clear();
-            model->mFlags._11 = true;
-            model->mFlags._1E = true;
-            model->directDraw(nullptr);
+            s32 left = 608 - _2FC;
+            GXSetScissor(left + 1, 1, _2FC - 2, _2FE - 2);
+            pModel->setDrawView(2);
+            pModel->mFlags.clear();
+            pModel->mFlags._11 = true;
+            pModel->mFlags._1E = true;
+            pModel->directDraw(nullptr);
         }
+
         GXSetViewport(608 - _2FC, 0.0f, _2FC, _2FE, 0.0f, 1.0f);
-        GXSetScissor(608 - _2FC + 1, 1, _2FC - 2, _2FE - 2);
-        model->setDrawView(2);
-        model->mFlags.clear();
-        model->mFlags._1E = true;
-        model->directDraw(nullptr);
-        model->mFlags._1E = false;
+        s32 left = 608 - _2FC;
+        GXSetScissor(left + 1, 1, _2FC - 2, _2FE - 2);
+        pModel->setDrawView(2);
+        pModel->mFlags.clear();
+        pModel->mFlags._1E = true;
+        pModel->directDraw(nullptr);
+        pModel->mFlags._1E = false;
     }
+
     if (!(_308 & 4)) {
         TDDraw::setup(0, 1, 2);
         GXSetColorUpdate(GX_FALSE);
         GXSetAlphaUpdate(GX_TRUE);
         GXSetBlendMode(GX_BM_BLEND, GX_BL_DSTALPHA, GX_BL_ZERO, GX_LO_NOOP);
         GXSetDstAlpha(GX_FALSE, 0);
-        TVec3f center(608 - _2FC / 2, _2FE / 2, 0);
+        f32 y = _2FE / 2;
+        f32 x = 608 - _2FC / 2;
+        TVec3f center(x, y, 0.0f);
         TDDraw::fix2Dpos(&center);
         TDDraw::drawFillCircle(center, _2FC / 2, 0xFFFFFFC0, 0, 16);
         const ResTIMG* image = _300->getTexInfo();
@@ -435,6 +448,7 @@ void CollisionShadow::drawAndCaptureTex(J3DModelX* model, const TVec3f& position
         GXSetCopyFilter(GX_FALSE, mode->sample_pattern, GX_TRUE, mode->vfilter);
         GXInvalidateTexAll();
     }
+
     GXSetAlphaUpdate(GX_FALSE);
     GXSetColorUpdate(GX_TRUE);
     J3DShape::resetVcdVatCache();
@@ -451,7 +465,7 @@ void CollisionShadow::clearAlphaBuffer() {
     MR::clearAlphaBuffer(0, position, size);
 }
 
-void CollisionShadow::drawVolumeBox(const TVec3f& position, const TVec3f& depth) const {
+void CollisionShadow::drawVolumeBox(const TVec3f& rPosition, const TVec3f& rDepth) const {
     TVec3f up(_3C);
     TVec3f side;
     side.cross(_24, up);
@@ -472,10 +486,10 @@ void CollisionShadow::drawVolumeBox(const TVec3f& position, const TVec3f& depth)
     GXSetTevColorS10(GX_TEVREG0, color);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_ONE, GX_BL_ONE, GX_LO_NOOP);
     GXSetCullMode(GX_CULL_BACK);
-    TDDraw::drawFillBox3D(position, depth * 2.0f, side * _1C, up * _18, 0xFFFFFF01);
+    TDDraw::drawFillBox3D(rPosition, rDepth * 2.0f, side * _1C, up * _18, 0xFFFFFF01);
     GXSetBlendMode(GX_BM_SUBTRACT, GX_BL_ONE, GX_BL_ONE, GX_LO_NOOP);
     GXSetCullMode(GX_CULL_FRONT);
-    TDDraw::drawFillBox3D(position, depth * 2.0f, side * _1C, up * _18, 0xFFFFFF01);
+    TDDraw::drawFillBox3D(rPosition, rDepth * 2.0f, side * _1C, up * _18, 0xFFFFFF01);
 }
 
 void CollisionShadow::draw() const {
@@ -495,6 +509,7 @@ void CollisionShadow::draw() const {
         drawVolume();
         break;
     }
+
     GXSetColorUpdate(GX_TRUE);
     GXSetAlphaUpdate(GX_FALSE);
 }
@@ -503,6 +518,7 @@ void CollisionShadow::draw2() const {
     if (_308 & 8) {
         return;
     }
+
     TVec3f position(_2F0 - _24 * _30C);
     drawVolumeBox(position, _24 * _20);
     TDDraw::setup(1, 1, 0);
@@ -522,6 +538,7 @@ void CollisionShadow::draw3() const {
     if (_308 & 8) {
         return;
     }
+
     TVec3f position(_2F0 - _24 * _30C);
     drawVolumeBox(position, _24 * _20);
     TDDraw::setup(1, 1, 0);
@@ -545,6 +562,7 @@ void CollisionShadow::draw3() const {
             }
         }
     }
+
     GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_CA_TEXA);
     GXSetZMode(GX_FALSE, GX_ALWAYS, GX_FALSE);
     GXSetAlphaUpdate(GX_TRUE);
@@ -560,12 +578,14 @@ void CollisionShadow::draw3() const {
         } else {
             GXBegin(GX_TRIANGLES, GX_VTXFMT0, _5A);
         }
+
         for (u32 j = 0; j < _5A; j++) {
             const TVec3f& point = getDrawPos(i, j);
             const TVec2f& tex = getDrawTx(i, j);
             GXPosition3f32(point.x, point.y, point.z);
             GXTexCoord2f32(tex.x, tex.y);
         }
+
         GXSetColorUpdate(GX_TRUE);
         GXSetDstAlpha(GX_TRUE, 0);
         if (_5A == 4) {
@@ -573,6 +593,7 @@ void CollisionShadow::draw3() const {
         } else {
             GXBegin(GX_TRIANGLES, GX_VTXFMT0, _5A);
         }
+
         for (u32 j = 0; j < _5A; j++) {
             const TVec3f& point = getDrawPos(i, j);
             const TVec2f& tex = getDrawTx(i, j);
@@ -580,6 +601,7 @@ void CollisionShadow::draw3() const {
             GXTexCoord2f32(tex.x, tex.y);
         }
     }
+
     GXSetMisc(GX_MT_XF_FLUSH, 0);
     GXSetDstAlpha(GX_FALSE, 0);
 }
@@ -612,6 +634,7 @@ void CollisionShadow::drawVolume() const {
     if (_308 & 8) {
         return;
     }
+
     _340->setDrawView(2);
     TVec3f position(_2F0 - _24 * _30C);
     drawVolumeBox(position, _24 * _20);
@@ -633,6 +656,7 @@ void CollisionShadow::doSortPolygons() {
         relative.sub(_2F0);
         distances[i] = relative.dot(_24);
     }
+
     MR::sortSmall(_54, distances, _F0);
 }
 

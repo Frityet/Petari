@@ -14,8 +14,7 @@ namespace {
     void setTextureTrans(f32 x, f32 y) {
         TPos3f transMtx;
         transMtx.makeTrans(x, y, 0.0f);
-
-        GXLoadTexMtxImm(transMtx, GX_TEXMTX0, GX_MTX2x4);
+        GXLoadTexMtxImm(transMtx.toMtxPtr(), GX_TEXMTX0, GX_MTX2x4);
     }
 };  // namespace
 
@@ -27,9 +26,9 @@ void MR::connectToSceneImageEffectMovement(NameObj* pObj) {
     MR::connectToScene(pObj, MR::MovementType_ImageEffect, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_None);
 }
 
-void ImageEffectLocalUtil::capture(JUTTexture* pTexture, s32 divide, s32 index, GXTexFmt format, bool mipmap, u8 clear) {
-    pTexture->capture((index % divide) * MR::getFrameBufferWidth() / divide, (index / divide) * MR::getFrameBufferHeight() / divide,
-                      format, mipmap, clear);
+void ImageEffectLocalUtil::capture(JUTTexture* pTexture, s32 divisions, s32 tile, GXTexFmt format, bool clear, u8 filter) {
+    pTexture->capture((tile % divisions) * MR::getFrameBufferWidth() / divisions, (tile / divisions) * MR::getFrameBufferHeight() / divisions, format,
+                      clear, filter);
 }
 
 void ImageEffectLocalUtil::setupDrawTexture() {
@@ -47,19 +46,19 @@ void ImageEffectLocalUtil::setupDrawTexture() {
 
     TMtx34f posMtx;
     posMtx.identity();
-    GXLoadPosMtxImm((MtxPtr)&posMtx, GX_PNMTX0);
+    GXLoadPosMtxImm(posMtx.toMtxPtr(), GX_PNMTX0);
     GXSetCurrentMtx(GX_PNMTX0);
 
     GXSetCullMode(GX_CULL_NONE);
     GXSetClipMode(GX_CLIP_ENABLE);
     GXSetNumChans(1);
-    GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT0, GX_DF_NONE, GX_AF_NONE);
+    GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
     GXSetNumTexGens(1);
     GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
-    GXLoadTexMtxImm(posMtx, GX_TEXMTX0, GX_MTX3x4);
+    GXLoadTexMtxImm(posMtx.toMtxPtr(), GX_TEXMTX0, GX_MTX2x4);
     GXSetNumTevStages(1);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
-    GXSetTevOp(GX_TEVSTAGE0, GX_DECAL);
+    GXSetTevOp(GX_TEVSTAGE0, GX_MODULATE);
     GXSetZTexture(GX_ZT_DISABLE, GX_TF_Z24X8, 0);
     GXSetNumIndStages(0);
     GXSetTevDirect(GX_TEVSTAGE0);
@@ -79,14 +78,14 @@ void ImageEffectLocalUtil::setupDrawTexture() {
     GXSetDither(GX_FALSE);
 }
 
-void ImageEffectLocalUtil::drawTexture(JUTTexture* pTexture, s32 param2, s32 param3, u8 param4, ETexDrawType texDrawType) {
+void ImageEffectLocalUtil::drawTexture(JUTTexture* pTexture, s32 divisions, s32 tile, u8 intensity, ETexDrawType texDrawType) {
     pTexture->load(GX_TEXMAP0);
 
     if (texDrawType == TexDrawType_2) {
-        GXSetChanMatColor(GX_COLOR0A0, Color8(255, 255, 255, param4));
+        GXSetChanMatColor(GX_COLOR0A0, Color8(255, 255, 255, intensity));
         GXSetChanAmbColor(GX_COLOR0A0, Color8(0, 0, 0, 255));
     } else {
-        GXSetChanMatColor(GX_COLOR0A0, Color8(param4, param4, param4, 255));
+        GXSetChanMatColor(GX_COLOR0A0, Color8(intensity, intensity, intensity, 255));
         GXSetChanAmbColor(GX_COLOR0A0, Color8(0, 0, 0, 255));
     }
 
@@ -105,13 +104,14 @@ void ImageEffectLocalUtil::drawTexture(JUTTexture* pTexture, s32 param2, s32 par
         break;
     }
 
-    sendTextureVertex(param2, param3);
+    sendTextureVertex(divisions, tile);
 }
-void ImageEffectLocalUtil::sendTextureVertex(s32 divide, s32 index) {
-    s32 row = index / divide;
-    s32 column = index % divide;
-    f32 width = static_cast< f32 >(MR::getFrameBufferWidth()) / divide;
-    f32 height = static_cast< f32 >(MR::getFrameBufferHeight()) / divide;
+
+void ImageEffectLocalUtil::sendTextureVertex(s32 divisions, s32 tile) {
+    s32 row = tile / divisions;
+    s32 column = tile % divisions;
+    f32 width = static_cast< f32 >(MR::getFrameBufferWidth()) / divisions;
+    f32 height = static_cast< f32 >(MR::getFrameBufferHeight()) / divisions;
     f32 left = column * width;
     f32 right = (column + 1) * width;
     f32 bottom = (row + 1) * height;
@@ -120,26 +120,32 @@ void ImageEffectLocalUtil::sendTextureVertex(s32 divide, s32 index) {
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 4);
     GXPosition3f32(left, bottom, 0.0f);
     GXTexCoord2f32(0.0f, 1.0f);
+
     GXPosition3f32(left, top, 0.0f);
     GXTexCoord2f32(0.0f, 0.0f);
+
     GXPosition3f32(right, bottom, 0.0f);
     GXTexCoord2f32(1.0f, 1.0f);
+
     GXPosition3f32(right, top, 0.0f);
     GXTexCoord2f32(1.0f, 0.0f);
     GXEnd();
 }
 
-void ImageEffectLocalUtil::blurTexture(JUTTexture* pTexture, s32 divide, s32 index, u32 count, f32 radius, f32 intensity) {
+void ImageEffectLocalUtil::blurTexture(JUTTexture* pTexture, s32 divisions, s32 tile, u32 sampleCount, f32 radius, f32 intensity) {
     f32 aspect = MR::isScreen16Per9() ? 1.333f : 1.0f;
     f32 verticalRadius = radius * aspect;
-    u8 passIntensity = 255.0f * intensity / count;
+    s32 sampleIntensity = 255.0f * intensity / sampleCount;
 
-    for (u32 i = 0; i < count; i++) {
-        f32 angle = 2.0f * (i * PI) / count;
-        f32 cos = JMACosRadian(angle);
-        f32 sin = JMASinRadian(angle);
-        ::setTextureTrans(radius * cos, verticalRadius * sin);
-        drawTexture(pTexture, divide, index, passIntensity, i == 0 ? TexDrawType_0 : TexDrawType_1);
+    for (u32 i = 0; i < sampleCount; i++) {
+        f32 angle = 2.0f * (i * JGeometry::TUtil< f32 >::PI()) / sampleCount;
+        ::setTextureTrans(radius * JMACosRadian(angle), verticalRadius * JMASinRadian(angle));
+        ETexDrawType type = TexDrawType_0;
+        if (i != 0) {
+            type = TexDrawType_1;
+        }
+
+        drawTexture(pTexture, divisions, tile, sampleIntensity, type);
     }
 
     ::setTextureTrans(0.0f, 0.0f);
@@ -148,13 +154,13 @@ void ImageEffectLocalUtil::blurTexture(JUTTexture* pTexture, s32 divide, s32 ind
 void MR::connectToSceneNormalBloom(BloomEffect* pBloomEffect) {
     MR::connectToScene(pBloomEffect, MR::MovementType_None, MR::CalcAnimType_Environment, MR::DrawBufferType_None, MR::DrawType_None);
 
-    NameObjAdaptor* preDrawAdaptor = new NameObjAdaptor("BloomEffect::preDraw");
+    NameObjAdaptor* pPreDrawAdaptor = new NameObjAdaptor("BloomEffect::preDraw");
 
-    preDrawAdaptor->connectToDraw(MR::Functor(pBloomEffect, &BloomEffect::preDraw));
-    MR::connectToScene(preDrawAdaptor, MR::MovementType_None, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_BloomEffectPreDraw);
+    pPreDrawAdaptor->connectToDraw(MR::Functor(pBloomEffect, &BloomEffect::preDraw));
+    MR::connectToScene(pPreDrawAdaptor, MR::MovementType_None, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_BloomEffectPreDraw);
 
-    NameObjAdaptor* postDrawAdaptor = new NameObjAdaptor("BloomEffect::postDraw");
+    NameObjAdaptor* pPostDrawAdaptor = new NameObjAdaptor("BloomEffect::postDraw");
 
-    postDrawAdaptor->connectToDraw(MR::Functor(pBloomEffect, &BloomEffect::postDraw));
-    MR::connectToScene(postDrawAdaptor, MR::MovementType_None, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_BloomEffectPostDraw);
+    pPostDrawAdaptor->connectToDraw(MR::Functor(pBloomEffect, &BloomEffect::postDraw));
+    MR::connectToScene(pPostDrawAdaptor, MR::MovementType_None, MR::CalcAnimType_None, MR::DrawBufferType_None, MR::DrawType_BloomEffectPostDraw);
 }

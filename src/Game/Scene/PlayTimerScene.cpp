@@ -21,8 +21,7 @@ namespace NrvPlayTimerScene {
     NEW_NERVE(PlayTimerSceneFadeoutAfterTimeUp, PlayTimerScene, FadeoutAfterTimeUp);
 };  // namespace NrvPlayTimerScene
 
-PlayTimerScene::PlayTimerScene()
-    : Scene("PlayTimerScene"), mTimeLimitLayout(nullptr), mTimeUpLayout(nullptr), mTimeUpWaitFrame(::sTimeUpWaitFrame), _20(nullptr) {
+PlayTimerScene::PlayTimerScene() : Scene("PlayTimerScene"), mTimeLimitLayout(), mTimeUpLayout(), mTimeUpWaitFrame(::sTimeUpWaitFrame), _20() {
     initNerve(GET_NERVE(PlayTimerScene, PlayTimerSceneNormal));
 
     _20 = new ValueControl(30);
@@ -50,24 +49,32 @@ void PlayTimerScene::update() {
     _20->update();
 
     if (isActive()) {
-        // FIXME: Should be called via pointer-to-member-function.
-        if (mTimeLimitLayout != nullptr) {
-            mTimeLimitLayout->movement();
+        {
+            void (LayoutActor::*pMethod)() = &LayoutActor::movement;
+            if (mTimeLimitLayout != nullptr) {
+                (mTimeLimitLayout->*pMethod)();
+            }
         }
 
-        // FIXME: Should be called via pointer-to-member-function.
-        if (mTimeUpLayout != nullptr) {
-            mTimeUpLayout->movement();
+        {
+            void (LayoutActor::*pMethod)() = &LayoutActor::movement;
+            if (mTimeUpLayout != nullptr) {
+                (mTimeUpLayout->*pMethod)();
+            }
         }
 
-        // FIXME: Should be called via pointer-to-member-function.
-        if (mTimeLimitLayout != nullptr) {
-            mTimeLimitLayout->calcAnim();
+        {
+            void (LayoutActor::*pMethod)() = &LayoutActor::calcAnim;
+            if (mTimeLimitLayout != nullptr) {
+                (mTimeLimitLayout->*pMethod)();
+            }
         }
 
-        // FIXME: Should be called via pointer-to-member-function.
-        if (mTimeUpLayout != nullptr) {
-            mTimeUpLayout->calcAnim();
+        {
+            void (LayoutActor::*pMethod)() = &LayoutActor::calcAnim;
+            if (mTimeUpLayout != nullptr) {
+                (mTimeUpLayout->*pMethod)();
+            }
         }
     }
 }
@@ -87,18 +94,13 @@ void PlayTimerScene::draw() const {
 
     J2DOrthoGraphSimple graph;
     graph.setPort();
-    u8 color = MR::lerp(0, 255, _20->getValue());
-    JUtility::TColor v1;
-    v1.r = 0;
-    v1.g = 0;
-    v1.b = 0;
-    v1.a = color;
-    graph.setColor(v1, v1, v1, v1);
+    u8 alpha = MR::lerp(0, 255, _20->getValue());
+    JUtility::TColor color(0, 0, 0, alpha);
+    graph.setColor(color);
 
-    f32 height = JUTVideo::getManager()->getRenderMode()->efbHeight;
+    f32 height = static_cast< s32 >(JUTVideo::getManager()->getRenderMode()->efbHeight);
     f32 width = MR::getScreenWidth();
-    TBox2f box(0.0f, 0.0f, 0.0f + width, 0.0f + height);
-    graph.fillBox(box);
+    graph.fillBox(0.0f, 0.0f, width, height);
 }
 
 bool PlayTimerScene::isActive() const {

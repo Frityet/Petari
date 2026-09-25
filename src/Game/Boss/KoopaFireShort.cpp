@@ -13,6 +13,18 @@
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 
+void KoopaFireShort_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)3.0f;
+    (void)130.0f;
+    (void)50.0f;
+    (void)100.0f;
+    (void)200.0f;
+    (void)0.001f;
+    (void)15.0f;
+}
+
 namespace {
     // static const f32 sFlySpeedSlow = _;
     static const f32 sFlySpeedNormal = 15.0f;
@@ -20,8 +32,8 @@ namespace {
     // static const s32 sFallStep = _;
     // static const f32 sFallSpeed = _;
     static const s32 sFlyStepNormal = 180;
-    static const s32 sFlyStepLong = 300;
-    // static const s32 sCurveLifeTime = _;
+    static const s32 sFlyStepLong = 900;
+    static const s32 sCurveLifeTime = 300;
     static const f32 sCurveRotateSpeed = 0.1f;
     static const s32 sStepToValidSensor = 30;
 };  // namespace
@@ -45,9 +57,8 @@ void KoopaFireShort::init(const JMapInfoIter& rIter) {
     MR::connectToSceneEnemy(this);
     initHitSensor(1);
 
-    // smth wrong here
-    TVec3f zeroVec = TVec3f(0.0f, 0.0f, 0.0f);
-    MR::addHitSensor(this, "Attack", ATYPE_KOOPA_FIRE, 8, 130.0f, zeroVec);
+    TVec3f sensorOffset = TVec3f(0.0f, 0.0f, 0.0f);
+    MR::addHitSensor(this, "Attack", ATYPE_KOOPA_FIRE, 8, 130.0f, sensorOffset);
     initBinder(50.0f, 0.0f, 0);
 
     MR::offBind(this);
@@ -60,8 +71,9 @@ void KoopaFireShort::init(const JMapInfoIter& rIter) {
     initSound(4, false);
     initNerve(GET_NERVE(KoopaFireShort, KoopaFireShortNrvFly));
 
-    zeroVec.set(0.0f);
-    MR::initStarPointerTarget(this, 100.0f, zeroVec);
+    TVec3f pointerOffset;
+    pointerOffset.set(0.0f);
+    MR::initStarPointerTarget(this, 100.0f, pointerOffset);
     MR::initShadowVolumeSphere(this, 200.0f);
 
     MR::invalidateClipping(this);
@@ -124,7 +136,7 @@ void KoopaFireShort::emitFast() {
 void KoopaFireShort::emitCurve() {
     appear();
 
-    mDuration = ::sFlyStepLong;
+    mDuration = ::sCurveLifeTime;
     mSpeed = ::sFlySpeedFast;
 
     if (MR::isPlayerLeftSide(this)) {
@@ -144,7 +156,7 @@ void KoopaFireShort::emitLongTime() {
 
 void KoopaFireShort::exeFly() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Wait", nullptr);
+        MR::startBck(this, "Wait");
         MR::startSound(this, "SE_OJ_KOOPA_BULLET_SHOOT");
     }
 
@@ -180,7 +192,7 @@ void KoopaFireShort::exeFly() {
 
 void KoopaFireShort::exeDisappear() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Disappear", nullptr);
+        MR::startBck(this, "Disappear");
         MR::startSound(this, "SE_OJ_KOOPA_BULLET_EXPLODE");
     }
 
@@ -195,7 +207,7 @@ void KoopaFireShort::exeErase2P() {
     if (MR::isFirstStep(this)) {
         MR::invalidateHitSensors(this);
 
-        MR::startBck(this, "Disappear", nullptr);
+        MR::startBck(this, "Disappear");
         MR::start2PAttackAssistSound();
         MR::startSound(this, "SE_EM_FIRE_BUBBLE_REFLECT");
 

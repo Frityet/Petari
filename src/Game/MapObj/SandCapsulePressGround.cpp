@@ -53,7 +53,7 @@ void SandCapsulePressGround::init(const JMapInfoIter& rIter) {
         MR::tryRegisterDemoActionNerve(this, GET_NERVE(SandCapsulePressGround, SandCapsulePressGroundNrvDisappearDemo), nullptr);
     }
 
-    _C4.set< f32 >(mPosition);
+    _C4.set(mPosition);
     TVec3f up;
     MR::calcUpVec(&up, this);
     _D0.scaleAdd(3600.0f, up, _C4);
@@ -111,10 +111,10 @@ void SandCapsulePressGround::exeMove() {
         MR::startSound(this, "SE_OJ_DESERT_LAND_MOVE_ED");
 
         if (isNerve(GET_NERVE(SandCapsulePressGround, SandCapsulePressGroundNrvMoveUp))) {
-            mPosition.set< f32 >(_D0);
+            mPosition.set(_D0);
             setNerve(GET_NERVE(SandCapsulePressGround, SandCapsulePressGroundNrvMoveUpEnd));
         } else {
-            mPosition.set< f32 >(_C4);
+            mPosition.set(_C4);
             setNerve(GET_NERVE(SandCapsulePressGround, SandCapsulePressGroundNrvMoveDownEnd));
         }
     }
@@ -139,12 +139,13 @@ void SandCapsulePressGround::exeDisappearDemo() {
         MR::overlayWithPreviousScreen(5);
         MR::offSwitchA(this);
 
-        TVec3f v8 = _C4 + _D0;
+        TVec3f v8;
+        v8.add(_C4, _D0);
         v8.x /= 2.0f;
         v8.y /= 2.0f;
         v8.z /= 2.0f;
         MR::resetPosition(this, v8);
-        MR::startBck(this, "MoveAway", nullptr);
+        MR::startBck(this, "MoveAway");
         MR::stopShakingCamera(this);
         MR::shakeCameraNormal();
         MR::startSound(this, "SE_OJ_DESERT_LAND_MOVE_ST");
@@ -154,7 +155,7 @@ void SandCapsulePressGround::exeDisappearDemo() {
     MR::startLevelSound(this, "SE_OJ_LV_DESERT_LAND_MOVE");
 
     if (MR::isBckStopped(this)) {
-        MR::startSound(this, "SE_OJ_DESERT_LAND_MOVE_END");
+        MR::startSound(this, "SE_OJ_DESERT_LAND_MOVE_ED");
         kill();
     }
 }
@@ -173,7 +174,11 @@ void SandCapsulePressGround::calcMoveVelocity() {
     TVec3f up;
     MR::calcUpVec(&up, this);
 
-    mVelocity.scale(3.0f, isNerve(GET_NERVE(SandCapsulePressGround, SandCapsulePressGroundNrvMoveDown)) ? -up : up);
+    if (isNerve(GET_NERVE(SandCapsulePressGround, SandCapsulePressGroundNrvMoveDown))) {
+        up.negate();
+    }
+
+    mVelocity.scale(3.0f, up);
 }
 
 bool SandCapsulePressGround::tryStop() {

@@ -5,11 +5,12 @@
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/MapObj/MapObjActorInitInfo.hpp"
 #include "Game/Util.hpp"
-#include "JSystem/JMath/JMath.hpp"
+#include <JSystem/JMath/JMath.hpp>
 
-namespace {
-    static u32 sBloomSyncStep;
-};  // namespace
+void FlipPanel_FORCE_MATCH_SDATA2() {
+    (void)MR::epsilon();
+    (void)-25.0f;
+}
 
 namespace NrvFlipPanel {
     NEW_NERVE(FlipPanelNrvFrontLand, FlipPanel, FrontLand);
@@ -19,6 +20,10 @@ namespace NrvFlipPanel {
     NEW_NERVE(FlipPanelNrvEndPrepare, FlipPanel, EndPrepare);
     NEW_NERVE(FlipPanelNrvEnd, FlipPanel, End);
 };  // namespace NrvFlipPanel
+
+namespace {
+    static u32 sBloomSyncStep;
+};  // namespace
 
 namespace NrvFlipPanelObserver {
     NEW_NERVE(FlipPanelObserverNrvWait, FlipPanelObserver, Wait);
@@ -49,7 +54,7 @@ void FlipPanel::init(const JMapInfoIter& rIter) {
     mDelegator = MR::createJointDelegatorWithNullChildFunc(this, &FlipPanel::calcJointMove, "Panel");
     mFlipPanelGroup = MR::joinToGroupArray(this, rIter, 0, 0x20);
     MR::invalidateClipping(this);
-    MR::startBck(this, "PanelB", 0);
+    MR::startBck(this, "PanelB");
     f32 frameMax = MR::getBckFrameMax(this);
     MR::setBckFrameAndStop(this, frameMax);
 
@@ -62,7 +67,7 @@ void FlipPanel::init(const JMapInfoIter& rIter) {
 
 void FlipPanel::exeFrontLand() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "PanelB", 0);
+        MR::startBck(this, "PanelB");
 
         if (mIsReverse) {
             MapObjActorUtil::appearBloomModel(this);
@@ -91,7 +96,7 @@ void FlipPanel::exeFrontLand() {
 
 void FlipPanel::exeBackLand() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "PanelA", 0);
+        MR::startBck(this, "PanelA");
 
         if (mIsReverse) {
             MapObjActorUtil::killBloomModel(this);
@@ -147,7 +152,7 @@ void FlipPanel::exeEndPrepare() {
 void FlipPanel::exeEnd() {
     if (MR::isFirstStep(this)) {
         MR::startSystemSE("SE_OJ_FLIP_PANEL_COMPLETE");
-        MR::startBck(this, "PanelEnd", 0);
+        MR::startBck(this, "PanelEnd");
         MapObjActorUtil::killBloomModel(this);
         _CC = 0;
     }
@@ -386,10 +391,4 @@ bool FlipPanelObserver::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* 
     }
 
     return false;
-}
-
-FlipPanel::~FlipPanel() {
-}
-
-FlipPanelObserver::~FlipPanelObserver() {
 }

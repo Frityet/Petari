@@ -119,10 +119,11 @@ void SmallStone::init(const JMapInfoIter& rIter) {
 }
 
 void SmallStone::initMember(const char* pModelName, bool useGravity) {
+    s32 i;
     mMembers = new SmallStoneMember*[mMemberCount];
     MR::declareStarPiece(this, mMemberCount);
 
-    for (s32 i = 0; i < mMemberCount; i++) {
+    for (i = 0; i < mMemberCount; i++) {
         SmallStoneMember* pMember = new SmallStoneMember(pModelName);
         pMember->mAnimRate = 1.0f;
         pMember->mShakeRequested = 0;
@@ -133,11 +134,11 @@ void SmallStone::initMember(const char* pModelName, bool useGravity) {
         pMember->appear();
 
         if (mStoneType == 1) {
-            f32 angle = MR::getRandom(-hRandomRotateAngle, hRandomRotateAngle);
+            f32 angle = MR::getRandom(-::hRandomRotateAngle, ::hRandomRotateAngle);
             pMember->mRotation.x = 0.0f;
             pMember->mRotation.y = angle;
             pMember->mRotation.z = 0.0f;
-            f32 scale = MR::getRandom(hRandomScaleMin, hRandomScaleMax);
+            f32 scale = MR::getRandom(::hRandomScaleMin, ::hRandomScaleMax);
             pMember->mScale.set(scale);
             MR::startBva(pMember, "Kind");
             MR::stopBva(pMember);
@@ -172,7 +173,7 @@ void SmallStone::initMember(const char* pModelName, bool useGravity) {
     }
 
     if (mStoneType == 1 || mStoneType == 2) {
-        for (s32 i = 0; i < mMemberCount; i++) {
+        for (i = 0; i < mMemberCount; i++) {
             s32 index = MR::getRandom(0, i + 1);
             SmallStoneMember* pMember = mMembers[i];
             SmallStoneMember* pOther = mMembers[index];
@@ -186,7 +187,7 @@ void SmallStone::initMember(const char* pModelName, bool useGravity) {
     }
 
     initHitSensor(1);
-    MR::addHitSensorMapObjSimple(this, "Range", 16, hSize, TVec3f(gZeroVec));
+    MR::addHitSensorMapObjSimple(this, "Range", 16, ::hSize, TVec3f(gZeroVec));
 }
 
 void SmallStone::initAfterPlacement() {
@@ -218,11 +219,11 @@ void SmallStone::initAfterPlacement() {
         TVec3f offset(axisX);
         offset.scale(JMACosRadian(angleStep * i));
         offset.add(axisY * JMASinRadian(angleStep * i));
-        offset.scale(hCircleRadius);
+        offset.scale(::hCircleRadius);
         TVec3f start(mPosition);
         start.add(offset);
         start.sub(gravity);
-        failed |= !MR::getFirstPolyOnLineToMap(&pMember->mPosition, nullptr, start, gravity * hCheckLineLength);
+        failed |= !MR::getFirstPolyOnLineToMap(&pMember->mPosition, nullptr, start, gravity * ::hCheckLineLength);
 
         if (mUseGravity) {
             MR::calcGravityVector(pMember, &pMember->mGravity, nullptr, 0);
@@ -330,9 +331,9 @@ bool SmallStone::isAllMemberBreak() {
 bool SmallStone::tryBreak() {
     MR::calcGravityVector(this, mPosition, &mGravity, nullptr, 0);
     TVec3f distance(mPosition);
-    distance.add(-mGravity * hBreakOffsetY);
+    distance.add(-mGravity * ::hBreakOffsetY);
     distance.sub(*MR::getPlayerPos());
-    f32 radius = hBreakSize;
+    f32 radius = ::hBreakSize;
 
     if (distance.squared() > radius * radius) {
         return false;
@@ -407,7 +408,7 @@ bool SmallStoneMember::tryShake() {
     f32 y = MR::abs(distance.y - zero.y);
     f32 x = MR::abs(distance.x - zero.x);
     f32 z = MR::abs(distance.z - zero.z);
-    f32 ratio = (z + (x + y)) / hWindRadius;
+    f32 ratio = (z + (x + y)) / ::hWindRadius;
 
     if (ratio > 1.0f) {
         ratio = 1.0f;
@@ -419,7 +420,7 @@ bool SmallStoneMember::tryShake() {
         return false;
     }
 
-    f32 rate = hMinAnimRate + (hMaxAnimRate - hMinAnimRate) * intensity;
+    f32 rate = ::hMinAnimRate + (::hMaxAnimRate - ::hMinAnimRate) * intensity;
     mShakeRequested = 1;
     MR::setBckRate(this, rate);
     mAnimRate = rate;
@@ -429,14 +430,14 @@ bool SmallStoneMember::tryShake() {
 bool SmallStoneMember::tryPush(HitSensor* pSender, HitSensor* pReceiver) {
     TVec3f distance(pReceiver->mPosition);
     distance.sub(mPosition);
-    const f32 collisionRadius = hCollisionRadius * mScale.y;
+    const f32 collisionRadius = ::hCollisionRadius * mScale.y;
     const f32 otherRadius = pReceiver->mRadius;
     f32 radius = collisionRadius + otherRadius;
     radius *= radius;
 
     if (distance.squared() < radius) {
         f32 oldRadius = pSender->mRadius;
-        pSender->mRadius = hCollisionRadius * mScale.y;
+        pSender->mRadius = ::hCollisionRadius * mScale.y;
         TVec3f oldPosition(pSender->mPosition);
         pSender->mPosition.set(mPosition);
         pReceiver->receiveMessage(ACTMES_PUSH, pSender);
@@ -453,7 +454,7 @@ void SmallStoneMember::animControl() {
         if (!MR::isBckPlaying(this, "WindLoop")) {
             mAnimStopped = false;
             MR::onCalcAnim(this);
-            MR::startBck(this, "WindLoop", nullptr);
+            MR::startBck(this, "WindLoop");
         }
 
         mShakeRequested = 0;
@@ -461,7 +462,7 @@ void SmallStoneMember::animControl() {
         if (MR::isBckPlaying(this, "WindLoop")) {
             mAnimStopped = false;
             MR::onCalcAnim(this);
-            MR::startBck(this, "WindEnd", nullptr);
+            MR::startBck(this, "WindEnd");
             MR::setBckRate(this, mAnimRate);
         } else if (!mAnimStopped && MR::isBckStopped(this)) {
             mAnimStopped = true;

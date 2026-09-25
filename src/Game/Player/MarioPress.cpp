@@ -11,7 +11,7 @@ f32 JMAAcosRadian(f32) NO_INLINE;
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/MapUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
-#include "JSystem/JMath/JMATrigonometric.hpp"
+#include <JSystem/JMath/JMATrigonometric.hpp>
 
 bool Mario::checkPressDamage() {
     if (_5FC) {
@@ -233,7 +233,7 @@ bool Mario::checkSidePress() {
                         mMovementStates._1 = false;
                         closeStatus(mHang);
                     }
-                    if (!mMovementStates._1 && __fabsf(firstNormal.dot(*getGravityVec())) < 0.707f) {
+                    if (!mMovementStates._1 && MR::abs(firstNormal.dot(*getGravityVec())) < 0.707f) {
                         if (!first->isCollisionAtFace()) {
                             TVec3f horizontal;
                             f32 vertical = MR::vecKillElement(first->mHitPos - center, *getGravityVec(), &horizontal);
@@ -295,7 +295,7 @@ bool Mario::checkSidePress() {
                         addVelocity(horizontal);
                         return false;
                     }
-                    if (__fabsf(firstNormal.dot(mHeadVec)) > 0.707f) {
+                    if (MR::abs(firstNormal.dot(mHeadVec)) > 0.707f) {
                         mActor->setPress(0, 0);
                     } else {
                         mActor->setPress(1, 0);
@@ -307,16 +307,13 @@ bool Mario::checkSidePress() {
             if (getPlayer()->mMovementStates.jumping) {
                 MR::diffAngleAbsHorizontal(firstNormal, secondNormal, getAirGravityVec());
                 f32 normalDot = firstNormal.dot(secondNormal);
-                TVec3f tangent;
-                TVec3f firstUp;
-                TVec3f secondUp;
-                PSVECCrossProduct(&firstNormal, &getAirGravityVec(), &tangent);
+                TVec3f tangent = firstNormal.cross(getAirGravityVec());
                 MR::normalizeOrZero(&tangent);
-                PSVECCrossProduct(&tangent, &firstNormal, &firstUp);
+                TVec3f firstUp = tangent.cross(firstNormal);
                 MR::normalizeOrZero(&firstUp);
-                PSVECCrossProduct(&secondNormal, &getAirGravityVec(), &tangent);
+                tangent.cross(secondNormal, getAirGravityVec());
                 MR::normalizeOrZero(&tangent);
-                PSVECCrossProduct(&tangent, &secondNormal, &secondUp);
+                TVec3f secondUp = tangent.cross(secondNormal);
                 MR::normalizeOrZero(&secondUp);
                 TVec3f firstPosition;
                 TVec3f secondPosition;

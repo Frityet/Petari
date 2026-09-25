@@ -41,6 +41,46 @@ bool MarioActor::isEnableSpinPunch() {
     return true;
 }
 
+bool MarioActor::trySpinPunch() {
+    bool out = true;
+    if (getMovementStates().jumping) {
+        changeAnimation("空パンチ");
+        setPunchHitTimer(15);
+        mMario->mWalkSpeed = 0.0f;
+    } else if (isEnableSpinPunch()) {
+        if (mMario->isStatusActive(MarioStatus_Bury)) {
+            playSound("スケキヨ終了スピン", -1);
+        }
+
+        if (getMovementStates()._A) {
+            if (mMario->calcDistToCeil(false) > 160.0f) {
+                changeAnimation("サマーソルト");
+                playSound("スピンジャンプ", -1);
+                playSound("声スピン", -1);
+            } else {
+                return false;
+            }
+        } else {
+            mMario->startMagic();
+        }
+
+        setPunchHitTimer(25);
+    } else {
+        out = false;
+    }
+
+    tryReleaseBombTeresa();
+    _950 = false;
+
+    return out;
+}
+
+void MarioActor::printHitMark(HitSensor* pSensor) {
+    TVec3f vec(pSensor->mPosition - _2A0);
+    vec.setLength(200.0f);
+    playEffectTrans("パンチヒット", _2A0 + vec);
+}
+
 void MarioActor::reactionPunch(HitSensor* pSensor) {
     if (mPlayerMode == 1) {
         return;
@@ -113,46 +153,6 @@ bool MarioActor::doFreezeAttack(HitSensor* pSensor) {
     return MR::sendArbitraryMsg(ACTMES_FREEZE_ATTACK, pSensor, getSensor("body"));
 }
 
-bool MarioActor::trySpinPunch() {
-    bool out = true;
-    if (getMovementStates().jumping) {
-        changeAnimation("空パンチ", static_cast< const char* >(nullptr));
-        setPunchHitTimer(15);
-        mMario->mWalkSpeed = 0.0f;
-    } else if (isEnableSpinPunch()) {
-        if (mMario->isStatusActive(MarioStatus_Bury)) {
-            playSound("スケキヨ終了スピン", -1);
-        }
-
-        if (getMovementStates()._A) {
-            if (mMario->calcDistToCeil(false) > 160.0f) {
-                changeAnimation("サマーソルト", static_cast< const char* >(nullptr));
-                playSound("スピンジャンプ", -1);
-                playSound("声スピン", -1);
-            } else {
-                return false;
-            }
-        } else {
-            mMario->startMagic();
-        }
-
-        setPunchHitTimer(25);
-    } else {
-        out = false;
-    }
-
-    tryReleaseBombTeresa();
-    _950 = false;
-
-    return out;
-}
-
-void MarioActor::printHitMark(HitSensor* pSensor) {
-    TVec3f vec(pSensor->mPosition - _2A0);
-    vec.setLength(200.0f);
-    playEffectTrans("パンチヒット", _2A0 + vec);
-}
-
 bool MarioActor::tryPunchAirAfter(HitSensor* pSensor) {
     if (pSensor->isType(ACTMES_FORCE_KILL)) {
         return false;
@@ -205,7 +205,7 @@ bool MarioActor::sendBodyAttack(HitSensor* pSensor) {
 
         if (MR::sendArbitraryMsg(ACTMES_KICK, pSensor, getSensor("body"))) {
             playSound("声ランニングキック", -1);
-            changeAnimation("ランニングキック", static_cast< const char* >(nullptr));
+            changeAnimation("ランニングキック");
             mMario->startPadVib(2);
 
             if (!MR::sendArbitraryMsg(ACTMES_HITMARK_EMIT, pSensor, getSensor("body"))) {
@@ -233,7 +233,7 @@ void MarioActor::doFreezeAttack() {
 
     if (isJumping()) {
         if (mMario->_430 != 13) {
-            changeAnimation("アイスひねり空中", static_cast< const char* >(nullptr));
+            changeAnimation("アイスひねり空中");
             playSound("スピンジャンプ", -1);
             playSound("声スピン", -1);
 
@@ -257,5 +257,5 @@ void MarioActor::doFreezeAttack() {
         playSound("声パンチ", -1);
     }
 
-    changeAnimation("アイスひねり", static_cast< const char* >(nullptr));
+    changeAnimation("アイスひねり");
 }

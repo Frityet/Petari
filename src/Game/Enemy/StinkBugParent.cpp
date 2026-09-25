@@ -12,9 +12,9 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
-#include "JSystem/JGeometry/TMatrix.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
-#include "revolution/types.h"
+#include <JSystem/JGeometry/TMatrix.hpp>
+#include <JSystem/JGeometry/TVec.hpp>
+#include <revolution/types.h>
 
 void StinkBugParent_FORCE_MATCH_SDATA2() {
     (void)1.0f;
@@ -110,7 +110,7 @@ void StinkBugParent::init(const JMapInfoIter& rIter) {
 
 void StinkBugParent::exeWait() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Wait", nullptr);
+        MR::startBck(this, "Wait");
         MR::resetPosition(this, _98);
     }
 
@@ -126,9 +126,9 @@ void StinkBugParent::exeWait() {
 void StinkBugParent::exeSearch() {
     if (MR::isFirstStep(this)) {
         if (mIsChildAlive) {
-            MR::startBck(this, "Search", nullptr);
+            MR::startBck(this, "Search");
         } else {
-            MR::startBck(this, "AngerSearch", nullptr);
+            MR::startBck(this, "AngerSearch");
         }
     }
 
@@ -143,7 +143,7 @@ void StinkBugParent::exeSearch() {
 
 void StinkBugParent::exeDashSign() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "RushStart", nullptr);
+        MR::startBck(this, "RushStart");
         MR::startSound(this, "SE_EV_STINKBUG_L_FIND");
     }
 
@@ -164,7 +164,7 @@ void StinkBugParent::exeDashSignEnd() {
 
 void StinkBugParent::exeDash() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Rush", nullptr);
+        MR::startBck(this, "Rush");
         MR::validateHitSensors(this);
     }
 
@@ -175,13 +175,13 @@ void StinkBugParent::exeDash() {
         setNerve(GET_NERVE(StinkBugParent, StinkBugParentNrvDashEnd));
         MR::startSound(this, "SE_EM_STINKBUG_L_DASH_END");
     } else {
-        setDashVelocity(getParam(mIsChildAlive)->mDashVelocity);
+        setDashVelocity(::getParam(mIsChildAlive)->mDashVelocity);
     }
 }
 
 void StinkBugParent::exeDashEnd() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "RushStop", nullptr);
+        MR::startBck(this, "RushStop");
     }
 
     mVelocity.zero();
@@ -193,26 +193,26 @@ void StinkBugParent::exeDashEnd() {
 
 void StinkBugParent::exeBack() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Back", nullptr);
+        MR::startBck(this, "Back");
         MR::invalidateHitSensor(this, "head");
     }
 
     MR::startLevelSound(this, "SE_EM_LV_STINKBUG_L_BACK");
 
-    if (MR::isNear(this, _98, (2.0f * getParam(mIsChildAlive)->mDashDistance))) {
+    if (MR::isNear(this, _98, (2.0f * ::getParam(mIsChildAlive)->mDashDistance))) {
         setNerve(GET_NERVE(StinkBugParent, StinkBugParentNrvWait));
     } else {
         TVec3f a1;
         a1.sub(_98, mPosition);
         MR::normalize(&a1);
         MR::turnVecToPlane(&a1, a1, mGravity);
-        mVelocity.scale(getParam(mIsChildAlive)->mDashDistance, a1);
+        mVelocity.scale(::getParam(mIsChildAlive)->mDashDistance, a1);
     }
 }
 
 void StinkBugParent::exeHipDropDown() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Death", nullptr);
+        MR::startBck(this, "Death");
         MR::startBrk(this, "Death");
         MR::invalidateCollisionParts(mParent);
         MR::invalidateHitSensors(this);
@@ -229,7 +229,7 @@ void StinkBugParent::exeHipDropDown() {
 
 void StinkBugParent::exeAttack() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Attack", nullptr);
+        MR::startBck(this, "Attack");
     }
 
     mVelocity.zero();
@@ -241,7 +241,7 @@ void StinkBugParent::exeAttack() {
 
 void StinkBugParent::exeSpinReaction() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "SpinAction", nullptr);
+        MR::startBck(this, "SpinAction");
         MR::startSound(this, "SE_EM_GUARD_S");
     }
 
@@ -254,7 +254,7 @@ void StinkBugParent::exeSpinReaction() {
 
 void StinkBugParent::exePanic() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Loss", nullptr);
+        MR::startBck(this, "Loss");
         MR::invalidateHitSensor(this, "head");
         MR::startSound(this, "SE_EV_STINKBUG_L_PANIC");
     }
@@ -264,7 +264,7 @@ void StinkBugParent::exePanic() {
 
     if (!MR::isOnPlayer(getSensor("body"))) {
         setNerve(GET_NERVE(StinkBugParent, StinkBugParentNrvRecover));
-    } else if (MR::isStep(this, getParam(mIsChildAlive)->mPanicStep)) {
+    } else if (MR::isStep(this, ::getParam(mIsChildAlive)->mPanicStep)) {
         setNerve(GET_NERVE(StinkBugParent, StinkBugParentNrvShakeStart));
     }
 }
@@ -280,7 +280,7 @@ void StinkBugParent::exeRecover() {
 
 void StinkBugParent::exeShakeStart() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Repel", nullptr);
+        MR::startBck(this, "Repel");
     }
 
     if (MR::isStep(this, ::sStepForShakeStart)) {
@@ -302,7 +302,7 @@ void StinkBugParent::exeDemoPrepare() {
 
 void StinkBugParent::exeDemoChildDown() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "ChildDeath", nullptr);
+        MR::startBck(this, "ChildDeath");
         MR::startBva(this, "ChildDeath");
         MR::startBrk(this, "ChildDeath");
         MR::startSound(this, "SE_EV_STINKBUG_S_STOMPED");
@@ -331,7 +331,7 @@ void StinkBugParent::exeDemoAnger() {
     if (MR::isFirstStep(this)) {
         TVec3f v1;
         MR::overlayWithPreviousScreen(2);
-        MR::startBck(this, "Anger", nullptr);
+        MR::startBck(this, "Anger");
         MR::startBrk(this, "Anger");
         MR::resetPosition(this, _98);
         MR::setPlayerPosAndWait("子連れカメムシデモ後ポイント");

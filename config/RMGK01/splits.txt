@@ -1184,7 +1184,7 @@ Game/Boss/OtaKingLongFoot.cpp:
 Game/Boss/OtaKingMagma.cpp:
 	.text       start:0x8006DD98 end:0x8006E654
 	.ctors      start:0x8052E954 end:0x8052E958
-	.rodata     start:0x80531078 end:0x805310A0
+	.rodata     start:0x80531078 end:0x80531098
 	.data       start:0x8056F4C8 end:0x8056F6B8
 	.sbss       start:0x806B3650 end:0x806B3670
 
@@ -1234,6 +1234,7 @@ Game/Boss/PoltaDemo.cpp:
 
 Game/Boss/PoltaFunction.cpp:
 	.text       start:0x80072A08 end:0x80073324
+	.rodata     start:0x80531098 end:0x805310A0
 	.data       start:0x80570088 end:0x805700B0
 	.sdata2     start:0x806B8BB0 end:0x806B8BD8
 
@@ -1325,14 +1326,14 @@ Game/Boss/SkeletalFishBoss.cpp:
 	.text       start:0x80077794 end:0x8007AE78
 	.ctors      start:0x8052E98C end:0x8052E990
 	.rodata     start:0x80531470 end:0x805314F8
-	.data       start:0x80570C68 end:0x805717C8
+	.data       start:0x80570C68 end:0x80571720
 	.sdata      start:0x806B1778 end:0x806B1780
 	.sbss       start:0x806B3778 end:0x806B37B8
 	.sdata2     start:0x806B8CC0 end:0x806B8D18
 
 Game/Boss/SkeletalFishBossBattleDirector.cpp:
 	.text       start:0x8007AE78 end:0x8007B4A8
-	.data       start:0x805717C8 end:0x805717F0
+	.data       start:0x80571720 end:0x805717F0
 
 Game/Boss/SkeletalFishBossFunc.cpp:
 	.text       start:0x8007B4A8 end:0x8007B5B0
@@ -2405,6 +2406,7 @@ Game/Effect/AutoEffectGroupHolder.cpp:
 Game/Effect/AutoEffectInfo.cpp:
 	.text       start:0x800C4D2C end:0x800C5328
 	.rodata     start:0x80531A48 end:0x80531A90
+	.data       start:0x805782A0 end:0x805783D0
 	.sdata      start:0x806B1880 end:0x806B1890
 	.sdata2     start:0x806B9CF0 end:0x806B9CF8
 
@@ -2700,7 +2702,7 @@ Game/Enemy/FireBall.cpp:
 Game/Enemy/FireBubble.cpp:
 	.text       start:0x800ECC34 end:0x800EDDCC
 	.ctors      start:0x8052EA84 end:0x8052EA88
-	.rodata     start:0x80531F48 end:0x80531F78
+	.rodata     start:0x80531F48 end:0x80531F60
 	.data       start:0x8057C2D0 end:0x8057C478
 	.sdata      start:0x806B1928 end:0x806B1930
 	.sbss       start:0x806B3EA0 end:0x806B3EC0
@@ -2709,6 +2711,7 @@ Game/Enemy/FireBubble.cpp:
 Game/Enemy/Gesso.cpp:
 	.text       start:0x800EDDCC end:0x800EF9F4
 	.ctors      start:0x8052EA88 end:0x8052EA8C
+	.rodata     start:0x80531F60 end:0x80531F68
 	.data       start:0x8057C478 end:0x8057C690
 	.sbss       start:0x806B3EC0 end:0x806B3EF0
 	.sdata2     start:0x806BA4C0 end:0x806BA548
@@ -2716,6 +2719,7 @@ Game/Enemy/Gesso.cpp:
 Game/Enemy/HammerHeadPackun.cpp:
 	.text       start:0x800EF9F4 end:0x800F17B4
 	.ctors      start:0x8052EA8C end:0x8052EA90
+	.rodata     start:0x80531F68 end:0x80531F70
 	.data       start:0x8057C690 end:0x8057C978
 	.sdata      start:0x806B1930 end:0x806B1938
 	.sbss       start:0x806B3EF0 end:0x806B3F20
@@ -2724,6 +2728,7 @@ Game/Enemy/HammerHeadPackun.cpp:
 Game/Enemy/Hanachan.cpp:
 	.text       start:0x800F17B4 end:0x800F58F4
 	.ctors      start:0x8052EA90 end:0x8052EA94
+	.rodata     start:0x80531F70 end:0x80531F78
 	.data       start:0x8057C978 end:0x8057CEE0
 	.sdata      start:0x806B1938 end:0x806B1940
 	.sbss       start:0x806B3F20 end:0x806B3FA0
@@ -3017,13 +3022,13 @@ Game/Enemy/MogucchiHill.cpp:
 	.text       start:0x80127C74 end:0x80128EE4
 	.ctors      start:0x8052EB0C end:0x8052EB10
 	.rodata     start:0x80532418 end:0x80532420
-	.data       start:0x80582130 end:0x80582338
+	.data       start:0x80582130 end:0x80582330
 	.sbss       start:0x806B4508 end:0x806B4520
 	.sdata2     start:0x806BB120 end:0x806BB140
 
 Game/Enemy/MogucchiRefuseTerritory.cpp:
 	.text       start:0x80128EE4 end:0x80129008
-	.data       start:0x80582338 end:0x805823B0
+	.data       start:0x80582330 end:0x805823B0
 	.sdata2     start:0x806BB140 end:0x806BB148
 
 Game/Enemy/MogucchiShooter.cpp:
@@ -3055,6 +3060,7 @@ Game/Enemy/Onimasu.cpp:
 	.ctors      start:0x8052EB1C end:0x8052EB20
 	.rodata     start:0x80532440 end:0x80532448
 	.data       start:0x80582B50 end:0x80582C88
+	.sdata      start:0x806B1A38 end:0x806B1A40
 	.sbss       start:0x806B45C0 end:0x806B45D8
 	.sdata2     start:0x806BB1E0 end:0x806BB228
 
@@ -3099,7 +3105,7 @@ Game/Enemy/Poihana.cpp:
 	.text       start:0x80133FAC end:0x801369B0
 	.ctors      start:0x8052EB2C end:0x8052EB30
 	.rodata     start:0x80532490 end:0x805324B0
-	.data       start:0x80583568 end:0x80583AD8
+	.data       start:0x80583568 end:0x80583920
 	.sdata      start:0x806B1A58 end:0x806B1A60
 	.sbss       start:0x806B4678 end:0x806B46C8
 	.sdata2     start:0x806BB350 end:0x806BB3E0
@@ -3108,7 +3114,7 @@ Game/Enemy/Pukupuku.cpp:
 	.text       start:0x801369B0 end:0x80138838
 	.ctors      start:0x8052EB30 end:0x8052EB34
 	.rodata     start:0x805324B0 end:0x805324D8
-	.data       start:0x80583AD8 end:0x80583C40
+	.data       start:0x80583920 end:0x80583C40
 	.sbss       start:0x806B46C8 end:0x806B46F8
 	.sdata2     start:0x806BB3E0 end:0x806BB438
 
@@ -3858,7 +3864,7 @@ Game/Map/GroupSwitchWatcher.cpp:
 Game/Map/Halo.cpp:
 	.text       start:0x80182094 end:0x80182920
 	.ctors      start:0x8052EBC4 end:0x8052EBC8
-	.rodata     start:0x80532AF0 end:0x80532B28
+	.rodata     start:0x80532AF0 end:0x80532B18
 	.data       start:0x8058A318 end:0x8058A4A0
 	.sbss       start:0x806B4B90 end:0x806B4BA0
 	.sdata2     start:0x806BC030 end:0x806BC040
@@ -3869,6 +3875,7 @@ Game/Map/HitInfo.cpp:
 
 Game/Map/KCollision.cpp:
 	.text       start:0x8018300C end:0x80185B7C
+	.rodata     start:0x80532B18 end:0x80532B28
 	.sdata2     start:0x806BC048 end:0x806BC060
 
 Game/Map/KCollisionPlus.cpp:
@@ -3933,7 +3940,7 @@ Game/Map/LightDirector.cpp:
 
 Game/Map/LightFunction.cpp:
 	.text       start:0x80188398 end:0x80189120
-	.rodata     start:0x80532BE0 end:0x80532C80
+	.rodata     start:0x80532BE0 end:0x80532C70
 	.data       start:0x8058AB70 end:0x8058AC08
 	.sdata2     start:0x806BC100 end:0x806BC118
 
@@ -4003,8 +4010,10 @@ Game/Map/OceanRingPipeOutside.cpp:
 Game/Map/OceanSphere.cpp:
 	.text       start:0x80191530 end:0x801945EC
 	.ctors      start:0x8052EBD8 end:0x8052EBDC
+	.rodata     start:0x80532C70 end:0x80532C80
 	.data       start:0x8058B1A0 end:0x8058B2C0
 	.bss        start:0x8060AD78 end:0x8060ADA0
+	.sdata      start:0x806B1C28 end:0x806B1C58
 	.sbss       start:0x806B4BE0 end:0x806B4BE8
 	.sdata2     start:0x806BC2C0 end:0x806BC308
 
@@ -4112,7 +4121,7 @@ Game/Map/SpaceInner.cpp:
 Game/Map/SphereSelector.cpp:
 	.text       start:0x8019C140 end:0x8019D404
 	.ctors      start:0x8052EBF4 end:0x8052EBF8
-	.data       start:0x8058C710 end:0x8058C978
+	.data       start:0x8058C710 end:0x8058C928
 	.sbss       start:0x806B4C78 end:0x806B4C98
 	.sdata2     start:0x806BC410 end:0x806BC420
 
@@ -4120,14 +4129,14 @@ Game/Map/SphereSelectorHandle.cpp:
 	.text       start:0x8019D404 end:0x8019E5E8
 	.ctors      start:0x8052EBF8 end:0x8052EBFC
 	.rodata     start:0x80532EE8 end:0x80532EF0
-	.data       start:0x8058C978 end:0x8058CAD0
+	.data       start:0x8058C928 end:0x8058CAA0
 	.sdata      start:0x806B1C90 end:0x806B1CC0
 	.sbss       start:0x806B4C98 end:0x806B4CC8
 	.sdata2     start:0x806BC420 end:0x806BC478
 
 Game/Map/StageSwitch.cpp:
 	.text       start:0x8019E5E8 end:0x8019ED8C
-	.data       start:0x8058CAD0 end:0x8058CAF8
+	.data       start:0x8058CAA0 end:0x8058CAF8
 
 Game/Map/SunshadeMapHolder.cpp:
 	.text       start:0x8019ED8C end:0x8019EF10
@@ -4361,14 +4370,14 @@ Game/MapObj/AstroOverlookObj.cpp:
 Game/MapObj/BallOpener.cpp:
 	.text       start:0x801B0B3C end:0x801B1444
 	.ctors      start:0x8052EC4C end:0x8052EC50
-	.data       start:0x8058F4F8 end:0x8058F600
+	.data       start:0x8058F4F8 end:0x8058F5F8
 	.sbss       start:0x806B4E38 end:0x806B4E48
 	.sdata2     start:0x806BC798 end:0x806BC7C8
 
 Game/MapObj/BallRail.cpp:
 	.text       start:0x801B1444 end:0x801B1DA4
 	.ctors      start:0x8052EC50 end:0x8052EC54
-	.data       start:0x8058F600 end:0x8058F6B8
+	.data       start:0x8058F5F8 end:0x8058F6B8
 	.sbss       start:0x806B4E48 end:0x806B4E58
 	.sdata2     start:0x806BC7C8 end:0x806BC7E8
 
@@ -4816,6 +4825,7 @@ Game/MapObj/ElectricRailHolder.cpp:
 Game/MapObj/ElectricRailMoving.cpp:
 	.text       start:0x801D6464 end:0x801D80B0
 	.ctors      start:0x8052ECF4 end:0x8052ECF8
+	.rodata     start:0x80533318 end:0x80533320
 	.data       start:0x80593C28 end:0x80593E10
 	.sbss       start:0x806B50E0 end:0x806B50F0
 	.sdata2     start:0x806BCEC8 end:0x806BCF10
@@ -4823,7 +4833,7 @@ Game/MapObj/ElectricRailMoving.cpp:
 Game/MapObj/ExterminationChecker.cpp:
 	.text       start:0x801D80B0 end:0x801D8708
 	.ctors      start:0x8052ECF8 end:0x8052ECFC
-	.rodata     start:0x80533318 end:0x80533360
+	.rodata     start:0x80533320 end:0x80533338
 	.data       start:0x80593E10 end:0x80593F40
 	.sbss       start:0x806B50F0 end:0x806B5100
 	.sdata2     start:0x806BCF10 end:0x806BCF18
@@ -4854,6 +4864,7 @@ Game/MapObj/FallOutFieldDraw.cpp:
 Game/MapObj/FireBar.cpp:
 	.text       start:0x801D9AD8 end:0x801DA790
 	.ctors      start:0x8052ED08 end:0x8052ED0C
+	.rodata     start:0x80533338 end:0x80533340
 	.data       start:0x80594140 end:0x80594290
 	.sbss       start:0x806B5118 end:0x806B5120
 	.sdata2     start:0x806BCF80 end:0x806BCFB8
@@ -4877,6 +4888,7 @@ Game/MapObj/FirePressureBulletHolder.cpp:
 Game/MapObj/FirePressureRadiate.cpp:
 	.text       start:0x801DB09C end:0x801DC004
 	.ctors      start:0x8052ED10 end:0x8052ED14
+	.rodata     start:0x80533340 end:0x80533348
 	.data       start:0x80594438 end:0x80594618
 	.sbss       start:0x806B5128 end:0x806B5140
 	.sdata2     start:0x806BCFD0 end:0x806BCFF8
@@ -4890,6 +4902,7 @@ Game/MapObj/FlameGun.cpp:
 
 Game/MapObj/FlexibleSphere.cpp:
 	.text       start:0x801DC9D0 end:0x801DD218
+	.rodata     start:0x80533348 end:0x80533350
 	.data       start:0x80594740 end:0x80594868
 	.sdata      start:0x806B1E10 end:0x806B1E18
 	.sdata2     start:0x806BD028 end:0x806BD060
@@ -4897,6 +4910,7 @@ Game/MapObj/FlexibleSphere.cpp:
 Game/MapObj/FlipPanel.cpp:
 	.text       start:0x801DD218 end:0x801DE334
 	.ctors      start:0x8052ED18 end:0x8052ED1C
+	.rodata     start:0x80533350 end:0x80533358
 	.data       start:0x80594868 end:0x80594B68
 	.sbss       start:0x806B5158 end:0x806B5180
 	.sdata2     start:0x806BD060 end:0x806BD068
@@ -4925,6 +4939,7 @@ Game/MapObj/GCapture.cpp:
 
 Game/MapObj/GCaptureRibbon.cpp:
 	.text       start:0x801E1420 end:0x801E1B9C
+	.rodata     start:0x80533358 end:0x80533360
 	.data       start:0x80594F60 end:0x80595000
 	.sdata2     start:0x806BD118 end:0x806BD138
 
@@ -5067,7 +5082,7 @@ Game/MapObj/ItemBubble.cpp:
 Game/MapObj/JetTurtle.cpp:
 	.text       start:0x801EA864 end:0x801ECF98
 	.ctors      start:0x8052ED68 end:0x8052ED6C
-	.rodata     start:0x80533398 end:0x805333E8
+	.rodata     start:0x80533398 end:0x805333D8
 	.data       start:0x805967E8 end:0x80596BD8
 	.sdata      start:0x806B1E78 end:0x806B1E80
 	.sbss       start:0x806B52C0 end:0x806B52E8
@@ -5076,6 +5091,7 @@ Game/MapObj/JetTurtle.cpp:
 Game/MapObj/JumpHole.cpp:
 	.text       start:0x801ECF98 end:0x801EDC64
 	.ctors      start:0x8052ED6C end:0x8052ED70
+	.rodata     start:0x805333D8 end:0x805333E0
 	.data       start:0x80596BD8 end:0x80596CF0
 	.bss        start:0x8060ADD0 end:0x8060ADE8
 	.sbss       start:0x806B52E8 end:0x806B52F8
@@ -5084,6 +5100,7 @@ Game/MapObj/JumpHole.cpp:
 Game/MapObj/JumpStand.cpp:
 	.text       start:0x801EDC64 end:0x801EE87C
 	.ctors      start:0x8052ED70 end:0x8052ED74
+	.rodata     start:0x805333E0 end:0x805333E8
 	.data       start:0x80596CF0 end:0x80596EE8
 	.sbss       start:0x806B52F8 end:0x806B5308
 	.sdata2     start:0x806BD3B8 end:0x806BD3E8
@@ -5108,6 +5125,7 @@ Game/MapObj/KillerGunnerSingle.cpp:
 Game/MapObj/LargeChain.cpp:
 	.text       start:0x801EF648 end:0x801EFD10
 	.ctors      start:0x8052ED7C end:0x8052ED80
+	.rodata     start:0x805333F8 end:0x80533408
 	.data       start:0x80597160 end:0x80597220
 	.sbss       start:0x806B5328 end:0x806B5330
 	.sdata2     start:0x806BD430 end:0x806BD440
@@ -5817,7 +5835,7 @@ Game/MapObj/SnowplowSwitch.cpp:
 Game/MapObj/SoundEmitter.cpp:
 	.text       start:0x8022DE74 end:0x8022E260
 	.ctors      start:0x8052EEA8 end:0x8052EEAC
-	.rodata     start:0x805337B0 end:0x80533840
+	.rodata     start:0x805337B0 end:0x80533838
 	.data       start:0x805A0318 end:0x805A0438
 	.sbss       start:0x806B5878 end:0x806B5880
 	.sdata2     start:0x806BE048 end:0x806BE050
@@ -5825,6 +5843,7 @@ Game/MapObj/SoundEmitter.cpp:
 Game/MapObj/SpaceMine.cpp:
 	.text       start:0x8022E260 end:0x8022E950
 	.ctors      start:0x8052EEAC end:0x8052EEB0
+	.rodata     start:0x80533838 end:0x80533840
 	.data       start:0x805A0438 end:0x805A0558
 	.sdata      start:0x806B2010 end:0x806B2018
 	.sbss       start:0x806B5880 end:0x806B5888
@@ -6230,14 +6249,14 @@ Game/MapObj/MapParts.cpp:
 Game/MapObj/GeneralMapParts.cpp:
 	.text       start:0x8025726C end:0x8025834C
 	.ctors      start:0x8052EF40 end:0x8052EF44
-	.data       start:0x805A69A8 end:0x805A6AC0
+	.data       start:0x805A69A8 end:0x805A6AB8
 	.sbss       start:0x806B5AD8 end:0x806B5AE8
 	.sdata2     start:0x806BE808 end:0x806BE810
 
 Game/MapObj/FloaterFloatingForce.cpp:
 	.text       start:0x8025834C end:0x802585D0
 	.rodata     start:0x80534D28 end:0x80534D30
-	.data       start:0x805A6AC0 end:0x805A6B08
+	.data       start:0x805A6AB8 end:0x805A6B08
 	.sdata2     start:0x806BE810 end:0x806BE818
 
 Game/MapObj/FloaterFloatingForceTypeNormal.cpp:
@@ -6297,13 +6316,13 @@ Game/MapObj/MapPartsFunction.cpp:
 Game/MapObj/MapPartsRailGuideDrawer.cpp:
 	.text       start:0x8025BEEC end:0x8025C4D0
 	.ctors      start:0x8052EF5C end:0x8052EF60
-	.data       start:0x805A70B8 end:0x805A7178
+	.data       start:0x805A70B8 end:0x805A7158
 	.sbss       start:0x806B5B48 end:0x806B5B58
 	.sdata2     start:0x806BE8F0 end:0x806BE900
 
 Game/MapObj/MapPartsRailGuideHolder.cpp:
 	.text       start:0x8025C4D0 end:0x8025C69C
-	.data       start:0x805A7178 end:0x805A71A0
+	.data       start:0x805A7158 end:0x805A71A0
 
 Game/MapObj/MapPartsRailGuidePoint.cpp:
 	.text       start:0x8025C69C end:0x8025C8A0
@@ -6490,7 +6509,7 @@ Game/NPC/Kinopio.cpp:
 	.text       start:0x80273494 end:0x802751F4
 	.ctors      start:0x8052EFA0 end:0x8052EFA4
 	.rodata     start:0x80539748 end:0x80539750
-	.data       start:0x805AFE00 end:0x805B02E0
+	.data       start:0x805AFE00 end:0x805B0240
 	.bss        start:0x8060ADE8 end:0x8060AE20
 	.sdata      start:0x806B2108 end:0x806B2110
 	.sbss       start:0x806B5D28 end:0x806B5D68
@@ -6498,7 +6517,7 @@ Game/NPC/Kinopio.cpp:
 
 Game/NPC/KinopioAstro.cpp:
 	.text       start:0x802751F4 end:0x80275DC0
-	.data       start:0x805B02E0 end:0x805B0460
+	.data       start:0x805B0240 end:0x805B0460
 	.sdata      start:0x806B2110 end:0x806B2118
 	.sdata2     start:0x806BEB90 end:0x806BEBA8
 
@@ -6674,7 +6693,7 @@ Game/NPC/RunawayRabbitCollect.cpp:
 	.text       start:0x80286634 end:0x80286FD8
 	.ctors      start:0x8052EFF0 end:0x8052EFF4
 	.data       start:0x805B3370 end:0x805B3498
-	.sdata      start:0x806B2160 end:0x806B2188
+	.sdata      start:0x806B2160 end:0x806B2170
 	.sbss       start:0x806B5F68 end:0x806B5F70
 
 Game/NPC/RunawayTico.cpp:
@@ -6702,8 +6721,9 @@ Game/NPC/StrayTico.cpp:
 Game/NPC/Syati.cpp:
 	.text       start:0x802892D0 end:0x8028B7A0
 	.ctors      start:0x8052F000 end:0x8052F004
-	.rodata     start:0x80539798 end:0x80539810
+	.rodata     start:0x80539798 end:0x80539800
 	.data       start:0x805B3A10 end:0x805B3DF0
+	.sdata      start:0x806B2170 end:0x806B2178
 	.sbss       start:0x806B5FB0 end:0x806B6008
 	.sdata2     start:0x806BEF88 end:0x806BEFF8
 
@@ -6717,8 +6737,10 @@ Game/NPC/TeresaRacer.cpp:
 Game/NPC/Tico.cpp:
 	.text       start:0x8028C618 end:0x8028DB80
 	.ctors      start:0x8052F008 end:0x8052F00C
+	.rodata     start:0x80539800 end:0x80539808
 	.data       start:0x805B4050 end:0x805B43B0
 	.bss        start:0x8060AE78 end:0x8060AE90
+	.sdata      start:0x806B2178 end:0x806B2180
 	.sbss       start:0x806B6028 end:0x806B6070
 	.sdata2     start:0x806BF038 end:0x806BF078
 
@@ -6729,6 +6751,7 @@ Game/NPC/TicoAstro.cpp:
 Game/NPC/TicoComet.cpp:
 	.text       start:0x8028DCF0 end:0x8028EC24
 	.ctors      start:0x8052F00C end:0x8052F010
+	.rodata     start:0x80539808 end:0x80539810
 	.data       start:0x805B4428 end:0x805B47B0
 	.bss        start:0x8060AE90 end:0x8060AEC8
 	.sbss       start:0x806B6070 end:0x806B6090
@@ -6745,6 +6768,7 @@ Game/NPC/TicoDomeLecture.cpp:
 	.ctors      start:0x8052F014 end:0x8052F018
 	.rodata     start:0x80539810 end:0x80539828
 	.data       start:0x805B4940 end:0x805B4A60
+	.sdata      start:0x806B2180 end:0x806B2188
 	.sbss       start:0x806B6098 end:0x806B60A8
 	.sdata2     start:0x806BF0A8 end:0x806BF0B0
 
@@ -8305,7 +8329,7 @@ Game/Screen/ImageEffectState.cpp:
 	.text       start:0x80365854 end:0x803661AC
 	.rodata     start:0x8053A748 end:0x8053A758
 	.data       start:0x805D5C60 end:0x805D5CD0
-	.sdata2     start:0x806C1050 end:0x806C1068
+	.sdata2     start:0x806C1050 end:0x806C1060
 
 Game/Screen/ImageEffectSystemHolder.cpp:
 	.text       start:0x803661AC end:0x80366370
@@ -8330,6 +8354,7 @@ Game/Screen/IsbnManager.cpp:
 	.rodata     start:0x8053A758 end:0x8053A760
 	.data       start:0x805D6110 end:0x805D6490
 	.sdata      start:0x806B2408 end:0x806B2410
+	.sdata2     start:0x806C1060 end:0x806C1068
 
 Game/Screen/LayoutActor.cpp:
 	.text       start:0x8036755C end:0x80367A6C
@@ -9368,7 +9393,7 @@ Game/Util/DrawUtil.cpp:
 	.rodata     start:0x8053EB38 end:0x8053EB48
 	.data       start:0x805E0BE0 end:0x805E0C48
 	.bss        start:0x8060B3C0 end:0x8060B3F0
-	.sdata      start:0x806B2610 end:0x806B2620
+	.sdata      start:0x806B2610 end:0x806B2618
 	.sbss       start:0x806B7000 end:0x806B7008
 	.sdata2     start:0x806C15C8 end:0x806C15F8
 
@@ -9380,6 +9405,7 @@ Game/Util/EffectUtil.cpp:
 Game/Util/EventUtil.cpp:
 	.text       start:0x803CDA10 end:0x803CF2A0
 	.data       start:0x805E0C58 end:0x805E0FA8
+	.sdata      start:0x806B2618 end:0x806B2620
 
 Game/Util/FileUtil.cpp:
 	.text       start:0x803CF2A0 end:0x803CFE74
@@ -9452,6 +9478,7 @@ Game/Util/LiveActorUtil.cpp:
 	.text       start:0x803DA22C end:0x803E0ECC
 	.rodata     start:0x8053EBB8 end:0x8053EBC8
 	.data       start:0x805E16B0 end:0x805E1768
+	.sdata      start:0x806B2650 end:0x806B2658
 	.sdata2     start:0x806C1700 end:0x806C1720
 
 Game/Util/MapPartsUtil.cpp:
@@ -9667,6 +9694,7 @@ Game/Util/PostureHolder.cpp:
 
 Game/Util/RumbleCalculator.cpp:
 	.text       start:0x80407F24 end:0x80408164
+	.rodata     start:0x8053F5C8 end:0x8053F5D0
 	.data       start:0x805E6F08 end:0x805E6F20
 	.sdata2     start:0x806C19D0 end:0x806C19E0
 

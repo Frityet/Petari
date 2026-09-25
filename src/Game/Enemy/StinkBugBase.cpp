@@ -9,8 +9,8 @@
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
-#include "JSystem/JMath/JMATrigonometric.hpp"
-#include "JSystem/JMath/JMath.hpp"
+#include <JSystem/JMath/JMATrigonometric.hpp>
+#include <JSystem/JMath/JMath.hpp>
 
 StinkBugBase::StinkBugBase(const char* pName)
     : LiveActor(pName), _8C(0.0f, 0.0f, 1.0f), _98(0.0f, 0.0f, 0.0f), _A4(0.0f, 0.0f, 1.0f), _B0(180.0f), mRadius(1000.0f), _B8(false) {
@@ -21,11 +21,7 @@ void StinkBugBase::setDashVelocity(f32 velocity) {
     f32 radius = mRadius;
     result.scaleAdd(radius, _8C, _98);
     f32 distance = result.distance(mPosition);
-    // Illogical branching in the ASM. Possible inline?
-    if (velocity >= distance) {
-        distance = velocity;
-    }
-
+    distance = MR::min(velocity, distance);
     mVelocity.scale(distance, _8C);
 }
 
@@ -70,7 +66,7 @@ bool StinkBugBase::isPlayerInTerritory(f32 arg1, f32 arg2, f32 arg3, f32 arg4) c
 
     f32 dot = v1.dot(upVec);
 
-    if (__fabs(dot) > arg3) {
+    if (MR::abs(dot) > arg3) {
         return false;
     }
 
@@ -79,7 +75,7 @@ bool StinkBugBase::isPlayerInTerritory(f32 arg1, f32 arg2, f32 arg3, f32 arg4) c
 
     dot = v1.dot(sideVec);
 
-    if (__fabs(dot) > arg2) {
+    if (MR::abs(dot) > arg2) {
         return false;
     }
 
@@ -91,7 +87,7 @@ bool StinkBugBase::isPlayerInTerritory(f32 arg1, f32 arg2, f32 arg3, f32 arg4) c
         return true;
     }
 
-    f32 f1 = MR::abs(MR::sin(_B0));
+    f32 f1 = MR::abs(MR::sinDegree(_B0));
 
     TVec3f scaledAdded;
     // r3 and r4's assembly are in the wrong order

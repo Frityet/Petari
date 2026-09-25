@@ -11,11 +11,12 @@
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "revolution/types.h"
 
 namespace NrvWoodBox {
     NEW_NERVE(WoodBoxNrvWait, WoodBox, Wait);
-    NEW_NERVE(WoodBoxNrvKilled, WoodBox, Killed);
     NEW_NERVE(WoodBoxNrvHit, WoodBox, Hit);
+    NEW_NERVE(WoodBoxNrvKilled, WoodBox, Killed);
 };  // namespace NrvWoodBox
 
 WoodBox::WoodBox(const char* pName) : LiveActor(pName) {
@@ -56,10 +57,11 @@ void WoodBox::init(const JMapInfoIter& rIter) {
 
     calcAndSetBaseMtx();
     PSMTXCopy(getBaseMtx(), mBaseMtx);
-    TVec3f transOffset(0.0f, 100.0f, 0.0f);
-    MR::addTransMtx(mBaseMtx, transOffset);
+    ;
+    MR::addTransMtx(mBaseMtx, TVec3f(0.0f, 100.0f, 0.0f));
 
     mHasPowerStar = false;
+
     if (arg7_PowerStar != 0) {
         mHasPowerStar = true;
         MR::declarePowerStar(this);
@@ -69,12 +71,16 @@ void WoodBox::init(const JMapInfoIter& rIter) {
 
     mCoinCount = arg0_Coins;
     mStarBitCount = arg2_StarBits;
+    s32 arg4 = arg4_1Up;
     mHitPoint = 1;
     mIsNoRespawn = true;
+
     if (arg1_Respawn == 0) {
         mIsNoRespawn = false;
     }
+
     mPlaySolveSE = false;
+
     if (arg3 == 1) {
         mPlaySolveSE = true;
     }
@@ -96,11 +102,12 @@ void WoodBox::init(const JMapInfoIter& rIter) {
     if (mCoinCount != 0) {
         MR::declareCoin(this, mCoinCount);
     }
+
     if (mStarBitCount != 0) {
         MR::declareStarPiece(this, mStarBitCount);
     }
 
-    if (arg4_1Up != 0) {
+    if (arg4 != 0) {
         mOneUp = MR::createKinokoOneUp();
         mOneUp->_DD = 1;
     } else {
@@ -151,6 +158,7 @@ bool WoodBox::receiveMsgPlayerAttack(u32 msg, HitSensor* pSender, HitSensor* pRe
             doHit(pSender, pReceiver);
             return true;
         }
+
         return true;
     }
 
@@ -196,6 +204,7 @@ bool WoodBox::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* pRec
         doHit(pSender, pReceiver);
         return true;
     }
+
     return false;
 }
 
@@ -203,11 +212,13 @@ void WoodBox::kill() {
     if (!mIsNoRespawn) {
         LiveActor::kill();
     } else {
-        LiveActor::setNerve(GET_NERVE(WoodBox, WoodBoxNrvWait));
+        LiveActor::setNerve(GET_NERVE(WoodBox, WoodBoxNrvKilled));
         MR::invalidateHitSensors(this);
         MR::invalidateCollisionParts(this);
     }
+
     mBreakModel->kill();
+
     if (mHasPowerStar) {
         mStarDemoModel->makeActorDead();
         MR::requestAppearPowerStar(this, mPosition);
@@ -219,6 +230,7 @@ void WoodBox::exeWait() {
 void WoodBox::exeHit() {
     if (LiveActor::getNerveStep() == 0) {
         LiveActor::getSensor("body")->invalidate();
+
         if (mHasPowerStar) {
             mStarDemoModel->makeActorAppeared();
         }
@@ -234,7 +246,7 @@ void WoodBox::exeHit() {
             MR::startSound(this, "SE_OJ_STAR_PIECE_BURST");
         }
 
-        if (mOneUp) {
+        if (mOneUp != nullptr) {
             TVec3f upVec;
             MR::calcUpVec(&upVec, this);
             Mtx spawnMtx;
@@ -262,36 +274,40 @@ void WoodBox::exeKilled() {
 }
 
 void WoodBox::doHit(HitSensor* pSender, HitSensor* pReceiver) {
-    if (mHitPoint == 0) {
-        return;
-    }
-    if (--mHitPoint == 0) {
-        MR::invalidateCollisionParts(this);
-    }
+    if (mHitPoint != 0) {
+        if (mHitPoint != 0) {
+            mHitPoint--;
+        }
 
-    if (MR::isInWater(this, TVec3f(0.0f, 0.0f, 0.0f))) {
-        MR::startSound(this, "SE_OJ_WOOD_BOX_BREAK_W");
-    } else {
-        MR::startSound(this, "SE_OJ_WOOD_BOX_BREAK");
-    }
-    if (!MR::isInWater(this, TVec3f(0.0f, 0.0f, 0.0f))) {
-        MR::startSound(this, "SE_EM_EXPLODE_S");
-    }
+        if (mHitPoint == 0) {
+            MR::invalidateCollisionParts(this);
+        }
 
-    mBreakModel->appear();
-    MR::startBck(mBreakModel, "Break", nullptr);
+        if (MR::isInWater(this, TVec3f(0.0f, 0.0f, 0.0f))) {
+            MR::startSound(this, "SE_OJ_WOOD_BOX_BREAK_W");
+        } else {
+            MR::startSound(this, "SE_OJ_WOOD_BOX_BREAK");
+        }
 
-    if (MR::isInWater(this, TVec3f(0.0f, 0.0f, 0.0f))) {
-        MR::emitEffect(mBreakModel, "BreakWater");
-    } else {
-        MR::emitEffect(mBreakModel, "Break");
+        if (!MR::isInWater(this, TVec3f(0.0f, 0.0f, 0.0f))) {
+            MR::startSound(this, "SE_EM_EXPLODE_S");
+        }
+
+        mBreakModel->appear();
+        MR::startBck(mBreakModel, "Break");
+
+        if (MR::isInWater(this, TVec3f(0.0f, 0.0f, 0.0f))) {
+            MR::emitEffect(mBreakModel, "BreakWater");
+        } else {
+            MR::emitEffect(mBreakModel, "Break");
+        }
+
+        if (mIsNoRespawn) {
+            MR::startBva(this, "WoodBox");
+        } else {
+            MR::hideModel(this);
+        }
+
+        setNerve(GET_NERVE(WoodBox, WoodBoxNrvHit));
     }
-
-    if (mIsNoRespawn) {
-        MR::startBva(this, "WoodBox");
-    } else {
-        MR::hideModel(this);
-    }
-
-    setNerve(GET_NERVE(WoodBox, WoodBoxNrvHit));
 }

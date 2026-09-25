@@ -439,8 +439,8 @@ void WaterRoadModelInfo::loadMaterialHigh(const WaterRoad* pRoad) const {
     GXSetIndTexMtx(GX_ITM_0, indMtx, 0);
     GXSetNumTevStages(5);
 
-    GXSetTevColor(GX_TEVREG0, sTevColor1);
-    GXSetTevColor(GX_TEVREG1, sTevColor2);
+    GXSetTevColor(GX_TEVREG0, ::sTevColor1);
+    GXSetTevColor(GX_TEVREG1, ::sTevColor2);
 
     if (pRoad != nullptr) {
         GXSetTevColor(GX_TEVREG2, Color8(0xFF, 0xFF, 0xFF, pRoad->mAlpha));
@@ -526,8 +526,8 @@ void WaterRoadModelInfo::loadMaterialLow() const {
 
     GXSetNumIndStages(0);
     GXSetNumTevStages(4);
-    GXSetTevColor(GX_TEVREG0, sTevColor1);
-    GXSetTevColor(GX_TEVREG1, sTevColor2);
+    GXSetTevColor(GX_TEVREG0, ::sTevColor1);
+    GXSetTevColor(GX_TEVREG1, ::sTevColor2);
     GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
     GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_TEXC, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO);
     GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
@@ -646,7 +646,7 @@ void WaterRoad::exeWaitInvalid() {
 
 void WaterRoad::exeRideStart() {
     if (MR::isFirstStep(this)) {
-        MR::startBckPlayer("WaterRoadIn", static_cast< const char* >(nullptr));
+        MR::startBckPlayer("WaterRoadIn");
         MR::startSound(mRider, "SE_OJ_WATER_ROAD_BIND_IN");
     }
 
@@ -666,7 +666,7 @@ void WaterRoad::exeRideStart() {
 
 void WaterRoad::exeRideWait() {
     if (MR::isFirstStep(this)) {
-        MR::startBckPlayer("SwimFlutter", static_cast< const char* >(nullptr));
+        MR::startBckPlayer("SwimFlutter");
     }
 
     if (updateRide()) {
@@ -680,7 +680,7 @@ void WaterRoad::exeRideWait() {
 
 void WaterRoad::exeRideSpin() {
     if (MR::isFirstStep(this)) {
-        MR::startBckPlayer("SwimSpin", static_cast< const char* >(nullptr));
+        MR::startBckPlayer("SwimSpin");
         MR::startSound(mRider, "SE_PM_TORNADE_IN_WATER_ST");
         f32 speed = MR::getRailCoordSpeed(this);
         speed += ::sRiderSpinAccel;

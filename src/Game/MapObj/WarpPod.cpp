@@ -1,5 +1,4 @@
 #include "Game/MapObj/WarpPod.hpp"
-#include "Game/Util.hpp"
 #include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/LiveActor/LiveActorGroup.hpp"
 #include "Game/Scene/SceneFunction.hpp"
@@ -103,7 +102,7 @@ void WarpPodMgr::endEventCamera() {
 
     WarpPod* pPairPod = getPairPod(_C);
     pPairPod->mDelay = 60;
-    MR::startBck(pPairPod, "Wait", nullptr);
+    MR::startBck(pPairPod, "Wait");
     MR::startBrk(pPairPod, "Wait");
 
     _C = nullptr;
@@ -116,7 +115,7 @@ void WarpPodMgr::notifyWarpEnd(WarpPod* pWarpPod) {
 
     WarpPod* pPairPod = getPairPod(pWarpPod);
     pPairPod->mDelay = 60;
-    MR::startBck(pPairPod, "Wait", nullptr);
+    MR::startBck(pPairPod, "Wait");
     MR::startBrk(pPairPod, "Wait");
 
     _C = nullptr;
@@ -211,11 +210,12 @@ void WarpPod::init(const JMapInfoIter& rIter) {
     _A4 = 0;
 
     if (mVisibilityState != 0) {
-        MR::startBck(this, "Active", nullptr);
+        MR::startBck(this, "Active");
         MR::startBrk(this, "Active");
     }
 
     bool isNonActive = false;
+
     if (MR::calcOpenedAstroDomeNum() < mGrandstarReq) {
         isNonActive = true;
     }
@@ -223,6 +223,7 @@ void WarpPod::init(const JMapInfoIter& rIter) {
     if (mArg3 == 0) {
         s32 index = MR::getWarpPodManager()->_14++;
         mPathFlagIndex = index;
+
         if (MR::isOnWarpPodPathFlag(mPathFlagIndex)) {
             isNonActive = false;
         } else {
@@ -233,7 +234,7 @@ void WarpPod::init(const JMapInfoIter& rIter) {
     }
 
     if (isNonActive) {
-        MR::startBck(this, "Wait", nullptr);
+        MR::startBck(this, "Wait");
         MR::startBrk(this, "Wait");
 
         mIsInactive = true;
@@ -267,30 +268,32 @@ void WarpPod::glowEffect() {
 void WarpPod::initPair() {
     mPairPod = MR::getWarpPodManager()->getPairPod(this);
 
-    bool isPath;
+    bool someBool;
+
     if (mPairPod->mPosition.x > mPosition.x) {
-        isPath = true;
+        someBool = true;
     } else if (mPairPod->mPosition.x < mPosition.x) {
-        isPath = false;
+        someBool = false;
     } else if (mPairPod->mPosition.y < mPosition.y) {
-        isPath = true;
+        someBool = true;
     } else if (mPairPod->mPosition.y < mPosition.y) {
-        isPath = false;
+        someBool = false;
     } else if (mPairPod->mPosition.z < mPosition.z) {
-        isPath = true;
+        someBool = true;
     } else if (mPairPod->mPosition.z < mPosition.z) {
-        isPath = false;
+        someBool = false;
     }
 
-    if (mPairPod->mArg7 != 1 && mArg7 != 1) {
-        if (mArg3 == 0) {
+    if (mPairPod->mArg7 != true && mArg7 != true) {
+        if (!mArg3) {
             mArg7 = false;
-        } else if (mPairPod->mArg3 == 0) {
+        } else if (!mPairPod->mArg3) {
             mArg7 = true;
         } else {
-            mArg7 = isPath;
+            mArg7 = someBool;
         }
     }
+
     initDraw();
 
     if (!mIsInactive) {
@@ -322,7 +325,7 @@ void WarpPod::appear() {
         mIsInactive = false;
 
         MR::startSound(this, "SE_OJ_WARP_POD_PATH_APPEAR");
-        MR::startBck(this, "Active", nullptr);
+        MR::startBck(this, "Active");
         MR::startBrk(this, "Active");
         glowEffect();
     }
@@ -370,7 +373,7 @@ void WarpPod::control() {
     mIsInactive = false;
     _CC = true;
 
-    MR::startBck(this, "Active", nullptr);
+    MR::startBck(this, "Active");
     MR::startBrk(this, "Active");
 
     glowEffect();
@@ -378,7 +381,9 @@ void WarpPod::control() {
 
 void WarpPod::movement() {
     if (_A6 != 0) {
-        if (--_A6 == 0) {
+        _A6--;
+
+        if (_A6 == 0) {
             MR::validateClipping(this);
 
             if (_CC) {
@@ -386,7 +391,7 @@ void WarpPod::movement() {
             }
 
             mPairPod->glowEffect();
-            MR::startBck(mPairPod, "Active", nullptr);
+            MR::startBck(mPairPod, "Active");
             MR::startBrk(mPairPod, "Active");
         }
     } else {
@@ -395,10 +400,12 @@ void WarpPod::movement() {
                 return;
             }
 
-            if (--mDelay == 0) {
+            mDelay--;
+
+            if (mDelay == 0) {
                 MR::validateClipping(this);
 
-                MR::startBck(this, "Active", nullptr);
+                MR::startBck(this, "Active");
                 MR::startBrk(this, "Active");
 
                 if (mVisibilityState != 0) {
@@ -414,12 +421,7 @@ void WarpPod::movement() {
 }
 
 void WarpPod::startEventCamera() const {
-    if (_CC) {
-        return;
-    }
-
-    // FIXME: Should not optimize to beqlr instruction.
-    if (!mPairPod->_CC) {
+    if (_CC || mPairPod->_CC) {
         return;
     }
 
@@ -464,39 +466,43 @@ void WarpPod::initDraw() {
         return;
     }
 
-    TVec3f axis;
-    TVec3f centerDirection;
-    TVec3f delta = mPairPod->mPosition - mPosition;
-    f32 distance = delta.length();
+    TVec3f side;
+    TVec3f normal;
+    TVec3f direction(mPairPod->mPosition - mPosition);
+    f32 distance = direction.length();
     TVec3f up;
     MR::calcUpVec(&up, this);
-    axis.cross(delta, -up);
-    MR::normalizeOrZero(&axis);
-    TVec3f midPoint = mPosition + delta * 0.5f;
-    centerDirection.cross(axis, delta);
-    MR::normalizeOrZero(&centerDirection);
+    side.cross(direction, -up);
+    MR::normalizeOrZero(&side);
+    TVec3f center(mPosition + direction * 0.5f);
+    normal.cross(side, direction);
+    MR::normalizeOrZero(&normal);
+
     f32 halfAngle = PI / 4.0f;
     f32 radius = (0.5f * distance) / MR::sin(halfAngle);
-    f32 centerDistance = MR::sqrt(radius * radius - 0.5f * (0.5f * distance * distance));
-    TVec3f rotationAxis = axis;
-    TVec3f center = midPoint + centerDirection * centerDistance;
-    TVec3f start = -centerDirection * radius;
-    f32 startAngle = -halfAngle;
+    f32 height = MR::sqrt(radius * radius - 0.5f * (0.5f * distance * distance));
+    TVec3f axis(side);
+    TVec3f arcCenter(center + normal * height);
+    TVec3f arcStart = -normal * radius;
 
-    u16 remaining = 60;
-    _C4 = new TVec3f[60];
-    u32 pointCount = 60;
-    _C8 = pointCount;
-    for (u32 i = 0; i < 60; i++, remaining--) {
-        f32 rate = (1.0f + MR::sin(((60 - remaining) - 0.5f * pointCount) / pointCount * PI)) * 0.5f;
+    f32 startAngle = -halfAngle;
+    u16 count = 60;
+    u16 remaining = count;
+    _C4 = new TVec3f[count];
+    _C8 = count;
+
+    for (u32 i = 0; i < count; remaining--, i++) {
+        f32 blend = (MR::sin(((count - remaining - 0.5f * count) / count) * MR::pi()) + 1.0f) / 2.0f;
+
         if (mVisibilityState == 2) {
-            rate = 1.0f - static_cast< f32 >(remaining - 1) / pointCount;
+            blend = 1.0f - (remaining - 1) / static_cast< f32 >(count);
         }
-        Mtx rotation;
-        PSMTXRotAxisRad(rotation, rotationAxis, startAngle * (1.0f - rate) + halfAngle * rate);
-        TVec3f rotated;
-        PSMTXMultVecSR(rotation, start, rotated);
-        TVec3f position = center + rotated;
+
+        TPos3f rotation;
+        PSMTXRotAxisRad(rotation, axis, startAngle * (1.0f - blend) + halfAngle * blend);
+        TVec3f point;
+        PSMTXMultVecSR(rotation, arcStart, point);
+        TVec3f position(arcCenter + point);
         _C4[i] = position + up * 200.0f;
     }
 
@@ -505,16 +511,20 @@ void WarpPod::initDraw() {
 }
 
 void WarpPod::drawCylinder(u32) const {
-    f32 radius = 30.0f;
+    f32 length = 30.0f;
+
     if (!mArg7) {
         return;
     }
+
     if (mPairPod->mIsInactive) {
         return;
     }
+
     if (mIsInactive) {
         return;
     }
+
     if (mVisibilityState != 1) {
         return;
     }
@@ -524,103 +534,127 @@ void WarpPod::drawCylinder(u32) const {
     MR::ddSetVtxFormat(2);
     MR::ddLightingOff();
     GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C0, GX_CC_ONE, GX_CC_TEXA, GX_CC_ZERO);
-    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_CC_APREV, GX_TEVPREV);
     GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_TEXA, GX_CA_KONST, GX_CA_ZERO);
-    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_2, GX_TRUE, GX_TEVPREV);
-    GXSetTevColor(GX_TEVREG0, gGlowEffectEnvColor[mGlowColorIndex]);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_2, GX_TB_ADDHALF, GX_TEVPREV);
+    GXSetTevColor(GX_TEVREG0, ::gGlowEffectEnvColor[mGlowColorIndex]);
     GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
+
     _D4->load(GX_TEXMAP0);
     _D8->load(GX_TEXMAP1);
 
-    u32 pointCount = _C8;
-    s32 timer = _A6;
-    s32 duration = mCameraTime;
-    if (timer == 0) {
-        timer = mPairPod->_A6;
-        duration = mPairPod->mCameraTime;
-    }
-    if (timer != 0) {
-        pointCount = pointCount * (1.0f - static_cast< f32 >(timer) / duration);
+    s32 val1 = _A6;
+    u32 val2 = _C8;
+    s32 val3 = mCameraTime;
+
+    if (val1 == 0) {
+        val1 = mPairPod->_A6;
+        val3 = mPairPod->mCameraTime;
     }
 
-    TVec3f prevVertices[4];
-    TVec3f nextVertices[4];
-    TVec3f prevPosition;
-    TVec2f nextTexCoords[2];
-    TVec2f prevTexCoords[2];
-    for (u32 i = 0; i < pointCount; i++) {
+    if (val1 != 0) {
+        val2 *= 1 - static_cast< f32 >(val1) / val3;
+    }
+
+    TVec3f vec84, vec90, vec9C, vecA8, vecB4, vecC0, vecCC, vecD8, vecE4;
+    TVec2f currentTexCoords[2];
+    TVec2f previousTexCoords[2];
+
+    for (u32 i = 0; i < val2; i++) {
         if (i == 0) {
-            u32 j = 1;
-            for (; j < pointCount; j++) {
-                TVec3f delta = _C4[j] - _C4[i];
-                TVec3f direction;
-                MR::vecKillElement(delta, MR::getCamZdir(), &direction);
-                if (MR::normalizeOrZero(&direction)) {
+            u32 j;
+
+            for (j = 1; j < val2; j++) {
+                TVec3f direction = _C4[j] - _C4[i];
+                TVec3f vec11C;
+                MR::vecKillElement(direction, MR::getCamZdir(), &vec11C);
+
+                if (MR::normalizeOrZero(&vec11C)) {
                     continue;
                 }
-                TVec3f side;
-                side.cross(direction, MR::getCamZdir());
-                MR::normalizeOrZero(&side);
-                TVec3f up;
-                up.cross(side, direction);
-                MR::normalizeOrZero(&up);
-                side.setLength(radius);
-                up.setLength(radius);
-                prevVertices[0] = _C4[i] + side;
-                prevVertices[1] = _C4[i] - side;
-                prevVertices[2] = _C4[i] + up;
-                prevVertices[3] = _C4[i] - up;
+
+                TVec3f vec128;
+                vec128.cross(vec11C, MR::getCamZdir());
+                MR::normalizeOrZero(&vec128);
+
+                TVec3f vec134;
+                vec134.cross(vec128, vec11C);
+                MR::normalizeOrZero(&vec134);
+
+                vec128.setLength(length);
+                vec134.setLength(length);
+
+                vecA8 = _C4[i] + vec128;
+                vec9C = _C4[i] - vec128;
+                vec90 = _C4[i] + vec134;
+                vec84 = _C4[i] - vec134;
+
                 break;
             }
-            if (j >= pointCount) {
-                return;
+
+            if (j >= val2) {
+                break;
             }
-            prevPosition = _C4[0];
-            prevTexCoords[0].set(0.0f, 1.0f);
-            prevTexCoords[1].set(1.0f, 1.0f);
-        } else {
-            f32 texCoord = 2.0f * (static_cast< f32 >(i + 1) / pointCount) - 1.0f;
-            if (texCoord < 0.0f) {
-                texCoord = -texCoord;
-            }
-            nextTexCoords[0].set(0.0f, texCoord);
-            nextTexCoords[1].set(1.0f, texCoord);
-            TVec3f delta = _C4[i] - prevPosition;
-            TVec3f direction;
-            MR::vecKillElement(delta, MR::getCamZdir(), &direction);
-            if (MR::normalizeOrZero(&direction)) {
-                continue;
-            }
-            TVec3f side;
-            side.cross(direction, MR::getCamZdir());
-            MR::normalizeOrZero(&side);
-            TVec3f up;
-            up.cross(side, direction);
-            MR::normalizeOrZero(&up);
-            side.setLength(radius);
-            up.setLength(radius);
-            nextVertices[0] = _C4[i] + side;
-            nextVertices[1] = _C4[i] - side;
-            nextVertices[2] = _C4[i] + up;
-            nextVertices[3] = _C4[i] - up;
-            GXBegin(GX_QUADS, GX_VTXFMT0, 8);
-            MR::ddSendVtxData(prevVertices[0], prevTexCoords[0]);
-            MR::ddSendVtxData(nextVertices[0], nextTexCoords[0]);
-            MR::ddSendVtxData(nextVertices[1], nextTexCoords[1]);
-            MR::ddSendVtxData(prevVertices[1], prevTexCoords[1]);
-            MR::ddSendVtxData(prevVertices[2], prevTexCoords[0]);
-            MR::ddSendVtxData(nextVertices[2], nextTexCoords[0]);
-            MR::ddSendVtxData(nextVertices[3], nextTexCoords[1]);
-            MR::ddSendVtxData(prevVertices[3], prevTexCoords[1]);
-            GXEnd();
-            prevVertices[0] = nextVertices[0];
-            prevTexCoords[0] = nextTexCoords[0];
-            prevVertices[1] = nextVertices[1];
-            prevTexCoords[1] = nextTexCoords[1];
-            prevVertices[2] = nextVertices[2];
-            prevVertices[3] = nextVertices[3];
-            prevPosition = _C4[i];
+
+            vecE4 = _C4[0];
+
+            previousTexCoords[0].set(0.0f, 1.0f);
+            previousTexCoords[1].set(1.0f, 1.0f);
+
+            continue;
         }
+
+        f32 val = 2.0f * (static_cast< f32 >(i + 1) / val2) - 1.0f;
+
+        if (val < 0.0f) {
+            val = -val;
+        }
+
+        currentTexCoords[0].set(0.0f, val);
+        currentTexCoords[1].set(1.0f, val);
+
+        TVec3f direction = _C4[i] - vecE4;
+        TVec3f vec14C;
+        MR::vecKillElement(direction, MR::getCamZdir(), &vec14C);
+
+        if (MR::normalizeOrZero(&vec14C)) {
+            continue;
+        }
+
+        TVec3f vec158;
+        vec158.cross(vec14C, MR::getCamZdir());
+        MR::normalizeOrZero(&vec158);
+
+        TVec3f vec164;
+        vec164.cross(vec158, vec14C);
+        MR::normalizeOrZero(&vec164);
+
+        vec158.setLength(length);
+        vec164.setLength(length);
+
+        vecD8 = _C4[i] + vec158;
+        vecCC = _C4[i] - vec158;
+        vecC0 = _C4[i] + vec164;
+        vecB4 = _C4[i] - vec164;
+
+        GXBegin(GX_QUADS, GX_VTXFMT0, 8);
+
+        MR::ddSendVtxData(vecA8, previousTexCoords[0]);
+        MR::ddSendVtxData(vecD8, currentTexCoords[0]);
+        MR::ddSendVtxData(vecCC, currentTexCoords[1]);
+        MR::ddSendVtxData(vec9C, previousTexCoords[1]);
+        MR::ddSendVtxData(vec90, previousTexCoords[0]);
+        MR::ddSendVtxData(vecC0, currentTexCoords[0]);
+        MR::ddSendVtxData(vecB4, currentTexCoords[1]);
+        MR::ddSendVtxData(vec84, previousTexCoords[1]);
+
+        vecA8 = vecD8;
+        previousTexCoords[0] = currentTexCoords[0];
+        vec9C = vecCC;
+        previousTexCoords[1] = currentTexCoords[1];
+        vec90 = vecC0;
+        vec84 = vecB4;
+        vecE4 = _C4[i];
     }
 }
 

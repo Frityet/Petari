@@ -5,7 +5,7 @@
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
-#include "revolution/gx.h"
+#include <revolution/gx.h>
 
 namespace {
     const f32 sModelScale = 100.0f;
@@ -29,55 +29,60 @@ ShadowVolumeOvalPole::ShadowVolumeOvalPole() : ShadowVolumeModel("影描画[ボ�
 void ShadowVolumeOvalPole::loadModelDrawMtx() const {
     ShadowController* controller = getController();
     MtxPtr dropMtx = controller->_18;
+    TPos3f scaledMtx;
+    TPos3f inverseMtx;
+    TPos3f mtx;
     TVec3f position;
     calcBaseDropPosition(&position);
     TVec3f direction;
     controller->getDropDir(&direction);
     direction.negate();
-    TVec3f scale(mSize);
-    scale.scale(1.0f / 100.0f);
-    if (scale.x <= 0.01f) {
-        scale.x = 0.01f;
-    }
-    if (scale.y <= 0.01f) {
-        scale.y = 0.01f;
-    }
-    if (scale.z <= 0.01f) {
-        scale.z = 0.01f;
-    }
-    if (controller->isFollowHostScale()) {
-        scale *= controller->getHost()->mScale;
+    f32 modelScale = ::sModelScale;
+    TVec3f size(mSize / modelScale);
+    if (size.x <= 0.01f) {
+        size.x = 0.01f;
     }
 
-    TPos3f scaleMtx;
-    scaleMtx.setInline(*reinterpret_cast< const TPos3f* >(dropMtx));
-    scaleMtx.setTrans(TVec3f(0.0f, 0.0f, 0.0f));
-    MR::preScaleMtx(scaleMtx.toMtxPtr(), scale);
-    TPos3f inverseMtx;
-    inverseMtx.invert(scaleMtx);
+    if (size.y <= 0.01f) {
+        size.y = 0.01f;
+    }
+
+    if (size.z <= 0.01f) {
+        size.z = 0.01f;
+    }
+
+    if (controller->isFollowHostScale()) {
+        size *= controller->getHost()->mScale;
+    }
+
+    scaledMtx.set(dropMtx);
+    scaledMtx.setTrans(TVec3f(0.0f, 0.0f, 0.0f));
+    MR::preScaleMtx(scaledMtx, size);
+    inverseMtx.invert(scaledMtx);
     TVec3f localDirection;
     inverseMtx.mult(direction, localDirection);
-    TPos3f drawMtx;
-    drawMtx.identity();
-    MR::makeMtxUpNoSupport(&drawMtx, localDirection);
-    drawMtx.concat(scaleMtx, drawMtx);
-    drawMtx.setTrans(position);
+    mtx.identity();
+    MR::makeMtxUpNoSupport(&mtx, localDirection);
+    mtx.concat(scaledMtx, mtx);
+    mtx.setTrans(position);
+
     TVec3f side;
     TVec3f up;
     TVec3f front;
-    drawMtx.getXDir(side);
-    drawMtx.getYDir(up);
-    drawMtx.getZDir(front);
+    mtx.getXDir(side);
+    mtx.getYDir(up);
+    mtx.getZDir(front);
     if (!MR::normalizeOrZero(&up)) {
-        JMAVECScaleAdd(&up, &side, &side, -up.dot(side));
-        JMAVECScaleAdd(&up, &front, &front, -up.dot(front));
+        side.orthogonalize(up);
+        front.orthogonalize(up);
     }
-    up.scale(calcBaseDropLength() / 100.0f);
-    drawMtx.setXDir(side);
-    drawMtx.setYDir(up);
-    drawMtx.setZDir(front);
-    PSMTXConcat(MR::getCameraViewMtx(), drawMtx.toMtxPtr(), drawMtx.toMtxPtr());
-    GXLoadPosMtxImm(drawMtx.toMtxPtr(), GX_PNMTX0);
+
+    up.scale(calcBaseDropLength() / ::sModelScale);
+    mtx.setXDir(side);
+    mtx.setYDir(up);
+    mtx.setZDir(front);
+    PSMTXConcat(MR::getCameraViewMtx(), mtx, mtx);
+    GXLoadPosMtxImm(mtx, 0);
 }
 
 void ShadowVolumeOvalPole::setSize(const TVec3f& rSize) {

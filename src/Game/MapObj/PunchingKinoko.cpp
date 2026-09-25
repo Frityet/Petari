@@ -1,7 +1,13 @@
 #include "Game/MapObj/PunchingKinoko.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util.hpp"
+#include "JSystem/JGeometry/TVec.hpp"
 #include <revolution.h>
+
+void PunchingKinoko_FORCE_EMIT_SCALE() {
+    TVec3f vec;
+    vec.scale(0.0f);
+}
 
 namespace NrvPunchingKinoko {
     NEW_NERVE(PunchingKinokoNrvWait, PunchingKinoko, Wait);
@@ -26,7 +32,7 @@ void PunchingKinoko::init(const JMapInfoIter& rIter) {
     initModelManagerWithAnm("PunchingKinoko", nullptr, false);
     MR::connectToSceneNoSilhouettedMapObj(this);
     MR::calcGravity(this);
-    _9C.set< f32 >(mPosition);
+    _9C.set(mPosition);
 
     mGroundChecker = new GroundChecker("頭コリジョン", 70.0f, 0.0f);
     MR::calcPositionUpOffset(&mGroundChecker->mPosition, this, 130.0f);
@@ -120,7 +126,7 @@ void PunchingKinoko::control() {
     mScaleController->update();
     mGroundChecker->movement();
     MR::reboundVelocityFromCollision(mGroundChecker, 0.0f, 0.0f, 1.0f);
-    if (mInvincibleHitCoolDown > -1) {
+    if (mInvincibleHitCoolDown >= 0) {
         mInvincibleHitCoolDown -= 1;
     }
 }
@@ -151,7 +157,7 @@ void PunchingKinoko::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
                 if (isEnableHitPlayer()) {
                     if (stack_8 >= 30.0f) {
                         if (stack_8 >= 45.0f) {
-                            hit = MR::sendMsgEnemyAttackFlipMaximumToDir(pReceiver, pSender, stack_3C * 70.0f);
+                            hit = MR::sendMsgEnemyAttackFlipMaximumToDir(pReceiver, pSender, stack_3C.multInLine(70.0f));
                         } else {
                             hit = MR::sendMsgEnemyAttackFlipToDir(pReceiver, pSender, stack_3C * 70.0f);
                         }
@@ -182,7 +188,7 @@ void PunchingKinoko::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
                 MR::calcSensorDirectionNormalize(&stack_30, pReceiver, pSender);
                 f32 dot = mGroundChecker->mVelocity.dot(stack_30) * 1.6f;
                 mGroundChecker->mVelocity -= stack_30 * dot;
-                mGroundChecker->mVelocity *= 0.3f;
+                mGroundChecker->mVelocity.mult(0.3f);
                 setNerve(GET_NERVE(PunchingKinoko, PunchingKinokoNrvWait));
             }
         }
@@ -418,7 +424,7 @@ void PunchingKinoko::exePunched() {
     MR::attenuateVelocity(mGroundChecker, 0.99f);
     HitSensor* sensor = getSensor("Head");
     MR::sendMsgEnemyAttackToBindedSensor(mGroundChecker, sensor);
-    _9C.set< f32 >(mGroundChecker->mPosition);
+    _9C.set(mGroundChecker->mPosition);
 
     if (MR::isGreaterStep(this, 5)) {
         setNerve(GET_NERVE(PunchingKinoko, PunchingKinokoNrvPunchedBrake));
@@ -429,7 +435,7 @@ void PunchingKinoko::exePunchedBrake() {
     addVelocityKeepHeight();
     MR::attenuateVelocity(mGroundChecker, 0.9f);
     MR::startLevelSound(this, "SE_OJ_LV_PNC_KINOKO_PUNCHED");
-    _9C.set< f32 >(mGroundChecker->mPosition);
+    _9C.set(mGroundChecker->mPosition);
     if (!MR::isGreaterStep(this, 40)) {
         HitSensor* sensor = getSensor("Head");
         if (!MR::sendMsgEnemyAttackToBindedSensor(mGroundChecker, sensor)) {
@@ -460,7 +466,7 @@ void PunchingKinoko::exeCrushed() {
             MR::getShadowProjectionPos(this, "頭", &mGroundChecker->mPosition);
             mGroundChecker->mPosition.add(_A8 * 20.0f);
         } else {
-            _A8.set< f32 >(mGravity);
+            _A8.set(mGravity);
         }
 
         MR::offBind(mGroundChecker);

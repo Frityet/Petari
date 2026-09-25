@@ -41,56 +41,6 @@ bool Mario::isEnableSlopeMove() const {
     }
 }
 
-void Mario::moveSlopeSlide() {
-    if (calcAngleD(_368) < 5.8f) {
-        if (mDrawStates._C) {
-            const TVec3f* pWorldPadDir = &getWorldPadDir();
-            f32 speed = _16C.length();
-            if (_910.length() < speed) {
-                _910 = _16C;
-            }
-
-            _910 += *pWorldPadDir * 0.5f;
-
-            if (_910.length() > 15.0f) {
-                _910.setLength(15.0f);
-            }
-
-            addVelocity(_910);
-        }
-    } else if (isAnimationRun("スケーティング") || isAnimationRun("坂すべり上向きうつぶせ", 2) || isAnimationRun("坂すべり下向きあおむけ", 3)) {
-        TVec3f stack_20;
-        stack_20.cross(getAirGravityVec(), _368);
-        MR::normalizeOrZero(&stack_20);
-
-        const TVec3f* pWorldPadDir = &getWorldPadDir();
-        if (MR::isNearZero(_280)) {
-            _284 = stack_20;
-        }
-
-        if (isStickOn() && _3C4 == 0) {
-            f32 dot = _284.dot(*pWorldPadDir);
-            if (MR::abs(dot) > 0.2f) {
-                _280 = (_280 * mActor->getConst().getTable()->mSlopeSideMoveInertia) +
-                       (dot * (1.0f - mActor->getConst().getTable()->mSlopeSideMoveInertia));
-            } else {
-                MarioConstTable* pConstTable = mActor->getConst().getTable();
-                _280 = _280 * pConstTable->mSlopeSideStopInertia;
-            }
-        } else {
-            MarioConstTable* pConstTable = mActor->getConst().getTable();
-            _280 = _280 * pConstTable->mSlopeSideStopInertia;
-        }
-
-        TVec3f stack_14;
-        stack_14.cross(_284, _368);
-        _284.cross(_368, stack_14);
-
-        MarioConstTable* pConstTable = mActor->getConst().getTable();
-        addVelocity(_284, _280 * pConstTable->mSlopeSideMoveSpeed);
-    }
-}
-
 void Mario::slopeMove() {
     if (mActor->mHealth == 0) {
         return;
@@ -100,13 +50,15 @@ void Mario::slopeMove() {
         return;
     }
 
+    f32 blend;
     f32 blendRate = MR::clamp(mWalkSpeed, 0.0f, 1.0f);
 
+    TVec3f stack_188;
+    TVec3f stack_17C;
     TVec3f stack_170;
     stack_170.cross(_368, getAirGravityVec());
     MR::normalizeOrZero(&stack_170);
 
-    TVec3f stack_17C;
     if (MR::isNearZero(stack_170)) {
         stack_17C.zero();
         _904.zero();
@@ -159,7 +111,7 @@ void Mario::slopeMove() {
         }
     } else {
         if (!mMovementStates._23) {
-            if (slopeAngle >= mActor->mConst->getTable()->mSlipAngle) {
+            if (slopeAngle >= getActor()->getConst().getTable()->mSlipAngle) {
                 TVec3f stack_164;
                 if (MR::vecKillElement(mVelocity, stack_17C, &stack_164) < 0.0f) {
                     _8F8 = mVelocity;
@@ -204,7 +156,6 @@ void Mario::slopeMove() {
             }
 
             if (_8F0 >= 10.0f) {
-                TVec3f stack_158;
                 if (MR::vecKillElement(mActor->getLastMove(), stack_17C, &stack_158) < 0.0f) {
                     _8F8 = mActor->getLastMove();
                 } else {
@@ -227,18 +178,19 @@ void Mario::slopeMove() {
             if (mDrawStates._4) {
                 _3FE++;
 
-                if (_3FE > mActor->mConst->getTable()->mSlopeDashAccelTime) {
-                    _3FE = mActor->mConst->getTable()->mSlopeDashAccelTime;
+                if (_3FE > getActor()->getConst().getTable()->mSlopeDashAccelTime) {
+                    _3FE = getActor()->getConst().getTable()->mSlopeDashAccelTime;
                 }
 
-                _8F4 = (slopeAngle / mActor->mConst->getTable()->mSlopeDashAngleFactor) *
-                       (static_cast< f32 >(_3FE) / static_cast< f32 >(mActor->mConst->getTable()->mSlopeDashAccelTime));
-                _8F4 = 1.0f + (_8F4 * mActor->mConst->getTable()->mSlopeDashSpeedFactor);
+                _8F4 = (slopeAngle / getActor()->getConst().getTable()->mSlopeDashAngleFactor) *
+                       (static_cast< f32 >(_3FE) / static_cast< f32 >(getActor()->getConst().getTable()->mSlopeDashAccelTime));
+                _8F4 = 1.0f + (_8F4 * getActor()->getConst().getTable()->mSlopeDashSpeedFactor);
 
-                mVelocity += -_904 * (1.0f + ((_8F4 - 1.0f) * mActor->mConst->getTable()->mSlopeDashAccelFactor));
+                const f32 accel = 1.0f + ((_8F4 - 1.0f) * getActor()->getConst().getTable()->mSlopeDashAccelFactor);
+                mVelocity += -_904 * accel;
 
                 if (isAnimationRun("がんばり走り")) {
-                    stopAnimation(static_cast< const char* >(nullptr));
+                    stopAnimation(nullptr);
                 }
             }
         }
@@ -254,7 +206,7 @@ void Mario::slopeMove() {
             MR::vecKillElement(mVelocity, stack_17C, &mVelocity);
             mVelocity += _8F8;
 
-            _8F8 += -stack_17C * slopeAngle * mActor->mConst->getTable()->mSlopeAccel;
+            _8F8 += -stack_17C * slopeAngle * getActor()->getConst().getTable()->mSlopeAccel;
         } else {
             TVec3f stack_140;
             stack_140 = _8F8;
@@ -291,7 +243,7 @@ void Mario::slopeMove() {
             MR::normalizeOrZero(&_8F8);
 
             const f32 ratio = MR::clamp(moveAngle / 30.0f, 0.0f, 1.0f);
-            const f32 blend = ratio * mActor->mConst->getTable()->mSlopeCurveAssist;
+            blend = ratio * getActor()->getConst().getTable()->mSlopeCurveAssist;
 
             MR::vecBlendSphere(_8F8, -stack_17C, &_8F8, blend);
             _8F8.setLength(speed);
@@ -333,7 +285,7 @@ void Mario::slopeMove() {
 
                     if (isStickOn() && _16C.dot(stack_11C) > 0.0f &&
                         MR::diffAngleAbsHorizontal(stack_11C, mFrontVec, *getGravityVec()) < 0.5235988f) {
-                        setFrontVecKeepUpAngle(_16C, mActor->mConst->getTable()->mSlipMoveTurnAngleRad);
+                        setFrontVecKeepUpAngle(_16C, getActor()->getConst().getTable()->mSlipMoveTurnAngleRad);
                     }
                 } else {
                     if (!isAnimationRun("坂すべり下向きあおむけ", 3)) {
@@ -349,7 +301,7 @@ void Mario::slopeMove() {
                     if (_3C2 > 10 && isStickOn() && _16C.dot(stack_11C) > 0.0f) {
                         const TVec3f& gravityVec = *getGravityVec();
                         if (MR::diffAngleAbsHorizontal(-stack_11C, mFrontVec, gravityVec) < 0.5235988f) {
-                            setFrontVecKeepUpAngle(-_16C, mActor->mConst->getTable()->mSlipMoveTurnAngleRad);
+                            setFrontVecKeepUpAngle(-_16C, getActor()->getConst().getTable()->mSlipMoveTurnAngleRad);
                         }
                     }
                 }
@@ -359,7 +311,7 @@ void Mario::slopeMove() {
                     _8F8.zero();
                 }
 
-                changeAnimation("スケーティング", static_cast< const char* >(nullptr));
+                changeAnimation("スケーティング");
             }
         }
 
@@ -375,7 +327,7 @@ void Mario::slopeMove() {
             MR::normalize(&stack_17C);
             if (stack_17C.dot(worldPadDir) > 0.15f) {
                 playEffect("共通スリップ坂制動");
-                _3D0 = mActor->mConst->getTable()->mTurnSlipTime;
+                _3D0 = getActor()->getConst().getTable()->mTurnSlipTime;
             }
         }
 
@@ -393,19 +345,19 @@ void Mario::slopeMove() {
         mVelocity += _8F8;
 
         if (isStickOn() && _3C4 == 0) {
-            _8F8.scale(mActor->mConst->getTable()->mSlopeCancelInertia);
+            _8F8.scale(getActor()->getConst().getTable()->mSlopeCancelInertia);
         } else {
-            _8F8.scale(mActor->mConst->getTable()->mSlopeFinishInertia);
+            _8F8.scale(getActor()->getConst().getTable()->mSlopeFinishInertia);
         }
 
-        const MarioConstTable* table = mActor->mConst->getTable();
+        const MarioConstTable* table = getActor()->getConst().getTable();
         if (_8F8.length() < table->mSlopeAnimeFinishSpeed) {
             if (isAnimationRun("坂すべり上向きうつぶせ", 2)) {
-                changeAnimation("坂すべり上向き終了", static_cast< const char* >(nullptr));
+                changeAnimation("坂すべり上向き終了");
             }
 
             if (isAnimationRun("坂すべり下向きあおむけ", 3)) {
-                changeAnimation("坂すべり下向き終了", static_cast< const char* >(nullptr));
+                changeAnimation("坂すべり下向き終了");
             }
 
             if (isAnimationRun("スケーティング")) {
@@ -414,15 +366,15 @@ void Mario::slopeMove() {
 
             if (isStickOn() && _8F0 == 0.0f) {
                 if (isAnimationRun("坂すべり上向き終了")) {
-                    stopAnimation(static_cast< const char* >(nullptr));
+                    stopAnimation(nullptr);
                 } else if (isAnimationRun("坂すべり下向き終了")) {
-                    stopAnimation(static_cast< const char* >(nullptr));
+                    stopAnimation(nullptr);
                 }
             }
         }
     }
 
-    const MarioConstTable* table = mActor->mConst->getTable();
+    const MarioConstTable* table = getActor()->getConst().getTable();
     f32 slopeSpeedMax = table->mSlopeSpeedMax;
     if (_3D0 != 0) {
         slopeSpeedMax = table->mSlopeSpeedMaxBraking;
@@ -433,7 +385,6 @@ void Mario::slopeMove() {
         _8F8.setLength((0.8f * slopeSpeed) + (0.2f * slopeSpeedMax));
     }
 
-    TVec3f stack_188;
     if (!MR::vecBlendSphere(*getGravityVec(), -_368, &stack_188, blendRate)) {
         mMovementStates._23 = false;
         tryDrop();
@@ -448,6 +399,56 @@ void Mario::slopeMove() {
     }
 
     moveSlopeSlide();
+}
+
+void Mario::moveSlopeSlide() {
+    if (calcAngleD(_368) < 5.8f) {
+        if (mDrawStates._C) {
+            const TVec3f* pWorldPadDir = &getWorldPadDir();
+            f32 speed = _16C.length();
+            if (_910.length() < speed) {
+                _910 = _16C;
+            }
+
+            _910 += *pWorldPadDir * 0.5f;
+
+            if (_910.length() > 15.0f) {
+                _910.setLength(15.0f);
+            }
+
+            addVelocity(_910);
+        }
+    } else if (isAnimationRun("スケーティング") || isAnimationRun("坂すべり上向きうつぶせ", 2) || isAnimationRun("坂すべり下向きあおむけ", 3)) {
+        TVec3f stack_20;
+        stack_20.cross(getAirGravityVec(), _368);
+        MR::normalizeOrZero(&stack_20);
+
+        const TVec3f* pWorldPadDir = &getWorldPadDir();
+        if (MR::isNearZero(_280)) {
+            _284 = stack_20;
+        }
+
+        if (isStickOn() && _3C4 == 0) {
+            f32 dot = _284.dot(*pWorldPadDir);
+            if (MR::abs(dot) > 0.2f) {
+                _280 = (_280 * mActor->getConst().getTable()->mSlopeSideMoveInertia) +
+                       (dot * (1.0f - mActor->getConst().getTable()->mSlopeSideMoveInertia));
+            } else {
+                MarioConstTable* pConstTable = mActor->getConst().getTable();
+                _280 = _280 * pConstTable->mSlopeSideStopInertia;
+            }
+        } else {
+            MarioConstTable* pConstTable = mActor->getConst().getTable();
+            _280 = _280 * pConstTable->mSlopeSideStopInertia;
+        }
+
+        TVec3f stack_14;
+        stack_14.cross(_284, _368);
+        _284.cross(_368, stack_14);
+
+        MarioConstTable* pConstTable = mActor->getConst().getTable();
+        addVelocity(_284, _280 * pConstTable->mSlopeSideMoveSpeed);
+    }
 }
 
 bool Mario::taskOnSlipTurn(u32) {

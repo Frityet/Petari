@@ -5,72 +5,75 @@
 #include "Game/Util/JointController.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
-#include <cmath>
+
+void TurnJointCtrl_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+}
 
 namespace {
     void makeMtxRotVecDegree(MtxPtr pMtx, const TVec3f& rFrom, const TVec3f& rTo, f32 degree) {
-        TVec3f axis;
-        PSVECCrossProduct(&rFrom, &rTo, &axis);
+        TVec3f axis = rFrom.cross(rTo);
         f32 dot = rFrom.dot(rTo);
+
         if (MR::normalizeOrZero(&axis)) {
             PSMTXIdentity(pMtx);
-            return;
+        } else {
+            PSMTXRotAxisRad(pMtx, &axis, -MR::min(acos(dot), MR::abs(MR::toRadian(degree))));
         }
-
-        f32 maxAngle = __fabs(MR::toRadian(degree));
-        f32 angle = acos(static_cast< f64 >(dot));
-        angle = angle >= maxAngle ? maxAngle : angle;
-        PSMTXRotAxisRad(pMtx, &axis, -angle);
     }
-};  // namespace
+}  // namespace
 
 TurnJointCtrl::TurnJointCtrl(LiveActor* pActor)
-    : mHostActor(pActor), mControlRate(new JointCtrlRate()), mMaxYawDegree(45.0f), mMaxPitchUpDegree(22.5f), mMaxPitchDownDegree(22.5f),
-      mStarePos(0.0f, 0.0f, 0.0f), _5C(1000.0f), _60(0.04f), _64(60), mEnabled(true) {
+    : mActor(pActor), mCtrlRate(new JointCtrlRate()), mHorizontalDegreeMax(45.0f), mPositiveDegreeMax(22.5f), mNegativeDegreeMax(22.5f),
+      mStarePos(0.0f, 0.0f, 0.0f), _5C(1000.0f), _60(0.04f), mCtrlFrames(60), mEnabled(true) {
     mFace.mEnabled = false;
-    mFace.mRate = 0.0f;
-    mFace.mController = nullptr;
+    mFace.mBlendRate = 0.0f;
+    mFace.mJointController = nullptr;
     mWaist.mEnabled = false;
-    mWaist.mRate = 0.0f;
-    mWaist.mController = nullptr;
+    mWaist.mBlendRate = 0.0f;
+    mWaist.mJointController = nullptr;
+
     MR::extractMtxZDir(pActor->getBaseMtx(), &mStarePos);
     mStarePos += pActor->mPosition;
 }
 
-void TurnJointCtrl::init(f32 yaw, f32 pitchUp, f32 pitchDown) {
-    mMaxYawDegree = yaw;
-    mMaxPitchUpDegree = pitchUp;
-    mMaxPitchDownDegree = pitchDown;
+void TurnJointCtrl::init(f32 horizontalDegreeMax, f32 positiveDegreeMax, f32 negativeDegreeMax) {
+    mHorizontalDegreeMax = horizontalDegreeMax;
+    mPositiveDegreeMax = positiveDegreeMax;
+    mNegativeDegreeMax = negativeDegreeMax;
 }
 
-void TurnJointCtrl::addFace(const char* pName, f32 rate, AXIS pitchAxis, AXIS yawAxis, AXIS frontAxis) {
-    mFace.mController = MR::createJointController< TurnJointCtrl >(this, mHostActor, pName, &TurnJointCtrl::updateJointMtxCallBackFace, nullptr);
-    mFace.mRate = rate;
+void TurnJointCtrl::addFace(const char* pJointName, f32 blendRate, AXIS verticalTurnAxis, AXIS horizontalTurnAxis, AXIS frontAxis) {
+    mFace.mJointController =
+        MR::createJointController< TurnJointCtrl >(this, mActor, pJointName, &TurnJointCtrl::updateJointMtxCallBackFace, nullptr);
+    mFace.mBlendRate = blendRate;
     mFace.mFrontAxis = frontAxis;
-    mFace.mPitchAxis = pitchAxis;
-    mFace.mYawAxis = yawAxis;
+    mFace.mVerticalTurnAxis = verticalTurnAxis;
+    mFace.mHorizontalTurnAxis = horizontalTurnAxis;
     mFace.mEnabled = true;
 }
 
-void TurnJointCtrl::addWaist(const char* pName, f32 rate, AXIS pitchAxis, AXIS yawAxis, AXIS frontAxis) {
-    mWaist.mController = MR::createJointController< TurnJointCtrl >(this, mHostActor, pName, &TurnJointCtrl::updateJointMtxCallBackWaist, nullptr);
-    mWaist.mRate = rate;
+void TurnJointCtrl::addWaist(const char* pJointName, f32 blendRate, AXIS verticalTurnAxis, AXIS horizontalTurnAxis, AXIS frontAxis) {
+    mWaist.mJointController =
+        MR::createJointController< TurnJointCtrl >(this, mActor, pJointName, &TurnJointCtrl::updateJointMtxCallBackWaist, nullptr);
+    mWaist.mBlendRate = blendRate;
     mWaist.mFrontAxis = frontAxis;
-    mWaist.mPitchAxis = pitchAxis;
-    mWaist.mYawAxis = yawAxis;
+    mWaist.mVerticalTurnAxis = verticalTurnAxis;
+    mWaist.mHorizontalTurnAxis = horizontalTurnAxis;
     mWaist.mEnabled = true;
 }
 
 void TurnJointCtrl::startCtrl(s32 frames) {
     mEnabled = true;
-    mControlRate->startCtrl(frames);
-    mControlRate->update();
+    mCtrlRate->startCtrl(frames);
+    mCtrlRate->update();
 }
 
 void TurnJointCtrl::endCtrl(s32 frames) {
     mEnabled = false;
-    mControlRate->endCtrl(frames);
-    mControlRate->update();
+    mCtrlRate->endCtrl(frames);
+    mCtrlRate->update();
 }
 
 void TurnJointCtrl::validate() {
@@ -82,43 +85,46 @@ void TurnJointCtrl::invalidate() {
 }
 
 void TurnJointCtrl::setStarePos(const TVec3f& rPos) {
-    if (!mEnabled && MR::isNearZero(mControlRate->_0, 0.001f)) {
+    if (!mEnabled && MR::isNearZero(mCtrlRate->_0)) {
         return;
     }
 
-    if (MR::isNear(mHostActor, rPos, _5C)) {
-        if (MR::isNearZero(mControlRate->_0, 0.001f)) {
-            mControlRate->startCtrl(_64);
+    if (MR::isNear(mActor, rPos, _5C)) {
+        if (MR::isNearZero(mCtrlRate->_0)) {
+            mCtrlRate->startCtrl(mCtrlFrames);
         }
-    } else if (MR::isNearZero(mControlRate->_0 - 1.0f, 0.001f)) {
-        mControlRate->endCtrl(_64);
+    } else {
+        if (MR::isNearZero(mCtrlRate->_0 - 1.0f)) {
+            mCtrlRate->endCtrl(mCtrlFrames);
+        }
     }
 
     MR::vecBlendSphere(mStarePos, rPos, &mStarePos, _60);
 }
 
 void TurnJointCtrl::update() {
-    mControlRate->update();
+    mCtrlRate->update();
 }
 
 void TurnJointCtrl::setCallBackFunction() {
-    if (!mEnabled && MR::isNearZero(mControlRate->_0, 0.001f)) {
+    if (!mEnabled && MR::isNearZero(mCtrlRate->_0)) {
         return;
     }
 
     if (mFace.mEnabled) {
-        mFace.mController->registerCallBack();
+        mFace.mJointController->registerCallBack();
     }
+
     if (mWaist.mEnabled) {
-        mWaist.mController->registerCallBack();
+        mWaist.mJointController->registerCallBack();
     }
 }
 
-bool TurnJointCtrl::updateJointMtxCallBackFace(TPos3f* pMtx, const JointControllerInfo&) {
+bool TurnJointCtrl::updateJointMtxCallBackFace(TPos3f* pMtx, const JointControllerInfo& rInfo) {
     return updateJointMtxCallBack(pMtx, mFace);
 }
 
-bool TurnJointCtrl::updateJointMtxCallBackWaist(TPos3f* pMtx, const JointControllerInfo&) {
+bool TurnJointCtrl::updateJointMtxCallBackWaist(TPos3f* pMtx, const JointControllerInfo& rInfo) {
     return updateJointMtxCallBack(pMtx, mWaist);
 }
 
@@ -134,52 +140,63 @@ void TurnJointCtrl::getMtxDir(TVec3f* pDir, const TPos3f* pMtx, AXIS axis) {
         pMtx->getZDir(*pDir);
         break;
     }
+
     MR::normalizeOrZero(pDir);
 }
 
 bool TurnJointCtrl::updateJointMtxCallBack(TPos3f* pMtx, const Ctrl& rCtrl) {
-    if (!mEnabled && MR::isNearZero(mControlRate->_0, 0.001f)) {
+    if (!mEnabled && MR::isNearZero(mCtrlRate->_0)) {
         return false;
     }
 
     TVec3f position;
     pMtx->getTrans(position);
-    TVec3f target(mStarePos);
-    target -= position;
-    if (MR::normalizeOrZero(&target)) {
+    TVec3f direction(mStarePos);
+    direction.sub(position);
+
+    if (MR::normalizeOrZero(&direction)) {
         return false;
     }
 
-    TPos3f result(*pMtx);
-    result.setTrans(TVec3f(0.0f, 0.0f, 0.0f));
+    TPos3f result = *pMtx;
     TPos3f rotation;
-    TVec3f pitchAxis;
-    TVec3f yawAxis;
+    result.setTrans(TVec3f(0.0f));
+
+    TVec3f verticalAxis;
+    TVec3f horizontalAxis;
     TVec3f front;
     TVec3f projected;
-    getMtxDir(&pitchAxis, pMtx, rCtrl.mPitchAxis);
-    MR::vecKillElement(target, pitchAxis, &projected);
+    getMtxDir(&verticalAxis, pMtx, rCtrl.mVerticalTurnAxis);
+    MR::vecKillElement(direction, verticalAxis, &projected);
+
     if (!MR::normalizeOrZero(&projected)) {
         getMtxDir(&front, pMtx, rCtrl.mFrontAxis);
         TVec3f cross;
-        PSVECCrossProduct(&target, &front, &cross);
+        cross.cross(direction, front);
         MR::normalizeOrZero(&cross);
-        MR::vecBlendSphere(front, projected, &projected, rCtrl.mRate);
-        if (pitchAxis.dot(cross) > 0.0f) {
-            ::makeMtxRotVecDegree(rotation.toMtxPtr(), projected, front, mMaxPitchUpDegree * mControlRate->_0);
+        MR::vecBlendSphere(front, projected, &projected, rCtrl.mBlendRate);
+
+        if (verticalAxis.dot(cross) > 0.0f) {
+            const f32 rate = mCtrlRate->_0;
+            ::makeMtxRotVecDegree(rotation, projected, front, mPositiveDegreeMax * rate);
         } else {
-            ::makeMtxRotVecDegree(rotation.toMtxPtr(), projected, front, mMaxPitchDownDegree * mControlRate->_0);
+            const f32 rate = mCtrlRate->_0;
+            ::makeMtxRotVecDegree(rotation, projected, front, mNegativeDegreeMax * rate);
         }
-        PSMTXConcat(rotation.toMtxPtr(), result.toMtxPtr(), result.toMtxPtr());
+
+        PSMTXConcat(rotation, result, result);
     }
 
-    getMtxDir(&yawAxis, pMtx, rCtrl.mYawAxis);
-    MR::vecKillElement(target, yawAxis, &projected);
+    getMtxDir(&horizontalAxis, pMtx, rCtrl.mHorizontalTurnAxis);
+    MR::vecKillElement(direction, horizontalAxis, &projected);
+
     if (!MR::normalizeOrZero(&projected)) {
         getMtxDir(&front, pMtx, rCtrl.mFrontAxis);
-        MR::vecBlendSphere(front, projected, &projected, rCtrl.mRate);
-        ::makeMtxRotVecDegree(rotation.toMtxPtr(), projected, front, mMaxYawDegree * mControlRate->_0);
-        PSMTXConcat(rotation.toMtxPtr(), result.toMtxPtr(), result.toMtxPtr());
+        MR::vecBlendSphere(front, projected, &projected, rCtrl.mBlendRate);
+
+        const f32 rate = mCtrlRate->_0;
+        ::makeMtxRotVecDegree(rotation, projected, front, mHorizontalDegreeMax * rate);
+        PSMTXConcat(rotation, result, result);
     }
 
     result.setTrans(position);

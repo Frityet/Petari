@@ -2,6 +2,7 @@
 #include "Game/LiveActor/MaterialCtrl.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 
 namespace {
@@ -47,7 +48,7 @@ bool FileSelectSky::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pRec
 
 void FileSelectSky::exeWait() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "CometNearOrbitSky", nullptr);
+        MR::startBck(this, "CometNearOrbitSky");
         MR::startBtk(this, "CometNearOrbitSky");
     }
 
@@ -63,10 +64,6 @@ void FileSelectSky::exeWait() {
     mBaseMtx.invert(mBaseMtx);
     f32 step = (getNerveStep() * PI) / ::cCycleX;
 
-    if (step < 0.0f) {
-        step = -step;
-    }
-
-    mAngleX = (1.0f - JMACosShort(step * 8)) * 3.0f / 2.0f * PI / 4.0f;
+    mAngleX = (1.0f - MR::cos(step)) * 3.0f / 2.0f * PI / 4.0f;
     mAngleY += ::cAngleIncY;
 }

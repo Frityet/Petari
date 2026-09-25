@@ -41,7 +41,7 @@ void TripodBossGuardWallPart::init(const JMapInfoIter& rIter) {
     initSound(4, false);
     initEffectKeeper(0, "TripodBoss", false);
     MR::invalidateClipping(this);
-    MR::startBck(this, "2ndDemo", nullptr);
+    MR::startBck(this, "2ndDemo");
     MR::setBckFrameAndStop(this, 0.0f);
     initNerve(GET_NERVE(TripodBossGuardWallPart, TripodBossGuardWallPartNrvNonActive));
     MR::addTripodBossPartsMovement(this);
@@ -63,7 +63,6 @@ void TripodBossGuardWallPart::control() {
 }
 
 void TripodBossGuardWallPart::calcAndSetBaseMtx() {
-    // FIXME: float swap in setEulerY
     TPos3f mtx;
     mtx.identity();
     mtx.setEulerY(MR::toRadian(mPlacementAngle));
@@ -115,7 +114,7 @@ void TripodBossGuardWallPart::exeBreak() {
     }
 
     if (MR::isStep(this, 5)) {
-        MR::startBck(this, "2ndDemo", nullptr);
+        MR::startBck(this, "2ndDemo");
         MR::setBckFrameAndStop(this, 0.0f);
     }
 
@@ -129,7 +128,7 @@ void TripodBossGuardWallPart::exeBreak() {
 void TripodBossGuardWallPart::exeRepair() {
     if (MR::isFirstStep(this)) {
         MR::validateCollisionParts(this);
-        MR::startBck(this, "2ndDemo", nullptr);
+        MR::startBck(this, "2ndDemo");
     }
 
     if (MR::isStep(this, ::sMoveStopSeTiming)) {

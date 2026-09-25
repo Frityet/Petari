@@ -56,9 +56,8 @@ void Balloonfish::init(const JMapInfoIter& rIter) {
     initEffectKeeper(0, "Balloonfish", false);
     initSound(2, false);
     initNerve(GET_NERVE(Balloonfish, HostTypeNrvWait));
-    // float regswap
-    f32 offset = 80.0f;
-    MR::initStarPointerTarget(this, 110.0f, TVec3f(0.0f, offset, 0.0f));
+    f32 zero = 0.0f;
+    MR::initStarPointerTarget(this, 110.0f, TVec3f(zero, 80.0f, zero));
     mAnimScaleController = new AnimScaleController(nullptr);
     MR::onCalcGravity(this);
     MR::initShadowVolumeSphere(this, 80.0f * mScale.y);
@@ -88,7 +87,7 @@ void Balloonfish::exeWait() {
         mVelocity.zero();
         if (mNerveBeforeBind != mSpine->getCurrentNerve()) {
             mNotBoundStep = 0;
-            MR::startBck(this, "appearance", nullptr);
+            MR::startBck(this, "appearance");
             MR::startSound(this, "SE_EM_BLNFISH_PRE_DASH");
         }
 
@@ -124,13 +123,13 @@ void Balloonfish::exeDash() {
         if (isNerve(GET_NERVE(Balloonfish, HostTypeNrvDash))) {
             if (mNerveBeforeBind != mSpine->getCurrentNerve()) {
                 mNotBoundStep = 0;
-                MR::startBck(this, "Attack", nullptr);
+                MR::startBck(this, "Attack");
                 MR::emitEffect(this, "SwimBubble");
             }
         } else {
             if (mNerveBeforeBind != mSpine->getCurrentNerve()) {
                 mNotBoundStep = 0;
-                MR::startBck(this, "AttackEnd", nullptr);
+                MR::startBck(this, "AttackEnd");
                 MR::emitEffect(this, "SwimBubble");
             }
         }

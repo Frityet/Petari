@@ -89,7 +89,9 @@ void ElectricBall::init(const JMapInfoIter& rIter) {
 }
 
 void ElectricBall::initAfterPlacement() {
-    std::for_each(mBalls.begin(), mBalls.end(), std::bind2nd(std::mem_fun1_ref_t< void, Ball, const TPos3f& >(&Ball::updatePosition), mBaseMtx));
+    std::for_each(mBalls.begin(), mBalls.end(),
+                  std::binder2nd< std::mem_fun1_ref_t< void, Ball, const TPos3f& >, const TPos3f& >(
+                      std::mem_fun1_ref_t< void, Ball, const TPos3f& >(&Ball::updatePosition), mBaseMtx));
 
     Ball* ball = getNearestBall();
     mClosestBallPos.set(ball->mHost->mPosition);
@@ -111,12 +113,15 @@ void ElectricBall::control() {
         mBaseMtx.concat(mBaseMtx, mtx);
         mBaseMtx.setTrans(mPosition);
 
-        std::for_each(mBalls.begin(), mBalls.end(), std::bind2nd(std::mem_fun1_ref_t< void, Ball, const TPos3f& >(&Ball::updatePosition), mBaseMtx));
+        std::for_each(mBalls.begin(), mBalls.end(),
+                      std::binder2nd< std::mem_fun1_ref_t< void, Ball, const TPos3f& >, const TPos3f& >(
+                          std::mem_fun1_ref_t< void, Ball, const TPos3f& >(&Ball::updatePosition), mBaseMtx));
 
         MR::startLevelSound(this, "SE_OJ_LV_BIRIKYU_MOVE");
     }
 
-    mClosestBallPos.set(getNearestBall()->mHost->mPosition);
+    Ball* pBall = getNearestBall();
+    mClosestBallPos.set(pBall->mHost->mPosition);
 }
 
 void ElectricBall::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
@@ -142,13 +147,14 @@ void ElectricBall::initBalls(const JMapInfoIter& rIter) {
 
     mBalls.init(arg0);
 
-    std::for_each_array(mBalls.begin(), mBalls.end(), std::bind2nd(std::mem_func(&Ball::updatePosition), mBaseMtx));
+    std::for_each_array(mBalls.begin(), mBalls.end(),
+                        std::binder2nd< std::mem_fun1_t< void, Ball, LiveActor* >, LiveActor* >(std::mem_func(&Ball::init), this));
 
     TVec3f vec(mRadius, 0.0f, 0.0f);
     f32 f1 = TWO_PI / mBalls.size();
 
     for (Ball* ball = mBalls.begin(); ball != mBalls.end(); ball++) {
-        f32 angle = f1 * ((ball - mBalls.begin()) / sizeof(&ball));
+        f32 angle = f1 * (ball - mBalls.begin());
         MR::rotateVecRadian(&ball->mPosition, vec, TVec3f(0.0f, 1.0f, 0.0f), angle);
     }
 }
@@ -159,6 +165,7 @@ ElectricBall::Ball* ElectricBall::getNearestBall() {
 
     for (Ball* ball = mBalls.begin(); ball != mBalls.end(); ball++) {
         f32 distanceToPlayer = MR::calcDistanceToPlayer(ball->mHost->mPosition);
+
         if (distanceToPlayer < minDistance) {
             nearestBall = ball;
             minDistance = distanceToPlayer;

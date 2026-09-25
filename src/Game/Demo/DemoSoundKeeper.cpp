@@ -65,3 +65,13 @@ bool DemoSoundKeeper::isPermitBgmChange() {
 
     return true;
 }
+
+inline const char* DemoSoundKeeper::getTypeString() const {
+    return "Sound";
+}
+
+inline const char* DemoSoundKeeper::getName() const {
+    return "サウンド";
+}
+
+#include "Game/Demo/DemoSheetKeeperInfoHolder.hpp"

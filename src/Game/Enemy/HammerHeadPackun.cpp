@@ -18,12 +18,12 @@
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
-#include "JSystem/JGeometry/TMatrix.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
-#include "JSystem/JMath/JMATrigonometric.hpp"
-#include "JSystem/JMath/JMath.hpp"
-#include "revolution/mtx.h"
-#include "revolution/types.h"
+#include <JSystem/JGeometry/TMatrix.hpp>
+#include <JSystem/JGeometry/TVec.hpp>
+#include <JSystem/JMath/JMATrigonometric.hpp>
+#include <JSystem/JMath/JMath.hpp>
+#include <revolution/mtx.h>
+#include <revolution/types.h>
 
 void HammerHeadPackun_FORCE_MATCH_SDATA2() {
     (void)1.0f;
@@ -31,7 +31,7 @@ void HammerHeadPackun_FORCE_MATCH_SDATA2() {
     (void)3.1415927f;
 }
 
-void DUMMY() {
+void HammerHeadPackun_DUMMY() {
     // to emit operator-
     TVec3f a, b;
     TVec3f c = a - b;
@@ -117,8 +117,8 @@ void HammerHeadPackun::control() {
 void HammerHeadPackun::exeWait() {
     if (MR::isFirstStep(this)) {
         const char* wait = "Wait";
-        MR::startBck(this, wait, nullptr);
-        MR::startBck(mLeafModel, wait, nullptr);
+        MR::startBck(this, wait);
+        MR::startBck(mLeafModel, wait);
     }
 
     if (!tryShiftNumb() && isTargetInRange()) {
@@ -139,8 +139,8 @@ void HammerHeadPackun::exeSearch() {
 void HammerHeadPackun::exeAttack() {
     if (MR::isFirstStep(this)) {
         const char* attack = "Attack";
-        MR::startBck(this, attack, nullptr);
-        MR::startBck(mLeafModel, attack, nullptr);
+        MR::startBck(this, attack);
+        MR::startBck(mLeafModel, attack);
     }
 
     TVec3f dir;
@@ -164,8 +164,8 @@ void HammerHeadPackun::exeAttack() {
 void HammerHeadPackun::exeRest() {
     if (MR::isFirstStep(this)) {
         const char* chance = "Chance";
-        MR::startBck(this, chance, nullptr);
-        MR::startBck(mLeafModel, chance, nullptr);
+        MR::startBck(this, chance);
+        MR::startBck(mLeafModel, chance);
         mImmunityTime = 0;
     }
 
@@ -177,8 +177,8 @@ void HammerHeadPackun::exeRest() {
 void HammerHeadPackun::exeRecover() {
     if (MR::isFirstStep(this)) {
         const char* recovery = "Recovery";
-        MR::startBck(this, recovery, nullptr);
-        MR::startBck(mLeafModel, recovery, nullptr);
+        MR::startBck(this, recovery);
+        MR::startBck(mLeafModel, recovery);
     }
 
     if (!tryShiftNumb()) {
@@ -190,8 +190,8 @@ void HammerHeadPackun::exeRecover() {
 void HammerHeadPackun::exeDamage() {
     if (MR::isFirstStep(this)) {
         const char* swoonStart = "SwoonStart";
-        MR::startBck(this, swoonStart, nullptr);
-        MR::startBck(mLeafModel, swoonStart, nullptr);
+        MR::startBck(this, swoonStart);
+        MR::startBck(mLeafModel, swoonStart);
         MR::startBlowHitSound(this);
         mImmunityTime++;
     }
@@ -203,8 +203,8 @@ void HammerHeadPackun::exeDamage() {
 
     if (MR::isBckOneTimeAndStopped(this)) {
         const char* swoon = "Swoon";
-        MR::startBck(this, swoon, nullptr);
-        MR::startBck(mLeafModel, swoon, nullptr);
+        MR::startBck(this, swoon);
+        MR::startBck(mLeafModel, swoon);
     }
 
     if (MR::isGreaterEqualStep(this, 60)) {
@@ -216,8 +216,8 @@ void HammerHeadPackun::exeDamage() {
 void HammerHeadPackun::exeRise() {
     if (MR::isFirstStep(this)) {
         const char* swoonEnd = "SwoonEnd";
-        MR::startBck(this, swoonEnd, nullptr);
-        MR::startBck(mLeafModel, swoonEnd, nullptr);
+        MR::startBck(this, swoonEnd);
+        MR::startBck(mLeafModel, swoonEnd);
     }
 
     if (!tryShiftNumb()) {
@@ -229,8 +229,8 @@ void HammerHeadPackun::exeRise() {
         if (MR::isBckStopped(this)) {
             if (isTargetInRange()) {
                 const char* wait = "Wait";
-                MR::startBck(this, wait, nullptr);
-                MR::startBck(mLeafModel, wait, nullptr);
+                MR::startBck(this, wait);
+                MR::startBck(mLeafModel, wait);
                 setNerve(GET_NERVE_ANON(HammerHeadPackunNrvSearch));
             } else {
                 setNerve(GET_NERVE_ANON(HammerHeadPackunNrvWait));
@@ -248,8 +248,8 @@ inline void HammerHeadPackun::exeHit() {
 void HammerHeadPackun::exeCrow() {
     if (MR::isFirstStep(this)) {
         const char* crow = "Crow";
-        MR::startBck(this, crow, nullptr);
-        MR::startBck(mLeafModel, crow, nullptr);
+        MR::startBck(this, crow);
+        MR::startBck(mLeafModel, crow);
     }
 
     if (!tryShiftNumb()) {
@@ -264,8 +264,8 @@ void HammerHeadPackun::exeCrow() {
 void HammerHeadPackun::exeSmashKill() {
     if (MR::isFirstStep(this)) {
         const char* down = "Down";
-        MR::startBck(this, down, nullptr);
-        MR::startBck(mLeafModel, down, nullptr);
+        MR::startBck(this, down);
+        MR::startBck(mLeafModel, down);
         MR::startSound(this, "SE_EM_HHPACKUN_STOMPED");
         MR::startSound(this, "SE_EM_STOMPED_S");
     }
@@ -278,8 +278,8 @@ void HammerHeadPackun::exeSmashKill() {
 void HammerHeadPackun::exeBlowKill() {
     if (MR::isFirstStep(this)) {
         const char* blowDown = "BlowDown";
-        MR::startBck(this, blowDown, nullptr);
-        MR::startBck(mLeafModel, blowDown, nullptr);
+        MR::startBck(this, blowDown);
+        MR::startBck(mLeafModel, blowDown);
         MR::tryRumblePadMiddle(this, WPAD_CHAN0);
         MR::startSound(this, "SE_EM_HHPACKUN_HIT_PUNCH");
         MR::startSound(this, "SE_EV_HHPACKUN_DEAD");
@@ -437,16 +437,8 @@ bool HammerHeadPackun::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSen
 void HammerHeadPackun::initPosture() {
     TPos3f mtx;
     MR::makeMtxTR(mtx, this);
-
-    f32 z1 = mtx[2][1];
-    f32 y1 = mtx[1][1];
-    f32 x1 = mtx[0][1];
-    _94.set< f32 >(x1, y1, z1);
-
-    f32 z2 = mtx[2][2];
-    f32 y2 = mtx[1][2];
-    f32 x2 = mtx[0][2];
-    _A0.set< f32 >(x2, y2, z2);
+    mtx.getYDir(_94);
+    mtx.getZDir(_A0);
 }
 
 void HammerHeadPackun::initSensor() {

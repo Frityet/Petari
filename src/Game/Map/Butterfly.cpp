@@ -110,7 +110,7 @@ void Butterfly::init(const JMapInfoIter& rIter) {
     MR::setClippingFar50m(this);
     initNerve(GET_NERVE(Butterfly, HostTypeWait));
     makeActorAppeared();
-    MR::startBck(this, "Butterfly", nullptr);
+    MR::startBck(this, "Butterfly");
     MR::setBckFrameAtRandom(this);
     if (MR::useStageSwitchReadAppear(this, rIter)) {
         MR::syncStageSwitchAppear(this);
@@ -441,7 +441,7 @@ void Butterfly::exeGotoSleepingMario() {
     jointMtx.mult(::sMarioCapPosOffset, posOffset);
 
     TVec3f vel = posOffset - mPosition;
-    // This can really only be sHiveAccel, but this nerve is only accessible by Wait
+    // This can really only be ::sHiveAccel, but this nerve is only accessible by Wait
     vel.setLength(0.05f);
     mVelocity += vel;
 
@@ -471,7 +471,7 @@ void Butterfly::exeReadyToPerchOnSleepingMario() {
 
 void Butterfly::exePerchOnSleepingMario() {
     if (MR::isFirstStep(this)) {
-        MR::startBck(this, "Wait", nullptr);
+        MR::startBck(this, "Wait");
     }
 
     TPos3f jointMtx;
@@ -480,7 +480,7 @@ void Butterfly::exePerchOnSleepingMario() {
     jointMtx.mult(::sMarioCapPosOffset, mPosition);
 
     if (!MR::isPlayerSleeping()) {
-        MR::startBck(this, "Butterfly", nullptr);
+        MR::startBck(this, "Butterfly");
         setNerve(GET_NERVE(Butterfly, HostTypeWait));
     }
 }

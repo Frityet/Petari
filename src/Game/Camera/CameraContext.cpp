@@ -2,7 +2,6 @@
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SystemUtil.hpp"
-#include <JSystem/JUtility/JUTVideo.hpp>
 
 void CameraContext_FORCE_MATCH_SDATA2() {
     (void)1.0f;
@@ -18,24 +17,19 @@ CameraContext::CameraContext() : NameObj("カメラコンテキスト") {
 }
 
 void CameraContext::initParams() {
-    // FIXME: float regswap
-    // https://decomp.me/scratch/N4sSe
-
     mView.setPositionFromLookAt(TVec3f(0.0f, 0.0f, 3000.0f), TVec3f(0.0f, 1.0f, 0.0f), TVec3f(0.0f, 0.0f, 0.0f));
 
     mViewInv.set(mView);
     mViewInv.invert(mViewInv);
 
-    // presumably a "set params" inline?
     mFovy = 45.0f;
-    f32 height = MR::getScreenHeight();
-    f32 width = MR::getScreenWidth();
+    const f32 height = MR::getScreenHeight();
+    const f32 width = MR::getScreenWidth();
+    mAspectRatio = width / height;
     mNearZ = 100.0f;
     mFarZ = 800000.0f;
 
     mShakeOffset.zero();
-
-    mAspectRatio = width / height;
 
     updateProjectionMtx();
 }
@@ -82,8 +76,6 @@ void CameraContext::setShakeOffset(f32 x, f32 y) {
 }
 
 void CameraContext::updateProjectionMtx() {
-    // NON-MATCHING, needs major fixing.
-    // TODO
     mProjection.makePerspective(getFovy(), getAspect(), getNearZ(), getFarZ());
 
     TProj3f trans;
@@ -91,9 +83,3 @@ void CameraContext::updateProjectionMtx() {
 
     mProjection.concat(trans, mProjection);
 }
-
-namespace MR {
-    s32 getScreenHeight() {
-        return JUTGetVideoManager()->getRenderMode()->efbHeight;
-    }
-}  // namespace MR

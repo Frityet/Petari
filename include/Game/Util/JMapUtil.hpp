@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Game/Util/JMapInfo.hpp"
-#include "JSystem/JGeometry.hpp"
+#include <JSystem/JGeometry.hpp>
 #include <revolution.h>
 
 namespace MR {
@@ -70,7 +70,7 @@ namespace MR {
     bool getJMapInfoArg7WithInit(const JMapInfoIter& rIter, s32*);
     bool getJMapInfoFollowID(const JMapInfoIter& rIter, s32*);
     bool getJMapInfoGroupID(const JMapInfoIter& rIter, s32*);
-    bool getJMapInfoClippingGroupID(const JMapInfoIter& rIter, s32*);
+    bool getJMapInfoClippingGroupID(const JMapInfoIter& rIter, s32*) NO_INLINE;
     bool getJMapInfoDemoGroupID(const JMapInfoIter& rIter, s32*);
     bool getJMapInfoLinkID(const JMapInfoIter& rIter, s32*);
     bool isConnectedWithRail(const JMapInfoIter& rIter);
