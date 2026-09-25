@@ -8,7 +8,7 @@
 #include <JSystem/JGeometry/TVec.hpp>
 #include <revolution/types.h>
 
-void dummy() {
+static void dummy() {
     // to emit TVec3f init
     TVec3f a(0, 0, 0);
 }

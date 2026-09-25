@@ -10,7 +10,7 @@
 #include "Game/Util.hpp"
 #include "Game/Util/FootPrint.hpp"
 
-void TrickRabbitSnow_FORCE_MATCH_SDATA2() {
+static void TrickRabbitSnow_FORCE_MATCH_SDATA2() {
     (void)1.0f;
     (void)0.0f;
     (void)3.0f;

@@ -1,5 +1,5 @@
-#include "Game/System/AudSystemWrapper.hpp"
 #include <MSL_C/stdio.h>
+#include "Game/System/AudSystemWrapper.hpp"
 #include "Game/Effect/ParticleResourceHolder.hpp"
 #include "app/OriginalGameApplication.hpp"
 #include "app/Application.hpp"

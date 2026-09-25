@@ -51,7 +51,7 @@
 #include "revolution/mtx.h"
 #include "revolution/types.h"
 
-void FORCE_OPERATOR() {
+static void FORCE_OPERATOR() {
     TVec3f vec;
     vec.scale(1.0f);
 }

@@ -12,7 +12,7 @@
 #include <JSystem/JAudio2/JASTrack.hpp>
 #include <JSystem/JGadget/hashcode.hpp>
 
-void FORCE_MATCH_SDATA2() {
+static void FORCE_MATCH_SDATA2() {
     f32 f1 = 1.0f;
 }
 

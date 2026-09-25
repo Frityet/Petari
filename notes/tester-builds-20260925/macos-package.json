@@ -43,6 +43,7 @@
     "archive_crc": "passed",
     "signature": "ad-hoc verified by packager",
     "loader": "expected native disc-open failure for invalid input",
-    "gameplay": "not rerun for packaging"
+    "gameplay": "not rerun for packaging",
+    "extracted_archive_signature": "codesign --verify --deep --strict passed after ditto extraction"
   }
 }

@@ -42,7 +42,7 @@ namespace {
     static const s32 sStepBattleEndPlanetBreak = 15;
 };  // namespace
 
-void TombSpiderDemo_FORCE_MATCH_SDATA2() {
+static void TombSpiderDemo_FORCE_MATCH_SDATA2() {
     (void)1.0f;
 }
 

@@ -144,7 +144,8 @@ public:
         };                                                                                                                                           \
         static name sInstance;                                                                                                                       \
     };                                                                                                                                               \
-    name name::sInstance;
+    NERVE_NATIVE_INSTANCE(name)                                                                                                                     \
+    INIT_NERVE(name)
 
 #define NEW_NERVE_ONEND(name, parent_class, executor_name, executorOnEnd_name)                                                                       \
     class name : public Nerve {                                                                                                                      \
@@ -159,7 +160,8 @@ public:
         };                                                                                                                                           \
         static name sInstance;                                                                                                                       \
     };                                                                                                                                               \
-    name name::sInstance;
+    NERVE_NATIVE_INSTANCE(name)                                                                                                                     \
+    INIT_NERVE(name)
 
 /* reduces the amount of lines / characters in a line with an easy alternative to get a nerve instance */
 #define GET_NERVE(cls, nerve) (&Nrv##cls::nerve::sInstance)

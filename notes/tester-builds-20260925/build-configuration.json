@@ -17,6 +17,16 @@
     "distro": "Ubuntu 24.04",
     "compiler": "LLVM 23",
     "runtimes": "stdc++_static",
-    "static_deps": true
+    "static_deps": true,
+    "source_base": "5899fd76704bad122539703fb8ad5b3223c4f3c1",
+    "aurora": "76573611d76a7bb6bfce8ae60e03813d8db9c566",
+    "compile_fixes": [
+      "Place MSL formatted-string declarations before GNU C++ headers in OriginalGameApplication.cpp.",
+      "Include cstdint explicitly in the Aurora ARAM provider.",
+      "Use cmath from C++ at the shared PPC math boundary.",
+      "Correct three include path capitalizations for case-sensitive filesystems.",
+      "Use existing native inline storage for both NEW_NERVE macros.",
+      "Give twelve unused decompilation matching helpers file-local linkage."
+    ]
   }
 }

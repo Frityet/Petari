@@ -67,7 +67,7 @@ namespace NrvSpinningBox {
     NEW_NERVE_ONEND(HostTypeNrvPointed, SpinningBox, Pointed, Pointed);
 };  // namespace NrvSpinningBox
 
-void FORCE_MATCH_SDATA2() {
+static void FORCE_MATCH_SDATA2() {
     f32 f1 = 1.0f;
     f32 f2 = 0.0f;
     f32 f3 = MR::epsilon();

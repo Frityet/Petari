@@ -1,6 +1,6 @@
 #include "resource/TextEncoding.hpp"
 #include "Game/Player/MarioSlider.hpp"
-#include "Game/Enemy/KariKariDirector.hpp"
+#include "Game/Enemy/KarikariDirector.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"

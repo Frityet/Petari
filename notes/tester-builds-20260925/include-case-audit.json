@@ -1,0 +1,26 @@
+[
+  {
+    "file": "src/Game/Enemy.hpp",
+    "line": 23,
+    "include": "Game/Enemy/KariKariDirector.hpp",
+    "candidates": [
+      "Game/Enemy/KarikariDirector.hpp"
+    ]
+  },
+  {
+    "file": "src/Game/Util/ActorMovementUtil.cpp",
+    "line": 2,
+    "include": "Game/Animation/Xanimecore.hpp",
+    "candidates": [
+      "Game/Animation/XanimeCore.hpp"
+    ]
+  },
+  {
+    "file": "src/Game/Player/MarioSlider.cpp",
+    "line": 3,
+    "include": "Game/Enemy/KariKariDirector.hpp",
+    "candidates": [
+      "Game/Enemy/KarikariDirector.hpp"
+    ]
+  }
+]

@@ -1,0 +1,14 @@
+[
+  "src/Game/AudioLib/AudSoundObject.cpp",
+  "src/Game/Boss/DinoPackunBattleVs1Lv1.cpp",
+  "src/Game/Boss/TombSpiderDemo.cpp",
+  "src/Game/Boss/TombSpiderFunction.cpp",
+  "src/Game/Boss/DinoPackunBattleEggVs2.cpp",
+  "src/Game/Enemy/IceMerameraKing.cpp",
+  "src/Game/Enemy/AnimStampController.cpp",
+  "src/Game/NPC/TrickRabbitSnow.cpp",
+  "src/Game/NPC/TrickRabbitFreeRun.cpp",
+  "src/Game/Player/Mario.cpp",
+  "src/Game/MapObj/SpinningBox.cpp",
+  "src/Game/MapObj/ItemBubble.cpp"
+]

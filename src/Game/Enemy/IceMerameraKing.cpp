@@ -31,7 +31,7 @@
 // TODO: the symbol order for header funcs is out of order between JointControlDelegator funcs
 //       and Array funcs. This needs to be fixed in order to link.
 
-void dummy() {
+static void dummy() {
     TVec3f a, b;
     a.sub(b);
 }

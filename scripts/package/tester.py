@@ -4,7 +4,6 @@
 import argparse
 import hashlib
 import json
-import os
 from pathlib import Path
 import plistlib
 import re
@@ -85,6 +84,11 @@ def main():
     copied = bindir / "smg-pc"
     shutil.copy2(binary, copied)
     copied.chmod(0o755)
+    if not macos:
+        # Keep the source executable for symbolizing reports, and avoid making
+        # testers download its DWARF data. Runtime checks remain enabled.
+        subprocess.run(["objcopy", "--strip-debug", str(copied)], check=True)
+        manifest["debug_sections"] = "Stripped from package; retained in the source executable"
     template = (root / "scripts/package/play.sh.in").read_text()
     launcher.write_text(template.replace("@PACKAGE_DIR@", package_dir).replace("@BINARY@", "smg-pc"))
     launcher.chmod(0o755)
