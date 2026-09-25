@@ -1,0 +1,714 @@
+{
+  "scope": "read-only post-flight crater fall analysis; no controller/source/build changes",
+  "supersedes": "live-targets nearest-first799-to806 direct leg; actual route fell across crater rim",
+  "trace_frame_window": [
+    25360,
+    26810
+  ],
+  "provenance": {
+    "archive_sha256": "d7da48a8a318f52651548f6fa96f38caf0c4a3d166fe2ef26d05fca91bb02dfb",
+    "kcl_file": "/heavensdoorblackholeplanet.kcl",
+    "kcl_sha256": "d0a78baf9b55180cf702fac971229f9e701c5f0c2401db099afa7569f0d2ecb0",
+    "triangle_count": 4352,
+    "native_rotation_degrees": [
+      132.5390625,
+      20.91796875,
+      19.27001953125
+    ],
+    "trace_checks": [
+      {
+        "frame": 25360,
+        "prism": 2157,
+        "max_vertex_residual": 0.00030468582088712766
+      },
+      {
+        "frame": 25870,
+        "prism": 2200,
+        "max_vertex_residual": 0.00047937982007556073
+      },
+      {
+        "frame": 26480,
+        "prism": 1228,
+        "max_vertex_residual": 0.0004720305018596275
+      },
+      {
+        "frame": 26520,
+        "prism": 681,
+        "max_vertex_residual": 0.0003115411076783487
+      }
+    ]
+  },
+  "events": [
+    {
+      "frame": 25340,
+      "position": [
+        13807.6123046875,
+        -2910.70458984375,
+        -4113.52978515625
+      ],
+      "grounded_flag": true,
+      "movement_low_word": "0x60020000",
+      "ground_prism": 2157,
+      "ground_host": 1142,
+      "ground_vertices": [
+        [
+          13811.1611328125,
+          -2892.87548828125,
+          -4073.49658203125
+        ],
+        [
+          13878.0029296875,
+          -2918.8095703125,
+          -4115.1240234375
+        ],
+        [
+          13948.2607421875,
+          -2872.595947265625,
+          -4028.272705078125
+        ]
+      ],
+      "status": 0,
+      "state_type": "",
+      "hazard_distance": 1091.2241141650816,
+      "chip799_nerve": {
+        "step": 1,
+        "type": "N11NrvChipBase14ChipBaseNrvGotE"
+      },
+      "chip799_dead": true
+    },
+    {
+      "frame": 25360,
+      "position": [
+        13855.2021484375,
+        -2907.079833984375,
+        -4095.65380859375
+      ],
+      "grounded_flag": true,
+      "movement_low_word": "0x60020000",
+      "ground_prism": 2157,
+      "ground_host": 1142,
+      "ground_vertices": [
+        [
+          13811.1611328125,
+          -2892.87548828125,
+          -4073.49658203125
+        ],
+        [
+          13878.0029296875,
+          -2918.8095703125,
+          -4115.1240234375
+        ],
+        [
+          13948.2607421875,
+          -2872.595947265625,
+          -4028.272705078125
+        ]
+      ],
+      "status": 0,
+      "state_type": "",
+      "hazard_distance": 1089.3874306634607,
+      "chip799_nerve": {
+        "step": 1,
+        "type": "N11NrvChipBase14ChipBaseNrvGotE"
+      },
+      "chip799_dead": true
+    },
+    {
+      "frame": 25870,
+      "position": [
+        13678.4775390625,
+        -2770.22021484375,
+        -3925.66455078125
+      ],
+      "grounded_flag": true,
+      "movement_low_word": "0x60020000",
+      "ground_prism": 2200,
+      "ground_host": 1142,
+      "ground_vertices": [
+        [
+          13678.97265625,
+          -2742.084228515625,
+          -3887.935546875
+        ],
+        [
+          13552.9462890625,
+          -2737.795166015625,
+          -3937.41162109375
+        ],
+        [
+          13615.4296875,
+          -2783.8818359375,
+          -3966.48681640625
+        ]
+      ],
+      "status": 0,
+      "state_type": "",
+      "hazard_distance": 1083.6113605247028,
+      "chip799_nerve": {
+        "step": 1,
+        "type": "N11NrvChipBase14ChipBaseNrvGotE"
+      },
+      "chip799_dead": true
+    },
+    {
+      "frame": 25910,
+      "position": [
+        13453.3564453125,
+        -2498.557861328125,
+        -3764.48779296875
+      ],
+      "grounded_flag": true,
+      "movement_low_word": "0x60020000",
+      "ground_prism": 1227,
+      "ground_host": 1142,
+      "ground_vertices": [
+        [
+          13479.60546875,
+          -2497.44189453125,
+          -3748.892578125
+        ],
+        [
+          13527.07421875,
+          -2446.958984375,
+          -3693.874755859375
+        ],
+        [
+          13463.390625,
+          -2393.88134765625,
+          -3692.83251953125
+        ]
+      ],
+      "status": 34,
+      "state_type": "9MarioTalk",
+      "hazard_distance": 1084.2099498544198,
+      "chip799_nerve": {
+        "step": 1,
+        "type": "N11NrvChipBase14ChipBaseNrvGotE"
+      },
+      "chip799_dead": true
+    },
+    {
+      "frame": 26460,
+      "position": [
+        13453.3564453125,
+        -2498.557861328125,
+        -3764.48779296875
+      ],
+      "grounded_flag": true,
+      "movement_low_word": "0x60000000",
+      "ground_prism": 1227,
+      "ground_host": 1142,
+      "ground_vertices": [
+        [
+          13479.60546875,
+          -2497.44189453125,
+          -3748.892578125
+        ],
+        [
+          13527.07421875,
+          -2446.958984375,
+          -3693.874755859375
+        ],
+        [
+          13463.390625,
+          -2393.88134765625,
+          -3692.83251953125
+        ]
+      ],
+      "status": 0,
+      "state_type": "",
+      "hazard_distance": 1084.2099498544198,
+      "chip799_nerve": {
+        "step": 1,
+        "type": "N11NrvChipBase14ChipBaseNrvGotE"
+      },
+      "chip799_dead": true
+    },
+    {
+      "frame": 26510,
+      "position": [
+        13331.478515625,
+        -2228.036376953125,
+        -3693.84228515625
+      ],
+      "grounded_flag": true,
+      "movement_low_word": "0x60000000",
+      "ground_prism": 682,
+      "ground_host": 1142,
+      "ground_vertices": [
+        [
+          13343.60546875,
+          -2280.060546875,
+          -3705.350830078125
+        ],
+        [
+          13377.841796875,
+          -2235.6064453125,
+          -3667.20068359375
+        ],
+        [
+          13301.55078125,
+          -2163.9013671875,
+          -3691.313720703125
+        ]
+      ],
+      "status": 0,
+      "state_type": "",
+      "hazard_distance": 1086.425718579182,
+      "chip799_nerve": {
+        "step": 1,
+        "type": "N11NrvChipBase14ChipBaseNrvGotE"
+      },
+      "chip799_dead": true
+    },
+    {
+      "frame": 26520,
+      "position": [
+        13285.06640625,
+        -2114.154052734375,
+        -3689.32177734375
+      ],
+      "grounded_flag": true,
+      "movement_low_word": "0x60000000",
+      "ground_prism": 681,
+      "ground_host": 1142,
+      "ground_vertices": [
+        [
+          13409.498046875,
+          -2185.932373046875,
+          -3633.55517578125
+        ],
+        [
+          13332.2451171875,
+          -2124.63232421875,
+          -3661.0625
+        ],
+        [
+          13301.55078125,
+          -2163.900634765625,
+          -3691.31298828125
+        ]
+      ],
+      "status": 0,
+      "state_type": "",
+      "hazard_distance": 1090.2431999567482,
+      "chip799_nerve": {
+        "step": 1,
+        "type": "N11NrvChipBase14ChipBaseNrvGotE"
+      },
+      "chip799_dead": true
+    },
+    {
+      "frame": 26530,
+      "position": [
+        13257.802734375,
+        -2034.478759765625,
+        -3693.80517578125
+      ],
+      "grounded_flag": false,
+      "movement_low_word": "0x80020800",
+      "ground_prism": 681,
+      "ground_host": 1142,
+      "ground_vertices": [
+        [
+          13409.498046875,
+          -2185.932373046875,
+          -3633.55517578125
+        ],
+        [
+          13332.2451171875,
+          -2124.63232421875,
+          -3661.0625
+        ],
+        [
+          13301.55078125,
+          -2163.900634765625,
+          -3691.31298828125
+        ]
+      ],
+      "status": 0,
+      "state_type": "",
+      "hazard_distance": 1091.9675226924621,
+      "chip799_nerve": {
+        "step": 1,
+        "type": "N11NrvChipBase14ChipBaseNrvGotE"
+      },
+      "chip799_dead": true
+    },
+    {
+      "frame": 26540,
+      "position": [
+        13288.470703125,
+        -1974.3607177734375,
+        -3764.912353515625
+      ],
+      "grounded_flag": false,
+      "movement_low_word": "0x80020800",
+      "ground_prism": 681,
+      "ground_host": 1142,
+      "ground_vertices": [
+        [
+          13409.498046875,
+          -2185.932373046875,
+          -3633.55517578125
+        ],
+        [
+          13332.2451171875,
+          -2124.63232421875,
+          -3661.0625
+        ],
+        [
+          13301.55078125,
+          -2163.900634765625,
+          -3691.31298828125
+        ]
+      ],
+      "status": 0,
+      "state_type": "",
+      "hazard_distance": 1013.0004808255907,
+      "chip799_nerve": {
+        "step": 1,
+        "type": "N11NrvChipBase14ChipBaseNrvGotE"
+      },
+      "chip799_dead": true
+    },
+    {
+      "frame": 26550,
+      "position": [
+        13370.2626953125,
+        -1898.002197265625,
+        -3910.186767578125
+      ],
+      "grounded_flag": false,
+      "movement_low_word": "0x80020800",
+      "ground_prism": 681,
+      "ground_host": 1142,
+      "ground_vertices": [
+        [
+          13409.498046875,
+          -2185.932373046875,
+          -3633.55517578125
+        ],
+        [
+          13332.2451171875,
+          -2124.63232421875,
+          -3661.0625
+        ],
+        [
+          13301.55078125,
+          -2163.900634765625,
+          -3691.31298828125
+        ]
+      ],
+      "status": 0,
+      "state_type": "",
+      "hazard_distance": 848.6551611285432,
+      "chip799_nerve": {
+        "step": 1,
+        "type": "N11NrvChipBase14ChipBaseNrvGotE"
+      },
+      "chip799_dead": true
+    },
+    {
+      "frame": 26560,
+      "position": [
+        13508.115234375,
+        -1819.719482421875,
+        -4128.0078125
+      ],
+      "grounded_flag": false,
+      "movement_low_word": "0x80020800",
+      "ground_prism": 681,
+      "ground_host": 1142,
+      "ground_vertices": [
+        [
+          13409.498046875,
+          -2185.932373046875,
+          -3633.55517578125
+        ],
+        [
+          13332.2451171875,
+          -2124.63232421875,
+          -3661.0625
+        ],
+        [
+          13301.55078125,
+          -2163.900634765625,
+          -3691.31298828125
+        ]
+      ],
+      "status": 0,
+      "state_type": "",
+      "hazard_distance": 604.7629973595082,
+      "chip799_nerve": {
+        "step": 1,
+        "type": "N11NrvChipBase14ChipBaseNrvGotE"
+      },
+      "chip799_dead": true
+    },
+    {
+      "frame": 26570,
+      "position": [
+        13591.2978515625,
+        -1795.97314453125,
+        -4245.52587890625
+      ],
+      "grounded_flag": false,
+      "movement_low_word": "0x80020800",
+      "ground_prism": 681,
+      "ground_host": 1142,
+      "ground_vertices": [
+        [
+          13409.498046875,
+          -2185.932373046875,
+          -3633.55517578125
+        ],
+        [
+          13332.2451171875,
+          -2124.63232421875,
+          -3661.0625
+        ],
+        [
+          13301.55078125,
+          -2163.900634765625,
+          -3691.31298828125
+        ]
+      ],
+      "status": 0,
+      "state_type": "",
+      "hazard_distance": 472.9648114328064,
+      "chip799_nerve": {
+        "step": 1,
+        "type": "N11NrvChipBase14ChipBaseNrvGotE"
+      },
+      "chip799_dead": true
+    },
+    {
+      "frame": 26770,
+      "position": [
+        13955.3125,
+        -1910.80517578125,
+        -4524.8154296875
+      ],
+      "grounded_flag": false,
+      "movement_low_word": "0x80020800",
+      "ground_prism": 681,
+      "ground_host": 1142,
+      "ground_vertices": [
+        [
+          13409.498046875,
+          -2185.932373046875,
+          -3633.55517578125
+        ],
+        [
+          13332.2451171875,
+          -2124.63232421875,
+          -3661.0625
+        ],
+        [
+          13301.55078125,
+          -2163.900634765625,
+          -3691.31298828125
+        ]
+      ],
+      "status": 0,
+      "state_type": "",
+      "hazard_distance": 0.0,
+      "chip799_nerve": {
+        "step": 1,
+        "type": "N11NrvChipBase14ChipBaseNrvGotE"
+      },
+      "chip799_dead": true
+    },
+    {
+      "frame": 26810,
+      "position": [
+        13955.3125,
+        -1910.80517578125,
+        -4524.8154296875
+      ],
+      "grounded_flag": false,
+      "movement_low_word": "0x80020800",
+      "ground_prism": 681,
+      "ground_host": 1142,
+      "ground_vertices": [
+        [
+          13409.498046875,
+          -2185.932373046875,
+          -3633.55517578125
+        ],
+        [
+          13332.2451171875,
+          -2124.63232421875,
+          -3661.0625
+        ],
+        [
+          13301.55078125,
+          -2163.900634765625,
+          -3691.31298828125
+        ]
+      ],
+      "status": 0,
+      "state_type": "",
+      "hazard_distance": 0.0,
+      "chip799_nerve": {
+        "step": 1,
+        "type": "N11NrvChipBase14ChipBaseNrvGotE"
+      },
+      "chip799_dead": true
+    }
+  ],
+  "detour": {
+    "destination_actor": 806,
+    "surface_path_length": 3028.7633643815448,
+    "minimum_face_centroid_clearance_from_excluded_boundary": 128.6332823118069,
+    "criteria": {
+      "minimum_radial_normal_dot": 0.75,
+      "minimum_radius": 1040,
+      "boundary_clearance": "Euclidean distance from triangle centroid to all outer-navigation boundary edges; excludes steep/inner-crater triangles",
+      "cost": "length*(1+(120/max(clearance,10))^2)"
+    },
+    "dense_path": "terrain/terrain-routes.json routes.806.steps",
+    "overview_waypoints": [
+      {
+        "prism": 2157,
+        "position": [
+          13879.141463583836,
+          -2894.7603392042543,
+          -4072.2977925331384
+        ],
+        "edge_clearance": 347.65557453136176,
+        "radius": 1133.1110711940914,
+        "radial_normal_dot": 0.9997793333269916
+      },
+      {
+        "prism": 2193,
+        "position": [
+          13744.374032917653,
+          -2750.598362514089,
+          -3882.3571366247324
+        ],
+        "edge_clearance": 304.82518054645595,
+        "radius": 1133.3017782565632,
+        "radial_normal_dot": 0.999814059699668
+      },
+      {
+        "prism": 2825,
+        "position": [
+          13723.89208279466,
+          -2550.1006108250976,
+          -3701.2212752650285
+        ],
+        "edge_clearance": 264.8681286313681,
+        "radius": 1133.4811604710035,
+        "radial_normal_dot": 0.9998329221345404
+      },
+      {
+        "prism": 603,
+        "position": [
+          13649.387047974014,
+          -2314.493532663546,
+          -3587.5561697419244
+        ],
+        "edge_clearance": 364.755515046627,
+        "radius": 1133.738010483561,
+        "radial_normal_dot": 0.9998161914220802
+      },
+      {
+        "prism": 594,
+        "position": [
+          13746.191886216342,
+          -2077.7609071199654,
+          -3500.7984437265627
+        ],
+        "edge_clearance": 338.8236616046575,
+        "radius": 1133.738529461429,
+        "radial_normal_dot": 0.9998087893200016
+      },
+      {
+        "prism": 398,
+        "position": [
+          13796.55800113226,
+          -1813.049718197409,
+          -3482.5755166287195
+        ],
+        "edge_clearance": 310.7668243669147,
+        "radius": 1133.7391353736264,
+        "radial_normal_dot": 0.9998092788923927
+      },
+      {
+        "prism": 528,
+        "position": [
+          13740.617305289701,
+          -1554.3936932812223,
+          -3540.312426881348
+        ],
+        "edge_clearance": 261.0434735731563,
+        "radius": 1133.795033252713,
+        "radial_normal_dot": 0.9998749284088098
+      },
+      {
+        "prism": 450,
+        "position": [
+          13689.88208956354,
+          -1327.9978900194155,
+          -3652.429976906272
+        ],
+        "edge_clearance": 320.07352430582205,
+        "radius": 1133.7939677267052,
+        "radial_normal_dot": 0.9998713995490698
+      },
+      {
+        "prism": 454,
+        "position": [
+          13488.044022595324,
+          -1286.6193789915005,
+          -3752.3300940533604
+        ],
+        "edge_clearance": 258.23201444206353,
+        "radius": 1134.0095768662252,
+        "radial_normal_dot": 0.9998955928882979
+      },
+      {
+        "prism": 406,
+        "position": [
+          13285.650804385496,
+          -1339.526370231792,
+          -3846.6875386485244
+        ],
+        "edge_clearance": 225.3995398201513,
+        "radius": 1134.2538563081555,
+        "radial_normal_dot": 0.9998737178159591
+      },
+      {
+        "prism": 491,
+        "position": [
+          13173.370431532783,
+          -1460.063065207472,
+          -3869.6281491175887
+        ],
+        "edge_clearance": 128.6332823118069,
+        "radius": 1134.403294351429,
+        "radial_normal_dot": 0.9998984306404031
+      }
+    ],
+    "nearby_landmark_actor": 1010,
+    "final_ground_target": [
+      13173.370431532783,
+      -1460.063065207472,
+      -3869.6281491175887
+    ],
+    "chip806_position": [
+      13085.5419921875,
+      -1389.111328125,
+      -3784.09326171875
+    ]
+  },
+  "limits": [
+    "Path has not been traversed live.",
+    "A face-center graph and clearance filter are conservative planning evidence, not collision/movement simulation.",
+    "Use dense path for short steering targets; skipping overview waypoints or cutting long chords is not validated.",
+    "Later chip pairs were disconnected by this conservative outer/walkable-face filter; no safe continuation is inferred.",
+    "Ground triangle remains stale after falling; use movement_low_word bit0x40000000 plus current position/contact progression."
+  ]
+}

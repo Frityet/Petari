@@ -1,0 +1,26 @@
+[
+  {
+    "command": [
+      "xmake",
+      "build",
+      "-y",
+      "-j",
+      "16",
+      "smg-pc"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 7.483910749957431
+  },
+  {
+    "command": [
+      "xmake",
+      "build",
+      "-y",
+      "-j",
+      "16",
+      "smg-pc-aurora-draw-sync-pass-render-tests"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 3.821828249958344
+  }
+]

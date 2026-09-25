@@ -1,0 +1,432 @@
+{
+  "scope": "Finalized terminal provenance for the post-fix run, preserving the original first-flight evidence through25360. No code/input/build/test changes.",
+  "source_head_at_launch": "ff6bf1b4572b86a58d48c44738ac67e770c4de4d",
+  "pid": 62913,
+  "binary_sha256_at_launch": "a0a0912c63f60d8197f2aae7142714eb71bfb9f0ba814f750c31f6b82a78b25b",
+  "trace": {
+    "path": "route-actors.jsonl",
+    "cutoff_frame": 25360,
+    "sample_interval": 10,
+    "whole_trace_hash": "4d244613df809f01e11c95d821f1269151814b1b37a1abfc34f69da54dc968cc",
+    "terminal_analysis_included": true,
+    "bytes": 307723325,
+    "snapshot_count": 2682,
+    "last_complete_frame": 26810,
+    "hash_taken_after_terminal_report": true,
+    "full_trace_compressed_or_copied": false
+  },
+  "outcome": "First driver flight traversed the authored path, released Mario, and reached BlackHole ground; one YellowChip obtained. Later gates and Grand Star not established by this prefix.",
+  "milestones": [
+    {
+      "frame": 22930,
+      "mario": {
+        "position": [
+          15062.96875,
+          -8179.326171875,
+          7532.93505859375
+        ],
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "bound": true,
+        "status": 0,
+        "ground_triangle_host": 741
+      },
+      "driver864": {
+        "step": 8,
+        "type": "N18NrvSuperSpinDriver28SuperSpinDriverNrvShootStartE"
+      }
+    },
+    {
+      "frame": 22970,
+      "mario": {
+        "position": [
+          15080.0,
+          -8042.27001953125,
+          7580.0
+        ],
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "bound": true,
+        "status": 0,
+        "ground_triangle_host": 741
+      },
+      "driver864": {
+        "step": 1,
+        "type": "N18NrvSuperSpinDriver23SuperSpinDriverNrvShootE"
+      }
+    },
+    {
+      "frame": 23120,
+      "mario": {
+        "position": [
+          14492.8212890625,
+          -5730.2236328125,
+          1637.53515625
+        ],
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "bound": true,
+        "status": 0,
+        "ground_triangle_host": 741
+      },
+      "driver864": {
+        "step": 151,
+        "type": "N18NrvSuperSpinDriver23SuperSpinDriverNrvShootE"
+      }
+    },
+    {
+      "frame": 23270,
+      "mario": {
+        "position": [
+          13436.7763671875,
+          -2650.706787109375,
+          -3707.37060546875
+        ],
+        "velocity": [
+          -6.248371601104736,
+          18.271455764770508,
+          -29.120092391967773
+        ],
+        "bound": false,
+        "status": 0,
+        "ground_triangle_host": 741
+      },
+      "driver864": {
+        "step": 0,
+        "type": "N18NrvSuperSpinDriver26SuperSpinDriverNrvCoolDownE"
+      }
+    },
+    {
+      "frame": 23800,
+      "mario": {
+        "position": [
+          13420.259765625,
+          -2565.819091796875,
+          -3838.281005859375
+        ],
+        "velocity": [
+          -0.0,
+          -0.0,
+          0.0
+        ],
+        "bound": false,
+        "status": 0,
+        "ground_triangle_host": 1142,
+        "movement_low_word": 1610743808,
+        "movement_low_word_hex": "0x60020000",
+        "grounded_bit_0x40000000": true
+      },
+      "driver864": {
+        "step": 1,
+        "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+      }
+    },
+    {
+      "frame": 25280,
+      "mario": {
+        "position": [
+          13718.8251953125,
+          -2919.226806640625,
+          -4157.05419921875
+        ],
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "bound": false,
+        "status": 17,
+        "ground_triangle_host": 1142
+      },
+      "driver864": {
+        "step": 1,
+        "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+      },
+      "chip799": {
+        "dead": false,
+        "nerve": {
+          "step": 2,
+          "type": "N11NrvChipBase15ChipBaseNrvWaitE"
+        }
+      },
+      "cage1007": {
+        "dead": false,
+        "nerve": {
+          "step": 3,
+          "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+        }
+      }
+    },
+    {
+      "frame": 25340,
+      "mario": {
+        "position": [
+          13807.6123046875,
+          -2910.70458984375,
+          -4113.52978515625
+        ],
+        "velocity": [
+          2.4711761474609375,
+          0.22547683119773865,
+          0.9064537286758423
+        ],
+        "bound": false,
+        "status": 0,
+        "ground_triangle_host": 1142
+      },
+      "driver864": {
+        "step": 1,
+        "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+      },
+      "chip799": {
+        "dead": true,
+        "nerve": {
+          "step": 1,
+          "type": "N11NrvChipBase14ChipBaseNrvGotE"
+        }
+      },
+      "cage1007": {
+        "dead": false,
+        "nerve": {
+          "step": 12,
+          "type": "N14NrvCrystalCage24CrystalCageNrvBreakAfterE"
+        }
+      }
+    },
+    {
+      "frame": 25360,
+      "mario": {
+        "position": [
+          13855.2021484375,
+          -2907.079833984375,
+          -4095.65380859375
+        ],
+        "velocity": [
+          1.0718756914138794,
+          0.16235677897930145,
+          0.36033451557159424
+        ],
+        "bound": false,
+        "status": 0,
+        "ground_triangle_host": 1142,
+        "movement_low_word": 1610743808,
+        "movement_low_word_hex": "0x60020000",
+        "grounded_bit_0x40000000": true
+      },
+      "driver864": {
+        "step": 1,
+        "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+      },
+      "chip799": {
+        "dead": true,
+        "nerve": {
+          "step": 1,
+          "type": "N11NrvChipBase14ChipBaseNrvGotE"
+        }
+      },
+      "cage1007": {
+        "dead": false,
+        "nerve": {
+          "step": 32,
+          "type": "N14NrvCrystalCage24CrystalCageNrvBreakAfterE"
+        }
+      }
+    }
+  ],
+  "arrival_interpretation": "Mario is unbound at23270 after the300-frame Shoot, at the authored endpoint. At23800 and25360 movement_low_word is0x60020000, including grounded bit0x40000000; Mario remains unbound. At23800 position is stable and velocity zero; at25360 he is grounded while moving slowly. ground_triangle host1142 identifies BlackHole surface but is not itself proof of grounding because this field can remain stale during a fall; binder.ground is null. Saved image adds visual context.",
+  "chip_first_observed_got": 25340,
+  "cage_first_observed_break": 25280,
+  "snapshot_extract": {
+    "path": "partial-flight-snapshots.jsonl.gz",
+    "frames": [
+      22930,
+      22970,
+      23120,
+      23270,
+      23800,
+      25280,
+      25340,
+      25360
+    ],
+    "count": 8,
+    "bytes": 186338,
+    "sha256": "e3d0b59d12e0bbca9aa656777b97fc7def493b9214f5362c102e729581b0130a",
+    "uncompressed_bytes": 936934,
+    "method": "Eight exact original raw JSONL lines; all fields preserved, no reserialization. This is not a full trace copy/hash."
+  },
+  "screenshot": {
+    "path": "blackhole-arrival.jpg",
+    "format": "JPEG",
+    "bytes": 691270,
+    "sha256": "1b37aac8a64ed4af67537c2d8453991da04d3e27032a8b1e8eb476cfa83632ea",
+    "provenance": "Parent operator UI capture from this run, visually inspected; exact frame not encoded in artifact.",
+    "visible_evidence": "Mario on rocky BlackHole planet beside Luma/crystals with normal HUD; this image alone does not prove a chip pickup."
+  },
+  "status_caveat": "Run is terminal, exit-11; initial still-live request is historical. This evidence establishes successful first flight/landing/one chip, not clean restart or final completion.",
+  "terminal_addendum": {
+    "sources": [
+      "route.json",
+      "restart-crash.json",
+      "route.log",
+      "route-actors.jsonl final complete row"
+    ],
+    "exit_code": -11,
+    "elapsed_seconds": 485.4623598330072,
+    "timeout_terminated": false,
+    "process_reaped": true,
+    "binary_unchanged": true,
+    "completed_frames": null,
+    "last_complete_actor_sample": 26810,
+    "last_input_revision_frame": 26813,
+    "exact_crash_frame": null,
+    "last_player_nerve": "N13NrvMarioActor30MarioActorNrvGameOverBlackHoleE",
+    "last_player_nerve_step": 246,
+    "exception": "EXC_BAD_ACCESS / SIGSEGV at0x10",
+    "faulting_thread": 5,
+    "stack_top": [
+      "dawn::native::ObjectBase::GetDevice",
+      "dawn::native::CommandEncoder::APIFinish",
+      "wgpu::CommandEncoder::Finish",
+      "aurora::gfx::detail::submit_frame_prefix lambda (frame.cpp:737)"
+    ],
+    "root_diagnosis": "Null command encoder in Aurora render worker; subsequent fixes are outside this run’s evidence.",
+    "scope": "Later BlackHole death/restart crash, distinct from the fixed direct FIFO first-launch crash; does not negate the observed first flight, landing and one-chip pickup. No post-fix validation claimed here."
+  },
+  "terminal_lifecycle": {
+    "started_at": "2026-09-25T20:36:13.977114+00:00",
+    "pid": 62913,
+    "exit_code": -11,
+    "elapsed_seconds": 485.4623598330072,
+    "timeout_terminated": false,
+    "process_still_exists_after_wait": false,
+    "completed_frames": null,
+    "verified_bounded_completion": false,
+    "binary_sha256": "a0a0912c63f60d8197f2aae7142714eb71bfb9f0ba814f750c31f6b82a78b25b",
+    "binary_sha256_after": "a0a0912c63f60d8197f2aae7142714eb71bfb9f0ba814f750c31f6b82a78b25b",
+    "binary_unchanged": true
+  },
+  "terminal_sources": [
+    {
+      "path": "route.json",
+      "bytes": 2088,
+      "sha256": "685d2ed095a6ff7a2f92dfb104053fecb685de051200657413ecd94135e058e1"
+    },
+    {
+      "path": "route-launch.json",
+      "bytes": 1717,
+      "sha256": "22a6fae1d9a11baf07c6a5648b70bf6eb280fb13e4da2edd9818c22f40420f03"
+    },
+    {
+      "path": "restart-crash.json",
+      "bytes": 15897,
+      "sha256": "f676d1700d133f64467c4f14bddaeb9b36c1ba3cf0ae36c7356555f53e5b74bb"
+    },
+    {
+      "path": "before-head.txt",
+      "bytes": 41,
+      "sha256": "e3dbaedc2d06a8c799b16ceebe522af5d664c67d746c3bb28e44e5c9248748d0"
+    },
+    {
+      "path": "before-status.txt",
+      "bytes": 1194,
+      "sha256": "12a891b9b0dc43119c660ad1264b7316e8c9f009580da9abf92cd12058d9dfa6"
+    }
+  ],
+  "compressed_artifacts": [
+    {
+      "path": "route.log.gz",
+      "bytes": 46547,
+      "sha256": "822513c2ae47f1ed8eff0dc5eeac18a24469bf3c4c5fa4ecd4ac127d12615d0a",
+      "source_path": "route.log",
+      "source_bytes": 341887,
+      "source_sha256": "07b5d7aed40584a1df61ac63ceac63ac872b7ccd9c173fef673379e94d14a683",
+      "encoding": "gzip, unchanged source bytes, mtime0"
+    },
+    {
+      "path": "operator.jsonl.gz",
+      "bytes": 33091,
+      "sha256": "36841de0fbc377e37a18ae00feb90b921efa155b8ae5f6f181618408fb00e8c4",
+      "source_path": "operator.jsonl",
+      "source_bytes": 575161,
+      "source_sha256": "8c8c2acec744cbfb1773fbf8c0ee1061faa1ea8c7b54160b2dfc0dd00c03ccc7",
+      "encoding": "gzip, unchanged source bytes, mtime0"
+    },
+    {
+      "path": "navigation.jsonl.gz",
+      "bytes": 20587,
+      "sha256": "e7be909579848c2ae80b242097f84b59e8a9d9adeb3b8489f858584aaee6eca0",
+      "source_path": "navigation.jsonl",
+      "source_bytes": 288970,
+      "source_sha256": "cb9d6dfdf086aa05a6623f1f9ed6ed03847d2c5c88c087229a62e4f25b8c8476",
+      "encoding": "gzip, unchanged source bytes, mtime0"
+    },
+    {
+      "path": "climb.jsonl.gz",
+      "bytes": 44576,
+      "sha256": "92a41102fa9904afed2e633a5caf087840efcb90fe7b803f2cb5300ef15121aa",
+      "source_path": "climb.jsonl",
+      "source_bytes": 542118,
+      "source_sha256": "a728347910e067cd2f9974693b04dbfa4c9e0b64c66ed88bc26246615b7e1b82",
+      "encoding": "gzip, unchanged source bytes, mtime0"
+    },
+    {
+      "path": "route-frame15000.png.gz",
+      "bytes": 2934623,
+      "sha256": "fcd7dc06cf1c7e90be530eaad31c609ffde0a5a287c78f763e422ab9f5a83269",
+      "source_path": "route-frame15000.png",
+      "source_bytes": 14758474,
+      "source_sha256": "fcc9625e10d926df75726627d7b2356e19b7378d09da207b572a647319b72a51",
+      "encoding": "gzip, unchanged source bytes, mtime0"
+    },
+    {
+      "path": "terminal-snapshot.jsonl.gz",
+      "bytes": 25317,
+      "sha256": "16ca266d533e6bab8787ad94e8a9638db9d5c4b4be1a11dcfec45f8bb63c67f5",
+      "source_path": "route-actors.jsonl",
+      "frame": 26810,
+      "method": "One exact original JSONL line, all actors/fields preserved."
+    }
+  ],
+  "renderer_screenshot": {
+    "path": "route-frame15000.png.gz",
+    "source_format": "PNG",
+    "source_frame": 15000,
+    "frame_provenance": "route-launch.json SMGPC_SCREENSHOT_FRAME and SMGPC_SCREENSHOT_PATH",
+    "method": "Lossless file compression only; no image conversion or editing. Raw PNG preserved locally.",
+    "visible_evidence": "Rosalina visible above Mario on the authored tower stairs; inspected original PNG. This frame is before the later flight."
+  },
+  "proposed_commit_files": [
+    "partial-flight-evidence.md",
+    "partial-flight-evidence.json",
+    "partial-flight-snapshots.jsonl.gz",
+    "terminal-snapshot.jsonl.gz",
+    "route.log.gz",
+    "operator.jsonl.gz",
+    "navigation.jsonl.gz",
+    "climb.jsonl.gz",
+    "route-frame15000.png.gz",
+    "blackhole-arrival.jpg",
+    "route.json",
+    "route-launch.json",
+    "restart-crash.json",
+    "before-head.txt",
+    "before-status.txt"
+  ],
+  "exclude_from_commit": [
+    "route-actors.jsonl",
+    "route.log",
+    "operator.jsonl",
+    "navigation.jsonl",
+    "climb.jsonl",
+    "route-frame15000.png"
+  ]
+}

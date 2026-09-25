@@ -1,0 +1,7 @@
+[aurora:aurora::gpu::cache] Failed to open database: unable to open database file
+[aurora:aurora::gpu::cache] SQLite DB init failed
+[aurora:aurora::gfx::pipeline_cache] Failed to open pipeline cache database: unable to open database file
+[aurora:aurora::gpu] Device lost: Device was destroyed.
+[ok] offscreen draw-sync callback observes preceding EFB GPU depth
+[ok] GPU completion preserves color, depth and stencil across final-discard pass splits
+[ok] 24 concurrent GPU completions survive 12 frame publication/retirement cycles

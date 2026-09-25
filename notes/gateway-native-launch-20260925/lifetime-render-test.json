@@ -1,0 +1,10 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-aurora-draw-sync-pass-render-tests"
+  ],
+  "binary_sha256": "222ba83f2db5e4e94d3cedbc6dd5b2253fbaec007a5fa6d665d30f4b77e91db0",
+  "pid": 64385,
+  "exit_code": 0,
+  "timeout_terminated": false,
+  "elapsed_seconds": 0.7701011669705622
+}

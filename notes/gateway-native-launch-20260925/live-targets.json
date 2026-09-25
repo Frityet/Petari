@@ -1,0 +1,552 @@
+{
+  "source_trace": "notes/gateway-native-launch-20260925/route-actors.jsonl",
+  "snapshot_frame": 11970,
+  "snapshot_line_sha256": "e668fce0ebe1ec53192cf51b1075bac15702fd173c1d969e3b3073cfb4b7bd87",
+  "read_method": "newest complete JSON record from at most last1000000bytes; no full trace read",
+  "binary_sha256": "a0a0912c63f60d8197f2aae7142714eb71bfb9f0ba814f750c31f6b82a78b25b",
+  "stage": "HeavensDoorGalaxy",
+  "scenario": 1,
+  "bindings": [
+    {
+      "zone": "BlackHole",
+      "authored_name": "YellowChip",
+      "authored_l_id": 16,
+      "actor_id": 793,
+      "observed_type": "10YellowChip",
+      "observed_name": "イエローチップ",
+      "position": [
+        13587.923828125,
+        -1989.66064453125,
+        -5968.26220703125
+      ],
+      "dead": false,
+      "clipped": true,
+      "hidden": false,
+      "nerve": {
+        "step": 0,
+        "type": "N11NrvChipBase15ChipBaseNrvWaitE"
+      },
+      "gate": "group0",
+      "binding_evidence": "type and unique nearest authored world position",
+      "authored_position": [
+        13587.54,
+        -1989.895,
+        -5968.153
+      ],
+      "distance_from_authored": 0.4627879546269042
+    },
+    {
+      "zone": "BlackHole",
+      "authored_name": "YellowChip",
+      "authored_l_id": 17,
+      "actor_id": 799,
+      "observed_type": "10YellowChip",
+      "observed_name": "イエローチップ",
+      "position": [
+        13917.75,
+        -3029.46435546875,
+        -4070.98779296875
+      ],
+      "dead": true,
+      "clipped": false,
+      "hidden": false,
+      "nerve": {
+        "step": 0,
+        "type": "N11NrvChipBase15ChipBaseNrvWaitE"
+      },
+      "gate": "appears local80; initially dead does not mean collected",
+      "binding_evidence": "type and unique nearest authored world position",
+      "authored_position": [
+        13918.28,
+        -3029.414,
+        -4070.882
+      ],
+      "distance_from_authored": 0.5427963020053012
+    },
+    {
+      "zone": "BlackHole",
+      "authored_name": "YellowChip",
+      "authored_l_id": 18,
+      "actor_id": 803,
+      "observed_type": "10YellowChip",
+      "observed_name": "イエローチップ",
+      "position": [
+        13044.4794921875,
+        -877.4627075195312,
+        -4618.345703125
+      ],
+      "dead": false,
+      "clipped": true,
+      "hidden": false,
+      "nerve": {
+        "step": 0,
+        "type": "N11NrvChipBase15ChipBaseNrvWaitE"
+      },
+      "gate": "group0",
+      "binding_evidence": "type and unique nearest authored world position",
+      "authored_position": [
+        13044.146,
+        -877.746,
+        -4618.176
+      ],
+      "distance_from_authored": 0.4693301814798076
+    },
+    {
+      "zone": "BlackHole",
+      "authored_name": "YellowChip",
+      "authored_l_id": 19,
+      "actor_id": 806,
+      "observed_type": "10YellowChip",
+      "observed_name": "イエローチップ",
+      "position": [
+        13085.5419921875,
+        -1389.111328125,
+        -3784.09326171875
+      ],
+      "dead": false,
+      "clipped": true,
+      "hidden": false,
+      "nerve": {
+        "step": 0,
+        "type": "N11NrvChipBase15ChipBaseNrvWaitE"
+      },
+      "gate": "group0",
+      "binding_evidence": "type and unique nearest authored world position",
+      "authored_position": [
+        13085.628,
+        -1389.303,
+        -3783.888
+      ],
+      "distance_from_authored": 0.29371384826295716
+    },
+    {
+      "zone": "BlackHole",
+      "authored_name": "YellowChip",
+      "authored_l_id": 20,
+      "actor_id": 809,
+      "observed_type": "10YellowChip",
+      "observed_name": "イエローチップ",
+      "position": [
+        14871.9326171875,
+        -1200.611328125,
+        -4756.81298828125
+      ],
+      "dead": false,
+      "clipped": true,
+      "hidden": false,
+      "nerve": {
+        "step": 0,
+        "type": "N11NrvChipBase15ChipBaseNrvWaitE"
+      },
+      "gate": "group0",
+      "binding_evidence": "type and unique nearest authored world position",
+      "authored_position": [
+        14871.662,
+        -1200.316,
+        -4757.168
+      ],
+      "distance_from_authored": 0.5352435744928259
+    },
+    {
+      "zone": "BlackHole",
+      "authored_name": "CrystalCageS",
+      "authored_l_id": 29,
+      "actor_id": 1004,
+      "observed_type": "11CrystalCage",
+      "observed_name": "クリスタルケージ[小]",
+      "position": [
+        12908.61328125,
+        -2329.048828125,
+        -4305.97607421875
+      ],
+      "dead": false,
+      "clipped": true,
+      "hidden": false,
+      "nerve": {
+        "step": 0,
+        "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+      },
+      "gate": "DEAD local81; optional surface waypoint",
+      "binding_evidence": "type and unique nearest authored world position",
+      "authored_position": [
+        12908.845,
+        -2329.347,
+        -4305.629
+      ],
+      "distance_from_authored": 0.5128942965791166
+    },
+    {
+      "zone": "BlackHole",
+      "authored_name": "CrystalCageS",
+      "authored_l_id": 30,
+      "actor_id": 1007,
+      "observed_type": "11CrystalCage",
+      "observed_name": "クリスタルケージ[小]",
+      "position": [
+        13915.05078125,
+        -2896.99560546875,
+        -4075.31201171875
+      ],
+      "dead": false,
+      "clipped": true,
+      "hidden": false,
+      "nerve": {
+        "step": 0,
+        "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+      },
+      "gate": "DEAD local80 releases chip799",
+      "binding_evidence": "type and unique nearest authored world position",
+      "authored_position": [
+        13915.536,
+        -2896.946,
+        -4075.218
+      ],
+      "distance_from_authored": 0.4967254182583097
+    },
+    {
+      "zone": "BlackHole",
+      "authored_name": "CrystalCageS",
+      "authored_l_id": 32,
+      "actor_id": 1010,
+      "observed_type": "11CrystalCage",
+      "observed_name": "クリスタルケージ[小]",
+      "position": [
+        13753.384765625,
+        -2119.62646484375,
+        -3469.2607421875
+      ],
+      "dead": false,
+      "clipped": true,
+      "hidden": false,
+      "nerve": {
+        "step": 0,
+        "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+      },
+      "gate": "DEAD local82",
+      "binding_evidence": "type and unique nearest authored world position",
+      "authored_position": [
+        13753.802,
+        -2119.573,
+        -3469.19
+      ],
+      "distance_from_authored": 0.42655300994234846
+    },
+    {
+      "zone": "BlackHole",
+      "authored_name": "Tico",
+      "authored_l_id": 25,
+      "actor_id": 787,
+      "observed_type": "4Tico",
+      "observed_name": "チコ",
+      "position": [
+        13586.587890625,
+        -2321.228759765625,
+        -3515.31201171875
+      ],
+      "dead": false,
+      "clipped": true,
+      "hidden": false,
+      "nerve": {
+        "step": 0,
+        "type": "N7NrvTico11TicoNrvWaitE"
+      },
+      "gate": "reads A1009",
+      "binding_evidence": "type and unique nearest authored world position",
+      "authored_position": [
+        13587.057,
+        -2321.234,
+        -3515.172
+      ],
+      "distance_from_authored": 0.4895858935438929
+    },
+    {
+      "zone": "Root",
+      "authored_name": "SuperSpinDriver",
+      "authored_l_id": 8,
+      "actor_id": 871,
+      "observed_type": "15SuperSpinDriver",
+      "observed_name": "スーパースピンドライバー",
+      "position": [
+        12958.8466796875,
+        -830.847412109375,
+        -4648.07763671875
+      ],
+      "dead": true,
+      "clipped": false,
+      "hidden": false,
+      "nerve": {
+        "step": 0,
+        "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+      },
+      "gate": "APPEAR1009 after all5 chip completion demo",
+      "binding_evidence": "type and unique nearest authored world position",
+      "authored_position": [
+        12958.847,
+        -830.847,
+        -4648.078
+      ],
+      "distance_from_authored": 0.0006359304218156379
+    },
+    {
+      "zone": "Small",
+      "authored_name": "Tico",
+      "authored_l_id": 9,
+      "actor_id": 757,
+      "observed_type": "4Tico",
+      "observed_name": "チコ",
+      "position": [
+        6680.0,
+        2925.40478515625,
+        -5310.0
+      ],
+      "dead": false,
+      "clipped": true,
+      "hidden": false,
+      "nerve": {
+        "step": 0,
+        "type": "N7NrvTico11TicoNrvWaitE"
+      },
+      "gate": "A1125/B1124/DEAD1127",
+      "binding_evidence": "type and unique nearest authored world position",
+      "authored_position": [
+        6680,
+        2925.405,
+        -5310
+      ],
+      "distance_from_authored": 0.00021484375020008883
+    },
+    {
+      "zone": "Small",
+      "authored_name": "CapsuleCage",
+      "authored_l_id": 16,
+      "actor_id": 1036,
+      "observed_type": "11CapsuleCage",
+      "observed_name": "カプセルケージ",
+      "position": [
+        6680.0,
+        2643.583984375,
+        -5310.0
+      ],
+      "dead": false,
+      "clipped": true,
+      "hidden": false,
+      "nerve": {
+        "step": 0,
+        "type": "N14NrvCapsuleCage18CapsuleCageNrvWaitE"
+      },
+      "gate": "B1125",
+      "binding_evidence": "type and unique nearest authored world position",
+      "authored_position": [
+        6680,
+        2643.584,
+        -5310
+      ],
+      "distance_from_authored": 1.5624999832652975e-05
+    },
+    {
+      "zone": "Small",
+      "authored_name": "ChildKuribo",
+      "authored_l_id": 3,
+      "actor_id": 1135,
+      "observed_type": "6Kuribo",
+      "observed_name": "全滅用クリボー",
+      "position": [
+        7112.83642578125,
+        1852.792724609375,
+        -6205.96484375
+      ],
+      "dead": true,
+      "clipped": false,
+      "hidden": false,
+      "nerve": {
+        "step": -1,
+        "type": "N9NrvKuribo15KuriboNrvWanderE"
+      },
+      "gate": "Parent21; SW_SLEEP1124",
+      "binding_evidence": "type and unique nearest authored world position",
+      "authored_position": [
+        7112.569,
+        1852.793,
+        -6206.094
+      ],
+      "distance_from_authored": 0.2969814156323977
+    },
+    {
+      "zone": "Small",
+      "authored_name": "ExterminationKuriboKeySwitch",
+      "authored_l_id": 21,
+      "actor_id": 1133,
+      "observed_type": "20ExterminationChecker",
+      "observed_name": "クリボー全滅チェッカーキースイッチ版",
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dead": true,
+      "clipped": false,
+      "hidden": false,
+      "nerve": {
+        "step": 0,
+        "type": "N23NrvExterminationChecker31ExterminationCheckerNrvWatchingE"
+      },
+      "gate": "only traced ExterminationChecker; original owner leaves position zero",
+      "binding_evidence": "unique traced owner/type/name and actual ExterminationChecker child-construction source"
+    },
+    {
+      "zone": "Small",
+      "authored_name": "owned KeySwitch",
+      "authored_l_id": null,
+      "actor_id": 1137,
+      "observed_type": "9KeySwitch",
+      "observed_name": "全滅用キースイッチ",
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dead": true,
+      "clipped": false,
+      "hidden": false,
+      "nerve": {
+        "step": 0,
+        "type": "N12NrvKeySwitch21KeySwitchNrvDemoStartE"
+      },
+      "gate": "unique name 全滅用キースイッチ from ExterminationChecker::init; later spawns at last defeated child",
+      "binding_evidence": "unique traced owner/type/name and actual ExterminationChecker child-construction source"
+    },
+    {
+      "zone": "Root",
+      "authored_name": "SpinDriver",
+      "authored_l_id": 2,
+      "actor_id": 1056,
+      "observed_type": "10SpinDriver",
+      "observed_name": "スピンドライバ",
+      "position": [
+        6704.375,
+        2943.039306640625,
+        -5296.36669921875
+      ],
+      "dead": true,
+      "clipped": false,
+      "hidden": false,
+      "nerve": {
+        "step": 0,
+        "type": "N13NrvSpinDriver17SpinDriverNrvWaitE"
+      },
+      "gate": "APPEAR1127 after freed Tico metamorphosis",
+      "binding_evidence": "type and unique nearest authored world position",
+      "authored_position": [
+        6704.375,
+        2943.039,
+        -5296.367
+      ],
+      "distance_from_authored": 0.00042953210966599286
+    }
+  ],
+  "first_rail_endpoint": [
+    13436.447265625,
+    -2651.24267578125,
+    -3706.7265625
+  ],
+  "hazard": {
+    "authored_position": [
+      13955.342,
+      -1910.785,
+      -4524.826
+    ],
+    "eye_sensor_radius_at_scale1": 500,
+    "actor_id": null,
+    "id_unavailable_reason": "BlackHole absent from configured trace type filter; position remains authored reference"
+  },
+  "nearest_first_chip_ids": [
+    799,
+    806,
+    803,
+    793,
+    809
+  ],
+  "prerequisite": {
+    "actor_id": 1007,
+    "action": "break cage then wait for chip799 to appear and pass initial40steps",
+    "distance_from_endpoint": 652.158769774958
+  },
+  "legs": [
+    {
+      "from": "first_rail_endpoint",
+      "to_actor_id": 799,
+      "straight_distance": 712.3132773752666,
+      "angular_separation_deg": 34.12800413621673,
+      "segment_min_distance_from_authored_hazard_center": 1159.9945338854359
+    },
+    {
+      "from": 799,
+      "to_actor_id": 806,
+      "straight_distance": 1861.6220600981856,
+      "angular_separation_deg": 98.13722784582772,
+      "segment_min_distance_from_authored_hazard_center": 806.6474124402185
+    },
+    {
+      "from": 806,
+      "to_actor_id": 803,
+      "straight_distance": 979.513948785834,
+      "angular_separation_deg": 43.29547755552973,
+      "segment_min_distance_from_authored_hazard_center": 1213.979357939782
+    },
+    {
+      "from": 803,
+      "to_actor_id": 793,
+      "straight_distance": 1831.5541392146033,
+      "angular_separation_deg": 79.13543445890438,
+      "segment_min_distance_from_authored_hazard_center": 1104.191248571435
+    },
+    {
+      "from": 793,
+      "to_actor_id": 809,
+      "straight_distance": 1933.6200773991004,
+      "angular_separation_deg": 91.88216714623879,
+      "segment_min_distance_from_authored_hazard_center": 911.6609327823827
+    },
+    {
+      "from": 809,
+      "to_actor_id": 871,
+      "straight_distance": 1951.5241567879411,
+      "angular_separation_deg": 93.87506070894763,
+      "segment_min_distance_from_authored_hazard_center": 891.4732224737322
+    }
+  ],
+  "optional_surface_waypoint": {
+    "between": [
+      799,
+      806
+    ],
+    "actor_id": 1004,
+    "action": "pass around surface near cage; not a required break/collect gate"
+  },
+  "small_encounter_sequence": [
+    757,
+    1135,
+    1137,
+    1036,
+    757,
+    1056
+  ],
+  "not_small_key_actor_id": 1126,
+  "limits": [
+    "ID bindings apply to this process run.",
+    "Position bindings are source/trace evidence; no visibility or interaction success asserted.",
+    "dead=True can be pre-appearance, not proof of collection or defeat.",
+    "Straight distances and minimum center distances are navigation diagnostics, not collision-free path proof. Use tangent surface steering/current gravity, not a chord through terrain.",
+    "After five chips, wait for completion/outro and actual driver871 appearance.",
+    "Key1137 is currently unspawned at origin; never navigate to its current zero coordinate."
+  ],
+  "subsequent_route_result": {
+    "failed_leg": [
+      799,
+      806
+    ],
+    "first_sampled_ungrounded_frame": 26530,
+    "replacement_note": "crater-detour.md",
+    "note": "Keep ID bindings; earlier straight center-clearance heuristic did not establish terrain safety."
+  }
+}

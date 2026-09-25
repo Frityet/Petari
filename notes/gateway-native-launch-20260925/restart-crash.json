@@ -1,0 +1,502 @@
+{
+  "pid": 62913,
+  "procName": "smg-pc",
+  "captureTime": "2026-09-25 21:44:19.4633 +0100",
+  "exception": {
+    "codes": "0x0000000000000001, 0x0000000000000010",
+    "rawCodes": [
+      1,
+      16
+    ],
+    "type": "EXC_BAD_ACCESS",
+    "signal": "SIGSEGV",
+    "subtype": "KERN_INVALID_ADDRESS at 0x0000000000000010"
+  },
+  "termination": {
+    "flags": 0,
+    "code": 11,
+    "namespace": "SIGNAL",
+    "indicator": "Segmentation fault: 11",
+    "byProc": "exc handler",
+    "byPid": 62913
+  },
+  "faultingThread": 5,
+  "usedImages": [
+    {
+      "source": "P",
+      "arch": "arm64",
+      "base": 4340367360,
+      "CFBundleShortVersionString": "0.1.0",
+      "CFBundleIdentifier": "org.petari.smg-pc.game",
+      "size": 16842752,
+      "uuid": "57e0ca34-7134-322b-a31e-52da38d03c8b",
+      "path": "/Users/USER/*/smg-pc.app/Contents/MacOS/smg-pc",
+      "name": "smg-pc",
+      "CFBundleVersion": "1"
+    },
+    {
+      "source": "P",
+      "arch": "arm64",
+      "base": 4375298048,
+      "size": 770048,
+      "uuid": "2f2000a9-e70a-3b30-bfc9-f6bff9fd3e8b",
+      "path": "/opt/homebrew/*/libc++.1.0.dylib",
+      "name": "libc++.1.0.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64",
+      "base": 4373233664,
+      "size": 196608,
+      "uuid": "d0e9ca85-6608-37ca-9250-8651e3ea2249",
+      "path": "/opt/homebrew/*/libc++abi.1.0.dylib",
+      "name": "libc++abi.1.0.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64",
+      "base": 4372987904,
+      "size": 49152,
+      "uuid": "afaa7230-c682-3c49-a8cd-d117c5d61e0e",
+      "path": "/opt/homebrew/*/libunwind.1.0.dylib",
+      "name": "libunwind.1.0.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 4454121472,
+      "size": 49152,
+      "uuid": "9ef9e491-f3d3-322c-918a-559d3b858d9a",
+      "path": "/usr/lib/libobjc-trampolines.dylib",
+      "name": "libobjc-trampolines.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 5256544256,
+      "CFBundleShortVersionString": "2.0.0",
+      "CFBundleIdentifier": "com.apple.iokit.IOHIDLib",
+      "size": 49152,
+      "uuid": "f3e9dcc5-2e8c-3e7a-bcaf-6491a77bf5cd",
+      "path": "/System/Library/Extensions/IOHIDFamily.kext/Contents/PlugIns/IOHIDLib.plugin/Contents/MacOS/IOHIDLib",
+      "name": "IOHIDLib",
+      "CFBundleVersion": "2.0.0"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 5285117952,
+      "size": 114688,
+      "uuid": "b7d8c7ba-8c30-3362-b3c7-d0998077dc1d",
+      "path": "/Volumes/VOLUME/*/libMetalMetricsInterpose.dylib",
+      "name": "libMetalMetricsInterpose.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6614204416,
+      "size": 256428,
+      "uuid": "f63bf418-8f75-34a4-aaf1-8caf2b9b6a05",
+      "path": "/usr/lib/system/libsystem_kernel.dylib",
+      "name": "libsystem_kernel.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6614515712,
+      "size": 38132,
+      "uuid": "080e4444-a0fb-3913-9756-4e470015f32f",
+      "path": "/usr/lib/system/libsystem_platform.dylib",
+      "name": "libsystem_platform.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6610264064,
+      "size": 784100,
+      "uuid": "d341ddcb-7969-3a9c-8e03-0cf4751398a9",
+      "path": "/usr/lib/dyld",
+      "name": "dyld"
+    },
+    {
+      "size": 0,
+      "source": "A",
+      "base": 0,
+      "uuid": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6612643840,
+      "size": 287136,
+      "uuid": "022bf08f-0b3a-3225-9e65-16d1553ce90d",
+      "path": "/usr/lib/system/libdispatch.dylib",
+      "name": "libdispatch.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6614462464,
+      "size": 51484,
+      "uuid": "5a1828c3-cbc2-3b85-bd07-c8ed10021a41",
+      "path": "/usr/lib/system/libsystem_pthread.dylib",
+      "name": "libsystem_pthread.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6614749184,
+      "CFBundleShortVersionString": "6.9",
+      "CFBundleIdentifier": "com.apple.CoreFoundation",
+      "size": 4787872,
+      "uuid": "727e905e-f344-3823-8e13-e7a096388321",
+      "path": "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+      "name": "CoreFoundation",
+      "CFBundleVersion": "5027.0.69"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6688141312,
+      "CFBundleShortVersionString": "6.9",
+      "CFBundleIdentifier": "com.apple.AppKit",
+      "size": 23340300,
+      "uuid": "2688afbc-5c39-3132-bcf5-8d00d32d7615",
+      "path": "/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit",
+      "name": "AppKit",
+      "CFBundleVersion": "2775.10.103.1"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6686695424,
+      "CFBundleShortVersionString": "2.0.2",
+      "CFBundleIdentifier": "com.apple.framework.IOKit",
+      "size": 939784,
+      "uuid": "0e4cf3e4-b0c2-312a-b147-0bd4978ef0b7",
+      "path": "/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit",
+      "name": "IOKit"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 7275986944,
+      "CFBundleShortVersionString": "162.11",
+      "CFBundleIdentifier": "com.apple.IOGPU",
+      "size": 241976,
+      "uuid": "3959324f-d63d-3387-8e97-238f27a76b74",
+      "path": "/System/Library/PrivateFrameworks/IOGPU.framework/Versions/A/IOGPU",
+      "name": "IOGPU",
+      "CFBundleVersion": "162.11"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6829137920,
+      "CFBundleShortVersionString": "382.5.3",
+      "CFBundleIdentifier": "com.apple.Metal",
+      "size": 2645368,
+      "uuid": "b0bc74fe-7080-347d-92ee-38195058ccce",
+      "path": "/System/Library/Frameworks/Metal.framework/Versions/A/Metal",
+      "name": "Metal",
+      "CFBundleVersion": "382.5.3"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 11242508288,
+      "CFBundleShortVersionString": "1",
+      "CFBundleIdentifier": "com.apple.siri.tts.SiriTTS",
+      "size": 10073808,
+      "uuid": "73a10adf-b12a-32c3-a752-23accafaa72f",
+      "path": "/System/Library/PrivateFrameworks/SiriTTS.framework/Versions/A/SiriTTS",
+      "name": "SiriTTS",
+      "CFBundleVersion": "1"
+    }
+  ],
+  "faulting_thread": {
+    "triggered": true,
+    "id": 6740537,
+    "name": "Aurora render worker",
+    "threadState": {
+      "x": [
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 16
+        },
+        {
+          "value": 2147755420
+        },
+        {
+          "value": 18446744073633768387
+        },
+        {
+          "value": 3
+        },
+        {
+          "value": 10
+        },
+        {
+          "value": 18446744072367376383
+        },
+        {
+          "value": 10362024864799785192
+        },
+        {
+          "value": 10362024864799785192
+        },
+        {
+          "value": 7696581396224
+        },
+        {
+          "value": 7696581396226
+        },
+        {
+          "value": 3
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 280375465148160
+        },
+        {
+          "value": 1
+        },
+        {
+          "value": 6614469148,
+          "symbolLocation": 0,
+          "symbol": "pthread_mutex_unlock"
+        },
+        {
+          "value": 18446744072367374336
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 4358357544,
+          "symbolLocation": 0,
+          "symbol": "aurora::gfx::(anonymous namespace)::g_stagingBuffers"
+        },
+        {
+          "value": 4358359160,
+          "symbolLocation": 0,
+          "symbol": "aurora::gfx::(anonymous namespace)::g_mappingStates"
+        },
+        {
+          "value": 1
+        },
+        {
+          "value": 18446744073709551615
+        },
+        {
+          "value": 4358360352,
+          "symbolLocation": 0,
+          "symbol": "aurora::gfx::render_worker::(anonymous namespace)::g_pendingItems"
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        }
+      ],
+      "flavor": "ARM_THREAD_STATE64",
+      "lr": {
+        "value": 4347767924
+      },
+      "cpsr": {
+        "value": 1610612736
+      },
+      "fp": {
+        "value": 6132657664
+      },
+      "sp": {
+        "value": 6132657520
+      },
+      "esr": {
+        "value": 2449473542,
+        "description": "(Data Abort) byte read Translation fault"
+      },
+      "pc": {
+        "value": 4348030368,
+        "matchesCrashFrame": 1
+      },
+      "far": {
+        "value": 16
+      }
+    },
+    "frames": [
+      {
+        "imageOffset": 7663008,
+        "symbol": "dawn::native::ObjectBase::GetDevice() const",
+        "symbolLocation": 0,
+        "imageIndex": 0
+      },
+      {
+        "imageOffset": 7400564,
+        "symbol": "dawn::native::CommandEncoder::APIFinish(dawn::native::CommandBufferDescriptor const*)",
+        "symbolLocation": 48,
+        "imageIndex": 0
+      },
+      {
+        "symbol": "wgpu::CommandEncoder::Finish(wgpu::CommandBufferDescriptor const*) const",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 5988832,
+        "symbolLocation": 12,
+        "sourceLine": 9211,
+        "sourceFile": "webgpu_cpp.h"
+      },
+      {
+        "symbol": "aurora::gfx::detail::submit_frame_prefix(aurora::gfx::detail::FramePacket&)::$_0::operator()() const",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 5988832,
+        "symbolLocation": 80,
+        "sourceLine": 737,
+        "sourceFile": "frame.cpp"
+      },
+      {
+        "symbol": "std::__1::__invoke_result_impl<void, aurora::gfx::detail::submit_frame_prefix(aurora::gfx::detail::FramePacket&)::$_0&>::type std::__1::__invoke[abi:nqe230101]<aurora::gfx::detail::submit_frame_prefix(aurora::gfx::detail::FramePacket&)::$_0&>(aurora::gfx::detail::submit_frame_prefix(aurora::gfx::detail::FramePacket&)::$_0&)",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 5988832,
+        "symbolLocation": 80,
+        "sourceLine": 90,
+        "sourceFile": "invoke.h"
+      },
+      {
+        "symbol": "void std::__1::__invoke_void_return_wrapper<void, true>::__call[abi:nqe230101]<aurora::gfx::detail::submit_frame_prefix(aurora::gfx::detail::FramePacket&)::$_0&>(aurora::gfx::detail::submit_frame_prefix(aurora::gfx::detail::FramePacket&)::$_0&)",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 5988832,
+        "symbolLocation": 80,
+        "sourceLine": 350,
+        "sourceFile": "invoke.h"
+      },
+      {
+        "symbol": "void std::__1::__invoke_r[abi:nqe230101]<void, aurora::gfx::detail::submit_frame_prefix(aurora::gfx::detail::FramePacket&)::$_0&>(aurora::gfx::detail::submit_frame_prefix(aurora::gfx::detail::FramePacket&)::$_0&)",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 5988832,
+        "symbolLocation": 80,
+        "sourceLine": 356,
+        "sourceFile": "invoke.h"
+      },
+      {
+        "imageOffset": 5988832,
+        "sourceLine": 177,
+        "sourceFile": "function.h",
+        "symbol": "std::__1::__function::__func<aurora::gfx::detail::submit_frame_prefix(aurora::gfx::detail::FramePacket&)::$_0, void ()>::operator()[abi:nqe230101]()",
+        "imageIndex": 0,
+        "symbolLocation": 108
+      },
+      {
+        "symbol": "std::__1::__function::__value_func<void ()>::operator()[abi:nqe230101]() const",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 6093800,
+        "symbolLocation": 12,
+        "sourceLine": 278,
+        "sourceFile": "function.h"
+      },
+      {
+        "symbol": "std::__1::function<void ()>::operator()[abi:nqe230101]() const",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 6093800,
+        "symbolLocation": 12,
+        "sourceLine": 763,
+        "sourceFile": "function.h"
+      },
+      {
+        "imageOffset": 6093800,
+        "sourceLine": 49,
+        "sourceFile": "render_worker.cpp",
+        "symbol": "aurora::gfx::render_worker::(anonymous namespace)::worker_main(std::__1::stop_token)",
+        "imageIndex": 0,
+        "symbolLocation": 172
+      },
+      {
+        "symbol": "std::__1::__invoke_result_impl<void, void (*&)(std::__1::stop_token), std::__1::stop_token&>::type std::__1::__invoke[abi:nqe230101]<void (*&)(std::__1::stop_token), std::__1::stop_token&>(void (*&)(std::__1::stop_token), std::__1::stop_token&)",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 6101236,
+        "symbolLocation": 32,
+        "sourceLine": 90,
+        "sourceFile": "invoke.h"
+      },
+      {
+        "symbol": "std::__1::__invoke_result_impl<void, void (*&)(std::__1::stop_token), std::__1::stop_token&>::type std::__1::invoke[abi:nqe230101]<void (*&)(std::__1::stop_token), std::__1::stop_token&>(void (*&)(std::__1::stop_token), std::__1::stop_token&)",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 6101236,
+        "symbolLocation": 32,
+        "sourceLine": 29,
+        "sourceFile": "invoke.h"
+      },
+      {
+        "symbol": "aurora::thread::Thread::Thread<void (&)(std::__1::stop_token)>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token)::operator()(std::__1::stop_token)",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 6101236,
+        "symbolLocation": 36,
+        "sourceLine": 34,
+        "sourceFile": "thread.hpp"
+      },
+      {
+        "imageOffset": 6101236,
+        "sourceLine": 90,
+        "sourceFile": "invoke.h",
+        "symbol": "std::__1::__invoke_result_impl<void, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token)>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token>::type std::__1::__invoke[abi:nqe230101]<aurora::thread::Thread::Thread<void (&)(std::__1::stop_token)>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token>(aurora::thread::Thread::Thread<void (&)(std::__1::stop_token)>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token)&&, std::__1::stop_token&&)",
+        "imageIndex": 0,
+        "symbolLocation": 64
+      },
+      {
+        "symbol": "void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token)>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token, 0ul, 1ul>(std::__1::tuple<T, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token)>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token>&, std::__1::__integer_sequence<unsigned long, 0ul, 1ul>)",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 6101100,
+        "symbolLocation": 12,
+        "sourceLine": 170,
+        "sourceFile": "thread.h"
+      },
+      {
+        "imageOffset": 6101100,
+        "sourceLine": 178,
+        "sourceFile": "thread.h",
+        "symbol": "void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token)>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token>>(void*)",
+        "imageIndex": 0,
+        "symbolLocation": 60
+      },
+      {
+        "imageOffset": 27904,
+        "symbol": "_pthread_start",
+        "symbolLocation": 136,
+        "imageIndex": 12
+      },
+      {
+        "imageOffset": 7404,
+        "symbol": "thread_start",
+        "symbolLocation": 8,
+        "imageIndex": 12
+      }
+    ]
+  }
+}
