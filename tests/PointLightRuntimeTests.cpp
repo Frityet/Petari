@@ -76,7 +76,7 @@ namespace {
         for (unsigned generation = 0; generation < 8; ++generation) {
             const auto domain = compat::JkrAllocationDomain::create(heaps, 1U << 20);
             test::SceneExecutionFixture scene(scheduler, domain,
-                                              &original.scene, original.controller().mObjHolder);
+                                              &original.scene);
             alignas(32) std::array<u8, 4096> commands{};
             GXBeginDisplayList(commands.data(), commands.size());
             auto* director = static_cast<LightDirector*>(MR::createSceneObj(SceneObj_LightDirector));

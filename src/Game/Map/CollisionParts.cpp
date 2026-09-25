@@ -16,10 +16,9 @@
 #include "Game/Util/TriangleFilter.hpp"
 #include "resource/KCollisionResource.hpp"
 #include "resource/RarcArchive.hpp"
-#include "scene/StageCollisionService.hpp"
-#include <array>
 #include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
+#include <cmath>
 #include <cstdio>
 #include <span>
 #include <stdexcept>
@@ -28,52 +27,66 @@
 struct CollisionParts::NativeResources {
     std::shared_ptr< const void > resource_owner;
     SceneObjHolder* scene_holder = nullptr;
-    std::shared_ptr< smgpc::scene::StageCollisionService > category_owner;
-    smgpc::scene::StageCollisionService* service = nullptr;
-    std::uint64_t service_generation = 0;
     std::span< const std::uint8_t > kcl;
     std::span< const std::uint8_t > attributes;
     std::string resource_name;
     std::string source;
     std::unique_ptr< smgpc::resource::KCollisionResource > decoded;
     std::shared_ptr< smgpc::resource::GeneratedKCollisionResource > generated;
-    std::shared_ptr< smgpc::scene::StageCollisionRegistrationState > registration;
-    std::array< float, 12 > published_current;
-    std::array< float, 12 > published_previous;
-
-    ~NativeResources() {
-        if (registration)
-            registration->release_owner();
-    }
+    s32 generated_prism_count = 0;
+    bool geometry_published = true;
 };
 
 namespace {
-    std::array< float, 12 > copy_matrix(const TPos3f& matrix) {
-        std::array< float, 12 > result;
-        for (std::size_t row = 0; row < 3; ++row)
-            for (std::size_t col = 0; col < 4; ++col)
-                result[row * 4 + col] = matrix.mMtx[row][col];
-        return result;
+    void validateMatrix(const TPos3f& matrix) {
+        for (int row = 0; row < 3; ++row)
+            for (int col = 0; col < 4; ++col)
+                if (!std::isfinite(matrix.mMtx[row][col]))
+                    aurora::throw_host_exception< std::invalid_argument >("Collision matrix contains a non-finite component.");
+        Mtx inverse;
+        if (!PSMTXInverse(matrix.toMtxPtr(), inverse))
+            aurora::throw_host_exception< std::invalid_argument >("Collision matrix must be invertible.");
     }
 
+    bool isFinite(const TVec3f& vector) {
+        return std::isfinite(vector.x) && std::isfinite(vector.y) && std::isfinite(vector.z);
+    }
+
+    void validateGeneratedPrisms(KCollisionServer& server) {
+        for (s32 i = 0; i < server.getTriangleNum(); ++i) {
+            auto* prism = server.getPrismData(i);
+            // Original KCollision deliberately ignores collapsed/nonpositive
+            // faces. Do not reconstruct vertices with undefined divisors.
+            if (prism->mHeight <= 0.0f)
+                continue;
+            const auto a = server.getPos(prism, 0);
+            const auto b = server.getPos(prism, 1);
+            const auto c = server.getPos(prism, 2);
+            const auto ab = b - a;
+            const auto ac = c - a;
+            const auto bc = c - b;
+            const auto area = ab.cross(ac).length();
+            if (!isFinite(a) || !isFinite(b) || !isFinite(c) || !std::isfinite(area) || !(area > 1.0e-8f) || !(ab.length() > 1.0e-8f) ||
+                !(ac.length() > 1.0e-8f) || !(bc.length() > 1.0e-8f))
+                aurora::throw_host_exception< std::invalid_argument >("Generated collision contains a degenerate active prism.");
+            const TVec3f* normals[] = {server.getFaceNormal(prism), server.getEdgeNormal1(prism), server.getEdgeNormal2(prism),
+                                       server.getEdgeNormal3(prism)};
+            for (auto* normal : normals)
+                if (!isFinite(*normal) || !(normal->squared() > 1.0e-12f))
+                    aurora::throw_host_exception< std::invalid_argument >("Generated collision contains an invalid active normal.");
+        }
+    }
 }  // namespace
 
 CollisionParts::~CollisionParts() {
     mNativeLifetime.reset();
-    if (mNativeResources) {
-        if (mNativeResources->registration)
-            mNativeResources->registration->release_owner();
-        if (_CC && MR::getSceneObjHolder() == mNativeResources->scene_holder && mNativeResources->scene_holder->isExist(SceneObj_CollisionDirector)) {
-            MR::invalidateCollisionParts(this);
-        }
-    }
+    if (mNativeResources && _CC && MR::getSceneObjHolder() == mNativeResources->scene_holder &&
+        mNativeResources->scene_holder->isExist(SceneObj_CollisionDirector))
+        MR::invalidateCollisionParts(this);
     delete mServer->mapInfo;
     delete mServer;
 }
 
-smgpc::scene::StageCollisionService* CollisionParts::nativeService() const noexcept {
-    return mNativeResources ? mNativeResources->service : nullptr;
-}
 std::string_view CollisionParts::nativeResourceName() const noexcept {
     return mNativeResources ? mNativeResources->resource_name : std::string_view{};
 }
@@ -90,9 +103,8 @@ std::size_t CollisionParts::nativeAttributesSize() const noexcept {
 void CollisionParts::initFromResource(ResourceHolder* resources, const char* name, HitSensor* sensor, const TPos3f& matrix, int scale_type,
                                       s32 category) {
     const aurora::allocation::HostAllocationScope host;
-    auto* collision = smgpc::scene::StageCollisionService::active();
     auto* holder = MR::getSceneObjHolder();
-    if (!resources || !name || !sensor || !sensor->mHost || !collision || !holder) {
+    if (!resources || !name || !sensor || !sensor->mHost || !holder) {
         aurora::throw_host_exception< std::logic_error >("CollisionParts requires its actor, resources, scene and collision owners.");
     }
     if (category < 0 || category > 3)
@@ -130,11 +142,6 @@ void CollisionParts::initFromResource(ResourceHolder* resources, const char* nam
         if (director == nullptr) {
             aurora::throw_host_exception< std::logic_error >("CollisionParts requires its original CollisionDirector.");
         }
-        auto* keeper = director->getCategoryKeeper(category);
-        state->category_owner = keeper->retainNativeService();
-        collision = keeper->nativeService();
-        state->service = collision;
-        state->service_generation = collision->generation();
         auto* data = state->decoded->native_file();
         auto* attrs = state->decoded->attributes_data();
         switch (scale_type) {
@@ -149,23 +156,15 @@ void CollisionParts::initFromResource(ResourceHolder* resources, const char* nam
             break;
         }
     }
-    state->registration = std::make_shared< smgpc::scene::StageCollisionRegistrationState >(nullptr, this);
-    state->registration->set_enabled(false);
-    state->published_current = copy_matrix(mBaseMatrix);
-    state->published_previous = copy_matrix(mPrevBaseMatrix);
-    const auto result = collision->register_kcl(state->kcl, state->published_current, state->source, state->registration, state->attributes, sensor,
-                                                placement_zone_id);
-    if (!result.accepted)
-        aurora::throw_host_exception< std::runtime_error >("Required CollisionParts KCL is malformed: " + state->source);
     mNativeResources = std::move(state);
+    validateNativeMatrices();
 }
 
 void CollisionParts::initFromGeneratedResource(std::shared_ptr< smgpc::resource::GeneratedKCollisionResource > resource, HitSensor* sensor,
                                                const TPos3f& matrix, s32 category) {
     const aurora::allocation::HostAllocationScope host;
-    auto* collision = smgpc::scene::StageCollisionService::active();
     auto* holder = MR::getSceneObjHolder();
-    if (!resource || !sensor || !sensor->mHost || !collision || !holder) {
+    if (!resource || !sensor || !sensor->mHost || !holder) {
         aurora::throw_host_exception< std::logic_error >("Generated CollisionParts requires its geometry, actor, scene and collision owners.");
     }
     if (category < 0 || category > 3)
@@ -174,21 +173,15 @@ void CollisionParts::initFromGeneratedResource(std::shared_ptr< smgpc::resource:
     if (zone < 0 || zone >= MR::getZoneNum() || MR::getZoneNum() > 32) {
         aurora::throw_host_exception< std::logic_error >("Generated CollisionParts requires a valid original placement zone.");
     }
-    CollisionCategorizedKeeper* keeper = nullptr;
     {
         const aurora::allocation::ClientAllocationScope client;
         auto* director = static_cast< CollisionDirector* >(MR::createSceneObj(SceneObj_CollisionDirector));
         if (!director) {
             aurora::throw_host_exception< std::logic_error >("Generated CollisionParts requires its original CollisionDirector.");
         }
-        keeper = director->getCategoryKeeper(category);
     }
-    collision = keeper->nativeService();
     auto state = std::make_unique< NativeResources >();
     state->scene_holder = holder;
-    state->category_owner = keeper->retainNativeService();
-    state->service = collision;
-    state->service_generation = collision->generation();
     state->resource_name = sensor->mHost->mName;
     state->source = "generated:" + state->resource_name;
     state->generated = std::move(resource);
@@ -196,70 +189,39 @@ void CollisionParts::initFromGeneratedResource(std::shared_ptr< smgpc::resource:
         const aurora::allocation::ClientAllocationScope client;
         init(matrix, sensor, state->generated->native_file(), nullptr, category, true);
     }
-    state->registration = std::make_shared< smgpc::scene::StageCollisionRegistrationState >(nullptr, this);
-    state->registration->set_enabled(false);
-    state->published_current = copy_matrix(mBaseMatrix);
-    state->published_previous = copy_matrix(mPrevBaseMatrix);
-    const auto result =
-        collision->register_generated_kcl(state->generated, *mServer, state->published_current, state->source, state->registration, sensor, zone);
-    if (!result.accepted)
-        aurora::throw_host_exception< std::logic_error >("Generated CollisionParts geometry was not registered.");
+    state->generated_prism_count = mServer->getTriangleNum();
     mNativeResources = std::move(state);
+    publishNativeGeometry();
 }
 
 void CollisionParts::publishNativeGeometry() {
-    const aurora::allocation::HostAllocationScope host;
     auto* state = mNativeResources.get();
-    // Initial bounds are established before publication. Decoded resource
-    // geometry retains its existing immutable-source behavior.
-    if (!state || !state->registration || !state->generated)
+    if (!state || !state->generated)
         return;
-    if (MR::getSceneObjHolder() != state->scene_holder || state->service->generation() != state->service_generation) {
-        aurora::throw_host_exception< std::logic_error >("Generated CollisionParts geometry publication requires its live collision owner.");
-    }
-    state->service->update_registered_geometry(*state->registration);
+    if (MR::getSceneObjHolder() != state->scene_holder)
+        aurora::throw_host_exception< std::logic_error >("Generated collision update requires its live scene owner.");
+    state->geometry_published = false;
+    state->generated->validate();
+    if (mServer->mFile != state->generated->native_file() || mServer->getTriangleNum() != state->generated_prism_count)
+        aurora::throw_host_exception< std::logic_error >("Generated collision changed its owned file or prism count.");
+    validateGeneratedPrisms(*mServer);
+    validateNativeMatrices();
+    state->geometry_published = true;
 }
 
-void CollisionParts::publishNativeMatrices() {
-    const aurora::allocation::HostAllocationScope host;
-    auto* state = mNativeResources.get();
-    // resetAllMtx is also called during init, before native publication.
-    if (!state || !state->registration)
+void CollisionParts::validateNativeMatrices() {
+    if (!mNativeResources)
         return;
-    if (MR::getSceneObjHolder() != state->scene_holder || state->service->generation() != state->service_generation) {
-        aurora::throw_host_exception< std::logic_error >("CollisionParts matrix publication requires its live collision owner.");
-    }
-    const auto current = copy_matrix(mBaseMatrix);
-    const auto previous = copy_matrix(mPrevBaseMatrix);
-    if (current == state->published_current && previous == state->published_previous)
-        return;
-    state->service->update_registered_transform(*state->registration, current, previous);
-    state->published_current = current;
-    state->published_previous = previous;
+    if (MR::getSceneObjHolder() != mNativeResources->scene_holder)
+        aurora::throw_host_exception< std::logic_error >("Collision matrix update requires its live scene owner.");
+    validateMatrix(mBaseMatrix);
+    validateMatrix(mPrevBaseMatrix);
 }
 
-void CollisionParts::publishNativeMembership(bool enabled) {
-    const aurora::allocation::HostAllocationScope host;
-    if (auto* state = mNativeResources.get())
-        state->registration->set_enabled(enabled);
+void CollisionParts::requireNativeGeometryPublished() const {
+    if (_CC && mNativeResources && !mNativeResources->geometry_published)
+        aurora::throw_host_exception< std::logic_error >("Generated collision queries require successful geometry validation after mutation.");
 }
-
-namespace {
-    void requirePublishedGeometry(const CollisionParts& parts) {
-        auto* service = parts.nativeService();
-        if (!service && parts.mKeeperIndex == 0)
-            service = smgpc::scene::StageCollisionService::active();
-        if (!service && parts.mKeeperIndex != 0) {
-            if (auto* director = MR::getCollisionDirector()) {
-                if (parts.mKeeperIndex < 1 || parts.mKeeperIndex > 3)
-                    aurora::throw_host_exception< std::invalid_argument >("Auxiliary collision category must be 1, 2 or 3.");
-                service = director->getCategoryKeeper(parts.mKeeperIndex)->nativeService();
-            }
-        }
-        if (service)
-            service->require_published_geometry();
-    }
-}  // namespace
 
 [[maybe_unused]] static void FORCE_SCALE() {
     TVec3f vec;
@@ -303,14 +265,12 @@ void CollisionParts::addToBelongZone() {
     s32 zoneID = mZone->mZoneID;
 
     MR::getCollisionDirector()->getCategoryKeeper(mKeeperIndex)->addToZone(this, zoneID);
-    publishNativeMembership(true);
 }
 
 void CollisionParts::removeFromBelongZone() {
     s32 zoneID = mZone->mZoneID;
 
     MR::getCollisionDirector()->getCategoryKeeper(mKeeperIndex)->removeFromZone(this, zoneID);
-    publishNativeMembership(false);
 }
 
 void CollisionParts::initWithAutoEqualScale(const TPos3f& a1, HitSensor* pHitSensor, const void* pKclData, const void* pMapInfo, s32 keeperIndex,
@@ -371,7 +331,7 @@ void CollisionParts::resetAllMtxPrivate(const TPos3f& a1) {
     mBaseMatrix.setInline(a1);
     mMatrix.setInline(a1);
     PSMTXInverse(reinterpret_cast< MtxPtr >(&mBaseMatrix), reinterpret_cast< MtxPtr >(&mInvBaseMatrix));
-    publishNativeMatrices();
+    validateNativeMatrices();
 }
 
 void CollisionParts::setMtx(const TPos3f& matrix) {
@@ -422,7 +382,7 @@ void CollisionParts::updateMtx() {
             PSMTXInverse(reinterpret_cast< MtxPtr >(&mBaseMatrix), reinterpret_cast< MtxPtr >(&mInvBaseMatrix));
         }
     }
-    publishNativeMatrices();
+    validateNativeMatrices();
 }
 
 // Issues with assignments of scaleDiff
@@ -504,7 +464,7 @@ s32 CollisionParts::getPlacementZoneID() const {
 
 // Instruction order
 bool CollisionParts::checkStrikePoint(HitInfo* pHitInfo, const TVec3f& rPos) {
-    requirePublishedGeometry(*this);
+    requireNativeGeometryPublished();
     TVec3f localPos;
     mInvBaseMatrix.mult(rPos, localPos);
     TVec3f scale;
@@ -550,7 +510,7 @@ bool CollisionParts::checkStrikePoint(HitInfo* pHitInfo, const TVec3f& rPos) {
 
 u32 CollisionParts::checkStrikeBall(HitInfo* pHitInfo, u32 capacity, const TVec3f& rPos, f32 radius, bool movingReaction,
                                     const TriangleFilterBase* pFilter) {
-    requirePublishedGeometry(*this);
+    requireNativeGeometryPublished();
     KC_PrismData* prisms[64];
     f32 distances[64];
     u8 features[64];
@@ -642,7 +602,7 @@ u32 CollisionParts::checkStrikeBallCore(HitInfo* pHitInfo, u32 capacity, const T
 
 u32 CollisionParts::checkStrikeBallWithThickness(HitInfo* pHitInfo, u32 capacity, const TVec3f& rPos, f32 radius, f32 thickness,
                                                  const TriangleFilterBase* pFilter) {
-    requirePublishedGeometry(*this);
+    requireNativeGeometryPublished();
     KC_PrismData* prisms[64];
     f32 distances[64];
     u8 features[64];
@@ -729,7 +689,7 @@ void CollisionParts::projectToPlane(TVec3f* pProjected, const TVec3f& rPos, cons
 }
 
 u32 CollisionParts::checkStrikeLine(HitInfo* pInfos, u32 maxCount, const TVec3f& rStart, const TVec3f& rOffset, const TriangleFilterBase* pFilter) {
-    requirePublishedGeometry(*this);
+    requireNativeGeometryPublished();
     f32 length = PSVECMag(&rOffset);
     TVec3f localStart;
     TVec3f localOffset;
@@ -775,7 +735,7 @@ void CollisionParts::calcForceMovePower(TVec3f* a1, const TVec3f& a2) const {
 }
 
 u32 CollisionParts::createAreaPolygonList(Triangle* pTriangles, u32 capacity, const TVec3f& rStart, const TVec3f& rEnd) {
-    requirePublishedGeometry(*this);
+    requireNativeGeometryPublished();
     KC_PrismData* prisms[512];
     TPos3f rotation;
     PSMTXCopy(mInvBaseMatrix.toMtxPtr(), rotation.toMtxPtr());
@@ -795,7 +755,7 @@ u32 CollisionParts::createAreaPolygonList(Triangle* pTriangles, u32 capacity, co
 }
 
 u32 CollisionParts::createAreaPolygonListArray(Triangle* pTriangles, u32 capacity, TVec3f* pPoints, u32 pointCount) {
-    requirePublishedGeometry(*this);
+    requireNativeGeometryPublished();
     KC_PrismData* prisms[512];
     TVec3f localPoints[32];
     TPos3f rotation;

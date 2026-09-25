@@ -10,7 +10,6 @@
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "layout/LayoutRuntime.hpp"
-#include "scene/NameObjChildOwner.hpp"
 #include <aurora/exception.hpp>
 #include <algorithm>
 #include <functional>
@@ -50,7 +49,7 @@ void verify_model_visibility(smgpc::runtime::SceneScheduler& scheduler,
                              const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps,
                              smgpc::test::OriginalSceneControllerFixture& original) {
     const auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 1U << 20);
-    smgpc::test::SceneExecutionFixture scene(scheduler, domain, &original.scene, original.controller().mObjHolder);
+    smgpc::test::SceneExecutionFixture scene(scheduler, domain, &original.scene);
     require(MR::createSceneObj(SceneObj_ClippingDirector) != nullptr,
             "the original LiveActor constructor requires its scene clipping director");
     VisibilityActor actor;
@@ -134,7 +133,7 @@ int main() {
             auto domain = compat::JkrAllocationDomain::create(heaps, 1U << 20);
             std::weak_ptr<compat::JkrAllocationDomain> weak = domain;
             {
-                test::SceneExecutionFixture scene(scheduler, domain, &original.scene, original.controller().mObjHolder);
+                test::SceneExecutionFixture scene(scheduler, domain, &original.scene);
                 auto* original_holder = &scene.execution().requirements();
                 require(JKRHeap::findFromRoot(original_holder) == &domain->heap(), "actual requirement holder must use the scene heap");
                 require(scene.executor().mBufferHolder != nullptr, "the real executor owns one draw holder");
@@ -208,25 +207,22 @@ int main() {
         }
         {
             auto domain = compat::JkrAllocationDomain::create(heaps, 1U << 20);
-            test::SceneExecutionFixture scene(scheduler, domain, &original.scene, original.controller().mObjHolder);
+            test::SceneExecutionFixture scene(scheduler, domain, &original.scene);
             layout::LayoutRuntime native_layout("scheduler-owned layout adaptor", "ownership fixture", 1, 72);
             const auto before = compat::name_obj_runtime_state_count();
-            const auto marker = compat::mark_name_obj_runtime_registrations();
             scheduler.register_layout(native_layout, 34, -1, 72);
             auto* adaptor = NameObjFinder::find(native_layout.getName().c_str());
             require(adaptor && compat::name_obj_runtime_owner(adaptor) == &scheduler,
                     "the actual layout adaptor must declare the scheduler that retains its unique_ptr");
             scene.complete_initialization();
-            scene::NameObjChildOwner::rollback_registration_suffix(marker);
             require(NameObjFinder::find(native_layout.getName().c_str()) == adaptor &&
                         compat::name_obj_runtime_state_count() == before + 1,
-                    "unclaimed scene-child retirement must leave a scheduler-owned layout adaptor alive");
+                    "the scheduler retains its own layout adaptor after execution initialization");
             scheduler.unregister_layout(native_layout);
             require(!NameObjFinder::find(native_layout.getName().c_str()) &&
                         compat::name_obj_runtime_state_count() == before,
                     "explicit layout unregistration destroys its adaptor and ownership record exactly once");
             scheduler.register_layout(native_layout, 34, -1, 72);
-            scene::NameObjChildOwner::rollback_registration_suffix(marker);
             scheduler.clear();
             require(!NameObjFinder::find(native_layout.getName().c_str()) &&
                         compat::name_obj_runtime_state_count() == before,

@@ -16,7 +16,6 @@
 #include "camera/CameraDirectorRuntime.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
-#include "scene/StagePlacementResolver.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 
 #include <aurora/dvd.h>
@@ -58,34 +57,6 @@ namespace {
         throw std::runtime_error(std::string(message));
     }
 
-    [[nodiscard]] std::optional<std::filesystem::path> find_real_disc() {
-        if (const auto *configured = std::getenv("SMGPC_REAL_DISC");
-            configured != nullptr && configured[0] != '\0') {
-            return std::filesystem::path(configured);
-        }
-
-        auto error = std::error_code{};
-        auto directory = std::filesystem::current_path(error);
-        if (error) {
-            return std::nullopt;
-        }
-        while (true) {
-            for (const auto name : {"RMGK01.iso", "RMGK01.wbfs"}) {
-                const auto candidate = directory / name;
-                if (std::filesystem::is_regular_file(candidate, error) && !error) {
-                    return candidate;
-                }
-                error.clear();
-            }
-            const auto parent = directory.parent_path();
-            if (parent == directory || parent.empty()) {
-                break;
-            }
-            directory = parent;
-        }
-        return std::nullopt;
-    }
-
     void test_scene_obj_6f_is_exact_and_synchronous() {
         require(MR::createSceneObj(SceneObj_SphereSelector) == nullptr,
                 "SceneObj 0x6F must remain absent without a scene-owned holder");
@@ -96,7 +67,7 @@ namespace {
         smgpc::test::OriginalSceneControllerFixture original(heaps);
         auto scene = smgpc::test::SceneExecutionFixture(
             scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 4U << 20),
-            &original.scene, original.controller().mObjHolder);
+            &original.scene);
         auto *created = MR::createSceneObj(SceneObj_SphereSelector);
         auto *selector = dynamic_cast<SphereSelector *>(created);
         require(selector != nullptr && MR::isDead(selector),
@@ -175,132 +146,6 @@ namespace {
             "the mandatory retail level-sound call must fail explicitly instead of becoming a silent event");
     }
 
-    void test_real_file_select_row_exact_init_and_messages() {
-        const auto disc_path = find_real_disc();
-        if (!disc_path.has_value()) {
-            std::cout
-                << "[skip] real RMGK01 SphereSelectorHandle row (set SMGPC_REAL_DISC or place RMGK01.iso in a workspace ancestor)\n";
-            return;
-        }
-
-        aurora_dvd_close();
-        const auto disc_path_string = disc_path->string();
-        require(aurora_dvd_open(disc_path_string.c_str()),
-                "the selected real-disc fixture must be a readable SMG image");
-        struct DiscCloseGuard {
-            ~DiscCloseGuard() {
-                aurora_dvd_close();
-            }
-        } close_guard;
-        DVDInit();
-
-        auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
-        const auto placements =
-            smgpc::scene::resolve_stage_placement_objects(dvd, "FileSelect", 1);
-        const auto row = std::ranges::find_if(placements, [](const auto &placement) {
-            return placement.object_name == "SphereSelectorHandle";
-        });
-        if (row != placements.end()) {
-            std::cout << "[info] handle source: zone=" << row->zone_name
-                      << ";layer=" << row->layer_name
-                      << ";table=" << row->table_path
-                      << ";arg0=" << row->object_args[0]
-                      << ";factory=" << row->factory_supported
-                      << ";reason=" << row->support_reason << '\n';
-        }
-        require(row != placements.end() && row->stage_name == "FileSelect" &&
-                    row->zone_name == "FileSelect" && row->layer_name == "common" &&
-                    row->table_path == "jmp/placement/common/objinfo" &&
-                    row->object_args[0] == 0 && !row->factory_supported &&
-                    row->support_reason ==
-                        "me_and_multi_stage_bgm_playback_runtime_unavailable",
-                "the test must use the real RMGK01 FileSelect handle row and retain its precise blocker");
-
-        const auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
-        auto scheduler = smgpc::runtime::SceneScheduler{};
-        const auto active_scheduler = smgpc::runtime::SceneSchedulerBinding(scheduler);
-        smgpc::test::OriginalSceneControllerFixture original(heaps);
-        auto scene = smgpc::test::SceneExecutionFixture(
-            scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 4U << 20),
-            &original.scene, original.controller().mObjHolder);
-        require(MR::createSceneObj(SceneObj_MessageSensorHolder) != nullptr,
-                "the exact message contract requires the retail scene message sensor");
-        require(MR::createSceneObj(SceneObj_DemoDirector) != nullptr,
-                "simple demo-cast registration requires the actual scene DemoDirector");
-        auto handle = SphereSelectorHandle{"FileSelect SphereSelectorHandle"};
-        const auto iter = JMapInfoIter(&row->jmap_info, row->jmap_entry_index);
-        const auto marker = scheduler.registration_marker();
-        {
-            const smgpc::compat::JkrAllocationScope game(scheduler.allocation_domain());
-            handle.init(iter);
-        }
-
-        auto *selector =
-            MR::getSceneObj<SphereSelector>(SceneObj_SphereSelector);
-        require(MR::isDead(&handle) && !handle.mIsFileSelectMode && selector != nullptr &&
-                    MR::isDead(selector) && selector->mHandle == &handle &&
-                    selector->mSphereGroup->getObjNum() == 1 &&
-                    selector->mSphereGroup->getActor(0) == &handle,
-                "exact placement init must synchronously bind the real handle into SceneObj 0x6F");
-        require(MR::getSceneObj<DemoDirector>(SceneObj_DemoDirector)->_20->nativeRegistrationCount(&handle) == 1U,
-                "exact placement init must retain the retail simple demo-cast registration");
-
-        require(SphereSelectorFunction::isMsgSelectStart(
-                    ACTMES_SPHERE_SELECTOR_SELECT_START) &&
-                    SphereSelectorFunction::isMsgSelectEnd(
-                        ACTMES_SPHERE_SELECTOR_SELECT_END) &&
-                    SphereSelectorFunction::isMsgConfirmStart(
-                        ACTMES_SPHERE_SELECTOR_CONFIRM_START) &&
-                    SphereSelectorFunction::isMsgConfirmCancel(
-                        ACTMES_SPHERE_SELECTOR_CONFIRM_CANCEL) &&
-                    SphereSelectorFunction::isMsgConfirmed(
-                        ACTMES_SPHERE_SELECTOR_CONFIRMED) &&
-                    SphereSelectorFunction::isMsgTargetSelected(
-                        ACTMES_SPHERE_SELECTOR_TARGET_SELECTED) &&
-                    !SphereSelectorFunction::isMsgTargetSelected(0xFFFFFFFFU),
-                "SphereSelector message classifiers must match the retail 0xE0-0xE5 contract");
-
-        const auto *message_sensor = MR::getMessageSensor();
-        const auto target_selected = MR::sendSimpleMsgToActor(
-            ACTMES_SPHERE_SELECTOR_TARGET_SELECTED, &handle);
-        require(message_sensor != nullptr && target_selected &&
-                    handle.isHolding() && handle.getNerveStep() == -1,
-                "the real message sensor must expose the queued Hold nerve at the retail deferred boundary");
-        require(MR::sendSimpleMsgToActor(
-                    ACTMES_SPHERE_SELECTOR_CONFIRM_START, &handle) &&
-                    !handle.isHolding() && handle.getNerveStep() == -1,
-                "the real FileSelect-row confirm-start must expose its replacement pending nerve through the exact message path");
-        require(MR::sendSimpleMsgToActor(
-                    ACTMES_SPHERE_SELECTOR_CONFIRM_CANCEL, &handle) &&
-                    MR::sendSimpleMsgToActor(
-                        ACTMES_SPHERE_SELECTOR_SELECT_END, &handle) &&
-                    !MR::sendSimpleMsgToActor(0xFFFFFFFFU, &handle),
-                "confirm-cancel/select-end must be accepted and an unknown message rejected");
-
-        const auto registrations = scheduler.remove_registrations_since(marker);
-        const auto handle_registration = std::ranges::find_if(
-            registrations, [&handle](const auto& registration) {
-                return registration.name_obj == &handle;
-            });
-        require(handle_registration != registrations.end() &&
-                    handle_registration->kind ==
-                        smgpc::runtime::SceneEntryKind::LiveActorModel &&
-                    handle_registration->live_actor == &handle &&
-                    std::ranges::count_if(registrations, [&handle](const auto& registration) {
-                        return registration.name_obj == &handle;
-                    }) == 1,
-                "original placement init must register the exact handle once with its LiveActor identity");
-
-        handle.mRotateSpeed = 1.0F;
-        require_logic_error(
-            [&handle] { handle.playRotateSE(); },
-            "active RuntimeContext",
-            "the exact runtime path must require the active concrete audio service");
-
-        std::cout << "[info] real-disc fixture: " << disc_path_string
-                  << "; SphereSelectorHandle row=" << row->jmap_entry_index << '\n';
-    }
-
     struct TestCase {
         std::string_view name;
         void (*run)();
@@ -316,8 +161,6 @@ int main() {
                  test_generalized_pointer_and_layout_contract},
         TestCase{"factory stays absent at ME/multi-BGM boundaries",
                  test_handle_factory_stays_absent_at_remaining_audio_boundaries},
-        TestCase{"real FileSelect row exact init/message contract",
-                 test_real_file_select_row_exact_init_and_messages},
     };
 
     auto failures = 0;

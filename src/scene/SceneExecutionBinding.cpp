@@ -1,5 +1,4 @@
 #include "scene/SceneExecutionBinding.hpp"
-#include "scene/SceneNameObjRegistry.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "Game/NameObj/NameObjExecuteHolder.hpp"
 #include "Game/NameObj/NameObjListExecutor.hpp"
@@ -13,7 +12,7 @@ namespace smgpc::scene {
 namespace { SceneExecutionBinding* current_binding = nullptr; }
 
 SceneExecutionBinding::SceneExecutionBinding(runtime::SceneScheduler& scheduler, NameObjListExecutor& executor,
-                                           std::shared_ptr<compat::JkrAllocationDomain> domain, NameObjHolder* original_holder)
+                                           std::shared_ptr<compat::JkrAllocationDomain> domain)
     : _scheduler(&scheduler), _executor(&executor), _domain(std::move(domain)), _previous(current_binding) {
     if (!_domain || !executor.mMovementList || !executor.mCalcAnimList || !executor.mDrawList || !executor.mBufferHolder)
         aurora::throw_host_exception<std::invalid_argument>("Scene execution requires its initialized original executor and Game domain");
@@ -21,8 +20,6 @@ SceneExecutionBinding::SceneExecutionBinding(runtime::SceneScheduler& scheduler,
         aurora::throw_host_exception<std::logic_error>("The scheduler already borrows a scene executor");
     current_binding = this;
     try {
-        _registry = original_holder ? std::make_unique<SceneNameObjRegistry>(*original_holder, _domain)
-                                    : std::make_unique<SceneNameObjRegistry>(_domain);
         _scheduler->attach_execution(*this);
         const compat::JkrAllocationScope game(_domain);
         _requirements = static_cast<NameObjExecuteHolder*>(MR::createSceneObj(SceneObj_NameObjExecuteHolder));

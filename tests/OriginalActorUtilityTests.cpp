@@ -120,7 +120,7 @@ namespace {
         smgpc::runtime::SceneSchedulerBinding active(scheduler);
         const auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 1U << 20);
         smgpc::test::SceneExecutionFixture scene(scheduler, domain,
-                                               &original.scene, original.controller().mObjHolder);
+                                               &original.scene);
         if (!MR::createSceneObj(SceneObj_PlanetGravityManager))
             throw std::runtime_error("utility tests require the actual scene-owned gravity manager");
         if (!MR::createSceneObj(SceneObj_ClippingDirector))

@@ -27,7 +27,7 @@
 #include "Game/System/WPadStick.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "resource/TextEncoding.hpp"
-#include "scene/SceneNameObjRegistry.hpp"
+#include "Game/NameObj/NameObjHolder.hpp"
 #include <aurora/allocation.hpp>
 #include <revolution/kpad.h>
 #include <nlohmann/json.hpp>
@@ -281,7 +281,7 @@ namespace smgpc::runtime {
             // owner. Never inspect actors of an asynchronously loading scene.
             if (controller->mObjHolder && controller->mScene &&
                 controller->getCurrentSceneForExecute() == controller->mScene) {
-                const auto objects = scene::SceneNameObjRegistry::snapshot_holder(*controller->mObjHolder);
+                const auto objects = controller->mObjHolder->snapshotNativeObjects();
                 GravityOwners gravity_owners;
                 for (const auto* object : objects) {
                     if (const auto* owner = dynamic_cast<const GlobalGravityObj*>(object);

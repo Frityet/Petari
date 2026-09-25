@@ -652,7 +652,7 @@ int main(int argc, char** argv) {
         smgpc::runtime::SceneScheduler scheduler;
         smgpc::runtime::SceneSchedulerBinding active(scheduler);
         smgpc::test::SceneExecutionFixture scene(scheduler, original.domain,
-                                                &original.scene, original.controller().mObjHolder);
+                                                &original.scene);
         auto& holder = scene.holder();
 
         requireUnavailable([&] { MR::addToAttributeGroupSearchTurtle(&actor); },

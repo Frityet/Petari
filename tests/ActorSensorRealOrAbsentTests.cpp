@@ -371,7 +371,7 @@ int main() {
                 smgpc::runtime::SceneScheduler scheduler;
                 smgpc::runtime::SceneSchedulerBinding active(scheduler);
                 smgpc::test::SceneExecutionFixture execution(scheduler, domain,
-                                                          &original.scene, original.controller().mObjHolder);
+                                                          &original.scene);
                 smgpc::compat::JkrAllocationScope game(domain);
                 auto* clipping = static_cast<ClippingDirector*>(MR::createSceneObj(SceneObj_ClippingDirector));
                 scheduler.disconnect_name_obj(*clipping);

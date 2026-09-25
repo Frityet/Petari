@@ -44,9 +44,9 @@ void DrawBufferHolder::initTable(const DrawBufferInitialTable* pInitialTable, s3
 
 void DrawBufferHolder::allocateActorListBuffer() {
     mTableInitialized = false;
-    // NOTE: this symbol does not appear in the debug map, instead it likely uses std::for_each. However the current std::for_each does not support
-    // flat array iteration
-    std::for_each_array(mBufferGroups.begin(), mBufferGroups.end(), std::mem_func(&DrawBufferGroup::allocateActorListBuffer));
+    for (DrawBufferGroup* pGroup = mBufferGroups.begin(); pGroup != mBufferGroups.end(); pGroup++) {
+        pGroup->allocateActorListBuffer();
+    }
 }
 
 s32 DrawBufferHolder::registerDrawBuffer(LiveActor* pActor, s32 drawBufferType) {

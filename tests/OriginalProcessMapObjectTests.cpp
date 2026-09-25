@@ -27,7 +27,6 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "scene/StageCollisionService.hpp"
 
 #include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
@@ -90,34 +89,22 @@ struct Probe {
         require(parts && parts->mServer && parts->mServer->mFile && parts->mServer->getTriangleNum() > 0 &&
                     parts->mHitSensor && parts->mHitSensor->mHost == actor && parts->mKeeperIndex == category && parts->mZone,
                 "Real KCL parts retain their original sensor host, category and zone");
-        auto* service = parts->nativeService();
-        require(service, "Each original part retains its actual category collision publication service");
-        auto& collision = *service;
         const auto* zone = parts->mZone;
         const auto membership = std::count(zone->mPartsArray, zone->mPartsArray + zone->mNumParts, parts);
         require(parts->_CC == enabled && membership == (enabled ? 1 : 0),
                 "Original enabled state agrees with actual keeper membership");
         bool checked_triangle = false, checked_line = false;
-        // Lookup by original part/prism retains disabled geometry without assuming
-        // globally dense triangle IDs or fabricating original keeper membership.
         for (s32 prism = 0; prism < parts->mServer->getTriangleNum(); ++prism) {
-            const auto surface = collision.surface(parts, prism);
-            if (!surface) continue;
-            require(collision.surface(surface->triangle_index, false).has_value() &&
-                        collision.surface(surface->triangle_index).has_value() == enabled && surface->sensor == parts->mHitSensor,
-                    "Retained collision geometry preserves its identity and original active/dead boundary");
+            if (parts->mServer->getPrismData(prism)->mHeight <= 0.0F) continue;
             Triangle triangle;
             triangle.fillData(parts, prism, parts->mHitSensor);
-            for (int corner = 0; corner < 3; ++corner)
-                require(near(*triangle.getPos(corner), surface->vertices[corner]),
-                        "Original Triangle reconstruction agrees with published world-space KCL vertices");
-            require(near(*triangle.getFaceNormal(), surface->normals[0], 0.0001F),
-                    "Original Triangle face normal agrees with the registered transformed KCL");
+            require(triangle.mParts == parts && triangle.mIdx == prism && triangle.getSensor() == parts->mHitSensor,
+                    "Original Triangle retains its real part, prism and sensor");
             checked_triangle = true;
             if (!enabled) break;
-            const auto center = surface->vertices[0] * 0.2F + surface->vertices[1] * 0.3F + surface->vertices[2] * 0.5F;
-            const auto start = center + surface->normals[0] * 10.0F;
-            const auto offset = surface->normals[0] * -20.0F;
+            const auto center = triangle.mPos[0] * 0.2F + triangle.mPos[1] * 0.3F + triangle.mPos[2] * 0.5F;
+            const auto start = center + triangle.mNormals[0] * 10.0F;
+            const auto offset = triangle.mNormals[0] * -20.0F;
             std::array<HitInfo, 32> hits;
             const auto count = parts->checkStrikeLine(hits.data(), hits.size(), start, offset, nullptr);
             require(count <= hits.size(), "Original per-part line query respects its output capacity");
@@ -136,7 +123,7 @@ struct Probe {
 
     void initialize() {
         auto* stage = MR::getStageDataHolder();
-        auto* collision = smgpc::scene::StageCollisionService::active();
+        auto* collision = MR::getCollisionDirector();
         require(stage && collision, "Actual original stage and collision owners exist");
         std::vector<MapObjActor*> actors;
         for (auto* object : smgpc::compat::snapshot_name_obj_runtime_objects())

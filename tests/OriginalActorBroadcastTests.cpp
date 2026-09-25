@@ -67,7 +67,7 @@ namespace {
                 auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 2U << 20);
                 retired = domain;
                 auto scene = smgpc::test::SceneExecutionFixture(scheduler, domain,
-                                                             &original.scene, original.controller().mObjHolder);
+                                                             &original.scene);
                 auto game = smgpc::compat::JkrAllocationScope(domain);
                 auto* clipping = static_cast<ClippingDirector*>(MR::createSceneObj(SceneObj_ClippingDirector));
                 scheduler.disconnect_name_obj(*clipping);

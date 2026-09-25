@@ -38,7 +38,6 @@
 #include "Game/Screen/StarPointerDirector.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "scene/OriginalSceneSupport.hpp"
-#include "scene/SceneNameObjRegistry.hpp"
 #include "resource/GameResourceRuntime.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/MessageHolderOwnership.hpp"
@@ -427,7 +426,7 @@ private:
         while (auto* object = compat::newest_name_obj_runtime_object_since_if(marker, nullptr, nullptr)) {
             if (auto* actor = dynamic_cast<LayoutActor*>(object)) actor->releaseNativeResources();
             if (auto* actor = dynamic_cast<LiveActor*>(object)) compat::release_actor_runtime_state(actor);
-            scene::unregister_scene_name_obj(*object);
+            object->detachNativeHolder();
             compat::release_name_obj_runtime_state(object);
         }
         if (objects) delete std::exchange(objects->mWPadHolder, nullptr);

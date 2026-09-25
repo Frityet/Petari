@@ -1,0 +1,3457 @@
+[
+  {
+    "source": "decomp/include/Game/Animation.hpp",
+    "destination": "src/Game/Animation.hpp",
+    "sha256": "5b6f1a36611c0bee8387028bf8ac418fa141fa8d65c00202c566513c5b6c39b8"
+  },
+  {
+    "source": "decomp/include/Game/AreaObj/AstroChangeStageCube.hpp",
+    "destination": "src/Game/AreaObj/AstroChangeStageCube.hpp",
+    "sha256": "a0308e716cf92dd4cfcaec9c7c7d2748914eb7ba384b2c0f8d2cdc359fe253a9"
+  },
+  {
+    "source": "decomp/include/Game/AreaObj/AudioEffectArea.hpp",
+    "destination": "src/Game/AreaObj/AudioEffectArea.hpp",
+    "sha256": "6904ab4b6056d1fde7fb5e028cf9f2b2a986ccc4ef08512ea9491f8055c36b6e"
+  },
+  {
+    "source": "decomp/include/Game/AreaObj/BgmProhibitArea.hpp",
+    "destination": "src/Game/AreaObj/BgmProhibitArea.hpp",
+    "sha256": "0a4e71003d539cc0500d0576fe26cf7cbc70dbd0faa6e60f0552513f167e14f3"
+  },
+  {
+    "source": "decomp/include/Game/AreaObj/BigBubbleCameraArea.hpp",
+    "destination": "src/Game/AreaObj/BigBubbleCameraArea.hpp",
+    "sha256": "319c85629f962620089fc80af4430b12665b1994affa008b39659df73f43d83e"
+  },
+  {
+    "source": "decomp/include/Game/AreaObj/BigBubbleGoalArea.hpp",
+    "destination": "src/Game/AreaObj/BigBubbleGoalArea.hpp",
+    "sha256": "818dd62b1a81faa96fd32730e65bfa2af9949bb3d1343361dc45e78a4f9173fe"
+  },
+  {
+    "source": "decomp/include/Game/AreaObj/ChangeBgmCube.hpp",
+    "destination": "src/Game/AreaObj/ChangeBgmCube.hpp",
+    "sha256": "82b474ff0d2d2376e7170cbdab939a00efaabe5a8ae9b199b75b05e78152ad1e"
+  },
+  {
+    "source": "decomp/include/Game/AreaObj/DeathArea.hpp",
+    "destination": "src/Game/AreaObj/DeathArea.hpp",
+    "sha256": "ed1551c8efb4262c7ad5a00e3b67e737d58c7722fca13c792fe8c9da250d8046"
+  },
+  {
+    "source": "decomp/include/Game/AreaObj/FollowCollisionArea.hpp",
+    "destination": "src/Game/AreaObj/FollowCollisionArea.hpp",
+    "sha256": "a7d2877db26aa4a8e9d5e765b0dfa735000788ff485ca32a515eb38a23c2164e"
+  },
+  {
+    "source": "decomp/include/Game/AreaObj/HazeCube.hpp",
+    "destination": "src/Game/AreaObj/HazeCube.hpp",
+    "sha256": "7fd8b1d082fcc53a1bde664a03d32898eb17b28cba842a8e6d8f6e7603fc0eb9"
+  },
+  {
+    "source": "decomp/include/Game/AreaObj/PlayerSeArea.hpp",
+    "destination": "src/Game/AreaObj/PlayerSeArea.hpp",
+    "sha256": "4e0c04813d1badef3adaaffb24d5aacc296304227c8e6acd659032642441bf12"
+  },
+  {
+    "source": "decomp/include/Game/AreaObj/QuakeEffectArea.hpp",
+    "destination": "src/Game/AreaObj/QuakeEffectArea.hpp",
+    "sha256": "ff904ba08a591f0100ed468ac81c1c65cc7839547605b0c56f1edfc0f94fec7a"
+  },
+  {
+    "source": "decomp/include/Game/AreaObj/SoundEmitterCube.hpp",
+    "destination": "src/Game/AreaObj/SoundEmitterCube.hpp",
+    "sha256": "72e4ffdd7da8d7bf5d18a72674a08a71a9ff0ff4ea63bde1c6fb60055a841b4f"
+  },
+  {
+    "source": "decomp/include/Game/AreaObj/SoundEmitterSphere.hpp",
+    "destination": "src/Game/AreaObj/SoundEmitterSphere.hpp",
+    "sha256": "877aa49fb6350c3d3b4d80028a47e9ab5de7295bc3ba7e941425f7997c2fa5ab"
+  },
+  {
+    "source": "decomp/include/Game/AreaObj/SpinGuidanceArea.hpp",
+    "destination": "src/Game/AreaObj/SpinGuidanceArea.hpp",
+    "sha256": "6fbef551d2428c334ba8220f931e06cea210ba73ee2bf4ed177e256b037476cb"
+  },
+  {
+    "source": "decomp/include/Game/AreaObj/SunLightArea.hpp",
+    "destination": "src/Game/AreaObj/SunLightArea.hpp",
+    "sha256": "ef68a9a80fb4fec1491ea781427e1c5a835bd61697e1ac26a75be2338ca2b67f"
+  },
+  {
+    "source": "decomp/include/Game/AreaObj.hpp",
+    "destination": "src/Game/AreaObj.hpp",
+    "sha256": "a69f4bf643f2c043d55e5a60248101e1fc9f6427fd88d2515dd64ac396d3c8b1"
+  },
+  {
+    "source": "decomp/include/Game/AudioLib/AudEffector.hpp",
+    "destination": "src/Game/AudioLib/AudEffector.hpp",
+    "sha256": "c17f0de8e5920a4944018536ae7edb233138f1a7feae7169aa328e952d9f1b08"
+  },
+  {
+    "source": "decomp/include/Game/AudioLib/AudSeStrategy.hpp",
+    "destination": "src/Game/AudioLib/AudSeStrategy.hpp",
+    "sha256": "1158d305ed911a24c91f251116aa28df254493d511a866cfac1d8af92814a3ca"
+  },
+  {
+    "source": "decomp/include/Game/AudioLib/AudSoundInfo.hpp",
+    "destination": "src/Game/AudioLib/AudSoundInfo.hpp",
+    "sha256": "e4c46b09a581901387ec33b320d8b42d56e7a090cdc98be1a6c1b31599106fbb"
+  },
+  {
+    "source": "decomp/include/Game/AudioLib/AudSoundObjHolder.hpp",
+    "destination": "src/Game/AudioLib/AudSoundObjHolder.hpp",
+    "sha256": "232096ebb98e862e1e652d5252efd9a498ed986092cb93bf3e334d95e86bad80"
+  },
+  {
+    "source": "decomp/include/Game/AudioLib/AudUtil.hpp",
+    "destination": "src/Game/AudioLib/AudUtil.hpp",
+    "sha256": "8bfe884fb5de43714971f54ca6a84ae63416a848a8db494f77c1c086b76e558c"
+  },
+  {
+    "source": "decomp/include/Game/AudioLib.hpp",
+    "destination": "src/Game/AudioLib.hpp",
+    "sha256": "4109ca503479575be74948fb491a06bb1e15f234522d563204d413f7c51f7eb4"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossBegoman.hpp",
+    "destination": "src/Game/Boss/BossBegoman.hpp",
+    "sha256": "2014e5fdcddb6145550902b00a667dba33c04346875593384d97194799eacf71"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossBegomanHead.hpp",
+    "destination": "src/Game/Boss/BossBegomanHead.hpp",
+    "sha256": "e52252ef929aa04c92dc2ab54dbd666d8ac93dbd3e68312567fe562f6217be86"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossKameck.hpp",
+    "destination": "src/Game/Boss/BossKameck.hpp",
+    "sha256": "433cf417fad9f1a1543220e22df22066c2ac356d9d3b6b59befb9dfa3d0624ab"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossKameckAction.hpp",
+    "destination": "src/Game/Boss/BossKameckAction.hpp",
+    "sha256": "1eaf4822e06189a1b01d6373b33399d690dd6d966eee254569c73491dc41b031"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossKameckBarrier.hpp",
+    "destination": "src/Game/Boss/BossKameckBarrier.hpp",
+    "sha256": "0b6d3977cfb7ecd9ee7c41c2081f16c999b9c60e16196c9463f8781af67395e6"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossKameckBattleDemo.hpp",
+    "destination": "src/Game/Boss/BossKameckBattleDemo.hpp",
+    "sha256": "70d4b8200e56c8c099754c2f894afd4dfd9713aa42451b1238482b2e2ab43a31"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossKameckBattlePattarn.hpp",
+    "destination": "src/Game/Boss/BossKameckBattlePattarn.hpp",
+    "sha256": "e65506f6aec9055da68f3edc028213b3a9ca505b3483c979713df1fa39bced60"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossKameckMoveRail.hpp",
+    "destination": "src/Game/Boss/BossKameckMoveRail.hpp",
+    "sha256": "69336b97a04c41830cd6ef27be2f8940d010d3badec8ef62f60ac32b9200e54c"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossKameckSequencer.hpp",
+    "destination": "src/Game/Boss/BossKameckSequencer.hpp",
+    "sha256": "de5232e62eaad8f63baa313564f2eae29c00880cd93f764afb086d2f46e9170e"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossKameckStateBattle.hpp",
+    "destination": "src/Game/Boss/BossKameckStateBattle.hpp",
+    "sha256": "1025dfb2c55b68e73ce0090a1fe9d4dc935c9d1c8b43beb692eba0f0703aeaa3"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossKameckVs1.hpp",
+    "destination": "src/Game/Boss/BossKameckVs1.hpp",
+    "sha256": "3e4833a2288f32f06d5454277b2502f20cb3d6148196e4965c2c91713cf833b2"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossKameckVs2.hpp",
+    "destination": "src/Game/Boss/BossKameckVs2.hpp",
+    "sha256": "e3789045b5d37350ec3f1d9b8f2475019091fe5644d2eb362b83a60b227cc723"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossStinkBugActionBase.hpp",
+    "destination": "src/Game/Boss/BossStinkBugActionBase.hpp",
+    "sha256": "c9a120b28084b0ada7fb39f01bce4a651d1edbc2e89957d2c21689724b894a66"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossStinkBugActionFlyHigh.hpp",
+    "destination": "src/Game/Boss/BossStinkBugActionFlyHigh.hpp",
+    "sha256": "1b05d552fd0d549b745d7604a4dd6cd2f96d484ad1ef0056028c1fd420304e0e"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossStinkBugActionFlyLow.hpp",
+    "destination": "src/Game/Boss/BossStinkBugActionFlyLow.hpp",
+    "sha256": "41a5ea44f4f5569632e5af1f5513dedc3f7d0aae4b7117bb9ccc98ad62bae166"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossStinkBugActionGround.hpp",
+    "destination": "src/Game/Boss/BossStinkBugActionGround.hpp",
+    "sha256": "33b2f72f94e4df7d355e8e3ddf7eca0cfb14bffa1ea78a9d288c0b3834edd33d"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossStinkBugActionSequencer.hpp",
+    "destination": "src/Game/Boss/BossStinkBugActionSequencer.hpp",
+    "sha256": "0ba3ec82f1cd04fb00c7c8e58610e2cdbef796409b884bb48ca36d269b56f955"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossStinkBugAngryDemo.hpp",
+    "destination": "src/Game/Boss/BossStinkBugAngryDemo.hpp",
+    "sha256": "9cc3a31b970859ce1e7ef6e2964a875b29236f558be766acb780bd0dd566b82e"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossStinkBugBomb.hpp",
+    "destination": "src/Game/Boss/BossStinkBugBomb.hpp",
+    "sha256": "cc0780d8dd96efef080f4a7291ac8fbdb82df581406a40e5a29db75f1707a4d2"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossStinkBugBombHolder.hpp",
+    "destination": "src/Game/Boss/BossStinkBugBombHolder.hpp",
+    "sha256": "19c76ef66a234f5c603b25e7a4827f8f03e815746f1adc357b9be597e4b95f7e"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossStinkBugFinishDemo.hpp",
+    "destination": "src/Game/Boss/BossStinkBugFinishDemo.hpp",
+    "sha256": "2c907c97eb9d272576c7078eeb978239803a11b34371b1e85a86a611c229aab0"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossStinkBugFlyDemo.hpp",
+    "destination": "src/Game/Boss/BossStinkBugFlyDemo.hpp",
+    "sha256": "cc264bca81680900cfecb802e0c37b1a135e0acdd6151bc039a2640b9f7268d5"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossStinkBugFollowValidater.hpp",
+    "destination": "src/Game/Boss/BossStinkBugFollowValidater.hpp",
+    "sha256": "cc742f7ffd2841fbcef14847c49530715ea27bdbfaefbf2bab71d962e4c83a0d"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossStinkBugFunction.hpp",
+    "destination": "src/Game/Boss/BossStinkBugFunction.hpp",
+    "sha256": "a1865a51c680dbf95b1793408fc1bec4ba78525c8c7ca13379645a5660a1d711"
+  },
+  {
+    "source": "decomp/include/Game/Boss/BossStinkBugOpeningDemo.hpp",
+    "destination": "src/Game/Boss/BossStinkBugOpeningDemo.hpp",
+    "sha256": "2a4943887062cee86f26027d3257ae4eecc72fed38533d2350dc11315f53c67a"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackun.hpp",
+    "destination": "src/Game/Boss/DinoPackun.hpp",
+    "sha256": "0da1731ea972beb7de1fa66d5923bbfd3ffbcfbf5c9dc4f76277d1909009069d"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunAction.hpp",
+    "destination": "src/Game/Boss/DinoPackunAction.hpp",
+    "sha256": "2604286b12a3332740506ef933519ac264ac870f987cf29c5f86af93f9e4d90c"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunBall.hpp",
+    "destination": "src/Game/Boss/DinoPackunBall.hpp",
+    "sha256": "5177aaf603cb7d40cada673518cc45410d9a5fb39f53b79847430d1ba6c9f754"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunBattleEgg.hpp",
+    "destination": "src/Game/Boss/DinoPackunBattleEgg.hpp",
+    "sha256": "cbdc617cc687ca3e2ad6774d381c728c68c80c56de70c3c4db1db231a95b57f5"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunBattleEggVs2.hpp",
+    "destination": "src/Game/Boss/DinoPackunBattleEggVs2.hpp",
+    "sha256": "d3c6bed33c3b3b6b742e552c91698a6ac002f4595141dbf732c74f90f0b2add1"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunBattleVs1Lv1.hpp",
+    "destination": "src/Game/Boss/DinoPackunBattleVs1Lv1.hpp",
+    "sha256": "5ddfb1efe3496d5d26b73a5b67eb695ff26d1b9298b2ba60ca39cb00251df5f2"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunBattleVs1Lv2.hpp",
+    "destination": "src/Game/Boss/DinoPackunBattleVs1Lv2.hpp",
+    "sha256": "8916294ff1224cd2e6efa450117e66049d8cb4e7038f9a2a2cb86cc12697d97f"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunBattleVs2Lv1.hpp",
+    "destination": "src/Game/Boss/DinoPackunBattleVs2Lv1.hpp",
+    "sha256": "281db344ab7e746589613aa533fbffb06d2d9bac8979db88d5ad79b6b78b2abc"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunDemo.hpp",
+    "destination": "src/Game/Boss/DinoPackunDemo.hpp",
+    "sha256": "fad9c9b971c7d0431931a15e644eb886df8c64f773c579dd5422ea445053d16c"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunDemoPosition.hpp",
+    "destination": "src/Game/Boss/DinoPackunDemoPosition.hpp",
+    "sha256": "ec33045cb6579b78ff1a20456d867c80a49736a9c96181b8dff04ce2f1ab8fdf"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunEggShell.hpp",
+    "destination": "src/Game/Boss/DinoPackunEggShell.hpp",
+    "sha256": "ddbda8163e690c60b6db774887e52652b9d1495a5ae8061d8664e9290f40fbfe"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunFire.hpp",
+    "destination": "src/Game/Boss/DinoPackunFire.hpp",
+    "sha256": "73736d9808c41ca087a38b31ead956158d6b4a83cf11e115feba9075d14b43f1"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunSequencer.hpp",
+    "destination": "src/Game/Boss/DinoPackunSequencer.hpp",
+    "sha256": "c375ac7fdaf747251249c9dbb19efb56e8cb2f20d019edc35edb6f9c6fff5a89"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunStateAwake.hpp",
+    "destination": "src/Game/Boss/DinoPackunStateAwake.hpp",
+    "sha256": "139bbba74cbd57f63466ce6751da9f488b7858ad2229b1e5a79a5f8c8dd84e56"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunStateDamage.hpp",
+    "destination": "src/Game/Boss/DinoPackunStateDamage.hpp",
+    "sha256": "b142c1de1cd55edf0c83365060ea1f33efe91c95aa226f3ac87fede967678211"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunStateFire.hpp",
+    "destination": "src/Game/Boss/DinoPackunStateFire.hpp",
+    "sha256": "951211d4a07df663f748804d62d85133c4f94dad201ebad01a154c7c30cf9a92"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunTail.hpp",
+    "destination": "src/Game/Boss/DinoPackunTail.hpp",
+    "sha256": "0150278adcd23a38ba1b33c1b01aa497c99687410ff50de11a1f290320d227d2"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunTailNode.hpp",
+    "destination": "src/Game/Boss/DinoPackunTailNode.hpp",
+    "sha256": "7f5c7a275a3b655ffaa17cc2d8e62caac61f647342d4f7c941285eb13183affd"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunTailPart.hpp",
+    "destination": "src/Game/Boss/DinoPackunTailPart.hpp",
+    "sha256": "f552a13a9ccaa9246deadefc3d3ca4f1b8665814b5135193e800b704456a6664"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunTailRoot.hpp",
+    "destination": "src/Game/Boss/DinoPackunTailRoot.hpp",
+    "sha256": "4604fab745e5100a5d91badc5bef9ced3696841732a60a146b8395a9bc56e892"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunTrackFire.hpp",
+    "destination": "src/Game/Boss/DinoPackunTrackFire.hpp",
+    "sha256": "c93a70e7df50fdcb845f672d679abcebc3ceb4e3189aa10b1a692b677eabbd49"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunVs1.hpp",
+    "destination": "src/Game/Boss/DinoPackunVs1.hpp",
+    "sha256": "ee001f7ba0eb16b7cddf893d6188e3459e3586a044ecd9adf3e12b36a5ab6378"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DinoPackunVs2.hpp",
+    "destination": "src/Game/Boss/DinoPackunVs2.hpp",
+    "sha256": "76c9c78d9f1f52ad9eed2f904e2836f988a710414a27ff07cdd8368af2052170"
+  },
+  {
+    "source": "decomp/include/Game/Boss/Dodoryu.hpp",
+    "destination": "src/Game/Boss/Dodoryu.hpp",
+    "sha256": "8b09ec37cf335a86a685f161eeeb84aa382055c03c4688b4ddbba6d1463a70e6"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DodoryuDemo.hpp",
+    "destination": "src/Game/Boss/DodoryuDemo.hpp",
+    "sha256": "303ed242cce077f4a4e97ea6dbe5c87e4dc1cad08d357919887e51633179f27c"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DodoryuHill.hpp",
+    "destination": "src/Game/Boss/DodoryuHill.hpp",
+    "sha256": "afa29a091a67062fa37c1f794127967ec69493430b2fdaf6340621c411c661ff"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DodoryuMove.hpp",
+    "destination": "src/Game/Boss/DodoryuMove.hpp",
+    "sha256": "f63654523c2be1051ea73a7ffb0a3b23a13210036013b43cc3a25845f7213fb9"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DodoryuStateBase.hpp",
+    "destination": "src/Game/Boss/DodoryuStateBase.hpp",
+    "sha256": "196db4901907c3ecf17786642c5fdeb215a6586247cd5fe272f2e48355fc845a"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DodoryuStateLv1.hpp",
+    "destination": "src/Game/Boss/DodoryuStateLv1.hpp",
+    "sha256": "e16d9e8e97d99b3f5083297576db0266873ad5caca3bac8780769d69d27b51ba"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DodoryuStateLv2.hpp",
+    "destination": "src/Game/Boss/DodoryuStateLv2.hpp",
+    "sha256": "05edf66aa46732cfe81c8794c84271a8cea10ec9004edf103380ce4c19209fb8"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DodoryuStateWait.hpp",
+    "destination": "src/Game/Boss/DodoryuStateWait.hpp",
+    "sha256": "05fa4989f78916b488b85c8d79a9de0f0ea14e23e22c01625f5cded015fa4eb6"
+  },
+  {
+    "source": "decomp/include/Game/Boss/DodoryuUtil.hpp",
+    "destination": "src/Game/Boss/DodoryuUtil.hpp",
+    "sha256": "df45cf18b84e51f62cb5cd1f9ec566588f27028be338a5cd78ea317c7cd39541"
+  },
+  {
+    "source": "decomp/include/Game/Boss/Koopa.hpp",
+    "destination": "src/Game/Boss/Koopa.hpp",
+    "sha256": "33d54692361d794607a72b09d071441578c654a10093da3167191d3432a4f9af"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaBattleBase.hpp",
+    "destination": "src/Game/Boss/KoopaBattleBase.hpp",
+    "sha256": "074a99a38f0abff23e0910dbf07a48cac55b0b1ec6e6a6ae9e22a55c6e6d70aa"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaBattleMain.hpp",
+    "destination": "src/Game/Boss/KoopaBattleMain.hpp",
+    "sha256": "1e68b966b3077c47918f75761b4e12736fbe9743b52fd823a4cb19bcf66c642f"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaBattleStairsBase.hpp",
+    "destination": "src/Game/Boss/KoopaBattleStairsBase.hpp",
+    "sha256": "e6d641e9e8bdc06b2cbc0a3d1725934198ac86c100dadefe84c69082ba960ccd"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaBattleStairsVs1.hpp",
+    "destination": "src/Game/Boss/KoopaBattleStairsVs1.hpp",
+    "sha256": "36d01b97bfbedbf35490f37a585abcb58be46cabed11133960101ab33af9c9b4"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaBattleStairsVs3.hpp",
+    "destination": "src/Game/Boss/KoopaBattleStairsVs3.hpp",
+    "sha256": "75554477a43dd0435c534e25d6b445f694cb58d4fb8535e8282accdee478cd2b"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaBattleVs3Lv1.hpp",
+    "destination": "src/Game/Boss/KoopaBattleVs3Lv1.hpp",
+    "sha256": "d4f6736fc872786747f834686925abeeaaf6501ab02b9c3ef2c2a9040ecb3819"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaBattleVs3Lv2.hpp",
+    "destination": "src/Game/Boss/KoopaBattleVs3Lv2.hpp",
+    "sha256": "d93a54d46b602b5c0a305ceffe5d89a79d90eaf4934eea0e1a74b59eae892d4d"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaDemoFallToPlanetVs3Lv2.hpp",
+    "destination": "src/Game/Boss/KoopaDemoFallToPlanetVs3Lv2.hpp",
+    "sha256": "54ecbeb875bae792f65a066e4b0b7dfd8482aedf52549af4b61b6434c96d2a2d"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaDemoFallToPlanetVs3Lv3.hpp",
+    "destination": "src/Game/Boss/KoopaDemoFallToPlanetVs3Lv3.hpp",
+    "sha256": "471455953e1b7564a48710fd7d3a3e8c6e3f2c042cdcd373086d1c570b99d45b"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaDemoJumpToPlanet.hpp",
+    "destination": "src/Game/Boss/KoopaDemoJumpToPlanet.hpp",
+    "sha256": "860055fcb516132ed895892fa06cbf7a76ebfeac55751d931d0d8258b97dcdea"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaDemoPowerUp.hpp",
+    "destination": "src/Game/Boss/KoopaDemoPowerUp.hpp",
+    "sha256": "435e4ebd858333b03af35724bf480fee167dabbc6f0a4a541598e935c8288809"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaFigureBall.hpp",
+    "destination": "src/Game/Boss/KoopaFigureBall.hpp",
+    "sha256": "8f70aca5cfeb2f0b07f75f9bdb1eb56387ad93da186c1fe24d5234e5ad249109"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaFireShort.hpp",
+    "destination": "src/Game/Boss/KoopaFireShort.hpp",
+    "sha256": "c2016606bec43a9c687e35f8a64ed4d64b7228d1b3c3357cf898d174972c3d3c"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaFireStairs.hpp",
+    "destination": "src/Game/Boss/KoopaFireStairs.hpp",
+    "sha256": "ed7d7edacec846efd35e5b629e790f74a4b0672e979d19848a18437c6e3a0d79"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaFunction.hpp",
+    "destination": "src/Game/Boss/KoopaFunction.hpp",
+    "sha256": "85f2c3f89ca7245302cfde5a708ba7b341163c3fd0f215e4d34515a85a3d60b3"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaParts.hpp",
+    "destination": "src/Game/Boss/KoopaParts.hpp",
+    "sha256": "2e1afac155bc00612a30101318b0a3681939267b7cf465fbcbe52ef52b485504"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaPlanetShadow.hpp",
+    "destination": "src/Game/Boss/KoopaPlanetShadow.hpp",
+    "sha256": "3741eb961f9c0abbbac5766d8b156c32ab4c403ec97fc860ad3d570194b1a18d"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaPowerUpSwitch.hpp",
+    "destination": "src/Game/Boss/KoopaPowerUpSwitch.hpp",
+    "sha256": "558423a6219889deb056d7da186c3c91fb1d24fc8e273413bcd2e58728e2c723"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaRestarterVs3.hpp",
+    "destination": "src/Game/Boss/KoopaRestarterVs3.hpp",
+    "sha256": "54c5d782e32c887788fc2a116f4720b36955b2396936f409ef245c948a6c563d"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaRockBreak.hpp",
+    "destination": "src/Game/Boss/KoopaRockBreak.hpp",
+    "sha256": "28b246386e82f18c6cc07568a467bf588d17c959b4310e7fff8b2cd157846010"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaSensorCtrl.hpp",
+    "destination": "src/Game/Boss/KoopaSensorCtrl.hpp",
+    "sha256": "ad6eda683c60cb3ccf4c85c789a6c3b91c8942e4623669df296351753b44cd3a"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaSequencer.hpp",
+    "destination": "src/Game/Boss/KoopaSequencer.hpp",
+    "sha256": "0734ac90a4c30ae1332d49d1292f345b1b569d95916129521fd22c52d1af1caf"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaSequencerVs1.hpp",
+    "destination": "src/Game/Boss/KoopaSequencerVs1.hpp",
+    "sha256": "72c36337a712a8e63b0efd96109ebf2c51098ed6b51db85d806dde1e2cbcdba0"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaSequencerVs2.hpp",
+    "destination": "src/Game/Boss/KoopaSequencerVs2.hpp",
+    "sha256": "64d4556d1ad3828a7cc1caf9ab7ee9f5ee708cc76351437362c004e2eee71e02"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaSequencerVs3.hpp",
+    "destination": "src/Game/Boss/KoopaSequencerVs3.hpp",
+    "sha256": "b49f232d30664804d540919f3d42fa9d0253ba1f675d12b90a085409da65d93f"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaShockWave.hpp",
+    "destination": "src/Game/Boss/KoopaShockWave.hpp",
+    "sha256": "db6eb391a48fa106adb7415d628931bcd2c55669079616e77153eee6626ee188"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaStateAttackFireLong.hpp",
+    "destination": "src/Game/Boss/KoopaStateAttackFireLong.hpp",
+    "sha256": "74d846fd788c2af4142dc948eac967151edfbb274541eceb607c70728d23f2b7"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaStateAttackFireShort.hpp",
+    "destination": "src/Game/Boss/KoopaStateAttackFireShort.hpp",
+    "sha256": "2c7a144ecd0f08286eba104fab6e82ad17324b398e3ac6504f89f38237ef2e01"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaStateAttackHipDrop.hpp",
+    "destination": "src/Game/Boss/KoopaStateAttackHipDrop.hpp",
+    "sha256": "e398b2b43814c0eb67db8453342541780e46da9713acec408424f1bfa1af1c6c"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaStateAttackRoll.hpp",
+    "destination": "src/Game/Boss/KoopaStateAttackRoll.hpp",
+    "sha256": "795ac09801fbac7fca142f65bfe19bc915b6b7e38b03751a696fe1b9e3ffaf74"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaStateAttackShockWave.hpp",
+    "destination": "src/Game/Boss/KoopaStateAttackShockWave.hpp",
+    "sha256": "34393279c22fb172669530949fdd7ce968aff2c40204e19fa5ae04fec1c2e6e1"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaStateAttackSpin.hpp",
+    "destination": "src/Game/Boss/KoopaStateAttackSpin.hpp",
+    "sha256": "29b6977e904f42cf68ce0e5c2c05849a9f16320dc63de833487d29855204bc9c"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaStateChaseRoll.hpp",
+    "destination": "src/Game/Boss/KoopaStateChaseRoll.hpp",
+    "sha256": "65fc9de703f744617ea456ed94b11840bebc1bb4ab8e1e37dc02beb53038291b"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaStateDamageEscape.hpp",
+    "destination": "src/Game/Boss/KoopaStateDamageEscape.hpp",
+    "sha256": "5b098ffca501c4fcb8a380ec5e8d00c3b86be92c2cfd9492c0e22228ede27b9c"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaStateGuard.hpp",
+    "destination": "src/Game/Boss/KoopaStateGuard.hpp",
+    "sha256": "c6c6eec153a573fd9b3eb588ac3895af4117586487328ace01649134945feba3"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaStateJumpAway.hpp",
+    "destination": "src/Game/Boss/KoopaStateJumpAway.hpp",
+    "sha256": "2e8d367e28fe3f36848fdbcebb01ba513c48c555d9652f9233255fa2fbc983ed"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaSubSequenceBattle.hpp",
+    "destination": "src/Game/Boss/KoopaSubSequenceBattle.hpp",
+    "sha256": "a4f1a6dbae3b61014a73d4d12a144eca1aadfc1f9d1ae95380a2f0f03d6d9a5a"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaSwitchKeeper.hpp",
+    "destination": "src/Game/Boss/KoopaSwitchKeeper.hpp",
+    "sha256": "fdf0326fc78c0e073823d760ed1e1dc2b1d314eab6ceeae33dbfa9d380f011f9"
+  },
+  {
+    "source": "decomp/include/Game/Boss/KoopaViewSwitchKeeper.hpp",
+    "destination": "src/Game/Boss/KoopaViewSwitchKeeper.hpp",
+    "sha256": "e7d4abe50efc6ea2663c38b3e7b30c5fdec26aba6b7fa1f24bf0aa1cf99f4dd5"
+  },
+  {
+    "source": "decomp/include/Game/Boss/OtaKing.hpp",
+    "destination": "src/Game/Boss/OtaKing.hpp",
+    "sha256": "15ada1c6ee270bc8342f78c4a101ce9bb7b0d53eedaf48f2d3b3476cb1cd8af7"
+  },
+  {
+    "source": "decomp/include/Game/Boss/OtaKingLongFoot.hpp",
+    "destination": "src/Game/Boss/OtaKingLongFoot.hpp",
+    "sha256": "5ea848aade57c5f67b32cb5a1379c383e68e58a191f0efe138f57acbd8361ba5"
+  },
+  {
+    "source": "decomp/include/Game/Boss/OtaKingMagma.hpp",
+    "destination": "src/Game/Boss/OtaKingMagma.hpp",
+    "sha256": "ed84634e1398c75891e8e27f4f1e040d3a7c7456fd4477650ab3e1275da37d66"
+  },
+  {
+    "source": "decomp/include/Game/Boss/Polta.hpp",
+    "destination": "src/Game/Boss/Polta.hpp",
+    "sha256": "88c10a6e8371a4d095985f3e39abd7ae1b26b125e8fe7eb43eb0cbd7eb921a3f"
+  },
+  {
+    "source": "decomp/include/Game/Boss/PoltaActionBase.hpp",
+    "destination": "src/Game/Boss/PoltaActionBase.hpp",
+    "sha256": "48d5bcb0e7028a810149ebe27949529144972acf68367caa4d55353efc9e397b"
+  },
+  {
+    "source": "decomp/include/Game/Boss/PoltaActionSequencer.hpp",
+    "destination": "src/Game/Boss/PoltaActionSequencer.hpp",
+    "sha256": "73ec59de0d2aefeafbd897bd222491195044ca4e53f9b7d8e2b24405bd29af92"
+  },
+  {
+    "source": "decomp/include/Game/Boss/PoltaArm.hpp",
+    "destination": "src/Game/Boss/PoltaArm.hpp",
+    "sha256": "3677449c0844b2f6b4792f041ac7428391c32ad1a126cc6f282386d87bc0dd95"
+  },
+  {
+    "source": "decomp/include/Game/Boss/PoltaBattleLv1.hpp",
+    "destination": "src/Game/Boss/PoltaBattleLv1.hpp",
+    "sha256": "8e239eaf9051ab940b0abcbdd1d8efd18d6e46ecace76d9d083d5f9c74c3ce11"
+  },
+  {
+    "source": "decomp/include/Game/Boss/PoltaBattleLv2.hpp",
+    "destination": "src/Game/Boss/PoltaBattleLv2.hpp",
+    "sha256": "82e8eefdbbc79a68a485b5e907414daffc2cf9c3e9e9d30ff9ade99757bd47e6"
+  },
+  {
+    "source": "decomp/include/Game/Boss/PoltaDemo.hpp",
+    "destination": "src/Game/Boss/PoltaDemo.hpp",
+    "sha256": "9a0601aaa982b07a8d7cd0d9a688e1901f2324a71c61a97526f2dee44bdd7f4c"
+  },
+  {
+    "source": "decomp/include/Game/Boss/PoltaFunction.hpp",
+    "destination": "src/Game/Boss/PoltaFunction.hpp",
+    "sha256": "b3feab672677d35cb0f01314af2a9b1b4a89a46f93a96fd3a6d650186c4fd531"
+  },
+  {
+    "source": "decomp/include/Game/Boss/PoltaGroundRock.hpp",
+    "destination": "src/Game/Boss/PoltaGroundRock.hpp",
+    "sha256": "f399213f18ca943cef18cf0bc7e943f5dd02b1189044dfda42d6483ff5384150"
+  },
+  {
+    "source": "decomp/include/Game/Boss/PoltaGroundRockHolder.hpp",
+    "destination": "src/Game/Boss/PoltaGroundRockHolder.hpp",
+    "sha256": "b139b849a164e91e9c3a7c2081949e3bd4dc63ceb9d0875062676f3d58c78b60"
+  },
+  {
+    "source": "decomp/include/Game/Boss/PoltaRock.hpp",
+    "destination": "src/Game/Boss/PoltaRock.hpp",
+    "sha256": "d32a2b2889e4a7e23cf227d5461ca54197744dec3a737ba8ae49f020f29fca20"
+  },
+  {
+    "source": "decomp/include/Game/Boss/PoltaRockHolder.hpp",
+    "destination": "src/Game/Boss/PoltaRockHolder.hpp",
+    "sha256": "7aee7f0b740e72804c4fbfdea4fb67670144c84e6affdf241d80c4bc5c7e6ee9"
+  },
+  {
+    "source": "decomp/include/Game/Boss/PoltaSensorCtrl.hpp",
+    "destination": "src/Game/Boss/PoltaSensorCtrl.hpp",
+    "sha256": "b343f079f8298565f36c60a97d9aba17dd78fc714f287c3b22a1307f8617e123"
+  },
+  {
+    "source": "decomp/include/Game/Boss/PoltaStateAttackGround.hpp",
+    "destination": "src/Game/Boss/PoltaStateAttackGround.hpp",
+    "sha256": "01a1b092f2e505cd2d4b2a4e638fe85aa0307e8353320a0360293f8419400dfe"
+  },
+  {
+    "source": "decomp/include/Game/Boss/PoltaStateGenerateRock.hpp",
+    "destination": "src/Game/Boss/PoltaStateGenerateRock.hpp",
+    "sha256": "bd991748091708a1d2997af5e439b90f8d1a46b59afe427eb9b51f123355daf1"
+  },
+  {
+    "source": "decomp/include/Game/Boss/PoltaStateGroundRockAttack.hpp",
+    "destination": "src/Game/Boss/PoltaStateGroundRockAttack.hpp",
+    "sha256": "560e16fa0cb1829c9a46e5daec458274a058649408c58d300bb8de243449bc71"
+  },
+  {
+    "source": "decomp/include/Game/Boss/PoltaStatePunch.hpp",
+    "destination": "src/Game/Boss/PoltaStatePunch.hpp",
+    "sha256": "1acb197b331253e3f06f4658babe3940258c19272b3b135d3ae21faa80fdb4f4"
+  },
+  {
+    "source": "decomp/include/Game/Boss/PoltaStateStagger.hpp",
+    "destination": "src/Game/Boss/PoltaStateStagger.hpp",
+    "sha256": "2575a23dde42a62b035ae335e0680649e9d8891e7078f102ee46c588e571f61d"
+  },
+  {
+    "source": "decomp/include/Game/Boss/PoltaWaitStart.hpp",
+    "destination": "src/Game/Boss/PoltaWaitStart.hpp",
+    "sha256": "7d8cdc6a357e047b3401a9eef6a50df903f68fc74cd55646eb46226db842f4cc"
+  },
+  {
+    "source": "decomp/include/Game/Boss/SkeletalFishBaby.hpp",
+    "destination": "src/Game/Boss/SkeletalFishBaby.hpp",
+    "sha256": "d63209959c382b114bafbb8a5fdc2209a8facea40ed3509023f1fa3b2c9790df"
+  },
+  {
+    "source": "decomp/include/Game/Boss/SkeletalFishBabyRail.hpp",
+    "destination": "src/Game/Boss/SkeletalFishBabyRail.hpp",
+    "sha256": "6dbb01bf2551da505a20f28d0ff5be2b957ac969c5e39f7988c41d9395cd16a1"
+  },
+  {
+    "source": "decomp/include/Game/Boss/SkeletalFishBoss.hpp",
+    "destination": "src/Game/Boss/SkeletalFishBoss.hpp",
+    "sha256": "8179206a4273a82f5dbb7a4ecbad344850329ad5acf6391b836d413ce966976e"
+  },
+  {
+    "source": "decomp/include/Game/Boss/SkeletalFishBossBattleDirector.hpp",
+    "destination": "src/Game/Boss/SkeletalFishBossBattleDirector.hpp",
+    "sha256": "db4b3f71eeb7bb2d3e862b427c07fe86760b69ec0c60f03c07d1eab2d0629bd2"
+  },
+  {
+    "source": "decomp/include/Game/Boss/SkeletalFishBossFunc.hpp",
+    "destination": "src/Game/Boss/SkeletalFishBossFunc.hpp",
+    "sha256": "0edde3038c581ca27de8f3e40d758a1afa129b494e55a39afe3b751b966f5365"
+  },
+  {
+    "source": "decomp/include/Game/Boss/SkeletalFishBossInfo.hpp",
+    "destination": "src/Game/Boss/SkeletalFishBossInfo.hpp",
+    "sha256": "a5c6bc793be57fc8a416de2ed67e457f905fa1c16448e838314f9ff998cfefad"
+  },
+  {
+    "source": "decomp/include/Game/Boss/SkeletalFishBossRail.hpp",
+    "destination": "src/Game/Boss/SkeletalFishBossRail.hpp",
+    "sha256": "2447a6aca852932e93c48478b0217b53d8ee0561467e1d947119fab933641755"
+  },
+  {
+    "source": "decomp/include/Game/Boss/SkeletalFishGuardHolder.hpp",
+    "destination": "src/Game/Boss/SkeletalFishGuardHolder.hpp",
+    "sha256": "223cd77a558b21b842d358c76ed7615f94ac9091d26b7f6c160e2a7590ffa5b9"
+  },
+  {
+    "source": "decomp/include/Game/Boss/SkeletalFishJointCalc.hpp",
+    "destination": "src/Game/Boss/SkeletalFishJointCalc.hpp",
+    "sha256": "415e50c511a96622e14496efc3606d2e59808a550fa96c8c01d2c171e481ebbc"
+  },
+  {
+    "source": "decomp/include/Game/Boss/SkeletalFishRailControl.hpp",
+    "destination": "src/Game/Boss/SkeletalFishRailControl.hpp",
+    "sha256": "d6eac2aa37d8490f3f656cb379d24619a06396f9c36015253d8463b65209a201"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TombSpider.hpp",
+    "destination": "src/Game/Boss/TombSpider.hpp",
+    "sha256": "522d34226a15986c09aa8ad4cce491dc9a8cb850354204cdd60a42385410899d"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TombSpiderAcid.hpp",
+    "destination": "src/Game/Boss/TombSpiderAcid.hpp",
+    "sha256": "dd2923dd49f5b5ee6eb5f9bebfb58c380a4fc7150715b9d7014f9dc3737f96c6"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TombSpiderAction1st.hpp",
+    "destination": "src/Game/Boss/TombSpiderAction1st.hpp",
+    "sha256": "4bc9bd38ddbefdfd2da1a45fe2182c1af052e3e24ecb0ecc165970b76a19bec1"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TombSpiderAction2nd.hpp",
+    "destination": "src/Game/Boss/TombSpiderAction2nd.hpp",
+    "sha256": "334f37fd11ffd3ce674ac6aae8146322979714f57b2c847806fa9c6478f53f8d"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TombSpiderActionBase.hpp",
+    "destination": "src/Game/Boss/TombSpiderActionBase.hpp",
+    "sha256": "deffcf37f2f7d9c6e9d1fc4544daa2da4c7ef8357e1e9b330e88bba90eb8417f"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TombSpiderActionCocoon.hpp",
+    "destination": "src/Game/Boss/TombSpiderActionCocoon.hpp",
+    "sha256": "a0e9713e3f71b433ac4f3b3fb8c5348fb76014d419bc58836496fe8c318e9055"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TombSpiderDemo.hpp",
+    "destination": "src/Game/Boss/TombSpiderDemo.hpp",
+    "sha256": "d2ad24a06e8d219340270dba625c980693fd14812aa1434b86ec9653667936de"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TombSpiderEnvironment.hpp",
+    "destination": "src/Game/Boss/TombSpiderEnvironment.hpp",
+    "sha256": "5d1e178047cbd038c8979a40a2e8a422f746368a3684b837035bfe860f139289"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TombSpiderFunction.hpp",
+    "destination": "src/Game/Boss/TombSpiderFunction.hpp",
+    "sha256": "f32acc425bd9cfaed6fdae905c21f51f92b6090073b1cabe9f99b6c31a0c5f2d"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TombSpiderGland.hpp",
+    "destination": "src/Game/Boss/TombSpiderGland.hpp",
+    "sha256": "a0a22e25a5f15ffedb62a781680a1bd2cdb17ccb12e05b9caa2cc2b99f069b53"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TombSpiderParts.hpp",
+    "destination": "src/Game/Boss/TombSpiderParts.hpp",
+    "sha256": "597abbfd3880a7d851e14943dc885786f8fc844b71328dcfd3e7716af5a89b3c"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TombSpiderSensorCtrl.hpp",
+    "destination": "src/Game/Boss/TombSpiderSensorCtrl.hpp",
+    "sha256": "318917b64384b490aaeae02dab98b0b9a15a0b390868d240ce721b3fcb6d7a55"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TombSpiderStateSwoon.hpp",
+    "destination": "src/Game/Boss/TombSpiderStateSwoon.hpp",
+    "sha256": "bade22e1fe730a8a526ace477958bd3c366d8e76967384f38fe30fa504ea8e64"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TombSpiderThreadAttacher.hpp",
+    "destination": "src/Game/Boss/TombSpiderThreadAttacher.hpp",
+    "sha256": "ac90055f61d995ba183c3b10b9c651e26fcb79b4c4e9b43c2937772949953b94"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TombSpiderVitalSpot.hpp",
+    "destination": "src/Game/Boss/TombSpiderVitalSpot.hpp",
+    "sha256": "bde18b86b9741f249eca790673ac153981cb738a656ed846e9ea548eb1963145"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossBaseJointPosition.hpp",
+    "destination": "src/Game/Boss/TripodBossBaseJointPosition.hpp",
+    "sha256": "b7325156b7eba38b0c47d5c8200d029b9012964b182b5425ee83c9cbd1b5ed05"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossBreakMovement.hpp",
+    "destination": "src/Game/Boss/TripodBossBreakMovement.hpp",
+    "sha256": "624ec16ec2376a29b2588b2a05cdb7be6450badc83c0b1e803083539166dd640"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossCoin.hpp",
+    "destination": "src/Game/Boss/TripodBossCoin.hpp",
+    "sha256": "5a62a5c7d3f621995c194a127b4ea14f77027dea9649d511857be3aec8b4b4a6"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossCore.hpp",
+    "destination": "src/Game/Boss/TripodBossCore.hpp",
+    "sha256": "e973b81e30310e516ee11fe36a19848f57248f3fd0308e36602c9660c82802f9"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossFixParts.hpp",
+    "destination": "src/Game/Boss/TripodBossFixParts.hpp",
+    "sha256": "58bbd0b49f828de24066697967a62765a51dee357d9e8af3758a74d249223279"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossFixPartsBase.hpp",
+    "destination": "src/Game/Boss/TripodBossFixPartsBase.hpp",
+    "sha256": "aae75d9f507a2cebd4f9956bea03a53d3fb3bd91c31bb3f04b374931465fd534"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossGuardWall.hpp",
+    "destination": "src/Game/Boss/TripodBossGuardWall.hpp",
+    "sha256": "6c974ca1fbe988f888a2de9131fbc6e9111a490664582f4f6dcbdb7861341a1c"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossGuardWallPart.hpp",
+    "destination": "src/Game/Boss/TripodBossGuardWallPart.hpp",
+    "sha256": "c88e56ccc8a7e05db5363ee665ba220ba363b616ad0175d3de960069d9a2f19e"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossKillerGenerater.hpp",
+    "destination": "src/Game/Boss/TripodBossKillerGenerater.hpp",
+    "sha256": "b2fe9f332db95d4e9281646fa002fd1cd5f65c844600585df031a29a35ef452b"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossKillerGeneraterCircle.hpp",
+    "destination": "src/Game/Boss/TripodBossKillerGeneraterCircle.hpp",
+    "sha256": "0d5be9321b55cc552ff7a65ddd22321192bfc5703c8317303fc8ce82b3686b4b"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossKinokoOneUp.hpp",
+    "destination": "src/Game/Boss/TripodBossKinokoOneUp.hpp",
+    "sha256": "444e1d544d033c7f244f29f50d95ae5ffee73b41bb0756614b7f9814f2bbb2fa"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossLeg.hpp",
+    "destination": "src/Game/Boss/TripodBossLeg.hpp",
+    "sha256": "5b26f0a0d1d6bb55d465c9f6b0ced5d40eee9bc733698b344250e8fe91e0b96a"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossMovableArea.hpp",
+    "destination": "src/Game/Boss/TripodBossMovableArea.hpp",
+    "sha256": "1b4f30e89603640d2ed8f846a7c2600a267dddb15d21700041c39e63edc150a9"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossRailMoveParts.hpp",
+    "destination": "src/Game/Boss/TripodBossRailMoveParts.hpp",
+    "sha256": "cf927d06d44fa04182a9feb63ec5d2843b00ddf5d100b791b673dbc3eaafb860"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossRotateParts.hpp",
+    "destination": "src/Game/Boss/TripodBossRotateParts.hpp",
+    "sha256": "725a1e570f699b1d8cacc4620d556c3bf362f1c95d4dd3760dd988a42e5e863d"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossShell.hpp",
+    "destination": "src/Game/Boss/TripodBossShell.hpp",
+    "sha256": "9142b66e51bf6a7e1541a9f36e82c512f930a81f9f50aed80e03d47bb53e5bfd"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossStepPoint.hpp",
+    "destination": "src/Game/Boss/TripodBossStepPoint.hpp",
+    "sha256": "2c2c9f8ccd901dd8961a86cc1a351bd49bba6f54f5d45d7a72c883151e59d026"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossStepSequence.hpp",
+    "destination": "src/Game/Boss/TripodBossStepSequence.hpp",
+    "sha256": "5e8b4cbc3b1f4278a8fd7af051d3c78bbf0ccc3d5c0a48016d04022c2b8109c5"
+  },
+  {
+    "source": "decomp/include/Game/Boss/TripodBossStepStartArea.hpp",
+    "destination": "src/Game/Boss/TripodBossStepStartArea.hpp",
+    "sha256": "90474d5022f90f891bbc9ccaf3bb3a03a31c29c46f69c31b53af94ec90f8e063"
+  },
+  {
+    "source": "decomp/include/Game/Boss.hpp",
+    "destination": "src/Game/Boss.hpp",
+    "sha256": "5ec56d2a79bc11d3245fbbec2c1402df9cfc65e3eba9d6c4c3af450d137e4cd8"
+  },
+  {
+    "source": "decomp/include/Game/Camera.hpp",
+    "destination": "src/Game/Camera.hpp",
+    "sha256": "01577a86f1cf609f44832bcaadd5ea1128f972f07b21252e475c65651580ee90"
+  },
+  {
+    "source": "decomp/include/Game/Demo/AstroDomeDemoStarter.hpp",
+    "destination": "src/Game/Demo/AstroDomeDemoStarter.hpp",
+    "sha256": "1ed579fd2b83a0c3a9a0ba965f65ff2cb5507b059a37f815d048a930abb75a6e"
+  },
+  {
+    "source": "decomp/include/Game/Demo/DemoCtrlBase.hpp",
+    "destination": "src/Game/Demo/DemoCtrlBase.hpp",
+    "sha256": "62b6970c3f7275de9f467df381f153fdec68ee68ee8c63fea099a01733fc5d45"
+  },
+  {
+    "source": "decomp/include/Game/Demo/DemoKoopaJrShip.hpp",
+    "destination": "src/Game/Demo/DemoKoopaJrShip.hpp",
+    "sha256": "78d2b10dc9819fa6136b7be528c0bfdfbcfab21c5770099c64951d3842abe183"
+  },
+  {
+    "source": "decomp/include/Game/Demo/DemoParamCommonDataTable.hpp",
+    "destination": "src/Game/Demo/DemoParamCommonDataTable.hpp",
+    "sha256": "e68b225d8964e4eb2eda64255f1d38028ff10794d1a838c04bc803565a9d51c2"
+  },
+  {
+    "source": "decomp/include/Game/Demo/DemoSheetKeeperInfoHolder.hpp",
+    "destination": "src/Game/Demo/DemoSheetKeeperInfoHolder.hpp",
+    "sha256": "4a66d235c7d09465c818245212f90fc727c22324bcbd6d133be22e9ca080906b"
+  },
+  {
+    "source": "decomp/include/Game/Demo/GrandStarReturnDemoStarter.hpp",
+    "destination": "src/Game/Demo/GrandStarReturnDemoStarter.hpp",
+    "sha256": "5261674ce08715560916141d733f0ea7ef3b180bb39589336d069b6d924f647d"
+  },
+  {
+    "source": "decomp/include/Game/Demo/ReturnDemoRailMove.hpp",
+    "destination": "src/Game/Demo/ReturnDemoRailMove.hpp",
+    "sha256": "6b1c8e319009db9f2cfabd9677d3faa7f8cb00ecde62cc0cd51961b9397549e3"
+  },
+  {
+    "source": "decomp/include/Game/Demo/ScenarioStarter.hpp",
+    "destination": "src/Game/Demo/ScenarioStarter.hpp",
+    "sha256": "55e61b6e7eb62bfa534b2b21a6843fd5a59f0bb33dc9d4be3e03f019cfadd1ef"
+  },
+  {
+    "source": "decomp/include/Game/Demo/StarReturnDemoStarter.hpp",
+    "destination": "src/Game/Demo/StarReturnDemoStarter.hpp",
+    "sha256": "17e760940a597254caefaa9a432986648f9362fa7891b1490d1fca09f53b5ad8"
+  },
+  {
+    "source": "decomp/include/Game/Demo.hpp",
+    "destination": "src/Game/Demo.hpp",
+    "sha256": "7e82a663ae1eda43ba1693568ffb1637db8b28c857e5a83f79b8aa6aff845c42"
+  },
+  {
+    "source": "decomp/include/Game/Effect/AstroEffectObj.hpp",
+    "destination": "src/Game/Effect/AstroEffectObj.hpp",
+    "sha256": "f26d30cb838ae4a2b9c08c45cd74bad9229589725250d20b4221b93d4c4639f1"
+  },
+  {
+    "source": "decomp/include/Game/Effect/EffectObjGravityDust.hpp",
+    "destination": "src/Game/Effect/EffectObjGravityDust.hpp",
+    "sha256": "c947f62994cfb51fb15767fc6c439ee04e76b8413d649f257f8b1e20c7b369a3"
+  },
+  {
+    "source": "decomp/include/Game/Effect/RandomEffectObj.hpp",
+    "destination": "src/Game/Effect/RandomEffectObj.hpp",
+    "sha256": "48370ad575bb0a123421cbb485e35d6e6c58ee58646398ec3509ef76dd244b31"
+  },
+  {
+    "source": "decomp/include/Game/Effect/SpinPullParticleCallBack.hpp",
+    "destination": "src/Game/Effect/SpinPullParticleCallBack.hpp",
+    "sha256": "4798de13b520d943c5ea727510b79675c5d02958ef3bafddcc289b9d73430c35"
+  },
+  {
+    "source": "decomp/include/Game/Effect.hpp",
+    "destination": "src/Game/Effect.hpp",
+    "sha256": "9426d4dd4db7737fa3209e88d60002993d1439c7002650d85109df1625d53b07"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/AnimStampController.hpp",
+    "destination": "src/Game/Enemy/AnimStampController.hpp",
+    "sha256": "8dd9221ef71d2f7938d99a0b124ff2809f0da5bfb80ae4f77666cf9cd6546872"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/BallBeamer.hpp",
+    "destination": "src/Game/Enemy/BallBeamer.hpp",
+    "sha256": "38245373fbad1abf0a68f81f4713ffba67f78ddc214a5c2a365c06a3c32f4864"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Balloonfish.hpp",
+    "destination": "src/Game/Enemy/Balloonfish.hpp",
+    "sha256": "8968adc186b18adf20c063cc980a1bb82d18e74ce78768139645679ce9b185eb"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/BasaBasa.hpp",
+    "destination": "src/Game/Enemy/BasaBasa.hpp",
+    "sha256": "dc90852b4abfea450b300421dcdcc340e7ac82f111a89d6279f046388d9988dd"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/BegomanBaby.hpp",
+    "destination": "src/Game/Enemy/BegomanBaby.hpp",
+    "sha256": "1bd6672399525cc8e225ef9391de07dc5393fe17a58651586e73862333ceeb81"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/BegomanLauncher.hpp",
+    "destination": "src/Game/Enemy/BegomanLauncher.hpp",
+    "sha256": "6a29866b12cbce7018a46623c885097fbf72e452a7020b0d1312d93b8cb2fbd2"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/BegomanSpike.hpp",
+    "destination": "src/Game/Enemy/BegomanSpike.hpp",
+    "sha256": "bbcef68478ff82318d85593715e5bba6f83e884630f6214313232fb66c65e568"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/BegomanSpring.hpp",
+    "destination": "src/Game/Enemy/BegomanSpring.hpp",
+    "sha256": "ef9807a4756d415da28c735e4ac7b51342a477dcfa70325ca259ebc7b2b80683"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/BegomanSpringHead.hpp",
+    "destination": "src/Game/Enemy/BegomanSpringHead.hpp",
+    "sha256": "daf9e139093651267471d612c66fcbcde6a0ebd6fc387c7a474f3c52573b79de"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Birikyu.hpp",
+    "destination": "src/Game/Enemy/Birikyu.hpp",
+    "sha256": "992d445b41caa08b50d379f9df96d079aec88ac078b34f5a8bdd87fd6a25f9ec"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/BombBird.hpp",
+    "destination": "src/Game/Enemy/BombBird.hpp",
+    "sha256": "8e6cea76dd95e429f0430a5bd633fd12ba5ecf97062f8405c82ee26705752a2a"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/BombBirdBomb.hpp",
+    "destination": "src/Game/Enemy/BombBirdBomb.hpp",
+    "sha256": "0626d03e2c069153b881266f73c3d29cb593378df2cc3791c04ce89cd4e42a92"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/BombHei.hpp",
+    "destination": "src/Game/Enemy/BombHei.hpp",
+    "sha256": "cc6983dd7cbaef40858f35aeb9882336ae5f04a0f0571ab857595badb2a83677"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/BombHeiLauncher.hpp",
+    "destination": "src/Game/Enemy/BombHeiLauncher.hpp",
+    "sha256": "7c17f244f1258cb60efeebbe9aafe46baa78d9b542fd4df499f5989668656be5"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/BombTeresa.hpp",
+    "destination": "src/Game/Enemy/BombTeresa.hpp",
+    "sha256": "230b6a28059b2392fe716aa2902d9a43f0a49bfb6aa0410ea31f1378dc6db821"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/CannonShellBase.hpp",
+    "destination": "src/Game/Enemy/CannonShellBase.hpp",
+    "sha256": "885cb6358fb582a62f7f5a14cd5f55909c96098b94a979ed339baeee46595e81"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/CocoNutBall.hpp",
+    "destination": "src/Game/Enemy/CocoNutBall.hpp",
+    "sha256": "53acaf5c773cb853743393d59f9a82616e3c1cccdebf0bf452e9abd44f0f3b04"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/CocoSambo.hpp",
+    "destination": "src/Game/Enemy/CocoSambo.hpp",
+    "sha256": "2bf13e41a27633fbfa570443f8ad79cba972be6f89597ae5363eab5b831c4515"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/DharmaSambo.hpp",
+    "destination": "src/Game/Enemy/DharmaSambo.hpp",
+    "sha256": "918e52c851be8e62e882f2a6fc1b70e07c610bece861f1a77070e09a7a66e2d3"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Dossun.hpp",
+    "destination": "src/Game/Enemy/Dossun.hpp",
+    "sha256": "7cc047ec6f2fcfa288488a3e05be84c0644c243b7c2f6cef23b88b16b90c5bbc"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/ElectricPressureBullet.hpp",
+    "destination": "src/Game/Enemy/ElectricPressureBullet.hpp",
+    "sha256": "3b5675cec4f2703ed22fe3696fc132cb95de3be882fe9d3a31ad11b6bd80d47e"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/EyeBeamer.hpp",
+    "destination": "src/Game/Enemy/EyeBeamer.hpp",
+    "sha256": "f858749cfe7ddbac6a9d1767828392c9c1c55821180767405e4f8bb717459747"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/FireBall.hpp",
+    "destination": "src/Game/Enemy/FireBall.hpp",
+    "sha256": "049969a1096f2be65d8491ea76323896909c7681806d768a4ce98210643f1ac2"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/FireBubble.hpp",
+    "destination": "src/Game/Enemy/FireBubble.hpp",
+    "sha256": "907fecb1bfad9689d2acafbd266cfc4d0bcd73308e7fcbcb439d90591124c7fc"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Gesso.hpp",
+    "destination": "src/Game/Enemy/Gesso.hpp",
+    "sha256": "f00920835efe4e117b4c177c5edc33d6e358543c56de0890c3488d47e4010c9e"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/HammerHeadPackun.hpp",
+    "destination": "src/Game/Enemy/HammerHeadPackun.hpp",
+    "sha256": "a7917136343e9bc81c6c8a12b93744b456b85bad09747adde873057319dc3f37"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Hanachan.hpp",
+    "destination": "src/Game/Enemy/Hanachan.hpp",
+    "sha256": "ca443bccfd822178f17b16ea88189008044737cc59d62d58375d1331113e7193"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/HomingKiller.hpp",
+    "destination": "src/Game/Enemy/HomingKiller.hpp",
+    "sha256": "6c70f8290b575d508a9b278c3aaf6febd2aee25502c9c9342f43affb479d7073"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/IceMerameraKing.hpp",
+    "destination": "src/Game/Enemy/IceMerameraKing.hpp",
+    "sha256": "49b8b5075c8a9858881b5da9185337c8f0952a41495ba36a987bf8596af7ee53"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/ItemGenerator.hpp",
+    "destination": "src/Game/Enemy/ItemGenerator.hpp",
+    "sha256": "1daf3a494ab9ff6b7df2da236d4e0e4d3a65918718e149d197981f2cd5600761"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Jellyfish.hpp",
+    "destination": "src/Game/Enemy/Jellyfish.hpp",
+    "sha256": "0f8fcdff8dff46155cef68e24369c31d0bb26a3df2206475d7e178a24154207f"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/JellyfishElectric.hpp",
+    "destination": "src/Game/Enemy/JellyfishElectric.hpp",
+    "sha256": "aabd2a6fc7b1c2cd4f3e8a131985d885c1fcdd28bccda5cda3ab0e797c8fb5ee"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Jiraira.hpp",
+    "destination": "src/Game/Enemy/Jiraira.hpp",
+    "sha256": "d233ad7e757948431aba7369f67e82f4059468dfcd8cc81e0fc2c51201ab26e2"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/JumpBeamer.hpp",
+    "destination": "src/Game/Enemy/JumpBeamer.hpp",
+    "sha256": "6afdb93c946e318d5d3b27172a1c401b9620fc40cd4d89be4efbfedbd39b33be"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/JumpGuarder.hpp",
+    "destination": "src/Game/Enemy/JumpGuarder.hpp",
+    "sha256": "c3c4847151608384abebf68b6756a6588e3242d8443e65c337578e35bef4b08b"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/JumpSpider.hpp",
+    "destination": "src/Game/Enemy/JumpSpider.hpp",
+    "sha256": "56c8062b440494e14097b4fb7e4553165aade3fcc4ffcc4fa62ae2c699520d12"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Kabokuri.hpp",
+    "destination": "src/Game/Enemy/Kabokuri.hpp",
+    "sha256": "d22f7198bb10161fecb4eda98a4cf1657e10ca829a82f21a6e6ce9f1db3803ac"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/KabokuriFire.hpp",
+    "destination": "src/Game/Enemy/KabokuriFire.hpp",
+    "sha256": "a2dd145b6ea28b4a5efde4ebd1d54a3ff098ea9610936e4c25b0fe3ec63df580"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Kameck.hpp",
+    "destination": "src/Game/Enemy/Kameck.hpp",
+    "sha256": "f42b98c29020aa9144f70f5eaa60741e4f1be571d4c2dc7be19fe90b6bcd52cd"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/KameckBeam.hpp",
+    "destination": "src/Game/Enemy/KameckBeam.hpp",
+    "sha256": "9d7f2e0260e0f804c06adbac983614db601efe629e203d79dad57ae2eee56dcc"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/KameckFireBall.hpp",
+    "destination": "src/Game/Enemy/KameckFireBall.hpp",
+    "sha256": "f354651ed520880bbf60dfc5e0c68304960ef0514897dc6458d567e1c4c43bbf"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/KameckHolder.hpp",
+    "destination": "src/Game/Enemy/KameckHolder.hpp",
+    "sha256": "c1bda8ca938f870a5bcf80c8986d8eba56c4579da13f6eefea40bf6183924557"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/KameckTurtle.hpp",
+    "destination": "src/Game/Enemy/KameckTurtle.hpp",
+    "sha256": "3148abc0d5253f50d378b85525cf2a4a068a4aa83a2fee0d1e5ec26da75cbe94"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Kanina.hpp",
+    "destination": "src/Game/Enemy/Kanina.hpp",
+    "sha256": "81e408e25c8e9845c219093b329c9f269c264e560470f1d48260f77e7c34663b"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Karon.hpp",
+    "destination": "src/Game/Enemy/Karon.hpp",
+    "sha256": "5fc369a49f686b96142e68c35bd0eff653376a443780f1e7b1a186d1fccbbfa7"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Kiraira.hpp",
+    "destination": "src/Game/Enemy/Kiraira.hpp",
+    "sha256": "03d68cb22372c246fcf2886662b330a57a7d4e8fdbcd4292f1ebd4b7c6dec137"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/KirairaChain.hpp",
+    "destination": "src/Game/Enemy/KirairaChain.hpp",
+    "sha256": "1411722cd686889da8c50de5fb3f17b106320a27ea9b9b040c6f74ca211249b0"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/KoopaJrShip.hpp",
+    "destination": "src/Game/Enemy/KoopaJrShip.hpp",
+    "sha256": "f7080cbf9fe6f6a555e9880e73bfaefb68e7e45dcb7d908d343cdb10f271a53b"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/KoopaJrShipCannonMainShell.hpp",
+    "destination": "src/Game/Enemy/KoopaJrShipCannonMainShell.hpp",
+    "sha256": "20c9d3f6386eaa8a439bad17838c882d1af0b1e80b7ac651485ed63f2e1ca4b6"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/KoopaJrShipCannonShell.hpp",
+    "destination": "src/Game/Enemy/KoopaJrShipCannonShell.hpp",
+    "sha256": "cf15d3d203c0bbbf9fbe9c2d53d1f604d6950bf6f3a2737158d8e98f809a80cc"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/KoteBug.hpp",
+    "destination": "src/Game/Enemy/KoteBug.hpp",
+    "sha256": "0d3c89b3499ecf6269397b7857b7b75f85359e374ab59870ce0a2f4092678009"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Kuribo.hpp",
+    "destination": "src/Game/Enemy/Kuribo.hpp",
+    "sha256": "5d2308603cd9f4231026c84117be6efa6038fdc1b27f9a5eb99debf9a07205c4"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/KuriboChief.hpp",
+    "destination": "src/Game/Enemy/KuriboChief.hpp",
+    "sha256": "a33b8212979cca95b9458a11a9324ab6bae6857188236daeb98762ed0c01f3e1"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/KuriboMini.hpp",
+    "destination": "src/Game/Enemy/KuriboMini.hpp",
+    "sha256": "1b86fe5b3fbe8b128ac5a21225229bea410ae0ed24b0df7564b3664ca02d474a"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/MechanicKoopaMini.hpp",
+    "destination": "src/Game/Enemy/MechanicKoopaMini.hpp",
+    "sha256": "7ea0231d32b026d44bf4ca98639dc8a8e37c8b3a203ba250952c4b0b9a45de23"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Meramera.hpp",
+    "destination": "src/Game/Enemy/Meramera.hpp",
+    "sha256": "3121efd78d5a95c782fb952b5ab6abf5554589dca09f7eef3d705f3c5394885c"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Metbo.hpp",
+    "destination": "src/Game/Enemy/Metbo.hpp",
+    "sha256": "dc6d105fac31fa9626d6ded8c7441358703cdb2ad850487f05addba1bf3db574"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Mogu.hpp",
+    "destination": "src/Game/Enemy/Mogu.hpp",
+    "sha256": "8e506a5c990ff585813d2724753e92b8a210f3d31f95a3b9cf34a573edf5279d"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/MoguStone.hpp",
+    "destination": "src/Game/Enemy/MoguStone.hpp",
+    "sha256": "fe6446354afb7899e8d6dc7c4a86cae1e1b4aa85d22fd61d70966fe4cf20bd43"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Mogucchi.hpp",
+    "destination": "src/Game/Enemy/Mogucchi.hpp",
+    "sha256": "afba26f27677df2aadefbbfe117bc316fb897b4523b7c524807c50eb9779931e"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/MogucchiHill.hpp",
+    "destination": "src/Game/Enemy/MogucchiHill.hpp",
+    "sha256": "7ea65aac7394c12757a232ed180bf787c2d074067486de7fcdc7e17b66657eba"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/MogucchiRefuseTerritory.hpp",
+    "destination": "src/Game/Enemy/MogucchiRefuseTerritory.hpp",
+    "sha256": "35dbe2ac94429f26e2a1e79230b1a9123651f4905a2b6436d51305cbf8782ebc"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/MogucchiShooter.hpp",
+    "destination": "src/Game/Enemy/MogucchiShooter.hpp",
+    "sha256": "2c9659c930482bc66f064743705eb86001d5982e770681a7b19941adf5ef8ec9"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/NokonokoLand.hpp",
+    "destination": "src/Game/Enemy/NokonokoLand.hpp",
+    "sha256": "4a5e6a4982507cf3db170214714b6b09820d135b3efab3d9ee0a3c8be30aa10c"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Onimasu.hpp",
+    "destination": "src/Game/Enemy/Onimasu.hpp",
+    "sha256": "334c7d2205d3da4f1f433430208879c5648698e6dfc0cb274e978de39a358f15"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/OnimasuJump.hpp",
+    "destination": "src/Game/Enemy/OnimasuJump.hpp",
+    "sha256": "728c75b9d66fd7bea6e1940441fda34cdc3f09e4591060bf32468224d91d15c5"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/OnimasuPivot.hpp",
+    "destination": "src/Game/Enemy/OnimasuPivot.hpp",
+    "sha256": "79ef7f996af069f6e19672b1d66f7f49a1dc03e08fdfe3c1e36a3712ab4b2dc8"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/OtaRock.hpp",
+    "destination": "src/Game/Enemy/OtaRock.hpp",
+    "sha256": "017280f37d1a32c51f99a3f1b3f6faba1321bc9b86b3f54a4ca03bfb19dc5520"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/PackunPetit.hpp",
+    "destination": "src/Game/Enemy/PackunPetit.hpp",
+    "sha256": "2d95d904aaa77945586f5f93243adc3adc1175a2180e56683e753df3963e4bff"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Petari.hpp",
+    "destination": "src/Game/Enemy/Petari.hpp",
+    "sha256": "4a1c06fb661cdeae0ff63b68a351c1f4e88136ebc57151afa7d12f4f8e1f2c9c"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Poihana.hpp",
+    "destination": "src/Game/Enemy/Poihana.hpp",
+    "sha256": "f321566b2ea6d7c5954166ab6138c82c3288b84686f41be70165c6258455102a"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Pukupuku.hpp",
+    "destination": "src/Game/Enemy/Pukupuku.hpp",
+    "sha256": "7e00a58b33c8c49b83e91162335265105992d80972776110307e97d0e57a71f5"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/RingBeam.hpp",
+    "destination": "src/Game/Enemy/RingBeam.hpp",
+    "sha256": "01bbcecc849038cc1296127204dcb1f3e472ddc1df2fa22915a94a10c454bdd7"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/RingBeamer.hpp",
+    "destination": "src/Game/Enemy/RingBeamer.hpp",
+    "sha256": "241bc3cbde8c69cafa2fbaf84ab8ca018c8c11d507ecdd8a540006f7cfe0a874"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/SamboFunction.hpp",
+    "destination": "src/Game/Enemy/SamboFunction.hpp",
+    "sha256": "806e273a867c582b9892b867bf0979a4ad0984eb93e7bc40747d56b6e5a85c8d"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/SamboHead.hpp",
+    "destination": "src/Game/Enemy/SamboHead.hpp",
+    "sha256": "493889b4d8c1d87e4ea698efbd45918c95d6a872f1503825da6725ac25a26074"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/SearchBeamer.hpp",
+    "destination": "src/Game/Enemy/SearchBeamer.hpp",
+    "sha256": "4404b87ce920c76551116d8f5fee8d67e0680c1b05bcc2aa0e805d1fd72cf049"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Snakehead.hpp",
+    "destination": "src/Game/Enemy/Snakehead.hpp",
+    "sha256": "d9ba288f32213df287043d2d7ba4ebf08a3a99486dbc48851b14877e15030ef6"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/SpinHitController.hpp",
+    "destination": "src/Game/Enemy/SpinHitController.hpp",
+    "sha256": "0d978c93e88936fabb278c30a6e1d145a89fd5b9d5b97026dbc3f78ee723e9f1"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/StinkBugBase.hpp",
+    "destination": "src/Game/Enemy/StinkBugBase.hpp",
+    "sha256": "5156c4fd033709c90600b0280a67489a58f4d24747a263f6c3a123745b2142d9"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/StinkBugParent.hpp",
+    "destination": "src/Game/Enemy/StinkBugParent.hpp",
+    "sha256": "2c68b29b126fda181645b70cd2cb7f1289194858746a41b645ae4b757704f883"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/StinkBugSmall.hpp",
+    "destination": "src/Game/Enemy/StinkBugSmall.hpp",
+    "sha256": "867605a8392c86c6258059ba0d26463bb7075a347d2a6a486bcdd28c2df5f34e"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/StringSpider.hpp",
+    "destination": "src/Game/Enemy/StringSpider.hpp",
+    "sha256": "cc558185a8dbd4f6131ca6220af0d6cbebd710751aabfe40feb49e36c1d9a9c4"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/TakoHei.hpp",
+    "destination": "src/Game/Enemy/TakoHei.hpp",
+    "sha256": "8b9256cdf5fa6a4f078720366a6ffd24982355f33bd3b61cd140fe70ae21ff6a"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/TakoHeiInk.hpp",
+    "destination": "src/Game/Enemy/TakoHeiInk.hpp",
+    "sha256": "176471ce7b126f760cde8680de4efa8bc26f2085f24e49f9aa7b5684d915d327"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Takobo.hpp",
+    "destination": "src/Game/Enemy/Takobo.hpp",
+    "sha256": "528df827a6d56346c4241d2397e086c1a4420e14c5871c7d3a0517455880456b"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Teresa.hpp",
+    "destination": "src/Game/Enemy/Teresa.hpp",
+    "sha256": "96182084089567b23399d809352ae82754facca498ad01367b33aabd6e264307"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/TeresaWater.hpp",
+    "destination": "src/Game/Enemy/TeresaWater.hpp",
+    "sha256": "c83e0e41dc50f8188be751fd754e8b24dce7130f5d42ee2aa8b9805fa168c3f4"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/TerritoryMover.hpp",
+    "destination": "src/Game/Enemy/TerritoryMover.hpp",
+    "sha256": "d42d02d03d985023ac474cf3a372b0e580621dc42befaeeb38bd2339d319cb20"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/Unizo.hpp",
+    "destination": "src/Game/Enemy/Unizo.hpp",
+    "sha256": "7995e11e4b664c7b14f8458a4ba14a23674208df872733e094fba56f669bd5d3"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/UnizoLauncher.hpp",
+    "destination": "src/Game/Enemy/UnizoLauncher.hpp",
+    "sha256": "66d8bf768261f84e2f76400ec45b4e10ec6957dcf3375a83526053a17f913b28"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/WalkerStateBindStarPointer.hpp",
+    "destination": "src/Game/Enemy/WalkerStateBindStarPointer.hpp",
+    "sha256": "f08054c78dfdef663d83942491404d5eb25709add6f941d289f9f2b15c4d0229"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/WalkerStateChase.hpp",
+    "destination": "src/Game/Enemy/WalkerStateChase.hpp",
+    "sha256": "31c757cde785efa291ee8bd9c75c925acec17d225a38eb9bb2a3b02f818a0050"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/WalkerStateFindPlayer.hpp",
+    "destination": "src/Game/Enemy/WalkerStateFindPlayer.hpp",
+    "sha256": "f3ad5fc068780dccd49b9a9e5e3941b6f91c4bebb0434847ff52aa3327931eae"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/WalkerStateFunction.hpp",
+    "destination": "src/Game/Enemy/WalkerStateFunction.hpp",
+    "sha256": "398956b89409d34e78e8347b00286cdc9793c2ce9409e332798494166efac07d"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/WalkerStateParam.hpp",
+    "destination": "src/Game/Enemy/WalkerStateParam.hpp",
+    "sha256": "6e50c9f3578eaf655da2a7cb039d6be45b57938f6621473186819d415d0a5209"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/WalkerStateStagger.hpp",
+    "destination": "src/Game/Enemy/WalkerStateStagger.hpp",
+    "sha256": "c112117bb8e2d8d85e66fe5ba57f1a5e85a6a92c93815593e36c161fdd7cb805"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/WalkerStateWander.hpp",
+    "destination": "src/Game/Enemy/WalkerStateWander.hpp",
+    "sha256": "b960b9a93d1355c29e1db1b11e54be9d5056c86db6568dd6d1ab59445f88df5a"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/WaterBazooka.hpp",
+    "destination": "src/Game/Enemy/WaterBazooka.hpp",
+    "sha256": "38798c861d4a38a649f3007d59728b8f94bf03b661eb0d5b7dca2e4129ca161c"
+  },
+  {
+    "source": "decomp/include/Game/Enemy/WaterBazookaCapsule.hpp",
+    "destination": "src/Game/Enemy/WaterBazookaCapsule.hpp",
+    "sha256": "5844b3cf33e94426a43a5851f079e18f277f83ff6193664357305c2457a22462"
+  },
+  {
+    "source": "decomp/include/Game/Enemy.hpp",
+    "destination": "src/Game/Enemy.hpp",
+    "sha256": "7d0b9c6d90bff9270e16b5e458f4fa22ace957253893da308db6166cae6c2e79"
+  },
+  {
+    "source": "decomp/include/Game/GameAudio/AudTamakoroBgmCtrl.hpp",
+    "destination": "src/Game/GameAudio/AudTamakoroBgmCtrl.hpp",
+    "sha256": "cad32bbd146792c9e266e5c1c9b91f3e7f33b74289ecacd7e521ec594058f2d3"
+  },
+  {
+    "source": "decomp/include/Game/GameAudio.hpp",
+    "destination": "src/Game/GameAudio.hpp",
+    "sha256": "acfb6e9b27c8a4b37e5e95f49cef196360f99e88ae3eb7a4afbe6bac0b924b45"
+  },
+  {
+    "source": "decomp/include/Game/LiveActor/ActiveActorList.hpp",
+    "destination": "src/Game/LiveActor/ActiveActorList.hpp",
+    "sha256": "a746cdd348c6cf8f63671bcb8c239a2fcc36ac50143bba88ed0d19f7521d383f"
+  },
+  {
+    "source": "decomp/include/Game/LiveActor/ActorJointCtrl.hpp",
+    "destination": "src/Game/LiveActor/ActorJointCtrl.hpp",
+    "sha256": "2758dbde29c5bcfda6a9e058277940fa96deff83809a943286a4a086f6e8359c"
+  },
+  {
+    "source": "decomp/include/Game/LiveActor/AnimationRandomPlayer.hpp",
+    "destination": "src/Game/LiveActor/AnimationRandomPlayer.hpp",
+    "sha256": "02c1fdacef128e53a3ba254f69e98fe5ebf3ea449a48bef058bf775c1e2ed3c6"
+  },
+  {
+    "source": "decomp/include/Game/LiveActor/FaceJointCtrl.hpp",
+    "destination": "src/Game/LiveActor/FaceJointCtrl.hpp",
+    "sha256": "766dda86a060655584fc2aceb8ebf7bb84b0b97b266f4df2242d0a0b2db74354"
+  },
+  {
+    "source": "decomp/include/Game/LiveActor/IKJointCtrl.hpp",
+    "destination": "src/Game/LiveActor/IKJointCtrl.hpp",
+    "sha256": "feff50e079cfe5655cb141e3855f3414121ffad8e55361dbccb7c7caadda41b2"
+  },
+  {
+    "source": "decomp/include/Game/LiveActor/SimpleJ3DModelDrawer.hpp",
+    "destination": "src/Game/LiveActor/SimpleJ3DModelDrawer.hpp",
+    "sha256": "9c3a845982b7659d2f8506d2bf0ea2566bc33e25926d523c80128443ab8aae7a"
+  },
+  {
+    "source": "decomp/include/Game/LiveActor.hpp",
+    "destination": "src/Game/LiveActor.hpp",
+    "sha256": "a7910f04499ebee98369790e4eee97dba77d70b7bb769c1f85c065ad7837474d"
+  },
+  {
+    "source": "decomp/include/Game/Map/FishGroup.hpp",
+    "destination": "src/Game/Map/FishGroup.hpp",
+    "sha256": "2bf055844be0189281654bb0ddf91dd61b364bab825f289ad362072a529e12c0"
+  },
+  {
+    "source": "decomp/include/Game/Map/GravityDust.hpp",
+    "destination": "src/Game/Map/GravityDust.hpp",
+    "sha256": "b3e2fd9b7ee70e8ff38333b52d267ebc1f21d9a1d65ce58d0f886164d620dfff"
+  },
+  {
+    "source": "decomp/include/Game/Map/Halo.hpp",
+    "destination": "src/Game/Map/Halo.hpp",
+    "sha256": "92185af2aa362f6dc6d5c37482ab5684b52947361aa2bd933d995415f7e1dfee"
+  },
+  {
+    "source": "decomp/include/Game/Map/KoopaBattleMapCoinPlate.hpp",
+    "destination": "src/Game/Map/KoopaBattleMapCoinPlate.hpp",
+    "sha256": "8215c36df3fc9ebc96bc7c2a35289d1fa13a14af0be72cf6fd250f67f29adf2d"
+  },
+  {
+    "source": "decomp/include/Game/Map/KoopaBattleMapDamagePlate.hpp",
+    "destination": "src/Game/Map/KoopaBattleMapDamagePlate.hpp",
+    "sha256": "59c306467539ec31cd3c2e0c757e5a0fca93522f6d5c0afa2433813921eba181"
+  },
+  {
+    "source": "decomp/include/Game/Map/KoopaBattleMapPlanet.hpp",
+    "destination": "src/Game/Map/KoopaBattleMapPlanet.hpp",
+    "sha256": "78d9c48165de23177a0bc64d9ebfa9c42fb36630e6e1366dca5a886200040f1d"
+  },
+  {
+    "source": "decomp/include/Game/Map/KoopaBattleMapPlate.hpp",
+    "destination": "src/Game/Map/KoopaBattleMapPlate.hpp",
+    "sha256": "0a317e41affc07db3f9d40b00ae4cb029847893666f3ed78b45824b90e4d6b94"
+  },
+  {
+    "source": "decomp/include/Game/Map/KoopaBattleMapStair.hpp",
+    "destination": "src/Game/Map/KoopaBattleMapStair.hpp",
+    "sha256": "00a22731b2382137e7cf672baa9d89185549a594ee12e48275641daec549223f"
+  },
+  {
+    "source": "decomp/include/Game/Map/LavaShellTower.hpp",
+    "destination": "src/Game/Map/LavaShellTower.hpp",
+    "sha256": "2bf7590ad781383d78d2ea503e2a43f60182f86870389798774962dd3b0c7f15"
+  },
+  {
+    "source": "decomp/include/Game/Map/LavaSunPlanet.hpp",
+    "destination": "src/Game/Map/LavaSunPlanet.hpp",
+    "sha256": "7c0ac48aef4025224a4a26838f4713b1ee315f4cfec965a88e8fb23f113609ec"
+  },
+  {
+    "source": "decomp/include/Game/Map/OceanRingPipeInside.hpp",
+    "destination": "src/Game/Map/OceanRingPipeInside.hpp",
+    "sha256": "8677a3a10145febd5c4fa1d39036e122e8ae06539dc62b0236c9914c7e394e72"
+  },
+  {
+    "source": "decomp/include/Game/Map/OceanRingPipeOutside.hpp",
+    "destination": "src/Game/Map/OceanRingPipeOutside.hpp",
+    "sha256": "3fb63c5e7d6efecb14c0c08ca2da420f2e5a5075fefcd56eeac5581a88f94cd5"
+  },
+  {
+    "source": "decomp/include/Game/Map/PlanetMapWithoutHighModel.hpp",
+    "destination": "src/Game/Map/PlanetMapWithoutHighModel.hpp",
+    "sha256": "542a134518b7d4f52e525af02a81404d11be67841574a4e72d11919673be31aa"
+  },
+  {
+    "source": "decomp/include/Game/Map/RailGraph.hpp",
+    "destination": "src/Game/Map/RailGraph.hpp",
+    "sha256": "e5c28a1f063a643da4938af66cc62be2d15cb103227566ec94944545238194f8"
+  },
+  {
+    "source": "decomp/include/Game/Map/RailGraphEdge.hpp",
+    "destination": "src/Game/Map/RailGraphEdge.hpp",
+    "sha256": "e62d5e0ebde73119952d8b486be6c10e339d0f36e23284f8ed92ac2bbe07abc6"
+  },
+  {
+    "source": "decomp/include/Game/Map/RailGraphIter.hpp",
+    "destination": "src/Game/Map/RailGraphIter.hpp",
+    "sha256": "9067cdd2e6a16bd03cb4ea837d1c20b46453796edde6bda356b14bcaa6e99e8b"
+  },
+  {
+    "source": "decomp/include/Game/Map/RailGraphNode.hpp",
+    "destination": "src/Game/Map/RailGraphNode.hpp",
+    "sha256": "d2917d0776ad89b4e90c3e5cb41c077b1768c3a157d7d5563a3191ecb8b6803d"
+  },
+  {
+    "source": "decomp/include/Game/Map/SeaGull.hpp",
+    "destination": "src/Game/Map/SeaGull.hpp",
+    "sha256": "815c45d39a2b6094a59a0cbaa489321ba7c74470a14ba8392bf28557e7ae2d41"
+  },
+  {
+    "source": "decomp/include/Game/Map/SunshadeMapParts.hpp",
+    "destination": "src/Game/Map/SunshadeMapParts.hpp",
+    "sha256": "e88c6f564c9bd88e94fed933cef1830a2a5f23b089e6063efbee8248441fea02"
+  },
+  {
+    "source": "decomp/include/Game/Map/TimerSwitch.hpp",
+    "destination": "src/Game/Map/TimerSwitch.hpp",
+    "sha256": "ada70b2fc2d926c67755fd79fa5304afa8207358b69fb08190c1db3bcfb56e3f"
+  },
+  {
+    "source": "decomp/include/Game/Map/WaterRoad.hpp",
+    "destination": "src/Game/Map/WaterRoad.hpp",
+    "sha256": "8577a36f5328f17ff7760976c3476e4ad0c878d2246994f91d020be4416efbf6"
+  },
+  {
+    "source": "decomp/include/Game/Map.hpp",
+    "destination": "src/Game/Map.hpp",
+    "sha256": "4e046de37ff88c8f0bc1706114ea585f27c75e4acd945a9002d6fd31921f72d7"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AirBubble.hpp",
+    "destination": "src/Game/MapObj/AirBubble.hpp",
+    "sha256": "357f44df9428ae1b168a149c0d5418ad141f0737b6f2a769bc24cdf66d681920"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AirBubbleGenerator.hpp",
+    "destination": "src/Game/MapObj/AirBubbleGenerator.hpp",
+    "sha256": "0676755fec88984d64c9efd2d96249713cc5d816830fc2ea1ec8c968c5cb2a50"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AnmModelObj.hpp",
+    "destination": "src/Game/MapObj/AnmModelObj.hpp",
+    "sha256": "bf73c06fa42bad522fe7fbac327e8608d7a7b89112a8bf81e4818ee12ca8b396"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ArrowSwitch.hpp",
+    "destination": "src/Game/MapObj/ArrowSwitch.hpp",
+    "sha256": "3f51b7f4e704e73bb83ed2f56dbb268b633ee2c5c18523f5ec6d6ff281f102bb"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ArrowSwitchMulti.hpp",
+    "destination": "src/Game/MapObj/ArrowSwitchMulti.hpp",
+    "sha256": "1981d0f29ff08664649280514e9ca25cfe41d467d2f179b79b3b70c588ef5224"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AssemblyBlock.hpp",
+    "destination": "src/Game/MapObj/AssemblyBlock.hpp",
+    "sha256": "f88a60887bd913db4a56fa1d9f5a2e92eeec5c0e4642593c1d42e6a153d713c0"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AstroCore.hpp",
+    "destination": "src/Game/MapObj/AstroCore.hpp",
+    "sha256": "1783fab8c4fb525575c6f87c7df37b1d81aed9573b90a11dd89178e9c103083a"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AstroCountDownPlate.hpp",
+    "destination": "src/Game/MapObj/AstroCountDownPlate.hpp",
+    "sha256": "cb89eef00486d88ab84a2096f88de1525ea547a61967f2c6cfef7488c27bd4e3"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AstroDemoFunction.hpp",
+    "destination": "src/Game/MapObj/AstroDemoFunction.hpp",
+    "sha256": "80cdbb350b22758962694b093593cbc1683ba6a34082f34e5cbb22e25c1e2951"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AstroDome.hpp",
+    "destination": "src/Game/MapObj/AstroDome.hpp",
+    "sha256": "8f1d2368799b7de9c93eb11a8f2f38dd841a31aa5a5cd2740e40553e7dc29f8b"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AstroDomeAsteroid.hpp",
+    "destination": "src/Game/MapObj/AstroDomeAsteroid.hpp",
+    "sha256": "4ed5cf82160213c95e07edd51b2280ae9071a4909b55a866bf6f273fdb52988c"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AstroDomeBlueStar.hpp",
+    "destination": "src/Game/MapObj/AstroDomeBlueStar.hpp",
+    "sha256": "e33be50658fe79a548596e997fe02602978f695e250b9627720219516ed0115a"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AstroDomeCameraController.hpp",
+    "destination": "src/Game/MapObj/AstroDomeCameraController.hpp",
+    "sha256": "48fd0617d406cc438d2b3e061096b1d5bc03dc4a36522744de898b65e53e9f1b"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AstroDomeComet.hpp",
+    "destination": "src/Game/MapObj/AstroDomeComet.hpp",
+    "sha256": "e754c0cce6c4b9f340a643e68973073754eaf1320f81cb18a32898716d870f32"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AstroDomeDemoAstroGalaxy.hpp",
+    "destination": "src/Game/MapObj/AstroDomeDemoAstroGalaxy.hpp",
+    "sha256": "c5a699a3849ba5ac1f97247b7426c18ef8e63731b01ece6184e43a7078adaa1a"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AstroDomeGalaxySelector.hpp",
+    "destination": "src/Game/MapObj/AstroDomeGalaxySelector.hpp",
+    "sha256": "23fee9f34628294f3c6d01bf777854e3b91da87e0d6f0c7d0eef59ad98b968bb"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AstroDomeOrbit.hpp",
+    "destination": "src/Game/MapObj/AstroDomeOrbit.hpp",
+    "sha256": "31a3a31d1ad48724285d556bb639ebc8f30ccdef8586f3f2ffeecf10237ed088"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AstroDomeSky.hpp",
+    "destination": "src/Game/MapObj/AstroDomeSky.hpp",
+    "sha256": "9bd40b663113f21a84c4fb8b9af46725d6b21d8563df27f184e0a6765ada980f"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AstroMapBoard.hpp",
+    "destination": "src/Game/MapObj/AstroMapBoard.hpp",
+    "sha256": "98938ba608dcb6b96d6a85f22b40107c58be1527174e74810c477c78fab13415"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AstroMapObj.hpp",
+    "destination": "src/Game/MapObj/AstroMapObj.hpp",
+    "sha256": "039c83d2fad4d57e21af1920b9f67fce1036c5b75431fca56156ebe7807fb691"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AstroMapObjFunction.hpp",
+    "destination": "src/Game/MapObj/AstroMapObjFunction.hpp",
+    "sha256": "bc970b87278a54e939c0f11f6feea57899decf220e344222dc7c04d8a277c488"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/AstroOverlookObj.hpp",
+    "destination": "src/Game/MapObj/AstroOverlookObj.hpp",
+    "sha256": "5f155517122df1d176d8409f333c51b49f6371b0bd1097c7fcc6a2651cb8392f"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/BallOpener.hpp",
+    "destination": "src/Game/MapObj/BallOpener.hpp",
+    "sha256": "1f921870137efcbab9bfad8ea4320f218b11f93d7fb15699fe9fae59c788b6e5"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/BallRail.hpp",
+    "destination": "src/Game/MapObj/BallRail.hpp",
+    "sha256": "22583b43cd4c81d28d27dafe538744adc27f313d43d60b8a7ca3d2310a25edb7"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/Banekiti.hpp",
+    "destination": "src/Game/MapObj/Banekiti.hpp",
+    "sha256": "38a90e1f3357e9d090b93b83aeccc8bf3e7b4ee12cf94f78ac3e663862fc7e65"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/BattleShipElevator.hpp",
+    "destination": "src/Game/MapObj/BattleShipElevator.hpp",
+    "sha256": "12809c6c76703573d943b60415e0aa6a106fa2cf8c2cc65f93e5b5c31b2b4a29"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/BeamGoRoundPlanet.hpp",
+    "destination": "src/Game/MapObj/BeamGoRoundPlanet.hpp",
+    "sha256": "c3574cbfab48ba510bea0253ad51e275a7e2de4e2eb045f20246c2160a011291"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/BeeFlowerHover.hpp",
+    "destination": "src/Game/MapObj/BeeFlowerHover.hpp",
+    "sha256": "ef82380f69115685c2ef5db5f3b219cdb6ad5726396cd9837a8196bf77c952fc"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/BenefitItemInvincible.hpp",
+    "destination": "src/Game/MapObj/BenefitItemInvincible.hpp",
+    "sha256": "1034135a2c537bf0ab4972d85a049a6c05c89fcdee5b90bdae95b36e812d9057"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/BenefitItemOneUp.hpp",
+    "destination": "src/Game/MapObj/BenefitItemOneUp.hpp",
+    "sha256": "39950bd6590804b951f4668d1362c7c172a5ddae2d4459e3b86172a987c57b34"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/BigBubbleDrawer.hpp",
+    "destination": "src/Game/MapObj/BigBubbleDrawer.hpp",
+    "sha256": "202e2a9e9996e73bba9d0d8526367143ce809bb7ee56426459ad9e6457e1b8ff"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/BigBubbleGenerator.hpp",
+    "destination": "src/Game/MapObj/BigBubbleGenerator.hpp",
+    "sha256": "2c6dc41e769a1314872f85d289ce9a4467c86fc90ef2630ce25197ae0d7a320f"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/BigBubbleMoveLimitter.hpp",
+    "destination": "src/Game/MapObj/BigBubbleMoveLimitter.hpp",
+    "sha256": "eb6be3763df93cc6ff628ae90313f193979bdbda7de8680988fceac1a55ae5d5"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/BlueChip.hpp",
+    "destination": "src/Game/MapObj/BlueChip.hpp",
+    "sha256": "7d060cc6da0c116d03a4faff2421ca9a3b026c01133cfb96e1115ef23928eca0"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/BlueStarCupsulePlanet.hpp",
+    "destination": "src/Game/MapObj/BlueStarCupsulePlanet.hpp",
+    "sha256": "de27619765efe34234db5b98bd36e34b69db5c095691b0bfec56d8c0853aa21a"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/BreakableCage.hpp",
+    "destination": "src/Game/MapObj/BreakableCage.hpp",
+    "sha256": "36fadd05aa1598b7558a93aad5d6b891945f5585474d52f502d5e5acacb1bc1d"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/BumpAppearPlanet.hpp",
+    "destination": "src/Game/MapObj/BumpAppearPlanet.hpp",
+    "sha256": "607c884407f415f95bd46db57fadbdddb8ae572cd3d427c35c17b76d1d908df7"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/Candlestand.hpp",
+    "destination": "src/Game/MapObj/Candlestand.hpp",
+    "sha256": "22a7dc786e2b1ebb64a46a276c3ae41304a90f30cc3afa40e2fe31abb9567513"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/CannonFortressBreakStep.hpp",
+    "destination": "src/Game/MapObj/CannonFortressBreakStep.hpp",
+    "sha256": "30bda0fd1171476045dbe85b5f43e57fe1162046aa83a84f7c2f88df699d3052"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/CapsuleCage.hpp",
+    "destination": "src/Game/MapObj/CapsuleCage.hpp",
+    "sha256": "c4ba3e35d01c08d69bcf99a724490d6571afbf2304dbf73c3b2aec19feb30ef3"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ChooChooTrain.hpp",
+    "destination": "src/Game/MapObj/ChooChooTrain.hpp",
+    "sha256": "cc02f9b8ed8e2293ef2a93c066550c176319f40f3bef2f4f1fcca1f10993e719"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/CircleCoinGroup.hpp",
+    "destination": "src/Game/MapObj/CircleCoinGroup.hpp",
+    "sha256": "5ae1283af275793671f89c22b6d05c00d74924f680b748804d411ee407f7c4e7"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ClipAreaDrop.hpp",
+    "destination": "src/Game/MapObj/ClipAreaDrop.hpp",
+    "sha256": "b5ac539da0ce336cb89fb26090a7852d57d164e2c2ca92bc48e3aebe40af0239"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ClipAreaDropLaser.hpp",
+    "destination": "src/Game/MapObj/ClipAreaDropLaser.hpp",
+    "sha256": "e44062159d44cbba9e049bf3e35dcc2f2d58a1515d2317c7732a1237f5914322"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ClipAreaMovable.hpp",
+    "destination": "src/Game/MapObj/ClipAreaMovable.hpp",
+    "sha256": "59a967a35bc08b3606168679a74a5bb9eb9fb9b6edd5afc2d9e2be7364294a87"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ClipAreaShape.hpp",
+    "destination": "src/Game/MapObj/ClipAreaShape.hpp",
+    "sha256": "dd31b04e550734ff76bd0cc8d69db1ecd6e1295647ba61eb5e73b05ec88ad4db"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ClipFieldMapParts.hpp",
+    "destination": "src/Game/MapObj/ClipFieldMapParts.hpp",
+    "sha256": "8b3114e57e93569be4248ea3e380c5c1825675e53ec21f7c2bf99f2f79df56a8"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ClipFieldSwitch.hpp",
+    "destination": "src/Game/MapObj/ClipFieldSwitch.hpp",
+    "sha256": "209b2308b9f55b3cf48e83c740cc942873e93fc3391450db5e722da5ce72a524"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/CocoNut.hpp",
+    "destination": "src/Game/MapObj/CocoNut.hpp",
+    "sha256": "2ec344e3bbc920ca54247b41fbb21d64f554c7449634bb5de8f9909977559062"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/CoconutTree.hpp",
+    "destination": "src/Game/MapObj/CoconutTree.hpp",
+    "sha256": "2b1c3dad2ab7f05b3051359e7e1ce318a12b69578571d7b809ee02e86d9a3d28"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/CoconutTreeLeaf.hpp",
+    "destination": "src/Game/MapObj/CoconutTreeLeaf.hpp",
+    "sha256": "3a5403a3c34e5516cdb01cf562eb43bc0a205a291368d9d08773d068cf1737e3"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/CoinBox.hpp",
+    "destination": "src/Game/MapObj/CoinBox.hpp",
+    "sha256": "347ebad67a8c1c158a39ab8e68c6e64f8bcf3fcd9e521170324e0ba183ede543"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/CoinReplica.hpp",
+    "destination": "src/Game/MapObj/CoinReplica.hpp",
+    "sha256": "90dee0ff1c2641fcb954f598fe5d28d6f9f81825d395522a4c60aff5e6a88cb8"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/CoinSpot.hpp",
+    "destination": "src/Game/MapObj/CoinSpot.hpp",
+    "sha256": "a3a3096d8fff1615e59c408dd50af54eb32ace58c7e6af0493804742ad7febba"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/CollapsePlane.hpp",
+    "destination": "src/Game/MapObj/CollapsePlane.hpp",
+    "sha256": "a944e809ff29abaa361b36e82e2aab9ab423b1c8a03fdd0831c65b02b8678919"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/CrystalCageMoving.hpp",
+    "destination": "src/Game/MapObj/CrystalCageMoving.hpp",
+    "sha256": "683afcb60751e9f3d6ccff8188b67eedb8dcf6fe3814a911f3786ccc8383274d"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/CrystalSwitch.hpp",
+    "destination": "src/Game/MapObj/CrystalSwitch.hpp",
+    "sha256": "eae556a90db81991cffbf788ab715693d109bc625453a13cc7f6eb7ace867e9e"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/DeadLeaves.hpp",
+    "destination": "src/Game/MapObj/DeadLeaves.hpp",
+    "sha256": "aad4c5c62be2ce3ac30d1666a9572a741f150a2598205bbc3fee9dfbf07e25ad"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/DesertLandMoveSwitch.hpp",
+    "destination": "src/Game/MapObj/DesertLandMoveSwitch.hpp",
+    "sha256": "4496471af43feea91ec5c62e7f45fc5470aacdf923071a6d1d67fe7aeccefdc7"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/DesertMovingLand.hpp",
+    "destination": "src/Game/MapObj/DesertMovingLand.hpp",
+    "sha256": "8d90d615df0b4bee9aef8bdce250fab44f8cea260088727785c1d4fe0e0499be"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/DragonHeadFlower.hpp",
+    "destination": "src/Game/MapObj/DragonHeadFlower.hpp",
+    "sha256": "3e02be1a10bf66d08565c238a9cba7b33ebfe65ba11be3026825ab0c8dbbc837"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/DriftWood.hpp",
+    "destination": "src/Game/MapObj/DriftWood.hpp",
+    "sha256": "a7d1502c6cdfbcdf5d8f07afdbfcc053bad863fae5198d6ced9a6a0550f122d1"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ElectricBall.hpp",
+    "destination": "src/Game/MapObj/ElectricBall.hpp",
+    "sha256": "878ce8e6a81c8d05ce7dd86b109b674c7c4b94fe2e4d0a793e317daff1e1f080"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ElectricRail.hpp",
+    "destination": "src/Game/MapObj/ElectricRail.hpp",
+    "sha256": "4113e0526d9c97af1a8f208063c80e01916f55f216ddcad1d2737f8eb37bfffb"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ElectricRailMoving.hpp",
+    "destination": "src/Game/MapObj/ElectricRailMoving.hpp",
+    "sha256": "3cfb528f2e5ad1fbb366b1ad72cc00aab5fd1769904fd2ad8894abb7e7f3fc50"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ExterminationChecker.hpp",
+    "destination": "src/Game/MapObj/ExterminationChecker.hpp",
+    "sha256": "e4aa434ea74abd01eb5ee79625f789b08be3c0a0e654b6037fe368a60c3484c2"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/FallDownBridge.hpp",
+    "destination": "src/Game/MapObj/FallDownBridge.hpp",
+    "sha256": "0301db289a6f3019505f0d8c8919c2a6674410a452755109972f56dc49c1c571"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/FallingSmallRock.hpp",
+    "destination": "src/Game/MapObj/FallingSmallRock.hpp",
+    "sha256": "70bda59b4bc38675c8da9120239f1f039b73e97c3120b9641f5c20ccd8446beb"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/FireBar.hpp",
+    "destination": "src/Game/MapObj/FireBar.hpp",
+    "sha256": "61eeb8ea5a48670d661aee691c971706987f7387529a6d0f0371533655017cc4"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/FirePressure.hpp",
+    "destination": "src/Game/MapObj/FirePressure.hpp",
+    "sha256": "ef2e31f2b6d1b1332cd93f6e8612714bb4d1f8fdc0d914faf9ed281d862c878f"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/FirePressureBullet.hpp",
+    "destination": "src/Game/MapObj/FirePressureBullet.hpp",
+    "sha256": "f3fd9b99da64cfc4ebf3ed221129a5c20aade29276012d5a6584c7da4c406b80"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/FirePressureRadiate.hpp",
+    "destination": "src/Game/MapObj/FirePressureRadiate.hpp",
+    "sha256": "1b0d098bce9e3a5d150db560c64d8858501e61eb498d700b9a7c64bd1d89f684"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/FlameGun.hpp",
+    "destination": "src/Game/MapObj/FlameGun.hpp",
+    "sha256": "e4335a7e52bc1e1301ce94f1527bd9eed7bd300a2cbb78348dd158ee568012cb"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/FlexibleSphere.hpp",
+    "destination": "src/Game/MapObj/FlexibleSphere.hpp",
+    "sha256": "4d10ecb8e3594dbedf12a1c523e4b04c6545656f213c813a02713a453e0dd38c"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/FloaterFloatingForce.hpp",
+    "destination": "src/Game/MapObj/FloaterFloatingForce.hpp",
+    "sha256": "04f26b40f009e756696b554471918bc25c7311d904571a21b893223c63b93998"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/FloaterFloatingForceTypeNormal.hpp",
+    "destination": "src/Game/MapObj/FloaterFloatingForceTypeNormal.hpp",
+    "sha256": "bbf8025835d1d679a3e76285a88d42d2ae3d28b48063156067f7ab51146f6fd7"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/FloaterFloatingForceTypeSpring.hpp",
+    "destination": "src/Game/MapObj/FloaterFloatingForceTypeSpring.hpp",
+    "sha256": "b3f78e41716815eb216d06273dc66c71fc46851d322751d3b323f9654e257fef"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/FloaterFunction.hpp",
+    "destination": "src/Game/MapObj/FloaterFunction.hpp",
+    "sha256": "f8c5a9c88b39542715b896e75b2d648f49c2afecace2bacd27a4f1e7e048136d"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/Fountain.hpp",
+    "destination": "src/Game/MapObj/Fountain.hpp",
+    "sha256": "234d2527cbb5436c7bf54a3e8cc17a48771a96c3cbe7ffac26b35f71ee0021c1"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/FountainBig.hpp",
+    "destination": "src/Game/MapObj/FountainBig.hpp",
+    "sha256": "c0ba2e97b1824520da26781493f29f319a1447c4df9072b3a3b50650c2deb81f"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/GCaptureRibbon.hpp",
+    "destination": "src/Game/MapObj/GCaptureRibbon.hpp",
+    "sha256": "305853d8cafc16370b4abe29004dc060950c1f59b5cc283ae6464b809f63520b"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/GCaptureTarget.hpp",
+    "destination": "src/Game/MapObj/GCaptureTarget.hpp",
+    "sha256": "ce79f5368d1f4f8527dbe5f8c07d830132eec693d74ecbaeb427559d02089a76"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/GeneralMapParts.hpp",
+    "destination": "src/Game/MapObj/GeneralMapParts.hpp",
+    "sha256": "b96bd172791acc452de76545dc4c496c4d6f1c986b6072646ae0d810b9d20945"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/GravityLight.hpp",
+    "destination": "src/Game/MapObj/GravityLight.hpp",
+    "sha256": "9eb98653bd740fe8b4c39db7770dc0ffc6e9e2f72da38b660454a47b94992077"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/GravityLightRoad.hpp",
+    "destination": "src/Game/MapObj/GravityLightRoad.hpp",
+    "sha256": "cf5762bfe9a193659d840128b25200fd548c78f931b8e47823417315296dbb29"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/GreenCaterpillarBig.hpp",
+    "destination": "src/Game/MapObj/GreenCaterpillarBig.hpp",
+    "sha256": "c1315342dcc99699eed3e175c4bb3a672b78a3205739e79b80e59048d516b5a9"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/HatchWaterPlanet.hpp",
+    "destination": "src/Game/MapObj/HatchWaterPlanet.hpp",
+    "sha256": "34da2848a4d4e1dacb239cce4af876340ad0837227ce90d57ac8cfcc3436167f"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/HipDropMoveObj.hpp",
+    "destination": "src/Game/MapObj/HipDropMoveObj.hpp",
+    "sha256": "17b0f07b19626eff021fb4f896c907a74952b1fc741ad901ed498f79b63d47ea"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/HipDropRock.hpp",
+    "destination": "src/Game/MapObj/HipDropRock.hpp",
+    "sha256": "9272f4a33532182ad28cc799558687b78d63c326b6d0cb9d496b14bb286a48e0"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/HipDropSwitch.hpp",
+    "destination": "src/Game/MapObj/HipDropSwitch.hpp",
+    "sha256": "ca69dd6f3e3303e397b7ca715b215d0e511e87e4aeb7144796d6bad4a8f50822"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/HipDropTimerSwitch.hpp",
+    "destination": "src/Game/MapObj/HipDropTimerSwitch.hpp",
+    "sha256": "ff352b2fc153ee5f79df5602abd2f058cf4d3cbfd90b915266c301a21cc95fb6"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/HitWallTimerSwitch.hpp",
+    "destination": "src/Game/MapObj/HitWallTimerSwitch.hpp",
+    "sha256": "bf0b417a51ca1e167417678efa58581fb9d6935f0441e3a8cd66e3241f27b3d2"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/IceVolcanoUpDownPlane.hpp",
+    "destination": "src/Game/MapObj/IceVolcanoUpDownPlane.hpp",
+    "sha256": "d9154199c45f29e9f706b1ee4b54d7e7d84ce67d6d64b0d56168c7cef99fa968"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/IronCannonShell.hpp",
+    "destination": "src/Game/MapObj/IronCannonShell.hpp",
+    "sha256": "6e384435907d895d19233fbcc170f1c8ae58b2efa18cc72e4379eb61750fafd7"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ItemAppearStone.hpp",
+    "destination": "src/Game/MapObj/ItemAppearStone.hpp",
+    "sha256": "1448f4eac8f91f5ad8ee515f64aac2c9003341d1cb86e2f2ed81a8ff4829da4c"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ItemBlock.hpp",
+    "destination": "src/Game/MapObj/ItemBlock.hpp",
+    "sha256": "6404ad7f19819922402e575708b9bcb13315531de2d9384db6ce1d6befd91950"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ItemBubble.hpp",
+    "destination": "src/Game/MapObj/ItemBubble.hpp",
+    "sha256": "79300769bd040c2c47ee46f0643912175fc9731f769250e9228a69d7d0a3e593"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/JetTurtle.hpp",
+    "destination": "src/Game/MapObj/JetTurtle.hpp",
+    "sha256": "e476bcbe58ff9f4d30c06a2f1164a77f81b543b70c01e82b74bb387d8bbb8e71"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/JumpHole.hpp",
+    "destination": "src/Game/MapObj/JumpHole.hpp",
+    "sha256": "1c85d8a5a6cd3668173206a8e4d1993b1d73040ff0238163c2c617a6f58979f0"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/JumpStand.hpp",
+    "destination": "src/Game/MapObj/JumpStand.hpp",
+    "sha256": "34347d475e4cd2225a8851955650dd78b9d0dcde2eca0e008a166f5673db311c"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/KeySwitch.hpp",
+    "destination": "src/Game/MapObj/KeySwitch.hpp",
+    "sha256": "b3adebc102dacb8f62580e5922e8424202f1a184474aae47a9ab03c7a3129a8a"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/KillerGunnerSingle.hpp",
+    "destination": "src/Game/MapObj/KillerGunnerSingle.hpp",
+    "sha256": "11638d8ef57bd4f7ab4e96777dbe8b7d30f9c8fe8d1f12534d6e2f225072cb06"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/LargeChain.hpp",
+    "destination": "src/Game/MapObj/LargeChain.hpp",
+    "sha256": "119891e74fc2173ce68b6363b3a30980d68914b42a01771d88f74af10c236ecd"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/LargeChainParts.hpp",
+    "destination": "src/Game/MapObj/LargeChainParts.hpp",
+    "sha256": "abf181d8f42e5ee1d50d77842ca9c0e59bef83f8aa878991b952e14bf18fc822"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/LavaBallRisingPlanetLava.hpp",
+    "destination": "src/Game/MapObj/LavaBallRisingPlanetLava.hpp",
+    "sha256": "1b2e1c728ea3827f7f5ed1f2ba2d68a2b4e10df2a5cb016f320afdfb65f66f58"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/LavaBreakColumn.hpp",
+    "destination": "src/Game/MapObj/LavaBreakColumn.hpp",
+    "sha256": "277fc5d1d7d8e2f3c655b37a7ec627674a9ddb1eaab03d8b44769555b240f25b"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/LavaFloater.hpp",
+    "destination": "src/Game/MapObj/LavaFloater.hpp",
+    "sha256": "837df45a1daffb9dc6eaff291d7ec856b8b95ed2cf15ac7cc250ce8ea6e46d05"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/LavaGalaxyParts.hpp",
+    "destination": "src/Game/MapObj/LavaGalaxyParts.hpp",
+    "sha256": "75c23c826bf0dac1894a63a46c3484ba7ade8ecae562253e09aba8cf080e9a07"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/LavaGeyser.hpp",
+    "destination": "src/Game/MapObj/LavaGeyser.hpp",
+    "sha256": "11c19b191f0f35213de1270e8164eddeb9aa4246328938b9d4f52c1fe23fdcf3"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/LavaHomeSeesaw.hpp",
+    "destination": "src/Game/MapObj/LavaHomeSeesaw.hpp",
+    "sha256": "a1881094583fbd413c7ba44b1d67848e6cf5b2a5ac5ee2691fbccc91ce181df2"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/LavaHomeSeesawRotator.hpp",
+    "destination": "src/Game/MapObj/LavaHomeSeesawRotator.hpp",
+    "sha256": "af9f5e6840bd647ec1ba119a3d76f6409156f0b1f3ee061627eea03ec6a02f30"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/LavaHomeVolcanoFlow.hpp",
+    "destination": "src/Game/MapObj/LavaHomeVolcanoFlow.hpp",
+    "sha256": "f52edcb895b661709f1c806f801560a4536631b50ef1a36e26a92c7373ffa4f0"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/LavaJamboSunPlanet.hpp",
+    "destination": "src/Game/MapObj/LavaJamboSunPlanet.hpp",
+    "sha256": "53c49c92429c2fb4f16879b4e4f56aa5a0835e853f69fa7d957cfaaf6494ecc4"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/LavaProminence.hpp",
+    "destination": "src/Game/MapObj/LavaProminence.hpp",
+    "sha256": "15975fbad401bf3d9114f140b0f8976ee08b89bb9cadd3b4a048b732e423c76b"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/LavaProminenceTriple.hpp",
+    "destination": "src/Game/MapObj/LavaProminenceTriple.hpp",
+    "sha256": "ed218f1d2ee97bf3aef95fc85a622fe06e68a80546f3448443593e9b44052ca9"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/LavaSteam.hpp",
+    "destination": "src/Game/MapObj/LavaSteam.hpp",
+    "sha256": "e87791984d9794042c29c9839a5180ea926ff944a16245ec77ec099ab62e33a3"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/LavaStrangeRock.hpp",
+    "destination": "src/Game/MapObj/LavaStrangeRock.hpp",
+    "sha256": "df8030c01ec9a529f64f9b57e5cd1ea9540c84aa3ed71e616b2c7fd05e955046"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/LotusLeaf.hpp",
+    "destination": "src/Game/MapObj/LotusLeaf.hpp",
+    "sha256": "6b41dfae7d9c044a17892f8a136d3482bae61204a8d68387b66a0ba46814df41"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/MagicBell.hpp",
+    "destination": "src/Game/MapObj/MagicBell.hpp",
+    "sha256": "5e2f28bf788e70a6676c98dbaa65d4456f2638ed5cf574bc4c8253cbd376b289"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ManholeCover.hpp",
+    "destination": "src/Game/MapObj/ManholeCover.hpp",
+    "sha256": "8b746859b202d45d3ae3ffb5b5f6390bac6f676b153cbb6961a03bfe0659a0bc"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/MapObjConnector.hpp",
+    "destination": "src/Game/MapObj/MapObjConnector.hpp",
+    "sha256": "ae0e4379026e63dc0c6068306e389a3ce5d177a3ed4d404b92bb72184524b115"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/MapPartsAppearController.hpp",
+    "destination": "src/Game/MapObj/MapPartsAppearController.hpp",
+    "sha256": "d74135eaf9179e3edbcbc57496c9421df391cacf97a5b7c92a0aed2bf1cb9b76"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/MapPartsBreaker.hpp",
+    "destination": "src/Game/MapObj/MapPartsBreaker.hpp",
+    "sha256": "7267780dc38564c98e984e75d78a6befd3e1425cb44c152f7de414df842e45b9"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/MapPartsFloatingForce.hpp",
+    "destination": "src/Game/MapObj/MapPartsFloatingForce.hpp",
+    "sha256": "6925080f828e55fff6aab17d7378251004a614ecd6debc622a20ac26e322ef8f"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/MarblePlanet.hpp",
+    "destination": "src/Game/MapObj/MarblePlanet.hpp",
+    "sha256": "17337ce610ffa478a0537d577f3ac9f3308096e70f55b22f162883113d5e2b99"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/MarioLauncher.hpp",
+    "destination": "src/Game/MapObj/MarioLauncher.hpp",
+    "sha256": "14d4b57334535ec52642774087e8515de7e5064e947945f0180f104d11dbb65b"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/MarioLauncherAttractor.hpp",
+    "destination": "src/Game/MapObj/MarioLauncherAttractor.hpp",
+    "sha256": "3e5b06cecbad65e2c64494da3d82c6418df965caf58c0ed5c4aab62f21b87f59"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/MechaKoopaPartsArm.hpp",
+    "destination": "src/Game/MapObj/MechaKoopaPartsArm.hpp",
+    "sha256": "01fefe718218a2ecf7341245944abda1c1784634ec25a9908a001f991befc431"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/MechaKoopaPartsHead.hpp",
+    "destination": "src/Game/MapObj/MechaKoopaPartsHead.hpp",
+    "sha256": "76ebc6621db272930bb505b677510c01a2a4dd1a6382c6128ee8e946bd8d99ad"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/MercatorFixParts.hpp",
+    "destination": "src/Game/MapObj/MercatorFixParts.hpp",
+    "sha256": "79ce09afe1fe6f66fc759b3ead5503413d0492ff7db98177455b0e76add31856"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/MercatorRailMoveParts.hpp",
+    "destination": "src/Game/MapObj/MercatorRailMoveParts.hpp",
+    "sha256": "c2ed10226ed85f02dd4024e0c0ad52273266bb314293123534c083c4cf787d96"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/MercatorRotateParts.hpp",
+    "destination": "src/Game/MapObj/MercatorRotateParts.hpp",
+    "sha256": "91bb393a29d080930796a6c779d93b3bfad82d4dac57decd4304bf1ced9b5cf8"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/MeteoContainer.hpp",
+    "destination": "src/Game/MapObj/MeteoContainer.hpp",
+    "sha256": "9a4ef352edc956c1b1cf1a01ec88cdd189e9d8f16fb1d38aa02d94007307e50e"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/MeteorStrike.hpp",
+    "destination": "src/Game/MapObj/MeteorStrike.hpp",
+    "sha256": "3b71165b17268fc4c143f304cbeb447e4ad6528205284563821e32a1157ff723"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/MeteorStrikeLauncher.hpp",
+    "destination": "src/Game/MapObj/MeteorStrikeLauncher.hpp",
+    "sha256": "2567452886c22dd657100ed2f1c5592753e0ce1c3a1c4b8e168ad77ebb56ab98"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/MiniatureGalaxy.hpp",
+    "destination": "src/Game/MapObj/MiniatureGalaxy.hpp",
+    "sha256": "e38d260dc74cd70e02b20cb29cd8f186e225125701c39deeed8d9df93302c9b7"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/MorphItemObjNeo.hpp",
+    "destination": "src/Game/MapObj/MorphItemObjNeo.hpp",
+    "sha256": "de67e050db5928df86544eed350e740280b7b457594be20565065b22d8e58db9"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/NeedlePlant.hpp",
+    "destination": "src/Game/MapObj/NeedlePlant.hpp",
+    "sha256": "2c7d714ed1cbe67fa712c261b2002d7c937620aee659aa69aead2d79c1d480ae"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/NormalMapBase.hpp",
+    "destination": "src/Game/MapObj/NormalMapBase.hpp",
+    "sha256": "9f23d55adc4a4a00bafc64fab629f567043b9d58fbb991e23386c1705186a623"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/NormalMapTestObj.hpp",
+    "destination": "src/Game/MapObj/NormalMapTestObj.hpp",
+    "sha256": "136fc0261b1448b95c20cc32f9af725c9e7b674110a657c7fe8763ee5fdec1b9"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/NoteFairy.hpp",
+    "destination": "src/Game/MapObj/NoteFairy.hpp",
+    "sha256": "f37bb4d0d07e09f78be05b17722abef95ad4fbc5902f217ddee1fac3f721464e"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/OceanFloaterLandParts.hpp",
+    "destination": "src/Game/MapObj/OceanFloaterLandParts.hpp",
+    "sha256": "702e4f002228ca005880797a72064aa64b4cb93e194ada80c6ef49dbc31692ef"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/OceanSmallTurtle.hpp",
+    "destination": "src/Game/MapObj/OceanSmallTurtle.hpp",
+    "sha256": "62a14e789cf65f1c915109602e6672e451b25d89de3148b012f530d6717a6bae"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/OceanWaveFloater.hpp",
+    "destination": "src/Game/MapObj/OceanWaveFloater.hpp",
+    "sha256": "0b55b6c2e95417f15b7ef71ffe23064f876d46039adbddf167437a47b856aff5"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/PTimerSwitch.hpp",
+    "destination": "src/Game/MapObj/PTimerSwitch.hpp",
+    "sha256": "f275d0d7e099037e529f5c4f0c9596ec14ac1fa6d3a0604739bad0a6ee805cbf"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/PalmIsland.hpp",
+    "destination": "src/Game/MapObj/PalmIsland.hpp",
+    "sha256": "d5f4a88ca5653162b9d1ba3b6166ddafaf110a4d37bf43a0b1ea435ee671ed28"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/PeachCastleGardenPlanet.hpp",
+    "destination": "src/Game/MapObj/PeachCastleGardenPlanet.hpp",
+    "sha256": "400b69c5e4101d34b05ff6c3ed8f896c758472633236262a0fc3707038573181"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/PhantomShipBoxFloater.hpp",
+    "destination": "src/Game/MapObj/PhantomShipBoxFloater.hpp",
+    "sha256": "273c75a40d08f0421301a74f06e240b9e580504e31695e657001a2870df1af74"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/PhantomShipBridge.hpp",
+    "destination": "src/Game/MapObj/PhantomShipBridge.hpp",
+    "sha256": "8dacc729adad74efe177d381c902dc5f7c856b495b411fd5fcde0ebd1b554c92"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/PhantomShipHandle.hpp",
+    "destination": "src/Game/MapObj/PhantomShipHandle.hpp",
+    "sha256": "6047b2f031683904dc3a8bc0dd7c4385d58f0f0c03f22bfcc25bdede5d4d06b0"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/PhantomTorch.hpp",
+    "destination": "src/Game/MapObj/PhantomTorch.hpp",
+    "sha256": "f0ce0fcd2093c57871b8c8ce9fabbeb253dc1c7aaf342b075ade2f734c925ba2"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/PicketSwitch.hpp",
+    "destination": "src/Game/MapObj/PicketSwitch.hpp",
+    "sha256": "a9b4ab4c61add94d35af1bc03a90dc1361f9bf18512b975ca1ce380c2c5c17f8"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/PlantPoint.hpp",
+    "destination": "src/Game/MapObj/PlantPoint.hpp",
+    "sha256": "07ee55195136056a4f228bbc2bc7d084e0eb3482c19820dff8a452b9089d430f"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/PlantRailInfo.hpp",
+    "destination": "src/Game/MapObj/PlantRailInfo.hpp",
+    "sha256": "e37f71cb599a37c8a1d768d53e0ab0d3e0653c6e191017dffdc5ad73079c5af6"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/PomponPlant.hpp",
+    "destination": "src/Game/MapObj/PomponPlant.hpp",
+    "sha256": "5bf5e705848d462c7922ee5cf8497d7da445e8871aedcef4f70cec23f5c31c67"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/PressureBase.hpp",
+    "destination": "src/Game/MapObj/PressureBase.hpp",
+    "sha256": "5dd0ba379bce9ca056dd7e3ed58e9e46f86b2ee808868df3b005dcaca545d473"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/PrizeRing.hpp",
+    "destination": "src/Game/MapObj/PrizeRing.hpp",
+    "sha256": "4805aa7a9c1ffe6b4ddd2cb7ec3dba69522e9731ae0f8870bd4160b4a309a12d"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/PunchBox.hpp",
+    "destination": "src/Game/MapObj/PunchBox.hpp",
+    "sha256": "16276eaed88ad1f797a47d94ad4266dc0e2d10ff99b0a882a91f70896ee6ff08"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/QuarterRollGravityRoomArrow.hpp",
+    "destination": "src/Game/MapObj/QuarterRollGravityRoomArrow.hpp",
+    "sha256": "c109eac132035cef0390ce67ed75e88d06afa48b7dc625c5b820945842cb9d1c"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/QuestionBoxGalleryObj.hpp",
+    "destination": "src/Game/MapObj/QuestionBoxGalleryObj.hpp",
+    "sha256": "d9ff6064eb71d248c3b1cfd7292d3bc09360a27152410cd283ac9cfd7fd67795"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/QuestionCoin.hpp",
+    "destination": "src/Game/MapObj/QuestionCoin.hpp",
+    "sha256": "b8e4293818a562b8c4f8715245be5f06b9b763a0aedf934102793670b60692ea"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/RailBlock.hpp",
+    "destination": "src/Game/MapObj/RailBlock.hpp",
+    "sha256": "f7f69c47fff0b2e60aea1473d44835f8751c225066f40331d9e13509ef68ecfe"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/RailMoveObj.hpp",
+    "destination": "src/Game/MapObj/RailMoveObj.hpp",
+    "sha256": "3c54553595793f3200c2d4c1a5e6838f4b8097340f632c5155edf9a94ff22a45"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/RainCloud.hpp",
+    "destination": "src/Game/MapObj/RainCloud.hpp",
+    "sha256": "77f5a9b1cb27e5f528259acbe079df2607a45ba239a971782ae4bc696e917f89"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ReverseGravityRoomPlanet.hpp",
+    "destination": "src/Game/MapObj/ReverseGravityRoomPlanet.hpp",
+    "sha256": "8ce0244ce84fa88b01428049ea8a864a2680c48b5b1c1cced5e2ffe8bf7bb01a"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/RevolvingWay.hpp",
+    "destination": "src/Game/MapObj/RevolvingWay.hpp",
+    "sha256": "523f14f4620dfabaef343be23a523fef81570e4306ac34fef63c53ca0803e687"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/Rock.hpp",
+    "destination": "src/Game/MapObj/Rock.hpp",
+    "sha256": "047d5e110bc66b88da502fa343a1e765f87be728109296ff06d6a52077d08e87"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/RockCreator.hpp",
+    "destination": "src/Game/MapObj/RockCreator.hpp",
+    "sha256": "73d28d675df7734a3498e18c8c9ee06bda996143c5e8c2f75c78b6bde320d53b"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/RosettaChair.hpp",
+    "destination": "src/Game/MapObj/RosettaChair.hpp",
+    "sha256": "fbd11d4eb628e6c892fe638072e1b4204a910248661ed552516c506c3b42ac27"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/RosettaPictureBook.hpp",
+    "destination": "src/Game/MapObj/RosettaPictureBook.hpp",
+    "sha256": "03fb27a0a2303085d3f9411429ed3baa0b4e3d5f85370ccd96325a649fd5e97f"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SandCapsuleInsidePlanet.hpp",
+    "destination": "src/Game/MapObj/SandCapsuleInsidePlanet.hpp",
+    "sha256": "5fd2f5e254f3c99f80c7c4e79d614f1f321386452d8391d409c9f66a7422e244"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SandCapsulePressGround.hpp",
+    "destination": "src/Game/MapObj/SandCapsulePressGround.hpp",
+    "sha256": "fc1ffcbf4ec693d705ab2abb12765cb5894b0877e0e0db18d6064569f6a55586"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SandUpDownEffectObj.hpp",
+    "destination": "src/Game/MapObj/SandUpDownEffectObj.hpp",
+    "sha256": "92ab23c95b23a2a7c20a54226bfeeac6b9d4abfcebeeea323bca6e47514caffb"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SandUpDownTriRock.hpp",
+    "destination": "src/Game/MapObj/SandUpDownTriRock.hpp",
+    "sha256": "68ce1e958679af044f2bb7ac081ef7d81502992d54302f3d4fa0446186133c8d"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/Sandstorm.hpp",
+    "destination": "src/Game/MapObj/Sandstorm.hpp",
+    "sha256": "b933ab86e876014a372165fe3a02aa41f00b99cc1ce1cb96a8af70d0f0ac65b8"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ScrewSwitch.hpp",
+    "destination": "src/Game/MapObj/ScrewSwitch.hpp",
+    "sha256": "3979bd2e863ee60c323ddaba9a658a4168a043ff6fbd33d2cb0aa0c59124e4ee"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ScrewSwitchReverse.hpp",
+    "destination": "src/Game/MapObj/ScrewSwitchReverse.hpp",
+    "sha256": "58b3efb1c170531117e0460f00633f0a642a2b1ffe88a6b0d7b5ffda3bfcea42"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SeaBottomTriplePropeller.hpp",
+    "destination": "src/Game/MapObj/SeaBottomTriplePropeller.hpp",
+    "sha256": "b3094f55d7c55a68b6187ee0700881af57c79d4e18bfb22966f1f48b637ae130"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SeesawMoveNut.hpp",
+    "destination": "src/Game/MapObj/SeesawMoveNut.hpp",
+    "sha256": "5ed70ca5a5ee06ac337e6823fa1a991066f8977a4cf0a43d99c95f83b08a95db"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/Shellfish.hpp",
+    "destination": "src/Game/MapObj/Shellfish.hpp",
+    "sha256": "bae1659e287bbb3e87d00188c2d3bd0bd33d50b1cde59c27ae25064c212afb40"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ShootingStar.hpp",
+    "destination": "src/Game/MapObj/ShootingStar.hpp",
+    "sha256": "bd49a2f444d6cf5e3268cb2420c5fb154a42bbcb3b674bc806ff8e2118883401"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SideSpikeMoveStep.hpp",
+    "destination": "src/Game/MapObj/SideSpikeMoveStep.hpp",
+    "sha256": "961a4429bdc60fe12e475c43474a66444687a2ea95be52048fb02ed5a4d023eb"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SimpleBreakableObj.hpp",
+    "destination": "src/Game/MapObj/SimpleBreakableObj.hpp",
+    "sha256": "dcf071dbdde4be8ac6537413b43b14dc3bde509a4a096d4927f603f16120db8b"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SimpleClipPartsObj.hpp",
+    "destination": "src/Game/MapObj/SimpleClipPartsObj.hpp",
+    "sha256": "1e4e16805b03a308c9ccbd49fae164f0f454df3af53adf12d21932da5d9284e1"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SimpleFloaterObj.hpp",
+    "destination": "src/Game/MapObj/SimpleFloaterObj.hpp",
+    "sha256": "29bb53f4224688f9b5b7a08673569ea97a152e353159c62a1e7d7e66b97bb9e8"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SimpleNormalMapObj.hpp",
+    "destination": "src/Game/MapObj/SimpleNormalMapObj.hpp",
+    "sha256": "4eda9ba3723ecc117cefedc6929538b25c0bb93a0c7d40a7b85942ac179c05f3"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SimpleTimerObj.hpp",
+    "destination": "src/Game/MapObj/SimpleTimerObj.hpp",
+    "sha256": "710a157941b1ca5260dd283a3dd07802bd5055721e28393b000d62da22d47e98"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SmallStone.hpp",
+    "destination": "src/Game/MapObj/SmallStone.hpp",
+    "sha256": "391af27f8de27dbcacd52fce156d48273c3092f5f0dca1881f2bc822ef566d56"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SnowCapsulePlanet.hpp",
+    "destination": "src/Game/MapObj/SnowCapsulePlanet.hpp",
+    "sha256": "0a8f84b264679a19eb0d5677d7fb2ce64c9677181a69c95909fc85ca91b8d82c"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SnowFloor.hpp",
+    "destination": "src/Game/MapObj/SnowFloor.hpp",
+    "sha256": "3b336d77391f2b5113504639907a940950b8ba5ec8b63a21b1978dfb3f7367a6"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SnowFloorTile.hpp",
+    "destination": "src/Game/MapObj/SnowFloorTile.hpp",
+    "sha256": "a163cfe12af0aa208267ad30352b6aa4140f71e923e18ff3d79c4dda68f87657"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SnowMan.hpp",
+    "destination": "src/Game/MapObj/SnowMan.hpp",
+    "sha256": "8e4b8b13b884cc356bf3e573dba7571b42bcb88e1869c6399527ec2ed04cad41"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SnowplowSwitch.hpp",
+    "destination": "src/Game/MapObj/SnowplowSwitch.hpp",
+    "sha256": "c1147b1b95181a286c8de2e592b4423a2acd8db02df47bddb6c47532e2718ab1"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SoundEmitter.hpp",
+    "destination": "src/Game/MapObj/SoundEmitter.hpp",
+    "sha256": "26eb9227908874909f5531269e29ee42004ad7dad274a19729c3d5df051cc405"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SpaceMine.hpp",
+    "destination": "src/Game/MapObj/SpaceMine.hpp",
+    "sha256": "b8df8f37282537bf700d8b8a9011865f75f9900993ec7c29f6d0ea4da0b67373"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SpaceShipStep.hpp",
+    "destination": "src/Game/MapObj/SpaceShipStep.hpp",
+    "sha256": "af4306cf5401ef266872e1cb9f5be828db8582275c3d9571dc0bd0964d915a7e"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SphereRailDash.hpp",
+    "destination": "src/Game/MapObj/SphereRailDash.hpp",
+    "sha256": "39aec60f844586114d6c5de7e2865399444f9a54249ecf8df84fdaddc2a715a7"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SpiderCoin.hpp",
+    "destination": "src/Game/MapObj/SpiderCoin.hpp",
+    "sha256": "638b7ad4e7e9be84e4a0d3a735d96d4580830ebd65a254cd85a15cbdead67972"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SpiderMapBlock.hpp",
+    "destination": "src/Game/MapObj/SpiderMapBlock.hpp",
+    "sha256": "d6ae7faba9c16bd226082fe41f5d36d8e0946f5aefe568e45cb8e2527bc30d2c"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SpiderThreadHangInfo.hpp",
+    "destination": "src/Game/MapObj/SpiderThreadHangInfo.hpp",
+    "sha256": "d185c7bddb4420bc1e3052c4ce0e487c27ee0bad3f6f97c7ca9331192a596dd2"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SpiderThreadMainPoint.hpp",
+    "destination": "src/Game/MapObj/SpiderThreadMainPoint.hpp",
+    "sha256": "5090d2d730a75227357c5500af8437ca474b57b25a87ad1d4b0dd82486dd6b3e"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SpiderThreadPart.hpp",
+    "destination": "src/Game/MapObj/SpiderThreadPart.hpp",
+    "sha256": "ff27c1e0f311da8d9cab88f23c6c0509ddc6d5e28ea748d41762169d9794e90c"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SpiderThreadPoint.hpp",
+    "destination": "src/Game/MapObj/SpiderThreadPoint.hpp",
+    "sha256": "2f1201d5e9a0e7b1a51a9efc02edda7b316c3136499bacd21407941e5d6dcf79"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SpiderThreadRadialLine.hpp",
+    "destination": "src/Game/MapObj/SpiderThreadRadialLine.hpp",
+    "sha256": "622f9396f7ded79a857f90d7788365c4efdd4da0ea9b3fcf9fc23696bafdd67d"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SpiderThreadWindCtrl.hpp",
+    "destination": "src/Game/MapObj/SpiderThreadWindCtrl.hpp",
+    "sha256": "4ed32a1c8d0cab2f425df8cb2c97cf385bb77ca4854e6f1173ad69847128f762"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SpinDriver.hpp",
+    "destination": "src/Game/MapObj/SpinDriver.hpp",
+    "sha256": "04c6a6453bf2b054326512b9d33d0e0728acfca38c9feafec91f7f040bfd5588"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SpinDriverCamera.hpp",
+    "destination": "src/Game/MapObj/SpinDriverCamera.hpp",
+    "sha256": "c15edff563d9b817c7ed554ce8d42d81c840d7788e79d3757a0a3cf0b673b64c"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SpinDriverOperateRing.hpp",
+    "destination": "src/Game/MapObj/SpinDriverOperateRing.hpp",
+    "sha256": "7b44752b4102cd099c24e4de739c24cb24177eb9f2ec81ce10428bd06c629526"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SpinDriverUtil.hpp",
+    "destination": "src/Game/MapObj/SpinDriverUtil.hpp",
+    "sha256": "7f162c1c607804c2d2d6013f44e9e6629e2fc9f31749d38d6b517c5dcab8cf97"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SpinLeverSwitch.hpp",
+    "destination": "src/Game/MapObj/SpinLeverSwitch.hpp",
+    "sha256": "c2559051db0ce5e3f5611098b0c3847eeb69bdf97dfa97736dc1ac279f2a1413"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SpinningBox.hpp",
+    "destination": "src/Game/MapObj/SpinningBox.hpp",
+    "sha256": "d31e643ee3717b4038fa784c02c7279a3214ccf62daab189881ec007d6dba6e7"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SpringJetWater.hpp",
+    "destination": "src/Game/MapObj/SpringJetWater.hpp",
+    "sha256": "de772c6b6dc6814ac421ffcb5cc3f0095c85780be19f260958de7b5af5506d26"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SpringWaterFloaterSpot.hpp",
+    "destination": "src/Game/MapObj/SpringWaterFloaterSpot.hpp",
+    "sha256": "e8f151905f10eab98b734623b9b016f45b8b284beaec03c36296426ac92cd2a7"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/StarPieceFollowGroup.hpp",
+    "destination": "src/Game/MapObj/StarPieceFollowGroup.hpp",
+    "sha256": "675f7267b8ab4dc94b0efb665e24bfec2baa86447e699f3454192c60538eaa57"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/StarPieceMother.hpp",
+    "destination": "src/Game/MapObj/StarPieceMother.hpp",
+    "sha256": "180248726a33dc4d134283a2f0cb3056e3e3f93bc06a4bcf3771e0238a0565ba"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/StarPieceSpot.hpp",
+    "destination": "src/Game/MapObj/StarPieceSpot.hpp",
+    "sha256": "8465cd01303794a86c377204622710f0a8edd1df0136b6c878aef0ad0f7a6ba0"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SubmarineSteam.hpp",
+    "destination": "src/Game/MapObj/SubmarineSteam.hpp",
+    "sha256": "d1e6a76c5656346dfab2cb22db89969eb9b7c69485238213631341a6299df584"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SubmarineVolcanoBigColumn.hpp",
+    "destination": "src/Game/MapObj/SubmarineVolcanoBigColumn.hpp",
+    "sha256": "2fa637d145b753ffb401ece9bb0c7ca11cfaffb1c4d47784f5b54b06d5cf7611"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SuperSpinDriver.hpp",
+    "destination": "src/Game/MapObj/SuperSpinDriver.hpp",
+    "sha256": "0a308770cbd71a158e020f055197c43a3228dcf5a493952aa115d2ef81e03c39"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SurprisedGalaxy.hpp",
+    "destination": "src/Game/MapObj/SurprisedGalaxy.hpp",
+    "sha256": "3fd4da87fd30f79364858cca0af0107d41b065aecffa9135e1a4d12f1acf2406"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SwingLight.hpp",
+    "destination": "src/Game/MapObj/SwingLight.hpp",
+    "sha256": "41412a9232fd8c708efc6e059b1eb5064d61399b57d115591173a37823cef58e"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/Swinger.hpp",
+    "destination": "src/Game/MapObj/Swinger.hpp",
+    "sha256": "f279c296d3883586c97e865dc7fa6712333e18920cf4c22704b8f58ed802f400"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/SwitchBox.hpp",
+    "destination": "src/Game/MapObj/SwitchBox.hpp",
+    "sha256": "9f352af7e5e587842520956be86c4f6b171bc3a06916851de817fccaf58367d7"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/TimeAppearObj.hpp",
+    "destination": "src/Game/MapObj/TimeAppearObj.hpp",
+    "sha256": "38276d38e46fe2a45fbf1683a9f7f442a15e9e78b0d70693e00ebd9b388aa54d"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/TimerMoveWall.hpp",
+    "destination": "src/Game/MapObj/TimerMoveWall.hpp",
+    "sha256": "052a84d2da6d15bce428c9dc798b729d06e777dbe61cae0d4a78740b4fbe92c2"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/TrampleStar.hpp",
+    "destination": "src/Game/MapObj/TrampleStar.hpp",
+    "sha256": "4029a34971d5349490bc881fedc5f389b5e9079cb608453de95f59d4ee56859b"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/TransparentWall.hpp",
+    "destination": "src/Game/MapObj/TransparentWall.hpp",
+    "sha256": "de5f6ba51b9afc1cc06bfc723548647cf22a3cd667f5950335d3cb279f04157f"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/TreasureBoxCracked.hpp",
+    "destination": "src/Game/MapObj/TreasureBoxCracked.hpp",
+    "sha256": "7c14fa2efe066a50e93392f912a8652d0ee866806292ea8a5e0f24cd058913d8"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/TreasureSpot.hpp",
+    "destination": "src/Game/MapObj/TreasureSpot.hpp",
+    "sha256": "5720bd8e20490a492c78a59082e1fd7b4644c72497b09e3faa42a5d4a1650172"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/Tsukidashikun.hpp",
+    "destination": "src/Game/MapObj/Tsukidashikun.hpp",
+    "sha256": "8acd313ef8b3974b0e4c64fe83ddc206d1da91a71ea5086af723bcce716b858c"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/TypicalDoor.hpp",
+    "destination": "src/Game/MapObj/TypicalDoor.hpp",
+    "sha256": "729cf32537dd0abf0e4a5a8f9e7cd44993c31423ddd87e820baca3d8c01f4788"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/UFOBase.hpp",
+    "destination": "src/Game/MapObj/UFOBase.hpp",
+    "sha256": "45879bae1176e4ea0990ebb5284c428595471e844b49c95c7caa85336c14904b"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/UFOKinoko.hpp",
+    "destination": "src/Game/MapObj/UFOKinoko.hpp",
+    "sha256": "154b559017c086005e12547397b866db44143f2b5b4c8c78addc07becac85618"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/ValveSwitch.hpp",
+    "destination": "src/Game/MapObj/ValveSwitch.hpp",
+    "sha256": "d0b2c159d6ddd0b973ba0b64d3868e02037f10bb9c99c43083a4ba1e91dea92f"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/WatchTowerRotateStep.hpp",
+    "destination": "src/Game/MapObj/WatchTowerRotateStep.hpp",
+    "sha256": "6e0edcc16bd265bd653c17f64343d327601837a877cdc3cf5585b2588cdda235"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/WaterLeakPipe.hpp",
+    "destination": "src/Game/MapObj/WaterLeakPipe.hpp",
+    "sha256": "b8d2422f5ba5784ed8c3e69dc43d1b7cfeaef71cfc213e30d2b145ef4c1d9d37"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/WaterPressure.hpp",
+    "destination": "src/Game/MapObj/WaterPressure.hpp",
+    "sha256": "a032ff04d2f6d1ad85550641f2c83cff2037bb124e4719bab174ea94b14c4fb1"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/WaterPressureBullet.hpp",
+    "destination": "src/Game/MapObj/WaterPressureBullet.hpp",
+    "sha256": "8f9061475bc7ec0afa7e5bcbd5141e176d2815e4ffb796040903516375f7db15"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/WaterfallCaveCover.hpp",
+    "destination": "src/Game/MapObj/WaterfallCaveCover.hpp",
+    "sha256": "29d226dc6c5c61da61c5e1e480d602636f66832fa450319bfdce5ce2f836e7eb"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/WaveFloatingForce.hpp",
+    "destination": "src/Game/MapObj/WaveFloatingForce.hpp",
+    "sha256": "63d38265044789f6e99658897a841723eb2c07421332d813a1f7573b5008e633"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/WoodBox.hpp",
+    "destination": "src/Game/MapObj/WoodBox.hpp",
+    "sha256": "8c7db4b103526c3452efb0baddfd296d7f458b249f8c76d39f6910806a3cc9bd"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/WormEatenPlanet.hpp",
+    "destination": "src/Game/MapObj/WormEatenPlanet.hpp",
+    "sha256": "9bf591dcdf6b64d930cc0e0c9b34940602efebb46b7f94b614c61178ce14609b"
+  },
+  {
+    "source": "decomp/include/Game/MapObj/YellowChip.hpp",
+    "destination": "src/Game/MapObj/YellowChip.hpp",
+    "sha256": "c40b2309a3cb3afc90c3567480874cc31ea74c0c5b42ba79c136d1c9c57d6645"
+  },
+  {
+    "source": "decomp/include/Game/MapObj.hpp",
+    "destination": "src/Game/MapObj.hpp",
+    "sha256": "4d83b4c0b675f82641f4c2b20af1bd37a38cfa46bcb5e3db3f3a831635d29b6f"
+  },
+  {
+    "source": "decomp/include/Game/NPC/Butler.hpp",
+    "destination": "src/Game/NPC/Butler.hpp",
+    "sha256": "eca113dd13cb10a5b9f71d91fba34c52508b2059262b6e9cb38947f71edcd9c4"
+  },
+  {
+    "source": "decomp/include/Game/NPC/ButlerExplain.hpp",
+    "destination": "src/Game/NPC/ButlerExplain.hpp",
+    "sha256": "5b12c7a6fc5279eaf49529a9728c9e3af0b830fb895fefb9b2c031bcec16faf8"
+  },
+  {
+    "source": "decomp/include/Game/NPC/ButlerMap.hpp",
+    "destination": "src/Game/NPC/ButlerMap.hpp",
+    "sha256": "e0b4dd011a8ae6b5ec2249e8fe6dcbf24d44000d8de690e4b609ce3ff5612948"
+  },
+  {
+    "source": "decomp/include/Game/NPC/ButlerStateStarPieceReaction.hpp",
+    "destination": "src/Game/NPC/ButlerStateStarPieceReaction.hpp",
+    "sha256": "bd37eef37a50203f03ebf21824e9b0ebfbc3161378b923f92503d1d9a5e3b24d"
+  },
+  {
+    "source": "decomp/include/Game/NPC/CareTaker.hpp",
+    "destination": "src/Game/NPC/CareTaker.hpp",
+    "sha256": "ce8f798c7f3b8c426ee5b31edff52875ff63a28b7f58dea34a3d0e1a5c572997"
+  },
+  {
+    "source": "decomp/include/Game/NPC/CollectTico.hpp",
+    "destination": "src/Game/NPC/CollectTico.hpp",
+    "sha256": "346bfbde284c5216408b666f6b84153fe63f7d581df96e2405346cf192a904b7"
+  },
+  {
+    "source": "decomp/include/Game/NPC/HoneyBee.hpp",
+    "destination": "src/Game/NPC/HoneyBee.hpp",
+    "sha256": "5d50bc230c5bcb59dd02f6965e2cf93ddf22f98323eddd6359fcc314a198131f"
+  },
+  {
+    "source": "decomp/include/Game/NPC/HoneyQueen.hpp",
+    "destination": "src/Game/NPC/HoneyQueen.hpp",
+    "sha256": "da3ee7bdaf0d6db3c8490abbef330ed5f4aa7f3a52662b0045367df970e2ca10"
+  },
+  {
+    "source": "decomp/include/Game/NPC/Kinopio.hpp",
+    "destination": "src/Game/NPC/Kinopio.hpp",
+    "sha256": "d721cad3206e132fe13209910cdedc774f6c5f154f80cbc67f26c8bd120e0656"
+  },
+  {
+    "source": "decomp/include/Game/NPC/KinopioAstro.hpp",
+    "destination": "src/Game/NPC/KinopioAstro.hpp",
+    "sha256": "615bd50c20f354a6c9ef510e0584d99f13ea9d97614d15e48943176a49bd51ec"
+  },
+  {
+    "source": "decomp/include/Game/NPC/KoopaJr.hpp",
+    "destination": "src/Game/NPC/KoopaJr.hpp",
+    "sha256": "6b869cb70c96cfe8c8b0ee3c910b9497d91cbb84fa174d857fc6ce765a6e808f"
+  },
+  {
+    "source": "decomp/include/Game/NPC/LuigiNPC.hpp",
+    "destination": "src/Game/NPC/LuigiNPC.hpp",
+    "sha256": "a6c95053e6a691402dd464ff16761ea8c72184ec3eb2db12c593342bd3cc3440"
+  },
+  {
+    "source": "decomp/include/Game/NPC/MiiDatabase.hpp",
+    "destination": "src/Game/NPC/MiiDatabase.hpp",
+    "sha256": "bd41919af7cfc3f7cab4bb2682f817206c7bd324fee13c0f78bdb9b24a70036e"
+  },
+  {
+    "source": "decomp/include/Game/NPC/MiiFaceIcon.hpp",
+    "destination": "src/Game/NPC/MiiFaceIcon.hpp",
+    "sha256": "946e8295d190bef6d613587272079e25c2387fa5ef38de1aafc9a80ed5738b94"
+  },
+  {
+    "source": "decomp/include/Game/NPC/NPCSupportRail.hpp",
+    "destination": "src/Game/NPC/NPCSupportRail.hpp",
+    "sha256": "4a39d11066e1bc0f98846aa55fbb69311627866a4a325f5220eb02b13ab1f6fe"
+  },
+  {
+    "source": "decomp/include/Game/NPC/Peach.hpp",
+    "destination": "src/Game/NPC/Peach.hpp",
+    "sha256": "33dffbee201fd8d0546dbe8b7367f66dd24a2b464e65b363807ff9ee4879862d"
+  },
+  {
+    "source": "decomp/include/Game/NPC/Penguin.hpp",
+    "destination": "src/Game/NPC/Penguin.hpp",
+    "sha256": "8acbe999b895a37248c5b1f7bee4d4f53ae3ef22d273244b7f74c5d8fbdf14d7"
+  },
+  {
+    "source": "decomp/include/Game/NPC/PenguinCoach.hpp",
+    "destination": "src/Game/NPC/PenguinCoach.hpp",
+    "sha256": "39f52b24a8c1c1cfd4a810ff6c0306af3e9f17f9de9f2ad6addcf882568b3209"
+  },
+  {
+    "source": "decomp/include/Game/NPC/PenguinMaster.hpp",
+    "destination": "src/Game/NPC/PenguinMaster.hpp",
+    "sha256": "8dbee176bb6a161bfb05cfd79c6ff78c22c55d9b5fa101b71414a7d4bdb49164"
+  },
+  {
+    "source": "decomp/include/Game/NPC/PenguinRacer.hpp",
+    "destination": "src/Game/NPC/PenguinRacer.hpp",
+    "sha256": "767b446961363253af81fad309e39146676852ba46227f6c9858871b206c11a3"
+  },
+  {
+    "source": "decomp/include/Game/NPC/PenguinRacerLeader.hpp",
+    "destination": "src/Game/NPC/PenguinRacerLeader.hpp",
+    "sha256": "70bd86680c742c9922cfa6ad3dd813e5813d115ad04a3f1a60f6c3dae89db3ae"
+  },
+  {
+    "source": "decomp/include/Game/NPC/PenguinSkater.hpp",
+    "destination": "src/Game/NPC/PenguinSkater.hpp",
+    "sha256": "8a89186d2e89f19e23b1135655d67939b1002e8f5e245f2e1788ae2279303f24"
+  },
+  {
+    "source": "decomp/include/Game/NPC/PenguinStudent.hpp",
+    "destination": "src/Game/NPC/PenguinStudent.hpp",
+    "sha256": "c147e0429577fbe708a6579ac40f3ca8910863659b5dc62b5eb0345401965cd7"
+  },
+  {
+    "source": "decomp/include/Game/NPC/Rabbit.hpp",
+    "destination": "src/Game/NPC/Rabbit.hpp",
+    "sha256": "5038843ce2ff260382588f5bf1bf95126ae171ccf32e94b9ff63df8ad8afbaec"
+  },
+  {
+    "source": "decomp/include/Game/NPC/RabbitStateCaught.hpp",
+    "destination": "src/Game/NPC/RabbitStateCaught.hpp",
+    "sha256": "3b8c5d80c4fcd1311f138eba2600f6ec2af03ffa73590090f7a9961e5d6f4190"
+  },
+  {
+    "source": "decomp/include/Game/NPC/RabbitStateWaitStart.hpp",
+    "destination": "src/Game/NPC/RabbitStateWaitStart.hpp",
+    "sha256": "6d24fddc7f4f074fa17a9b28b8822da534919c471aec9236b57ec64a4c04cb1c"
+  },
+  {
+    "source": "decomp/include/Game/NPC/RosettaReading.hpp",
+    "destination": "src/Game/NPC/RosettaReading.hpp",
+    "sha256": "7ecb72fe2f0e30420c354a7fde483e35f5a01b4ff8bd2bc85159ba7666cda7fc"
+  },
+  {
+    "source": "decomp/include/Game/NPC/SignBoard.hpp",
+    "destination": "src/Game/NPC/SignBoard.hpp",
+    "sha256": "20ffe1e98b5c023c33e190b9a432b12c421f8bd3645ae9289f57b068f4d0f128"
+  },
+  {
+    "source": "decomp/include/Game/NPC/StrayTico.hpp",
+    "destination": "src/Game/NPC/StrayTico.hpp",
+    "sha256": "112aa6bfd89bbab5175ad10e308c1434adb83c99746d9b4981f5d97816ca22a9"
+  },
+  {
+    "source": "decomp/include/Game/NPC/Syati.hpp",
+    "destination": "src/Game/NPC/Syati.hpp",
+    "sha256": "c998b9ebe8eff779085bcad689cfeb3077abfd1458926fd1fc950c1247fe1a2b"
+  },
+  {
+    "source": "decomp/include/Game/NPC/TeresaRacer.hpp",
+    "destination": "src/Game/NPC/TeresaRacer.hpp",
+    "sha256": "1fede2c281ad1bb5f2b0bebbb112adea7494ace74c7ce656e976fc2bef307fdf"
+  },
+  {
+    "source": "decomp/include/Game/NPC/TicoAstro.hpp",
+    "destination": "src/Game/NPC/TicoAstro.hpp",
+    "sha256": "0ee3119aa489c51b5b62902b5045870c4b8be19e11a61fcf3cfaa21b0530d1b3"
+  },
+  {
+    "source": "decomp/include/Game/NPC/TicoComet.hpp",
+    "destination": "src/Game/NPC/TicoComet.hpp",
+    "sha256": "f314a9c8e354fc9ec31a48d9bba21f01305584e70f1ecf29ffd8f725c2d6a3dd"
+  },
+  {
+    "source": "decomp/include/Game/NPC/TicoDomeLecture.hpp",
+    "destination": "src/Game/NPC/TicoDomeLecture.hpp",
+    "sha256": "70acd98f974964bb9dd5818e4504483aea57fae8a50d2b86cf80c316fa1a9a50"
+  },
+  {
+    "source": "decomp/include/Game/NPC/TicoFat.hpp",
+    "destination": "src/Game/NPC/TicoFat.hpp",
+    "sha256": "725fb38378185f42d8a9f5f02c32dfdb3a96b39e3257870ee30cb6ff19ce0d39"
+  },
+  {
+    "source": "decomp/include/Game/NPC/TicoGalaxy.hpp",
+    "destination": "src/Game/NPC/TicoGalaxy.hpp",
+    "sha256": "0b9951b5988dd8ae822c003cecafab77fb7fa321420dc65eb901954aec4ddea6"
+  },
+  {
+    "source": "decomp/include/Game/NPC/TicoRail.hpp",
+    "destination": "src/Game/NPC/TicoRail.hpp",
+    "sha256": "513d807c32ac82789b559202db5c928dec8dc006a8200e318646a15639fb70fc"
+  },
+  {
+    "source": "decomp/include/Game/NPC/TicoReading.hpp",
+    "destination": "src/Game/NPC/TicoReading.hpp",
+    "sha256": "d9aaafd33adb263d01719f0772a20062ad15332296077c851a66cfa4117838d8"
+  },
+  {
+    "source": "decomp/include/Game/NPC/TicoShop.hpp",
+    "destination": "src/Game/NPC/TicoShop.hpp",
+    "sha256": "4a6fc056b28cbf2903bf0041d961156d65ff4708cf26d364811ab1ff7a3c8df9"
+  },
+  {
+    "source": "decomp/include/Game/NPC/TicoStarRing.hpp",
+    "destination": "src/Game/NPC/TicoStarRing.hpp",
+    "sha256": "d9d7d86a6f6f17b2daa5dd66c0b2110fbb51378d7cbb56a775760458108905bb"
+  },
+  {
+    "source": "decomp/include/Game/NPC/TrickRabbit.hpp",
+    "destination": "src/Game/NPC/TrickRabbit.hpp",
+    "sha256": "0a021c615f04d698b5191bd59216e647d1bf54077100ce232329141305851b7d"
+  },
+  {
+    "source": "decomp/include/Game/NPC/TrickRabbitFreeRun.hpp",
+    "destination": "src/Game/NPC/TrickRabbitFreeRun.hpp",
+    "sha256": "78c77895ababcdcf4c4d77a3f01b5485395743e891b8daa28340856080d240b0"
+  },
+  {
+    "source": "decomp/include/Game/NPC/TrickRabbitSnow.hpp",
+    "destination": "src/Game/NPC/TrickRabbitSnow.hpp",
+    "sha256": "398ce96e7cbb5343de75a5e2e3779b1b05a1b8aed7e54b1fdf364ff474ce6265"
+  },
+  {
+    "source": "decomp/include/Game/NPC/TrickRabbitSnowCollect.hpp",
+    "destination": "src/Game/NPC/TrickRabbitSnowCollect.hpp",
+    "sha256": "4a557c161ab52f45d85a09fbc14aecce0339370efeaefbfcf7e73e7aa262298d"
+  },
+  {
+    "source": "decomp/include/Game/NPC.hpp",
+    "destination": "src/Game/NPC.hpp",
+    "sha256": "d40a75ebc8aacb153597e25f737deb06787848b1f3295d165836020ff807f494"
+  },
+  {
+    "source": "decomp/include/Game/NWC24/ReceiverTagMail.hpp",
+    "destination": "src/Game/NWC24/ReceiverTagMail.hpp",
+    "sha256": "2c988cb1e30ea5feb36875dfd8435643e33168ecaa488235188415f8740ea74e"
+  },
+  {
+    "source": "decomp/include/Game/NWC24.hpp",
+    "destination": "src/Game/NWC24.hpp",
+    "sha256": "adc67508052c1908d62a4d5c9f7a475f6ad69a788a2ccc48ffe5a234067351d2"
+  },
+  {
+    "source": "decomp/include/Game/NameObj/NameObjFactoryStubs.hpp",
+    "destination": "src/Game/NameObj/NameObjFactoryStubs.hpp",
+    "sha256": "f20bbc97576dc4fe989ddecd572b45605743303902bb9f3188c72d9268ce62c9"
+  },
+  {
+    "source": "decomp/include/Game/NameObj.hpp",
+    "destination": "src/Game/NameObj.hpp",
+    "sha256": "ba6d028616453bf582ea1f3af1c29873eaa30383eaf62b4aac1db93ad3f5820e"
+  },
+  {
+    "source": "decomp/include/Game/Player/GhostPacket.hpp",
+    "destination": "src/Game/Player/GhostPacket.hpp",
+    "sha256": "8e57c00a6af1000dbd8593ec0dac8b202c709a4860a2e5c0ce9dcc5e8a450111"
+  },
+  {
+    "source": "decomp/include/Game/Player/GhostPlayer.hpp",
+    "destination": "src/Game/Player/GhostPlayer.hpp",
+    "sha256": "3a1b682930805948b2ae95882f5ae03b48401ad40981cb0bacf5607caa6a6e45"
+  },
+  {
+    "source": "decomp/include/Game/Player.hpp",
+    "destination": "src/Game/Player.hpp",
+    "sha256": "b1a79ea9220c4be28f8d0559790a0334ceaec708e042390f9105487100463c5d"
+  },
+  {
+    "source": "decomp/include/Game/RhythmLib.hpp",
+    "destination": "src/Game/RhythmLib.hpp",
+    "sha256": "8532ec177b99bb04de7e8dd8558e0609fe52cfdcf0229f1ccb4c74e6a25aa19f"
+  },
+  {
+    "source": "decomp/include/Game/Ride/BigBubble.hpp",
+    "destination": "src/Game/Ride/BigBubble.hpp",
+    "sha256": "e3caaf7c703a24ddb7c0f5b1740a712aef8ee6e8876b14d5b19b8ea072629ccc"
+  },
+  {
+    "source": "decomp/include/Game/Ride/Creeper.hpp",
+    "destination": "src/Game/Ride/Creeper.hpp",
+    "sha256": "2badbeabdc9052839f6353d1bb664fbcd700c7d71bba124486e0764d014ab1b2"
+  },
+  {
+    "source": "decomp/include/Game/Ride/Fluff.hpp",
+    "destination": "src/Game/Ride/Fluff.hpp",
+    "sha256": "f49f0a241803fe9e83cf4d1e101ab628ea62647aa1b9781224c39f44b04b4c87"
+  },
+  {
+    "source": "decomp/include/Game/Ride/JumpBranch.hpp",
+    "destination": "src/Game/Ride/JumpBranch.hpp",
+    "sha256": "30e0da6a08d0d4d07da8c559226121159ed6ee44d477d91e195558054ec1654b"
+  },
+  {
+    "source": "decomp/include/Game/Ride/Plant.hpp",
+    "destination": "src/Game/Ride/Plant.hpp",
+    "sha256": "5196d1d3ff10cc7c26214abf222e045f8e1c9968749e730275a06db0e6a7d111"
+  },
+  {
+    "source": "decomp/include/Game/Ride/Pole.hpp",
+    "destination": "src/Game/Ride/Pole.hpp",
+    "sha256": "a217180baadef0094e1b749646729855c7bd75597dab5ad38d0035726a39e267"
+  },
+  {
+    "source": "decomp/include/Game/Ride/SledRopePoint.hpp",
+    "destination": "src/Game/Ride/SledRopePoint.hpp",
+    "sha256": "a3c16fcd5dfb6849d790390b969e0254b99fe5cf31e245b1dc822f8f6e868b2c"
+  },
+  {
+    "source": "decomp/include/Game/Ride/SlingShooter.hpp",
+    "destination": "src/Game/Ride/SlingShooter.hpp",
+    "sha256": "eecc9d5b02325879513b08f6b8fcd935ec3cbda7afaec3cdd057ad97e49b1ea1"
+  },
+  {
+    "source": "decomp/include/Game/Ride/SpaceCocoon.hpp",
+    "destination": "src/Game/Ride/SpaceCocoon.hpp",
+    "sha256": "dd3912dc2255e2b0486eda6bf1c1159f34d59715216bd0f1fb7ba2f0ee8612b3"
+  },
+  {
+    "source": "decomp/include/Game/Ride/SphereAccelSensorController.hpp",
+    "destination": "src/Game/Ride/SphereAccelSensorController.hpp",
+    "sha256": "a33964b490ba9962ae24e142dd279dc40230452eb304f10f3921895aabcf63db"
+  },
+  {
+    "source": "decomp/include/Game/Ride/SphereController.hpp",
+    "destination": "src/Game/Ride/SphereController.hpp",
+    "sha256": "c69698d816dfda3f71646ea1b7444e747607b649eb00c8f67117ca3f30648eaa"
+  },
+  {
+    "source": "decomp/include/Game/Ride/SpherePadController.hpp",
+    "destination": "src/Game/Ride/SpherePadController.hpp",
+    "sha256": "f05e77ac09f48a15db2daf357f94aaa226438520483bb7aba54dc1819825554b"
+  },
+  {
+    "source": "decomp/include/Game/Ride/SurfRay.hpp",
+    "destination": "src/Game/Ride/SurfRay.hpp",
+    "sha256": "fc0ebb4c52aac7464995ee4940dac8f7a2862cba4254e00b67a41a8baaed7ba8"
+  },
+  {
+    "source": "decomp/include/Game/Ride/SurfRayTutorial.hpp",
+    "destination": "src/Game/Ride/SurfRayTutorial.hpp",
+    "sha256": "d38e427d375888b969b464af4c7bbbd63ffab230c2374b792f4bde78f0595cb5"
+  },
+  {
+    "source": "decomp/include/Game/Ride/Tamakoro.hpp",
+    "destination": "src/Game/Ride/Tamakoro.hpp",
+    "sha256": "7f5a8494ce5e2457ccaf10b136d61b5a35eab860f7f524badeb6942ab1af58b2"
+  },
+  {
+    "source": "decomp/include/Game/Ride/TamakoroTutorial.hpp",
+    "destination": "src/Game/Ride/TamakoroTutorial.hpp",
+    "sha256": "52ed2e7c7722823c56627f01bee3e677776fe92b51414a57d1672577085612ff"
+  },
+  {
+    "source": "decomp/include/Game/Ride.hpp",
+    "destination": "src/Game/Ride.hpp",
+    "sha256": "9e39af1fa724978f96f772b59240b50c9273fa5f0d0ef8a47552c15d8c5eab11"
+  },
+  {
+    "source": "decomp/include/Game/Scene/SceneExecutor.hpp",
+    "destination": "src/Game/Scene/SceneExecutor.hpp",
+    "sha256": "b3adf106d95b8934f690943f2921308b90be5b766c4c8ba250c792de56400201"
+  },
+  {
+    "source": "decomp/include/Game/Scene.hpp",
+    "destination": "src/Game/Scene.hpp",
+    "sha256": "6e1c2b6dcebd8cb496417abbcfe641c33ec9a915007119058346e7db152d2e4d"
+  },
+  {
+    "source": "decomp/include/Game/Screen/BombTimerLayout.hpp",
+    "destination": "src/Game/Screen/BombTimerLayout.hpp",
+    "sha256": "567971f57e1ce774c06ba9da585d41c6fa51f8a6cd1f9cca05f9864abed10681"
+  },
+  {
+    "source": "decomp/include/Game/Screen/FullnessMeter.hpp",
+    "destination": "src/Game/Screen/FullnessMeter.hpp",
+    "sha256": "0d7c2d71acb38b7cfc805497b102fa06b34e7673b07e68c7d4f6e863624f6279"
+  },
+  {
+    "source": "decomp/include/Game/Screen/GalaxyConfirmLayout.hpp",
+    "destination": "src/Game/Screen/GalaxyConfirmLayout.hpp",
+    "sha256": "5a2c96fc8780f101edf921b4070b2130c6481d05e6ec983160a6225a04e10c2f"
+  },
+  {
+    "source": "decomp/include/Game/Screen/GalaxyInfoLayoutSetter.hpp",
+    "destination": "src/Game/Screen/GalaxyInfoLayoutSetter.hpp",
+    "sha256": "98c243bac66dae5fc1a07dca228f5bf16d6607e7727718bf48cd88e6fcb31029"
+  },
+  {
+    "source": "decomp/include/Game/Screen/GalaxyMap.hpp",
+    "destination": "src/Game/Screen/GalaxyMap.hpp",
+    "sha256": "62c8838805b37e3b406dacb36738380177f556d6f288d8d14fb032af1a35fc86"
+  },
+  {
+    "source": "decomp/include/Game/Screen/GalaxyMapBackground.hpp",
+    "destination": "src/Game/Screen/GalaxyMapBackground.hpp",
+    "sha256": "c64822cde6e5b81589ac19e4e2e1c056a1de237746b04dd3724a618d50985ec1"
+  },
+  {
+    "source": "decomp/include/Game/Screen/GalaxyMapCometIcon.hpp",
+    "destination": "src/Game/Screen/GalaxyMapCometIcon.hpp",
+    "sha256": "10136e047422d35e181d57aed6ffe3822014205892a9430f9fd6d895d377d74c"
+  },
+  {
+    "source": "decomp/include/Game/Screen/GalaxyMapDomeIcon.hpp",
+    "destination": "src/Game/Screen/GalaxyMapDomeIcon.hpp",
+    "sha256": "d754e373eedfab2655211348c8e5263ce7b8bf924063a45c4d92f48a32315f32"
+  },
+  {
+    "source": "decomp/include/Game/Screen/GalaxyMapGalaxyDetail.hpp",
+    "destination": "src/Game/Screen/GalaxyMapGalaxyDetail.hpp",
+    "sha256": "3c40e805425e4f1e49546b389c46606e40ae1a05e869db15f2d0067016f97050"
+  },
+  {
+    "source": "decomp/include/Game/Screen/GalaxyMapIcon.hpp",
+    "destination": "src/Game/Screen/GalaxyMapIcon.hpp",
+    "sha256": "d9a0e366c4fce789be0e2dde4d88a12daeb6cf3e97f63557dc1efd1d0c6ed878"
+  },
+  {
+    "source": "decomp/include/Game/Screen/GalaxyMapMarioIcon.hpp",
+    "destination": "src/Game/Screen/GalaxyMapMarioIcon.hpp",
+    "sha256": "5954201e9ca9cc1384cf2178c7b32469db2a83e07bd5569dd13cc43f24aec7cc"
+  },
+  {
+    "source": "decomp/include/Game/Screen/GalaxyMapSelectButton.hpp",
+    "destination": "src/Game/Screen/GalaxyMapSelectButton.hpp",
+    "sha256": "49edb3120f471ec1d1e434d7665962eb8e11f98ed091405077cf1b4fab9f01ab"
+  },
+  {
+    "source": "decomp/include/Game/Screen/GalaxyMapTicoIcon.hpp",
+    "destination": "src/Game/Screen/GalaxyMapTicoIcon.hpp",
+    "sha256": "2f38aafd5839bf2ff83ed9cf288ab84f9016c91687e79e41a006b7a14b00c356"
+  },
+  {
+    "source": "decomp/include/Game/Screen/GalaxyMapTitle.hpp",
+    "destination": "src/Game/Screen/GalaxyMapTitle.hpp",
+    "sha256": "44f9840ed7e1c3376787cfef17c3c73376d4278df27db4c14f44d86ce0009256"
+  },
+  {
+    "source": "decomp/include/Game/Screen/GalaxyNamePlate.hpp",
+    "destination": "src/Game/Screen/GalaxyNamePlate.hpp",
+    "sha256": "8de508789e7df1e28be04bd510cdcb711790574f44feafed5cf19e56f150d48d"
+  },
+  {
+    "source": "decomp/include/Game/Screen/GalaxySelectBackButton.hpp",
+    "destination": "src/Game/Screen/GalaxySelectBackButton.hpp",
+    "sha256": "c78c49e4977b088f6c2dcaf612fc179baf1883df51f9fe87e1bfc16bd0d162f4"
+  },
+  {
+    "source": "decomp/include/Game/Screen/GalaxySelectInfo.hpp",
+    "destination": "src/Game/Screen/GalaxySelectInfo.hpp",
+    "sha256": "77673486f71c4b7cc099081abce6bfeb525bfb7867cfa8e698a8fadb5b7020bd"
+  },
+  {
+    "source": "decomp/include/Game/Screen/HomeButtonLayout.hpp",
+    "destination": "src/Game/Screen/HomeButtonLayout.hpp",
+    "sha256": "1c73ccb9dd0b419efd6c9a3e446105614dad07b42e1847f519efac8921f6720d"
+  },
+  {
+    "source": "decomp/include/Game/Screen/IconComet.hpp",
+    "destination": "src/Game/Screen/IconComet.hpp",
+    "sha256": "0cef0338828b6169efbeabb8f80fe552c1d6f4021d0d3e18dd555a553698854b"
+  },
+  {
+    "source": "decomp/include/Game/Screen/MiiSelectIcon.hpp",
+    "destination": "src/Game/Screen/MiiSelectIcon.hpp",
+    "sha256": "f77b767eb6692be9e3b71b2c9b30985e996292785cce5aac27b42e54ed67205e"
+  },
+  {
+    "source": "decomp/include/Game/Screen/MovieStarter.hpp",
+    "destination": "src/Game/Screen/MovieStarter.hpp",
+    "sha256": "f5e00ec3f592efd35b6556db7e09354af05bfa1b405387457e8c59ff947a8ee2"
+  },
+  {
+    "source": "decomp/include/Game/Screen/PeachLetter.hpp",
+    "destination": "src/Game/Screen/PeachLetter.hpp",
+    "sha256": "f601c36895a78e419a2ecad5fe97358576de113734f3a381f33848de2572ca07"
+  },
+  {
+    "source": "decomp/include/Game/Screen/PowerStarList.hpp",
+    "destination": "src/Game/Screen/PowerStarList.hpp",
+    "sha256": "cf03614713be041b9996e73e27026d38623c3cfade84ba81aaa915e3ef2c4a0e"
+  },
+  {
+    "source": "decomp/include/Game/Screen/StageResultInformer.hpp",
+    "destination": "src/Game/Screen/StageResultInformer.hpp",
+    "sha256": "bcacc31973e58ddf1bdc203bb4e2434e2511ef2fc380338b49152e29162fac6e"
+  },
+  {
+    "source": "decomp/include/Game/Screen/SurfingGuidance.hpp",
+    "destination": "src/Game/Screen/SurfingGuidance.hpp",
+    "sha256": "5810ea3b5887a7547b7eb91e8cb756868943b03d8b64a5e0396aa25402f8eefe"
+  },
+  {
+    "source": "decomp/include/Game/Screen/odh.hpp",
+    "destination": "src/Game/Screen/odh.hpp",
+    "sha256": "8808f3de60f962753660481405e9bd79fa74212a17af785cfdb7b45369ef1c07"
+  },
+  {
+    "source": "decomp/include/Game/Screen.hpp",
+    "destination": "src/Game/Screen.hpp",
+    "sha256": "6946ff1fe2108ee39b7fd32d6fc75326500eb0cbd4adb8f8757b1915e3a272e5"
+  },
+  {
+    "source": "decomp/include/Game/Speaker.hpp",
+    "destination": "src/Game/Speaker.hpp",
+    "sha256": "a8d4aa4dfb2bc0a0abdd4ae3d42629ec13722b250e14b330cfce88f9385f7e33"
+  },
+  {
+    "source": "decomp/include/Game/System/HomeButtonMenuWrapper.hpp",
+    "destination": "src/Game/System/HomeButtonMenuWrapper.hpp",
+    "sha256": "aed6b7d8853501aeddd816605e569a4fd09415a047537236ee1682846791adc8"
+  },
+  {
+    "source": "decomp/include/Game/System.hpp",
+    "destination": "src/Game/System.hpp",
+    "sha256": "0524473586c3d36e9b7c0d19fa8b2613e433a60c927b278f4b2f916430b5f45d"
+  },
+  {
+    "source": "decomp/include/Game/Util/BezierSurface.hpp",
+    "destination": "src/Game/Util/BezierSurface.hpp",
+    "sha256": "58abc7740b2a1360e76f872e5bad37a4d0b0830f3bbf08e4b6f81c51f74767f1"
+  },
+  {
+    "source": "decomp/include/Game/Util/CollisionShapeUtil.hpp",
+    "destination": "src/Game/Util/CollisionShapeUtil.hpp",
+    "sha256": "8416c763f803961030cee3f7db696f64dda269d91d617e029ec7ba2a4744aa21"
+  },
+  {
+    "source": "decomp/include/Game/Util/GeometryBindUtil.hpp",
+    "destination": "src/Game/Util/GeometryBindUtil.hpp",
+    "sha256": "68bdcfb1acf71869e3962ac6309904a03903b9e4c5441a46fed15583ad32d04a"
+  },
+  {
+    "source": "decomp/include/Game/Util/IKJoint.hpp",
+    "destination": "src/Game/Util/IKJoint.hpp",
+    "sha256": "f183761113c58a9b023309ab766a4d9346f58ef892ecef32fe46b5dd85e11d82"
+  },
+  {
+    "source": "decomp/include/Game/Util/JointRumbler.hpp",
+    "destination": "src/Game/Util/JointRumbler.hpp",
+    "sha256": "cb941fc54d7fbffeaa064ef7fcb24adcff55569f4f106ca87260b14ed5c82e31"
+  },
+  {
+    "source": "decomp/include/Game/Util/MultiEventCamera.hpp",
+    "destination": "src/Game/Util/MultiEventCamera.hpp",
+    "sha256": "c80d0fe35e0daac86517f664903e9e133671678995629536a5e414dafcff3597"
+  },
+  {
+    "source": "decomp/include/Game/Util/OctahedronBezierSurface.hpp",
+    "destination": "src/Game/Util/OctahedronBezierSurface.hpp",
+    "sha256": "962f9b2489a14debca66b014033916895ebb6f97cceb7e8c1aaeefbf40561b94"
+  },
+  {
+    "source": "decomp/include/Game/Util/PostureHolder.hpp",
+    "destination": "src/Game/Util/PostureHolder.hpp",
+    "sha256": "5d2947ef4349ae59248b75ff724a816f6afb711a9d97c44711d29e6e1efcc3b3"
+  },
+  {
+    "source": "decomp/include/Game/Util/RailGraphUtil.hpp",
+    "destination": "src/Game/Util/RailGraphUtil.hpp",
+    "sha256": "8bfcf3c7706af8879655d32c5e23b9a57b43b8c7504158ffa906e2c7e44924b1"
+  },
+  {
+    "source": "decomp/include/Game/Util/SpringValue.hpp",
+    "destination": "src/Game/Util/SpringValue.hpp",
+    "sha256": "89a0f5cfe58ef57c42b4653014ff4a984df61106388fdda92ee6d3df90bd2c03"
+  }
+]

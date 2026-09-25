@@ -1,0 +1,269 @@
+{
+  "scope": "Actual NameObjHolder registration ownership and obsolete scene helper removal",
+  "files": [
+    {
+      "path": "src/Game/NameObj/NameObj.hpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/src/Game/NameObj/NameObj.hpp",
+      "before_sha256": "a6d2148a0635f7fe6e93cdfb0f7213bd4623221f68ca14267d2f03871554f52d",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "d43087359ad56ce66ef69d66f25833ab2670af05a48a383771a4c87f2e1881c8"
+    },
+    {
+      "path": "src/Game/NameObj/NameObj.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/src/Game/NameObj/NameObj.cpp",
+      "before_sha256": "75a3730088bd4ae8317b4c0f8cee49d6f71353db95d926ffffa17b715673cc9a",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "d50371c47a5762c1a537284117e919dac194a28a8ebf532e35dc0a74137cfd24"
+    },
+    {
+      "path": "src/Game/NameObj/NameObjHolder.hpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/src/Game/NameObj/NameObjHolder.hpp",
+      "before_sha256": "9276215f409ce88bf7fc373d33c3e6d58fb516505bbe410e9561ad030386cfea",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "2c5db61b0fb0f7d4ae440a79efdeb121ab9536bcfe5721f138d5edff44835089"
+    },
+    {
+      "path": "src/Game/NameObj/NameObjHolder.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/src/Game/NameObj/NameObjHolder.cpp",
+      "before_sha256": "5467387df4f47c8f70f16f2cd474b08da6a6a63184ed775daea8e000abadecd9",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "42cdb196ba8ac57ffa05fb32916d6b868fc3441f2bc909178fe1edbad2f89371"
+    },
+    {
+      "path": "src/scene/SceneExecutionBinding.hpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/src/scene/SceneExecutionBinding.hpp",
+      "before_sha256": "7a6cf969895780f5aa73541c4da8e5a3188a367ed3952d90323b9fe2625307ed",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "a3b506170d5e60791c6ae8cf9f7837517a9a92e6bfbb9ab75bf4f3a68af20ddc"
+    },
+    {
+      "path": "src/scene/SceneExecutionBinding.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/src/scene/SceneExecutionBinding.cpp",
+      "before_sha256": "3923fa199231f588e705deb2a4692975617c5ee9b4bb94300da0f21763834f30",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "be99004653a4279fe177d5c5f448bee3061af12d53c99fd148b682432d0f2382"
+    },
+    {
+      "path": "src/app/OriginalGameApplication.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/src/app/OriginalGameApplication.cpp",
+      "before_sha256": "32018183981817a5d7d5d3f2f781b94787f61d03b1be4cef13fef7d01e34ad4b",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "eeb7c4415bac2c85798806087e352524f33eb134ddff82eb81be188043e5f59d"
+    },
+    {
+      "path": "src/runtime/OriginalProcessTrace.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/src/runtime/OriginalProcessTrace.cpp",
+      "before_sha256": "7c6f38eb536afa3fcac758d1a1eaa4066876793910d16d8879737ce5413fd815",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "ede4ec012c983ca31c45caf2dc99671d459271f5b43daac71e9088c0237b77b3"
+    },
+    {
+      "path": "src/scene/SceneNameObjRegistry.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/src/scene/SceneNameObjRegistry.cpp",
+      "before_sha256": "4df0d8818a0a8ee325a5b9c2c016ac2ac7304dc826173848816ae18dbf6e2832",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/scene/SceneNameObjRegistry.hpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/src/scene/SceneNameObjRegistry.hpp",
+      "before_sha256": "812d35afa46cd5faf09977975255e8cceab7f39de8b0d3aac7c6ea1f125e3a37",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/scene/NameObjChildOwner.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/src/scene/NameObjChildOwner.cpp",
+      "before_sha256": "270fd48547b927fc5df40e5adb054f3182054cee3d3e78b5f047a8a5796af493",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/scene/NameObjChildOwner.hpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/src/scene/NameObjChildOwner.hpp",
+      "before_sha256": "922223edd7ba7626ff0691ba810dec418f2ba9135245430f8d554f37cb6509a0",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/ActorRuntimeRegistry.hpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/src/compat/ActorRuntimeRegistry.hpp",
+      "before_sha256": "8eab033bbb41ba9dae487f17628b9b258c6e05aa2c6d10a9d09d9bc06095ae0a",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "7ca91bce3f614f6651196ff3aa457787d1ad024890ab07c4c4941fef4a671b1b"
+    },
+    {
+      "path": "src/compat/ActorRuntimeRegistry.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/src/compat/ActorRuntimeRegistry.cpp",
+      "before_sha256": "2ea219e0d8e5307136728bce67cf7e964f867dd0344966e63044ab0c92c938c2",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "7d75c59bf99fd9ee480e85af8e9dfcc87d7c14341a9e4eaf3c84d51e0bb9d311"
+    },
+    {
+      "path": "tests/OriginalSceneControllerFixture.hpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/OriginalSceneControllerFixture.hpp",
+      "before_sha256": "a47d8a355ffc2bff6087e2d88a7996fba83f869bebe065fc674c39391bd95d13",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "049650ce69e551b9fea7e05ee3fe79acfbd27096a9b665cc823ecc1670868638"
+    },
+    {
+      "path": "tests/SceneExecutionFixture.hpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/SceneExecutionFixture.hpp",
+      "before_sha256": "c7779eacf99c1601f7934c687c58e8cd69d20d7e6a8c8a5d69695554e95a30cf",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "e43c56f623cdf860f3396e57a07d37b49538b04b7156e11f7d3e5059bd08364b"
+    },
+    {
+      "path": "tests/SceneSchedulerHeapTests.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/SceneSchedulerHeapTests.cpp",
+      "before_sha256": "52df6910b2d7d7b3a75b7eabfc44ffad32421e9ec82364d04a116ec6f5fe2b3d",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "399c30438db093a94ab8c8c70ffbf80639502bab3af36a4ed1025d03506ee216"
+    },
+    {
+      "path": "tests/GravityRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/GravityRealOrAbsentTests.cpp",
+      "before_sha256": "eb85ab070a1413705d16ccc52f0ab8bd7b05904bc558cac0197c38285233099d",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "cf751cbd4751cf3864dd1bea4d53dcb459f782be2c491bc0b0e09c7c8d25ff04"
+    },
+    {
+      "path": "tests/OriginalActorUtilityTests.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/OriginalActorUtilityTests.cpp",
+      "before_sha256": "0c4e5f7df5d75ab30c620b3b12527232a96f3e2d8c81ba1486cf1e5354a55c49",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "2f57697ba32dee4f77d977c22fe3f21fd3c5a0bdd47c30af9ef0e1397df7c224"
+    },
+    {
+      "path": "tests/NameObjGroupLifetimeTests.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/NameObjGroupLifetimeTests.cpp",
+      "before_sha256": "2c6ea24511a19cd4b9ea976871de828b3c129c2efe5cd821b0424167a33204b7",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "307dffa693ad53ffbace08db7e0a6189f914d106c435fac82dc837f8e4e3ff0c"
+    },
+    {
+      "path": "tests/OriginalActorBroadcastTests.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/OriginalActorBroadcastTests.cpp",
+      "before_sha256": "82c771f894cb6623067de3e62ce7842e51063ae05d9b333b3925a194d32516f7",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "550639c6184fc8b52eab753aa6e058d22854eb7c1be3c42e571f0f67aeae09fc"
+    },
+    {
+      "path": "tests/NPCActorRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/NPCActorRealOrAbsentTests.cpp",
+      "before_sha256": "bc16a7fa5f2c71e65c7d4f6adf12c5f447e0371725a34cf90c449c6f30ca6c70",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "585a4c06cb67af86b9601808cdf08b79abbfd1ffc065f4731e029191684e362f"
+    },
+    {
+      "path": "tests/SphereSelectorRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/SphereSelectorRealOrAbsentTests.cpp",
+      "before_sha256": "4ab4ea20528a0a3558813dcdb1b50e4f0531db6b9586e76964091d9f1e0e4436",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "9c96edda67fb99a0e4d2df3b32fa0812599da03baaa4ea9e147e3b1bcdc5e4ce"
+    },
+    {
+      "path": "tests/OriginalSceneExecutionOwnerTests.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/OriginalSceneExecutionOwnerTests.cpp",
+      "before_sha256": "04a9d066131d362840c2d49f36a9c1450e083d5af0a95e99db3f267d3f59a3c8",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "d3ae1f1e5a533e41643f2f71013c5929f9ee3be74f6cf9fd458dc37f5befa065"
+    },
+    {
+      "path": "tests/PointLightRuntimeTests.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/PointLightRuntimeTests.cpp",
+      "before_sha256": "4470c61e9f34b8a60a0b606867d39ae27fdcd12a442e31451672d227eb071774",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "c9210ff9da06346d614950078680d99151c44072c0e465c9e14f8beb5100e288"
+    },
+    {
+      "path": "tests/JkrExceptionOwnershipTests.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/JkrExceptionOwnershipTests.cpp",
+      "before_sha256": "325c2a3c592822b0b2b4ecfd492c12044ce399ba48e08cbc55ead1cfb46bb4ea",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "a70f347bc6d8f920b07c56ab9c435f437dd86aa501bc98eeb6c2bd8a0162433b"
+    },
+    {
+      "path": "tests/AreaObjRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/AreaObjRealOrAbsentTests.cpp",
+      "before_sha256": "341ebacd995288da53d5624cd28664eda9602fcf6946d14cc89c28fb212c5462",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "be98317c9dd531c0026468fa89077f3d6ed3b4a1848d5baedeef7d25a46ecab8"
+    },
+    {
+      "path": "tests/ActorSensorRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/ActorSensorRealOrAbsentTests.cpp",
+      "before_sha256": "72d3146cc7ff59f9749363cc2d02b3e710246a69c5b95575f846044e520ffc92",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "68651ba73a210f0b5db20fadad7f6d7d9aa18827e01d3f15890ea3c9865ac76c"
+    },
+    {
+      "path": "tests/SceneNameObjRegistryTests.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/SceneNameObjRegistryTests.cpp",
+      "before_sha256": "20c085bec43a3dd60bf786f1d2c6f60a930bec4afe5e56e82b9c70ceb3938233",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "tests/ActorRuntimeRegistryTests.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/ActorRuntimeRegistryTests.cpp",
+      "before_sha256": "d2472852d983aa739d04496c5b15881bd6d7cdd4b0d16bbc8fcbe8ea21c6b28a",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "f652361491af7cea3d38dcc4b4260cea657d52800d64c19d95691742c174ca9c"
+    },
+    {
+      "path": "tests/DemoStartRequestHolderTests.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/DemoStartRequestHolderTests.cpp",
+      "before_sha256": "c9c8e7241a365becbc8f0c53d8172c1ed2f03eea1e89d482e6e4efac9132e14a",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "e399114eb824646d6d221aa15ce441ba2a95439867a2017dc87e47733657adc4"
+    },
+    {
+      "path": "tests/OriginalProcessShadowVolumeLineTests.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/OriginalProcessShadowVolumeLineTests.cpp",
+      "before_sha256": "037f0d99153dde293d7467065b4efe803a8d6ad8359a8a835ca13a888c283edf",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "150a1708f2c3096b30364decb4c6291a0800c3a909c6c036f9357459cc922dae"
+    },
+    {
+      "path": "tests/OriginalSensorMatrixTests.cpp",
+      "before": "notes/compat-owner-removal-round16-20260925/nameobj/before/tests/OriginalSensorMatrixTests.cpp",
+      "before_sha256": "202437a36019c0646076561e2a17524bb466a286662f2b0355ad1970b11a0097",
+      "initial_git_status": "clean (parent round16 baseline)",
+      "action": "modify",
+      "after_sha256": "f3317b58386b89f84749163ee546a264c2905717dfab03e99c4dc74cf6ab0548"
+    }
+  ]
+}

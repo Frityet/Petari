@@ -1,0 +1,117 @@
+{
+  "base": "16d91cbb02869a694d008c307aa7b6ce2d6cdb63",
+  "files": [
+    {
+      "path": "src/scene/StagePlacementResolver.cpp",
+      "before_sha256": "60b829f29b9d2d66e2f763354f876df1e2cc5fe2ef8baf7d6c46359f4cfe3482",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "src/scene/StagePlacementResolver.hpp",
+      "before_sha256": "6371fe4cfe11beb6d281e595eafc86b1379738dd37db07846f2e210983996bf8",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "src/scene/PlacementZoneScope.cpp",
+      "before_sha256": "fdb1bbc76a58f57947378937bc59a551b05286ad8341b6a58688dcbb7ef1cf7c",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "src/scene/PlacementZoneScope.hpp",
+      "before_sha256": "5d56b2bf16c5a00d0246bae7f62a4cc95d6e90ba45e1e861e15f305973bd8374",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "src/scene/nameobj/ObjectNameTable.cpp",
+      "before_sha256": "412773d76d166c63ec16626401993f218f5f504b25ce3618074bb00ad2d87356",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "src/scene/nameobj/ObjectNameTable.hpp",
+      "before_sha256": "f2b2d61553c21a0e52785e2761cb731b86d7c919bef998404d71807b37d1fd34",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "src/scene/OriginalPlacementCoverage.cpp",
+      "before_sha256": "facec51b78392ad471e4dfebccbb52a3442147428ce031ecc5310c80ebd5a220",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "src/scene/OriginalPlacementCoverage.hpp",
+      "before_sha256": "f057073369d7e7c60bb548a38c28718395036a460b1957d88349a24d86c71c0a",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "src/Game/Scene/SceneFunction.cpp",
+      "before_sha256": "e3cf26c59e5b0bfb6fc46f409ae78e3493f69132a5b1c58dca349db249ba792f",
+      "before_status": "",
+      "after_sha256": "520ecb7dda5b8a4dea5d3d13bb5f8f69dd3ae87fc7b4e697584c8e0bf53eb537",
+      "action": "modify"
+    },
+    {
+      "path": "tests/ObjectNameTableTests.cpp",
+      "before_sha256": "939903dcec32dbd8161bcb118f437e410356009b9814b5627a86700eb39cfc80",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "tests/OriginalPlacementCoverageTests.cpp",
+      "before_sha256": "8eafa44791efb09602f58c820043a0757326c1f2407881bb3bd687ff940a7f4b",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "tests/OriginalProcessPlacementTransformTests.cpp",
+      "before_sha256": "362a8282755edf68169240dfc97d06630990ace2d98100cc4483397907305b90",
+      "before_status": "",
+      "after_sha256": "7c48a31020a1c1645ce2c97aa25097854b00697352ef1a12a0dbf7915185332d",
+      "action": "modify"
+    },
+    {
+      "path": "tests/OriginalCollisionPartsOwnerTests.cpp",
+      "before_sha256": "083b904371b6a45e457116cc4217cba76b5706ffd5e8582f75d6ad87b3c3f46c",
+      "before_status": "",
+      "after_sha256": "1ad2841f25e194a33f376e6fcfdbb63cbdb5b7d5f5ee57a00297bc9f2055039a",
+      "action": "modify"
+    },
+    {
+      "path": "tests/NameObjFactoryPlacementTests.cpp",
+      "before_sha256": "22c6f547d693e698278c0b88a14a4e26938799bbc250efc9644bc37959804de8",
+      "before_status": "",
+      "after_sha256": "93014c9c4d4a82a159a037e26aeefd4ce6b19eaeaea05b6f265d04acf0250a2a",
+      "action": "modify"
+    },
+    {
+      "path": "tests/AreaObjRealOrAbsentTests.cpp",
+      "before_sha256": "341ebacd995288da53d5624cd28664eda9602fcf6946d14cc89c28fb212c5462",
+      "before_status": "",
+      "after_sha256": "be98317c9dd531c0026468fa89077f3d6ed3b4a1848d5baedeef7d25a46ecab8",
+      "action": "modify"
+    },
+    {
+      "path": "tests/SphereSelectorRealOrAbsentTests.cpp",
+      "before_sha256": "4ab4ea20528a0a3558813dcdb1b50e4f0531db6b9586e76964091d9f1e0e4436",
+      "before_status": "",
+      "after_sha256": "9c96edda67fb99a0e4d2df3b32fa0812599da03baaa4ea9e147e3b1bcdc5e4ce",
+      "action": "modify"
+    }
+  ]
+}

@@ -1,27 +1,17 @@
-#include "compat/Cp932Literal.hpp"
 #include "Game/Map/CollisionCategorizedKeeper.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
-#include "Game/Map/CollisionParts.hpp"
 #include "Game/Map/CollisionDirector.hpp"
+#include "Game/Map/CollisionParts.hpp"
 #include "Game/Util/CollisionPartsFilter.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
+#include "compat/Cp932Literal.hpp"
 #include <algorithm>
-#include "scene/StageCollisionService.hpp"
-#include <aurora/allocation.hpp>
 
 CollisionCategorizedKeeper::CollisionCategorizedKeeper(s32 category)
-    : NameObj(CP932("地形コリジョンカテゴリキーパー")), mHitInfoArray(nullptr), _10(0), mZoneCount(0), mZones{}, mZoneNum(0), _9C(category), _A0(false), _A1(true) {
+    : NameObj(CP932("地形コリジョンカテゴリキーパー")), mHitInfoArray(nullptr), _10(0), mZoneCount(0), mZones{}, mZoneNum(0), _9C(category),
+      _A0(false), _A1(true) {
     mHitInfoArray = new HitInfo[32];
-    try {
-        if (category != 0) {
-            const aurora::allocation::HostAllocationScope host;
-            mNativeService = std::make_shared<smgpc::scene::StageCollisionService>();
-        }
-    } catch (...) {
-        delete[] mHitInfoArray;
-        throw;
-    }
 }
 
 CollisionCategorizedKeeper::~CollisionCategorizedKeeper() {
@@ -30,17 +20,12 @@ CollisionCategorizedKeeper::~CollisionCategorizedKeeper() {
     delete[] mHitInfoArray;
 }
 
-smgpc::scene::StageCollisionService* CollisionCategorizedKeeper::nativeService() const noexcept {
-    return _9C == 0 ? smgpc::scene::StageCollisionService::active() : mNativeService.get();
-}
-
-std::shared_ptr<smgpc::scene::StageCollisionService> CollisionCategorizedKeeper::retainNativeService() const noexcept {
-    return mNativeService;
-}
-
 void CollisionCategorizedKeeper::requireNativeGeometryPublished() const {
-    if (auto* service = nativeService())
-        service->require_published_geometry();
+    // Check every enabled original part before spatial culling. A malformed
+    // mutable source quarantines only the category that actually owns it.
+    for (s32 zone = 0; zone < mZoneNum; ++zone)
+        for (s32 part = 0; part < mZones[zone]->mNumParts; ++part)
+            mZones[zone]->mPartsArray[part]->requireNativeGeometryPublished();
 }
 
 CollisionZone* CollisionCategorizedKeeper::getZone(int zoneID) {
@@ -312,7 +297,7 @@ s32 CollisionCategorizedKeeper::checkStrikeBallWithThickness(const TVec3f& rPos,
 }
 
 s32 CollisionCategorizedKeeper::checkStrikeLine(const TVec3f& rStart, const TVec3f& rOffset, s32 maxCount,
-                                               const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter) {
+                                                const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter) {
     requireNativeGeometryPublished();
     MR::getCollisionDirector();
 

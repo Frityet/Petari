@@ -19,7 +19,7 @@ namespace smgpc::test {
 class SceneExecutionFixture final {
 public:
     SceneExecutionFixture(runtime::SceneScheduler& scheduler, std::shared_ptr<compat::JkrAllocationDomain> domain,
-                          Scene* original_scene = nullptr, NameObjHolder* original_names = nullptr)
+                          Scene* original_scene = nullptr)
         : _scheduler(scheduler), _domain(std::move(domain)), _original_scene(original_scene) {
         try {
             {
@@ -34,7 +34,7 @@ public:
             }
             _allocation = std::make_unique<runtime::SceneSchedulerAllocationBinding>(_scheduler, _domain);
             _holder->initializeNative(_domain);
-            _execution = std::make_unique<scene::SceneExecutionBinding>(_scheduler, *_executor, _domain, original_names);
+            _execution = std::make_unique<scene::SceneExecutionBinding>(_scheduler, *_executor, _domain);
         } catch (...) { retire(); throw; }
     }
     ~SceneExecutionFixture() { retire(); }
@@ -48,7 +48,7 @@ public:
         const scene::SceneInitializationScope phase(SceneInitializeState_AfterPlacement);
         for (auto* object : compat::snapshot_name_obj_runtime_objects()) {
             if (!_holder->ownsNativeObject(object) || std::ranges::find(_completed, object) != _completed.end()) continue;
-            if (!compat::name_obj_runtime_postpass_is_delegated(object)) {
+            {
                 const aurora::allocation::ClientAllocationScope game({true, true});
                 object->initAfterPlacement();
             }

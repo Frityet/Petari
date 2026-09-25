@@ -23,9 +23,7 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "resource/KCollisionResource.hpp"
-#include "scene/NameObjChildOwner.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
-#include "scene/StageCollisionService.hpp"
 
 #include <aurora/allocation.hpp>
 #include <aurora/main.h>
@@ -123,14 +121,11 @@ namespace {
                         "Authored area uses its real zone, sensor group and two-prism parts");
                 require(!area->mSwitchCtrl->isOnSwitchAppear() && !area->isValid() && !parts->_CC,
                         "Fresh authored SW_APPEAR remains off and collision membership is disabled");
-                auto& collision = *smgpc::scene::StageCollisionService::active();
-                const auto first = collision.surface(parts, 0);
-                const auto second = collision.surface(parts, 1);
-                require(first && second && !collision.surface(first->triangle_index) && !collision.surface(second->triangle_index),
-                        "Switch-off placement retains diagnostic geometry but no enabled native surface");
-                const auto point = first->vertices[0] * 0.2F + first->vertices[1] * 0.3F + first->vertices[2] * 0.5F;
-                const auto start = point + first->normals[0] * 100.0F;
-                const auto offset = first->normals[0] * -200.0F;
+                Triangle first;
+                first.fillData(parts, 0, parts->mHitSensor);
+                const auto point = first.mPos[0] * 0.2F + first.mPos[1] * 0.3F + first.mPos[2] * 0.5F;
+                const auto start = point + first.mNormals[0] * 100.0F;
+                const auto offset = first.mNormals[0] * -200.0F;
                 const OnlyPart only_area(parts);
                 auto* keeper = MR::getCollisionDirector()->getCategoryKeeper(parts->mKeeperIndex);
                 require(line_hits(*keeper, only_area, start, offset) == 0,
@@ -145,22 +140,22 @@ namespace {
         }
 
         void exercise_polygon(const JMapInfoIter& iter) {
-            auto& collision = *smgpc::scene::StageCollisionService::active();
             const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
             require(domain != nullptr, "Actual original GameScene allocation domain exists");
             const PlacementZoneScope zone(MR::getPlacedZoneId(iter));
             const auto actors_before = smgpc::compat::actor_runtime_state_count();
-            smgpc::scene::NameObjChildOwner objects;
+            std::unique_ptr<AreaPolygon> polygon_owner;
             std::unique_ptr<AreaFormCube> form;
             AreaPolygon* polygon = nullptr;
-            objects.capture_construction_children([&] {
+            {
                 const smgpc::compat::JkrAllocationScope game(domain);
                 form = std::make_unique<AreaFormCube>(0);
                 form->init(iter);
-                polygon = new AreaPolygon;
+                polygon_owner = std::make_unique<AreaPolygon>();
+                polygon = polygon_owner.get();
                 polygon->mForm = form.get();
                 polygon->init(iter);
-            });
+            }
             auto* parts = polygon->mParts;
             auto* server = parts->mServer;
             auto* file = polygon->mKCLFile;
@@ -171,11 +166,6 @@ namespace {
                     "AreaPolygon::init creates real sensor/group, CollisionParts and typed generated KCL");
             require(polygon->nativeCollisionParts().size() == 1,
                     "Actual actor owns exactly one generated collision part");
-            const auto initial0 = collision.surface(parts, 0);
-            const auto initial1 = collision.surface(parts, 1);
-            require(initial0 && initial1, "Generated initialization publishes both original prisms");
-            const auto id0 = initial0->triangle_index;
-            const auto id1 = initial1->triangle_index;
             const auto zone_count = parts->mZone->mNumParts;
             auto* original_zone = parts->mZone;
             const OnlyPart only_polygon(parts);
@@ -207,17 +197,17 @@ namespace {
                 }
                 require(polygon->mParts == parts && polygon->mKCLFile == file && parts->mServer == server,
                         "Face mutation preserves actual file, part and server identity");
-                const auto first = collision.surface(parts, 0);
-                const auto second = collision.surface(parts, 1);
-                require(first && second && first->triangle_index == id0 && second->triangle_index == id1 &&
-                            first->prism_index == 0 && second->prism_index == 1 && first->sensor == sensor,
-                        "Six face mutations preserve local prisms, global IDs and the real sensor");
+                Triangle first, second;
+                first.fillData(parts, 0, sensor);
+                second.fillData(parts, 1, sensor);
+                require(first.mParts == parts && second.mParts == parts && first.mIdx == 0 && second.mIdx == 1 && first.mSensor == sensor,
+                        "Six face mutations preserve actual local prisms and the real sensor");
                 const auto axis = static_cast<std::size_t>(face / 2);
                 const auto sign = face % 2 == 0 ? 1.0F : -1.0F;
                 const auto normal = axes[axis] * sign;
-                near(first->normals[0], normal, "Regenerated face normal matches the authored world axis");
-                for (const auto* surface : {&*first, &*second}) {
-                    for (const auto& vertex : surface->vertices) {
+                near(first.mNormals[0], normal, "Regenerated face normal matches the authored world axis");
+                for (const auto* surface : {&first, &second}) {
+                    for (const auto& vertex : surface->mPos) {
                         const auto local = vertex - center;
                         near(local.dot(axes[axis]), sign * extents[axis], "All face vertices lie on the authored expanded plane");
                         for (std::size_t other = 0; other < axes.size(); ++other) {
@@ -227,7 +217,7 @@ namespace {
                     }
                 }
                 // A strictly interior point avoids shared-diagonal and edge tolerances.
-                const auto point = first->vertices[0] * 0.2F + first->vertices[1] * 0.3F + first->vertices[2] * 0.5F;
+                const auto point = first.mPos[0] * 0.2F + first.mPos[1] * 0.3F + first.mPos[2] * 0.5F;
                 last_start = point + normal * 100.0F;
                 last_offset = normal * -200.0F;
                 const auto hit_count = line_hits(*keeper, only_polygon, last_start, last_offset);
@@ -258,24 +248,24 @@ namespace {
                     near(keeper->getStrikeInfo(encounter)->_60 / last_offset.length(), fractions[encounter],
                          "Original server fraction and keeper world distance agree");
                 }
-                std::fprintf(stderr, "[collision-area-probe] face=%d zone=%d prisms=2 ids=%u,%u encounters=%u fraction=%g\n",
-                             face, parts->mZone->mZoneID, id0, id1, count, double(fractions[0]));
+                std::fprintf(stderr, "[collision-area-probe] face=%d zone=%d prisms=2 encounters=%u fraction=%g\n",
+                             face, parts->mZone->mZoneID, count, double(fractions[0]));
             }
             polygon->invalidate();
             require(!parts->_CC && original_zone->mNumParts + 1 == zone_count &&
-                        !collision.surface(id0) && line_hits(*keeper, only_polygon, last_start, last_offset) == 0,
+                        line_hits(*keeper, only_polygon, last_start, last_offset) == 0,
                     "Original invalidation removes zone membership and original query results");
             polygon->validate();
-            require(parts->_CC && original_zone->mNumParts == zone_count && collision.surface(id0),
+            require(parts->_CC && original_zone->mNumParts == zone_count,
                     "Original validation restores the same membership and surface identity");
-            objects.clear();
+            polygon_owner.reset();
             require(!smgpc::compat::has_actor_runtime_state(polygon) &&
                         smgpc::compat::actor_runtime_state_count() == actors_before &&
-                        original_zone->mNumParts + 1 == zone_count && !collision.surface(id0) &&
+                        original_zone->mNumParts + 1 == zone_count &&
                         line_hits(*keeper, only_polygon, last_start, last_offset) == 0,
                     "Actor retirement removes real sensor and collision children, zone membership and original query results");
-            require(smgpc::resource::is_native_kcollision_file(file),
-                    "Scene collision cache retains generated arrays after the actor is retired");
+            require(!smgpc::resource::is_native_kcollision_file(file),
+                    "Actual actor retirement releases its generated collision allocation");
             retained_files.push_back(file);
         }
 
@@ -339,11 +329,9 @@ int main(int argc, char* argv[]) {
         };
         require(smgpc::app::run_original_game(configuration, *logger, observer) == 0 && probe.exercised,
                 "Actual OriginalProcess completed the diagnostic and bounded normal frame loop");
-        require(smgpc::scene::StageCollisionService::active() == nullptr,
-                "Normal OriginalProcess teardown retires the actual scene collision owner");
         for (const auto* file : probe.retained_files)
             require(!smgpc::resource::is_native_kcollision_file(file),
-                    "Normal scene-cache retirement releases every generated typed-resource identity");
+                    "Normal scene retirement releases every generated typed-resource identity");
         std::fprintf(stderr, "PASS original-process CollisionArea integration: twelve face mutations, real sensors/parts, original keeper/parts queries, actor and scene retirement, factory placements=%d\n",
                      probe.expect_placements ? 2 : 0);
         return 0;

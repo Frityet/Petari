@@ -1,0 +1,12 @@
+{
+  "source_only": true,
+  "no_builds_or_tests_by_this_lane": true,
+  "retired_api_references": [],
+  "part_query_guards": 6,
+  "keeper_query_guards": 6,
+  "nonpositive_generated_prisms_skipped": true,
+  "publication_clear_before_validation": true,
+  "paths": 15,
+  "source_files_deleted": 2,
+  "test_files_deleted": 1
+}

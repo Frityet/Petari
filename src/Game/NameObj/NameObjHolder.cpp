@@ -2,7 +2,10 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/HashUtil.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+#include <aurora/exception.hpp>
 #include <algorithm>
+#include <stdexcept>
 #include <cstring>
 
 namespace {
@@ -23,8 +26,44 @@ NameObjHolder::NameObjHolder(int num) {
     mObjArray1.init(num);
 }
 
+NameObjHolder::~NameObjHolder() {
+    clearArray();
+}
+
 void NameObjHolder::add(NameObj* pObj) {
+    if (!pObj || pObj->mNativeHolder || std::find(mObjArray1.begin(), mObjArray1.end(), pObj) != mObjArray1.end()) {
+        aurora::throw_host_exception<std::logic_error>("NameObj already belongs to an original holder");
+    }
+    if (mObjArray1.size() >= mObjArray1.capacity()) {
+        aurora::throw_host_exception<std::length_error>("Original NameObjHolder capacity exceeded");
+    }
     mObjArray1.push_back(pObj);
+    pObj->mNativeHolder = this;
+}
+
+void NameObjHolder::removeNativeObject(NameObj* object) noexcept {
+    // Single-object native destruction must remove the primary entry and every
+    // cached lookup, preserving the original surviving order and array storage.
+    auto erase = [object](auto& objects) {
+        for (auto* it = objects.begin(); it != objects.end();) {
+            if (*it == object) {
+                objects.erase(it);
+                *objects.end() = nullptr;
+            } else {
+                ++it;
+            }
+        }
+    };
+    erase(mObjArray1);
+    erase(mObjArray2);
+    if (object && object->mNativeHolder == this) {
+        object->mNativeHolder = nullptr;
+    }
+}
+
+std::vector<NameObj*> NameObjHolder::snapshotNativeObjects() const {
+    const smgpc::compat::JkrHostAllocationScope host;
+    return {mObjArray1.begin(), mObjArray1.end()};
 }
 
 void NameObjHolder::suspendAllObj() {
@@ -55,6 +94,11 @@ void NameObjHolder::callMethodAllObj(NameObjMethod pMethod) {
 }
 
 void NameObjHolder::clearArray() {
+    for (auto* object : mObjArray1) {
+        if (object && object->mNativeHolder == this) {
+            object->mNativeHolder = nullptr;
+        }
+    }
     mObjArray1.clear();
     mObjArray2.clear();
 }

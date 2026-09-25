@@ -61,7 +61,7 @@ int main() {
             {
                 smgpc::test::SceneExecutionFixture scene(
                     scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 1U << 20),
-                    &original.scene, original.controller().mObjHolder);
+                    &original.scene);
                 membership(); derived_group();
                 scene.complete_initialization();
             }

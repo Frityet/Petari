@@ -4,7 +4,6 @@
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "scene/NameObjChildOwner.hpp"
 
 #include <array>
 #include <cstddef>
@@ -188,7 +187,6 @@ namespace {
         auto domain = JkrAllocationDomain::create(heaps, 64U << 10);
         auto owner = std::unique_ptr<DemoStartRequestHolder>{};
         NameObj borrower("borrowed request owner");
-        const auto capture = mark_name_obj_runtime_registrations();
         NameObj* proxy = nullptr;
         {
             JkrAllocationScope game_allocations(domain);
@@ -209,16 +207,15 @@ namespace {
                         "original request storage must use the caller-selected Game arena");
             }
             require(name_obj_runtime_owner(proxy) == owner.get(),
-                    "construction capture can adopt the independently owned proxy");
+                    "the actual holder owns its proxy");
             auto info = DemoStartInfo{};
             info._C = &borrower;
             info.mDemoName = "retained request";
             holder.registerStartDemoInfo(info);
             holder.pushRequest(&borrower, info.mDemoName);
         }
-        smgpc::scene::NameObjChildOwner::rollback_registration_suffix(capture);
         require(has_name_obj_runtime_state(proxy),
-                "construction capture deleted the independently owned proxy");
+                "the actual holder retains its proxy after nested holder retirement");
         domain.reset();
         {
             auto reuse = JkrAllocationDomain::create(heaps, 64U << 10);

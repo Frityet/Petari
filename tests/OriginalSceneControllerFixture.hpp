@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Game/Scene/IntermissionScene.hpp"
+#include "Game/NameObj/NameObjRegister.hpp"
 #include "Game/Scene/PlayTimerScene.hpp"
 #include "Game/Scene/ScenarioSelectScene.hpp"
 #include "Game/System/GameSystem.hpp"
@@ -17,11 +18,13 @@ class OriginalSceneControllerFixture final {
 public:
     explicit OriginalSceneControllerFixture(const std::shared_ptr<compat::JkrHeapRuntime>& heaps)
         : domain(compat::JkrAllocationDomain::create(heaps, 1U << 20)), scene("original scene fixture") {
-        if (SingletonHolder<GameSystem>::get())
+        if (SingletonHolder<GameSystem>::get() || SingletonHolder<NameObjRegister>::get())
             throw std::logic_error("Scene test requires exclusive original GameSystem ownership");
         compat::JkrAllocationScope game(domain);
         SingletonHolder<GameSystem>::init();
         SingletonHolder<GameSystem>::get()->mSceneController = new GameSystemSceneController();
+        SingletonHolder<NameObjRegister>::init();
+        SingletonHolder<NameObjRegister>::get()->setCurrentHolder(controller().mObjHolder);
         controller().mScene = &scene;
     }
     ~OriginalSceneControllerFixture() {
@@ -32,6 +35,7 @@ public:
         delete owner->mScenarioSelectScene;
         delete owner->mPlayTimerScene;
         delete owner->mIntermissionScene;
+        delete SingletonHolder<NameObjRegister>::release();
         delete owner;
         system->mSceneController = nullptr;
         delete system;

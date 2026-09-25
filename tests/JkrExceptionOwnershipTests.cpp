@@ -154,7 +154,7 @@ namespace {
             smgpc::runtime::SceneScheduler scheduler;
             smgpc::runtime::SceneSchedulerBinding scheduler_binding(scheduler);
             smgpc::test::SceneExecutionFixture execution(scheduler, process.domain,
-                                                        &process.scene, process.controller().mObjHolder);
+                                                        &process.scene);
             JkrAllocationScope scope(process.domain);
             require(MR::getSceneObjHolder() == process.controller().getSceneObjHolder() &&
                         !MR::getSceneObjHolder()->isExist(SceneObj_CameraContext),

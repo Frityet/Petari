@@ -1,0 +1,8 @@
+[
+  "src/Game/MapObj/GCapture.cpp",
+  "src/Game/MapObj/GCaptureRibbon.cpp",
+  "src/Game/Util/SpringValue.cpp",
+  "src/Game/MapObj/GCapture.hpp",
+  "src/compat/OriginalGCaptureQueries.cpp",
+  "src/Game/Scene/SceneObjAvailability.hpp"
+]

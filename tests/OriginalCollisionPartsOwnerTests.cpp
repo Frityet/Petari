@@ -3,8 +3,7 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
-#include "scene/PlacementZoneScope.hpp"
-#include "scene/StageCollisionService.hpp"
+#include "Game/Util/SceneUtil.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/MapObj/ClipAreaHolder.hpp"
@@ -49,8 +48,11 @@ int main() {
         const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
         auto& holder = *MR::getSceneObjHolder();
         auto* director = static_cast<CollisionDirector*>(holder.getObj(SceneObj_CollisionDirector));
-        auto& collision = *smgpc::scene::StageCollisionService::active();
-        smgpc::scene::PlacementZoneScope placement(0);
+        struct RestorePlacementZone {
+            s32 previous = MR::getCurrentPlacementZoneId();
+            ~RestorePlacementZone() { MR::setCurrentPlacementZoneId(previous); }
+        } placement;
+        MR::setCurrentPlacementZoneId(0);
         ResourceHolder* resource = nullptr;
         smgpc::test::on_resource_worker([&] {
             resource = MR::createAndAddResourceHolder("HeavensDoorSmallPlanet.arc");
@@ -74,12 +76,13 @@ int main() {
             require(parts->_CC && parts->mZone->mNumParts == zone_members + 1,
                     "original appearance inserts exactly one real zone member");
 
-            std::optional<smgpc::scene::StageCollisionSurface> surface;
-            for (s32 i = 0; i < parts->mServer->getTriangleNum() && !surface; ++i)
-                surface = collision.surface(parts, i);
-            require(surface.has_value(), "real archived part publishes its prisms");
-            retained.fillData(parts, surface->prism_index, sensor);
-            require(retained.mParts == parts && retained.mIdx == surface->prism_index &&
+            Triangle surface;
+            for (s32 i = 0; i < parts->mServer->getTriangleNum() && !surface.isValid(); ++i)
+                if (parts->mServer->getPrismData(i)->mHeight > 0.0F)
+                    surface.fillData(parts, i, sensor);
+            require(surface.isValid(), "Real archived part contains an active original prism");
+            retained = surface;
+            require(retained.mParts == parts && retained.mIdx == surface.mIdx &&
                     retained.getBaseMtx() == &parts->mBaseMatrix,
                     "native query retains exact original owner, local prism and matrix identity");
             {
@@ -99,9 +102,9 @@ int main() {
                         "scene factory creates the actual empty active ClipArea holder on the Game heap");
                 require(filter->isInvalidParts(parts),
                         "clip-field collision is excluded outside all live ClipAreas");
-                const auto center = (surface->vertices[0] + surface->vertices[1] + surface->vertices[2]) * (1.0F / 3.0F);
-                const auto start = center + surface->normals[0];
-                const auto offset = surface->normals[0] * -2.0F;
+                const auto center = (surface.mPos[0] + surface.mPos[1] + surface.mPos[2]) * (1.0F / 3.0F);
+                const auto start = center + surface.mNormals[0];
+                const auto offset = surface.mNormals[0] * -2.0F;
                 Triangle found;
                 TVec3f position;
                 require(!MR::getFirstPolyOnLineToMap(&position, &found, start, offset, filter, nullptr),
@@ -120,8 +123,8 @@ int main() {
                 MatrixActor caster;
                 MR::initShadowVolumeSphere(&caster, 10);
                 auto* shadow = caster.mShadowControllerList->getController(0U);
-                const auto center = (surface->vertices[0] + surface->vertices[1] + surface->vertices[2]) * (1.0F / 3.0F);
-                const auto normal = surface->normals[0];
+                const auto center = (surface.mPos[0] + surface.mPos[1] + surface.mPos[2]) * (1.0F / 3.0F);
+                const auto normal = surface.mNormals[0];
                 shadow->setDropPosFix(center + normal);
                 shadow->setDropDirFix(normal * -1.0F);
                 shadow->setDropStartOffset(0.25F);
@@ -157,7 +160,7 @@ int main() {
             MR::calcVelocityMovingPoint(&retained, TVec3f(35, 0, 0), &velocity);
             near(velocity.x, 30, "moving-point velocity follows actual previous/current transforms");
             const auto* position = retained.calcAndGetPos(0);
-            near(position->x, surface->vertices[0].x + 30, "retained original triangle recalculates translated vertex");
+            near(position->x, surface.mPos[0].x + 30, "retained original triangle recalculates translated vertex");
             MR::offUpdateCollisionParts(&actor);
             actor.matrix.mMtx[0][3] = 90;
             actor.calcAnim(); director->movement();
@@ -168,7 +171,7 @@ int main() {
             require(!parts->_CD && !parts->_CE && parts->_D4 == 1,
                     "one-shot update clears only its original request flag and preserves continuous-off policy");
             MR::invalidateCollisionParts(&actor);
-            require(!collision.surface(surface->triangle_index) && retained.isValid() && retained.getBaseMtx() == base,
+            require(!parts->_CC && retained.isValid() && retained.getBaseMtx() == base,
                     "zone invalidation hides queries while existing original triangle retains its live part");
             MR::validateCollisionParts(&actor);
             MR::validateCollisionParts(&actor);

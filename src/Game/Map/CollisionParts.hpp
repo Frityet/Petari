@@ -16,9 +16,6 @@ class ResourceHolder;
 namespace smgpc::resource {
     class GeneratedKCollisionResource;
 }
-namespace smgpc::scene {
-    class StageCollisionService;
-}
 
 class CollisionParts {
 public:
@@ -29,7 +26,7 @@ public:
 
     void initFromResource(ResourceHolder*, const char*, HitSensor*, const TPos3f&, int, s32);
     void initFromGeneratedResource(std::shared_ptr< smgpc::resource::GeneratedKCollisionResource >, HitSensor*, const TPos3f&, s32);
-    smgpc::scene::StageCollisionService* nativeService() const noexcept;
+    void requireNativeGeometryPublished() const;
     std::weak_ptr< const void > nativeLifetime() const noexcept {
         return mNativeLifetime;
     }
@@ -92,9 +89,8 @@ public:
     f32 _F0;
 
 private:
-    void publishNativeMatrices();
+    void validateNativeMatrices();
     void publishNativeGeometry();
-    void publishNativeMembership(bool);
     struct NativeResources;
     std::unique_ptr< NativeResources > mNativeResources;
     std::shared_ptr< const void > mNativeLifetime;

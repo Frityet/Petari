@@ -52,7 +52,6 @@ namespace {
         std::shared_ptr<const std::string> host_name{};
         std::uint64_t registration_order = 0U;
         const void* owner = nullptr;
-        const void* postpass_delegate = nullptr;
     };
 
     struct LiveActorRuntimeState {
@@ -80,13 +79,6 @@ namespace {
     [[nodiscard]] auto& next_name_obj_registration_order() {
         static auto order = std::uint64_t{1U};
         return order;
-    }
-
-    [[nodiscard]] const smgpc::compat::NameObjRuntimeRegistrationCapture*&
-    active_name_obj_registration_capture() {
-        static const smgpc::compat::NameObjRuntimeRegistrationCapture* capture =
-            nullptr;
-        return capture;
     }
 
     [[nodiscard]] std::vector<NameObj*> snapshot_name_obj_runtime_objects_from(
@@ -163,28 +155,6 @@ namespace smgpc::compat {
                 }
             }
         }
-    }
-
-    NameObjRuntimeRegistrationCapture::NameObjRuntimeRegistrationCapture() {
-        auto& active = active_name_obj_registration_capture();
-        if (active != nullptr) {
-            aurora::throw_host_exception<std::logic_error>(
-                "NameObj construction capture cannot overlap or nest.");
-        }
-        _marker = mark_name_obj_runtime_registrations();
-        active = this;
-    }
-
-    NameObjRuntimeRegistrationCapture::~NameObjRuntimeRegistrationCapture() {
-        auto& active = active_name_obj_registration_capture();
-        if (active == this) {
-            active = nullptr;
-        }
-    }
-
-    NameObjRuntimeRegistrationMarker
-    NameObjRuntimeRegistrationCapture::marker() const noexcept {
-        return _marker;
     }
 
     void register_name_obj_runtime_state(NameObj* object) {
@@ -293,48 +263,6 @@ namespace smgpc::compat {
                                                 : nullptr;
     }
 
-    void delegate_name_obj_runtime_postpass(NameObj* object,
-                                            const void* delegate) {
-        if (object == nullptr || delegate == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>(
-                "NameObj postpass delegation requires real object and delegate identities.");
-        }
-        const auto found = name_obj_states().find(object);
-        if (found == name_obj_states().end()) {
-            aurora::throw_host_exception<std::logic_error>(
-                "NameObj postpass delegation requires a registered object.");
-        }
-        if (found->second.postpass_delegate != nullptr &&
-            found->second.postpass_delegate != delegate) {
-            aurora::throw_host_exception<std::logic_error>(
-                "NameObj postpass is already delegated to another boundary.");
-        }
-        found->second.postpass_delegate = delegate;
-    }
-
-    void release_name_obj_runtime_postpass_delegation(
-        const NameObj* object, const void* delegate) noexcept {
-        const auto found = name_obj_states().find(object);
-        if (found != name_obj_states().end() &&
-            found->second.postpass_delegate == delegate) {
-            found->second.postpass_delegate = nullptr;
-        }
-    }
-
-    bool name_obj_runtime_postpass_is_delegated(
-        const NameObj* object) noexcept {
-        const auto found = name_obj_states().find(object);
-        return found != name_obj_states().end() &&
-               found->second.postpass_delegate != nullptr;
-    }
-
-    const void* name_obj_runtime_postpass_delegate(
-        const NameObj* object) noexcept {
-        const auto found = name_obj_states().find(object);
-        return found != name_obj_states().end()
-                   ? found->second.postpass_delegate
-                   : nullptr;
-    }
 
     std::vector<NameObj*> snapshot_name_obj_runtime_objects() {
         return snapshot_name_obj_runtime_objects_from(0U);

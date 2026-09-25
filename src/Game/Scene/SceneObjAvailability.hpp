@@ -85,7 +85,7 @@
 #define SMGPC_SCENEOBJ_ClipFieldFillDraw 0
 #define SMGPC_SCENEOBJ_ScreenAlphaCapture 1
 #define SMGPC_SCENEOBJ_MapPartsRailGuideHolder 1
-#define SMGPC_SCENEOBJ_GCapture 0
+#define SMGPC_SCENEOBJ_GCapture 1
 #define SMGPC_SCENEOBJ_NameObjExecuteHolder 1
 #define SMGPC_SCENEOBJ_ElectricRailHolder 0
 #define SMGPC_SCENEOBJ_SpiderThread 0

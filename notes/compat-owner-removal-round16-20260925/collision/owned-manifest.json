@@ -1,0 +1,142 @@
+{
+  "baseline": "16d91cbb0",
+  "paths": [
+    {
+      "path": "src/scene/StageCollisionService.cpp",
+      "existed_before": true,
+      "action": "delete",
+      "initially_dirty": false,
+      "before_sha256": "1f5e40f9a2dcb1a425c45a9a6acbdd042c09ec1c5b63e6af44146a8a096a770d",
+      "after_sha256": null,
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/scene/StageCollisionService.hpp",
+      "existed_before": true,
+      "action": "delete",
+      "initially_dirty": false,
+      "before_sha256": "d382a90d2d48af336fed5941c3d8b4d571213d6abc49144a3064ca332c3ae1e8",
+      "after_sha256": null,
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Map/CollisionParts.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "7530bf60cb1fd0ea2f990f6bf3c18238779fa15b1d471da8af8ff2bdce2b9d03",
+      "after_sha256": "3af6b9813ad81803dca93eecf7d15f721a2c028a57cee8d1ab4da5f5fa97c0ad",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Map/CollisionParts.hpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "a4c0d19342fbbc087f4caa06d739db6903fbf0e519ccfdd5eb10fe7665ef241e",
+      "after_sha256": "b408deedc4e34aeed14c4cee471b4724961fb5b26e48feeb24a1b2388bc69e27",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "89c23d234dec03986f1e6972e9d2d225baa664711424cc25281a8822a56e29b0",
+      "after_sha256": "ad61c2958d351239f7a2505a0e9628f4f43e5e45d66758ba9d9be814918ae2ba",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Map/CollisionCategorizedKeeper.hpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "f6d0b99846790d9d1afd48924425d624c78d8ec4eeabb3c7a4ed61f6eed14de0",
+      "after_sha256": "ea1d512b4e18d6168a717d5f4458df582f82944681f6bfacd4a1d9ad0fdc71b3",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/scene/OriginalSceneSupport.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "709692d0a933a3c93461e85621fe7887c5be2f111a0d040cf84f9d34b67daeea",
+      "after_sha256": "354ff033c917f12537da3de75b72682246b82ba9359d1f9faa7e57940c574e27",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "tests/OriginalProcessMapObjectTests.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "229a9ffff260cb96f83027963c7aaa6c4301e6b6196881a7d88b92f7737ce8c9",
+      "after_sha256": "aae81c896e8b3c13e2d0281b776a0a2702a2c3867f54ccaa29bb1971bffe66f9",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "tests/OriginalProcessCollisionAreaTests.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "f891e48377e90fdab5e6d7444fef95f8b832c6a45d3369a7b6fa1ac49daa4e89",
+      "after_sha256": "54b93aea37fca52c205b7ff88451e4bf780dc49eaadbb70f133ef6c8641dbfec",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "tests/OriginalSphereQueryTests.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "f666989ce83afcd32259faab7f18c2fbd2e3a85f18375ffd099eb80b1f68b6b2",
+      "after_sha256": "6b9737493ebcda67ec4a196e8d33f305b69018fa5a044a9996453d3990f5a705",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "tests/OriginalPlayerUtilTests.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "ff792b46d5b517d1e118357fa4c24ee435dd64649a6bb8f92bbcaef2653c361f",
+      "after_sha256": "3506eb4203f36b6373b4ca253d4dd76a3c634f5413a97eefb7691aef8c5bf4d9",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "tests/OriginalProcessPlayerOwnerTests.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "d11e96ec51bb85aa0052ec0a4cb98140b03836b0dd97b578194755cae7e915d0",
+      "after_sha256": "5de1621d8e1dd0ef3ddda4b78789d96a8e5ede8584521670d995a56221972a61",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "tests/StageCollisionRegistrationTests.cpp",
+      "existed_before": true,
+      "action": "delete",
+      "initially_dirty": false,
+      "before_sha256": "a1461ce801321b3a82ac10d7e7d2520c78189364c1f95f28fec5b77511b07831",
+      "after_sha256": null,
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "tests/OriginalCollisionPartsOwnerTests.cpp",
+      "existed_before": true,
+      "before_includes_coordinated_changes": "decomp_validation resolver/zone migration",
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "1ad2841f25e194a33f376e6fcfdbb63cbdb5b7d5f5ee57a00297bc9f2055039a",
+      "after_sha256": "6ef89976cb8cf6a2531458722e887a883de3ccf36255e97ef20ec69ade79b37f",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "tests/NameObjFactoryPlacementTests.cpp",
+      "existed_before": true,
+      "before_includes_coordinated_changes": "decomp_validation resolver/zone migration",
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "93014c9c4d4a82a159a037e26aeefd4ce6b19eaeaea05b6f265d04acf0250a2a",
+      "after_sha256": "96d38f9a427f57c460a95769c9e8b8ed8ab0e51a8049dee2243ba95b4a4a4b2f",
+      "lane_patch": "lane-only.patch"
+    }
+  ]
+}

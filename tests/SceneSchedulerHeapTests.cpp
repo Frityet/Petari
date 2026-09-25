@@ -154,7 +154,7 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
         SceneSchedulerBinding active(scheduler);
         SceneSchedulerAllocationBinding scene(scheduler, game);
         smgpc::test::SceneExecutionFixture execution(scheduler, game,
-                                                  &original.scene, original.controller().mObjHolder);
+                                                  &original.scene);
         create_clipping_fixture(scheduler);
         CallbackObject object(scheduler);
         scheduler.connect_name_obj(object, 34, 0, -1, 72);
@@ -307,7 +307,7 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
         SceneSchedulerBinding active(scheduler);
         auto execution_domain = JkrAllocationDomain::create(heaps, 512U << 10);
         smgpc::test::SceneExecutionFixture execution(scheduler, execution_domain,
-                                                  &original.scene, original.controller().mObjHolder);
+                                                  &original.scene);
         auto domain = JkrAllocationDomain::create(heaps, 64U << 10);
         std::weak_ptr<JkrAllocationDomain> weak = domain;
         auto scene = std::make_unique<SceneSchedulerAllocationBinding>(scheduler, domain);
@@ -344,7 +344,7 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
         SceneSchedulerBinding active(scheduler);
         SceneSchedulerAllocationBinding game(scheduler, domain);
         smgpc::test::SceneExecutionFixture execution(scheduler, domain,
-                                                  &original.scene, original.controller().mObjHolder);
+                                                  &original.scene);
         create_clipping_fixture(scheduler);
         CallbackObject camera(scheduler), clipping(scheduler), platform(scheduler), collision(scheduler), player(scheduler);
         std::vector<unsigned> order;
@@ -525,7 +525,7 @@ int main(int argc, char** argv) {
     smgpc::runtime::SceneSchedulerBinding active(scheduler);
     auto execution_domain = JkrAllocationDomain::create(heaps, 1U << 20);
     auto execution = std::make_unique<smgpc::test::SceneExecutionFixture>(
-        scheduler, execution_domain, &original->scene, original->controller().mObjHolder);
+        scheduler, execution_domain, &original->scene);
     create_clipping_fixture(scheduler);
     std::vector<std::unique_ptr<NameObj>> objects;
     for (int i = 0; i < 128; ++i)

@@ -177,32 +177,6 @@ target("smg-pc-stationed-archive-real-or-absent-tests")
         realtime_output = true
     })
 
-target("smg-pc-object-name-table-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    set_rundir(os.projectdir())
-    add_files {
-        "ObjectNameTableTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("object_name_table", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
 target("smg-pc-nameobj-factory-placement-tests")
     set_kind("binary")
     set_default(false)
@@ -224,31 +198,6 @@ target("smg-pc-nameobj-factory-placement-tests")
         "aurora-vi"
     }
     add_tests("nameobj_factory_placement", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
-target("smg-pc-stage-collision-registration-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    add_files {
-        "StageCollisionRegistrationTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("stage_collision_registration", {
         group = "aurora",
         rundir = os.projectdir(),
         realtime_output = true
@@ -2367,18 +2316,6 @@ target("smg-pc-original-name-pos-owner-tests")
         group = "original-process", rundir = os.projectdir(), realtime_output = true
     })
 
-target("smg-pc-scene-name-obj-registry-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    add_files("SceneNameObjRegistryTests.cpp")
-    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
-              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
-    add_tests("scene_name_obj_registry", {
-        group = "aurora", rundir = os.projectdir(), realtime_output = true
-    })
-
-
 target("smg-pc-original-scene-execution-owner-tests")
     set_kind("binary")
     set_default(false)
@@ -2620,15 +2557,6 @@ target("smg-pc-original-actor-utility-tests")
              "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi")
     add_tests("original_actor_utilities", {group = "aurora", rundir = os.projectdir(), realtime_output = true})
 
-
-target("smg-pc-original-placement-coverage-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    add_files("OriginalPlacementCoverageTests.cpp")
-    add_deps("smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd", "aurora-gd",
-             "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi")
-    add_tests("original_placement_coverage", {group = "aurora", rundir = os.projectdir(), realtime_output = true})
 
 target("smg-pc-original-process-player-owner-tests")
     set_kind("binary")

@@ -20,11 +20,6 @@
 #include "Game/Util/SystemUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/Cp932Literal.hpp"
-#include "Game/System/FileLoader.hpp"
-#include "Game/Util/SingletonHolder.hpp"
-#include "runtime/RuntimeServices.hpp"
-#include "scene/OriginalPlacementCoverage.hpp"
-#include "scene/StagePlacementResolver.hpp"
 #include <aurora/allocation.hpp>
 #include <array>
 #include <cmath>
@@ -97,57 +92,6 @@ struct Probe {
                 "Actual authored MysteriousZone placement has a nonidentity transform");
         std::fprintf(stderr, "[placement-transform] zone=5 translation=(%.9g,%.9g,%.9g)\n",
                      child->mPlacementMtx[0][3], child->mPlacementMtx[1][3], child->mPlacementMtx[2][3]);
-        // This report must identify original retained rows even though their
-        // JMapInfo native-copy zone metadata is deliberately unpopulated.
-        const auto queues = std::array{
-            smgpc::scene::OriginalPlacementQueue{"common_priority", root._FC},
-            smgpc::scene::OriginalPlacementQueue{"scenario_priority", root._104},
-            smgpc::scene::OriginalPlacementQueue{"common", root._100},
-            smgpc::scene::OriginalPlacementQueue{"scenario", root._108},
-            smgpc::scene::OriginalPlacementQueue{"deferred", root._10C},
-        };
-        const auto start = root.makeCurrentMarioJMapInfoIter();
-        require(start.isValid() && start.mInfo->getPlacedZoneId() == -1,
-                "Original start has no synthetic-copy zone metadata");
-        const auto coverage = smgpc::scene::inspect_original_placement_queues(queues, start, &root);
-        std::set<std::string> identities;
-        std::set<s32> zones;
-        bool player_seen = false, rosetta_seen = false;
-        for (const auto& entry : coverage) {
-            const auto* owner = &root;
-            for (const auto index : entry.holder_path) {
-                require(index >= 0 && index < owner->mStageDataHolderCount,
-                        "Coverage reports an attached holder path");
-                owner = owner->mStageDataArray[index];
-            }
-            require(owner->mZoneID == entry.zone && owner->_A8 == entry.zone_name,
-                    "Coverage provenance agrees with the actual attached owner");
-            require(entry.table_path.starts_with("/jmp/") && entry.table_path.ends_with('/' + entry.table) &&
-                        (entry.layer == "common" || entry.layer == "layera"),
-                    "Coverage keeps full archive path and actual scenario-one layer");
-            for (unsigned row = 0; row < 3; ++row)
-                for (unsigned column = 0; column < 4; ++column)
-                    require(entry.zone_placement_matrix[row * 4 + column] == owner->mPlacementMtx[row][column],
-                            "Coverage matrix is copied from the original owner");
-            const auto identity = std::to_string(entry.zone) + ':' + entry.table_path + ':' + std::to_string(entry.row);
-            require(identities.insert(identity).second, "Coverage includes each retained placement row once");
-            zones.insert(entry.zone);
-            if (entry.phase == "player") {
-                require(entry.zone == 0 && entry.holder_path.empty() &&
-                            entry.table_path == "/jmp/start/layera/startinfo",
-                        "Default Mario start resolves to original root-zone LayerA");
-                player_seen = true;
-            }
-            if (entry.object == "Rosetta") {
-                require(entry.zone == 5 && entry.layer == "layera" && entry.link_id == 28,
-                        "Rosetta retains her authored zone, layer and link ID");
-                rosetta_seen = true;
-            }
-        }
-        require(coverage.size() == 243 && zones == std::set<s32>{0, 1, 2, 4, 5, 6} && player_seen && rosetta_seen,
-                "Actual queues contain all attached scenario-one zones and exclude unattached LargeZone");
-        std::fprintf(stderr, "[placement-transform] coverage provenance PASS rows=%zu attached_zones=%zu\n",
-                     coverage.size(), zones.size());
         auto* restarts = MR::getAreaObjContainer()->getManager("RestartCube");
         require(restarts && restarts->getNumAreaObj() == 4,
                 "All four authored RestartCube placements use the original manager");
@@ -302,43 +246,6 @@ struct Probe {
         require(positions > 20 && rotations > 20 && rail_points > 9 && areas == 2,
                 "Actual nonidentity placement, rotation, all rail controls and both switch cubes were exercised");
 
-        // Inventory tooling retains raw JMap rows too. Its separate world-space
-        // metadata must stay useful without pretransforming inputs to Game.
-        auto* archives = SingletonHolder<FileLoader>::get();
-        smgpc::runtime::DvdFileSystemService dvd("/");
-        require(archives, "Actual process retains its archive filesystem");
-        const auto tables = smgpc::scene::resolve_stage_placement_tables(dvd, "HeavensDoorGalaxy", 1);
-        const auto objects = smgpc::scene::resolve_stage_placement_objects(dvd, tables);
-        unsigned checked_inventory = 0, checked_starts = 0;
-        for (const auto& object : objects) {
-            if (object.zone_id != 5 || !object.has_translation) continue;
-            TVec3f raw;
-            require(MR::getJMapInfoTransLocal(JMapInfoIter(&object.jmap_info, object.jmap_entry_index), &raw),
-                    "Inventory keeps raw placement fields");
-            const auto world = transformed(child->mPlacementMtx, raw);
-            require_position(TVec3f(object.translation[0], object.translation[1], object.translation[2]), world,
-                             "Inventory world metadata transforms its retained local JMap row once");
-            ++checked_inventory;
-        }
-        for (const auto& table : tables) {
-            if (table.category != "start" || table.zone_id != 5) continue;
-            for (s32 row = 0; row < table.jmap_info.getNumEntries(); ++row) {
-                const JMapInfoIter iter(&table.jmap_info, row);
-                s32 start_id = -1;
-                if (!iter.getValue("MarioNo", &start_id)) continue;
-                const auto start = smgpc::scene::select_stage_start_info(tables, start_id, 5);
-                require(start.has_value(), "Authored child-zone start remains selectable");
-                TVec3f raw;
-                require(MR::getJMapInfoTransLocal(start->iter(), &raw), "Start descriptor retains raw local JMap fields");
-                require_position(raw, TVec3f(start->local_position[0], start->local_position[1], start->local_position[2]),
-                                 "Start JMap does not contain a baked world position");
-                require_position(TVec3f(start->world_position[0], start->world_position[1], start->world_position[2]),
-                                 transformed(child->mPlacementMtx, raw), "Start world metadata remains transformed once");
-                ++checked_starts;
-            }
-        }
-        require(checked_inventory > 20 && checked_starts > 0,
-                "Native inventory and start copies were checked for double-transform regressions");
     }
 
     void after_frame(GameSystem& system, std::uint64_t frame) {

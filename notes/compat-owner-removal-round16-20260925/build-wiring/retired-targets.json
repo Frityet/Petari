@@ -1,0 +1,6 @@
+[
+  "target(\"smg-pc-object-name-table-tests\")",
+  "target(\"smg-pc-scene-name-obj-registry-tests\")",
+  "target(\"smg-pc-original-placement-coverage-tests\")",
+  "target(\"smg-pc-stage-collision-registration-tests\")"
+]

@@ -1,0 +1,6 @@
+[
+  "src/Game/Effect/MultiEmitter.cpp",
+  "src/Game/System/DrawBufferHolder.cpp",
+  "src/compat/MetrowerksStdCompat.hpp",
+  "src/compat/MetrowerksAlgorithm.hpp"
+]

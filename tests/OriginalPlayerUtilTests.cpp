@@ -18,7 +18,7 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
-#include "scene/StageCollisionService.hpp"
+#include "Game/Map/CollisionDirector.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -209,7 +209,7 @@ namespace smgpc::tests {
                     "player grounding must observe movement-bit changes without another scheduler tick");
             mario.mMovementStates._1 = grounded;
 
-            auto* collision = scene::StageCollisionService::active();
+            auto* collision = MR::getCollisionDirector();
             require(collision != nullptr, "rush grounding requires the still-live authored Gateway collision owner");
             auto down = actor.getGravityVec();
             const auto length = std::sqrt(down.dot(down));

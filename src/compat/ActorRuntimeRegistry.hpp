@@ -38,30 +38,6 @@ namespace smgpc::compat {
         std::uint64_t next_registration_order = 0U;
     };
 
-    // Construction capture shares the process-global NameObj registry and is
-    // therefore restricted to the scene-construction thread. Overlapping or
-    // nested capture scopes are rejected instead of exposing the same raw
-    // child identity to two owners.
-    class NameObjRuntimeRegistrationCapture final {
-    public:
-        NameObjRuntimeRegistrationCapture();
-        ~NameObjRuntimeRegistrationCapture();
-
-        NameObjRuntimeRegistrationCapture(
-            const NameObjRuntimeRegistrationCapture &) = delete;
-        NameObjRuntimeRegistrationCapture &operator=(
-            const NameObjRuntimeRegistrationCapture &) = delete;
-        NameObjRuntimeRegistrationCapture(
-            NameObjRuntimeRegistrationCapture &&) = delete;
-        NameObjRuntimeRegistrationCapture &operator=(
-            NameObjRuntimeRegistrationCapture &&) = delete;
-
-        [[nodiscard]] NameObjRuntimeRegistrationMarker marker() const noexcept;
-
-    private:
-        NameObjRuntimeRegistrationMarker _marker{};
-    };
-
     struct ActorBinderRuntimeConfig {
         float radius = 0.0F;
         float offset = 0.0F;
@@ -87,18 +63,6 @@ namespace smgpc::compat {
     [[nodiscard]] bool name_obj_runtime_ownership_is_claimed(
         const NameObj* object) noexcept;
     [[nodiscard]] const void* name_obj_runtime_owner(
-        const NameObj* object) noexcept;
-    // A construction boundary can observe an independently-owned NameObj in
-    // its ordered registration suffix and take responsibility only for that
-    // object's one scene-wide initAfterPlacement callback. The storage owner
-    // remains unchanged and can skip its pre-pass using this marker.
-    void delegate_name_obj_runtime_postpass(NameObj* object,
-                                            const void* delegate);
-    void release_name_obj_runtime_postpass_delegation(
-        const NameObj* object, const void* delegate) noexcept;
-    [[nodiscard]] bool name_obj_runtime_postpass_is_delegated(
-        const NameObj* object) noexcept;
-    [[nodiscard]] const void* name_obj_runtime_postpass_delegate(
         const NameObj* object) noexcept;
     // Returns the currently live host-tracked NameObj identities in their
     // construction order. A marker provides the matching ordered suffix so a

@@ -5,18 +5,16 @@
 class NameObj;
 class NameObjExecuteHolder;
 class NameObjListExecutor;
-class NameObjHolder;
 namespace smgpc::compat { class JkrAllocationDomain; }
 namespace smgpc::runtime { class SceneScheduler; }
 
 namespace smgpc::scene {
-class SceneNameObjRegistry;
 // The Scene owns executor; its SceneObjHolder owns requirements. This scope
 // borrows both while retaining the Game arena through execution and teardown.
 class SceneExecutionBinding final {
 public:
     SceneExecutionBinding(runtime::SceneScheduler&, NameObjListExecutor&,
-                          std::shared_ptr<compat::JkrAllocationDomain>, NameObjHolder* original_holder = nullptr);
+                          std::shared_ptr<compat::JkrAllocationDomain>);
     ~SceneExecutionBinding();
     SceneExecutionBinding(const SceneExecutionBinding&) = delete;
     SceneExecutionBinding& operator=(const SceneExecutionBinding&) = delete;
@@ -37,7 +35,6 @@ private:
     SceneExecutionBinding* _previous = nullptr;
     bool _initialized = false;
     bool _retiring = false;
-    std::unique_ptr<SceneNameObjRegistry> _registry;
 };
 SceneExecutionBinding* current_scene_execution_binding() noexcept;
 NameObjListExecutor& current_scene_name_obj_list_executor();

@@ -193,7 +193,7 @@ namespace {
             : heaps(smgpc::compat::JkrHeapRuntime::create(32U << 20)), original(heaps),
               active(scheduler), domain(smgpc::compat::JkrAllocationDomain::create(heaps, 4U << 20)),
               execution(scheduler, domain,
-                        &original.scene, original.controller().mObjHolder),
+                        &original.scene),
               manager(static_cast<PlanetGravityManager*>(
                   MR::createSceneObj(SceneObj_PlanetGravityManager))) {
             require(manager != nullptr && MR::createSceneObj(SceneObj_ClippingDirector) != nullptr,
@@ -234,7 +234,7 @@ namespace {
 
         const auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 1U << 20);
         smgpc::test::SceneExecutionFixture binding(scheduler, domain,
-                                                  &original.scene, original.controller().mObjHolder);
+                                                  &original.scene);
         destination.set(3.0F, 4.0F, 5.0F);
         require_throws<std::logic_error>(
             [&] { (void)MR::calcGravityVector(&actor, &destination, nullptr, 0U); },
@@ -250,7 +250,7 @@ namespace {
         smgpc::runtime::SceneSchedulerBinding active(scheduler);
         const auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 1U << 20);
         smgpc::test::SceneExecutionFixture scene(scheduler, domain,
-                                                &original.scene, original.controller().mObjHolder);
+                                                &original.scene);
         require(MR::createSceneObj(SceneObj_PlanetGravityManager) != nullptr,
                 "gravity query coverage requires the original scene-owned manager");
 

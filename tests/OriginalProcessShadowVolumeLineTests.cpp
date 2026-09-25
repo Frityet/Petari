@@ -12,7 +12,7 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "scene/NameObjChildOwner.hpp"
+#include <memory>
 #include "../aurora/lib/dolphin/gx/__gx.h"
 #include "../aurora/lib/gx/fifo.hpp"
 
@@ -97,17 +97,19 @@ namespace {
             const auto initial_count = holder->_C.size();
             const auto initial_pending = holder->_18.size();
             const auto initial_actors = smgpc::compat::actor_runtime_state_count();
-            smgpc::scene::NameObjChildOwner endpoints, lines;
+            std::unique_ptr<LiveActor> from_owner, to_owner, line_owner, single_owner;
             LiveActor *from = nullptr, *to = nullptr, *owner = nullptr, *single = nullptr;
-            endpoints.capture_construction_children([&] {
+            {
                 const smgpc::compat::JkrAllocationScope game(domain);
-                from = new LiveActor("ShadowLineFromProbe");
-                to = new LiveActor("ShadowLineToProbe");
+                from_owner = std::make_unique<LiveActor>("ShadowLineFromProbe");
+                from = from_owner.get();
+                to_owner = std::make_unique<LiveActor>("ShadowLineToProbe");
+                to = to_owner.get();
                 MR::initShadowController(from, 1);
                 MR::initShadowController(to, 1);
                 MR::addShadowVolumeSphere(from, "from", 5);
                 MR::addShadowVolumeSphere(to, "to", 10);
-            });
+            }
             auto* from_controller = from->mShadowControllerList->getController(u32(0));
             auto* to_controller = to->mShadowControllerList->getController(u32(0));
             for (auto* controller : {from_controller, to_controller}) {
@@ -117,18 +119,20 @@ namespace {
                         "Programmatic volume offsets preserve original zero constructor defaults");
                 drawer_identities.push_back(sphere);
             }
-            lines.capture_construction_children([&] {
+            {
                 const smgpc::compat::JkrAllocationScope game(domain);
-                owner = new LiveActor("ShadowLineOwnerProbe");
+                line_owner = std::make_unique<LiveActor>("ShadowLineOwnerProbe");
+                owner = line_owner.get();
                 MR::initShadowController(owner, 4);
                 // Other actors' original one-controller lookup ignores names.
                 MR::addShadowVolumeLine(owner, "line", from, "ignored", 5, to, "also ignored", 10);
                 MR::addShadowVolumeLine(owner, "self", owner, "line", 3, owner, "self", 4);
                 MR::addShadowVolumeLine(owner, "missing", owner, "unknown", 1, owner, "line", 2);
-                single = new LiveActor("ShadowLineSingleProbe");
+                single_owner = std::make_unique<LiveActor>("ShadowLineSingleProbe");
+                single = single_owner.get();
                 MR::initShadowController(single, 1);
                 MR::addShadowVolumeLine(single, "solo", single, "ignored", 1, single, "also ignored", 2);
-            });
+            }
             auto* controller = owner->mShadowControllerList->getController("line");
             auto* line = dynamic_cast<ShadowVolumeLine*>(controller->getShadowDrawer());
             require(line && line->mFromShadowController == from_controller && line->mToShadowController == to_controller &&
@@ -174,10 +178,12 @@ namespace {
             require(holder->_C.size() == initial_count + 6, "Original holder contains exactly six new owned controllers");
             // Endpoints are borrowed exactly like original drop-position and
             // direction bindings. Retire their dependent line actors first.
-            lines.clear();
+            single_owner.reset();
+            line_owner.reset();
             require(holder->_C.size() == initial_count + 2 && holder->_18.size() == initial_pending,
                     "Line retirement removes both complete and pending original holder registrations");
-            endpoints.clear();
+            to_owner.reset();
+            from_owner.reset();
             require(holder->_C.size() == initial_count && smgpc::compat::actor_runtime_state_count() == initial_actors,
                     "Actor retirement restores original holder membership and actor ownership counts");
             for (const auto* drawer : drawer_identities)

@@ -9,7 +9,6 @@
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/SystemUtil.hpp"
 #include "scene/OriginalSceneSupport.hpp"
-#include "scene/OriginalPlacementCoverage.hpp"
 #include "scene/SceneExecutionBinding.hpp"
 #include "runtime/SceneScheduler.hpp"
 
@@ -37,9 +36,6 @@ void SceneFunction::startActorFileLoadScenario() {
 }
 
 void SceneFunction::startActorPlacement() {
-#ifndef NDEBUG
-    smgpc::scene::report_original_placement_coverage(*::getSceneDataInitializer()->mDataHolder);
-#endif
     ::getSceneDataInitializer()->startActorPlacement();
 }
 

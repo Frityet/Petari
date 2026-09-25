@@ -4,7 +4,6 @@
 #include "Game/Util/SingletonHolder.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "runtime/RuntimeContext.hpp"
-#include "scene/SceneNameObjRegistry.hpp"
 
 #define FLAG_MOVEMENT_OFF 1u
 #define FLAG_SUSPEND 2u
@@ -13,7 +12,9 @@
 NameObj::NameObj(const char* pName) : mName(pName), mFlag(), mExecutorIdx(-1) {
     smgpc::compat::register_name_obj_runtime_state(this);
     try {
-        smgpc::scene::register_scene_name_obj(*this);
+        if (auto* registry = SingletonHolder<NameObjRegister>::get(); registry && registry->mHolder) {
+            registry->add(this);
+        }
     } catch (...) {
         smgpc::compat::release_name_obj_runtime_state(this);
         throw;
@@ -26,8 +27,14 @@ NameObj::~NameObj() {
     } else if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
         runtime->scheduler().disconnect_name_obj(*this);
     }
-    smgpc::scene::unregister_scene_name_obj(*this);
+    detachNativeHolder();
     smgpc::compat::release_name_obj_runtime_state(this);
+}
+
+void NameObj::detachNativeHolder() noexcept {
+    if (mNativeHolder) {
+        mNativeHolder->removeNativeObject(this);
+    }
 }
 
 void NameObj::init(const JMapInfoIter& rIter) {

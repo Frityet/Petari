@@ -4,11 +4,6 @@
 #include "Game/Map/HitInfo.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include <revolution.h>
-#include <memory>
-
-namespace smgpc::scene {
-    class StageCollisionService;
-}
 
 class CollisionZone;
 class CollisionPartsFilterBase;
@@ -36,8 +31,6 @@ public:
     HitInfo* getStrikeInfo(u32);
     CollisionZone* getZone(int);
 
-    smgpc::scene::StageCollisionService* nativeService() const noexcept;
-    std::shared_ptr<smgpc::scene::StageCollisionService> retainNativeService() const noexcept;
     void requireNativeGeometryPublished() const;
 
     HitInfo* mHitInfoArray;  // 0xC
@@ -50,9 +43,6 @@ public:
     u8 _A1;
     u8 _A2;
     u8 _A3;
-
-private:
-    std::shared_ptr<smgpc::scene::StageCollisionService> mNativeService;
 };
 
 class CollisionZone {

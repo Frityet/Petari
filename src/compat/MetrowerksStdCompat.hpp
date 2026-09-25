@@ -1,7 +1,6 @@
 #pragma once
 
 #include "compat/MetrowerksPrintf.hpp"
-#include "compat/MetrowerksAlgorithm.hpp"
 
 class JKRHeap;
 

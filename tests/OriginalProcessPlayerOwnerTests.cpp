@@ -22,7 +22,7 @@
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
-#include "scene/StageCollisionService.hpp"
+#include "Game/Map/CollisionDirector.hpp"
 #include "Game/Util/MtxUtil.hpp"
 
 #include <aurora/allocation.hpp>
@@ -96,7 +96,7 @@ namespace {
 
     void verify_recovery_safety_position(MarioActor& actor) {
         auto& mario = *actor.mMario;
-        auto* collision = smgpc::scene::StageCollisionService::active();
+        auto* collision = MR::getCollisionDirector();
         require(collision != nullptr, "recovery safety test requires the actual stage collision owner");
         require(!mario.isStatusActive(8) && !mario.isStatusActive(19),
                 "the ordinary opening player is outside fire damage and recovery states");

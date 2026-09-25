@@ -3,6 +3,8 @@
 #include "Game/Util/JMapInfo.hpp"
 #include <revolution/types.h>
 
+class NameObjHolder;
+
 /// @brief The most basic form of an object.
 class NameObj {
 public:
@@ -49,10 +51,15 @@ public:
     void requestSuspend();
     void requestResume();
     void syncWithFlags();
+    void detachNativeHolder() noexcept;
 
     /* 0x04 */ const char* mName;  ///< A string to identify the NameObj.
     /* 0x08 */ u16 mFlag;          ///< Flags in relation to movement.
     /* 0x0A */ s16 mExecutorIdx;   ///< The index into the NameObjExecuteInfo array.
+
+private:
+    friend class NameObjHolder;
+    NameObjHolder* mNativeHolder = nullptr;
 };
 
 /// @brief Contains static functions to begin and end movement in a NameObj.

@@ -63,7 +63,9 @@ void MultiEmitter::createEmitterWithCallBack(MultiEmitterCallBackBase* pCallBack
 }
 
 void MultiEmitter::deleteEmitter() {
-    std::for_each_array(mEmitters.begin(), mEmitters.end(), std::mem_func(&SingleEmitter::deleteEmitter));
+    for (SingleEmitter* pEmitter = mEmitters.begin(); pEmitter != mEmitters.end(); pEmitter++) {
+        pEmitter->deleteEmitter();
+    }
     std::for_each(mChildren.begin(), mChildren.end(), std::mem_func(&MultiEmitter::deleteEmitter));
 }
 
@@ -164,7 +166,9 @@ void MultiEmitter::create(EffectSystem* pSystem) {
 }
 
 void MultiEmitter::scanParticleEmitter(EffectSystem* pSystem) {
-    std::for_each_array(mEmitters.begin(), mEmitters.end(), std::bind2nd(std::mem_func(&SingleEmitter::scanParticleEmitter), pSystem));
+    for (SingleEmitter* pEmitter = mEmitters.begin(); pEmitter != mEmitters.end(); pEmitter++) {
+        pEmitter->scanParticleEmitter(pSystem);
+    }
 }
 
 void MultiEmitter::forceFollowOn() {
@@ -238,7 +242,9 @@ void MultiEmitter::playEmitterOffClipped() {
     }
 }
 void MultiEmitter::setDrawOrder(s32 idx) {
-    std::for_each_array(mEmitters.begin(), mEmitters.end(), std::bind2nd(std::mem_func(&SingleEmitter::setGroupID), idx));
+    for (SingleEmitter* pEmitter = mEmitters.begin(); pEmitter != mEmitters.end(); pEmitter++) {
+        pEmitter->setGroupID(idx);
+    }
 }
 
 void MultiEmitter::addChildEmitter(MultiEmitter* pChild) {

@@ -25,7 +25,7 @@
 #include "Game/Util/StarPointerUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "scene/NameObjChildOwner.hpp"
+#include <memory>
 
 #include <aurora/allocation.hpp>
 #include <array>
@@ -181,13 +181,16 @@ namespace {
         const auto sensors_before = checker->mCharacterGroup->mSensorCount;
         std::vector<Receipt> receipts;
         receipts.reserve(32);
-        smgpc::scene::NameObjChildOwner actors;
+        std::array<std::unique_ptr<Receiver>, 4> actors;
         std::array<Receiver*, 4> owners{};
-        actors.capture_construction_children([&] {
+        {
             const smgpc::compat::JkrAllocationScope game(domain);
-            for (auto& owner : owners) owner = new Receiver("sensor utility probe", receipts);
+            for (std::size_t i = 0; i < owners.size(); ++i) {
+                actors[i] = std::make_unique<Receiver>("sensor utility probe", receipts);
+                owners[i] = actors[i].get();
+            }
             owners[0]->initBinder(10, 0, 6);
-        });
+        }
         auto* sender = owners[0]->getSensor("body");
         auto* first = owners[1]->getSensor("body");
         auto* second = owners[2]->getSensor("body");
@@ -256,7 +259,7 @@ namespace {
         owners[2]->accepts = false;
         require(!MR::sendMsgEnemyAttackToBindedSensor(owners[0], sender) && receipts.size() == 3,
                 "All-rejected bound messages still visit every unique sensor");
-        actors.clear();
+        for (auto it = actors.rbegin(); it != actors.rend(); ++it) it->reset();
         require(checker->mCharacterGroup->mSensorCount == sensors_before &&
                     smgpc::compat::actor_runtime_state_count() == actors_before &&
                     smgpc::compat::name_obj_runtime_state_count() == names_before,
