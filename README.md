@@ -28,6 +28,7 @@ xmake                              # build the original game and its dependencie
 xmake f --disc=/path/to/game.rvz    # remember your disc (optional)
 xmake run                          # build if needed, then launch the original game process
 xmake run smg-pc --stage HeavensDoorGalaxy --scenario 1   # launch Gateway
+xmake run smg-pc --stage AstroDome --scenario 1 --save-slot 1  # use an existing save
 ```
 
 Disc selection is: explicit `--disc PATH` argument, configured `--disc`,

@@ -1,0 +1,17 @@
+{
+  "exit_code": 0,
+  "command": [
+    "/Users/frityet/Projects/petari/notes/comet-observatory-20260925T224134Z/saved-slot-diagnostic",
+    "--disc",
+    "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--stage",
+    "AstroDome",
+    "--scenario",
+    "1",
+    "--save-slot",
+    "1",
+    "--max-frames",
+    "180"
+  ],
+  "original_slot_with_one_star_loaded": true
+}

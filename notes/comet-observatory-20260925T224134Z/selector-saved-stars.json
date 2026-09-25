@@ -1,0 +1,11 @@
+{
+  "file": "mario1",
+  "owned_records": [
+    {
+      "galaxy_hash": 44054,
+      "power_star_flags": 1,
+      "heavens_door": true
+    }
+  ],
+  "total_flag_bits": 1
+}

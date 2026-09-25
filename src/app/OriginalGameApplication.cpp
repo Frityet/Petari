@@ -24,6 +24,8 @@
 #include "Game/System/MainLoopFramework.hpp"
 #include "Game/System/NANDManager.hpp"
 #include "Game/System/ResourceHolderManager.hpp"
+#include "Game/System/SaveDataHandleSequence.hpp"
+#include "Game/System/UserFile.hpp"
 #include "Game/System/WPad.hpp"
 #include "Game/System/WPadHolder.hpp"
 #include "Game/Util/MathUtil.hpp"
@@ -104,6 +106,8 @@ Integer option_integer(std::string_view value, std::string_view name) {
 struct StageSelection {
     std::string stage;
     s32 scenario = 1;
+    std::optional<s32> save_slot;
+    bool save_preload_requested = false;
     bool requested = false;
 };
 
@@ -118,13 +122,20 @@ LaunchOptions launch_options(const BootstrapConfiguration& configuration) {
         options.max_frames = option_integer<std::uint64_t>(*frames, "--max-frames");
     const auto stage = option_value(configuration, "--stage");
     const auto scenario = option_value(configuration, "--scenario");
+    const auto save_slot = option_value(configuration, "--save-slot");
     if (scenario && !stage) throw std::invalid_argument("--scenario requires --stage");
+    if (save_slot && !stage) throw std::invalid_argument("--save-slot requires --stage");
     if (stage) {
         if (stage->size() >= sizeof(SceneControlInfo::mStage))
             throw std::invalid_argument("--stage exceeds the original scene controller's name capacity");
         const auto number = scenario ? option_integer<s32>(*scenario, "--scenario") : 1;
         if (number < 1) throw std::invalid_argument("--scenario must be positive");
         options.selection = StageSelection{std::string(*stage), number};
+        if (save_slot) {
+            const auto slot = option_integer<s32>(*save_slot, "--save-slot");
+            if (slot < 1 || slot > 6) throw std::invalid_argument("--save-slot must be between 1 and 6");
+            options.selection->save_slot = slot;
+        }
     }
     return options;
 }
@@ -342,6 +353,26 @@ private:
         const auto* scenario = controller->mScenarioParser->getScenarioData(stage_selection->stage.c_str());
         if (!scenario || !scenario->getScenarioDataIter(stage_selection->scenario).isValid())
             aurora::throw_host_exception<std::invalid_argument>("Requested stage/scenario is absent from the original scenario catalog");
+        if (stage_selection->save_slot) {
+            if (!stage_selection->save_preload_requested) {
+                GameSequenceFunction::startPreLoadSaveDataSequence();
+                stage_selection->save_preload_requested = true;
+                return;
+            }
+            if (!GameSequenceFunction::isSuccessSaveDataHandleSequence())
+                aurora::throw_host_exception<std::runtime_error>("The original save sequence could not load the selected save");
+            auto* save_sequence = sequence->mSaveDataHandleSequence;
+            auto* file = save_sequence->getCurrentUserFile();
+            const auto slot = *stage_selection->save_slot;
+            save_sequence->restoreUserFileConfigData(file, slot);
+            if (file->mIsConfigDataCorrupted || !file->isCreated())
+                aurora::throw_host_exception<std::runtime_error>("The selected save slot is empty or has corrupt configuration data");
+            GameSequenceFunction::startGameDataLoadSequence(slot, file->isLastLoadedMario());
+            if (file->mIsGameDataCorrupted)
+                aurora::throw_host_exception<std::runtime_error>("The selected save slot has corrupt game data");
+            std::fprintf(stderr, "[original-process] Loaded original save slot %d (%s): %d stars\n",
+                         slot, file->getGameDataName(), file->getPowerStarNum());
+        }
         std::fprintf(stderr, "[original-process] Requesting authored stage %s scenario %d through GameSequence\n",
                      scenario->mGalaxyName, stage_selection->scenario);
         std::fflush(stderr);
