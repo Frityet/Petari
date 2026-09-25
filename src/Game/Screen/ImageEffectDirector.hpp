@@ -19,6 +19,7 @@ public:
     /// @brief Creates a new `ImageEffectDirector`.
     /// @param pName A pointer to the null-terminated name of the object.
     ImageEffectDirector(const char* pName);
+    ~ImageEffectDirector() override;
 
     virtual void movement();
 

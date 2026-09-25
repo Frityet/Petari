@@ -1,0 +1,37 @@
+{
+  "scope": "Complete original OceanHomeMapCtrl plus active scene factory; coordinated PlanetMapRuntimeCompat retirement",
+  "files": [
+    {
+      "path": "src/Game/Map/OceanHomeMapCtrl.cpp",
+      "existed_before": false,
+      "after_sha256": "ea9433f1d31a0148799ada4b8f366a871b0df3b74c79a9b9af36eb8bb1ffb41a",
+      "action": "add"
+    },
+    {
+      "path": "src/Game/Map/OceanHomeMapCtrl.hpp",
+      "existed_before": true,
+      "before": "notes/compat-owner-removal-round9-20260925/ocean/before/src/Game/Map/OceanHomeMapCtrl.hpp",
+      "before_sha256": "ff1b9cc348bee7974d24178bb78543f7123ec48fd24837d51822c8f7d17e2d8b",
+      "after_sha256": "ff1b9cc348bee7974d24178bb78543f7123ec48fd24837d51822c8f7d17e2d8b",
+      "action": "unchanged-donor-header"
+    },
+    {
+      "path": "src/compat/PlanetMapRuntimeCompat.cpp",
+      "existed_before": true,
+      "before": "notes/compat-owner-removal-round9-20260925/ocean/before/src/compat/PlanetMapRuntimeCompat.cpp",
+      "before_sha256": "40c4b353023bc4b3e4e615ba503e30506ef57664d922dfc6baf45f8d196640a0",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/SceneObjHolderCompat.cpp",
+      "existed_before": true,
+      "before": "notes/compat-owner-removal-round9-20260925/ocean/before/src/compat/SceneObjHolderCompat.cpp",
+      "before_sha256": "edf36bfa54d8315667e811384ab94bdf36c06660b59c536ef6c30a6f4e8b6b38",
+      "after_sha256": "8c390f57c4f5f5f8fbf89aac9e07589fec725549dd5e22c46a571108bc2f0456",
+      "action": "modify"
+    }
+  ],
+  "donor": "decomp/src/Game/Map/OceanHomeMapCtrl.cpp",
+  "build_wiring": "Game recursive CPP glob includes OceanHomeMapCtrl. Remove PlanetMapRuntimeCompat from regenerated compat graph; no build-file edits performed.",
+  "coordinated_provider": "gateway_gap_audit restores all MR/submodel/LOD methods from deleted PlanetMapRuntimeCompat in full canonical LiveActorUtil."
+}

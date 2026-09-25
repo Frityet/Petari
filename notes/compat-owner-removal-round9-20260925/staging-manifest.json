@@ -1,0 +1,378 @@
+[
+  {
+    "path": "scripts/source_provider_provenance.json",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/Binder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/LiveActor.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowController.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowController.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowSurfaceBox.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowSurfaceBox.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowSurfaceOval.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowSurfaceOval.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowVolumeBox.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowVolumeBox.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowVolumeFlatModel.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowVolumeFlatModel.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/Flag.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/Flag.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/OceanHomeMapCtrl.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/OceanHomeMapCtrl.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/WaterAreaHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/WaterAreaHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Ride/SwingRopePoint.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Ride/SwingRopePoint.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/BloomEffect.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/BloomEffect.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/DepthOfFieldBlur.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/DepthOfFieldBlur.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectDirector.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectDirector.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectResource.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectResource.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectSystemHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectSystemHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/WaterCameraFilter.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/WaterCameraFilter.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/ActorShadowLocalUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/ActorShadowLocalUtil.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/ActorShadowUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/JMapInfo.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/JMapInfo.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/LiveActorUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/MapUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/MapUtil.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/TriangleFilter.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/TriangleFilter.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/xmake.lua",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/JSystem/J3DGraphLoader/J3DMaterialFactory.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/JSystem/J3DGraphLoader/J3DModelLoader.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/JSystem/J3DGraphLoader/J3DModelLoader.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRDisposer.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ActorShadowCsvCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ActorShadowCsvCompat.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/BinderCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/GameActorPhysicsCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/GameMapCollisionCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/GameRuntimeCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ImageEffectOwnership.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ImageEffectOwnership.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/J3DMaterialLoaderFactoryCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/J3DModelLoaderCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/J3DModelLoaderCompat.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/JutTextureConstruction.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/JutTextureConstruction.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/LiveActorUtilCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/LodCtrlRuntimeCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/NativeJkrDisposer.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalActorAnimationStart.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalActorBckControl.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalActorModelAccess.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalActorShadowQueries.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalBinderFilterUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalBinderQueries.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalCollisionGeometry.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalCollisionPartsUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalFurAccess.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalLiveActorGroupUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalMapQueries.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalMirrorReflectionUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/PlanetMapRuntimeCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ShadowControllerOwnership.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ShadowControllerOwnership.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/resource/J3dModelResource.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/jut/JutTexture.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/scene/SceneObjHolderRuntime.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/ActorRuntimeRegistryTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/GameActorPhysicsRealOrAbsentTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/JMapHeapLifetimeTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/JutTextureOwnershipTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/LodCtrlCompatTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalProcessPunchingKinokoTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalProcessShadowVolumeLineTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalShadowControllerOwnerTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "mode": "scoped-delta-on-HEAD"
+  }
+]

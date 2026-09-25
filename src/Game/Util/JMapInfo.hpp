@@ -1,6 +1,6 @@
 #pragma once
 
-#include "compat/NativeJkrDisposer.hpp"
+#include "JSystem/JKernel/JKRDisposer.hpp"
 
 #include <cstddef>
 #include <cstdint>
@@ -41,7 +41,7 @@ inline bool compareValues< const char* >(const char* a, const char* b) {
 
 class JMapInfoIter;
 
-class JMapInfo : private smgpc::compat::NativeJkrDisposer {
+class JMapInfo : private JKRDisposer {
 public:
     struct DataCompat {
         explicit DataCompat(s32 numEntries = 0) : mNumEntries(numEntries) {}
@@ -106,6 +106,7 @@ public:
     template < typename T >
     [[nodiscard]] JMapInfoIter findElement(const char* pKey, T searchValue, int startIndex) const;
 
+    [[nodiscard]] JMapInfoIter begin() const;
     [[nodiscard]] JMapInfoIter end() const;
 
 private:

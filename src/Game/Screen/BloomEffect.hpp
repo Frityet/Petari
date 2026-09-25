@@ -15,6 +15,7 @@ public:
     /// @brief Creates a new `BloomEffect`.
     /// @param pName The pointer to the null-terminated name of the object.
     BloomEffect(const char* pName);
+    ~BloomEffect() override;
 
     void preDraw() const;
     void postDraw() const;

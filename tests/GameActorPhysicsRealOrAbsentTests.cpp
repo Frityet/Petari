@@ -223,11 +223,9 @@ int main() {
         }
         {
             ProbeActor actor;
-            actor.initShadowControllerList(2U);
-            smgpc::compat::add_actor_shadow_controller(
-                &actor, "first", smgpc::compat::ActorShadowControllerKind::SurfaceCircle, 20.0F);
-            smgpc::compat::add_actor_shadow_controller(
-                &actor, "second", smgpc::compat::ActorShadowControllerKind::VolumeCylinder, 30.0F);
+            MR::initShadowController(&actor, 2U);
+            MR::addShadowSurfaceCircle(&actor, "first", 20.0F);
+            MR::addShadowVolumeCylinder(&actor, "second", 30.0F);
             require(actor.mShadowControllerList->getController("first") == actor.mShadowControllerList->getController(0U) &&
                         actor.mShadowControllerList->getController("second") == actor.mShadowControllerList->getController(1U),
                     "multi-controller lookup must select the exact authored name");

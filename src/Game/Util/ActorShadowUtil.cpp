@@ -1,7 +1,8 @@
 #include "compat/Cp932Literal.hpp"
-#include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
-#include "Game/LiveActor/ShadowSurfaceBox.hpp"
+#include "Game/LiveActor/ShadowController.hpp"
+#include "Game/Util/ModelUtil.hpp"
+#include <memory>
 #include "Game/LiveActor/ShadowSurfaceCircle.hpp"
 #include "Game/LiveActor/ShadowSurfaceOval.hpp"
 #include "Game/LiveActor/ShadowVolumeBox.hpp"
@@ -12,17 +13,61 @@
 #include "Game/LiveActor/ShadowVolumeSphere.hpp"
 #include "Game/Map/CollisionParts.hpp"
 #include "Game/Util/ActorShadowLocalUtil.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/CollisionPartsFilter.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
-#include "JSystem/JMath/JMath.hpp"
-#include "math_types.hpp"
-#include "revolution/mtx.h"
 
 namespace MR {
-    void initShadowVolumeBox(LiveActor* pActor, const TVec3f& size) {
+    void initShadowFromCSV(LiveActor* pActor, const char* pName) {
+        ResourceHolder* pResourceHolder = getResourceHolder(pActor);
+        std::unique_ptr<JMapInfo> csvOwner(tryCreateCsvParser(pResourceHolder, "%s.bcsv", pName));
+        JMapInfo* pInfo = csvOwner.get();
+
+        if (pInfo == nullptr) {
+            pActor->initShadowControllerList(1);
+            return;
+        }
+
+        pActor->initShadowControllerList(pInfo->getNumEntries());
+        pActor->mShadowControllerList->mNativeCsvInfo = std::move(csvOwner);
+
+        for (JMapInfoIter iter = pInfo->begin(); iter.isValid(); iter.mIndex++) {
+            ActorShadow::addShadowFromCSV(pActor, iter);
+        }
+    }
+
+    void initShadowSurfaceCircle(LiveActor* pActor, f32 radius) {
         pActor->initShadowControllerList(1);
-        addShadowVolumeBox(pActor, CP932("ボリューム影(ボックス)"), size);
+        addShadowSurfaceCircle(pActor, CP932("水面丸影"), radius);
+    }
+
+    void initShadowVolumeSphere(LiveActor* pActor, f32 radius) {
+        pActor->initShadowControllerList(1);
+        addShadowVolumeSphere(pActor, CP932("ボリューム影(球)"), radius);
+    }
+
+    void initShadowVolumeOval(LiveActor* pActor, const TVec3f& rSize) {
+        pActor->initShadowControllerList(1);
+        const char* pName = CP932("ボリューム影(楕球)");
+        addShadowVolumeOval(pActor, pName, rSize, pActor->getBaseMtx());
+    }
+
+    void initShadowVolumeCylinder(LiveActor* pActor, f32 radius) {
+        pActor->initShadowControllerList(1);
+        addShadowVolumeCylinder(pActor, CP932("ボリューム影(円柱)"), radius);
+    }
+
+    void initShadowVolumeBox(LiveActor* pActor, const TVec3f& rSize) {
+        pActor->initShadowControllerList(1);
+        addShadowVolumeBox(pActor, CP932("ボリューム影(ボックス)"), rSize);
+    }
+
+    void initShadowVolumeFlatModel(LiveActor* pActor, const char* pModelName) {
+        pActor->initShadowControllerList(1);
+        addShadowVolumeFlatModel(pActor, CP932("ボリューム影(板モデル)"), pModelName);
     }
 
     void initShadowController(LiveActor* pActor, u32 numShadows) {
@@ -43,11 +88,11 @@ namespace MR {
         pSphere->setRadius(radius);
     }
 
-    void addShadowVolumeOval(LiveActor* pActor, const char* pName, const TVec3f& rSize, MtxPtr mtx) {
+    void addShadowVolumeOval(LiveActor* pActor, const char* pName, const TVec3f& rSize, MtxPtr pMtx) {
         ShadowController* pController = ActorShadow::createShadowControllerVolumeParam(pActor, pName);
         ShadowVolumeOval* pOval = new ShadowVolumeOval();
         pController->setShadowDrawer(pOval);
-        pController->setDropPosMtxPtr(mtx, TVec3f(0.0f, 0.0f, 0.0f));
+        pController->setDropPosMtxPtr(pMtx, TVec3f(0.0f, 0.0f, 0.0f));
         pOval->setSize(rSize);
     }
 
@@ -59,16 +104,16 @@ namespace MR {
         pCylinder->setRadius(radius);
     }
 
-    void addShadowVolumeBox(LiveActor* pActor, const char* pName, const TVec3f& size) {
-        addShadowVolumeBox(pActor, pName, size, pActor->getBaseMtx());
+    void addShadowVolumeBox(LiveActor* pActor, const char* pName, const TVec3f& rSize) {
+        addShadowVolumeBox(pActor, pName, rSize, pActor->getBaseMtx());
     }
 
-    void addShadowVolumeBox(LiveActor* pActor, const char* pName, const TVec3f& size, MtxPtr mtx) {
+    void addShadowVolumeBox(LiveActor* pActor, const char* pName, const TVec3f& rSize, MtxPtr pMtx) {
         ShadowController* pController = ActorShadow::createShadowControllerVolumeParam(pActor, pName);
         ShadowVolumeBox* pBox = new ShadowVolumeBox();
         pController->setShadowDrawer(pBox);
-        pController->setDropPosMtxPtr(mtx, TVec3f(0.0f, 0.0f, 0.0f));
-        pBox->setSize(size);
+        pController->setDropPosMtxPtr(pMtx, TVec3f(0.0f, 0.0f, 0.0f));
+        pBox->setSize(rSize);
     }
 
     void addShadowVolumeLine(LiveActor* pActor1, const char* pName1, LiveActor* pActor2, const char* pName2, f32 fromWidth, LiveActor* pActor3,
@@ -83,60 +128,54 @@ namespace MR {
         pLine->setToShadowController(ActorShadow::getShadowController(pActor3, pName3));
     }
 
-    // Wrong registers
-    void addShadowVolumeFlatModel(LiveActor* pActor, const char* pName1, const char* pName2) {
-        MtxPtr mtx = pActor->getBaseMtx();
+    void addShadowVolumeFlatModel(LiveActor* pActor, const char* pName, const char* pModelName) {
+        addShadowVolumeFlatModel(pActor, pName, pModelName, pActor->getBaseMtx());
+    }
+
+    void addShadowVolumeFlatModel(LiveActor* pActor, const char* pName1, const char* pName2, MtxPtr pMtx) {
         ShadowController* pController = ActorShadow::createShadowControllerVolumeParam(pActor, pName1);
         ShadowVolumeFlatModel* pModel = new ShadowVolumeFlatModel(pName2);
         pController->setShadowDrawer(pModel);
         pController->offCalcCollision();
-        pModel->setBaseMatrixPtr(mtx);
+        pModel->setBaseMatrixPtr(pMtx);
     }
 
-    // Wrong value is loaded but only because the FlatModel header is incomplete
-    void addShadowVolumeFlatModel(LiveActor* pActor, const char* pName1, const char* pName2, MtxPtr mtx) {
-        ShadowController* pController = ActorShadow::createShadowControllerVolumeParam(pActor, pName1);
-        ShadowVolumeFlatModel* pModel = new ShadowVolumeFlatModel(pName2);
-        pController->setShadowDrawer(pModel);
-        pController->offCalcCollision();
-        pModel->setBaseMatrixPtr(mtx);
-    }
-
-    void initShadowVolumeBox(LiveActor* pActor, const TVec3f& size, MtxPtr mtx) {
+    void initShadowVolumeBox(LiveActor* pActor, const TVec3f& rSize, MtxPtr pMtx) {
         pActor->initShadowControllerList(1);
-        addShadowVolumeBox(pActor, CP932("ボリューム影(ボックス)"), size, mtx);
+        addShadowVolumeBox(pActor, CP932("ボリューム影(ボックス)"), rSize, pMtx);
     }
 
-    void setShadowDropPosition(LiveActor* pActor, const char* pName, const TVec3f& rPos) {
-        ActorShadow::getShadowController(pActor, pName)->setDropPosFix(rPos);
+    void initShadowVolumeFlatModel(LiveActor* pActor, const char* pModelName, MtxPtr pMtx) {
+        pActor->initShadowControllerList(1);
+        addShadowVolumeFlatModel(pActor, CP932("ボリューム影(板モデル)"), pModelName, pMtx);
     }
 
     void setShadowDropPositionPtr(LiveActor* pActor, const char* pName, const TVec3f* pPos) {
         ActorShadow::getShadowController(pActor, pName)->setDropPosPtr(pPos);
     }
 
-    void setShadowDropPositionMtxPtr(LiveActor* pActor, const char* pName, MtxPtr mtx, const TVec3f& rPos) {
-        ActorShadow::getShadowController(pActor, pName)->setDropPosMtxPtr(mtx, rPos);
+    void setShadowDropPositionMtxPtr(LiveActor* pActor, const char* pName, MtxPtr pMtx, const TVec3f& rPos) {
+        ActorShadow::getShadowController(pActor, pName)->setDropPosMtxPtr(pMtx, rPos);
     }
 
     void setShadowDropPositionAtJoint(LiveActor* pActor, const char* pName1, const char* pName2, const TVec3f& rPos) {
         setShadowDropPositionMtxPtr(pActor, pName1, getJointMtx(pActor, pName2), rPos);
     }
 
-    void setShadowDropDirection(LiveActor* pActor, const char* pName, const TVec3f& rDir) {
-        ActorShadow::getShadowController(pActor, pName)->setDropDirFix(rDir);
-    }
-
     void setShadowDropDirectionPtr(LiveActor* pActor, const char* pName, const TVec3f* pDir) {
         ActorShadow::getShadowController(pActor, pName)->setDropDirPtr(pDir);
     }
 
-    void setShadowProjection(LiveActor* pActor, const char* pName, const TVec3f& a3, const TVec3f& a4, bool a5) {
-        ActorShadow::getShadowController(pActor, pName)->setProjectionFix(a3, a4, a5);
+    void setShadowProjectionPtr(LiveActor* pActor, const char* pName, const TVec3f* pPosition, const TVec3f* pDirection) {
+        ActorShadow::getShadowController(pActor, pName)->setProjectionPtr(pPosition, pDirection);
     }
 
-    void setShadowProjectionPtr(LiveActor* pActor, const char* pName, const TVec3f* a3, const TVec3f* a4) {
-        ActorShadow::getShadowController(pActor, pName)->setProjectionPtr(a3, a4);
+    void setShadowDropPosition(LiveActor* pActor, const char* pName, const TVec3f& rPos) {
+        ActorShadow::getShadowController(pActor, pName)->setDropPosFix(rPos);
+    }
+
+    void setShadowDropDirection(LiveActor* pActor, const char* pName, const TVec3f& rDir) {
+        ActorShadow::getShadowController(pActor, pName)->setDropDirFix(rDir);
     }
 
     void setShadowDropLength(LiveActor* pActor, const char* pName, f32 length) {
@@ -147,8 +186,13 @@ namespace MR {
         ActorShadow::getShadowController(pActor, pName)->setDropStartOffset(offset);
     }
 
-    void setShadowSurfaceOvalColor(LiveActor* pActor, const char* pName, Color8 color) {
-        ActorShadow::getShadowSurfaceOval(pActor, pName)->setColor(color);
+    void setShadowProjection(LiveActor* pActor, const char* pName, const TVec3f& rPosition, const TVec3f& rDirection, bool a5) {
+        ActorShadow::getShadowController(pActor, pName)->setProjectionFix(rPosition, rDirection, a5);
+    }
+
+    void setShadowSurfaceOvalColor(LiveActor* pActor, const char* pName, const Color8 color) {
+        ShadowSurfaceOval* pOval = ActorShadow::getShadowSurfaceOval(pActor, pName);
+        pOval->setColor(color);
     }
 
     void setShadowSurfaceOvalAlpha(LiveActor* pActor, const char* pName, u8 alpha) {
@@ -187,11 +231,11 @@ namespace MR {
         }
     }
 
-    void onCalcShadowAll(LiveActor* pActor) {
-        u32 count = ActorShadow::getShadowControllerCount(pActor);
-
-        for (u32 i = 0; i < count; i++) {
-            ActorShadow::getShadowController(pActor, i)->onCalcCollision();
+    void offCalcShadow(LiveActor* pActor, const char* pName) {
+        if (pName != nullptr) {
+            ActorShadow::getShadowController(pActor, pName)->offCalcCollision();
+        } else {
+            offCalcShadowAll(pActor);
         }
     }
 
@@ -203,19 +247,11 @@ namespace MR {
         }
     }
 
-    void onCalcShadowOneTimeAll(LiveActor* pActor) {
+    void onCalcShadowAll(LiveActor* pActor) {
         u32 count = ActorShadow::getShadowControllerCount(pActor);
 
         for (u32 i = 0; i < count; i++) {
-            ActorShadow::getShadowController(pActor, i)->onCalcCollisionOneTime();
-        }
-    }
-
-    void offCalcShadow(LiveActor* pActor, const char* pName) {
-        if (pName != nullptr) {
-            ActorShadow::getShadowController(pActor, pName)->offCalcCollision();
-        } else {
-            offCalcShadowAll(pActor);
+            ActorShadow::getShadowController(pActor, i)->onCalcCollision();
         }
     }
 
@@ -224,6 +260,14 @@ namespace MR {
 
         for (u32 i = 0; i < count; i++) {
             ActorShadow::getShadowController(pActor, i)->offCalcCollision();
+        }
+    }
+
+    void onCalcShadowOneTimeAll(LiveActor* pActor) {
+        u32 count = ActorShadow::getShadowControllerCount(pActor);
+
+        for (u32 i = 0; i < count; i++) {
+            ActorShadow::getShadowController(pActor, i)->onCalcCollisionOneTime();
         }
     }
 
@@ -257,34 +301,60 @@ namespace MR {
         }
     }
 
+    inline void excludeCalcShadowToCollision(LiveActor* pActor, const char* pName, const HitSensor* pSensor) {
+        if (pName == nullptr) {
+            excludeCalcShadowToSensorAll(pActor, pSensor);
+        } else {
+            ShadowController* pShadowCtrl = ActorShadow::getShadowController(pActor, pName);
+            auto filter = std::make_shared<CollisionPartsFilterSensor>(pSensor);
+            pActor->mShadowControllerList->mNativeCollisionFilters.push_back(filter);
+            pShadowCtrl->setCollisionPartsFilter(filter.get());
+        }
+    }
+
+    void excludeCalcShadowToCollision(LiveActor* pActor, const char* pName, CollisionParts* pCollision) {
+        if (pName != nullptr) {
+            const HitSensor* pSensor = pCollision->mHitSensor;
+            excludeCalcShadowToCollision(pActor, pName, pSensor);
+        } else {
+            excludeCalcShadowToSensorAll(pActor, pCollision->mHitSensor);
+        }
+    }
+
+    void excludeCalcShadowToSensorAll(LiveActor* pActor, const HitSensor* pExcluded) {
+        u32 count = ActorShadow::getShadowControllerCount(pActor);
+
+        if (count == 0) {
+            return;
+        }
+
+        auto filter = std::make_shared<CollisionPartsFilterSensor>(pExcluded);
+        CollisionPartsFilterSensor* pFilter = filter.get();
+        pActor->mShadowControllerList->mNativeCollisionFilters.push_back(std::move(filter));
+
+        for (u32 i = 0; i < count; i++) {
+            ActorShadow::getShadowController(pActor, i)->setCollisionPartsFilter(pFilter);
+        }
+    }
+
+    void excludeCalcShadowToActorAll(LiveActor* pActor, const LiveActor* pExcluded) {
+        u32 count = ActorShadow::getShadowControllerCount(pActor);
+
+        if (count == 0) {
+            return;
+        }
+
+        auto filter = std::make_shared<CollisionPartsFilterActor>(pExcluded);
+        CollisionPartsFilterActor* pFilter = filter.get();
+        pActor->mShadowControllerList->mNativeCollisionFilters.push_back(std::move(filter));
+
+        for (u32 i = 0; i < count; i++) {
+            ActorShadow::getShadowController(pActor, i)->setCollisionPartsFilter(pFilter);
+        }
+    }
+
     bool isExistShadow(const LiveActor* pActor, const char* pName) {
         return ActorShadow::isExistShadowController(pActor, pName);
-    }
-
-    void validateShadow(LiveActor* pActor, const char* pName) {
-        if (pName != nullptr) {
-            ActorShadow::getShadowController(pActor, pName)->validate();
-        } else {
-            validateShadowAll(pActor);
-        }
-    }
-
-    void validateShadowGroup(LiveActor* pActor, const char* pName) {
-        u32 count = ActorShadow::getShadowControllerCount(pActor);
-
-        for (u32 i = 0; i < count; i++) {
-            if (isEqualString(ActorShadow::getShadowController(pActor, i)->mGroupName, pName)) {
-                ActorShadow::getShadowController(pActor, i)->validate();
-            }
-        }
-    }
-
-    void validateShadowAll(LiveActor* pActor) {
-        u32 count = ActorShadow::getShadowControllerCount(pActor);
-
-        for (u32 i = 0; i < count; i++) {
-            ActorShadow::getShadowController(pActor, i)->validate();
-        }
     }
 
     void invalidateShadow(LiveActor* pActor, const char* pName) {
@@ -292,6 +362,14 @@ namespace MR {
             ActorShadow::getShadowController(pActor, pName)->invalidate();
         } else {
             invalidateShadowAll(pActor);
+        }
+    }
+
+    void validateShadow(LiveActor* pActor, const char* pName) {
+        if (pName != nullptr) {
+            ActorShadow::getShadowController(pActor, pName)->validate();
+        } else {
+            validateShadowAll(pActor);
         }
     }
 
@@ -305,6 +383,16 @@ namespace MR {
         }
     }
 
+    void validateShadowGroup(LiveActor* pActor, const char* pName) {
+        u32 count = ActorShadow::getShadowControllerCount(pActor);
+
+        for (u32 i = 0; i < count; i++) {
+            if (isEqualString(ActorShadow::getShadowController(pActor, i)->mGroupName, pName)) {
+                ActorShadow::getShadowController(pActor, i)->validate();
+            }
+        }
+    }
+
     void invalidateShadowAll(LiveActor* pActor) {
         u32 count = ActorShadow::getShadowControllerCount(pActor);
 
@@ -313,11 +401,11 @@ namespace MR {
         }
     }
 
-    void onShadowVisibleSyncHostAll(LiveActor* pActor) {
+    void validateShadowAll(LiveActor* pActor) {
         u32 count = ActorShadow::getShadowControllerCount(pActor);
 
         for (u32 i = 0; i < count; i++) {
-            ActorShadow::getShadowController(pActor, i)->onVisibleSyncHost();
+            ActorShadow::getShadowController(pActor, i)->validate();
         }
     }
 
@@ -326,6 +414,14 @@ namespace MR {
             ActorShadow::getShadowController(pActor, pName)->offVisibleSyncHost();
         } else {
             offShadowVisibleSyncHostAll(pActor);
+        }
+    }
+
+    void onShadowVisibleSyncHostAll(LiveActor* pActor) {
+        u32 count = ActorShadow::getShadowControllerCount(pActor);
+
+        for (u32 i = 0; i < count; i++) {
+            ActorShadow::getShadowController(pActor, i)->onVisibleSyncHost();
         }
     }
 
@@ -357,7 +453,7 @@ namespace MR {
         TVec3f projectionPos;
 
         if (ActorShadow::getShadowController(pActor, static_cast< const char* >(nullptr))->isProjected()) {
-            getShadowProjectionPos(pActor, static_cast< const char* >(nullptr), &projectionPos);
+            getShadowProjectionPos(pActor, nullptr, &projectionPos);
             pVecOutput->set((pActor->mPosition + projectionPos) * 0.5f);
             *pF32Output = projectionPos.distance(pActor->mPosition) * 0.5f + a4;
             return true;
@@ -368,11 +464,11 @@ namespace MR {
         }
     }
 
-    void setClippingRangeIncludeShadow(LiveActor* pActor, TVec3f* a2, f32 a3) {
+    void setClippingRangeIncludeShadow(LiveActor* pActor, TVec3f* pCenter, f32 a3) {
         f32 stack_8 = a3;
 
-        if (calcClippingRangeIncludeShadow(a2, &stack_8, pActor, a3)) {
-            setClippingTypeSphere(pActor, stack_8, a2);
+        if (calcClippingRangeIncludeShadow(pCenter, &stack_8, pActor, a3)) {
+            setClippingTypeSphere(pActor, stack_8, pCenter);
         } else {
             setClippingTypeSphere(pActor, a3);
         }
@@ -380,18 +476,6 @@ namespace MR {
 
     bool isShadowProjected(const LiveActor* pActor, const char* pName) {
         return ActorShadow::getShadowController(pActor, pName)->isProjected();
-    }
-
-    bool isShadowProjectedAny(const LiveActor* pActor) {
-        u32 count = ActorShadow::getShadowControllerCount(pActor);
-
-        for (u32 i = 0; i < count; i++) {
-            if (ActorShadow::getShadowController(pActor, i)->isProjected()) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     void getShadowProjectionPos(const LiveActor* pActor, const char* pName, TVec3f* pResult) {
@@ -416,6 +500,18 @@ namespace MR {
         return ActorShadow::getShadowController(pActor, pName)->mProjectedSensor;
     }
 
+    bool isShadowProjectedAny(const LiveActor* pActor) {
+        u32 count = ActorShadow::getShadowControllerCount(pActor);
+
+        for (u32 i = 0; i < count; i++) {
+            if (ActorShadow::getShadowController(pActor, i)->isProjected()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     f32 getShadowNearProjectionLength(const LiveActor* pActor) {
         u32 count = ActorShadow::getShadowControllerCount(pActor);
         f32 result = FLOAT_MAX;
@@ -432,4 +528,4 @@ namespace MR {
 
         return result;
     }
-};  // namespace MR
+}  // namespace MR

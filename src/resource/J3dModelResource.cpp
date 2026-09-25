@@ -7,7 +7,6 @@
 #include "J3dTextureData.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/J3dCommandScope.hpp"
-#include "compat/J3DModelLoaderCompat.hpp"
 #include "JSystem/J3DGraphAnimator/J3DJoint.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
 #include "JSystem/J3DGraphBase/J3DMaterial.hpp"
@@ -372,7 +371,7 @@ namespace smgpc::resource {
                 compat::JkrAllocationScope original(domain);
                 compat::J3dCommandScope commands;
                 if (binary) validate_display_lists(model.mMaterialTable, *result->materials);
-                compat::finalize_j3d_model(model, result->geometry->shape_block(), binary);
+                J3DModelLoader::finalizeNativeModel(model, result->geometry->shape_block(), binary);
             }
             auto* pointer = result->model.get();
             std::lock_guard lock(mutex);

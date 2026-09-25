@@ -11,6 +11,7 @@
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <JSystem/JUtility/JUTVideo.hpp>
 #include <math_types.hpp>
+#include <memory>
 #include <dolphin/base/PPCArch.h>
 
 namespace {
@@ -53,8 +54,10 @@ BloomEffect::BloomEffect(const char* pName) : ImageEffectBase(pName), _14(255), 
     _3C = _2C;
     _40 = MR::getImageEffectResource()->_1C;
     _44 = MR::getImageEffectResource()->_20;
-    _48 = new Mtx[::sL1RoundPoints * ARRAY_SIZE(::sL1RadAndOfs)];
-    _4C = new Mtx[::sL2RoundPoints * ARRAY_SIZE(::sL2RadAndOfs)];
+    std::unique_ptr< Mtx[] > first(new Mtx[::sL1RoundPoints * ARRAY_SIZE(::sL1RadAndOfs)]);
+    std::unique_ptr< Mtx[] > second(new Mtx[::sL2RoundPoints * ARRAY_SIZE(::sL2RadAndOfs)]);
+    _48 = first.get();
+    _4C = second.get();
 
     for (u32 i = 0; i < ARRAY_SIZE(::sL1RadAndOfs); i++) {
         initBlurMtx(&_48[i * ::sL1RoundPoints], ::sL1RoundPoints, ::sL1RadAndOfs[i]._0, ::sL1RadAndOfs[i]._4);
@@ -65,6 +68,14 @@ BloomEffect::BloomEffect(const char* pName) : ImageEffectBase(pName), _14(255), 
     }
 
     PPCSync();
+    first.release();
+    second.release();
+}
+
+BloomEffect::~BloomEffect() {
+    // Texture members borrow ImageEffectResource storage.
+    delete[] _4C;
+    delete[] _48;
 }
 
 void BloomEffect::preDraw() const {

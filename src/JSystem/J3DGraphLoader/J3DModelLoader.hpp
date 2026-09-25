@@ -192,6 +192,8 @@ struct J3DTextureBlock : public J3DModelBlock {
 
 class J3DModelLoader {
 public:
+    // Finish the original hierarchy after native endian/pointer decoding.
+    static void finalizeNativeModel(J3DModelData&, const J3DShapeBlock&, bool binaryDisplayList);
     J3DModelLoader();
 
     virtual J3DModelData* load(const void*, u32);

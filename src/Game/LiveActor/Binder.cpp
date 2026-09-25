@@ -44,6 +44,10 @@ Binder::Binder(MtxPtr mtx, const TVec3f* v1, const TVec3f* v2, f32 radius, f32 o
     _1EC._5 = false;
 }
 
+Binder::~Binder() {
+    delete[] mPlane;
+}
+
 void Binder::setTriangleFilter(TriangleFilterBase* pFilter) {
     mTriangleFilter = pFilter;
 }

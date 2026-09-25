@@ -7,6 +7,7 @@ class JUTTexture;
 class WaterCameraFilter : public LiveActor {
 public:
     WaterCameraFilter();
+    ~WaterCameraFilter() override;
 
     virtual void init(const JMapInfoIter&);
     virtual void draw() const;

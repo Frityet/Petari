@@ -8,6 +8,18 @@ ImageEffectResource::ImageEffectResource()
     : _0(nullptr), _4(nullptr), _8(nullptr), _C(nullptr), _10(nullptr), _14(nullptr), _18(nullptr), _1C(nullptr), _20(nullptr) {
 }
 
+ImageEffectResource::~ImageEffectResource() {
+    delete _20;
+    delete _1C;
+    delete _18;
+    delete _14;
+    delete _10;
+    delete _C;
+    delete _8;
+    delete _4;
+    delete _0;
+}
+
 void ImageEffectResource::createBloomTexture() {
     if (_0 == nullptr) {
         _0 = createTexture(1.0f, GX_TF_RGBA8);

@@ -1,6 +1,7 @@
 #include "compat/Cp932Literal.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
 #include "Game/LiveActor/ShadowDrawer.hpp"
+#include "Game/LiveActor/ShadowVolumeLine.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/GravityUtil.hpp"
@@ -11,6 +12,11 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
+#include "Game/Util/JMapInfo.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
+#include <aurora/exception.hpp>
+#include <algorithm>
+#include <stdexcept>
 
 ShadowControllerHolder::ShadowControllerHolder() : NameObj(CP932("影管理")), _C(), _18(), _24(false) {
     mFarClip = 4000.0f;
@@ -57,7 +63,19 @@ ShadowControllerList::ShadowControllerList(LiveActor* pActor, u32 listCount) : m
     mShadowList.init(listCount);
 }
 
+ShadowControllerList::~ShadowControllerList() {
+    if (mHost->mShadowControllerList == this) {
+        mHost->mShadowControllerList = nullptr;
+    }
+    while (mShadowList.mCount != 0) {
+        delete mShadowList[--mShadowList.mCount];
+    }
+}
+
 void ShadowControllerList::addController(ShadowController* pController) {
+    if (mShadowList.size() >= mShadowList.capacity()) {
+        aurora::throw_host_exception<std::length_error>("Shadow controller list capacity exhausted");
+    }
     mShadowList.push_back(pController);
 }
 
@@ -103,7 +121,31 @@ ShadowController::ShadowController(LiveActor* pActor, const char* pName)
       _3C(0.0f, -1.0f, 0.0f), _48(0.0f, 0.0f, 0.0f), _54(0.0f, 1.0f, 0.0f), _60(1), _61(0), _62(0), _63(0), _64(0), _65(0), _66(0),
       _67(0), mStartOffset(50.0f), mDropLength(0.0f), _70(0), _71(1), _72(1) {
     MR::createSceneObj(SceneObj_ShadowControllerHolder);
+    mNativeHolder = MR::getSceneObj<ShadowControllerHolder>(SceneObj_ShadowControllerHolder);
+    mNativeHolderGeneration = smgpc::compat::name_obj_runtime_generation(mNativeHolder);
     MR::addShadowController(this);
+}
+
+ShadowController::~ShadowController() {
+    if (mNativeHolder && smgpc::compat::name_obj_runtime_generation(mNativeHolder) == mNativeHolderGeneration) {
+        // Lines borrow controllers from other actors. Retire those references
+        // while the actual holder still provides the live controller set.
+        for (auto* controller : mNativeHolder->_C) {
+            auto* line = dynamic_cast<ShadowVolumeLine*>(controller->mDrawer);
+            if (!line) continue;
+            if (line->mFromShadowController == this || line->mToShadowController == this) {
+                controller->invalidate();
+                if (line->mFromShadowController == this) line->mFromShadowController = nullptr;
+                if (line->mToShadowController == this) line->mToShadowController = nullptr;
+            }
+        }
+        for (auto* list : {&mNativeHolder->_C, &mNativeHolder->_18}) {
+            auto* begin = list->mArray.mArr;
+            list->mCount = static_cast<s32>(std::remove(begin, begin + list->mCount, this) - begin);
+        }
+    }
+    delete mDrawer;
+    mDrawer = nullptr;
 }
 
 void ShadowController::requestCalc() {
@@ -138,6 +180,8 @@ LiveActor* ShadowController::getHost() const {
 }
 
 void ShadowController::setShadowDrawer(ShadowDrawer* pDrawer) {
+    smgpc::compat::claim_name_obj_runtime_ownership(pDrawer, this);
+    if (mDrawer != pDrawer) delete mDrawer;
     mDrawer = pDrawer;
     pDrawer->setShadowController(this);
 }
@@ -242,6 +286,14 @@ void ShadowController::setDropDirFix(const TVec3f& a1) {
     _3C.set< f32 >(a1);
     mDropDir = 0;
     _61 = 0;
+}
+
+void ShadowController::setProjectionPtr(const TVec3f* pPosition, const TVec3f* pNormal) {
+    mProjPos = pPosition;
+    mProjNorm = pNormal;
+    _60 = 0;
+    _63 = 1;
+    mProjectedSensor = nullptr;
 }
 
 void ShadowController::setDropLength(f32 len) {
@@ -432,7 +484,11 @@ void ShadowController::setDropPosMtxPtr(MtxPtr pMtx, const TVec3f& rPos) {
 
 namespace MR {
     void addShadowController(ShadowController* pController) {
-        getSceneObj< ShadowControllerHolder >(SceneObj_ShadowControllerHolder)->_C.push_back(pController);
+        auto& controllers = getSceneObj< ShadowControllerHolder >(SceneObj_ShadowControllerHolder)->_C;
+        if (controllers.size() >= controllers.capacity()) {
+            aurora::throw_host_exception<std::length_error>("Shadow controller holder capacity exhausted");
+        }
+        controllers.push_back(pController);
     }
 
     void requestCalcActorShadowAppear(LiveActor* pActor) {

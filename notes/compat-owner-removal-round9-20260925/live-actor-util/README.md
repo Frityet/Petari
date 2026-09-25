@@ -1,0 +1,9 @@
+# Original LiveActorUtil owner restoration
+
+Complete current donor restored in `src/Game/Util/LiveActorUtil.cpp`; 11 duplicate providers deleted, six LiveActorUtil definitions removed from GameActorPhysicsCompat and four from LodCtrlRuntimeCompat. All 14 owned files were clean at baseline1191258a; snapshots and exact scoped delta are retained. Other lanes own BinderCompat, PlanetMapRuntimeCompat/OceanHomeMapCtrl, Flag/SwingRopePoint and build wiring.
+
+Native differences are limited to explicit headers/CP932, the existing collision decoding/resource-token boundary, clipping-group capture, exception-safe LOD adoption (NPC, planet and newly exposed map-object helper), the full-width joint matrix pointer, and native named Binder bitfields. The original Wii raw byte masks target fields `_0` (moving collision) and `_2` (extra collision); named assignment preserves behavior on the native bitfield order. The matching-only constant-order helper is omitted. Source comparison records every changed function body; all other donor bodies are exact.
+
+Restores all previously absent donor helpers and overloads, original zero-step/null contracts, scalar quaternion construction, and constant animation-rate scale. Existing native null guards and alternate nerve interpolation are removed with their fragments. No renamed shim or second implementation was introduced. CollisionPartsCompat, ActorRuntimeRegistry and ClippingDirectorOwnership remain actual native lifetime boundaries pending their own owner migrations.
+
+Root must enable `Util/LiveActorUtil.cpp` with `-ffp-contract=off`; compat source glob naturally drops the deleted providers. Build manifest lists the exact11 deletions. No builds, test runs, new tests, index changes or commits performed in this lane. Source checks: definition signatures preserved, only the11 documented body changes, scoped `git diff --check` passed.

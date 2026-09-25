@@ -4,11 +4,19 @@
 #include "Game/Screen/ImageEffectDirector.hpp"
 #include "Game/Screen/ImageEffectResource.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include <memory>
 
 ImageEffectSystemHolder::ImageEffectSystemHolder() : NameObj(CP932("画像効果管理")) {
-    mResource = new ImageEffectResource();
+    std::unique_ptr< ImageEffectResource > resource(new ImageEffectResource());
+    mResource = resource.get();
     mDirector = nullptr;
     mDirector = new ImageEffectDirector(CP932("全画面エフェクト管理"));
+    resource.release();
+}
+
+ImageEffectSystemHolder::~ImageEffectSystemHolder() {
+    // The director is a separately registered scene NameObj.
+    delete mResource;
 }
 
 void ImageEffectSystemHolder::pauseOff() {

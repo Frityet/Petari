@@ -67,6 +67,8 @@ namespace MR {
     s32 getSoundCodeIndex(const JMapInfoIter&);
     s32 getFloorCodeIndex(const Triangle*);
     s32 getWallCodeIndex(const Triangle*);
+    s32 getSoundCodeIndex(const Triangle*);
+    s32 getCameraCodeIndex(const Triangle*);
     bool isGroundCodeWaterIter(const JMapInfoIter&);
     bool isGroundCodeDeath(const Triangle*);
     bool isGroundCodeDamage(const Triangle*);
@@ -87,6 +89,7 @@ namespace MR {
     bool isWallCodeRebound(const Triangle*);
     bool isWallCodeNoAction(const Triangle*);
     bool isCameraCodeThrough(const Triangle*);
+    bool isSoundCodeSand(const Triangle*);
     bool isCodeSand(const Triangle*);
     const Triangle* getCameraPolyFast(const TVec3f&, const TVec3f&, const HitSensor*);
     bool getFirstPolyOnLineBFast(const TVec3f&, const TVec3f&, TVec3f*, Triangle*);

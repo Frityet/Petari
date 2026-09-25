@@ -167,9 +167,8 @@ int main() {
         };
         require(smgpc::app::run_original_game(configuration, *logger, observer) == 0 && probe.exercised,
                 "OriginalProcess completes read-only placement diagnostic and normal bounded frame loop");
-        require(!smgpc::compat::has_name_obj_runtime_state(probe.holder_identity) &&
-                    smgpc::compat::actor_shadow_runtime_state_count() == 0,
-                "Normal scene retirement removes actual shadow holder and all actor shadow owners");
+        require(!smgpc::compat::has_name_obj_runtime_state(probe.holder_identity),
+                "Normal scene retirement removes the actual shadow holder");
         for (const auto* object : probe.retained_identities)
             require(!smgpc::compat::has_name_obj_runtime_state(object), "Normal original scene teardown retires every actual actor, GroundChecker and shadow drawer");
         std::fprintf(stderr, "PASS original-process PunchingKinoko: all fourteen ordinary factory placements, actual model/sensor/binder/shadow graph, normal frames and scene retirement\n");

@@ -17,7 +17,6 @@ namespace smgpc::compat {
     class CollisionDirectorOwnership;
     class ClippingDirectorOwnership;
     class EffectSystemOwnership;
-    class ImageEffectOwnership;
     class JkrAllocationDomain;
     class TalkDirectorLifetime;
     class CapturedFrameBlurService;
@@ -75,7 +74,6 @@ namespace smgpc::scene {
         std::unique_ptr<smgpc::runtime::SceneSchedulerAllocationBinding> _game_allocation_binding;
         std::unique_ptr<smgpc::camera::CameraDirectorRuntime> _camera_runtime;
         std::unique_ptr<smgpc::compat::EffectSystemOwnership> _effect_system_ownership;
-        std::unique_ptr<smgpc::compat::ImageEffectOwnership> _image_effect_ownership;
         std::unique_ptr<smgpc::compat::CollisionDirectorOwnership> _collision_director_ownership;
         std::unique_ptr<smgpc::compat::ClippingDirectorOwnership> _clipping_director_ownership;
         smgpc::runtime::SceneScheduler* _effect_scheduler = nullptr;

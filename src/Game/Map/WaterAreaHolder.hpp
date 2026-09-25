@@ -14,6 +14,7 @@ class WhirlPoolAccelerator;
 class WaterAreaHolder : public NameObj {
 public:
     WaterAreaHolder();
+    ~WaterAreaHolder() override;
 
     virtual void movement();
 

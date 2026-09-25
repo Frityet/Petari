@@ -1,0 +1,67 @@
+{
+  "head": "1191258ac4c19c4652a1ab4c2eb927ec53a34d81",
+  "decomp_head": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "paths": [
+    {
+      "path": "src/Game/Util/MapUtil.cpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "e932d1e880b359d67940fa8a58a7911c963461f95a147ec21eafd9349f0c6a47",
+      "action": "modified",
+      "after_sha256": "0b67cc43db844dc74e1affe6c0545d39c52843a51b1b9fe206733b29acc03b41"
+    },
+    {
+      "path": "src/Game/Util/MapUtil.hpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "715afb98a4fd935c0aba191a9f8b3331e80db178fa90dccbbe7d75edbc33ce27",
+      "action": "modified",
+      "after_sha256": "f39d73abf3bbdc4f73bbcadd32e60246ab5ebc02392ea1225f7b31b1adff7527"
+    },
+    {
+      "path": "src/compat/GameMapCollisionCompat.cpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "1f6ffea41b23b22632582eff343bc7f5edec69125fec49399fad3fb1e7994dbf",
+      "action": "deleted",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/OriginalMapQueries.cpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "68a3b7b3b3a81393c0b0741bdfc5943c577ccdc81187bf15c3d9a4ad11ed48d5",
+      "action": "deleted",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/OriginalCollisionGeometry.cpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "cd7389aa39322f2a941626385111f7c7670271fe3aac12caf59bb31139bfa9fb",
+      "action": "deleted",
+      "after_sha256": null
+    },
+    {
+      "path": "src/Game/Util/TriangleFilter.cpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "1e2ee30f622a0e836226a492f9237e862c0c17c8773090bb778ca0d633945720",
+      "action": "modified",
+      "donor": "decomp/src/Game/Util/TriangleFilter.cpp",
+      "after_sha256": "4a50f8b6a40a62b9678b4f4e3e4181484f9705ccc6900b6e9d2f8e649a1b67a4"
+    },
+    {
+      "path": "src/Game/Util/TriangleFilter.hpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "415276f768efdd2703319d0b8c8557bd380ed11ad8756a0085be73c8a7c0aa56",
+      "action": "modified",
+      "donor": "decomp/include/Game/Util/TriangleFilter.hpp",
+      "after_sha256": "1e33cc32f952acbd4694f9752a3510b0fd870da15ee7feab7e28071abf27843f"
+    }
+  ],
+  "coordination": "gateway_gap_audit deletes GameActorPhysicsCompat.cpp after its shadow restoration; MapUtil now includes the two remaining map methods isBindedGroundDamageFire/isBindedGroundWater.",
+  "wiring": "Remove Util/MapUtil.cpp exclusion; replace explicit ../compat/OriginalMapQueries.cpp source/ffp-contract=off entry with Util/MapUtil.cpp; remove any explicit deleted provider references. Parent owns xmake.",
+  "validation": "Read-only source mapping only; no builds/tests/git mutations. No non-ASCII donor literals."
+}

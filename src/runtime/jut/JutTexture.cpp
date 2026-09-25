@@ -3,7 +3,6 @@
 
 #include "compat/JutTextureAllocation.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
-#include "compat/JutTextureConstruction.hpp"
 
 namespace {
     void retire_jut_texture(void* object) noexcept {
@@ -15,7 +14,6 @@ JUTTexture::JUTTexture() {
     setCaptureFlag(false);
     try {
         JKRHeap::registerFinalizer(this, retire_jut_texture);
-        smgpc::compat::record_completed_jut_texture(*this);
     } catch (...) {
         JKRHeap::unregisterFinalizer(this);
         throw;
@@ -57,7 +55,6 @@ JUTTexture::JUTTexture(int width, int height, GXTexFmt format) {
     DCFlushRange(mImage, bufSize);
     try {
         JKRHeap::registerFinalizer(this, retire_jut_texture);
-        smgpc::compat::record_completed_jut_texture(*this);
     } catch (...) {
         JKRHeap::unregisterFinalizer(this);
         throw;
@@ -70,7 +67,6 @@ JUTTexture::JUTTexture(const ResTIMG *p_timg, u8 param_1) {
         storeTIMG(p_timg, param_1);
         setCaptureFlag(false);
         JKRHeap::registerFinalizer(this, retire_jut_texture);
-        smgpc::compat::record_completed_jut_texture(*this);
     } catch (...) {
         JKRHeap::unregisterFinalizer(this);
         GXDestroyTexObj(&mObj);
@@ -80,7 +76,6 @@ JUTTexture::JUTTexture(const ResTIMG *p_timg, u8 param_1) {
 }
 
 JUTTexture::~JUTTexture() {
-    smgpc::compat::forget_completed_jut_texture(*this);
     JKRHeap::unregisterFinalizer(this);
     GXDestroyTexObj(&mObj);
     if (getCaptureFlag()) {

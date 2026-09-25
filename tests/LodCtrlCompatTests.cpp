@@ -2,6 +2,8 @@
 #include "Game/LiveActor/ClippingDirector.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/LodCtrl.hpp"
+#include "Game/LiveActor/ShadowController.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
@@ -122,7 +124,7 @@ namespace {
                 "an invalid controller must preserve the recovered early-return behavior");
     }
 
-    void test_missing_resources_and_shadows_stay_absent() {
+    void test_missing_resources_stay_absent() {
         constexpr auto missing_model = "SMGPC_LodCtrl_RealOrAbsent_Missing_5A6F2C8D";
         require(!LodCtrlFunction::isExistLodLowModel(missing_model),
                 "a missing Low archive must remain absent instead of producing a fallback model");
@@ -139,26 +141,6 @@ namespace {
         ctrl.createLodModel(-1, -1, -1);
         require(ctrl._10 == nullptr && ctrl._14 == nullptr && ctrl._18 == 0,
                 "only real Middle/Low archives may create LodCtrl submodels");
-
-        auto rejected_shadow_sync = false;
-        try {
-            ctrl.offSyncShadowHost();
-        } catch (const std::logic_error&) {
-            rejected_shadow_sync = true;
-        }
-        require(rejected_shadow_sync && ctrl._1A != 0,
-                "missing real shadow ownership must reject explicitly without reporting fake state");
-
-        const auto lod_baseline = smgpc::compat::actor_lod_ctrl_runtime_state_count();
-        auto rejected_npc_lod = false;
-        try {
-            (void)MR::createLodCtrlNPC(&actor, JMapInfoIter{});
-        } catch (const std::logic_error&) {
-            rejected_npc_lod = true;
-        }
-        require(rejected_npc_lod &&
-                    smgpc::compat::actor_lod_ctrl_runtime_state_count() == lod_baseline,
-                "NPC LodCtrl construction must reject a missing real shadow without retaining partial ownership");
     }
 
     void test_npc_lod_owns_controller_and_synchronizes_all_shadows() {
@@ -172,31 +154,29 @@ namespace {
             auto actor = LiveActor("lod-npc-owner-test");
             actor.initModelManagerWithAnm("SMGPC_LodCtrl_RealOrAbsent_Missing_5A6F2C8D", nullptr, false);
             actor.makeActorAppeared();
-            actor.initShadowControllerList(2U);
-            auto& primary = smgpc::compat::add_actor_shadow_controller(
-                &actor, "primary", smgpc::compat::ActorShadowControllerKind::VolumeSphere,
-                75.0F);
-            auto& secondary = smgpc::compat::add_actor_shadow_controller(
-                &actor, "secondary", smgpc::compat::ActorShadowControllerKind::VolumeSphere,
-                50.0F);
-            require(primary.visible_sync_host && secondary.visible_sync_host,
+            MR::initShadowController(&actor, 2U);
+            MR::addShadowVolumeSphere(&actor, "primary", 75.0F);
+            MR::addShadowVolumeSphere(&actor, "secondary", 50.0F);
+            auto& primary = *actor.mShadowControllerList->getController("primary");
+            auto& secondary = *actor.mShadowControllerList->getController("secondary");
+            require(primary._72 && secondary._72,
                     "every real shadow controller must default to host visibility synchronization");
 
             auto* ctrl = MR::createLodCtrlNPC(&actor, JMapInfoIter{});
-            require(ctrl != nullptr && ctrl->_1A == 0 && !primary.visible_sync_host &&
-                        !secondary.visible_sync_host &&
+            require(ctrl != nullptr && ctrl->_1A == 0 && !primary._72 &&
+                        !secondary._72 &&
                         smgpc::compat::actor_lod_ctrl_runtime_state_count() == lod_baseline + 1U,
                     "NPC LOD creation must atomically adopt its controller and disable host shadow visibility sync");
 
             ctrl->kill();
-            require(primary.visible_sync_host && secondary.visible_sync_host,
+            require(primary._72 && secondary._72,
                     "killing an independently synchronized NPC LOD must restore every host shadow visibility sync");
             ctrl->appear();
-            require(!primary.visible_sync_host && !secondary.visible_sync_host,
+            require(!primary._72 && !secondary._72,
                     "appearing an independently synchronized NPC LOD must disable every host shadow visibility sync again");
             ctrl->kill();
             ctrl->validate();
-            require(!primary.visible_sync_host && !secondary.visible_sync_host &&
+            require(!primary._72 && !secondary._72 &&
                         ctrl->_18 != 0,
                     "validating an NPC LOD must appear it and retain independent shadow visibility");
         }
@@ -216,7 +196,7 @@ int main() {
         TestCase{"Game source boundary retains only GCC attribute relocation", test_game_source_boundary_retains_only_gcc_attribute_relocation},
         TestCase{"director must be explicitly scene-owned", test_director_must_be_explicitly_scene_owned},
         TestCase{"exact update uses real host state", test_exact_update_uses_real_host_state},
-        TestCase{"missing resources and shadows stay absent", test_missing_resources_and_shadows_stay_absent},
+        TestCase{"missing resources stay absent", test_missing_resources_stay_absent},
         TestCase{"NPC LOD ownership and shadow sync", test_npc_lod_owns_controller_and_synchronizes_all_shadows},
     };
 

@@ -1,0 +1,9 @@
+# Flag / SwingRopePoint canonical donor import
+
+Imported all four complete donor files from decomp 1a126cb5da311fedff662f53fb31c5aeaf851408 into the native Game owners. They were absent at round9 baseline 1191258ac4c19c4652a1ab4c2eb927ec53a34d81; before/ records absence. SwingRopePoint source/header are byte-identical to the donor. All donor text is ASCII, so CP932 literal conversion is unnecessary.
+
+Flag retains original cloth simulation, authored object parameters, RNG, sound, clipping and immediate GX drawing. Native-only differences are the available GX umbrella header, equivalent TMatrix getter names, TVec2f coordinates, explicit 4-byte GXColor stride, and cleanup of the texture, color/UV arrays, each concrete point and each point row. Null-initialized row/pointer arrays make partial init cleanup safe. SwingRopePoint only contains vectors and needs no custom cleanup.
+
+Flag now retains its real ResourceHolder native resources for the lifetime of the borrowed ResTIMG. The lookup uses the exact .arc suffix used by the original loadTexFromArc; it reuses the canonical manager entry. The member releases after deleting JUTTexture, preventing resource retirement while the texture remains live. JUTTexture destruction unregisters its heap finalizer and nulls any construction capture record, so Flag cleanup does not leave a second texture deletion in those existing mechanisms. Arrays and points remain allocated on the original active Game heap and are freed during actual actor retirement.
+
+No utility, compat, build configuration, decomp, tests or git index changed. The existing Game wildcard selects both new cpp files. No builds or tests were run, as requested. Root performs the integrated build and short smoke. donor-native.patch records the exact divergence from the authoritative donor.

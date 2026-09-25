@@ -8,6 +8,7 @@ class ImageEffectResource {
 public:
     /// @brief Creates a new `ImageEffectResource`.
     ImageEffectResource();
+    ~ImageEffectResource();
 
     void createBloomTexture();
     void createBlurTexture();

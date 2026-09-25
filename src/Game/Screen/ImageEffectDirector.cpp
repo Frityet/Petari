@@ -12,6 +12,7 @@
 #include "Game/Screen/ImageEffectLocalUtil.hpp"
 #include "Game/Screen/ImageEffectState.hpp"
 #include "Game/Util.hpp"
+#include <memory>
 
 namespace {
     static const s32 sIntensityCountMax = 60;
@@ -20,10 +21,33 @@ namespace {
 
 ImageEffectDirector::ImageEffectDirector(const char* pName)
     : NameObj(pName), mIsAuto(true), mIsPlayerSync(false), _E(false), _F(false), mPlayerSyncIntensity(0), mDepthOfFieldIntensity(::sDOFIntensity),
-      mStateNull(new ImageEffectStateImpl::StateNull(this)), mStateBloomNormal(new ImageEffectStateImpl::StateBloomNormal(this)),
-      mStateBloomSimple(new ImageEffectStateImpl::StateBloomSimple(this)), mStateScreenBlur(new ImageEffectStateImpl::StateScreenBlur(this)),
-      mStateDepthOfField(new ImageEffectStateImpl::StateDepthOfField(this)), mState(mStateNull), mCurrentEffect(nullptr) {
+      mStateNull(nullptr), mStateBloomNormal(nullptr), mStateBloomSimple(nullptr), mStateScreenBlur(nullptr), mStateDepthOfField(nullptr),
+      mState(nullptr), mCurrentEffect(nullptr) {
+    std::unique_ptr< ImageEffectStateImpl::StateNull > stateNull(new ImageEffectStateImpl::StateNull(this));
+    std::unique_ptr< ImageEffectStateImpl::StateBloomNormal > bloomNormal(new ImageEffectStateImpl::StateBloomNormal(this));
+    std::unique_ptr< ImageEffectStateImpl::StateBloomSimple > bloomSimple(new ImageEffectStateImpl::StateBloomSimple(this));
+    std::unique_ptr< ImageEffectStateImpl::StateScreenBlur > screenBlur(new ImageEffectStateImpl::StateScreenBlur(this));
+    std::unique_ptr< ImageEffectStateImpl::StateDepthOfField > depthOfField(new ImageEffectStateImpl::StateDepthOfField(this));
+    mStateNull = stateNull.get();
+    mStateBloomNormal = bloomNormal.get();
+    mStateBloomSimple = bloomSimple.get();
+    mStateScreenBlur = screenBlur.get();
+    mStateDepthOfField = depthOfField.get();
+    mState = mStateNull;
     MR::connectToSceneImageEffectMovement(this);
+    stateNull.release();
+    bloomNormal.release();
+    bloomSimple.release();
+    screenBlur.release();
+    depthOfField.release();
+}
+
+ImageEffectDirector::~ImageEffectDirector() {
+    delete mStateDepthOfField;
+    delete mStateScreenBlur;
+    delete mStateBloomSimple;
+    delete mStateBloomNormal;
+    delete mStateNull;
 }
 
 void ImageEffectDirector::movement() {

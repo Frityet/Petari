@@ -68,97 +68,6 @@ namespace smgpc::compat {
         std::uint32_t plane_capacity = 0U;
     };
 
-    enum class ActorShadowControllerKind {
-        SurfaceCircle,
-        SurfaceOval,
-        SurfaceBox,
-        VolumeSphere,
-        VolumeOval,
-        VolumeOvalPole,
-        VolumeCylinder,
-        VolumeBox,
-        VolumeFlatModel,
-        VolumeLine,
-    };
-
-    enum class ActorShadowPositionBinding {
-        ActorTranslation,
-        BaseMatrix,
-        FixedPosition,
-        OtherTranslation,
-        OtherMatrix,
-        JointMatrix,
-    };
-
-    enum class ActorShadowCalculationMode {
-        Disabled,
-        Continuous,
-        OneTime,
-    };
-
-    enum class ActorShadowGravityMode {
-        HostDirection,
-        HostContinuous,
-        HostOneTime,
-        PrivateDisabled,
-        PrivateContinuous,
-        PrivateOneTime,
-    };
-
-    // Parsed construction parameters and retained shape data. Live projection,
-    // gravity and visibility are owned by the original ShadowController.
-    // *_raw fields retain CP932 Game identity; other name fields are UTF-8
-    // presentation only and must never be used to resolve original resources.
-    struct ActorShadowControllerRuntimeState {
-        std::string name{};
-        std::string name_raw{};
-        std::string group_name{};
-        std::string group_name_raw{};
-        ActorShadowControllerKind kind = ActorShadowControllerKind::VolumeSphere;
-        ActorShadowPositionBinding position_binding = ActorShadowPositionBinding::ActorTranslation;
-        std::string joint_name{};
-        std::string joint_name_raw{};
-        std::optional<std::string> model_name{};
-        std::optional<std::string> model_name_raw{};
-        std::optional<std::string> line_start_name{};
-        std::optional<std::string> line_end_name{};
-        std::optional<std::string> line_start_name_raw{};
-        std::optional<std::string> line_end_name_raw{};
-        float radius = 0.0F;
-        TVec3f size{};
-        TVec3f drop_offset{};
-        TVec3f fixed_drop_position{};
-        TVec3f fixed_drop_direction{};
-        const TVec3f* drop_position = nullptr;
-        MtxPtr drop_position_matrix = nullptr;
-        const TVec3f* drop_direction = nullptr;
-        float drop_length = 1000.0F;
-        float drop_start_offset = 0.0F;
-        float volume_start_offset = 0.0F;
-        float volume_end_offset = 0.0F;
-        float line_start_radius = 100.0F;
-        float line_end_radius = 100.0F;
-        std::optional<std::size_t> line_start_controller_index{};
-        std::optional<std::size_t> line_end_controller_index{};
-        // Programmatic endpoints may belong to another actor. These are
-        // borrowed, like drop_position/drop_direction; their owner must outlive
-        // this line. An index instead binds a preceding or this new controller.
-        const ShadowController* line_start_controller = nullptr;
-        const ShadowController* line_end_controller = nullptr;
-        bool volume_cut_drop_length = false;
-        bool follow_host_scale = false;
-        bool valid = true;
-        bool visible_sync_host = true;
-        ActorShadowCalculationMode calculation_mode = ActorShadowCalculationMode::Disabled;
-        ActorShadowGravityMode gravity_mode = ActorShadowGravityMode::HostDirection;
-    };
-
-    struct ActorShadowRuntimeState {
-        // Resource definitions used to construct the separately owned original list.
-        std::uint32_t capacity = 0U;
-        std::vector<ActorShadowControllerRuntimeState> controllers{};
-    };
-
     // Original names are borrowed, including member buffers filled after the
     // NameObj base constructor. Registration must not inspect their bytes.
     void register_name_obj_runtime_state(NameObj* object);
@@ -255,24 +164,5 @@ namespace smgpc::compat {
 
     void retire_clipping_actor_holder(ClippingActorHolder& holder) noexcept;
     void retire_clipping_group_holder(ClippingGroupHolder& holder) noexcept;
-
-    void initialize_actor_shadow_controller_list(LiveActor* actor, std::uint32_t capacity);
-    // Name inputs and lookups below use raw CP932 bytes, including host callers.
-    [[nodiscard]] ActorShadowControllerRuntimeState make_actor_shadow_controller_runtime_state(
-        LiveActor* actor, std::string_view name, ActorShadowControllerKind kind, float radius);
-    void replace_actor_shadow_runtime_state(LiveActor* actor, ActorShadowRuntimeState state);
-    // Publish only a complete definition so the original drawer sees all of
-    // its shape parameters and endpoint bindings at construction.
-    [[nodiscard]] ActorShadowControllerRuntimeState& add_actor_shadow_controller(
-        LiveActor* actor, ActorShadowControllerRuntimeState definition);
-    [[nodiscard]] ActorShadowControllerRuntimeState& add_actor_shadow_controller(
-        LiveActor* actor, std::string_view name, ActorShadowControllerKind kind, float radius);
-    [[nodiscard]] ActorShadowControllerRuntimeState* actor_shadow_controller_runtime_state(
-        LiveActor* actor, const char* name);
-    [[nodiscard]] const ActorShadowControllerRuntimeState* actor_shadow_controller_runtime_state(
-        const LiveActor* actor, const char* name);
-    [[nodiscard]] ActorShadowRuntimeState* actor_shadow_runtime_state(LiveActor* actor);
-    [[nodiscard]] const ActorShadowRuntimeState* actor_shadow_runtime_state(const LiveActor* actor);
-    [[nodiscard]] std::size_t actor_shadow_runtime_state_count();
 
 }  // namespace smgpc::compat

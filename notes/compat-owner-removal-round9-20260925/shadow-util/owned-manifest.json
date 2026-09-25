@@ -1,0 +1,110 @@
+{
+  "baseline": "1191258ac4c19c4652a1ab4c2eb927ec53a34d81",
+  "files": [
+    {
+      "path": "src/Game/Util/ActorShadowUtil.cpp",
+      "initial_status": "clean",
+      "before_sha256": "e09e3f9e5efd20a3b3b3e793ee5c99b63fa7bb203a62579b03c070467cc87769",
+      "operation": "modify",
+      "prior_round9_lane": null
+    },
+    {
+      "path": "src/Game/Util/ActorShadowLocalUtil.cpp",
+      "initial_status": "absent",
+      "before_sha256": null,
+      "operation": "add",
+      "prior_round9_lane": null
+    },
+    {
+      "path": "src/Game/Util/ActorShadowLocalUtil.hpp",
+      "initial_status": "clean",
+      "before_sha256": "bc2f3a2c60ae82d152da704edb12ad00fffeda5b8abb26ab3590d868bcaa016f",
+      "operation": "modify",
+      "prior_round9_lane": null
+    },
+    {
+      "path": "src/Game/LiveActor/ShadowController.cpp",
+      "initial_status": "clean",
+      "before_sha256": "33ee090d1769116aeb1584756d32555e83b249885ba4a129c93f0d2058182694",
+      "operation": "modify",
+      "prior_round9_lane": null
+    },
+    {
+      "path": "src/Game/LiveActor/ShadowController.hpp",
+      "initial_status": "clean",
+      "before_sha256": "89d0678837f7511e58641b5041ef76f94e89bce83fc3ec93c42399b58c5ff56c",
+      "operation": "modify",
+      "prior_round9_lane": null
+    },
+    {
+      "path": "src/Game/LiveActor/LiveActor.cpp",
+      "initial_status": "clean",
+      "before_sha256": "6477410281db04e03764a75fff9bfc3f13dc5a18b0086dcb56b1e379c9fd9ae9",
+      "operation": "modify",
+      "prior_round9_lane": null
+    },
+    {
+      "path": "src/compat/ActorRuntimeRegistry.cpp",
+      "initial_status": "clean",
+      "before_sha256": "7fac0a21415e3cb8a124d147658d5fa16d2f78baa38be5e4e9a28e68a92528e6",
+      "operation": "modify",
+      "prior_round9_lane": null
+    },
+    {
+      "path": "src/compat/ActorRuntimeRegistry.hpp",
+      "initial_status": "clean",
+      "before_sha256": "2c2905eb4e4d075053a1df56bedb0513646f45995f0d106e6a7410b6c0c0a091",
+      "operation": "modify",
+      "prior_round9_lane": null
+    },
+    {
+      "path": "src/compat/OriginalActorShadowQueries.cpp",
+      "initial_status": "clean",
+      "before_sha256": "22058db611cf1a8d36ac85e4dfe5708a0a16afd7d9359db9d7d131ab686162f6",
+      "operation": "delete",
+      "prior_round9_lane": null
+    },
+    {
+      "path": "src/compat/ActorShadowCsvCompat.cpp",
+      "initial_status": "clean",
+      "before_sha256": "b81c12914223a75bfbf2c37010c83e151071152858c7083eae7925fea8b65d90",
+      "operation": "delete",
+      "prior_round9_lane": null
+    },
+    {
+      "path": "src/compat/ActorShadowCsvCompat.hpp",
+      "initial_status": "clean",
+      "before_sha256": "1d1da34146bd45868c6593bae8c3e2ca4893f4bf0db30927b13ea1e4b90ef058",
+      "operation": "delete",
+      "prior_round9_lane": null
+    },
+    {
+      "path": "src/compat/ShadowControllerOwnership.cpp",
+      "initial_status": "clean",
+      "before_sha256": "7065136a54ff6fd8229489b79c6866c52e500e2bc7767f31f0625f8d5fa6dd1a",
+      "operation": "delete",
+      "prior_round9_lane": null
+    },
+    {
+      "path": "src/compat/ShadowControllerOwnership.hpp",
+      "initial_status": "clean",
+      "before_sha256": "adbd4f66d74806d178bdb8c67af74cebcf82cfcc40067a268190db3bbfd55416",
+      "operation": "delete",
+      "prior_round9_lane": null
+    },
+    {
+      "path": "src/compat/GameActorPhysicsCompat.cpp",
+      "initial_status": "clean",
+      "before_sha256": "bcae8b2c5c23f4355f5ce275c9a76ecdda13867fe63bccbe5d470d170555d082",
+      "operation": "delete",
+      "prior_round9_lane": "live-actor-util"
+    },
+    {
+      "path": "src/compat/LodCtrlRuntimeCompat.cpp",
+      "initial_status": "clean",
+      "before_sha256": "140c765fc123eadc578b7140396574926cc125e9a2073541069115532a9ec177",
+      "operation": "delete",
+      "prior_round9_lane": "live-actor-util"
+    }
+  ]
+}

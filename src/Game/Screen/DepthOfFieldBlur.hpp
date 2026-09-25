@@ -9,6 +9,7 @@ public:
     /// @brief Creates a new `DepthOfFieldBlur`.
     /// @param pName A pointer to the null-terminated name of the object.
     DepthOfFieldBlur(const char* pName);
+    ~DepthOfFieldBlur() override;
 
     /// @brief Draws the `DepthOfFieldBlur` to the screen.
     virtual void draw() const;

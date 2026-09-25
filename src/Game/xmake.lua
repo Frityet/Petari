@@ -41,9 +41,6 @@ target("smg-pc-game")
     remove_files("NameObj/NameObjFactory.cpp")
     remove_files("Scene/SceneFunction.cpp")
     remove_files("Scene/SceneObjHolder.cpp")
-    remove_files("Util/ActorShadowUtil.cpp")
-    remove_files("Util/LiveActorUtil.cpp")
-    remove_files("Util/MapUtil.cpp")
     remove_files("Util/StarPointerUtil.cpp")
     remove_files("Util/SoundUtil.cpp")
     remove_files("NPC/MiiFacePartsHolder.cpp")
@@ -72,9 +69,12 @@ target("smg-pc-game")
     remove_files("../compat/MslPrintfCompat.cpp")
     -- Original paired-single helpers make fused and rounded operations explicit.
     add_files("Util/MathUtil.cpp", {cxxflags = "-ffp-contract=off"})
+    add_files("Util/LiveActorUtil.cpp", {cxxflags = "-ffp-contract=off"})
+    add_files("Util/ActorShadowUtil.cpp", {cxxflags = "-ffp-contract=off"})
+    add_files("Util/ActorShadowLocalUtil.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("Util/MtxUtil.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("System/Overwrite.cpp", {cxxflags = "-ffp-contract=off"})
-    add_files({"Util/ActorMovementUtil.cpp", "../compat/OriginalMapQueries.cpp",
+    add_files({"Util/ActorMovementUtil.cpp", "Util/MapUtil.cpp",
                "Map/CollisionParts.cpp", "Map/KCollision.cpp"},
               {cxxflags = "-ffp-contract=off"})
     add_files({"../JSystem/J3DGraphBase/J3DMaterial.cpp", "../JSystem/J3DGraphBase/J3DMatBlock.cpp",
@@ -116,7 +116,9 @@ target("smg-pc-game")
     add_files("../JSystem/J3DGraphBase/J3DPacket.cpp", "../nw4r/ut/ut_LinkList.cpp")
     add_files("../JSystem/JKernel/JKRThread.cpp")
     add_files("../JSystem/J3DGraphAnimator/J3DAnimation.cpp",
-              "../JSystem/J3DGraphLoader/J3DAnmLoader.cpp")
+              "../JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+              "../JSystem/J3DGraphLoader/J3DModelLoader.cpp",
+              "../JSystem/J3DGraphLoader/J3DMaterialFactory.cpp")
     add_files("../JSystem/J3DGraphBase/J3DDrawBuffer.cpp",
               "../JSystem/J3DGraphBase/J3DStruct.cpp",
               "../JSystem/J3DGraphBase/J3DGD.cpp", {cxxflags = "-ffp-contract=off"})

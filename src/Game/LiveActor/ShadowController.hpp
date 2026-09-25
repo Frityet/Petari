@@ -4,9 +4,13 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/Array.hpp"
 #include <JSystem/JGeometry/TVec.hpp>
+#include <cstdint>
+#include <memory>
+#include <vector>
 
 class CollisionPartsFilterBase;
 class HitSensor;
+class JMapInfo;
 class LiveActor;
 class ShadowController;
 class ShadowDrawer;
@@ -14,6 +18,7 @@ class ShadowDrawer;
 class ShadowControllerList {
 public:
     ShadowControllerList(LiveActor*, u32);
+    ~ShadowControllerList();
 
     void addController(ShadowController*);
     u32 getControllerCount() const;
@@ -24,6 +29,8 @@ public:
 
     MR::Vector< MR::AssignableArray< ShadowController* > > mShadowList;  // 0x0
     LiveActor* mHost;                                                    // 0xC
+    std::unique_ptr<JMapInfo> mNativeCsvInfo;
+    std::vector<std::shared_ptr<CollisionPartsFilterBase>> mNativeCollisionFilters;
 };
 
 class ShadowControllerHolder : public NameObj {
@@ -45,6 +52,7 @@ public:
 class ShadowController {
 public:
     ShadowController(LiveActor*, const char*);
+    ~ShadowController();
 
     void requestCalc();
     void update();
@@ -111,8 +119,8 @@ public:
     MtxPtr _1C;
     const TVec3f* mDropPos;  // 0x20
     const TVec3f* mDropDir;  // 0x24
-    TVec3f* mProjPos;        // 0x28
-    TVec3f* mProjNorm;       // 0x2C
+    const TVec3f* mProjPos;  // 0x28
+    const TVec3f* mProjNorm; // 0x2C
     TVec3f _30;
     TVec3f _3C;
     TVec3f _48;
@@ -130,6 +138,10 @@ public:
     u8 _70;
     u8 _71;
     u8 _72;
+
+private:
+    ShadowControllerHolder* mNativeHolder = nullptr;
+    std::uint64_t mNativeHolderGeneration = 0;
 };
 
 namespace MR {

@@ -1940,33 +1940,6 @@ target("smg-pc-actor-event-camera-tests")
         realtime_output = true
     })
 
-target("smg-pc-original-shadow-controller-owner-tests")
-    add_deps {"smg-pc-app", "aurora-main"}
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    set_rundir(os.projectdir())
-    add_files {
-        "OriginalShadowControllerOwnerTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("original_shadow_controller_owner", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
 target("smg-pc-point-light-runtime-tests")
     add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")

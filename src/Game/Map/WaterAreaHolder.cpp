@@ -13,6 +13,7 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
+#include <memory>
 
 namespace {
     static const s32 sAreaNumMax = 8;
@@ -33,11 +34,16 @@ WaterAreaHolder::WaterAreaHolder()
         mUseBloom = true;
     }
 
-    mOceanBowls = new OceanBowl*[::sAreaNumMax];
-    mOceanRings = new OceanRing*[::sAreaNumMax];
-    mOceanSpheres = new OceanSphere*[::sAreaNumMax];
-    mWhirlPools = new WhirlPool*[::sAreaNumMax];
-    mWhirlPoolAccelerators = new WhirlPoolAccelerator*[::sAreaNumMax];
+    std::unique_ptr< OceanBowl*[] > bowls(new OceanBowl*[::sAreaNumMax]);
+    std::unique_ptr< OceanRing*[] > rings(new OceanRing*[::sAreaNumMax]);
+    std::unique_ptr< OceanSphere*[] > spheres(new OceanSphere*[::sAreaNumMax]);
+    std::unique_ptr< WhirlPool*[] > whirls(new WhirlPool*[::sAreaNumMax]);
+    std::unique_ptr< WhirlPoolAccelerator*[] > accelerators(new WhirlPoolAccelerator*[::sAreaNumMax]);
+    mOceanBowls = bowls.get();
+    mOceanRings = rings.get();
+    mOceanSpheres = spheres.get();
+    mWhirlPools = whirls.get();
+    mWhirlPoolAccelerators = accelerators.get();
 
     for (s32 idx = 0; idx < ::sAreaNumMax; idx++) {
         mOceanBowls[idx] = nullptr;
@@ -50,6 +56,20 @@ WaterAreaHolder::WaterAreaHolder()
     MR::connectToSceneScreenEffectMovement(this);
     mCameraFilter = new WaterCameraFilter();
     mCameraFilter->initWithoutIter();
+    bowls.release();
+    rings.release();
+    spheres.release();
+    whirls.release();
+    accelerators.release();
+}
+
+WaterAreaHolder::~WaterAreaHolder() {
+    // Array entries and the camera filter are independently registered NameObjs.
+    delete[] mWhirlPoolAccelerators;
+    delete[] mWhirlPools;
+    delete[] mOceanSpheres;
+    delete[] mOceanRings;
+    delete[] mOceanBowls;
 }
 
 void WaterAreaHolder::entryOceanBowl(OceanBowl* pOceanBowl) {

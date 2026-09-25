@@ -92,8 +92,6 @@ namespace {
             actor.initBinder(50.0F, 25.0F, 4U);
             smgpc::compat::configure_actor_clipping_sphere(&actor, 100.0F, nullptr);
             smgpc::compat::configure_actor_clipping_far_level(&actor, 3);
-            auto* shadow = smgpc::compat::actor_shadow_runtime_state(&actor);
-            shadow->valid = true;
 
             const auto* binder = smgpc::compat::actor_binder_config(&actor);
             const auto* clipping = smgpc::compat::actor_clipping_runtime_state(&actor);
@@ -103,8 +101,8 @@ namespace {
                         actor.mBinder != nullptr &&
                         binder->radius == 50.0F && binder->offset == 25.0F && binder->plane_capacity == 4U &&
                         clipping != nullptr && clipping->sphere_configured && clipping->sphere_radius == 100.0F &&
-                        clipping->far_level == 3 && shadow->valid,
-                    "the generalized record must retain model, animation, sensor, binder, clipping, and shadow state");
+                        clipping->far_level == 3,
+                    "the generalized record must retain model, animation, sensor, binder and clipping state");
             require(actor.mModelManager == nullptr && actor.mAnimKeeper == nullptr &&
                         actor.mShadowControllerList == nullptr,
                     "only a real exact provider may occupy a retail provider slot");
@@ -116,8 +114,7 @@ namespace {
                     !smgpc::compat::has_actor_runtime_state(stale_actor) &&
                     smgpc::compat::actor_model(stale_actor) == nullptr &&
                     !smgpc::compat::has_actor_binder(stale_actor) &&
-                    smgpc::compat::actor_clipping_runtime_state(stale_actor) == nullptr &&
-                    smgpc::compat::actor_shadow_runtime_state(stale_actor) == nullptr,
+                    smgpc::compat::actor_clipping_runtime_state(stale_actor) == nullptr,
                 "LiveActor destruction must remove every external record for the stale identity");
     }
 

@@ -1,0 +1,90 @@
+{
+  "baseline": "1191258ac4c19c4652a1ab4c2eb927ec53a34d81",
+  "donor": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "files": [
+    {
+      "path": "src/Game/Util/LiveActorUtil.cpp",
+      "initial_status": "clean",
+      "before_sha256": "39cc7cd0b40b6d4604d8b75ce5b516ae7131a161daf1f144e5df094f10f3124e",
+      "operation": "modify"
+    },
+    {
+      "path": "src/compat/LiveActorUtilCompat.cpp",
+      "initial_status": "clean",
+      "before_sha256": "ac18e3d41f40eb17a9217dd303209f072d5b6af69e4783f82d757a275af7a7f3",
+      "operation": "delete"
+    },
+    {
+      "path": "src/compat/GameRuntimeCompat.cpp",
+      "initial_status": "clean",
+      "before_sha256": "0cb80187adabac144f3d6748e4a870bc91b889cadb50dd264a518d9ffb6c6d72",
+      "operation": "delete"
+    },
+    {
+      "path": "src/compat/OriginalActorAnimationStart.cpp",
+      "initial_status": "clean",
+      "before_sha256": "f204b6944cf438da2473e71987c9f48afa572b7e2cd12aa20a89dfe160c8ebd0",
+      "operation": "delete"
+    },
+    {
+      "path": "src/compat/OriginalActorBckControl.cpp",
+      "initial_status": "clean",
+      "before_sha256": "c3ee772ba19512d913d47cf2a80cafc57d0f544212e28a62f723551e2c6383e3",
+      "operation": "delete"
+    },
+    {
+      "path": "src/compat/OriginalActorModelAccess.cpp",
+      "initial_status": "clean",
+      "before_sha256": "97823512d19f3bf86bcf2eb8c6af089882570fc8c675ce8abdf7f840ab479806",
+      "operation": "delete"
+    },
+    {
+      "path": "src/compat/OriginalBinderQueries.cpp",
+      "initial_status": "clean",
+      "before_sha256": "77ec46ad93ec5f49ded6a6e2358aa0d51fb797dc3b4ba11377a948162e27fe71",
+      "operation": "delete"
+    },
+    {
+      "path": "src/compat/OriginalBinderFilterUtil.cpp",
+      "initial_status": "clean",
+      "before_sha256": "6bea3a4a0fa7fa366fc1f8a9cb58e6e3beba4591f3e7179537fddd00bf57cc5c",
+      "operation": "delete"
+    },
+    {
+      "path": "src/compat/OriginalLiveActorGroupUtil.cpp",
+      "initial_status": "clean",
+      "before_sha256": "bae33b4c21c102efb4005e1a0735c1ec90193719fe971a74217e4c1d1bb2bc73",
+      "operation": "delete"
+    },
+    {
+      "path": "src/compat/OriginalMirrorReflectionUtil.cpp",
+      "initial_status": "clean",
+      "before_sha256": "cc59e1424e9ae5509bac3ca594b58aa3555432fdbd6ef518d5014921922aeee1",
+      "operation": "delete"
+    },
+    {
+      "path": "src/compat/OriginalCollisionPartsUtil.cpp",
+      "initial_status": "clean",
+      "before_sha256": "c4b49b8cee53f2dad912abcffa4242d244b386ce0d61890b11d93ac97bf95f94",
+      "operation": "delete"
+    },
+    {
+      "path": "src/compat/OriginalFurAccess.cpp",
+      "initial_status": "clean",
+      "before_sha256": "f6e9604a4d0e358069c35749eb89e71a4be64d11029ca572b487eede07d093de",
+      "operation": "delete"
+    },
+    {
+      "path": "src/compat/GameActorPhysicsCompat.cpp",
+      "initial_status": "clean",
+      "before_sha256": "bcae8b2c5c23f4355f5ce275c9a76ecdda13867fe63bccbe5d470d170555d082",
+      "operation": "modify"
+    },
+    {
+      "path": "src/compat/LodCtrlRuntimeCompat.cpp",
+      "initial_status": "clean",
+      "before_sha256": "140c765fc123eadc578b7140396574926cc125e9a2073541069115532a9ec177",
+      "operation": "modify"
+    }
+  ]
+}

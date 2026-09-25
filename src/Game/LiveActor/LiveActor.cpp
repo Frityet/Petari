@@ -43,6 +43,8 @@ LiveActor::LiveActor(const char* pName)
 }
 
 LiveActor::~LiveActor() {
+    delete mShadowControllerList;
+    mShadowControllerList = nullptr;
     smgpc::compat::release_actor_runtime_state(this);
     delete mSensorKeeper;
     mSensorKeeper = nullptr;
@@ -370,7 +372,9 @@ void LiveActor::initRailRider(const JMapInfoIter& rIter) {
 }
 
 void LiveActor::initShadowControllerList(u32 controllerCount) {
-    smgpc::compat::initialize_actor_shadow_controller_list(this, controllerCount);
+    ShadowControllerList* list = new ShadowControllerList(this, controllerCount);
+    delete mShadowControllerList;
+    mShadowControllerList = list;
 }
 
 void LiveActor::initActorCollisionParts(const char* pParam1, HitSensor* pParam2, ResourceHolder* pParam3, MtxPtr pParam4, bool param5, bool param6) {

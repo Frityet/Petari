@@ -1,0 +1,49 @@
+{
+  "scope": "Retire synthetic shadow metadata tests; use actual original controllers in retained assertions",
+  "files": [
+    {
+      "path": "tests/OriginalShadowControllerOwnerTests.cpp",
+      "before": "notes/compat-owner-removal-round9-20260925/shadow-tests/before/tests/OriginalShadowControllerOwnerTests.cpp",
+      "before_sha256": "cfc6c0b1d7da92ff0ca17ab3a6ee9204f3628f00fe82cc0b08930256e787dfa8",
+      "action": "delete"
+    },
+    {
+      "path": "tests/OriginalProcessShadowVolumeLineTests.cpp",
+      "before": "notes/compat-owner-removal-round9-20260925/shadow-tests/before/tests/OriginalProcessShadowVolumeLineTests.cpp",
+      "before_sha256": "463911b94e86cbe310e337a89b9862b493225c073c9b20db0ae249585874cc75",
+      "action": "modify",
+      "after_sha256": "98451479d81b39c22e377edd86220b0b75f915e5cce40b2a9d62f865969df1b0"
+    },
+    {
+      "path": "tests/GameActorPhysicsRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round9-20260925/shadow-tests/before/tests/GameActorPhysicsRealOrAbsentTests.cpp",
+      "before_sha256": "d35720bd9793085d6eaeecd86e85cab259d32d32064251ec8e699091a20a9279",
+      "action": "modify",
+      "after_sha256": "b74f881c667bd69e5ba3428cc0b1d142bc0bf78b2e6f4b70854b7f39c5bef0e4"
+    },
+    {
+      "path": "tests/LodCtrlCompatTests.cpp",
+      "before": "notes/compat-owner-removal-round9-20260925/shadow-tests/before/tests/LodCtrlCompatTests.cpp",
+      "before_sha256": "e4187bdfa52d22275aee761468676fe7314a9de0532e8deee5bf284dbc172f37",
+      "action": "modify",
+      "after_sha256": "5910a09c9ca19226b8843ac2fd32fd51b0c780dac34e1338398c4488f90afb33"
+    },
+    {
+      "path": "tests/ActorRuntimeRegistryTests.cpp",
+      "before": "notes/compat-owner-removal-round9-20260925/shadow-tests/before/tests/ActorRuntimeRegistryTests.cpp",
+      "before_sha256": "5df3a8b29b0e8ab8031bb7f4e4968662696362618e9157b25b7849902b10593b",
+      "action": "modify",
+      "after_sha256": "d2472852d983aa739d04496c5b15881bd6d7cdd4b0d16bbc8fcbe8ea21c6b28a"
+    },
+    {
+      "path": "tests/OriginalProcessPunchingKinokoTests.cpp",
+      "before": "notes/compat-owner-removal-round9-20260925/shadow-tests/before/tests/OriginalProcessPunchingKinokoTests.cpp",
+      "before_sha256": "1c1fd01b6005e271062b85136005ba145d54668ac89c97651a1da691e983237a",
+      "action": "modify",
+      "after_sha256": "f525e4be4bf535d0fbb4d9e38889aff43c386629d739a0ef66729dd8ca99b68f"
+    }
+  ],
+  "retired_target_source": "tests/OriginalShadowControllerOwnerTests.cpp",
+  "build_wiring": "Root retires the OriginalShadowControllerOwnerTests xmake target; no test build-file edits made by this task.",
+  "validation": "Read-only stale-reference check of six owned paths; no builds or test runs."
+}

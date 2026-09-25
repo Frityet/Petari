@@ -40,6 +40,11 @@ WaterCameraFilter::WaterCameraFilter() : LiveActor(CP932("水中カメラフィ�
     mFilterTex = nullptr;
 }
 
+WaterCameraFilter::~WaterCameraFilter() {
+    delete mFilterTex;
+    delete mScreenTex;
+}
+
 void WaterCameraFilter::init(const JMapInfoIter& rIter) {
     MR::connectToScene(this, MR::MovementType_MapObj, -1, -1, MR::DrawType_WaterCameraFilter);
     MR::invalidateClipping(this);

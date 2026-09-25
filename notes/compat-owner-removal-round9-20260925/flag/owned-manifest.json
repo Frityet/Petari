@@ -1,0 +1,44 @@
+{
+  "head": "1191258ac4c19c4652a1ab4c2eb927ec53a34d81",
+  "decomp_head": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "paths": [
+    {
+      "path": "src/Game/Map/Flag.cpp",
+      "donor": "decomp/src/Game/Map/Flag.cpp",
+      "before_status": "",
+      "existed": false,
+      "action": "created",
+      "after_sha256": "5e72d2b98e30133ad9b3ec06f5e8237e747b92c34f3628aaffac9e8f08bf1fe7",
+      "non_ascii": false
+    },
+    {
+      "path": "src/Game/Map/Flag.hpp",
+      "donor": "decomp/include/Game/Map/Flag.hpp",
+      "before_status": "",
+      "existed": false,
+      "action": "created",
+      "after_sha256": "53153a694c2fc443c7ed6f0fa9574d8bbaf4eacbb35d0c438490b62e037818a8",
+      "non_ascii": false
+    },
+    {
+      "path": "src/Game/Ride/SwingRopePoint.cpp",
+      "donor": "decomp/src/Game/Ride/SwingRopePoint.cpp",
+      "before_status": "",
+      "existed": false,
+      "action": "created",
+      "after_sha256": "70cc722fa543c3ceadf0d30c977902dc91f971014f783c0fe60550b2dd368517",
+      "non_ascii": false
+    },
+    {
+      "path": "src/Game/Ride/SwingRopePoint.hpp",
+      "donor": "decomp/include/Game/Ride/SwingRopePoint.hpp",
+      "before_status": "",
+      "existed": false,
+      "action": "created",
+      "after_sha256": "b47b545d0562ed51748f7a0d3ff27fabb2131daec0d9bbb0a2ba3a6146a63397",
+      "non_ascii": false
+    }
+  ],
+  "validation": "No builds or tests per parent instruction. All four donor files contain only ASCII; CP932 literal conversion unnecessary.",
+  "wiring": "Existing src/Game wildcard selects Flag.cpp and SwingRopePoint.cpp; no build file changes."
+}

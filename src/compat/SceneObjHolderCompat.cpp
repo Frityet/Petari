@@ -7,7 +7,6 @@
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Effect/EffectSystem.hpp"
 #include "compat/EffectSystemOwnership.hpp"
-#include "compat/ImageEffectOwnership.hpp"
 #include "compat/CollisionDirectorOwnership.hpp"
 #include "compat/ClippingDirectorOwnership.hpp"
 #include "compat/CollisionPartsCompat.hpp"
@@ -40,6 +39,8 @@
 #include "Game/LiveActor/MessageSensorHolder.hpp"
 #include "Game/Map/Air.hpp"
 #include "Game/Map/LightDirector.hpp"
+#include "Game/Map/OceanHomeMapCtrl.hpp"
+#include "Game/Map/WaterAreaHolder.hpp"
 #include "Game/Map/SleepControllerHolder.hpp"
 #include "Game/Map/SphereSelector.hpp"
 #include "Game/Map/StageSwitch.hpp"
@@ -61,6 +62,11 @@
 #include "Game/GameAudio/AudBgmConductor.hpp"
 #include "Game/MapObj/BigFanHolder.hpp"
 #include "Game/MapObj/WarpPod.hpp"
+#include "Game/Screen/BloomEffect.hpp"
+#include "Game/Screen/BloomEffectSimple.hpp"
+#include "Game/Screen/DepthOfFieldBlur.hpp"
+#include "Game/Screen/ImageEffectSystemHolder.hpp"
+#include "Game/Screen/ScreenBlurEffect.hpp"
 #include "Game/Screen/CenterScreenBlur.hpp"
 #include "Game/Screen/InformationObserver.hpp"
 #include "Game/Screen/GameSceneLayoutHolder.hpp"
@@ -172,7 +178,6 @@ namespace smgpc::scene {
         _collision_director_ownership = std::make_unique<smgpc::compat::CollisionDirectorOwnership>();
         _clipping_director_ownership = std::make_unique<smgpc::compat::ClippingDirectorOwnership>();
         _talk_director_lifetime = std::make_unique<smgpc::compat::TalkDirectorLifetime>();
-        _image_effect_ownership = std::make_unique<smgpc::compat::ImageEffectOwnership>(holder);
         _captured_frame_blur_service = std::make_unique<smgpc::compat::CapturedFrameBlurService>();
         if (sCurrentSceneObjHolder != nullptr) {
             aurora::throw_host_exception<std::logic_error>("a SceneObjHolder is already bound to the active scene");
@@ -214,7 +219,6 @@ namespace smgpc::scene {
             smgpc::compat::retire_draw_sync_callbacks(_game_allocation_domain->heap());
         prepare_retirement();
         _collision_director_ownership->prepare_retirement();
-        _image_effect_ownership->prepare_retirement();
         if (_camera_runtime) _camera_runtime->unpublish();
         if (_effect_scheduler) {
             (void)_effect_scheduler->remove_registrations_since(_effect_registration_marker);
@@ -235,8 +239,6 @@ namespace smgpc::scene {
         _collision_director_ownership.reset();
         _clipping_director_ownership->reclaim();
         _clipping_director_ownership.reset();
-        _image_effect_ownership->reclaim_prepared();
-        _image_effect_ownership.reset();
         _owned_registration_objects.clear();
         _camera_runtime.reset();
         // The external holder storage outlives this binding in test and scene
@@ -412,8 +414,6 @@ NameObj *SceneObjHolder::create(int id) {
     const auto outermost = binding->_construction_depth == 0U;
     ++binding->_construction_depth;
     auto object = std::unique_ptr<NameObj>{};
-    smgpc::compat::JutTextureConstructionScope textures(
-        smgpc::compat::ImageEffectOwnership::handles(id));
     try {
         // Original factories may await resource creation on the main thread.
         // Keep their caller-selected heap without holding the heap mutex over
@@ -431,11 +431,9 @@ NameObj *SceneObjHolder::create(int id) {
             return nullptr;
         }
 
-        binding->_image_effect_ownership->capture(id, *object, textures);
         object->initWithoutIter();
         if (id == SceneObj_TalkDirector)
             binding->_talk_director_lifetime->capture_after_init(static_cast<TalkDirector&>(*object));
-        binding->_image_effect_ownership->capture(id, *object, textures);
         smgpc::compat::JkrHostAllocationScope host_metadata;
         auto registrations =
             smgpc::compat::snapshot_name_obj_runtime_objects_since(
@@ -507,8 +505,6 @@ NameObj *SceneObjHolder::create(int id) {
         if (binding->_camera_runtime && smgpc::compat::name_obj_runtime_object_was_registered_since(
                 &binding->_camera_runtime->director(), marker))
             binding->_camera_runtime.reset();
-        binding->_image_effect_ownership->capture_shared_textures(textures);
-        binding->_image_effect_ownership->prepare_rollback(marker);
         const bool collision_rollback = binding->_collision_director_ownership->prepare_rollback(marker);
         const bool clipping_rollback = binding->_clipping_director_ownership->prepare_rollback(marker);
         if (object != nullptr &&
@@ -524,7 +520,6 @@ NameObj *SceneObjHolder::create(int id) {
             }
         }
         rollback_scene_obj_registrations(marker);
-        binding->_image_effect_ownership->reclaim_prepared();
         if (collision_rollback) binding->_collision_director_ownership->reclaim();
         if (clipping_rollback) binding->_clipping_director_ownership->reclaim();
         --binding->_construction_depth;
@@ -557,11 +552,19 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         }
     }
 
-    if (smgpc::compat::ImageEffectOwnership::handles(id)) {
-        return sCurrentSceneObjHolderBinding->_image_effect_ownership->construct(id);
-    }
-
     switch (id) {
+    case SceneObj_ImageEffectSystemHolder:
+        return new ImageEffectSystemHolder();
+    case SceneObj_BloomEffect:
+        return new BloomEffect(CP932("ブルーム"));
+    case SceneObj_BloomEffectSimple:
+        return new BloomEffectSimple();
+    case SceneObj_ScreenBlurEffect:
+        return new ScreenBlurEffect(CP932("画面ブラー"));
+    case SceneObj_DepthOfFieldBlur:
+        return new DepthOfFieldBlur(CP932("被写界深度ブラー"));
+    case SceneObj_WaterAreaHolder:
+        return new WaterAreaHolder();
     case SceneObj_SceneDataInitializer:
         return new SceneDataInitializer();
     case SceneObj_StageDataHolder:
@@ -570,6 +573,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new AllLiveActorGroup();
     case SceneObj_SunshadeMapHolder:
         return new SunshadeMapHolder();
+    case SceneObj_OceanHomeMapCtrl:
+        return new OceanHomeMapCtrl();
     case SceneObj_CollisionDirector:
         return sCurrentSceneObjHolderBinding->_collision_director_ownership->construct();
     case SceneObj_MirrorCamera:

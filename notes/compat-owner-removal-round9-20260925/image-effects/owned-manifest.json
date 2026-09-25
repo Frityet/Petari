@@ -1,0 +1,157 @@
+{
+  "scope": "Actual Game image-effect cleanup and retirement of synthetic texture construction capture",
+  "files": [
+    {
+      "path": "src/Game/Screen/ImageEffectResource.cpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/Game/Screen/ImageEffectResource.cpp",
+      "before_sha256": "70a315c3ffb6c8d6be9ff4d949dae6392f376c0975bb88cb2269df721fa0d579",
+      "action": "modify",
+      "after_sha256": "fb566651077c0bcda7bf053e1e476f0c09afa87171a1f558e5b3a31ec9c8918a"
+    },
+    {
+      "path": "src/Game/Screen/ImageEffectResource.hpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/Game/Screen/ImageEffectResource.hpp",
+      "before_sha256": "74720eb6a6f03d2525bd60a55d1380d00f8c2fb3e95b77287b19c66b5c189d24",
+      "action": "modify",
+      "after_sha256": "2d9f5f563dff24177ee1275923232bbd782b68d8676f02bc6384a9b3f64492da"
+    },
+    {
+      "path": "src/Game/Screen/ImageEffectSystemHolder.cpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/Game/Screen/ImageEffectSystemHolder.cpp",
+      "before_sha256": "50c38933a5ae3a17a385c702efd52276c03b99e3a7295bb805264044469cba86",
+      "action": "modify",
+      "after_sha256": "fe6ec3e4ccc4574e397f56cbc491f69792cb4f208015f1b9ee09a3f64017eda1"
+    },
+    {
+      "path": "src/Game/Screen/ImageEffectSystemHolder.hpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/Game/Screen/ImageEffectSystemHolder.hpp",
+      "before_sha256": "af01c71a84e14eba3ce6e6ca936a7059d8803eec8a1837ae5b3f6abbd674bc01",
+      "action": "modify",
+      "after_sha256": "3ddabcb5ef0a367d1f5273595dfa9afdac723d1b96fd55c72a6721c65befcfae"
+    },
+    {
+      "path": "src/Game/Screen/ImageEffectDirector.cpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/Game/Screen/ImageEffectDirector.cpp",
+      "before_sha256": "4807f677b027f27c05a5b38cddcd235e6ba6be7a7d4ed042f29f6f7dd5138231",
+      "action": "modify",
+      "after_sha256": "174c382da11965d610cb4dfe92eb1b3e057cc634959d2bc55f50b49ca3daebeb"
+    },
+    {
+      "path": "src/Game/Screen/ImageEffectDirector.hpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/Game/Screen/ImageEffectDirector.hpp",
+      "before_sha256": "b2c86cbc077228949def5f7b64822964d641bc665f6cf6064e3e212626c93c53",
+      "action": "modify",
+      "after_sha256": "8de2dca221684617f0c1a6f678bd9a1e382efb482eb5a60092c3ba7da745f812"
+    },
+    {
+      "path": "src/Game/Screen/BloomEffect.cpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/Game/Screen/BloomEffect.cpp",
+      "before_sha256": "3ee77f2948080dab287788353bf5964ef674618c78830e7d568a5254f0078204",
+      "action": "modify",
+      "after_sha256": "5ad3b68e2f1dc8b78808cd5198052414f716f101436423f27e1e4a9e14336db2"
+    },
+    {
+      "path": "src/Game/Screen/BloomEffect.hpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/Game/Screen/BloomEffect.hpp",
+      "before_sha256": "17f98b8567d16b18706565ea2830d0fedf15fba1081a0ee85227626cc066017c",
+      "action": "modify",
+      "after_sha256": "d9226cd1f08d4564aa839d669790512c0a30fc101b4077b413163e25b9eb8a8e"
+    },
+    {
+      "path": "src/Game/Screen/DepthOfFieldBlur.cpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/Game/Screen/DepthOfFieldBlur.cpp",
+      "before_sha256": "461368b7d22f6580318bb1ad69e4bb6844b34884fd8344ff6b280ead86a30b0b",
+      "action": "modify",
+      "after_sha256": "e9b675a03d015f4a5a1499ff778645f9dd3e8dada5d21cd7592d43c5dbb93c5e"
+    },
+    {
+      "path": "src/Game/Screen/DepthOfFieldBlur.hpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/Game/Screen/DepthOfFieldBlur.hpp",
+      "before_sha256": "05c2aa8219176f147d170db2a7777fa385cb77eb11339d6bc2d0065a9192bad3",
+      "action": "modify",
+      "after_sha256": "b66f4e4ba56626a557d536b4d681ee3c51f84b36f67fca5ae1a6295ecd2f64ca"
+    },
+    {
+      "path": "src/Game/Screen/WaterCameraFilter.cpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/Game/Screen/WaterCameraFilter.cpp",
+      "before_sha256": "aec6a951a1748f09dc02da3ae303ba96b25b206e91e60f3ef6af8129cb0d5657",
+      "action": "modify",
+      "after_sha256": "266f8dc87d1d53b33fd2d4d98b2742b02e5fd7291f613dee34eedf7c9e270c9b"
+    },
+    {
+      "path": "src/Game/Screen/WaterCameraFilter.hpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/Game/Screen/WaterCameraFilter.hpp",
+      "before_sha256": "420c532673cf3ac7ff615c013ea4688526c940bf01044be97b54dd6bc5bea1a5",
+      "action": "modify",
+      "after_sha256": "91a5c62c6d1d4d07866121b59da053c2e4850704d33010eeffbc036c353ec036"
+    },
+    {
+      "path": "src/Game/Map/WaterAreaHolder.cpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/Game/Map/WaterAreaHolder.cpp",
+      "before_sha256": "f8dcdfa6f5418ca440a38a3c2a3c1e35b309ff5d36cc3518dbc7dbc225b54d31",
+      "action": "modify",
+      "after_sha256": "776ae33d4aeb469d3f1f66a2322e7ac21c7c31c13928f568ae3bab11f2aa2e28"
+    },
+    {
+      "path": "src/Game/Map/WaterAreaHolder.hpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/Game/Map/WaterAreaHolder.hpp",
+      "before_sha256": "38409ea869564c4829f4ce039c5018c8c803a8236b36f4a2482c059c5171953b",
+      "action": "modify",
+      "after_sha256": "bad5a4e43b5528f8d14a9d52c5a720bf3ae44be3888423f05f459d0889769dcd"
+    },
+    {
+      "path": "src/compat/ImageEffectOwnership.cpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/compat/ImageEffectOwnership.cpp",
+      "before_sha256": "dcbf22cb09bee6335a9abb315c2602836017d4f45dfbc23a018ade7d0b78f0cb",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/ImageEffectOwnership.hpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/compat/ImageEffectOwnership.hpp",
+      "before_sha256": "836752116c93080e1b1c0d5869299278757a0fb1727571384242d81896bddbd3",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/JutTextureConstruction.cpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/compat/JutTextureConstruction.cpp",
+      "before_sha256": "10760e1edd935de1ac45ce20803703376c23660269dab6991df0145e2982d85a",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/JutTextureConstruction.hpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/compat/JutTextureConstruction.hpp",
+      "before_sha256": "f94d4d38d38d7662fa23b19beaeaa1925cbce37afea19289291fe667ae6f9b7f",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/SceneObjHolderCompat.cpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/compat/SceneObjHolderCompat.cpp",
+      "before_sha256": "8c390f57c4f5f5f8fbf89aac9e07589fec725549dd5e22c46a571108bc2f0456",
+      "action": "modify",
+      "after_sha256": "0ab69fb2a8bfff916ea1409b0735d7823db153351f43f15b9dc138f67c370db9"
+    },
+    {
+      "path": "src/scene/SceneObjHolderRuntime.hpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/scene/SceneObjHolderRuntime.hpp",
+      "before_sha256": "1002b91e2eea8e4ba1a7f7459f2f369a4254e2a3af06328d6eedf031d664402d",
+      "action": "modify",
+      "after_sha256": "1755faa0b05fccee797579ba58611cb529148ee0520441be200ba07530373959"
+    },
+    {
+      "path": "src/runtime/jut/JutTexture.cpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/src/runtime/jut/JutTexture.cpp",
+      "before_sha256": "5e0bc813925db1f51b8db361a30247d0afdb3580ea2d3302a9d2d93bee9a5016",
+      "action": "modify",
+      "after_sha256": "7e60d830a76acd68902064dfab1efeeaa7cc137af264b8978d7b39c81c13f675"
+    },
+    {
+      "path": "tests/JutTextureOwnershipTests.cpp",
+      "before": "notes/compat-owner-removal-round9-20260925/image-effects/before/tests/JutTextureOwnershipTests.cpp",
+      "before_sha256": "b9828fbd6d54e99b80f81f623053bf227f190e50332662e9ce9f6b5ea1316fc0",
+      "action": "modify",
+      "after_sha256": "2272a641ba7814e039d76663cbc207923ca53c8905f772a1ecff1b79a6c29c0d"
+    }
+  ],
+  "build_wiring": "Regenerate source graph without ImageEffectOwnership.cpp or JutTextureConstruction.cpp. Existing original Game owner sources remain compiled. No xmake changes made.",
+  "validation": "Read-only provider/reference inspection only. No build or test run, per instruction."
+}

@@ -1,0 +1,60 @@
+{
+  "baseline": "1191258ac4c19c4652a1ab4c2eb927ec53a34d81",
+  "compat_files_before": 129,
+  "compat_files_after": 98,
+  "removed_compat_files": [
+    "src/compat/ActorShadowCsvCompat.cpp",
+    "src/compat/ActorShadowCsvCompat.hpp",
+    "src/compat/BinderCompat.cpp",
+    "src/compat/GameActorPhysicsCompat.cpp",
+    "src/compat/GameMapCollisionCompat.cpp",
+    "src/compat/GameRuntimeCompat.cpp",
+    "src/compat/ImageEffectOwnership.cpp",
+    "src/compat/ImageEffectOwnership.hpp",
+    "src/compat/J3DMaterialLoaderFactoryCompat.cpp",
+    "src/compat/J3DModelLoaderCompat.cpp",
+    "src/compat/J3DModelLoaderCompat.hpp",
+    "src/compat/JutTextureConstruction.cpp",
+    "src/compat/JutTextureConstruction.hpp",
+    "src/compat/LiveActorUtilCompat.cpp",
+    "src/compat/LodCtrlRuntimeCompat.cpp",
+    "src/compat/NativeJkrDisposer.hpp",
+    "src/compat/OriginalActorAnimationStart.cpp",
+    "src/compat/OriginalActorBckControl.cpp",
+    "src/compat/OriginalActorModelAccess.cpp",
+    "src/compat/OriginalActorShadowQueries.cpp",
+    "src/compat/OriginalBinderFilterUtil.cpp",
+    "src/compat/OriginalBinderQueries.cpp",
+    "src/compat/OriginalCollisionGeometry.cpp",
+    "src/compat/OriginalCollisionPartsUtil.cpp",
+    "src/compat/OriginalFurAccess.cpp",
+    "src/compat/OriginalLiveActorGroupUtil.cpp",
+    "src/compat/OriginalMapQueries.cpp",
+    "src/compat/OriginalMirrorReflectionUtil.cpp",
+    "src/compat/PlanetMapRuntimeCompat.cpp",
+    "src/compat/ShadowControllerOwnership.cpp",
+    "src/compat/ShadowControllerOwnership.hpp"
+  ],
+  "build": {
+    "command": "xmake build smg-pc",
+    "result": "passed",
+    "log": "build.log",
+    "integration_fixes": [
+      "Use u32 index literal for LP64 overload resolution",
+      "Use Aurora GX umbrella for imported shadow shapes",
+      "Restore complete original TriangleFilter danger-code implementation",
+      "Restore original JMapInfo::begin"
+    ]
+  },
+  "runtime": {
+    "record": "gateway-120.json",
+    "log": "gateway-120.log",
+    "frames": 120,
+    "exit_code": 0,
+    "binary_sha256": "f35b90d484f63035177558d85a173b8948cb86e018b360cba09f7048577c19fa",
+    "process_exited": true
+  },
+  "focused_tests": "not run, per user request for substantially less testing",
+  "scope": "Integrated working tree app build and one bounded opening run only; no clean-checkout or full Gateway gameplay claim.",
+  "preservation": "Preexisting staged patch unchanged; temporary index stages only owned source and scoped tests/xmake delta."
+}

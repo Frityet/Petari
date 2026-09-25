@@ -34,6 +34,11 @@ DepthOfFieldBlur::DepthOfFieldBlur(const char* pName)
     _28->mMagType = GX_LINEAR;
 }
 
+DepthOfFieldBlur::~DepthOfFieldBlur() {
+    // The remaining texture members borrow ImageEffectResource storage.
+    delete _28;
+}
+
 void DepthOfFieldBlur::draw() const {
     if (!isSomething()) {
         return;

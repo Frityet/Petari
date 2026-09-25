@@ -1,7 +1,7 @@
 #include "Game/Util/JMapInfo.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "compat/NativeJkrDisposer.hpp"
+#include "JSystem/JKernel/JKRDisposer.hpp"
 #include "resource/BcsvTable.hpp"
 
 #include <array>
@@ -58,7 +58,7 @@ namespace {
         return false;
     }
 
-    struct NativeValue final : smgpc::compat::NativeJkrDisposer {
+    struct NativeValue final : JKRDisposer {
         std::shared_ptr<int> value;
         NativeValue() = default;
         NativeValue(const NativeValue&) = default;

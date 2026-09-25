@@ -9,6 +9,7 @@ class ImageEffectSystemHolder : public NameObj {
 public:
     /// @brief Creates a new `ImageEffectSystemHolder`.
     ImageEffectSystemHolder();
+    ~ImageEffectSystemHolder() override;
 
     void pauseOff();
 

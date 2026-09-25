@@ -63,11 +63,11 @@ JMapInfo::JMapInfo(const smgpc::resource::BcsvTable& table) {
     mSourceOwner = mTable;
 }
 
-JMapInfo::JMapInfo(const JMapInfo& info) : smgpc::compat::NativeJkrDisposer(info) {
+JMapInfo::JMapInfo(const JMapInfo& info) : JKRDisposer(info) {
     *this = info;
 }
 
-JMapInfo::JMapInfo(JMapInfo&& info) noexcept : smgpc::compat::NativeJkrDisposer(std::move(info)) {
+JMapInfo::JMapInfo(JMapInfo&& info) noexcept : JKRDisposer(std::move(info)) {
     *this = std::move(info);
 }
 
@@ -327,6 +327,10 @@ bool JMapInfo::getValueFast(int entryIndex, int itemIndex, bool* pValueOut) cons
 
 JMapInfoIter JMapInfo::findElementBinary(const char* pKey, const char* pValue) const {
     return findElement(pKey, pValue, 0);
+}
+
+JMapInfoIter JMapInfo::begin() const {
+    return JMapInfoIter(this, 0);
 }
 
 JMapInfoIter JMapInfo::end() const {
