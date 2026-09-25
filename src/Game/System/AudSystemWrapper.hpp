@@ -15,6 +15,11 @@ class JKRExpHeap;
 class JKRHeap;
 class JKRMemArchive;
 class JKRSolidHeap;
+class JAIStreamMgr;
+namespace aurora::audio {
+    class PcmAudioMixer;
+    class JAudioSoundArchive;
+}
 
 class AudSystemWrapper {
 public:
@@ -77,6 +82,9 @@ private:
     JAUSoundNameTable* mPreviousNameTable = nullptr;
     AudSoundNameConverter* mPreviousNameConverter = nullptr;
     std::unique_ptr< AudSoundNameConverter > mSoundNameConverter;
+    std::shared_ptr< aurora::audio::PcmAudioMixer > mStreamMixer;
+    std::shared_ptr< aurora::audio::JAudioSoundArchive > mStreamArchive;
+    std::unique_ptr< JAIStreamMgr > mStreamMgr;
     std::unique_ptr< AudSceneMgr > mSceneMgr;
     std::unique_ptr< AudBgmMgr > mBgmMgr;
     std::unique_ptr< AudSoundObjHolder > mSoundObjHolder;

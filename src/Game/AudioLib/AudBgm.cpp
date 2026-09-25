@@ -11,6 +11,7 @@
 #include "Game/RhythmLib/AudRhythmMeSystem.hpp"
 #include "Game/RhythmLib/AudRhythmSeqParser.hpp"
 #include "Game/System/AudSystemWrapper.hpp"
+#include <JSystem/JAudio2/JAIStreamMgr.hpp>
 #include <JSystem/JAudio2/JAISound.hpp>
 #include <JSystem/JAudio2/JAISoundChild.hpp>
 #include <JSystem/JAudio2/JAISoundInfo.hpp>
@@ -49,9 +50,7 @@ void AudSingleBgm::movement() {
 }
 
 JAISoundHandle* AudSingleBgm::start(u32 soundID, bool lock) {
-    if (AudSystemWrapper::isOutputDisabled()) {
-        return nullptr;
-    }
+    if (AudSystemWrapper::isOutputDisabled() && JAISoundID(soundID).getSectionID() != JAISoundID::SOUND_STREAM) return nullptr;
     JAISoundID id = soundID;
     mSoundID = soundID;
 
@@ -61,7 +60,7 @@ JAISoundHandle* AudSingleBgm::start(u32 soundID, bool lock) {
     resetAuxVolume();
 
     if (id.getSectionID() == 0x2) {  // STM
-        AudWrap::getSystem()->getStreamMgr().startSound(id, &mHandle, nullptr);
+        JAIStreamMgr::getInstance()->startSound(id, &mHandle, nullptr);
     } else {  // BGM or MBGM
         AudSoundInfo* info = AudWrap::getSoundInfo();
         AudWrap::getSystem()->getSeqMgr().startSound(id, &mHandle, nullptr);
@@ -216,9 +215,7 @@ void AudMultiBgm::init() {
 }
 
 JAISoundHandle* AudMultiBgm::start(u32 soundID, bool lock) {
-    if (AudSystemWrapper::isOutputDisabled()) {
-        return nullptr;
-    }
+    if (AudSystemWrapper::isOutputDisabled()) return nullptr;
     if (!isStopping()) {
         stop(0);
     }
@@ -464,9 +461,7 @@ void AudMultiBgm::updateTrackControl() {
 }
 
 JAISoundHandle* AudMultiBgm::prepare(u32 id) {
-    if (AudSystemWrapper::isOutputDisabled()) {
-        return nullptr;
-    }
+    if (AudSystemWrapper::isOutputDisabled()) return nullptr;
     u32 bgmId = id & ~(0x01010000);
 
     u32 seqID = AudBgmSetting::getSeqIdForMultiBgm(bgmId);

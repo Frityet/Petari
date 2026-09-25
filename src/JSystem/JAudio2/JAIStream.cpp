@@ -4,6 +4,28 @@
 #include "JSystem/JAudio2/JAIStreamDataMgr.hpp"
 #include "JSystem/JAudio2/JAIStreamMgr.hpp"
 #include "JSystem/JAudio2/JASAramStream.hpp"
+#include <aurora/allocation.hpp>
+#include <algorithm>
+#include <utility>
+
+struct JAIStream::NativeStream {
+    std::shared_ptr< aurora::audio::PcmAudioMixer > mixer;
+    aurora::audio::JAudioStreamRecipe recipe;
+    aurora::audio::VoiceToken voice;
+    float pan = 0.5f;
+};
+
+JAIStream::~JAIStream() {
+    if (mNative && mNative->voice) mNative->mixer->stop_voice(mNative->voice);
+    releaseHandle();
+}
+
+void JAIStream::prepareNative(std::shared_ptr< aurora::audio::PcmAudioMixer > mixer,
+                             aurora::audio::JAudioStreamRecipe recipe) {
+    const aurora::allocation::HostAllocationScope host;
+    mNative = std::make_unique< NativeStream >(std::move(mixer), std::move(recipe));
+    mParams.mProperty.mVolume *= mNative->recipe.voice.gain_multiplier;
+}
 
 static void JAIStream_JASAramStreamCallback_(u32 type, JASAramStream* aramStream, void* userData) {
     JAIStream* stream = (JAIStream*)userData;
@@ -45,6 +67,7 @@ void JAIStream::JAIStreamMgr_startID_(JAISoundID id, s32 streamFileEntry, const 
 }
 
 bool JAIStream::prepare_prepareStream_() {
+    if (mNative) return true;  // The complete bounded resource has been decoded.
     u32 local_28;
     JAIStreamAramMgr* streamAramMgr;
 
@@ -123,6 +146,21 @@ void JAIStream::prepare_() {
 }
 
 void JAIStream::prepare_startStream_() {
+    if (mNative) {
+        const aurora::allocation::HostAllocationScope host;
+        auto spec = mNative->recipe.voice;
+        for (std::size_t i = 0; i < spec.layers.size(); ++i) {
+            if (i < NUM_CHILDREN && children[i]) {
+                spec.layers[i].gain *= children[i]->mMove.mParams.mVolume;
+                spec.layers[i].pan += children[i]->mMove.mParams.mPan - 0.5f;
+            }
+            spec.layers[i].pan = std::clamp(spec.layers[i].pan + mNative->pan - 0.5f, 0.0f, 1.0f);
+        }
+        mNative->voice = mNative->mixer->start_voice(spec);
+        mPrepareState = 4;
+        mIsPaused = spec.paused;
+        return;
+    }
     if (inner_.aramStream.start()) {
         mIsStreamStarted = false;
         mIsPaused = false;
@@ -149,6 +187,31 @@ void JAIStream::JAIStreamMgr_mixOut_(const JASSoundParams& inParams, JAISoundAct
                 break;
             }
         }
+    }
+
+    if (mNative) {
+        const aurora::allocation::HostAllocationScope host;
+        auto& spec = mNative->recipe.voice;
+        spec.gain_multiplier = mixParams->mVolume;
+        spec.pitch_multiplier = mixParams->mPitch;
+        spec.paused = mStatus.isPaused() || activity.isPaused();
+        mNative->pan = mixParams->mPan;
+        prepare_();
+        if (mNative->voice) {
+            std::vector< aurora::audio::PcmLayerControls > controls;
+            for (std::size_t i = 0; i < spec.layers.size(); ++i) {
+                const auto& layer = spec.layers[i];
+                const auto* child = i < NUM_CHILDREN ? children[i] : nullptr;
+                controls.push_back({layer.gain * (child ? child->mMove.mParams.mVolume : 1.0f),
+                    std::clamp(layer.pan + mixParams->mPan - 0.5f + (child ? child->mMove.mParams.mPan - 0.5f : 0.0f), 0.0f, 1.0f)});
+            }
+            const bool paused = mStatus.isPaused() || activity.isPaused();
+            mIsPaused = paused;
+            inner_.aramStream._0AE = paused;
+            (void)mNative->mixer->try_update_voice(mNative->voice, mixParams->mVolume, mixParams->mPitch);
+            (void)mNative->mixer->try_update_voice_controls(mNative->voice, mixParams->mPitch, paused, controls);
+        }
+        return;
     }
 
     for (int i = 0; i < NUM_CHILDREN; i++) {
@@ -178,11 +241,15 @@ void JAIStream::JAIStreamMgr_mixOut_(const JASSoundParams& inParams, JAISoundAct
 }
 
 void JAIStream::die_JAIStream_() {
+    if (mNative && mNative->voice) {
+        mNative->mixer->stop_voice(std::exchange(mNative->voice, {}));
+    }
     die_JAISound_();
 
     for (int i = 0; i < NUM_CHILDREN; i++) {
         if (children[i] != nullptr) {
-            delete children[i];
+            if (mNative) ::delete children[i];
+            else delete children[i];
             children[i] = nullptr;
         }
     }
@@ -194,6 +261,10 @@ void JAIStream::die_JAIStream_() {
 }
 
 bool JAIStream::JAISound_tryDie_() {
+    if (mNative) {
+        die_JAIStream_();
+        return true;
+    }
     if (mIsStreamStarted) {
         die_JAIStream_();
         return true;
@@ -219,6 +290,9 @@ bool JAIStream::JAISound_tryDie_() {
 }
 
 void JAIStream::JAIStreamMgr_calc_() {
+    if (mNative && mNative->voice && !mNative->mixer->is_voice_active(mNative->voice)) {
+        mIsStreamStarted = true;
+    }
     if (mIsStreamStarted) {
         mPrepareState = 0;
         stop_JAISound_();
@@ -243,14 +317,15 @@ s32 JAIStream::getNumChild() const {
 
 JAISoundChild* JAIStream::getChild(int index) {
     if (children[index] == nullptr) {
-        children[index] = new JAISoundChild();
+        children[index] = mNative ? ::new JAISoundChild() : new JAISoundChild();
     }
     return children[index];
 }
 
 void JAIStream::releaseChild(int index) {
     if (children[index] != nullptr) {
-        delete children[index];
+        if (mNative) ::delete children[index];
+        else delete children[index];
         children[index] = nullptr;
     }
 }

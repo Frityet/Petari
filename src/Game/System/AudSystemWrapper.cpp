@@ -11,6 +11,11 @@
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include <JSystem/JKernel/JKRHeap.hpp>
+#include <JSystem/JAudio2/JAIStreamMgr.hpp>
+#include <aurora/j_audio_stream.hpp>
+#include <dolphin/dvd.h>
+#include <cstdio>
+#include <limits>
 #include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
 #include <aurora/j_audio_sound_archive.hpp>
@@ -18,6 +23,20 @@
 #include <stdexcept>
 
 namespace {
+    std::vector< u8 > readAudioFile(const std::string& path) {
+        const aurora::allocation::HostAllocationScope host;
+        DVDFileInfo file{};
+        if (!DVDOpen(path.c_str(), &file))
+            aurora::throw_host_exception< std::runtime_error >("Cannot open audio resource: " + path);
+        struct CloseFile { DVDFileInfo* file; ~CloseFile() { DVDClose(file); } } close{&file};
+        if (file.length > std::numeric_limits< s32 >::max())
+            aurora::throw_host_exception< std::runtime_error >("Audio resource exceeds the DVD read range: " + path);
+        std::vector< u8 > bytes(file.length);
+        if (DVDReadPrio(&file, bytes.data(), static_cast< s32 >(bytes.size()), 0, 1) != bytes.size())
+            aurora::throw_host_exception< std::runtime_error >("Cannot read complete audio resource: " + path);
+        return bytes;
+    }
+
     void retireWrapper(void* object) noexcept {
         static_cast< AudSystemWrapper* >(object)->~AudSystemWrapper();
     }
@@ -80,8 +99,8 @@ void AudSystemWrapper::requestResourceForInitialize() {
     if (mInitializePhase != InitializePhase::Created) {
         aurora::throw_host_exception< std::logic_error >("Audio initialization was already requested");
     }
-    // Name conversion remains required with output disabled. The absent DSP,
-    // rhythm and speaker owners have no bank requests to enqueue.
+    // Stream metadata and name conversion share the original sound archive.
+    // The absent DSP, rhythm and speaker owners have no bank requests to enqueue.
     MR::loadAsyncToMainRAM("/AudioRes/SMR.szs", nullptr, _8, JKRDvdRipper::ALLOC_DIRECTION_BACKWARD);
     mInitializePhase = InitializePhase::Requested;
 }
@@ -112,18 +131,32 @@ void AudSystemWrapper::createAudioSystem() {
             aurora::throw_host_exception< std::logic_error >("Audio name resource requires a bounded original heap allocation");
         }
         const aurora::allocation::HostAllocationScope host;
-        aurora::audio::JAudioSoundArchive archive(
-            {static_cast< const u8* >(mSmrRes), static_cast< std::size_t >(size)},
-            [](std::string_view) -> std::vector< u8 > {
-                aurora::throw_host_exception< std::logic_error >("Disabled audio output does not load wave banks");
+        mStreamArchive = std::make_shared< aurora::audio::JAudioSoundArchive >(
+            std::span< const u8 >(static_cast< const u8* >(mSmrRes), static_cast< std::size_t >(size)),
+            [](std::string_view name) -> std::vector< u8 > {
+                return readAudioFile("/AudioRes/Waves/" + std::string(name));
             });
-        mSoundNameBytes = archive.native_sound_name_table();
+        mSoundNameBytes = mStreamArchive->native_sound_name_table();
         if (mSoundNameBytes.size() < 16) {
             aurora::throw_host_exception< std::runtime_error >("Audio initialization received no sound-name table");
         }
         mSoundNameTable.init(mSoundNameBytes.data());
         AudSoundNameConverter::validateTable(&mSoundNameTable);
         createSoundNameConverter();
+
+        mStreamMixer = std::make_shared< aurora::audio::PcmAudioMixer >();
+        mStreamMixer->open_default_playback();
+        mStreamMgr = std::make_unique< JAIStreamMgr >(true);
+        mStreamMgr->bindNativeOutput(mStreamMixer, [archive = mStreamArchive](JAISoundID id) {
+            const auto metadata = archive->resolve_sound(static_cast< u32 >(id));
+            if (metadata.kind != aurora::audio::JAudioSoundKind::Stream)
+                aurora::throw_host_exception< std::invalid_argument >("JAI stream request refers to a non-stream resource");
+            auto recipe = aurora::audio::decode_jaudio_stream(readAudioFile(metadata.stream_path), metadata.channel_control);
+            recipe.voice.gain_multiplier = metadata.volume / 127.0f;
+            std::fprintf(stderr, "[original-audio] Prepared stream id=%08x rate=%u channels=%u samples=%u loop=%d path=%s\n",
+                static_cast< u32 >(id), recipe.sample_rate, recipe.channel_count, recipe.sample_count, recipe.looping, metadata.stream_path.c_str());
+            return recipe;
+        });
 
         auto* heap = JKRHeap::findFromRoot(this);
         const MR::CurrentHeapRestorer current(heap);
@@ -182,6 +215,16 @@ void AudSystemWrapper::releaseResources() noexcept {
     mSystemSeObject.reset();
     mSoundObjHolder.reset();
     mBgmMgr.reset();
+    mStreamMgr.reset();
+    if (mStreamMixer) {
+        mStreamMixer->close_default_playback();
+        const auto stats = mStreamMixer->stats();
+        std::fprintf(stderr, "[original-audio] Playback frames=%llu nonzero_samples=%llu device_callbacks=%llu\n",
+            static_cast< unsigned long long >(stats.mixed_frames), static_cast< unsigned long long >(stats.nonzero_samples),
+            static_cast< unsigned long long >(stats.device_callbacks));
+    }
+    mStreamMixer.reset();
+    mStreamArchive.reset();
     mSceneMgr.reset();
     if (mSoundNameConverter && AudSingletonHolder< AudSoundNameConverter >::get() == mSoundNameConverter.get()) {
         AudSingletonHolder< AudSoundNameConverter >::exchange(mPreviousNameConverter);
@@ -197,7 +240,7 @@ void AudSystemWrapper::releaseResources() noexcept {
 }
 
 void AudSystemWrapper::updateRhythm() {
-    // No rhythm owner exists while output is disabled.
+    // Stream playback does not provide the sequencer's rhythm owner.
 }
 
 void AudSystemWrapper::movement() {
@@ -205,11 +248,13 @@ void AudSystemWrapper::movement() {
         return;
     }
     mBgmMgr->movement();
+    mStreamMgr->calc();
+    mStreamMgr->mixOut();
     mSoundObjHolder->update();
 }
 
-void AudSystemWrapper::stopAllSound(u32) {
-    // Disabled starts create no voices requiring a stop acknowledgement.
+void AudSystemWrapper::stopAllSound(u32 frames) {
+    if (mStreamMgr) mStreamMgr->stop(frames);
 }
 
 bool AudSystemWrapper::isLoadDoneWaveDataAtSystemInit() const {

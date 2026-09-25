@@ -3,6 +3,9 @@
 #include "JSystem/JAudio2/JAIAudience.hpp"
 #include "JSystem/JAudio2/JAIStream.hpp"
 #include "JSystem/JAudio2/JASGlobal.hpp"
+#include <aurora/j_audio_stream.hpp>
+#include <functional>
+#include <memory>
 
 class JAIStreamAramMgr;
 struct JAIStreamDataMgr;
@@ -10,6 +13,9 @@ struct JAIStreamDataMgr;
 class JAIStreamMgr : public JASGlobalInstance< JAIStreamMgr > {
 public:
     JAIStreamMgr(bool setInstance);
+    ~JAIStreamMgr();
+    void bindNativeOutput(std::shared_ptr< aurora::audio::PcmAudioMixer >,
+                          std::function< aurora::audio::JAudioStreamRecipe(JAISoundID) >);
     bool startSound(JAISoundID id, JAISoundHandle* handle, const TVec3f* posPtr);
     void freeDeadStream_();
     void calc();
@@ -67,4 +73,6 @@ private:
     /* 0x64 */ JAIStreamDataMgr* streamDataMgr_;
     /* 0x68 */ JAIStreamAramMgr* mStreamAramMgr;
     /* 0x6C */ JAISoundStrategyMgr< JAIStream >* soundStrategyMgr;
+    std::shared_ptr< aurora::audio::PcmAudioMixer > mNativeMixer;
+    std::function< aurora::audio::JAudioStreamRecipe(JAISoundID) > mNativeLoader;
 };

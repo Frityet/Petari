@@ -165,6 +165,11 @@ namespace MR {
         return result.release();
     }
 
+    nw4r::lyt::TexMap* createLytTexMap(ResTIMG* pImage) {
+        JUTTexture texture(pImage, 0);
+        return new nw4r::lyt::TexMap(texture.getTexObj());
+    }
+
     LayoutHolder* createAndAddLayoutHolder(const char* pArcName) {
         return SingletonHolder< ResourceHolderManager >::get()->createAndAddLayoutHolder(pArcName, nullptr);
     }

@@ -1,0 +1,290 @@
+[
+  {
+    "frame": 0,
+    "stage": "",
+    "actors": []
+  },
+  {
+    "frame": 30,
+    "stage": "FileSelect",
+    "actors": []
+  },
+  {
+    "frame": 90,
+    "stage": "FileSelect",
+    "actors": [
+      {
+        "type": "12FileSelector",
+        "nerve": {
+          "step": 28,
+          "type": "N15NrvFileSelector20FileSelectorNrvTitleE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 480,
+    "stage": "FileSelect",
+    "actors": [
+      {
+        "type": "12FileSelector",
+        "nerve": {
+          "step": 28,
+          "type": "N15NrvFileSelector23FileSelectorNrvRFLErrorE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 540,
+    "stage": "FileSelect",
+    "actors": [
+      {
+        "type": "12FileSelector",
+        "nerve": {
+          "step": 23,
+          "type": "N15NrvFileSelector23FileSelectorNrvTitleEndE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 600,
+    "stage": "FileSelect",
+    "actors": [
+      {
+        "type": "12FileSelector",
+        "nerve": {
+          "step": 18,
+          "type": "N15NrvFileSelector33FileSelectorNrvCreateConfirmStartE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 660,
+    "stage": "FileSelect",
+    "actors": [
+      {
+        "type": "12FileSelector",
+        "nerve": {
+          "step": 16,
+          "type": "N15NrvFileSelector28FileSelectorNrvCreateConfirmE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 750,
+    "stage": "FileSelect",
+    "actors": [
+      {
+        "type": "12FileSelector",
+        "nerve": {
+          "step": 12,
+          "type": "N15NrvFileSelector21FileSelectorNrvCreateE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 900,
+    "stage": "FileSelect",
+    "actors": [
+      {
+        "type": "12FileSelector",
+        "nerve": {
+          "step": 16,
+          "type": "N15NrvFileSelector34FileSelectorNrvMiiSelectStartFirstE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 930,
+    "stage": "FileSelect",
+    "actors": [
+      {
+        "type": "12FileSelector",
+        "nerve": {
+          "step": 3,
+          "type": "N15NrvFileSelector24FileSelectorNrvMiiSelectE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 960,
+    "stage": "FileSelect",
+    "actors": [
+      {
+        "type": "12FileSelector",
+        "nerve": {
+          "step": 15,
+          "type": "N15NrvFileSelector29FileSelectorNrvMiiConfirmWaitE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 990,
+    "stage": "FileSelect",
+    "actors": [
+      {
+        "type": "12FileSelector",
+        "nerve": {
+          "step": 3,
+          "type": "N15NrvFileSelector25FileSelectorNrvMiiConfirmE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 1110,
+    "stage": "FileSelect",
+    "actors": [
+      {
+        "type": "12FileSelector",
+        "nerve": {
+          "step": 4,
+          "type": "N15NrvFileSelector28FileSelectorNrvMiiCreateWaitE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 1260,
+    "stage": "FileSelect",
+    "actors": [
+      {
+        "type": "12FileSelector",
+        "nerve": {
+          "step": 8,
+          "type": "N15NrvFileSelector28FileSelectorNrvMiiCreateDemoE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 1410,
+    "stage": "FileSelect",
+    "actors": [
+      {
+        "type": "12FileSelector",
+        "nerve": {
+          "step": 6,
+          "type": "N15NrvFileSelector26FileSelectorNrvFileConfirmE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 1470,
+    "stage": "FileSelect",
+    "actors": [
+      {
+        "type": "12FileSelector",
+        "nerve": {
+          "step": 24,
+          "type": "N15NrvFileSelector28FileSelectorNrvDemoStartWaitE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 1530,
+    "stage": "PeachCastleGardenGalaxy",
+    "actors": []
+  },
+  {
+    "frame": 1560,
+    "stage": "PeachCastleGardenGalaxy",
+    "actors": [
+      {
+        "type": "16PrologueDirector",
+        "nerve": {
+          "step": 0,
+          "type": "N12_GLOBAL__N_130PrologueDirectorNrvPictureBookE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 3480,
+    "stage": "PeachCastleGardenGalaxy",
+    "actors": [
+      {
+        "type": "16PrologueDirector",
+        "nerve": {
+          "step": 3,
+          "type": "N12_GLOBAL__N_135PrologueDirectorNrvPeachLetterStartE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 3570,
+    "stage": "PeachCastleGardenGalaxy",
+    "actors": [
+      {
+        "type": "16PrologueDirector",
+        "nerve": {
+          "step": 2,
+          "type": "N12_GLOBAL__N_130PrologueDirectorNrvPeachLetterE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 3660,
+    "stage": "PeachCastleGardenGalaxy",
+    "actors": [
+      {
+        "type": "16PrologueDirector",
+        "nerve": {
+          "step": 18,
+          "type": "N12_GLOBAL__N_134PrologueDirectorNrvPeachLetterWaitE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 3690,
+    "stage": "PeachCastleGardenGalaxy",
+    "actors": [
+      {
+        "type": "16PrologueDirector",
+        "nerve": {
+          "step": 27,
+          "type": "N12_GLOBAL__N_133PrologueDirectorNrvPeachLetterEndE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 3750,
+    "stage": "PeachCastleGardenGalaxy",
+    "actors": [
+      {
+        "type": "16PrologueDirector",
+        "nerve": {
+          "step": 25,
+          "type": "N12_GLOBAL__N_125PrologueDirectorNrvArriveE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 4050,
+    "stage": "PeachCastleGardenGalaxy",
+    "actors": [
+      {
+        "type": "16PrologueDirector",
+        "nerve": {
+          "step": 16,
+          "type": "N12_GLOBAL__N_128PrologueDirectorNrvGameStartE"
+        }
+      }
+    ]
+  }
+]

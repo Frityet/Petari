@@ -31,7 +31,7 @@ void AudBgmMgr::movement() {
 }
 
 JAISoundHandle* AudBgmMgr::start(s32 bgmIndex, u32 soundID, bool lock) {
-    if (AudSystemWrapper::isOutputDisabled()) {
+    if (AudSystemWrapper::isOutputDisabled() && JAISoundID(soundID).getSectionID() != JAISoundID::SOUND_STREAM) {
         return nullptr;
     }
     if (mBgm[bgmIndex] != nullptr) {

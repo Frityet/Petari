@@ -1,0 +1,21 @@
+ M .vscode/extensions.json
+ M .vscode/settings.json
+ M decomp
+ M notes/compat-owner-removal-round21-20260925/next-actor-plan.md
+ M notes/compat-owner-removal-round21-20260925/next-heap-plan.md
+ M notes/decomp-upstream-scene-reuse-20260919/README.md
+ M notes/decomp-upstream-scene-reuse-20260919/final-validation.json
+ M notes/decomp-upstream-scene-reuse-20260919/merge-util-libraries.md
+ M notes/decomp-upstream-scene-reuse-20260919/publication.json
+ M notes/gateway-content-inventory-20260919/README.md
+ M notes/gateway-content-inventory-20260919/note-manifest.json
+ M notes/gateway-wakeup-demo-20260912/first-run.log
+ M notes/original-audio-name-owner-20260912/README.md
+ M notes/original-audio-scene-owner-20260919/README.md
+MM notes/original-gateway-chase-20260919/operate_first_catch.py
+A  notes/original-gateway-chase-20260919/sequential-route-offline-replay.json
+AM notes/original-gateway-chase-20260919/sequential-route-validation.json
+AM notes/original-gateway-chase-20260919/sequential-route.md
+AM notes/original-gateway-chase-20260919/test_sequential_route.py
+A  notes/original-gateway-chase-20260919/three-rabbit-route.json
+ M notes/original-sequence-galaxy-move-20260910/README.md

@@ -53,6 +53,7 @@ void Manual2P::init(const JMapInfoIter&) {
     mRightPaneCtrl->_22 = false;
 
     mBackButton = new BackButton(CP932("マニュアルの戻るボタン"), true);
+    mBackButton->claimNativeOwnership(this);
     mBackButton->initWithoutIter();
 
     initNerve(&Manual2PNrvAppear::sInstance);

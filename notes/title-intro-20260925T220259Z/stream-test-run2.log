@@ -1,0 +1,2 @@
+[pass] original JAISoundID layout and JAISoundStatus flags/prepare transitions
+[pass] JAI stream preparation, lock, audible PCM, pause, EOF, fade and owner retirement

@@ -3,6 +3,8 @@
 #include "JSystem/JAudio2/JAISound.hpp"
 #include "JSystem/JAudio2/JASAramStream.hpp"
 #include "JSystem/JSupport/JSUList.hpp"
+#include <aurora/j_audio_stream.hpp>
+#include <memory>
 
 class JAIStreamMgr;
 
@@ -13,6 +15,8 @@ public:
     };
 
     JAIStream(JAIStreamMgr* streamMgr, JAISoundStrategyMgr< JAIStream >* soundStrategyMgr);
+    ~JAIStream();
+    void prepareNative(std::shared_ptr< aurora::audio::PcmAudioMixer >, aurora::audio::JAudioStreamRecipe);
     void JAIStreamMgr_startID_(JAISoundID id, s32 streamFileEntry, const TVec3f* posPtr, JAIAudience* audience, int category);
     bool prepare_prepareStream_();
     void prepare_();
@@ -55,4 +59,7 @@ public:
     /* 0x2C4 */ bool mIsPaused;
     /* 0x2C5 */ bool mIsStreamStopped;
     /* 0x2C6 */ bool mIsStreamStarted;
+private:
+    struct NativeStream;
+    std::unique_ptr< NativeStream > mNative;
 };
