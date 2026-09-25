@@ -25,26 +25,12 @@ namespace smgpc::compat {
     namespace {
         struct CapturedHashTable {
             HashSortTable* table = nullptr;
-            u32* hashes = nullptr;
-            HashSortTable::Value* indices = nullptr;
-            u16* bucket_starts = nullptr;
-            u16* bucket_counts = nullptr;
-
             void capture(HashSortTable* value) noexcept {
                 table = value;
-                if (!table) return;
-                hashes = table->mHashCodes;
-                indices = table->_8;
-                bucket_starts = table->_C;
-                bucket_counts = table->_10;
             }
 
             void destroy() noexcept {
                 delete table;
-                delete[] hashes;
-                delete[] indices;
-                delete[] bucket_starts;
-                delete[] bucket_counts;
             }
         };
 

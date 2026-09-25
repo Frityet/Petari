@@ -1,0 +1,20 @@
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-original-resource-holder-tests>[0m cache compiling.debug tests/OriginalResourceHolderTests.cpp[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[1;38;5;1;1merror: [0m/opt/homebrew/Cellar/llvm/23.1.1/include/c++/v1/__memory/unique_ptr.h:708:30: error: no matching constructor for initialization of 'smgpc::compat::ResourceArchiveOwner'
+  708 |   return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...));
+      |                              ^   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tests/OriginalResourceHolderTests.cpp:186:27: note: in instantiation of function template specialization 'std::make_unique<smgpc::compat::ResourceArchiveOwner, std::shared_ptr<smgpc::resource::RarcArchive> &, const char (&)[22], std::shared_ptr<smgpc::compat::JkrAllocationDomain>, const std::shared_ptr<smgpc::resource::Mem1ResourceHeap> &, 0>' requested here
+  186 |         auto owner = std::make_unique<ResourceArchiveOwner>(source, "/retained/Texture.arc", process.create_cohort(), process.mem1_heap());
+      |                           ^
+src/compat/ResourceHolderCompat.hpp:44:9: note: candidate constructor not viable: requires 3 arguments, but 4 were provided
+   44 |         ResourceArchiveOwner(std::shared_ptr<const runtime::MountedArchive>,
+      |         ^                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   45 |                              std::shared_ptr<JkrAllocationDomain>, std::shared_ptr<resource::Mem1ResourceHeap>);
+      |                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/compat/ResourceHolderCompat.hpp:47:9: note: candidate constructor not viable: requires 1 argument, but 4 were provided
+   47 |         ResourceArchiveOwner(const ResourceArchiveOwner&) = delete;
+      |         ^                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from tests/OriginalResourceHolderTests.cpp:1:
+In file included from src/compat/ResourceHolderCompat.hpp:3:
+In file included from src/Game/System/ResourceHolder.hpp:5:
+  [38;5;3m> in [1mtests/OriginalResourceHolderTests.cpp[0m

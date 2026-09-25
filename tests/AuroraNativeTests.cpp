@@ -46,7 +46,6 @@
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/GameGravityCompat.hpp"
 #include "SceneExecutionFixture.hpp"
 
 #include <RVLFaceLib.h>

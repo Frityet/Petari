@@ -2,6 +2,7 @@
 
 #include "Game/NameObj/NameObj.hpp"
 #include <JSystem/JGeometry/TVec.hpp>
+#include <stdint.h>
 
 class GravityInfo;
 class PlanetGravity;
@@ -31,7 +32,7 @@ public:
     /// @param rPosition The position in space to calculate the gravity at.
     /// @param gravityType The affected gravity context (normal, shadow, magnet, etc.)
     /// @param requester The pointer of the object requesting the gravity vector.
-    bool calcTotalGravityVector(TVec3f* pGravity, GravityInfo* pInfo, const TVec3f& rPosition, u32 gravityType, u32 requester) const;
+    bool calcTotalGravityVector(TVec3f* pGravity, GravityInfo* pInfo, const TVec3f& rPosition, u32 gravityType, uintptr_t requester) const;
 
     /// @brief Registers a PlanetGravity instance to the array of gravities. The higher the gravity's priority is, the
     /// closer it will be placed towards the array's beginning.

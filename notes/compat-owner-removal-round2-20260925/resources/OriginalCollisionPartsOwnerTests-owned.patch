@@ -1,0 +1,18 @@
+--- a/tests/OriginalCollisionPartsOwnerTests.cpp
++++ b/tests/OriginalCollisionPartsOwnerTests.cpp
+@@ -4,7 +4,6 @@
+ #include "compat/CollisionDirectorOwnership.hpp"
+ #include "compat/HitInfoCompat.hpp"
+ #include "compat/JkrAllocationDomain.hpp"
+-#include "compat/StageResourceBinding.hpp"
+ #include "compat/StageSessionState.hpp"
+ #include "compat/StageZoneMatrixRegistry.hpp"
+ #include "runtime/RuntimeContext.hpp"
+@@ -80,7 +79,6 @@
+     smgpc::runtime::SceneSchedulerBinding scheduler_binding(scheduler);
+     std::vector<smgpc::scene::StageHolderOccurrence> holders;
+     const auto tables = smgpc::scene::resolve_stage_placement_tables(runtime.dvd(), "HeavensDoorGalaxy", 1, &holders);
+-    smgpc::compat::StageResourceBinding stage_resources(runtime.dvd(), holders, tables);
+     smgpc::compat::StageZoneMatrixBinding zones(holders, tables);
+     smgpc::compat::StageSessionState session("Game", "HeavensDoorGalaxy", 1, JMapIdInfo(0, 0));
+     smgpc::compat::StageSessionBinding session_binding(session);

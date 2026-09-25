@@ -31,7 +31,6 @@ void operator delete[](void* memory, int alignment) noexcept;
 void operator delete(void* memory, JKRHeap* heap, int alignment) noexcept;
 void operator delete[](void* memory, JKRHeap* heap, int alignment) noexcept;
 
-#include "compat/GameGravityCompat.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 
 // Metrowerks targets ILP32, so recovered `long` integer literals bind to the

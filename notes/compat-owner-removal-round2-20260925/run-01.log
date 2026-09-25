@@ -1,0 +1,1 @@
+individual group destruction must return all child and hash storage to the Game heap

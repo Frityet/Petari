@@ -74,3 +74,12 @@ FixedPosition::FixedPosition(const LiveActor* pActor, const char* pResName, cons
         init(MR::getJointMtx(pActor, jointName), trans, rotate);
     }
 }
+
+void FixedPosition::copyRotate(TVec3f* pRotate) const {
+    if (pRotate == nullptr) {
+        return;
+    }
+
+    mMtx.getEulerXYZ(*pRotate);
+    pRotate->scale(180.0F / 3.14159265358979323846F);
+}

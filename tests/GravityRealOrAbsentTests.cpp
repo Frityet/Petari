@@ -14,7 +14,6 @@
 #include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/JMapLinkInfo.hpp"
-#include "compat/GameGravityCompat.hpp"
 #include "compat/GlobalGravityOwnership.hpp"
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -375,6 +374,28 @@ namespace {
                     destination.epsilonEquals(TVec3f{0.0F, 1.0F, 0.0F}, 0.0001F) &&
                     info.mGravityInstance == &high && !MR::isLightGravity(info),
                 "the requester's own gravity host should be excluded using retail host identity rules");
+
+        if constexpr (sizeof(std::uintptr_t) > sizeof(u32)) {
+            const auto caller_id = reinterpret_cast<std::uintptr_t>(&caller);
+            const auto other_id = caller_id ^ static_cast<std::uintptr_t>(std::uint64_t{1} << 32U);
+            require(MR::calcGravityVector(&caller, TVec3f{}, &destination, &info, caller_id) &&
+                        info.mGravityInstance == &high,
+                    "an explicit full-width requester must exclude exactly its own gravity host");
+            require(MR::calcGravityVector(&caller, TVec3f{}, &destination, &info, other_id) &&
+                        info.mGravityInstance == &strongest,
+                    "distinct requester identities sharing their low 32 bits must not exclude one another");
+
+            // mHost is an opaque comparison token and is never dereferenced.
+            // This checks the implicit caller path independently of explicit IDs.
+            strongest.mHost = reinterpret_cast<const void*>(other_id);
+            require(MR::calcGravityVector(&caller, TVec3f{}, &destination, &info, 0U) &&
+                        info.mGravityInstance == &strongest,
+                    "implicit requester identity must preserve the caller's upper address bits");
+            require(MR::calcGravityVector(&caller, TVec3f{}, &destination, &info, other_id) &&
+                        info.mGravityInstance == &high,
+                    "an explicit alternate host must override the requesting actor's identity");
+            strongest.mHost = &caller;
+        }
 
         auto shadow = ConstantGravity(TVec3f{-1.0F, 0.0F, 0.0F}, 25.0F);
         shadow.mPriority = 9;

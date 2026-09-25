@@ -69,7 +69,10 @@ struct J3DTexCoord : public J3DTexCoordInfo {
     void setTexMtxReg(u16 reg) {
         mTexMtxReg = reg;
     }
-    J3DTexCoord& operator=(const J3DTexCoord& other);
+    J3DTexCoord& operator=(const J3DTexCoord& other) {
+        __memcpy(this, &other, sizeof(J3DTexCoordInfo));
+        return *this;
+    }
 
     void resetTexMtxReg() {
         mTexMtxReg = mTexGenMtx;

@@ -1,0 +1,8 @@
+{
+  "target": "smg-pc-scene-scheduler-heap-tests",
+  "args": [
+    "--categories-only"
+  ],
+  "build_exit": 0,
+  "run_exit": -6
+}

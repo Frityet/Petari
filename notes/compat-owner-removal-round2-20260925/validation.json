@@ -1,0 +1,110 @@
+{
+  "native_build_exit": 0,
+  "native_build_log": "integrated-build.log",
+  "binary_sha256": "b3d83217bce60af07b97d8bee30aa4a313b9d3cb9a65758673eabbcb6d4ebc5a",
+  "passing_focused_checks": [
+    {
+      "name": "hash tables",
+      "exit": 0,
+      "log": "run-00.log"
+    },
+    {
+      "name": "scene registry/groups",
+      "exit": 0,
+      "log": "smg-pc-scene-name-obj-registry-tests-retest.log"
+    },
+    {
+      "name": "fixed positions",
+      "exit": 0,
+      "log": "fixed-position-final-run.log"
+    },
+    {
+      "name": "gravity queries",
+      "exit": 0,
+      "log": "run-03.log"
+    },
+    {
+      "name": "gravity math",
+      "exit": 0,
+      "log": "run-04.log"
+    },
+    {
+      "name": "J3D material blocks",
+      "exit": 0,
+      "log": "run-05.log"
+    },
+    {
+      "name": "J3D material tables",
+      "exit": 0,
+      "log": "run-06.log"
+    },
+    {
+      "name": "J3D texture matrices",
+      "exit": 0,
+      "log": "run-07.log"
+    },
+    {
+      "name": "J3D material resources real disc",
+      "exit": 0,
+      "log": "run-08.log"
+    },
+    {
+      "name": "J3D geometry resources real disc",
+      "exit": 0,
+      "log": "run-09.log"
+    },
+    {
+      "name": "camera holder real disc",
+      "exit": 0,
+      "log": "run-10.log"
+    },
+    {
+      "name": "stage camera resources original process",
+      "exit": 0,
+      "log": "smg-pc-stage-camera-resource-tests-final-run.log"
+    },
+    {
+      "name": "name positions original process",
+      "exit": 0,
+      "log": "run-12.log"
+    },
+    {
+      "name": "NPC attribute groups only",
+      "exit": 0,
+      "log": "npc-groups-run.log"
+    }
+  ],
+  "limits": [
+    {
+      "check": "OriginalResourceHolderTests build",
+      "exit": 255,
+      "reason": "obsolete ResourceArchiveOwner constructor fixture API"
+    },
+    {
+      "check": "NPCActorRealOrAbsent full run",
+      "exit": -11,
+      "reason": "later RuntimeContext model fixture lacks original FileLoader"
+    },
+    {
+      "check": "SceneSchedulerHeap full run",
+      "exit": -6,
+      "reason": "sensor-retirement expectation after original owner fixture migration"
+    },
+    {
+      "check": "SceneSchedulerHeap categories-only",
+      "exit": -6,
+      "reason": "exact trace-count expectation with actual original sensor checker participating"
+    }
+  ],
+  "bounded_real_disc_run": "owner-removal-round2-600.json",
+  "provider_audit": {
+    "duplicate_strong_symbols": 0,
+    "stale_source_providers": 0,
+    "unavailable_owner_inputs": 0,
+    "gate_exit": 255,
+    "reason": "existing source provenance differences remain"
+  },
+  "removed_this_batch": 28,
+  "total_removed": 73,
+  "remaining": 257
+}

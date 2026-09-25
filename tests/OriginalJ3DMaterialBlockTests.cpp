@@ -98,6 +98,61 @@ namespace {
                 "native texture-number relocation reads unaligned big-endian BP data");
     }
 
+    void light_diff_dispatch_and_registers() {
+        Commands commands;
+        J3DColorBlockLightOn block;
+        J3DLightObj first;
+        J3DLightObj last;
+        first.mInfo.mLightPosition = {1.0F, 2.0F, 3.0F};
+        first.mInfo.mColor = {0x12, 0x34, 0x56, 0x78};
+        last.mInfo.mLightPosition = {4.0F, 5.0F, 6.0F};
+        last.mInfo.mColor = {0x9A, 0xBC, 0xDE, 0xF0};
+        block.setLight(0, &first);
+        block.setLight(7, &last);
+        J3DColorBlock* color_block = &block;
+
+        const auto check_lights = [&] {
+            require(GDGetCurrOffset() == 165,
+                    "light diff records four color channels and both non-null 72-byte lights");
+            require(commands.word(1) == 0x0003100E &&
+                        commands.word(22) == 0x0002060A &&
+                        commands.word(39) == 0x00050604 &&
+                        commands.word(68) == 0x00000603 &&
+                        commands.word(77) == 0x0002060D,
+                    "the first light retains its original position, attenuation, color and direction registers");
+            require(commands.word(26) == 0x3F800000 && commands.word(72) == 0x12345678 &&
+                        commands.word(94) == 0x0002067A && commands.word(144) == 0x9ABCDEF0,
+                    "sparse light slots preserve their hardware index, float encoding and RGBA order");
+            require(std::all_of(commands.bytes.begin() + 165, commands.bytes.end(),
+                                [](u8 byte) { return byte == 0xCD; }),
+                    "light diff stays within its actual command extent");
+        };
+
+        for (const u32 flags : {u32{0x10}, u32{0x80}, u32{J3DDiffFlag_ColorChan}}) {
+            GDSetCurrOffset(0);
+            color_block->diff(flags);
+            check_lights();
+        }
+        GDSetCurrOffset(0);
+        color_block->diffLight();
+        check_lights();
+
+        GDSetCurrOffset(0);
+        color_block->diff(J3DDiffFlag_MatColor);
+        require(GDGetCurrOffset() == 13,
+                "material-color-only updates do not upload lights");
+        J3DColorBlockLightOff unlit;
+        color_block = &unlit;
+        GDSetCurrOffset(0);
+        color_block->diffLight();
+        require(GDGetCurrOffset() == 21,
+                "the unlit block overrides the same original diffLight virtual slot for its channels");
+        GDSetCurrOffset(0);
+        color_block->diff(0x10);
+        require(GDGetCurrOffset() == 0,
+                "an unlit block ignores the light-count mask");
+    }
+
     void depth_and_fog_commands() {
         Commands commands;
         J3DPEBlockXlu translucent;
@@ -162,9 +217,10 @@ int main() {
         original_factory_selection();
         color_commands_and_patch_extent();
         packed_stage_and_texture_number_commands();
+        light_diff_dispatch_and_registers();
         depth_and_fog_commands();
         structure_assignment_boundaries();
-        std::cout << "5/5 original J3D material-block groups passed\n";
+        std::cout << "6/6 original J3D material-block groups passed\n";
         return 0;
     } catch (const std::exception& error) {
         std::cerr << "[fail] " << error.what() << '\n';

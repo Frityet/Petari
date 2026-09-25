@@ -13,11 +13,6 @@ target("smg-pc-game")
     add_files("LiveActor/Binder.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("LiveActor/HitSensorInfo.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("Map/CollisionCategorizedKeeper.cpp", {cxxflags = "-ffp-contract=off"})
-    -- The retail source explicitly narrows its opaque host pointer to u32.
-    -- Clang accepts this legacy cast in its extension mode; -fpermissive is GCC-only.
-    add_files("Gravity/PlanetGravityManager.cpp", {
-        cxxflags = is_plat("macosx", "iphoneos") and "-fms-extensions" or "-fpermissive"
-    })
     add_files("AudioLib/AudBgmSetting.cpp", {cxxflags = "-Wno-narrowing"})
     add_files("GameAudio/AudStageBgmTable.cpp", {cxxflags = "-Wno-narrowing"})
     add_files("GameAudio/AudStageBgmWrap.cpp", {cxxflags = "-Wno-narrowing"})
@@ -54,12 +49,10 @@ target("smg-pc-game")
     remove_files("System/ConfigDataMisc.cpp")
     remove_files("System/SysConfigFile.cpp")
     remove_files("Util/ActorSensorUtil.cpp")
-    remove_files("Util/GravityUtil.cpp")
     remove_files("Util/FileUtil.cpp")
     remove_files("Util/ActorShadowUtil.cpp")
     remove_files("Util/LiveActorUtil.cpp")
     remove_files("Util/MapUtil.cpp")
-    remove_files("Util/SystemUtil.cpp")
     remove_files("Util/StarPointerUtil.cpp")
     remove_files("Util/SoundUtil.cpp")
     remove_files("Util/LightUtil.cpp")
@@ -93,6 +86,9 @@ target("smg-pc-game")
     add_files({"Util/ActorMovementUtil.cpp", "../compat/OriginalMapQueries.cpp",
                "../compat/OriginalCollisionPartsCompat.cpp", "../compat/OriginalKCollisionCompat.cpp"},
               {cxxflags = "-ffp-contract=off"})
+    add_files({"../JSystem/J3DGraphBase/J3DMaterial.cpp", "../JSystem/J3DGraphBase/J3DMatBlock.cpp",
+               "../JSystem/J3DGraphBase/J3DTevs.cpp", "../JSystem/J3DGraphAnimator/J3DMaterialAnm.cpp",
+               "../JSystem/J3DGraphAnimator/J3DMaterialAttach.cpp", "../JSystem/J3DGraphAnimator/J3DShapeTable.cpp"})
     add_files("../JSystem/J2DGraph/**.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("../JSystem/JParticle/**.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("../compat/OriginalJPADraw.cpp", {cxxflags = "-ffp-contract=off"})

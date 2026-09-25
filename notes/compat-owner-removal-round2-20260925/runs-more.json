@@ -1,0 +1,47 @@
+[
+  {
+    "target": "smg-pc-original-j3d-material-block-tests",
+    "disc": "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-material-table-tests",
+    "disc": "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-texture-mtx-tests",
+    "disc": "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-material-resource-tests",
+    "disc": "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-geometry-resource-tests",
+    "disc": "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-original-camera-holder-tests",
+    "disc": "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-stage-camera-resource-tests",
+    "disc": "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "exit": 1
+  },
+  {
+    "target": "smg-pc-original-name-pos-owner-tests",
+    "disc": "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-npc-actor-real-or-absent-tests",
+    "disc": "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "exit": -6
+  }
+]

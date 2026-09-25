@@ -1,10 +1,14 @@
 #include "Game/LiveActor/ClippingJudge.hpp"
+#include "Game/LiveActor/ClippingActorHolder.hpp"
+#include "Game/LiveActor/ClippingActorInfo.hpp"
+#include "Game/LiveActor/ClippingDirector.hpp"
+#include "Game/LiveActor/ViewGroupCtrl.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "SceneExecutionFixture.hpp"
+#include "OriginalSceneControllerFixture.hpp"
 #include "Game/Scene/SceneNameObjMovementController.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/ActorPhysicsRuntime.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
@@ -28,6 +32,14 @@
 namespace {
 void require(bool value, const char* message) {
     if (!value) throw std::runtime_error(message);
+}
+
+void create_clipping_fixture(smgpc::runtime::SceneScheduler& scheduler) {
+    auto* director = static_cast<ClippingDirector*>(MR::createSceneObj(SceneObj_ClippingDirector));
+    require(director != nullptr, "actor callbacks require the original scene clipping owner");
+    // These tests dispatch selected callbacks; the clipping case below drives
+    // the original actor info against explicit test planes without a camera.
+    scheduler.disconnect_name_obj(*director);
 }
 
 struct CallbackAllocations {
@@ -135,12 +147,15 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
     using namespace smgpc::runtime;
     const auto free_before = heaps->root_heap().getFreeSize();
     {
+        smgpc::test::OriginalSceneControllerFixture original(heaps);
         auto game = JkrAllocationDomain::create(heaps, 2U << 20);
         auto caller = JkrAllocationDomain::create(heaps, 64U << 10);
         SceneScheduler scheduler;
         SceneSchedulerBinding active(scheduler);
         SceneSchedulerAllocationBinding scene(scheduler, game);
-        smgpc::test::SceneExecutionFixture execution(scheduler, game);
+        smgpc::test::SceneExecutionFixture execution(scheduler, game, nullptr, nullptr,
+                                                  &original.scene, original.controller().mObjHolder);
+        create_clipping_fixture(scheduler);
         CallbackObject object(scheduler);
         scheduler.connect_name_obj(object, 34, 0, -1, 72);
         scheduler.register_pre_draw_function(MR::Functor(static_cast<const CallbackObject*>(&object), &CallbackObject::pre_draw), 72);
@@ -261,18 +276,21 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
         require(!message_victim && first.allocation.calls[5] == 1,
                 "original group broadcasts may remove future recipients without invalidating live traversal");
 
-        configure_actor_clipping_sphere(&first, 1.0F, nullptr);
-        ClippingJudge judge("Callback clipping plane fixture");
+        auto* clipping_info = MR::getClippingDirector()->mActorHolder->find(&first);
+        ViewGroupCtrlDataEntry view_group{};
+        clipping_info->_14 = &view_group;
+        clipping_info->setTypeToSphere(1.0F, nullptr);
+        auto& judge = *MR::getClippingJudge();
         const TVec3f normals[] = {{1, 0, 0}, {-1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1}};
         const TVec3f points[] = {{-100, 0, 0}, {100, 0, 0}, {0, -100, 0}, {0, 100, 0}, {0, 0, -100}, {0, 0, 100}};
         for (unsigned i = 0; i < 6; ++i) judge.mFrustum.mPlanes[i].set(normals[i], points[i]);
-        configure_actor_clipping_far_level(&first, 0);
+        clipping_info->mFarClipLevel = 0;
         CallbackObject clipping_driver(scheduler);
         clipping_driver.movement_hook = [&] {
             first.mPosition.x = 1000000;
-            update_actor_clipping(first, judge);
+            clipping_info->judgeClipping();
             first.mPosition.x = 0;
-            update_actor_clipping(first, judge);
+            clipping_info->judgeClipping();
         };
         scheduler.connect_name_obj(clipping_driver, 34, -1, -1, -1);
         scheduler.execute_movement();
@@ -282,10 +300,12 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
     }
     require(heaps->root_heap().getFreeSize() == free_before, "all callback and scene domain allocations retire at scene teardown");
     {
+        smgpc::test::OriginalSceneControllerFixture original(heaps);
         SceneScheduler scheduler;
         SceneSchedulerBinding active(scheduler);
         auto execution_domain = JkrAllocationDomain::create(heaps, 512U << 10);
-        smgpc::test::SceneExecutionFixture execution(scheduler, execution_domain);
+        smgpc::test::SceneExecutionFixture execution(scheduler, execution_domain, nullptr, nullptr,
+                                                  &original.scene, original.controller().mObjHolder);
         auto domain = JkrAllocationDomain::create(heaps, 64U << 10);
         std::weak_ptr<JkrAllocationDomain> weak = domain;
         auto scene = std::make_unique<SceneSchedulerAllocationBinding>(scheduler, domain);
@@ -315,12 +335,15 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
     using namespace smgpc::runtime;
     const auto free_before = heaps->root_heap().getFreeSize();
     {
+        smgpc::test::OriginalSceneControllerFixture original(heaps);
         auto domain = JkrAllocationDomain::create(heaps, 1U << 20);
         auto caller = JkrAllocationDomain::create(heaps, 32U << 10);
         SceneScheduler scheduler;
         SceneSchedulerBinding active(scheduler);
         SceneSchedulerAllocationBinding game(scheduler, domain);
-        smgpc::test::SceneExecutionFixture execution(scheduler, domain);
+        smgpc::test::SceneExecutionFixture execution(scheduler, domain, nullptr, nullptr,
+                                                  &original.scene, original.controller().mObjHolder);
+        create_clipping_fixture(scheduler);
         CallbackObject camera(scheduler), clipping(scheduler), platform(scheduler), collision(scheduler), player(scheduler);
         std::vector<unsigned> order;
         const auto record = [&](unsigned event) {
@@ -455,9 +478,13 @@ public:
     unsigned messages = 0;
 };
 
-int main() {
+int main(int argc, char** argv) {
     using namespace smgpc::compat;
     auto heaps = JkrHeapRuntime::create(16U << 20);
+    if (argc == 2 && std::string_view(argv[1]) == "--categories-only") {
+        verify_category_execution(heaps);
+        return 0;
+    }
     auto domain = JkrAllocationDomain::create(heaps, 64U << 10);
     std::vector<NameObj*> snapshot;
     std::vector<smgpc::runtime::SceneSchedulerEntryState> scheduler_snapshot;
@@ -486,10 +513,13 @@ int main() {
     // Renaming, snapshots and registry retirement must consume no more space.
     if (domain->heap().getTotalFreeSize() != after_object)
         throw std::runtime_error("NameObj metadata consumed additional original heap storage");
+    auto original = std::make_unique<smgpc::test::OriginalSceneControllerFixture>(heaps);
     smgpc::runtime::SceneScheduler scheduler;
     smgpc::runtime::SceneSchedulerBinding active(scheduler);
     auto execution_domain = JkrAllocationDomain::create(heaps, 1U << 20);
-    auto execution = std::make_unique<smgpc::test::SceneExecutionFixture>(scheduler, execution_domain);
+    auto execution = std::make_unique<smgpc::test::SceneExecutionFixture>(
+        scheduler, execution_domain, nullptr, nullptr, &original->scene, original->controller().mObjHolder);
+    create_clipping_fixture(scheduler);
     std::vector<std::unique_ptr<NameObj>> objects;
     for (int i = 0; i < 128; ++i)
         objects.push_back(std::make_unique<NameObj>("heap registration fixture"));
@@ -589,8 +619,10 @@ int main() {
     }
     std::cout << "NameObj registry and scheduler sorting/history/snapshots survive original heap retirement; "
                  "movement and animation callbacks retain original heap routing\n";
+    objects.clear();
     execution.reset();
     execution_domain.reset();
+    original.reset();
     verify_explicit_scene_callbacks(heaps);
     verify_backend_allocation_routing(heaps);
     verify_category_execution(heaps);

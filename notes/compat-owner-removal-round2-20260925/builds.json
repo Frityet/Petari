@@ -1,0 +1,62 @@
+[
+  {
+    "target": "smg-pc-hash-sort-table-tests",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-scene-name-obj-registry-tests",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-fixed-position-real-or-absent-tests",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-gravity-real-or-absent-tests",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-gravity-math-foundation-tests",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-material-block-tests",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-material-table-tests",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-texture-mtx-tests",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-material-resource-tests",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-geometry-resource-tests",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-stage-camera-resource-tests",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-original-name-pos-owner-tests",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-original-camera-holder-tests",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-original-resource-holder-tests",
+    "exit": 255
+  },
+  {
+    "target": "smg-pc-npc-actor-real-or-absent-tests",
+    "exit": 0
+  }
+]

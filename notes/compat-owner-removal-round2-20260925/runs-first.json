@@ -1,0 +1,33 @@
+[
+  {
+    "command": [
+      "smg-pc-hash-sort-table-tests"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "smg-pc-scene-name-obj-registry-tests"
+    ],
+    "exit": 1
+  },
+  {
+    "command": [
+      "smg-pc-fixed-position-real-or-absent-tests"
+    ],
+    "exit": -11
+  },
+  {
+    "command": [
+      "smg-pc-gravity-real-or-absent-tests",
+      "--queries-only"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "smg-pc-gravity-math-foundation-tests"
+    ],
+    "exit": 0
+  }
+]

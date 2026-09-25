@@ -8,6 +8,10 @@ public:
     typedef uintptr_t Value;
 
     HashSortTable(u32);
+    ~HashSortTable();
+
+    HashSortTable(const HashSortTable&) = delete;
+    HashSortTable& operator=(const HashSortTable&) = delete;
 
     bool add(const char*, Value, bool);
     bool add(u32, Value);

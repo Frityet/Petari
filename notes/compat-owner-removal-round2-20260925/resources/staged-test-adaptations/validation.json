@@ -1,0 +1,35 @@
+{
+  "base_commit": "93b469e438c2eea1afbde6e4613d3eb6cbcd75e5",
+  "scope": "Minimal committed-source retirement of StageResourceBinding and CameraUtilCompat references; no working test or index writes",
+  "files": [
+    {
+      "path": "tests/NameObjFactoryPlacementTests.cpp",
+      "head_sha256": "e69e2fafd3041c7aa9f0904dfa7abd8be36a2d259c66dae66e9d544444d7804f",
+      "working_sha256_before": "0c65301ea7eb226cbd6f037733c07d7377ef01d5430b14d49a53552de957087d",
+      "adaptation_sha256": "46e1ee5420933c05a7991585bcd963e65507e011a1e3542279eda5b816ee1032",
+      "changed_lines_added": 0,
+      "changed_lines_removed": 2,
+      "retired_references_in_adaptation": false,
+      "working_sha256_after": "0c65301ea7eb226cbd6f037733c07d7377ef01d5430b14d49a53552de957087d",
+      "working_file_preserved": true
+    },
+    {
+      "path": "tests/OriginalCameraDirectorTests.cpp",
+      "head_sha256": "0f8242d2b731f0f8c9898e786c06f6bcbc7eb9006eafe95a3368f8604ccf9656",
+      "working_sha256_before": "f9acdf37ccac6c2d73b9d914e4f310c677a64a7ebd53718d4814942f5335d878",
+      "adaptation_sha256": "74a6d7d400fa83e440426e5c137a59d28758dc51eb111ca5ba1480592f33d9d1",
+      "changed_lines_added": 6,
+      "changed_lines_removed": 4,
+      "retired_references_in_adaptation": false,
+      "working_sha256_after": "f9acdf37ccac6c2d73b9d914e4f310c677a64a7ebd53718d4814942f5335d878",
+      "working_file_preserved": true
+    }
+  ],
+  "build_run": false,
+  "runtime_tests_run": false,
+  "limitations": [
+    "Standalone original controller/StageDataHolder initialization remains preexisting runtime prerequisite",
+    "Saved HEAD factory test references StagePlacementPreflight.hpp removed in unrelated dirty working migration",
+    "Saved HEAD camera test references SceneExecutionService.hpp and RuntimeContext::scene_execution removed in unrelated dirty working migration"
+  ]
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "target": "smg-pc-scene-name-obj-registry-tests",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-fixed-position-real-or-absent-tests",
+    "exit": -11
+  }
+]

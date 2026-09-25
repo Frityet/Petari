@@ -17,7 +17,6 @@
 #include "camera/OriginalAnimationCamera.hpp"
 #include "camera/OriginalGameCamera.hpp"
 #include "compat/CameraLocalUtilRuntime.hpp"
-#include "compat/CameraUtilCompat.hpp"
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"

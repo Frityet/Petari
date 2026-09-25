@@ -1,0 +1,12 @@
+[
+  {
+    "target": "smg-pc-scene-scheduler-heap-tests",
+    "build_exit": 0,
+    "run_exit": -6
+  },
+  {
+    "target": "smg-pc-npc-actor-real-or-absent-tests",
+    "build_exit": 0,
+    "run_exit": -11
+  }
+]

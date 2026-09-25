@@ -1,0 +1,25 @@
+{
+  "modified": [
+    "src/Game/Util/GravityUtil.cpp",
+    "src/Game/Util/GravityUtil.hpp",
+    "src/Game/Gravity/PlanetGravityManager.cpp",
+    "src/Game/Gravity/PlanetGravityManager.hpp",
+    "src/Game/Gravity/PlanetGravity.hpp",
+    "src/compat/MetrowerksStdCompat.hpp",
+    "tests/GravityRealOrAbsentTests.cpp",
+    "tests/AuroraNativeTests.cpp",
+    "tests/StageStartCameraTests.cpp",
+    "tests/ActorEventCameraTests.cpp"
+  ],
+  "created": [
+    "src/Game/Util/LiveActorUtilGravity.cpp"
+  ],
+  "deleted": [
+    "src/compat/GameGravityCompat.cpp",
+    "src/compat/GameGravityCompat.hpp",
+    "src/compat/MarioCameraTarget.cpp",
+    "src/compat/MarioCameraTarget.hpp",
+    "src/compat/CameraUtilCompat.cpp",
+    "src/compat/CameraUtilCompat.hpp"
+  ]
+}

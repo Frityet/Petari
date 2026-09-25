@@ -1,0 +1,149 @@
+[
+  {
+    "path": "src/compat/StageResourceBinding.cpp",
+    "disposition": "delete-unused",
+    "state": "deleted",
+    "destination": [
+      "src/Game/Scene/StageDataHolder.cpp",
+      "src/Game/Util/SceneUtil.cpp"
+    ],
+    "methods": {},
+    "confidence": "high",
+    "evidence": "No production stage-binding consumer; four tests migrated"
+  },
+  {
+    "path": "src/compat/StageResourceBinding.hpp",
+    "disposition": "delete-unused",
+    "state": "deleted",
+    "destination": [
+      "src/Game/Scene/StageDataHolder.cpp",
+      "src/Game/Util/SceneUtil.cpp"
+    ],
+    "methods": {},
+    "confidence": "high",
+    "evidence": "No production stage-binding consumer; four tests migrated"
+  },
+  {
+    "path": "src/compat/MemoryHeapScopeCompat.cpp",
+    "disposition": "restore-original-owner",
+    "state": "deleted",
+    "destination": [
+      "src/Game/Util/MemoryUtil.cpp"
+    ],
+    "methods": {
+      "CurrentHeapRestorer::CurrentHeapRestorer": "src/Game/Util/MemoryUtil.cpp",
+      "CurrentHeapRestorer::~CurrentHeapRestorer": "src/Game/Util/MemoryUtil.cpp",
+      "getCurrentHeap": "src/Game/Util/MemoryUtil.cpp",
+      "becomeCurrentHeap": "src/Game/Util/MemoryUtil.cpp",
+      "isEqualCurrentHeap": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "confidence": "high",
+    "evidence": "Donor-backed method inventory has unique surviving canonical definitions"
+  },
+  {
+    "path": "src/compat/MemoryUtilCompat.cpp",
+    "disposition": "restore-original-owner",
+    "state": "deleted",
+    "destination": [
+      "src/Game/Util/MemoryUtil.cpp"
+    ],
+    "methods": {
+      "NewDeleteAllocator::alloc": "src/Game/Util/MemoryUtil.cpp",
+      "NewDeleteAllocator::free": "src/Game/Util/MemoryUtil.cpp",
+      "calcCheckSum": "src/Game/Util/MemoryUtil.cpp",
+      "copyMemory": "src/Game/Util/MemoryUtil.cpp",
+      "fillMemory": "src/Game/Util/MemoryUtil.cpp",
+      "zeroMemory": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "confidence": "high",
+    "evidence": "Donor-backed method inventory has unique surviving canonical definitions"
+  },
+  {
+    "path": "src/compat/OriginalStationedArchiveUtil.cpp",
+    "disposition": "restore-original-owner",
+    "state": "deleted",
+    "destination": [
+      "src/Game/Util/MemoryUtil.cpp",
+      "src/Game/Util/SystemUtil.cpp"
+    ],
+    "methods": {
+      "requestChangeArchivePlayer": "src/Game/Util/SystemUtil.cpp",
+      "waitEndChangeArchivePlayer": "src/Game/Util/SystemUtil.cpp",
+      "getStationedHeapNapa": "src/Game/Util/MemoryUtil.cpp",
+      "getStationedHeapGDDR3": "src/Game/Util/MemoryUtil.cpp",
+      "getSceneHeapNapa": "src/Game/Util/MemoryUtil.cpp",
+      "getHeapNapa": "src/Game/Util/MemoryUtil.cpp",
+      "getHeapGDDR3": "src/Game/Util/MemoryUtil.cpp",
+      "getAproposHeapForSceneArchive": "src/Game/Util/MemoryUtil.cpp",
+      "adjustHeapSize": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "confidence": "high",
+    "evidence": "Donor-backed method inventory has unique surviving canonical definitions"
+  },
+  {
+    "path": "src/compat/OriginalLayoutResourceUtil.cpp",
+    "disposition": "restore-original-owner",
+    "state": "deleted",
+    "destination": [
+      "src/Game/Util/SystemUtil.cpp"
+    ],
+    "methods": {
+      "getFontOnCurrentLanguage": "src/Game/Util/SystemUtil.cpp",
+      "getMenuFontNW4R": "src/Game/Util/SystemUtil.cpp",
+      "getNumberFontNW4R": "src/Game/Util/SystemUtil.cpp",
+      "getPictureFontNW4R": "src/Game/Util/SystemUtil.cpp",
+      "getCinemaFontNW4R": "src/Game/Util/SystemUtil.cpp"
+    },
+    "confidence": "high",
+    "evidence": "Donor-backed method inventory has unique surviving canonical definitions"
+  },
+  {
+    "path": "src/compat/OriginalGameSystemAccess.cpp",
+    "disposition": "restore-original-owner",
+    "state": "deleted",
+    "destination": [
+      "src/Game/Util/SystemUtil.cpp"
+    ],
+    "methods": {
+      "getGameSystemObjHolder": "src/Game/Util/SystemUtil.cpp",
+      "initSceneMessage": "src/Game/Util/SystemUtil.cpp",
+      "destroySceneMessage": "src/Game/Util/SystemUtil.cpp",
+      "stopAllSound": "src/Game/Util/SystemUtil.cpp",
+      "setLayoutDefaultAllocator": "src/Game/Util/SystemUtil.cpp",
+      "setRandomSeedFromStageName": "src/Game/Util/SystemUtil.cpp",
+      "clearFileLoaderRequestFileInfo": "src/Game/Util/SystemUtil.cpp",
+      "resetSystemAndGameStatus": "src/Game/Util/SystemUtil.cpp"
+    },
+    "confidence": "high",
+    "evidence": "Donor-backed method inventory has unique surviving canonical definitions"
+  },
+  {
+    "path": "src/compat/OriginalScreenConfig.cpp",
+    "disposition": "restore-original-owner",
+    "state": "deleted",
+    "destination": [
+      "src/Game/Util/SystemUtil.cpp"
+    ],
+    "methods": {
+      "isScreen16Per9": "src/Game/Util/SystemUtil.cpp"
+    },
+    "confidence": "high",
+    "evidence": "Donor-backed method inventory has unique surviving canonical definitions"
+  },
+  {
+    "path": "src/compat/SceneNameObjUtilCompat.cpp",
+    "disposition": "restore-original-owner",
+    "state": "deleted",
+    "destination": [
+      "src/Game/Util/SystemUtil.cpp"
+    ],
+    "methods": {
+      "callMethodAllSceneNameObj": "src/Game/Util/SystemUtil.cpp",
+      "suspendAllSceneNameObj": "src/Game/Util/SystemUtil.cpp",
+      "resumeAllSceneNameObj": "src/Game/Util/SystemUtil.cpp",
+      "syncWithFlagsAllSceneNameObj": "src/Game/Util/SystemUtil.cpp"
+    },
+    "confidence": "high",
+    "evidence": "Donor-backed method inventory has unique surviving canonical definitions"
+  }
+]

@@ -20,12 +20,13 @@
 #include "Logger.hpp"
 #include "RendererService.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/GroupCheckManagerCompat.hpp"
+#include "Game/Util/HashUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/JMapResource.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "SceneExecutionFixture.hpp"
+#include "OriginalSceneControllerFixture.hpp"
 
 #include <aurora/dvd.h>
 #include <dolphin/dvd.h>
@@ -624,7 +625,7 @@ namespace {
     }
 }  // namespace
 
-int main() {
+int main(int argc, char** argv) {
     auto passed = 0;
 
     auto caps = NPCActorCaps("TestNpc");
@@ -646,66 +647,60 @@ int main() {
     require(!actor._D8, "the exact NPCActor reaction edge must clear on the next update");
     ++passed;
 
-    const auto manager_baseline = smgpc::compat::group_check_manager_runtime_state_count();
-    const auto checker_baseline = smgpc::compat::group_checker_runtime_state_count();
-    const auto membership_baseline = smgpc::compat::attribute_group_membership_count();
     {
-        auto holder = SceneObjHolder{};
-        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        const auto heaps = smgpc::compat::JkrHeapRuntime::create(8U << 20);
+        smgpc::test::OriginalSceneControllerFixture original(heaps);
+        smgpc::runtime::SceneScheduler scheduler;
+        smgpc::runtime::SceneSchedulerBinding active(scheduler);
+        smgpc::test::SceneExecutionFixture scene(scheduler, original.domain, nullptr, nullptr,
+                                                &original.scene, original.controller().mObjHolder);
+        auto& holder = scene.holder();
 
         requireUnavailable([&] { MR::addToAttributeGroupSearchTurtle(&actor); },
                            "attribute membership must not fabricate a missing scene-owned manager");
         require(holder.getObj(SceneObj_GroupCheckManager) == nullptr,
                 "a failed membership request must leave the required pre-placement SceneObj absent");
+        require(MR::createSceneObj(SceneObj_ClippingDirector) != nullptr,
+                "the original actor fixture requires its actual clipping director");
         require(MR::createSceneObj(SceneObj_GroupCheckManager) != nullptr,
                 "the focused scene fixture must explicitly create its GroupCheckManager");
 
+        auto* manager = MR::getSceneObj<GroupCheckManager>(SceneObj_GroupCheckManager);
+        auto* table = manager->mGroups[0]->mHashTable;
         MR::addToAttributeGroupSearchTurtle(&actor);
         MR::addToAttributeGroupSearchTurtle(&actor);
-        require(MR::isExistInAttributeGroupSearchTurtle(&actor),
-                "SearchTurtle membership must be queryable through the scene-owned GroupCheckManager");
-        require(!MR::isExistInAttributeGroupReflectSpinningBox(&actor),
-                "SearchTurtle membership must not leak into the ReflectSpinningBox group");
-        require(smgpc::compat::attribute_group_membership_count() == membership_baseline + 1U,
-                "attribute group insertion must be idempotent for the same NameObj name");
-
         auto same_name = NPCActor("npc-reaction-test");
-        require(MR::isExistInAttributeGroupSearchTurtle(&same_name),
-                "GroupChecker lookup must use NameObj names like the retail HashSortTable");
-
         auto second = NPCActor("npc-second-search-target");
         MR::addToAttributeGroupSearchTurtle(&second);
-        require(MR::isExistInAttributeGroupSearchTurtle(&second),
-                "multiple actors must coexist in the same SearchTurtle group");
-
         auto reflected = NPCActor("npc-reflected-target");
         MR::addToAttributeGroupReflectSpinningBox(&reflected);
-        require(MR::isExistInAttributeGroupReflectSpinningBox(&reflected) &&
-                    !MR::isExistInAttributeGroupSearchTurtle(&reflected),
-                "the two retail attribute groups must retain independent membership");
-
-        const auto before_transient = smgpc::compat::attribute_group_membership_count();
         {
             auto transient = NPCActor("npc-transient-search-target");
             MR::addToAttributeGroupSearchTurtle(&transient);
-            require(smgpc::compat::attribute_group_membership_count() == before_transient + 1U,
-                    "a newly inserted NameObj name must contribute one group membership");
         }
         auto same_transient_name = NPCActor("npc-transient-search-target");
-        require(smgpc::compat::attribute_group_membership_count() == before_transient + 1U &&
+        require(table->mCurrentLength == 3 && !table->mHasBeenSorted &&
+                    manager->mGroups[1]->mHashTable->mCurrentLength == 1,
+                "original attribute tables must collect unique name hashes during placement");
+        manager->mGroups[0]->initAfterPlacement();
+        manager->mGroups[1]->initAfterPlacement();
+        require(MR::isExistInAttributeGroupSearchTurtle(&actor) &&
+                    MR::isExistInAttributeGroupSearchTurtle(&same_name) &&
+                    MR::isExistInAttributeGroupSearchTurtle(&second) &&
                     MR::isExistInAttributeGroupSearchTurtle(&same_transient_name),
-                "name membership must live with the scene-owned checker, not an individual actor identity");
-        require(smgpc::compat::group_check_manager_runtime_state_count() == manager_baseline + 1U &&
-                    smgpc::compat::group_checker_runtime_state_count() == checker_baseline + 2U,
-                "one scene manager must own exactly the two retail group checkers");
+                "placement sorting must preserve original names after the registering actor is gone");
+        require(MR::isExistInAttributeGroupReflectSpinningBox(&reflected) &&
+                    !MR::isExistInAttributeGroupSearchTurtle(&reflected) &&
+                    !MR::isExistInAttributeGroupReflectSpinningBox(&actor),
+                "the two original attribute groups must retain independent membership");
     }
-    require(smgpc::compat::group_check_manager_runtime_state_count() == manager_baseline &&
-                smgpc::compat::group_checker_runtime_state_count() == checker_baseline &&
-                smgpc::compat::attribute_group_membership_count() == membership_baseline,
-            "scene teardown must release both group checkers and every remaining membership");
     requireInvalid([] { MR::addToAttributeGroupSearchTurtle(nullptr); },
                    "null attribute-group insertion must remain an explicit contract error");
     ++passed;
+
+    std::cerr << "[pass] original NPC attribute groups: unique hashes, placement sorting, isolated groups, retirement\n";
+    if (argc == 2 && std::string_view(argv[1]) == "--groups-only")
+        return 0;
 
     requireUnavailable([] { (void)MR::checkPlayerSwingTrigger(); },
                        "missing real MarioActor swing state must be explicitly unavailable");

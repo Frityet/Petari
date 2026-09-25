@@ -1,0 +1,12 @@
+[
+  {
+    "target": "smg-pc-stage-camera-resource-tests",
+    "build_exit": 0,
+    "run_exit": 0
+  },
+  {
+    "target": "smg-pc-npc-actor-real-or-absent-tests",
+    "build_exit": 0,
+    "run_exit": -11
+  }
+]

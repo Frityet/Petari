@@ -1,0 +1,2 @@
+libc++abi: terminating due to uncaught exception of type std::runtime_error: sensor callbacks may retire the other actor without stale sensor dereferences
+NameObj registry and scheduler sorting/history/snapshots survive original heap retirement; movement and animation callbacks retain original heap routing

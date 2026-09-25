@@ -84,13 +84,7 @@ namespace smgpc::compat {
             for (auto* multi : keeper->_C)
                 destroy_multi_emitter(multi);
             delete keeper->_20;
-            if (auto* table = keeper->_18) {
-                delete[] table->mHashCodes;
-                delete[] table->_8;
-                delete[] table->_C;
-                delete[] table->_10;
-                delete table;
-            }
+            delete keeper->_18;
             delete keeper;
         }
 

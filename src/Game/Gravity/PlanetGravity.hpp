@@ -31,6 +31,10 @@ public:
     bool isInRangeSquare(f32 radius) const;
     bool isInRangeDistance(f32 radius) const;
 
+    f32 getDistant() const {
+        return mDistant;
+    }
+
     void setPriority(s32 priority);
     void updateIdentityMtx();
 

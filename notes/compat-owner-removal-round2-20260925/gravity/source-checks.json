@@ -1,0 +1,25 @@
+{
+  "donor_commit": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "gravity_util_definitions": [
+    "registerGravity",
+    "calcGravityVector",
+    "calcGravityVector",
+    "calcDropShadowVector",
+    "calcDropShadowVector",
+    "calcGravityAndDropShadowVector",
+    "calcGravityAndMagnetVector",
+    "calcGravityVectorOrZero",
+    "calcGravityVectorOrZero",
+    "calcDropShadowVectorOrZero",
+    "calcGravityAndDropShadowVectorOrZero",
+    "calcAttractMarioLauncherOrZero",
+    "isZeroGravity",
+    "isLightGravity",
+    "settingGravityParamFromJMap",
+    "getJMapInfoGravityType",
+    "getJMapInfoGravityPower"
+  ],
+  "all_original_public_functions_retained": true,
+  "live_actor_gravity_methods_exact_donor": true,
+  "builds_run": false
+}

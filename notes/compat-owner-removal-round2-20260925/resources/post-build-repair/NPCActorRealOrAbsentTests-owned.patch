@@ -1,0 +1,26 @@
+--- a/tests/NPCActorRealOrAbsentTests.cpp
++++ b/tests/NPCActorRealOrAbsentTests.cpp
+@@ -27,6 +27,7 @@
+ #include "resource/JMapResource.hpp"
+ #include "scene/SceneObjHolderRuntime.hpp"
+ #include "SceneExecutionFixture.hpp"
++#include "OriginalSceneControllerFixture.hpp"
+ 
+ #include <aurora/dvd.h>
+ #include <dolphin/dvd.h>
+@@ -648,8 +649,13 @@
+     ++passed;
+ 
+     {
+-        auto holder = SceneObjHolder{};
+-        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
++        const auto heaps = smgpc::compat::JkrHeapRuntime::create(8U << 20);
++        smgpc::test::OriginalSceneControllerFixture original(heaps);
++        smgpc::runtime::SceneScheduler scheduler;
++        smgpc::runtime::SceneSchedulerBinding active(scheduler);
++        smgpc::test::SceneExecutionFixture scene(scheduler, original.domain, nullptr, nullptr,
++                                                &original.scene, original.controller().mObjHolder);
++        auto& holder = scene.holder();
+ 
+         requireUnavailable([&] { MR::addToAttributeGroupSearchTurtle(&actor); },
+                            "attribute membership must not fabricate a missing scene-owned manager");

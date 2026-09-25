@@ -1,0 +1,135 @@
+diff --git a/tests/GravityRealOrAbsentTests.cpp b/tests/GravityRealOrAbsentTests.cpp
+index d98cb64159b5c76c450ac399a4f804ea87b01e4b..15ffbecb37eb16d5f3f5a225a6cfae2b72ad590a 100644
+--- a/tests/GravityRealOrAbsentTests.cpp
++++ b/tests/GravityRealOrAbsentTests.cpp
+@@ -26,7 +26,6 @@
+ #include "Game/Util/GravityUtil.hpp"
+ #include "Game/Util/JMapInfo.hpp"
+ #include "Game/Util/JMapLinkInfo.hpp"
+-#include "compat/GameGravityCompat.hpp"
+ #include "compat/GlobalGravityOwnership.hpp"
+ #include "resource/BcsvTable.hpp"
+ #include "runtime/RuntimeServices.hpp"
+@@ -308,6 +307,28 @@
+                     destination.epsilonEquals(TVec3f{0.0F, 1.0F, 0.0F}, 0.0001F) &&
+                     info.mGravityInstance == &high && !MR::isLightGravity(info),
+                 "the requester's own gravity host should be excluded using retail host identity rules");
++
++        if constexpr (sizeof(std::uintptr_t) > sizeof(u32)) {
++            const auto caller_id = reinterpret_cast<std::uintptr_t>(&caller);
++            const auto other_id = caller_id ^ static_cast<std::uintptr_t>(std::uint64_t{1} << 32U);
++            require(MR::calcGravityVector(&caller, TVec3f{}, &destination, &info, caller_id) &&
++                        info.mGravityInstance == &high,
++                    "an explicit full-width requester must exclude exactly its own gravity host");
++            require(MR::calcGravityVector(&caller, TVec3f{}, &destination, &info, other_id) &&
++                        info.mGravityInstance == &strongest,
++                    "distinct requester identities sharing their low 32 bits must not exclude one another");
++
++            // mHost is an opaque comparison token and is never dereferenced.
++            // This checks the implicit caller path independently of explicit IDs.
++            strongest.mHost = reinterpret_cast<const void*>(other_id);
++            require(MR::calcGravityVector(&caller, TVec3f{}, &destination, &info, 0U) &&
++                        info.mGravityInstance == &strongest,
++                    "implicit requester identity must preserve the caller's upper address bits");
++            require(MR::calcGravityVector(&caller, TVec3f{}, &destination, &info, other_id) &&
++                        info.mGravityInstance == &high,
++                    "an explicit alternate host must override the requesting actor's identity");
++            strongest.mHost = &caller;
++        }
+ 
+         auto shadow = ConstantGravity(TVec3f{-1.0F, 0.0F, 0.0F}, 25.0F);
+         shadow.mPriority = 9;
+diff --git a/tests/ActorEventCameraTests.cpp b/tests/ActorEventCameraTests.cpp
+index 6856c35b084f68e4356a15272611308607aa56f6..126aeb8b1cd4a2d8ead60c2e11069f9bbe9a1dd8 100644
+--- a/tests/ActorEventCameraTests.cpp
++++ b/tests/ActorEventCameraTests.cpp
+@@ -36,7 +36,6 @@
+ #include "camera/OriginalAnimationCamera.hpp"
+ #include "camera/OriginalGameCamera.hpp"
+ #include "compat/CameraLocalUtilRuntime.hpp"
+-#include "compat/CameraUtilCompat.hpp"
+ #include "resource/BcsvTable.hpp"
+ #include "runtime/RuntimeServices.hpp"
+ #include "runtime/SceneScheduler.hpp"
+diff --git a/tests/AuroraNativeTests.cpp b/tests/AuroraNativeTests.cpp
+index e5959e64cca7b29ac0bd96a596daf94769f9ba08..43e3098af46806d5bc4c50372b82d110c6043884 100644
+--- a/tests/AuroraNativeTests.cpp
++++ b/tests/AuroraNativeTests.cpp
+@@ -45,7 +45,6 @@
+ #include "scene/SceneObjHolderRuntime.hpp"
+ #include "scene/nameobj/NameObjFactory.hpp"
+ #include "compat/ActorRuntimeRegistry.hpp"
+-#include "compat/GameGravityCompat.hpp"
+ #include "SceneExecutionFixture.hpp"
+ 
+ #include <RVLFaceLib.h>
+diff --git a/tests/StageStartCameraTests.cpp b/tests/StageStartCameraTests.cpp
+index 3907cbe02eba0a4b3083c54bbd43c71bd838024b..a477fa0216896db1accecbc3d2d5340f6e021533 100644
+--- a/tests/StageStartCameraTests.cpp
++++ b/tests/StageStartCameraTests.cpp
+@@ -12,7 +12,6 @@
+ #include "camera/OriginalGameCamera.hpp"
+ #include "camera/StageStartCamera.hpp"
+ #include "compat/ActorRuntimeRegistry.hpp"
+-#include "compat/CameraUtilCompat.hpp"
+ #include "SceneExecutionFixture.hpp"
+ #include "resource/BcsvTable.hpp"
+ #include "runtime/RuntimeServices.hpp"
+diff --git a/tests/OriginalCollisionPartsOwnerTests.cpp b/tests/OriginalCollisionPartsOwnerTests.cpp
+index 2f56b32d2256cfcd129bc85b89e2ae053a05f5de..b88052c8007914c729ff60119775ecba0fcdaed8 100644
+--- a/tests/OriginalCollisionPartsOwnerTests.cpp
++++ b/tests/OriginalCollisionPartsOwnerTests.cpp
+@@ -4,7 +4,6 @@
+ #include "compat/CollisionDirectorOwnership.hpp"
+ #include "compat/HitInfoCompat.hpp"
+ #include "compat/JkrAllocationDomain.hpp"
+-#include "compat/StageResourceBinding.hpp"
+ #include "compat/StageSessionState.hpp"
+ #include "compat/StageZoneMatrixRegistry.hpp"
+ #include "runtime/RuntimeContext.hpp"
+@@ -80,7 +79,6 @@
+     smgpc::runtime::SceneSchedulerBinding scheduler_binding(scheduler);
+     std::vector<smgpc::scene::StageHolderOccurrence> holders;
+     const auto tables = smgpc::scene::resolve_stage_placement_tables(runtime.dvd(), "HeavensDoorGalaxy", 1, &holders);
+-    smgpc::compat::StageResourceBinding stage_resources(runtime.dvd(), holders, tables);
+     smgpc::compat::StageZoneMatrixBinding zones(holders, tables);
+     smgpc::compat::StageSessionState session("Game", "HeavensDoorGalaxy", 1, JMapIdInfo(0, 0));
+     smgpc::compat::StageSessionBinding session_binding(session);
+diff --git a/tests/xmake.lua b/tests/xmake.lua
+index 773ebd777f43f6d7b51349e7622d054de0ce8d44..97dafe8bd5b9fbaf0a4764628ce289b0eeb46301 100644
+--- a/tests/xmake.lua
++++ b/tests/xmake.lua
+@@ -2320,14 +2320,14 @@
+ target("smg-pc-stage-camera-resource-tests")
+     set_kind("binary")
+     set_default(false)
+-    set_group("tests/aurora")
++    set_group("tests/original-process")
+     add_files("StageCameraResourceTests.cpp")
+     add_deps {
+-        "smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
++        "smg-pc-app", "smg-pc-common", "smg-pc-game", "aurora-main", "aurora-card", "aurora-dvd",
+         "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"
+     }
+     add_tests("stage_camera_resources", {
+-        group = "aurora", rundir = os.projectdir(), realtime_output = true
++        group = "original-process", rundir = os.projectdir(), realtime_output = true
+     })
+ 
+ target("smg-pc-original-camera-holder-tests")
+@@ -2630,12 +2630,12 @@
+ target("smg-pc-original-name-pos-owner-tests")
+     set_kind("binary")
+     set_default(false)
+-    set_group("tests/aurora")
++    set_group("tests/original-process")
+     add_files("OriginalNamePosOwnerTests.cpp")
+-    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
++    add_deps {"smg-pc-app", "smg-pc-common", "smg-pc-game", "aurora-main", "aurora-card", "aurora-dvd",
+               "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+     add_tests("original_name_pos_owner", {
+-        group = "aurora", rundir = os.projectdir(), realtime_output = true
++        group = "original-process", rundir = os.projectdir(), realtime_output = true
+     })
+ 
+ target("smg-pc-scene-name-obj-registry-tests")

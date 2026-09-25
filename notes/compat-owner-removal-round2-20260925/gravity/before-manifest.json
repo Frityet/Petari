@@ -1,0 +1,66 @@
+{
+  "src/Game/Util/GravityUtil.cpp": {
+    "sha256": "e289101d7677410c13afdef953825e4a715195dde8ed7fbc029e42cc611f129e",
+    "bytes": 6859
+  },
+  "src/Game/Util/GravityUtil.hpp": {
+    "sha256": "2aca6193729e081576ebf29f097af5d61582df766b1c2dc02d2ca56adbe06810",
+    "bytes": 1857
+  },
+  "src/Game/Gravity/PlanetGravityManager.cpp": {
+    "sha256": "9cfb3913d2e3951edf5c870ea45dda83f0b0b325207c524d68e2ed9f9a1aaccd",
+    "bytes": 3499
+  },
+  "src/Game/Gravity/PlanetGravityManager.hpp": {
+    "sha256": "b7ce50c1f53263579802374135007900656a781162452d304a588d6b1c61c1e8",
+    "bytes": 2657
+  },
+  "src/Game/Gravity/PlanetGravity.hpp": {
+    "sha256": "d3faba894987238db36ebd38ca8e89c8a468ea596ff58e253348097f5af1752f",
+    "bytes": 1627
+  },
+  "src/compat/GameGravityCompat.cpp": {
+    "sha256": "e733c71d80b50a1036078056c6dc81e2faf1f9ae748278d1cd1052fd128eebc7",
+    "bytes": 10151
+  },
+  "src/compat/GameGravityCompat.hpp": {
+    "sha256": "963f69da07dccada724650e40e920c7c4d79f95df9e1f24524bdb83fa9a35857",
+    "bytes": 2902
+  },
+  "src/compat/MarioCameraTarget.cpp": {
+    "sha256": "476035ff92e8a795c0194274379756c68aa97ba886d5c3807632de7a517afd23",
+    "bytes": 1246
+  },
+  "src/compat/MarioCameraTarget.hpp": {
+    "sha256": "c558ae3176748b4d6630be281e972e5fdae5361f439716dcdf8bb5a02d51de14",
+    "bytes": 315
+  },
+  "src/compat/CameraUtilCompat.cpp": {
+    "sha256": "306e47dc629fb416201eb57e7c7921c32fd2697b921be7293370ba78330f7bd8",
+    "bytes": 1379
+  },
+  "src/compat/CameraUtilCompat.hpp": {
+    "sha256": "629fa5b5e2918c2ce35b444898e131a32a1cfb29a81b716eb01b99e22369ff59",
+    "bytes": 305
+  },
+  "src/compat/MetrowerksStdCompat.hpp": {
+    "sha256": "bc8be6365f4d71d05b26331ea7492e2afe38d0fca4914feaf9b348f4c9350b5f",
+    "bytes": 3593
+  },
+  "tests/GravityRealOrAbsentTests.cpp": {
+    "sha256": "6b85988e5b191f4599b4b0e19958d3bbb7d0cb6aaf14aa511fda3c07f8a31fb0",
+    "bytes": 38693
+  },
+  "tests/AuroraNativeTests.cpp": {
+    "sha256": "5ecdf39802830850f7b7964199c3da08212ae951aa7534d88a89dac50f1c5d46",
+    "bytes": 61687
+  },
+  "tests/StageStartCameraTests.cpp": {
+    "sha256": "e0f6106502b5e82962577e13d25570cfc070861e224752c6a65e0ac30e090fbe",
+    "bytes": 75335
+  },
+  "tests/ActorEventCameraTests.cpp": {
+    "sha256": "dde41cc41180f351ced89808dae891abafc5c4eb58331824c5e14339f395fce4",
+    "bytes": 110679
+  }
+}

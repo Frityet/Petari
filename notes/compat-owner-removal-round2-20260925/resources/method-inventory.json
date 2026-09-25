@@ -1,0 +1,270 @@
+{
+  "donor": "decomp (1a126cb5d)",
+  "before_sha256": {
+    "src/compat/StageResourceBinding.cpp": "b24103f5dad5030f332cc9271fb36f30e1f84908c370127c8a0cf2e5ba5c54ff",
+    "src/compat/StageResourceBinding.hpp": "e6d26576d17ed114bfa40535969f240c8b9b6f78aca75e889b05dff248521b99",
+    "src/compat/MemoryHeapScopeCompat.cpp": "06edb1e1edd206650b79e8d9c9986f9f3339fde63ef6b5fd60af0015a800ed20",
+    "src/compat/MemoryUtilCompat.cpp": "f01594434ff135bae1684a9cad4f850eb2e4665a1681a87e74b1f250f6026caf",
+    "src/compat/OriginalStationedArchiveUtil.cpp": "7ffee47c6ca78dfbf8549c0fe35f05c80060faa2fc35d4e623ce9ba2b4aa0ee7",
+    "src/compat/OriginalLayoutResourceUtil.cpp": "b0810b8aa08477313b55d292090351854bcfbf60b9551a3850712b34a41ea11c",
+    "src/compat/OriginalGameSystemAccess.cpp": "55aa3e02480145a0ecf0216ffc8c53b8694668738961d15e8095e39e9b13be62",
+    "src/compat/OriginalScreenConfig.cpp": "8fe79a62f9584fda01a1ad4686ab19e7fffa37883b81d7b1512c35863d8689c0",
+    "src/compat/SceneNameObjUtilCompat.cpp": "e4a45742a92c0b3663cd54393d1b9a684c7c8c598959703dc15b243fa86f3f0c",
+    "src/Game/Util/SystemUtil.cpp": "9b8972121c04a5e7117163928d184dd1c23f6984a8e69a5d48d832d1350ceefa",
+    "tests/OriginalCollisionPartsOwnerTests.cpp": "d617a60050122e2b92c801e1f4dde0004e9b0347cb9a94b57f82a6890c7d571a",
+    "tests/OriginalNamePosOwnerTests.cpp": "68403a3bcdd02cfc1d17dd6671eca9899d596e1b9c8bf2bbf40f226ae7594cea",
+    "tests/StageCameraResourceTests.cpp": "b31ce12bb7611f1458d38c1cfb3a94add2b97231f6fa71846c3ee3475773c43f",
+    "tests/OriginalCameraHolderTests.cpp": "05122508674f4e04970b775cb165f2dd07fbdc76c1a1aefae07ad82e56a499a7"
+  },
+  "removed": [
+    "src/compat/StageResourceBinding.cpp",
+    "src/compat/StageResourceBinding.hpp",
+    "src/compat/MemoryHeapScopeCompat.cpp",
+    "src/compat/MemoryUtilCompat.cpp",
+    "src/compat/OriginalStationedArchiveUtil.cpp",
+    "src/compat/OriginalLayoutResourceUtil.cpp",
+    "src/compat/OriginalGameSystemAccess.cpp",
+    "src/compat/OriginalScreenConfig.cpp",
+    "src/compat/SceneNameObjUtilCompat.cpp"
+  ],
+  "added": [
+    "src/Game/Util/MemoryUtil.cpp",
+    "tests/OriginalStageResourceProcessFixture.hpp"
+  ],
+  "utility_method_inventory": {
+    "CurrentHeapRestorer::CurrentHeapRestorer": {
+      "previous": "src/compat/MemoryHeapScopeCompat.cpp",
+      "current": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "CurrentHeapRestorer::~CurrentHeapRestorer": {
+      "previous": "src/compat/MemoryHeapScopeCompat.cpp",
+      "current": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "getCurrentHeap": {
+      "previous": "src/compat/MemoryHeapScopeCompat.cpp",
+      "current": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "becomeCurrentHeap": {
+      "previous": "src/compat/MemoryHeapScopeCompat.cpp",
+      "current": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "isEqualCurrentHeap": {
+      "previous": "src/compat/MemoryHeapScopeCompat.cpp",
+      "current": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "NewDeleteAllocator::alloc": {
+      "previous": "src/compat/MemoryUtilCompat.cpp",
+      "current": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "NewDeleteAllocator::free": {
+      "previous": "src/compat/MemoryUtilCompat.cpp",
+      "current": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "calcCheckSum": {
+      "previous": "src/compat/MemoryUtilCompat.cpp",
+      "current": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "copyMemory": {
+      "previous": "src/compat/MemoryUtilCompat.cpp",
+      "current": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "fillMemory": {
+      "previous": "src/compat/MemoryUtilCompat.cpp",
+      "current": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "zeroMemory": {
+      "previous": "src/compat/MemoryUtilCompat.cpp",
+      "current": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "requestChangeArchivePlayer": {
+      "previous": "src/compat/OriginalStationedArchiveUtil.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "waitEndChangeArchivePlayer": {
+      "previous": "src/compat/OriginalStationedArchiveUtil.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "getStationedHeapNapa": {
+      "previous": "src/compat/OriginalStationedArchiveUtil.cpp",
+      "current": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "getStationedHeapGDDR3": {
+      "previous": "src/compat/OriginalStationedArchiveUtil.cpp",
+      "current": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "getSceneHeapNapa": {
+      "previous": "src/compat/OriginalStationedArchiveUtil.cpp",
+      "current": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "getHeapNapa": {
+      "previous": "src/compat/OriginalStationedArchiveUtil.cpp",
+      "current": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "getHeapGDDR3": {
+      "previous": "src/compat/OriginalStationedArchiveUtil.cpp",
+      "current": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "getAproposHeapForSceneArchive": {
+      "previous": "src/compat/OriginalStationedArchiveUtil.cpp",
+      "current": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "adjustHeapSize": {
+      "previous": "src/compat/OriginalStationedArchiveUtil.cpp",
+      "current": "src/Game/Util/MemoryUtil.cpp"
+    },
+    "getFontOnCurrentLanguage": {
+      "previous": "src/compat/OriginalLayoutResourceUtil.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "getMenuFontNW4R": {
+      "previous": "src/compat/OriginalLayoutResourceUtil.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "getNumberFontNW4R": {
+      "previous": "src/compat/OriginalLayoutResourceUtil.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "getPictureFontNW4R": {
+      "previous": "src/compat/OriginalLayoutResourceUtil.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "getCinemaFontNW4R": {
+      "previous": "src/compat/OriginalLayoutResourceUtil.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "getGameSystemObjHolder": {
+      "previous": "src/compat/OriginalGameSystemAccess.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "initSceneMessage": {
+      "previous": "src/compat/OriginalGameSystemAccess.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "destroySceneMessage": {
+      "previous": "src/compat/OriginalGameSystemAccess.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "stopAllSound": {
+      "previous": "src/compat/OriginalGameSystemAccess.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "setLayoutDefaultAllocator": {
+      "previous": "src/compat/OriginalGameSystemAccess.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "setRandomSeedFromStageName": {
+      "previous": "src/compat/OriginalGameSystemAccess.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "clearFileLoaderRequestFileInfo": {
+      "previous": "src/compat/OriginalGameSystemAccess.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "resetSystemAndGameStatus": {
+      "previous": "src/compat/OriginalGameSystemAccess.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "isScreen16Per9": {
+      "previous": "src/compat/OriginalScreenConfig.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "callMethodAllSceneNameObj": {
+      "previous": "src/compat/SceneNameObjUtilCompat.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "suspendAllSceneNameObj": {
+      "previous": "src/compat/SceneNameObjUtilCompat.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "resumeAllSceneNameObj": {
+      "previous": "src/compat/SceneNameObjUtilCompat.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    },
+    "syncWithFlagsAllSceneNameObj": {
+      "previous": "src/compat/SceneNameObjUtilCompat.cpp",
+      "current": "src/Game/Util/SystemUtil.cpp"
+    }
+  },
+  "canonical_memory_methods": [
+    "CurrentHeapRestorer::CurrentHeapRestorer",
+    "CurrentHeapRestorer::~CurrentHeapRestorer",
+    "NewDeleteAllocator::alloc",
+    "NewDeleteAllocator::free",
+    "getCurrentHeap",
+    "getHeapFreeRatio",
+    "getAproposHeapForSceneArchive",
+    "getStationedHeapNapa",
+    "getStationedHeapGDDR3",
+    "getSceneHeapNapa",
+    "getHeapNapa",
+    "getHeapGDDR3",
+    "becomeCurrentHeap",
+    "isEqualCurrentHeap",
+    "adjustHeapSize",
+    "copyMemory",
+    "fillMemory",
+    "zeroMemory",
+    "calcCheckSum"
+  ],
+  "canonical_system_methods": [
+    "getGameSystemObjHolder",
+    "getSceneNameObjHolder",
+    "getFontOnCurrentLanguage",
+    "getPictureFontNW4R",
+    "getMenuFontNW4R",
+    "getNumberFontNW4R",
+    "getCinemaFontNW4R",
+    "requestChangeArchivePlayer",
+    "waitEndChangeArchivePlayer",
+    "callMethodAllSceneNameObj",
+    "suspendAllSceneNameObj",
+    "resumeAllSceneNameObj",
+    "syncWithFlagsAllSceneNameObj",
+    "setRandomSeedFromStageName",
+    "clearFileLoaderRequestFileInfo",
+    "isScreen16Per9",
+    "initSceneMessage",
+    "destroySceneMessage",
+    "resetSystemAndGameStatus",
+    "stopAllSound",
+    "setLayoutDefaultAllocator"
+  ],
+  "deliberately_remaining": {
+    "src/compat/OriginalFunctionAsyncUtil.cpp": [
+      "startFunctionAsyncExecute",
+      "startFunctionAsyncExecuteOnMainThread",
+      "waitForEndFunctionAsyncExecute",
+      "isEndFunctionAsyncExecute",
+      "tryEndFunctionAsyncExecute",
+      "suspendAsyncExecuteThread",
+      "resumeAsyncExecuteThread",
+      "isSuspendedAsyncExecuteThread"
+    ],
+    "src/compat/StageSessionGameCompat.cpp": [
+      "getPlayerRestartIdInfo",
+      "setPlayerRestartIdInfo"
+    ],
+    "src/compat/OriginalParticleResourceLookup.cpp": [
+      "getParticleResourceHolder"
+    ],
+    "src/compat/SceneSystemUtilCompat.cpp": [
+      "isDisplayEncouragePal60Window"
+    ],
+    "src/compat/SceneHeapAccess.cpp": [
+      "getSceneHeapGDDR3"
+    ],
+    "src/compat/WPadOwnership.cpp": [
+      "allocFromWPadHeap",
+      "freeFromWPadHeap"
+    ]
+  },
+  "not_imported": {
+    "getHomeButtonLayoutAllocator": "No native HeapMemoryWatcher::mHomeButtonLayoutHeap or JKRHeapAllocator<0> static definitions; was absent before this batch. No unused stub introduced."
+  },
+  "checks": {
+    "duplicate_utility_names_in_remaining_compat": false,
+    "old_utility_definitions_preserved": 38,
+    "build_run": false,
+    "tests_run": false
+  }
+}

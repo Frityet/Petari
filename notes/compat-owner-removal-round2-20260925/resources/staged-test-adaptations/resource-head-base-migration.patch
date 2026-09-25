@@ -1,0 +1,50 @@
+--- a/tests/NameObjFactoryPlacementTests.cpp
++++ b/tests/NameObjFactoryPlacementTests.cpp
+@@ -1,4 +1,3 @@
+-#include "compat/StageResourceBinding.hpp"
+ #include "compat/StageZoneMatrixRegistry.hpp"
+ #include "runtime/SystemConfigService.hpp"
+ #include "compat/StageSessionState.hpp"
+@@ -542,7 +541,6 @@
+         const auto session_binding = smgpc::compat::StageSessionBinding{session};
+         std::vector<smgpc::scene::StageHolderOccurrence> stage_holders;
+         const auto stage_tables = smgpc::scene::resolve_stage_placement_tables(dvd, "FileSelect", 1, &stage_holders);
+-        smgpc::compat::StageResourceBinding stage_resources(dvd, stage_holders, stage_tables);
+         smgpc::compat::StageZoneMatrixBinding stage_zones(stage_holders, stage_tables);
+         const auto placements =
+             smgpc::scene::resolve_stage_placement_objects(dvd, "FileSelect", 1);
+--- a/tests/OriginalCameraDirectorTests.cpp
++++ b/tests/OriginalCameraDirectorTests.cpp
+@@ -1,9 +1,7 @@
+ #include "SceneExecutionFixture.hpp"
+ #include "camera/CameraDirectorRuntime.hpp"
+ #include "compat/ActorRuntimeRegistry.hpp"
+-#include "compat/CameraUtilCompat.hpp"
+ #include "compat/JkrAllocationDomain.hpp"
+-#include "compat/StageResourceBinding.hpp"
+ #include "compat/StageSessionState.hpp"
+ #include "compat/StarPointerDepthOwnership.hpp"
+ #include "compat/StageZoneMatrixRegistry.hpp"
+@@ -275,7 +273,6 @@
+     for (const char* stage : {"HeavensDoorGalaxy", "EggStarGalaxy"}) {
+         std::vector<smgpc::scene::StageHolderOccurrence> holders;
+         const auto tables = smgpc::scene::resolve_stage_placement_tables(runtime.dvd(), stage, 1, &holders);
+-        smgpc::compat::StageResourceBinding resources(runtime.dvd(), holders, tables);
+         smgpc::compat::StageZoneMatrixBinding zones(holders, tables);
+         smgpc::compat::StageSessionState session("Game", stage, 1, JMapIdInfo(0, 0));
+         smgpc::compat::StageSessionBinding session_binding(session);
+@@ -313,8 +310,13 @@
+                     "original target argument selects matrix target and invalidates initial displacement");
+             ActorCameraInfo info;
+             {
++                const smgpc::compat::JkrHostAllocationScope host;
+                 auto raw = animation();
+-                smgpc::compat::declare_event_camera_animation(info, "Retained owner animation", raw);
++                void* retained_animation = owner->retain_animation(raw);
++                {
++                    const smgpc::compat::JkrAllocationScope game(domain);
++                    MR::declareEventCameraAnim(&info, "Retained owner animation", retained_animation);
++                }
+                 std::fill(raw.begin(), raw.end(), 0xa5);
+             }
+             auto* event = director.getEventParameter(0, "Retained owner animation");

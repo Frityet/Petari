@@ -1,10 +1,7 @@
 #include "Game/Util/SystemUtil.hpp"
 #include "Game/NameObj/NameObjHolder.hpp"
 #include "Game/System/AudSystemWrapper.hpp"
-#include "Game/System/FunctionAsyncExecutor.hpp"
 #include "Game/System/GameDataFunction.hpp"
-#include "Game/System/GameDataTemporaryInGalaxy.hpp"
-#include "Game/System/GameSequenceDirector.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemFontHolder.hpp"
 #include "Game/System/GameSystemFunction.hpp"
@@ -27,14 +24,6 @@ namespace MR {
 };  // namespace MR
 
 namespace {
-    FunctionAsyncExecutor* getFunctionAsyncExecutor() NO_INLINE {
-        return MR::getGameSystemObjHolder()->mFunctionAsyncExecutor;
-    }
-
-    GameDataTemporaryInGalaxy* getGameDataTemporaryInGalaxy() {
-        return SingletonHolder< GameSystem >::get()->mSequenceDirector->mGameDataTemporaryInGalaxy;
-    }
-
     NameObjHolder* getSceneNameObjHolder() NO_INLINE {
         return SingletonHolder< GameSystem >::get()->mSceneController->mObjHolder;
     }
@@ -59,10 +48,6 @@ namespace MR {
 
     nw4r::ut::Font* getCinemaFontNW4R() {
         return SingletonHolder< GameSystem >::get()->mFontHolder->mCinemaFont;
-    }
-
-    ParticleResourceHolder* getParticleResourceHolder() {
-        return getGameSystemObjHolder()->mParticleResHolder;
     }
 
     void requestChangeArchivePlayer(bool isPlayerMario) {
@@ -100,52 +85,6 @@ namespace MR {
         getGameSystemObjHolder()->clearRequestFileInfo(param1);
     }
 
-    void startFunctionAsyncExecute(const MR::FunctorBase& rFunc, int threadPriority, const char* pThreadName) {
-        ::getFunctionAsyncExecutor()->start(rFunc, threadPriority, pThreadName);
-    }
-
-    bool startFunctionAsyncExecuteOnMainThread(const MR::FunctorBase& rFunc, const char* pThreadName) {
-        return ::getFunctionAsyncExecutor()->startOnMainThread(rFunc, pThreadName);
-    }
-
-    void waitForEndFunctionAsyncExecute(const char* pThreadName) {
-        ::getFunctionAsyncExecutor()->waitForEnd(pThreadName);
-    }
-
-    bool isEndFunctionAsyncExecute(const char* pThreadName) {
-        return ::getFunctionAsyncExecutor()->isEnd(pThreadName);
-    }
-
-    bool tryEndFunctionAsyncExecute(const char* pThreadName) {
-        if (isEndFunctionAsyncExecute(pThreadName)) {
-            waitForEndFunctionAsyncExecute(pThreadName);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    void suspendAsyncExecuteThread(const char* pThreadName) {
-        OSSuspendThread(::getFunctionAsyncExecutor()->getOSThread(pThreadName));
-    }
-
-    void resumeAsyncExecuteThread(const char* pThreadName) {
-        OSThread* pThread = ::getFunctionAsyncExecutor()->getOSThread(pThreadName);
-
-        OSResumeThread(::getFunctionAsyncExecutor()->getOSThread(pThreadName));
-    }
-
-    bool isSuspendedAsyncExecuteThread(const char* pThreadName) {
-        OSThread* pThread = ::getFunctionAsyncExecutor()->getOSThread(pThreadName);
-
-        if (pThread == nullptr) {
-            return false;
-        }
-
-        return OSIsThreadSuspended(pThread);
-    }
-
     bool isScreen16Per9() {
         return isAspectRatioFlag16Per9();
     }
@@ -170,18 +109,6 @@ namespace MR {
 
     void setLayoutDefaultAllocator() {
         nw4r::lyt::Layout::mspAllocator = &MR::NewDeleteAllocator::sAllocator;
-    }
-
-    bool isDisplayEncouragePal60Window() {
-        return VIGetTvFormat() == VI_PAL;
-    }
-
-    JMapIdInfo* getPlayerRestartIdInfo() {
-        return ::getGameDataTemporaryInGalaxy()->mPlayerRestartIdInfo;
-    }
-
-    void setPlayerRestartIdInfo(const JMapIdInfo& rInfo) {
-        ::getGameDataTemporaryInGalaxy()->setPlayerRestartIdInfo(rInfo);
     }
 
 };  // namespace MR

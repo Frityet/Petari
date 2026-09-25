@@ -1,0 +1,14 @@
+[
+  {
+    "target": "smg-pc-scene-name-obj-registry-tests",
+    "build_exit": 0
+  },
+  {
+    "target": "smg-pc-fixed-position-real-or-absent-tests",
+    "build_exit": 0
+  },
+  {
+    "target": "smg-pc-scene-scheduler-heap-tests",
+    "build_exit": 255
+  }
+]

@@ -3,6 +3,7 @@
 #include "JSystem/J3DGraphBase/J3DGD.hpp"
 #include <aurora/endian.hpp>
 #include "JSystem/J3DGraphBase/J3DStruct.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include <revolution/gx.h>
 
 extern const J3DLightInfo j3dDefaultLightInfo;
@@ -213,6 +214,7 @@ struct J3DTevOrder : public J3DTevOrderInfo {
     }
     J3DTevOrder(const J3DTevOrderInfo& info) : J3DTevOrderInfo(info) {
     }
+    J3DTevOrder& operator=(const J3DTevOrder& other);
     J3DTevOrderInfo& getTevOrderInfo() {
         return *this;
     }
@@ -329,6 +331,10 @@ struct J3DIndTevStage {
 struct J3DNBTScale;
 struct J3DTexCoord;
 void loadNBTScale(J3DNBTScale& param_0);
+
+inline void loadTexCoordScale(GXTexCoordID coord, const J3DTexCoordScaleInfo& info) {
+    J3DGDSetTexCoordScale2(coord, info.field_0x00, info.field_0x04 == 1, 0, info.field_0x02, info.field_0x06 == 1, 0);
+}
 
 void loadTexCoordGens(u32 param_0, J3DTexCoord* param_1);
 void loadTexNo(u32 param_0, u16 const& param_1);

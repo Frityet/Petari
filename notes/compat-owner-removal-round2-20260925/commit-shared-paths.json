@@ -1,0 +1,8 @@
+[
+  "tests/ActorEventCameraTests.cpp",
+  "tests/AuroraNativeTests.cpp",
+  "tests/GravityRealOrAbsentTests.cpp",
+  "tests/OriginalCollisionPartsOwnerTests.cpp",
+  "tests/StageStartCameraTests.cpp",
+  "tests/xmake.lua"
+]

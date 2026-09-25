@@ -1,0 +1,17 @@
+--- a/tests/StageCameraResourceTests.cpp
++++ b/tests/StageCameraResourceTests.cpp
+@@ -48,9 +48,13 @@
+         void* data = nullptr;
+         s32 size = 0;
+         MR::getStageCameraData(&data, &size, zone);
++        auto* mounted_data = holder->getStageArchiveResource("CameraParam.bcam");
++        require(data == mounted_data && size == holder->getStageArchiveResourceSize(mounted_data),
++                "Original stage camera query keeps its actual StageDataHolder archive identity and size");
+         if (archive->find_resource("CameraParam.bcam")) {
+             const auto bytes = archive->resource_data("CameraParam.bcam");
+-            require(data == bytes.data() && size == bytes.size(), "Original stage camera query keeps mounted archive identity and size");
++            require(data != nullptr && size == bytes.size() && std::memcmp(data, bytes.data(), bytes.size()) == 0,
++                    "Original mounted camera resource matches the independently read retail archive bytes");
+             const auto expected = smgpc::resource::BcsvTable::from_bytes(bytes);
+             std::vector<const char*> names;
+             {

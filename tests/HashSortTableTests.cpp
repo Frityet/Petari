@@ -17,20 +17,21 @@ namespace {
     struct TableOwner {
         explicit TableOwner(u32 capacity) : table(capacity) {}
 
-        // Retail tables live in an owning heap. The fixture owns the exact
-        // constructor allocations individually and never copies their pointers.
-        ~TableOwner() {
-            delete[] table.mHashCodes;
-            delete[] table._8;
-            delete[] table._C;
-            delete[] table._10;
-        }
-
         TableOwner(const TableOwner&) = delete;
         TableOwner& operator=(const TableOwner&) = delete;
 
         HashSortTable table;
     };
+
+    void test_empty_table_has_no_members() {
+        HashSortTable table(8);
+        table.sort();
+        for (u32 bucket = 0; bucket < 256; ++bucket) {
+            HashSortTable::Value value = 123;
+            require(!table.search(bucket << 24, &value) && value == 0,
+                    "an empty attribute group must return false for every hash bucket");
+        }
+    }
 
     void test_resource_hash_preserves_wii_bytes() {
         constexpr char name[] = "\x82\xa0" "A";
@@ -103,10 +104,11 @@ namespace {
 
 int main() {
     try {
+        test_empty_table_has_no_members();
         test_resource_hash_preserves_wii_bytes();
         test_unsigned_buckets_retain_values_after_sort();
         test_duplicate_names_composite_lookup_and_resort();
-        std::cout << "HashSortTable tests passed (3 groups).\n";
+        std::cout << "HashSortTable tests passed (4 groups).\n";
         return 0;
     } catch (const std::exception& error) {
         std::cerr << "HashSortTable tests failed: " << error.what() << '\n';

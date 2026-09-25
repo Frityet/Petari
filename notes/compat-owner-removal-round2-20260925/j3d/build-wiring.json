@@ -1,0 +1,39 @@
+{
+  "add_files_relative_to_src_Game": [
+    "../JSystem/J3DGraphBase/J3DMaterial.cpp",
+    "../JSystem/J3DGraphBase/J3DMatBlock.cpp",
+    "../JSystem/J3DGraphBase/J3DTevs.cpp",
+    "../JSystem/J3DGraphAnimator/J3DMaterialAnm.cpp",
+    "../JSystem/J3DGraphAnimator/J3DMaterialAttach.cpp",
+    "../JSystem/J3DGraphAnimator/J3DShapeTable.cpp"
+  ],
+  "deleted_compat_providers": [
+    "src/compat/J3DMaterialFactoryCompat.cpp",
+    "src/compat/J3DMaterialHelpersCompat.cpp",
+    "src/compat/J3DMaterialVariantsCompat.cpp",
+    "src/compat/J3DMatBlockCompat.cpp",
+    "src/compat/J3DTevsCompat.cpp",
+    "src/compat/J3DTexMtxCompat.cpp",
+    "src/compat/J3DMaterialAnmCompat.cpp",
+    "src/compat/J3DMaterialAttachCompat.cpp",
+    "src/compat/J3DShapeTableCompat.cpp"
+  ],
+  "modified_existing_sources": [
+    "src/compat/J3DSysCompat.cpp",
+    "src/compat/J3DModelDataCompat.cpp"
+  ],
+  "modified_existing_headers": [
+    "src/JSystem/J3DGraphBase/J3DMatBlock.hpp",
+    "src/JSystem/J3DGraphBase/J3DTevs.hpp",
+    "src/JSystem/J3DGraphBase/J3DTexture.hpp",
+    "src/JSystem/J3DGraphBase/J3DGD.hpp"
+  ],
+  "existing_regression_target": "smg-pc-original-j3d-material-block-tests",
+  "recommended_additional_existing_targets": [
+    "smg-pc-original-j3d-material-table-tests",
+    "smg-pc-original-j3d-texture-mtx-tests",
+    "smg-pc-original-j3d-material-resource-tests",
+    "smg-pc-original-j3d-geometry-resource-tests"
+  ],
+  "new_test_wiring_needed": false
+}

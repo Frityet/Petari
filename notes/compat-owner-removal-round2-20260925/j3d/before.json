@@ -1,0 +1,102 @@
+{
+  "head": "93b469e438c2eea1afbde6e4613d3eb6cbcd75e5",
+  "decomp_head": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "files": [
+    {
+      "path": "src/compat/J3DMaterialFactoryCompat.cpp",
+      "sha256": "4f36c119eb0cc1e3997a47c8089a73a5f96abb1281d058c7e01f848b09ddbba0",
+      "before_status": "",
+      "lines": 160
+    },
+    {
+      "path": "src/compat/J3DMaterialHelpersCompat.cpp",
+      "sha256": "8d458822d49789223045e4d7c57f64eba53432357f5d8b2a28dafbb9907fc9f6",
+      "before_status": "",
+      "lines": 195
+    },
+    {
+      "path": "src/compat/J3DMaterialVariantsCompat.cpp",
+      "sha256": "1971865ed5e372ecff754f47d0463cfbbb217913165cc939ef8e598f29d1e819",
+      "before_status": "",
+      "lines": 69
+    },
+    {
+      "path": "src/compat/J3DMatBlockCompat.cpp",
+      "sha256": "0498aafe166b9cc0cb2650611183d54d273e35b412d0300e1dabfaf43d999f3a",
+      "before_status": "",
+      "lines": 1919
+    },
+    {
+      "path": "src/compat/J3DTevsCompat.cpp",
+      "sha256": "8af71198b75901b8e747af3da55b63c23dd598de0ba7f54f409b0c61d7ded87e",
+      "before_status": "",
+      "lines": 131
+    },
+    {
+      "path": "src/compat/J3DTexMtxCompat.cpp",
+      "sha256": "28f751c0699ff33098d92fcde301cf6673104358f140c19f5426663fd16d656c",
+      "before_status": "",
+      "lines": 273
+    },
+    {
+      "path": "src/compat/J3DMaterialAnmCompat.cpp",
+      "sha256": "e8f13199bc87d894e546b3fe0978ca97e530bcd290113a0a96a25cc18ce50e85",
+      "before_status": "",
+      "lines": 102
+    },
+    {
+      "path": "src/compat/J3DMaterialAttachCompat.cpp",
+      "sha256": "87fd92083af28b7234c362e3260017bc2f818ed41c08819e0994d1bc16aa1cf6",
+      "before_status": "",
+      "lines": 267
+    },
+    {
+      "path": "src/compat/J3DShapeTableCompat.cpp",
+      "sha256": "77026552c02f1123184c66d35a1f951d35b9b19bd0b69126eb0006956b0df78e",
+      "before_status": "",
+      "lines": 24
+    },
+    {
+      "path": "src/compat/J3DSysCompat.cpp",
+      "sha256": "db1018cc8d594d16c4e216a055cb1e5af20f39c76925f318c79815ec492441b9",
+      "before_status": "",
+      "lines": 119
+    },
+    {
+      "path": "src/compat/J3DModelDataCompat.cpp",
+      "sha256": "daae30596ae6b992f7d03363d2369ca7c57094e3b0be826ff12c6253ca6f0a8b",
+      "before_status": "",
+      "lines": 112
+    },
+    {
+      "path": "src/JSystem/J3DGraphBase/J3DMatBlock.hpp",
+      "sha256": "315c9a1cab15e72caa32ea4cd9632a00ad4d34269f6c9feaa39cf832643b62ce",
+      "before_status": "",
+      "lines": 2014
+    },
+    {
+      "path": "src/JSystem/J3DGraphBase/J3DTevs.hpp",
+      "sha256": "d557554f1b7c50936582247941c7083b83e4bf4887f8533648acebe6a84cd06b",
+      "before_status": "",
+      "lines": 337
+    },
+    {
+      "path": "src/JSystem/J3DGraphBase/J3DTexture.hpp",
+      "sha256": "d7cec863b70161e7ea9a704e39e6e5b7f03a86dfec42993e2ab597308334e135",
+      "before_status": "",
+      "lines": 114
+    },
+    {
+      "path": "src/JSystem/J3DGraphBase/J3DGD.hpp",
+      "sha256": "05bf695f2cf5cfe1282743f428a243f93997da3f2c58f1c074446de80367071c",
+      "before_status": "",
+      "lines": 117
+    },
+    {
+      "path": "tests/OriginalJ3DMaterialBlockTests.cpp",
+      "sha256": "9f6bb8a5ccc299593b46dcb5616118230d78a5ec848a9428b996db7d7bc0073e",
+      "before_status": "",
+      "lines": 173
+    }
+  ]
+}

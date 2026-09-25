@@ -1,5 +1,6 @@
 #include "Game/Util/HashUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include <memory>
 
 namespace {
     // The retail C locale folds only ASCII; resource-name bytes remain CP932.
@@ -10,13 +11,24 @@ namespace {
 }
 
 HashSortTable::HashSortTable(u32 cnt) {
-    mHashCodes = new u32[cnt];
-    _8 = new Value[cnt];
-    _C = new u16[0x100];
-    _10 = new u16[0x100];
+    auto hashes = std::make_unique<u32[]>(cnt);
+    auto values = std::make_unique<Value[]>(cnt);
+    auto starts = std::make_unique<u16[]>(0x100);
+    auto counts = std::make_unique<u16[]>(0x100);
+    mHashCodes = hashes.release();
+    _8 = values.release();
+    _C = starts.release();
+    _10 = counts.release();
     mCurrentLength = 0;
     mMaxLength = cnt;
     mHasBeenSorted = false;
+}
+
+HashSortTable::~HashSortTable() {
+    delete[] mHashCodes;
+    delete[] _8;
+    delete[] _C;
+    delete[] _10;
 }
 
 bool HashSortTable::add(const char* pName, Value a2, bool isValidSkip) {

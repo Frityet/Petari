@@ -2355,14 +2355,14 @@ target("smg-pc-original-scene-counter-owner-tests")
 target("smg-pc-stage-camera-resource-tests")
     set_kind("binary")
     set_default(false)
-    set_group("tests/aurora")
+    set_group("tests/original-process")
     add_files("StageCameraResourceTests.cpp")
     add_deps {
-        "smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+        "smg-pc-app", "smg-pc-common", "smg-pc-game", "aurora-main", "aurora-card", "aurora-dvd",
         "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"
     }
     add_tests("stage_camera_resources", {
-        group = "aurora", rundir = os.projectdir(), realtime_output = true
+        group = "original-process", rundir = os.projectdir(), realtime_output = true
     })
 
 target("smg-pc-original-camera-holder-tests")
@@ -2675,12 +2675,12 @@ target("smg-pc-scene-lifetime-binding-tests")
 target("smg-pc-original-name-pos-owner-tests")
     set_kind("binary")
     set_default(false)
-    set_group("tests/aurora")
+    set_group("tests/original-process")
     add_files("OriginalNamePosOwnerTests.cpp")
-    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+    add_deps {"smg-pc-app", "smg-pc-common", "smg-pc-game", "aurora-main", "aurora-card", "aurora-dvd",
               "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
     add_tests("original_name_pos_owner", {
-        group = "aurora", rundir = os.projectdir(), realtime_output = true
+        group = "original-process", rundir = os.projectdir(), realtime_output = true
     })
 
 target("smg-pc-scene-name-obj-registry-tests")

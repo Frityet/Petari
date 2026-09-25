@@ -1,0 +1,18 @@
+[
+  "src/Game/Player/GroupChecker.cpp",
+  "src/Game/Player/GroupChecker.hpp",
+  "src/Game/Util/HashUtil.cpp",
+  "src/Game/Util/HashUtil.hpp",
+  "src/Game/Util/LiveActorUtilGroup.cpp",
+  "src/compat/GroupCheckManagerCompat.cpp",
+  "src/compat/GroupCheckManagerCompat.hpp",
+  "src/compat/MarioAnimatorLifetime.cpp",
+  "src/compat/EffectSystemOwnership.cpp",
+  "tests/HashSortTableTests.cpp",
+  "tests/NPCActorRealOrAbsentTests.cpp",
+  "tests/SceneNameObjRegistryTests.cpp",
+  "src/Game/Util/FixedPosition.cpp",
+  "src/compat/FixedPositionCompat.cpp",
+  "src/compat/FixedPositionCompat.hpp",
+  "tests/FixedPositionRealOrAbsentTests.cpp"
+]

@@ -12,7 +12,6 @@
 #include "camera/OriginalGameCamera.hpp"
 #include "camera/StageStartCamera.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/CameraUtilCompat.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeServices.hpp"

@@ -4,7 +4,7 @@
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "compat/GroupCheckManagerCompat.hpp"
+#include "Game/Util/HashUtil.hpp"
 #include "scene/SceneNameObjRegistry.hpp"
 #include <aurora/exception.hpp>
 
@@ -36,47 +36,56 @@ namespace {
     };
 
     void attribute_group_native_registry_lifetime() {
-        const auto checkers = smgpc::compat::group_checker_runtime_state_count();
-        const auto managers = smgpc::compat::group_check_manager_runtime_state_count();
-        const auto members = smgpc::compat::attribute_group_membership_count();
-        // The second complete arena exercises reuse of static bucket storage
-        // after the first arena and every original group object are gone.
+        // Repeated arenas exercise original table storage and child destruction.
         for (int cycle = 0; cycle < 2; ++cycle) {
             auto heaps = smgpc::compat::JkrHeapRuntime::create(1U << 20);
-            auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 128U << 10);
+            // A reclaiming heap lets this test prove individual child frees;
+            // the later scene cases retain original bulk-release SolidHeap semantics.
+            auto domain = smgpc::compat::JkrAllocationDomain::retain_heap(heaps, heaps->root_heap(), heaps);
             const auto retired = std::weak_ptr(domain);
             {
                 smgpc::scene::SceneNameObjRegistry registry(domain);
                 const smgpc::compat::JkrAllocationScope game(domain);
-                GroupCheckManager manager("Original group owner");
-                NameObj member("Attribute member name exceeding native string inline storage");
-                NameObj same_name("Attribute member name exceeding native string inline storage");
-                NameObj absent("Absent attribute member with another long name");
-                require(JKRHeap::findFromRoot(manager.mShellSearchGroup) == &domain->heap() &&
-                            JKRHeap::findFromRoot(manager.mSpinningBoxSearchGroup) == &domain->heap() &&
-                            smgpc::compat::name_obj_runtime_owner(manager.mShellSearchGroup) == &manager &&
-                            smgpc::compat::name_obj_runtime_owner(manager.mSpinningBoxSearchGroup) == &manager,
-                        "native attribute registries must preserve actual Game child allocation and ownership");
-                const auto free_before = domain->heap().getFreeSize();
-                manager.add(&member, 0);
-                manager.add(&same_name, 0);
-                require(manager.isExist(&same_name, 0) && !manager.isExist(&absent, 0) &&
-                            !manager.isExist(&member, 1) &&
-                            smgpc::compat::attribute_group_membership_count() == members + 1,
-                        "native attribute metadata must preserve original name identity, duplicates and group isolation");
-                require(domain->heap().getFreeSize() == free_before,
-                        "native member strings, lookup temporaries and hash storage must not consume the Game heap");
-                auto* original = new int(7);
-                require(JKRHeap::findFromRoot(original) == &domain->heap(),
-                        "native group operations must restore original caller allocation routing");
-                delete original;
+                const auto free_before_group = domain->heap().getFreeSize();
+                {
+                    GroupCheckManager manager("Original group owner");
+                    NameObj member("Aa");
+                    NameObj same_name("Aa");
+                    NameObj collision("BB");
+                    NameObj absent("Absent attribute member with another long name");
+                    require(JKRHeap::findFromRoot(manager.mGroups[0]) == &domain->heap() &&
+                                JKRHeap::findFromRoot(manager.mGroups[1]) == &domain->heap() &&
+                                smgpc::compat::name_obj_runtime_owner(manager.mGroups[0]) == &manager &&
+                                smgpc::compat::name_obj_runtime_owner(manager.mGroups[1]) == &manager,
+                            "original attribute groups must retain Game child allocation and ownership");
+                    const auto free_before = domain->heap().getFreeSize();
+                    manager.add(&member, 0);
+                    manager.add(&same_name, 0);
+                    manager.add(&collision, 0);
+                    require(!manager.mGroups[0]->mHashTable->mHasBeenSorted &&
+                                manager.mGroups[0]->mHashTable->mCurrentLength == 1,
+                            "insertion must retain original unique hashes until the placement postpass");
+                    registry.holder().callMethodAllObj(&NameObj::initAfterPlacement);
+                    require(manager.mGroups[0]->mHashTable->mHasBeenSorted,
+                            "the original NameObj placement phase must sort group hashes");
+                    require(manager.isExist(&same_name, 0) && manager.isExist(&collision, 0) &&
+                                !manager.isExist(&absent, 0) &&
+                                !manager.isExist(&member, 1) &&
+                                manager.mGroups[0]->mHashTable->mCurrentLength == 1,
+                            "original hash identity must preserve collisions, duplicates and group isolation");
+                    require(domain->heap().getFreeSize() == free_before,
+                            "insertion and sorting must use the preallocated original table storage");
+                    auto* original = new int(7);
+                    require(JKRHeap::findFromRoot(original) == &domain->heap(),
+                            "native group operations must restore original caller allocation routing");
+                    delete original;
+                }
+                require(domain->heap().getFreeSize() == free_before_group,
+                        "individual group destruction must return all child and hash storage to the Game heap");
             }
             domain.reset();
-            require(retired.expired() &&
-                        smgpc::compat::group_checker_runtime_state_count() == checkers &&
-                        smgpc::compat::group_check_manager_runtime_state_count() == managers &&
-                        smgpc::compat::attribute_group_membership_count() == members,
-                    "actual group destruction must release all native entries before Game arena retirement");
+            require(retired.expired(),
+                    "actual group destruction must release table allocations before Game arena retirement");
             heaps.reset();
         }
     }
@@ -94,11 +103,12 @@ int main() {
                 smgpc::scene::SceneNameObjRegistry registry(domain);
                 require(JKRHeap::findFromRoot(&registry.holder()) == &domain->heap(),
                         "the scene registry must own an actual NameObjHolder in its retained Game heap");
+                std::array<std::string, 20> names;
                 std::array<std::unique_ptr<NameObj>, 20> objects;
                 for (std::size_t index = 0; index < objects.size(); ++index) {
-                    const auto name = "Registry " + std::to_string(index);
+                    names[index] = "Registry " + std::to_string(index);
                     const smgpc::compat::JkrAllocationScope game(domain);
-                    objects[index] = std::make_unique<NameObj>(name.c_str());
+                    objects[index] = std::make_unique<NameObj>(names[index].c_str());
                 }
                 require(objects[0]->mExecutorIdx == -1 && registry.holder().find("Registry 0") == objects[0].get(),
                         "the scene holder must include NameObjs without an execution category");

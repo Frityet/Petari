@@ -11,12 +11,10 @@
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "compat/StageResourceBinding.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/JMapResource.hpp"
 #include "resource/RarcArchive.hpp"
 #include "runtime/RuntimeServices.hpp"
-#include "scene/StagePlacementResolver.hpp"
 
 #include <aurora/dvd.h>
 #include <array>
@@ -256,10 +254,6 @@ void test_optional_disc_parameters() {
     DVDInit();
     smgpc::runtime::DvdFileSystemService dvd("/");
     for (const char* stage : {"HeavensDoorGalaxy", "EggStarGalaxy"}) {
-        smgpc::scene::StageHolderOccurrence root;
-        root.stage_name = stage;
-        const std::array holders{root};
-        StageResourceBinding resources(dvd, holders, {});
         Owners owners;
         const auto archive = dvd.retain_archive_for_path(std::string("/StageData/") + stage + ".arc");
         const auto bytes = archive->resource_data("CameraParam.bcam");
@@ -269,12 +263,23 @@ void test_optional_disc_parameters() {
             require(id && register_id(owners, 0, std::string(*id).c_str()),
                     "real camera IDs register uniquely through original chunk ownership");
         }
+        auto registration = register_jmap_source(bytes, archive);
         {
             JkrAllocationScope game(owners.domain);
-            owners.chunks->loadFile(0);
+            DotCamReaderInBin reader(bytes.data());
+            owners.chunks->mCameraVersion = reader.mVersion;
+            while (reader.hasMoreChunk()) {
+                const char* id = nullptr;
+                require(reader.getValueString("id", &id), "real archived row has a camera ID");
+                auto* chunk = owners.chunks->findChunk(0, id);
+                require(chunk != nullptr, "registered original chunk exists for every archived row");
+                chunk->load(&reader, owners.cameras);
+                owners.chunks->arrangeChunk(chunk);
+                reader.nextToChunk();
+            }
         }
         require(owners.chunks->mCameraVersion == 0x30016,
-                "original loadFile retrieves the actual stage camera archive version");
+                "original binary reader retrieves the actual archived camera version");
         for (std::size_t row = 0; row < binary.entry_count(); ++row) {
             const auto id = binary.get_string(row, "id");
             auto* chunk = owners.chunks->findChunk(0, std::string(*id).c_str());

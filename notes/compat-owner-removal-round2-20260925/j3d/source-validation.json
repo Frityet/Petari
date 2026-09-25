@@ -1,0 +1,186 @@
+{
+  "validation": "source only; no build or runtime execution",
+  "comparisons": [
+    {
+      "path": "src/JSystem/J3DGraphBase/J3DMaterial.cpp",
+      "functions": 45,
+      "nonexact_body_symbols": []
+    },
+    {
+      "path": "src/JSystem/J3DGraphBase/J3DMatBlock.cpp",
+      "functions": 143,
+      "nonexact_body_symbols": [
+        "loadMatColors",
+        "loadAmbColors"
+      ]
+    },
+    {
+      "path": "src/JSystem/J3DGraphBase/J3DTevs.cpp",
+      "functions": 19,
+      "nonexact_body_symbols": [
+        "getTexNoReg",
+        "J3DTexMtx::loadTexMtx",
+        "J3DGDLoadTexMtxImm"
+      ]
+    },
+    {
+      "path": "src/JSystem/J3DGraphAnimator/J3DMaterialAnm.cpp",
+      "functions": 7,
+      "nonexact_body_symbols": []
+    },
+    {
+      "path": "src/JSystem/J3DGraphAnimator/J3DMaterialAttach.cpp",
+      "functions": 12,
+      "nonexact_body_symbols": []
+    },
+    {
+      "path": "src/JSystem/J3DGraphAnimator/J3DShapeTable.cpp",
+      "functions": 2,
+      "nonexact_body_symbols": []
+    }
+  ],
+  "checks": [
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DMaterial.cpp: complete donor function set",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DMaterial.cpp: only documented native body adaptations",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DMatBlock.cpp: complete donor function set",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DMatBlock.cpp: only documented native body adaptations",
+      "passed": true,
+      "evidence": [
+        "loadMatColors",
+        "loadAmbColors"
+      ]
+    },
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DTevs.cpp: complete donor function set",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DTevs.cpp: only documented native body adaptations",
+      "passed": true,
+      "evidence": [
+        "getTexNoReg",
+        "J3DTexMtx::loadTexMtx",
+        "J3DGDLoadTexMtxImm"
+      ]
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DMaterialAnm.cpp: complete donor function set",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DMaterialAnm.cpp: only documented native body adaptations",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DMaterialAttach.cpp: complete donor function set",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DMaterialAttach.cpp: only documented native body adaptations",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DShapeTable.cpp: complete donor function set",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DShapeTable.cpp: only documented native body adaptations",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "nine old providers deleted",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "one CPP provider for each restored symbol",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "name": "both original diffLight overrides declared",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "light-count bits reach original light upload",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "packed RGBA uses endian reads",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "unaligned texture register uses endian read",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "original signed LOD casts retained",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "PPC texture matrix FP contract boundary retained",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "default light data preserved from prior provider",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "native allocation sizing retained",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "single original TEV-order assignment provider",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "single GD command header provider",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "display-list device scope untouched",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "all touched existing files were clean before changes",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "no added trailing whitespace",
+      "passed": true,
+      "evidence": null
+    }
+  ]
+}
