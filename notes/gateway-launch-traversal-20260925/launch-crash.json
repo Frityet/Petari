@@ -1,0 +1,415 @@
+{
+  "pid": 57882,
+  "procName": "smg-pc",
+  "captureTime": "2026-09-25 21:30:27.5217 +0100",
+  "exception": {
+    "codes": "0x0000000000000001, 0x00000000cc008000",
+    "rawCodes": [
+      1,
+      3422584832
+    ],
+    "type": "EXC_BAD_ACCESS",
+    "signal": "SIGSEGV",
+    "subtype": "KERN_INVALID_ADDRESS at 0x00000000cc008000"
+  },
+  "termination": {
+    "flags": 0,
+    "code": 11,
+    "namespace": "SIGNAL",
+    "indicator": "Segmentation fault: 11",
+    "byProc": "exc handler",
+    "byPid": 57882
+  },
+  "faultingThread": 0,
+  "usedImages": [
+    {
+      "source": "P",
+      "arch": "arm64",
+      "base": 4332240896,
+      "CFBundleShortVersionString": "0.1.0",
+      "CFBundleIdentifier": "org.petari.smg-pc.game",
+      "size": 16842752,
+      "uuid": "7f95a328-6654-33d8-96a8-671dea0f048d",
+      "path": "/Users/USER/*/smg-pc.app/Contents/MacOS/smg-pc",
+      "name": "smg-pc",
+      "CFBundleVersion": "1"
+    },
+    {
+      "source": "P",
+      "arch": "arm64",
+      "base": 4365942784,
+      "size": 770048,
+      "uuid": "2f2000a9-e70a-3b30-bfc9-f6bff9fd3e8b",
+      "path": "/opt/homebrew/*/libc++.1.0.dylib",
+      "name": "libc++.1.0.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64",
+      "base": 4365107200,
+      "size": 196608,
+      "uuid": "d0e9ca85-6608-37ca-9250-8651e3ea2249",
+      "path": "/opt/homebrew/*/libc++abi.1.0.dylib",
+      "name": "libc++abi.1.0.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64",
+      "base": 4364861440,
+      "size": 49152,
+      "uuid": "afaa7230-c682-3c49-a8cd-d117c5d61e0e",
+      "path": "/opt/homebrew/*/libunwind.1.0.dylib",
+      "name": "libunwind.1.0.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 4661280768,
+      "size": 49152,
+      "uuid": "9ef9e491-f3d3-322c-918a-559d3b858d9a",
+      "path": "/usr/lib/libobjc-trampolines.dylib",
+      "name": "libobjc-trampolines.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 4832460800,
+      "CFBundleShortVersionString": "2.0.0",
+      "CFBundleIdentifier": "com.apple.iokit.IOHIDLib",
+      "size": 49152,
+      "uuid": "f3e9dcc5-2e8c-3e7a-bcaf-6491a77bf5cd",
+      "path": "/System/Library/Extensions/IOHIDFamily.kext/Contents/PlugIns/IOHIDLib.plugin/Contents/MacOS/IOHIDLib",
+      "name": "IOHIDLib",
+      "CFBundleVersion": "2.0.0"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 5280432128,
+      "size": 114688,
+      "uuid": "b7d8c7ba-8c30-3362-b3c7-d0998077dc1d",
+      "path": "/Volumes/VOLUME/*/libMetalMetricsInterpose.dylib",
+      "name": "libMetalMetricsInterpose.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6610264064,
+      "size": 784100,
+      "uuid": "d341ddcb-7969-3a9c-8e03-0cf4751398a9",
+      "path": "/usr/lib/dyld",
+      "name": "dyld"
+    },
+    {
+      "size": 0,
+      "source": "A",
+      "base": 0,
+      "uuid": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6614515712,
+      "size": 38132,
+      "uuid": "080e4444-a0fb-3913-9756-4e470015f32f",
+      "path": "/usr/lib/system/libsystem_platform.dylib",
+      "name": "libsystem_platform.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6614204416,
+      "size": 256428,
+      "uuid": "f63bf418-8f75-34a4-aaf1-8caf2b9b6a05",
+      "path": "/usr/lib/system/libsystem_kernel.dylib",
+      "name": "libsystem_kernel.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6612643840,
+      "size": 287136,
+      "uuid": "022bf08f-0b3a-3225-9e65-16d1553ce90d",
+      "path": "/usr/lib/system/libdispatch.dylib",
+      "name": "libdispatch.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6614462464,
+      "size": 51484,
+      "uuid": "5a1828c3-cbc2-3b85-bd07-c8ed10021a41",
+      "path": "/usr/lib/system/libsystem_pthread.dylib",
+      "name": "libsystem_pthread.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6614749184,
+      "CFBundleShortVersionString": "6.9",
+      "CFBundleIdentifier": "com.apple.CoreFoundation",
+      "size": 4787872,
+      "uuid": "727e905e-f344-3823-8e13-e7a096388321",
+      "path": "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation",
+      "name": "CoreFoundation",
+      "CFBundleVersion": "5027.0.69"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6688141312,
+      "CFBundleShortVersionString": "6.9",
+      "CFBundleIdentifier": "com.apple.AppKit",
+      "size": 23340300,
+      "uuid": "2688afbc-5c39-3132-bcf5-8d00d32d7615",
+      "path": "/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit",
+      "name": "AppKit",
+      "CFBundleVersion": "2775.10.103.1"
+    }
+  ],
+  "faulting_thread": {
+    "threadState": {
+      "x": [
+        {
+          "value": 31242
+        },
+        {
+          "value": 6134632512
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 503813907808
+        },
+        {
+          "value": 525705346240
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 6
+        },
+        {
+          "value": 18446744072367376383
+        },
+        {
+          "value": 1
+        },
+        {
+          "value": 503813907808
+        },
+        {
+          "value": 524288
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 855638143
+        },
+        {
+          "value": 503825407472
+        },
+        {
+          "value": 8866216378332405045
+        },
+        {
+          "value": 8866216378332405045
+        },
+        {
+          "value": 6614531424,
+          "symbolLocation": 0,
+          "symbol": "_platform_memmove"
+        },
+        {
+          "value": 4373888608
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 503825407472
+        },
+        {
+          "value": 1065353216
+        },
+        {
+          "value": 1
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 20
+        },
+        {
+          "value": 3422584832
+        },
+        {
+          "value": 1056964608
+        },
+        {
+          "value": 525767605696
+        },
+        {
+          "value": 1
+        },
+        {
+          "value": 6134632992
+        }
+      ],
+      "flavor": "ARM_THREAD_STATE64",
+      "lr": {
+        "value": 4335952428
+      },
+      "cpsr": {
+        "value": 1610612736
+      },
+      "fp": {
+        "value": 6134632816
+      },
+      "sp": {
+        "value": 6134632576
+      },
+      "esr": {
+        "value": 2449473606,
+        "description": "(Data Abort) byte write Translation fault"
+      },
+      "pc": {
+        "value": 4335952440,
+        "matchesCrashFrame": 1
+      },
+      "far": {
+        "value": 3422584832
+      }
+    },
+    "id": 6721712,
+    "triggered": true,
+    "name": "Main thread",
+    "queue": "com.apple.main-thread",
+    "frames": [
+      {
+        "symbol": "SpinDriverPathDrawer::sendPoint(JGeometry::TVec3<float> const&, float, float) const",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 3711544,
+        "symbolLocation": 0,
+        "sourceLine": 369,
+        "sourceFile": "SpinDriverPathDrawer.cpp"
+      },
+      {
+        "imageOffset": 3711544,
+        "sourceLine": 350,
+        "sourceFile": "SpinDriverPathDrawer.cpp",
+        "symbol": "SpinDriverPathDrawer::draw() const",
+        "imageIndex": 0,
+        "symbolLocation": 504
+      },
+      {
+        "imageOffset": 3711532,
+        "sourceLine": 348,
+        "sourceFile": "SpinDriverPathDrawer.cpp",
+        "symbol": "SpinDriverPathDrawer::draw() const",
+        "imageIndex": 0,
+        "symbolLocation": 492
+      },
+      {
+        "imageOffset": 2469952,
+        "sourceLine": 126,
+        "sourceFile": "NameObjCategoryList.cpp",
+        "symbol": "NameObjCategoryList::execute(int)",
+        "imageIndex": 0,
+        "symbolLocation": 660
+      },
+      {
+        "imageOffset": 2477536,
+        "sourceLine": 251,
+        "sourceFile": "NameObjListExecutor.cpp",
+        "symbol": "NameObjListExecutor::executeDraw(int)",
+        "imageIndex": 0,
+        "symbolLocation": 140
+      },
+      {
+        "imageOffset": 2569208,
+        "sourceLine": 249,
+        "sourceFile": "SceneExecutor.cpp",
+        "symbol": "SceneFunction::executeDrawListXlu()",
+        "imageIndex": 0,
+        "symbolLocation": 44
+      },
+      {
+        "imageOffset": 2562304,
+        "sourceLine": 438,
+        "sourceFile": "GameScene.cpp",
+        "symbol": "GameScene::draw3D() const",
+        "imageIndex": 0,
+        "symbolLocation": 260
+      },
+      {
+        "imageOffset": 2561844,
+        "sourceLine": 218,
+        "sourceFile": "GameScene.cpp",
+        "symbol": "GameScene::draw() const",
+        "imageIndex": 0,
+        "symbolLocation": 56
+      },
+      {
+        "imageOffset": 1849856,
+        "sourceLine": 246,
+        "sourceFile": "GameSystemSceneController.cpp",
+        "symbol": "GameSystemSceneController::drawScene()",
+        "imageIndex": 0,
+        "symbolLocation": 76
+      },
+      {
+        "imageOffset": 1896940,
+        "sourceLine": 208,
+        "sourceFile": "GameSystem.cpp",
+        "symbol": "GameSystem::draw()",
+        "imageIndex": 0,
+        "symbolLocation": 24
+      },
+      {
+        "imageOffset": 1896840,
+        "sourceLine": 198,
+        "sourceFile": "GameSystem.cpp",
+        "symbol": "GameSystem::frameLoop()",
+        "imageIndex": 0,
+        "symbolLocation": 40
+      },
+      {
+        "symbol": "smgpc::app::(anonymous namespace)::OriginalProcess::frame(smgpc::render::AuroraWindow&, unsigned long long)",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 14508,
+        "symbolLocation": 512,
+        "sourceLine": 321,
+        "sourceFile": "OriginalGameApplication.cpp"
+      },
+      {
+        "imageOffset": 14508,
+        "sourceLine": 530,
+        "sourceFile": "OriginalGameApplication.cpp",
+        "symbol": "smgpc::app::run_original_game(smgpc::app::BootstrapConfiguration const&, smgpc::logging::ILogger&, smgpc::app::OriginalGameDebugObserver)",
+        "imageIndex": 0,
+        "symbolLocation": 4332
+      },
+      {
+        "imageOffset": 6440,
+        "sourceLine": 54,
+        "sourceFile": "main.cpp",
+        "symbol": "aurora_main",
+        "imageIndex": 0,
+        "symbolLocation": 616
+      },
+      {
+        "imageOffset": 204416,
+        "symbol": "start",
+        "symbolLocation": 6688,
+        "imageIndex": 7
+      }
+    ]
+  }
+}

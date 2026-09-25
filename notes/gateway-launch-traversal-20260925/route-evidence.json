@@ -1,0 +1,620 @@
+{
+  "version": 1,
+  "scope": "One fresh-save ordinary-controller Gateway route; no actor, flag, nerve or position writes reported by operator. Evidence extraction only; no code/input/build/test changes.",
+  "outcome": "All three rabbits, tower ascent, tutorial, crystal gate, launch-star Capture and ShootStart reached; entered Shoot then SIGSEGV before observed traversal/landing.",
+  "source_head_at_launch": "c3f55804a08e0fde8e91b9c8d3725f9f8c1d9937",
+  "source_baseline": "Initial dirty state and exact patches are retained in before-status.txt / before-worktree.patch / before-index.patch; this is not a claim of a clean checkout.",
+  "run": {
+    "started_at": "2026-09-25T20:23:22.371681+00:00",
+    "pid": 57882,
+    "binary_sha256": "dd622defca96d44fecefe82d865e5019c201fdcd4c9bedfece6105fa9b2bffcc",
+    "binary_sha256_after": "dd622defca96d44fecefe82d865e5019c201fdcd4c9bedfece6105fa9b2bffcc",
+    "binary_unchanged": true,
+    "elapsed_seconds": 425.16914137499407,
+    "exit_code": -11,
+    "timeout_terminated": false,
+    "process_still_exists_after_wait": false,
+    "completed_frames": null,
+    "verified_bounded_completion": false
+  },
+  "requested_frame_limit": 100000,
+  "crash": {
+    "signal": "SIGSEGV",
+    "invalid_address": "0x00000000cc008000",
+    "last_logged_processing_frame": 24303,
+    "last_logged_frame_source": "route.log final debug-input-file entry; completed frame count unavailable",
+    "faulting_thread": 0,
+    "stack_top": [
+      {
+        "symbol": "SpinDriverPathDrawer::sendPoint(JGeometry::TVec3<float> const&, float, float) const",
+        "sourceFile": "SpinDriverPathDrawer.cpp",
+        "sourceLine": 369
+      },
+      {
+        "symbol": "SpinDriverPathDrawer::draw() const",
+        "sourceFile": "SpinDriverPathDrawer.cpp",
+        "sourceLine": 350
+      }
+    ],
+    "metadata_source": "launch-crash.json",
+    "limitation": "Exact crash frame is not directly logged. No clean teardown, BlackHole landing, later chip gate or Grand Star completion.",
+    "exact_crash_frame": null
+  },
+  "trace": {
+    "path": "route-actors.jsonl",
+    "bytes": 277436576,
+    "sha256": "bb44be4d918f704d20314238031d5f721f1cd0f3dc5c08cc16e6de9b07f80777",
+    "hash_taken_after_terminal_report": true,
+    "snapshot_count": 2431,
+    "first_frame": 0,
+    "last_frame": 24300,
+    "sample_interval": 10,
+    "transition_semantics": "Milestone frames are first observed sampled states, not exact underlying transition times."
+  },
+  "snapshot_extract": {
+    "path": "milestone-snapshots.jsonl.gz",
+    "frames": [
+      3160,
+      4660,
+      7630,
+      8120,
+      8590,
+      13860,
+      13980,
+      16990,
+      21190,
+      22110,
+      22120,
+      22940,
+      23000,
+      24260,
+      24300
+    ],
+    "count": 15,
+    "uncompressed_bytes": 1717947,
+    "method": "Exact original JSONL lines, including all actors/fields, selected from terminal trace; no reserialization. This is not a full trace compression."
+  },
+  "rabbit_operator_results": [
+    {
+      "label": "bush",
+      "rabbit_id": 1090,
+      "caught_frame": 3160,
+      "tico_id": 1075,
+      "tico_talk_frame": 3420,
+      "completed_frame": 3530
+    },
+    {
+      "label": "pipe",
+      "rabbit_id": 1085,
+      "caught_frame": 4660,
+      "tico_id": 1069,
+      "tico_talk_frame": 4920,
+      "completed_frame": 5030
+    },
+    {
+      "label": "hole",
+      "rabbit_id": 1095,
+      "caught_frame": 7630,
+      "tico_id": 1081,
+      "tico_talk_frame": 7880,
+      "completed_frame": 8120
+    }
+  ],
+  "operator_handoff": {
+    "climb_start_frame": 9010,
+    "waypoint27_frame": 13860,
+    "tutorial_phase_frame": 13980,
+    "completion_event_frame": 16990,
+    "source": "climb.jsonl",
+    "current_completion_rule": "tutorial phase, Rosetta dead, frame >16000; exits through finally cleanup"
+  },
+  "milestones": [
+    {
+      "frame": 3160,
+      "event": "Bush rabbit1090 first sampled Caught",
+      "actors": [
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 6,
+            "type": "N16NrvRunawayRabbit22RunawayRabbitNrvCaughtE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 4660,
+      "event": "Pipe rabbit1085 first sampled Caught",
+      "actors": [
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 3,
+            "type": "N16NrvRunawayRabbit22RunawayRabbitNrvCaughtE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 7630,
+      "event": "Hole rabbit1095 first sampled Caught",
+      "actors": [
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 2,
+            "type": "N16NrvRunawayRabbit22RunawayRabbitNrvCaughtE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 8120,
+      "event": "Hole Tico1081 enters WhiteOut after dialogue",
+      "actors": [
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 4,
+            "type": "N14NrvRunawayTico22RunawayTicoNrvWhiteOutE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 8590,
+      "event": "Rosetta1060 alive and visible; rabbit operator completes",
+      "actors": [
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 6,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 13860,
+      "event": "Climber reaches waypoint27",
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 13780,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "position": [
+            14207.4599609375,
+            -8273.7626953125,
+            7758.4931640625
+          ],
+          "status": 0,
+          "bound": false
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 5276,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 13980,
+      "event": "Spin tutorial entry; Tico903 alive and Rosetta at demo pose",
+      "actors": [
+        {
+          "id": 903,
+          "type": "4Tico",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 4,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 5396,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 16990,
+      "event": "Rosetta1060 and Tico903 retire; climber emits tutorial-finished-handoff",
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 16910,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "position": [
+            14368.75390625,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "status": 0,
+          "bound": false
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 3011,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 8403,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 21190,
+      "event": "Crystal1013 first sampled Break, hidden",
+      "actors": [
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 7,
+            "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 22110,
+      "event": "Crystal1020 first sampled Break; driver864 Appear",
+      "actors": [
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 3,
+            "type": "N18NrvSuperSpinDriver24SuperSpinDriverNrvAppearE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 14,
+            "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 3,
+            "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 22120,
+      "event": "Driver864 first sampled alive Wait",
+      "actors": [
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 22940,
+      "event": "Driver864 Capture step4; Mario bound",
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 22854,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "position": [
+            15113.15234375,
+            -8304.10546875,
+            7525.814453125
+          ],
+          "status": 0,
+          "bound": true
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 4,
+            "type": "N18NrvSuperSpinDriver25SuperSpinDriverNrvCaptureE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 23000,
+      "event": "Capture expires; driver864 Wait and Mario unbound",
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 22914,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "position": [
+            15079.193359375,
+            -8051.71142578125,
+            7577.3212890625
+          ],
+          "status": 0,
+          "bound": false
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 2,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 24260,
+      "event": "Driver864 ShootStart step7; Mario bound",
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 24174,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "position": [
+            15049.1171875,
+            -8196.78515625,
+            7532.853515625
+          ],
+          "status": 0,
+          "bound": true
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 7,
+            "type": "N18NrvSuperSpinDriver28SuperSpinDriverNrvShootStartE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 24300,
+      "event": "Last trace: driver864 Shoot step0; Mario bound",
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 24214,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "status": 0,
+          "bound": true
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver23SuperSpinDriverNrvShootE"
+          }
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "tower-ascent.jpg",
+      "frame": null,
+      "visible_evidence": "Mario on authored tower stairs; Rosalina visible above.",
+      "source": "Parent operator saved UI capture from this run; exact frame not recorded in artifact",
+      "format": "JPEG",
+      "bytes": 409753,
+      "sha256": "2baae144686d854a78139b0e8de235d2ba7b9428917ff3ed7887b48e1c03c29d"
+    },
+    {
+      "path": "route-frame15000.png",
+      "frame": 15000,
+      "visible_evidence": "Rendered Rosalina tutorial close-up.",
+      "source": "Scheduled game renderer capture: route.json screenshot frame15000",
+      "format": "PNG",
+      "bytes": 14758474,
+      "sha256": "bd4469b153a6164f37b4fb9f384290f2f154575a61c17ccbed34f71642f771b6"
+    },
+    {
+      "path": "crystal-spin.jpg",
+      "frame": null,
+      "visible_evidence": "Mario beside remaining crystal cluster, Luma and spin/shard effects; does not show all cages gone.",
+      "source": "Parent operator saved UI capture from this run; exact frame not recorded in artifact",
+      "format": "JPEG",
+      "bytes": 533047,
+      "sha256": "e8335ec596cc7f738d7ef100cba1a3c63a43c11dd7d2c127b1775098ba915c42"
+    },
+    {
+      "path": "launch-reveal.jpg",
+      "frame": null,
+      "visible_evidence": "Revealed orange launch star with Mario and crystal fragments.",
+      "source": "Parent operator saved UI capture from this run; exact frame not recorded in artifact",
+      "format": "JPEG",
+      "bytes": 549784,
+      "sha256": "fc92e89cbb112d4938f68c7eff91803beacbfd8ba857c34bf2ed7f85ffd21e2a"
+    },
+    {
+      "path": "first-launch.jpg",
+      "frame": null,
+      "visible_evidence": "Luma dialogue beside revealed launch star; Mario remains on tower.",
+      "source": "Parent operator saved UI capture from this run; exact frame not recorded in artifact",
+      "format": "JPEG",
+      "bytes": 441190,
+      "sha256": "a0326c299228901b7999d09ba9a25e789349d037b3b49353d7de1768d145ea64"
+    },
+    {
+      "path": "launch-flight.jpg",
+      "frame": null,
+      "visible_evidence": "Mario inside rotating launch star at tower; no interplanetary flight or landing visible.",
+      "source": "Parent operator saved UI capture from this run; exact frame not recorded in artifact",
+      "format": "JPEG",
+      "bytes": 523313,
+      "sha256": "5adf4ffeb6dad0cfc66a663c5f6f7a3ffaa2eadd6d0971840cdc1c0dd76c92ce"
+    }
+  ],
+  "limitations": [
+    "The trace does not expose the spin-permission bit or pad acceleration gesture; actual cage Break and driver ShootStart provide behavior evidence.",
+    "The frame interval can miss brief player states; no claim that every X gesture appears as a sampled MarioMagic state.",
+    "UI JPEG filenames are descriptive, not proof of a frame or completed flight.",
+    "Runtime IDs were rebound in this run; previous route timings must not be substituted.",
+    "This crashed pre-fix executable does not validate subsequent FIFO/GX source changes or builds."
+  ],
+  "artifacts": [
+    {
+      "path": "route.json",
+      "bytes": 2101,
+      "sha256": "0dd6f7df1f36e5112989d0936767476267b4f7707d02509d5265b10dff4393ad"
+    },
+    {
+      "path": "route-launch.json",
+      "bytes": 1729,
+      "sha256": "1bec4f1fd45bdc67ed69da51fbaeae1972b26539ed397af330f083a33156ad10"
+    },
+    {
+      "path": "launch-crash.json",
+      "bytes": 10585,
+      "sha256": "0360aa76a65c4c768211bb789b2aee6a3eafd3b5a92fc56304c68e725619c72c"
+    },
+    {
+      "path": "before-head.txt",
+      "bytes": 41,
+      "sha256": "72e14c922ae1ce5414b98ad14b3cc6322f8161a93bc84ec28f46ece983982b80"
+    },
+    {
+      "path": "before-status.txt",
+      "bytes": 1194,
+      "sha256": "12a891b9b0dc43119c660ad1264b7316e8c9f009580da9abf92cd12058d9dfa6"
+    },
+    {
+      "path": "before-worktree.patch",
+      "bytes": 48913,
+      "sha256": "4e6cc79cbd3e7a60079e971f77bb3bca13634dfca73d4f1dcb6f0cd9565952cc"
+    },
+    {
+      "path": "before-index.patch",
+      "bytes": 40117,
+      "sha256": "288c9971c3f77f8e8440c8e9e0f63892204d46e6f2f8fbf2064959988601e096"
+    },
+    {
+      "path": "operator.jsonl",
+      "bytes": 667841,
+      "sha256": "d57341e00188575b5d470af51d8c5de5dbfb59ddf66485005ad6e94072b12096"
+    },
+    {
+      "path": "climb.jsonl",
+      "bytes": 396478,
+      "sha256": "4545a1103a2595b364d13eab8f93217c78565a6ce8ee3ff6115495100c3a2a66"
+    },
+    {
+      "path": "navigation.jsonl",
+      "bytes": 275556,
+      "sha256": "08b48bcd140dbcd2d7de1a81fb05d9b510087efad0cc43f9dfe563b7f6d44d0f"
+    },
+    {
+      "path": "route.log",
+      "bytes": 298314,
+      "sha256": "4e9ea1a2c96243237ef3eb9ab01b00c2315b11fc60709de0db9d37c08d45f0bb"
+    },
+    {
+      "path": "milestone-snapshots.jsonl.gz",
+      "bytes": 316752,
+      "sha256": "71b7de57d84df8b6660eb2d421ae77443e87f3149a6da31480573e1139a2927c"
+    }
+  ]
+}
