@@ -13,6 +13,7 @@ public:
     enum MenuType { ActivePause = 0, SceneInformation = 1 };
 
     GamePauseSequence();
+    virtual ~GamePauseSequence();
 
     virtual void init(const JMapInfoIter&);
 

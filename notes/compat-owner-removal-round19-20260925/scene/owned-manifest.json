@@ -1,0 +1,21 @@
+{
+  "scope": "Actual Scene lifetime and execution ownership; Scene.hpp/.cpp only",
+  "files": [
+    {
+      "path": "src/Game/Scene/Scene.hpp",
+      "before": "notes/compat-owner-removal-round19-20260925/scene/before/src/Game/Scene/Scene.hpp",
+      "before_sha256": "85079cfa7c53b62c0bbdb076061d370833961f2a6c04e5ca012d2351757bebf0",
+      "initial_git_status": "clean",
+      "action": "modify",
+      "after_sha256": "74cf5c7a142abd743bceab8daa286063b57c120d471919246da1e0f1ecbb158f"
+    },
+    {
+      "path": "src/Game/Scene/Scene.cpp",
+      "before": "notes/compat-owner-removal-round19-20260925/scene/before/src/Game/Scene/Scene.cpp",
+      "before_sha256": "e4ea3c1b3ae89059fc2fc228a408df43f8379e77ec177a411090cc044039cca5",
+      "initial_git_status": "clean",
+      "action": "modify",
+      "after_sha256": "d5ff08758b6fecb70f3c1e6e56377f088fd65b2184838fc0958a1c321423a3a8"
+    }
+  ]
+}

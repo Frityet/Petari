@@ -1,0 +1,116 @@
+[0mchecking for Xcode SDK ... [38;5;2;1m/Applications/Xcode.app (sdk: 27.0, arm64-apple-macos26.0)[0m
+[0mchecking for disc ... [38;5;1;1mno[0m
+[0mchecking for Xcode SDK ... [38;5;2;1m/Applications/Xcode.app (sdk: 27.0, arm64-apple-macos26.0)[0m
+[0m[38;5;2;1m[  9%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/ScreenUtil.cpp[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystemSceneController.cpp[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystemFunction.cpp[0m
+[0m[38;5;2;1m[ 51%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/GamePauseSequence.cpp[0m
+[0m[38;5;2;1m[ 51%]:[0m [38;5;5;1m<smg-pc-app>[0m cache compiling.debug src/app/OriginalGameApplication.cpp[0m
+[0m[38;5;2;1m[ 55%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/NameObj/NameObjFactory.cpp[0m
+[0m[38;5;2;1m[ 55%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Scene/SceneFactory.cpp[0m
+[0m[38;5;2;1m[ 55%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Scene/Scene.cpp[0m
+[0m[38;5;2;1m[ 56%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Scene/IntermissionScene.cpp[0m
+[0m[38;5;2;1m[ 56%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Scene/PlayTimerScene.cpp[0m
+[0m[38;5;2;1m[ 56%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Scene/GameSceneFunction.cpp[0m
+[0m[38;5;2;1m[ 56%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Scene/SceneFunction.cpp[0m
+[0m[38;5;2;1m[ 56%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Scene/GameScenePauseControl.cpp[0m
+[0m[38;5;2;1m[ 56%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Scene/GameScene.cpp[0m
+[0m[38;5;2;1m[ 56%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Scene/ScenarioSelectScene.cpp[0m
+[0m[38;5;2;1m[ 56%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Scene/LogoScene.cpp[0m
+[0m[38;5;3;1msrc/Game/Util/ScreenUtil.cpp:38:70: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   38 |     CaptureScreenDirector* getCaptureScreenDirector() __attribute__((noinline)) {
+      |                                                                      ^
+src/Game/Util/ScreenUtil.cpp:42:56: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   42 |     PlayTimerScene* getPlayTimerScene() __attribute__((noinline)) {
+      |                                                        ^
+src/Game/Util/ScreenUtil.cpp:60:50: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   60 |     StarCounter* getStarCounter() __attribute__((noinline)) {
+      |                                                  ^
+src/Game/Util/ScreenUtil.cpp:64:60: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   64 |     StarPieceCounter* getStarPieceCounter() __attribute__((noinline)) {
+      |                                                            ^
+4 warnings generated.[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/SceneScheduler.cpp[0m
+[0m[38;5;3;1msrc/Game/Scene/GameSceneFunction.cpp:8:46: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+    8 |     GameScene* getGameScene() __attribute__((noinline)) {
+      |                                              ^
+1 warning generated.[0m
+[0m[38;5;3;1msrc/Game/System/GameSystemFunction.cpp:33:60: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   33 |     AudSystemWrapper* getAudSystemWrapper() __attribute__((noinline)) {
+      |                                                            ^
+src/Game/System/GameSystemFunction.cpp:37:72: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   37 |     SaveDataHandleSequence* getSaveDataHandleSequence() __attribute__((noinline)) {
+      |                                                                        ^
+2 warnings generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/Screen/GamePauseSequence.cpp:12:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/System/GameSystemSceneController.cpp:19:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+src/Game/System/GameSystemSceneController.cpp:31:62: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   31 |     AudSystemWrapper* getAudioSystemWrapper() __attribute__((noinline)) {
+      |                                                              ^
+2 warnings generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/Scene/GameScene.cpp:39:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/NameObj/NameObjFactory.cpp:7:
+src/Game/Enemy.hpp:23:10: warning: non-portable path to file '"Game/Enemy/KarikariDirector.hpp"'; specified path differs in case from file name on disk [-Wnonportable-include-path]
+   23 | #include "Game/Enemy/KariKariDirector.hpp"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |          "Game/Enemy/KarikariDirector.hpp"
+1 warning generated.
+In file included from src/Game/NameObj/NameObjFactory.cpp:11:
+In file included from src/Game/MapObj.hpp:99:
+src/Game/MapObj/FloaterFloatingForce.hpp:21:16: warning: returning reference to local temporary object [-Wreturn-stack-address]
+   21 |         return TVec3f(0.0f, 0.0f, 0.0f);
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from src/Game/NameObj/NameObjFactory.cpp:17:
+In file included from src/Game/Screen.hpp:20:
+In file included from src/Game/Screen/CustomTagProcessor.hpp:4:
+In file included from src/nw4r/lyt/textBox.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare][0m
+[0m[38;5;3;1mIn file included from src/app/OriginalGameApplication.cpp:11:
+In file included from src/Game/System/FileLoader.hpp:3:
+In file included from src/Game/System/ArchiveHolder.hpp:4:
+In file included from src/JSystem/JKernel/JKRMemArchive.hpp:3:
+src/JSystem/JKernel/JKRArchive.hpp:122:33: warning: 'getResource' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  122 |     [[nodiscard]] virtual void *getResource(const char *pPath) const;
+      |                                 ^
+src/JSystem/JKernel/JKRFileLoader.hpp:15:19: note: overridden virtual function is here
+   15 |     virtual void* getResource(const char*) const = 0;
+      |                   ^
+In file included from src/app/OriginalGameApplication.cpp:11:
+In file included from src/Game/System/FileLoader.hpp:3:
+In file included from src/Game/System/ArchiveHolder.hpp:4:
+In file included from src/JSystem/JKernel/JKRMemArchive.hpp:3:
+src/JSystem/JKernel/JKRArchive.hpp:124:33: warning: 'getResource' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  124 |     [[nodiscard]] virtual void *getResource(std::uint32_t, const char *pPath) const;[0m
+[0m[38;5;3;1mIn file included from src/runtime/SceneScheduler.cpp:32:
+In file included from src/Game/Screen/LayoutManager.hpp:6:
+In file included from src/nw4r/lyt/layout.h:3:
+In file included from src/nw4r/lyt/animation.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                                              ~~~ ^  ~~~~~~~~~~~
+In file included from src/runtime/SceneScheduler.cpp:32:
+In file included from src/Game/Screen/LayoutManager.hpp:6:
+In file included from src/nw4r/lyt/layout.h:4:[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-game>[0m [38;5;5;1marchiving.debug libsmg-pc-game.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-app>[0m [38;5;5;1marchiving.debug libsmg-pc-app.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc>[0m [38;5;5;1mlinking.debug smg-pc[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc>[0m [38;5;5;1mgenerating.xcode.debug smg-pc.app[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[38;5;2;1m[100%]:[0m [38;5;2;1mbuild ok, spent 6.228s[0m

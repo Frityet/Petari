@@ -1,0 +1,32 @@
+{
+  "scope": "Delete remaining scene sidecars through actual Scene and GameScene lifetime ownership; use original controller initialization state. Preserve all unrelated index and worktree changes.",
+  "paths": [
+    "scripts/generate_nameobj_catalog.py",
+    "scripts/source_closeness_audit.lua",
+    "src/Game/Scene/GameScene.cpp",
+    "src/Game/Scene/GameScene.hpp",
+    "src/Game/Scene/GameScenePauseControl.cpp",
+    "src/Game/Scene/Scene.cpp",
+    "src/Game/Scene/Scene.hpp",
+    "src/Game/Scene/SceneFunction.cpp",
+    "src/Game/Screen/GamePauseSequence.cpp",
+    "src/Game/Screen/GamePauseSequence.hpp",
+    "src/Game/xmake.lua",
+    "src/app/OriginalGameApplication.cpp",
+    "src/runtime/SceneScheduler.cpp",
+    "src/scene/GameSceneBinding.cpp",
+    "src/scene/GameSceneBinding.hpp",
+    "src/scene/OriginalSceneSupport.cpp",
+    "src/scene/OriginalSceneSupport.hpp",
+    "src/scene/SceneInitializationState.cpp",
+    "src/scene/SceneInitializationState.hpp",
+    "src/scene/SceneLifetimeBinding.cpp",
+    "src/scene/SceneLifetimeBinding.hpp",
+    "tests/NameObjFactoryPlacementTests.cpp",
+    "tests/SceneExecutionFixture.hpp",
+    "tests/SceneInitializationStateTests.cpp",
+    "tests/SceneLifetimeBindingTests.cpp",
+    "tests/xmake.lua"
+  ],
+  "existing_paths_incorporated": []
+}

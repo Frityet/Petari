@@ -1891,22 +1891,6 @@ target("smg-pc-star-pointer-real-or-absent-tests")
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
 
-target("smg-pc-scene-initialization-state-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    set_rundir(os.projectdir())
-    add_files("SceneInitializationStateTests.cpp")
-    add_deps {
-        "smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
-        "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"
-    }
-    add_tests("scene_initialization_state", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
 target("smg-pc-original-fur-drawer-tests")
     set_kind("binary")
     set_default(false)
@@ -2247,18 +2231,6 @@ target("smg-pc-original-scene-wipe-owner-tests")
     add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
               "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
     add_tests("original_scene_wipe_owner", {
-        group = "aurora", rundir = os.projectdir(), realtime_output = true
-    })
-
-
-target("smg-pc-scene-lifetime-binding-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    add_files("SceneLifetimeBindingTests.cpp")
-    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
-              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
-    add_tests("scene_lifetime_binding", {
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
 

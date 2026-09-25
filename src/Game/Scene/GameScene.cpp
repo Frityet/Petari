@@ -1,7 +1,9 @@
 #include "compat/Cp932Literal.hpp"
-#if defined(TARGET_PC)
-#include "scene/GameSceneBinding.hpp"
-#endif
+#include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+#include <aurora/exception.hpp>
+#include <stdexcept>
+#include <utility>
 #include "Game/Scene/GameScene.hpp"
 #include "Game/AudioLib/AudSceneMgr.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
@@ -48,6 +50,10 @@
 #include <JSystem/J3DGraphBase/J3DSys.hpp>
 
 namespace {
+    bool isUnclaimedGameSceneChild(const NameObj* pObject, const void*) noexcept {
+        return !smgpc::compat::name_obj_runtime_ownership_is_claimed(pObject);
+    }
+
     CometRetryButton* getCometRetryButton() {
         return MR::getSceneObj< CometRetryButton >(SceneObj_CometRetryButton);
     }
@@ -74,12 +80,31 @@ GameScene::GameScene()
 }
 
 GameScene::~GameScene() {
-#if defined(TARGET_PC)
-    smgpc::scene::prepare_game_scene_retirement(*this);
-#endif
+    prepareNativeRetirement();
     MR::destroySceneMessage();
     NPCFunction::deleteNPCData();
     MR::onStarPointerSceneOut();
+
+    const smgpc::compat::JkrHostAllocationScope host;
+    if (mNativeChildrenInitialized) {
+        mNativeChildrenInitialized = false;
+        const smgpc::compat::NameObjRuntimeRegistrationMarker marker{mNativeChildRegistrationMarker};
+        while (auto* child = smgpc::compat::newest_name_obj_runtime_object_since_if(marker, isUnclaimedGameSceneChild, nullptr)) {
+            delete child;
+        }
+    }
+    mPauseSeq = nullptr;
+    mStageClearSeq = nullptr;
+    delete std::exchange(mScenarioCamera, nullptr);
+    delete std::exchange(mPauseCtrl, nullptr);
+}
+
+void GameScene::initNativeSceneChildren() {
+    if (mNativeChildrenInitialized) {
+        aurora::throw_host_exception< std::logic_error >("GameScene children are already initialized");
+    }
+    mNativeChildRegistrationMarker = smgpc::compat::mark_name_obj_runtime_registrations().next_registration_order;
+    mNativeChildrenInitialized = true;
 }
 
 void GameScene::init() {

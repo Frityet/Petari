@@ -377,7 +377,7 @@ local function classify(pc_text, root_text)
 end
 
 local function compat_group(rel)
-    if rel:match("^scene/") or rel:match("^runtime/Runtime") or rel:match("^runtime/Scene") or rel:match("^runtime/NameObj") then
+    if rel:match("^runtime/Runtime") or rel:match("^runtime/Scene") or rel:match("^runtime/NameObj") then
         return "scene-sequence"
     end
     if rel:match("^render/Effect") then

@@ -25,6 +25,11 @@ namespace {
 GamePauseSequence::GamePauseSequence() : LayoutActor(CP932("ポーズ画面管理"), true), mMenuType(ActivePause), mPauseMenu(nullptr), mWindowMenuFunc(nullptr) {
 }
 
+GamePauseSequence::~GamePauseSequence() {
+    delete mWindowMenuFunc;
+    mWindowMenuFunc = nullptr;
+}
+
 void GamePauseSequence::init(const JMapInfoIter& rIter) {
     if (!MR::isStageDisablePauseMenu()) {
         mPauseMenu = new PauseMenu();

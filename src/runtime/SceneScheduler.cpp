@@ -1271,6 +1271,7 @@ namespace smgpc::runtime {
     void SceneScheduler::clear() {
         while (!_entries.empty()) disconnect_name_obj(*_entries.back().name_obj);
         _layout_draw_adaptors.clear();
+        if (_execution && _execution->mDrawList) _execution->mDrawList->clearNativeCallbacks();
 #ifndef NDEBUG
         _last_execution_trace.clear();
 #endif

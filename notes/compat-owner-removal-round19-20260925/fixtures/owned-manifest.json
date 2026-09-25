@@ -1,0 +1,39 @@
+{
+  "owned_paths": [
+    {
+      "path": "tests/SceneExecutionFixture.hpp",
+      "before_sha256": "a6c73d61abd09df1fabcb6922579f23ad13e8c07119e57e706888de5ff225a43",
+      "before_status": "",
+      "after_sha256": "c2f3236baf159ad8147eaee8832f4336bf91cc5743981f7e02c807add25195ff",
+      "change": "modified"
+    },
+    {
+      "path": "tests/NameObjFactoryPlacementTests.cpp",
+      "before_sha256": "a6ecdbd7a1d6acdfdafcfc90694ecc3fcbb4de01690b53bf2c18e37aa3af9a5e",
+      "before_status": "",
+      "after_sha256": "5ce66a4a1c8a48829207ec637dd4bfa0974172fc584ee1b83bb64a580a6697da",
+      "change": "modified"
+    },
+    {
+      "path": "tests/SceneInitializationStateTests.cpp",
+      "before_sha256": "12daba7bf43678b8d9bf27d7f2340835f7d4b93389f35efe20a81c80dd341af0",
+      "before_status": "",
+      "after_sha256": null,
+      "change": "deleted"
+    },
+    {
+      "path": "tests/SceneLifetimeBindingTests.cpp",
+      "before_sha256": "7ca791a1e792ec06363b9e87e830b2780a093b72e8f6feaad2786e63b7a38c18",
+      "before_status": "",
+      "after_sha256": null,
+      "change": "deleted"
+    },
+    {
+      "path": "tests/xmake.lua",
+      "before_sha256": "2dc05125bc053646c5bb89c151406dffcfea89164edb6b98e87fd8365fccbccc",
+      "before_status": "",
+      "after_sha256": "219751e5c451a6aefb1abee87882acbab28cfef9464956b1d261a3b041466e02",
+      "change": "modified"
+    }
+  ]
+}

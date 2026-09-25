@@ -18,6 +18,8 @@ public:
     virtual void draw() const;
     virtual void calcAnim();
 
+    void initNativeSceneChildren();
+
     void notifyEndScenarioStarter();
     void requestPlayMovieDemo();
     void requestStartGameOverDemo();
@@ -67,4 +69,8 @@ public:
     GameStageClearSequence* mStageClearSeq;                // 0x24
     bool mDraw3D;                                          // 0x28
     u8 _29;
+
+private:
+    u64 mNativeChildRegistrationMarker = 0;
+    bool mNativeChildrenInitialized = false;
 };

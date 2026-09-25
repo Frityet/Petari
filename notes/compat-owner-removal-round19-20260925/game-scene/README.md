@@ -1,0 +1,15 @@
+# GameScene child lifetime ownership
+
+Five actual owner files changed: GameScene.hpp/.cpp, GameScenePauseControl.cpp and GamePauseSequence.hpp/.cpp. GameScenePauseControl already declared its destructor, so its header requires no change. No source wiring, tests, builds or Git operations were performed. Before/after snapshots and scoped patch are included. Root removes the obsolete binding files; the Scene lane owns its base implementation.
+
+GameScene::initNativeSceneChildren() stores the live NameObj registration marker and initialization flag on the actual GameScene. Scene calls it after actual holder initialization and executor binding, matching the old GameSceneBinding marker placement. It rejects repeated initialization; there is no global current_binding or separate captured child pointers.
+
+GameScene destruction first invokes the coordinated noexcept/idempotent Scene::prepareNativeRetirement(), then preserves the original destroySceneMessage/deleteNPCData/onStarPointerSceneOut sequence. It next deletes the newest still-live, unclaimed NameObj identities after its marker, under the original host allocation routing. Claimed SceneObj children remain owned by their actual holder. Because each next identity is looked up after the previous destructor, child destructors that remove other identities do not leave a stale snapshot. It nulls its sequence borrows, deletes its opening-camera state, then its pause control while the actual Scene still owns executor/holder/domain dependencies.
+
+GamePauseSequence::~GamePauseSequence owns the cloned mWindowMenuFunc. This changes deletion from before all NameObj cleanup to the sequence's own retirement, while preserving its only dependency: the captured pause-control pointer outlives the entire NameObj cleanup loop. PauseMenu is itself a registered NameObj and remains part of that reverse-construction cleanup, so the sequence destructor deliberately does not delete mPauseMenu again. The opening camera's ScenarioTitle follows the same registered-NameObj rule.
+
+GameScenePauseControl::~GameScenePauseControl now deletes its actual mPauseChecker. This preserves the old checker-before-control-base-destruction order. The checker is a plain class, not a NameObj or separately claimed child, and source search found no other owning deletion. Opening camera and pause control are NerveExecutors, so their real base destructors release Spine after child cleanup.
+
+Integration: Scene calls initNativeSceneChildren() after executor.bindNativeExecution; GameScene calls the base prepareNativeRetirement() first. Base Scene destruction then disconnects executor registration, releases remaining native layout/actor state, retires claimed holder children, unbinds execution and deletes actual holder/executor. No derived GameScene field is read after its destructor ends.
+
+Validation is source inspection only: old binding order, actual constructors, NameObj ownership claims and all mWindowMenuFunc/mPauseChecker deletion sites were reviewed. Runtime validation is reserved for root's integrated build and smoke.

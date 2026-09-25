@@ -6,7 +6,9 @@
 #include "compat/JkrAllocationDomain.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "Game/NameObj/NameObjExecuteHolder.hpp"
-#include "scene/SceneInitializationState.hpp"
+#include "Game/System/GameSystem.hpp"
+#include "Game/System/GameSystemSceneController.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include <aurora/allocation.hpp>
 #include <algorithm>
@@ -43,19 +45,28 @@ public:
     void complete_initialization() {
         _executor->allocateDrawBufferActorList();
         _executor->nativeRequirements().initConnectting();
-        _initialization.complete();
+        SingletonHolder<GameSystem>::get()->mSceneController->setSceneInitializeState(SceneInitializeState_End);
     }
     void init_after_placement() {
-        const scene::SceneInitializationScope phase(SceneInitializeState_AfterPlacement);
-        for (auto* object : compat::snapshot_name_obj_runtime_objects()) {
-            if (!_holder->ownsNativeObject(object) || std::ranges::find(_completed, object) != _completed.end()) continue;
-            {
-                const aurora::allocation::ClientAllocationScope game({true, true});
-                object->initAfterPlacement();
+        auto& controller = *SingletonHolder<GameSystem>::get()->mSceneController;
+        const auto previous = controller.mSceneInitializeState;
+        controller.setSceneInitializeState(SceneInitializeState_AfterPlacement);
+        try {
+            for (auto* object : compat::snapshot_name_obj_runtime_objects()) {
+                if (!_holder->ownsNativeObject(object) || std::ranges::find(_completed, object) != _completed.end()) continue;
+                {
+                    const aurora::allocation::ClientAllocationScope game({true, true});
+                    object->initAfterPlacement();
+                }
+                _completed.push_back(object);
             }
-            _completed.push_back(object);
+        } catch (...) {
+            controller.setSceneInitializeState(previous);
+            throw;
         }
+        controller.setSceneInitializeState(previous);
     }
+
     void apply_connections() {
         _scheduler.apply_execution_requirements(true, false);
         _scheduler.apply_execution_requirements(true, true);
@@ -83,7 +94,6 @@ private:
     Scene* _original_scene;
     std::unique_ptr<SceneObjHolder> _holder;
     std::unique_ptr<SceneNameObjListExecutor> _executor;
-    scene::SceneInitializationBinding _initialization;
     std::unique_ptr<runtime::SceneSchedulerAllocationBinding> _allocation;
     std::vector<NameObj*> _completed;
 };

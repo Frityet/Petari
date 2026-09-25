@@ -69,4 +69,6 @@ bool GameScenePauseControl::tryStartPauseMenu() {
 }
 
 GameScenePauseControl::~GameScenePauseControl() {
+    delete mPauseChecker;
+    mPauseChecker = nullptr;
 }

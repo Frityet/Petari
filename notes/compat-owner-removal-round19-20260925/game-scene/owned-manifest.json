@@ -1,0 +1,38 @@
+{
+  "paths": [
+    {
+      "path": "src/Game/Scene/GameScene.hpp",
+      "before_sha256": "a1443240a97829b1974b786ce3328985969ee0c638cb36cfe6741de1d9c561b1",
+      "after_sha256": "f664afc41832ccd5009c9d7c41f5e04d93af3eeeb50fd4f78fc2bcc12de4bd0d",
+      "reason": "Actual GameScene and pause owner child retirement replacing GameSceneBinding."
+    },
+    {
+      "path": "src/Game/Scene/GameScene.cpp",
+      "before_sha256": "d41802f060fdf4ef5786d78481bc7245c2ea3a108b4d4856581b0532748b1829",
+      "after_sha256": "cae46e81f544a6727183be809f51ba137e3af4e186f4a508cf705c4d4c62897c",
+      "reason": "Actual GameScene and pause owner child retirement replacing GameSceneBinding."
+    },
+    {
+      "path": "src/Game/Scene/GameScenePauseControl.cpp",
+      "before_sha256": "ef80fd38119b3961189a6b865a30e51adfd590c4424065fe7cad109b72cc66ab",
+      "after_sha256": "aff9f99510eb5ca7204a00f4ed9f0430495b062c62562f2c4564e93e2f9503c1",
+      "reason": "Actual GameScene and pause owner child retirement replacing GameSceneBinding."
+    },
+    {
+      "path": "src/Game/Screen/GamePauseSequence.hpp",
+      "before_sha256": "15366c70cc9a0184fc0d16f6ac783d13b2fac7ace2a96dfbe40ebe09787c26d7",
+      "after_sha256": "61b9ed3e727143e646b351ab120df61aadc702759d4cc891b831432b13fb653c",
+      "reason": "Actual GameScene and pause owner child retirement replacing GameSceneBinding."
+    },
+    {
+      "path": "src/Game/Screen/GamePauseSequence.cpp",
+      "before_sha256": "6309d644cf9181229f158c77b9ac74f2e5eb28de4c5c4af003397273a016d871",
+      "after_sha256": "fa4476b4e2bb316043a463bb13f7a51a246e4081372405f1ab2795c8f910c961",
+      "reason": "Actual GameScene and pause owner child retirement replacing GameSceneBinding."
+    }
+  ],
+  "build_changes": [],
+  "tests_changed": [],
+  "builds_run": false,
+  "tests_run": false
+}

@@ -8,7 +8,7 @@
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/SystemUtil.hpp"
-#include "scene/OriginalSceneSupport.hpp"
+#include "Game/Scene/Scene.hpp"
 
 namespace {
     SceneDataInitializer* getSceneDataInitializer() {
@@ -68,7 +68,7 @@ void SceneFunction::initForLiveActor() {
 }
 
 void SceneFunction::initEffectSystem(u32 a1, u32 a2) {
-    smgpc::scene::initialize_original_scene_effects(a1, a2);
+    SingletonHolder< GameSystem >::get()->mSceneController->mScene->initializeNativeEffects(a1, a2);
 }
 
 void SceneFunction::allocateDrawBufferActorList() {

@@ -37,7 +37,7 @@
 #include "Game/System/FunctionAsyncExecutor.hpp"
 #include "Game/Screen/StarPointerDirector.hpp"
 #include "Game/Screen/LayoutActor.hpp"
-#include "scene/OriginalSceneSupport.hpp"
+#include "Game/Scene/Scene.hpp"
 #include "resource/GameResourceRuntime.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/MessageHolderOwnership.hpp"
@@ -313,8 +313,10 @@ public:
         const aurora::os::GuestThreadExecutionScope execution;
         const aurora::allocation::ClientAllocationScope game({true, true});
         publish_input(window, frame_index);
-        scene::begin_original_scene_frame();
         auto& system = *SingletonHolder<GameSystem>::get();
+        if (system.mSceneController && system.mSceneController->mScene) {
+            system.mSceneController->mScene->beginNativeFrame();
+        }
         system.frameLoop();
 #ifndef NDEBUG
         frame_trace.capture(system, frame_index);

@@ -9,7 +9,6 @@
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Map/CollisionCategorizedKeeper.hpp"
 #include "Game/Util/CollisionPartsFilter.hpp"
-#include "scene/SceneInitializationState.hpp"
 #include <aurora/allocation.hpp>
 #include <aurora/main.h>
 #include "Game/AreaObj/AreaObj.hpp"
@@ -245,12 +244,17 @@ namespace {
                 const PlacementTableRangeBinding range(*stage, wall_table);
                 require(stage->findPlacedStageDataHolder(iter) == stage && MR::getPlacedZoneId(iter) == 0,
                         "The exact injected row resolves through the original root holder's temporary range");
-                struct RestorePlacementZone {
-                    s32 previous = MR::getCurrentPlacementZoneId();
-                    ~RestorePlacementZone() { MR::setCurrentPlacementZoneId(previous); }
-                } zone;
+                struct RestorePlacementState {
+                    GameSystemSceneController& controller;
+                    SceneInitializeState previous_state;
+                    s32 previous_zone = MR::getCurrentPlacementZoneId();
+                    ~RestorePlacementState() {
+                        controller.setSceneInitializeState(previous_state);
+                        MR::setCurrentPlacementZoneId(previous_zone);
+                    }
+                } placement{*controller, controller->mSceneInitializeState};
                 MR::setCurrentPlacementZoneId(0);
-                const smgpc::scene::SceneInitializationScope placement(SceneInitializeState_Placement);
+                controller->setSceneInitializeState(SceneInitializeState_Placement);
                 std::unique_ptr<NameObj> object_owner;
                 InvisiblePolygonObj* actor = nullptr;
                 {

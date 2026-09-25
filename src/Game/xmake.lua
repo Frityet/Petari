@@ -85,7 +85,6 @@ target("smg-pc-game")
     add_files("../layout/**.cpp")
     add_files("../resource/**.cpp")
     add_files("../runtime/**.cpp")
-    add_files("../scene/**.cpp")
     add_files("../compat/**.cpp")
     -- Its numeric fallback must call host libc outside the forced MSL aliases.
     remove_files("../compat/MslPrintfCompat.cpp")
@@ -177,7 +176,6 @@ target("smg-pc-game")
     add_headerfiles("../layout/**.hpp")
     add_headerfiles("../resource/**.hpp")
     add_headerfiles("../runtime/**.hpp")
-    add_headerfiles("../scene/**.hpp")
     add_headerfiles("../compat/**.hpp")
     add_headerfiles {
         "../render/effects/EffectResource.hpp",
