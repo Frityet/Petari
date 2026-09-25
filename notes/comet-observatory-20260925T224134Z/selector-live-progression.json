@@ -1,0 +1,304 @@
+[
+  {
+    "frame": 0,
+    "stage": "",
+    "actors": []
+  },
+  {
+    "frame": 60,
+    "stage": "AstroDome",
+    "actors": [
+      {
+        "name": "スフィアセレクター",
+        "type": "14SphereSelector",
+        "dead": true,
+        "nerve": {
+          "step": 0,
+          "type": "N17NrvSphereSelector28SphereSelectorNrvSelectStartE"
+        }
+      },
+      {
+        "name": "天文ドームギャラクシーセレクタ",
+        "type": "23AstroDomeGalaxySelector",
+        "dead": true,
+        "nerve": {
+          "step": 0,
+          "type": "N26NrvAstroDomeGalaxySelector43AstroDomeGalaxySelectorNrvGalaxySelectStartE"
+        }
+      },
+      {
+        "name": "ミニチュア[エッグスター]",
+        "type": "15MiniatureGalaxy",
+        "dead": true,
+        "nerve": {
+          "step": 0,
+          "type": "N18NrvMiniatureGalaxy22MiniatureGalaxyNrvWaitE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 1020,
+    "stage": "AstroDome",
+    "actors": [
+      {
+        "name": "スフィアセレクター",
+        "type": "14SphereSelector",
+        "dead": false,
+        "nerve": {
+          "step": 28,
+          "type": "N17NrvSphereSelector28SphereSelectorNrvSelectStartE"
+        }
+      },
+      {
+        "name": "天文ドームギャラクシーセレクタ",
+        "type": "23AstroDomeGalaxySelector",
+        "dead": false,
+        "nerve": {
+          "step": 27,
+          "type": "N26NrvAstroDomeGalaxySelector43AstroDomeGalaxySelectorNrvGalaxySelectStartE"
+        }
+      },
+      {
+        "name": "ミニチュア[エッグスター]",
+        "type": "15MiniatureGalaxy",
+        "dead": false,
+        "nerve": {
+          "step": 27,
+          "type": "N18NrvMiniatureGalaxy22MiniatureGalaxyNrvWaitE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 1080,
+    "stage": "AstroDome",
+    "actors": [
+      {
+        "name": "スフィアセレクター",
+        "type": "14SphereSelector",
+        "dead": false,
+        "nerve": {
+          "step": 1,
+          "type": "N17NrvSphereSelector27SphereSelectorNrvSelectWaitE"
+        }
+      },
+      {
+        "name": "天文ドームギャラクシーセレクタ",
+        "type": "23AstroDomeGalaxySelector",
+        "dead": false,
+        "nerve": {
+          "step": 26,
+          "type": "N26NrvAstroDomeGalaxySelector41AstroDomeGalaxySelectorNrvDemoDomeLectureE"
+        }
+      },
+      {
+        "name": "ミニチュア[エッグスター]",
+        "type": "15MiniatureGalaxy",
+        "dead": false,
+        "nerve": {
+          "step": 87,
+          "type": "N18NrvMiniatureGalaxy22MiniatureGalaxyNrvWaitE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 1500,
+    "stage": "AstroDome",
+    "actors": [
+      {
+        "name": "スフィアセレクター",
+        "type": "14SphereSelector",
+        "dead": false,
+        "nerve": {
+          "step": 5,
+          "type": "N17NrvSphereSelector27SphereSelectorNrvSelectWaitE"
+        }
+      },
+      {
+        "name": "天文ドームギャラクシーセレクタ",
+        "type": "23AstroDomeGalaxySelector",
+        "dead": false,
+        "nerve": {
+          "step": 4,
+          "type": "N26NrvAstroDomeGalaxySelector38AstroDomeGalaxySelectorNrvGalaxySelectE"
+        }
+      },
+      {
+        "name": "ミニチュア[エッグスター]",
+        "type": "15MiniatureGalaxy",
+        "dead": false,
+        "nerve": {
+          "step": 507,
+          "type": "N18NrvMiniatureGalaxy22MiniatureGalaxyNrvWaitE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 1620,
+    "stage": "AstroDome",
+    "actors": [
+      {
+        "name": "スフィアセレクター",
+        "type": "14SphereSelector",
+        "dead": false,
+        "nerve": {
+          "step": 125,
+          "type": "N17NrvSphereSelector27SphereSelectorNrvSelectWaitE"
+        }
+      },
+      {
+        "name": "天文ドームギャラクシーセレクタ",
+        "type": "23AstroDomeGalaxySelector",
+        "dead": false,
+        "nerve": {
+          "step": 124,
+          "type": "N26NrvAstroDomeGalaxySelector38AstroDomeGalaxySelectorNrvGalaxySelectE"
+        }
+      },
+      {
+        "name": "ミニチュア[エッグスター]",
+        "type": "15MiniatureGalaxy",
+        "dead": false,
+        "nerve": {
+          "step": 10,
+          "type": "N18NrvMiniatureGalaxy22MiniatureGalaxyNrvOpenE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 1800,
+    "stage": "AstroDome",
+    "actors": [
+      {
+        "name": "スフィアセレクター",
+        "type": "14SphereSelector",
+        "dead": false,
+        "nerve": {
+          "step": 21,
+          "type": "N17NrvSphereSelector29SphereSelectorNrvConfirmStartE"
+        }
+      },
+      {
+        "name": "天文ドームギャラクシーセレクタ",
+        "type": "23AstroDomeGalaxySelector",
+        "dead": false,
+        "nerve": {
+          "step": 20,
+          "type": "N26NrvAstroDomeGalaxySelector44AstroDomeGalaxySelectorNrvGalaxyConfirmStartE"
+        }
+      },
+      {
+        "name": "ミニチュア[エッグスター]",
+        "type": "15MiniatureGalaxy",
+        "dead": false,
+        "nerve": {
+          "step": 21,
+          "type": "N18NrvMiniatureGalaxy26MiniatureGalaxyNrvSelectedE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 1860,
+    "stage": "AstroDome",
+    "actors": [
+      {
+        "name": "スフィアセレクター",
+        "type": "14SphereSelector",
+        "dead": false,
+        "nerve": {
+          "step": 1,
+          "type": "N17NrvSphereSelector28SphereSelectorNrvConfirmWaitE"
+        }
+      },
+      {
+        "name": "天文ドームギャラクシーセレクタ",
+        "type": "23AstroDomeGalaxySelector",
+        "dead": false,
+        "nerve": {
+          "step": 34,
+          "type": "N26NrvAstroDomeGalaxySelector43AstroDomeGalaxySelectorNrvGalaxyMoveLectureE"
+        }
+      },
+      {
+        "name": "ミニチュア[エッグスター]",
+        "type": "15MiniatureGalaxy",
+        "dead": false,
+        "nerve": {
+          "step": 81,
+          "type": "N18NrvMiniatureGalaxy26MiniatureGalaxyNrvSelectedE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 2220,
+    "stage": "AstroDome",
+    "actors": [
+      {
+        "name": "スフィアセレクター",
+        "type": "14SphereSelector",
+        "dead": false,
+        "nerve": {
+          "step": 1,
+          "type": "N17NrvSphereSelector26SphereSelectorNrvConfirmedE"
+        }
+      },
+      {
+        "name": "天文ドームギャラクシーセレクタ",
+        "type": "23AstroDomeGalaxySelector",
+        "dead": false,
+        "nerve": {
+          "step": 11,
+          "type": "N26NrvAstroDomeGalaxySelector37AstroDomeGalaxySelectorNrvDemoJumpOutE"
+        }
+      },
+      {
+        "name": "ミニチュア[エッグスター]",
+        "type": "15MiniatureGalaxy",
+        "dead": false,
+        "nerve": {
+          "step": 11,
+          "type": "N18NrvMiniatureGalaxy27MiniatureGalaxyNrvConfirmedE"
+        }
+      }
+    ]
+  },
+  {
+    "frame": 2400,
+    "stage": "AstroDome",
+    "actors": [
+      {
+        "name": "スフィアセレクター",
+        "type": "14SphereSelector",
+        "dead": false,
+        "nerve": {
+          "step": 1,
+          "type": "N17NrvSphereSelector26SphereSelectorNrvConfirmedE"
+        }
+      },
+      {
+        "name": "天文ドームギャラクシーセレクタ",
+        "type": "23AstroDomeGalaxySelector",
+        "dead": false,
+        "nerve": {
+          "step": 191,
+          "type": "N26NrvAstroDomeGalaxySelector37AstroDomeGalaxySelectorNrvDemoJumpOutE"
+        }
+      },
+      {
+        "name": "ミニチュア[エッグスター]",
+        "type": "15MiniatureGalaxy",
+        "dead": true,
+        "nerve": {
+          "step": 140,
+          "type": "N18NrvMiniatureGalaxy27MiniatureGalaxyNrvConfirmedE"
+        }
+      }
+    ]
+  }
+]

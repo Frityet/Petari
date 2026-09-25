@@ -1,0 +1,17 @@
+[
+  {
+    "case": "missing-stage",
+    "exit_code": 1,
+    "expected_error_present": true
+  },
+  {
+    "case": "out-of-range",
+    "exit_code": 1,
+    "expected_error_present": true
+  },
+  {
+    "case": "empty-slot",
+    "exit_code": 1,
+    "expected_error_present": true
+  }
+]
