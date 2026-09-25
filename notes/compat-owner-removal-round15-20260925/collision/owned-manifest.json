@@ -1,0 +1,239 @@
+{
+  "baseline": "878278a2ffd451dbffc0957b7c604ca49521dfb5",
+  "paths": [
+    {
+      "path": "src/compat/CollisionPartsCompat.cpp",
+      "existed_before": true,
+      "action": "delete",
+      "initially_dirty": true,
+      "before_sha256": "4c62d8a44cd494911029e47c54685c3f82b1a5372bef85131611ec49ffb567df",
+      "after_sha256": null,
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/compat/CollisionPartsCompat.hpp",
+      "existed_before": true,
+      "action": "delete",
+      "initially_dirty": false,
+      "before_sha256": "f64e8a2470821c376935d938c549aca793ff117cf1f1f7864e2fc018c77bed8b",
+      "after_sha256": null,
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/compat/HitInfoCompat.cpp",
+      "existed_before": true,
+      "action": "delete",
+      "initially_dirty": true,
+      "before_sha256": "c11366ed0d8977e198f2adbbbb99a4d194cf459f13db103a78c67329a8e7bd83",
+      "after_sha256": null,
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/compat/HitInfoCompat.hpp",
+      "existed_before": true,
+      "action": "delete",
+      "initially_dirty": true,
+      "before_sha256": "47ab1cc7f95f88f68a369cd75415462b25e540234cffcb541031271b5cb107d8",
+      "after_sha256": null,
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Map/CollisionParts.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "bddcdbbc662c753f8a5d72562bcd8f121a6e6dac4e4136c86f63f134cea74c10",
+      "after_sha256": "7530bf60cb1fd0ea2f990f6bf3c18238779fa15b1d471da8af8ff2bdce2b9d03",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Map/CollisionParts.hpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "091308c1dd4ce3210d529150f51bec551f91a540e06ed5d1ba12405f7eed3e3d",
+      "after_sha256": "a4c0d19342fbbc087f4caa06d739db6903fbf0e519ccfdd5eb10fe7665ef241e",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Map/HitInfo.cpp",
+      "existed_before": false,
+      "action": "add",
+      "initially_dirty": false,
+      "before_sha256": null,
+      "after_sha256": "2c4c4e690f08ecb1f8bf7c2ad5298c82f7aea3d2191864559a627d2a8d0cae1d",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Map/HitInfo.hpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "f767ba9097cb11bc27a93202a4080ea195bd82bb71bba54fd45946cda176a47f",
+      "after_sha256": "6bfd190281c8bd336ab33438bfbcbc98e18500fc03ce94f725f3ec12431b1503",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/LiveActor/LiveActor.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "79fd273a4c4de40133a3d5eb1db4594a9efa4f4b3b18fbc772804daad26a6af6",
+      "after_sha256": "869e3c504a19b7c4f809295cf3db36cf907eb25720789aba9e023e5cf6dc0f83",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/LiveActor/LiveActor.hpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "e02299c25344e9906f7104c4fbd172ae1966d63e6ff77599e6a1e70c9c277093",
+      "after_sha256": "090f4aa655c36067ee090d514cbefbda3531f40599e8bd2e65bd90422d3e02a1",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Player/MarioActor.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "fb1adac7aadf88bd0cdf313d02e16474134906c2145f61ab1991e50ee96b0452",
+      "after_sha256": "9c7d08f8fa188b47c333eb5baa76c07798388732c8d44edbdbd64a0d63fac299",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/MapObj/DynamicCollisionObj.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "efbd9a21fef686698b3048a58d3a494dcb52f97e06159f79408b84860939b7c3",
+      "after_sha256": "e5f4c30a313f1e71ef0a4121deb3f297e40f083a059283e8d594fb2ffbad1fe7",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Util/LiveActorUtil.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "e89e72fde6a7250b17c17e2bea06a703db935f15d0d1e193fe8f3e84390ee8ca",
+      "after_sha256": "93bc375b5b450cb51afb4640fe3b7bfa2b235413fed8e0d730188f0e10823409",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/compat/ActorRuntimeRegistry.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "7b200c7f2fae8d916da90bcbcef1f6a5ba8394f25fe2253bd18da3058b67c080",
+      "after_sha256": "2ea219e0d8e5307136728bce67cf7e964f867dd0344966e63044ab0c92c938c2",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/compat/MetrowerksStdCompat.hpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "65e5df7212cf1926cf1fe77e6ab1709b0be57ab0f3c98357179a4f8fb92106e5",
+      "after_sha256": "bdae516a161a6732bc4f582653de8d72506545c05e8dc6ddd289423e9782cd41",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "tests/OriginalCollisionPartsOwnerTests.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "3a9a7bc6e010931b9db257163a6b16f12f97348ab810b6e46e692db0bb62c520",
+      "after_sha256": "083b904371b6a45e457116cc4217cba76b5706ffd5e8582f75d6ad87b3c3f46c",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "tests/NameObjFactoryPlacementTests.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "0af947b0e39c803c11bfa6ead30d278761ad9ce2b7c5b74bd53ca7070150ae4e",
+      "after_sha256": "22c6f547d693e698278c0b88a14a4e26938799bbc250efc9644bc37959804de8",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "tests/OriginalProcessCollisionAreaTests.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": true,
+      "before_sha256": "1296d4a32878edb3886226210e9f995dd9c758847eed39130283cda66216841e",
+      "after_sha256": "f891e48377e90fdab5e6d7444fef95f8b832c6a45d3369a7b6fa1ac49daa4e89",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "tests/OriginalProcessMapObjectTests.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": true,
+      "before_sha256": "cf68a92d2a0097b43e282a21e6635915f22fb3784f97ee3dfb9daee016b6a36c",
+      "after_sha256": "229a9ffff260cb96f83027963c7aaa6c4301e6b6196881a7d88b92f7737ce8c9",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "tests/OriginalSphereQueryTests.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": true,
+      "before_sha256": "a846f3644cf89a66219e93a557f8ef363ff53f60dfe6973d265f93f11f7241a1",
+      "after_sha256": "f666989ce83afcd32259faab7f18c2fbd2e3a85f18375ffd099eb80b1f68b6b2",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "tests/OriginalSphereQueryFixture.hpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "8dc60a1ec9c6e71ee06a140727a517493d94769df646be4ece3eba92800adaca",
+      "after_sha256": "a4fabee008ae403f6d553b7693764116e0c1eb6bd248882c1a7e7f1ef18e841d",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "tests/StageCollisionRegistrationTests.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": true,
+      "before_sha256": "405b83a46c6dd5971d1c9e583cbfde229a819b5e1e2df73687e290e31a432518",
+      "after_sha256": "a1461ce801321b3a82ac10d7e7d2520c78189364c1f95f28fec5b77511b07831",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/LiveActor/Binder.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "96fabeaa419c1700457255c48abfdf11d1db3919569431f6fe7066b17b6d3860",
+      "after_sha256": "9cd6e5b57dfbd0f21d518aaa1b531ac36a9001f0a1b9033debee0a9da147914c",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Player/MarioSlope.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "0aa766c22a57359d50f4db0256a51585cfc949a95fcf1390e237096432568d3e",
+      "after_sha256": "24637ecb9e87cfe83850380b220bf959768da91d69ee5bc7ac3997958ef2bf4f",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Player/MarioHang.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "a275f21cead7636eaf87f37ee9fe0f7fdcc49ef8e37bfb73d759caee4572f3fb",
+      "after_sha256": "59c2166cc78d98f44db3d3e6fe6021e5d29c128a17d8ca90f272b060214b96da",
+      "lane_patch": "lane-only.patch"
+    },
+    {
+      "path": "src/Game/Util/ModelUtil.cpp",
+      "existed_before": true,
+      "action": "modify",
+      "initially_dirty": false,
+      "before_sha256": "ae855334b7ba748ab7b0bfb328af4675f324384ef9b1d8aad80840b0e5aaaab3",
+      "after_sha256": "248f8084ac10f47b89a0258822e610e54be7a48fc40d4ec3e00c375f2f013bba",
+      "lane_patch": "lane-only.patch"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 #include "OriginalStageResourceProcessFixture.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NPC/TalkBalloon.hpp"
@@ -7,7 +7,6 @@
 #include "Game/NPC/TalkMessageCtrl.hpp"
 #include "Game/NPC/TalkNodeCtrl.hpp"
 #include "Game/NPC/TalkTextFormer.hpp"
-#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/MessageHolder.hpp"
@@ -32,7 +31,7 @@ void require(bool condition, std::string_view message) {
     if (!condition) throw std::runtime_error(std::string(message));
 }
 void verify_original_talk() {
-    const auto allocation = smgpc::scene::current_scene_allocation_domain();
+    const auto allocation = MR::getSceneObjHolder()->nativeAllocationDomain();
     require(allocation != nullptr, "original Talk fixture requires the initialized GameScene heap");
     const smgpc::compat::JkrAllocationScope game(allocation);
     auto* talk = MR::getSceneObj<TalkDirector>(SceneObj_TalkDirector);

@@ -7,16 +7,7 @@
 #include <algorithm>
 
 HitInfo& HitInfo::operator=(const HitInfo& rOther) {
-    mParentTriangle.mParts = rOther.mParentTriangle.mParts;
-    mParentTriangle.mIdx = rOther.mParentTriangle.mIdx;
-    mParentTriangle.mSensor = rOther.mParentTriangle.mSensor;
-    mParentTriangle.mNormals[0] = rOther.mParentTriangle.mNormals[0];
-    mParentTriangle.mNormals[1] = rOther.mParentTriangle.mNormals[1];
-    mParentTriangle.mNormals[2] = rOther.mParentTriangle.mNormals[2];
-    mParentTriangle.mNormals[3] = rOther.mParentTriangle.mNormals[3];
-    mParentTriangle.mPos[0] = rOther.mParentTriangle.mPos[0];
-    mParentTriangle.mPos[1] = rOther.mParentTriangle.mPos[1];
-    mParentTriangle.mPos[2] = rOther.mParentTriangle.mPos[2];
+    mParentTriangle = rOther.mParentTriangle;
     _60 = rOther._60;
     mHitPos = rOther.mHitPos;
     _70 = rOther._70;

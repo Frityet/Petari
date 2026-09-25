@@ -18,7 +18,7 @@
 #include "compat/Cp932Literal.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 
 #include <aurora/allocation.hpp>
 #include <cstdio>
@@ -86,7 +86,7 @@ namespace {
             auto* emitter = keeper->getEmitter(effect_name);
             require(emitter && !emitter->isValid(), "Original trample emitter exists and is inactive before the injected action");
 
-            const auto domain = smgpc::scene::current_scene_allocation_domain();
+            const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
             require(domain != nullptr, "Actual scene owns allocations performed by the original action");
             {
                 const smgpc::compat::JkrAllocationScope allocation(domain);

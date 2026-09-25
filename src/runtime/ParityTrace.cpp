@@ -1,3 +1,4 @@
+#include "render/GXState.hpp"
 #include "camera/CameraDirectorRuntime.hpp"
 #include "runtime/ParityTrace.hpp"
 
@@ -16,7 +17,7 @@
 #include "TraceStore.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "resource/TextEncoding.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Screen/ImageEffectSystemHolder.hpp"
 #include "Game/Screen/ImageEffectDirector.hpp"
@@ -169,109 +170,6 @@ namespace smgpc::runtime {
             return "unknown_sequence_request";
         }
 
-        [[nodiscard]] const char *j3d_packet_mode_name(smgpc::render::J3dRendererPacketMode mode) {
-            switch (mode) {
-            case smgpc::render::J3dRendererPacketMode::ConstantBackdrop:
-                return "ConstantBackdrop";
-            case smgpc::render::J3dRendererPacketMode::ConstantMaterial:
-                return "ConstantMaterial";
-            case smgpc::render::J3dRendererPacketMode::ShaderGxTev:
-                return "ShaderGxTev";
-            case smgpc::render::J3dRendererPacketMode::TexturePass:
-                return "TexturePass";
-            }
-
-            return "Unknown";
-        }
-
-        [[nodiscard]] const char *texture_format_name(smgpc::resource::TplTextureFormat format) {
-            switch (format) {
-            case smgpc::resource::TplTextureFormat::I4:
-                return "I4";
-            case smgpc::resource::TplTextureFormat::I8:
-                return "I8";
-            case smgpc::resource::TplTextureFormat::IA4:
-                return "IA4";
-            case smgpc::resource::TplTextureFormat::IA8:
-                return "IA8";
-            case smgpc::resource::TplTextureFormat::RGB565:
-                return "RGB565";
-            case smgpc::resource::TplTextureFormat::RGB5A3:
-                return "RGB5A3";
-            case smgpc::resource::TplTextureFormat::RGBA8:
-                return "RGBA8";
-            case smgpc::resource::TplTextureFormat::C4:
-                return "C4";
-            case smgpc::resource::TplTextureFormat::C8:
-                return "C8";
-            case smgpc::resource::TplTextureFormat::C14X2:
-                return "C14X2";
-            case smgpc::resource::TplTextureFormat::CMPR:
-                return "CMPR";
-            }
-
-            return "Unknown";
-        }
-
-        [[nodiscard]] const char *register_space_name(smgpc::render::GXRegisterSpace space) {
-            switch (space) {
-            case smgpc::render::GXRegisterSpace::BP:
-                return "BP";
-            case smgpc::render::GXRegisterSpace::CP:
-                return "CP";
-            case smgpc::render::GXRegisterSpace::XF:
-                return "XF";
-            case smgpc::render::GXRegisterSpace::IndexedA:
-                return "IndexedA";
-            case smgpc::render::GXRegisterSpace::IndexedB:
-                return "IndexedB";
-            case smgpc::render::GXRegisterSpace::IndexedC:
-                return "IndexedC";
-            case smgpc::render::GXRegisterSpace::IndexedD:
-                return "IndexedD";
-            case smgpc::render::GXRegisterSpace::Unknown:
-                return "Unknown";
-            }
-
-            return "Unknown";
-        }
-
-        [[nodiscard]] const char *blend_mode_name(render::BlendMode mode) {
-            switch (mode) {
-            case render::BlendMode::Opaque:
-                return "Opaque";
-            case render::BlendMode::Alpha:
-                return "Alpha";
-            case render::BlendMode::Additive:
-                return "Additive";
-            }
-
-            return "Unknown";
-        }
-
-        [[nodiscard]] const char *depth_compare_name(render::DepthCompare compare) {
-            switch (compare) {
-            case render::DepthCompare::Never:
-                return "Never";
-            case render::DepthCompare::Less:
-                return "Less";
-            case render::DepthCompare::Equal:
-                return "Equal";
-            case render::DepthCompare::LessEqual:
-                return "LessEqual";
-            case render::DepthCompare::Greater:
-                return "Greater";
-            case render::DepthCompare::NotEqual:
-                return "NotEqual";
-            case render::DepthCompare::GreaterEqual:
-                return "GreaterEqual";
-            case render::DepthCompare::Always:
-                return "Always";
-            }
-
-            return "Unknown";
-        }
-
         [[nodiscard]] const char *cull_mode_name(render::CullMode mode) {
             switch (mode) {
             case render::CullMode::None:
@@ -313,23 +211,7 @@ namespace smgpc::runtime {
             return Json::array({values[0U], values[1U], values[2U]});
         }
 
-        [[nodiscard]] Json float16_json(const std::array<float, 16U> &values) {
-            auto out = Json::array();
-            for (const auto value : values) {
-                out.push_back(value);
-            }
-            return out;
-        }
-
         [[nodiscard]] Json float12_json(const std::array<float, 12U> &values) {
-            auto out = Json::array();
-            for (const auto value : values) {
-                out.push_back(value);
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json float_array_json(std::span<const float> values) {
             auto out = Json::array();
             for (const auto value : values) {
                 out.push_back(value);
@@ -349,14 +231,6 @@ namespace smgpc::runtime {
             auto out = Json::array();
             for (const auto &sample : pattern) {
                 out.push_back(Json::array({sample[0U], sample[1U]}));
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json u32_array_json(std::span<const std::uint32_t> values) {
-            auto out = Json::array();
-            for (const auto value : values) {
-                out.push_back(value);
             }
             return out;
         }
@@ -898,7 +772,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json image_effect_state_json() {
-            auto* holder = smgpc::scene::current_scene_obj_holder();
+            auto* holder = MR::getSceneObjHolder();
             if (!holder || !holder->isExist(SceneObj_ImageEffectSystemHolder)) return Json{{"available", false}};
             auto* system = static_cast<ImageEffectSystemHolder*>(holder->getObj(SceneObj_ImageEffectSystemHolder));
             if (!system->mDirector) return Json{{"available", false}};
@@ -1185,118 +1059,6 @@ namespace smgpc::runtime {
             };
         }
 
-        [[nodiscard]] Json gx_blend_json(const render::GxBlendMode2D &blend) {
-            return Json{
-                {"enabled", blend.enabled},
-                {"type", blend.type},
-                {"src_factor", blend.src_factor},
-                {"dst_factor", blend.dst_factor},
-                {"op", blend.op},
-                {"color_update", blend.color_update},
-                {"alpha_update", blend.alpha_update},
-            };
-        }
-
-        [[nodiscard]] Json gx_alpha_compare_json(const render::GxAlphaCompare2D &alpha_compare) {
-            return Json{
-                {"enabled", alpha_compare.enabled},
-                {"comp0", alpha_compare.comp0},
-                {"ref0", alpha_compare.ref0},
-                {"op", alpha_compare.op},
-                {"comp1", alpha_compare.comp1},
-                {"ref1", alpha_compare.ref1},
-            };
-        }
-
-        [[nodiscard]] Json gx_color_channel_control_json(const smgpc::render::GXColorChannelControlState &control) {
-            return Json{
-                {"raw", control.raw},
-                {"material_source", control.material_source},
-                {"lighting_enabled", control.lighting_enabled},
-                {"light_mask", control.light_mask},
-                {"ambient_source", control.ambient_source},
-                {"diffuse_function", control.diffuse_function},
-                {"attenuation_function", control.attenuation_function},
-                {"attenuation_mode", control.attenuation_mode},
-            };
-        }
-
-        [[nodiscard]] Json gx_color_channels_json(const smgpc::render::J3dRendererPacketState &state) {
-            auto out = Json::array();
-            for (auto channel = std::size_t{}; channel < state.color_channel_material_colors.size(); ++channel) {
-                out.push_back(Json{
-                    {"index", channel},
-                    {"material_color", color_json(state.color_channel_material_colors[channel])},
-                    {"ambient_color", color_json(state.color_channel_ambient_colors[channel])},
-                    {"color_control", gx_color_channel_control_json(state.color_channel_controls[channel])},
-                    {"alpha_control", gx_color_channel_control_json(state.alpha_channel_controls[channel])},
-                });
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json gx_lights_json(const smgpc::render::J3dRendererPacketState &state) {
-            auto out = Json::array();
-            for (auto light_index = std::size_t{}; light_index < state.lights.size(); ++light_index) {
-                const auto &light = state.lights[light_index];
-                if (!light.loaded) {
-                    continue;
-                }
-                out.push_back(Json{
-                    {"index", light_index},
-                    {"color", color_json(light.color)},
-                    {"cosine_attenuation", float3_json(light.cosine_attenuation)},
-                    {"distance_attenuation", float3_json(light.distance_attenuation)},
-                    {"position", float3_json(light.position)},
-                    {"direction", float3_json(light.direction)},
-                });
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json gx_texture_binding_json(const smgpc::render::J3dRendererTextureState &texture) {
-            return Json{
-                {"slot", texture.slot},
-                {"texture_index", texture.texture_index},
-                {"name", texture.name},
-                {"has_source_texture", texture.has_source_texture},
-                {"width", texture.width},
-                {"height", texture.height},
-                {"format", texture_format_name(texture.format)},
-                {"format_raw", static_cast<std::uint32_t>(texture.format)},
-                {"has_sampler_metadata", texture.has_sampler_metadata},
-                {"transparency", texture.transparency},
-                {"wrap_s", texture.wrap_s},
-                {"wrap_t", texture.wrap_t},
-                {"palette_format", texture.palette_format},
-                {"palette_entry_count", texture.palette_entry_count},
-                {"palette_data_offset", texture.palette_data_offset},
-                {"mipmap", texture.mipmap},
-                {"do_edge_lod", texture.do_edge_lod},
-                {"bias_clamp", texture.bias_clamp},
-                {"max_anisotropy", texture.max_anisotropy},
-                {"min_filter", texture.min_filter},
-                {"mag_filter", texture.mag_filter},
-                {"min_lod_raw", texture.min_lod},
-                {"max_lod_raw", texture.max_lod},
-                {"min_lod", static_cast<float>(texture.min_lod) / 8.0F},
-                {"max_lod", static_cast<float>(texture.max_lod) / 8.0F},
-                {"image_count", texture.image_count},
-                {"lod_bias_raw", texture.lod_bias},
-                {"lod_bias", static_cast<float>(texture.lod_bias) / 100.0F},
-                {"image_data_offset", texture.image_data_offset},
-                {"host_texture_handle", texture.host_handle.is_valid() ? Json(static_cast<std::uint64_t>(texture.host_handle.debug_id())) : Json(nullptr)},
-            };
-        }
-
-        [[nodiscard]] Json gx_texture_bindings_json(std::span<const smgpc::render::J3dRendererTextureState> textures) {
-            auto out = Json::array();
-            for (const auto &texture : textures) {
-                out.push_back(gx_texture_binding_json(texture));
-            }
-            return out;
-        }
-
         [[nodiscard]] Json render_texture_binding_json(const RuntimeContext::RenderTextureBindingTrace &texture) {
             return Json{
                 {"slot", texture.slot},
@@ -1318,16 +1080,6 @@ namespace smgpc::runtime {
             return out;
         }
 
-        [[nodiscard]] std::uint32_t used_textures_mask(std::span<const smgpc::render::J3dRendererTextureState> textures) {
-            auto mask = std::uint32_t{};
-            for (const auto &texture : textures) {
-                if (texture.slot < 8U) {
-                    mask |= 1U << texture.slot;
-                }
-            }
-            return mask;
-        }
-
         [[nodiscard]] std::uint32_t used_textures_mask(std::span<const RuntimeContext::RenderTextureBindingTrace> textures) {
             auto mask = std::uint32_t{};
             for (const auto &texture : textures) {
@@ -1336,23 +1088,6 @@ namespace smgpc::runtime {
                 }
             }
             return mask;
-        }
-
-        [[nodiscard]] Json used_texture_slots_json(std::span<const smgpc::render::J3dRendererTextureState> textures) {
-            auto slots = std::array<bool, 8U>{};
-            for (const auto &texture : textures) {
-                if (texture.slot < slots.size()) {
-                    slots[texture.slot] = true;
-                }
-            }
-
-            auto out = Json::array();
-            for (auto slot = std::size_t{}; slot < slots.size(); ++slot) {
-                if (slots[slot]) {
-                    out.push_back(slot);
-                }
-            }
-            return out;
         }
 
         [[nodiscard]] Json used_texture_slots_json(std::span<const RuntimeContext::RenderTextureBindingTrace> textures) {
@@ -1370,376 +1105,6 @@ namespace smgpc::runtime {
                 }
             }
             return out;
-        }
-
-        [[nodiscard]] Json gx_tex_coord_gen_json(const smgpc::render::GXTexCoordGenState &gen) {
-            return Json{
-                {"slot", gen.slot},
-                {"type", gen.type},
-                {"source", gen.source},
-                {"matrix", gen.matrix},
-            };
-        }
-
-        [[nodiscard]] Json gx_tex_coord_gens_json(std::span<const smgpc::render::GXTexCoordGenState> gens) {
-            auto out = Json::array();
-            for (const auto &gen : gens) {
-                out.push_back(gx_tex_coord_gen_json(gen));
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json gx_tex_coord_scale_json(std::uint8_t slot, const smgpc::render::GXTexCoordScaleState &scale) {
-            return Json{
-                {"slot", slot},
-                {"s_scale_minus_1", scale.s_scale_minus_1},
-                {"t_scale_minus_1", scale.t_scale_minus_1},
-                {"s_scale", static_cast<std::uint32_t>(scale.s_scale_minus_1) + 1U},
-                {"t_scale", static_cast<std::uint32_t>(scale.t_scale_minus_1) + 1U},
-                {"s_bias", scale.s_bias},
-                {"t_bias", scale.t_bias},
-                {"s_wrap", scale.s_wrap},
-                {"t_wrap", scale.t_wrap},
-                {"line_offset", scale.line_offset},
-                {"point_offset", scale.point_offset},
-                {"s_loaded", scale.s_loaded},
-                {"t_loaded", scale.t_loaded},
-                {"derived_from_texture", scale.derived_from_texture},
-                {"raw_s", scale.raw_s},
-                {"raw_t", scale.raw_t},
-            };
-        }
-
-        [[nodiscard]] Json gx_tex_coord_scales_json(const std::array<smgpc::render::GXTexCoordScaleState, 8U> &scales) {
-            auto out = Json::array();
-            for (auto slot = 0U; slot < scales.size(); ++slot) {
-                const auto &scale = scales[slot];
-                if (!scale.s_loaded && !scale.t_loaded && !scale.derived_from_texture) {
-                    continue;
-                }
-
-                out.push_back(gx_tex_coord_scale_json(static_cast<std::uint8_t>(slot), scale));
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json gx_su_line_point_json(const smgpc::render::GXSULinePointState &state) {
-            return Json{
-                {"loaded", state.loaded},
-                {"line_size", state.line_size},
-                {"point_size", state.point_size},
-                {"line_tex_offset", state.line_tex_offset},
-                {"point_tex_offset", state.point_tex_offset},
-                {"field_mode", state.field_mode},
-                {"raw", state.raw},
-            };
-        }
-
-        [[nodiscard]] Json gx_tex_matrix_json(const smgpc::render::GXTexMatrixState &matrix) {
-            return Json{
-                {"slot", matrix.slot},
-                {"projection", matrix.projection},
-                {"info", matrix.info},
-                {"center", float3_json(matrix.center)},
-                {"scale_s", matrix.scale_s},
-                {"scale_t", matrix.scale_t},
-                {"rotation", matrix.rotation},
-                {"translate_s", matrix.translate_s},
-                {"translate_t", matrix.translate_t},
-                {"effect_matrix", float16_json(matrix.effect_matrix)},
-            };
-        }
-
-        [[nodiscard]] Json gx_tex_matrices_json(std::span<const smgpc::render::GXTexMatrixState> matrices) {
-            auto out = Json::array();
-            for (const auto &matrix : matrices) {
-                out.push_back(gx_tex_matrix_json(matrix));
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json gx_tev_order_json(const smgpc::render::GXTevOrderState &order) {
-            return Json{
-                {"stage", order.stage},
-                {"tex_coord", order.tex_coord},
-                {"tex_map", order.tex_map},
-                {"color_channel", order.color_channel},
-            };
-        }
-
-        [[nodiscard]] Json gx_tev_orders_json(std::span<const smgpc::render::GXTevOrderState> orders) {
-            auto out = Json::array();
-            for (const auto &order : orders) {
-                out.push_back(gx_tev_order_json(order));
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json gx_tev_stage_json(const smgpc::render::GXTevStageState &stage) {
-            return Json{
-                {"stage", stage.stage},
-                {"raw", u8_array_json(stage.raw)},
-                {"color_in", u8_array_json(stage.color_in)},
-                {"color_op", stage.color_op},
-                {"color_bias", stage.color_bias},
-                {"color_scale", stage.color_scale},
-                {"color_clamp", stage.color_clamp},
-                {"color_out", stage.color_out},
-                {"k_color_sel", stage.k_color_sel},
-                {"alpha_in", u8_array_json(stage.alpha_in)},
-                {"alpha_op", stage.alpha_op},
-                {"alpha_bias", stage.alpha_bias},
-                {"alpha_scale", stage.alpha_scale},
-                {"alpha_clamp", stage.alpha_clamp},
-                {"alpha_out", stage.alpha_out},
-                {"k_alpha_sel", stage.k_alpha_sel},
-            };
-        }
-
-        [[nodiscard]] Json gx_tev_stages_json(std::span<const smgpc::render::GXTevStageState> stages) {
-            auto out = Json::array();
-            for (const auto &stage : stages) {
-                out.push_back(gx_tev_stage_json(stage));
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json tev_registers_json(const std::array<render::GxTevRegisterColor2D, 4U> &registers) {
-            auto out = Json::array();
-            for (const auto &reg : registers) {
-                out.push_back(Json::array({reg[0U], reg[1U], reg[2U], reg[3U]}));
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json tev_k_colors_json(const std::array<smgpc::render::GXColorValue, 4U> &colors) {
-            auto out = Json::array();
-            for (const auto &color : colors) {
-                out.push_back(color_json(color));
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json gx_z_mode_json(const smgpc::render::GXZModeState &z_mode) {
-            return Json{
-                {"enabled", z_mode.enabled},
-                {"compare_enable", z_mode.compare_enable},
-                {"function", z_mode.function},
-                {"update_enable", z_mode.update_enable},
-            };
-        }
-
-        [[nodiscard]] Json gx_fog_json(const smgpc::render::GXFogState &fog) {
-            return Json{
-                {"enabled", fog.enabled},
-                {"type", fog.type},
-                {"projection", fog.projection},
-                {"range_adjust_enabled", fog.range_adjust_enabled},
-                {"range_center", fog.range_center},
-                {"a", fog.a},
-                {"c", fog.c},
-                {"b_magnitude", fog.b_magnitude},
-                {"b_shift", fog.b_shift},
-                {"color", color_json(fog.color)},
-                {"range_k", float_array_json(fog.range_k)},
-                {"raw", u8_array_json(fog.raw)},
-            };
-        }
-
-        [[nodiscard]] Json gx_indirect_texture_orders_json(std::span<const smgpc::render::GXIndirectTextureOrderState> orders) {
-            auto out = Json::array();
-            for (const auto &order : orders) {
-                out.push_back(Json{
-                    {"stage", order.stage},
-                    {"tex_map", order.tex_map},
-                    {"tex_coord", order.tex_coord},
-                });
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json gx_indirect_texture_matrices_json(std::span<const smgpc::render::GXIndirectTextureMatrixState> matrices) {
-            auto out = Json::array();
-            for (const auto &matrix : matrices) {
-                out.push_back(Json{
-                    {"matrix", matrix.matrix},
-                    {"ma", matrix.ma},
-                    {"mb", matrix.mb},
-                    {"mc", matrix.mc},
-                    {"md", matrix.md},
-                    {"me", matrix.me},
-                    {"mf", matrix.mf},
-                    {"scale", matrix.scale},
-                    {"raw", u32_array_json(matrix.raw)},
-                });
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json gx_indirect_texture_coord_scales_json(std::span<const smgpc::render::GXIndirectTextureCoordScaleState> scales) {
-            auto out = Json::array();
-            for (const auto &scale : scales) {
-                out.push_back(Json{
-                    {"stage", scale.stage},
-                    {"scale_s", scale.scale_s},
-                    {"scale_t", scale.scale_t},
-                });
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json gx_indirect_tev_stages_json(std::span<const smgpc::render::GXIndirectTevStageState> stages) {
-            auto out = Json::array();
-            for (const auto &stage : stages) {
-                out.push_back(Json{
-                    {"tev_stage", stage.tev_stage},
-                    {"ind_stage", stage.ind_stage},
-                    {"format", stage.format},
-                    {"bias", stage.bias},
-                    {"bump_alpha", stage.bump_alpha},
-                    {"matrix_index", stage.matrix_index},
-                    {"matrix_id", stage.matrix_id},
-                    {"wrap_s", stage.wrap_s},
-                    {"wrap_t", stage.wrap_t},
-                    {"use_original_lod", stage.use_original_lod},
-                    {"add_previous", stage.add_previous},
-                    {"active", stage.active},
-                    {"raw", stage.raw},
-                });
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json gx_indirect_json(const smgpc::render::GXIndirectState &indirect) {
-            return Json{
-                {"stage_count", indirect.stage_count},
-                {"texture_orders", gx_indirect_texture_orders_json(indirect.texture_orders)},
-                {"texture_matrices", gx_indirect_texture_matrices_json(indirect.texture_matrices)},
-                {"texture_coord_scales", gx_indirect_texture_coord_scales_json(indirect.texture_coord_scales)},
-                {"tev_stages", gx_indirect_tev_stages_json(indirect.tev_stages)},
-            };
-        }
-
-        [[nodiscard]] Json gx_register_load_json(const smgpc::render::GXRegisterLoadState &load, std::size_t index) {
-            return Json{
-                {"index", index},
-                {"space", register_space_name(load.space)},
-                {"byte_offset", load.byte_offset},
-                {"address", load.address},
-                {"count", load.count},
-                {"value", load.value},
-            };
-        }
-
-        [[nodiscard]] Json gx_register_loads_json(std::span<const smgpc::render::GXRegisterLoadState> loads) {
-            auto out = Json::array();
-            for (auto i = std::size_t{}; i < loads.size(); ++i) {
-                out.push_back(gx_register_load_json(loads[i], i));
-            }
-            return out;
-        }
-
-        [[nodiscard]] Json j3d_packet_trace_json(const RuntimeContext::J3dRuntimePacketTrace &packet, std::size_t index) {
-            const auto &state = packet.state;
-            return Json{
-                {"index", index},
-                {"model_name", packet.model_name},
-                {"frame_index", packet.frame_index},
-                {"draw_pass", packet.draw_pass},
-                {"render_pass", packet.draw_pass},
-                {"view_id", 0},
-                {"material_name", state.material_name},
-                {"shape_index", state.shape_index},
-                {"shape_draw_order", state.shape_draw_order},
-                {"material_index", state.material_index},
-                {"material_mode", state.material_mode},
-                {"draw_buffer_opaque", state.draw_buffer_opaque},
-                {"joint_index", state.joint_index},
-                {"matrix_group_index", state.matrix_group_index},
-                {"matrix_group_count", state.matrix_group_count},
-                {"use_matrix_index", state.use_matrix_index},
-                {"use_matrix_count", state.use_matrix_count},
-                {"first_matrix_table_index", state.first_matrix_table_index},
-                {"matrix_table_count", state.matrix_table_count},
-                {"display_list_offset", state.display_list_offset},
-                {"display_list_size", state.display_list_size},
-                {"parsed_display_list_bytes", state.parsed_display_list_bytes},
-                {"draw_packet_triangle_count", state.draw_packet_triangle_count},
-                {"pass_order", state.pass_order},
-                {"packet_mode", j3d_packet_mode_name(state.packet_mode)},
-                {"packet_mode_reason", state.packet_mode_reason},
-                {"material_pass_count", state.material_pass_count},
-                {"shader_texture_stage_count", state.shader_texture_stage_count},
-                {"color_channel_count", state.color_channel_count},
-                {"declared_tev_stage_count", state.declared_tev_stage_count},
-                {"color_channels", gx_color_channels_json(state)},
-                {"loaded_light_mask", state.loaded_light_mask},
-                {"material_loaded_light_mask", state.material_loaded_light_mask},
-                {"scene_loaded_light_mask", state.scene_loaded_light_mask},
-                {"requested_light_mask", state.requested_light_mask},
-                {"unsatisfied_light_mask", state.unsatisfied_light_mask},
-                {"lights", gx_lights_json(state)},
-                {"used_textures_mask", used_textures_mask(state.texture_bindings)},
-                {"used_texture_slots", used_texture_slots_json(state.texture_bindings)},
-                {"texture_bindings", gx_texture_bindings_json(state.texture_bindings)},
-                {"tex_coord_gens", gx_tex_coord_gens_json(state.tex_coord_gens)},
-                {"tex_coord_scales", gx_tex_coord_scales_json(state.tex_coord_scales)},
-                {"su_line_point", gx_su_line_point_json(state.su_line_point)},
-                {"tex_matrices", gx_tex_matrices_json(state.tex_matrices)},
-                {"tev_orders", gx_tev_orders_json(state.tev_orders)},
-                {"tev_stages", gx_tev_stages_json(state.tev_stages)},
-                {"tev_k_colors", tev_k_colors_json(state.tev_k_colors)},
-                {"active_tev_stage_count", state.active_tev_stage_count},
-                {"tev_order_count", state.tev_order_count},
-                {"tev_stage_count", state.tev_stage_count},
-                {"texgen_count", state.texgen_count},
-                {"indirect_stage_count", state.indirect_stage_count},
-                {"active_indirect_tev_stage_count", state.active_indirect_tev_stage_count},
-                {"indirect_matrix_count", state.indirect_matrix_count},
-                {"indirect_texture_order_count", state.indirect_texture_order_count},
-                {"indirect_texture_scale_count", state.indirect_texture_scale_count},
-                {"indirect", gx_indirect_json(state.indirect)},
-                {"mdl3_packet_bytes", state.mdl3_packet_bytes},
-                {"mdl3_command_count", state.mdl3_command_count},
-                {"mdl3_bp_load_count", state.mdl3_bp_load_count},
-                {"mdl3_xf_load_count", state.mdl3_xf_load_count},
-                {"mdl3_register_loads", gx_register_loads_json(state.mdl3_register_loads)},
-                {"source_vertex_count", state.source_vertex_count},
-                {"source_triangle_count", state.source_triangle_count},
-                {"project_source_vertices", state.project_source_vertices},
-                {"evaluate_material_per_vertex", state.evaluate_material_per_vertex},
-                {"blend", state.blend},
-                {"blend_mode", blend_mode_name(state.blend_mode)},
-                {"gx_blend", gx_blend_json(state.gx_blend)},
-                {"gx_alpha_compare", gx_alpha_compare_json(state.gx_alpha_compare)},
-                {"gx_initial_tev_registers", tev_registers_json(state.gx_initial_tev_registers)},
-                {"gx_z_mode", gx_z_mode_json(state.gx_z_mode)},
-                {"gx_fog", gx_fog_json(state.gx_fog)},
-                {"depth_test", state.depth_test},
-                {"depth_write", state.depth_write},
-                {"depth_compare", depth_compare_name(state.depth_compare)},
-                {"cull_mode", cull_mode_name(state.cull_mode)},
-                {"fog_enabled", state.fog_enabled},
-                {"fog_type", state.fog_type},
-                {"fog_projection", state.fog_projection},
-                {"fog_range_adjust_enabled", state.fog_range_adjust_enabled},
-                {"fog_color", color_json(state.fog_color)},
-                {"bck_active", state.bck_active},
-                {"bck_frame", state.bck_frame},
-                {"bck_normalized_frame", state.bck_normalized_frame},
-                {"bck_frame_max", state.bck_frame_max},
-                {"bck_joint_count", state.bck_joint_count},
-                {"btk_active", state.btk_active},
-                {"btk_frame", state.btk_frame},
-                {"btk_normalized_frame", state.btk_normalized_frame},
-                {"btk_frame_max", state.btk_frame_max},
-                {"btk_material_count", state.btk_material_count},
-                {"btp_active", state.btp_active},
-                {"btp_frame", state.btp_frame},
-                {"btp_normalized_frame", state.btp_normalized_frame},
-                {"btp_frame_max", state.btp_frame_max},
-                {"btp_material_count", state.btp_material_count},
-            };
         }
 
         [[nodiscard]] Json layout_packet_trace_json(const RuntimeContext::LayoutRuntimePacketTrace &packet, std::size_t index) {
@@ -1777,10 +1142,6 @@ namespace smgpc::runtime {
         [[nodiscard]] Json runtime_render_packets_json(const RuntimeContext &runtime) {
             auto out = Json::array();
             auto index = std::size_t{};
-            for (const auto &packet : runtime.j3d_packet_trace()) {
-                out.push_back(j3d_packet_trace_json(packet, index));
-                ++index;
-            }
             for (const auto &packet : runtime.layout_packet_trace()) {
                 out.push_back(layout_packet_trace_json(packet, index));
                 ++index;

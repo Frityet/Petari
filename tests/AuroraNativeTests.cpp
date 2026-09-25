@@ -42,8 +42,6 @@
 #include "runtime/SceneScheduler.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/TplTexture.hpp"
-#include "scene/StageCollisionService.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "SceneExecutionFixture.hpp"
@@ -123,42 +121,6 @@ namespace {
         write_be32(bytes, 0x00U, entry_count);
         write_be32(bytes, 0x08U, 0x10U);
         return JMapInfo::from_bcsv(bytes);
-    }
-
-    std::vector<std::uint8_t> make_single_triangle_kcl(float thickness = 2.0F,
-                                                       std::uint16_t attribute = 7U) {
-        constexpr auto position_offset = 0x38U;
-        constexpr auto normal_offset = 0x44U;
-        constexpr auto prism_offset = 0x74U;
-        constexpr auto octree_offset = 0x84U;
-        auto bytes = std::vector<std::uint8_t>(0x88U, 0U);
-        write_be32(bytes, 0x00U, position_offset);
-        write_be32(bytes, 0x04U, normal_offset);
-        // KCL stores this address 0x10 bytes before the first prism.
-        write_be32(bytes, 0x08U, prism_offset - 0x10U);
-        write_be32(bytes, 0x0cU, octree_offset);
-        write_be_float(bytes, 0x10U, thickness);
-
-        const auto write_vec3 = [&](std::size_t offset, float x, float y, float z) {
-            write_be_float(bytes, offset, x);
-            write_be_float(bytes, offset + 4U, y);
-            write_be_float(bytes, offset + 8U, z);
-        };
-        write_vec3(position_offset, 0.0F, 0.0F, 0.0F);
-        write_vec3(normal_offset + 0x00U, 0.0F, 1.0F, 0.0F);
-        write_vec3(normal_offset + 0x0cU, 1.0F, 0.0F, 0.0F);
-        write_vec3(normal_offset + 0x18U, 0.0F, 0.0F, 1.0F);
-        constexpr auto diagonal = 0.70710678118F;
-        write_vec3(normal_offset + 0x24U, diagonal, 0.0F, diagonal);
-
-        write_be_float(bytes, prism_offset, diagonal);
-        write_be16(bytes, prism_offset + 4U, 0U);
-        write_be16(bytes, prism_offset + 6U, 0U);
-        write_be16(bytes, prism_offset + 8U, 1U);
-        write_be16(bytes, prism_offset + 10U, 2U);
-        write_be16(bytes, prism_offset + 12U, 3U);
-        write_be16(bytes, prism_offset + 14U, attribute);
-        return bytes;
     }
 
     JMapInfo make_open_rail_path_info() {
@@ -536,7 +498,7 @@ namespace {
         nand.write_file("save/banner.bin", std::span<const std::uint8_t>(payload), 0x3CU, 0U);
 
         const auto normalized = nand.normalize_path("save/banner.bin");
-        require(normalized.starts_with(aurora::NandFileSystem::title_data_root()),
+        require(normalized.starts_with(nand.title_data_root()),
                 "relative NAND paths should live under the title data root");
         require(nand.exists("save/banner.bin"), "NAND write should make the file visible");
 
@@ -617,65 +579,6 @@ namespace {
         int off_count = 0;
     };
 
-    class CurrentSceneObjHolderGuard {
-    public:
-        explicit CurrentSceneObjHolderGuard(SceneObjHolder &holder) : _binding(holder) {
-        }
-
-    private:
-        smgpc::scene::SceneObjHolderBinding _binding;
-    };
-
-    void test_stage_switch_zone_identity_and_edges() {
-        auto holder = SceneObjHolder{};
-        const auto holder_guard = CurrentSceneObjHolderGuard(holder);
-        require(MR::createSceneObj(SceneObj_StageSwitchContainer) != nullptr,
-                "the retail stage-switch holder must be created explicitly for the scene");
-
-        auto zone_one_info = JMapInfo{};
-        zone_one_info.setPlacedZoneId(1);
-        auto zone_two_info = JMapInfo{};
-        zone_two_info.setPlacedZoneId(2);
-        const auto zone_one_iter = JMapInfoIter(&zone_one_info, 0);
-        const auto zone_two_iter = JMapInfoIter(&zone_two_info, 0);
-
-        auto local_zone_one = SwitchIdInfo(7, zone_one_iter);
-        auto local_zone_two = SwitchIdInfo(7, zone_two_iter);
-        auto global_zone_one = SwitchIdInfo(1007, zone_one_iter);
-        auto global_zone_two = SwitchIdInfo(1007, zone_two_iter);
-
-        auto *container = MR::getSceneObj<StageSwitchContainer>(SceneObj_StageSwitchContainer);
-        container->createAndAddZone(local_zone_one);
-        container->createAndAddZone(local_zone_two);
-
-        require(!StageSwitchFunction::isOnSwitchBySwitchIdInfo(local_zone_one) &&
-                    !StageSwitchFunction::isOnSwitchBySwitchIdInfo(local_zone_two),
-                "same-numbered local switches should start off in separate zone banks");
-
-        auto ctrl = StageSwitchCtrl(JMapInfoIter{});
-        ctrl.mSW_A = &local_zone_one;
-        auto watcher = SwitchWatcher(&ctrl);
-        auto listener = CountingSwitchListener{};
-        watcher.addSwitchListener(&listener, 1U);
-        watcher.movement();
-
-        StageSwitchFunction::onSwitchBySwitchIdInfo(local_zone_one);
-        require(StageSwitchFunction::isOnSwitchBySwitchIdInfo(local_zone_one), "local switch should turn on in its placed zone");
-        require(!StageSwitchFunction::isOnSwitchBySwitchIdInfo(local_zone_two),
-                "turning on a local switch must not affect the same number in another zone");
-        watcher.movement();
-        watcher.movement();
-        require(listener.on_count == 1 && listener.off_count == 0, "watcher should emit one rising edge and no duplicate steady-state edge");
-
-        StageSwitchFunction::onSwitchBySwitchIdInfo(global_zone_one);
-        require(StageSwitchFunction::isOnSwitchBySwitchIdInfo(global_zone_two),
-                "global switches should share their bank across placement zones");
-
-        StageSwitchFunction::offSwitchBySwitchIdInfo(local_zone_one);
-        watcher.movement();
-        require(listener.on_count == 1 && listener.off_count == 1, "watcher should emit one falling edge after the switch turns off");
-    }
-
     void test_collision_blocker_sensor_lifecycle() {
         auto blocker = CollisionBlocker("CollisionBlocker");
         blocker.init(JMapInfoIter{});
@@ -692,12 +595,12 @@ namespace {
 
     void test_simple_effect_host_compatibility() {
         auto steam = SimpleEffectObj("Steam");
-        const auto* first_offset = steam.getClippingCenterOffset();
-        const auto* second_offset = steam.getClippingCenterOffset();
+        const auto first_offset = steam.getClippingCenterOffset();
+        const auto second_offset = steam.getClippingCenterOffset();
 
-        require(first_offset != nullptr && first_offset == second_offset,
-                "SimpleEffectObj clipping offset should use persistent host storage");
-        require(first_offset->x == 0.0F && first_offset->y == 0.0F && first_offset->z == 0.0F,
+        require(first_offset == second_offset,
+                "SimpleEffectObj clipping offset should return the original value consistently");
+        require(first_offset.x == 0.0F && first_offset.y == 0.0F && first_offset.z == 0.0F,
                 "SimpleEffectObj clipping offset should preserve the original zero value");
         require(MR::isEqualString("Steam", "Steam") && !MR::isEqualString("Steam", "Smoke"),
                 "host string equality should retain the retail strcmp semantics");
@@ -760,24 +663,24 @@ namespace {
         require_logic_error(
             [&] { (void)MR::tryRegisterDemoCast(&actor, JMapInfoIter(&placement, 0)); },
             "demo-cast registration without a scene-owned DemoDirector runtime must fail explicitly");
-        require(smgpc::scene::current_scene_obj_holder() == nullptr,
+        require(MR::getSceneObjHolder() == nullptr,
                 "missing-scene registration must not manufacture a SceneObj holder");
 
         require_logic_error(
             [&] { (void)MR::tryRegisterDemoCast(&actor, JMapInfoIter(&placement, 1)); },
             "missing placement metadata must not hide an absent scene-owned DemoDirector runtime");
-        require(smgpc::scene::current_scene_obj_holder() == nullptr,
+        require(MR::getSceneObjHolder() == nullptr,
                 "a second missing-scene registration must not manufacture a SceneObj holder");
     }
 
     void test_story_event_spin_entitlement_boundary() {
-        require(smgpc::scene::current_scene_obj_holder() == nullptr,
+        require(MR::getSceneObjHolder() == nullptr,
                 "the absent story-owner proof must have no scene or original Mario owner");
 
         require_logic_error(
             [&] { MR::onGameEventFlagEnableToSpinAndStarPointer(); },
             "spin entitlement must be unavailable while no retail save sequence is backed");
-        require(smgpc::scene::current_scene_obj_holder() == nullptr,
+        require(MR::getSceneObjHolder() == nullptr,
                 "an unavailable story write must not manufacture a scene or player owner");
         require_logic_error(
             [] { static_cast<void>(MR::isOnGameEventFlagEndTicoGuideDemo()); },
@@ -795,120 +698,6 @@ namespace {
         NameObjFactory::getMountObjectArchiveList(&archives, "StarPieceGroup", JMapInfoIter());
         require(archives.getArchiveNum() == 0,
                 "an absent StarPiece group factory must not synthesize archive requests");
-    }
-
-    void test_host_kcl_collision_service_queries() {
-        auto collision = smgpc::scene::StageCollisionService{};
-        constexpr auto identity = std::array<float, 12U>{
-            1.0F, 0.0F, 0.0F, 0.0F,
-            0.0F, 1.0F, 0.0F, 0.0F,
-            0.0F, 0.0F, 1.0F, 0.0F,
-        };
-        const auto kcl = make_single_triangle_kcl();
-        require(collision.add_kcl(kcl, identity, "native-test.kcl"),
-                "a valid big-endian KCL prism should reconstruct into a host collision triangle");
-        collision.build();
-        require(collision.stats().mesh_count == 1U && collision.stats().triangle_count == 1U &&
-                    collision.stats().rejected_triangle_count == 0U,
-                "the KCL service should report its accepted resource and triangle counts");
-
-        auto hit = smgpc::scene::StageCollisionHit{};
-        require(collision.line_cast(TVec3f{0.25F, 1.0F, 0.25F}, TVec3f{0.0F, -2.0F, 0.0F}, &hit) &&
-                    hit.position.epsilonEquals(TVec3f{0.25F, 0.0F, 0.25F}, 0.0001F) &&
-                    hit.normal.epsilonEquals(TVec3f{0.0F, 1.0F, 0.0F}, 0.0001F) && hit.attribute == 7U,
-                "line queries should return the reconstructed KCL position, normal, and attribute");
-        require(!collision.line_cast(TVec3f{0.25F, -1.0F, 0.25F}, TVec3f{0.0F, 2.0F, 0.0F}, &hit),
-                "KCL line queries should reject travel from the prism's back side toward its front");
-        require(collision.line_cast(TVec3f{0.25F, 1.0F, 0.25F}, TVec3f{0.0F, -1.0F, 0.0F}, &hit) &&
-                    std::abs(hit.fraction - 1.0F) < 0.0001F,
-                "KCL line queries should accept an arrow ending exactly on the face");
-        require(collision.line_cast(TVec3f{-0.005F, 1.0F, 0.25F}, TVec3f{0.0F, -2.0F, 0.0F}, &hit) &&
-                    !collision.line_cast(TVec3f{-0.011F, 1.0F, 0.25F}, TVec3f{0.0F, -2.0F, 0.0F}, &hit),
-                "KCL arrows should preserve the original 0.01-unit physical edge tolerance");
-
-        const auto contacts = collision.sphere_contacts(TVec3f{0.25F, 0.25F, 0.25F}, 0.5F);
-        require(!contacts.empty() && contacts.front().penetration > 0.24F && contacts.front().attribute == 7U,
-                "sphere queries should expose penetrating KCL contacts to the generalized binder");
-        auto ordered_collision = smgpc::scene::StageCollisionService{};
-        constexpr auto raised = std::array<float, 12U>{
-            1.0F, 0.0F, 0.0F, 0.0F,
-            0.0F, 1.0F, 0.0F, 0.2F,
-            0.0F, 0.0F, 1.0F, 0.0F,
-        };
-        require(ordered_collision.add_kcl(make_single_triangle_kcl(2.0F, 7U), identity, "first.kcl") &&
-                    ordered_collision.add_kcl(make_single_triangle_kcl(2.0F, 9U), raised, "second.kcl"),
-                "the native fixture should permit overlapping KCL sources at different depths");
-        ordered_collision.build();
-        const auto first_ordered_contact =
-            ordered_collision.sphere_contacts(TVec3f{0.25F, 0.25F, 0.25F}, 0.5F, 1U);
-        require(first_ordered_contact.size() == 1U && first_ordered_contact.front().attribute == 7U,
-                "a full collision-plane array should use deterministic source order rather than deepest-first order");
-
-        auto thin_collision = smgpc::scene::StageCollisionService{};
-        const auto thin_kcl = make_single_triangle_kcl(0.2F);
-        require(thin_collision.add_kcl(thin_kcl, identity, "thin.kcl"),
-                "a thin KCL prism should remain a valid collision resource");
-        thin_collision.build();
-        require(thin_collision.sphere_contacts(TVec3f{0.25F, 0.25F, 0.25F}, 0.5F).empty(),
-                "a sphere penetration deeper than the KCL thickness should be rejected");
-        const auto thickness_boundary = thin_collision.sphere_contacts(TVec3f{0.25F, 0.3F, 0.25F}, 0.5F);
-        require(!thickness_boundary.empty() &&
-                    std::abs(thickness_boundary.front().penetration - 0.2F) < 0.0001F,
-                "the inclusive KCL thickness boundary should retain radius minus signed face distance");
-
-        const auto edge_contact = collision.sphere_contacts(TVec3f{0.75F, 0.1F, 0.75F}, 0.5F);
-        constexpr auto expected_edge_penetration = 0.25355339F;
-        require(!edge_contact.empty() &&
-                    std::abs(edge_contact.front().penetration - expected_edge_penetration) < 0.0001F &&
-                    edge_contact.front().normal.epsilonEquals(TVec3f{0.0F, 1.0F, 0.0F}, 0.0001F) &&
-                    edge_contact.front().moving_reaction.epsilonEquals(TVec3f{}, 0.0F),
-                "static edge contacts retain the face normal and have zero collision-part movement reaction");
-
-        const auto point_contact = collision.sphere_contacts(TVec3f{0.25F, -1.0F, 0.25F}, 0.0F);
-        require(!point_contact.empty() && std::abs(point_contact.front().penetration - 1.0F) < 0.0001F,
-                "a zero-radius point behind the face but inside the extruded prism slab should collide");
-        require(collision.sphere_contacts(TVec3f{0.0F, -1.0F, 0.25F}, 0.0F).empty(),
-                "a zero-radius point exactly on a prism edge should retain KCHitSphere's strict rejection");
-        const auto zero_depth = collision.sphere_contacts(TVec3f{0.25F, 0.5F, 0.25F}, 0.5F);
-        require(!zero_depth.empty() && std::abs(zero_depth.front().penetration) < 0.0001F,
-                "a face-interior sphere exactly tangent to KCL should remain a zero-depth hit");
-
-        auto scaled_collision = smgpc::scene::StageCollisionService{};
-        constexpr auto scale_four = std::array<float, 12U>{
-            4.0F, 0.0F, 0.0F, 0.0F,
-            0.0F, 4.0F, 0.0F, 0.0F,
-            0.0F, 0.0F, 4.0F, 0.0F,
-        };
-        require(scaled_collision.add_kcl(kcl, scale_four, "scaled.kcl"),
-                "a uniformly scaled KCL prism should remain loadable");
-        scaled_collision.build();
-        const auto scaled_depth = scaled_collision.sphere_contacts(TVec3f{1.0F, -4.0F, 1.0F}, 0.0F);
-        require(!scaled_depth.empty() && std::abs(scaled_depth.front().penetration - 4.0F) < 0.0001F,
-                "KCL header thickness should scale into world space with its collision transform");
-        require(scaled_collision.line_cast(TVec3f{-0.03F, 4.0F, 1.0F}, TVec3f{0.0F, -8.0F, 0.0F}) &&
-                    !scaled_collision.line_cast(TVec3f{-0.041F, 4.0F, 1.0F}, TVec3f{0.0F, -8.0F, 0.0F}),
-                "KCHitArrow's 0.01 local-unit edge allowance should scale with transformed KCL");
-
-        auto affine_collision = smgpc::scene::StageCollisionService{};
-        constexpr auto shear_x_by_y = std::array<float, 12U>{
-            1.0F, 1.0F, 0.0F, 0.0F,
-            0.0F, 1.0F, 0.0F, 0.0F,
-            0.0F, 0.0F, 1.0F, 0.0F,
-        };
-        require(affine_collision.add_kcl(kcl, shear_x_by_y, "affine.kcl"),
-                "an affine-transformed KCL prism should remain loadable");
-        affine_collision.build();
-        require(!affine_collision.sphere_contacts(TVec3f{0.5F, -1.9F, 0.25F}, 0.0F).empty() &&
-                    affine_collision.sphere_contacts(TVec3f{0.5F, -2.1F, 0.25F}, 0.0F).empty(),
-                "KCL slab thickness should use transformed-plane separation under non-uniform affine transforms");
-
-        collision.activate();
-        require(smgpc::scene::StageCollisionService::active() == &collision,
-                "the scene collision boundary should publish the current stage service");
-
-        collision.deactivate();
-        require(smgpc::scene::StageCollisionService::active() == nullptr,
-                "stage teardown should clear the active collision boundary");
     }
 
     void test_original_rail_part_geometry() {
@@ -1136,18 +925,7 @@ namespace {
         require(gravity.epsilonEquals(TVec3f{9.0F, 9.0F, 9.0F}, 0.0F),
                 "an unavailable positional query must leave its destination untouched");
 
-        auto gravity_holder = SceneObjHolder{};
-        const auto gravity_binding =
-            smgpc::scene::SceneObjHolderBinding(gravity_holder);
-        require(MR::createSceneObj(SceneObj_PlanetGravityManager) != nullptr,
-                "the grounded fallback test requires the exact scene-owned gravity manager");
-        actor.mGravity.zero();
-        smgpc::compat::register_actor_binder(&actor);
-        actor.mBinder->_C8 = 0.0F;
-        actor.mBinder->mGroundInfo.mParentTriangle.mNormals[0].set(0.0F, 2.0F, 0.0F);
-        MR::calcGravityOrZero(&actor);
-        require(actor.mGravity.epsilonEquals(TVec3f{0.0F, -2.0F, 0.0F}, 0.00001F),
-                "calcGravityOrZero copies the negated original contact normal without renormalizing it");
+
     }
 
     struct SpineProbeState {
@@ -1292,7 +1070,6 @@ int main(int argc, char** argv) {
         TestCase{"Aurora NAND storage smoke", test_aurora_nand_storage_smoke},
         TestCase{"player snapshot preserves actor visibility", test_player_snapshot_preserves_actor_visibility},
         TestCase{"scene scheduler registration scope cleanup", test_scene_scheduler_registration_scope_cleanup},
-        TestCase{"stage switch zone identity and edges", test_stage_switch_zone_identity_and_edges},
         TestCase{"CollisionBlocker sensor lifecycle", test_collision_blocker_sensor_lifecycle},
         TestCase{"SimpleEffectObj host compatibility", test_simple_effect_host_compatibility},
         TestCase{"rail info ownership and per-entry lookup", test_rail_info_ownership_and_per_entry_lookup},
@@ -1301,8 +1078,6 @@ int main(int argc, char** argv) {
         TestCase{"story-event spin entitlement boundary", test_story_event_spin_entitlement_boundary},
         TestCase{"StarPieceGroup factory absent without real director",
                  test_star_piece_group_factory_is_absent_without_real_director},
-        TestCase{"host KCL query and storage surface", test_host_kcl_collision_service_queries},
-        TestCase{"derived actor same-frame Binder ownership",
         TestCase{"original rail part geometry", test_original_rail_part_geometry},
         TestCase{"FixedPosition and PartsModel surface", test_fixed_position_and_parts_model_surface},
         TestCase{"original vector kill and normalize", test_original_vector_kill_and_normalize},

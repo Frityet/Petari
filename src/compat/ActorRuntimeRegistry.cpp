@@ -28,7 +28,6 @@
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjGroup.hpp"
-#include "compat/CollisionPartsCompat.hpp"
 #include "Game/System/ResourceHolder.hpp"
 #include "resource/RarcArchive.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -38,7 +37,7 @@
 #include "Game/Util/LiveActorUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "resource/TextEncoding.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -425,7 +424,7 @@ namespace smgpc::compat {
                 aurora::throw_host_exception<std::logic_error>("LiveActor runtime state is already registered.");
             }
         }
-        if (smgpc::scene::current_scene_obj_holder() != nullptr) {
+        if (MR::getSceneObjHolder() != nullptr) {
             MR::getAllLiveActorGroup()->registerActor(actor);
             auto* director = MR::getClippingDirector();
             director->registerActor(actor);
@@ -479,7 +478,7 @@ namespace smgpc::compat {
         }
         delete actor->mEffectKeeper;
         const_cast<LiveActor*>(actor)->mEffectKeeper = nullptr;
-        release_actor_collision_parts(actor);
+        const_cast<LiveActor*>(actor)->releaseNativeCollisionParts();
 
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->star_pointer().unregister_target(*actor);

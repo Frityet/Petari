@@ -1,6 +1,6 @@
 #include "OriginalStageResourceProcessFixture.hpp"
 #include "Game/Util/SystemUtil.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "resource/JpcResource.hpp"
 #include "resource/RarcArchive.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -30,7 +30,7 @@ void verify_jpa(bool ownershipOnly, std::weak_ptr<const smgpc::resource::JpcReso
         assert(holder.mParticleNames->getValue(i, "name", &name));
         assert(holder.getUserIndex(name) == i);
     }
-    auto domain = smgpc::compat::JkrAllocationDomain::create(smgpc::scene::current_scene_allocation_domain(), 2U << 20);
+    auto domain = smgpc::compat::JkrAllocationDomain::create(MR::getSceneObjHolder()->nativeAllocationDomain(), 2U << 20);
     const std::weak_ptr<smgpc::compat::JkrAllocationDomain> retired = domain;
     backing = manager->mNativeResource;
     assert(manager->mResNum == 3327 && manager->mTexNum == 225);

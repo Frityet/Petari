@@ -130,16 +130,7 @@ bool Mario::checkGroundOnSlope() {
             setGroundNorm(*triangle.getNormal(0));
 
             Triangle* pGroundPolygon = mGroundPolygon;
-            pGroundPolygon->mParts = triangle.mParts;
-            pGroundPolygon->mIdx = triangle.mIdx;
-            pGroundPolygon->mSensor = triangle.mSensor;
-            pGroundPolygon->mNormals[0] = triangle.mNormals[0];
-            pGroundPolygon->mNormals[1] = triangle.mNormals[1];
-            pGroundPolygon->mNormals[2] = triangle.mNormals[2];
-            pGroundPolygon->mNormals[3] = triangle.mNormals[3];
-            pGroundPolygon->mPos[0] = triangle.mPos[0];
-            pGroundPolygon->mPos[1] = triangle.mPos[1];
-            pGroundPolygon->mPos[2] = triangle.mPos[2];
+            *pGroundPolygon = triangle;
 
             TVec3f groundPos(hitPos);
             mGroundPos = groundPos;

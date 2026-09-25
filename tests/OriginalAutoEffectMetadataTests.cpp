@@ -11,7 +11,7 @@
 #include "Game/System/GameSystemObjHolder.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "JSystem/JKernel/JKRExpHeap.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "JSystem/JKernel/JKRMemArchive.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "resource/BcsvTable.hpp"
@@ -147,7 +147,7 @@ void verify_authored(Backing& backing) {
     require(JKRHeap::sRootHeap != nullptr, "the original process has created its actual SDK root heap");
     const auto root = smgpc::compat::JkrAllocationDomain::retain_heap(*JKRHeap::sRootHeap);
     backing.root = root;
-    const auto scene = smgpc::scene::current_scene_allocation_domain();
+    const auto scene = MR::getSceneObjHolder()->nativeAllocationDomain();
     require(scene != nullptr, "the original GameScene has its actual allocation owner");
     backing.scene = scene;
     Coverage coverage;

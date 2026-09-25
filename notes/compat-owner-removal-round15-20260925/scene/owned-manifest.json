@@ -1,0 +1,685 @@
+{
+  "scope": "Actual SceneObjHolder native ownership and original process authority",
+  "files": [
+    {
+      "path": "src/Game/Scene/SceneObjAvailability.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "6a9c8c2d6c8b1c9094597c10bb9c0ed22094103d8e7033c7c570b4b18f812608"
+    },
+    {
+      "path": "src/Game/Scene/SceneObjHolder.hpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/src/Game/Scene/SceneObjHolder.hpp",
+      "before_sha256": "8e830cfc37c2fbc37d8f8604c0334257d4d56ad584aacfabcca605540867ee7e",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "88ad7d2fc6437490b3c233e6dba86312e7bed961d370927e70e7883389c433b2"
+    },
+    {
+      "path": "src/Game/Scene/SceneObjHolder.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/src/Game/Scene/SceneObjHolder.cpp",
+      "before_sha256": "c3e5a3bef03fe7a5d2716362ee6e4c5fd21c9ea0d095e68eed245df0a5c0f368",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "7864c31cebc8502f6556525c8b0af02bc5a7c296714f46458726d313b1854f20"
+    },
+    {
+      "path": "src/compat/SceneObjHolderCompat.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/src/compat/SceneObjHolderCompat.cpp",
+      "before_sha256": "51ccd4ec0efd7f14dabe3da51e7f687db0d6bd19b2c0e5b6283a149daaa4ff15",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/scene/SceneObjHolderRuntime.hpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/src/scene/SceneObjHolderRuntime.hpp",
+      "before_sha256": "95f8aa511eb62d2c2812166b88cdbea2ba429782bd78f42ab5b030a1d1714e22",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/scene/OriginalSceneSupport.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/src/scene/OriginalSceneSupport.cpp",
+      "before_sha256": "297489f9b9f76a16e7651d78635d4a1e33d054dd8a698f85af16b610e5ce89ec",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "709692d0a933a3c93461e85621fe7887c5be2f111a0d040cf84f9d34b67daeea"
+    },
+    {
+      "path": "src/scene/GameSceneBinding.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/src/scene/GameSceneBinding.cpp",
+      "before_sha256": "aebac0fbce0c26d3307c1ff44b7d39851a4fda12d9eafc7cdcd3ce0f30ed56e9",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "a5c15b433c1944d420f810aef98fd0bd5715f26ed5f30c561c0b1271a133599a"
+    },
+    {
+      "path": "src/scene/NameObjChildOwner.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/src/scene/NameObjChildOwner.cpp",
+      "before_sha256": "4bf4897162e9c75b4100dce47aeaac4ffd85fda629b8ed68bb6831539d2bd070",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "270fd48547b927fc5df40e5adb054f3182054cee3d3e78b5f047a8a5796af493"
+    },
+    {
+      "path": "src/Game/Map/SwitchWatcherHolder.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/src/Game/Map/SwitchWatcherHolder.cpp",
+      "before_sha256": "02922a28250d8bcd9160bc37c0203f38af98a458bbe08819df1e46e749f5cc02",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "c6bcdbdc238142c5acfb1f76fb0e541569d098c7a0ccd7cb35d6e3a6c94f29d6"
+    },
+    {
+      "path": "src/Game/NameObj/NameObjListExecutor.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/src/Game/NameObj/NameObjListExecutor.cpp",
+      "before_sha256": "5ad1cb20aa1130e06179c29f66ce82ac7230d57c468dfe5dafaa859c336c34f9",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "9df7ee7dc28793fae22a75e9b0b291775a6241c38b9a5814e0f841f9e74a31cc"
+    },
+    {
+      "path": "src/runtime/ParityTrace.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/src/runtime/ParityTrace.cpp",
+      "before_sha256": "b6feb06752097ca445eb6ae861883e128c0224a6360ca9ef48e60c2b4cee0cc8",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "244e42a6c9c716e9cdce2e7873f2fcec7d7fffa46dd2245c09f0487fb58859b5"
+    },
+    {
+      "path": "src/camera/CameraDirectorRuntime.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/src/camera/CameraDirectorRuntime.cpp",
+      "before_sha256": "2a45d5b1247d70b2e7a0b96399988874f09c04408b63e70dc75aa3f791c54322",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "0f6053c34655a165a1cecc44c3113d6df2dfcdd7f9f0e0166fc87a91804245b6"
+    },
+    {
+      "path": "tests/SceneSchedulerHeapTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/SceneSchedulerHeapTests.cpp",
+      "before_sha256": "fbd1a916189b9b2bc24e5b79d52dbaaec87443885d4a5a92d0be7a487b86862d",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "52df6910b2d7d7b3a75b7eabfc44ffad32421e9ec82364d04a116ec6f5fe2b3d"
+    },
+    {
+      "path": "tests/OriginalScenarioCatalogTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalScenarioCatalogTests.cpp",
+      "before_sha256": "964bf252b20824793d8da6ad3074d61f28a4b2eebdc1afb929d4eb052b8b21cc",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "428ef49d213852318242eb406e1bab305e3e52b95ed35737835d5a0387d299f9"
+    },
+    {
+      "path": "tests/OriginalCameraContextTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalCameraContextTests.cpp",
+      "before_sha256": "d4f3198747e005f04bac1fe9671550d17840fc6223dfd9d869c767cb4f67c2be",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "bca78a69da220ddd71c2b4cdc79930df4fc30cfb40791dc502a7c956286c04fb"
+    },
+    {
+      "path": "tests/GravityRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/GravityRealOrAbsentTests.cpp",
+      "before_sha256": "8c408a3c1f43838fc2df7ce838e6c1d2b6fa7b0dad9c4fee34e4b866124165f8",
+      "initial_git_status": " M",
+      "action": "modify",
+      "after_sha256": "eb85ab070a1413705d16ccc52f0ab8bd7b05904bc558cac0197c38285233099d"
+    },
+    {
+      "path": "tests/OriginalProcessPlayerOwnerTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalProcessPlayerOwnerTests.cpp",
+      "before_sha256": "31722c5bc95ce0b28ed0272232760c2cc5f73e2507ffb88c217dde1f4879167c",
+      "initial_git_status": " M",
+      "action": "modify",
+      "after_sha256": "d11e96ec51bb85aa0052ec0a4cb98140b03836b0dd97b578194755cae7e915d0"
+    },
+    {
+      "path": "tests/OriginalProcessStarPiecePlacementTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalProcessStarPiecePlacementTests.cpp",
+      "before_sha256": "2c501b46de78237e8e9fe5eeaaac5f95a0f7819f87724bd219ac8dc0b577f3de",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "57c933f96173ba2f46af46d01dcab34bc154d760f8023bc9224e814a8c110b8e"
+    },
+    {
+      "path": "tests/OriginalPlayerUtilTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalPlayerUtilTests.cpp",
+      "before_sha256": "e719e035f1619d913b92b9a2466301c2009c4aefd22e4a508860b3cec409323c",
+      "initial_git_status": " M",
+      "action": "modify",
+      "after_sha256": "ff792b46d5b517d1e118357fa4c24ee435dd64649a6bb8f92bbcaef2653c361f"
+    },
+    {
+      "path": "tests/OriginalActorUtilityTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalActorUtilityTests.cpp",
+      "before_sha256": "bd0f63ff6064f32379fc587f3e805903a031bba26748718ec9b48d6e9b9f8971",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "0c4e5f7df5d75ab30c620b3b12527232a96f3e2d8c81ba1486cf1e5354a55c49"
+    },
+    {
+      "path": "tests/NameObjGroupLifetimeTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/NameObjGroupLifetimeTests.cpp",
+      "before_sha256": "4f0b1c5572501820fb62876bc8d48091a9618ae2f6c872da3eefeca8cc85aa3b",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "2c6ea24511a19cd4b9ea976871de828b3c129c2efe5cd821b0424167a33204b7"
+    },
+    {
+      "path": "tests/OriginalActorBroadcastTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalActorBroadcastTests.cpp",
+      "before_sha256": "e15b804f9c5bae1db0002993cbfef4cac31ff97eff3a1c4efea6d7d22b4be8fc",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "82c771f894cb6623067de3e62ce7842e51063ae05d9b333b3925a194d32516f7"
+    },
+    {
+      "path": "tests/SceneExecutionFixture.hpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/SceneExecutionFixture.hpp",
+      "before_sha256": "1c4d54888cd1a024b189cbb9f85b7faeee9a5024595928c2d972235e31d74a38",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "c7779eacf99c1601f7934c687c58e8cd69d20d7e6a8c8a5d69695554e95a30cf"
+    },
+    {
+      "path": "tests/OriginalJpaManagerTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalJpaManagerTests.cpp",
+      "before_sha256": "e593ba942946c710935b9cb36766a00608fb5483c19220da68ff75ead29e1f5a",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "ce00f2899f441c89ab0fa31affe1afb9abf4addaf56782e5eeb1d12c13ea6950"
+    },
+    {
+      "path": "tests/NPCActorRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/NPCActorRealOrAbsentTests.cpp",
+      "before_sha256": "aa32187ac8841d70e3cf659e87117b8357221baa77b35745e9ee6d4b5e5bddd3",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "bc16a7fa5f2c71e65c7d4f6adf12c5f447e0371725a34cf90c449c6f30ca6c70"
+    },
+    {
+      "path": "tests/OriginalLayoutGroupTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalLayoutGroupTests.cpp",
+      "before_sha256": "921ad42a1f677c197d85bd995e88fcee560a75e34c2dd28678f52882aa4e866f",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "e0babcb3f28b9ef554ae3c80006639b906d40e4b457455ec098245244d08c72f"
+    },
+    {
+      "path": "tests/OriginalProcessTrampleJumpTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalProcessTrampleJumpTests.cpp",
+      "before_sha256": "dc264506363dfcb4d0533acede10492a34d52f7316c9246ef5e80689fd07e8c0",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "d24476cbdee3150b35c14164b560b0fc81a08118a6a01ffbecbb954765d693d7"
+    },
+    {
+      "path": "tests/OriginalMessageHolderTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalMessageHolderTests.cpp",
+      "before_sha256": "03e30ebeb15036cd8f4c1a71d2eecfd967c4036f2a8834d407b8bca5184108c4",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "6c2774283b375fb1d0c4560b0c3307dcbd6bf86a38ba8cb77ec23c5cfe646675"
+    },
+    {
+      "path": "tests/OriginalProcessWarpPodTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalProcessWarpPodTests.cpp",
+      "before_sha256": "591877ae04144757433207cc33f5d6efd47fb4895679fceef586affc49860c38",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "f67d9614ce4e9884d6b5c37b93663f91dbb0f66ca85868785f006c3ac8b62932"
+    },
+    {
+      "path": "tests/OriginalSceneWipeOwnerTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalSceneWipeOwnerTests.cpp",
+      "before_sha256": "6ea1f67c7308978672b7591342a81536a9ae20d13f23fad03258bb38d7d75b9d",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "1c3170af96accb8541ab54a36b1a7320f8b5193983c68afcdbe6946af7eafd0d"
+    },
+    {
+      "path": "tests/SphereSelectorRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/SphereSelectorRealOrAbsentTests.cpp",
+      "before_sha256": "4195045c4610aa18ae32d8d216fe8560cae901d0553900f02e44bab8267cc90f",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "4ab4ea20528a0a3558813dcdb1b50e4f0531db6b9586e76964091d9f1e0e4436"
+    },
+    {
+      "path": "tests/OriginalSceneExecutionOwnerTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalSceneExecutionOwnerTests.cpp",
+      "before_sha256": "b467e99eec496efd3caff8927c440a51b492c3226182ae4ff39f720224731234",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "04a9d066131d362840c2d49f36a9c1450e083d5af0a95e99db3f267d3f59a3c8"
+    },
+    {
+      "path": "tests/LodCtrlCompatTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/LodCtrlCompatTests.cpp",
+      "before_sha256": "5910a09c9ca19226b8843ac2fd32fd51b0c780dac34e1338398c4488f90afb33",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "tests/OriginalProcessPunchingKinokoTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalProcessPunchingKinokoTests.cpp",
+      "before_sha256": "f525e4be4bf535d0fbb4d9e38889aff43c386629d739a0ef66729dd8ca99b68f",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "7029ccb4004a0ab2a699ef99caaf37778ec19a2c6ad8da7017927a428e07f362"
+    },
+    {
+      "path": "tests/PointLightRuntimeTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/PointLightRuntimeTests.cpp",
+      "before_sha256": "c4caec68d862e8a492aa955fdd1ee0fe47a0f23df19eac586fdcc05ffa4b8958",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "4470c61e9f34b8a60a0b606867d39ae27fdcd12a442e31451672d227eb071774"
+    },
+    {
+      "path": "tests/OriginalResourceHolderTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalResourceHolderTests.cpp",
+      "before_sha256": "66f1137c0a1b4394de21426d8f5a8a90a5308343e3b09a3ed6500f4a281b30d0",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "7c123054d3b4151c666e14f4b74fe1721df75dfb6214ba8d40acb509f3d11a38"
+    },
+    {
+      "path": "tests/JkrExceptionOwnershipTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/JkrExceptionOwnershipTests.cpp",
+      "before_sha256": "877d4266317f22c825eaecfa1b94c19852de127da1ae2715653f1b8ce1244aa4",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "325c2a3c592822b0b2b4ecfd492c12044ce399ba48e08cbc55ead1cfb46bb4ea"
+    },
+    {
+      "path": "tests/OriginalSensorMatrixTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalSensorMatrixTests.cpp",
+      "before_sha256": "1fba858e5c4e70c5db4f52fc3f86f1966946823c1fb3664146a13d1c27e13cec",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "202437a36019c0646076561e2a17524bb466a286662f2b0355ad1970b11a0097"
+    },
+    {
+      "path": "tests/AuroraNativeTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/AuroraNativeTests.cpp",
+      "before_sha256": "cba3c56eeaa542cff1eec131556ac5a370b347b28f5bd0a729cd440cb8ee0296",
+      "initial_git_status": " M",
+      "action": "modify",
+      "after_sha256": "5a385ab4b2298ffba8872c2970a69f3a05c4ae10711ceef94c184056001ac3d5"
+    },
+    {
+      "path": "tests/CenterScreenBlurRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/CenterScreenBlurRealOrAbsentTests.cpp",
+      "before_sha256": "338d1da7e51a172f41543dd2432f7933508885dd0bd05823399f6f0277240a58",
+      "initial_git_status": " M",
+      "action": "modify",
+      "after_sha256": "817371e8c3b7ac36ceb06f37d11b2bc28441950f8cb60b3dfc2b689c37beb7c1"
+    },
+    {
+      "path": "tests/OriginalProcessCrystalCageTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalProcessCrystalCageTests.cpp",
+      "before_sha256": "f4f65e182e1e8ebef2e0b0df1ad77ad96d527a3ed451efd2a8db065c75859ebd",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "a228b53c4a6aa257eb5f98ab78043b79942ed44ae847ce912be102bb78638cbe"
+    },
+    {
+      "path": "tests/TalkRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/TalkRealOrAbsentTests.cpp",
+      "before_sha256": "c9b2682f0b7ea427054a766f6aff307e95de9f353c667f398d4e2ceec87c69f1",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "a9082a727334d2676987793788203193349a6c4ab5d3874e064cc18382b43e02"
+    },
+    {
+      "path": "tests/AreaObjRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/AreaObjRealOrAbsentTests.cpp",
+      "before_sha256": "9b27caf5d093ba6c58b9a6236bcbbbf4d5447a91ff3eb176aef2268d76235f32",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "341ebacd995288da53d5624cd28664eda9602fcf6946d14cc89c28fb212c5462"
+    },
+    {
+      "path": "tests/OriginalNpcOrientationTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalNpcOrientationTests.cpp",
+      "before_sha256": "ae1209a8615a7014af7b34b26a18131f4f8867f369d8ee4897ee28b0a9f76f86",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "01ade235f8081e0028d24c8820b1eb949265b76872fa65932329e2133cc1cb23"
+    },
+    {
+      "path": "tests/ActorSensorRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/ActorSensorRealOrAbsentTests.cpp",
+      "before_sha256": "74b6d58648f0d0abcc75529e2a47934328d28cf8c3e40ed3dd2168c8754a9ec8",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "72d3146cc7ff59f9749363cc2d02b3e710246a69c5b95575f846044e520ffc92"
+    },
+    {
+      "path": "tests/OriginalAutoEffectMetadataTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalAutoEffectMetadataTests.cpp",
+      "before_sha256": "c6d05c7e31268a00e1a9c7ef24ed9ddc51033820ee89aaafc04090f812aa147e",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "760040ec5d118c99ccc8504f8ae370c6f1e48ca26b027f0d14588848857a4e26"
+    },
+    {
+      "path": "tests/OriginalProcessShadowVolumeLineTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalProcessShadowVolumeLineTests.cpp",
+      "before_sha256": "0a67c28b8455667d6479bfcb91bd3bc9cda89184e27a668d5c34fc58cdbb92dc",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "037f0d99153dde293d7467065b4efe803a8d6ad8359a8a835ca13a888c283edf"
+    },
+    {
+      "path": "tests/GameActorPhysicsRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/GameActorPhysicsRealOrAbsentTests.cpp",
+      "before_sha256": "b74f881c667bd69e5ba3428cc0b1d142bc0bf78b2e6f4b70854b7f39c5bef0e4",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "e70852ef8f5ac088f393feeedee48e15f6bc1dd30cd3a1b678ef32ca78783eab"
+    },
+    {
+      "path": "tests/OriginalImageEffectOwnershipTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalImageEffectOwnershipTests.cpp",
+      "before_sha256": "03543f211cbf5e5f38e975eeb92b56f2526e5027f96adff2c78ee8a776b8efe6",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "2d94915a060aeb054671871372c689294e777644d1c305300ff1aee4c47466b8"
+    },
+    {
+      "path": "tests/OriginalNamePosOwnerTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalNamePosOwnerTests.cpp",
+      "before_sha256": "ad96d9a1b32215c63cc91fae318edbbdec0b1508167053b2ca635aeb7031a1dd",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "acb87a199f03b9d610d8f8db3991f616f9af767fff51a668295da292e3bd26ca"
+    },
+    {
+      "path": "tests/OriginalCameraDirectorTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalCameraDirectorTests.cpp",
+      "before_sha256": "4c47b114dd5b9e491d3e238f3b70f04b22c294e0af857d33dd4561e885e15d5a",
+      "initial_git_status": " M",
+      "action": "modify",
+      "after_sha256": "7424b088ea2fb9eaa9748acfe44e3915edaad6a0ce7480e93713f54198d91f62"
+    },
+    {
+      "path": "tests/SceneObjHolderRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/SceneObjHolderRealOrAbsentTests.cpp",
+      "before_sha256": "a262563dd332f75f7f5031c51b38d0c23666d1baeba6170b3fe921cff2cd2e55",
+      "initial_git_status": " M",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "tests/OriginalJointControllerTests.cpp",
+      "before": "notes/compat-owner-removal-round15-20260925/scene/before/tests/OriginalJointControllerTests.cpp",
+      "before_sha256": "982fcbef33f95ab428dec6c9c70e820113cc9b06e23525dee11c13525a7cd71e",
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "modify",
+      "after_sha256": "058ed43aa11e18f9836d529b7e92051b43e3660f03fb620274fb6baa7e9fe57c"
+    },
+    {
+      "path": "src/Game/Screen/PlayerActionGuidance.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "cae98d0f2f06339019f8747bd2ffef2011edd90fb8972ec4db4b8912a569348b"
+    },
+    {
+      "path": "src/Game/Screen/HeatHazeEffect.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "55029a5b35891f0cf279309fc69f15a997669ee6364cebcb45252a40aeece338"
+    },
+    {
+      "path": "src/Game/Screen/GalaxyNamePlateDrawer.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "3903759e3e049111b2e2f1ecb226b0c4402667b24cb91178a61218524e7b21ae"
+    },
+    {
+      "path": "src/Game/Screen/GalaxyMapController.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "0dac1cb9098dc6f8d6fe7f5710776b24a4a7aa6924067869f98f779d7d03426b"
+    },
+    {
+      "path": "src/Game/Ride/Trapeze.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "87974e16a2e6cf5a0b2c77f6a596e07ff3e2a4f87b2e5202aeb28ded9abea08c"
+    },
+    {
+      "path": "src/Game/Ride/SwingRope.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "68168718bd4282f3a10ad382871aef44785691357e4a4d03e2eaed8d21ee0dc6"
+    },
+    {
+      "path": "src/Game/Ride/PlantStalk.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "7063743eb14eb05b9db4a20e31a457f9e354fc7241f047f0bea9d18b688d0d61"
+    },
+    {
+      "path": "src/Game/Ride/PlantLeaf.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "3b899c4314eddb5509078e0bb8d2bb39e704589112da722662d475f1ccd514a7"
+    },
+    {
+      "path": "src/Game/Ride/FluffWind.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "528e7001d4324d9e3c356bc664c0efe8ef6b26fd16cdf4affb277b5ccaff575e"
+    },
+    {
+      "path": "src/Game/NPC/MiiFaceIconHolder.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "b536bc0afd91ba2bb1146c79ac0bedf74bf18c3483d937fa78a9ef25f096c868"
+    },
+    {
+      "path": "src/Game/MapObj/WaterPressureBulletHolder.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "206f740fbad339f6ea0d31f04314864d55e82b7be46feebd1c994d476f58f59f"
+    },
+    {
+      "path": "src/Game/MapObj/Note.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "f2b191d9f5ab7be5a405ada32febbc259226476965d8c546e4982a1c6566074b"
+    },
+    {
+      "path": "src/Game/MapObj/MiniatureGalaxyHolder.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "1de603548ac04edad53aeaf57b8eb5ce40fa04155fc9f8eab51cb3c62043b490"
+    },
+    {
+      "path": "src/Game/MapObj/FirePressureBulletHolder.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "3299e8cc55d6d4a3386b1382f513472e36639ad466de52b2ae936a96e0db1fd9"
+    },
+    {
+      "path": "src/Game/MapObj/FallOutFieldDraw.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "25d0591b0e296bcaa58c434ea7501977545b8451041e856f1bfad096816ee55c"
+    },
+    {
+      "path": "src/Game/MapObj/ElectricRailHolder.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "78fc241f56bb3fa0e91f845d0d31450f99040e4002c084e0a9a708bffd5f95a0"
+    },
+    {
+      "path": "src/Game/MapObj/ClipFieldFillDraw.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "667fe6fc7bef77ba83d7d49b6ac01957376818427fdeffafef2fa31ca6c469e3"
+    },
+    {
+      "path": "src/Game/MapObj/ClipAreaDropHolder.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "33924607f852d3df3c51efb44d6d6a13001b13e1694f9340788716485b76826c"
+    },
+    {
+      "path": "src/Game/MapObj/BigBubbleHolder.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "144060eeab2cd7253940e6ef897b44e35debdd13845aeaccc90542ab56a5c6d8"
+    },
+    {
+      "path": "src/Game/MapObj/ArrowSwitchMultiHolder.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "a2ac8248121ca6f6f54109ca7dbb86233e7613edc51af353336d924b71adc358"
+    },
+    {
+      "path": "src/Game/MapObj/AirBubbleHolder.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "6ea0b0a3540d5c000e6f85bb21d4ab072c17005f28ac3ba4fe46b54e4dd8b4d2"
+    },
+    {
+      "path": "src/Game/Map/WaterPlant.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "053120d33c76b7e3a8285e305c74fd64980d6fbe311dfb0a4c69e967dc9e7011"
+    },
+    {
+      "path": "src/Game/Map/QuakeEffectGenerator.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "49247f4524de90999ee4ea08ea9cc61d132f962a4da9ac45d0faec9299c9eb81"
+    },
+    {
+      "path": "src/Game/LiveActor/VolumeModelDrawer.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "75224e8516cf7210ff301154662161135c99e480d8a572c6a5b23482232a017d"
+    },
+    {
+      "path": "src/Game/GameAudio/AudCameraWatcher.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "a42e27a66fc78504011ff9cf9dcb487009ab238f57f2cff314514e645824e700"
+    },
+    {
+      "path": "src/Game/Enemy/TakoHeiInkHolder.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "6879691b6ae668b1d72c08e568e3647a6ba184414bae027bf15f26121c4da28c"
+    },
+    {
+      "path": "src/Game/Enemy/KameckBeamHolder.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "e205f0c9b103487e854c61587af6317b4d13fa3f97128037153d4ad11878c517"
+    },
+    {
+      "path": "src/Game/Enemy/KabokuriFireHolder.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "c7b3e7df3bbffdc58a5f25a58a1f781ee93268c151b5e9665a681a313d5d15ff"
+    },
+    {
+      "path": "src/Game/Enemy/BegomanBase.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "ab9ed1c4a28cd7cce37e19b74f93c2a8333557b08fcab4b1d1cd1580348a1e02"
+    },
+    {
+      "path": "src/Game/Boss/SkeletalFishBossRailHolder.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "24306d189e936c3c0003bdfa9634616098203779e906f291a30da8e7e598a3d9"
+    },
+    {
+      "path": "src/Game/Boss/SkeletalFishBabyRailHolder.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "57dcab08348a225545b273f285e53170be6d983c532fc6643db2b49191828da0"
+    },
+    {
+      "path": "src/Game/Boss/BossAccessor.hpp",
+      "before": null,
+      "before_sha256": null,
+      "initial_git_status": "clean (parent round15 baseline)",
+      "action": "add",
+      "after_sha256": "a229d4d1ea8a911ee397035d8ef1745f72173bcbfa78a787a67177ebc71deb8c"
+    }
+  ]
+}

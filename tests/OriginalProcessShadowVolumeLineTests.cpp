@@ -13,7 +13,6 @@
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "scene/NameObjChildOwner.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 #include "../aurora/lib/dolphin/gx/__gx.h"
 #include "../aurora/lib/gx/fifo.hpp"
 
@@ -90,7 +89,7 @@ namespace {
         std::vector<const NameObj*> drawer_identities;
 
         void exercise() {
-            const auto domain = smgpc::scene::current_scene_allocation_domain();
+            const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
             require(domain != nullptr, "Actual original scene allocation domain exists");
             auto* holder = MR::getSceneObj<ShadowControllerHolder>(SceneObj_ShadowControllerHolder);
             require(holder != nullptr, "Actual original shadow holder exists");

@@ -50,7 +50,7 @@ void verify_model_visibility(smgpc::runtime::SceneScheduler& scheduler,
                              const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps,
                              smgpc::test::OriginalSceneControllerFixture& original) {
     const auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 1U << 20);
-    smgpc::test::SceneExecutionFixture scene(scheduler, domain, nullptr, nullptr, &original.scene, original.controller().mObjHolder);
+    smgpc::test::SceneExecutionFixture scene(scheduler, domain, &original.scene, original.controller().mObjHolder);
     require(MR::createSceneObj(SceneObj_ClippingDirector) != nullptr,
             "the original LiveActor constructor requires its scene clipping director");
     VisibilityActor actor;
@@ -134,7 +134,7 @@ int main() {
             auto domain = compat::JkrAllocationDomain::create(heaps, 1U << 20);
             std::weak_ptr<compat::JkrAllocationDomain> weak = domain;
             {
-                test::SceneExecutionFixture scene(scheduler, domain, nullptr, nullptr, &original.scene, original.controller().mObjHolder);
+                test::SceneExecutionFixture scene(scheduler, domain, &original.scene, original.controller().mObjHolder);
                 auto* original_holder = &scene.execution().requirements();
                 require(JKRHeap::findFromRoot(original_holder) == &domain->heap(), "actual requirement holder must use the scene heap");
                 require(scene.executor().mBufferHolder != nullptr, "the real executor owns one draw holder");
@@ -208,7 +208,7 @@ int main() {
         }
         {
             auto domain = compat::JkrAllocationDomain::create(heaps, 1U << 20);
-            test::SceneExecutionFixture scene(scheduler, domain, nullptr, nullptr, &original.scene, original.controller().mObjHolder);
+            test::SceneExecutionFixture scene(scheduler, domain, &original.scene, original.controller().mObjHolder);
             layout::LayoutRuntime native_layout("scheduler-owned layout adaptor", "ownership fixture", 1, 72);
             const auto before = compat::name_obj_runtime_state_count();
             const auto marker = compat::mark_name_obj_runtime_registrations();

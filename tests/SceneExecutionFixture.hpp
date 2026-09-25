@@ -6,16 +6,19 @@
 #include "compat/JkrAllocationDomain.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "scene/SceneExecutionBinding.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "scene/SceneInitializationState.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
+#include <aurora/allocation.hpp>
+#include <algorithm>
 #include <memory>
+#include <vector>
 
 namespace smgpc::test {
-// Standalone tests explicitly own the same original executor, SceneObj holder,
-// requirements and Game arena as production scene initialization.
+// Tests provide the actual GameSystem controller scene and use its original
+// holder, executor and Game arena. No fixture factory or alternate scene is published.
 class SceneExecutionFixture final {
 public:
     SceneExecutionFixture(runtime::SceneScheduler& scheduler, std::shared_ptr<compat::JkrAllocationDomain> domain,
-                          scene::SceneObjFactoryOverride factory = nullptr, void* factory_context = nullptr,
                           Scene* original_scene = nullptr, NameObjHolder* original_names = nullptr)
         : _scheduler(scheduler), _domain(std::move(domain)), _original_scene(original_scene) {
         try {
@@ -29,14 +32,29 @@ public:
                 _original_scene->mSceneObjHolder = _holder.get();
                 _original_scene->mListExecutor = _executor.get();
             }
-            _objects = std::make_unique<scene::SceneObjHolderBinding>(*_holder, factory, factory_context, _domain);
+            _allocation = std::make_unique<runtime::SceneSchedulerAllocationBinding>(_scheduler, _domain);
+            _holder->initializeNative(_domain);
             _execution = std::make_unique<scene::SceneExecutionBinding>(_scheduler, *_executor, _domain, original_names);
         } catch (...) { retire(); throw; }
     }
     ~SceneExecutionFixture() { retire(); }
     SceneExecutionFixture(const SceneExecutionFixture&) = delete;
     SceneExecutionFixture& operator=(const SceneExecutionFixture&) = delete;
-    void complete_initialization() { _execution->complete_initialization(); }
+    void complete_initialization() {
+        _execution->complete_initialization();
+        _initialization.complete();
+    }
+    void init_after_placement() {
+        const scene::SceneInitializationScope phase(SceneInitializeState_AfterPlacement);
+        for (auto* object : compat::snapshot_name_obj_runtime_objects()) {
+            if (!_holder->ownsNativeObject(object) || std::ranges::find(_completed, object) != _completed.end()) continue;
+            if (!compat::name_obj_runtime_postpass_is_delegated(object)) {
+                const aurora::allocation::ClientAllocationScope game({true, true});
+                object->initAfterPlacement();
+            }
+            _completed.push_back(object);
+        }
+    }
     void apply_connections() {
         _scheduler.apply_execution_requirements(true, false);
         _scheduler.apply_execution_requirements(true, true);
@@ -45,8 +63,9 @@ public:
     }
     void retire() {
         if (_execution) _execution->prepare_retirement();
-        _objects.reset();
+        if (_holder) _holder->retireNativeResources();
         _execution.reset();
+        _allocation.reset();
         if (_original_scene) {
             _original_scene->mSceneObjHolder = nullptr;
             _original_scene->mListExecutor = nullptr;
@@ -58,14 +77,15 @@ public:
     SceneNameObjListExecutor& executor() { return *_executor; }
     SceneObjHolder& holder() { return *_holder; }
     scene::SceneExecutionBinding& execution() { return *_execution; }
-    scene::SceneObjHolderBinding& objects() { return *_objects; }
 private:
     runtime::SceneScheduler& _scheduler;
     std::shared_ptr<compat::JkrAllocationDomain> _domain;
     Scene* _original_scene;
     std::unique_ptr<SceneObjHolder> _holder;
     std::unique_ptr<SceneNameObjListExecutor> _executor;
-    std::unique_ptr<scene::SceneObjHolderBinding> _objects;
+    scene::SceneInitializationBinding _initialization;
+    std::unique_ptr<runtime::SceneSchedulerAllocationBinding> _allocation;
+    std::vector<NameObj*> _completed;
     std::unique_ptr<scene::SceneExecutionBinding> _execution;
 };
 }

@@ -2,7 +2,7 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Util/MapUtil.hpp"
 #include "Game/Util/TriangleFilter.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "scene/StageCollisionService.hpp"
 #include <iostream>
 
@@ -254,8 +254,6 @@ void publication_before_culling(Fixture& owner) {
             geometry->file,geometry->positions,geometry->normals,geometry->prisms,geometry->octree,geometry);
         HitSensor sensor(0,0,1,nullptr);
         CollisionParts parts;
-        std::unique_ptr<KCollisionServer> server(parts.mServer);
-        std::unique_ptr<JMapInfo> attributes(parts.mServer->mapInfo);
         parts.mServer->init(resource->native_file(),nullptr);
         parts.mHitSensor=&sensor; parts._CC=true; parts._D4=2; parts._D8=10;
         parts.mKeeperIndex=category; parts.mZone=keeper->mZones[0];
@@ -270,7 +268,6 @@ void publication_before_culling(Fixture& owner) {
         require(service.register_generated_kcl(resource,*parts.mServer,Fixture::matrix(),
                     "publication boundary triangle",registration,&sensor,0).accepted,
                 "Generated geometry must register against its actual original part and keeper");
-        service.build();
         // These queries are outside the part sphere. Without the entry guard,
         // original culling never calls a CollisionParts narrow-phase guard.
         std::array box{TVec3f(10000),TVec3f(10001)};

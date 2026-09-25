@@ -17,10 +17,11 @@
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "Game/Util/MtxUtil.hpp"
 
@@ -103,14 +104,12 @@ namespace {
         const auto length = std::sqrt(down.dot(down));
         require(std::isfinite(length) && length > 0.0F, "original Mario gravity is finite");
         down.scale(1.0F / length);
-        smgpc::scene::StageCollisionHit hit;
-        require(collision->line_cast(actor.mPosition - down * 250.0F, down * 1000.0F, &hit),
-                "recovery safety test finds an actual authored KCL face under Mario");
-        const auto surface = collision->surface(hit.triangle_index);
-        require(surface && surface->parts && surface->sensor && !surface->sensor->isType(0x48),
-                "the tested face retains real collision parts and an eligible original sensor");
+        TVec3f hit_position;
         Triangle original;
-        original.fillData(surface->parts, surface->prism_index, surface->sensor);
+        require(MR::getFirstPolyOnLineToMap(&hit_position, &original, actor.mPosition - down * 250.0F, down * 1000.0F),
+                "recovery safety test finds an actual authored KCL face under Mario");
+        require(original.mParts && original.getSensor() && !original.getSensor()->isType(0x48),
+                "the tested face retains real collision parts and an eligible original sensor");
         require(original.isValid() && MR::isSameMtx(original.getBaseMtx()->toMtxPtr(),
                                                    original.getPrevBaseMtx()->toMtxPtr()),
                 "recovery safety test borrows an actual stationary original Triangle identity");
@@ -250,7 +249,7 @@ namespace {
                     "normal original placement initializes the actual Mario, constants, animator, Binder and holder");
             require(!identity || identity == actor, "the original player owner survives every observed scene frame");
             identity = actor;
-            const auto domain = smgpc::scene::current_scene_allocation_domain();
+            const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
             require(domain != nullptr, "the actual original scene owns test allocations");
             const smgpc::compat::JkrAllocationScope allocation(domain);
             const J3DSys::CommandScope commands;

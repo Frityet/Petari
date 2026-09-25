@@ -1,0 +1,199 @@
+{
+  "reason": "User explicitly authorized broad donor import and requested existing declarations over unavailable-header guards",
+  "imports": [
+    {
+      "path": "src/Game/Boss/BossAccessor.hpp",
+      "donor": "decomp/include/Game/Boss/BossAccessor.hpp",
+      "sha256": "a229d4d1ea8a911ee397035d8ef1745f72173bcbfa78a787a67177ebc71deb8c",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/Boss/SkeletalFishBabyRailHolder.hpp",
+      "donor": "decomp/include/Game/Boss/SkeletalFishBabyRailHolder.hpp",
+      "sha256": "57dcab08348a225545b273f285e53170be6d983c532fc6643db2b49191828da0",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/Boss/SkeletalFishBossRailHolder.hpp",
+      "donor": "decomp/include/Game/Boss/SkeletalFishBossRailHolder.hpp",
+      "sha256": "24306d189e936c3c0003bdfa9634616098203779e906f291a30da8e7e598a3d9",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/Enemy/BegomanBase.hpp",
+      "donor": "decomp/include/Game/Enemy/BegomanBase.hpp",
+      "sha256": "ab9ed1c4a28cd7cce37e19b74f93c2a8333557b08fcab4b1d1cd1580348a1e02",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/Enemy/KabokuriFireHolder.hpp",
+      "donor": "decomp/include/Game/Enemy/KabokuriFireHolder.hpp",
+      "sha256": "c7b3e7df3bbffdc58a5f25a58a1f781ee93268c151b5e9665a681a313d5d15ff",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/Enemy/KameckBeamHolder.hpp",
+      "donor": "decomp/include/Game/Enemy/KameckBeamHolder.hpp",
+      "sha256": "e205f0c9b103487e854c61587af6317b4d13fa3f97128037153d4ad11878c517",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/Enemy/TakoHeiInkHolder.hpp",
+      "donor": "decomp/include/Game/Enemy/TakoHeiInkHolder.hpp",
+      "sha256": "6879691b6ae668b1d72c08e568e3647a6ba184414bae027bf15f26121c4da28c",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/GameAudio/AudCameraWatcher.hpp",
+      "donor": "decomp/include/Game/GameAudio/AudCameraWatcher.hpp",
+      "sha256": "a42e27a66fc78504011ff9cf9dcb487009ab238f57f2cff314514e645824e700",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/LiveActor/VolumeModelDrawer.hpp",
+      "donor": "decomp/include/Game/LiveActor/VolumeModelDrawer.hpp",
+      "sha256": "75224e8516cf7210ff301154662161135c99e480d8a572c6a5b23482232a017d",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/Map/QuakeEffectGenerator.hpp",
+      "donor": "decomp/include/Game/Map/QuakeEffectGenerator.hpp",
+      "sha256": "49247f4524de90999ee4ea08ea9cc61d132f962a4da9ac45d0faec9299c9eb81",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/Map/WaterPlant.hpp",
+      "donor": "decomp/include/Game/Map/WaterPlant.hpp",
+      "sha256": "053120d33c76b7e3a8285e305c74fd64980d6fbe311dfb0a4c69e967dc9e7011",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/MapObj/AirBubbleHolder.hpp",
+      "donor": "decomp/include/Game/MapObj/AirBubbleHolder.hpp",
+      "sha256": "6ea0b0a3540d5c000e6f85bb21d4ab072c17005f28ac3ba4fe46b54e4dd8b4d2",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/MapObj/ArrowSwitchMultiHolder.hpp",
+      "donor": "decomp/include/Game/MapObj/ArrowSwitchMultiHolder.hpp",
+      "sha256": "a2ac8248121ca6f6f54109ca7dbb86233e7613edc51af353336d924b71adc358",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/MapObj/BigBubbleHolder.hpp",
+      "donor": "decomp/include/Game/MapObj/BigBubbleHolder.hpp",
+      "sha256": "144060eeab2cd7253940e6ef897b44e35debdd13845aeaccc90542ab56a5c6d8",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/MapObj/ClipAreaDropHolder.hpp",
+      "donor": "decomp/include/Game/MapObj/ClipAreaDropHolder.hpp",
+      "sha256": "33924607f852d3df3c51efb44d6d6a13001b13e1694f9340788716485b76826c",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/MapObj/ClipFieldFillDraw.hpp",
+      "donor": "decomp/include/Game/MapObj/ClipFieldFillDraw.hpp",
+      "sha256": "667fe6fc7bef77ba83d7d49b6ac01957376818427fdeffafef2fa31ca6c469e3",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/MapObj/ElectricRailHolder.hpp",
+      "donor": "decomp/include/Game/MapObj/ElectricRailHolder.hpp",
+      "sha256": "78fc241f56bb3fa0e91f845d0d31450f99040e4002c084e0a9a708bffd5f95a0",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/MapObj/FallOutFieldDraw.hpp",
+      "donor": "decomp/include/Game/MapObj/FallOutFieldDraw.hpp",
+      "sha256": "25d0591b0e296bcaa58c434ea7501977545b8451041e856f1bfad096816ee55c",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/MapObj/FirePressureBulletHolder.hpp",
+      "donor": "decomp/include/Game/MapObj/FirePressureBulletHolder.hpp",
+      "sha256": "3299e8cc55d6d4a3386b1382f513472e36639ad466de52b2ae936a96e0db1fd9",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/MapObj/MiniatureGalaxyHolder.hpp",
+      "donor": "decomp/include/Game/MapObj/MiniatureGalaxyHolder.hpp",
+      "sha256": "1de603548ac04edad53aeaf57b8eb5ce40fa04155fc9f8eab51cb3c62043b490",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/MapObj/Note.hpp",
+      "donor": "decomp/include/Game/MapObj/Note.hpp",
+      "sha256": "f2b191d9f5ab7be5a405ada32febbc259226476965d8c546e4982a1c6566074b",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/MapObj/WaterPressureBulletHolder.hpp",
+      "donor": "decomp/include/Game/MapObj/WaterPressureBulletHolder.hpp",
+      "sha256": "206f740fbad339f6ea0d31f04314864d55e82b7be46feebd1c994d476f58f59f",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/NPC/MiiFaceIconHolder.hpp",
+      "donor": "decomp/include/Game/NPC/MiiFaceIconHolder.hpp",
+      "sha256": "b536bc0afd91ba2bb1146c79ac0bedf74bf18c3483d937fa78a9ef25f096c868",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/Ride/FluffWind.hpp",
+      "donor": "decomp/include/Game/Ride/FluffWind.hpp",
+      "sha256": "528e7001d4324d9e3c356bc664c0efe8ef6b26fd16cdf4affb277b5ccaff575e",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/Ride/PlantLeaf.hpp",
+      "donor": "decomp/include/Game/Ride/PlantLeaf.hpp",
+      "sha256": "3b899c4314eddb5509078e0bb8d2bb39e704589112da722662d475f1ccd514a7",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/Ride/PlantStalk.hpp",
+      "donor": "decomp/include/Game/Ride/PlantStalk.hpp",
+      "sha256": "7063743eb14eb05b9db4a20e31a457f9e354fc7241f047f0bea9d18b688d0d61",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/Ride/SwingRope.hpp",
+      "donor": "decomp/include/Game/Ride/SwingRope.hpp",
+      "sha256": "68168718bd4282f3a10ad382871aef44785691357e4a4d03e2eaed8d21ee0dc6",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/Ride/Trapeze.hpp",
+      "donor": "decomp/include/Game/Ride/Trapeze.hpp",
+      "sha256": "87974e16a2e6cf5a0b2c77f6a596e07ff3e2a4f87b2e5202aeb28ded9abea08c",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/Screen/GalaxyMapController.hpp",
+      "donor": "decomp/include/Game/Screen/GalaxyMapController.hpp",
+      "sha256": "0dac1cb9098dc6f8d6fe7f5710776b24a4a7aa6924067869f98f779d7d03426b",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/Screen/GalaxyNamePlateDrawer.hpp",
+      "donor": "decomp/include/Game/Screen/GalaxyNamePlateDrawer.hpp",
+      "sha256": "3903759e3e049111b2e2f1ecb226b0c4402667b24cb91178a61218524e7b21ae",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/Screen/HeatHazeEffect.hpp",
+      "donor": "decomp/include/Game/Screen/HeatHazeEffect.hpp",
+      "sha256": "55029a5b35891f0cf279309fc69f15a997669ee6364cebcb45252a40aeece338",
+      "adaptations": []
+    },
+    {
+      "path": "src/Game/Screen/PlayerActionGuidance.hpp",
+      "donor": "decomp/include/Game/Screen/PlayerActionGuidance.hpp",
+      "sha256": "cae98d0f2f06339019f8747bd2ffef2011edd90fb8972ec4db4b8912a569348b",
+      "adaptations": []
+    }
+  ],
+  "missing_transitive_dependencies": [],
+  "constructor_selection_changed": false
+}

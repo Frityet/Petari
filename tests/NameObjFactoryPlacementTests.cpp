@@ -1,3 +1,5 @@
+#include "Game/Map/HitInfo.hpp"
+#include "Game/Map/CollisionParts.hpp"
 #include "OriginalStageResourceProcessFixture.hpp"
 #include "app/Application.hpp"
 #include "app/OriginalGameApplication.hpp"
@@ -25,8 +27,6 @@
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/CollisionPartsCompat.hpp"
-#include "compat/HitInfoCompat.hpp"
 #include "Game/System/ResourceHolder.hpp"
 #include "Game/System/ResourceHolderManager.hpp"
 #include "Game/Util/SingletonHolder.hpp"
@@ -37,7 +37,6 @@
 #include "resource/RarcArchive.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/PlacementZoneScope.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "Game/Util/MapUtil.hpp"
 #include "scene/StagePlacementResolver.hpp"
@@ -549,7 +548,7 @@ namespace {
             auto* stage = MR::getStageDataHolder();
             auto* collision = smgpc::scene::StageCollisionService::active();
             auto* resources = SingletonHolder<ResourceHolderManager>::get();
-            const auto domain = smgpc::scene::current_scene_allocation_domain();
+            const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
             require(stage && stage->mZoneID == 0 && collision && resources && domain,
                     "Actual process owns the root stage, collision, resource manager and scene heap");
 
@@ -597,13 +596,13 @@ namespace {
                     require(actor != nullptr, "The retail wall creator constructs InvisiblePolygonObj");
                     actor->init(iter);
                 });
-                const auto source = smgpc::compat::actor_collision_parts_source(actor);
+                const auto source = actor->mCollisionParts ? actor->mCollisionParts->nativeResourceSource() : std::string_view{};
                 const auto radius = actor->mCollisionParts ? MR::getCollisionBoundingSphereRange(actor) : -1.0F;
                 std::fprintf(stderr, "[wall-probe] initialized actor=%p parts=%p registered=%d radius=%g source=%.*s\n",
                              static_cast<void*>(actor), static_cast<void*>(actor->mCollisionParts),
-                             smgpc::compat::has_actor_collision_parts(actor), static_cast<double>(radius),
+                             !actor->nativeCollisionParts().empty(), static_cast<double>(radius),
                              static_cast<int>(source.size()), source.data());
-                require(actor->mCollisionParts && smgpc::compat::has_actor_collision_parts(actor) &&
+                require(actor->mCollisionParts && !actor->nativeCollisionParts().empty() &&
                             source == expected_source &&
                             MR::getCollisionBoundingSphereRange(actor) > 0.0F,
                         "Unchanged actor init creates actual CollisionParts and original clipping bounds");
@@ -620,7 +619,7 @@ namespace {
                 const auto surface = collision->surface(parts, retired_triangle.mIdx);
                 require(surface && retired_triangle.getHostName() == actor->mName &&
                             retired_triangle.getHostPlacementZoneID() == 0 &&
-                            surface->source_name == smgpc::compat::actor_collision_parts_source(actor),
+                            surface->source_name == actor->mCollisionParts->nativeResourceSource(),
                         "Original triangle retains its injected host zone and exact resource provenance");
                 const auto surface_id = surface->triangle_index;
 
@@ -646,8 +645,7 @@ namespace {
                 require(!line_query_hits_registered_wall(nullptr, &only_wall) &&
                             !retired_triangle.isValid() && retired_triangle.getHostName() == nullptr &&
                             !collision->surface(surface_id) && original_zone->mNumParts + 1 == zone_count &&
-                            !smgpc::compat::has_actor_runtime_state(retired_actor) &&
-                            !smgpc::compat::has_actor_collision_parts(retired_actor),
+                            !smgpc::compat::has_actor_runtime_state(retired_actor),
                         "Actor retirement removes actual keeper membership, queries and retained Triangle identities");
             }
             require(stage->_E4 == begin_before && stage->_E8 == end_before &&

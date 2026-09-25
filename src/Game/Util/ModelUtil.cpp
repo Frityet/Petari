@@ -12,6 +12,7 @@
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/MutexHolder.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SchedulerUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include <JSystem/J3DGraphBase/J3DMaterial.hpp>

@@ -21,7 +21,6 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "layout/LayoutRuntime.hpp"
 #include "runtime/RuntimeContext.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 #include <aurora/dvd.h>
 #include <array>
 #include <cmath>
@@ -65,7 +64,7 @@ void layout_actor_lifetime(smgpc::runtime::RuntimeContext& runtime) {
             {
                 smgpc::test::SceneExecutionFixture execution(
                     runtime.scheduler(), smgpc::compat::JkrAllocationDomain::create(runtime.host_heaps(), 8U << 20));
-                const auto domain = smgpc::scene::current_scene_allocation_domain();
+                const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
                 const auto identities = smgpc::compat::name_obj_runtime_state_count();
 
                 const auto scheduled_count = runtime.scheduler().snapshot().size();
@@ -125,8 +124,8 @@ void owner(smgpc::runtime::RuntimeContext& runtime) {
     {
         smgpc::test::SceneExecutionFixture execution(
             runtime.scheduler(), smgpc::compat::JkrAllocationDomain::create(runtime.host_heaps(), 8U << 20));
-        auto& binding = execution.objects();
-        domain = smgpc::scene::current_scene_allocation_domain();
+        auto& binding = execution;
+        domain = MR::getSceneObjHolder()->nativeAllocationDomain();
         auto* group = dynamic_cast<NameObjGroup*>(MR::createSceneObj(SceneObj_NameObjGroup));
         auto* wipes = dynamic_cast<SceneWipeHolder*>(MR::createSceneObj(SceneObj_SceneWipeHolder));
         require(group && wipes && SceneWipeHolderFunction::getSceneWipeHolder() == wipes &&

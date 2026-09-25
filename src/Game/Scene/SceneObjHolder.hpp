@@ -1,5 +1,9 @@
 #pragma once
 
+#include <memory>
+
+namespace smgpc::compat { class JkrAllocationDomain; }
+
 #include "Inline.hpp"
 
 class NameObj;
@@ -137,6 +141,18 @@ class SceneObjHolder {
 public:
     /// @brief Creates a new `SceneObjHolder`.
     SceneObjHolder();
+    ~SceneObjHolder();
+    SceneObjHolder(const SceneObjHolder&) = delete;
+    SceneObjHolder& operator=(const SceneObjHolder&) = delete;
+
+    void initializeNative(std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain);
+    std::shared_ptr<smgpc::compat::JkrAllocationDomain> nativeAllocationDomain() const;
+    bool ownsNativeObject(const NameObj* object) const;
+    void adoptNativeObject(NameObj* object);
+    void prepareNativeRetirement() noexcept;
+    void retireNativeResources() noexcept;
+    bool isNativeRetiring() const;
+
 
     /// @brief Creates the requested object, returning the existing instance if it has already been created.
     /// @param id The index of the object.
@@ -161,6 +177,8 @@ public:
 private:
     /// @brief The array of objects.
     /* 0x00 */ NameObj* mObj[SceneObj_NumMax];
+    struct NativeResources;
+    std::unique_ptr<NativeResources> mNativeResources;
 };
 
 namespace MR {

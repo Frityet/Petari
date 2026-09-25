@@ -53,7 +53,7 @@
 #include "JSystem/J3DGraphBase/J3DShape.hpp"
 #include "JSystem/JUtility/JUTNameTab.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/CollisionPartsCompat.hpp"
+#include <aurora/allocation.hpp>
 #include <cstdio>
 #include <cstring>
 #include <memory>
@@ -61,8 +61,10 @@
 namespace {
     CollisionParts* createCollisionParts(ResourceHolder* pResHolder, const char* pName, HitSensor* pSensor, const TPos3f& rMtx,
                                          MR::CollisionScaleType scaleType, s32 unk) {
-        // Native KCL decoding retains the actual resource owner and collision registration.
-        return smgpc::compat::create_collision_parts(pResHolder, pName, pSensor, rMtx, scaleType, unk);
+        const aurora::allocation::ClientAllocationScope client;
+        auto parts = std::make_unique<CollisionParts>();
+        parts->initFromResource(pResHolder, pName, pSensor, rMtx, scaleType, unk);
+        return pSensor->mHost->adoptCollisionParts(std::move(parts));
     }
 
     const char* createSubModelObjName(const LiveActor* pActor, const char* pSubName) {

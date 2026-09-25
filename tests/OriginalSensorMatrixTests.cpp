@@ -26,7 +26,6 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "scene/NameObjChildOwner.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 
 #include <aurora/allocation.hpp>
 #include <array>
@@ -173,7 +172,7 @@ namespace {
     };
 
     void verify_sensor_messages() {
-        const auto domain = smgpc::scene::current_scene_allocation_domain();
+        const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
         require(domain != nullptr, "Sensors require the actual original scene allocation domain");
         auto* checker = static_cast<SensorHitChecker*>(MR::getSceneObjHolder()->getObj(SceneObj_SensorHitChecker));
         require(checker != nullptr, "Original scene owns its SensorHitChecker");

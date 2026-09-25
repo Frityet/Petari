@@ -1,0 +1,7 @@
+# Expanded removal target
+
+During round15, the user explicitly added all of src/scene/ to the deletion target, replacing those services with actual implementations and behaviors. This joins complete src/compat/ removal as the immediate objective. Necessary architecture/lifetime fixes remain in actual Game/SDK owners; general platform behavior belongs in Aurora. Do not satisfy this by renaming or relocating the sidecar service directory.
+
+Finish and publish the current coherent batch, then remove the remaining scene support/placement/collision/catalog infrastructure in dependency groups. Validation remains one app build and one short opening run per integrated batch, with retries only for observed failures. The Gateway wakeup-to-Rosalina demo remains the later gameplay objective and has not been verified end-to-end.
+
+The user additionally authorized broad inclusion of code and headers from decomp to resolve link dependencies, and explicit stubs for remaining unresolved functions. Use existing donor implementations first, preserve native architecture/lifetime fixes already in port files, and keep remaining stubs clearly identified. Stub reachability is unfinished behavior and must not count as completed gameplay. This permits a broad missing-source import/compile/link batch after the current owner-removal build, rather than retaining narrow constructor availability as the long-term limit.

@@ -1,8 +1,8 @@
 #include "Game/Camera/CameraContext.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "OriginalSceneControllerFixture.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 #include "Game/System/RenderMode.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SystemUtil.hpp"
@@ -138,8 +138,14 @@ int main() {
             const bool wide = flag == 1;
             require(MR::isScreen16Per9() == wide && MR::getScreenWidth() == (wide ? 832 : 608),
                     "original SC accessor controls screen width without a camera pose");
+            smgpc::test::OriginalSceneControllerFixture original(process.host_heaps());
             SceneObjHolder holder;
-            smgpc::scene::SceneObjHolderBinding scene(holder, nullptr, nullptr, process.create_cohort());
+            original.scene.mSceneObjHolder = &holder;
+            struct Unpublish {
+                Scene& scene;
+                ~Unpublish() { scene.mSceneObjHolder = nullptr; }
+            } unpublish{original.scene};
+            holder.initializeNative(process.create_cohort());
             auto& camera = *static_cast<CameraContext*>(holder.create(SceneObj_CameraContext));
             const float aspect = wide ? 16.0f / 9.0f : 4.0f / 3.0f;
             require(camera.getAspect() == aspect && camera.getFovy() == 45.0f &&

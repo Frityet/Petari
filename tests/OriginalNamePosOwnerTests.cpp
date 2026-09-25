@@ -8,7 +8,6 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <cmath>
 #include <cstring>
@@ -23,7 +22,7 @@ bool equal(const TVec3f& a, const TVec3f& b) {
 const NamePosHolder* retired_identity = nullptr;
 void verify() {
     auto* stage = MR::getStageDataHolder();
-    const auto domain = smgpc::scene::current_scene_allocation_domain();
+    const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
     require(stage && domain, "Actual GameScene owns the original stage tables and heap");
     NamePosHolder* owner;
     {

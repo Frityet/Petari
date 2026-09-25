@@ -1,5 +1,4 @@
 #include "Game/MapObj/DynamicCollisionObj.hpp"
-#include "compat/CollisionPartsCompat.hpp"
 #include "resource/KCollisionResource.hpp"
 #include <aurora/allocation.hpp>
 #include <memory>
@@ -200,7 +199,10 @@ void DynamicCollisionObj::createCollision() {
     }
     TPos3f posmtx;
     PSMTXTrans(posmtx, mPosition.x, mPosition.y, mPosition.z);
-    mParts = smgpc::compat::create_generated_collision_parts(std::move(resource), getSensor("body"), posmtx, 0);
+    const aurora::allocation::ClientAllocationScope client;
+    auto parts = std::make_unique<CollisionParts>();
+    parts->initFromGeneratedResource(std::move(resource), getSensor("body"), posmtx, 0);
+    mParts = adoptCollisionParts(std::move(parts));
     MR::validateCollisionParts(mParts);
     mParts->mServer->calcFarthestVertexDistance();
     mParts->updateBoundingSphereRange(TVec3f(mScale));

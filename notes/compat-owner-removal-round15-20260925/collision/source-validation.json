@@ -1,0 +1,41 @@
+{
+  "source_only": true,
+  "no_builds_or_tests_run": true,
+  "retired_api_references": [],
+  "donor_hitinfo_methods": [
+    "Triangle",
+    "fillData",
+    "getHostName",
+    "getHostPlacementZoneID",
+    "isHostMoved",
+    "isValid",
+    "getNormal",
+    "getFaceNormal",
+    "getEdgeNormal",
+    "getPos",
+    "calcAndGetNormal",
+    "calcAndGetEdgeNormal",
+    "calcAndGetPos",
+    "calcForceMovePower",
+    "getAttributes",
+    "getBaseMtx",
+    "getBaseInvMtx",
+    "getPrevBaseMtx",
+    "HitInfo",
+    "isCollisionAtFace",
+    "isCollisionAtEdge",
+    "isCollisionAtCorner"
+  ],
+  "missing_donor_methods": [],
+  "changed_paths": 26,
+  "retired_providers": 4,
+  "preexisting_dirty_paths": [
+    "src/compat/CollisionPartsCompat.cpp",
+    "src/compat/HitInfoCompat.cpp",
+    "src/compat/HitInfoCompat.hpp",
+    "tests/OriginalProcessCollisionAreaTests.cpp",
+    "tests/OriginalProcessMapObjectTests.cpp",
+    "tests/OriginalSphereQueryTests.cpp",
+    "tests/StageCollisionRegistrationTests.cpp"
+  ]
+}

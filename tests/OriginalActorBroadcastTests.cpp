@@ -9,7 +9,7 @@
 #include "SceneExecutionFixture.hpp"
 #include "OriginalSceneControllerFixture.hpp"
 #include "OriginalStageResourceProcessFixture.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/LiveActor/ClippingDirector.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -66,7 +66,7 @@ namespace {
                 smgpc::test::OriginalSceneControllerFixture original(heaps);
                 auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 2U << 20);
                 retired = domain;
-                auto scene = smgpc::test::SceneExecutionFixture(scheduler, domain, nullptr, nullptr,
+                auto scene = smgpc::test::SceneExecutionFixture(scheduler, domain,
                                                              &original.scene, original.controller().mObjHolder);
                 auto game = smgpc::compat::JkrAllocationScope(domain);
                 auto* clipping = static_cast<ClippingDirector*>(MR::createSceneObj(SceneObj_ClippingDirector));
@@ -153,7 +153,7 @@ namespace {
         require(placement != nullptr, "shared message group requires a real placed row and its original stage owner");
         auto receipts = std::vector<Receipt>{};
         receipts.reserve(4);
-        const smgpc::compat::JkrAllocationScope game(smgpc::scene::current_scene_allocation_domain());
+        const smgpc::compat::JkrAllocationScope game(MR::getSceneObjHolder()->nativeAllocationDomain());
         Receiver first("first queued recipient", receipts), second("second queued recipient", receipts);
         auto sender = std::make_unique<Receiver>("retiring queued sender", receipts);
         for (auto* actor : {&first, &second, sender.get()}) {

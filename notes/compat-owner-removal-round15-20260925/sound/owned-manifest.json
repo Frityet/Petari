@@ -1,0 +1,6 @@
+{
+  "paths": [
+    "src/Game/Util/SoundUtil.cpp",
+    "src/compat/OriginalSoundUtil.cpp"
+  ]
+}

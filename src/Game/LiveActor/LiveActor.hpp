@@ -3,6 +3,8 @@
 #include "Game/LiveActor/LiveActorFlag.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include <JSystem/JGeometry/TVec.hpp>
+#include <memory>
+#include <vector>
 
 class ActorAnimKeeper;
 class ActorLightCtrl;
@@ -29,10 +31,11 @@ public:
     /// @param pName A pointer to the null-terminated name of the actor.
     LiveActor(const char* pName);
 
-    // Native cleanup only. This occupies the same inherited virtual
-    // destructor slot as the retail compiler-generated destructor and adds no
-    // object storage.
+    // Native cleanup uses the inherited destructor slot.
     virtual ~LiveActor();
+    CollisionParts* adoptCollisionParts(std::unique_ptr<CollisionParts>);
+    void releaseNativeCollisionParts() noexcept;
+    const std::vector<std::unique_ptr<CollisionParts>>& nativeCollisionParts() const noexcept { return mNativeCollisionParts; }
 
     /// @brief Intializes the `LiveActor` while being placed into a scene.
     /// @param rIter A reference to an iterator over a `JMapInfo`.
@@ -172,4 +175,7 @@ public:
     /* 0x80 */ StarPointerTarget* mStarPointerTarget;
     /* 0x84 */ ActorLightCtrl* mActorLightCtrl;
     /* 0x88 */ ActorPadAndCameraCtrl* mCameraCtrl;
+
+private:
+    std::vector<std::unique_ptr<CollisionParts>> mNativeCollisionParts;
 };

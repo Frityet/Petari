@@ -20,7 +20,7 @@
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "OriginalStageResourceProcessFixture.hpp"
 #include "OriginalAsyncHeapSelection.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "resource/TextEncoding.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 
@@ -58,7 +58,7 @@ namespace {
 int main() {
     return smgpc::test::run_stage_resource_process("game-actor-physics", [] {
     auto passed = 0;
-    auto domain = smgpc::scene::current_scene_allocation_domain();
+    auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
     require(bool(domain), "actor physics requires the actual original scene heap");
     smgpc::test::OriginalAsyncHeapSelection game(domain);
 

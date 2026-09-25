@@ -1,0 +1,592 @@
+[
+  {
+    "slot": "SceneObj_SensorHitChecker",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_CollisionDirector",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_ClippingDirector",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_DemoDirector",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_EventDirector",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_EffectSystem",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_LightDirector",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_SceneDataInitializer",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_StageDataHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_MessageSensorHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_StageSwitchContainer",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_SwitchWatcherHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_SleepControllerHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_AreaObjContainer",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_LiveActorGroupArray",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_MovementOnOffGroupHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_CaptureScreenActor",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_AudCameraWatcher",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_AudEffectDirector",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_AudBgmConductor",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_MarioHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_MirrorCamera",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_CameraContext",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_NameObjGroup",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_TalkDirector",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_EventSequencer",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_StopSceneController",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_SceneNameObjMovementController",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_ImageEffectSystemHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_BloomEffect",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_BloomEffectSimple",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_ScreenBlurEffect",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_DepthOfFieldBlur",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_SceneWipeHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_PlayerActionGuidance",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_ScenePlayingResult",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_LensFlareDirector",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_FurDrawManager",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_PlacementStateChecker",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_NamePosHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_NPCDirector",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_ResourceShare",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_MoviePlayerSimple",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_InformationObserver",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_CenterScreenBlur",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_OdhConverter",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_CometRetryButton",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_AllLiveActorGroup",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_CameraDirector",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_PlanetGravityManager",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_BaseMatrixFollowTargetHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_GameSceneLayoutHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_TripodBossAccesser",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_KameckBeamHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_KameckFireBallHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_KameckBeamTurtleHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_KabokuriFireHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_TakoHeiInkHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_SwingRopeGroup",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_CoinHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_PurpleCoinHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_CoinRotater",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_AirBubbleHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_StarPieceDirector",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_BegomanAttackPermitter",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_BigFanHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_KarikariDirector",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_ShadowControllerHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_ShadowVolumeDrawInit",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_ShadowSurfaceDrawInit",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_PlantStalkDrawInit",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_PlantLeafDrawInit",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_TrapezeRopeDrawInit",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_VolumeModelDrawInit",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_SpinDriverPathDrawInit",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_NoteGroup",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_ClipAreaHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_ArrowSwitchMultiHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_ClipAreaDropHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_FallOutFieldDraw",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_ClipFieldFillDraw",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_ScreenAlphaCapture",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_MapPartsRailGuideHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_GCapture",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_NameObjExecuteHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_ElectricRailHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_SpiderThread",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_QuakeEffectGenerator",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_HeatHazeDirector",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_BlueChipHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_YellowChipHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_BigBubbleHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_EarthenPipeMediator",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_WaterAreaHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_WaterPlantDrawInit",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_OceanHomeMapCtrl",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_RaceManager",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_GroupCheckManager",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_SkeletalFishBabyRailHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_SkeletalFishBossRailHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_WaterPressureBulletHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_FirePressureBulletHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_SunshadeMapHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_MiiFacePartsHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_MiiFaceIconHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_FluffWindHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_SphereSelector",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_GalaxyNamePlateDrawer",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_CinemaFrame",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_BossAccessor",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_MiniatureGalaxyHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_PlanetMapCreator",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_WarpPodMgr",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_PriorDrawAirHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_GalaxyMapController",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_MoviePlayingSequenceHolder",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  },
+  {
+    "slot": "SceneObj_PrologueHolder",
+    "enabled": true,
+    "evidence": "previous linked SceneObjHolderCompat switch"
+  },
+  {
+    "slot": "SceneObj_StaffRoll",
+    "enabled": false,
+    "evidence": "donor case retained; native constructor closure not selected"
+  }
+]

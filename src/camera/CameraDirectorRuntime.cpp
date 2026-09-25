@@ -6,7 +6,6 @@
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 
 #include <aurora/exception.hpp>
 

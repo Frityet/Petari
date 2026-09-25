@@ -1,7 +1,9 @@
 #pragma once
 
 #include "JSystem/JGeometry.hpp"
+#include <memory>
 #include <revolution.h>
+#include <string_view>
 
 class CollisionZone;
 class HitInfo;
@@ -10,10 +12,31 @@ class KC_PrismData;
 class KCollisionServer;
 class Triangle;
 class TriangleFilterBase;
+class ResourceHolder;
+namespace smgpc::resource {
+    class GeneratedKCollisionResource;
+}
+namespace smgpc::scene {
+    class StageCollisionService;
+}
 
 class CollisionParts {
 public:
     CollisionParts();
+    ~CollisionParts();
+    CollisionParts(const CollisionParts&) = delete;
+    CollisionParts& operator=(const CollisionParts&) = delete;
+
+    void initFromResource(ResourceHolder*, const char*, HitSensor*, const TPos3f&, int, s32);
+    void initFromGeneratedResource(std::shared_ptr< smgpc::resource::GeneratedKCollisionResource >, HitSensor*, const TPos3f&, s32);
+    smgpc::scene::StageCollisionService* nativeService() const noexcept;
+    std::weak_ptr< const void > nativeLifetime() const noexcept {
+        return mNativeLifetime;
+    }
+    std::string_view nativeResourceName() const noexcept;
+    std::string_view nativeResourceSource() const noexcept;
+    std::size_t nativeKclSize() const noexcept;
+    std::size_t nativeAttributesSize() const noexcept;
 
     TVec3f getTrans();
     void init(const TPos3f&, HitSensor*, const void*, const void*, s32, bool);
@@ -67,4 +90,12 @@ public:
     f32 _E8;
     f32 _EC;
     f32 _F0;
+
+private:
+    void publishNativeMatrices();
+    void publishNativeGeometry();
+    void publishNativeMembership(bool);
+    struct NativeResources;
+    std::unique_ptr< NativeResources > mNativeResources;
+    std::shared_ptr< const void > mNativeLifetime;
 };

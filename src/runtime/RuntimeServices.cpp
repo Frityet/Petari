@@ -1721,7 +1721,33 @@ namespace smgpc::runtime {
         return _events;
     }
 
-    SaveDataService::SaveDataService() = default;
+    SaveDataService::SaveDataService() : _nand("/title/00010000/524d474b/data") {
+    }
+
+    SaveDataService::~SaveDataService() {
+        _nand.deactivate_sdk();
+    }
+
+    void SaveDataService::activate_nand() {
+        _nand.activate_sdk({
+            .context = this,
+            .read = [](void* owner, std::string_view path) {
+                return static_cast<SaveDataService*>(owner)->read_nand_file(path);
+            },
+            .commit = [](void* owner, std::string_view path, std::span<const u8> bytes, u8 permission, u8 attribute) {
+                static_cast<SaveDataService*>(owner)->write_nand_file(path, bytes, permission, attribute);
+            },
+            .create = [](void* owner, std::string_view path, u8 permission, u8 attribute) {
+                return static_cast<SaveDataService*>(owner)->create_nand_file(path, permission, attribute);
+            },
+            .move = [](void* owner, std::string_view from, std::string_view to) {
+                return static_cast<SaveDataService*>(owner)->move_nand_file(from, to);
+            },
+            .erase = [](void* owner, std::string_view path) {
+                return static_cast<SaveDataService*>(owner)->erase_nand_file(path);
+            },
+        });
+    }
 
     void SaveDataService::write_file(std::string_view name, std::span<const std::uint8_t> bytes) {
         if (!_host_directory.has_value()) {
@@ -1751,7 +1777,7 @@ namespace smgpc::runtime {
         return std::nullopt;
     }
 
-    void SaveDataService::write_nand_file(std::string_view name, std::span<const std::uint8_t> bytes) {
+    void SaveDataService::write_nand_file(std::string_view name, std::span<const std::uint8_t> bytes, u8 permission, u8 attribute) {
         if (!_host_directory.has_value()) {
             aurora::throw_host_exception<std::logic_error>("NAND save persistence is unavailable without a configured host directory");
         }
@@ -1768,7 +1794,7 @@ namespace smgpc::runtime {
         if (file_name == SAVE_DATA_CONTAINER_NAME && !decode_game_data_container(payload).has_value()) {
             aurora::throw_host_exception<std::invalid_argument>("Translated GameData.bin does not match the retail container layout");
         }
-        _nand.write_file(name, payload);
+        _nand.write_file(name, payload, permission, attribute);
         write_file(nand_file_key(name), payload);
     }
 
@@ -1798,7 +1824,7 @@ namespace smgpc::runtime {
 
     std::string SaveDataService::nand_file_key(std::string_view name) const {
         const auto path = _nand.normalize_path(name);
-        const auto title_prefix = NandFileSystemService::title_data_root() + "/";
+        const auto title_prefix = _nand.title_data_root() + "/";
         if (path.starts_with(title_prefix)) return path.substr(title_prefix.size());
         // Preserve absolute NAND namespaces outside this title's data directory.
         return "nand/" + path.substr(1U);
@@ -1903,7 +1929,7 @@ namespace smgpc::runtime {
         }
 
         _files.clear();
-        _nand.erase_subtree(NandFileSystemService::title_data_root());
+        _nand.erase_subtree(_nand.title_data_root());
         _has_valid_game_data_container = false;
         for (const auto &entry : std::filesystem::recursive_directory_iterator(*_host_directory, error)) {
             if (error) {

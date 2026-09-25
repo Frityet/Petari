@@ -17,7 +17,6 @@
 #include "Game/LiveActor/SensorHitChecker.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "OriginalSceneControllerFixture.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 
 #include <array>
 #include <exception>
@@ -371,7 +370,7 @@ int main() {
                 auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 4U << 20);
                 smgpc::runtime::SceneScheduler scheduler;
                 smgpc::runtime::SceneSchedulerBinding active(scheduler);
-                smgpc::test::SceneExecutionFixture execution(scheduler, domain, nullptr, nullptr,
+                smgpc::test::SceneExecutionFixture execution(scheduler, domain,
                                                           &original.scene, original.controller().mObjHolder);
                 smgpc::compat::JkrAllocationScope game(domain);
                 auto* clipping = static_cast<ClippingDirector*>(MR::createSceneObj(SceneObj_ClippingDirector));

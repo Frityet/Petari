@@ -1,4 +1,5 @@
 #include "SceneExecutionFixture.hpp"
+#include "OriginalSceneControllerFixture.hpp"
 #include "Game/LiveActor/LiveActorGroup.hpp"
 #include "Game/Map/SphereSelector.hpp"
 #include "Game/Map/SphereSelectorHandle.hpp"
@@ -15,7 +16,6 @@
 #include "camera/CameraDirectorRuntime.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StagePlacementResolver.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 
@@ -93,8 +93,10 @@ namespace {
         const auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
         auto scheduler = smgpc::runtime::SceneScheduler{};
         const auto active_scheduler = smgpc::runtime::SceneSchedulerBinding(scheduler);
+        smgpc::test::OriginalSceneControllerFixture original(heaps);
         auto scene = smgpc::test::SceneExecutionFixture(
-            scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 4U << 20));
+            scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 4U << 20),
+            &original.scene, original.controller().mObjHolder);
         auto *created = MR::createSceneObj(SceneObj_SphereSelector);
         auto *selector = dynamic_cast<SphereSelector *>(created);
         require(selector != nullptr && MR::isDead(selector),
@@ -217,8 +219,10 @@ namespace {
         const auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
         auto scheduler = smgpc::runtime::SceneScheduler{};
         const auto active_scheduler = smgpc::runtime::SceneSchedulerBinding(scheduler);
+        smgpc::test::OriginalSceneControllerFixture original(heaps);
         auto scene = smgpc::test::SceneExecutionFixture(
-            scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 4U << 20));
+            scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 4U << 20),
+            &original.scene, original.controller().mObjHolder);
         require(MR::createSceneObj(SceneObj_MessageSensorHolder) != nullptr,
                 "the exact message contract requires the retail scene message sensor");
         require(MR::createSceneObj(SceneObj_DemoDirector) != nullptr,

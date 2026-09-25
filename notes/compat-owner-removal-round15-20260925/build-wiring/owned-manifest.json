@@ -1,0 +1,7 @@
+{
+  "paths": [
+    "src/Game/xmake.lua",
+    "xmake.lua",
+    "tests/xmake.lua"
+  ]
+}

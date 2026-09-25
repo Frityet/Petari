@@ -22,7 +22,6 @@
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
 #include "resource/GameResourceRuntime.hpp"
-#include "render/J3dModelRenderer.hpp"
 #include "runtime/JAudioPlaybackService.hpp"
 #include "runtime/RflService.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -37,36 +36,18 @@ class CaptureScreenActor;
 class CaptureScreenDirector;
 class JUTTexture;
 
-namespace smgpc::scene {
-    class NameObjLifecycleService;
-    class SceneExecutionService;
-}  // namespace smgpc::scene
-
 namespace smgpc::layout {
     class LayoutRuntime;
 }
 
 namespace aurora::audio { class DisabledObjectAudioService; }
-namespace smgpc::compat { class NandSdkBinding; }
 
 namespace smgpc::runtime {
 
 
-    enum class RuntimeContextSceneServiceMode {
-        RuntimeOwned,
-        External,
-    };
-
     class RuntimeContext final {
     public:
 #ifndef NDEBUG
-        struct J3dRuntimePacketTrace {
-            std::string model_name;
-            std::uint64_t frame_index = 0U;
-            std::string draw_pass;
-            smgpc::render::J3dRendererPacketState state = {};
-        };
-
         struct RenderTextureBindingTrace {
             std::uint8_t slot = 0U;
             std::uint16_t texture_index = 0U;
@@ -127,14 +108,12 @@ namespace smgpc::runtime {
 #endif
 
         RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
-                       resource::GameResourceRuntime &resources,
-                       RuntimeContextSceneServiceMode scene_service_mode = RuntimeContextSceneServiceMode::RuntimeOwned);
+                       resource::GameResourceRuntime &resources);
         // Allows a host to supply a fully concrete playback service (for
         // example an explicit SDL test sink backed by retail fixtures).
         RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
                        resource::GameResourceRuntime &resources,
-                       std::unique_ptr<JAudioPlaybackService> audio_playback,
-                       RuntimeContextSceneServiceMode scene_service_mode = RuntimeContextSceneServiceMode::RuntimeOwned);
+                       std::unique_ptr<JAudioPlaybackService> audio_playback);
         ~RuntimeContext();
 
         RuntimeContext(const RuntimeContext &) = delete;
@@ -147,12 +126,8 @@ namespace smgpc::runtime {
         void set_scene_camera_pose(const smgpc::camera::CameraPose &camera_pose);
         void refresh_scene_camera_pose();
         void record_copy_event(render::CopyEvent event);
-        void draw_scene();
-        void draw_3d_normal(const smgpc::camera::CameraPose &camera_pose);
-        void draw_3d_normal();
-        void draw_2d_normal();
 #ifndef NDEBUG
-        void set_j3d_packet_trace_frame(std::optional<std::uint64_t> frame_index);
+        void set_render_packet_trace_frame(std::optional<std::uint64_t> frame_index);
 #endif
         void set_j3d_pixel_update_state(std::optional<GxPixelUpdateState> state);
         void set_current_stage_name(std::string_view stage_name);
@@ -171,11 +146,9 @@ namespace smgpc::runtime {
         void set_freecam_enabled(bool enabled);
         [[nodiscard]] std::span<const render::CopyEvent> copy_events() const;
 #ifndef NDEBUG
-        [[nodiscard]] std::span<const J3dRuntimePacketTrace> j3d_packet_trace() const;
         [[nodiscard]] std::span<const LayoutRuntimePacketTrace> layout_packet_trace() const;
         [[nodiscard]] std::span<const SemanticTraceEvent> semantic_trace_events() const;
         [[nodiscard]] const HostInputTraceState &host_input_trace() const;
-        [[nodiscard]] bool should_record_j3d_packet_trace() const;
         [[nodiscard]] bool should_record_render_packet_trace() const;
         [[nodiscard]] bool is_destroying() const;
 #endif
@@ -237,12 +210,6 @@ namespace smgpc::runtime {
         [[nodiscard]] const SceneScheduler &scheduler() const;
         [[nodiscard]] std::size_t begin_scene_registration_scope();
         [[nodiscard]] std::size_t end_scene_registration_scope(std::size_t scope_id);
-        [[nodiscard]] smgpc::scene::NameObjLifecycleService &name_obj_lifecycle();
-        [[nodiscard]] const smgpc::scene::NameObjLifecycleService &name_obj_lifecycle() const;
-        [[nodiscard]] smgpc::scene::SceneExecutionService &scene_execution();
-        [[nodiscard]] const smgpc::scene::SceneExecutionService &scene_execution() const;
-        void attach_name_obj_lifecycle(smgpc::scene::NameObjLifecycleService &service);
-        void attach_scene_execution(smgpc::scene::SceneExecutionService &service);
 
         [[nodiscard]] JAISoundHandle *start_sub_bgm(std::string_view name, bool prepared);
         [[nodiscard]] JAISoundHandle *start_sub_bgm(u32 sound_id, bool prepared);
@@ -277,8 +244,6 @@ namespace smgpc::runtime {
         void note_debug_event(std::string_view message);
         void emit_semantic_trace_event(std::string_view category, std::string_view name, std::string_view detail = {});
         void emit_sequence_state_trace_event(std::string_view name, std::string_view detail = {}, std::string_view draw_phase = {});
-        void record_j3d_packet_trace(std::string_view model_name, std::uint64_t frame_index, std::string_view draw_pass,
-                                     const smgpc::render::J3dRendererPacketState &packet);
         void record_layout_packet_trace(LayoutRuntimePacketTrace packet);
 #endif
         void register_layout(smgpc::layout::LayoutRuntime &layout);
@@ -326,7 +291,6 @@ namespace smgpc::runtime {
         RumbleService _rumble;
         SequenceRequestService _sequence_requests;
         SaveDataService _save_data;
-        std::unique_ptr<compat::NandSdkBinding> _nand_sdk;
         std::unique_ptr<aurora::SystemConfiguration> _system_config;
         MessageService _messages;
         SceneLightService _scene_lights;
@@ -334,10 +298,6 @@ namespace smgpc::runtime {
         aurora::WpadShakeGesture _core_pad_gesture;
         aurora::WpadShakeGesture _sub_pad_gesture;
         std::unique_ptr<CaptureScreenDirector> _capture_screen_director;
-        std::unique_ptr<smgpc::scene::NameObjLifecycleService> _owned_name_obj_lifecycle;
-        std::unique_ptr<smgpc::scene::SceneExecutionService> _owned_scene_execution;
-        smgpc::scene::NameObjLifecycleService *_name_obj_lifecycle = nullptr;
-        smgpc::scene::SceneExecutionService *_scene_execution = nullptr;
         std::optional<std::size_t> _active_scene_registration_scope;
         std::size_t _scene_scheduler_registration_marker = 0U;
         std::size_t _next_scene_registration_scope_id = 1U;
@@ -359,11 +319,10 @@ namespace smgpc::runtime {
         std::string _current_sequence_scene_name = "Game";
         std::string _next_sequence_scene_name;
 #ifndef NDEBUG
-        std::vector<J3dRuntimePacketTrace> _j3d_packet_trace = {};
         std::vector<LayoutRuntimePacketTrace> _layout_packet_trace = {};
         std::vector<SemanticTraceEvent> _semantic_trace_events = {};
         HostInputTraceState _host_input_trace = {};
-        std::optional<std::uint64_t> _j3d_packet_trace_frame = {};
+        std::optional<std::uint64_t> _render_packet_trace_frame = {};
         DebugWpadInputScript _debug_wpad_input_script;
         DebugWpadInputFile _debug_wpad_input_file = DebugWpadInputFile::from_environment();
         std::uint64_t _next_semantic_trace_event_index = 0U;

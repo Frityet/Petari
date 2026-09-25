@@ -25,7 +25,8 @@
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/CollisionPartsCompat.hpp"
+#include "Game/Map/CollisionParts.hpp"
+#include <aurora/allocation.hpp>
 #include "runtime/RuntimeContext.hpp"
 
 #include <stdexcept>
@@ -45,8 +46,22 @@ LiveActor::~LiveActor() {
     delete mShadowControllerList;
     mShadowControllerList = nullptr;
     smgpc::compat::release_actor_runtime_state(this);
+    releaseNativeCollisionParts();
     delete mSensorKeeper;
     mSensorKeeper = nullptr;
+}
+
+CollisionParts* LiveActor::adoptCollisionParts(std::unique_ptr<CollisionParts> parts) {
+    const aurora::allocation::HostAllocationScope host;
+    auto* result = parts.get();
+    mNativeCollisionParts.push_back(std::move(parts));
+    return result;
+}
+
+void LiveActor::releaseNativeCollisionParts() noexcept {
+    mCollisionParts = nullptr;
+    std::vector<std::unique_ptr<CollisionParts>> children;
+    children.swap(mNativeCollisionParts);
 }
 
 void LiveActor::init(const JMapInfoIter&) {

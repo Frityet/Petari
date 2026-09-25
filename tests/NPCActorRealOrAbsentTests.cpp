@@ -24,7 +24,6 @@
 #include "runtime/RuntimeContext.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/JMapResource.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "OriginalSceneControllerFixture.hpp"
 
@@ -652,7 +651,7 @@ int main(int argc, char** argv) {
         smgpc::test::OriginalSceneControllerFixture original(heaps);
         smgpc::runtime::SceneScheduler scheduler;
         smgpc::runtime::SceneSchedulerBinding active(scheduler);
-        smgpc::test::SceneExecutionFixture scene(scheduler, original.domain, nullptr, nullptr,
+        smgpc::test::SceneExecutionFixture scene(scheduler, original.domain,
                                                 &original.scene, original.controller().mObjHolder);
         auto& holder = scene.holder();
 

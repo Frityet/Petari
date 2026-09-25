@@ -1,4 +1,5 @@
 #include "Game/System/NANDManager.hpp"
+#include <aurora/nand.hpp>
 #include "Game/System/NANDManagerThread.hpp"
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
@@ -75,6 +76,15 @@ NANDManager::NANDManager() : mManagerThread(nullptr) {
 
     OSResumeThread(mManagerThread->mThread);
     OSInitMutex(&mMutex);
+}
+
+NANDManager::~NANDManager() {
+    // OSThreadWrapper cancellation waits for the worker before freeing its
+    // queue and stack. Discard only that worker's unfinished descriptors.
+    const auto* thread = mManagerThread ? mManagerThread->mThread : nullptr;
+    delete mManagerThread;
+    mManagerThread = nullptr;
+    aurora::NandFileSystem::retire_thread_files(thread);
 }
 
 bool NANDManager::addRequest(NANDRequestInfo* pRequestInfo) {

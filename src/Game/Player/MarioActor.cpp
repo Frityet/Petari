@@ -53,6 +53,7 @@ bool gIsLuigi;
 static f32 BASE_ROTATION = 0.0f;
 
 Triangle& Triangle::operator=(const Triangle& rOther) {
+    mNativeOwner = rOther.mNativeOwner;
     mParts = rOther.mParts;
     mIdx = rOther.mIdx;
     mSensor = rOther.mSensor;

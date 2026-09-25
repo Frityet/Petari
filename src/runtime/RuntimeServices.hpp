@@ -550,9 +550,11 @@ namespace smgpc::runtime {
     class SaveDataService final {
     public:
         SaveDataService();
+        ~SaveDataService();
+        void activate_nand();
         void write_file(std::string_view name, std::span<const std::uint8_t> bytes);
         [[nodiscard]] std::optional<std::vector<std::uint8_t>> read_file(std::string_view name) const;
-        void write_nand_file(std::string_view name, std::span<const std::uint8_t> bytes);
+        void write_nand_file(std::string_view name, std::span<const std::uint8_t> bytes, u8 permission = 0x3c, u8 attribute = 0);
         [[nodiscard]] std::optional<std::vector<std::uint8_t>> read_nand_file(std::string_view name) const;
         s32 create_nand_file(std::string_view name, u8 permission, u8 attribute);
         s32 move_nand_file(std::string_view source, std::string_view destination);

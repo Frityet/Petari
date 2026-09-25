@@ -29,7 +29,6 @@
 #include "runtime/SceneScheduler.hpp"
 #include "resource/BcsvTable.hpp"
 #include "scene/AreaObjRuntime.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StagePlacementResolver.hpp"
 
 #include <aurora/aurora.h>
@@ -82,7 +81,7 @@ namespace {
         smgpc::runtime::SceneScheduler scheduler;
         smgpc::runtime::SceneSchedulerBinding scheduler_binding{scheduler};
         smgpc::test::OriginalSceneControllerFixture original{heaps};
-        smgpc::test::SceneExecutionFixture execution{scheduler, domain, nullptr, nullptr,
+        smgpc::test::SceneExecutionFixture execution{scheduler, domain,
                                                    &original.scene, original.controller().mObjHolder};
     };
 
@@ -183,7 +182,7 @@ namespace {
             if (manager == nullptr) continue;
             ++managers;
             if (typeid(*manager) == typeid(AreaObjMgr)) ++base_managers;
-            require(smgpc::scene::current_scene_obj_holder_binding_owns(manager),
+            require(MR::getSceneObjHolder()->ownsNativeObject(manager),
                     "the scene transaction must own every manager created by the original container");
             require(container.getManager(manager->mName) == manager,
                     "every manager must be reachable through the original container");
@@ -198,7 +197,7 @@ namespace {
     void test_manager_readiness_does_not_fabricate_placement_support() {
         auto fixture = AreaContainerFixture{};
         auto& holder = fixture.execution.holder();
-        auto& binding = fixture.execution.objects();
+        auto& binding = fixture.execution;
         auto *container = static_cast<AreaObjContainer *>(smgpc::test::create_area_container(holder));
         auto *manager = container->getManager("ChangeBgmCube");
         require(typeid(*manager) == typeid(AreaObjMgr) && manager->_18 == 0x20,
@@ -235,7 +234,7 @@ namespace {
     void test_cube_camera_manager_finalizes_priority_and_reverse_query() {
         auto fixture = AreaContainerFixture{};
         auto& holder = fixture.execution.holder();
-        auto& binding = fixture.execution.objects();
+        auto& binding = fixture.execution;
         auto *container = dynamic_cast<AreaObjContainer *>(smgpc::test::create_area_container(holder));
         require(container != nullptr, "the CubeCamera fixture requires the real scene-owned container");
 
@@ -299,7 +298,7 @@ namespace {
     void test_light_area_priority_and_stable_zone_identity() {
         auto fixture = AreaContainerFixture{};
         auto& holder = fixture.execution.holder();
-        auto& binding = fixture.execution.objects();
+        auto& binding = fixture.execution;
         auto *container = dynamic_cast<AreaObjContainer *>(smgpc::test::create_area_container(holder));
         require(container != nullptr, "the LightArea fixture requires the real scene-owned container");
         auto *manager = dynamic_cast<LightAreaHolder *>(container->getManager("LightArea"));
@@ -337,7 +336,7 @@ namespace {
         {
             auto fixture = AreaContainerFixture{};
             auto& holder = fixture.execution.holder();
-            auto& binding = fixture.execution.objects();
+            auto& binding = fixture.execution;
             auto *object = smgpc::test::create_area_container(holder);
             auto *container = dynamic_cast<AreaObjContainer *>(object);
 
@@ -347,7 +346,7 @@ namespace {
             require(smgpc::test::create_area_container(holder) == container,
                     "SceneObj creation must retain one container per scene");
             verify_installed_original_managers(*container);
-            require(smgpc::scene::current_scene_obj_holder_binding_owns(container->getManager("SwitchArea")),
+            require(MR::getSceneObjHolder()->ownsNativeObject(container->getManager("SwitchArea")),
                     "AreaObj managers must use the general scene transaction owner");
             require_throws<std::logic_error>(
                 [&] { (void)container->getManager("__SMGPC_missing_area_manager__"); },
@@ -369,7 +368,7 @@ namespace {
                         dynamic_cast<LightAreaHolder *>(
                             second_container->getManager("LightArea")) !=
                             nullptr &&
-                        smgpc::scene::current_scene_obj_holder_binding_owns(second_container->getManager("LightArea")),
+                        MR::getSceneObjHolder()->ownsNativeObject(second_container->getManager("LightArea")),
                     "destroying a scene binding must release container and manager ownership for the next scene");
         }
         require(smgpc::compat::name_obj_runtime_state_count() ==
@@ -492,10 +491,10 @@ namespace {
             auto scheduler = smgpc::runtime::SceneScheduler{};
             auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
             auto original = smgpc::test::OriginalSceneControllerFixture(heaps);
-        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain, nullptr, nullptr,
+        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain,
                                                           &original.scene, original.controller().mObjHolder);
             auto &holder = execution.holder();
-            auto &binding = execution.objects();
+            auto &binding = execution;
             {
                 const auto game = smgpc::compat::JkrAllocationScope(domain);
                 for (const auto id : {SceneObj_StageSwitchContainer, SceneObj_SwitchWatcherHolder,
@@ -631,10 +630,10 @@ namespace {
         auto scheduler = smgpc::runtime::SceneScheduler{};
         auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
         auto original = smgpc::test::OriginalSceneControllerFixture(heaps);
-        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain, nullptr, nullptr,
+        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain,
                                                           &original.scene, original.controller().mObjHolder);
         auto &holder = execution.holder();
-        auto &binding = execution.objects();
+        auto &binding = execution;
         for (const auto scene_obj : {SceneObj_StageSwitchContainer, SceneObj_SwitchWatcherHolder,
                                      SceneObj_SleepControllerHolder, SceneObj_AreaObjContainer}) {
             const auto game = smgpc::compat::JkrAllocationScope(domain);
@@ -724,10 +723,10 @@ namespace {
         auto scheduler = smgpc::runtime::SceneScheduler{};
         auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
         auto original = smgpc::test::OriginalSceneControllerFixture(heaps);
-        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain, nullptr, nullptr,
+        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain,
                                                           &original.scene, original.controller().mObjHolder);
         auto &holder = execution.holder();
-        auto &binding = execution.objects();
+        auto &binding = execution;
         for (const auto scene_obj : {SceneObj_StageSwitchContainer, SceneObj_SwitchWatcherHolder,
                                      SceneObj_SleepControllerHolder, SceneObj_AreaObjContainer}) {
             const auto game = smgpc::compat::JkrAllocationScope(domain);
@@ -856,10 +855,10 @@ namespace {
         auto scheduler = smgpc::runtime::SceneScheduler{};
         auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
         auto original = smgpc::test::OriginalSceneControllerFixture(heaps);
-        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain, nullptr, nullptr,
+        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain,
                                                           &original.scene, original.controller().mObjHolder);
         auto &holder = execution.holder();
-        auto &binding = execution.objects();
+        auto &binding = execution;
         for (const auto scene_obj : {SceneObj_StageSwitchContainer, SceneObj_SwitchWatcherHolder,
                                      SceneObj_SleepControllerHolder, SceneObj_AreaObjContainer}) {
             const auto game = smgpc::compat::JkrAllocationScope(domain);
@@ -954,7 +953,7 @@ namespace {
         require_throws<std::logic_error>([&] { MR::calcAreaMoveVelocity(&velocity, TVec3f(0,0,0)); }, "active scene-owned");
         auto fixture = AreaContainerFixture{};
         auto& holder = fixture.execution.holder();
-        auto& binding = fixture.execution.objects();
+        auto& binding = fixture.execution;
         auto* container = static_cast<AreaObjContainer*>(smgpc::test::create_area_container(holder));
         auto* manager = container->getManager("AreaMoveSphere");
         require(manager != nullptr && manager->_18 == 0x10, "Area movement requires the actual retail manager");

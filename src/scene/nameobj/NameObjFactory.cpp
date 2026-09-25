@@ -849,12 +849,9 @@ namespace {
     }
 
     [[nodiscard]] bool is_proven_non_actor_helper_table(std::string_view table_path) {
-        // StageObjInfo rows describe zone composition and DemoObjInfo rows feed
-        // the separate demo-sheet loader. Actor-bearing AreaObjInfo,
-        // CameraCubeInfo, and PlanetObjInfo must pass through the factory
-        // boundary and remain blocked until their real owners exist.
-        return contains_path_component(table_path, "/stageobjinfo") ||
-               contains_path_component(table_path, "/demoobjinfo");
+        // Only StageObjInfo is zone composition metadata. DemoObjInfo also
+        // contains original actor creators and must use the same factory check.
+        return contains_path_component(table_path, "/stageobjinfo");
     }
 
 }  // namespace

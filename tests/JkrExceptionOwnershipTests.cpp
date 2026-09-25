@@ -153,7 +153,7 @@ namespace {
             retired = process.domain;
             smgpc::runtime::SceneScheduler scheduler;
             smgpc::runtime::SceneSchedulerBinding scheduler_binding(scheduler);
-            smgpc::test::SceneExecutionFixture execution(scheduler, process.domain, nullptr, nullptr,
+            smgpc::test::SceneExecutionFixture execution(scheduler, process.domain,
                                                         &process.scene, process.controller().mObjHolder);
             JkrAllocationScope scope(process.domain);
             require(MR::getSceneObjHolder() == process.controller().getSceneObjHolder() &&

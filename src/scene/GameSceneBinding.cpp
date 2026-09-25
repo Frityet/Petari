@@ -9,7 +9,6 @@
 #include "compat/JkrAllocationDomain.hpp"
 #include "scene/SceneLifetimeBinding.hpp"
 #include "scene/OriginalSceneSupport.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 #include <aurora/exception.hpp>
 #include <exception>
 #include <stdexcept>
@@ -19,8 +18,7 @@ namespace smgpc::scene {
         GameSceneBinding *current_binding = nullptr;
 
         bool unclaimed_child(const NameObj *object, const void *) noexcept {
-            return !current_scene_obj_holder_binding_owns(object) &&
-                   !compat::name_obj_runtime_ownership_is_claimed(object);
+            return !compat::name_obj_runtime_ownership_is_claimed(object);
         }
     }
 

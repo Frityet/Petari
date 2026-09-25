@@ -10,7 +10,7 @@
 #include "JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "OriginalStageResourceProcessFixture.hpp"
@@ -276,7 +276,7 @@ namespace {
         const auto label = std::string("original-joint-controller-") + std::to_string(generation);
         const int result = smgpc::test::run_stage_resource_process(label.c_str(), [&] {
             Globals globals;
-            auto domain = smgpc::scene::current_scene_allocation_domain();
+            auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
             require(bool(domain), "the original scene must publish its actual retained heap");
             retired = domain;
             smgpc::test::OriginalAsyncHeapSelection game(domain);

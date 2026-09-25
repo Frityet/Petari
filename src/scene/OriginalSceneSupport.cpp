@@ -18,7 +18,10 @@
 #include "scene/SceneExecutionBinding.hpp"
 #include "scene/SceneLifetimeBinding.hpp"
 #include "scene/SceneNameObjRegistry.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Effect/EffectSystem.hpp"
+#include "Game/Util/SystemUtil.hpp"
+#include "scene/SceneInitializationState.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "scene/nameobj/PlanetMapCatalog.hpp"
 #include <JSystem/JKernel/JKRHeap.hpp>
@@ -36,7 +39,7 @@ extern std::unique_ptr<OriginalSceneSupport> active_support;
 class OriginalSceneSupport final {
 public:
     OriginalSceneSupport(Scene& scene, NameObjHolder& names, JKRHeap& heap)
-        : _scene(&scene), _names(&names), _domain(compat::JkrAllocationDomain::retain_heap(heap)) {
+        : _scene(&scene), _names(&names), _domain(compat::JkrAllocationDomain::retain_heap(heap)), _objects(scene.mSceneObjHolder) {
         auto* game = dynamic_cast<GameScene*>(&scene);
         if (game) {
             runtime::DvdFileSystemService dvd("/");
@@ -49,13 +52,19 @@ public:
             throw std::logic_error("Retire the previous scene collision owner before binding another scene");
         _collision.activate();
         _scheduler_binding = std::make_unique<runtime::SceneSchedulerBinding>(_scheduler);
-        _objects = std::make_unique<SceneObjHolderBinding>(*scene.mSceneObjHolder, nullptr, nullptr, _domain);
+        _allocation_binding = std::make_unique<runtime::SceneSchedulerAllocationBinding>(_scheduler, _domain);
+        _objects->initializeNative(_domain);
+        try {
         _execution = std::make_unique<SceneExecutionBinding>(_scheduler, *scene.mListExecutor, _domain, &names);
         _lifetime = std::make_unique<SceneLifetimeBinding>(scene, [](void* context) noexcept {
             if (active_support.get() != context) std::terminate();
             active_support.reset();
         }, this);
         if (game) _game = std::make_unique<GameSceneBinding>(*game);
+        } catch (...) {
+            _objects->retireNativeResources();
+            throw;
+        }
     }
 
     ~OriginalSceneSupport() {
@@ -69,7 +78,7 @@ public:
         auto objects = compat::snapshot_name_obj_runtime_objects();
         for (auto it = objects.rbegin(); it != objects.rend(); ++it) {
             auto* object = *it;
-            if (!compat::has_name_obj_runtime_state(object) || current_scene_obj_holder_binding_owns(object)) continue;
+            if (!compat::has_name_obj_runtime_state(object) || _objects->ownsNativeObject(object)) continue;
             bool belongs_to_heap = false;
             for (auto* heap = JKRHeap::findFromRoot(object); heap; heap = heap->getParent()) {
                 if (heap == &_domain->heap()) {
@@ -86,18 +95,25 @@ public:
             unregister_scene_name_obj(*object);
             compat::release_name_obj_runtime_state(object);
         }
-        _objects.reset();
+        _objects->retireNativeResources();
         _execution.reset();
+        _allocation_binding.reset();
         _scheduler_binding.reset();
         _planet_map_catalog.reset();
     }
 
     void prepare_retirement() noexcept {
         DrawSyncManager::retireNativeCallbacks(_domain->heap());
-        _objects->prepare_retirement();
+        _objects->prepareNativeRetirement();
     }
     Scene& scene() const noexcept { return *_scene; }
-    void initialize_effects(unsigned particles, unsigned emitters) { _objects->initialize_effect_system(particles, emitters); }
+    void initialize_effects(unsigned particles, unsigned emitters) {
+        if (_objects->isExist(SceneObj_EffectSystem))
+            throw std::logic_error("Scene effect system already initialized");
+        const compat::JkrAllocationScope game(_domain);
+        auto* effects = static_cast<EffectSystem*>(_objects->create(SceneObj_EffectSystem));
+        effects->entry(MR::getParticleResourceHolder(), particles, emitters);
+    }
     void begin_frame() { if (_execution->initialized()) _scheduler.begin_frame(); }
 
 private:
@@ -110,7 +126,9 @@ private:
     StageCollisionService _collision;
     runtime::SceneScheduler _scheduler;
     std::unique_ptr<runtime::SceneSchedulerBinding> _scheduler_binding;
-    std::unique_ptr<SceneObjHolderBinding> _objects;
+    SceneInitializationBinding _initialization_state;
+    std::unique_ptr<runtime::SceneSchedulerAllocationBinding> _allocation_binding;
+    SceneObjHolder* _objects;
     std::unique_ptr<SceneExecutionBinding> _execution;
     std::unique_ptr<SceneLifetimeBinding> _lifetime;
     std::unique_ptr<GameSceneBinding> _game;

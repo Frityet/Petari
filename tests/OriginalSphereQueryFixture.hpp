@@ -89,8 +89,6 @@ public:
         }
         ~Part() {
             owner.keeper->removeFromZone(&parts,0);
-            delete parts.mServer->mapInfo;
-            delete parts.mServer;
         }
         void set_matrices(const std::array<float,12>& current, const std::array<float,12>& previous) {
             std::copy(current.begin(),current.end(),&parts.mBaseMatrix.mMtx[0][0]);

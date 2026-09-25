@@ -1,5 +1,4 @@
 #include "OriginalStageResourceProcessFixture.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/AreaObj/AreaObjContainer.hpp"
 #include "Game/AreaObj/ImageEffectArea.hpp"
@@ -29,7 +28,7 @@ int main() {
                     "real water filter archive texture");
         });
         const aurora::allocation::ClientAllocationScope game;
-        auto& holder = *smgpc::scene::current_scene_obj_holder();
+        auto& holder = *MR::getSceneObjHolder();
         auto* areas = MR::getAreaObjContainer();
         require(areas && dynamic_cast<ImageEffectAreaMgr*>(areas->getManager("ImageEffectArea")),
                 "the actual scene owns its original image-effect area manager");

@@ -1,0 +1,145 @@
+{
+  "root_base": "878278a2ffd451dbffc0957b7c604ca49521dfb5",
+  "aurora_base": "3bbd1016d90c64eaa305301f932f48c304c6314f",
+  "files": [
+    {
+      "path": "aurora/include/aurora/nand.hpp",
+      "before_sha256": "0b864c2ffd70f4d556ef47ca10dffcbc6d49775e16c85ec78e3b400d44ad34f3",
+      "before_status": "",
+      "after_sha256": "616256a6253018f43c5e0b061234a4f6acb20b7d90b022da0058de313d744ece",
+      "action": "modify",
+      "followup": "Storage-only transaction fix; before retry snapshots in transaction-fix-before/."
+    },
+    {
+      "path": "aurora/lib/nand.cpp",
+      "before_sha256": "8a25f9786dcbfde300ecdf50fe240eb3992a6506d6c22dbd69f24f0235ecfade",
+      "before_status": "",
+      "after_sha256": "8d217cb185d4f2441265a13a6d16a13abd6a73d0761eb3ed20899c1a31997cfe",
+      "action": "modify",
+      "followup": "Storage-only transaction fix; before retry snapshots in transaction-fix-before/."
+    },
+    {
+      "path": "aurora/include/revolution/nand.h",
+      "before_sha256": null,
+      "before_status": "",
+      "after_sha256": "4002158f22594b593063ebc23383086b7199593faf0697ccceb2c6726a433eeb",
+      "action": "add"
+    },
+    {
+      "path": "aurora/include/revolution.h",
+      "before_sha256": "d4a000a9eb583ed982e624ddbaeb77c121001d8f0860a54f3d9a2bd8c0452895",
+      "before_status": "",
+      "after_sha256": "8cb6a6329a23073ba9a8cd28078cfe389aabab59a08d9441dad6b3b9ea49e6a8",
+      "action": "modify"
+    },
+    {
+      "path": "aurora/xmake.lua",
+      "before_sha256": "27d11e06b8f1614eaaa57905840b9fdd02ca8e89a769d3973a613db8cad6f0a7",
+      "before_status": "",
+      "after_sha256": "84dfb41dcc4b6aa7f65d8b88500b95e5ac8e3e2c9b435473a90428d36e0b05ea",
+      "action": "modify"
+    },
+    {
+      "path": "src/revolution/nand.h",
+      "before_sha256": "db2c6617e61ed141473095d48928cffa75dec2fbf0a15c743016e4c0b6d08362",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/NandSdkCompat.cpp",
+      "before_sha256": "c9221915029270aea6321fc8396f636754c9882d0e8ef8492b2b234cbf23c98b",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/NandSdkBinding.hpp",
+      "before_sha256": "5f0ecb8aacdb35762a5edcbc1a82fe0e3a9e7f1cf35c758f4c71506c76ff68e2",
+      "before_status": "",
+      "after_sha256": null,
+      "action": "delete"
+    },
+    {
+      "path": "src/Game/System/NANDManager.cpp",
+      "before_sha256": "d95ba81ed593edff8ad9056371784de17e161a200b13e52b1ef4e1a4a2a7ad23",
+      "before_status": "",
+      "after_sha256": "74f1635555ece7c31702a417c21dcd64fb9bd7630c9ba53afe33f16de5404f68",
+      "action": "modify"
+    },
+    {
+      "path": "src/runtime/RuntimeServices.cpp",
+      "before_sha256": "2b7c2da1283c1f40d6b3fbbc7119cd017953e5c6641c5b14a9b9a181da5b7cbb",
+      "before_status": "",
+      "after_sha256": "bdd60aa8bfdd21dcc2d7960d18ff0162a24eb6a7e9ec06e9b0055c3b299de758",
+      "action": "modify"
+    },
+    {
+      "path": "src/runtime/RuntimeServices.hpp",
+      "before_sha256": "c4e82277826203780a2164bb1ed82048596fc6f45210464291970444eac07247",
+      "before_status": "",
+      "after_sha256": "81931fffaea4ef81253570319608a82d5b227ac9f1425d3e064fe3be003fa8b8",
+      "action": "modify"
+    },
+    {
+      "path": "src/app/OriginalGameApplication.cpp",
+      "before_sha256": "de189df259e4e592d8e22563b62b83c94bea9e1b1de883636049df7585f9e719",
+      "before_status": "",
+      "after_sha256": "32018183981817a5d7d5d3f2f781b94787f61d03b1be4cef13fef7d01e34ad4b",
+      "action": "modify"
+    },
+    {
+      "path": "src/runtime/RuntimeContext.cpp",
+      "before_sha256": "12483cd8fd1c9be0d261a888af576a4c3b0ff270e37f5d887a52042c013306ab",
+      "before_status": "M src/runtime/RuntimeContext.cpp",
+      "after_sha256": "01d0c2ee263152fcf6d66b2c5bf34b056cb482999df396ae9eaed7de5cf71f70",
+      "action": "modify",
+      "scope": "NAND-only before-to-after snapshot; root subsequent renderer edits deliberately excluded."
+    },
+    {
+      "path": "src/runtime/RuntimeContext.hpp",
+      "before_sha256": "cc6cc2da70d2bc3b0eb124278bdd272e6b7c53036c1b74fc714b69a5fd2e02bf",
+      "before_status": "M src/runtime/RuntimeContext.hpp",
+      "after_sha256": "9d78eb8a8bd615de45e52e0f00177b6a3f4c6a17e0f2beef2bd7e8f517858062",
+      "action": "modify",
+      "scope": "NAND-only before-to-after snapshot; root subsequent renderer edits deliberately excluded."
+    },
+    {
+      "path": "tests/OriginalGameSystemStartupTests.cpp",
+      "before_sha256": "2c1643baffa1cd3b22d16c1bae15506537c7aa79ced8d0559cd04f6e4533d842",
+      "before_status": "",
+      "after_sha256": "45f8f91e6d9d266f08f7963a979df5e6835ee1c9a4a8557c3490b9e57fb4516f",
+      "action": "modify"
+    },
+    {
+      "path": "tests/OriginalSystemConfigTests.cpp",
+      "before_sha256": "978cbc95c0d09f624b33d2a43f06f35a3b68f7e5e4b6ec243f89424d6b26bc8a",
+      "before_status": "",
+      "after_sha256": "2b33c51bc665cf6d3f43a027bf60aaecc8ac45dac059c2f51b7c08476b17d8eb",
+      "action": "modify"
+    },
+    {
+      "path": "tests/AuroraNativeTests.cpp",
+      "before_sha256": "66642c1f4e9bd8d197851fa9ccac0caa7a8dde7ef07135da412283287801029f",
+      "before_status": "M tests/AuroraNativeTests.cpp",
+      "scope": "Single existing title-root call migration; preserve every initially dirty test change.",
+      "after_sha256": "cba3c56eeaa542cff1eec131556ac5a370b347b28f5bd0a729cd440cb8ee0296",
+      "action": "modify"
+    },
+    {
+      "path": "tests/ConsoleNandImportTests.cpp",
+      "before_sha256": "aa36ff46a0a0587dbe3f29d09fd95a6fcecf549911354fc99767fea6cda63c06",
+      "before_status": "",
+      "after_sha256": "448742a6eac4f6b1cc1defc6c5117d4f12218b1fd326af17656e4bf54add7bff",
+      "action": "modify"
+    },
+    {
+      "path": "src/runtime/ConsoleNandImport.cpp",
+      "before_sha256": "0635f3711d52d1f637a82e2906b682a3642617a3efe9d334e1f99fc85b558f43",
+      "before_status": "",
+      "action": "modify",
+      "after_sha256": "8f4ad9b77be80e28a4bf8c17d263838aa2fbbb01e0b9bdb33cdc53b9c3a67546",
+      "followup": "Storage-only transaction fix; before retry snapshots in transaction-fix-before/."
+    }
+  ]
+}

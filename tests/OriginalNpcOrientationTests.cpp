@@ -9,7 +9,7 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 
 #include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
@@ -159,7 +159,7 @@ namespace {
             for (auto* object : smgpc::compat::snapshot_name_obj_runtime_objects())
                 if (auto* actor = dynamic_cast<DemoRabbit*>(object)) actors.push_back(actor);
             require(!actors.empty(), "ordinary authored placement constructed at least one real DemoRabbit");
-            const auto domain = smgpc::scene::current_scene_allocation_domain();
+            const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
             require(domain != nullptr, "the ordinary original scene owns all NPC allocations");
             const smgpc::compat::JkrAllocationScope allocation(domain);
             const J3DSys::CommandScope commands;

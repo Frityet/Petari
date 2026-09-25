@@ -2,7 +2,7 @@
 #include "resource/BcsvTable.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/System/FileLoader.hpp"
 #include "Game/System/ScenarioDataParser.hpp"
 #include "Game/System/StationedArchiveLoader.hpp"
@@ -106,7 +106,7 @@ void verify_catalog(std::weak_ptr<JMapInfo::DataCompat>& last_map) {
 
 void verify_native_name_and_failed_constructor_lifetimes() {
     const auto baseline = smgpc::compat::name_obj_runtime_state_count();
-    auto domain = smgpc::compat::JkrAllocationDomain::create(smgpc::scene::current_scene_allocation_domain(), 4096);
+    auto domain = smgpc::compat::JkrAllocationDomain::create(MR::getSceneObjHolder()->nativeAllocationDomain(), 4096);
     std::optional<NameObj> object;
     std::vector<NameObj*> snapshot;
     constexpr char changed_name[] = "An explicitly retained original NameObj name longer than a string small buffer";
@@ -124,7 +124,7 @@ void verify_native_name_and_failed_constructor_lifetimes() {
     require(smgpc::compat::name_obj_runtime_state_count() == baseline,
             "stack object retirement removes precisely its original NameObj registration");
 
-    auto constrained = smgpc::compat::JkrAllocationDomain::create(smgpc::scene::current_scene_allocation_domain(), 2048);
+    auto constrained = smgpc::compat::JkrAllocationDomain::create(MR::getSceneObjHolder()->nativeAllocationDomain(), 2048);
     const auto archive_count = SingletonHolder<FileLoader>::get()->mArchiveHolder->mEntries.size();
     bool allocation_failed = false;
     try {

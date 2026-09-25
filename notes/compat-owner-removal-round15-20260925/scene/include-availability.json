@@ -1,0 +1,418 @@
+{
+  "guards": [
+    {
+      "include": "Game/Boss/BossAccessor.hpp",
+      "constructors": [
+        "SceneObj_BossAccessor"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_BossAccessor"
+    },
+    {
+      "include": "Game/Boss/SkeletalFishBabyRailHolder.hpp",
+      "constructors": [
+        "SceneObj_SkeletalFishBabyRailHolder"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_SkeletalFishBabyRailHolder"
+    },
+    {
+      "include": "Game/Boss/SkeletalFishBossRailHolder.hpp",
+      "constructors": [
+        "SceneObj_SkeletalFishBossRailHolder"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_SkeletalFishBossRailHolder"
+    },
+    {
+      "include": "Game/Boss/TripodBossAccesser.hpp",
+      "constructors": [
+        "SceneObj_TripodBossAccesser"
+      ],
+      "native_header_present": true,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_TripodBossAccesser"
+    },
+    {
+      "include": "Game/Enemy/BegomanBase.hpp",
+      "constructors": [
+        "SceneObj_BegomanAttackPermitter"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_BegomanAttackPermitter"
+    },
+    {
+      "include": "Game/Enemy/KabokuriFireHolder.hpp",
+      "constructors": [
+        "SceneObj_KabokuriFireHolder"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_KabokuriFireHolder"
+    },
+    {
+      "include": "Game/Enemy/KameckBeamHolder.hpp",
+      "constructors": [
+        "SceneObj_KameckBeamHolder",
+        "SceneObj_KameckBeamTurtleHolder",
+        "SceneObj_KameckFireBallHolder"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_KameckBeamHolder || SMGPC_SCENEOBJ_KameckBeamTurtleHolder || SMGPC_SCENEOBJ_KameckFireBallHolder"
+    },
+    {
+      "include": "Game/Enemy/KarikariDirector.hpp",
+      "constructors": [
+        "SceneObj_KarikariDirector"
+      ],
+      "native_header_present": true,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_KarikariDirector"
+    },
+    {
+      "include": "Game/Enemy/TakoHeiInkHolder.hpp",
+      "constructors": [
+        "SceneObj_TakoHeiInkHolder"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_TakoHeiInkHolder"
+    },
+    {
+      "include": "Game/GameAudio/AudCameraWatcher.hpp",
+      "constructors": [
+        "SceneObj_AudCameraWatcher"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_AudCameraWatcher"
+    },
+    {
+      "include": "Game/GameAudio/AudEffectDirector.hpp",
+      "constructors": [
+        "SceneObj_AudEffectDirector"
+      ],
+      "native_header_present": true,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_AudEffectDirector"
+    },
+    {
+      "include": "Game/LiveActor/VolumeModelDrawer.hpp",
+      "constructors": [
+        "SceneObj_VolumeModelDrawInit"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_VolumeModelDrawInit"
+    },
+    {
+      "include": "Game/Map/PlanetMapCreator.hpp",
+      "constructors": [
+        "SceneObj_PlanetMapCreator"
+      ],
+      "native_header_present": true,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_PlanetMapCreator"
+    },
+    {
+      "include": "Game/Map/QuakeEffectGenerator.hpp",
+      "constructors": [
+        "SceneObj_QuakeEffectGenerator"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_QuakeEffectGenerator"
+    },
+    {
+      "include": "Game/Map/RaceManager.hpp",
+      "constructors": [
+        "SceneObj_RaceManager"
+      ],
+      "native_header_present": true,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_RaceManager"
+    },
+    {
+      "include": "Game/Map/WaterPlant.hpp",
+      "constructors": [
+        "SceneObj_WaterPlantDrawInit"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_WaterPlantDrawInit"
+    },
+    {
+      "include": "Game/MapObj/AirBubbleHolder.hpp",
+      "constructors": [
+        "SceneObj_AirBubbleHolder"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_AirBubbleHolder"
+    },
+    {
+      "include": "Game/MapObj/ArrowSwitchMultiHolder.hpp",
+      "constructors": [
+        "SceneObj_ArrowSwitchMultiHolder"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_ArrowSwitchMultiHolder"
+    },
+    {
+      "include": "Game/MapObj/BigBubbleHolder.hpp",
+      "constructors": [
+        "SceneObj_BigBubbleHolder"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_BigBubbleHolder"
+    },
+    {
+      "include": "Game/MapObj/ChipHolder.hpp",
+      "constructors": [
+        "SceneObj_BlueChipHolder",
+        "SceneObj_YellowChipHolder"
+      ],
+      "native_header_present": true,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_BlueChipHolder || SMGPC_SCENEOBJ_YellowChipHolder"
+    },
+    {
+      "include": "Game/MapObj/ClipAreaDropHolder.hpp",
+      "constructors": [
+        "SceneObj_ClipAreaDropHolder"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_ClipAreaDropHolder"
+    },
+    {
+      "include": "Game/MapObj/ClipFieldFillDraw.hpp",
+      "constructors": [
+        "SceneObj_ClipFieldFillDraw"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_ClipFieldFillDraw"
+    },
+    {
+      "include": "Game/MapObj/ElectricRailHolder.hpp",
+      "constructors": [
+        "SceneObj_ElectricRailHolder"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_ElectricRailHolder"
+    },
+    {
+      "include": "Game/MapObj/FallOutFieldDraw.hpp",
+      "constructors": [
+        "SceneObj_FallOutFieldDraw"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_FallOutFieldDraw"
+    },
+    {
+      "include": "Game/MapObj/FirePressureBulletHolder.hpp",
+      "constructors": [
+        "SceneObj_FirePressureBulletHolder"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_FirePressureBulletHolder"
+    },
+    {
+      "include": "Game/MapObj/GCapture.hpp",
+      "constructors": [
+        "SceneObj_GCapture"
+      ],
+      "native_header_present": true,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_GCapture"
+    },
+    {
+      "include": "Game/MapObj/MiniatureGalaxyHolder.hpp",
+      "constructors": [
+        "SceneObj_MiniatureGalaxyHolder"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_MiniatureGalaxyHolder"
+    },
+    {
+      "include": "Game/MapObj/Note.hpp",
+      "constructors": [
+        "SceneObj_NoteGroup"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_NoteGroup"
+    },
+    {
+      "include": "Game/MapObj/SpiderThread.hpp",
+      "constructors": [
+        "SceneObj_SpiderThread"
+      ],
+      "native_header_present": true,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_SpiderThread"
+    },
+    {
+      "include": "Game/MapObj/SpinDriverPathDrawer.hpp",
+      "constructors": [
+        "SceneObj_SpinDriverPathDrawInit"
+      ],
+      "native_header_present": true,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_SpinDriverPathDrawInit"
+    },
+    {
+      "include": "Game/MapObj/WaterPressureBulletHolder.hpp",
+      "constructors": [
+        "SceneObj_WaterPressureBulletHolder"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_WaterPressureBulletHolder"
+    },
+    {
+      "include": "Game/NPC/MiiFaceIconHolder.hpp",
+      "constructors": [
+        "SceneObj_MiiFaceIconHolder"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_MiiFaceIconHolder"
+    },
+    {
+      "include": "Game/NPC/MiiFacePartsHolder.hpp",
+      "constructors": [
+        "SceneObj_MiiFacePartsHolder"
+      ],
+      "native_header_present": true,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_MiiFacePartsHolder"
+    },
+    {
+      "include": "Game/Ride/FluffWind.hpp",
+      "constructors": [
+        "SceneObj_FluffWindHolder"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_FluffWindHolder"
+    },
+    {
+      "include": "Game/Ride/PlantLeaf.hpp",
+      "constructors": [
+        "SceneObj_PlantLeafDrawInit"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_PlantLeafDrawInit"
+    },
+    {
+      "include": "Game/Ride/PlantStalk.hpp",
+      "constructors": [
+        "SceneObj_PlantStalkDrawInit"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_PlantStalkDrawInit"
+    },
+    {
+      "include": "Game/Ride/SwingRope.hpp",
+      "constructors": [
+        "SceneObj_SwingRopeGroup"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_SwingRopeGroup"
+    },
+    {
+      "include": "Game/Ride/Trapeze.hpp",
+      "constructors": [
+        "SceneObj_TrapezeRopeDrawInit"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_TrapezeRopeDrawInit"
+    },
+    {
+      "include": "Game/Screen/CometRetryButton.hpp",
+      "constructors": [
+        "SceneObj_CometRetryButton"
+      ],
+      "native_header_present": true,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_CometRetryButton"
+    },
+    {
+      "include": "Game/Screen/GalaxyMapController.hpp",
+      "constructors": [
+        "SceneObj_GalaxyMapController"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_GalaxyMapController"
+    },
+    {
+      "include": "Game/Screen/GalaxyNamePlateDrawer.hpp",
+      "constructors": [
+        "SceneObj_GalaxyNamePlateDrawer"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_GalaxyNamePlateDrawer"
+    },
+    {
+      "include": "Game/Screen/HeatHazeEffect.hpp",
+      "constructors": [
+        "SceneObj_HeatHazeDirector"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_HeatHazeDirector"
+    },
+    {
+      "include": "Game/Screen/MoviePlayerSimple.hpp",
+      "constructors": [
+        "SceneObj_MoviePlayerSimple"
+      ],
+      "native_header_present": true,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_MoviePlayerSimple"
+    },
+    {
+      "include": "Game/Screen/MoviePlayingSequence.hpp",
+      "constructors": [
+        "SceneObj_MoviePlayingSequenceHolder"
+      ],
+      "native_header_present": true,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_MoviePlayingSequenceHolder"
+    },
+    {
+      "include": "Game/Screen/OdhConverter.hpp",
+      "constructors": [
+        "SceneObj_OdhConverter"
+      ],
+      "native_header_present": true,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_OdhConverter"
+    },
+    {
+      "include": "Game/Screen/PlayerActionGuidance.hpp",
+      "constructors": [
+        "SceneObj_PlayerActionGuidance"
+      ],
+      "native_header_present": false,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_PlayerActionGuidance"
+    },
+    {
+      "include": "Game/Screen/StaffRoll.hpp",
+      "constructors": [
+        "SceneObj_StaffRoll"
+      ],
+      "native_header_present": true,
+      "condition": "!defined(TARGET_PC) || SMGPC_SCENEOBJ_StaffRoll"
+    }
+  ],
+  "missing_native_headers": [
+    "Game/Boss/BossAccessor.hpp",
+    "Game/Boss/SkeletalFishBabyRailHolder.hpp",
+    "Game/Boss/SkeletalFishBossRailHolder.hpp",
+    "Game/Enemy/BegomanBase.hpp",
+    "Game/Enemy/KabokuriFireHolder.hpp",
+    "Game/Enemy/KameckBeamHolder.hpp",
+    "Game/Enemy/TakoHeiInkHolder.hpp",
+    "Game/GameAudio/AudCameraWatcher.hpp",
+    "Game/LiveActor/VolumeModelDrawer.hpp",
+    "Game/Map/QuakeEffectGenerator.hpp",
+    "Game/Map/WaterPlant.hpp",
+    "Game/MapObj/AirBubbleHolder.hpp",
+    "Game/MapObj/ArrowSwitchMultiHolder.hpp",
+    "Game/MapObj/BigBubbleHolder.hpp",
+    "Game/MapObj/ClipAreaDropHolder.hpp",
+    "Game/MapObj/ClipFieldFillDraw.hpp",
+    "Game/MapObj/ElectricRailHolder.hpp",
+    "Game/MapObj/FallOutFieldDraw.hpp",
+    "Game/MapObj/FirePressureBulletHolder.hpp",
+    "Game/MapObj/MiniatureGalaxyHolder.hpp",
+    "Game/MapObj/Note.hpp",
+    "Game/MapObj/WaterPressureBulletHolder.hpp",
+    "Game/NPC/MiiFaceIconHolder.hpp",
+    "Game/Ride/FluffWind.hpp",
+    "Game/Ride/PlantLeaf.hpp",
+    "Game/Ride/PlantStalk.hpp",
+    "Game/Ride/SwingRope.hpp",
+    "Game/Ride/Trapeze.hpp",
+    "Game/Screen/GalaxyMapController.hpp",
+    "Game/Screen/GalaxyNamePlateDrawer.hpp",
+    "Game/Screen/HeatHazeEffect.hpp",
+    "Game/Screen/PlayerActionGuidance.hpp"
+  ],
+  "constructor_availability_changed": false
+}

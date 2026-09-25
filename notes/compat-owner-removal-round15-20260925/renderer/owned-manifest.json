@@ -1,0 +1,15 @@
+{
+  "paths": [
+    "src/compat/OriginalJ3dJointTree.cpp",
+    "src/compat/OriginalJ3dJointTree.hpp",
+    "src/render/J3dModelRenderer.cpp",
+    "src/render/J3dModelRenderer.hpp",
+    "src/runtime/ParityTrace.cpp",
+    "tests/OriginalJ3DJointTraversalTests.cpp",
+    "tests/LiveActorUtilRealOrAbsentTests.cpp",
+    "tests/MarioModelDemoSurfaceTests.cpp",
+    "tests/J3dGxRealOrAbsentTests.cpp",
+    "src/runtime/RuntimeContext.cpp",
+    "src/runtime/RuntimeContext.hpp"
+  ]
+}

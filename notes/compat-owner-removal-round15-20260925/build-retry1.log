@@ -1,0 +1,852 @@
+[0m[38;5;2;1m[ 14%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/PlayerUtil.cpp[0m
+[0m[38;5;2;1m[ 14%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/EffectUtil.cpp[0m
+[0m[38;5;2;1m[ 14%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/MapUtil.cpp[0m
+[0m[38;5;2;1m[ 14%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/ActorMovementUtil.cpp[0m
+[0m[38;5;2;1m[ 16%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/ObjUtil.cpp[0m
+[0m[38;5;2;1m[ 16%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/ModelUtil.cpp[0m
+[0m[38;5;2;1m[ 16%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/LiveActorUtil.cpp[0m
+[0m[38;5;2;1m[ 17%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/LiveActorUtilGravity.cpp[0m
+[0m[38;5;2;1m[ 17%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/SoundUtil.cpp[0m
+[0m[38;5;2;1m[ 18%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/ActorSensorUtil.cpp[0m
+[0m[38;5;2;1m[ 19%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraViewInterpolator.cpp[0m
+[0m[38;5;2;1m[ 19%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraHolder.cpp[0m
+[0m[38;5;2;1m[ 19%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraTripodBossJoint.cpp[0m
+[0m[38;5;2;1m[ 19%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraTalk.cpp[0m
+[0m[38;5;2;1m[ 19%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamKarikariEffector.cpp[0m
+[0m[38;5;2;1m[ 19%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraCharmedVecRegTower.cpp[0m
+[0m[38;5;2;1m[ 19%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraRegisterHolder.cpp[0m
+[0m[38;5;2;1m[ 19%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorFixedThere.cpp[0m
+[0m[38;5;2;1m[ 19%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraContext.cpp[0m
+[0m[38;5;2;1m[ 19%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorTower.cpp[0m
+[0m[38;5;2;1m[ 19%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraRaceFollow.cpp[0m
+[0m[38;5;2;1m[ 19%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraDPD.cpp[0m
+[0m[38;5;2;1m[ 19%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraPolygonCodeUtil.cpp[0m
+[0m[38;5;2;1m[ 19%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorWaterPlanet.cpp[0m
+[0m[38;5;2;1m[ 19%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorInwardTower.cpp[0m
+[0m[38;5;2;1m[ 20%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorTripodBossJoint.cpp[0m
+[0m[38;5;2;1m[ 20%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraMedianPlanet.cpp[0m
+[0m[38;5;2;1m[ 20%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorCharmedVecReg.cpp[0m
+[0m[38;5;2;1m[ 20%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraCharmedVecReg.cpp[0m
+[0m[38;5;2;1m[ 20%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorInwardSphere.cpp[0m
+[0m[38;5;2;1m[ 20%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorWonderPlanet.cpp[0m
+[0m[38;5;2;1m[ 20%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraTwistedPassage.cpp[0m
+[0m[38;5;2;1m[ 20%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraCharmedFix.cpp[0m
+[0m[38;5;2;1m[ 20%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraManEvent.cpp[0m
+[0m[38;5;2;1m[ 20%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorWaterFollow.cpp[0m
+[0m[38;5;3;1msrc/Game/Util/ActorMovementUtil.cpp:2:10: warning: non-portable path to file '"Game/Animation/XanimeCore.hpp"'; specified path differs in case from file name on disk [-Wnonportable-include-path]
+    2 | #include "Game/Animation/Xanimecore.hpp"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |          "Game/Animation/XanimeCore.hpp"
+1 warning generated.
+In file included from src/Game/Util/ActorMovementUtil.cpp:2:
+In file included from src/Game/Animation/Xanimecore.hpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+In file included from src/Game/Util/ActorMovementUtil.cpp:8:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {[0m
+[0m[38;5;2;1m[ 20%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraTowerBase.cpp[0m
+[0m[38;5;3;1msrc/Game/Util/SoundUtil.cpp:276:40: warning: comparison of address of 'pBinder->mWallInfo.mParentTriangle' not equal to a null pointer is always true [-Wtautological-pointer-compare]
+  276 |         } else if (&pBinder->mWallInfo.mParentTriangle != nullptr) {
+      |                     ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~    ~~~~~~~
+src/Game/Util/SoundUtil.cpp:278:40: warning: comparison of address of 'pBinder->mRoofInfo.mParentTriangle' not equal to a null pointer is always true [-Wtautological-pointer-compare]
+  278 |         } else if (&pBinder->mRoofInfo.mParentTriangle != nullptr) {
+      |                     ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~    ~~~~~~~
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 20%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/Camera.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Util/ModelUtil.cpp:18:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 20%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/DotCamParams.cpp[0m
+[0m[38;5;3;1msrc/Game/Util/ObjUtil.cpp:53:117: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   53 |     bool isExistFileInArcLocal(const ResourceHolder* pHolder, const char* pArchive, va_list pFormat) __attribute__((noinline)) {
+      |                                                                                                                     ^
+src/Game/Util/ObjUtil.cpp:60:124: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   60 |     JMapInfo* tryCreateCsvParserLocal(const ResourceHolder* pHolder, const char* pArchive, va_list pFormat) __attribute__((noinline)) {
+      |                                                                                                                            ^
+src/Game/Util/ObjUtil.cpp:571:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  571 |         pMapInfo->getValue(idx, pKey, pOut);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Util/ObjUtil.cpp:583:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  583 |         pMapInfo->getValue< s32 >(idx, pKey, pOut);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Util/ObjUtil.cpp:589:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  589 |         pMapInfo->getValue< s32 >(idx, pKey, &val);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Util/ObjUtil.cpp:595:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result][0m
+[0m[38;5;2;1m[ 21%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorAnim.cpp[0m
+[0m[38;5;2;1m[ 21%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorFix.cpp[0m
+[0m[38;5;2;1m[ 21%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraCharmedTripodBoss.cpp[0m
+[0m[38;5;2;1m[ 21%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraLocalUtil.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Util/LiveActorUtil.cpp:4:
+In file included from src/Game/Animation/XanimeCore.hpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+src/Game/Util/LiveActorUtil.cpp:79:126: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   79 |     PartsModel* createSubModel(LiveActor* pActor, const char* pSubModelName, MtxPtr pMtx, int drawBufferType) __attribute__((noinline)) {
+      |                                                                                                                              ^
+src/Game/Util/LiveActorUtil.cpp:96:75: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   96 |     void changeBckForEffectKeeper(const LiveActor* pActor) __attribute__((noinline)) {
+      |                                                                           ^
+src/Game/Util/LiveActorUtil.cpp:104:81: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  104 |     void calcCollisionMtx(TPos3f* pMtx, const LiveActor* pActor) __attribute__((noinline)) {
+      |                                                                                 ^[0m
+[0m[38;5;2;1m[ 21%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorSpiral.cpp[0m
+[0m[38;5;2;1m[ 21%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraMtxRegParallel.cpp[0m
+[0m[38;5;2;1m[ 21%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorMedianTower.cpp[0m
+[0m[38;5;2;1m[ 21%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraWonderPlanet.cpp[0m
+[0m[38;5;2;1m[ 21%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorTowerPos.cpp[0m
+[0m[38;5;2;1m[ 21%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraTowerPos.cpp[0m
+[0m[38;5;2;1m[ 21%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraShaker.cpp[0m
+[0m[38;5;2;1m[ 21%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraFooFighterPlanet.cpp[0m
+[0m[38;5;2;1m[ 21%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorMedianPlanet.cpp[0m
+[0m[38;5;2;1m[ 21%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraTripodBoss.cpp[0m
+[0m[38;5;2;1m[ 22%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraTargetObj.cpp[0m
+[0m[38;5;2;1m[ 22%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraInwardSphere.cpp[0m
+[0m[38;5;2;1m[ 22%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraInwardTower.cpp[0m
+[0m[38;5;2;1m[ 22%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraParamString.cpp[0m
+[0m[38;5;2;1m[ 22%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraParamChunk.cpp[0m
+[0m[38;5;2;1m[ 22%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorTrundle.cpp[0m
+[0m[38;5;3;1msrc/Game/Camera/DotCamParams.cpp:74:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   74 |     mMapInfo.getValue(0, "version", &mVersion);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 22%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraWaterPlanet.cpp[0m
+[0m[38;5;2;1m[ 22%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorRailFollow.cpp[0m
+[0m[38;5;2;1m[ 22%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraBlackHole.cpp[0m
+[0m[38;5;2;1m[ 22%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraFooFighter.cpp[0m
+[0m[38;5;2;1m[ 22%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraRotChecker.cpp[0m
+[0m[38;5;2;1m[ 22%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorFixedPoint.cpp[0m
+[0m[38;5;2;1m[ 22%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraCalc.cpp[0m
+[0m[38;5;2;1m[ 23%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraWaterFollow.cpp[0m
+[0m[38;5;2;1m[ 23%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorSlide.cpp[0m
+[0m[38;5;2;1m[ 23%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorBlackHole.cpp[0m
+[0m[38;5;2;1m[ 23%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorCubePlanet.cpp[0m
+[0m[38;5;2;1m[ 23%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/GameCameraCreator.cpp[0m
+[0m[38;5;2;1m[ 23%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraFollow.cpp[0m
+[0m[38;5;2;1m[ 23%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraDead.cpp[0m
+[0m[38;5;2;1m[ 23%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraWaterPlanetBoss.cpp[0m
+[0m[38;5;2;1m[ 23%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraTargetMtx.cpp[0m
+[0m[38;5;2;1m[ 23%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorMtxRegParallel.cpp[0m
+[0m[38;5;2;1m[ 23%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraManSubjective.cpp[0m
+[0m[38;5;2;1m[ 23%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraShakePatternImpl.cpp[0m
+[0m[38;5;2;1m[ 23%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorCharmedFix.cpp[0m
+[0m[38;5;2;1m[ 23%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorCharmedTripodBoss.cpp[0m
+[0m[38;5;2;1m[ 24%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraDirector.cpp[0m
+[0m[38;5;2;1m[ 24%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorTalk.cpp[0m
+[0m[38;5;2;1m[ 24%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorFollow.cpp[0m
+[0m[38;5;2;1m[ 24%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraTargetHolder.cpp[0m
+[0m[38;5;2;1m[ 24%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorDPD.cpp[0m
+[0m[38;5;2;1m[ 24%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraSpiral.cpp[0m
+[0m[38;5;2;1m[ 24%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraHeightArrange.cpp[0m
+[0m[38;5;2;1m[ 24%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorRailDemo.cpp[0m
+[0m[38;5;2;1m[ 24%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorWaterPlanetBoss.cpp[0m
+[0m[38;5;2;1m[ 24%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraObjParallel.cpp[0m
+[0m[38;5;2;1m[ 24%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraParallel.cpp[0m
+[0m[38;5;2;1m[ 24%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorParallel.cpp[0m
+[0m[38;5;2;1m[ 24%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorTripodPlanet.cpp[0m
+[0m[38;5;2;1m[ 25%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraAnim.cpp[0m
+[0m[38;5;2;1m[ 25%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorFrontAndBack.cpp[0m
+[0m[38;5;2;1m[ 25%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraPoseParam.cpp[0m
+[0m[38;5;2;1m[ 25%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraRailHolder.cpp[0m
+[0m[38;5;2;1m[ 25%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraRailDemo.cpp[0m
+[0m[38;5;2;1m[ 25%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraSlide.cpp[0m
+[0m[38;5;2;1m[ 25%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraManPause.cpp[0m
+[0m[38;5;2;1m[ 25%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraFixedThere.cpp[0m
+[0m[38;5;2;1m[ 25%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorRaceFollow.cpp[0m
+[0m[38;5;2;1m[ 25%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraParamChunkHolder.cpp[0m
+[0m[38;5;2;1m[ 25%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraFrontAndBack.cpp[0m
+[0m[38;5;2;1m[ 25%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraFix.cpp[0m
+[0m[38;5;2;1m[ 25%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraRailFollow.cpp[0m
+[0m[38;5;2;1m[ 26%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraTripodPlanet.cpp[0m
+[0m[38;5;2;1m[ 26%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraSubjective.cpp[0m
+[0m[38;5;2;1m[ 26%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraMan.cpp[0m
+[0m[38;5;2;1m[ 26%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorFooFighter.cpp[0m
+[0m[38;5;2;1m[ 26%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraFixedPoint.cpp[0m
+[0m[38;5;2;1m[ 26%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorCharmedVecRegTower.cpp[0m
+[0m[38;5;2;1m[ 26%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraTower.cpp[0m
+[0m[38;5;2;1m[ 26%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraManGame.cpp[0m
+[0m[38;5;2;1m[ 26%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraCubePlanet.cpp[0m
+[0m[38;5;2;1m[ 26%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraCover.cpp[0m
+[0m[38;5;2;1m[ 26%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraTrundle.cpp[0m
+[0m[38;5;2;1m[ 26%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorObjParallel.cpp[0m
+[0m[38;5;3;1msrc/Game/Camera/CameraRailHolder.cpp:40:17: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   40 |                 iter.getValue("l_id", &linkId);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 26%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraTargetArg.cpp[0m
+[0m[38;5;2;1m[ 26%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraGround.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraBehind.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamHeliEffector.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorRailWatch.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/OnlyCamera.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorTripodBoss.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraRailWatch.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorInnerCylinder.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraInnerCylinder.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CamTranslatorTwistedPassage.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/MirrorActor.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ClippingActorHolder.cpp[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ActorLightCtrl.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Camera/CamTranslatorCharmedVecRegTower.cpp:3:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 27%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ShadowSurfaceBox.cpp[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ActorAnimKeeper.cpp[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ActorStateBase.cpp[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ActorCameraInfo.cpp[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ShadowVolumeCylinder.cpp[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ActorPadAndCameraCtrl.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Camera/CameraCover.cpp:4:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+src/Game/Camera/CameraCover.cpp:38:17: warning: decrement of object of volatile-qualified type 'volatile s32' (aka 'volatile int') is deprecated [-Wdeprecated-volatile]
+   38 |     if (_3C && !--_3C) {
+      |                 ^
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/SensorHitChecker.cpp[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ShadowVolumeOval.cpp[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/Spine.cpp[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/Binder.cpp[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ShadowVolumeSphere.cpp[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ShadowDrawer.cpp[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ClippingJudge.cpp[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/MaterialCtrl.cpp[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ClippingDirector.cpp[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/LiveActorGroup.cpp[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/LodCtrl.cpp[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/SpotMarkLight.cpp[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/MirrorCamera.cpp[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ShadowSurfaceDrawer.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/LiveActor/ActorLightCtrl.cpp:7:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ShadowSurfaceOval.cpp[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/DisplayListMaker.cpp[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/HitSensor.cpp[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ModelObj.cpp[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/FlashingCtrl.cpp[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ShadowVolumeFlatModel.cpp[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ShadowVolumeDrawer.cpp[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/LiveActorFlag.cpp[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ShadowSurfaceCircle.cpp[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/HitSensorKeeper.cpp[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/HitSensorInfo.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/LiveActor/ClippingJudge.cpp:3:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/DynamicJointCtrl.cpp[0m
+[0m[38;5;3;1msrc/Game/LiveActor/ActorPadAndCameraCtrl.cpp:43:17: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   43 |                 parser->getValue(i, distanceInvalidKey, &info->mDistanceInvalid);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/Nerve.cpp[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ActorStateKeeper.cpp[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/RailRider.cpp[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/EffectKeeper.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/LiveActor/MaterialCtrl.cpp:3:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+In file included from src/Game/LiveActor/MaterialCtrl.cpp:6:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ShadowController.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/LiveActor/MirrorCamera.cpp:4:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ShadowVolumeLine.cpp[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ViewGroupCtrl.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/LiveActor/ShadowSurfaceDrawer.cpp:6:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ShadowVolumeBox.cpp[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/LiveActorGroupArray.cpp[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ShadowVolumeOvalPole.cpp[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/MessageSensorHolder.cpp[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/LiveActor.cpp[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ClippingGroupHolder.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/LiveActor/ShadowVolumeFlatModel.cpp:9:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/PartsModel.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/LiveActor/ShadowVolumeDrawer.cpp:6:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/AllLiveActorGroup.cpp[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ShadowVolumeModel.cpp[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ModelManager.cpp[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ClippingActorInfo.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/LiveActor/DynamicJointCtrl.cpp:2:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/MirrorReflectionModel.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/LiveActor/DisplayListMaker.cpp:5:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+In file included from src/Game/LiveActor/DisplayListMaker.cpp:7:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Ride/SwingRopePoint.cpp[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/EffectSystem.cpp[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/SingleEmitter.cpp[0m
+[0m[38;5;3;1msrc/Game/LiveActor/RailRider.cpp:250:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  250 |     iter.getValue< s32 >(pStr, &val);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/LiveActor/RailRider.cpp:263:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  263 |     iter.getValue< s32 >(pStr, pOut);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/LiveActor/RailRider.cpp:273:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  273 |     iter.getValue< s32 >(pStr, &val);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/LiveActor/RailRider.cpp:286:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  286 |     iter.getValue< s32 >(pStr, pOut);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/LiveActor/RailRider.cpp:296:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  296 |     iter.getValue< s32 >(pStr, &val);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/LiveActor/RailRider.cpp:309:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result][0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/SyncBckEffectInfo.cpp[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/MultiEmitterAccess.cpp[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/MultiEmitterParticleCallBack.cpp[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/MultiEmitter.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/LiveActor/MessageSensorHolder.cpp:2:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/SimpleEffectObj.cpp[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/EffectSystemUtil.cpp[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/SyncBckEffectChecker.cpp[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/ParticleDrawExecutor.cpp[0m
+[0m[38;5;3;1msrc/Game/LiveActor/AllLiveActorGroup.cpp:23:10: warning: expression result unused [-Wunused-value]
+   23 |     for (actorNum; actorNum < getObjNum(); actorNum++) {
+      |          ^~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/AutoEffectInfo.cpp[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/AutoEffectGroupHolder.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/LiveActor/ShadowVolumeModel.cpp:2:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/ParticleCalcExecutor.cpp[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/ParticleEmitter.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/LiveActor/ClippingActorInfo.cpp:5:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/ParticleEmitterHolder.cpp[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/AutoEffectGroup.cpp[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/ParticleResourceHolder.cpp[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/MultiEmitterCallBack.cpp[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Animation/BvaPlayer.cpp[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Animation/BtkPlayer.cpp[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Animation/MaterialAnmBuffer.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/LiveActor/ModelManager.cpp:8:
+In file included from src/Game/Animation/XanimeCore.hpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Animation/XanimeCore.cpp[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Animation/BckCtrl.cpp[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Animation/BpkPlayer.cpp[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Animation/XanimePlayer.cpp[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Animation/BtpPlayer.cpp[0m
+[0m[38;5;3;1msrc/Game/Effect/AutoEffectInfo.cpp:37:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   37 |         rIter.getValue(pKey, &pValue);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Effect/AutoEffectInfo.cpp:43:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   43 |         rIter.getValue(pKey, &pValue);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Effect/AutoEffectInfo.cpp:49:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   49 |         rIter.getValue(pKey, &pValue);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Effect/AutoEffectInfo.cpp:58:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   58 |         rIter.getValue(pKey, &pValue);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Effect/AutoEffectInfo.cpp:87:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   87 |     rIter.getValue("ContinueAnimEnd", &pContinueAnimEnd);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Effect/AutoEffectInfo.cpp:97:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result][0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Animation/BrkPlayer.cpp[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Animation/LayoutAnmPlayer.cpp[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Animation/XanimeResource.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Effect/SimpleEffectObj.cpp:7:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Animation/AnmPlayer.cpp[0m
+[0m[38;5;3;1msrc/Game/Effect/EffectSystemUtil.cpp:277:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  277 |             iter.getValue("GroupName", &pGroupName);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/AnimScaleController.cpp[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/KarikariDirector.cpp[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/WalkerStateRunaway.cpp[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/Karikari.cpp[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Enemy/WalkerStateBlowDamage.cpp[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GalaxyCometScheduler.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Effect/ParticleDrawExecutor.cpp:9:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/ConfigDataHolder.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Effect/ParticleCalcExecutor.cpp:8:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameDataFunction.cpp[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystemFontHolder.cpp[0m
+[0m[38;5;3;1msrc/Game/Effect/ParticleResourceHolder.cpp:87:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   87 |         iter.getValue("GroupName", &groupName);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystemFrameControl.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Animation/MaterialAnmBuffer.cpp:6:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GalaxyNameSortTable.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Animation/XanimeCore.cpp:1:
+In file included from src/Game/Animation/XanimeCore.hpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystemErrorWatcher.cpp[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/StarPieceAlmsStorage.cpp[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/WPadHolder.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Animation/LayoutAnmPlayer.cpp:2:
+In file included from src/Game/Screen/LayoutManager.hpp:6:
+In file included from src/nw4r/lyt/layout.h:3:
+In file included from src/nw4r/lyt/animation.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                                              ~~~ ^  ~~~~~~~~~~~
+In file included from src/Game/Animation/LayoutAnmPlayer.cpp:2:
+In file included from src/Game/Screen/LayoutManager.hpp:6:
+In file included from src/nw4r/lyt/layout.h:4:[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/UserFile.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Animation/BckCtrl.cpp:4:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+src/Game/Animation/BckCtrl.cpp:47:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   47 |             iter.getValue("name", &name);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Animation/BckCtrl.cpp:49:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   49 |             iter.getValue("interpole", &interpole);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Animation/BckCtrl.cpp:51:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   51 |             iter.getValue("play_frame", &playFrame);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Animation/BckCtrl.cpp:53:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   53 |             iter.getValue("start_frame", &startFrame);[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/StationedArchiveLoader.cpp[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/PlacedHiddenStarScenarioTable.cpp[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GalaxyStatusAccessor.cpp[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/WPadRumbleData.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Animation/XanimePlayer.cpp:2:
+In file included from src/Game/Animation/XanimeCore.hpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GalaxyMoveArgument.cpp[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameEventFlagChecker.cpp[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/FindingLuigiEventScheduler.cpp[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/FileRipper.cpp[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/PauseButtonCheckerInGame.cpp[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/LuigiLeftSupplier.cpp[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/NANDManager.cpp[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/NerveExecutor.cpp[0m
+[0m[38;5;3;1msrc/Game/System/GameDataFunction.cpp:19:72: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   19 |     SaveDataHandleSequence* getSaveDataHandleSequence() __attribute__((noinline)) {
+      |                                                                        ^
+src/Game/System/GameDataFunction.cpp:27:68: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   27 |     GameSequenceProgress* getGameSequenceProgress() __attribute__((noinline)) {
+      |                                                                    ^
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/DrawBufferHolder.cpp[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/StarPointerOnOffController.cpp[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystemStationedArchiveLoader.cpp[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/ResourceHolder.cpp[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/WPadRumble.cpp[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/LayoutHolder.cpp[0m
+[0m[38;5;3;1msrc/Game/System/WPadHolder.cpp:155:48: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  155 |     WPadHolder* getWPadHolder() __attribute__((noinline)) {
+      |                                                ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/NANDErrorSequence.cpp[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/WPadAcceleration.cpp[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/WPad.cpp[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameDataConst.cpp[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/HeapMemoryWatcher.cpp[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/SysConfigFile.cpp[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSequenceDirector.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/DrawBuffer.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/MessageHolder.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/Language.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/WPadStick.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/SaveDataHandleSequence.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/DrawBufferGroup.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GalaxyIDBCSV.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/HomeButtonStateNotifier.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/SaveDataBannerCreator.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/GameSystemStationedArchiveLoader.cpp:9:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameEventValueChecker.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystemSceneController.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/StageResultSequenceChecker.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameEventFlagTable.cpp[0m
+[0m[38;5;3;1msrc/Game/System/HeapMemoryWatcher.cpp:11:81: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   11 |     JKRExpHeap* createExpHeap(u32 size, JKRHeap* pHeap, bool a3) __attribute__((noinline)) {
+      |                                                                                 ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/SpinDriverPathStorage.cpp[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameDataTemporaryInGalaxy.cpp[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/OSThreadWrapper.cpp[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/StorySequenceExecutor.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/GameSequenceDirector.cpp:7:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/SaveDataHandler.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/GameDataConst.cpp:4:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+src/Game/System/GameDataConst.cpp:12:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   12 |     element.getValue< u32 >("PowerStarNum", &powerStarNum);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/System/GameDataConst.cpp:71:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   71 |     element.getValue< u32 >("GrandGalaxyNo", &grandGalaxyNo);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+3 warnings generated.[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/StationedFileInfo.cpp[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/WPadHVSwing.cpp[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSequenceProgress.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/SaveDataHandleSequence.cpp:11:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/BinaryDataChunkHolder.cpp[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameDataPlayerStatus.cpp[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/FunctionAsyncExecutor.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/DrawBuffer.cpp:7:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/ConfigDataMii.cpp[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/WPadButton.cpp[0m
+[0m[38;5;3;1msrc/Game/System/LayoutHolder.cpp:215:17: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]
+  215 |                 sprintf(path, "%s%s%s", pPath, "/", finder->mName);
+      |                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk/usr/include/_stdio.h:278:16: note: 'sprintf' has been explicitly marked deprecated here
+  278 | __attribute__((__deprecated__("This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead.")))
+      |                ^
+src/Game/System/LayoutHolder.cpp:236:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  236 |             mArchive->getFileAttribute(finder->mFileID);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/NANDManagerThread.cpp[0m
+[0m[38;5;3;1msrc/Game/System/MessageHolder.cpp:188:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  188 |     iter.getValue("Index", &messageIndex);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystemFunction.cpp[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/FileHolder.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/GameSystemSceneController.cpp:19:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+src/Game/System/GameSystemSceneController.cpp:31:62: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   31 |     AudSystemWrapper* getAudioSystemWrapper() __attribute__((noinline)) {
+      |                                                              ^
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/ShapePacketUserData.cpp[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystemDimmingWatcher.cpp[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/ResourceHolderManager.cpp[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/DrawBufferExecuter.cpp[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/SaveDataFileAccessor.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/ResourceHolder.cpp:20:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+src/Game/System/ResourceHolder.cpp:367:17: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]
+  367 |                 sprintf(path, "%s%s%s", pPath, "/", finder->mName);
+      |                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk/usr/include/_stdio.h:278:16: note: 'sprintf' has been explicitly marked deprecated here
+  278 | __attribute__((__deprecated__("This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead.")))
+      |                ^
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystem.cpp[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/ArchiveHolder.cpp[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/RenderMode.cpp[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/ScenarioProgressTestRun.cpp[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/DrawSyncManager.cpp[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystemObjHolder.cpp[0m
+[0m[38;5;3;1msrc/Game/System/GameEventFlagTable.cpp:474:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  474 |             iter.getValue(key, &openCondition);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/MainLoopFramework.cpp[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/WPadPointer.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/FunctionAsyncExecutor.cpp:2:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameDataHolder.cpp[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/ResourceInfo.cpp[0m
+[0m[38;5;3;1msrc/Game/System/GameSystemFunction.cpp:33:60: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   33 |     AudSystemWrapper* getAudSystemWrapper() __attribute__((noinline)) {
+      |                                                            ^
+src/Game/System/GameSystemFunction.cpp:37:72: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   37 |     SaveDataHandleSequence* getSaveDataHandleSequence() __attribute__((noinline)) {
+      |                                                                        ^
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/ScenarioDataParser.cpp[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/BinaryDataContentAccessor.cpp[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystemResetAndPowerProcess.cpp[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/Overwrite.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/FileHolder.cpp:2:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/ConfigDataMisc.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/ShapePacketUserData.cpp:5:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameEventFlag.cpp[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSequenceFunction.cpp[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/WPadInfoChecker.cpp[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameEventFlagStorage.cpp[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GalaxyCometState.cpp[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/WPadLeaveWatcher.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/GameSystem.cpp:24:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/FileLoader.cpp[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/AlreadyDoneFlagInGalaxy.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/ResourceInfo.cpp:2:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameDataGalaxyStorage.cpp[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/FileLoaderThread.cpp[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystemException.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/WPadPointer.cpp:2:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/FileSelectModel.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/MainLoopFramework.cpp:8:
+src/JSystem/JUtility/JUTConsole.hpp:122:63: warning: 'offsetof' on non-standard-layout type 'JUTConsole' [-Winvalid-offsetof]
+  122 |     typedef JGadget::TLinkList< JUTConsole, -static_cast<int>(__builtin_offsetof(JUTConsole, mListNode)) > ConsoleList;
+      |                                                               ^                              ~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/OceanSphere.cpp[0m
+[0m[38;5;3;1msrc/Game/System/GameDataHolder.cpp:318:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  318 |     iter.getValue("progress", &progress);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/System/GameDataHolder.cpp:326:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  326 |     iter.getValue("progress", &progress);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/WaterAreaHolder.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/ResourceHolderManager.cpp:5:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/SleepController.cpp[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/StageSwitch.cpp[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/WaterInfo.cpp[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/FileSelectIconID.cpp[0m
+[0m[38;5;3;1msrc/Game/System/ScenarioDataParser.cpp:109:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  109 |     mZoneList->getValue< const char* >(zoneId, "ZoneName", &pZoneName);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/System/ScenarioDataParser.cpp:152:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  152 |         mZoneList->getValue< const char* >(i, "ZoneName", &pName);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/SwitchWatcherHolder.cpp[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/OceanHomeMapCtrl.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/ArchiveHolder.cpp:2:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/FileSelectCameraController.cpp[0m
+[0m[38;5;3;1msrc/Game/System/GameSequenceFunction.cpp:22:68: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   22 |     GameSequenceProgress* getGameSequenceProgress() __attribute__((noinline)) {
+      |                                                                    ^
+src/Game/System/GameSequenceFunction.cpp:26:72: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   26 |     SaveDataHandleSequence* getSaveDataHandleSequence() __attribute__((noinline)) {
+      |                                                                        ^
+src/Game/System/GameSequenceFunction.cpp:34:56: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   34 |     NWC24Messenger* getNWC24Messenger() __attribute__((noinline)) {
+      |                                                        ^
+3 warnings generated.[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/SwitchSynchronizer.cpp[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/SphereSelector.cpp[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/SwitchWatcher.cpp[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/OceanRing.cpp[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/RaceManager.cpp[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/HitInfo.cpp[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/ActorAppearSwitchListener.cpp[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/LightDirector.cpp[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/KCollision.cpp[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/FileSelectSky.cpp[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/Sky.cpp[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/SunshadeMapHolder.cpp[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/SpaceInner.cpp[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/PlanetMap.cpp[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/ScenarioSelectStar.cpp[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/GroundChecker.cpp[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/BezierRail.cpp[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/WaterPoint.cpp[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/CollisionDirector.cpp[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/LightDataHolder.cpp[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/FileSelectFunc.cpp[0m
+[0m[38;5;3;1msrc/Game/Map/OceanRing.cpp:216:9: warning: expression result unused [-Wunused-value]
+  216 |         static_cast< f32 >(index);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/RailPart.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Map/SphereSelector.cpp:7:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/CollisionParts.cpp[0m
+[0m[38;5;2;1m[ 44%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/LightPointCtrl.cpp[0m
+[0m[38;5;2;1m[ 44%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/NamePosHolder.cpp[0m
+[0m[38;5;2;1m[ 44%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/Butterfly.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Map/WaterPoint.cpp:2:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) NO_INLINE {
+      |                                                                                          ^
+src/Inline.hpp:5:34: note: expanded from macro 'NO_INLINE'
+    5 | #define NO_INLINE __attribute__((noinline))
+      |                                  ^
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/Map/LightDataHolder.cpp:4:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) NO_INLINE {
+      |                                                                                          ^
+src/Inline.hpp:5:34: note: expanded from macro 'NO_INLINE'
+    5 | #define NO_INLINE __attribute__((noinline))
+      |                                  ^
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/Game/Map/Sky.cpp:10:
+src/Game/Util/Functor.hpp:114:90: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) NO_INLINE {
+      |                                                                                          ^
+src/Inline.hpp:5:34: note: expanded from macro 'NO_INLINE'
+    5 | #define NO_INLINE __attribute__((noinline))
+      |                                  ^
+1 warning generated.[0m
+[0m[38;5;3;1msrc/Game/Map/BezierRail.cpp:29:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   29 |     pMapInfo->getValue(idx, pKey, pOut);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[1;38;5;1;1merror: [0msrc/Game/MapObj/WhirlPool.hpp:11:13: error: array is too large (18'446'744'073'709'551'600 elements)
+   11 |     u8 mPad[(0xD8) - sizeof(LiveActor)];
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+1 error generated.
+  [38;5;3m> in [1msrc/Game/Map/WaterAreaHolder.cpp[0m

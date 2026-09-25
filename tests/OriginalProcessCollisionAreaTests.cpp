@@ -1,9 +1,13 @@
+#include "Game/Map/HitInfo.hpp"
 #include "app/Application.hpp"
 #include "app/OriginalGameApplication.hpp"
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/CollisionArea.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Map/CollisionCategorizedKeeper.hpp"
+#include "Game/Map/CollisionDirector.hpp"
+#include "Game/Util/CollisionPartsFilter.hpp"
+#include <aurora/exception.hpp>
 #include "Game/Map/CollisionParts.hpp"
 #include "Game/Map/KCollision.hpp"
 #include "Game/Map/StageSwitch.hpp"
@@ -17,11 +21,10 @@
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/CollisionPartsCompat.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "resource/KCollisionResource.hpp"
 #include "scene/NameObjChildOwner.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "scene/StageCollisionService.hpp"
 
 #include <aurora/allocation.hpp>
@@ -42,7 +45,7 @@
 #ifndef NDEBUG
 namespace {
     void require(bool value, const char* message) {
-        if (!value) throw std::runtime_error(message);
+        if (!value) aurora::throw_host_exception<std::runtime_error>(message);
     }
 
     void near(float actual, float expected, const char* message) {
@@ -84,6 +87,19 @@ namespace {
         return result;
     }
 
+    class OnlyPart final : public CollisionPartsFilterBase {
+    public:
+        explicit OnlyPart(const CollisionParts* parts) : _parts(parts) {}
+        bool isInvalidParts(const CollisionParts* parts) const override { return parts != _parts; }
+    private:
+        const CollisionParts* _parts;
+    };
+
+    s32 line_hits(CollisionCategorizedKeeper& keeper, const CollisionPartsFilterBase& filter,
+                  const TVec3f& start, const TVec3f& offset) {
+        return keeper.checkStrikeLine(start, offset, 8, &filter, nullptr);
+    }
+
     struct Probe {
         bool expect_placements = true;
         bool exercised = false;
@@ -115,10 +131,10 @@ namespace {
                 const auto point = first->vertices[0] * 0.2F + first->vertices[1] * 0.3F + first->vertices[2] * 0.5F;
                 const auto start = point + first->normals[0] * 100.0F;
                 const auto offset = first->normals[0] * -200.0F;
-                const auto only_area = [&](std::uint32_t id) { return id == first->triangle_index || id == second->triangle_index; };
-                require(collision.line_hits(start, offset, 8, only_area).empty() &&
-                            !collision.line_cast(start, offset, nullptr, only_area),
-                        "Authored off switch excludes its actual parts from original and native queries");
+                const OnlyPart only_area(parts);
+                auto* keeper = MR::getCollisionDirector()->getCategoryKeeper(parts->mKeeperIndex);
+                require(line_hits(*keeper, only_area, start, offset) == 0,
+                        "Authored off switch excludes its actual parts from the original keeper query");
                 retained_files.push_back(area->mPolygon->mKCLFile);
             }
             for (const auto& iter : placements) {
@@ -130,7 +146,7 @@ namespace {
 
         void exercise_polygon(const JMapInfoIter& iter) {
             auto& collision = *smgpc::scene::StageCollisionService::active();
-            const auto domain = smgpc::scene::current_scene_allocation_domain();
+            const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
             require(domain != nullptr, "Actual original GameScene allocation domain exists");
             const PlacementZoneScope zone(MR::getPlacedZoneId(iter));
             const auto actors_before = smgpc::compat::actor_runtime_state_count();
@@ -153,7 +169,7 @@ namespace {
                         server->mFile == file && server->getTriangleNum() == 2 &&
                         sensor == parts->mHitSensor && sensor->mHost == polygon && sensor->mSensorGroup,
                     "AreaPolygon::init creates real sensor/group, CollisionParts and typed generated KCL");
-            require(smgpc::compat::actor_collision_parts_count(polygon) == 1,
+            require(polygon->nativeCollisionParts().size() == 1,
                     "Actual actor owns exactly one generated collision part");
             const auto initial0 = collision.surface(parts, 0);
             const auto initial1 = collision.surface(parts, 1);
@@ -162,7 +178,8 @@ namespace {
             const auto id1 = initial1->triangle_index;
             const auto zone_count = parts->mZone->mNumParts;
             auto* original_zone = parts->mZone;
-            const auto only_polygon = [=](std::uint32_t id) { return id == id0 || id == id1; };
+            const OnlyPart only_polygon(parts);
+            auto* keeper = MR::getCollisionDirector()->getCategoryKeeper(parts->mKeeperIndex);
 
             TPos3f world;
             form->calcWorldMtx(&world);
@@ -213,43 +230,16 @@ namespace {
                 const auto point = first->vertices[0] * 0.2F + first->vertices[1] * 0.3F + first->vertices[2] * 0.5F;
                 last_start = point + normal * 100.0F;
                 last_offset = normal * -200.0F;
-                const auto hits = collision.line_hits(last_start, last_offset, 8, only_polygon);
-                const bool expected_hits = !hits.empty() && std::ranges::all_of(hits, [=](const auto& hit) {
-                    return hit.triangle_index == id0;
-                });
-                if (!expected_hits) {
-                    std::fprintf(stderr, "[collision-area-probe] arrow failure face=%d expected=%u actual_count=%zu radius=%g min=%g,%g,%g masks=%08x,%08x,%08x shift=%d\n",
-                                 face, id0, hits.size(), double(parts->_D8), double(file->mMin.x), double(file->mMin.y), double(file->mMin.z),
-                                 unsigned(file->mXMask), unsigned(file->mYMask), unsigned(file->mZMask), file->mBlockWidthShift);
-                    for (const auto& hit : hits)
-                        std::fprintf(stderr, "[collision-area-probe] actual id=%u fraction=%g\n", hit.triangle_index, double(hit.fraction));
-                    const auto local_start = last_start - polygon->mPosition;
-                    std::array<float, 32> direct_fractions{};
-                    std::array<u8, 32> direct_flags{};
-                    std::array<KC_PrismData*, 32> direct_prisms{};
-                    u32 direct_count = 0;
-                    server->checkArrow(local_start, last_offset, direct_fractions.data(), direct_flags.data(),
-                                       &direct_count, direct_prisms.data(), direct_prisms.size());
-                    std::fprintf(stderr, "[collision-area-probe] direct server traversal count=%u\n", direct_count);
-                    for (u32 entry = 0; entry < direct_count; ++entry)
-                        std::fprintf(stderr, "[collision-area-probe] direct server prism=%d fraction=%g\n",
-                                     server->toIndex(direct_prisms[entry]), double(direct_fractions[entry]));
-                    smgpc::scene::StageCollisionHit native_diagnostic;
-                    const bool native_found = collision.line_cast(last_start, last_offset, &native_diagnostic, only_polygon);
-                    std::fprintf(stderr, "[collision-area-probe] native hit=%d id=%u fraction=%g\n", native_found,
-                                 native_diagnostic.triangle_index, double(native_diagnostic.fraction));
-                    for (u32 prism = 0; prism < 2; ++prism) {
-                        float fraction = 0.0F;
-                        u8 flag = 0;
-                        const bool direct = server->KCHitArrow(server->getPrismData(prism), local_start, last_offset, &fraction, &flag);
-                        std::fprintf(stderr, "[collision-area-probe] direct prism=%u hit=%d fraction=%g local_start=%g,%g,%g offset=%g,%g,%g\n",
-                                     prism, direct, double(fraction), double(local_start.x), double(local_start.y), double(local_start.z),
-                                     double(last_offset.x), double(last_offset.y), double(last_offset.z));
-                    }
-                    std::fflush(stderr);
+                const auto hit_count = line_hits(*keeper, only_polygon, last_start, last_offset);
+                require(hit_count > 0, "Actual keeper/parts/KCollision traversal reaches the generated face");
+                for (s32 entry = 0; entry < hit_count; ++entry) {
+                    const auto* hit = keeper->getStrikeInfo(entry);
+                    require(hit->mParentTriangle.mParts == parts && hit->mParentTriangle.mIdx == 0 &&
+                                hit->mParentTriangle.mSensor == sensor,
+                            "Keeper results retain the actual original part, prism and sensor");
+                    near(hit->_60, 100.0F, "Original regenerated arrow world distance");
+                    near(hit->mHitPos, point, "Original regenerated arrow position");
                 }
-                require(expected_hits,
-                        "Actual original KCollisionServer traversal reaches the selected generated prism");
                 // Retail preserves repeated encounters of the same leaf. Match
                 // that ordered sequence instead of deduplicating its hits.
                 TVec3f local_start, local_end;
@@ -262,37 +252,28 @@ namespace {
                 u32 count = 0;
                 server->checkArrow(local_start, local_end - local_start, fractions.data(), flags.data(),
                                    &count, prisms.data(), prisms.size());
-                require(count == hits.size(), "Native all-hit route retains the original leaf encounter count");
+                require(count == static_cast<u32>(hit_count), "Original keeper retains the server leaf encounter count");
                 for (u32 encounter = 0; encounter < count; ++encounter) {
                     require(server->toIndex(prisms[encounter]) == 0, "Original encounter sequence retains selected local prism identity");
-                    near(hits[encounter].fraction, fractions[encounter], "Original server and all-hit route fractions agree");
-                    near(hits[encounter].fraction, 0.5F, "Original regenerated arrow fraction");
-                    near(hits[encounter].position, point, "Original regenerated arrow position");
+                    near(keeper->getStrikeInfo(encounter)->_60 / last_offset.length(), fractions[encounter],
+                         "Original server fraction and keeper world distance agree");
                 }
-                smgpc::scene::StageCollisionHit native;
-                require(collision.line_cast(last_start, last_offset, &native, only_polygon) && native.triangle_index == id0,
-                        "Refitted native spatial index reaches the same generated prism");
-                near(native.fraction, hits[0].fraction, "Native and original generated query fractions agree");
-                near(native.position, hits[0].position, "Native and original generated query positions agree");
                 std::fprintf(stderr, "[collision-area-probe] face=%d zone=%d prisms=2 ids=%u,%u encounters=%u fraction=%g\n",
-                             face, parts->mZone->mZoneID, id0, id1, count, double(native.fraction));
+                             face, parts->mZone->mZoneID, id0, id1, count, double(fractions[0]));
             }
             polygon->invalidate();
             require(!parts->_CC && original_zone->mNumParts + 1 == zone_count &&
-                        !collision.surface(id0) && collision.line_hits(last_start, last_offset, 8, only_polygon).empty() &&
-                        !collision.line_cast(last_start, last_offset, nullptr, only_polygon),
-                    "Original invalidation removes zone membership and both query paths");
+                        !collision.surface(id0) && line_hits(*keeper, only_polygon, last_start, last_offset) == 0,
+                    "Original invalidation removes zone membership and original query results");
             polygon->validate();
             require(parts->_CC && original_zone->mNumParts == zone_count && collision.surface(id0),
                     "Original validation restores the same membership and surface identity");
             objects.clear();
             require(!smgpc::compat::has_actor_runtime_state(polygon) &&
-                        !smgpc::compat::has_actor_collision_parts(polygon) &&
                         smgpc::compat::actor_runtime_state_count() == actors_before &&
                         original_zone->mNumParts + 1 == zone_count && !collision.surface(id0) &&
-                        collision.line_hits(last_start, last_offset, 8, only_polygon).empty() &&
-                        !collision.line_cast(last_start, last_offset, nullptr, only_polygon),
-                    "Actor retirement removes real sensor/parts sidecars, zone membership and original/native query results");
+                        line_hits(*keeper, only_polygon, last_start, last_offset) == 0,
+                    "Actor retirement removes real sensor and collision children, zone membership and original query results");
             require(smgpc::resource::is_native_kcollision_file(file),
                     "Scene collision cache retains generated arrays after the actor is retired");
             retained_files.push_back(file);
@@ -363,7 +344,7 @@ int main(int argc, char* argv[]) {
         for (const auto* file : probe.retained_files)
             require(!smgpc::resource::is_native_kcollision_file(file),
                     "Normal scene-cache retirement releases every generated typed-resource identity");
-        std::fprintf(stderr, "PASS original-process CollisionArea integration: twelve face mutations, real sensors/parts, original/native queries, actor and scene retirement, factory placements=%d\n",
+        std::fprintf(stderr, "PASS original-process CollisionArea integration: twelve face mutations, real sensors/parts, original keeper/parts queries, actor and scene retirement, factory placements=%d\n",
                      probe.expect_placements ? 2 : 0);
         return 0;
     } catch (const std::exception& error) {

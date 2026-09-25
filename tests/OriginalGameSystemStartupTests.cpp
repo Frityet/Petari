@@ -12,7 +12,6 @@
 #include "Game/Util/MutexHolder.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/SystemUtil.hpp"
-#include "compat/NandSdkBinding.hpp"
 #include "resource/GameResourceRuntime.hpp"
 #include "runtime/ConsoleNandImport.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -49,7 +48,6 @@ struct Bootstrap {
     smgpc::runtime::DvdFileSystemService dvd{"/"};
     smgpc::runtime::SaveDataService save;
     std::unique_ptr<aurora::SystemConfiguration> settings;
-    std::unique_ptr<smgpc::compat::NandSdkBinding> nand;
     std::shared_ptr<smgpc::compat::JkrAllocationDomain> root;
     std::shared_ptr<smgpc::compat::JkrAllocationDomain> stationed;
 
@@ -66,7 +64,7 @@ struct Bootstrap {
                 imported.imported_files, imported.imported_bytes);
         }
         settings = std::make_unique<aurora::SystemConfiguration>(save.nand());
-        nand = std::make_unique<smgpc::compat::NandSdkBinding>(save);
+        save.activate_nand();
         std::fprintf(stderr, "[original-startup] private NAND: %s\n", directory.c_str());
     }
 };

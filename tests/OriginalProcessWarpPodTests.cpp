@@ -15,7 +15,7 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/Cp932Literal.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "resource/TextEncoding.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include <JSystem/JUtility/JUTTexture.hpp>
@@ -67,7 +67,7 @@ struct Probe {
     void initialize() {
         const auto placements = original_placements();
         require(placements.size() == actors.size(), "Exactly two authored WarpPod placements exist");
-        require(smgpc::scene::current_scene_allocation_domain() != nullptr, "Actual original scene allocation domain exists");
+        require(MR::getSceneObjHolder()->nativeAllocationDomain() != nullptr, "Actual original scene allocation domain exists");
         group = dynamic_cast<LiveActorGroup*>(NameObjFinder::find(CP932("ワープポッド群")));
         require(group && group->getObjNum() == actors.size(), "Factory constructed both original named-group members");
         for (std::size_t i = 0; i < actors.size(); ++i)

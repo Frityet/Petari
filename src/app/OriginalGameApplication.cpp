@@ -35,7 +35,6 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "Game/System/FileLoader.hpp"
 #include "Game/System/FunctionAsyncExecutor.hpp"
-#include "compat/NandSdkBinding.hpp"
 #include "Game/Screen/StarPointerDirector.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "scene/OriginalSceneSupport.hpp"
@@ -250,7 +249,7 @@ public:
         if (const char* source = std::getenv("SMGPC_NAND_DIR"); source && *source)
             (void)runtime::import_console_nand_directory(save.nand(), source, runtime::NandImportExisting::Preserve);
         settings = std::make_unique<aurora::SystemConfiguration>(save.nand());
-        nand = std::make_unique<compat::NandSdkBinding>(save);
+        save.activate_nand();
 #ifndef NDEBUG
         if (input_script.button_span_count() || input_script.pointer_span_count() || input_script.stick_span_count()) {
             std::fprintf(stderr, "[original-process] Debug controller script configured: %zu button spans, %zu pointer spans, %zu stick spans; zero-based inclusive frame ranges\n",
@@ -477,7 +476,6 @@ private:
     resource::GameResourceRuntime resources;
     runtime::SaveDataService save;
     std::unique_ptr<aurora::SystemConfiguration> settings;
-    std::unique_ptr<compat::NandSdkBinding> nand;
     std::shared_ptr<compat::JkrAllocationDomain> root;
     std::shared_ptr<compat::JkrAllocationDomain> stationed;
     std::optional<StageSelection> stage_selection;

@@ -18,7 +18,6 @@
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "Game/Util/Functor.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include <memory>
 #include <vector>
@@ -154,7 +153,7 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
         SceneScheduler scheduler;
         SceneSchedulerBinding active(scheduler);
         SceneSchedulerAllocationBinding scene(scheduler, game);
-        smgpc::test::SceneExecutionFixture execution(scheduler, game, nullptr, nullptr,
+        smgpc::test::SceneExecutionFixture execution(scheduler, game,
                                                   &original.scene, original.controller().mObjHolder);
         create_clipping_fixture(scheduler);
         CallbackObject object(scheduler);
@@ -307,7 +306,7 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
         SceneScheduler scheduler;
         SceneSchedulerBinding active(scheduler);
         auto execution_domain = JkrAllocationDomain::create(heaps, 512U << 10);
-        smgpc::test::SceneExecutionFixture execution(scheduler, execution_domain, nullptr, nullptr,
+        smgpc::test::SceneExecutionFixture execution(scheduler, execution_domain,
                                                   &original.scene, original.controller().mObjHolder);
         auto domain = JkrAllocationDomain::create(heaps, 64U << 10);
         std::weak_ptr<JkrAllocationDomain> weak = domain;
@@ -344,7 +343,7 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
         SceneScheduler scheduler;
         SceneSchedulerBinding active(scheduler);
         SceneSchedulerAllocationBinding game(scheduler, domain);
-        smgpc::test::SceneExecutionFixture execution(scheduler, domain, nullptr, nullptr,
+        smgpc::test::SceneExecutionFixture execution(scheduler, domain,
                                                   &original.scene, original.controller().mObjHolder);
         create_clipping_fixture(scheduler);
         CallbackObject camera(scheduler), clipping(scheduler), platform(scheduler), collision(scheduler), player(scheduler);
@@ -526,7 +525,7 @@ int main(int argc, char** argv) {
     smgpc::runtime::SceneSchedulerBinding active(scheduler);
     auto execution_domain = JkrAllocationDomain::create(heaps, 1U << 20);
     auto execution = std::make_unique<smgpc::test::SceneExecutionFixture>(
-        scheduler, execution_domain, nullptr, nullptr, &original->scene, original->controller().mObjHolder);
+        scheduler, execution_domain, &original->scene, original->controller().mObjHolder);
     create_clipping_fixture(scheduler);
     std::vector<std::unique_ptr<NameObj>> objects;
     for (int i = 0; i < 128; ++i)

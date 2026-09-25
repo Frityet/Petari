@@ -162,16 +162,7 @@ bool Mario::isEnableSideHang() {
 
 void MarioHang::recordWallPolygon(const Triangle* pTriangle) {
     Triangle* wallTriangle = _20;
-    wallTriangle->mParts = pTriangle->mParts;
-    wallTriangle->mIdx = pTriangle->mIdx;
-    wallTriangle->mSensor = pTriangle->mSensor;
-    wallTriangle->mNormals[0] = pTriangle->mNormals[0];
-    wallTriangle->mNormals[1] = pTriangle->mNormals[1];
-    wallTriangle->mNormals[2] = pTriangle->mNormals[2];
-    wallTriangle->mNormals[3] = pTriangle->mNormals[3];
-    wallTriangle->mPos[0] = pTriangle->mPos[0];
-    wallTriangle->mPos[1] = pTriangle->mPos[1];
-    wallTriangle->mPos[2] = pTriangle->mPos[2];
+    *wallTriangle = *pTriangle;
     mWallSensor = pTriangle->mSensor;
 
     TPos3f inverse;

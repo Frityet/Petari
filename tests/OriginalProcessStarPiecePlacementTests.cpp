@@ -15,7 +15,7 @@
 #include "compat/JkrAllocationDomain.hpp"
 #include "resource/TextEncoding.hpp"
 #include "runtime/SceneScheduler.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 
 #include <aurora/allocation.hpp>
 #include <algorithm>
@@ -65,7 +65,7 @@ struct Probe {
     std::vector<const NameObj*> retained_identities;
 
     void exercise() {
-        require(smgpc::scene::current_scene_allocation_domain() != nullptr, "Actual scene allocation domain exists");
+        require(MR::getSceneObjHolder()->nativeAllocationDomain() != nullptr, "Actual scene allocation domain exists");
         const auto placements = original_placements();
         require(placements.size() == 7, "Actual active Gateway stage data has seven standalone StarPiece placements");
         auto* director = MR::getStarPieceDirector();

@@ -2,7 +2,7 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include <optional>
 
@@ -12,7 +12,9 @@ namespace {
         std::optional<smgpc::compat::JkrAllocationScope> mHeap;
 
         NativeExecutionScope() {
-            if (auto domain = smgpc::scene::current_scene_allocation_domain()) {
+            if (auto* holder = MR::getSceneObjHolder()) {
+                auto domain = holder->nativeAllocationDomain();
+                if (!domain) return;
                 mHeap.emplace(std::move(domain));
             }
         }

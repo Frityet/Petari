@@ -1,6 +1,5 @@
 #include <aurora/system_config.hpp>
 #include "runtime/RuntimeServices.hpp"
-#include "compat/NandSdkBinding.hpp"
 #include <aurora/aurora.h>
 #include <aurora/sysconf.hpp>
 #include <revolution/sc.h>
@@ -27,7 +26,6 @@ namespace {
     constexpr auto product_path = "/title/00000001/00000002/data/setting.txt";
     void require(bool good, const char* message) { if (!good) throw std::runtime_error(message); }
     void standalone_nand() {
-        using smgpc::compat::NandSdkBinding;
         struct Directory {
             std::filesystem::path path;
             Directory() {
@@ -45,7 +43,7 @@ namespace {
         NANDFileInfo retired{};
         const std::array<u8, 5> bytes{0, 1, 0xff, 2, 0};
         {
-            NandSdkBinding owner(first);
+            first.activate_nand();
             require(NANDInit() == NAND_RESULT_OK && NANDCreate("/binding-probe", 0x3c, 0) == NAND_RESULT_OK,
                     "standalone storage binding supplies actual NAND initialization and file creation");
             NANDFileInfo file{};
@@ -55,21 +53,23 @@ namespace {
             require(NANDOpen("/binding-probe", &retired, NAND_ACCESS_READ) == NAND_RESULT_OK,
                     "the exact stored file can be reopened through the same owner");
             bool rejected = false;
-            try { NandSdkBinding overlap(second); } catch (const std::logic_error&) { rejected = true; }
+            try { second.activate_nand(); } catch (const std::logic_error&) { rejected = true; }
             std::array<u8, 5> read{};
             require(rejected && NANDRead(&retired, read.data(), read.size()) == read.size() && read == bytes,
                     "overlapping owner rejection preserves live descriptors and exact binary contents");
         }
+        first.nand().deactivate_sdk();
         u32 length = 0xfeed;
         require(NANDGetLength(&retired, &length) == NAND_RESULT_INVALID && length == 0xfeed,
                 "retiring a storage binding invalidates its borrowed SDK descriptor without modifying failed outputs");
         {
-            NandSdkBinding owner(second);
+            second.activate_nand();
             NANDFileInfo file{};
             require(NANDGetLength(&retired, &length) == NAND_RESULT_INVALID &&
                         NANDOpen("/binding-probe", &file, NAND_ACCESS_READ) == NAND_RESULT_NOEXISTS,
                     "a later storage owner cannot inherit descriptors or files from the retired owner");
         }
+        second.nand().deactivate_sdk();
         require(first.nand().read_file("/binding-probe") == std::optional(std::vector<u8>(bytes.begin(), bytes.end())),
                 "descriptor retirement does not destroy the caller-owned persistent NAND contents");
     }

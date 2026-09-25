@@ -58,11 +58,11 @@ namespace {
         file(directory.path / "title/00000001/00000002/data/setting.txt", product());
         const std::array<u8, 2> alternate{0x12, 0x34};
         file(directory.path / "other/SYSCONF", alternate);
-        const auto title = aurora::NandFileSystem::title_data_root();
+        aurora::NandFileSystem nand("/title/00010000/524d474b/data");
+        const auto title = nand.title_data_root();
         const std::array<u8, 3> dump_save{1, 2, 3};
         const std::array<u8, 2> current_save{7, 8};
         file(directory.path / (title.substr(1) + "/GameData.bin"), dump_save);
-        aurora::NandFileSystem nand;
         nand.write_file("GameData.bin", current_save, 0x12, 7);
         auto domain = smgpc::compat::JkrAllocationDomain::create(process.host_heaps(), 4096);
         smgpc::runtime::NandImportResult result;
@@ -128,7 +128,7 @@ namespace {
         auto& nand = saves.nand();
         const std::array<u8, 2> old{3, 4};
         const std::array<u8, 3> fresh{8, 9, 10};
-        const auto title = aurora::NandFileSystem::title_data_root();
+        const auto title = nand.title_data_root();
         nand.write_file("old.bin", old);
         nand.write_file("nested/old.bin", old);
         nand.write_file("/shared2/sys/SYSCONF", old, 0x12, 3);

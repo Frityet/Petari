@@ -4,7 +4,7 @@
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/FileUtil.hpp"
 #include "Game/Util/SystemUtil.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "OriginalStageResourceProcessFixture.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "resource/GameResourceRuntime.hpp"
@@ -858,7 +858,7 @@ int main() {
     std::cout << std::unitbuf;
     return smgpc::test::run_stage_resource_process("original-resource-holder", [] {
         auto& process = *GameResourceRuntime::active();
-        const auto scene = smgpc::scene::current_scene_allocation_domain();
+        const auto scene = MR::getSceneObjHolder()->nativeAllocationDomain();
         require(scene != nullptr, "the actual GameScene supplies the fixture allocation parent");
         std::unique_ptr<JKRExpHeap, void (*)(JKRExpHeap*)> test_heap(
             JKRExpHeap::create(4U << 20, &scene->heap(), false),

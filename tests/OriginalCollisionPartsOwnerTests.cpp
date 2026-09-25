@@ -1,9 +1,8 @@
+#include "Game/Map/HitInfo.hpp"
 #include "OriginalStageResourceProcessFixture.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/CollisionPartsCompat.hpp"
-#include "compat/HitInfoCompat.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "scene/PlacementZoneScope.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
@@ -16,7 +15,6 @@
 #include "Game/Map/CollisionCategorizedKeeper.hpp"
 #include "Game/Map/CollisionParts.hpp"
 #include "Game/Map/KCollision.hpp"
-#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
@@ -48,8 +46,8 @@ namespace {
 
 int main() {
     return smgpc::test::run_stage_resource_process("original-collision-parts-owner", [] {
-        const auto domain = smgpc::scene::current_scene_allocation_domain();
-        auto& holder = *smgpc::scene::current_scene_obj_holder();
+        const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
+        auto& holder = *MR::getSceneObjHolder();
         auto* director = static_cast<CollisionDirector*>(holder.getObj(SceneObj_CollisionDirector));
         auto& collision = *smgpc::scene::StageCollisionService::active();
         smgpc::scene::PlacementZoneScope placement(0);
@@ -80,7 +78,7 @@ int main() {
             for (s32 i = 0; i < parts->mServer->getTriangleNum() && !surface; ++i)
                 surface = collision.surface(parts, i);
             require(surface.has_value(), "real archived part publishes its prisms");
-            retained = smgpc::compat::make_collision_triangle(collision, surface->triangle_index);
+            retained.fillData(parts, surface->prism_index, sensor);
             require(retained.mParts == parts && retained.mIdx == surface->prism_index &&
                     retained.getBaseMtx() == &parts->mBaseMatrix,
                     "native query retains exact original owner, local prism and matrix identity");
@@ -179,7 +177,7 @@ int main() {
             require(!parts->_CC && parts->mZone->mNumParts == zone_members, "original death removes zone membership");
             actor.makeActorAppeared();
             auto* zone = parts->mZone;
-            smgpc::compat::release_actor_collision_parts(&actor);
+            actor.releaseNativeCollisionParts();
             require(actor.mCollisionParts == nullptr && !retained.isValid() && zone->mNumParts == zone_members,
                     "actor retirement removes native part identity");
         }

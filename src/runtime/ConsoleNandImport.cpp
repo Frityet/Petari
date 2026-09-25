@@ -7,7 +7,6 @@
 #include <set>
 #include <stdexcept>
 #include <string>
-#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -57,9 +56,9 @@ namespace smgpc::runtime {
             files.push_back({entry.path(), normalized});
         }
         std::ranges::sort(files, {}, &InputFile::nand_path);
-        // Copy the actual owner so every read/allocation can fail before commit.
-        // NandFileSystem has no borrowed buffer references; its public reads copy.
-        auto candidate = nand;
+        // Stage storage only so every read/allocation can fail before commit.
+        // SDK activation, open descriptors and callbacks stay on the real owner.
+        auto candidate = nand.clone_storage();
         NandImportResult result;
         for (const auto& file : files) {
             if (existing == NandImportExisting::Preserve && candidate.exists(file.nand_path)) {
@@ -78,8 +77,8 @@ namespace smgpc::runtime {
                 aurora::throw_host_exception<std::overflow_error>("Console NAND import byte count overflow");
             result.imported_bytes += bytes.size();
         }
-        static_assert(std::is_nothrow_move_assignable_v<aurora::NandFileSystem>);
-        nand = std::move(candidate);
+        static_assert(noexcept(nand.swap_storage(candidate)));
+        nand.swap_storage(candidate);
         return result;
     }
 }

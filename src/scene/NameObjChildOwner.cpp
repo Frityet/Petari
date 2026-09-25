@@ -1,7 +1,6 @@
 #include <aurora/exception.hpp>
 #include "scene/NameObjChildOwner.hpp"
 
-#include "scene/SceneObjHolderRuntime.hpp"
 
 #include <algorithm>
 #include <stdexcept>
@@ -11,8 +10,7 @@ namespace smgpc::scene {
 
         [[nodiscard]] bool is_unowned_construction_child(
             const NameObj *object, const void *) noexcept {
-            return !current_scene_obj_holder_binding_owns(object) &&
-                   !smgpc::compat::
+            return !smgpc::compat::
                        name_obj_runtime_ownership_is_claimed(object);
         }
 
@@ -63,7 +61,6 @@ namespace smgpc::scene {
             smgpc::compat::snapshot_name_obj_runtime_objects_since(marker);
         if (registrations.empty() || registrations.front() != &root ||
             std::ranges::count(registrations, &root) != 1 ||
-            current_scene_obj_holder_binding_owns(&root) ||
             smgpc::compat::name_obj_runtime_ownership_is_claimed(&root)) {
             aurora::throw_host_exception<std::logic_error>(
                 "Root construction did not produce one leading unowned registration.");
@@ -73,7 +70,6 @@ namespace smgpc::scene {
             static_cast<std::size_t>(std::ranges::count_if(
                 registrations, [&root](const NameObj *object) {
                     return object != &root &&
-                           !current_scene_obj_holder_binding_owns(object) &&
                            !smgpc::compat::
                                name_obj_runtime_ownership_is_claimed(object);
                 }));
@@ -86,7 +82,6 @@ namespace smgpc::scene {
             for (auto *object : registrations) {
                 const auto independently_owned =
                     object == &root ||
-                    current_scene_obj_holder_binding_owns(object) ||
                     smgpc::compat::
                         name_obj_runtime_ownership_is_claimed(object);
                 if (independently_owned) {
@@ -97,7 +92,6 @@ namespace smgpc::scene {
             for (auto *object : registrations) {
                 const auto independently_owned =
                     object == &root ||
-                    current_scene_obj_holder_binding_owns(object) ||
                     smgpc::compat::
                         name_obj_runtime_ownership_is_claimed(object);
                 if (!independently_owned) {
@@ -174,8 +168,7 @@ namespace smgpc::scene {
             })) {
             aurora::throw_host_exception<std::logic_error>("A scene cannot adopt the same NameObj child twice.");
         }
-        if (current_scene_obj_holder_binding_owns(child) ||
-            smgpc::compat::name_obj_runtime_ownership_is_claimed(child)) {
+        if (smgpc::compat::name_obj_runtime_ownership_is_claimed(child)) {
             aurora::throw_host_exception<std::logic_error>(
                 "A scene cannot adopt a NameObj child owned by another runtime boundary.");
         }
@@ -186,8 +179,7 @@ namespace smgpc::scene {
         auto children =
             smgpc::compat::snapshot_name_obj_runtime_objects_since(marker);
         std::erase_if(children, [](const NameObj *child) {
-            return current_scene_obj_holder_binding_owns(child) ||
-                   smgpc::compat::
+            return smgpc::compat::
                        name_obj_runtime_ownership_is_claimed(child);
         });
         for (const auto *child : children) {

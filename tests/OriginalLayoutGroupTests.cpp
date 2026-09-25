@@ -19,7 +19,7 @@
 #include "Game/Util/FileUtil.hpp"
 #include <JSystem/JKernel/JKRArchive.hpp>
 #include "OriginalStageResourceProcessFixture.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <nw4r/lyt/group.h>
@@ -250,7 +250,7 @@ void materials_and_text(const std::filesystem::path& path) {
     }
 }
 void host_heap_boundary(const std::filesystem::path& path) {
-    auto domain = smgpc::compat::JkrAllocationDomain::create(smgpc::scene::current_scene_allocation_domain(), 64U << 10);
+    auto domain = smgpc::compat::JkrAllocationDomain::create(MR::getSceneObjHolder()->nativeAllocationDomain(), 64U << 10);
     const auto retired = std::weak_ptr(domain);
     auto archive_path = path;
     std::optional<smgpc::layout::LayoutRuntime> layout;
@@ -385,7 +385,7 @@ void fly_meter() {
     {
         std::unique_ptr<SubMeterLayout> meter;
         {
-            const smgpc::compat::JkrAllocationScope game(smgpc::scene::current_scene_allocation_domain());
+            const smgpc::compat::JkrAllocationScope game(MR::getSceneObjHolder()->nativeAllocationDomain());
             meter = std::make_unique<SubMeterLayout>("Original FlyMeter regression", "FlyMeter");
             meter->initWithoutIter();
         }
@@ -403,7 +403,7 @@ void fly_meter() {
         MR::startAnim(meter.get(), "Wait", 0);
         for (const auto ratio : {1.0F, 0.5F, 0.125F}) {
             {
-                const auto domain = smgpc::scene::current_scene_allocation_domain();
+                const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
                 const smgpc::compat::JkrAllocationScope game(domain);
                 const auto free_before = domain->heap().getFreeSize();
                 meter->setLifeRatio(ratio);

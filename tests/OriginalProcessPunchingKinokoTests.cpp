@@ -17,7 +17,6 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/Cp932Literal.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 
 #include <aurora/allocation.hpp>
 #include <algorithm>
@@ -61,7 +60,7 @@ namespace {
 
         void exercise() {
             auto* shadows = MR::getSceneObj<ShadowControllerHolder>(SceneObj_ShadowControllerHolder);
-            require(smgpc::scene::current_scene_allocation_domain() && shadows,
+            require(MR::getSceneObjHolder()->nativeAllocationDomain() && shadows,
                     "Actual original scene heap and shadow holder exist");
             holder_identity = shadows;
             const auto objects = smgpc::compat::snapshot_name_obj_runtime_objects();

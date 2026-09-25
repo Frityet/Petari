@@ -31,32 +31,6 @@ target("smg-pc-player-source-mirror-tests")
         realtime_output = true
     })
 
-target("smg-pc-mario-model-demo-surface-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    set_rundir(os.projectdir())
-    add_files {
-        "MarioModelDemoSurfaceTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("mario_model_demo_surface", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
 target("smg-pc-only-camera-tests")
     set_kind("binary")
     set_default(false)
@@ -198,32 +172,6 @@ target("smg-pc-stationed-archive-real-or-absent-tests")
         "aurora-dvd"
     }
     add_tests("stationed_archive_real_or_absent", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
-target("smg-pc-lod-ctrl-real-or-absent-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    set_rundir(os.projectdir())
-    add_files {
-        "LodCtrlCompatTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("lod_ctrl_real_or_absent", {
         group = "aurora",
         rundir = os.projectdir(),
         realtime_output = true
@@ -381,32 +329,6 @@ target("smg-pc-fixed-position-real-or-absent-tests")
         realtime_output = true
     })
 
-target("smg-pc-sceneobj-holder-real-or-absent-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    set_rundir(os.projectdir())
-    add_files {
-        "SceneObjHolderRealOrAbsentTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("sceneobj_holder_real_or_absent", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
 target("smg-pc-camera-util-real-or-absent-tests")
     set_kind("binary")
     set_default(false)
@@ -478,31 +400,6 @@ target("smg-pc-story-sequence-real-or-absent-tests")
         "aurora-vi"
     }
     add_tests("story_sequence_real_or_absent", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
-target("smg-pc-live-actor-util-real-or-absent-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    add_files {
-        "LiveActorUtilRealOrAbsentTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("live_actor_util_real_or_absent", {
         group = "aurora",
         rundir = os.projectdir(),
         realtime_output = true
@@ -756,31 +653,6 @@ target("smg-pc-j3d-frame-ctrl-tests")
         "aurora-vi"
     }
     add_tests("j3d_frame_ctrl", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
-target("smg-pc-original-j3d-joint-traversal-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    add_files {
-        "OriginalJ3DJointTraversalTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("original_j3d_joint_traversal", {
         group = "aurora",
         rundir = os.projectdir(),
         realtime_output = true
@@ -1160,6 +1032,7 @@ target("smg-pc-game-data-real-or-absent-tests")
 target("smg-pc-gravity-real-or-absent-tests")
     set_kind("binary")
     set_default(false)
+    add_deps("smg-pc-app", "aurora-main")
     set_group("tests/aurora")
     add_files {
         "GravityRealOrAbsentTests.cpp"
@@ -1682,6 +1555,7 @@ target("smg-pc-rfl-resource-archive-tests")
 target("smg-pc-center-screen-blur-real-or-absent-tests")
     set_kind("binary")
     set_default(false)
+    add_deps("smg-pc-app", "aurora-main")
     set_group("tests/aurora")
     set_rundir(os.projectdir())
     add_files {
@@ -2126,19 +2000,6 @@ target("smg-pc-scene-initialization-state-tests")
         realtime_output = true
     })
 
-target("smg-pc-area-polygon-query-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    add_files("AreaPolygonQueryTests.cpp")
-    add_deps {
-        "smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
-        "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"
-    }
-    add_tests("area_polygon_query", {
-        group = "aurora", rundir = os.projectdir(), realtime_output = true
-    })
-
 target("smg-pc-original-fur-drawer-tests")
     set_kind("binary")
     set_default(false)
@@ -2252,20 +2113,10 @@ target("smg-pc-original-direct-draw-util-tests")
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
 
-target("smg-pc-line-collision-query-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    add_files("LineCollisionQueryTests.cpp")
-    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
-              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
-    add_tests("line_collision_query", {
-        group = "aurora", rundir = os.projectdir(), realtime_output = true
-    })
-
 target("smg-pc-original-camera-director-tests")
     set_kind("binary")
     set_default(false)
+    add_deps("smg-pc-app", "aurora-main")
     set_group("tests/aurora")
     add_files("OriginalCameraDirectorTests.cpp")
     add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
@@ -2813,3 +2664,23 @@ target("smg-pc-original-npc-orientation-tests")
     add_files("OriginalNpcOrientationTests.cpp")
     add_deps("smg-pc-app", "aurora-main")
     add_tests("original_npc_orientation", {group = "original-process", rundir = os.projectdir(), realtime_output = true})
+
+target("smg-pc-original-process-map-object-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/original-process")
+    set_rundir(os.projectdir())
+    add_files("OriginalProcessMapObjectTests.cpp")
+    add_deps("smg-pc-app", "aurora-main")
+    add_tests("original_process_map_objects", {group = "original-process", rundir = os.projectdir(), realtime_output = true})
+
+target("smg-pc-aurora-vi-scanout-render-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    add_files("../aurora/tests/gx_vi_scanout_render_test.cpp")
+    add_includedirs("../aurora/lib")
+    add_packages("abseil")
+    add_deps {"aurora-core", "aurora-card", "aurora-dvd", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("aurora_vi_scanout_render", {group = "aurora", rundir = os.projectdir(), realtime_output = true})

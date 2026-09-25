@@ -31,7 +31,7 @@ void operator delete[](void* memory, int alignment) noexcept;
 void operator delete(void* memory, JKRHeap* heap, int alignment) noexcept;
 void operator delete[](void* memory, JKRHeap* heap, int alignment) noexcept;
 
-#include "compat/CollisionPartsCompat.hpp"
+
 
 // Metrowerks targets ILP32, so recovered `long` integer literals bind to the
 // retail s32 overload. Keep that call shape unambiguous on LP64 hosts without

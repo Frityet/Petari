@@ -12,11 +12,12 @@
 #include "Game/Player/MarioHolder.hpp"
 #include "Game/Player/MarioSwim.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
 #include "Game/Util/NPCUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "scene/StageCollisionService.hpp"
 
 #include <cmath>
@@ -214,16 +215,18 @@ namespace smgpc::tests {
             const auto length = std::sqrt(down.dot(down));
             require(std::isfinite(length) && length > 0.0F, "rush grounding requires finite original Mario gravity");
             down.scale(1.0F / length);
-            auto hit = scene::StageCollisionHit{};
-            require(collision->line_cast(actor.mPosition - down * 250.0F, down * 1000.0F, &hit),
+            TVec3f hit_position;
+            Triangle triangle;
+            require(MR::getFirstPolyOnLineToMap(&hit_position, &triangle, actor.mPosition - down * 250.0F, down * 1000.0F),
                     "rush grounding must find a real authored KCL surface beneath Mario");
 
             // This is an ordinary LiveActor/Binder on the actual map. No
             // synthetic contact record supplies the rush-host ground result.
             auto host = LiveActor("Original player utility rush host");
-            host.mPosition = hit.position + hit.normal * 11.0F;
-            host.mGravity = -hit.normal;
-            host.mVelocity = -hit.normal * 4.0F;
+            const auto normal = *triangle.getNormal(0);
+            host.mPosition = hit_position + normal * 11.0F;
+            host.mGravity = -normal;
+            host.mVelocity = -normal * 4.0F;
             host.mFlag.mIsDead = false;
             host.initBinder(10.0F, 0.0F, 0U);
             host.updateBinder();
@@ -235,7 +238,7 @@ namespace smgpc::tests {
             mario.mMovementStates._1 = false;
             require(MR::isOnGroundPlayer(),
                     "a bound player must inherit its grounded rush host even when Mario's movement bit is clear");
-            host.mVelocity = hit.normal * 4.0F;
+            host.mVelocity = normal * 4.0F;
             mario.mMovementStates._1 = true;
             require(host.mBinder->isBindedGround() && !MR::isOnGround(&host) && !MR::isOnGroundPlayer(),
                     "rush grounding must evaluate host departure velocity despite retained contact and Mario's set movement bit");
@@ -285,7 +288,7 @@ namespace smgpc::tests {
     void verify_original_player_util(MarioActor& actor) {
         require(actor.mMario != nullptr && MR::getMarioHolder()->getMarioActor() == &actor,
                 "player utility checks require the initialized actual MarioHolder owner");
-        const auto owner = scene::current_scene_allocation_domain();
+        const auto owner = MR::getSceneObjHolder()->nativeAllocationDomain();
         require(owner != nullptr, "player utility checks require the actual original scene allocation owner");
         const compat::JkrAllocationScope allocation(owner);
         verify_live_vectors(actor);

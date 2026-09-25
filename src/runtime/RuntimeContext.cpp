@@ -8,7 +8,6 @@
 #include "RuntimeContext.hpp"
 #include "compat/DisabledObjectAudioService.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
-#include "compat/NandSdkBinding.hpp"
 #include "Game/Util/DrawUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
@@ -46,8 +45,6 @@
 #include "compat/AudioFacadeCompat.hpp"
 #include "camera/CameraParam.hpp"
 #include "camera/CameraDirectorRuntime.hpp"
-#include "scene/NameObjLifecycleService.hpp"
-#include "scene/SceneExecutionService.hpp"
 
 namespace smgpc::runtime {
     namespace {
@@ -219,16 +216,14 @@ namespace smgpc::runtime {
     };
 
     RuntimeContext::RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
-                                   resource::GameResourceRuntime &resources,
-                                   RuntimeContextSceneServiceMode scene_service_mode)
-        : RuntimeContext(logger, window_service, resources, nullptr, scene_service_mode) {
+                                   resource::GameResourceRuntime &resources)
+        : RuntimeContext(logger, window_service, resources, nullptr) {
     }
 
     RuntimeContext::RuntimeContext(
         logging::ILogger &logger, render::AuroraWindow &window_service,
         resource::GameResourceRuntime &resources,
-        std::unique_ptr<JAudioPlaybackService> audio_playback,
-        RuntimeContextSceneServiceMode scene_service_mode)
+        std::unique_ptr<JAudioPlaybackService> audio_playback)
         : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root),
           _host_heaps(resources.host_heaps()),
           _j_audio_playback(audio_playback != nullptr
@@ -253,15 +248,9 @@ namespace smgpc::runtime {
                              imported.imported_files, nand_directory->string(), imported.preserved_files);
             }
             _system_config = std::make_unique<aurora::SystemConfiguration>(_save_data.nand());
-            _nand_sdk = std::make_unique<compat::NandSdkBinding>(_save_data);
+            _save_data.activate_nand();
             aurora::wpad_service().clear();
             _display = std::make_unique<OriginalDisplayLifetime>(_window_service, _host_heaps, *MR::getSuitableRenderMode());
-            if (scene_service_mode == RuntimeContextSceneServiceMode::RuntimeOwned) {
-                _owned_name_obj_lifecycle = std::make_unique<smgpc::scene::NameObjLifecycleService>(*this);
-                _owned_scene_execution = std::make_unique<smgpc::scene::SceneExecutionService>(*this);
-                attach_name_obj_lifecycle(*_owned_name_obj_lifecycle);
-                attach_scene_execution(*_owned_scene_execution);
-            }
             _capture_screen_director = std::make_unique<CaptureScreenDirector>();
             _logger.info(logging::Category::APP, logging::Message{"Using SMG disc image through Aurora DVD"});
             if (const auto message_archive = _dvd.find_first({
@@ -315,10 +304,6 @@ namespace smgpc::runtime {
                 SDL_SetWindowRelativeMouseMode(static_cast<SDL_Window *>(native_handle.window_handle), false);
             }
         }
-        _owned_scene_execution.reset();
-        _owned_name_obj_lifecycle.reset();
-        _scene_execution = nullptr;
-        _name_obj_lifecycle = nullptr;
         _j_audio_playback->reset_scene();
         smgpc::compat::retire_audio_facade_state();
         _display.reset();
@@ -347,7 +332,6 @@ namespace smgpc::runtime {
         _wii_platform.begin_frame(_frame_index);
         _copy_events.clear();
 #ifndef NDEBUG
-        _j3d_packet_trace.clear();
         _layout_packet_trace.clear();
 #endif
         _j3d_pixel_update_state.reset();
@@ -564,9 +548,20 @@ namespace smgpc::runtime {
         }
 #endif
 
-        auto &scene_execution_service = scene_execution();
-        scene_execution_service.execute_movement();
-        scene_execution_service.execute_calc_anim_and_view();
+        {
+            const smgpc::compat::JkrAllocationScope game(_scheduler.allocation_domain());
+            const J3DSys::ContextScope commands;
+            _scheduler.begin_frame();
+            SceneFunction::movementStopSceneController();
+            SceneFunction::executeMovementList();
+        }
+        {
+            const smgpc::compat::JkrAllocationScope game(_scheduler.allocation_domain());
+            const J3DSys::ContextScope commands;
+            SceneFunction::executeCalcAnimList();
+            CategoryList::execute(MR::CalcAnimType_AnimParticleIgnorePause);
+            SceneFunction::executeCalcViewAndEntryList();
+        }
         _j_audio_playback->end_frame();
         smgpc::compat::advance_audio_facade_state();
     }
@@ -597,58 +592,9 @@ namespace smgpc::runtime {
         _copy_events.push_back(std::move(event));
     }
 
-    void RuntimeContext::draw_scene() {
-        const aurora::os::GuestThreadExecutionScope execution;
-        draw_3d_normal();
-        draw_2d_normal();
-    }
-
-    void RuntimeContext::draw_3d_normal(const smgpc::camera::CameraPose &camera_pose) {
-        _last_camera_pose = camera_pose;
-        if (!_game_layout.is_game_scene_draw_3d_active()) {
-            return;
-        }
-        J3DSys::ContextScope j3d_scope;
-        MR::drawInit();
-        MR::loadViewMtx();
-        MR::loadProjectionMtx();
-        MR::setDefaultViewportAndScissor();
 #ifndef NDEBUG
-        if (should_record_j3d_packet_trace()) {
-            emit_sequence_state_trace_event("draw_3d_normal", {}, "3d_normal");
-        }
-#endif
-        scene_execution().draw_3d_normal(camera_pose);
-    }
-
-    void RuntimeContext::draw_3d_normal() {
-        if (!_scene_camera_pose.has_value()) {
-            if (const auto* camera = smgpc::camera::current_camera_director_runtime()) {
-                _scene_camera_pose = camera->pose();
-                draw_3d_normal(*_scene_camera_pose);
-                return;
-            }
-#ifndef NDEBUG
-            emit_semantic_trace_event("camera", "missing_scene_camera_pose", "draw_3d_omitted");
-#endif
-            return;
-        }
-
-        draw_3d_normal(*_scene_camera_pose);
-    }
-
-    void RuntimeContext::draw_2d_normal() {
-#ifndef NDEBUG
-        if (should_record_j3d_packet_trace()) {
-            emit_sequence_state_trace_event("draw_2d_normal", {}, "2d_normal");
-        }
-#endif
-        scene_execution().draw_2d_normal();
-    }
-
-#ifndef NDEBUG
-    void RuntimeContext::set_j3d_packet_trace_frame(std::optional<std::uint64_t> frame_index) {
-        _j3d_packet_trace_frame = frame_index;
+    void RuntimeContext::set_render_packet_trace_frame(std::optional<std::uint64_t> frame_index) {
+        _render_packet_trace_frame = frame_index;
     }
 #endif
 
@@ -725,10 +671,6 @@ namespace smgpc::runtime {
     }
 
 #ifndef NDEBUG
-    std::span<const RuntimeContext::J3dRuntimePacketTrace> RuntimeContext::j3d_packet_trace() const {
-        return _j3d_packet_trace;
-    }
-
     std::span<const RuntimeContext::LayoutRuntimePacketTrace> RuntimeContext::layout_packet_trace() const {
         return _layout_packet_trace;
     }
@@ -741,12 +683,8 @@ namespace smgpc::runtime {
         return _host_input_trace;
     }
 
-    bool RuntimeContext::should_record_j3d_packet_trace() const {
-        return _j3d_packet_trace_frame.has_value() && _frame_index == *_j3d_packet_trace_frame;
-    }
-
     bool RuntimeContext::should_record_render_packet_trace() const {
-        return should_record_j3d_packet_trace();
+        return _render_packet_trace_frame.has_value() && _frame_index == *_render_packet_trace_frame;
     }
 
     bool RuntimeContext::is_destroying() const {
@@ -1028,48 +966,6 @@ namespace smgpc::runtime {
         return registrations.size();
     }
 
-    smgpc::scene::NameObjLifecycleService &RuntimeContext::name_obj_lifecycle() {
-        if (_name_obj_lifecycle == nullptr) {
-            aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::NameObjLifecycleService has not been attached.");
-        }
-        return *_name_obj_lifecycle;
-    }
-
-    const smgpc::scene::NameObjLifecycleService &RuntimeContext::name_obj_lifecycle() const {
-        if (_name_obj_lifecycle == nullptr) {
-            aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::NameObjLifecycleService has not been attached.");
-        }
-        return *_name_obj_lifecycle;
-    }
-
-    smgpc::scene::SceneExecutionService &RuntimeContext::scene_execution() {
-        if (_scene_execution == nullptr) {
-            aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::SceneExecutionService has not been attached.");
-        }
-        return *_scene_execution;
-    }
-
-    const smgpc::scene::SceneExecutionService &RuntimeContext::scene_execution() const {
-        if (_scene_execution == nullptr) {
-            aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::SceneExecutionService has not been attached.");
-        }
-        return *_scene_execution;
-    }
-
-    void RuntimeContext::attach_name_obj_lifecycle(smgpc::scene::NameObjLifecycleService &service) {
-        if (_name_obj_lifecycle != nullptr && _name_obj_lifecycle != &service) {
-            aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::NameObjLifecycleService has already been attached.");
-        }
-        _name_obj_lifecycle = &service;
-    }
-
-    void RuntimeContext::attach_scene_execution(smgpc::scene::SceneExecutionService &service) {
-        if (_scene_execution != nullptr && _scene_execution != &service) {
-            aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::SceneExecutionService has already been attached.");
-        }
-        _scene_execution = &service;
-    }
-
     JAISoundHandle *RuntimeContext::start_sub_bgm(std::string_view name, bool prepared) {
         auto *handle = _j_audio_playback->start_bgm(BgmLane::Sub, name, prepared);
         if (handle == nullptr) {
@@ -1302,16 +1198,6 @@ namespace smgpc::runtime {
                    << ";radius=" << event.projected_radius << ";check_z=" << (event.check_z ? "true" : "false");
             emit_semantic_trace_event("star_pointer", star_pointer_target_event_name(event.kind), detail.str());
         }
-    }
-
-    void RuntimeContext::record_j3d_packet_trace(std::string_view model_name, std::uint64_t frame_index, std::string_view draw_pass,
-                                                 const smgpc::render::J3dRendererPacketState &packet) {
-        _j3d_packet_trace.push_back(J3dRuntimePacketTrace{
-            .model_name = std::string(model_name),
-            .frame_index = frame_index,
-            .draw_pass = std::string(draw_pass),
-            .state = packet,
-        });
     }
 
     void RuntimeContext::record_layout_packet_trace(LayoutRuntimePacketTrace packet) {

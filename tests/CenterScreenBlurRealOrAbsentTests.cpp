@@ -1,332 +1,173 @@
+#include "app/Application.hpp"
+#include "app/OriginalGameApplication.hpp"
+#include "Game/LiveActor/Spine.hpp"
+#include "Game/Scene/GameScene.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Screen/CenterScreenBlur.hpp"
+#include "Game/Screen/CaptureScreenDirector.hpp"
 #include "Game/Screen/FullScreenBlur.hpp"
+#include "Game/System/GameSystem.hpp"
+#include "Game/System/GameSystemObjHolder.hpp"
+#include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/ScreenUtil.hpp"
-#include "JSystem/JUtility/JUTTexture.hpp"
-#include "Logger.hpp"
-#include "RendererService.hpp"
-#include "camera/CameraPose.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
+#include "JSystem/JUtility/JUTTexture.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "Game/Demo/DemoDirector.hpp"
 #include "Game/Demo/DemoSimpleCastHolder.hpp"
-#include "runtime/RuntimeContext.hpp"
-#include "runtime/RuntimeServices.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
-#include "scene/StagePlacementResolver.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 
 #include <dolphin/gx/GXAurora.h>
-
+#include <aurora/exception.hpp>
 #include <array>
 #include <cmath>
-#include <cstdint>
+#include <cstdio>
 #include <cstdlib>
-#include <exception>
 #include <filesystem>
-#include <iostream>
-#include <numeric>
-#include <span>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <string_view>
-#include <vector>
+#include <unistd.h>
 
 namespace {
-
     void require(bool condition, std::string_view message) {
-        if (!condition) {
-            throw std::runtime_error(std::string(message));
-        }
+        if (!condition) aurora::throw_host_exception<std::runtime_error>(std::string(message));
     }
 
-    template <typename Function>
-    void require_logic_error(Function&& function, std::string_view expected_text,
-                             std::string_view message) {
-        try {
-            function();
-        } catch (const std::logic_error& error) {
-            require(std::string_view(error.what()).find(expected_text) !=
-                        std::string_view::npos,
-                    message);
-            return;
-        }
-        throw std::runtime_error(std::string(message));
+    void verify_absent_owner() {
+        require(MR::getSceneObjHolder() == nullptr,
+                "a process without a scene has no original actor");
+        MR::createCenterScreenBlur();
+        require(MR::getSceneObjHolder() == nullptr &&
+                    !MR::isExistSceneObj(SceneObj_CenterScreenBlur),
+                "creation without a scene leaves the original actor absent");
+        // Original start/draw require the actual scene and player owners.
+        // There is no exception contract for an absent original owner.
+        const std::array<unsigned char, 32> arbitrary_address{};
+        require(!AuroraIsFrameActive() && !AuroraHasTextureCopy(arbitrary_address.data()),
+                "outside a renderer frame no arbitrary address is a completed GPU copy");
     }
 
-    struct ExactCenterFixture {
-        ExactCenterFixture()
-            : holder(), binding(holder) {
-            require(holder.create(SceneObj_DemoDirector) != nullptr,
-                    "the bound blur scene requires its original DemoDirector");
-            MR::createCenterScreenBlur();
-            blur = dynamic_cast<CenterScreenBlur*>(
-                holder.getObj(SceneObj_CenterScreenBlur));
-        }
+#ifndef NDEBUG
+    constexpr std::uint64_t frame_count = 120;
 
-        SceneObjHolder holder;
-        smgpc::scene::SceneObjHolderBinding binding;
-        CenterScreenBlur* blur = nullptr;
-    };
+    struct Probe {
+        const CenterScreenBlur* identity = nullptr;
+        const void* history_image = nullptr;
+        std::weak_ptr<smgpc::compat::JkrAllocationDomain> domain;
+        std::uint64_t observations = 0;
+        bool checked = false;
 
-    void test_absent_without_scene_ownership() {
-        require_logic_error(
-            [] { MR::createCenterScreenBlur(); }, "scene-owned SceneObjHolder",
-            "CenterScreenBlur creation must stop at the missing scene boundary");
-        require_logic_error(
-            [] { MR::startCenterScreenBlur(12, 30.0F, 160U, 3, 3); },
-            "must be created",
-            "CenterScreenBlur start must not manufacture a process-global actor");
-    }
-
-    void test_exact_scene_object_and_generalized_history_owner() {
-        auto fixture = ExactCenterFixture{};
-        auto* history = MR::getFullScreenBlurTexture();
-
-        require(fixture.blur != nullptr && fixture.blur->isDead(),
-                "SceneObj 0x2D must synchronously initialize the exact dead actor");
-        require(MR::createSceneObj(SceneObj_CenterScreenBlur) == fixture.blur,
-                "SceneObj 0x2D must retain a single scene-owned exact actor");
-        const auto* demo_ownership = MR::getSceneObj<DemoDirector>(SceneObj_DemoDirector);
-        require(demo_ownership != nullptr &&
-                    demo_ownership->_20->nativeRegistrationCount(fixture.blur) == 1U,
-                "exact init must retain the retail simple demo-cast registration");
-        require(history != nullptr && history->getWidth() == 128 && history->getHeight() == 64,
-                "the original player must own its 128x64 history texture");
-    }
-
-    void test_exact_nerve_lifecycle_and_strict_capture_boundary() {
-        auto fixture = ExactCenterFixture{};
-        auto* blur = fixture.blur;
-        require(blur != nullptr, "the fixture must own the exact blur actor");
-
-        MR::startCenterScreenBlur(6, 30.0F, 180U, 2, 2);
-        require(!blur->isDead() && blur->mTime == 6 && blur->mFadeIn == 2 &&
-                    blur->mFadeOut == 2 && blur->mOffset == 30.0F &&
-                    blur->mAlpha == 180U && blur->mBlendRate == 0.0F,
-                "start must preserve the exact retail parameter and appear contract");
-
-        require_logic_error(
-            [blur] { blur->draw(); }, "real CaptureScreenDirector texture",
-            "an appeared exact actor must fail at the real capture dependency instead of drawing a substitute");
-
-        blur->updateNerve();
-        require(!blur->isDead() && blur->mBlendRate == 0.0F,
-                "the exact FadeIn nerve must begin at zero blend");
-        blur->updateNerve();
-        require(std::fabs(blur->mBlendRate - 0.5F) < 0.00001F,
-                "the exact FadeIn nerve must use the generalized linear nerve rate");
-
-        for (auto frame = 0; frame < 16 && !blur->isDead(); ++frame) {
-            blur->updateNerve();
-        }
-        require(blur->isDead(),
-                "the exact FadeIn/Keep/FadeOut sequence must kill itself at completion");
-    }
-
-    void test_aurora_capability_queries_are_real_and_absent_outside_a_frame() {
-        const auto identity = std::array<unsigned char, 32U>{};
-        require(AuroraIsFrameActive() == GX_FALSE,
-                "Aurora must report no GPU frame when no renderer frame is active");
-        require(AuroraHasTextureCopy(identity.data()) == GX_FALSE,
-                "an arbitrary host address must not be reported as a completed GXCopyTex");
-    }
-
-    [[nodiscard]] std::vector<std::uint8_t> read_display_copy() {
-        auto width = 0U;
-        auto height = 0U;
-        require(AuroraGetDisplayCopySize(&width, &height) == GX_TRUE &&
-                    width >= 640U && height >= 456U,
-                "the GPU proof requires a materialized Aurora display copy");
-
-        auto row_stride = 0U;
-        auto pixels =
-            std::vector<std::uint8_t>(static_cast<std::size_t>(width) * height * 4U);
-        require(AuroraReadDisplayCopyRGBA8(pixels.data(),
-                                           static_cast<u32>(pixels.size()),
-                                           &width, &height, &row_stride) == GX_TRUE &&
-                    row_stride == width * 4U,
-                "Aurora must return the real display-copy pixels");
-        return pixels;
-    }
-
-    [[nodiscard]] smgpc::render::TexturedQuad2D full_frame_quad() {
-        using smgpc::render::RenderSpace2D;
-        using smgpc::render::TexturedQuad2D;
-        using smgpc::render::TexturedVertex2D;
-        return TexturedQuad2D{
-            .vertices =
-                {
-                    TexturedVertex2D{.x = -320.0F, .y = -228.0F, .u = 0.0F,
-                                     .v = 0.0F},
-                    TexturedVertex2D{.x = 320.0F, .y = -228.0F, .u = 1.0F,
-                                     .v = 0.0F},
-                    TexturedVertex2D{.x = 320.0F, .y = 228.0F, .u = 1.0F,
-                                     .v = 1.0F},
-                    TexturedVertex2D{.x = -320.0F, .y = 228.0F, .u = 0.0F,
-                                     .v = 1.0F},
-                },
-            .space = RenderSpace2D::CenteredFramebuffer,
-            .blend = false,
-        };
-    }
-
-    [[nodiscard]] std::array<std::uint8_t, 64U * 64U * 4U>
-    make_checkerboard() {
-        auto pixels = std::array<std::uint8_t, 64U * 64U * 4U>{};
-        for (auto y = 0U; y < 64U; ++y) {
-            for (auto x = 0U; x < 64U; ++x) {
-                const auto index = static_cast<std::size_t>(y * 64U + x) * 4U;
-                const auto marker = x >= 7U && x < 23U && y >= 11U && y < 29U;
-                pixels[index + 0U] = marker ? 248U : static_cast<std::uint8_t>(x * 4U);
-                pixels[index + 1U] = marker ? 24U : static_cast<std::uint8_t>(y * 4U);
-                pixels[index + 2U] = marker
-                                         ? 216U
-                                         : static_cast<std::uint8_t>((x * 3U + y * 5U) & 0xffU);
-                pixels[index + 3U] = 255U;
-            }
-        }
-        return pixels;
-    }
-
-    void test_real_gpu_capture_blur_when_requested() {
-        const auto* requested = std::getenv("SMGPC_BLUR_GPU_TEST");
-        if (requested == nullptr || std::string_view(requested) != "1") {
-            std::cout << "[skip] real GPU blur proof (set SMGPC_BLUR_GPU_TEST=1)\n";
-            return;
-        }
-
-        auto logger = smgpc::logging::create_default_logger();
-        auto window = smgpc::render::AuroraWindow({
-            .width = 640,
-            .height = 456,
-            .title = "SMG PC captured-frame blur proof",
-        });
-        auto renderer = smgpc::render::AuroraRenderer(window);
-        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
-        auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
-        auto fixture = std::make_unique<ExactCenterFixture>();
-        const auto checkerboard = make_checkerboard();
-        auto checker_texture = smgpc::render::TextureHandle{};
-        const auto camera = smgpc::camera::CameraPose{
-            .eye = {0.0F, 0.0F, 1000.0F},
-            .watch = {0.0F, 0.0F, 0.0F},
-        };
-
-        {
-            const auto frame = renderer.begin_frame();
-            require(AuroraIsFrameActive() == GX_TRUE,
-                    "renderer.begin_frame must expose a real Aurora GX frame");
-            const auto renderer_context =
-                smgpc::render::ScopedAuroraRendererContext(renderer);
-            runtime.begin_frame(frame);
-            checker_texture = renderer.create_rgba8_texture(64U, 64U, checkerboard);
-            require(checker_texture.is_valid(),
-                    "the GPU proof checkerboard must be a real texture");
-            renderer.submit_textured_quad(checker_texture, full_frame_quad());
-            runtime.draw_3d_normal(camera);
-            require(AuroraHasTextureCopy(MR::getScreenTexImage()) == GX_TRUE,
-                    "CaptureScreenIndirect must materialize its real GXCopyTex before blur starts");
-            renderer.end_frame();
-        }
-        const auto baseline = read_display_copy();
-        if (const auto* screenshot = std::getenv("SMGPC_BLUR_SCREENSHOT");
-            screenshot != nullptr && screenshot[0] != '\0') {
-            auto baseline_path = std::filesystem::path(screenshot);
-            baseline_path.replace_filename("baseline-frame.png");
-            renderer.request_screenshot_png(baseline_path);
-            std::cout << "[info] baseline screenshot=" << baseline_path.string()
-                      << '\n';
-        }
-
-        MR::startCenterScreenBlur(30, 60.0F, 224U, 0, 8);
-        void* history_image = nullptr;
-        {
-            const auto frame = renderer.begin_frame();
-            const auto renderer_context =
-                smgpc::render::ScopedAuroraRendererContext(renderer);
-            runtime.begin_frame(frame);
-            renderer.submit_textured_quad(checker_texture, full_frame_quad());
-            runtime.draw_3d_normal(camera);
+        void after_frame(GameSystem& system, std::uint64_t frame) {
+            auto* controller = system.mSceneController;
+            if (!controller || controller->mSceneInitializeState != SceneInitializeState_End ||
+                controller->getCurrentSceneForExecute() != controller->mScene ||
+                !dynamic_cast<GameScene*>(controller->mScene)) return;
+            const smgpc::compat::JkrHostAllocationScope host;
+            auto* holder = MR::getSceneObjHolder();
+            auto* blur = dynamic_cast<CenterScreenBlur*>(holder->getObj(SceneObj_CenterScreenBlur));
             auto* history = MR::getFullScreenBlurTexture();
-            require(history != nullptr && AuroraHasTextureCopy(history->mImage) == GX_TRUE,
-                    "the visible pass must also resolve a real 128x64 GPU history capture");
+            auto* demo = MR::getSceneObj<DemoDirector>(SceneObj_DemoDirector);
+            require(blur && blur->mSpine && history && demo,
+                    "original initialization constructs the actual blur actor, nerve, player history texture and DemoDirector");
+            require(!identity || identity == blur, "ordinary scene frames retain one original blur identity");
+            identity = blur;
+            domain = MR::getSceneObjHolder()->nativeAllocationDomain();
+            require(MR::createSceneObj(SceneObj_CenterScreenBlur) == blur &&
+                        demo->_20->nativeRegistrationCount(blur) == 1,
+                    "the exact actor is unique and registered once with the real original DemoDirector");
+            require(MR::isDead(blur) && history->getWidth() == 128 && history->getHeight() == 64 &&
+                        history->getFormat() == GX_TF_RGBA8 && history->mImage,
+                    "the original opening retains an inactive blur and Mario's allocated RGBA8 history texture");
+            ++observations;
+            if (frame != frame_count - 1) return;
+            require(observations >= 30, "blur owner survives at least thirty ordinary original scene frames");
+            const auto allocation_domain = domain.lock();
+            require(allocation_domain != nullptr, "blur checks borrow the actual original scene heap");
+            const smgpc::compat::JkrAllocationScope allocation(allocation_domain);
+            const J3DSys::ContextScope commands;
+            require(AuroraIsFrameActive(), "original process observer executes inside its active GX frame");
+            require(system.mObjHolder && system.mObjHolder->mCaptureScreenDirector &&
+                        MR::getScreenResTIMG() == system.mObjHolder->mCaptureScreenDirector->getResTIMG(),
+                    "screen helpers borrow the real GameSystem capture owner");
+            require(MR::getScreenTexImage() && AuroraHasTextureCopy(MR::getScreenTexImage()),
+                    "ordinary original rendering completed a real screen texture copy");
+            // Inject the public action only after the last normal game frame.
+            // Follow its actual nerve and draws, then retire the normal scene.
+            MR::startCenterScreenBlur(6, 30.0f, 180, 2, 2);
+            require(!MR::isDead(blur) && blur->mTime == 6 && blur->mFadeIn == 2 && blur->mFadeOut == 2 &&
+                        blur->mOffset == 30.0f && blur->mAlpha == 180 && blur->mBlendRate == 0.0f,
+                    "public start preserves the exact retail parameters and appearance contract");
+            blur->mSpine->update();
+            require(!MR::isDead(blur) && blur->mBlendRate == 0.0f,
+                    "the original FadeIn nerve starts at zero blend");
+            blur->mSpine->update();
+            require(std::fabs(blur->mBlendRate - 0.5f) < 0.00001f,
+                    "the original FadeIn nerve computes its linear half blend");
+            blur->draw();
+            require(history == MR::getFullScreenBlurTexture() && history->mImage && AuroraHasTextureCopy(history->mImage),
+                    "the original blur draw samples the real screen copy and captures one real history texture");
             history_image = history->mImage;
-            renderer.end_frame();
+            blur->draw();
+            require(MR::getFullScreenBlurTexture() == history && history->mImage == history_image &&
+                        AuroraHasTextureCopy(history_image),
+                    "the second original blur draw reuses its retained history allocation with a new GPU copy");
+            for (unsigned step = 0; step < 16 && !MR::isDead(blur); ++step) blur->mSpine->update();
+            require(MR::isDead(blur), "the original FadeIn/Keep/FadeOut sequence kills itself");
+            checked = true;
+            std::fprintf(stderr, "PASS original blur actor/demo/nerve and two real GPU history captures; ordinary_frames=%llu\n",
+                         static_cast<unsigned long long>(observations));
         }
-
-        {
-            const auto frame = renderer.begin_frame();
-            const auto renderer_context =
-                smgpc::render::ScopedAuroraRendererContext(renderer);
-            runtime.begin_frame(frame);
-            renderer.submit_textured_quad(checker_texture, full_frame_quad());
-            runtime.draw_3d_normal(camera);
-            auto* history = MR::getFullScreenBlurTexture();
-            require(history != nullptr && AuroraHasTextureCopy(history->mImage) == GX_TRUE,
-                    "the second visible pass must sample and refresh the real GPU history texture");
-            renderer.end_frame();
-        }
-        const auto blurred = read_display_copy();
-        require(baseline.size() == blurred.size(),
-                "baseline and blur readbacks must have the same display dimensions");
-        const auto changed = std::inner_product(
-            baseline.begin(), baseline.end(), blurred.begin(), std::size_t{0U},
-            std::plus<>{}, [](std::uint8_t lhs, std::uint8_t rhs) {
-                return lhs != rhs ? std::size_t{1U} : std::size_t{0U};
-            });
-        if (const auto* screenshot = std::getenv("SMGPC_BLUR_SCREENSHOT");
-            screenshot != nullptr && screenshot[0] != '\0') {
-            renderer.request_screenshot_png(std::filesystem::path(screenshot));
-            std::cout << "[info] blur screenshot=" << screenshot << '\n';
-        }
-        std::cout << "[info] real GPU blur changed " << changed << " / "
-                  << baseline.size() << " RGBA bytes\n";
-        require(changed > baseline.size() / 100U,
-                "the real blur draw must materially change the captured framebuffer");
-
-        require(history_image != nullptr,
-                "the GPU proof must retain the history texture identity for teardown validation");
-        fixture.reset();
-        {
-            const auto frame = renderer.begin_frame();
-            const auto renderer_context =
-                smgpc::render::ScopedAuroraRendererContext(renderer);
-            runtime.begin_frame(frame);
-            renderer.end_frame();
-        }
-        require(AuroraHasTextureCopy(history_image) == GX_FALSE,
-                "destroying the scene must evict the captured history texture before its host address can be reused");
-    }
-
-    struct TestCase {
-        std::string_view name;
-        void (*run)();
     };
-
-}  // namespace
+#endif
+}
 
 int main() {
-    constexpr auto tests = std::array{
-        TestCase{"absent without scene ownership",
-                 test_absent_without_scene_ownership},
-        TestCase{"exact scene object and generalized history owner",
-                 test_exact_scene_object_and_generalized_history_owner},
-        TestCase{"exact nerve lifecycle and strict capture boundary",
-                 test_exact_nerve_lifecycle_and_strict_capture_boundary},
-        TestCase{"Aurora capability queries are real outside a frame",
-                 test_aurora_capability_queries_are_real_and_absent_outside_a_frame},
-        TestCase{"real GPU captured-frame blur when requested",
-                 test_real_gpu_capture_blur_when_requested},
-    };
-
-    auto failures = 0;
-    for (const auto& test : tests) {
-        try {
-            test.run();
-            std::cout << "[ok] " << test.name << '\n';
-        } catch (const std::exception& error) {
-            ++failures;
-            std::cerr << "[fail] " << test.name << ": " << error.what() << '\n';
-        }
+#ifdef NDEBUG
+    std::fprintf(stderr, "Original blur owner diagnostic requires a debug build.\n");
+    return 1;
+#else
+    try {
+        verify_absent_owner();
+        const auto* disc = std::getenv("SMGPC_REAL_DISC");
+        require(disc && *disc, "SMGPC_REAL_DISC must name the real disc image");
+        const auto save = std::filesystem::temp_directory_path() /
+                          ("petari-original-blur-owner-" + std::to_string(getpid()));
+        require(!std::filesystem::exists(save), "blur diagnostic starts with a fresh console directory");
+        setenv("SMGPC_SAVE_DIR", save.c_str(), 1);
+        for (const auto* name : {"SMGPC_NAND_DIR", "SMGPC_DEBUG_WPAD_BUTTON_SCRIPT", "SMGPC_DEBUG_WPAD_POINTER_SCRIPT",
+                                "SMGPC_DEBUG_WPAD_STICK_SCRIPT", "SMGPC_DEBUG_WPAD_INPUT_FILE", "SMGPC_STRICT_PLACEMENT"})
+            unsetenv(name);
+        const smgpc::app::BootstrapConfiguration configuration{
+            .window_width = 640, .window_height = 456, .window_title = "Original captured-frame blur regression",
+            .arguments = {"original-blur-owner-test", "--stage", "HeavensDoorGalaxy", "--scenario", "1",
+                          "--max-frames", std::to_string(frame_count)},
+            .disc_image = disc,
+        };
+        auto logger = smgpc::logging::create_default_logger();
+        smgpc::app::ensure_disc_image_open(configuration, *logger);
+        struct Disc { ~Disc() { smgpc::app::close_disc_image(); } } disc_lifetime;
+        Probe probe;
+        const smgpc::app::OriginalGameDebugObserver observer{
+            .context = &probe,
+            .after_frame = +[](void* context, GameSystem& system, std::uint64_t frame) {
+                static_cast<Probe*>(context)->after_frame(system, frame);
+            },
+        };
+        require(smgpc::app::run_original_game(configuration, *logger, observer) == 0 && probe.checked,
+                "the actual original process completes the retained blur checks and bounded frame loop");
+        require(probe.identity && !smgpc::compat::has_actor_runtime_state(probe.identity) && probe.domain.expired() &&
+                    probe.history_image && !AuroraHasTextureCopy(probe.history_image),
+                "normal process retirement releases the blur actor, scene heap, history owner and GPU copy");
+        verify_absent_owner();
+        std::fprintf(stderr, "PASS original blur ownership, public action, nerve lifecycle, real capture history and process retirement\n");
+        return 0;
+    } catch (const std::exception& error) {
+        std::fprintf(stderr, "FAIL original blur owner: %s\n", error.what());
+        return 1;
     }
-    return failures == 0 ? 0 : 1;
+#endif
 }

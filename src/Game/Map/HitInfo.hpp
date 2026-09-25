@@ -3,6 +3,7 @@
 #include "Game/Util/JMapInfo.hpp"
 #include "JSystem/JGeometry/TMatrix.hpp"
 #include "JSystem/JGeometry/TVec.hpp"
+#include <memory>
 
 class CollisionParts;
 class HitSensor;
@@ -10,6 +11,8 @@ class HitSensor;
 class Triangle {
 public:
     Triangle();
+    Triangle(const Triangle&);
+    ~Triangle();
 
     Triangle& operator=(const Triangle&);
 
@@ -32,7 +35,7 @@ public:
     TPos3f* getPrevBaseMtx() const;
 
     HitSensor* getSensor() const {
-        return mSensor;
+        return isValid() ? mSensor : nullptr;
     }
 
     CollisionParts* mParts;  // 0x0
@@ -40,6 +43,10 @@ public:
     HitSensor* mSensor;      // 0x8
     TVec3f mNormals[4];      // 0xC
     TVec3f mPos[3];          // 0x3C
+
+private:
+    void requireNativeOwner() const;
+    std::weak_ptr< const void > mNativeOwner;
 };
 
 class HitInfo {

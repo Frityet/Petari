@@ -18,7 +18,6 @@
 #include "resource/TextEncoding.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/SceneScheduler.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 #include <array>
 #include <bit>
 #include <cmath>
@@ -76,7 +75,7 @@ namespace {
         runtime::SceneSchedulerBinding active(scheduler);
         for (unsigned generation = 0; generation < 8; ++generation) {
             const auto domain = compat::JkrAllocationDomain::create(heaps, 1U << 20);
-            test::SceneExecutionFixture scene(scheduler, domain, nullptr, nullptr,
+            test::SceneExecutionFixture scene(scheduler, domain,
                                               &original.scene, original.controller().mObjHolder);
             alignas(32) std::array<u8, 4096> commands{};
             GXBeginDisplayList(commands.data(), commands.size());
@@ -102,7 +101,7 @@ namespace {
             }
             require(!director->_1C, "actor retirement clears the original director before the controller is freed");
         }
-        require(scene::current_scene_obj_holder() == nullptr,
+        require(MR::getSceneObjHolder() == nullptr,
                 "retired original scenes expose no player light controller");
     }
 

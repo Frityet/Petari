@@ -39,8 +39,6 @@ target("smg-pc-game")
     remove_files("Map/FileSelectItem.cpp")
     remove_files("Map/FileSelector.cpp")
     remove_files("NameObj/NameObjFactory.cpp")
-    remove_files("Scene/SceneObjHolder.cpp")
-    remove_files("Util/SoundUtil.cpp")
     remove_files("NPC/MiiFacePartsHolder.cpp")
     remove_files("NPC/MiiFaceParts.cpp")
     remove_files("NPC/MiiFaceRecipe.cpp")
@@ -73,7 +71,7 @@ target("smg-pc-game")
     add_files("Util/MtxUtil.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("System/Overwrite.cpp", {cxxflags = "-ffp-contract=off"})
     add_files({"Util/ActorMovementUtil.cpp", "Util/MapUtil.cpp",
-               "Map/CollisionParts.cpp", "Map/KCollision.cpp"},
+               "Map/CollisionParts.cpp", "Map/HitInfo.cpp", "Map/KCollision.cpp"},
               {cxxflags = "-ffp-contract=off"})
     add_files({"../JSystem/J3DGraphBase/J3DMaterial.cpp", "../JSystem/J3DGraphBase/J3DMatBlock.cpp",
                "../JSystem/J3DGraphBase/J3DTevs.cpp", "../JSystem/J3DGraphAnimator/J3DMaterialAnm.cpp",
@@ -87,7 +85,6 @@ target("smg-pc-game")
         "../render/J3dMaterialRuntime.cpp",
         "../render/J3dMatrix.cpp",
         "../render/J3dModel.cpp",
-        "../render/J3dModelRenderer.cpp",
         "../render/J3dTexture.cpp",
         "../render/JMathTrig.cpp",
         "../JSystem/JGeometry/TQuat.cpp",
@@ -163,7 +160,6 @@ target("smg-pc-game")
         "../render/J3dMaterialRuntime.hpp",
         "../render/J3dMatrix.hpp",
         "../render/J3dModel.hpp",
-        "../render/J3dModelRenderer.hpp",
         "../render/J3dTexture.hpp",
         "../render/JMathTrig.hpp",
     }

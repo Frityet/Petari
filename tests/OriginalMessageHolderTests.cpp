@@ -1,4 +1,4 @@
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "OriginalTalkNodeTests.hpp"
 #include "Game/System/MessageHolder.hpp"
 #include "Game/Map/FileSelectFunc.hpp"
@@ -106,7 +106,7 @@ Bytes archive(const Bytes& messages, const Bytes& identifiers) {
 }
 void native_boundary(smgpc::resource::GameResourceRuntime& process, FileLoader& loader) {
     const auto message_bytes = bmg(), identifier_bytes = ids();
-    auto domain = smgpc::compat::JkrAllocationDomain::create(smgpc::scene::current_scene_allocation_domain(), 1U << 20);
+    auto domain = smgpc::compat::JkrAllocationDomain::create(MR::getSceneObjHolder()->nativeAllocationDomain(), 1U << 20);
     auto raw_archive = archive(message_bytes, identifier_bytes);
     (void)loader.createAndAddArchive(raw_archive.data(), &domain->heap(), "/NativeMessageFixture.arc");
     {
