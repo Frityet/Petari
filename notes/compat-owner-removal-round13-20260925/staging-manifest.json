@@ -1,0 +1,146 @@
+[
+  {
+    "path": "src/Game/Animation/XanimeCore.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Animation/XanimeCore.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Animation/XanimePlayer.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Animation/XanimePlayer.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Animation/XanimeResource.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Animation/XanimeResource.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ModelManager.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Player/MarioActor.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Player/MarioAnimationEfx.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Player/MarioAnimator.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Player/MarioAnimator.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/CaptureScreenDirector.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/CaptureScreenDirector.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/xmake.lua",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTTexture.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/CapturedFrameBlurService.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/CapturedFrameBlurService.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/JutTextureAllocation.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/JutTextureAllocation.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/MarioAnimatorLifetime.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/MarioAnimatorLifetime.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalJ3dJointTree.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/resource/GameResourceRuntime.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/resource/GameResourceRuntime.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.cpp",
+    "mode": "scoped-delta-on-HEAD"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.hpp",
+    "mode": "scoped-delta-on-HEAD"
+  },
+  {
+    "path": "src/runtime/jut/JutTexture.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/scene/SceneObjHolderRuntime.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/CenterScreenBlurRealOrAbsentTests.cpp",
+    "mode": "retired-api-adaptation-on-HEAD-preserving-preexisting-fixture-migration"
+  },
+  {
+    "path": "tests/JutTextureOwnershipTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalBckCtrlTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalImageEffectOwnershipTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalJ3DVertexBufferTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalXanimeCoreTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalXanimePlayerTests.cpp",
+    "mode": "clean-owned"
+  }
+]

@@ -52,17 +52,10 @@ namespace smgpc::compat {
             Mtx _matrix;
         };
 
-        // The original core allocates from the game's arena and has an empty
-        // destructor because other cores can share its joint storage. This
-        // non-sharing native owner retains its allocations explicitly.
         struct AnimationCalculator final {
             XanimeCore core;
-            std::unique_ptr<XjointInfo[]> joint_storage;
-            std::unique_ptr<XanimeTrack[]> track_storage;
 
-            AnimationCalculator(u32 joint_count, u8 mode)
-                : core(1, joint_count, mode), joint_storage(core.mJointList),
-                  track_storage(core.mTrackList) {}
+            AnimationCalculator(u32 joint_count, u8 mode) : core(1, joint_count, mode) {}
         };
 
     }  // namespace

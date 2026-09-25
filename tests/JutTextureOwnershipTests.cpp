@@ -1,4 +1,4 @@
-#include "compat/JutTextureAllocation.hpp"
+#include "resource/GameResourceRuntime.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "resource/Mem1ResourceHeap.hpp"
@@ -23,17 +23,17 @@ int main() {
     smgpc::render::AuroraWindow window({.width=640,.height=456,.title="Owned JUTTexture MEM1 lifetime"});
     smgpc::render::AuroraRenderer renderer(window);
     OSInit();
-    auto heap=smgpc::resource::Mem1ResourceHeap::create(4U*1024U*1024U);
+    auto resources=std::make_unique<smgpc::resource::GameResourceRuntime>(smgpc::resource::GameResourceBudget{
+        .host_heap_bytes=2U*1024U*1024U, .cohort_bytes=256U*1024U, .mem1_bytes=4U*1024U*1024U});
+    auto heap=resources->mem1_heap();
     const auto available=heap->available_bytes();
-    auto jkr=smgpc::compat::JkrHeapRuntime::create(2U*1024U*1024U);
+    auto jkr=resources->host_heaps();
     std::unique_ptr<JUTTexture> retained;
-    std::shared_ptr<smgpc::compat::JkrAllocationDomain> retired_service_domain;
+    std::shared_ptr<smgpc::compat::JkrAllocationDomain> retired_runtime_domain;
     std::size_t retained_capacity=0;
     (void)renderer.begin_frame();
     {
-        smgpc::compat::JutTextureAllocationService provider(heap);
         retained=std::make_unique<JUTTexture>(8,8,GX_TF_RGB565);
-        require(smgpc::compat::get_owned_jut_texture(retained->mTIMG)==retained.get());
         require(retained->getCaptureFlag());
         require(retained->mTIMG==retained->_3C);
         require(retained->mImage==reinterpret_cast<const u8*>(retained->mTIMG)+sizeof(ResTIMG));
@@ -121,22 +121,23 @@ int main() {
         try { JUTTexture too_large(2048, 2048, GX_TF_RGBA8); }
         catch (const std::bad_alloc&) { capacity_rejected=true; }
         require(capacity_rejected && heap->available_bytes()==allocated);
-        retired_service_domain=smgpc::compat::JkrAllocationDomain::create(jkr,128U*1024U);
+        retired_runtime_domain=smgpc::compat::JkrAllocationDomain::create(jkr,128U*1024U);
         {
-            smgpc::compat::JkrAllocationScope scope(retired_service_domain);
+            smgpc::compat::JkrAllocationScope scope(retired_runtime_domain);
             new JUTTexture(8,8,GX_TF_I8);
         }
         std::cout << "JUTTexture: enclosing-constructor unwind and failed allocation restore mapped capacity\n";
         std::cout << "JUTTexture: mapped owned/borrowed, GD address, dimensions, three capture/destruction/reuse cycles pass\n";
     }
+    resources.reset();
     require(OSPhysicalToCached(OSCachedToPhysical(retained->mImage))==retained->mImage);
     bool rejected=false;
     try { JUTTexture missing(8,8,GX_TF_RGB565); } catch(const std::logic_error&) { rejected=true; }
     require(rejected);
-    retired_service_domain.reset();
+    retired_runtime_domain.reset();
     require(heap->available_bytes()==retained_capacity);
     retained.reset();
     require(heap->available_bytes()==available);
     renderer.end_frame();
-    std::cout << "JUTTexture: outstanding storage survives provider retirement, returns full MEM1 capacity on final destruction\n";
+    std::cout << "JUTTexture: outstanding storage survives resource-runtime retirement, returns full MEM1 capacity on final destruction\n";
 }

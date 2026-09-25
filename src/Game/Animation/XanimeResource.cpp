@@ -63,9 +63,12 @@ XanimeResourceTable::XanimeResourceTable(ResourceHolder* pResourceHolder, Xanime
     _1C._8 = 1;
     _1C.mBckTableVariant = 1;
     _1C._1D = 0;
-    mSimpleGroupInfos = new XanimeGroupInfo[0];
+    mNativeSimpleGroups.reset(new XanimeGroupInfo[0]);
+    mSimpleGroupInfos = mNativeSimpleGroups.get();
     mAmountOfSimpleGroupInfos = 0;
 }
+
+XanimeResourceTable::~XanimeResourceTable() = default;
 
 void XanimeResourceTable::init() {
     _0 = 0;
@@ -76,6 +79,7 @@ void XanimeResourceTable::init() {
     mGroupInfos = nullptr;
     mDirectories = nullptr;
     mBckTables = nullptr;
+    mSimpleGroupInfos = nullptr;
 
     mResourceHolder = nullptr;
     mSortTable = nullptr;
@@ -387,7 +391,8 @@ u32 XanimeResourceTable::getSimpleIndex(const char* pTarget) const {
 }
 
 void XanimeResourceTable::createSortTable() {
-    mSortTable = new HashSortTable(mAmountOfGroupInfos);
+    mNativeSortTable.reset(new HashSortTable(mAmountOfGroupInfos));
+    mSortTable = mNativeSortTable.get();
     for (int i = 0; i < mAmountOfGroupInfos; i++) {
         mSortTable->add(mGroupInfos[i].mHash, i);
     }

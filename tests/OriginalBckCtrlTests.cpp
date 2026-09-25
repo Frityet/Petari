@@ -64,9 +64,7 @@ namespace {
         Model model;
         XanimeResourceTable resources{nullptr};
         XanimePlayer player{model.object.get(), &resources};
-        std::unique_ptr<XanimeCore> core{player.mCore};
-        std::unique_ptr<XjointInfo[]> joints{core->mJointList};
-        std::unique_ptr<XanimeTrack[]> tracks{core->mTrackList};
+        XanimeCore* core = player.mCore;
         Fixture() {
             auto* ctrl = player._20;
             ctrl->setStart(2); ctrl->setEnd(20); ctrl->setLoop(4);

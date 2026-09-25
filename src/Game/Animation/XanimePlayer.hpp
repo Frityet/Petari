@@ -3,6 +3,7 @@
 #include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
 #include <JSystem/JGeometry/TVec.hpp>
 #include <revolution/types.h>
+#include <memory>
 
 class J3DAnmTransform;
 class J3DModel;
@@ -22,6 +23,9 @@ class XanimePlayer {
 public:
     XanimePlayer(J3DModel*, XanimeResourceTable*);
     XanimePlayer(J3DModel*, XanimeResourceTable*, XanimePlayer*);
+    ~XanimePlayer();
+    XanimePlayer(const XanimePlayer&) = delete;
+    XanimePlayer& operator=(const XanimePlayer&) = delete;
 
     void init();
     void stopAnimation();
@@ -96,4 +100,8 @@ public:
     /* 0x80 */ bool _80;
     /* 0x84 */ f32 _84;
     /* 0x88 */ bool _88;
+
+private:
+    std::unique_ptr< XanimeCore > mNativeCore;
+    std::unique_ptr< XanimeGroupInfo > mNativeSimpleGroup;
 };

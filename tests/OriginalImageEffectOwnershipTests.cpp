@@ -1,6 +1,5 @@
 #include "OriginalStageResourceProcessFixture.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
-#include "compat/JutTextureAllocation.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/AreaObj/AreaObjContainer.hpp"
 #include "Game/AreaObj/ImageEffectArea.hpp"
@@ -37,7 +36,7 @@ int main() {
         auto* system = static_cast<ImageEffectSystemHolder*>(holder.create(SceneObj_ImageEffectSystemHolder));
         auto* bloom = static_cast<BloomEffect*>(holder.create(SceneObj_BloomEffect));
         require(system->mResource->_0 && bloom->_24 == system->mResource->_0 &&
-                    smgpc::compat::get_owned_jut_texture(system->mResource->_0->mTIMG) == system->mResource->_0,
+                    system->mResource->_0->getCaptureFlag() && system->mResource->_0->mTIMG == system->mResource->_0->_3C,
                 "original bloom borrows the actual image-effect owner's live shared texture");
         require(holder.create(SceneObj_BloomEffect) == bloom &&
                     holder.getObj(SceneObj_ImageEffectSystemHolder) == system,

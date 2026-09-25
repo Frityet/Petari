@@ -1,5 +1,4 @@
 #include "compat/Cp932Literal.hpp"
-#include "compat/MarioAnimatorLifetime.hpp"
 #include "Game/Player/MarioAnimator.hpp"
 #include "Game/Animation/XanimeCore.hpp"
 #include "Game/Animation/XanimePlayer.hpp"
@@ -11,9 +10,11 @@
 #include "Game/Player/MarioAnimatorData.hpp"
 #include "Game/Player/MarioConst.hpp"
 #include "Game/Player/MarioState.hpp"
+#include "Game/System/ResourceHolder.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/HashUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
@@ -21,15 +22,61 @@
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/J3dCommandScope.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+#include <aurora/exception.hpp>
 #include <cstring>
+#include <stdexcept>
 
 const char* jname_chest = "Spine1";
 static const char sHip[] = "Hip";
 static const char sRun[8] = "Run";
 
-MarioAnimator::MarioAnimator(MarioActor* actor) : MarioModule(actor) {
-    smgpc::compat::MarioAnimatorConstructionScope lifetime(*this);
-    init();
+MarioAnimator::MarioAnimator(MarioActor* actor)
+    : MarioModule(actor), mResourceTable(nullptr), mXanimePlayer(nullptr), mXanimePlayerUpper(nullptr), _120(nullptr),
+      mNativeResources(MR::getResourceHolder(actor)->retainNativeResources()) {
+    // The command scope restores recursive SDK locks and GD state on unwind.
+    const smgpc::compat::J3dCommandScope commands;
+    const J3DSys previousSystem = j3dSys;
+    try {
+        init();
+    } catch (...) {
+        j3dSys = previousSystem;
+        throw;
+    }
+    j3dSys = previousSystem;
+}
+
+MarioAnimator::~MarioAnimator() = default;
+
+MarioAnimator* MarioAnimator::createNative(MarioActor* actor) {
+    const smgpc::compat::JkrHostAllocationScope host;
+    const auto owner = smgpc::compat::retain_actor_model(actor);
+    if (!owner || owner.get() != actor->mModelManager) {
+        aurora::throw_host_exception< std::logic_error >("MarioAnimator requires the actor's actual ModelManager owner");
+    }
+    const auto domain = owner->nativeAllocationDomain();
+    XanimePlayer* previousPlayer = owner->mXanimePlayer;
+    try {
+        MarioAnimator* original;
+        {
+            const smgpc::compat::JkrAllocationScope heap(domain);
+            original = new MarioAnimator(actor);
+        }
+        // The model can outlive its actor while render packets still borrow it.
+        // Keep the animator matrices and the heap alive through operator delete.
+        auto animator = std::shared_ptr< MarioAnimator >(original, [domain](MarioAnimator* value) {
+            const smgpc::compat::JkrHostAllocationScope host;
+            (void)domain;
+            delete value;
+        });
+        owner->retainNativeDependency(animator);
+        return original;
+    } catch (...) {
+        owner->mXanimePlayer = previousPlayer;
+        throw;
+    }
 }
 
 void MarioAnimator::init() {
@@ -37,9 +84,10 @@ void MarioAnimator::init() {
     if (gIsLuigi) {
         luigiAnimations = luigiAnimeSwapTable;
     }
-    mResourceTable = new XanimeResourceTable(MR::getResourceHolder(mActor), marioAnimeTable, marioAnimeAuxTable, marioAnimeOfsTable,
-                                             reinterpret_cast< XanimeBckTable* >(singleAnimeTable), doubleAnimeTable, tripleAnimeTable,
-                                             quadAnimeTable, luigiAnimations);
+    mNativeResourceTable.reset(new XanimeResourceTable(
+        MR::getResourceHolder(mActor), marioAnimeTable, marioAnimeAuxTable, marioAnimeOfsTable,
+        reinterpret_cast< XanimeBckTable* >(singleAnimeTable), doubleAnimeTable, tripleAnimeTable, quadAnimeTable, luigiAnimations));
+    mResourceTable = mNativeResourceTable.get();
 
     _14 = 0;
     _15 = 0;
@@ -71,7 +119,8 @@ void MarioAnimator::init() {
 
     initCallbackTable();
 
-    mXanimePlayer = new XanimePlayer(MR::getJ3DModel(mActor), mResourceTable);
+    mNativePlayer.reset(new XanimePlayer(MR::getJ3DModel(mActor), mResourceTable));
+    mXanimePlayer = mNativePlayer.get();
 
     changeDefault(CP932("基本"));
     change(CP932("基本"));
@@ -79,7 +128,8 @@ void MarioAnimator::init() {
     mXanimePlayer->getCore()->enableJointTransform(MR::getJ3DModelData(mActor));
 
     mActor->mModelManager->mXanimePlayer = mXanimePlayer;
-    mXanimePlayerUpper = new XanimePlayer(MR::getJ3DModel(mActor), mResourceTable, mXanimePlayer);
+    mNativeUpperPlayer.reset(new XanimePlayer(MR::getJ3DModel(mActor), mResourceTable, mXanimePlayer));
+    mXanimePlayerUpper = mNativeUpperPlayer.get();
     changeDefaultUpper(CP932("基本"));
     mXanimePlayerUpper->changeAnimation(CP932("基本"));
     mXanimePlayerUpper->mCore->shareJointTransform(mXanimePlayer->mCore);

@@ -1,0 +1,49 @@
+{
+  "state": "applied-and-frozen",
+  "files": [
+    {
+      "path": "src/compat/CapturedFrameBlurService.cpp",
+      "before_exists": true,
+      "before_sha256": "4e9f768668ade8ea70e5a2a5279583e6193cdabcf5a1cc020ab2c22d234603bb",
+      "initially_dirty": false,
+      "action": "deleted",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/CapturedFrameBlurService.hpp",
+      "before_exists": true,
+      "before_sha256": "cb9658d66a222fe21f595734e2683b6fd4b2cc39ea43e0b3519a025afd0993fd",
+      "initially_dirty": false,
+      "action": "deleted",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/SceneObjHolderCompat.cpp",
+      "before_exists": true,
+      "before_sha256": "c35edad5b45af72110f5540b240f3c761b021f3d1972391c49dbbf6d17db5ebf",
+      "initially_dirty": false,
+      "action": "modified",
+      "after_sha256": "f306e2296b9361304380a18ec424fa1f576519d4eb291adf66217befeebf5bed"
+    },
+    {
+      "path": "src/scene/SceneObjHolderRuntime.hpp",
+      "before_exists": true,
+      "before_sha256": "fdeabc7004a79ff32848c88551d7d6e9721e2417a4cb57aaaef85709b3436ea2",
+      "initially_dirty": false,
+      "action": "modified",
+      "after_sha256": "ca088037885a16788a8c3712dc783552be8980375987c675cab60ac907636c85"
+    },
+    {
+      "path": "tests/CenterScreenBlurRealOrAbsentTests.cpp",
+      "before_exists": true,
+      "before_sha256": "eefdb67b8bd55fe3c2fbe9ac7170a24714ac6c072f9298ee8d318769ce59d52f",
+      "initially_dirty": true,
+      "action": "modified",
+      "after_sha256": "586dcd8b156b715976c28530f1c0a1e9f09442d008ac1bf93c5dff4266d56681"
+    }
+  ],
+  "parent_checkpoint": "d24ec238e577ebc971998e6d5ae9f5fc6ad485f5",
+  "original_source_unchanged": "src/Game/Screen/FullScreenBlur.cpp",
+  "build_wiring": "Remove remove_files(\"Screen/FullScreenBlur.cpp\") from src/Game/xmake.lua; root owns build wiring. No new source files or flags.",
+  "dirty_overlap": "CenterScreenBlurRealOrAbsentTests.cpp was already rewritten in the worktree. before/ preserves its bytes; owned-working-delta.patch contains only removed-service migration."
+}

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <revolution/types.h>
+#include <memory>
 
 class HashSortTable;
 class ResourceHolder;
@@ -115,6 +116,9 @@ public:
         XanimeSwapTable*);
 
     XanimeResourceTable(ResourceHolder*);
+    ~XanimeResourceTable();
+    XanimeResourceTable(const XanimeResourceTable&) = delete;
+    XanimeResourceTable& operator=(const XanimeResourceTable&) = delete;
 
     u32 initGroupInfo(ResourceHolder*, XanimeGroupInfo*, XanimeAuxInfo*, XanimeOfsInfo*, XanimeBckTable*, XanimeBckTable2*, XanimeBckTable3*,
                       XanimeBckTable4*, XanimeSwapTable*);
@@ -147,4 +151,8 @@ public:
     /* 0x6C */ ResourceHolder* mResourceHolder;
     /* 0x70 */ HashSortTable* mSortTable;
     /* 0x74 */ XanimeSwapTable* mSwapTable;
+
+private:
+    std::unique_ptr< HashSortTable > mNativeSortTable;
+    std::unique_ptr< XanimeGroupInfo[] > mNativeSimpleGroups;
 };

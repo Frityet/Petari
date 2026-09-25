@@ -167,13 +167,10 @@ namespace {
         model.getJointTree().mJointNodePointer = joint_pointers.data();
 
         XanimeCore core(1, joint_pointers.size(), 0);
-        // Original Core destruction is empty: this fixture owns the allocations.
-        std::unique_ptr<XjointInfo[]> joint_storage(core.mJointList);
-        std::unique_ptr<XanimeTrack[]> track_storage(core.mTrackList);
         require(core.getJointTransform(0) == nullptr && core.getJointTransform(1) == nullptr,
                 "original accessor returns null before optional transform allocation");
         core.enableJointTransform(&model);
-        std::unique_ptr<XjointTransform[]> transform_storage(core.mTransformList);
+        auto* transform_storage = core.mTransformList;
         require(core.getJointTransform(0) == &transform_storage[0] && core.getJointTransform(1) == &transform_storage[1],
                 "original accessor uses the native typed element stride");
         core.getJointTransform(1)->_2C.x = 43;
@@ -181,7 +178,6 @@ namespace {
                 "mutation through the accessor reaches only the selected original joint transform");
 
         XanimeCore upper(1, &core);
-        std::unique_ptr<XanimeTrack[]> upper_track_storage(upper.mTrackList);
         require(upper.getJointTransform(1) == core.getJointTransform(1),
                 "shared original cores expose the same transform object");
     }

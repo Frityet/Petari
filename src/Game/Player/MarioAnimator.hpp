@@ -3,6 +3,7 @@
 #include "Game/Animation/XanimePlayer.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioModule.hpp"
+#include <memory>
 
 class MarioActor;
 class XanimeResourceTable;
@@ -13,6 +14,10 @@ class HashSortTable;
 class MarioAnimator : public MarioModule {
 public:
     MarioAnimator(MarioActor*);
+    ~MarioAnimator();
+    static MarioAnimator* createNative(MarioActor*);
+    MarioAnimator(const MarioAnimator&) = delete;
+    MarioAnimator& operator=(const MarioAnimator&) = delete;
 
     void init();
     void update();
@@ -113,4 +118,11 @@ public:
     f32 _118;
     s32 _11C;
     HashSortTable* _120;
+
+private:
+    std::shared_ptr< const void > mNativeResources;
+    std::unique_ptr< XanimeResourceTable > mNativeResourceTable;
+    std::unique_ptr< HashSortTable > mNativeCallbacks;
+    std::unique_ptr< XanimePlayer > mNativePlayer;
+    std::unique_ptr< XanimePlayer > mNativeUpperPlayer;
 };

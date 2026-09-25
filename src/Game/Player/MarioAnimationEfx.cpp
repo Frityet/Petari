@@ -59,7 +59,8 @@ void MarioAnimator::initCallbackTable() {
         info++;
     }
 
-    _120 = new HashSortTable(num);
+    mNativeCallbacks.reset(new HashSortTable(num));
+    _120 = mNativeCallbacks.get();
 
     info = marioCallbackTable;
     for (u32 i = 0; i < num; i++) {

@@ -6,8 +6,6 @@
 #include <cstddef>
 #include <memory>
 
-namespace smgpc::compat { class JutTextureAllocationService; }
-
 namespace smgpc::resource {
     class EmbeddedGameTables;
     struct GameResourceBudget {
@@ -38,7 +36,6 @@ namespace smgpc::resource {
         GameResourceBudget _budget;
         std::shared_ptr<compat::JkrHeapRuntime> _heaps;
         std::shared_ptr<Mem1ResourceHeap> _mem1;
-        std::unique_ptr<compat::JutTextureAllocationService> _textures;
         std::unique_ptr<EmbeddedGameTables> _embedded_tables;
     };
 }

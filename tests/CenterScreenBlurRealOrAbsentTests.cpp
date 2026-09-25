@@ -6,7 +6,7 @@
 #include "Logger.hpp"
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
-#include "compat/CapturedFrameBlurService.hpp"
+#include "Game/Util/PlayerUtil.hpp"
 #include "Game/Demo/DemoDirector.hpp"
 #include "Game/Demo/DemoSimpleCastHolder.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -68,8 +68,6 @@ namespace {
     };
 
     void test_absent_without_scene_ownership() {
-        require(smgpc::scene::current_captured_frame_blur_service() == nullptr,
-                "a process without a scene must not synthesize blur history state");
         require_logic_error(
             [] { MR::createCenterScreenBlur(); }, "scene-owned SceneObjHolder",
             "CenterScreenBlur creation must stop at the missing scene boundary");
@@ -77,16 +75,11 @@ namespace {
             [] { MR::startCenterScreenBlur(12, 30.0F, 160U, 3, 3); },
             "must be created",
             "CenterScreenBlur start must not manufacture a process-global actor");
-        require_logic_error(
-            [] { MR::drawFullScreenBlur(15.0F, 15.0F, 128U, 64U); },
-            "scene-owned captured-frame blur service",
-            "the draw helper must not fall back to an event or a no-op");
     }
 
     void test_exact_scene_object_and_generalized_history_owner() {
         auto fixture = ExactCenterFixture{};
-        auto* service =
-            smgpc::scene::current_captured_frame_blur_service();
+        auto* history = MR::getFullScreenBlurTexture();
 
         require(fixture.blur != nullptr && fixture.blur->isDead(),
                 "SceneObj 0x2D must synchronously initialize the exact dead actor");
@@ -96,13 +89,8 @@ namespace {
         require(demo_ownership != nullptr &&
                     demo_ownership->_20->nativeRegistrationCount(fixture.blur) == 1U,
                 "exact init must retain the retail simple demo-cast registration");
-        require(service != nullptr && service->history_width() == 128U &&
-                    service->history_height() == 64U &&
-                    service->history_texture() == nullptr &&
-                    service->stats().draw_count == 0U &&
-                    service->stats().history_capture_count == 0U &&
-                    !service->stats().history_valid,
-                "the scene must own one lazy 128x64 real history target");
+        require(history != nullptr && history->getWidth() == 128 && history->getHeight() == 64,
+                "the original player must own its 128x64 history texture");
     }
 
     void test_exact_nerve_lifecycle_and_strict_capture_boundary() {
@@ -258,16 +246,10 @@ namespace {
             runtime.begin_frame(frame);
             renderer.submit_textured_quad(checker_texture, full_frame_quad());
             runtime.draw_3d_normal(camera);
-            auto* service =
-                smgpc::scene::current_captured_frame_blur_service();
-            require(service != nullptr && service->stats().draw_count == 1U &&
-                        service->stats().history_capture_count == 1U &&
-                        service->stats().history_valid &&
-                        service->history_texture() != nullptr &&
-                        AuroraHasTextureCopy(service->history_texture()->mImage) ==
-                            GX_TRUE,
+            auto* history = MR::getFullScreenBlurTexture();
+            require(history != nullptr && AuroraHasTextureCopy(history->mImage) == GX_TRUE,
                     "the visible pass must also resolve a real 128x64 GPU history capture");
-            history_image = service->history_texture()->mImage;
+            history_image = history->mImage;
             renderer.end_frame();
         }
 
@@ -278,14 +260,8 @@ namespace {
             runtime.begin_frame(frame);
             renderer.submit_textured_quad(checker_texture, full_frame_quad());
             runtime.draw_3d_normal(camera);
-            auto* service =
-                smgpc::scene::current_captured_frame_blur_service();
-            require(service != nullptr && service->stats().draw_count == 2U &&
-                        service->stats().history_capture_count == 2U &&
-                        service->stats().history_valid &&
-                        service->history_texture() != nullptr &&
-                        AuroraHasTextureCopy(service->history_texture()->mImage) ==
-                            GX_TRUE,
+            auto* history = MR::getFullScreenBlurTexture();
+            require(history != nullptr && AuroraHasTextureCopy(history->mImage) == GX_TRUE,
                     "the second visible pass must sample and refresh the real GPU history texture");
             renderer.end_frame();
         }

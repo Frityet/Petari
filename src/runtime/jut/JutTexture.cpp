@@ -1,8 +1,27 @@
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <JSystem/JUtility/JUTPalette.hpp>
 
-#include "compat/JutTextureAllocation.hpp"
+#include "resource/GameResourceRuntime.hpp"
+#include <aurora/allocation.hpp>
+#include <aurora/exception.hpp>
+#include <stdexcept>
+#include <utility>
 #include "JSystem/JKernel/JKRHeap.hpp"
+
+struct JUTTexture::NativeCaptureAllocation {
+    smgpc::resource::Mem1ResourceHeap::Allocation mStorage;
+
+    explicit NativeCaptureAllocation(smgpc::resource::Mem1ResourceHeap::Allocation storage)
+        : mStorage(std::move(storage)) {
+    }
+
+    ~NativeCaptureAllocation() {
+        const aurora::allocation::HostAllocationScope host;
+        GXDestroyCopyTex(mStorage.bytes().data() + sizeof(ResTIMG));
+        // Release under host routing, after draining queued reads of these MEM1 bytes.
+        mStorage = {};
+    }
+};
 
 namespace {
     void retire_jut_texture(void* object) noexcept {
@@ -24,8 +43,16 @@ JUTTexture::JUTTexture(int width, int height, GXTexFmt format) {
     mFlag = mFlag & 2 | 1;
     u32 bufSize = GXGetTexBufferSize(width, height, format, GX_FALSE, 1);
 
-    auto allocation = smgpc::compat::allocate_owned_jut_texture(*this, static_cast<std::size_t>(bufSize) + sizeof(ResTIMG));
-    ResTIMG* texBuf = static_cast<ResTIMG*>(allocation.data());
+    {
+        const aurora::allocation::HostAllocationScope host;
+        auto* resources = smgpc::resource::GameResourceRuntime::active();
+        if (resources == nullptr) {
+            aurora::throw_host_exception<std::logic_error>("Owned JUTTexture construction requires the process graphics heap");
+        }
+        mNativeCaptureAllocation = std::make_unique<NativeCaptureAllocation>(
+            resources->mem1_heap()->allocate(static_cast<std::size_t>(bufSize) + sizeof(ResTIMG)));
+    }
+    ResTIMG* texBuf = reinterpret_cast<ResTIMG*>(mNativeCaptureAllocation->mStorage.bytes().data());
     _3C = texBuf;
     texBuf->mFormat = format;
     texBuf->mTransparency = 0;
@@ -50,16 +77,17 @@ JUTTexture::JUTTexture(int width, int height, GXTexFmt format) {
     texBuf->mImageDataOffset = sizeof(ResTIMG);
     mEmbPalette = nullptr;
 
-    // cast to u8 solves ambiguity
-    storeTIMG(texBuf, static_cast< u8 >(0));
-    DCFlushRange(mImage, bufSize);
     try {
+        // cast to u8 solves ambiguity
+        storeTIMG(texBuf, static_cast< u8 >(0));
+        DCFlushRange(mImage, bufSize);
         JKRHeap::registerFinalizer(this, retire_jut_texture);
     } catch (...) {
         JKRHeap::unregisterFinalizer(this);
+        GXDestroyTexObj(&mObj);
+        if (getEmbPaletteDelFlag()) delete mEmbPalette;
         throw;
     }
-    allocation.commit();
 }
 
 JUTTexture::JUTTexture(const ResTIMG *p_timg, u8 param_1) {
@@ -78,9 +106,7 @@ JUTTexture::JUTTexture(const ResTIMG *p_timg, u8 param_1) {
 JUTTexture::~JUTTexture() {
     JKRHeap::unregisterFinalizer(this);
     GXDestroyTexObj(&mObj);
-    if (getCaptureFlag()) {
-        smgpc::compat::release_owned_jut_texture(*this);
-    }
+    mNativeCaptureAllocation.reset();
     if (getEmbPaletteDelFlag()) delete mEmbPalette;
 }
 

@@ -1,0 +1,13 @@
+# Actual JUTTexture allocation ownership
+
+Removed `src/compat/JutTextureAllocation.cpp` and `.hpp`, including their process heap publication, texture-to-allocation map, and reverse lookup API. Capture JUTTextures now hold a unique native allocation inside the actual SDK object. The constructor resolves the existing `GameResourceRuntime` mapped heap and the resulting `Mem1ResourceHeap::Allocation` retains its own shared heap independently of runtime publication. GameResourceRuntime no longer owns a texture allocation service.
+
+The owned allocation retires its GX copy identity and drains pending GX CPU reads before MEM1 reuse, under host allocation routing. Normal destruction still destroys the GX texture object first. Constructor failure still removes a partially published GX object before allocation release. Original dimensions, header/image offsets, texture flags, borrowed-image constructor behavior, and palette cleanup remain unchanged. Original constructors keep their existing exact-object JKR finalizers, so native scene bulk/tail retirement still destroys textures, including MarioActor's existing `_B7C` blur texture. The private unique allocation field prevents accidental copying of an owning SDK texture; source inspection found no actual texture copy/assignment consumers.
+
+CaptureScreenDirector now destroys its owned `mTexture`. RuntimeContext no longer looks up/adopts that texture independently, eliminating the only production reverse-lookup consumer. The actual Game capture methods and timing behavior are unchanged.
+
+Two existing fixtures received minimal API migration: JutTextureOwnershipTests creates the existing GameResourceRuntime owner instead of the deleted service, then retires it while outstanding textures/heaps remain, preserving the existing allocation/finalizer/borrowed-image/capture assertions. OriginalImageEffectOwnershipTests checks the actual shared owner texture and capture backing directly instead of the registry. No new cases or fixtures were added.
+
+## Scope and integration
+
+The manifest records all 12 paths and before/after hashes. RuntimeContext.cpp/.hpp were initially dirty; `dirty-runtime-only.patch` contains only this lane's four line removals. `texture-owner.patch` is the full before-to-after lane delta. HEAD contained the same four old API references, so no hidden HEAD-only adoption adaptation is required. No xmake change is required: the existing runtime JUT translation unit stays active and the deleted provider drops from the compatibility wildcard. No build or test invocation was performed. A source search found no remaining old allocation API reference in src/tests; whitespace checking passed before final note generation.

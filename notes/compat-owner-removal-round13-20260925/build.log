@@ -1,0 +1,911 @@
+[0mchecking for Xcode SDK ... [38;5;2;1m/Applications/Xcode.app (sdk: 27.0, arm64-apple-macos26.0)[0m
+[0mchecking for disc ... [38;5;1;1mno[0m
+[0mchecking for Xcode SDK ... [38;5;2;1m/Applications/Xcode.app (sdk: 27.0, arm64-apple-macos26.0)[0m
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc>[0m cache compiling.debug src/app/main.cpp[0m
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-app>[0m cache compiling.debug src/app/Application.cpp[0m
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-app>[0m cache compiling.debug src/app/OriginalGameApplication.cpp[0m
+[0m[38;5;2;1m[  2%]:[0m [38;5;5;1m<aurora-platform>[0m cache compiling.debug aurora/lib/webgpu/gpu.cpp[0m
+[0m[38;5;2;1m[  3%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/clear.cpp[0m
+[0m[38;5;2;1m[  3%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/depth_peek.cpp[0m
+[0m[38;5;2;1m[  3%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/encoding.cpp[0m
+[0m[38;5;2;1m[  3%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/frame.cpp[0m
+[0m[38;5;2;1m[  3%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/recording.cpp[0m
+[0m[38;5;2;1m[  3%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/resource_cache.cpp[0m
+[0m[38;5;2;1m[  3%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/pipeline_cache.cpp[0m
+[0m[38;5;2;1m[  3%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/tex_copy_conv.cpp[0m
+[0m[38;5;2;1m[  4%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gfx/texture_replacement.cpp[0m
+[0m[38;5;2;1m[  4%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/attr_fmt.cpp[0m
+[0m[38;5;2;1m[  4%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/command_processor.cpp[0m
+[0m[38;5;2;1m[  4%]:[0m [38;5;5;1m<aurora-platform>[0m cache compiling.debug aurora/lib/window.cpp[0m
+[0m[38;5;2;1m[  4%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/regs.cpp[0m
+[0m[38;5;2;1m[  4%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/dl.cpp[0m
+[0m[38;5;2;1m[  4%]:[0m [38;5;5;1m<aurora-core>[0m cache compiling.debug aurora/lib/aurora.cpp[0m
+[0m[38;5;2;1m[  4%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/fifo.cpp[0m
+[0m[38;5;2;1m[  4%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/gx.cpp[0m
+[0m[38;5;2;1m[  4%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/texture.cpp[0m
+[0m[38;5;2;1m[  4%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/pipeline.cpp[0m
+[0m[38;5;3;1mIn file included from src/app/OriginalGameApplication.cpp:11:
+In file included from src/Game/System/FileLoader.hpp:3:
+In file included from src/Game/System/ArchiveHolder.hpp:4:
+In file included from src/JSystem/JKernel/JKRMemArchive.hpp:3:
+src/JSystem/JKernel/JKRArchive.hpp:122:33: warning: 'getResource' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  122 |     [[nodiscard]] virtual void *getResource(const char *pPath) const;
+      |                                 ^
+src/JSystem/JKernel/JKRFileLoader.hpp:15:19: note: overridden virtual function is here
+   15 |     virtual void* getResource(const char*) const = 0;
+      |                   ^
+In file included from src/app/OriginalGameApplication.cpp:11:
+In file included from src/Game/System/FileLoader.hpp:3:
+In file included from src/Game/System/ArchiveHolder.hpp:4:
+In file included from src/JSystem/JKernel/JKRMemArchive.hpp:3:
+src/JSystem/JKernel/JKRArchive.hpp:124:33: warning: 'getResource' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  124 |     [[nodiscard]] virtual void *getResource(std::uint32_t, const char *pPath) const;[0m
+[0m[38;5;2;1m[  5%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/shader.cpp[0m
+[0m[38;5;2;1m[  5%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/gx/shader_info.cpp[0m
+[0m[38;5;2;1m[  5%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXBump.cpp[0m
+[0m[38;5;2;1m[  5%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXCull.cpp[0m
+[0m[38;5;2;1m[  5%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXCpu2Efb.cpp[0m
+[0m[38;5;2;1m[  5%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXDispList.cpp[0m
+[0m[38;5;2;1m[  5%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXDraw.cpp[0m
+[0m[38;5;2;1m[  5%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXExtra.cpp[0m
+[0m[38;5;2;1m[  5%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXFifo.cpp[0m
+[0m[38;5;2;1m[  5%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXFrameBuffer.cpp[0m
+[0m[38;5;2;1m[  5%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXGeometry.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXGet.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXLighting.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXManage.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXPerf.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXPixel.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXTev.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXTexture.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXTransform.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXVert.cpp[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<aurora-gx>[0m cache compiling.debug aurora/lib/dolphin/gx/GXAurora.cpp[0m
+[0m[38;5;3;1maurora/lib/dolphin/gx/GXBump.cpp:11:11: warning: enumeration value 'GX_MAX_INDTEXSTAGE' not handled in switch [-Wswitch]
+   11 |   switch (indStage) {
+      |           ^~~~~~~~
+aurora/lib/dolphin/gx/GXBump.cpp:36:13: warning: enumeration values 'GX_INDTEXSTAGE2', 'GX_INDTEXSTAGE3', and 'GX_MAX_INDTEXSTAGE' not handled in switch [-Wswitch]
+   36 |     switch (indStage) {
+      |             ^~~~~~~~
+aurora/lib/dolphin/gx/GXBump.cpp:48:13: warning: enumeration values 'GX_INDTEXSTAGE0', 'GX_INDTEXSTAGE1', and 'GX_MAX_INDTEXSTAGE' not handled in switch [-Wswitch]
+   48 |     switch (indStage) {
+      |             ^~~~~~~~
+3 warnings generated.[0m
+[0m[38;5;2;1m[  6%]:[0m [38;5;5;1m<aurora-vi>[0m cache compiling.debug aurora/lib/dolphin/vi/vi.cpp[0m
+[0m[38;5;2;1m[ 12%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/LayoutUtil.cpp[0m
+[0m[38;5;2;1m[ 13%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/FurShader.cpp[0m
+[0m[38;5;2;1m[ 13%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/ActorMovementUtil.cpp[0m
+[0m[38;5;2;1m[ 13%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/ScreenUtil.cpp[0m
+[0m[38;5;2;1m[ 14%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/JointController.cpp[0m
+[0m[38;5;2;1m[ 15%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/FurMulti.cpp[0m
+[0m[38;5;2;1m[ 15%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/ModelUtil.cpp[0m
+[0m[38;5;2;1m[ 15%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/LiveActorUtil.cpp[0m
+[0m[38;5;2;1m[ 15%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/DrawUtil.cpp[0m
+[0m[38;5;2;1m[ 16%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/DirectDraw.cpp[0m
+[0m[38;5;2;1m[ 16%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/JointUtil.cpp[0m
+[0m[38;5;2;1m[ 17%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/FurDrawer.cpp[0m
+[0m[38;5;2;1m[ 17%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Util/FootPrint.cpp[0m
+[0m[38;5;2;1m[ 23%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraDirector.cpp[0m
+[0m[38;5;2;1m[ 26%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Camera/CameraCover.cpp[0m
+[0m[38;5;2;1m[ 28%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/MaterialCtrl.cpp[0m
+[0m[38;5;3;1msrc/Game/Util/ScreenUtil.cpp:38:70: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   38 |     CaptureScreenDirector* getCaptureScreenDirector() __attribute__((noinline)) {
+      |                                                                      ^
+src/Game/Util/ScreenUtil.cpp:42:56: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   42 |     PlayTimerScene* getPlayTimerScene() __attribute__((noinline)) {
+      |                                                        ^
+src/Game/Util/ScreenUtil.cpp:60:50: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   60 |     StarCounter* getStarCounter() __attribute__((noinline)) {
+      |                                                  ^
+src/Game/Util/ScreenUtil.cpp:64:60: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   64 |     StarPieceCounter* getStarPieceCounter() __attribute__((noinline)) {
+      |                                                            ^
+4 warnings generated.[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/DisplayListMaker.cpp[0m
+[0m[38;5;2;1m[ 29%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ShadowVolumeFlatModel.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Util/FurShader.cpp:5:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+src/Game/Util/FurShader.cpp:193:17: warning: 25 enumeration values not handled in switch: 'GX_VA_PNMTXIDX', 'GX_VA_TEX0MTXIDX', 'GX_VA_TEX1MTXIDX'... [-Wswitch]
+  193 |         switch (pDesc->attr) {
+      |                 ^~~~~~~~~~~
+src/Game/Util/FurShader.cpp:245:21: warning: 25 enumeration values not handled in switch: 'GX_VA_PNMTXIDX', 'GX_VA_TEX0MTXIDX', 'GX_VA_TEX1MTXIDX'... [-Wswitch]
+  245 |             switch (pDesc->attr) {
+      |                     ^~~~~~~~~~~
+src/Game/Util/FurShader.cpp:318:17: warning: enumeration value 'GX_MAX_TEXWRAPMODE' not handled in switch [-Wswitch]
+  318 |         switch (mode) {
+      |                 ^~~~
+4 warnings generated.[0m
+[0m[38;5;2;1m[ 30%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/LiveActor.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Util/JointController.cpp:4:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/LiveActor/ModelManager.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Util/JointUtil.cpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+src/Game/Util/JointUtil.cpp:38:82: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   38 |     u16 getJointIndex(const LiveActor* pActor, const char* pName) __attribute__((noinline)) {
+      |                                                                                  ^
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/EffectSystem.cpp[0m
+[0m[38;5;2;1m[ 31%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/SyncBckEffectInfo.cpp[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/EffectSystemUtil.cpp[0m
+[0m[38;5;3;1msrc/Game/Util/ActorMovementUtil.cpp:2:10: warning: non-portable path to file '"Game/Animation/XanimeCore.hpp"'; specified path differs in case from file name on disk [-Wnonportable-include-path]
+    2 | #include "Game/Animation/Xanimecore.hpp"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |          "Game/Animation/XanimeCore.hpp"
+1 warning generated.
+In file included from src/Game/Util/ActorMovementUtil.cpp:2:
+In file included from src/Game/Animation/Xanimecore.hpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+In file included from src/Game/Util/ActorMovementUtil.cpp:8:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/SyncBckEffectChecker.cpp[0m
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Effect/ParticleResourceHolder.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Util/FurMulti.cpp:10:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Animation/MaterialAnmBuffer.cpp[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Animation/XanimeCore.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Util/LayoutUtil.cpp:4:
+In file included from src/Game/Screen/LayoutCoreUtil.hpp:4:
+src/nw4r/lyt/pane.h:37:37: warning: 'offsetof' on non-standard-layout type 'detail::PaneBase' [-Winvalid-offsetof]
+   37 |         typedef ut::LinkList< Pane, __builtin_offsetof(detail::PaneBase, mLink) > PaneList;
+      |                                     ^                                    ~~~~~
+In file included from src/Game/Util/LayoutUtil.cpp:4:
+In file included from src/Game/Screen/LayoutCoreUtil.hpp:5:
+In file included from src/nw4r/lyt/textBox.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Animation/BckCtrl.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Util/ModelUtil.cpp:17:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Animation/XanimePlayer.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Camera/CameraCover.cpp:4:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+src/Game/Camera/CameraCover.cpp:38:17: warning: decrement of object of volatile-qualified type 'volatile s32' (aka 'volatile int') is deprecated [-Wdeprecated-volatile]
+   38 |     if (_3C && !--_3C) {
+      |                 ^
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Animation/XanimeResource.cpp[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/ResourceHolder.cpp[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/LayoutHolder.cpp[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/DrawBuffer.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/LiveActor/ShadowVolumeFlatModel.cpp:9:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/SaveDataBannerCreator.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/LiveActor/DisplayListMaker.cpp:5:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+In file included from src/Game/LiveActor/DisplayListMaker.cpp:7:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/ShapePacketUserData.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Util/LiveActorUtil.cpp:4:
+In file included from src/Game/Animation/XanimeCore.hpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+src/Game/Util/LiveActorUtil.cpp:77:126: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   77 |     PartsModel* createSubModel(LiveActor* pActor, const char* pSubModelName, MtxPtr pMtx, int drawBufferType) __attribute__((noinline)) {
+      |                                                                                                                              ^
+src/Game/Util/LiveActorUtil.cpp:94:75: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   94 |     void changeBckForEffectKeeper(const LiveActor* pActor) __attribute__((noinline)) {
+      |                                                                           ^
+src/Game/Util/LiveActorUtil.cpp:102:81: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  102 |     void calcCollisionMtx(TPos3f* pMtx, const LiveActor* pActor) __attribute__((noinline)) {
+      |                                                                                 ^[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameSystemObjHolder.cpp[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/OceanSphere.cpp[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/SwitchWatcherHolder.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/LiveActor/MaterialCtrl.cpp:3:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+In file included from src/Game/LiveActor/MaterialCtrl.cpp:6:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/OceanRing.cpp[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/OceanBowl.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Util/DrawUtil.cpp:10:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 44%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Map/Flag.cpp[0m
+[0m[38;5;3;1msrc/Game/Effect/EffectSystemUtil.cpp:277:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  277 |             iter.getValue("GroupName", &pGroupName);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 46%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/CaptureScreenDirector.cpp[0m
+[0m[38;5;3;1msrc/Game/Effect/ParticleResourceHolder.cpp:75:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   75 |         iter.getValue("GroupName", &groupName);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 46%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/SystemWipeHolder.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/LiveActor/ModelManager.cpp:8:
+In file included from src/Game/Animation/XanimeCore.hpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 47%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/ScreenBlurEffect.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Animation/XanimePlayer.cpp:2:
+In file included from src/Game/Animation/XanimeCore.hpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 47%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/ScreenPreserver.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Animation/XanimeCore.cpp:1:
+In file included from src/Game/Animation/XanimeCore.hpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 47%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/ImageEffectLocalUtil.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/DrawBuffer.cpp:7:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 48%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/MiiSelect.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Animation/BckCtrl.cpp:4:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+src/Game/Animation/BckCtrl.cpp:47:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   47 |             iter.getValue("name", &name);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Animation/BckCtrl.cpp:49:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   49 |             iter.getValue("interpole", &interpole);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Animation/BckCtrl.cpp:51:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   51 |             iter.getValue("play_frame", &playFrame);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Animation/BckCtrl.cpp:53:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   53 |             iter.getValue("start_frame", &startFrame);[0m
+[0m[38;5;2;1m[ 48%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/PaneEffectKeeper.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Animation/MaterialAnmBuffer.cpp:6:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 48%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/DepthOfFieldBlur.cpp[0m
+[0m[38;5;2;1m[ 50%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/ImageEffectResource.cpp[0m
+[0m[38;5;2;1m[ 50%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/LayoutManager.cpp[0m
+[0m[38;5;2;1m[ 51%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/ScreenAlphaCapture.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/ShapePacketUserData.cpp:5:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 51%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/LayoutActor.cpp[0m
+[0m[38;5;3;1msrc/Game/System/LayoutHolder.cpp:215:17: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]
+  215 |                 sprintf(path, "%s%s%s", pPath, "/", finder->mName);
+      |                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk/usr/include/_stdio.h:278:16: note: 'sprintf' has been explicitly marked deprecated here
+  278 | __attribute__((__deprecated__("This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead.")))
+      |                ^
+src/Game/System/LayoutHolder.cpp:236:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  236 |             mArchive->getFileAttribute(finder->mFileID);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 52%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/FullScreenBlur.cpp[0m
+[0m[38;5;2;1m[ 52%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/BloomEffect.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Map/OceanBowl.cpp:7:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 52%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/WaterCameraFilter.cpp[0m
+[0m[38;5;2;1m[ 52%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/StarPointerLayout.cpp[0m
+[0m[38;5;3;1msrc/Game/Map/OceanRing.cpp:216:9: warning: expression result unused [-Wunused-value]
+  216 |         static_cast< f32 >(index);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 53%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/StarPointerDirector.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Screen/SystemWipeHolder.cpp:7:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 53%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Screen/StarPointerBlur.cpp[0m
+[0m[38;5;2;1m[ 54%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/NameObj/NameObjListExecutor.cpp[0m
+[0m[38;5;2;1m[ 54%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/NameObj/NameObj.cpp[0m
+[0m[38;5;2;1m[ 55%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Scene/MultiSceneEffectKeeper.cpp[0m
+[0m[38;5;2;1m[ 56%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Scene/SceneExecutor.cpp[0m
+[0m[38;5;2;1m[ 58%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioAnimationEfx.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Screen/ImageEffectLocalUtil.cpp:7:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 59%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioActorEye.cpp[0m
+[0m[38;5;2;1m[ 59%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioMove.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/ResourceHolder.cpp:20:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+src/Game/System/ResourceHolder.cpp:367:17: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]
+  367 |                 sprintf(path, "%s%s%s", pPath, "/", finder->mName);
+      |                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk/usr/include/_stdio.h:278:16: note: 'sprintf' has been explicitly marked deprecated here
+  278 | __attribute__((__deprecated__("This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead.")))
+      |                ^
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 59%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioAnimator.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Screen/PaneEffectKeeper.cpp:6:
+In file included from src/Game/Screen/LayoutManager.hpp:6:
+In file included from src/nw4r/lyt/layout.h:3:
+In file included from src/nw4r/lyt/animation.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                                              ~~~ ^  ~~~~~~~~~~~
+In file included from src/Game/Screen/PaneEffectKeeper.cpp:6:
+In file included from src/Game/Screen/LayoutManager.hpp:6:
+In file included from src/nw4r/lyt/layout.h:4:[0m
+[0m[38;5;2;1m[ 59%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioHang.cpp[0m
+[0m[38;5;2;1m[ 59%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioActorSpecialDraw.cpp[0m
+[0m[38;5;2;1m[ 60%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioActorGameOver.cpp[0m
+[0m[38;5;2;1m[ 60%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/Mario.cpp[0m
+[0m[38;5;2;1m[ 60%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioShadow.cpp[0m
+[0m[38;5;2;1m[ 60%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarineSnow.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Screen/StarPointerDirector.cpp:3:
+In file included from src/Game/Screen/LayoutCoreUtil.hpp:4:
+src/nw4r/lyt/pane.h:37:37: warning: 'offsetof' on non-standard-layout type 'detail::PaneBase' [-Winvalid-offsetof]
+   37 |         typedef ut::LinkList< Pane, __builtin_offsetof(detail::PaneBase, mLink) > PaneList;
+      |                                     ^                                    ~~~~~
+In file included from src/Game/Screen/StarPointerDirector.cpp:3:
+In file included from src/Game/Screen/LayoutCoreUtil.hpp:5:
+In file included from src/nw4r/lyt/textBox.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;[0m
+[0m[38;5;2;1m[ 60%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioSkate.cpp[0m
+[0m[38;5;2;1m[ 60%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/J3DModelX.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Scene/SceneExecutor.cpp:9:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 61%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioJump.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Screen/LayoutManager.cpp:1:
+In file included from src/Game/Screen/LayoutManager.hpp:6:
+In file included from src/nw4r/lyt/layout.h:3:
+In file included from src/nw4r/lyt/animation.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                                              ~~~ ^  ~~~~~~~~~~~
+In file included from src/Game/Screen/LayoutManager.cpp:1:
+In file included from src/Game/Screen/LayoutManager.hpp:6:
+In file included from src/nw4r/lyt/layout.h:4:[0m
+[0m[38;5;2;1m[ 61%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioActorHand.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Screen/StarPointerLayout.cpp:4:
+In file included from src/Game/Screen/LayoutCoreUtil.hpp:4:
+src/nw4r/lyt/pane.h:37:37: warning: 'offsetof' on non-standard-layout type 'detail::PaneBase' [-Winvalid-offsetof]
+   37 |         typedef ut::LinkList< Pane, __builtin_offsetof(detail::PaneBase, mLink) > PaneList;
+      |                                     ^                                    ~~~~~
+In file included from src/Game/Screen/StarPointerLayout.cpp:4:
+In file included from src/Game/Screen/LayoutCoreUtil.hpp:5:
+In file included from src/nw4r/lyt/textBox.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;[0m
+[0m[38;5;2;1m[ 61%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioModule.cpp[0m
+[0m[38;5;2;1m[ 62%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioActorDraw.cpp[0m
+[0m[38;5;2;1m[ 62%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioBee.cpp[0m
+[0m[38;5;2;1m[ 62%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioActorRushMsg.cpp[0m
+[0m[38;5;3;1msrc/Game/Player/MarioMove.cpp:19:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   19 |     vec - vec2;
+      |     ^~~~~~~~~~
+src/Game/Player/MarioMove.cpp:899:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  899 |     moveDir.dot(mHeadVec);
+      |     ^~~~~~~~~~~~~~~~~~~~~
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 62%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioActor.cpp[0m
+[0m[38;5;2;1m[ 63%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioActorDefensiveMsg.cpp[0m
+[0m[38;5;2;1m[ 63%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioSwim.cpp[0m
+[0m[38;5;2;1m[ 63%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioActorRush.cpp[0m
+[0m[38;5;2;1m[ 63%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioTeresa.cpp[0m
+[0m[38;5;2;1m[ 64%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioWait.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/Mario.cpp:47:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 64%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioActorTakeMsg.cpp[0m
+[0m[38;5;2;1m[ 64%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioWalk.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Screen/LayoutActor.cpp:6:
+In file included from src/Game/Screen/LayoutCoreUtil.hpp:4:
+src/nw4r/lyt/pane.h:37:37: warning: 'offsetof' on non-standard-layout type 'detail::PaneBase' [-Winvalid-offsetof]
+   37 |         typedef ut::LinkList< Pane, __builtin_offsetof(detail::PaneBase, mLink) > PaneList;
+      |                                     ^                                    ~~~~~
+In file included from src/Game/Screen/LayoutActor.cpp:6:
+In file included from src/Game/Screen/LayoutCoreUtil.hpp:5:
+In file included from src/nw4r/lyt/textBox.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                                           ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:66: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;[0m
+[0m[38;5;2;1m[ 64%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioFoo.cpp[0m
+[0m[38;5;2;1m[ 65%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioActorParts.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/NameObj/NameObjListExecutor.cpp:4:
+In file included from src/compat/SceneJ3dScope.hpp:4:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 65%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioActorSensor.cpp[0m
+[0m[38;5;2;1m[ 65%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioAccess.cpp[0m
+[0m[38;5;2;1m[ 65%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioSlope.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/J3DModelX.cpp:12:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 66%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/Player/MarioActorOffensiveMsg.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioAnimator.cpp:3:
+In file included from src/Game/Animation/XanimeCore.hpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 69%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/MapObj/WarpPod.cpp[0m
+[0m[38;5;3;1msrc/Game/Player/MarioBee.cpp:175:25: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  175 |                         jumpDirection.dot(getWorldPadDir());
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 69%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/MapObj/SpinDriverPathDrawer.cpp[0m
+[0m[38;5;3;1msrc/Game/Player/MarioJump.cpp:1034:50: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+ 1034 | bool Mario::isDigitalJump() const __attribute__((noinline)) {
+      |                                                  ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 72%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/camera/CameraDirectorRuntime.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioModule.cpp:3:
+In file included from src/Game/Animation/XanimeCore.hpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 72%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/layout/LayoutRuntime.cpp[0m
+[0m[38;5;2;1m[ 73%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/layout/LytTexMap.cpp[0m
+[0m[38;5;3;1msrc/Game/Player/MarioTeresa.cpp:592:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  592 |             velocity.dot(getWorldPadDir());
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 73%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/resource/JpcResource.cpp[0m
+[0m[38;5;2;1m[ 73%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/resource/J3dModelResource.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioActorRush.cpp:15:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 73%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/resource/NativeTextureImage.cpp[0m
+[0m[38;5;3;1msrc/Game/Player/MarioActorDefensiveMsg.cpp:89:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+   89 |     direction.length();
+      |     ^~~~~~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 73%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/resource/J3dTextureData.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioActorDraw.cpp:2:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+In file included from src/Game/Player/MarioActorDraw.cpp:6:
+In file included from src/Game/Player/DrawAdaptor.hpp:4:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+src/Game/Player/MarioActorDraw.cpp:40:103: warning: attribute declaration must precede definition [-Wignored-attributes]
+   40 |     FunctorV0M< const T*, void (T::*)() const > Functor(const T*, void (T::*)() const) __attribute__((noinline));
+      |                                                                                                       ^
+src/Game/Util/Functor.hpp:104:63: note: previous definition is here
+  104 |     inline static FunctorV0M< const T*, void (T::*)() const > Functor(const T* caller, void (T::*callee)() const) {[0m
+[0m[38;5;2;1m[ 74%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/resource/J3dMaterialTableData.cpp[0m
+[0m[38;5;3;1msrc/Game/Player/MarioSwim.cpp:2556:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+ 2556 |             direction.length();
+      |             ^~~~~~~~~~~~~~~~~~
+src/Game/Player/MarioSwim.cpp:3170:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+ 3170 |         mUpVec.dot(getPlayer()->mHeadVec);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2 warnings generated.[0m
+[0m[38;5;2;1m[ 74%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/resource/GameResourceRuntime.cpp[0m
+[0m[38;5;2;1m[ 74%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/resource/BtiTextureData.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioActor.cpp:3:
+In file included from src/Game/Animation/XanimeCore.hpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+src/Game/Player/MarioActor.cpp:1142:25: warning: using the result of an assignment as a condition without parentheses [-Wparentheses]
+ 1142 |         if (requestRush = isRequestSpinJump2P()) {
+      |             ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Player/MarioActor.cpp:1142:25: note: place parentheses around the assignment to silence this warning
+ 1142 |         if (requestRush = isRequestSpinJump2P()) {
+      |                         ^                      
+      |             (                                  )
+src/Game/Player/MarioActor.cpp:1142:25: note: use '==' to turn this assignment into an equality comparison
+ 1142 |         if (requestRush = isRequestSpinJump2P()) {[0m
+[0m[38;5;2;1m[ 75%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/resource/J3dMaterialBlockData.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioWalk.cpp:14:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 75%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/resource/J3dJointData.cpp[0m
+[0m[38;5;2;1m[ 75%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/SceneScheduler.cpp[0m
+[0m[38;5;2;1m[ 75%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/ParticleResourceOwnership.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioAccess.cpp:18:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 76%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/rfl/RVLFaceLib.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioActorParts.cpp:2:
+In file included from src/Game/Animation/XanimeCore.hpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 76%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/RuntimeContext.cpp[0m
+[0m[38;5;2;1m[ 76%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/ParityTrace.cpp[0m
+[0m[38;5;2;1m[ 76%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/WiiPlatformService.cpp[0m
+[0m[38;5;2;1m[ 76%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/jut/JutTexture.cpp[0m
+[0m[38;5;2;1m[ 76%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/scene/OriginalSceneSupport.cpp[0m
+[0m[38;5;2;1m[ 77%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/scene/NameObjChildOwner.cpp[0m
+[0m[38;5;2;1m[ 77%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/scene/GameSceneBinding.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/MapObj/WarpPod.cpp:8:
+In file included from src/Game/Util.hpp:18:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+src/Game/MapObj/WarpPod.cpp:166:5: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]
+  166 |     sprintf(eventCameraName, (::smgpc::compat::cp932::EncodedLiteral<::smgpc::compat::cp932::Utf8Literal{"ワープカメラ %d-%c"}>::value.bytes), groupID, arg0 + 65);
+      |     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk/usr/include/_stdio.h:278:16: note: 'sprintf' has been explicitly marked deprecated here
+  278 | __attribute__((__deprecated__("This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead.")))
+      |                ^
+src/Game/MapObj/WarpPod.cpp:289:5: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]
+  289 |     sprintf(buf, (::smgpc::compat::cp932::EncodedLiteral<::smgpc::compat::cp932::Utf8Literal{"wPod出現カメラ %d"}>::value.bytes), _90);
+      |     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk/usr/include/_stdio.h:278:16: note: 'sprintf' has been explicitly marked deprecated here
+  278 | __attribute__((__deprecated__("This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead.")))[0m
+[0m[38;5;2;1m[ 78%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/ActorRuntimeRegistry.cpp[0m
+[0m[38;5;2;1m[ 78%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/AudioFacadeCompat.cpp[0m
+[0m[38;5;2;1m[ 78%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/GlobalGravityOwnership.cpp[0m
+[0m[38;5;2;1m[ 79%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/CollisionPartsCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/resource/J3dMaterialTableData.cpp:6:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 79%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/CollisionDirectorOwnership.cpp[0m
+[0m[38;5;2;1m[ 79%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/OriginalJ3dJointTree.cpp[0m
+[0m[38;5;2;1m[ 79%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/SceneObjHolderCompat.cpp[0m
+[0m[38;5;2;1m[ 79%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/EffectSystemOwnership.cpp[0m
+[0m[38;5;3;1mIn file included from src/resource/J3dJointData.cpp:5:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 80%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DMaterial.cpp[0m
+[0m[38;5;3;1mIn file included from src/scene/GameSceneBinding.cpp:8:
+src/Game/Util/Functor.hpp:114:105: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+  114 |     static FunctorV1M< T*, void (T::*)(U), U > Functor(T* a1, void (T::*a2)(U), U arg_0) __attribute__((noinline)) {
+      |                                                                                                         ^
+1 warning generated.[0m
+[0m[38;5;2;1m[ 80%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DMatBlock.cpp[0m
+[0m[38;5;2;1m[ 80%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DTevs.cpp[0m
+[0m[38;5;2;1m[ 80%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DMaterialAnm.cpp[0m
+[0m[38;5;2;1m[ 80%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DMaterialAttach.cpp[0m
+[0m[38;5;3;1mIn file included from src/resource/J3dModelResource.cpp:10:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 80%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J2DGraph/J2DPicture.cpp[0m
+[0m[38;5;2;1m[ 81%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAResourceManager.cpp[0m
+[0m[38;5;2;1m[ 81%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPATexture.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphBase/J3DMaterial.cpp:1:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 81%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAEmitterManager.cpp[0m
+[0m[38;5;2;1m[ 81%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAResourceLoader.cpp[0m
+[0m[38;5;2;1m[ 81%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAEmitter.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/OriginalJ3dJointTree.cpp:4:
+In file included from src/Game/Animation/XanimeCore.hpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 81%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPABaseShape.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphBase/J3DTevs.cpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 81%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAExTexShape.cpp[0m
+[0m[38;5;2;1m[ 82%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAResource.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphAnimator/J3DMaterialAnm.cpp:2:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DPacket.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DAnimation.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphLoader/J3DModelLoader.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphBase/J3DMatBlock.cpp:1:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+src/JSystem/J3DGraphBase/J3DMatBlock.cpp:1490:24: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'J3DTexMtx' [-Wnontrivial-memcall]
+ 1490 |                 memcpy(mTexMtx[i], pBlock->getTexMtx(i), sizeof(*mTexMtx[i]));
+      |                        ^
+src/JSystem/J3DGraphBase/J3DMatBlock.cpp:1490:24: note: explicitly cast the pointer to silence this warning
+ 1490 |                 memcpy(mTexMtx[i], pBlock->getTexMtx(i), sizeof(*mTexMtx[i]));
+      |                        ^
+      |                        (void*)
+src/JSystem/J3DGraphBase/J3DMatBlock.cpp:1507:24: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'J3DTexMtx' [-Wnontrivial-memcall]
+ 1507 |                 memcpy(mTexMtx[i], pBlock->getTexMtx(i), sizeof(*mTexMtx[i]));
+      |                        ^
+src/JSystem/J3DGraphBase/J3DMatBlock.cpp:1507:24: note: explicitly cast the pointer to silence this warning
+ 1507 |                 memcpy(mTexMtx[i], pBlock->getTexMtx(i), sizeof(*mTexMtx[i]));[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphLoader/J3DMaterialFactory.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphAnimator/J3DMaterialAttach.cpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DDrawBuffer.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DJoint.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DJointTree.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DModelData.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DModel.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DShapeMtx.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DMtxBuffer.cpp[0m
+[0m[38;5;2;1m[ 91%]:[0m [38;5;5;1m<aurora-platform>[0m [38;5;5;1marchiving.debug libaurora-platform.a[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphLoader/J3DModelLoader.cpp:4:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 92%]:[0m [38;5;5;1m<aurora-vi>[0m [38;5;5;1marchiving.debug libaurora-vi.a[0m
+[0m[38;5;2;1m[ 92%]:[0m [38;5;5;1m<aurora-gx>[0m [38;5;5;1marchiving.debug libaurora-gx.a[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphAnimator/J3DModelData.cpp:3:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphBase/J3DPacket.cpp:6:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphAnimator/J3DAnimation.cpp:3:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 92%]:[0m [38;5;5;1m<aurora-core>[0m [38;5;5;1marchiving.debug libaurora-core.a[0m
+[0m[38;5;2;1m[ 92%]:[0m [38;5;5;1m<aurora-gd>[0m [38;5;5;1marchiving.debug libaurora-gd.a[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphBase/J3DDrawBuffer.cpp:2:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphAnimator/J3DJoint.cpp:1:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 93%]:[0m [38;5;5;1m<smg-pc-render>[0m [38;5;5;1marchiving.debug libsmg-pc-render.a[0m
+[0m[38;5;2;1m[ 93%]:[0m [38;5;5;1m<aurora-thp>[0m [38;5;5;1marchiving.debug libaurora-thp.a[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphAnimator/J3DModel.cpp:2:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphAnimator/J3DJointTree.cpp:2:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphLoader/J3DMaterialFactory.cpp:1:
+In file included from src/JSystem/J3DGraphLoader/J3DMaterialFactory.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/resource/J3dMaterialBlockData.cpp:6:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+src/resource/J3dMaterialBlockData.cpp:185:33: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'J3DIndInitData' [-Wnontrivial-memcall]
+  185 |                     std::memcpy(&records[i], row.data(), stride);
+      |                                 ^
+src/resource/J3dMaterialBlockData.cpp:230:47: note: in instantiation of function template specialization 'smgpc::resource::(anonymous namespace)::Decoder<J3DMaterialBlock>::table<J3DIndInitData, (lambda at src/resource/J3dMaterialBlockData.cpp:230:82)>' requested here
+  230 |                 block.mpIndInitData = decoder.table<J3DIndInitData>(0x18, 0x138, [](auto& value, Bytes row) {
+      |                                               ^
+src/resource/J3dMaterialBlockData.cpp:185:33: note: explicitly cast the pointer to silence this warning
+  185 |                     std::memcpy(&records[i], row.data(), stride);
+      |                                 ^
+      |                                 (void*)
+src/resource/J3dMaterialBlockData.cpp:185:33: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'J3DTexCoordInfo' [-Wnontrivial-memcall][0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphBase/J3DShapeMtx.cpp:4:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphAnimator/J3DMtxBuffer.cpp:2:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/layout/LayoutRuntime.cpp:27:
+src/nw4r/lyt/pane.h:37:37: warning: 'offsetof' on non-standard-layout type 'detail::PaneBase' [-Winvalid-offsetof]
+   37 |         typedef ut::LinkList< Pane, __builtin_offsetof(detail::PaneBase, mLink) > PaneList;
+      |                                     ^                                    ~~~~~
+1 warning generated.[0m
+[0m[38;5;3;1mIn file included from src/runtime/SceneScheduler.cpp:17:
+In file included from src/compat/SceneJ3dScope.hpp:4:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+In file included from src/runtime/SceneScheduler.cpp:35:
+In file included from src/Game/Screen/LayoutManager.hpp:6:
+In file included from src/nw4r/lyt/layout.h:3:
+In file included from src/nw4r/lyt/animation.h:3:
+src/nw4r/lyt/common.h:14:28: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;
+      |                        ~~~ ^  ~~~~~~~~
+src/nw4r/lyt/common.h:14:47: warning: comparison of different enumeration types ('_GXTexFmt' (aka 'GXTexFmt') and 'GXCITexFmt') is deprecated [-Wdeprecated-enum-compare]
+   14 |                 return fmt == GX_TF_C4 || fmt == GX_TF_C8 || fmt == GX_TF_C14X2;[0m
+[0m[38;5;3;1mIn file included from src/runtime/RuntimeContext.cpp:10:
+In file included from src/compat/SceneJ3dScope.hpp:4:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-game>[0m [38;5;5;1marchiving.debug libsmg-pc-game.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-app>[0m [38;5;5;1marchiving.debug libsmg-pc-app.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc>[0m [38;5;5;1mlinking.debug smg-pc[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc>[0m [38;5;5;1mgenerating.xcode.debug smg-pc.app[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[38;5;2;1m[100%]:[0m [38;5;2;1mbuild ok, spent 27.886s[0m

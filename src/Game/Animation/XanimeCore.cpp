@@ -7,6 +7,8 @@
 #include "JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "JSystem/JMath/JMath.hpp"
+#include <aurora/allocation.hpp>
+#include <utility>
 
 void JMAEulerToQuat(s16, s16, s16, Quaternion*);
 
@@ -33,6 +35,7 @@ XjointInfo::XjointInfo() {
 }
 
 void XanimeCore::shareJointTransform(const XanimeCore* pOther) {
+    mNativeTransforms = pOther->mNativeTransforms;
     mTransformList = pOther->mTransformList;
 }
 
@@ -62,7 +65,12 @@ XjointTransform::XjointTransform() {
 }
 
 void XanimeCore::enableJointTransform(J3DModelData* pModelData) {
-    mTransformList = new XjointTransform[mJointCount];
+    auto transforms = std::make_unique< XjointTransform[] >(mJointCount);
+    {
+        const aurora::allocation::HostAllocationScope host;
+        mNativeTransforms = std::move(transforms);
+    }
+    mTransformList = mNativeTransforms.get();
 
     for (u32 i = 0; i < mJointCount; i++) {
         J3DJoint* joint = pModelData->getJointNodePointer(i);
@@ -105,7 +113,8 @@ void XanimeCore::initMember(u32 trackCount) {
     _29 = 0;
     _6 = 0;
     _C = 0;
-    mTrackList = new XanimeTrack[trackCount];
+    mNativeTracks.reset(new XanimeTrack[trackCount]);
+    mTrackList = mNativeTracks.get();
 
     s32 curTrack = 0;
 
@@ -121,7 +130,12 @@ XanimeCore::XanimeCore(u32 trackCount, u32 jointCount, u8 a3) {
     _4 = a3;
     mTrackCount = trackCount;
     mJointCount = jointCount;
-    mJointList = new XjointInfo[jointCount];
+    auto joints = std::make_unique< XjointInfo[] >(jointCount);
+    {
+        const aurora::allocation::HostAllocationScope host;
+        mNativeJoints = std::move(joints);
+    }
+    mJointList = mNativeJoints.get();
     mTransformList = 0;
     initMember(trackCount);
 }
@@ -130,6 +144,8 @@ XanimeCore::XanimeCore(u32 trackCount, XanimeCore* pOtherCore) {
     mTrackCount = trackCount;
     mJointCount = pOtherCore->mJointCount;
     _4 = pOtherCore->_4;
+    mNativeJoints = pOtherCore->mNativeJoints;
+    mNativeTransforms = pOtherCore->mNativeTransforms;
     mJointList = pOtherCore->mJointList;
     mTransformList = pOtherCore->mTransformList;
     initMember(trackCount);

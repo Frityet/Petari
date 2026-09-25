@@ -125,8 +125,6 @@ namespace {
         // archive lookup is attempted through the deliberately absent holder.
         XanimeResourceTable table{nullptr};
         std::array<XanimeGroupInfo, 3> groups;
-        // HashSortTable owns its four buffers; the fixture owns only the table.
-        std::unique_ptr<HashSortTable> sort;
 
         Groups(Clip& first, Clip& second) {
             constexpr std::array names{"Cycle", "Blend", "Once"};
@@ -162,32 +160,25 @@ namespace {
             table.mGroupInfos = groups.data();
             table.mSimpleGroupInfos = nullptr;
             table.createSortTable();
-            sort.reset(table.mSortTable);
         }
     };
 
     struct Player {
         XanimePlayer object;
-        std::unique_ptr<XanimeCore> core;
-        std::unique_ptr<XjointInfo[]> joints;
-        std::unique_ptr<XanimeTrack[]> tracks;
-        std::unique_ptr<XjointTransform[]> transforms;
-        std::unique_ptr<XanimeGroupInfo> simple;
+        XanimeCore* core;
 
         Player(Model& model, Groups& groups)
-            : object(model.object.get(), &groups.table), core(object.mCore), joints(core->mJointList), tracks(core->mTrackList) {}
+            : object(model.object.get(), &groups.table), core(object.mCore) {}
 
         Player(Model& model, Groups& groups, Player& other)
-            : object(model.object.get(), &groups.table, &other.object), core(object.mCore), tracks(core->mTrackList) {}
+            : object(model.object.get(), &groups.table, &other.object), core(object.mCore) {}
 
         void duplicate_simple_group() {
             object.duplicateSimpleGroup();
-            simple.reset(object.mSimpleGroup);
         }
 
         void enable_transforms(Model& model) {
             core->enableJointTransform(&model.data);
-            transforms.reset(core->mTransformList);
         }
     };
 

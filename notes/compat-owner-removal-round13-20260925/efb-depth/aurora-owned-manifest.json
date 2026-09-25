@@ -1,0 +1,8 @@
+[
+  "aurora/lib/gfx/depth_peek.cpp",
+  "aurora/lib/gfx/depth_peek.hpp",
+  "aurora/lib/gfx/recording.cpp",
+  "aurora/lib/gfx/frame_packet.hpp",
+  "aurora/lib/gfx/encoding.cpp",
+  "aurora/tests/gx_test_stubs.cpp"
+]

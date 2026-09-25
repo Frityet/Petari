@@ -1,0 +1,89 @@
+{
+  "base_head": "d24ec238e577ebc971998e6d5ae9f5fc6ad485f5",
+  "paths": [
+    {
+      "path": "src/JSystem/JUtility/JUTTexture.hpp",
+      "before_sha256": "b5656e99ef46b5de923608496b7f6567da06af67d9c48da09c779d3461e72aac",
+      "status_before": "",
+      "action": "actual-texture-ownership",
+      "after_sha256": "9e28d28a8cb6d7f93f98b1dc66f1039a81ddedc19fc5b6a1d34543f24b6c4867"
+    },
+    {
+      "path": "src/runtime/jut/JutTexture.cpp",
+      "before_sha256": "7e60d830a76acd68902064dfab1efeeaa7cc137af264b8978d7b39c81c13f675",
+      "status_before": "",
+      "action": "actual-texture-ownership",
+      "after_sha256": "16f26600dc3f57d6c6ffff5161e77201799928cab064a8d629aa3aee6553c653"
+    },
+    {
+      "path": "src/resource/GameResourceRuntime.cpp",
+      "before_sha256": "3aacbdf9ca69eff66509f528b182f0d73fc03575b1d12f264073bb9943cf2f49",
+      "status_before": "",
+      "action": "actual-texture-ownership",
+      "after_sha256": "eb68f3a65b64f9e356cdd4abe34efd4b0e0a9a12dc3256245a24015bf7652416"
+    },
+    {
+      "path": "src/resource/GameResourceRuntime.hpp",
+      "before_sha256": "8e6c019b061bdda9d95fe544432b0f33abe50fcfcc2c6f80caf277a48efd8c6d",
+      "status_before": "",
+      "action": "actual-texture-ownership",
+      "after_sha256": "d0d358d4417c310a547c87bad0ec4371c246f0c6b7cc060ba0cd85bda6527aee"
+    },
+    {
+      "path": "src/Game/Screen/CaptureScreenDirector.cpp",
+      "before_sha256": "87dcb4d1992a9a1cd6a3415c2087ee0463ea9af70ddcb8a058d9fadfe853aa35",
+      "status_before": "",
+      "action": "actual-texture-ownership",
+      "after_sha256": "a6dcac0176a0034608c340baa9889531a14beaf6a1077450022ac63550b40d9b"
+    },
+    {
+      "path": "src/Game/Screen/CaptureScreenDirector.hpp",
+      "before_sha256": "defdad2e4042e1baabac146f110cf0f4dece1d9696c29067469c0a9960993d8d",
+      "status_before": "",
+      "action": "actual-texture-ownership",
+      "after_sha256": "3047793634c4cb7d5690336b74dc5ce59fe73741392d56ed26d1c237cbada95e"
+    },
+    {
+      "path": "src/runtime/RuntimeContext.cpp",
+      "before_sha256": "980cddc17eaf04e2013879cdf1c54806b7d3be41a76559a84f963f1b56908eb2",
+      "status_before": "M src/runtime/RuntimeContext.cpp",
+      "action": "actual-texture-ownership",
+      "after_sha256": "9a4c586d1c7c22c473a0f6825c413a5745722a8b5c572cffd709ea918cd9cacd"
+    },
+    {
+      "path": "src/runtime/RuntimeContext.hpp",
+      "before_sha256": "44e22bc510d8e9c80775320eed6563ce6a8ad585608c0533ce070ef531893891",
+      "status_before": "M src/runtime/RuntimeContext.hpp",
+      "action": "actual-texture-ownership",
+      "after_sha256": "cc6cc2da70d2bc3b0eb124278bdd272e6b7c53036c1b74fc714b69a5fd2e02bf"
+    },
+    {
+      "path": "src/compat/JutTextureAllocation.cpp",
+      "before_sha256": "87d8927133f858ab7b86aaa7f21ea7731716080aff3a173318cb268cb43abaeb",
+      "status_before": "",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/JutTextureAllocation.hpp",
+      "before_sha256": "0164d5a98aa66b22388e8cc062c70f0ebf064d70b881e9e93880976121425f68",
+      "status_before": "",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "tests/JutTextureOwnershipTests.cpp",
+      "before_sha256": "2272a641ba7814e039d76663cbc207923ca53c8905f772a1ecff1b79a6c29c0d",
+      "status_before": "",
+      "action": "minimal-existing-fixture-migration",
+      "after_sha256": "373c04ff0b0fd7555060234752b1821611512e04c38d5415c65e84b280aba435"
+    },
+    {
+      "path": "tests/OriginalImageEffectOwnershipTests.cpp",
+      "before_sha256": "d5c0dbd128c972b8ec779c2cd4dccf75e47174c1b57fa2695fd16780e3f9b1a7",
+      "status_before": "",
+      "action": "minimal-existing-fixture-migration",
+      "after_sha256": "03543f211cbf5e5f38e975eeb92b56f2526e5027f96adff2c78ee8a776b8efe6"
+    }
+  ]
+}

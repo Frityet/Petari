@@ -52,7 +52,7 @@ struct ModelManager::NativeState {
     std::vector<std::shared_ptr<void>> dependencies;
     J3DModel* createdModel = nullptr;
     XanimePlayer* createdPlayer = nullptr;
-    XanimeCore* createdCore = nullptr;
+    XanimeResourceTable* createdResourceTable = nullptr;
 };
 
 namespace MR {
@@ -75,8 +75,8 @@ ModelManager::~ModelManager() {
     // borrow the original model. Restore it before retiring their graphs.
     mXanimePlayer = mNativeState->createdPlayer;
     mNativeState->dependencies.clear();
-    delete mNativeState->createdCore;
     delete mNativeState->createdPlayer;
+    delete mNativeState->createdResourceTable;
     delete mNativeState->createdModel;
     // Original raw child arrays retire with the retained Game heap. The
     // resource holder owns shared material-animation storage.
@@ -450,12 +450,14 @@ void ModelManager::initModelAndAnimation(ResourceHolder* pModelResource, const c
     }
     else {
         mXanimeResourceTable = MR::newXanimeResourceTable(pAnimResource);
+        if (mNativeState != nullptr) {
+            mNativeState->createdResourceTable = mXanimeResourceTable;
+        }
         mXanimePlayer = MR::newXanimePlayer(pModelResource, pModelName, pAnimResource, flags, mXanimeResourceTable);
     }
     if (mNativeState != nullptr) {
         mNativeState->createdModel = getJ3DModel();
         mNativeState->createdPlayer = mXanimePlayer;
-        mNativeState->createdCore = mXanimePlayer ? mXanimePlayer->mCore : nullptr;
     }
 }
 

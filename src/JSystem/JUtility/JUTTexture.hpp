@@ -1,6 +1,7 @@
 #pragma once
 
 #include <revolution.h>
+#include <memory>
 
 class JUTPalette;
 
@@ -77,4 +78,8 @@ public:
     /* 0x3A */ u8 mTlutName = GX_TLUT0;
     /* 0x3B */ u8 mFlag = 0U;
     /* 0x3C */ ResTIMG* _3C = nullptr;
+
+private:
+    struct NativeCaptureAllocation;
+    std::unique_ptr<NativeCaptureAllocation> mNativeCaptureAllocation;
 };

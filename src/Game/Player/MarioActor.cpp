@@ -300,7 +300,7 @@ void MarioActor::init2(const TVec3f& a, const TVec3f& b, s32 initialAnimation) {
 
     MR::connectToScene(this, MR::MovementType_Player, MR::CalcAnimType_Player, MR::DrawBufferType_Player, MR::DrawType_Player);
     MR::initLightCtrlForPlayer(this);
-    mMarioAnim = new MarioAnimator(this);
+    mMarioAnim = MarioAnimator::createNative(this);
     mMarioEffect = new MarioEffect(this);
     _214 = new CollisionShadow(100.0f, 360.0f);
     mConst = new MarioConst();

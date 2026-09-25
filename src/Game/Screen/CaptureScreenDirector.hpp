@@ -15,6 +15,7 @@ struct TimingInfo {
 class CaptureScreenDirector : public NameObj {
 public:
     CaptureScreenDirector();
+    ~CaptureScreenDirector() override;
 
     void captureIfAllow(const char* pName);
     void capture();

@@ -1,0 +1,12 @@
+[
+  "aurora/lib/dolphin/gx/GXCull.cpp",
+  "aurora/lib/dolphin/gx/GXManage.cpp",
+  "aurora/lib/gx/regs.cpp",
+  "aurora/lib/gx/gx.cpp",
+  "aurora/lib/gx/gx.hpp",
+  "aurora/lib/gfx/recording.cpp",
+  "aurora/lib/dolphin/vi/vi.cpp",
+  "aurora/lib/dolphin/vi/vi_internal.hpp",
+  "aurora/lib/webgpu/gpu.cpp",
+  "aurora/lib/window.cpp"
+]

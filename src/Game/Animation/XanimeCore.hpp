@@ -2,6 +2,7 @@
 
 #include <JSystem/J3DGraphAnimator/J3DJoint.hpp>
 #include <JSystem/JGeometry/TVec.hpp>
+#include <memory>
 
 class J3DModelData;
 class J3DAnmTransform;
@@ -92,6 +93,8 @@ public:
     XanimeCore(u32, XanimeCore*);
 
     virtual ~XanimeCore();
+    XanimeCore(const XanimeCore&) = delete;
+    XanimeCore& operator=(const XanimeCore&) = delete;
     virtual void setWeight(u8, f32);
     virtual void init(const Vec&, const Mtx&);
     virtual void calc();
@@ -132,4 +135,10 @@ public:
     /* 0x24 */ f32 mFrameRatio;
     u8 _28;
     u8 _29;
+
+private:
+    // Upper and lower players share joints/transforms, but own separate tracks.
+    std::shared_ptr< XjointInfo[] > mNativeJoints;
+    std::shared_ptr< XjointTransform[] > mNativeTransforms;
+    std::unique_ptr< XanimeTrack[] > mNativeTracks;
 };

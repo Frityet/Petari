@@ -17,7 +17,6 @@ namespace smgpc::compat {
     class CollisionDirectorOwnership;
     class EffectSystemOwnership;
     class JkrAllocationDomain;
-    class CapturedFrameBlurService;
     class GlobalGravityOwnership;
 }
 
@@ -54,8 +53,6 @@ namespace smgpc::scene {
         friend std::shared_ptr<smgpc::compat::JkrAllocationDomain> current_scene_allocation_domain() noexcept;
         friend smgpc::compat::CollisionDirectorOwnership* current_collision_director_ownership() noexcept;
         friend smgpc::compat::EffectSystemOwnership* current_effect_system_ownership() noexcept;
-        friend smgpc::compat::CapturedFrameBlurService *
-        current_captured_frame_blur_service() noexcept;
         friend smgpc::compat::GlobalGravityOwnership *
         current_global_gravity_ownership() noexcept;
         friend bool current_scene_obj_holder_binding_owns(
@@ -86,8 +83,6 @@ namespace smgpc::scene {
         void *_factory_context;
         std::unique_ptr<smgpc::compat::GlobalGravityOwnership>
             _global_gravity_ownership;
-        std::unique_ptr<smgpc::compat::CapturedFrameBlurService>
-            _captured_frame_blur_service;
     };
 
     [[nodiscard]] smgpc::compat::CollisionDirectorOwnership* current_collision_director_ownership() noexcept;
@@ -97,8 +92,6 @@ namespace smgpc::scene {
     [[nodiscard]] bool current_scene_obj_holder_binding_owns(
         const NameObj *object) noexcept;
     void adopt_current_scene_obj_holder_descendant(NameObj *object);
-    [[nodiscard]] smgpc::compat::CapturedFrameBlurService *
-    current_captured_frame_blur_service() noexcept;
     [[nodiscard]] smgpc::compat::GlobalGravityOwnership *
     current_global_gravity_ownership() noexcept;
 

@@ -1,0 +1,49 @@
+{
+  "state": "applied-and-frozen",
+  "files": [
+    {
+      "path": "aurora/lib/gfx/depth_peek.cpp",
+      "before_exists": true,
+      "before_sha256": "59d4c6f1ae725cc03668238e38e8671242dba74df9cf64a5247c4c635939a365",
+      "action": "modified",
+      "after_sha256": "0057aaa690a6ab0c395874377b147ec72dd457f3ee332a24d34f9d16c66c96bd"
+    },
+    {
+      "path": "aurora/lib/gfx/depth_peek.hpp",
+      "before_exists": true,
+      "before_sha256": "de87410c452ca695c95268bf529478db1c13e8d37e0ca3b82595548435b25f66",
+      "action": "modified",
+      "after_sha256": "c2a1f1633a8f9a7378b7b86f3945309d12cc8a0b245827d41311c8b003fd9d64"
+    },
+    {
+      "path": "aurora/lib/gfx/recording.cpp",
+      "before_exists": true,
+      "before_sha256": "e450028ace7a50f1b89b7855df0cbb229dea3b8f7f0ee1f672ad0ca8dcd4df5a",
+      "action": "modified",
+      "after_sha256": "d0c121c2a3e71eef8cd2fbf3249325affa1eaf85f1a51629fb57457c5a85d60b"
+    },
+    {
+      "path": "aurora/lib/gfx/frame_packet.hpp",
+      "before_exists": true,
+      "before_sha256": "b771e781996ab12ee7d19e1fb1ae8281d2c1690511fe80f1e1052b6a92d4fba4",
+      "action": "modified",
+      "after_sha256": "b17458b6b03619e02eb872539c96e81b77231db8609df0e3dd7248007f06a8dc"
+    },
+    {
+      "path": "aurora/lib/gfx/encoding.cpp",
+      "before_exists": true,
+      "before_sha256": "16512098a4c3b07fa53f762c429dbfc493f60c5c98991719e037ca5b4ce72147",
+      "action": "modified",
+      "after_sha256": "2dbb2a534eb757923e459f3e7e0ef9bfee63c2e6dc0b17d0f1a69d05fb956f83"
+    },
+    {
+      "path": "aurora/tests/gx_test_stubs.cpp",
+      "before_exists": true,
+      "before_sha256": "be010f04c14362befabe0bbaabc78f04495794ec4e630f033f4058e044ba8409",
+      "action": "modified",
+      "after_sha256": "57ec8c9d8e81f1ec50fa3dda5fe4e85bbc1bed0635a1eff2a6d0c565259ae656"
+    }
+  ],
+  "shared_path_note": "recording.cpp snapshot includes root main-EFB changes; lane delta is depth snapshot geometry only.",
+  "validation": "Source inspection only; no builds/tests. Root owns integrated build/smoke."
+}

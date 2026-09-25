@@ -25,7 +25,8 @@ XanimePlayer::XanimePlayer(J3DModel* pModel, XanimeResourceTable* pRessource) {
     mCurrentAnimation = nullptr;
     _68 = nullptr;
 
-    mCore = new XanimeCore(mResourceTable->mMaxGroupInfoTableSize, mModelData->mJointTree.mJointNum, flags);
+    mNativeCore.reset(new XanimeCore(mResourceTable->mMaxGroupInfoTableSize, mModelData->mJointTree.mJointNum, flags));
+    mCore = mNativeCore.get();
 
     mWeights[0] = 0.0f;
     for (u32 i = 1; i < mResourceTable->mMaxGroupInfoTableSize; i++) {
@@ -62,7 +63,8 @@ XanimePlayer::XanimePlayer(J3DModel* pModel, XanimeResourceTable* pRessource, Xa
 
     _68 = nullptr;
 
-    mCore = new XanimeCore(mResourceTable->mMaxGroupInfoTableSize, pPlayer->mCore);
+    mNativeCore.reset(new XanimeCore(mResourceTable->mMaxGroupInfoTableSize, pPlayer->mCore));
+    mCore = mNativeCore.get();
 
     mWeights[0] = 0.0f;
     for (u32 i = 1; i < mResourceTable->mMaxGroupInfoTableSize; i++) {
@@ -84,6 +86,8 @@ XanimePlayer::XanimePlayer(J3DModel* pModel, XanimeResourceTable* pRessource, Xa
 
     mCore->initT(mModelData);
 }
+
+XanimePlayer::~XanimePlayer() = default;
 
 void XanimePlayer::init() {
     mModel = nullptr;
@@ -598,7 +602,8 @@ XanimeGroupInfo* XanimePlayer::getSimpleGroup() const {
 }
 
 void XanimePlayer::duplicateSimpleGroup() {
-    mSimpleGroup = new XanimeGroupInfo();
+    mNativeSimpleGroup.reset(new XanimeGroupInfo());
+    mSimpleGroup = mNativeSimpleGroup.get();
     mSimpleGroup->init();
     mSimpleGroup->mParent.mAnimationName = "dup-non-group";
     mSimpleGroup->mRate = 1.0f;

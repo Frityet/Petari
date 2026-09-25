@@ -24,6 +24,10 @@ CaptureScreenDirector::CaptureScreenDirector() : NameObj(CP932("画面キャプ�
     mTexture = new JUTTexture(JUTVideo::getManager()->getRenderMode()->fbWidth, JUTVideo::getManager()->getRenderMode()->efbHeight, GX_TF_RGB565);
 }
 
+CaptureScreenDirector::~CaptureScreenDirector() {
+    delete mTexture;
+}
+
 void CaptureScreenDirector::captureIfAllow(const char* pName) {
     const TimingInfo* pInfo = findFromName(pName);
 

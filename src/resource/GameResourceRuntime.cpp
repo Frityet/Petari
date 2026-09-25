@@ -1,7 +1,6 @@
 #include <aurora/exception.hpp>
 #include "GameResourceRuntime.hpp"
 #include "resource/EmbeddedGameTables.hpp"
-#include "compat/JutTextureAllocation.hpp"
 #include <dolphin/os.h>
 #include <stdexcept>
 
@@ -16,7 +15,6 @@ namespace smgpc::resource {
         OSInit();
         _heaps = compat::JkrHeapRuntime::create(budget.host_heap_bytes);
         _mem1 = Mem1ResourceHeap::create(budget.mem1_bytes);
-        _textures = std::make_unique<compat::JutTextureAllocationService>(_mem1);
         _embedded_tables = std::make_unique<EmbeddedGameTables>();
         active_runtime = this;
     }

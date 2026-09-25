@@ -91,24 +91,18 @@ namespace {
         }
     };
 
-    // The original Core destructor is empty. The fixture owns its allocations,
-    // while shared-core construction owns only its newly allocated track array.
     struct Core {
         XanimeCore object;
-        std::unique_ptr<XjointInfo[]> joints;
-        std::unique_ptr<XanimeTrack[]> tracks;
-        std::unique_ptr<XjointTransform[]> transforms;
 
         Core(u32 track_count, u32 joint_count, u8 mode)
-            : object(track_count, joint_count, mode), joints(object.mJointList), tracks(object.mTrackList) {}
+            : object(track_count, joint_count, mode) {}
 
         Core(u32 track_count, XanimeCore& other)
-            : object(track_count, &other), tracks(object.mTrackList) {}
+            : object(track_count, &other) {}
 
         void enable_transforms(J3DModelData& data) {
             require(object.mTransformList == nullptr, "fixture enables its transform allocation only once");
             object.enableJointTransform(&data);
-            transforms.reset(object.mTransformList);
         }
     };
 

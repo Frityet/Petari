@@ -84,7 +84,6 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "Game/System/DrawSyncManager.hpp"
-#include "compat/CapturedFrameBlurService.hpp"
 #include "compat/GlobalGravityOwnership.hpp"
 #include "Game/NPC/TalkDirector.hpp"
 #include "Game/NPC/EventDirector.hpp"
@@ -170,7 +169,6 @@ namespace smgpc::scene {
         smgpc::compat::JkrHostAllocationScope host;
         _global_gravity_ownership = std::make_unique<smgpc::compat::GlobalGravityOwnership>(holder);
         _collision_director_ownership = std::make_unique<smgpc::compat::CollisionDirectorOwnership>();
-        _captured_frame_blur_service = std::make_unique<smgpc::compat::CapturedFrameBlurService>();
         if (sCurrentSceneObjHolder != nullptr) {
             aurora::throw_host_exception<std::logic_error>("a SceneObjHolder is already bound to the active scene");
         }
@@ -240,7 +238,6 @@ namespace smgpc::scene {
         // children after both SceneObjs have retired.
         _global_gravity_ownership->reclaim();
         _global_gravity_ownership.reset();
-        _captured_frame_blur_service.reset();
         _effect_system_ownership.reset();
         _scene_messages.reset();
         _game_allocation_binding.reset();
@@ -364,12 +361,6 @@ namespace smgpc::scene {
         binding->_owned_registration_objects.push_back(object);
     }
 
-
-    smgpc::compat::CapturedFrameBlurService *current_captured_frame_blur_service() noexcept {
-        return sCurrentSceneObjHolderBinding != nullptr
-                   ? sCurrentSceneObjHolderBinding->_captured_frame_blur_service.get()
-                   : nullptr;
-    }
 
     smgpc::compat::GlobalGravityOwnership *
     current_global_gravity_ownership() noexcept {

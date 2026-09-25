@@ -12,7 +12,6 @@
 #include "Game/Util/DrawUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
-#include "compat/JutTextureAllocation.hpp"
 #include "runtime/ConsoleNandImport.hpp"
 #include <aurora/system_config.hpp>
 #include "Game/System/RenderMode.hpp"
@@ -264,7 +263,6 @@ namespace smgpc::runtime {
                 attach_scene_execution(*_owned_scene_execution);
             }
             _capture_screen_director = std::make_unique<CaptureScreenDirector>();
-            _capture_screen_texture.reset(smgpc::compat::get_owned_jut_texture(_capture_screen_director->getResTIMG()));
             _logger.info(logging::Category::APP, logging::Message{"Using SMG disc image through Aurora DVD"});
             if (const auto message_archive = _dvd.find_first({
                     std::filesystem::path("KrKorean") / "MessageData" / "Message.arc",
@@ -326,7 +324,6 @@ namespace smgpc::runtime {
         _display.reset();
         _scheduler.clear();
         _capture_screen_director.reset();
-        _capture_screen_texture.reset();
         _disabled_object_audio.reset();
     }
 

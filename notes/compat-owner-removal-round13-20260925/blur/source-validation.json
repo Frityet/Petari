@@ -1,0 +1,8 @@
+{
+  "full_screen_blur_exact_donor": true,
+  "remaining_retired_source_references": [],
+  "jutttexture_history_owner": "MarioActor::_B7C, original 128x64 GX_TF_RGBA8 allocation; JUTTexture per-object JKR finalizer preserved by texture lane",
+  "builds_run": false,
+  "tests_run": false,
+  "backend_dependency": "Root owns general BP0x59 scissor offset, wrapping viewport/scissor, full EFB backing and copy extents; existing displayed-height clamp cannot provide rows464..527."
+}

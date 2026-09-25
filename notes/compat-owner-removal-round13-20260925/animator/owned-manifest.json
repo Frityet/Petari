@@ -1,0 +1,153 @@
+{
+  "scope": "MarioAnimator and Xanime canonical native lifetime ownership",
+  "files": [
+    {
+      "path": "src/compat/MarioAnimatorLifetime.cpp",
+      "before": "notes/compat-owner-removal-round13-20260925/animator/before/src/compat/MarioAnimatorLifetime.cpp",
+      "before_sha256": "7782e0811216f2b2636a548d8d0aeffe6e41051c8fdb397736f8eb817bc8c025",
+      "initial_git_status": "clean (parent round13 baseline)",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/MarioAnimatorLifetime.hpp",
+      "before": "notes/compat-owner-removal-round13-20260925/animator/before/src/compat/MarioAnimatorLifetime.hpp",
+      "before_sha256": "37affae70d13950e570a73f3be91ca03d39966cb8ff77001adfe1b31935922f3",
+      "initial_git_status": "clean (parent round13 baseline)",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/Game/Animation/XanimeCore.cpp",
+      "before": "notes/compat-owner-removal-round13-20260925/animator/before/src/Game/Animation/XanimeCore.cpp",
+      "before_sha256": "12a8f4400158f4b9ec73ba542202347600c5bd15bb2a18179c8894702a880379",
+      "initial_git_status": "clean (parent round13 baseline)",
+      "action": "modify",
+      "after_sha256": "e42aa054479f6a5eec9164f48e3c187daf261d5643a9472a1f2a8c8ded4ee9b1"
+    },
+    {
+      "path": "src/Game/Animation/XanimeCore.hpp",
+      "before": "notes/compat-owner-removal-round13-20260925/animator/before/src/Game/Animation/XanimeCore.hpp",
+      "before_sha256": "89ecbea4b67e41a22b487e69479014405f4a8c3c3e1ecd5dc7c58d0b9014ad61",
+      "initial_git_status": "clean (parent round13 baseline)",
+      "action": "modify",
+      "after_sha256": "d22f1049c54a2ae00008a99582c5293a5ece28f97f10450e5a721e3b4788b89e"
+    },
+    {
+      "path": "src/Game/Animation/XanimePlayer.cpp",
+      "before": "notes/compat-owner-removal-round13-20260925/animator/before/src/Game/Animation/XanimePlayer.cpp",
+      "before_sha256": "4792bf4ace0d8432786279813d946a7192fa89adeb36257b790f80b4f02c9795",
+      "initial_git_status": "clean (parent round13 baseline)",
+      "action": "modify",
+      "after_sha256": "b53bd0c194ad5767f842a5d8950b2246b23e16a1b377448a37463e33a9cc6185"
+    },
+    {
+      "path": "src/Game/Animation/XanimePlayer.hpp",
+      "before": "notes/compat-owner-removal-round13-20260925/animator/before/src/Game/Animation/XanimePlayer.hpp",
+      "before_sha256": "e3a16fd54058496003d6cce09c5235bac7815e5ca9f89818da32e69578a55743",
+      "initial_git_status": "clean (parent round13 baseline)",
+      "action": "modify",
+      "after_sha256": "0cc58892a4f01c8c8db26e761b8e70811d6ba2fb848f64948cccbe271f9858fe"
+    },
+    {
+      "path": "src/Game/Animation/XanimeResource.cpp",
+      "before": "notes/compat-owner-removal-round13-20260925/animator/before/src/Game/Animation/XanimeResource.cpp",
+      "before_sha256": "6fe4147e36d1be2adbc3972552cbc751853fa0d24f2eea6b1d85578671602140",
+      "initial_git_status": "clean (parent round13 baseline)",
+      "action": "modify",
+      "after_sha256": "143bc836d92a408e308bf7c07c9fb18b9c60d7dd1a923dd2f0c6cb8dc0aede06"
+    },
+    {
+      "path": "src/Game/Animation/XanimeResource.hpp",
+      "before": "notes/compat-owner-removal-round13-20260925/animator/before/src/Game/Animation/XanimeResource.hpp",
+      "before_sha256": "a34bdfe879dfa0e202d899aef975e713383f102e82da26d5cc48e8f33fd09da0",
+      "initial_git_status": "clean (parent round13 baseline)",
+      "action": "modify",
+      "after_sha256": "f9dbb1ad1f8994a0ec8224eb38b25bd9627bfa4aaf801a11199578ec86805fb3"
+    },
+    {
+      "path": "src/Game/Player/MarioAnimator.cpp",
+      "before": "notes/compat-owner-removal-round13-20260925/animator/before/src/Game/Player/MarioAnimator.cpp",
+      "before_sha256": "8d380cfbc5d89c999815eb88dca98f4390694053be879345f5f96558a943ae8d",
+      "initial_git_status": "clean (parent round13 baseline)",
+      "action": "modify",
+      "after_sha256": "9c3051af9895a5b66efd6bc666970c521b93b3b45ca6e22cd43d45ecc6f2cd18"
+    },
+    {
+      "path": "src/Game/Player/MarioAnimator.hpp",
+      "before": "notes/compat-owner-removal-round13-20260925/animator/before/src/Game/Player/MarioAnimator.hpp",
+      "before_sha256": "4184c38ea0672e2d59eabbb0f6803ca0f0f548c0b7c329b80600f5f2a5885df6",
+      "initial_git_status": "clean (parent round13 baseline)",
+      "action": "modify",
+      "after_sha256": "960e8f440b4bd0a80965ca233ad9056a99a16e2a66ed3388efd5367516c9cff8"
+    },
+    {
+      "path": "src/Game/Player/MarioAnimationEfx.cpp",
+      "before": "notes/compat-owner-removal-round13-20260925/animator/before/src/Game/Player/MarioAnimationEfx.cpp",
+      "before_sha256": "f42288d9352174950d344aff6cc42b53b2d75f6ba1893f5a945b1e092c83cdf6",
+      "initial_git_status": "clean (parent round13 baseline)",
+      "action": "modify",
+      "after_sha256": "0776e50a6d61daba2a6a17f8392f333b780ef3eccc66707aa006828fc9c9dd92"
+    },
+    {
+      "path": "src/Game/Player/MarioActor.cpp",
+      "before": "notes/compat-owner-removal-round13-20260925/animator/before/src/Game/Player/MarioActor.cpp",
+      "before_sha256": "d2638c2aa10a7e5399bdd36ba22fa5e23d15a848e0ceb8039fb357bf1578f6fa",
+      "initial_git_status": "clean (parent round13 baseline)",
+      "action": "modify",
+      "after_sha256": "fb1adac7aadf88bd0cdf313d02e16474134906c2145f61ab1991e50ee96b0452"
+    },
+    {
+      "path": "src/Game/LiveActor/ModelManager.cpp",
+      "before": "notes/compat-owner-removal-round13-20260925/animator/before/src/Game/LiveActor/ModelManager.cpp",
+      "before_sha256": "021439a12483ae67a298e5b39c1cd664a7e457efecb03ea36c39cef5b06dc2a1",
+      "initial_git_status": "clean (parent round13 baseline)",
+      "action": "modify",
+      "after_sha256": "ebec86941e58e8103053cf450d9d664045481d7cf42f155c843f62c255deb633"
+    },
+    {
+      "path": "src/compat/OriginalJ3dJointTree.cpp",
+      "before": "notes/compat-owner-removal-round13-20260925/animator/before/src/compat/OriginalJ3dJointTree.cpp",
+      "before_sha256": "f50cf7b6c74f7fef5b110a72f3d90ce97186cc5492102e0b6617bd7c15225a7a",
+      "initial_git_status": "clean (parent round13 baseline)",
+      "action": "modify",
+      "after_sha256": "2d8a88ea424b4a4abe6d076cdd1e73291e6393bd40baf64062a939142c2c23fa"
+    },
+    {
+      "path": "tests/OriginalBckCtrlTests.cpp",
+      "before": "notes/compat-owner-removal-round13-20260925/animator/before/tests/OriginalBckCtrlTests.cpp",
+      "before_sha256": "5e26bf48f12e3a8f023f82497de0f91e20814b28e79b6196dd9d37e847018a75",
+      "initial_git_status": "clean (parent round13 baseline)",
+      "action": "modify",
+      "after_sha256": "786f03db49b1d5b8f746cb67a3c2d0ef0e3b277b6b6745e577695cd6ca8c8810"
+    },
+    {
+      "path": "tests/OriginalJ3DVertexBufferTests.cpp",
+      "before": "notes/compat-owner-removal-round13-20260925/animator/before/tests/OriginalJ3DVertexBufferTests.cpp",
+      "before_sha256": "d46993e9740c10a3ef0bd882c43405ac7e7382aca4ffa5177c08cf8174ab4f60",
+      "initial_git_status": "clean (parent round13 baseline)",
+      "action": "modify",
+      "after_sha256": "533d405af10fc12996db25d257cbe2740efc47f557f4e38e5a59bee2567cd78a"
+    },
+    {
+      "path": "tests/OriginalXanimeCoreTests.cpp",
+      "before": "notes/compat-owner-removal-round13-20260925/animator/before/tests/OriginalXanimeCoreTests.cpp",
+      "before_sha256": "32bcedf6d92c2dfa259a7ee3fb4876ab259e7845233ba2f1bd6cfb727d210abd",
+      "initial_git_status": "clean (parent round13 baseline)",
+      "action": "modify",
+      "after_sha256": "834998fb9218e490235324d6a4a7cd38f36006a4f14a6d545dada46ff72e891a"
+    },
+    {
+      "path": "tests/OriginalXanimePlayerTests.cpp",
+      "before": "notes/compat-owner-removal-round13-20260925/animator/before/tests/OriginalXanimePlayerTests.cpp",
+      "before_sha256": "bc31f1aaf82fe2443a5aedd88929ae4365c485b551b527bfd31c9d619d602262",
+      "initial_git_status": "clean (parent round13 baseline)",
+      "action": "modify",
+      "after_sha256": "a21ec87c2c1dc28b80914200ec2278a8a55b3e3203096fbcac7380af511a0711"
+    }
+  ],
+  "authorization": "Parent apply round13 received; no builds/tests/git operations",
+  "build_wiring": "No source additions or explicit Game wiring. Existing Game/Animation and Game/Player owners already compile. Regenerate compat source glob after deleting MarioAnimatorLifetime.cpp/.hpp.",
+  "validation": "Read-only source reference and ownership review only. No builds/tests or git operations. Four existing fixtures only drop their now-duplicate manual cleanup.",
+  "frozen": true
+}
