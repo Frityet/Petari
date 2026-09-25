@@ -1,0 +1,13 @@
+{
+  "decomp_commit": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "decomp_parents": [
+    "2460b25c9f27d1a83e91b786f20cddde3e4c3228",
+    "cae17c10e9a8c59a019e81da7454736f71a84595"
+  ],
+  "upstream_commit": "cae17c10e9a8c59a019e81da7454736f71a84595",
+  "upstream_is_ancestor": true,
+  "remote": "origin",
+  "branch": "pcp-decomp",
+  "remote_sha": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "remote_sha_verified": true
+}

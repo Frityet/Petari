@@ -1,0 +1,59 @@
+{
+  "upstream": "cae17c10e9a8c59a019e81da7454736f71a84595",
+  "files": [
+    {
+      "path": "src/Game/Camera/CameraContext.cpp",
+      "before_sha256": "c8d33ed676517fd779e1befeb3d8f1e78de23ccea5a9b6f45ccab1f78c178af3",
+      "after_sha256": "081f908a1c642366757bcbae227330460007209f0a017d21e713bce5c46f7bdd",
+      "upstream_exact": true
+    },
+    {
+      "path": "src/Game/Player/MarioActorParts.cpp",
+      "before_sha256": "c41c17f5b6f93ca23e5cba8bd304ea56989a3dc24ba74875c0e0878a363a0f28",
+      "after_sha256": "fe301d3bb31ce87b5ef8ec6313a0e648d3aebc76d93a855508fe244804f97c97",
+      "upstream_exact": true
+    },
+    {
+      "path": "src/Game/Player/MarioActorOffensiveMsg.cpp",
+      "before_sha256": "99baa28a8b730e38246944fe452d420e6b0ff5dfb4329ac84f4910ce8a42bbce",
+      "after_sha256": "07b04b4a0fbd043d0904b286d946aaf6853b9c5ff351028d00a42bd85e7e856c",
+      "upstream_exact": true
+    },
+    {
+      "path": "src/Game/Player/MarioActorTakeMsg.cpp",
+      "before_sha256": "e945c6907306a0fd9c122082c40c485f0234b13d5d51be865ec2b4fe6e1c24b6",
+      "after_sha256": "75a91601847af8b9a6d9564cf3dadc74c54ddf9b64be32e13e3c88627981467f",
+      "upstream_exact": true
+    },
+    {
+      "path": "src/Game/Player/MarioCollision.cpp",
+      "before_sha256": "de8ada02b34dbb534d4f18e75e8c0a79d52751ddbb54222ec9610ffeae4e2682",
+      "after_sha256": "d074898f15be42e4f90e6bc295db9941dc3788afd70053e31976dffe4a7169e7",
+      "upstream_exact": true
+    },
+    {
+      "path": "src/Game/Player/MarioRabbit.cpp",
+      "before_sha256": "b583a2f06806f3bb3aeccd6bc1a45bb5ffe89c119f15ddafc8523b47af39710e",
+      "after_sha256": "cab43e325dd772a1ba46874df96d9868f667658d9dda7a96fae11263e45cc229",
+      "upstream_exact": true
+    },
+    {
+      "path": "src/Game/Player/MarioActorRush.cpp",
+      "before_sha256": "472b3782337be6c99a87833bcb40328b9ca00bfcb051505f71ff5481c4dbeeda",
+      "after_sha256": "3bbae4372a3417d6ec568489fd0811bf05cef68318a633044b4222422f38e3ae",
+      "upstream_exact": true
+    },
+    {
+      "path": "src/Game/Player/MarioActorSensor.cpp",
+      "before_sha256": "e4ae1b54506ff14460dc634672ace3be7e42d23a2f0eb928ded4dee4690adfda",
+      "after_sha256": "6b12bd762afa0d3a17a7d95c75d0f36d3fc6047cb9ad139ede28e9d5571317a0",
+      "upstream_exact": true
+    },
+    {
+      "path": "include/Game/Player/MarioRabbit.hpp",
+      "before_sha256": "c1b995c50dfd94993003cab590063eaa8e296f3a74fbe79b242c3c408e1c65cd",
+      "after_sha256": "022f76d16d043f407f8c498139982b2d6da035f6dfc4a4df0fbb97819d649935",
+      "upstream_exact": true
+    }
+  ]
+}

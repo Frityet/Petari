@@ -1,0 +1,20 @@
+configure.py:3571: trailing whitespace.
++            Object(NonMatching, 
+src/Game/Boss/DinoPackunVs2.cpp:158: trailing whitespace.
++    
+src/Game/Enemy/RingBeam.cpp:18: trailing whitespace.
++#include <JSystem/JGeometry/TUtil.hpp>
+src/Game/Enemy/RingBeamer.cpp:87: trailing whitespace.
++        MR::startBck(this, "Open");
+src/Game/Enemy/Takobo.cpp:67: trailing whitespace.
++    
+src/Game/Enemy/Takobo.cpp:164: trailing whitespace.
++    
+src/Game/Enemy/Takobo.cpp:216: trailing whitespace.
++            _D0 = ((-_C4 + v6) - _C8) / _C0;           
+src/Game/MapObj/LargeChainParts.cpp:27: trailing whitespace.
++    
+src/Game/MapObj/LargeChainParts.cpp:45: trailing whitespace.
++    
+src/Game/Screen/WipeKoopa.cpp:61: trailing whitespace.
++    

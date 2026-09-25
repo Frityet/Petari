@@ -1,0 +1,52 @@
+[
+  {
+    "path": "configure.py",
+    "line": 3571,
+    "exact_line_present_in_upstream": true
+  },
+  {
+    "path": "src/Game/Boss/DinoPackunVs2.cpp",
+    "line": 158,
+    "exact_line_present_in_upstream": true
+  },
+  {
+    "path": "src/Game/Enemy/RingBeam.cpp",
+    "line": 18,
+    "exact_line_present_in_upstream": true
+  },
+  {
+    "path": "src/Game/Enemy/RingBeamer.cpp",
+    "line": 87,
+    "exact_line_present_in_upstream": true
+  },
+  {
+    "path": "src/Game/Enemy/Takobo.cpp",
+    "line": 67,
+    "exact_line_present_in_upstream": true
+  },
+  {
+    "path": "src/Game/Enemy/Takobo.cpp",
+    "line": 164,
+    "exact_line_present_in_upstream": true
+  },
+  {
+    "path": "src/Game/Enemy/Takobo.cpp",
+    "line": 216,
+    "exact_line_present_in_upstream": true
+  },
+  {
+    "path": "src/Game/MapObj/LargeChainParts.cpp",
+    "line": 27,
+    "exact_line_present_in_upstream": true
+  },
+  {
+    "path": "src/Game/MapObj/LargeChainParts.cpp",
+    "line": 45,
+    "exact_line_present_in_upstream": true
+  },
+  {
+    "path": "src/Game/Screen/WipeKoopa.cpp",
+    "line": 61,
+    "exact_line_present_in_upstream": true
+  }
+]

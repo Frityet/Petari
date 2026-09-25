@@ -1,0 +1,57 @@
+{
+  "upstream_commit": "cae17c10e9a8c59a019e81da7454736f71a84595",
+  "validated_tree": "a80bca7440271c845220085d2f83092755a5a770",
+  "configuration": [
+    "python3",
+    "configure.py",
+    "--no-progress"
+  ],
+  "build_command": [
+    "ninja",
+    "-j6",
+    "-k",
+    "0",
+    "all_source",
+    "build/RMGK01/main.dol"
+  ],
+  "build_attempts": [
+    {
+      "log": "build-first.log",
+      "exit_code": 2
+    },
+    {
+      "log": "build-second.log",
+      "exit_code": 2
+    },
+    {
+      "log": "build-third.log",
+      "exit_code": 1
+    },
+    {
+      "log": "build-fourth.log",
+      "exit_code": 1
+    },
+    {
+      "log": "build-fifth.log",
+      "exit_code": 0
+    }
+  ],
+  "confirm_command": [
+    "ninja",
+    "-j6",
+    "all_source",
+    "build/RMGK01/main.dol"
+  ],
+  "confirm_exit_code": 0,
+  "confirm_output": "ninja: no work to do.\n",
+  "configured_source_targets": 2186,
+  "configured_game_source_targets": 1606,
+  "linked_outputs": {
+    "build/RMGK01/main.elf": "b0f7b43b20aa3ada3c61c0106486cbcf533c43f7b385ba200381292d4817f37e",
+    "build/RMGK01/main.dol": "a9460b4123bf10e90edf6586f3dc67dd4581da8c663c2a310e389e1e17e32b37"
+  },
+  "untracked_NPCUtil_d_preserved": true,
+  "unresolved_conflicts": 0,
+  "retail_checksum_comparison": "not run in this checkpoint; no exact matching claim",
+  "runtime_gameplay": "not run; decomp merge does not change native source tree"
+}

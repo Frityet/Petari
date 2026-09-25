@@ -1,0 +1,2636 @@
+[
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Boss/DinoPackunStateAwake.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Boss/DinoPackunStateDamage.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Boss/PoltaBattleLv2.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Boss/PoltaStateGroundRockAttack.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Camera/CamTranslatorCharmedVecRegTower.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Camera/CameraCover.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Demo/AstroDomeDemoStarter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Demo/DemoStartRequestUtil.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Demo/DemoSubPartKeeper.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Demo/PrologueDirector.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Demo/ScenarioStarter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Demo/StarReturnDemoStarter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/BombBird.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/BombTeresa.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/Gesso.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/KoteBug.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/OnimasuJump.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/OnimasuPivot.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/OtaRock.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/SamboHead.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/TakoHei.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/TakoHeiInk.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Gravity/DiskGravity.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Gravity/DiskTorusGravity.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Gravity/GlobalGravityObj.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Gravity/GravityCreator.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Gravity/ParallelGravity.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Gravity/PlanetGravity.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Gravity/PointGravity.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Gravity/SegmentGravity.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Gravity/WireGravity.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/LiveActor/ActorLightCtrl.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/LiveActor/Binder.o",
+    "errors": [
+      "#   undefined identifier 'pPlanes' #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/LiveActor/ClippingActorInfo.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/LiveActor/ClippingJudge.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/LiveActor/DisplayListMaker.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/LiveActor/DynamicJointCtrl.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/LiveActor/FaceJointCtrl.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/LiveActor/IKJointCtrl.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/LiveActor/MessageSensorHolder.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/LiveActor/MaterialCtrl.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/LiveActor/MirrorCamera.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/LiveActor/ShadowVolumeModel.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/LiveActor/ShadowVolumeOvalPole.o",
+    "errors": [
+      "#   undefined identifier 'scale' #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Map/LightZoneDataHolder.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Map/RailGraphEdge.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Map/WaterPoint.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/AstroDomeGalaxySelector.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/BallOpener.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/BallRail.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/BeamGoRoundPlanet.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/BeeFlowerHover.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/BigFan.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/BigFanHolder.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/BlackHole.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/BumpAppearPlanet.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/Candlestand.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/CannonFortressBreakStep.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/ChipCounter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/CapsuleCage.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/ClipArea.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/ClipAreaShape.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/ClipAreaHolder.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/ClipFieldMapParts.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/ClipFieldSwitch.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/CoconutTree.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/CoconutTreeLeaf.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/Coin.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/CoinBox.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/CoinGroup.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/CoinReplica.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/CollapsePlane.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/CollectCounter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/CollisionBlocker.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/CrystalCage.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/CutBushModelObj.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/CrystalSwitch.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/DeadLeaves.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/EarthenPipe.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/ExterminationChecker.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/FallingSmallRock.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/FirePressureBullet.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/FirePressureBulletHolder.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/FlameGun.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/FlipPanel.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/HeavensDoorDemoObj.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/IronCannonShell.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/ItemBlock.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/ItemAppearStone.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/JumpHole.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/KillerGunnerSingle.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/LavaGeyser.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/LavaBallRisingPlanetLava.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/LavaSteam.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/MapObjActor.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/MarioLauncherAttractor.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/MechaKoopaPartsArm.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/MechaKoopaPartsHead.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/MeteoContainer.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/MiniatureGalaxy.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/Note.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/OceanFloaterLandParts.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/OceanSmallTurtle.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/PhantomShipBridge.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/PlantPoint.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/PlantRailInfo.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/PomponPlant.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/PowerStarAppearPoint.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/PowerStarHolder.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/PurpleCoinHolder.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/QuestionCoin.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/RailBlock.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/RosettaPictureBook.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/RailCoin.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/ScrewSwitch.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SandUpDownTriRock.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SeaBottomTriplePropeller.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SeesawMoveNut.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/ShockWaveGenerator.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/ShootingStar.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SideSpikeMoveStep.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SnowplowSwitch.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SoundEmitter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SpaceMine.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SpiderThreadHangInfo.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SpiderThreadRadialLine.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SpringJetWater.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/StarPieceDirector.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SubmarineSteam.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/Sun.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SwingLight.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/TrampleStar.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/UFOBase.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/UFOKinoko.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/ValveSwitch.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/WarpPod.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/WatchTowerRotateStep.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/WaterLeakPipe.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/WaterPressureBulletHolder.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/WormEatenPlanet.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/FloaterFloatingForceTypeNormal.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/GeneralMapParts.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/FloaterFunction.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/MapPartsRailGuideDrawer.o",
+    "errors": [
+      "#   object 'MapPartsRailGuideDrawer::exeDrawForward()' redefined #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/MapPartsRailPointPassChecker.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/MapPartsRotator.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/DemoRabbit.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/Kinopio.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/TrickRabbitFreeRun.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/TalkBalloon.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/TalkNodeCtrl.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/TalkTextFormer.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Player/MarioActorRush.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Ride/BigBubble.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Ride/Fluff.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Scene/LogoScene.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Scene/PlayTimerScene.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Scene/ScenarioSelectScene.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Scene/SceneExecutor.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Scene/StageFileLoader.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/BackButton.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/BatteryInfo.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/BloomEffect.o",
+    "errors": [
+      "#   undefined identifier 'drawType' #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/BombTimerLayout.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/BrosButton.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/ButtonPaneController.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/CameraInfo.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/CinemaFrame.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/CoinCounter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/CounterLayoutAppearer.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/CounterLayoutController.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/EncouragePal60Window.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/ErrorMessageWindow.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/FileSelectButton.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/FileSelectInfo.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GalaxyCometScreenFilter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GalaxyMapBackground.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GalaxyMapCometIcon.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GalaxyMap.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GalaxyMapGalaxyPlain.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GalaxyMapIcon.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GalaxyMapMarioIcon.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GalaxyMapSelectButton.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GalaxyMapTicoIcon.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GalaxyMapTitle.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GalaxyNamePlate.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GalaxySelectBackButton.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GalaxySelectInfo.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GameSceneLayoutHolder.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/IconAButton.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GameStageClearSequence.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/IconComet.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GamePauseSequence.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/InformationMessage.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/LayoutActor.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/LayoutPaneCtrl.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/LogoFader.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/LuigiLetter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/Manual2P.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/MiiConfirmIcon.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/MessageTagSkipTagProcessor.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/MissLayout.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/MiiSelectIcon.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/MovieSubtitles.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/NoteCounter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/OneUpBoard.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/PauseMenu.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/PeachLetter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/PictureBookLayout.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/PlayerActionGuidance.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/PrologueLetter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/PowerStarList.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/SaveIcon.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/ReplaceTagProcessor.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/ScenarioTitle.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/StaffRoll.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/StageResultInformer.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/StarPointerCommandStream.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/StarPointerGuidance.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/SurfingGuidance.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/SysInfoWindow.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/SystemWipeHolder.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/TimeLimitLayout.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/StarPointerLayout.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/WipeKoopa.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/WipeRing.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/YesNoLayout.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/YesNoController.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/System/ArchiveHolder.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/System/DrawSyncManager.o",
+    "errors": [
+      "#   data object 'DrawSyncManager::sInstance' redefined #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/System/FileHolder.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/System/GameSystemErrorWatcher.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/System/NANDErrorSequence.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/System/ResourceInfo.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/System/GameDataConst.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/System/GameEventValueChecker.o",
+    "errors": [
+      "#   undefined identifier 'readHash' #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/System/GameSequenceProgress.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Util/EventUtil.o",
+    "errors": [
+      "#   object 'starId' redefined #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Util/MathUtil.o",
+    "errors": [
+      "#   object 'JMASqrt(float)' redefined #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Util/MessageUtil.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Util/ParabolicPath.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Util/ScreenUtil.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Util/BothDirList.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NWC24/NWC24Messenger.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Animation/BckCtrl.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/AreaObj/AreaForm.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/AreaObj/CollisionArea.o",
+    "errors": [
+      "#   undefined identifier 'pCube' #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Boss/DinoPackunAction.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Boss/DinoPackunBattleEgg.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Boss/DodoryuStateLv2.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Boss/OtaKing.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Boss/OtaKingLongFoot.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Boss/OtaKingMagma.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Boss/PoltaArm.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Boss/PoltaRock.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Camera/CameraContext.o",
+    "errors": [
+      "#   object 'MR::getScreenHeight()' redefined #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Demo/GrandStarReturnDemoStarter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/CocoNutBall.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/CocoSambo.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/FireBubble.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/JumpGuarder.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/Kameck.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/KameckBeam.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/KameckTurtle.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/Kanina.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/MogucchiRefuseTerritory.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/SearchBeamer.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Enemy/TeresaWater.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/LiveActor/ShadowVolumeCylinder.o",
+    "errors": [
+      "#   undefined identifier 'controller' #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Map/FileSelector.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Map/KCollision.o",
+    "errors": [
+      "#   undefined identifier 'remainingZ' #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Map/LightDataHolder.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Map/OceanSpherePoint.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Map/RaceManager.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Map/SphereSelector.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Map/SphereSelectorHandle.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Map/WaterPlant.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Map/WhirlPoolAccelerator.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Map/WaterRoad.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/Banekiti.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/BattleShipElevator.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/BigBubbleDrawer.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/BigBubbleGenerator.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/BigBubbleHolder.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/BigBubbleMoveLimitter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/BreakableCage.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/ChooChooTrain.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/CircleCoinGroup.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/CocoNut.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/CoinHolder.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/CrystalCageMoving.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/DesertMovingLand.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/DummyDisplayModel.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/DynamicCollisionObj.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/ElectricBall.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/DriftWood.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/FireBar.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/FirePressureRadiate.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/FirePressure.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/ElectricRailMoving.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/Fountain.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/FountainBig.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/GreenCaterpillarBig.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/HatchWaterPlanet.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/HipDropMoveObj.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/HitWallTimerSwitch.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/ItemBubble.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/JetTurtle.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/JumpStand.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/KeySwitch.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/LavaHomeSeesaw.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/LavaProminenceTriple.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/LotusLeaf.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/LavaStrangeRock.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/MagicBell.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/MarblePlanet.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/MercatorRailMoveParts.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/MarioLauncher.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/MercatorRotateParts.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/NormalMapBase.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/NoteFairy.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/PalmIsland.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/PhantomShipBoxFloater.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/PhantomTorch.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/PicketSwitch.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/PlantGroup.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/PressureBase.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/PrizeRing.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/PTimerSwitch.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/PunchingKinoko.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/PurpleCoinStarter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/RainCloud.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/ReverseGravityRoomPlanet.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/Rock.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/RockCreator.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/RosettaChair.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/RotateMoveObj.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/Sandstorm.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/Shellfish.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SimpleBreakableObj.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SimpleFloaterObj.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SimpleMapObj.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SmallStone.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SnowCapsulePlanet.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SnowFloor.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SnowFloorTile.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SpaceShipStep.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SpiderCoin.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SpiderThreadMainPoint.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SpiderThreadPart.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SpiderThreadPoint.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SpiderThreadWindCtrl.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SpinLeverSwitch.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SpinningBox.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/StarPiece.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/StarPieceFollowGroup.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/StarPieceGroup.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/StarPieceMother.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SubmarineVolcanoBigColumn.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SuperSpinDriver.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/Swinger.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/SwitchBox.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/TransparentWall.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/TreasureBoxCracked.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/TreasureSpot.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/WaterPressure.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/WaterPressureBullet.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/WhirlPool.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/WoodBox.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/MapParts.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/FloaterFloatingForceTypeSpring.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/MapPartsRailMover.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/MapObj/MapPartsRailPosture.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/CareTaker.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/KinopioAstro.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NameObj/NameObjFactory.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/Rosetta.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/RosettaDemoAstroDome.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/RosettaReading.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/RosettaDemoHeavensDoor.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/RunawayTico.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/StrayTico.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/Syati.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/TrickRabbit.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/TrickRabbitSnowCollect.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/TrickRabbitSnow.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/TalkDirector.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/NPC/TalkState.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Player/Mario.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Player/MarioActorParts.o",
+    "errors": [
+      "#   declaration syntax error #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Player/MarioActorOffensiveMsg.o",
+    "errors": [
+      "#   undefined identifier 'sensorRadius' #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Player/MarioActorSpecialDraw.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Player/MarioActorTakeMsg.o",
+    "errors": [
+      "#   undefined identifier 'distance' #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Player/MarioCollision.o",
+    "errors": [
+      "#   undefined identifier 'hitFlags' #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Player/MarioRabbit.o",
+    "errors": [
+      "#   undefined identifier '_14' #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Player/MarioAccess.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Player/MarioWalk.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/CometRetryButton.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/CountUpPaneRumbler.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/CustomTagProcessor.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/FullnessMeter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/FileSelectNumber.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GalaxyMapController.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GalaxyInfoLayoutSetter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GalaxyMapDomeIcon.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/GalaxyMapGalaxyDetail.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/HomeButtonLayout.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/ImageEffectDirector.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/LayoutCoreUtil.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   Too many errors printed, aborting program"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/LayoutManager.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/MeterLayout.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/MiiSelect.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/MoviePlayingSequence.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/MoviePlayerSimple.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/PlayerLeft.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/PlayerMissLeft.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/ProloguePictureBook.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/PurpleCoinCounter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/ScenarioSelectLayout.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/StarCounter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/StarPieceCounter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/StarPointerDirector.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/StarPointerTarget.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/SuddenDeathMeter.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/SubMeterLayout.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/TitleSequenceProduct.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/WipeGameOver.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Screen/WipeFade.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/System/GameSystemObjHolder.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/System/GameSystemResetAndPowerProcess.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/System/WPadAcceleration.o",
+    "errors": [
+      "#   object 'WPadAcceleration::WPadAcceleration(const WPad *, unsigned long)'  #   redefined"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/System/SaveDataHandleSequence.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Util/ActorMovementUtil.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Util/CameraUtil.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Util/JMapUtil.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Util/LayoutUtil.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Util/LiveActorUtil.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/Game/Util/ModelUtil.o",
+    "errors": [
+      "#   class 'MessageEditorMessageTag' redefined #   (included from:"
+    ]
+  },
+  {
+    "target": "[code=2] build/RMGK01/src/JSystem/J2DGraph/J2DOrthoGraph.o",
+    "errors": [
+      "#   object 'J2DOrthoGraph::getGrafType() const' redefined #   Too many errors printed, aborting program"
+    ]
+  }
+]
