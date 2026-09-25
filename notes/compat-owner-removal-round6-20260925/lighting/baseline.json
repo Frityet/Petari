@@ -1,0 +1,186 @@
+{
+  "head": "eb0712c1488fdc244f7daa0e8da42ea89455d7df",
+  "decomp": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "files": [
+    {
+      "path": "src/Game/AreaObj/LightAreaHolder.cpp",
+      "before_status": "",
+      "before_sha256": "d35bc952c2bba94e13c3a3d07b32ea329787f032790b893bf8d4f1f60f74d60a"
+    },
+    {
+      "path": "src/Game/LiveActor/ActorLightCtrl.cpp",
+      "before_status": "",
+      "before_sha256": "4dd4d037fe9032fad28fe51281372e7ed44594c8f0f6519017330817b115e0aa"
+    },
+    {
+      "path": "src/Game/LiveActor/ActorLightCtrl.hpp",
+      "before_status": "",
+      "before_sha256": "d200267a8f978f3c250bddf41b288f69dee883813ff8caa6bb7342ac5bd6b3d5"
+    },
+    {
+      "path": "src/Game/Map/LightDataHolder.cpp",
+      "before_status": "",
+      "before_sha256": "10b49523f48c6922c516d5e8f4188f717e07718a815cc72c6e1dbeb9cf0db2cf"
+    },
+    {
+      "path": "src/Game/Map/LightDataHolder.hpp",
+      "before_status": "",
+      "before_sha256": "03930d10251b828f54d9b84b015dc088f59cf59d3f0867d2175af0dbec8e302c"
+    },
+    {
+      "path": "src/Game/Map/LightDirector.cpp",
+      "before_status": "",
+      "before_sha256": "b8491500105d2258251c0fc7d0ec2e990559adda50de572a9a1d4fd1a9d8997f"
+    },
+    {
+      "path": "src/Game/Map/LightDirector.hpp",
+      "before_status": "",
+      "before_sha256": "9ebbb8a0b61c4cfb6ee15266dd4115072cc6b18efc0e9ae4e097f52d3dede635"
+    },
+    {
+      "path": "src/Game/Map/LightFunction.cpp",
+      "before_status": "",
+      "before_sha256": "c8a52b7cb3148b94ca08735c5f78524e7b537cf6bf06fffa3c3174b3ee47bf5c"
+    },
+    {
+      "path": "src/Game/Map/LightFunction.hpp",
+      "before_status": "",
+      "before_sha256": "872b54f4f70bbc555c23f0d62efe958954a079e63fd8a11a166254b9837ced10"
+    },
+    {
+      "path": "src/Game/Map/LightPointCtrl.cpp",
+      "before_status": "",
+      "before_sha256": "ceed3e79b23c28f32931889f9d3ffe8b5fc3885e3d117d586cc3fc9cfdf57c53"
+    },
+    {
+      "path": "src/Game/Map/LightPointCtrl.hpp",
+      "before_status": "",
+      "before_sha256": "3aeb8d92e3aedd9656c2781669d861b961d7ed3e7241851ca1afa845a0489e2d"
+    },
+    {
+      "path": "src/Game/Map/LightZoneDataHolder.cpp",
+      "before_status": "",
+      "before_sha256": "b9d63d2510a89518ef2063d4a3c95e60c2497d72b8b298a104da5ea7b521ab0a"
+    },
+    {
+      "path": "src/Game/Map/LightZoneDataHolder.hpp",
+      "before_status": "",
+      "before_sha256": "40a881d2627688a917c23bd221dcf3423914e4f0c9321074c9ff4a93dac0da00"
+    },
+    {
+      "path": "src/Game/Util/LightUtil.cpp",
+      "before_status": "",
+      "before_sha256": "111ee6f921f406b1205d2ac1fe5ab951428bf6be0f50ccbedf7d90f4df90334a"
+    },
+    {
+      "path": "src/Game/Util/LightUtil.hpp",
+      "before_status": "",
+      "before_sha256": "330e6a7febe432408b2d721ae095defdca0ffe217b061871113b7da11dc837d6"
+    },
+    {
+      "path": "src/compat/ActorRuntimeRegistry.cpp",
+      "before_status": "",
+      "before_sha256": "a196e91421597914e8056de69d20eee282306e9032896bba03b304794a8076cb"
+    },
+    {
+      "path": "src/compat/LightDirectorCompat.cpp",
+      "before_status": "",
+      "before_sha256": "11e68000c72f827997636f1bbc070db8e1d267e153b21307cf876af2ee1937b2"
+    },
+    {
+      "path": "src/compat/LightFunctionCompat.cpp",
+      "before_status": "",
+      "before_sha256": "90fd9605a49b5902dd658c783023f87d468c1cd9f298e773a963a3264c2e2f8e"
+    },
+    {
+      "path": "src/compat/LightFunctionCompat.hpp",
+      "before_status": "",
+      "before_sha256": "afd558ea92c2c9198af3e62bb11d5a7f96c53b2b3a50f83ecc52f8b3c0253603"
+    },
+    {
+      "path": "src/compat/LightUtilCompat.cpp",
+      "before_status": "",
+      "before_sha256": "e9d057907578d1ef7d385e49f870fc20ceedd55b71be21035c44b83e196cdce0"
+    },
+    {
+      "path": "src/compat/SceneInitializationCompat.cpp",
+      "before_status": "",
+      "before_sha256": "bd1eb13ea2c170dbd8dc89e7e6467f5f8e34eef436d56b8bebf4c421342b17a9"
+    },
+    {
+      "path": "src/render/light/LightData.cpp",
+      "before_status": "",
+      "before_sha256": "fb66250a5eb088afead59be614ac39cbd00047766c5cd2b0b7b532b5f8540129"
+    },
+    {
+      "path": "src/render/light/LightData.hpp",
+      "before_status": "",
+      "before_sha256": "154bcd9e26c182b9446e02e5997d86fb4082cc0931d3d0da49e242d9fc840d6f"
+    },
+    {
+      "path": "src/scene/OriginalSceneSupport.cpp",
+      "before_status": "",
+      "before_sha256": "9b342f228eab869f6d526dc9eb60abe1d855e591f3010a09d296843085c1a2a7"
+    },
+    {
+      "path": "src/scene/OriginalSceneSupport.hpp",
+      "before_status": "",
+      "before_sha256": "6ad0474df813da9d1aa05e4b4c01493066bb3d52a67d25229b3c15f88f208055"
+    },
+    {
+      "path": "src/scene/StageLightSceneBinding.cpp",
+      "before_status": "",
+      "before_sha256": "880edf0196e9ee628dfae24304dc8c301403e7752a08f22d174083f244430ffb"
+    },
+    {
+      "path": "src/scene/StageLightSceneBinding.hpp",
+      "before_status": "",
+      "before_sha256": "0199415e95d20f9d4d2c4ef40eede9f2c8e1009119b34178dc860e532ed2f289"
+    },
+    {
+      "path": "tests/AreaObjRealOrAbsentTests.cpp",
+      "before_status": "",
+      "before_sha256": "4d57646b8da527b27c79097906d532b3b070cd05f35bac8bf132528ee1769054"
+    },
+    {
+      "path": "tests/PointLightRuntimeTests.cpp",
+      "before_status": "",
+      "before_sha256": "eba8c1a94e660836e2234029c647559bae8171fa66c36a018c815955b95e8bef"
+    },
+    {
+      "path": "src/Game/AreaObj/LightAreaHolder.hpp",
+      "before_status": "",
+      "before_sha256": "f6c37862c967017de7fdb376f5880ea15c4919f5e53cb8635b3ecb576fcc0830"
+    },
+    {
+      "path": "tests/OriginalCollisionPartsOwnerTests.cpp",
+      "before_status": "M tests/OriginalCollisionPartsOwnerTests.cpp",
+      "before_sha256": "72f28a3daef1dbe67e4d6080d7f8abd4eb6562428eab8cc44cf76723ab76d7f0"
+    },
+    {
+      "path": "tests/OriginalImageEffectOwnershipTests.cpp",
+      "before_status": "",
+      "before_sha256": "8f44844607991928923959b9798a00e1644e867d6e308a82b21b3877ad50da5d"
+    },
+    {
+      "path": "tests/StageStartCameraTests.cpp",
+      "before_status": "M tests/StageStartCameraTests.cpp",
+      "before_sha256": "3e741565c8e2c44d78c1b07de9958cc349a602f3e93cc36abac9cb1aeec830a1"
+    },
+    {
+      "path": "tests/ActorEventCameraTests.cpp",
+      "before_status": "M tests/ActorEventCameraTests.cpp",
+      "before_sha256": "a07104cf5f0ff13b8b4784dfc1a82490b66cecc6ea912f3b4bdb31a7e2cd9cdd"
+    },
+    {
+      "path": "tests/CameraViewInterpolatorTests.cpp",
+      "before_status": "M tests/CameraViewInterpolatorTests.cpp",
+      "before_sha256": "42fd6ce3afeedc850bf176bc533bad6134d8872c3bc0e3e68036bc64d9c003ee"
+    },
+    {
+      "path": "tests/CameraViewServiceTests.cpp",
+      "before_status": "M tests/CameraViewServiceTests.cpp",
+      "before_sha256": "b8a230b46e47556351afe9f554a76be5aa4113eec96455643a33abbec82d7f23"
+    }
+  ]
+}

@@ -1653,6 +1653,7 @@ target("smg-pc-restart-stage-session-tests")
     })
 
 target("smg-pc-mii-font-compat-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -2008,6 +2009,7 @@ target("smg-pc-original-shadow-controller-owner-tests")
     })
 
 target("smg-pc-point-light-runtime-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")

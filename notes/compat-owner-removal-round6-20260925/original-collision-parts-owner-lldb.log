@@ -1,0 +1,82 @@
+(lldb) target create "build/macosx/arm64/debug/smg-pc-original-collision-parts-owner-tests"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-collision-parts-owner-tests' (arm64).
+(lldb) run
+[aurora:info:aurora] Aurora initializing
+[aurora:info:aurora::system_info] CPU model: Apple M5 Max
+[aurora:info:aurora::system_info] Memory: 131072 MiB
+[aurora:info:aurora::system_info] Architecture: aarch64
+[aurora:info:aurora::system_info] OS: macOS Version 27.0 (Build 26A428)
+2026-09-25 15:36:31.370789+0100 smg-pc-original-collision-parts-owner-tests[43163:5959471] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 15:36:31.370953+0100 smg-pc-original-collision-parts-owner-tests[43163:5959471] [Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 15:36:31.371101+0100 smg-pc-original-collision-parts-owner-tests[43163:5959470] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 15:36:31.371113+0100 smg-pc-original-collision-parts-owner-tests[43163:5959470] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 15:36:31.371362+0100 smg-pc-original-collision-parts-owner-tests[43163:5959473] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 15:36:31.371372+0100 smg-pc-original-collision-parts-owner-tests[43163:5959473] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 15:36:31.371615+0100 smg-pc-original-collision-parts-owner-tests[43163:5959473] [Connection] Will NOT re-try to establish the connection
+2026-09-25 15:36:31.371640+0100 smg-pc-original-collision-parts-owner-tests[43163:5959471] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 15:36:31.371652+0100 smg-pc-original-collision-parts-owner-tests[43163:5959471] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 15:36:32.130681+0100 smg-pc-original-collision-parts-owner-tests[43163:5959454] [WindowTab] Cannot index window tabs due to missing main bundle identifier
+[aurora:info:aurora::gpu] Creating WebGPU instance
+[aurora:info:aurora::gpu] Attempting to initialize Metal
+[aurora:info:aurora::gpu] Requesting adapter
+  Feature level: Compatibility
+  Power preference: HighPerformance
+  Backend: Metal
+  Compatible surface: true
+[aurora:info:aurora::gpu] Graphics adapter information
+  API: Metal
+  Device: Apple M5 Max (IntegratedGPU)
+  Driver: Metal driver on macOS Version 27.0 (Build 26A428)
+[aurora:info:aurora::gpu] Using limits:
+  maxTextureDimension1D: 16384
+  maxTextureDimension2D: 16384
+  maxTextureDimension3D: 2048
+  maxTextureArrayLayers: 2048
+  maxStorageBuffersPerShaderStage: 2
+  minUniformBufferOffsetAlignment: 256
+  minStorageBufferOffsetAlignment: 256
+  maxImmediateSize: 64
+[aurora:info:aurora::gpu] Enabling features: 
+  CoreFeaturesAndLimits
+  DepthClipControl
+  TextureCompressionBC
+  TextureCompressionASTC
+  ClipDistances
+  DualSourceBlending
+  TextureComponentSwizzle
+[aurora:info:aurora::gpu] Using surface format BGRA8Unorm, present mode Fifo
+[aurora:info:aurora::gfx::pipeline_cache] No bundled initial pipeline cache found at '/Users/frityet/Projects/petari/build/macosx/arm64/debug/initial_pipeline_cache.db'
+[aurora:info:aurora] Using framebuffer size 1280x960 scale 2
+warning: smg-pc-original-collision-parts-owner-tests was compiled with optimization - stepping may behave oddly; variables may not be available.
+Process 43163 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-collision-parts-owner-tests' (arm64)
+Process 43163 stopped
+* thread #1, name = 'Main thread', queue = 'com.apple.main-thread', stop reason = EXC_BAD_ACCESS (code=1, address=0x40)
+       frame #0: 0x000000010008647c smg-pc-original-collision-parts-owner-tests`MR::getLanguage() at Language.cpp:146:54 [opt]
+   143 	    }
+   144 	
+   145 	    u32 getLanguage() {
+-> 146 	        return SingletonHolder< GameSystem >::get()->mObjHolder->mLanguage;
+    	                                                     ^
+   147 	    }
+   148 	
+   149 	    u32 getLanguageFromIPL() {
+Target 0: (smg-pc-original-collision-parts-owner-tests) stopped.
+(lldb) bt 18
+* thread #1, name = 'Main thread', queue = 'com.apple.main-thread', stop reason = EXC_BAD_ACCESS (code=1, address=0x40)
+   * frame #0: 0x000000010008647c smg-pc-original-collision-parts-owner-tests`MR::getLanguage() at Language.cpp:146:54 [opt]
+     frame #1: 0x00000001000864b8 smg-pc-original-collision-parts-owner-tests`MR::getCurrentLanguagePrefix() at Language.cpp:154:18 [opt]
+     frame #2: 0x0000000100236d94 smg-pc-original-collision-parts-owner-tests`MR::makeFileNameConsideringLanguage(pDst="\xe8\xc1\xdfo\U00000001", size=256, pFilePath="/Memory/SystemMessage.arc") at FileUtilCompat.cpp:206:46 [opt] [inlined]
+     frame #3: 0x0000000100236d90 smg-pc-original-collision-parts-owner-tests`MR::getMountedArchiveAndHeap(pFilePath="/Memory/SystemMessage.arc", ppArchive=0x000000016fdfc1d8, ppHeap=0x000000016fdfc1d0) at FileUtilCompat.cpp:145:9 [opt]
+     frame #4: 0x000000010008604c smg-pc-original-collision-parts-owner-tests`MessageData::MessageData(this=0x00000075cf6f96a0, pArchiveName=<unavailable>) at MessageHolder.cpp:133:5 [opt]
+     frame #5: 0x0000000100086358 smg-pc-original-collision-parts-owner-tests`MessageData::MessageData(this=0x00000075cf6f96a0, pArchiveName=<unavailable>) at MessageHolder.cpp:130:144 [opt] [inlined]
+     frame #6: 0x000000010008634c smg-pc-original-collision-parts-owner-tests`MessageHolder::initSystemData(this=0x00000075cf6f9680) at MessageHolder.cpp:179:30 [opt]
+     frame #7: 0x00000001001ea0e4 smg-pc-original-collision-parts-owner-tests`smgpc::runtime::MessageHolderOwnership::MessageHolderOwnership(this=0x0000007b94486840, runtime=<unavailable>, byte_budget=2097152, mounts=0x000000016fdfce90, game_archive_path=<unavailable>, language_prefix=<unavailable>) at MessageHolderOwnership.cpp:77:30 [opt]
+     frame #8: 0x00000001001ea41c smg-pc-original-collision-parts-owner-tests`smgpc::runtime::MessageHolderOwnership::MessageHolderOwnership(this=<unavailable>, runtime=<unavailable>, byte_budget=<unavailable>, mounts=<unavailable>, game_archive_path=<unavailable>, language_prefix=<unavailable>) at MessageHolderOwnership.cpp:46:43 [opt] [artificial]
+     frame #9: 0x00000001001fe6b0 smg-pc-original-collision-parts-owner-tests`std::__1::unique_ptr<smgpc::runtime::MessageHolderOwnership, std::__1::default_delete<smgpc::runtime::MessageHolderOwnership>> std::__1::make_unique[abi:nqe230101]<smgpc::runtime::MessageHolderOwnership, std::__1::shared_ptr<smgpc::compat::JkrHeapRuntime>&, unsigned long const&, smgpc::runtime::ArchiveMountService&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, char const (&) [9], 0>(__args=std::__1::shared_ptr<smgpc::compat::JkrHeapRuntime>::element_type @ 0x0000007b94486710 strong=9 weak=0, __args=0x000000016fdfccb0, __args=0x000000016fdfce90, __args="/KrKorean/MessageData/Message.arc", __args={\xdd\x95\xcc\0\x01\0\0\0}) at unique_ptr.h:708:30 [opt]
+     frame #10: 0x00000001001fd3fc smg-pc-original-collision-parts-owner-tests`smgpc::runtime::RuntimeContext::RuntimeContext(this=0x000000016fdfccf8, logger=<unavailable>, window_service=0x000000016fdfccf0, resources=0x000000016fdfcc80, audio_playback=<unavailable>) at RuntimeContext.cpp:266:35 [opt]
+     frame #11: 0x00000001001fe134 smg-pc-original-collision-parts-owner-tests`smgpc::runtime::RuntimeContext::RuntimeContext(this=0x000000016fdfccf8, logger=<unavailable>, window_service=<unavailable>, resources=<unavailable>, audio_playback=nullptr) at RuntimeContext.cpp:241:5 [opt] [inlined]
+     frame #12: 0x00000001001fe12c smg-pc-original-collision-parts-owner-tests`smgpc::runtime::RuntimeContext::RuntimeContext(this=0x000000016fdfccf8, logger=<unavailable>, window_service=<unavailable>, resources=<unavailable>) at RuntimeContext.cpp:222:11 [opt]
+     frame #13: 0x00000001000017f0 smg-pc-original-collision-parts-owner-tests`main at OriginalCollisionPartsOwnerTests.cpp:77:36 [opt]
+     frame #14: 0x000000018a03be80 dyld`start + 6688
+(lldb) process kill
+Process 43163 exited with status = 9 (0x00000009) killed

@@ -1,4 +1,4 @@
-#include "resource/TextEncoding.hpp"
+#include "OriginalStageResourceProcessFixture.hpp"
 #include "OriginalSceneControllerFixture.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
@@ -6,40 +6,28 @@
 #include "Game/Map/LightDirector.hpp"
 #include "Game/Map/LightFunction.hpp"
 #include "Game/Map/LightPointCtrl.hpp"
+#include "Game/Camera/CameraContext.hpp"
+#include "Game/Player/MarioActor.hpp"
+#include "Game/Player/MarioHolder.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/Color.hpp"
 #include "Game/Util/LightUtil.hpp"
-#include "Game/Util/ObjUtil.hpp"
-#include "Logger.hpp"
-#include "RendererService.hpp"
+#include "Game/Util/SceneUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/LightFunctionCompat.hpp"
-#include "render/GXState.hpp"
+#include "resource/TextEncoding.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
-#include "scene/StageLightSceneBinding.hpp"
-
-#include <aurora/dvd.h>
-#include <dolphin/dvd.h>
-
-#include <algorithm>
 #include <array>
 #include <bit>
-#include <map>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
-#include <cstdlib>
-#include <filesystem>
-#include <functional>
 #include <iostream>
 #include <limits>
-#include <memory>
+#include <map>
 #include <new>
-#include <optional>
-#include <ranges>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -49,59 +37,6 @@ namespace {
         if (!condition) {
             throw std::runtime_error(std::string(message));
         }
-    }
-
-    void testOriginalPlayerLightOwnership() {
-        using namespace smgpc;
-        const auto heaps = compat::JkrHeapRuntime::create(16U << 20);
-        test::OriginalSceneControllerFixture original(heaps);
-        runtime::SceneScheduler scheduler;
-        runtime::SceneSchedulerBinding active(scheduler);
-        for (unsigned generation = 0; generation < 8; ++generation) {
-            const auto domain = compat::JkrAllocationDomain::create(heaps, 1U << 20);
-            test::SceneExecutionFixture scene(scheduler, domain, nullptr, nullptr,
-                                              &original.scene, original.controller().mObjHolder);
-            alignas(32) std::array<u8, 4096> commands{};
-            GXBeginDisplayList(commands.data(), commands.size());
-            auto* director = static_cast<LightDirector*>(MR::createSceneObj(SceneObj_LightDirector));
-            GXEndDisplayList();
-            require(director && !director->_1C, "each real scene starts without a borrowed player controller");
-            MR::createSceneObj(SceneObj_ClippingDirector);
-            {
-                LiveActor first("first original player light"), second("second original player light");
-                compat::replace_actor_light_ctrl(&first);
-                compat::replace_actor_light_ctrl(&second);
-                LightFunction::registerPlayerLightCtrl(first.mActorLightCtrl);
-                require(director->_1C == first.mActorLightCtrl &&
-                            compat::registered_player_light_controller() == first.mActorLightCtrl,
-                        "registration uses the original director's actual borrowed pointer");
-                LightFunction::registerPlayerLightCtrl(second.mActorLightCtrl);
-                compat::replace_actor_light_ctrl(&first);
-                require(director->_1C == second.mActorLightCtrl,
-                        "replacing an unregistered controller preserves the active player");
-                compat::replace_actor_light_ctrl(&second);
-                require(!director->_1C, "replacing the registered controller clears its borrowed pointer");
-                LightFunction::registerPlayerLightCtrl(first.mActorLightCtrl);
-            }
-            require(!director->_1C, "actor retirement clears the original director before the controller is freed");
-        }
-        require(!compat::registered_player_light_controller(),
-                "retired original scenes expose no player light controller");
-    }
-
-    template <typename Exception>
-    void requireThrows(const std::function<void()> &operation,
-                       std::string_view messageFragment,
-                       std::string_view message) {
-        try {
-            operation();
-        } catch (const Exception &error) {
-            require(std::string_view(error.what()).find(messageFragment) !=
-                        std::string_view::npos,
-                    message);
-            return;
-        }
-        throw std::runtime_error(std::string(message));
     }
 
     void requireNear(f32 actual, f32 expected, std::string_view message) {
@@ -133,110 +68,43 @@ namespace {
         require(info.mDistAttnFn == GX_DA_STEEP, message);
     }
 
-    [[nodiscard]] std::array<std::uint8_t, 4U> colorValue(
-        const _GXColor &color) {
-        return {color.r, color.g, color.b, color.a};
+    void testOriginalPlayerLightOwnership() {
+        using namespace smgpc;
+        const auto heaps = compat::JkrHeapRuntime::create(16U << 20);
+        test::OriginalSceneControllerFixture original(heaps);
+        runtime::SceneScheduler scheduler;
+        runtime::SceneSchedulerBinding active(scheduler);
+        for (unsigned generation = 0; generation < 8; ++generation) {
+            const auto domain = compat::JkrAllocationDomain::create(heaps, 1U << 20);
+            test::SceneExecutionFixture scene(scheduler, domain, nullptr, nullptr,
+                                              &original.scene, original.controller().mObjHolder);
+            alignas(32) std::array<u8, 4096> commands{};
+            GXBeginDisplayList(commands.data(), commands.size());
+            auto* director = static_cast<LightDirector*>(MR::createSceneObj(SceneObj_LightDirector));
+            GXEndDisplayList();
+            require(director && !director->_1C, "each real scene starts without a borrowed player controller");
+            MR::createSceneObj(SceneObj_ClippingDirector);
+            {
+                LiveActor first("first original player light"), second("second original player light");
+                compat::replace_actor_light_ctrl(&first);
+                compat::replace_actor_light_ctrl(&second);
+                LightFunction::registerPlayerLightCtrl(first.mActorLightCtrl);
+                require(director->_1C == first.mActorLightCtrl &&
+                            first.mActorLightCtrl->mRegisteredLightDirector == director,
+                        "registration uses the original director's actual borrowed pointer");
+                LightFunction::registerPlayerLightCtrl(second.mActorLightCtrl);
+                compat::replace_actor_light_ctrl(&first);
+                require(director->_1C == second.mActorLightCtrl,
+                        "replacing an unregistered controller preserves the active player");
+                compat::replace_actor_light_ctrl(&second);
+                require(!director->_1C, "replacing the registered controller clears its borrowed pointer");
+                LightFunction::registerPlayerLightCtrl(first.mActorLightCtrl);
+            }
+            require(!director->_1C, "actor retirement clears the original director before the controller is freed");
+        }
+        require(scene::current_scene_obj_holder() == nullptr,
+                "retired original scenes expose no player light controller");
     }
-
-    void requireDiffuseLight(
-        const smgpc::render::GXLightState *actual,
-        const LightInfo &expected, std::string_view message) {
-        require(actual != nullptr && actual->loaded &&
-                    actual->coordinate_space ==
-                        (expected.mIsFollowCamera ? smgpc::render::GXLightCoordinateSpace::View : smgpc::render::GXLightCoordinateSpace::World) &&
-                    actual->color == colorValue(expected.mColor),
-                message);
-        requireNear(actual->position[0U], expected.mPos.x, message);
-        requireNear(actual->position[1U], expected.mPos.y, message);
-        requireNear(actual->position[2U], expected.mPos.z, message);
-    }
-
-    [[nodiscard]] std::optional<std::filesystem::path> findRealDisc() {
-        if (const auto *configured = std::getenv("SMGPC_REAL_DISC");
-            configured != nullptr && configured[0] != '\0') {
-            const auto path = std::filesystem::path(configured);
-            if (std::filesystem::is_regular_file(path)) {
-                return path;
-            }
-        }
-
-        auto error = std::error_code{};
-        auto directory = std::filesystem::current_path(error);
-        if (error) {
-            return std::nullopt;
-        }
-        while (true) {
-            for (const auto name : {"RMGK01.iso", "RMGK01.wbfs"}) {
-                const auto candidate = directory / name;
-                if (std::filesystem::is_regular_file(candidate, error) &&
-                    !error) {
-                    return candidate;
-                }
-                error.clear();
-            }
-            const auto parent = directory.parent_path();
-            if (parent == directory || parent.empty()) {
-                break;
-            }
-            directory = parent;
-        }
-        return std::nullopt;
-    }
-
-    class DiscMount final {
-    public:
-        DiscMount() {
-            const auto path = findRealDisc();
-            if (!path.has_value()) {
-                return;
-            }
-            aurora_dvd_close();
-            const auto pathString = path->string();
-            if (!aurora_dvd_open(pathString.c_str())) {
-                throw std::runtime_error(
-                    "the point-light fallback proof could not open the real SMG disc");
-            }
-            DVDInit();
-            _mounted = true;
-        }
-
-        ~DiscMount() {
-            if (_mounted) {
-                aurora_dvd_close();
-            }
-        }
-
-        [[nodiscard]] bool mounted() const {
-            return _mounted;
-        }
-
-    private:
-        bool _mounted = false;
-    };
-
-    class NpcPointLightRequester final : public LiveActor {
-    public:
-        NpcPointLightRequester()
-            : LiveActor("point-light NPC requester"),
-              color(200U, 100U, 50U, 255U) {
-            MR::connectToSceneNpcMovement(this);
-        }
-
-        void movement() override {
-            ++movementCount;
-            if (enabled) {
-                MR::requestPointLight(this, lightPosition, color, brightness,
-                                      duration);
-            }
-        }
-
-        TVec3f lightPosition{25.0F, 5.0F, -2.0F};
-        Color8 color;
-        f32 brightness = 0.99F;
-        s32 duration = 2;
-        s32 movementCount = 0;
-        bool enabled = true;
-    };
 
     void testClampAndCandidateContract(LiveActor &player) {
         auto farActor = LiveActor("point-light far candidate");
@@ -386,72 +254,6 @@ namespace {
                     "duration zero must retain the retail point-light radius");
     }
 
-    void testRequestServiceBoundary(
-        smgpc::runtime::RuntimeContext &runtime, LiveActor &actor) {
-        requireThrows<std::invalid_argument>(
-            [&] {
-                MR::requestPointLight(nullptr, TVec3f{},
-                                      Color8(1U, 2U, 3U, 255U), 0.98F,
-                                      2);
-            },
-            "LiveActor",
-            "a null point-light requester must fail separately from scene ownership");
-        requireThrows<std::logic_error>(
-            [&] {
-                MR::requestPointLight(&actor, TVec3f{},
-                                      Color8(1U, 2U, 3U, 255U), 0.98F,
-                                      2);
-            },
-            "active SceneObjHolder",
-            "a point-light request without a scene holder must fail loudly");
-
-        auto sentinel = smgpc::render::GXLightState{};
-        sentinel.coordinate_space =
-            smgpc::render::GXLightCoordinateSpace::World;
-        sentinel.color = {7U, 8U, 9U, 10U};
-        sentinel.position = {11.0F, 12.0F, 13.0F};
-        runtime.scene_lights().set_light(4U, sentinel);
-        {
-            auto standalone = LightPointCtrl{};
-        }
-        const auto *preserved = runtime.scene_lights().light(4U);
-        require(preserved != nullptr &&
-                    preserved->coordinate_space == sentinel.coordinate_space &&
-                    preserved->color == sentinel.color &&
-                    preserved->position == sentinel.position,
-                "a standalone LightPointCtrl destructor must not clear the scene owner's GX_LIGHT4 slot");
-        runtime.scene_lights().clear_light(4U);
-
-        auto holder = SceneObjHolder{};
-        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
-        requireThrows<std::logic_error>(
-            [&] {
-                MR::requestPointLight(&actor, TVec3f{},
-                                      Color8(1U, 2U, 3U, 255U), 0.98F,
-                                      2);
-            },
-            "scene-owned LightDirector",
-            "a point-light request must not lazily create its LightDirector owner");
-        require(holder.getObj(SceneObj_LightDirector) == nullptr,
-                "the missing-director failure must leave the SceneObj slot empty");
-
-        auto *director = dynamic_cast<LightDirector *>(
-            MR::createSceneObj(SceneObj_LightDirector));
-        require(director != nullptr && director->mPointCtrl != nullptr,
-                "the service-boundary fixture must create an initialized director");
-        auto *pointController = director->mPointCtrl;
-        director->mPointCtrl = nullptr;
-        requireThrows<std::logic_error>(
-            [&] {
-                MR::requestPointLight(&actor, TVec3f{},
-                                      Color8(1U, 2U, 3U, 255U), 0.98F,
-                                      2);
-            },
-            "initialized LightPointCtrl",
-            "a director without its initialized controller must fail loudly");
-        director->mPointCtrl = pointController;
-    }
-
     void testOriginalGxLightSubmission() {
         require(smgpc::runtime::RuntimeContext::try_instance() == nullptr,
                 "direct light proof must not install the host showcase runtime");
@@ -505,8 +307,8 @@ namespace {
                     "retail all-white initializer writes eight white lights at origin");
         }
         LightInfoCoin coin;
-        static_cast<LightInfo&>(coin) = actor.mInfo0;
-        coin._14 = 3; coin._15 = 5; coin._16 = 7; coin._17 = 11; coin._18 = 65.0f;
+        coin.base = actor.mInfo0;
+        coin._14 = {3, 5, 7, 11}; coin._18 = 65.0f;
         GXBeginDisplayList(commands.data(), commands.size());
         LightFunction::loadLightInfoCoin(&coin);
         const auto coinRegisters = decode(GXEndDisplayList());
@@ -515,429 +317,143 @@ namespace {
                     coinRegisters.at(0x639) == std::bit_cast<u32>(-31.5f),
                 "coin uses original diffuse slot zero and GX_LIGHT3 specular attenuation");
     }
+}
 
-    void testSceneOwnerSchedulingAndTransitions(
-        smgpc::runtime::RuntimeContext &runtime, LiveActor &player,
-        bool realDiscMounted) {
-        auto stageLightBinding =
-            std::unique_ptr<smgpc::scene::StageLightSceneBinding>{};
-        AreaLightInfo *stageArea = nullptr;
-        if (realDiscMounted) {
-            runtime.set_current_stage_name("HeavensDoorGalaxy");
-            const auto noPlacementTables =
-                std::array<smgpc::scene::StagePlacementTable, 0U>{};
-            stageLightBinding =
-                std::make_unique<smgpc::scene::StageLightSceneBinding>(
-                    runtime.dvd(), "HeavensDoorGalaxy", noPlacementTables);
-            stageArea = LightFunction::getAreaLightInfo(ZoneLightID{});
-            require(stageArea != nullptr,
-                    "the real HeavensDoorGalaxy fixture must expose its default AreaLight row");
+namespace {
+    void testOriginalCatalog() {
+        auto* director = MR::getSceneObj<LightDirector>(SceneObj_LightDirector);
+        require(director && director->mResourceHolder && director->mDataHolder && director->mZoneDataHolder,
+                "original scene owns the archive, light records and zone records");
+        require(director->mDataHolder->mLightCount > 0 && director->mZoneDataHolder->mCount == MR::getZoneNum(),
+                "original data owners load every light row and actual catalog zone");
+        require(director->_C && director->_1C && director->_1C->mRegisteredLightDirector == director,
+                "actual area and player controllers register with the original director");
+        auto* root = LightFunction::getAreaLightInfo(ZoneLightID{});
+        require(root == director->mDefaultAreaLight &&
+                    smgpc::resource::decode_cp932(root->mAreaLightName) == "[共通]宇宙の星",
+                "clear ZoneLightID resolves the authored root-zone default");
+        require(smgpc::resource::decode_cp932(LightFunction::getDefaultAreaLightName()) == "デフォルト",
+                "original default catalog name is distinct from the stage default");
+        s32 childZone = -1;
+        for (s32 i = 0; i < MR::getZoneNum(); ++i) {
+            if (std::string_view(MR::getZoneNameFromZoneId(i)) == "HeavensDoorMysteriousZone") childZone = i;
         }
-
-        const auto nameBaseline =
-            smgpc::compat::name_obj_runtime_state_count();
-        runtime.scene_lights().clear();
-
-        {
-            auto holder = SceneObjHolder{};
-            auto binding = smgpc::scene::SceneObjHolderBinding(holder);
-            auto *director = dynamic_cast<LightDirector *>(
-                MR::createSceneObj(SceneObj_LightDirector));
-            {
-                LiveActor registered("registered light owner");
-                smgpc::compat::replace_actor_light_ctrl(&registered);
-                LightFunction::registerPlayerLightCtrl(registered.mActorLightCtrl);
-                require(director->_1C == registered.mActorLightCtrl,
-                        "player registration must use the actual LightDirector field");
-                smgpc::compat::replace_actor_light_ctrl(&registered);
-                require(director->_1C == nullptr,
-                        "retiring a registered controller must release the actual borrowed pointer");
-            }
-            require(director != nullptr && director->mPointCtrl != nullptr &&
-                        MR::createSceneObj(SceneObj_LightDirector) == director &&
-                        holder.getObj(SceneObj_LightDirector) == director,
-                    "SceneObj 0x06 must own one reusable real LightDirector");
-            require(smgpc::resource::decode_cp932(director->getName()) == "ライト管理" &&
-                        smgpc::compat::name_obj_runtime_state_count() ==
-                            nameBaseline + 1U,
-                    "LightDirector must retain its retail identity in the scene owner");
-            require(director->_1C == nullptr,
-                    "the simplified player fixture must exercise the no-registered-controller fallback");
-
-            auto requester = NpcPointLightRequester{};
-            auto farActor = LiveActor("point-light transition far");
-            player.mPosition.zero();
-            requester.mPosition.set(25.0F, 0.0F, 0.0F);
-            farActor.mPosition.set(100.0F, 0.0F, 0.0F);
-            auto *controller = director->mPointCtrl;
-
-#ifndef NDEBUG
-            const auto entries = runtime.scheduler().snapshot();
-            const auto directorEntry = std::ranges::find_if(
-                entries, [director](const auto &candidate) {
-                    return candidate.name == director->getName();
-                });
-            const auto requesterEntry = std::ranges::find_if(
-                entries, [&requester](const auto &candidate) {
-                    return candidate.name == requester.getName();
-                });
-            require(directorEntry != entries.end() &&
-                        directorEntry->movement_type ==
-                            MR::MovementType_MapObj &&
-                        directorEntry->calc_anim_type == -1 &&
-                        directorEntry->draw_buffer_type == -1 &&
-                        directorEntry->draw_type == -1,
-                    "LightDirector must execute through MovementType_MapObj only");
-            require(requesterEntry != entries.end() &&
-                        requesterEntry->movement_type ==
-                            MR::MovementType_NPC,
-                    "the point-light requester fixture must submit from the real NPC movement tranche");
-#endif
-
-            // MapObj movement observes the previous frame's candidate before
-            // the NPC movement tranche submits this frame's request.
-            runtime.scheduler().execute_movement();
-            require(requester.movementCount == 1 &&
-                        controller->_10 == &requester &&
-                        controller->_0 == -1 && controller->_4 == 2,
-                    "the scheduled NPC request must remain queued for exactly one frame");
-            requireAbsent(*controller->_14,
-                          "the scheduled request frame must leave the published point light absent");
-
-            runtime.scene_lights().clear_light(4U);
-            MR::loadLight(MR::LightType_Strong);
-            require(runtime.scene_lights().light(4U) == nullptr,
-                    "non-player lighting must not publish the point-light slot");
-
-            for (auto slot = std::size_t{}; slot < 3U; ++slot) {
-                runtime.scene_lights().clear_light(slot);
-            }
-            runtime.scene_lights().clear_light(4U);
-            runtime.scene_lights().clear_actor_ambient();
-            MR::loadLightPlayer();
-            if (stageArea != nullptr) {
-                const auto &fallback = stageArea->mPlayerLight;
-                requireDiffuseLight(runtime.scene_lights().light(0U),
-                                    fallback.mInfo0,
-                                    "director player loading must preserve the StageLightData light-0 fallback");
-                requireDiffuseLight(runtime.scene_lights().light(1U),
-                                    fallback.mInfo1,
-                                    "director player loading must preserve the StageLightData light-1 fallback");
-                const auto *light2 = runtime.scene_lights().light(2U);
-                require(light2 != nullptr &&
-                            light2->coordinate_space ==
-                                smgpc::render::GXLightCoordinateSpace::View &&
-                            light2->color ==
-                                std::array<std::uint8_t, 4U>{
-                                    0U, 0U, 0U, fallback.mAlpha2} &&
-                            light2->position ==
-                                std::array<f32, 3U>{0.0F, 0.0F, 0.0F},
-                        "director player loading must preserve the StageLightData light-2 fallback");
-                const auto &ambient = runtime.scene_lights().actor_ambient();
-                require(ambient.has_value() &&
-                            *ambient == colorValue(fallback.mColor),
-                        "director player loading must preserve the StageLightData player ambient fallback");
-            } else {
-                require(runtime.scene_lights().light(0U) == nullptr &&
-                            runtime.scene_lights().light(1U) == nullptr &&
-                            runtime.scene_lights().light(2U) == nullptr &&
-                            !runtime.scene_lights().actor_ambient().has_value(),
-                        "an absent retail disc must leave the unavailable player fallback explicit");
-            }
-            const auto *absentLight = runtime.scene_lights().light(4U);
-            require(absentLight != nullptr &&
-                        absentLight->coordinate_space ==
-                            smgpc::render::GXLightCoordinateSpace::World &&
-                        absentLight->color ==
-                            std::array<std::uint8_t, 4U>{0U, 0U, 0U, 255U} &&
-                        absentLight->position ==
-                            std::array<f32, 3U>{0.0F, 0.0F, 0.0F},
-                    "player loading must append the currently absent GX_LIGHT4 record to its fallback");
-
-            runtime.scheduler().execute_movement();
-            require(requester.movementCount == 2 && controller->_0 == 1 &&
-                        controller->_8 == &requester,
-                    "the following MapObj frame must freeze the scheduled candidate and execute cosine step zero");
-            requirePosition(controller->_14->mPosition,
-                            TVec3f{25.0F, 5.0F, -2.0F},
-                            "fade-in step zero must use the target position");
-            requireColor(controller->_14->mColor,
-                         _GXColor{0U, 0U, 0U, 255U},
-                         "fade-in cosine step zero must begin at black");
-            requireNear(controller->_14->mBrightness, 0.95F,
-                        "fade-in cosine step zero must use brightness 0.95");
-            requireNear(controller->_14->mRadius, 15.0F,
-                        "fade-in cosine step zero must use radius 15");
-
-            requester.lightPosition.set(-500.0F, 0.0F, 0.0F);
-            requester.color = Color8(1U, 2U, 3U, 255U);
-            requester.brightness = 0.95F;
-            requester.duration = 20;
-            runtime.scheduler().execute_movement();
-            require(requester.movementCount == 3 && controller->_0 == 2 &&
-                        controller->_4 == 2,
-                    "scheduled requests during a blend must not mutate its frozen duration");
-            requirePosition(controller->_18->mPosition,
-                            TVec3f{25.0F, 5.0F, -2.0F},
-                            "scheduled requests during a blend must not mutate its frozen target");
-            requirePosition(controller->_14->mPosition,
-                            TVec3f{25.0F, 5.0F, -2.0F},
-                            "fade-in midpoint must keep the target position");
-            requireColor(controller->_14->mColor,
-                         _GXColor{100U, 50U, 25U, 255U},
-                         "duration-two fade-in step one must be the exact color midpoint");
-            requireNear(controller->_14->mBrightness, 0.97F,
-                        "duration-two fade-in step one must be the exact brightness midpoint");
-            requireNear(controller->_14->mRadius, 15.0F,
-                        "duration-two fade-in midpoint must retain radius 15");
-
-            requester.lightPosition.set(30.0F, 6.0F, -1.0F);
-            requester.color = Color8(20U, 40U, 60U, 255U);
-            requester.brightness = 0.98F;
-            requester.duration = 19;
-            runtime.scheduler().execute_movement();
-            require(requester.movementCount == 4 && controller->_0 == -1 &&
-                        controller->_C == &requester &&
-                        controller->_10 == &requester &&
-                        controller->_4 == 19,
-                    "the inclusive fade-in endpoint must accept the NPC's next request after the MapObj footer");
-            requirePosition(controller->_14->mPosition,
-                            TVec3f{25.0F, 5.0F, -2.0F},
-                            "the inclusive fade-in endpoint must retain its frozen target position");
-            requireColor(controller->_14->mColor,
-                         _GXColor{200U, 100U, 50U, 255U},
-                         "the inclusive fade-in endpoint must reach the frozen target color");
-            requireNear(controller->_14->mBrightness, 0.99F,
-                        "the inclusive fade-in endpoint must reach the frozen target brightness");
-            requireNear(controller->_14->mRadius, 15.0F,
-                        "the inclusive fade-in endpoint must retain radius 15");
-
-            requester.enabled = false;
-            runtime.scheduler().execute_movement();
-            require(requester.movementCount == 5 && controller->_0 == -1 &&
-                        controller->_C == &requester &&
-                        controller->_10 == nullptr,
-                    "the same live actor generation must track immediately without a blend");
-            requirePosition(controller->_14->mPosition,
-                            TVec3f{30.0F, 6.0F, -1.0F},
-                            "same-actor tracking must publish its new position immediately");
-            requireColor(controller->_14->mColor,
-                         _GXColor{20U, 40U, 60U, 255U},
-                         "same-actor tracking must publish its new color immediately");
-            requireNear(controller->_14->mBrightness, 0.98F,
-                        "same-actor tracking must publish its new brightness immediately");
-            requireNear(controller->_14->mRadius, 15.0F,
-                        "same-actor tracking must publish radius 15 immediately");
-
-            runtime.scene_lights().clear_light(4U);
-            MR::loadLightPlayer();
-            const auto *activeLight = runtime.scene_lights().light(4U);
-            require(activeLight != nullptr && activeLight->loaded &&
-                        activeLight->coordinate_space ==
-                            smgpc::render::GXLightCoordinateSpace::World &&
-                        activeLight->position ==
-                            std::array<f32, 3U>{30.0F, 6.0F, -1.0F} &&
-                        activeLight->color ==
-                            std::array<std::uint8_t, 4U>{20U, 40U, 60U,
-                                                         255U},
-                    "active player point-light loading must publish GX_LIGHT4 in world space");
-            requireNear(activeLight->cosine_attenuation[0U], 1.0F,
-                        "active GX_LIGHT4 must use cosine constant one");
-            requireNear(activeLight->cosine_attenuation[1U], 0.0F,
-                        "active GX_LIGHT4 must use zero cosine linear term");
-            requireNear(activeLight->cosine_attenuation[2U], 0.0F,
-                        "active GX_LIGHT4 must use zero cosine quadratic term");
-            const auto activeSteepQuadratic =
-                (1.0F - 0.98F) / (0.98F * 15.0F * 15.0F);
-            requireNear(activeLight->distance_attenuation[0U], 1.0F,
-                        "active GX_LIGHT4 steep attenuation must use constant one");
-            requireNear(activeLight->distance_attenuation[1U], 0.0F,
-                        "active GX_LIGHT4 steep attenuation must use zero linear term");
-            requireNear(activeLight->distance_attenuation[2U],
-                        activeSteepQuadratic,
-                        "active GX_LIGHT4 must use independently computed steep attenuation");
-
-            MR::requestPointLight(
-                &farActor, TVec3f{100.0F, 20.0F, 10.0F},
-                Color8(220U, 120U, 80U, 255U), 0.96F, 2);
-            runtime.scheduler().execute_movement();
-            require(controller->_0 == 1 && controller->_8 == &farActor,
-                    "a different actor must start a frozen interpolation");
-            requirePosition(controller->_14->mPosition,
-                            TVec3f{30.0F, 6.0F, -1.0F},
-                            "actor-switch step zero must retain the old position");
-            requireColor(controller->_14->mColor,
-                         _GXColor{20U, 40U, 60U, 255U},
-                         "actor-switch step zero must retain the old color");
-            requireNear(controller->_14->mBrightness, 0.98F,
-                        "actor-switch step zero must retain the old brightness");
-            requireNear(controller->_14->mRadius, 15.0F,
-                        "actor-switch step zero must retain radius 15");
-
-            runtime.scheduler().execute_movement();
-            require(controller->_0 == 2,
-                    "actor-switch duration-two step one must remain active");
-            requirePosition(controller->_14->mPosition,
-                            TVec3f{65.0F, 13.0F, 4.5F},
-                            "actor-switch cosine midpoint must blend both positions");
-            requireColor(controller->_14->mColor,
-                         _GXColor{120U, 80U, 70U, 255U},
-                         "actor-switch cosine midpoint must blend both colors");
-            requireNear(controller->_14->mBrightness, 0.97F,
-                        "actor-switch cosine midpoint must blend both brightness values");
-            requireNear(controller->_14->mRadius, 15.0F,
-                        "actor-switch cosine midpoint must retain radius 15");
-
-            runtime.scheduler().execute_movement();
-            require(controller->_0 == -1 && controller->_C == &farActor,
-                    "the actor-switch inclusive endpoint must become the tracked actor");
-            requirePosition(controller->_14->mPosition,
-                            TVec3f{100.0F, 20.0F, 10.0F},
-                            "the actor-switch endpoint must reach the target position");
-            requireColor(controller->_14->mColor,
-                         _GXColor{220U, 120U, 80U, 255U},
-                         "the actor-switch endpoint must reach the target color");
-            requireNear(controller->_14->mBrightness, 0.96F,
-                        "the actor-switch endpoint must reach the target brightness");
-            requireNear(controller->_14->mRadius, 15.0F,
-                        "the actor-switch endpoint must retain radius 15");
-
-            runtime.scheduler().execute_movement();
-            require(controller->_0 == 1 && controller->_8 == nullptr &&
-                        controller->_4 == 30,
-                    "a missed idle-frame request must begin the retail 30-frame fade-out");
-            requirePosition(controller->_14->mPosition,
-                            TVec3f{100.0F, 20.0F, 10.0F},
-                            "fade-out step zero must freeze the old actor position");
-            requireColor(controller->_14->mColor,
-                         _GXColor{220U, 120U, 80U, 255U},
-                         "fade-out step zero must retain the old color");
-            requireNear(controller->_14->mBrightness, 0.96F,
-                        "fade-out step zero must retain the old brightness");
-            requireNear(controller->_14->mRadius, 15.0F,
-                        "fade-out step zero must retain radius 15");
-
-            for (auto step = 1; step <= 15; ++step) {
-                runtime.scheduler().execute_movement();
-            }
-            require(controller->_0 == 16,
-                    "fade-out cosine midpoint must leave steps 16 through 30 pending");
-            requirePosition(controller->_14->mPosition,
-                            TVec3f{100.0F, 20.0F, 10.0F},
-                            "fade-out midpoint must keep the frozen old position");
-            requireColor(controller->_14->mColor,
-                         _GXColor{110U, 60U, 40U, 255U},
-                         "fade-out cosine midpoint must blend to half color");
-            requireNear(controller->_14->mBrightness, 0.955F,
-                        "fade-out cosine midpoint must blend to brightness 0.955");
-            requireNear(controller->_14->mRadius, 15.0F,
-                        "fade-out cosine midpoint must retain radius 15");
-
-            for (auto step = 16; step <= 30; ++step) {
-                runtime.scheduler().execute_movement();
-            }
-            require(controller->_0 == -1 && controller->_C == nullptr,
-                    "fade-out must include cosine step 30 before becoming absent");
-            requirePosition(controller->_14->mPosition,
-                            TVec3f{100.0F, 20.0F, 10.0F},
-                            "the final black fade-out endpoint must retain the old position");
-            requireColor(controller->_14->mColor,
-                         _GXColor{0U, 0U, 0U, 255U},
-                         "the final fade-out endpoint must be black");
-            requireNear(controller->_14->mBrightness, 0.95F,
-                        "the final present fade-out endpoint must retain brightness 0.95");
-            requireNear(controller->_14->mRadius, 15.0F,
-                        "the final present fade-out endpoint must retain radius 15");
-
-            runtime.scheduler().execute_movement();
-            requireAbsent(*controller->_14,
-                          "the frame after fade-out must publish the .001 absent record");
-
-            runtime.scene_lights().clear_light(4U);
-            MR::loadLightPlayer();
-            const auto *loaded = runtime.scene_lights().light(4U);
-            require(loaded != nullptr &&
-                        loaded->coordinate_space ==
-                            smgpc::render::GXLightCoordinateSpace::World &&
-                        loaded->color ==
-                            std::array<std::uint8_t, 4U>{0U, 0U, 0U,
-                                                         255U} &&
-                        loaded->position ==
-                            std::array<f32, 3U>{0.0F, 0.0F, 0.0F},
-                    "player-light load must route the exact absent record through GX_LIGHT4");
-            const auto absentSteepQuadratic =
-                (1.0F - 0.001F) / (0.001F * 15.0F * 15.0F);
-            requireNear(loaded->distance_attenuation[0U], 1.0F,
-                        "absent GX_LIGHT4 steep attenuation must use constant one");
-            requireNear(loaded->distance_attenuation[1U], 0.0F,
-                        "absent GX_LIGHT4 steep attenuation must use zero linear term");
-            requireNear(loaded->distance_attenuation[2U],
-                        absentSteepQuadratic,
-                        "absent GX_LIGHT4 must use independently computed steep attenuation");
-        }
-
-        require(runtime.scene_lights().light(4U) == nullptr &&
-                    smgpc::compat::name_obj_runtime_state_count() ==
-                        nameBaseline,
-                "LightDirector destruction must clear GX_LIGHT4 and release its SceneObj identity");
-
-        {
-            auto holder = SceneObjHolder{};
-            auto binding = smgpc::scene::SceneObjHolderBinding(holder);
-            auto *director = dynamic_cast<LightDirector *>(
-                MR::createSceneObj(SceneObj_LightDirector));
-            require(director != nullptr && director->mPointCtrl != nullptr,
-                    "a later scene generation must recreate LightDirector normally");
-            runtime.scene_lights().clear_light(4U);
-            MR::loadLightPlayer();
-            require(runtime.scene_lights().light(4U) != nullptr,
-                    "the recreated owner must publish its own absent point-light record");
-        }
-        require(runtime.scene_lights().light(4U) == nullptr,
-                "the recreated owner must clear only its GX_LIGHT4 slot on teardown");
-        stageLightBinding.reset();
+        require(childZone >= 0, "actual scenario catalog contains the authored child zone");
+        ZoneLightID id;
+        id._0 = childZone;
+        id.mLightID = 0;
+        const auto* child = LightFunction::getAreaLightInfo(id);
+        require(child && child != root && smgpc::resource::decode_cp932(child->mAreaLightName) == "ロゼッタ出会い",
+                "child-zone light zero resolves the Rosetta meeting row");
+        require(child->mPlayerLight.mInfo0.mColor.r == 90 && child->mPlayerLight.mInfo0.mColor.g == 90 &&
+                    child->mPlayerLight.mInfo0.mColor.b == 90,
+                "Rosetta diffuse color comes from original CSV parsing");
+        require(!child->mPlayerLight.mInfo0.mIsFollowCamera && child->mPlayerLight.mInfo1.mIsFollowCamera,
+                "authored world-space and camera-space flags survive the original parser");
+        requireColor(child->mPlayerLight.mColor, GXColor{90, 90, 115, 60},
+                     "Rosetta ambient bytes come from original CSV parsing");
+        id.mLightID = 1;
+        require(smgpc::resource::decode_cp932(LightFunction::getAreaLightInfo(id)->mAreaLightName) == "天文台（ロゼッタ）",
+                "child-zone second light row is distinct");
+        id.mLightID = 999;
+        require(LightFunction::getAreaLightInfo(id) == director->mDataHolder->findAreaLight("\x83\x66\x83\x74\x83\x48\x83\x8b\x83\x67"),
+                "missing child ID uses the original literal default lookup");
+        requireColor(director->mDataHolder->_8.base.mColor, GXColor{255, 255, 0, 0},
+                     "coin light defaults belong to the original data holder");
+        require(director->mDataHolder->_8.base.mIsFollowCamera && director->mDataHolder->_8._18 == 65.0f,
+                "coin camera and specular defaults retain the original values");
     }
-}  // namespace
+
+    void testCoordinateBlend() {
+        auto* camera = MR::getSceneObj<CameraContext>(SceneObj_CameraContext);
+        const auto savedView = camera->mView;
+        const auto savedInverse = camera->mViewInv;
+        struct Restore {
+            CameraContext* camera;
+            TPos3f view, inverse;
+            ~Restore() { camera->mView = view; camera->mViewInv = inverse; }
+        } restore{camera, savedView, savedInverse};
+        camera->mView.identity();
+        camera->mView.setTrans(TVec3f(-100, -200, -300));
+        camera->mViewInv.identity();
+        camera->mViewInv.setTrans(TVec3f(100, 200, 300));
+
+        ActorLightInfo from{}, to{}, result{};
+        from.mInfo0 = {{10, 20, 30, 40}, {110, 220, 330}, false};
+        to.mInfo0 = {{50, 60, 70, 80}, {30, 40, 50}, true};
+        from.mInfo1 = {{10, 20, 30, 40}, {10, 20, 30}, true};
+        to.mInfo1 = {{50, 60, 70, 80}, {130, 240, 350}, false};
+        from.mAlpha2 = 10;
+        to.mAlpha2 = 90;
+        result.mInfo0.mIsFollowCamera = true;
+        result.mInfo1.mIsFollowCamera = false;
+        LightFunction::blendActorLightInfo(&result, from, to, 0.25f);
+        requirePosition(result.mInfo0.mPos, TVec3f(15, 25, 35), "world source converts to target camera space before blending");
+        requirePosition(result.mInfo1.mPos, TVec3f(115, 225, 335), "camera source converts to target world space before blending");
+        require(result.mInfo0.mIsFollowCamera && !result.mInfo1.mIsFollowCamera && result.mAlpha2 == 30,
+                "blend preserves destination spaces and original alpha interpolation");
+        requireColor(result.mInfo0.mColor, GXColor{20, 30, 40, 50}, "original color interpolation truncates authored bytes");
+        LightFunction::blendActorLightInfo(&result, from, to, 1.5f);
+        requirePosition(result.mInfo0.mPos, TVec3f(40, 50, 60), "original interpolation extrapolates without clamping the rate");
+        requireColor(result.mInfo0.mColor, GXColor{70, 80, 90, 100}, "color extrapolation uses the same unclamped rate");
+        TVec3f world;
+        LightFunction::calcLightWorldPos(&world, to.mInfo0);
+        requirePosition(world, TVec3f(130, 240, 350), "follow-camera light converts through actual inverse view");
+    }
+
+    void testPointTransition() {
+        LiveActor actor("original point transition");
+        LightPointCtrl controller;
+        controller.requestPointLight(&actor, TVec3f(25, 5, -2), Color8(200, 100, 50, 255), 0.99f, 2);
+        controller.update();
+        require(controller._0 == 1 && controller._8 == &actor, "fade-in includes step zero");
+        requireColor(controller._14->mColor, GXColor{0, 0, 0, 255}, "fade-in begins at black");
+        requireNear(controller._14->mBrightness, 0.95f, "fade-in begins at minimum present brightness");
+        controller.update();
+        requireColor(controller._14->mColor, GXColor{100, 50, 25, 255}, "cosine midpoint blends half color");
+        requireNear(controller._14->mBrightness, 0.97f, "cosine midpoint blends brightness");
+        controller.update();
+        require(controller._0 == -1 && controller._C == &actor, "fade-in includes its endpoint");
+        requireColor(controller._14->mColor, GXColor{200, 100, 50, 255}, "fade-in reaches authored color");
+        controller.update();
+        require(controller._0 == 1 && controller._8 == nullptr && controller._4 == 30, "missed request starts the original thirty-step fade-out");
+        for (int i = 0; i < 15; ++i) controller.update();
+        requireColor(controller._14->mColor, GXColor{100, 50, 25, 255}, "fade-out retains the cosine midpoint");
+        requirePosition(controller._14->mPosition, TVec3f(25, 5, -2), "fade-out freezes the prior actor position");
+        for (int i = 0; i < 15; ++i) controller.update();
+        require(controller._0 == -1 && controller._C == nullptr, "fade-out includes step thirty");
+        controller.update();
+        requireAbsent(*controller._14, "idle frame after fade-out clears the real point record");
+    }
+}
 
 int main(int argc, char** argv) {
     try {
         if (argc == 2 && std::string_view(argv[1]) == "--original-owner-only") {
             testOriginalPlayerLightOwnership();
-            std::cout << "Original player-light ownership passed: registration, replacement, actor retirement and eight scene lifetimes\n";
+            std::cout << "PASS player-light registration, replacement, retirement and eight scene lifetimes\n";
             return 0;
         }
         if (argc == 2 && std::string_view(argv[1]) == "--original-gx-only") {
             testOriginalGxLightSubmission();
-            std::cout << "Original GX light submission passed: authored diffuse, ambient, alpha, all-white and coin without RuntimeContext\n";
+            std::cout << "PASS original diffuse, ambient, alpha, white and coin GX commands\n";
             return 0;
         }
-        auto discMount = DiscMount{};
-        auto logger = smgpc::logging::create_default_logger();
-        auto window = smgpc::render::AuroraWindow({
-            .width = 320,
-            .height = 240,
-            .title = "SMG PC point-light runtime proof",
+        return smgpc::test::run_stage_resource_process("original-light-owners", [] {
+            testOriginalCatalog();
+            testCoordinateBlend();
+            auto& player = *MR::getMarioHolder()->getMarioActor();
+            const auto position = player.mPosition;
+            struct RestorePosition { LiveActor& actor; TVec3f position; ~RestorePosition() { actor.mPosition = position; } } restore{player, position};
+            testClampAndCandidateContract(player);
+            testStaleAndAbaCandidateSafety();
+            LiveActor zeroDuration("original point zero duration");
+            testZeroDurationIsNotNormalized(zeroDuration);
+            testPointTransition();
+            testOriginalGxLightSubmission();
         });
-        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
-        auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
-        auto player = LiveActor("point-light player");
-        player.mPosition.zero();
-        player.calcAndSetBaseMtx();
-        runtime.player_system().attach_actor(player);
-
-        testClampAndCandidateContract(player);
-        testStaleAndAbaCandidateSafety();
-        auto zeroDurationActor = LiveActor("point-light zero duration");
-        testZeroDurationIsNotNormalized(zeroDurationActor);
-        testRequestServiceBoundary(runtime, player);
-        testSceneOwnerSchedulingAndTransitions(runtime, player,
-                                               discMount.mounted());
-
-        runtime.player_system().detach_actor(&player);
-        std::cout << "PointLightRuntime tests passed: 6/6 exact request, transition, load, scheduling, fallback, and lifecycle contracts\n";
-        return 0;
-    } catch (const std::exception &error) {
-        std::cerr << "PointLightRuntime tests failed: " << error.what() << '\n';
+    } catch (const std::exception& error) {
+        std::cerr << "FAIL original lights: " << error.what() << '\n';
         return 1;
     }
 }

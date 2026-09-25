@@ -1,0 +1,16 @@
+(lldb) target create "build/macosx/arm64/debug/smg-pc-original-xanime-player-tests"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-xanime-player-tests' (arm64).
+(lldb) settings set target.disable-aslr false
+(lldb) run
+smg-pc-original-xanime-player-tests(42174,0x1eff3bf80) malloc: *** error for object 0x79fac24070: pointer being freed was not allocated
+smg-pc-original-xanime-player-tests(42174,0x1eff3bf80) malloc: *** set a breakpoint in malloc_error_break to debug
+Process 42174 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-xanime-player-tests' (arm64)
+Process 42174 stopped
+* thread #1, queue = 'com.apple.main-thread', stop reason = signal SIGABRT
+       frame #0: 0x000000018a3d5650 libsystem_kernel.dylib`__pthread_kill + 8
+libsystem_kernel.dylib`__pthread_kill:
+->  0x18a3d5650 <+8>:  b.lo   0x18a3d5670               ; <+40>
+    0x18a3d5654 <+12>: pacibsp 
+    0x18a3d5658 <+16>: stp    x29, x30, [sp, #-0x10]!
+    0x18a3d565c <+20>: mov    x29, sp
+Target 0: (smg-pc-original-xanime-player-tests) stopped.

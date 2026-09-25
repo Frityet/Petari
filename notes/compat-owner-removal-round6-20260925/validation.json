@@ -1,0 +1,318 @@
+{
+  "application_build": {
+    "exit": 0,
+    "log": "build-app.log",
+    "initial_failure": "build-app-initial-failure.log"
+  },
+  "focused_targets": [
+    {
+      "name": "game-math-rotation",
+      "target": "smg-pc-game-math-rotation-tests",
+      "build": 0,
+      "build_log": "smg-pc-game-math-rotation-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-game-math-rotation-tests-run.log",
+      "completed_at": 1790346595.2679281
+    },
+    {
+      "name": "gravity-math-foundation",
+      "target": "smg-pc-gravity-math-foundation-tests",
+      "build": 0,
+      "build_log": "smg-pc-gravity-math-foundation-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-gravity-math-foundation-tests-run.log",
+      "completed_at": 1790346599.84983
+    },
+    {
+      "name": "original-sensor-matrix",
+      "target": "smg-pc-original-sensor-matrix-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-sensor-matrix-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-sensor-matrix-tests-run.log",
+      "completed_at": 1790346604.662136
+    },
+    {
+      "name": "area-obj-core",
+      "target": "smg-pc-area-obj-core-tests",
+      "build": 0,
+      "build_log": "smg-pc-area-obj-core-tests-build.log",
+      "run": 1,
+      "run_log": "smg-pc-area-obj-core-tests-run.log",
+      "completed_at": 1790346804.051837
+    },
+    {
+      "name": "original-xanime-core",
+      "target": "smg-pc-original-xanime-core-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-xanime-core-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-xanime-core-tests-run.log",
+      "completed_at": 1790346613.4032059
+    },
+    {
+      "name": "original-xanime-player",
+      "target": "smg-pc-original-xanime-player-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-xanime-player-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-xanime-player-tests-run.log",
+      "completed_at": 1790346799.68188
+    },
+    {
+      "name": "original-jpa-manager",
+      "target": "smg-pc-original-jpa-manager-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-jpa-manager-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-jpa-manager-tests-run.log",
+      "completed_at": 1790346624.506208
+    },
+    {
+      "name": "original-particle-resource-owner",
+      "target": "smg-pc-original-particle-resource-owner-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-particle-resource-owner-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-particle-resource-owner-tests-run.log",
+      "completed_at": 1790346631.202826
+    },
+    {
+      "name": "original-effect-ownership",
+      "target": "smg-pc-original-effect-ownership-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-effect-ownership-tests-build.log",
+      "run": -11,
+      "run_log": "smg-pc-original-effect-ownership-tests-run.log",
+      "completed_at": 1790346636.425323
+    },
+    {
+      "name": "original-j3d-geometry-resource",
+      "target": "smg-pc-original-j3d-geometry-resource-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-j3d-geometry-resource-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-j3d-geometry-resource-tests-run.log",
+      "completed_at": 1790346641.1270158
+    },
+    {
+      "name": "point-light-runtime",
+      "target": "smg-pc-point-light-runtime-tests",
+      "build": 0,
+      "build_log": "smg-pc-point-light-runtime-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-point-light-runtime-tests-run.log",
+      "completed_at": 1790346648.65012
+    },
+    {
+      "name": "mii-font-compat",
+      "target": "smg-pc-mii-font-compat-tests",
+      "build": 0,
+      "build_log": "smg-pc-mii-font-compat-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-mii-font-compat-tests-run.log",
+      "completed_at": 1790346656.261111
+    },
+    {
+      "name": "original-layout-group",
+      "target": "smg-pc-original-layout-group-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-layout-group-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-original-layout-group-tests-run.log",
+      "completed_at": 1790346663.853305
+    },
+    {
+      "name": "layout-real-or-absent",
+      "target": "smg-pc-layout-real-or-absent-tests",
+      "build": 0,
+      "build_log": "smg-pc-layout-real-or-absent-tests-build.log",
+      "run": 0,
+      "run_log": "smg-pc-layout-real-or-absent-tests-run.log",
+      "completed_at": 1790346671.15598
+    },
+    {
+      "name": "area-obj-real-or-absent",
+      "target": "smg-pc-area-obj-real-or-absent-tests",
+      "build": 0,
+      "build_log": "smg-pc-area-obj-real-or-absent-tests-build.log",
+      "run": -11,
+      "run_log": "smg-pc-area-obj-real-or-absent-tests-run.log",
+      "completed_at": 1790346888.297816
+    },
+    {
+      "name": "original-image-effect-ownership",
+      "target": "smg-pc-original-image-effect-ownership-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-image-effect-ownership-tests-build.log",
+      "run": -11,
+      "run_log": "smg-pc-original-image-effect-ownership-tests-run.log",
+      "completed_at": 1790346893.46151
+    },
+    {
+      "name": "original-collision-parts-owner",
+      "target": "smg-pc-original-collision-parts-owner-tests",
+      "build": 0,
+      "build_log": "smg-pc-original-collision-parts-owner-tests-build.log",
+      "run": -11,
+      "run_log": "smg-pc-original-collision-parts-owner-tests-run.log",
+      "completed_at": 1790346898.662981
+    },
+    {
+      "name": "actor-event-camera",
+      "target": "smg-pc-actor-event-camera-tests",
+      "build": 0,
+      "build_log": "smg-pc-actor-event-camera-tests-build.log",
+      "run": -11,
+      "run_log": "smg-pc-actor-event-camera-tests-run.log",
+      "completed_at": 1790346903.928575
+    },
+    {
+      "name": "camera-view-interpolator",
+      "target": "smg-pc-camera-view-interpolator-tests",
+      "build": 0,
+      "build_log": "smg-pc-camera-view-interpolator-tests-build.log",
+      "run": 1,
+      "run_log": "smg-pc-camera-view-interpolator-tests-run.log",
+      "completed_at": 1790346826.970051
+    },
+    {
+      "name": "camera-view-service",
+      "target": "smg-pc-camera-view-service-tests",
+      "build": 0,
+      "build_log": "smg-pc-camera-view-service-tests-build.log",
+      "run": 1,
+      "run_log": "smg-pc-camera-view-service-tests-run.log",
+      "completed_at": 1790346831.575571
+    },
+    {
+      "name": "stage-start-camera",
+      "target": "smg-pc-stage-start-camera-tests",
+      "build": 0,
+      "build_log": "smg-pc-stage-start-camera-tests-build.log",
+      "run": 1,
+      "run_log": "smg-pc-stage-start-camera-tests-run.log",
+      "completed_at": 1790346908.90605
+    }
+  ],
+  "focused_counts": {
+    "attempted": 21,
+    "compiled": 21,
+    "passed": 12,
+    "failed": 9
+  },
+  "additional_lighting_modes": [
+    {
+      "mode": "original-owner-only",
+      "exit": 0
+    },
+    {
+      "mode": "original-gx-only",
+      "exit": 0
+    }
+  ],
+  "runtime": {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc",
+      "--disc",
+      "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--stage",
+      "HeavensDoorGalaxy",
+      "--scenario",
+      "1",
+      "--max-frames",
+      "600"
+    ],
+    "environment": {
+      "SMGPC_SAVE_DIR": "/Users/frityet/Projects/petari/notes/compat-owner-removal-round6-20260925/gateway-600-nand",
+      "SMGPC_NAND_DIR": "",
+      "SMGPC_ORIGINAL_PLACEMENT_REPORT_PATH": "/Users/frityet/Projects/petari/notes/compat-owner-removal-round6-20260925/gateway-600-placements.json",
+      "AURORA_BACKEND": "metal",
+      "SMGPC_WINDOW_WIDTH": "1280",
+      "SMGPC_WINDOW_HEIGHT": "720",
+      "SMGPC_SCREENSHOT_PATH": "/Users/frityet/Projects/petari/notes/compat-owner-removal-round6-20260925/gateway-600-frame240.png",
+      "SMGPC_SCREENSHOT_FRAME": "240",
+      "SMGPC_DEBUG_WPAD_INPUT_FILE": "",
+      "SMGPC_DEBUG_FRAME_TIMING": "",
+      "SMGPC_DEBUG_ACTOR_TRACE_PATH": "",
+      "SMGPC_DEBUG_ACTOR_TRACE_TYPES": "",
+      "SMGPC_DEBUG_ACTOR_TRACE_INTERVAL": "60",
+      "SMGPC_DEBUG_LAYOUT_DUMP_PATH": "",
+      "SMGPC_DEBUG_LAYOUT_DUMP_FRAME": "",
+      "SMGPC_DEBUG_WPAD_BUTTON_SCRIPT": "",
+      "SMGPC_DEBUG_WPAD_POINTER_SCRIPT": "",
+      "SMGPC_DEBUG_WPAD_STICK_SCRIPT": ""
+    },
+    "binary_sha256": "341060f86dad834b384372986f5fa4444f63d85afb582feb90be9197fa0e020c",
+    "started_at": "2026-09-25T14:29:50.735701+00:00",
+    "pid": 41762,
+    "exit_code": 0,
+    "timeout_terminated": false,
+    "inherited_smgpc_environment_removed": true,
+    "binary_sha256_after": "341060f86dad834b384372986f5fa4444f63d85afb582feb90be9197fa0e020c",
+    "binary_unchanged": true,
+    "elapsed_seconds": 11.494041499972809,
+    "process_still_exists_after_wait": false,
+    "completed_frames": 600,
+    "verified_bounded_completion": true
+  },
+  "screenshot_visually_inspected": true,
+  "legacy_failure_path_sources": {
+    "src/Game/System/Language.cpp": {
+      "same_as_baseline": true,
+      "sha256": "47f401f2758ae6a6f46e2041222853a7e11b1cc1aebd37882aee95c85096bc19"
+    },
+    "src/runtime/MessageHolderOwnership.cpp": {
+      "same_as_baseline": true,
+      "sha256": "2db20374555bc7405eda89c075c81ba01557ff83083348b4464e3fc97154415b"
+    },
+    "src/compat/FileUtilCompat.cpp": {
+      "same_as_baseline": true,
+      "sha256": "1e595f37ecb695fb18fc47419495f174cd32eef0d26bca4331fa1e217f022883"
+    },
+    "src/Game/Util/SceneUtil.cpp": {
+      "same_as_baseline": true,
+      "sha256": "05bfa4758bc87aaa54a669b2239bb04f89d76649a969c777ac199916bbc5bbf0"
+    },
+    "src/compat/OriginalActorModelAccess.cpp": {
+      "same_as_baseline": true,
+      "sha256": "97823512d19f3bf86bcf2eb8c6af089882570fc8c675ce8abdf7f840ab479806"
+    },
+    "src/runtime/RuntimeServices.cpp": {
+      "same_as_baseline": true,
+      "sha256": "789843f961aadf2f32c46ba7a919f14fd0f8dddb565bb3befc99a1a60769cef3"
+    },
+    "src/compat/SceneHeapAccess.cpp": {
+      "same_as_baseline": true,
+      "sha256": "4a0884c57bae8a7b8a52e4439e579a1aa0ebd6a6c7aab4e82d6b088d6ba0aaa9"
+    }
+  },
+  "provider_audit": {
+    "duplicate_strong_symbols": 0,
+    "stale_source_providers": 0,
+    "unavailable_owner_inputs": 0,
+    "provider_provenance": {
+      "unreviewed": 7632,
+      "canonical-path-see-source-closeness-report": 15716,
+      "source-tokens-exact": 8,
+      "source-tokens-differ": 2,
+      "unresolved": 9
+    },
+    "source_checks": {
+      "source-tokens-exact": 9,
+      "unresolved": 11,
+      "source-tokens-differ": 2
+    }
+  },
+  "provider_gate_exit": 255,
+  "removed_this_batch": 16,
+  "remaining_compat_files": 168,
+  "complete_removal_finished": false,
+  "full_gateway_completed": false,
+  "limits": [
+    "Working-tree validation includes unrelated pending changes.",
+    "No CMake or clean-checkout build.",
+    "Nine legacy focused targets remain failing; no full-suite pass.",
+    "600 frames prove only the bounded opening run."
+  ]
+}

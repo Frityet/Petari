@@ -1,0 +1,12 @@
+{
+  "donor_functions": 77,
+  "identical_after_declared_native_adaptation": true,
+  "native_adaptations": [
+    "aurora/ppc_math.hpp include",
+    "four degree-to-short conversions use aurora::ppc::truncate_s16"
+  ],
+  "header_changed": false,
+  "source_sha256": "de8914f173b62395355e39a1d3f1ba59035de2aa4d715a30deca4cc0664ef0f1",
+  "donor_sha256": "2a3488eb892682ac6331f3c3e1be286ac81dc12dede9b9c30d1be8317d8feb25",
+  "build_and_runtime": "not run; root coordinates"
+}

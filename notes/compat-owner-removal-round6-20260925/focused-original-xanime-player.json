@@ -1,0 +1,64 @@
+[
+  {
+    "name": "original-xanime-player",
+    "target": "smg-pc-original-xanime-player-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-xanime-player-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-xanime-player-tests-run.log"
+  },
+  {
+    "name": "area-obj-core",
+    "target": "smg-pc-area-obj-core-tests",
+    "build": 0,
+    "build_log": "smg-pc-area-obj-core-tests-build.log",
+    "run": 1,
+    "run_log": "smg-pc-area-obj-core-tests-run.log"
+  },
+  {
+    "name": "area-obj-real-or-absent",
+    "target": "smg-pc-area-obj-real-or-absent-tests",
+    "build": 255,
+    "build_log": "smg-pc-area-obj-real-or-absent-tests-build.log"
+  },
+  {
+    "name": "original-image-effect-ownership",
+    "target": "smg-pc-original-image-effect-ownership-tests",
+    "build": 255,
+    "build_log": "smg-pc-original-image-effect-ownership-tests-build.log"
+  },
+  {
+    "name": "original-collision-parts-owner",
+    "target": "smg-pc-original-collision-parts-owner-tests",
+    "build": 255,
+    "build_log": "smg-pc-original-collision-parts-owner-tests-build.log"
+  },
+  {
+    "name": "actor-event-camera",
+    "target": "smg-pc-actor-event-camera-tests",
+    "build": 255,
+    "build_log": "smg-pc-actor-event-camera-tests-build.log"
+  },
+  {
+    "name": "camera-view-interpolator",
+    "target": "smg-pc-camera-view-interpolator-tests",
+    "build": 0,
+    "build_log": "smg-pc-camera-view-interpolator-tests-build.log",
+    "run": 1,
+    "run_log": "smg-pc-camera-view-interpolator-tests-run.log"
+  },
+  {
+    "name": "camera-view-service",
+    "target": "smg-pc-camera-view-service-tests",
+    "build": 0,
+    "build_log": "smg-pc-camera-view-service-tests-build.log",
+    "run": 1,
+    "run_log": "smg-pc-camera-view-service-tests-run.log"
+  },
+  {
+    "name": "stage-start-camera",
+    "target": "smg-pc-stage-start-camera-tests",
+    "build": 255,
+    "build_log": "smg-pc-stage-start-camera-tests-build.log"
+  }
+]

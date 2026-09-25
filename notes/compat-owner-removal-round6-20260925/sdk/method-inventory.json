@@ -1,0 +1,162 @@
+[
+  {
+    "method": "J3DShapeMtx::loadMtxIndx_PNGP",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 232,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 26
+    },
+    "adaptation": "none"
+  },
+  {
+    "method": "JPABaseEmitter::init",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 456,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 250
+    },
+    "adaptation": "reset existing native callback owner token"
+  },
+  {
+    "method": "JPADrawDirection",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 507,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 303
+    },
+    "adaptation": "none"
+  },
+  {
+    "method": "JPADrawRotDirection",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 550,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 346
+    },
+    "adaptation": "none"
+  },
+  {
+    "method": "JPADrawDBillboard",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 598,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 394
+    },
+    "adaptation": "none"
+  },
+  {
+    "method": "JPADrawLine",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 632,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 428
+    },
+    "adaptation": "none"
+  },
+  {
+    "method": "JPADrawStripe",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 658,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 454
+    },
+    "adaptation": "none"
+  },
+  {
+    "method": "JPADrawStripeX",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 743,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 539
+    },
+    "adaptation": "none"
+  },
+  {
+    "method": "JPAFieldAir::prepare",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 890,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 686
+    },
+    "adaptation": "none"
+  },
+  {
+    "method": "JPAFieldVortex::prepare",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 901,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 697
+    },
+    "adaptation": "none"
+  },
+  {
+    "method": "JPAFieldVortex::calc",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 908,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 704
+    },
+    "adaptation": "none"
+  },
+  {
+    "method": "JPAFieldConvection::prepare",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 927,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 723
+    },
+    "adaptation": "none"
+  },
+  {
+    "method": "JPAFieldSpin::prepare",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 940,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 736
+    },
+    "adaptation": "none"
+  },
+  {
+    "method": "JPAEmitterManager::calcYBBCam",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 951,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 747
+    },
+    "adaptation": "none"
+  },
+  {
+    "method": "JPADrawYBillboard",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 970,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 766
+    },
+    "adaptation": "none"
+  },
+  {
+    "method": "JPADrawRotYBillboard",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 999,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 795
+    },
+    "adaptation": "none"
+  }
+]

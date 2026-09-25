@@ -147,11 +147,11 @@ namespace {
     void test_retail_area_math_helpers() {
         auto cylinder = AreaFormCylinder{};
         cylinder.calcDir(TVec3f{90.0F, 0.0F, 0.0F});
-        require(cylinder.mRotation.epsilonEquals(TVec3f{0.0F, 0.0F, -1.0F}, 0.0001F),
-                "retail temporary X-degree matrix must rotate the area axis with the recovered sign convention");
+        require(cylinder.mRotation.epsilonEquals(TVec3f{0.0F, 0.0F, 1.0F}, 0.0001F),
+                "retail positive X-degree rotation maps the area up axis toward positive Z");
         cylinder.calcDir(TVec3f{0.0F, 0.0F, 90.0F});
-        require(cylinder.mRotation.epsilonEquals(TVec3f{1.0F, 0.0F, 0.0F}, 0.0001F),
-                "retail temporary Z-degree matrix must rotate the area axis with the recovered sign convention");
+        require(cylinder.mRotation.epsilonEquals(TVec3f{-1.0F, 0.0F, 0.0F}, 0.0001F),
+                "retail positive Z-degree rotation maps the area up axis toward negative X");
     }
 
     void test_manager_reverse_priority() {

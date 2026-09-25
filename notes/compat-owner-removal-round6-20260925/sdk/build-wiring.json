@@ -1,0 +1,28 @@
+{
+  "add_to_smg_pc_game": [
+    {
+      "path": "System/Overwrite.cpp",
+      "cxxflags": "-ffp-contract=off"
+    }
+  ],
+  "remove_explicit_source_entries": [
+    "../compat/OriginalJPADraw.cpp",
+    "../compat/OriginalJPAFields.cpp",
+    "../compat/OriginalJPAEmitterInit.cpp"
+  ],
+  "remove_compat_glob_sources": [
+    "src/compat/OriginalJPADraw.cpp",
+    "src/compat/OriginalJPAEmitterInit.cpp",
+    "src/compat/OriginalJPAFields.cpp",
+    "src/compat/J3DShapeMtxGameCompat.cpp"
+  ],
+  "focused_targets": [
+    "smg-pc-original-jpa-manager-tests",
+    "smg-pc-original-particle-resource-owner-tests",
+    "smg-pc-original-effect-ownership-tests",
+    "smg-pc-original-j3d-geometry-resource-tests"
+  ],
+  "runtime_check": "Actual process startup/render/teardown with SMGPC_REAL_DISC. Manager --ownership-only omits simulation; regular manager runs CPU calculations but does not invoke draw callbacks.",
+  "builds_run_by_agent": false,
+  "source_state": "frozen"
+}

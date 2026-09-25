@@ -1,0 +1,8 @@
+[fail] cut output and interpolation-off gate: Original game utility requires active SceneObj 23
+[fail] recursive camera switching: Original game utility requires active SceneObj 23
+[fail] separate anti-oscillation rates: Original game utility requires active SceneObj 23
+[pass] target identity and last-move correction
+[pass] nearly-end thresholds
+[fail] raw controller and damped service view: Scene initialization requires the original GameSystem scene controller.
+[fail] camera Binder wall and Through filter: Original game utility requires active SceneObj 23
+2/7 tests passed

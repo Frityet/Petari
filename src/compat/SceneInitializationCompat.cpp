@@ -44,9 +44,6 @@ void SceneFunction::startActorPlacement() {
 void SceneFunction::initAfterScenarioSelected() {
     ::getSceneDataInitializer()->startStageFileLoadAfterScenarioSelected();
     ::getSceneDataInitializer()->initAfterScenarioSelected();
-    // The original holder tree now includes the selected scenario's zones.
-    // Retain their authored lighting before original Game creates any actors.
-    smgpc::scene::initialize_original_scene_lights();
 }
 
 void SceneFunction::initEffectSystem(u32 particles, u32 emitters) {

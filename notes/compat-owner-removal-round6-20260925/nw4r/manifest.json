@@ -1,0 +1,74 @@
+{
+  "files": [
+    "src/compat/Nw4rDiagnostics.cpp",
+    "src/compat/Nw4rFontCompat.cpp",
+    "src/compat/Nw4rLayoutRecordsCompat.cpp",
+    "src/compat/PPCArchCompat.cpp",
+    "src/nw4r/db/db_assert.cpp",
+    "src/nw4r/ut/ut_ResFont.cpp",
+    "src/nw4r/lyt/lyt_pane.cpp",
+    "aurora/lib/dolphin/PPCArch.cpp",
+    "src/nw4r/ut/ut_Font.cpp",
+    "aurora/xmake.lua",
+    "aurora/cmake/aurora_os.cmake",
+    "tests/MiiFontCompatTests.cpp",
+    "src/nw4r/math/types.h"
+  ],
+  "before": [
+    {
+      "path": "src/compat/Nw4rDiagnostics.cpp",
+      "exists": true,
+      "sha256": "c2242cc0ab1e758676a351617f4a3e019a8f8d837600e19ede2d02354e711643"
+    },
+    {
+      "path": "src/compat/Nw4rFontCompat.cpp",
+      "exists": true,
+      "sha256": "dcf5b4a58060a51ba18198aed3135a000068e18d2f40d11e60d4028d6bc5f9b1"
+    },
+    {
+      "path": "src/compat/Nw4rLayoutRecordsCompat.cpp",
+      "exists": true,
+      "sha256": "034fde335b9184bd0483f544b74d79ba52f20bebba81d7282459fc3578762be3"
+    },
+    {
+      "path": "src/compat/PPCArchCompat.cpp",
+      "exists": true,
+      "sha256": "edc5506349ed00a4622b1bd8910156c738b6a7914063082d964b808e12adbc17"
+    },
+    {
+      "path": "src/nw4r/db/db_assert.cpp",
+      "exists": false,
+      "sha256": null
+    },
+    {
+      "path": "src/nw4r/ut/ut_ResFont.cpp",
+      "exists": false,
+      "sha256": null
+    },
+    {
+      "path": "src/nw4r/lyt/lyt_pane.cpp",
+      "exists": false,
+      "sha256": null
+    },
+    {
+      "path": "aurora/lib/dolphin/PPCArch.cpp",
+      "exists": false,
+      "sha256": null
+    },
+    {
+      "path": "src/nw4r/ut/ut_Font.cpp",
+      "exists": true,
+      "sha256": "e7daa57340ad419f5cc019bc3523cb420959ecfba5f62321086db3c16b66d3c1"
+    },
+    {
+      "path": "aurora/xmake.lua",
+      "exists": true,
+      "sha256": "11692f3df5047216b3339aa531ad661d9dd96c0d25477f77197be73cc66391ea"
+    },
+    {
+      "path": "aurora/cmake/aurora_os.cmake",
+      "exists": true,
+      "sha256": "0737dd108d81ea70a08cb7bda6c990a28386e8f6fbf890b0a8be479494159153"
+    }
+  ]
+}

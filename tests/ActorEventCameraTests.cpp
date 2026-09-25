@@ -1,3 +1,4 @@
+#include "OriginalLightFixture.hpp"
 #include "resource/TextEncoding.hpp"
 #include "CameraTargetTestSupport.hpp"
 #include "Game/Camera/CameraAnim.hpp"
@@ -273,7 +274,7 @@ namespace {
                     "a geometry-free target fixture must not replace another scene's collision");
             collision.build();
             collision.activate();
-            require(holder.create(SceneObj_AreaObjContainer) != nullptr &&
+            require(smgpc::test::create_area_container(holder) != nullptr &&
                         holder.create(SceneObj_PlanetGravityManager) != nullptr,
                     "original camera targets require real area and gravity scene registries");
         }

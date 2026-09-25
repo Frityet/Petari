@@ -1,0 +1,33 @@
+{
+  "source_state": "frozen",
+  "files": [
+    {
+      "path": "src/Game/System/Overwrite.cpp",
+      "action": "add",
+      "sha256": "4350714da918a797a5cf64f21bfe5a7e24b014b751d7ad14f2ef98d2ce56652f"
+    },
+    {
+      "path": "src/compat/OriginalJPADraw.cpp",
+      "action": "delete",
+      "sha256": null
+    },
+    {
+      "path": "src/compat/OriginalJPAEmitterInit.cpp",
+      "action": "delete",
+      "sha256": null
+    },
+    {
+      "path": "src/compat/OriginalJPAFields.cpp",
+      "action": "delete",
+      "sha256": null
+    },
+    {
+      "path": "src/compat/J3DShapeMtxGameCompat.cpp",
+      "action": "delete",
+      "sha256": null
+    }
+  ],
+  "unchanged_sdk_and_headers": true,
+  "tests_changed": false,
+  "whole_donor_translation_unit_compiled": false
+}

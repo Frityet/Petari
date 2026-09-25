@@ -125,11 +125,8 @@ namespace {
         // archive lookup is attempted through the deliberately absent holder.
         XanimeResourceTable table{nullptr};
         std::array<XanimeGroupInfo, 3> groups;
+        // HashSortTable owns its four buffers; the fixture owns only the table.
         std::unique_ptr<HashSortTable> sort;
-        std::unique_ptr<u32[]> hashes;
-        std::unique_ptr<HashSortTable::Value[]> indices;
-        std::unique_ptr<u16[]> starts;
-        std::unique_ptr<u16[]> counts;
 
         Groups(Clip& first, Clip& second) {
             constexpr std::array names{"Cycle", "Blend", "Once"};
@@ -166,10 +163,6 @@ namespace {
             table.mSimpleGroupInfos = nullptr;
             table.createSortTable();
             sort.reset(table.mSortTable);
-            hashes.reset(sort->mHashCodes);
-            indices.reset(sort->_8);
-            starts.reset(sort->_C);
-            counts.reset(sort->_10);
         }
     };
 

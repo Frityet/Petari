@@ -1,3 +1,4 @@
+#include "OriginalLightFixture.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -73,7 +74,7 @@ int main() {
             auto& binding = execution.objects();
             auto& holder = *smgpc::scene::current_scene_obj_holder();
             failure.holder = &holder;
-            auto* areas = static_cast<AreaObjContainer*>(holder.create(SceneObj_AreaObjContainer));
+            auto* areas = static_cast<AreaObjContainer*>(smgpc::test::create_area_container(holder));
             require(dynamic_cast<ImageEffectAreaMgr*>(areas->getManager("ImageEffectArea")), "exact image-effect manager exists with no areas");
             auto* system = static_cast<ImageEffectSystemHolder*>(holder.create(SceneObj_ImageEffectSystemHolder));
             bool rejected = false;

@@ -1,0 +1,886 @@
+{
+  "all_passed": true,
+  "checks": [
+    {
+      "name": "Map/LightDirector.cpp contains one LightDirector::LightDirector",
+      "passed": true
+    },
+    {
+      "name": "Map/LightDirector.cpp contains one LightDirector::init",
+      "passed": true
+    },
+    {
+      "name": "Map/LightDirector.cpp contains one LightDirector::initData",
+      "passed": true
+    },
+    {
+      "name": "LightDirector::initData has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightDirector.cpp contains one LightDirector::loadLightPlayer",
+      "passed": true
+    },
+    {
+      "name": "LightDirector::loadLightPlayer has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightDirector.cpp contains one LightDirector::loadLightCoin",
+      "passed": true
+    },
+    {
+      "name": "LightDirector::loadLightCoin has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightDirector.cpp contains one LightDirector::movement",
+      "passed": true
+    },
+    {
+      "name": "LightDirector::movement has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one LightFunction::initLightRegisterAll",
+      "passed": true
+    },
+    {
+      "name": "LightFunction::initLightRegisterAll has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one LightFunction::initLightData",
+      "passed": true
+    },
+    {
+      "name": "LightFunction::initLightData has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one LightFunction::loadLightArchive",
+      "passed": true
+    },
+    {
+      "name": "LightFunction::loadLightArchive has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one LightFunction::createLightDataParser",
+      "passed": true
+    },
+    {
+      "name": "LightFunction::createLightDataParser has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one LightFunction::createZoneDataParser",
+      "passed": true
+    },
+    {
+      "name": "LightFunction::createZoneDataParser has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one getDataLightInfo",
+      "passed": true
+    },
+    {
+      "name": "getDataLightInfo has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one getDataActorLightInfo",
+      "passed": true
+    },
+    {
+      "name": "getDataActorLightInfo has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one LightFunction::getAreaLightLightData",
+      "passed": true
+    },
+    {
+      "name": "LightFunction::getAreaLightLightData has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one LightFunction::getDefaultAreaLightName",
+      "passed": true
+    },
+    {
+      "name": "LightFunction::getDefaultAreaLightName has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one LightFunction::getDefaultStepInterpolate",
+      "passed": true
+    },
+    {
+      "name": "LightFunction::getDefaultStepInterpolate has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one LightFunction::registerPlayerLightCtrl",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one LightFunction::registerLightAreaHolder",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one LightFunction::tryFindNewAreaLightID",
+      "passed": true
+    },
+    {
+      "name": "LightFunction::tryFindNewAreaLightID has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one LightFunction::getAreaLightInfo",
+      "passed": true
+    },
+    {
+      "name": "LightFunction::getAreaLightInfo has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one blendActorLightPos",
+      "passed": true
+    },
+    {
+      "name": "blendActorLightPos has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one LightFunction::blendActorLightInfo",
+      "passed": true
+    },
+    {
+      "name": "LightFunction::blendActorLightInfo has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one LightFunction::loadActorLightInfo",
+      "passed": true
+    },
+    {
+      "name": "LightFunction::loadActorLightInfo has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one LightFunction::loadLightInfoCoin",
+      "passed": true
+    },
+    {
+      "name": "LightFunction::loadLightInfoCoin has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one LightFunction::loadPointLightInfo",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one LightFunction::loadAllLightWhite",
+      "passed": true
+    },
+    {
+      "name": "LightFunction::loadAllLightWhite has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightFunction.cpp contains one LightFunction::calcLightWorldPos",
+      "passed": true
+    },
+    {
+      "name": "LightFunction::calcLightWorldPos has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightDataHolder.cpp contains one LightDataHolder::LightDataHolder",
+      "passed": true
+    },
+    {
+      "name": "LightDataHolder::LightDataHolder has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightDataHolder.cpp contains one LightDataHolder::initLightData",
+      "passed": true
+    },
+    {
+      "name": "LightDataHolder::initLightData has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightDataHolder.cpp contains one LightDataHolder::findAreaLight",
+      "passed": true
+    },
+    {
+      "name": "LightDataHolder::findAreaLight has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightDataHolder.cpp contains one LightDataHolder::getDefaultAreaLightName",
+      "passed": true
+    },
+    {
+      "name": "LightDataHolder::getDefaultAreaLightName has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightDataHolder.cpp contains one LightDataHolder::getDefaultStepInterpolate",
+      "passed": true
+    },
+    {
+      "name": "LightDataHolder::getDefaultStepInterpolate has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightZoneDataHolder.cpp contains one ZoneLightID::ZoneLightID",
+      "passed": true
+    },
+    {
+      "name": "ZoneLightID::ZoneLightID has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightZoneDataHolder.cpp contains one ZoneLightID::clear",
+      "passed": true
+    },
+    {
+      "name": "ZoneLightID::clear has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightZoneDataHolder.cpp contains one ZoneLightID::isTargetArea",
+      "passed": true
+    },
+    {
+      "name": "ZoneLightID::isTargetArea has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightZoneDataHolder.cpp contains one ZoneLightID::isOutOfArea",
+      "passed": true
+    },
+    {
+      "name": "ZoneLightID::isOutOfArea has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightZoneDataHolder.cpp contains one LightZoneInfo::LightZoneInfo",
+      "passed": true
+    },
+    {
+      "name": "LightZoneInfo::LightZoneInfo has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightZoneDataHolder.cpp contains one LightZoneInfo::getAreaLightNameInZoneData",
+      "passed": true
+    },
+    {
+      "name": "LightZoneInfo::getAreaLightNameInZoneData has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightZoneDataHolder.cpp contains one LightZoneDataHolder::LightZoneDataHolder",
+      "passed": true
+    },
+    {
+      "name": "LightZoneDataHolder::LightZoneDataHolder has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightZoneDataHolder.cpp contains one LightZoneDataHolder::initZoneData",
+      "passed": true
+    },
+    {
+      "name": "LightZoneDataHolder::initZoneData has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightZoneDataHolder.cpp contains one LightZoneDataHolder::getAreaLightNameInZoneData",
+      "passed": true
+    },
+    {
+      "name": "LightZoneDataHolder::getAreaLightNameInZoneData has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightZoneDataHolder.cpp contains one LightZoneDataHolder::getDefaultStageAreaLightName",
+      "passed": true
+    },
+    {
+      "name": "LightZoneDataHolder::getDefaultStageAreaLightName has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Map/LightZoneDataHolder.cpp contains one LightZoneInfo::init",
+      "passed": true
+    },
+    {
+      "name": "LightZoneInfo::init has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Util/LightUtil.cpp contains one loadLight",
+      "passed": true
+    },
+    {
+      "name": "loadLight has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Util/LightUtil.cpp contains one loadLightPlayer",
+      "passed": true
+    },
+    {
+      "name": "loadLightPlayer has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Util/LightUtil.cpp contains one initActorLightInfoLightType",
+      "passed": true
+    },
+    {
+      "name": "initActorLightInfoLightType has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Util/LightUtil.cpp contains one initActorLightInfoDrawBuffer",
+      "passed": true
+    },
+    {
+      "name": "initActorLightInfoDrawBuffer has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "Util/LightUtil.cpp contains one requestPointLight",
+      "passed": true
+    },
+    {
+      "name": "requestPointLight has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "LiveActor/ActorLightCtrl.cpp contains one ActorLightCtrl::ActorLightCtrl",
+      "passed": true
+    },
+    {
+      "name": "ActorLightCtrl::ActorLightCtrl has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "LiveActor/ActorLightCtrl.cpp contains one ActorLightCtrl::init",
+      "passed": true
+    },
+    {
+      "name": "ActorLightCtrl::init has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "LiveActor/ActorLightCtrl.cpp contains one ActorLightCtrl::update",
+      "passed": true
+    },
+    {
+      "name": "ActorLightCtrl::update has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "LiveActor/ActorLightCtrl.cpp contains one ActorLightCtrl::loadLight",
+      "passed": true
+    },
+    {
+      "name": "ActorLightCtrl::loadLight has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "LiveActor/ActorLightCtrl.cpp contains one ActorLightCtrl::reset",
+      "passed": true
+    },
+    {
+      "name": "ActorLightCtrl::reset has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "LiveActor/ActorLightCtrl.cpp contains one ActorLightCtrl::copy",
+      "passed": true
+    },
+    {
+      "name": "ActorLightCtrl::copy has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "LiveActor/ActorLightCtrl.cpp contains one ActorLightCtrl::isSameLight",
+      "passed": true
+    },
+    {
+      "name": "ActorLightCtrl::isSameLight has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "LiveActor/ActorLightCtrl.cpp contains one ActorLightCtrl::getActorLight",
+      "passed": true
+    },
+    {
+      "name": "ActorLightCtrl::getActorLight has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "LiveActor/ActorLightCtrl.cpp contains one ActorLightCtrl::initActorLightInfo",
+      "passed": true
+    },
+    {
+      "name": "ActorLightCtrl::initActorLightInfo has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "LiveActor/ActorLightCtrl.cpp contains one ActorLightCtrl::tryFindNewAreaLight",
+      "passed": true
+    },
+    {
+      "name": "ActorLightCtrl::tryFindNewAreaLight has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "LiveActor/ActorLightCtrl.cpp contains one ActorLightCtrl::updateLightBlend",
+      "passed": true
+    },
+    {
+      "name": "ActorLightCtrl::updateLightBlend has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "LiveActor/ActorLightCtrl.cpp contains one ActorLightCtrl::resetCurrentLightInfo",
+      "passed": true
+    },
+    {
+      "name": "ActorLightCtrl::resetCurrentLightInfo has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "LiveActor/ActorLightCtrl.cpp contains one ActorLightCtrl::getTargetActorLight",
+      "passed": true
+    },
+    {
+      "name": "ActorLightCtrl::getTargetActorLight has complete unchanged donor body",
+      "passed": true
+    },
+    {
+      "name": "PointLightCtrl numeric, generation and ownership implementation unchanged",
+      "passed": true
+    },
+    {
+      "name": "PointLightCtrl native record and generation schema unchanged",
+      "passed": true
+    },
+    {
+      "name": "src/compat/LightDirectorCompat.cpp removed after snapshot",
+      "passed": true
+    },
+    {
+      "name": "src/compat/LightFunctionCompat.cpp removed after snapshot",
+      "passed": true
+    },
+    {
+      "name": "src/compat/LightFunctionCompat.hpp removed after snapshot",
+      "passed": true
+    },
+    {
+      "name": "src/compat/LightUtilCompat.cpp removed after snapshot",
+      "passed": true
+    },
+    {
+      "name": "src/render/light/LightData.cpp removed after snapshot",
+      "passed": true
+    },
+    {
+      "name": "src/render/light/LightData.hpp removed after snapshot",
+      "passed": true
+    },
+    {
+      "name": "src/scene/StageLightSceneBinding.cpp removed after snapshot",
+      "passed": true
+    },
+    {
+      "name": "src/scene/StageLightSceneBinding.hpp removed after snapshot",
+      "passed": true
+    },
+    {
+      "name": "StageLightData has no remaining source/test callers",
+      "passed": true
+    },
+    {
+      "name": "StageLightSceneBinding has no remaining source/test callers",
+      "passed": true
+    },
+    {
+      "name": "LightFunctionCompat has no remaining source/test callers",
+      "passed": true
+    },
+    {
+      "name": "registered_player_light_controller has no remaining source/test callers",
+      "passed": true
+    },
+    {
+      "name": "unregister_player_light_controller has no remaining source/test callers",
+      "passed": true
+    },
+    {
+      "name": "initialize_original_scene_lights has no remaining source/test callers",
+      "passed": true
+    },
+    {
+      "name": "LightFunction no longer routes through RuntimeContext",
+      "passed": true
+    },
+    {
+      "name": "LightFunction no longer routes through SceneLightService",
+      "passed": true
+    },
+    {
+      "name": "LightFunction no longer routes through GXLightState",
+      "passed": true
+    },
+    {
+      "name": "LightFunction no longer routes through std::clamp",
+      "passed": true
+    },
+    {
+      "name": "Original coordinate-space conversion retained",
+      "passed": true
+    },
+    {
+      "name": "Canonical sorting is called rather than a no-op adapter",
+      "passed": true
+    },
+    {
+      "name": "Default light test uses the real original process",
+      "passed": true
+    },
+    {
+      "name": "Independent existing ownership and GX modes retained",
+      "passed": true
+    }
+  ],
+  "check_count": 141,
+  "donor_definitions": [
+    {
+      "symbol": "LightDirector::LightDirector",
+      "owner": "src/Game/Map/LightDirector.cpp",
+      "native_change": "CP932 literal encoding"
+    },
+    {
+      "symbol": "LightDirector::init",
+      "owner": "src/Game/Map/LightDirector.cpp",
+      "native_change": "Exception-safe ownership transfer after all three allocations"
+    },
+    {
+      "symbol": "LightDirector::initData",
+      "owner": "src/Game/Map/LightDirector.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightDirector::loadLightPlayer",
+      "owner": "src/Game/Map/LightDirector.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightDirector::loadLightCoin",
+      "owner": "src/Game/Map/LightDirector.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightDirector::movement",
+      "owner": "src/Game/Map/LightDirector.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightFunction::initLightRegisterAll",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightFunction::initLightData",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightFunction::loadLightArchive",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightFunction::createLightDataParser",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightFunction::createZoneDataParser",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "getDataLightInfo",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "getDataActorLightInfo",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightFunction::getAreaLightLightData",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightFunction::getDefaultAreaLightName",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightFunction::getDefaultStepInterpolate",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightFunction::registerPlayerLightCtrl",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": "Native two-way borrowed controller lifetime"
+    },
+    {
+      "symbol": "LightFunction::registerLightAreaHolder",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": "Native two-way borrowed area-manager lifetime"
+    },
+    {
+      "symbol": "LightFunction::tryFindNewAreaLightID",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightFunction::getAreaLightInfo",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "blendActorLightPos",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightFunction::blendActorLightInfo",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightFunction::loadActorLightInfo",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightFunction::loadLightInfoCoin",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightFunction::loadPointLightInfo",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": "Existing native PointLightInfo field names and enum type"
+    },
+    {
+      "symbol": "LightFunction::loadAllLightWhite",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightFunction::calcLightWorldPos",
+      "owner": "src/Game/Map/LightFunction.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightDataHolder::LightDataHolder",
+      "owner": "src/Game/Map/LightDataHolder.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightDataHolder::initLightData",
+      "owner": "src/Game/Map/LightDataHolder.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightDataHolder::findAreaLight",
+      "owner": "src/Game/Map/LightDataHolder.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightDataHolder::getDefaultAreaLightName",
+      "owner": "src/Game/Map/LightDataHolder.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightDataHolder::getDefaultStepInterpolate",
+      "owner": "src/Game/Map/LightDataHolder.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "ZoneLightID::ZoneLightID",
+      "owner": "src/Game/Map/LightZoneDataHolder.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "ZoneLightID::clear",
+      "owner": "src/Game/Map/LightZoneDataHolder.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "ZoneLightID::isTargetArea",
+      "owner": "src/Game/Map/LightZoneDataHolder.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "ZoneLightID::isOutOfArea",
+      "owner": "src/Game/Map/LightZoneDataHolder.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightZoneInfo::LightZoneInfo",
+      "owner": "src/Game/Map/LightZoneDataHolder.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightZoneInfo::getAreaLightNameInZoneData",
+      "owner": "src/Game/Map/LightZoneDataHolder.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightZoneDataHolder::LightZoneDataHolder",
+      "owner": "src/Game/Map/LightZoneDataHolder.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightZoneDataHolder::initZoneData",
+      "owner": "src/Game/Map/LightZoneDataHolder.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightZoneDataHolder::getAreaLightNameInZoneData",
+      "owner": "src/Game/Map/LightZoneDataHolder.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightZoneDataHolder::getDefaultStageAreaLightName",
+      "owner": "src/Game/Map/LightZoneDataHolder.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "LightZoneInfo::init",
+      "owner": "src/Game/Map/LightZoneDataHolder.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "loadLight",
+      "owner": "src/Game/Util/LightUtil.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "loadLightPlayer",
+      "owner": "src/Game/Util/LightUtil.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "initActorLightInfoLightType",
+      "owner": "src/Game/Util/LightUtil.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "initActorLightInfoDrawBuffer",
+      "owner": "src/Game/Util/LightUtil.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "requestPointLight",
+      "owner": "src/Game/Util/LightUtil.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "ActorLightCtrl::ActorLightCtrl",
+      "owner": "src/Game/LiveActor/ActorLightCtrl.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "ActorLightCtrl::init",
+      "owner": "src/Game/LiveActor/ActorLightCtrl.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "ActorLightCtrl::update",
+      "owner": "src/Game/LiveActor/ActorLightCtrl.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "ActorLightCtrl::loadLight",
+      "owner": "src/Game/LiveActor/ActorLightCtrl.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "ActorLightCtrl::reset",
+      "owner": "src/Game/LiveActor/ActorLightCtrl.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "ActorLightCtrl::copy",
+      "owner": "src/Game/LiveActor/ActorLightCtrl.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "ActorLightCtrl::isSameLight",
+      "owner": "src/Game/LiveActor/ActorLightCtrl.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "ActorLightCtrl::getActorLight",
+      "owner": "src/Game/LiveActor/ActorLightCtrl.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "ActorLightCtrl::initActorLightInfo",
+      "owner": "src/Game/LiveActor/ActorLightCtrl.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "ActorLightCtrl::tryFindNewAreaLight",
+      "owner": "src/Game/LiveActor/ActorLightCtrl.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "ActorLightCtrl::updateLightBlend",
+      "owner": "src/Game/LiveActor/ActorLightCtrl.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "ActorLightCtrl::resetCurrentLightInfo",
+      "owner": "src/Game/LiveActor/ActorLightCtrl.cpp",
+      "native_change": null
+    },
+    {
+      "symbol": "ActorLightCtrl::getTargetActorLight",
+      "owner": "src/Game/LiveActor/ActorLightCtrl.cpp",
+      "native_change": null
+    }
+  ],
+  "source_sha256": {
+    "src/Game/Map/LightDirector.cpp": "f6b066857812e97596ac245ddab367c01da33a6175791dfb6fb267f0166eeb73",
+    "src/Game/Map/LightFunction.cpp": "bc797b00c74d5428dc745585108857f293aafa72ee1c180fa8b3e9b9021ed59b",
+    "src/Game/Map/LightDataHolder.cpp": "44b6402c0331e55abfb34851726b6ec605722075d9f7e546da017db3c96cfc7f",
+    "src/Game/Map/LightZoneDataHolder.cpp": "75cc3fabf0b063b21c7bd0a6c543e3a217f886aa0eb31c649103ad5f521b8049",
+    "src/Game/Util/LightUtil.cpp": "d09d6db86671e44c44df387e19815ccb59bd0e2efd8ff1ca37fd4966326f9cfa",
+    "src/Game/LiveActor/ActorLightCtrl.cpp": "345f4e3348809d8e124ea882520c85d1377376f16be506ed5a6d494b40a854e4"
+  },
+  "validation_boundary": "Source validation only; parent owns compile and runtime results"
+}

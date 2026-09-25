@@ -1,3 +1,4 @@
+#include "OriginalLightFixture.hpp"
 #include "resource/TextEncoding.hpp"
 #include "CameraTargetTestSupport.hpp"
 #include "Game/Util/CameraUtil.hpp"
@@ -1166,7 +1167,7 @@ namespace {
         auto& event_scene_holder = event_scene.holder();
         require(event_scene_holder.create(SceneObj_DemoDirector) != nullptr,
                 "retail camera integration requires the actual scene DemoDirector");
-        require(event_scene_holder.create(SceneObj_AreaObjContainer) != nullptr &&
+        require(smgpc::test::create_area_container(event_scene_holder) != nullptr &&
                     event_scene_holder.create(SceneObj_PlanetGravityManager) != nullptr,
                 "the original stage view and matrix target require real area and gravity scene registries");
         const auto root = smgpc::camera::resolve_stage_start_camera(dvd, "HeavensDoorGalaxy", 1, 0, 0);
@@ -1337,7 +1338,7 @@ int main(int argc, char** argv) {
                 collision = std::make_unique<EmptyCameraCollisionScene>();
                 holder = std::make_unique<SceneObjHolder>();
                 binding = std::make_unique<smgpc::scene::SceneObjHolderBinding>(*holder);
-                require(holder->create(SceneObj_AreaObjContainer) != nullptr,
+                require(smgpc::test::create_area_container(*holder) != nullptr,
                         "original stage camera views require the real AreaObj registry");
             }
             test.run();

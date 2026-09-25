@@ -1,5 +1,6 @@
 #include "compat/Cp932Literal.hpp"
 #include "Game/Map/LightDirector.hpp"
+#include "Game/AreaObj/LightAreaHolder.hpp"
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/Map/LightDataHolder.hpp"
 #include "Game/Map/LightFunction.hpp"
@@ -7,18 +8,34 @@
 #include "Game/Map/LightZoneDataHolder.hpp"
 #include "Game/System/ResourceHolder.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include <memory>
 
 LightDirector::LightDirector()
     : NameObj(CP932("ライト指揮")), _C(), mDataHolder(), mZoneDataHolder(), mDefaultAreaLight(), _1C(), mPointCtrl(), mResourceHolder() {
+}
+
+LightDirector::~LightDirector() {
+    if (_1C != nullptr) {
+        _1C->mRegisteredLightDirector = nullptr;
+    }
+    if (_C != nullptr) {
+        _C->mRegisteredLightDirector = nullptr;
+    }
+    delete mPointCtrl;
+    delete mZoneDataHolder;
+    delete mDataHolder;
 }
 
 void LightDirector::init(const JMapInfoIter& rIter) {
     MR::connectToSceneMapObjMovement(this);
     LightFunction::loadAllLightWhite();
 
-    mDataHolder = new LightDataHolder();
-    mZoneDataHolder = new LightZoneDataHolder();
-    mPointCtrl = new LightPointCtrl();
+    auto data = std::make_unique<LightDataHolder>();
+    auto zones = std::make_unique<LightZoneDataHolder>();
+    auto point = std::make_unique<LightPointCtrl>();
+    mDataHolder = data.release();
+    mZoneDataHolder = zones.release();
+    mPointCtrl = point.release();
 }
 
 void LightDirector::initData() {

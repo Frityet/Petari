@@ -1,0 +1,114 @@
+[
+  {
+    "name": "game-math-rotation",
+    "target": "smg-pc-game-math-rotation-tests",
+    "build": 0,
+    "build_log": "smg-pc-game-math-rotation-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-game-math-rotation-tests-run.log"
+  },
+  {
+    "name": "gravity-math-foundation",
+    "target": "smg-pc-gravity-math-foundation-tests",
+    "build": 0,
+    "build_log": "smg-pc-gravity-math-foundation-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-gravity-math-foundation-tests-run.log"
+  },
+  {
+    "name": "original-sensor-matrix",
+    "target": "smg-pc-original-sensor-matrix-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-sensor-matrix-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-sensor-matrix-tests-run.log"
+  },
+  {
+    "name": "area-obj-core",
+    "target": "smg-pc-area-obj-core-tests",
+    "build": 0,
+    "build_log": "smg-pc-area-obj-core-tests-build.log",
+    "run": 1,
+    "run_log": "smg-pc-area-obj-core-tests-run.log"
+  },
+  {
+    "name": "original-xanime-core",
+    "target": "smg-pc-original-xanime-core-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-xanime-core-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-xanime-core-tests-run.log"
+  },
+  {
+    "name": "original-xanime-player",
+    "target": "smg-pc-original-xanime-player-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-xanime-player-tests-build.log",
+    "run": -6,
+    "run_log": "smg-pc-original-xanime-player-tests-run.log"
+  },
+  {
+    "name": "original-jpa-manager",
+    "target": "smg-pc-original-jpa-manager-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-jpa-manager-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-jpa-manager-tests-run.log"
+  },
+  {
+    "name": "original-particle-resource-owner",
+    "target": "smg-pc-original-particle-resource-owner-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-particle-resource-owner-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-particle-resource-owner-tests-run.log"
+  },
+  {
+    "name": "original-effect-ownership",
+    "target": "smg-pc-original-effect-ownership-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-effect-ownership-tests-build.log",
+    "run": -11,
+    "run_log": "smg-pc-original-effect-ownership-tests-run.log"
+  },
+  {
+    "name": "original-j3d-geometry-resource",
+    "target": "smg-pc-original-j3d-geometry-resource-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-geometry-resource-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-j3d-geometry-resource-tests-run.log"
+  },
+  {
+    "name": "point-light-runtime",
+    "target": "smg-pc-point-light-runtime-tests",
+    "build": 0,
+    "build_log": "smg-pc-point-light-runtime-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-point-light-runtime-tests-run.log"
+  },
+  {
+    "name": "mii-font-compat",
+    "target": "smg-pc-mii-font-compat-tests",
+    "build": 0,
+    "build_log": "smg-pc-mii-font-compat-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-mii-font-compat-tests-run.log"
+  },
+  {
+    "name": "original-layout-group",
+    "target": "smg-pc-original-layout-group-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-layout-group-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-layout-group-tests-run.log"
+  },
+  {
+    "name": "layout-real-or-absent",
+    "target": "smg-pc-layout-real-or-absent-tests",
+    "build": 0,
+    "build_log": "smg-pc-layout-real-or-absent-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-layout-real-or-absent-tests-run.log"
+  }
+]

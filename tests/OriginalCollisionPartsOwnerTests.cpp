@@ -1,3 +1,4 @@
+#include "OriginalLightFixture.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "compat/CollisionPartsCompat.hpp"
@@ -109,7 +110,7 @@ int main() {
             auto* director = static_cast<CollisionDirector*>(holder.create(SceneObj_CollisionDirector));
             require(director && director->mCategoryKeeper[0], "same binding can retry its original owner after rollback");
             holder.create(SceneObj_NameObjGroup);
-            holder.create(SceneObj_AreaObjContainer);
+            smgpc::test::create_area_container(holder);
             holder.create(SceneObj_PlanetGravityManager);
             holder.create(SceneObj_DemoDirector);
             binding.initialize_camera_system();

@@ -1,0 +1,46 @@
+{
+  "stop_excluding": [
+    "src/Game/Map/LightDirector.cpp",
+    "src/Game/Map/LightFunction.cpp",
+    "src/Game/Util/LightUtil.cpp"
+  ],
+  "canonical_already_wildcard": [
+    "src/Game/Map/LightDataHolder.cpp",
+    "src/Game/Map/LightZoneDataHolder.cpp",
+    "src/Game/LiveActor/ActorLightCtrl.cpp"
+  ],
+  "remove_explicit_sources": [
+    "src/render/light/LightData.cpp"
+  ],
+  "remove_explicit_headers": [
+    "src/render/light/LightData.hpp"
+  ],
+  "deleted_wildcard_sources": [
+    "src/compat/LightDirectorCompat.cpp",
+    "src/compat/LightFunctionCompat.cpp",
+    "src/compat/LightFunctionCompat.hpp",
+    "src/compat/LightUtilCompat.cpp",
+    "src/render/light/LightData.cpp",
+    "src/render/light/LightData.hpp",
+    "src/scene/StageLightSceneBinding.cpp",
+    "src/scene/StageLightSceneBinding.hpp"
+  ],
+  "new_compile_flags": [],
+  "tests": {
+    "smg-pc-point-light-runtime-tests": {
+      "add_deps": [
+        "smg-pc-app",
+        "aurora-main"
+      ],
+      "commands": [
+        "--original-owner-only",
+        "--original-gx-only",
+        "(no arguments; actual process needs SMGPC_REAL_DISC)"
+      ]
+    },
+    "smg-pc-area-obj-real-or-absent-tests": {
+      "wiring_change": false,
+      "change": "Remove deleted cache fixture; authored zone checks now in point-light actual-process mode."
+    }
+  }
+}

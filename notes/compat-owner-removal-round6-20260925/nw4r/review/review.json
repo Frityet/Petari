@@ -1,0 +1,65 @@
+{
+  "review_mode": "read-only source and build registration inspection; no compiler or runtime executed",
+  "finding_count": 1,
+  "findings": [
+    {
+      "id": "NW4R-001",
+      "severity": "build-blocking",
+      "status": "resolved-by-root-and-source-rechecked",
+      "path": "src/nw4r/lyt/lyt_pane.cpp",
+      "line": 361,
+      "summary": "Restored LoadMtx calls MTX34Copy missing from current native math header",
+      "evidence": [
+        "Only MTX34Copy reference under src/ and aurora/include/ is this call.",
+        "src/nw4r/math/types.h defines MTX34Identity and MTX34Mult but not MTX34Copy.",
+        "Previous Nw4rLayoutRecordsCompat.cpp called PSMTXCopy directly.",
+        "Original helper exists at decomp/libs/nw4r/include/nw4r/math/types.h:85-88."
+      ],
+      "recommended_change": "Restore original inline MTX34Copy into canonical nw4r/math/types.h, forwarding input then output to PSMTXCopy and returning pOut; preserve donor Pane body.",
+      "resolution": "Root restored exact donor inline MTX34Copy; reviewer re-read native helper and original donor. Root also fixed the integrated-compile GXLoadPosMtxImm conversion ambiguity with pMtx->m, preserving the same contiguous matrix data and the previous compat argument form."
+    }
+  ],
+  "checked_contracts": [
+    "Canonical Font/ResFont provider uniqueness and unchanged public class layout",
+    "Font shared ownership state construction on host allocation route; weak observer and destruction unchanged",
+    "ResFont bounded endian decode, generation, glyph texture borrowing, resource install/remove unchanged",
+    "Pane virtual surface, static runtime typeinfo, child/material ownership, and all five hook ordering preserved",
+    "Pane default constructor preserves initialized transform/visibility/alpha state",
+    "FindPaneByName helper uses same 16-byte comparison",
+    "LoadMtx multiply wrapper calls same PSMTXConcat and ReverseYAxis negates same second column",
+    "Native layout retirement unbinds animation before layout release and detaches all child lists before unique_ptr destruction",
+    "NW4R Panic direct scope matches original JKR type alias and preserves host-owned exception route",
+    "PPCSync C linkage, unchanged sequentially consistent fence, unique provider, Xmake and CMake registration",
+    "smg-pc-game directly depends on aurora-os; current PPCSync game callers retain link dependency",
+    "All restored NW4R source files explicitly registered; retired compat filenames absent from live build scripts",
+    "Mii font test runs assertions in original process host callback; real DVD archive copies are scoped and font objects outlive borrowing TextBoxes; app/Aurora-main dependencies added",
+    "Final matrix-copy helper exactly matches donor; explicit GXLoadPosMtxImm(pMtx->m) supplies same matrix bytes and resolves host const-void pointer overload conversion"
+  ],
+  "validation_limits": [
+    "No build or runtime test was executed by reviewer.",
+    "Initial 49 source checks missed a required donor header dependency; root added the helper preservation assertion and current source-validation.json records 50/50 checks.",
+    "This batch preserves existing native font/layout representation and fence semantics; it does not establish complete Wii behavior or gameplay success."
+  ],
+  "reviewed_sha256": {
+    "src/nw4r/lyt/lyt_pane.cpp": "692e8227f9fc3db69c5ba7654df9eea6f7267321532655649b878e8ad7454e79",
+    "src/nw4r/lyt/pane.h": "a9dd1c9d99c29ca3db33d9e60e65a8505a0a60cda128099cc2e6584d3c836eaa",
+    "src/nw4r/math/types.h": "12380ae39f04085138df1797d571c42e8480b54a239b39bd3624f900c1d561b6",
+    "src/nw4r/lyt/lyt_common.cpp": "73a5315099d1fed71a6eae8a161026e9efc7c9b4770b174d9559d5fc3e1e16f7",
+    "src/layout/Nw4rLayoutRecords.cpp": "0efed27b4850594a00a181ea10c31813b452aa1b21ada69018d3c18662ea78f6",
+    "src/nw4r/ut/ut_Font.cpp": "f04be4da110cd5b5772b7dd211a7503af3d1fffdc582dc00725605988c40c1f6",
+    "src/nw4r/ut/ut_ResFont.cpp": "9e976f90abf8aea6d0bbe02a3f673d196a283f313b40ffc00e53deac3a1be84e",
+    "src/nw4r/ut/Font.h": "8de6fb2d077f7ebbddc4d8a04274618ee59174c51d78ba8c3c00f8188b342a19",
+    "src/nw4r/ut/ResFont.h": "ff18fced4c057cd08b85aadb75883f5d7e2de99f861c59a9da4e1e0f27e681bd",
+    "src/nw4r/db/db_assert.cpp": "6c3b07b2f21ec2449b002c38ce474a9d21e8c0f26e7638138c8a0d8740554044",
+    "src/nw4r/db/assert.h": "a3d942d3094f443abb8c4b9f240a964b1e31f8461fd7709c9e5ad06e4e2ea5dd",
+    "src/Game/xmake.lua": "c298f1e378d9632395026d02d381e9fc6e6d99bcc7d1725974c234a7298472cd",
+    "aurora/lib/dolphin/PPCArch.cpp": "d5b5ce9432d04b0ded4182ec1c158b254b1968f3945018ddaf4535ff443f6b2e",
+    "aurora/include/dolphin/base/PPCArch.h": "ac84794eef9775cfebc76b89d83e3ffe071ae4c7f6fbd149bd4f22e4e77f97c0",
+    "aurora/cmake/aurora_os.cmake": "aab6a2b6a5d3f107d0572cc623d378f7c01536d8b89bbe37c878819912cb6eef",
+    "aurora/xmake.lua": "27d11e06b8f1614eaaa57905840b9fdd02ca8e89a769d3973a613db8cad6f0a7",
+    "tests/MiiFontCompatTests.cpp": "19994d3029907f61bca6c2de40798cbe8292e55260119a622eaec4aeaa40c413",
+    "tests/OriginalStageResourceProcessFixture.hpp": "1f8576453401fc3df7edc923b314f794cc5b6e641862a4b53e5bb03000675238",
+    "tests/xmake.lua": "9e7e4dd7bfa47dfe0b4a3db5da181b51a02483cf2a27ed60f92e3e76ca6e5c31"
+  },
+  "open_finding_count": 0
+}

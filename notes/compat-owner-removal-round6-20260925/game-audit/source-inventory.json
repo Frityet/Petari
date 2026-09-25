@@ -1,0 +1,1946 @@
+{
+  "root_head_at_audit": "eb0712c1488fdc244f7daa0e8da42ea89455d7df",
+  "decomp_head_at_audit": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "sources": [
+    {
+      "path": "src/compat/LightDirectorCompat.cpp",
+      "sha256": "11e68000c72f827997636f1bbc070db8e1d267e153b21307cf876af2ee1937b2",
+      "lines": 77,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "LightDirector::LightDirector",
+          "line": 12
+        },
+        {
+          "symbol": "LightDirector::~LightDirector",
+          "line": 16
+        },
+        {
+          "symbol": "LightDirector::init",
+          "line": 29
+        },
+        {
+          "symbol": "LightDirector::initData",
+          "line": 42
+        },
+        {
+          "symbol": "LightDirector::loadLightPlayer",
+          "line": 56
+        },
+        {
+          "symbol": "LightDirector::loadLightCoin",
+          "line": 67
+        },
+        {
+          "symbol": "LightDirector::movement",
+          "line": 73
+        }
+      ]
+    },
+    {
+      "path": "src/compat/LightFunctionCompat.cpp",
+      "sha256": "90fd9605a49b5902dd658c783023f87d468c1cd9f298e773a963a3264c2e2f8e",
+      "lines": 378,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "loadLightDiffuse",
+          "line": 45
+        },
+        {
+          "symbol": "loadLightInfoDiffuse",
+          "line": 73
+        },
+        {
+          "symbol": "blendColor",
+          "line": 93
+        },
+        {
+          "symbol": "blendVec",
+          "line": 100
+        },
+        {
+          "symbol": "blendLightInfo",
+          "line": 106
+        },
+        {
+          "symbol": "LightFunction::initLightRegisterAll",
+          "line": 129
+        },
+        {
+          "symbol": "LightFunction::initLightData",
+          "line": 147
+        },
+        {
+          "symbol": "LightFunction::loadLightArchive",
+          "line": 152
+        },
+        {
+          "symbol": "LightFunction::createLightDataParser",
+          "line": 156
+        },
+        {
+          "symbol": "LightFunction::createZoneDataParser",
+          "line": 160
+        },
+        {
+          "symbol": "LightFunction::loadAllLightWhite",
+          "line": 164
+        },
+        {
+          "symbol": "LightFunction::getAreaLightInfo",
+          "line": 190
+        },
+        {
+          "symbol": "LightFunction::getDefaultStepInterpolate",
+          "line": 194
+        },
+        {
+          "symbol": "LightFunction::tryFindNewAreaLightID",
+          "line": 198
+        },
+        {
+          "symbol": "LightFunction::loadActorLightInfo",
+          "line": 216
+        },
+        {
+          "symbol": "LightFunction::blendActorLightInfo",
+          "line": 232
+        },
+        {
+          "symbol": "LightFunction::getAreaLightLightData",
+          "line": 243
+        },
+        {
+          "symbol": "LightFunction::getDefaultAreaLightName",
+          "line": 246
+        },
+        {
+          "symbol": "LightFunction::loadPointLightInfo",
+          "line": 250
+        },
+        {
+          "symbol": "LightFunction::loadLightInfoCoin",
+          "line": 279
+        },
+        {
+          "symbol": "LightFunction::registerLightAreaHolder",
+          "line": 304
+        },
+        {
+          "symbol": "LightFunction::unregisterLightAreaHolder",
+          "line": 308
+        },
+        {
+          "symbol": "LightFunction::calcLightWorldPos",
+          "line": 314
+        },
+        {
+          "symbol": "LightFunction::registerPlayerLightCtrl",
+          "line": 357
+        },
+        {
+          "symbol": "active_light_director",
+          "line": 364
+        },
+        {
+          "symbol": "registered_player_light_controller",
+          "line": 369
+        },
+        {
+          "symbol": "unregister_player_light_controller",
+          "line": 374
+        }
+      ]
+    },
+    {
+      "path": "src/compat/LightFunctionCompat.hpp",
+      "sha256": "afd558ea92c2c9198af3e62bb11d5a7f96c53b2b3a50f83ecc52f8b3c0253603",
+      "lines": 10,
+      "status": "",
+      "definitions": []
+    },
+    {
+      "path": "src/compat/LightUtilCompat.cpp",
+      "sha256": "e9d057907578d1ef7d385e49f870fc20ceedd55b71be21035c44b83e196cdce0",
+      "lines": 98,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "loadLight",
+          "line": 36
+        },
+        {
+          "symbol": "initActorLightInfoLightType",
+          "line": 65
+        },
+        {
+          "symbol": "initActorLightInfoDrawBuffer",
+          "line": 71
+        },
+        {
+          "symbol": "loadLightPlayer",
+          "line": 77
+        },
+        {
+          "symbol": "requestPointLight",
+          "line": 81
+        }
+      ]
+    },
+    {
+      "path": "src/compat/OriginalModelLightAccess.cpp",
+      "sha256": "18dab3377d3cafe653f7a1abc43b73b306938953527215ce000e639053a42cdb",
+      "lines": 70,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "isUseLightChanNo",
+          "line": 8
+        },
+        {
+          "symbol": "getLightNum",
+          "line": 19
+        },
+        {
+          "symbol": "getLightNum",
+          "line": 41
+        },
+        {
+          "symbol": "getLightNumMax",
+          "line": 50
+        },
+        {
+          "symbol": "getLightNumMax",
+          "line": 54
+        },
+        {
+          "symbol": "getLightAmbientColor",
+          "line": 67
+        }
+      ]
+    },
+    {
+      "path": "src/Game/Map/LightDirector.cpp",
+      "sha256": "b8491500105d2258251c0fc7d0ec2e990559adda50de572a9a1d4fd1a9d8997f",
+      "lines": 42,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "LightDirector::LightDirector",
+          "line": 11
+        },
+        {
+          "symbol": "LightDirector::init",
+          "line": 15
+        },
+        {
+          "symbol": "LightDirector::initData",
+          "line": 24
+        },
+        {
+          "symbol": "LightDirector::loadLightPlayer",
+          "line": 31
+        },
+        {
+          "symbol": "LightDirector::loadLightCoin",
+          "line": 36
+        },
+        {
+          "symbol": "LightDirector::movement",
+          "line": 40
+        }
+      ]
+    },
+    {
+      "path": "src/Game/Map/LightFunction.cpp",
+      "sha256": "c8a52b7cb3148b94ca08735c5f78524e7b537cf6bf06fffa3c3174b3ee47bf5c",
+      "lines": 241,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "LightFunction::initLightRegisterAll",
+          "line": 17
+        },
+        {
+          "symbol": "LightFunction::initLightData",
+          "line": 34
+        },
+        {
+          "symbol": "LightFunction::loadLightArchive",
+          "line": 38
+        },
+        {
+          "symbol": "LightFunction::createLightDataParser",
+          "line": 44
+        },
+        {
+          "symbol": "LightFunction::createZoneDataParser",
+          "line": 55
+        },
+        {
+          "symbol": "getDataLightInfo",
+          "line": 72
+        },
+        {
+          "symbol": "getDataActorLightInfo",
+          "line": 84
+        },
+        {
+          "symbol": "LightFunction::getAreaLightLightData",
+          "line": 99
+        },
+        {
+          "symbol": "LightFunction::getDefaultAreaLightName",
+          "line": 109
+        },
+        {
+          "symbol": "LightFunction::getDefaultStepInterpolate",
+          "line": 113
+        },
+        {
+          "symbol": "LightFunction::registerPlayerLightCtrl",
+          "line": 117
+        },
+        {
+          "symbol": "LightFunction::registerLightAreaHolder",
+          "line": 121
+        },
+        {
+          "symbol": "LightFunction::tryFindNewAreaLightID",
+          "line": 125
+        },
+        {
+          "symbol": "LightFunction::getAreaLightInfo",
+          "line": 129
+        },
+        {
+          "symbol": "blendActorLightPos",
+          "line": 135
+        },
+        {
+          "symbol": "LightFunction::blendActorLightInfo",
+          "line": 154
+        },
+        {
+          "symbol": "LightFunction::loadActorLightInfo",
+          "line": 187
+        },
+        {
+          "symbol": "LightFunction::loadLightInfoCoin",
+          "line": 196
+        },
+        {
+          "symbol": "LightFunction::loadPointLightInfo",
+          "line": 207
+        },
+        {
+          "symbol": "LightFunction::loadAllLightWhite",
+          "line": 218
+        },
+        {
+          "symbol": "LightFunction::calcLightWorldPos",
+          "line": 230
+        }
+      ]
+    },
+    {
+      "path": "src/Game/Util/LightUtil.cpp",
+      "sha256": "111ee6f921f406b1205d2ac1fe5ab951428bf6be0f50ccbedf7d90f4df90334a",
+      "lines": 49,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "loadLight",
+          "line": 12
+        },
+        {
+          "symbol": "loadLightPlayer",
+          "line": 32
+        },
+        {
+          "symbol": "initActorLightInfoLightType",
+          "line": 36
+        },
+        {
+          "symbol": "initActorLightInfoDrawBuffer",
+          "line": 40
+        },
+        {
+          "symbol": "requestPointLight",
+          "line": 44
+        }
+      ]
+    },
+    {
+      "path": "src/Game/Map/LightDataHolder.cpp",
+      "sha256": "10b49523f48c6922c516d5e8f4188f717e07718a815cc72c6e1dbeb9cf0db2cf",
+      "lines": 40,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "LightDataHolder::LightDataHolder",
+          "line": 10
+        },
+        {
+          "symbol": "LightDataHolder::initLightData",
+          "line": 15
+        },
+        {
+          "symbol": "LightDataHolder::findAreaLight",
+          "line": 18
+        },
+        {
+          "symbol": "LightDataHolder::getDefaultAreaLightName",
+          "line": 34
+        },
+        {
+          "symbol": "LightDataHolder::getDefaultStepInterpolate",
+          "line": 38
+        }
+      ]
+    },
+    {
+      "path": "src/Game/Map/LightDataHolder.hpp",
+      "sha256": "03930d10251b828f54d9b84b015dc088f59cf59d3f0867d2175af0dbec8e302c",
+      "lines": 66,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "LightInfoCoin",
+          "line": 15
+        },
+        {
+          "symbol": "ActorLightInfo",
+          "line": 27
+        },
+        {
+          "symbol": "getLightInfo",
+          "line": 55
+        }
+      ]
+    },
+    {
+      "path": "src/Game/Map/LightZoneDataHolder.cpp",
+      "sha256": "b9d63d2510a89518ef2063d4a3c95e60c2497d72b8b298a104da5ea7b521ab0a",
+      "lines": 25,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "ZoneLightID::ZoneLightID",
+          "line": 5
+        },
+        {
+          "symbol": "ZoneLightID::clear",
+          "line": 10
+        },
+        {
+          "symbol": "ZoneLightID::isTargetArea",
+          "line": 15
+        },
+        {
+          "symbol": "ZoneLightID::isOutOfArea",
+          "line": 23
+        }
+      ]
+    },
+    {
+      "path": "src/Game/Map/LightZoneDataHolder.hpp",
+      "sha256": "40a881d2627688a917c23bd221dcf3423914e4f0c9321074c9ff4a93dac0da00",
+      "lines": 50,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "getAreaLightNameInZoneData",
+          "line": 28
+        },
+        {
+          "symbol": "getAreaLightNameInZoneData",
+          "line": 40
+        },
+        {
+          "symbol": "getDefaultStageAreaLightName",
+          "line": 44
+        }
+      ]
+    },
+    {
+      "path": "src/Game/LiveActor/ActorLightCtrl.cpp",
+      "sha256": "4dd4d037fe9032fad28fe51281372e7ed44594c8f0f6519017330817b115e0aa",
+      "lines": 228,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "resetLightSort",
+          "line": 9
+        },
+        {
+          "symbol": "ActorLightCtrl::ActorLightCtrl",
+          "line": 13
+        },
+        {
+          "symbol": "ActorLightCtrl::init",
+          "line": 19
+        },
+        {
+          "symbol": "ActorLightInfo::operator=",
+          "line": 34
+        },
+        {
+          "symbol": "ActorLightCtrl::update",
+          "line": 44
+        },
+        {
+          "symbol": "ActorLightCtrl::loadLight",
+          "line": 51
+        },
+        {
+          "symbol": "ActorLightCtrl::reset",
+          "line": 61
+        },
+        {
+          "symbol": "ActorLightCtrl::copy",
+          "line": 81
+        },
+        {
+          "symbol": "ActorLightCtrl::isSameLight",
+          "line": 94
+        },
+        {
+          "symbol": "ActorLightCtrl::getActorLight",
+          "line": 102
+        },
+        {
+          "symbol": "ActorLightCtrl::initActorLightInfo",
+          "line": 110
+        },
+        {
+          "symbol": "ActorLightCtrl::tryFindNewAreaLight",
+          "line": 119
+        },
+        {
+          "symbol": "ActorLightCtrl::updateLightBlend",
+          "line": 163
+        },
+        {
+          "symbol": "ActorLightCtrl::resetCurrentLightInfo",
+          "line": 189
+        },
+        {
+          "symbol": "ActorLightCtrl::getTargetActorLight",
+          "line": 210
+        }
+      ]
+    },
+    {
+      "path": "src/Game/LiveActor/ActorLightCtrl.hpp",
+      "sha256": "d200267a8f978f3c250bddf41b288f69dee883813ff8caa6bb7342ac5bd6b3d5",
+      "lines": 36,
+      "status": "",
+      "definitions": []
+    },
+    {
+      "path": "src/Game/Map/LightPointCtrl.cpp",
+      "sha256": "ceed3e79b23c28f32931889f9d3ffe8b5fc3885e3d117d586cc3fc9cfdf57c53",
+      "lines": 213,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "blendColor",
+          "line": 51
+        },
+        {
+          "symbol": "blendVec",
+          "line": 58
+        },
+        {
+          "symbol": "LightPointCtrl::LightPointCtrl",
+          "line": 68
+        },
+        {
+          "symbol": "LightPointCtrl::~LightPointCtrl",
+          "line": 82
+        },
+        {
+          "symbol": "LightPointCtrl::loadPointLight",
+          "line": 91
+        },
+        {
+          "symbol": "LightPointCtrl::update",
+          "line": 95
+        },
+        {
+          "symbol": "LightPointCtrl::requestPointLight",
+          "line": 118
+        },
+        {
+          "symbol": "LightPointCtrl::updatePointLight",
+          "line": 138
+        },
+        {
+          "symbol": "LightPointCtrl::clearPointLight",
+          "line": 166
+        },
+        {
+          "symbol": "LightPointCtrl::blendPointLight",
+          "line": 179
+        },
+        {
+          "symbol": "LightPointCtrl::tryBlendStart",
+          "line": 195
+        },
+        {
+          "symbol": "LightPointCtrl::isUpdateCandidateActor",
+          "line": 204
+        }
+      ]
+    },
+    {
+      "path": "src/Game/Map/LightPointCtrl.hpp",
+      "sha256": "3aeb8d92e3aedd9656c2781669d861b961d7ed3e7241851ca1afa845a0489e2d",
+      "lines": 58,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "operator=",
+          "line": 12
+        }
+      ]
+    },
+    {
+      "path": "src/render/light/LightData.cpp",
+      "sha256": "fb66250a5eb088afead59be614ac39cbd00047766c5cd2b0b7b532b5f8540129",
+      "lines": 352,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "std::ranges::transform",
+          "line": 26
+        },
+        {
+          "symbol": "read_light_info",
+          "line": 116
+        },
+        {
+          "symbol": "read_actor_light_info",
+          "line": 122
+        },
+        {
+          "symbol": "StageLightData::clear_loaded_data",
+          "line": 141
+        },
+        {
+          "symbol": "StageLightData::reset",
+          "line": 152
+        },
+        {
+          "symbol": "StageLightData::configure_stage_zones",
+          "line": 157
+        },
+        {
+          "symbol": "StageLightData::stage_zones",
+          "line": 184
+        },
+        {
+          "symbol": "StageLightData::load_stage",
+          "line": 188
+        },
+        {
+          "symbol": "StageLightData::ensure_loaded",
+          "line": 251
+        },
+        {
+          "symbol": "StageLightData::load_current_stage",
+          "line": 288
+        }
+      ]
+    },
+    {
+      "path": "src/render/light/LightData.hpp",
+      "sha256": "154bcd9e26c182b9446e02e5997d86fb4082cc0931d3d0da49e242d9fc840d6f",
+      "lines": 58,
+      "status": "",
+      "definitions": []
+    },
+    {
+      "path": "src/scene/StageLightSceneBinding.cpp",
+      "sha256": "880edf0196e9ee628dfae24304dc8c301403e7752a08f22d174083f244430ffb",
+      "lines": 82,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "append_zones",
+          "line": 16
+        },
+        {
+          "symbol": "StageLightSceneBinding::StageLightSceneBinding",
+          "line": 31
+        },
+        {
+          "symbol": "StageLightSceneBinding::StageLightSceneBinding",
+          "line": 44
+        },
+        {
+          "symbol": "StageLightSceneBinding::initialize",
+          "line": 51
+        },
+        {
+          "symbol": "StageLightSceneBinding::~StageLightSceneBinding",
+          "line": 75
+        }
+      ]
+    },
+    {
+      "path": "src/scene/StageLightSceneBinding.hpp",
+      "sha256": "0199415e95d20f9d4d2c4ef40eede9f2c8e1009119b34178dc860e532ed2f289",
+      "lines": 42,
+      "status": "",
+      "definitions": []
+    },
+    {
+      "path": "src/scene/OriginalSceneSupport.cpp",
+      "sha256": "9b342f228eab869f6d526dc9eb60abe1d855e591f3010a09d296843085c1a2a7",
+      "lines": 161,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "OriginalSceneSupport",
+          "line": 38
+        },
+        {
+          "symbol": "~OriginalSceneSupport",
+          "line": 63
+        },
+        {
+          "symbol": "prepare_retirement",
+          "line": 98
+        },
+        {
+          "symbol": "scene",
+          "line": 102
+        },
+        {
+          "symbol": "initialize_effects",
+          "line": 103
+        },
+        {
+          "symbol": "initialize_lights",
+          "line": 104
+        },
+        {
+          "symbol": "begin_frame",
+          "line": 111
+        },
+        {
+          "symbol": "bind_original_scene_support",
+          "line": 132
+        },
+        {
+          "symbol": "prepare_original_scene_support_retirement",
+          "line": 143
+        },
+        {
+          "symbol": "initialize_original_scene_effects",
+          "line": 147
+        },
+        {
+          "symbol": "initialize_original_scene_lights",
+          "line": 152
+        },
+        {
+          "symbol": "begin_original_scene_frame",
+          "line": 158
+        }
+      ]
+    },
+    {
+      "path": "src/scene/OriginalSceneSupport.hpp",
+      "sha256": "6ad0474df813da9d1aa05e4b4c01493066bb3d52a67d25229b3c15f88f208055",
+      "lines": 13,
+      "status": "",
+      "definitions": []
+    },
+    {
+      "path": "src/compat/SceneInitializationCompat.cpp",
+      "sha256": "bd1eb13ea2c170dbd8dc89e7e6467f5f8e34eef436d56b8bebf4c421342b17a9",
+      "lines": 89,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "getSceneDataInitializer",
+          "line": 14
+        },
+        {
+          "symbol": "SceneFunction::startStageFileLoad",
+          "line": 19
+        },
+        {
+          "symbol": "SceneFunction::waitDoneStageFileLoad",
+          "line": 24
+        },
+        {
+          "symbol": "SceneFunction::startActorFileLoadCommon",
+          "line": 28
+        },
+        {
+          "symbol": "SceneFunction::startActorFileLoadScenario",
+          "line": 32
+        },
+        {
+          "symbol": "SceneFunction::startActorPlacement",
+          "line": 36
+        },
+        {
+          "symbol": "SceneFunction::initAfterScenarioSelected",
+          "line": 44
+        },
+        {
+          "symbol": "SceneFunction::initEffectSystem",
+          "line": 52
+        },
+        {
+          "symbol": "SceneFunction::allocateDrawBufferActorList",
+          "line": 56
+        },
+        {
+          "symbol": "SceneFunction::initForNameObj",
+          "line": 63
+        },
+        {
+          "symbol": "SceneFunction::initForLiveActor",
+          "line": 69
+        },
+        {
+          "symbol": "SceneFunction::createHioBasicNode",
+          "line": 88
+        }
+      ]
+    },
+    {
+      "path": "src/compat/ActorRuntimeRegistry.cpp",
+      "sha256": "a196e91421597914e8056de69d20eee282306e9032896bba03b304794a8076cb",
+      "lines": 851,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "active_name_obj_registration_capture",
+          "line": 90
+        },
+        {
+          "symbol": "std::ranges::sort",
+          "line": 106
+        },
+        {
+          "symbol": "invalidate_shadow_joint_matrix_bindings",
+          "line": 129
+        },
+        {
+          "symbol": "retire_hit_sensor_borrows",
+          "line": 143
+        },
+        {
+          "symbol": "NameObjRuntimeRegistrationCapture::NameObjRuntimeRegistrationCapture",
+          "line": 182
+        },
+        {
+          "symbol": "NameObjRuntimeRegistrationCapture::~NameObjRuntimeRegistrationCapture",
+          "line": 192
+        },
+        {
+          "symbol": "NameObjRuntimeRegistrationCapture::marker",
+          "line": 199
+        },
+        {
+          "symbol": "register_name_obj_runtime_state",
+          "line": 204
+        },
+        {
+          "symbol": "retain_name_obj_host_name",
+          "line": 219
+        },
+        {
+          "symbol": "release_name_obj_runtime_state",
+          "line": 231
+        },
+        {
+          "symbol": "has_name_obj_runtime_state",
+          "line": 258
+        },
+        {
+          "symbol": "name_obj_runtime_generation",
+          "line": 262
+        },
+        {
+          "symbol": "name_obj_runtime_state_count",
+          "line": 270
+        },
+        {
+          "symbol": "claim_name_obj_runtime_ownership",
+          "line": 274
+        },
+        {
+          "symbol": "name_obj_runtime_ownership_is_claimed",
+          "line": 292
+        },
+        {
+          "symbol": "name_obj_runtime_owner",
+          "line": 299
+        },
+        {
+          "symbol": "delegate_name_obj_runtime_postpass",
+          "line": 305
+        },
+        {
+          "symbol": "release_name_obj_runtime_postpass_delegation",
+          "line": 324
+        },
+        {
+          "symbol": "name_obj_runtime_postpass_is_delegated",
+          "line": 333
+        },
+        {
+          "symbol": "name_obj_runtime_postpass_delegate",
+          "line": 340
+        },
+        {
+          "symbol": "snapshot_name_obj_runtime_objects",
+          "line": 348
+        },
+        {
+          "symbol": "mark_name_obj_runtime_registrations",
+          "line": 352
+        },
+        {
+          "symbol": "snapshot_name_obj_runtime_objects_since",
+          "line": 358
+        },
+        {
+          "symbol": "newest_name_obj_runtime_object_since_if",
+          "line": 367
+        },
+        {
+          "symbol": "name_obj_runtime_object_was_registered_since",
+          "line": 390
+        },
+        {
+          "symbol": "destroy_name_obj_runtime_objects_since",
+          "line": 403
+        },
+        {
+          "symbol": "name_obj_is_suspended",
+          "line": 417
+        },
+        {
+          "symbol": "register_actor_runtime_state",
+          "line": 426
+        },
+        {
+          "symbol": "has_actor_runtime_state",
+          "line": 446
+        },
+        {
+          "symbol": "actor_runtime_state_count",
+          "line": 450
+        },
+        {
+          "symbol": "release_actor_runtime_state",
+          "line": 454
+        },
+        {
+          "symbol": "replace_actor_spine",
+          "line": 511
+        },
+        {
+          "symbol": "update_actor_nerve",
+          "line": 517
+        },
+        {
+          "symbol": "replace_actor_rail_rider",
+          "line": 523
+        },
+        {
+          "symbol": "adopt_actor_stage_switch",
+          "line": 529
+        },
+        {
+          "symbol": "replace_actor_light_ctrl",
+          "line": 535
+        },
+        {
+          "symbol": "adopt_actor_lod_ctrl",
+          "line": 542
+        },
+        {
+          "symbol": "actor_lod_ctrl_runtime_state_count",
+          "line": 553
+        },
+        {
+          "symbol": "std::ranges::count_if",
+          "line": 554
+        },
+        {
+          "symbol": "initialize_actor_model",
+          "line": 559
+        },
+        {
+          "symbol": "actor_scene_allocation_domain",
+          "line": 579
+        },
+        {
+          "symbol": "adopt_actor_sound_object",
+          "line": 588
+        },
+        {
+          "symbol": "adopt_actor_animation_helpers",
+          "line": 596
+        },
+        {
+          "symbol": "retain_actor_model_owner",
+          "line": 602
+        },
+        {
+          "symbol": "actor_model_resource_data_if_present",
+          "line": 606
+        },
+        {
+          "symbol": "configure_actor_binder",
+          "line": 616
+        },
+        {
+          "symbol": "register_actor_binder",
+          "line": 625
+        },
+        {
+          "symbol": "has_actor_binder",
+          "line": 637
+        },
+        {
+          "symbol": "actor_binder_config",
+          "line": 642
+        },
+        {
+          "symbol": "release_actor_binder_state",
+          "line": 654
+        },
+        {
+          "symbol": "retire_clipping_actor_holder",
+          "line": 664
+        },
+        {
+          "symbol": "retire_clipping_group_holder",
+          "line": 673
+        },
+        {
+          "symbol": "initialize_actor_shadow_controller_list",
+          "line": 681
+        },
+        {
+          "symbol": "make_actor_shadow_controller_runtime_state",
+          "line": 694
+        },
+        {
+          "symbol": "replace_actor_shadow_runtime_state",
+          "line": 743
+        },
+        {
+          "symbol": "add_actor_shadow_controller",
+          "line": 760
+        },
+        {
+          "symbol": "add_actor_shadow_controller",
+          "line": 765
+        },
+        {
+          "symbol": "actor_shadow_controller_runtime_state",
+          "line": 787
+        },
+        {
+          "symbol": "actor_shadow_controller_runtime_state",
+          "line": 804
+        },
+        {
+          "symbol": "actor_shadow_runtime_state",
+          "line": 822
+        },
+        {
+          "symbol": "actor_shadow_runtime_state",
+          "line": 831
+        },
+        {
+          "symbol": "actor_shadow_runtime_state_count",
+          "line": 843
+        }
+      ]
+    },
+    {
+      "path": "src/Game/AreaObj/LightAreaHolder.cpp",
+      "sha256": "d35bc952c2bba94e13c3a3d07b32ea329787f032790b893bf8d4f1f60f74d60a",
+      "lines": 59,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "LightAreaHolder::LightAreaHolder",
+          "line": 6
+        },
+        {
+          "symbol": "LightAreaHolder::tryFindLightID",
+          "line": 11
+        },
+        {
+          "symbol": "LightAreaHolder::initAfterPlacement",
+          "line": 33
+        },
+        {
+          "symbol": "LightAreaHolder::sort",
+          "line": 37
+        },
+        {
+          "symbol": "LightAreaHolder::~LightAreaHolder",
+          "line": 57
+        }
+      ]
+    },
+    {
+      "path": "tests/PointLightRuntimeTests.cpp",
+      "sha256": "eba8c1a94e660836e2234029c647559bae8171fa66c36a018c815955b95e8bef",
+      "lines": 943,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "require",
+          "line": 48
+        },
+        {
+          "symbol": "testOriginalPlayerLightOwnership",
+          "line": 54
+        },
+        {
+          "symbol": "requireThrows",
+          "line": 92
+        },
+        {
+          "symbol": "requireNear",
+          "line": 107
+        },
+        {
+          "symbol": "requirePosition",
+          "line": 113
+        },
+        {
+          "symbol": "requireColor",
+          "line": 120
+        },
+        {
+          "symbol": "requireAbsent",
+          "line": 127
+        },
+        {
+          "symbol": "requireDiffuseLight",
+          "line": 141
+        },
+        {
+          "symbol": "DiscMount",
+          "line": 187
+        },
+        {
+          "symbol": "~DiscMount",
+          "line": 203
+        },
+        {
+          "symbol": "NpcPointLightRequester",
+          "line": 218
+        },
+        {
+          "symbol": "testClampAndCandidateContract",
+          "line": 241
+        },
+        {
+          "symbol": "testStaleAndAbaCandidateSafety",
+          "line": 296
+        },
+        {
+          "symbol": "testZeroDurationIsNotNormalized",
+          "line": 368
+        },
+        {
+          "symbol": "testRequestServiceBoundary",
+          "line": 389
+        },
+        {
+          "symbol": "testOriginalGxLightSubmission",
+          "line": 455
+        },
+        {
+          "symbol": "testSceneOwnerSchedulingAndTransitions",
+          "line": 519
+        },
+        {
+          "symbol": "main",
+          "line": 902
+        }
+      ]
+    },
+    {
+      "path": "tests/AreaObjRealOrAbsentTests.cpp",
+      "sha256": "4d57646b8da527b27c79097906d532b3b070cd05f35bac8bf132528ee1769054",
+      "lines": 1196,
+      "status": "",
+      "definitions": [
+        {
+          "symbol": "require",
+          "line": 63
+        },
+        {
+          "symbol": "require_throws",
+          "line": 69
+        },
+        {
+          "symbol": "test_area_queries_reject_missing_scene_owner",
+          "line": 91
+        },
+        {
+          "symbol": "test_area_obj_source_boundaries_are_exact",
+          "line": 160
+        },
+        {
+          "symbol": "verify_installed_original_managers",
+          "line": 180
+        },
+        {
+          "symbol": "test_manager_readiness_does_not_fabricate_placement_support",
+          "line": 200
+        },
+        {
+          "symbol": "configure_unit_cube",
+          "line": 226
+        },
+        {
+          "symbol": "test_cube_camera_manager_finalizes_priority_and_reverse_query",
+          "line": 237
+        },
+        {
+          "symbol": "configure_light_cube",
+          "line": 288
+        },
+        {
+          "symbol": "test_light_area_priority_and_stable_zone_identity",
+          "line": 301
+        },
+        {
+          "symbol": "~DiscCloseGuard",
+          "line": 309
+        },
+        {
+          "symbol": "test_scene_holder_owns_real_container_and_managers",
+          "line": 378
+        },
+        {
+          "symbol": "test_descriptor_registry_and_strict_area_preflight",
+          "line": 428
+        },
+        {
+          "symbol": "make_generic_effect_area_row",
+          "line": 494
+        },
+        {
+          "symbol": "test_generic_effect_areas_use_original_init_and_queries",
+          "line": 535
+        },
+        {
+          "symbol": "test_rmgk01_cube_camera_rows_construct_exactly",
+          "line": 613
+        },
+        {
+          "symbol": "~DiscCloseGuard",
+          "line": 625
+        },
+        {
+          "symbol": "std::ranges::count_if",
+          "line": 644
+        },
+        {
+          "symbol": "require",
+          "line": 651
+        },
+        {
+          "symbol": "require",
+          "line": 659
+        },
+        {
+          "symbol": "std::ranges::count_if",
+          "line": 662
+        },
+        {
+          "symbol": "std::ranges::count_if",
+          "line": 665
+        },
+        {
+          "symbol": "std::ranges::all_of",
+          "line": 668
+        },
+        {
+          "symbol": "test_rmgk01_message_area_rows_construct_exactly",
+          "line": 742
+        },
+        {
+          "symbol": "~DiscCloseGuard",
+          "line": 754
+        },
+        {
+          "symbol": "test_rmgk01_switch_area_rows_drive_authored_switches",
+          "line": 852
+        },
+        {
+          "symbol": "~DiscCloseGuard",
+          "line": 864
+        },
+        {
+          "symbol": "require",
+          "line": 891
+        },
+        {
+          "symbol": "std::ranges::all_of",
+          "line": 896
+        },
+        {
+          "symbol": "test_rmgk01_zone_light_data_resolves_child_tables",
+          "line": 974
+        },
+        {
+          "symbol": "~DiscCloseGuard",
+          "line": 986
+        },
+        {
+          "symbol": "test_water_and_mercator_do_not_fabricate_results",
+          "line": 1101
+        },
+        {
+          "symbol": "test_area_movement_uses_actual_sphere_and_arguments",
+          "line": 1116
+        },
+        {
+          "symbol": "main",
+          "line": 1153
+        }
+      ]
+    },
+    {
+      "path": "src/Game/xmake.lua",
+      "sha256": "f9d4f716caf82958cbfefaedbd6615ad4c0b60fd2dc3162eff4db5418f6f625a",
+      "lines": 193,
+      "status": "",
+      "definitions": []
+    },
+    {
+      "path": "tests/xmake.lua",
+      "sha256": "8988c7b366deb72312b4a0845cb472a729cb03c4e8e62977d32febab1be52a07",
+      "lines": 2967,
+      "status": "M tests/xmake.lua",
+      "definitions": []
+    }
+  ],
+  "donors": [
+    {
+      "path": "decomp/src/Game/Map/LightDirector.cpp",
+      "sha256": "381bafeb2b187577fa9b6b757f7394deaeae28eb735592ad2b37af1bbde42810",
+      "lines": 41,
+      "definitions": [
+        {
+          "symbol": "LightDirector::LightDirector",
+          "line": 10
+        },
+        {
+          "symbol": "LightDirector::init",
+          "line": 14
+        },
+        {
+          "symbol": "LightDirector::initData",
+          "line": 23
+        },
+        {
+          "symbol": "LightDirector::loadLightPlayer",
+          "line": 30
+        },
+        {
+          "symbol": "LightDirector::loadLightCoin",
+          "line": 35
+        },
+        {
+          "symbol": "LightDirector::movement",
+          "line": 39
+        }
+      ]
+    },
+    {
+      "path": "decomp/src/Game/Map/LightFunction.cpp",
+      "sha256": "e20992bb4f28a438fa3a396dfc16e79ce88a69667d07b45ed825ce5f0f5fbad6",
+      "lines": 241,
+      "definitions": [
+        {
+          "symbol": "LightFunction::initLightRegisterAll",
+          "line": 15
+        },
+        {
+          "symbol": "LightFunction::initLightData",
+          "line": 32
+        },
+        {
+          "symbol": "LightFunction::loadLightArchive",
+          "line": 36
+        },
+        {
+          "symbol": "LightFunction::createLightDataParser",
+          "line": 42
+        },
+        {
+          "symbol": "LightFunction::createZoneDataParser",
+          "line": 53
+        },
+        {
+          "symbol": "getDataLightInfo",
+          "line": 70
+        },
+        {
+          "symbol": "getDataActorLightInfo",
+          "line": 82
+        },
+        {
+          "symbol": "LightFunction::getAreaLightLightData",
+          "line": 97
+        },
+        {
+          "symbol": "LightFunction::getDefaultAreaLightName",
+          "line": 107
+        },
+        {
+          "symbol": "LightFunction::getDefaultStepInterpolate",
+          "line": 111
+        },
+        {
+          "symbol": "LightFunction::registerPlayerLightCtrl",
+          "line": 115
+        },
+        {
+          "symbol": "LightFunction::registerLightAreaHolder",
+          "line": 119
+        },
+        {
+          "symbol": "LightFunction::tryFindNewAreaLightID",
+          "line": 123
+        },
+        {
+          "symbol": "LightFunction::getAreaLightInfo",
+          "line": 127
+        },
+        {
+          "symbol": "blendActorLightPos",
+          "line": 133
+        },
+        {
+          "symbol": "LightFunction::blendActorLightInfo",
+          "line": 152
+        },
+        {
+          "symbol": "LightFunction::loadActorLightInfo",
+          "line": 185
+        },
+        {
+          "symbol": "LightFunction::loadLightInfoCoin",
+          "line": 195
+        },
+        {
+          "symbol": "LightFunction::loadPointLightInfo",
+          "line": 206
+        },
+        {
+          "symbol": "LightFunction::loadAllLightWhite",
+          "line": 217
+        },
+        {
+          "symbol": "LightFunction::calcLightWorldPos",
+          "line": 230
+        }
+      ]
+    },
+    {
+      "path": "decomp/src/Game/Util/LightUtil.cpp",
+      "sha256": "134f26cbf83eafc2d26e7d4c992391746dff6cbab09539d3afdc4c86ab789ec0",
+      "lines": 50,
+      "definitions": [
+        {
+          "symbol": "loadLight",
+          "line": 11
+        },
+        {
+          "symbol": "loadLightPlayer",
+          "line": 35
+        },
+        {
+          "symbol": "initActorLightInfoLightType",
+          "line": 39
+        },
+        {
+          "symbol": "initActorLightInfoDrawBuffer",
+          "line": 43
+        },
+        {
+          "symbol": "requestPointLight",
+          "line": 47
+        }
+      ]
+    },
+    {
+      "path": "decomp/src/Game/Map/LightDataHolder.cpp",
+      "sha256": "74a352f56ce752be4f0a73d6258afd5d11c89bfb5704b2c4dd3adb37af616e9b",
+      "lines": 46,
+      "definitions": [
+        {
+          "symbol": "LightDataHolder::LightDataHolder",
+          "line": 11
+        },
+        {
+          "symbol": "LightDataHolder::initLightData",
+          "line": 16
+        },
+        {
+          "symbol": "LightDataHolder::findAreaLight",
+          "line": 28
+        },
+        {
+          "symbol": "LightDataHolder::getDefaultAreaLightName",
+          "line": 40
+        },
+        {
+          "symbol": "LightDataHolder::getDefaultStepInterpolate",
+          "line": 44
+        }
+      ]
+    },
+    {
+      "path": "decomp/src/Game/Map/LightZoneDataHolder.cpp",
+      "sha256": "2a6dd612d060cb73207c4af1e798303141ce9a003c217a0205655bd2c209a561",
+      "lines": 84,
+      "definitions": [
+        {
+          "symbol": "ZoneLightID::ZoneLightID",
+          "line": 6
+        },
+        {
+          "symbol": "ZoneLightID::clear",
+          "line": 11
+        },
+        {
+          "symbol": "ZoneLightID::isTargetArea",
+          "line": 16
+        },
+        {
+          "symbol": "ZoneLightID::isOutOfArea",
+          "line": 24
+        },
+        {
+          "symbol": "LightZoneInfo::LightZoneInfo",
+          "line": 28
+        },
+        {
+          "symbol": "LightZoneInfo::getAreaLightNameInZoneData",
+          "line": 33
+        },
+        {
+          "symbol": "LightZoneDataHolder::LightZoneDataHolder",
+          "line": 43
+        },
+        {
+          "symbol": "LightZoneDataHolder::initZoneData",
+          "line": 48
+        },
+        {
+          "symbol": "LightZoneDataHolder::getAreaLightNameInZoneData",
+          "line": 57
+        },
+        {
+          "symbol": "LightZoneDataHolder::getDefaultStageAreaLightName",
+          "line": 68
+        },
+        {
+          "symbol": "LightZoneInfo::init",
+          "line": 72
+        }
+      ]
+    },
+    {
+      "path": "decomp/src/Game/LiveActor/ActorLightCtrl.cpp",
+      "sha256": "3a0da75d6e12c073a643c9d76394aec823ef4af3156723f92e2bb68470679d35",
+      "lines": 162,
+      "definitions": [
+        {
+          "symbol": "ActorLightCtrl::ActorLightCtrl",
+          "line": 7
+        },
+        {
+          "symbol": "ActorLightCtrl::init",
+          "line": 13
+        },
+        {
+          "symbol": "ActorLightCtrl::update",
+          "line": 25
+        },
+        {
+          "symbol": "ActorLightCtrl::loadLight",
+          "line": 32
+        },
+        {
+          "symbol": "ActorLightCtrl::reset",
+          "line": 42
+        },
+        {
+          "symbol": "ActorLightCtrl::copy",
+          "line": 58
+        },
+        {
+          "symbol": "ActorLightCtrl::isSameLight",
+          "line": 67
+        },
+        {
+          "symbol": "ActorLightCtrl::getActorLight",
+          "line": 75
+        },
+        {
+          "symbol": "ActorLightCtrl::initActorLightInfo",
+          "line": 83
+        },
+        {
+          "symbol": "ActorLightCtrl::tryFindNewAreaLight",
+          "line": 92
+        },
+        {
+          "symbol": "ActorLightCtrl::updateLightBlend",
+          "line": 118
+        },
+        {
+          "symbol": "ActorLightCtrl::resetCurrentLightInfo",
+          "line": 140
+        },
+        {
+          "symbol": "ActorLightCtrl::getTargetActorLight",
+          "line": 148
+        }
+      ]
+    },
+    {
+      "path": "decomp/src/Game/Map/LightPointCtrl.cpp",
+      "sha256": "d6940cb8f3dab8ba9c23872f44cbe83fac4af72333c200b92b38ad7162014543",
+      "lines": 131,
+      "definitions": [
+        {
+          "symbol": "LightPointCtrl::LightPointCtrl",
+          "line": 11
+        },
+        {
+          "symbol": "LightPointCtrl::loadPointLight",
+          "line": 23
+        },
+        {
+          "symbol": "LightPointCtrl::update",
+          "line": 27
+        },
+        {
+          "symbol": "LightPointCtrl::requestPointLight",
+          "line": 42
+        },
+        {
+          "symbol": "LightPointCtrl::updatePointLight",
+          "line": 54
+        },
+        {
+          "symbol": "LightPointCtrl::clearPointLight",
+          "line": 79
+        },
+        {
+          "symbol": "LightPointCtrl::blendPointLight",
+          "line": 99
+        },
+        {
+          "symbol": "LightPointCtrl::tryBlendStart",
+          "line": 115
+        },
+        {
+          "symbol": "LightPointCtrl::isUpdateCandidateActor",
+          "line": 124
+        }
+      ]
+    },
+    {
+      "path": "decomp/src/Game/Util/ModelUtil.cpp",
+      "sha256": "512218b126e406fc77fa3e6ad2832ff42f248f97f6c46a9927540e4748ce882c",
+      "lines": 643,
+      "definitions": [
+        {
+          "symbol": "isUseLightChanNo",
+          "line": 14
+        },
+        {
+          "symbol": "FORCE_MATCH_FUNCTION_ORDER1",
+          "line": 27
+        },
+        {
+          "symbol": "newXanimePlayer",
+          "line": 32
+        },
+        {
+          "symbol": "newXanimeResourceTable",
+          "line": 38
+        },
+        {
+          "symbol": "updateModelManager",
+          "line": 42
+        },
+        {
+          "symbol": "calcAnimModelManager",
+          "line": 46
+        },
+        {
+          "symbol": "updateModelAnimPlayer",
+          "line": 50
+        },
+        {
+          "symbol": "invalidateMtxCalc",
+          "line": 56
+        },
+        {
+          "symbol": "invalidateJointCallback",
+          "line": 63
+        },
+        {
+          "symbol": "getJ3DModel",
+          "line": 70
+        },
+        {
+          "symbol": "calcJ3DModel",
+          "line": 78
+        },
+        {
+          "symbol": "getJ3DModelData",
+          "line": 84
+        },
+        {
+          "symbol": "getBckFrameMax",
+          "line": 92
+        },
+        {
+          "symbol": "getBrkFrameMax",
+          "line": 96
+        },
+        {
+          "symbol": "getBvaFrameMax",
+          "line": 100
+        },
+        {
+          "symbol": "isBckPlaying",
+          "line": 104
+        },
+        {
+          "symbol": "findBckNameStringInResource",
+          "line": 109
+        },
+        {
+          "symbol": "getMaterialNo",
+          "line": 120
+        },
+        {
+          "symbol": "getMaterialNo",
+          "line": 124
+        },
+        {
+          "symbol": "getMaterial",
+          "line": 129
+        },
+        {
+          "symbol": "getMaterial",
+          "line": 133
+        },
+        {
+          "symbol": "getMaterial",
+          "line": 137
+        },
+        {
+          "symbol": "getMaterial",
+          "line": 141
+        },
+        {
+          "symbol": "getMaterialNum",
+          "line": 145
+        },
+        {
+          "symbol": "getMaterialName",
+          "line": 149
+        },
+        {
+          "symbol": "updateModelDiffDL",
+          "line": 153
+        },
+        {
+          "symbol": "isEnvelope",
+          "line": 157
+        },
+        {
+          "symbol": "hideMaterial",
+          "line": 161
+        },
+        {
+          "symbol": "hideMaterial",
+          "line": 166
+        },
+        {
+          "symbol": "showMaterial",
+          "line": 170
+        },
+        {
+          "symbol": "showMaterial",
+          "line": 175
+        },
+        {
+          "symbol": "calcFogStartEnd",
+          "line": 179
+        },
+        {
+          "symbol": "isUseTex",
+          "line": 201
+        },
+        {
+          "symbol": "isNormalTexMtx",
+          "line": 217
+        },
+        {
+          "symbol": "isUseTexMtx",
+          "line": 229
+        },
+        {
+          "symbol": "isExistEffectTexMtx",
+          "line": 249
+        },
+        {
+          "symbol": "isExistEffectTexMtx",
+          "line": 259
+        },
+        {
+          "symbol": "isUseTexMtxEnvMap",
+          "line": 263
+        },
+        {
+          "symbol": "isUseTexMtxProjMap",
+          "line": 283
+        },
+        {
+          "symbol": "setShapeVcdVatCmdSelf",
+          "line": 299
+        },
+        {
+          "symbol": "initEnvelopeAndEnvMapOrProjMapModelData",
+          "line": 306
+        },
+        {
+          "symbol": "getResTIMG",
+          "line": 346
+        },
+        {
+          "symbol": "getResTIMG",
+          "line": 350
+        },
+        {
+          "symbol": "getTexture",
+          "line": 354
+        },
+        {
+          "symbol": "getTextureName",
+          "line": 358
+        },
+        {
+          "symbol": "findPosNrmMtxIndexFromModel",
+          "line": 362
+        },
+        {
+          "symbol": "findPosNrmMtxIndexFromShape",
+          "line": 380
+        },
+        {
+          "symbol": "copyJointAnimation",
+          "line": 396
+        },
+        {
+          "symbol": "copyJointAnimation",
+          "line": 408
+        },
+        {
+          "symbol": "syncJointAnimation",
+          "line": 412
+        },
+        {
+          "symbol": "syncMaterialAnimation",
+          "line": 416
+        },
+        {
+          "symbol": "syncMaterialAnimation",
+          "line": 434
+        },
+        {
+          "symbol": "FORCE_FUNCTION_ORDER2",
+          "line": 438
+        },
+        {
+          "symbol": "getLightNum",
+          "line": 443
+        },
+        {
+          "symbol": "getLightNum",
+          "line": 465
+        },
+        {
+          "symbol": "getLightNumMax",
+          "line": 474
+        },
+        {
+          "symbol": "getLightNumMax",
+          "line": 478
+        },
+        {
+          "symbol": "downFracVtx",
+          "line": 491
+        },
+        {
+          "symbol": "calcModelBoundingBox",
+          "line": 519
+        },
+        {
+          "symbol": "calcModelBoundingRadius",
+          "line": 546
+        },
+        {
+          "symbol": "newJ3DModel",
+          "line": 559
+        },
+        {
+          "symbol": "isExistCollisionResource",
+          "line": 610
+        },
+        {
+          "symbol": "isExistModel",
+          "line": 616
+        },
+        {
+          "symbol": "isExistSubModel",
+          "line": 622
+        },
+        {
+          "symbol": "getJ3DModelData",
+          "line": 628
+        },
+        {
+          "symbol": "isUseFur",
+          "line": 634
+        }
+      ]
+    }
+  ],
+  "scope": "Read-only source audit; no source modifications, build, runtime, or index actions"
+}

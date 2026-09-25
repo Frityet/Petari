@@ -1,0 +1,29 @@
+(lldb) target create "build/macosx/arm64/debug/smg-pc-actor-event-camera-tests"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-actor-event-camera-tests' (arm64).
+(lldb) run
+[ok] FixedPoint offsets and safe distance
+[ok] FixedPoint zone and transported up
+warning: smg-pc-actor-event-camera-tests was compiled with optimization - stepping may behave oddly; variables may not be available.
+Process 43178 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-actor-event-camera-tests' (arm64)
+Process 43178 stopped
+* thread #1, queue = 'com.apple.main-thread', stop reason = EXC_BAD_ACCESS (code=1, address=0x34)
+       frame #0: 0x00000001002f1b28 smg-pc-actor-event-camera-tests`C_MTXCopy(src=0x000000016fdfe5c8, dst=0x0000000000000034) at mtx.c:27:15 [opt]
+   24  	  assert(src && "MTXCopy():  NULL MtxPtr 'src' ");
+   25  	  assert(dst && "MTXCopy():  NULL MtxPtr 'dst' ");
+   26  	  if (src != dst) {
+-> 27  	    dst[0][0] = src[0][0];
+    	              ^
+   28  	    dst[0][1] = src[0][1];
+   29  	    dst[0][2] = src[0][2];
+   30  	    dst[0][3] = src[0][3];
+Target 0: (smg-pc-actor-event-camera-tests) stopped.
+(lldb) bt 18
+* thread #1, queue = 'com.apple.main-thread', stop reason = EXC_BAD_ACCESS (code=1, address=0x34)
+   * frame #0: 0x00000001002f1b28 smg-pc-actor-event-camera-tests`C_MTXCopy(src=0x000000016fdfe5c8, dst=0x0000000000000034) at mtx.c:27:15 [opt]
+     frame #1: 0x000000010029e184 smg-pc-actor-event-camera-tests`MR::setBaseTRMtx(pActor=<unavailable>, pMtx=<unavailable>) at OriginalActorModelAccess.cpp:46:9 [opt] [artificial]
+     frame #2: 0x000000010020bfe4 smg-pc-actor-event-camera-tests`smgpc::runtime::PlayerSystemService::set_base_matrix(this=0x000000016fdfe500, matrix=<unavailable>) at RuntimeServices.cpp:2284:13 [opt]
+     frame #3: 0x0000000100003144 smg-pc-actor-event-camera-tests`(anonymous namespace)::test_fixed_point_mode_two_uses_global_player_up() at ActorEventCameraTests.cpp:490:16 [opt]
+     frame #4: 0x000000010000183c smg-pc-actor-event-camera-tests`main(argc=<unavailable>, argv=<unavailable>) at ActorEventCameraTests.cpp:1912:13 [opt]
+     frame #5: 0x000000018a03be80 dyld`start + 6688
+(lldb) process kill
+Process 43178 exited with status = 9 (0x00000009) killed

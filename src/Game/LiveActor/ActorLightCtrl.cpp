@@ -1,22 +1,24 @@
 #include "Game/LiveActor/ActorLightCtrl.hpp"
-
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/LightFunction.hpp"
+#include "Game/Map/LightDirector.hpp"
 #include "Game/NameObj/NameObjExecuteHolder.hpp"
-#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/System/DrawBuffer.hpp"
+#include "Game/Util.hpp"
 
-namespace {
-    void resetLightSort(DrawBuffer*, const ActorLightCtrl*) {
-    }
-}  // namespace
-
-ActorLightCtrl::ActorLightCtrl(const LiveActor* pActor) : mActor(pActor), _4(-1), _8(0), _C(0), mAreaLightInf(nullptr), mLightID() {
+ActorLightCtrl::ActorLightCtrl(const LiveActor* pActor) : mActor(pActor), _4(-1), _8(), _C(), mAreaLightInf(), mLightID() {
     _1C = 0;
     mInterpolate = -1;
     _54 = -1;
 }
 
-void ActorLightCtrl::init(int interpolate, bool) {
+ActorLightCtrl::~ActorLightCtrl() {
+    if (mRegisteredLightDirector != nullptr && mRegisteredLightDirector->_1C == this) {
+        mRegisteredLightDirector->_1C = nullptr;
+    }
+}
+
+void ActorLightCtrl::init(int interpolate, bool /* unused */) {
     if (interpolate >= 0) {
         _4 = interpolate;
         _C = 1;
@@ -25,20 +27,7 @@ void ActorLightCtrl::init(int interpolate, bool) {
     initActorLightInfo();
     tryFindNewAreaLight(false);
     mAreaLightInf = LightFunction::getAreaLightInfo(mLightID);
-    const ActorLightInfo* lightInfo = getTargetActorLight(mAreaLightInf);
-    if (lightInfo != nullptr) {
-        mLightInfo = *lightInfo;
-    }
-}
-
-void ActorLightInfo::operator=(const ActorLightInfo& rInfo) {
-    mInfo0 = rInfo.mInfo0;
-    mInfo1 = rInfo.mInfo1;
-    mAlpha2 = rInfo.mAlpha2;
-    mColor.r = rInfo.mColor.r;
-    mColor.g = rInfo.mColor.g;
-    mColor.b = rInfo.mColor.b;
-    mColor.a = rInfo.mColor.a;
+    mLightInfo = *getTargetActorLight(mAreaLightInf);
 }
 
 void ActorLightCtrl::update(bool direct) {
@@ -49,8 +38,8 @@ void ActorLightCtrl::update(bool direct) {
 }
 
 void ActorLightCtrl::loadLight() const {
-    if (mAreaLightInf != nullptr) {
-        if (_1C != nullptr) {
+    if (mAreaLightInf) {
+        if (_1C) {
             LightFunction::loadActorLightInfo(&mLightInfo);
         } else {
             LightFunction::loadActorLightInfo(getTargetActorLight(mAreaLightInf));
@@ -61,38 +50,30 @@ void ActorLightCtrl::loadLight() const {
 void ActorLightCtrl::reset() {
     mLightID.clear();
 
-    if (mActor != nullptr && LightFunction::tryFindNewAreaLightID(mActor->mPosition, &mLightID)) {
+    if (LightFunction::tryFindNewAreaLightID(mActor->mPosition, &mLightID)) {
         resetCurrentLightInfo();
-        _1C = 0;
-
-        const ActorLightInfo* target = getTargetActorLight(mAreaLightInf);
-        if (target != nullptr) {
-            mLightInfo = *target;
-        }
+        _1C = nullptr;
+        mLightInfo = *getTargetActorLight(mAreaLightInf);
     }
 
     mAreaLightInf = LightFunction::getAreaLightInfo(mLightID);
 
     if (!_C) {
-        resetLightSort(_8, this);
+        _8->resetLightSort(this);
     }
 }
 
-void ActorLightCtrl::copy(const ActorLightCtrl* pLight) {
-    if (pLight == nullptr) {
-        return;
-    }
-
-    mAreaLightInf = pLight->mAreaLightInf;
-    mLightID = pLight->mLightID;
-    _1C = pLight->_1C;
-    mLightInfo = pLight->mLightInfo;
-    mInterpolate = pLight->mInterpolate;
-    _54 = pLight->_54;
+void ActorLightCtrl::copy(const ActorLightCtrl* pCtrl) {
+    mAreaLightInf = pCtrl->mAreaLightInf;
+    mLightID = pCtrl->mLightID;
+    _1C = pCtrl->_1C;
+    mLightInfo = pCtrl->mLightInfo;
+    mInterpolate = pCtrl->mInterpolate;
+    _54 = pCtrl->_54;
 }
 
 bool ActorLightCtrl::isSameLight(const ActorLightCtrl* pLight) const {
-    if (pLight == nullptr || _1C != nullptr) {
+    if (_1C) {
         return false;
     }
 
@@ -100,7 +81,7 @@ bool ActorLightCtrl::isSameLight(const ActorLightCtrl* pLight) const {
 }
 
 const ActorLightInfo* ActorLightCtrl::getActorLight() const {
-    if (_1C != nullptr || mAreaLightInf == nullptr) {
+    if (_1C) {
         return &mLightInfo;
     }
 
@@ -116,34 +97,20 @@ void ActorLightCtrl::initActorLightInfo() {
     return;
 }
 
-void ActorLightCtrl::tryFindNewAreaLight(bool direct) {
-    if (mAreaLightInf == nullptr) {
-        mAreaLightInf = LightFunction::getAreaLightInfo(mLightID);
-        const ActorLightInfo* target = getTargetActorLight(mAreaLightInf);
-        if (target != nullptr) {
-            mLightInfo = *target;
-        }
-    }
-
-    if (mActor == nullptr) {
-        return;
-    }
-
+void ActorLightCtrl::tryFindNewAreaLight(bool a2) {
     if (LightFunction::tryFindNewAreaLightID(mActor->mPosition, &mLightID)) {
         if (mAreaLightInf != nullptr) {
-            _1C = getTargetActorLight(mAreaLightInf);
-            if (_1C != nullptr) {
-                mLightInfo = *_1C;
-            }
+            const ActorLightInfo* inf = getTargetActorLight(mAreaLightInf);
+            _1C = inf;
+            mLightInfo = *inf;
         }
 
         resetCurrentLightInfo();
 
-        const ActorLightInfo* target = getTargetActorLight(mAreaLightInf);
-        if ((mInterpolate == 0 || direct) && target != nullptr) {
+        if (!mInterpolate || a2) {
             mInterpolate = 0;
-            _1C = 0;
-            mLightInfo = *target;
+            _1C = nullptr;
+            mLightInfo = *getTargetActorLight(mAreaLightInf);
         }
 
         if (mInterpolate < 0) {
@@ -151,67 +118,42 @@ void ActorLightCtrl::tryFindNewAreaLight(bool direct) {
         }
 
         if (!_C) {
-            resetLightSort(_8, this);
+            _8->resetLightSort(this);
         }
-    }
-
-    if (mAreaLightInf == nullptr) {
-        mAreaLightInf = LightFunction::getAreaLightInfo(mLightID);
     }
 }
 
 void ActorLightCtrl::updateLightBlend() {
-    if (_1C != nullptr) {
-        const ActorLightInfo* target = getTargetActorLight(mAreaLightInf);
-        if (target == nullptr || mInterpolate <= 0) {
-            _1C = nullptr;
-            _54 = -1;
-            return;
-        }
-
+    if (_1C) {
+        s32 v = _54;
         _54++;
 
-        if (_54 >= mInterpolate) {
-            mLightInfo = *target;
-            _1C = 0;
+        if (v + 1 >= mInterpolate) {
+            mLightInfo = *getTargetActorLight(mAreaLightInf);
+            _1C = nullptr;
             _54 = -1;
 
             if (!_C) {
-                resetLightSort(_8, this);
+                _8->resetLightSort(this);
             }
+
         } else {
-            f32 rate = static_cast< f32 >(_54) / static_cast< f32 >(mInterpolate);
-            LightFunction::blendActorLightInfo(&mLightInfo, *_1C, *target, rate);
+            f32 v = (f32)_54 / mInterpolate;
+            const ActorLightInfo* info = getTargetActorLight(mAreaLightInf);
+            LightFunction::blendActorLightInfo(&mLightInfo, *_1C, *info, v);
         }
     }
 }
 
 void ActorLightCtrl::resetCurrentLightInfo() {
     mAreaLightInf = LightFunction::getAreaLightInfo(mLightID);
-    if (mAreaLightInf == nullptr) {
-        mInterpolate = -1;
-        _54 = -1;
-        return;
-    }
-
-    const auto* target_light = getTargetActorLight(mAreaLightInf);
-    if (target_light == nullptr) {
-        mInterpolate = -1;
-        _54 = -1;
-        return;
-    }
-
     mInterpolate = mAreaLightInf->mInterpolate;
-    mLightInfo.mInfo0.mIsFollowCamera = target_light->mInfo0.mIsFollowCamera;
-    mLightInfo.mInfo1.mIsFollowCamera = target_light->mInfo1.mIsFollowCamera;
+    mLightInfo.mInfo0.mIsFollowCamera = getTargetActorLight(mAreaLightInf)->mInfo0.mIsFollowCamera;
+    mLightInfo.mInfo1.mIsFollowCamera = getTargetActorLight(mAreaLightInf)->mInfo1.mIsFollowCamera;
     _54 = 0;
 }
 
 const ActorLightInfo* ActorLightCtrl::getTargetActorLight(const AreaLightInfo* pInfo) const {
-    if (pInfo == nullptr) {
-        return nullptr;
-    }
-
     s32 type = _4;
 
     if (type == 0) {
@@ -224,5 +166,5 @@ const ActorLightInfo* ActorLightCtrl::getTargetActorLight(const AreaLightInfo* p
         return &pInfo->mPlanetLight;
     }
 
-    return nullptr;
+    return 0;
 }

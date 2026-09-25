@@ -20,7 +20,6 @@
 #include "scene/SceneNameObjRegistry.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageCollisionService.hpp"
-#include "scene/StageLightSceneBinding.hpp"
 #include "scene/nameobj/PlanetMapCatalog.hpp"
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <memory>
@@ -91,7 +90,6 @@ public:
         _objects.reset();
         _execution.reset();
         _scheduler_binding.reset();
-        _stage_light.reset();
         _planet_map_catalog.reset();
     }
 
@@ -101,13 +99,6 @@ public:
     }
     Scene& scene() const noexcept { return *_scene; }
     void initialize_effects(unsigned particles, unsigned emitters) { _objects->initialize_effect_system(particles, emitters); }
-    void initialize_lights() {
-        auto* archives = runtime::ArchiveMountService::active();
-        auto* stage = MR::getStageDataHolder();
-        if (!_game || !archives || !stage || _stage_light)
-            throw std::logic_error("Original stage lights require one scenario-initialized GameScene and its authored stage holder");
-        _stage_light = std::make_unique<StageLightSceneBinding>(archives->dvd(), *stage);
-    }
     void begin_frame() { if (_execution->initialized()) _scheduler.begin_frame(); }
 
 private:
@@ -115,7 +106,6 @@ private:
     NameObjHolder* _names;
     std::shared_ptr<compat::JkrAllocationDomain> _domain;
     std::unique_ptr<nameobj::PlanetMapCatalog> _planet_map_catalog;
-    std::unique_ptr<StageLightSceneBinding> _stage_light;
     // CollisionParts and original map queries share this scene's primary
     // collision category. Retain it until all actor and SceneObj owners retire.
     StageCollisionService _collision;
@@ -147,12 +137,6 @@ void prepare_original_scene_support_retirement(Scene& scene) noexcept {
 void initialize_original_scene_effects(unsigned particles, unsigned emitters) {
     if (!active_support) throw std::logic_error("Original scene effects require the actual controller's scene support");
     active_support->initialize_effects(particles, emitters);
-}
-
-void initialize_original_scene_lights() {
-    if (!active_support) throw std::logic_error("Original stage lights require the controller's active scene support");
-    const compat::JkrHostAllocationScope host;
-    active_support->initialize_lights();
 }
 
 void begin_original_scene_frame() {

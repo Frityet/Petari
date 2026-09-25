@@ -1,3 +1,6 @@
+#include "OriginalStageResourceProcessFixture.hpp"
+#include "runtime/RuntimeServices.hpp"
+#include <fstream>
 #include "Game/Util/LayoutUtil.hpp"
 #include "JSystem/JKernel/JKRMemArchive.hpp"
 #include "layout/BrlytLayout.hpp"
@@ -44,31 +47,27 @@ namespace {
         throw std::runtime_error(std::string(message));
     }
 
-    [[nodiscard]] std::optional< RetailFontFixture > find_retail_font_fixture() {
-        for (auto root = std::filesystem::current_path(); !root.empty(); root = root.parent_path()) {
-            const std::array candidates{
-                root / "orig/RMGK02/files/LayoutData",
-                root / "orig/RMGK01/files/LayoutData",
-                root / "container/orig/RMGK01/files/LayoutData",
-            };
-            for (const auto& directory : candidates) {
-                const auto mii_font = directory / "MiiFont.arc";
-                const auto file_info = directory / "FileInfo.arc";
-                auto error = std::error_code{};
-                if (std::filesystem::is_regular_file(mii_font, error) && !error &&
-                    std::filesystem::is_regular_file(file_info, error) && !error) {
-                    return RetailFontFixture{
-                        .mii_font_archive = mii_font,
-                        .file_info_archive = file_info,
-                    };
+    struct RetailFontFiles {
+        std::filesystem::path directory = std::filesystem::temp_directory_path() /
+            ("petari-mii-font-resources-" + std::to_string(getpid()));
+        RetailFontFixture fixture{directory / "MiiFont.arc", directory / "FileInfo.arc"};
+        RetailFontFiles() {
+            require(std::filesystem::create_directory(directory), "font fixture requires a fresh temporary directory");
+            try {
+                smgpc::runtime::DvdFileSystemService dvd{"/"};
+                for (const auto& path : {fixture.mii_font_archive, fixture.file_info_archive}) {
+                    const auto bytes = dvd.read_file("/LayoutData/" + path.filename().string());
+                    std::ofstream output(path, std::ios::binary);
+                    output.write(reinterpret_cast<const char*>(bytes.data()), bytes.size());
+                    require(bool(output), "actual font fixture archive must be written completely");
                 }
-            }
-            if (root == root.root_path()) {
-                break;
+            } catch (...) {
+                std::filesystem::remove_all(directory);
+                throw;
             }
         }
-        return std::nullopt;
-    }
+        ~RetailFontFiles() { std::error_code error; std::filesystem::remove_all(directory, error); }
+    };
 
     [[nodiscard]] bool pane_descends_from(const smgpc::layout::BrlytLayout& layout, std::size_t pane_index,
                                           std::string_view ancestor_name) {
@@ -222,16 +221,10 @@ namespace {
 }  // namespace
 
 int main() {
-    test_absent_and_malformed_resources_fail_honestly();
-
-    const auto fixture = find_retail_font_fixture();
-    if (!fixture.has_value()) {
-        std::cout << "[skip] retail MiiFont.arc/FileInfo.arc checks\n";
-        std::cout << "Mii font compatibility tests passed: 1/2\n";
-        return 0;
-    }
-
-    test_retail_mii_font_and_layout_binding(*fixture);
-    std::cout << "Mii font compatibility tests passed: 2/2\n";
-    return 0;
+    return smgpc::test::run_stage_resource_process("original-mii-font", [] {
+        test_absent_and_malformed_resources_fail_honestly();
+        const RetailFontFiles files;
+        test_retail_mii_font_and_layout_binding(files.fixture);
+        std::cout << "Mii font resource and layout binding tests passed: 2/2\n";
+    });
 }

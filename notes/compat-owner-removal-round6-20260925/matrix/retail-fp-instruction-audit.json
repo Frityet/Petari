@@ -1,0 +1,401 @@
+{
+  "source": "notes/original-mario-math-frontier-20260907/MtxUtil.objdiff.json",
+  "side": "left/reference",
+  "symbols": [
+    {
+      "symbol": "setScale__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>Ffff",
+      "instruction_count": 11,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "getXYZDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRQ29JGeometry8TVec3<f>RQ29JGeometry8TVec3<f>RQ29JGeometry8TVec3<f>",
+      "instruction_count": 29,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxRotate__2MRFPA4_fsss",
+      "instruction_count": 47,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxRotate__2MRFPA4_ffff",
+      "instruction_count": 24,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxRotate__2MRFPA4_fRCQ29JGeometry8TVec3<f>",
+      "instruction_count": 4,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxRotateY__2MRFPA4_ff",
+      "instruction_count": 29,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxTR__2MRFPA4_fffffff",
+      "instruction_count": 100,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxTR__2MRFPA4_fRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 7,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxTransRotateY__2MRFPA4_fffff",
+      "instruction_count": 22,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "rotateMtxLocalX__2MRFPA4_ff",
+      "instruction_count": 53,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "rotateMtxLocalY__2MRFPA4_ff",
+      "instruction_count": 53,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "rotateMtxLocalZ__2MRFPA4_ff",
+      "instruction_count": 53,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "rotateMtxLocalXDegree__2MRFPA4_ff",
+      "instruction_count": 3,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "rotateMtxLocalYDegree__2MRFPA4_ff",
+      "instruction_count": 3,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "rotateMtxLocalZDegree__2MRFPA4_ff",
+      "instruction_count": 3,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "preScaleMtx__2MRFPA4_ff",
+      "instruction_count": 3,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "preScaleMtx__2MRFPA4_fRCQ29JGeometry8TVec3<f>",
+      "instruction_count": 4,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "preScaleMtx__2MRFPA4_ffff",
+      "instruction_count": 28,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "scaleMtxToLocalMtx__2MRFPA4_fPA4_fPA4_fRCQ29JGeometry8TVec3<f>",
+      "instruction_count": 59,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "scaleMtxToLocalMtx__2MRFPA4_fPA4_fRCQ29JGeometry8TVec3<f>",
+      "instruction_count": 5,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "scaleMtxToDir__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 60,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxTRS__2MRFPA4_ffffffffff",
+      "instruction_count": 124,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxTRS__2MRFPA4_fRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 18,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "setMtxAxisXYZ__2MRFPA4_fRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 19,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "flattenMtx__2MRFPA4_fPA4_fRCQ29JGeometry8TVec3<f>",
+      "instruction_count": 52,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "flattenMtx__2MRFPA4_fRCQ29JGeometry8TVec3<f>",
+      "instruction_count": 3,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "blendMtxRotate__2MRFPA4_fPA4_ffPA4_f",
+      "instruction_count": 30,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "blendMtxRotateSlerp__2MRFPA4_fPA4_ffPA4_f",
+      "instruction_count": 30,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "blendMtx__2MRFPA4_fPA4_ffPA4_f",
+      "instruction_count": 59,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxWithoutScale__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>",
+      "instruction_count": 35,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeRTFromMtxPtr__2MRFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>PA4_fb",
+      "instruction_count": 34,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxSideUp__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 31,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxSideUpPos__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 35,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxSideFront__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 31,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxUpSide__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 31,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxUpSidePos__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 35,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxUpFront__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 31,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxUpFrontPos__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 35,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxFrontSidePos__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 35,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxFrontUp__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 31,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxFrontUpPos__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 35,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxUpNoSupport__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 46,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxUpNoSupportPos__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 34,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxFrontNoSupport__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 46,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxFrontNoSupportPos__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 34,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "orthogonalize__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>",
+      "instruction_count": 135,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "turnMtxToXDirRate__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>f",
+      "instruction_count": 26,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "turnMtxToXDirDegree__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>f",
+      "instruction_count": 29,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "turnMtxToYDirRate__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>f",
+      "instruction_count": 26,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "turnMtxToYDirDegree__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>f",
+      "instruction_count": 29,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "turnMtxToLocalDirDegree__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>f",
+      "instruction_count": 60,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "makeMtxMoment__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 29,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "rotateMtxMoment__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 60,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "rotateMtxMoment__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>",
+      "instruction_count": 3,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "setMtxTrans__2MRFPA4_ffff",
+      "instruction_count": 4,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "addTransMtx__2MRFPA4_fRCQ29JGeometry8TVec3<f>",
+      "instruction_count": 13,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "addTransMtxLocal__2MRFPA4_fRCQ29JGeometry8TVec3<f>",
+      "instruction_count": 21,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "addTransMtxLocalX__2MRFPA4_ff",
+      "instruction_count": 16,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "addTransMtxLocalY__2MRFPA4_ff",
+      "instruction_count": 16,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "addTransMtxLocalZ__2MRFPA4_ff",
+      "instruction_count": 16,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "extractMtxXDir__2MRFPA4_fPQ29JGeometry8TVec3<f>",
+      "instruction_count": 7,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "extractMtxYDir__2MRFPA4_fPQ29JGeometry8TVec3<f>",
+      "instruction_count": 7,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "extractMtxZDir__2MRFPA4_fPQ29JGeometry8TVec3<f>",
+      "instruction_count": 7,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "extractMtxXYZDir__2MRFPA4_fPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+      "instruction_count": 21,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "extractMtxTrans__2MRFPA4_fPQ29JGeometry8TVec3<f>",
+      "instruction_count": 7,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "isSameMtx__2MRFPA4_fPA4_f",
+      "instruction_count": 13,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "isSameMtxRot__2MRFPA4_fPA4_f",
+      "instruction_count": 18,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "isRotAxisY__2MRFPA4_fPA4_f",
+      "instruction_count": 36,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "calcMtxRotAxis__2MRFPQ29JGeometry8TVec3<f>PA4_fPA4_f",
+      "instruction_count": 45,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "tmpMtxTrans__2MRFRCQ29JGeometry8TVec3<f>",
+      "instruction_count": 17,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "tmpMtxScale__2MRFfff",
+      "instruction_count": 6,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "tmpMtxRotXRad__2MRFf",
+      "instruction_count": 23,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "tmpMtxRotYRad__2MRFf",
+      "instruction_count": 23,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "tmpMtxRotZRad__2MRFf",
+      "instruction_count": 23,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "tmpMtxRotXDeg__2MRFf",
+      "instruction_count": 23,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "tmpMtxRotYDeg__2MRFf",
+      "instruction_count": 23,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "tmpMtxRotZDeg__2MRFf",
+      "instruction_count": 23,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "orderRotateMtx__2MRFsRCQ29JGeometry8TVec3<f>PA4_f",
+      "instruction_count": 64,
+      "fused_arithmetic": []
+    },
+    {
+      "symbol": "rotAxisVecRad__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>f",
+      "instruction_count": 19,
+      "fused_arithmetic": []
+    }
+  ]
+}

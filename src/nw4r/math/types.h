@@ -153,6 +153,11 @@ namespace nw4r {
             }
         };
 
+        inline MTX34* MTX34Copy(MTX34* pOut, const MTX34* pIn) {
+            PSMTXCopy(*pIn, *pOut);
+            return pOut;
+        }
+
         inline MTX34* MTX34Identity(MTX34* pOut) {
             PSMTXIdentity(*pOut);
             return pOut;

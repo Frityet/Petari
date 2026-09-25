@@ -1,66 +1,55 @@
 #pragma once
 
+#include <JSystem/JGeometry/TVec.hpp>
 #include <revolution.h>
 
-#include "Game/LiveActor/LiveActor.hpp"
-
-class LightInfo {
-public:
-    _GXColor mColor;       // 0x0
-    TVec3f mPos;           // 0x4
-    bool mIsFollowCamera;  // 0x10
+struct LightInfo {
+    /* 0x00 */ GXColor mColor;
+    /* 0x04 */ Vec mPos;
+    /* 0x10 */ bool mIsFollowCamera;
 };
 
-class LightInfoCoin : public LightInfo {
-public:
-    inline LightInfoCoin() {
-    }
-
-    u8 _14;
-    u8 _15;
-    u8 _16;
-    u8 _17;
-    f32 _18;
+struct LightInfoCoin {
+    LightInfo base;
+    struct {
+        GXColor _14;
+        f32 _18;
+    };
 };
 
-class ActorLightInfo {
-public:
-    inline ActorLightInfo() {
-    }
-
-    void operator=(const ActorLightInfo&);
-
+struct ActorLightInfo {
     LightInfo mInfo0;  // 0x0
     LightInfo mInfo1;  // 0x14
     u8 mAlpha2;        // 0x28
-    _GXColor mColor;   // 0x29
+    GXColor mColor;    // 0x29
 };
 
 struct AreaLightInfo {
-    const char* mAreaLightName;   // 0x0
-    s32 mInterpolate;             // 0x4
-    bool mFix;                    // 0x8
-    ActorLightInfo mPlayerLight;  // 0xC
-    ActorLightInfo mStrongLight;  // 0x3C
-    ActorLightInfo mWeakLight;    // 0x6C
-    ActorLightInfo mPlanetLight;  // 0x9C
+    /* 0x00 */ const char* mAreaLightName;
+    /* 0x04 */ s32 mInterpolate;
+    /* 0x08 */ bool mFix;
+    /* 0x0C */ ActorLightInfo mPlayerLight;
+    /* 0x3C */ ActorLightInfo mStrongLight;
+    /* 0x6C */ ActorLightInfo mWeakLight;
+    /* 0x9C */ ActorLightInfo mPlanetLight;
 };
 
 class LightDataHolder {
 public:
     LightDataHolder();
+    ~LightDataHolder();
 
     void initLightData();
-
-    AreaLightInfo* getLightInfo(s32 index) const {
-        return &mLights[index];
-    }
 
     AreaLightInfo* findAreaLight(const char*) const;
     const char* getDefaultAreaLightName() const;
     s32 getDefaultStepInterpolate() const;
 
-    s32 mLightCount;         // 0x0
-    AreaLightInfo* mLights;  // 0x4
-    LightInfoCoin _8;
+    inline AreaLightInfo* getLightInfo(s32 idx) const {
+        return &mLights[idx];
+    }
+
+    /* 0x00 */ s32 mLightCount;
+    /* 0x04 */ AreaLightInfo* mLights;
+    /* 0x08 */ LightInfoCoin _8;
 };

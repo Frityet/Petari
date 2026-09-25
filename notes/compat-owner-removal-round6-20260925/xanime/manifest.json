@@ -1,0 +1,13 @@
+{
+  "files": [
+    "tests/OriginalXanimePlayerTests.cpp"
+  ],
+  "before": [
+    {
+      "path": "tests/OriginalXanimePlayerTests.cpp",
+      "sha256": "91f8d905ddf12c6456e3a69a120cbccca244eaffad5edbc28cc448b345c32c4c",
+      "git_status": ""
+    }
+  ],
+  "build_wiring_changes": []
+}

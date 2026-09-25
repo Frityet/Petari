@@ -1,0 +1,87 @@
+{
+  "baseline": "eb0712c14",
+  "all_ten_sources_unchanged": true,
+  "note": "Existing test allows only two base pure-virtual markers plus CP932. Other preexisting donor/port differences remain failures and are not masked.",
+  "pairs": [
+    {
+      "donor": "decomp/include/Game/AreaObj/AreaForm.hpp",
+      "native": "src/Game/AreaObj/AreaForm.hpp",
+      "unchanged_from_round6_baseline": true,
+      "native_sha256": "13a4fe8a1177cdc23837bc33dd68cbb0f5a8651fe221ebfafb354bdc4ec02274",
+      "donor_sha256": "4dba93f0eb45773c9cffda030918335a7941e00ee89a2fc346f68fe2a45cab13",
+      "byte_identical_before_native_adaptations": false
+    },
+    {
+      "donor": "decomp/src/Game/AreaObj/AreaForm.cpp",
+      "native": "src/Game/AreaObj/AreaForm.cpp",
+      "unchanged_from_round6_baseline": true,
+      "native_sha256": "cdb2e9b301efefc0c0f299f697af9b5194798dcc4df3e2e673fc2cad26768465",
+      "donor_sha256": "f45e61cc27a5902bbedd948ca5e4302f85f1a992c89458ed8cdae1aceef88432",
+      "byte_identical_before_native_adaptations": false
+    },
+    {
+      "donor": "decomp/include/Game/AreaObj/AreaObj.hpp",
+      "native": "src/Game/AreaObj/AreaObj.hpp",
+      "unchanged_from_round6_baseline": true,
+      "native_sha256": "d2dfa58a58019af745424c966fd34f526b209d1788688aadfe0ba0724a33adf2",
+      "donor_sha256": "d2dfa58a58019af745424c966fd34f526b209d1788688aadfe0ba0724a33adf2",
+      "byte_identical_before_native_adaptations": true
+    },
+    {
+      "donor": "decomp/src/Game/AreaObj/AreaObj.cpp",
+      "native": "src/Game/AreaObj/AreaObj.cpp",
+      "unchanged_from_round6_baseline": true,
+      "native_sha256": "7558f9aea116697e0e17ba9b4e27d5f12bc9fea1526be21fff532b12268d58be",
+      "donor_sha256": "5ad833601ba9cebf115b53530077ee868de64ddbd52870aaa327450a4ff87cc3",
+      "byte_identical_before_native_adaptations": false
+    },
+    {
+      "donor": "decomp/include/Game/AreaObj/AreaObjFollower.hpp",
+      "native": "src/Game/AreaObj/AreaObjFollower.hpp",
+      "unchanged_from_round6_baseline": true,
+      "native_sha256": "db1bbb7a58df089ab1124e2243940b86043a22305646f360176939b8cdbb0c83",
+      "donor_sha256": "db1bbb7a58df089ab1124e2243940b86043a22305646f360176939b8cdbb0c83",
+      "byte_identical_before_native_adaptations": true
+    },
+    {
+      "donor": "decomp/src/Game/AreaObj/AreaObjFollower.cpp",
+      "native": "src/Game/AreaObj/AreaObjFollower.cpp",
+      "unchanged_from_round6_baseline": true,
+      "native_sha256": "dfbb0fb870b64be810fc07657f906b8825f001e34ebcce409837fa95f17ff29c",
+      "donor_sha256": "dfbb0fb870b64be810fc07657f906b8825f001e34ebcce409837fa95f17ff29c",
+      "byte_identical_before_native_adaptations": true
+    },
+    {
+      "donor": "decomp/include/Game/Util/AreaObjUtil.hpp",
+      "native": "src/Game/Util/AreaObjUtil.hpp",
+      "unchanged_from_round6_baseline": true,
+      "native_sha256": "8844134afe474d12bfad31b22ade5049a4af8ebdac806b4abccb66ba3c205449",
+      "donor_sha256": "9bd2f145f948645812b03060742a4f65add0d1218976e6b6de646ef67dc3aba6",
+      "byte_identical_before_native_adaptations": false
+    },
+    {
+      "donor": "decomp/src/Game/Util/AreaObjUtil.cpp",
+      "native": "src/Game/Util/AreaObjUtil.cpp",
+      "unchanged_from_round6_baseline": true,
+      "native_sha256": "317909026601baff7ed63a4d161c64e8c64a0eb6e174ae4dc61382b2b1e26971",
+      "donor_sha256": "5c1d4206d567d12fa791efee85c327f5c3cd82ea9d7d62f477a5b625a91db6f5",
+      "byte_identical_before_native_adaptations": false
+    },
+    {
+      "donor": "decomp/include/Game/Map/SleepControllerHolder.hpp",
+      "native": "src/Game/Map/SleepControllerHolder.hpp",
+      "unchanged_from_round6_baseline": true,
+      "native_sha256": "2b55054e06e1ce89dc46d58d0d1a2cc9fe473af8ea5a6e1e8761d0cbfc6101a5",
+      "donor_sha256": "2b55054e06e1ce89dc46d58d0d1a2cc9fe473af8ea5a6e1e8761d0cbfc6101a5",
+      "byte_identical_before_native_adaptations": true
+    },
+    {
+      "donor": "decomp/src/Game/Map/SleepControllerHolder.cpp",
+      "native": "src/Game/Map/SleepControllerHolder.cpp",
+      "unchanged_from_round6_baseline": true,
+      "native_sha256": "016aa0ad6b455016e1794afdf42bfbff172ac41b4b89abb4f9c4686c4ba6d3bb",
+      "donor_sha256": "f744c6e4837bcf53fb107c303effc23b4d5f2b9a66d520d1377c6343d4ad56c8",
+      "byte_identical_before_native_adaptations": false
+    }
+  ]
+}

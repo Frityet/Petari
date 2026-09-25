@@ -1,0 +1,50 @@
+(lldb) target create "build/macosx/arm64/debug/smg-pc-original-xanime-player-tests"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-xanime-player-tests' (arm64).
+(lldb) settings set target.disable-aslr false
+(lldb) run
+smg-pc-original-xanime-player-tests(42221,0x1eff3bf80) malloc: *** error for object 0x7a1ec20070: pointer being freed was not allocated
+smg-pc-original-xanime-player-tests(42221,0x1eff3bf80) malloc: *** set a breakpoint in malloc_error_break to debug
+Process 42221 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-xanime-player-tests' (arm64)
+Process 42221 stopped
+* thread #1, queue = 'com.apple.main-thread', stop reason = signal SIGABRT
+       frame #0: 0x000000018a3d5650 libsystem_kernel.dylib`__pthread_kill + 8
+libsystem_kernel.dylib`__pthread_kill:
+->  0x18a3d5650 <+8>:  b.lo   0x18a3d5670               ; <+40>
+    0x18a3d5654 <+12>: pacibsp 
+    0x18a3d5658 <+16>: stp    x29, x30, [sp, #-0x10]!
+    0x18a3d565c <+20>: mov    x29, sp
+Target 0: (smg-pc-original-xanime-player-tests) stopped.
+(lldb) thread backtrace all
+* thread #1, queue = 'com.apple.main-thread', stop reason = signal SIGABRT
+   * frame #0: 0x000000018a3d5650 libsystem_kernel.dylib`__pthread_kill + 8
+     frame #1: 0x000000018a41197c libsystem_pthread.dylib`pthread_kill + 296
+     frame #2: 0x000000018a314458 libsystem_c.dylib`abort + 148
+     frame #3: 0x000000018a206b80 libsystem_malloc.dylib`malloc_vreport + 900
+     frame #4: 0x000000018a20a54c libsystem_malloc.dylib`malloc_report + 64
+     frame #5: 0x000000018a20f9fc libsystem_malloc.dylib`___BUG_IN_CLIENT_OF_LIBMALLOC_POINTER_BEING_FREED_WAS_NOT_ALLOCATED + 76
+     frame #6: 0x0000000102ab3f48 smg-pc-original-xanime-player-tests`HashSortTable::~HashSortTable(this=0x0000007a1f018000) at HashUtil.cpp:28:5 [opt] [inlined]
+     frame #7: 0x0000000102ab3f3c smg-pc-original-xanime-player-tests`HashSortTable::~HashSortTable(this=0x0000007a1f018000) at HashUtil.cpp:27:33 [opt]
+     frame #8: 0x0000000102ab2f60 smg-pc-original-xanime-player-tests`std::__1::default_delete<HashSortTable>::operator()[abi:nqe230101](this=0x000000016d34e748, __ptr=<unavailable>) const at unique_ptr.h:74:5 [opt] [inlined]
+     frame #9: 0x0000000102ab2f5c smg-pc-original-xanime-player-tests`std::__1::unique_ptr<HashSortTable, std::__1::default_delete<HashSortTable>>::reset[abi:nqe230101](this=0x000000016d34e748, __p=0x0000000000000000) at unique_ptr.h:264:7 [opt] [inlined]
+     frame #10: 0x0000000102ab2f50 smg-pc-original-xanime-player-tests`std::__1::unique_ptr<HashSortTable, std::__1::default_delete<HashSortTable>>::~unique_ptr[abi:nqe230101](this=0x000000016d34e748) at unique_ptr.h:229:170 [opt] [inlined]
+     frame #11: 0x0000000102ab2f50 smg-pc-original-xanime-player-tests`std::__1::unique_ptr<HashSortTable, std::__1::default_delete<HashSortTable>>::~unique_ptr[abi:nqe230101](this=0x000000016d34e748) at unique_ptr.h:229:168 [opt] [inlined]
+     frame #12: 0x0000000102ab2f50 smg-pc-original-xanime-player-tests`(anonymous namespace)::Groups::~Groups(this=0x000000016d34e540) at OriginalXanimePlayerTests.cpp:122:12 [opt] [inlined]
+     frame #13: 0x0000000102ab2f10 smg-pc-original-xanime-player-tests`(anonymous namespace)::Groups::~Groups(this=0x000000016d34e540) at OriginalXanimePlayerTests.cpp:122:12 [opt] [inlined]
+     frame #14: 0x0000000102ab2f10 smg-pc-original-xanime-player-tests`(anonymous namespace)::Fixture::~Fixture(this=0x000000016d34df28) at OriginalXanimePlayerTests.cpp:201:12 [opt] [inlined]
+     frame #15: 0x0000000102ab2eb4 smg-pc-original-xanime-player-tests`(anonymous namespace)::Fixture::~Fixture(this=0x000000016d34df28) at OriginalXanimePlayerTests.cpp:201:12 [opt]
+     frame #16: 0x0000000102ab1930 smg-pc-original-xanime-player-tests`(anonymous namespace)::construction_and_shared_storage() at OriginalXanimePlayerTests.cpp:234:5 [opt] [inlined]
+     frame #17: 0x0000000102ab16ec smg-pc-original-xanime-player-tests`main at OriginalXanimePlayerTests.cpp:386:9 [opt]
+     frame #18: 0x000000018a03be80 dyld`start + 6688
+(lldb) frame select 6
+warning: smg-pc-original-xanime-player-tests was compiled with optimization - stepping may behave oddly; variables may not be available.
+frame #6: 0x0000000102ab3f48 smg-pc-original-xanime-player-tests`HashSortTable::~HashSortTable(this=0x0000007a1f018000) at HashUtil.cpp:28:5 [opt] [inlined]
+   25  	}
+   26  	
+   27  	HashSortTable::~HashSortTable() {
+-> 28  	    delete[] mHashCodes;
+    	    ^
+   29  	    delete[] _8;
+   30  	    delete[] _C;
+   31  	    delete[] _10;
+(lldb) frame variable
+(HashSortTable *) this = 0x0000007a1f018000

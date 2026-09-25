@@ -1,0 +1,7 @@
+[fail] manual view seeds original event interpolation: Scene initialization requires the original GameSystem scene controller.
+[fail] event finish cuts back to manual view: Scene initialization requires the original GameSystem scene controller.
+[fail] event finish interpolates back to manual view: Scene initialization requires the original GameSystem scene controller.
+[fail] controller reset retains manager matrix seed: Scene initialization requires the original GameSystem scene controller.
+[fail] pending event matrix seed ownership: Scene initialization requires the original GameSystem scene controller.
+[fail] animation used target versus moved input: Scene initialization requires the original GameSystem scene controller.
+0/6 tests passed

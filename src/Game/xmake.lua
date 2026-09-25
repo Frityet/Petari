@@ -49,24 +49,22 @@ target("smg-pc-game")
     remove_files("Util/MapUtil.cpp")
     remove_files("Util/StarPointerUtil.cpp")
     remove_files("Util/SoundUtil.cpp")
-    remove_files("Util/LightUtil.cpp")
-    remove_files("Map/LightFunction.cpp")
-    remove_files("Map/LightDirector.cpp")
     remove_files("NPC/MiiFacePartsHolder.cpp")
     remove_files("NPC/MiiFaceParts.cpp")
     remove_files("NPC/MiiFaceRecipe.cpp")
     add_files({"../nw4r/ut/ut_CharWriter.cpp", "../nw4r/ut/ut_TextWriterBase.cpp",
                "../nw4r/ut/ut_TagProcessorBase.cpp", "../nw4r/ut/ut_CharStrmReader.cpp",
-               "../nw4r/ut/ut_Font.cpp"}, {cxxflags = "-ffp-contract=off"})
+               "../nw4r/ut/ut_Font.cpp", "../nw4r/ut/ut_ResFont.cpp"}, {cxxflags = "-ffp-contract=off"})
     add_files({"../nw4r/lyt/lyt_animation.cpp", "../nw4r/lyt/lyt_group.cpp",
                "../nw4r/lyt/lyt_layout.cpp", "../nw4r/lyt/lyt_arcResourceAccessor.cpp",
                "../nw4r/lyt/lyt_resourceAccessor.cpp", "../nw4r/lyt/lyt_common.cpp",
                "../nw4r/lyt/lyt_material.cpp", "../nw4r/lyt/lyt_texMap.cpp",
                "../nw4r/lyt/lyt_textBox.cpp", "../nw4r/lyt/lyt_picture.cpp",
                "../nw4r/lyt/lyt_window.cpp", "../nw4r/lyt/lyt_bounding.cpp",
-               "../nw4r/lyt/lyt_drawInfo.cpp", "../nw4r/lyt/lyt_init.cpp",
+               "../nw4r/lyt/lyt_drawInfo.cpp", "../nw4r/lyt/lyt_init.cpp", "../nw4r/lyt/lyt_pane.cpp",
                "../nw4r/math/math_triangular.cpp"},
               {cxxflags = "-ffp-contract=off"})
+    add_files("../nw4r/db/db_assert.cpp")
     add_files("../camera/**.cpp")
     add_files("../layout/**.cpp")
     add_files("../resource/**.cpp")
@@ -77,6 +75,8 @@ target("smg-pc-game")
     remove_files("../compat/MslPrintfCompat.cpp")
     -- Original paired-single helpers make fused and rounded operations explicit.
     add_files("Util/MathUtil.cpp", {cxxflags = "-ffp-contract=off"})
+    add_files("Util/MtxUtil.cpp", {cxxflags = "-ffp-contract=off"})
+    add_files("System/Overwrite.cpp", {cxxflags = "-ffp-contract=off"})
     add_files({"Util/ActorMovementUtil.cpp", "../compat/OriginalMapQueries.cpp",
                "../compat/OriginalCollisionPartsCompat.cpp", "../compat/OriginalKCollisionCompat.cpp"},
               {cxxflags = "-ffp-contract=off"})
@@ -85,9 +85,6 @@ target("smg-pc-game")
                "../JSystem/J3DGraphAnimator/J3DMaterialAttach.cpp", "../JSystem/J3DGraphAnimator/J3DShapeTable.cpp"})
     add_files("../JSystem/J2DGraph/**.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("../JSystem/JParticle/**.cpp", {cxxflags = "-ffp-contract=off"})
-    add_files("../compat/OriginalJPADraw.cpp", {cxxflags = "-ffp-contract=off"})
-    add_files("../compat/OriginalJPAFields.cpp", {cxxflags = "-ffp-contract=off"})
-    add_files("../compat/OriginalJPAEmitterInit.cpp", {cxxflags = "-ffp-contract=off"})
     add_files {
         "../render/effects/EffectResource.cpp",
         "../render/GXState.cpp",
@@ -101,7 +98,6 @@ target("smg-pc-game")
         "../JSystem/JGeometry/TQuat.cpp",
         "../JSystem/JMath/JMATrigonometricTable.cpp",
         "../JSystem/JMath/random.cpp",
-        "../render/light/LightData.cpp",
     }
     add_files("../JSystem/JGeometry/TMatrix.cpp", {cxxflags = "-ffp-contract=off"})
     add_files({
@@ -173,7 +169,6 @@ target("smg-pc-game")
         "../render/J3dModelRenderer.hpp",
         "../render/J3dTexture.hpp",
         "../render/JMathTrig.hpp",
-        "../render/light/LightData.hpp",
     }
     add_includedirs("../", { public = true })
     add_deps {

@@ -8,6 +8,5 @@ namespace smgpc::scene {
 void bind_original_scene_support(Scene&);
 void prepare_original_scene_support_retirement(Scene&) noexcept;
 void initialize_original_scene_effects(unsigned particles, unsigned emitters);
-void initialize_original_scene_lights();
 void begin_original_scene_frame();
 }

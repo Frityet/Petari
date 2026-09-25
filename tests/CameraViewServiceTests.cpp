@@ -1,3 +1,4 @@
+#include "OriginalLightFixture.hpp"
 #include "CameraTargetTestSupport.hpp"
 #include "Game/Camera/CameraMan.hpp"
 #include "Game/Camera/CameraPoseParam.hpp"
@@ -86,7 +87,7 @@ namespace {
             auto& holder = scene.holder();
             require(holder.create(SceneObj_DemoDirector) != nullptr,
                     "camera service requires the actual scene DemoDirector and DemoSheet resource");
-            require(holder.create(SceneObj_AreaObjContainer) != nullptr &&
+            require(smgpc::test::create_area_container(holder) != nullptr &&
                         holder.create(SceneObj_PlanetGravityManager) != nullptr,
                     "camera view integration requires real area and gravity registries");
             collision.build();

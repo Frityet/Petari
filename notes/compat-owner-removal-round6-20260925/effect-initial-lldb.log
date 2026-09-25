@@ -1,0 +1,197 @@
+(lldb) target create "build/macosx/arm64/debug/smg-pc-original-effect-ownership-tests"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-effect-ownership-tests' (arm64).
+(lldb) run
+[aurora:info:aurora] Aurora initializing
+[aurora:info:aurora::system_info] CPU model: Apple M5 Max
+[aurora:info:aurora::system_info] Memory: 131072 MiB
+[aurora:info:aurora::system_info] Architecture: aarch64
+[aurora:info:aurora::system_info] OS: macOS Version 27.0 (Build 26A428)
+2026-09-25 15:31:28.087676+0100 smg-pc-original-effect-ownership-tests[42201:5949712] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 15:31:28.087842+0100 smg-pc-original-effect-ownership-tests[42201:5949712] [Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 15:31:28.087995+0100 smg-pc-original-effect-ownership-tests[42201:5949733] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 15:31:28.088010+0100 smg-pc-original-effect-ownership-tests[42201:5949733] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 15:31:28.088229+0100 smg-pc-original-effect-ownership-tests[42201:5949712] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 15:31:28.088238+0100 smg-pc-original-effect-ownership-tests[42201:5949712] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 15:31:28.088464+0100 smg-pc-original-effect-ownership-tests[42201:5949712] [Connection] Will NOT re-try to establish the connection
+2026-09-25 15:31:28.088488+0100 smg-pc-original-effect-ownership-tests[42201:5949733] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 15:31:28.088496+0100 smg-pc-original-effect-ownership-tests[42201:5949733] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 15:31:28.865864+0100 smg-pc-original-effect-ownership-tests[42201:5949680] [WindowTab] Cannot index window tabs due to missing main bundle identifier
+[aurora:info:aurora::gpu] Creating WebGPU instance
+[aurora:info:aurora::gpu] Attempting to initialize Metal
+[aurora:info:aurora::gpu] Requesting adapter
+  Feature level: Compatibility
+  Power preference: HighPerformance
+  Backend: Metal
+  Compatible surface: true
+[aurora:info:aurora::gpu] Graphics adapter information
+  API: Metal
+  Device: Apple M5 Max (IntegratedGPU)
+  Driver: Metal driver on macOS Version 27.0 (Build 26A428)
+[aurora:info:aurora::gpu] Using limits:
+  maxTextureDimension1D: 16384
+  maxTextureDimension2D: 16384
+  maxTextureDimension3D: 2048
+  maxTextureArrayLayers: 2048
+  maxStorageBuffersPerShaderStage: 2
+  minUniformBufferOffsetAlignment: 256
+  minStorageBufferOffsetAlignment: 256
+  maxImmediateSize: 64
+[aurora:info:aurora::gpu] Enabling features: 
+  CoreFeaturesAndLimits
+  DepthClipControl
+  TextureCompressionBC
+  TextureCompressionASTC
+  ClipDistances
+  DualSourceBlending
+  TextureComponentSwizzle
+[aurora:info:aurora::gpu] Using surface format BGRA8Unorm, present mode Fifo
+[aurora:info:aurora::gfx::pipeline_cache] No bundled initial pipeline cache found at '/Users/frityet/Projects/petari/build/macosx/arm64/debug/initial_pipeline_cache.db'
+[aurora:info:aurora] Using framebuffer size 1280x960 scale 2
+[aurora:info:aurora::gpu::cache] Pruned 4 stale Dawn cache entries
+warning: smg-pc-original-effect-ownership-tests was compiled with optimization - stepping may behave oddly; variables may not be available.
+Process 42201 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-effect-ownership-tests' (arm64)
+Process 42201 stopped
+* thread #1, name = 'Main thread', queue = 'com.apple.main-thread', stop reason = EXC_BAD_ACCESS (code=1, address=0x40)
+       frame #0: 0x0000000100086c7c smg-pc-original-effect-ownership-tests`MR::getLanguage() at Language.cpp:146:54 [opt]
+   143 	    }
+   144 	
+   145 	    u32 getLanguage() {
+-> 146 	        return SingletonHolder< GameSystem >::get()->mObjHolder->mLanguage;
+    	                                                     ^
+   147 	    }
+   148 	
+   149 	    u32 getLanguageFromIPL() {
+Target 0: (smg-pc-original-effect-ownership-tests) stopped.
+(lldb) thread backtrace all
+* thread #1, name = 'Main thread', queue = 'com.apple.main-thread', stop reason = EXC_BAD_ACCESS (code=1, address=0x40)
+   * frame #0: 0x0000000100086c7c smg-pc-original-effect-ownership-tests`MR::getLanguage() at Language.cpp:146:54 [opt]
+     frame #1: 0x0000000100086cb8 smg-pc-original-effect-ownership-tests`MR::getCurrentLanguagePrefix() at Language.cpp:154:18 [opt]
+     frame #2: 0x0000000100247ce8 smg-pc-original-effect-ownership-tests`MR::makeFileNameConsideringLanguage(pDst="\x98\xbe\xdfo\U00000001", size=256, pFilePath="/Memory/SystemMessage.arc") at FileUtilCompat.cpp:206:46 [opt] [inlined]
+     frame #3: 0x0000000100247ce4 smg-pc-original-effect-ownership-tests`MR::getMountedArchiveAndHeap(pFilePath="/Memory/SystemMessage.arc", ppArchive=0x000000016fdfbe88, ppHeap=0x000000016fdfbe80) at FileUtilCompat.cpp:145:9 [opt]
+     frame #4: 0x000000010008684c smg-pc-original-effect-ownership-tests`MessageData::MessageData(this=0x00000072296f96a0, pArchiveName=<unavailable>) at MessageHolder.cpp:133:5 [opt]
+     frame #5: 0x0000000100086b58 smg-pc-original-effect-ownership-tests`MessageData::MessageData(this=0x00000072296f96a0, pArchiveName=<unavailable>) at MessageHolder.cpp:130:144 [opt] [inlined]
+     frame #6: 0x0000000100086b4c smg-pc-original-effect-ownership-tests`MessageHolder::initSystemData(this=0x00000072296f9680) at MessageHolder.cpp:179:30 [opt]
+     frame #7: 0x00000001001eeaa4 smg-pc-original-effect-ownership-tests`smgpc::runtime::MessageHolderOwnership::MessageHolderOwnership(this=0x000000786b846610, runtime=<unavailable>, byte_budget=2097152, mounts=0x000000016fdfceb0, game_archive_path=<unavailable>, language_prefix=<unavailable>) at MessageHolderOwnership.cpp:77:30 [opt]
+     frame #8: 0x00000001001eeddc smg-pc-original-effect-ownership-tests`smgpc::runtime::MessageHolderOwnership::MessageHolderOwnership(this=<unavailable>, runtime=<unavailable>, byte_budget=<unavailable>, mounts=<unavailable>, game_archive_path=<unavailable>, language_prefix=<unavailable>) at MessageHolderOwnership.cpp:46:43 [opt] [artificial]
+     frame #9: 0x0000000100209eb0 smg-pc-original-effect-ownership-tests`std::__1::unique_ptr<smgpc::runtime::MessageHolderOwnership, std::__1::default_delete<smgpc::runtime::MessageHolderOwnership>> std::__1::make_unique[abi:nqe230101]<smgpc::runtime::MessageHolderOwnership, std::__1::shared_ptr<smgpc::compat::JkrHeapRuntime>&, unsigned long const&, smgpc::runtime::ArchiveMountService&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, char const (&) [9], 0>(__args=std::__1::shared_ptr<smgpc::compat::JkrHeapRuntime>::element_type @ 0x000000786b8464e0 strong=9 weak=0, __args=0x000000016fdfcb70, __args=0x000000016fdfceb0, __args="/KrKorean/MessageData/Message.arc", __args={b\xcb\xcd\0\x01\0\0\0}) at unique_ptr.h:708:30 [opt]
+     frame #10: 0x0000000100208bfc smg-pc-original-effect-ownership-tests`smgpc::runtime::RuntimeContext::RuntimeContext(this=0x000000016fdfcd18, logger=<unavailable>, window_service=0x000000016fdfcbb0, resources=0x000000016fdfcb40, audio_playback=<unavailable>) at RuntimeContext.cpp:266:35 [opt]
+     frame #11: 0x0000000100209934 smg-pc-original-effect-ownership-tests`smgpc::runtime::RuntimeContext::RuntimeContext(this=0x000000016fdfcd18, logger=<unavailable>, window_service=<unavailable>, resources=<unavailable>, audio_playback=nullptr) at RuntimeContext.cpp:241:5 [opt] [inlined]
+     frame #12: 0x000000010020992c smg-pc-original-effect-ownership-tests`smgpc::runtime::RuntimeContext::RuntimeContext(this=0x000000016fdfcd18, logger=<unavailable>, window_service=<unavailable>, resources=<unavailable>) at RuntimeContext.cpp:222:11 [opt]
+     frame #13: 0x0000000100001860 smg-pc-original-effect-ownership-tests`main at OriginalEffectOwnershipTests.cpp:138:44 [opt]
+     frame #14: 0x000000018a03be80 dyld`start + 6688
+  thread #2
+       frame #0: 0x000000018a3ce9ec libsystem_kernel.dylib`__workq_kernreturn + 8
+  thread #3
+       frame #0: 0x000000018a3ce9ec libsystem_kernel.dylib`__workq_kernreturn + 8
+  thread #4, name = 'com.apple.NSEventThread'
+       frame #0: 0x000000018a3ccc20 libsystem_kernel.dylib`mach_msg2_trap + 8
+       frame #1: 0x000000018a3df8e0 libsystem_kernel.dylib`mach_msg2_internal + 76
+       frame #2: 0x000000018a3d5a28 libsystem_kernel.dylib`mach_msg_overwrite + 480
+       frame #3: 0x000000018a3ccfac libsystem_kernel.dylib`mach_msg + 24
+       frame #4: 0x000000018a4d2aec CoreFoundation`__CFRunLoopServiceMachPort + 160
+       frame #5: 0x000000018a4d1334 CoreFoundation`__CFRunLoopRun + 1172
+       frame #6: 0x000000018a5ab82c CoreFoundation`_CFRunLoopRunSpecificWithOptions + 536
+       frame #7: 0x000000018ebac844 AppKit`_NSEventThread + 184
+       frame #8: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #5
+       frame #0: 0x000000018a3ce9ec libsystem_kernel.dylib`__workq_kernreturn + 8
+  thread #6
+       frame #0: 0x0000000000000000 
+  thread #7, name = 'Aurora render worker'
+       frame #0: 0x000000018a3d050c libsystem_kernel.dylib`__psynch_cvwait + 8
+       frame #1: 0x000000018a4121d0 libsystem_pthread.dylib`_pthread_cond_wait + 980
+       frame #2: 0x0000000101accfd4 libc++.1.dylib`std::__1::condition_variable::__do_timed_wait(std::__1::unique_lock<std::__1::mutex>&, std::__1::chrono::time_point<std::__1::chrono::system_clock, std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000000000l>>>) + 96
+       frame #3: 0x000000010040260c smg-pc-original-effect-ownership-tests`std::__1::cv_status std::__1::condition_variable::wait_for[abi:nqe230101]<long long, std::__1::ratio<1l, 1000000000l>>(this=0x0000000100e7e3d8, __lk=0x0000000170142e20, __d=<unavailable>) at condition_variable.h:0 [opt] [inlined]
+       frame #4: 0x00000001004025c0 smg-pc-original-effect-ownership-tests`void std::__1::condition_variable::__do_timed_wait[abi:nqe230101]<std::__1::chrono::steady_clock>(this=0x0000000100e7e3d8, __lk=0x0000000170142e20, __tp=<unavailable>) at condition_variable.h:224:3 [opt] [inlined]
+       frame #5: 0x00000001004025c0 smg-pc-original-effect-ownership-tests`std::__1::cv_status std::__1::condition_variable::wait_until[abi:nqe230101]<std::__1::chrono::steady_clock, std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000000000l>>>(this=0x0000000100e7e3d8, __lk=0x0000000170142e20, __t=0x0000000170142e30) at condition_variable.h:128:5 [opt]
+       frame #6: 0x00000001003e300c smg-pc-original-effect-ownership-tests`bool std::__1::condition_variable::wait_until[abi:nqe230101]<std::__1::chrono::steady_clock, std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000000000l>>, aurora::gfx::render_worker::BoundedQueue::pop_for(std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000l>>, bool&)::$_0>(this=<unavailable>, __lk=0x0000000170142e20, __t=0x0000000170142e30, __pred=(unnamed class) @ x20) at condition_variable.h:136:11 [opt] [inlined]
+       frame #7: 0x00000001003e3000 smg-pc-original-effect-ownership-tests`bool std::__1::condition_variable::wait_for[abi:nqe230101]<long long, std::__1::ratio<1l, 1000l>, aurora::gfx::render_worker::BoundedQueue::pop_for(std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000l>>, bool&)::$_0>(this=<unavailable>, __lk=0x0000000170142e20, __d=<unavailable>, __pred=(unnamed class) @ x20) at condition_variable.h:194:10 [opt] [inlined]
+       frame #8: 0x00000001003e3000 smg-pc-original-effect-ownership-tests`aurora::gfx::render_worker::BoundedQueue::pop_for(this=0x0000000100e7e390, timeout=1 ms, closed=0x0000000170142eb7) at render_worker.cpp:103:14 [opt]
+    ﹍ frame #9: 0x00000001003e398c smg-pc-original-effect-ownership-tests`aurora::gfx::render_worker::(anonymous namespace)::worker_main(token=stop_token @ 0x0000000170142f78) at render_worker.cpp:39:25 [opt]
+    ﹉ frame #12: 0x00000001003e5694 smg-pc-original-effect-ownership-tests`aurora::thread::Thread::Thread<void (&)(std::__1::stop_token)>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token)::operator()(this=0x000000786b9c0a88, token=<unavailable>) at thread.hpp:34:5 [opt] [inlined]
+    ﹉ frame #14: 0x00000001003e562c smg-pc-original-effect-ownership-tests`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token)>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token, 0ul, 1ul>(__t=<unavailable>, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #15: 0x00000001003e5620 smg-pc-original-effect-ownership-tests`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token)>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token>>(__vp=0x000000786b9c0a80) at thread.h:178:3 [opt]
+       frame #16: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #8
+       frame #0: 0x000000018a3d050c libsystem_kernel.dylib`__psynch_cvwait + 8
+       frame #1: 0x000000018a4121d0 libsystem_pthread.dylib`_pthread_cond_wait + 980
+       frame #2: 0x0000000101accf44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #3: 0x00000001003db080 smg-pc-original-effect-ownership-tests`void std::__1::condition_variable::wait[abi:nqe230101]<aurora::gfx::pipeline_worker()::$_0>(this=<unavailable>, __lk=0x00000001701ceec8, __pred=<unavailable>) at condition_variable.h:113:7 [opt] [inlined]
+    ﹍ frame #4: 0x00000001003db05c smg-pc-original-effect-ownership-tests`aurora::gfx::pipeline_worker() at pipeline_cache.cpp:978:29 [opt]
+    ﹉ frame #6: 0x00000001003e17f0 smg-pc-original-effect-ownership-tests`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)(), 0ul>(__t=size=2, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #7: 0x00000001003e17f0 smg-pc-original-effect-ownership-tests`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)()>>(__vp=0x000000786b845bf0) at thread.h:178:3 [opt]
+       frame #8: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #9
+       frame #0: 0x000000018a3d050c libsystem_kernel.dylib`__psynch_cvwait + 8
+       frame #1: 0x000000018a4121d0 libsystem_pthread.dylib`_pthread_cond_wait + 980
+       frame #2: 0x0000000101accf44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #3: 0x00000001003dee68 smg-pc-original-effect-ownership-tests`void std::__1::condition_variable::wait[abi:nqe230101]<aurora::gfx::pipeline_cache_writer()::$_0>(this=<unavailable>, __lk=0x000000017025aee8, __pred=<unavailable>) at condition_variable.h:113:7 [opt] [inlined]
+    ﹍ frame #4: 0x00000001003dee48 smg-pc-original-effect-ownership-tests`aurora::gfx::pipeline_cache_writer() at pipeline_cache.cpp:931:31 [opt]
+    ﹉ frame #6: 0x00000001003e17f0 smg-pc-original-effect-ownership-tests`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)(), 0ul>(__t=size=2, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #7: 0x00000001003e17f0 smg-pc-original-effect-ownership-tests`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)()>>(__vp=0x000000786b845e00) at thread.h:178:3 [opt]
+       frame #8: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #10, name = 'Aurora FIFO processor'
+       frame #0: 0x000000018a3dad9c libsystem_kernel.dylib`__ulock_wait2 + 8
+       frame #1: 0x000000018a41f0b4 libsystem_platform.dylib`os_sync_wait_on_address + 104
+    ﹍ frame #2: 0x0000000101accacc libc++.1.dylib`std::__1::__libcpp_atomic_wait(void const volatile*, long long) + 88
+    ﹉ frame #4: 0x00000001003f615c smg-pc-original-effect-ownership-tests`std::__1::__poll_with_backoff_results std::__1::__libcpp_thread_poll_with_backoff[abi:nqe230101]<void std::__1::__atomic_wait_unless[abi:nqe230101]<std::__1::__atomic_base<unsigned int, false>, void std::__1::__atomic_wait[abi:nqe230101]<std::__1::__atomic_base<unsigned int, false> const, unsigned int>(std::__1::__atomic_base<unsigned int, false> const&, unsigned int, std::__1::memory_order)::'lambda'(unsigned int const&)>(std::__1::__atomic_base<unsigned int, false> const const&, std::__1::memory_order, unsigned int&&)::'lambda'(), std::__1::__atomic_wait_backoff_impl<std::__1::__atomic_base<unsigned int, false>, void std::__1::__atomic_wait[abi:nqe230101]<std::__1::__atomic_base<unsigned int, false> const, unsigned int>(std::__1::__atomic_base<unsigned int, false> const&, unsigned int, std::__1::memory_order)::'lambda'(unsigned int const&)>&>(__poll=0x00000001702e6ee0, __backoff=0x00000001702e6f00, __max_elapsed=0 ns) at poll_with_backoff.h:65:30 [opt]
+       frame #5: 0x000000010040f520 smg-pc-original-effect-ownership-tests`void std::__1::__atomic_wait_unless[abi:nqe230101]<std::__1::__atomic_base<unsigned int, false>, void std::__1::__atomic_wait[abi:nqe230101]<std::__1::__atomic_base<unsigned int, false> const, unsigned int>(std::__1::__atomic_base<unsigned int, false> const&, unsigned int, std::__1::memory_order)::'lambda'(unsigned int const&)>(__a=0x0000000100e7e810, __order=acquire, __poll=0x00000001702e6f28) at atomic_sync.h:173:3 [opt] [inlined]
+       frame #6: 0x000000010040f4f8 smg-pc-original-effect-ownership-tests`void std::__1::__atomic_wait[abi:nqe230101]<std::__1::__atomic_base<unsigned int, false> const, unsigned int>(__a=0x0000000100e7e810, __val=<unavailable>, __order=acquire) at atomic_sync.h:257:3 [opt] [inlined]
+       frame #7: 0x000000010040f4ec smg-pc-original-effect-ownership-tests`std::__1::__atomic_base<unsigned int, false>::wait[abi:nqe230101](this=0x0000000100e7e810, __v=<unavailable>, __m=acquire) const at atomic.h:120:5 [opt] [inlined]
+    ﹍ frame #8: 0x000000010040f4ec smg-pc-original-effect-ownership-tests`aurora::gx::fifo::(anonymous namespace)::worker_main(token=stop_token @ 0x00000001702e6fa8) at fifo.cpp:323:17 [opt]
+    ﹉ frame #11: 0x0000000100410484 smg-pc-original-effect-ownership-tests`aurora::thread::Thread::Thread<void (&)(std::__1::stop_token) noexcept>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token)::operator()(this=<unavailable>, token=<unavailable>) at thread.hpp:34:5 [opt] [inlined]
+    ﹉ frame #13: 0x0000000100410480 smg-pc-original-effect-ownership-tests`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token) noexcept>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token, 0ul, 1ul>(__t=size=3, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #14: 0x0000000100410474 smg-pc-original-effect-ownership-tests`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token) noexcept>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token>>(__vp=<unavailable>) at thread.h:178:3 [opt]
+       frame #15: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #11, name = 'Preloader 0'
+       frame #0: 0x000000018a3ccb9c libsystem_kernel.dylib`semaphore_wait_trap + 8
+       frame #1: 0x000000018a25249c libdispatch.dylib`_dispatch_sema4_wait + 28
+       frame #2: 0x000000018a252b28 libdispatch.dylib`_dispatch_semaphore_wait_slow + 132
+       frame #3: 0x000000010039cfe0 smg-pc-original-effect-ownership-tests`<std::sys::sync::thread_parking::darwin::Parker>::park at darwin.rs:74:15 [opt] [inlined]
+       frame #4: 0x000000010039cfc0 smg-pc-original-effect-ownership-tests`<std::thread::thread::Thread>::park at thread.rs:121:47 [opt] [inlined]
+       frame #5: 0x000000010039cfc0 smg-pc-original-effect-ownership-tests`std::thread::functions::park at functions.rs:533:19 [opt]
+       frame #6: 0x00000001002dbe78 smg-pc-original-effect-ownership-tests`crossbeam_channel::flavors::list::Channel$LT$T$GT$::recv::_$u7b$$u7b$closure$u7d$$u7d$::h859e3c9833fb63cc + 204
+       frame #7: 0x00000001002db858 smg-pc-original-effect-ownership-tests`crossbeam_channel::flavors::list::Channel$LT$T$GT$::recv::hdb946b39f0b08934 + 588
+       frame #8: 0x00000001002f05e8 smg-pc-original-effect-ownership-tests`crossbeam_channel::channel::Receiver$LT$T$GT$::recv::hf871fda17557fdba + 72
+       frame #9: 0x00000001002d459c smg-pc-original-effect-ownership-tests`std::sys::backtrace::__rust_begin_short_backtrace::he60433a33bb0cd3b + 56
+       frame #10: 0x00000001002f154c smg-pc-original-effect-ownership-tests`core::ops::function::FnOnce::call_once$u7b$$u7b$vtable.shim$u7d$$u7d$::hde877fe98d6056ce + 252
+       frame #11: 0x00000001003a1d08 smg-pc-original-effect-ownership-tests`<alloc::boxed::Box<dyn core::ops::function::FnOnce<(), Output = ()> + core::marker::Send> as core::ops::function::FnOnce<()>>::call_once at boxed.rs:2249:9 [opt] [inlined]
+       frame #12: 0x00000001003a1cfc smg-pc-original-effect-ownership-tests`<std::sys::thread::unix::Thread>::new::thread_start at unix.rs:118:17 [opt]
+       frame #13: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #12
+       frame #0: 0x000000018a3d050c libsystem_kernel.dylib`__psynch_cvwait + 8
+       frame #1: 0x000000018a4121d0 libsystem_pthread.dylib`_pthread_cond_wait + 980
+       frame #2: 0x0000000101accf44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #3: 0x00000001002c478c smg-pc-original-effect-ownership-tests`void std::__1::condition_variable::wait[abi:nqe230101]<(anonymous namespace)::DvdWorker::run()::'lambda'()>(this=<unavailable>, __lk=0x000000017057ef70, __pred=(unnamed class) @ x20) at condition_variable.h:113:7 [opt] [inlined]
+       frame #4: 0x00000001002c4758 smg-pc-original-effect-ownership-tests`(anonymous namespace)::DvdWorker::run(this=0x0000000100e7d5f0) at dvd.cpp:622:12 [opt]
+    ﹍ frame #5: 0x00000001002c4740 smg-pc-original-effect-ownership-tests`(anonymous namespace)::DvdWorker::start()::'lambda'()::operator()(this=0x000000786b846588) const at dvd.cpp:437:37 [opt] [inlined]
+    ﹉ frame #7: 0x00000001002c4740 smg-pc-original-effect-ownership-tests`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, (anonymous namespace)::DvdWorker::start()::'lambda'(), 0ul>(__t=size=2, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #8: 0x00000001002c4740 smg-pc-original-effect-ownership-tests`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, (anonymous namespace)::DvdWorker::start()::'lambda'()>>(__vp=0x000000786b846580) at thread.h:178:3 [opt]
+       frame #9: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #13
+       frame #0: 0x000000018a3d050c libsystem_kernel.dylib`__psynch_cvwait + 8
+       frame #1: 0x000000018a4121d0 libsystem_pthread.dylib`_pthread_cond_wait + 980
+       frame #2: 0x0000000101accf44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #3: 0x00000001008cbc34 smg-pc-original-effect-ownership-tests`void std::__1::condition_variable::wait[abi:nqe230101]<OSSleepThread::$_0>(this=0x0000000100e68768, __lk=0x000000017060ae90, __pred=<unavailable>) at condition_variable.h:113:7 [opt] [inlined]
+       frame #4: 0x00000001008cbc04 smg-pc-original-effect-ownership-tests`OSSleepThread(queue=0x000000722940e1d8) at OSExecution.cpp:291:15 [opt]
+       frame #5: 0x00000001008ce430 smg-pc-original-effect-ownership-tests`OSReceiveMessage(mq=0x000000722940e1c8, msg=0x000000017060af18, flags=1) at OSMessage.cpp:45:13 [opt]
+       frame #6: 0x00000001000924c8 smg-pc-original-effect-ownership-tests`DrawSyncManager::threadFunc(pArg=0x000000722940de20) at DrawSyncManager.cpp:80:9 [opt]
+    ﹍ frame #7: 0x00000001008cd2bc smg-pc-original-effect-ownership-tests`(anonymous namespace)::run_managed_thread(record=0x000000786badfa80) at OSExecution.cpp:422:13 [opt]
+    ﹉ frame #9: 0x00000001008cdf78 smg-pc-original-effect-ownership-tests`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*, 0ul, 1ul>(__t=size=3, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #10: 0x00000001008cdf78 smg-pc-original-effect-ownership-tests`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*>>(__vp=0x000000786bae65c0) at thread.h:178:3 [opt]
+       frame #11: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #14
+       frame #0: 0x000000018a3d050c libsystem_kernel.dylib`__psynch_cvwait + 8
+       frame #1: 0x000000018a4121d0 libsystem_pthread.dylib`_pthread_cond_wait + 980
+       frame #2: 0x0000000101accfd4 libc++.1.dylib`std::__1::condition_variable::__do_timed_wait(std::__1::unique_lock<std::__1::mutex>&, std::__1::chrono::time_point<std::__1::chrono::system_clock, std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000000000l>>>) + 96
+       frame #3: 0x000000010040260c smg-pc-original-effect-ownership-tests`std::__1::cv_status std::__1::condition_variable::wait_for[abi:nqe230101]<long long, std::__1::ratio<1l, 1000000000l>>(this=0x0000000100e7ee88, __lk=0x0000000170696f48, __d=<unavailable>) at condition_variable.h:0 [opt] [inlined]
+       frame #4: 0x00000001004025c0 smg-pc-original-effect-ownership-tests`void std::__1::condition_variable::__do_timed_wait[abi:nqe230101]<std::__1::chrono::steady_clock>(this=0x0000000100e7ee88, __lk=0x0000000170696f48, __tp=<unavailable>) at condition_variable.h:224:3 [opt] [inlined]
+       frame #5: 0x00000001004025c0 smg-pc-original-effect-ownership-tests`std::__1::cv_status std::__1::condition_variable::wait_until[abi:nqe230101]<std::__1::chrono::steady_clock, std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000000000l>>>(this=0x0000000100e7ee88, __lk=0x0000000170696f48, __t=0x0000000170696f40) at condition_variable.h:128:5 [opt]
+       frame #6: 0x000000010045541c smg-pc-original-effect-ownership-tests`bool std::__1::condition_variable::wait_until[abi:nqe230101]<std::__1::chrono::steady_clock, std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000000000l>>, aurora::vi::(anonymous namespace)::RetraceClock::run()::'lambda'()>(this=<unavailable>, __lk=<unavailable>, __t=<unavailable>, __pred=<unavailable>) at condition_variable.h:136:11 [opt] [inlined]
+       frame #7: 0x0000000100455400 smg-pc-original-effect-ownership-tests`aurora::vi::(anonymous namespace)::RetraceClock::run(this=0x0000000100e7ee48) at vi.cpp:117:20 [opt]
+    ﹍ frame #8: 0x0000000100455360 smg-pc-original-effect-ownership-tests`aurora::vi::(anonymous namespace)::RetraceClock::start()::'lambda'()::operator()(this=<unavailable>) const at vi.cpp:80:36 [opt] [inlined]
+    ﹉ frame #10: 0x0000000100455360 smg-pc-original-effect-ownership-tests`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::vi::(anonymous namespace)::RetraceClock::start()::'lambda'(), 0ul>(__t=<unavailable>, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #11: 0x0000000100455360 smg-pc-original-effect-ownership-tests`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::vi::(anonymous namespace)::RetraceClock::start()::'lambda'()>>(__vp=<unavailable>) at thread.h:178:3 [opt]
+       frame #12: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+(lldb) process kill
+Process 42201 exited with status = 9 (0x00000009) killed

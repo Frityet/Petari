@@ -1,0 +1,35 @@
+(lldb) target create "build/macosx/arm64/debug/smg-pc-area-obj-real-or-absent-tests"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-area-obj-real-or-absent-tests' (arm64).
+(lldb) run
+[ok] AreaObj source boundaries are exact
+[ok] area queries reject missing scene owner
+[ok] scene holder owns real container and managers
+[ok] manager readiness does not fabricate placement support
+[ok] CubeCamera manager finalizes priority and reverse query
+[ok] LightArea priority and stable zone identity
+[ok] descriptor registry and strict area preflight
+warning: smg-pc-area-obj-real-or-absent-tests was compiled with optimization - stepping may behave oddly; variables may not be available.
+Process 43130 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-area-obj-real-or-absent-tests' (arm64)
+Process 43130 stopped
+* thread #1, queue = 'com.apple.main-thread', stop reason = EXC_BAD_ACCESS (code=1, address=0x80)
+       frame #0: 0x00000001000387d8 smg-pc-area-obj-real-or-absent-tests`MR::isPlacementLocalStage() at SceneUtil.cpp:338:38 [opt]
+   335 	    }
+   336 	
+   337 	    bool isPlacementLocalStage() {
+-> 338 	        return getStageDataHolder()->mStageDataHolderCount > 0;
+    	                                     ^
+   339 	    }
+   340 	
+   341 	    s32 getPlacedZoneId(const JMapInfoIter& rIter) {
+Target 0: (smg-pc-area-obj-real-or-absent-tests) stopped.
+(lldb) bt 18
+* thread #1, queue = 'com.apple.main-thread', stop reason = EXC_BAD_ACCESS (code=1, address=0x80)
+   * frame #0: 0x00000001000387d8 smg-pc-area-obj-real-or-absent-tests`MR::isPlacementLocalStage() at SceneUtil.cpp:338:38 [opt]
+     frame #1: 0x0000000100033474 smg-pc-area-obj-real-or-absent-tests`MR::getJMapInfoTrans(rIter=0x000000016fdfe3e8, pOut=0x000000722042d250) at JMapUtil.cpp:255:13 [opt]
+     frame #2: 0x00000001000ae8fc smg-pc-area-obj-real-or-absent-tests`AreaFormCylinder::init(this=0x000000722042d240, rIter=0x000000016fdfe3e8) at AreaForm.cpp:284:5 [opt]
+     frame #3: 0x00000001000af268 smg-pc-area-obj-real-or-absent-tests`AreaObj::init(this=0x000000722042d1f0, rIter=0x000000016fdfe3e8) at AreaObj.cpp:36:12 [opt]
+     frame #4: 0x0000000100004fcc smg-pc-area-obj-real-or-absent-tests`(anonymous namespace)::test_generic_effect_areas_use_original_init_and_queries() at AreaObjRealOrAbsentTests.cpp:539:29 [opt]
+     frame #5: 0x00000001000017d4 smg-pc-area-obj-real-or-absent-tests`main(argc=1, argv=0x000000016fdfeeb0) at AreaObjRealOrAbsentTests.cpp:1013:13 [opt]
+     frame #6: 0x000000018a03be80 dyld`start + 6688
+(lldb) process kill
+Process 43130 exited with status = 9 (0x00000009) killed

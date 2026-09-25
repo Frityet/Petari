@@ -5,6 +5,7 @@
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/SystemUtil.hpp"
+#include "JSystem/JMath/JMATrigonometric.hpp"
 
 #include <array>
 #include <bit>
@@ -12,6 +13,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
+#include <limits>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -558,7 +560,7 @@ namespace {
         matrix.getXYZDir(side, up, front);
         require_vector(side, TVec3f{1.0F, 0.0F, 0.0F}, "up/side removes the supplied side's up component");
         require_vector(up, TVec3f{0.0F, 1.0F, 0.0F}, "up/side normalizes the primary up direction");
-        require_vector(front, TVec3f{0.0F, 0.0F, -1.0F}, "up/side preserves the original cross-product orientation");
+        require_vector(front, TVec3f{0.0F, 0.0F, 1.0F}, "up/side follows retail side-cross-up orientation");
         MR::makeMtxFrontUp(&matrix, TVec3f{0.0F, 0.0F, 4.0F}, TVec3f{0.0F, 3.0F, 1.0F});
         matrix.getXYZDir(side, up, front);
         require_vector(side, TVec3f{1.0F, 0.0F, 0.0F}, "front/up retains the original side direction");
@@ -599,9 +601,22 @@ namespace {
         require(!MR::isSameMtxRot(identity, translated), "unordered rotation entries remain unequal");
         TVec3f axis;
         MR::calcMtxRotAxis(&axis, identity, yaw);
-        require_vector(axis, TVec3f{0.0F, 1.0F, 0.0F}, "quarter yaw retains its world rotation axis");
+        require_vector(axis, TVec3f{0.0F, 1.0F, 0.0F}, "quarter yaw preserves local Y and uses the original Y fallback");
         MR::calcMtxRotAxis(&axis, identity, identity);
-        require_vector(axis, TVec3f{0.0F, 0.0F, 1.0F}, "coincident forward axes use the original local Z result");
+        require_vector(axis, TVec3f{0.0F, 1.0F, 0.0F}, "coincident relative up axes use the original local Y result");
+        Mtx roll;
+        PSMTXRotRad(roll, 'z', HALF_PI);
+        // inv(roll) maps Y to X, and pitch leaves X fixed: Y cross X is -Z.
+        // The former provider transformed independent Z axes and returned +X.
+        MR::calcMtxRotAxis(&axis, roll, pitch);
+        require_vector(axis, TVec3f{0.0F, 0.0F, -1.0F},
+                       "relative-axis calculation composes B with inverse A before comparing local Y");
+        PSMTXCopy(identity, translated);
+        translated[0][1] = 16.0F * std::numeric_limits<float>::epsilon();
+        require(MR::isRotAxisY(identity, translated), "original axis comparison accepts a sub-epsilon component difference");
+        translated[0][1] = 64.0F * std::numeric_limits<float>::epsilon();
+        require(!MR::isRotAxisY(identity, translated),
+                "original axis comparison rejects differences beyond 32 float epsilons, even below 0.001");
         require(MR::isNormalize(TVec3f{0.0F, 1.0F, 0.0F}) &&
                     !MR::isNormalize(TVec3f{0.0F, 2.0F, 0.0F}) &&
                     !MR::isNormalize(TVec3f{NAN, 0.0F, 0.0F}),
@@ -614,6 +629,74 @@ namespace {
                 "2D angular distance accepts scaled directions and opposite endpoints");
         MR::getRotatedAxisZ(&axis, TVec3f{0.0F, 90.0F, 0.0F});
         require_vector(axis, TVec3f{1.0F, 0.0F, 0.0F}, "authored Euler degrees rotate the local forward axis");
+    }
+    void test_original_matrix_degree_quantization_and_signs() {
+        struct AxisCase {
+            MtxPtr (*degrees)(f32);
+            MtxPtr (*radians)(f32);
+            TVec3f input;
+            TVec3f expected;
+        };
+        const AxisCase axes[] = {
+            {MR::tmpMtxRotXDeg, MR::tmpMtxRotXRad, {0.0F, 1.0F, 0.0F}, {0.0F, 0.0F, 1.0F}},
+            {MR::tmpMtxRotYDeg, MR::tmpMtxRotYRad, {0.0F, 0.0F, 1.0F}, {1.0F, 0.0F, 0.0F}},
+            {MR::tmpMtxRotZDeg, MR::tmpMtxRotZRad, {1.0F, 0.0F, 0.0F}, {0.0F, 1.0F, 0.0F}},
+        };
+        for (const auto& axis : axes) {
+            // Degree/radian variants intentionally share each original temporary.
+            Mtx degree_matrix, radian_matrix;
+            PSMTXCopy(axis.degrees(90.0F), degree_matrix);
+            PSMTXCopy(axis.radians(HALF_PI), radian_matrix);
+            TVec3f degree_result, radian_result;
+            PSMTXMultVecSR(degree_matrix, &axis.input, &degree_result);
+            PSMTXMultVecSR(radian_matrix, &axis.input, &radian_result);
+            require_vector(degree_result, axis.expected, "positive degree rotation follows the retail right-handed orientation");
+            require_vector(radian_result, degree_result, "degree and radian rotations preserve the same authored orientation");
+        }
+
+        // 12.34 degrees selects short-angle table bucket 561 (short value 2244).
+        // A second angle in that bucket must retain the exact same rotation.
+        const f32 sine = JMASSin(s16{2244});
+        const f32 cosine = JMASCos(s16{2244});
+        Mtx matrix, adjacent;
+        MR::makeMtxRotateY(matrix, 12.34F);
+        MR::makeMtxRotateY(adjacent, 12.341F);
+        require(MR::isSameMtx(matrix, adjacent) && matrix[0][2] == sine && matrix[0][0] == cosine,
+                "yaw matrices retain original lookup-table quantization between adjacent authored angles");
+        require(std::fabs(sine - std::sin(12.34F * PI_180)) > 0.0001F,
+                "the non-grid fixture distinguishes original table lookup from host trigonometry");
+        MR::makeMtxTR(matrix, 7.0F, -8.0F, 9.0F, 0.0F, 12.34F, 0.0F);
+        require(matrix[0][2] == sine && matrix[2][0] == -sine && matrix[0][0] == cosine &&
+                    matrix[0][3] == 7.0F && matrix[1][3] == -8.0F && matrix[2][3] == 9.0F,
+                "translation-rotation construction uses original degree tables and preserves the authored translation");
+        MR::makeMtxTRS(matrix, 7.0F, -8.0F, 9.0F, 0.0F, 12.34F, 0.0F, 2.0F, 3.0F, 4.0F);
+        require(matrix[0][2] == 4.0F * sine && matrix[2][0] == -sine * 2.0F &&
+                    matrix[0][0] == 2.0F * cosine && matrix[1][1] == 3.0F && matrix[2][3] == 9.0F,
+                "scaled transforms apply original table rotations and scale each local column");
+
+        struct AngleCase { f32 degrees; s16 short_angle; };
+        const AngleCase angles[] = {{450.0F, 16384}, {-450.0F, -16384}, {1080.0F, 0},
+                                    {INFINITY, -1}, {-INFINITY, 0}, {NAN, 0}};
+        for (const auto& angle : angles) {
+            MR::makeMtxRotate(matrix, angle.degrees, 0.0F, 0.0F);
+            MR::makeMtxRotate(adjacent, angle.short_angle, s16{0}, s16{0});
+            require(MR::isSameMtx(matrix, adjacent),
+                    "native degree conversion preserves Gekko integer-word truncation and signed low-halfword wrap");
+            MR::makeMtxRotateY(matrix, angle.degrees);
+            require(matrix[0][2] == JMASSin(angle.short_angle) && matrix[0][0] == JMASCos(angle.short_angle),
+                    "the yaw-only path preserves the same Gekko degree conversion");
+        }
+    }
+
+    void test_original_matrix_scalar_rounding() {
+        Mtx matrix;
+        PSMTXIdentity(matrix);
+        const float next_one = std::bit_cast<float>(u32{0x3F800001});
+        matrix[0][0] = next_one;
+        matrix[0][3] = -std::bit_cast<float>(u32{0x3F800002});
+        MR::addTransMtxLocalX(matrix, next_one);
+        require(matrix[0][3] == 0.0F,
+                "retail local translation rounds the multiply before addition instead of introducing a fused residual");
     }
 }  // namespace
 
@@ -638,6 +721,8 @@ int main() {
         test_fixed16_conversion_boundaries();
         test_original_matrix_basis_and_axis_rotation();
         test_original_matrix_comparisons_and_angles();
+        test_original_matrix_degree_quantization_and_signs();
+        test_original_matrix_scalar_rounding();
         std::cout << "game math rotation tests passed\n";
         return 0;
     } catch (const std::exception& exception) {

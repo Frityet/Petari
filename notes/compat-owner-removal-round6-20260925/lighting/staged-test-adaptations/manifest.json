@@ -1,0 +1,62 @@
+[
+  {
+    "path": "tests/OriginalCollisionPartsOwnerTests.cpp",
+    "before_status": "M tests/OriginalCollisionPartsOwnerTests.cpp",
+    "staged_path": "notes/compat-owner-removal-round6-20260925/lighting/staged-test-adaptations/OriginalCollisionPartsOwnerTests.cpp",
+    "changes": "Add shared actual LightDirector-before-AreaObjContainer fixture prerequisite only",
+    "before_sha256": "72f28a3daef1dbe67e4d6080d7f8abd4eb6562428eab8cc44cf76723ab76d7f0",
+    "working_sha256": "10381b5e475afdf1c1a1f19e99e14e23d0bee5883b82f4645293477049c85975",
+    "head_sha256": "4d2128a68adab668e6ea4b641f3074240693ccd8b96fd66b8ca95e86e860b252",
+    "staged_sha256": "4ae2299e24a1d3aa063a3913e340013355ec7a6655e60f0105ce53acabdf690e"
+  },
+  {
+    "path": "tests/OriginalImageEffectOwnershipTests.cpp",
+    "before_status": "",
+    "staged_path": "notes/compat-owner-removal-round6-20260925/lighting/staged-test-adaptations/OriginalImageEffectOwnershipTests.cpp",
+    "changes": "Add shared actual LightDirector-before-AreaObjContainer fixture prerequisite only",
+    "before_sha256": "8f44844607991928923959b9798a00e1644e867d6e308a82b21b3877ad50da5d",
+    "working_sha256": "8d80fb5aab047beb6f22a123984fbf550272c3fc7b904832225b32d32f9b3245",
+    "head_sha256": "8f44844607991928923959b9798a00e1644e867d6e308a82b21b3877ad50da5d",
+    "staged_sha256": "8d80fb5aab047beb6f22a123984fbf550272c3fc7b904832225b32d32f9b3245"
+  },
+  {
+    "path": "tests/StageStartCameraTests.cpp",
+    "before_status": "M tests/StageStartCameraTests.cpp",
+    "staged_path": "notes/compat-owner-removal-round6-20260925/lighting/staged-test-adaptations/StageStartCameraTests.cpp",
+    "changes": "Add shared actual LightDirector-before-AreaObjContainer fixture prerequisite only",
+    "before_sha256": "3e741565c8e2c44d78c1b07de9958cc349a602f3e93cc36abac9cb1aeec830a1",
+    "working_sha256": "3af4304e9c0dfb28cfee20645f08b8851d1c1f283fc80b258cfe035540a7a3bf",
+    "head_sha256": "8bad813190d256a59d2e13e2eec5b78198e20d3eec3b36c5f2fcd423633b5766",
+    "staged_sha256": "380c292998bf8b65876cadcd69f37482c3256ad1c96d74266ebbabfc3729726c"
+  },
+  {
+    "path": "tests/ActorEventCameraTests.cpp",
+    "before_status": "M tests/ActorEventCameraTests.cpp",
+    "staged_path": "notes/compat-owner-removal-round6-20260925/lighting/staged-test-adaptations/ActorEventCameraTests.cpp",
+    "changes": "Add shared actual LightDirector-before-AreaObjContainer fixture prerequisite only",
+    "before_sha256": "a07104cf5f0ff13b8b4784dfc1a82490b66cecc6ea912f3b4bdb31a7e2cd9cdd",
+    "working_sha256": "881429e1a71c53c121043682ce9aa0df9ebd61124d4a619f8efb08e3127b9ddf",
+    "head_sha256": "50c3b870db5603ee3a6a714c89c09d36843a0c9e63a8e5408f26fd11d0577942",
+    "staged_sha256": "b2087c6d39f838a98fee167052f84985caf0933615f2429dacd8343b65392d3b"
+  },
+  {
+    "path": "tests/CameraViewInterpolatorTests.cpp",
+    "before_status": "M tests/CameraViewInterpolatorTests.cpp",
+    "staged_path": "notes/compat-owner-removal-round6-20260925/lighting/staged-test-adaptations/CameraViewInterpolatorTests.cpp",
+    "changes": "Add shared actual LightDirector-before-AreaObjContainer fixture prerequisite only",
+    "before_sha256": "42fd6ce3afeedc850bf176bc533bad6134d8872c3bc0e3e68036bc64d9c003ee",
+    "working_sha256": "174dcbf3578cc0b01f31dba18045f93bb67d71bc316833210fcde04a9667d5cb",
+    "head_sha256": "baa2c2c4da0b17081cf8c26391ba73c5991d13550dea3de14637f1fddc342b4b",
+    "staged_sha256": "20685a3c87d44252d7f81f66f2537743ba4f0f056f0f7ad1c7389ee7b7211c64"
+  },
+  {
+    "path": "tests/CameraViewServiceTests.cpp",
+    "before_status": "M tests/CameraViewServiceTests.cpp",
+    "staged_path": "notes/compat-owner-removal-round6-20260925/lighting/staged-test-adaptations/CameraViewServiceTests.cpp",
+    "changes": "Add shared actual LightDirector-before-AreaObjContainer fixture prerequisite only",
+    "before_sha256": "b8a230b46e47556351afe9f554a76be5aa4113eec96455643a33abbec82d7f23",
+    "working_sha256": "4a22dde11ffb7695684d57285aaaad54ac95d252c0984f849daba327a9d89717",
+    "head_sha256": "7774a02214cb83451e232e89d832c49fa17cb8a4fff1eea9176f0ca6ed9b9d89",
+    "staged_sha256": "b8e0f60578069018fa04ed93c9dd0466c10bc9c8a4a9c6f6be79ead1acf6764a"
+  }
+]

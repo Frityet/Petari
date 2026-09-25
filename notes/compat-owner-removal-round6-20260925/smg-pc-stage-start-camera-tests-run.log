@@ -1,0 +1,15 @@
+[fail] rigid zone matrix and StartInfo selection: Scene initialization requires the original GameSystem scene controller.
+[fail] camera migration, key, and XZ_PARA pose: Scene initialization requires the original GameSystem scene controller.
+[fail] original controller height and lifetime: Scene initialization requires the original GameSystem scene controller.
+[fail] original manager safe basis and deferred reset: Scene initialization requires the original GameSystem scene controller.
+[fail] base and programmable camera priority: Scene initialization requires the original GameSystem scene controller.
+[fail] RunawayTico start-camera handoff: Scene initialization requires the original GameSystem scene controller.
+[fail] authored game-camera target tracking: Scene initialization requires the original GameSystem scene controller.
+[fail] authored game-camera offset accumulation: Scene initialization requires the original GameSystem scene controller.
+[fail] player target camera phase ownership: Scene initialization requires the original GameSystem scene controller.
+[fail] authored game-camera priority and restart: Scene initialization requires the original GameSystem scene controller.
+[fail] authored game-camera owner retirement: Scene initialization requires the original GameSystem scene controller.
+[fail] start-camera errors and scene generations: Scene initialization requires the original GameSystem scene controller.
+[fail] retail placement-zone SceneObj: Scene initialization requires the original GameSystem scene controller.
+[fail] optional real-disc HeavensDoor camera: Scene initialization requires the original GameSystem scene controller.
+14 stage-start camera test(s) failed

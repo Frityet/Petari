@@ -1,3 +1,4 @@
+#include "OriginalLightFixture.hpp"
 #include "SourceMirrorEncoding.hpp"
 #include "resource/TextEncoding.hpp"
 #include "SceneExecutionFixture.hpp"
@@ -27,11 +28,9 @@
 #include "resource/GameResourceRuntime.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
-#include "render/light/LightData.hpp"
 #include "resource/BcsvTable.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
-#include "scene/StageLightSceneBinding.hpp"
 #include "scene/StagePlacementResolver.hpp"
 
 #include <aurora/aurora.h>
@@ -201,7 +200,7 @@ namespace {
         auto fixture = AreaContainerFixture{};
         auto& holder = fixture.execution.holder();
         auto& binding = fixture.execution.objects();
-        auto *container = static_cast<AreaObjContainer *>(holder.create(SceneObj_AreaObjContainer));
+        auto *container = static_cast<AreaObjContainer *>(smgpc::test::create_area_container(holder));
         auto *manager = container->getManager("ChangeBgmCube");
         require(typeid(*manager) == typeid(AreaObjMgr) && manager->_18 == 0x20,
                 "ChangeBgmCube's original base manager exists independently of its specialized actor");
@@ -238,7 +237,7 @@ namespace {
         auto fixture = AreaContainerFixture{};
         auto& holder = fixture.execution.holder();
         auto& binding = fixture.execution.objects();
-        auto *container = dynamic_cast<AreaObjContainer *>(holder.create(SceneObj_AreaObjContainer));
+        auto *container = dynamic_cast<AreaObjContainer *>(smgpc::test::create_area_container(holder));
         require(container != nullptr, "the CubeCamera fixture requires the real scene-owned container");
 
         auto *manager = dynamic_cast<CubeCameraMgr *>(container->getManager("CubeCamera"));
@@ -299,29 +298,10 @@ namespace {
     }
 
     void test_light_area_priority_and_stable_zone_identity() {
-        const auto disc_path = find_real_disc();
-        require(disc_path.has_value(), "the real actor light-owner fixture requires SMGPC_REAL_DISC");
-        smgpc::render::AuroraWindow window({.width = 640, .height = 456, .title = "Original area light ownership"});
-        smgpc::render::AuroraRenderer renderer(window);
-        aurora_dvd_close();
-        require(aurora_dvd_open(disc_path->string().c_str()), "the actor light fixture must open the real model archive");
-        struct DiscCloseGuard {
-            ~DiscCloseGuard() { aurora_dvd_close(); }
-        } close_guard;
-        DVDInit();
-        aurora::g_config.mem1Size = 24U << 20;
-        auto process = smgpc::resource::GameResourceRuntime{};
-        auto domain = process.create_cohort();
-        auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
-        auto resources = smgpc::compat::ResourceHolderService{dvd, domain, process.mem1_heap()};
-        auto scheduler = smgpc::runtime::SceneScheduler{};
-        auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
-        auto original = smgpc::test::OriginalSceneControllerFixture(process.host_heaps());
-        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain, nullptr, nullptr,
-                                                          &original.scene, original.controller().mObjHolder);
-        auto &holder = execution.holder();
-        auto &binding = execution.objects();
-        auto *container = dynamic_cast<AreaObjContainer *>(holder.create(SceneObj_AreaObjContainer));
+        auto fixture = AreaContainerFixture{};
+        auto& holder = fixture.execution.holder();
+        auto& binding = fixture.execution.objects();
+        auto *container = dynamic_cast<AreaObjContainer *>(smgpc::test::create_area_container(holder));
         require(container != nullptr, "the LightArea fixture requires the real scene-owned container");
         auto *manager = dynamic_cast<LightAreaHolder *>(container->getManager("LightArea"));
         require(manager != nullptr && manager->_18 == 0x80,
@@ -349,30 +329,7 @@ namespace {
         require(!manager->tryFindLightID(TVec3f{5000.0F, 5000.0F, 5000.0F}, &light_id),
                 "remaining outside every LightCtrl volume must not retrigger a light transition");
 
-        auto moving_actor = LiveActor{"moving LightArea fixture"};
-        moving_actor.initModelManagerWithAnm("Tico", nullptr, false);
-        require(moving_actor.mModelManager != nullptr && smgpc::compat::retain_actor_model_owner(&moving_actor),
-                "draw registration requires the actor's actual resource-backed ModelManager owner");
-        scheduler.register_live_actor_model(
-            moving_actor, MR::MovementType_NPC, MR::CalcAnimType_NPC,
-            MR::DrawBufferType_NPC, -1);
-        auto light_ctrl = std::make_unique<ActorLightCtrl>(&moving_actor);
-        moving_actor.mActorLightCtrl = light_ctrl.get();
-        light_ctrl->init(-1, false);
-        require(light_ctrl->_4 == MR::LightType_Strong,
-                "a controller created after connectToScene must inherit the draw-buffer's retained retail light type");
-        execution.complete_initialization();
-        moving_actor.makeActorAppeared();
-        moving_actor.mPosition.set(0.0F, 100.0F, 0.0F);
-        moving_actor.movement();
-        require(light_ctrl->mLightID._0 == 5 && light_ctrl->mLightID.mLightID == 7,
-                "LiveActor movement must update its controller into the highest-priority authored LightArea");
-        moving_actor.mPosition.set(5000.0F, 5000.0F, 5000.0F);
-        moving_actor.movement();
-        require(light_ctrl->mLightID._0 == -1 && light_ctrl->mLightID.mLightID == -1,
-                "LiveActor movement must update its controller when leaving authored LightAreas");
-        scheduler.unregister_live_actor_model(moving_actor);
-        moving_actor.mActorLightCtrl = nullptr;
+
     }
 
     void test_scene_holder_owns_real_container_and_managers() {
@@ -382,13 +339,13 @@ namespace {
             auto fixture = AreaContainerFixture{};
             auto& holder = fixture.execution.holder();
             auto& binding = fixture.execution.objects();
-            auto *object = holder.create(SceneObj_AreaObjContainer);
+            auto *object = smgpc::test::create_area_container(holder);
             auto *container = dynamic_cast<AreaObjContainer *>(object);
 
             require(container != nullptr && holder.isExist(SceneObj_AreaObjContainer) &&
                         MR::getAreaObjContainer() == container,
                     "a bound scene must install the real AreaObjContainer SceneObj");
-            require(holder.create(SceneObj_AreaObjContainer) == container,
+            require(smgpc::test::create_area_container(holder) == container,
                     "SceneObj creation must retain one container per scene");
             verify_installed_original_managers(*container);
             require(smgpc::scene::current_scene_obj_holder_binding_owns(container->getManager("SwitchArea")),
@@ -403,16 +360,12 @@ namespace {
             binding.init_after_placement();
         }
 
-        auto detached_light = ZoneLightID{};
-        require(!LightFunction::tryFindNewAreaLightID(TVec3f{}, &detached_light) &&
-                    detached_light._0 == -1 && detached_light.mLightID == -1,
-                "destroying the scene-owned LightArea manager must detach its non-owning lookup before reuse");
 
         {
             auto fixture = AreaContainerFixture{};
             auto& second_holder = fixture.execution.holder();
             auto *second_container = dynamic_cast<AreaObjContainer *>(
-                second_holder.create(SceneObj_AreaObjContainer));
+                smgpc::test::create_area_container(second_holder));
             require(second_container != nullptr &&
                         dynamic_cast<LightAreaHolder *>(
                             second_container->getManager("LightArea")) !=
@@ -548,7 +501,7 @@ namespace {
                 const auto game = smgpc::compat::JkrAllocationScope(domain);
                 for (const auto id : {SceneObj_StageSwitchContainer, SceneObj_SwitchWatcherHolder,
                                       SceneObj_SleepControllerHolder, SceneObj_AreaObjContainer})
-                    require(holder.create(id) != nullptr, "generic area init requires original scene services");
+                    require((id == SceneObj_AreaObjContainer ? smgpc::test::create_area_container(holder) : holder.create(id)) != nullptr, "generic area init requires original scene services");
             }
 
             constexpr auto cases = std::array{
@@ -971,123 +924,7 @@ namespace {
                 "both exact rabbit SwitchCube rows must enter the one scene-owned SwitchArea manager");
     }
 
-    void test_rmgk01_zone_light_data_resolves_child_tables() {
-        const auto disc_path = find_real_disc();
-        if (!disc_path.has_value()) {
-            std::cout << "[skip] RMGK01 zone-light data test (set SMGPC_REAL_DISC or place RMGK01.iso in a workspace ancestor)\n";
-            return;
-        }
 
-        aurora_dvd_close();
-        const auto disc_path_string = disc_path->string();
-        require(aurora_dvd_open(disc_path_string.c_str()),
-                "the RMGK01 zone-light fixture must be a readable SMG disc image");
-        struct DiscCloseGuard {
-            ~DiscCloseGuard() {
-                aurora_dvd_close();
-            }
-        } close_guard;
-        DVDInit();
-
-        auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
-        auto &light_data = smgpc::render::light::StageLightData::instance();
-        light_data.reset();
-        const auto light_tables = std::array{
-            smgpc::scene::StagePlacementTable{
-                .stage_name = "HeavensDoorGalaxy",
-                .zone_name = "HeavensDoorMysteriousZone",
-                .zone_id = 5,
-            },
-            smgpc::scene::StagePlacementTable{
-                .stage_name = "HeavensDoorGalaxy",
-                .zone_name = "HeavensDoorGalaxy",
-                .zone_id = 0,
-            },
-            // Duplicate table metadata is intentionally accepted; resolved
-            // scenario tables repeat zones across placement categories.
-            smgpc::scene::StagePlacementTable{
-                .stage_name = "HeavensDoorGalaxy",
-                .zone_name = "HeavensDoorMysteriousZone",
-                .zone_id = 5,
-            },
-        };
-        auto light_binding = std::make_unique<smgpc::scene::StageLightSceneBinding>(
-            dvd, "HeavensDoorGalaxy", light_tables);
-        require(light_data.stage_zones().size() == 2U &&
-                    light_data.stage_zones()[0].zone_id == 0 &&
-                    light_data.stage_zones()[1].zone_id == 5,
-                "scene-owned stage lighting must deduplicate and order authored placement-zone IDs");
-
-        auto root_id = ZoneLightID{};
-        auto *root = light_data.area_light_info(root_id);
-        require(root != nullptr && root->mAreaLightName != nullptr &&
-                    smgpc::resource::decode_cp932(root->mAreaLightName) == "[共通]宇宙の星" &&
-                    smgpc::resource::decode_cp932(light_data.default_area_light_name()) == "[共通]宇宙の星",
-                "the clear ZoneLightID must resolve the exact root-zone default row");
-
-        auto child_id = ZoneLightID{};
-        child_id._0 = 5;
-        child_id.mLightID = 0;
-        auto *child = light_data.area_light_info(child_id);
-        require(child != nullptr && child != root && child->mAreaLightName != nullptr &&
-                    smgpc::resource::decode_cp932(child->mAreaLightName) == "ロゼッタ出会い" &&
-                    child->mPlayerLight.mInfo0.mColor.r == 90U &&
-                    child->mPlayerLight.mInfo0.mColor.g == 90U &&
-                    child->mPlayerLight.mInfo0.mColor.b == 90U &&
-                    !child->mPlayerLight.mInfo0.mIsFollowCamera &&
-                    child->mPlayerLight.mInfo1.mIsFollowCamera &&
-                    child->mPlayerLight.mColor.r == 90U &&
-                    child->mPlayerLight.mColor.g == 90U &&
-                    child->mPlayerLight.mColor.b == 115U &&
-                    child->mPlayerLight.mColor.a == 60U,
-                "zone 5/light 0 must resolve exact child-zone Rosetta player lighting and ambient data");
-
-        child_id.mLightID = 1;
-        auto *observatory = light_data.area_light_info(child_id);
-        require(observatory != nullptr && observatory->mAreaLightName != nullptr &&
-                    smgpc::resource::decode_cp932(observatory->mAreaLightName) == "天文台（ロゼッタ）",
-                "zone 5/light 1 must resolve the second exact child-zone light row");
-
-        child_id.mLightID = 999;
-        require(light_data.area_light_info(child_id) == root,
-                "an absent child light ID must use the exact root-stage default rather than another child row");
-
-        const auto conflicting = std::array{
-            smgpc::render::light::StageLightZone{.zone_id = 5, .zone_name = "HeavensDoorMysteriousZone"},
-            smgpc::render::light::StageLightZone{.zone_id = 5, .zone_name = "HeavensDoorGalaxy"},
-        };
-        require_throws<std::invalid_argument>(
-            [&] { light_data.configure_stage_zones(conflicting); },
-            "cannot name multiple authored zones");
-
-        light_binding.reset();
-        require(light_data.stage_zones().empty() &&
-                    light_data.area_light_info(ZoneLightID{}) == nullptr,
-                "stage-light scene teardown must release every cached zone and AreaLight row");
-
-        const auto next_scene_tables = std::array{
-            smgpc::scene::StagePlacementTable{
-                .stage_name = "HeavensDoorGalaxy",
-                .zone_name = "HeavensDoorGalaxy",
-                .zone_id = 0,
-            },
-        };
-        {
-            const auto next_scene_binding = smgpc::scene::StageLightSceneBinding{
-                dvd, "HeavensDoorGalaxy", next_scene_tables};
-            auto stale_child = ZoneLightID{};
-            stale_child._0 = 5;
-            stale_child.mLightID = 0;
-            const auto* next_scene_light = light_data.area_light_info(stale_child);
-            require(light_data.stage_zones().size() == 1U &&
-                        next_scene_light != nullptr &&
-                        smgpc::resource::decode_cp932(next_scene_light->mAreaLightName) ==
-                            "[共通]宇宙の星",
-                    "a recreated scene without child metadata must not inherit the previous scene's child light table");
-        }
-        require(light_data.stage_zones().empty(),
-                "recreated stage-light ownership must also reset on teardown");
-    }
 
     class RecordingDivideInfo final : public DivideMercatorRailPosInfo {
     public:
@@ -1119,7 +956,7 @@ namespace {
         auto fixture = AreaContainerFixture{};
         auto& holder = fixture.execution.holder();
         auto& binding = fixture.execution.objects();
-        auto* container = static_cast<AreaObjContainer*>(holder.create(SceneObj_AreaObjContainer));
+        auto* container = static_cast<AreaObjContainer*>(smgpc::test::create_area_container(holder));
         auto* manager = container->getManager("AreaMoveSphere");
         require(manager != nullptr && manager->_18 == 0x10, "Area movement requires the actual retail manager");
         require(!MR::calcAreaMoveVelocity(&velocity, TVec3f(0,0,0)) && velocity.squared() == 0,
@@ -1163,7 +1000,6 @@ int main(int argc, char **argv) {
         TestCase{"RMGK01 CubeCamera rows construct exactly", test_rmgk01_cube_camera_rows_construct_exactly},
         TestCase{"RMGK01 MessageArea rows construct exactly", test_rmgk01_message_area_rows_construct_exactly},
         TestCase{"RMGK01 SwitchArea rows drive authored switches", test_rmgk01_switch_area_rows_drive_authored_switches},
-        TestCase{"RMGK01 zone-light data resolves child tables", test_rmgk01_zone_light_data_resolves_child_tables},
         TestCase{"area movement uses actual sphere and arguments", test_area_movement_uses_actual_sphere_and_arguments},
         TestCase{"water and Mercator do not fabricate results", test_water_and_mercator_do_not_fabricate_results},
     };

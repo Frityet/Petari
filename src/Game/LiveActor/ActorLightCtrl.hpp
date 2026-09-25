@@ -5,10 +5,12 @@
 
 class LiveActor;
 class DrawBuffer;
+class LightDirector;
 
 class ActorLightCtrl {
 public:
     ActorLightCtrl(const LiveActor*);
+    ~ActorLightCtrl();
 
     void init(int, bool);
     void update(bool);
@@ -33,4 +35,7 @@ public:
     ActorLightInfo mLightInfo;     // 0x20
     s32 mInterpolate;              // 0x50
     s32 _54;                       // 0x54
+
+    // The native director borrows this controller across actor replacement.
+    mutable LightDirector* mRegisteredLightDirector = nullptr;
 };

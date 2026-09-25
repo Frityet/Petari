@@ -1,0 +1,322 @@
+[
+  {
+    "method": "Overwrite_FORCE_MATCH_SDATA2",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 42,
+    "provider": null,
+    "disposition": "not-runtime-code",
+    "reason": "Matching-only constant anchor; runtime constants remain with their actual override expressions."
+  },
+  {
+    "method": "JKRUnitHeap::do_alloc",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 60,
+    "provider": "src/JSystem/JKernel/JKRUnitHeap.cpp",
+    "disposition": "canonical-native-owner",
+    "reason": "Preserve native allocation bookkeeping, alignment and mutex ownership."
+  },
+  {
+    "method": "JKRUnitHeap::do_free",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 97,
+    "provider": "src/JSystem/JKernel/JKRUnitHeap.cpp",
+    "disposition": "canonical-native-owner",
+    "reason": "Preserve allocation extent/provenance and native release."
+  },
+  {
+    "method": "JKRSolidHeap::do_free",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 112,
+    "provider": "src/JSystem/JKernel/JKRSolidHeap.cpp",
+    "disposition": "canonical-native-owner",
+    "reason": "Original solid-heap no-op remains at its complete SDK owner."
+  },
+  {
+    "method": "JKRExpHeap::adjustSize",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 115,
+    "provider": "src/JSystem/JKernel/JKRExpHeap.cpp",
+    "disposition": "canonical-native-owner",
+    "reason": "Preserve existing native parent/heap locking and width-safe size handling."
+  },
+  {
+    "method": "JKRHeap::getMaxAllocatableSize",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 168,
+    "provider": "src/JSystem/JKernel/JKRHeap.hpp",
+    "disposition": "canonical-native-owner",
+    "reason": "Already inline with uintptr_t address arithmetic."
+  },
+  {
+    "method": "JUTWarningConsole_f",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 173,
+    "provider": null,
+    "disposition": "deferred-unlinked-console-wrapper",
+    "reason": "Declaration exists in JUTConsole.hpp; no current native definition/call site found. JUTWarningConsole_f_va remains in complete JUTConsole.cpp. No wrapper introduced."
+  },
+  {
+    "method": "JUTWarningConsole",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 180,
+    "provider": null,
+    "disposition": "deferred-unlinked-console-wrapper",
+    "reason": "Declaration exists in JUTConsole.hpp; no current native definition/call site found. No wrapper introduced."
+  },
+  {
+    "method": "JUTTexture::captureDolTexture",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 184,
+    "provider": "src/compat/OriginalJutCapture.cpp",
+    "disposition": "separate-jut-closure",
+    "reason": "Left untouched at root request; eventual canonical JUTTexture owner must reconcile runtime/jut/JutTexture.cpp and mapped texture allocation/construction lifetimes."
+  },
+  {
+    "method": "JSUOutputStream::~JSUOutputStream",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 196,
+    "provider": "src/JSystem/JSupport/JSUOutputStream.cpp",
+    "disposition": "canonical-native-owner",
+    "reason": "Complete stream owner already supplies default destructor."
+  },
+  {
+    "method": "JSUInputStream::~JSUInputStream",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 199,
+    "provider": "src/JSystem/JSupport/JSUInputStream.cpp",
+    "disposition": "canonical-native-owner",
+    "reason": "Complete stream owner already supplies default destructor."
+  },
+  {
+    "method": "PSMTXRotRad",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 202,
+    "provider": "aurora/lib/dolphin/mtx/mtx.c",
+    "disposition": "aurora-sdk-owner",
+    "reason": "Native header maps PSMTXRotRad/MTXRotRad to C_MTXRotRad. Existing sinf/cosf implementation retained; no claim it is bit-identical to original JMA trigonometric wrapper."
+  },
+  {
+    "method": "JUTException::readPad",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 208,
+    "provider": "src/Game/System/GameSystemException.cpp",
+    "disposition": "native-diagnostics-path",
+    "reason": "TARGET_PC uses Aurora native exception reporting; original Wii exception frontend is in the non-PC branch. No native JUTException class definition found, and no duplicate exception frontend added."
+  },
+  {
+    "method": "JUTException::queryMapAddress_single",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 227,
+    "provider": "src/Game/System/GameSystemException.cpp",
+    "disposition": "native-diagnostics-path",
+    "reason": "Original false-return method belongs to inactive Wii exception UI; it is not fabricated as a host stub."
+  },
+  {
+    "method": "J3DShapeMtx::loadMtxIndx_PNGP",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 232,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 26
+    },
+    "adaptation": "none",
+    "disposition": "restored-original-game-override"
+  },
+  {
+    "method": "JPABaseEmitter::init",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 456,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 250
+    },
+    "adaptation": "reset existing native callback owner token",
+    "disposition": "restored-original-game-override"
+  },
+  {
+    "method": "JPADrawDirection",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 507,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 303
+    },
+    "adaptation": "none",
+    "disposition": "restored-original-game-override"
+  },
+  {
+    "method": "JPADrawRotDirection",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 550,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 346
+    },
+    "adaptation": "none",
+    "disposition": "restored-original-game-override"
+  },
+  {
+    "method": "JPADrawDBillboard",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 598,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 394
+    },
+    "adaptation": "none",
+    "disposition": "restored-original-game-override"
+  },
+  {
+    "method": "JPADrawLine",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 632,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 428
+    },
+    "adaptation": "none",
+    "disposition": "restored-original-game-override"
+  },
+  {
+    "method": "JPADrawStripe",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 658,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 454
+    },
+    "adaptation": "none",
+    "disposition": "restored-original-game-override"
+  },
+  {
+    "method": "JPADrawStripeX",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 743,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 539
+    },
+    "adaptation": "none",
+    "disposition": "restored-original-game-override"
+  },
+  {
+    "method": "JPAFieldAir::prepare",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 890,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 686
+    },
+    "adaptation": "none",
+    "disposition": "restored-original-game-override"
+  },
+  {
+    "method": "JPAFieldVortex::prepare",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 901,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 697
+    },
+    "adaptation": "none",
+    "disposition": "restored-original-game-override"
+  },
+  {
+    "method": "JPAFieldVortex::calc",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 908,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 704
+    },
+    "adaptation": "none",
+    "disposition": "restored-original-game-override"
+  },
+  {
+    "method": "JPAFieldConvection::prepare",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 927,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 723
+    },
+    "adaptation": "none",
+    "disposition": "restored-original-game-override"
+  },
+  {
+    "method": "JPAFieldSpin::prepare",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 940,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 736
+    },
+    "adaptation": "none",
+    "disposition": "restored-original-game-override"
+  },
+  {
+    "method": "JPAEmitterManager::calcYBBCam",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 951,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 747
+    },
+    "adaptation": "none",
+    "disposition": "restored-original-game-override"
+  },
+  {
+    "method": "JPADrawYBillboard",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 970,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 766
+    },
+    "adaptation": "none",
+    "disposition": "restored-original-game-override"
+  },
+  {
+    "method": "JPADrawRotYBillboard",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 999,
+    "provider": {
+      "path": "src/Game/System/Overwrite.cpp",
+      "line": 795
+    },
+    "adaptation": "none",
+    "disposition": "restored-original-game-override"
+  },
+  {
+    "method": "JKRAramPiece::startDMA",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 1037,
+    "provider": "src/JSystem/JKernel/JKRAramPiece.cpp",
+    "disposition": "canonical-native-owner",
+    "reason": "Original range checks and DMA completion sequence already supplied with uintptr_t command token."
+  },
+  {
+    "method": "JAU_JASInitializer::initJASystem",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 1057,
+    "provider": null,
+    "disposition": "deferred-original-audio-surface",
+    "reason": "No current native class/provider found; pulling original audio thread/startup closure is outside the authorized JPA/shape batch."
+  },
+  {
+    "method": "JASAudioThread::JASAudioThread",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 1115,
+    "provider": null,
+    "disposition": "deferred-original-audio-surface",
+    "reason": "No current native class/provider found; do not manufacture a constructor to satisfy unrelated declarations."
+  },
+  {
+    "method": "JKRAram::JKRAram",
+    "donor": "decomp/src/Game/System/Overwrite.cpp",
+    "donor_line": 1120,
+    "provider": "src/JSystem/JKernel/JKRAram.cpp",
+    "disposition": "canonical-native-owner",
+    "reason": "Existing owner supplies original ARInit/ARQ/partition/thread semantics with native lifetime work."
+  }
+]

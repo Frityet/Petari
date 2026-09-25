@@ -1,0 +1,213 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "Complete ResFont implementation and helpers unchanged",
+      "passed": true
+    },
+    {
+      "check": "Font native ownership methods preserved",
+      "passed": true
+    },
+    {
+      "check": "Original Font character reader unchanged",
+      "passed": true
+    },
+    {
+      "check": "Native Panic keeps identical behavior and direct Aurora allocation",
+      "passed": true
+    },
+    {
+      "check": "PPCSync memory fence unchanged",
+      "passed": true
+    },
+    {
+      "check": "Original NW4R matrix copy helper restored",
+      "passed": true
+    },
+    {
+      "check": "Native pane hook preserved: smgpc::layout::validate_native_pane_rename(this, pName);",
+      "passed": true
+    },
+    {
+      "check": "Native pane hook preserved: smgpc::layout::validate_native_pane_hierarchy_change(this, pChild);",
+      "passed": true
+    },
+    {
+      "check": "Native pane hook preserved: if (smgpc::layout::synchronize_native_pane(this)) return;",
+      "passed": true
+    },
+    {
+      "check": "Native pane hook preserved: smgpc::layout::animate_native_pane(this);",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: ReverseYAxis",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: PaneBase::PaneBase",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: PaneBase::~PaneBase",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::Pane",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::~Pane",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::Init",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::SetName",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::SetUserData",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::AppendChild",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::InsertChild",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::RemoveChild",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::GetVtxColor",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::SetVtxColor",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::GetColorElement",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::SetColorElement",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::GetVtxColorElement",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::SetVtxColorElement",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::FindPaneByName",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::FindMaterialByName",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::CalculateMtx",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::CalculateMtxChild",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::Draw",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::DrawSelf",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::Animate",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::AnimateSelf",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::BindAnimation",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::UnbindAnimation",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::UnbindAllAnimation",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::UnbindAnimationSelf",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::AddAnimationLink",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::FindAnimationLinkSelf",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::SetAnimationEnable",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::LoadMtx",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::GetVtxPos",
+      "passed": true
+    },
+    {
+      "check": "Complete donor body: Pane::GetMaterial",
+      "passed": true
+    },
+    {
+      "check": "Native default Pane constructor preserved",
+      "passed": true
+    },
+    {
+      "check": "Retired provider removed: src/compat/Nw4rDiagnostics.cpp",
+      "passed": true
+    },
+    {
+      "check": "Retired provider removed: src/compat/Nw4rFontCompat.cpp",
+      "passed": true
+    },
+    {
+      "check": "Retired provider removed: src/compat/Nw4rLayoutRecordsCompat.cpp",
+      "passed": true
+    },
+    {
+      "check": "Retired provider removed: src/compat/PPCArchCompat.cpp",
+      "passed": true
+    }
+  ],
+  "donor_functions": 35,
+  "files": {
+    "src/nw4r/db/db_assert.cpp": "6c3b07b2f21ec2449b002c38ce474a9d21e8c0f26e7638138c8a0d8740554044",
+    "src/nw4r/ut/ut_Font.cpp": "f04be4da110cd5b5772b7dd211a7503af3d1fffdc582dc00725605988c40c1f6",
+    "src/nw4r/ut/ut_ResFont.cpp": "9e976f90abf8aea6d0bbe02a3f673d196a283f313b40ffc00e53deac3a1be84e",
+    "src/nw4r/lyt/lyt_pane.cpp": "692e8227f9fc3db69c5ba7654df9eea6f7267321532655649b878e8ad7454e79",
+    "aurora/lib/dolphin/PPCArch.cpp": "d5b5ce9432d04b0ded4182ec1c158b254b1968f3945018ddaf4535ff443f6b2e"
+  }
+}

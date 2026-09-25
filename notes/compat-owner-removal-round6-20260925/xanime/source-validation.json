@@ -1,0 +1,7 @@
+{
+  "all_six_test_bodies_and_main_unchanged": true,
+  "one_table_owner_retained": true,
+  "four_duplicate_buffer_owners_removed": true,
+  "after_sha256": "bc31f1aaf82fe2443a5aedd88929ae4365c485b551b527bfd31c9d619d602262",
+  "runtime_validation": "Pending root rebuild; reviewer diagnosed old binary with LLDB only."
+}

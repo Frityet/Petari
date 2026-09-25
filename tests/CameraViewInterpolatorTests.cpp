@@ -1,3 +1,4 @@
+#include "OriginalLightFixture.hpp"
 #include "CameraTargetTestSupport.hpp"
 #include "Game/Camera/CameraPoseParam.hpp"
 #include "Game/Camera/CameraViewInterpolator.hpp"
@@ -231,7 +232,7 @@ namespace {
         auto& holder = scene.holder();
         require(holder.create(SceneObj_DemoDirector) != nullptr,
                 "camera service requires the actual scene DemoDirector and DemoSheet resource");
-        require(holder.create(SceneObj_AreaObjContainer) != nullptr,
+        require(smgpc::test::create_area_container(holder) != nullptr,
                 "the service view test must provide the original repulsive-area query registry");
         auto collision = smgpc::scene::StageCollisionService{};
         collision.build();

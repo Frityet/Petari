@@ -1,0 +1,7 @@
+[fail] Game source boundary is exact: pc-port Game file must match the decomp with only the verified base declaration fixes and explicit CP932 encoding: src/Game/AreaObj/AreaForm.hpp
+[ok] rotated scaled cube volume
+[ok] Cube2 base origin
+[ok] followed scaled cylinder volume
+[ok] retail area math helpers
+[ok] manager reverse priority
+1 AreaObj core test(s) failed
