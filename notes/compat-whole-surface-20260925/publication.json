@@ -1,0 +1,8 @@
+{
+  "commit": "002c1056a5c8404a2fe93abf37707f3464189830",
+  "remote_branch": "origin/pcp-aurora",
+  "verified_remote": "002c1056a5c8404a2fe93abf37707f3464189830",
+  "preexisting_staged_patch_unchanged": true,
+  "removed_compat_files": 45,
+  "remaining_compat_files": 285
+}
