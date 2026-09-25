@@ -6,6 +6,8 @@
 #include "Game/LiveActor/ViewGroupCtrl.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
+#include <memory>
 
 namespace {
     static int sActorNumMax = 2560;
@@ -13,11 +15,16 @@ namespace {
 
 ClippingActorHolder::ClippingActorHolder()
     : NameObj(CP932("クリッピングアクター保持")), _C(0), _10(nullptr), _14(nullptr), _18(nullptr), _1C(nullptr), mViewGroupCtrl(nullptr) {
-    _10 = new ClippingActorInfoList(::sActorNumMax);
-    _14 = new ClippingActorInfoList(::sActorNumMax);
-    _18 = new ClippingActorInfoList(::sActorNumMax);
-    _1C = new ClippingActorInfoList(::sActorNumMax);
-    mViewGroupCtrl = new ViewGroupCtrl();
+    auto active = std::make_unique<ClippingActorInfoList>(::sActorNumMax);
+    auto invalid = std::make_unique<ClippingActorInfoList>(::sActorNumMax);
+    auto dead = std::make_unique<ClippingActorInfoList>(::sActorNumMax);
+    auto grouped = std::make_unique<ClippingActorInfoList>(::sActorNumMax);
+    auto view = std::make_unique<ViewGroupCtrl>();
+    _10 = active.release();
+    _14 = invalid.release();
+    _18 = dead.release();
+    _1C = grouped.release();
+    mViewGroupCtrl = view.release();
 }
 
 void ClippingActorHolder::movement() {
@@ -164,4 +171,10 @@ ClippingActorInfo* ClippingActorHolder::find(const LiveActor* pActor) const {
 }
 
 ClippingActorHolder::~ClippingActorHolder() {
+    smgpc::compat::retire_clipping_actor_holder(*this);
+    delete _10;
+    delete _14;
+    delete _18;
+    delete _1C;
+    delete mViewGroupCtrl;
 }

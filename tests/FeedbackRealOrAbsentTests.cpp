@@ -82,48 +82,6 @@ namespace {
                 "the exact finite pattern must turn the physical motor back off");
     }
 
-    void test_camera_shake_is_exact_projection_motion() {
-        auto camera = smgpc::runtime::CameraSystemService{};
-        camera.set_game_camera_pose(smgpc::camera::CameraPose{});
-        require_throws<std::logic_error>([&] { camera.request_normal_shake(); },
-                                         "camera shake without proven retail projection dimensions must be absent");
-        require_throws<std::invalid_argument>([&] { camera.set_shake_projection_dimensions(0.0F, 456.0F); },
-                                               "invalid projection dimensions must be rejected");
-
-        camera.set_shake_projection_dimensions(608.0F, 456.0F);
-        camera.begin_frame(20U);
-        camera.request_normal_shake();
-        camera.request_normal_shake();
-        require(camera.shake_request_events().size() == 1U,
-                "an already-running retail shake power must not restart or add a fake request");
-
-        camera.begin_frame(21U);
-        const auto pose = camera.effective_camera_pose();
-        const auto remaining = 24.0F;
-        const auto raw_offset = std::sin(12.566371F * remaining / 25.0F) *
-                                std::sin(1.5707964F * remaining / 25.0F);
-        const auto expected_y = raw_offset * 30.0F / 456.0F;
-        require(pose.has_value() && std::abs(pose->projection_offset_x) < 0.000001F &&
-                    std::abs(pose->projection_offset_y - expected_y) < 0.000001F,
-                "normal shake must use the decompiled 25-frame sine and exact 30/EFB-height scaling");
-
-        camera.begin_frame(21U);
-        require(camera.effective_camera_pose()->projection_offset_y == pose->projection_offset_y,
-                "repeating a director phase must not advance its shake a second time");
-        camera.pause_on_camera_director();
-        camera.begin_frame(22U);
-        require(camera.effective_camera_pose()->projection_offset_y == pose->projection_offset_y,
-                "pausing the director must freeze its original shake phase with its camera pose");
-        camera.pause_off_camera_director();
-
-        for (auto frame = std::uint64_t{22U}; frame <= 45U; ++frame) {
-            camera.begin_frame(frame);
-        }
-        const auto ended = camera.effective_camera_pose();
-        require(ended.has_value() && ended->projection_offset_x == 0.0F && ended->projection_offset_y == 0.0F,
-                "the retail singly-vertical shake must end exactly after 25 updates");
-    }
-
     void test_game_feedback_boundary_reports_absence() {
         auto source = 0;
         require(!MR::tryRumblePad(&source, smgpc::resource::encode_cp932("最強").c_str(), WPAD_CHAN0) &&
@@ -138,7 +96,6 @@ int main() {
     try {
         const auto tests = std::array{
             std::pair{"exact rumble pattern drives real actuator", &test_rumble_uses_exact_named_pattern_and_real_actuator},
-            std::pair{"camera shake changes projection exactly", &test_camera_shake_is_exact_projection_motion},
             std::pair{"Game feedback boundary reports absence", &test_game_feedback_boundary_reports_absence},
         };
         for (const auto& [name, test] : tests) {

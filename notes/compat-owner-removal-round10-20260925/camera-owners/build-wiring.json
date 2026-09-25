@@ -1,0 +1,43 @@
+{
+  "already_applied": true,
+  "add": [
+    "src/Game/Camera/CameraLocalUtil.cpp"
+  ],
+  "cxxflags": {
+    "src/Game/Camera/CameraLocalUtil.cpp": [
+      "-ffp-contract=off"
+    ]
+  },
+  "removed": [
+    "src/compat/CameraLocalUtilRuntime.cpp",
+    "src/compat/CameraLocalUtilRuntime.hpp",
+    "src/compat/OriginalCameraOwnerUtil.cpp",
+    "src/compat/CameraViewRuntime.cpp",
+    "src/compat/CameraViewRuntime.hpp",
+    "src/camera/OriginalGameCamera.cpp",
+    "src/camera/OriginalGameCamera.hpp",
+    "src/camera/OriginalAnimationCamera.cpp",
+    "src/camera/OriginalAnimationCamera.hpp",
+    "src/camera/OriginalCameraView.cpp",
+    "src/camera/OriginalCameraView.hpp",
+    "src/camera/EventCamera.cpp",
+    "src/camera/EventCamera.hpp",
+    "src/camera/StageStartCamera.cpp",
+    "src/camera/StageStartCamera.hpp",
+    "src/camera/PublishedCameraTarget.cpp",
+    "src/camera/PublishedCameraTarget.hpp",
+    "src/scene/StageEventCameraBinding.cpp",
+    "src/scene/StageEventCameraBinding.hpp"
+  ],
+  "glob_removal": "camera/compat/scene globs automatically stop compiling deleted sources",
+  "retained": [
+    "src/camera/CameraDirectorRuntime.cpp/.hpp",
+    "src/camera/CameraAnimation.cpp/.hpp",
+    "src/camera/CameraPose.cpp/.hpp",
+    "src/camera/CameraParam.cpp/.hpp"
+  ],
+  "coordinated_lanes": [
+    "RuntimeServices/RuntimeContext/ParityTrace by decomp_validation",
+    "obsolete camera fixtures and tests/xmake by merge_audit"
+  ]
+}

@@ -2,8 +2,6 @@
 #include "Game/Camera/CameraPoseParam.hpp"
 #include "Game/Camera/CameraViewInterpolator.hpp"
 #include "Game/Camera/OnlyCamera.hpp"
-#include "camera/OriginalCameraView.hpp"
-#include "compat/CameraViewRuntime.hpp"
 
 #include <array>
 #include <bit>
@@ -259,75 +257,6 @@ namespace {
                        "the zero-frame flag must not introduce movement behavior absent from the original calculation");
     }
 
-    constexpr auto isolated_view = smgpc::camera::OriginalCameraViewFlags{
-        .interpolation_off = true, .collision_off = true, .zero_frame_move_off = true};
-
-    void test_native_owner_manager_fov_feedback_and_raw_pose() {
-        auto manager = Manager{};
-        manager.pose->mPos.set(10.0F, 20.0F, 30.0F);
-        manager.pose->mWatchPos.set(manager.pose->mPos);
-        manager.pose->mFovy = 70.0F;
-        const auto raw = *manager.pose;
-        {
-            auto owner = smgpc::camera::OriginalCameraView{};
-            owner.original().mIsRepulsionOff = true;
-            auto projection = smgpc::camera::CameraPose{};
-            projection.aspect_ratio = 2.0F;
-            projection.near_clip = 15.0F;
-            const auto result = owner.update(manager.original, nullptr, projection, isolated_view);
-            require_vector(owner.processed_pose().mWatchPos, {10.0F, 20.0F, 29.0F},
-                           "the native view phase must execute OnlyCamera before constructing the camera matrix");
-            require_near(owner.processed_pose().mFovy, 40.0F, "the processed pose must retain the original OnlyCamera FOV field");
-            require_near(result.fovy_degrees, 70.0F, "rendered FOV must come directly from the manager");
-            require(result.aspect_ratio == 2.0F && result.near_clip == 15.0F,
-                    "the native owner must retain the caller's projection metadata");
-            require_pose(*manager.pose, raw, "the native view phase must preserve every raw manager pose field");
-            const auto expected_translation = std::array{raw.mPos.x, raw.mPos.y, raw.mPos.z};
-            for (int row = 0; row != 3; ++row) {
-                for (int column = 0; column != 4; ++column) {
-                    const float expected = column == 3 ? expected_translation[row] : (row == column ? 1.0F : 0.0F);
-                    require_near(manager.original.mMatrix.mMtx[row][column], expected,
-                                 "the manager must receive the actual inverse view as matrix feedback");
-                    require_near(owner.output().inverse_view.mMtx[row][column], expected,
-                                 "matrix feedback must match the view phase's published output");
-                }
-            }
-            require(owner.pose_processor().mIsZeroFrameMoveOff,
-                    "the native zero-frame request must reach the original start-pose flag");
-            (void)owner.update(manager.original, nullptr, projection, isolated_view);
-            require(!owner.pose_processor().mIsZeroFrameMoveOff,
-                    "a later native zero-frame request must be cleared by the original safe-pose calculation");
-        }
-        require_pose(*manager.pose, raw, "destroying the native owner must leave its borrowed manager and pose alive");
-        require(smgpc::compat::bound_camera_view_output() == nullptr,
-                "destroying a native owner must not leave a bound view-output pointer");
-    }
-
-    void test_native_owner_retains_pose_across_manager_lifetimes_and_reset() {
-        auto owner = smgpc::camera::OriginalCameraView{};
-        owner.original().mIsRepulsionOff = true;
-        {
-            auto first = Manager{};
-            first.pose->mWatchPos.set(450.0F, 0.0F, 0.0F);
-            (void)owner.update(first.original, nullptr, {}, isolated_view);
-        }
-        require_vector(owner.processed_pose().mWatchPos, {450.0F, 0.0F, 0.0F},
-                       "the view owner must retain its processed pose after the input manager is destroyed");
-        auto second = Manager{};
-        second.pose->mPos.set(10.0F, 20.0F, 30.0F);
-        second.pose->mWatchPos.set(second.pose->mPos);
-        (void)owner.update(second.original, nullptr, {}, isolated_view);
-        require_vector(owner.processed_pose().mWatchPos, {460.0F, 20.0F, 30.0F},
-                       "a manager switch must retain the director's previous watch vector until an explicit pose reset");
-        owner.request_pose_reset();
-        require(owner.pose_processor().mIsResetting, "a native reset request must mark the original state without calculating early");
-        require_vector(owner.processed_pose().mWatchPos, {460.0F, 20.0F, 30.0F},
-                       "requesting reset must preserve the visible processed pose until the next camera phase");
-        (void)owner.update(second.original, nullptr, {}, isolated_view);
-        require_vector(owner.processed_pose().mWatchPos, {10.0F, 20.0F, 29.0F},
-                       "the next native update must consume reset using the original first-pose fallback");
-        require(!owner.pose_processor().mIsResetting, "the native pose reset must be consumed exactly once");
-    }
 }  // namespace
 
 int main() {
@@ -343,8 +272,6 @@ int main() {
         TestCase{"ideal movement and target translation", test_ideal_movement_accumulates_speed_and_preserves_target_motion},
         TestCase{"ideal braking and endpoint boundaries", test_ideal_movement_braking_cap_and_strict_endpoint},
         TestCase{"reset and zero-frame flag", test_reset_and_zero_frame_flag_source_semantics},
-        TestCase{"native manager FOV and matrix feedback", test_native_owner_manager_fov_feedback_and_raw_pose},
-        TestCase{"native owner lifetime and reset", test_native_owner_retains_pose_across_manager_lifetimes_and_reset},
     };
     std::size_t passed = 0;
     for (const auto& test : tests) {

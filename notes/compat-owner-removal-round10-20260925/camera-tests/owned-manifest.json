@@ -1,0 +1,85 @@
+{
+  "scope": "Remove obsolete duplicate camera test contracts; retain original camera math against canonical owners",
+  "files": [
+    {
+      "path": "tests/CameraLocalUtilRuntimeTests.cpp",
+      "before": "notes/compat-owner-removal-round10-20260925/camera-tests/before/tests/CameraLocalUtilRuntimeTests.cpp",
+      "before_sha256": "acd02b634e9f875c9d2b72a7f98e7c6910ea1ff2b3e379dae69d180c858737de",
+      "action": "delete"
+    },
+    {
+      "path": "tests/StageStartCameraTests.cpp",
+      "before": "notes/compat-owner-removal-round10-20260925/camera-tests/before/tests/StageStartCameraTests.cpp",
+      "before_sha256": "3af4304e9c0dfb28cfee20645f08b8851d1c1f283fc80b258cfe035540a7a3bf",
+      "action": "delete"
+    },
+    {
+      "path": "tests/ActorEventCameraTests.cpp",
+      "before": "notes/compat-owner-removal-round10-20260925/camera-tests/before/tests/ActorEventCameraTests.cpp",
+      "before_sha256": "881429e1a71c53c121043682ce9aa0df9ebd61124d4a619f8efb08e3127b9ddf",
+      "action": "delete"
+    },
+    {
+      "path": "tests/CameraViewServiceTests.cpp",
+      "before": "notes/compat-owner-removal-round10-20260925/camera-tests/before/tests/CameraViewServiceTests.cpp",
+      "before_sha256": "4a22dde11ffb7695684d57285aaaad54ac95d252c0984f849daba327a9d89717",
+      "action": "delete"
+    },
+    {
+      "path": "tests/CameraTargetTestSupport.hpp",
+      "before": "notes/compat-owner-removal-round10-20260925/camera-tests/before/tests/CameraTargetTestSupport.hpp",
+      "before_sha256": "d766e65f66a7177ec4e9ebdf5f2676d46faf8763e1eb8d3d0d66ae36a6510a86",
+      "action": "delete"
+    },
+    {
+      "path": "tests/OnlyCameraTests.cpp",
+      "before": "notes/compat-owner-removal-round10-20260925/camera-tests/before/tests/OnlyCameraTests.cpp",
+      "before_sha256": "9058b0ff6a095969dd6af97f6fd69eec948f245f4f6ca091e09676f432a451a6",
+      "action": "modify",
+      "after_sha256": "793a553bc6760a3d898a4c54d2ac0ce6d9bde08d8e034aba5c68e2d0737c4ec8"
+    },
+    {
+      "path": "tests/CameraViewInterpolatorTests.cpp",
+      "before": "notes/compat-owner-removal-round10-20260925/camera-tests/before/tests/CameraViewInterpolatorTests.cpp",
+      "before_sha256": "174dcbf3578cc0b01f31dba18045f93bb67d71bc316833210fcde04a9667d5cb",
+      "action": "modify",
+      "after_sha256": "c1f3ed19950ab84c321d4297ded53c04257e60d57a5914a11c2c00e946bc09f7"
+    },
+    {
+      "path": "tests/FeedbackRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round10-20260925/camera-tests/before/tests/FeedbackRealOrAbsentTests.cpp",
+      "before_sha256": "6bc9bd48a750c3f16cbf768c53c9628d3d7154daa2bd26755230e584d928c114",
+      "action": "modify",
+      "after_sha256": "87cfb829f4321d128eaec3b436bde1efd3c6be917d292a9059c42057e593c85c"
+    },
+    {
+      "path": "tests/AuroraNativeTests.cpp",
+      "before": "notes/compat-owner-removal-round10-20260925/camera-tests/before/tests/AuroraNativeTests.cpp",
+      "before_sha256": "83af1ac9f5144da27882cd699e118d86c0caf169c7f88f0252a2bce80a68febf",
+      "action": "modify",
+      "after_sha256": "66642c1f4e9bd8d197851fa9ccac0caa7a8dde7ef07135da412283287801029f"
+    },
+    {
+      "path": "tests/PlayerUtilRealOrAbsentTests.cpp",
+      "before": "notes/compat-owner-removal-round10-20260925/camera-tests/before/tests/PlayerUtilRealOrAbsentTests.cpp",
+      "before_sha256": "d0ab9bf12bd0fbdc5112dc852022a6f00ae941371597c56dafb36e225452bb7c",
+      "action": "modify",
+      "after_sha256": "def41696a007bed5a9e606ad5f02e031bd51a8c118c3497c8c70ccd671656f76"
+    },
+    {
+      "path": "tests/xmake.lua",
+      "before": "notes/compat-owner-removal-round10-20260925/camera-tests/before/tests/xmake.lua",
+      "before_sha256": "a93c457b0cf4fc80814495c9c0bc57c1e1e66702cf3bdd2b8f7f03bce433cc16",
+      "action": "modify",
+      "after_sha256": "cddfd9209d7163b2acee9bc9958a8d8369d34f293d4b5e4706a622bd2053e7b6"
+    }
+  ],
+  "retired_targets": [
+    "smg-pc-original-camera-runtime-tests",
+    "smg-pc-stage-start-camera-tests",
+    "smg-pc-actor-event-camera-tests",
+    "smg-pc-camera-view-service-tests"
+  ],
+  "build_wiring": "tests/xmake.lua updated: retire four obsolete targets and add smg-pc-app/aurora-main to the retained camera-view-interpolator target. Other target blocks preserved from current working snapshot.",
+  "validation": "Read-only reference search: no deleted camera wrapper, service, scope, target publication, or support-header APIs remain in tests. No builds or test runs."
+}

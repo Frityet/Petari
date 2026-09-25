@@ -1,6 +1,5 @@
 #include "Game/Demo/DemoDirector.hpp"
 #include "Game/Demo/DemoExecutor.hpp"
-#include "compat/ClippingDirectorOwnership.hpp"
 #include "compat/TalkDirectorLifetime.hpp"
 #include <aurora/exception.hpp>
 #include "Game/Screen/StarPointerTarget.hpp"
@@ -216,7 +215,6 @@ namespace smgpc::compat {
     }
 
     void release_name_obj_runtime_state(const NameObj* object) {
-        if (auto* clipping = smgpc::scene::current_clipping_director_ownership()) clipping->release_name_obj(object);
         if (auto* talk = smgpc::scene::current_talk_director_lifetime()) talk->release_name_obj(object);
         // Groups borrow their members. Native factory rollback and object
         // retirement may leave the group alive after one member is deleted.
@@ -470,15 +468,7 @@ namespace smgpc::compat {
                         }
                     }
                 }
-                delete info->mInfo;
                 delete info;
-            }
-            auto* view = holder->mViewGroupCtrl;
-            for (u32 i = 0; i < view->mViewCtrlCount; ++i) {
-                if (view->mLodCtrls[i] == state.lod_ctrl.get()) {
-                    view->mLodCtrls[i] = view->mLodCtrls[--view->mViewCtrlCount];
-                    break;
-                }
             }
             state.clipping_holder = nullptr;
             state.clipping_groups = nullptr;

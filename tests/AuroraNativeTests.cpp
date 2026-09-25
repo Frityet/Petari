@@ -702,25 +702,7 @@ namespace {
         require(MR::isEqualString("Steam", "Steam") && !MR::isEqualString("Steam", "Smoke"),
                 "host string equality should retain the retail strcmp semantics");
 
-        auto camera = smgpc::runtime::CameraSystemService{};
-        camera.set_game_camera_pose(smgpc::camera::CameraPose{});
-        camera.set_shake_projection_dimensions(608.0F, 456.0F);
-        camera.begin_frame(42U);
-        camera.request_weak_shake();
-        camera.request_strong_shake();
-        const auto events = camera.shake_request_events();
 
-        require(events.size() == 2U && events[0].kind == smgpc::runtime::CameraSystemService::ShakeRequestKind::Weak &&
-                    events[1].kind == smgpc::runtime::CameraSystemService::ShakeRequestKind::Strong && events[0].frame_index == 42U &&
-                    events[1].frame_index == 42U,
-                "camera shake events should retain their kind and frame");
-        camera.begin_frame(43U);
-        const auto shaken = camera.effective_camera_pose();
-        const auto remaining = 24.0F;
-        const auto raw_offset = (0.2F + 6.0F) * std::sin(12.566371F * remaining / 25.0F) *
-                                std::sin(1.5707964F * remaining / 25.0F);
-        require(shaken.has_value() && std::abs(shaken->projection_offset_y - raw_offset * 30.0F / 456.0F) < 0.000001F,
-                "camera shake should apply the retail damped sine and EFB-height projection scaling");
     }
 
     void test_rail_info_ownership_and_per_entry_lookup() {

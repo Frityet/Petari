@@ -1,0 +1,131 @@
+{
+  "baseline": "584584def20de13f57657e4cd4d3a41a3a356286",
+  "donor": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "files": [
+    {
+      "path": "src/Game/Camera/CameraLocalUtil.cpp",
+      "operation": "add",
+      "initial_status": "absent"
+    },
+    {
+      "path": "src/Game/xmake.lua",
+      "operation": "modify",
+      "initial_status": "clean",
+      "before_sha256": "9699e4e73551d353589cecc129273f49261b1213279f4ed4f1b29b7e9d45a6b3"
+    },
+    {
+      "path": "src/compat/CameraLocalUtilRuntime.cpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "af32fc5657396828d7b0a36ab1be7caf4a03f34d4d4a23fdaa9e5099db377a85"
+    },
+    {
+      "path": "src/compat/CameraLocalUtilRuntime.hpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "80609b0195965cdf053b40b66393cc165ada661bcfaf81597beea81e52071e6e"
+    },
+    {
+      "path": "src/compat/OriginalCameraOwnerUtil.cpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "344b27def7cdb0f92e67509b9a0f26f03944946355e1f6f632c72a2c67a10367"
+    },
+    {
+      "path": "src/compat/CameraViewRuntime.cpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "e8147ae1864baa3550caf5dbf4268723a6f368b82df70ceabe5744dd141696a8"
+    },
+    {
+      "path": "src/compat/CameraViewRuntime.hpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "a0aad0488105b1512d2d52272a020cd19825fe9e11211bd268495b65a8ffec88"
+    },
+    {
+      "path": "src/camera/OriginalGameCamera.cpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "a5820ce4ac42509cd4c99f5d3b174fd4f2b80b8a34b3ae99bf80d3a2f04c323f"
+    },
+    {
+      "path": "src/camera/OriginalGameCamera.hpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "41484c60410536792cebe8d62627da9515ac13d8409519e6ec9970089cf87589"
+    },
+    {
+      "path": "src/camera/OriginalAnimationCamera.cpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "06abe164aef89404779c62e8c0ace7179e1e62b67824babd9da0240d80764646"
+    },
+    {
+      "path": "src/camera/OriginalAnimationCamera.hpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "77b454f69f4d3eec86fc90ec62897c0f911bf40d9df02c06ccd9aabc08ee0b14"
+    },
+    {
+      "path": "src/camera/OriginalCameraView.cpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "34693d4799569401e85da1c2320262b1de345eab496a930a7180dc59f1887d68"
+    },
+    {
+      "path": "src/camera/OriginalCameraView.hpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "c0b8700d8fc815d9762c3932038beae92206ab0d6351d9c1ee51be408534e0a9"
+    },
+    {
+      "path": "src/camera/EventCamera.cpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "657b32cc6745b3119164e127ea74263212058fd1f6ac12d44b46661274e36868"
+    },
+    {
+      "path": "src/camera/EventCamera.hpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "aa0c3e676b11f9b605a1db134719b9e2e6332fab5828b4492b59a7249290f1fe"
+    },
+    {
+      "path": "src/camera/StageStartCamera.cpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "c3466650a36c7b3e6bb2770c8b7651d74229ddc2cfb8b70c2c307fac82b0fd6e"
+    },
+    {
+      "path": "src/camera/StageStartCamera.hpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "5c657bcedfff1ca80606101b9d56a7380c6e2c435f7ecadb783402f7d5b14ee4"
+    },
+    {
+      "path": "src/camera/PublishedCameraTarget.cpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "4e87848baf44c7cca6594f55155634c92c87be8c245ad36ca2f1316f6f068e83"
+    },
+    {
+      "path": "src/camera/PublishedCameraTarget.hpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "66b1feb0a2c7b194d6517b481cb7a49e300f38777feda9b1dd056e82f70874b8"
+    },
+    {
+      "path": "src/scene/StageEventCameraBinding.cpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "5494b2777b035706b34f1e4a744326a5eb24b23ee957445186505bc7e26c88b1"
+    },
+    {
+      "path": "src/scene/StageEventCameraBinding.hpp",
+      "operation": "delete",
+      "initial_status": "clean",
+      "before_sha256": "c42825db888d05faa97d66beea4fb00850dda1961058555b82f9da914a6ac039"
+    }
+  ]
+}

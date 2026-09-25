@@ -76,13 +76,6 @@ int main() {
                 player.position()[2] == 30.0F,
             "the host snapshot must preserve the attached actor without manufacturing a model matrix");
 
-    auto camera = smgpc::runtime::CameraSystemService{};
-    const auto camera_pose = smgpc::camera::CameraPose{
-        .eye = {100.0F, 200.0F, 300.0F},
-        .watch = {10.0F, 20.0F, 30.0F},
-        .up = {0.0F, 1.0F, 0.0F},
-    };
-    camera.set_game_camera_pose(camera_pose);
     player.clear_stage_state();
     require(player.attached_actor() == nullptr && !player.has_base_matrix() &&
                 player.actor_center_position() == nullptr,
@@ -93,8 +86,6 @@ int main() {
                 player.position()[2] == 0.0F && player.gravity()[0] == 0.0F &&
                 player.gravity()[1] == 0.0F && player.gravity()[2] == 0.0F,
             "clearing a stage must discard the attached actor snapshot without inventing gravity");
-    require(camera.game_camera_pose().has_value() && camera.game_camera_pose()->eye.x == camera_pose.eye.x,
-            "a real stage camera must remain usable independently of absent player state");
     ++passed;
 
     std::cout << "Player real-or-absent tests passed: " << passed << "/4\n";

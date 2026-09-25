@@ -19,6 +19,7 @@ struct ViewGroupCtrlDataEntry {
 class ViewGroupCtrl {
 public:
     ViewGroupCtrl();
+    ~ViewGroupCtrl();
 
     void initActorInfo(ClippingActorInfo*, s32);
     void initViewGroup(ClippingActorInfoList*);

@@ -49,6 +49,7 @@
 #include "layout/LayoutRuntime.hpp"
 #include "compat/AudioFacadeCompat.hpp"
 #include "camera/CameraParam.hpp"
+#include "camera/CameraDirectorRuntime.hpp"
 #include "scene/NameObjLifecycleService.hpp"
 #include "scene/SceneExecutionService.hpp"
 
@@ -361,26 +362,8 @@ namespace smgpc::runtime {
 #endif
         _j3d_pixel_update_state.reset();
         _scene_camera_pose.reset();
-        _camera_system.clear_shake_projection_dimensions();
-        const auto camera_pose = _camera_system.active_event_camera_pose().has_value()
-                                     ? _camera_system.active_event_camera_pose()
-                                 : _camera_system.active_programmable_camera_pose().has_value()
-                                     ? _camera_system.active_programmable_camera_pose()
-                                     : _camera_system.game_camera_pose();
-        if (camera_pose.has_value()) {
-            constexpr auto retail_4x3_aspect = 608.0F / 456.0F;
-            constexpr auto retail_16x9_aspect = 16.0F / 9.0F;
-            const auto shake_screen_width = camera_pose->aspect_ratio == retail_4x3_aspect
-                                                ? 608.0F
-                                                : camera_pose->aspect_ratio == retail_16x9_aspect ? 832.0F : 0.0F;
-            if (shake_screen_width == 0.0F) {
-                aurora::throw_host_exception<std::logic_error>("Camera shake requires an exact retail 4:3 or 16:9 projection ratio.");
-            }
-            _camera_system.set_shake_projection_dimensions(shake_screen_width,
-                                                           static_cast<float>(_display->render_mode().efbHeight));
-        }
-        if (const auto camera_pose = _camera_system.effective_camera_pose()) {
-            _scene_camera_pose = *camera_pose;
+        if (const auto* camera = smgpc::camera::current_camera_director_runtime()) {
+            _scene_camera_pose = camera->pose();
         }
         const auto debug_toggle_freecam = _window_service.is_debug_input_pressed(render::DebugInput::CORE_PAD_TOGGLE_FREECAM);
         if (debug_toggle_freecam && !_freecam_toggle_held_last_frame) {
@@ -579,12 +562,7 @@ namespace smgpc::runtime {
         // GameSystemObjHolder updates WPad, then original pointer controllers,
         // before the scene's camera and actor movement.
         _star_pointer_depth->update();
-        // Original camera controllers read the current WPAD trigger state.
-        // Publish host input before the camera and player movement phases.
-        _camera_system.begin_frame(_frame_index);
-        if (!_freecam_enabled) {
-            _scene_camera_pose = _camera_system.effective_camera_pose();
-        }
+        refresh_scene_camera_pose();
 #ifndef NDEBUG
         if (!_emitted_wpad_buttons_held_event && hold_mask != 0U) {
             _emitted_wpad_buttons_held_event = true;
@@ -608,12 +586,14 @@ namespace smgpc::runtime {
         if (_freecam_enabled) {
             return;
         }
-        _scene_camera_pose = _camera_system.apply_shake(camera_pose);
+        _scene_camera_pose = camera_pose;
     }
 
     void RuntimeContext::refresh_scene_camera_pose() {
         if (!_freecam_enabled) {
-            _scene_camera_pose = _camera_system.effective_camera_pose();
+            if (const auto* camera = smgpc::camera::current_camera_director_runtime()) {
+                _scene_camera_pose = camera->pose();
+            }
         }
     }
 
@@ -655,8 +635,8 @@ namespace smgpc::runtime {
 
     void RuntimeContext::draw_3d_normal() {
         if (!_scene_camera_pose.has_value()) {
-            if (const auto camera_pose = _camera_system.effective_camera_pose()) {
-                _scene_camera_pose = *camera_pose;
+            if (const auto* camera = smgpc::camera::current_camera_director_runtime()) {
+                _scene_camera_pose = camera->pose();
                 draw_3d_normal(*_scene_camera_pose);
                 return;
             }
@@ -943,14 +923,6 @@ namespace smgpc::runtime {
         emit_star_pointer_target_trace_events();
 #endif
         return pointing;
-    }
-
-    CameraSystemService &RuntimeContext::camera_system() {
-        return _camera_system;
-    }
-
-    const CameraSystemService &RuntimeContext::camera_system() const {
-        return _camera_system;
     }
 
     PlayerSystemService &RuntimeContext::player_system() {

@@ -1,0 +1,24 @@
+{
+  "before_head": "584584def20de13f57657e4cd4d3a41a3a356286",
+  "removed_compat_files": 7,
+  "remaining_compat_files": 91,
+  "app_build": {
+    "command": "xmake build smg-pc",
+    "exit_code": 0,
+    "log": "build.log"
+  },
+  "runtime": {
+    "record": "gateway-final-120.json",
+    "completed_frames": 120,
+    "exit_code": 0,
+    "process_still_exists": false,
+    "binary_sha256": "50a278b7ff2bc7832f833f796672707349371edc91a69f274890d13d30c01b65",
+    "verified_bounded_completion": true
+  },
+  "focused_tests": "Not built or run per user speed preference. Existing obsolete camera service contracts retired; retained tests minimally migrated.",
+  "limitations": [
+    "120 neutral-input opening frames only; no screenshot or full Gateway/Rosalina gameplay proof.",
+    "Build/run used working tree including preexisting changes. Isolated-index scoped commit is not a clean-checkout build attestation."
+  ],
+  "earlier_validation": "Initial build and gateway-120 passed; narrow source review found failure-path LOD unregister issue, so the fix was rebuilt and the same120frame run repeated."
+}

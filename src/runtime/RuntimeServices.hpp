@@ -15,19 +15,16 @@
 
 #include <aurora/wpad.hpp>
 #include <revolution.h>
+#include <JSystem/JGeometry/TVec.hpp>
 
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
-#include "camera/OriginalGameCamera.hpp"
-#include "camera/EventCamera.hpp"
-#include "camera/StageStartCamera.hpp"
 #include "render/GXState.hpp"
 #include "resource/BmgMessageArchive.hpp"
 #include "resource/RarcArchive.hpp"
 #include "runtime/NandFileSystemService.hpp"
 
 class ActorLightCtrl;
-class CameraTargetObj;
 class LiveActor;
 struct RumblePattern;
 
@@ -396,171 +393,6 @@ namespace smgpc::runtime {
 #endif
     };
 
-    class CameraSystemService final {
-    public:
-        enum class ShakeRequestKind {
-            VeryWeak,
-            Weak,
-            NormalWeak,
-            Normal,
-            NormalStrong,
-            Strong,
-            VeryStrong,
-        };
-
-        struct ShakeRequestEvent {
-            ShakeRequestKind kind = ShakeRequestKind::Normal;
-            std::uint64_t frame_index = 0U;
-        };
-
-        void begin_frame(std::uint64_t frame_index);
-        void set_shake_projection_dimensions(float screen_width, float efb_height);
-        void clear_shake_projection_dimensions() noexcept;
-        void reset_camera_man();
-        void request_very_weak_shake();
-        void request_weak_shake();
-        void request_normal_weak_shake();
-        void request_normal_shake();
-        void request_normal_strong_shake();
-        void request_strong_shake();
-        void request_very_strong_shake();
-        void pause_on_camera_director();
-        void pause_off_camera_director();
-        void attach_event_camera_catalog(
-            const smgpc::camera::EventCameraCatalog &catalog);
-        void detach_event_camera_catalog(
-            const smgpc::camera::EventCameraCatalog &catalog) noexcept;
-        void declare_event_camera(std::int32_t zone_id, std::string_view name);
-        void declare_event_camera_animation(
-            std::int32_t zone_id, std::string_view name,
-            smgpc::camera::CameraAnimation animation);
-        void start_event_camera(
-            std::int32_t zone_id, std::string_view name,
-            smgpc::camera::EventCameraTarget target,
-            std::int32_t interpolation_frames, float speed = 1.0F);
-        void end_event_camera(std::int32_t zone_id, std::string_view name,
-                              bool force, std::int32_t interpolation_frames);
-        [[nodiscard]] ActorCameraInfo *create_actor_camera_info(
-            std::int32_t camera_set_id, std::int32_t zone_id);
-        void declare_event_camera_programmable(std::string_view name);
-        void start_global_event_camera_no_target(std::string_view name);
-        void end_global_event_camera(std::string_view name);
-        [[nodiscard]] std::uint64_t set_stage_start_camera(
-            smgpc::camera::ResolvedStageStartCamera camera);
-        // Retain an original authored camera controller without
-        // entering the retail start-position camera mode.
-        [[nodiscard]] std::uint64_t set_authored_game_camera(
-            smgpc::camera::ResolvedStageStartCamera camera);
-        void set_game_camera_target(
-            std::uint64_t owner_generation,
-            std::optional<smgpc::camera::StageCameraTargetState> target);
-        void set_game_camera_target_player(std::uint64_t owner_generation,
-                                           PlayerSystemService &player);
-        void clear_stage_start_camera(
-            std::uint64_t owner_generation) noexcept;
-        void start_start_position_camera(bool immediate);
-        void end_start_position_camera();
-        void set_game_camera_pose(const smgpc::camera::CameraPose &pose);
-        void clear_game_camera_pose();
-        [[nodiscard]] std::optional<smgpc::camera::CameraPose> set_programmable_camera_param(std::string_view name, const smgpc::camera::CameraParamVec3 &watch,
-                                                                                             const smgpc::camera::CameraParamVec3 &eye, const smgpc::camera::CameraParamVec3 &up,
-                                                                                             bool do_zero_w_offset);
-        [[nodiscard]] std::optional<smgpc::camera::CameraPose> set_programmable_camera_fovy(std::string_view name, float fovy_degrees);
-
-        [[nodiscard]] std::uint32_t reset_camera_man_count() const;
-        [[nodiscard]] std::uint32_t camera_director_pause_count() const;
-        [[nodiscard]] bool is_camera_director_paused() const;
-        [[nodiscard]] const smgpc::camera::ResolvedStageStartCamera *
-        stage_start_camera() const noexcept;
-        [[nodiscard]] bool is_start_position_camera_end() const;
-        [[nodiscard]] std::uint32_t
-        start_position_camera_zero_interpolation_frames() const;
-        [[nodiscard]] std::optional<smgpc::camera::CameraPose> game_camera_pose() const;
-        [[nodiscard]] std::optional<smgpc::camera::CameraPose> active_event_camera_pose() const;
-        [[nodiscard]] std::optional<smgpc::camera::EventCameraKey> active_event_camera_key() const;
-        [[nodiscard]] bool is_event_camera_active(std::int32_t zone_id,
-                                                  std::string_view name) const;
-        [[nodiscard]] bool is_event_camera_declared(
-            std::int32_t zone_id, std::string_view name) const;
-        [[nodiscard]] bool is_event_camera_animation_end(
-            std::int32_t zone_id, std::string_view name) const;
-        [[nodiscard]] std::int32_t event_camera_animation_frame(
-            std::int32_t zone_id, std::string_view name) const;
-        [[nodiscard]] std::int32_t event_camera_frames(
-            std::int32_t zone_id, std::string_view name) const;
-        [[nodiscard]] std::size_t actor_camera_info_count() const noexcept;
-        [[nodiscard]] std::optional<smgpc::camera::CameraPose> active_programmable_camera_pose() const;
-        [[nodiscard]] std::optional<smgpc::camera::CameraPose> effective_camera_pose() const;
-        [[nodiscard]] smgpc::camera::CameraPose apply_shake(const smgpc::camera::CameraPose &pose) const;
-        [[nodiscard]] std::optional<std::string_view> active_programmable_camera_name() const;
-        [[nodiscard]] std::uint32_t programmable_camera_declare_count() const;
-        [[nodiscard]] std::uint32_t programmable_camera_start_count() const;
-        [[nodiscard]] std::uint32_t programmable_camera_end_count() const;
-        [[nodiscard]] std::uint32_t programmable_camera_param_count() const;
-        [[nodiscard]] std::uint32_t programmable_camera_fovy_count() const;
-        [[nodiscard]] std::span<const ShakeRequestEvent> shake_request_events() const;
-
-    private:
-        struct ProgrammableCameraEventState {
-            smgpc::camera::CameraPose pose{};
-            bool declared = false;
-            bool active = false;
-            bool has_pose = false;
-        };
-
-        struct AuthoredGameCameraState {
-            std::unique_ptr<smgpc::camera::OriginalGameCamera> controller;
-            std::optional<smgpc::camera::StageCameraTargetState> target;
-            PlayerSystemService *player_target = nullptr;
-            bool overridden = false;
-            bool reset_requested = false;
-            bool manager_reset_requested = false;
-        };
-
-        [[nodiscard]] std::uint64_t set_owned_stage_camera(
-            smgpc::camera::ResolvedStageStartCamera camera,
-            bool start_position_active);
-        void update_authored_game_camera();
-        void update_camera_view();
-        void clear_camera_view();
-        void update_game_camera_activation();
-        [[nodiscard]] ProgrammableCameraEventState *find_programmable_event(std::string_view name);
-        [[nodiscard]] const ProgrammableCameraEventState *find_programmable_event(std::string_view name) const;
-        [[nodiscard]] std::optional<smgpc::camera::CameraPose> active_programmable_camera_pose_for(std::string_view name) const;
-        void request_shake(ShakeRequestKind kind);
-        void push_shake_event(ShakeRequestKind kind);
-
-        std::uint64_t _frame_index = 0U;
-        std::optional<std::uint64_t> _last_camera_movement_frame;
-        std::uint32_t _reset_camera_man_count = 0U;
-        std::array<std::optional<std::uint32_t>, 7U> _vertical_shake_steps;
-        float _shake_offset_x = 0.0F;
-        float _shake_offset_y = 0.0F;
-        std::optional<float> _shake_screen_width;
-        std::optional<float> _shake_efb_height;
-        std::uint32_t _camera_director_pause_count = 0U;
-        std::optional<smgpc::camera::ResolvedStageStartCamera>
-            _stage_start_camera;
-        std::optional<AuthoredGameCameraState> _authored_game_camera;
-        std::uint64_t _stage_start_camera_owner_generation = 0U;
-        std::uint64_t _next_stage_start_camera_owner_generation = 1U;
-        bool _start_position_camera_active = false;
-        std::uint32_t _start_position_camera_zero_interpolation_frames = 0U;
-        std::optional<smgpc::camera::CameraPose> _game_camera_pose;
-        std::unique_ptr<smgpc::camera::OriginalCameraView> _camera_view;
-        std::optional<smgpc::camera::CameraPose> _view_camera_pose;
-        std::optional<std::uint64_t> _last_view_frame;
-        smgpc::camera::EventCameraRuntime _event_cameras;
-        std::map<std::string, ProgrammableCameraEventState> _programmable_camera_events;
-        std::string _active_programmable_camera_name;
-        std::uint32_t _programmable_camera_declare_count = 0U;
-        std::uint32_t _programmable_camera_start_count = 0U;
-        std::uint32_t _programmable_camera_end_count = 0U;
-        std::uint32_t _programmable_camera_param_count = 0U;
-        std::uint32_t _programmable_camera_fovy_count = 0U;
-        std::vector<ShakeRequestEvent> _shake_request_events;
-    };
-
     struct PlayerActorBridge {
         using ElementModeReader = s32 (*)(const LiveActor &);
         using BaseMatrixReader = MtxPtr (*)(const LiveActor &);
@@ -591,8 +423,6 @@ namespace smgpc::runtime {
                           PlayerActorBridge actor_bridge = {});
         void detach_actor(const LiveActor *actor = nullptr);
         void synchronize_attached_actor();
-        void set_camera_target(std::unique_ptr<CameraTargetObj> target);
-        void advance_camera_target(std::uint64_t frame_index);
 
         void set_base_matrix(MtxPtr matrix);
 
@@ -605,8 +435,6 @@ namespace smgpc::runtime {
         [[nodiscard]] bool is_on_ground() const;
         [[nodiscard]] std::optional<bool> player_dead_state() const;
         [[nodiscard]] std::optional<s32> player_element_mode() const;
-        [[nodiscard]] std::optional<smgpc::camera::StageCameraTargetState> camera_target_state() const;
-        [[nodiscard]] CameraTargetObj *camera_target() const;
         [[nodiscard]] MtxPtr actor_base_matrix() const;
         [[nodiscard]] TVec3f *actor_center_position() const;
         [[nodiscard]] bool copy_actor_up_vector(TVec3f *out) const;
@@ -628,8 +456,6 @@ namespace smgpc::runtime {
         std::array<f32, 3U> _velocity{};
         std::array<f32, 3U> _gravity{0.0F, -1.0F, 0.0F};
         PlayerActorBridge _actor_bridge{};
-        std::unique_ptr<CameraTargetObj> _camera_target;
-        std::optional<std::uint64_t> _camera_target_frame;
     };
 
     class GameLayoutService final {

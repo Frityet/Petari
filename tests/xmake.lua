@@ -57,34 +57,6 @@ target("smg-pc-mario-model-demo-surface-tests")
         realtime_output = true
     })
 
-target("smg-pc-original-camera-runtime-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    set_rundir(os.projectdir())
-    add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), {force = true})
-    add_cxxflags("-fno-builtin-sprintf", "-fno-builtin-snprintf", "-fno-builtin-vsprintf", "-fno-builtin-vsnprintf", {force = true})
-    add_files {
-        "CameraLocalUtilRuntimeTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("original_camera_runtime", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
 target("smg-pc-only-camera-tests")
     set_kind("binary")
     set_default(false)
@@ -114,6 +86,7 @@ target("smg-pc-only-camera-tests")
     })
 
 target("smg-pc-camera-view-interpolator-tests")
+    add_deps("smg-pc-app", "aurora-main")
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -136,34 +109,6 @@ target("smg-pc-camera-view-interpolator-tests")
         "aurora-vi"
     }
     add_tests("camera_view_interpolator", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
-target("smg-pc-camera-view-service-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    set_rundir(os.projectdir())
-    add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), {force = true})
-    add_cxxflags("-fno-builtin-sprintf", "-fno-builtin-snprintf", "-fno-builtin-vsprintf", "-fno-builtin-vsnprintf", {force = true})
-    add_files {
-        "CameraViewServiceTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("camera_view_service", {
         group = "aurora",
         rundir = os.projectdir(),
         realtime_output = true
@@ -233,31 +178,6 @@ target("smg-pc-gx-copy-fifo-order-tests")
     add_files("GxCopyFifoOrderTests.cpp")
     add_deps("smg-pc-game")
     add_tests("gx_copy_fifo_order", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
-target("smg-pc-stage-start-camera-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    add_files {
-        "StageStartCameraTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("stage_start_camera", {
         group = "aurora",
         rundir = os.projectdir(),
         realtime_output = true
@@ -1909,32 +1829,6 @@ target("smg-pc-picture-font-tag-tests")
         "aurora-vi"
     }
     add_tests("picture_font_tags", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
-target("smg-pc-actor-event-camera-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    set_rundir(os.projectdir())
-    add_files {
-        "ActorEventCameraTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("actor_event_camera", {
         group = "aurora",
         rundir = os.projectdir(),
         realtime_output = true

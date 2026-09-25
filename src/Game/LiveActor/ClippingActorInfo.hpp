@@ -11,6 +11,7 @@ class ViewGroupCtrlDataEntry;
 class ClippingActorInfo {
 public:
     ClippingActorInfo(LiveActor*);
+    ~ClippingActorInfo();
 
     void judgeClipping();
     bool isJudgedToClip() const;
@@ -30,6 +31,7 @@ public:
 class ClippingActorInfoList {
 public:
     ClippingActorInfoList(int);
+    ~ClippingActorInfoList();
 
     void add(ClippingActorInfo*);
     ClippingActorInfo* find(const LiveActor*, s32*) const;

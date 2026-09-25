@@ -1,0 +1,10 @@
+{
+  "all_donor_executable_bodies_exact": true,
+  "definition_count": 52,
+  "omitted_matching_only_anchors": [
+    "CameraLocalUtil_FORCE_SDATA2",
+    "CameraLocalUtil_DUMMY"
+  ],
+  "scoped_diff_check": "pass",
+  "builds_or_tests_run": false
+}

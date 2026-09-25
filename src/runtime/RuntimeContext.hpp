@@ -213,8 +213,6 @@ namespace smgpc::runtime {
         [[nodiscard]] StarPointerService &star_pointer();
         [[nodiscard]] const StarPointerService &star_pointer() const;
         [[nodiscard]] bool sample_star_pointer_target(const LiveActor &actor, bool check_z);
-        [[nodiscard]] CameraSystemService &camera_system();
-        [[nodiscard]] const CameraSystemService &camera_system() const;
         [[nodiscard]] PlayerSystemService &player_system();
         [[nodiscard]] const PlayerSystemService &player_system() const;
         [[nodiscard]] GameLayoutService &game_layout();
@@ -325,7 +323,6 @@ namespace smgpc::runtime {
         StarPointerService _star_pointer;
         std::unique_ptr<compat::DrawSyncManagerLifetime> _draw_sync;
         std::unique_ptr<compat::StarPointerDepthOwnership> _star_pointer_depth;
-        CameraSystemService _camera_system;
         PlayerSystemService _player_system;
         GameLayoutService _game_layout;
         RumbleService _rumble;

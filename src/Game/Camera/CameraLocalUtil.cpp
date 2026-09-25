@@ -1,108 +1,18 @@
-#include <aurora/exception.hpp>
-#include "compat/CameraLocalUtilRuntime.hpp"
-
+#include "Game/Camera/CameraLocalUtil.hpp"
 #include "Game/Camera/Camera.hpp"
 #include "Game/Camera/CameraDirector.hpp"
-#include "camera/CameraDirectorRuntime.hpp"
-#include "Game/Camera/CameraLocalUtil.hpp"
 #include "Game/Camera/CameraMan.hpp"
 #include "Game/Camera/CameraPoseParam.hpp"
+#include "Game/Camera/CameraRegisterHolder.hpp"
 #include "Game/Camera/CameraTargetObj.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include <JSystem/JMath/JMATrigonometric.hpp>
 
-#include <revolution.h>
-
-#include <stdexcept>
-
-namespace {
-    thread_local Camera* sBoundCamera = nullptr;
-    thread_local CameraTargetObj* sBoundTarget = nullptr;
-    thread_local std::optional<smgpc::compat::OriginalCameraMode> sBoundMode;
-
-    CameraTargetObj* require_bound_target(const Camera* camera) {
-        if (camera == nullptr || sBoundCamera != camera || sBoundTarget == nullptr) {
-            aurora::throw_host_exception<std::logic_error>("Camera target lookup requires the matching active camera calculation scope.");
-        }
-        return sBoundTarget;
-    }
-}  // namespace
-
-namespace smgpc::compat {
-
-    ScopedCameraTargetBinding::ScopedCameraTargetBinding(Camera& camera, CameraTargetObj& target, OriginalCameraMode mode)
-        : _previous_camera(sBoundCamera), _previous_target(sBoundTarget), _previous_mode(sBoundMode) {
-        if (camera.mCameraMan == nullptr || camera.mPoseParam == nullptr || camera.mCameraMan->mPoseParam == nullptr) {
-            aurora::throw_host_exception<std::logic_error>("Camera target binding requires the original CameraMan and both pose objects.");
-        }
-        sBoundCamera = &camera;
-        sBoundTarget = &target;
-        sBoundMode = mode;
-    }
-
-    ScopedCameraTargetBinding::~ScopedCameraTargetBinding() {
-        sBoundCamera = _previous_camera;
-        sBoundTarget = _previous_target;
-        sBoundMode = _previous_mode;
-    }
-
-
-    // Exact root CameraDirector::calcViewMtxFromPoseParam body.
-    void calcCameraViewMtxFromPoseParam(TPos3f* pMtx, const CameraPoseParam* pParam) {
-        TVec3f front = pParam->mWatchPos - pParam->mPos;
-        MR::normalizeOrZero(&front);
-        TVec3f side = pParam->mUpVec.cross(front);
-        MR::normalizeOrZero(&side);
-        TVec3f up = front.cross(side);
-        MR::normalizeOrZero(&up);
-
-        pMtx->setXDir(-side);
-        pMtx->setYDir(up);
-        pMtx->setZDir(-front);
-        pMtx->setTrans(pParam->mPos);
-
-        TPos3f rot;
-        rot.makeRotate(TVec3f(0.0f, 0.0f, 1.0f), pParam->mRoll);
-        pMtx->concat(*pMtx, rot);
-    }
-
-}  // namespace smgpc::compat
 
 namespace CameraLocalUtil {
-    CameraTargetObj* getTarget(const Camera* pCamera) {
-        if (pCamera->mCameraMan->mDirector != nullptr) return pCamera->mCameraMan->mDirector->getTarget();
-        return require_bound_target(pCamera);
-    }
-
-    CameraTargetObj* getTarget(const CameraMan* pCameraMan) {
-        if (pCameraMan->mDirector != nullptr) return pCameraMan->mDirector->getTarget();
-        if (sBoundCamera == nullptr || pCameraMan == nullptr || sBoundCamera->mCameraMan != pCameraMan) {
-            aurora::throw_host_exception<std::logic_error>("Camera manager target lookup requires its active camera calculation scope.");
-        }
-        return require_bound_target(sBoundCamera);
-    }
-
-    // MR::isFirstPersonCamera is the original CameraUtil wrapper for
-    // CameraDirector::isSubjectiveCamera. The runtime supplies its state.
-    bool testCameraPadButtonReset() {
-        if (MR::isFirstPersonCamera()) {
-            return false;
-        }
-        return MR::testSubPadButtonC(WPAD_CHAN0);
-    }
-
-    bool testCameraPadTriggerReset() {
-        if (MR::isFirstPersonCamera()) {
-            return false;
-        }
-        return MR::testSubPadTriggerC(WPAD_CHAN0);
-    }
-
-    // The following implementations retain their root CameraLocalUtil.cpp
-    // bodies verbatim; only scene ownership and controller adapters above
-    // use host state.
     const TVec3f& getWatchPos(const CameraMan* pCameraMan) {
         return pCameraMan->mPoseParam->mWatchPos;
     }
@@ -175,6 +85,37 @@ namespace CameraLocalUtil {
         pCameraMan->mPoseParam->mRoll = roll;
     }
 
+    CameraTargetObj* getTarget(const CameraMan* pCameraMan) {
+        return pCameraMan->mDirector->getTarget();
+    }
+
+    const MtxPtr getMtxReg(const char* pRegName) {
+        return getCameraDirector()->mRegisterHolder->getMtx(pRegName);
+    }
+
+    const TVec3f& getVecReg(const char* pRegName) {
+        return *getCameraDirector()->mRegisterHolder->getVec(pRegName);
+    }
+
+    const char* getDummyVecRegName() {
+        return getCameraDirector()->mRegisterHolder->getDummyVecRegName();
+    }
+
+    bool isForceCameraChange() {
+        return getCameraDirector()->isForceCameraChange();
+    }
+
+    CameraDirector* getCameraDirector() {
+        return MR::getCameraDirector();
+    }
+
+    void setUsedTarget(const CameraMan* pCameraMan, CameraTargetObj* pUsedTarget) {
+        pCameraMan->mDirector->mTargetObj = pUsedTarget;
+    }
+
+    CameraTargetObj* getTarget(const Camera* pCamera) {
+        return pCamera->mCameraMan->mDirector->getTarget();
+    }
 
     const TVec3f& getWatchPos(const Camera* pCamera) {
         return pCamera->mPoseParam->mWatchPos;
@@ -309,6 +250,41 @@ namespace CameraLocalUtil {
         pDst->add(pTarget->getPosition());
     }
 
+    bool tryCameraReset() {
+        if (getCameraDirector()->isEnableToReset()) {
+            return testCameraPadButtonReset();
+        }
+
+        return false;
+    }
+
+    bool tryCameraResetTrigger() {
+        if (!getCameraDirector()->isEnableToReset()) {
+            return false;
+        }
+
+        if (getCameraDirector()->isSubjectiveCamera()) {
+            return false;
+        }
+
+        return testCameraPadTriggerReset();
+    }
+
+    bool testCameraPadButtonReset() {
+        if (getCameraDirector()->isSubjectiveCamera()) {
+            return false;
+        }
+
+        return MR::testSubPadButtonC(WPAD_CHAN0);
+    }
+
+    bool testCameraPadTriggerReset() {
+        if (getCameraDirector()->isSubjectiveCamera()) {
+            return false;
+        }
+
+        return MR::testSubPadTriggerC(WPAD_CHAN0);
+    }
 
     bool testCameraPadTriggerRoundLeft() {
         if (MR::isDemoActive()) {
@@ -333,7 +309,6 @@ namespace CameraLocalUtil {
 
         return MR::testCorePadTriggerRight(WPAD_CHAN0);
     }
-
 
     void slerpCamera(TQuat4f* pDst, const TQuat4f& rA, const TQuat4f& rB, f32 ratio, bool reverse) {
         TQuat4f rotA, rotB;
@@ -369,6 +344,64 @@ namespace CameraLocalUtil {
                   sratio * rotA.w + ratio * rotB.w);
     }
 
+    bool makeTowerCameraMtx(TPos3f* pMtx, const TPos3f& rMtx, const TVec3f& rPos, const TVec3f& rUp, const TVec3f& rWatchPos) {
+        TVec3f pos = rPos;
+        TVec3f up = rUp;
+        rMtx.mult(pos, pos);
+        rMtx.mult33(up);
+
+        TVec3f diff = rWatchPos - pos;
+        TVec3f front = diff.killElement(up);
+
+        if (MR::isNearZero(front)) {
+            return false;
+        }
+
+        MR::normalize(&front);
+        TVec3f side = up.cross(front);
+        pMtx->setXDir(side);
+        pMtx->setYDir(up);
+        pMtx->setZDir(front);
+        pMtx->setTrans(rWatchPos);
+        return true;
+    }
+
+    void arrangeDistanceByFovy(Camera* pCamera, TVec3f pos, f32 offset) {
+        // FIXME: regswaps
+        // https://decomp.me/scratch/jeret
+        TVec3f viewDir = getPos(pCamera) - getWatchPos(pCamera);
+        if (MR::isNearZero(viewDir)) {
+            return;
+        }
+
+        f32 viewDist = viewDir.length();
+        MR::normalize(&viewDir);
+        TVec3f posDiff = pos - getWatchPos(pCamera);
+        f32 projDist = posDiff.dot(viewDir);
+        TVec3f projZ = viewDir * projDist;
+
+        f32 dist = projDist + (offset + posDiff.distance(projZ)) / MR::tanDegree(MR::getFovy() * 0.5f);
+        if (dist > viewDist) {
+            setPos(pCamera, viewDir * dist + getWatchPos(pCamera));
+        }
+    }
+
+    void arrangeDistanceByPushAndPull(Camera* pCamera, f32 push, f32 pull) {
+        TVec3f viewDir = getPos(pCamera) - getWatchPos(pCamera);
+        f32 viewDist = viewDir.length();
+
+        if (viewDist < push) {
+            if (MR::isNearZero(viewDir)) {
+                MR::getCameraInvViewMtx().getZDir(viewDir);
+                viewDir.negate();
+            }
+            viewDir.setLength(push);
+        } else if (viewDist > pull) {
+            viewDir.setLength(pull);
+        }
+
+        setPos(pCamera, getWatchPos(pCamera) + viewDir);
+    }
 
     inline void keepAwayWatchPos(CameraMan* pCameraMan, Camera* pCamera, TVec3f* watchPos, const TVec3f& pos) {
         TVec3f dir = *watchPos - pos;
@@ -424,4 +457,4 @@ namespace CameraLocalUtil {
         setFovy(pCameraMan, getFovy(pCamera));
         setRoll(pCameraMan, getRoll(pCamera));
     }
-}  // namespace CameraLocalUtil
+};  // namespace CameraLocalUtil

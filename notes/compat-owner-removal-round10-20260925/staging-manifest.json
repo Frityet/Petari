@@ -1,0 +1,214 @@
+[
+  {
+    "path": "scripts/source_provider_provenance.json",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Camera/CameraLocalUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ClippingActorHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ClippingActorInfo.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ClippingActorInfo.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ClippingGroupHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ClippingGroupHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/LodCtrl.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/LodCtrl.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ViewGroupCtrl.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ViewGroupCtrl.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/LiveActorUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/xmake.lua",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/camera/EventCamera.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/camera/EventCamera.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/camera/OriginalAnimationCamera.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/camera/OriginalAnimationCamera.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/camera/OriginalCameraView.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/camera/OriginalCameraView.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/camera/OriginalGameCamera.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/camera/OriginalGameCamera.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/camera/PublishedCameraTarget.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/camera/PublishedCameraTarget.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/camera/StageStartCamera.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/camera/StageStartCamera.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/CameraLocalUtilRuntime.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/CameraLocalUtilRuntime.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/CameraViewRuntime.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/CameraViewRuntime.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ClippingDirectorOwnership.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ClippingDirectorOwnership.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalCameraOwnerUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/ParityTrace.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.cpp",
+    "mode": "scoped-delta-on-HEAD"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.hpp",
+    "mode": "scoped-delta-on-HEAD"
+  },
+  {
+    "path": "src/runtime/RuntimeServices.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/RuntimeServices.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/scene/SceneObjHolderRuntime.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/scene/StageEventCameraBinding.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/scene/StageEventCameraBinding.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/ActorEventCameraTests.cpp",
+    "mode": "necessary-existing-test-migration"
+  },
+  {
+    "path": "tests/AuroraNativeTests.cpp",
+    "mode": "scoped-delta-on-HEAD"
+  },
+  {
+    "path": "tests/CameraLocalUtilRuntimeTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/CameraTargetTestSupport.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/CameraViewInterpolatorTests.cpp",
+    "mode": "necessary-existing-test-migration"
+  },
+  {
+    "path": "tests/CameraViewServiceTests.cpp",
+    "mode": "necessary-existing-test-migration"
+  },
+  {
+    "path": "tests/FeedbackRealOrAbsentTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OnlyCameraTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/PlayerUtilRealOrAbsentTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/StageStartCameraTests.cpp",
+    "mode": "necessary-existing-test-migration"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "mode": "owned-camera-target-delta-on-HEAD"
+  }
+]

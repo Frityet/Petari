@@ -1,0 +1,18 @@
+[
+  "src/compat/ClippingDirectorOwnership.cpp",
+  "src/compat/ClippingDirectorOwnership.hpp",
+  "src/compat/ActorRuntimeRegistry.cpp",
+  "src/compat/SceneObjHolderCompat.cpp",
+  "src/scene/SceneObjHolderRuntime.hpp",
+  "src/Game/Util/LiveActorUtil.cpp",
+  "src/Game/LiveActor/ClippingActorHolder.cpp",
+  "src/Game/LiveActor/ClippingActorInfo.cpp",
+  "src/Game/LiveActor/ClippingActorInfo.hpp",
+  "src/Game/LiveActor/ClippingGroupHolder.cpp",
+  "src/Game/LiveActor/ClippingGroupHolder.hpp",
+  "src/Game/LiveActor/ViewGroupCtrl.cpp",
+  "src/Game/LiveActor/ViewGroupCtrl.hpp",
+  "scripts/source_provider_provenance.json",
+  "src/Game/LiveActor/LodCtrl.cpp",
+  "src/Game/LiveActor/LodCtrl.hpp"
+]

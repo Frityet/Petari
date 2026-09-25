@@ -3,6 +3,7 @@
 #include "Game/NameObj/NameObj.hpp"
 
 class ClippingActorInfo;
+class ClippingGroupHolder;
 class JMapIdInfo;
 
 class ClippingInfoGroup : public NameObj {
@@ -22,6 +23,8 @@ public:
     ClippingActorInfo** _14;
     JMapIdInfo* _18;
     u8 _1C;
+    ClippingGroupHolder* mNativeHolder = nullptr;
+    u64 mNativeHolderGeneration = 0;
 };
 
 class ClippingGroupHolder : public NameObj {

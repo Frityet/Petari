@@ -53,9 +53,7 @@
 #include "JSystem/J3DGraphBase/J3DShape.hpp"
 #include "JSystem/JUtility/JUTNameTab.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/ClippingDirectorOwnership.hpp"
 #include "compat/CollisionPartsCompat.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
 #include <cstdio>
 #include <cstring>
 #include <memory>
@@ -687,7 +685,6 @@ namespace MR {
 
     void setGroupClipping(LiveActor* pActor, const JMapInfoIter& rIter, int a3) {
         MR::getClippingDirector()->joinToGroupClipping(pActor, rIter, a3);
-        smgpc::scene::current_clipping_director_ownership()->capture_groups();
     }
 
     void validateClipping(LiveActor* pActor) {

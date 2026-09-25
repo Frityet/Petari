@@ -15,6 +15,10 @@ ClippingActorInfo::ClippingActorInfo(LiveActor* pActor) {
     setTypeToSphere(300.0f, 0);
 }
 
+ClippingActorInfo::~ClippingActorInfo() {
+    delete mInfo;
+}
+
 void ClippingActorInfo::judgeClipping() {
     if (isJudgedToClip()) {
         if (!MR::isClipped(mActor)) {
@@ -67,6 +71,13 @@ ClippingActorInfoList::ClippingActorInfoList(int a1) {
     for (s32 i = 0; i < _0; i++) {
         mClippingActorList[i] = 0;
     }
+}
+
+ClippingActorInfoList::~ClippingActorInfoList() {
+    for (s32 i = 0; i < _4; ++i) {
+        delete mClippingActorList[i];
+    }
+    delete[] mClippingActorList;
 }
 
 void ClippingActorInfoList::add(ClippingActorInfo* pInfo) {

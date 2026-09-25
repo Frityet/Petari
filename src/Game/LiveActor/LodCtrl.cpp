@@ -2,6 +2,7 @@
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/ClippingDirector.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
+#include "Game/LiveActor/ViewGroupCtrl.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
@@ -58,6 +59,24 @@ LodCtrl::LodCtrl(LiveActor* pActor, const JMapInfoIter& rIter) {
     _28 = &def;
     MR::getClippingDirector()->entryLodCtrl(this, rIter);
     mActorLightCtrl = mActor->mActorLightCtrl;
+}
+
+LodCtrl::~LodCtrl() {
+    detachViewGroup();
+}
+
+void LodCtrl::detachViewGroup() {
+    if (mNativeViewGroup) {
+        auto* view = mNativeViewGroup;
+        for (u32 i = 0; i < view->mViewCtrlCount; ++i) {
+            if (view->mLodCtrls[i] == this) {
+                view->mLodCtrls[i] = view->mLodCtrls[--view->mViewCtrlCount];
+                break;
+            }
+        }
+        mNativeViewGroup = nullptr;
+    }
+    setViewCtrlPtr(&def, &def, &def, &def);
 }
 
 void LodCtrl::offSyncShadowHost() {

@@ -21,6 +21,14 @@ ViewGroupCtrl::ViewGroupCtrl() {
     }
 }
 
+ViewGroupCtrl::~ViewGroupCtrl() {
+    while (mViewCtrlCount != 0) {
+        mLodCtrls[mViewCtrlCount - 1]->detachViewGroup();
+    }
+    delete[] mViewGroupData;
+    delete[] mLodCtrls;
+}
+
 void ViewGroupCtrl::initActorInfo(ClippingActorInfo* pInfo, s32 groupID) {
     pInfo->_12 = groupID;
 
@@ -48,6 +56,7 @@ void ViewGroupCtrl::entryLodCtrl(LodCtrl* pCtrl, const JMapInfoIter& rIter) {
     s32 groupID = -1;
     if (MR::getJMapInfoViewGroupID(rIter, &groupID)) {
         pCtrl->mViewGroupID = groupID;
+        pCtrl->mNativeViewGroup = this;
         mLodCtrls[mViewCtrlCount] = pCtrl;
         mViewCtrlCount++;
     }

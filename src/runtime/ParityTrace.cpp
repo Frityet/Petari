@@ -1,3 +1,4 @@
+#include "camera/CameraDirectorRuntime.hpp"
 #include "runtime/ParityTrace.hpp"
 
 #ifndef NDEBUG
@@ -106,27 +107,6 @@ namespace smgpc::runtime {
                 return "LevelSoundPermit";
             case AudioEventKind::AtmosphereSoundStart:
                 return "AtmosphereSoundStart";
-            }
-
-            return "Unknown";
-        }
-
-        [[nodiscard]] const char *camera_shake_request_kind_name(CameraSystemService::ShakeRequestKind kind) {
-            switch (kind) {
-            case CameraSystemService::ShakeRequestKind::VeryWeak:
-                return "VeryWeak";
-            case CameraSystemService::ShakeRequestKind::Weak:
-                return "Weak";
-            case CameraSystemService::ShakeRequestKind::NormalWeak:
-                return "NormalWeak";
-            case CameraSystemService::ShakeRequestKind::Normal:
-                return "Normal";
-            case CameraSystemService::ShakeRequestKind::NormalStrong:
-                return "NormalStrong";
-            case CameraSystemService::ShakeRequestKind::Strong:
-                return "Strong";
-            case CameraSystemService::ShakeRequestKind::VeryStrong:
-                return "VeryStrong";
             }
 
             return "Unknown";
@@ -940,19 +920,6 @@ namespace smgpc::runtime {
                         {"state", state}, {"current_effect", std::move(effect)}};
         }
 
-        [[nodiscard]] Json camera_shake_request_events_json(std::span<const CameraSystemService::ShakeRequestEvent> events) {
-            auto out = Json::array();
-            for (auto i = std::size_t{}; i < events.size(); ++i) {
-                const auto &event = events[i];
-                out.push_back(Json{
-                    {"index", i},
-                    {"kind", camera_shake_request_kind_name(event.kind)},
-                    {"frame_index", event.frame_index},
-                });
-            }
-            return out;
-        }
-
         [[nodiscard]] Json rumble_request_events_json(std::span<const RumbleRequestEvent> events) {
             auto out = Json::array();
             for (auto i = std::size_t{}; i < events.size(); ++i) {
@@ -1163,6 +1130,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] Json runtime_services_json(const RuntimeContext &runtime) {
+            const auto* camera = smgpc::camera::current_camera_director_runtime();
             return Json{
                 {"dvd",
                  Json{
@@ -1200,20 +1168,9 @@ namespace smgpc::runtime {
                 {"image_effects", image_effect_state_json()},
                 {"camera",
                  Json{
-                     {"game_camera_pose",
-                      runtime.camera_system().game_camera_pose().has_value() ? camera_pose_json(*runtime.camera_system().game_camera_pose()) : Json(nullptr)},
-                     {"effective_camera_pose",
-                      runtime.camera_system().effective_camera_pose().has_value() ? camera_pose_json(*runtime.camera_system().effective_camera_pose()) : Json(nullptr)},
-                     {"active_programmable_camera",
-                      runtime.camera_system().active_programmable_camera_name().has_value() ? Json(smgpc::resource::decode_cp932(*runtime.camera_system().active_programmable_camera_name())) : Json(nullptr)},
-                     {"reset_camera_man_count", runtime.camera_system().reset_camera_man_count()},
-                     {"camera_director_pause_count", runtime.camera_system().camera_director_pause_count()},
-                     {"programmable_camera_declare_count", runtime.camera_system().programmable_camera_declare_count()},
-                     {"programmable_camera_start_count", runtime.camera_system().programmable_camera_start_count()},
-                     {"programmable_camera_end_count", runtime.camera_system().programmable_camera_end_count()},
-                     {"programmable_camera_param_count", runtime.camera_system().programmable_camera_param_count()},
-                     {"programmable_camera_fovy_count", runtime.camera_system().programmable_camera_fovy_count()},
-                     {"shake_events", camera_shake_request_events_json(runtime.camera_system().shake_request_events())},
+                     {"effective_camera_pose", camera != nullptr ? camera_pose_json(camera->pose()) : Json(nullptr)},
+                     {"presented_camera_pose",
+                      runtime.scene_camera_pose().has_value() ? camera_pose_json(*runtime.scene_camera_pose()) : Json(nullptr)},
                  }},
                 {"rumble",
                  Json{

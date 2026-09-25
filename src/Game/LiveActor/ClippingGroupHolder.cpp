@@ -4,6 +4,8 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/JMapIdInfo.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
+#include <memory>
 
 ClippingInfoGroup::ClippingInfoGroup(const char* pGroupName, int count) : NameObj(pGroupName) {
     _C = count;
@@ -93,11 +95,12 @@ void ClippingGroupHolder::createAndAdd(ClippingActorInfo* pInfo, const JMapInfoI
 }
 
 ClippingInfoGroup* ClippingGroupHolder::createGroup(ClippingActorInfo* pInfo, const JMapInfoIter& rIter, int count) {
-    ClippingInfoGroup* group = new ClippingInfoGroup(pInfo->mActor->mName, count);
+    auto group = std::make_unique<ClippingInfoGroup>(pInfo->mActor->mName, count);
     group->setGroupNo(rIter);
-    mInfoGroups[mNumGroups] = group;
-    mNumGroups++;
-    return group;
+    group->mNativeHolder = this;
+    group->mNativeHolderGeneration = smgpc::compat::name_obj_runtime_generation(this);
+    mInfoGroups[mNumGroups++] = group.get();
+    return group.release();
 }
 
 // reg usage issue, and not reloading the array to return
@@ -117,9 +120,24 @@ ClippingInfoGroup* ClippingGroupHolder::findGroup(const JMapInfoIter& rIter) {
 }
 
 ClippingInfoGroup::~ClippingInfoGroup() {
+    if (mNativeHolder && smgpc::compat::name_obj_runtime_generation(mNativeHolder) == mNativeHolderGeneration) {
+        for (s32 i = 0; i < mNativeHolder->mNumGroups; ++i) {
+            if (mNativeHolder->mInfoGroups[i] == this) {
+                mNativeHolder->mInfoGroups[i] = mNativeHolder->mInfoGroups[--mNativeHolder->mNumGroups];
+                break;
+            }
+        }
+    }
+    delete[] _14;
+    delete _18;
 }
 
 ClippingGroupHolder::~ClippingGroupHolder() {
+    smgpc::compat::retire_clipping_group_holder(*this);
+    for (s32 i = 0; i < mNumGroups; ++i) {
+        mInfoGroups[i]->mNativeHolder = nullptr;
+    }
+    delete[] mInfoGroups;
 }
 
 ClippingGroupHolder::ClippingGroupHolder() : NameObj(CP932("クリッピングアクター保持")) {

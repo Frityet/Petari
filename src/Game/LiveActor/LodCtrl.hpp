@@ -6,10 +6,13 @@
 class ActorLightCtrl;
 class LiveActor;
 class ModelObj;
+class ViewGroupCtrl;
 
 class LodCtrl {
 public:
     LodCtrl(LiveActor*, const JMapInfoIter&);
+    ~LodCtrl();
+    void detachViewGroup();
 
     void offSyncShadowHost();
     void appear();
@@ -53,6 +56,7 @@ public:
     const bool* _28;
     s16 mViewGroupID;                 // 0x2C
     ActorLightCtrl* mActorLightCtrl;  // 0x30
+    ViewGroupCtrl* mNativeViewGroup = nullptr;
 };
 
 class LodCtrlFunction {

@@ -1,0 +1,53 @@
+{
+  "head": "584584def20de13f57657e4cd4d3a41a3a356286",
+  "paths": [
+    {
+      "path": "src/runtime/RuntimeServices.cpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "789843f961aadf2f32c46ba7a919f14fd0f8dddb565bb3befc99a1a60769cef3",
+      "action": "modified",
+      "after_sha256": "2b7c2da1283c1f40d6b3fbbc7119cd017953e5c6641c5b14a9b9a181da5b7cbb",
+      "removed_lines_net": 865
+    },
+    {
+      "path": "src/runtime/RuntimeServices.hpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "5f0f6b221790b88ccb8c6f9ca6147fe213571b71357d0ce2958e6cbc1f8f3f15",
+      "action": "modified",
+      "after_sha256": "c4e82277826203780a2164bb1ed82048596fc6f45210464291970444eac07247",
+      "removed_lines_net": 174
+    },
+    {
+      "path": "src/runtime/RuntimeContext.cpp",
+      "before_status": "M src/runtime/RuntimeContext.cpp",
+      "existed": true,
+      "before_sha256": "0376cbea4a2342b82a5b087e64967b651cab1d9786490943cd6b62da17ed6bfe",
+      "action": "modified",
+      "after_sha256": "5f0e364b346483b9590bc9c7c9f683e3462aea62f1515e4950d99610023d5d2d",
+      "removed_lines_net": 28
+    },
+    {
+      "path": "src/runtime/RuntimeContext.hpp",
+      "before_status": "M src/runtime/RuntimeContext.hpp",
+      "existed": true,
+      "before_sha256": "14151c3a1121c776e7bd70aebeb400a19aa16783ae56de4719790f1bdff21cd8",
+      "action": "modified",
+      "after_sha256": "81e40201f3338ecfd0da7d12cdbe16f1d626435c9c76ee1d8d18db5c2dbd2082",
+      "removed_lines_net": 3
+    },
+    {
+      "path": "src/runtime/ParityTrace.cpp",
+      "before_status": "",
+      "existed": true,
+      "before_sha256": "4adb20226ff06e9d4ce36645c270992caeb9315e4e1d8167bc8fb27005963966",
+      "action": "modified",
+      "after_sha256": "4b14a488413f341ea4ce0f1dfbd83a181909e33218fbb6c1d35f8934ad17a63d",
+      "removed_lines_net": 43
+    }
+  ],
+  "validation": "No builds/tests/git mutations. Final source scan found no CameraSystemService, camera_system(), StageCameraTargetState or retired controller references; only legitimate SceneObjHolderBinding::initialize_camera_system remains.",
+  "wiring": "No new sources or build changes. Camera owner lane deletes old wrapper/EventCamera/StageStart sources; test lane retires obsolete API fixtures.",
+  "dirty_baseline": "RuntimeContext.cpp AND RuntimeContext.hpp were already dirty; their before copies and runtime-camera.patch isolate only this lane edits."
+}

@@ -1,0 +1,13 @@
+--- a/src/runtime/RuntimeContext.cpp
++++ b/src/runtime/RuntimeContext.cpp
+@@ -655,8 +655,8 @@
+ 
+     void RuntimeContext::draw_3d_normal() {
+         if (!_scene_camera_pose.has_value()) {
+-            if (const auto camera_pose = _camera_system.effective_camera_pose()) {
+-                _scene_camera_pose = *camera_pose;
++            if (const auto* camera = smgpc::camera::current_camera_director_runtime()) {
++                _scene_camera_pose = camera->pose();
+                 draw_3d_normal(*_scene_camera_pose);
+                 return;
+             }
