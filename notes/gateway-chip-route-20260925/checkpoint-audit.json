@@ -1,0 +1,40 @@
+{
+  "root": "d88ec4b7bb0e888b826835b28e1b405f39616f28",
+  "aurora": "522da71e3a4d529cfcf9c25ac0a2cc5a8de7f87d",
+  "decomp": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "removed_roots": {
+    "src/compat": {
+      "exists": false,
+      "tracked": false
+    },
+    "src/scene": {
+      "exists": false,
+      "tracked": false
+    }
+  },
+  "input": {
+    "buttons": "",
+    "pointer": "",
+    "stick": ""
+  },
+  "manual_handoff": {
+    "controller_processes": [
+      {
+        "pid": 65759,
+        "script": "resume_control.py"
+      },
+      {
+        "pid": 65762,
+        "script": "operate_first_catch.py"
+      },
+      {
+        "pid": 65439,
+        "script": "supervise.py",
+        "action": "paused"
+      }
+    ],
+    "game_pid": 65443,
+    "input_cleared": true,
+    "reason": "User requested manual control"
+  }
+}

@@ -1,0 +1,628 @@
+{
+  "points": [
+    [
+      14916.831,
+      -9164.09,
+      8241.563
+    ],
+    [
+      14909.794,
+      -9191.727,
+      8326.297
+    ],
+    [
+      15121.26,
+      -9216.419,
+      8314.891
+    ],
+    [
+      15327.457,
+      -9226.671,
+      8261.649
+    ],
+    [
+      15519.376,
+      -9222.035,
+      8168.897
+    ],
+    [
+      15688.626,
+      -9202.711,
+      8040.687
+    ],
+    [
+      15837.53,
+      -9097.278,
+      7906.343
+    ],
+    [
+      15940.572,
+      -9051.721,
+      7725.333
+    ],
+    [
+      16002.962,
+      -8995.763,
+      7529.289
+    ],
+    [
+      16021.973,
+      -8931.849,
+      7326.778
+    ],
+    [
+      15996.775,
+      -8862.773,
+      7126.651
+    ],
+    [
+      15928.471,
+      -8791.553,
+      6937.653
+    ],
+    [
+      15848.203,
+      -8716.432,
+      6741.672
+    ],
+    [
+      15754.612,
+      -8638.079,
+      6541.302
+    ],
+    [
+      15572.038,
+      -8500.632,
+      6441.866
+    ],
+    [
+      15355.75,
+      -8445.043,
+      6361.115
+    ],
+    [
+      15136.649,
+      -8314.265,
+      6354.921
+    ],
+    [
+      14889.253,
+      -8374.718,
+      6337.981
+    ],
+    [
+      14659.431,
+      -8363.057,
+      6396.609
+    ],
+    [
+      14445.37,
+      -8367.977,
+      6499.296
+    ],
+    [
+      14262.191,
+      -8251.869,
+      6699.58
+    ],
+    [
+      14119.629,
+      -8286.34,
+      6863.005
+    ],
+    [
+      14004.23,
+      -8336.893,
+      7064.298
+    ],
+    [
+      13956.032,
+      -8215.669,
+      7361.243
+    ],
+    [
+      13937.496,
+      -8281.651,
+      7569.862
+    ],
+    [
+      13964.838,
+      -8358.527,
+      7792.872
+    ],
+    [
+      14265.21,
+      -8280.559,
+      7755.534
+    ],
+    [
+      14454.927,
+      -8270.492,
+      7647.142
+    ],
+    [
+      14732.419,
+      -8280.553,
+      7561.133
+    ]
+  ],
+  "reach_distance": 85,
+  "status": "geometry-derived candidate, not live-validated",
+  "source_geometry": "notes/demo-system-verification-20260919/physics/steps-geometry.json",
+  "transform_source": "notes/gateway-after-compat-removal-20260925/route-actors.jsonl frame17990 actor1108 base_matrix; agrees with current actual ground prism236",
+  "transform": [
+    [
+      0.18725037574768066,
+      0.12673532962799072,
+      0.9741023778915405,
+      14760.0
+    ],
+    [
+      0.2835235595703125,
+      0.9424662590026855,
+      -0.1771206557750702,
+      -10676.2255859375
+    ],
+    [
+      -0.940506100654602,
+      0.30934685468673706,
+      0.14054471254348755,
+      6770.0
+    ]
+  ],
+  "waypoints": [
+    {
+      "index": 0,
+      "kind": "known_grounded_approach",
+      "local_position": [
+        -925.921,
+        1900.236,
+        91.759
+      ],
+      "note": "Prior direct approach reaches this point; actual original ground prism236. Not an approach validated by this generated route."
+    },
+    {
+      "index": 1,
+      "kind": "tread",
+      "kcl_prisms": [
+        235,
+        236
+      ],
+      "local_position": [
+        -1014.767,
+        1899.51,
+        101.709
+      ],
+      "local_angle_degrees": 174.28,
+      "rise_from_previous": -0.726,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 2,
+      "kind": "tread",
+      "kcl_prisms": [
+        237,
+        238
+      ],
+      "local_position": [
+        -971.443,
+        1899.51,
+        310.469
+      ],
+      "local_angle_degrees": 162.28,
+      "rise_from_previous": 0.0,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 3,
+      "kind": "tread",
+      "kcl_prisms": [
+        239,
+        240
+      ],
+      "local_position": [
+        -885.666,
+        1899.51,
+        505.659
+      ],
+      "local_angle_degrees": 150.28,
+      "rise_from_previous": 0.0,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 4,
+      "kind": "tread",
+      "kcl_prisms": [
+        241,
+        242
+      ],
+      "local_position": [
+        -761.18,
+        1899.51,
+        678.75
+      ],
+      "local_angle_degrees": 138.28,
+      "rise_from_previous": 0.0,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 5,
+      "kind": "tread",
+      "kcl_prisms": [
+        243,
+        244
+      ],
+      "local_position": [
+        -603.427,
+        1899.51,
+        822.175
+      ],
+      "local_angle_degrees": 126.28,
+      "rise_from_previous": 0.0,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 6,
+      "kind": "tread",
+      "kcl_prisms": [
+        245,
+        246
+      ],
+      "local_position": [
+        -419.301,
+        1976.19,
+        929.668
+      ],
+      "local_angle_degrees": 114.28,
+      "rise_from_previous": 76.68,
+      "jump_on_grounded_stall": true
+    },
+    {
+      "index": 7,
+      "kind": "tread",
+      "kcl_prisms": [
+        247,
+        248
+      ],
+      "local_position": [
+        -216.849,
+        1976.19,
+        996.532
+      ],
+      "local_angle_degrees": 102.28,
+      "rise_from_previous": 0.0,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 8,
+      "kind": "tread",
+      "kcl_prisms": [
+        249,
+        250
+      ],
+      "local_position": [
+        -4.92,
+        1976.19,
+        1019.842
+      ],
+      "local_angle_degrees": 90.28,
+      "rise_from_previous": 0.0,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 9,
+      "kind": "tread",
+      "kcl_prisms": [
+        251,
+        252
+      ],
+      "local_position": [
+        207.224,
+        1976.19,
+        998.578
+      ],
+      "local_angle_degrees": 78.28,
+      "rise_from_previous": 0.0,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 10,
+      "kind": "tread",
+      "kcl_prisms": [
+        253,
+        254
+      ],
+      "local_position": [
+        410.311,
+        1976.19,
+        933.671
+      ],
+      "local_angle_degrees": 66.28,
+      "rise_from_previous": 0.0,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 11,
+      "kind": "tread",
+      "kcl_prisms": [
+        255,
+        256
+      ],
+      "local_position": [
+        595.467,
+        1976.19,
+        827.959
+      ],
+      "local_angle_degrees": 54.28,
+      "rise_from_previous": 0.0,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 12,
+      "kind": "tread",
+      "kcl_prisms": [
+        506,
+        507
+      ],
+      "local_position": [
+        786.056,
+        1976.19,
+        708.919
+      ],
+      "local_angle_degrees": 42.05,
+      "rise_from_previous": 0.0,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 13,
+      "kind": "tread",
+      "kcl_prisms": [
+        115,
+        116
+      ],
+      "local_position": [
+        979.196,
+        1976.19,
+        575.713
+      ],
+      "local_angle_degrees": 30.45,
+      "rise_from_previous": 0.0,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 14,
+      "kind": "tread",
+      "kcl_prisms": [
+        123,
+        124
+      ],
+      "local_position": [
+        1077.498,
+        2051.83,
+        359.549
+      ],
+      "local_angle_degrees": 18.45,
+      "rise_from_previous": 75.64,
+      "jump_on_grounded_stall": true
+    },
+    {
+      "index": 15,
+      "kind": "tread",
+      "kcl_prisms": [
+        125,
+        126
+      ],
+      "local_position": [
+        1128.706,
+        2051.83,
+        127.666
+      ],
+      "local_angle_degrees": 6.45,
+      "rise_from_previous": 0.0,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 16,
+      "kind": "tread",
+      "kcl_prisms": [
+        127,
+        128
+      ],
+      "local_position": [
+        1130.584,
+        2145.4,
+        -109.794
+      ],
+      "local_angle_degrees": -5.55,
+      "rise_from_previous": 93.57,
+      "jump_on_grounded_stall": true
+    },
+    {
+      "index": 17,
+      "kind": "tread",
+      "kcl_prisms": [
+        117,
+        118
+      ],
+      "local_position": [
+        1083.051,
+        2051.83,
+        -342.457
+      ],
+      "local_angle_degrees": -17.55,
+      "rise_from_previous": -93.57,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 18,
+      "kind": "tread",
+      "kcl_prisms": [
+        119,
+        120
+      ],
+      "local_position": [
+        988.183,
+        2051.83,
+        -560.152
+      ],
+      "local_angle_degrees": -29.55,
+      "rise_from_previous": 0.0,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 19,
+      "kind": "tread",
+      "kcl_prisms": [
+        121,
+        122
+      ],
+      "local_position": [
+        850.127,
+        2051.83,
+        -753.366
+      ],
+      "local_angle_degrees": -41.55,
+      "rise_from_previous": 0.0,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 20,
+      "kind": "tread",
+      "kcl_prisms": [
+        223,
+        224
+      ],
+      "local_position": [
+        660.377,
+        2200.0,
+        -924.218
+      ],
+      "local_angle_degrees": -54.45,
+      "rise_from_previous": 148.17,
+      "jump_on_grounded_stall": true
+    },
+    {
+      "index": 21,
+      "kind": "tread",
+      "kcl_prisms": [
+        225,
+        226
+      ],
+      "local_position": [
+        470.208,
+        2200.0,
+        -1034.013
+      ],
+      "local_angle_degrees": -65.55,
+      "rise_from_previous": 0.0,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 22,
+      "kind": "tread",
+      "kcl_prisms": [
+        227,
+        228
+      ],
+      "local_position": [
+        244.949,
+        2200.0,
+        -1109.18
+      ],
+      "local_angle_degrees": -77.55,
+      "rise_from_previous": 0.0,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 23,
+      "kind": "tread",
+      "kcl_prisms": [
+        229,
+        230
+      ],
+      "local_position": [
+        -8.985,
+        2400.0,
+        -1135.867
+      ],
+      "local_angle_degrees": -90.45,
+      "rise_from_previous": 200.0,
+      "jump_on_grounded_stall": true
+    },
+    {
+      "index": 24,
+      "kind": "tread",
+      "kcl_prisms": [
+        231,
+        232
+      ],
+      "local_position": [
+        -227.371,
+        2400.0,
+        -1112.916
+      ],
+      "local_angle_degrees": -101.55,
+      "rise_from_previous": 0.0,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 25,
+      "kind": "tread",
+      "kcl_prisms": [
+        233,
+        234
+      ],
+      "local_position": [
+        -453.789,
+        2400.0,
+        -1041.323
+      ],
+      "local_angle_degrees": -113.55,
+      "rise_from_previous": 0.0,
+      "jump_on_grounded_stall": false
+    },
+    {
+      "index": 26,
+      "kind": "parapet_opening",
+      "kcl_prisms": [
+        271,
+        272
+      ],
+      "local_position": [
+        -340.323,
+        2500.0,
+        -767.787
+      ],
+      "local_angle_degrees": -113.91,
+      "rise_from_previous": 100.0,
+      "jump_on_grounded_stall": true
+    },
+    {
+      "index": 27,
+      "kind": "inside_top",
+      "local_position": [
+        -200,
+        2500,
+        -600
+      ],
+      "note": "Stop steering once the real spin tutorial/demo begins."
+    },
+    {
+      "index": 28,
+      "kind": "rosetta_approach",
+      "local_position": [
+        -70,
+        2499.08,
+        -340
+      ],
+      "note": "Stop steering once the real spin tutorial/demo begins."
+    }
+  ],
+  "controller_hints": {
+    "direction": "clockwise in local x/z: atan2(z,x) decreases from174deg through0 to-114deg",
+    "jump": "Ordinary A jump on a grounded stall at upward risers; release A between attempts. Do not jump at every waypoint.",
+    "advance": "Advance sequentially within reach_distance; do not skip distant intermediate treads or use straight line to Rosetta.",
+    "speed": "Use existing shaped controls; ordinary moderate movement with its close-target slowdown.",
+    "demo": "Clear controller commands when actual tutorial/demo takes control."
+  }
+}

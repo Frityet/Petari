@@ -1,0 +1,9 @@
+{
+  "command": [
+    "build/aurora-fifo-tests-20260919/tests/gx_fifo_tests",
+    "--gtest_filter=GXFifoBreakpointTest.OlderDrainCanResumeAfterANewerDrainRetiresItsStorage"
+  ],
+  "exit_code": -6,
+  "timeout": false,
+  "elapsed_seconds": 0.4013840419938788
+}

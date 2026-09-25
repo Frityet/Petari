@@ -1,0 +1,570 @@
+{
+  "pid": 65443,
+  "procName": "smg-pc",
+  "captureTime": "2026-09-25 22:10:40.2210 +0100",
+  "exception": {
+    "codes": "0x0000000000000000, 0x0000000000000000",
+    "rawCodes": [
+      0,
+      0
+    ],
+    "type": "EXC_CRASH",
+    "signal": "SIGABRT"
+  },
+  "termination": {
+    "flags": 0,
+    "code": 6,
+    "namespace": "SIGNAL",
+    "indicator": "Abort trap: 6",
+    "byProc": "smg-pc",
+    "byPid": 65443
+  },
+  "faultingThread": 15,
+  "threads": [
+    {
+      "index": 0,
+      "name": "Main thread",
+      "triggered": null,
+      "frames": [
+        {
+          "imageOffset": 60828,
+          "symbol": "__ulock_wait2",
+          "symbolLocation": 8,
+          "imageIndex": 7
+        },
+        {
+          "imageOffset": 28852,
+          "symbol": "os_sync_wait_on_address",
+          "symbolLocation": 104,
+          "imageIndex": 8
+        },
+        {
+          "imageOffset": 199372,
+          "symbol": "std::__1::__libcpp_atomic_wait(void const volatile*, long long)",
+          "symbolLocation": 88,
+          "imageIndex": 1
+        },
+        {
+          "symbol": "std::__1::__atomic_wait_backoff_impl<std::__1::__atomic_base<unsigned long long, false>, void std::__1::__atomic_wait[abi:nqe230101]<std::__1::__atomic_base<unsigned long long, false> const, unsigned long long>(std::__1::__atomic_base<unsigned long long, false> const&, unsigned long long, std::__1::memory_order)::'lambda'(unsigned long long const&)>::operator()[abi:nqe230101](std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000000000l>>) const",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 6278608,
+          "symbolLocation": 96,
+          "sourceLine": 152,
+          "sourceFile": "atomic_sync.h"
+        },
+        {
+          "imageOffset": 6278608,
+          "sourceLine": 65,
+          "sourceFile": "poll_with_backoff.h",
+          "symbol": "std::__1::__poll_with_backoff_results std::__1::__libcpp_thread_poll_with_backoff[abi:nqe230101]<void std::__1::__atomic_wait_unless[abi:nqe230101]<std::__1::__atomic_base<unsigned long long, false>, void std::__1::__atomic_wait[abi:nqe230101]<std::__1::__atomic_base<unsigned long long, false> const, unsigned long long>(std::__1::__atomic_base<unsigned long long, false> const&, unsigned long long, std::__1::memory_order)::'lambda'(unsigned long long const&)>(std::__1::__atomic_base<unsigned long long, false> const const&, std::__1::memory_order, unsigned long long&&)::'lambda'(), std::__1::__atomic_wait_backoff_impl<std::__1::__atomic_base<unsigned long long, false>, void std::__1::__atomic_wait[abi:nqe230101]<std::__1::__atomic_base<unsigned long long, false> const, unsigned long long>(std::__1::__atomic_base<unsigned long long, false> const&, unsigned long long, std::__1::memory_order)::'lambda'(unsigned long long const&)>&>(std::__1::__atomic_base<unsigned long long, false> const&&, unsigned long long&&, std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000000000l>>)",
+          "imageIndex": 0,
+          "symbolLocation": 236
+        },
+        {
+          "symbol": "void std::__1::__atomic_wait_unless[abi:nqe230101]<std::__1::__atomic_base<unsigned long long, false>, void std::__1::__atomic_wait[abi:nqe230101]<std::__1::__atomic_base<unsigned long long, false> const, unsigned long long>(std::__1::__atomic_base<unsigned long long, false> const&, unsigned long long, std::__1::memory_order)::'lambda'(unsigned long long const&)>(std::__1::__atomic_base<unsigned long long, false> const const&, std::__1::memory_order, unsigned long long&&)",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 6270804,
+          "symbolLocation": 32,
+          "sourceLine": 173,
+          "sourceFile": "atomic_sync.h"
+        },
+        {
+          "symbol": "void std::__1::__atomic_wait[abi:nqe230101]<std::__1::__atomic_base<unsigned long long, false> const, unsigned long long>(std::__1::__atomic_base<unsigned long long, false> const&, unsigned long long, std::__1::memory_order)",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 6270804,
+          "symbolLocation": 32,
+          "sourceLine": 257,
+          "sourceFile": "atomic_sync.h"
+        },
+        {
+          "symbol": "std::__1::__atomic_base<unsigned long long, false>::wait[abi:nqe230101](unsigned long long, std::__1::memory_order) const",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 6270804,
+          "symbolLocation": 32,
+          "sourceLine": 120,
+          "sourceFile": "atomic.h"
+        },
+        {
+          "imageOffset": 6270804,
+          "sourceLine": 819,
+          "sourceFile": "fifo.cpp",
+          "symbol": "aurora::gx::fifo::drain()",
+          "imageIndex": 0,
+          "symbolLocation": 336
+        },
+        {
+          "imageOffset": 6463056,
+          "sourceLine": 299,
+          "sourceFile": "GXManage.cpp",
+          "symbol": "GXDrawDone",
+          "imageIndex": 0,
+          "symbolLocation": 68
+        },
+        {
+          "imageOffset": 1906948,
+          "sourceLine": 472,
+          "sourceFile": "MainLoopFramework.cpp",
+          "symbol": "(anonymous namespace)::waitDrawDoneAndSetAlarm()",
+          "imageIndex": 0,
+          "symbolLocation": 100
+        },
+        {
+          "imageOffset": 1908908,
+          "sourceFile": "MainLoopFramework.cpp",
+          "symbol": "MainLoopFramework::endFrame()",
+          "symbolLocation": 56,
+          "imageIndex": 0
+        },
+        {
+          "imageOffset": 1896900,
+          "sourceLine": 203,
+          "sourceFile": "GameSystem.cpp",
+          "symbol": "GameSystem::frameLoop()",
+          "imageIndex": 0,
+          "symbolLocation": 100
+        },
+        {
+          "symbol": "smgpc::app::(anonymous namespace)::OriginalProcess::frame(smgpc::render::AuroraWindow&, unsigned long long)",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 14508,
+          "symbolLocation": 512,
+          "sourceLine": 321,
+          "sourceFile": "OriginalGameApplication.cpp"
+        },
+        {
+          "imageOffset": 14508,
+          "sourceLine": 530,
+          "sourceFile": "OriginalGameApplication.cpp",
+          "symbol": "smgpc::app::run_original_game(smgpc::app::BootstrapConfiguration const&, smgpc::logging::ILogger&, smgpc::app::OriginalGameDebugObserver)",
+          "imageIndex": 0,
+          "symbolLocation": 4332
+        },
+        {
+          "imageOffset": 6440,
+          "sourceLine": 54,
+          "sourceFile": "main.cpp",
+          "symbol": "aurora_main",
+          "imageIndex": 0,
+          "symbolLocation": 616
+        },
+        {
+          "imageOffset": 204416,
+          "symbol": "start",
+          "symbolLocation": 6688,
+          "imageIndex": 9
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "name": "Aurora FIFO processor",
+      "triggered": null,
+      "frames": [
+        {
+          "imageOffset": 17676,
+          "symbol": "__psynch_cvwait",
+          "symbolLocation": 8,
+          "imageIndex": 7
+        },
+        {
+          "imageOffset": 29136,
+          "symbol": "_pthread_cond_wait",
+          "symbolLocation": 980,
+          "imageIndex": 12
+        },
+        {
+          "imageOffset": 200516,
+          "symbol": "std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&)",
+          "symbolLocation": 24,
+          "imageIndex": 1
+        },
+        {
+          "symbol": "void std::__1::condition_variable::wait[abi:nqe230101]<aurora::gfx::render_worker::synchronize()::$_0>(std::__1::unique_lock<std::__1::mutex>&, aurora::gfx::render_worker::synchronize()::$_0)",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 6097160,
+          "symbolLocation": 8,
+          "sourceLine": 113,
+          "sourceFile": "condition_variable.h"
+        },
+        {
+          "imageOffset": 6097160,
+          "sourceLine": 266,
+          "sourceFile": "render_worker.cpp",
+          "symbol": "aurora::gfx::render_worker::synchronize()",
+          "imageIndex": 0,
+          "symbolLocation": 320
+        },
+        {
+          "imageOffset": 5976300,
+          "sourceLine": 763,
+          "sourceFile": "frame.cpp",
+          "symbol": "aurora::gfx::detail::submit_frame_prefix(aurora::gfx::detail::FramePacket&)",
+          "imageIndex": 0,
+          "symbolLocation": 1304
+        },
+        {
+          "imageOffset": 6020312,
+          "sourceLine": 1136,
+          "sourceFile": "recording.cpp",
+          "symbol": "aurora::gfx::complete_draw()",
+          "imageIndex": 0,
+          "symbolLocation": 368
+        },
+        {
+          "symbol": "aurora::gx::fifo::(anonymous namespace)::process_to(aurora::gx::fifo::detail::CommandStream*, unsigned long long, unsigned long long, std::__1::memory_order)",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 6275540,
+          "symbolLocation": 1812,
+          "sourceLine": 297,
+          "sourceFile": "fifo.cpp"
+        },
+        {
+          "imageOffset": 6275540,
+          "sourceLine": 320,
+          "sourceFile": "fifo.cpp",
+          "symbol": "aurora::gx::fifo::(anonymous namespace)::worker_main(std::__1::stop_token)",
+          "imageIndex": 0,
+          "symbolLocation": 2036
+        },
+        {
+          "symbol": "std::__1::__invoke_result_impl<void, void (*&)(std::__1::stop_token) noexcept, std::__1::stop_token&>::type std::__1::__invoke[abi:nqe230101]<void (*&)(std::__1::stop_token) noexcept, std::__1::stop_token&>(void (*&)(std::__1::stop_token) noexcept, std::__1::stop_token&)",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 6277796,
+          "symbolLocation": 32,
+          "sourceLine": 90,
+          "sourceFile": "invoke.h"
+        },
+        {
+          "symbol": "std::__1::__invoke_result_impl<void, void (*&)(std::__1::stop_token) noexcept, std::__1::stop_token&>::type std::__1::invoke[abi:nqe230101]<void (*&)(std::__1::stop_token) noexcept, std::__1::stop_token&>(void (*&)(std::__1::stop_token) noexcept, std::__1::stop_token&)",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 6277796,
+          "symbolLocation": 32,
+          "sourceLine": 29,
+          "sourceFile": "invoke.h"
+        },
+        {
+          "symbol": "aurora::thread::Thread::Thread<void (&)(std::__1::stop_token) noexcept>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token)::operator()(std::__1::stop_token)",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 6277796,
+          "symbolLocation": 36,
+          "sourceLine": 34,
+          "sourceFile": "thread.hpp"
+        },
+        {
+          "symbol": "std::__1::__invoke_result_impl<void, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token) noexcept>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token>::type std::__1::__invoke[abi:nqe230101]<aurora::thread::Thread::Thread<void (&)(std::__1::stop_token) noexcept>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token>(aurora::thread::Thread::Thread<void (&)(std::__1::stop_token) noexcept>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token)&&, std::__1::stop_token&&)",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 6277796,
+          "symbolLocation": 36,
+          "sourceLine": 90,
+          "sourceFile": "invoke.h"
+        },
+        {
+          "symbol": "void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token) noexcept>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token, 0ul, 1ul>(std::__1::tuple<T, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token) noexcept>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token>&, std::__1::__integer_sequence<unsigned long, 0ul, 1ul>)",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 6277796,
+          "symbolLocation": 48,
+          "sourceLine": 170,
+          "sourceFile": "thread.h"
+        },
+        {
+          "imageOffset": 6277796,
+          "sourceLine": 178,
+          "sourceFile": "thread.h",
+          "symbol": "void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token) noexcept>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token>>(void*)",
+          "imageIndex": 0,
+          "symbolLocation": 96
+        },
+        {
+          "imageOffset": 27904,
+          "symbol": "_pthread_start",
+          "symbolLocation": 136,
+          "imageIndex": 12
+        },
+        {
+          "imageOffset": 7404,
+          "symbol": "thread_start",
+          "symbolLocation": 8,
+          "imageIndex": 12
+        }
+      ]
+    },
+    {
+      "index": 15,
+      "name": null,
+      "triggered": true,
+      "frames": [
+        {
+          "imageOffset": 38480,
+          "symbol": "__pthread_kill",
+          "symbolLocation": 8,
+          "imageIndex": 7
+        },
+        {
+          "imageOffset": 27004,
+          "symbol": "pthread_kill",
+          "symbolLocation": 296,
+          "imageIndex": 12
+        },
+        {
+          "imageOffset": 504920,
+          "symbol": "abort",
+          "symbolLocation": 148,
+          "imageIndex": 18
+        },
+        {
+          "imageOffset": 4848908,
+          "sourceLine": 342,
+          "sourceFile": "RendererService.cpp",
+          "symbol": "smgpc::render::(anonymous namespace)::aurora_log_callback(AuroraLogLevel, char const*, char const*, unsigned int)",
+          "imageIndex": 0,
+          "symbolLocation": 172
+        },
+        {
+          "imageOffset": 11325940,
+          "sourceLine": 19,
+          "sourceFile": "logging.cpp",
+          "symbol": "aurora::log_internal(AuroraLogLevel, char const*, char const*, unsigned int)",
+          "imageIndex": 0,
+          "symbolLocation": 52
+        },
+        {
+          "imageOffset": 4894260,
+          "sourceLine": 26,
+          "sourceFile": "logging.hpp",
+          "symbol": "void aurora::Module::report<>(AuroraLogLevel, fmt::v11::fstring<>::t) const",
+          "imageIndex": 0,
+          "symbolLocation": 116
+        },
+        {
+          "imageOffset": 6279096,
+          "symbol": "void aurora::Module::fatal<>(fmt::v11::fstring<>::t) const",
+          "symbolLocation": 24,
+          "imageIndex": 0
+        },
+        {
+          "imageOffset": 6270960,
+          "sourceLine": 830,
+          "sourceFile": "fifo.cpp",
+          "symbol": "aurora::gx::fifo::drain()",
+          "imageIndex": 0,
+          "symbolLocation": 492
+        },
+        {
+          "imageOffset": 6463056,
+          "sourceLine": 299,
+          "sourceFile": "GXManage.cpp",
+          "symbol": "GXDrawDone",
+          "imageIndex": 0,
+          "symbolLocation": 68
+        },
+        {
+          "imageOffset": 1894836,
+          "sourceLine": 67,
+          "sourceFile": "DrawBufferExecuter.cpp",
+          "symbol": "DrawBufferExecuter::remove(LiveActor*)",
+          "imageIndex": 0,
+          "symbolLocation": 128
+        },
+        {
+          "imageOffset": 1844776,
+          "sourceLine": 113,
+          "sourceFile": "DrawBufferGroup.cpp",
+          "symbol": "DrawBufferGroup::deactive(LiveActor*, int)",
+          "imageIndex": 0,
+          "symbolLocation": 116
+        },
+        {
+          "imageOffset": 1790856,
+          "sourceLine": 129,
+          "sourceFile": "DrawBufferHolder.cpp",
+          "symbol": "DrawBufferHolder::deactive(LiveActor*, int, int)",
+          "imageIndex": 0,
+          "symbolLocation": 148
+        },
+        {
+          "symbol": "NameObjExecuteInfo::disconnectToDraw(NameObjListExecutor&)",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 2525768,
+          "symbolLocation": 60,
+          "sourceLine": 216,
+          "sourceFile": "NameObjExecuteHolder.cpp"
+        },
+        {
+          "imageOffset": 2525768,
+          "sourceLine": 228,
+          "sourceFile": "NameObjExecuteHolder.cpp",
+          "symbol": "NameObjExecuteInfo::retireNativeRegistration(NameObjListExecutor&)",
+          "imageIndex": 0,
+          "symbolLocation": 264
+        },
+        {
+          "imageOffset": 4496748,
+          "symbol": "smgpc::runtime::SceneScheduler::disconnect_name_obj(NameObj&)",
+          "symbolLocation": 116,
+          "imageIndex": 0
+        },
+        {
+          "imageOffset": 700712,
+          "sourceLine": 131,
+          "sourceFile": "LiveActor.cpp",
+          "symbol": "LiveActor::releaseNativeResources()",
+          "imageIndex": 0,
+          "symbolLocation": 244
+        },
+        {
+          "imageOffset": 700220,
+          "sourceLine": 58,
+          "sourceFile": "LiveActor.cpp",
+          "symbol": "LiveActor::~LiveActor()",
+          "imageIndex": 0,
+          "symbolLocation": 64
+        },
+        {
+          "symbol": "MapObjActor::~MapObjActor()",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 3784768,
+          "symbolLocation": 4,
+          "sourceLine": 16,
+          "sourceFile": "MapObjActor.hpp"
+        },
+        {
+          "symbol": "FlipPanel::~FlipPanel()",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 3784768,
+          "symbolLocation": 4,
+          "sourceLine": 393,
+          "sourceFile": "FlipPanel.cpp"
+        },
+        {
+          "symbol": "FlipPanel::~FlipPanel()",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 3784768,
+          "symbolLocation": 4,
+          "sourceLine": 392,
+          "sourceFile": "FlipPanel.cpp"
+        },
+        {
+          "imageOffset": 3784768,
+          "sourceLine": 392,
+          "sourceFile": "FlipPanel.cpp",
+          "symbol": "FlipPanel::~FlipPanel()",
+          "imageIndex": 0,
+          "symbolLocation": 12
+        },
+        {
+          "imageOffset": 2560092,
+          "sourceLine": 93,
+          "sourceFile": "GameScene.cpp",
+          "symbol": "GameScene::~GameScene()",
+          "imageIndex": 0,
+          "symbolLocation": 140
+        },
+        {
+          "symbol": "GameScene::~GameScene()",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 2560236,
+          "symbolLocation": 4,
+          "sourceLine": 82,
+          "sourceFile": "GameScene.cpp"
+        },
+        {
+          "imageOffset": 2560236,
+          "sourceLine": 82,
+          "sourceFile": "GameScene.cpp",
+          "symbol": "GameScene::~GameScene()",
+          "imageIndex": 0,
+          "symbolLocation": 12
+        },
+        {
+          "imageOffset": 1848636,
+          "sourceLine": 144,
+          "sourceFile": "GameSystemSceneController.cpp",
+          "symbol": "GameSystemSceneController::destroyScene()",
+          "imageIndex": 0,
+          "symbolLocation": 48
+        },
+        {
+          "symbol": "FunctionAsyncExecInfo::execute()",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 1882596,
+          "symbolLocation": 44,
+          "sourceLine": 24,
+          "sourceFile": "FunctionAsyncExecutor.cpp"
+        },
+        {
+          "imageOffset": 1882596,
+          "sourceLine": 45,
+          "sourceFile": "FunctionAsyncExecutor.cpp",
+          "symbol": "FunctionAsyncExecutorThread::run()",
+          "imageIndex": 0,
+          "symbolLocation": 116
+        },
+        {
+          "imageOffset": 11261820,
+          "sourceLine": 422,
+          "sourceFile": "OSExecution.cpp",
+          "symbol": "(anonymous namespace)::run_managed_thread((anonymous namespace)::ManagedThread*)",
+          "imageIndex": 0,
+          "symbolLocation": 224
+        },
+        {
+          "symbol": "std::__1::__invoke_result_impl<void, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*>::type std::__1::__invoke[abi:nqe230101]<void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*>(void (*&&)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*&&)",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 11267200,
+          "symbolLocation": 8,
+          "sourceLine": 90,
+          "sourceFile": "invoke.h"
+        },
+        {
+          "symbol": "void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*, 0ul, 1ul>(std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*>&, std::__1::__integer_sequence<unsigned long, 0ul, 1ul>)",
+          "inline": true,
+          "imageIndex": 0,
+          "imageOffset": 11267200,
+          "symbolLocation": 8,
+          "sourceLine": 170,
+          "sourceFile": "thread.h"
+        },
+        {
+          "imageOffset": 11267200,
+          "sourceLine": 178,
+          "sourceFile": "thread.h",
+          "symbol": "void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*>>(void*)",
+          "imageIndex": 0,
+          "symbolLocation": 52
+        },
+        {
+          "imageOffset": 27904,
+          "symbol": "_pthread_start",
+          "symbolLocation": 136,
+          "imageIndex": 12
+        },
+        {
+          "imageOffset": 7404,
+          "symbol": "thread_start",
+          "symbolLocation": 8,
+          "imageIndex": 12
+        }
+      ]
+    }
+  ],
+  "original_report": "/Users/frityet/Library/Logs/DiagnosticReports/smg-pc-2026-09-25-221045.ips"
+}

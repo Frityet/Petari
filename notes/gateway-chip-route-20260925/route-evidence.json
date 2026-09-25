@@ -1,0 +1,456 @@
+{
+  "trace_sha256": "0a487d703e509b8d0fe807c677883a9b240c1b6d2bda26f81280d7f464bdbdd4",
+  "trace_bytes": 435033816,
+  "snapshots": 3734,
+  "last_frame": 37330,
+  "milestones": [
+    {
+      "frame": 3210,
+      "events": [
+        {
+          "event": "rabbit caught",
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "nerve": {
+            "step": 6,
+            "type": "N16NrvRunawayRabbit25RunawayRabbitNrvCaughtEndE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 3880,
+      "events": [
+        {
+          "event": "pipe entry",
+          "id": 717,
+          "type": "11EarthenPipe",
+          "nerve": {
+            "step": 6,
+            "type": "N14NrvEarthenPipe22EarthenPipeNrvPlayerInE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 3950,
+      "events": [
+        {
+          "event": "pipe exit",
+          "id": 717,
+          "type": "11EarthenPipe",
+          "nerve": {
+            "step": 1,
+            "type": "N14NrvEarthenPipe23EarthenPipeNrvPlayerOutE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 4720,
+      "events": [
+        {
+          "event": "rabbit caught",
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "nerve": {
+            "step": 7,
+            "type": "N16NrvRunawayRabbit25RunawayRabbitNrvCaughtEndE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 19130,
+      "events": [
+        {
+          "event": "rabbit caught",
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "nerve": {
+            "step": 4,
+            "type": "N16NrvRunawayRabbit22RunawayRabbitNrvCaughtE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 19990,
+      "events": [
+        {
+          "event": "Rosetta appears",
+          "id": 1060,
+          "type": "7Rosetta",
+          "nerve": {
+            "step": 4,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 24930,
+      "events": [
+        {
+          "event": "launch shoot",
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "nerve": {
+            "step": 3,
+            "type": "N18NrvSuperSpinDriver23SuperSpinDriverNrvShootE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 25230,
+      "events": [
+        {
+          "event": "launch release",
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "nerve": {
+            "step": 2,
+            "type": "N18NrvSuperSpinDriver26SuperSpinDriverNrvCoolDownE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 25900,
+      "events": [
+        {
+          "event": "chip collected",
+          "id": 806,
+          "type": "10YellowChip",
+          "nerve": {
+            "step": -1,
+            "type": "N11NrvChipBase14ChipBaseNrvGotE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 26020,
+      "events": [
+        {
+          "event": "chip collected",
+          "id": 803,
+          "type": "10YellowChip",
+          "nerve": {
+            "step": 1,
+            "type": "N11NrvChipBase14ChipBaseNrvGotE"
+          },
+          "dead": true
+        }
+      ]
+    },
+    {
+      "frame": 26230,
+      "events": [
+        {
+          "event": "chip collected",
+          "id": 793,
+          "type": "10YellowChip",
+          "nerve": {
+            "step": 1,
+            "type": "N11NrvChipBase14ChipBaseNrvGotE"
+          },
+          "dead": true
+        }
+      ]
+    },
+    {
+      "frame": 26480,
+      "events": [
+        {
+          "event": "chip collected",
+          "id": 809,
+          "type": "10YellowChip",
+          "nerve": {
+            "step": 1,
+            "type": "N11NrvChipBase14ChipBaseNrvGotE"
+          },
+          "dead": true
+        }
+      ]
+    },
+    {
+      "frame": 27020,
+      "events": [
+        {
+          "event": "chip collected",
+          "id": 799,
+          "type": "10YellowChip",
+          "nerve": {
+            "step": 1,
+            "type": "N11NrvChipBase14ChipBaseNrvGotE"
+          },
+          "dead": true
+        }
+      ]
+    },
+    {
+      "frame": 27710,
+      "events": [
+        {
+          "event": "launch shoot",
+          "id": 871,
+          "type": "15SuperSpinDriver",
+          "nerve": {
+            "step": 1,
+            "type": "N18NrvSuperSpinDriver23SuperSpinDriverNrvShootE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 27860,
+      "events": [
+        {
+          "event": "launch release",
+          "id": 871,
+          "type": "15SuperSpinDriver",
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver26SuperSpinDriverNrvCoolDownE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 29410,
+      "events": [
+        {
+          "event": "key cage opened",
+          "id": 1036,
+          "type": "11CapsuleCage",
+          "nerve": {
+            "step": 1,
+            "type": "N14NrvCapsuleCage18CapsuleCageNrvOpenE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 30240,
+      "events": [
+        {
+          "event": "launch shoot",
+          "id": 1056,
+          "type": "10SpinDriver",
+          "nerve": {
+            "step": 7,
+            "type": "N13NrvSpinDriver18SpinDriverNrvShootE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 30330,
+      "events": [
+        {
+          "event": "launch release",
+          "id": 1056,
+          "type": "10SpinDriver",
+          "nerve": {
+            "step": 5,
+            "type": "N13NrvSpinDriver21SpinDriverNrvCoolDownE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 31120,
+      "events": [
+        {
+          "event": "key cage opened",
+          "id": 1038,
+          "type": "11CapsuleCage",
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCapsuleCage18CapsuleCageNrvOpenE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 32660,
+      "events": [
+        {
+          "event": "pipe entry",
+          "id": 877,
+          "type": "11EarthenPipe",
+          "nerve": {
+            "step": 7,
+            "type": "N14NrvEarthenPipe22EarthenPipeNrvPlayerInE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 32790,
+      "events": [
+        {
+          "event": "pipe exit",
+          "id": 877,
+          "type": "11EarthenPipe",
+          "nerve": {
+            "step": 9,
+            "type": "N14NrvEarthenPipe23EarthenPipeNrvPlayerOutE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 35420,
+      "events": [
+        {
+          "event": "panel observer complete",
+          "id": 917,
+          "type": "17FlipPanelObserver",
+          "nerve": {
+            "step": 1,
+            "type": "N20NrvFlipPanelObserver28FlipPanelObserverNrvCompleteE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 35450,
+      "events": [
+        {
+          "event": "all16 panels ended",
+          "ids": [
+            919,
+            921,
+            923,
+            925,
+            927,
+            929,
+            931,
+            933,
+            935,
+            937,
+            939,
+            941,
+            943,
+            945,
+            947,
+            949
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 35780,
+      "events": [
+        {
+          "event": "Grand Star revives",
+          "id": 907,
+          "type": "9PowerStar",
+          "nerve": {
+            "step": 8,
+            "type": "N12NrvPowerStar22PowerStarNrvWeakToWaitE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 35810,
+      "events": [
+        {
+          "event": "Grand Star collectible",
+          "id": 907,
+          "type": "9PowerStar",
+          "nerve": {
+            "step": 7,
+            "type": "N12NrvPowerStar16PowerStarNrvWaitE"
+          },
+          "dead": false
+        }
+      ]
+    },
+    {
+      "frame": 36570,
+      "events": [
+        {
+          "event": "Grand Star collected",
+          "id": 907,
+          "type": "9PowerStar",
+          "nerve": {
+            "step": 1,
+            "type": "N12NrvPowerStar26PowerStarNrvStageClearDemoE"
+          },
+          "dead": false
+        }
+      ]
+    }
+  ],
+  "lifecycle": {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc.app/Contents/MacOS/smg-pc",
+      "--disc",
+      "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--stage",
+      "HeavensDoorGalaxy",
+      "--scenario",
+      "1",
+      "--max-frames",
+      "100000",
+      "-ApplePersistenceIgnoreState",
+      "YES"
+    ],
+    "environment": {
+      "SMGPC_SAVE_DIR": "/Users/frityet/Projects/petari/notes/gateway-chip-route-20260925/route-nand",
+      "SMGPC_NAND_DIR": "",
+      "AURORA_BACKEND": "metal",
+      "SMGPC_WINDOW_WIDTH": "1280",
+      "SMGPC_WINDOW_HEIGHT": "720",
+      "SMGPC_SCREENSHOT_PATH": "/Users/frityet/Projects/petari/notes/gateway-chip-route-20260925/route-frame15000.png",
+      "SMGPC_SCREENSHOT_FRAME": "15000",
+      "SMGPC_DEBUG_WPAD_INPUT_FILE": "/Users/frityet/Projects/petari/notes/gateway-chip-route-20260925/input.json",
+      "SMGPC_DEBUG_FRAME_TIMING": "",
+      "SMGPC_DEBUG_ACTOR_TRACE_PATH": "/Users/frityet/Projects/petari/notes/gateway-chip-route-20260925/route-actors.jsonl",
+      "SMGPC_DEBUG_ACTOR_TRACE_TYPES": "MarioActor,Rabbit,Tico,Rosetta,EarthenPipe,CrystalCage,HeavensDoorDemoObj,GlobalGravityObj,SpinDriver,Kuribo,KeySwitch,FlipPanel,PowerStar,YellowChip,CapsuleCage,Extermination,CollisionBlocker,MiniSun,Steam,Scene",
+      "SMGPC_DEBUG_ACTOR_TRACE_INTERVAL": "10",
+      "SMGPC_DEBUG_LAYOUT_DUMP_PATH": "",
+      "SMGPC_DEBUG_LAYOUT_DUMP_FRAME": "",
+      "SMGPC_DEBUG_WPAD_BUTTON_SCRIPT": "",
+      "SMGPC_DEBUG_WPAD_POINTER_SCRIPT": "",
+      "SMGPC_DEBUG_WPAD_STICK_SCRIPT": ""
+    },
+    "binary_sha256": "9cd1045eef85bb7f5ee0d730093d25d156427aabd0caf9027d99d4f7548fc919",
+    "started_at": "2026-09-25T20:58:59.963077+00:00",
+    "pid": 65443,
+    "exit_code": -6,
+    "timeout_terminated": false,
+    "inherited_smgpc_environment_removed": true,
+    "binary_sha256_after": "9cd1045eef85bb7f5ee0d730093d25d156427aabd0caf9027d99d4f7548fc919",
+    "binary_unchanged": true,
+    "elapsed_seconds": 700.2325884579914,
+    "process_still_exists_after_wait": false,
+    "completed_frames": null,
+    "verified_bounded_completion": false
+  },
+  "limits": "Grand Star collected; FIFO abort during asynchronous scene destruction. AstroGalaxy initialization not observed. Last frame is last sample, not an exact crash-frame claim."
+}

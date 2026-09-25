@@ -1,0 +1,39 @@
+{
+  "route.log": {
+    "raw_bytes": 204344,
+    "raw_sha256": "a80aee43c168d39ba481cae36048818bca9988d55fcd3dd4ec1f0fdb0502acbe",
+    "compressed_bytes": 34086
+  },
+  "operator.jsonl": {
+    "raw_bytes": 1395813,
+    "raw_sha256": "3e960087e3a559da8c97100b16f155dc1f70574e56510163577f643eca5ca560",
+    "compressed_bytes": 91301
+  },
+  "operator-resumed.jsonl": {
+    "raw_bytes": 320852,
+    "raw_sha256": "4e805cf6b2e69742fc7de5faab798ebaaf9e24aad469904b1255693dc1a9f0fc",
+    "compressed_bytes": 21786
+  },
+  "crater-override.jsonl": {
+    "raw_bytes": 8119,
+    "raw_sha256": "c2f2e6d7a0a327babb36519e9007816713c1b65bb18773cce2640ed12641afd5",
+    "compressed_bytes": 1067
+  },
+  "route-frame15000.png": {
+    "raw_bytes": 14758474,
+    "raw_sha256": "c542ae003e669bc9046d3074e6cae5515321752fbb89e56dbd7602e36de2828b",
+    "compressed_bytes": 8162964
+  },
+  "route-milestone-snapshots.jsonl.gz": {
+    "bytes": 728202,
+    "sha256": "ea65d3bb8fc66dc18a56fd3d1fa4007a2c06f020b03974c990b5a300f4449b95"
+  },
+  "completed-panels.jpg": {
+    "bytes": 247350,
+    "sha256": "4089c60d83a5aa09ca6270312bdcb83581ba77440aaf77ca7e918af6e361824c"
+  },
+  "handoff-crash.json": {
+    "bytes": 22143,
+    "sha256": "9c7196e8d430033912f8e0064b75e1c6aeadbe57b3a2499b30382fa170996bf9"
+  }
+}

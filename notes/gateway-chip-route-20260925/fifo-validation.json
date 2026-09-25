@@ -1,0 +1,41 @@
+[
+  {
+    "label": "fifo-test-build-after",
+    "command": [
+      "cmake",
+      "--build",
+      "build/aurora-fifo-tests-20260919",
+      "--target",
+      "gx_fifo_tests",
+      "-j",
+      "8"
+    ],
+    "exit_code": 0,
+    "timeout": false,
+    "elapsed_seconds": 0.5646613749559037
+  },
+  {
+    "label": "fifo-regression-after",
+    "command": [
+      "build/aurora-fifo-tests-20260919/tests/gx_fifo_tests",
+      "--gtest_filter=GXFifoBreakpointTest.OlderDrainCanResumeAfterANewerDrainRetiresItsStorage:GXFifoBreakpointTest.GuestUnregisterYieldsWhileCallbackSleepsOnAFullSdkQueue"
+    ],
+    "exit_code": 0,
+    "timeout": false,
+    "elapsed_seconds": 0.34713441698113456
+  },
+  {
+    "label": "game-fifo-build",
+    "command": [
+      "xmake",
+      "build",
+      "-y",
+      "-j",
+      "16",
+      "smg-pc"
+    ],
+    "exit_code": 0,
+    "timeout": false,
+    "elapsed_seconds": 7.132112499966752
+  }
+]

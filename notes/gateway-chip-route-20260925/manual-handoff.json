@@ -1,0 +1,20 @@
+{
+  "controller_processes": [
+    {
+      "pid": 65759,
+      "script": "resume_control.py"
+    },
+    {
+      "pid": 65762,
+      "script": "operate_first_catch.py"
+    },
+    {
+      "pid": 65439,
+      "script": "supervise.py",
+      "action": "paused"
+    }
+  ],
+  "game_pid": 65443,
+  "input_cleared": true,
+  "reason": "User requested manual control"
+}

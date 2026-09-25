@@ -1,0 +1,15 @@
+Running main() from /Users/frityet/Projects/petari/decomp/build/aurora-upstream-merge-tests/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = GXFifoBreakpointTest.OlderDrainCanResumeAfterANewerDrainRetiresItsStorage:GXFifoBreakpointTest.GuestUnregisterYieldsWhileCallbackSleepsOnAFullSdkQueue
+[==========] Running 2 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 2 tests from GXFifoBreakpointTest
+[ RUN      ] GXFifoBreakpointTest.GuestUnregisterYieldsWhileCallbackSleepsOnAFullSdkQueue
+[0] aurora::gx::fifo: Unhandled BP register 0x48 (value 0x000001)
+[       OK ] GXFifoBreakpointTest.GuestUnregisterYieldsWhileCallbackSleepsOnAFullSdkQueue (3 ms)
+[ RUN      ] GXFifoBreakpointTest.OlderDrainCanResumeAfterANewerDrainRetiresItsStorage
+[       OK ] GXFifoBreakpointTest.OlderDrainCanResumeAfterANewerDrainRetiresItsStorage (0 ms)
+[----------] 2 tests from GXFifoBreakpointTest (3 ms total)
+
+[----------] Global test environment tear-down
+[==========] 2 tests from 1 test suite ran. (3 ms total)
+[  PASSED  ] 2 tests.
