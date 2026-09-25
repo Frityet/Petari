@@ -1,4 +1,6 @@
 #include "compat/JkrAllocationDomain.hpp"
+#include "OriginalSceneControllerFixture.hpp"
+#include "SceneExecutionFixture.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "JSystem/JAudio2/JAISound.hpp"
@@ -141,24 +143,37 @@ namespace {
     }
 
     void test_camera_unwind(const std::shared_ptr<JkrHeapRuntime>& runtime) {
+#if !defined(NDEBUG)
+        const auto expected = "Original game utility requires active SceneObj " + std::to_string(SceneObj_CameraContext);
         const auto free_before = runtime->root_heap().getFreeSize();
         std::weak_ptr<JkrAllocationDomain> retired;
         bool caught = false;
         try {
-            auto game = JkrAllocationDomain::create(runtime, 128U << 10);
-            retired = game;
-            JkrAllocationScope scope(game);
+            smgpc::test::OriginalSceneControllerFixture process(runtime);
+            retired = process.domain;
+            smgpc::runtime::SceneScheduler scheduler;
+            smgpc::runtime::SceneSchedulerBinding scheduler_binding(scheduler);
+            smgpc::test::SceneExecutionFixture execution(scheduler, process.domain, nullptr, nullptr,
+                                                        &process.scene, process.controller().mObjHolder);
+            JkrAllocationScope scope(process.domain);
+            require(MR::getSceneObjHolder() == process.controller().getSceneObjHolder() &&
+                        !MR::getSceneObjHolder()->isExist(SceneObj_CameraContext),
+                    "the camera precondition is tested against its actual original scene holder");
             (void)MR::getCamPos();
         } catch (const std::logic_error& error) {
             caught = true;
             require(retired.expired(), "the actual camera error is caught after its scene domain is destroyed");
-            require(std::strcmp(error.what(), "Camera state is unavailable.") == 0,
-                    "the real camera producer keeps its existing error semantics");
+            require(typeid(error) == typeid(std::logic_error) && error.what() == expected,
+                    "the original camera debug guard identifies the missing CameraContext");
             require(JKRHeap::findFromRoot(const_cast<char*>(error.what())) == nullptr,
                     "the actual camera error retains a host-owned payload");
         }
         require(caught && runtime->root_heap().getFreeSize() == free_before, "camera error unwinding retires the Game heap and exception normally");
         std::puts("actual_camera_error_after_scene_retirement=pass");
+#else
+        (void)runtime;
+        std::puts("actual_camera_error_after_scene_retirement=skip (debug-only original precondition guard)");
+#endif
     }
 
     void test_aurora_unwind(const std::shared_ptr<JkrHeapRuntime>& runtime) {

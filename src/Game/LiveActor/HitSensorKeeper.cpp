@@ -2,9 +2,15 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/HitSensorInfo.hpp"
 #include "Game/Util/HashUtil.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
+#include <aurora/exception.hpp>
 #include <cstring>
+#include <stdexcept>
 
 HitSensorKeeper::HitSensorKeeper(int sensorCount) {
+    if (sensorCount < 0) {
+        aurora::throw_host_exception<std::invalid_argument>("HitSensorKeeper capacity must be non-negative");
+    }
     mSensorCount = sensorCount;
     mSensorInfosSize = 0;
     mSensorInfos = nullptr;
@@ -15,6 +21,16 @@ HitSensorKeeper::HitSensorKeeper(int sensorCount) {
     for (s32 i = 0; i < mSensorCount; i++) {
         mSensorInfos[i] = nullptr;
     }
+}
+
+HitSensorKeeper::~HitSensorKeeper() {
+    // Native actor retirement can happen in an attack callback or between
+    // queuing a shared message and its movement phase.
+    smgpc::compat::retire_hit_sensor_borrows(this);
+    for (s32 i = 0; i < mSensorInfosSize; ++i) {
+        delete mSensorInfos[i];
+    }
+    delete[] mSensorInfos;
 }
 
 HitSensor* HitSensorKeeper::add(const char* pName, u32 sensorType, u16 sensorGroupSize, f32 radius, LiveActor* pActor, const TVec3f& a6) {

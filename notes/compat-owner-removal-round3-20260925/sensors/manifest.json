@@ -1,0 +1,29 @@
+{
+  "head": "8490a01dfe1ca84d5348059c6133d154231ec3ef",
+  "files": [
+    "src/compat/GameActorSensorCompat.cpp",
+    "src/compat/GameActorSensorCompat.hpp",
+    "src/compat/OriginalActorBroadcast.cpp",
+    "src/compat/SensorHitCheckerOwnership.cpp",
+    "src/compat/ActorRuntimeRegistry.cpp",
+    "src/compat/ActorRuntimeRegistry.hpp",
+    "src/Game/Util/ActorSensorUtil.cpp",
+    "src/Game/LiveActor/HitSensor.cpp",
+    "src/Game/LiveActor/HitSensor.hpp",
+    "src/Game/LiveActor/HitSensorKeeper.cpp",
+    "src/Game/LiveActor/HitSensorKeeper.hpp",
+    "src/Game/LiveActor/HitSensorInfo.cpp",
+    "src/Game/LiveActor/HitSensorInfo.hpp",
+    "src/Game/LiveActor/SensorHitChecker.cpp",
+    "src/Game/LiveActor/SensorHitChecker.hpp",
+    "src/Game/LiveActor/LiveActor.cpp",
+    "src/runtime/ParityTrace.cpp",
+    "tests/ActorRuntimeRegistryTests.cpp",
+    "tests/ActorSensorRealOrAbsentTests.cpp",
+    "tests/SceneSchedulerHeapTests.cpp",
+    "tests/GameActorPhysicsRealOrAbsentTests.cpp",
+    "tests/OriginalActorBroadcastTests.cpp",
+    "src/Game/LiveActor/LiveActorGroupArray.cpp",
+    "src/Game/NPC/NPCActor.cpp"
+  ]
+}

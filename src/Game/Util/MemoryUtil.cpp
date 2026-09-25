@@ -1,6 +1,5 @@
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/System/HeapMemoryWatcher.hpp"
-#include "Game/Util/MutexHolder.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include <JSystem/JKernel/JKRExpHeap.hpp>
 #include <JSystem/JKernel/JKRSolidHeap.hpp>
@@ -10,14 +9,14 @@
 
 namespace MR {
     CurrentHeapRestorer::CurrentHeapRestorer(JKRHeap* pHeap) {
+        OSLockMutex(&JKRHeap::sCurrentHeapMutex);
         _0 = JKRHeap::sCurrentHeap;
-        OSLockMutex(&MR::MutexHolder< 1 >::sMutex);
         MR::becomeCurrentHeap(pHeap);
     }
 
     CurrentHeapRestorer::~CurrentHeapRestorer() {
         MR::becomeCurrentHeap(_0);
-        OSUnlockMutex(&MR::MutexHolder< 1 >::sMutex);
+        OSUnlockMutex(&JKRHeap::sCurrentHeapMutex);
     }
 
     void* NewDeleteAllocator::alloc(MEMAllocator* pAllocator, u32 size) {
@@ -76,9 +75,9 @@ namespace MR {
     }
 
     void becomeCurrentHeap(JKRHeap* pHeap) {
-        OSLockMutex(&MR::MutexHolder< 1 >::sMutex);
+        OSLockMutex(&JKRHeap::sCurrentHeapMutex);
         pHeap->becomeCurrentHeap();
-        OSUnlockMutex(&MR::MutexHolder< 1 >::sMutex);
+        OSUnlockMutex(&JKRHeap::sCurrentHeapMutex);
     }
 
     bool isEqualCurrentHeap(JKRHeap* pHeap) {

@@ -1,6 +1,5 @@
-#include "compat/JkrHeapFinalizer.hpp"
-#include "compat/JkrAllocationDomain.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 #include "JSystem/JKernel/JKRDisposer.hpp"
 #include <iostream>
 #include <memory>
@@ -14,9 +13,9 @@ namespace {
         int& retired;
         Resource* sibling = nullptr;
         explicit Resource(int& counter) : retired(counter) {
-            register_jkr_heap_finalizer(this, [](void* pointer) noexcept { static_cast<Resource*>(pointer)->~Resource(); });
+            JKRHeap::registerFinalizer(this, [](void* pointer) noexcept { static_cast<Resource*>(pointer)->~Resource(); });
         }
-        ~Resource() { unregister_jkr_heap_finalizer(this); ++retired; delete sibling; }
+        ~Resource() { JKRHeap::unregisterFinalizer(this); ++retired; delete sibling; }
     };
     struct OriginalOwner final : JKRDisposer {
         Resource* resource;

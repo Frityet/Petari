@@ -1,0 +1,12 @@
+[ok] NPC optional sensor capability
+[ok] original sensor center distance
+[ok] original keeper callbacks, offsets and validity
+[ok] original contact delivery and retirement
+[ok] original keeper and messenger arena lifetime
+[ok] actor-relative registration
+[ok] matrix binding
+[ok] position binding
+[ok] original optional matrix semantics
+[ok] scene-owned message sensor
+[ok] arbitrary message dispatch
+11 ActorSensor real-or-absent tests passed

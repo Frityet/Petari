@@ -1,0 +1,270 @@
+{
+  "validation": "source only; no build or runtime execution",
+  "comparisons": [
+    {
+      "path": "src/JSystem/J3DGraphBase/J3DShape.cpp",
+      "functions": 17,
+      "nonexact_body_symbols": [
+        "J3DLoadArrayBasePtr",
+        "J3DShape::makeVtxArrayCmd"
+      ]
+    },
+    {
+      "path": "src/JSystem/J3DGraphBase/J3DShapeDraw.cpp",
+      "functions": 5,
+      "nonexact_body_symbols": [
+        "J3DShapeDraw::countVertex",
+        "J3DShapeDraw::addTexMtxIndexInDL"
+      ]
+    },
+    {
+      "path": "src/JSystem/J3DGraphBase/J3DShapeMtx.cpp",
+      "functions": 22,
+      "nonexact_body_symbols": [
+        "J3DPSMtx33Copy",
+        "J3DPSMtx33CopyFrom34"
+      ]
+    },
+    {
+      "path": "src/JSystem/J3DGraphBase/J3DVertex.cpp",
+      "functions": 7,
+      "nonexact_body_symbols": []
+    },
+    {
+      "path": "src/JSystem/J3DGraphLoader/J3DShapeFactory.cpp",
+      "functions": 8,
+      "nonexact_body_symbols": [
+        "J3DShapeFactory::calcSize",
+        "J3DShapeFactory::calcSizeShapeMtx"
+      ]
+    },
+    {
+      "path": "src/JSystem/J3DGraphAnimator/J3DMtxBuffer.cpp",
+      "functions": 12,
+      "nonexact_body_symbols": [
+        "J3DMtxBuffer::calcWeightEnvelopeMtx"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DShape.cpp: complete donor function set",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DShape.cpp: only documented native body adaptations",
+      "passed": true,
+      "evidence": [
+        "J3DLoadArrayBasePtr",
+        "J3DShape::makeVtxArrayCmd"
+      ]
+    },
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DShapeDraw.cpp: complete donor function set",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DShapeDraw.cpp: only documented native body adaptations",
+      "passed": true,
+      "evidence": [
+        "J3DShapeDraw::countVertex",
+        "J3DShapeDraw::addTexMtxIndexInDL"
+      ]
+    },
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DShapeMtx.cpp: complete donor function set",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DShapeMtx.cpp: only documented native body adaptations",
+      "passed": true,
+      "evidence": [
+        "J3DPSMtx33Copy",
+        "J3DPSMtx33CopyFrom34"
+      ]
+    },
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DVertex.cpp: complete donor function set",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "src/JSystem/J3DGraphBase/J3DVertex.cpp: only documented native body adaptations",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "src/JSystem/J3DGraphLoader/J3DShapeFactory.cpp: complete donor function set",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "src/JSystem/J3DGraphLoader/J3DShapeFactory.cpp: only documented native body adaptations",
+      "passed": true,
+      "evidence": [
+        "J3DShapeFactory::calcSize",
+        "J3DShapeFactory::calcSizeShapeMtx"
+      ]
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DMtxBuffer.cpp: complete donor function set",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "src/JSystem/J3DGraphAnimator/J3DMtxBuffer.cpp: only documented native body adaptations",
+      "passed": true,
+      "evidence": [
+        "J3DMtxBuffer::calcWeightEnvelopeMtx"
+      ]
+    },
+    {
+      "name": "six completed providers deleted",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "one CPP provider for each restored symbol",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "name": "full native array pointer forwarded to Aurora",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "raw array clear retains original logic with typed zero",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "both primitive counts decoded as unaligned big-endian",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "inserted display-list counts preserve big-endian encoding",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "expanded display-list extent uses native uintptr_t",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "original primitive acceptance retained",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "3x3 scalar copy retains full temporary snapshot",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "3x4-to-3x3 scalar copy retains all-loads-before-stores",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "J3DPSMtx33Copy: original MW assembly retained",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "J3DPSMtx33CopyFrom34: original MW assembly retained",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "envelope scalar FMA/store order unchanged",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "envelope FP contract setting retained",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "full matrix-loader interface reused",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "native factory allocation accounting: J3DShape",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "native factory allocation accounting: J3DShapeMtx*",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "native factory allocation accounting: J3DShapeDraw*",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "native factory allocation accounting: J3DShapeDraw",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "native factory allocation accounting: J3DShapeMtxConcatView",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "native factory allocation accounting: J3DShapeMtxBBoardConcatView",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "native factory allocation accounting: J3DShapeMtxYBBoardConcatView",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "native factory allocation accounting: J3DShapeMtxMultiConcatView",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "native factory allocation accounting: J3DShapeMtx",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "native factory allocation accounting: J3DShapeMtxMulti",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "native VCD/VAT command reserve preserved",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "original game shape-matrix override retained separately",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "all touched existing files were clean before changes",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "no added trailing whitespace",
+      "passed": true,
+      "evidence": null
+    }
+  ]
+}

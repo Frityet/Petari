@@ -4,10 +4,6 @@
 #include <dolphin/ar.h>
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/JkrAllocationRouting.hpp"
-#include "compat/JkrAllocationProvenance.hpp"
-#include "compat/JkrDiagnostics.hpp"
-#include "Game/Util/MemoryUtil.hpp"
-#include "Game/Util/MutexHolder.hpp"
 #include "JSystem/JKernel/JKRExpHeap.hpp"
 #include "JSystem/JKernel/JKRSolidHeap.hpp"
 
@@ -32,11 +28,11 @@ namespace smgpc::compat {
             ~OriginalHeapTeardown() { routing_state = previous; --heap_teardown_depth; }
         };
 
-        // This lock is the original Game current-heap mutex. Holding it before
-        // CurrentHeapRestorer's snapshot also serializes native host threads.
+        // SDK heap selection and domain ownership share the same recursive
+        // mutex used by original Game heap wrappers and native SDK callers.
         struct HeapLock {
-            HeapLock() { OSLockMutex(&MR::MutexHolder<1>::sMutex); }
-            ~HeapLock() { OSUnlockMutex(&MR::MutexHolder<1>::sMutex); }
+            HeapLock() { OSLockMutex(&JKRHeap::sCurrentHeapMutex); }
+            ~HeapLock() { OSUnlockMutex(&JKRHeap::sCurrentHeapMutex); }
             HeapLock(const HeapLock&) = delete;
             HeapLock& operator=(const HeapLock&) = delete;
         };
@@ -104,7 +100,7 @@ namespace smgpc::compat {
         if (_storage->mem2 != nullptr) ARReset();
         HeapLock lock;
         if (domains != nullptr || _storage->root->mChildTree.getNumChildren() != 0) {
-            jkr_panic(__FILE__, __LINE__, "JKR runtime released with live child heaps");
+            OSPanic(__FILE__, __LINE__, "JKR runtime released with live child heaps");
         }
         {
             OriginalHeapTeardown original;
@@ -286,7 +282,7 @@ namespace smgpc::compat {
         std::shared_ptr<JkrAllocationDomain> previous_domain;
         RoutingState previous_routing;
         HeapLock lock;
-        std::optional<MR::CurrentHeapRestorer> restore;
+        std::optional<JKRHeap::CurrentHeapScope> restore;
 
         Storage(std::shared_ptr<JkrAllocationDomain> owner, RoutingState previous)
             : domain(std::move(owner)), previous_routing(previous) {
@@ -299,7 +295,7 @@ namespace smgpc::compat {
                     }
                 }
             }
-            restore.emplace(&domain->heap());
+            restore.emplace(domain->heap());
         }
         ~Storage() { restore.reset(); }
     };
@@ -337,7 +333,7 @@ namespace smgpc::compat {
             }
         }
         if (heap_teardown_depth != 0) {
-            jkr_panic(__FILE__, __LINE__, "Cannot retain a new resource in a heap whose last owner is releasing");
+            OSPanic(__FILE__, __LINE__, "Cannot retain a new resource in a heap whose last owner is releasing");
         }
         return {};
     }
@@ -350,7 +346,7 @@ namespace smgpc::compat {
                 if (size > heap_size_limit || alignment > heap_size_limit) return nullptr;
                 HeapLock lock;
                 JKRHeap* heap = explicit_heap != nullptr ? explicit_heap : JKRHeap::sCurrentHeap;
-                if (heap == nullptr) jkr_panic(__FILE__, __LINE__, "Original allocation has no current JKR heap");
+                if (heap == nullptr) OSPanic(__FILE__, __LINE__, "Original allocation has no current JKR heap");
                 // C++ objects require native alignment even where an original
                 // placement-new spelling requested only four bytes.
                 alignment = alignment < alignof(void*) ? alignof(void*) : alignment;
@@ -365,7 +361,7 @@ namespace smgpc::compat {
 
         void deallocate_jkr_or_host(void* memory) noexcept {
             if (memory == nullptr) return;
-            if (JKRHeap* heap = forget_jkr_allocation(memory)) {
+            if (JKRHeap* heap = JKRHeap::releaseAllocation(memory)) {
                 // The provenance lock has been released. The original heap's
                 // own mutex serializes its free; no global Game lock is needed.
                 heap->free(memory);
@@ -374,11 +370,11 @@ namespace smgpc::compat {
             const auto address = reinterpret_cast<std::uintptr_t>(memory);
             const auto begin = arena_begin.load(std::memory_order_acquire);
             if (begin != 0 && begin <= address && address < arena_end.load(std::memory_order_relaxed)) {
-                jkr_panic(__FILE__, __LINE__, "Delete has no original allocation provenance: %p", memory);
+                OSPanic(__FILE__, __LINE__, "Delete has no original allocation provenance: %p", memory);
             }
             const auto mem2 = mem2_begin.load(std::memory_order_acquire);
             if (mem2 != 0 && mem2 <= address && address < mem2_end.load(std::memory_order_relaxed)) {
-                jkr_panic(__FILE__, __LINE__, "Delete has no original MEM2 allocation provenance: %p", memory);
+                OSPanic(__FILE__, __LINE__, "Delete has no original MEM2 allocation provenance: %p", memory);
             }
             std::free(memory);
         }

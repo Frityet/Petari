@@ -31,6 +31,7 @@ public:
 class SensorGroup {
 public:
     SensorGroup(int, const char*);
+    ~SensorGroup();
 
     void add(HitSensor*);
     void remove(HitSensor*);

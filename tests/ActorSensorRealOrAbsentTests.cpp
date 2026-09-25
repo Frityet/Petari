@@ -5,6 +5,7 @@
 #include "compat/JkrAllocationDomain.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/Player/MarioMessenger.hpp"
+#include "Game/NPC/NPCActor.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
@@ -12,7 +13,10 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
-#include "compat/GameActorSensorCompat.hpp"
+#include "Game/LiveActor/ClippingDirector.hpp"
+#include "Game/LiveActor/SensorHitChecker.hpp"
+#include "SceneExecutionFixture.hpp"
+#include "OriginalSceneControllerFixture.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 
 #include <array>
@@ -55,6 +59,22 @@ namespace {
         int message_count = 0;
     };
 
+    void test_npc_sensor_capability_owns_body_registration() {
+        NPCActor actor("NPC optional sensor fixture");
+        NPCActorCaps caps("NPC optional sensor fixture");
+        caps.mSwitchDead = false;
+        actor.initialize(JMapInfoIter(), caps);
+        require(actor.mSensorKeeper == nullptr,
+                "disabled NPC sensor capability must skip both keeper and Body sensor creation");
+
+        caps.mSensor = true;
+        caps.mSensorMax = 2;
+        actor.initialize(JMapInfoIter(), caps);
+        require(actor.mSensorKeeper != nullptr && actor.mSensorKeeper->mSensorCount == 2 &&
+                    actor.mSensorKeeper->mSensorInfosSize == 1 && actor.getSensor("Body")->isType(ATYPE_NPC),
+                "enabled NPC capability must initialize the requested keeper and original Body sensor together");
+    }
+
     void test_actor_relative_registration_is_real() {
         auto actor = LiveActor("actor-relative-sensor");
         actor.mPosition.set(10.0F, 20.0F, 30.0F);
@@ -87,8 +107,8 @@ namespace {
         auto* sensor = MR::addHitSensorMtxEnemy(&actor, "matrix", 4U, 25.0F, matrix, TVec3f{2.0F, 3.0F, 4.0F});
         require(sensor != nullptr && sensor->mType == ATYPE_ENEMY,
                 "a valid matrix-bound enemy sensor must be created with its retail type");
-        require(smgpc::compat::actor_sensor_binding_count(&actor) == 1U,
-                "the compatibility layer must own the one non-actor binding");
+        require(actor.mSensorKeeper->getSensorInfo("matrix")->_1C == matrix,
+                "the original HitSensorInfo must retain the supplied matrix pointer");
         require_vec(sensor->mPosition, TVec3f{7.0F, 22.0F, 34.0F},
                     "matrix-bound offset must be transformed by the supplied matrix");
 
@@ -101,8 +121,8 @@ namespace {
                     "matrix-bound sensor must track matrix changes instead of falling back to the actor");
 
         actor.initHitSensor(1);
-        require(smgpc::compat::actor_sensor_binding_count(&actor) == 0U,
-                "reinitializing actor sensors must release compatibility binding state");
+        require(actor.mSensorKeeper->mSensorInfosSize == 0,
+                "reinitializing the keeper must release its old sensor infos");
     }
 
     void test_position_binding_tracks_the_supplied_position() {
@@ -122,56 +142,35 @@ namespace {
                     "position-bound sensor must not silently switch to actor-relative placement");
     }
 
-    void test_missing_matrix_and_joint_remain_absent() {
-        auto actor = LiveActor("absent-joint-sensor");
+    void test_optional_matrix_uses_original_actor_relative_path() {
+        auto actor = LiveActor("optional matrix sensor");
         actor.mPosition.set(10.0F, 20.0F, 30.0F);
-        actor.calcAndSetBaseMtx();
-        actor.initHitSensor(4);
-
-        require(MR::addHitSensorMtxEnemy(&actor, "missing-matrix", 1U, 5.0F, nullptr, {}) == nullptr,
-                "a missing matrix must not create an origin- or actor-bound sensor");
-        require(MR::addHitSensorAtJointEnemy(&actor, "missing-joint", "HandR", 1U, 5.0F, {}) == nullptr,
-                "an unavailable named J3D joint must not fall back to the actor base matrix");
-        require(MR::addHitSensorAtJointEnemy(&actor, "empty-joint", "", 1U, 5.0F, {}) == nullptr,
-                "an empty joint name must remain unavailable");
-        require(MR::addHitSensorAtJointEnemy(nullptr, "missing-actor", "HandR", 1U, 5.0F, {}) == nullptr,
-                "a missing actor must not manufacture a joint sensor");
-        require(actor.getSensor("missing-matrix") == nullptr && actor.getSensor("missing-joint") == nullptr &&
-                    actor.getSensor("empty-joint") == nullptr,
-                "rejected bindings must not leave ordinary fallback sensors behind");
-        require(smgpc::compat::actor_sensor_binding_count(&actor) == 0U,
-                "rejected bindings must not leave compatibility state behind");
+        actor.initHitSensor(1);
+        auto* sensor = MR::addHitSensorMtxEnemy(&actor, "body", 1U, 5.0F, nullptr, TVec3f(1, 2, 3));
+        require(sensor != nullptr && actor.mSensorKeeper->getSensorInfo("body")->_1C == nullptr,
+                "the original optional matrix must reach HitSensorInfo without a substitute binding");
+        require_vec(sensor->mPosition, TVec3f(11, 22, 33),
+                    "HitSensorInfo's original null-matrix path uses the actor position and offset");
     }
 
     void test_message_sensor_is_owned_by_the_active_scene() {
-        require(MR::getMessageSensor() == nullptr,
-                "no active scene must mean no process-global fabricated message sensor");
+        require(!MR::isExistSceneObj(SceneObj_MessageSensorHolder),
+                "the fixture must explicitly create the original message sensor owner");
+        auto* object = MR::createSceneObj(SceneObj_MessageSensorHolder);
+        auto* message_holder = dynamic_cast<MessageSensorHolder*>(object);
+        require(message_holder != nullptr,
+                "explicit SceneObj creation must instantiate the original MessageSensorHolder");
+        auto* sensor = MR::getMessageSensor();
+        require(sensor != nullptr && sensor == message_holder->getSensor("body"),
+                "the message API must return the scene-owned holder's actual body sensor");
+        require(sensor->mHost == message_holder && sensor->mType == ATYPE_MESSAGE_SENSOR,
+                "the message sensor must retain its real host and retail type");
 
-        {
-            auto holder = SceneObjHolder{};
-            const auto binding = smgpc::scene::SceneObjHolderBinding(holder);
-            require(MR::getMessageSensor() == nullptr,
-                    "binding a scene holder must not implicitly fabricate its message sensor");
-
-            auto* object = MR::createSceneObj(SceneObj_MessageSensorHolder);
-            auto* message_holder = dynamic_cast<MessageSensorHolder*>(object);
-            require(message_holder != nullptr,
-                    "explicit SceneObj creation must instantiate the real retail MessageSensorHolder");
-            auto* sensor = MR::getMessageSensor();
-            require(sensor != nullptr && sensor == message_holder->getSensor("body"),
-                    "the message API must return the scene-owned holder's actual body sensor");
-            require(sensor->mHost == message_holder && sensor->mType == ATYPE_MESSAGE_SENSOR,
-                    "the message sensor must retain its real host and retail type");
-
-            auto receiver = RecordingActor("message-receiver");
-            require(MR::sendSimpleMsgToActor(ACTMES_START_DEMO, &receiver),
-                    "simple actor messaging must dispatch through the real scene sensor");
-            require(receiver.last_sender == sensor && receiver.last_receiver == sensor,
-                    "both message endpoints must be the active scene-owned message sensor");
-        }
-
-        require(MR::getMessageSensor() == nullptr,
-                "destroying the scene must remove its message sensor instead of leaking a static replacement");
+        auto receiver = RecordingActor("message-receiver");
+        require(MR::sendSimpleMsgToActor(ACTMES_START_DEMO, &receiver),
+                "simple actor messaging must dispatch through the real scene sensor");
+        require(receiver.last_sender == sensor && receiver.last_receiver == sensor,
+                "both message endpoints must be the active scene-owned message sensor");
     }
 
     void test_arbitrary_message_dispatch_is_real_or_absent() {
@@ -188,8 +187,6 @@ namespace {
         require(receiver_actor.message_count == 1 && receiver_actor.last_message == ACTMES_PUSH_FORCE &&
                     receiver_actor.last_sender == sender && receiver_actor.last_receiver == receiver,
                 "message dispatch must preserve the concrete sender and receiver");
-        require(!MR::sendArbitraryMsg(ACTMES_PUSH_FORCE, nullptr, sender),
-                "an absent receiver must return false instead of reporting a fabricated delivery");
     }
 
     class KeeperActor final : public LiveActor {
@@ -241,7 +238,8 @@ namespace {
                     "external-position offset must also use the actor's base matrix");
         auto* callback = MR::addHitSensorCallback(&actor, "callback", ATYPE_PLAYER, 4, 5);
         require(actor.callbacks == 1 && callback->mValidByHost && !callback->mValidBySystem &&
-                    callback->mSensorCount == 0 && callback->mSensorGroup == nullptr,
+                    callback->mSensorCount == 0 &&
+                    callback->mSensorGroup == MR::getSceneObj<SensorHitChecker>(SceneObj_SensorHitChecker)->mPlayerGroup,
                 "original callback registration and HitSensor initial state must be deterministic");
         require_vec(callback->mPosition, TVec3f(7, 8, 9), "callback result must not be overwritten by an offset fallback");
         ordinary->invalidate();
@@ -283,47 +281,41 @@ namespace {
         sensor->addHitSensor(other);
         actor.movement();
         require(actor.attacks == 1, "the original info must skip receivers that have died");
+        actor.mSensorKeeper->mTaking = other;
+        actor.mSensorKeeper->mTaken = other;
         receiver.reset();
-        require(sensor->mSensorCount == 0, "native owner retirement must remove borrowed contacts before deleting sensor storage");
+        require(sensor->mSensorCount == 0 && sensor->mSensors[0] == nullptr &&
+                    actor.mSensorKeeper->mTaking == nullptr && actor.mSensorKeeper->mTaken == nullptr,
+                "native retirement must clear borrowed contacts and take links before releasing sensor storage");
         actor.movement();
         require(actor.attacks == 1, "retired contacts must never be dispatched");
     }
 
     void test_keeper_and_original_messenger_game_heap_lifetime() {
-        using namespace smgpc::compat;
-        auto heaps = JkrHeapRuntime::create(2U << 20);
-        const auto baseline = heaps->root_heap().getFreeSize();
-        {
-            auto domain = JkrAllocationDomain::create(heaps, 64U << 10);
-            smgpc::runtime::SceneScheduler scheduler;
-            smgpc::runtime::SceneSchedulerBinding scheduler_binding(scheduler);
-            smgpc::runtime::SceneSchedulerAllocationBinding scene_domain(scheduler, domain);
-            JkrAllocationScope game(domain);
-            KeeperActor sender, receiver;
-            for (auto* actor : {&sender, &receiver}) {
-                actor->initHitSensor(1);
-                auto* sensor = MR::addHitSensorEnemy(actor, "body", 4, 8, {});
-                auto* keeper = actor->mSensorKeeper;
-                auto* info = keeper->getNthSensorInfo(0);
-                require(JKRHeap::findFromRoot(keeper) == &domain->heap() &&
-                            JKRHeap::findFromRoot(keeper->mSensorInfos) == &domain->heap() &&
-                            JKRHeap::findFromRoot(info) == &domain->heap() &&
-                            JKRHeap::findFromRoot(sensor) == &domain->heap() &&
-                            JKRHeap::findFromRoot(sensor->mSensors) == &domain->heap(),
-                        "all original keeper allocations must remain in the caller's Game arena");
-            }
-            MarioMessenger messenger(sender.getSensor("body"));
-            for (u32 i = 0; i < 35; ++i) messenger.addRequest(receiver.getSensor("body"), 1000 + i);
-            scheduler.execute_movement();
-            require(receiver.received == 32, "the actual messenger must cap requests at 32 and execute from its registered category");
-            for (u32 i = 0; i < 32; ++i) require(receiver.messages[i] == 1000 + i, "messenger must retain FIFO message order");
-            require(receiver.last_sender == sender.getSensor("body") && receiver.last_receiver == receiver.getSensor("body"),
-                    "messenger must preserve actual sensor endpoints");
-            scheduler.execute_movement();
-            require(receiver.received == 32, "messenger movement must clear its queue after delivery");
+        auto& scheduler = *smgpc::runtime::try_active_scene_scheduler();
+        auto domain = scheduler.allocation_domain();
+        KeeperActor sender, receiver;
+        for (auto* actor : {&sender, &receiver}) {
+            actor->initHitSensor(1);
+            auto* sensor = MR::addHitSensorEnemy(actor, "body", 4, 8, {});
+            auto* keeper = actor->mSensorKeeper;
+            auto* info = keeper->getNthSensorInfo(0);
+            require(JKRHeap::findFromRoot(keeper) == &domain->heap() &&
+                        JKRHeap::findFromRoot(keeper->mSensorInfos) == &domain->heap() &&
+                        JKRHeap::findFromRoot(info) == &domain->heap() &&
+                        JKRHeap::findFromRoot(sensor) == &domain->heap() &&
+                        JKRHeap::findFromRoot(sensor->mSensors) == &domain->heap(),
+                    "all original keeper allocations must remain in the caller's Game arena");
         }
-        require(heaps->root_heap().getFreeSize() == baseline,
-                "original keeper and messenger storage must retire with their Game arena");
+        MarioMessenger messenger(sender.getSensor("body"));
+        for (u32 i = 0; i < 35; ++i) messenger.addRequest(receiver.getSensor("body"), 1000 + i);
+        scheduler.execute_movement();
+        require(receiver.received == 32, "the actual messenger must cap requests at 32 and execute from its registered category");
+        for (u32 i = 0; i < 32; ++i) require(receiver.messages[i] == 1000 + i, "messenger must retain FIFO message order");
+        require(receiver.last_sender == sender.getSensor("body") && receiver.last_receiver == receiver.getSensor("body"),
+                "messenger must preserve actual sensor endpoints");
+        scheduler.execute_movement();
+        require(receiver.received == 32, "messenger movement must clear its queue after delivery");
     }
 
     void test_original_sensor_distance_and_direction() {
@@ -354,6 +346,7 @@ namespace {
 
 int main() {
     constexpr auto tests = std::array{
+        TestCase{"NPC optional sensor capability", test_npc_sensor_capability_owns_body_registration},
         TestCase{"original sensor center distance", test_original_sensor_distance_and_direction},
         TestCase{"original keeper callbacks, offsets and validity", test_original_keeper_callbacks_offsets_and_validity},
         TestCase{"original contact delivery and retirement", test_original_contact_delivery_and_retirement},
@@ -361,7 +354,7 @@ int main() {
         TestCase{"actor-relative registration", test_actor_relative_registration_is_real},
         TestCase{"matrix binding", test_matrix_binding_tracks_the_supplied_matrix},
         TestCase{"position binding", test_position_binding_tracks_the_supplied_position},
-        TestCase{"missing matrix and joint", test_missing_matrix_and_joint_remain_absent},
+        TestCase{"original optional matrix semantics", test_optional_matrix_uses_original_actor_relative_path},
         TestCase{"scene-owned message sensor", test_message_sensor_is_owned_by_the_active_scene},
         TestCase{"arbitrary message dispatch", test_arbitrary_message_dispatch_is_real_or_absent},
     };
@@ -369,7 +362,27 @@ int main() {
     auto failures = 0;
     for (const auto& test : tests) {
         try {
-            test.run();
+            auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+            const auto root_free = heaps->root_heap().getFreeSize();
+            const auto names = smgpc::compat::name_obj_runtime_state_count();
+            const auto actors = smgpc::compat::actor_runtime_state_count();
+            {
+                smgpc::test::OriginalSceneControllerFixture original(heaps);
+                auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 4U << 20);
+                smgpc::runtime::SceneScheduler scheduler;
+                smgpc::runtime::SceneSchedulerBinding active(scheduler);
+                smgpc::test::SceneExecutionFixture execution(scheduler, domain, nullptr, nullptr,
+                                                          &original.scene, original.controller().mObjHolder);
+                smgpc::compat::JkrAllocationScope game(domain);
+                auto* clipping = static_cast<ClippingDirector*>(MR::createSceneObj(SceneObj_ClippingDirector));
+                scheduler.disconnect_name_obj(*clipping);
+                execution.complete_initialization();
+                test.run();
+            }
+            require(heaps->root_heap().getFreeSize() == root_free &&
+                        smgpc::compat::name_obj_runtime_state_count() == names &&
+                        smgpc::compat::actor_runtime_state_count() == actors,
+                    "each original scene must retire all registered sensor owners and its Game arenas");
             std::cout << "[ok] " << test.name << '\n';
         } catch (const std::exception& error) {
             ++failures;

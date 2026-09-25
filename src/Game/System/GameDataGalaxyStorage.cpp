@@ -8,6 +8,9 @@
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
+#include <aurora/endian.hpp>
+#include <aurora/exception.hpp>
+#include <stdexcept>
 
 bool GameDataSomeScenarioAccessor::hasPowerStar() const {
     return mSomeGalaxyStorage->hasPowerStar(mScenarioNum - 1);
@@ -90,7 +93,7 @@ s32 GameDataSomeGalaxyStorage::deserialize(const BinaryDataContentAccessor& rAcc
     u16* maxCoinNums = (u16*)rAccessor.getPointer("mMaxCoinNum", (u8*)pData);
     for (s32 idx = 0; idx < 8; idx++) {
         if (maxCoinNums != nullptr) {
-            mMaxCoinNum[idx] = maxCoinNums[idx];
+            mMaxCoinNum[idx] = aurora::endian::read_u16(reinterpret_cast< const u8* >(maxCoinNums) + idx * 2);
         } else {
             mMaxCoinNum[idx] = 0;
         }
@@ -167,7 +170,9 @@ s32 GameDataAllGalaxyStorage::deserialize(const u8* pData, u32 dataSize) {
     // FIXME: regswaps
     // https://decomp.me/scratch/1nmoc
 
-    s32 attributeNum = *(u16*)(pData + 0);
+    if (!validateData(pData, dataSize))
+        return -1;
+    s32 attributeNum = aurora::endian::read_u16(pData);
     BinaryDataContentAccessor accessor((u8*)(pData + 2));
     u32 readOffset = accessor.getHeaderSize() + 2;
 
@@ -175,7 +180,7 @@ s32 GameDataAllGalaxyStorage::deserialize(const u8* pData, u32 dataSize) {
 
     for (s32 idx = 0; idx < attributeNum; idx++) {
         const char* name = "mGalaxyName";
-        s32 galaxyIndex = findIndex(*(u16*)accessor.getPointer(name, (u8*)(pData + readOffset)));
+        s32 galaxyIndex = findIndex(aurora::endian::read_u16(accessor.getPointer(name, (u8*)(pData + readOffset))));
         if (galaxyIndex >= 0) {
             switch (mSomeGalaxyStorages[galaxyIndex]->deserialize(accessor, (u8*)(pData + readOffset))) {
             case 0:
@@ -240,15 +245,22 @@ void GameDataSomeGalaxyStorage::serialize(const BinaryDataContentAccessor& rAcce
 
     u16* maxCoinNums = (u16*)rAccessor.getPointer("mMaxCoinNum", pData);
     for (s32 idx = 0; idx < 8; idx++) {
-        maxCoinNums[idx] = mMaxCoinNum[idx];
+        aurora::endian::write_u16(reinterpret_cast< u8* >(maxCoinNums) + idx * 2, mMaxCoinNum[idx]);
     }
 }
 
 s32 GameDataAllGalaxyStorage::serialize(u8* pData, u32 dataSize) const {
+    if (pData == nullptr || dataSize > 0x7fffffffU) {
+        aurora::throw_host_exception<std::length_error>("Save output exceeds the stream range");
+    }
     // FIXME: regswap and missing load
     // https://decomp.me/scratch/NCESx
 
-    *(u16*)(pData + 0) = getGalaxyNum();
+    const u64 binarySize = 2 + getSerializer()->getHeaderSize() + u64(getGalaxyNum()) * getSerializer()->getDataSize();
+    if (pData == nullptr || binarySize > dataSize) {
+        aurora::throw_host_exception< std::length_error >("GALA output is too small");
+    }
+    aurora::endian::write_u16(pData, getGalaxyNum());
     MR::copyMemory(pData + 2, getSerializer()->getBuffer(), getSerializer()->getHeaderSize());
 
     s32 writeOffset = getSerializer()->getHeaderSize() + 2;
@@ -259,10 +271,22 @@ s32 GameDataAllGalaxyStorage::serialize(u8* pData, u32 dataSize) const {
         GameDataSomeGalaxyStorage* storage = mSomeGalaxyStorages[idx];
         const char* name = "mGalaxyName";
         u16* writePtr = (u16*)accessor.getPointer(name, pData + writeOffset);
-        *writePtr = MR::getHashCode(storage->mGalaxyName);
+        aurora::endian::write_u16(writePtr, MR::getHashCode(storage->mGalaxyName));
         storage->serialize(accessor, pData + writeOffset);
         writeOffset += getSerializer()->getDataSize();
     }
 
     return writeOffset;
+}
+
+bool GameDataAllGalaxyStorage::validateData(const u8* pData, u32 size) const {
+    if (pData == nullptr || size < 6)
+        return false;
+    constexpr BinaryDataContentAccessor::Attribute attributes[] = {
+        {"mGalaxyName", 2, true},
+        {"mPowerStarFlag", 1, false},
+        {"mFirstPlayFlag", 1, false},
+        {"mMaxCoinNum", 16, false},
+    };
+    return BinaryDataContentAccessor::validate(pData + 2, size - 2, aurora::endian::read_u16(pData), attributes);
 }

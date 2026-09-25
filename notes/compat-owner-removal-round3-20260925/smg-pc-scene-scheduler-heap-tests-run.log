@@ -1,0 +1,4 @@
+NameObj registry and scheduler sorting/history/snapshots survive original heap retirement; movement and animation callbacks retain original heap routing
+explicit_scene_heap=pass nested_exception_restoration=pass stable_registration_mutation=pass sensor_message_retirement=pass clipping_transitions=pass predraw_draw=pass callback_lease=pass scene_heap_retirement=pass
+backend_host_escape=pass nested_client_reentry=pass explicit_nested_domain=pass routing_exception_restore=pass
+category_interleave=pass category_identity=pass category_exception_restore=pass single_sensor_phase=pass

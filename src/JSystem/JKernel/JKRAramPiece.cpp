@@ -2,7 +2,6 @@
 #include "JSystem/JKernel/JKRAram.hpp"
 #include "JSystem/JKernel/JKRAramStream.hpp"
 #include "JSystem/JKernel/JKRDecomp.hpp"
-#include "compat/JkrDiagnostics.hpp"
 
 JKRAMCommand* JKRAramPiece::prepareCommand(int direction, uintptr_t src, uintptr_t dst, u32 length, JKRAramBlock* block, JKRAMCommand::AsyncCallback callback) {
     JKRAMCommand* command = new (JKRGetSystemHeap(), -4) JKRAMCommand();
@@ -30,7 +29,7 @@ JKRAMCommand* JKRAramPiece::orderAsync(int direction, uintptr_t source, uintptr_
         OSReport("source = %zx\n", static_cast<size_t>(source));
         OSReport("destination = %zx\n", static_cast<size_t>(destination));
         OSReport("length = %x\n", length);
-        smgpc::compat::jkr_panic(__FILE__, 108, "illegal address. abort.");
+        OSPanic(__FILE__, 108, "illegal address. abort.");
     }
 
     JKRAramCommand* message = new (JKRGetSystemHeap(), -4) JKRAramCommand();

@@ -1,0 +1,38 @@
+[0m[38;5;2;1m[ 32%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/StarPieceAlmsStorage.cpp[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/SysConfigFile.cpp[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameEventValueChecker.cpp[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/SpinDriverPathStorage.cpp[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/BinaryDataChunkHolder.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/BinaryDataContentAccessor.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/ConfigDataMisc.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameEventFlagStorage.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/GameDataGalaxyStorage.cpp[0m
+[0m[38;5;2;1m[ 76%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/GameDataOwnership.cpp[0m
+[0m[38;5;2;1m[ 82%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/ResourceHolderCompat.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/light/LightData.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DShape.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DShapeDraw.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRAramPiece.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRAramStream.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRDecomp.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JSupport/JSUFileStream.cpp[0m
+[0m[38;5;3;1msrc/JSystem/JKernel/JKRAramStream.cpp:46:17: warning: enumeration value 'UNKNOWN' not handled in switch [-Wswitch]
+   46 |         switch (command->mType) {
+      |                 ^~~~~~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;3;1msrc/compat/ResourceHolderCompat.cpp:327:13: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  327 |             mounts->mount(path, &(domain ? domain : _domain)->heap());
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/compat/ResourceHolderCompat.cpp:374:17: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  374 |                 mounts->mount(path, &(domain ? domain : _domain)->heap());
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2 warnings generated.[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[1;38;5;1;1merror: [0msrc/JSystem/J3DGraphBase/J3DShape.cpp:221:13: error: no matching function for call to 'GDSetArrayRaw'
+  221 |             GDSetArrayRaw((GXAttr)(i + GX_VA_POS), nullptr, stride[i]);
+      |             ^~~~~~~~~~~~~
+aurora/include/dolphin/gd/GDGeometry.h:513:6: note: candidate function not viable: no known conversion from 'std::nullptr_t' to 'u32' (aka 'unsigned int') for 2nd argument
+  513 | void GDSetArrayRaw(GXAttr attr, u32 base_ptr_raw, u8 stride);
+      |      ^                          ~~~~~~~~~~~~~~~~
+1 error generated.
+  [38;5;3m> in [1msrc/JSystem/J3DGraphBase/J3DShape.cpp[0m

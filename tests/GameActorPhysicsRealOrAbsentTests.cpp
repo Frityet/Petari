@@ -103,8 +103,8 @@ int main() {
         ProbeActor actor;
         actor.makeActorAppeared();
         actor.initHitSensor(2);
-        auto* first = smgpc::compat::add_actor_hit_sensor(&actor, "first", 1U, 1U, 10.0F, {});
-        auto* second = smgpc::compat::add_actor_hit_sensor(&actor, "second", 1U, 1U, 10.0F, {});
+        auto* first = MR::addHitSensor(&actor, "first", 1U, 1U, 10.0F, {});
+        auto* second = MR::addHitSensor(&actor, "second", 1U, 1U, 10.0F, {});
         first->addHitSensor(second);
         actor.initBinder(50.0F, 0.0F, 8U);
         actor.mBinder->_158 = 1.0F;

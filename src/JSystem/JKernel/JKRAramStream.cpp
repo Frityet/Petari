@@ -1,7 +1,6 @@
 #include "JSystem/JKernel/JKRAramStream.hpp"
 #include "JSystem/JKernel/JKRAramPiece.hpp"
 #include "JSystem/JSupport/JSUFileStream.hpp"
-#include "compat/JkrDiagnostics.hpp"
 
 const u32 stack_size = 0x4000;
 
@@ -90,7 +89,7 @@ s32 JKRAramStream::writeToAram(JKRAramStreamCommand* command) {
             heap->dump();
         }
 
-        smgpc::compat::jkr_panic(__FILE__, 172, ":::Cannot alloc memory\n");
+        OSPanic(__FILE__, 172, ":::Cannot alloc memory\n");
     }
 
     if (buffer) {

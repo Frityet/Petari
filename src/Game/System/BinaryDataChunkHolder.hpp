@@ -9,6 +9,11 @@ public:
     virtual s32 serialize(u8*, u32) const = 0;
     virtual s32 deserialize(const u8*, u32) = 0;
     virtual void initializeData() = 0;
+
+    // Native file loading checks every chunk before mutating any game state.
+    virtual bool validateData(const u8* pData, u32 size) const {
+        return size == 0 || pData != nullptr;
+    }
 };
 
 struct BinaryDataChunkHolderChunkData {

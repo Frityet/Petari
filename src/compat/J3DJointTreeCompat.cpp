@@ -29,15 +29,6 @@ void J3DMtxCalc::setMtxBuffer(J3DMtxBuffer* mtxBuffer) {
 J3DJointTree::~J3DJointTree() {
 }
 
-J3DDrawMtxData::J3DDrawMtxData() {
-    mEntryNum = 0;
-    mDrawMtxFlag = NULL;
-    mDrawMtxIndex = NULL;
-}
-
-J3DDrawMtxData::~J3DDrawMtxData() {
-}
-
 // Original zero-initialized J3DSys traversal globals (RMGK01 BSS).
 Mtx J3DSys::mCurrentMtx;
 Vec J3DSys::mCurrentS;

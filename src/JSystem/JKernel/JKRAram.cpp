@@ -5,7 +5,6 @@
 #include "JSystem/JKernel/JKRAramStream.hpp"
 #include "JSystem/JKernel/JKRDecomp.hpp"
 #include "JSystem/JKernel/JKRExpHeap.hpp"
-#include "compat/JkrDiagnostics.hpp"
 #include <cstring>
 #include <revolution.h>
 
@@ -62,11 +61,11 @@ void* JKRAram::run(void) {
 
 void JKRAram::checkOkAddress(u8* addr, u32 size, JKRAramBlock* block, u32 param_4) {
     if (!IS_ALIGNED(reinterpret_cast< uintptr_t >(addr), 0x20) && !IS_ALIGNED(size, 0x20)) {
-        smgpc::compat::jkr_panic(__FILE__, 219, ":::address not 32Byte aligned.");
+        OSPanic(__FILE__, 219, ":::address not 32Byte aligned.");
     }
 
     if (block && !IS_ALIGNED(static_cast< uintptr_t >(block->getAddress()) + param_4, 0x20)) {
-        smgpc::compat::jkr_panic(__FILE__, 227, ":::address not 32Byte aligned.");
+        OSPanic(__FILE__, 227, ":::address not 32Byte aligned.");
     }
 }
 

@@ -16,6 +16,11 @@ HitSensor::HitSensor(u32 type, u16 groupSize, f32 radius, LiveActor* pHost)
     MR::initHitSensorGroup(this);
 }
 
+HitSensor::~HitSensor() {
+    invalidateBySystem();
+    delete[] mSensors;
+}
+
 bool HitSensor::receiveMessage(u32 msg, HitSensor* pSender) {
     return mHost->receiveMessage(msg, pSender, this);
 }

@@ -45,6 +45,8 @@ LiveActor::LiveActor(const char* pName)
 
 LiveActor::~LiveActor() {
     smgpc::compat::release_actor_runtime_state(this);
+    delete mSensorKeeper;
+    mSensorKeeper = nullptr;
 }
 
 void LiveActor::init(const JMapInfoIter&) {
@@ -82,7 +84,7 @@ void LiveActor::movement() {
         if (mActorLightCtrl != nullptr) {
             MR::updateLightCtrl(this);
         }
-        smgpc::compat::update_actor_hit_sensors(this);
+        MR::tryUpdateHitSensorsAll(this);
         MR::actorSoundMovement(this);
         MR::requestCalcActorShadow(this);
     }
@@ -345,7 +347,9 @@ void LiveActor::initActorLightCtrl() {
 }
 
 void LiveActor::initHitSensor(int sensorCount) {
-    smgpc::compat::initialize_actor_hit_sensors(this, sensorCount);
+    HitSensorKeeper* keeper = new HitSensorKeeper(sensorCount);
+    delete mSensorKeeper;
+    mSensorKeeper = keeper;
 }
 
 void LiveActor::initBinder(f32 radius, f32 offset, u32 type) {
@@ -406,7 +410,11 @@ void LiveActor::initActorStarPointerTarget(f32 radius, const TVec3f* pTrans, Mtx
 }
 
 HitSensor* LiveActor::getSensor(const char* pSensorName) const {
-    return smgpc::compat::actor_hit_sensor(this, pSensorName);
+    if (mSensorKeeper != nullptr) {
+        return mSensorKeeper->getSensor(pSensorName);
+    }
+
+    return nullptr;
 }
 
 void LiveActor::addToSoundObjHolder() {

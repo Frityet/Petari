@@ -1,0 +1,82 @@
+[
+  {
+    "path": "src/compat/JKRHeapCompat.cpp",
+    "state": "deleted",
+    "disposition": "canonical-sdk-owner",
+    "destination": "src/JSystem/JKernel/JKRHeap.cpp",
+    "confidence": "high",
+    "evidence": "source-validation.json records 129 retained heap method bodies and six unchanged native lifetime/provenance algorithms; all consumers updated"
+  },
+  {
+    "path": "src/compat/JKRExpHeapCompat.cpp",
+    "state": "deleted",
+    "disposition": "canonical-sdk-owner",
+    "destination": "src/JSystem/JKernel/JKRExpHeap.cpp",
+    "confidence": "high",
+    "evidence": "source-validation.json records 129 retained heap method bodies and six unchanged native lifetime/provenance algorithms; all consumers updated"
+  },
+  {
+    "path": "src/compat/JKRSolidHeapCompat.cpp",
+    "state": "deleted",
+    "disposition": "canonical-sdk-owner",
+    "destination": "src/JSystem/JKernel/JKRSolidHeap.cpp",
+    "confidence": "high",
+    "evidence": "source-validation.json records 129 retained heap method bodies and six unchanged native lifetime/provenance algorithms; all consumers updated"
+  },
+  {
+    "path": "src/compat/JKRUnitHeapCompat.cpp",
+    "state": "deleted",
+    "disposition": "canonical-sdk-owner",
+    "destination": "src/JSystem/JKernel/JKRUnitHeap.cpp",
+    "confidence": "high",
+    "evidence": "source-validation.json records 129 retained heap method bodies and six unchanged native lifetime/provenance algorithms; all consumers updated"
+  },
+  {
+    "path": "src/compat/JkrHeapFinalizer.cpp",
+    "state": "deleted",
+    "disposition": "canonical-sdk-owner",
+    "destination": "src/JSystem/JKernel/JKRHeap.cpp",
+    "confidence": "high",
+    "evidence": "source-validation.json records 129 retained heap method bodies and six unchanged native lifetime/provenance algorithms; all consumers updated"
+  },
+  {
+    "path": "src/compat/JkrHeapFinalizer.hpp",
+    "state": "deleted",
+    "disposition": "canonical-sdk-owner",
+    "destination": "src/JSystem/JKernel/JKRHeap.cpp",
+    "confidence": "high",
+    "evidence": "source-validation.json records 129 retained heap method bodies and six unchanged native lifetime/provenance algorithms; all consumers updated"
+  },
+  {
+    "path": "src/compat/JkrAllocationProvenance.cpp",
+    "state": "deleted",
+    "disposition": "canonical-sdk-owner",
+    "destination": "src/JSystem/JKernel/JKRHeap.cpp",
+    "confidence": "high",
+    "evidence": "source-validation.json records 129 retained heap method bodies and six unchanged native lifetime/provenance algorithms; all consumers updated"
+  },
+  {
+    "path": "src/compat/JkrAllocationProvenance.hpp",
+    "state": "deleted",
+    "disposition": "canonical-sdk-owner",
+    "destination": "src/JSystem/JKernel/JKRHeap.cpp",
+    "confidence": "high",
+    "evidence": "source-validation.json records 129 retained heap method bodies and six unchanged native lifetime/provenance algorithms; all consumers updated"
+  },
+  {
+    "path": "src/compat/JkrDiagnostics.cpp",
+    "state": "deleted",
+    "disposition": "delete-redundant-wrapper",
+    "destination": "aurora/include/dolphin/os.h (existing OSReport/OSPanic API)",
+    "confidence": "high",
+    "evidence": "source-validation.json records 129 retained heap method bodies and six unchanged native lifetime/provenance algorithms; all consumers updated"
+  },
+  {
+    "path": "src/compat/JkrDiagnostics.hpp",
+    "state": "deleted",
+    "disposition": "delete-redundant-wrapper",
+    "destination": "aurora/include/dolphin/os.h (existing OSReport/OSPanic API)",
+    "confidence": "high",
+    "evidence": "source-validation.json records 129 retained heap method bodies and six unchanged native lifetime/provenance algorithms; all consumers updated"
+  }
+]

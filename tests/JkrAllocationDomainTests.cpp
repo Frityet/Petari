@@ -1,5 +1,6 @@
 #include "compat/JkrAllocationDomain.hpp"
 #include "Game/Util/MemoryUtil.hpp"
+#include "Game/Util/MutexHolder.hpp"
 #include "JSystem/JKernel/JKRExpHeap.hpp"
 #include "JSystem/JKernel/JKRSolidHeap.hpp"
 
@@ -87,6 +88,8 @@ namespace {
         auto runtime = JkrHeapRuntime::create(1 << 20);
         auto a = JkrAllocationDomain::create(runtime, 16384);
         auto b = JkrAllocationDomain::create(runtime, 16384);
+        require(&MR::MutexHolder<1>::sMutex == &JKRHeap::sCurrentHeapMutex,
+                "original Game and J3D wrappers alias the SDK current-heap mutex");
         require(!current_jkr_allocation_domain(), "no domain is published outside a Game allocation scope");
         std::vector<std::uint64_t> host_values;
         void* root_before = JKRHeap::sCurrentHeap;
@@ -99,6 +102,17 @@ namespace {
                 require(current_jkr_allocation_domain() == b, "original heap selector changes the published domain");
                 auto* bv = new int(29);
                 require(JKRHeap::findFromRoot(bv) == &b->heap(), "original selector controls ordinary new");
+                try {
+                    JKRHeap::CurrentHeapScope sdk_select(a->heap());
+                    auto* sdk_value = new int(37);
+                    require(current_jkr_allocation_domain() == a && JKRHeap::findFromRoot(sdk_value) == &a->heap(),
+                            "SDK heap scope nests inside the original MR heap restorer");
+                    delete sdk_value;
+                    throw 37;
+                } catch (int value) {
+                    require(value == 37 && JKRHeap::sCurrentHeap == &b->heap(),
+                            "SDK scope restores the original selected heap while unwinding");
+                }
                 {
                     JkrHostAllocationScope host;
                     host_values.resize(1000, 0x1234);

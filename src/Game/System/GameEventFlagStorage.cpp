@@ -1,3 +1,5 @@
+#include <aurora/exception.hpp>
+#include <stdexcept>
 #include "Game/System/GameEventFlagStorage.hpp"
 #include "Game/System/GameEventFlag.hpp"
 #include "Game/System/GameEventFlagTable.hpp"
@@ -23,6 +25,9 @@ u32 GameEventFlagStorage::getSignature() const {
 }
 
 s32 GameEventFlagStorage::serialize(u8* pData, u32 size) const {
+    if (pData == nullptr || size > 0x7fffffffU) {
+        aurora::throw_host_exception<std::length_error>("Save output exceeds the stream range");
+    }
     JSUMemoryOutputStream stream(pData, size);
 
     for (GameEventFlagIter iter = GameEventFlagTable::getBeginIter(); !iter.isEnd(); iter.goNext()) {
@@ -33,19 +38,20 @@ s32 GameEventFlagStorage::serialize(u8* pData, u32 size) const {
         GameEventFlagAccessor accessor(iter.getFlag());
         u16 hash = MR::getHashCode(accessor.getName()) & 0x7FFF;
         u16 data = hash | (isOn(iter.getFlag()) ? 0x8000 : 0);
-        stream.write(&data, sizeof(data));
+        stream.writeBig(data);
     }
 
     return stream.mPosition;
 }
 
 s32 GameEventFlagStorage::deserialize(const u8* pData, u32 size) {
+    if (!validateData(pData, size))
+        return -1;
     s32 deserializationFailed = false;
     JSUMemoryInputStream stream(pData, size);
 
     for (s32 i = 0; i < (int)size / (int)sizeof(u16); i++) {
-        u16 data;
-        stream.read(&data, sizeof(data));
+        u16 data = stream.readBig< u16 >();
 
         bool isOn = ((data >> 15) & 0x1) != 0;
         int index = GameEventFlagTable::getIndexFromHashCode(data & 0x7FFF);
@@ -68,4 +74,8 @@ void GameEventFlagStorage::initializeData() {
 
 u32 GameEventFlagStorage::makeHeaderHashCode() const {
     return MR::getHashCode("2bytes/flag");
+}
+
+bool GameEventFlagStorage::validateData(const u8* pData, u32 size) const {
+    return (pData != nullptr || size == 0) && size <= 0x7fffffffU && size % 2 == 0;
 }

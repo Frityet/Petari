@@ -6,6 +6,79 @@
 #include "Game/Util/StringUtil.hpp"
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 #include <JSystem/JSupport/JSUMemoryOutputStream.hpp>
+#include <aurora/endian.hpp>
+#include <aurora/exception.hpp>
+#include <cstring>
+#include <span>
+#include <stdexcept>
+
+namespace {
+    bool contains(std::size_t size, std::size_t offset, std::size_t length) noexcept {
+        return offset <= size && length <= size - offset;
+    }
+
+    // Only identify serialized tags and widths; the original deserializer still
+    // decides which galaxy, scenario and driver receives each value.
+    bool validate_path_tokens(std::span< const u8 > bytes, std::size_t begin, std::size_t end) noexcept {
+        bool has_zone = false;
+        unsigned entries = 0;
+        unsigned steps = 0;
+        while (begin < end && ++steps <= 100) {
+            const auto tag = bytes[begin++];
+            if (tag == 0xff)
+                return begin == end;
+            if ((tag & 0xc0) == 0xc0) {
+                has_zone = true;
+                continue;
+            }
+            if (!has_zone || ++entries > 16)
+                return false;
+            if ((tag & 0x80) != 0) {
+                if (begin == end)
+                    return false;
+                ++begin;
+            }
+        }
+        return false;
+    }
+
+    bool validatePaths(std::span< const u8 > bytes) noexcept {
+        if (bytes.empty())
+            return false;
+        std::size_t position = 1;
+        for (unsigned galaxy = 0; galaxy < bytes[0]; ++galaxy) {
+            if (!contains(bytes.size(), position, 6))
+                return false;
+            const auto block_size = aurora::endian::read_u16(bytes.data() + position + 2);
+            const auto scenarios = bytes[position + 4];
+            if (block_size < 6 || !contains(bytes.size(), position, block_size))
+                return false;
+            const auto end = position + block_size;
+
+            position += 6;
+            for (unsigned scenario = 0; scenario < scenarios; ++scenario) {
+                if (!contains(end, position, 3))
+                    return false;
+                const auto scenario_size = aurora::endian::read_u16(bytes.data() + position);
+                if (scenario_size < 3 || !contains(end, position, scenario_size))
+                    return false;
+                if (!validate_path_tokens(bytes, position + 2, position + scenario_size))
+                    return false;
+
+                position += scenario_size;
+            }
+            // Later versions may append opaque bytes within a galaxy block.
+            position = end;
+        }
+        return true;
+    }
+
+    void requireOutput(const u8* pData, u32 capacity, u32 needed) {
+        if (pData == nullptr || needed > capacity) {
+            aurora::throw_host_exception< std::length_error >("SPN1 output is too small");
+        }
+    }
+}  // namespace
 
 enum SpinDriverDataFlag {
     SpinDriverDataFlag_Interrupted = 0b10000000,
@@ -128,6 +201,7 @@ void SpinDriverPathStorageScenario::updateValue(int spinDriverIndex, f32 drawRan
 }
 
 s32 SpinDriverPathStorageScenario::serialize(u8* pData, u32 dataSize) const {
+    requireOutput(pData, dataSize, 3);
     s32 size = 0;
     s32 maxZoneId = calcMaxZoneId();
     for (s32 zone = 0; zone <= maxZoneId; zone++) {
@@ -135,19 +209,24 @@ s32 SpinDriverPathStorageScenario::serialize(u8* pData, u32 dataSize) const {
         for (s32 idx = 0; idx < mOneStorage.size(); idx++) {
             if (zone == mOneStorage[idx].mZoneId) {
                 if (newZone) {
+                    requireOutput(pData, dataSize, size + 4);
                     *(u8*)(pData + 2 + size) = zone & ~(SpinDriverScenarioDataFlag_ZoneDataStart) | SpinDriverScenarioDataFlag_ZoneDataStart;
                     size += 1;
                     newZone = false;
                 }
 
-                size += mOneStorage[idx].serialize(pData + 2 + size);
+                u8 entry[2];
+                const s32 entrySize = mOneStorage[idx].serialize(entry);
+                requireOutput(pData, dataSize, size + entrySize + 3);
+                std::memcpy(pData + 2 + size, entry, entrySize);
+                size += entrySize;
             }
         }
     }
 
     u16 blockSize = size + 3;
     *(pData + size + 2) = SpinDriverScenarioDataFlag_EndOfData;
-    *(u16*)(pData + 0) = blockSize;
+    aurora::endian::write_u16(pData, blockSize);
     return blockSize;
 }
 
@@ -219,34 +298,35 @@ void SpinDriverPathStorageGalaxy::updateValue(int scenarioNo, int spinDriverInde
 }
 
 s32 SpinDriverPathStorageGalaxy::serialize(u8* pData, u32 maxBufferSize) const {
+    requireOutput(pData, maxBufferSize, 6);
     s32 size = 0;
     for (s32 idx = 0; idx < mNumScenarios; idx++) {
         size += mScenarioStorage[idx].serialize(pData + size + 6, maxBufferSize - size - 6);
     }
 
-    *(u16*)(pData + 0) = MR::getHashCode(mGalaxyName);
+    aurora::endian::write_u16(pData, MR::getHashCode(mGalaxyName));
     u16 blockSize = size + 6;
-    *(u16*)(pData + 2) = blockSize;
+    aurora::endian::write_u16(pData + 2, blockSize);
     *(u8*)(pData + 4) = mNumScenarios;
     *(u8*)(pData + 5) = 0;
     return blockSize;
 }
 
 s32 SpinDriverPathStorageGalaxy::deserialize(const u8* pData, u32 maxBufferSize) {
-    if (*(u16*)(pData + 0) != (u16)MR::getHashCode(mGalaxyName)) {
-        return *(u16*)(pData + 2);
+    if (aurora::endian::read_u16(pData) != (u16)MR::getHashCode(mGalaxyName)) {
+        return aurora::endian::read_u16(pData + 2);
     }
 
     if (*(u8*)(pData + 4) != mNumScenarios) {
         resetAllData();
-        return *(u16*)(pData + 2);
+        return aurora::endian::read_u16(pData + 2);
     }
 
     s32 size = 0;
     for (s32 idx = 0; idx < mNumScenarios; idx++) {
         size += mScenarioStorage[idx].deserialize((u8*)(pData + size + 6), maxBufferSize - size - 6);
     }
-    return *(u16*)(pData + 2);
+    return aurora::endian::read_u16(pData + 2);
 }
 
 SpinDriverPathStorage::SpinDriverPathStorage() {
@@ -283,6 +363,10 @@ u32 SpinDriverPathStorage::getSignature() const {
 }
 
 s32 SpinDriverPathStorage::serialize(u8* pData, u32 maxBufferSize) const {
+    if (pData == nullptr || maxBufferSize > 0x7fffffffU) {
+        aurora::throw_host_exception<std::length_error>("Save output exceeds the stream range");
+    }
+    requireOutput(pData, maxBufferSize, 1);
     JSUMemoryOutputStream stream(pData, maxBufferSize);
     stream.writeU8(mGalaxyStorage.size());
     for (s32 idx = 0; idx < mGalaxyStorage.size(); idx++) {
@@ -293,6 +377,8 @@ s32 SpinDriverPathStorage::serialize(u8* pData, u32 maxBufferSize) const {
 }
 
 s32 SpinDriverPathStorage::deserialize(const u8* pData, u32 maxBufferSize) {
+    if (!validateData(pData, maxBufferSize))
+        return -1;
     s32 readError = 0;
 
     JSUMemoryInputStream stream(pData, maxBufferSize);
@@ -300,13 +386,13 @@ s32 SpinDriverPathStorage::deserialize(const u8* pData, u32 maxBufferSize) {
 
     for (s32 idx = 0; idx < numEntries; idx++) {
         u8* readPtr = (u8*)stream.mBuffer + stream.mPosition;
-        SpinDriverPathStorageGalaxy* storage = findFromHashCode(*(u16*)readPtr);
+        SpinDriverPathStorageGalaxy* storage = findFromHashCode(aurora::endian::read_u16(readPtr));
         if (storage != nullptr) {
             storage->deserialize((u8*)stream.mBuffer + stream.mPosition, maxBufferSize - stream.mPosition);
         } else {
             readError = 1;
         }
-        stream.seek(*(u16*)(readPtr + 2), SEEK_FROM_POSITION);
+        stream.seek(aurora::endian::read_u16(readPtr + 2), SEEK_FROM_POSITION);
     }
 
     return readError ? 1 : 0;
@@ -328,4 +414,8 @@ SpinDriverPathStorageGalaxy* SpinDriverPathStorage::findFromHashCode(u16 galaxyN
         }
     }
     return nullptr;
+}
+
+bool SpinDriverPathStorage::validateData(const u8* pData, u32 size) const {
+    return pData != nullptr && size <= 0x7fffffffU && validatePaths({pData, size});
 }

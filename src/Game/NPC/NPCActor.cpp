@@ -365,12 +365,11 @@ void NPCActor::initialize(const JMapInfoIter& rIter, const NPCActorCaps& rCaps) 
 
     if (rCaps.mSensor) {
         initHitSensor(rCaps.mSensorMax);
-    }
-
-    if (rCaps.mSensorJoint != nullptr) {
-        MR::addHitSensorAtJointNpc(this, "Body", rCaps.mSensorJoint, 8, rCaps.mSensorSize, rCaps.mSensorOffset);
-    } else {
-        MR::addHitSensorNpc(this, "Body", 8, rCaps.mSensorSize, rCaps.mSensorOffset);
+        if (rCaps.mSensorJoint != nullptr) {
+            MR::addHitSensorAtJointNpc(this, "Body", rCaps.mSensorJoint, 8, rCaps.mSensorSize, rCaps.mSensorOffset);
+        } else {
+            MR::addHitSensorNpc(this, "Body", 8, rCaps.mSensorSize, rCaps.mSensorOffset);
+        }
     }
 
     if (rCaps.mBinder) {

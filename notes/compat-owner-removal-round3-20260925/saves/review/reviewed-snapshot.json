@@ -1,0 +1,50 @@
+[
+  {
+    "path": "src/Game/System/BinaryDataChunkHolder.cpp",
+    "sha256": "2eb7ae7a681ba572683427a5775147dde02138d10c0055d5c27c3f8725ebf33f"
+  },
+  {
+    "path": "src/Game/System/BinaryDataContentAccessor.cpp",
+    "sha256": "6bf063a8527519aeb0adc4c37f5e34bc067e9345104c859e1dfb95abecf1b460"
+  },
+  {
+    "path": "src/Game/System/ConfigDataMisc.cpp",
+    "sha256": "13f743a44e4537dfdafdb9915450bb7dc9f85dd262e6ed0fc296c585e75f3f8a"
+  },
+  {
+    "path": "src/Game/System/SysConfigFile.cpp",
+    "sha256": "7fcf622f19639286496e28ecb4d7b3c8257e0a2ae7ef798564199ae90a4e090c"
+  },
+  {
+    "path": "src/Game/System/GameDataGalaxyStorage.cpp",
+    "sha256": "2aaa0fd9a42b37dcf01c3f6c925ee00302808862fec1e1ce2d14c5a4e56411d2"
+  },
+  {
+    "path": "src/Game/System/GameDataPlayerStatus.cpp",
+    "sha256": "437b0c61d64b13e139eaa7ccdd59b05a6d5e9cbc6761ffed33ab31e42a83aa4b"
+  },
+  {
+    "path": "src/Game/System/StarPieceAlmsStorage.cpp",
+    "sha256": "5a2dba498b6575f2cf3f825cc9cf0f27a4b0c5445a38d50d6694f03a09fb833d"
+  },
+  {
+    "path": "src/Game/System/GameEventFlagStorage.cpp",
+    "sha256": "745db13e75d2f1e265059ae5e229fa3299d09d1b4a3677a7a9cab9123f4145a6"
+  },
+  {
+    "path": "src/Game/System/GameEventValueChecker.cpp",
+    "sha256": "77ea2b32447fa683d09ac08446a5bd1895958327ca99ab759d1cfec842eed317"
+  },
+  {
+    "path": "src/Game/System/SpinDriverPathStorage.cpp",
+    "sha256": "45a219128d9a7dc9a326c729e4a7d3b5f87266cd808b1352371c38c6c6066adb"
+  },
+  {
+    "path": "src/JSystem/JSupport/JSUInputStream.hpp",
+    "sha256": "8d6bec2d4e49d0e40247e9fd1bae8e9a9c11b034984310e895583e484d0444f6"
+  },
+  {
+    "path": "src/JSystem/JSupport/JSUOutputStream.hpp",
+    "sha256": "2227a0eda6b5ea1c3891fa7af8394d87b9d73255060440ae5a2537c121beae91"
+  }
+]

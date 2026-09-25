@@ -3,7 +3,6 @@
 #include "Game/Util/FileUtil.hpp"
 #include "compat/DisabledAudioBackend.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "compat/JkrHeapFinalizer.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include <aurora/exception.hpp>
 #include <stdexcept>
@@ -30,11 +29,11 @@ AudSystemWrapper::AudSystemWrapper(JKRSolidHeap* audio_heap, JKRHeap* resource_h
         aurora::throw_host_exception<std::logic_error>("An audio wrapper requires its actual original process heaps");
     smgpc::compat::JkrHostAllocationScope host;
     auto instance = std::make_unique<Backend>(*owner_heap);
-    smgpc::compat::register_jkr_heap_finalizer(this, retire_wrapper);
+    JKRHeap::registerFinalizer(this, retire_wrapper);
     mDisabledBackend = instance.release();
 }
 AudSystemWrapper::~AudSystemWrapper() {
-    smgpc::compat::unregister_jkr_heap_finalizer(this);
+    JKRHeap::unregisterFinalizer(this);
     delete mDisabledBackend;
     mDisabledBackend = nullptr;
 }

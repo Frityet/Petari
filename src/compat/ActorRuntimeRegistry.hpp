@@ -18,6 +18,7 @@
 
 class ActorLightCtrl;
 class HitSensor;
+class HitSensorKeeper;
 class JMapInfoIter;
 class LiveActor;
 class ClippingActorHolder;
@@ -243,16 +244,8 @@ namespace smgpc::compat {
     [[nodiscard]] std::optional<std::span<const std::uint8_t>>
     actor_model_resource_data_if_present(const LiveActor* actor, std::string_view resource_name);
 
-    void initialize_actor_hit_sensors(LiveActor* actor, int sensor_count);
-    [[nodiscard]] HitSensor* add_actor_hit_sensor(LiveActor* actor, const char* name, std::uint32_t type,
-                                                  std::uint16_t group_size, float radius, const TVec3f& offset);
-    [[nodiscard]] HitSensor* actor_hit_sensor(const LiveActor* actor, const char* name);
-    [[nodiscard]] const char* actor_hit_sensor_name(const LiveActor* actor, const HitSensor* sensor);
-    void collect_actor_hit_sensors(const LiveActor* actor, std::vector<HitSensor*>& sensors);
-    void validate_actor_hit_sensors(LiveActor* actor);
-    void invalidate_actor_hit_sensors(LiveActor* actor);
-    void update_actor_hit_sensors(LiveActor* actor);
-    [[nodiscard]] std::size_t actor_hit_sensor_count(const LiveActor* actor);
+    // Borrow retirement only: Game's actual keeper owns all sensor storage.
+    void retire_hit_sensor_borrows(const HitSensorKeeper* keeper) noexcept;
 
     void configure_actor_binder(LiveActor* actor, float radius, float offset, std::uint32_t plane_capacity);
     void register_actor_binder(const LiveActor* actor);

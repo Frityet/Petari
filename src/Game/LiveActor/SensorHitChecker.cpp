@@ -120,10 +120,14 @@ namespace MR {
     }
 };  // namespace MR
 
-#if !defined(TARGET_PC)
 SensorHitChecker::~SensorHitChecker() {
+    delete mPlayerGroup;
+    delete mRideGroup;
+    delete mEyeGroup;
+    delete mSimpleGroup;
+    delete mMapObjGroup;
+    delete mCharacterGroup;
 }
-#endif
 
 SensorHitChecker::SensorHitChecker(const char* pName) : NameObj(pName) {
     mPlayerGroup = nullptr;
@@ -150,6 +154,15 @@ SensorGroup::SensorGroup(int maxSensors, const char* a2) {
     for (s32 i = 0; i < mMaxSensors; i++) {
         mSensors[i] = nullptr;
     }
+}
+
+SensorGroup::~SensorGroup() {
+    for (s32 i = 0; i < mSensorCount; ++i) {
+        mSensors[i]->mValidBySystem = false;
+        mSensors[i]->mSensorCount = 0;
+        mSensors[i]->mSensorGroup = nullptr;
+    }
+    delete[] mSensors;
 }
 
 void SensorGroup::add(HitSensor* pSensor) {

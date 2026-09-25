@@ -19,6 +19,7 @@ public:
     virtual s32 serialize(u8*, u32) const;
     virtual s32 deserialize(const u8*, u32);
     virtual void initializeData();
+    bool validateData(const u8*, u32) const override;
 
     s32 getValue(int) const;
     s32 getMaxValue(int) const;

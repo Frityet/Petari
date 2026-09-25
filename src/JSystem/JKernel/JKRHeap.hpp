@@ -12,6 +12,25 @@ void JKRDefaultMemoryErrorRoutine(void*, u32, int);
 
 class JKRHeap : public JKRDisposer {
 public:
+    // Native callers and original MR heap wrappers share one recursive lock.
+    static OSMutex sCurrentHeapMutex;
+    class CurrentHeapScope {
+    public:
+        explicit CurrentHeapScope(JKRHeap&);
+        ~CurrentHeapScope();
+        CurrentHeapScope(const CurrentHeapScope&) = delete;
+        CurrentHeapScope& operator=(const CurrentHeapScope&) = delete;
+    private:
+        JKRHeap* mPrevious;
+    };
+
+    // Native resources retire after original disposers, before heap reuse.
+    // Registration does not retain the heap; host and stack objects are ignored.
+    static void registerFinalizer(void*, void (*)(void*) noexcept);
+    static void unregisterFinalizer(void*) noexcept;
+    // Global delete consumes exact allocation provenance before freeing memory.
+    static JKRHeap* releaseAllocation(void*) noexcept;
+
     class TState {
     public:
         /* 0x00 */ u32 mUsedSize;
@@ -223,6 +242,12 @@ public:
     u8 _69;
     u8 mAllocMode;       // 0x6A
     u8 mCurrentGroupId;  // 0x6B
+
+private:
+    static void recordAllocation(void*, JKRHeap*, int alignment);
+    static void retireAllocations(JKRHeap*, bool tailOnly = false) noexcept;
+    void finalizeObjects() noexcept;
+    void finalizeObjects(std::uintptr_t begin, std::uintptr_t end) noexcept;
 };
 
 #if !defined(__MWERKS__)

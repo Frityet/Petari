@@ -34,7 +34,9 @@ void MsgSharedGroup::movement() {
         return;
     }
 
-    for (s32 i = 0; i < getObjNum(); i++) {
+    // Native retirement of a queued sender cancels mMsg during a callback.
+    // Do not dispatch the canceled message or its cleared sensor name again.
+    for (s32 i = 0; i < getObjNum() && mMsg != static_cast<u32>(-1); i++) {
         getActor(i)->getSensor(mSensorName)->receiveMessage(mMsg, mSensor);
     }
 

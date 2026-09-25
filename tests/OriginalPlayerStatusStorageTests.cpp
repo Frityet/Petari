@@ -1,6 +1,5 @@
 #include "Game/System/BinaryDataChunkHolder.hpp"
 #include "Game/System/GameDataPlayerStatus.hpp"
-#include "compat/SaveChunkEncoding.hpp"
 
 #include <algorithm>
 #include <array>
@@ -17,7 +16,7 @@ using Payload = std::array<u8, 7>;
 
 Payload encode_status(const GameDataPlayerStatus& status) {
     Payload payload{};
-    require(smgpc::compat::serialize_save_chunk(status, payload.data(), payload.size()) == payload.size(),
+    require(status.serialize(payload.data(), payload.size()) == payload.size(),
             "the original PLAY chunk stores exactly seven Wii bytes");
     return payload;
 }
@@ -41,22 +40,17 @@ void test_original_payload_and_load() {
 
     Payload native{};
     require(status.serialize(native.data(), native.size()) == native.size(),
-            "the unchanged original serializer writes its full native payload");
-    u32 native_stock;
-    u16 native_lives;
-    std::memcpy(&native_stock, native.data() + 1, sizeof(native_stock));
-    std::memcpy(&native_lives, native.data() + 5, sizeof(native_lives));
-    require(native[0] == 0x2a && native_stock == 0x01020304 && native_lives == 0x1234,
-            "raw JSU writes preserve native scalar order; only the explicit save boundary converts bytes");
+            "the original serializer writes its full packed payload");
+    require(native == expected, "the real serializer emits Wii bytes directly");
     GameDataPlayerStatus raw_loaded;
     require(raw_loaded.deserialize(native.data(), native.size()) == 0 && raw_loaded.mStoryProgress == 0x2a &&
                 raw_loaded.mStockedStarPiece == 0x01020304 && raw_loaded.mPlayerLeft == 4 && raw_loaded.isPlayerLeftSupply(),
-            "the original raw deserializer consumes native scalar bytes and applies original life resupply");
+            "the original deserializer consumes Wii scalar bytes and applies original life resupply");
 
     for (u32 length = 0; length <= 9; ++length) {
         std::array<u8, 11> guarded;
         guarded.fill(0xcd);
-        const auto copied = smgpc::compat::serialize_save_chunk(status, guarded.data() + 1, length);
+        const auto copied = status.serialize(guarded.data() + 1, length);
         require(copied == std::min<u32>(length, 7), "short output retains the original stream position");
         require(guarded.front() == 0xcd &&
                     std::all_of(guarded.begin() + copied + 1, guarded.end(), [](u8 byte) { return byte == 0xcd; }),
@@ -64,13 +58,13 @@ void test_original_payload_and_load() {
         require(std::memcmp(guarded.data() + 1, expected.data(), copied) == 0,
                 "every short output is the literal Wii payload prefix");
     }
-    require(smgpc::compat::serialize_save_chunk(status, nullptr, 7) == 0, "null output writes nothing");
+    require(status.serialize(nullptr, 7) == 0, "null output writes nothing");
     native.fill(0xcd);
-    require(smgpc::compat::serialize_save_chunk(status, native.data(), std::numeric_limits<u32>::max()) == 0 &&
+    require(status.serialize(native.data(), std::numeric_limits<u32>::max()) == 0 &&
                 std::all_of(native.begin(), native.end(), [](u8 byte) { return byte == 0xcd; }),
             "an extent outside the original signed stream range writes nothing");
 
-    require(smgpc::compat::deserialize_save_chunk(status, expected.data(), expected.size()) == 0 &&
+    require(status.deserialize(expected.data(), expected.size()) == 0 &&
                 status.mPlayerLeft == 4 && status.mStoryProgress == 0x2a && status.mStockedStarPiece == 0x01020304 &&
                 status.isPlayerLeftSupply(),
             "original load restores story and stock, loads saved lives as supply, and resets active lives to four");
@@ -78,14 +72,14 @@ void test_original_payload_and_load() {
     require(!status.isPlayerLeftSupply(), "the original method clears the actual private supply field");
     for (u8 saved_lives : {u8(9), u8(10)}) {
         const Payload payload{5, 0, 0, 0x12, 0x34, 0, saved_lives};
-        require(smgpc::compat::deserialize_save_chunk(status, payload.data(), payload.size()) == 0 &&
+        require(status.deserialize(payload.data(), payload.size()) == 0 &&
                     status.isPlayerLeftSupply() == (saved_lives >= 10) && status.mPlayerLeft == 4,
                 "the original resupply threshold remains ten independent of fresh active lives");
     }
 
     const std::array<u8, 9> extended{0x2a, 1, 2, 3, 4, 0x12, 0x34, 0xee, 0xff};
     for (u32 length = 0; length <= extended.size(); ++length) {
-        require(smgpc::compat::deserialize_save_chunk(status, extended.data(), length) == 0,
+        require(status.deserialize(extended.data(), length) == 0,
                 "every legacy prefix length retains the original successful load result");
         u32 stocked = 0;
         for (u32 i = 1; i < std::min<u32>(length, 5); ++i) stocked |= u32(expected[i]) << ((4 - i) * 8);
@@ -93,9 +87,9 @@ void test_original_payload_and_load() {
                     status.mPlayerLeft == 4 && status.isPlayerLeftSupply() == (length >= 6),
                 "partial input replaces original most-significant bytes, keeps defaults, and ignores trailing bytes");
     }
-    require(smgpc::compat::deserialize_save_chunk(status, nullptr, 7) == 0, "null input follows initialized prefix loading");
+    require(status.deserialize(nullptr, 7) == 0, "null input follows initialized prefix loading");
     require_initialized(status);
-    require(smgpc::compat::deserialize_save_chunk(status, expected.data(), std::numeric_limits<u32>::max()) == 0,
+    require(status.deserialize(expected.data(), std::numeric_limits<u32>::max()) == 0,
             "an extent outside the original signed stream range is an empty load");
     require_initialized(status);
 
@@ -104,7 +98,7 @@ void test_original_payload_and_load() {
     status.mPlayerLeft = 0xfedc;
     const Payload wide{0xff, 0xfe, 0xdc, 0xba, 0x98, 0xfe, 0xdc};
     require(encode_status(status) == wide, "all scalar high bits survive the original serializer and save conversion");
-    require(smgpc::compat::deserialize_save_chunk(status, wide.data(), wide.size()) == 0 &&
+    require(status.deserialize(wide.data(), wide.size()) == 0 &&
                 status.mStoryProgress == 0xff && status.mStockedStarPiece == 0xfedcba98 &&
                 status.mPlayerLeft == 4 && status.isPlayerLeftSupply(),
             "wide saved fields are loaded without gameplay clamping or sign extension");
@@ -115,7 +109,7 @@ void test_original_payload_and_load() {
 void test_chunk_container_and_original_methods() {
     GameDataPlayerStatus source;
     const Payload saved{15, 0, 0, 0x23, 0x45, 0, 12};
-    require(smgpc::compat::deserialize_save_chunk(source, saved.data(), saved.size()) == 0,
+    require(source.deserialize(saved.data(), saved.size()) == 0,
             "source status is loaded by the original deserializer");
     source.addPlayerLeft(8);
     require(source.getPlayerLeft() == 12 && source.isPlayerLeftSupply(),
@@ -156,7 +150,7 @@ int main() {
     try {
         test_original_payload_and_load();
         test_chunk_container_and_original_methods();
-        std::cout << "[ok] original PLAY native serialization, Wii golden bytes, partial loads, resupply, and container dispatch\n";
+        std::cout << "[ok] original PLAY direct serialization, Wii golden bytes, partial loads, resupply, and container dispatch\n";
         return 0;
     } catch (const std::exception& error) {
         std::cerr << "[fail] original PLAY: " << error.what() << '\n';

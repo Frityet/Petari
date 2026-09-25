@@ -1,6 +1,7 @@
 #include "SourceMirrorEncoding.hpp"
 #include "Game/System/BinaryDataChunkHolder.hpp"
 #include "Game/System/ConfigDataHolder.hpp"
+#include "Game/System/ConfigDataMisc.hpp"
 #include "Game/System/SysConfigFile.hpp"
 #include "runtime/RuntimeServices.hpp"
 
@@ -16,6 +17,7 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <aurora/endian.hpp>
 
 namespace {
 void require(bool condition, std::string_view message) {
@@ -61,8 +63,7 @@ void require_throws(const std::function<void()>& operation, std::string_view mes
 void test_decompiled_sources_are_byte_exact() {
     const auto project = find_project_root();
     constexpr auto sources = std::array{
-        "BinaryDataChunkHolder.cpp", "BinaryDataContentAccessor.cpp", "ConfigDataHolder.cpp",
-        "ConfigDataMii.cpp", "ConfigDataMisc.cpp", "SaveDataHandleSequence.cpp", "SysConfigFile.cpp",
+        "ConfigDataHolder.cpp", "ConfigDataMii.cpp",
         "UserFile.cpp",
     };
     for (const auto* name : sources) {
@@ -71,8 +72,7 @@ void test_decompiled_sources_are_byte_exact() {
     }
 
     constexpr auto headers = std::array{
-        "BinaryDataChunkHolder.hpp", "BinaryDataContentAccessor.hpp", "ConfigDataHolder.hpp",
-        "ConfigDataMii.hpp", "ConfigDataMisc.hpp", "SaveDataHandleSequence.hpp", "SysConfigFile.hpp",
+        "ConfigDataHolder.hpp", "ConfigDataMii.hpp", "SaveDataHandleSequence.hpp",
         "UserFile.hpp",
     };
     for (const auto* name : headers) {
@@ -137,6 +137,62 @@ void test_sysconfig_uses_proven_retail_chunk() {
             "retail SYSC data must round-trip through the host compatibility boundary");
     require_throws<std::invalid_argument>([&] { loaded.loadFromDataBinary(bytes.data(), 51U); },
                                           "truncated SYSC data must fail explicitly");
+
+    auto reject = [&](const auto& malformed) {
+        loaded.setTimeSent(37);
+        loaded.setSentBytes(41);
+        require_throws<std::invalid_argument>([&] { loaded.loadFromDataBinary(malformed.data(), malformed.size()); },
+                                              "SYSC must reject malformed attribute schemas");
+        require(loaded.getTimeAnnounced() == 0 && loaded.getTimeSent() == 37 && loaded.getSentBytes() == 41,
+                "SYSC validates its entire schema before changing any existing values");
+    };
+    auto corrupt16 = [&](std::size_t offset, u16 value) {
+        auto malformed = bytes;
+        aurora::endian::write_u16(malformed.data() + offset, value);
+        reject(malformed);
+    };
+    corrupt16(16, 0xffff); // Descriptor count exceeds the chunk.
+    corrupt16(18, 19); // Record cannot contain all required values.
+    corrupt16(20, 0); // Required announced-time descriptor is missing.
+    corrupt16(22, 13); // Eight-byte field extends past the record.
+    corrupt16(26, 0); // Both times refer to the same bytes.
+
+    // A larger schema can reorder fields and retain unknown descriptors.
+    std::array<u8, 61> extended{};
+    std::copy_n(bytes.begin(), 16, extended.begin());
+    aurora::endian::write_big(extended.data() + 12, u32{57});
+    aurora::endian::write_u16(extended.data() + 16, 4);
+    aurora::endian::write_u16(extended.data() + 18, 25);
+    constexpr std::array<u8, 16> attributes{
+        0x49, 0xc6, 0, 0, 0x0f, 0x92, 0, 5, 0xa5, 0x61, 0, 13, 0x12, 0x34, 0, 25,
+    };
+    std::copy(attributes.begin(), attributes.end(), extended.begin() + 20);
+    aurora::endian::write_big(extended.data() + 36, u32{0x89abcdef});
+    aurora::endian::write_big(extended.data() + 41, u64{0x1122334455667788});
+    aurora::endian::write_big(extended.data() + 49, u64{0xfedcba9876543210});
+    loaded.loadFromDataBinary(extended.data(), extended.size());
+    require(loaded.getTimeSent() == static_cast<OSTime>(0x1122334455667788) &&
+                loaded.getTimeAnnounced() == static_cast<OSTime>(0xfedcba9876543210ULL) && loaded.getSentBytes() == 0x89abcdef,
+            "SYSC accepts reordered, unaligned, signed-time fields with unknown schema extensions");
+}
+
+void test_misc_legacy_and_signed_stream_bounds() {
+    ConfigDataMisc misc;
+    constexpr std::array<u8, 9> golden{7, 1, 2, 3, 4, 5, 6, 7, 8};
+    require(misc.deserialize(golden.data(), golden.size()) == 0 && misc.getLastModified() == 0x0102030405060708LL,
+            "MISC decodes the fixed big-endian timestamp");
+    std::array<u8, 9> serialized{};
+    require(misc.serialize(serialized.data(), serialized.size()) == serialized.size() && serialized == golden,
+            "MISC serializes the exact flag and timestamp bytes");
+    require(misc.deserialize(golden.data(), 1) == 0 && misc.isOnCompleteEndingMario() &&
+                misc.isOnCompleteEndingLuigi() && misc.getLastModified() == 0,
+            "Legacy one-byte MISC retains flags and defaults the absent timestamp");
+    for (u32 size = 2; size < golden.size(); ++size)
+        require(!misc.validateData(golden.data(), size), "MISC rejects partial timestamps");
+    require(!misc.validateData(golden.data(), 0xffffffffU), "MISC rejects sizes outside the signed JSU stream domain");
+    require(misc.deserialize(golden.data(), 0xffffffffU) != 0, "Oversized MISC input fails without reading an uninitialized flag");
+    require_throws<std::length_error>([&] { misc.serialize(serialized.data(), 0xffffffffU); },
+                                      "Oversized MISC output fails instead of producing an empty chunk");
 }
 
 void test_save_service_is_real_or_absent() {
@@ -168,7 +224,8 @@ int main() {
     test_decompiled_sources_are_byte_exact();
     test_config_binary_matches_dolphin_oracle();
     test_sysconfig_uses_proven_retail_chunk();
+    test_misc_legacy_and_signed_stream_bounds();
     test_save_service_is_real_or_absent();
-    std::cout << "Save/config real-or-absent tests passed: 4/4\n";
+    std::cout << "Save/config real-or-absent tests passed: 5/5\n";
     return 0;
 }

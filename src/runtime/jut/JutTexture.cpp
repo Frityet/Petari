@@ -2,7 +2,7 @@
 #include <JSystem/JUtility/JUTPalette.hpp>
 
 #include "compat/JutTextureAllocation.hpp"
-#include "compat/JkrHeapFinalizer.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/JutTextureConstruction.hpp"
 
 namespace {
@@ -14,10 +14,10 @@ namespace {
 JUTTexture::JUTTexture() {
     setCaptureFlag(false);
     try {
-        smgpc::compat::register_jkr_heap_finalizer(this, retire_jut_texture);
+        JKRHeap::registerFinalizer(this, retire_jut_texture);
         smgpc::compat::record_completed_jut_texture(*this);
     } catch (...) {
-        smgpc::compat::unregister_jkr_heap_finalizer(this);
+        JKRHeap::unregisterFinalizer(this);
         throw;
     }
 }
@@ -56,10 +56,10 @@ JUTTexture::JUTTexture(int width, int height, GXTexFmt format) {
     storeTIMG(texBuf, static_cast< u8 >(0));
     DCFlushRange(mImage, bufSize);
     try {
-        smgpc::compat::register_jkr_heap_finalizer(this, retire_jut_texture);
+        JKRHeap::registerFinalizer(this, retire_jut_texture);
         smgpc::compat::record_completed_jut_texture(*this);
     } catch (...) {
-        smgpc::compat::unregister_jkr_heap_finalizer(this);
+        JKRHeap::unregisterFinalizer(this);
         throw;
     }
     allocation.commit();
@@ -69,10 +69,10 @@ JUTTexture::JUTTexture(const ResTIMG *p_timg, u8 param_1) {
     try {
         storeTIMG(p_timg, param_1);
         setCaptureFlag(false);
-        smgpc::compat::register_jkr_heap_finalizer(this, retire_jut_texture);
+        JKRHeap::registerFinalizer(this, retire_jut_texture);
         smgpc::compat::record_completed_jut_texture(*this);
     } catch (...) {
-        smgpc::compat::unregister_jkr_heap_finalizer(this);
+        JKRHeap::unregisterFinalizer(this);
         GXDestroyTexObj(&mObj);
         if (getEmbPaletteDelFlag()) delete mEmbPalette;
         throw;
@@ -81,7 +81,7 @@ JUTTexture::JUTTexture(const ResTIMG *p_timg, u8 param_1) {
 
 JUTTexture::~JUTTexture() {
     smgpc::compat::forget_completed_jut_texture(*this);
-    smgpc::compat::unregister_jkr_heap_finalizer(this);
+    JKRHeap::unregisterFinalizer(this);
     GXDestroyTexObj(&mObj);
     if (getCaptureFlag()) {
         smgpc::compat::release_owned_jut_texture(*this);

@@ -150,20 +150,3 @@ void J3DPSMtxArrayConcat(Mtx mA, Mtx mB, Mtx mAB, u32 count) {
         destination++;
     } while (--count != 0);
 }
-
-// Original RMGK01 0x80426304: all nine source elements are loaded before
-// any destination store, including when the 3x4 and 3x3 buffers overlap.
-void J3DPSMtx33CopyFrom34(MtxPtr src, Mtx3P dst) {
-    f32 xx = src[0][0], xy = src[0][1], xz = src[0][2];
-    f32 yx = src[1][0], yy = src[1][1], yz = src[1][2];
-    f32 zx = src[2][0], zy = src[2][1], zz = src[2][2];
-    dst[0][0] = xx;
-    dst[0][1] = xy;
-    dst[0][2] = xz;
-    dst[1][0] = yx;
-    dst[1][1] = yy;
-    dst[1][2] = yz;
-    dst[2][0] = zx;
-    dst[2][1] = zy;
-    dst[2][2] = zz;
-}

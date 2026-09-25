@@ -1,0 +1,20 @@
+{
+  "target": "smg-pc-game",
+  "add_files_relative_to_src_Game": [
+    "../JSystem/JKernel/JKRHeap.cpp",
+    "../JSystem/JKernel/JKRExpHeap.cpp",
+    "../JSystem/JKernel/JKRSolidHeap.cpp",
+    "../JSystem/JKernel/JKRUnitHeap.cpp"
+  ],
+  "remove_files": "Compat sources are globbed; regenerate after deletion",
+  "xmake_changed_by_agent": false,
+  "suggested_test_targets": [
+    "smg-pc-original-jkr-heap-tests",
+    "smg-pc-original-jkr-heap-finalizer-tests",
+    "smg-pc-original-jkr-allocation-domain-tests",
+    "smg-pc-j3d-command-scheduling-tests",
+    "smg-pc-original-jkr-aram-tests",
+    "smg-pc-original-game-system-startup-tests",
+    "smg-pc-original-file-loader-tests"
+  ]
+}

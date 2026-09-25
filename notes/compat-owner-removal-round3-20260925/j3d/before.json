@@ -1,0 +1,66 @@
+{
+  "head": "8490a01dfe1ca84d5348059c6133d154231ec3ef",
+  "decomp_head": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "files": [
+    {
+      "path": "src/compat/J3DShapeCompat.cpp",
+      "before_status": "",
+      "sha256": "be57b99ee71fded8695fe2af9963e3974c176d535cab0f501d3924aff671765d",
+      "lines": 326
+    },
+    {
+      "path": "src/compat/J3DShapeDrawCompat.cpp",
+      "before_status": "",
+      "sha256": "918f7a5375a41996e4c562bb7e60f8f86bd2df0451dd419eceab5e5554e15e53",
+      "lines": 82
+    },
+    {
+      "path": "src/compat/J3DShapeMtxCompat.cpp",
+      "before_status": "",
+      "sha256": "41325cd778510176774814dfd7bf8d48822fe123434f622830d8f2ec9f3483c9",
+      "lines": 523
+    },
+    {
+      "path": "src/compat/J3DShapeFactoryCompat.cpp",
+      "before_status": "",
+      "sha256": "4f345ac3ba8257fd9a44b7c26b14e4ebe0fbe4c7d6cde812e1b9f460b31bcf78",
+      "lines": 170
+    },
+    {
+      "path": "src/compat/J3DMtxBufferCompat.cpp",
+      "before_status": "",
+      "sha256": "0e79601d2ee3c4e5a45a514f2d8e54baebd17fe5fbf37267e36a7c9c2e3634f7",
+      "lines": 473
+    },
+    {
+      "path": "src/compat/J3DVertexBufferCompat.cpp",
+      "before_status": "",
+      "sha256": "82ce069b63412342506d5b21e83f097994b6d824244a5ccf7e5d1c794448564b",
+      "lines": 42
+    },
+    {
+      "path": "src/compat/J3DModelDataCompat.cpp",
+      "before_status": "",
+      "sha256": "e8c8a4b1c9c65b7ac3a5e0e46376f914449797691e410c4ca6b0cf50ed0dcab5",
+      "lines": 87
+    },
+    {
+      "path": "src/compat/J3DJointTreeCompat.cpp",
+      "before_status": "",
+      "sha256": "5204294532137e0f6e548aa0fd985c7475a3994a4d08318c6aec8fcd4668ad60",
+      "lines": 72
+    },
+    {
+      "path": "src/compat/J3DTransformMtxCompat.cpp",
+      "before_status": "",
+      "sha256": "d5e5ffc9070083685b135b8ee992ff5fc869625e613d5ccc75dc80b0fbd5f48c",
+      "lines": 169
+    },
+    {
+      "path": "tests/OriginalJ3DPacketTests.cpp",
+      "before_status": "",
+      "sha256": "ebffc543c34fc4063187833313e8df5214ea01ce66094bb6faa7751ac272a428",
+      "lines": 212
+    }
+  ]
+}

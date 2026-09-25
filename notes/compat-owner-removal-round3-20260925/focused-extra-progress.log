@@ -1,0 +1,6 @@
+original-save-owner build 0
+original-save-owner run -11
+save-config-real-or-absent build 255
+original-actor-broadcast build 255
+scene-scheduler-heap build 0
+scene-scheduler-heap run 0

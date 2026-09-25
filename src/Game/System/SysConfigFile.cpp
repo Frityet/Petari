@@ -1,6 +1,9 @@
 #include "Game/System/SysConfigFile.hpp"
 #include "Game/System/BinaryDataContentAccessor.hpp"
 #include "Game/Util/MemoryUtil.hpp"
+#include <aurora/endian.hpp>
+#include <aurora/exception.hpp>
+#include <stdexcept>
 
 SysConfigChunk::SysConfigChunk() : mHeaderSerializer(nullptr) {
     initHeaderSerializer();
@@ -16,6 +19,8 @@ u32 SysConfigChunk::getSignature() const {
 }
 
 s32 SysConfigChunk::deserialize(const u8* pBuffer, u32 size) {
+    if (!validateData(pBuffer, size))
+        return 3;
     s32 result;
     const char* pName;
 
@@ -24,13 +29,13 @@ s32 SysConfigChunk::deserialize(const u8* pBuffer, u32 size) {
     u8* pData = const_cast< u8* >(pBuffer) + headerSize;
 
     pName = "mTimeAnnounced";
-    mTimeAnnounced = *static_cast< OSTime* >(accessor.getPointer(pName, pData));
+    mTimeAnnounced = aurora::endian::read_big< OSTime >(accessor.getPointer(pName, pData));
 
     pName = "mTimeSent";
-    mTimeSent = *static_cast< OSTime* >(accessor.getPointer(pName, pData));
+    mTimeSent = aurora::endian::read_big< OSTime >(accessor.getPointer(pName, pData));
 
     pName = "mSentBytes";
-    mSentBytes = *static_cast< u32* >(accessor.getPointer(pName, pData));
+    mSentBytes = aurora::endian::read_big< u32 >(accessor.getPointer(pName, pData));
 
     s32 newSize = headerSize + mHeaderSerializer->getDataSize();
 
@@ -96,10 +101,15 @@ void SysConfigFile::makeDataBinary(u8* pBuffer, u32 size) const {
 }
 
 void SysConfigFile::loadFromDataBinary(const u8* pBuffer, u32 size) {
-    mChunkHolder->loadFromFileBinary(pBuffer, size);
+    if (!mChunkHolder->loadFromFileBinary(pBuffer, size)) {
+        aurora::throw_host_exception< std::invalid_argument >("SYSC data is not a valid binary chunk file");
+    }
 }
 
 s32 SysConfigChunk::serialize(u8* pBuffer, u32 size) const {
+    if (pBuffer == nullptr || size < mHeaderSerializer->getHeaderSize() + mHeaderSerializer->getDataSize()) {
+        aurora::throw_host_exception< std::length_error >("SYSC output is too small");
+    }
     void* pSrcBuffer = mHeaderSerializer->mStream.mBuffer;
     const char* pName;
 
@@ -118,9 +128,18 @@ s32 SysConfigChunk::serialize(u8* pBuffer, u32 size) const {
     pName = "mSentBytes";
     u32* pSentBytes = static_cast< u32* >(accessor.getPointer(pName, pData));
 
-    *pTimeAnnounced = mTimeAnnounced;
-    *pTimeSent = mTimeSent;
-    *pSentBytes = mSentBytes;
+    aurora::endian::write_big(pTimeAnnounced, static_cast< u64 >(mTimeAnnounced));
+    aurora::endian::write_big(pTimeSent, static_cast< u64 >(mTimeSent));
+    aurora::endian::write_big(pSentBytes, static_cast< u32 >(mSentBytes));
 
     return headerSize + mHeaderSerializer->getDataSize();
+}
+
+bool SysConfigChunk::validateData(const u8* pData, u32 size) const {
+    constexpr BinaryDataContentAccessor::Attribute attributes[] = {
+        {"mTimeAnnounced", 8, true},
+        {"mTimeSent", 8, true},
+        {"mSentBytes", 4, true},
+    };
+    return BinaryDataContentAccessor::validate(pData, size, 1, attributes);
 }

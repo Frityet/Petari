@@ -9,6 +9,7 @@ class SensorGroup;
 class HitSensor {
 public:
     HitSensor(u32 type, u16 groupSize, f32 radius, LiveActor* pHost);
+    ~HitSensor();
 
     bool receiveMessage(u32 msg, HitSensor* pSender);
     void setType(u32);

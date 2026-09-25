@@ -1,0 +1,48 @@
+{
+  "baseline_head": "8490a01dfe1ca84d5348059c6133d154231ec3ef",
+  "decomp_head": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "canonical_actor_sensor_util_equals_donor": true,
+  "canonical_actor_sensor_util_lines": 1033,
+  "changed_paths": [
+    "src/compat/GameActorSensorCompat.cpp",
+    "src/compat/GameActorSensorCompat.hpp",
+    "src/compat/OriginalActorBroadcast.cpp",
+    "src/compat/SensorHitCheckerOwnership.cpp",
+    "src/compat/ActorRuntimeRegistry.cpp",
+    "src/compat/ActorRuntimeRegistry.hpp",
+    "src/Game/LiveActor/HitSensor.cpp",
+    "src/Game/LiveActor/HitSensor.hpp",
+    "src/Game/LiveActor/HitSensorKeeper.cpp",
+    "src/Game/LiveActor/HitSensorKeeper.hpp",
+    "src/Game/LiveActor/HitSensorInfo.cpp",
+    "src/Game/LiveActor/HitSensorInfo.hpp",
+    "src/Game/LiveActor/SensorHitChecker.cpp",
+    "src/Game/LiveActor/SensorHitChecker.hpp",
+    "src/Game/LiveActor/LiveActor.cpp",
+    "src/runtime/ParityTrace.cpp",
+    "tests/ActorRuntimeRegistryTests.cpp",
+    "tests/ActorSensorRealOrAbsentTests.cpp",
+    "tests/SceneSchedulerHeapTests.cpp",
+    "tests/GameActorPhysicsRealOrAbsentTests.cpp",
+    "tests/OriginalActorBroadcastTests.cpp",
+    "src/Game/LiveActor/LiveActorGroupArray.cpp",
+    "src/Game/NPC/NPCActor.cpp"
+  ],
+  "deleted_paths": [
+    "src/compat/GameActorSensorCompat.cpp",
+    "src/compat/GameActorSensorCompat.hpp",
+    "src/compat/OriginalActorBroadcast.cpp",
+    "src/compat/SensorHitCheckerOwnership.cpp"
+  ],
+  "validation": "Static inspection and git diff --check only; parent owns builds and runtime validation.",
+  "parent_validation": {
+    "actor_sensor": "10 cases passed before adding NPC capability regression; new 11th case awaits root rerun",
+    "scene_scheduler_heap": "Root reports full pass, including retirement and corrected original sensor category trace",
+    "actor_broadcast": "New process regression requires smg-pc-app dependency; root wiring and rerun pending",
+    "game_startup": "Root LLDB identified NPCActor Body registration outside mSensor guard; exact current donor block restored; rerun pending",
+    "legacy_test_blockers": {
+      "ActorRuntimeRegistryTests.cpp": "Pre-existing removed clipping/model/shadow APIs and obsolete copied-name/pending-suspend expectations. Sensor helper references migrated only.",
+      "GameActorPhysicsRealOrAbsentTests.cpp": "Pre-existing removed ActorPhysicsRuntime.hpp plus obsolete clipping helper assertions. Sensor helper references migrated only."
+    }
+  }
+}

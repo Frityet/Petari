@@ -45,10 +45,6 @@ target("smg-pc-game")
     remove_files("Scene/SceneObjHolder.cpp")
     remove_files("System/GameDataFunction.cpp")
     remove_files("System/Language.cpp")
-    remove_files("System/BinaryDataChunkHolder.cpp")
-    remove_files("System/ConfigDataMisc.cpp")
-    remove_files("System/SysConfigFile.cpp")
-    remove_files("Util/ActorSensorUtil.cpp")
     remove_files("Util/FileUtil.cpp")
     remove_files("Util/ActorShadowUtil.cpp")
     remove_files("Util/LiveActorUtil.cpp")
@@ -128,6 +124,11 @@ target("smg-pc-game")
     })
     add_files("../JSystem/J3DGraphBase/J3DPacket.cpp", "../nw4r/ut/ut_LinkList.cpp")
     add_files("../JSystem/JKernel/JKRThread.cpp")
+    add_files("../JSystem/JKernel/JKRHeap.cpp", "../JSystem/JKernel/JKRExpHeap.cpp",
+              "../JSystem/JKernel/JKRSolidHeap.cpp", "../JSystem/JKernel/JKRUnitHeap.cpp")
+    add_files("../JSystem/J3DGraphBase/J3DShape.cpp", "../JSystem/J3DGraphBase/J3DShapeDraw.cpp",
+              "../JSystem/J3DGraphBase/J3DShapeMtx.cpp", "../JSystem/J3DGraphBase/J3DVertex.cpp",
+              "../JSystem/J3DGraphLoader/J3DShapeFactory.cpp", "../JSystem/J3DGraphAnimator/J3DMtxBuffer.cpp")
     add_files("../JSystem/JAudio2/JAUSoundTable.cpp", "../JSystem/JGadget/hashcode.cpp")
     add_files("../JSystem/JUtility/JUTVideo.cpp", "../JSystem/JUtility/JUTXfb.cpp", "../JSystem/JUtility/JUTDirectPrint.cpp", "../JSystem/JUtility/JUTAssert.cpp", "../JSystem/JUtility/JUTConsole.cpp", "../JSystem/JUtility/JUTDbPrint.cpp", "../JSystem/JUtility/JUTFont.cpp", "../JSystem/JUtility/JUTPalette.cpp", "../JSystem/JGadget/linklist.cpp")
     add_files({"../JSystem/JKernel/JKRAram.cpp", "../JSystem/JKernel/JKRAramHeap.cpp",

@@ -22,10 +22,10 @@ s32 GameDataPlayerStatus::serialize(u8* pBuffer, u32 size) const {
     stream.write(&storyProgress, sizeof(mStoryProgress));
 
     u32 stockedStarPiece = mStockedStarPiece;
-    stream.write(&stockedStarPiece, sizeof(mStockedStarPiece));
+    stream.writeBig(stockedStarPiece);
 
     u16 playerLeft = mPlayerLeft;
-    stream.write(&playerLeft, sizeof(mPlayerLeft));
+    stream.writeBig(playerLeft);
 
     return stream.mPosition;
 }
@@ -36,10 +36,10 @@ s32 GameDataPlayerStatus::deserialize(const u8* pBuffer, u32 size) {
     JSUMemoryInputStream stream = JSUMemoryInputStream(pBuffer, size);
 
     stream.read(&mStoryProgress, sizeof(mStoryProgress));
-    stream.read(&mStockedStarPiece, sizeof(mStockedStarPiece));
+    stream.readBig(mStockedStarPiece);
 
     if (stream.getAvailable() != 0) {
-        stream.read(&mPlayerLeftSupply, sizeof(mPlayerLeftSupply));
+        stream.readBig(mPlayerLeftSupply);
     }
 
     mPlayerLeft = 4;

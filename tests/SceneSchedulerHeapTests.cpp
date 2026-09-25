@@ -12,6 +12,7 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/SensorHitChecker.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
@@ -245,13 +246,15 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
         require(replacement.allocation.calls[0] == 1, "new registrations run in the next movement snapshot");
         scheduler.clear();
 
+        // Previous scheduler.clear() calls also disconnect the original checker.
+        MR::getSceneObj<SensorHitChecker>(SceneObj_SensorHitChecker)->initWithoutIter();
         (void)MR::createSceneObj(SceneObj_MessageSensorHolder);
         CallbackActor first(scheduler);
         auto second = std::make_unique<CallbackActor>(scheduler);
         for (auto* actor : {&first, second.get()}) {
             JkrAllocationScope initialization_heap(game);
             actor->initHitSensor(1);
-            (void)add_actor_hit_sensor(actor, "body", 1U, 4U, 10.0F, {});
+            (void)MR::addHitSensor(actor, "body", actor == &first ? ATYPE_PLAYER : ATYPE_ENEMY, 4U, 10.0F, {});
             actor->makeActorAppeared();
             scheduler.connect_name_obj(*actor, 34, 0, -1, -1);
         }
@@ -376,7 +379,11 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
             require(current_jkr_allocation_domain() == caller, "category callbacks restore the caller's selected heap");
         }
         require(order == std::vector<unsigned>({1, 2, 3, 4, 5, 6}), "categories execute exactly the caller's movement/animation interleave");
-        require(player.allocation.calls[1] == 0 && scheduler.last_execution_trace().size() == 6,
+        const auto trace = scheduler.last_execution_trace();
+        require(player.allocation.calls[1] == 0 && trace.size() == 7 &&
+                    trace[2].phase == SceneSchedulerPhase::Movement &&
+                    trace[2].movement_type == MR::MovementType_SensorHitChecker &&
+                    trace[2].name == "SensorHitChecker",
                 "category dispatch never executes an aggregate animation list or clears earlier category traces");
         scheduler.request_movement_off(MR::MovementType_Player);
         MR::getSceneNameObjMovementController()->movement();
@@ -429,11 +436,12 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
         }
         scheduler.clear();
 
+        MR::getSceneObj<SensorHitChecker>(SceneObj_SensorHitChecker)->initWithoutIter();
         CallbackActor first(scheduler), second(scheduler);
         for (auto* actor : {&first, &second}) {
             JkrAllocationScope initialization_heap(domain);
             actor->initHitSensor(1);
-            (void)add_actor_hit_sensor(actor, "body", 1U, 4U, 10.0F, {});
+            (void)MR::addHitSensor(actor, "body", actor == &first ? ATYPE_PLAYER : ATYPE_ENEMY, 4U, 10.0F, {});
             actor->makeActorAppeared();
             scheduler.connect_name_obj(*actor, MR::MovementType_Player, MR::CalcAnimType_Player, -1, -1);
         }
@@ -441,10 +449,10 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
         CategoryList::execute(MR::MovementType_Player);
         require(first.allocation.calls[4] == 0, "player category does not inject a sensor checker");
         CategoryList::execute(MR::MovementType_SensorHitChecker);
-        auto* sensor = actor_hit_sensor(&first, "body");
+        auto* sensor = first.getSensor("body");
         require(sensor && sensor->mSensorCount == 1, "sensor category computes one contact pass");
         second.mPosition.x = 1000.0F;
-        update_actor_hit_sensors(&second);
+        MR::updateHitSensorsAll(&second);
         CategoryList::execute(MR::CalcAnimType_Player);
         CategoryList::execute(MR::MovementType_CollisionDirector);
         execution.apply_connections();
@@ -574,7 +582,7 @@ int main(int argc, char** argv) {
         second.mPosition.x = 1000;
         for (auto* actor : {&first, &second}) {
             actor->initHitSensor(1);
-            (void)add_actor_hit_sensor(actor, "body", 1U, 1U, 10.0F, {});
+            (void)MR::addHitSensor(actor, "body", ATYPE_PLAYER, 1U, 10.0F, {});
             actor->makeActorAppeared();
             scheduler.connect_name_obj(*actor, 34, -1, -1, -1);
         }

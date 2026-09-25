@@ -1,0 +1,37 @@
+{
+  "add_files_relative_to_src_Game": [
+    "../JSystem/J3DGraphBase/J3DShape.cpp",
+    "../JSystem/J3DGraphBase/J3DShapeDraw.cpp",
+    "../JSystem/J3DGraphBase/J3DShapeMtx.cpp",
+    "../JSystem/J3DGraphBase/J3DVertex.cpp",
+    "../JSystem/J3DGraphLoader/J3DShapeFactory.cpp",
+    "../JSystem/J3DGraphAnimator/J3DMtxBuffer.cpp"
+  ],
+  "deleted_compat_providers": [
+    "src/compat/J3DShapeCompat.cpp",
+    "src/compat/J3DShapeDrawCompat.cpp",
+    "src/compat/J3DShapeMtxCompat.cpp",
+    "src/compat/J3DShapeFactoryCompat.cpp",
+    "src/compat/J3DMtxBufferCompat.cpp",
+    "src/compat/J3DVertexBufferCompat.cpp"
+  ],
+  "modified_mixed_providers": [
+    "src/compat/J3DModelDataCompat.cpp",
+    "src/compat/J3DJointTreeCompat.cpp",
+    "src/compat/J3DTransformMtxCompat.cpp"
+  ],
+  "modified_tests": [
+    "tests/OriginalJ3DPacketTests.cpp"
+  ],
+  "additional_source_flags_required": [],
+  "preserved_fp_directive": "J3DMtxBuffer.cpp retains #pragma clang fp contract(off); native envelope math keeps explicit std::fma",
+  "existing_test_targets": [
+    "smg-pc-original-j3d-packet-tests",
+    "smg-pc-original-j3d-mtx-buffer-tests",
+    "smg-pc-original-j3d-geometry-resource-tests",
+    "smg-pc-original-j3d-vertex-buffer-tests",
+    "smg-pc-original-j3d-texture-mtx-tests"
+  ],
+  "new_test_wiring_needed": false,
+  "pending_game_override": "src/compat/J3DShapeMtxGameCompat.cpp remains the unchanged sole SMG loadMtxIndx_PNGP provider, for future complete Game/System/Overwrite restoration."
+}

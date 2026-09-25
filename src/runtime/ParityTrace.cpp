@@ -13,7 +13,6 @@
 #include "DumpJson.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "TraceStore.hpp"
-#include "compat/GameActorSensorCompat.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "resource/TextEncoding.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"

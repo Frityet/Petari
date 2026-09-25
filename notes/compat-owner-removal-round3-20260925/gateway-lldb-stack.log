@@ -1,0 +1,339 @@
+(lldb) target create "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc' (arm64).
+(lldb) settings set -- target.run-args  "--disc" "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz" "--stage" "HeavensDoorGalaxy" "--scenario" "1" "--max-frames" "600"
+(lldb) run
+[src/app/Application.cpp:59][APP - INFO] Opened Aurora disc image /Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz
+[aurora:info:aurora] Aurora initializing
+[aurora:info:aurora::system_info] CPU model: Apple M5 Max
+[aurora:info:aurora::system_info] Memory: 131072 MiB
+[aurora:info:aurora::system_info] Architecture: aarch64
+[aurora:info:aurora::system_info] OS: macOS Version 27.0 (Build 26A428)
+2026-09-25 14:23:34.329157+0100 smg-pc[16995:5772954] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:23:34.329453+0100 smg-pc[16995:5772954] [Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:23:34.329538+0100 smg-pc[16995:5772953] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:23:34.329556+0100 smg-pc[16995:5772953] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:23:34.329835+0100 smg-pc[16995:5772971] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:23:34.329845+0100 smg-pc[16995:5772971] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:23:34.330077+0100 smg-pc[16995:5772971] [Connection] Will NOT re-try to establish the connection
+2026-09-25 14:23:34.330098+0100 smg-pc[16995:5772954] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:23:34.330107+0100 smg-pc[16995:5772954] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-25 14:23:35.173597+0100 smg-pc[16995:5772934] [WindowTab] Cannot index window tabs due to missing main bundle identifier
+[aurora:info:aurora::gpu] Creating WebGPU instance
+[aurora:info:aurora::gpu] Attempting to initialize Metal
+[aurora:info:aurora::gpu] Requesting adapter
+  Feature level: Compatibility
+  Power preference: HighPerformance
+  Backend: Metal
+  Compatible surface: true
+[aurora:info:aurora::gpu] Graphics adapter information
+  API: Metal
+  Device: Apple M5 Max (IntegratedGPU)
+  Driver: Metal driver on macOS Version 27.0 (Build 26A428)
+[aurora:info:aurora::gpu] Using limits:
+  maxTextureDimension1D: 16384
+  maxTextureDimension2D: 16384
+  maxTextureDimension3D: 2048
+  maxTextureArrayLayers: 2048
+  maxStorageBuffersPerShaderStage: 2
+  minUniformBufferOffsetAlignment: 256
+  minStorageBufferOffsetAlignment: 256
+  maxImmediateSize: 64
+[aurora:info:aurora::gpu] Enabling features: 
+  CoreFeaturesAndLimits
+  DepthClipControl
+  TextureCompressionBC
+  TextureCompressionASTC
+  ClipDistances
+  DualSourceBlending
+  TextureComponentSwizzle
+[aurora:info:aurora::gpu] Using surface format BGRA8Unorm, present mode Fifo
+[aurora:info:aurora::gfx::pipeline_cache] No bundled initial pipeline cache found at '/Users/frityet/Projects/petari/build/macosx/arm64/debug/initial_pipeline_cache.db'
+[aurora:info:aurora] Using framebuffer size 1280x960 scale 2
+[src/app/OriginalGameApplication.cpp:511][APP - INFO] Booting the original GameSystem
+[original-process] Preparing original heap arenas
+[original-process] Initializing SDK, layout allocator and original heap watcher
+[original-process] Initialized console language 9 for disc region K
+<< NW4R    - LYT 	final   build: Jul 17 2007 12:25:23 (0x4199_60831) >>
+[original-process] Initializing original file and exception services
+[original-process] Constructing GameSystem
+[original-process] Entering GameSystem::init
+[aurora:info:aurora::gpu::cache] Pruned 4 stale Dawn cache entries
+[original-process] GameSystem::init completed
+[src/app/OriginalGameApplication.cpp:513][APP - INFO] Running the original GameSystem frame loop
+[original-process] Requesting authored stage HeavensDoorGalaxy scenario 1 through GameSequence
+[original-process] Placement coverage HeavensDoorGalaxy: 187 supported, 51 known-unlinked, 0 unknown, 5 metadata rows
+warning: smg-pc was compiled with optimization - stepping may behave oddly; variables may not be available.
+Process 16995 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc' (arm64)
+Process 16995 stopped
+* thread #19, stop reason = EXC_BAD_ACCESS (code=1, address=0x8)
+       frame #0: 0x00000001000651d8 smg-pc`HitSensorKeeper::registHitSensorInfo(this=0x0000000000000000, pInfo=0x000000757c0cdee0) at HitSensorKeeper.cpp:143:5 [opt] [inlined]
+   140 	}
+   141 	
+   142 	void HitSensorKeeper::registHitSensorInfo(HitSensorInfo* pInfo) {
+-> 143 	    mSensorInfos[mSensorInfosSize] = pInfo;
+    	    ^
+   144 	    mSensorInfosSize++;
+   145 	    pInfo->update();
+   146 	}
+Target 0: (smg-pc) stopped.
+(lldb) thread backtrace all
+  thread #1, name = 'Main thread', queue = 'com.apple.main-thread'
+       frame #0: 0x000000018a3cf9dc libsystem_kernel.dylib`__psynch_mutexwait + 8
+       frame #1: 0x000000018a40ef7c libsystem_pthread.dylib`_pthread_mutex_firstfit_lock_wait + 84
+       frame #2: 0x000000018a40c9b8 libsystem_pthread.dylib`_pthread_mutex_firstfit_lock_slow + 216
+       frame #3: 0x0000000101af61f8 libc++.1.dylib`std::__1::mutex::lock() + 12
+       frame #4: 0x00000001008e3c7c smg-pc`(anonymous namespace)::acquire_cpu(interrupt=false) at OSExecution.cpp:48:14 [opt] [inlined]
+       frame #5: 0x00000001008e3c54 smg-pc`aurora::os::GuestThreadExecutionScope::GuestThreadExecutionScope(this=0x000000016fdfe58f) at OSExecution.cpp:470:3 [opt] [inlined]
+       frame #6: 0x00000001008e3c54 smg-pc`aurora::os::GuestThreadExecutionScope::GuestThreadExecutionScope(this=0x000000016fdfe58f) at OSExecution.cpp:469:56 [opt]
+       frame #7: 0x0000000100003678 smg-pc`smgpc::app::(anonymous namespace)::OriginalProcess::frame(this=0x000000016fdfe1f8, window=0x000000016fdfe528, frame_index=29) at OriginalGameApplication.cpp:319:53 [opt] [inlined]
+       frame #8: 0x0000000100003670 smg-pc`smgpc::app::run_original_game(configuration=0x000000016fdfe680, logger=0x0000007889018020, observer=<unavailable>) at OriginalGameApplication.cpp:529:21 [opt]
+       frame #9: 0x0000000100001928 smg-pc`aurora_main(argc=<unavailable>, argv=0x000000016fdfee18) at main.cpp:54:12 [opt]
+       frame #10: 0x000000018a03be80 dyld`start + 6688
+  thread #2, name = 'Preloader 0'
+       frame #0: 0x000000018a3ccb9c libsystem_kernel.dylib`semaphore_wait_trap + 8
+       frame #1: 0x000000018a25249c libdispatch.dylib`_dispatch_sema4_wait + 28
+       frame #2: 0x000000018a252b28 libdispatch.dylib`_dispatch_semaphore_wait_slow + 132
+       frame #3: 0x00000001003ae360 smg-pc`<std::sys::sync::thread_parking::darwin::Parker>::park at darwin.rs:74:15 [opt] [inlined]
+       frame #4: 0x00000001003ae340 smg-pc`<std::thread::thread::Thread>::park at thread.rs:121:47 [opt] [inlined]
+       frame #5: 0x00000001003ae340 smg-pc`std::thread::functions::park at functions.rs:533:19 [opt]
+       frame #6: 0x00000001002ed1f8 smg-pc`crossbeam_channel::flavors::list::Channel$LT$T$GT$::recv::_$u7b$$u7b$closure$u7d$$u7d$::h859e3c9833fb63cc + 204
+       frame #7: 0x00000001002ecbd8 smg-pc`crossbeam_channel::flavors::list::Channel$LT$T$GT$::recv::hdb946b39f0b08934 + 588
+       frame #8: 0x0000000100301968 smg-pc`crossbeam_channel::channel::Receiver$LT$T$GT$::recv::hf871fda17557fdba + 72
+       frame #9: 0x00000001002e591c smg-pc`std::sys::backtrace::__rust_begin_short_backtrace::he60433a33bb0cd3b + 56
+       frame #10: 0x00000001003028cc smg-pc`core::ops::function::FnOnce::call_once$u7b$$u7b$vtable.shim$u7d$$u7d$::hde877fe98d6056ce + 252
+       frame #11: 0x00000001003b3088 smg-pc`<alloc::boxed::Box<dyn core::ops::function::FnOnce<(), Output = ()> + core::marker::Send> as core::ops::function::FnOnce<()>>::call_once at boxed.rs:2249:9 [opt] [inlined]
+       frame #12: 0x00000001003b307c smg-pc`<std::sys::thread::unix::Thread>::new::thread_start at unix.rs:118:17 [opt]
+       frame #13: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #3
+       frame #0: 0x000000018a3d050c libsystem_kernel.dylib`__psynch_cvwait + 8
+       frame #1: 0x000000018a4121d0 libsystem_pthread.dylib`_pthread_cond_wait + 980
+       frame #2: 0x0000000101af4f44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #3: 0x00000001002d5a4c smg-pc`void std::__1::condition_variable::wait[abi:nqe230101]<(anonymous namespace)::DvdWorker::run()::'lambda'()>(this=<unavailable>, __lk=0x0000000170092f70, __pred=(unnamed class) @ x20) at condition_variable.h:113:7 [opt] [inlined]
+       frame #4: 0x00000001002d5a18 smg-pc`(anonymous namespace)::DvdWorker::run(this=0x0000000100e9d810) at dvd.cpp:622:12 [opt]
+    ﹍ frame #5: 0x00000001002d5a00 smg-pc`(anonymous namespace)::DvdWorker::start()::'lambda'()::operator()(this=0x0000007889018058) const at dvd.cpp:437:37 [opt] [inlined]
+    ﹉ frame #7: 0x00000001002d5a00 smg-pc`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, (anonymous namespace)::DvdWorker::start()::'lambda'(), 0ul>(__t=size=2, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #8: 0x00000001002d5a00 smg-pc`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, (anonymous namespace)::DvdWorker::start()::'lambda'()>>(__vp=0x0000007889018050) at thread.h:178:3 [opt]
+       frame #9: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #4
+       frame #0: 0x000000018a3ce9ec libsystem_kernel.dylib`__workq_kernreturn + 8
+  thread #5
+       frame #0: 0x000000018a3ce9ec libsystem_kernel.dylib`__workq_kernreturn + 8
+  thread #6, name = 'com.apple.NSEventThread'
+       frame #0: 0x000000018a3ccc20 libsystem_kernel.dylib`mach_msg2_trap + 8
+       frame #1: 0x000000018a3df8e0 libsystem_kernel.dylib`mach_msg2_internal + 76
+       frame #2: 0x000000018a3d5a28 libsystem_kernel.dylib`mach_msg_overwrite + 480
+       frame #3: 0x000000018a3ccfac libsystem_kernel.dylib`mach_msg + 24
+       frame #4: 0x000000018a4d2aec CoreFoundation`__CFRunLoopServiceMachPort + 160
+       frame #5: 0x000000018a4d1334 CoreFoundation`__CFRunLoopRun + 1172
+       frame #6: 0x000000018a5ab82c CoreFoundation`_CFRunLoopRunSpecificWithOptions + 536
+       frame #7: 0x000000018ebac844 AppKit`_NSEventThread + 184
+       frame #8: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #7
+       frame #0: 0x000000018a3ce9ec libsystem_kernel.dylib`__workq_kernreturn + 8
+  thread #8, name = 'Aurora render worker'
+       frame #0: 0x0000000100400670 smg-pc`std::__1::array<wgpu::BindGroupEntry, 3ul>::~array(this=0x000000017034e938) at array:175 [opt]
+       frame #1: 0x000000010046f5bc smg-pc`std::__1::array<wgpu::BindGroupEntry, 3ul>::~array(this=0x000000017034e938) at array:175:8 [opt] [inlined]
+       frame #2: 0x000000010046f5b4 smg-pc`aurora::webgpu::resample_present_source(encoder=<unavailable>, viewport=<unavailable>, source=<unavailable>) at gpu.cpp:716:1 [opt]
+    ﹍ frame #3: 0x00000001003d33b0 smg-pc`aurora::(anonymous namespace)::end_frame()::$_0::operator()(this=<unavailable>, encoder=<unavailable>, afterSubmitCallbacks=size=error: Failed to determine start/end of vector data., submission=std::__1::shared_ptr<aurora::gfx::SubmissionState>::element_type @ 0x000000788fc92c58 strong=1 weak=0) const at aurora.cpp:355:39 [opt]
+    ﹉ frame #5: 0x00000001003d33a8 smg-pc`bool std::__1::__invoke_void_return_wrapper<bool, false>::__call[abi:nqe230101]<aurora::(anonymous namespace)::end_frame()::$_0&, wgpu::CommandEncoder&, std::__1::vector<std::__1::function<void ()>, std::__1::allocator<std::__1::function<void ()>>>, std::__1::shared_ptr<aurora::gfx::SubmissionState> const&>(__args=<unavailable>, __args=<unavailable>, __args=<unavailable>, __args=std::__1::shared_ptr<aurora::gfx::SubmissionState>::element_type @ 0x000000788fc92c58 strong=1 weak=0) at invoke.h:342:12 [opt] [inlined]
+    ﹍ frame #6: 0x00000001003d33a8 smg-pc`bool std::__1::__invoke_r[abi:nqe230101]<bool, aurora::(anonymous namespace)::end_frame()::$_0&, wgpu::CommandEncoder&, std::__1::vector<std::__1::function<void ()>, std::__1::allocator<std::__1::function<void ()>>>, std::__1::shared_ptr<aurora::gfx::SubmissionState> const&>(__args=<unavailable>, __args=<unavailable>, __args=<unavailable>, __args=std::__1::shared_ptr<aurora::gfx::SubmissionState>::element_type @ 0x000000788fc92c58 strong=1 weak=0) at invoke.h:356:10 [opt] [inlined]
+    ﹉ frame #10: 0x00000001003e3738 smg-pc`aurora::gfx::end_frame(std::__1::function<bool (wgpu::CommandEncoder&, std::__1::vector<std::__1::function<void ()>, std::__1::allocator<std::__1::function<void ()>>>, std::__1::shared_ptr<aurora::gfx::SubmissionState> const&)> const&)::$_0::operator()(this=0x000000788fc07548) at frame.cpp:840:19 [opt]
+    ﹉ frame #12: 0x00000001003e3508 smg-pc`void std::__1::__invoke_void_return_wrapper<void, true>::__call[abi:nqe230101]<aurora::gfx::end_frame(std::__1::function<bool (wgpu::CommandEncoder&, std::__1::vector<std::__1::function<void ()>, std::__1::allocator<std::__1::function<void ()>>>, std::__1::shared_ptr<aurora::gfx::SubmissionState> const&)> const&)::$_0&>(__args=0x000000788fc07548) at invoke.h:350:5 [opt] [inlined]
+       frame #13: 0x00000001003e3508 smg-pc`void std::__1::__invoke_r[abi:nqe230101]<void, aurora::gfx::end_frame(std::__1::function<bool (wgpu::CommandEncoder&, std::__1::vector<std::__1::function<void ()>, std::__1::allocator<std::__1::function<void ()>>>, std::__1::shared_ptr<aurora::gfx::SubmissionState> const&)> const&)::$_0&>(__args=0x000000788fc07548) at invoke.h:356:10 [opt] [inlined]
+       frame #14: 0x00000001003e3508 smg-pc`std::__1::__function::__func<aurora::gfx::end_frame(std::__1::function<bool (wgpu::CommandEncoder&, std::__1::vector<std::__1::function<void ()>, std::__1::allocator<std::__1::function<void ()>>>, std::__1::shared_ptr<aurora::gfx::SubmissionState> const&)> const&)::$_0, void ()>::operator()[abi:nqe230101](this=0x000000788fc07540) at function.h:177:12 [opt]
+       frame #15: 0x00000001003fc028 smg-pc`std::__1::__function::__value_func<void ()>::operator()[abi:nqe230101](this=0x000000017034eed0) const at function.h:278:12 [opt] [inlined]
+       frame #16: 0x00000001003fc01c smg-pc`std::__1::function<void ()>::operator()[abi:nqe230101](this=0x000000017034eed0) const at function.h:763:10 [opt] [inlined]
+    ﹍ frame #17: 0x00000001003fc01c smg-pc`aurora::gfx::render_worker::(anonymous namespace)::worker_main(token=stop_token @ 0x000000017034ef78) at render_worker.cpp:49:7 [opt]
+    ﹉ frame #20: 0x00000001003fdd14 smg-pc`aurora::thread::Thread::Thread<void (&)(std::__1::stop_token)>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token)::operator()(this=0x000000788a67c0c8, token=<unavailable>) at thread.hpp:34:5 [opt] [inlined]
+    ﹉ frame #22: 0x00000001003fdcac smg-pc`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token)>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token, 0ul, 1ul>(__t=<unavailable>, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #23: 0x00000001003fdca0 smg-pc`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token)>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token>>(__vp=0x000000788a67c0c0) at thread.h:178:3 [opt]
+       frame #24: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #9
+       frame #0: 0x000000018a3d050c libsystem_kernel.dylib`__psynch_cvwait + 8
+       frame #1: 0x000000018a4121d0 libsystem_pthread.dylib`_pthread_cond_wait + 980
+       frame #2: 0x0000000101af4f44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #3: 0x00000001003f37c0 smg-pc`void std::__1::condition_variable::wait[abi:nqe230101]<aurora::gfx::pipeline_worker()::$_0>(this=<unavailable>, __lk=0x00000001703daec8, __pred=<unavailable>) at condition_variable.h:113:7 [opt] [inlined]
+    ﹍ frame #4: 0x00000001003f379c smg-pc`aurora::gfx::pipeline_worker() at pipeline_cache.cpp:978:29 [opt]
+    ﹉ frame #6: 0x00000001003f9e70 smg-pc`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)(), 0ul>(__t=size=2, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #7: 0x00000001003f9e70 smg-pc`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)()>>(__vp=0x000000788a675250) at thread.h:178:3 [opt]
+       frame #8: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #10
+       frame #0: 0x000000018a3d050c libsystem_kernel.dylib`__psynch_cvwait + 8
+       frame #1: 0x000000018a4121d0 libsystem_pthread.dylib`_pthread_cond_wait + 980
+       frame #2: 0x0000000101af4f44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #3: 0x00000001003f74e8 smg-pc`void std::__1::condition_variable::wait[abi:nqe230101]<aurora::gfx::pipeline_cache_writer()::$_0>(this=<unavailable>, __lk=0x0000000170466ee8, __pred=<unavailable>) at condition_variable.h:113:7 [opt] [inlined]
+    ﹍ frame #4: 0x00000001003f74c8 smg-pc`aurora::gfx::pipeline_cache_writer() at pipeline_cache.cpp:931:31 [opt]
+    ﹉ frame #6: 0x00000001003f9e70 smg-pc`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)(), 0ul>(__t=size=2, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #7: 0x00000001003f9e70 smg-pc`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)()>>(__vp=0x000000788a6752c0) at thread.h:178:3 [opt]
+       frame #8: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #11, name = 'Aurora FIFO processor'
+       frame #0: 0x000000018a3dad9c libsystem_kernel.dylib`__ulock_wait2 + 8
+       frame #1: 0x000000018a41f0b4 libsystem_platform.dylib`os_sync_wait_on_address + 104
+    ﹍ frame #2: 0x0000000101af4acc libc++.1.dylib`std::__1::__libcpp_atomic_wait(void const volatile*, long long) + 88
+    ﹉ frame #4: 0x000000010040e7dc smg-pc`std::__1::__poll_with_backoff_results std::__1::__libcpp_thread_poll_with_backoff[abi:nqe230101]<void std::__1::__atomic_wait_unless[abi:nqe230101]<std::__1::__atomic_base<unsigned int, false>, void std::__1::__atomic_wait[abi:nqe230101]<std::__1::__atomic_base<unsigned int, false> const, unsigned int>(std::__1::__atomic_base<unsigned int, false> const&, unsigned int, std::__1::memory_order)::'lambda'(unsigned int const&)>(std::__1::__atomic_base<unsigned int, false> const const&, std::__1::memory_order, unsigned int&&)::'lambda'(), std::__1::__atomic_wait_backoff_impl<std::__1::__atomic_base<unsigned int, false>, void std::__1::__atomic_wait[abi:nqe230101]<std::__1::__atomic_base<unsigned int, false> const, unsigned int>(std::__1::__atomic_base<unsigned int, false> const&, unsigned int, std::__1::memory_order)::'lambda'(unsigned int const&)>&>(__poll=0x00000001704f2ee0, __backoff=0x00000001704f2f00, __max_elapsed=0 ns) at poll_with_backoff.h:65:30 [opt]
+       frame #5: 0x0000000100427aa0 smg-pc`void std::__1::__atomic_wait_unless[abi:nqe230101]<std::__1::__atomic_base<unsigned int, false>, void std::__1::__atomic_wait[abi:nqe230101]<std::__1::__atomic_base<unsigned int, false> const, unsigned int>(std::__1::__atomic_base<unsigned int, false> const&, unsigned int, std::__1::memory_order)::'lambda'(unsigned int const&)>(__a=0x0000000100e9ea40, __order=acquire, __poll=0x00000001704f2f28) at atomic_sync.h:173:3 [opt] [inlined]
+       frame #6: 0x0000000100427a78 smg-pc`void std::__1::__atomic_wait[abi:nqe230101]<std::__1::__atomic_base<unsigned int, false> const, unsigned int>(__a=0x0000000100e9ea40, __val=<unavailable>, __order=acquire) at atomic_sync.h:257:3 [opt] [inlined]
+       frame #7: 0x0000000100427a6c smg-pc`std::__1::__atomic_base<unsigned int, false>::wait[abi:nqe230101](this=0x0000000100e9ea40, __v=<unavailable>, __m=acquire) const at atomic.h:120:5 [opt] [inlined]
+    ﹍ frame #8: 0x0000000100427a6c smg-pc`aurora::gx::fifo::(anonymous namespace)::worker_main(token=stop_token @ 0x00000001704f2fa8) at fifo.cpp:323:17 [opt]
+    ﹉ frame #11: 0x0000000100428a04 smg-pc`aurora::thread::Thread::Thread<void (&)(std::__1::stop_token) noexcept>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token)::operator()(this=<unavailable>, token=<unavailable>) at thread.hpp:34:5 [opt] [inlined]
+    ﹉ frame #13: 0x0000000100428a00 smg-pc`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token) noexcept>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token, 0ul, 1ul>(__t=size=3, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #14: 0x00000001004289f4 smg-pc`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::thread::Thread::Thread<void (&)(std::__1::stop_token) noexcept>(aurora::thread::Options, T&&)::'lambda'(std::__1::stop_token), std::__1::stop_token>>(__vp=<unavailable>) at thread.h:178:3 [opt]
+       frame #15: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #12
+       frame #0: 0x000000018a3d050c libsystem_kernel.dylib`__psynch_cvwait + 8
+       frame #1: 0x000000018a4121d0 libsystem_pthread.dylib`_pthread_cond_wait + 980
+       frame #2: 0x0000000101af4fd4 libc++.1.dylib`std::__1::condition_variable::__do_timed_wait(std::__1::unique_lock<std::__1::mutex>&, std::__1::chrono::time_point<std::__1::chrono::system_clock, std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000000000l>>>) + 96
+       frame #3: 0x000000010041ab8c smg-pc`std::__1::cv_status std::__1::condition_variable::wait_for[abi:nqe230101]<long long, std::__1::ratio<1l, 1000000000l>>(this=0x0000000100e9f0b8, __lk=0x000000017057ef48, __d=<unavailable>) at condition_variable.h:0 [opt] [inlined]
+       frame #4: 0x000000010041ab40 smg-pc`void std::__1::condition_variable::__do_timed_wait[abi:nqe230101]<std::__1::chrono::steady_clock>(this=0x0000000100e9f0b8, __lk=0x000000017057ef48, __tp=<unavailable>) at condition_variable.h:224:3 [opt] [inlined]
+       frame #5: 0x000000010041ab40 smg-pc`std::__1::cv_status std::__1::condition_variable::wait_until[abi:nqe230101]<std::__1::chrono::steady_clock, std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000000000l>>>(this=0x0000000100e9f0b8, __lk=0x000000017057ef48, __t=0x000000017057ef40) at condition_variable.h:128:5 [opt]
+       frame #6: 0x000000010046a41c smg-pc`bool std::__1::condition_variable::wait_until[abi:nqe230101]<std::__1::chrono::steady_clock, std::__1::chrono::duration<long long, std::__1::ratio<1l, 1000000000l>>, aurora::vi::(anonymous namespace)::RetraceClock::run()::'lambda'()>(this=<unavailable>, __lk=<unavailable>, __t=<unavailable>, __pred=<unavailable>) at condition_variable.h:136:11 [opt] [inlined]
+       frame #7: 0x000000010046a400 smg-pc`aurora::vi::(anonymous namespace)::RetraceClock::run(this=0x0000000100e9f078) at vi.cpp:117:20 [opt]
+    ﹍ frame #8: 0x000000010046a360 smg-pc`aurora::vi::(anonymous namespace)::RetraceClock::start()::'lambda'()::operator()(this=<unavailable>) const at vi.cpp:80:36 [opt] [inlined]
+    ﹉ frame #10: 0x000000010046a360 smg-pc`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::vi::(anonymous namespace)::RetraceClock::start()::'lambda'(), 0ul>(__t=<unavailable>, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #11: 0x000000010046a360 smg-pc`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, aurora::vi::(anonymous namespace)::RetraceClock::start()::'lambda'()>>(__vp=<unavailable>) at thread.h:178:3 [opt]
+       frame #12: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #13
+       frame #0: 0x000000018a3cf9dc libsystem_kernel.dylib`__psynch_mutexwait + 8
+       frame #1: 0x000000018a40ef7c libsystem_pthread.dylib`_pthread_mutex_firstfit_lock_wait + 84
+       frame #2: 0x000000018a40c9b8 libsystem_pthread.dylib`_pthread_mutex_firstfit_lock_slow + 216
+       frame #3: 0x000000018a41225c libsystem_pthread.dylib`_pthread_cond_wait + 1120
+       frame #4: 0x0000000101af4f44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #5: 0x00000001008e3134 smg-pc`void std::__1::condition_variable::wait[abi:nqe230101]<OSSleepThread::$_0>(this=0x0000000100e887a8, __lk=0x000000017060ae80, __pred=<unavailable>) at condition_variable.h:113:7 [opt] [inlined]
+       frame #6: 0x00000001008e3104 smg-pc`OSSleepThread(queue=0x0000000100ec4dc0) at OSExecution.cpp:291:15 [opt]
+       frame #7: 0x00000001008e6270 smg-pc`OSReceiveMessage(mq=0x0000000100ec4db0, msg=0x000000017060af08, flags=1) at OSMessage.cpp:45:13 [opt]
+       frame #8: 0x00000001002c9db0 smg-pc`JKRAram::run(this=<unavailable>) at JKRAram.cpp:48:9 [opt]
+    ﹍ frame #9: 0x00000001008e4a7c smg-pc`(anonymous namespace)::run_managed_thread(record=0x000000788acbe700) at OSExecution.cpp:422:13 [opt]
+    ﹉ frame #11: 0x00000001008e5db8 smg-pc`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*, 0ul, 1ul>(__t=size=3, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #12: 0x00000001008e5db8 smg-pc`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*>>(__vp=0x0000007888a39f80) at thread.h:178:3 [opt]
+       frame #13: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #14
+       frame #0: 0x000000018a3cf9dc libsystem_kernel.dylib`__psynch_mutexwait + 8
+       frame #1: 0x000000018a40ef7c libsystem_pthread.dylib`_pthread_mutex_firstfit_lock_wait + 84
+       frame #2: 0x000000018a40c9b8 libsystem_pthread.dylib`_pthread_mutex_firstfit_lock_slow + 216
+       frame #3: 0x000000018a41225c libsystem_pthread.dylib`_pthread_cond_wait + 1120
+       frame #4: 0x0000000101af4f44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #5: 0x00000001008e3134 smg-pc`void std::__1::condition_variable::wait[abi:nqe230101]<OSSleepThread::$_0>(this=0x0000000100e887a8, __lk=0x0000000170696e90, __pred=<unavailable>) at condition_variable.h:113:7 [opt] [inlined]
+       frame #6: 0x00000001008e3104 smg-pc`OSSleepThread(queue=0x0000000100ec4e98) at OSExecution.cpp:291:15 [opt]
+       frame #7: 0x00000001008e6270 smg-pc`OSReceiveMessage(mq=0x0000000100ec4e88, msg=0x0000000170696f18, flags=1) at OSMessage.cpp:45:13 [opt]
+       frame #8: 0x00000001002ca90c smg-pc`JKRAramStream::run(this=<unavailable>) at JKRAramStream.cpp:43:9 [opt]
+    ﹍ frame #9: 0x00000001008e4a7c smg-pc`(anonymous namespace)::run_managed_thread(record=0x000000788acbe180) at OSExecution.cpp:422:13 [opt]
+    ﹉ frame #11: 0x00000001008e5db8 smg-pc`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*, 0ul, 1ul>(__t=size=3, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #12: 0x00000001008e5db8 smg-pc`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*>>(__vp=0x0000007888a39140) at thread.h:178:3 [opt]
+       frame #13: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #15
+       frame #0: 0x000000018a3cf9dc libsystem_kernel.dylib`__psynch_mutexwait + 8
+       frame #1: 0x000000018a40ef7c libsystem_pthread.dylib`_pthread_mutex_firstfit_lock_wait + 84
+       frame #2: 0x000000018a40c9b8 libsystem_pthread.dylib`_pthread_mutex_firstfit_lock_slow + 216
+       frame #3: 0x000000018a41225c libsystem_pthread.dylib`_pthread_cond_wait + 1120
+       frame #4: 0x0000000101af4f44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #5: 0x00000001008e3134 smg-pc`void std::__1::condition_variable::wait[abi:nqe230101]<OSSleepThread::$_0>(this=0x0000000100e887a8, __lk=0x0000000170722e90, __pred=<unavailable>) at condition_variable.h:113:7 [opt] [inlined]
+       frame #6: 0x00000001008e3104 smg-pc`OSSleepThread(queue=0x0000000100e9d700) at OSExecution.cpp:291:15 [opt]
+       frame #7: 0x00000001008e6270 smg-pc`OSReceiveMessage(mq=0x0000000100e9d6f0, msg=0x0000000170722f18, flags=1) at OSMessage.cpp:45:13 [opt]
+       frame #8: 0x00000001002cac7c smg-pc`JKRDecomp::run(this=<unavailable>) at JKRDecomp.cpp:42:9 [opt]
+    ﹍ frame #9: 0x00000001008e4a7c smg-pc`(anonymous namespace)::run_managed_thread(record=0x000000788acbc880) at OSExecution.cpp:422:13 [opt]
+    ﹉ frame #11: 0x00000001008e5db8 smg-pc`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*, 0ul, 1ul>(__t=size=3, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #12: 0x00000001008e5db8 smg-pc`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*>>(__vp=0x0000007888a39c80) at thread.h:178:3 [opt]
+       frame #13: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #16
+       frame #0: 0x000000018a3cf9dc libsystem_kernel.dylib`__psynch_mutexwait + 8
+       frame #1: 0x000000018a40ef7c libsystem_pthread.dylib`_pthread_mutex_firstfit_lock_wait + 84
+       frame #2: 0x000000018a40c9b8 libsystem_pthread.dylib`_pthread_mutex_firstfit_lock_slow + 216
+       frame #3: 0x000000018a41225c libsystem_pthread.dylib`_pthread_cond_wait + 1120
+       frame #4: 0x0000000101af4f44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #5: 0x00000001008e3134 smg-pc`void std::__1::condition_variable::wait[abi:nqe230101]<OSSleepThread::$_0>(this=0x0000000100e887a8, __lk=0x00000001707aee70, __pred=<unavailable>) at condition_variable.h:113:7 [opt] [inlined]
+       frame #6: 0x00000001008e3104 smg-pc`OSSleepThread(queue=0x000000757b640538) at OSExecution.cpp:291:15 [opt]
+       frame #7: 0x00000001008e6270 smg-pc`OSReceiveMessage(mq=0x000000757b640528, msg=0x00000001707aeef8, flags=1) at OSMessage.cpp:45:13 [opt]
+       frame #8: 0x000000010009b80c smg-pc`FileLoaderThread::run(this=0x000000757b640510) at FileLoaderThread.cpp:26:9 [opt]
+    ﹍ frame #9: 0x00000001008e4a7c smg-pc`(anonymous namespace)::run_managed_thread(record=0x000000788acbc1c0) at OSExecution.cpp:422:13 [opt]
+    ﹉ frame #11: 0x00000001008e5db8 smg-pc`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*, 0ul, 1ul>(__t=size=3, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #12: 0x00000001008e5db8 smg-pc`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*>>(__vp=0x0000007888a391c0) at thread.h:178:3 [opt]
+       frame #13: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #17
+       frame #0: 0x000000018a3cf9dc libsystem_kernel.dylib`__psynch_mutexwait + 8
+       frame #1: 0x000000018a40ef7c libsystem_pthread.dylib`_pthread_mutex_firstfit_lock_wait + 84
+       frame #2: 0x000000018a40c9b8 libsystem_pthread.dylib`_pthread_mutex_firstfit_lock_slow + 216
+       frame #3: 0x000000018a41225c libsystem_pthread.dylib`_pthread_cond_wait + 1120
+       frame #4: 0x0000000101af4f44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #5: 0x00000001008e3134 smg-pc`void std::__1::condition_variable::wait[abi:nqe230101]<OSSleepThread::$_0>(this=0x0000000100e887a8, __lk=0x000000017083ae80, __pred=<unavailable>) at condition_variable.h:113:7 [opt] [inlined]
+       frame #6: 0x00000001008e3104 smg-pc`OSSleepThread(queue=0x000000757b656ab8) at OSExecution.cpp:291:15 [opt]
+       frame #7: 0x00000001008e6270 smg-pc`OSReceiveMessage(mq=0x000000757b656aa8, msg=0x000000017083af08, flags=1) at OSMessage.cpp:45:13 [opt]
+       frame #8: 0x0000000100091b98 smg-pc`NANDManagerThread::run(this=0x000000757b656a90) at NANDManagerThread.cpp:12:9 [opt]
+    ﹍ frame #9: 0x00000001008e4a7c smg-pc`(anonymous namespace)::run_managed_thread(record=0x000000788acbda40) at OSExecution.cpp:422:13 [opt]
+    ﹉ frame #11: 0x00000001008e5db8 smg-pc`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*, 0ul, 1ul>(__t=size=3, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #12: 0x00000001008e5db8 smg-pc`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*>>(__vp=0x0000007888a39880) at thread.h:178:3 [opt]
+       frame #13: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #18
+       frame #0: 0x000000018a3cf9dc libsystem_kernel.dylib`__psynch_mutexwait + 8
+       frame #1: 0x000000018a40ef7c libsystem_pthread.dylib`_pthread_mutex_firstfit_lock_wait + 84
+       frame #2: 0x000000018a40c9b8 libsystem_pthread.dylib`_pthread_mutex_firstfit_lock_slow + 216
+       frame #3: 0x000000018a41225c libsystem_pthread.dylib`_pthread_cond_wait + 1120
+       frame #4: 0x0000000101af4f44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #5: 0x00000001008e3134 smg-pc`void std::__1::condition_variable::wait[abi:nqe230101]<OSSleepThread::$_0>(this=0x0000000100e887a8, __lk=0x00000001708c6e90, __pred=<unavailable>) at condition_variable.h:113:7 [opt] [inlined]
+       frame #6: 0x00000001008e3104 smg-pc`OSSleepThread(queue=0x000000757b6e25f8) at OSExecution.cpp:291:15 [opt]
+       frame #7: 0x00000001008e6270 smg-pc`OSReceiveMessage(mq=0x000000757b6e25e8, msg=0x00000001708c6f18, flags=1) at OSMessage.cpp:45:13 [opt]
+       frame #8: 0x0000000100093f08 smg-pc`DrawSyncManager::threadFunc(pArg=0x000000757b6e2240) at DrawSyncManager.cpp:80:9 [opt]
+    ﹍ frame #9: 0x00000001008e4a7c smg-pc`(anonymous namespace)::run_managed_thread(record=0x000000788a66f380) at OSExecution.cpp:422:13 [opt]
+    ﹉ frame #11: 0x00000001008e5db8 smg-pc`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*, 0ul, 1ul>(__t=size=3, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #12: 0x00000001008e5db8 smg-pc`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*>>(__vp=0x0000007888a396c0) at thread.h:178:3 [opt]
+       frame #13: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+* thread #19, stop reason = EXC_BAD_ACCESS (code=1, address=0x8)
+   * frame #0: 0x00000001000651d8 smg-pc`HitSensorKeeper::registHitSensorInfo(this=0x0000000000000000, pInfo=0x000000757c0cdee0) at HitSensorKeeper.cpp:143:5 [opt] [inlined]
+     frame #1: 0x00000001000651d8 smg-pc`HitSensorKeeper::add(this=0x0000000000000000, pName="Body", sensorType=5, sensorGroupSize=8, radius=50, pActor=0x000000757c0c3910, a6=0x0000000170952d8c) at HitSensorKeeper.cpp:38:5 [opt]
+     frame #2: 0x000000010003050c smg-pc`MR::addHitSensor(pActor=<unavailable>, pName=<unavailable>, type=5, groupSize=<unavailable>, radius=<unavailable>, rOffset=<unavailable>) at ActorSensorUtil.cpp:20:39 [opt] [inlined] [artificial]
+     frame #3: 0x00000001000d75fc smg-pc`NPCActor::initialize(this=0x000000757c0c3910, rIter=0x000000757bea9500, rCaps=0x0000000170952d18) at NPCActor.cpp:373:9 [opt]
+     frame #4: 0x00000001000e2550 smg-pc`Rosetta::init(this=0x000000757c0c3910, rIter=0x000000757bea9500) at Rosetta.cpp:56:5 [opt]
+     frame #5: 0x00000001000d3d64 smg-pc`PlacementInfoOrdered::initPlacement(this=0x000000757bea9080) at PlacementInfoOrdered.cpp:100:23 [opt]
+     frame #6: 0x00000001000cfddc smg-pc`StageDataHolder::initPlacement(this=0x000000757be97760) at StageDataHolder.cpp:161:11 [opt]
+     frame #7: 0x00000001000d253c smg-pc`GameScene::init(this=0x000000757bdac820) at GameScene.cpp:144:9 [opt]
+     frame #8: 0x0000000100089560 smg-pc`GameSystemSceneController::initializeScene(this=0x000000757b6ebf90) at GameSystemSceneController.cpp:132:13 [opt]
+     frame #9: 0x000000010009111c smg-pc`FunctionAsyncExecInfo::execute(this=0x000000757b71dee0) at FunctionAsyncExecutor.cpp:22:5 [opt] [inlined]
+     frame #10: 0x00000001000910f0 smg-pc`FunctionAsyncExecutorThread::run(this=0x000000757b6fd2b0) at FunctionAsyncExecutor.cpp:43:15 [opt]
+  ﹍ frame #11: 0x00000001008e4a7c smg-pc`(anonymous namespace)::run_managed_thread(record=0x000000788b0aa080) at OSExecution.cpp:422:13 [opt]
+  ﹉ frame #13: 0x00000001008e5db8 smg-pc`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*, 0ul, 1ul>(__t=size=3, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+     frame #14: 0x00000001008e5db8 smg-pc`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*>>(__vp=0x00000078889c39c0) at thread.h:178:3 [opt]
+     frame #15: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #20
+       frame #0: 0x000000018a3cf9dc libsystem_kernel.dylib`__psynch_mutexwait + 8
+       frame #1: 0x000000018a40ef7c libsystem_pthread.dylib`_pthread_mutex_firstfit_lock_wait + 84
+       frame #2: 0x000000018a40c9b8 libsystem_pthread.dylib`_pthread_mutex_firstfit_lock_slow + 216
+       frame #3: 0x000000018a41225c libsystem_pthread.dylib`_pthread_cond_wait + 1120
+       frame #4: 0x0000000101af4f44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #5: 0x00000001008e3134 smg-pc`void std::__1::condition_variable::wait[abi:nqe230101]<OSSleepThread::$_0>(this=0x0000000100e887a8, __lk=0x00000001709dee70, __pred=<unavailable>) at condition_variable.h:113:7 [opt] [inlined]
+       frame #6: 0x00000001008e3104 smg-pc`OSSleepThread(queue=0x000000757b70d738) at OSExecution.cpp:291:15 [opt]
+       frame #7: 0x00000001008e6270 smg-pc`OSReceiveMessage(mq=0x000000757b70d728, msg=0x00000001709deef8, flags=1) at OSMessage.cpp:45:13 [opt]
+       frame #8: 0x00000001000910e0 smg-pc`FunctionAsyncExecutorThread::run(this=0x000000757b70d710) at FunctionAsyncExecutor.cpp:38:9 [opt]
+    ﹍ frame #9: 0x00000001008e4a7c smg-pc`(anonymous namespace)::run_managed_thread(record=0x000000788b0aa300) at OSExecution.cpp:422:13 [opt]
+    ﹉ frame #11: 0x00000001008e5db8 smg-pc`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*, 0ul, 1ul>(__t=size=3, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #12: 0x00000001008e5db8 smg-pc`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, void (*)((anonymous namespace)::ManagedThread*), (anonymous namespace)::ManagedThread*>>(__vp=0x00000078889c3a60) at thread.h:178:3 [opt]
+       frame #13: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+  thread #21
+       frame #0: 0x000000018a3ce9ec libsystem_kernel.dylib`__workq_kernreturn + 8
+  thread #22
+       frame #0: 0x000000018a3ce9ec libsystem_kernel.dylib`__workq_kernreturn + 8
+  thread #23
+       frame #0: 0x000000018a3ce9ec libsystem_kernel.dylib`__workq_kernreturn + 8
+  thread #24
+       frame #0: 0x000000018a3ce9ec libsystem_kernel.dylib`__workq_kernreturn + 8
+  thread #25
+       frame #0: 0x000000018a3ce9ec libsystem_kernel.dylib`__workq_kernreturn + 8
+  thread #26
+       frame #0: 0x000000018a3ce9ec libsystem_kernel.dylib`__workq_kernreturn + 8
+  thread #27
+       frame #0: 0x000000018a3ce9ec libsystem_kernel.dylib`__workq_kernreturn + 8
+  thread #28
+       frame #0: 0x000000018a40ccd8 libsystem_pthread.dylib`start_wqthread
+  thread #29
+       frame #0: 0x000000018a3ce9ec libsystem_kernel.dylib`__workq_kernreturn + 8
+  thread #30
+       frame #0: 0x000000018a3ce9ec libsystem_kernel.dylib`__workq_kernreturn + 8
+  thread #31
+       frame #0: 0x000000018a3d050c libsystem_kernel.dylib`__psynch_cvwait + 8
+       frame #1: 0x000000018a4121d0 libsystem_pthread.dylib`_pthread_cond_wait + 980
+       frame #2: 0x0000000101af4f44 libc++.1.dylib`std::__1::condition_variable::wait(std::__1::unique_lock<std::__1::mutex>&) + 24
+       frame #3: 0x00000001008e1844 smg-pc`(anonymous namespace)::AlarmService::run(this=0x0000000100e9f5e8) at OSAlarm.cpp:0 [opt]
+    ﹍ frame #4: 0x00000001008e182c smg-pc`(anonymous namespace)::AlarmService::AlarmService()::'lambda'()::operator()(this=<unavailable>) const at OSAlarm.cpp:50:74 [opt] [inlined]
+    ﹉ frame #6: 0x00000001008e182c smg-pc`void std::__1::__thread_execute[abi:nqe230101]<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, (anonymous namespace)::AlarmService::AlarmService()::'lambda'(), 0ul>(__t=<unavailable>, (null)=<unavailable>) at thread.h:170:3 [opt] [inlined]
+       frame #7: 0x00000001008e182c smg-pc`void* std::__1::__thread_proxy[abi:nqe230101]<std::__1::tuple<std::__1::unique_ptr<std::__1::__thread_struct, std::__1::default_delete<std::__1::__thread_struct>>, (anonymous namespace)::AlarmService::AlarmService()::'lambda'()>>(__vp=<unavailable>) at thread.h:178:3 [opt]
+       frame #8: 0x000000018a411d00 libsystem_pthread.dylib`_pthread_start + 136
+(lldb) process kill
+Process 16995 exited with status = 9 (0x00000009) killed

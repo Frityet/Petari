@@ -1,6 +1,8 @@
 #include "Game/System/ConfigDataMisc.hpp"
 #include <JSystem/JSupport/JSUMemoryInputStream.hpp>
 #include <JSystem/JSupport/JSUMemoryOutputStream.hpp>
+#include <aurora/exception.hpp>
+#include <stdexcept>
 
 #define FLAG_LAST_LOADED_MARIO 0x1
 #define FLAG_COMPLETE_ENDING_MARIO 0x2
@@ -55,13 +57,16 @@ u32 ConfigDataMisc::getSignature() const {
 }
 
 s32 ConfigDataMisc::serialize(u8* pBuffer, u32 size) const {
+    if (pBuffer == nullptr || size < 1 + sizeof(OSTime) || size > 0x7fffffffU) {
+        aurora::throw_host_exception< std::length_error >("MISC output is too small");
+    }
     JSUMemoryOutputStream stream = JSUMemoryOutputStream(pBuffer, size);
 
     u8 flag = mFlag;
     stream.write(&flag, sizeof(flag));
 
     OSTime lastModified = mLastModified;
-    stream.write(&lastModified, sizeof(lastModified));
+    stream.writeBig(lastModified);
 
     return stream.mPosition;
 }
@@ -71,15 +76,21 @@ s32 ConfigDataMisc::deserialize(const u8* pBuffer, u32 size) {
 
     JSUMemoryInputStream stream = JSUMemoryInputStream(pBuffer, size);
 
-    u8 flag;
+    if (pBuffer == nullptr || size == 0 || size > 0x7fffffffU) {
+        return 2;
+    }
+    u8 flag = mFlag;
     stream.read(&flag, sizeof(flag));
     mFlag = flag;
 
     if (stream.getAvailable() == 0) {
         mLastModified = 0;
     } else {
-        OSTime lastModified;
-        stream.read(&lastModified, sizeof(lastModified));
+        if (size < 1 + sizeof(OSTime)) {
+            return 2;
+        }
+        OSTime lastModified = 0;
+        stream.readBig(lastModified);
         mLastModified = lastModified;
     }
 
@@ -89,4 +100,8 @@ s32 ConfigDataMisc::deserialize(const u8* pBuffer, u32 size) {
 void ConfigDataMisc::initializeData() {
     mFlag = FLAG_LAST_LOADED_MARIO;
     mLastModified = 0;
+}
+
+bool ConfigDataMisc::validateData(const u8* pData, u32 size) const {
+    return pData != nullptr && size <= 0x7fffffffU && (size == 1 || size >= 1 + sizeof(OSTime));
 }

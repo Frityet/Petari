@@ -2,6 +2,7 @@
 
 #include "Game/Util/MemoryUtil.hpp"
 #include <JSystem/JSupport/JSUMemoryOutputStream.hpp>
+#include <span>
 
 class BinaryDataContentHeaderSerializer {
 public:
@@ -24,6 +25,13 @@ public:
 class BinaryDataContentAccessor {
 public:
     BinaryDataContentAccessor(u8* pData);
+
+    struct Attribute {
+        const char* mName;
+        u32 mSize;
+        bool mRequired;
+    };
+    static bool validate(const u8*, u32, u32 recordCount, std::span< const Attribute >);
 
     s32 getHeaderSize() const;
     s32 getDataSize() const;

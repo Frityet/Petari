@@ -1,0 +1,10 @@
+[
+  {
+    "name": "save-config-real-or-absent",
+    "target": "smg-pc-save-config-real-or-absent-tests",
+    "build": 0,
+    "build_log": "smg-pc-save-config-real-or-absent-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-save-config-real-or-absent-tests-run.log"
+  }
+]

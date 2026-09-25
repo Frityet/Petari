@@ -16,6 +16,10 @@ HitSensorInfo::HitSensorInfo(const char* pName, HitSensor* pSensor, const TVec3f
     _20 = a6;
 }
 
+HitSensorInfo::~HitSensorInfo() {
+    delete mSensor;
+}
+
 void HitSensorInfo::update() {
     if (_20) {
         mSensor->mHost->updateHitSensor(mSensor);

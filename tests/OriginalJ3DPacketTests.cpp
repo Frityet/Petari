@@ -4,6 +4,7 @@
 #include "JSystem/J3DGraphBase/J3DPacket.hpp"
 #include "JSystem/J3DGraphBase/J3DShapeDraw.hpp"
 #include "JSystem/J3DGraphBase/J3DShapeMtx.hpp"
+#include "JSystem/J3DGraphBase/J3DTransform.hpp"
 #include "JSystem/J3DGraphBase/J3DVertex.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 
@@ -194,6 +195,41 @@ namespace {
             }
         }
     }
+
+    void overlapping_normal_matrix_copies() {
+        constexpr std::size_t source_offset = 4;
+        for (const std::size_t destination_offset : {0U, 3U, 4U, 5U, 7U, 12U}) {
+            alignas(32) std::array<float, 32> storage;
+            for (std::size_t i = 0; i < storage.size(); ++i) storage[i] = float(i) - 7.5F;
+            storage[source_offset] = -0.0F;
+            const auto before = storage;
+            auto expected = before;
+            for (std::size_t row = 0; row < 3; ++row) {
+                for (std::size_t column = 0; column < 3; ++column) {
+                    expected[destination_offset + row * 3 + column] = before[source_offset + row * 4 + column];
+                }
+            }
+            J3DPSMtx33CopyFrom34(reinterpret_cast<MtxPtr>(storage.data() + source_offset),
+                               reinterpret_cast<Mtx3P>(storage.data() + destination_offset));
+            require(std::memcmp(storage.data(), expected.data(), sizeof(storage)) == 0,
+                    "3x4-to-3x3 copy loads all source rows before overlapping stores, preserves signed zero and leaves guards untouched");
+
+            storage = before;
+            expected = before;
+            const Vec scale{2.0F, 3.0F, 4.0F};
+            const float factors[]{scale.x, scale.y, scale.z};
+            for (std::size_t row = 0; row < 3; ++row) {
+                for (std::size_t column = 0; column < 3; ++column) {
+                    expected[destination_offset + row * 3 + column] = before[source_offset + row * 3 + column] * factors[column];
+                }
+            }
+            J3DShapeMtx matrix(0);
+            matrix.calcNBTScale(scale, reinterpret_cast<Mtx33*>(storage.data() + source_offset),
+                                reinterpret_cast<Mtx33*>(storage.data() + destination_offset));
+            require(std::memcmp(storage.data(), expected.data(), sizeof(storage)) == 0,
+                    "normal-matrix scaling copies all nine source values before overlapping destination writes");
+        }
+    }
 }
 
 int main() {
@@ -203,7 +239,8 @@ int main() {
         primitive_count_and_matrix_index_insertion();
         original_shape_array_recording();
         original_multi_matrix_nbt_scale();
-        std::cout << "5 original J3D packet/display-list groups passed\n";
+        overlapping_normal_matrix_copies();
+        std::cout << "6 original J3D packet/display-list groups passed\n";
         return 0;
     } catch (const std::exception& error) {
         std::cerr << error.what() << '\n';

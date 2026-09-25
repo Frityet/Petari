@@ -1,0 +1,93 @@
+{
+  "base_commit": "8490a01dfe1ca84d5348059c6133d154231ec3ef",
+  "files": {
+    "src/compat/JKRHeapCompat.cpp": {
+      "sha256": "a97c3b02c4fa9ee99813f87f648afc3c2b3178880a92885ccf45d218f192fe59",
+      "status": ""
+    },
+    "src/compat/JKRExpHeapCompat.cpp": {
+      "sha256": "e23462197be574603b82760e86db13038764d8d098c7cdad1f6f8789b4303412",
+      "status": ""
+    },
+    "src/compat/JKRSolidHeapCompat.cpp": {
+      "sha256": "f2e3903cf3ba606de9e29788f96b19bee199e8f2e1c40bd75f8583a272afa097",
+      "status": ""
+    },
+    "src/compat/JKRUnitHeapCompat.cpp": {
+      "sha256": "3d038dbb8122bffda23c5fe7972542783a3db1e4a24f9cfef9285f4502f8f9dd",
+      "status": ""
+    },
+    "src/compat/JkrHeapFinalizer.cpp": {
+      "sha256": "dc89df1e9d25336aba46abe00b56dc0b2620762cfcc1830310b40e2fdc92754c",
+      "status": ""
+    },
+    "src/compat/JkrHeapFinalizer.hpp": {
+      "sha256": "1df42be3da0b8bacb175738be75a14caebfd7c4881271c8229b91093bf1aaf0c",
+      "status": ""
+    },
+    "src/compat/JkrAllocationProvenance.cpp": {
+      "sha256": "22bab0e2fb493ce3e8e76e485e4bb2a43e28c29fbc443192f1689e7dda360bb4",
+      "status": ""
+    },
+    "src/compat/JkrAllocationProvenance.hpp": {
+      "sha256": "3d218818cd56281a028cb59c57da6875f9a24bbba0821699af51583797ab6f0f",
+      "status": ""
+    },
+    "src/compat/JkrDiagnostics.cpp": {
+      "sha256": "a9bd75f69b8f4827f4688a1f455d7660a624e1780abfadec8d444299fcad0539",
+      "status": ""
+    },
+    "src/compat/JkrDiagnostics.hpp": {
+      "sha256": "695c97632d0b59f9314e47667982ef2a6e2f8af7d83288813b6862836385f590",
+      "status": ""
+    },
+    "src/compat/JkrAllocationDomain.cpp": {
+      "sha256": "3cdfed9f651a2e431f9684c37e267dd9a935ebeb55e7ec07244db8f36fdf41c1",
+      "status": ""
+    },
+    "src/JSystem/JKernel/JKRHeap.hpp": {
+      "sha256": "7793c2e3210377d1bf04ffa63abe513cac8c6ecbd16e449f7a77599d42ebca5e",
+      "status": ""
+    },
+    "src/JSystem/JKernel/JKRAram.cpp": {
+      "sha256": "ba77b39aa39b7ef1b9a0b3b81a99cb8222b2c9cb1867bab3afd8f4a87957bd0c",
+      "status": ""
+    },
+    "src/JSystem/JKernel/JKRAramPiece.cpp": {
+      "sha256": "c7dec465b580dae4f1ddf4657ed560923e9a9d286223553761da5e836aa6ff67",
+      "status": ""
+    },
+    "src/JSystem/JKernel/JKRAramStream.cpp": {
+      "sha256": "941a7ac97e30fd68ec11cb51f2628eca942903ab0e9e59159d56c0b68536f310",
+      "status": ""
+    },
+    "src/Game/Util/MemoryUtil.cpp": {
+      "sha256": "2ec723fc3a3658d155740ebfd4e6e8b2829373cf254d7c77bf84a39db404bf24",
+      "status": ""
+    },
+    "src/Game/Util/MutexHolder.hpp": {
+      "sha256": "dde11cb9bed6751cd194994497065345241a4df76a2819e7baa920e8c067b7d1",
+      "status": ""
+    },
+    "src/runtime/jut/JutTexture.cpp": {
+      "sha256": "11c0df175bc71280ba00dfd8243b77ce96d45d207b10b031ba9089f378afe932",
+      "status": ""
+    },
+    "src/JSystem/JParticle/JPAResourceManager.cpp": {
+      "sha256": "d5575b3a4069c07a5a1116fdc509900854852657cb5a9cdfe64174373b312ce1",
+      "status": ""
+    },
+    "src/compat/DisabledAudioSystemWrapper.cpp": {
+      "sha256": "2766c3bdba80eb497132d4bf0cfcf60e12dbce80f606932adb29197bf27eee88",
+      "status": ""
+    },
+    "tests/JkrHeapFinalizerTests.cpp": {
+      "sha256": "f7ed22c5059bc80f302892aed6b9724e41bb0566ba5d389b701a82766fc868d0",
+      "status": ""
+    },
+    "tests/JkrAllocationDomainTests.cpp": {
+      "sha256": "5ba24a1053a200d6c98696a8073f7bea27afcfe1b35219ab02fb19bf18e25df5",
+      "status": ""
+    }
+  }
+}

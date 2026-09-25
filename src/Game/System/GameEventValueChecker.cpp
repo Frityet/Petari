@@ -1,10 +1,12 @@
-#include "compat/Cp932Literal.hpp"
+#include <aurora/exception.hpp>
+#include <stdexcept>
 #include "Game/System/GameEventValueChecker.hpp"
 #include "Game/System/FindingLuigiEventScheduler.hpp"
 #include "Game/Util/HashUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include "JSystem/JSupport/JSUMemoryInputStream.hpp"
 #include "JSystem/JSupport/JSUMemoryOutputStream.hpp"
+#include "compat/Cp932Literal.hpp"
 
 namespace {
     const GameEventValue cGameEventValueTable[] = {
@@ -59,6 +61,9 @@ u32 GameEventValueChecker::getSignature() const {
 }
 
 s32 GameEventValueChecker::serialize(u8* pData, u32 maxBufferSize) const {
+    if (pData == nullptr || maxBufferSize > 0x7fffffffU) {
+        aurora::throw_host_exception<std::length_error>("Save output exceeds the stream range");
+    }
     // FIXME: regswap
     // https://decomp.me/scratch/zhaby
 
@@ -71,25 +76,27 @@ s32 GameEventValueChecker::serialize(u8* pData, u32 maxBufferSize) const {
         hash = MR::getHashCode(::cGameEventValueTable[idx].mName);
         value = mValues[idx];
 
-        stream.writeU16(hash);
-        stream.writeU16(value);
+        stream.writeBig(static_cast< u16 >(hash));
+        stream.writeBig(value);
     }
 
     return stream.mPosition;
 }
 
 s32 GameEventValueChecker::deserialize(const u8* pData, u32 maxBufferSize) {
+    if (!validateData(pData, maxBufferSize))
+        return -1;
     s32 readError = 0;
 
     JSUMemoryInputStream stream(pData, maxBufferSize);
 
     s32 numEntries = static_cast< s32 >(maxBufferSize) / 2;
-    u16 readHash;
-    u16 readValue;
+    u16 readHash = 0;
+    u16 readValue = 0;
     for (s32 idx = 0; idx < numEntries; idx++) {
-        stream.read(&readHash, sizeof(readHash));
+        stream.readBig(readHash);
         u16 hash = readHash;
-        stream.read(&readValue, sizeof(readValue));
+        stream.readBig(readValue);
         u16 value = readValue;
 
         s32 valueIndex = findIndexFromHashCode(hash);
@@ -129,4 +136,8 @@ s32 GameEventValueChecker::findIndexFromHashCode(u16 hash) const {
         }
     }
     return -1;
+}
+
+bool GameEventValueChecker::validateData(const u8* pData, u32 size) const {
+    return (pData != nullptr || size == 0) && size <= 0x7fffffffU && size % 4 == 0;
 }

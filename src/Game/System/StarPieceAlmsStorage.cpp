@@ -2,6 +2,9 @@
 #include "Game/Util/HashUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MemoryUtil.hpp"
+#include <aurora/endian.hpp>
+#include <aurora/exception.hpp>
+#include <stdexcept>
 
 namespace {
     const static u32 sMaxValueArray[] = {32767, 32767, 32767, 32767, 32767, 32767, 32767, 32767, 400, 400, 600, 1200, 1600, 1000, 800, 32767};
@@ -38,13 +41,22 @@ u32 StarPieceAlmsStorage::getSignature() const {
     return 'PCE1';
 }
 
-s32 StarPieceAlmsStorage::serialize(u8* pData, u32) const {
-    MR::copyMemory(pData, mValueArray, 32);
+s32 StarPieceAlmsStorage::serialize(u8* pData, u32 size) const {
+    if (!validateData(pData, size)) {
+        aurora::throw_host_exception< std::length_error >("PCE1 output is too small");
+    }
+    for (s32 idx = 0; idx < 16; idx++) {
+        aurora::endian::write_u16(pData + idx * 2, mValueArray[idx]);
+    }
     return 32;
 }
 
-s32 StarPieceAlmsStorage::deserialize(const u8* pData, u32) {
-    MR::copyMemory(mValueArray, pData, 32);
+s32 StarPieceAlmsStorage::deserialize(const u8* pData, u32 size) {
+    if (!validateData(pData, size))
+        return -1;
+    for (s32 idx = 0; idx < 16; idx++) {
+        mValueArray[idx] = aurora::endian::read_u16(pData + idx * 2);
+    }
     return 0;
 }
 
@@ -52,4 +64,8 @@ void StarPieceAlmsStorage::initializeData() {
     for (s32 idx = 0; idx < 16; idx++) {
         mValueArray[idx] = 0;
     }
+}
+
+bool StarPieceAlmsStorage::validateData(const u8* pData, u32 size) const {
+    return pData != nullptr && size >= 32 && size <= 0x7fffffffU;
 }

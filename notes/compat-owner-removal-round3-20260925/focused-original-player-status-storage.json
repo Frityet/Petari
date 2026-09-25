@@ -1,0 +1,118 @@
+[
+  {
+    "name": "original-player-status-storage",
+    "target": "smg-pc-original-player-status-storage-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-player-status-storage-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-player-status-storage-tests-run.log"
+  },
+  {
+    "name": "original-save-owner",
+    "target": "smg-pc-original-save-owner-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-save-owner-tests-build.log",
+    "run": 1,
+    "run_log": "smg-pc-original-save-owner-tests-run.log"
+  },
+  {
+    "name": "original-jkr-heap",
+    "target": "smg-pc-original-jkr-heap-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-jkr-heap-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-jkr-heap-tests-run.log"
+  },
+  {
+    "name": "original-jkr-heap-finalizer",
+    "target": "smg-pc-original-jkr-heap-finalizer-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-jkr-heap-finalizer-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-jkr-heap-finalizer-tests-run.log"
+  },
+  {
+    "name": "original-jkr-allocation-domain",
+    "target": "smg-pc-original-jkr-allocation-domain-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-jkr-allocation-domain-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-jkr-allocation-domain-tests-run.log"
+  },
+  {
+    "name": "jkr-exception-ownership",
+    "target": "smg-pc-jkr-exception-ownership-tests",
+    "build": 0,
+    "build_log": "smg-pc-jkr-exception-ownership-tests-build.log",
+    "run": -6,
+    "run_log": "smg-pc-jkr-exception-ownership-tests-run.log"
+  },
+  {
+    "name": "original-j3d-packet",
+    "target": "smg-pc-original-j3d-packet-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-packet-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-j3d-packet-tests-run.log"
+  },
+  {
+    "name": "original-j3d-mtx-buffer",
+    "target": "smg-pc-original-j3d-mtx-buffer-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-mtx-buffer-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-j3d-mtx-buffer-tests-run.log"
+  },
+  {
+    "name": "original-j3d-geometry-resource",
+    "target": "smg-pc-original-j3d-geometry-resource-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-geometry-resource-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-j3d-geometry-resource-tests-run.log"
+  },
+  {
+    "name": "original-j3d-vertex-buffer",
+    "target": "smg-pc-original-j3d-vertex-buffer-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-vertex-buffer-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-j3d-vertex-buffer-tests-run.log"
+  },
+  {
+    "name": "original-j3d-texture-mtx",
+    "target": "smg-pc-original-j3d-texture-mtx-tests",
+    "build": 0,
+    "build_log": "smg-pc-original-j3d-texture-mtx-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-original-j3d-texture-mtx-tests-run.log"
+  },
+  {
+    "name": "actor-sensor-real-or-absent",
+    "target": "smg-pc-actor-sensor-real-or-absent-tests",
+    "build": 0,
+    "build_log": "smg-pc-actor-sensor-real-or-absent-tests-build.log",
+    "run": 0,
+    "run_log": "smg-pc-actor-sensor-real-or-absent-tests-run.log"
+  },
+  {
+    "name": "actor-runtime-registry",
+    "target": "smg-pc-actor-runtime-registry-tests",
+    "build": 255,
+    "build_log": "smg-pc-actor-runtime-registry-tests-build.log"
+  },
+  {
+    "name": "scene-scheduler-heap",
+    "target": "smg-pc-scene-scheduler-heap-tests",
+    "build": 0,
+    "build_log": "smg-pc-scene-scheduler-heap-tests-build.log",
+    "run": -6,
+    "run_log": "smg-pc-scene-scheduler-heap-tests-run.log"
+  },
+  {
+    "name": "game-actor-physics-real-or-absent",
+    "target": "smg-pc-game-actor-physics-real-or-absent-tests",
+    "build": 255,
+    "build_log": "smg-pc-game-actor-physics-real-or-absent-tests-build.log"
+  }
+]
