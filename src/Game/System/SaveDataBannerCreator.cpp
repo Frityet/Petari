@@ -1,3 +1,4 @@
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/System/SaveDataBannerCreator.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/System/NANDManager.hpp"

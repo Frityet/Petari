@@ -2,9 +2,6 @@
 
 #ifndef RVL_SDK_PUBLIC_NWC24_H
 #define RVL_SDK_PUBLIC_NWC24_H
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #include <revolution.h>
 #include <cstdlib>
@@ -21,7 +18,4 @@ extern "C" {
 #include <revolution/nwc24/NWC24Types.h>
 #include <revolution/nwc24/NWC24Utils.h>
 
-#ifdef __cplusplus
-}
-#endif
 #endif

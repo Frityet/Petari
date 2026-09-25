@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/System/StorySequenceExecutor.hpp"
 #include "Game/Demo/PrologueDirector.hpp"
 #include "Game/LiveActor/Nerve.hpp"

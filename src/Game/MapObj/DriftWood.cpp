@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/MapObj/DriftWood.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/MapObj/MapObjActorInitInfo.hpp"

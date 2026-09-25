@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/NPC/CareTaker.hpp"
 #include "Game/Effect/EffectSystem.hpp"
 #include "Game/Effect/EffectSystemUtil.hpp"

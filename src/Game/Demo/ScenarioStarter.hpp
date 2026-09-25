@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Game/LiveActor/LiveActor.hpp"
+#include <JSystem/JGeometry/TQuat.hpp>
 
 class SpinDriverCamera;
 class SpinDriverShootPath;

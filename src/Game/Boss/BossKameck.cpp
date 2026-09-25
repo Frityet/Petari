@@ -1,5 +1,5 @@
 #include "Game/Util/Functor.hpp"
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/BossKameck.hpp"
 #include "Game/Boss/BossKameckMoveRail.hpp"
 #include "Game/Boss/BossKameckSequencer.hpp"

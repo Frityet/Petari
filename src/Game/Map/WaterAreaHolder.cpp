@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Map/WaterAreaHolder.hpp"
 #include "Game/Map/OceanBowl.hpp"
 #include "Game/Map/OceanRing.hpp"

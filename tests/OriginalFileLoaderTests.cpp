@@ -1,4 +1,4 @@
-#include "compat/MetrowerksStdCompat.hpp"
+#include <MSL_C/stdio.h>
 #include "compat/JkrAllocationDomain.hpp"
 #include "Game/System/FileLoader.hpp"
 #include "Game/System/FileRipper.hpp"

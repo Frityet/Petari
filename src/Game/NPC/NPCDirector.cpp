@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/NPC/NPCDirector.hpp"
 #include "Game/NPC/NPCParameter.hpp"
 #include "Game/Util/ObjUtil.hpp"

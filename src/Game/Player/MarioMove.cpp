@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"

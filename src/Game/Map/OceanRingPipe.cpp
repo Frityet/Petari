@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Map/OceanRingPipe.hpp"
 #include "Game/Map/Flag.hpp"
 #include "Game/Map/OceanRing.hpp"

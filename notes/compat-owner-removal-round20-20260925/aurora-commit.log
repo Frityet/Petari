@@ -1,0 +1,7 @@
+[codex/macos-compat 58514e3] Own MSL string formatting and canonical SDK allocation and math boundaries
+ 12 files changed, 819 insertions(+), 12 deletions(-)
+ create mode 100644 cmake/aurora_msl.cmake
+ create mode 100644 include/MSL_C/stdio.h
+ create mode 100644 include/MSL_C/stdio_api.h
+ create mode 100644 include/macros.h
+ create mode 100644 lib/MSL_C/printf.cpp

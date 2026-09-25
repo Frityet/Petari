@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Enemy/KirairaChain.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
 #include "Game/LiveActor/SimpleJ3DModelDrawer.hpp"

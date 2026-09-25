@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/BossStinkBugActionFlyLow.hpp"
 #include "Game/Boss/BossStinkBug.hpp"
 #include "Game/Boss/BossStinkBugActionBase.hpp"

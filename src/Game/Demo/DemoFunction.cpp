@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Demo/DemoFunction.hpp"
 #include "Game/Demo/DemoCastGroup.hpp"
 #include "Game/Demo/DemoCastGroupHolder.hpp"

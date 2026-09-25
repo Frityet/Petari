@@ -1,3 +1,4 @@
+#include "JSystem/JGeometry/TQuat.hpp"
 #include <JSystem/JGeometry/TVec.hpp>
 
 void dummy(const TQuat4f& rRotation, TVec3f& rVector) {

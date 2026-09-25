@@ -1,3 +1,4 @@
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/Speaker/SpkMixingBuffer.hpp"
 #include "Game/Speaker/SpkSound.hpp"
 #include <JSystem/JAudio2/JASCalc.hpp>

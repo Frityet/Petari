@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Map/SwitchWatcher.hpp"
 #include "Game/Map/ActorAppearSwitchListener.hpp"
 #include "Game/Map/StageSwitch.hpp"

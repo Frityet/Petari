@@ -1,4 +1,5 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/Player/MarioShadow.hpp"
 
 #include "Game/Map/HitInfo.hpp"

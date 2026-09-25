@@ -1,4 +1,4 @@
-#include "compat/MetrowerksStdCompat.hpp"
+#include <MSL_C/stdio.h>
 
 #include "JSystem/J3DGraphBase/J3DGD.hpp"
 #include "JSystem/J3DGraphBase/J3DPacket.hpp"

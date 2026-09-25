@@ -1,5 +1,5 @@
 #include "Game/Util/Functor.hpp"
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/Dodoryu.hpp"
 #include "Game/Boss/DodoryuDemo.hpp"
 #include "Game/Boss/DodoryuHill.hpp"

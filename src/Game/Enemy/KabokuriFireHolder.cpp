@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Enemy/KabokuriFireHolder.hpp"
 #include "Game/Enemy/KabokuriFire.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"

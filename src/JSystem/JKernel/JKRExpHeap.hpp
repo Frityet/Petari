@@ -68,6 +68,9 @@ public:
     s32 adjustSize();
 
     static JKRExpHeap* createRoot(int, bool);
+    // Construct the original root in aligned storage retained by its caller.
+    // Destruction retires heap state; the caller releases the arena afterward.
+    static JKRExpHeap* createRoot(void* memory, u32 size, bool errorFlag);
     static JKRExpHeap* create(u32, JKRHeap*, bool);
     static JKRExpHeap* create(void*, u32, JKRHeap*, bool);
 

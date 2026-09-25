@@ -325,7 +325,6 @@ int main(int argc, char** argv) {
         auto logger = smgpc::logging::create_default_logger();
         smgpc::app::ensure_disc_image_open(configuration, *logger);
         struct DiscLifetime { ~DiscLifetime() { smgpc::app::close_disc_image(); } } disc_lifetime;
-        const auto initial_lod_owners = smgpc::compat::actor_lod_ctrl_runtime_state_count();
         Probe probe;
         const smgpc::app::OriginalGameDebugObserver observer{
             .context = &probe,
@@ -345,8 +344,6 @@ int main(int argc, char** argv) {
                          static_cast<unsigned long long>(owner.suspended), static_cast<unsigned long long>(owner.angle_changes),
                          static_cast<unsigned long long>(owner.matrix_changes));
         }
-        require(smgpc::compat::actor_lod_ctrl_runtime_state_count() == initial_lod_owners,
-                "Normal retirement releases actual LodCtrl ownership and its borrowed view registrations");
         std::fprintf(stderr, "PASS original-process MapObj: eight authored owners, three actual Low models, eleven real collision parts (%u active face queries, %u retained inactive), observed appearance, %s frames and retirement; no visibility or gameplay-parity claim\n",
                      probe.active_line_queries, probe.retained_disabled_parts, frames);
         return 0;

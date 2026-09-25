@@ -1,3 +1,4 @@
+#include "JSystem/JKernel/JKRHeap.hpp"
 #if defined(TARGET_PC)
 #include "Game/System/HomeButtonMenuWrapper.hpp"
 #include <aurora/exception.hpp>

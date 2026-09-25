@@ -1,0 +1,532 @@
+{
+  "owned_paths": [
+    {
+      "path": "src/Game/Util/MathUtil.hpp",
+      "before_exists": true,
+      "before_sha256": "c3d6f43ac15a1d48ebc24a42dcb1495a7ef757c64ed718a256ecebec7e96f640",
+      "before_status": "",
+      "after_sha256": "f4dd92d618a57c605a5973d2972a8029a7fb6892c1d9a7ec13a784c77430d13d",
+      "change": "modify"
+    },
+    {
+      "path": "aurora/include/revolution/types.h",
+      "before_exists": true,
+      "before_sha256": "cc4f39cbdb26906543cc2ecfabca32977bbc214bb9fddd00f13d1ad327a19395",
+      "before_status": "",
+      "after_sha256": "262aff59e6b60cddc722bfe3b8052aa9663815a3ab75bbdbc4c1706d7a9fefd6",
+      "change": "modify"
+    },
+    {
+      "path": "aurora/include/macros.h",
+      "before_exists": false,
+      "before_sha256": null,
+      "before_status": "",
+      "after_sha256": "0dbfb6d49d486ff67252422b43d96fd8ad14c24cf48217909d1a1a8daf20630d",
+      "change": "create"
+    },
+    {
+      "path": "src/Game/Gravity/ParallelGravity.cpp",
+      "before_exists": true,
+      "before_sha256": "452f545e19753e3579b304b24c13a930b66ce3a38899a2cacb5446f0050cf209",
+      "before_status": "",
+      "after_sha256": "c5b20991debb7ede4ff7b8968e60b15c2a2d1f35c06cb53bb9bc4afe84cfb712",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Map/RailPart.cpp",
+      "before_exists": true,
+      "before_sha256": "47723523efe04d782c674ce24e2daf39f00a921dcc2e27d203dabb9251f8734c",
+      "before_status": "",
+      "after_sha256": "212b5fd63c44ff881e64d9234697afc9fc69af1dbb56516fa1bb380b127ae81b",
+      "change": "modify"
+    },
+    {
+      "path": "src/app/OriginalGameApplication.cpp",
+      "before_exists": true,
+      "before_sha256": "173ad0669fd05caf1628f15407d461bf18193ed6e22426a93ae7b52a2cc0f9af",
+      "before_status": "",
+      "after_sha256": "e31aa657078a8f97e09c97a407ce5b442953ea841a8ba80e7f6d0e6dffe29a0f",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalGameSystemStartupTests.cpp",
+      "before_exists": true,
+      "before_sha256": "45f8f91e6d9d266f08f7963a979df5e6835ee1c9a4a8557c3490b9e57fb4516f",
+      "before_status": "",
+      "after_sha256": "a24876d2c4d8e21d6e1f618dca5762ac10120b7a3a0d55d116e24f43851e9857",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalActorUtilityTests.cpp",
+      "before_exists": true,
+      "before_sha256": "2f57697ba32dee4f77d977c22fe3f21fd3c5a0bdd47c30af9ef0e1397df7c224",
+      "before_status": "",
+      "after_sha256": "18eecb73ee920af4d9659eb16e3162bb4280611987f902292032da956a441b33",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalXanimePlayerTests.cpp",
+      "before_exists": true,
+      "before_sha256": "a21ec87c2c1dc28b80914200ec2278a8a55b3e3203096fbcac7380af511a0711",
+      "before_status": "",
+      "after_sha256": "ecddd54d3790d1d23d1ae05af6e06088cd710ebd1d93ad7185ab61b1860111dd",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalJ3DPacketTests.cpp",
+      "before_exists": true,
+      "before_sha256": "d5692c131be3d9702a367c59f9fe0ab7f96c8dec29ead78eb45cfc3a2e8559a3",
+      "before_status": "",
+      "after_sha256": "2b8e40774e9e75216c0889ad6b46bd09a0aedf9a783eac421c5667c41a6c801c",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalJ3DMaterialBlockTests.cpp",
+      "before_exists": true,
+      "before_sha256": "6aeba5507cedaec2daabcdeb14b5b6310ad807cf03dd5a88c6df7691eb408c72",
+      "before_status": "",
+      "after_sha256": "543cfc898d560ca57fe04ec3d5063c2917a8ca25b9c76bf7888f7811aa16089e",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalFileLoaderTests.cpp",
+      "before_exists": true,
+      "before_sha256": "b31d6b64c21ad33a5d2b2b098431465448708d496149fda3c54d7d239bb41705",
+      "before_status": "",
+      "after_sha256": "c4936ce7d87731e85d73818c32cec0241c905cda56a94de22125f17c0ea13e1b",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalJ3DTextureMtxTests.cpp",
+      "before_exists": true,
+      "before_sha256": "a2e1512d816747dd06914cac0d78d4cd7f5ad58e516aeb972053b72708979b71",
+      "before_status": "",
+      "after_sha256": "8376caf49736ca11129381df0d439faf6ccc027320aedc97a6548926a2e4a8b9",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalJ3DMtxBufferTests.cpp",
+      "before_exists": true,
+      "before_sha256": "7e4a4059f52de3b86993b8f4003cebba5c792ed8c1a2a1886cdd74034525aa3f",
+      "before_status": "",
+      "after_sha256": "f8922aa667f5d2a9eee6b67dd6179c441b85153488e2d0f635f26d1636a67476",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalXanimeCoreTests.cpp",
+      "before_exists": true,
+      "before_sha256": "834998fb9218e490235324d6a4a7cd38f36006a4f14a6d545dada46ff72e891a",
+      "before_status": "",
+      "after_sha256": "4a1df457d9f2ebc4f4a41ef2d9ed11296c1becf5c80bb24e446b4be56ce5965a",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalSensorMatrixTests.cpp",
+      "before_exists": true,
+      "before_sha256": "271a249c1c4ae0bd2fb9aea4476aca3dd54c656606eebcde3a07e946578ebaf5",
+      "before_status": " M tests/OriginalSensorMatrixTests.cpp",
+      "after_sha256": "76ddc2c3bb332b48900048e423376d03a2601d32bff73a130ea51edb6caef8f6",
+      "change": "modify"
+    },
+    {
+      "path": "tests/AuroraNativeTests.cpp",
+      "before_exists": true,
+      "before_sha256": "a7fb7145a4a285e3943a8e4482e2be443791332438fbd26b86349374d4b21b42",
+      "before_status": "",
+      "after_sha256": "a1abc914d4ff4f1644b2b7422d34c79f022fb079b50db8e7983f297e73edb89b",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalJ3DVertexBufferTests.cpp",
+      "before_exists": true,
+      "before_sha256": "533d405af10fc12996db25d257cbe2740efc47f557f4e38e5a59bee2567cd78a",
+      "before_status": "",
+      "after_sha256": "7bf10953f2dff19e3fc3f42807814656f055cef5237cd972833d54d0f4d9cf36",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalMaterialAnimationTests.cpp",
+      "before_exists": true,
+      "before_sha256": "180a1b50ef8368114eaa8dfa66b0d48cb821d2fae829dc71f88a211a868cf9f6",
+      "before_status": "",
+      "after_sha256": "846ab90a64f0ae218bb588c437bfcbf024c51bca57f672067dc0545ca186d034",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalBckCtrlTests.cpp",
+      "before_exists": true,
+      "before_sha256": "786f03db49b1d5b8f746cb67a3c2d0ef0e3b277b6b6745e577695cd6ca8c8810",
+      "before_status": "",
+      "after_sha256": "837b26fadb727a984974007d761dd60d3391213012485161ec55ce00b95f1b72",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/xmake.lua",
+      "before_exists": true,
+      "before_sha256": "9e15616ae229e49ce0f30ba1aa96c265c37aa94af98c4e1234d3f17324add32c",
+      "before_status": " M src/Game/xmake.lua",
+      "after_sha256": "1ca360d3a543f63d8f50204ce4773dfc6b865eaffe8310af6c72c981120a7b83",
+      "change": "modify"
+    },
+    {
+      "path": "tests/xmake.lua",
+      "before_exists": true,
+      "before_sha256": "bda3192e70e7ab4e76ca9e00bfc6f4fb2794688842e17ace6232304eab71f85c",
+      "before_status": " M tests/xmake.lua",
+      "after_sha256": "cf5c27da2e59e86b396eb0e915bc8557e947165b92c89530b39943bf0efd0f46",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Demo/DemoExecutor.cpp",
+      "before_exists": true,
+      "before_sha256": "b8104559b7d374293faaf479ae7473968680f97e963b184e2c8fce4cfa9564f6",
+      "before_status": "",
+      "after_sha256": "fa765eb74ab54a3f88e3bc07bb42e26892b314f17211e39026f676613ba7518b",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/AudioLib/OverwriteJAudio.cpp",
+      "before_exists": true,
+      "before_sha256": "87ce154580bf86ebc72bf3bdb0b724e7622d2ad3440daeaa6cbf6a09da8e2f5e",
+      "before_status": "",
+      "after_sha256": "ec8eec363350542c8ca7c010b506d0e32561bbf1c1ab93703c645e7885b44a2a",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/RhythmLib/AudMeObject.cpp",
+      "before_exists": true,
+      "before_sha256": "5ab5aef561320893da33e04bb78fb092efe71c91d9b69aa5f4da8058e44e09c3",
+      "before_status": "",
+      "after_sha256": "3ee4c81783a4f0dca973e4c9aeb64940d2d2fc5262db346e89d385b964a09376",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Util/ModelUtil.cpp",
+      "before_exists": true,
+      "before_sha256": "248f8084ac10f47b89a0258822e610e54be7a48fc40d4ec3e00c375f2f013bba",
+      "before_status": "",
+      "after_sha256": "530767c2f73b1b60054dad7d3f36a3aad1705d13423ea572cb60a84078b76eba",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Util/FileUtil.cpp",
+      "before_exists": true,
+      "before_sha256": "2b70f7e0c406e805c87b6eb22335c21491748634ccf1ccd84f9cb898299d58a3",
+      "before_status": "",
+      "after_sha256": "322cf02845ce86bcfa54b967f3600a052b31d9d39d158f3fdd07b066dde8687c",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Speaker/SpkMixingBuffer.cpp",
+      "before_exists": true,
+      "before_sha256": "ae207d8276df1b889162d6616f51857889d609328ad1e3ce9455e5257208d0ed",
+      "before_status": "",
+      "after_sha256": "c44ea2b54bcbbd48527ad37b8a15006e9489217fbcba70890e82c84bcf48176c",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/LiveActor/EffectKeeper.cpp",
+      "before_exists": true,
+      "before_sha256": "e9b3a1f7056c8217cd5a4bdfe12349a6f432fafa399d174d02443487ed9fdc60",
+      "before_status": "",
+      "after_sha256": "71cf059415f2046b5eb92889dcb312f83ca79a84195d7b8330805d9c6b31b692",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/LiveActor/ShadowVolumeBox.cpp",
+      "before_exists": true,
+      "before_sha256": "c792e65adbd82f9c948ccf929f93d89130af90a326bfb4e8b9577664b5135b77",
+      "before_status": " M src/Game/LiveActor/ShadowVolumeBox.cpp",
+      "after_sha256": "468e70fad8c4e3788f8cee235d2e1c50b5cccd2c897d927bd291cec8c32cde00",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Effect/MultiEmitter.cpp",
+      "before_exists": true,
+      "before_sha256": "bb1a08c9cb73fbe72eec3f94388d22e30f67feb9692089926ba68ace61b671e4",
+      "before_status": "",
+      "after_sha256": "6c0aad0b133774d91d72afca7b89c63f2739277ad571b15128397fafac5c379a",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/System/ResourceHolder.cpp",
+      "before_exists": true,
+      "before_sha256": "a5368bd1d0f1c8cb9ef63a710ef642bc81f4c7de815780e0f36f60ce702b82bc",
+      "before_status": "",
+      "after_sha256": "9b1bd1a003a801923c8329366b44fdc56d770fc8c16ee01f443af8898518c56a",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/System/HomeButtonMenuWrapper.cpp",
+      "before_exists": true,
+      "before_sha256": "c72ee5d68031bf1e1496f97fd224a4f1b86db794453c29a71889a1e595cb4fd6",
+      "before_status": "",
+      "after_sha256": "56cf4db803e0321ab6c5ec59b47b94c8e0ea623d2c4f70b27bf0d86219da3753",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/System/HeapMemoryWatcher.cpp",
+      "before_exists": true,
+      "before_sha256": "e0accf0df6fb02589910465d27e197bb89d3e47176066dbf867eacf569b7a844",
+      "before_status": "",
+      "after_sha256": "39a092406e08740dcbf89ecd634887e7deb0df58d83134bc7721f446180b5b40",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/System/SaveDataBannerCreator.cpp",
+      "before_exists": true,
+      "before_sha256": "b043942d0afa44193bcb05a05d1b3a5642a8a08f7ee6e73d21e50edd60ef9cd4",
+      "before_status": "",
+      "after_sha256": "044cfa312554bf6fcb961162cb79543062634c448101065ba44dc1921df67a64",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/System/SaveDataHandler.cpp",
+      "before_exists": true,
+      "before_sha256": "b8a96f3e13d64d256c5f8e844592ea8f13a8129388d01aa327bfc576900d1347",
+      "before_status": "",
+      "after_sha256": "f11480bbd59ae1164ebbf31a101fd77831657ff13d1209be7ed09763a51ca392",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/System/FunctionAsyncExecutor.cpp",
+      "before_exists": true,
+      "before_sha256": "de3c7af75d96d1d2d32e09ffe8f4f3506b79990a8a3304f1e1a0c3ae8b093284",
+      "before_status": "",
+      "after_sha256": "eaa2111af52ade6a015d854f50fbef2c1efb6795ab73f6f2e4e54a1dfa6b880b",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/System/FileHolder.cpp",
+      "before_exists": true,
+      "before_sha256": "91019d4c2bec3717672961654683bb8421abb3f5e9bf411632d1e77fddd284ce",
+      "before_status": "",
+      "after_sha256": "539435b6fc741b194e1f230a1338b09ecc4d02e3eddc5a4b170b11fbc65a1a55",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/System/GameSystem.cpp",
+      "before_exists": true,
+      "before_sha256": "08a83f7f9e14aa731a7a6f4a5a72faab64331ad6a4155d982c9ed4148c3f177b",
+      "before_status": " M src/Game/System/GameSystem.cpp",
+      "after_sha256": "defab1384811839d70b9d2a6e7745c12a11640d4f68ea06e5619ce24bad71e80",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/System/ArchiveHolder.cpp",
+      "before_exists": true,
+      "before_sha256": "43c8a1e5a2c0dfa63e7706770655b4d8fe56a7c867f722d7db9a83f10c7fe07e",
+      "before_status": "",
+      "after_sha256": "c0104d50c366f1a9875463c77b5f71fecf141655985e95a9512b73fdaae6b245",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/System/GameSystemObjHolder.cpp",
+      "before_exists": true,
+      "before_sha256": "0be2e2db18cfe9a3fb8c0249242ca937dfa34d347d26b889a223931355d6ce9c",
+      "before_status": "",
+      "after_sha256": "e5219cf5c12bdc77fc702949e4f24ae6f77b1fb4fd73b49c3f9abafaf6e6c875",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Map/WaterRoad.cpp",
+      "before_exists": true,
+      "before_sha256": "221a042eae25c791ed0fd3b132336445e37c26b4248204212bf54f6189faec8c",
+      "before_status": " M src/Game/Map/WaterRoad.cpp",
+      "after_sha256": "c742d3dcc308f514fed28fc0ce2e176c61864a189eccb269c30a9606c8b4dae8",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Map/Butterfly.cpp",
+      "before_exists": true,
+      "before_sha256": "8f43207abdd231bb5ffc6cedda9e53ffc72afc93a7453d2187f735cb6861438d",
+      "before_status": "",
+      "after_sha256": "e0065fa0d554745b008cb5a589ab7d7c74f2a5123747143d1cbbc9b85f25e2ef",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Map/OceanBowl.cpp",
+      "before_exists": true,
+      "before_sha256": "40dfd5c01e36f773ef183dcee73aaa275c74e7d8cbf18b215fcba76d6e8aec34",
+      "before_status": "",
+      "after_sha256": "95ffcdbb47b6abdfb3dbe9a0ed094395fbab4f457b10487689ebb4995146103c",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Screen/MoviePlayerSimple.cpp",
+      "before_exists": true,
+      "before_sha256": "0e845dd8d3df98db2ee89c251f839969e5856355f24addfaa447e8eeb51d81dc",
+      "before_status": " M src/Game/Screen/MoviePlayerSimple.cpp",
+      "after_sha256": "e9f0dabdc9b008c81f57ec6ce0740e3aa2e1f41147eb02bd19f61624bbc75dd9",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Screen/OdhConverter.cpp",
+      "before_exists": true,
+      "before_sha256": "551df1771d1e67d49a9df51a87cb2896ef064747dd6c80fc34271e6e72b487b0",
+      "before_status": " M src/Game/Screen/OdhConverter.cpp",
+      "after_sha256": "ea5d03d1e926611688f38676a6b02c51c561de069527de70be932903967eac50",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Scene/MultiSceneEffectKeeper.cpp",
+      "before_exists": true,
+      "before_sha256": "6da1dd1362ad873a4f7e17d394c67b1fee1b24aa8168b1e7a7b1c9ddf4c66c39",
+      "before_status": "",
+      "after_sha256": "8f694170212ae1f1e8ba7b6ed1e1953e3a04355a686ca6c98875b0065f5bffa9",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/NPC/MiiFacePartsHolder.cpp",
+      "before_exists": true,
+      "before_sha256": "ccbbe8d267f620f26ab775ff9586d286d2b6c1571ff911d2f9a89f55e0b9be87",
+      "before_status": " M src/Game/NPC/MiiFacePartsHolder.cpp",
+      "after_sha256": "5dd36670e010e9fe286672e42301fa47be745dea3ddd7f586749ac936e8091da",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Player/Mario.cpp",
+      "before_exists": true,
+      "before_sha256": "73997a8af747e3d330feb280a605cb4744b2a449605721efd151e76c2864b3ee",
+      "before_status": " M src/Game/Player/Mario.cpp",
+      "after_sha256": "7f79bff46ea692fc3fa4c69bd62ecf6185d330081ea02e61cf335cabe87ce388",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Player/MarioShadow.cpp",
+      "before_exists": true,
+      "before_sha256": "593ed180c7a631592751d8dee0c66942cae00c2e5e0ca2b9e0775bbe43426f92",
+      "before_status": " M src/Game/Player/MarioShadow.cpp",
+      "after_sha256": "0d5f3fad112e3748df2dc52030332ef589297c54687d0ba3fd662ec9eeb4fc81",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Player/MarioActorDraw.cpp",
+      "before_exists": true,
+      "before_sha256": "1d1468df492965e469c8c8145974cce2feacf42b0df7426ac11d1f809d4cf36d",
+      "before_status": "",
+      "after_sha256": "45dcf458f65ecbeea86e680d6b8aab816646e497e3bd8b9b4e96f510626c96df",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Player/MarioSwim.cpp",
+      "before_exists": true,
+      "before_sha256": "1d5609f4cd731faafbccea322737dffe1df5bbd38ecba16923f34b6be2e2fc14",
+      "before_status": " M src/Game/Player/MarioSwim.cpp",
+      "after_sha256": "a5cc234c72faca41196c9f34e8f03352a007e38ac24dae70c0acfc6a9506399c",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/MapObj/ElectricRailMoving.cpp",
+      "before_exists": true,
+      "before_sha256": "8ca41c79b1f982513374eb576c86fd342c98cf5edc918d8eaed8f1727e01164e",
+      "before_status": "",
+      "after_sha256": "2c35585b2f00d125b608e4315ce20c130caf13a130c519f15e25bc33d4b1be10",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/MapObj/ElectricRail.cpp",
+      "before_exists": true,
+      "before_sha256": "6b26921386a740a48ff37a4486c98161993e4e5e798bdfedf11d574d47526b74",
+      "before_status": " M src/Game/MapObj/ElectricRail.cpp",
+      "after_sha256": "afa922b427b9603528a65386eb20645161b4e088abe7c92f34a97fcae58abd2d",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/MapObj/SpinDriverPathDrawer.cpp",
+      "before_exists": true,
+      "before_sha256": "ae09642ae5fed02af8a01c3bdfb05a2a8df613459d3f1829805c00de61d37b18",
+      "before_status": " M src/Game/MapObj/SpinDriverPathDrawer.cpp",
+      "after_sha256": "ae64f208b82fd774a5cea20e2b4ff1c31a85076143130f2ff2fdd8494ed70764",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/MapObj/TrampleStar.cpp",
+      "before_exists": true,
+      "before_sha256": "d155f3a7e8d1c66034797d58bc0fb2171502980baaf027737692d241449a4e2d",
+      "before_status": "",
+      "after_sha256": "db7a098e680f81388373809768384129e0ea4c0f55991ace7beb5f4128c71534",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Util/JointController.hpp",
+      "before_exists": true,
+      "before_sha256": "e275c115b9ab70e8e1b522be5344b91cefba8f19475360275c33efe65f43b74c",
+      "before_status": "",
+      "after_sha256": "68d26eb2e0351283fd7c2787fba567c74407a389ca3adb3c0f81be2b993d99e6",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/NWC24/NWC24Messenger.cpp",
+      "before_exists": true,
+      "before_sha256": "cfce96de54e1f63e665a43375b24cfd2c540a8f8377697a1d9bbb08669e4204a",
+      "before_status": " M src/Game/NWC24/NWC24Messenger.cpp",
+      "after_sha256": "2c337f367f019d1aef8ddd3e034ee29aef9633bfe16b9793757e381192d3fcdb",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Effect/ParticleDrawExecutor.cpp",
+      "before_exists": true,
+      "before_sha256": "b1094dd3d644a77856f7bd21747c7e8c1c2f5f4051a1a8ebe4677907e1317544",
+      "before_status": " M src/Game/Effect/ParticleDrawExecutor.cpp",
+      "after_sha256": "eef34feddd6ad403486173367fc8bead0cd0f0fcd1d44a62f617e117f648be05",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Effect/ParticleCalcExecutor.cpp",
+      "before_exists": true,
+      "before_sha256": "4bdc04029172cb276f498337ed23acb1333b3493ddf9b3730fa8b2b42ad42702",
+      "before_status": " M src/Game/Effect/ParticleCalcExecutor.cpp",
+      "after_sha256": "f89226e5771c5c833152d27eb10bea0a46b4029c77414bb01acb3c6eb938362e",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/System/NANDErrorSequence.cpp",
+      "before_exists": true,
+      "before_sha256": "38a92f5dd51b8529445fa7c403def5c4fa015df72e125278b1f70c001ccd66eb",
+      "before_status": "",
+      "after_sha256": "d586e71921483bb34acf050d90930b55259d84fe57b587d49d37f2afcaddb25b",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Screen/LayoutPaneCtrl.cpp",
+      "before_exists": true,
+      "before_sha256": "ede16c0727e1252013e34bc2e829fa51f987a8cf64b67631f50034babf5a342c",
+      "before_status": "",
+      "after_sha256": "c7178760e4d3c9956b4fd81cfc4ec216861b0759adb85ac828fbf7d6dbf6318e",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Screen/PaneEffectKeeper.cpp",
+      "before_exists": true,
+      "before_sha256": "36455f835ec9f91a5c6792e541b667b6156e967184b035d4983dcb96b88f9042",
+      "before_status": "",
+      "after_sha256": "04d3301559a839391ac529809346766012084a52e53fb142a3aaa784b9d34686",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Screen/FileSelectInfo.cpp",
+      "before_exists": true,
+      "before_sha256": "ff8625e2e0837a8dae31f54e74ae3ca15cab37c982130d088297efd56610a789",
+      "before_status": " M src/Game/Screen/FileSelectInfo.cpp",
+      "after_sha256": "aa9682c35f7469c51c991aadff93a3b31fdefb118ff089b4283fd35571940df1",
+      "change": "modify"
+    },
+    {
+      "path": "src/Game/Screen/ImageEffectState.cpp",
+      "before_exists": true,
+      "before_sha256": "0a475bfe3f0eb8a34312966acededa5a90bd26995b8b50a8a3b7f5e08bf63b33",
+      "before_status": "",
+      "after_sha256": "f056fc89ec4f445b66a6e7a3c9dc89b527b7ea588bd35f7c0342013615d33d99",
+      "change": "modify"
+    },
+    {
+      "path": "src/compat/MetrowerksStdCompat.hpp",
+      "before_exists": true,
+      "before_sha256": "52a97db34b696d2bf57573dcac2977ce5473219d94bb1aebeb65fbbce7bc2777",
+      "before_status": "",
+      "after_sha256": null,
+      "change": "delete"
+    }
+  ]
+}

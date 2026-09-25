@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/NPC/PowerStarEventKeeper.hpp"
 #include "Game/MapObj/PowerStarHolder.hpp"
 #include "Game/NPC/EventDirector.hpp"

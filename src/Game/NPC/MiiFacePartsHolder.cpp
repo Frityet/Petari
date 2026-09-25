@@ -1,4 +1,5 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/NPC/MiiFacePartsHolder.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NPC/MiiDatabase.hpp"

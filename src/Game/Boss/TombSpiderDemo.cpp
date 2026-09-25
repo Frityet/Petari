@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/TombSpiderDemo.hpp"
 #include "Game/Boss/TombSpider.hpp"
 #include "Game/Boss/TombSpiderFunction.hpp"

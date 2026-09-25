@@ -1,3 +1,4 @@
+#include "JSystem/JGeometry/TQuat.hpp"
 #include <JSystem/JGeometry/TVec.hpp>
 
 void CamPoseSphereInterpolator_FORCE_MATCH_SDATA2() {

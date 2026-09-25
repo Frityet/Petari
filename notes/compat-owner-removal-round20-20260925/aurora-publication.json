@@ -1,0 +1,19 @@
+{
+  "head": "58514e371c8c6c741bb3e5bb46460e4e59608a7f",
+  "remote": "58514e371c8c6c741bb3e5bb46460e4e59608a7f",
+  "paths": [
+    "CMakeLists.txt",
+    "xmake.lua",
+    "cmake/aurora_msl.cmake",
+    "include/MSL_C/stdio.h",
+    "include/MSL_C/stdio_api.h",
+    "lib/MSL_C/printf.cpp",
+    "include/aurora/mem2_arena.hpp",
+    "lib/dolphin/os/OSArena.cpp",
+    "include/revolution/types.h",
+    "include/macros.h",
+    "include/dolphin/gx/GXEnum.h",
+    "include/revolution.h"
+  ],
+  "original_index_preserved": true
+}

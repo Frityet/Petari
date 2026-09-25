@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Scene/GameScenePauseControl.hpp"
 #if defined(TARGET_PC)
 #include "compat/DisabledObjectAudio.hpp"

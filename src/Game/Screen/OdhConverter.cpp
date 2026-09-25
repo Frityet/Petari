@@ -1,4 +1,5 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/Screen/OdhConverter.hpp"
 #include "Game/NameObj/NameObjAdaptor.hpp"
 #include "Game/Scene/SceneFunction.hpp"

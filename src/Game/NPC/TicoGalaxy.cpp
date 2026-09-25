@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/NPC/TicoGalaxy.hpp"
 #include "Game/MapObj/StarPieceDirector.hpp"
 #include "Game/NPC/TicoStarRing.hpp"

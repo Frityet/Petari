@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Enemy/WalkerStateWander.hpp"
 #include "Game/Enemy/TerritoryMover.hpp"
 #include "Game/Enemy/WalkerStateFunction.hpp"

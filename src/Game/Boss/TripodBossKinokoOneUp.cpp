@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/TripodBossKinokoOneUp.hpp"
 #include "Game/Boss/TripodBossAccesser.hpp"
 #include "Game/MapObj/BenefitItemOneUp.hpp"

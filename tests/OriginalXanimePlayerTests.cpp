@@ -1,4 +1,4 @@
-#include "compat/MetrowerksStdCompat.hpp"
+#include <MSL_C/stdio.h>
 
 #include "Game/Animation/XanimeCore.hpp"
 #include "Game/Animation/XanimePlayer.hpp"

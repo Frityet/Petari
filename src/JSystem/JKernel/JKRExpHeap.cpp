@@ -1,8 +1,11 @@
 #include "JSystem/JKernel/JKRExpHeap.hpp"
 #include "JSystem/JSupport/JSupport.hpp"
 
+#include <aurora/exception.hpp>
 #include <cstdint>
+#include <limits>
 #include <new>
+#include <stdexcept>
 
 static u32 DBfoundSize;
 static u32 DBfoundOffset;
@@ -17,6 +20,34 @@ JKRExpHeap *JKRExpHeap::createRoot(int, bool) {
         OSPanic(__FILE__, __LINE__, "JKR boot requires a retained native expandable root heap");
     }
     return static_cast<JKRExpHeap *>(sRootHeap);
+}
+
+JKRExpHeap *JKRExpHeap::createRoot(void *memory, u32 size, bool errorFlag) {
+    struct CurrentHeapLock {
+        CurrentHeapLock() { OSLockMutex(&JKRHeap::sCurrentHeapMutex); }
+        ~CurrentHeapLock() { OSUnlockMutex(&JKRHeap::sCurrentHeapMutex); }
+    } lock;
+    if (sRootHeap != nullptr || getUserRamStart() != nullptr) {
+        aurora::throw_host_exception<std::logic_error>("An original JKR root heap already exists");
+    }
+    constexpr std::size_t alignment = 32;
+    constexpr std::size_t headerSize = (sizeof(JKRExpHeap) + alignment - 1) & ~(alignment - 1);
+    const auto begin = reinterpret_cast<std::uintptr_t>(memory);
+    if (!memory || (begin & (alignment - 1)) != 0 || (size & (alignment - 1)) != 0 ||
+        size < headerSize + sizeof(CMemBlock) + alignment || size > std::numeric_limits<s32>::max() ||
+        size > std::numeric_limits<std::uintptr_t>::max() - begin) {
+        aurora::throw_host_exception<std::invalid_argument>("JKR root requires one aligned, caller-owned arena");
+    }
+    auto *data = static_cast<u8 *>(memory) + headerSize;
+    auto *heap = new (memory) JKRExpHeap(data, static_cast<u32>(size - headerSize), nullptr, errorFlag);
+    heap->_6E = 1;
+    heap->_70 = memory;
+    heap->_74 = size;
+    sRootHeap = heap;
+    mMemorySize = size;
+    mUserRamEnd.store(static_cast<u8 *>(memory) + size, std::memory_order_relaxed);
+    mUserRamStart.store(memory, std::memory_order_release);
+    return heap;
 }
 
 JKRExpHeap *JKRExpHeap::create(u32 size, JKRHeap *pParent, bool errorFlag) {

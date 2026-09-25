@@ -1,5 +1,7 @@
 #pragma once
 
+#include "JSystem/JGeometry/TQuat.hpp"
+
 #include "Game/NPC/NPCActor.hpp"
 
 class MapObjConnector;

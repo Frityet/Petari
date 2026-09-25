@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/MapObj/FlexibleSphere.hpp"
 #include "Game/Player/J3DModelX.hpp"
 #include "Game/Scene/SceneFunction.hpp"

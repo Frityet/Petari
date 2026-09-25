@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Demo/StarReturnDemoStarter.hpp"
 #include "Game/Demo/ReturnDemoRailMove.hpp"
 #include "Game/LiveActor/ModelObj.hpp"

@@ -1,4 +1,4 @@
-#include "compat/MetrowerksStdCompat.hpp"
+#include <MSL_C/stdio.h>
 
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Effect/SimpleEffectObj.hpp"

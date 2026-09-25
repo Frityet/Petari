@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Camera/CameraFix.hpp"
 #include "Game/Camera/CamTranslatorFix.hpp"
 #include "Game/Camera/CameraLocalUtil.hpp"

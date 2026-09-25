@@ -1,3 +1,4 @@
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/LiveActor/DisplayListMaker.hpp"
 #include "JSystem/J3DGraphAnimator/J3DJoint.hpp"
 #include "Game/LiveActor/ModelManager.hpp"

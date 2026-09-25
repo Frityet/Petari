@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/NPC/TrickRabbitUtil.hpp"
 #include "Game/Util/FootPrint.hpp"
 #include "Game/Util/LiveActorUtil.hpp"

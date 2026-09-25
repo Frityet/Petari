@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/LiveActor/FlashingCtrl.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/DemoUtil.hpp"

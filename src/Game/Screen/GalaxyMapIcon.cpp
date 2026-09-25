@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Screen/GalaxyMapIcon.hpp"
 #include "Game/Screen/ButtonPaneController.hpp"
 #include "Game/System/GalaxyStatusAccessor.hpp"

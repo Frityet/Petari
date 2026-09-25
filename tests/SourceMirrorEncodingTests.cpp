@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
             throw std::runtime_error("CP932 source boundary failed case " + std::to_string(cases));
         }
     };
-    check("f(\"日本語\");\n", "#include \"compat/Cp932Literal.hpp\"\nf(CP932(\"日本語\"));\n", true);
+    check("f(\"日本語\");\n", "#include \"resource/TextEncoding.hpp\"\nf(CP932(\"日本語\"));\n", true);
     check("f(\"日\" \"本\");", "f(CP932(\"日\" \"本\"));", true);
     check("f(\"日\" /* retained */\n\"本\");", "f(CP932(\"日\" /* retained */\n\"本\"));", true);
     check("f(\"日\\\"本\\n\");", "f(CP932(\"日\\\"本\\n\"));", true);
@@ -40,10 +40,10 @@ int main(int argc, char **argv) {
     check("auto s = R\"tag(\"日\")tag\";", "auto s = R\"tag(CP932(\"日\"))tag\";", false);
     check("f(\"CP932(\\\"日\\\")\");", "f(\"CP932(\\\"日\\\")\");", true);
     check("int n = 1;\n", "#include \"compat/Other.hpp\"\nint n = 1;\n", false);
-    check("int n = 1;\n", "#include \"compat/Cp932Literal.hpp\"\n#include \"compat/Cp932Literal.hpp\"\nint n = 1;\n", false);
-    check("int n = 1;\n", "int n = 1;\n#include \"compat/Cp932Literal.hpp\"\n", false);
-    check("int n = 1;\n", "#include \"compat/Cp932Literal.hpp\" // unexpected\nint n = 1;\n", false);
-    check("int n = 1;\n", "#include \"compat/Cp932Literal.hpp\"\n\nint n = 1;\n", false);
+    check("int n = 1;\n", "#include \"resource/TextEncoding.hpp\"\n#include \"resource/TextEncoding.hpp\"\nint n = 1;\n", false);
+    check("int n = 1;\n", "int n = 1;\n#include \"resource/TextEncoding.hpp\"\n", false);
+    check("int n = 1;\n", "#include \"resource/TextEncoding.hpp\" // unexpected\nint n = 1;\n", false);
+    check("int n = 1;\n", "#include \"resource/TextEncoding.hpp\"\n\nint n = 1;\n", false);
     check("f(\"日\"); // original", "f(CP932(\"日\")); // changed", false);
     check("f(\"日\");", "f(CP932(\"日\" /* unexpected */));", false);
     std::cout << "Passed " << cases << " strict CP932 source-boundary cases\n";

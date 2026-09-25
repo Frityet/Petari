@@ -1,0 +1,11 @@
+{
+  "paths": [
+    "src/compat/MetrowerksPrintf.hpp",
+    "src/compat/MslPrintfCompat.cpp",
+    "src/compat/MslPrintfCompat.hpp",
+    "tests/MslPrintfTests.cpp",
+    "tests/MslPrintfAliasTests.cpp",
+    "src/common/xmake.lua",
+    "src/Game/xmake.lua"
+  ]
+}

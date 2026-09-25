@@ -6,7 +6,7 @@
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include <aurora/exception.hpp>
 #include <stdexcept>

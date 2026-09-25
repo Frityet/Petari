@@ -1,7 +1,7 @@
 #include "Game/Player/GroupChecker.hpp"
 #include "Game/Util/HashUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include <memory>
 
 GroupChecker::GroupChecker(const char* pName, u32 a2) : NameObj(pName) {

@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Map/LightDirector.hpp"
 #include "Game/AreaObj/LightAreaHolder.hpp"
 #include "Game/LiveActor/ActorLightCtrl.hpp"

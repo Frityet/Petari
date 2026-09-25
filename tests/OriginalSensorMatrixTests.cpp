@@ -1,5 +1,5 @@
-#include "compat/MetrowerksStdCompat.hpp"
-#include "compat/Cp932Literal.hpp"
+#include <MSL_C/stdio.h>
+#include "resource/TextEncoding.hpp"
 #include "app/Application.hpp"
 #include "app/OriginalGameApplication.hpp"
 #include "Game/Camera/CameraContext.hpp"

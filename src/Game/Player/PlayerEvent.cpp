@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Player/PlayerEvent.hpp"
 #include "Game/Player/PlayerEventAbyss.hpp"
 #include "Game/Player/PlayerEventDown.hpp"

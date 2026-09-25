@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/TripodBossCoin.hpp"
 #include "Game/Boss/TripodBossAccesser.hpp"
 #include "Game/LiveActor/Nerve.hpp"

@@ -16,7 +16,7 @@ def main():
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
-    data = (root / "src/compat/detail/Cp932Mapping.tsv").read_bytes()
+    data = (root / "src/resource/detail/Cp932Mapping.tsv").read_bytes()
     expected_hash = "46778ae55afa614d3ece7e4f7160d9f1205626f09a461e6d7a933b57b582d600"
     assert hashlib.sha256(data).hexdigest() == expected_hash
     entries = []
@@ -29,7 +29,7 @@ def main():
     assert entries == sorted(entries)
     for point, encoded in entries:
         assert chr(point).encode("cp932") == encoded
-    table = (root / "src/compat/detail/Cp932Table.hpp").read_text()
+    table = (root / "src/resource/detail/Cp932Table.hpp").read_text()
     actual = [(int(point, 16), int(encoded, 16)) for point, encoded in
               re.findall(r"\{0x([0-9A-F]+), 0x([0-9A-F]+)\}", table)]
     assert actual == [(point, int.from_bytes(encoded, "big")) for point, encoded in entries]
@@ -42,7 +42,7 @@ def main():
         temp = Path(directory)
         common = [args.cxx, "-std=c++23", "-I", str(root / "src"), "-Wall", "-Wextra", "-Werror"]
         second = temp / "second.cpp"
-        second.write_text('#include "compat/Cp932Literal.hpp"\nconst char* cp932_pointer_from_second_translation_unit() { return CP932("日本語"); }\n')
+        second.write_text('#include "resource/TextEncoding.hpp"\nconst char* cp932_pointer_from_second_translation_unit() { return CP932("日本語"); }\n')
         binary = temp / "literals"
         subprocess.run(common + [str(root / "tests/Cp932LiteralTests.cpp"), str(second), "-o", str(binary)], check=True)
         subprocess.run([str(binary)], check=True)
@@ -75,7 +75,7 @@ def main():
         }
         for name, (expression, diagnostic) in negatives.items():
             path = temp / f"{name}.cpp"
-            path.write_text('#include "compat/Cp932Literal.hpp"\nconstexpr char unterminated[] = {65};\n'
+            path.write_text('#include "resource/TextEncoding.hpp"\nconstexpr char unterminated[] = {65};\n'
                             f"constexpr const auto& result = {expression};\n")
             process = subprocess.run(common + ["-fsyntax-only", str(path)], capture_output=True, text=True)
             assert process.returncode != 0, f"{name} unexpectedly compiled"

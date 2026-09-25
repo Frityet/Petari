@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Screen/SystemWipeHolder.hpp"
 #include "Game/Screen/WipeFade.hpp"
 #include "Game/Screen/WipeHolderBase.hpp"

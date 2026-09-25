@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Player/MarioSlider.hpp"
 #include "Game/Enemy/KariKariDirector.hpp"
 #include "Game/Map/HitInfo.hpp"

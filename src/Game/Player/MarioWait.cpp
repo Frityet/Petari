@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Player/MarioWait.hpp"
 #include "Game/Animation/XanimePlayer.hpp"
 #include "Game/LiveActor/Nerve.hpp"

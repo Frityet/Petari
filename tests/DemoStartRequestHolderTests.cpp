@@ -206,8 +206,8 @@ namespace {
                 require(JKRHeap::findFromRoot(slot) == &domain->heap(),
                         "original request storage must use the caller-selected Game arena");
             }
-            require(name_obj_runtime_owner(proxy) == owner.get(),
-                    "the actual holder owns its proxy");
+            require(name_obj_runtime_ownership_is_claimed(proxy),
+                    "the actual holder claims its retained proxy");
             auto info = DemoStartInfo{};
             info._C = &borrower;
             info.mDemoName = "retained request";

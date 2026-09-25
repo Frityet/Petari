@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Player/DrawAdaptor.hpp"
 #include "Game/Util/ObjUtil.hpp"
 

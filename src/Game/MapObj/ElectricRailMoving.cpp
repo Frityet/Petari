@@ -1,3 +1,4 @@
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/MapObj/ElectricRailMoving.hpp"
 #include "Game/AudioLib/AudAnmSoundObject.hpp"
 #include "Game/Gravity/GravityInfo.hpp"

@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Util/AreaObjUtil.hpp"
 #include "Game/Player/MarioConst.hpp"
 #include "Game/LiveActor/HitSensor.hpp"

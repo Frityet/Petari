@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/BossKameckBattleDemo.hpp"
 #include "Game/Boss/BossKameck.hpp"
 #include "Game/LiveActor/Nerve.hpp"

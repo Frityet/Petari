@@ -1,3 +1,4 @@
+#include <macros.h>
 #include "JSystem/J2DGraph/J2DPane.hpp"
 #include "JSystem/J2DGraph/J2DAnimation.hpp"
 #include <cmath>

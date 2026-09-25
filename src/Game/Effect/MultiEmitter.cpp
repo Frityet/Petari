@@ -1,3 +1,4 @@
+#include <functional.hpp>
 #include "Game/Effect/MultiEmitter.hpp"
 #include "Game/Effect/EffectSystem.hpp"
 #include "Game/Effect/EffectSystemUtil.hpp"

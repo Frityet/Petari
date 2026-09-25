@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Camera/CameraDirector.hpp"

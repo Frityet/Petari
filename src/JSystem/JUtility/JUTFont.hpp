@@ -1,5 +1,7 @@
 #pragma once
 
+#include <revolution/types.h>
+
 #include "JSystem/JUtility/TColor.hpp"
 #include <cstring>
 

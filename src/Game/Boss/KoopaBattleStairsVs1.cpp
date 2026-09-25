@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/KoopaBattleStairsVs1.hpp"
 #include "Game/Boss/Koopa.hpp"
 #include "Game/Boss/KoopaFireStairs.hpp"

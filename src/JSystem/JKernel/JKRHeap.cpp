@@ -2,8 +2,10 @@
 #include <atomic>
 #include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
+#include <aurora/mem2_arena.hpp>
 #include <cstdint>
 #include <cstdlib>
+#include <limits>
 #include <mutex>
 #include <new>
 #include <stdexcept>
@@ -132,8 +134,8 @@ JKRHeap *JKRHeap::sSystemHeap;
 
 void *JKRHeap::mCodeStart;
 void *JKRHeap::mCodeEnd;
-void *JKRHeap::mUserRamStart;
-void *JKRHeap::mUserRamEnd;
+std::atomic<void *> JKRHeap::mUserRamStart;
+std::atomic<void *> JKRHeap::mUserRamEnd;
 
 JKRErrorHandler JKRHeap::mErrorHandler;
 
@@ -182,16 +184,25 @@ JKRHeap::~JKRHeap() {
     // can release its host arena after all children and resources are gone.
     if (auto *parent = mChildTree.getParent())
         parent->removeChild(&mChildTree);
-    JSUTree<JKRHeap> *nextRootHeap = sRootHeap->mChildTree.getFirstChild();
+    JSUTree<JKRHeap> *nextRootHeap = sRootHeap ? sRootHeap->mChildTree.getFirstChild() : nullptr;
 
     if (sCurrentHeap == this)
         sCurrentHeap = !nextRootHeap ? sRootHeap : nextRootHeap->getObject();
 
     if (sSystemHeap == this)
         sSystemHeap = !nextRootHeap ? sRootHeap : nextRootHeap->getObject();
+
+    if (sRootHeap == this) {
+        sRootHeap = nullptr;
+        sCurrentHeap = nullptr;
+        sSystemHeap = nullptr;
+        mUserRamStart.store(nullptr, std::memory_order_release);
+        mUserRamEnd.store(nullptr, std::memory_order_relaxed);
+        mMemorySize = 0;
+    }
 }
 
-// Wii boot-arena setup is not used by the explicit native JkrHeapRuntime.
+// The native JKRExpHeap root factory publishes its caller-owned arena bounds.
 
 JKRHeap *JKRHeap::becomeSystemHeap() {
     JKRHeap *sys = sSystemHeap;
@@ -417,7 +428,112 @@ JKRErrorHandler JKRHeap::setErrorHandler(JKRErrorHandler errorHandler) {
     return prev;
 }
 
-// Native global allocation routing is supplied by MetrowerksAlignedNew.cpp.
+namespace {
+    constexpr std::size_t default_new_alignment = __STDCPP_DEFAULT_NEW_ALIGNMENT__;
+    constexpr std::size_t native_heap_size_limit = std::numeric_limits<s32>::max();
+
+    struct CurrentHeapLock {
+        CurrentHeapLock() { OSLockMutex(&JKRHeap::sCurrentHeapMutex); }
+        ~CurrentHeapLock() { OSUnlockMutex(&JKRHeap::sCurrentHeapMutex); }
+    };
+
+    void* allocate_native(std::size_t size, std::size_t alignment, bool from_tail, JKRHeap* explicit_heap) {
+        if (alignment == 0 || (alignment & (alignment - 1)) != 0) throw std::bad_alloc();
+        if (explicit_heap != nullptr || aurora::allocation::routing_state.guest) {
+            if (size > native_heap_size_limit || alignment > native_heap_size_limit) return nullptr;
+            CurrentHeapLock lock;
+            JKRHeap* heap = explicit_heap != nullptr ? explicit_heap : JKRHeap::sCurrentHeap;
+            if (heap == nullptr) OSPanic(__FILE__, __LINE__, "Original allocation has no current JKR heap");
+            // Preserve integer-alignment new while meeting the native pointer
+            // alignment required by C++ objects allocated with retail values.
+            alignment = alignment < alignof(void*) ? alignof(void*) : alignment;
+            const int signed_alignment = from_tail ? -static_cast<int>(alignment) : static_cast<int>(alignment);
+            return heap->alloc(static_cast<u32>(size), signed_alignment);
+        }
+        alignment = alignment < alignof(void*) ? alignof(void*) : alignment;
+        void* result = nullptr;
+        if (posix_memalign(&result, alignment, size == 0 ? 1 : size) != 0) return nullptr;
+        return result;
+    }
+
+    void* allocate(std::size_t size, std::size_t alignment, bool from_tail = false, JKRHeap* heap = nullptr) {
+        for (;;) {
+            if (void* result = allocate_native(size, alignment, from_tail, heap)) return result;
+            auto handler = std::get_new_handler();
+            if (handler == nullptr) throw std::bad_alloc();
+            handler();
+        }
+    }
+
+    void* allocate_jkr(std::size_t size, JKRHeap* heap, int alignment) {
+        if (alignment == std::numeric_limits<int>::min()) throw std::bad_alloc();
+        auto magnitude = static_cast<std::size_t>(alignment < 0 ? -alignment : alignment);
+        if (magnitude == 0) magnitude = default_new_alignment;
+        return allocate(size, magnitude, alignment < 0, heap);
+    }
+
+    void release(void* memory) noexcept {
+        if (memory == nullptr) return;
+        if (JKRHeap* heap = JKRHeap::releaseAllocation(memory)) {
+            // Provenance is consumed before the heap's own mutex is taken;
+            // global delete must not acquire the current-selection lock.
+            heap->free(memory);
+            return;
+        }
+        const auto address = reinterpret_cast<std::uintptr_t>(memory);
+        const auto begin = reinterpret_cast<std::uintptr_t>(JKRHeap::getUserRamStart());
+        if (begin != 0 && begin <= address && address < reinterpret_cast<std::uintptr_t>(JKRHeap::getUserRamEnd())) {
+            OSPanic(__FILE__, __LINE__, "Delete has no original allocation provenance: %p", memory);
+        }
+        if (aurora::contains_mem2_address(memory)) {
+            OSPanic(__FILE__, __LINE__, "Delete has no original MEM2 allocation provenance: %p", memory);
+        }
+        std::free(memory);
+    }
+}
+
+void* operator new(std::size_t size) { return allocate(size, default_new_alignment); }
+void* operator new[](std::size_t size) { return allocate(size, default_new_alignment); }
+void* operator new(std::size_t size, std::align_val_t alignment) { return allocate(size, static_cast<std::size_t>(alignment)); }
+void* operator new[](std::size_t size, std::align_val_t alignment) { return allocate(size, static_cast<std::size_t>(alignment)); }
+void* operator new(std::size_t size, const std::nothrow_t&) noexcept {
+    try { return ::operator new(size); } catch (...) { return nullptr; }
+}
+void* operator new[](std::size_t size, const std::nothrow_t&) noexcept {
+    try { return ::operator new[](size); } catch (...) { return nullptr; }
+}
+void* operator new(std::size_t size, std::align_val_t alignment, const std::nothrow_t&) noexcept {
+    try { return ::operator new(size, alignment); } catch (...) { return nullptr; }
+}
+void* operator new[](std::size_t size, std::align_val_t alignment, const std::nothrow_t&) noexcept {
+    try { return ::operator new[](size, alignment); } catch (...) { return nullptr; }
+}
+
+void operator delete(void* memory) noexcept { release(memory); }
+void operator delete[](void* memory) noexcept { release(memory); }
+void operator delete(void* memory, std::size_t) noexcept { release(memory); }
+void operator delete[](void* memory, std::size_t) noexcept { release(memory); }
+void operator delete(void* memory, std::align_val_t) noexcept { release(memory); }
+void operator delete[](void* memory, std::align_val_t) noexcept { release(memory); }
+void operator delete(void* memory, std::size_t, std::align_val_t) noexcept { release(memory); }
+void operator delete[](void* memory, std::size_t, std::align_val_t) noexcept { release(memory); }
+void operator delete(void* memory, const std::nothrow_t&) noexcept { release(memory); }
+void operator delete[](void* memory, const std::nothrow_t&) noexcept { release(memory); }
+void operator delete(void* memory, std::align_val_t, const std::nothrow_t&) noexcept { release(memory); }
+void operator delete[](void* memory, std::align_val_t, const std::nothrow_t&) noexcept { release(memory); }
+
+void* operator new(std::size_t size, int alignment) { return allocate_jkr(size, nullptr, alignment); }
+void* operator new[](std::size_t size, int alignment) { return allocate_jkr(size, nullptr, alignment); }
+void* operator new(std::size_t size, JKRHeap* heap) { return allocate_jkr(size, heap, 4); }
+void* operator new[](std::size_t size, JKRHeap* heap) { return allocate_jkr(size, heap, 4); }
+void* operator new(std::size_t size, JKRHeap* heap, int alignment) { return allocate_jkr(size, heap, alignment); }
+void* operator new[](std::size_t size, JKRHeap* heap, int alignment) { return allocate_jkr(size, heap, alignment); }
+void operator delete(void* memory, int) noexcept { release(memory); }
+void operator delete[](void* memory, int) noexcept { release(memory); }
+void operator delete(void* memory, JKRHeap*) noexcept { release(memory); }
+void operator delete[](void* memory, JKRHeap*) noexcept { release(memory); }
+void operator delete(void* memory, JKRHeap*, int) noexcept { release(memory); }
+void operator delete[](void* memory, JKRHeap*, int) noexcept { release(memory); }
 
 void JKRHeap::state_register(TState *, u32) const {
     return;

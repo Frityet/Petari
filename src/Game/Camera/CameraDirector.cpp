@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Camera/CameraDirector.hpp"
 #include "Game/Boss/BossStinkBug.hpp"
 #include "Game/Camera/CameraCover.hpp"

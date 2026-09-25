@@ -1,3 +1,4 @@
+#include <functional.hpp>
 #include "Game/LiveActor/DisplayListMaker.hpp"
 #include "Game/Animation/MaterialAnmBuffer.hpp"
 #include "Game/LiveActor/MaterialCtrl.hpp"

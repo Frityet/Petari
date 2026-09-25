@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Player/MarioWarp.hpp"
 #include "Game/AreaObj/WarpCube.hpp"
 #include "Game/MapObj/WarpPod.hpp"

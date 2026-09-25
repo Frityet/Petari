@@ -1,0 +1,91 @@
+{
+  "paths": [
+    {
+      "path": "src/compat/MetrowerksPrintf.hpp",
+      "existed_before": true,
+      "before_sha256": "9c45d18d5ff3fe06370c5a9982d2b47d688d25873f5fbf2e11a85e0afb1aae1b",
+      "action": "deleted"
+    },
+    {
+      "path": "src/compat/MslPrintfCompat.cpp",
+      "existed_before": true,
+      "before_sha256": "3b01e0a263a4abdf5bc770b66a7cc1a9fbe4a93d76695a16d4ff73bea23dc76a",
+      "action": "deleted"
+    },
+    {
+      "path": "src/compat/MslPrintfCompat.hpp",
+      "existed_before": true,
+      "before_sha256": "e5b3cf375c2f6296366afeda8a73dfaa227fcd8f0bd2255ee82474e52f91cc47",
+      "action": "deleted"
+    },
+    {
+      "path": "aurora/lib/MSL_C/printf.cpp",
+      "existed_before": false,
+      "after_sha256": "e6588b29cb8cadf4ffa97f3b7e7816ff0a21c68896b58228e5f947e3573731c3",
+      "action": "added"
+    },
+    {
+      "path": "aurora/include/MSL_C/stdio_api.h",
+      "existed_before": false,
+      "after_sha256": "88b667ae7e0e763900f9c37c81f0997fe89772530ed627037b1c438b90b0ce49",
+      "action": "added"
+    },
+    {
+      "path": "aurora/include/MSL_C/stdio.h",
+      "existed_before": false,
+      "after_sha256": "dc5e34ff3d1293bcdd2204eb4c058c994b24485d5beb7841b25d5ea9282d244b",
+      "action": "added"
+    },
+    {
+      "path": "aurora/cmake/aurora_msl.cmake",
+      "existed_before": false,
+      "after_sha256": "899d9c3956c7591fa5ae7fd9fd40b2f369f12613d6c9bac7ee5dbda477e82e39",
+      "action": "added"
+    },
+    {
+      "path": "aurora/CMakeLists.txt",
+      "existed_before": true,
+      "before_sha256": "7d0b162a14f106869e23326ce7f9fbb75df3f46169f9e1bffebe76d9e42f722e",
+      "after_sha256": "59d17ab83b6790537a686d64daa385bd107b53deed2da9b88d39066d522107ce",
+      "action": "modified"
+    },
+    {
+      "path": "aurora/xmake.lua",
+      "existed_before": true,
+      "before_sha256": "84dfb41dcc4b6aa7f65d8b88500b95e5ac8e3e2c9b435473a90428d36e0b05ea",
+      "after_sha256": "12bdcaffd8d488d50398e4506e94915687f5fdb90dbfd10bbf8bdfabef03e96f",
+      "action": "modified"
+    },
+    {
+      "path": "tests/MslPrintfTests.cpp",
+      "existed_before": true,
+      "before_sha256": "b5c54e6554a13e2a12633b6423838d258ccd17f4aa943c4d713a9f8dfeba298b",
+      "after_sha256": "acb082d7247f12ab6a9173adb1e72271b53b6b158ee1c647bec4b58aa7473015",
+      "action": "modified"
+    },
+    {
+      "path": "tests/MslPrintfAliasTests.cpp",
+      "existed_before": true,
+      "before_sha256": "4ef87d400f3585ab25ece265265a81b19535070448e66685a5c2e3d31aa30f2d",
+      "after_sha256": "ef381774aa6e72809be67ff71cebe1777a553e0863b14ce6f974cefb7e67123e",
+      "action": "modified"
+    },
+    {
+      "path": "src/common/xmake.lua",
+      "existed_before": true,
+      "before_sha256": "b3c22457550a75c482e1cc0b0fd39a808fa58a74ec5abcb60ca76fb833cd3ebc",
+      "shared_scope": "formatter provider removal and public dependency",
+      "after_sha256": "9c2ecd9a23a0ac917fc1b0dfe2c66ce48f290ed760fe57fa43c36f92fa5fd1ba",
+      "action": "modified"
+    },
+    {
+      "path": "src/Game/xmake.lua",
+      "existed_before": true,
+      "before_sha256": "1d80a872b50a3e1ca8e43d2cb57797663cc0e209a9c8192259e63f5792ba06ad",
+      "shared_scope": "formatter provider/dependency lines only",
+      "after_sha256": "9e15616ae229e49ce0f30ba1aa96c265c37aa94af98c4e1234d3f17324add32c",
+      "action": "modified"
+    }
+  ],
+  "validation": "Source-only normalization comparison; no builds/tests/git operations."
+}

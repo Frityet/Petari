@@ -1,3 +1,4 @@
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/System/FunctionAsyncExecutor.hpp"
 #include "Game/Util/Functor.hpp"
 #include "Game/Util/MemoryUtil.hpp"

@@ -5,7 +5,7 @@
 // Frozen canonical Windows CP932 encoding table, generated offline from
 // Cp932Mapping.tsv. No generator or source rewriting runs during a build.
 // Mapping SHA-256: 46778ae55afa614d3ece7e4f7160d9f1205626f09a461e6d7a933b57b582d600
-namespace smgpc::compat::cp932::detail {
+namespace smgpc::resource::cp932::detail {
     struct MappingEntry {
         std::uint16_t unicode;
         std::uint16_t encoded;

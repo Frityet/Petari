@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Screen/GalaxyCometScreenFilter.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/EventUtil.hpp"

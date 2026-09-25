@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/MapObj/MapPartsSeesaw1AxisRotator.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/GravityUtil.hpp"

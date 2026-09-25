@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Player/MarioMagic.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioModule.hpp"

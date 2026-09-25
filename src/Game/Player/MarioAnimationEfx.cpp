@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Player/MarioAnimator.hpp"
 #include "Game/Animation/XanimeResource.hpp"
 #include "Game/Player/MarioActor.hpp"

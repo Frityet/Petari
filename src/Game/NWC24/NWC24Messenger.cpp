@@ -1,4 +1,5 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NWC24/NWC24Messenger.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NWC24/NWC24Function.hpp"

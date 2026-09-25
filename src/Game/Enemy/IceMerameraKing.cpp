@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Enemy/IceMerameraKing.hpp"
 #include "Game/Camera/CameraTargetObj.hpp"
 #include "Game/Effect/SpinPullParticleCallBack.hpp"

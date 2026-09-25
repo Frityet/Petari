@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/SkeletalFishGuardHolder.hpp"
 #include "Game/Boss/SkeletalFishBoss.hpp"
 #include "Game/Boss/SkeletalFishBossFunc.hpp"

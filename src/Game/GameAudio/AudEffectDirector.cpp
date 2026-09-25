@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/System/AudSystemWrapper.hpp"
 #include "Game/GameAudio/AudEffectDirector.hpp"
 #include "Game/AudioLib/AudEffector.hpp"

@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "Game/Scene/StageDataHolder.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"

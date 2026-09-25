@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/PoltaStateGroundRockAttack.hpp"
 #include "Game/Boss/Polta.hpp"
 #include "Game/Boss/PoltaFunction.hpp"

@@ -1,4 +1,4 @@
-#include "compat/MetrowerksStdCompat.hpp"
+#include <MSL_C/stdio.h>
 #include "OriginalSceneControllerFixture.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "Game/Gravity/PlanetGravity.hpp"

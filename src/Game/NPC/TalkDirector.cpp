@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/NPC/TalkDirector.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include <algorithm>

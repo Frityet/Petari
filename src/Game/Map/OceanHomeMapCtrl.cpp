@@ -7,7 +7,7 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include <cstring>
 
 // Not entirely sure if the createSceneObj would've been here or not. There's no evidence for or against it being here.

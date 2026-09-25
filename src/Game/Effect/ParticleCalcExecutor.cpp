@@ -1,6 +1,7 @@
+#include "Game/LiveActor/LiveActor.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include <utility>
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Effect/ParticleCalcExecutor.hpp"
 #include "Game/Effect/EffectSystem.hpp"
 #include "Game/Effect/ParticleEmitterHolder.hpp"

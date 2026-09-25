@@ -1,0 +1,51 @@
+{
+  "operator_provider_body_exact": true,
+  "operator_count": 32,
+  "files": [
+    {
+      "path": "src/JSystem/JKernel/JKRHeap.hpp",
+      "before_snapshot_matches": true,
+      "after_snapshot_matches": true
+    },
+    {
+      "path": "src/JSystem/JKernel/JKRHeap.cpp",
+      "before_snapshot_matches": true,
+      "after_snapshot_matches": true
+    },
+    {
+      "path": "src/JSystem/JKernel/JKRExpHeap.hpp",
+      "before_snapshot_matches": true,
+      "after_snapshot_matches": true
+    },
+    {
+      "path": "src/JSystem/JKernel/JKRExpHeap.cpp",
+      "before_snapshot_matches": true,
+      "after_snapshot_matches": true
+    },
+    {
+      "path": "src/compat/JkrAllocationDomain.cpp",
+      "before_snapshot_matches": true,
+      "after_snapshot_matches": true
+    },
+    {
+      "path": "aurora/include/aurora/mem2_arena.hpp",
+      "before_snapshot_matches": true,
+      "after_snapshot_matches": true
+    },
+    {
+      "path": "aurora/lib/dolphin/os/OSArena.cpp",
+      "before_snapshot_matches": true,
+      "after_snapshot_matches": true
+    },
+    {
+      "path": "src/compat/MetrowerksAlignedNew.cpp",
+      "before_snapshot_matches": true,
+      "after_snapshot_matches": true
+    },
+    {
+      "path": "src/compat/JkrAllocationRouting.hpp",
+      "before_snapshot_matches": true,
+      "after_snapshot_matches": true
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Util/SequenceUtil.hpp"
 #include "Game/MapObj/MagicBell.hpp"
 #include "Game/LiveActor/Nerve.hpp"

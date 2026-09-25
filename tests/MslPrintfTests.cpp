@@ -1,4 +1,4 @@
-#include "compat/MslPrintfCompat.hpp"
+#include <MSL_C/stdio_api.h>
 #include <array>
 #include <atomic>
 #include <climits>
@@ -22,7 +22,7 @@ namespace {
         char out[2048];
         va_list args;
         va_start(args, format);
-        int length = smgpc_msl_vsnprintf(out, sizeof(out), format, args);
+        int length = __msl_vsnprintf(out, sizeof(out), format, args);
         va_end(args);
         require(length == int(std::strlen(expected)) && std::strcmp(out, expected) == 0, "independent formatted-string expectation");
     }
@@ -32,7 +32,7 @@ namespace {
         va_start(args, format);
         va_copy(copy, args);
         int wanted = std::vsnprintf(expected, sizeof(expected), format, args);
-        int got = smgpc_msl_vsnprintf(actual, sizeof(actual), format, copy);
+        int got = __msl_vsnprintf(actual, sizeof(actual), format, copy);
         va_end(copy);
         va_end(args);
         require(wanted == got && std::memcmp(actual, expected, std::size_t(wanted) + 1) == 0, "defined native numeric/extension behavior preserved");
@@ -58,17 +58,17 @@ namespace {
         equal("|Wide|", "%ls|%ls|", static_cast<const wchar_t *>(nullptr), L"Wide");
         equal("   Wi", "%5.2ls", L"Wide");
         char binary[] = {3, 'a', '\0', 'b'}, out[16];
-        int length = smgpc_msl_snprintf(out, sizeof(out), "%#s", binary);
+        int length = __msl_snprintf(out, sizeof(out), "%#s", binary);
         require(length == 3 && out[0] == 'a' && out[1] == 0 && out[2] == 'b' && out[3] == 0, "Pascal payload length and embedded NUL preserved");
     }
     void wide_bytes() {
         const wchar_t value[] = {wchar_t(0x00e9), wchar_t(0x0141), 0};
         char out[16];
-        require(smgpc_msl_snprintf(out, sizeof(out), "%ls", value) == 2 && static_cast<unsigned char>(out[0]) == 0xe9 && out[1] == 'A' && out[2] == 0, "MSL C locale copies each wide character low byte");
+        require(__msl_snprintf(out, sizeof(out), "%ls", value) == 2 && static_cast<unsigned char>(out[0]) == 0xe9 && out[1] == 'A' && out[2] == 0, "MSL C locale copies each wide character low byte");
         const wchar_t nul[] = {wchar_t(0x0100), L'x', 0};
-        require(smgpc_msl_snprintf(out, sizeof(out), "%ls", nul) == 0 && out[0] == 0, "MSL string length sees a converted embedded zero");
+        require(__msl_snprintf(out, sizeof(out), "%ls", nul) == 0 && out[0] == 0, "MSL string length sees a converted embedded zero");
         const wchar_t pascal[] = {3, L'a', wchar_t(0x0100), L'b', 0};
-        require(smgpc_msl_snprintf(out, sizeof(out), "%#ls", pascal) == 3 && out[0] == 'a' && out[1] == 0 && out[2] == 'b' && out[3] == 0, "MSL wide Pascal payload preserves byte count and embedded NUL");
+        require(__msl_snprintf(out, sizeof(out), "%#ls", pascal) == 3 && out[0] == 'a' && out[1] == 0 && out[2] == 'b' && out[3] == 0, "MSL wide Pascal payload preserves byte count and embedded NUL");
     }
     void numeric() {
         int object = 42;
@@ -84,7 +84,7 @@ namespace {
         char actual[512], expected[512];
         const char *format = "%s|%*.*f|%lld|%p|%zu|%s|%.2Lf|%ls";
         int object = 0;
-        auto n = smgpc_msl_snprintf(actual, sizeof(actual), format, static_cast<const char *>(nullptr), 12, 4, 1.25, -1234567890123LL, &object, std::size_t(87), "ok", 2.5L, L"wide");
+        auto n = __msl_snprintf(actual, sizeof(actual), format, static_cast<const char *>(nullptr), 12, 4, 1.25, -1234567890123LL, &object, std::size_t(87), "ok", 2.5L, L"wide");
         auto e = std::snprintf(expected, sizeof(expected), format, "", 12, 4, 1.25, -1234567890123LL, &object, std::size_t(87), "ok", 2.5L, L"wide");
         require(n == e && std::strcmp(actual, expected) == 0, "native variadic integer/FP/pointer banks remain in order after null string");
     }
@@ -92,11 +92,11 @@ namespace {
         char out[8];
         std::memset(out, 0x6b, sizeof(out));
         int count = -1;
-        auto size = smgpc_msl_snprintf(out, 4, "a%sbcdef%n", static_cast<const char *>(nullptr), &count);
+        auto size = __msl_snprintf(out, 4, "a%sbcdef%n", static_cast<const char *>(nullptr), &count);
         require(size == 6 && count == 6 && std::strcmp(out, "abc") == 0 && out[4] == 0x6b, "bounded sink truncates only output while n sees complete count");
-        require(smgpc_msl_snprintf(nullptr, 0, "%s:%s", static_cast<const char *>(nullptr), "tail") == 5, "zero-size query reads no destination");
+        require(__msl_snprintf(nullptr, 0, "%s:%s", static_cast<const char *>(nullptr), "tail") == 5, "zero-size query reads no destination");
         char one = 'x';
-        require(smgpc_msl_snprintf(&one, 1, "%s", "two") == 3 && one == 0, "size-one terminator");
+        require(__msl_snprintf(&one, 1, "%s", "two") == 3 && one == 0, "size-one terminator");
         signed char c = -1;
         short s = -1;
         long l = -1;
@@ -115,7 +115,7 @@ namespace {
         std::array<std::thread, 4> workers;
         std::atomic<bool> failed = false;
         for (int i = 0; i < 4; ++i)
-            workers[i] = std::thread([&] {for(int n=0;n<100;++n){char out[32];if(smgpc_msl_snprintf(out,sizeof(out),"%s/%03d",static_cast<const char*>(nullptr),17)!=4||std::strcmp(out,"/017")!=0)failed=true;} });
+            workers[i] = std::thread([&] {for(int n=0;n<100;++n){char out[32];if(__msl_snprintf(out,sizeof(out),"%s/%03d",static_cast<const char*>(nullptr),17)!=4||std::strcmp(out,"/017")!=0)failed=true;} });
         for (auto &t : workers)
             t.join();
         require(!failed, "formatting has no shared mutable parser or va_list state");

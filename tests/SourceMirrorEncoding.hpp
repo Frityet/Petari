@@ -92,7 +92,7 @@ namespace smgpc::test {
     // byte. It grants no general include, token, formatting or logic exemption.
     inline std::string without_cp932_source_adaptations(std::string_view source) {
         using namespace source_mirror_detail;
-        constexpr std::string_view include = "#include \"compat/Cp932Literal.hpp\"\n";
+        constexpr std::string_view include = "#include \"resource/TextEncoding.hpp\"\n";
         if (source.substr(0, include.size()) == include)
             source.remove_prefix(include.size());
         std::string result;

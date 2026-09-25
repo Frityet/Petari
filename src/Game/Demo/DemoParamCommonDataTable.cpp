@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Demo/DemoParamCommonDataTable.hpp"
 #include "Game/Util/StringUtil.hpp"
 

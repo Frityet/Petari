@@ -19,7 +19,7 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/SystemUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include <aurora/allocation.hpp>
 #include <array>
 #include <cmath>

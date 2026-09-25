@@ -1,4 +1,5 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/Map/WaterRoad.hpp"
 #include "Game/AudioLib/AudSoundObject.hpp"
 #include "Game/LiveActor/HitSensor.hpp"

@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include <revolution/types.h>
 
 #include "Game/LiveActor/LiveActor.hpp"

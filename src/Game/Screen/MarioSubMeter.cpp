@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Screen/MarioSubMeter.hpp"
 #include "Game/Screen/SubMeterLayout.hpp"
 

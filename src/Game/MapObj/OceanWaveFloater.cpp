@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/MapObj/OceanWaveFloater.hpp"
 #include "Game/LiveActor/MaterialCtrl.hpp"
 #include "Game/MapObj/FloaterFloatingForceTypeSpring.hpp"

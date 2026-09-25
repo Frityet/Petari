@@ -1,3 +1,4 @@
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/System/ResourceHolder.hpp"
 #include "Game/Animation/MaterialAnmBuffer.hpp"
 #include "Game/System/FileLoader.hpp"

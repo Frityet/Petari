@@ -7,7 +7,8 @@ end
 
 target("smg-pc-common")
     set_kind("static")
-    add_files("Logger.cpp", "DumpJson.cpp", "MarkdownWriter.cpp", "BinaryChunkFile.cpp", "../compat/MslPrintfCompat.cpp")
+    add_deps("aurora-msl", {public = true})
+    add_files("Logger.cpp", "DumpJson.cpp", "MarkdownWriter.cpp", "BinaryChunkFile.cpp")
     if is_mode("debug") then
         add_files("Sqlite.cpp", "TraceStore.cpp", "TraceAnalysis.cpp")
     end

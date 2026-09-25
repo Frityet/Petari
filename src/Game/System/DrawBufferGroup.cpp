@@ -1,3 +1,4 @@
+#include <functional.hpp>
 #include "Game/System/DrawBufferGroup.hpp"
 #include "Game/System/DrawBufferExecuter.hpp"
 #include "Game/LiveActor/LiveActor.hpp"

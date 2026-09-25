@@ -1,0 +1,5 @@
+Formatter source equals prior implementation after include/export renaming and Aurora formatting.
+Implementation imports MSL_C/stdio_api.h and native cstdio; it does not import the redirecting MSL_C/stdio.h.
+Standalone Aurora target has no forced include or Game dependency.
+The two existing test sources differ only in direct includes and renamed MSL exports.
+No builds or tests run.

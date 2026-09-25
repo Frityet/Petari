@@ -1,0 +1,182 @@
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J2DGraph/J2DPane.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/J3dAnimation.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/J3dMaterialRuntime.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/J3dMatrix.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/J3dModel.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/J3dTexture.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/JMathTrig.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JGeometry/TQuat.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JMath/JMATrigonometricTable.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JMath/random.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JGeometry/TMatrix.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRDisposer.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRFileFinder.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JSupport/JSUList.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JUtility/JUTNameTab.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JAudio2/JAIAudible.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JAudio2/JAIAudience.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JAudio2/JAISound.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JAudio2/JAISoundChild.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JAudio2/JAISoundHandles.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JAudio2/JAISoundStarter.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JAudio2/JAIStream.cpp[0m
+[0m[38;5;2;1m[ 87%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JAudio2/JAIStreamDataMgr.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JAudio2/JAIStreamMgr.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JAudio2/JASSoundParams.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DPacket.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/nw4r/ut/ut_LinkList.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRThread.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DAnimation.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphLoader/J3DModelLoader.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphLoader/J3DMaterialFactory.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DDrawBuffer.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DStruct.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DGD.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DJoint.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DJointTree.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DModelData.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DModel.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DSkinDeform.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DCluster.cpp[0m
+[0m[38;5;3;1msrc/JSystem/J3DGraphBase/J3DGD.cpp:102:17: warning: 15 enumeration values not handled in switch: 'GX_VA_PNMTXIDX', 'GX_VA_TEX0MTXIDX', 'GX_VA_TEX1MTXIDX'... [-Wswitch]
+  102 |         switch (list->attr) {
+      |                 ^~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DTransform.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphBase/J3DPacket.cpp:6:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DSys.cpp[0m
+[0m[38;5;2;1m[ 88%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JMath/JMath.cpp[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JSupport/JSUInputStream.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphLoader/J3DModelLoader.cpp:4:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JSupport/JSUOutputStream.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphAnimator/J3DAnimation.cpp:3:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JSupport/JSUMemoryStream.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphBase/J3DDrawBuffer.cpp:2:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRFileLoader.cpp[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRArchivePub.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphAnimator/J3DJoint.cpp:1:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRArchivePri.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphAnimator/J3DModelData.cpp:3:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRMemArchive.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphAnimator/J3DJointTree.cpp:2:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRHeap.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphLoader/J3DMaterialFactory.cpp:1:
+In file included from src/JSystem/J3DGraphLoader/J3DMaterialFactory.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRExpHeap.cpp[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRSolidHeap.cpp[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRUnitHeap.cpp[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DShape.cpp[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DShapeDraw.cpp[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DShapeMtx.cpp[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DVertex.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphAnimator/J3DModel.cpp:2:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphLoader/J3DShapeFactory.cpp[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DMtxBuffer.cpp[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JAudio2/JAUSoundTable.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphBase/J3DSys.cpp:5:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JGadget/hashcode.cpp[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JUtility/JUTVideo.cpp[0m
+[0m[38;5;2;1m[ 89%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JUtility/JUTXfb.cpp[0m
+[0m[38;5;2;1m[ 90%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JUtility/JUTDirectPrint.cpp[0m
+[0m[38;5;2;1m[ 90%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JUtility/JUTAssert.cpp[0m
+[0m[38;5;2;1m[ 90%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JUtility/JUTConsole.cpp[0m
+[0m[38;5;2;1m[ 90%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JUtility/JUTDbPrint.cpp[0m
+[0m[38;5;2;1m[ 90%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JUtility/JUTFont.cpp[0m
+[0m[38;5;2;1m[ 90%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JUtility/JUTPalette.cpp[0m
+[0m[38;5;2;1m[ 90%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JGadget/linklist.cpp[0m
+[0m[38;5;2;1m[ 90%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRAram.cpp[0m
+[0m[38;5;3;1msrc/JSystem/JKernel/JKRExpHeap.cpp:180:14: warning: multi-character character constant [-Wmultichar]
+  180 |     mMagic = 'HM';
+      |              ^
+src/JSystem/JKernel/JKRExpHeap.cpp:228:30: warning: multi-character character constant [-Wmultichar]
+  228 |         if (block->mMagic == 'HM') {
+      |                              ^
+src/JSystem/JKernel/JKRExpHeap.cpp:602:24: warning: multi-character character constant [-Wmultichar]
+  602 |     newblock->mMagic = 'HM';
+      |                        ^
+src/JSystem/JKernel/JKRExpHeap.cpp:733:30: warning: multi-character character constant [-Wmultichar]
+  733 |         if (block->mMagic != 'HM') {
+      |                              ^
+src/JSystem/JKernel/JKRExpHeap.cpp:739:41: warning: multi-character character constant [-Wmultichar]
+  739 |             if (block->mNext->mMagic != 'HM') {
+      |                                         ^
+src/JSystem/JKernel/JKRExpHeap.cpp:802:30: warning: multi-character character constant [-Wmultichar][0m
+[0m[38;5;2;1m[ 90%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRAramHeap.cpp[0m
+[0m[38;5;2;1m[ 90%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRAramBlock.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/JUtility/JUTAssert.cpp:2:
+src/JSystem/JUtility/JUTConsole.hpp:122:63: warning: 'offsetof' on non-standard-layout type 'JUTConsole' [-Winvalid-offsetof]
+  122 |     typedef JGadget::TLinkList< JUTConsole, -static_cast<int>(__builtin_offsetof(JUTConsole, mListNode)) > ConsoleList;
+      |                                                               ^                              ~~~~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 90%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRAramPiece.cpp[0m
+[0m[38;5;2;1m[ 90%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRAramStream.cpp[0m
+[0m[38;5;2;1m[ 90%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JKernel/JKRDecomp.cpp[0m
+[0m[38;5;2;1m[ 90%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JSupport/JSUFileStream.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphBase/J3DShapeMtx.cpp:4:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 91%]:[0m [38;5;5;1m<aurora-card>[0m cache compiling.debug aurora/lib/dolphin/card.cpp[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[1;38;5;1;1merror: [0msrc/JSystem/JUtility/JUTFont.hpp:46:99: error: expected ';' at end of declaration list
+   46 |     f32 drawString_scale(f32 posX, f32 posY, f32 width, f32 height, const char* str, bool visible) NO_INLINE {
+      |                                                                                                   ^
+      |                                                                                                   ;
+1 error generated.
+  [38;5;3m> in [1msrc/JSystem/JUtility/JUTDbPrint.cpp[0m

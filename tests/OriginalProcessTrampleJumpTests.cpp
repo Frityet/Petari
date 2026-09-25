@@ -15,7 +15,7 @@
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"

@@ -13,7 +13,7 @@
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "resource/TextEncoding.hpp"

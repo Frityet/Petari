@@ -1,3 +1,4 @@
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/System/GameSystemObjHolder.hpp"
 #include "Game/Effect/ParticleResourceHolder.hpp"
 #include "Game/NameObj/NameObjRegister.hpp"

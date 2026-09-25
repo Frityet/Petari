@@ -1,5 +1,5 @@
 #include "Game/Util/Functor.hpp"
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/MapObj/MiniatureGalaxyHolder.hpp"
 #include "Game/LiveActor/LiveActorGroup.hpp"
 #include "Game/Map/SphereSelector.hpp"

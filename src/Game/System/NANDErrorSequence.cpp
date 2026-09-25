@@ -1,3 +1,4 @@
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/System/NANDErrorSequence.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/SysInfoWindow.hpp"

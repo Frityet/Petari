@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Scene/StopSceneController.hpp"
 #include "Game/NameObj/NameObjGroup.hpp"
 #include "Game/Util/ObjUtil.hpp"

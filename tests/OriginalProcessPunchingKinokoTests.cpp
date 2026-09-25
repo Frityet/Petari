@@ -15,7 +15,7 @@
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 
 #include <aurora/allocation.hpp>

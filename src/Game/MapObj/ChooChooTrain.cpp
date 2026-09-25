@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/MapObj/ChooChooTrain.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
 #include "Game/Scene/SceneFunction.hpp"

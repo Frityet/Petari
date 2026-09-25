@@ -49,7 +49,6 @@
 
 namespace {
     struct NameObjRuntimeState {
-        std::shared_ptr<const std::string> host_name{};
         std::uint64_t registration_order = 0U;
         const void* owner = nullptr;
     };
@@ -60,7 +59,6 @@ namespace {
         std::unique_ptr<ActorPadAndCameraCtrl> camera_ctrl{};
         std::shared_ptr<smgpc::compat::JkrAllocationDomain> sound_domain{};
         std::unique_ptr<AudAnmSoundObject> sound_object{};
-        std::optional<smgpc::compat::ActorBinderRuntimeConfig> binder{};
         std::unique_ptr<Binder> binder_provider{};
         ClippingActorHolder* clipping_holder = nullptr;
         ClippingGroupHolder* clipping_groups = nullptr;
@@ -113,7 +111,6 @@ namespace {
         }
         return found->second;
     }
-
 
 }  // namespace
 
@@ -170,18 +167,6 @@ namespace smgpc::compat {
         if (!inserted) {
             aurora::throw_host_exception<std::logic_error>("NameObj runtime state is already registered.");
         }
-    }
-
-    void retain_name_obj_host_name(NameObj* object, std::shared_ptr<const std::string> name) {
-        JkrHostAllocationScope host;
-        if (object == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("NameObj runtime state requires a real object.");
-        }
-        const auto found = name_obj_states().find(object);
-        if (found == name_obj_states().end()) {
-            aurora::throw_host_exception<std::logic_error>("NameObj has no registered native runtime state.");
-        }
-        found->second.host_name = std::move(name);
     }
 
     void release_name_obj_runtime_state(const NameObj* object) {
@@ -257,13 +242,6 @@ namespace smgpc::compat {
                found->second.owner != nullptr;
     }
 
-    const void* name_obj_runtime_owner(const NameObj* object) noexcept {
-        const auto found = name_obj_states().find(object);
-        return found != name_obj_states().end() ? found->second.owner
-                                                : nullptr;
-    }
-
-
     std::vector<NameObj*> snapshot_name_obj_runtime_objects() {
         return snapshot_name_obj_runtime_objects_from(0U);
     }
@@ -317,20 +295,6 @@ namespace smgpc::compat {
         return found != name_obj_states().end() &&
                found->second.registration_order >=
                    marker.next_registration_order;
-    }
-
-    void destroy_name_obj_runtime_objects_since(
-        NameObjRuntimeRegistrationMarker marker) noexcept {
-        if (marker.next_registration_order == 0U) {
-            return;
-        }
-
-        // Selecting the newest identity on each pass avoids allocating while
-        // allowing each destructor to mutate the registry safely.
-        while (auto* newest = newest_name_obj_runtime_object_since_if(
-                   marker, nullptr, nullptr)) {
-            delete newest;
-        }
     }
 
     bool name_obj_is_suspended(const NameObj* object) {
@@ -460,12 +424,6 @@ namespace smgpc::compat {
         state.lod_ctrl.reset(lod_ctrl);
     }
 
-    std::size_t actor_lod_ctrl_runtime_state_count() {
-        return std::ranges::count_if(actor_states(), [](const auto& entry) {
-            return entry.second.lod_ctrl != nullptr;
-        });
-    }
-
     void initialize_actor_model(LiveActor* actor, const char* model_archive,
                                 const char* animation_archive, bool create_display_list) {
         auto& state = require_actor_state(actor);
@@ -509,60 +467,12 @@ namespace smgpc::compat {
         return require_actor_state(actor).model;
     }
 
-    std::optional<std::span<const std::uint8_t>>
-    actor_model_resource_data_if_present(const LiveActor* actor, std::string_view resource_name) {
-        if (!actor || !actor->mModelManager || resource_name.empty()) return std::nullopt;
-        const auto& archive = MR::getModelResourceHolder(actor)->nativeResourceSource();
-        if (!archive.contains_resource(resource_name)) return std::nullopt;
-        return archive.resource_data(resource_name);
-    }
-
     void configure_actor_binder(LiveActor* actor, float radius, float offset, std::uint32_t plane_capacity) {
         auto& state = require_actor_state(actor);
-        state.binder = ActorBinderRuntimeConfig{radius, offset, plane_capacity};
         state.binder_provider = std::make_unique<Binder>(
             actor->getBaseMtx(), &actor->mPosition, &actor->mGravity,
             radius, offset, plane_capacity);
         actor->mBinder = state.binder_provider.get();
-    }
-
-    void register_actor_binder(const LiveActor* actor) {
-        if (actor != nullptr) {
-            auto& state = require_actor_state(actor);
-            state.binder.emplace();
-            auto* mutable_actor = const_cast<LiveActor*>(actor);
-            state.binder_provider = std::make_unique<Binder>(
-                actor->getBaseMtx(), &mutable_actor->mPosition,
-                &mutable_actor->mGravity, 0.0F, 0.0F, 0U);
-            mutable_actor->mBinder = state.binder_provider.get();
-        }
-    }
-
-    bool has_actor_binder(const LiveActor* actor) {
-        const auto found = actor_states().find(actor);
-        return found != actor_states().end() && found->second.binder.has_value();
-    }
-
-    const ActorBinderRuntimeConfig* actor_binder_config(const LiveActor* actor) {
-        if (actor == nullptr) {
-            return nullptr;
-        }
-        const auto found = actor_states().find(actor);
-        if (found == actor_states().end()) {
-            return nullptr;
-        }
-        const auto& binder = found->second.binder;
-        return binder.has_value() ? &*binder : nullptr;
-    }
-
-    void release_actor_binder_state(const LiveActor* actor) {
-        if (actor == nullptr) {
-            return;
-        }
-        auto& state = require_actor_state(actor);
-        const_cast<LiveActor*>(actor)->mBinder = nullptr;
-        state.binder_provider.reset();
-        state.binder.reset();
     }
 
     void retire_clipping_actor_holder(ClippingActorHolder& holder) noexcept {

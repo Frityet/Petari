@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Enemy/UnizoLauncher.hpp"
 #include "Game/Enemy/Unizo.hpp"
 #include "Game/LiveActor/Nerve.hpp"

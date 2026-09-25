@@ -1,3 +1,4 @@
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/RhythmLib/AudMeObject.hpp"
 
 AudMeObject::AudMeObject(TVec3f* pPos, u8 numHandles, JKRHeap* pHeap)

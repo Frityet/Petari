@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/NPC/RosettaDemoEpilogue.hpp"
 #include "Game/Demo/DemoFunction.hpp"
 #include "Game/LiveActor/LodCtrl.hpp"

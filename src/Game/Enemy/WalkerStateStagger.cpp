@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Enemy/WalkerStateStagger.hpp"
 #include "Game/Enemy/WalkerStateFunction.hpp"
 #include "Game/LiveActor/Nerve.hpp"

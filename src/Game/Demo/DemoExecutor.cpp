@@ -1,3 +1,5 @@
+#include "Game/LiveActor/LiveActor.hpp"
+#include <functional.hpp>
 #include "Game/Demo/DemoExecutor.hpp"
 #include "Game/Demo/DemoActionKeeper.hpp"
 #include "Game/Demo/DemoCameraKeeper.hpp"

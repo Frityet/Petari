@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Player/MarioFpView.hpp"
 #include "Game/Enemy/KarikariDirector.hpp"
 #include "Game/Player/MarioActor.hpp"

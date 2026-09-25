@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Ride/BigBubble.hpp"
 #include "Game/AreaObj/BigBubbleGoalArea.hpp"
 #include "Game/LiveActor/HitSensor.hpp"

@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/MapObj/MarioLauncher.hpp"
 #include "Game/Animation/BckCtrl.hpp"
 #include "Game/Camera/CameraTargetArg.hpp"

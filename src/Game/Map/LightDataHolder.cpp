@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Map/LightDataHolder.hpp"
 #include "Game/Map/LightFunction.hpp"
 #include "Game/Util.hpp"

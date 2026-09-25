@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Util/Functor.hpp"
 #include "Game/Map/WaterPlant.hpp"
 #include "Game/Scene/SceneFunction.hpp"

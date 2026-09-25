@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Screen/PlayerActionGuidance.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
 #include "Game/LiveActor/Nerve.hpp"

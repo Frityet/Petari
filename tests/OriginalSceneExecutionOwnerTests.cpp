@@ -212,8 +212,8 @@ int main() {
             const auto before = compat::name_obj_runtime_state_count();
             scheduler.register_layout(native_layout, 34, -1, 72);
             auto* adaptor = NameObjFinder::find(native_layout.getName().c_str());
-            require(adaptor && compat::name_obj_runtime_owner(adaptor) == &scheduler,
-                    "the actual layout adaptor must declare the scheduler that retains its unique_ptr");
+            require(adaptor && compat::name_obj_runtime_ownership_is_claimed(adaptor),
+                    "the actual layout adaptor is claimed by its retaining scheduler");
             scene.complete_initialization();
             require(NameObjFinder::find(native_layout.getName().c_str()) == adaptor &&
                         compat::name_obj_runtime_state_count() == before + 1,

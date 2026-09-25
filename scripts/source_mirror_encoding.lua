@@ -67,7 +67,7 @@ local function literal_end(source, position)
 end
 
 function normalize(source)
-    local include = '#include "compat/Cp932Literal.hpp"\n'
+    local include = '#include "resource/TextEncoding.hpp"\n'
     if source:sub(1, #include) == include then source = source:sub(#include + 1) end
     local output, cursor = {}, 1
     while cursor <= #source do

@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Screen/HeatHazeEffect.hpp"
 #include "Game/AreaObj/HazeCube.hpp"
 #include "Game/Util/AreaObjUtil.hpp"

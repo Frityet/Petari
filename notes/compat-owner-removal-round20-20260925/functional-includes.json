@@ -1,0 +1,10 @@
+[
+  "src/Game/LiveActor/DisplayListMaker.cpp",
+  "src/Game/Enemy/KoopaJrShip.cpp",
+  "src/Game/System/DrawBufferGroup.cpp",
+  "src/Game/Map/RaceManager.cpp",
+  "src/Game/Map/SleepControllerHolder.cpp",
+  "src/Game/Screen/PaneEffectKeeper.cpp",
+  "src/Game/Screen/GalaxyMap.cpp",
+  "src/Game/MapObj/MapPartsRailGuideDrawer.cpp"
+]

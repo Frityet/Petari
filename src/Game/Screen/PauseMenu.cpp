@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Screen/PauseMenu.hpp"
 #include "Game/System/GalaxyStatusAccessor.hpp"
 #include "Game/LiveActor/Nerve.hpp"

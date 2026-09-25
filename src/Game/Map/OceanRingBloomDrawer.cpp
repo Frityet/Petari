@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Map/OceanRingBloomDrawer.hpp"
 #include "Game/Map/OceanRing.hpp"
 #include "Game/Map/OceanRingDrawer.hpp"

@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/NPC/NPCActor.hpp"
 #include "Game/Enemy/AnimScaleController.hpp"
 #include "Game/LiveActor/LodCtrl.hpp"

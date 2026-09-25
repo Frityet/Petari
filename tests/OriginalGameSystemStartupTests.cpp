@@ -1,4 +1,4 @@
-#include "compat/MetrowerksStdCompat.hpp"
+#include <MSL_C/stdio.h>
 #include "Game/System/DrawSyncManager.hpp"
 #include "Game/System/FileRipper.hpp"
 #include "Game/System/GameSystem.hpp"

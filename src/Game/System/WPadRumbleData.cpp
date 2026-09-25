@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/System/WPadRumbleData.hpp"
 #include "Game/Util/HashUtil.hpp"
 #include <revolution/wpad.h>

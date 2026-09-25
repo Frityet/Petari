@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #pragma once
 
 #include "Game/Camera/CameraTowerBase.hpp"

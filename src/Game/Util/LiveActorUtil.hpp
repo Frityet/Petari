@@ -1,5 +1,7 @@
 #pragma once
 
+#include "JSystem/JGeometry/TQuat.hpp"
+
 #include "Game/Animation/AnmPlayer.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "JSystem/J3DGraphBase/J3DStruct.hpp"

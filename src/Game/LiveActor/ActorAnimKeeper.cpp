@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/LiveActor/ActorAnimKeeper.hpp"
 #include "Game/System/ResourceHolder.hpp"
 #include "Game/Util/LiveActorUtil.hpp"

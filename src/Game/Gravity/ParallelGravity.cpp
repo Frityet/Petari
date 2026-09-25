@@ -3,7 +3,7 @@
 #include "Inline.hpp"
 #include "JSystem/JMath.hpp"
 
-void DUMMY() {
+static void DUMMY() {
     // emit operator-()
     TVec3f a;
     TVec3f b = -a;

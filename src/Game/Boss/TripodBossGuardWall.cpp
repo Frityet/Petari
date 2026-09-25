@@ -1,5 +1,5 @@
 #include "Game/Util/Functor.hpp"
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/TripodBossGuardWall.hpp"
 #include "Game/Boss/TripodBossAccesser.hpp"
 #include "Game/Camera/CameraTargetArg.hpp"

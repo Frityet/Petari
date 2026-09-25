@@ -154,7 +154,7 @@ rendering parity. Source and build ownership evidence is recorded in `notes/`.
 ## Original string encoding
 
 Keep source files in UTF-8. Original narrow strings containing Japanese text
-must use `CP932("日本語")` from `compat/Cp932Literal.hpp`. Conversion happens
+must use `CP932("日本語")` from `resource/TextEncoding.hpp`. Conversion happens
 entirely at compile time, with no compiler wrapper or runtime allocation. ASCII
 strings and original wide strings keep their normal spelling. Put adjacent
 literals inside one wrapper: `CP932("日本" "語")`.

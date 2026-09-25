@@ -4,6 +4,7 @@
 #include "JSystem/JKernel/JKRDisposer.hpp"
 #include "JSystem/JSupport/JSUList.hpp"
 #include <revolution.h>
+#include <atomic>
 #include <cstddef>
 #include <cstdint>
 
@@ -179,10 +180,10 @@ public:
         return mCodeEnd;
     }
     static void* getUserRamStart(void) {
-        return mUserRamStart;
+        return mUserRamStart.load(std::memory_order_acquire);
     }
     static void* getUserRamEnd(void) {
-        return mUserRamEnd;
+        return mUserRamEnd.load(std::memory_order_relaxed);
     }
     static u32 getMemorySize(void) {
         return mMemorySize;
@@ -216,8 +217,10 @@ public:
 
     static void* mCodeStart;
     static void* mCodeEnd;
-    static void* mUserRamStart;
-    static void* mUserRamEnd;
+    // The original root-arena bounds also identify pointers lacking native
+    // allocation provenance. Atomic publication keeps global delete lock-free.
+    static std::atomic< void* > mUserRamStart;
+    static std::atomic< void* > mUserRamEnd;
     static u32 mMemorySize;
 
     inline void* getStartAddr() const {
@@ -255,8 +258,14 @@ void* operator new(std::size_t, int);
 void* operator new(std::size_t, JKRHeap*);
 void* operator new(std::size_t, JKRHeap*, int);
 void* operator new[](std::size_t, int);
-
+void* operator new[](std::size_t, JKRHeap*);
 void* operator new[](std::size_t, JKRHeap*, int);
+void operator delete(void*, int) noexcept;
+void operator delete(void*, JKRHeap*) noexcept;
+void operator delete(void*, JKRHeap*, int) noexcept;
+void operator delete[](void*, int) noexcept;
+void operator delete[](void*, JKRHeap*) noexcept;
+void operator delete[](void*, JKRHeap*, int) noexcept;
 #endif
 
 inline void* JKRAllocFromHeap(JKRHeap* heap, u32 size, int alignment) {

@@ -6,7 +6,7 @@
 #include "Game/Util/StringUtil.hpp"
 #include "JSystem/JSupport/JSUMemoryInputStream.hpp"
 #include "JSystem/JSupport/JSUMemoryOutputStream.hpp"
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 
 namespace {
     const GameEventValue cGameEventValueTable[] = {

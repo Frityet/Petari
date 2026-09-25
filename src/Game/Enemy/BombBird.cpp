@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Enemy/BombBird.hpp"
 #include "Game/Enemy/AnimScaleController.hpp"
 #include "Game/Enemy/BombBirdBomb.hpp"

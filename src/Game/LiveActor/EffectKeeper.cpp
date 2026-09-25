@@ -1,3 +1,4 @@
+#include <functional.hpp>
 #include "Game/Effect/EffectSystem.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/EffectKeeper.hpp"

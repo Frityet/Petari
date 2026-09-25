@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/TombSpiderStateSwoon.hpp"
 #include "Game/Boss/TombSpider.hpp"
 #include "Game/LiveActor/Nerve.hpp"

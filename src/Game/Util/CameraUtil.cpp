@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #if !defined(NDEBUG)
 #include <aurora/exception.hpp>

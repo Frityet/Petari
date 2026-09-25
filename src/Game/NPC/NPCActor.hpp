@@ -1,5 +1,7 @@
 #pragma once
 
+#include "JSystem/JGeometry/TQuat.hpp"
+
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/TalkUtil.hpp"
 #include <JSystem/JGeometry/TMatrix.hpp>

@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Map/NamePosHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/JMapLinkInfo.hpp"

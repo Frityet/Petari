@@ -1,5 +1,6 @@
+#include "Game/Util/DirectDraw.hpp"
 #include <dolphin/gx.h>
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/LiveActor/ShadowVolumeBox.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowController.hpp"

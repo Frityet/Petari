@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Screen/MiiSelect.hpp"
 
 #include "Game/LiveActor/Nerve.hpp"

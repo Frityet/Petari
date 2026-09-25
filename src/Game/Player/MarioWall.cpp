@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #if !defined(TARGET_PC)
 #define JMAAcosRadian JMAAcosRadianInline
 #endif

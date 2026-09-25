@@ -1,5 +1,7 @@
 #pragma once
 
+#include "JSystem/JGeometry/TQuat.hpp"
+
 #include "Game/Enemy/Onimasu.hpp"
 #include "Game/Util/Array.hpp"
 

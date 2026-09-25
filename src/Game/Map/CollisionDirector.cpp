@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Map/CollisionDirector.hpp"
 #include "Game/Map/CollisionCategorizedKeeper.hpp"
 #include "Game/Map/CollisionCode.hpp"

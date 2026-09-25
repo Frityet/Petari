@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Enemy/Kameck.hpp"
 #include "Game/Enemy/AnimScaleController.hpp"
 #include "Game/Enemy/KameckBeam.hpp"

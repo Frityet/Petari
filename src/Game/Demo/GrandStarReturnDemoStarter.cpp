@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Demo/GrandStarReturnDemoStarter.hpp"
 #include "Game/Demo/AstroDemoFunction.hpp"
 #include "Game/Demo/ReturnDemoRailMove.hpp"

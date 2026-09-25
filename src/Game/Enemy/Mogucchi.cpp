@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Enemy/Mogucchi.hpp"
 #include "Game/Enemy/MogucchiHill.hpp"
 #include "Game/LiveActor/HitSensor.hpp"

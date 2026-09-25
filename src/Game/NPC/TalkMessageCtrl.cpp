@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/NPC/TalkMessageCtrl.hpp"
 #include "Game/AreaObj/MessageArea.hpp"
 #include "Game/LiveActor/ActorCameraInfo.hpp"

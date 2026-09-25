@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Player/MarioTeresa.hpp"
 
 #include "Game/Animation/XanimePlayer.hpp"

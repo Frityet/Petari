@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/MapObj/ClipAreaDropHolder.hpp"
 #include "Game/MapObj/ClipAreaDrop.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"

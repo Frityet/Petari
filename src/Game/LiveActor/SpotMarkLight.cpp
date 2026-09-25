@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/LiveActor/SpotMarkLight.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"

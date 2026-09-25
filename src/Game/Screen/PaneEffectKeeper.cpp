@@ -1,3 +1,5 @@
+#include <functional.hpp>
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Effect/EffectSystem.hpp"
 #include "Game/Screen/PaneEffectKeeper.hpp"
 #include "Game/Effect/EffectSystemUtil.hpp"

@@ -1,0 +1,86 @@
+{
+  "scope": "Canonical JKernel allocation operators/root arena and authoritative Aurora MEM2 containment",
+  "files": [
+    {
+      "path": "src/JSystem/JKernel/JKRHeap.hpp",
+      "before": "notes/compat-owner-removal-round20-20260925/allocation/before/src/JSystem/JKernel/JKRHeap.hpp",
+      "before_sha256": "86b6e9d91207997abfbf9007f864c094abb2e1aa9dedb51d76129d00b1f3f490",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "modify",
+      "after_sha256": "8e00cd27a66b62213ce3888538b8514758fc2ddece8480498b0aaf67d1fea384"
+    },
+    {
+      "path": "src/JSystem/JKernel/JKRHeap.cpp",
+      "before": "notes/compat-owner-removal-round20-20260925/allocation/before/src/JSystem/JKernel/JKRHeap.cpp",
+      "before_sha256": "ea16d11dcff0732fbcd1558fc9999371db7b38ffb91e689d12033c4e4bf224cb",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "modify",
+      "after_sha256": "89cc0335dc6823ad24dfcc7758ef8a16350c8afff5d4a7eaa8b70b52c3970150"
+    },
+    {
+      "path": "src/JSystem/JKernel/JKRExpHeap.hpp",
+      "before": "notes/compat-owner-removal-round20-20260925/allocation/before/src/JSystem/JKernel/JKRExpHeap.hpp",
+      "before_sha256": "babfda0eaa89267e76f7474d852053cf053ccbd5b224f4a0846bf17127300f0c",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "modify",
+      "after_sha256": "68f4a0797e3a523c6011d22d8bfdd007bdf990b430702c3de4557baad181b25d"
+    },
+    {
+      "path": "src/JSystem/JKernel/JKRExpHeap.cpp",
+      "before": "notes/compat-owner-removal-round20-20260925/allocation/before/src/JSystem/JKernel/JKRExpHeap.cpp",
+      "before_sha256": "163e3cb540c89b58194babce23bccf814879dd6bb448592b2d354450b3575bf0",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "modify",
+      "after_sha256": "f003b863ae64e718da9affea80e92beef6ceb23a7f5f5c49f619b39e00d1e40c"
+    },
+    {
+      "path": "src/compat/JkrAllocationDomain.cpp",
+      "before": "notes/compat-owner-removal-round20-20260925/allocation/before/src/compat/JkrAllocationDomain.cpp",
+      "before_sha256": "506f5b852e52336b2be101b07995447e551fb386f95aa23d18311c1361f66d2a",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "modify",
+      "after_sha256": "f213040bcd386624fd6cc1c7f01d6b50680a49fb1c822616506a78ae632975a4"
+    },
+    {
+      "path": "aurora/include/aurora/mem2_arena.hpp",
+      "before": "notes/compat-owner-removal-round20-20260925/allocation/before/aurora/include/aurora/mem2_arena.hpp",
+      "before_sha256": "c14fc4935cc015dc6287862386c606ba8efdd59cad3276bad8f4a7ee67799323",
+      "initial_git_status": "clean",
+      "git_root": "aurora",
+      "action": "modify",
+      "after_sha256": "4557c65f57a6a6942ca9e7e4dd21e74568f0af67d5008fbb0b894d91cda65b4d"
+    },
+    {
+      "path": "aurora/lib/dolphin/os/OSArena.cpp",
+      "before": "notes/compat-owner-removal-round20-20260925/allocation/before/aurora/lib/dolphin/os/OSArena.cpp",
+      "before_sha256": "87da39aadc19791051101a9367d0215d516f0416f17ca732642d9b0b08e5c4ff",
+      "initial_git_status": "clean",
+      "git_root": "aurora",
+      "action": "modify",
+      "after_sha256": "9bdbd4cde477736d6390e64fec966edfb9ca6e90287a52958ef257405958bedb"
+    },
+    {
+      "path": "src/compat/MetrowerksAlignedNew.cpp",
+      "before": "notes/compat-owner-removal-round20-20260925/allocation/before/src/compat/MetrowerksAlignedNew.cpp",
+      "before_sha256": "ff68d14a0c89f0f5a064b59081d4c782fbd51c4d37984c5500fc13f9df8ec4d2",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/JkrAllocationRouting.hpp",
+      "before": "notes/compat-owner-removal-round20-20260925/allocation/before/src/compat/JkrAllocationRouting.hpp",
+      "before_sha256": "5659fd86c0d58f640acbfb8154411c3edb7f0ed22940686eda64c096dba903c1",
+      "initial_git_status": "clean",
+      "git_root": ".",
+      "action": "delete",
+      "after_sha256": null
+    }
+  ]
+}

@@ -1,4 +1,5 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
+#include "JSystem/JGeometry/TQuat.hpp"
 #pragma once
 
 #include "Game/Camera/Camera.hpp"

@@ -1,3 +1,4 @@
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Screen/LayoutPaneCtrl.hpp"
 #include "Game/Animation/LayoutAnmPlayer.hpp"
 #include "Game/Screen/LayoutManager.hpp"

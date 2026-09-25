@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/AreaObj/FollowCollisionArea.hpp"
 #include "Game/AreaObj/CollisionArea.hpp"
 #include "Game/Util/MathUtil.hpp"

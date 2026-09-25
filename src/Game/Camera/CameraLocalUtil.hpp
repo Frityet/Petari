@@ -1,5 +1,7 @@
 #pragma once
 
+#include "JSystem/JGeometry/TQuat.hpp"
+
 #include <JSystem/JGeometry/TMatrix.hpp>
 
 class Camera;

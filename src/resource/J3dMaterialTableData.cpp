@@ -1,3 +1,4 @@
+#include <JSystem/JKernel/JKRHeap.hpp>
 #include "J3dMaterialTableData.hpp"
 #include "J3dAllocationIdentity.hpp"
 #include "J3dMaterialBlockData.hpp"

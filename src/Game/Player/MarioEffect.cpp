@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Player/MarioEffect.hpp"
 #include "Game/Effect/MultiEmitter.hpp"
 #include "Game/Effect/ParticleEmitter.hpp"

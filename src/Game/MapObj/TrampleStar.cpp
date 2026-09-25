@@ -1,3 +1,4 @@
+#include "Game/Util/DirectDraw.hpp"
 #include "Game/MapObj/TrampleStar.hpp"
 #include "Game/Util/DirectDrawUtil.hpp"
 #include "Game/LiveActor/AllLiveActorGroup.hpp"

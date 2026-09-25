@@ -1,0 +1,10 @@
+{
+  "paths": [
+    "aurora/lib/MSL_C/printf.cpp",
+    "aurora/include/MSL_C/stdio_api.h",
+    "aurora/include/MSL_C/stdio.h",
+    "aurora/cmake/aurora_msl.cmake",
+    "aurora/CMakeLists.txt",
+    "aurora/xmake.lua"
+  ]
+}

@@ -36,7 +36,7 @@ target("smg-pc-only-camera-tests")
     set_default(false)
     set_group("tests/aurora")
     set_rundir(os.projectdir())
-    add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), {force = true})
+    add_cxxflags("-include " .. path.join(os.projectdir(), "aurora/include/MSL_C/stdio.h"), {force = true})
     add_cxxflags("-fno-builtin-sprintf", "-fno-builtin-snprintf", "-fno-builtin-vsprintf", "-fno-builtin-vsnprintf", {force = true})
     add_files {
         "OnlyCameraTests.cpp"
@@ -65,7 +65,7 @@ target("smg-pc-camera-view-interpolator-tests")
     set_default(false)
     set_group("tests/aurora")
     set_rundir(os.projectdir())
-    add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), {force = true})
+    add_cxxflags("-include " .. path.join(os.projectdir(), "aurora/include/MSL_C/stdio.h"), {force = true})
     add_cxxflags("-fno-builtin-sprintf", "-fno-builtin-snprintf", "-fno-builtin-vsprintf", "-fno-builtin-vsnprintf", {force = true})
     add_files {
         "CameraViewInterpolatorTests.cpp"
@@ -92,7 +92,7 @@ target("smg-pc-file-select-exact-source-compile")
     set_kind("static")
     set_default(false)
     set_group("tests/source-boundary")
-    add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), { force = true })
+    add_cxxflags("-include " .. path.join(os.projectdir(), "aurora/include/MSL_C/stdio.h"), { force = true })
     add_cxxflags("-fno-builtin-sprintf", "-fno-builtin-snprintf", "-fno-builtin-vsprintf", "-fno-builtin-vsnprintf", {force = true})
     add_cxxflags("-include " .. path.join(os.projectdir(), "tests/FileSelectExactSourceCompileCompat.hpp"), { force = true })
     add_files {
@@ -527,31 +527,6 @@ target("smg-pc-actor-sensor-real-or-absent-tests")
         "aurora-vi"
     }
     add_tests("actor_sensor_real_or_absent", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
-target("smg-pc-actor-runtime-registry-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    add_files {
-        "ActorRuntimeRegistryTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("actor_runtime_registry", {
         group = "aurora",
         rundir = os.projectdir(),
         realtime_output = true
@@ -1850,7 +1825,7 @@ target("smg-pc-original-file-loader-tests")
     set_rundir(os.projectdir())
     add_files("OriginalFileLoaderTests.cpp")
     add_files("../src/Game/Util/FileUtil.cpp", {
-        cxxflags = "-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp")
+        cxxflags = "-include " .. path.join(os.projectdir(), "aurora/include/MSL_C/stdio.h")
     })
     add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
               "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
@@ -2022,7 +1997,7 @@ target("smg-pc-ppc-bitfield-abi-tests")
     set_group("tests/aurora")
     add_includedirs("../src", "../aurora/include")
     add_defines("TARGET_PC", "AURORA")
-    add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), {force = true})
+    add_cxxflags("-include " .. path.join(os.projectdir(), "aurora/include/MSL_C/stdio.h"), {force = true})
     add_files("PpcBitfieldAbiTests.cpp")
     add_tests("ppc_bitfield_abi", {
         group = "aurora", rundir = os.projectdir(), realtime_output = true
@@ -2113,7 +2088,7 @@ target("smg-pc-original-event-sequence-tests")
     set_group("tests/aurora")
     add_includedirs("../src", "../aurora/include")
     add_defines("TARGET_PC", "AURORA")
-    add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), {force = true})
+    add_cxxflags("-include " .. path.join(os.projectdir(), "aurora/include/MSL_C/stdio.h"), {force = true})
     add_cxxflags("-ffunction-sections", "-fdata-sections", {force = true})
     if is_plat("macosx", "iphoneos") then
         add_ldflags("-Wl,-dead_strip", {force = true})

@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/DodoryuDemo.hpp"
 #include "Game/Boss/Dodoryu.hpp"
 #include "Game/Camera/CameraTargetArg.hpp"

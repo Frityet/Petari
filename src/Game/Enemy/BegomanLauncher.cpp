@@ -1,5 +1,5 @@
 #include "Game/Util/Functor.hpp"
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 
 #include "Game/Enemy/BegomanLauncher.hpp"
 #include "Game/Enemy/BegomanBaby.hpp"

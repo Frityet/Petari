@@ -1,3 +1,4 @@
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/System/ArchiveHolder.hpp"
 #include "Game/Util.hpp"
 #include "resource/JMapResource.hpp"

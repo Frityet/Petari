@@ -1,5 +1,6 @@
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/Util/Functor.hpp"
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/MapObj/SpinDriverPathDrawer.hpp"
 #include "Game/MapObj/SpinDriverShootPath.hpp"
 #include "Game/Scene/SceneFunction.hpp"

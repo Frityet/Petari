@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Screen/StarPointerLayout.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/LayoutCoreUtil.hpp"

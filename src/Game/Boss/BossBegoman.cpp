@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/BossBegoman.hpp"
 #include "Game/Boss/BossBegomanHead.hpp"
 #include "Game/Enemy/BegomanBaby.hpp"

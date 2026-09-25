@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Demo/DemoCastGroup.hpp"
 #include "Game/LiveActor/LiveActorGroup.hpp"
 #include "Game/Util/JMapIdInfo.hpp"

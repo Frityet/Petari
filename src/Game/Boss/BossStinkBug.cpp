@@ -1,5 +1,5 @@
 #include "Game/Util/Functor.hpp"
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/BossStinkBug.hpp"
 #include "Game/Boss/BossStinkBugActionSequencer.hpp"
 #include "Game/Boss/BossStinkBugBomb.hpp"

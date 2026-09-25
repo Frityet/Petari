@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Enemy/TakoHeiInkHolder.hpp"
 #include "Game/Enemy/TakoHeiInk.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"

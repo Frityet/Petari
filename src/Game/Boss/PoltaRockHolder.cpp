@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/PoltaRockHolder.hpp"
 #include "Game/Boss/PoltaRock.hpp"
 

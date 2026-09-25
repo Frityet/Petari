@@ -10,6 +10,7 @@
 #if !defined(__MWERKS__)
 #include <bit>
 #include <cmath>
+#include <concepts>
 #endif
 
 namespace MR {
@@ -605,6 +606,15 @@ namespace MR {
 
         return ret;
     }
+
+#if defined(TARGET_PC)
+    // Wii long is 32-bit; preserve the original integer overload on LP64 hosts.
+    template <std::integral Value, std::integral Minimum, std::integral Maximum>
+        requires (std::same_as<Value, long> || std::same_as<Minimum, long> || std::same_as<Maximum, long>)
+    inline s32 clamp(Value value, Minimum min, Maximum max) {
+        return clamp(static_cast<s32>(value), static_cast<s32>(min), static_cast<s32>(max));
+    }
+#endif
 
     /// @brief Restricts a number to the unit interval.
     /// @param[in,out] pX A pointer to the number to evaluate and initialize.

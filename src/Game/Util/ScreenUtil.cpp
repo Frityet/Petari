@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Scene/GameSceneFunction.hpp"
 #include "Game/Scene/PlayTimerScene.hpp"

@@ -1,3 +1,4 @@
+#include <functional.hpp>
 #include "Game/Scene/MultiSceneEffectKeeper.hpp"
 #include "Game/Effect/EffectSystemUtil.hpp"
 #include "Game/Effect/MultiEmitter.hpp"

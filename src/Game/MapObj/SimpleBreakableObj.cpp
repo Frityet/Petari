@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 
 #include "Game/MapObj/SimpleBreakableObj.hpp"
 #include "Game/LiveActor/ModelObj.hpp"

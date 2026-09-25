@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/BossKameckVs2.hpp"
 #include "Game/Boss/BossKameck.hpp"
 #include "Game/Boss/BossKameckBarrier.hpp"

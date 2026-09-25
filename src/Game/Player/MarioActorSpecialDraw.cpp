@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "revolution/os.h"
 #include "Game/Player/DLchanger.hpp"
 #include "Game/Player/J3DModelX.hpp"

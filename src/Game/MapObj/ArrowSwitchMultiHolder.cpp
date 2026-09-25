@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/MapObj/ArrowSwitchMultiHolder.hpp"
 #include "Game/MapObj/ArrowSwitchMulti.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"

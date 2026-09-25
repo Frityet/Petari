@@ -1,3 +1,4 @@
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Screen/ImageEffectState.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Screen/BloomEffect.hpp"

@@ -1,4 +1,5 @@
-#include "compat/Cp932Literal.hpp"
+#include <functional.hpp>
+#include "resource/TextEncoding.hpp"
 #include "Game/MapObj/MapPartsRailGuideDrawer.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util.hpp"

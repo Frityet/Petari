@@ -1,0 +1,90 @@
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/resource/J3dMaterialTableData.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/OriginalProcessTrace.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/SceneScheduler.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/JAudioPlaybackService.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/ParticleResourceOwnership.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/DebugWpadInputScript.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/WiiIosService.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/rfl/RVLFaceLib.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/RuntimeContext.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/DebugWpadInputFile.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/ParityTrace.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/WiiPlatformService.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/jut/OriginalDisplayLifetime.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/jut/JutTexture.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/RflService.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/ScenarioCatalogOwnership.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/ActorRuntimeRegistry.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/JAudioSoundParameterSemantics.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/jaudio/JasAramStreamPlatform.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/jaudio/JasGenericPoolPlatform.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/jaudio/JasStreamPcmBackend.cpp[0m
+[0m[38;5;3;1mIn file included from src/resource/J3dMaterialTableData.cpp:7:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/AudioFacadeCompat.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/JAudioCategoryVolumeOwnership.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/NativePcmSound.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/OriginalAudioVolumeController.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/DisabledObjectAudioService.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/JAudioLimitedSoundOwnership.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/OriginalObjectSoundState.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/JkrAllocationDomain.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/JaiStreamPlayback.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/DisabledAudioBackend.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/DisabledObjectAudio.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DMaterial.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DMatBlock.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphBase/J3DTevs.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DMaterialAnm.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DMaterialAttach.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J3DGraphAnimator/J3DShapeTable.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J2DGraph/J2DPicture.cpp[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J2DGraph/J2DOrthoGraph.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphBase/J3DMaterial.cpp:1:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J2DGraph/J2DPane.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J2DGraph/J2DManage.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J2DGraph/J2DScreen.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphAnimator/J3DMaterialAnm.cpp:2:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/J2DGraph/J2DGrafContext.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAResourceManager.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPATexture.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/J3DGraphAnimator/J3DMaterialAttach.cpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAChildShape.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAFieldBlock.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAMath.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPADynamicsBlock.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAEmitterManager.cpp[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAKeyBlock.cpp[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[1;38;5;1;1merror: [0msrc/JSystem/J3DGraphBase/J3DGD.hpp:81:39: error: unknown type name '_GXTlutFmt'; did you mean 'GXTlutFmt'?
+   81 | void J3DGDSetTexTlut(GXTexMapID, u32, _GXTlutFmt);
+      |                                       ^~~~~~~~~~
+      |                                       GXTlutFmt
+aurora/include/dolphin/gx/GXEnum.h:855:3: note: 'GXTlutFmt' declared here
+  855 | } GXTlutFmt;
+      |   ^
+In file included from src/JSystem/J3DGraphBase/J3DTevs.cpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning and 1 error generated.
+  [38;5;3m> in [1msrc/JSystem/J3DGraphBase/J3DTevs.cpp[0m

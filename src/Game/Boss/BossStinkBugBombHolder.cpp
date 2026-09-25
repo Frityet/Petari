@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/BossStinkBugBombHolder.hpp"
 #include "Game/Boss/BossStinkBugBomb.hpp"
 #include "Game/Util/LiveActorUtil.hpp"

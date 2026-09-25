@@ -1,5 +1,6 @@
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/Util/Functor.hpp"
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include <dolphin/gd/GDGeometry.h>
 #include "Game/MapObj/ElectricRail.hpp"
 #include "Game/AudioLib/AudAnmSoundObject.hpp"

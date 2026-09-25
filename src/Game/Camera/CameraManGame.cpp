@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Camera/CameraManGame.hpp"
 #include "Game/AreaObj/CubeCamera.hpp"
 #include "Game/Boss/SkeletalFishGuard.hpp"

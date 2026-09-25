@@ -1,5 +1,5 @@
 #include "Game/Util/Functor.hpp"
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/NPC/CollectTico.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NPC/StrayTico.hpp"

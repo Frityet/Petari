@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Boss/BossAccessor.hpp"
 #include "Game/Boss/Koopa.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"

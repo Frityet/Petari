@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/MapObj/ExterminationChecker.hpp"
 #include "Game/Boss/SkeletalFishBaby.hpp"
 #include "Game/Enemy/Kuribo.hpp"

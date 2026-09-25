@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Util/Functor.hpp"
 #include "Game/MapObj/ElectricBall.hpp"
 #include "Game/LiveActor/LiveActor.hpp"

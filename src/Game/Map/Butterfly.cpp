@@ -1,3 +1,4 @@
+#include <macros.h>
 #include "Game/Map/Butterfly.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/Nerve.hpp"

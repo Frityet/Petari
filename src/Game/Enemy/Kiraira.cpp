@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Enemy/Kiraira.hpp"
 #include "Game/Enemy/KirairaChain.hpp"
 #include "Game/LiveActor/HitSensor.hpp"

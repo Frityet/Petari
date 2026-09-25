@@ -1,3 +1,4 @@
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/AudioLib/AudUtil.hpp"
 #include "Game/Util/FileUtil.hpp"
 #include <JSystem/JAudio2/JASAiCtrl.hpp>

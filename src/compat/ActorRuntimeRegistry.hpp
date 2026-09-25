@@ -2,10 +2,6 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <optional>
-#include <span>
-#include <string>
-#include <string_view>
 #include <vector>
 
 #include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
@@ -38,17 +34,9 @@ namespace smgpc::compat {
         std::uint64_t next_registration_order = 0U;
     };
 
-    struct ActorBinderRuntimeConfig {
-        float radius = 0.0F;
-        float offset = 0.0F;
-        std::uint32_t plane_capacity = 0U;
-    };
-
     // Original names are borrowed, including member buffers filled after the
     // NameObj base constructor. Registration must not inspect their bytes.
     void register_name_obj_runtime_state(NameObj* object);
-    // Host factories retain their generated constructor names explicitly.
-    void retain_name_obj_host_name(NameObj* object, std::shared_ptr<const std::string> name);
     void release_name_obj_runtime_state(const NameObj* object);
     [[nodiscard]] bool has_name_obj_runtime_state(const NameObj* object);
     [[nodiscard]] std::uint64_t name_obj_runtime_generation(
@@ -61,8 +49,6 @@ namespace smgpc::compat {
     void claim_name_obj_runtime_ownership(NameObj* object,
                                           const void* owner);
     [[nodiscard]] bool name_obj_runtime_ownership_is_claimed(
-        const NameObj* object) noexcept;
-    [[nodiscard]] const void* name_obj_runtime_owner(
         const NameObj* object) noexcept;
     // Returns the currently live host-tracked NameObj identities in their
     // construction order. A marker provides the matching ordered suffix so a
@@ -85,10 +71,6 @@ namespace smgpc::compat {
     [[nodiscard]] bool name_obj_runtime_object_was_registered_since(
         const NameObj* object,
         NameObjRuntimeRegistrationMarker marker) noexcept;
-    // Failure rollback for compatibility owners. This performs no allocation
-    // and retires the still-live suffix in reverse construction order.
-    void destroy_name_obj_runtime_objects_since(
-        NameObjRuntimeRegistrationMarker marker) noexcept;
     [[nodiscard]] bool name_obj_is_suspended(const NameObj* object);
 
     // One generalized record owns every native-only LiveActor resource. The
@@ -105,7 +87,6 @@ namespace smgpc::compat {
     void adopt_actor_stage_switch(LiveActor* actor, StageSwitchCtrl* controller);
     void replace_actor_light_ctrl(LiveActor* actor);
     void adopt_actor_lod_ctrl(LiveActor* actor, LodCtrl* lod_ctrl);
-    [[nodiscard]] std::size_t actor_lod_ctrl_runtime_state_count();
 
     class JkrAllocationDomain;
     [[nodiscard]] std::shared_ptr<JkrAllocationDomain> actor_scene_allocation_domain(const LiveActor*);
@@ -114,17 +95,11 @@ namespace smgpc::compat {
                                 const char* animation_archive, bool create_display_list);
     void adopt_actor_animation_helpers(LiveActor* actor);
     [[nodiscard]] std::shared_ptr<ModelManager> retain_actor_model(const LiveActor* actor);
-    [[nodiscard]] std::optional<std::span<const std::uint8_t>>
-    actor_model_resource_data_if_present(const LiveActor* actor, std::string_view resource_name);
 
     // Borrow retirement only: Game's actual keeper owns all sensor storage.
     void retire_hit_sensor_borrows(const HitSensorKeeper* keeper) noexcept;
 
     void configure_actor_binder(LiveActor* actor, float radius, float offset, std::uint32_t plane_capacity);
-    void register_actor_binder(const LiveActor* actor);
-    [[nodiscard]] bool has_actor_binder(const LiveActor* actor);
-    [[nodiscard]] const ActorBinderRuntimeConfig* actor_binder_config(const LiveActor* actor);
-    void release_actor_binder_state(const LiveActor* actor);
 
     void retire_clipping_actor_holder(ClippingActorHolder& holder) noexcept;
     void retire_clipping_group_holder(ClippingGroupHolder& holder) noexcept;

@@ -5,7 +5,7 @@
 #include "Game/Util/CollisionPartsFilter.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include <algorithm>
 
 CollisionCategorizedKeeper::CollisionCategorizedKeeper(s32 category)

@@ -1,4 +1,4 @@
-#include "compat/Cp932Literal.hpp"
+#include "resource/TextEncoding.hpp"
 #include "Game/Screen/MarioMeter.hpp"
 #include "Game/Screen/MeterLayout.hpp"
 #include "Game/Screen/SuddenDeathMeter.hpp"

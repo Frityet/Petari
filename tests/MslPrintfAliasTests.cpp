@@ -1,4 +1,4 @@
-#include "compat/MetrowerksPrintf.hpp"
+#include <MSL_C/stdio.h>
 
 extern "C" int test_original_printf_alias(char *output, std::size_t size) {
     const char *absent = nullptr;

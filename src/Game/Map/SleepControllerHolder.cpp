@@ -1,4 +1,5 @@
-#include "compat/Cp932Literal.hpp"
+#include <functional.hpp>
+#include "resource/TextEncoding.hpp"
 #include "Game/Map/SleepControllerHolder.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
 #include "Game/LiveActor/LiveActor.hpp"

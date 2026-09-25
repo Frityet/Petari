@@ -1,5 +1,5 @@
+#include <MSL_C/stdio.h>
 #include "Game/Effect/ParticleResourceHolder.hpp"
-#include "compat/MetrowerksStdCompat.hpp"
 #include "app/OriginalGameApplication.hpp"
 #include "app/Application.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
