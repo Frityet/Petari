@@ -1,0 +1,2095 @@
+{
+  "scope": "Read-only source/resource map; no native compile/link/placement/gameplay validation. Rows are authored Common+LayerA scenario1; direct-factory absence is not a blocker for explicitly parent-owned children.",
+  "source_inventory": "notes/gateway-content-inventory-20260919/source-placement-inventory.json",
+  "native_factory_sha256": "6427cef75c8a01927155a0e53bd94afdf6addb2fe2fb6eafda2e455c416a80c8",
+  "rows": [
+    {
+      "zone": "HeavensDoorGalaxy",
+      "table": "/jmp/placement/layera/objinfo",
+      "row": 0,
+      "l_id": 2,
+      "name": "SpinDriver",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        90,
+        -1,
+        -1,
+        1,
+        -1,
+        0,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": 1127,
+        "SW_DEAD": -1
+      },
+      "common_path_id": 1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorGalaxy",
+      "table": "/jmp/placement/layera/objinfo",
+      "row": 2,
+      "l_id": 5,
+      "name": "SuperSpinDriver",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        300,
+        -1,
+        -1,
+        3,
+        -1,
+        -180,
+        -1,
+        0
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": 1017,
+        "SW_DEAD": -1
+      },
+      "common_path_id": 3,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorGalaxy",
+      "table": "/jmp/placement/layera/objinfo",
+      "row": 3,
+      "l_id": 8,
+      "name": "SuperSpinDriver",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        150,
+        350,
+        -1,
+        3,
+        -1,
+        170,
+        -1,
+        0
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": 1009,
+        "SW_DEAD": -1
+      },
+      "common_path_id": 4,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorMysteriousZone",
+      "table": "/jmp/placement/layera/objinfo",
+      "row": 4,
+      "l_id": 71,
+      "name": "CrystalCageM",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<CrystalCage>",
+      "args": [
+        0,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": 1017,
+        "SW_B": -1,
+        "SW_APPEAR": 1015,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 2
+    },
+    {
+      "zone": "HeavensDoorMysteriousZone",
+      "table": "/jmp/placement/layera/objinfo",
+      "row": 5,
+      "l_id": 72,
+      "name": "CrystalCageM",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<CrystalCage>",
+      "args": [
+        0,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        3
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": 1015,
+        "SW_DEAD": 1017
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 2
+    },
+    {
+      "zone": "HeavensDoorMysteriousZone",
+      "table": "/jmp/placement/layera/objinfo",
+      "row": 6,
+      "l_id": 73,
+      "name": "CrystalCageM",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<CrystalCage>",
+      "args": [
+        0,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": 1017,
+        "SW_B": -1,
+        "SW_APPEAR": 1015,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 2
+    },
+    {
+      "zone": "HeavensDoorMysteriousZone",
+      "table": "/jmp/placement/layera/objinfo",
+      "row": 7,
+      "l_id": 65,
+      "name": "Tico",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<Tico>",
+      "args": [
+        0,
+        0,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": 0,
+      "group_id": 2
+    },
+    {
+      "zone": "HeavensDoorSmallZone",
+      "table": "/jmp/childobj/common/childobjinfo",
+      "row": 0,
+      "l_id": 3,
+      "name": "ChildKuribo",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": 21,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorSmallZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 1,
+      "l_id": 9,
+      "name": "Tico",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<Tico>",
+      "args": [
+        0,
+        0,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": 1125,
+        "SW_B": 1124,
+        "SW_APPEAR": -1,
+        "SW_DEAD": 1127
+      },
+      "common_path_id": 0,
+      "parent_id": -1,
+      "demo_group_id": 0,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorSmallZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 2,
+      "l_id": 16,
+      "name": "CapsuleCage",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        0,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": 1125,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorSmallZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 3,
+      "l_id": 21,
+      "name": "ExterminationKuriboKeySwitch",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": 1125,
+        "SW_B": -1,
+        "SW_APPEAR": 1124,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorSmallZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 5,
+      "l_id": 17,
+      "name": "CrystalCageS",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        0
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorSmallZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 6,
+      "l_id": 18,
+      "name": "CrystalCageS",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        0
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorSmallZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 7,
+      "l_id": 19,
+      "name": "CrystalCageS",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        0
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorSmallZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 8,
+      "l_id": 20,
+      "name": "CrystalCageS",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        0
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorSmallZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 9,
+      "l_id": 23,
+      "name": "KuriboMini",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorSmallZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 10,
+      "l_id": 24,
+      "name": "KuriboMini",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorSmallZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 11,
+      "l_id": 25,
+      "name": "KuriboMini",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorSmallZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 13,
+      "l_id": 27,
+      "name": "KuriboMini",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorMiddleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 0,
+      "l_id": 7,
+      "name": "KuriboMini",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorMiddleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 1,
+      "l_id": 8,
+      "name": "Kuribo",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorMiddleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 2,
+      "l_id": 9,
+      "name": "Kuribo",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorMiddleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 3,
+      "l_id": 10,
+      "name": "Kuribo",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorMiddleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 8,
+      "l_id": 24,
+      "name": "CapsuleCage",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        0,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": 1100,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorMiddleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 9,
+      "l_id": 26,
+      "name": "Tico",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<Tico>",
+      "args": [
+        0,
+        0,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": 1100,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": 1008
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorMiddleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 10,
+      "l_id": 29,
+      "name": "RailCoin",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        8,
+        -1,
+        -1,
+        0,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": 0,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorMiddleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 12,
+      "l_id": 31,
+      "name": "KuriboChief",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        0
+      ],
+      "switches": {
+        "SW_A": 1100,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorMiddleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 13,
+      "l_id": 32,
+      "name": "Kuribo",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorMiddleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 14,
+      "l_id": 33,
+      "name": "Kuribo",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorMiddleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 23,
+      "l_id": 42,
+      "name": "KuriboMini",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorMiddleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 24,
+      "l_id": 43,
+      "name": "Tico",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<Tico>",
+      "args": [
+        0,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 0,
+      "l_id": 2,
+      "name": "FlipPanelObserver",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<FlipPanelObserver>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": 0,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 0
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 1,
+      "l_id": 16,
+      "name": "Kuribo",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 2,
+      "l_id": 17,
+      "name": "Kuribo",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 3,
+      "l_id": 24,
+      "name": "Tico",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<Tico>",
+      "args": [
+        -1,
+        0,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": 0,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 4,
+      "l_id": 25,
+      "name": "Tico",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<Tico>",
+      "args": [
+        -1,
+        8,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": 0,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 6,
+      "l_id": 28,
+      "name": "HeavensDoorInsideCage",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<HeavensDoorDemoObj>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        0,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": 0,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 8,
+      "l_id": 31,
+      "name": "HeavensDoorInsidePlanetPartsA",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<HeavensDoorDemoObj>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        0,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": 0,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 17,
+      "l_id": 49,
+      "name": "FlipPanelReverse",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<FlipPanel>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 0
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 18,
+      "l_id": 52,
+      "name": "Kuribo",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 19,
+      "l_id": 53,
+      "name": "RailCoin",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        6,
+        -1,
+        -1,
+        0,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": 1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 20,
+      "l_id": 58,
+      "name": "FlipPanelReverse",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<FlipPanel>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 0
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 21,
+      "l_id": 59,
+      "name": "FlipPanelReverse",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<FlipPanel>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 0
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 22,
+      "l_id": 60,
+      "name": "FlipPanelReverse",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<FlipPanel>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 0
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 23,
+      "l_id": 61,
+      "name": "FlipPanelReverse",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<FlipPanel>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 0
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 24,
+      "l_id": 62,
+      "name": "FlipPanelReverse",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<FlipPanel>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 0
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 25,
+      "l_id": 63,
+      "name": "FlipPanelReverse",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<FlipPanel>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 0
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 26,
+      "l_id": 64,
+      "name": "FlipPanelReverse",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<FlipPanel>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 0
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 27,
+      "l_id": 65,
+      "name": "FlipPanelReverse",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<FlipPanel>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 0
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 28,
+      "l_id": 66,
+      "name": "FlipPanelReverse",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<FlipPanel>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 0
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 29,
+      "l_id": 67,
+      "name": "FlipPanelReverse",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<FlipPanel>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 0
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 30,
+      "l_id": 68,
+      "name": "FlipPanelReverse",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<FlipPanel>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 0
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 31,
+      "l_id": 69,
+      "name": "FlipPanelReverse",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<FlipPanel>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 0
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 32,
+      "l_id": 70,
+      "name": "FlipPanelReverse",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<FlipPanel>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 0
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 33,
+      "l_id": 71,
+      "name": "FlipPanelReverse",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<FlipPanel>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 0
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 34,
+      "l_id": 72,
+      "name": "FlipPanelReverse",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<FlipPanel>",
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": 0
+    },
+    {
+      "zone": "HeavensDoorInsideZone",
+      "table": "/jmp/placement/layera/objinfo",
+      "row": 0,
+      "l_id": 26,
+      "name": "GrandStar",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<PowerStar>",
+      "args": [
+        1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": 0,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensBlackHoleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 0,
+      "l_id": 14,
+      "name": "BlackHole",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        1500,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": 1016,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensBlackHoleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 1,
+      "l_id": 15,
+      "name": "YellowChipGroup",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        0,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": 1009,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensBlackHoleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 2,
+      "l_id": 16,
+      "name": "YellowChip",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        0,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensBlackHoleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 3,
+      "l_id": 17,
+      "name": "YellowChip",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        0,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": 80,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensBlackHoleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 4,
+      "l_id": 18,
+      "name": "YellowChip",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        0,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensBlackHoleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 5,
+      "l_id": 19,
+      "name": "YellowChip",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        0,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensBlackHoleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 6,
+      "l_id": 20,
+      "name": "YellowChip",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        0,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensBlackHoleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 7,
+      "l_id": 21,
+      "name": "MeteorCannon",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        20,
+        3,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": 21,
+        "SW_DEAD": -1
+      },
+      "common_path_id": 0,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensBlackHoleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 8,
+      "l_id": 22,
+      "name": "MeteorCannon",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        20,
+        3,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": 21,
+        "SW_DEAD": -1
+      },
+      "common_path_id": 1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensBlackHoleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 9,
+      "l_id": 24,
+      "name": "KuriboMini",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensBlackHoleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 10,
+      "l_id": 25,
+      "name": "Tico",
+      "native_direct_factory_present": true,
+      "native_constructor": "create_supported_name_obj<Tico>",
+      "args": [
+        -1,
+        0,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": 1009,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensBlackHoleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 12,
+      "l_id": 29,
+      "name": "CrystalCageS",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        0
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": 81
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensBlackHoleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 13,
+      "l_id": 30,
+      "name": "CrystalCageS",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        11
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": 80
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensBlackHoleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 14,
+      "l_id": 32,
+      "name": "CrystalCageS",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        0
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": 82
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    },
+    {
+      "zone": "HeavensBlackHoleZone",
+      "table": "/jmp/placement/common/objinfo",
+      "row": 16,
+      "l_id": 35,
+      "name": "KuriboMini",
+      "native_direct_factory_present": false,
+      "native_constructor": null,
+      "args": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "switches": {
+        "SW_A": -1,
+        "SW_B": -1,
+        "SW_APPEAR": -1,
+        "SW_DEAD": -1
+      },
+      "common_path_id": -1,
+      "parent_id": -1,
+      "demo_group_id": -1,
+      "group_id": -1
+    }
+  ]
+}
