@@ -1,5 +1,4 @@
 #include "Game/System/SaveDataBannerCreator.hpp"
-#include "compat/MessageUtilCompat.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/System/NANDManager.hpp"
 #include "Game/Util/MemoryUtil.hpp"

@@ -6,6 +6,11 @@ namespace MR {
     const wchar_t* getSystemMessageDirect(const char*);
     const wchar_t* getGameMessageDirect(const char*);
     const wchar_t* getLayoutMessageDirect(const char*);
+#if defined(TARGET_PC)
+    // Native byte-oriented clients retain the Wii UTF-16 code-unit width.
+    const u16* getGameMessageDirectUtf16(const char*);
+    const u16* getSystemMessageDirectUtf16(const char*);
+#endif
     const wchar_t* getCurrentGalaxyNameOnCurrentLanguage();
     const wchar_t* getCurrentGalaxyNameShortOnCurrentLanguage();
     const wchar_t* getCurrentScenarioNameOnCurrentLanguage();

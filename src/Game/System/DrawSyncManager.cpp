@@ -1,6 +1,11 @@
 #include "Game/System/DrawSyncManager.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/Util/SingletonHolder.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
+#include <aurora/guest_thread.hpp>
+#include <dolphin/gx/GXAurora.h>
+#include <algorithm>
+#include <exception>
 #include <stdint.h>
 
 DrawSyncManager* DrawSyncManager::sInstance = nullptr;
@@ -121,10 +126,61 @@ DrawSyncManager::DrawSyncManager(u32 count, s32 priority)
 }
 
 DrawSyncManager::~DrawSyncManager() {
+    const aurora::os::GuestThreadExecutionScope execution;
+    quiesceNativeCallbacks();
     GXSetDrawSyncCallback(0);
     GXDisableBreakPt();
     OSSendMessage(&mQueue, (void*)0x10000, OS_MESSAGE_BLOCK);
     OSJoinThread(&mThread, 0);
+    delete mFifo;
+    delete[] mMessages;
+    delete[] mStack;
+}
+
+void DrawSyncManager::quiesceNativeCallbacks() {
+    const aurora::os::GuestThreadExecutionScope execution;
+    DrawSyncManager* manager = sInstance;
+    if (!manager) return;
+    AuroraDrainGXCommands();
+    // A GPU callback queues an acknowledgement after invoking Game. Let the
+    // original worker finish both queues before changing borrowed callbacks.
+    while (manager->mQueue.usedCount != 0 || manager->mFifo->getCount() != 0)
+        OSYieldThread();
+}
+
+void DrawSyncManager::retireNativeCallbacks(const JKRHeap& heap) {
+    const aurora::os::GuestThreadExecutionScope execution;
+    DrawSyncManager* manager = sInstance;
+    if (!manager) return;
+    quiesceNativeCallbacks();
+    for (auto& range : manager->mTokenRanges) {
+        if (range.mCallback && heap.find(range.mCallback))
+            range = {};
+    }
+}
+
+DrawSyncManager::CallbackRegistration::CallbackRegistration() {
+    const aurora::os::GuestThreadExecutionScope execution;
+    mManager = sInstance;
+    if (!mManager) return;
+    quiesceNativeCallbacks();
+    std::copy(std::begin(mManager->mTokenRanges), std::end(mManager->mTokenRanges), mRanges.begin());
+    mLow = mManager->_36E;
+    mHigh = mManager->_370;
+}
+
+DrawSyncManager::CallbackRegistration::~CallbackRegistration() { rollback(); }
+void DrawSyncManager::CallbackRegistration::commit() noexcept { mManager = nullptr; }
+
+void DrawSyncManager::CallbackRegistration::rollback() {
+    const aurora::os::GuestThreadExecutionScope execution;
+    if (!mManager) return;
+    if (sInstance != mManager) std::terminate();
+    quiesceNativeCallbacks();
+    std::copy(mRanges.begin(), mRanges.end(), std::begin(mManager->mTokenRanges));
+    mManager->_36E = mLow;
+    mManager->_370 = mHigh;
+    mManager = nullptr;
 }
 
 u16 DrawSyncManager::setCallback(u32 index, u16 count, DrawSyncCallback* pCallback) {

@@ -1,6 +1,5 @@
 #include "Game/System/DrawSyncManager.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
-#include "compat/DrawSyncManagerLifetime.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 
 #include <aurora/aurora.h>
@@ -40,7 +39,7 @@ struct CallbackOwner {
         require(domain->heap().find(callback.get()), "callback must belong to its actual JKR heap");
     }
     ~CallbackOwner() {
-        smgpc::compat::retire_draw_sync_callbacks(domain->heap());
+        DrawSyncManager::retireNativeCallbacks(domain->heap());
         callback.reset();
     }
 };
@@ -52,7 +51,13 @@ void submit(u16 token) {
 
 void verify_retirement(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
     using namespace smgpc::compat;
-    DrawSyncManagerLifetime owner(heaps);
+    const auto managerDomain = JkrAllocationDomain::create(heaps, 128U * 1024U);
+    {
+        const JkrAllocationScope allocation(managerDomain);
+        DrawSyncManager::start(0x300, 15);
+    }
+    const std::unique_ptr<DrawSyncManager, void (*)(DrawSyncManager*)> owner(
+        DrawSyncManager::sInstance, [](DrawSyncManager*) { DrawSyncManager::end(); });
     auto& manager = *DrawSyncManager::sInstance;
     CallbackOwner scene(JkrAllocationDomain::create(heaps, 64U * 1024U));
     CallbackOwner process(JkrAllocationDomain::create(heaps, 64U * 1024U));
@@ -65,14 +70,14 @@ void verify_retirement(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& hea
         submit(secondToken);
     }
     GXDrawDone();
-    quiesce_draw_sync();
+    DrawSyncManager::quiesceNativeCallbacks();
     require(scene.callback->count == 64 && process.callback->count == 64,
             "all original callback ranges must complete");
 
     // Retirement must dispatch and acknowledge pending work before it removes
     // the callback range. Otherwise the original breakpoint Fifo cannot drain.
     submit(firstToken);
-    retire_draw_sync_callbacks(scene.domain->heap());
+    DrawSyncManager::retireNativeCallbacks(scene.domain->heap());
     require(scene.callback->count == 65 && manager.mTokenRanges[2].mCallback == nullptr,
             "pending scene callback must finish before heap registration retirement");
     require(manager.mTokenRanges[4].mCallback == process.callback.get(),
@@ -86,12 +91,12 @@ void verify_retirement(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& hea
     std::copy(std::begin(manager.mTokenRanges), std::end(manager.mTokenRanges), ranges.begin());
     submit(secondToken);
     {
-        DrawSyncRegistrationTransaction outer;
+        DrawSyncManager::CallbackRegistration outer;
         require(process.callback->count == 65,
                 "transaction entry must acknowledge an old pending token before its range can be replaced");
         const auto temporaryLow = manager.setCallback(1, 1, transient.callback.get());
         {
-            DrawSyncRegistrationTransaction inner;
+            DrawSyncManager::CallbackRegistration inner;
             const auto temporaryHigh = manager.setCallback(4, 1, transient.callback.get());
             submit(temporaryLow);
             submit(temporaryHigh);
@@ -109,7 +114,7 @@ void verify_retirement(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& hea
                 "rollback must restore all original callback ranges exactly");
     }
     submit(secondToken);
-    quiesce_draw_sync();
+    DrawSyncManager::quiesceNativeCallbacks();
     require(process.callback->count == 66, "restored process callback must still run");
     GXBool overflow, underflow, readIdle, commandIdle, breakpoint;
     GXGetGPStatus(&overflow, &underflow, &readIdle, &commandIdle, &breakpoint);

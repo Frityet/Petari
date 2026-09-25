@@ -1,0 +1,33 @@
+{
+  "base_head": "9a878db96c78bdb08c57c6948bba6da655a24637",
+  "paths": [
+    {
+      "path": "src/Game/Util/CameraUtil.cpp",
+      "status_before": "",
+      "before_sha256": "030eccec707ef0a85bc85e8c6de0c213ae87014394637413b086b926f2654754",
+      "action": "inline-existing-debug-check",
+      "after_sha256": "2cd84a11957c8407f5df728afcba81f5150af80d480e5e37427732c6e943795d"
+    },
+    {
+      "path": "src/Game/Player/MarioAccess.cpp",
+      "status_before": "",
+      "before_sha256": "39fbc989612952af886f2c189061b2c05159bd9a24ecb67bc980f31985ef3174",
+      "action": "inline-existing-debug-check",
+      "after_sha256": "cd9bb91a62b665fab9f7ce60db3f9188e65949efcdb68b8b5c89434f5fc688a9"
+    },
+    {
+      "path": "src/compat/OriginalGameDiagnostics.cpp",
+      "status_before": "",
+      "before_sha256": "a9074c2eae7ecfbf846dfcc062c167585570d9ef382ff93697a68cadfe7aac0d",
+      "action": "delete",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/OriginalGameDiagnostics.hpp",
+      "status_before": "",
+      "before_sha256": "23fb3bc2bacf7c39196b917ad11bcf53be9b04b31826ed874165b84343d191b1",
+      "action": "delete",
+      "after_sha256": null
+    }
+  ]
+}

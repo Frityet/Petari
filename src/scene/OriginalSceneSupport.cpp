@@ -10,7 +10,7 @@
 #include "Game/Util/SingletonHolder.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "compat/DrawSyncManagerLifetime.hpp"
+#include "Game/System/DrawSyncManager.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -93,7 +93,7 @@ public:
     }
 
     void prepare_retirement() noexcept {
-        compat::retire_draw_sync_callbacks(_domain->heap());
+        DrawSyncManager::retireNativeCallbacks(_domain->heap());
         _objects->prepare_retirement();
     }
     Scene& scene() const noexcept { return *_scene; }

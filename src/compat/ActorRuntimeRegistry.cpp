@@ -1,6 +1,6 @@
 #include "Game/Demo/DemoDirector.hpp"
 #include "Game/Demo/DemoExecutor.hpp"
-#include "compat/TalkDirectorLifetime.hpp"
+#include "Game/NPC/TalkDirector.hpp"
 #include <aurora/exception.hpp>
 #include "Game/Screen/StarPointerTarget.hpp"
 #include "compat/EffectSystemOwnership.hpp"
@@ -215,12 +215,13 @@ namespace smgpc::compat {
     }
 
     void release_name_obj_runtime_state(const NameObj* object) {
-        if (auto* talk = smgpc::scene::current_talk_director_lifetime()) talk->release_name_obj(object);
         // Groups borrow their members. Native factory rollback and object
         // retirement may leave the group alive after one member is deleted.
         // Scan actual groups so direct original registerObj calls are covered.
         for (const auto& [registered, state] : name_obj_states()) {
             if (registered == object) continue;
+            if (auto* talk = dynamic_cast<TalkDirector*>(const_cast<NameObj*>(registered)))
+                talk->releaseNativeReference(object);
             if (auto* director = dynamic_cast<DemoDirector*>(const_cast<NameObj*>(registered)))
                 director->releaseNativeReference(object);
             if (auto* executor = dynamic_cast<DemoExecutor*>(const_cast<NameObj*>(registered)))

@@ -1,0 +1,15 @@
+[
+  "src/Game/System/DrawSyncManager.cpp",
+  "src/Game/System/DrawSyncManager.hpp",
+  "src/compat/DrawSyncManagerLifetime.cpp",
+  "src/compat/DrawSyncManagerLifetime.hpp",
+  "src/runtime/RuntimeContext.cpp",
+  "src/runtime/RuntimeContext.hpp",
+  "src/scene/OriginalSceneSupport.cpp",
+  "src/compat/SceneObjHolderCompat.cpp",
+  "src/app/OriginalGameApplication.cpp",
+  "src/Game/Screen/StarPointerDirector.cpp",
+  "tests/OriginalDrawSyncManagerTests.cpp",
+  "tests/OriginalJutVideoTests.cpp",
+  "tests/OriginalStarPointerOwnerTests.cpp"
+]

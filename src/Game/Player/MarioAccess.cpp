@@ -19,7 +19,10 @@
 #include "Game/Util/FixedPosition.hpp"
 
 #if !defined(NDEBUG)
-#include "compat/OriginalGameDiagnostics.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
+#include <aurora/exception.hpp>
+#include <stdexcept>
+#include <string>
 #endif
 
 namespace MarioAccess {
@@ -639,7 +642,15 @@ namespace MarioAccess {
 
     MarioActor* getPlayerActor() {
 #if !defined(NDEBUG)
-        smgpc::compat::validate_player_owner_for_debug();
+        auto* sceneHolder = MR::getSceneObjHolder();
+        auto* holder = sceneHolder != nullptr ? static_cast<MarioHolder*>(sceneHolder->getObj(SceneObj_MarioHolder)) : nullptr;
+        if (holder == nullptr) {
+            aurora::throw_host_exception<std::logic_error>(
+                "Original game utility requires active SceneObj " + std::to_string(SceneObj_MarioHolder));
+        }
+        if (holder->getMarioActor() == nullptr) {
+            aurora::throw_host_exception<std::logic_error>("Original player utility requires MarioHolder's actual MarioActor");
+        }
 #endif
         return MR::getMarioHolder()->getMarioActor();
     }

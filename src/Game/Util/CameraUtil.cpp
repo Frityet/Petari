@@ -1,7 +1,9 @@
 #include "compat/Cp932Literal.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #if !defined(NDEBUG)
-#include "compat/OriginalGameDiagnostics.hpp"
+#include <aurora/exception.hpp>
+#include <stdexcept>
+#include <string>
 #endif
 #include "Game/Camera/CameraAnim.hpp"
 #include "Game/Camera/CameraCalc.hpp"
@@ -55,7 +57,11 @@ namespace {
 
     CameraContext* getCameraContext() {
 #if !defined(NDEBUG)
-        smgpc::compat::require_scene_object_for_debug(SceneObj_CameraContext);
+        auto* holder = MR::getSceneObjHolder();
+        if (holder == nullptr || holder->getObj(SceneObj_CameraContext) == nullptr) {
+            aurora::throw_host_exception<std::logic_error>(
+                "Original game utility requires active SceneObj " + std::to_string(SceneObj_CameraContext));
+        }
 #endif
         return MR::getSceneObj< CameraContext >(SceneObj_CameraContext);
     }

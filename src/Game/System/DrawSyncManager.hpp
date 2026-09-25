@@ -1,6 +1,9 @@
 #pragma once
 
 #include <revolution.h>
+#include <array>
+
+class JKRHeap;
 
 class DrawSyncCallback {
 public:
@@ -15,6 +18,8 @@ public:
     Fifo(u32 count) : mCount(count), mLoopIdx(0), _C(0) {
         mArray = new void*[mCount + 1];
     }
+
+    ~Fifo() { delete[] mArray; }
 
     void* pop();
     u32 getLoopIdx(u32);
@@ -39,6 +44,27 @@ public:
         u16 mEnd;
         DrawSyncCallback* mCallback;
     };
+
+    // Failed native construction must restore the actual callback ranges before
+    // destroying objects that a submitted token may still reference.
+    class CallbackRegistration {
+    public:
+        CallbackRegistration();
+        ~CallbackRegistration();
+        CallbackRegistration(const CallbackRegistration&) = delete;
+        CallbackRegistration& operator=(const CallbackRegistration&) = delete;
+        void commit() noexcept;
+        void rollback();
+
+    private:
+        DrawSyncManager* mManager = nullptr;
+        std::array<TDrawSyncTokenRange, 5> mRanges;
+        u16 mLow = 0;
+        u16 mHigh = 0;
+    };
+
+    static void quiesceNativeCallbacks();
+    static void retireNativeCallbacks(const JKRHeap&);
 
     DrawSyncManager(u32, s32);
 

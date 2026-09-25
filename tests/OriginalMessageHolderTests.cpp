@@ -9,7 +9,6 @@
 #include "Game/Util/MessageUtil.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "nw4r/ut/ResFont.h"
-#include "compat/MessageUtilCompat.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/BmgMessageArchive.hpp"
 #include "resource/GameResourceRuntime.hpp"
@@ -229,7 +228,7 @@ void original_holder(smgpc::resource::GameResourceRuntime& process, FileLoader& 
             require(holder.mGameMessageData->mIDTable->getValue(0, "MessageId", &id), "the first game ID is authored");
             const auto* message = MR::getGameMessageDirect(id);
             require(message && message == MR::getLayoutMessageDirect(id) && MR::getGameMessageDirectUtf16(id) &&
-                        MR::isExistGameMessage(id) && smgpc::compat::layout_message_id_for_pointer(message),
+                        MR::isExistGameMessage(id) && smgpc::runtime::message_id_for_pointer(message),
                     "shared Game and layout utilities read retained actual MessageData pointers");
             const auto& game_archive = MR::receiveArchive("/MessageData/Message.arc")->source();
             const auto authored_messages = smgpc::resource::BmgMessageArchive::from_message_archive(game_archive);

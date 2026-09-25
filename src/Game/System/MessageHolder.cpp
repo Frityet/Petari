@@ -55,6 +55,21 @@ bool MessageData::getMessageDirect(TalkMessageInfo* pMessageInfo, const char* pM
     return false;
 }
 
+#if defined(TARGET_PC)
+const u16* MessageData::getMessageDirectUtf16(const char* pMessageId) const {
+    if (pMessageId == nullptr) {
+        return nullptr;
+    }
+
+    s32 messageIndex = findMessageIndex(pMessageId);
+    if (messageIndex < 0 || messageIndex >= mInfoBlock->mItemCount) {
+        return nullptr;
+    }
+
+    return mNativeResource->message_utf16(messageIndex);
+}
+#endif
+
 bool MessageData::getMessage(TalkMessageInfo* pMessageInfo, u16, u16 infoToolIndex) const {
     u8* pInfoTool = getMessageInfoTool(infoToolIndex);
     pMessageInfo->_0 = reinterpret_cast< u8* >(mDataBlock + 1) + *reinterpret_cast< u32* >(pInfoTool);

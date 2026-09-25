@@ -7,7 +7,6 @@
 #include "Game/Screen/StarPointerBlur.hpp"
 #include "Game/Screen/StarPointerCommandStream.hpp"
 #include "Game/LiveActor/Spine.hpp"
-#include "compat/DrawSyncManagerLifetime.hpp"
 #include "Game/System/DrawSyncManager.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemObjHolder.hpp"
@@ -39,7 +38,7 @@ StarPointerDirector::StarPointerDirector()
 
 StarPointerDirector::~StarPointerDirector() {
     const aurora::os::GuestThreadExecutionScope execution;
-    smgpc::compat::quiesce_draw_sync();
+    DrawSyncManager::quiesceNativeCallbacks();
     if (auto* manager = DrawSyncManager::sInstance) {
         for (auto& range : manager->mTokenRanges) {
             if (range.mCallback == mPeekZ) {

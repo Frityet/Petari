@@ -1,0 +1,91 @@
+{
+  "scope": "Remove unused information-message binding and canonicalize native UTF-16 message access",
+  "files": [
+    {
+      "path": "src/compat/InformationMessageCompat.cpp",
+      "before": "notes/compat-owner-removal-round12-20260925/messages/before/src/compat/InformationMessageCompat.cpp",
+      "before_sha256": "e283fc9b9c903caa2559e260d135c19eca68de5ffb0bbf4fedf843184f90d871",
+      "initial_git_status": "clean",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/InformationMessageCompat.hpp",
+      "before": "notes/compat-owner-removal-round12-20260925/messages/before/src/compat/InformationMessageCompat.hpp",
+      "before_sha256": "ea371ffa479a263a2a1ec42b71b68e6f3cbcce1547b8379bbc98c2af392b117d",
+      "initial_git_status": "clean",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/MessageUtilCompat.cpp",
+      "before": "notes/compat-owner-removal-round12-20260925/messages/before/src/compat/MessageUtilCompat.cpp",
+      "before_sha256": "ecf6c0669a9cc21d8e77d8a777460a667522213bcd1a31afc4befd48a8b06648",
+      "initial_git_status": "clean",
+      "action": "delete"
+    },
+    {
+      "path": "src/compat/MessageUtilCompat.hpp",
+      "before": "notes/compat-owner-removal-round12-20260925/messages/before/src/compat/MessageUtilCompat.hpp",
+      "before_sha256": "f4179fd90f99e5e138e0b955eb8a73e667067ec3d1d5920d9a74d3cb4e65e9cc",
+      "initial_git_status": "clean",
+      "action": "delete"
+    },
+    {
+      "path": "src/Game/Util/MessageUtil.cpp",
+      "before": "notes/compat-owner-removal-round12-20260925/messages/before/src/Game/Util/MessageUtil.cpp",
+      "before_sha256": "4f9537921a8869170979960d8c40265560f1f369ed022d8d10d144549c3f6f70",
+      "initial_git_status": "clean",
+      "action": "modify",
+      "after_sha256": "a973e64e2c2ad39a599b556dd7718b5668783e389228689caf54b7a5ff14f052"
+    },
+    {
+      "path": "src/Game/Util/MessageUtil.hpp",
+      "before": "notes/compat-owner-removal-round12-20260925/messages/before/src/Game/Util/MessageUtil.hpp",
+      "before_sha256": "cf8c63e8e84d85fc04f2f81774c9731aa3756901ea33ea1620e66a27a864ce21",
+      "initial_git_status": "clean",
+      "action": "modify",
+      "after_sha256": "6fdd4704be34d9ab778471d06f6c37d56f25931f6b65f20b4120509eb0b327b8"
+    },
+    {
+      "path": "src/Game/System/MessageHolder.cpp",
+      "before": "notes/compat-owner-removal-round12-20260925/messages/before/src/Game/System/MessageHolder.cpp",
+      "before_sha256": "15718429de8dbed29d6f5e179129372ba7457b53824a3bc0f6ed91ae2a742373",
+      "initial_git_status": "clean",
+      "action": "modify",
+      "after_sha256": "cb9379d2c5e8590e88bc8cce9b78e1a3ac958f0a32fe5323cb35173dc5fd5f1a"
+    },
+    {
+      "path": "src/Game/System/MessageHolder.hpp",
+      "before": "notes/compat-owner-removal-round12-20260925/messages/before/src/Game/System/MessageHolder.hpp",
+      "before_sha256": "2fc7722aa2ff88b96d32306367cfb4e2ec96d7b8ea85ab636d6dff0996819daf",
+      "initial_git_status": "clean",
+      "action": "modify",
+      "after_sha256": "e338230e9d81196884a3b003ece7355499c1223659dc88332d957d89dad4469e"
+    },
+    {
+      "path": "src/Game/Map/FileSelectFunc.cpp",
+      "before": "notes/compat-owner-removal-round12-20260925/messages/before/src/Game/Map/FileSelectFunc.cpp",
+      "before_sha256": "0eb0442b1c4151c9dcd09a5067308e51fa91b099176ab31a77600eaac79105ce",
+      "initial_git_status": "clean",
+      "action": "modify",
+      "after_sha256": "1b144fe03375caf2279bda55b1e2296db35ac7acdec3d1aef0cd105f0fca4106"
+    },
+    {
+      "path": "src/Game/System/SaveDataBannerCreator.cpp",
+      "before": "notes/compat-owner-removal-round12-20260925/messages/before/src/Game/System/SaveDataBannerCreator.cpp",
+      "before_sha256": "63205f5f74aacbbf50f97c7a9d594b940d8e25fcab487f7e49dd47ab8837a466",
+      "initial_git_status": "clean",
+      "action": "modify",
+      "after_sha256": "b043942d0afa44193bcb05a05d1b3a5642a8a08f7ee6e73d21e50edd60ef9cd4"
+    },
+    {
+      "path": "tests/OriginalMessageHolderTests.cpp",
+      "before": "notes/compat-owner-removal-round12-20260925/messages/before/tests/OriginalMessageHolderTests.cpp",
+      "before_sha256": "1b4b7be1734df70932becfd283b86427ca39911aae2219e1ffa47217f5f2ad91",
+      "initial_git_status": "clean",
+      "action": "modify",
+      "after_sha256": "03e30ebeb15036cd8f4c1a71d2eecfd967c4036f2a8834d407b8bca5184108c4"
+    }
+  ],
+  "build_wiring": "No explicit source additions. Existing canonical Game/System/MessageHolder.cpp and Game/Util/MessageUtil.cpp are already compiled. Regenerate the compat source glob after four deletions.",
+  "validation": "Source reference search confirms no retired provider APIs/includes remain under src/tests or root xmake.lua. No builds or tests were run."
+}

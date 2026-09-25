@@ -1,0 +1,56 @@
+{
+  "state": "applied-and-frozen",
+  "files": [
+    {
+      "path": "src/Game/NPC/TalkDirector.cpp",
+      "before_exists": true,
+      "before_sha256": "70491f4d397af5b0704cf3c24d3409d548019250ab8dd0182c0ec10de68b629b",
+      "action": "modified",
+      "after_sha256": "b722f066923e49ae4abf325d65826aed564e52f09dc29f6a864cf2aafd9ad808"
+    },
+    {
+      "path": "src/Game/NPC/TalkDirector.hpp",
+      "before_exists": true,
+      "before_sha256": "d8b8f649dc6840e9331d1af380e5fd5a077b33a948168c89a198402290afc65b",
+      "action": "modified",
+      "after_sha256": "61429317e8b4259fcf79dd59160f927f4ac3e961e3eb0ab9b0e80d8faa37d611"
+    },
+    {
+      "path": "src/compat/ActorRuntimeRegistry.cpp",
+      "before_exists": true,
+      "before_sha256": "fcfec07fb119c60f9dbe832d7ab2a80be43a817598835b875188e0e7d74f2c54",
+      "action": "modified",
+      "after_sha256": "599b5852f0fbfa4ed6b75f52f6d78ecf82b1d6b59a847a29a5dbfcaee0d39671"
+    },
+    {
+      "path": "src/compat/SceneObjHolderCompat.cpp",
+      "before_exists": true,
+      "before_sha256": "71c5b67c982ab17b43aaef111b753b5258461aad5466c7cd4e0a7a0a017fb5ef",
+      "action": "modified",
+      "after_sha256": "ed3d3c8f7e855afc572695ce9b2d36abff3d53682f3428fa39cdf9299ee55c73"
+    },
+    {
+      "path": "src/scene/SceneObjHolderRuntime.hpp",
+      "before_exists": true,
+      "before_sha256": "1819fdaec3bbcfcc962379518896f6770cac9e3cb161c098c8c933f5eaf8ad48",
+      "action": "modified",
+      "after_sha256": "fdeabc7004a79ff32848c88551d7d6e9721e2417a4cb57aaaef85709b3436ea2"
+    },
+    {
+      "path": "src/compat/TalkDirectorLifetime.cpp",
+      "before_exists": true,
+      "before_sha256": "f871ac115beddef81a1fb9407d11eb0efa297cdd9ef0cbfeda667db51b714822",
+      "action": "deleted",
+      "after_sha256": null
+    },
+    {
+      "path": "src/compat/TalkDirectorLifetime.hpp",
+      "before_exists": true,
+      "before_sha256": "5f7141cd92b055ba32f4bdc85b3092cddeab73655135ba8980c917657bf2932a",
+      "action": "deleted",
+      "after_sha256": null
+    }
+  ],
+  "parent_checkpoint": "9a878db96",
+  "shared_path_note": "SceneObjHolderCompat.cpp released to root for separate DrawSync edits; after/ and owned-working-delta.patch capture only this lane."
+}

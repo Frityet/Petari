@@ -3,7 +3,7 @@
 #include "JSystem/JUtility/JUTDirectPrint.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/System/MainLoopFramework.hpp"
-#include "compat/DrawSyncManagerLifetime.hpp"
+#include "Game/System/DrawSyncManager.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "render/RendererService.hpp"
 #include "runtime/jut/OriginalDisplayLifetime.hpp"
@@ -234,7 +234,13 @@ void exerciseDisplayFrames() {
     mode.efbHeight = mode.xfbHeight = mode.viHeight = 96;
     for (unsigned cycle = 0; cycle < 3; ++cycle) {
         {
-            smgpc::compat::DrawSyncManagerLifetime drawSync(heaps);
+            const auto drawSyncDomain = smgpc::compat::JkrAllocationDomain::create(heaps, 128U * 1024U);
+            {
+                const smgpc::compat::JkrAllocationScope allocation(drawSyncDomain);
+                DrawSyncManager::start(0x300, 15);
+            }
+            const std::unique_ptr<DrawSyncManager, void (*)(DrawSyncManager*)> drawSync(
+                DrawSyncManager::sInstance, [](DrawSyncManager*) { DrawSyncManager::end(); });
             smgpc::runtime::OriginalDisplayLifetime display(window, heaps, mode);
             require(&display.main_loop() == MainLoopFramework::sManager &&
                         &display.render_mode() == JUTVideo::getManager()->getRenderMode(),

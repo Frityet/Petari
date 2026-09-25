@@ -1,0 +1,138 @@
+[
+  {
+    "path": "src/Game/Map/FileSelectFunc.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/NPC/TalkDirector.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/NPC/TalkDirector.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Player/MarioAccess.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerDirector.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/DrawSyncManager.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/DrawSyncManager.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/MessageHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/MessageHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/SaveDataBannerCreator.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/CameraUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/MessageUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/MessageUtil.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/app/OriginalGameApplication.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/DrawSyncManagerLifetime.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/DrawSyncManagerLifetime.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/InformationMessageCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/InformationMessageCompat.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/MessageUtilCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/MessageUtilCompat.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalGameDiagnostics.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalGameDiagnostics.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/TalkDirectorLifetime.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/TalkDirectorLifetime.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.cpp",
+    "mode": "scoped-delta-on-HEAD"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.hpp",
+    "mode": "scoped-delta-on-HEAD"
+  },
+  {
+    "path": "src/scene/OriginalSceneSupport.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/scene/SceneObjHolderRuntime.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalDrawSyncManagerTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalJutVideoTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalMessageHolderTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalStarPointerOwnerTests.cpp",
+    "mode": "clean-owned"
+  }
+]

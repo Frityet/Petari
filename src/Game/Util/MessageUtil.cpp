@@ -6,6 +6,9 @@
 #include "Game/System/MessageHolder.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
+#if defined(TARGET_PC)
+#include "runtime/MessageHolderOwnership.hpp"
+#endif
 #include <cstdio>
 #include <cstring>
 
@@ -27,6 +30,34 @@ namespace MR {
 
         return reinterpret_cast< wchar_t* >(messageInfo._0);
     }
+
+#if defined(TARGET_PC)
+    const u16* getGameMessageDirectUtf16(const char* pMessageId) {
+        if (pMessageId == nullptr) {
+            return nullptr;
+        }
+
+        MessageHolder* pHolder = smgpc::runtime::current_message_holder();
+        if (pHolder == nullptr) {
+            return nullptr;
+        }
+
+        return pHolder->mGameMessageData->getMessageDirectUtf16(pMessageId);
+    }
+
+    const u16* getSystemMessageDirectUtf16(const char* pMessageId) {
+        if (pMessageId == nullptr) {
+            return nullptr;
+        }
+
+        MessageHolder* pHolder = smgpc::runtime::current_message_holder();
+        if (pHolder == nullptr) {
+            return nullptr;
+        }
+
+        return pHolder->mSystemMessageData->getMessageDirectUtf16(pMessageId);
+    }
+#endif
 
     const wchar_t* getLayoutMessageDirect(const char* pMessageId) {
         TalkMessageInfo messageInfo = TalkMessageInfo();

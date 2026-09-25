@@ -83,10 +83,9 @@
 #include "Game/Util/ShareUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "compat/DrawSyncManagerLifetime.hpp"
+#include "Game/System/DrawSyncManager.hpp"
 #include "compat/CapturedFrameBlurService.hpp"
 #include "compat/GlobalGravityOwnership.hpp"
-#include "compat/TalkDirectorLifetime.hpp"
 #include "Game/NPC/TalkDirector.hpp"
 #include "Game/NPC/EventDirector.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -171,7 +170,6 @@ namespace smgpc::scene {
         smgpc::compat::JkrHostAllocationScope host;
         _global_gravity_ownership = std::make_unique<smgpc::compat::GlobalGravityOwnership>(holder);
         _collision_director_ownership = std::make_unique<smgpc::compat::CollisionDirectorOwnership>();
-        _talk_director_lifetime = std::make_unique<smgpc::compat::TalkDirectorLifetime>();
         _captured_frame_blur_service = std::make_unique<smgpc::compat::CapturedFrameBlurService>();
         if (sCurrentSceneObjHolder != nullptr) {
             aurora::throw_host_exception<std::logic_error>("a SceneObjHolder is already bound to the active scene");
@@ -210,7 +208,7 @@ namespace smgpc::scene {
 
     SceneObjHolderBinding::~SceneObjHolderBinding() {
         if (_game_allocation_domain)
-            smgpc::compat::retire_draw_sync_callbacks(_game_allocation_domain->heap());
+            DrawSyncManager::retireNativeCallbacks(_game_allocation_domain->heap());
         prepare_retirement();
         _collision_director_ownership->prepare_retirement();
         if (_camera_runtime) _camera_runtime->unpublish();
@@ -315,11 +313,11 @@ namespace smgpc::scene {
     }
 
     void SceneObjHolderBinding::prepare_retirement() noexcept {
-        _talk_director_lifetime->begin_retirement();
-    }
-
-    smgpc::compat::TalkDirectorLifetime* current_talk_director_lifetime() noexcept {
-        return sCurrentSceneObjHolderBinding ? sCurrentSceneObjHolderBinding->_talk_director_lifetime.get() : nullptr;
+        auto* object = _holder->getObj(SceneObj_TalkDirector);
+        if (smgpc::compat::has_name_obj_runtime_state(object)) {
+            if (auto* talk = dynamic_cast<TalkDirector*>(object))
+                talk->beginNativeRetirement();
+        }
     }
 
 
@@ -400,7 +398,7 @@ NameObj *SceneObjHolder::create(int id) {
 
     auto *binding = sCurrentSceneObjHolderBinding;
     const auto marker = smgpc::compat::mark_name_obj_runtime_registrations();
-    smgpc::compat::DrawSyncRegistrationTransaction callbacks;
+    DrawSyncManager::CallbackRegistration callbacks;
     const auto slot_checkpoint = binding->_provisional_slots.size();
     const auto outermost = binding->_construction_depth == 0U;
     ++binding->_construction_depth;
@@ -423,8 +421,6 @@ NameObj *SceneObjHolder::create(int id) {
         }
 
         object->initWithoutIter();
-        if (id == SceneObj_TalkDirector)
-            binding->_talk_director_lifetime->capture_after_init(static_cast<TalkDirector&>(*object));
         smgpc::compat::JkrHostAllocationScope host_metadata;
         auto registrations =
             smgpc::compat::snapshot_name_obj_runtime_objects_since(

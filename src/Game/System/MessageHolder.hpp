@@ -42,6 +42,9 @@ public:
     MessageData(const char*);
 #if defined(TARGET_PC)
     ~MessageData();
+
+    // Borrow the original UTF-16 units independently of native wchar_t width.
+    const u16* getMessageDirectUtf16(const char*) const;
 #endif
 
     bool getMessageDirect(TalkMessageInfo*, const char*) const;

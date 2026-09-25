@@ -33,7 +33,6 @@
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/SystemUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/DrawSyncManagerLifetime.hpp"
 #include "Game/System/FileLoader.hpp"
 #include "Game/System/FunctionAsyncExecutor.hpp"
 #include "compat/NandSdkBinding.hpp"
@@ -413,7 +412,7 @@ private:
             objects->mFunctionAsyncExecutor = nullptr;
         }
         delete SingletonHolder<NANDManager>::release();
-        compat::quiesce_draw_sync();
+        DrawSyncManager::quiesceNativeCallbacks();
         if (system && system->mSceneController) {
             auto* controller = system->mSceneController;
             delete std::exchange(controller->mScene, nullptr);

@@ -1,7 +1,7 @@
 #include "Game/Util/FileUtil.hpp"
 #include <JSystem/JKernel/JKRArchive.hpp>
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/DrawSyncManagerLifetime.hpp"
+#include "Game/System/DrawSyncManager.hpp"
 #include "OriginalStageResourceProcessFixture.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include <aurora/guest_thread.hpp>
@@ -114,7 +114,7 @@ void original_gpu_depth(StarPointerDirector& director) {
     }
     draw_fullscreen(-0.75F, GXColor{232, 24, 24, 255});
     MR::setStarPointerDrawSyncToken();
-    smgpc::compat::quiesce_draw_sync();
+    DrawSyncManager::quiesceNativeCallbacks();
     std::array<u32, 2> first{};
     for (int port = 0; port < 2; ++port) {
         const auto& info = director.mControllers[port].mInfo;
@@ -125,7 +125,7 @@ void original_gpu_depth(StarPointerDirector& director) {
     }
     draw_fullscreen(-0.25F, GXColor{24, 232, 24, 255});
     MR::setStarPointerDrawSyncToken();
-    smgpc::compat::quiesce_draw_sync();
+    DrawSyncManager::quiesceNativeCallbacks();
     for (int port = 0; port < 2; ++port) {
         const auto& info = director.mControllers[port].mInfo;
         require(info.mDrawReady && info.mZDepth < first[port],

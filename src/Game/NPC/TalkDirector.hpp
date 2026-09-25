@@ -39,6 +39,9 @@ public:
     virtual void init(const JMapInfoIter&);
     virtual void movement();
 
+    void beginNativeRetirement() noexcept;
+    void releaseNativeReference(const NameObj*) noexcept;
+
     bool request(TalkMessageCtrl*, bool);
     bool test(TalkMessageCtrl*, bool, bool);
     bool start(TalkMessageCtrl*, bool, bool, bool);
@@ -113,6 +116,9 @@ public:
     /* 0x89 */ bool mIsRosettaTalkAstroDemoRecover;
     /* 0x8A */ bool mIsRosettaTalkTorchProgress;
     /* 0x8B */ bool mIsOnGameEventFlagViewNormalEnding;
+
+private:
+    bool mNativeRetiring = false;
 };
 
 namespace MR {

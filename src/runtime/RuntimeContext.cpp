@@ -8,7 +8,6 @@
 #include "RuntimeContext.hpp"
 #include "compat/DisabledObjectAudioService.hpp"
 #include "compat/SceneJ3dScope.hpp"
-#include "compat/DrawSyncManagerLifetime.hpp"
 #include "compat/NandSdkBinding.hpp"
 #include "Game/Util/DrawUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
@@ -257,7 +256,6 @@ namespace smgpc::runtime {
             _system_config = std::make_unique<aurora::SystemConfiguration>(_save_data.nand());
             _nand_sdk = std::make_unique<compat::NandSdkBinding>(_save_data);
             aurora::wpad_service().clear();
-            _draw_sync = std::make_unique<compat::DrawSyncManagerLifetime>(_host_heaps);
             _display = std::make_unique<OriginalDisplayLifetime>(_window_service, _host_heaps, *MR::getSuitableRenderMode());
             if (scene_service_mode == RuntimeContextSceneServiceMode::RuntimeOwned) {
                 _owned_name_obj_lifecycle = std::make_unique<smgpc::scene::NameObjLifecycleService>(*this);
@@ -326,7 +324,6 @@ namespace smgpc::runtime {
         _j_audio_playback->reset_scene();
         smgpc::compat::retire_audio_facade_state();
         _display.reset();
-        _draw_sync.reset();
         _scheduler.clear();
         _capture_screen_director.reset();
         _capture_screen_texture.reset();

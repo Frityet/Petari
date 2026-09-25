@@ -1,0 +1,13 @@
+{
+  "scope": "source-only; no builds/tests/index/commits",
+  "existing_director_methods": 27,
+  "existing_methods_changed": [
+    "TalkDirector::TalkDirector(const char* pName)"
+  ],
+  "new_methods": [
+    "TalkDirector::beginNativeRetirement()",
+    "TalkDirector::releaseNativeReference(const NameObj* object)"
+  ],
+  "retired_api_references_in_after": [],
+  "trailing_whitespace_in_after": []
+}

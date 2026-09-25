@@ -1,5 +1,8 @@
 #include "compat/Cp932Literal.hpp"
 #include "Game/NPC/TalkDirector.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
+#include <algorithm>
+#include <exception>
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NPC/TalkBalloon.hpp"
@@ -73,10 +76,72 @@ void TalkPeekZ::drawSyncCallback(u16 arg) {
 }
 
 TalkDirector::TalkDirector(const char* pName)
-    : LayoutActor(pName, true), mMsgCtrl(), _3C(), _40(), _44(), mTalkState(), _4C(), _4D(), _4E(), mIsInvalidClipping(), mDemoType(), _58(), _59() {
+    : LayoutActor(pName, true), mPeekZ(), mBalloonHolder(), mStateHolder(), mMsgCtrl(), _3C(), _40(), _44(), mTalkState(), _4C(), _4D(), _4E(),
+      mIsInvalidClipping(), mDemoType(), _58(), _59() {
 }
 
 TalkDirector::~TalkDirector() {
+}
+
+void TalkDirector::beginNativeRetirement() noexcept {
+    mNativeRetiring = true;
+}
+
+void TalkDirector::releaseNativeReference(const NameObj* object) noexcept {
+    if (mMsgControls.mCount == 0)
+        return;
+
+    const auto forEachBalloon = [this](const auto& visit) {
+        if (mBalloonHolder) {
+            if (mBalloonHolder->mBalloonShortArray) {
+                for (s32 i = 0; i < 4; ++i)
+                    visit(mBalloonHolder->mBalloonShortArray[i]);
+            }
+            visit(mBalloonHolder->mBalloonEvent);
+            visit(mBalloonHolder->mBalloonInfo);
+            visit(mBalloonHolder->mBalloonSign);
+            visit(mBalloonHolder->mBalloonIcon);
+        }
+        if (mStateHolder)
+            visit(mStateHolder->mBalloonShort);
+    };
+    const auto remove = [&](TalkMessageCtrl* controller) {
+        if (!controller || (controller != object && controller->mHostActor != object))
+            return false;
+
+        // Retail kill keeps participant storage alive. Native deletion must
+        // not invent camera, demo or nerve transitions for an active talk.
+        bool active = mTalkState && mTalkState->_04 == controller;
+        forEachBalloon([&](const TalkBalloon* balloon) {
+            if (smgpc::compat::has_name_obj_runtime_state(balloon) &&
+                !balloon->mFlag.mIsDead && balloon->mMessageCtrl == controller)
+                active = true;
+        });
+        if (!mNativeRetiring && active)
+            std::terminate();
+
+        for (auto** reference : {&mMsgCtrl, &_3C, &_40, &_44}) {
+            if (*reference == controller)
+                *reference = nullptr;
+        }
+        if (mStateHolder) {
+            for (TalkState* state : {mStateHolder->mTalk, static_cast<TalkState*>(mStateHolder->mTalkShort),
+                                    static_cast<TalkState*>(mStateHolder->mTalkNormal), static_cast<TalkState*>(mStateHolder->mTalkEvent),
+                                    static_cast<TalkState*>(mStateHolder->mTalkCompose)}) {
+                if (state && state->_04 == controller)
+                    state->_04 = nullptr;
+            }
+        }
+        forEachBalloon([&](TalkBalloon* balloon) {
+            if (smgpc::compat::has_name_obj_runtime_state(balloon) && balloon->mMessageCtrl == controller)
+                balloon->mMessageCtrl = nullptr;
+        });
+        return true;
+    };
+    auto* oldEnd = mMsgControls.end();
+    auto* newEnd = std::remove_if(mMsgControls.begin(), oldEnd, remove);
+    std::fill(newEnd, oldEnd, nullptr);
+    mMsgControls.mCount = static_cast<s32>(newEnd - mMsgControls.begin());
 }
 
 void TalkDirector::init(const JMapInfoIter& rIter) {
