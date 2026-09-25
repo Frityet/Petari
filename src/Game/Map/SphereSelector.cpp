@@ -395,7 +395,7 @@ void SphereSelectorFunction::registerPointingTarget(LiveActor* pActor, HandlePoi
 }
 
 bool SphereSelectorFunction::tryRegisterPointingTarget(LiveActor* pActor, HandlePointingPriority priority) {
-    if (isHandleHolding() && MR::isStarPointerPointing1PWithoutCheckZ(pActor, nullptr, true, false)) {
+    if (!isHandleHolding() && MR::isStarPointerPointing1PWithoutCheckZ(pActor, nullptr, true, false)) {
         ::getSphereSelector()->registerPointingTarget(pActor, priority);
         return true;
     }

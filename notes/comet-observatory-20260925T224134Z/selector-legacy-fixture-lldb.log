@@ -1,0 +1,17 @@
+(lldb) target create "build/macosx/arm64/debug/smg-pc-sphere-selector-real-or-absent-tests"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-sphere-selector-real-or-absent-tests' (arm64).
+(lldb) run
+warning: smg-pc-sphere-selector-real-or-absent-tests was compiled with optimization - stepping may behave oddly; variables may not be available.
+Process 20048 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-sphere-selector-real-or-absent-tests' (arm64)
+Process 20048 stopped
+* thread #1, queue = 'com.apple.main-thread', stop reason = EXC_BAD_ACCESS (code=1, address=0x48)
+       frame #0: 0x000000010009a2dc smg-pc-sphere-selector-real-or-absent-tests`ClippingDirector::registerActor(this=0x0000000000000000, pActor=0x0000007662409ee0) at ClippingDirector.cpp:35:5 [opt]
+   32  	}
+   33  	
+   34  	void ClippingDirector::registerActor(LiveActor* pActor) {
+-> 35  	    mActorHolder->registerActor(pActor);
+    	    ^
+   36  	}
+   37  	
+   38  	void ClippingDirector::initActorSystemInfo(LiveActor* pActor, const JMapInfoIter& rIter) {
+Target 0: (smg-pc-sphere-selector-real-or-absent-tests) stopped.
