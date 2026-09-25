@@ -1,0 +1,17 @@
+# Original resource lifecycle review
+
+Reviewed root integration in OriginalGameApplication teardown, RuntimeContext service removal, ScenarioCatalogOwnership, ParticleResourceOwnership, LayoutRuntime, and SceneObjHolder creation/postpass. No edits to those root-owned files were made here.
+
+Concrete findings and fixes:
+
+- The restored original resource manager dispatches holder creation to the main thread. ModelManagerOwner previously kept JkrAllocationScope's current-heap mutex across its synchronous wait. Root captured this deadlock in `gateway-initial-hang.txt`. This lane uses allocation routing without a held heap mutex; root applied the same boundary to generic SceneObj construction. Original thread-selected heaps remain authoritative.
+- ScenarioDataParser/ScenarioData and ParticleResourceHolder had no destructors for their actual child JMap parsers. Root's parent deletions now invoke native destructors before manager/FileLoader retirement. JPAResourceManager's existing destructor unregisters its heap finalizer, so explicit owning deletion does not cause a later finalizer double deletion.
+- StageDataHolder owned local child StageDataHolder instances, their tables, and its object-name table. Its native destructor now retires them. Children explicitly claim their original parent before initialization so SceneObj generic capture cannot also own the same child; all initialized child slots are visited even on partial initialization.
+- Original actor animation/camera records borrow CSV strings. ActorAnimKeeper and ActorPadAndCameraCtrl now own their actual JMapInfo parsers through helper destruction. LiveActor destroys an unadopted animation keeper if the subsequent camera helper construction throws.
+- The full scan of local Game CSV parser creation found additional light, demo-sheet, movie-rumble, and FixedPosition parser owners. Each actual owner now retains its parser; FixedPosition destroys its parser after copying the transform and resolving its joint because it retains no parser strings.
+
+LayoutRuntime's actual LayoutHolder token is declared before dependent render/font/texture records, so member destruction retires those records before the token. Scenario and particle wrappers now use original FileLoader archives and their actual parent destructors. No separate fallback publication or global lease clearing was added.
+
+The subsequent DemoSheet failure showed DemoDirectorOwnership executor capture was dead. That adapter has now been removed. Canonical DemoExecutor/keeper/Talk/CastGroup/Director destructors own their actual non-NameObj children; original group NameObjs remain scene-owned. Constructor catches retire partial native arrays, and the existing registry scans actual objects for early borrowed-reference cleanup. BckCtrl's stack JMap parser is safe: the actual ArchiveHolder JMapSourceRegistration retains the shared decoded cache and its string storage until archive retirement, confirmed with the archive lane.
+
+Limits: these are source/lifetime reviews. The prior root run reached 120 frames then failed retirement with two GrandStar parser leases; a subsequent run passed those and identified 14 DemoSheet leases from unretired actual executors. That failure is preserved in root notes. Rebuilt runtime success and focused assertions are root-owned and pending at this source freeze. There is no claim that Gateway through Rosalina is complete. OOM/invalid-data injection across every historical raw-array constructor is not covered.

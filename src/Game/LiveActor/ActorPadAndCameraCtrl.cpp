@@ -14,39 +14,50 @@ namespace {
 
 ActorPadAndCameraCtrl::ActorPadAndCameraCtrl(const ModelManager* pModelManager, const TVec3f* pPosition)
     : _0(pModelManager), _4(pPosition), _8(pModelManager->getResourceHolder()), _C(nullptr), mInfoNum(0), mInfo(nullptr) {
-    JMapInfo* parser = MR::tryCreateCsvParser(_8, "%s.bcsv", sFileName);
-    if (parser == nullptr) {
-        return;
+    try {
+        JMapInfo* parser = MR::tryCreateCsvParser(_8, "%s.bcsv", sFileName);
+        mNativeParser.reset(parser);
+        if (parser == nullptr) {
+            return;
+        }
+
+        s32 infoNum = 0;
+        if (parser != nullptr) {
+            infoNum = MR::getCsvDataElementNum(parser);
+        }
+        mInfoNum = infoNum;
+        ActorPadAndCameraCtrlInfo* infoArray = new ActorPadAndCameraCtrlInfo[mInfoNum];
+        mInfo = infoArray;
+        if (mInfoNum > 0) {
+            const char* distanceInvalidKey = "DistanceInvalid";
+            for (s32 i = 0; i < mInfoNum; i++) {
+                ActorPadAndCameraCtrlInfo* info = &infoArray[i];
+                MR::getCsvDataStr(&info->mBckName, parser, "BckName", i);
+                MR::getCsvDataF32(&info->mStartFrame, parser, "StartFrame", i);
+                MR::getCsvDataF32(&info->mEndFrame, parser, "EndFrame", i);
+                MR::getCsvDataStrOrNULL(&info->mPadRumbleName, parser, "PadRumbleName", i);
+                MR::getCsvDataStrOrNULL(&info->mCameraShakeName, parser, "CameraShakeName", i);
+                MR::getCsvDataF32(&info->mDistanceNear, parser, "DistanceNear", i);
+                MR::getCsvDataF32(&info->mDistanceFar, parser, "DistanceFar", i);
+                info->mDistanceInvalid = 3000.0f;
+                parser->getValue(i, distanceInvalidKey, &info->mDistanceInvalid);
+                MR::getCsvDataStrOrNULL(&info->mPadRumbleNameMiddle, parser, "PadRumbleNameMiddle", i);
+                MR::getCsvDataStrOrNULL(&info->mPadRumbleNameFar, parser, "PadRumbleNameFar", i);
+                MR::getCsvDataStrOrNULL(&info->mCameraShakeNameMiddle, parser, "CameraShakeNameMiddle", i);
+                MR::getCsvDataStrOrNULL(&info->mCameraShakeNameFar, parser, "CameraShakeNameFar", i);
+                info->_30 = false;
+                info->_31 = false;
+            }
+        }
+    } catch (...) {
+        delete[] mInfo;
+        throw;
     }
 
-    s32 infoNum = 0;
-    if (parser != nullptr) {
-        infoNum = MR::getCsvDataElementNum(parser);
-    }
-    mInfoNum = infoNum;
-    ActorPadAndCameraCtrlInfo* infoArray = new ActorPadAndCameraCtrlInfo[mInfoNum];
-    mInfo = infoArray;
-    if (mInfoNum > 0) {
-        const char* distanceInvalidKey = "DistanceInvalid";
-        for (s32 i = 0; i < mInfoNum; i++) {
-            ActorPadAndCameraCtrlInfo* info = &infoArray[i];
-            MR::getCsvDataStr(&info->mBckName, parser, "BckName", i);
-            MR::getCsvDataF32(&info->mStartFrame, parser, "StartFrame", i);
-            MR::getCsvDataF32(&info->mEndFrame, parser, "EndFrame", i);
-            MR::getCsvDataStrOrNULL(&info->mPadRumbleName, parser, "PadRumbleName", i);
-            MR::getCsvDataStrOrNULL(&info->mCameraShakeName, parser, "CameraShakeName", i);
-            MR::getCsvDataF32(&info->mDistanceNear, parser, "DistanceNear", i);
-            MR::getCsvDataF32(&info->mDistanceFar, parser, "DistanceFar", i);
-            info->mDistanceInvalid = 3000.0f;
-            parser->getValue(i, distanceInvalidKey, &info->mDistanceInvalid);
-            MR::getCsvDataStrOrNULL(&info->mPadRumbleNameMiddle, parser, "PadRumbleNameMiddle", i);
-            MR::getCsvDataStrOrNULL(&info->mPadRumbleNameFar, parser, "PadRumbleNameFar", i);
-            MR::getCsvDataStrOrNULL(&info->mCameraShakeNameMiddle, parser, "CameraShakeNameMiddle", i);
-            MR::getCsvDataStrOrNULL(&info->mCameraShakeNameFar, parser, "CameraShakeNameFar", i);
-            info->_30 = false;
-            info->_31 = false;
-        }
-    }
+}
+
+ActorPadAndCameraCtrl::~ActorPadAndCameraCtrl() {
+    delete[] mInfo;
 }
 
 ActorPadAndCameraCtrl* ActorPadAndCameraCtrl::tryCreate(const ModelManager* pModelManager, const TVec3f* pPosition) {

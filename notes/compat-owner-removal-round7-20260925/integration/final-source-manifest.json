@@ -1,0 +1,622 @@
+[
+  {
+    "path": "src/Game/Demo/DemoActionKeeper.cpp",
+    "staged_git_blob": "8a8aea848edf613845beed10995374ddf0bc240c",
+    "working_sha256": "ae8d469e5c74b206ff3bc55f8ee121252e353873500d946028ae942ee16b0292"
+  },
+  {
+    "path": "src/Game/Demo/DemoActionKeeper.hpp",
+    "staged_git_blob": "8f7919cb6a31053aaa489bed4e3829401168f25c",
+    "working_sha256": "7df96dfda47c83a9080ec8a2c1fa5ceee1f0b05fa885b00fb701cad8becc3ffc"
+  },
+  {
+    "path": "src/Game/Demo/DemoCameraKeeper.cpp",
+    "staged_git_blob": "012fcb9e9f051c5dd48e249c36824d78a8d479b8",
+    "working_sha256": "082dfef7221aa6203a1ab2a85d18c6d2ba85ea8d267bbcb97823e2e419bbd538"
+  },
+  {
+    "path": "src/Game/Demo/DemoCameraKeeper.hpp",
+    "staged_git_blob": "44d3a936040d3fe6352cf79cf5fb5c775080ff40",
+    "working_sha256": "05aa522d50d6a79e965cc3c6341c84f98e241211e0275b6a3082f8de32d2ffd0"
+  },
+  {
+    "path": "src/Game/Demo/DemoCastGroup.cpp",
+    "staged_git_blob": "7fe15e2c7718dd0664c67df69aa245b0efc744d7",
+    "working_sha256": "ee86cddb66e13fcd840ce337637207a06597f1c289017767ae8de509e48b8212"
+  },
+  {
+    "path": "src/Game/Demo/DemoCastGroup.hpp",
+    "staged_git_blob": "ce51899537d0a2e350257d500eba677585728111",
+    "working_sha256": "3c2b1c9395d6976e011c9f6a91d3292503de5638207f77fbd62495c2fd4c3a95"
+  },
+  {
+    "path": "src/Game/Demo/DemoDirector.cpp",
+    "staged_git_blob": "990e11efea682bd0aa0c57540a4ca6eac474002f",
+    "working_sha256": "a3591c0b21750923b5ff22a579f5e83c676e200ac76186fe4ee4791273ee3871"
+  },
+  {
+    "path": "src/Game/Demo/DemoDirector.hpp",
+    "staged_git_blob": "4428b50662d86420a7b0f9af033291503e9cd335",
+    "working_sha256": "bab660441dc0921cabdd2b7ab4cf502964c0554fa68adc17c34a90d089a38600"
+  },
+  {
+    "path": "src/Game/Demo/DemoExecutor.cpp",
+    "staged_git_blob": "094dd0b63b67c31441f5115e44d2bf3497e9cbd0",
+    "working_sha256": "b8104559b7d374293faaf479ae7473968680f97e963b184e2c8fce4cfa9564f6"
+  },
+  {
+    "path": "src/Game/Demo/DemoExecutor.hpp",
+    "staged_git_blob": "45dd3d97ec487b5152b4633bb9acc2399d1c4424",
+    "working_sha256": "386effcbd3e8123540b2e39cd82c99f1cd78e4787c88752a96e923ff5e6fa424"
+  },
+  {
+    "path": "src/Game/Demo/DemoPadRumbler.cpp",
+    "staged_git_blob": "84387b6c8c057d1c6b8776cd2730550edfcb5976",
+    "working_sha256": "a07a7b7c7b9dd80ba4b831e0d978143f638f3eccb8c73f1d0fd5942e66d19a67"
+  },
+  {
+    "path": "src/Game/Demo/DemoPadRumbler.hpp",
+    "staged_git_blob": "11c16e7133039f77dd383ba942d875f5e778f695",
+    "working_sha256": "29d4a60f984a25cfb80f5bb6b87f9d6cb3de166e81c718612b2b7cfe7ea5fdc0"
+  },
+  {
+    "path": "src/Game/Demo/DemoPlayerKeeper.cpp",
+    "staged_git_blob": "d7bcc2350c51975f4b34ca65c52cfe651c654f97",
+    "working_sha256": "832edfdf36ba37ad3c975f22db0180db3607809e3323e33f8a28b2a9df238316"
+  },
+  {
+    "path": "src/Game/Demo/DemoPlayerKeeper.hpp",
+    "staged_git_blob": "e62365e142c8d1eb231d56d945c01d833e4fe7b4",
+    "working_sha256": "ddd59e1dfed17a693576f4e4fe4f896af859a73d552bf1dacc09a61cf9993c95"
+  },
+  {
+    "path": "src/Game/Demo/DemoSimpleCastHolder.cpp",
+    "staged_git_blob": "348ac8dae08e9190a473f2553016da848bb7f7db",
+    "working_sha256": "6e808df94de4c0ebe6dc5ad62b30b0829a103d2f78438aa8e1f4c91659f9648c"
+  },
+  {
+    "path": "src/Game/Demo/DemoSimpleCastHolder.hpp",
+    "staged_git_blob": "d31a5623b6dbc80972e1aa5f385820a23c5a3d6d",
+    "working_sha256": "f0c89d9d7244ae981cd8ec6252b73fc132b8caaa9814b9380be447e46334d82c"
+  },
+  {
+    "path": "src/Game/Demo/DemoSoundKeeper.cpp",
+    "staged_git_blob": "75a8a3c5ffa5d07ade0dd05c1942a760463580e6",
+    "working_sha256": "64a7cf7d5360b9e2139ebb597b01cb63ba203d2a83a7e3970b2831aba2315226"
+  },
+  {
+    "path": "src/Game/Demo/DemoSoundKeeper.hpp",
+    "staged_git_blob": "e2e622140fd84f79adfff3faf04c2facc5de1106",
+    "working_sha256": "5c4dd7772533d4d282f3505991b9bff32de816263d0d4a7d7338b169e0e11c37"
+  },
+  {
+    "path": "src/Game/Demo/DemoStartRequestHolder.cpp",
+    "staged_git_blob": "d457f65cd88ff99502dd7ccf68195d95d0ee5eef",
+    "working_sha256": "40a777ee34706674e7cb1e837ac9037aa32c52c026fa26ea693c04f366d214a8"
+  },
+  {
+    "path": "src/Game/Demo/DemoStartRequestHolder.hpp",
+    "staged_git_blob": "c902d2f92cb847677709e2ea213a31514604473a",
+    "working_sha256": "0126550f217553e43d9dac6e03e384a06d2581fe599b89fe1e319c4897621988"
+  },
+  {
+    "path": "src/Game/Demo/DemoSubPartKeeper.cpp",
+    "staged_git_blob": "4da9ad2850e55248d18a8930b062320db6e039f6",
+    "working_sha256": "da59d863465531e905b0d3a54e8eaf55938dc7b22aba3ccf0f40d2ff12cfea3b"
+  },
+  {
+    "path": "src/Game/Demo/DemoSubPartKeeper.hpp",
+    "staged_git_blob": "2d1cf52aa90c8b33ce0967eb10a6adfa414154e3",
+    "working_sha256": "b488045b63f0be7a8856834d7aa2210e8216ada4597ab2d8ec430af8439a1ca9"
+  },
+  {
+    "path": "src/Game/Demo/DemoTalkAnimCtrl.cpp",
+    "staged_git_blob": "49cd6ddc870c7c1e9ad9d9619b7a44d27f1830f5",
+    "working_sha256": "c5a8245e50ecb127a3171ae21107d166eb41722674f6ae9de99bdae17e683d56"
+  },
+  {
+    "path": "src/Game/Demo/DemoTalkAnimCtrl.hpp",
+    "staged_git_blob": "f999a83d865a6b903eee24f08db052c503b42cbd",
+    "working_sha256": "f2d185e5761c1144b753d6e4951c272e1297dda7e197fd8011058b5ca8400ae1"
+  },
+  {
+    "path": "src/Game/Demo/DemoTimeKeeper.cpp",
+    "staged_git_blob": "1b771dccb3651b8df7991af784de67e21e5c38ad",
+    "working_sha256": "c0bbd7d822ee548845a13e948bb9860a60d7af031539f7ecbbf9b6dd0b207f99"
+  },
+  {
+    "path": "src/Game/Demo/DemoTimeKeeper.hpp",
+    "staged_git_blob": "7a3c637129a15ca0bb2b20cbce6a5fd51cc8a817",
+    "working_sha256": "769b4ad1184f6be67ad66149789c55e7c1e7e4aa7e72bd6645dd5e901fb37d17"
+  },
+  {
+    "path": "src/Game/Demo/DemoWipeKeeper.cpp",
+    "staged_git_blob": "0fc0eefc187582114c3425581a4649441c0dc987",
+    "working_sha256": "3df8ec557d4316b2b1d01a06da22f3f6c19ca415d0517c1848e39a091b6d5f4d"
+  },
+  {
+    "path": "src/Game/Demo/DemoWipeKeeper.hpp",
+    "staged_git_blob": "ed069553c9e5534d3620c5385671d28259347a43",
+    "working_sha256": "0ba7e6fe1824a062e3265047fb02ad4adc1a758b06ea415f50323017be39a75f"
+  },
+  {
+    "path": "src/Game/Effect/ParticleResourceHolder.cpp",
+    "staged_git_blob": "a831f34219cfe8b3129c8a752da49d272531dd31",
+    "working_sha256": "d6ac09fe6a7f2ff31e2136400d605c73efd606f5e032d4f43776cd8861ae6be1"
+  },
+  {
+    "path": "src/Game/Effect/ParticleResourceHolder.hpp",
+    "staged_git_blob": "2fee2a82f62e308bec159b6c6e79bd8faa2995f7",
+    "working_sha256": "0fb4aeac88a9f55eb55574ff1f072bb08dbb2533af9cb31cc3e66ea3f4062fbf"
+  },
+  {
+    "path": "src/Game/LiveActor/ActorAnimKeeper.cpp",
+    "staged_git_blob": "5a91438abf1f0cd45ff11fc86fa0de5e95c7dc7b",
+    "working_sha256": "03a8ef8932588df536ce6d68767321da4097182d30d787bafdfbaa7c073dbcb3"
+  },
+  {
+    "path": "src/Game/LiveActor/ActorAnimKeeper.hpp",
+    "staged_git_blob": "09fdaa7c500c4f9ed1ac38594f30bb799c58ed1b",
+    "working_sha256": "2621bc188719e2c0d22548af31efb6f75c1f6138c762dd5b0e77e3edd00c1384"
+  },
+  {
+    "path": "src/Game/LiveActor/ActorPadAndCameraCtrl.cpp",
+    "staged_git_blob": "87b1df10b8e3a7fbc454c1f8abb773e21ec577b7",
+    "working_sha256": "5c5e9688de818fac0e55b5a83c8bfec386b1728a6890d57ee2952c2aa9ac7754"
+  },
+  {
+    "path": "src/Game/LiveActor/ActorPadAndCameraCtrl.hpp",
+    "staged_git_blob": "ddb3f48c0736ac3c5e06578476bcd0aedf2cb938",
+    "working_sha256": "a9152388c1161980a060aa8bfaf18578b79bd3e619b9a87cb88cbb05559dde7a"
+  },
+  {
+    "path": "src/Game/LiveActor/LiveActor.cpp",
+    "staged_git_blob": "fcf234eaa78ba02b263a295fcf9dd15c33b9d737",
+    "working_sha256": "99ea531cb43cd6a8e2039e6b53feadbce611724eba7f7150440ba54183c7838d"
+  },
+  {
+    "path": "src/Game/Map/LightDataHolder.cpp",
+    "staged_git_blob": "4a54845018a60cb8ed99f27ac8eba42d2b3c7717",
+    "working_sha256": "56d52ef83a1f9e4452183d1b03961f5850bc525680743068b4e8ae32c5430435"
+  },
+  {
+    "path": "src/Game/Map/LightDataHolder.hpp",
+    "staged_git_blob": "44d791f4cac71f91bd89cb7f9ef930aa9efea53e",
+    "working_sha256": "402c79792cde7f118f08a1d4bffe2f768dda2471d1f4bc9057dc2d84a1927c6d"
+  },
+  {
+    "path": "src/Game/Map/LightZoneDataHolder.cpp",
+    "staged_git_blob": "5241b2ac7469448479fc7a739a18e06a7e719c56",
+    "working_sha256": "912a0bb08dd271ccf14f7bf90d558d2ec4ea10b40a7659602974661283b9daf3"
+  },
+  {
+    "path": "src/Game/Map/LightZoneDataHolder.hpp",
+    "staged_git_blob": "d923372adddc40673c7deeb4421bc08056fe3fd3",
+    "working_sha256": "a5addf5b89590ad08e3696817f1029f5b3131f935880ed8e27227b14ef2922eb"
+  },
+  {
+    "path": "src/Game/Scene/StageDataHolder.cpp",
+    "staged_git_blob": "3eb2d075818a11ed89b2b4f042f1c11d3441702b",
+    "working_sha256": "696c72f0bb2ccfcdd6cdb87880612e7c52fb2c8c9d9d67aa619d43744e5acccb"
+  },
+  {
+    "path": "src/Game/Scene/StageDataHolder.hpp",
+    "staged_git_blob": "0ae4b920c31fc5eaaf73e462abe57b42630e9471",
+    "working_sha256": "93a4309a3229d68632cbc8cf8c021144513e2c3b32a31ed4adcf8777cfd1bff7"
+  },
+  {
+    "path": "src/Game/Screen/MoviePlayingSequence.cpp",
+    "staged_git_blob": "7338e304d1c4efe170f9f71517b574c9f7612a1e",
+    "working_sha256": "07a15bd1d4e83639f98fe285b14090cd6ba9d46bb79aab4837cd8fb88217d7df"
+  },
+  {
+    "path": "src/Game/Screen/MoviePlayingSequence.hpp",
+    "staged_git_blob": "58f3b151d5bdbb5f532564a68bfb9caffba5a491",
+    "working_sha256": "63a91e04f3fe7e498663c81e1202d615e779cc42d97978f6bf9fd99af593f9e6"
+  },
+  {
+    "path": "src/Game/System/ArchiveHolder.cpp",
+    "staged_git_blob": "c73ea409c9c3b790959e21de8b5ea2203ecf0ddb",
+    "working_sha256": "43c8a1e5a2c0dfa63e7706770655b4d8fe56a7c867f722d7db9a83f10c7fe07e"
+  },
+  {
+    "path": "src/Game/System/ArchiveHolder.hpp",
+    "staged_git_blob": "8831a37a99f63c8941be309c83b5b02550d4b71c",
+    "working_sha256": "b2dfc6833bcb6c2dec503be9458a87182d97d77c234af8e63e74fbe7047bfed7"
+  },
+  {
+    "path": "src/Game/System/FileLoader.cpp",
+    "staged_git_blob": "33513efcacfcef3fe91fb6a3165442f0fd78dde3",
+    "working_sha256": "74debba9dcc992840a19df238bf3b257ab6f370fafbad9f4037faff1ddc21499"
+  },
+  {
+    "path": "src/Game/System/LayoutHolder.cpp",
+    "staged_git_blob": "18021f849c89b032a2574db814cf0a46f4af224a",
+    "working_sha256": "8e7d9fc24c8a189a8def3ec98c30909aee95502b1db2ac746e70efc9012d54ca"
+  },
+  {
+    "path": "src/Game/System/LayoutHolder.hpp",
+    "staged_git_blob": "9276a12ae76ea08894f743b99bd593b69dd70658",
+    "working_sha256": "43b4d82e1fe5321cf52dadda1e9fbfdb218c3c415182027bc35bc3135896f16f"
+  },
+  {
+    "path": "src/Game/System/ResourceHolder.cpp",
+    "staged_git_blob": "a2071aeea3f76afa8ef2b1676a1c87035b944069",
+    "working_sha256": "c928573bba2dea2d3165c65cc64eed33e36e9d6b2c627095a09d0f00899987a5"
+  },
+  {
+    "path": "src/Game/System/ResourceHolder.hpp",
+    "staged_git_blob": "2ab591fb1f6c3e88cad1f1b4ce1146c648f70015",
+    "working_sha256": "41e30e33eafe9928d22b1af47e118c51fdbd8b42c903eae8d36a629d3e054e7f"
+  },
+  {
+    "path": "src/Game/System/ResourceHolderManager.cpp",
+    "staged_git_blob": "e0676c9d783f460d8d3993bc022ee7f7d566705e",
+    "working_sha256": "d521c1542053c9de466d461555ce18092daa50cf083c85c9ce9f2115c444351a"
+  },
+  {
+    "path": "src/Game/System/ResourceHolderManager.hpp",
+    "staged_git_blob": "ca0543795352f092d689a778785d821d2c25563a",
+    "working_sha256": "b5d8301723813e5b1a6b4b76b70add53907b6e32e7f73b1ce283d32822dcb322"
+  },
+  {
+    "path": "src/Game/System/ScenarioDataParser.cpp",
+    "staged_git_blob": "4559514b552d1dcad15b180150ef4f1d2a4196fc",
+    "working_sha256": "6045ed1f461e781b88b88b8fba572c9eb04d5b35553048565ff1d1d5ccbafae0"
+  },
+  {
+    "path": "src/Game/System/ScenarioDataParser.hpp",
+    "staged_git_blob": "b8f1388e91d80836282ce7a2811dba8f528ff2de",
+    "working_sha256": "c121f29b54cc9bf61e6135269ba312cbd02e1e134c7e2efce1426eb8b9af4bf4"
+  },
+  {
+    "path": "src/Game/Util/FileUtil.cpp",
+    "staged_git_blob": "01bfe877fe49152d84e73c1da8424fefc2c1b1b3",
+    "working_sha256": "2b70f7e0c406e805c87b6eb22335c21491748634ccf1ccd84f9cb898299d58a3"
+  },
+  {
+    "path": "src/Game/Util/FixedPosition.cpp",
+    "staged_git_blob": "1b6b15cf92f2cee2048d377f8c5d0c0730054bac",
+    "working_sha256": "87b87fa88adaff270c4e9289fa4fbfd1ab8e61a8bd8791a8da1e12f1334f1d35"
+  },
+  {
+    "path": "src/Game/Util/LayoutUtil.cpp",
+    "staged_git_blob": "309784aca61b8b458b97a3f5a312fbd1008f3c0f",
+    "working_sha256": "7e15464b3dc9d4af8dbc87f79b75caf4ef09f4b3c97681ac0af9871f44589ba6"
+  },
+  {
+    "path": "src/Game/Util/MemoryUtil.cpp",
+    "staged_git_blob": "1f84e0f791f173002edf80001e55bc5811f46368",
+    "working_sha256": "4df0b2427c09159768e20028e639c61f5026d8b4c28b222a63ef344075e2a5fa"
+  },
+  {
+    "path": "src/Game/xmake.lua",
+    "staged_git_blob": "430fe5aae5ea4e30fc3162b32db190e79a3a8a50",
+    "working_sha256": "a842413fba84e77defebd1c4b8e45ddccc04c0dc52a4eef96fbceb0dddcb9eb3"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRArchive.hpp",
+    "staged_git_blob": "2ed0dff6d227df69961caa9a781b6d02274ae792",
+    "working_sha256": "c7e56bf193387e4894bc3a9af9a7da1aadac23d8db1d4cae43662b7303cf03b3"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRArchivePri.cpp",
+    "staged_git_blob": "5200284174bc59d3f3993d8e82b377f926569419",
+    "working_sha256": "8131b76632eafdd1321dda57cb0b1bd9a275a3019c572c8031da0f9dae52fa2b"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRMemArchive.cpp",
+    "staged_git_blob": "5953597474ed6981b9d8204130d9c19ddbcfd036",
+    "working_sha256": "6bac98a8ab35ee719f61323c73b4ce43e17c3e369c3a96f328133c986087ed42"
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTTexture.hpp",
+    "staged_git_blob": "648bb438821679429a296a656b24856830c3fc3b",
+    "working_sha256": "b5656e99ef46b5de923608496b7f6567da06af67d9c48da09c779d3461e72aac"
+  },
+  {
+    "path": "src/app/OriginalGameApplication.cpp",
+    "staged_git_blob": "f89c32bcf3e76c8af6ba7d0037d7417939a30c70",
+    "working_sha256": "8456be681bc96469c105acb1edf7d3042d4a1b45ca0b8c77183b28ac7b07675a"
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.cpp",
+    "staged_git_blob": "d9da2b6eb6979dc86cfb69d5c5c264771c7b817d",
+    "working_sha256": "591ebef0796c01f422a5bb1fa37d3d93c6007ff9df3d54a35f9c9e2668a7e397"
+  },
+  {
+    "path": "src/compat/CollisionPartsCompat.cpp",
+    "staged_git_blob": "393c12a65f504f37877d634e7efc9603454b70ef",
+    "working_sha256": "a919950cbbc1106789a3fbcd1e7a93436fc53d695bda365188518082d150a7af"
+  },
+  {
+    "path": "src/compat/DemoDirectorOwnership.cpp",
+    "staged_git_blob": null,
+    "working_sha256": null
+  },
+  {
+    "path": "src/compat/DemoDirectorOwnership.hpp",
+    "staged_git_blob": null,
+    "working_sha256": null
+  },
+  {
+    "path": "src/compat/FileUtilCompat.cpp",
+    "staged_git_blob": null,
+    "working_sha256": null
+  },
+  {
+    "path": "src/compat/MarioAnimatorLifetime.cpp",
+    "staged_git_blob": "47161b768d897ef737d2f7c9d2c20d04ce93c3df",
+    "working_sha256": "0f36e244b1eb1c0de409924713fc096651d410633da9053de4943599d682cba0"
+  },
+  {
+    "path": "src/compat/ModelManagerOwner.cpp",
+    "staged_git_blob": "e9e734b29409f6309ab52a7097ec37df6f91f05a",
+    "working_sha256": "fad3c71b1e232ff3710a3c66ad6a164b299a7994ca1ac5651ebb49bb6fdf76d5"
+  },
+  {
+    "path": "src/compat/ModelManagerOwner.hpp",
+    "staged_git_blob": "42e00074314a8cea46b66aaf1963246872987698",
+    "working_sha256": "75e0201a1ab11409633a0ca3936c4457a733d795b9f60c139b438a8f81542fc2"
+  },
+  {
+    "path": "src/compat/OriginalStationedResourceManager.cpp",
+    "staged_git_blob": null,
+    "working_sha256": null
+  },
+  {
+    "path": "src/compat/ResourceHolderCompat.cpp",
+    "staged_git_blob": null,
+    "working_sha256": null
+  },
+  {
+    "path": "src/compat/ResourceHolderCompat.hpp",
+    "staged_git_blob": null,
+    "working_sha256": null
+  },
+  {
+    "path": "src/compat/ScenarioDataParserAccess.cpp",
+    "staged_git_blob": null,
+    "working_sha256": null
+  },
+  {
+    "path": "src/compat/SceneHeapAccess.cpp",
+    "staged_git_blob": null,
+    "working_sha256": null
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "staged_git_blob": "958b6cff9c05c546569f48df964dfbb4774112ca",
+    "working_sha256": "edf36bfa54d8315667e811384ab94bdf36c06660b59c536ef6c30a6f4e8b6b38"
+  },
+  {
+    "path": "src/layout/LayoutManagerCompat.cpp",
+    "staged_git_blob": "061b79a44d685c9c01f9c97fb4a6a7eebb91ec3e",
+    "working_sha256": "71194f71969475490ee09390828774b646ebe2be9557bfd378e4bb3aaa0009a5"
+  },
+  {
+    "path": "src/layout/LayoutRuntime.cpp",
+    "staged_git_blob": "0db67e690e14e7640539d13943eaf868a2100be5",
+    "working_sha256": "254228ccdbb3f737c138fc1863b4c602d57ac22ac61efa30aa83962e11518e34"
+  },
+  {
+    "path": "src/layout/LayoutRuntime.hpp",
+    "staged_git_blob": "1083d8bb29b098d83ed26d707662035d61802ff6",
+    "working_sha256": "7d0a7c1513821faaad98d3157e79846299bf9ebb6d1273a8306544e3ba292112"
+  },
+  {
+    "path": "src/layout/LayoutUtilCompat.cpp",
+    "staged_git_blob": "4b3dd5affdc38d0abab29cec88a8e5c0a5f5510d",
+    "working_sha256": "47a0ed76f9d999e53cd9a5eee4719623a3c5e4deaee0aa6cfc2f51121098b985"
+  },
+  {
+    "path": "src/layout/Nw4rLayoutRecords.cpp",
+    "staged_git_blob": "9e279e903d6f94a5471132e36091d3be09d5b16b",
+    "working_sha256": "fcbb37a0d0fc5fa16ec177061b01177e76bf52d1bbce285ac6c403d545dfd184"
+  },
+  {
+    "path": "src/nw4r/lyt/lyt_texMap.cpp",
+    "staged_git_blob": "f32afe69167192f31abeb3ba50db6098d10262c8",
+    "working_sha256": "5108a03b98080571250c1e15de9c275cd6fdb7dcd34ab32dda38890a3cf4df62"
+  },
+  {
+    "path": "src/nw4r/lyt/texMap.h",
+    "staged_git_blob": "a51da15b2cb18cd0b791a2dbbbf01fa2c7c69d80",
+    "working_sha256": "fc4ff07da012c4d003487c2479cd82dbaf99b4145290ea1d9806cb49ffc1019f"
+  },
+  {
+    "path": "src/resource/GameResourceRuntime.cpp",
+    "staged_git_blob": "d5a4046b8cb8624c4efae3bb548368a4b1d30e64",
+    "working_sha256": "3aacbdf9ca69eff66509f528b182f0d73fc03575b1d12f264073bb9943cf2f49"
+  },
+  {
+    "path": "src/resource/GameResourceRuntime.hpp",
+    "staged_git_blob": "7977cec0a3336fe05576e287122fa4ed269c751e",
+    "working_sha256": "8e6c019b061bdda9d95fe544432b0f33abe50fcfcc2c6f80caf277a48efd8c6d"
+  },
+  {
+    "path": "src/resource/JMapResource.cpp",
+    "staged_git_blob": "c7568d4576e85e5190bb46b8e71f089ffdc5767a",
+    "working_sha256": "1786ad5dcb7e87f6a28c057c036e0dbbbcc1e92bb1c7bf37e9962b13936a07c7"
+  },
+  {
+    "path": "src/resource/JMapResource.hpp",
+    "staged_git_blob": "1a76d1de10f146cfbcde3adac1bb04e9052493a9",
+    "working_sha256": "b5138476d399266814fa9fa86eaa16dd2656ccf190da0a314701142b9f849424"
+  },
+  {
+    "path": "src/runtime/ArchiveMountService.cpp",
+    "staged_git_blob": null,
+    "working_sha256": null
+  },
+  {
+    "path": "src/runtime/ArchiveMountService.hpp",
+    "staged_git_blob": null,
+    "working_sha256": null
+  },
+  {
+    "path": "src/runtime/MessageHolderOwnership.cpp",
+    "staged_git_blob": "9b0698fa4a29efdf314457663c77031cbe1cf98c",
+    "working_sha256": "8421b808ef6dacb0709509c974784f480af27da0ac22be3718dde06c131c11b6"
+  },
+  {
+    "path": "src/runtime/MessageHolderOwnership.hpp",
+    "staged_git_blob": "222d7220e7837e9eaece5b9fb923a674baed4aa9",
+    "working_sha256": "fa49ef0705d15d51cf31b37f426a32784fe66bb6245e651a0ff66542d44013a4"
+  },
+  {
+    "path": "src/runtime/ParticleResourceOwnership.cpp",
+    "staged_git_blob": "3fcf43c2b1c063342bf771363a2311a6cdb73034",
+    "working_sha256": "a887639446cd966bab6d99f697340d116d98d40091ef8f19e550412a10d41ae4"
+  },
+  {
+    "path": "src/runtime/ParticleResourceOwnership.hpp",
+    "staged_git_blob": "60a458f569d38211c3d991a07c4a8deeec1cfa27",
+    "working_sha256": "0bed81ccd319a81ce5ccfe03686a9261f05b2f03f357fac1911208a3a4bf164a"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.cpp",
+    "staged_git_blob": "a4189dca58bc627ca4ff00d86583137208b1a95c",
+    "working_sha256": "0376cbea4a2342b82a5b087e64967b651cab1d9786490943cd6b62da17ed6bfe"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.hpp",
+    "staged_git_blob": "34c41a016b3066b930733f30fe727022a343a744",
+    "working_sha256": "14151c3a1121c776e7bd70aebeb400a19aa16783ae56de4719790f1bdff21cd8"
+  },
+  {
+    "path": "src/runtime/ScenarioCatalogOwnership.cpp",
+    "staged_git_blob": "d2361f2a8757d811f2424dfc97ac126d872b0355",
+    "working_sha256": "1da48174c7b701bf10545018cfa583f507ee017763d845663fca7d3938f5c58b"
+  },
+  {
+    "path": "src/runtime/ScenarioCatalogOwnership.hpp",
+    "staged_git_blob": "1b52c4b2d5372e5da6a62892ce08ceba1797767d",
+    "working_sha256": "4567cc1800d98dda64b2c0a99cf0d2a87dec53799a7d2c48ba80d942327c31d5"
+  },
+  {
+    "path": "src/scene/OriginalSceneSupport.cpp",
+    "staged_git_blob": "0d3a8cac136488593d3bc309ec3995d97440dcb0",
+    "working_sha256": "cb491e673b3d36c55f4813f8e5fc1b9bc6754c19e10e92861e91d9e701649276"
+  },
+  {
+    "path": "src/scene/SceneObjHolderRuntime.hpp",
+    "staged_git_blob": "ea8f273abb523bc72184e5d7bbec8952e12b3cc8",
+    "working_sha256": "1002b91e2eea8e4ba1a7f7459f2f369a4254e2a3af06328d6eedf031d664402d"
+  },
+  {
+    "path": "src/scene/StagePlacementResolver.cpp",
+    "staged_git_blob": "97ee4e737aeb309093852c57161e13bdb3528934",
+    "working_sha256": "60b829f29b9d2d66e2f763354f876df1e2cc5fe2ef8baf7d6c46359f4cfe3482"
+  },
+  {
+    "path": "tests/AreaObjRealOrAbsentTests.cpp",
+    "staged_git_blob": "14abdf6daa3774785a343c2c31971aca17ce1d27",
+    "working_sha256": "9b27caf5d093ba6c58b9a6236bcbbbf4d5447a91ff3eb176aef2268d76235f32"
+  },
+  {
+    "path": "tests/AuthoredPlacementInstantiatorTests.cpp",
+    "staged_git_blob": null,
+    "working_sha256": null
+  },
+  {
+    "path": "tests/CenterScreenBlurRealOrAbsentTests.cpp",
+    "staged_git_blob": "fb14683e51c878b4f14b58a9fb3f6dfbc4c9fa65",
+    "working_sha256": "eefdb67b8bd55fe3c2fbe9ac7170a24714ac6c072f9298ee8d318769ce59d52f"
+  },
+  {
+    "path": "tests/NameObjFactoryPlacementTests.cpp",
+    "staged_git_blob": "cce8ebc252f329b2bfb876c68002e1ede8919fad",
+    "working_sha256": "0af947b0e39c803c11bfa6ead30d278761ad9ce2b7c5b74bd53ca7070150ae4e"
+  },
+  {
+    "path": "tests/OriginalAsyncHeapSelection.hpp",
+    "staged_git_blob": "6d892d3cc284ea2767e7222686f19f13b38ca489",
+    "working_sha256": "d311060fa952cd5555a5bb1bbe2daf8dc1257cd9f2dba757b6accc8a6b454eb3"
+  },
+  {
+    "path": "tests/OriginalGameSystemStartupTests.cpp",
+    "staged_git_blob": "69ca4cd98bcd7b9961b27647a706481221528ce8",
+    "working_sha256": "2c1643baffa1cd3b22d16c1bae15506537c7aa79ced8d0559cd04f6e4533d842"
+  },
+  {
+    "path": "tests/OriginalJMapResourceTests.cpp",
+    "staged_git_blob": "893fd9f53080fdf6161ff15b3dcf3d511886216e",
+    "working_sha256": "cede612e5fafd3b8d2085fbb0e3c14e2dc99f3f9ef13ff4184a58260729f1ffd"
+  },
+  {
+    "path": "tests/OriginalJkrArchiveTests.cpp",
+    "staged_git_blob": "8ac7d3134ced6d893a1e25542ab9c0bb4ac202b8",
+    "working_sha256": "acf915ba46d37311961ee33962e72235ad937c923ed2a78fbd055bd7d8869910"
+  },
+  {
+    "path": "tests/OriginalJointControllerTests.cpp",
+    "staged_git_blob": "bbceebf6a181c3b569df656d28597ab852a9a987",
+    "working_sha256": "7f577419183ecd18c2932f24c8a5f9c9a174ac5f59062056a20d3b12fba4a915"
+  },
+  {
+    "path": "tests/OriginalMessageHolderTests.cpp",
+    "staged_git_blob": "5bc6f704918350f0ca9396e75795378faf851433",
+    "working_sha256": "1b4b7be1734df70932becfd283b86427ca39911aae2219e1ffa47217f5f2ad91"
+  },
+  {
+    "path": "tests/OriginalProcessPlacementTransformTests.cpp",
+    "staged_git_blob": "71fc33144d985afa28eb5929e5673d60985bf66a",
+    "working_sha256": "362a8282755edf68169240dfc97d06630990ace2d98100cc4483397907305b90"
+  },
+  {
+    "path": "tests/OriginalResourceHolderTests.cpp",
+    "staged_git_blob": "9f8e1b18efe820cda30e684bb6b0e874122c1f1a",
+    "working_sha256": "85b3b081d7bd1f0614c2cc60b0929d84a25759f4eb5034dff4f135e2562ab292"
+  },
+  {
+    "path": "tests/OriginalScenarioCatalogTests.cpp",
+    "staged_git_blob": "74019045f14ff286b10489aaa95b466f94970e74",
+    "working_sha256": "964bf252b20824793d8da6ad3074d61f28a4b2eebdc1afb929d4eb052b8b21cc"
+  },
+  {
+    "path": "tests/OriginalShadowControllerOwnerTests.cpp",
+    "staged_git_blob": "444c004e4e33229e7e7675fd5f994bde88bc2ba8",
+    "working_sha256": "4fd6ceda4a2660d7dbcbe4bfc7ec95d9b44c129272402d70a43982a9bef52a86"
+  },
+  {
+    "path": "tests/OriginalStageResourceProcessFixture.hpp",
+    "staged_git_blob": "29bd8f6cd21f8fb086b8efb6f12e4a19dffcd140",
+    "working_sha256": "52f6bf9393ab1aa56d724190c3f6a4bb4c38f949db23c41e9a0e3f66ea4c3550"
+  },
+  {
+    "path": "tests/OriginalStarPointerOwnerTests.cpp",
+    "staged_git_blob": "401e8cde6631ccf5f6d4803a110e615a9a513356",
+    "working_sha256": "ba3bb28106c9eb0469ae1a4c1c9a1424a90ae50de227d71ba0540c2f87ce30da"
+  },
+  {
+    "path": "tests/RuntimeContextFailureTests.cpp",
+    "staged_git_blob": "19fc4517c4a6e7d45d960dda11070e9c07751a95",
+    "working_sha256": "13a2c17d6e2949e5595e97811f51aad6d00a95962827121fa913f13090bb8aec"
+  },
+  {
+    "path": "tests/ScenarioPublicationTests.cpp",
+    "staged_git_blob": "3caf9a6a8e06234c2d0a77ddabc80278e9bd2e58",
+    "working_sha256": "04fd1b28298808587ccfd9206afd279950dfa2ec0b5aa2f8ac302b18075fd833"
+  },
+  {
+    "path": "tests/SphereSelectorRealOrAbsentTests.cpp",
+    "staged_git_blob": "b4ec21f3bc209b3fe61603e21e584541b9654d4d",
+    "working_sha256": "ede75b0219018a316ba2d1e5a31037bf8f36dfe6bd3c5910be76c5a0df335edd"
+  },
+  {
+    "path": "tests/StageCameraResourceTests.cpp",
+    "staged_git_blob": "727741ddf85816ba9cfe8a55bb31d8062373b254",
+    "working_sha256": "71d4e77a66b4742a10317aaae6dcd10761f0d14000541267f59ef750c70a7b97"
+  },
+  {
+    "path": "tests/StationedArchiveRealOrAbsentTests.cpp",
+    "staged_git_blob": "1218fce1b0c6e833052ee85ea20ebbca6ce762d2",
+    "working_sha256": "f73555f34a15e949c50b9e5c066f9f90aaf839340137201945dbd5dcdcd74705"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "staged_git_blob": "0e8e5e568309446518fe8c01ccc41b4f47084ae0",
+    "working_sha256": "cc52cceb27d1e9bc936ac23410931ff01e113f85ab521c322a5adc3782ee212c"
+  }
+]

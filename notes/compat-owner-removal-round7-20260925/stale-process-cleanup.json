@@ -1,0 +1,20 @@
+[
+  {
+    "pid": 48099,
+    "command": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc --disc /Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz --stage HeavensDoorGalaxy --scenario 1 --max-frames 600",
+    "signal": "SIGKILL",
+    "reason": "Earlier task-owned deadlocked validation processes survived SIGTERM"
+  },
+  {
+    "pid": 48227,
+    "command": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-message-holder-tests",
+    "signal": "SIGKILL",
+    "reason": "Earlier task-owned deadlocked validation processes survived SIGTERM"
+  },
+  {
+    "pid": 52461,
+    "command": "build/macosx/arm64/debug/smg-pc-original-resource-holder-tests",
+    "signal": "SIGKILL",
+    "reason": "Earlier task-owned deadlocked validation processes survived SIGTERM"
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "checks": {
+    "factory_defined_only_in_actual_Game_owner": true,
+    "factory_uses_original_ResTIMG_JUT_GX_sequence": true,
+    "LayoutHolder_factory_removed": true,
+    "SDK_copy_constructs_registered_destination": true,
+    "SDK_destructor_unregisters_finalizer": true,
+    "factory_repetition_exceeds_entire_registry_capacity": true,
+    "factory_first_type_query_covered": true,
+    "native_heap_reuse_checked": true,
+    "no_missing_archive_service_shortcut": true
+  },
+  "builds_run_by_agent": false
+}

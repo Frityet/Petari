@@ -66,6 +66,10 @@ namespace MR {
         return SingletonHolder< HeapMemoryWatcher >::get()->mSceneHeapNapa;
     }
 
+    JKRSolidHeap* getSceneHeapGDDR3() {
+        return SingletonHolder< HeapMemoryWatcher >::get()->mSceneHeapGDDR;
+    }
+
     JKRHeap* getHeapNapa(const JKRHeap* pHeap) {
         return SingletonHolder< HeapMemoryWatcher >::get()->getHeapNapa(pHeap);
     }

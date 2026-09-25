@@ -5,7 +5,14 @@
 #include <JSystem/JKernel/JKRArchive.hpp>
 #include <JSystem/JKernel/JKRFileFinder.hpp>
 #include <JSystem/JKernel/JKRHeap.hpp>
+#include <memory>
+#include <filesystem>
 
+namespace smgpc::resource {
+    class RarcArchive;
+}
+
+struct ResTIMG;
 class MaterialAnmBuffer;
 class J3DModelData;
 
@@ -14,6 +21,17 @@ typedef const char* ArchiveName;
 class ResourceHolder {
 public:
     ResourceHolder(JKRArchive&);
+    ~ResourceHolder();
+    ResourceHolder(const ResourceHolder&) = delete;
+    ResourceHolder& operator=(const ResourceHolder&) = delete;
+
+    [[nodiscard]] std::shared_ptr<const void> retainNativeResources() const;
+    [[nodiscard]] std::shared_ptr<const void> retainNativeTexture(const ResTIMG*) const;
+    [[nodiscard]] std::size_t nativeArchiveReferenceCount() const noexcept;
+    void ensureNativeResourcesUnborrowed() const;
+    [[nodiscard]] const smgpc::resource::RarcArchive& nativeResourceSource() const;
+    [[nodiscard]] const std::filesystem::path& nativeResourcePath() const;
+    [[nodiscard]] JKRHeap& heap() const noexcept;
 
     const char* getMotionName(u32) const;
     bool isExistMaterialAnm() const;
@@ -86,4 +104,9 @@ public:
     JKRArchive* mArchive;             // 0x44
     JKRHeap* mHeap;                   // 0x48
     u32 mTotalResourceSize;           // 0x4C
+
+private:
+    struct NativeResources;
+    std::shared_ptr<NativeResources> mNativeResources;
+    void destroyNativeResources() noexcept;
 };

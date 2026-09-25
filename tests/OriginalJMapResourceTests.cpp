@@ -265,7 +265,7 @@ namespace {
         }
         domain.reset(); runtime.reset();
     }
-    void test_original_archive_index() {
+    auto archive_fixture() {
         using namespace smgpc::resource;
         const auto table = fixture();
         constexpr std::size_t dirs = 0x40, files = 0x50, strings = 0x8c, data = 0xc0;
@@ -284,7 +284,12 @@ namespace {
         };
         entry(0, 100, 10, 0x11, 0, table.size()); entry(1, 0xffff, 5, 2, 0, 16); entry(2, 0xffff, 7, 2, 0xffffffff, 16);
         std::copy(names.begin(), names.end(), bytes.begin() + strings); std::copy(table.begin(), table.end(), bytes.begin() + data);
-        auto archive = std::make_shared<RarcArchive>(RarcArchive::from_bytes(std::move(bytes)));
+        return bytes;
+    }
+    void test_original_archive_index() {
+        using namespace smgpc::resource;
+        const auto table = fixture();
+        auto archive = std::make_shared<RarcArchive>(RarcArchive::from_bytes(archive_fixture()));
         JKRMemArchive original(*archive);
         auto* index = original.getIdxResource(0);
         require(index == archive->file_data_start() && index == original.getResource(u16(100)), "index fetch returns actual memory-archive bytes");
@@ -295,6 +300,73 @@ namespace {
         auto registration = register_jmap_source(archive->file_data(archive->entries().front()), archive);
         JMapInfo info; require(info.attach(index) && info.getData() == index, "index-fed parser retains real raw file identity");
     }
+    void test_fixed_archive_attachment_leases() {
+        using namespace smgpc::resource;
+        auto raw = archive_fixture();
+        const auto expected_table = fixture();
+        auto archive = std::make_unique<JKRMemArchive>();
+        require(archive->mountFixed(std::span<const u8>(raw), JKR_MEM_BREAK_FLAG_0), "bounded fixed archive mounts");
+        auto source = archive->retainSource();
+        std::weak_ptr<const RarcArchive> weak_source = source;
+        const std::weak_ptr<const void> lifetime = archive->retainNativeResources();
+        const auto bytes = source->file_data(source->entries().front());
+        std::optional<JMapSourceRegistration> registration;
+        registration.emplace(register_jmap_source(bytes, source, [lifetime] { return lifetime.lock(); }));
+        source.reset();
+        archive->validateNativeRetirement();
+
+        JMapInfo first;
+        require(first.attach(bytes.data()) && first.getData() == bytes.data() &&
+                    first.getEntryData(0) == reinterpret_cast<const char*>(bytes.data() + 40),
+                "fixed attachment preserves the archive's exact raw and entry identities");
+        JMapInfo copy(first);
+        first = JMapInfo();
+        archive->validateNativeRetirement(1);
+        JMapInfo independent;
+        require(independent.attach(bytes.data()), "a second original attach acquires its own lease");
+        archive->validateNativeRetirement(2);
+        bool rejected = false;
+        try { archive->validateNativeRetirement(1); }
+        catch (const std::logic_error&) { rejected = true; }
+        require(rejected, "copied readers share one lease while independently attached readers own separate leases");
+
+        registration.reset();
+        require(!find_jmap_resource(bytes.data()) && !weak_source.expired(),
+                "unpublication removes raw lookup while existing readers retain bounded metadata");
+        rejected = false;
+        try { archive->validateNativeRetirement(); }
+        catch (const std::logic_error&) { rejected = true; }
+        require(rejected && bytes.size() == expected_table.size() &&
+                    std::memcmp(copy.getData(), expected_table.data(), expected_table.size()) == 0,
+                "live fixed-buffer attachments prevent archive retirement rather than dangling their raw identity");
+        copy = JMapInfo();
+        archive->validateNativeRetirement(1);
+        JMapResource replacement(fixture());
+        require(independent.attach(replacement.data()), "rebinding to a separately owned table succeeds");
+        archive->validateNativeRetirement();
+        archive.reset();
+        require(lifetime.expired() && weak_source.expired(),
+                "final detach releases archive and metadata before the fixed caller buffer can retire");
+        const char* value = nullptr;
+        require(independent.getValue(0, "name", &value) && std::string_view(value) == name,
+                "rebound reader retains its independently owned table");
+    }
+    void test_attachment_lease_validation() {
+        using namespace smgpc::resource;
+        auto raw = std::make_shared<const std::vector<u8>>(fixture());
+        auto lease = std::make_shared<const int>(7);
+        std::weak_ptr<const void> weak = lease;
+        auto registration = register_jmap_source(*raw, raw, [weak] { return weak.lock(); });
+        bool policy_rejected = false;
+        try { auto changed = register_jmap_source(*raw, raw); }
+        catch (const std::logic_error&) { policy_rejected = true; }
+        require(policy_rejected, "duplicate raw registration cannot silently discard its required attachment lease");
+        lease.reset();
+        bool expired_rejected = false;
+        try { JMapInfo reader; (void)reader.attach(raw->data()); }
+        catch (const std::logic_error&) { expired_rejected = true; }
+        require(expired_rejected, "an expired raw lifetime rejects attachment before decoding source bytes");
+    }
 
 }
 int main() {
@@ -302,6 +374,8 @@ int main() {
         std::pair{"raw source identity and original row ranges", test_raw_source_identity},
         std::pair{"raw source original heap retirement", test_raw_source_heap_retirement},
         std::pair{"original memory-archive index fetch", test_original_archive_index},
+        std::pair{"fixed archive attachment retirement leases", test_fixed_archive_attachment_leases},
+        std::pair{"attachment lease expiry and duplicate policy", test_attachment_lease_validation},
         std::pair{"borrowed name outlives local reader", test_reader_lifetime},
         std::pair{"attached reader retains released resource", test_attached_reader_retains_data},
         std::pair{"rebind preserves other owner", test_rebind_keeps_other_owner},

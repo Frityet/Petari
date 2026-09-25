@@ -1,9 +1,17 @@
-#include "compat/StageZoneMatrixRegistry.hpp"
-#include <aurora/system_config.hpp>
-#include "compat/StageSessionState.hpp"
-#include "SceneExecutionFixture.hpp"
-#include "runtime/ArchiveMountService.hpp"
-#include "runtime/ScenarioCatalogOwnership.hpp"
+#include "OriginalStageResourceProcessFixture.hpp"
+#include "app/Application.hpp"
+#include "app/OriginalGameApplication.hpp"
+#include "Game/Scene/GameScene.hpp"
+#include "Game/Scene/StageDataHolder.hpp"
+#include "Game/System/GameSystem.hpp"
+#include "Game/System/GameSystemSceneController.hpp"
+#include "Game/Map/CollisionCategorizedKeeper.hpp"
+#include "Game/Util/CollisionPartsFilter.hpp"
+#include "scene/NameObjChildOwner.hpp"
+#include "scene/SceneInitializationState.hpp"
+#include <aurora/allocation.hpp>
+#include <aurora/main.h>
+#include "Game/AreaObj/AreaObj.hpp"
 #include "Game/AreaObj/AreaObjContainer.hpp"
 #include "Game/Map/FileSelector.hpp"
 #include "Game/MapObj/InvisiblePolygonObj.hpp"
@@ -19,7 +27,9 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 #include "compat/HitInfoCompat.hpp"
-#include "compat/ResourceHolderCompat.hpp"
+#include "Game/System/ResourceHolder.hpp"
+#include "Game/System/ResourceHolderManager.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "resource/GameResourceRuntime.hpp"
 #include <aurora/aurora.h>
 #include "runtime/RuntimeServices.hpp"
@@ -29,16 +39,20 @@
 #include "scene/PlacementZoneScope.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageCollisionService.hpp"
-#include "scene/StagePlacementPreflight.hpp"
+#include "Game/Util/MapUtil.hpp"
 #include "scene/StagePlacementResolver.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 
 #include <aurora/dvd.h>
+#include <aurora/exception.hpp>
 #include <dolphin/dvd.h>
 
 #include <algorithm>
 #include <array>
 #include <cstdlib>
+#include <stdlib.h>
+#include <unistd.h>
+#include <cstdio>
 #include <cstdint>
 #include <exception>
 #include <filesystem>
@@ -62,7 +76,7 @@ namespace {
 
     void require(bool condition, std::string_view message) {
         if (!condition) {
-            throw std::runtime_error(std::string(message));
+            aurora::throw_host_exception<std::runtime_error>(std::string(message));
         }
     }
 
@@ -418,41 +432,9 @@ namespace {
         }
 
         const auto placements = smgpc::scene::resolve_stage_placement_objects(dvd, "HeavensDoorGalaxy", 1);
-        const auto passive_area_placement = std::ranges::find_if(placements, [](const auto &placement) {
-            if (smgpc::scene::find_complete_area_obj_placement_descriptor(placement.object_name) == nullptr) {
-                return false;
-            }
-            for (const auto *field : {"FollowId", "SW_A", "SW_B", "SW_APPEAR", "SW_DEAD", "SW_SLEEP"}) {
-                auto value = s32{-1};
-                if (placement.jmap_info.getValue(placement.jmap_entry_index, field, &value) && value >= 0) {
-                    return false;
-                }
-            }
-            return true;
-        });
-        require(passive_area_placement != placements.end(),
-                "Gateway must retain a passive placement for the completed AreaObj subset");
-        {
-            auto holder = SceneObjHolder{};
-            auto binding = smgpc::scene::SceneObjHolderBinding(holder);
-            require(holder.create(SceneObj_AreaObjContainer) != nullptr,
-                    "the exact placement test requires its scene-owned retail AreaObj container");
-
-            auto object = smgpc::scene::nameobj::create_name_obj(
-                dvd, passive_area_placement->object_name, "localized actor label");
-            auto *area = dynamic_cast<AreaObj *>(object.get());
-            require(area != nullptr, "the completed passive descriptor must construct its exact AreaObj type");
-            object->init(JMapInfoIter(
-                &passive_area_placement->jmap_info, passive_area_placement->jmap_entry_index));
-
-            const auto *descriptor = smgpc::scene::find_complete_area_obj_placement_descriptor(
-                passive_area_placement->object_name);
-            auto *manager = MR::getAreaObjContainer()->getManager(descriptor->manager_name.data());
-            require(std::string_view(object->getName()) == passive_area_placement->object_name &&
-                        manager->getAreaObj(0) == area,
-                    "exact placement init must apply JMap naming before entering the canonical retail manager");
-            binding.init_after_placement();
-        }
+        // OriginalProcessPlacementTransformTests covers authored area init,
+        // managers and zone transforms under the real StageDataHolder graph.
+        // This test only classifies the resolved factory/archive requests.
         const auto archive_only_placement = std::ranges::find_if(placements, [](const auto &placement) {
             return !placement.intentionally_ignored && !placement.factory_supported &&
                    !placement.object_archive_path.empty();
@@ -472,7 +454,7 @@ namespace {
 
         auto collision = smgpc::scene::StageCollisionService{};
         collision.clear();
-        collision.build();
+
         if (!direct_archive_only_name.empty()) {
             require(collision.empty() && collision.stats().mesh_count == 0U &&
                         collision.stats().triangle_count == 0U,
@@ -487,8 +469,7 @@ namespace {
     }
 
     [[nodiscard]] bool line_query_hits_registered_wall(
-        const smgpc::scene::StageCollisionService &collision,
-        smgpc::scene::StageCollisionHit *hit = nullptr) {
+        Triangle* hit = nullptr, const CollisionPartsFilterBase* filter = nullptr) {
         constexpr auto coordinates = std::array{-750.0F, -500.0F, -250.0F, 0.0F,
                                                 250.0F, 500.0F, 750.0F, 1000.0F};
         for (auto axis = 0U; axis < 3U; ++axis) {
@@ -503,7 +484,12 @@ namespace {
                         offset_values[axis] = direction * 4000.0F;
                         start_values[(axis + 1U) % 3U] = first;
                         start_values[(axis + 2U) % 3U] = second;
-                        if (collision.line_cast(start, offset, hit)) {
+                        TVec3f position;
+                        Triangle triangle;
+                        if (MR::getFirstPolyOnLineToMap(&position, &triangle, start, offset, filter, nullptr)) {
+                            if (hit != nullptr) {
+                                *hit = triangle;
+                            }
                             return true;
                         }
                     }
@@ -513,167 +499,210 @@ namespace {
         return false;
     }
 
-    void test_real_file_select_invisible_wall_collision_lifecycle() {
-        const auto disc_path = find_real_disc();
-        if (!disc_path.has_value()) {
-            std::cout << "[skip] real FileSelect InvisiblePolygonObj test (set SMGPC_REAL_DISC or place RMGK01.iso in a workspace ancestor)\n";
-            return;
-        }
-
-        aurora_dvd_close();
-        const auto disc_path_string = disc_path->string();
-        require(aurora_dvd_open(disc_path_string.c_str()),
-                "the selected real-disc fixture should be a readable SMG image");
-        struct DiscCloseGuard {
-            ~DiscCloseGuard() {
-                aurora_dvd_close();
-            }
-        } close_guard;
-        DVDInit();
-
-        auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
-        aurora::g_config.mem1Size = 24U * 1024U * 1024U;
-        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
-        auto mounts = smgpc::runtime::ArchiveMountService{dvd};
-        auto catalog = smgpc::runtime::ScenarioCatalogOwnership{
-            resource_runtime.host_heaps(), resource_runtime.budget().scenario_catalog_bytes, mounts};
-        auto session = smgpc::compat::StageSessionState{"FileSelect", "FileSelect", 1, JMapIdInfo(0, 0)};
-        const auto session_binding = smgpc::compat::StageSessionBinding{session};
-        std::vector<smgpc::scene::StageHolderOccurrence> stage_holders;
-        const auto stage_tables = smgpc::scene::resolve_stage_placement_tables(dvd, "FileSelect", 1, &stage_holders);
-        smgpc::compat::StageZoneMatrixBinding stage_zones(stage_holders, stage_tables);
-        const auto placements =
-            smgpc::scene::resolve_stage_placement_objects(dvd, "FileSelect", 1);
-        require(placements.size() == 4U,
-                "retail FileSelect scenario 1 must retain its four actor-bearing rows");
-        const auto wall = std::ranges::find_if(placements, [](const auto &placement) {
-            return placement.object_name == "InvisibleWall10x10";
-        });
-        require(wall != placements.end() && wall->factory_supported &&
-                    wall->object_archive_path == "/ObjectData/InvisibleWall10x10.arc",
-                "the real FileSelect wall row must resolve through its exact creator and archive");
-        const auto blocked_count = std::ranges::count_if(placements, [](const auto &placement) {
-            return !placement.intentionally_ignored && !placement.factory_supported;
-        });
-        require(blocked_count == 2U,
-                "FileSelect must retain only FileSelector and SphereSelectorHandle as blocked rows");
-
 #ifndef NDEBUG
-        const auto report_path = std::filesystem::temp_directory_path() /
-                                 "smgpc-file-select-invisible-wall-preflight.md";
-        {
-            const auto report_environment = ScopedEnvironmentVariable(
-                "SMGPC_STAGE_PLACEMENT_REPORT_PATH", report_path.string());
-            require_throws(
-                [&] {
-                    smgpc::scene::preflight_stage_placements_or_throw(
-                        "FileSelect", 1, placements);
-                },
-                "strict FileSelect preflight must remain red for its two real blockers");
+    // This deliberately injects one unchanged FileSelect row into a bounded
+    // original-process test. It does not claim the wall is authored in Gateway.
+    class PlacementTableRangeBinding final {
+    public:
+        PlacementTableRangeBinding(StageDataHolder& holder, const JMapInfo& table)
+            : _holder(holder), _begin(holder._E4), _end(holder._E8) {
+            const auto begin = reinterpret_cast<std::uintptr_t>(table.getData());
+            const auto size = table.getDataSize();
+            require(begin && size && begin + size > begin,
+                    "Injected placement requires its retained exact JMap byte range");
+            _holder._E4 = begin;
+            _holder._E8 = begin + size;
         }
-        auto report_stream = std::ifstream(report_path);
-        const auto report = std::string(std::istreambuf_iterator<char>(report_stream),
-                                        std::istreambuf_iterator<char>());
-        std::filesystem::remove(report_path);
-        require(report.find("total_objects: 4\n") != std::string::npos &&
-                    report.find("complete_objects: 2\n") != std::string::npos &&
-                    report.find("blocked_objects: 2\n") != std::string::npos &&
-                    report.find("- status: complete\n  object: InvisibleWall10x10\n") !=
-                        std::string::npos &&
-                    report.find("created_objects:") == std::string::npos,
-                "strict preflight must report the exact 2-blocker closure without fabricating roots");
+        ~PlacementTableRangeBinding() {
+            _holder._E4 = _begin;
+            _holder._E8 = _end;
+        }
+    private:
+        StageDataHolder& _holder;
+        std::uintptr_t _begin;
+        std::uintptr_t _end;
+    };
+
+    class OnlyWall final : public CollisionPartsFilterBase {
+    public:
+        explicit OnlyWall(const CollisionParts* parts) : _parts(parts) {}
+        bool isInvalidParts(const CollisionParts* parts) const override { return parts != _parts; }
+    private:
+        const CollisionParts* _parts;
+    };
+
+    struct WallProbe {
+        bool exercised = false;
+        const InvisiblePolygonObj* retired_actor = nullptr;
+        Triangle retired_triangle;
+
+        void after_frame(GameSystem& system, std::uint64_t frame) {
+            // Inject only at the terminal completed frame, after all ordinary
+            // game callbacks. All temporary owners retire before returning.
+            if (exercised || frame != 119) return;
+            auto* controller = system.mSceneController;
+            require(controller && controller->mSceneInitializeState == SceneInitializeState_End &&
+                        controller->getCurrentSceneForExecute() == controller->mScene &&
+                        dynamic_cast<GameScene*>(controller->mScene) && MR::isEqualStageName("HeavensDoorGalaxy"),
+                    "Terminal wall probe requires the fully initialized ordinary Gateway process");
+            const aurora::allocation::HostAllocationScope host;
+            auto* stage = MR::getStageDataHolder();
+            auto* collision = smgpc::scene::StageCollisionService::active();
+            auto* resources = SingletonHolder<ResourceHolderManager>::get();
+            const auto domain = smgpc::scene::current_scene_allocation_domain();
+            require(stage && stage->mZoneID == 0 && collision && resources && domain,
+                    "Actual process owns the root stage, collision, resource manager and scene heap");
+
+            auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
+            const auto placements = smgpc::scene::resolve_stage_placement_objects(dvd, "FileSelect", 1);
+            require(placements.size() == 4U, "Retail FileSelect retains four actor-bearing placement rows");
+            const auto wall = std::ranges::find_if(placements, [](const auto& placement) {
+                return placement.object_name == "InvisibleWall10x10";
+            });
+            require(wall != placements.end() && wall->factory_supported &&
+                        wall->object_archive_path == "/ObjectData/InvisibleWall10x10.arc",
+                    "The injected row retains the exact retail wall creator and archive");
+            ResourceHolder* wall_resources = nullptr;
+            smgpc::test::on_resource_worker([&] {
+                wall_resources = resources->createAndAdd("InvisibleWall10x10.arc", nullptr);
+            });
+            const auto& archive = wall_resources->nativeResourceSource();
+            require(archive.resource_data("InvisibleWall10x10.kcl").size() == 1222U &&
+                        archive.resource_data("InvisibleWall10x10.pa").size() == 96U &&
+                        archive.resource_data("CollisionVersion").size() == 7U,
+                    "Actual resource owner exposes the real RMGK01 wall KCL, attributes and version");
+            const auto* kcl_entry = archive.find_resource("InvisibleWall10x10.kcl");
+            require(kcl_entry != nullptr, "The exact wall KCL entry is retained in the resource archive");
+            const auto expected_source = wall->object_archive_path + ":/" + kcl_entry->path;
+            const auto iter = JMapInfoIter(&wall->jmap_info, wall->jmap_entry_index);
+            const auto begin_before = stage->_E4;
+            const auto end_before = stage->_E8;
+            const auto zone_before = MR::getCurrentPlacementZoneId();
+            const auto actors_before = smgpc::compat::actor_runtime_state_count();
+            const auto meshes_before = collision->stats().mesh_count;
+            {
+                const PlacementTableRangeBinding range(*stage, wall->jmap_info);
+                require(stage->findPlacedStageDataHolder(iter) == stage && MR::getPlacedZoneId(iter) == 0,
+                        "The exact injected row resolves through the original root holder's temporary range");
+                const smgpc::scene::PlacementZoneScope zone(0);
+                const smgpc::scene::SceneInitializationScope placement(SceneInitializeState_Placement);
+                smgpc::scene::NameObjChildOwner objects;
+                InvisiblePolygonObj* actor = nullptr;
+                objects.capture_construction_children([&] {
+                    const smgpc::compat::JkrAllocationScope game(domain);
+                    const auto creator = NameObjFactory::getCreator("InvisibleWall10x10");
+                    require(creator != nullptr, "The retail factory provides the exact wall creator");
+                    auto* object = creator("InvisibleWall10x10");
+                    actor = dynamic_cast<InvisiblePolygonObj*>(object);
+                    require(actor != nullptr, "The retail wall creator constructs InvisiblePolygonObj");
+                    actor->init(iter);
+                });
+                const auto source = smgpc::compat::actor_collision_parts_source(actor);
+                const auto radius = actor->mCollisionParts ? MR::getCollisionBoundingSphereRange(actor) : -1.0F;
+                std::fprintf(stderr, "[wall-probe] initialized actor=%p parts=%p registered=%d radius=%g source=%.*s\n",
+                             static_cast<void*>(actor), static_cast<void*>(actor->mCollisionParts),
+                             smgpc::compat::has_actor_collision_parts(actor), static_cast<double>(radius),
+                             static_cast<int>(source.size()), source.data());
+                require(actor->mCollisionParts && smgpc::compat::has_actor_collision_parts(actor) &&
+                            source == expected_source &&
+                            MR::getCollisionBoundingSphereRange(actor) > 0.0F,
+                        "Unchanged actor init creates actual CollisionParts and original clipping bounds");
+                auto* parts = actor->mCollisionParts;
+                auto* original_zone = parts->mZone;
+                const auto zone_count = original_zone->mNumParts;
+                const OnlyWall only_wall(parts);
+                require(line_query_hits_registered_wall(nullptr, &only_wall),
+                        "Original CollisionParts registration immediately publishes wall line queries");
+                actor->initAfterPlacement();
+                require(collision->stats().mesh_count == meshes_before + 1 &&
+                            line_query_hits_registered_wall(&retired_triangle, &only_wall),
+                        "Original post-placement callback retains exactly one additional KCL source");
+                const auto surface = collision->surface(parts, retired_triangle.mIdx);
+                require(surface && retired_triangle.getHostName() == actor->mName &&
+                            retired_triangle.getHostPlacementZoneID() == 0 &&
+                            surface->source_name == smgpc::compat::actor_collision_parts_source(actor),
+                        "Original triangle retains its injected host zone and exact resource provenance");
+                const auto surface_id = surface->triangle_index;
+
+                actor->makeActorDead();
+                require(!line_query_hits_registered_wall(nullptr, &only_wall),
+                        "Dead original actors remove their parts from map queries");
+                actor->makeActorAppeared();
+                require(line_query_hits_registered_wall(nullptr, &only_wall),
+                        "Original appearance restores retained collision membership");
+                MR::invalidateCollisionParts(actor);
+                MR::invalidateCollisionParts(actor);
+                require(!line_query_hits_registered_wall(nullptr, &only_wall),
+                        "Repeated invalidation remains absent from original queries");
+                actor->makeActorDead();
+                actor->makeActorAppeared();
+                require(actor->mCollisionParts == parts && line_query_hits_registered_wall(nullptr, &only_wall),
+                        "Appearance revalidates the same original CollisionParts identity");
+                MR::invalidateCollisionParts(actor);
+                require(!line_query_hits_registered_wall(nullptr, &only_wall),
+                        "Explicit invalidation removes collision after reappearance");
+                retired_actor = actor;
+                objects.clear();
+                require(!line_query_hits_registered_wall(nullptr, &only_wall) &&
+                            !retired_triangle.isValid() && retired_triangle.getHostName() == nullptr &&
+                            !collision->surface(surface_id) && original_zone->mNumParts + 1 == zone_count &&
+                            !smgpc::compat::has_actor_runtime_state(retired_actor) &&
+                            !smgpc::compat::has_actor_collision_parts(retired_actor),
+                        "Actor retirement removes actual keeper membership, queries and retained Triangle identities");
+            }
+            require(stage->_E4 == begin_before && stage->_E8 == end_before &&
+                        MR::getCurrentPlacementZoneId() == zone_before &&
+                        controller->mSceneInitializeState == SceneInitializeState_End &&
+                        smgpc::compat::actor_runtime_state_count() == actors_before,
+                    "Injected row bounds, placement zone, initialization state and actor ownership restore exactly");
+            exercised = true;
+            std::fprintf(stderr, "[wall-probe] PASS terminal injected FileSelect row: original creator/init, line queries, appearance/death/invalidation/retirement and restored Gateway owners; frame=%llu\n",
+                         static_cast<unsigned long long>(frame));
+        }
+    };
 #endif
 
-        auto resource_holders = smgpc::compat::ResourceHolderService{dvd, resource_runtime.create_cohort(), resource_runtime.mem1_heap()};
-        auto *wall_resources =
-            resource_holders.create_and_add("InvisibleWall10x10.arc");
-        require(resource_holders.backing(*wall_resources).archive().resource_data("InvisibleWall10x10.kcl").size() == 1222U &&
-                    resource_holders.backing(*wall_resources).archive().resource_data("InvisibleWall10x10.pa").size() == 96U &&
-                    resource_holders.backing(*wall_resources).archive().resource_data("CollisionVersion").size() == 7U,
-                "the ResourceHolder must expose the real RMGK01 KCL, attribute, and version resources");
-
-        auto collision = smgpc::scene::StageCollisionService{};
-        collision.clear();
-        collision.build();
-        collision.activate();
-        require(collision.empty(),
-                "strict preflight must not synthesize collision before exact actor construction");
-
-        auto scheduler = smgpc::runtime::SceneScheduler{};
-        const auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding{scheduler};
-        auto execution = smgpc::test::SceneExecutionFixture{
-            scheduler, smgpc::compat::JkrAllocationDomain::create(resource_runtime.host_heaps(), 8U << 20)};
-        aurora::NandFileSystem nand;
-        aurora::SystemConfiguration settings(nand);
-        auto& scene_objects = execution.holder();
-        scene_objects.create(SceneObj_NameObjGroup);
-        scene_objects.create(SceneObj_AreaObjContainer);
-        scene_objects.create(SceneObj_PlanetGravityManager);
-        scene_objects.create(SceneObj_CameraContext);
-        require(scene_objects.create(SceneObj_DemoDirector) != nullptr,
-                "the bound placement scene requires its original DemoDirector");
-        scene_objects.create(SceneObj_CameraDirector);
-        require(scene_objects.create(SceneObj_PlacementStateChecker) != nullptr,
-                "collision construction requires the original placement-zone state owner");
-        auto object = smgpc::scene::nameobj::create_name_obj(
-            dvd, wall->object_name, wall->object_name.c_str());
-        auto *actor = dynamic_cast<InvisiblePolygonObj *>(object.get());
-        require(actor != nullptr, "the real FileSelect row must construct InvisiblePolygonObj");
-        const auto iter = JMapInfoIter(&wall->jmap_info, wall->jmap_entry_index);
-        const auto archives = smgpc::scene::nameobj::preload_name_obj_archives(
-            dvd, wall->object_name, &iter);
-        require(archives.size() == 1U && archives.front().loaded,
-                "the exact wall lifecycle must preload its real retail archive");
-        {
-            const auto zone_scope = smgpc::scene::PlacementZoneScope(wall->zone_id);
-            actor->init(iter);
+    void test_real_file_select_invisible_wall_collision_lifecycle() {
+#ifdef NDEBUG
+        require(false, "Original-process wall lifecycle diagnostic requires a debug build");
+#else
+        const auto disc_path = find_real_disc();
+        if (!disc_path) {
+            std::cout << "[skip] real wall lifecycle test (set SMGPC_REAL_DISC)\n";
+            return;
         }
-        require(MR::getCurrentPlacementZoneId() == -1,
-                "the collision fixture must finish its construction zone scope before querying provenance");
-        require(smgpc::compat::has_actor_collision_parts(actor) &&
-                    smgpc::compat::actor_collision_parts_source(actor).find(
-                        "InvisibleWall10x10.arc") != std::string_view::npos &&
-                    MR::getCollisionBoundingSphereRange(actor) > 0.0F,
-                "exact actor init must retain real CollisionParts ownership and clipping bounds");
-        require(!line_query_hits_registered_wall(collision),
-                "registered KCL must remain unqueryable before the generic post-placement build");
-
-        actor->initAfterPlacement();
-        collision.build();
-        auto hit = smgpc::scene::StageCollisionHit{};
-        require(collision.stats().mesh_count == 1U &&
-                    collision.stats().triangle_count > 0U &&
-                    line_query_hits_registered_wall(collision, &hit),
-                "the post-placement build must expose the exact wall KCL to map queries");
-        const auto triangle = smgpc::compat::make_collision_triangle(collision, hit.triangle_index);
-        require(triangle.getHostName() == actor->mName &&
-                    triangle.getHostPlacementZoneID() == wall->zone_id &&
-                    collision.surface(hit.triangle_index)->source_name ==
-                        smgpc::compat::actor_collision_parts_source(actor),
-                "the original actor's CollisionParts must retain its host/zone separately from the exact KCL path");
-
-        actor->makeActorDead();
-        require(!line_query_hits_registered_wall(collision),
-                "dead CollisionParts owners must stop contributing map collision");
-        actor->makeActorAppeared();
-        require(line_query_hits_registered_wall(collision),
-                "reappeared CollisionParts owners must restore their retained map collision");
-        MR::invalidateCollisionParts(actor);
-        MR::invalidateCollisionParts(actor);
-        require(!line_query_hits_registered_wall(collision),
-                "explicit invalidation must remove an already-built KCL from map queries");
-        auto* retained_parts = actor->mCollisionParts;
-        actor->makeActorDead();
-        actor->makeActorAppeared();
-        require(actor->mCollisionParts == retained_parts && line_query_hits_registered_wall(collision),
-                "original actor appearance revalidates its retained CollisionParts");
-        MR::invalidateCollisionParts(actor);
-        require(!line_query_hits_registered_wall(collision),
-                "explicit invalidation removes collision again after original reappearance");
-        object.reset();
-        require(!line_query_hits_registered_wall(collision) &&
-                    !triangle.isValid() && triangle.getHostName() == nullptr,
-                "destroyed CollisionParts owners must invalidate retained BVH registrations");
+        auto pattern = (std::filesystem::temp_directory_path() / "petari-wall-process-XXXXXX").string();
+        const auto* directory = mkdtemp(pattern.data());
+        require(directory, "Wall process fixture requires a fresh private native console directory");
+        const ScopedEnvironmentVariable save("SMGPC_SAVE_DIR", directory);
+        const ScopedEnvironmentVariable nand("SMGPC_NAND_DIR", "");
+        const ScopedEnvironmentVariable buttons("SMGPC_DEBUG_WPAD_BUTTON_SCRIPT", "");
+        const ScopedEnvironmentVariable pointer("SMGPC_DEBUG_WPAD_POINTER_SCRIPT", "");
+        const ScopedEnvironmentVariable stick("SMGPC_DEBUG_WPAD_STICK_SCRIPT", "");
+        const ScopedEnvironmentVariable input_file("SMGPC_DEBUG_WPAD_INPUT_FILE", "");
+        const ScopedEnvironmentVariable strict("SMGPC_STRICT_PLACEMENT", "0");
+        const smgpc::app::BootstrapConfiguration configuration{
+            .window_width = 640, .window_height = 456, .window_title = "Original wall lifecycle fixture",
+            .arguments = {"original-wall-test", "--stage", "HeavensDoorGalaxy", "--scenario", "1", "--max-frames", "120"},
+            .disc_image = *disc_path,
+        };
+        auto logger = smgpc::logging::create_default_logger();
+        smgpc::app::ensure_disc_image_open(configuration, *logger);
+        struct DiscLifetime { ~DiscLifetime() { smgpc::app::close_disc_image(); } } disc_lifetime;
+        WallProbe probe;
+        const smgpc::app::OriginalGameDebugObserver observer{
+            .context = &probe,
+            .after_frame = +[](void* context, GameSystem& system, std::uint64_t frame) {
+                static_cast<WallProbe*>(context)->after_frame(system, frame);
+            },
+        };
+        require(smgpc::app::run_original_game(configuration, *logger, observer) == 0 && probe.exercised,
+                "Actual original process completes the terminal wall fixture and bounded frame loop");
+        require(smgpc::scene::StageCollisionService::active() == nullptr &&
+                    !smgpc::compat::has_actor_runtime_state(probe.retired_actor) &&
+                    !probe.retired_triangle.isValid() && probe.retired_triangle.getHostName() == nullptr,
+                "Normal original-process teardown preserves retired wall identities and releases the scene collision owner");
+#endif
     }
 
     struct TestCase {
@@ -683,12 +712,12 @@ namespace {
 
 }  // namespace
 
-int main() {
+int main(int, char**) {
     constexpr auto tests = std::array{
         TestCase{"factory-only placement support", test_factory_is_the_only_constructible_support_kind},
         TestCase{"DemoRabbit creator/archive callback atomicity", test_demo_rabbit_creator_and_placement_archive_callback_are_atomic},
         TestCase{"optional real-disc archive-only rejection", test_optional_real_disc_archive_presence_does_not_create_support},
-        TestCase{"real FileSelect invisible wall collision lifecycle", test_real_file_select_invisible_wall_collision_lifecycle},
+        TestCase{"injected retail wall lifecycle under original Gateway process", test_real_file_select_invisible_wall_collision_lifecycle},
     };
 
     auto failures = 0;

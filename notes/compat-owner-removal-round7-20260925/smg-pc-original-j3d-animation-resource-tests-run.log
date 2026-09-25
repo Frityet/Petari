@@ -1,0 +1,15 @@
+PASS BCK and BCA original dispatch
+PASS BPK and BPA material color
+PASS material keyed interpolation
+PASS BTK pre and post texture data
+PASS BRK signed and konst registers
+PASS BTP and BVA frame rules
+PASS BLK and BLA cluster weights
+PASS BXK and BXA index relocation
+PASS original block order
+PASS original block navigation and bounded reads
+PASS retained ownership and repeat load
+PASS explicit archive alias lifetime
+PASS bounded malformed resources
+PASS concurrent native load scopes
+PASS actual JKR allocation domain

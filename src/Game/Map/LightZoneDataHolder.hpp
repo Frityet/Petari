@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+class JMapInfo;
+
 #include <revolution.h>
 
 class LightArea;
@@ -34,6 +37,10 @@ public:
 
     s32 mAreaCount;       // 0x0
     AreaInfo* mAreaInfo;  // 0x4
+
+private:
+    // Original records borrow strings from this native parser until retirement.
+    std::unique_ptr<JMapInfo> mNativeParser;
 };
 
 class LightZoneDataHolder {

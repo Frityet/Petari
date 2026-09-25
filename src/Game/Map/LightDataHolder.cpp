@@ -21,6 +21,7 @@ LightDataHolder::~LightDataHolder() {
 void LightDataHolder::initLightData() {
     JMapInfo* data = NULL;
     mLightCount = LightFunction::createLightDataParser(&data);
+    mNativeParser.reset(data);
     mLights = new AreaLightInfo[mLightCount];
 
     for (s32 i = 0; i < mLightCount; i++) {

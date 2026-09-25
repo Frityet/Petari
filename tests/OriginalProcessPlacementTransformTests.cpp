@@ -20,7 +20,9 @@
 #include "Game/Util/SystemUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/Cp932Literal.hpp"
-#include "runtime/ArchiveMountService.hpp"
+#include "Game/System/FileLoader.hpp"
+#include "Game/Util/SingletonHolder.hpp"
+#include "runtime/RuntimeServices.hpp"
 #include "scene/OriginalPlacementCoverage.hpp"
 #include "scene/StagePlacementResolver.hpp"
 #include <aurora/allocation.hpp>
@@ -302,10 +304,11 @@ struct Probe {
 
         // Inventory tooling retains raw JMap rows too. Its separate world-space
         // metadata must stay useful without pretransforming inputs to Game.
-        auto* archives = smgpc::runtime::ArchiveMountService::active();
+        auto* archives = SingletonHolder<FileLoader>::get();
+        smgpc::runtime::DvdFileSystemService dvd("/");
         require(archives, "Actual process retains its archive filesystem");
-        const auto tables = smgpc::scene::resolve_stage_placement_tables(archives->dvd(), "HeavensDoorGalaxy", 1);
-        const auto objects = smgpc::scene::resolve_stage_placement_objects(archives->dvd(), tables);
+        const auto tables = smgpc::scene::resolve_stage_placement_tables(dvd, "HeavensDoorGalaxy", 1);
+        const auto objects = smgpc::scene::resolve_stage_placement_objects(dvd, tables);
         unsigned checked_inventory = 0, checked_starts = 0;
         for (const auto& object : objects) {
             if (object.zone_id != 5 || !object.has_translation) continue;

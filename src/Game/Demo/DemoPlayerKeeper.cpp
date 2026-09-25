@@ -6,14 +6,20 @@
 #include "Game/Util/PlayerUtil.hpp"
 
 DemoPlayerKeeper::DemoPlayerKeeper(const DemoExecutor* pExecutor) : mExecutor(pExecutor), mNumPlayerInfos(0), mPlayerInfos(nullptr) {
-    JMapInfo* map = nullptr;
-    mNumPlayerInfos = DemoFunction::createSheetParser(mExecutor, "Player", &map);
-    mPlayerInfos = new DemoPlayerInfo[mNumPlayerInfos];
-    for (int i = 0; i < mNumPlayerInfos; i++) {
-        DemoPlayerInfo* playerinfo = &mPlayerInfos[i];
-        MR::getCsvDataStrOrNULL(&playerinfo->mPartName, map, "PartName", i);
-        MR::getCsvDataStrOrNULL(&playerinfo->mPosName, map, "PosName", i);
-        MR::getCsvDataStrOrNULL(&playerinfo->mBckName, map, "BckName", i);
+    try {
+        JMapInfo* map = nullptr;
+        mNumPlayerInfos = DemoFunction::createSheetParser(mExecutor, "Player", &map);
+        mNativeParser.reset(map);
+        mPlayerInfos = new DemoPlayerInfo[mNumPlayerInfos];
+        for (int i = 0; i < mNumPlayerInfos; i++) {
+            DemoPlayerInfo* playerinfo = &mPlayerInfos[i];
+            MR::getCsvDataStrOrNULL(&playerinfo->mPartName, map, "PartName", i);
+            MR::getCsvDataStrOrNULL(&playerinfo->mPosName, map, "PosName", i);
+            MR::getCsvDataStrOrNULL(&playerinfo->mBckName, map, "BckName", i);
+        }
+    } catch (...) {
+        delete[] mPlayerInfos;
+        throw;
     }
 }
 
@@ -46,4 +52,8 @@ void DemoPlayerKeeper::executePlayer(const DemoPlayerInfo* pPlayerInfo) const {
     if (pPlayerInfo->mBckName != nullptr) {
         MR::startBckPlayer(pPlayerInfo->mBckName, (const char*)nullptr);
     }
+}
+
+DemoPlayerKeeper::~DemoPlayerKeeper() {
+    delete[] mPlayerInfos;
 }

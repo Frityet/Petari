@@ -58,6 +58,7 @@ public:
     };
 
     MoviePlayingSequence(const char*, s32);
+    ~MoviePlayingSequence() override;
 
     virtual void appear();
     virtual void kill();

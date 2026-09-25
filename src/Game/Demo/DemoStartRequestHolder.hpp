@@ -39,6 +39,7 @@ class DemoStartRequestHolder {
 public:
     DemoStartRequestHolder();
     ~DemoStartRequestHolder();
+    void releaseNativeReference(const NameObj*) noexcept;
     DemoStartRequestHolder(const DemoStartRequestHolder&) = delete;
     DemoStartRequestHolder& operator=(const DemoStartRequestHolder&) = delete;
 

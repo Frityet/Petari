@@ -334,7 +334,13 @@ void LiveActor::initModelManagerWithAnm(const char* pModelName, const char* pAni
     MR::calcJ3DModel(this);
 
     mAnimKeeper = ActorAnimKeeper::tryCreate(this);
-    mCameraCtrl = ActorPadAndCameraCtrl::tryCreate(mModelManager, &mPosition);
+    try {
+        mCameraCtrl = ActorPadAndCameraCtrl::tryCreate(mModelManager, &mPosition);
+    } catch (...) {
+        delete mAnimKeeper;
+        mAnimKeeper = nullptr;
+        throw;
+    }
     smgpc::compat::adopt_actor_animation_helpers(this);
 }
 

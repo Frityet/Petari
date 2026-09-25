@@ -11,6 +11,7 @@ class PlacementInfoOrdered;
 class StageDataHolder : public NameObj {
 public:
     StageDataHolder(const char*, int, bool);
+    ~StageDataHolder() override;
 
     virtual void init(const JMapInfoIter&);
 

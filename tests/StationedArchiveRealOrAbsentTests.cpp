@@ -1,5 +1,9 @@
+#include "Game/Util/FileUtil.hpp"
 #include "Game/System/StationedFileInfo.hpp"
-#include "compat/ResourceHolderCompat.hpp"
+#include "Game/System/ResourceHolder.hpp"
+#include "Game/System/ResourceHolderManager.hpp"
+#include "Game/Util/SingletonHolder.hpp"
+#include "OriginalStageResourceProcessFixture.hpp"
 #include "resource/GameResourceRuntime.hpp"
 #include <aurora/aurora.h>
 #include "resource/RarcArchive.hpp"
@@ -78,27 +82,10 @@ namespace {
     }
 
     void test_real_mario_stationed_archives() {
-        const auto disc_path = find_real_disc();
-        if (!disc_path.has_value()) {
-            std::cout << "[skip] real Mario stationed archive test (set SMGPC_REAL_DISC or place RMGK01.iso in a workspace ancestor)\n";
-            return;
-        }
-
-        aurora_dvd_close();
-        const auto path = disc_path->string();
-        require(aurora_dvd_open(path.c_str()), "the selected real-disc fixture should be a readable SMG image");
-        struct DiscCloseGuard final {
-            ~DiscCloseGuard() {
-                aurora_dvd_close();
-            }
-        } close_guard;
-        DVDInit();
-
-        auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
-        aurora::g_config.mem1Size = 24U * 1024U * 1024U;
-        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
-        auto service = smgpc::compat::ResourceHolderService{dvd, resource_runtime.create_cohort(), resource_runtime.mem1_heap()};
-        const auto resources = service.create_and_add_stationed(2);
+        auto& service = *SingletonHolder<ResourceHolderManager>::get();
+        std::vector<ResourceHolder*> resources;
+        for (auto* info = MR::getStationedFileInfoTable(); info->mArchive; ++info)
+            if (info->mLoadType == 2) resources.push_back(service.createAndAdd(std::filesystem::path(info->mArchive).filename().c_str(), nullptr));
         require(resources.size() == 6U, "stationed load type 2 must resolve all six retail Mario archives");
 
         constexpr auto expected_names = std::array{
@@ -111,12 +98,12 @@ namespace {
         };
         for (auto index = std::size_t{}; index < resources.size(); ++index) {
             require(resources[index] != nullptr, "a real stationed archive must produce a ResourceHolder");
-            require(service.backing(*resources[index]).resolved_path().filename() == expected_names[index],
+            require(resources[index]->mArchive == MR::receiveArchive((std::string("/ObjectData/") + std::string(expected_names[index])).c_str()),
                     "stationed archives must retain retail table order and exact resolved identity");
-            require(!service.backing(*resources[index]).archive().entries().empty(),
+            require(!resources[index]->nativeResourceSource().entries().empty(),
                     "each real Mario stationed archive must contain a parsed RARC file table");
             auto& holder = *resources[index];
-            require(holder.mArchive != nullptr && holder.mHeap == &service.allocation_domain()->heap() &&
+            require(holder.mArchive != nullptr && &holder.heap() == holder.mHeap &&
                         JKRHeap::findFromRoot(&holder) == holder.mHeap,
                     "stationed resources must construct the actual Game holder in their shared archive cohort");
             std::size_t count = 0, total_size = 0;
@@ -133,23 +120,18 @@ namespace {
                     total_size += info->_4;
                 }
             }
-            require(count == service.backing(holder).archive().entries().size() && total_size == holder.mTotalResourceSize,
+            require(count == holder.nativeResourceSource().entries().size() && total_size == holder.mTotalResourceSize,
                     "original resource tables cover every authored file exactly once");
             require(holder.mMotionResTable->mCount == 0 || holder.mBckCtrl != nullptr,
                     "motion archives construct the actual BckCtrl with retained control-table names");
         }
 
-        const auto repeated = service.create_and_add_stationed(2);
-        require(repeated.size() == resources.size(), "repeated stationed loads must preserve the exact row set");
-        for (auto index = std::size_t{}; index < resources.size(); ++index) {
-            require(repeated[index] == resources[index],
-                    "ResourceHolder ownership must deduplicate repeated stationed archive requests");
-        }
-        require(service.create_and_add_stationed(0x7fffffff).empty(),
-                "an unknown stationed load type must remain genuinely absent");
-        std::cout << "stationed cohort used=" << service.allocation_domain()->heap().mSize -
-                         service.allocation_domain()->heap().getTotalFreeSize()
-                  << " MEM1 available=" << resource_runtime.mem1_heap()->available_bytes() << '\n';
+        std::size_t index = 0;
+        for (auto* info = MR::getStationedFileInfoTable(); info->mArchive; ++info)
+            if (info->mLoadType == 2)
+                require(service.createAndAdd(std::filesystem::path(info->mArchive).filename().c_str(), nullptr) == resources[index++],
+                        "the original manager deduplicates repeated stationed requests");
+
     }
 
 }  // namespace
@@ -158,7 +140,8 @@ int main() {
     try {
         test_exact_mario_stationed_rows();
         std::cout << "[ok] exact Mario stationed table\n";
-        test_real_mario_stationed_archives();
+        const auto result = smgpc::test::run_stage_resource_process("stationed-archive", test_real_mario_stationed_archives);
+        if (result) return result;
         std::cout << "[ok] real Mario stationed archives\n";
         std::cout << "Stationed archive real-or-absent tests passed (2/2).\n";
         return 0;

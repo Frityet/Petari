@@ -32,7 +32,6 @@
 #include "camera/CameraDirectorRuntime.hpp"
 #include "Game/Demo/PrologueDirector.hpp"
 #include "Game/Demo/DemoDirector.hpp"
-#include "compat/DemoDirectorOwnership.hpp"
 #include "Game/Gravity/PlanetGravityManager.hpp"
 #include "Game/LiveActor/ClippingDirector.hpp"
 #include "Game/LiveActor/MirrorCamera.hpp"
@@ -172,7 +171,6 @@ namespace smgpc::scene {
         _global_gravity_ownership = std::make_unique<smgpc::compat::GlobalGravityOwnership>(holder);
         _collision_director_ownership = std::make_unique<smgpc::compat::CollisionDirectorOwnership>();
         _clipping_director_ownership = std::make_unique<smgpc::compat::ClippingDirectorOwnership>();
-        _demo_director_ownership = std::make_unique<smgpc::compat::DemoDirectorOwnership>();
         _talk_director_lifetime = std::make_unique<smgpc::compat::TalkDirectorLifetime>();
         _image_effect_ownership = std::make_unique<smgpc::compat::ImageEffectOwnership>(holder);
         _captured_frame_blur_service = std::make_unique<smgpc::compat::CapturedFrameBlurService>();
@@ -215,7 +213,6 @@ namespace smgpc::scene {
         if (_game_allocation_domain)
             smgpc::compat::retire_draw_sync_callbacks(_game_allocation_domain->heap());
         prepare_retirement();
-        _demo_director_ownership->prepare_retirement();
         _collision_director_ownership->prepare_retirement();
         _image_effect_ownership->prepare_retirement();
         if (_camera_runtime) _camera_runtime->unpublish();
@@ -233,8 +230,6 @@ namespace smgpc::scene {
         while (!_owned_objects.empty()) {
             _owned_objects.pop_back();
         }
-        _demo_director_ownership->reclaim();
-        _demo_director_ownership.reset();
         smgpc::compat::release_scene_collision_parts(_holder);
         _collision_director_ownership->reclaim();
         _collision_director_ownership.reset();
@@ -299,12 +294,8 @@ namespace smgpc::scene {
                 _next_registration_postpass_index];
             if (!smgpc::compat::
                      name_obj_runtime_postpass_is_delegated(object)) {
-                if (_game_allocation_domain) {
-                    smgpc::compat::JkrAllocationScope heap(_game_allocation_domain);
-                    object->initAfterPlacement();
-                } else {
-                    object->initAfterPlacement();
-                }
+                const aurora::allocation::ClientAllocationScope game({true, true});
+                object->initAfterPlacement();
             }
             ++_next_registration_postpass_index;
         }
@@ -338,9 +329,6 @@ namespace smgpc::scene {
         return sCurrentSceneObjHolderBinding ? sCurrentSceneObjHolderBinding->_talk_director_lifetime.get() : nullptr;
     }
 
-    smgpc::compat::DemoDirectorOwnership* current_demo_director_ownership() noexcept {
-        return sCurrentSceneObjHolderBinding ? sCurrentSceneObjHolderBinding->_demo_director_ownership.get() : nullptr;
-    }
 
     SceneObjHolder *current_scene_obj_holder() noexcept {
         return sCurrentSceneObjHolder;
@@ -427,10 +415,10 @@ NameObj *SceneObjHolder::create(int id) {
     smgpc::compat::JutTextureConstructionScope textures(
         smgpc::compat::ImageEffectOwnership::handles(id));
     try {
-        std::optional<smgpc::compat::JkrAllocationScope> game_heap;
-        if (binding->_game_allocation_domain) {
-            game_heap.emplace(binding->_game_allocation_domain);
-        }
+        // Original factories may await resource creation on the main thread.
+        // Keep their caller-selected heap without holding the heap mutex over
+        // that wait; each original allocation serializes its own heap access.
+        const aurora::allocation::ClientAllocationScope game({true, true});
         object.reset(newEachObj(id));
         if (object == nullptr) {
             if (binding->_provisional_slots.size() != slot_checkpoint ||
@@ -444,7 +432,6 @@ NameObj *SceneObjHolder::create(int id) {
         }
 
         binding->_image_effect_ownership->capture(id, *object, textures);
-        if (id == SceneObj_DemoDirector) binding->_demo_director_ownership->capture(static_cast<DemoDirector&>(*object));
         object->initWithoutIter();
         if (id == SceneObj_TalkDirector)
             binding->_talk_director_lifetime->capture_after_init(static_cast<TalkDirector&>(*object));
@@ -521,7 +508,6 @@ NameObj *SceneObjHolder::create(int id) {
                 &binding->_camera_runtime->director(), marker))
             binding->_camera_runtime.reset();
         binding->_image_effect_ownership->capture_shared_textures(textures);
-        binding->_demo_director_ownership->prepare_rollback(marker);
         binding->_image_effect_ownership->prepare_rollback(marker);
         const bool collision_rollback = binding->_collision_director_ownership->prepare_rollback(marker);
         const bool clipping_rollback = binding->_clipping_director_ownership->prepare_rollback(marker);
@@ -538,7 +524,6 @@ NameObj *SceneObjHolder::create(int id) {
             }
         }
         rollback_scene_obj_registrations(marker);
-        binding->_demo_director_ownership->reclaim();
         binding->_image_effect_ownership->reclaim_prepared();
         if (collision_rollback) binding->_collision_director_ownership->reclaim();
         if (clipping_rollback) binding->_clipping_director_ownership->reclaim();

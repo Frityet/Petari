@@ -44,6 +44,7 @@ public:
     void storeTIMG(const ResTIMG* timg, JUTPalette* palette, GXTlut tlut);
     void attachPalette(JUTPalette* palette);
     void init();
+    GXTexObj getTexObj() const { return mObj; }
     void initTexObj();
     void initTexObj(GXTlut tlut);
     void load(GXTexMapID tex_map_id);

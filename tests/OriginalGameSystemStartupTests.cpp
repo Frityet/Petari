@@ -13,9 +13,7 @@
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/SystemUtil.hpp"
 #include "compat/NandSdkBinding.hpp"
-#include "compat/ResourceHolderCompat.hpp"
 #include "resource/GameResourceRuntime.hpp"
-#include "runtime/ArchiveMountService.hpp"
 #include "runtime/ConsoleNandImport.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include <aurora/system_config.hpp>
@@ -49,13 +47,11 @@ void require(bool condition, const char* message) {
 struct Bootstrap {
     smgpc::resource::GameResourceRuntime resources;
     smgpc::runtime::DvdFileSystemService dvd{"/"};
-    smgpc::runtime::ArchiveMountService archives{dvd};
     smgpc::runtime::SaveDataService save;
     std::unique_ptr<aurora::SystemConfiguration> settings;
     std::unique_ptr<smgpc::compat::NandSdkBinding> nand;
     std::shared_ptr<smgpc::compat::JkrAllocationDomain> root;
     std::shared_ptr<smgpc::compat::JkrAllocationDomain> stationed;
-    std::unique_ptr<smgpc::compat::ResourceHolderService> holders;
 
     void configure_nand() {
         auto pattern = (std::filesystem::temp_directory_path() / "petari-original-startup-nand-XXXXXX").string();
@@ -102,7 +98,6 @@ void original_main_initialization(Bootstrap& host) {
     {
         const aurora::allocation::HostAllocationScope allocations;
         host.stationed = smgpc::compat::JkrAllocationDomain::retain_heap(host.root, *watcher->mStationedHeapNapa);
-        host.holders = std::make_unique<smgpc::compat::ResourceHolderService>(host.dvd, host.stationed, host.resources.mem1_heap());
     }
     checkpoint("FileRipper::setup");
     FileRipper::setup(0x20000, MR::getStationedHeapNapa());

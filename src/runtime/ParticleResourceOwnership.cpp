@@ -1,6 +1,8 @@
 #include <aurora/exception.hpp>
 #include "runtime/ParticleResourceOwnership.hpp"
-#include "runtime/ArchiveMountService.hpp"
+#include "Game/System/FileLoader.hpp"
+#include "Game/Util/FileUtil.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "Game/Effect/ParticleResourceHolder.hpp"
 #include "JSystem/JKernel/JKRMemArchive.hpp"
@@ -16,38 +18,38 @@ namespace {
 
 struct ParticleResourceOwnership::Storage {
     std::shared_ptr<compat::JkrAllocationDomain> domain;
-    ArchiveMountService* mounts = nullptr;
-    std::shared_ptr<const MountedArchive> archive;
+    FileLoader* loader = nullptr;
+    std::shared_ptr<const void> archive;
     std::unique_ptr<ParticleResourceHolder> holder;
     std::size_t construction_bytes = 0;
 
     ~Storage() {
         holder.reset();
-        if (mounts && domain) mounts->remove_for_heap(&domain->heap());
         // Original JMap disposers run before JPA's heap finalizer. Both may
         // release native backing, so the mounted archive outlives the domain.
-        domain.reset();
         archive.reset();
+        if (loader && domain) loader->removeHolderIfIsEqualHeap(&domain->heap());
+        domain.reset();
     }
 };
 
 ParticleResourceOwnership::ParticleResourceOwnership(
     std::shared_ptr<compat::JkrHeapRuntime> runtime,
-    std::size_t byte_budget, ArchiveMountService& mounts) {
+    std::size_t byte_budget, FileLoader& loader) {
     compat::JkrHostAllocationScope host;
-    if (!runtime || ArchiveMountService::active() != &mounts)
-        aurora::throw_host_exception<std::invalid_argument>("Particle resources require the active archive service and real heap runtime");
+    if (!runtime || SingletonHolder<FileLoader>::get() != &loader)
+        aurora::throw_host_exception<std::invalid_argument>("Particle resources require the original FileLoader and real heap runtime");
     if (active_particles)
         aurora::throw_host_exception<std::logic_error>("An actual particle resource holder is already published");
 
     auto storage = std::make_unique<Storage>();
     storage->domain = compat::JkrAllocationDomain::create(std::move(runtime), byte_budget);
-    storage->mounts = &mounts;
+    storage->loader = &loader;
     // Load before entering the unchanged constructor. This propagates archive
     // errors, while the original constructor remounts the same ready identity.
-    auto* archive = mounts.mount(particle_archive, &storage->domain->heap());
-    storage->archive = mounts.retain(particle_archive);
-    if (!storage->archive || &storage->archive->archive() != archive)
+    auto* archive = MR::mountArchive(particle_archive, &storage->domain->heap());
+    storage->archive = archive->retainNativeResources();
+    if (loader.receiveArchive(particle_archive) != archive)
         aurora::throw_host_exception<std::logic_error>("Particle resource preload lost its actual mounted archive");
     for (const auto* resource : {"Particles.jpc", "ParticleNames.bcsv", "AutoEffectList.bcsv"})
         if (!archive->getResource(resource))

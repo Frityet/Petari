@@ -11,26 +11,6 @@ namespace smgpc::compat {
 }
 
 namespace smgpc::runtime {
-    class ArchiveMountService;
-
-    // Owns the complete original system/game message records and their archive
-    // aliases for standalone hosts. The original process publishes its own
-    // GameSystem-owned holder through the same read-only lookup boundary.
-    class MessageHolderOwnership final {
-    public:
-        MessageHolderOwnership(std::shared_ptr<compat::JkrHeapRuntime>, std::size_t byte_budget,
-                               ArchiveMountService &, std::string_view game_archive_path,
-                               std::string_view language_prefix);
-        ~MessageHolderOwnership();
-        MessageHolderOwnership(const MessageHolderOwnership &) = delete;
-        MessageHolderOwnership &operator=(const MessageHolderOwnership &) = delete;
-        [[nodiscard]] MessageHolder &holder() const noexcept;
-
-    private:
-        struct Storage;
-        std::unique_ptr<Storage> _storage;
-    };
-
     // The retail scene aliases the persistent game messages. Keep that alias
     // valid across scene-owned object construction and retirement.
     class SceneMessageBinding final {

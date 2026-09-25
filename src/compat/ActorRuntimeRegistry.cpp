@@ -1,4 +1,5 @@
-#include "compat/DemoDirectorOwnership.hpp"
+#include "Game/Demo/DemoDirector.hpp"
+#include "Game/Demo/DemoExecutor.hpp"
 #include "compat/ClippingDirectorOwnership.hpp"
 #include "compat/TalkDirectorLifetime.hpp"
 #include <aurora/exception.hpp>
@@ -29,7 +30,8 @@
 #include "Game/NameObj/NameObjGroup.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 #include "compat/ModelManagerOwner.hpp"
-#include "compat/ResourceHolderCompat.hpp"
+#include "Game/System/ResourceHolder.hpp"
+#include "resource/RarcArchive.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/ShadowControllerOwnership.hpp"
 #include "Game/LiveActor/ActorAnimKeeper.hpp"
@@ -230,12 +232,15 @@ namespace smgpc::compat {
     void release_name_obj_runtime_state(const NameObj* object) {
         if (auto* clipping = smgpc::scene::current_clipping_director_ownership()) clipping->release_name_obj(object);
         if (auto* talk = smgpc::scene::current_talk_director_lifetime()) talk->release_name_obj(object);
-        if (auto* demo = smgpc::scene::current_demo_director_ownership()) demo->release_name_obj(object);
         // Groups borrow their members. Native factory rollback and object
         // retirement may leave the group alive after one member is deleted.
         // Scan actual groups so direct original registerObj calls are covered.
         for (const auto& [registered, state] : name_obj_states()) {
             if (registered == object) continue;
+            if (auto* director = dynamic_cast<DemoDirector*>(const_cast<NameObj*>(registered)))
+                director->releaseNativeReference(object);
+            if (auto* executor = dynamic_cast<DemoExecutor*>(const_cast<NameObj*>(registered)))
+                executor->releaseNativeReference(object);
             if (auto* array = dynamic_cast<LiveActorGroupArray*>(const_cast<NameObj*>(registered))) {
                 auto& groups = array->mGroups;
                 auto* old_end = groups.end();
@@ -559,15 +564,11 @@ namespace smgpc::compat {
         if (state.model_owner) {
             aurora::throw_host_exception<std::logic_error>("Actor model replacement requires scene draw retirement first");
         }
-        auto* service = ResourceHolderService::active();
-        if (!service) {
-            aurora::throw_host_exception<std::logic_error>("Actor ModelManager requires the active scene resource service");
-        }
         JkrHostAllocationScope host;
         auto* heap = JKRHeap::getCurrentHeap();
         if (!heap)
             aurora::throw_host_exception<std::logic_error>("Actor ModelManager requires the original caller's Game heap");
-        auto owner = std::make_shared<ModelManagerOwner>(*service, JkrAllocationDomain::retain_heap(*heap),
+        auto owner = std::make_shared<ModelManagerOwner>(JkrAllocationDomain::retain_heap(*heap),
                                                         model_archive, animation_archive, create_display_list);
         actor->mModelManager = &owner->manager();
         state.model_owner = std::move(owner);
@@ -603,9 +604,7 @@ namespace smgpc::compat {
     std::optional<std::span<const std::uint8_t>>
     actor_model_resource_data_if_present(const LiveActor* actor, std::string_view resource_name) {
         if (!actor || !actor->mModelManager || resource_name.empty()) return std::nullopt;
-        auto* service = ResourceHolderService::active();
-        if (!service) return std::nullopt;
-        const auto& archive = service->backing(*MR::getModelResourceHolder(actor)).archive();
+        const auto& archive = MR::getModelResourceHolder(actor)->nativeResourceSource();
         if (!archive.contains_resource(resource_name)) return std::nullopt;
         return archive.resource_data(resource_name);
     }

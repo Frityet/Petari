@@ -11,6 +11,7 @@ class LiveActor;
 class DemoTalkAnimCtrl : public NerveExecutor {
 public:
     DemoTalkAnimCtrl(LiveActor*, const char*, const char*);
+    ~DemoTalkAnimCtrl() override;
 
     void initForScene(const char*, const char*, const JMapInfoIter&);
     void updateCamera();

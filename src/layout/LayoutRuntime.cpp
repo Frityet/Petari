@@ -19,7 +19,7 @@
 #include "core/RenderTypes.hpp"
 #include "Game/Util/EventUtil.hpp"
 #include "layout/LayoutResourceResolver.hpp"
-#include "compat/ResourceHolderCompat.hpp"
+#include "Game/System/LayoutHolder.hpp"
 #include "Game/System/LayoutHolder.hpp"
 #include "layout/LytTexMap.hpp"
 #include "layout/Nw4rLayoutRecords.hpp"
@@ -294,8 +294,8 @@ smgpc::layout::LayoutRuntime::LayoutRuntime(const char* pName, const char* pLayo
 }
 
 smgpc::layout::LayoutRuntime::LayoutRuntime(const char* pName, const char* pLayoutName, u32 animLayerNum, int,
-                                           std::shared_ptr<const compat::LayoutArchiveOwner> archiveOwner)
-    : mAnimLayerNum(animLayerNum), mArchiveOwner(std::move(archiveOwner)) {
+                                           LayoutHolder& archiveOwner)
+    : mAnimLayerNum(animLayerNum), mArchiveOwner(&archiveOwner), mArchiveBorrow(archiveOwner.retainNativeResources()) {
     const compat::JkrHostAllocationScope host;
     mName = pName;
     mLayoutName = pLayoutName;
@@ -1205,7 +1205,7 @@ void smgpc::layout::LayoutRuntime::loadRenderData() {
         auto local_archive = std::optional< smgpc::resource::RarcArchive >{};
         const auto* archive = static_cast< const smgpc::resource::RarcArchive* >(nullptr);
         if (mArchiveOwner) {
-            archive = &mArchiveOwner->archive();
+            archive = &mArchiveOwner->nativeResourceSource();
         } else if (runtime != nullptr) {
             archive = &runtime->dvd().archive_for_path(*mArchivePath);
         } else {

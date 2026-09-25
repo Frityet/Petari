@@ -5,6 +5,7 @@
 #include <cctype>
 #include <limits>
 #include <stdexcept>
+#include <string>
 
 namespace {
     using aurora::endian::read_big;
@@ -19,12 +20,88 @@ namespace {
 
 u32 JKRArchive::sCurrentDirID = 0;
 
+struct JKRArchive::NativeResourceOverride {
+    JKRArchive* archive;
+    u32 index;
+    void* replacement;
+    std::shared_ptr<const void> lifetime;
+
+    NativeResourceOverride(JKRArchive* owner, u32 entry, void* data)
+        : archive(owner), index(entry), replacement(data), lifetime(owner->retainNativeResources()) {
+    }
+    ~NativeResourceOverride() {
+        archive->removeNativeResourceOverride(*this);
+    }
+};
+
 JKRArchive::JKRArchive(const smgpc::resource::RarcArchive *archive) {
     attach_archive(archive);
 }
 
 void JKRArchive::attach_archive(const smgpc::resource::RarcArchive *archive) {
     aurora::allocation::HostAllocationScope host;
+    attach_archive(archive ? std::make_shared<smgpc::resource::RarcArchive>(
+                                smgpc::resource::RarcArchive::from_borrowed(archive->bytes()))
+                          : std::shared_ptr<const smgpc::resource::RarcArchive>{});
+}
+
+const smgpc::resource::RarcArchive& JKRArchive::source() const {
+    if (!mNativeSource)
+        aurora::throw_host_exception<std::logic_error>("Archive resources require a mounted archive");
+    return *mNativeSource;
+}
+
+std::shared_ptr<const smgpc::resource::RarcArchive> JKRArchive::retainSource() const {
+    (void)source();
+    return mNativeSource;
+}
+
+std::shared_ptr<const void> JKRArchive::retainNativeResources() const {
+    (void)source();
+    return mNativeResourceToken;
+}
+
+std::shared_ptr<const void> JKRArchive::overrideNativeResource(u32 index, void* replacement) {
+    const aurora::allocation::HostAllocationScope host;
+    if (index >= mNativeFiles.size() || !replacement || (mNativeFiles[index].mFlag & FILE_FLAG_FOLDER) != 0)
+        aurora::throw_host_exception<std::invalid_argument>("Native archive override requires a valid file entry and resource");
+    auto& chain = mNativeResourceOverrides[index];
+    if (chain.active.empty())
+        chain.original = mNativeFiles[index].mFileData;
+    auto handle = std::make_shared<NativeResourceOverride>(this, index, replacement);
+    chain.active.push_back(handle);
+    mNativeFiles[index].mFileData = replacement;
+    return handle;
+}
+
+void JKRArchive::removeNativeResourceOverride(const NativeResourceOverride& retiring) noexcept {
+    const aurora::allocation::HostAllocationScope host;
+    auto& chain = mNativeResourceOverrides[retiring.index];
+    // During final shared_ptr destruction the retiring weak pointer is already
+    // expired. Remove it and any other retired entries before selecting a cache.
+    std::erase_if(chain.active, [](const auto& entry) { return entry.expired(); });
+    auto& current = mNativeFiles[retiring.index].mFileData;
+    if (current == retiring.replacement) {
+        const auto latest = chain.active.empty() ? std::shared_ptr<const NativeResourceOverride>{} : chain.active.back().lock();
+        current = latest ? latest->replacement : chain.original;
+    }
+    if (chain.active.empty())
+        chain.original = nullptr;
+}
+
+void JKRArchive::validateNativeRetirement(std::size_t releasingBorrows) const {
+    if (mNativeResourceToken && mNativeResourceToken.use_count() > 1 + releasingBorrows) {
+        const aurora::allocation::HostAllocationScope host;
+        aurora::throw_host_exception<std::logic_error>(
+            "Cannot retire archive '" + std::string(mLoaderName ? mLoaderName : "<unnamed>") +
+            "': live native borrowers=" + std::to_string(mNativeResourceToken.use_count() - 1) +
+            ", expected holder releases=" + std::to_string(releasingBorrows));
+    }
+}
+
+void JKRArchive::attach_archive(std::shared_ptr<const smgpc::resource::RarcArchive> archive) {
+    aurora::allocation::HostAllocationScope host;
+    validateNativeRetirement();
     if (archive == nullptr) {
         mArchive = nullptr;
         mInfoBlock = nullptr;
@@ -35,6 +112,9 @@ void JKRArchive::attach_archive(const smgpc::resource::RarcArchive *archive) {
         mNativeDirs.clear();
         mNativeFiles.clear();
         mNativeStrings.clear();
+        mNativeResourceOverrides.clear();
+        mNativeSource.reset();
+        mNativeResourceToken.reset();
         return;
     }
     RarcInfoBlock nativeInfo{};
@@ -100,6 +180,8 @@ void JKRArchive::attach_archive(const smgpc::resource::RarcArchive *archive) {
         }
         nativeFiles.push_back(file);
     }
+    auto nativeToken = std::make_shared<const u8>(0);
+    std::vector<NativeResourceOverrides> nativeOverrides(nativeFiles.size());
     mNativeInfo = nativeInfo;
     mNativeDirs = std::move(nativeDirs);
     mNativeFiles = std::move(nativeFiles);
@@ -109,7 +191,10 @@ void JKRArchive::attach_archive(const smgpc::resource::RarcArchive *archive) {
     mFiles = mNativeFiles.data();
     mStringTable = mNativeStrings.data();
     mLoaderName = mStringTable + mDirs->mNameOffset;
-    mArchive = archive;
+    mNativeResourceOverrides = std::move(nativeOverrides);
+    mNativeResourceToken = std::move(nativeToken);
+    mNativeSource = std::move(archive);
+    mArchive = mNativeSource.get();
 }
 
 void JKRArchive::CArcName::store(const char *name) {

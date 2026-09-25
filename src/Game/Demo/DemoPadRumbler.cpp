@@ -1,3 +1,4 @@
+#include "Game/Util/JMapInfo.hpp"
 #include "Game/Demo/DemoPadRumbler.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include <cstdio>
@@ -9,6 +10,7 @@ DemoPadRumbler::DemoPadRumbler(const char* pName) : mNumPadRumbleEntries(0), mPa
     char buf[0x100];
     snprintf(buf, sizeof(buf), "MoviePadRumble%s.arc", pName);
     JMapInfo* map = MR::createCsvParser(buf, "PadRumbleData.bcsv");
+    mNativeParser.reset(map);
 
     mNumPadRumbleEntries = MR::getCsvDataElementNum(map);
     PadRumbleInfo* infos = new PadRumbleInfo[mNumPadRumbleEntries];
@@ -28,4 +30,8 @@ void DemoPadRumbler::update(s32 frame) {
             MR::tryRumblePad(this, rumble->mName, WPAD_CHAN0);
         }
     }
+}
+
+DemoPadRumbler::~DemoPadRumbler() {
+    delete[] mPadRumbleEntries;
 }

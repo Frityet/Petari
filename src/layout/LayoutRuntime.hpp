@@ -33,7 +33,7 @@ namespace nw4r::ut {
     struct HostFontResourceState;
 }
 
-namespace smgpc::compat { class LayoutArchiveOwner; }
+class LayoutHolder;
 
 namespace smgpc::layout {
 
@@ -54,7 +54,7 @@ public:
     LayoutRuntime(const char* pName, const char* pLayoutName, u32 animLayerNum, int drawType,
                   std::filesystem::path archivePath);
     LayoutRuntime(const char* pName, const char* pLayoutName, u32 animLayerNum, int drawType,
-                  std::shared_ptr<const compat::LayoutArchiveOwner> archiveOwner);
+                  LayoutHolder& archiveOwner);
     ~LayoutRuntime();
 
     void initWithoutIter();
@@ -264,7 +264,8 @@ private:
     f32 mScaleX = 1.0F;
     f32 mScaleY = 1.0F;
     std::optional< std::filesystem::path > mArchivePath;
-    std::shared_ptr<const compat::LayoutArchiveOwner> mArchiveOwner;
+    LayoutHolder* mArchiveOwner = nullptr;
+    std::shared_ptr<const void> mArchiveBorrow;
     std::array< AnimationState, 4 > mAnimations = {};
     bool mRenderDataLoaded = false;
     smgpc::layout::BrlytLayout mBrlytLayout = {};

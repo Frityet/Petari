@@ -1,3 +1,5 @@
+#include <memory>
+#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/FixedPosition.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/JointUtil.hpp"
@@ -59,6 +61,7 @@ FixedPosition::FixedPosition(const LiveActor* pActor, const char* pResName, cons
 
     ResourceHolder* resourceHolder = MR::getResourceHolder(pResActor);
     JMapInfo* csv = MR::tryCreateCsvParser(resourceHolder, "%s.bcsv", pResName);
+    const std::unique_ptr<JMapInfo> parser(csv);
 
     const char* jointName = nullptr;
     TVec3f trans(0.0f, 0.0f, 0.0f);

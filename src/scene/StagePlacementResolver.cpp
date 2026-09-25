@@ -4,6 +4,7 @@
 #include "runtime/RuntimeServices.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 #include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 
 #include <algorithm>
 #include <cctype>
@@ -19,7 +20,6 @@ namespace smgpc::scene {
     namespace {
 
         constexpr auto cCommonLayerMask = u32{1U};
-        constexpr auto cDegToRad = f32{3.14159265358979323846F / 180.0F};
 
         constexpr std::array<std::string_view, 17U> cLayerDirNames{
             "common",
@@ -827,31 +827,15 @@ namespace smgpc::scene {
 
     StageZoneTransform StageZoneTransform::from_translation_rotation(const std::array<f32, 3U> &translation,
                                                                      const std::array<f32, 3U> &rotation_degrees) {
-        const auto rx = rotation_degrees[0] * cDegToRad;
-        const auto ry = rotation_degrees[1] * cDegToRad;
-        const auto rz = rotation_degrees[2] * cDegToRad;
-        const auto sx = std::sin(rx);
-        const auto cx = std::cos(rx);
-        const auto sy = std::sin(ry);
-        const auto cy = std::cos(ry);
-        const auto sz = std::sin(rz);
-        const auto cz = std::cos(rz);
-
+        // Match StageDataHolder::calcPlacementMtx, including JMath's degree
+        // lookup precision and the original floating-point operation order.
+        Mtx matrix;
+        MR::makeMtxTR(matrix, translation[0], translation[1], translation[2],
+                      rotation_degrees[0], rotation_degrees[1], rotation_degrees[2]);
         auto result = StageZoneTransform{};
-        result.matrix = {
-            cz * cy,
-            (cz * sy * sx) - (sz * cx),
-            (cz * sy * cx) + (sz * sx),
-            translation[0],
-            sz * cy,
-            (sz * sy * sx) + (cz * cx),
-            (sz * sy * cx) - (cz * sx),
-            translation[1],
-            -sy,
-            cy * sx,
-            cy * cx,
-            translation[2],
-        };
+        for (std::size_t row = 0; row < 3U; ++row) {
+            std::copy_n(matrix[row], 4U, result.matrix.begin() + row * 4U);
+        }
         return result;
     }
 

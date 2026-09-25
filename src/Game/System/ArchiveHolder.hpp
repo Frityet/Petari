@@ -12,9 +12,16 @@ public:
     /// @brief Destroys the `ArchiveHolderArchiveEntry`.
     ~ArchiveHolderArchiveEntry();
 
+    std::shared_ptr< const void > retainNativeResources() const;
+    void validateNativeRetirement(std::size_t = 0) const;
+
     /* 0x0 */ JKRMemArchive* mArchive;
     /* 0x4 */ JKRHeap* mHeap;
     /* 0x8 */ char* mArchiveName;
+
+private:
+    struct NativeState;
+    std::unique_ptr< NativeState > mNativeState;
 };
 
 class ArchiveHolder {
@@ -43,11 +50,14 @@ public:
     /// @brief Removes entries that match the given heap.
     /// @param pHeap The heap to compare.
     void removeIfIsEqualHeap(JKRHeap*);
+    // A null heap validates every entry, as required before process teardown.
+    void validateNativeRetirement(JKRHeap* = nullptr) const;
 
     /// @brief Finds the entry with the given archive name.
     /// @param pArchiveName The name of the archive.
     /// @return The pointer to the found entry, or `nullptr` if not found.
     ArchiveHolderArchiveEntry* findEntry(const char*) const;
+    ArchiveHolderArchiveEntry* findEntry(const JKRArchive*) const;
 
     /* 0x0 */ MR::Vector< MR::AssignableArray< ArchiveHolderArchiveEntry* > > mEntries;
     /* 0xC */ OSMutex mMutex;

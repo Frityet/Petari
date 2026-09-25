@@ -1,0 +1,66 @@
+{
+  "status": "Batch validated; complete compat removal remains active",
+  "base_commit": "0f8bc440af14cbc62ebaf26f221124eae447ec03",
+  "compat_files_before": 168,
+  "compat_files_after": 160,
+  "initial_compat_files": 330,
+  "removed_compat_files": [
+    "src/compat/DemoDirectorOwnership.cpp",
+    "src/compat/DemoDirectorOwnership.hpp",
+    "src/compat/FileUtilCompat.cpp",
+    "src/compat/OriginalStationedResourceManager.cpp",
+    "src/compat/ResourceHolderCompat.cpp",
+    "src/compat/ResourceHolderCompat.hpp",
+    "src/compat/ScenarioDataParserAccess.cpp",
+    "src/compat/SceneHeapAccess.cpp"
+  ],
+  "other_removed_files": [
+    "src/runtime/ArchiveMountService.cpp",
+    "src/runtime/ArchiveMountService.hpp",
+    "tests/AuthoredPlacementInstantiatorTests.cpp"
+  ],
+  "build": {
+    "command": "xmake build smg-pc",
+    "exit_code": 0,
+    "log": "build-final.log"
+  },
+  "runtime": {
+    "record": "gateway-final-600.json",
+    "binary_sha256": "69c278ac08c8111a08c32bddabccf58dd6224b96b5b8bc7bf3cffe11b01e5815",
+    "completed_frames": 600,
+    "exit_code": 0,
+    "verified_bounded_completion": true,
+    "screenshot": "gateway-final-600-frame240.png"
+  },
+  "focused_targets": {
+    "passed": 20,
+    "failed": 0,
+    "results": "focused-final.json",
+    "history_includes_initial_failures": "focused-history.jsonl"
+  },
+  "source_comparison": {
+    "manager_passed": 33,
+    "manager_donor_functions": 18,
+    "holders_passed": 61,
+    "factory_passed": 9
+  },
+  "provider_audit": "provider-summary.json",
+  "broad_provider_gate_passed": false,
+  "staged_retired_api_references": 0,
+  "staged_source_diff_check": 0,
+  "raw_diagnostic_output_retained_verbatim": true,
+  "existing_index_preserved_before_commit": true,
+  "baseline_index_patch_sha256": "288c9971c3f77f8e8440c8e9e0f63892204d46e6f2f8fbf2064959988601e096",
+  "necessary_preexisting_test_dependency_closure": [
+    "tests/NameObjFactoryPlacementTests.cpp",
+    "tests/AuthoredPlacementInstantiatorTests.cpp",
+    "only associated tests/xmake.lua wiring"
+  ],
+  "limits": [
+    "Validation ran in the existing working tree with unrelated pending changes; not a clean-checkout attestation.",
+    "Only 20 focused targets were run, not the entire repository suite.",
+    "Opening regression does not prove reaching Rosalina or completing Gateway.",
+    "160 compat files remain.",
+    "Broad provider provenance gate still reports unresolved/differing records; duplicate/stale/unavailable counts are zero."
+  ]
+}

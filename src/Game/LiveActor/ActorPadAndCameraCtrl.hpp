@@ -1,6 +1,9 @@
 #pragma once
 
 #include <JSystem/JGeometry/TVec.hpp>
+#include <memory>
+
+class JMapInfo;
 
 class ModelManager;
 class ResourceHolder;
@@ -25,6 +28,7 @@ struct ActorPadAndCameraCtrlInfo {
 class ActorPadAndCameraCtrl {
 public:
     ActorPadAndCameraCtrl(const ModelManager*, const TVec3f*);
+    ~ActorPadAndCameraCtrl();
 
     static ActorPadAndCameraCtrl* tryCreate(const ModelManager*, const TVec3f*);
 
@@ -38,4 +42,8 @@ public:
     /* 0x0C */ const char* _C;
     /* 0x10 */ s32 mInfoNum;
     /* 0x14 */ ActorPadAndCameraCtrlInfo* mInfo;
+
+private:
+    // Control records borrow the native JMap string cache until retirement.
+    std::unique_ptr<JMapInfo> mNativeParser;
 };

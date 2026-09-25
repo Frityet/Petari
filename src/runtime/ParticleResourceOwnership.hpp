@@ -4,19 +4,19 @@
 #include <memory>
 
 class ParticleResourceHolder;
+class FileLoader;
 namespace smgpc::compat { class JkrHeapRuntime; }
 
 namespace smgpc::runtime {
-    class ArchiveMountService;
 
     // Process owner of the original particle catalog. Scene effect owners must
     // retain this owner until every emitter using its resources has retired.
-    // The process ArchiveMountService must outlive this owner.
+    // The original FileLoader must outlive this owner.
     class ParticleResourceOwnership final {
     public:
         static constexpr std::size_t default_byte_budget = 2U * 1024U * 1024U;
         ParticleResourceOwnership(std::shared_ptr<compat::JkrHeapRuntime>,
-                                  std::size_t byte_budget, ArchiveMountService&);
+                                  std::size_t byte_budget, FileLoader&);
         ~ParticleResourceOwnership();
         ParticleResourceOwnership(const ParticleResourceOwnership&) = delete;
         ParticleResourceOwnership& operator=(const ParticleResourceOwnership&) = delete;

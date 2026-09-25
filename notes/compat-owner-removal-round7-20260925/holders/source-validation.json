@@ -1,0 +1,259 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "Original existing body retained: ResourceHolder::getMotionName",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: ResourceHolder::isExistMaterialAnm",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: ResourceHolder::newMaterialAnmBuffer",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: ResourceHolder::newBckCtrl",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: ResourceHolder::getInitEffectMtx",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: ResourceHolder::initializeArc",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: ResourceHolder::getFileFinder",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: ResourceHolder::initEachResTable",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: ResourceHolder::backupInitMaterialData",
+      "passed": true
+    },
+    {
+      "check": "ResourceHolder native ownership method retainNativeResources",
+      "passed": true
+    },
+    {
+      "check": "ResourceHolder native ownership method nativeArchiveReferenceCount",
+      "passed": true
+    },
+    {
+      "check": "ResourceHolder native ownership method ensureNativeResourcesUnborrowed",
+      "passed": true
+    },
+    {
+      "check": "ResourceHolder native ownership method nativeResourceSource",
+      "passed": true
+    },
+    {
+      "check": "ResourceHolder native ownership method nativeResourcePath",
+      "passed": true
+    },
+    {
+      "check": "ResourceHolder native ownership method heap",
+      "passed": true
+    },
+    {
+      "check": "ResourceHolder native ownership method destroyNativeResources",
+      "passed": true
+    },
+    {
+      "check": "ResourceHolder uses actual archive source/token",
+      "passed": true
+    },
+    {
+      "check": "ResourceHolder cleans original tables and names",
+      "passed": true
+    },
+    {
+      "check": "ResourceHolder enumeration has unwind-safe finders",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: LayoutHolder::GetResource",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: LayoutHolder::GetFont",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: LayoutHolder::isAnimationHashEqual",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: LayoutHolder::initializeArc",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: LayoutHolder::getFileFinder",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: LayoutHolder::initEachResTable",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: LayoutHolder::createAndRegisterObject",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: LayoutHolder::getResOther",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: LayoutHolder::getResOtherNum",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: LayoutHolder::getResOtherName",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: LayoutHolder::getResOther",
+      "passed": true
+    },
+    {
+      "check": "Original existing body retained: LayoutHolder::isExistResOther",
+      "passed": true
+    },
+    {
+      "check": "LayoutHolder native ownership method retainNativeResources",
+      "passed": true
+    },
+    {
+      "check": "LayoutHolder native ownership method nativeArchiveReferenceCount",
+      "passed": true
+    },
+    {
+      "check": "LayoutHolder native ownership method ensureNativeResourcesUnborrowed",
+      "passed": true
+    },
+    {
+      "check": "LayoutHolder native ownership method nativeResourceSource",
+      "passed": true
+    },
+    {
+      "check": "LayoutHolder native ownership method nativeResourcePath",
+      "passed": true
+    },
+    {
+      "check": "LayoutHolder native ownership method heap",
+      "passed": true
+    },
+    {
+      "check": "LayoutHolder native ownership method destroyNativeResources",
+      "passed": true
+    },
+    {
+      "check": "LayoutHolder uses actual archive source/token",
+      "passed": true
+    },
+    {
+      "check": "LayoutHolder cleans original tables and names",
+      "passed": true
+    },
+    {
+      "check": "LayoutHolder enumeration has unwind-safe finders",
+      "passed": true
+    },
+    {
+      "check": "Constructor typed preparation precedes original initialization",
+      "passed": true
+    },
+    {
+      "check": "Original load mutex recovery and command scope remain",
+      "passed": true
+    },
+    {
+      "check": "Model destruction precedes material buffer teardown",
+      "passed": true
+    },
+    {
+      "check": "Per-holder J3D and BAS sources avoid competing archive aliases",
+      "passed": true
+    },
+    {
+      "check": "Typed texture/camera cache entries use canonical override leases",
+      "passed": true
+    },
+    {
+      "check": "Retired src/compat/ResourceHolderCompat.cpp",
+      "passed": true
+    },
+    {
+      "check": "Retired src/compat/ResourceHolderCompat.hpp",
+      "passed": true
+    },
+    {
+      "check": "Retained fixture bytes/SDK checks put16",
+      "passed": true
+    },
+    {
+      "check": "Retained fixture bytes/SDK checks put32",
+      "passed": true
+    },
+    {
+      "check": "Retained fixture bytes/SDK checks tag",
+      "passed": true
+    },
+    {
+      "check": "Retained fixture bytes/SDK checks archive",
+      "passed": true
+    },
+    {
+      "check": "Retained fixture bytes/SDK checks transform",
+      "passed": true
+    },
+    {
+      "check": "Retained fixture bytes/SDK checks control",
+      "passed": true
+    },
+    {
+      "check": "Retained fixture bytes/SDK checks color",
+      "passed": true
+    },
+    {
+      "check": "Retained fixture bytes/SDK checks indexed_tpl",
+      "passed": true
+    },
+    {
+      "check": "Retained fixture bytes/SDK checks test_sdk_tex_map",
+      "passed": true
+    },
+    {
+      "check": "Actual process manager fixture",
+      "passed": true
+    },
+    {
+      "check": "Duplicate native lifetimes cover FIFO/reverse and unrelated cache writes",
+      "passed": true
+    },
+    {
+      "check": "Actual original stationed duplicates covered",
+      "passed": true
+    },
+    {
+      "check": "Attached parser preflight replaces unsafe fixed-byte retirement",
+      "passed": true
+    }
+  ],
+  "files": {
+    "src/Game/System/ResourceHolder.hpp": "41e30e33eafe9928d22b1af47e118c51fdbd8b42c903eae8d36a629d3e054e7f",
+    "src/Game/System/ResourceHolder.cpp": "c928573bba2dea2d3165c65cc64eed33e36e9d6b2c627095a09d0f00899987a5",
+    "src/Game/System/LayoutHolder.hpp": "43b4d82e1fe5321cf52dadda1e9fbfdb218c3c415182027bc35bc3135896f16f",
+    "src/Game/System/LayoutHolder.cpp": "8e7d9fc24c8a189a8def3ec98c30909aee95502b1db2ac746e70efc9012d54ca",
+    "src/compat/ResourceHolderCompat.hpp": null,
+    "src/compat/ResourceHolderCompat.cpp": null,
+    "tests/OriginalResourceHolderTests.cpp": "85b3b081d7bd1f0614c2cc60b0929d84a25759f4eb5034dff4f135e2562ab292"
+  },
+  "builds_run_by_agent": false
+}

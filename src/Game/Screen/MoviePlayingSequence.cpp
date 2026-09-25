@@ -220,31 +220,36 @@ const char* MoviePlayingSequence::getMovieName(MoviePlayingSequence::MovieType t
 }
 
 // https://decomp.me/scratch/O5orZ
-MoviePlayingSequence::MoviePlayingSequence(const char* pName, s32 movieType) : LayoutActor(pName, true), mSubtitles() {
-    mInfo = &::sInfoTable[movieType];
-    mPadRumbler = new DemoPadRumbler(getMovieName(MovieType(movieType)));
+MoviePlayingSequence::MoviePlayingSequence(const char* pName, s32 movieType) : LayoutActor(pName, true), mSubtitles(), mPadRumbler(nullptr) {
+    try {
+        mInfo = &::sInfoTable[movieType];
+        mPadRumbler = new DemoPadRumbler(getMovieName(MovieType(movieType)));
 
-    MR::createSceneObj(SceneObj_MoviePlayerSimple);
-    MR::connectToSceneLayoutMovement(this);
-    initNerve(&NrvMoviePlayingSequence::HostTypeWait::sInstance);
+        MR::createSceneObj(SceneObj_MoviePlayerSimple);
+        MR::connectToSceneLayoutMovement(this);
+        initNerve(&NrvMoviePlayingSequence::HostTypeWait::sInstance);
 
-    s32 subtitleNum = MovieSubtitlesUtil::getSubtitlesMessageNum(mInfo->mMovieName);
+        s32 subtitleNum = MovieSubtitlesUtil::getSubtitlesMessageNum(mInfo->mMovieName);
 
-    if (subtitleNum > 0) {
-        mSubtitles.init(subtitleNum);
+        if (subtitleNum > 0) {
+            mSubtitles.init(subtitleNum);
 
-        for (s32 i = 0; i < subtitleNum; i++) {
-            if (MovieSubtitlesUtil::isExistSubtitles(mInfo->mMovieName, i)) {
-                const MoviePlayingInfo* pInfo = mInfo;
-                MovieSubtitles* pSubtitles = new MovieSubtitles(MovieSubtitlesUtil::getSubtitlesMessageId(pInfo->mMovieName, i),
-                                                                MovieSubtitlesUtil::getSubtitlesAppearTime(pInfo->mMovieName, i));
+            for (s32 i = 0; i < subtitleNum; i++) {
+                if (MovieSubtitlesUtil::isExistSubtitles(mInfo->mMovieName, i)) {
+                    const MoviePlayingInfo* pInfo = mInfo;
+                    MovieSubtitles* pSubtitles = new MovieSubtitles(MovieSubtitlesUtil::getSubtitlesMessageId(pInfo->mMovieName, i),
+                                                                    MovieSubtitlesUtil::getSubtitlesAppearTime(pInfo->mMovieName, i));
 
-                mSubtitles.push_back(pSubtitles);
+                    mSubtitles.push_back(pSubtitles);
+                }
             }
         }
-    }
 
-    kill();
+        kill();
+    } catch (...) {
+        delete mPadRumbler;
+        throw;
+    }
 }
 
 void MoviePlayingSequence::appear() {
@@ -527,3 +532,7 @@ namespace MR {
         return false;
     }
 };  // namespace MR
+
+MoviePlayingSequence::~MoviePlayingSequence() {
+    delete mPadRumbler;
+}

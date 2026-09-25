@@ -4,10 +4,11 @@
 #include <memory>
 
 class ScenarioDataParser;
+class FileLoader;
 namespace smgpc::compat { class JkrHeapRuntime; }
 
 namespace smgpc::runtime {
-    class ArchiveMountService;
+    class DvdFileSystemService;
 
     // Owns the actual process catalog and its original heap. Scene users
     // retain this owner; its publication never fabricates a GameSystem.
@@ -15,7 +16,7 @@ namespace smgpc::runtime {
     public:
         ScenarioCatalogOwnership(std::shared_ptr<compat::JkrHeapRuntime>,
                                  std::size_t byte_budget,
-                                 ArchiveMountService&);
+                                 FileLoader&, DvdFileSystemService&);
         ~ScenarioCatalogOwnership();
         ScenarioCatalogOwnership(const ScenarioCatalogOwnership&) = delete;
         ScenarioCatalogOwnership& operator=(const ScenarioCatalogOwnership&) = delete;

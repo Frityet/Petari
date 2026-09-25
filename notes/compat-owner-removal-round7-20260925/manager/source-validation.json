@@ -1,0 +1,140 @@
+{
+  "validation": "source comparison only; root owns compile/runtime validation",
+  "donor_functions": 18,
+  "checks": [
+    {
+      "check": "complete original function ResourceHolderManager::ResourceHolderManager",
+      "pass": true
+    },
+    {
+      "check": "complete original function ResourceHolderManager::createAndAdd",
+      "pass": true
+    },
+    {
+      "check": "complete original function ResourceHolderManager::createAndAddStationed",
+      "pass": true
+    },
+    {
+      "check": "complete original function ResourceHolderManager::createAndAddLayoutHolder",
+      "pass": true
+    },
+    {
+      "check": "complete original function ResourceHolderManager::createAndAddLayoutHolderStationed",
+      "pass": true
+    },
+    {
+      "check": "complete original function ResourceHolderManager::createAndAddLayoutHolderRawData",
+      "pass": true
+    },
+    {
+      "check": "complete original function ResourceHolderManager::removeIfIsEqualHeap",
+      "pass": true
+    },
+    {
+      "check": "complete original function ResourceHolderManager::startCreateResourceHolderOnMainThread",
+      "pass": true
+    },
+    {
+      "check": "complete original function ResourceHolderManager::startCreateLayoutHolderOnMainThread",
+      "pass": true
+    },
+    {
+      "check": "complete original function ResourceHolderManager::createAndAddInner",
+      "pass": true
+    },
+    {
+      "check": "complete original function ResourceHolderManager::createAndAddInnerStationed",
+      "pass": true
+    },
+    {
+      "check": "complete original function ResourceHolderManager::createResourceHolder",
+      "pass": true
+    },
+    {
+      "check": "complete original function ResourceHolderManager::createLayoutHolder",
+      "pass": true
+    },
+    {
+      "check": "complete original function ResourceHolderManager::add",
+      "pass": true
+    },
+    {
+      "check": "complete original function ResourceHolderManager::find",
+      "pass": true
+    },
+    {
+      "check": "complete original function ResourceHolderManagerName2Resource::ResourceHolderManagerName2Resource",
+      "pass": true
+    },
+    {
+      "check": "complete original function ResourceHolderManagerName2Resource::operator=",
+      "pass": true
+    },
+    {
+      "check": "complete original function CreateResourceHolderArgs::CreateResourceHolderArgs",
+      "pass": true
+    },
+    {
+      "check": "original 512-entry fixed registry retained",
+      "pass": true
+    },
+    {
+      "check": "retired provider src/compat/OriginalStationedResourceManager.cpp",
+      "pass": true
+    },
+    {
+      "check": "retired provider src/compat/SceneHeapAccess.cpp",
+      "pass": true
+    },
+    {
+      "check": "retired provider src/compat/ScenarioDataParserAccess.cpp",
+      "pass": true
+    },
+    {
+      "check": "removed resource service dependency src/compat/ModelManagerOwner.cpp",
+      "pass": true
+    },
+    {
+      "check": "removed resource service dependency src/compat/ModelManagerOwner.hpp",
+      "pass": true
+    },
+    {
+      "check": "removed resource service dependency src/compat/ActorRuntimeRegistry.cpp",
+      "pass": true
+    },
+    {
+      "check": "removed resource service dependency src/compat/MarioAnimatorLifetime.cpp",
+      "pass": true
+    },
+    {
+      "check": "removed resource service dependency src/compat/CollisionPartsCompat.cpp",
+      "pass": true
+    },
+    {
+      "check": "removed resource service dependency tests/NameObjFactoryPlacementTests.cpp",
+      "pass": true
+    },
+    {
+      "check": "removed resource service dependency tests/OriginalShadowControllerOwnerTests.cpp",
+      "pass": true
+    },
+    {
+      "check": "removed resource service dependency tests/OriginalJointControllerTests.cpp",
+      "pass": true
+    },
+    {
+      "check": "original process scenario getter retained",
+      "pass": true
+    },
+    {
+      "check": "retired uncaptured demo sidecar src/compat/DemoDirectorOwnership.cpp",
+      "pass": true
+    },
+    {
+      "check": "retired uncaptured demo sidecar src/compat/DemoDirectorOwnership.hpp",
+      "pass": true
+    }
+  ],
+  "passed": 33,
+  "failed": 0
+}

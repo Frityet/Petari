@@ -1,6 +1,9 @@
 #include "compat/Cp932Literal.hpp"
 #pragma once
 
+#include <memory>
+class JMapInfo;
+
 #include "Game/Demo/DemoExecutor.hpp"
 
 class DemoSoundInfo {
@@ -18,6 +21,7 @@ public:
 class DemoSoundKeeper : public DemoSheetKeeperBase, public DemoSheetKeeperInfoHolder< DemoSoundInfo > {
 public:
     DemoSoundKeeper(DemoExecutor*);
+    ~DemoSoundKeeper();
 
     virtual const char* getName() const {
         return CP932("サウンド");
@@ -32,4 +36,8 @@ public:
     virtual void executeType(const DemoSoundInfo*);
 
     bool isPermitBgmChange();
+
+private:
+    // Original records borrow strings from this native parser until retirement.
+    std::unique_ptr<JMapInfo> mNativeParser;
 };

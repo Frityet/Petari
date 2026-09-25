@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+class JMapInfo;
+
 #include <JSystem/JGeometry/TVec.hpp>
 #include <revolution.h>
 
@@ -52,4 +55,8 @@ public:
     /* 0x00 */ s32 mLightCount;
     /* 0x04 */ AreaLightInfo* mLights;
     /* 0x08 */ LightInfoCoin _8;
+
+private:
+    // Original records borrow strings from this native parser until retirement.
+    std::unique_ptr<JMapInfo> mNativeParser;
 };

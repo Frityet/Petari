@@ -15,6 +15,7 @@ DemoWipeKeeper::DemoWipeKeeper(DemoExecutor* pExecutor) : DemoSheetKeeperBase(pE
     JMapInfo* map = nullptr;
     DemoExecutor* executor = mExecutor;
     s32 count = DemoFunction::createSheetParser(executor, getTypeString(), &map);
+    mNativeParser.reset(map);
     mInfo.mArray.init(count);
     for (s32 i = 0; i < count; i++) {
         DemoWipeInfo info;
@@ -46,3 +47,5 @@ void DemoWipeKeeper::executeType(const DemoWipeInfo* pInfo) {
         }
     }
 }
+
+DemoWipeKeeper::~DemoWipeKeeper() = default;

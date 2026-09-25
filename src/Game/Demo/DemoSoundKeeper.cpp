@@ -15,6 +15,7 @@ DemoSoundKeeper::DemoSoundKeeper(DemoExecutor* pExecutor) : DemoSheetKeeperBase(
     JMapInfo* map = nullptr;
     DemoExecutor* executor = mExecutor;
     s32 count = DemoFunction::createSheetParser(executor, getTypeString(), &map);
+    mNativeParser.reset(map);
     mInfo.mArray.init(count);
     for (s32 i = 0; i < count; i++) {
         DemoSoundInfo info;
@@ -57,3 +58,5 @@ bool DemoSoundKeeper::isPermitBgmChange() {
     }
     return true;
 }
+
+DemoSoundKeeper::~DemoSoundKeeper() = default;

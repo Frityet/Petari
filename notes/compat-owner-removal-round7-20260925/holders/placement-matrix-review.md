@@ -1,0 +1,7 @@
+# Inventory zone matrix precision
+
+The parent original-process-placement-transform run found inventory position `(13894.748,-10278.8203,7627.56982)` versus original Game matrix result `(13894.6035,-10278.9688,7627.49316)`. StageZoneTransform::from_translation_rotation independently constructed its matrix with host std::sin/cos of radians. Actual StageDataHolder::calcPlacementMtx calls MR::makeMtxTR, whose restored original implementation uses JMath degree sine/cosine table lookup and original floating-point expression order. These are different arithmetic paths; the source mismatch explains the drift for translated/rotated local zones.
+
+The resolver now calls the same MR::makeMtxTR scalar overload and copies its 3x4 rows into the unchanged flattened metadata array. The unused degree-to-radian constant and duplicate trigonometric formula are removed. Provenance, local JMap rows, hierarchy, concatenation and point/vector contracts remain unchanged. The focused test's 0.015 positional tolerance is unchanged, and no stage-specific behavior was added.
+
+StagePlacementResolver.cpp was clean before this change. `before-placement-fix/`, `placement-before.json` and `placement-fix.patch` preserve the exact baseline/delta; the main holder manifest includes the owned source for scoped staging. No build or test was run by this agent. Parent integration should rerun original-process-placement-transform and existing placement resolver checks.

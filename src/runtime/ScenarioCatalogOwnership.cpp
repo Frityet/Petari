@@ -1,6 +1,7 @@
 #include <aurora/exception.hpp>
 #include "runtime/ScenarioCatalogOwnership.hpp"
-#include "runtime/ArchiveMountService.hpp"
+#include "Game/System/FileLoader.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -17,26 +18,26 @@ namespace { ScenarioCatalogOwnership* active_catalog = nullptr; }
 
 struct ScenarioCatalogOwnership::Storage {
     std::shared_ptr<compat::JkrAllocationDomain> domain;
-    ArchiveMountService* mounts = nullptr;
-    std::vector<std::shared_ptr<const MountedArchive>> archives;
+    FileLoader* loader = nullptr;
+    std::vector<std::shared_ptr<const void>> archives;
     std::unique_ptr<ScenarioDataParser> parser;
 
     ~Storage() {
         parser.reset();
-        if (mounts && domain) mounts->remove_for_heap(&domain->heap());
         // JMapInfo is an original JKRDisposer. Keep its source aliases and
         // typed storage alive until the domain performs original disposal.
-        domain.reset();
         archives.clear();
+        if (loader && domain) loader->removeHolderIfIsEqualHeap(&domain->heap());
+        domain.reset();
     }
 };
 
 ScenarioCatalogOwnership::ScenarioCatalogOwnership(
     std::shared_ptr<compat::JkrHeapRuntime> runtime,
-    std::size_t byte_budget, ArchiveMountService& mounts) {
+    std::size_t byte_budget, FileLoader& loader, DvdFileSystemService& dvd) {
     compat::JkrHostAllocationScope host;
-    if (!runtime || ArchiveMountService::active() != &mounts)
-        aurora::throw_host_exception<std::invalid_argument>("The scenario catalog requires the active archive service and real heap runtime");
+    if (!runtime || SingletonHolder<FileLoader>::get() != &loader)
+        aurora::throw_host_exception<std::invalid_argument>("The scenario catalog requires the original FileLoader and real heap runtime");
     if (active_catalog)
         aurora::throw_host_exception<std::logic_error>("An actual scenario catalog is already published");
 
@@ -44,25 +45,25 @@ ScenarioCatalogOwnership::ScenarioCatalogOwnership(
     // enumerates the same immutable disc directory. This does not select or
     // manufacture any catalog row.
     std::vector<std::string> paths;
-    for (const auto& entry : mounts.dvd().directory_entries("/StageData")) {
+    for (const auto& entry : dvd.directory_entries("/StageData")) {
         if (!entry.is_directory) continue;
         char path[256];
         MR::makeScenarioArchiveFileName(path, sizeof(path), entry.name.c_str());
-        if (mounts.dvd().exists(path)) paths.emplace_back(path);
+        if (dvd.exists(path)) paths.emplace_back(path);
     }
     if (paths.size() > 64)
         aurora::throw_host_exception<std::length_error>("Authored scenario archives exceed the original parser capacity");
 
     auto storage = std::make_unique<Storage>();
     storage->domain = compat::JkrAllocationDomain::create(std::move(runtime), byte_budget);
-    storage->mounts = &mounts;
+    storage->loader = &loader;
     StationedArchiveLoader::loadScenarioData(&storage->domain->heap());
     storage->archives.reserve(paths.size());
     for (const auto& path : paths) {
-        auto archive = mounts.retain(path);
+        auto* archive = loader.receiveArchive(path.c_str());
         if (!archive)
             aurora::throw_host_exception<std::logic_error>("The original preloader did not publish an authored scenario archive");
-        storage->archives.push_back(std::move(archive));
+        storage->archives.push_back(archive->retainNativeResources());
     }
     {
         compat::JkrAllocationScope heap(storage->domain);

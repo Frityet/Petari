@@ -8,16 +8,24 @@
 #include "Game/Screen/PaneEffectKeeper.hpp"
 #include "Game/Screen/SimpleLayout.hpp"
 #include "Game/System/ResourceHolderManager.hpp"
+#include "Game/System/ResourceHolder.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MessageUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/StringUtil.hpp"
+#include "layout/LytTexMap.hpp"
 #include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
+#include <JSystem/JUtility/JUTTexture.hpp>
 #include <nw4r/lyt/layout.h>
 #include <nw4r/lyt/textBox.h>
 #include <nw4r/lyt/picture.h>
 #include <nw4r/lyt/material.h>
+#include <aurora/allocation.hpp>
+#include <memory>
+#include <stdexcept>
+#include <string>
 
 extern "C" int vswprintf(wchar_t*, size_t, const wchar_t*, va_list);
 
@@ -113,6 +121,27 @@ namespace {
 };  // namespace
 
 namespace MR {
+    nw4r::lyt::TexMap* createLytTexMap(const char* pArchiveName, const char* pTextureName) {
+        if (pArchiveName == nullptr || pTextureName == nullptr) {
+            throw std::invalid_argument("MR::createLytTexMap requires archive and texture names");
+        }
+        const ResTIMG* image = loadTexFromArc(pArchiveName, pTextureName);
+        if (image == nullptr) {
+            throw std::runtime_error("Required layout texture resource is unavailable: " + std::string(pTextureName));
+        }
+        JUTTexture texture(image, 0);
+        auto result = std::make_unique<nw4r::lyt::TexMap>(texture.getTexObj());
+        {
+            const aurora::allocation::HostAllocationScope host;
+            auto* holder = createAndAddResourceHolder(pArchiveName);
+            result->SetHostResourceState(std::make_shared<nw4r::lyt::HostTextureResourceState>(
+                nw4r::lyt::HostTextureResourceState{
+                    holder->nativeResourcePath().generic_string() + ":" + pTextureName,
+                    holder->retainNativeTexture(image), nullptr}));
+        }
+        return result.release();
+    }
+
     LayoutHolder* createAndAddLayoutHolder(const char* pArcName) {
         return SingletonHolder< ResourceHolderManager >::get()->createAndAddLayoutHolder(pArcName, nullptr);
     }

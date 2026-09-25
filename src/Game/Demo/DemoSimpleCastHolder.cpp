@@ -34,3 +34,36 @@ void DemoSimpleCastHolder::movementOnAllCasts() {
         MR::requestMovementOn(*pNameObj);
     }
 }
+
+void DemoSimpleCastHolder::releaseNativeReference(const NameObj* pObject) noexcept {
+    const auto release = [pObject](auto& values) {
+        s32 retained = 0;
+        for (s32 i = 0; i < values.mCount; i++) {
+            if (values[i] != pObject) {
+                values[retained++] = values[i];
+            }
+        }
+        for (s32 i = retained; i < values.mCount; i++) {
+            values[i] = nullptr;
+        }
+        values.mCount = retained;
+    };
+    release(mLiveActors);
+    release(mLayoutActors);
+    release(mNameObjs);
+}
+
+std::size_t DemoSimpleCastHolder::nativeRegistrationCount(const NameObj* pObject) const noexcept {
+    std::size_t count = 0;
+    const auto add = [&](const auto& values) {
+        for (const auto* value : values) {
+            if (pObject == nullptr || value == pObject) {
+                count++;
+            }
+        }
+    };
+    add(mLiveActors);
+    add(mLayoutActors);
+    add(mNameObjs);
+    return count;
+}

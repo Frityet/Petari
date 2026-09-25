@@ -1,18 +1,25 @@
+#include "Game/Util/JMapInfo.hpp"
 #include "Game/Demo/DemoSubPartKeeper.hpp"
 #include "Game/Demo/DemoFunction.hpp"
 #include "Game/Util.hpp"
 #include <cstring>
 
 DemoSubPartKeeper::DemoSubPartKeeper(const DemoExecutor* pExecutor) : mExecutor(pExecutor), mNumSubPartInfos(0), mSubPartInfos(nullptr) {
-    JMapInfo* map = nullptr;
-    mNumSubPartInfos = DemoFunction::createSheetParser(mExecutor, "SubPart", &map);
-    mSubPartInfos = new DemoSubPartInfo[mNumSubPartInfos];
-    for (int i = 0; i < mNumSubPartInfos; i++) {
-        DemoSubPartInfo* subpart = &mSubPartInfos[i];
-        MR::getCsvDataStrOrNULL(&subpart->mSubPartName, map, "SubPartName", i);
-        MR::getCsvDataS32(&subpart->mSubPartTotalStep, map, "SubPartTotalStep", i);
-        MR::getCsvDataStrOrNULL(&subpart->mMainPartName, map, "MainPartName", i);
-        MR::getCsvDataS32(&subpart->mMainPartStep, map, "MainPartStep", i);
+    try {
+        JMapInfo* map = nullptr;
+        mNumSubPartInfos = DemoFunction::createSheetParser(mExecutor, "SubPart", &map);
+        mNativeParser.reset(map);
+        mSubPartInfos = new DemoSubPartInfo[mNumSubPartInfos];
+        for (int i = 0; i < mNumSubPartInfos; i++) {
+            DemoSubPartInfo* subpart = &mSubPartInfos[i];
+            MR::getCsvDataStrOrNULL(&subpart->mSubPartName, map, "SubPartName", i);
+            MR::getCsvDataS32(&subpart->mSubPartTotalStep, map, "SubPartTotalStep", i);
+            MR::getCsvDataStrOrNULL(&subpart->mMainPartName, map, "MainPartName", i);
+            MR::getCsvDataS32(&subpart->mMainPartStep, map, "MainPartStep", i);
+        }
+    } catch (...) {
+        delete[] mSubPartInfos;
+        throw;
     }
 }
 
@@ -68,4 +75,8 @@ DemoSubPartInfo* DemoSubPartKeeper::findSubPart(const char* pSubPartName) const 
         }
     }
     return nullptr;
+}
+
+DemoSubPartKeeper::~DemoSubPartKeeper() {
+    delete[] mSubPartInfos;
 }

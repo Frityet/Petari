@@ -14,7 +14,7 @@
 #include "compat/J3dCommandScope.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/ModelManagerOwner.hpp"
-#include "compat/ResourceHolderCompat.hpp"
+#include "Game/System/ResourceHolder.hpp"
 
 #include <exception>
 #include <memory>
@@ -59,7 +59,7 @@ namespace smgpc::compat {
         // each core has its own tracks. No player here owns/deletes the model.
         struct MarioAnimatorLifetime {
             std::shared_ptr<JkrAllocationDomain> domain;
-            std::shared_ptr<const ResourceArchiveOwner> resources;
+            std::shared_ptr<const void> resources;
             MarioAnimator* animator = nullptr;
             XanimeResourceTable* resource_table = nullptr;
             XanimeGroupInfo* simple_groups = nullptr;
@@ -128,12 +128,8 @@ namespace smgpc::compat {
               system(j3dSys), previous_player(owner->manager().mXanimePlayer), thread(OSGetCurrentThread()),
               exceptions(std::uncaught_exceptions()),
               mutex_count(MR::MutexHolder<0>::sMutex.thread == thread ? MR::MutexHolder<0>::sMutex.count : 0) {
-            auto* service = ResourceHolderService::active();
-            if (!service) {
-                aurora::throw_host_exception<std::logic_error>("MarioAnimator requires its actual archive resource service");
-            }
             lifetime->domain = owner->allocation_domain();
-            lifetime->resources = service->retain(*MR::getResourceHolder(animator.mActor));
+            lifetime->resources = MR::getResourceHolder(animator.mActor)->retainNativeResources();
             // Original init assigns each pointer only after a successful complete
             // child construction. Known null slots permit capture during unwind.
             animator.mResourceTable = nullptr;

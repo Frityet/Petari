@@ -10,7 +10,8 @@
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
-#include "compat/DemoDirectorOwnership.hpp"
+#include "Game/Demo/DemoDirector.hpp"
+#include "Game/Demo/DemoSimpleCastHolder.hpp"
 #include "compat/StarPointerDepthOwnership.hpp"
 #include "camera/CameraDirectorRuntime.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -244,7 +245,7 @@ namespace {
                     selector->mSphereGroup->getObjNum() == 1 &&
                     selector->mSphereGroup->getActor(0) == &handle,
                 "exact placement init must synchronously bind the real handle into SceneObj 0x6F");
-        require(smgpc::scene::current_demo_director_ownership()->simple_cast_registration_count(&handle) == 1U,
+        require(MR::getSceneObj<DemoDirector>(SceneObj_DemoDirector)->_20->nativeRegistrationCount(&handle) == 1U,
                 "exact placement init must retain the retail simple demo-cast registration");
 
         require(SphereSelectorFunction::isMsgSelectStart(

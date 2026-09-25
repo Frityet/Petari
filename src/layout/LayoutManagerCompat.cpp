@@ -30,7 +30,6 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/LayoutUtil.hpp"
 #include "Game/Util/FileUtil.hpp"
-#include "compat/ResourceHolderCompat.hpp"
 #include "compat/EffectSystemOwnership.hpp"
 #include "Game/Screen/PaneEffectKeeper.hpp"
 #include "Game/Screen/LayoutCoreUtil.hpp"
@@ -219,13 +218,10 @@ void bind_actor_manager(LayoutActor* actor, LayoutManager* manager) {
         }
     }
     manager->_78 = manager_state.base_name.c_str();
-    auto* resources = smgpc::compat::ResourceHolderService::active();
-    if (!resources)
-        aurora::throw_host_exception<std::logic_error>("LayoutManager requires its mounted layout resource owner");
     manager->mLayoutHolder = MR::createAndAddLayoutHolder((resource_name + ".arc").c_str());
     manager_state.runtime = std::make_unique< smgpc::layout::LayoutRuntime >(
         smgpc::resource::decode_cp932(actor->getName()).c_str(), resource_name.c_str(),
-        manager_state.animation_layer_count, MR::DrawType_Layout, resources->retain(*manager->mLayoutHolder));
+        manager_state.animation_layer_count, MR::DrawType_Layout, *manager->mLayoutHolder);
     manager_state.runtime->initWithoutIter();
     manager_state.runtime->kill();
     manager_state.runtime->setTrans(actor_state.translation.x, actor_state.translation.y);

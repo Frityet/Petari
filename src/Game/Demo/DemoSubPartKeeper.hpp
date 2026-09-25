@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+class JMapInfo;
+
 #include <revolution/types.h>
 
 class DemoExecutor;
@@ -18,6 +21,7 @@ public:
 class DemoSubPartKeeper {
 public:
     DemoSubPartKeeper(const DemoExecutor*);
+    ~DemoSubPartKeeper();
 
     void update();
     void end();
@@ -29,4 +33,8 @@ public:
     const DemoExecutor* mExecutor;   // 0x0
     s32 mNumSubPartInfos;            // 0x4
     DemoSubPartInfo* mSubPartInfos;  // 0x8
+
+private:
+    // Original records borrow strings from this native parser until retirement.
+    std::unique_ptr<JMapInfo> mNativeParser;
 };

@@ -1,7 +1,7 @@
 #include "layout/Nw4rLayoutRecords.hpp"
 #include "layout/LayoutRuntime.hpp"
 #include "layout/LytTexMap.hpp"
-#include "compat/ResourceHolderCompat.hpp"
+#include "Game/System/LayoutHolder.hpp"
 #include "resource/RarcArchive.hpp"
 #include "Game/System/LayoutHolder.hpp"
 #include "Game/Util/MessageUtil.hpp"
@@ -307,7 +307,7 @@ Nw4rLayoutRecords::Nw4rLayoutRecords(LayoutRuntime& runtime, LayoutManager* mana
                 aurora::throw_host_exception<std::logic_error>("NW4R text pane has no decoded text resource");
             const nw4r::ut::Font* font = nullptr;
             if (runtime.mArchiveOwner) {
-                font = runtime.mArchiveOwner->holder().GetFont(text->font_name.c_str());
+                font = runtime.mArchiveOwner->GetFont(text->font_name.c_str());
             } else {
                 const auto entry = std::ranges::find(runtime.mRenderFonts, text->font_name, &LayoutRuntime::RenderFont::name);
                 if (entry != runtime.mRenderFonts.end()) font = entry->native_font.get();
@@ -445,7 +445,7 @@ nw4r::lyt::Layout& Nw4rLayoutRecords::layout() { return *_state->layout; }
 nw4r::lyt::AnimTransform* Nw4rLayoutRecords::create_animation(const void* resource) {
     const aurora::allocation::HostAllocationScope host;
     const auto& runtime = _state->runtime;
-    NativeResourceAccessor accessor(runtime.mRenderTextures, runtime.mArchiveOwner ? &runtime.mArchiveOwner->archive() : nullptr);
+    NativeResourceAccessor accessor(runtime.mRenderTextures, runtime.mArchiveOwner ? &runtime.mArchiveOwner->nativeResourceSource() : nullptr);
     auto* transform = _state->layout->CreateAnimTransform(resource, &accessor);
     if (!transform) aurora::throw_host_exception<std::runtime_error>("NW4R animation resource could not create a transform");
     return transform;

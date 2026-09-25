@@ -5,6 +5,7 @@
 
 class CreateResourceHolderArgs;
 class JKRHeap;
+class JKRArchive;
 class LayoutHolder;
 class ResourceHolder;
 class ResourceHolderManager;
@@ -43,6 +44,14 @@ class ResourceHolderManager {
 public:
     /// @brief Creates a new `ResourceHolderManager`.
     ResourceHolderManager();
+    ~ResourceHolderManager();
+    ResourceHolderManager(const ResourceHolderManager&) = delete;
+    ResourceHolderManager& operator=(const ResourceHolderManager&) = delete;
+
+    // Native owner retirement preflight; checks all borrowers before deletion.
+    void validateRetirement() const;
+    void validateHeapRetirement(JKRHeap*) const;
+    u32 countNativeArchiveReferences(const JKRArchive*, JKRHeap*) const;
 
     ResourceHolder* createAndAdd(const char*, JKRHeap*);
     ResourceHolder* createAndAddStationed(const char*);

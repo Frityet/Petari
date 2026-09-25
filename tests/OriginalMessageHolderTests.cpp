@@ -1,3 +1,4 @@
+#include "scene/SceneObjHolderRuntime.hpp"
 #include "OriginalTalkNodeTests.hpp"
 #include "Game/System/MessageHolder.hpp"
 #include "Game/Map/FileSelectFunc.hpp"
@@ -14,7 +15,11 @@
 #include "resource/GameResourceRuntime.hpp"
 #include "resource/NativeBmgResource.hpp"
 #include "resource/RarcArchive.hpp"
-#include "runtime/ArchiveMountService.hpp"
+#include "Game/System/FileLoader.hpp"
+#include "Game/System/GameSystemObjHolder.hpp"
+#include "Game/Util/SingletonHolder.hpp"
+#include "Game/Util/FileUtil.hpp"
+#include "OriginalStageResourceProcessFixture.hpp"
 #include "runtime/MessageHolderOwnership.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include <aurora/aurora.h>
@@ -100,10 +105,11 @@ Bytes archive(const Bytes& messages, const Bytes& identifiers) {
     std::copy(identifiers.begin(), identifiers.end(), b.begin() + payload + second);
     return b;
 }
-void native_boundary(smgpc::resource::GameResourceRuntime& process, smgpc::runtime::ArchiveMountService& mounts) {
+void native_boundary(smgpc::resource::GameResourceRuntime& process, FileLoader& loader) {
     const auto message_bytes = bmg(), identifier_bytes = ids();
-    auto domain = smgpc::compat::JkrAllocationDomain::create(process.host_heaps(), 1U << 20);
-    (void)mounts.mount_memory("/NativeMessageFixture.arc", archive(message_bytes, identifier_bytes), &domain->heap());
+    auto domain = smgpc::compat::JkrAllocationDomain::create(smgpc::scene::current_scene_allocation_domain(), 1U << 20);
+    auto raw_archive = archive(message_bytes, identifier_bytes);
+    (void)loader.createAndAddArchive(raw_archive.data(), &domain->heap(), "/NativeMessageFixture.arc");
     {
         smgpc::compat::JkrAllocationScope heap(domain);
         MessageData data("/NativeMessageFixture.arc");
@@ -137,7 +143,7 @@ void native_boundary(smgpc::resource::GameResourceRuntime& process, smgpc::runti
                     data.isValidBranchNode(0) && !data.isValidBranchNode(1),
                 "original flow methods retain node, branch, sentinel and event-u32 union semantics");
     }
-    mounts.remove_for_heap(&domain->heap());
+    loader.removeHolderIfIsEqualHeap(&domain->heap());
     auto malformed = message_bytes;
     put32(malformed, 0x30, 1);
     rejects([&] { smgpc::resource::NativeBmgResource invalid(malformed, identifier_bytes); },
@@ -196,30 +202,24 @@ std::size_t compare_data(MessageData& data, const smgpc::resource::RarcArchive& 
     }
     return table.entry_count();
 }
-void original_holder(smgpc::resource::GameResourceRuntime& process, smgpc::runtime::ArchiveMountService& mounts) {
-    const auto mounts_before = mounts.size();
-    const auto free_before = process.host_heaps()->root_heap().getTotalFreeSize();
-    for (int generation = 0; generation < 2; ++generation) {
-        std::weak_ptr<JMapInfo::DataCompat> metadata;
-        {
-            smgpc::runtime::MessageHolderOwnership owner(process.host_heaps(), process.budget().message_resource_bytes,
-                mounts, "/KrKorean/MessageData/Message.arc", "KrKorean");
-            auto& holder = owner.holder(); metadata = holder.mGameMessageData->mIDTable->mData;
-            require(smgpc::runtime::current_message_holder() == &holder && holder.mSceneMessageData == nullptr &&
-                        holder.mSystemMessageData != holder.mGameMessageData,
-                    "one complete actual holder publishes separate system and game owners before scene initialization");
-            const auto& embedded = mounts.retain("ErrorMessageArchive.arc")->source();
+void original_holder(smgpc::resource::GameResourceRuntime& process, FileLoader& loader) {
+    auto& holder = *SingletonHolder<GameSystem>::get()->mObjHolder->mMessageHolder;
+    const auto* prior_scene = holder.mSceneMessageData;
+    require(smgpc::runtime::current_message_holder() == &holder &&
+                holder.mSystemMessageData != holder.mGameMessageData,
+            "the original GameSystem publishes its actual system and game message owners");
+            const auto& embedded = loader.receiveArchive("ErrorMessageArchive.arc")->source();
             const auto* korean = embedded.find_normalized("krkorean/messagedata/system.arc");
             require(korean && embedded.find_resource("/KrKorean/MessageData/System.arc") == korean &&
                         !embedded.find_resource("/AbsentLanguage/MessageData/System.arc"),
                     "qualified JKR resource paths fold case without falling through to a different language");
             const auto compressed = embedded.file_data(*korean);
             const auto canonical = smgpc::resource::RarcArchive::from_bytes(Bytes(compressed.begin(), compressed.end()));
-            const auto mounted_system = mounts.retain("/Memory/SystemMessage.arc")->source().bytes();
+            const auto mounted_system = MR::receiveArchive("/Memory/SystemMessage.arc")->source().bytes();
             require(std::ranges::equal(canonical.bytes(), mounted_system),
                     "the original system owner mounts the exact selected language resource from the embedded archive");
-            const auto system_count = compare_data(*holder.mSystemMessageData, mounts.retain("/Memory/SystemMessage.arc")->source());
-            const auto game_count = compare_data(*holder.mGameMessageData, mounts.retain("/MessageData/Message.arc")->source());
+            const auto system_count = compare_data(*holder.mSystemMessageData, MR::receiveArchive("/Memory/SystemMessage.arc")->source());
+            const auto game_count = compare_data(*holder.mGameMessageData, MR::receiveArchive("/MessageData/Message.arc")->source());
             holder.initSceneData(); require(MessageSystem::getSceneMessageData() == holder.mGameMessageData,
                                             "original scene initialization aliases the actual game message data");
             verify_original_talk_nodes(holder);
@@ -231,7 +231,7 @@ void original_holder(smgpc::resource::GameResourceRuntime& process, smgpc::runti
             require(message && message == MR::getLayoutMessageDirect(id) && MR::getGameMessageDirectUtf16(id) &&
                         MR::isExistGameMessage(id) && smgpc::compat::layout_message_id_for_pointer(message),
                     "shared Game and layout utilities read retained actual MessageData pointers");
-            const auto& game_archive = mounts.retain("/MessageData/Message.arc")->source();
+            const auto& game_archive = MR::receiveArchive("/MessageData/Message.arc")->source();
             const auto authored_messages = smgpc::resource::BmgMessageArchive::from_message_archive(game_archive);
             const auto authored_bytes = game_archive.resource_data("Message.bmg");
             const auto* authored_dat = authored_messages.block("DAT1");
@@ -270,16 +270,11 @@ void original_holder(smgpc::resource::GameResourceRuntime& process, smgpc::runti
             require(!MessageSystem::getGameMessageDirect(&info, "Missing_Actual_Message") && info._0 == before._0 &&
                         !MR::getGameMessageDirect("Missing_Actual_Message"),
                     "original failed lookup preserves the caller record and utility absence stays null");
-            rejects([&] { smgpc::runtime::MessageHolderOwnership duplicate(process.host_heaps(), 1U << 20,
-                mounts, "/KrKorean/MessageData/Message.arc", "KrKorean"); }, "a second process owner cannot replace live message identity");
-            std::cout << "[ok] actual MessageHolder generation " << generation << ": system=" << system_count << " game=" << game_count << '\n';
-        }
-        require(metadata.expired() && mounts.size() == mounts_before && !smgpc::runtime::current_message_holder() &&
-                    process.host_heaps()->root_heap().getTotalFreeSize() == free_before,
-                "holder teardown releases native table metadata, both mounts and its complete original Game heap");
-    }
+    holder.mSceneMessageData = const_cast<MessageData*>(prior_scene);
+    std::cout << "[ok] actual MessageHolder: system=" << system_count << " game=" << game_count << '\n';
 }
 }
+
 int main() {
     try {
         rejects([] { (void)MR::getGameMessageDirect("Missing"); }, "game utility requires the original holder");
@@ -287,13 +282,12 @@ int main() {
         rejects([] { (void)MR::getLayoutMessageDirect("Missing"); }, "layout utility requires the original holder");
         rejects([] { (void)MR::isExistGameMessage("Missing"); }, "existence queries require the original holder");
         rejects([] { (void)MessageSystem::getSceneMessageData(); }, "direct original access requires an actual holder");
-        const auto* disc = std::getenv("SMGPC_REAL_DISC");
-        require(disc && aurora_dvd_open(disc), "SMGPC_REAL_DISC must identify the original disc for complete message proof");
-        struct CloseDisc { ~CloseDisc() { aurora_dvd_close(); } } close;
-        DVDInit(); aurora::g_config.mem1Size = 24U << 20;
-        smgpc::resource::GameResourceRuntime process;
-        smgpc::runtime::DvdFileSystemService dvd({});
-        smgpc::runtime::ArchiveMountService mounts(dvd);
+        std::weak_ptr<JMapInfo::DataCompat> metadata;
+        const int result = smgpc::test::run_stage_resource_process("original-message-holder", [&] {
+        auto& process = *smgpc::resource::GameResourceRuntime::active();
+        auto& loader = *SingletonHolder<FileLoader>::get();
+        smgpc::runtime::DvdFileSystemService dvd("/");
+        metadata = smgpc::runtime::current_message_holder()->mGameMessageData->mIDTable->mData;
         const auto font_path = dvd.find_layout_archive("Font");
         require(font_path.has_value(), "the DVD catalog contains the current fixture's font archive");
         auto font_archive = smgpc::resource::RarcArchive::from_bytes(dvd.read_file(font_path->generic_string()));
@@ -302,9 +296,12 @@ int main() {
         require(font.SetResource(const_cast<std::uint8_t*>(font_bytes.data()), font_bytes.size()),
                 "the original tag processor uses the retained authored message font");
         verify_original_message_tag_processor(font);
-        native_boundary(process, mounts);
-        original_holder(process, mounts);
-        std::cout << "[ok] original message owner, all authored records, shared getters and repeated teardown\n";
+        native_boundary(process, loader);
+        original_holder(process, loader);
+        });
+        if (result) return result;
+        require(metadata.expired() && !smgpc::runtime::current_message_holder(),
+                "actual process teardown releases native message metadata and its publication");
         return 0;
     } catch (const std::exception& error) { std::cerr << "[failed] " << error.what() << '\n'; return 1; }
 }

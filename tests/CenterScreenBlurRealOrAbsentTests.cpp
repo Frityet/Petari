@@ -7,7 +7,8 @@
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
 #include "compat/CapturedFrameBlurService.hpp"
-#include "compat/DemoDirectorOwnership.hpp"
+#include "Game/Demo/DemoDirector.hpp"
+#include "Game/Demo/DemoSimpleCastHolder.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -91,9 +92,9 @@ namespace {
                 "SceneObj 0x2D must synchronously initialize the exact dead actor");
         require(MR::createSceneObj(SceneObj_CenterScreenBlur) == fixture.blur,
                 "SceneObj 0x2D must retain a single scene-owned exact actor");
-        const auto* demo_ownership = smgpc::scene::current_demo_director_ownership();
+        const auto* demo_ownership = MR::getSceneObj<DemoDirector>(SceneObj_DemoDirector);
         require(demo_ownership != nullptr &&
-                    demo_ownership->simple_cast_registration_count(fixture.blur) == 1U,
+                    demo_ownership->_20->nativeRegistrationCount(fixture.blur) == 1U,
                 "exact init must retain the retail simple demo-cast registration");
         require(service != nullptr && service->history_width() == 128U &&
                     service->history_height() == 64U &&

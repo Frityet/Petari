@@ -1,6 +1,9 @@
 #include "compat/Cp932Literal.hpp"
 #pragma once
 
+#include <memory>
+class JMapInfo;
+
 #include "Game/Demo/DemoExecutor.hpp"
 
 class DemoWipeInfo {
@@ -17,6 +20,7 @@ public:
 class DemoWipeKeeper : public DemoSheetKeeperBase, public DemoSheetKeeperInfoHolder< DemoWipeInfo > {
 public:
     DemoWipeKeeper(DemoExecutor*);
+    ~DemoWipeKeeper();
 
     virtual const char* getName() const {
         return CP932("ワイプ");
@@ -30,4 +34,8 @@ public:
     virtual void update();
 
     virtual void executeType(const DemoWipeInfo*);
+
+private:
+    // Original records borrow strings from this native parser until retirement.
+    std::unique_ptr<JMapInfo> mNativeParser;
 };

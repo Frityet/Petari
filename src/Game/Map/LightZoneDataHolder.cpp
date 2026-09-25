@@ -81,6 +81,7 @@ void LightZoneInfo::init(s32 zoneID) {
     const char* zoneName = MR::getZoneNameFromZoneId(zoneID);
     JMapInfo* parser = 0;
     mAreaCount = LightFunction::createZoneDataParser(zoneName, &parser);
+    mNativeParser.reset(parser);
     mAreaInfo = new AreaInfo[mAreaCount];
 
     for (int i = 0; i < mAreaCount; i++) {

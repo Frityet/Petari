@@ -1,4 +1,5 @@
 #include "compat/Cp932Literal.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "Game/Scene/StageDataHolder.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
 #include "Game/Scene/PlacementInfoOrdered.hpp"
@@ -73,6 +74,19 @@ StageDataHolder::StageDataHolder(const char* pStageName, int zoneId, bool loadCo
       _108(nullptr), _10C(nullptr) {
     MR::zeroMemory(mStageDataArray, sizeof(mStageDataArray));
     reinterpret_cast< TPos3f* >(mPlacementMtx)->identity();
+}
+
+StageDataHolder::~StageDataHolder() {
+    // Parent-owned child tables and the separately allocated object-name map
+    // must release their archive attachments before FileLoader retirement.
+    for (StageDataHolder*& holder : mStageDataArray) {
+        delete holder;
+        holder = nullptr;
+    }
+    mStageDataHolderCount = 0;
+    delete mObjNameTbl;
+    mObjNameTbl = nullptr;
+    // AssignableArray members destroy each original JMapInfo table normally.
 }
 
 void StageDataHolder::init(const JMapInfoIter& rIter) {
@@ -593,6 +607,9 @@ void StageDataHolder::createLocalStageDataHolder(const MR::AssignableArray< JMap
                 GalaxyStatusAccessor accessor = MR::makeCurrentGalaxyStatusAccessor();
                 s32 zoneId = accessor.getZoneId(pName);
                 mStageDataArray[mStageDataHolderCount] = new StageDataHolder(pName, zoneId, loadCommon);
+                // The original parent owns this hierarchy. Exclude the child
+                // from generic SceneObj/NameObj lifetime capture.
+                smgpc::compat::claim_name_obj_runtime_ownership(mStageDataArray[mStageDataHolderCount], this);
                 mStageDataArray[mStageDataHolderCount]->initWithoutIter();
                 mStageDataArray[mStageDataHolderCount]->calcPlacementMtx(iter);
                 mStageDataHolderCount++;

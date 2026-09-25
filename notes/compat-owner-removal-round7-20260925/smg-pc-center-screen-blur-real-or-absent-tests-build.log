@@ -1,0 +1,20 @@
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-center-screen-blur-real-or-absent-tests>[0m cache compiling.debug tests/CenterScreenBlurRealOrAbsentTests.cpp[0m
+[0m[38;5;3;1mIn file included from tests/CenterScreenBlurRealOrAbsentTests.cpp:17:
+src/Game/Demo/DemoDirector.hpp:21:18: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   21 |     virtual void movement();
+      |                  ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from tests/CenterScreenBlurRealOrAbsentTests.cpp:20:
+In file included from src/compat/SceneJ3dScope.hpp:4:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:248:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  248 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:426:17: warning: 'countDLSize' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  426 |     virtual s32 countDLSize();[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-center-screen-blur-real-or-absent-tests>[0m [38;5;5;1mlinking.debug smg-pc-center-screen-blur-real-or-absent-tests[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[38;5;2;1m[100%]:[0m [38;5;2;1mbuild ok, spent 3.577s[0m

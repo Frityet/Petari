@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+class JMapInfo;
+
 #include <revolution/types.h>
 
 class DemoExecutor;
@@ -17,6 +20,7 @@ public:
 class DemoTimeKeeper {
 public:
     DemoTimeKeeper(const DemoExecutor*);
+    ~DemoTimeKeeper();
 
     void start();
     void update();
@@ -36,4 +40,8 @@ public:
     /* 0x14 */ s32 mCurrentStep;
     /* 0x18 */ s32 _18;
     /* 0x1C */ bool mIsPaused;
+
+private:
+    // Original records borrow strings from this native parser until retirement.
+    std::unique_ptr<JMapInfo> mNativeParser;
 };

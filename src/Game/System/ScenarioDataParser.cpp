@@ -1,6 +1,9 @@
 #include "Game/System/ScenarioDataParser.hpp"
 #include "Game/System/GalaxyNameSortTable.hpp"
 #include "Game/System/GalaxyStatusAccessor.hpp"
+#include "Game/System/GameSystem.hpp"
+#include "Game/System/GameSystemSceneController.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/FileUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
@@ -20,27 +23,42 @@ namespace {
 };  // namespace
 
 ScenarioData::ScenarioData(const char* pFilePath) : mScenarioData(nullptr), mGalaxyName(nullptr), mZoneList(nullptr) {
-    char fileName[64];
-    MR::removeExtensionString(fileName, sizeof(fileName), MR::getBasename(pFilePath));
+    try {
+        char fileName[64];
+        MR::removeExtensionString(fileName, sizeof(fileName), MR::getBasename(pFilePath));
 
-    char* pGalaxyName = strstr(fileName, "Scenario");
+        char* pGalaxyName = strstr(fileName, "Scenario");
 
-    if (pGalaxyName != nullptr) {
-        pGalaxyName[0] = '\0';
+        if (pGalaxyName != nullptr) {
+            pGalaxyName[0] = '\0';
+        }
+
+        int galaxyNameSize = strlen(fileName) + 1;
+
+        mGalaxyName = new char[galaxyNameSize];
+        MR::copyString(mGalaxyName, fileName, galaxyNameSize);
+
+        JKRMemArchive* pArchive = static_cast< JKRMemArchive* >(MR::receiveArchive(pFilePath));
+
+        mScenarioData = new JMapInfo();
+        mScenarioData->attach(pArchive->getResource("/ScenarioData.bcsv"));
+
+        mZoneList = new JMapInfo();
+        mZoneList->attach(pArchive->getResource("/ZoneList.bcsv"));
+    } catch (...) {
+        delete mZoneList;
+        delete mScenarioData;
+        delete[] mGalaxyName;
+        throw;
     }
 
-    int galaxyNameSize = strlen(fileName) + 1;
+}
 
-    mGalaxyName = new char[galaxyNameSize];
-    MR::copyString(mGalaxyName, fileName, galaxyNameSize);
-
-    JKRMemArchive* pArchive = static_cast< JKRMemArchive* >(MR::receiveArchive(pFilePath));
-
-    mScenarioData = new JMapInfo();
-    mScenarioData->attach(pArchive->getResource("/ScenarioData.bcsv"));
-
-    mZoneList = new JMapInfo();
-    mZoneList->attach(pArchive->getResource("/ZoneList.bcsv"));
+// These native JMap attachments must retire before the mounted archive.
+ScenarioData::~ScenarioData() {
+    delete mZoneList;
+    delete mScenarioData;
+    delete[] mGalaxyName;
 }
 
 s32 ScenarioData::getScenarioNum() const {
@@ -159,9 +177,10 @@ GalaxyStatusAccessor ScenarioDataIter::makeAccessor() const {
 }
 
 ScenarioDataParser::ScenarioDataParser(const char* pName) : NameObj(pName), mScenarioData() {
-    DVDDir dir;
+    DVDDir dir{};
     DVDDirEntry dirent;
-    DVDOpenDir("/StageData", &dir);
+    bool directoryOpen = DVDOpenDir("/StageData", &dir);
+    try {
 
     while (DVDReadDir(&dir, &dirent)) {
         if (!dirent.isDir) {
@@ -181,8 +200,26 @@ ScenarioDataParser::ScenarioDataParser(const char* pName) : NameObj(pName), mSce
     }
 
     DVDCloseDir(&dir);
+    directoryOpen = false;
 
     std::sort(mScenarioData.begin(), mScenarioData.end(), GalaxyNameSortLt());
+    } catch (...) {
+        if (directoryOpen) {
+            DVDCloseDir(&dir);
+        }
+        for (ScenarioData* data : mScenarioData) {
+            delete data;
+        }
+        mScenarioData.clear();
+        throw;
+    }
+
+}
+
+ScenarioDataParser::~ScenarioDataParser() {
+    for (ScenarioData* data : mScenarioData) {
+        delete data;
+    }
 }
 
 const ScenarioData* ScenarioDataParser::getScenarioData(const char* pGalaxyName) const {
@@ -206,6 +243,10 @@ GalaxyStatusAccessor ScenarioDataParser::makeAccessor(const char* pGalaxyName) c
 }
 
 namespace ScenarioDataFunction {
+    ScenarioDataParser* getScenarioDataParser() {
+        return SingletonHolder< GameSystem >::get()->mSceneController->mScenarioParser;
+    }
+
 
     u32 getCurrentCommonLayers(const char* pParam1) {
         ::getCurrentScenarioData();

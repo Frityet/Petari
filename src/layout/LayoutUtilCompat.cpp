@@ -24,10 +24,6 @@
 #include "core/RenderTypes.hpp"
 #include "layout/LayoutHost.hpp"
 #include "layout/LayoutRuntime.hpp"
-#include "layout/LytTexMap.hpp"
-#include "compat/ResourceHolderCompat.hpp"
-#include "resource/RarcArchive.hpp"
-#include "resource/TplTexture.hpp"
 
 namespace {
     [[nodiscard]] LayoutManager& require_layout_manager(LayoutActor* layout, std::string_view operation) {
@@ -44,16 +40,6 @@ namespace MR {
     void startAnim(LayoutActor* pLayout, const char* pAnimName, u32 animLayer) {
         smgpc::layout::start_layout_anim(pLayout, pAnimName, animLayer);
     }
-
-    nw4r::lyt::TexMap* createLytTexMap(const char* pArchiveName, const char* pTextureName) {
-        if (!pArchiveName || !pTextureName)
-            throw std::invalid_argument("MR::createLytTexMap requires archive and texture names");
-        auto* service = smgpc::compat::ResourceHolderService::active();
-        if (!service)
-            throw std::logic_error("MR::createLytTexMap requires the actual resource holder owner");
-        return service->create_layout_texture(pArchiveName, pTextureName);
-    }
-
 
     void showPane(LayoutActor* pLayout, const char* pPaneName) {
         smgpc::layout::set_pane_visible(&require_layout_manager(pLayout, "Showing a pane"), pPaneName, true, false);

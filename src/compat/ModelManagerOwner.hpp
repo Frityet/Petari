@@ -5,10 +5,9 @@
 class ModelManager;
 namespace smgpc::compat {
     class JkrAllocationDomain;
-    class ResourceHolderService;
     class ModelManagerOwner final {
     public:
-        ModelManagerOwner(ResourceHolderService&, std::shared_ptr<JkrAllocationDomain>, const char*, const char*, bool);
+        ModelManagerOwner(std::shared_ptr<JkrAllocationDomain>, const char*, const char*, bool);
         ~ModelManagerOwner();
         ModelManagerOwner(const ModelManagerOwner&) = delete;
         ModelManagerOwner& operator=(const ModelManagerOwner&) = delete;

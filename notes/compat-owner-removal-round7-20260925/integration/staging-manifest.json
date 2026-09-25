@@ -1,0 +1,502 @@
+[
+  {
+    "path": "src/Game/Demo/DemoActionKeeper.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoActionKeeper.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoCameraKeeper.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoCameraKeeper.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoCastGroup.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoCastGroup.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoDirector.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoDirector.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoExecutor.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoExecutor.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoPadRumbler.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoPadRumbler.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoPlayerKeeper.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoPlayerKeeper.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoSimpleCastHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoSimpleCastHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoSoundKeeper.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoSoundKeeper.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoStartRequestHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoStartRequestHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoSubPartKeeper.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoSubPartKeeper.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoTalkAnimCtrl.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoTalkAnimCtrl.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoTimeKeeper.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoTimeKeeper.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoWipeKeeper.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Demo/DemoWipeKeeper.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Effect/ParticleResourceHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Effect/ParticleResourceHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ActorAnimKeeper.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ActorAnimKeeper.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ActorPadAndCameraCtrl.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/ActorPadAndCameraCtrl.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/LiveActor/LiveActor.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/LightDataHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/LightDataHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/LightZoneDataHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Map/LightZoneDataHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Scene/StageDataHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Scene/StageDataHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/MoviePlayingSequence.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Screen/MoviePlayingSequence.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/ArchiveHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/ArchiveHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/FileLoader.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/FileLoader.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/LayoutHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/LayoutHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/ResourceHolder.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/ResourceHolder.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/ResourceHolderManager.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/ResourceHolderManager.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/ScenarioDataParser.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/System/ScenarioDataParser.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/FileUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/FixedPosition.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/LayoutUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/Util/MemoryUtil.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/Game/xmake.lua",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRArchive.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRArchivePri.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRMemArchive.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTTexture.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/app/OriginalGameApplication.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/CollisionPartsCompat.cpp",
+    "mode": "agent-HEAD-adaptation"
+  },
+  {
+    "path": "src/compat/DemoDirectorOwnership.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/DemoDirectorOwnership.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/FileUtilCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/MarioAnimatorLifetime.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ModelManagerOwner.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ModelManagerOwner.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/OriginalStationedResourceManager.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ResourceHolderCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ResourceHolderCompat.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/ScenarioDataParserAccess.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/SceneHeapAccess.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/layout/LayoutManagerCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/layout/LayoutRuntime.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/layout/LayoutRuntime.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/layout/LayoutUtilCompat.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/layout/Nw4rLayoutRecords.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/nw4r/lyt/lyt_texMap.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/nw4r/lyt/texMap.h",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/resource/GameResourceRuntime.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/resource/GameResourceRuntime.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/resource/JMapResource.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/resource/JMapResource.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/ArchiveMountService.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/ArchiveMountService.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/MessageHolderOwnership.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/MessageHolderOwnership.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/ParticleResourceOwnership.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/ParticleResourceOwnership.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.cpp",
+    "mode": "scoped-delta-on-HEAD"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.hpp",
+    "mode": "scoped-delta-on-HEAD"
+  },
+  {
+    "path": "src/runtime/ScenarioCatalogOwnership.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/runtime/ScenarioCatalogOwnership.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/scene/OriginalSceneSupport.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/scene/SceneObjHolderRuntime.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "src/scene/StagePlacementResolver.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/AreaObjRealOrAbsentTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/AuthoredPlacementInstantiatorTests.cpp",
+    "mode": "necessary-existing-test-migration"
+  },
+  {
+    "path": "tests/CenterScreenBlurRealOrAbsentTests.cpp",
+    "mode": "agent-HEAD-adaptation"
+  },
+  {
+    "path": "tests/NameObjFactoryPlacementTests.cpp",
+    "mode": "necessary-existing-test-migration"
+  },
+  {
+    "path": "tests/OriginalAsyncHeapSelection.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalGameSystemStartupTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalJMapResourceTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalJkrArchiveTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalJointControllerTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalMessageHolderTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalProcessPlacementTransformTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalResourceHolderTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalScenarioCatalogTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalShadowControllerOwnerTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalStageResourceProcessFixture.hpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/OriginalStarPointerOwnerTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/RuntimeContextFailureTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/ScenarioPublicationTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/SphereSelectorRealOrAbsentTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/StageCameraResourceTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/StationedArchiveRealOrAbsentTests.cpp",
+    "mode": "clean-owned"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "mode": "scoped-delta-on-HEAD-and-required-test-closure"
+  }
+]

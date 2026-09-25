@@ -1,0 +1,33 @@
+{
+  "scope": "Configured project archive dependencies and direct executable objects of smg-pc; external package libraries excluded",
+  "strong_symbols": 23399,
+  "duplicate_strong_symbols": 0,
+  "stale_source_providers": 0,
+  "unavailable_owner_inputs": 0,
+  "unavailable_artifacts": [],
+  "provider_mapping": {
+    "unique": 23399
+  },
+  "provider_provenance": {
+    "unreviewed": 7529,
+    "canonical-path-see-source-closeness-report": 15851,
+    "source-tokens-exact": 8,
+    "source-tokens-differ": 2,
+    "unresolved": 9
+  },
+  "source_checks": {
+    "source-tokens-exact": 9,
+    "unresolved": 11,
+    "source-tokens-differ": 2
+  },
+  "missing_reviewed_symbols": [],
+  "limits": [
+    "No inferred compatibility approval from directories or filenames.",
+    "Explicit provenance checks compare complete anchored signatures/bodies as tokens; no preprocessor or semantic equivalence claim.",
+    "Unlisted source imports remain unreviewed. Excluded-TU mappings are partial, not complete API coverage.",
+    "Executable symbol presence does not identify which duplicate archive member the linker selected.",
+    "Artifact hashes and source/object timestamps are not a full build attestation; header/flag freshness requires a successful build."
+  ],
+  "command_exit_code": 255,
+  "broad_provenance_gate_passed": false
+}

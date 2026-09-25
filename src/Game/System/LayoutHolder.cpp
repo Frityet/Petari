@@ -1,10 +1,17 @@
 #include "Game/System/LayoutHolder.hpp"
+#include "Game/System/FileLoader.hpp"
 #include "Game/Util/SystemUtil.hpp"
+#include "Game/Util/MemoryUtil.hpp"
+#include "Game/Util/SingletonHolder.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+#include "resource/RarcArchive.hpp"
 #include <JSystem/JKernel/JKRArchive.hpp>
 #include <JSystem/JKernel/JKRFileFinder.hpp>
 #include <cstdio>
 #include <cstring>
 #include <aurora/endian.hpp>
+#include <aurora/exception.hpp>
+#include <stdexcept>
 
 extern "C" int strncasecmp(const char*, const char*, size_t);
 
@@ -19,11 +26,73 @@ namespace {
     };
 };  // namespace
 
+struct LayoutHolder::NativeResources {
+    std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain;
+    std::shared_ptr<const void> archiveLifetime;
+    std::shared_ptr<const smgpc::resource::RarcArchive> source;
+    std::filesystem::path path;
+};
+
 LayoutHolder::LayoutHolder(JKRArchive& rArchive) : nw4r::lyt::ResourceAccessor(), mArchive(&rArchive) {
-    initializeArc();
+    try {
+        {
+            const aurora::allocation::HostAllocationScope host;
+            mNativeResources = std::make_shared<NativeResources>();
+            mNativeResources->domain = smgpc::compat::JkrAllocationDomain::retain_heap(*MR::getCurrentHeap());
+            mNativeResources->archiveLifetime = rArchive.retainNativeResources();
+            mNativeResources->source = rArchive.retainSource();
+            mNativeResources->path = rArchive.mLoaderName ? rArchive.mLoaderName : "";
+            if (const auto* loader = SingletonHolder<FileLoader>::get())
+                if (const auto* entry = loader->mArchiveHolder->findEntry(&rArchive))
+                    mNativeResources->path = entry->mArchiveName;
+        }
+        const smgpc::compat::JkrAllocationScope original(mNativeResources->domain);
+        initializeArc();
+    } catch (...) {
+        destroyNativeResources();
+        throw;
+    }
 }
 
 LayoutHolder::~LayoutHolder() {
+    destroyNativeResources();
+}
+
+void LayoutHolder::destroyNativeResources() noexcept {
+    const aurora::allocation::HostAllocationScope host;
+    for (auto* table : {&mLayoutRes, &mAnimRes, &mResOther}) {
+        for (u32 i = 0; i < table->mCount; ++i)
+            delete[] table->mFileInfoTable[i].mName;
+        delete[] table->mFileInfoTable;
+        table->mFileInfoTable = nullptr;
+        table->mCount = 0;
+    }
+    mNativeResources.reset();
+}
+
+std::shared_ptr<const void> LayoutHolder::retainNativeResources() const {
+    return mNativeResources;
+}
+
+std::size_t LayoutHolder::nativeArchiveReferenceCount() const noexcept {
+    return 1;
+}
+
+void LayoutHolder::ensureNativeResourcesUnborrowed() const {
+    if (mNativeResources.use_count() != 1)
+        aurora::throw_host_exception<std::logic_error>("Cannot unload an original resource heap with live layout owners");
+}
+
+const smgpc::resource::RarcArchive& LayoutHolder::nativeResourceSource() const {
+    return *mNativeResources->source;
+}
+
+const std::filesystem::path& LayoutHolder::nativeResourcePath() const {
+    return mNativeResources->path;
+}
+
+JKRHeap& LayoutHolder::heap() const noexcept {
+    return mNativeResources->domain->heap();
 }
 
 void* LayoutHolder::GetResource(u32 type, const char* pName, u32* pSize) {
@@ -104,7 +173,7 @@ u32 LayoutHolder::initEachResTable(ResTable* pTable, const char* const* pExtensi
 
 s32 LayoutHolder::count(const char* pExtension, const char* pPath) {
     s32 resourceCount = 0;
-    JKRFileFinder* finder = getFileFinder(pPath);
+    std::unique_ptr<JKRFileFinder> finder(getFileFinder(pPath));
     while (finder->mHasMoreFiles) {
         if (finder->mFileIsFolder) {
             if (finder->mName[0] != '.') {
@@ -117,12 +186,11 @@ s32 LayoutHolder::count(const char* pExtension, const char* pPath) {
         }
         finder->findNextFile();
     }
-    delete finder;
     return resourceCount;
 }
 
 void LayoutHolder::mount(char* pPath) {
-    JKRFileFinder* finder = getFileFinder(pPath);
+    std::unique_ptr<JKRFileFinder> finder(getFileFinder(pPath));
     while (finder->mHasMoreFiles) {
         if (finder->mFileIsFolder) {
             if (finder->mName[0] != '.') {
@@ -139,7 +207,6 @@ void LayoutHolder::mount(char* pPath) {
         }
         finder->findNextFile();
     }
-    delete finder;
 }
 
 ResFileInfo* LayoutHolder::createAndRegisterObject(const char* pName, void* pResource) {

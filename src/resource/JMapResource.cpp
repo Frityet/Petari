@@ -9,6 +9,7 @@
 namespace {
     struct DeferredJMap {
         std::shared_ptr<const void> source_owner;
+        std::function<std::shared_ptr<const void>()> retain_attachment;
         std::span<const std::uint8_t> bytes;
         std::once_flag decode_once;
         std::shared_ptr<const JMapInfo> table;
@@ -76,12 +77,14 @@ namespace smgpc::resource {
     JMapSourceRegistration::JMapSourceRegistration(JMapSourceRegistration &&) noexcept = default;
     JMapSourceRegistration &JMapSourceRegistration::operator=(JMapSourceRegistration &&) noexcept = default;
     JMapSourceRegistration register_jmap_source(std::span<const std::uint8_t> bytes,
-                                               std::shared_ptr<const void> source_owner) {
+                                               std::shared_ptr<const void> source_owner,
+                                               std::function<std::shared_ptr<const void>()> retain_attachment) {
         compat::JkrHostAllocationScope host;
         if (bytes.empty() || !source_owner)
             aurora::throw_host_exception<std::invalid_argument>("Deferred JMap source requires a nonempty retained byte range");
         auto source = std::make_shared<DeferredJMap>();
         source->source_owner = std::move(source_owner);
+        source->retain_attachment = std::move(retain_attachment);
         source->bytes = bytes;
         auto &owners = registry();
         const std::lock_guard lock(owners.mutex);
@@ -91,7 +94,8 @@ namespace smgpc::resource {
             auto existing = found->second.deferred.lock();
             if (!existing || existing->source_owner.get() != source->source_owner.get() ||
                 existing->source_owner.owner_before(source->source_owner) ||
-                source->source_owner.owner_before(existing->source_owner) || existing->bytes.size() != bytes.size())
+                source->source_owner.owner_before(existing->source_owner) || existing->bytes.size() != bytes.size() ||
+                bool(existing->retain_attachment) != bool(source->retain_attachment))
                 aurora::throw_host_exception<std::logic_error>("JMap source identity belongs to a different retained byte range");
             source = std::move(existing);
             generation = found->second.generation;
@@ -173,9 +177,18 @@ namespace smgpc::resource {
         // Parsing and final source release can allocate or retire owners;
         // neither operation runs while holding the identity registry lock.
         if (!deferred) return nullptr;
+        // Fixed archives own raw bytes through their original FileEntry and
+        // heap. Each attachment takes a distinct retirement lease before any
+        // decode; registration alone must not make its archive self-borrowed.
+        struct Attachment {
+            std::shared_ptr<DeferredJMap> source;
+            std::shared_ptr<const void> lifetime;
+        };
+        auto lifetime = deferred->retain_attachment ? deferred->retain_attachment() : std::shared_ptr<const void>{};
+        if (deferred->retain_attachment && !lifetime)
+            aurora::throw_host_exception<std::logic_error>("JMap attachment requires its live raw source lease");
         const auto table = deferred->load();
-        // The alias retains the actual archive byte owner as well as its
-        // decoded table, without retaining a Game heap or introducing a cycle.
-        return std::shared_ptr<const JMapInfo>(std::move(deferred), table.get());
+        auto attachment = std::make_shared<Attachment>(Attachment{std::move(deferred), std::move(lifetime)});
+        return std::shared_ptr<const JMapInfo>(std::move(attachment), table.get());
     }
 }  // namespace smgpc::resource

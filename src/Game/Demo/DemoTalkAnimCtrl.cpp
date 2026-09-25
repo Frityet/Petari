@@ -246,3 +246,7 @@ void DemoTalkAnimCtrl::setupStartDemoPart(const char* pPartName) {
         _34 = MR::isEqualStringCase(pPartName, _10);
     }
 }
+
+DemoTalkAnimCtrl::~DemoTalkAnimCtrl() {
+    delete mCameraInfo;
+}

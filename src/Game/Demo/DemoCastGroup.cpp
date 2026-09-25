@@ -40,3 +40,7 @@ void DemoCastGroup::init(const JMapInfoIter& rIter) {
     mGroup->initWithoutIter();
     mInfo = new JMapIdInfo(MR::getDemoGroupLinkID(rIter), rIter);
 }
+
+DemoCastGroup::~DemoCastGroup() {
+    delete mInfo;
+}

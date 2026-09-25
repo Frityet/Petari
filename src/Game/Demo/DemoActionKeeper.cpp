@@ -1,3 +1,4 @@
+#include "Game/Util/JMapInfo.hpp"
 #include "Game/Demo/DemoActionKeeper.hpp"
 #include "Game/Demo/DemoExecutor.hpp"
 #include "Game/Demo/DemoFunction.hpp"
@@ -42,13 +43,21 @@ DemoActionInfo::DemoActionInfo() {
     mFunctors = nullptr;
     mNerves = nullptr;
     _2C = 0;
-    mCastList = new LiveActor*[128];
-    mFunctors = new MR::FunctorBase*[_18];
-    mNerves = new const Nerve*[_18];
-    for (s32 i = 0; i < _18; i++) {
-        mCastList[i] = nullptr;
-        mFunctors[i] = nullptr;
-        mNerves[i] = nullptr;
+
+    try {
+        mCastList = new LiveActor*[128];
+        mFunctors = new MR::FunctorBase*[_18]{};
+        mNerves = new const Nerve*[_18];
+        for (s32 i = 0; i < _18; i++) {
+            mCastList[i] = nullptr;
+            mFunctors[i] = nullptr;
+            mNerves[i] = nullptr;
+        }
+    } catch (...) {
+        delete[] mNerves;
+        delete[] mFunctors;
+        delete[] mCastList;
+        throw;
     }
 }
 
@@ -219,18 +228,50 @@ DemoActionKeeper::DemoActionKeeper(const DemoExecutor* pExector) {
     mDemoExecutor = pExector;
     mNumInfos = 0;
     mInfoArray = nullptr;
-    JMapInfo* jmap = nullptr;
-    mNumInfos = DemoFunction::createSheetParser(mDemoExecutor, "Action", &jmap);
-    mInfoArray = new DemoActionInfo*[mNumInfos];
 
-    for (s32 i = 0; i < mNumInfos; i++) {
-        mInfoArray[i] = new DemoActionInfo();
-        DemoActionInfo* info = mInfoArray[i];
-        jmap->getValue< const char* >(i, "PartName", &info->mPartName);
-        jmap->getValue< const char* >(i, "CastName", &info->mCastName);
-        jmap->getValue< s32 >(i, "CastID", &info->mCastID);
-        jmap->getValue< s32 >(i, "ActionType", &info->mActionType);
-        jmap->getValue< const char* >(i, "PosName", &info->mPosName);
-        jmap->getValue< const char* >(i, "AnimName", &info->mAnimName);
+    try {
+        JMapInfo* jmap = nullptr;
+        mNumInfos = DemoFunction::createSheetParser(mDemoExecutor, "Action", &jmap);
+        mNativeParser.reset(jmap);
+        mInfoArray = new DemoActionInfo*[mNumInfos]{};
+
+        for (s32 i = 0; i < mNumInfos; i++) {
+            mInfoArray[i] = new DemoActionInfo();
+            DemoActionInfo* info = mInfoArray[i];
+            jmap->getValue< const char* >(i, "PartName", &info->mPartName);
+            jmap->getValue< const char* >(i, "CastName", &info->mCastName);
+            jmap->getValue< s32 >(i, "CastID", &info->mCastID);
+            jmap->getValue< s32 >(i, "ActionType", &info->mActionType);
+            jmap->getValue< const char* >(i, "PosName", &info->mPosName);
+            jmap->getValue< const char* >(i, "AnimName", &info->mAnimName);
+        }
+    } catch (...) {
+        if (mInfoArray != nullptr) {
+            for (s32 i = 0; i < mNumInfos; i++) {
+                delete mInfoArray[i];
+            }
+        }
+        delete[] mInfoArray;
+        throw;
     }
+}
+
+DemoActionKeeper::~DemoActionKeeper() {
+    if (mInfoArray != nullptr) {
+        for (s32 i = 0; i < mNumInfos; i++) {
+            delete mInfoArray[i];
+        }
+    }
+    delete[] mInfoArray;
+}
+
+DemoActionInfo::~DemoActionInfo() {
+    if (mFunctors != nullptr) {
+        for (s32 i = 0; i < _18; i++) {
+            delete mFunctors[i];
+        }
+    }
+    delete[] mNerves;
+    delete[] mFunctors;
+    delete[] mCastList;
 }

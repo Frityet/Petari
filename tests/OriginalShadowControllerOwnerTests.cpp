@@ -1,7 +1,10 @@
 #include "resource/TextEncoding.hpp"
-#include "SceneExecutionFixture.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/ClippingActorHolder.hpp"
+#include "Game/LiveActor/ClippingActorInfo.hpp"
+#include "Game/LiveActor/ClippingDirector.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
+#include "Game/LiveActor/ShadowVolumeDrawer.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -13,7 +16,11 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/ActorShadowCsvCompat.hpp"
 #include "compat/ModelManagerOwner.hpp"
-#include "compat/ResourceHolderCompat.hpp"
+#include "Game/System/ResourceHolder.hpp"
+#include "Game/System/ResourceHolderManager.hpp"
+#include "Game/Util/SingletonHolder.hpp"
+#include "OriginalStageResourceProcessFixture.hpp"
+#include "OriginalAsyncHeapSelection.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/GameResourceRuntime.hpp"
 #include "resource/RarcArchive.hpp"
@@ -524,7 +531,7 @@ namespace {
         const auto archive = make_single_file_rarc("Shadow.bcsv", make_shadow_bcsv(rows));
         auto actor = ProbeActor{};
         actor.mPosition.set(20.0F, 30.0F, 40.0F);
-        if (smgpc::compat::ResourceHolderService::active() == nullptr) {
+        if (SingletonHolder<ResourceHolderManager>::get() == nullptr) {
             std::cout << "[skip] authored named-joint binding requires real Tico model resources\n";
             return;
         }
@@ -629,9 +636,10 @@ namespace {
         MR::setShadowVolumeStartDropOffset(&actor, nullptr, -12.5F);
         MR::setShadowVolumeEndDropOffset(&actor, nullptr, 35.25F);
         MR::onShadowVolumeCutDropLength(&actor, nullptr);
-        require(state->controllers.front().volume_start_offset == -12.5F &&
-                    state->controllers.front().volume_end_offset == 35.25F &&
-                    state->controllers.front().volume_cut_drop_length,
+        const auto* volume = dynamic_cast<const ShadowVolumeDrawer*>(actor.mShadowControllerList->getController(0U)->getShadowDrawer());
+        require(volume && volume->mStartDrawShapeOffset == -12.5F &&
+                    volume->mEndDrawShapeOffset == 35.25F &&
+                    volume->mIsCutDropShadow,
                 "volume setters must preserve exact signed offsets and enable authored length clipping");
         MR::initShadowVolumeCylinder(&actor, 20.0F);
         state = smgpc::compat::actor_shadow_runtime_state(&actor);
@@ -659,7 +667,7 @@ namespace {
         }
         smgpc::compat::replace_actor_shadow_runtime_state(&actor, std::move(candidate));
         state = smgpc::compat::actor_shadow_runtime_state(&actor);
-        if (smgpc::compat::ResourceHolderService::active() != nullptr) {
+        if (SingletonHolder<ResourceHolderManager>::get() != nullptr) {
             actor.initModelManagerWithAnm("Tico", nullptr, false);
             state->controllers[0U].drop_position_matrix = MR::getJointMtx(&actor, "Body");
         }
@@ -707,31 +715,31 @@ namespace {
                     clipping_center.epsilonEquals(actor.mPosition, 0) && clipping_radius == 150,
                 "an unprojected shadow keeps the authored actor-centered clipping sphere");
         MR::setClippingRangeIncludeShadow(&actor, &clipping_center, 150);
-        auto* clipping = smgpc::compat::actor_clipping_runtime_state(&actor);
-        require(clipping && clipping->sphere_center == nullptr && clipping->sphere_radius == 150,
-                "unprojected clipping must retain the original null center binding");
+        auto* clipping = MR::getClippingDirector()->mActorHolder->find(&actor);
+        require(clipping && clipping->mActor == &actor && clipping->_4 == &actor.mPosition && clipping->_8 == 150,
+                "unprojected clipping must resolve the default center to the actual actor position");
         first->setProjectionFix(TVec3f(8, 3, 12), TVec3f(0, 1, 0), true);
         require(MR::isShadowProjected(&actor, nullptr) && MR::isShadowProjectedAny(&actor),
                 "original shadow queries observe the controller projection flag");
         MR::setClippingRangeIncludeShadow(&actor, &clipping_center, 150);
-        clipping = smgpc::compat::actor_clipping_runtime_state(&actor);
-        require(clipping && clipping->sphere_center == &clipping_center &&
+        clipping = MR::getClippingDirector()->mActorHolder->find(&actor);
+        require(clipping && clipping->_4 == &clipping_center &&
                     clipping_center.epsilonEquals(TVec3f(5, 3, 8), 0),
                 "projected clipping borrows the caller center spanning actor and shadow");
-        require_near(clipping->sphere_radius, 155, "projected clipping includes half the shadow separation");
+        require_near(clipping->_8, 155, "projected clipping includes half the shadow separation");
         TVec3f moving_projection(2, 23, 4);
         first->mProjPos = &moving_projection;
         MR::setClippingRangeIncludeShadow(&actor, &clipping_center, 25);
         require(clipping_center.epsilonEquals(TVec3f(2, 13, 4), 0),
                 "clipping follows the actual borrowed projection pointer");
-        require_near(smgpc::compat::actor_clipping_runtime_state(&actor)->sphere_radius, 35,
+        require_near(MR::getClippingDirector()->mActorHolder->find(&actor)->_8, 35,
                      "a changed projection updates the clipping radius");
         first->mProjPos = nullptr;
         first->setProjectionFix(TVec3f(8, 3, 12), TVec3f(0, 1, 0), false);
         MR::setClippingRangeIncludeShadow(&actor, &clipping_center, 25);
         require(!MR::isShadowProjectedAny(&actor) &&
-                    smgpc::compat::actor_clipping_runtime_state(&actor)->sphere_center == nullptr,
-                "losing projection clears the borrowed clipping center");
+                    MR::getClippingDirector()->mActorHolder->find(&actor)->_4 == &actor.mPosition,
+                "losing projection restores the original actor-position clipping center");
     }
 
     void test_original_controller_graph() {
@@ -781,12 +789,12 @@ namespace {
     }
 
     void test_real_tico_shadow() {
-        auto* resources = smgpc::compat::ResourceHolderService::active();
+        auto* resources = SingletonHolder<ResourceHolderManager>::get();
         if (resources == nullptr) {
             throw std::runtime_error("actual resource holder is required for Tico proof");
         }
-        const auto& tico = resources->backing(*resources->create_and_add("Tico.arc")).archive();
-        const auto& baby = resources->backing(*resources->create_and_add("TicoBaby.arc")).archive();
+        const auto& tico = resources->createAndAdd("Tico.arc", nullptr)->nativeResourceSource();
+        const auto& baby = resources->createAndAdd("TicoBaby.arc", nullptr)->nativeResourceSource();
         const auto* tico_entry = tico.find_resource("shadow.bcsv");
         const auto* baby_entry = baby.find_resource("shadow.bcsv");
         require(tico_entry != nullptr && baby_entry != nullptr, "both retail Tico archives must contain shadow.bcsv");
@@ -816,82 +824,57 @@ namespace {
     }
 }  // namespace
 
-int main() try {
-    const auto* disc = std::getenv("SMGPC_REAL_DISC");
-    require(disc && *disc, "SMGPC_REAL_DISC must name the real model fixture image");
-    smgpc::render::AuroraWindow window({.width = 640, .height = 456, .title = "Original shadow controller ownership"});
-    smgpc::render::AuroraRenderer renderer(window);
-    require(aurora_dvd_open(disc), "cannot open actual fixture image");
-    struct DiscCloseGuard { ~DiscCloseGuard() { aurora_dvd_close(); } } disc_close;
-    DVDInit();
-    smgpc::resource::GameResourceRuntime process({96U << 20, 32U << 20, 4U << 20});
-    class Logger final : public smgpc::logging::ILogger {
-        void write(std::FILE*, std::source_location, smgpc::logging::Level,
-                   smgpc::logging::Category, std::string_view) override {}
-    } logger;
-    smgpc::runtime::RuntimeContext runtime(logger, window, process);
-    auto& scheduler = runtime.scheduler();
-    smgpc::runtime::SceneSchedulerBinding scheduler_binding(scheduler);
-    smgpc::compat::StageSessionState session("Game", "HeavensDoorGalaxy", 1, JMapIdInfo(0, 0));
-    smgpc::compat::StageSessionBinding session_binding(session);
-    (void)renderer.begin_frame();
-    const auto tests = std::array< std::pair< std::string_view, void (*)() >, 9U >{
-        std::pair{"missing CSV and transaction", test_missing_csv_and_strong_replacement},
-        std::pair{"all types and defaults", test_all_types_and_exact_missing_defaults},
-        std::pair{"authored bindings and modes", test_authored_bindings_modes_and_line_order},
-        std::pair{"single line self lookup", test_single_line_self_resolution},
-        std::pair{"model binding lifetime", test_generic_ctor_and_model_binding_lifetime},
-        std::pair{"real Tico", test_real_tico_shadow},
-        std::pair{"original controller graph", test_original_controller_graph},
-        std::pair{"original shadow clipping", test_original_shadow_clipping},
-        std::pair{"registry teardown",
-                  [] {
-                      const auto baseline = smgpc::compat::actor_shadow_runtime_state_count();
-                      {
-                          auto actor = ProbeActor{};
-                          MR::initShadowVolumeSphere(&actor, 1.0F);
-                      }
-                      require(smgpc::compat::actor_shadow_runtime_state_count() == baseline, "actor teardown must release shadow CSV state");
-                  }},
-    };
-    const auto baseline_objects = smgpc::compat::name_obj_runtime_state_count();
-    const auto baseline_entries = scheduler.snapshot().size();
-    for (int cycle = 0; cycle < 2; ++cycle) {
+int main(int argc, char** argv) try {
+    return smgpc::test::run_stage_resource_generations(argc, argv, "original-shadow-controller-owner", 2, [](unsigned cycle) {
+        const auto baseline_objects = smgpc::compat::name_obj_runtime_state_count();
+        const auto baseline_actors = smgpc::compat::actor_runtime_state_count();
         std::weak_ptr<smgpc::compat::JkrAllocationDomain> weak_domain;
-        auto survivor = std::make_unique<ProbeActor>();
-        {
-            smgpc::test::SceneExecutionFixture scene(scheduler,
-                smgpc::compat::JkrAllocationDomain::create(runtime.host_heaps(), 8U << 20));
-            auto& holder = scene.holder();
-            weak_domain = smgpc::scene::current_scene_allocation_domain();
+        const auto label = std::string("original-shadow-controller-owner-") + std::to_string(cycle);
+        const int result = smgpc::test::run_stage_resource_process(label.c_str(), [&] {
+            const auto tests = std::array< std::pair< std::string_view, void (*)() >, 9U >{
+                std::pair{"missing CSV and transaction", test_missing_csv_and_strong_replacement},
+                std::pair{"all types and defaults", test_all_types_and_exact_missing_defaults},
+                std::pair{"authored bindings and modes", test_authored_bindings_modes_and_line_order},
+                std::pair{"single line self lookup", test_single_line_self_resolution},
+                std::pair{"model binding lifetime", test_generic_ctor_and_model_binding_lifetime},
+                std::pair{"real Tico", test_real_tico_shadow},
+                std::pair{"original controller graph", test_original_controller_graph},
+                std::pair{"original shadow clipping", test_original_shadow_clipping},
+                std::pair{"registry teardown",
+                          [] {
+                              const auto baseline = smgpc::compat::actor_shadow_runtime_state_count();
+                              {
+                                  auto actor = ProbeActor{};
+                                  MR::initShadowVolumeSphere(&actor, 1.0F);
+                              }
+                              require(smgpc::compat::actor_shadow_runtime_state_count() == baseline, "actor teardown must release shadow CSV state");
+                          }},
+            };
+            auto domain = smgpc::scene::current_scene_allocation_domain();
+            require(bool(domain), "shadow assertions require the actual retained original scene heap");
+            weak_domain = domain;
+            auto& holder = *MR::getSceneObjHolder();
+            smgpc::test::OriginalAsyncHeapSelection game(domain);
+            const bool had_holder = holder.isExist(SceneObj_ShadowControllerHolder);
             {
                 ProbeActor empty;
                 empty.initShadowControllerList(0);
                 require(empty.mShadowControllerList && empty.mShadowControllerList->getControllerCount() == 0 &&
-                        !holder.isExist(SceneObj_ShadowControllerHolder),
-                        "an empty original list must not create a global shadow holder");
+                            holder.isExist(SceneObj_ShadowControllerHolder) == had_holder,
+                        "an empty original list must preserve the existing shadow-holder state");
             }
             for (const auto& [name, test] : tests) {
-                smgpc::compat::JkrAllocationScope game(smgpc::scene::current_scene_allocation_domain());
                 test();
                 std::cout << "[ok] cycle " << cycle << ": " << name << '\n';
             }
-            {
-                smgpc::compat::JkrAllocationScope game(smgpc::scene::current_scene_allocation_domain());
-                MR::initShadowVolumeSphere(survivor.get(), 1.0F);
-                MR::requestCalcActorShadow(survivor.get());
-            }
-        }
-        require(!weak_domain.expired(), "an external actor retains its original controller allocation domain");
-        survivor.reset();
+        });
+        if (result != 0) return result;
         require(weak_domain.expired() && smgpc::compat::name_obj_runtime_state_count() == baseline_objects &&
-                scheduler.snapshot().size() == baseline_entries,
-                "holder-before-actor retirement must release the graph without dereferencing retired holder storage");
-    }
-    renderer.end_frame();
-    std::cout << "Original shadow controller ownership and CSV tests passed in two scene generations\n";
-    return 0;
+                    smgpc::compat::actor_runtime_state_count() == baseline_actors,
+                "actual process teardown must release the graph, registrations and original scene heap");
+        return 0;
+    });
 } catch (const std::exception& error) {
-    std::cerr << "Actor shadow CSV test failed: " << error.what() << '\n';
+    std::cerr << "Original shadow owner test failed: " << error.what() << '\n';
     return 1;
 }

@@ -1,6 +1,9 @@
 #pragma once
 
 #include <revolution/types.h>
+#include <memory>
+
+class JMapInfo;
 
 class LiveActor;
 
@@ -23,6 +26,7 @@ struct ActorAnimKeeperInfo {
 class ActorAnimKeeper {
 public:
     ActorAnimKeeper(LiveActor*);
+    ~ActorAnimKeeper();
 
     bool start(const char*);
     void update();
@@ -35,4 +39,8 @@ public:
     /* 0x4 */ s32 mNumInfo;
     /* 0x8 */ ActorAnimKeeperInfo* mInfoArray;
     /* 0xC */ ActorAnimKeeperInfo* mCurrentInfo;
+
+private:
+    // Parsed names borrow the native JMap string cache until keeper retirement.
+    std::unique_ptr<JMapInfo> mNativeParser;
 };

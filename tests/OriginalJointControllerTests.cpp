@@ -10,11 +10,12 @@
 #include "JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
-#include "SceneExecutionFixture.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/J3dCommandScope.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "compat/ResourceHolderCompat.hpp"
+#include "OriginalStageResourceProcessFixture.hpp"
+#include "OriginalAsyncHeapSelection.hpp"
 #include "resource/GameResourceRuntime.hpp"
 #include "runtime/RuntimeServices.hpp"
 
@@ -269,103 +270,94 @@ namespace {
         return matrix;
     }
 
-    bool test_real_npc_model_sharing() {
-        const auto* disc = std::getenv("SMGPC_REAL_DISC");
-        if (disc == nullptr || *disc == '\0') {
-            std::cout << "[skip] real NPC model ownership requires SMGPC_REAL_DISC\n";
-            return false;
-        }
-        require(aurora_dvd_open(disc), "the actual disc fixture must open");
-        struct CloseDisc { ~CloseDisc() { aurora_dvd_close(); } } close;
-        DVDInit();
-        aurora::g_config.mem1Size = 24U << 20;
-        smgpc::resource::GameResourceRuntime process;
-        smgpc::runtime::DvdFileSystemService dvd("/");
-        smgpc::runtime::SceneScheduler scheduler;
-        smgpc::runtime::SceneSchedulerBinding scheduled(scheduler);
+    int test_real_npc_model_sharing(unsigned generation) {
         const auto registered_before = smgpc::compat::name_obj_runtime_state_count();
         const auto actors_before = smgpc::compat::actor_runtime_state_count();
-        for (int generation = 0; generation < 2; ++generation) {
-            std::weak_ptr<smgpc::compat::JkrAllocationDomain> retired;
-            {
-                Globals globals;
-                auto domain = smgpc::compat::JkrAllocationDomain::create(process.host_heaps(), 16U << 20);
-                retired = domain;
-                smgpc::test::SceneExecutionFixture execution(scheduler, domain);
-                smgpc::compat::ResourceHolderService resources(dvd, domain, process.mem1_heap());
-                smgpc::compat::JkrAllocationScope game(domain);
-                smgpc::compat::J3dCommandScope commands;
-                NPCActor first("First original joint-controller NPC");
-                NPCActor second("Second original joint-controller NPC");
-                first.initModelManagerWithAnm("Tico", nullptr, false);
-                second.initModelManagerWithAnm("Tico", nullptr, false);
-                first.mPosition.set(10, 20, 30);
-                second.mPosition.set(-40, 50, 60);
-                auto* first_model = MR::getJ3DModel(&first);
-                auto* second_model = MR::getJ3DModel(&second);
-                auto* joint = MR::getJoint(&first, "Body");
-                require(first_model != second_model && first.mModelManager != second.mModelManager &&
-                            first_model->getModelData() == second_model->getModelData() &&
-                            first_model->mMtxBuffer != second_model->mMtxBuffer && joint == MR::getJoint(&second, "Body"),
-                        "actual NPC owners share resource joints but retain distinct model and matrix storage");
-                require(JKRHeap::findFromRoot(first.mModelManager) == &domain->heap() &&
-                            JKRHeap::findFromRoot(second.mModelManager) == &domain->heap(),
-                        "both complete original ModelManagers belong to the retained Game scene heap");
-                NpcScaleBinding first_scale(first);
-                NpcScaleBinding second_scale(second);
-                JointController indexed;
-                MR::setJointControllerParam(&indexed, &first, joint->mJntNo);
-                require(indexed.mModel == first_model && indexed.mJoint == joint &&
-                            first.mDelegator->mModel == first_model && first.mDelegator->mJoint == joint &&
-                            second.mDelegator->mModel == second_model && second.mDelegator->mJoint == joint,
-                        "named/indexed original binding preserves each actor's model and the shared joint identity");
+        std::weak_ptr<smgpc::compat::JkrAllocationDomain> retired;
+        const auto label = std::string("original-joint-controller-") + std::to_string(generation);
+        const int result = smgpc::test::run_stage_resource_process(label.c_str(), [&] {
+            Globals globals;
+            auto domain = smgpc::scene::current_scene_allocation_domain();
+            require(bool(domain), "the original scene must publish its actual retained heap");
+            retired = domain;
+            smgpc::test::OriginalAsyncHeapSelection game(domain);
+            NPCActor first("First original joint-controller NPC");
+            NPCActor second("Second original joint-controller NPC");
+            first.initModelManagerWithAnm("Tico", nullptr, false);
+            second.initModelManagerWithAnm("Tico", nullptr, false);
+            first.mPosition.set(10, 20, 30);
+            second.mPosition.set(-40, 50, 60);
+            auto* first_model = MR::getJ3DModel(&first);
+            auto* second_model = MR::getJ3DModel(&second);
+            auto* joint = MR::getJoint(&first, "Body");
+            require(first_model != second_model && first.mModelManager != second.mModelManager &&
+                        first_model->getModelData() == second_model->getModelData() &&
+                        first_model->mMtxBuffer != second_model->mMtxBuffer && joint == MR::getJoint(&second, "Body"),
+                    "actual NPC owners share resource joints but retain distinct model and matrix storage");
+            require(JKRHeap::findFromRoot(first.mModelManager) == &domain->heap() &&
+                        JKRHeap::findFromRoot(second.mModelManager) == &domain->heap(),
+                    "both complete original ModelManagers belong to the retained Game scene heap");
+            NpcScaleBinding first_scale(first);
+            NpcScaleBinding second_scale(second);
+            JointController indexed;
+            MR::setJointControllerParam(&indexed, &first, joint->mJntNo);
+            require(indexed.mModel == first_model && indexed.mJoint == joint &&
+                        first.mDelegator->mModel == first_model && first.mDelegator->mJoint == joint &&
+                        second.mDelegator->mModel == second_model && second.mDelegator->mJoint == joint,
+                    "named/indexed original binding preserves each actor's model and the shared joint identity");
 
-                // Establish only the original scale-controller input. The
-                // normal LiveActor calcAnmMtx virtual path registers the NPC
-                // callback and executes its complete ModelManager traversal.
-                first.calcAnmMtx();
-                const auto first_unit = snapshot(first_model->getAnmMtx(joint->mJntNo));
-                second.calcAnmMtx();
-                const auto second_unit = snapshot(second_model->getAnmMtx(joint->mJntNo));
-                const TVec3f first_value{2, 3, 4};
-                first_scale.set(first_value);
-                first.calcAnmMtx();
-                const auto first_scaled = snapshot(first_model->getAnmMtx(joint->mJntNo));
-                matrix_near(first_scaled, scaled_basis(first_unit, first_value),
-                            "original NPC calcJointScale changes the actual model's stored joint basis");
-                matrix_near(snapshot(second_model->getAnmMtx(joint->mJntNo)), second_unit,
-                            "first NPC traversal cannot write the second NPC's matrix buffer");
-                require(joint->mCallBack == nullptr && joint->mCallBackUserData == nullptr,
-                        "completed NPC traversal retires its pointer from the shared model resource");
-                const TVec3f second_value{0.5F, 1.5F, 2.5F};
-                second_scale.set(second_value);
-                second.calcAnmMtx();
-                matrix_near(snapshot(second_model->getAnmMtx(joint->mJntNo)), scaled_basis(second_unit, second_value),
-                            "the second original NPC registers and applies its own scale controller");
-                matrix_near(snapshot(first_model->getAnmMtx(joint->mJntNo)), first_scaled,
-                            "the second shared-resource traversal preserves the first actor's completed pose");
-                first_scale.set(TVec3f{1, 1, 1});
-                first.calcAnmMtx();
-                matrix_near(snapshot(first_model->getAnmMtx(joint->mJntNo)), first_unit,
-                            "returning to the first NPC applies fresh input rather than a stale shared callback");
-                require(joint->mCallBack == nullptr && joint->mCallBackUserData == nullptr,
-                        "all borrowed callback state clears before typed actor/model retirement");
-            }
-            require(retired.expired() && smgpc::compat::name_obj_runtime_state_count() == registered_before &&
-                        smgpc::compat::actor_runtime_state_count() == actors_before && scheduler.snapshot().empty(),
-                    "typed NPC/model/executor retirement releases registrations and its original scene heap");
-        }
-        return true;
+            // Establish only the original scale-controller input. The
+            // normal LiveActor calcAnmMtx virtual path registers the NPC
+            // callback and executes its complete ModelManager traversal.
+            first.calcAnmMtx();
+            const auto first_unit = snapshot(first_model->getAnmMtx(joint->mJntNo));
+            second.calcAnmMtx();
+            const auto second_unit = snapshot(second_model->getAnmMtx(joint->mJntNo));
+            const TVec3f first_value{2, 3, 4};
+            first_scale.set(first_value);
+            first.calcAnmMtx();
+            const auto first_scaled = snapshot(first_model->getAnmMtx(joint->mJntNo));
+            matrix_near(first_scaled, scaled_basis(first_unit, first_value),
+                        "original NPC calcJointScale changes the actual model's stored joint basis");
+            matrix_near(snapshot(second_model->getAnmMtx(joint->mJntNo)), second_unit,
+                        "first NPC traversal cannot write the second NPC's matrix buffer");
+            require(joint->mCallBack == nullptr && joint->mCallBackUserData == nullptr,
+                    "completed NPC traversal retires its pointer from the shared model resource");
+            const TVec3f second_value{0.5F, 1.5F, 2.5F};
+            second_scale.set(second_value);
+            second.calcAnmMtx();
+            matrix_near(snapshot(second_model->getAnmMtx(joint->mJntNo)), scaled_basis(second_unit, second_value),
+                        "the second original NPC registers and applies its own scale controller");
+            matrix_near(snapshot(first_model->getAnmMtx(joint->mJntNo)), first_scaled,
+                        "the second shared-resource traversal preserves the first actor's completed pose");
+            first_scale.set(TVec3f{1, 1, 1});
+            first.calcAnmMtx();
+            matrix_near(snapshot(first_model->getAnmMtx(joint->mJntNo)), first_unit,
+                        "returning to the first NPC applies fresh input rather than a stale shared callback");
+            require(joint->mCallBack == nullptr && joint->mCallBackUserData == nullptr,
+                    "all borrowed callback state clears before typed actor/model retirement");
+        });
+        require(result == 0 && retired.expired() &&
+                    smgpc::compat::name_obj_runtime_state_count() == registered_before &&
+                    smgpc::compat::actor_runtime_state_count() == actors_before,
+                "actual process retirement releases the NPC registrations and original scene heap");
+        return 0;
     }
 }
 
-int main() try {
-    test_base_and_direct_phase_contract();
-    test_delegator_acceptance_and_real_traversal();
-    const bool real = test_real_npc_model_sharing();
-    std::cout << "Original JointController: 2/2 SDK groups passed; real NPC resource group "
-              << (real ? "passed in 2 scene generations" : "skipped") << '\n';
-    return 0;
+int main(int argc, char** argv) try {
+    if (argc == 1) {
+        test_base_and_direct_phase_contract();
+        test_delegator_acceptance_and_real_traversal();
+        std::cout << "Original JointController: 2/2 SDK groups passed\n";
+        const auto* disc = std::getenv("SMGPC_REAL_DISC");
+        if (disc == nullptr || *disc == '\0') {
+            std::cout << "[skip] real NPC model ownership requires SMGPC_REAL_DISC\n";
+            return 0;
+        }
+    }
+    return smgpc::test::run_stage_resource_generations(
+        argc, argv, "original-joint-controller", 2, test_real_npc_model_sharing);
 } catch (const std::exception& error) {
     std::cerr << "[fail] original JointController: " << error.what() << '\n';
     return 1;

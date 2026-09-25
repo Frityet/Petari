@@ -25,7 +25,19 @@ namespace nw4r {
                 SetPalette(NULL);
                 SetPaletteFormat(GX_TL_IA8);
                 SetPaletteEntryNum(0);
+                RegisterNativeLifetime();
             }
+
+            TexMap(const GXTexObj& rTexObj) : TexMap() {
+                Set(rTexObj);
+                SetPalette(0);
+                SetPaletteFormat(GXTlutFmt(0));
+                SetPaletteEntryNum(0);
+            }
+
+            TexMap(const TexMap& other) : TexMap() { *this = other; }
+            TexMap& operator=(const TexMap&) = default;
+            ~TexMap();
 
             void SetImage(void* pImage) {
                 mImage = pImage;
@@ -189,6 +201,7 @@ namespace nw4r {
             } mBits;  // 0x18
 
         private:
+            void RegisterNativeLifetime();
             std::shared_ptr<const HostTextureResourceState> mHostResource;
         };
     };  // namespace lyt

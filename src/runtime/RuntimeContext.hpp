@@ -15,15 +15,12 @@
 #include <aurora/system_config.hpp>
 
 #include "Logger.hpp"
-#include "runtime/ArchiveMountService.hpp"
 #include "runtime/DebugWpadInputScript.hpp"
 #include "runtime/DebugWpadInputFile.hpp"
 #include "runtime/ScenarioCatalogOwnership.hpp"
 #include "runtime/ParticleResourceOwnership.hpp"
-#include "runtime/MessageHolderOwnership.hpp"
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
-#include "compat/ResourceHolderCompat.hpp"
 #include "resource/GameResourceRuntime.hpp"
 #include "render/J3dModelRenderer.hpp"
 #include "runtime/JAudioPlaybackService.hpp"
@@ -190,8 +187,6 @@ namespace smgpc::runtime {
         [[nodiscard]] std::string_view current_stage_bgm_name() const;
         [[nodiscard]] std::optional<std::filesystem::path> find_layout_archive(std::string_view layout_name) const;
         [[nodiscard]] std::optional<std::filesystem::path> find_object_archive(std::string_view object_name) const;
-        [[nodiscard]] ArchiveMountService &archive_mounts();
-        [[nodiscard]] const ArchiveMountService &archive_mounts() const;
         [[nodiscard]] const std::shared_ptr<compat::JkrHeapRuntime>& host_heaps() const noexcept { return _host_heaps; }
         void initialize_particle_resources(const resource::GameResourceRuntime &resources);
         [[nodiscard]] std::shared_ptr<ParticleResourceOwnership> retain_particle_resources() const;
@@ -316,12 +311,10 @@ namespace smgpc::runtime {
         render::AuroraWindow &_window_service;
         std::filesystem::path _disc_files_root;
         DvdFileSystemService _dvd;
-        ArchiveMountService _archive_mounts;
         std::shared_ptr<compat::JkrHeapRuntime> _host_heaps;
         std::shared_ptr<ScenarioCatalogOwnership> _scenario_catalog;
         std::shared_ptr<ParticleResourceOwnership> _particle_resources;
         std::unique_ptr<JAudioPlaybackService> _j_audio_playback;
-        smgpc::compat::ResourceHolderService _resource_holders;
         std::unique_ptr<aurora::audio::DisabledObjectAudioService> _disabled_object_audio;
         WiiIosService _ios;
         WiiPlatformService _wii_platform;
@@ -341,7 +334,6 @@ namespace smgpc::runtime {
         std::unique_ptr<compat::NandSdkBinding> _nand_sdk;
         std::unique_ptr<aurora::SystemConfiguration> _system_config;
         MessageService _messages;
-        std::unique_ptr<MessageHolderOwnership> _message_holder;
         SceneLightService _scene_lights;
         RflService _rfl;
         aurora::WpadShakeGesture _core_pad_gesture;

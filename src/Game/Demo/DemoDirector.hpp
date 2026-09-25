@@ -15,6 +15,8 @@ public:
     /// @brief Creates a new `DemoDirector`.
     /// @param pName A pointer to the null-terminated name of the object.
     DemoDirector(const char* pName);
+    ~DemoDirector() override;
+    void releaseNativeReference(const NameObj*) noexcept;
 
     virtual void movement();
 

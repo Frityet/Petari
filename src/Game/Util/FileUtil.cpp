@@ -131,6 +131,18 @@ namespace MR {
     }
 
     void removeResourceAndFileHolderIfIsEqualHeap(JKRHeap* pHeap) {
+        if (pHeap == nullptr)
+            return;
+        // Validate the entire native borrow graph before either original owner
+        // mutates its entries. Holder retirement will release its own archive
+        // tokens; any independent archive borrower must still reject removal.
+        auto* resources = SingletonHolder< ResourceHolderManager >::get();
+        auto* files = SingletonHolder< FileLoader >::get();
+        resources->validateHeapRetirement(pHeap);
+        for (auto* entry : files->mArchiveHolder->mEntries) {
+            if (entry->mHeap == pHeap || getHeapNapa(entry->mHeap) == pHeap || getHeapGDDR3(entry->mHeap) == pHeap)
+                entry->validateNativeRetirement(resources->countNativeArchiveReferences(entry->mArchive, pHeap));
+        }
         SingletonHolder< ResourceHolderManager >::get()->removeIfIsEqualHeap(pHeap);
         SingletonHolder< FileLoader >::get()->removeHolderIfIsEqualHeap(pHeap);
     }

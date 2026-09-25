@@ -24,7 +24,6 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/AreaObjUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/ResourceHolderCompat.hpp"
 #include "resource/GameResourceRuntime.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"

@@ -12,7 +12,7 @@
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/DrawSyncManagerLifetime.hpp"
 #include "layout/LayoutHost.hpp"
-#include "runtime/ArchiveMountService.hpp"
+#include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "scene/GameSceneBinding.hpp"
 #include "scene/SceneExecutionBinding.hpp"
@@ -39,12 +39,11 @@ public:
         : _scene(&scene), _names(&names), _domain(compat::JkrAllocationDomain::retain_heap(heap)) {
         auto* game = dynamic_cast<GameScene*>(&scene);
         if (game) {
-            auto* archives = runtime::ArchiveMountService::active();
-            if (!archives) throw std::logic_error("Original planet data requires the process archive service");
+            runtime::DvdFileSystemService dvd("/");
             // StageDataHolder partitions authored placements during loading.
             // Its archive predicate and NameObjFactory share this retained
             // table, before any planet actor is constructed.
-            _planet_map_catalog = std::make_unique<nameobj::PlanetMapCatalog>(archives->dvd());
+            _planet_map_catalog = std::make_unique<nameobj::PlanetMapCatalog>(dvd);
         }
         if (StageCollisionService::active())
             throw std::logic_error("Retire the previous scene collision owner before binding another scene");

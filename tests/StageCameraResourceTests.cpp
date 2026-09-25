@@ -5,7 +5,8 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/RarcArchive.hpp"
-#include "runtime/ArchiveMountService.hpp"
+#include "Game/System/FileLoader.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include <cstring>
 #include <functional>
@@ -19,7 +20,8 @@ void require(bool value, const char* message) {
 }
 void verify() {
     auto* root = MR::getStageDataHolder();
-    auto* archives = smgpc::runtime::ArchiveMountService::active();
+    auto* archives = SingletonHolder<FileLoader>::get();
+    smgpc::runtime::DvdFileSystemService dvd("/");
     require(root && archives, "Actual process owns both the stage and mounted archives");
     std::vector<const JMapInfo*> starts;
     const auto collect = [&](auto&& self, const StageDataHolder& stage) -> void {
@@ -44,7 +46,7 @@ void verify() {
     for (s32 zone = 0; zone < MR::getZoneNum(); ++zone) {
         auto* holder = root->getStageDataHolderFromZoneId(zone);
         if (!holder) continue;
-        const auto archive = archives->dvd().retain_archive_for_path(std::string("/StageData/") + holder->_A8 + ".arc");
+        const auto archive = dvd.retain_archive_for_path(std::string("/StageData/") + holder->_A8 + ".arc");
         void* data = nullptr;
         s32 size = 0;
         MR::getStageCameraData(&data, &size, zone);

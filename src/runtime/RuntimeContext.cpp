@@ -1,3 +1,5 @@
+#include "Game/System/FileLoader.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include <aurora/guest_thread.hpp>
 #include "Game/AudioLib/AudBgm.hpp"
@@ -230,12 +232,11 @@ namespace smgpc::runtime {
         resource::GameResourceRuntime &resources,
         std::unique_ptr<JAudioPlaybackService> audio_playback,
         RuntimeContextSceneServiceMode scene_service_mode)
-        : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root), _archive_mounts(_dvd),
+        : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root),
           _host_heaps(resources.host_heaps()),
           _j_audio_playback(audio_playback != nullptr
                                 ? std::move(audio_playback)
                                 : std::make_unique<JAudioPlaybackService>(_dvd)),
-          _resource_holders(_dvd, resources.create_cohort(), resources.mem1_heap()),
           _disabled_object_audio(aurora::audio::make_disabled_object_audio_service(resources.host_heaps(), _j_audio_playback.get())), _rfl(_save_data.nand()),
           _current_stage_name(default_stage_name())
 #ifndef NDEBUG
@@ -273,9 +274,6 @@ namespace smgpc::runtime {
                     std::filesystem::path("KrKorean") / "MessageData" / "Message.arc",
                     std::filesystem::path("MessageData") / "Message.arc",
                 })) {
-                _message_holder = std::make_unique<MessageHolderOwnership>(
-                    _host_heaps, resources.budget().message_resource_bytes, _archive_mounts,
-                    message_archive->string(), "KrKorean");
                 try {
                     const auto count = _messages.load_message_archive(_dvd.archive_for_path(*message_archive));
                     _logger.info(logging::Category::APP, logging::Message{"Loaded {} messages from {}"}, count, message_archive->string());
@@ -822,16 +820,16 @@ namespace smgpc::runtime {
         return _dvd.find_object_archive(object_name);
     }
 
-    ArchiveMountService &RuntimeContext::archive_mounts() { return _archive_mounts; }
-    const ArchiveMountService &RuntimeContext::archive_mounts() const { return _archive_mounts; }
 
     void RuntimeContext::initialize_particle_resources(const resource::GameResourceRuntime &resources) {
+        if (!SingletonHolder<FileLoader>::get())
+            aurora::throw_host_exception<std::logic_error>("Resources require the original FileLoader");
         compat::JkrHostAllocationScope host;
         if (_particle_resources) {
             aurora::throw_host_exception<std::logic_error>("The process particle resources are already initialized.");
         }
         _particle_resources = std::make_shared<ParticleResourceOwnership>(
-            resources.host_heaps(), resources.budget().particle_resource_bytes, _archive_mounts);
+            resources.host_heaps(), resources.budget().particle_resource_bytes, *SingletonHolder<FileLoader>::get());
     }
 
     std::shared_ptr<ParticleResourceOwnership> RuntimeContext::retain_particle_resources() const {
@@ -842,12 +840,14 @@ namespace smgpc::runtime {
     }
 
     void RuntimeContext::initialize_scenario_catalog(const resource::GameResourceRuntime &resources) {
+        if (!SingletonHolder<FileLoader>::get())
+            aurora::throw_host_exception<std::logic_error>("Resources require the original FileLoader");
         compat::JkrHostAllocationScope host;
         if (_scenario_catalog) {
             aurora::throw_host_exception<std::logic_error>("The process scenario catalog is already initialized.");
         }
         _scenario_catalog = std::make_shared<ScenarioCatalogOwnership>(
-            resources.host_heaps(), resources.budget().scenario_catalog_bytes, _archive_mounts);
+            resources.host_heaps(), resources.budget().scenario_catalog_bytes, *SingletonHolder<FileLoader>::get(), _dvd);
     }
 
     std::shared_ptr<ScenarioCatalogOwnership> RuntimeContext::retain_scenario_catalog() const {

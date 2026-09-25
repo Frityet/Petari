@@ -19,17 +19,29 @@
 #include "Game/Util/StarPointerUtil.hpp"
 
 DemoDirector::DemoDirector(const char* pName)
-    : NameObj(pName), mIsActive(), mExecutor(), _14(), _18(), _20(new DemoSimpleCastHolder(512, 64, 128)), mResourceHolder(),
-      mStartRequestHolder(new DemoStartRequestHolder()), _2C(), _30(), _34(-1), _38(true) {
-    MR::connectToScene(this, 11, -1, -1, -1);
+    : NameObj(pName), mIsActive(), mExecutor(), _14(), _18(), mCastSubGroupHolder(), _20(), mResourceHolder(),
+      mStartRequestHolder(), _2C(), _30(), _34(-1), _38(true) {
+    try {
+        _20 = new DemoSimpleCastHolder(512, 64, 128);
+        mStartRequestHolder = new DemoStartRequestHolder();
+        MR::connectToScene(this, 11, -1, -1, -1);
 
-    _18 = new DemoCastGroupHolder();
-    _18->initWithoutIter();
+        _18 = new DemoCastGroupHolder();
+        _18->initWithoutIter();
 
-    mCastSubGroupHolder = new DemoCastGroupHolder();
-    mCastSubGroupHolder->initWithoutIter();
+        mCastSubGroupHolder = new DemoCastGroupHolder();
+        mCastSubGroupHolder->initWithoutIter();
 
-    mResourceHolder = DemoFunction::loadDemoArchive();
+        mResourceHolder = DemoFunction::loadDemoArchive();
+    } catch (...) {
+        auto* requests = mStartRequestHolder;
+        auto* simple = _20;
+        mStartRequestHolder = nullptr;
+        _20 = nullptr;
+        delete requests;
+        delete simple;
+        throw;
+    }
 }
 
 void DemoDirector::movement() {
@@ -204,4 +216,28 @@ void DemoDirector::doDemoEndRequest() {
     }
 
     mIsActive = false;
+}
+
+DemoDirector::~DemoDirector() {
+    auto* requests = mStartRequestHolder;
+    auto* simple = _20;
+    mStartRequestHolder = nullptr;
+    _20 = nullptr;
+    delete requests;
+    delete simple;
+}
+
+void DemoDirector::releaseNativeReference(const NameObj* pObject) noexcept {
+    if (_20 != nullptr) {
+        _20->releaseNativeReference(pObject);
+    }
+    if (mStartRequestHolder != nullptr) {
+        mStartRequestHolder->releaseNativeReference(pObject);
+    }
+    if (_2C == pObject) {
+        _2C = nullptr;
+    }
+    if (mExecutor == pObject) {
+        mExecutor = nullptr;
+    }
 }

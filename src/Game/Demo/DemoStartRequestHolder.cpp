@@ -1,6 +1,11 @@
 #include "compat/Cp932Literal.hpp"
 #include "Game/Demo/DemoStartRequestHolder.hpp"
 #include "Game/Demo/DemoStartRequestUtil.hpp"
+#include "Game/Demo/DemoExecutor.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Screen/LayoutActor.hpp"
+#include <array>
+#include <exception>
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
@@ -215,5 +220,38 @@ void MR::FixedRingBuffer< const DemoStartInfo*, 16 >::iterator::operator++() {
 
     if (pEnd <= mHead) {
         mHead = mTail;
+    }
+}
+
+void DemoStartRequestHolder::releaseNativeReference(const NameObj* pObject) noexcept {
+    const auto borrows = [pObject](const DemoStartInfo& info) {
+        return info._0 == pObject || info._4 == pObject || info._C == pObject ||
+               info._10 == pObject || info._14 == pObject;
+    };
+    std::array<const DemoStartInfo*, 16> retained{};
+    s32 count = 0;
+    if (mRequestBuffer.mCount < 0 || mRequestBuffer.mCount > 16) {
+        std::terminate();
+    }
+    auto cursor = mRequestBuffer.mHead;
+    for (s32 i = 0; i < mRequestBuffer.mCount; i++, ++cursor) {
+        const auto* info = *cursor.mHead;
+        if (info != nullptr && !borrows(*info)) {
+            retained[count++] = info;
+        }
+    }
+    for (s32 i = 0; i < mNumInfos; i++) {
+        if (borrows(*mStartInfos[i])) {
+            *mStartInfos[i] = DemoStartInfo{};
+        }
+    }
+    mRequestBuffer.mHead = decltype(mRequestBuffer.mHead)(mRequestBuffer.mBuffer, mRequestBuffer.mBuffer);
+    mRequestBuffer.mEnd = mRequestBuffer.mHead;
+    mRequestBuffer.mCount = 0;
+    for (auto& info : mRequestBuffer.mBuffer) {
+        info = nullptr;
+    }
+    for (s32 i = 0; i < count; i++) {
+        mRequestBuffer.push_back(retained[i]);
     }
 }

@@ -9,7 +9,7 @@
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
-#include "compat/ResourceHolderCompat.hpp"
+#include "Game/System/ResourceHolder.hpp"
 #include "resource/KCollisionResource.hpp"
 #include "resource/RarcArchive.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -36,7 +36,7 @@ namespace {
     };
 
     struct ActorCollisionPartsState {
-        std::shared_ptr<const smgpc::compat::ResourceArchiveOwner> resource_owner;
+        std::shared_ptr<const void> resource_owner;
         SceneObjHolder* scene_holder = nullptr;
         smgpc::scene::StageCollisionService* service = nullptr;
         std::uint64_t service_generation = 0;
@@ -89,9 +89,8 @@ namespace smgpc::compat {
                                            int scale_type, s32 category) {
         const aurora::allocation::HostAllocationScope host;
         auto* collision = scene::StageCollisionService::active();
-        auto* resource_service = ResourceHolderService::active();
         auto* holder = scene::current_scene_obj_holder();
-        if (!resources || !name || !sensor || !sensor->mHost || !collision || !resource_service || !holder) {
+        if (!resources || !name || !sensor || !sensor->mHost || !collision || !holder) {
             aurora::throw_host_exception<std::logic_error>("CollisionParts requires its actor, resources, scene and collision owners.");
         }
         if (category != 0) collision = &scene::current_collision_director_ownership()->category_service(category);
@@ -102,26 +101,26 @@ namespace smgpc::compat {
         if (placement_zone_id < 0 || placement_zone_id >= MR::getZoneNum() || MR::getZoneNum() > 32) {
             aurora::throw_host_exception<std::logic_error>("CollisionParts requires a valid original placement zone.");
         }
-        const auto& backing = resource_service->backing(*resources);
+        const auto& archive = resources->nativeResourceSource();
         // Retail resource lookup uses two 0x80-byte filename buffers.
         char kcl_name[0x80];
         char attributes_name[0x80];
         std::snprintf(kcl_name, sizeof(kcl_name), "%s.kcl", name);
         std::snprintf(attributes_name, sizeof(attributes_name), "%s.pa", name);
-        const auto* kcl_entry = backing.archive().find_resource(kcl_name);
-        const auto* attributes_entry = backing.archive().find_resource(attributes_name);
+        const auto* kcl_entry = archive.find_resource(kcl_name);
+        const auto* attributes_entry = archive.find_resource(attributes_name);
         if (!kcl_entry) aurora::throw_host_exception<std::runtime_error>("Required CollisionParts KCL is unavailable: " + std::string(kcl_name));
         auto state = std::make_unique<ActorCollisionPartsState>();
-        state->resource_owner = resource_service->retain(*resources);
+        state->resource_owner = resources->retainNativeResources();
         state->scene_holder = holder;
         state->service = collision;
         state->service_generation = collision->generation();
         state->resource_name = name;
-        state->source = backing.resolved_path().generic_string() + ":/" + kcl_entry->path;
-        state->kcl = backing.archive().file_data(*kcl_entry);
+        state->source = resources->nativeResourcePath().generic_string() + ":/" + kcl_entry->path;
+        state->kcl = archive.file_data(*kcl_entry);
         if (attributes_entry) {
-            state->attributes = backing.archive().file_data(*attributes_entry);
-            state->attributes_source = backing.resolved_path().generic_string() + ":/" + attributes_entry->path;
+            state->attributes = archive.file_data(*attributes_entry);
+            state->attributes_source = resources->nativeResourcePath().generic_string() + ":/" + attributes_entry->path;
         }
         state->decoded = std::make_unique<resource::KCollisionResource>(state->kcl, state->attributes);
         {

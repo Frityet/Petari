@@ -264,6 +264,7 @@ target("smg-pc-stage-start-camera-tests")
     })
 
 target("smg-pc-stationed-archive-real-or-absent-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -337,6 +338,7 @@ target("smg-pc-object-name-table-tests")
 target("smg-pc-nameobj-factory-placement-tests")
     set_kind("binary")
     set_default(false)
+    add_deps("smg-pc-app", "aurora-main")
     set_group("tests/aurora")
     add_files {
         "NameObjFactoryPlacementTests.cpp"
@@ -973,6 +975,9 @@ for _, fixture in ipairs {
     {"camera-vector-math", "OriginalCameraVectorMathTests.cpp"}
 } do
     target("smg-pc-original-" .. fixture[1] .. "-tests")
+        if fixture[1] == "resource-holder" or fixture[1] == "message-holder" or fixture[1] == "joint-controller" then
+            add_deps {"smg-pc-app", "aurora-main"}
+        end
         set_kind("binary")
         set_default(false)
         set_group("tests/aurora")
@@ -1282,6 +1287,7 @@ target("smg-pc-gravity-math-foundation-tests")
     })
 
 target("smg-pc-original-scenario-catalog-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -1298,6 +1304,7 @@ target("smg-pc-original-scenario-catalog-tests")
     })
 
 target("smg-pc-scenario-publication-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -1930,32 +1937,6 @@ target("smg-pc-picture-font-tag-tests")
         realtime_output = true
     })
 
-target("smg-pc-authored-placement-instantiator-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    set_rundir(os.projectdir())
-    add_files {
-        "AuthoredPlacementInstantiatorTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("authored_placement_instantiator", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
 target("smg-pc-actor-event-camera-tests")
     set_kind("binary")
     set_default(false)
@@ -1983,6 +1964,7 @@ target("smg-pc-actor-event-camera-tests")
     })
 
 target("smg-pc-original-shadow-controller-owner-tests")
+    add_deps {"smg-pc-app", "aurora-main"}
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")

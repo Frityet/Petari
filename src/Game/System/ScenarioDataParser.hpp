@@ -12,6 +12,7 @@ public:
     /// @brief Creates a new `ScenarioDataParser`.
     /// @param pName A pointer to the null-terminated name of the object.
     ScenarioDataParser(const char* pName);
+    ~ScenarioDataParser() override;
 
     const ScenarioData* getScenarioData(const char*) const;
     const ScenarioData* getScenarioData(s32) const;
@@ -35,6 +36,7 @@ public:
 class ScenarioData {
 public:
     ScenarioData(const char*);
+    ~ScenarioData();
 
     s32 getScenarioNum() const;
     s32 getPowerStarNum() const;

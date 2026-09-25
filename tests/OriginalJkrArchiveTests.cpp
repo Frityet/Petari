@@ -194,6 +194,57 @@ namespace {
         try { JKRMemArchive arc(parsed); } catch (const std::invalid_argument&) { rejected = true; }
         require(rejected, "bounded native catalog rejects unterminated names in declared string extent");
     }
+    void test_native_cache_override_retirement() {
+        std::array<unsigned, 3> order{0, 1, 2};
+        do {
+            auto arc = archive();
+            void* original = arc.getIdxResource(0);
+            std::array<u8, 3> replacements{0x61, 0x62, 0x63};
+            std::array<std::shared_ptr<const void>, 3> handles;
+            std::array<bool, 3> live{true, true, true};
+            for (unsigned i = 0; i < handles.size(); ++i)
+                handles[i] = arc.overrideNativeResource(0, &replacements[i]);
+            auto copy = handles[0];
+            // Copying an override handle shares its one archive borrow; it does
+            // not represent another converted file owned by the holder.
+            arc.validateNativeRetirement(3);
+            bool rejected = false;
+            try { arc.validateNativeRetirement(2); }
+            catch (const std::logic_error&) { rejected = true; }
+            require(rejected, "preflight discounts exactly one archive token for each live cache override");
+            copy.reset();
+            for (const auto retiring : order) {
+                handles[retiring].reset();
+                live[retiring] = false;
+                void* expected = original;
+                for (unsigned i = 0; i < live.size(); ++i)
+                    if (live[i]) expected = &replacements[i];
+                require(arc.getIdxResource(0) == expected && arc.getResource(u16(42)) == expected &&
+                            arc.getResource("/a.bck") == expected && arc.getResSize(expected) == 1,
+                        "every retirement permutation restores the newest live resource across original lookup APIs");
+            }
+            arc.validateNativeRetirement();
+        } while (std::next_permutation(order.begin(), order.end()));
+
+        auto arc = archive();
+        u8 first = 0x31, second = 0x32, independent = 0x33;
+        auto earlier = arc.overrideNativeResource(0, &first);
+        auto later = arc.overrideNativeResource(0, &second);
+        arc.mFiles[0].mFileData = &independent;
+        earlier.reset(); later.reset();
+        require(arc.getIdxResource(0) == &independent,
+                "retiring an override cannot overwrite a separately replaced native cache");
+        arc.validateNativeRetirement();
+        bool folder_rejected = false, index_rejected = false, null_rejected = false;
+        try { (void)arc.overrideNativeResource(1, &first); }
+        catch (const std::invalid_argument&) { folder_rejected = true; }
+        try { (void)arc.overrideNativeResource(10, &first); }
+        catch (const std::invalid_argument&) { index_rejected = true; }
+        try { (void)arc.overrideNativeResource(0, nullptr); }
+        catch (const std::invalid_argument&) { null_rejected = true; }
+        require(folder_rejected && index_rejected && null_rejected && arc.getIdxResource(0) == &independent,
+                "invalid native overrides preserve the existing cache and lifetime state");
+    }
 }
 int main() {
     const std::array tests{
@@ -202,6 +253,7 @@ int main() {
         std::pair{"retained archive lifetime", test_lifetime}, std::pair{"bounded string table", test_missing_string_extent},
         std::pair{"bounded lookup names", test_bounded_lookup_names},
         std::pair{"fixed mount volume and byte identity", test_fixed_mount_volume_and_byte_identity},
+        std::pair{"native cache override lifetime and arbitrary retirement", test_native_cache_override_retirement},
     };
     for (const auto& [name, test] : tests) {
         try { test(); std::cout << "PASS " << name << '\n'; }

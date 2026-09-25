@@ -14,9 +14,11 @@
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/JMapIdInfo.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include <algorithm>
+#include <type_traits>
 
 DemoExecutor::DemoExecutor(const char* pName)
     : DemoCastGroup(pName), mSheetName(), mTimeKeeper(), mSubPartKeeper(), mPlayerKeeper(), mCameraKeeper(), mActionKeeper(), mWipeKeeper(),
@@ -239,4 +241,78 @@ void DemoExecutor::end() {
     }
 
     mActor.clear();
+}
+
+DemoExecutor::~DemoExecutor() {
+    for (auto* controller : mTalkAnimCtrl) {
+        delete controller;
+    }
+    delete mActionKeeper;
+    delete mCameraKeeper;
+    delete mPlayerKeeper;
+    delete mSubPartKeeper;
+    delete mTimeKeeper;
+    delete mSoundKeeper;
+    delete mWipeKeeper;
+    if (_40 != nullptr) {
+        for (auto* info : {_40->mSW_A, _40->mSW_B, _40->mSW_Appear, _40->mSW_Dead}) {
+            if (info != nullptr) {
+                delete info->mIDInfo;
+                delete info;
+            }
+        }
+        delete _40;
+    }
+}
+
+void DemoExecutor::releaseNativeReference(const NameObj* pObject) noexcept {
+    const auto release = [](auto& values, auto remove) {
+        auto* oldEnd = values.end();
+        auto* retained = std::remove_if(values.begin(), oldEnd, remove);
+        std::fill(retained, oldEnd, typename std::remove_reference_t<decltype(values)>::Item{});
+        values.mCount = static_cast<s32>(retained - values.begin());
+    };
+    release(mActor, [pObject](const LiveActor* actor) { return actor == pObject; });
+    release(mTalkMessageCtrl, [pObject](const DemoTalkMessageCtrl& info) { return info.mActor == pObject; });
+    release(mTalkAnimCtrl, [pObject](DemoTalkAnimCtrl* controller) {
+        if (controller->mActor != pObject) {
+            return false;
+        }
+        delete controller;
+        return true;
+    });
+    if (_44 == pObject) {
+        _44 = nullptr;
+    }
+    if (mCameraKeeper != nullptr) {
+        for (s32 i = 0; i < mCameraKeeper->_4; i++) {
+            if (mCameraKeeper->_8[i]._24 == pObject) {
+                mCameraKeeper->_8[i]._24 = nullptr;
+            }
+        }
+    }
+    if (mActionKeeper != nullptr) {
+        for (s32 i = 0; i < mActionKeeper->mNumInfos; i++) {
+            auto* info = mActionKeeper->mInfoArray[i];
+            if (info == nullptr) {
+                continue;
+            }
+            s32 retained = 0;
+            for (s32 cast = 0; cast < info->mCastCount; cast++) {
+                if (info->mCastList[cast] == pObject) {
+                    delete info->mFunctors[cast];
+                    continue;
+                }
+                info->mCastList[retained] = info->mCastList[cast];
+                info->mFunctors[retained] = info->mFunctors[cast];
+                info->mNerves[retained++] = info->mNerves[cast];
+            }
+            for (s32 cast = retained; cast < info->mCastCount; cast++) {
+                info->mCastList[cast] = nullptr;
+                info->mFunctors[cast] = nullptr;
+                info->mNerves[cast] = nullptr;
+            }
+            info->mCastCount = retained;
+        }
+    }
 }

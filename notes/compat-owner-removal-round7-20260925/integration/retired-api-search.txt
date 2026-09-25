@@ -1,0 +1,1 @@
+No retired provider, header or API references in staged src/ and tests/.

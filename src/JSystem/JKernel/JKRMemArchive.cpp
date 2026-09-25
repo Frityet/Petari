@@ -28,8 +28,9 @@ JKRMemArchive::JKRMemArchive(const smgpc::resource::RarcArchive &archive)
 
 JKRMemArchive::JKRMemArchive(smgpc::resource::RarcArchive &&archive) : JKRArchive(nullptr) {
     aurora::allocation::HostAllocationScope host;
-    mOwnedArchive = std::make_unique<smgpc::resource::RarcArchive>(std::move(archive));
-    attach_archive(mOwnedArchive.get());
+    auto owned = std::make_shared<smgpc::resource::RarcArchive>(std::move(archive));
+    attach_archive(owned);
+    mOwnedArchive = std::move(owned);
     mHeader = reinterpret_cast<RarcHeader *>(const_cast<u8 *>(mOwnedArchive->bytes().data()));
     mFileDataStart = const_cast<u8 *>(mOwnedArchive->file_data_start());
     publish_mount(mOwnedArchive->bytes().data());
@@ -115,9 +116,9 @@ bool JKRMemArchive::mountFixed(Bytes bytes, JKRMemBreakFlag breakFlag) {
     auto *heap = JKRHeap::findFromRoot(const_cast<u8 *>(bytes.data()));
     if (breakFlag == JKR_MEM_BREAK_FLAG_1 && heap == nullptr)
         aurora::throw_host_exception<std::invalid_argument>("Owned fixed archives require an actual JKR buffer allocation");
-    auto parsed = std::make_unique<smgpc::resource::RarcArchive>(
+    auto parsed = std::make_shared<smgpc::resource::RarcArchive>(
         smgpc::resource::RarcArchive::from_borrowed(bytes.first(size)));
-    attach_archive(parsed.get());
+    attach_archive(parsed);
     mOwnedArchive = std::move(parsed);
     mHeap = heap;
     mHeader = reinterpret_cast<RarcHeader *>(const_cast<u8 *>(bytes.data()));

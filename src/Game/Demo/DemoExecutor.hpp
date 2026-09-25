@@ -53,6 +53,8 @@ class DemoExecutor : public DemoCastGroup {
 public:
     /// @brief Creates a new `DemoExecutor`
     DemoExecutor(const char* pName);
+    ~DemoExecutor() override;
+    void releaseNativeReference(const NameObj*) noexcept;
 
     virtual void init(const JMapInfoIter& rIter);
     virtual void movement();

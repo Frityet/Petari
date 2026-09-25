@@ -6,7 +6,9 @@
 #include "Game/Animation/XanimeResource.hpp"
 #include "Game/Animation/XanimeCore.hpp"
 #include "compat/JkrAllocationDomain.hpp"
-#include "compat/ResourceHolderCompat.hpp"
+#include "Game/System/ResourceHolder.hpp"
+#include "Game/System/ResourceHolderManager.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/MutexHolder.hpp"
 #include <exception>
 #include <vector>
@@ -32,8 +34,8 @@ namespace smgpc::compat {
     }
     struct ModelManagerOwner::Storage {
         std::shared_ptr<JkrAllocationDomain> domain;
-        std::shared_ptr<const ResourceArchiveOwner> model_resources;
-        std::shared_ptr<const ResourceArchiveOwner> animation_resources;
+        std::shared_ptr<const void> model_resources;
+        std::shared_ptr<const void> animation_resources;
         std::unique_ptr<ModelManager> manager;
         std::vector<std::shared_ptr<void>> lifetime_dependencies;
         J3DModel* created_model = nullptr;
@@ -52,19 +54,20 @@ namespace smgpc::compat {
             delete created_model;
         }
     };
-    ModelManagerOwner::ModelManagerOwner(ResourceHolderService& service, std::shared_ptr<JkrAllocationDomain> domain,
+    ModelManagerOwner::ModelManagerOwner(std::shared_ptr<JkrAllocationDomain> domain,
                                          const char* model, const char* animation, bool create_dl) {
         JkrHostAllocationScope host;
         if (!domain)
             aurora::throw_host_exception<std::invalid_argument>("A ModelManager requires its actual retained Game heap");
-        if (ResourceHolderService::active() != &service)
-            aurora::throw_host_exception<std::invalid_argument>("ModelManager requires the active original resource service");
+        if (!SingletonHolder<ResourceHolderManager>::get())
+            aurora::throw_host_exception<std::invalid_argument>("ModelManager requires the original ResourceHolderManager");
         _storage = std::make_unique<Storage>();
         auto& state = *_storage;
         state.domain = std::move(domain);
-        // The instance graph belongs to the caller's original heap. Shared
-        // model/animation resources retain their own archive heap independently.
-        JkrAllocationScope heap(state.domain);
+        // The caller has selected its original heap. Transfer allocation
+        // routing only: init may wait for FileLoader or queue resource creation
+        // on the main thread, both of which must be able to select a heap.
+        const aurora::allocation::ClientAllocationScope game({true, true});
         // The original init can wait for FileLoader before entering its own
         // model mutex and display-list critical sections. Do not disable the
         // scheduler or snapshot shared J3D state across those resource waits.
@@ -74,8 +77,8 @@ namespace smgpc::compat {
         state.created_model = state.manager->getJ3DModel();
         state.created_player = state.manager->mXanimePlayer;
         state.created_core = state.created_player ? state.created_player->mCore : nullptr;
-        state.model_resources = service.retain(*state.manager->getModelResourceHolder());
-        state.animation_resources = service.retain(*state.manager->getResourceHolder());
+        state.model_resources = state.manager->getModelResourceHolder()->retainNativeResources();
+        state.animation_resources = state.manager->getResourceHolder()->retainNativeResources();
     }
     void ModelManagerOwner::retain_lifetime_dependency(std::shared_ptr<void> dependency) {
         JkrHostAllocationScope host;

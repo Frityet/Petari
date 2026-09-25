@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+class JMapInfo;
+
 #include <revolution/types.h>
 
 class JMapInfoIter;
@@ -14,6 +17,7 @@ namespace MR {
 class DemoActionInfo {
 public:
     DemoActionInfo();
+    ~DemoActionInfo();
 
     void registerCast(LiveActor*);
     void registerFunctor(const LiveActor*, const MR::FunctorBase&);
@@ -39,6 +43,7 @@ public:
 class DemoActionKeeper {
 public:
     DemoActionKeeper(const DemoExecutor*);
+    ~DemoActionKeeper();
 
     void initCast(LiveActor*, const JMapInfoIter&);
     void registerFunctor(const LiveActor*, const MR::FunctorBase&, const char*);
@@ -52,4 +57,8 @@ public:
     const DemoExecutor* mDemoExecutor;  // 0x00
     s32 mNumInfos;                      // 0x04
     DemoActionInfo** mInfoArray;        // 0x08
+
+private:
+    // Original records borrow strings from this native parser until retirement.
+    std::unique_ptr<JMapInfo> mNativeParser;
 };

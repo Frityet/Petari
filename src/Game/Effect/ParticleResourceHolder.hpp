@@ -17,6 +17,7 @@ public:
     };
 
     ParticleResourceHolder(const char*);
+    ~ParticleResourceHolder();
 
     u16 getUserIndex(const char*) const;
     void countAutoEffectNum();

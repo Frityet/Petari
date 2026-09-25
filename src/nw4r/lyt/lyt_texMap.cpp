@@ -1,4 +1,5 @@
 #include "nw4r/lyt/common.h"
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "nw4r/lyt/texMap.h"
 #include "revolution/gx/GXEnum.h"
 #include "revolution/gx/GXGet.h"
@@ -9,6 +10,16 @@
 
 namespace nw4r {
     namespace lyt {
+        void TexMap::RegisterNativeLifetime() {
+            JKRHeap::registerFinalizer(this, [](void* object) noexcept {
+                static_cast<TexMap*>(object)->~TexMap();
+            });
+        }
+
+        TexMap::~TexMap() {
+            JKRHeap::unregisterFinalizer(this);
+        }
+
         void TexMap::Get(_GXTexObj* pTexObj) const {
             if (detail::IsCITexelFormat(GetTexelFormat())) {
                 u32 tlutName = GXGetTexObjTlut(pTexObj);

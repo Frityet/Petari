@@ -2,6 +2,7 @@
 #include "Game/LiveActor/ActorAnimKeeper.hpp"
 #include "Game/System/ResourceHolder.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include <cstdio>
@@ -11,10 +12,19 @@ namespace {
 };  // namespace
 
 ActorAnimKeeper::ActorAnimKeeper(LiveActor* pActor) : mActor(pActor), mNumInfo(0), mInfoArray(nullptr), mCurrentInfo(0) {
-    if (!initAnimData()) {
-        return;
+    try {
+        if (!initAnimData()) {
+            return;
+        }
+        start(CP932("デフォルト"));
+    } catch (...) {
+        delete[] mInfoArray;
+        throw;
     }
-    start(CP932("デフォルト"));
+}
+
+ActorAnimKeeper::~ActorAnimKeeper() {
+    delete[] mInfoArray;
 }
 
 ActorAnimKeeper* ActorAnimKeeper::tryCreate(LiveActor* pActor) {
@@ -117,6 +127,7 @@ namespace {
 bool ActorAnimKeeper::initAnimData() {
     const ResourceHolder* pResourceHolder = MR::getResourceHolder(mActor);
     JMapInfo* csvParser = MR::tryCreateCsvParser(pResourceHolder, "%s.bcsv", ::sFileName);
+    mNativeParser.reset(csvParser);
 
     if (csvParser == nullptr) {
         return false;

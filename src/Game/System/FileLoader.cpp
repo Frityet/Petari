@@ -2,6 +2,7 @@
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/StringUtil.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 #include <JSystem/JKernel/JKRExpHeap.hpp>
 #include <aurora/exception.hpp>
 #include <aurora/guest_thread.hpp>
@@ -105,11 +106,17 @@ void FileLoader::clearRequestFileInfo(bool) {
 }
 
 void FileLoader::removeHolderIfIsEqualHeap(JKRHeap* pHeap) {
+    if (pHeap != nullptr)
+        mArchiveHolder->validateNativeRetirement(pHeap);
     mFileHolder->removeIfIsEqualHeap(pHeap);
     mArchiveHolder->removeIfIsEqualHeap(pHeap);
 }
 
 void FileLoader::removeFile(const char* pName) {
+    // A mounted archive borrows this exact FileEntry buffer. Removing only its
+    // file would invalidate even an otherwise unborrowed archive's lookup data.
+    if (mArchiveHolder->getArchive(pName) != nullptr)
+        aurora::throw_host_exception< std::logic_error >("Retire a mounted archive with its owning heap before removing its file");
     mFileHolder->removeFile(pName);
 }
 
@@ -153,6 +160,12 @@ void FileLoader::destroy(FileLoader* loader) {
     const aurora::os::GuestThreadExecutionScope execution;
     if (loader->mLoaderThread && loader->mLoaderThread->mThread == OSGetCurrentThread())
         aurora::throw_host_exception< std::logic_error >("A file loader cannot retire its own executing worker");
+    if (loader->mFileHolder) {
+        for (auto* entry : loader->mFileHolder->mEntries)
+            entry->waitReadDone();
+    }
+    if (loader->mArchiveHolder)
+        loader->mArchiveHolder->validateNativeRetirement();
     delete loader;
 }
 
@@ -164,6 +177,8 @@ FileLoader::~FileLoader() {
         for (auto* entry : mFileHolder->mEntries)
             entry->waitReadDone();
     }
+    if (mArchiveHolder)
+        mArchiveHolder->validateNativeRetirement();
     delete mLoaderThread;
     mLoaderThread = nullptr;
     if (SingletonHolder< FileLoader >::get() == this)
@@ -179,8 +194,10 @@ FileLoader::~FileLoader() {
         mFileHolder = nullptr;
     }
     if (mArchiveHolder) {
-        for (auto* entry : mArchiveHolder->mEntries)
+        for (auto* entry : mArchiveHolder->mEntries) {
+            const auto heap = smgpc::compat::JkrAllocationDomain::retain_heap(*entry->mHeap);
             delete entry;
+        }
         mArchiveHolder->mEntries.clear();
         delete mArchiveHolder;
         mArchiveHolder = nullptr;

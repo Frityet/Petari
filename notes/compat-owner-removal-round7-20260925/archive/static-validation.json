@@ -1,0 +1,81 @@
+{
+  "baseline": "0f8bc440af14cbc62ebaf26f221124eae447ec03",
+  "diff_check_exit": 0,
+  "diff_check_output": "",
+  "builds_run": false,
+  "tests_run": false,
+  "snapshots": [
+    {
+      "path": "src/Game/System/ArchiveHolder.hpp",
+      "after_sha256": "b2dfc6833bcb6c2dec503be9458a87182d97d77c234af8e63e74fbe7047bfed7"
+    },
+    {
+      "path": "src/Game/System/ArchiveHolder.cpp",
+      "after_sha256": "43c8a1e5a2c0dfa63e7706770655b4d8fe56a7c867f722d7db9a83f10c7fe07e"
+    },
+    {
+      "path": "src/Game/System/FileLoader.hpp",
+      "after_sha256": "741a7382ed5640edf72ea61a64d3a75a49c31e576b9f0592ce95c50a57880007"
+    },
+    {
+      "path": "src/Game/System/FileLoader.cpp",
+      "after_sha256": "74debba9dcc992840a19df238bf3b257ab6f370fafbad9f4037faff1ddc21499"
+    },
+    {
+      "path": "src/Game/Util/FileUtil.cpp",
+      "after_sha256": "2b70f7e0c406e805c87b6eb22335c21491748634ccf1ccd84f9cb898299d58a3"
+    },
+    {
+      "path": "src/compat/FileUtilCompat.cpp",
+      "after_sha256": null
+    },
+    {
+      "path": "src/runtime/ArchiveMountService.cpp",
+      "after_sha256": null
+    },
+    {
+      "path": "src/runtime/ArchiveMountService.hpp",
+      "after_sha256": null
+    },
+    {
+      "path": "src/JSystem/JKernel/JKRArchive.hpp",
+      "after_sha256": "c7e56bf193387e4894bc3a9af9a7da1aadac23d8db1d4cae43662b7303cf03b3"
+    },
+    {
+      "path": "src/JSystem/JKernel/JKRArchivePri.cpp",
+      "after_sha256": "4f0fd4d155d55d92ae9bee95003da21c340149bf6d529798ef4c5df7cd8f9631"
+    },
+    {
+      "path": "src/JSystem/JKernel/JKRMemArchive.cpp",
+      "after_sha256": "6bac98a8ab35ee719f61323c73b4ce43e17c3e369c3a96f328133c986087ed42"
+    },
+    {
+      "path": "src/Game/xmake.lua",
+      "after_sha256": "a842413fba84e77defebd1c4b8e45ddccc04c0dc52a4eef96fbceb0dddcb9eb3"
+    },
+    {
+      "path": "tests/OriginalScenarioCatalogTests.cpp",
+      "after_sha256": "964bf252b20824793d8da6ad3074d61f28a4b2eebdc1afb929d4eb052b8b21cc"
+    },
+    {
+      "path": "tests/ScenarioPublicationTests.cpp",
+      "after_sha256": "42b5684873abfcad6c1ef6e69bc2dd5dca48e25d3f05c961154daaa738127140"
+    },
+    {
+      "path": "src/resource/JMapResource.hpp",
+      "after_sha256": "b5138476d399266814fa9fa86eaa16dd2656ccf190da0a314701142b9f849424"
+    },
+    {
+      "path": "src/resource/JMapResource.cpp",
+      "after_sha256": "1786ad5dcb7e87f6a28c057c036e0dbbbcc1e92bb1c7bf37e9962b13936a07c7"
+    },
+    {
+      "path": "tests/OriginalJkrArchiveTests.cpp",
+      "after_sha256": "acf915ba46d37311961ee33962e72235ad937c923ed2a78fbd055bd7d8869910"
+    },
+    {
+      "path": "tests/OriginalJMapResourceTests.cpp",
+      "after_sha256": "cede612e5fafd3b8d2085fbb0e3c14e2dc99f3f9ef13ff4184a58260729f1ffd"
+    }
+  ]
+}

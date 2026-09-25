@@ -135,6 +135,17 @@ public:
     [[nodiscard]] JKRArcFinder* getFirstFile(const char*) const;
     [[nodiscard]] bool getDirEntry(SDirEntry*, u32) const;
     [[nodiscard]] u32 getFileAttribute(u32) const;
+    // Native resource readers use the original archive's complete byte bounds.
+    // Fixed mounts still borrow caller/FileEntry bytes. Keep a native resource
+    // token while borrowing archive records or raw bytes; source ownership
+    // alone retains parsed metadata, not that original fixed buffer.
+    [[nodiscard]] const smgpc::resource::RarcArchive& source() const;
+    [[nodiscard]] std::shared_ptr<const smgpc::resource::RarcArchive> retainSource() const;
+    [[nodiscard]] std::shared_ptr<const void> retainNativeResources() const;
+    // Override the native cache until the returned handle retires. Overlapping
+    // overrides may retire in either order; each handle holds one archive lease.
+    [[nodiscard]] std::shared_ptr<const void> overrideNativeResource(u32 fileEntryIndex, void* replacement);
+    void validateNativeRetirement(std::size_t releasingBorrows = 0) const;
     [[nodiscard]] bool isSameName(CArcName&, u32, u16) const;
     [[nodiscard]] SDIDirEntry* findDirectory(const char*, u32) const;
     [[nodiscard]] SDIFileEntry* findIdxResource(u32) const;
@@ -160,6 +171,7 @@ public:
 protected:
     explicit JKRArchive(const smgpc::resource::RarcArchive* archive);
     void attach_archive(const smgpc::resource::RarcArchive* archive);
+    void attach_archive(std::shared_ptr<const smgpc::resource::RarcArchive> archive);
 
     [[nodiscard]] std::span<const std::uint8_t> resource_data(std::string_view path) const;
 
@@ -168,6 +180,15 @@ protected:
     const smgpc::resource::RarcArchive *mArchive = nullptr;
 
 private:
+    struct NativeResourceOverride;
+    void removeNativeResourceOverride(const NativeResourceOverride&) noexcept;
+    struct NativeResourceOverrides {
+        void* original = nullptr;
+        std::vector<std::weak_ptr<const NativeResourceOverride>> active;
+    };
+    std::vector<NativeResourceOverrides> mNativeResourceOverrides;
+    std::shared_ptr<const smgpc::resource::RarcArchive> mNativeSource;
+    std::shared_ptr<const void> mNativeResourceToken;
     RarcInfoBlock mNativeInfo{};
     std::vector<SDIDirEntry> mNativeDirs;
     std::vector<SDIFileEntry> mNativeFiles;
@@ -194,5 +215,5 @@ public:
 
 private:
     void publish_mount(const void* identity);
-    std::unique_ptr<smgpc::resource::RarcArchive> mOwnedArchive;
+    std::shared_ptr<smgpc::resource::RarcArchive> mOwnedArchive;
 };

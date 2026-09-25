@@ -1,3 +1,4 @@
+#include "Game/Effect/ParticleResourceHolder.hpp"
 #include "compat/MetrowerksStdCompat.hpp"
 #include "app/OriginalGameApplication.hpp"
 #include "app/Application.hpp"
@@ -36,13 +37,11 @@
 #include "Game/System/FileLoader.hpp"
 #include "Game/System/FunctionAsyncExecutor.hpp"
 #include "compat/NandSdkBinding.hpp"
-#include "compat/ResourceHolderCompat.hpp"
 #include "compat/StarPointerDepthOwnership.hpp"
 #include "layout/LayoutHost.hpp"
 #include "scene/OriginalSceneSupport.hpp"
 #include "scene/SceneNameObjRegistry.hpp"
 #include "resource/GameResourceRuntime.hpp"
-#include "runtime/ArchiveMountService.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/MessageHolderOwnership.hpp"
 #include "runtime/ConsoleNandImport.hpp"
@@ -240,8 +239,7 @@ void destroy_child_heaps(JKRHeap& parent) {
 class OriginalProcess final {
 public:
     OriginalProcess(const BootstrapConfiguration& configuration, std::optional<StageSelection> selection)
-        : resources(configuration.resource_budget), dvd("/"),
-          archives(std::make_unique<runtime::ArchiveMountService>(dvd)), stage_selection(std::move(selection)) {
+        : resources(configuration.resource_budget), stage_selection(std::move(selection)) {
         const char* directory = std::getenv("SMGPC_SAVE_DIR");
         if (directory && *directory) {
             save.set_host_directory(directory);
@@ -299,7 +297,6 @@ public:
         {
             const aurora::allocation::HostAllocationScope host;
             stationed = compat::JkrAllocationDomain::retain_heap(root, *heaps->mStationedHeapNapa);
-            holders = std::make_unique<compat::ResourceHolderService>(dvd, stationed, resources.mem1_heap());
         }
         startup_phase("Initializing original file and exception services");
         FileRipper::setup(0x20000, MR::getStationedHeapNapa());
@@ -437,9 +434,14 @@ private:
         }
         if (objects) delete std::exchange(objects->mWPadHolder, nullptr);
         if (objects) runtime::destroy_message_holder(objects->mMessageHolder);
-        holders.reset();
+        if (objects) delete std::exchange(objects->mParticleResHolder, nullptr);
+        if (system && system->mSceneController)
+            delete std::exchange(system->mSceneController->mScenarioParser, nullptr);
+        if (auto* manager = SingletonHolder<ResourceHolderManager>::get()) {
+            manager->validateRetirement();
+            delete SingletonHolder<ResourceHolderManager>::release();
+        }
         FileLoader::destroy(SingletonHolder<FileLoader>::get());
-        archives.reset();
         AuroraDrainGXCommands();
         GXSetDrawDoneCallback(nullptr);
         delete MainLoopFramework::sManager;
@@ -474,14 +476,11 @@ private:
     }
 
     resource::GameResourceRuntime resources;
-    runtime::DvdFileSystemService dvd;
-    std::unique_ptr<runtime::ArchiveMountService> archives;
     runtime::SaveDataService save;
     std::unique_ptr<aurora::SystemConfiguration> settings;
     std::unique_ptr<compat::NandSdkBinding> nand;
     std::shared_ptr<compat::JkrAllocationDomain> root;
     std::shared_ptr<compat::JkrAllocationDomain> stationed;
-    std::unique_ptr<compat::ResourceHolderService> holders;
     std::optional<StageSelection> stage_selection;
     compat::NameObjRuntimeRegistrationMarker marker;
     aurora::WpadShakeGesture shake;

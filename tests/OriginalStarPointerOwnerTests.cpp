@@ -1,3 +1,5 @@
+#include "Game/Util/FileUtil.hpp"
+#include <JSystem/JKernel/JKRArchive.hpp>
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/DrawSyncManagerLifetime.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -251,7 +253,7 @@ void modes_and_resources(smgpc::runtime::RuntimeContext& runtime) {
         require(MR::isStarPointerValid(0) && !MR::isStarPointerValid(1),
                 "connecting a controller enables only its own valid original pointer query");
         const auto original_messages = smgpc::resource::BmgMessageArchive::from_message_archive(
-            runtime.archive_mounts().retain("/MessageData/Message.arc")->source());
+            MR::receiveArchive("/MessageData/Message.arc")->source());
         const auto* expected_message = original_messages.find("System_Date000");
         require(expected_message && original_messages.find("System_Time002"), "the retained-pointer proof uses two actual authored messages");
         require(guidance->request1PGuidance("System_Date000", true), "actual connected and valid layout accepts original guidance request");

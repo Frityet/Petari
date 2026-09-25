@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+class JMapInfo;
+
 #include <revolution/types.h>
 
 class ActorCameraInfo;
@@ -11,6 +14,7 @@ class DemoCameraInfo {
 public:
     /// @brief Creates a new `DemoCameraInfo`.
     DemoCameraInfo();
+    ~DemoCameraInfo();
 
     /* 0x00 */ const char* mPartName;
     /* 0x04 */ const char* mCameraTargetName;
@@ -27,6 +31,7 @@ public:
 class DemoCameraKeeper {
 public:
     DemoCameraKeeper(DemoExecutor*, const JMapInfoIter&);
+    ~DemoCameraKeeper();
 
     void initCast(LiveActor*, const JMapInfoIter&);
     void start();
@@ -43,4 +48,8 @@ public:
     /* 0x08 */ DemoCameraInfo* _8;
     /* 0x0C */ s32 _C;
     /* 0x10 */ const DemoCameraInfo* _10;
+
+private:
+    // Original records borrow strings from this native parser until retirement.
+    std::unique_ptr<JMapInfo> mNativeParser;
 };

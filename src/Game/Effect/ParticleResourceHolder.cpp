@@ -6,12 +6,36 @@
 #include <cstring>
 
 ParticleResourceHolder::ParticleResourceHolder(const char* pArchiveName)
-    : mResourceMgr(), mAutoEffectList(new JMapInfo()), mParticleNames(new JMapInfo()), mNumParticles() {
-    JKRMemArchive* archive = MR::mountArchive(pArchiveName, nullptr);
-    mResourceMgr = new JPAResourceManager(archive->getResource("Particles.jpc"), MR::getCurrentHeap());
-    mParticleNames->attach(archive->getResource("ParticleNames.bcsv"));
-    mAutoEffectList->attach(archive->getResource("AutoEffectList.bcsv"));
-    countAutoEffectNum();
+    : mResourceMgr(), mAutoEffectList(), mParticleNames(), mParticles{}, mNumParticles() {
+    try {
+        mAutoEffectList = new JMapInfo();
+        mParticleNames = new JMapInfo();
+        JKRMemArchive* archive = MR::mountArchive(pArchiveName, nullptr);
+        mResourceMgr = new JPAResourceManager(archive->getResource("Particles.jpc"), MR::getCurrentHeap());
+        mParticleNames->attach(archive->getResource("ParticleNames.bcsv"));
+        mAutoEffectList->attach(archive->getResource("AutoEffectList.bcsv"));
+        countAutoEffectNum();
+    } catch (...) {
+        for (int i = 0; i < mNumParticles; i++) {
+            delete mParticles[i];
+        }
+        delete mResourceMgr;
+        delete mParticleNames;
+        delete mAutoEffectList;
+        throw;
+    }
+
+}
+
+ParticleResourceHolder::~ParticleResourceHolder() {
+    for (int i = 0; i < mNumParticles; i++) {
+        delete mParticles[i];
+    }
+    // JPAResourceManager unregisters its heap finalizer in its destructor,
+    // so explicit resource retirement cannot run that destructor twice.
+    delete mResourceMgr;
+    delete mParticleNames;
+    delete mAutoEffectList;
 }
 
 u16 ParticleResourceHolder::getUserIndex(const char* pName) const {

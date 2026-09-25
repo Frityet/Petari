@@ -7,16 +7,22 @@
 DemoTimeKeeper::DemoTimeKeeper(const DemoExecutor* pExecutor)
     : mExecutor(pExecutor), mMainPartInfos(nullptr), mSubPartInfos(nullptr), mNumPartInfos(0), _10(-1), mCurrentStep(-1), _18(-1),
       mIsPaused(false) {
-    JMapInfo* map = nullptr;
-    mNumPartInfos = DemoFunction::createSheetParser(mExecutor, "Time", &map);
-    mMainPartInfos = new DemoTimePartInfo[mNumPartInfos];
-    for (s32 i = 0; i < mNumPartInfos; i++) {
-        DemoTimePartInfo* part = &mMainPartInfos[i];
-        MR::getCsvDataStrOrNULL(&part->mPartName, map, "PartName", i);
-        MR::getCsvDataS32(&part->mTotalStep, map, "TotalStep", i);
-        s32 suspendFlag = 0;
-        MR::getCsvDataS32(&suspendFlag, map, "SuspendFlag", i);
-        part->mSuspendFlag = suspendFlag != 0;
+    try {
+        JMapInfo* map = nullptr;
+        mNumPartInfos = DemoFunction::createSheetParser(mExecutor, "Time", &map);
+        mNativeParser.reset(map);
+        mMainPartInfos = new DemoTimePartInfo[mNumPartInfos];
+        for (s32 i = 0; i < mNumPartInfos; i++) {
+            DemoTimePartInfo* part = &mMainPartInfos[i];
+            MR::getCsvDataStrOrNULL(&part->mPartName, map, "PartName", i);
+            MR::getCsvDataS32(&part->mTotalStep, map, "TotalStep", i);
+            s32 suspendFlag = 0;
+            MR::getCsvDataS32(&suspendFlag, map, "SuspendFlag", i);
+            part->mSuspendFlag = suspendFlag != 0;
+        }
+    } catch (...) {
+        delete[] mMainPartInfos;
+        throw;
     }
 }
 
@@ -100,4 +106,8 @@ found:
 
 bool DemoTimeKeeper::isCurrentDemoPartLastStep() const {
     return mCurrentStep >= mSubPartInfos->mTotalStep - 1;
+}
+
+DemoTimeKeeper::~DemoTimeKeeper() {
+    delete[] mMainPartInfos;
 }
