@@ -282,9 +282,4 @@ namespace smgpc::compat {
     [[nodiscard]] const ActorShadowRuntimeState* actor_shadow_runtime_state(const LiveActor* actor);
     [[nodiscard]] std::size_t actor_shadow_runtime_state_count();
 
-    void release_demo_runtime_state(const LiveActor* actor);
-
-    [[nodiscard]] bool has_registered_demo_cast(const LiveActor* actor);
-    [[nodiscard]] std::size_t registered_demo_membership_count(const LiveActor* actor);
-    [[nodiscard]] std::size_t registered_demo_action_count(const LiveActor* actor);
 }  // namespace smgpc::compat

@@ -1,0 +1,154 @@
+{
+  "count": 14,
+  "files": [
+    {
+      "removed": "src/compat/JKRDisposerCompat.cpp",
+      "destination": "src/JSystem/JKernel/JKRDisposer.cpp",
+      "donor": "decomp/src/JSystem/JKernel/JKRDisposer.cpp",
+      "previous_sha256": "8f7e592620e25bec11fccf38dc57149d920ca185cbbfdf716e90a606346ba1e5",
+      "donor_sha256": "8f7e592620e25bec11fccf38dc57149d920ca185cbbfdf716e90a606346ba1e5",
+      "result_sha256": "8f7e592620e25bec11fccf38dc57149d920ca185cbbfdf716e90a606346ba1e5",
+      "adaptations": [],
+      "donor_diff": ""
+    },
+    {
+      "removed": "src/compat/JSUListCompat.cpp",
+      "destination": "src/JSystem/JSupport/JSUList.cpp",
+      "donor": "decomp/src/JSystem/JSupport/JSUList.cpp",
+      "previous_sha256": "1590f545b672b375bc51e52670bb055d07ebe883564c957e3ac37076b40559f0",
+      "donor_sha256": "1590f545b672b375bc51e52670bb055d07ebe883564c957e3ac37076b40559f0",
+      "result_sha256": "1590f545b672b375bc51e52670bb055d07ebe883564c957e3ac37076b40559f0",
+      "adaptations": [],
+      "donor_diff": ""
+    },
+    {
+      "removed": "src/compat/JUTNameTabCompat.cpp",
+      "destination": "src/JSystem/JUtility/JUTNameTab.cpp",
+      "donor": "decomp/src/JSystem/JUtility/JUTNameTab.cpp",
+      "previous_sha256": "1c79def40146b69aaab99c3b79b45aca77bd7dccd10d9db8397bfeb24dc6de93",
+      "donor_sha256": "720f375b22b3fe776b4474b4275c19b212aa642e5f87830945741d853b7593c4",
+      "result_sha256": "720f375b22b3fe776b4474b4275c19b212aa642e5f87830945741d853b7593c4",
+      "adaptations": [],
+      "donor_diff": ""
+    },
+    {
+      "removed": "src/compat/JKRFileFinderCompat.cpp",
+      "destination": "src/JSystem/JKernel/JKRFileFinder.cpp",
+      "donor": "decomp/src/JSystem/JKernel/JKRFileFinder.cpp",
+      "previous_sha256": "b080bcf47f9093d2781e4947a191bbe5b5b4a1246594b0df3461ccaf331d9f7f",
+      "donor_sha256": "38d785271bd5cdacfd2b3f83ae74db2d4bceab3e1258dd41b2203c8d1c2d922c",
+      "result_sha256": "ee822faf2f073134b3db8b153ccf5735cbc2c1d1e4bf6b7380aae1ab863b7209",
+      "adaptations": [
+        "Retain existing empty JKRFileFinder base destructor required by native vtable/header."
+      ],
+      "donor_diff": "--- decomp/src/JSystem/JKernel/JKRFileFinder.cpp\n+++ src/JSystem/JKernel/JKRFileFinder.cpp\n@@ -38,5 +38,8 @@\n     mFileIsFolder = false;\n }\n \n+JKRFileFinder::~JKRFileFinder() {\n+}\n+\n JKRArcFinder::~JKRArcFinder() {\n }\n"
+    },
+    {
+      "removed": "src/compat/jaudio/JAISoundChild.cpp",
+      "destination": "src/JSystem/JAudio2/JAISoundChild.cpp",
+      "donor": "decomp/src/JSystem/JAudio2/JAISoundChild.cpp",
+      "previous_sha256": "50f6da2baee577670e21b4ac1108fc8a9cb0592aaf4ff8b8ce501fe03dccb946",
+      "donor_sha256": "50f6da2baee577670e21b4ac1108fc8a9cb0592aaf4ff8b8ce501fe03dccb946",
+      "result_sha256": "50f6da2baee577670e21b4ac1108fc8a9cb0592aaf4ff8b8ce501fe03dccb946",
+      "adaptations": [],
+      "donor_diff": ""
+    },
+    {
+      "removed": "src/compat/jaudio/JAISoundHandles.cpp",
+      "destination": "src/JSystem/JAudio2/JAISoundHandles.cpp",
+      "donor": "decomp/src/JSystem/JAudio2/JAISoundHandles.cpp",
+      "previous_sha256": "6f291c3d87915c1b0b4e4602f4b5ba8ef3d409b77b05b8a62cedeb31b80fd014",
+      "donor_sha256": "6f291c3d87915c1b0b4e4602f4b5ba8ef3d409b77b05b8a62cedeb31b80fd014",
+      "result_sha256": "6f291c3d87915c1b0b4e4602f4b5ba8ef3d409b77b05b8a62cedeb31b80fd014",
+      "adaptations": [],
+      "donor_diff": ""
+    },
+    {
+      "removed": "src/compat/jaudio/JAISoundStarter.cpp",
+      "destination": "src/JSystem/JAudio2/JAISoundStarter.cpp",
+      "donor": "decomp/src/JSystem/JAudio2/JAISoundStarter.cpp",
+      "previous_sha256": "9a9a03ec6abaf424748c26e051de64278efce1ca629dfe0078c5a3cfb998ffa5",
+      "donor_sha256": "9a9a03ec6abaf424748c26e051de64278efce1ca629dfe0078c5a3cfb998ffa5",
+      "result_sha256": "9a9a03ec6abaf424748c26e051de64278efce1ca629dfe0078c5a3cfb998ffa5",
+      "adaptations": [],
+      "donor_diff": ""
+    },
+    {
+      "removed": "src/compat/jaudio/JAIStreamDataMgr.cpp",
+      "destination": "src/JSystem/JAudio2/JAIStreamDataMgr.cpp",
+      "donor": "decomp/src/JSystem/JAudio2/JAIStreamDataMgr.cpp",
+      "previous_sha256": "1d6d67988db7ac3884c17c6fe570cc7bde296d626dff3c673c49cf67e0b93b70",
+      "donor_sha256": "1d6d67988db7ac3884c17c6fe570cc7bde296d626dff3c673c49cf67e0b93b70",
+      "result_sha256": "1d6d67988db7ac3884c17c6fe570cc7bde296d626dff3c673c49cf67e0b93b70",
+      "adaptations": [],
+      "donor_diff": ""
+    },
+    {
+      "removed": "src/compat/jaudio/JASSoundParams.cpp",
+      "destination": "src/JSystem/JAudio2/JASSoundParams.cpp",
+      "donor": "decomp/src/JSystem/JAudio2/JASSoundParams.cpp",
+      "previous_sha256": "31355c6e1b4d33ae11c617b71e567587745a3cd22f8e96694313e01c6477f16f",
+      "donor_sha256": "31355c6e1b4d33ae11c617b71e567587745a3cd22f8e96694313e01c6477f16f",
+      "result_sha256": "31355c6e1b4d33ae11c617b71e567587745a3cd22f8e96694313e01c6477f16f",
+      "adaptations": [],
+      "donor_diff": ""
+    },
+    {
+      "removed": "src/compat/jaudio/JAISound.cpp",
+      "destination": "src/JSystem/JAudio2/JAISound.cpp",
+      "donor": "decomp/src/JSystem/JAudio2/JAISound.cpp",
+      "previous_sha256": "6c05c4b9548ff3d60f029568783f372a0c70339dcf4ff94cecb99ee8770e2e4c",
+      "donor_sha256": "5a34a53ef5275e606fac808039bfe18de804ee62e4203f7cd61dff4ee9631f49",
+      "result_sha256": "aa06ecbeddd93bf1d65a6e96e44da30cf8ee3bdeffab084d3c14475b0a415605",
+      "adaptations": [
+        "Preserve native pointer-safe %p diagnostic and typed JAISoundID conversion."
+      ],
+      "donor_diff": "--- decomp/src/JSystem/JAudio2/JAISound.cpp\n+++ src/JSystem/JAudio2/JAISound.cpp\n@@ -194,6 +194,6 @@\n \n void JAISound::increasePrepareCount_JAISound_() {\n     if ((++mPrepareCount & 0xFF) == 0) {\n-        JASReport(\"It cost %d steps to prepare Sound(ID:%08x, Address%08x).\\n\", mPrepareCount, *(u32*)&mSoundID, this);\n+        JASReport(\"It cost %d steps to prepare Sound(ID:%08x, Address%p).\\n\", mPrepareCount, u32(mSoundID), static_cast< void* >(this));\n     }\n }\n"
+    },
+    {
+      "removed": "src/compat/jaudio/JAIStream.cpp",
+      "destination": "src/JSystem/JAudio2/JAIStream.cpp",
+      "donor": "decomp/src/JSystem/JAudio2/JAIStream.cpp",
+      "previous_sha256": "eaaa20a8554b7e8ee6722977519495d0e43e7c5e22da6bfa333deadac4511a41",
+      "donor_sha256": "892983a7ad7b7875ad9f9f92661703c335759e208fda69ef41af1b74b12d4c3f",
+      "result_sha256": "8c5859a60577d3b089963754e847bbc7cdacd4a71afd771a513cc4c84bdeb2ff",
+      "adaptations": [
+        "Preserve native-width ARAM storage address passed to adapted JASAramStream::init."
+      ],
+      "donor_diff": "--- decomp/src/JSystem/JAudio2/JAIStream.cpp\n+++ src/JSystem/JAudio2/JAIStream.cpp\n@@ -54,7 +54,7 @@\n \n         streamAramAddr = streamAramMgr->newStreamAram(&local_28);\n         if (streamAramAddr != nullptr) {\n-            inner_.aramStream.init((u32)streamAramAddr, local_28, &JAIStream_JASAramStreamCallback_, this);\n+            inner_.aramStream.init(reinterpret_cast< uintptr_t >(streamAramAddr), local_28, &JAIStream_JASAramStreamCallback_, this);\n             mPrepareState = 1;\n             mPrepareCount = 0;\n         } else {\n"
+    },
+    {
+      "removed": "src/compat/jaudio/JAIStreamMgr.cpp",
+      "destination": "src/JSystem/JAudio2/JAIStreamMgr.cpp",
+      "donor": "decomp/src/JSystem/JAudio2/JAIStreamMgr.cpp",
+      "previous_sha256": "3f9b9808196e95175f9a00577a787cebf5243681be3b6cf0ce78f50f5cce24a9",
+      "donor_sha256": "a9652d625b527aac2be67c614602f8344cab14f7c9dc998dbf5eda60bc455105",
+      "result_sha256": "927484bf1785ff774354f82ad6bb72edfae1f310b3a019619c2b915a06f5ea5a",
+      "adaptations": [
+        "Preserve native-width ARAM storage address passed to adapted JAIStreamAramMgr::deleteStreamAram."
+      ],
+      "donor_diff": "--- decomp/src/JSystem/JAudio2/JAIStreamMgr.cpp\n+++ src/JSystem/JAudio2/JAIStreamMgr.cpp\n@@ -55,7 +55,7 @@\n             mStreamList.remove(i);\n             void* aramAddr = stream->JAIStreamMgr_getAramAddr_();\n             if (aramAddr != nullptr) {\n-                bool result = mStreamAramMgr->deleteStreamAram((u32)aramAddr);\n+                bool result = mStreamAramMgr->deleteStreamAram(reinterpret_cast< uintptr_t >(aramAddr));\n             }\n \n             delete stream;\n"
+    },
+    {
+      "removed": "src/compat/jaudio/JAIAudible.cpp",
+      "destination": "src/JSystem/JAudio2/JAIAudible.cpp",
+      "donor": "decomp/src/JSystem/JAudio2/JAIAudible.cpp",
+      "previous_sha256": "ee383b49cc26852a18d05581fd51f4895d90373aab10b0ea823b96167eb5956e",
+      "donor_sha256": "ee383b49cc26852a18d05581fd51f4895d90373aab10b0ea823b96167eb5956e",
+      "result_sha256": "ee383b49cc26852a18d05581fd51f4895d90373aab10b0ea823b96167eb5956e",
+      "adaptations": [],
+      "donor_diff": ""
+    },
+    {
+      "removed": "src/compat/jaudio/JAIAudience.cpp",
+      "destination": "src/JSystem/JAudio2/JAIAudience.cpp",
+      "donor": "decomp/src/JSystem/JAudio2/JAIAudience.cpp",
+      "previous_sha256": "8001914c66b2ef1c430dac4b9a20de19969e50e5187674757e035550396f3fc8",
+      "donor_sha256": "8001914c66b2ef1c430dac4b9a20de19969e50e5187674757e035550396f3fc8",
+      "result_sha256": "8001914c66b2ef1c430dac4b9a20de19969e50e5187674757e035550396f3fc8",
+      "adaptations": [],
+      "donor_diff": ""
+    }
+  ],
+  "validation": "Donor/source diff and complete mapping checked. No build/test run; parent owns build wiring and validation."
+}

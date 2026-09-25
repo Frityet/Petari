@@ -234,10 +234,8 @@ int main() {
         }
         require(heaps->root_heap().getFreeSize() == free && compat::name_obj_runtime_state_count() == identities,
                 "layout adaptor teardown retains no scene domain or runtime identities");
-        bool rejected = false;
-        try { (void)NameObjFinder::find(outside.getName()); }
-        catch (const std::logic_error&) { rejected = true; }
-        require(rejected, "original name lookup requires the owning scene holder");
+        require(NameObjFinder::find(outside.getName()) == nullptr,
+                "the original process holder remains valid after a scene and contains no unregistered object");
         std::cout << "original_queue=pass deferred_connections=pass category_swap_order=pass callback_retirement=pass sixteen_scene_domains=pass layout_adaptor_ownership=pass model_visibility=pass\n";
     } catch (const std::exception& error) { std::cerr << error.what() << '\n'; return 1; }
 }

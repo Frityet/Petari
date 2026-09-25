@@ -13,6 +13,7 @@ namespace MR {
     };
 
     enum MovementType {
+        MovementType_None = -1,
         MovementType_UNK_0x00 = 0x00,
         MovementType_StopSceneDelayRequest = 0x01,
         MovementType_Camera = 0x02,
@@ -62,6 +63,7 @@ namespace MR {
     };
 
     enum CalcAnimType {
+        CalcAnimType_None = -1,
         CalcAnimType_ClippedMapParts = 0x00,
         CalcAnimType_Planet = 0x01,
         CalcAnimType_CollisionMapObj = 0x02,
@@ -87,6 +89,7 @@ namespace MR {
     };
 
     enum DrawBufferType {
+        DrawBufferType_None = -1,
         DrawBufferType_ClippedMapParts = 0x00,
         DrawBufferType_Sky = 0x01,
         DrawBufferType_Air = 0x02,

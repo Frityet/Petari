@@ -1,5 +1,3 @@
-#include "compat/MetrowerksStdCompat.hpp"
-
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 
@@ -130,7 +128,7 @@ namespace {
         require(FLOAT_MAX > 3.0e38F && FLOAT_ZERO == 0.0F && near(PI_180 * 180.0F, PI, 0.000001F),
                 "math_types constants must have one canonical compatibility definition");
         require(gZeroVec.x == 0.0F && gZeroVec.y == 0.0F && gZeroVec.z == 0.0F,
-                "the excluded retail MathUtil translation unit must retain its canonical zero-vector provider");
+                "the original MathUtil owner must provide the canonical zero vector");
     }
 
     void test_vector_gravity_helpers() {
@@ -223,6 +221,7 @@ namespace {
 
 int main() {
     try {
+        MR::initAcosTable();
         test_original_partition_and_volume();
         test_vector_decomposition_and_projection();
         test_gravity_scalar_math_surface();

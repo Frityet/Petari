@@ -8,7 +8,7 @@
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "compat/CameraLocalUtilRuntime.hpp"
-#include "compat/DemoSceneRuntime.hpp"
+#include "SceneExecutionFixture.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "scene/StagePlacementResolver.hpp"
@@ -129,8 +129,11 @@ namespace {
     void test_subjective_mode_suppresses_original_pad_helpers() {
         auto scheduler = smgpc::runtime::SceneScheduler{};
         const auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
-        auto dvd = smgpc::runtime::DvdFileSystemService(std::filesystem::path{});
-        auto demo = smgpc::compat::DemoSceneRuntime(dvd, {});
+        auto heaps = smgpc::compat::JkrHeapRuntime::create(8U << 20);
+        auto scene = smgpc::test::SceneExecutionFixture(
+            scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 2U << 20));
+        require(scene.holder().create(SceneObj_DemoDirector) != nullptr,
+                "camera pad gates require the actual scene DemoDirector and DemoSheet resource");
         auto manager = TestManager{};
         auto camera = TestCamera(&manager);
         auto target = TestTarget{};
@@ -150,8 +153,11 @@ namespace {
     void test_original_parallel_pad_round_trajectory() {
         auto scheduler = smgpc::runtime::SceneScheduler{};
         const auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
-        auto dvd = smgpc::runtime::DvdFileSystemService(std::filesystem::path{});
-        auto demo = smgpc::compat::DemoSceneRuntime(dvd, {});
+        auto heaps = smgpc::compat::JkrHeapRuntime::create(8U << 20);
+        auto scene = smgpc::test::SceneExecutionFixture(
+            scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 2U << 20));
+        require(scene.holder().create(SceneObj_DemoDirector) != nullptr,
+                "camera pad gates require the actual scene DemoDirector and DemoSheet resource");
         auto& wpad = aurora::wpad_service();
         wpad.clear();
         auto manager = TestManager{};

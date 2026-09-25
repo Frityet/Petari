@@ -1,0 +1,1663 @@
+{
+  "total_files": 330,
+  "groups": {
+    "actor-collision-camera": [
+      {
+        "path": "src/compat/ActorRuntimeRegistry.cpp",
+        "sha256": "365b79d5f86e3713bbd6a04f5530f907d717a6b506aabb328fbdca6d4e11bd8f",
+        "lines": 927
+      },
+      {
+        "path": "src/compat/ActorRuntimeRegistry.hpp",
+        "sha256": "d411614662fa2d273d1e42fb46fb4f3f72d75658757ea244ec1e17b21381b8f3",
+        "lines": 290
+      },
+      {
+        "path": "src/compat/BinderCompat.cpp",
+        "sha256": "082e0d40d0dad01f565779c5c965cc4a1e266fc7bdea7112dd462ffda6b355db",
+        "lines": 22
+      },
+      {
+        "path": "src/compat/CameraLocalUtilRuntime.cpp",
+        "sha256": "175aab2f433ec97cb56100db98ee349bd0f4d9d1e66410aa3e02e7c1686a56ac",
+        "lines": 431
+      },
+      {
+        "path": "src/compat/CameraLocalUtilRuntime.hpp",
+        "sha256": "80609b0195965cdf053b40b66393cc165ada661bcfaf81597beea81e52071e6e",
+        "lines": 39
+      },
+      {
+        "path": "src/compat/CameraUtilCompat.cpp",
+        "sha256": "306e47dc629fb416201eb57e7c7921c32fd2697b921be7293370ba78330f7bd8",
+        "lines": 34
+      },
+      {
+        "path": "src/compat/CameraUtilCompat.hpp",
+        "sha256": "629fa5b5e2918c2ce35b444898e131a32a1cfb29a81b716eb01b99e22369ff59",
+        "lines": 15
+      },
+      {
+        "path": "src/compat/CameraViewRuntime.cpp",
+        "sha256": "e8147ae1864baa3550caf5dbf4268723a6f368b82df70ceabe5744dd141696a8",
+        "lines": 24
+      },
+      {
+        "path": "src/compat/CameraViewRuntime.hpp",
+        "sha256": "a0aad0488105b1512d2d52272a020cd19825fe9e11211bd268495b65a8ffec88",
+        "lines": 30
+      },
+      {
+        "path": "src/compat/ClippingDirectorOwnership.cpp",
+        "sha256": "cc365a0fad3369f58dc6330cd5b3c7e1e7b2c22f155fa650731b06baa7942815",
+        "lines": 109
+      },
+      {
+        "path": "src/compat/ClippingDirectorOwnership.hpp",
+        "sha256": "1cf1046cb3b8a60cfcebfc39eb6850361c2999b6d1bf89cd4331bdd2d1576263",
+        "lines": 44
+      },
+      {
+        "path": "src/compat/CollisionDirectorOwnership.cpp",
+        "sha256": "14279c598146916c62326462129cff0948b6ec26bed92cca3b774db3827c97ef",
+        "lines": 84
+      },
+      {
+        "path": "src/compat/CollisionDirectorOwnership.hpp",
+        "sha256": "4194229fa5aeb71ff2ae1e2a180b5ae20ae8527ce6ca7dbdd802d6e4b5f92fd3",
+        "lines": 40
+      },
+      {
+        "path": "src/compat/CollisionPartsCompat.cpp",
+        "sha256": "338b45f70676cc60ecb76ea0e36d29bbb79d9c444ea8c14d47e21dfb782c49ce",
+        "lines": 290
+      },
+      {
+        "path": "src/compat/CollisionPartsCompat.hpp",
+        "sha256": "f64e8a2470821c376935d938c549aca793ff117cf1f1f7864e2fc018c77bed8b",
+        "lines": 62
+      },
+      {
+        "path": "src/compat/FixedPositionCompat.cpp",
+        "sha256": "c63811c842ed3610b8f10067e9f35a0f7f712e62fc06d7ca309e98825b281676",
+        "lines": 84
+      },
+      {
+        "path": "src/compat/FixedPositionCompat.hpp",
+        "sha256": "f25ef9958c253d62287c35adf033265f10f97132524f6aa737e7a2e4d9101700",
+        "lines": 21
+      },
+      {
+        "path": "src/compat/GameActorPhysicsCompat.cpp",
+        "sha256": "bcae8b2c5c23f4355f5ce275c9a76ecdda13867fe63bccbe5d470d170555d082",
+        "lines": 308
+      },
+      {
+        "path": "src/compat/GameActorSensorCompat.cpp",
+        "sha256": "fb8f3b22ad96f8330fe1ee9967a1d4dc328183a3a5b3fe7a7b65b7bc8b8523c2",
+        "lines": 837
+      },
+      {
+        "path": "src/compat/GameActorSensorCompat.hpp",
+        "sha256": "ce50b1c956be109ae0942e0b11515cbef32467d9ffc56041a44582b74f61e254",
+        "lines": 16
+      },
+      {
+        "path": "src/compat/GameGravityCompat.cpp",
+        "sha256": "e733c71d80b50a1036078056c6dc81e2faf1f9ae748278d1cd1052fd128eebc7",
+        "lines": 251
+      },
+      {
+        "path": "src/compat/GameGravityCompat.hpp",
+        "sha256": "963f69da07dccada724650e40e920c7c4d79f95df9e1f24524bdb83fa9a35857",
+        "lines": 61
+      },
+      {
+        "path": "src/compat/GameMapCollisionCompat.cpp",
+        "sha256": "1f6ffea41b23b22632582eff343bc7f5edec69125fec49399fad3fb1e7994dbf",
+        "lines": 291
+      },
+      {
+        "path": "src/compat/GameMathCompat.cpp",
+        "sha256": "7806139a8f70c63cd4da47291b640c11e044545936beb33a6959851d33271382",
+        "lines": 1045
+      },
+      {
+        "path": "src/compat/GlobalGravityOwnership.cpp",
+        "sha256": "1c0966e95f80a8877a2215032bdac30db04b14754c22a22f021addeaa21a6b61",
+        "lines": 511
+      },
+      {
+        "path": "src/compat/GlobalGravityOwnership.hpp",
+        "sha256": "91b0921242493e1a5b1d73cbb1525f333fd672d022ec4b4228918f215e8d5ca4",
+        "lines": 60
+      },
+      {
+        "path": "src/compat/HitInfoCompat.cpp",
+        "sha256": "c11366ed0d8977e198f2adbbbb99a4d194cf459f13db103a78c67329a8e7bd83",
+        "lines": 338
+      },
+      {
+        "path": "src/compat/HitInfoCompat.hpp",
+        "sha256": "47ab1cc7f95f88f68a369cd75415462b25e540234cffcb541031271b5cb107d8",
+        "lines": 13
+      },
+      {
+        "path": "src/compat/JMapUtilCompat.cpp",
+        "sha256": "baa59b4ab18f367decbc7a2dc5009f95efdff7940d487a19096c74eb295183c3",
+        "lines": 48
+      },
+      {
+        "path": "src/compat/JMathQuaternionCompat.cpp",
+        "sha256": "5d46a5574a2c718b32f26877c8bead5fa731abce599797c1c43e48e64ca4e9e6",
+        "lines": 71
+      },
+      {
+        "path": "src/compat/JMathVectorCompat.cpp",
+        "sha256": "bb147f9eba1c394e3728c354eb5690c147b530176589509526b18bf028c4bc28",
+        "lines": 15
+      },
+      {
+        "path": "src/compat/LiveActorUtilCompat.cpp",
+        "sha256": "47eeb95e4df00dee4ff24cba4c8386a139f7bea2c257216a97144adb9e5bcf12",
+        "lines": 430
+      },
+      {
+        "path": "src/compat/LodCtrlRuntimeCompat.cpp",
+        "sha256": "140c765fc123eadc578b7140396574926cc125e9a2073541069115532a9ec177",
+        "lines": 91
+      },
+      {
+        "path": "src/compat/MarioAnimatorLifetime.cpp",
+        "sha256": "1f43c5fab34a6774f827cabab5d9b2d0e11c51d1be9c4b9d910253bfecb34551",
+        "lines": 197
+      },
+      {
+        "path": "src/compat/MarioAnimatorLifetime.hpp",
+        "sha256": "37affae70d13950e570a73f3be91ca03d39966cb8ff77001adfe1b31935922f3",
+        "lines": 20
+      },
+      {
+        "path": "src/compat/MarioCameraTarget.cpp",
+        "sha256": "476035ff92e8a795c0194274379756c68aa97ba886d5c3807632de7a517afd23",
+        "lines": 35
+      },
+      {
+        "path": "src/compat/MarioCameraTarget.hpp",
+        "sha256": "c558ae3176748b4d6630be281e972e5fdae5361f439716dcdf8bb5a02d51de14",
+        "lines": 12
+      },
+      {
+        "path": "src/compat/MatrixTranslationCompat.cpp",
+        "sha256": "b51c74d570806ef9fd87da1f41ae9d7ae2e555216462f5a8af48126569080a67",
+        "lines": 16
+      },
+      {
+        "path": "src/compat/ModelCreationCompat.cpp",
+        "sha256": "ae6981d96beaf8e531b55d427d9d61836338cd64c3c7b4e51d776deb94b90e04",
+        "lines": 79
+      },
+      {
+        "path": "src/compat/ModelFogCompat.cpp",
+        "sha256": "bd52710af64949ffc5735616b0b1b6554b957dd25bfde6079befd7f5a69268cb",
+        "lines": 28
+      },
+      {
+        "path": "src/compat/ModelManagerOwner.cpp",
+        "sha256": "da07f7a078f07d137c9b4f1001f3a27ae5bcff26705f39e06c2a35bd342e8b07",
+        "lines": 91
+      },
+      {
+        "path": "src/compat/ModelManagerOwner.hpp",
+        "sha256": "a6cf66cb18a2f3976821f0b3cdf387964150cffae647c5a9521a07417b1352da",
+        "lines": 24
+      },
+      {
+        "path": "src/compat/ModelPostLoadCompat.cpp",
+        "sha256": "b45dd348dbe22510207b6d50f76a772ffa20020f35d7541aff48fcbba6ad9b63",
+        "lines": 90
+      },
+      {
+        "path": "src/compat/OriginalActorAnimationStart.cpp",
+        "sha256": "f204b6944cf438da2473e71987c9f48afa572b7e2cd12aa20a89dfe160c8ebd0",
+        "lines": 280
+      },
+      {
+        "path": "src/compat/OriginalActorBckControl.cpp",
+        "sha256": "c3ee772ba19512d913d47cf2a80cafc57d0f544212e28a62f723551e2c6383e3",
+        "lines": 23
+      },
+      {
+        "path": "src/compat/OriginalActorBroadcast.cpp",
+        "sha256": "08834a75bd78c9f9003282dc411961595db76123ad345b458b08447cad0bea1e",
+        "lines": 26
+      },
+      {
+        "path": "src/compat/OriginalActorModelAccess.cpp",
+        "sha256": "97823512d19f3bf86bcf2eb8c6af089882570fc8c675ce8abdf7f840ab479806",
+        "lines": 624
+      },
+      {
+        "path": "src/compat/OriginalBinderFilterUtil.cpp",
+        "sha256": "6bea3a4a0fa7fa366fc1f8a9cb58e6e3beba4591f3e7179537fddd00bf57cc5c",
+        "lines": 20
+      },
+      {
+        "path": "src/compat/OriginalBinderQueries.cpp",
+        "sha256": "77ec46ad93ec5f49ded6a6e2358aa0d51fb797dc3b4ba11377a948162e27fe71",
+        "lines": 161
+      },
+      {
+        "path": "src/compat/OriginalCameraOwnerUtil.cpp",
+        "sha256": "344b27def7cdb0f92e67509b9a0f26f03944946355e1f6f632c72a2c67a10367",
+        "lines": 117
+      },
+      {
+        "path": "src/compat/OriginalCameraTargetActor.cpp",
+        "sha256": "7dcd7591f812fc9eca423a9eab88ef7335bce96466f8c93df2c3479808030514",
+        "lines": 80
+      },
+      {
+        "path": "src/compat/OriginalCameraTargetPlayer.cpp",
+        "sha256": "748ac8e5e1dbb365168ce3d9950ccc20c7c7b1d728828750240c98eeb1243a78",
+        "lines": 163
+      },
+      {
+        "path": "src/compat/OriginalCollisionGeometry.cpp",
+        "sha256": "a168d818bb2d2e531dde55fc02d3dbaac465390135435a528dd196b0e0e28c86",
+        "lines": 60
+      },
+      {
+        "path": "src/compat/OriginalCollisionPartsCompat.cpp",
+        "sha256": "435c1b47606f17045340a8c33040b29c5a5cd7defdc2e9b4664a37f3cd287445",
+        "lines": 573
+      },
+      {
+        "path": "src/compat/OriginalCollisionPartsUtil.cpp",
+        "sha256": "c4b49b8cee53f2dad912abcffa4242d244b386ce0d61890b11d93ac97bf95f94",
+        "lines": 243
+      },
+      {
+        "path": "src/compat/OriginalDynamicCollisionObj.cpp",
+        "sha256": "efbd9a21fef686698b3048a58d3a494dcb52f97e06159f79408b84860939b7c3",
+        "lines": 207
+      },
+      {
+        "path": "src/compat/OriginalJMathSqrt.cpp",
+        "sha256": "6aae8adf695e926aeab36cd0ddca54a6058611657bbd4ab1c962212cd3255227",
+        "lines": 21
+      },
+      {
+        "path": "src/compat/OriginalKCollisionCompat.cpp",
+        "sha256": "11db2f489c776ad40a5c3439d4dcd940528eee13ca4a9770ec4c9986a9510f52",
+        "lines": 1393
+      },
+      {
+        "path": "src/compat/OriginalLiveActorGroupUtil.cpp",
+        "sha256": "bae33b4c21c102efb4005e1a0735c1ec90193719fe971a74217e4c1d1bb2bc73",
+        "lines": 162
+      },
+      {
+        "path": "src/compat/OriginalMatrixTransforms.cpp",
+        "sha256": "0a15044bcd95f623e759e5e5b8931d93d7e9ac42a2ac706ff40e56618eb71400",
+        "lines": 228
+      },
+      {
+        "path": "src/compat/OriginalModelAccess.cpp",
+        "sha256": "0de0cd2d5b4b20901b18ea79e9dd0364bffb54bcdff6a3f16a13683ea20b900a",
+        "lines": 220
+      },
+      {
+        "path": "src/compat/OriginalModelBounds.cpp",
+        "sha256": "d16680c5c302f790d751c7e8b437facb4a2841700ac3bd49225858978a81ff95",
+        "lines": 88
+      },
+      {
+        "path": "src/compat/OriginalPlacementJMap.cpp",
+        "sha256": "7350db3a162fe82e94f3ad2dc5c8f9c51205e5a98ac35c75f70ece5061db00f8",
+        "lines": 7
+      },
+      {
+        "path": "src/compat/OriginalPlayerEventUtil.cpp",
+        "sha256": "72949ddef9e85c8002ed0cef945dfee360bf77a2ef12e43bcf6a1404a2e3956d",
+        "lines": 23
+      },
+      {
+        "path": "src/compat/SensorHitCheckerOwnership.cpp",
+        "sha256": "881a4c46977ead91873860119f91983649141d59766a505e4bc32c9b69e3f82d",
+        "lines": 11
+      },
+      {
+        "path": "src/compat/StageZoneMatrixRegistry.cpp",
+        "sha256": "7a42f1beefc1b90bcbbb32e4ecb2be641428bff23d293c9136d6793f5a8ffda3",
+        "lines": 116
+      },
+      {
+        "path": "src/compat/StageZoneMatrixRegistry.hpp",
+        "sha256": "9503ab358db3b2c69e2db6f7ebbe72ec68264b90c745c843ad04eb17d752b8e2",
+        "lines": 53
+      }
+    ],
+    "render-effects": [
+      {
+        "path": "src/compat/ActorShadowCsvCompat.cpp",
+        "sha256": "b81c12914223a75bfbf2c37010c83e151071152858c7083eae7925fea8b65d90",
+        "lines": 333
+      },
+      {
+        "path": "src/compat/ActorShadowCsvCompat.hpp",
+        "sha256": "1d1da34146bd45868c6593bae8c3e2ca4893f4bf0db30927b13ea1e4b90ef058",
+        "lines": 17
+      },
+      {
+        "path": "src/compat/CapturedFrameBlurService.cpp",
+        "sha256": "4e9f768668ade8ea70e5a2a5279583e6193cdabcf5a1cc020ab2c22d234603bb",
+        "lines": 245
+      },
+      {
+        "path": "src/compat/CapturedFrameBlurService.hpp",
+        "sha256": "cb9658d66a222fe21f595734e2683b6fd4b2cc39ea43e0b3519a025afd0993fd",
+        "lines": 46
+      },
+      {
+        "path": "src/compat/DrawSyncManagerLifetime.cpp",
+        "sha256": "bdaec6e4e856af775f9b016f5139311f89b7fb427e1cfb72d3deb608f1bde5fb",
+        "lines": 85
+      },
+      {
+        "path": "src/compat/DrawSyncManagerLifetime.hpp",
+        "sha256": "5b235c7ea27f770a6a7b0048a855c962b3c89a6117019a28e59c4fefe3edad9c",
+        "lines": 53
+      },
+      {
+        "path": "src/compat/EffectSystemOwnership.cpp",
+        "sha256": "d54cd39dc67562654ddbff335d8e951cba0471b38def08b06326044fc62ec939",
+        "lines": 297
+      },
+      {
+        "path": "src/compat/EffectSystemOwnership.hpp",
+        "sha256": "24614b0adaaca48318a15a25e5f48784630ffee64f2665f7613f24c3c1f0198c",
+        "lines": 38
+      },
+      {
+        "path": "src/compat/ImageEffectOwnership.cpp",
+        "sha256": "dcbf22cb09bee6335a9abb315c2602836017d4f45dfbc23a018ade7d0b78f0cb",
+        "lines": 172
+      },
+      {
+        "path": "src/compat/ImageEffectOwnership.hpp",
+        "sha256": "836752116c93080e1b1c0d5869299278757a0fb1727571384242d81896bddbd3",
+        "lines": 28
+      },
+      {
+        "path": "src/compat/J3DAdditionalAnimationCompat.cpp",
+        "sha256": "f1ceeb527698d268727d775f71a011dba7dc4772e9a18229100fdce3d1b93c67",
+        "lines": 190
+      },
+      {
+        "path": "src/compat/J3DAnimationInterpolation.hpp",
+        "sha256": "cc3db00641202cd04f8315cfa5b9fe6cb984358b607881fb07c83f7bfda1ad80",
+        "lines": 107
+      },
+      {
+        "path": "src/compat/J3DAnmLoaderCompat.cpp",
+        "sha256": "1a39c5f8d10dfede8bd3b46a43617f238812752c55b4a1825b9cb5086d471be9",
+        "lines": 436
+      },
+      {
+        "path": "src/compat/J3DClusterCompat.cpp",
+        "sha256": "c80d1ceccd380fec98e03be864c100df636a6764a54df8aca58d8745ed3f9bd8",
+        "lines": 212
+      },
+      {
+        "path": "src/compat/J3DDrawBufferCompat.cpp",
+        "sha256": "afc661f9501d018da49961d35259472191f5f0495f9de696f916bb02ac1aa333",
+        "lines": 204
+      },
+      {
+        "path": "src/compat/J3DDrawInitCompat.cpp",
+        "sha256": "dba0787163210180b73a7d4da192244327d1484ef1bdece75d9235d3e9997867",
+        "lines": 298
+      },
+      {
+        "path": "src/compat/J3DFrameCtrlCompat.cpp",
+        "sha256": "8da334cfc7d0ccb32a46429bd27680c564d46bee612e63f802356d6b265e8983",
+        "lines": 165
+      },
+      {
+        "path": "src/compat/J3DGDCompat.cpp",
+        "sha256": "bab47e0ac52a68901044fa832fc5027abd3d68ecb52f6a8e8e0a4f022cd0a37e",
+        "lines": 644
+      },
+      {
+        "path": "src/compat/J3DHierarchyCompat.cpp",
+        "sha256": "3afb86e273b422eca0d6486bf38fd708a5dee2ea9b1662865cbeed63bdbbf23c",
+        "lines": 63
+      },
+      {
+        "path": "src/compat/J3DJointCompat.cpp",
+        "sha256": "f3c65b362c34b4bdc50ed1240ea5c7f848893889f2da309e635252c7072b34af",
+        "lines": 278
+      },
+      {
+        "path": "src/compat/J3DJointEntryCompat.cpp",
+        "sha256": "62d64047b84bae8c4792cdd732c1c08cc6e72c533d812c37817f4d2a37ecc825",
+        "lines": 39
+      },
+      {
+        "path": "src/compat/J3DJointTreeCompat.cpp",
+        "sha256": "5204294532137e0f6e548aa0fd985c7475a3994a4d08318c6aec8fcd4668ad60",
+        "lines": 72
+      },
+      {
+        "path": "src/compat/J3DMatBlockCompat.cpp",
+        "sha256": "0498aafe166b9cc0cb2650611183d54d273e35b412d0300e1dabfaf43d999f3a",
+        "lines": 1919
+      },
+      {
+        "path": "src/compat/J3DMaterialAnimationCompat.cpp",
+        "sha256": "f8dede8d3e64e65d8d32f4ca0b0a80f4b5d828121b858bae9aefa591fec08112",
+        "lines": 489
+      },
+      {
+        "path": "src/compat/J3DMaterialAnmCompat.cpp",
+        "sha256": "e8f13199bc87d894e546b3fe0978ca97e530bcd290113a0a96a25cc18ce50e85",
+        "lines": 102
+      },
+      {
+        "path": "src/compat/J3DMaterialAttachCompat.cpp",
+        "sha256": "87fd92083af28b7234c362e3260017bc2f818ed41c08819e0994d1bc16aa1cf6",
+        "lines": 267
+      },
+      {
+        "path": "src/compat/J3DMaterialFactoryCompat.cpp",
+        "sha256": "4f36c119eb0cc1e3997a47c8089a73a5f96abb1281d058c7e01f848b09ddbba0",
+        "lines": 160
+      },
+      {
+        "path": "src/compat/J3DMaterialHelpersCompat.cpp",
+        "sha256": "8d458822d49789223045e4d7c57f64eba53432357f5d8b2a28dafbb9907fc9f6",
+        "lines": 195
+      },
+      {
+        "path": "src/compat/J3DMaterialLoaderFactoryCompat.cpp",
+        "sha256": "59332aba0213a59f714621da81b74c185ea1b3c91a6c34a7bc5401282b08b7ff",
+        "lines": 682
+      },
+      {
+        "path": "src/compat/J3DMaterialVariantsCompat.cpp",
+        "sha256": "1971865ed5e372ecff754f47d0463cfbbb217913165cc939ef8e598f29d1e819",
+        "lines": 69
+      },
+      {
+        "path": "src/compat/J3DModelCompat.cpp",
+        "sha256": "3f1c3f42e43778955657df0bd2e293fe203734c3294982f842b039f850ee6303",
+        "lines": 434
+      },
+      {
+        "path": "src/compat/J3DModelDataCompat.cpp",
+        "sha256": "daae30596ae6b992f7d03363d2369ca7c57094e3b0be826ff12c6253ca6f0a8b",
+        "lines": 112
+      },
+      {
+        "path": "src/compat/J3DModelLoaderCompat.cpp",
+        "sha256": "47df503adf831670ad6b7eb6d301aee82fd2cb80bff3a5793ffecd2bdc5fdfa2",
+        "lines": 76
+      },
+      {
+        "path": "src/compat/J3DModelLoaderCompat.hpp",
+        "sha256": "3ae31aaf2a850573e73f0f1f3ab0310eeb735bf16cbf9f9ff847a1568d07873b",
+        "lines": 9
+      },
+      {
+        "path": "src/compat/J3DMtxBufferCompat.cpp",
+        "sha256": "0e79601d2ee3c4e5a45a514f2d8e54baebd17fe5fbf37267e36a7c9c2e3634f7",
+        "lines": 473
+      },
+      {
+        "path": "src/compat/J3DPacketCompat.cpp",
+        "sha256": "6f881fa389aab691b85263ffff471d270a3586299b35a63cbfbffba1c01e5360",
+        "lines": 358
+      },
+      {
+        "path": "src/compat/J3DShapeCompat.cpp",
+        "sha256": "be57b99ee71fded8695fe2af9963e3974c176d535cab0f501d3924aff671765d",
+        "lines": 326
+      },
+      {
+        "path": "src/compat/J3DShapeDrawCompat.cpp",
+        "sha256": "918f7a5375a41996e4c562bb7e60f8f86bd2df0451dd419eceab5e5554e15e53",
+        "lines": 82
+      },
+      {
+        "path": "src/compat/J3DShapeFactoryCompat.cpp",
+        "sha256": "4f345ac3ba8257fd9a44b7c26b14e4ebe0fbe4c7d6cde812e1b9f460b31bcf78",
+        "lines": 170
+      },
+      {
+        "path": "src/compat/J3DShapeMtxCompat.cpp",
+        "sha256": "41325cd778510176774814dfd7bf8d48822fe123434f622830d8f2ec9f3483c9",
+        "lines": 523
+      },
+      {
+        "path": "src/compat/J3DShapeMtxGameCompat.cpp",
+        "sha256": "91efa52090eb0bc9abfb5e9d318c439e78dac33a40cd52e91589efd79a6ec21b",
+        "lines": 14
+      },
+      {
+        "path": "src/compat/J3DShapeTableCompat.cpp",
+        "sha256": "77026552c02f1123184c66d35a1f951d35b9b19bd0b69126eb0006956b0df78e",
+        "lines": 24
+      },
+      {
+        "path": "src/compat/J3DSkinDeformCompat.cpp",
+        "sha256": "11069827417bb24e5e9d14a32dc415b485797b9f29385f4f396899b708f61827",
+        "lines": 22
+      },
+      {
+        "path": "src/compat/J3DStructCompat.cpp",
+        "sha256": "a0dcf5cbb9225a16774ccf0686bc9b14dd00fd03f34c0843568b39776ae44fd3",
+        "lines": 62
+      },
+      {
+        "path": "src/compat/J3DSysCompat.cpp",
+        "sha256": "db1018cc8d594d16c4e216a055cb1e5af20f39c76925f318c79815ec492441b9",
+        "lines": 119
+      },
+      {
+        "path": "src/compat/J3DTevsCompat.cpp",
+        "sha256": "8af71198b75901b8e747af3da55b63c23dd598de0ba7f54f409b0c61d7ded87e",
+        "lines": 131
+      },
+      {
+        "path": "src/compat/J3DTexMtxCompat.cpp",
+        "sha256": "28f751c0699ff33098d92fcde301cf6673104358f140c19f5426663fd16d656c",
+        "lines": 273
+      },
+      {
+        "path": "src/compat/J3DTextureMtxCompat.cpp",
+        "sha256": "6ceb2f03dab3043603e1fad7f4ddb0f5d68f71b1016e1a53516c52e15eeef2e9",
+        "lines": 106
+      },
+      {
+        "path": "src/compat/J3DTransformAnimationCompat.cpp",
+        "sha256": "a060535c3d434220e20c055a2ab91b3a8937343df0b74583752ac067fc65fd05",
+        "lines": 422
+      },
+      {
+        "path": "src/compat/J3DTransformMtxCompat.cpp",
+        "sha256": "d5e5ffc9070083685b135b8ee992ff5fc869625e613d5ccc75dc80b0fbd5f48c",
+        "lines": 169
+      },
+      {
+        "path": "src/compat/J3DVertexBufferCompat.cpp",
+        "sha256": "82ce069b63412342506d5b21e83f097994b6d824244a5ccf7e5d1c794448564b",
+        "lines": 42
+      },
+      {
+        "path": "src/compat/J3dCommandScope.cpp",
+        "sha256": "d352fd1e61bceeec234478a78fab82ad0632aba43530936d68541c7206187e79",
+        "lines": 39
+      },
+      {
+        "path": "src/compat/J3dCommandScope.hpp",
+        "sha256": "e42ff92b5007ad28b8e4eff210cc7d57d647e0e45cc5c72207163ce1b8c8c17d",
+        "lines": 39
+      },
+      {
+        "path": "src/compat/J3dSystemCompat.cpp",
+        "sha256": "850bf6e0fb1931856333ca0c56186ce66b00faf59d50eb3cee59f5188f99ec7f",
+        "lines": 14
+      },
+      {
+        "path": "src/compat/J3dSystemCompat.hpp",
+        "sha256": "32752684cf5f4ac58a246721c5553c883c4ff38b3080bf5f46860b1f55ec68fe",
+        "lines": 10
+      },
+      {
+        "path": "src/compat/JutTextureAllocation.cpp",
+        "sha256": "87d8927133f858ab7b86aaa7f21ea7731716080aff3a173318cb268cb43abaeb",
+        "lines": 99
+      },
+      {
+        "path": "src/compat/JutTextureAllocation.hpp",
+        "sha256": "0164d5a98aa66b22388e8cc062c70f0ebf064d70b881e9e93880976121425f68",
+        "lines": 42
+      },
+      {
+        "path": "src/compat/JutTextureConstruction.cpp",
+        "sha256": "10760e1edd935de1ac45ce20803703376c23660269dab6991df0145e2982d85a",
+        "lines": 103
+      },
+      {
+        "path": "src/compat/JutTextureConstruction.hpp",
+        "sha256": "f94d4d38d38d7662fa23b19beaeaa1925cbce37afea19289291fe667ae6f9b7f",
+        "lines": 51
+      },
+      {
+        "path": "src/compat/LightDirectorCompat.cpp",
+        "sha256": "11e68000c72f827997636f1bbc070db8e1d267e153b21307cf876af2ee1937b2",
+        "lines": 77
+      },
+      {
+        "path": "src/compat/LightFunctionCompat.cpp",
+        "sha256": "90fd9605a49b5902dd658c783023f87d468c1cd9f298e773a963a3264c2e2f8e",
+        "lines": 378
+      },
+      {
+        "path": "src/compat/LightFunctionCompat.hpp",
+        "sha256": "afd558ea92c2c9198af3e62bb11d5a7f96c53b2b3a50f83ecc52f8b3c0253603",
+        "lines": 10
+      },
+      {
+        "path": "src/compat/LightUtilCompat.cpp",
+        "sha256": "e9d057907578d1ef7d385e49f870fc20ceedd55b71be21035c44b83e196cdce0",
+        "lines": 98
+      },
+      {
+        "path": "src/compat/MaterialTextureModeCompat.cpp",
+        "sha256": "36c58a274e615caa496da2287340b599ecc67c938b321029671cb76666d53e5d",
+        "lines": 64
+      },
+      {
+        "path": "src/compat/OriginalActorShadowQueries.cpp",
+        "sha256": "22058db611cf1a8d36ac85e4dfe5708a0a16afd7d9359db9d7d131ab686162f6",
+        "lines": 144
+      },
+      {
+        "path": "src/compat/OriginalImageEffectUtil.cpp",
+        "sha256": "99b0837e8ef05c104aa711b1ad82ab2f25b670e7cc63630f07ae0e0e631d1068",
+        "lines": 85
+      },
+      {
+        "path": "src/compat/OriginalJ2DProjection.cpp",
+        "sha256": "1bc6eeeb7716f9e924c291d334c0b34f95b75e59fc5dac9b31a9efd4ee4b1b8c",
+        "lines": 20
+      },
+      {
+        "path": "src/compat/OriginalJ3dJointTree.cpp",
+        "sha256": "f50cf7b6c74f7fef5b110a72f3d90ce97186cc5492102e0b6617bd7c15225a7a",
+        "lines": 247
+      },
+      {
+        "path": "src/compat/OriginalJ3dJointTree.hpp",
+        "sha256": "2873d5166b6013408e37b8e42a497c665f7472e455fced783ca09a6390c2955a",
+        "lines": 43
+      },
+      {
+        "path": "src/compat/OriginalJPADraw.cpp",
+        "sha256": "eb1f0d4a4ed4285044121834c7f7710ad3fcb6506b3a90a7e920cc0edfc822df",
+        "lines": 603
+      },
+      {
+        "path": "src/compat/OriginalJPAEmitterInit.cpp",
+        "sha256": "65058109b761cec3a4829b150007e4152b6b7d883a766d46b0161e88adccac69",
+        "lines": 48
+      },
+      {
+        "path": "src/compat/OriginalJPAFields.cpp",
+        "sha256": "f16b361c5031b760747dd4a99a5b42e47b225c384011d2b988a476bd13493bb1",
+        "lines": 63
+      },
+      {
+        "path": "src/compat/OriginalModelLightAccess.cpp",
+        "sha256": "18dab3377d3cafe653f7a1abc43b73b306938953527215ce000e639053a42cdb",
+        "lines": 70
+      },
+      {
+        "path": "src/compat/OriginalModelMaterialHelpers.cpp",
+        "sha256": "183eed0395fd202f14f7c102f78335fc931c8dabca5cd5b0e7474fe723738155",
+        "lines": 75
+      },
+      {
+        "path": "src/compat/OriginalSceneDrawInit.cpp",
+        "sha256": "08a4c66500f3c341f7361826c2935b486bd61034d602e9bd183287b1a632cf43",
+        "lines": 74
+      },
+      {
+        "path": "src/compat/OriginalShadowTextureAccess.cpp",
+        "sha256": "9c800f408ee126a5c596cd9e354c91075d525db32b8f70d0e53f4761e41cc067",
+        "lines": 26
+      },
+      {
+        "path": "src/compat/OriginalShadowVolumeDraw.cpp",
+        "sha256": "438de1e46a2abb39c5d85db7bf2fbe1ad71b57b1b7fbb810a819f4042f7c4a28",
+        "lines": 45
+      },
+      {
+        "path": "src/compat/SceneJ3dScope.hpp",
+        "sha256": "9b73410f4baca433deb7ceb73d3a3000eaecc78e836c0fe502cde3b6ef8fd648",
+        "lines": 40
+      },
+      {
+        "path": "src/compat/ShadowControllerOwnership.cpp",
+        "sha256": "7065136a54ff6fd8229489b79c6866c52e500e2bc7767f31f0625f8d5fa6dd1a",
+        "lines": 216
+      },
+      {
+        "path": "src/compat/ShadowControllerOwnership.hpp",
+        "sha256": "adbd4f66d74806d178bdb8c67af74cebcf82cfcc40067a268190db3bbfd55416",
+        "lines": 40
+      }
+    ],
+    "platform-resources": [
+      {
+        "path": "src/compat/AudioFacadeCompat.cpp",
+        "sha256": "8a34488002fe77c464fdbabf08d2b1bbf8245c27ffae9e3cfb918366f40bf9ca",
+        "lines": 876
+      },
+      {
+        "path": "src/compat/AudioFacadeCompat.hpp",
+        "sha256": "75c78950f45efead7e5d92ed57a945628f28da73e2b8076b3350ee8266ed708c",
+        "lines": 29
+      },
+      {
+        "path": "src/compat/BinaryDataChunkHolderCompat.cpp",
+        "sha256": "0b09c09daec813ff7b6e28714fb0bfa64e93c32d8c0e18317f4e8490f0cc8d07",
+        "lines": 153
+      },
+      {
+        "path": "src/compat/ConfigDataMiscCompat.cpp",
+        "sha256": "05e5cacf849955b151fa03bc0779bfa6ae5122e13db0d5ca275c394ff2f5bbea",
+        "lines": 106
+      },
+      {
+        "path": "src/compat/Cp932Literal.hpp",
+        "sha256": "e5c5c748631b290daa48d235ebf3ef9c2786a89a11a125ced62452c55ac5d713",
+        "lines": 116
+      },
+      {
+        "path": "src/compat/DisabledAudioBackend.cpp",
+        "sha256": "55704492fb3f13a942b757b79fb8fb15535114f351ae99f03763f3d2313cd087",
+        "lines": 66
+      },
+      {
+        "path": "src/compat/DisabledAudioBackend.hpp",
+        "sha256": "7ea7aad07eb172dc7764e43644cd8691c90c76218d728a472fd0c591cd192101",
+        "lines": 48
+      },
+      {
+        "path": "src/compat/DisabledAudioSystemWrapper.cpp",
+        "sha256": "2766c3bdba80eb497132d4bf0cfcf60e12dbce80f606932adb29197bf27eee88",
+        "lines": 110
+      },
+      {
+        "path": "src/compat/DisabledObjectAudio.cpp",
+        "sha256": "6be64ff85036e39778d4e3cbc5a6930cc5534529d1bb7e93d93b4fbfa506dc61",
+        "lines": 107
+      },
+      {
+        "path": "src/compat/DisabledObjectAudio.hpp",
+        "sha256": "af248d6972b166715d30a9a35b90aa712cef55a14a781d8fe9470900dbd62015",
+        "lines": 15
+      },
+      {
+        "path": "src/compat/DisabledObjectAudioService.cpp",
+        "sha256": "ecd1719324ed9ddc80d0dab12613b9ef868613ba9e13619065cc6a47856b2aad",
+        "lines": 200
+      },
+      {
+        "path": "src/compat/DisabledObjectAudioService.hpp",
+        "sha256": "6e0b7c109b4024d1624a75f2b261a33f402532e1f60ac2e65d862e9c4c42c1cd",
+        "lines": 64
+      },
+      {
+        "path": "src/compat/FileLoaderOwnership.cpp",
+        "sha256": "b969ba1c7991b17e1072b73ab8a77d6a79f2099facdbf70ae72de19aa6151fa0",
+        "lines": 45
+      },
+      {
+        "path": "src/compat/FileLoaderOwnership.hpp",
+        "sha256": "122a7b1c20f7fec21946d9b2534b0ea2f0fc351870f2616e57728dda539ea43b",
+        "lines": 12
+      },
+      {
+        "path": "src/compat/FileUtilCompat.cpp",
+        "sha256": "1e595f37ecb695fb18fc47419495f174cd32eef0d26bca4331fa1e217f022883",
+        "lines": 292
+      },
+      {
+        "path": "src/compat/FunctionAsyncExecutorOwnership.cpp",
+        "sha256": "1f1dbe32cda3cf321ae75796ed0c6aa45ece588f35e9bec7dba2114e137ddd1b",
+        "lines": 25
+      },
+      {
+        "path": "src/compat/FunctionAsyncExecutorOwnership.hpp",
+        "sha256": "f5f98c3ca0518d7f80f19278de0dd55c57e971aea1e3055e70e9cf4f8a5bfc61",
+        "lines": 12
+      },
+      {
+        "path": "src/compat/JAudioCategoryVolumeOwnership.cpp",
+        "sha256": "eea0d8b8325b4425eb76692e4bc350ba22ddae32aa1f5357434ad45201e881e1",
+        "lines": 86
+      },
+      {
+        "path": "src/compat/JAudioCategoryVolumeOwnership.hpp",
+        "sha256": "3b8da31501bd41d94b7b4fbf4dca976ef4bc378ddd71b4f2e289dbdf6ba22bd2",
+        "lines": 39
+      },
+      {
+        "path": "src/compat/JAudioLimitedSoundOwnership.cpp",
+        "sha256": "d1d1b645181bc21317fc7c3cd1774e36d963dc60e31d83498ca028b3ce03b505",
+        "lines": 36
+      },
+      {
+        "path": "src/compat/JAudioLimitedSoundOwnership.hpp",
+        "sha256": "5c8c8a2c9b3adff6369534add516c51752f113420eca46486ae6647fe2e69416",
+        "lines": 22
+      },
+      {
+        "path": "src/compat/JAudioSoundParameterSemantics.cpp",
+        "sha256": "a44cb1de69f86894b17c0c2eb71ae4a2e3e7b720e58c347ad20a55668970e38e",
+        "lines": 60
+      },
+      {
+        "path": "src/compat/JAudioSoundParameterSemantics.hpp",
+        "sha256": "482240f9461cd6ae6a4496883e16739536babda4da6f6459fc3b97a55555b980",
+        "lines": 21
+      },
+      {
+        "path": "src/compat/JKRArchiveCompat.cpp",
+        "sha256": "f3a3c3327631b92b1cb63ca86d0cd421438e5472f3451dade8a0130ffaca9586",
+        "lines": 461
+      },
+      {
+        "path": "src/compat/JKRDisposerCompat.cpp",
+        "sha256": "8f7e592620e25bec11fccf38dc57149d920ca185cbbfdf716e90a606346ba1e5",
+        "lines": 16
+      },
+      {
+        "path": "src/compat/JKRExpHeapCompat.cpp",
+        "sha256": "e23462197be574603b82760e86db13038764d8d098c7cdad1f6f8789b4303412",
+        "lines": 946
+      },
+      {
+        "path": "src/compat/JKRFileFinderCompat.cpp",
+        "sha256": "b080bcf47f9093d2781e4947a191bbe5b5b4a1246594b0df3461ccaf331d9f7f",
+        "lines": 47
+      },
+      {
+        "path": "src/compat/JKRHeapCompat.cpp",
+        "sha256": "a97c3b02c4fa9ee99813f87f648afc3c2b3178880a92885ccf45d218f192fe59",
+        "lines": 338
+      },
+      {
+        "path": "src/compat/JKRSolidHeapCompat.cpp",
+        "sha256": "f2e3903cf3ba606de9e29788f96b19bee199e8f2e1c40bd75f8583a272afa097",
+        "lines": 209
+      },
+      {
+        "path": "src/compat/JKRUnitHeapCompat.cpp",
+        "sha256": "3d038dbb8122bffda23c5fe7972542783a3db1e4a24f9cfef9285f4502f8f9dd",
+        "lines": 193
+      },
+      {
+        "path": "src/compat/JSUListCompat.cpp",
+        "sha256": "1590f545b672b375bc51e52670bb055d07ebe883564c957e3ac37076b40559f0",
+        "lines": 147
+      },
+      {
+        "path": "src/compat/JSUStreamCompat.cpp",
+        "sha256": "8b03e1ef615551446396534338ca4201742f402dcf27a7110ef09fa14d617796",
+        "lines": 152
+      },
+      {
+        "path": "src/compat/JUTNameTabCompat.cpp",
+        "sha256": "1c79def40146b69aaab99c3b79b45aca77bd7dccd10d9db8397bfeb24dc6de93",
+        "lines": 52
+      },
+      {
+        "path": "src/compat/JaiStreamPlayback.cpp",
+        "sha256": "fec1e102108b8f9146a191d03d7cd9910cec3ae59a922293a041cfafcafe4ed6",
+        "lines": 133
+      },
+      {
+        "path": "src/compat/JaiStreamPlayback.hpp",
+        "sha256": "ee58a23e410b692715f559c3c34d150e5a10e408e58b007803d1b8b575952cfb",
+        "lines": 28
+      },
+      {
+        "path": "src/compat/JkrAllocationDomain.cpp",
+        "sha256": "3cdfed9f651a2e431f9684c37e267dd9a935ebeb55e7ec07244db8f36fdf41c1",
+        "lines": 386
+      },
+      {
+        "path": "src/compat/JkrAllocationDomain.hpp",
+        "sha256": "df5332a9b029cec1e1d285872177f6ebf9751dec8f594854104af5b972cb0d1f",
+        "lines": 92
+      },
+      {
+        "path": "src/compat/JkrAllocationProvenance.cpp",
+        "sha256": "22bab0e2fb493ce3e8e76e485e4bb2a43e28c29fbc443192f1689e7dda360bb4",
+        "lines": 97
+      },
+      {
+        "path": "src/compat/JkrAllocationProvenance.hpp",
+        "sha256": "3d218818cd56281a028cb59c57da6875f9a24bbba0821699af51583797ab6f0f",
+        "lines": 10
+      },
+      {
+        "path": "src/compat/JkrAllocationRouting.hpp",
+        "sha256": "5659fd86c0d58f640acbfb8154411c3edb7f0ed22940686eda64c096dba903c1",
+        "lines": 11
+      },
+      {
+        "path": "src/compat/JkrDiagnostics.cpp",
+        "sha256": "a9bd75f69b8f4827f4688a1f455d7660a624e1780abfadec8d444299fcad0539",
+        "lines": 39
+      },
+      {
+        "path": "src/compat/JkrDiagnostics.hpp",
+        "sha256": "695c97632d0b59f9314e47667982ef2a6e2f8af7d83288813b6862836385f590",
+        "lines": 11
+      },
+      {
+        "path": "src/compat/JkrHeapFinalizer.cpp",
+        "sha256": "dc89df1e9d25336aba46abe00b56dc0b2620762cfcc1830310b40e2fdc92754c",
+        "lines": 103
+      },
+      {
+        "path": "src/compat/JkrHeapFinalizer.hpp",
+        "sha256": "1df42be3da0b8bacb175738be75a14caebfd7c4881271c8229b91093bf1aaf0c",
+        "lines": 14
+      },
+      {
+        "path": "src/compat/LanguageOwnership.hpp",
+        "sha256": "0033345a14bf8b4e9c361610cc7133d54abfa383e84bb5d46b04ccc5caad1256",
+        "lines": 22
+      },
+      {
+        "path": "src/compat/MemoryHeapScopeCompat.cpp",
+        "sha256": "06edb1e1edd206650b79e8d9c9986f9f3339fde63ef6b5fd60af0015a800ed20",
+        "lines": 31
+      },
+      {
+        "path": "src/compat/MemoryUtilCompat.cpp",
+        "sha256": "f01594434ff135bae1684a9cad4f850eb2e4665a1681a87e74b1f250f6026caf",
+        "lines": 58
+      },
+      {
+        "path": "src/compat/MetrowerksAlgorithm.hpp",
+        "sha256": "bbbd510aa50364358c5009728e205f845e4ac7e5fd3f364a068e140014fe4a3c",
+        "lines": 13
+      },
+      {
+        "path": "src/compat/MetrowerksAlignedNew.cpp",
+        "sha256": "ff68d14a0c89f0f5a064b59081d4c782fbd51c4d37984c5500fc13f9df8ec4d2",
+        "lines": 70
+      },
+      {
+        "path": "src/compat/MetrowerksPrintf.hpp",
+        "sha256": "9c45d18d5ff3fe06370c5a9982d2b47d688d25873f5fbf2e11a85e0afb1aae1b",
+        "lines": 31
+      },
+      {
+        "path": "src/compat/MetrowerksStdCompat.hpp",
+        "sha256": "bc8be6365f4d71d05b26331ea7492e2afe38d0fca4914feaf9b348f4c9350b5f",
+        "lines": 102
+      },
+      {
+        "path": "src/compat/MslPrintfCompat.cpp",
+        "sha256": "3b01e0a263a4abdf5bc770b66a7cc1a9fbe4a93d76695a16d4ff73bea23dc76a",
+        "lines": 650
+      },
+      {
+        "path": "src/compat/MslPrintfCompat.hpp",
+        "sha256": "e5b3cf375c2f6296366afeda8a73dfaa227fcd8f0bd2255ee82474e52f91cc47",
+        "lines": 11
+      },
+      {
+        "path": "src/compat/NandSdkBinding.hpp",
+        "sha256": "5f0ecb8aacdb35762a5edcbc1a82fe0e3a9e7f1cf35c758f4c71506c76ff68e2",
+        "lines": 18
+      },
+      {
+        "path": "src/compat/NandSdkCompat.cpp",
+        "sha256": "c9221915029270aea6321fc8396f636754c9882d0e8ef8492b2b234cbf23c98b",
+        "lines": 274
+      },
+      {
+        "path": "src/compat/NativeJkrDisposer.hpp",
+        "sha256": "d5812afc25e050aee590344a6c4d2b4309ac30ddd663e7c39ed765f7ae2acc0f",
+        "lines": 20
+      },
+      {
+        "path": "src/compat/NativePcmSound.cpp",
+        "sha256": "85a8aa9a327ec8a27c904df6ee1a1fd5d5fc3b4f03b6c544718ec2413700c7d2",
+        "lines": 102
+      },
+      {
+        "path": "src/compat/NativePcmSound.hpp",
+        "sha256": "c1d2b6cab32e2b857635c62a94686ca5b2f901355af87ac8df5bfc8c5500a4b1",
+        "lines": 37
+      },
+      {
+        "path": "src/compat/Nw4rFontCompat.cpp",
+        "sha256": "dcf5b4a58060a51ba18198aed3135a000068e18d2f40d11e60d4028d6bc5f9b1",
+        "lines": 264
+      },
+      {
+        "path": "src/compat/OriginalArchiveIndex.cpp",
+        "sha256": "d77a3f81ef53b6b64a3ab0fec470583daa2c183c646ceb30f4dfd0a87c5a4301",
+        "lines": 23
+      },
+      {
+        "path": "src/compat/OriginalAudioVolumeController.cpp",
+        "sha256": "96d9546206de9344b10fbac5a31764bc54fda52a67057153174c85d115117d03",
+        "lines": 67
+      },
+      {
+        "path": "src/compat/OriginalFunctionAsyncUtil.cpp",
+        "sha256": "8475ebe4713ca815fbf910f9e6f82c5030e2ff25607a04eea31715b393d40d62",
+        "lines": 63
+      },
+      {
+        "path": "src/compat/OriginalLanguage.cpp",
+        "sha256": "8c5a91bd1c3a4b36b8a32ae1ecbd3a779eac92de628c31c9f916f643fb251691",
+        "lines": 232
+      },
+      {
+        "path": "src/compat/OriginalLayoutResourceUtil.cpp",
+        "sha256": "b0810b8aa08477313b55d292090351854bcfbf60b9551a3850712b34a41ea11c",
+        "lines": 28
+      },
+      {
+        "path": "src/compat/OriginalObjectSoundState.cpp",
+        "sha256": "cd48bcd76cfbaac3aaf537b99ff148517917464b5e3ab1d45647d007e83b1911",
+        "lines": 213
+      },
+      {
+        "path": "src/compat/OriginalParticleResourceLookup.cpp",
+        "sha256": "c3dbc316062e1054df94cbfd2a558a87df85ac853d4dcf21f3befd7bb2c73eae",
+        "lines": 21
+      },
+      {
+        "path": "src/compat/OriginalSoundUtil.cpp",
+        "sha256": "1b8294cedecb3d1b799db9d18bd51f9aa0d304a04c1c9412a4f2262bc4de15a8",
+        "lines": 801
+      },
+      {
+        "path": "src/compat/OriginalStationedArchiveUtil.cpp",
+        "sha256": "7ffee47c6ca78dfbf8549c0fe35f05c80060faa2fc35d4e623ce9ba2b4aa0ee7",
+        "lines": 48
+      },
+      {
+        "path": "src/compat/OriginalStationedResourceManager.cpp",
+        "sha256": "36a2a568a80461c9e71f8d082bf8be9dcea63cc74c4b4cc54b46bc70c8b52d0f",
+        "lines": 51
+      },
+      {
+        "path": "src/compat/ResourceHolderCompat.cpp",
+        "sha256": "8db52865d2557bda51e45c51c5db678f0754418755bfd076013a3a54c7702537",
+        "lines": 415
+      },
+      {
+        "path": "src/compat/ResourceHolderCompat.hpp",
+        "sha256": "2dfeea928d5c6730d969a661fe457ec16b75e60abf2af37e11e6eef2fda6458d",
+        "lines": 85
+      },
+      {
+        "path": "src/compat/SceneHeapAccess.cpp",
+        "sha256": "4a0884c57bae8a7b8a52e4439e579a1aa0ebd6a6c7aab4e82d6b088d6ba0aaa9",
+        "lines": 21
+      },
+      {
+        "path": "src/compat/StageResourceBinding.cpp",
+        "sha256": "b24103f5dad5030f332cc9271fb36f30e1f84908c370127c8a0cf2e5ba5c54ff",
+        "lines": 359
+      },
+      {
+        "path": "src/compat/StageResourceBinding.hpp",
+        "sha256": "e6d26576d17ed114bfa40535969f240c8b9b6f78aca75e889b05dff248521b99",
+        "lines": 52
+      },
+      {
+        "path": "src/compat/StorySequencePlatformCompat.cpp",
+        "sha256": "073808c2b361901a0029632d977eef8084482b0081dd563fe19d10b9e24b1859",
+        "lines": 99
+      },
+      {
+        "path": "src/compat/SysConfigFileCompat.cpp",
+        "sha256": "3bd637d31f40c079ca43045b9bc1b014692f086c2a2e978b5e84564584243fcf",
+        "lines": 183
+      },
+      {
+        "path": "src/compat/SystemConfigSdkCompat.cpp",
+        "sha256": "cbfbf71e5c01d1597f47526b2b07b3fe5d9f662931b4231dc08fbbdae04fd4b8",
+        "lines": 35
+      },
+      {
+        "path": "src/compat/detail/Cp932Mapping.tsv",
+        "sha256": "46778ae55afa614d3ece7e4f7160d9f1205626f09a461e6d7a933b57b582d600",
+        "lines": 9283
+      },
+      {
+        "path": "src/compat/detail/Cp932Table.hpp",
+        "sha256": "efea8729a5f23357b223d01c6322b30c919bcf512df945f8ce6a01c358442deb",
+        "lines": 2335
+      },
+      {
+        "path": "src/compat/jaudio/JAISound.cpp",
+        "sha256": "6c05c4b9548ff3d60f029568783f372a0c70339dcf4ff94cecb99ee8770e2e4c",
+        "lines": 199
+      },
+      {
+        "path": "src/compat/jaudio/JAISoundChild.cpp",
+        "sha256": "50f6da2baee577670e21b4ac1108fc8a9cb0592aaf4ff8b8ce501fe03dccb946",
+        "lines": 16
+      },
+      {
+        "path": "src/compat/jaudio/JAISoundHandles.cpp",
+        "sha256": "6f291c3d87915c1b0b4e4602f4b5ba8ef3d409b77b05b8a62cedeb31b80fd014",
+        "lines": 45
+      },
+      {
+        "path": "src/compat/jaudio/JAISoundStarter.cpp",
+        "sha256": "9a9a03ec6abaf424748c26e051de64278efce1ca629dfe0078c5a3cfb998ffa5",
+        "lines": 27
+      },
+      {
+        "path": "src/compat/jaudio/JAIStream.cpp",
+        "sha256": "eaaa20a8554b7e8ee6722977519495d0e43e7c5e22da6bfa333deadac4511a41",
+        "lines": 273
+      },
+      {
+        "path": "src/compat/jaudio/JAIStreamDataMgr.cpp",
+        "sha256": "1d6d67988db7ac3884c17c6fe570cc7bde296d626dff3c673c49cf67e0b93b70",
+        "lines": 7
+      },
+      {
+        "path": "src/compat/jaudio/JAIStreamMgr.cpp",
+        "sha256": "3f9b9808196e95175f9a00577a787cebf5243681be3b6cf0ce78f50f5cce24a9",
+        "lines": 118
+      },
+      {
+        "path": "src/compat/jaudio/JASSoundParams.cpp",
+        "sha256": "31355c6e1b4d33ae11c617b71e567587745a3cd22f8e96694313e01c6477f16f",
+        "lines": 9
+      },
+      {
+        "path": "src/compat/jaudio/JasAramStreamPlatform.cpp",
+        "sha256": "04ed089b4eb77fc740210740c0ce825cd5413fc8af1c70997f5edff04fd46ae6",
+        "lines": 104
+      },
+      {
+        "path": "src/compat/jaudio/JasGenericPoolPlatform.cpp",
+        "sha256": "c5b7deb2dbefa2aa03903b828e5cddec4150ae2241ac81fb1f02b8ffc7bf4ce7",
+        "lines": 80
+      },
+      {
+        "path": "src/compat/jaudio/JasStreamPcmBackend.cpp",
+        "sha256": "10aef6df843440a5ddde67f57498bd21b9f90dc242883ebc9c9aa2abe00860b1",
+        "lines": 165
+      },
+      {
+        "path": "src/compat/jaudio/JasStreamPcmBackend.hpp",
+        "sha256": "d79e5ada655cc40ca53ebc93026ae4b4f30901f8fa3b879a1040ccce1575d63f",
+        "lines": 37
+      }
+    ],
+    "scene-game": [
+      {
+        "path": "src/compat/AreaObjRuntimeCompat.cpp",
+        "sha256": "84c7393d0f31b70f66e7b69f43bc2fddbb09fca55f2544456cf0b996b074bb72",
+        "lines": 146
+      },
+      {
+        "path": "src/compat/DemoCompat.cpp",
+        "sha256": "17796bbaee75c34708975292675a57ebe786b701705614be735ba096a393079a",
+        "lines": 22
+      },
+      {
+        "path": "src/compat/DemoDirectorOwnership.cpp",
+        "sha256": "22d91b112edb25d4d5b78ab075fcdf87d2b715fa8387e2db7a61d8d4c008a8cb",
+        "lines": 338
+      },
+      {
+        "path": "src/compat/DemoDirectorOwnership.hpp",
+        "sha256": "0b9c8ccba21765c65390db3dc65ab65ec38a912a55a3710117ad11f7251536d0",
+        "lines": 44
+      },
+      {
+        "path": "src/compat/DemoSceneRuntime.cpp",
+        "sha256": "b14a178b9b25257babaeed1e44cda9f494821a79b8bf8035baab8653debd8180",
+        "lines": 540
+      },
+      {
+        "path": "src/compat/DemoSceneRuntime.hpp",
+        "sha256": "6c13ce9c4efb01ff4115b212d2f3d8eb91f77793aa76b59c87975ebe68b25373",
+        "lines": 194
+      },
+      {
+        "path": "src/compat/DemoSheetRuntime.cpp",
+        "sha256": "91ba7002f5aa97a2a322da4b96ededaf422f4efa590b89a8ec5693105d4f64e7",
+        "lines": 528
+      },
+      {
+        "path": "src/compat/DemoSheetRuntime.hpp",
+        "sha256": "9e7a3919bcc9dd8c3fa6c3ea9d7aa1eb4d54ba360a1080dc92c4a462d8e8b932",
+        "lines": 169
+      },
+      {
+        "path": "src/compat/DemoStartRequestOwner.cpp",
+        "sha256": "0d7b0701e9fa83a518d310e19c70ef65a84278321b319c7e31a635f4439dfa6f",
+        "lines": 38
+      },
+      {
+        "path": "src/compat/DemoStartRequestOwner.hpp",
+        "sha256": "affc0617efbd3b373f57d05a5496b1ef486eae0e3713913854a4dcac9f69c1ac",
+        "lines": 30
+      },
+      {
+        "path": "src/compat/DemoUtilCompat.cpp",
+        "sha256": "f49d528312fe97332ef20d6a0d2fdab66899e04e6ff6181e9ac7a53a786d23a8",
+        "lines": 8
+      },
+      {
+        "path": "src/compat/DemoUtilCompat.hpp",
+        "sha256": "a4b6603c59390811d86cbb2e2782d3feaafa0fb4b6760f454a8e28f660305919",
+        "lines": 9
+      },
+      {
+        "path": "src/compat/GameDataFunctionCompat.cpp",
+        "sha256": "17c6473ca6d093194b913a2877e82b700567c295e13205216bf27e97607478a2",
+        "lines": 400
+      },
+      {
+        "path": "src/compat/GameDataFunctionCompat.hpp",
+        "sha256": "7b68394f5e5fb60fa1153d8d61b067d90441566d077c46a4b7df26e3af3a68e5",
+        "lines": 26
+      },
+      {
+        "path": "src/compat/GameDataOwnership.cpp",
+        "sha256": "7226b382ed97b7431d17c4733edf16cb8535818850a9de3cd95a6e5559c39230",
+        "lines": 83
+      },
+      {
+        "path": "src/compat/GameDataOwnership.hpp",
+        "sha256": "b467e9b582484ccaa32c04790708a1926c03a56bc2ffc150db18e80d78c4cfe3",
+        "lines": 20
+      },
+      {
+        "path": "src/compat/GameDataSession.cpp",
+        "sha256": "4aa5b6d8a9deb5567b1b834be7ac1245d968dc1825b4bc992b525ab2e0856ada",
+        "lines": 97
+      },
+      {
+        "path": "src/compat/GameDataSession.hpp",
+        "sha256": "9fd568c2c370bf3ee83d03478db157e6988d86fa813b426a6fdf051beecb8ae2",
+        "lines": 42
+      },
+      {
+        "path": "src/compat/GameRuntimeCompat.cpp",
+        "sha256": "0cb80187adabac144f3d6748e4a870bc91b889cadb50dd264a518d9ffb6c6d72",
+        "lines": 55
+      },
+      {
+        "path": "src/compat/GroupCheckManagerCompat.cpp",
+        "sha256": "8c97db2cc14a4fbe890bac5fb4a071fdf3f33e2b237c098b8223e008df6bd3ee",
+        "lines": 257
+      },
+      {
+        "path": "src/compat/GroupCheckManagerCompat.hpp",
+        "sha256": "35971bf1c6250ad152175fc770dd846935b93c1aae73b5aa481e8d547d16058c",
+        "lines": 24
+      },
+      {
+        "path": "src/compat/HashSortTableCompat.cpp",
+        "sha256": "7a4ce2e94466d985e529cec0c2931a404e78442e0f971dbb2b5225bfbc08514c",
+        "lines": 188
+      },
+      {
+        "path": "src/compat/InformationMessageCompat.cpp",
+        "sha256": "e283fc9b9c903caa2559e260d135c19eca68de5ffb0bbf4fedf843184f90d871",
+        "lines": 129
+      },
+      {
+        "path": "src/compat/InformationMessageCompat.hpp",
+        "sha256": "ea371ffa479a263a2a1ec42b71b68e6f3cbcce1547b8379bbc98c2af392b117d",
+        "lines": 34
+      },
+      {
+        "path": "src/compat/MessageUtilCompat.cpp",
+        "sha256": "ecf6c0669a9cc21d8e77d8a777460a667522213bcd1a31afc4befd48a8b06648",
+        "lines": 39
+      },
+      {
+        "path": "src/compat/MessageUtilCompat.hpp",
+        "sha256": "f4179fd90f99e5e138e0b955eb8a73e667067ec3d1d5920d9a74d3cb4e65e9cc",
+        "lines": 16
+      },
+      {
+        "path": "src/compat/MtxCompat.cpp",
+        "sha256": "5a5757f78f2f43bd5bc4cd705ec3afed8280fa79bede714c0e24ddea0c9baf0e",
+        "lines": 354
+      },
+      {
+        "path": "src/compat/NameObjExecuteCompat.cpp",
+        "sha256": "ac792450b7ae8eff2fa4c80dee0244d3b189fdedc8007a4a5814d0ef8afdb272",
+        "lines": 23
+      },
+      {
+        "path": "src/compat/NameObjLifetimeCompat.cpp",
+        "sha256": "bf9ee2e4adb7ca2f04a7b084ba48fbb15d12de70e07a9d29cabeac3f006817b0",
+        "lines": 106
+      },
+      {
+        "path": "src/compat/Nw4rDiagnostics.cpp",
+        "sha256": "c2242cc0ab1e758676a351617f4a3e019a8f8d837600e19ede2d02354e711643",
+        "lines": 19
+      },
+      {
+        "path": "src/compat/Nw4rLayoutRecordsCompat.cpp",
+        "sha256": "034fde335b9184bd0483f544b74d79ba52f20bebba81d7282459fc3578762be3",
+        "lines": 267
+      },
+      {
+        "path": "src/compat/Nw4rLinkListCompat.cpp",
+        "sha256": "c2576368f9c703eab1b4381e45b6be964d8e572f06600f61b11127dc5b2a3beb",
+        "lines": 58
+      },
+      {
+        "path": "src/compat/OriginalAlphaClear.cpp",
+        "sha256": "f393ca3aa11635903bed290d70f38bd7542e5f0f4a5bf81986737c3a721ecc29",
+        "lines": 56
+      },
+      {
+        "path": "src/compat/OriginalClearZBuffer.cpp",
+        "sha256": "b1995be522d03c3005153b54ef3c035b39455f3582c93478fb4d15a0efed368e",
+        "lines": 84
+      },
+      {
+        "path": "src/compat/OriginalFurAccess.cpp",
+        "sha256": "f6e9604a4d0e358069c35749eb89e71a4be64d11029ca572b487eede07d093de",
+        "lines": 18
+      },
+      {
+        "path": "src/compat/OriginalGCaptureQueries.cpp",
+        "sha256": "bb54394c8d1f8930501510dac9f664a4bf2ed32f37df50aab58bcf4e96245bf3",
+        "lines": 18
+      },
+      {
+        "path": "src/compat/OriginalGameDiagnostics.cpp",
+        "sha256": "a9074c2eae7ecfbf846dfcc062c167585570d9ef382ff93697a68cadfe7aac0d",
+        "lines": 27
+      },
+      {
+        "path": "src/compat/OriginalGameDiagnostics.hpp",
+        "sha256": "23fb3bc2bacf7c39196b917ad11bcf53be9b04b31826ed874165b84343d191b1",
+        "lines": 8
+      },
+      {
+        "path": "src/compat/OriginalGameSystemAccess.cpp",
+        "sha256": "55aa3e02480145a0ecf0216ffc8c53b8694668738961d15e8095e39e9b13be62",
+        "lines": 53
+      },
+      {
+        "path": "src/compat/OriginalJointAccess.cpp",
+        "sha256": "f57eee0838fb5fae1e36e7dbfc2aa349acc18ad141e5826b1408ace5aacbf4c5",
+        "lines": 158
+      },
+      {
+        "path": "src/compat/OriginalJutCapture.cpp",
+        "sha256": "443a15f2df14937bb2eee2146a73f39cea7d9561032be91112d2f3353059f2f5",
+        "lines": 12
+      },
+      {
+        "path": "src/compat/OriginalLayoutLocale.cpp",
+        "sha256": "f7e7c9982147bc1dfd7f657f505b73abfa340d9eb48d5d3987417e0d5e5f9984",
+        "lines": 100
+      },
+      {
+        "path": "src/compat/OriginalMapQueries.cpp",
+        "sha256": "68a3b7b3b3a81393c0b0741bdfc5943c577ccdc81187bf15c3d9a4ad11ed48d5",
+        "lines": 296
+      },
+      {
+        "path": "src/compat/OriginalMirrorReflectionUtil.cpp",
+        "sha256": "cc59e1424e9ae5509bac3ca594b58aa3555432fdbd6ef518d5014921922aeee1",
+        "lines": 62
+      },
+      {
+        "path": "src/compat/OriginalMtxGeometry.cpp",
+        "sha256": "5d05af1d3120b68315dae97942ec3f2eeb58bdac84990b40d1dc1294e8ac1a43",
+        "lines": 116
+      },
+      {
+        "path": "src/compat/OriginalNameObjExecuteHolder.cpp",
+        "sha256": "343ca94a801427ba808a4732b29169713c7ad7c43d82f507bcd6b9f4d5331e38",
+        "lines": 445
+      },
+      {
+        "path": "src/compat/OriginalPointerVectorQueries.cpp",
+        "sha256": "e64c7dae48b87f38e52bb0953667a60af1a23063f8b917a758082d653f5c4380",
+        "lines": 37
+      },
+      {
+        "path": "src/compat/OriginalSceneCounterQueries.cpp",
+        "sha256": "aa63fd17f81e17e4af88692fb68dd5525f98b12e733f03131cc257a38847d02e",
+        "lines": 65
+      },
+      {
+        "path": "src/compat/OriginalSceneDrawUtil.cpp",
+        "sha256": "d2fd020e1221274dad228a2b57d78f15ae2a92dbc8458f6f9be60b9734fecd06",
+        "lines": 31
+      },
+      {
+        "path": "src/compat/OriginalScreenConfig.cpp",
+        "sha256": "8fe79a62f9584fda01a1ad4686ab19e7fffa37883b81d7b1512c35863d8689c0",
+        "lines": 10
+      },
+      {
+        "path": "src/compat/OriginalStarPointerDepth.cpp",
+        "sha256": "3722771b42325d08f687820e5a826f49c5f86f49930db2eda80617dc5b269807",
+        "lines": 127
+      },
+      {
+        "path": "src/compat/OriginalStarPointerDirector.cpp",
+        "sha256": "a5d24c593477cd248dd421478318006ceaa48eb711210cc78f7c53dfed82aa36",
+        "lines": 201
+      },
+      {
+        "path": "src/compat/OriginalStarPointerOwnerQueries.cpp",
+        "sha256": "41a3588b2f48231612c355183dbb56b9759db974eef6c69e734c03ea5dbfc7d6",
+        "lines": 658
+      },
+      {
+        "path": "src/compat/OriginalSystemConfigAccessors.cpp",
+        "sha256": "cabd684040954cd5216692b6d89405484eef00684b30e603a80056e95170d359",
+        "lines": 205
+      },
+      {
+        "path": "src/compat/OriginalSystemProductInfo.cpp",
+        "sha256": "dc88d45947a951f8a3858985cf1f5c7add354a7c30a945c481b9feffff23d087",
+        "lines": 137
+      },
+      {
+        "path": "src/compat/OriginalTripodBossQuery.cpp",
+        "sha256": "674c5aadcd5b5813b56f8df72f207875f74def9800f87256487bea45d9e35fe7",
+        "lines": 59
+      },
+      {
+        "path": "src/compat/OriginalVectorOrientation.cpp",
+        "sha256": "e9592a45f1d48a964b90527008f83cd0c93739d828d616005c51df6ffd659674",
+        "lines": 60
+      },
+      {
+        "path": "src/compat/OriginalWPadHolder.cpp",
+        "sha256": "ce82b871be2ea41848f7482348546a5bc9ebcf35ba940d3b4ea9dc355117313e",
+        "lines": 187
+      },
+      {
+        "path": "src/compat/OriginalWPadSpeaker.cpp",
+        "sha256": "be565ade0d2c716279d6593a6d6d729a22683cf955f33bd2703e5228c23febf9",
+        "lines": 105
+      },
+      {
+        "path": "src/compat/PPCArchCompat.cpp",
+        "sha256": "edc5506349ed00a4622b1bd8910156c738b6a7914063082d964b808e12adbc17",
+        "lines": 10
+      },
+      {
+        "path": "src/compat/PlanetMapRuntimeCompat.cpp",
+        "sha256": "40c4b353023bc4b3e4e615ba503e30506ef57664d922dfc6baf45f8d196640a0",
+        "lines": 152
+      },
+      {
+        "path": "src/compat/RumbleCompat.cpp",
+        "sha256": "da9619927fa254568105721b3ed7c39596bccb194411dd92cc7a8322cebc22ff",
+        "lines": 25
+      },
+      {
+        "path": "src/compat/RumbleCompat.hpp",
+        "sha256": "0807df44355ec132e2a6025d5cdc177d4fc507341df961338494c280f1c0cdbe",
+        "lines": 9
+      },
+      {
+        "path": "src/compat/SaveChunkEncoding.cpp",
+        "sha256": "d700ba1ccc5c2d2f413b0f330191054adc951a4e5b8bdd7a7e7ebe3ff881960b",
+        "lines": 253
+      },
+      {
+        "path": "src/compat/SaveChunkEncoding.hpp",
+        "sha256": "da9ea7d762d03eda532ba949709e4ed398e3baed722c176675fed04ef7686310",
+        "lines": 22
+      },
+      {
+        "path": "src/compat/ScenarioDataParserAccess.cpp",
+        "sha256": "5692b874481291c5a2d9e38fef2a694b316da285af7887b930254f75921df8ef",
+        "lines": 17
+      },
+      {
+        "path": "src/compat/SceneConnectionCompat.cpp",
+        "sha256": "9d641c7de67a872f7924a5243cfa6206756e47700fce25df2d101843395e849e",
+        "lines": 12
+      },
+      {
+        "path": "src/compat/SceneInitializationCompat.cpp",
+        "sha256": "bd1eb13ea2c170dbd8dc89e7e6467f5f8e34eef436d56b8bebf4c421342b17a9",
+        "lines": 89
+      },
+      {
+        "path": "src/compat/SceneLifetimeCompat.cpp",
+        "sha256": "cca1eee582195e26c39221d18dbd26dc278a8be28b354c299ffaf5b50a7f42d9",
+        "lines": 49
+      },
+      {
+        "path": "src/compat/SceneMovementCompat.cpp",
+        "sha256": "a5a22e62eb48eec50b514dcb7d919e077e57e3956b65ad3893de02a744254b36",
+        "lines": 61
+      },
+      {
+        "path": "src/compat/SceneMovementOwnerLifetime.cpp",
+        "sha256": "47a67fd1a878f219b9fd740d39aa8f062f197e3f0f7d4dec49b3923c71d9d528",
+        "lines": 8
+      },
+      {
+        "path": "src/compat/SceneNameObjUtilCompat.cpp",
+        "sha256": "e4a45742a92c0b3663cd54393d1b9a684c7c8c598959703dc15b243fa86f3f0c",
+        "lines": 40
+      },
+      {
+        "path": "src/compat/SceneObjHolderCompat.cpp",
+        "sha256": "2708d8c8fa96cfab173aba81cad842d98e51c747a0c8ad75f107eb52c37c3f22",
+        "lines": 733
+      },
+      {
+        "path": "src/compat/SceneSystemUtilCompat.cpp",
+        "sha256": "12319896baf25cf94610efd59bd977d93381b99d6e910c61da9471a088436782",
+        "lines": 53
+      },
+      {
+        "path": "src/compat/SimpleLayoutCompat.cpp",
+        "sha256": "e0f8cbf63da6d13bee1dae02aae2d5d2c75cb57d5ec0691d14156efd06fb9ca1",
+        "lines": 15
+      },
+      {
+        "path": "src/compat/SphereSelectorRuntimeCompat.cpp",
+        "sha256": "b45a68cd0b9da50bd532650643be7a19249e214980f3573551129f0ac573007b",
+        "lines": 36
+      },
+      {
+        "path": "src/compat/StageScenarioMetadataResolver.cpp",
+        "sha256": "494d74e838956d05865c29653b34ca669221af4cd46cca0066708b86a55afcbb",
+        "lines": 122
+      },
+      {
+        "path": "src/compat/StageScenarioMetadataResolver.hpp",
+        "sha256": "765dc9a27624b069ddbd5ce2b3a1e2c2182ddac32219c5546cb00fa3f5d7db28",
+        "lines": 26
+      },
+      {
+        "path": "src/compat/StageSessionGameCompat.cpp",
+        "sha256": "e9e030ff460118e84cdf4ed627a1ee41c2c01d4c32956824c3b51cddfefe145c",
+        "lines": 27
+      },
+      {
+        "path": "src/compat/StageSessionState.cpp",
+        "sha256": "addefd1e6ffa1d0794c23e8e9c2d1ea2e1f404af196edc5b3e0da85486f30b95",
+        "lines": 144
+      },
+      {
+        "path": "src/compat/StageSessionState.hpp",
+        "sha256": "71d73fe60778840b8ecafc21b6b6aa7aee06a4dd93bf6db597215c5b08de6e19",
+        "lines": 96
+      },
+      {
+        "path": "src/compat/StarPointerDepthOwnership.cpp",
+        "sha256": "147319c32cc7369c3eab4216d8ffce2264113c6ff8d1c9fbf84b558e2885c7b7",
+        "lines": 274
+      },
+      {
+        "path": "src/compat/StarPointerDepthOwnership.hpp",
+        "sha256": "6ee446ee2d7bb891b498bcc49546ab28781638a6d91d06fed9d591d3d3a623c6",
+        "lines": 62
+      },
+      {
+        "path": "src/compat/StarPointerServiceCompat.cpp",
+        "sha256": "6f63f8cd794ffc92e0f49706262ad23c2a1fdf489df532ab2ca63a3736d7ad30",
+        "lines": 129
+      },
+      {
+        "path": "src/compat/TalkDirectorLifetime.cpp",
+        "sha256": "f871ac115beddef81a1fb9407d11eb0efa297cdd9ef0cbfeda667db51b714822",
+        "lines": 102
+      },
+      {
+        "path": "src/compat/TalkDirectorLifetime.hpp",
+        "sha256": "5f7141cd92b055ba32f4bdc85b3092cddeab73655135ba8980c917657bf2932a",
+        "lines": 25
+      },
+      {
+        "path": "src/compat/WPadDestruction.cpp",
+        "sha256": "f8f78b57913c86f1646ae2fa97ccbf027c6b857dc4c74aa8fd633abb980e5f46",
+        "lines": 29
+      },
+      {
+        "path": "src/compat/WPadOwnership.cpp",
+        "sha256": "25fca7e5ed1605ba0f9a4c7fd4957026ed8ac2dfa23a9addebac3e34007a746f",
+        "lines": 136
+      },
+      {
+        "path": "src/compat/WPadOwnership.hpp",
+        "sha256": "af49d33c0615a343a4f0709f770f0ebc377a784d6e3b53821238a514e18d991d",
+        "lines": 34
+      },
+      {
+        "path": "src/compat/XanimeQueryCompat.cpp",
+        "sha256": "bb83d0788c8bdd425b80924df691b60059e44460f31094029ca0c551073a991c",
+        "lines": 42
+      },
+      {
+        "path": "src/compat/jaudio/JAIAudible.cpp",
+        "sha256": "ee383b49cc26852a18d05581fd51f4895d90373aab10b0ea823b96167eb5956e",
+        "lines": 3
+      },
+      {
+        "path": "src/compat/jaudio/JAIAudience.cpp",
+        "sha256": "8001914c66b2ef1c430dac4b9a20de19969e50e5187674757e035550396f3fc8",
+        "lines": 4
+      }
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "target": "smg-pc-area-obj-real-or-absent-tests",
+    "build_exit": 0
+  },
+  {
+    "target": "smg-pc-hash-sort-table-tests",
+    "build_exit": 0
+  },
+  {
+    "target": "smg-pc-game-math-rotation-tests",
+    "build_exit": 255
+  },
+  {
+    "target": "smg-pc-gravity-math-foundation-tests",
+    "build_exit": 255
+  },
+  {
+    "target": "smg-pc-original-j3d-packet-tests",
+    "build_exit": 0
+  },
+  {
+    "target": "smg-pc-original-wpad-ownership-tests",
+    "build_exit": 0
+  },
+  {
+    "target": "smg-pc-demo-start-request-holder-tests",
+    "build_exit": 0
+  },
+  {
+    "target": "smg-pc-scene-lifetime-binding-tests",
+    "build_exit": 0
+  },
+  {
+    "target": "smg-pc-original-scene-execution-owner-tests",
+    "build_exit": 0
+  },
+  {
+    "target": "smg-pc-original-camera-context-tests",
+    "build_exit": 0
+  },
+  {
+    "target": "smg-pc-original-camera-holder-tests",
+    "build_exit": 0
+  },
+  {
+    "target": "smg-pc-original-event-sequence-tests",
+    "build_exit": 0
+  }
+]

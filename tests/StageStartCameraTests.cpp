@@ -13,7 +13,7 @@
 #include "camera/StageStartCamera.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CameraUtilCompat.hpp"
-#include "compat/DemoSceneRuntime.hpp"
+#include "SceneExecutionFixture.hpp"
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -1161,9 +1161,12 @@ namespace {
         auto scheduler = smgpc::runtime::SceneScheduler{};
         const auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
         auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
-        auto demo = smgpc::compat::DemoSceneRuntime(dvd, {});
-        auto event_scene_holder = SceneObjHolder{};
-        auto event_scene_binding = smgpc::scene::SceneObjHolderBinding(event_scene_holder);
+        auto heaps = smgpc::compat::JkrHeapRuntime::create(8U << 20);
+        auto event_scene = smgpc::test::SceneExecutionFixture(
+            scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 2U << 20));
+        auto& event_scene_holder = event_scene.holder();
+        require(event_scene_holder.create(SceneObj_DemoDirector) != nullptr,
+                "retail camera integration requires the actual scene DemoDirector");
         require(event_scene_holder.create(SceneObj_AreaObjContainer) != nullptr &&
                     event_scene_holder.create(SceneObj_PlanetGravityManager) != nullptr,
                 "the original stage view and matrix target require real area and gravity scene registries");

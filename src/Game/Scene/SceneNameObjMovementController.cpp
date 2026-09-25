@@ -221,3 +221,8 @@ namespace MR {
         getSceneNameObjMovementController()->notifyRequestNameObjMovementOnOff(true);
     }
 };  // namespace MR
+
+// Native scene retirement runs the owned state destructor before releasing its heap.
+SceneNameObjMovementController::~SceneNameObjMovementController() {
+    delete mStopSceneStateControl;
+}

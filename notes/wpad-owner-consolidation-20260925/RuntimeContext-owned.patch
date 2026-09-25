@@ -1,0 +1,18 @@
+--- a/src/runtime/RuntimeContext.cpp
++++ b/src/runtime/RuntimeContext.cpp
+@@ -46,7 +46,6 @@
+ #include "layout/LayoutHost.hpp"
+ #include "layout/LayoutRuntime.hpp"
+ #include "compat/AudioFacadeCompat.hpp"
+-#include "compat/RumbleCompat.hpp"
+ #include "camera/CameraParam.hpp"
+ 
+ namespace smgpc::runtime {
+@@ -253,7 +252,6 @@
+             }
+             _system_config = std::make_unique<SystemConfigService>(_save_data.nand());
+             _nand_sdk = std::make_unique<compat::NandSdkBinding>(_save_data);
+-            _rumble.attach_actuator(smgpc::compat::aurora_rumble_actuator());
+             aurora::wpad_service().clear();
+             _draw_sync = std::make_unique<compat::DrawSyncManagerLifetime>(_host_heaps);
+             _display = std::make_unique<OriginalDisplayLifetime>(_window_service, _host_heaps, *MR::getSuitableRenderMode());

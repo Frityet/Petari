@@ -1,0 +1,337 @@
+[
+  {
+    "path": "src/compat/ActorRuntimeRegistry.cpp",
+    "sha256": "365b79d5f86e3713bbd6a04f5530f907d717a6b506aabb328fbdca6d4e11bd8f",
+    "lines": 927
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.hpp",
+    "sha256": "d411614662fa2d273d1e42fb46fb4f3f72d75658757ea244ec1e17b21381b8f3",
+    "lines": 290
+  },
+  {
+    "path": "src/compat/BinderCompat.cpp",
+    "sha256": "082e0d40d0dad01f565779c5c965cc4a1e266fc7bdea7112dd462ffda6b355db",
+    "lines": 22
+  },
+  {
+    "path": "src/compat/CameraLocalUtilRuntime.cpp",
+    "sha256": "175aab2f433ec97cb56100db98ee349bd0f4d9d1e66410aa3e02e7c1686a56ac",
+    "lines": 431
+  },
+  {
+    "path": "src/compat/CameraLocalUtilRuntime.hpp",
+    "sha256": "80609b0195965cdf053b40b66393cc165ada661bcfaf81597beea81e52071e6e",
+    "lines": 39
+  },
+  {
+    "path": "src/compat/CameraUtilCompat.cpp",
+    "sha256": "306e47dc629fb416201eb57e7c7921c32fd2697b921be7293370ba78330f7bd8",
+    "lines": 34
+  },
+  {
+    "path": "src/compat/CameraUtilCompat.hpp",
+    "sha256": "629fa5b5e2918c2ce35b444898e131a32a1cfb29a81b716eb01b99e22369ff59",
+    "lines": 15
+  },
+  {
+    "path": "src/compat/CameraViewRuntime.cpp",
+    "sha256": "e8147ae1864baa3550caf5dbf4268723a6f368b82df70ceabe5744dd141696a8",
+    "lines": 24
+  },
+  {
+    "path": "src/compat/CameraViewRuntime.hpp",
+    "sha256": "a0aad0488105b1512d2d52272a020cd19825fe9e11211bd268495b65a8ffec88",
+    "lines": 30
+  },
+  {
+    "path": "src/compat/ClippingDirectorOwnership.cpp",
+    "sha256": "cc365a0fad3369f58dc6330cd5b3c7e1e7b2c22f155fa650731b06baa7942815",
+    "lines": 109
+  },
+  {
+    "path": "src/compat/ClippingDirectorOwnership.hpp",
+    "sha256": "1cf1046cb3b8a60cfcebfc39eb6850361c2999b6d1bf89cd4331bdd2d1576263",
+    "lines": 44
+  },
+  {
+    "path": "src/compat/CollisionDirectorOwnership.cpp",
+    "sha256": "14279c598146916c62326462129cff0948b6ec26bed92cca3b774db3827c97ef",
+    "lines": 84
+  },
+  {
+    "path": "src/compat/CollisionDirectorOwnership.hpp",
+    "sha256": "4194229fa5aeb71ff2ae1e2a180b5ae20ae8527ce6ca7dbdd802d6e4b5f92fd3",
+    "lines": 40
+  },
+  {
+    "path": "src/compat/CollisionPartsCompat.cpp",
+    "sha256": "338b45f70676cc60ecb76ea0e36d29bbb79d9c444ea8c14d47e21dfb782c49ce",
+    "lines": 290
+  },
+  {
+    "path": "src/compat/CollisionPartsCompat.hpp",
+    "sha256": "f64e8a2470821c376935d938c549aca793ff117cf1f1f7864e2fc018c77bed8b",
+    "lines": 62
+  },
+  {
+    "path": "src/compat/FixedPositionCompat.cpp",
+    "sha256": "c63811c842ed3610b8f10067e9f35a0f7f712e62fc06d7ca309e98825b281676",
+    "lines": 84
+  },
+  {
+    "path": "src/compat/FixedPositionCompat.hpp",
+    "sha256": "f25ef9958c253d62287c35adf033265f10f97132524f6aa737e7a2e4d9101700",
+    "lines": 21
+  },
+  {
+    "path": "src/compat/GameActorPhysicsCompat.cpp",
+    "sha256": "bcae8b2c5c23f4355f5ce275c9a76ecdda13867fe63bccbe5d470d170555d082",
+    "lines": 308
+  },
+  {
+    "path": "src/compat/GameActorSensorCompat.cpp",
+    "sha256": "fb8f3b22ad96f8330fe1ee9967a1d4dc328183a3a5b3fe7a7b65b7bc8b8523c2",
+    "lines": 837
+  },
+  {
+    "path": "src/compat/GameActorSensorCompat.hpp",
+    "sha256": "ce50b1c956be109ae0942e0b11515cbef32467d9ffc56041a44582b74f61e254",
+    "lines": 16
+  },
+  {
+    "path": "src/compat/GameGravityCompat.cpp",
+    "sha256": "e733c71d80b50a1036078056c6dc81e2faf1f9ae748278d1cd1052fd128eebc7",
+    "lines": 251
+  },
+  {
+    "path": "src/compat/GameGravityCompat.hpp",
+    "sha256": "963f69da07dccada724650e40e920c7c4d79f95df9e1f24524bdb83fa9a35857",
+    "lines": 61
+  },
+  {
+    "path": "src/compat/GameMapCollisionCompat.cpp",
+    "sha256": "1f6ffea41b23b22632582eff343bc7f5edec69125fec49399fad3fb1e7994dbf",
+    "lines": 291
+  },
+  {
+    "path": "src/compat/GameMathCompat.cpp",
+    "sha256": "7806139a8f70c63cd4da47291b640c11e044545936beb33a6959851d33271382",
+    "lines": 1045
+  },
+  {
+    "path": "src/compat/GlobalGravityOwnership.cpp",
+    "sha256": "1c0966e95f80a8877a2215032bdac30db04b14754c22a22f021addeaa21a6b61",
+    "lines": 511
+  },
+  {
+    "path": "src/compat/GlobalGravityOwnership.hpp",
+    "sha256": "91b0921242493e1a5b1d73cbb1525f333fd672d022ec4b4228918f215e8d5ca4",
+    "lines": 60
+  },
+  {
+    "path": "src/compat/HitInfoCompat.cpp",
+    "sha256": "c11366ed0d8977e198f2adbbbb99a4d194cf459f13db103a78c67329a8e7bd83",
+    "lines": 338
+  },
+  {
+    "path": "src/compat/HitInfoCompat.hpp",
+    "sha256": "47ab1cc7f95f88f68a369cd75415462b25e540234cffcb541031271b5cb107d8",
+    "lines": 13
+  },
+  {
+    "path": "src/compat/JMapUtilCompat.cpp",
+    "sha256": "baa59b4ab18f367decbc7a2dc5009f95efdff7940d487a19096c74eb295183c3",
+    "lines": 48
+  },
+  {
+    "path": "src/compat/JMathQuaternionCompat.cpp",
+    "sha256": "5d46a5574a2c718b32f26877c8bead5fa731abce599797c1c43e48e64ca4e9e6",
+    "lines": 71
+  },
+  {
+    "path": "src/compat/JMathVectorCompat.cpp",
+    "sha256": "bb147f9eba1c394e3728c354eb5690c147b530176589509526b18bf028c4bc28",
+    "lines": 15
+  },
+  {
+    "path": "src/compat/LiveActorUtilCompat.cpp",
+    "sha256": "47eeb95e4df00dee4ff24cba4c8386a139f7bea2c257216a97144adb9e5bcf12",
+    "lines": 430
+  },
+  {
+    "path": "src/compat/LodCtrlRuntimeCompat.cpp",
+    "sha256": "140c765fc123eadc578b7140396574926cc125e9a2073541069115532a9ec177",
+    "lines": 91
+  },
+  {
+    "path": "src/compat/MarioAnimatorLifetime.cpp",
+    "sha256": "1f43c5fab34a6774f827cabab5d9b2d0e11c51d1be9c4b9d910253bfecb34551",
+    "lines": 197
+  },
+  {
+    "path": "src/compat/MarioAnimatorLifetime.hpp",
+    "sha256": "37affae70d13950e570a73f3be91ca03d39966cb8ff77001adfe1b31935922f3",
+    "lines": 20
+  },
+  {
+    "path": "src/compat/MarioCameraTarget.cpp",
+    "sha256": "476035ff92e8a795c0194274379756c68aa97ba886d5c3807632de7a517afd23",
+    "lines": 35
+  },
+  {
+    "path": "src/compat/MarioCameraTarget.hpp",
+    "sha256": "c558ae3176748b4d6630be281e972e5fdae5361f439716dcdf8bb5a02d51de14",
+    "lines": 12
+  },
+  {
+    "path": "src/compat/MatrixTranslationCompat.cpp",
+    "sha256": "b51c74d570806ef9fd87da1f41ae9d7ae2e555216462f5a8af48126569080a67",
+    "lines": 16
+  },
+  {
+    "path": "src/compat/ModelCreationCompat.cpp",
+    "sha256": "ae6981d96beaf8e531b55d427d9d61836338cd64c3c7b4e51d776deb94b90e04",
+    "lines": 79
+  },
+  {
+    "path": "src/compat/ModelFogCompat.cpp",
+    "sha256": "bd52710af64949ffc5735616b0b1b6554b957dd25bfde6079befd7f5a69268cb",
+    "lines": 28
+  },
+  {
+    "path": "src/compat/ModelManagerOwner.cpp",
+    "sha256": "da07f7a078f07d137c9b4f1001f3a27ae5bcff26705f39e06c2a35bd342e8b07",
+    "lines": 91
+  },
+  {
+    "path": "src/compat/ModelManagerOwner.hpp",
+    "sha256": "a6cf66cb18a2f3976821f0b3cdf387964150cffae647c5a9521a07417b1352da",
+    "lines": 24
+  },
+  {
+    "path": "src/compat/ModelPostLoadCompat.cpp",
+    "sha256": "b45dd348dbe22510207b6d50f76a772ffa20020f35d7541aff48fcbba6ad9b63",
+    "lines": 90
+  },
+  {
+    "path": "src/compat/OriginalActorAnimationStart.cpp",
+    "sha256": "f204b6944cf438da2473e71987c9f48afa572b7e2cd12aa20a89dfe160c8ebd0",
+    "lines": 280
+  },
+  {
+    "path": "src/compat/OriginalActorBckControl.cpp",
+    "sha256": "c3ee772ba19512d913d47cf2a80cafc57d0f544212e28a62f723551e2c6383e3",
+    "lines": 23
+  },
+  {
+    "path": "src/compat/OriginalActorBroadcast.cpp",
+    "sha256": "08834a75bd78c9f9003282dc411961595db76123ad345b458b08447cad0bea1e",
+    "lines": 26
+  },
+  {
+    "path": "src/compat/OriginalActorModelAccess.cpp",
+    "sha256": "97823512d19f3bf86bcf2eb8c6af089882570fc8c675ce8abdf7f840ab479806",
+    "lines": 624
+  },
+  {
+    "path": "src/compat/OriginalBinderFilterUtil.cpp",
+    "sha256": "6bea3a4a0fa7fa366fc1f8a9cb58e6e3beba4591f3e7179537fddd00bf57cc5c",
+    "lines": 20
+  },
+  {
+    "path": "src/compat/OriginalBinderQueries.cpp",
+    "sha256": "77ec46ad93ec5f49ded6a6e2358aa0d51fb797dc3b4ba11377a948162e27fe71",
+    "lines": 161
+  },
+  {
+    "path": "src/compat/OriginalCameraOwnerUtil.cpp",
+    "sha256": "344b27def7cdb0f92e67509b9a0f26f03944946355e1f6f632c72a2c67a10367",
+    "lines": 117
+  },
+  {
+    "path": "src/compat/OriginalCameraTargetActor.cpp",
+    "sha256": "7dcd7591f812fc9eca423a9eab88ef7335bce96466f8c93df2c3479808030514",
+    "lines": 80
+  },
+  {
+    "path": "src/compat/OriginalCameraTargetPlayer.cpp",
+    "sha256": "748ac8e5e1dbb365168ce3d9950ccc20c7c7b1d728828750240c98eeb1243a78",
+    "lines": 163
+  },
+  {
+    "path": "src/compat/OriginalCollisionGeometry.cpp",
+    "sha256": "a168d818bb2d2e531dde55fc02d3dbaac465390135435a528dd196b0e0e28c86",
+    "lines": 60
+  },
+  {
+    "path": "src/compat/OriginalCollisionPartsCompat.cpp",
+    "sha256": "435c1b47606f17045340a8c33040b29c5a5cd7defdc2e9b4664a37f3cd287445",
+    "lines": 573
+  },
+  {
+    "path": "src/compat/OriginalCollisionPartsUtil.cpp",
+    "sha256": "c4b49b8cee53f2dad912abcffa4242d244b386ce0d61890b11d93ac97bf95f94",
+    "lines": 243
+  },
+  {
+    "path": "src/compat/OriginalDynamicCollisionObj.cpp",
+    "sha256": "efbd9a21fef686698b3048a58d3a494dcb52f97e06159f79408b84860939b7c3",
+    "lines": 207
+  },
+  {
+    "path": "src/compat/OriginalJMathSqrt.cpp",
+    "sha256": "6aae8adf695e926aeab36cd0ddca54a6058611657bbd4ab1c962212cd3255227",
+    "lines": 21
+  },
+  {
+    "path": "src/compat/OriginalKCollisionCompat.cpp",
+    "sha256": "11db2f489c776ad40a5c3439d4dcd940528eee13ca4a9770ec4c9986a9510f52",
+    "lines": 1393
+  },
+  {
+    "path": "src/compat/OriginalLiveActorGroupUtil.cpp",
+    "sha256": "bae33b4c21c102efb4005e1a0735c1ec90193719fe971a74217e4c1d1bb2bc73",
+    "lines": 162
+  },
+  {
+    "path": "src/compat/OriginalMatrixTransforms.cpp",
+    "sha256": "0a15044bcd95f623e759e5e5b8931d93d7e9ac42a2ac706ff40e56618eb71400",
+    "lines": 228
+  },
+  {
+    "path": "src/compat/OriginalModelAccess.cpp",
+    "sha256": "0de0cd2d5b4b20901b18ea79e9dd0364bffb54bcdff6a3f16a13683ea20b900a",
+    "lines": 220
+  },
+  {
+    "path": "src/compat/OriginalModelBounds.cpp",
+    "sha256": "d16680c5c302f790d751c7e8b437facb4a2841700ac3bd49225858978a81ff95",
+    "lines": 88
+  },
+  {
+    "path": "src/compat/OriginalPlacementJMap.cpp",
+    "sha256": "7350db3a162fe82e94f3ad2dc5c8f9c51205e5a98ac35c75f70ece5061db00f8",
+    "lines": 7
+  },
+  {
+    "path": "src/compat/OriginalPlayerEventUtil.cpp",
+    "sha256": "72949ddef9e85c8002ed0cef945dfee360bf77a2ef12e43bcf6a1404a2e3956d",
+    "lines": 23
+  },
+  {
+    "path": "src/compat/SensorHitCheckerOwnership.cpp",
+    "sha256": "881a4c46977ead91873860119f91983649141d59766a505e4bc32c9b69e3f82d",
+    "lines": 11
+  },
+  {
+    "path": "src/compat/StageZoneMatrixRegistry.cpp",
+    "sha256": "7a42f1beefc1b90bcbbb32e4ecb2be641428bff23d293c9136d6793f5a8ffda3",
+    "lines": 116
+  },
+  {
+    "path": "src/compat/StageZoneMatrixRegistry.hpp",
+    "sha256": "9503ab358db3b2c69e2db6f7ebbe72ec68264b90c745c843ad04eb17d752b8e2",
+    "lines": 53
+  }
+]

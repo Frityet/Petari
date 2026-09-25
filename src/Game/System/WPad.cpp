@@ -14,19 +14,38 @@ WPad::WPad(s32 channel)
     : mChannel(channel), mReadInfo(nullptr), mButton(nullptr), mPointer(nullptr), mCorePadAccel(nullptr), mCorePadSwing(nullptr), _18(nullptr),
       _1C(nullptr), mStick(nullptr), mSubPadAccel(nullptr), mSubPadSwing(nullptr), mLeaveWatcher(nullptr), mInfoChecker(nullptr), _34(true),
       mIsConnected(false), mIsSubPadConnected(false) {
-    mButton = new WPadButton(this);
-    mPointer = new WPadPointer(this);
-    mCorePadAccel = new WPadAcceleration(this, WPAD_DEV_CORE);
-    mCorePadSwing = new WPadHVSwing(this, WPAD_DEV_CORE);
-    _18 = new WPadRumble(this);
-    _1C = new WPadRumble(this);
-    _18->registInstance();
-    mSubPadAccel = new WPadAcceleration(this, WPAD_DEV_FREESTYLE);
-    mSubPadSwing = new WPadHVSwing(this, WPAD_DEV_FREESTYLE);
-    mStick = new WPadStick(this);
-    mLeaveWatcher = new WPadLeaveWatcher(this);
-    mInfoChecker = new WPadInfoChecker(this);
-    mSubPadSwing->_8 = 2.0f;
+    try {
+        mButton = new WPadButton(this);
+        mPointer = new WPadPointer(this);
+        mCorePadAccel = new WPadAcceleration(this, WPAD_DEV_CORE);
+        mCorePadSwing = new WPadHVSwing(this, WPAD_DEV_CORE);
+        _18 = new WPadRumble(this);
+        _1C = new WPadRumble(this);
+        _18->registInstance();
+        mSubPadAccel = new WPadAcceleration(this, WPAD_DEV_FREESTYLE);
+        mSubPadSwing = new WPadHVSwing(this, WPAD_DEV_FREESTYLE);
+        mStick = new WPadStick(this);
+        mLeaveWatcher = new WPadLeaveWatcher(this);
+        mInfoChecker = new WPadInfoChecker(this);
+        mSubPadSwing->_8 = 2.0f;
+    } catch (...) {
+        this->~WPad();
+        throw;
+    }
+}
+
+WPad::~WPad() {
+    delete mInfoChecker;
+    delete mLeaveWatcher;
+    delete mStick;
+    delete mSubPadSwing;
+    delete mSubPadAccel;
+    delete _1C;
+    delete _18;
+    delete mCorePadSwing;
+    delete mCorePadAccel;
+    delete mPointer;
+    delete mButton;
 }
 
 void WPad::setReadInfo(WPadReadDataInfo* pReadInfo) {

@@ -36,11 +36,9 @@ target("smg-pc-game")
     remove_files("AudioLib/AudTrackController.cpp")
     remove_files("AudioLib/AudSystemVolumeController.cpp")
     remove_files("AudioLib/AudWrap.cpp")
-    remove_files("AreaObj/AreaObjContainer.cpp")
     remove_files("Screen/FileSelectInfo.cpp")
     remove_files("Screen/LayoutActor.cpp")
     remove_files("Screen/LayoutPaneCtrl.cpp")
-    remove_files("Screen/SimpleLayout.cpp")
     remove_files("Screen/FullScreenBlur.cpp")
     remove_files("Map/FileSelectEffect.cpp")
     remove_files("Map/CollisionParts.cpp")
@@ -48,8 +46,6 @@ target("smg-pc-game")
     remove_files("Map/FileSelectItem.cpp")
     remove_files("Map/FileSelector.cpp")
     remove_files("NameObj/NameObjFactory.cpp")
-    remove_files("NameObj/NameObj.cpp")
-    remove_files("Scene/Scene.cpp")
     remove_files("Scene/SceneFunction.cpp")
     remove_files("Scene/SceneObjHolder.cpp")
     remove_files("System/GameDataFunction.cpp")
@@ -63,7 +59,6 @@ target("smg-pc-game")
     remove_files("Util/ActorShadowUtil.cpp")
     remove_files("Util/LiveActorUtil.cpp")
     remove_files("Util/MapUtil.cpp")
-    remove_files("Util/MathUtil.cpp")
     remove_files("Util/SystemUtil.cpp")
     remove_files("Util/StarPointerUtil.cpp")
     remove_files("Util/SoundUtil.cpp")
@@ -94,10 +89,9 @@ target("smg-pc-game")
     -- Its numeric fallback must call host libc outside the forced MSL aliases.
     remove_files("../compat/MslPrintfCompat.cpp")
     -- Original paired-single helpers make fused and rounded operations explicit.
-    add_files("../compat/GameMathCompat.cpp", {cxxflags = "-ffp-contract=off"})
+    add_files("Util/MathUtil.cpp", {cxxflags = "-ffp-contract=off"})
     add_files({"Util/ActorMovementUtil.cpp", "../compat/OriginalMapQueries.cpp",
-               "../compat/OriginalCollisionPartsCompat.cpp", "../compat/OriginalKCollisionCompat.cpp",
-               "../compat/OriginalJMathSqrt.cpp"},
+               "../compat/OriginalCollisionPartsCompat.cpp", "../compat/OriginalKCollisionCompat.cpp"},
               {cxxflags = "-ffp-contract=off"})
     add_files("../JSystem/J2DGraph/**.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("../JSystem/JParticle/**.cpp", {cxxflags = "-ffp-contract=off"})
@@ -120,6 +114,23 @@ target("smg-pc-game")
         "../render/light/LightData.cpp",
     }
     add_files("../JSystem/JGeometry/TMatrix.cpp", {cxxflags = "-ffp-contract=off"})
+    add_files({
+        "../JSystem/JKernel/JKRDisposer.cpp",
+        "../JSystem/JKernel/JKRFileFinder.cpp",
+        "../JSystem/JSupport/JSUList.cpp",
+        "../JSystem/JUtility/JUTNameTab.cpp",
+        "../JSystem/JAudio2/JAIAudible.cpp",
+        "../JSystem/JAudio2/JAIAudience.cpp",
+        "../JSystem/JAudio2/JAISound.cpp",
+        "../JSystem/JAudio2/JAISoundChild.cpp",
+        "../JSystem/JAudio2/JAISoundHandles.cpp",
+        "../JSystem/JAudio2/JAISoundStarter.cpp",
+        "../JSystem/JAudio2/JAIStream.cpp",
+        "../JSystem/JAudio2/JAIStreamDataMgr.cpp",
+        "../JSystem/JAudio2/JAIStreamMgr.cpp",
+        "../JSystem/JAudio2/JASSoundParams.cpp",
+    })
+    add_files("../JSystem/J3DGraphBase/J3DPacket.cpp", "../nw4r/ut/ut_LinkList.cpp")
     add_files("../JSystem/JKernel/JKRThread.cpp")
     add_files("../JSystem/JAudio2/JAUSoundTable.cpp", "../JSystem/JGadget/hashcode.cpp")
     add_files("../JSystem/JUtility/JUTVideo.cpp", "../JSystem/JUtility/JUTXfb.cpp", "../JSystem/JUtility/JUTDirectPrint.cpp", "../JSystem/JUtility/JUTAssert.cpp", "../JSystem/JUtility/JUTConsole.cpp", "../JSystem/JUtility/JUTDbPrint.cpp", "../JSystem/JUtility/JUTFont.cpp", "../JSystem/JUtility/JUTPalette.cpp", "../JSystem/JGadget/linklist.cpp")

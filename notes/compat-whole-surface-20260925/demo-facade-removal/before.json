@@ -1,0 +1,140 @@
+[
+  {
+    "path": "src/compat/DemoCompat.cpp",
+    "sha256": "17796bbaee75c34708975292675a57ebe786b701705614be735ba096a393079a",
+    "lines": 22,
+    "git_status": ""
+  },
+  {
+    "path": "src/compat/DemoSceneRuntime.cpp",
+    "sha256": "b14a178b9b25257babaeed1e44cda9f494821a79b8bf8035baab8653debd8180",
+    "lines": 540,
+    "git_status": ""
+  },
+  {
+    "path": "src/compat/DemoSceneRuntime.hpp",
+    "sha256": "6c13ce9c4efb01ff4115b212d2f3d8eb91f77793aa76b59c87975ebe68b25373",
+    "lines": 194,
+    "git_status": ""
+  },
+  {
+    "path": "src/compat/DemoSheetRuntime.cpp",
+    "sha256": "91ba7002f5aa97a2a322da4b96ededaf422f4efa590b89a8ec5693105d4f64e7",
+    "lines": 528,
+    "git_status": ""
+  },
+  {
+    "path": "src/compat/DemoSheetRuntime.hpp",
+    "sha256": "9e7a3919bcc9dd8c3fa6c3ea9d7aa1eb4d54ba360a1080dc92c4a462d8e8b932",
+    "lines": 169,
+    "git_status": ""
+  },
+  {
+    "path": "src/compat/DemoStartRequestOwner.cpp",
+    "sha256": "0d7b0701e9fa83a518d310e19c70ef65a84278321b319c7e31a635f4439dfa6f",
+    "lines": 38,
+    "git_status": ""
+  },
+  {
+    "path": "src/compat/DemoStartRequestOwner.hpp",
+    "sha256": "affc0617efbd3b373f57d05a5496b1ef486eae0e3713913854a4dcac9f69c1ac",
+    "lines": 30,
+    "git_status": ""
+  },
+  {
+    "path": "src/compat/DemoUtilCompat.cpp",
+    "sha256": "f49d528312fe97332ef20d6a0d2fdab66899e04e6ff6181e9ac7a53a786d23a8",
+    "lines": 8,
+    "git_status": ""
+  },
+  {
+    "path": "src/compat/DemoUtilCompat.hpp",
+    "sha256": "a4b6603c59390811d86cbb2e2782d3feaafa0fb4b6760f454a8e28f660305919",
+    "lines": 9,
+    "git_status": ""
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.cpp",
+    "sha256": "365b79d5f86e3713bbd6a04f5530f907d717a6b506aabb328fbdca6d4e11bd8f",
+    "lines": 927,
+    "git_status": ""
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.hpp",
+    "sha256": "d411614662fa2d273d1e42fb46fb4f3f72d75658757ea244ec1e17b21381b8f3",
+    "lines": 290,
+    "git_status": ""
+  },
+  {
+    "path": "src/compat/DemoDirectorOwnership.cpp",
+    "sha256": "22d91b112edb25d4d5b78ab075fcdf87d2b715fa8387e2db7a61d8d4c008a8cb",
+    "lines": 338,
+    "git_status": ""
+  },
+  {
+    "path": "src/Game/Demo/DemoStartRequestHolder.cpp",
+    "sha256": "b839aa64a05c8616895afc350fbdbac374aab271104827ad53557972a438b271",
+    "lines": 201,
+    "git_status": ""
+  },
+  {
+    "path": "src/Game/Demo/DemoStartRequestHolder.hpp",
+    "sha256": "86388f89e39fc705aa2c48af0fd76cab77900d7a05a1d81d8cc83a008d320f7f",
+    "lines": 71,
+    "git_status": ""
+  },
+  {
+    "path": "tests/DemoSceneRuntimeTests.cpp",
+    "sha256": "5681ea8ad94bd0fa799353dcd6f8ab707426667d7f80b60e9fbe7f9e1edcad8a",
+    "lines": 1986,
+    "git_status": ""
+  },
+  {
+    "path": "tests/DemoSheetRuntimeTests.cpp",
+    "sha256": "b8f73e4093ac952290dc38ca62981da587efbd506aac2fb34247a707cf2f1a28",
+    "lines": 586,
+    "git_status": ""
+  },
+  {
+    "path": "tests/DemoStartRequestHolderTests.cpp",
+    "sha256": "d92c9397999fe5f832c414f50e7d40231c467e621cf4e4825c5b7efa57e0bf34",
+    "lines": 261,
+    "git_status": ""
+  },
+  {
+    "path": "tests/CameraLocalUtilRuntimeTests.cpp",
+    "sha256": "6dc3303148ab1ce85ef0d4c4cc0d401db6ef4b34e39fe3e955f3b9ac280cba51",
+    "lines": 209,
+    "git_status": ""
+  },
+  {
+    "path": "tests/CameraViewInterpolatorTests.cpp",
+    "sha256": "dbd36b7e4af3ae209fa3cd5b79115173a5703c523eb6767fd761e3000cd1f368",
+    "lines": 446,
+    "git_status": " M tests/CameraViewInterpolatorTests.cpp"
+  },
+  {
+    "path": "tests/CameraViewServiceTests.cpp",
+    "sha256": "f5439bdcbe67aec2a8e34ed7862b88bceb5dda039414920c0c3f2baa70c34772",
+    "lines": 332,
+    "git_status": " M tests/CameraViewServiceTests.cpp"
+  },
+  {
+    "path": "tests/StageStartCameraTests.cpp",
+    "sha256": "1171bacb203d9120fdb84bf6022c18381402588a0d4a7f2114c300ad3172982a",
+    "lines": 1354,
+    "git_status": " M tests/StageStartCameraTests.cpp"
+  },
+  {
+    "path": "tests/SphereSelectorRealOrAbsentTests.cpp",
+    "sha256": "fb298132aa95fc5a7ec0d5f63b2d80fc4995437a2cefb376c76fec34aa916b90",
+    "lines": 342,
+    "git_status": ""
+  },
+  {
+    "path": "tests/AuroraNativeTests.cpp",
+    "sha256": "b0b7860f53b833f03d8be62cd25cada15509129b68c40d54640fec08a08b0682",
+    "lines": 1206,
+    "git_status": " M tests/AuroraNativeTests.cpp"
+  }
+]

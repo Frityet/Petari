@@ -1,0 +1,155 @@
+--- a/tests/ActorEventCameraTests.cpp
++++ b/tests/ActorEventCameraTests.cpp
+@@ -18,7 +18,6 @@
+ #include "camera/OriginalGameCamera.hpp"
+ #include "compat/CameraLocalUtilRuntime.hpp"
+ #include "compat/CameraUtilCompat.hpp"
+-#include "compat/DemoSceneRuntime.hpp"
+ #include "resource/BcsvTable.hpp"
+ #include "runtime/RuntimeServices.hpp"
+ #include "runtime/SceneScheduler.hpp"
+@@ -1479,8 +1478,7 @@
+     }
+ 
+     void test_same_xz_request_preserves_original_state(
+-        const smgpc::camera::EventCameraCatalog &retail_catalog,
+-        smgpc::runtime::DvdFileSystemService &dvd) {
++        const smgpc::camera::EventCameraCatalog &retail_catalog) {
+         // Control the temporal parameters in a private copy of a valid loaded
+         // catalog. The original catalog and its retail resource remain intact.
+         auto catalog = retail_catalog;
+@@ -1501,7 +1499,8 @@
+ 
+         auto scheduler = smgpc::runtime::SceneScheduler{};
+         const auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
+-        auto demo = smgpc::compat::DemoSceneRuntime(dvd, {});
++        require(MR::createSceneObj(SceneObj_DemoDirector) != nullptr,
++                "the bound event-camera scene requires its original DemoDirector");
+         auto &wpad = aurora::wpad_service();
+         wpad.clear();
+         struct WpadClearGuard {
+@@ -1754,7 +1753,7 @@
+                     catalog.find(5, smgpc::resource::encode_cp932("土管固有出現054")) == nullptr,
+                 "event-camera lookup must not cross a zone boundary");
+ 
+-        test_same_xz_request_preserves_original_state(catalog, dvd);
++        test_same_xz_request_preserves_original_state(catalog);
+         test_fixed_point_event_lifecycle(catalog);
+         test_fixed_point_event_interpolation_precedence(catalog);
+ 
+--- a/tests/CenterScreenBlurRealOrAbsentTests.cpp
++++ b/tests/CenterScreenBlurRealOrAbsentTests.cpp
+@@ -7,7 +7,7 @@
+ #include "RendererService.hpp"
+ #include "camera/CameraPose.hpp"
+ #include "compat/CapturedFrameBlurService.hpp"
+-#include "compat/DemoSceneRuntime.hpp"
++#include "compat/DemoDirectorOwnership.hpp"
+ #include "runtime/RuntimeContext.hpp"
+ #include "runtime/RuntimeServices.hpp"
+ #include "scene/SceneObjHolderRuntime.hpp"
+@@ -53,15 +53,14 @@
+ 
+     struct ExactCenterFixture {
+         ExactCenterFixture()
+-            : dvd("/"), placements(), demo(dvd, placements), holder(), binding(holder) {
++            : holder(), binding(holder) {
++            require(holder.create(SceneObj_DemoDirector) != nullptr,
++                    "the bound blur scene requires its original DemoDirector");
+             MR::createCenterScreenBlur();
+             blur = dynamic_cast<CenterScreenBlur*>(
+                 holder.getObj(SceneObj_CenterScreenBlur));
+         }
+ 
+-        smgpc::runtime::DvdFileSystemService dvd;
+-        std::array<smgpc::scene::StagePlacementObject, 0U> placements;
+-        smgpc::compat::DemoSceneRuntime demo;
+         SceneObjHolder holder;
+         smgpc::scene::SceneObjHolderBinding binding;
+         CenterScreenBlur* blur = nullptr;
+@@ -92,7 +91,9 @@
+                 "SceneObj 0x2D must synchronously initialize the exact dead actor");
+         require(MR::createSceneObj(SceneObj_CenterScreenBlur) == fixture.blur,
+                 "SceneObj 0x2D must retain a single scene-owned exact actor");
+-        require(fixture.demo.simple_cast_registration_count(fixture.blur) == 1U,
++        const auto* demo_ownership = smgpc::scene::current_demo_director_ownership();
++        require(demo_ownership != nullptr &&
++                    demo_ownership->simple_cast_registration_count(fixture.blur) == 1U,
+                 "exact init must retain the retail simple demo-cast registration");
+         require(service != nullptr && service->history_width() == 128U &&
+                     service->history_height() == 64U &&
+--- a/tests/GravityRealOrAbsentTests.cpp
++++ b/tests/GravityRealOrAbsentTests.cpp
+@@ -15,7 +15,6 @@
+ #include "Game/Util/JMapInfo.hpp"
+ #include "Game/Util/JMapLinkInfo.hpp"
+ #include "compat/GameGravityCompat.hpp"
+-#include "compat/DemoSceneRuntime.hpp"
+ #include "compat/GlobalGravityOwnership.hpp"
+ #include "resource/BcsvTable.hpp"
+ #include "runtime/RuntimeServices.hpp"
+@@ -267,16 +266,15 @@
+     class GravityScene final {
+     public:
+         GravityScene()
+-            : dvd("/"), placements(), demo(dvd, placements), holder(), binding(holder),
++            : holder(), binding(holder),
+               manager(static_cast<PlanetGravityManager*>(
+                   MR::createSceneObj(SceneObj_PlanetGravityManager))) {
++            require(holder.create(SceneObj_DemoDirector) != nullptr,
++                    "the bound gravity scene requires its original DemoDirector");
+             require(manager != nullptr,
+                     "a bound stage scene must create the exact PlanetGravityManager SceneObj");
+         }
+ 
+-        smgpc::runtime::DvdFileSystemService dvd;
+-        std::array<smgpc::scene::StagePlacementObject, 0U> placements;
+-        smgpc::compat::DemoSceneRuntime demo;
+         SceneObjHolder holder;
+         smgpc::scene::SceneObjHolderBinding binding;
+         PlanetGravityManager* manager;
+@@ -618,9 +616,6 @@
+ 
+     void test_deferred_field_follower_and_same_holder_recreation() {
+         auto dvd = smgpc::runtime::DvdFileSystemService("/");
+-        auto placements =
+-            std::array<smgpc::scene::StagePlacementObject, 0U>{};
+-        auto demo = smgpc::compat::DemoSceneRuntime(dvd, placements);
+         auto holder = SceneObjHolder{};
+         const auto totals_before =
+             smgpc::compat::global_gravity_ownership_totals();
+@@ -628,6 +623,8 @@
+         auto* external_link = static_cast<JMapLinkInfo*>(nullptr);
+         {
+             auto binding = smgpc::scene::SceneObjHolderBinding(holder);
++            require(holder.create(SceneObj_DemoDirector) != nullptr,
++                    "the first gravity generation requires its original DemoDirector");
+             auto* manager = static_cast<PlanetGravityManager*>(
+                 MR::createSceneObj(SceneObj_PlanetGravityManager));
+             require(manager != nullptr, "the first ownership generation requires its exact manager");
+@@ -682,6 +679,8 @@
+ 
+         {
+             auto second_binding = smgpc::scene::SceneObjHolderBinding(holder);
++            require(holder.create(SceneObj_DemoDirector) != nullptr,
++                    "the second gravity generation requires its original DemoDirector");
+             auto* second_manager = static_cast<PlanetGravityManager*>(
+                 MR::createSceneObj(SceneObj_PlanetGravityManager));
+             require(second_manager != nullptr,
+--- a/tests/NameObjFactoryPlacementTests.cpp
++++ b/tests/NameObjFactoryPlacementTests.cpp
+@@ -1,4 +1,3 @@
+-#include "compat/DemoSceneRuntime.hpp"
+ #include "compat/StageResourceBinding.hpp"
+ #include "compat/StageZoneMatrixRegistry.hpp"
+ #include "runtime/SystemConfigService.hpp"
+@@ -613,7 +612,8 @@
+         scene_objects.create(SceneObj_AreaObjContainer);
+         scene_objects.create(SceneObj_PlanetGravityManager);
+         scene_objects.create(SceneObj_CameraContext);
+-        auto demo = smgpc::compat::DemoSceneRuntime{dvd, placements};
++        require(scene_objects.create(SceneObj_DemoDirector) != nullptr,
++                "the bound placement scene requires its original DemoDirector");
+         scene_objects.create(SceneObj_CameraDirector);
+         require(scene_objects.create(SceneObj_PlacementStateChecker) != nullptr,
+                 "collision construction requires the original placement-zone state owner");

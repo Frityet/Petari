@@ -65,21 +65,3 @@ namespace MR {
     }
 
 }
-
-namespace MR {
-    u8 lerp(u8 start, u8 end, f32 t) {
-        return JGeometry::TUtil< f32 >::clamp(start + (end - start) * t, 0.0f, 255.0f);
-    }
-
-    GXColor lerp(GXColor start, GXColor end, f32 t) {
-        u8 a = lerp(start.a, end.a, t);
-        u8 b = lerp(start.b, end.b, t);
-        u8 g = lerp(start.g, end.b, t);
-        u8 r = lerp(start.r, end.r, t);
-
-        GXColor color = {r, g, b, a};
-
-        return color;
-    }
-
-}

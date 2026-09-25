@@ -1,0 +1,3 @@
+[skip] RMGK01 zone-light data test (set SMGPC_REAL_DISC or place RMGK01.iso in a workspace ancestor)
+[ok] RMGK01 zone-light data resolves child tables
+1 AreaObj runtime test(s) passed

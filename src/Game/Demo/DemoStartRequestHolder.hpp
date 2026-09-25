@@ -38,6 +38,9 @@ public:
 class DemoStartRequestHolder {
 public:
     DemoStartRequestHolder();
+    ~DemoStartRequestHolder();
+    DemoStartRequestHolder(const DemoStartRequestHolder&) = delete;
+    DemoStartRequestHolder& operator=(const DemoStartRequestHolder&) = delete;
 
     void pushRequest(LiveActor*, const char*);
     void pushRequest(LayoutActor*, const char*);

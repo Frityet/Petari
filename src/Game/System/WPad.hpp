@@ -17,6 +17,7 @@ struct KPADStatus;
 class WPad {
 public:
     WPad(s32);
+    ~WPad();
 
     void setReadInfo(WPadReadDataInfo*);
     void update();

@@ -5,7 +5,7 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "camera/OriginalCameraView.hpp"
 #include "compat/CameraViewRuntime.hpp"
-#include "compat/DemoSceneRuntime.hpp"
+#include "SceneExecutionFixture.hpp"
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -225,10 +225,12 @@ namespace {
     void test_camera_service_keeps_raw_pose_and_damps_rendered_view() {
         auto scheduler = smgpc::runtime::SceneScheduler{};
         const auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
-        auto dvd = smgpc::runtime::DvdFileSystemService("/");
-        auto demo = smgpc::compat::DemoSceneRuntime(dvd, {});
-        auto holder = SceneObjHolder{};
-        auto scene_binding = smgpc::scene::SceneObjHolderBinding(holder);
+        auto heaps = smgpc::compat::JkrHeapRuntime::create(8U << 20);
+        auto scene = smgpc::test::SceneExecutionFixture(
+            scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 2U << 20));
+        auto& holder = scene.holder();
+        require(holder.create(SceneObj_DemoDirector) != nullptr,
+                "camera service requires the actual scene DemoDirector and DemoSheet resource");
         require(holder.create(SceneObj_AreaObjContainer) != nullptr,
                 "the service view test must provide the original repulsive-area query registry");
         auto collision = smgpc::scene::StageCollisionService{};

@@ -266,8 +266,6 @@ namespace smgpc::compat {
         if (director.prepared) {
             JkrAllocationScope original(director.domain);
             if (director.requests) {
-                for (s32 i = 0; i < director.requests->mNumInfos; ++i) delete director.requests->mStartInfos[i];
-                // The request proxy is a registered, scene-owned NameObj.
                 delete director.requests;
             }
             delete director.simple;

@@ -3,6 +3,7 @@
 #include "Game/Demo/DemoStartRequestUtil.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Util/StringUtil.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 
 DemoStartInfo::DemoStartInfo() {
     _0 = nullptr;
@@ -162,13 +163,30 @@ DemoStartInfo* DemoStartRequestHolder::findEmpty() const {
     return nullptr;
 }
 
-DemoStartRequestHolder::DemoStartRequestHolder() : mNumInfos(0), mRequestBuffer(mRequestBuffer.mBuffer, mRequestBuffer.mBuffer) {
-    mProxyObj = new NameObj(CP932("代理人"));
-    for (u32 i = 0; i < ARRAY_SIZE(mStartInfos); i++) {
-        DemoStartInfo* pInfo = new DemoStartInfo();
-        s32 idx = mNumInfos;
-        mNumInfos = idx + 1;
-        mStartInfos[idx] = pInfo;
+DemoStartRequestHolder::DemoStartRequestHolder()
+    : mNumInfos(0), mRequestBuffer(mRequestBuffer.mBuffer, mRequestBuffer.mBuffer), mProxyObj(nullptr) {
+    try {
+        mProxyObj = new NameObj(CP932("代理人"));
+        for (u32 i = 0; i < ARRAY_SIZE(mStartInfos); i++) {
+            DemoStartInfo* pInfo = new DemoStartInfo();
+            s32 idx = mNumInfos;
+            mNumInfos = idx + 1;
+            mStartInfos[idx] = pInfo;
+        }
+        smgpc::compat::claim_name_obj_runtime_ownership(mProxyObj, this);
+    } catch (...) {
+        delete mProxyObj;
+        for (s32 i = 0; i < mNumInfos; i++) {
+            delete mStartInfos[i];
+        }
+        throw;
+    }
+}
+
+DemoStartRequestHolder::~DemoStartRequestHolder() {
+    delete mProxyObj;
+    for (s32 i = 0; i < mNumInfos; i++) {
+        delete mStartInfos[i];
     }
 }
 

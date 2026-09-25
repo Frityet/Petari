@@ -1,0 +1,402 @@
+[
+  {
+    "path": "src/compat/ActorShadowCsvCompat.cpp",
+    "sha256": "b81c12914223a75bfbf2c37010c83e151071152858c7083eae7925fea8b65d90",
+    "lines": 333
+  },
+  {
+    "path": "src/compat/ActorShadowCsvCompat.hpp",
+    "sha256": "1d1da34146bd45868c6593bae8c3e2ca4893f4bf0db30927b13ea1e4b90ef058",
+    "lines": 17
+  },
+  {
+    "path": "src/compat/CapturedFrameBlurService.cpp",
+    "sha256": "4e9f768668ade8ea70e5a2a5279583e6193cdabcf5a1cc020ab2c22d234603bb",
+    "lines": 245
+  },
+  {
+    "path": "src/compat/CapturedFrameBlurService.hpp",
+    "sha256": "cb9658d66a222fe21f595734e2683b6fd4b2cc39ea43e0b3519a025afd0993fd",
+    "lines": 46
+  },
+  {
+    "path": "src/compat/DrawSyncManagerLifetime.cpp",
+    "sha256": "bdaec6e4e856af775f9b016f5139311f89b7fb427e1cfb72d3deb608f1bde5fb",
+    "lines": 85
+  },
+  {
+    "path": "src/compat/DrawSyncManagerLifetime.hpp",
+    "sha256": "5b235c7ea27f770a6a7b0048a855c962b3c89a6117019a28e59c4fefe3edad9c",
+    "lines": 53
+  },
+  {
+    "path": "src/compat/EffectSystemOwnership.cpp",
+    "sha256": "d54cd39dc67562654ddbff335d8e951cba0471b38def08b06326044fc62ec939",
+    "lines": 297
+  },
+  {
+    "path": "src/compat/EffectSystemOwnership.hpp",
+    "sha256": "24614b0adaaca48318a15a25e5f48784630ffee64f2665f7613f24c3c1f0198c",
+    "lines": 38
+  },
+  {
+    "path": "src/compat/ImageEffectOwnership.cpp",
+    "sha256": "dcbf22cb09bee6335a9abb315c2602836017d4f45dfbc23a018ade7d0b78f0cb",
+    "lines": 172
+  },
+  {
+    "path": "src/compat/ImageEffectOwnership.hpp",
+    "sha256": "836752116c93080e1b1c0d5869299278757a0fb1727571384242d81896bddbd3",
+    "lines": 28
+  },
+  {
+    "path": "src/compat/J3DAdditionalAnimationCompat.cpp",
+    "sha256": "f1ceeb527698d268727d775f71a011dba7dc4772e9a18229100fdce3d1b93c67",
+    "lines": 190
+  },
+  {
+    "path": "src/compat/J3DAnimationInterpolation.hpp",
+    "sha256": "cc3db00641202cd04f8315cfa5b9fe6cb984358b607881fb07c83f7bfda1ad80",
+    "lines": 107
+  },
+  {
+    "path": "src/compat/J3DAnmLoaderCompat.cpp",
+    "sha256": "1a39c5f8d10dfede8bd3b46a43617f238812752c55b4a1825b9cb5086d471be9",
+    "lines": 436
+  },
+  {
+    "path": "src/compat/J3DClusterCompat.cpp",
+    "sha256": "c80d1ceccd380fec98e03be864c100df636a6764a54df8aca58d8745ed3f9bd8",
+    "lines": 212
+  },
+  {
+    "path": "src/compat/J3DDrawBufferCompat.cpp",
+    "sha256": "afc661f9501d018da49961d35259472191f5f0495f9de696f916bb02ac1aa333",
+    "lines": 204
+  },
+  {
+    "path": "src/compat/J3DDrawInitCompat.cpp",
+    "sha256": "dba0787163210180b73a7d4da192244327d1484ef1bdece75d9235d3e9997867",
+    "lines": 298
+  },
+  {
+    "path": "src/compat/J3DFrameCtrlCompat.cpp",
+    "sha256": "8da334cfc7d0ccb32a46429bd27680c564d46bee612e63f802356d6b265e8983",
+    "lines": 165
+  },
+  {
+    "path": "src/compat/J3DGDCompat.cpp",
+    "sha256": "bab47e0ac52a68901044fa832fc5027abd3d68ecb52f6a8e8e0a4f022cd0a37e",
+    "lines": 644
+  },
+  {
+    "path": "src/compat/J3DHierarchyCompat.cpp",
+    "sha256": "3afb86e273b422eca0d6486bf38fd708a5dee2ea9b1662865cbeed63bdbbf23c",
+    "lines": 63
+  },
+  {
+    "path": "src/compat/J3DJointCompat.cpp",
+    "sha256": "f3c65b362c34b4bdc50ed1240ea5c7f848893889f2da309e635252c7072b34af",
+    "lines": 278
+  },
+  {
+    "path": "src/compat/J3DJointEntryCompat.cpp",
+    "sha256": "62d64047b84bae8c4792cdd732c1c08cc6e72c533d812c37817f4d2a37ecc825",
+    "lines": 39
+  },
+  {
+    "path": "src/compat/J3DJointTreeCompat.cpp",
+    "sha256": "5204294532137e0f6e548aa0fd985c7475a3994a4d08318c6aec8fcd4668ad60",
+    "lines": 72
+  },
+  {
+    "path": "src/compat/J3DMatBlockCompat.cpp",
+    "sha256": "0498aafe166b9cc0cb2650611183d54d273e35b412d0300e1dabfaf43d999f3a",
+    "lines": 1919
+  },
+  {
+    "path": "src/compat/J3DMaterialAnimationCompat.cpp",
+    "sha256": "f8dede8d3e64e65d8d32f4ca0b0a80f4b5d828121b858bae9aefa591fec08112",
+    "lines": 489
+  },
+  {
+    "path": "src/compat/J3DMaterialAnmCompat.cpp",
+    "sha256": "e8f13199bc87d894e546b3fe0978ca97e530bcd290113a0a96a25cc18ce50e85",
+    "lines": 102
+  },
+  {
+    "path": "src/compat/J3DMaterialAttachCompat.cpp",
+    "sha256": "87fd92083af28b7234c362e3260017bc2f818ed41c08819e0994d1bc16aa1cf6",
+    "lines": 267
+  },
+  {
+    "path": "src/compat/J3DMaterialFactoryCompat.cpp",
+    "sha256": "4f36c119eb0cc1e3997a47c8089a73a5f96abb1281d058c7e01f848b09ddbba0",
+    "lines": 160
+  },
+  {
+    "path": "src/compat/J3DMaterialHelpersCompat.cpp",
+    "sha256": "8d458822d49789223045e4d7c57f64eba53432357f5d8b2a28dafbb9907fc9f6",
+    "lines": 195
+  },
+  {
+    "path": "src/compat/J3DMaterialLoaderFactoryCompat.cpp",
+    "sha256": "59332aba0213a59f714621da81b74c185ea1b3c91a6c34a7bc5401282b08b7ff",
+    "lines": 682
+  },
+  {
+    "path": "src/compat/J3DMaterialVariantsCompat.cpp",
+    "sha256": "1971865ed5e372ecff754f47d0463cfbbb217913165cc939ef8e598f29d1e819",
+    "lines": 69
+  },
+  {
+    "path": "src/compat/J3DModelCompat.cpp",
+    "sha256": "3f1c3f42e43778955657df0bd2e293fe203734c3294982f842b039f850ee6303",
+    "lines": 434
+  },
+  {
+    "path": "src/compat/J3DModelDataCompat.cpp",
+    "sha256": "daae30596ae6b992f7d03363d2369ca7c57094e3b0be826ff12c6253ca6f0a8b",
+    "lines": 112
+  },
+  {
+    "path": "src/compat/J3DModelLoaderCompat.cpp",
+    "sha256": "47df503adf831670ad6b7eb6d301aee82fd2cb80bff3a5793ffecd2bdc5fdfa2",
+    "lines": 76
+  },
+  {
+    "path": "src/compat/J3DModelLoaderCompat.hpp",
+    "sha256": "3ae31aaf2a850573e73f0f1f3ab0310eeb735bf16cbf9f9ff847a1568d07873b",
+    "lines": 9
+  },
+  {
+    "path": "src/compat/J3DMtxBufferCompat.cpp",
+    "sha256": "0e79601d2ee3c4e5a45a514f2d8e54baebd17fe5fbf37267e36a7c9c2e3634f7",
+    "lines": 473
+  },
+  {
+    "path": "src/compat/J3DPacketCompat.cpp",
+    "sha256": "6f881fa389aab691b85263ffff471d270a3586299b35a63cbfbffba1c01e5360",
+    "lines": 358
+  },
+  {
+    "path": "src/compat/J3DShapeCompat.cpp",
+    "sha256": "be57b99ee71fded8695fe2af9963e3974c176d535cab0f501d3924aff671765d",
+    "lines": 326
+  },
+  {
+    "path": "src/compat/J3DShapeDrawCompat.cpp",
+    "sha256": "918f7a5375a41996e4c562bb7e60f8f86bd2df0451dd419eceab5e5554e15e53",
+    "lines": 82
+  },
+  {
+    "path": "src/compat/J3DShapeFactoryCompat.cpp",
+    "sha256": "4f345ac3ba8257fd9a44b7c26b14e4ebe0fbe4c7d6cde812e1b9f460b31bcf78",
+    "lines": 170
+  },
+  {
+    "path": "src/compat/J3DShapeMtxCompat.cpp",
+    "sha256": "41325cd778510176774814dfd7bf8d48822fe123434f622830d8f2ec9f3483c9",
+    "lines": 523
+  },
+  {
+    "path": "src/compat/J3DShapeMtxGameCompat.cpp",
+    "sha256": "91efa52090eb0bc9abfb5e9d318c439e78dac33a40cd52e91589efd79a6ec21b",
+    "lines": 14
+  },
+  {
+    "path": "src/compat/J3DShapeTableCompat.cpp",
+    "sha256": "77026552c02f1123184c66d35a1f951d35b9b19bd0b69126eb0006956b0df78e",
+    "lines": 24
+  },
+  {
+    "path": "src/compat/J3DSkinDeformCompat.cpp",
+    "sha256": "11069827417bb24e5e9d14a32dc415b485797b9f29385f4f396899b708f61827",
+    "lines": 22
+  },
+  {
+    "path": "src/compat/J3DStructCompat.cpp",
+    "sha256": "a0dcf5cbb9225a16774ccf0686bc9b14dd00fd03f34c0843568b39776ae44fd3",
+    "lines": 62
+  },
+  {
+    "path": "src/compat/J3DSysCompat.cpp",
+    "sha256": "db1018cc8d594d16c4e216a055cb1e5af20f39c76925f318c79815ec492441b9",
+    "lines": 119
+  },
+  {
+    "path": "src/compat/J3DTevsCompat.cpp",
+    "sha256": "8af71198b75901b8e747af3da55b63c23dd598de0ba7f54f409b0c61d7ded87e",
+    "lines": 131
+  },
+  {
+    "path": "src/compat/J3DTexMtxCompat.cpp",
+    "sha256": "28f751c0699ff33098d92fcde301cf6673104358f140c19f5426663fd16d656c",
+    "lines": 273
+  },
+  {
+    "path": "src/compat/J3DTextureMtxCompat.cpp",
+    "sha256": "6ceb2f03dab3043603e1fad7f4ddb0f5d68f71b1016e1a53516c52e15eeef2e9",
+    "lines": 106
+  },
+  {
+    "path": "src/compat/J3DTransformAnimationCompat.cpp",
+    "sha256": "a060535c3d434220e20c055a2ab91b3a8937343df0b74583752ac067fc65fd05",
+    "lines": 422
+  },
+  {
+    "path": "src/compat/J3DTransformMtxCompat.cpp",
+    "sha256": "d5e5ffc9070083685b135b8ee992ff5fc869625e613d5ccc75dc80b0fbd5f48c",
+    "lines": 169
+  },
+  {
+    "path": "src/compat/J3DVertexBufferCompat.cpp",
+    "sha256": "82ce069b63412342506d5b21e83f097994b6d824244a5ccf7e5d1c794448564b",
+    "lines": 42
+  },
+  {
+    "path": "src/compat/J3dCommandScope.cpp",
+    "sha256": "d352fd1e61bceeec234478a78fab82ad0632aba43530936d68541c7206187e79",
+    "lines": 39
+  },
+  {
+    "path": "src/compat/J3dCommandScope.hpp",
+    "sha256": "e42ff92b5007ad28b8e4eff210cc7d57d647e0e45cc5c72207163ce1b8c8c17d",
+    "lines": 39
+  },
+  {
+    "path": "src/compat/J3dSystemCompat.cpp",
+    "sha256": "850bf6e0fb1931856333ca0c56186ce66b00faf59d50eb3cee59f5188f99ec7f",
+    "lines": 14
+  },
+  {
+    "path": "src/compat/J3dSystemCompat.hpp",
+    "sha256": "32752684cf5f4ac58a246721c5553c883c4ff38b3080bf5f46860b1f55ec68fe",
+    "lines": 10
+  },
+  {
+    "path": "src/compat/JutTextureAllocation.cpp",
+    "sha256": "87d8927133f858ab7b86aaa7f21ea7731716080aff3a173318cb268cb43abaeb",
+    "lines": 99
+  },
+  {
+    "path": "src/compat/JutTextureAllocation.hpp",
+    "sha256": "0164d5a98aa66b22388e8cc062c70f0ebf064d70b881e9e93880976121425f68",
+    "lines": 42
+  },
+  {
+    "path": "src/compat/JutTextureConstruction.cpp",
+    "sha256": "10760e1edd935de1ac45ce20803703376c23660269dab6991df0145e2982d85a",
+    "lines": 103
+  },
+  {
+    "path": "src/compat/JutTextureConstruction.hpp",
+    "sha256": "f94d4d38d38d7662fa23b19beaeaa1925cbce37afea19289291fe667ae6f9b7f",
+    "lines": 51
+  },
+  {
+    "path": "src/compat/LightDirectorCompat.cpp",
+    "sha256": "11e68000c72f827997636f1bbc070db8e1d267e153b21307cf876af2ee1937b2",
+    "lines": 77
+  },
+  {
+    "path": "src/compat/LightFunctionCompat.cpp",
+    "sha256": "90fd9605a49b5902dd658c783023f87d468c1cd9f298e773a963a3264c2e2f8e",
+    "lines": 378
+  },
+  {
+    "path": "src/compat/LightFunctionCompat.hpp",
+    "sha256": "afd558ea92c2c9198af3e62bb11d5a7f96c53b2b3a50f83ecc52f8b3c0253603",
+    "lines": 10
+  },
+  {
+    "path": "src/compat/LightUtilCompat.cpp",
+    "sha256": "e9d057907578d1ef7d385e49f870fc20ceedd55b71be21035c44b83e196cdce0",
+    "lines": 98
+  },
+  {
+    "path": "src/compat/MaterialTextureModeCompat.cpp",
+    "sha256": "36c58a274e615caa496da2287340b599ecc67c938b321029671cb76666d53e5d",
+    "lines": 64
+  },
+  {
+    "path": "src/compat/OriginalActorShadowQueries.cpp",
+    "sha256": "22058db611cf1a8d36ac85e4dfe5708a0a16afd7d9359db9d7d131ab686162f6",
+    "lines": 144
+  },
+  {
+    "path": "src/compat/OriginalImageEffectUtil.cpp",
+    "sha256": "99b0837e8ef05c104aa711b1ad82ab2f25b670e7cc63630f07ae0e0e631d1068",
+    "lines": 85
+  },
+  {
+    "path": "src/compat/OriginalJ2DProjection.cpp",
+    "sha256": "1bc6eeeb7716f9e924c291d334c0b34f95b75e59fc5dac9b31a9efd4ee4b1b8c",
+    "lines": 20
+  },
+  {
+    "path": "src/compat/OriginalJ3dJointTree.cpp",
+    "sha256": "f50cf7b6c74f7fef5b110a72f3d90ce97186cc5492102e0b6617bd7c15225a7a",
+    "lines": 247
+  },
+  {
+    "path": "src/compat/OriginalJ3dJointTree.hpp",
+    "sha256": "2873d5166b6013408e37b8e42a497c665f7472e455fced783ca09a6390c2955a",
+    "lines": 43
+  },
+  {
+    "path": "src/compat/OriginalJPADraw.cpp",
+    "sha256": "eb1f0d4a4ed4285044121834c7f7710ad3fcb6506b3a90a7e920cc0edfc822df",
+    "lines": 603
+  },
+  {
+    "path": "src/compat/OriginalJPAEmitterInit.cpp",
+    "sha256": "65058109b761cec3a4829b150007e4152b6b7d883a766d46b0161e88adccac69",
+    "lines": 48
+  },
+  {
+    "path": "src/compat/OriginalJPAFields.cpp",
+    "sha256": "f16b361c5031b760747dd4a99a5b42e47b225c384011d2b988a476bd13493bb1",
+    "lines": 63
+  },
+  {
+    "path": "src/compat/OriginalModelLightAccess.cpp",
+    "sha256": "18dab3377d3cafe653f7a1abc43b73b306938953527215ce000e639053a42cdb",
+    "lines": 70
+  },
+  {
+    "path": "src/compat/OriginalModelMaterialHelpers.cpp",
+    "sha256": "183eed0395fd202f14f7c102f78335fc931c8dabca5cd5b0e7474fe723738155",
+    "lines": 75
+  },
+  {
+    "path": "src/compat/OriginalSceneDrawInit.cpp",
+    "sha256": "08a4c66500f3c341f7361826c2935b486bd61034d602e9bd183287b1a632cf43",
+    "lines": 74
+  },
+  {
+    "path": "src/compat/OriginalShadowTextureAccess.cpp",
+    "sha256": "9c800f408ee126a5c596cd9e354c91075d525db32b8f70d0e53f4761e41cc067",
+    "lines": 26
+  },
+  {
+    "path": "src/compat/OriginalShadowVolumeDraw.cpp",
+    "sha256": "438de1e46a2abb39c5d85db7bf2fbe1ad71b57b1b7fbb810a819f4042f7c4a28",
+    "lines": 45
+  },
+  {
+    "path": "src/compat/SceneJ3dScope.hpp",
+    "sha256": "9b73410f4baca433deb7ceb73d3a3000eaecc78e836c0fe502cde3b6ef8fd648",
+    "lines": 40
+  },
+  {
+    "path": "src/compat/ShadowControllerOwnership.cpp",
+    "sha256": "7065136a54ff6fd8229489b79c6866c52e500e2bc7767f31f0625f8d5fa6dd1a",
+    "lines": 216
+  },
+  {
+    "path": "src/compat/ShadowControllerOwnership.hpp",
+    "sha256": "adbd4f66d74806d178bdb8c67af74cebcf82cfcc40067a268190db3bbfd55416",
+    "lines": 40
+  }
+]

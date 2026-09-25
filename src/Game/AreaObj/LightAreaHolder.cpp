@@ -53,3 +53,7 @@ void LightAreaHolder::sort() {
         }
     }
 }
+
+LightAreaHolder::~LightAreaHolder() {
+    LightFunction::unregisterLightAreaHolder(this);
+}

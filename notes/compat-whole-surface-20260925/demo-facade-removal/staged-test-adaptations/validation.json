@@ -1,0 +1,50 @@
+{
+  "base_commit": "ec94f1d5d996729c4e166b395cb5b90fcedc5336",
+  "scope": "Minimal HEAD-base Demo facade removal; working files and Git index not written",
+  "files": [
+    {
+      "path": "tests/ActorEventCameraTests.cpp",
+      "head_sha256": "d8cf2014965df0b4d7e90a66b5b127a97a5d4a44681803e2b694e22f9084e9be",
+      "working_sha256_before": "dde41cc41180f351ced89808dae891abafc5c4eb58331824c5e14339f395fce4",
+      "adaptation_sha256": "b923d42fdf75025ce6eff9074a97aa2d868b18cacf0e2a83a59185848a9ad51a",
+      "changed_lines_added": 4,
+      "changed_lines_removed": 5,
+      "retired_references_in_adaptation": false,
+      "working_sha256_after": "dde41cc41180f351ced89808dae891abafc5c4eb58331824c5e14339f395fce4",
+      "working_file_preserved": true
+    },
+    {
+      "path": "tests/CenterScreenBlurRealOrAbsentTests.cpp",
+      "head_sha256": "51351727c2ab7112f3d4db9294e9e61a00ded07bd5ca51fd64582dbbbb90bd3a",
+      "working_sha256_before": "0797f764d758a5ea89ad94c539d38c14c145962d8befbe2050be177d5a5dcf75",
+      "adaptation_sha256": "61babab43a4a6957d5e5a19859df2b5b301e76487588d87b03682240d611ef5e",
+      "changed_lines_added": 7,
+      "changed_lines_removed": 6,
+      "retired_references_in_adaptation": false,
+      "working_sha256_after": "0797f764d758a5ea89ad94c539d38c14c145962d8befbe2050be177d5a5dcf75",
+      "working_file_preserved": true
+    },
+    {
+      "path": "tests/GravityRealOrAbsentTests.cpp",
+      "head_sha256": "cda2800369b3b728f5fb0b359e0e8770892d2b46de177d7ba5af2f0c174bc29e",
+      "working_sha256_before": "6b85988e5b191f4599b4b0e19958d3bbb7d0cb6aaf14aa511fda3c07f8a31fb0",
+      "adaptation_sha256": "0551e8cee891da11aa994223a61ec26ed57955742a18e340f849c7f9232dc32f",
+      "changed_lines_added": 7,
+      "changed_lines_removed": 8,
+      "retired_references_in_adaptation": false,
+      "working_sha256_after": "6b85988e5b191f4599b4b0e19958d3bbb7d0cb6aaf14aa511fda3c07f8a31fb0",
+      "working_file_preserved": true
+    },
+    {
+      "path": "tests/NameObjFactoryPlacementTests.cpp",
+      "head_sha256": "af652c59634c8e9c182bbe333a1a24ea0d2ded9cde13dcb6ed03d84089fa13e7",
+      "working_sha256_before": "0c65301ea7eb226cbd6f037733c07d7377ef01d5430b14d49a53552de957087d",
+      "adaptation_sha256": "e69e2fafd3041c7aa9f0904dfa7abd8be36a2d259c66dae66e9d544444d7804f",
+      "changed_lines_added": 2,
+      "changed_lines_removed": 2,
+      "retired_references_in_adaptation": false,
+      "working_sha256_after": "0c65301ea7eb226cbd6f037733c07d7377ef01d5430b14d49a53552de957087d",
+      "working_file_preserved": true
+    }
+  ]
+}

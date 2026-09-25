@@ -3,10 +3,20 @@
 #include "Game/System/GameSystemObjHolder.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
-#include "revolution/mtx.h"
 #include <JSystem/JGeometry/TUtil.hpp>
 #include <JSystem/JMath/JMATrigonometric.hpp>
 #include <JSystem/JMath/JMath.hpp>
+#include <revolution/mtx.h>
+
+#if defined(TARGET_PC)
+#include <aurora/exception.hpp>
+#include <aurora/ppc_math.hpp>
+#include <dolphin/ppc_math.h>
+#include <bit>
+#include <cmath>
+#include <limits>
+#include <stdexcept>
+#endif
 
 extern "C" int __fpclassifyf(f32);
 
@@ -40,6 +50,16 @@ namespace {
 };  // namespace
 
 namespace MR {
+    void MathUtil_FORCE_MATCH_RODATA() {
+        (void)0.98;
+        (void)(1.0 - 0.98);
+        (void)255.0;
+        (void)1.0;
+        (void)4503599627370496.0;
+        (void)4503601774854144.0;
+        (void)360.0;
+    }
+
     void initAcosTable() {
         ::gAcosTable = new f32[256];
 
@@ -55,6 +75,12 @@ namespace MR {
     }
 
     f32 acosEx(f32 x) {
+#if defined(TARGET_PC)
+        // Avoid an undefined host float-to-integer conversion outside the domain.
+        if (!std::isfinite(x) || x < -1.0f || x > 1.0f) {
+            return std::numeric_limits< f32 >::quiet_NaN();
+        }
+#endif
         if (MR::abs(x) < 0.98f) {
             return JMAAcosRadian(x);
         } else if (x < 0.0f) {
@@ -73,7 +99,11 @@ namespace MR {
         u32 rand = SingletonHolder< GameSystem >::get()->mObjHolder->mRandom.rand();
         u32 value = (rand >> 9) | 0x3F800000;
 
+#if defined(TARGET_PC)
+        return std::bit_cast< f32 >(value) - 1.0f;
+#else
         return reinterpret_cast< f32& >(value) - 1.0f;
+#endif
     }
 
     f32 getRandom(f32 min, f32 max) {
@@ -155,13 +185,12 @@ namespace MR {
         return getInterpolateValue((1.0f - JMACosRadian(t)) / 2.0f, start, end);
     }
 
-    f32 getScaleWithReactionValueZeroToOne(f32 x, f32 rate, f32 amplitude) {
+    f32 getScaleWithReactionValueZeroToOne(f32 x, f32 freq, f32 amplitude) {
         if (x < 0.5f) {
             return getEaseOutValue(x * 2.0f, 0.0f, 1.0f, 1.0f);
         } else {
-            // reaction oscillation, TODO: inline?
             f32 t = (x - 0.5f) * 2.0f;
-            return 1.0f + (1.0f - JMACosRadian(pi() * rate * t)) * (1.0f - t) * amplitude;
+            return 1.0f + (1.0f - JMACosRadian(pi() * freq * t)) * (1.0f - t) * amplitude;
         }
     }
 
@@ -176,7 +205,6 @@ namespace MR {
     }
 
     f32 getReduceVibrationValue(f32 x, f32 time, f32 base, f32 amplitude, f32 freq) {
-        // FIXME: float swap
         f32 vibMax = base + amplitude;
 
         f32 vib = JMACosRadian(x * (1.0f / freq * PI));
@@ -186,7 +214,8 @@ namespace MR {
         } else {
             f32 t = x - time;
             f32 reduce = (1.0f - vibMax) * (1.0f / (time * time)) * t * t;
-            return vibration + (vibMax + reduce);
+            reduce = vibMax + reduce;
+            return reduce + vibration;
         }
     }
 
@@ -219,6 +248,7 @@ namespace MR {
         if (isNearZero(*pVec)) {
             pVec->killElement(TVec3f(1.0f, 0.0f, 0.0f), rAxis);
         }
+
         normalize(pVec);
     }
 
@@ -287,6 +317,7 @@ namespace MR {
                     pDir->set(rSpherePos - rPointA);
                     MR::normalizeOrZero(pDir);
                 }
+
                 return true;
             }
         } else if (segment.squared() < dot) {
@@ -295,6 +326,7 @@ namespace MR {
                     pDir->set(rSpherePos - rPointB);
                     MR::normalizeOrZero(pDir);
                 }
+
                 return true;
             }
         } else {
@@ -306,6 +338,7 @@ namespace MR {
                     pDir->set(-offset);
                     MR::normalizeOrZero(pDir);
                 }
+
                 return true;
             }
         }
@@ -462,8 +495,6 @@ namespace MR {
     }
 
     void blendQuatFrontUp(TQuat4f* pDst, const TQuat4f& rSrc, const TVec3f& rFront, const TVec3f& rUp, f32 frontRate, f32 upRate) {
-        // NOTE: axes are reversed here for the quat.
-
         TQuat4f q;
         q.set(rSrc);
         TVec3f up;
@@ -599,7 +630,7 @@ namespace MR {
     }
 
     void clampVecAngleDeg(TVec3f* pDst, const TVec3f& rBase, f32 angle) {
-        if (pDst->angle(rBase) * _180_PI <= angle) {  // TODO: value written directly?
+        if (pDst->angle(rBase) * _180_PI <= angle) {
             return;
         }
 
@@ -649,17 +680,21 @@ namespace MR {
             if (x < max) {
                 return false;
             }
+
             if (x > min) {
                 return false;
             }
+
             return true;
         } else {
             if (x < min) {
                 return false;
             }
+
             if (x > max) {
                 return false;
             }
+
             return true;
         }
     }
@@ -669,10 +704,10 @@ namespace MR {
     }
 
     f32 calcRotateZ(const TVec3f& rVecA, const TVec3f& rVecB) {
-        // FIXME:
-        // Compiler refuses to cooperate, but mathematically this is correct
-        TVec2f vec(rVecB.y - rVecA.y, rVecB.x - rVecA.x);
-        return MR::atan2(vec.x, vec.y) * (180.0f / PI);
+        TVec2f vec(rVecB.x, rVecB.y);
+        vec.x -= rVecA.x;
+        vec.y -= rVecA.y;
+        return MR::atan2(vec.y, vec.x) * _180_PI;
     }
 
     f32 calcDistanceXY(const TVec3f& rPos1, const TVec3f& rPos2) {
@@ -863,6 +898,7 @@ namespace MR {
             pDst->set(planarTo);
             return true;
         }
+
         return false;
     }
 
@@ -871,12 +907,12 @@ namespace MR {
     }
 
     f32 turnVecToVecRadian(TVec3f* pDst, const TVec3f& rFrom, const TVec3f& rTo, f32 angle, const TVec3f& rAxis) {
-        // FIXME: extra load causing out-of-order compare
-        f32 angleBetween = JMAAcosRadian(JGeometry::TUtil< f32 >::clamp(rFrom.dot(rTo), -1.0f, 1.0f));
+        const f32 rawAngle = JMAAcosRadian(JGeometry::TUtil< f32 >::clamp(rFrom.dot(rTo), -1.0f, 1.0f));
+        f32 angleBetween = rawAngle;
         f32 angleMoved = 0.0f;
         f32 angleClamped = angleBetween;
-        if (angle <= angleClamped) {
-            angleMoved = angleClamped - angle;
+        if (angle <= angleBetween) {
+            angleMoved = angleBetween - angle;
             angleClamped = angle;
         }
 
@@ -889,7 +925,7 @@ namespace MR {
         if (isSameDir) {
             rot.setRotate(rAxis, angleClamped);
         } else {
-            rot.setRotate(rFrom, rTo, angleClamped / angleBetween);
+            rot.setRotate(rFrom, rTo, angleClamped / rawAngle);
         }
 
         TVec3f v = rFrom;
@@ -903,7 +939,7 @@ namespace MR {
     }
 
     f32 turnVecToVecDegree(TVec3f* pDst, const TVec3f& rFrom, const TVec3f& rTo, f32 angle, const TVec3f& rAxis) {
-        return turnVecToVecRadian(pDst, rFrom, rTo, angle * (PI / 180.0f), rAxis) * (180.0f / PI);
+        return turnVecToVecRadian(pDst, rFrom, rTo, angle * (PI / 180.0f), rAxis) * _180_PI;
     }
 
     void calcMomentRollBall(TVec3f* pMoment, const TVec3f& rVel, const TVec3f& rUp, f32 radius) {
@@ -1061,19 +1097,18 @@ namespace MR {
     }
 
     f32 blendAngle(f32 angleA, f32 angleB, f32 rate) {
-        // FIXME: float regswap
-        f32 a1_n = normalizeAngleAbs(angleA);
-        f32 a2_n = normalizeAngleAbs(angleB);
+        angleA = normalizeAngleAbs(angleA);
+        angleB = normalizeAngleAbs(angleB);
 
-        if (!isAngleBetween((a1_n + a2_n) / 2.0f, a1_n, a2_n)) {
-            if (a1_n < a2_n) {
-                a1_n += TWO_PI;
+        if (!isAngleBetween((angleA + angleB) / 2.0f, angleA, angleB)) {
+            if (angleA < angleB) {
+                angleA += TWO_PI;
             } else {
-                a2_n += TWO_PI;
+                angleB += TWO_PI;
             }
         }
 
-        return normalizeAngleAbs((1.0f - rate) * a1_n + rate * a2_n);
+        return normalizeAngleAbs((1.0f - rate) * angleA + rate * angleB);
     }
 
     u8 lerp(u8 start, u8 end, f32 t) {
@@ -1091,70 +1126,63 @@ namespace MR {
         return color;
     }
 
-    // This function implements the selection sort sorting algorithm
-    // on an array of f32 where sortArray is the array to be sorted
-    // and indexArray holds the indices the elements had in the original array
-    void sortSmall(s32 length, f32* sortArray, s32* indexArray) {
+    void sortSmall(s32 length, f32* pSortArray, s32* pIndexArray) {
         for (int i = 0; i < length; i++) {
-            indexArray[i] = i;
+            pIndexArray[i] = i;
         }
+
         for (int index = 0; index < length; index++) {
-            f32 element = sortArray[index];
+            f32 element = pSortArray[index];
             int indexOfSmallestElement = index;
             for (int i = index + 1; i < length; i++) {
-                if (element > sortArray[i]) {
-                    element = sortArray[i];
+                if (element > pSortArray[i]) {
+                    element = pSortArray[i];
                     indexOfSmallestElement = i;
                 }
             }
-            s32 temp = indexArray[index];
-            f32 temp2 = sortArray[index];
-            indexArray[index] = indexArray[indexOfSmallestElement];
-            sortArray[index] = element;
-            indexArray[indexOfSmallestElement] = temp;
-            sortArray[indexOfSmallestElement] = temp2;
+
+            s32 temp = pIndexArray[index];
+            f32 temp2 = pSortArray[index];
+            pIndexArray[index] = pIndexArray[indexOfSmallestElement];
+            pSortArray[index] = element;
+            pIndexArray[indexOfSmallestElement] = temp;
+            pSortArray[indexOfSmallestElement] = temp2;
         }
     };
 
-    // This function implements the selection sort sorting algorithm
-    // on an array of u32 where sortArray is the array to be sorted
-    // and indexArray holds the indices the elements had in the original array
-    void sortSmall(s32 length, u32* sortArray, s32* indexArray) {
+    void sortSmall(s32 length, u32* pSortArray, s32* pIndexArray) {
         for (int i = 0; i < length; i++) {
-            indexArray[i] = i;
+            pIndexArray[i] = i;
         }
+
         for (int index = 0; index < length; index++) {
-            u32 element = sortArray[index];
+            u32 element = pSortArray[index];
             int indexOfSmallestElement = index;
             for (int i = index + 1; i < length; i++) {
-                if (element > sortArray[i]) {
-                    element = sortArray[i];
+                if (element > pSortArray[i]) {
+                    element = pSortArray[i];
                     indexOfSmallestElement = i;
                 }
             }
-            s32 temp = indexArray[index];
-            u32 temp2 = sortArray[index];
-            indexArray[index] = indexArray[indexOfSmallestElement];
-            sortArray[index] = element;
-            indexArray[indexOfSmallestElement] = temp;
-            sortArray[indexOfSmallestElement] = temp2;
+
+            s32 temp = pIndexArray[index];
+            u32 temp2 = pSortArray[index];
+            pIndexArray[index] = pIndexArray[indexOfSmallestElement];
+            pSortArray[index] = element;
+            pIndexArray[indexOfSmallestElement] = temp;
+            pSortArray[indexOfSmallestElement] = temp2;
         }
     };
 };  // namespace MR
 
-f32 JMASqrt(f32 x) {
-    return MR::fastSqrtf(x);
-}
-
 f32 PSVECKillElement(__REGISTER const Vec* pSrc, __REGISTER const Vec* pKill, __REGISTER const Vec* pDst) {
-    // FIXME: out of order instruction
 #ifdef __MWERKS__
     __REGISTER f32 dot;
     // clang-format off
-    asm {
+    asm volatile {
         psq_l      f2, 4(pSrc),  0, 0
-        psq_l      f5, 0(pSrc),  1, 0
         psq_l      f3, 4(pKill), 0, 0
+        psq_l      f5, 0(pSrc),  1, 0
         psq_l      f4, 0(pKill), 1, 0
         ps_mul     f6, f2, f3
         ps_madd    f7, f5, f4, f6
@@ -1164,8 +1192,7 @@ f32 PSVECKillElement(__REGISTER const Vec* pSrc, __REGISTER const Vec* pKill, __
         ps_nmsub   f2, dot, f3, f2
         psq_st     f5, 0(pDst),  1, 0
         psq_st     f2, 4(pDst),  0, 0
-    }
-    // clang-format on
+    }  // clang-format on
     return dot;
 #else
     const f32 x = pSrc->x;
@@ -1200,35 +1227,59 @@ namespace MR {
         return PSVECKillElement(rSrc, rKillDir, pDst);
     }
 
-    void vecScaleAdd(const register TVec3f* a1, const register TVec3f* a2, register f32 a3) {
+    void vecScaleAdd(const register TVec3f* pA1, const register TVec3f* pA2, register f32 a3) {
 #ifdef __MWERKS__
         __asm {
-            psq_l f0, 0(a1), 0, 0
-            psq_l f3, 0(a2), 0, 0
-            psq_l f2, 8(a1), 1, 0
-            psq_l f4, 8(a2), 1, 0
+            psq_l f0, 0(pA1), 0, 0
+            psq_l f3, 0(pA2), 0, 0
+            psq_l f2, 8(pA1), 1, 0
+            psq_l f4, 8(pA2), 1, 0
             ps_madds0 f0, f3, a3, f0
             ps_madds0 f2, f4, a3, f2
-            psq_st f0, 0(a1), 0, 0
-            psq_st f2, 8(a1), 1, 0
+            psq_st f0, 0(pA1), 0, 0
+            psq_st f2, 8(pA1), 1, 0
         }
+
+#else
+        // Retail loads both vectors before either paired-single store, and
+        // ps_madds0 rounds the multiply/add once per component.
+        const TVec3f previous = *pA1;
+        const TVec3f increment = *pA2;
+        auto* result = const_cast<TVec3f*>(pA1);
+        result->x = std::fma(increment.x, a3, previous.x);
+        result->y = std::fma(increment.y, a3, previous.y);
+        result->z = std::fma(increment.z, a3, previous.z);
 #endif
     }
 
-    void PSvecBlend(const register TVec3f* a1, const register TVec3f* a2, register TVec3f* a3, register f32 a4, register f32 a5) {
+    void PSvecBlend(const register TVec3f* pA1, const register TVec3f* pA2, register TVec3f* pA3, register f32 a4, register f32 a5) {
 #ifdef __MWERKS__
         __asm {
-            psq_l     f0, 0(a1), 0, 0
-            psq_l     f3, 8(a1), 1, 0
+            psq_l     f0, 0(pA1), 0, 0
+            psq_l     f3, 8(pA1), 1, 0
             ps_muls0  f4, f0, a4
-            psq_l     f0, 0(a2), 0, 0
+            psq_l     f0, 0(pA2), 0, 0
             ps_muls0  f3, f3, a4
-            psq_l     f1, 8(a2), 1, 0
+            psq_l     f1, 8(pA2), 1, 0
             ps_madds0 f4, f0, f2, f4
             ps_madds0 f3, f1, f2, f3
-            psq_st    f4, 0(a3), 0, 0
-            psq_st    f3, 8(a3), 1, 0
+            psq_st    f4, 0(pA3), 0, 0
+            psq_st    f3, 8(pA3), 1, 0
         }
+
+#else
+        const f32 fromX = pA1->x;
+        const f32 fromY = pA1->y;
+        const f32 fromZ = pA1->z;
+        const f32 toX = pA2->x;
+        const f32 toY = pA2->y;
+        const f32 toZ = pA2->z;
+        const f32 scaledX = fromX * a4;
+        const f32 scaledY = fromY * a4;
+        const f32 scaledZ = fromZ * a4;
+        pA3->x = std::fma(toX, a5, scaledX);
+        pA3->y = std::fma(toY, a5, scaledY);
+        pA3->z = std::fma(toZ, a5, scaledZ);
 #endif
     }
 
@@ -1360,11 +1411,25 @@ namespace MR {
     }
 
     f32 getMaxElement(const TVec3f& rVec) {
-        return (&rVec.x)[getMaxElementIndex(rVec)];
+#if defined(TARGET_PC)
+        if (rVec.x > rVec.y && rVec.x > rVec.z) {
+            return rVec.x;
+        }
+        return rVec.y > rVec.z ? rVec.y : rVec.z;
+#else
+        f32* vec_arr = (f32*)(&rVec);
+        return vec_arr[getMaxElementIndex(rVec)];
+#endif
     }
 
     f32 getMaxAbsElement(const TVec3f& rVec) {
-        return (&rVec.x)[getMaxAbsElementIndex(rVec)];
+#if defined(TARGET_PC)
+        const u32 index = getMaxAbsElementIndex(rVec);
+        return index == 0 ? rVec.x : index == 1 ? rVec.y : rVec.z;
+#else
+        f32* vec_arr = (f32*)(&rVec);
+        return vec_arr[getMaxAbsElementIndex(rVec)];
+#endif
     }
 
     u32 getMaxElementIndex(const TVec3f& rVec) {
@@ -1454,7 +1519,7 @@ namespace MR {
         vecKillElement(rB, rAxis, &horizonB);
         f32 angleAbs = diffAngleAbs(horizonA, horizonB);
         TPos3f mtx;
-        PSMTXRotAxisRad(mtx, rAxis, 0.00017453293f);  // TODO: written directly?
+        PSMTXRotAxisRad(mtx, rAxis, 0.00017453293f);
         f32 angle1 = horizonA.dot(horizonB);
         PSMTXMultVec(mtx, horizonA, horizonA);
         f32 angle2 = horizonA.dot(horizonB);
@@ -1485,7 +1550,7 @@ namespace MR {
     }
 
     bool isNearAngleRadianHV(const TVec3f& rA, const TVec3f& rB, const TVec3f& rAxis, f32 angleH, f32 angleV) {
-        if (angleV > HALF_PI_D) {  // TODO: value written directly
+        if (angleV > HALF_PI_D) {
             angleV = HALF_PI;
         }
 
@@ -1536,9 +1601,11 @@ namespace MR {
             if (point.x < pMin->x) {
                 pMin->x = point.x;
             }
+
             if (point.y < pMin->y) {
                 pMin->y = point.y;
             }
+
             if (point.z < pMin->z) {
                 pMin->z = point.z;
             }
@@ -1546,9 +1613,11 @@ namespace MR {
             if (pMax->x < point.x) {
                 pMax->x = point.x;
             }
+
             if (pMax->y < point.y) {
                 pMax->y = point.y;
             }
+
             if (pMax->z < point.z) {
                 pMax->z = point.z;
             }
@@ -1559,20 +1628,31 @@ namespace MR {
         return MR::abs(1.0f - rVec.length()) <= tolerance;
     }
 
-    // Matches with no consequences, but I am not exactly sure if *THIS* is what Nintendo would've done...
     void setNan(TVec3f& rDst) {
+#if defined(TARGET_PC)
+        // Retail writes 0xffffffff into each component. Preserve those bits
+        // without aliasing a floating-point vector through an integer type.
+        rDst.x = std::bit_cast<f32>(u32{0xffffffff});
+        rDst.y = std::bit_cast<f32>(u32{0xffffffff});
+        rDst.z = std::bit_cast<f32>(u32{0xffffffff});
+#else
         JGeometry::TVec3< int >* tmp = (JGeometry::TVec3< int >*)&rDst;
         tmp->x = -1;
         tmp->y = -1;
         tmp->z = -1;
+#endif
     }
 
     bool isNan(const TVec3f& rVec) {
+#if defined(TARGET_PC)
+        return std::isnan(rVec.x) || std::isnan(rVec.y) || std::isnan(rVec.z);
+#else
         if (__fpclassifyf(rVec.x) == 1 || __fpclassifyf(rVec.y) == 1 || __fpclassifyf(rVec.z) == 1) {
             return true;
         }
 
         return false;
+#endif
     }
 
     f32 getFootPoint(const TVec3f& rPointA, const TVec3f& rPointB, const TVec3f& rPos, TVec3f* pDst) {
@@ -1587,43 +1667,119 @@ namespace MR {
         return fmod(x, y);
     }
 
-    void floatToFixed16(TVec3s* pDst, const TVec3f& pSrc, u8 q) {
+    void floatToFixed16(TVec3s* pDst, const TVec3f& rPSrc, u8 q) {
+#if defined(TARGET_PC)
+        const f32 scale = static_cast<f32>(aurora::ppc::shift_left_s32(1, q));
+        const s16 x = aurora::ppc::truncate_s16(rPSrc.x * scale);
+        const s16 y = aurora::ppc::truncate_s16(rPSrc.y * scale);
+        const s16 z = aurora::ppc::truncate_s16(rPSrc.z * scale);
+        pDst->x = x;
+        pDst->y = y;
+        pDst->z = z;
+#else
         f32 scale = 1 << q;
 
-        pDst->x = pSrc.x * scale;
-        pDst->y = pSrc.y * scale;
-        pDst->z = pSrc.z * scale;
+        pDst->x = rPSrc.x * scale;
+        pDst->y = rPSrc.y * scale;
+        pDst->z = rPSrc.z * scale;
+#endif
     }
 
-    void fixed16ToFloat(TVec3f* pDst, const TVec3s& pSrc, u8 q) {
+    void fixed16ToFloat(TVec3f* pDst, const TVec3s& rPSrc, u8 q) {
+#if defined(TARGET_PC)
+        const f32 scale = 1.0f / static_cast<f32>(aurora::ppc::shift_left_s32(1, q));
+        const f32 x = rPSrc.x * scale;
+        const f32 y = rPSrc.y * scale;
+        const f32 z = rPSrc.z * scale;
+        pDst->x = x;
+        pDst->y = y;
+        pDst->z = z;
+#else
         f32 scale = 1.0f / (1 << q);
 
-        pDst->x = pSrc.x * scale;
-        pDst->y = pSrc.y * scale;
-        pDst->z = pSrc.z * scale;
+        pDst->x = rPSrc.x * scale;
+        pDst->y = rPSrc.y * scale;
+        pDst->z = rPSrc.z * scale;
+#endif
     }
 
-    void getRotatedAxisY(TVec3f* pDst, const TVec3f& pSrc) {
-        f32 var = pSrc.x;
+    void getRotatedAxisY(TVec3f* pDst, const TVec3f& rPSrc) {
+        f32 var = rPSrc.x;
         f32 CosX = JMACosDegree(var);
-        var = pSrc.y;
+        var = rPSrc.y;
         f32 CosY = JMACosDegree(var);
-        var = pSrc.z;
+        var = rPSrc.z;
         f32 CosZ = JMACosDegree(var);
-        var = pSrc.x;
+        var = rPSrc.x;
         f32 SinX = JMASinDegree(var);
-        var = pSrc.y;
+        var = rPSrc.y;
         f32 SinY = JMASinDegree(var);
-        var = pSrc.z;
+        var = rPSrc.z;
         f32 SinZ = JMASinDegree(var);
 
         pDst->set((SinX * (CosZ * SinY)) - (SinZ * CosX), (SinX * (SinZ * SinY)) + (CosZ * CosX), CosY * SinX);
     }
 
-    void getRotatedAxisZ(TVec3f* pDst, const TVec3f& pSrc) {
+    void getRotatedAxisZ(TVec3f* pDst, const TVec3f& rPSrc) {
         TVec3f vec(0.0f, 0.0f, 1.0f);
         TPos3f mtx;
-        MR::makeMtxTR(mtx, 0.0f, 0.0f, 0.0f, pSrc.x, pSrc.y, pSrc.z);
+        MR::makeMtxTR(mtx, 0.0f, 0.0f, 0.0f, rPSrc.x, rPSrc.y, rPSrc.z);
         PSMTXMultVec(mtx, &vec, pDst);
     }
 };  // namespace MR
+
+f32 JMASqrt(__REGISTER f32 value) {
+#if defined(__MWERKS__)
+    if (!(value > 0.0f)) {
+        return value;
+    }
+
+    __REGISTER f32 inverse;
+    __asm { frsqrte inverse, value }
+    f32 estimate = inverse * value;
+    inverse = -(estimate * inverse - 3.0f);
+    inverse *= estimate;
+    inverse *= 0.5f;
+    return inverse;
+#else
+#if defined(__clang__)
+#pragma clang fp contract(off)
+#pragma clang fp reassociate(off)
+#endif
+    if (value > 0.0f) {
+        const double estimate = ::frsqrte(static_cast<double>(value));
+        const f32 scaled = static_cast<f32>(estimate * static_cast<double>(value));
+        const f32 product = static_cast<f32>(static_cast<double>(scaled) * estimate);
+        f32 correction = -(product - 3.0f);
+        correction *= scaled;
+        correction *= 0.5f;
+        return correction;
+    }
+
+    return value;
+#endif
+}
+
+#if defined(TARGET_PC)
+namespace MR {
+    s32 getRandom(long min, long max) {
+        if (min < std::numeric_limits<s32>::min() ||
+            min > std::numeric_limits<s32>::max() ||
+            max < std::numeric_limits<s32>::min() ||
+            max > std::numeric_limits<s32>::max()) {
+            aurora::throw_host_exception<std::out_of_range>("A retail long random range must fit in s32.");
+        }
+
+        return getRandom(static_cast<s32>(min), static_cast<s32>(max));
+    }
+
+    f32 frsqrte(f32 x) {
+        return static_cast<f32>(::frsqrte(static_cast<double>(x)) * static_cast<double>(x));
+    }
+
+    f32 fastSqrtf(f32 x) {
+        return JMASqrt(x);
+    }
+
+}  // namespace MR
+#endif

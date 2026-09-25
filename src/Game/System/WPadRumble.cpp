@@ -43,7 +43,10 @@ void RumbleChannel::setPattern(const void* pParam1, const RumblePattern& rParam2
 
 WPadRumble::WPadRumble(WPad* pPad) : mPad(pPad), _8(false), _C(1), _B0(0), _B4(0), _B8(false), _BC(0) {
     if (sInstanceForCallback == nullptr) {
-        sInstanceForCallback = new WPadRumble*[MR::getWPadMaxCount()];
+        // Native process owners can retire their heaps and initialize again.
+        // The two original callback slots must outlive each holder's heap.
+        static WPadRumble* callbackInstances[2];
+        sInstanceForCallback = callbackInstances;
 
         for (u32 i = 0; i < MR::getWPadMaxCount(); i++) {
             sInstanceForCallback[i] = nullptr;
@@ -67,7 +70,9 @@ WPadRumble::~WPadRumble() {
         WPADControlMotor(chan, WPAD_MOTOR_STOP);
     }
 
-    sInstanceForCallback[chan] = nullptr;
+    if (sInstanceForCallback[chan] == this) {
+        sInstanceForCallback[chan] = nullptr;
+    }
 }
 
 void WPadRumble::registInstance() {

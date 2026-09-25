@@ -1,4 +1,7 @@
 #include "Game/Scene/Scene.hpp"
+#include "scene/SceneLifetimeBinding.hpp"
+#include "scene/OriginalSceneSupport.hpp"
+#include <memory>
 
 Scene::Scene(const char* pName) : NerveExecutor(pName) {
     mListExecutor = nullptr;
@@ -7,6 +10,7 @@ Scene::Scene(const char* pName) : NerveExecutor(pName) {
 }
 
 Scene::~Scene() {
+    smgpc::scene::retire_scene_services(*this);
     if (mSceneObjHolder != nullptr) {
         delete mSceneObjHolder;
     }
@@ -32,11 +36,12 @@ void Scene::calcAnim() {
 }
 
 void Scene::initNameObjListExecutor() {
-    SceneNameObjListExecutor* exec = new SceneNameObjListExecutor();
+    auto exec = std::make_unique<SceneNameObjListExecutor>();
     exec->init();
-    mListExecutor = exec;
+    mListExecutor = exec.release();
 }
 
 void Scene::initSceneObjHolder() {
     mSceneObjHolder = new SceneObjHolder();
+    smgpc::scene::bind_original_scene_support(*this);
 }

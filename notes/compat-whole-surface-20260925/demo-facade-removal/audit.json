@@ -1,0 +1,162 @@
+[
+  {
+    "path": "src/compat/DemoCompat.cpp",
+    "sha256": "17796bbaee75c34708975292675a57ebe786b701705614be735ba096a393079a",
+    "lines": 22,
+    "git_status": "",
+    "disposition": "delete-unused",
+    "destination": [],
+    "evidence": [
+      "Only production call was ActorRuntimeRegistry.cpp release_demo_runtime_state(actor), which erased facade diagnostic identities.",
+      "Actual original membership/request/action unlink already occurs in release_name_obj_runtime_state\u2192DemoDirectorOwnership::release_name_obj.",
+      "Other three APIs were test-only diagnostics; two were used only by removed DemoSceneRuntimeTests."
+    ],
+    "action": "Deleted facade functions, four registry declarations and redundant retirement call. AuroraNative missing-scene checks now observe actual SceneObj holder absence.",
+    "confidence": "high",
+    "deleted": true
+  },
+  {
+    "path": "src/compat/DemoSceneRuntime.cpp",
+    "sha256": "b14a178b9b25257babaeed1e44cda9f494821a79b8bf8035baab8653debd8180",
+    "lines": 540,
+    "git_status": "",
+    "disposition": "delete-unused",
+    "destination": [
+      "src/Game/Demo/DemoDirector.cpp",
+      "src/Game/Demo/DemoExecutor.cpp",
+      "src/Game/Demo/DemoWipeKeeper.cpp",
+      "src/scene/nameobj/NameObjFactory.cpp"
+    ],
+    "evidence": [
+      "Constructed only by tests; production NameObjFactory already maps DemoGroup\u2192DemoExecutor and DemoSubGroup\u2192DemoCastSubGroup.",
+      "Kept duplicate placement/BCSV definitions, cast-ID diagnostic map, installed facade registry and forwards to real DemoDirector. release_actor only erased that diagnostic map.",
+      "dispatch_demo_wipe_row bypassed original DemoWipeKeeper in facade tests."
+    ],
+    "action": "Deleted facade and its dedicated test; retained tests now create actual scene DemoDirector and use original methods/ownership observations.",
+    "confidence": "high",
+    "deleted": true
+  },
+  {
+    "path": "src/compat/DemoSceneRuntime.hpp",
+    "sha256": "6c13ce9c4efb01ff4115b212d2f3d8eb91f77793aa76b59c87975ebe68b25373",
+    "lines": 194,
+    "git_status": "",
+    "disposition": "delete-unused",
+    "destination": [
+      "src/Game/Demo/DemoDirector.cpp",
+      "src/Game/Demo/DemoExecutor.cpp",
+      "src/Game/Demo/DemoWipeKeeper.cpp",
+      "src/scene/nameobj/NameObjFactory.cpp"
+    ],
+    "evidence": [
+      "Constructed only by tests; production NameObjFactory already maps DemoGroup\u2192DemoExecutor and DemoSubGroup\u2192DemoCastSubGroup.",
+      "Kept duplicate placement/BCSV definitions, cast-ID diagnostic map, installed facade registry and forwards to real DemoDirector. release_actor only erased that diagnostic map.",
+      "dispatch_demo_wipe_row bypassed original DemoWipeKeeper in facade tests."
+    ],
+    "action": "Deleted facade and its dedicated test; retained tests now create actual scene DemoDirector and use original methods/ownership observations.",
+    "confidence": "high",
+    "deleted": true
+  },
+  {
+    "path": "src/compat/DemoSheetRuntime.cpp",
+    "sha256": "91ba7002f5aa97a2a322da4b96ededaf422f4efa590b89a8ec5693105d4f64e7",
+    "lines": 528,
+    "git_status": "",
+    "disposition": "delete-unused",
+    "destination": [
+      "src/Game/Demo/DemoTimeKeeper.cpp",
+      "src/Game/Demo/DemoSubPartKeeper.cpp",
+      "src/Game/Demo/DemoFunction.cpp"
+    ],
+    "evidence": [
+      "Only production-tree consumer was unused DemoSceneRuntime diagnostics; no game/runtime code constructed it.",
+      "Parsed seven Demo BCSV families and simulated time/subpart state already owned by original DemoTimeKeeper/SubPartKeeper and specific keepers."
+    ],
+    "action": "Deleted duplicate parser/clock and its facade-only tests; original DemoExecutor graph remains provider.",
+    "confidence": "high",
+    "deleted": true
+  },
+  {
+    "path": "src/compat/DemoSheetRuntime.hpp",
+    "sha256": "9e7a3919bcc9dd8c3fa6c3ea9d7aa1eb4d54ba360a1080dc92c4a462d8e8b932",
+    "lines": 169,
+    "git_status": "",
+    "disposition": "delete-unused",
+    "destination": [
+      "src/Game/Demo/DemoTimeKeeper.cpp",
+      "src/Game/Demo/DemoSubPartKeeper.cpp",
+      "src/Game/Demo/DemoFunction.cpp"
+    ],
+    "evidence": [
+      "Only production-tree consumer was unused DemoSceneRuntime diagnostics; no game/runtime code constructed it.",
+      "Parsed seven Demo BCSV families and simulated time/subpart state already owned by original DemoTimeKeeper/SubPartKeeper and specific keepers."
+    ],
+    "action": "Deleted duplicate parser/clock and its facade-only tests; original DemoExecutor graph remains provider.",
+    "confidence": "high",
+    "deleted": true
+  },
+  {
+    "path": "src/compat/DemoStartRequestOwner.cpp",
+    "sha256": "0d7b0701e9fa83a518d310e19c70ef65a84278321b319c7e31a635f4439dfa6f",
+    "lines": 38,
+    "git_status": "",
+    "disposition": "narrow-game-adaptation",
+    "destination": [
+      "src/Game/Demo/DemoStartRequestHolder.cpp",
+      "src/Game/Demo/DemoStartRequestHolder.hpp"
+    ],
+    "evidence": [
+      "Only consumer was tests/DemoStartRequestHolderTests.cpp; production DemoDirector already constructs DemoStartRequestHolder directly.",
+      "Original holder owns sixteen DemoStartInfo records and one proxy NameObj. Wrapper duplicated this ownership and selected host allocation regardless of caller."
+    ],
+    "action": "Deleted wrapper; original holder now owns destructor, native exception cleanup, noncopyable lifetime and proxy ownership claim. Caller still selects actual Game/host allocator. Removed manual record deletion from DemoDirectorOwnership to prevent double destruction.",
+    "confidence": "high",
+    "deleted": true
+  },
+  {
+    "path": "src/compat/DemoStartRequestOwner.hpp",
+    "sha256": "affc0617efbd3b373f57d05a5496b1ef486eae0e3713913854a4dcac9f69c1ac",
+    "lines": 30,
+    "git_status": "",
+    "disposition": "narrow-game-adaptation",
+    "destination": [
+      "src/Game/Demo/DemoStartRequestHolder.cpp",
+      "src/Game/Demo/DemoStartRequestHolder.hpp"
+    ],
+    "evidence": [
+      "Only consumer was tests/DemoStartRequestHolderTests.cpp; production DemoDirector already constructs DemoStartRequestHolder directly.",
+      "Original holder owns sixteen DemoStartInfo records and one proxy NameObj. Wrapper duplicated this ownership and selected host allocation regardless of caller."
+    ],
+    "action": "Deleted wrapper; original holder now owns destructor, native exception cleanup, noncopyable lifetime and proxy ownership claim. Caller still selects actual Game/host allocator. Removed manual record deletion from DemoDirectorOwnership to prevent double destruction.",
+    "confidence": "high",
+    "deleted": true
+  },
+  {
+    "path": "src/compat/DemoUtilCompat.cpp",
+    "sha256": "f49d528312fe97332ef20d6a0d2fdab66899e04e6ff6181e9ac7a53a786d23a8",
+    "lines": 8,
+    "git_status": "",
+    "disposition": "delete-unused",
+    "destination": [],
+    "evidence": [
+      "release_puppetable_demo_control has no caller in src or tests; it only forwarded to MarioAccess::endRemoteDemo(nullptr) and ignored bool."
+    ],
+    "action": "Deleted unused forwarding source and header; original PlayerUtil/Demo owners remain unchanged.",
+    "confidence": "high",
+    "deleted": true
+  },
+  {
+    "path": "src/compat/DemoUtilCompat.hpp",
+    "sha256": "a4b6603c59390811d86cbb2e2782d3feaafa0fb4b6760f454a8e28f660305919",
+    "lines": 9,
+    "git_status": "",
+    "disposition": "delete-unused",
+    "destination": [],
+    "evidence": [
+      "release_puppetable_demo_control has no caller in src or tests; it only forwarded to MarioAccess::endRemoteDemo(nullptr) and ignored bool."
+    ],
+    "action": "Deleted unused forwarding source and header; original PlayerUtil/Demo owners remain unchanged.",
+    "confidence": "high",
+    "deleted": true
+  }
+]

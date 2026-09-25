@@ -508,7 +508,6 @@ namespace smgpc::compat {
         }
         release_actor_effect_keeper(actor);
         release_actor_collision_parts(actor);
-        release_demo_runtime_state(actor);
 
         unregister_player_light_controller(actor->mActorLightCtrl);
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {

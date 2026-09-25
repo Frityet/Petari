@@ -1,0 +1,13 @@
+{
+  "donor": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "original_functions": 141,
+  "native_functions": 144,
+  "missing": [],
+  "added_native": [
+    "fastSqrtf(f32)",
+    "frsqrte(f32)",
+    "getRandom(long,long)"
+  ],
+  "remaining_textual_matches": {},
+  "limitations": "Textual definitions only; LightFunction anonymous namespace helper is distinct. Native compile/link deferred to root."
+}

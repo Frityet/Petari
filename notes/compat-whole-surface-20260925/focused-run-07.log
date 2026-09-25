@@ -1,0 +1,5 @@
+[pass] complete original controller table and teardown
+[pass] original chunk identity, sort and capacity
+[pass] binary parameters and actual virtual translators
+[skip] real archived camera chunks (set SMGPC_REAL_DISC)
+[pass] real archived original chunks

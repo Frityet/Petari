@@ -1,0 +1,123 @@
+{
+  "checks": {
+    "entire_current_donor_except_standard_cstring_include": true,
+    "compat_provider_deleted": true,
+    "public_return_type_matches_donor": true,
+    "original_failed_allocation_propagates": true,
+    "seven_register_table": true,
+    "original_indirect_stage_budget": true,
+    "no_added_ambient_budget": true,
+    "original_device_sdk_boundary_preserved": true,
+    "all_32_packet_definitions_have_single_canonical_owner": true,
+    "static_state_has_single_canonical_owner": true
+  },
+  "providers": {
+    "J3DDisplayListObj::newDisplayList": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DDisplayListObj::newSingleDisplayList": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DDisplayListObj::single_To_Double": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DDisplayListObj::setSingleDisplayList": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DDisplayListObj::swapBuffer": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DDisplayListObj::callDL": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DDisplayListObj::beginDL": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DDisplayListObj::endDL": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DDisplayListObj::beginPatch": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DDisplayListObj::endPatch": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DPacket::entry": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DPacket::addChildPacket": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DDrawPacket::J3DDrawPacket": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DDrawPacket::~J3DDrawPacket": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DDrawPacket::newDisplayList": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DDrawPacket::newSingleDisplayList": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DDrawPacket::draw": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DMatPacket::J3DMatPacket": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DMatPacket::~J3DMatPacket": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DMatPacket::addShapePacket": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DMatPacket::beginDiff": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DMatPacket::endDiff": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DMatPacket::isSame": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DMatPacket::draw": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DShapePacket::J3DShapePacket": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DShapePacket::~J3DShapePacket": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DShapePacket::calcDifferedBufferSize": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DShapePacket::newDifferedDisplayList": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DShapePacket::prepareDraw": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DShapePacket::draw": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DShapePacket::drawFast": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "J3DMatPacket::entry": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ]
+  },
+  "static_providers": {
+    "sGDLObj": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ],
+    "sInterruptFlag": [
+      "src/JSystem/J3DGraphBase/J3DPacket.cpp"
+    ]
+  },
+  "native_sha256": "1e332eae9cb5c020269d9ee00f21b502403508da09d8d5f24b80ce246c47f588",
+  "donor_sha256": "f54a1521243a20bcb4598803b0278aeab5e2057d31fc4369fcd4d2d2ec01b727",
+  "scope": "Source ownership, donor equality, public signature, original error branch/register table and unchanged device boundaries. Not a compile, heap exhaustion, GPU or gameplay test."
+}

@@ -7,6 +7,11 @@
 #include <JSystem/JGeometry/TVec.hpp>
 #include <revolution/types.h>
 
+#if !defined(__MWERKS__)
+#include <bit>
+#include <cmath>
+#endif
+
 namespace MR {
     /// @brief Initializes the precomputed arccosine table.
     void initAcosTable();
@@ -31,6 +36,10 @@ namespace MR {
     /// @param max The exclusive maximum integer.
     /// @return The pseudorandom integer.
     s32 getRandom(s32 min, s32 max);
+
+#if defined(TARGET_PC)
+    s32 getRandom(long min, long max);
+#endif
 
     /// @brief Computes the next pseudorandom floating-point number within the half-open interval `[0.0f, 360.0f)`.
     /// @return The pseudorandom number of degrees.
@@ -443,11 +452,20 @@ namespace MR {
     }
 
     inline f32 abs(f32 x) {
+#if defined(__MWERKS__)
         return __fabsf(x);
+#else
+        return std::fabs(x);
+#endif
     }
 
     inline s32 abs(s32 x) {
+#if defined(__MWERKS__)
         return __abs(x);
+#else
+        const u32 magnitude = x < 0 ? -static_cast< u32 >(x) : static_cast< u32 >(x);
+        return std::bit_cast< s32 >(magnitude);
+#endif
     }
 
     /// @brief Computes the cosine of a number, in radians.

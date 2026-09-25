@@ -2,16 +2,32 @@
 #include "Game/NameObj/NameObjRegister.hpp"
 #include "Game/Scene/SceneNameObjMovementController.hpp"
 #include "Game/Util/SingletonHolder.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
+#include "runtime/RuntimeContext.hpp"
+#include "scene/SceneNameObjRegistry.hpp"
 
 #define FLAG_MOVEMENT_OFF 1u
 #define FLAG_SUSPEND 2u
 #define FLAG_RESUME 4u
 
 NameObj::NameObj(const char* pName) : mName(pName), mFlag(), mExecutorIdx(-1) {
-    SingletonHolder< NameObjRegister >::get()->add(this);
+    smgpc::compat::register_name_obj_runtime_state(this);
+    try {
+        smgpc::scene::register_scene_name_obj(*this);
+    } catch (...) {
+        smgpc::compat::release_name_obj_runtime_state(this);
+        throw;
+    }
 }
 
 NameObj::~NameObj() {
+    if (auto* scheduler = smgpc::runtime::try_active_scene_scheduler()) {
+        scheduler->disconnect_name_obj(*this);
+    } else if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+        runtime->scheduler().disconnect_name_obj(*this);
+    }
+    smgpc::scene::unregister_scene_name_obj(*this);
+    smgpc::compat::release_name_obj_runtime_state(this);
 }
 
 void NameObj::init(const JMapInfoIter& rIter) {

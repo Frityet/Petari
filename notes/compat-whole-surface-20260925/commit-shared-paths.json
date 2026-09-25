@@ -1,0 +1,12 @@
+[
+  "src/runtime/RuntimeContext.cpp",
+  "tests/ActorEventCameraTests.cpp",
+  "tests/AuroraNativeTests.cpp",
+  "tests/CameraViewInterpolatorTests.cpp",
+  "tests/CameraViewServiceTests.cpp",
+  "tests/CenterScreenBlurRealOrAbsentTests.cpp",
+  "tests/GravityRealOrAbsentTests.cpp",
+  "tests/NameObjFactoryPlacementTests.cpp",
+  "tests/StageStartCameraTests.cpp",
+  "tests/xmake.lua"
+]

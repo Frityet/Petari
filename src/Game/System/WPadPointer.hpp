@@ -6,6 +6,7 @@
 class WPadPointer {
 public:
     WPadPointer(const WPad*);
+    ~WPadPointer();
 
     void reset();
     void setSensorBarLevel(f32);

@@ -5,7 +5,7 @@
 #include "camera/CameraAnimation.hpp"
 #include "camera/OriginalAnimationCamera.hpp"
 #include "camera/OriginalGameCamera.hpp"
-#include "compat/DemoSceneRuntime.hpp"
+#include "SceneExecutionFixture.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -79,8 +79,13 @@ namespace {
     }
 
     struct CameraScene {
-        CameraScene() : scheduler_binding(scheduler), dvd("/"), demo(dvd, {}),
-                        scene_binding(holder), target([this] { return target_state; }) {
+        CameraScene() : scheduler_binding(scheduler),
+                        heaps(smgpc::compat::JkrHeapRuntime::create(8U << 20)),
+                        scene(scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 2U << 20)),
+                        target([this] { return target_state; }) {
+            auto& holder = scene.holder();
+            require(holder.create(SceneObj_DemoDirector) != nullptr,
+                    "camera service requires the actual scene DemoDirector and DemoSheet resource");
             require(holder.create(SceneObj_AreaObjContainer) != nullptr &&
                         holder.create(SceneObj_PlanetGravityManager) != nullptr,
                     "camera view integration requires real area and gravity registries");
@@ -105,10 +110,8 @@ namespace {
 
         smgpc::runtime::SceneScheduler scheduler;
         smgpc::runtime::SceneSchedulerBinding scheduler_binding;
-        smgpc::runtime::DvdFileSystemService dvd;
-        smgpc::compat::DemoSceneRuntime demo;
-        SceneObjHolder holder;
-        smgpc::scene::SceneObjHolderBinding scene_binding;
+        std::shared_ptr<smgpc::compat::JkrHeapRuntime> heaps;
+        smgpc::test::SceneExecutionFixture scene;
         smgpc::scene::StageCollisionService collision;
         smgpc::camera::StageCameraTargetState target_state{
             .ground_position = smgpc::camera::CameraParamVec3{},

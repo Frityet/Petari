@@ -73,18 +73,6 @@ const StorySequenceExecutorType::DemoSequenceInfo *StorySequenceExecutor::addDyn
 }
 
 namespace MR {
-    u32 getHashCode(const char *text) {
-        if (text == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("Hash input must not be null");
-        }
-
-        auto hash = u32{};
-        for (; *text != '\0'; ++text) {
-            hash = static_cast<u8>(*text) + hash * 31U;
-        }
-        return hash;
-    }
-
     StaffRoll *getStaffRoll() {
         unavailable("staff-roll object lookup");
     }

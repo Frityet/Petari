@@ -1,0 +1,68 @@
+[
+  {
+    "target": "smg-pc-game-math-rotation-tests",
+    "args": [],
+    "exit": 0,
+    "log": "notes/compat-whole-surface-20260925/final-run-00.log"
+  },
+  {
+    "target": "smg-pc-gravity-math-foundation-tests",
+    "args": [],
+    "exit": 0,
+    "log": "notes/compat-whole-surface-20260925/final-run-01.log"
+  },
+  {
+    "target": "smg-pc-original-scene-execution-owner-tests",
+    "args": [],
+    "exit": 0,
+    "log": "notes/compat-whole-surface-20260925/final-run-02.log"
+  },
+  {
+    "target": "smg-pc-area-obj-real-or-absent-tests",
+    "args": [
+      "area queries reject missing scene owner"
+    ],
+    "exit": 0,
+    "log": "notes/compat-whole-surface-20260925/final-run-03.log"
+  },
+  {
+    "target": "smg-pc-area-obj-real-or-absent-tests",
+    "args": [
+      "scene holder owns real container and managers"
+    ],
+    "exit": 0,
+    "log": "notes/compat-whole-surface-20260925/final-run-04.log"
+  },
+  {
+    "target": "smg-pc-area-obj-real-or-absent-tests",
+    "args": [
+      "manager readiness does not fabricate placement support"
+    ],
+    "exit": 0,
+    "log": "notes/compat-whole-surface-20260925/final-run-05.log"
+  },
+  {
+    "target": "smg-pc-area-obj-real-or-absent-tests",
+    "args": [
+      "CubeCamera manager finalizes priority and reverse query"
+    ],
+    "exit": 0,
+    "log": "notes/compat-whole-surface-20260925/final-run-06.log"
+  },
+  {
+    "target": "smg-pc-area-obj-real-or-absent-tests",
+    "args": [
+      "area movement uses actual sphere and arguments"
+    ],
+    "exit": 0,
+    "log": "notes/compat-whole-surface-20260925/final-run-07.log"
+  },
+  {
+    "target": "smg-pc-area-obj-real-or-absent-tests",
+    "args": [
+      "water and Mercator do not fabricate results"
+    ],
+    "exit": 0,
+    "log": "notes/compat-whole-surface-20260925/final-run-08.log"
+  }
+]

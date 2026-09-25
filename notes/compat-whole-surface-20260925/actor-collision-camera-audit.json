@@ -1,0 +1,3828 @@
+{
+  "scope": "Actor, collision, camera and related math/model compatibility surface",
+  "authoritative_decomp": "1a126cb5da311fedff662f53fb31c5aeaf851408",
+  "method": "All67 scoped files read; current donor methods and actual src/tests consumers inspected. Source-only audit; no builds or runtime validation executed. Representative symbol matches are bounded textual references, not linker reachability.",
+  "policy": "Remove src/compat entirely. keep-general means integrate with canonical JSystem/Aurora; it never means keep a compat directory. Native targeted ownership/ABI changes belong at Game owners; unused alternate paths are deleted.",
+  "entries": [
+    {
+      "path": "src/compat/ActorRuntimeRegistry.cpp",
+      "sha256": "365b79d5f86e3713bbd6a04f5530f907d717a6b506aabb328fbdca6d4e11bd8f",
+      "lines": 927,
+      "observed_sha256": "365b79d5f86e3713bbd6a04f5530f907d717a6b506aabb328fbdca6d4e11bd8f",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/NameObj/NameObj.cpp; Game/LiveActor/LiveActor.cpp; each allocated child owner",
+      "evidence": "register_name_obj_runtime_state, initialize_actor_model, release_live_actor_runtime_state; unordered sidecars duplicate NameObj/LiveActor lifetime and initialization while retaining model, sensor, binder, rail, switch, shadow, light and LOD children. Retirement also repairs original group and queued sensor borrows.",
+      "include_consumers": [
+        "src/Game/LiveActor/LiveActor.cpp",
+        "src/Game/Map/LightPointCtrl.cpp",
+        "src/app/OriginalGameApplication.cpp",
+        "src/camera/EventCamera.cpp",
+        "src/compat/ActorShadowCsvCompat.cpp",
+        "src/compat/ClippingDirectorOwnership.hpp",
+        "src/compat/CollisionDirectorOwnership.hpp",
+        "src/compat/DemoCompat.cpp",
+        "src/compat/DemoDirectorOwnership.hpp",
+        "src/compat/DemoSceneRuntime.cpp",
+        "src/compat/DemoStartRequestOwner.cpp",
+        "src/compat/FixedPositionCompat.cpp",
+        "src/compat/GameActorPhysicsCompat.cpp",
+        "src/compat/GameActorSensorCompat.cpp",
+        "src/compat/GroupCheckManagerCompat.cpp",
+        "src/compat/ImageEffectOwnership.hpp",
+        "src/compat/InformationMessageCompat.cpp",
+        "src/compat/LiveActorUtilCompat.cpp",
+        "src/compat/LodCtrlRuntimeCompat.cpp",
+        "src/compat/MarioAnimatorLifetime.cpp",
+        "src/compat/NameObjExecuteCompat.cpp",
+        "src/compat/NameObjLifetimeCompat.cpp",
+        "src/compat/PlanetMapRuntimeCompat.cpp",
+        "src/compat/SceneObjHolderCompat.cpp",
+        "src/compat/ShadowControllerOwnership.cpp",
+        "src/compat/StarPointerDepthOwnership.cpp",
+        "src/compat/TalkDirectorLifetime.cpp",
+        "src/runtime/OriginalProcessTrace.cpp",
+        "src/runtime/RuntimeContext.cpp",
+        "src/runtime/RuntimeServices.cpp",
+        "src/runtime/ScenarioCatalogOwnership.cpp",
+        "src/runtime/SceneScheduler.cpp",
+        "src/scene/GameSceneBinding.hpp",
+        "src/scene/NameObjChildOwner.hpp",
+        "src/scene/OriginalSceneSupport.cpp",
+        "src/scene/nameobj/NameObjFactory.cpp",
+        "tests/ActorRuntimeRegistryTests.cpp",
+        "tests/ActorSensorRealOrAbsentTests.cpp",
+        "tests/AreaObjRealOrAbsentTests.cpp",
+        "tests/AuroraNativeTests.cpp",
+        "tests/CenterScreenBlurRealOrAbsentTests.cpp",
+        "tests/DemoSceneRuntimeTests.cpp",
+        "tests/DemoStartRequestHolderTests.cpp",
+        "tests/GameActorPhysicsRealOrAbsentTests.cpp",
+        "tests/GravityRealOrAbsentTests.cpp",
+        "tests/LiveActorUtilRealOrAbsentTests.cpp",
+        "tests/LodCtrlCompatTests.cpp",
+        "tests/MarioModelDemoSurfaceTests.cpp",
+        "tests/Model3DFor2DContractTests.cpp",
+        "tests/NPCActorRealOrAbsentTests.cpp",
+        "tests/NameObjFactoryPlacementTests.cpp",
+        "tests/NameObjGroupLifetimeTests.cpp",
+        "tests/OriginalActorBroadcastTests.cpp",
+        "tests/OriginalCameraContextTests.cpp",
+        "tests/OriginalCameraHolderTests.cpp",
+        "tests/OriginalCollisionPartsOwnerTests.cpp",
+        "tests/OriginalEffectOwnershipTests.cpp",
+        "tests/OriginalImageEffectOwnershipTests.cpp",
+        "tests/OriginalJointControllerTests.cpp",
+        "tests/OriginalNamePosOwnerTests.cpp",
+        "tests/OriginalNpcOrientationTests.cpp",
+        "tests/OriginalParticleResourceOwnerTests.cpp",
+        "tests/OriginalPlayerUtilTests.cpp",
+        "tests/OriginalProcessButterflyTests.cpp",
+        "tests/OriginalProcessCollisionAreaTests.cpp",
+        "tests/OriginalProcessCrystalCageTests.cpp",
+        "tests/OriginalProcessMapObjectTests.cpp",
+        "tests/OriginalProcessPlacementTransformTests.cpp",
+        "tests/OriginalProcessPlayerOwnerTests.cpp",
+        "tests/OriginalProcessPunchingKinokoTests.cpp",
+        "tests/OriginalProcessShadowVolumeLineTests.cpp",
+        "tests/OriginalProcessStarPiecePlacementTests.cpp",
+        "tests/OriginalProcessTrampleJumpTests.cpp",
+        "tests/OriginalProcessWarpPodTests.cpp",
+        "tests/OriginalScenarioCatalogTests.cpp",
+        "tests/OriginalSceneExecutionOwnerTests.cpp",
+        "tests/OriginalSceneWipeOwnerTests.cpp",
+        "tests/OriginalSensorMatrixTests.cpp",
+        "tests/OriginalShadowControllerOwnerTests.cpp",
+        "tests/OriginalStarPointerOwnerTests.cpp",
+        "tests/PointLightRuntimeTests.cpp",
+        "tests/RuntimeContextConstructionTests.cpp",
+        "tests/ScenarioPublicationTests.cpp",
+        "tests/SceneNameObjRegistryTests.cpp",
+        "tests/SceneObjHolderRealOrAbsentTests.cpp",
+        "tests/SceneSchedulerHeapTests.cpp",
+        "tests/StageStartCameraTests.cpp",
+        "tests/StarPointerRealOrAbsentTests.cpp",
+        "tests/TalkRealOrAbsentTests.cpp"
+      ],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/app/OriginalGameApplication.cpp",
+          "symbols": [
+            "release_name_obj_runtime_state",
+            "mark_name_obj_runtime_registrations",
+            "newest_name_obj_runtime_object_since_if"
+          ]
+        },
+        {
+          "path": "src/camera/EventCamera.cpp",
+          "symbols": [
+            "name_obj_runtime_generation",
+            "has_actor_runtime_state"
+          ]
+        },
+        {
+          "path": "src/layout/BrlytLayout.cpp",
+          "symbols": [
+            "operator"
+          ]
+        },
+        {
+          "path": "src/layout/LayoutManagerCompat.cpp",
+          "symbols": [
+            "operator"
+          ]
+        },
+        {
+          "path": "src/runtime/RuntimeServices.cpp",
+          "symbols": [
+            "count_if"
+          ]
+        },
+        {
+          "path": "src/runtime/OriginalProcessTrace.cpp",
+          "symbols": [
+            "name_obj_runtime_generation"
+          ]
+        },
+        {
+          "path": "src/runtime/SceneScheduler.cpp",
+          "symbols": [
+            "name_obj_is_suspended",
+            "retain_actor_model_owner"
+          ]
+        },
+        {
+          "path": "src/render/J3dModelRenderer.cpp",
+          "symbols": [
+            "operator",
+            "count_if"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/NameObj/NameObj.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/LiveActor/LiveActor.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Integrate native-owned fields/destructors into those canonical owners; rewrite scene registration and fixture accessors. Preserve reverse retirement, shared MsgSharedGroup borrow invalidation, resource/heap retention and partial-init cleanup. Delete sidecar once all callers use owners.",
+      "confidence": "medium",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/ActorRuntimeRegistry.hpp",
+      "sha256": "d411614662fa2d273d1e42fb46fb4f3f72d75658757ea244ec1e17b21381b8f3",
+      "lines": 290,
+      "observed_sha256": "d411614662fa2d273d1e42fb46fb4f3f72d75658757ea244ec1e17b21381b8f3",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/NameObj/NameObj.cpp; Game/LiveActor/LiveActor.cpp; each allocated child owner",
+      "evidence": "register_name_obj_runtime_state, initialize_actor_model, release_live_actor_runtime_state; unordered sidecars duplicate NameObj/LiveActor lifetime and initialization while retaining model, sensor, binder, rail, switch, shadow, light and LOD children. Retirement also repairs original group and queued sensor borrows.",
+      "include_consumers": [
+        "src/Game/LiveActor/LiveActor.cpp",
+        "src/Game/Map/LightPointCtrl.cpp",
+        "src/app/OriginalGameApplication.cpp",
+        "src/camera/EventCamera.cpp",
+        "src/compat/ActorRuntimeRegistry.cpp",
+        "src/compat/ActorShadowCsvCompat.cpp",
+        "src/compat/ClippingDirectorOwnership.hpp",
+        "src/compat/CollisionDirectorOwnership.hpp",
+        "src/compat/DemoCompat.cpp",
+        "src/compat/DemoDirectorOwnership.hpp",
+        "src/compat/DemoSceneRuntime.cpp",
+        "src/compat/DemoStartRequestOwner.cpp",
+        "src/compat/FixedPositionCompat.cpp",
+        "src/compat/GameActorPhysicsCompat.cpp",
+        "src/compat/GameActorSensorCompat.cpp",
+        "src/compat/GroupCheckManagerCompat.cpp",
+        "src/compat/ImageEffectOwnership.hpp",
+        "src/compat/InformationMessageCompat.cpp",
+        "src/compat/LiveActorUtilCompat.cpp",
+        "src/compat/LodCtrlRuntimeCompat.cpp",
+        "src/compat/MarioAnimatorLifetime.cpp",
+        "src/compat/NameObjExecuteCompat.cpp",
+        "src/compat/NameObjLifetimeCompat.cpp",
+        "src/compat/PlanetMapRuntimeCompat.cpp",
+        "src/compat/SceneObjHolderCompat.cpp",
+        "src/compat/ShadowControllerOwnership.cpp",
+        "src/compat/StarPointerDepthOwnership.cpp",
+        "src/compat/TalkDirectorLifetime.cpp",
+        "src/runtime/OriginalProcessTrace.cpp",
+        "src/runtime/RuntimeContext.cpp",
+        "src/runtime/RuntimeServices.cpp",
+        "src/runtime/ScenarioCatalogOwnership.cpp",
+        "src/runtime/SceneScheduler.cpp",
+        "src/scene/GameSceneBinding.hpp",
+        "src/scene/NameObjChildOwner.hpp",
+        "src/scene/OriginalSceneSupport.cpp",
+        "src/scene/nameobj/NameObjFactory.cpp",
+        "tests/ActorRuntimeRegistryTests.cpp",
+        "tests/ActorSensorRealOrAbsentTests.cpp",
+        "tests/AreaObjRealOrAbsentTests.cpp",
+        "tests/AuroraNativeTests.cpp",
+        "tests/CenterScreenBlurRealOrAbsentTests.cpp",
+        "tests/DemoSceneRuntimeTests.cpp",
+        "tests/DemoStartRequestHolderTests.cpp",
+        "tests/GameActorPhysicsRealOrAbsentTests.cpp",
+        "tests/GravityRealOrAbsentTests.cpp",
+        "tests/LiveActorUtilRealOrAbsentTests.cpp",
+        "tests/LodCtrlCompatTests.cpp",
+        "tests/MarioModelDemoSurfaceTests.cpp",
+        "tests/Model3DFor2DContractTests.cpp",
+        "tests/NPCActorRealOrAbsentTests.cpp",
+        "tests/NameObjFactoryPlacementTests.cpp",
+        "tests/NameObjGroupLifetimeTests.cpp",
+        "tests/OriginalActorBroadcastTests.cpp",
+        "tests/OriginalCameraContextTests.cpp",
+        "tests/OriginalCameraHolderTests.cpp",
+        "tests/OriginalCollisionPartsOwnerTests.cpp",
+        "tests/OriginalEffectOwnershipTests.cpp",
+        "tests/OriginalImageEffectOwnershipTests.cpp",
+        "tests/OriginalJointControllerTests.cpp",
+        "tests/OriginalNamePosOwnerTests.cpp",
+        "tests/OriginalNpcOrientationTests.cpp",
+        "tests/OriginalParticleResourceOwnerTests.cpp",
+        "tests/OriginalPlayerUtilTests.cpp",
+        "tests/OriginalProcessButterflyTests.cpp",
+        "tests/OriginalProcessCollisionAreaTests.cpp",
+        "tests/OriginalProcessCrystalCageTests.cpp",
+        "tests/OriginalProcessMapObjectTests.cpp",
+        "tests/OriginalProcessPlacementTransformTests.cpp",
+        "tests/OriginalProcessPlayerOwnerTests.cpp",
+        "tests/OriginalProcessPunchingKinokoTests.cpp",
+        "tests/OriginalProcessShadowVolumeLineTests.cpp",
+        "tests/OriginalProcessStarPiecePlacementTests.cpp",
+        "tests/OriginalProcessTrampleJumpTests.cpp",
+        "tests/OriginalProcessWarpPodTests.cpp",
+        "tests/OriginalScenarioCatalogTests.cpp",
+        "tests/OriginalSceneExecutionOwnerTests.cpp",
+        "tests/OriginalSceneWipeOwnerTests.cpp",
+        "tests/OriginalSensorMatrixTests.cpp",
+        "tests/OriginalShadowControllerOwnerTests.cpp",
+        "tests/OriginalStarPointerOwnerTests.cpp",
+        "tests/PointLightRuntimeTests.cpp",
+        "tests/RuntimeContextConstructionTests.cpp",
+        "tests/ScenarioPublicationTests.cpp",
+        "tests/SceneNameObjRegistryTests.cpp",
+        "tests/SceneObjHolderRealOrAbsentTests.cpp",
+        "tests/SceneSchedulerHeapTests.cpp",
+        "tests/StageStartCameraTests.cpp",
+        "tests/StarPointerRealOrAbsentTests.cpp",
+        "tests/TalkRealOrAbsentTests.cpp"
+      ],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/scene/NameObjChildOwner.cpp",
+          "symbols": [
+            "release_name_obj_runtime_postpass_delegation"
+          ]
+        },
+        {
+          "path": "tests/AreaObjRealOrAbsentTests.cpp",
+          "symbols": [
+            "release_name_obj_runtime_postpass_delegation"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/NameObj/NameObj.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/LiveActor/LiveActor.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Integrate native-owned fields/destructors into those canonical owners; rewrite scene registration and fixture accessors. Preserve reverse retirement, shared MsgSharedGroup borrow invalidation, resource/heap retention and partial-init cleanup. Delete sidecar once all callers use owners.",
+      "confidence": "medium",
+      "build_selection": "Included by listed current consumers; delete this header with its API",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/BinderCompat.cpp",
+      "sha256": "082e0d40d0dad01f565779c5c965cc4a1e266fc7bdea7112dd462ffda6b355db",
+      "lines": 22,
+      "observed_sha256": "082e0d40d0dad01f565779c5c965cc4a1e266fc7bdea7112dd462ffda6b355db",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/LiveActor/Binder.cpp; Game/Util/LiveActorUtil.cpp",
+      "evidence": "Binder::~Binder deletes mPlane; MR::setBinderOffsetVec is the original field setter plus host validation.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Util/LiveActorUtil.cpp",
+          "symbols": [
+            "setBinderOffsetVec"
+          ]
+        },
+        {
+          "path": "src/Game/Player/MarioActor.cpp",
+          "symbols": [
+            "setBinderOffsetVec"
+          ]
+        },
+        {
+          "path": "src/Game/MapObj/CrystalCage.cpp",
+          "symbols": [
+            "setBinderOffsetVec"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/LiveActor/Binder.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Util/LiveActorUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Place native array cleanup in Binder destructor, restore setter in canonical LiveActorUtil; avoid duplicate definition with full utility restore.",
+      "confidence": "medium",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/CameraLocalUtilRuntime.cpp",
+      "sha256": "175aab2f433ec97cb56100db98ee349bd0f4d9d1e66410aa3e02e7c1686a56ac",
+      "lines": 431,
+      "observed_sha256": "175aab2f433ec97cb56100db98ee349bd0f4d9d1e66410aa3e02e7c1686a56ac",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Camera/CameraLocalUtil.cpp; Game/Camera/CameraDirector.cpp; Game/Camera/CameraTargetObj.cpp",
+      "evidence": "CameraTargetObj constructor and pose/getTarget/getWatchPos/set* helpers mirror current canonical owners; calcCameraViewMtxFromPoseParam mirrors director. TLS ScopedCameraTargetBinding supplies a target only when no original CameraMan/director is present.",
+      "include_consumers": [
+        "src/camera/OriginalAnimationCamera.cpp",
+        "src/camera/OriginalCameraView.cpp",
+        "src/camera/OriginalGameCamera.cpp",
+        "src/camera/OriginalGameCamera.hpp",
+        "tests/ActorEventCameraTests.cpp",
+        "tests/CameraLocalUtilRuntimeTests.cpp"
+      ],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/camera/EventCamera.cpp",
+          "symbols": [
+            "getUpVec"
+          ]
+        },
+        {
+          "path": "src/camera/OriginalGameCamera.cpp",
+          "symbols": [
+            "calcCameraViewMtxFromPoseParam",
+            "getUpVec",
+            "getLocalOffset"
+          ]
+        },
+        {
+          "path": "src/camera/CameraAnimation.cpp",
+          "symbols": [
+            "getWatchPos",
+            "getPos",
+            "getFovy"
+          ]
+        },
+        {
+          "path": "src/camera/OriginalAnimationCamera.cpp",
+          "symbols": [
+            "calcCameraViewMtxFromPoseParam",
+            "calcSafePose"
+          ]
+        },
+        {
+          "path": "src/camera/OriginalCameraView.cpp",
+          "symbols": [
+            "calcCameraViewMtxFromPoseParam",
+            "getWatchPos"
+          ]
+        },
+        {
+          "path": "src/camera/CameraDirectorRuntime.cpp",
+          "symbols": [
+            "getTarget"
+          ]
+        },
+        {
+          "path": "src/runtime/RuntimeServices.cpp",
+          "symbols": [
+            "calcCameraViewMtxFromPoseParam",
+            "getUpVec"
+          ]
+        },
+        {
+          "path": "src/scene/StageCollisionService.cpp",
+          "symbols": [
+            "getPos"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Camera/CameraLocalUtil.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Camera/CameraDirector.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Camera/CameraTargetObj.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore complete owners. Replace src/camera/OriginalGameCamera and OriginalAnimationCamera isolated adapter fallback with canonical CameraMan/Director target ownership; fixtures may construct those owners. Keep native camera-mode/input adaptations in CameraLocalUtil only where needed.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/CameraLocalUtilRuntime.hpp",
+      "sha256": "80609b0195965cdf053b40b66393cc165ada661bcfaf81597beea81e52071e6e",
+      "lines": 39,
+      "observed_sha256": "80609b0195965cdf053b40b66393cc165ada661bcfaf81597beea81e52071e6e",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Camera/CameraLocalUtil.cpp; Game/Camera/CameraDirector.cpp; Game/Camera/CameraTargetObj.cpp",
+      "evidence": "CameraTargetObj constructor and pose/getTarget/getWatchPos/set* helpers mirror current canonical owners; calcCameraViewMtxFromPoseParam mirrors director. TLS ScopedCameraTargetBinding supplies a target only when no original CameraMan/director is present.",
+      "include_consumers": [
+        "src/camera/OriginalAnimationCamera.cpp",
+        "src/camera/OriginalCameraView.cpp",
+        "src/camera/OriginalGameCamera.cpp",
+        "src/camera/OriginalGameCamera.hpp",
+        "src/compat/CameraLocalUtilRuntime.cpp",
+        "tests/ActorEventCameraTests.cpp",
+        "tests/CameraLocalUtilRuntimeTests.cpp"
+      ],
+      "representative_symbol_consumers": [],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Camera/CameraLocalUtil.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Camera/CameraDirector.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Camera/CameraTargetObj.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore complete owners. Replace src/camera/OriginalGameCamera and OriginalAnimationCamera isolated adapter fallback with canonical CameraMan/Director target ownership; fixtures may construct those owners. Keep native camera-mode/input adaptations in CameraLocalUtil only where needed.",
+      "confidence": "high",
+      "build_selection": "Included by listed current consumers; delete this header with its API",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/CameraUtilCompat.cpp",
+      "sha256": "306e47dc629fb416201eb57e7c7921c32fd2697b921be7293370ba78330f7bd8",
+      "lines": 34,
+      "observed_sha256": "306e47dc629fb416201eb57e7c7921c32fd2697b921be7293370ba78330f7bd8",
+      "disposition": "delete-unused",
+      "destination": "None: use existing CameraSystemService member or canonical MR::declareEventCameraAnim",
+      "evidence": "Free declare_event_camera_animation retains bytes via CameraDirectorRuntime and enters scene allocation domain, but has no callers. Tests include header and invoke CameraSystemService::declare_event_camera_animation instead.",
+      "include_consumers": [
+        "tests/ActorEventCameraTests.cpp",
+        "tests/StageStartCameraTests.cpp"
+      ],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/runtime/RuntimeServices.cpp",
+          "symbols": [
+            "declare_event_camera_animation"
+          ]
+        },
+        {
+          "path": "tests/ActorEventCameraTests.cpp",
+          "symbols": [
+            "declare_event_camera_animation"
+          ]
+        },
+        {
+          "path": "tests/CameraViewServiceTests.cpp",
+          "symbols": [
+            "declare_event_camera_animation"
+          ]
+        },
+        {
+          "path": "tests/StageStartCameraTests.cpp",
+          "symbols": [
+            "declare_event_camera_animation"
+          ]
+        }
+      ],
+      "canonical_counterparts": [],
+      "action": "Remove cpp/hpp and two unused test includes. Keep the already-used resource-retention path in its actual CameraDirector owner during that separate migration.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/CameraUtilCompat.hpp",
+      "sha256": "629fa5b5e2918c2ce35b444898e131a32a1cfb29a81b716eb01b99e22369ff59",
+      "lines": 15,
+      "observed_sha256": "629fa5b5e2918c2ce35b444898e131a32a1cfb29a81b716eb01b99e22369ff59",
+      "disposition": "delete-unused",
+      "destination": "None: use existing CameraSystemService member or canonical MR::declareEventCameraAnim",
+      "evidence": "Free declare_event_camera_animation retains bytes via CameraDirectorRuntime and enters scene allocation domain, but has no callers. Tests include header and invoke CameraSystemService::declare_event_camera_animation instead.",
+      "include_consumers": [
+        "src/compat/CameraUtilCompat.cpp",
+        "tests/ActorEventCameraTests.cpp",
+        "tests/StageStartCameraTests.cpp"
+      ],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/runtime/RuntimeServices.cpp",
+          "symbols": [
+            "declare_event_camera_animation"
+          ]
+        },
+        {
+          "path": "tests/ActorEventCameraTests.cpp",
+          "symbols": [
+            "declare_event_camera_animation"
+          ]
+        },
+        {
+          "path": "tests/CameraViewServiceTests.cpp",
+          "symbols": [
+            "declare_event_camera_animation"
+          ]
+        },
+        {
+          "path": "tests/StageStartCameraTests.cpp",
+          "symbols": [
+            "declare_event_camera_animation"
+          ]
+        }
+      ],
+      "canonical_counterparts": [],
+      "action": "Remove cpp/hpp and two unused test includes. Keep the already-used resource-retention path in its actual CameraDirector owner during that separate migration.",
+      "confidence": "high",
+      "build_selection": "Included by listed current consumers; delete this header with its API",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/CameraViewRuntime.cpp",
+      "sha256": "e8147ae1864baa3550caf5dbf4268723a6f368b82df70ceabe5744dd141696a8",
+      "lines": 24,
+      "observed_sha256": "e8147ae1864baa3550caf5dbf4268723a6f368b82df70ceabe5744dd141696a8",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/Camera/CameraDirector.cpp; Game/Camera/CameraContext.cpp",
+      "evidence": "TLS ScopedCameraViewOutput stores view/inverse/fovy/near under src/camera/OriginalCameraView; CameraViewInterpolatorTests binds output.",
+      "include_consumers": [
+        "src/camera/OriginalCameraView.hpp",
+        "tests/CameraViewInterpolatorTests.cpp",
+        "tests/OnlyCameraTests.cpp"
+      ],
+      "representative_symbol_consumers": [],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Camera/CameraDirector.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Camera/CameraContext.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Have canonical director/context expose their actual result through native view integration. Delete TLS output and adapt OriginalCameraView and fixtures; verify view/inverse composition and interpolation.",
+      "confidence": "medium",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/CameraViewRuntime.hpp",
+      "sha256": "a0aad0488105b1512d2d52272a020cd19825fe9e11211bd268495b65a8ffec88",
+      "lines": 30,
+      "observed_sha256": "a0aad0488105b1512d2d52272a020cd19825fe9e11211bd268495b65a8ffec88",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/Camera/CameraDirector.cpp; Game/Camera/CameraContext.cpp",
+      "evidence": "TLS ScopedCameraViewOutput stores view/inverse/fovy/near under src/camera/OriginalCameraView; CameraViewInterpolatorTests binds output.",
+      "include_consumers": [
+        "src/camera/OriginalCameraView.hpp",
+        "src/compat/CameraViewRuntime.cpp",
+        "tests/CameraViewInterpolatorTests.cpp",
+        "tests/OnlyCameraTests.cpp"
+      ],
+      "representative_symbol_consumers": [],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Camera/CameraDirector.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Camera/CameraContext.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Have canonical director/context expose their actual result through native view integration. Delete TLS output and adapt OriginalCameraView and fixtures; verify view/inverse composition and interpolation.",
+      "confidence": "medium",
+      "build_selection": "Included by listed current consumers; delete this header with its API",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/ClippingDirectorOwnership.cpp",
+      "sha256": "cc365a0fad3369f58dc6330cd5b3c7e1e7b2c22f155fa650731b06baa7942815",
+      "lines": 109,
+      "observed_sha256": "cc365a0fad3369f58dc6330cd5b3c7e1e7b2c22f155fa650731b06baa7942815",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/LiveActor/ClippingDirector.cpp; ClippingActorHolder.cpp; ClippingGroupHolder.cpp; ClippingInfoGroup.cpp; ViewGroupCtrl.cpp",
+      "evidence": "make_clipping_director and ownership capture arrays from original clipping actor/group/view owners; destructor reclaims child arrays after borrowed actors retire.",
+      "include_consumers": [
+        "src/compat/ActorRuntimeRegistry.cpp",
+        "src/compat/GameRuntimeCompat.cpp",
+        "src/compat/SceneObjHolderCompat.cpp"
+      ],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/scene/OriginalSceneSupport.cpp",
+          "symbols": [
+            "prepare_retirement"
+          ]
+        },
+        {
+          "path": "src/scene/SceneExecutionBinding.cpp",
+          "symbols": [
+            "prepare_retirement"
+          ]
+        },
+        {
+          "path": "src/scene/GameSceneBinding.cpp",
+          "symbols": [
+            "prepare_retirement"
+          ]
+        },
+        {
+          "path": "tests/OriginalSceneExecutionOwnerTests.cpp",
+          "symbols": [
+            "prepare_retirement"
+          ]
+        },
+        {
+          "path": "tests/TalkRealOrAbsentTests.cpp",
+          "symbols": [
+            "prepare_retirement"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/LiveActor/ClippingDirector.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Put allocation cleanup into actual child destructors and director ownership. Coordinate SceneObjHolder and ActorRuntimeRegistry teardown; preserve no-double-delete ordering and group JMapIdInfo ownership.",
+      "confidence": "medium",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/ClippingDirectorOwnership.hpp",
+      "sha256": "1cf1046cb3b8a60cfcebfc39eb6850361c2999b6d1bf89cd4331bdd2d1576263",
+      "lines": 44,
+      "observed_sha256": "1cf1046cb3b8a60cfcebfc39eb6850361c2999b6d1bf89cd4331bdd2d1576263",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/LiveActor/ClippingDirector.cpp; ClippingActorHolder.cpp; ClippingGroupHolder.cpp; ClippingInfoGroup.cpp; ViewGroupCtrl.cpp",
+      "evidence": "make_clipping_director and ownership capture arrays from original clipping actor/group/view owners; destructor reclaims child arrays after borrowed actors retire.",
+      "include_consumers": [
+        "src/compat/ActorRuntimeRegistry.cpp",
+        "src/compat/ClippingDirectorOwnership.cpp",
+        "src/compat/GameRuntimeCompat.cpp",
+        "src/compat/SceneObjHolderCompat.cpp"
+      ],
+      "representative_symbol_consumers": [],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/LiveActor/ClippingDirector.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Put allocation cleanup into actual child destructors and director ownership. Coordinate SceneObjHolder and ActorRuntimeRegistry teardown; preserve no-double-delete ordering and group JMapIdInfo ownership.",
+      "confidence": "medium",
+      "build_selection": "Included by listed current consumers; delete this header with its API",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/CollisionDirectorOwnership.cpp",
+      "sha256": "14279c598146916c62326462129cff0948b6ec26bed92cca3b774db3827c97ef",
+      "lines": 84,
+      "observed_sha256": "14279c598146916c62326462129cff0948b6ec26bed92cca3b774db3827c97ef",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/Map/CollisionDirector.cpp; CollisionCategorizedKeeper.cpp; CollisionCode.cpp",
+      "evidence": "Captures four keepers, each zone/list storage and code tables, plus three auxiliary StageCollisionService categories. require_published_collision_geometry guards duplicate native geometry publication.",
+      "include_consumers": [
+        "src/Game/Map/CollisionCategorizedKeeper.cpp",
+        "src/compat/CollisionPartsCompat.cpp",
+        "src/compat/OriginalCollisionPartsCompat.cpp",
+        "src/compat/SceneObjHolderCompat.cpp",
+        "tests/OriginalCollisionPartsOwnerTests.cpp",
+        "tests/OriginalSphereQueryTests.cpp"
+      ],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/scene/OriginalSceneSupport.cpp",
+          "symbols": [
+            "prepare_retirement"
+          ]
+        },
+        {
+          "path": "src/scene/SceneExecutionBinding.cpp",
+          "symbols": [
+            "prepare_retirement"
+          ]
+        },
+        {
+          "path": "src/scene/GameSceneBinding.cpp",
+          "symbols": [
+            "prepare_retirement"
+          ]
+        },
+        {
+          "path": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+          "symbols": [
+            "require_published_collision_geometry"
+          ]
+        },
+        {
+          "path": "tests/OriginalSceneExecutionOwnerTests.cpp",
+          "symbols": [
+            "prepare_retirement"
+          ]
+        },
+        {
+          "path": "tests/TalkRealOrAbsentTests.cpp",
+          "symbols": [
+            "prepare_retirement"
+          ]
+        },
+        {
+          "path": "tests/OriginalSphereQueryTests.cpp",
+          "symbols": [
+            "category_service"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Map/CollisionDirector.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Implement canonical native destructors; remove parallel query/index publication only after its consumers are gone. Scene holder must own actual director through teardown; no raw retained child aliases after deletion.",
+      "confidence": "medium",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/CollisionDirectorOwnership.hpp",
+      "sha256": "4194229fa5aeb71ff2ae1e2a180b5ae20ae8527ce6ca7dbdd802d6e4b5f92fd3",
+      "lines": 40,
+      "observed_sha256": "4194229fa5aeb71ff2ae1e2a180b5ae20ae8527ce6ca7dbdd802d6e4b5f92fd3",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/Map/CollisionDirector.cpp; CollisionCategorizedKeeper.cpp; CollisionCode.cpp",
+      "evidence": "Captures four keepers, each zone/list storage and code tables, plus three auxiliary StageCollisionService categories. require_published_collision_geometry guards duplicate native geometry publication.",
+      "include_consumers": [
+        "src/Game/Map/CollisionCategorizedKeeper.cpp",
+        "src/compat/CollisionDirectorOwnership.cpp",
+        "src/compat/CollisionPartsCompat.cpp",
+        "src/compat/OriginalCollisionPartsCompat.cpp",
+        "src/compat/SceneObjHolderCompat.cpp",
+        "tests/OriginalCollisionPartsOwnerTests.cpp",
+        "tests/OriginalSphereQueryTests.cpp"
+      ],
+      "representative_symbol_consumers": [],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Map/CollisionDirector.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Implement canonical native destructors; remove parallel query/index publication only after its consumers are gone. Scene holder must own actual director through teardown; no raw retained child aliases after deletion.",
+      "confidence": "medium",
+      "build_selection": "Included by listed current consumers; delete this header with its API",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/CollisionPartsCompat.cpp",
+      "sha256": "338b45f70676cc60ecb76ea0e36d29bbb79d9c444ea8c14d47e21dfb782c49ce",
+      "lines": 290,
+      "observed_sha256": "338b45f70676cc60ecb76ea0e36d29bbb79d9c444ea8c14d47e21dfb782c49ce",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/Map/CollisionParts.cpp; Game/Util/LiveActorUtil.cpp; resource/KCollisionResource.cpp",
+      "evidence": "create_collision_parts loads kcl/pa, retains archive/scene generation and decoded KCL; per-actor records mirror original CollisionParts and publish matrices, membership and mutable geometry to StageCollisionService.",
+      "include_consumers": [
+        "src/Game/LiveActor/LiveActor.cpp",
+        "src/compat/ActorRuntimeRegistry.cpp",
+        "src/compat/HitInfoCompat.cpp",
+        "src/compat/MetrowerksStdCompat.hpp",
+        "src/compat/OriginalCollisionPartsCompat.cpp",
+        "src/compat/OriginalCollisionPartsUtil.cpp",
+        "src/compat/OriginalDynamicCollisionObj.cpp",
+        "src/compat/SceneObjHolderCompat.cpp",
+        "tests/NameObjFactoryPlacementTests.cpp",
+        "tests/OriginalCollisionPartsOwnerTests.cpp",
+        "tests/OriginalProcessCollisionAreaTests.cpp",
+        "tests/OriginalProcessMapObjectTests.cpp"
+      ],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/layout/BrlytLayout.cpp",
+          "symbols": [
+            "operator"
+          ]
+        },
+        {
+          "path": "src/layout/LayoutManagerCompat.cpp",
+          "symbols": [
+            "operator"
+          ]
+        },
+        {
+          "path": "src/render/J3dModelRenderer.cpp",
+          "symbols": [
+            "operator"
+          ]
+        },
+        {
+          "path": "src/resource/J3dModelResource.cpp",
+          "symbols": [
+            "operator"
+          ]
+        },
+        {
+          "path": "src/resource/J3dAnimationResource.cpp",
+          "symbols": [
+            "operator"
+          ]
+        },
+        {
+          "path": "src/resource/KCollisionResource.cpp",
+          "symbols": [
+            "operator"
+          ]
+        },
+        {
+          "path": "src/resource/J3dGeometryData.cpp",
+          "symbols": [
+            "operator"
+          ]
+        },
+        {
+          "path": "src/resource/J3dMaterialBlockData.cpp",
+          "symbols": [
+            "operator"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Map/CollisionParts.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Util/LiveActorUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Give CollisionParts native resource ownership; leave endian/32-bit resource decode at KCollisionResource boundary. Restore original creation wrapper and retire parallel StageCollisionService only after all old triangle consumers migrate. Preserve category, scene generation and borrow invalidation.",
+      "confidence": "medium",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/CollisionPartsCompat.hpp",
+      "sha256": "f64e8a2470821c376935d938c549aca793ff117cf1f1f7864e2fc018c77bed8b",
+      "lines": 62,
+      "observed_sha256": "f64e8a2470821c376935d938c549aca793ff117cf1f1f7864e2fc018c77bed8b",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/Map/CollisionParts.cpp; Game/Util/LiveActorUtil.cpp; resource/KCollisionResource.cpp",
+      "evidence": "create_collision_parts loads kcl/pa, retains archive/scene generation and decoded KCL; per-actor records mirror original CollisionParts and publish matrices, membership and mutable geometry to StageCollisionService.",
+      "include_consumers": [
+        "src/Game/LiveActor/LiveActor.cpp",
+        "src/compat/ActorRuntimeRegistry.cpp",
+        "src/compat/CollisionPartsCompat.cpp",
+        "src/compat/HitInfoCompat.cpp",
+        "src/compat/MetrowerksStdCompat.hpp",
+        "src/compat/OriginalCollisionPartsCompat.cpp",
+        "src/compat/OriginalCollisionPartsUtil.cpp",
+        "src/compat/OriginalDynamicCollisionObj.cpp",
+        "src/compat/SceneObjHolderCompat.cpp",
+        "tests/NameObjFactoryPlacementTests.cpp",
+        "tests/OriginalCollisionPartsOwnerTests.cpp",
+        "tests/OriginalProcessCollisionAreaTests.cpp",
+        "tests/OriginalProcessMapObjectTests.cpp"
+      ],
+      "representative_symbol_consumers": [],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Map/CollisionParts.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Util/LiveActorUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Give CollisionParts native resource ownership; leave endian/32-bit resource decode at KCollisionResource boundary. Restore original creation wrapper and retire parallel StageCollisionService only after all old triangle consumers migrate. Preserve category, scene generation and borrow invalidation.",
+      "confidence": "medium",
+      "build_selection": "Included by listed current consumers; delete this header with its API",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/FixedPositionCompat.cpp",
+      "sha256": "c63811c842ed3610b8f10067e9f35a0f7f712e62fc06d7ca309e98825b281676",
+      "lines": 84,
+      "observed_sha256": "c63811c842ed3610b8f10067e9f35a0f7f712e62fc06d7ca309e98825b281676",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/FixedPosition.cpp",
+      "evidence": "FixedPosition::copyRotate is original Euler/radian conversion plus null guard. load_fixed_position_resource independently parses first BCSV row (JointName/Trans/Rotate); only FixedPositionRealOrAbsentTests calls it.",
+      "include_consumers": [
+        "tests/FixedPositionRealOrAbsentTests.cpp"
+      ],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Player/MarioSearchLight.cpp",
+          "symbols": [
+            "copyRotate"
+          ]
+        },
+        {
+          "path": "src/Game/Player/MarioActorParts.cpp",
+          "symbols": [
+            "copyRotate"
+          ]
+        },
+        {
+          "path": "tests/FixedPositionRealOrAbsentTests.cpp",
+          "symbols": [
+            "load_fixed_position_resource"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/FixedPosition.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore copyRotate in canonical file; delete host parsing API and rewrite test through original FixedPosition::init plus JMapInfo/ResourceHolder. Do not retain test-only alternate parser.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/FixedPositionCompat.hpp",
+      "sha256": "f25ef9958c253d62287c35adf033265f10f97132524f6aa737e7a2e4d9101700",
+      "lines": 21,
+      "observed_sha256": "f25ef9958c253d62287c35adf033265f10f97132524f6aa737e7a2e4d9101700",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/FixedPosition.cpp",
+      "evidence": "FixedPosition::copyRotate is original Euler/radian conversion plus null guard. load_fixed_position_resource independently parses first BCSV row (JointName/Trans/Rotate); only FixedPositionRealOrAbsentTests calls it.",
+      "include_consumers": [
+        "src/compat/FixedPositionCompat.cpp",
+        "tests/FixedPositionRealOrAbsentTests.cpp"
+      ],
+      "representative_symbol_consumers": [],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/FixedPosition.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore copyRotate in canonical file; delete host parsing API and rewrite test through original FixedPosition::init plus JMapInfo/ResourceHolder. Do not retain test-only alternate parser.",
+      "confidence": "high",
+      "build_selection": "Included by listed current consumers; delete this header with its API",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/GameActorPhysicsCompat.cpp",
+      "sha256": "bcae8b2c5c23f4355f5ce275c9a76ecdda13867fe63bccbe5d470d170555d082",
+      "lines": 308,
+      "observed_sha256": "bcae8b2c5c23f4355f5ce275c9a76ecdda13867fe63bccbe5d470d170555d082",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/ActorShadowUtil.cpp; Game/Util/LiveActorUtil.cpp",
+      "evidence": "Shadow initialization and setters construct original ShadowController through custom metadata; includes volume-line bindings, calcNerveValue, isNoBind/onBind and ground fire/water queries.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Util/MapUtil.cpp",
+          "symbols": [
+            "isBindedGroundDamageFire",
+            "isBindedGroundWater"
+          ]
+        },
+        {
+          "path": "src/Game/Util/NerveUtil.cpp",
+          "symbols": [
+            "calcNerveValue"
+          ]
+        },
+        {
+          "path": "src/Game/Util/ActorShadowUtil.cpp",
+          "symbols": [
+            "initShadowController",
+            "addShadowVolumeSphere",
+            "setShadowDropDirectionPtr"
+          ]
+        },
+        {
+          "path": "src/Game/Util/NPCUtil.cpp",
+          "symbols": [
+            "onCalcShadowOneTimeAll"
+          ]
+        },
+        {
+          "path": "src/Game/Util/LiveActorUtil.cpp",
+          "symbols": [
+            "calcNerveValue",
+            "setClippingFar100m",
+            "isNoBind"
+          ]
+        },
+        {
+          "path": "src/Game/Util/MapPartsUtil.cpp",
+          "symbols": [
+            "initShadowVolumeSphere",
+            "setShadowDropPositionAtJoint"
+          ]
+        },
+        {
+          "path": "src/Game/LiveActor/LiveActor.cpp",
+          "symbols": [
+            "onBind"
+          ]
+        },
+        {
+          "path": "src/Game/Enemy/WalkerStateRunaway.cpp",
+          "symbols": [
+            "calcNerveValue"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/ActorShadowUtil.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Util/LiveActorUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore upstream utility functions and canonical ShadowController ownership. Keep only demonstrated native child lifetime/CP932 literal adaptations in owners; remove shadow metadata duplication. Coordinate actor shadow lane and LiveActorUtil full provider.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/GameActorSensorCompat.cpp",
+      "sha256": "fb8f3b22ad96f8330fe1ee9967a1d4dc328183a3a5b3fe7a7b65b7bc8b8523c2",
+      "lines": 837,
+      "observed_sha256": "fb8f3b22ad96f8330fe1ee9967a1d4dc328183a3a5b3fe7a7b65b7bc8b8523c2",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/ActorSensorUtil.cpp; Game/LiveActor/HitSensorKeeper.cpp; runtime/ParityTrace.cpp",
+      "evidence": "addHitSensor*, getSensor, validation, predicates/messages duplicate ActorSensorUtil; allocation/query wrappers use ActorRuntimeRegistry. actor_sensor_binding_count serves tests; actor_message_name is referenced by ParityTrace.",
+      "include_consumers": [
+        "src/compat/ActorRuntimeRegistry.cpp",
+        "src/runtime/ParityTrace.cpp",
+        "tests/ActorRuntimeRegistryTests.cpp",
+        "tests/ActorSensorRealOrAbsentTests.cpp"
+      ],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Demo/DemoExecutor.cpp",
+          "symbols": [
+            "sendMsgStartDemo"
+          ]
+        },
+        {
+          "path": "src/Game/Util/EffectUtil.cpp",
+          "symbols": [
+            "calcPosBetweenSensors"
+          ]
+        },
+        {
+          "path": "src/Game/Util/ActorMovementUtil.cpp",
+          "symbols": [
+            "clearHitSensors",
+            "sendMsgPush"
+          ]
+        },
+        {
+          "path": "src/Game/Util/LiveActorUtil.cpp",
+          "symbols": [
+            "isSensorPressObj",
+            "getGroundSensor",
+            "getRoofSensor"
+          ]
+        },
+        {
+          "path": "src/Game/Util/MapPartsUtil.cpp",
+          "symbols": [
+            "getSensor"
+          ]
+        },
+        {
+          "path": "src/Game/Util/ActorSensorUtil.cpp",
+          "symbols": [
+            "getTaking",
+            "getTaken",
+            "addHitSensor"
+          ]
+        },
+        {
+          "path": "src/Game/LiveActor/SensorHitChecker.cpp",
+          "symbols": [
+            "addHitSensor",
+            "isSensorPlayer",
+            "isSensorRide"
+          ]
+        },
+        {
+          "path": "src/Game/LiveActor/HitSensor.cpp",
+          "symbols": [
+            "addHitSensor"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/ActorSensorUtil.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/LiveActor/HitSensorKeeper.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore full ActorSensorUtil and move sensor ownership to HitSensorKeeper destructor; use actual keeper counts in tests and put message debug formatting in ParityTrace. Delete both compat files and OriginalActorBroadcast provider together.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/GameActorSensorCompat.hpp",
+      "sha256": "ce50b1c956be109ae0942e0b11515cbef32467d9ffc56041a44582b74f61e254",
+      "lines": 16,
+      "observed_sha256": "ce50b1c956be109ae0942e0b11515cbef32467d9ffc56041a44582b74f61e254",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/ActorSensorUtil.cpp; Game/LiveActor/HitSensorKeeper.cpp; runtime/ParityTrace.cpp",
+      "evidence": "addHitSensor*, getSensor, validation, predicates/messages duplicate ActorSensorUtil; allocation/query wrappers use ActorRuntimeRegistry. actor_sensor_binding_count serves tests; actor_message_name is referenced by ParityTrace.",
+      "include_consumers": [
+        "src/compat/ActorRuntimeRegistry.cpp",
+        "src/compat/GameActorSensorCompat.cpp",
+        "src/runtime/ParityTrace.cpp",
+        "tests/ActorRuntimeRegistryTests.cpp",
+        "tests/ActorSensorRealOrAbsentTests.cpp"
+      ],
+      "representative_symbol_consumers": [],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/ActorSensorUtil.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/LiveActor/HitSensorKeeper.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore full ActorSensorUtil and move sensor ownership to HitSensorKeeper destructor; use actual keeper counts in tests and put message debug formatting in ParityTrace. Delete both compat files and OriginalActorBroadcast provider together.",
+      "confidence": "high",
+      "build_selection": "Included by listed current consumers; delete this header with its API",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/GameGravityCompat.cpp",
+      "sha256": "e733c71d80b50a1036078056c6dc81e2faf1f9ae748278d1cd1052fd128eebc7",
+      "lines": 251,
+      "observed_sha256": "e733c71d80b50a1036078056c6dc81e2faf1f9ae748278d1cd1052fd128eebc7",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/GravityUtil.cpp; Game/Gravity/PlanetGravityManager.cpp; PlanetGravity.hpp",
+      "evidence": "Queries already call original PlanetGravityManager. host_id casts uintptr_t to u32; parser/defaults and normal/shadow/magnet/launcher wrappers duplicate GravityUtil. Header overloads handle int/nullptr-to-u32 source adaptation.",
+      "include_consumers": [
+        "src/compat/MetrowerksStdCompat.hpp",
+        "tests/AuroraNativeTests.cpp",
+        "tests/GravityRealOrAbsentTests.cpp"
+      ],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Gravity/PlanetGravity.cpp",
+          "symbols": [
+            "calcGravity"
+          ]
+        },
+        {
+          "path": "src/Game/Gravity/PlanetGravityManager.cpp",
+          "symbols": [
+            "registerGravity",
+            "calcGravity"
+          ]
+        },
+        {
+          "path": "src/Game/Gravity/GravityCreator.cpp",
+          "symbols": [
+            "registerGravity",
+            "settingGravityParamFromJMap"
+          ]
+        },
+        {
+          "path": "src/Game/Util/GravityUtil.cpp",
+          "symbols": [
+            "registerGravity",
+            "calcGravityVector",
+            "calcDropShadowVector"
+          ]
+        },
+        {
+          "path": "src/Game/Util/ActorMovementUtil.cpp",
+          "symbols": [
+            "calcGravity"
+          ]
+        },
+        {
+          "path": "src/Game/Util/ObjUtil.cpp",
+          "symbols": [
+            "calcGravityVector"
+          ]
+        },
+        {
+          "path": "src/Game/Util/LiveActorUtil.cpp",
+          "symbols": [
+            "calcGravityVector",
+            "calcGravityOrZero",
+            "calcGravity"
+          ]
+        },
+        {
+          "path": "src/Game/Camera/CameraMedianPlanet.cpp",
+          "symbols": [
+            "calcGravityVector"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/GravityUtil.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Gravity/PlanetGravityManager.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore complete GravityUtil. Make the opaque host identity consistently uintptr_t in native canonical declarations/fields/comparisons; adapt narrow syntax at Game caller boundaries and remove global forced overload header. Validate high-address identity and original priority/filter behavior.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/GameGravityCompat.hpp",
+      "sha256": "963f69da07dccada724650e40e920c7c4d79f95df9e1f24524bdb83fa9a35857",
+      "lines": 61,
+      "observed_sha256": "963f69da07dccada724650e40e920c7c4d79f95df9e1f24524bdb83fa9a35857",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/GravityUtil.cpp; Game/Gravity/PlanetGravityManager.cpp; PlanetGravity.hpp",
+      "evidence": "Queries already call original PlanetGravityManager. host_id casts uintptr_t to u32; parser/defaults and normal/shadow/magnet/launcher wrappers duplicate GravityUtil. Header overloads handle int/nullptr-to-u32 source adaptation.",
+      "include_consumers": [
+        "src/compat/GameGravityCompat.cpp",
+        "src/compat/MetrowerksStdCompat.hpp",
+        "tests/AuroraNativeTests.cpp",
+        "tests/GravityRealOrAbsentTests.cpp"
+      ],
+      "representative_symbol_consumers": [],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/GravityUtil.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Gravity/PlanetGravityManager.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore complete GravityUtil. Make the opaque host identity consistently uintptr_t in native canonical declarations/fields/comparisons; adapt narrow syntax at Game caller boundaries and remove global forced overload header. Validate high-address identity and original priority/filter behavior.",
+      "confidence": "high",
+      "build_selection": "Included by listed current consumers; delete this header with its API",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/GameMapCollisionCompat.cpp",
+      "sha256": "1f6ffea41b23b22632582eff343bc7f5edec69125fec49399fad3fb1e7994dbf",
+      "lines": 291,
+      "observed_sha256": "1f6ffea41b23b22632582eff343bc7f5edec69125fec49399fad3fb1e7994dbf",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/MapUtil.cpp; Game/Map/CollisionCode.cpp",
+      "evidence": "Original point/ball/area query wrappers mixed with copied floor/wall/sound string tables and null/range guards. isWaterPolygon/isThroughPolygon strings Water/Shallow/PullBack match current donor (not an invented hack).",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Util/MapUtil.cpp",
+          "symbols": [
+            "createAreaPolygonList",
+            "createAreaPolygonListArray",
+            "getNormal"
+          ]
+        },
+        {
+          "path": "src/Game/Util/ActorMovementUtil.cpp",
+          "symbols": [
+            "isWallPolygon",
+            "isFloorPolygon",
+            "isFloorPolygonCos"
+          ]
+        },
+        {
+          "path": "src/Game/Util/LiveActorUtil.cpp",
+          "symbols": [
+            "getNormal",
+            "isWallPolygon",
+            "isFloorPolygonCos"
+          ]
+        },
+        {
+          "path": "src/Game/Util/SoundUtil.cpp",
+          "symbols": [
+            "getSoundCodeIndex"
+          ]
+        },
+        {
+          "path": "src/Game/Camera/CameraInwardSphere.cpp",
+          "symbols": [
+            "getNormal",
+            "checkStrikeBallToMap"
+          ]
+        },
+        {
+          "path": "src/Game/Camera/GameCameraCreator.cpp",
+          "symbols": [
+            "getCameraID"
+          ]
+        },
+        {
+          "path": "src/Game/Camera/CameraManGame.cpp",
+          "symbols": [
+            "getCameraID"
+          ]
+        },
+        {
+          "path": "src/Game/LiveActor/Binder.cpp",
+          "symbols": [
+            "getNormal",
+            "isWallPolygon",
+            "isFloorPolygon"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/MapUtil.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Map/CollisionCode.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore full MapUtil and one CollisionCode table owner; remove string/numeric fallback duplication. Keep essential finite/capacity guard at actual query boundary; coordinate OriginalMapQueries and other MapUtil providers.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/GameMathCompat.cpp",
+      "sha256": "7806139a8f70c63cd4da47291b640c11e044545936beb33a6959851d33271382",
+      "lines": 1045,
+      "observed_sha256": "7806139a8f70c63cd4da47291b640c11e044545936beb33a6959851d33271382",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/MathUtil.cpp; Game/System/GameSystemObjHolder.cpp; Aurora PPC primitives",
+      "evidence": "MathUtil is excluded from native build. Most 1045 lines reproduce math, but getRandom owns independent static sRandomSeed instead of canonical GameSystemObjHolder::mRandom. Native paired-single translations preserve fma/load order; bit_cast removes aliasing and long overload handles LP64.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/app/OriginalGameApplication.cpp",
+          "symbols": [
+            "initAcosTable"
+          ]
+        },
+        {
+          "path": "src/camera/OriginalGameCamera.cpp",
+          "symbols": [
+            "normalize",
+            "isNearZero"
+          ]
+        },
+        {
+          "path": "src/scene/StageCollisionService.cpp",
+          "symbols": [
+            "normalize"
+          ]
+        },
+        {
+          "path": "src/JSystem/JGeometry/TQuat.cpp",
+          "symbols": [
+            "normalize"
+          ]
+        },
+        {
+          "path": "src/Game/Gravity/PlanetGravity.cpp",
+          "symbols": [
+            "separateScalarAndDirection"
+          ]
+        },
+        {
+          "path": "src/Game/Gravity/ParallelGravity.cpp",
+          "symbols": [
+            "normalize",
+            "isInRange",
+            "normalizeOrZero"
+          ]
+        },
+        {
+          "path": "src/Game/Gravity/PlanetGravityManager.cpp",
+          "symbols": [
+            "normalizeOrZero"
+          ]
+        },
+        {
+          "path": "src/Game/Gravity/CubeGravity.cpp",
+          "symbols": [
+            "normalize",
+            "normalizeOrZero",
+            "separateScalarAndDirection"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/MathUtil.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/System/GameSystemObjHolder.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore MathUtil with original RNG owner and initialize its table normally; retain PPC instruction primitives in Aurora and small native branches in canonical math. Preserve no-contraction flags, bit patterns, aliasing and host-long conversion; remove alternate singleton state.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/GlobalGravityOwnership.cpp",
+      "sha256": "1c0966e95f80a8877a2215032bdac30db04b14754c22a22f021addeaa21a6b61",
+      "lines": 511,
+      "observed_sha256": "1c0966e95f80a8877a2215032bdac30db04b14754c22a22f021addeaa21a6b61",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/Gravity/GlobalGravityObj.cpp; GravityCreator.cpp; GraviryFollower.cpp; Game/Util/BaseMatrixFollowTargetHolder.cpp; Game/LiveActor/RailRider.cpp",
+      "evidence": "Runtime creator-kind RTTI switch mirrors gravity ownership; snapshots appended followers/targets and deletes shared targets once, link records, creator field and wire rail graph. Fixed128 limit follows retail manager capacity.",
+      "include_consumers": [
+        "src/compat/SceneObjHolderCompat.cpp",
+        "src/scene/nameobj/NameObjFactory.cpp",
+        "tests/GravityRealOrAbsentTests.cpp"
+      ],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/scene/nameobj/NameObjFactory.cpp",
+          "symbols": [
+            "adopt_global_gravity_children"
+          ]
+        },
+        {
+          "path": "src/scene/nameobj/PlanetMapCatalog.cpp",
+          "symbols": [
+            "append_unique"
+          ]
+        },
+        {
+          "path": "tests/GravityRealOrAbsentTests.cpp",
+          "symbols": [
+            "adopt_global_gravity_children",
+            "prepare_global_gravity_init",
+            "capture_global_gravity_children"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Gravity/GlobalGravityObj.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Util/BaseMatrixFollowTargetHolder.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/LiveActor/RailRider.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Replace capture/suffix bookkeeping with explicit native owners at allocation sites and destructors. Coordinate shared follower target and borrowed prefix lifetime; retain exception cleanup during partially initialized creators. Delete compatibility capture API from factory/scene holder.",
+      "confidence": "medium",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/GlobalGravityOwnership.hpp",
+      "sha256": "91b0921242493e1a5b1d73cbb1525f333fd672d022ec4b4228918f215e8d5ca4",
+      "lines": 60,
+      "observed_sha256": "91b0921242493e1a5b1d73cbb1525f333fd672d022ec4b4228918f215e8d5ca4",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/Gravity/GlobalGravityObj.cpp; GravityCreator.cpp; GraviryFollower.cpp; Game/Util/BaseMatrixFollowTargetHolder.cpp; Game/LiveActor/RailRider.cpp",
+      "evidence": "Runtime creator-kind RTTI switch mirrors gravity ownership; snapshots appended followers/targets and deletes shared targets once, link records, creator field and wire rail graph. Fixed128 limit follows retail manager capacity.",
+      "include_consumers": [
+        "src/compat/GlobalGravityOwnership.cpp",
+        "src/compat/SceneObjHolderCompat.cpp",
+        "src/scene/nameobj/NameObjFactory.cpp",
+        "tests/GravityRealOrAbsentTests.cpp"
+      ],
+      "representative_symbol_consumers": [],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Gravity/GlobalGravityObj.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Util/BaseMatrixFollowTargetHolder.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/LiveActor/RailRider.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Replace capture/suffix bookkeeping with explicit native owners at allocation sites and destructors. Coordinate shared follower target and borrowed prefix lifetime; retain exception cleanup during partially initialized creators. Delete compatibility capture API from factory/scene holder.",
+      "confidence": "medium",
+      "build_selection": "Included by listed current consumers; delete this header with its API",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/HitInfoCompat.cpp",
+      "sha256": "c11366ed0d8977e198f2adbbbb99a4d194cf459f13db103a78c67329a8e7bd83",
+      "lines": 338,
+      "observed_sha256": "c11366ed0d8977e198f2adbbbb99a4d194cf459f13db103a78c67329a8e7bd83",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Map/HitInfo.cpp; Game/Map/CollisionParts.cpp",
+      "evidence": "Triangle/HitInfo original methods mixed with triangle_surface StageCollisionService lookup, global attribute cache and synthetic no-mParts triangles. make_collision_triangle only called by tests.",
+      "include_consumers": [
+        "tests/NameObjFactoryPlacementTests.cpp",
+        "tests/OriginalCollisionPartsOwnerTests.cpp"
+      ],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/app/OriginalGameApplication.cpp",
+          "symbols": [
+            "isValid"
+          ]
+        },
+        {
+          "path": "src/camera/CameraAnimation.cpp",
+          "symbols": [
+            "getPos"
+          ]
+        },
+        {
+          "path": "src/runtime/RuntimeServices.cpp",
+          "symbols": [
+            "getBaseMtx"
+          ]
+        },
+        {
+          "path": "src/runtime/OriginalProcessTrace.cpp",
+          "symbols": [
+            "getBaseMtx"
+          ]
+        },
+        {
+          "path": "src/runtime/SceneScheduler.cpp",
+          "symbols": [
+            "getBaseMtx"
+          ]
+        },
+        {
+          "path": "src/scene/StagePlacementResolver.cpp",
+          "symbols": [
+            "isValid"
+          ]
+        },
+        {
+          "path": "src/scene/StageCollisionService.cpp",
+          "symbols": [
+            "getFaceNormal",
+            "getPos"
+          ]
+        },
+        {
+          "path": "src/scene/OriginalPlacementCoverage.cpp",
+          "symbols": [
+            "isValid"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Map/HitInfo.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Map/CollisionParts.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore original Triangle/HitInfo owner; migrate tests to original CollisionParts::fillData rather than synthetic native service triangle. Remove attribute cache/dual geometry semantics once StageCollisionService-only queries are retired; keep defined initialization and native lifetime checks in Game if required.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/HitInfoCompat.hpp",
+      "sha256": "47ab1cc7f95f88f68a369cd75415462b25e540234cffcb541031271b5cb107d8",
+      "lines": 13,
+      "observed_sha256": "47ab1cc7f95f88f68a369cd75415462b25e540234cffcb541031271b5cb107d8",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Map/HitInfo.cpp; Game/Map/CollisionParts.cpp",
+      "evidence": "Triangle/HitInfo original methods mixed with triangle_surface StageCollisionService lookup, global attribute cache and synthetic no-mParts triangles. make_collision_triangle only called by tests.",
+      "include_consumers": [
+        "src/compat/HitInfoCompat.cpp",
+        "tests/NameObjFactoryPlacementTests.cpp",
+        "tests/OriginalCollisionPartsOwnerTests.cpp"
+      ],
+      "representative_symbol_consumers": [],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Map/HitInfo.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Map/CollisionParts.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore original Triangle/HitInfo owner; migrate tests to original CollisionParts::fillData rather than synthetic native service triangle. Remove attribute cache/dual geometry semantics once StageCollisionService-only queries are retired; keep defined initialization and native lifetime checks in Game if required.",
+      "confidence": "high",
+      "build_selection": "Included by listed current consumers; delete this header with its API",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/JMapUtilCompat.cpp",
+      "sha256": "baa59b4ab18f367decbc7a2dc5009f95efdff7940d487a19096c74eb295183c3",
+      "lines": 48,
+      "observed_sha256": "baa59b4ab18f367decbc7a2dc5009f95efdff7940d487a19096c74eb295183c3",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/JMapUtil.cpp",
+      "evidence": "getRailId, getJMapInfoRailArg0NoInit, isEqualRailUsage and getJMapInfoMatrixFromRT mirror canonical JMapUtil and use JMapInfo.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Util/BaseMatrixFollowTargetHolder.cpp",
+          "symbols": [
+            "getJMapInfoMatrixFromRT"
+          ]
+        },
+        {
+          "path": "src/Game/Util/SceneUtil.cpp",
+          "symbols": [
+            "getRailId",
+            "isEqualRailUsage"
+          ]
+        },
+        {
+          "path": "src/Game/Camera/CameraRailHolder.cpp",
+          "symbols": [
+            "getJMapInfoRailArg0NoInit"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/JMapUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Merge exact methods into canonical JMapUtil, remove fragment, check OriginalPlacementJMap and other JMapUtil providers.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/JMathQuaternionCompat.cpp",
+      "sha256": "5d46a5574a2c718b32f26877c8bead5fa731abce599797c1c43e48e64ca4e9e6",
+      "lines": 71,
+      "observed_sha256": "5d46a5574a2c718b32f26877c8bead5fa731abce599797c1c43e48e64ca4e9e6",
+      "disposition": "keep-general",
+      "destination": "JSystem/JMath/JMath.cpp; Aurora PPC instruction helpers",
+      "evidence": "JMAEulerToQuat and JMAQuatLerp are generalized JSystem math; native std::fma translation accompanies original paired-single code.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Animation/XanimeCore.cpp",
+          "symbols": [
+            "JMAEulerToQuat",
+            "JMAQuatLerp"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/JSystem/JMath/JMath.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Integrate generalized methods into canonical JMath owner (not renamed compat directory); preserve instruction ordering, rounding and no-contraction compilation.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/JMathVectorCompat.cpp",
+      "sha256": "bb147f9eba1c394e3728c354eb5690c147b530176589509526b18bf028c4bc28",
+      "lines": 15,
+      "observed_sha256": "bb147f9eba1c394e3728c354eb5690c147b530176589509526b18bf028c4bc28",
+      "disposition": "keep-general",
+      "destination": "JSystem/JMath/JMath.cpp; Aurora PPC instruction helpers",
+      "evidence": "JMAVECScaleAdd loads all components before stores, uses fma and ppc_psq_store_f32 for paired-single store behavior.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/LiveActor/ShadowVolumeOval.cpp",
+          "symbols": [
+            "JMAVECScaleAdd"
+          ]
+        },
+        {
+          "path": "src/Game/LiveActor/ShadowVolumeLine.cpp",
+          "symbols": [
+            "JMAVECScaleAdd"
+          ]
+        },
+        {
+          "path": "src/Game/LiveActor/ShadowVolumeOvalPole.cpp",
+          "symbols": [
+            "JMAVECScaleAdd"
+          ]
+        },
+        {
+          "path": "tests/OriginalCameraVectorMathTests.cpp",
+          "symbols": [
+            "JMAVECScaleAdd"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/JSystem/JMath/JMath.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Move method into canonical JMath owner; retain reusable PPC quantization primitive in Aurora. Verify aliasing/subnormal behavior.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/LiveActorUtilCompat.cpp",
+      "sha256": "47eeb95e4df00dee4ff24cba4c8386a139f7bea2c257216a97144adb9e5bcf12",
+      "lines": 430,
+      "observed_sha256": "47eeb95e4df00dee4ff24cba4c8386a139f7bea2c257216a97144adb9e5bcf12",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/LiveActorUtil.cpp",
+      "evidence": "Clipping, PartsModel construction, default transform/light, hidden/calc flags, nerve ratios, bind fix vectors and nearclip utilities duplicate current donor; null/stepMax<=0 behavior differs.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/layout/LayoutRuntime.cpp",
+          "symbols": [
+            "isDead"
+          ]
+        },
+        {
+          "path": "src/runtime/SceneScheduler.cpp",
+          "symbols": [
+            "isDead"
+          ]
+        },
+        {
+          "path": "src/runtime/JAudioPlaybackService.cpp",
+          "symbols": [
+            "isDead"
+          ]
+        },
+        {
+          "path": "src/Game/Demo/DemoExecutor.cpp",
+          "symbols": [
+            "validateClipping",
+            "isInvalidClipping"
+          ]
+        },
+        {
+          "path": "src/Game/Demo/PrologueDirector.cpp",
+          "symbols": [
+            "invalidateClipping",
+            "initLightCtrl",
+            "isDead"
+          ]
+        },
+        {
+          "path": "src/Game/Demo/DemoActionKeeper.cpp",
+          "symbols": [
+            "showModel",
+            "hideModel"
+          ]
+        },
+        {
+          "path": "src/Game/Demo/DemoPositionController.cpp",
+          "symbols": [
+            "invalidateClipping",
+            "initDefaultPos"
+          ]
+        },
+        {
+          "path": "src/Game/Gravity/GlobalGravityObj.cpp",
+          "symbols": [
+            "invalidateClipping",
+            "initDefaultPos"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/LiveActorUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore complete LiveActorUtil and remove all its shards in a coordinated batch. Only keep justified host lifetime/ABI changes at actual owner; preserve donor step/clipping semantics.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/LodCtrlRuntimeCompat.cpp",
+      "sha256": "140c765fc123eadc578b7140396574926cc125e9a2073541069115532a9ec177",
+      "lines": 91,
+      "observed_sha256": "140c765fc123eadc578b7140396574926cc125e9a2073541069115532a9ec177",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/LiveActorUtil.cpp; Game/LiveActor/LodCtrl.cpp",
+      "evidence": "createLodCtrlNPC, copyTransRotateScale, hideModelAndOnCalcAnim and model/shadow helpers mirror LiveActorUtil; creator adds ActorRuntimeRegistry adoption.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Util/ActorShadowUtil.cpp",
+          "symbols": [
+            "offShadowVisibleSyncHostAll",
+            "onShadowVisibleSyncHostAll"
+          ]
+        },
+        {
+          "path": "src/Game/Util/LiveActorUtil.cpp",
+          "symbols": [
+            "copyTransRotateScale",
+            "hideModelAndOnCalcAnim",
+            "setClippingTypeSphereContainsModelBoundingBox"
+          ]
+        },
+        {
+          "path": "src/Game/LiveActor/LodCtrl.cpp",
+          "symbols": [
+            "copyTransRotateScale",
+            "hideModelAndOnCalcAnim",
+            "setClippingTypeSphereContainsModelBoundingBox"
+          ]
+        },
+        {
+          "path": "src/Game/Map/Air.cpp",
+          "symbols": [
+            "setClippingTypeSphereContainsModelBoundingBox"
+          ]
+        },
+        {
+          "path": "src/Game/NPC/NPCActor.cpp",
+          "symbols": [
+            "createLodCtrlNPC"
+          ]
+        },
+        {
+          "path": "src/Game/MapObj/ShockWaveGenerator.cpp",
+          "symbols": [
+            "setClippingTypeSphereContainsModelBoundingBox"
+          ]
+        },
+        {
+          "path": "tests/OriginalSceneExecutionOwnerTests.cpp",
+          "symbols": [
+            "hideModelAndOnCalcAnim"
+          ]
+        },
+        {
+          "path": "tests/LodCtrlCompatTests.cpp",
+          "symbols": [
+            "createLodCtrlNPC"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/LiveActorUtil.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/LiveActor/LodCtrl.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore utilities, make LiveActor/LodCtrl native ownership explicit, preserve NPC animation/light/shadow settings from donor; delete adoption shim.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/MarioAnimatorLifetime.cpp",
+      "sha256": "1f43c5fab34a6774f827cabab5d9b2d0e11c51d1be9c4b9d910253bfecb34551",
+      "lines": 197,
+      "observed_sha256": "1f43c5fab34a6774f827cabab5d9b2d0e11c51d1be9c4b9d910253bfecb34551",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/Player/MarioAnimator.cpp; Game/Animation/XanimePlayer.cpp; XanimeCore.cpp; Game/LiveActor/ModelManager.cpp",
+      "evidence": "Initializer scope preserves heap/resources/J3D/mutex and captures original lower/upper animation graphs during success or exceptions. Destructor deduplicates shared joint transforms, tracks and hash buffers, restoring ModelManager original player.",
+      "include_consumers": [
+        "src/Game/Player/MarioAnimator.cpp"
+      ],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/app/OriginalGameApplication.cpp",
+          "symbols": [
+            "capture",
+            "destroy"
+          ]
+        },
+        {
+          "path": "src/runtime/OriginalProcessTrace.cpp",
+          "symbols": [
+            "capture"
+          ]
+        },
+        {
+          "path": "src/Game/System/HeapMemoryWatcher.cpp",
+          "symbols": [
+            "destroy"
+          ]
+        },
+        {
+          "path": "src/Game/Screen/CaptureScreenDirector.cpp",
+          "symbols": [
+            "capture"
+          ]
+        },
+        {
+          "path": "src/Game/Screen/ScreenBlurEffect.cpp",
+          "symbols": [
+            "capture"
+          ]
+        },
+        {
+          "path": "src/Game/Screen/ImageEffectLocalUtil.cpp",
+          "symbols": [
+            "capture"
+          ]
+        },
+        {
+          "path": "src/Game/Screen/DepthOfFieldBlur.cpp",
+          "symbols": [
+            "capture"
+          ]
+        },
+        {
+          "path": "src/Game/Screen/BloomEffectSimple.cpp",
+          "symbols": [
+            "capture"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Player/MarioAnimator.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Animation/XanimePlayer.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/LiveActor/ModelManager.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Add native owned graph state at actual allocator/owner; destructors must avoid shared lower/upper double frees and partial-init leaks. Remove capture wrapper only after allocator-level ownership and J3D mutex unwinding are proven.",
+      "confidence": "medium",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/MarioAnimatorLifetime.hpp",
+      "sha256": "37affae70d13950e570a73f3be91ca03d39966cb8ff77001adfe1b31935922f3",
+      "lines": 20,
+      "observed_sha256": "37affae70d13950e570a73f3be91ca03d39966cb8ff77001adfe1b31935922f3",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/Player/MarioAnimator.cpp; Game/Animation/XanimePlayer.cpp; XanimeCore.cpp; Game/LiveActor/ModelManager.cpp",
+      "evidence": "Initializer scope preserves heap/resources/J3D/mutex and captures original lower/upper animation graphs during success or exceptions. Destructor deduplicates shared joint transforms, tracks and hash buffers, restoring ModelManager original player.",
+      "include_consumers": [
+        "src/Game/Player/MarioAnimator.cpp",
+        "src/compat/MarioAnimatorLifetime.cpp"
+      ],
+      "representative_symbol_consumers": [],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Player/MarioAnimator.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Animation/XanimePlayer.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/LiveActor/ModelManager.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Add native owned graph state at actual allocator/owner; destructors must avoid shared lower/upper double frees and partial-init leaks. Remove capture wrapper only after allocator-level ownership and J3D mutex unwinding are proven.",
+      "confidence": "medium",
+      "build_selection": "Included by listed current consumers; delete this header with its API",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/MarioCameraTarget.cpp",
+      "sha256": "476035ff92e8a795c0194274379756c68aa97ba886d5c3807632de7a517afd23",
+      "lines": 35,
+      "observed_sha256": "476035ff92e8a795c0194274379756c68aa97ba886d5c3807632de7a517afd23",
+      "disposition": "delete-unused",
+      "destination": "None; existing Game/Camera/CameraTargetHolder.cpp and Game/Player/MarioAccess.cpp supply original behavior",
+      "evidence": "create_mario_camera_target constructs CameraTargetPlayer with CP932 name; mario_camera_base_matrix repeats Mario forced-matrix selection. Neither function nor header has any external consumer.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [],
+      "canonical_counterparts": [],
+      "action": "Delete pair outright. Do not replace unused API; native camera code should use original target holder and Mario access.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/MarioCameraTarget.hpp",
+      "sha256": "c558ae3176748b4d6630be281e972e5fdae5361f439716dcdf8bb5a02d51de14",
+      "lines": 12,
+      "observed_sha256": "c558ae3176748b4d6630be281e972e5fdae5361f439716dcdf8bb5a02d51de14",
+      "disposition": "delete-unused",
+      "destination": "None; existing Game/Camera/CameraTargetHolder.cpp and Game/Player/MarioAccess.cpp supply original behavior",
+      "evidence": "create_mario_camera_target constructs CameraTargetPlayer with CP932 name; mario_camera_base_matrix repeats Mario forced-matrix selection. Neither function nor header has any external consumer.",
+      "include_consumers": [
+        "src/compat/MarioCameraTarget.cpp"
+      ],
+      "representative_symbol_consumers": [],
+      "canonical_counterparts": [],
+      "action": "Delete pair outright. Do not replace unused API; native camera code should use original target holder and Mario access.",
+      "confidence": "high",
+      "build_selection": "Included by listed current consumers; delete this header with its API",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/MatrixTranslationCompat.cpp",
+      "sha256": "b51c74d570806ef9fd87da1f41ae9d7ae2e555216462f5a8af48126569080a67",
+      "lines": 16,
+      "observed_sha256": "b51c74d570806ef9fd87da1f41ae9d7ae2e555216462f5a8af48126569080a67",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/MtxUtil.cpp",
+      "evidence": "Two MR::setMtxTrans overloads contain only three matrix translation stores.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Animation/XanimeCore.cpp",
+          "symbols": [
+            "setMtxTrans"
+          ]
+        },
+        {
+          "path": "src/Game/Map/RaceManager.cpp",
+          "symbols": [
+            "setMtxTrans"
+          ]
+        },
+        {
+          "path": "src/Game/NPC/TalkMessageCtrl.cpp",
+          "symbols": [
+            "setMtxTrans"
+          ]
+        },
+        {
+          "path": "src/Game/Player/MarioSearchLight.cpp",
+          "symbols": [
+            "setMtxTrans"
+          ]
+        },
+        {
+          "path": "src/Game/Player/Mario.cpp",
+          "symbols": [
+            "setMtxTrans"
+          ]
+        },
+        {
+          "path": "src/Game/Player/J3DModelX.cpp",
+          "symbols": [
+            "setMtxTrans"
+          ]
+        },
+        {
+          "path": "src/Game/Player/MarioActorShadow.cpp",
+          "symbols": [
+            "setMtxTrans"
+          ]
+        },
+        {
+          "path": "src/Game/Player/MarioActor.cpp",
+          "symbols": [
+            "setMtxTrans"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/MtxUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore both canonical definitions and delete fragment; coordinate OriginalMatrixTransforms provider.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/ModelCreationCompat.cpp",
+      "sha256": "ae6981d96beaf8e531b55d427d9d61836338cd64c3c7b4e51d776deb94b90e04",
+      "lines": 79,
+      "observed_sha256": "ae6981d96beaf8e531b55d427d9d61836338cd64c3c7b4e51d776deb94b90e04",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/ModelUtil.cpp",
+      "evidence": "newJ3DModel selects J3DModelX for original named models, clears callbacks/matrices, locks calc/material/view phases and allocates display lists. newXanimePlayer/ResTable helpers original. Names are donor behavior, not new native hacks.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/LiveActor/ModelManager.cpp",
+          "symbols": [
+            "newJ3DModel",
+            "newXanimeResourceTable"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/ModelUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore donor ModelUtil owner; preserve J3D native allocation/mutex behavior and original name dispatch. Remove alongside other ModelUtil fragments to avoid duplicate symbols.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/ModelFogCompat.cpp",
+      "sha256": "bd52710af64949ffc5735616b0b1b6554b957dd25bfde6079befd7f5a69268cb",
+      "lines": 28,
+      "observed_sha256": "bd52710af64949ffc5735616b0b1b6554b957dd25bfde6079befd7f5a69268cb",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/ModelUtil.cpp",
+      "evidence": "calcFogStartEnd uses original view-Z math with100/100000 constants.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Util/DirectDraw.cpp",
+          "symbols": [
+            "calcFogStartEnd"
+          ]
+        },
+        {
+          "path": "src/Game/Player/MarioActorSpecialDraw.cpp",
+          "symbols": [
+            "calcFogStartEnd"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/ModelUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore exact method in canonical ModelUtil and delete fragment.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/ModelManagerOwner.cpp",
+      "sha256": "da07f7a078f07d137c9b4f1001f3a27ae5bcff26705f39e06c2a35bd342e8b07",
+      "lines": 91,
+      "observed_sha256": "da07f7a078f07d137c9b4f1001f3a27ae5bcff26705f39e06c2a35bd342e8b07",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/LiveActor/ModelManager.cpp; Game/Animation/XanimePlayer.cpp; Game/System/ResourceHolder.cpp",
+      "evidence": "create_model_manager retains actual JKR domain/archive resources, captures original model/player/core, handles init exceptions and J3D mutex, and restores original player before teardown.",
+      "include_consumers": [
+        "src/Game/LiveActor/LiveActor.cpp",
+        "src/compat/ActorRuntimeRegistry.cpp",
+        "src/compat/MarioAnimatorLifetime.cpp",
+        "src/scene/SceneDrawBufferService.cpp",
+        "tests/OriginalShadowControllerOwnerTests.cpp"
+      ],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/camera/EventCamera.cpp",
+          "symbols": [
+            "manager"
+          ]
+        },
+        {
+          "path": "src/camera/OriginalGameCamera.cpp",
+          "symbols": [
+            "manager"
+          ]
+        },
+        {
+          "path": "src/camera/OriginalAnimationCamera.cpp",
+          "symbols": [
+            "manager"
+          ]
+        },
+        {
+          "path": "src/runtime/RuntimeServices.cpp",
+          "symbols": [
+            "manager"
+          ]
+        },
+        {
+          "path": "src/runtime/SceneScheduler.cpp",
+          "symbols": [
+            "allocation_domain"
+          ]
+        },
+        {
+          "path": "src/runtime/RuntimeContext.cpp",
+          "symbols": [
+            "allocation_domain"
+          ]
+        },
+        {
+          "path": "src/scene/SceneDrawBufferService.cpp",
+          "symbols": [
+            "manager"
+          ]
+        },
+        {
+          "path": "src/Game/LiveActor/LiveActor.cpp",
+          "symbols": [
+            "allocation_domain"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/LiveActor/ModelManager.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Animation/XanimePlayer.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/System/ResourceHolder.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Canonical ModelManager native ownership must retain same domains/resources and own children; no J3D snapshot across resource wait. Replace external custom deleter and update actor/draw-buffer/Mario animator users.",
+      "confidence": "medium",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/ModelManagerOwner.hpp",
+      "sha256": "a6cf66cb18a2f3976821f0b3cdf387964150cffae647c5a9521a07417b1352da",
+      "lines": 24,
+      "observed_sha256": "a6cf66cb18a2f3976821f0b3cdf387964150cffae647c5a9521a07417b1352da",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/LiveActor/ModelManager.cpp; Game/Animation/XanimePlayer.cpp; Game/System/ResourceHolder.cpp",
+      "evidence": "create_model_manager retains actual JKR domain/archive resources, captures original model/player/core, handles init exceptions and J3D mutex, and restores original player before teardown.",
+      "include_consumers": [
+        "src/Game/LiveActor/LiveActor.cpp",
+        "src/compat/ActorRuntimeRegistry.cpp",
+        "src/compat/MarioAnimatorLifetime.cpp",
+        "src/compat/ModelManagerOwner.cpp",
+        "src/scene/SceneDrawBufferService.cpp",
+        "tests/OriginalShadowControllerOwnerTests.cpp"
+      ],
+      "representative_symbol_consumers": [],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/LiveActor/ModelManager.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/Animation/XanimePlayer.cpp",
+          "exists": true
+        },
+        {
+          "path": "decomp/src/Game/System/ResourceHolder.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Canonical ModelManager native ownership must retain same domains/resources and own children; no J3D snapshot across resource wait. Replace external custom deleter and update actor/draw-buffer/Mario animator users.",
+      "confidence": "medium",
+      "build_selection": "Included by listed current consumers; delete this header with its API",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/ModelPostLoadCompat.cpp",
+      "sha256": "b45dd348dbe22510207b6d50f76a772ffa20020f35d7541aff48fcbba6ad9b63",
+      "lines": 90,
+      "observed_sha256": "b45dd348dbe22510207b6d50f76a772ffa20020f35d7541aff48fcbba6ad9b63",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/ModelUtil.cpp; JSystem/J3D canonical loaders",
+      "evidence": "initEnvelopeAndEnvMapOrProjMapModelData, VCD/VAT copy, texture-matrix index setup, sort, downFracVtx and isUseFur mirror original ModelUtil.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/System/ResourceHolder.cpp",
+          "symbols": [
+            "initEnvelopeAndEnvMapOrProjMapModelData",
+            "downFracVtx",
+            "isUseFur"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/ModelUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore Game method owner; preserve already-decoded native J3D arrays and aligned VCD/VAT storage at loader boundary; delete fragment.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalActorAnimationStart.cpp",
+      "sha256": "f204b6944cf438da2473e71987c9f48afa572b7e2cd12aa20a89dfe160c8ebd0",
+      "lines": 280,
+      "observed_sha256": "f204b6944cf438da2473e71987c9f48afa572b7e2cd12aa20a89dfe160c8ebd0",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/LiveActorUtil.cpp",
+      "evidence": "startAction/startBck and BCK/BAS/effect coupling, frame/end/query functions are original Game behavior.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Demo/DemoTalkAnimCtrl.cpp",
+          "symbols": [
+            "startBck",
+            "startBckNoInterpole"
+          ]
+        },
+        {
+          "path": "src/Game/Demo/PrologueDirector.cpp",
+          "symbols": [
+            "startBck"
+          ]
+        },
+        {
+          "path": "src/Game/Demo/DemoActionKeeper.cpp",
+          "symbols": [
+            "startAction"
+          ]
+        },
+        {
+          "path": "src/Game/Demo/DemoPositionController.cpp",
+          "symbols": [
+            "startBck"
+          ]
+        },
+        {
+          "path": "src/Game/Util/NPCUtil.cpp",
+          "symbols": [
+            "startAction",
+            "isActionStart",
+            "tryStartAction"
+          ]
+        },
+        {
+          "path": "src/Game/Util/LiveActorUtil.cpp",
+          "symbols": [
+            "changeBckForEffectKeeper",
+            "startAction",
+            "isActionEnd"
+          ]
+        },
+        {
+          "path": "src/Game/LiveActor/ActorAnimKeeper.cpp",
+          "symbols": [
+            "startBck"
+          ]
+        },
+        {
+          "path": "src/Game/LiveActor/ModelManager.cpp",
+          "symbols": [
+            "startBck",
+            "startBckWithInterpole"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/LiveActorUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore canonical LiveActorUtil and delete fragment; preserve Bva/Brk donor quirks rather than opportunistic changes.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalActorBckControl.cpp",
+      "sha256": "c3ee772ba19512d913d47cf2a80cafc57d0f544212e28a62f723551e2c6383e3",
+      "lines": 23,
+      "observed_sha256": "c3ee772ba19512d913d47cf2a80cafc57d0f544212e28a62f723551e2c6383e3",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/LiveActorUtil.cpp",
+      "evidence": "reflectBckCtrlData applies BckCtrlFunction and audio loop/start fields exactly as Game utility.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Demo/DemoTalkAnimCtrl.cpp",
+          "symbols": [
+            "reflectBckCtrlData"
+          ]
+        },
+        {
+          "path": "src/Game/Util/LiveActorUtil.cpp",
+          "symbols": [
+            "reflectBckCtrlData"
+          ]
+        },
+        {
+          "path": "src/Game/Animation/BckCtrl.cpp",
+          "symbols": [
+            "reflectBckCtrlData"
+          ]
+        },
+        {
+          "path": "src/Game/Player/MarioAccess.cpp",
+          "symbols": [
+            "reflectBckCtrlData"
+          ]
+        },
+        {
+          "path": "tests/OriginalBckCtrlTests.cpp",
+          "symbols": [
+            "reflectBckCtrlData"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/LiveActorUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore exact canonical method and delete file.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalActorBroadcast.cpp",
+      "sha256": "08834a75bd78c9f9003282dc411961595db76123ad345b458b08447cad0bea1e",
+      "lines": 26,
+      "observed_sha256": "08834a75bd78c9f9003282dc411961595db76123ad345b458b08447cad0bea1e",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/ActorSensorUtil.cpp",
+      "evidence": "sendMsgToAllLiveActor traverses original AllLiveActorGroup, skips dead/self and calls receiveMessage with message sensor.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Demo/DemoDirector.cpp",
+          "symbols": [
+            "sendMsgToAllLiveActor"
+          ]
+        },
+        {
+          "path": "src/Game/Demo/DemoStartRequestUtil.cpp",
+          "symbols": [
+            "sendMsgToAllLiveActor"
+          ]
+        },
+        {
+          "path": "src/Game/Util/ActorSensorUtil.cpp",
+          "symbols": [
+            "sendMsgToAllLiveActor"
+          ]
+        },
+        {
+          "path": "src/Game/NPC/RunawayRabbitCollect.cpp",
+          "symbols": [
+            "sendMsgToAllLiveActor"
+          ]
+        },
+        {
+          "path": "src/Game/MapObj/PowerStar.cpp",
+          "symbols": [
+            "sendMsgToAllLiveActor"
+          ]
+        },
+        {
+          "path": "tests/SceneSchedulerHeapTests.cpp",
+          "symbols": [
+            "sendMsgToAllLiveActor"
+          ]
+        },
+        {
+          "path": "tests/OriginalActorBroadcastTests.cpp",
+          "symbols": [
+            "sendMsgToAllLiveActor"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/ActorSensorUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore with full ActorSensorUtil; delete this second provider simultaneously.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalActorModelAccess.cpp",
+      "sha256": "97823512d19f3bf86bcf2eb8c6af089882570fc8c675ce8abdf7f840ab479806",
+      "lines": 624,
+      "observed_sha256": "97823512d19f3bf86bcf2eb8c6af089882570fc8c675ce8abdf7f840ab479806",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/LiveActorUtil.cpp",
+      "evidence": "624 lines of model/frame/resource/flag methods; sAnimRateScale duplicates utility state, getters dispatch original ModelManager.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/runtime/RuntimeServices.cpp",
+          "symbols": [
+            "setBaseTRMtx"
+          ]
+        },
+        {
+          "path": "src/scene/SceneDrawBufferService.cpp",
+          "symbols": [
+            "getModelResName"
+          ]
+        },
+        {
+          "path": "src/Game/Demo/DemoTalkAnimCtrl.cpp",
+          "symbols": [
+            "getResourceHolder",
+            "isExistBck",
+            "isExistBtk"
+          ]
+        },
+        {
+          "path": "src/Game/Util/PlayerUtil.cpp",
+          "symbols": [
+            "isBckStopped",
+            "isBckOneTimeAndStopped",
+            "setBckRate"
+          ]
+        },
+        {
+          "path": "src/Game/Util/LayoutUtil.cpp",
+          "symbols": [
+            "onCalcAnim",
+            "stopAnimFrame",
+            "releaseAnimFrame"
+          ]
+        },
+        {
+          "path": "src/Game/Util/EffectUtil.cpp",
+          "symbols": [
+            "setBaseScale"
+          ]
+        },
+        {
+          "path": "src/Game/Util/ActorMovementUtil.cpp",
+          "symbols": [
+            "isCalcGravity",
+            "calcAnimDirect",
+            "setBaseTRMtx"
+          ]
+        },
+        {
+          "path": "src/Game/Util/FixedPosition.cpp",
+          "symbols": [
+            "getResourceHolder"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/LiveActorUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore complete canonical utility and its single animation rate state; remove all animation/model shards simultaneously to avoid duplicate or divergent state.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalBinderFilterUtil.cpp",
+      "sha256": "6bea3a4a0fa7fa366fc1f8a9cb58e6e3beba4591f3e7179537fddd00bf57cc5c",
+      "lines": 20,
+      "observed_sha256": "6bea3a4a0fa7fa366fc1f8a9cb58e6e3beba4591f3e7179537fddd00bf57cc5c",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/LiveActorUtil.cpp",
+      "evidence": "setBinderTriangleFilter/setBinderCollisionPartsFilter/setBinderExceptActor directly manipulate original Binder and CollisionPartsFilterActor.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Util/LiveActorUtil.cpp",
+          "symbols": [
+            "setBinderCollisionPartsFilter",
+            "setBinderExceptActor",
+            "setBindTriangleFilter"
+          ]
+        },
+        {
+          "path": "src/Game/MapObj/StarPiece.cpp",
+          "symbols": [
+            "setBindTriangleFilter"
+          ]
+        },
+        {
+          "path": "src/Game/MapObj/CrystalCage.cpp",
+          "symbols": [
+            "setBinderExceptActor"
+          ]
+        },
+        {
+          "path": "src/Game/MapObj/ClipAreaHolder.cpp",
+          "symbols": [
+            "setBinderCollisionPartsFilter"
+          ]
+        },
+        {
+          "path": "tests/GameActorPhysicsRealOrAbsentTests.cpp",
+          "symbols": [
+            "setBinderCollisionPartsFilter"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/LiveActorUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore original utility definitions; make allocated filter lifetime explicit in Binder native owner if required.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalBinderQueries.cpp",
+      "sha256": "77ec46ad93ec5f49ded6a6e2358aa0d51fb797dc3b4ba11377a948162e27fe71",
+      "lines": 161,
+      "observed_sha256": "77ec46ad93ec5f49ded6a6e2358aa0d51fb797dc3b4ba11377a948162e27fe71",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/LiveActorUtil.cpp",
+      "evidence": "Ground/wall/roof queries, press checks, radius and contact-position helpers directly inspect Binder and CollisionParts.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/runtime/RuntimeServices.cpp",
+          "symbols": [
+            "isBindedGround"
+          ]
+        },
+        {
+          "path": "src/Game/Util/PlayerUtil.cpp",
+          "symbols": [
+            "isOnGround"
+          ]
+        },
+        {
+          "path": "src/Game/Util/MapUtil.cpp",
+          "symbols": [
+            "isBindedGround",
+            "isBindedWall",
+            "isBindedRoof"
+          ]
+        },
+        {
+          "path": "src/Game/Util/ActorMovementUtil.cpp",
+          "symbols": [
+            "isOnGround",
+            "isBindedGround",
+            "isBindedWall"
+          ]
+        },
+        {
+          "path": "src/Game/Util/LiveActorUtil.cpp",
+          "symbols": [
+            "calcHitPowerToWall",
+            "isPressedRoofAndGround",
+            "isOnGround"
+          ]
+        },
+        {
+          "path": "src/Game/Util/ActorSensorUtil.cpp",
+          "symbols": [
+            "isBindedGround",
+            "isBindedWall"
+          ]
+        },
+        {
+          "path": "src/Game/Camera/CameraDirector.cpp",
+          "symbols": [
+            "isOnGround"
+          ]
+        },
+        {
+          "path": "src/Game/Camera/CameraTargetHolder.cpp",
+          "symbols": [
+            "isOnGround"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/LiveActorUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore original utilities with donor behavior; delete fragment with full LiveActorUtil batch.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalCameraOwnerUtil.cpp",
+      "sha256": "344b27def7cdb0f92e67509b9a0f26f03944946355e1f6f632c72a2c67a10367",
+      "lines": 117,
+      "observed_sha256": "344b27def7cdb0f92e67509b9a0f26f03944946355e1f6f632c72a2c67a10367",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Camera/CameraLocalUtil.cpp",
+      "evidence": "register/get named camera, director target/reset/force and tower adjustment methods are original CameraLocalUtil.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Util/ObjUtil.cpp",
+          "symbols": [
+            "getCameraDirector"
+          ]
+        },
+        {
+          "path": "src/Game/Util/CameraUtil.cpp",
+          "symbols": [
+            "getCameraDirector"
+          ]
+        },
+        {
+          "path": "src/Game/Camera/CameraMedianTower.cpp",
+          "symbols": [
+            "getVecReg",
+            "makeTowerCameraMtx"
+          ]
+        },
+        {
+          "path": "src/Game/Camera/CameraTripodBossJoint.cpp",
+          "symbols": [
+            "tryCameraReset"
+          ]
+        },
+        {
+          "path": "src/Game/Camera/CameraCharmedVecRegTower.cpp",
+          "symbols": [
+            "getVecReg",
+            "arrangeDistanceByFovy"
+          ]
+        },
+        {
+          "path": "src/Game/Camera/CameraRegisterHolder.cpp",
+          "symbols": [
+            "getDummyVecRegName"
+          ]
+        },
+        {
+          "path": "src/Game/Camera/CameraRaceFollow.cpp",
+          "symbols": [
+            "arrangeDistanceByPushAndPull"
+          ]
+        },
+        {
+          "path": "src/Game/Camera/CameraPolygonCodeUtil.cpp",
+          "symbols": [
+            "getCameraDirector"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Camera/CameraLocalUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Merge full canonical CameraLocalUtil, coordinate existing local runtime shard and native input/getTarget adaptations.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalCameraTargetActor.cpp",
+      "sha256": "7dcd7591f812fc9eca423a9eab88ef7335bce96466f8c93df2c3479808030514",
+      "lines": 80,
+      "observed_sha256": "7dcd7591f812fc9eca423a9eab88ef7335bce96466f8c93df2c3479808030514",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Camera/CameraTargetObj.cpp",
+      "evidence": "CameraTargetActor constructor, movement, position/up/front/side/gravity/last-move/radius/map-matrix methods mirror complete current donor.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/camera/PublishedCameraTarget.cpp",
+          "symbols": [
+            "CameraTargetObj",
+            "getGroundPos",
+            "getGravityVector"
+          ]
+        },
+        {
+          "path": "src/camera/EventCamera.cpp",
+          "symbols": [
+            "movement",
+            "getPosition",
+            "getUpVec"
+          ]
+        },
+        {
+          "path": "src/camera/OriginalGameCamera.cpp",
+          "symbols": [
+            "getPosition",
+            "getUpVec",
+            "getFrontVec"
+          ]
+        },
+        {
+          "path": "src/layout/LayoutManagerCompat.cpp",
+          "symbols": [
+            "movement"
+          ]
+        },
+        {
+          "path": "src/runtime/RuntimeServices.cpp",
+          "symbols": [
+            "movement",
+            "getPosition",
+            "getUpVec"
+          ]
+        },
+        {
+          "path": "src/runtime/SceneScheduler.cpp",
+          "symbols": [
+            "movement"
+          ]
+        },
+        {
+          "path": "src/JSystem/JSupport/JSUFileStream.cpp",
+          "symbols": [
+            "getPosition"
+          ]
+        },
+        {
+          "path": "src/Game/Demo/DemoDirector.cpp",
+          "symbols": [
+            "movement"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Camera/CameraTargetObj.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore whole CameraTargetObj.cpp together with player methods and base ctor from CameraLocalUtilRuntime; preserve native explicit matrix conversion as needed.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalCameraTargetPlayer.cpp",
+      "sha256": "748ac8e5e1dbb365168ce3d9950ccc20c7c7b1d728828750240c98eeb1243a78",
+      "lines": 163,
+      "observed_sha256": "748ac8e5e1dbb365168ce3d9950ccc20c7c7b1d728828750240c98eeb1243a78",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Camera/CameraTargetObj.cpp",
+      "evidence": "CameraTargetPlayer target setup, position/orientation/gravity/ground/underwater/jump, reset and update methods mirror complete donor.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/camera/PublishedCameraTarget.cpp",
+          "symbols": [
+            "getGroundPos",
+            "getGravityVector"
+          ]
+        },
+        {
+          "path": "src/camera/EventCamera.cpp",
+          "symbols": [
+            "movement",
+            "getPosition",
+            "getUpVec"
+          ]
+        },
+        {
+          "path": "src/camera/OriginalGameCamera.cpp",
+          "symbols": [
+            "getPosition",
+            "getUpVec",
+            "getFrontVec"
+          ]
+        },
+        {
+          "path": "src/layout/LayoutManagerCompat.cpp",
+          "symbols": [
+            "movement"
+          ]
+        },
+        {
+          "path": "src/runtime/RuntimeServices.cpp",
+          "symbols": [
+            "movement",
+            "getPosition",
+            "getUpVec"
+          ]
+        },
+        {
+          "path": "src/runtime/SceneScheduler.cpp",
+          "symbols": [
+            "movement"
+          ]
+        },
+        {
+          "path": "src/JSystem/JSupport/JSUFileStream.cpp",
+          "symbols": [
+            "getPosition"
+          ]
+        },
+        {
+          "path": "src/Game/Demo/DemoDirector.cpp",
+          "symbols": [
+            "movement"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Camera/CameraTargetObj.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Same whole owner restoration as actor; preserve original CameraTargetArg and player area/forced-matrix behavior, verify exactly one provider per method.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalCollisionGeometry.cpp",
+      "sha256": "a168d818bb2d2e531dde55fc02d3dbaac465390135435a528dd196b0e0e28c86",
+      "lines": 60,
+      "observed_sha256": "a168d818bb2d2e531dde55fc02d3dbaac465390135435a528dd196b0e0e28c86",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/MapUtil.cpp",
+      "evidence": "checkHitSegmentSphere and calcVelocityMovingPoint implement original geometry/current-to-previous transform.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Util/MapUtil.cpp",
+          "symbols": [
+            "calcVelocityMovingPoint"
+          ]
+        },
+        {
+          "path": "src/Game/Util/MathUtil.cpp",
+          "symbols": [
+            "checkHitSegmentSphere"
+          ]
+        },
+        {
+          "path": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+          "symbols": [
+            "checkHitSegmentSphere"
+          ]
+        },
+        {
+          "path": "src/Game/Player/MarioPress.cpp",
+          "symbols": [
+            "calcVelocityMovingPoint"
+          ]
+        },
+        {
+          "path": "tests/OriginalCollisionPartsOwnerTests.cpp",
+          "symbols": [
+            "calcVelocityMovingPoint"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/MapUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore complete MapUtil and delete fragment; preserve arithmetic/no-contraction as needed.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalCollisionPartsCompat.cpp",
+      "sha256": "435c1b47606f17045340a8c33040b29c5a5cd7defdc2e9b4664a37f3cd287445",
+      "lines": 573,
+      "observed_sha256": "435c1b47606f17045340a8c33040b29c5a5cd7defdc2e9b4664a37f3cd287445",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Map/CollisionParts.cpp",
+      "evidence": "Entire CollisionParts copied owner; differences are require_published_collision_geometry/publication hooks, native geometry sync and initialized all-hit u8 flags. Canonical donor now contains all main methods.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Gravity/PlanetGravity.cpp",
+          "symbols": [
+            "updateMtx"
+          ]
+        },
+        {
+          "path": "src/Game/Gravity/ParallelGravity.cpp",
+          "symbols": [
+            "updateMtx"
+          ]
+        },
+        {
+          "path": "src/Game/Gravity/CubeGravity.cpp",
+          "symbols": [
+            "updateMtx"
+          ]
+        },
+        {
+          "path": "src/Game/Gravity/DiskTorusGravity.cpp",
+          "symbols": [
+            "updateMtx"
+          ]
+        },
+        {
+          "path": "src/Game/Gravity/SegmentGravity.cpp",
+          "symbols": [
+            "updateMtx"
+          ]
+        },
+        {
+          "path": "src/Game/Gravity/GraviryFollower.cpp",
+          "symbols": [
+            "updateMtx"
+          ]
+        },
+        {
+          "path": "src/Game/Gravity/PointGravity.cpp",
+          "symbols": [
+            "updateMtx"
+          ]
+        },
+        {
+          "path": "src/Game/Gravity/DiskGravity.cpp",
+          "symbols": [
+            "updateMtx"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Map/CollisionParts.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore donor owner with targeted native resource publication hooks until duplicate service is removed. Preserve zero initialization of flags (retail all-hit path does not fill them), scale/matrix publication and no-contraction flags; delete mirror.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalCollisionPartsUtil.cpp",
+      "sha256": "c4b49b8cee53f2dad912abcffa4242d244b386ce0d61890b11d93ac97bf95f94",
+      "lines": 243,
+      "observed_sha256": "c4b49b8cee53f2dad912abcffa4242d244b386ce0d61890b11d93ac97bf95f94",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/LiveActorUtil.cpp",
+      "evidence": "init/create/validate/invalidate/set/reset CollisionParts wrappers follow donor; only local creator calls create_collision_parts host decoder. MoveLimit/WaterSurface/Sunshade category rules are original Game behavior.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Util/ActorMovementUtil.cpp",
+          "symbols": [
+            "resetAllCollisionMtx"
+          ]
+        },
+        {
+          "path": "src/Game/Util/LiveActorUtil.cpp",
+          "symbols": [
+            "calcCollisionMtx",
+            "initCollisionParts",
+            "initCollisionPartsAutoEqualScale"
+          ]
+        },
+        {
+          "path": "src/Game/Util/MapPartsUtil.cpp",
+          "symbols": [
+            "getCollisionBoundingSphereRange"
+          ]
+        },
+        {
+          "path": "src/Game/LiveActor/LiveActor.cpp",
+          "symbols": [
+            "createCollisionPartsFromLiveActor",
+            "validateCollisionParts",
+            "invalidateCollisionParts"
+          ]
+        },
+        {
+          "path": "src/Game/Map/PlanetMap.cpp",
+          "symbols": [
+            "initCollisionParts",
+            "tryCreateCollisionMoveLimit",
+            "tryCreateCollisionWaterSurface"
+          ]
+        },
+        {
+          "path": "src/Game/AreaObj/CollisionArea.cpp",
+          "symbols": [
+            "validateCollisionParts",
+            "invalidateCollisionParts"
+          ]
+        },
+        {
+          "path": "src/Game/MapObj/MapParts.cpp",
+          "symbols": [
+            "initCollisionParts",
+            "getCollisionBoundingSphereRange"
+          ]
+        },
+        {
+          "path": "src/Game/MapObj/EarthenPipe.cpp",
+          "symbols": [
+            "initCollisionParts",
+            "isValidCollisionParts",
+            "validateCollisionParts"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/LiveActorUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore canonical wrappers; put decoded KCL ownership at actual CollisionParts construction boundary; preserve category1/2/3 and borrowed base-matrix lifetime.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalDynamicCollisionObj.cpp",
+      "sha256": "efbd9a21fef686698b3048a58d3a494dcb52f97e06159f79408b84860939b7c3",
+      "lines": 207,
+      "observed_sha256": "efbd9a21fef686698b3048a58d3a494dcb52f97e06159f79408b84860939b7c3",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/MapObj/DynamicCollisionObj.cpp; resource/KCollisionResource.cpp",
+      "evidence": "Original prism generation/normal/bounds methods with native createCollision using typed KCLFile, vectors and GeneratedKCollisionResource rather than retail32-bit relocated arena.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/AreaObj/CollisionArea.cpp",
+          "symbols": [
+            "syncCollision",
+            "createCollision"
+          ]
+        },
+        {
+          "path": "src/Game/MapObj/DynamicCollisionObj.cpp",
+          "symbols": [
+            "syncCollision",
+            "updateTriangle",
+            "updateCollisionHeader"
+          ]
+        },
+        {
+          "path": "tests/StageCollisionRegistrationTests.cpp",
+          "symbols": [
+            "syncCollision",
+            "updateTriangle",
+            "updateCollisionHeader"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/MapObj/DynamicCollisionObj.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore Game owner and retain narrow native typed allocation at createCollision; do not reinstate invalid32-bit offsets. Preserve dummy prism, octree sentinel, mutable geometry sync and full resource lifetime.",
+      "confidence": "medium",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalJMathSqrt.cpp",
+      "sha256": "6aae8adf695e926aeab36cd0ddca54a6058611657bbd4ab1c962212cd3255227",
+      "lines": 21,
+      "observed_sha256": "6aae8adf695e926aeab36cd0ddca54a6058611657bbd4ab1c962212cd3255227",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/MathUtil.cpp; Aurora PPC frsqrte helper",
+      "evidence": "JMASqrt translates canonical MathUtil Gekko estimate/refinement with explicit double/float rounding and nonpositive branch.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Util/MathUtil.cpp",
+          "symbols": [
+            "JMASqrt"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/MathUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Place Game/JMA wrapper in canonical MathUtil; reusable estimate remains Aurora. Preserve -ffp-contract=off and reassociation constraints, signed-zero and estimate tests.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalKCollisionCompat.cpp",
+      "sha256": "11db2f489c776ad40a5c3439d4dcd940528eee13ca4a9770ec4c9986a9510f52",
+      "lines": 1393,
+      "observed_sha256": "11db2f489c776ad40a5c3439d4dcd940528eee13ca4a9770ec4c9986a9510f52",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Map/KCollision.cpp; resource/KCollisionResource.cpp; Aurora PPC conversion helpers",
+      "evidence": "Complete KCollisionServer geometry owner mirrors current donor. Native deltas require decoded typed KCL, registry count, one-root negative-shift avoidance and saturating fctiwz conversion.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/camera/CameraAnimation.cpp",
+          "symbols": [
+            "getPos"
+          ]
+        },
+        {
+          "path": "src/scene/StageCollisionService.cpp",
+          "symbols": [
+            "getFaceNormal",
+            "getEdgeNormal1",
+            "getEdgeNormal2"
+          ]
+        },
+        {
+          "path": "src/JSystem/JParticle/JPAFieldBlock.cpp",
+          "symbols": [
+            "getPos"
+          ]
+        },
+        {
+          "path": "src/Game/Util/PlayerUtil.cpp",
+          "symbols": [
+            "getFaceNormal"
+          ]
+        },
+        {
+          "path": "src/Game/Util/MapUtil.cpp",
+          "symbols": [
+            "getFaceNormal",
+            "getNormal",
+            "getAttributes"
+          ]
+        },
+        {
+          "path": "src/Game/Util/LiveActorUtil.cpp",
+          "symbols": [
+            "getFaceNormal",
+            "getNormal"
+          ]
+        },
+        {
+          "path": "src/Game/Util/SoundUtil.cpp",
+          "symbols": [
+            "getAttributes"
+          ]
+        },
+        {
+          "path": "src/Game/Camera/CameraMedianTower.cpp",
+          "symbols": [
+            "getPos"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Map/KCollision.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore canonical KCollision with those narrow host branches only. Keep decoding in resource loader, instruction conversions Aurora; preserve native header inline helpers, prism/attribute identity, all-hit flags and no-contraction behavior. No offset relocation on host pointers.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalLiveActorGroupUtil.cpp",
+      "sha256": "bae33b4c21c102efb4005e1a0735c1ec90193719fe971a74217e4c1d1bb2bc73",
+      "lines": 162,
+      "observed_sha256": "bae33b4c21c102efb4005e1a0735c1ec90193719fe971a74217e4c1d1bb2bc73",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/LiveActorUtil.cpp",
+      "evidence": "Group search/count/iteration/send methods use original LiveActorGroup and duplicate utility logic.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Util/ObjUtil.cpp",
+          "symbols": [
+            "joinToGroup"
+          ]
+        },
+        {
+          "path": "src/Game/Util/LiveActorUtil.cpp",
+          "symbols": [
+            "isShowModel",
+            "callFuncAllGroupMember",
+            "callMethodAllGroupMember"
+          ]
+        },
+        {
+          "path": "src/Game/Util/ActorSensorUtil.cpp",
+          "symbols": [
+            "getGroupFromArray"
+          ]
+        },
+        {
+          "path": "src/Game/Effect/SimpleEffectObj.cpp",
+          "symbols": [
+            "joinToGroupArray"
+          ]
+        },
+        {
+          "path": "src/Game/Enemy/Karikari.cpp",
+          "symbols": [
+            "joinToGroup"
+          ]
+        },
+        {
+          "path": "src/Game/NameObj/MovementOnOffGroupHolder.cpp",
+          "symbols": [
+            "joinToGroup"
+          ]
+        },
+        {
+          "path": "src/Game/NPC/Tico.cpp",
+          "symbols": [
+            "joinToGroupArray",
+            "countHideGroupMember",
+            "countShowGroupMember"
+          ]
+        },
+        {
+          "path": "src/Game/MapObj/MapParts.cpp",
+          "symbols": [
+            "joinToGroupArray"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/LiveActorUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore in canonical utility, preserve const/member-pointer signatures and original group ownership; delete fragment.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalMatrixTransforms.cpp",
+      "sha256": "0a15044bcd95f623e759e5e5b8931d93d7e9ac42a2ac706ff40e56618eb71400",
+      "lines": 228,
+      "observed_sha256": "0a15044bcd95f623e759e5e5b8931d93d7e9ac42a2ac706ff40e56618eb71400",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/MtxUtil.cpp",
+      "evidence": "Original scale/Euler/quat/rotation-order/transformation helpers and scratch matrices are Game MtxUtil logic.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Util/FixedPosition.cpp",
+          "symbols": [
+            "makeMtxWithoutScale"
+          ]
+        },
+        {
+          "path": "src/Game/AreaObj/AreaForm.cpp",
+          "symbols": [
+            "tmpMtxRotXDeg",
+            "tmpMtxRotYDeg",
+            "tmpMtxRotZDeg"
+          ]
+        },
+        {
+          "path": "src/Game/NPC/TurnJointCtrl.cpp",
+          "symbols": [
+            "extractMtxZDir"
+          ]
+        },
+        {
+          "path": "src/Game/NPC/TalkMessageCtrl.cpp",
+          "symbols": [
+            "addTransMtxLocal"
+          ]
+        },
+        {
+          "path": "src/Game/NPC/RunawayTico.cpp",
+          "symbols": [
+            "addTransMtxLocalY"
+          ]
+        },
+        {
+          "path": "src/Game/NPC/Rosetta.cpp",
+          "symbols": [
+            "extractMtxYDir"
+          ]
+        },
+        {
+          "path": "src/Game/Player/MarioSearchLight.cpp",
+          "symbols": [
+            "blendMtxRotateSlerp"
+          ]
+        },
+        {
+          "path": "src/Game/Player/MarioMove2D.cpp",
+          "symbols": [
+            "tmpMtxRotYDeg"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/MtxUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore canonical owner and delete fragment plus MatrixTranslationCompat; preserve original operation order and quirks.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalModelAccess.cpp",
+      "sha256": "0de0cd2d5b4b20901b18ea79e9dd0364bffb54bcdff6a3f16a13683ea20b900a",
+      "lines": 220,
+      "observed_sha256": "0de0cd2d5b4b20901b18ea79e9dd0364bffb54bcdff6a3f16a13683ea20b900a",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/ModelUtil.cpp",
+      "evidence": "getJ3DModelData/resource/material lookups, callback invalidation, animation sync and isExistModel duplicate original ModelUtil.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/runtime/OriginalProcessTrace.cpp",
+          "symbols": [
+            "getJ3DModel"
+          ]
+        },
+        {
+          "path": "src/runtime/RuntimeContext.cpp",
+          "symbols": [
+            "getResTIMG"
+          ]
+        },
+        {
+          "path": "src/resource/J3dModelResource.cpp",
+          "symbols": [
+            "getTexture",
+            "getMaterialNum",
+            "getResTIMG"
+          ]
+        },
+        {
+          "path": "src/JSystem/J2DGraph/J2DPicture.cpp",
+          "symbols": [
+            "getTexture"
+          ]
+        },
+        {
+          "path": "src/Game/Util/PlayerUtil.cpp",
+          "symbols": [
+            "getBckFrameMax"
+          ]
+        },
+        {
+          "path": "src/Game/Util/FurShader.cpp",
+          "symbols": [
+            "getMaterial",
+            "getMaterialName"
+          ]
+        },
+        {
+          "path": "src/Game/Util/ScreenUtil.cpp",
+          "symbols": [
+            "getResTIMG"
+          ]
+        },
+        {
+          "path": "src/Game/Util/JointController.cpp",
+          "symbols": [
+            "getJ3DModel"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/ModelUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore complete canonical ModelUtil and remove all related shards; native resource pointer decoding remains actual resource owner.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalModelBounds.cpp",
+      "sha256": "d16680c5c302f790d751c7e8b437facb4a2841700ac3bd49225858978a81ff95",
+      "lines": 88,
+      "observed_sha256": "d16680c5c302f790d751c7e8b437facb4a2841700ac3bd49225858978a81ff95",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/ModelUtil.cpp",
+      "evidence": "Original bounding radius, effect texture matrix, collision-resource and indirect-texture methods.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Util/ObjUtil.cpp",
+          "symbols": [
+            "isExistIndirectTexture"
+          ]
+        },
+        {
+          "path": "src/Game/Util/LiveActorUtil.cpp",
+          "symbols": [
+            "calcModelBoundingRadius",
+            "isExistIndirectTexture"
+          ]
+        },
+        {
+          "path": "src/Game/Util/MapPartsUtil.cpp",
+          "symbols": [
+            "calcModelBoundingBox",
+            "calcModelBoundingRadius"
+          ]
+        },
+        {
+          "path": "src/Game/LiveActor/MirrorActor.cpp",
+          "symbols": [
+            "calcModelBoundingBox"
+          ]
+        },
+        {
+          "path": "src/Game/Map/PlanetMap.cpp",
+          "symbols": [
+            "isExistEffectTexMtx",
+            "calcModelBoundingRadius",
+            "isExistCollisionResource"
+          ]
+        },
+        {
+          "path": "src/Game/MapObj/MapParts.cpp",
+          "symbols": [
+            "calcModelBoundingBox"
+          ]
+        },
+        {
+          "path": "src/Game/MapObj/BigFan.cpp",
+          "symbols": [
+            "isExistCollisionResource"
+          ]
+        },
+        {
+          "path": "src/Game/MapObj/MapObjActor.cpp",
+          "symbols": [
+            "calcModelBoundingRadius",
+            "isExistCollisionResource"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/ModelUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore canonical ModelUtil methods and delete fragment.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalPlacementJMap.cpp",
+      "sha256": "7350db3a162fe82e94f3ad2dc5c8f9c51205e5a98ac35c75f70ece5061db00f8",
+      "lines": 7,
+      "observed_sha256": "7350db3a162fe82e94f3ad2dc5c8f9c51205e5a98ac35c75f70ece5061db00f8",
+      "disposition": "restore-original-owner",
+      "destination": "Game/Util/JMapUtil.cpp",
+      "evidence": "getJMapInfoShapeIdWithInit simply reads ShapeModelNo through JMapInfoIter.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Util/MapPartsUtil.cpp",
+          "symbols": [
+            "getJMapInfoShapeIdWithInit"
+          ]
+        },
+        {
+          "path": "src/Game/Scene/PlacementInfoOrdered.cpp",
+          "symbols": [
+            "getJMapInfoShapeIdWithInit"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/Util/JMapUtil.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Restore exact method in existing canonical JMapUtil and delete seven-line fragment.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/OriginalPlayerEventUtil.cpp",
+      "sha256": "72949ddef9e85c8002ed0cef945dfee360bf77a2ef12e43bcf6a1404a2e3956d",
+      "lines": 23,
+      "observed_sha256": "72949ddef9e85c8002ed0cef945dfee360bf77a2ef12e43bcf6a1404a2e3956d",
+      "disposition": "restore-original-owner",
+      "destination": "Game/System/GameDataFunction.cpp",
+      "evidence": "Only GameDataFunction::addMissPoint and incPlayerMissNum exist here; both forward to canonical GameDataHolder.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/Game/Util/EventUtil.cpp",
+          "symbols": [
+            "addMissPoint",
+            "incPlayerMissNum"
+          ]
+        },
+        {
+          "path": "src/Game/System/GameDataFunction.cpp",
+          "symbols": [
+            "addMissPoint",
+            "incPlayerMissNum"
+          ]
+        },
+        {
+          "path": "src/Game/System/GameDataHolder.cpp",
+          "symbols": [
+            "addMissPoint",
+            "incPlayerMissNum"
+          ]
+        },
+        {
+          "path": "tests/OriginalSceneCounterOwnerTests.cpp",
+          "symbols": [
+            "addMissPoint"
+          ]
+        }
+      ],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/System/GameDataFunction.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Move definitions into actual GameDataFunction provider; coordinate its currently excluded canonical file and other GameDataFunction fragments.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/SensorHitCheckerOwnership.cpp",
+      "sha256": "881a4c46977ead91873860119f91983649141d59766a505e4bc32c9b69e3f82d",
+      "lines": 11,
+      "observed_sha256": "881a4c46977ead91873860119f91983649141d59766a505e4bc32c9b69e3f82d",
+      "disposition": "narrow-game-adaptation",
+      "destination": "Game/LiveActor/SensorHitChecker.cpp",
+      "evidence": "Only destructor: frees six original SensorGroup child arrays/objects.",
+      "include_consumers": [],
+      "representative_symbol_consumers": [],
+      "canonical_counterparts": [
+        {
+          "path": "decomp/src/Game/LiveActor/SensorHitChecker.cpp",
+          "exists": true
+        }
+      ],
+      "action": "Place native destruction in canonical SensorHitChecker and preserve scene retirement ordering. Delete compat file.",
+      "confidence": "medium",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/StageZoneMatrixRegistry.cpp",
+      "sha256": "7a42f1beefc1b90bcbbb32e4ecb2be641428bff23d293c9136d6793f5a8ffda3",
+      "lines": 116,
+      "observed_sha256": "7a42f1beefc1b90bcbbb32e4ecb2be641428bff23d293c9136d6793f5a8ffda3",
+      "disposition": "delete-unused",
+      "destination": "None in production; use Game/Scene/StageDataHolder.cpp in fixtures",
+      "evidence": "Standalone TLS matrix graph maps StageHolderOccurrence/JMapInfo::DataCompat; matrix_for_zone imitates immediate-child first matching original StageDataHolder semantics. All external consumers are two tests.",
+      "include_consumers": [
+        "tests/OriginalCollisionPartsOwnerTests.cpp",
+        "tests/StageZoneMatrixRegistryTests.cpp"
+      ],
+      "representative_symbol_consumers": [
+        {
+          "path": "src/resource/JpcResource.cpp",
+          "symbols": [
+            "registry"
+          ]
+        },
+        {
+          "path": "src/resource/J3dModelResource.cpp",
+          "symbols": [
+            "registry"
+          ]
+        },
+        {
+          "path": "src/resource/BasResource.cpp",
+          "symbols": [
+            "registry"
+          ]
+        },
+        {
+          "path": "src/resource/JMapResource.cpp",
+          "symbols": [
+            "registry"
+          ]
+        },
+        {
+          "path": "src/resource/J3dAnimationResource.cpp",
+          "symbols": [
+            "registry"
+          ]
+        },
+        {
+          "path": "src/resource/KCollisionResource.cpp",
+          "symbols": [
+            "registry"
+          ]
+        },
+        {
+          "path": "tests/SceneNameObjRegistryTests.cpp",
+          "symbols": [
+            "registry"
+          ]
+        }
+      ],
+      "canonical_counterparts": [],
+      "action": "Delete pair after adapting StageZoneMatrixRegistryTests and OriginalCollisionPartsOwnerTests to original StageDataHolder/placement binding, or retire duplicate-implementation fixture. Preserve repeated/empty-zone coverage through canonical owner.",
+      "confidence": "high",
+      "build_selection": "Game/xmake.lua wildcard ../compat/**.cpp",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    },
+    {
+      "path": "src/compat/StageZoneMatrixRegistry.hpp",
+      "sha256": "9503ab358db3b2c69e2db6f7ebbe72ec68264b90c745c843ad04eb17d752b8e2",
+      "lines": 53,
+      "observed_sha256": "9503ab358db3b2c69e2db6f7ebbe72ec68264b90c745c843ad04eb17d752b8e2",
+      "disposition": "delete-unused",
+      "destination": "None in production; use Game/Scene/StageDataHolder.cpp in fixtures",
+      "evidence": "Standalone TLS matrix graph maps StageHolderOccurrence/JMapInfo::DataCompat; matrix_for_zone imitates immediate-child first matching original StageDataHolder semantics. All external consumers are two tests.",
+      "include_consumers": [
+        "src/compat/StageZoneMatrixRegistry.cpp",
+        "tests/OriginalCollisionPartsOwnerTests.cpp",
+        "tests/StageZoneMatrixRegistryTests.cpp"
+      ],
+      "representative_symbol_consumers": [],
+      "canonical_counterparts": [],
+      "action": "Delete pair after adapting StageZoneMatrixRegistryTests and OriginalCollisionPartsOwnerTests to original StageDataHolder/placement binding, or retire duplicate-implementation fixture. Preserve repeated/empty-zone coverage through canonical owner.",
+      "confidence": "high",
+      "build_selection": "Included by listed current consumers; delete this header with its API",
+      "end_state": "No src/compat path or forwarding wrapper remains."
+    }
+  ]
+}

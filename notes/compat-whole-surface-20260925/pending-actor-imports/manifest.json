@@ -1,0 +1,147 @@
+[
+  {
+    "path": "src/Game/MapObj/ChipBase.hpp",
+    "saved_sha256": "aacb1406ae0cfa4ccfe5e832c514749e8d1eece0f9bff513a5c408d206d067f7",
+    "baseline_sha256": "b73d7f26aaf7f600bb20948f4f344a84c21816b8c2b269eea60718464cf5e36f"
+  },
+  {
+    "path": "src/Game/MapObj/ChipGroup.cpp",
+    "saved_sha256": "5a99bc671fd11ac02c74d4fdf368e6758bbbe4c863e271734b0a6bcc37cdfbbf",
+    "baseline_sha256": "1ecca94d83f1004246549b5148e2462b57674dfe9743f8a61c48cd0a36454abc"
+  },
+  {
+    "path": "src/Game/MapObj/ChipGroup.hpp",
+    "saved_sha256": "026e517e560356d4e8712181292676a5e214c8f7f557599dea37632b2f060fa5",
+    "baseline_sha256": "c638931beb2eb519d5c318edbccedb5b44d124946821a9b8b99f8ac4691d95e6"
+  },
+  {
+    "path": "src/Game/MapObj/ChipHolder.cpp",
+    "saved_sha256": "8bef4b60ca61dd4bd20371791d37780aa7c7dc89ef43c9c786d8e1444f9b4c25",
+    "baseline_sha256": "231e0047924889769283e96e299ef891af33a749df1425f857f2b7577fcdb107"
+  },
+  {
+    "path": "src/Game/MapObj/SpinDriverPathDrawer.hpp",
+    "saved_sha256": "5f93af1d19c7334be752bafda752759acf54752a58930900bc918d1205a2207f",
+    "baseline_sha256": "fd858859c5744c509f041163568043f18177514171b0f56e091c1f92ef455f14"
+  },
+  {
+    "path": "src/Game/MapObj/SpinDriverShootPath.hpp",
+    "saved_sha256": "77582602a88fadf081b916c9dc4e08954e7b609de9ae16679b474ca01187661d",
+    "baseline_sha256": "856441f490bc50b0ff15793cf2cdbc279040c5eb89e6101cad7bbf54f1630a87"
+  },
+  {
+    "path": "src/Game/Util/ParabolicPath.hpp",
+    "saved_sha256": "117f45b002b2d1259804304e0ecd2f5c3c001e7ba46d365f35a1036034f6dcd5",
+    "baseline_sha256": "1b12383c304c0faaca4190f0cc03216cb06ece5c81ae1f7b25eba1311b8f7957"
+  },
+  {
+    "path": "src/Game/MapObj/BlueChip.cpp",
+    "saved_sha256": "41a6d0fbbdfcc3e10003e5a102b5869c557ecb7e08a4edf6bafa484231bbc36b",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/MapObj/BlueChip.hpp",
+    "saved_sha256": "7d060cc6da0c116d03a4faff2421ca9a3b026c01133cfb96e1115ef23928eca0",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/MapObj/ChipBase.cpp",
+    "saved_sha256": "0a040743ee280c4ad4d5c90d7b84119f03646e00e63273898e2d30dcdc2fdf04",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/MapObj/SpinDriver.cpp",
+    "saved_sha256": "ce965908d9359a2e6a357e3165816acf7249583aaa8aae0dd524aad8489e31b2",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/MapObj/SpinDriver.hpp",
+    "saved_sha256": "04c6a6453bf2b054326512b9d33d0e0728acfca38c9feafec91f7f040bfd5588",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/MapObj/SpinDriverCamera.cpp",
+    "saved_sha256": "fbff53314d4b06d16df92c1b78465a37b8f166c8a8e6f91236eae30607ef4c80",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/MapObj/SpinDriverCamera.hpp",
+    "saved_sha256": "c15edff563d9b817c7ed554ce8d42d81c840d7788e79d3757a0a3cf0b673b64c",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/MapObj/SpinDriverOperateRing.cpp",
+    "saved_sha256": "f20e4c58ddfd3849d2f70d5b4fded2de5c4c89af06a67116f565398acd118697",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/MapObj/SpinDriverOperateRing.hpp",
+    "saved_sha256": "7b44752b4102cd099c24e4de739c24cb24177eb9f2ec81ce10428bd06c629526",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/MapObj/SpinDriverPathDrawer.cpp",
+    "saved_sha256": "96c29e3985a3d691a16544e7bbed37a513c27aefa858128f49e9ed041ed9e9c5",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/MapObj/SpinDriverShootPath.cpp",
+    "saved_sha256": "c63a92b71e11bff02e4aa321b3232b264dd180c49ca490c5af071049865a33f8",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/MapObj/SpinDriverUtil.cpp",
+    "saved_sha256": "53c637100bf8142f1d80341936d75b35c663e463beea0d82983eaabf622d2ab8",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/MapObj/SpinDriverUtil.hpp",
+    "saved_sha256": "7f162c1c607804c2d2d6013f44e9e6629e2fc9f31749d38d6b517c5dcab8cf97",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/MapObj/SuperSpinDriver.cpp",
+    "saved_sha256": "d4d6e9ead2e60c0ccdfc45269e197417542cd661ac5bd73594c02070d124315d",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/MapObj/SuperSpinDriver.hpp",
+    "saved_sha256": "0a308770cbd71a158e020f055197c43a3228dcf5a493952aa115d2ef81e03c39",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/MapObj/YellowChip.cpp",
+    "saved_sha256": "cf158669c8b902239b7c288dea47fd6fb3ce55331aeadbd82a380f3516f1bce7",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/MapObj/YellowChip.hpp",
+    "saved_sha256": "c40b2309a3cb3afc90c3567480874cc31ea74c0c5b42ba79c136d1c9c57d6645",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/Util/MultiEventCamera.cpp",
+    "saved_sha256": "d3c4bede4009ec7c292f03d96d6ae20736e8d9537ab9c0b254fcbf5449ae457a",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/Util/MultiEventCamera.hpp",
+    "saved_sha256": "c80d0fe35e0daac86517f664903e9e133671678995629536a5e414dafcff3597",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/Game/Util/ParabolicPath.cpp",
+    "saved_sha256": "86cd478c7897155c3d07d2d587592adfb23422e1f641810bc917938047f09aae",
+    "baseline_sha256": null
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "saved_sha256": "3454b5d21459bb8daa93dc88bb8f5039db1dd28932237d4f730a7d56ac635777",
+    "baseline_sha256": "2708d8c8fa96cfab173aba81cad842d98e51c747a0c8ad75f107eb52c37c3f22"
+  },
+  {
+    "path": "src/scene/nameobj/NameObjFactory.cpp",
+    "saved_sha256": "2dd342b42aa5c3a96a94bf188d151a59635f9b10405cff9846cc0e44b631533a",
+    "baseline_sha256": "6427cef75c8a01927155a0e53bd94afdf6addb2fe2fb6eafda2e455c416a80c8"
+  }
+]

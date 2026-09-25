@@ -68,6 +68,17 @@ namespace {
         require(std::equal(expected.begin(), expected.end(), static_cast<u8*>(original)), "previous frame's commands remain intact");
     }
 
+    void differed_indirect_register_budget() {
+        J3DShapePacket packet;
+        require(packet.calcDifferedBufferSize(J3DDiffFlag_TevStageIndirect) == 64,
+                "indirect-stage register updates must reserve 45 bytes rounded to a cache line");
+        require(packet.calcDifferedBufferSize(J3DDiffFlag_MatColor | J3DDiffFlag_ColorChan |
+                                             J3DDiffFlag_TevReg | J3DDiffFlag_Fog |
+                                             J3DDiffFlag_Blend | J3DDiffFlag_KonstColor |
+                                             J3DDiffFlag_TevStageIndirect) == 288,
+                "the original seven register groups must all contribute to the display-list budget");
+    }
+
     void primitive_count_and_matrix_index_insertion() {
         constexpr u32 stride = 3;
         constexpr u32 insertion = 2;
@@ -188,10 +199,11 @@ namespace {
 int main() {
     try {
         display_list_recording();
+        differed_indirect_register_budget();
         primitive_count_and_matrix_index_insertion();
         original_shape_array_recording();
         original_multi_matrix_nbt_scale();
-        std::cout << "4 original J3D packet/display-list groups passed\n";
+        std::cout << "5 original J3D packet/display-list groups passed\n";
         return 0;
     } catch (const std::exception& error) {
         std::cerr << error.what() << '\n';

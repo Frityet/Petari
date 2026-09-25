@@ -3,7 +3,7 @@
 #include <JSystem/JUtility/JUTVideo.hpp>
 
 // arrays are generating a constructor for some reason
-WPadPointer::WPadPointer(const WPad* pPad) {
+WPadPointer::WPadPointer(const WPad* pPad) : mPointingPosArray(nullptr), mHorizonArray(nullptr) {
     mPad = pPad;
     mPosPlayRadius = 0.03f;
     mPosSensitivity = 0.5f;
@@ -19,10 +19,21 @@ WPadPointer::WPadPointer(const WPad* pPad) {
     mEnablePastCount = 0;
     mIsPointInScreen = 0;
     _45 = 0;
-    mPointingPosArray = new TVec2f[0x78];
-    mHorizonArray = new TVec2f[0x78];
-    _C = 120;
-    reset();
+    try {
+        mPointingPosArray = new TVec2f[0x78];
+        mHorizonArray = new TVec2f[0x78];
+        _C = 120;
+        reset();
+    } catch (...) {
+        delete[] mHorizonArray;
+        delete[] mPointingPosArray;
+        throw;
+    }
+}
+
+WPadPointer::~WPadPointer() {
+    delete[] mHorizonArray;
+    delete[] mPointingPosArray;
 }
 
 void WPadPointer::reset() {

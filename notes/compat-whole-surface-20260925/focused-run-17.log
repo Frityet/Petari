@@ -1,0 +1,3 @@
+[skip] RMGK01 CubeCamera placement test (set SMGPC_REAL_DISC or place RMGK01.iso in a workspace ancestor)
+[ok] RMGK01 CubeCamera rows construct exactly
+1 AreaObj runtime test(s) passed

@@ -4,7 +4,7 @@
 #include "Game/Camera/CameraTargetObj.hpp"
 #include "Game/Util/MathUtil.hpp"
 
-void CameraTargetObj_FORCE_MATCH_SDATA2() {
+void CameraInnerCylinder_FORCE_MATCH_SDATA2() {
     (void)1.0f;
 }
 

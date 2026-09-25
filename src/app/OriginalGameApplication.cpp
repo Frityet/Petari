@@ -75,10 +75,6 @@
 #include <stdexcept>
 #include <utility>
 
-namespace smgpc::compat {
-void destroy_wpad_children(WPad&) noexcept;
-}
-
 namespace smgpc::app {
 namespace {
 
@@ -439,16 +435,7 @@ private:
             scene::unregister_scene_name_obj(*object);
             compat::release_name_obj_runtime_state(object);
         }
-        if (objects && objects->mWPadHolder) {
-            for (auto* pad : objects->mWPadHolder->mPad) {
-                compat::destroy_wpad_children(*pad);
-                delete pad;
-            }
-            for (s32 channel = 0; channel < WPAD_MAX_CONTROLLERS; ++channel)
-                delete[] objects->mWPadHolder->mReadDataInfoArray[channel].mStatusArray;
-            delete[] objects->mWPadHolder->mReadDataInfoArray;
-            delete std::exchange(objects->mWPadHolder, nullptr);
-        }
+        if (objects) delete std::exchange(objects->mWPadHolder, nullptr);
         if (objects) runtime::destroy_message_holder(objects->mMessageHolder);
         holders.reset();
         compat::destroy_file_loader(SingletonHolder<FileLoader>::get());

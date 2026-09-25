@@ -10,7 +10,7 @@
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
-#include "compat/DemoSceneRuntime.hpp"
+#include "compat/DemoDirectorOwnership.hpp"
 #include "compat/StarPointerDepthOwnership.hpp"
 #include "camera/CameraDirectorRuntime.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -227,7 +227,8 @@ namespace {
             scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 4U << 20));
         require(MR::createSceneObj(SceneObj_MessageSensorHolder) != nullptr,
                 "the exact message contract requires the retail scene message sensor");
-        auto demo_runtime = smgpc::compat::DemoSceneRuntime{dvd, placements};
+        require(MR::createSceneObj(SceneObj_DemoDirector) != nullptr,
+                "simple demo-cast registration requires the actual scene DemoDirector");
         auto handle = SphereSelectorHandle{"FileSelect SphereSelectorHandle"};
         const auto iter = JMapInfoIter(&row->jmap_info, row->jmap_entry_index);
         const auto marker = scheduler.registration_marker();
@@ -243,7 +244,7 @@ namespace {
                     selector->mSphereGroup->getObjNum() == 1 &&
                     selector->mSphereGroup->getActor(0) == &handle,
                 "exact placement init must synchronously bind the real handle into SceneObj 0x6F");
-        require(demo_runtime.simple_cast_registration_count(&handle) == 1U,
+        require(smgpc::scene::current_demo_director_ownership()->simple_cast_registration_count(&handle) == 1U,
                 "exact placement init must retain the retail simple demo-cast registration");
 
         require(SphereSelectorFunction::isMsgSelectStart(

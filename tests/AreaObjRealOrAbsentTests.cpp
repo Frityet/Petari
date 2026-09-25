@@ -1,10 +1,12 @@
 #include "SourceMirrorEncoding.hpp"
 #include "resource/TextEncoding.hpp"
 #include "SceneExecutionFixture.hpp"
+#include "OriginalSceneControllerFixture.hpp"
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
 #include "Game/AreaObj/AreaObjContainer.hpp"
 #include "Game/AreaObj/CubeCamera.hpp"
+#include "Game/AreaObj/GlaringLightArea.hpp"
 #include "Game/AreaObj/LightArea.hpp"
 #include "Game/AreaObj/LightAreaHolder.hpp"
 #include "Game/AreaObj/MessageArea.hpp"
@@ -75,6 +77,16 @@ namespace {
         }
         throw std::runtime_error("the unavailable operation silently returned instead of rejecting the query");
     }
+
+    struct AreaContainerFixture {
+        std::shared_ptr<smgpc::compat::JkrHeapRuntime> heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+        std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain = smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20);
+        smgpc::runtime::SceneScheduler scheduler;
+        smgpc::runtime::SceneSchedulerBinding scheduler_binding{scheduler};
+        smgpc::test::OriginalSceneControllerFixture original{heaps};
+        smgpc::test::SceneExecutionFixture execution{scheduler, domain, nullptr, nullptr,
+                                                   &original.scene, original.controller().mObjHolder};
+    };
 
     void test_area_queries_reject_missing_scene_owner() {
         constexpr auto position = TVec3f{10.0F, 20.0F, 30.0F};
@@ -158,8 +170,6 @@ namespace {
             std::pair{"src/Game/AreaObj/MessageArea.cpp", "src/Game/AreaObj/MessageArea.cpp"},
             std::pair{"include/Game/AreaObj/LightArea.hpp", "src/Game/AreaObj/LightArea.hpp"},
             std::pair{"src/Game/AreaObj/LightArea.cpp", "src/Game/AreaObj/LightArea.cpp"},
-            std::pair{"include/Game/AreaObj/LightAreaHolder.hpp", "src/Game/AreaObj/LightAreaHolder.hpp"},
-            std::pair{"src/Game/AreaObj/LightAreaHolder.cpp", "src/Game/AreaObj/LightAreaHolder.cpp"},
         };
         for (const auto &[retail_source, host_source] : source_pairs) {
             require(smgpc::test::source_matches_with_cp932(read_file(decomp_root / retail_source), read_file(*pc_port_root / host_source)),
@@ -167,52 +177,30 @@ namespace {
         }
     }
 
-    void verify_installed_descriptor_managers(AreaObjContainer &container) {
-        const auto managers = smgpc::scene::complete_area_obj_manager_descriptors();
-        auto installed_manager_names = std::vector<std::string_view>{};
-        auto base_manager_count = std::size_t{};
-        auto previous_order = s32{-1};
-        for (const auto &descriptor : managers) {
-            require(!descriptor.name.empty() && descriptor.creator != nullptr &&
-                        descriptor.retail_order > previous_order && descriptor.capacity > 0,
-                    "the manager catalog must contain complete unique rows in strict retail order");
-            previous_order = descriptor.retail_order;
-            require(std::ranges::find(installed_manager_names, descriptor.name) == installed_manager_names.end(),
-                    "each original manager must have one canonical catalog row");
-            installed_manager_names.push_back(descriptor.name);
-            const auto name = std::string(descriptor.name);
-            auto *manager = container.getManager(name.c_str());
-            require(manager != nullptr && manager->_18 == descriptor.capacity,
-                    "every ready catalog manager must exist even without completed placements");
-            if (typeid(*manager) == typeid(AreaObjMgr)) ++base_manager_count;
-            const auto derived_name = name + "PlacementVariant";
-            const auto expected = std::ranges::find_if(installed_manager_names, [&](const auto &installed_name) {
-                return starts_with(derived_name, installed_name);
-            });
-            require(expected != installed_manager_names.end() &&
-                        std::string_view(container.getManager(derived_name.c_str())->mName) == *expected,
-                    "manager lookup must preserve retail prefix and first-match ordering");
+    void verify_installed_original_managers(AreaObjContainer &container) {
+        auto managers = std::size_t{};
+        auto base_managers = std::size_t{};
+        for (auto *object : smgpc::compat::snapshot_name_obj_runtime_objects()) {
+            auto *manager = dynamic_cast<AreaObjMgr *>(object);
+            if (manager == nullptr) continue;
+            ++managers;
+            if (typeid(*manager) == typeid(AreaObjMgr)) ++base_managers;
+            require(smgpc::scene::current_scene_obj_holder_binding_owns(manager),
+                    "the scene transaction must own every manager created by the original container");
+            require(container.getManager(manager->mName) == manager,
+                    "every manager must be reachable through the original container");
+            const auto variant = std::string(manager->mName) + "PlacementVariant";
+            require(container.getManager(variant.c_str()) == manager,
+                    "original manager lookup must accept a matching name prefix");
         }
-        require(base_manager_count == 61U,
-                "all 61 original base AreaObjMgr rows must exist independently of actor coverage");
-
-        for (const auto &descriptor : smgpc::scene::complete_area_obj_placement_descriptors()) {
-            require(!descriptor.object_name.empty() && descriptor.object_creator != nullptr,
-                    "the public AreaObj registry must expose complete placements only");
-            require(smgpc::scene::find_complete_area_obj_placement_descriptor(descriptor.object_name) == &descriptor,
-                    "placement lookup must return the canonical registry entry");
-            const auto manager = std::ranges::find(managers, descriptor.manager_name,
-                                                  &smgpc::scene::AreaObjManagerDescriptor::name);
-            require(manager != managers.end() && manager->retail_order == descriptor.retail_manager_order &&
-                        manager->capacity == descriptor.manager_capacity && manager->creator == descriptor.manager_creator &&
-                        manager->finalize == descriptor.manager_finalize,
-                    "a complete placement must resolve its exact canonical manager closure");
-        }
+        require(managers == 67U && base_managers == 61U,
+                "the complete original table must construct 61 base and six specialized managers");
     }
 
     void test_manager_readiness_does_not_fabricate_placement_support() {
-        auto holder = SceneObjHolder{};
-        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        auto fixture = AreaContainerFixture{};
+        auto& holder = fixture.execution.holder();
+        auto& binding = fixture.execution.objects();
         auto *container = static_cast<AreaObjContainer *>(holder.create(SceneObj_AreaObjContainer));
         auto *manager = container->getManager("ChangeBgmCube");
         require(typeid(*manager) == typeid(AreaObjMgr) && manager->_18 == 0x20,
@@ -230,104 +218,9 @@ namespace {
         require(!smgpc::scene::placement_has_complete_area_obj_runtime(
                     "WarpCube", "jmp/placement/common/areaobjinfo", true),
                 "installing WarpCubeMgr must not claim the specialized WarpCube placement is complete");
-        require_throws<std::logic_error>([&] { (void)container->getManager("GlaringLightArea"); },
-                                        "No complete retail AreaObj manager");
-    }
-
-    void test_retail_prefix_collision_uses_first_manager() {
-        auto short_prefix = AreaObjMgr{4, "Prefix"};
-        auto long_prefix = AreaObjMgr{4, "PrefixLong"};
-        const auto query = std::string_view{"PrefixLongCube"};
-
-        auto retail_order = std::array<AreaObjMgr *, 2U>{&short_prefix, &long_prefix};
-        require(smgpc::scene::find_area_obj_manager_by_retail_prefix(retail_order, query) ==
-                    &short_prefix,
-                "a prefix collision must select the first manager in retail descriptor order");
-
-        auto reversed_order = std::array<AreaObjMgr *, 2U>{&long_prefix, &short_prefix};
-        require(smgpc::scene::find_area_obj_manager_by_retail_prefix(reversed_order, query) ==
-                    &long_prefix,
-                "prefix selection must follow registry order rather than longest-name preference");
-    }
-
-    class LifecycleManager final : public AreaObjMgr {
-    public:
-        LifecycleManager(int id, std::vector<int> &events, int &destroyed)
-            : AreaObjMgr(4, "LifecycleManager"), _id(id), _events(events), _destroyed(destroyed) {
-        }
-
-        ~LifecycleManager() override {
-            ++_destroyed;
-        }
-
-        void initAfterPlacement() override {
-            _events.push_back(_id);
-        }
-
-        void finalize() {
-            _events.push_back(100 + _id);
-        }
-
-    private:
-        int _id;
-        std::vector<int> &_events;
-        int &_destroyed;
-    };
-
-    void finalize_lifecycle_manager(AreaObjMgr &manager) {
-        dynamic_cast<LifecycleManager &>(manager).finalize();
-    }
-
-    void test_manager_lifecycle_is_owned_ordered_and_once() {
-        auto events = std::vector<int>{};
-        auto destroyed = 0;
-        {
-            auto runtime = smgpc::scene::AreaObjRuntime{};
-            (void)runtime.adopt_manager(
-                std::make_unique<LifecycleManager>(1, events, destroyed),
-                finalize_lifecycle_manager);
-            (void)runtime.adopt_manager(
-                std::make_unique<LifecycleManager>(2, events, destroyed),
-                finalize_lifecycle_manager);
-            runtime.init_after_placement();
-            runtime.init_after_placement();
-            require(events == std::vector<int>({1, 2, 101, 102}),
-                    "scene-owned AreaObj managers must initialize then finalize in creation order exactly once");
-            require_throws<std::logic_error>(
-                [&] {
-                    (void)runtime.adopt_manager(
-                        std::make_unique<LifecycleManager>(3, events, destroyed));
-                },
-                "after the scene post-placement phase");
-        }
-        require(destroyed == 3,
-                "AreaObjRuntime must destroy every adopted manager, including a rejected late adoption");
-    }
-
-    void test_delegated_manager_postpass_runs_once() {
-        auto events = std::vector<int>{};
-        auto destroyed = 0;
-        {
-            auto runtime = smgpc::scene::AreaObjRuntime{};
-            auto* manager = runtime.adopt_manager(
-                std::make_unique<LifecycleManager>(1, events, destroyed),
-                finalize_lifecycle_manager);
-            const auto delegate_identity = std::uint8_t{};
-            smgpc::compat::delegate_name_obj_runtime_postpass(
-                manager, &delegate_identity);
-
-            // The authored-placement delegate owns the scene-wide callback;
-            // AreaObjRuntime retains only its manager-specific finalizer.
-            manager->initAfterPlacement();
-            runtime.init_after_placement();
-            runtime.init_after_placement();
-            require(events == std::vector<int>({1, 101}),
-                    "a delegated AreaObj manager must run one global postpass and one finalizer");
-            smgpc::compat::release_name_obj_runtime_postpass_delegation(
-                manager, &delegate_identity);
-        }
-        require(destroyed == 1,
-                "delegated AreaObj manager storage must remain owned by its runtime");
+        auto *glaring = dynamic_cast<GlaringLightAreaMgr *>(container->getManager("GlaringLightArea"));
+        require(glaring != nullptr && glaring->_18 == 0x40 && glaring->find_in(TVec3f{}) == nullptr,
+                "the original GlaringLightArea manager must exist even before actor placement support");
     }
 
     void configure_unit_cube(CubeCameraArea &area, s32 priority, s32 category_mask) {
@@ -342,8 +235,9 @@ namespace {
     }
 
     void test_cube_camera_manager_finalizes_priority_and_reverse_query() {
-        auto holder = SceneObjHolder{};
-        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        auto fixture = AreaContainerFixture{};
+        auto& holder = fixture.execution.holder();
+        auto& binding = fixture.execution.objects();
         auto *container = dynamic_cast<AreaObjContainer *>(holder.create(SceneObj_AreaObjContainer));
         require(container != nullptr, "the CubeCamera fixture requires the real scene-owned container");
 
@@ -366,9 +260,13 @@ namespace {
         manager->entry(&middle);
 
         binding.init_after_placement();
+        require(manager->getAreaObj(0) == &high && manager->getAreaObj(1) == &low,
+                "the general NameObj postpass must not substitute for the camera creator's load phase");
+        // GameCameraCreator invokes this original phase after camera creation.
+        manager->initAfterLoad();
         require(manager->getAreaObj(0) == &low && manager->getAreaObj(1) == &middle &&
                     manager->getAreaObj(2) == &high,
-                "the generalized manager-finalize callback must run CubeCameraMgr::initAfterLoad priority sorting");
+                "the original CubeCameraMgr::initAfterLoad must sort camera priority");
         binding.init_after_placement();
         require(manager->getAreaObj(0) == &low && manager->getAreaObj(1) == &middle &&
                     manager->getAreaObj(2) == &high,
@@ -418,7 +316,9 @@ namespace {
         auto resources = smgpc::compat::ResourceHolderService{dvd, domain, process.mem1_heap()};
         auto scheduler = smgpc::runtime::SceneScheduler{};
         auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
-        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain);
+        auto original = smgpc::test::OriginalSceneControllerFixture(process.host_heaps());
+        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain, nullptr, nullptr,
+                                                          &original.scene, original.controller().mObjHolder);
         auto &holder = execution.holder();
         auto &binding = execution.objects();
         auto *container = dynamic_cast<AreaObjContainer *>(holder.create(SceneObj_AreaObjContainer));
@@ -479,8 +379,9 @@ namespace {
         const auto registry_baseline =
             smgpc::compat::name_obj_runtime_state_count();
         {
-            auto holder = SceneObjHolder{};
-            auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+            auto fixture = AreaContainerFixture{};
+            auto& holder = fixture.execution.holder();
+            auto& binding = fixture.execution.objects();
             auto *object = holder.create(SceneObj_AreaObjContainer);
             auto *container = dynamic_cast<AreaObjContainer *>(object);
 
@@ -489,11 +390,9 @@ namespace {
                     "a bound scene must install the real AreaObjContainer SceneObj");
             require(holder.create(SceneObj_AreaObjContainer) == container,
                     "SceneObj creation must retain one container per scene");
-            verify_installed_descriptor_managers(*container);
-            require(smgpc::compat::name_obj_runtime_owner(
-                        container->getManager("SwitchArea")) ==
-                        smgpc::scene::current_area_obj_runtime(),
-                    "AreaObj managers must retain one independent scene-runtime storage owner");
+            verify_installed_original_managers(*container);
+            require(smgpc::scene::current_scene_obj_holder_binding_owns(container->getManager("SwitchArea")),
+                    "AreaObj managers must use the general scene transaction owner");
             require_throws<std::logic_error>(
                 [&] { (void)container->getManager("__SMGPC_missing_area_manager__"); },
                 "No complete retail AreaObj manager");
@@ -510,18 +409,15 @@ namespace {
                 "destroying the scene-owned LightArea manager must detach its non-owning lookup before reuse");
 
         {
-            auto second_holder = SceneObjHolder{};
-            const auto second_binding =
-                smgpc::scene::SceneObjHolderBinding(second_holder);
+            auto fixture = AreaContainerFixture{};
+            auto& second_holder = fixture.execution.holder();
             auto *second_container = dynamic_cast<AreaObjContainer *>(
                 second_holder.create(SceneObj_AreaObjContainer));
             require(second_container != nullptr &&
                         dynamic_cast<LightAreaHolder *>(
                             second_container->getManager("LightArea")) !=
                             nullptr &&
-                        smgpc::compat::name_obj_runtime_owner(
-                            second_container->getManager("LightArea")) ==
-                            smgpc::scene::current_area_obj_runtime(),
+                        smgpc::scene::current_scene_obj_holder_binding_owns(second_container->getManager("LightArea")),
                     "destroying a scene binding must release container and manager ownership for the next scene");
         }
         require(smgpc::compat::name_obj_runtime_state_count() ==
@@ -576,11 +472,8 @@ namespace {
             const auto *found = smgpc::scene::find_complete_area_obj_placement_descriptor(object_name);
             require(found != nullptr, "every previously completed area must remain registered");
             const auto &descriptor = *found;
-            require(descriptor.object_name == object_name && descriptor.manager_name == manager_name &&
-                        descriptor.retail_manager_order == retail_order &&
-                        descriptor.manager_capacity == capacity &&
-                        (descriptor.manager_finalize != nullptr) == has_finalize,
-                    "the completed descriptor subset must retain exact retail manager-table data");
+            require(descriptor.object_name == object_name && descriptor.object_creator != nullptr,
+                    "the placement catalog must retain each original creator");
             auto actor = std::unique_ptr<NameObj>(descriptor.object_creator(object_name));
             const auto *area = dynamic_cast<const AreaObj *>(actor.get());
             require(area != nullptr && area->mFormType == form_type,
@@ -590,11 +483,6 @@ namespace {
             require(std::ranges::count(descriptors, descriptor.object_name,
                                        &smgpc::scene::AreaObjPlacementDescriptor::object_name) == 1,
                     "each completed placement must have exactly one canonical descriptor");
-        }
-        for (auto index = std::size_t{1U}; index < descriptors.size(); ++index) {
-            require(descriptors[index - 1U].retail_manager_order <=
-                        descriptors[index].retail_manager_order,
-                    "the complete descriptor subset must preserve retail cCreateTable order");
         }
         if (!descriptors.empty()) {
             require(smgpc::scene::placement_has_complete_area_obj_runtime(
@@ -651,7 +539,9 @@ namespace {
             auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20);
             auto scheduler = smgpc::runtime::SceneScheduler{};
             auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
-            auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain);
+            auto original = smgpc::test::OriginalSceneControllerFixture(heaps);
+        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain, nullptr, nullptr,
+                                                          &original.scene, original.controller().mObjHolder);
             auto &holder = execution.holder();
             auto &binding = execution.objects();
             {
@@ -675,9 +565,8 @@ namespace {
             auto objects = std::vector<std::unique_ptr<NameObj>>{};
             for (const auto &[name, manager_name, order, capacity, form, inside, outside_side, outside_top] : cases) {
                 const auto *descriptor = smgpc::scene::find_complete_area_obj_placement_descriptor(name);
-                require(descriptor != nullptr && descriptor->manager_name == manager_name &&
-                            descriptor->retail_manager_order == order && descriptor->manager_capacity == capacity,
-                        "effect areas must retain the exact retail manager identity, order and capacity");
+                require(descriptor != nullptr && descriptor->object_creator != nullptr,
+                        "effect areas must retain their original placement creator");
                 auto *manager = MR::getAreaObjContainer()->getManager(manager_name);
                 require(typeid(*manager) == typeid(AreaObjMgr) && manager->_18 == capacity,
                         "generic effects must use the original base AreaObjMgr");
@@ -789,7 +678,9 @@ namespace {
         auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20);
         auto scheduler = smgpc::runtime::SceneScheduler{};
         auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
-        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain);
+        auto original = smgpc::test::OriginalSceneControllerFixture(heaps);
+        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain, nullptr, nullptr,
+                                                          &original.scene, original.controller().mObjHolder);
         auto &holder = execution.holder();
         auto &binding = execution.objects();
         for (const auto scene_obj : {SceneObj_StageSwitchContainer, SceneObj_SwitchWatcherHolder,
@@ -834,6 +725,8 @@ namespace {
         }
 
         binding.init_after_placement();
+        // Original GameCameraCreator finishes the camera load before querying priorities.
+        manager->initAfterLoad();
         execution.complete_initialization();
         require(manager->mArray.size() == camera_rows.size(),
                 "all 16 real rows must enter the one scene-owned CubeCamera manager");
@@ -878,7 +771,9 @@ namespace {
         auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20);
         auto scheduler = smgpc::runtime::SceneScheduler{};
         auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
-        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain);
+        auto original = smgpc::test::OriginalSceneControllerFixture(heaps);
+        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain, nullptr, nullptr,
+                                                          &original.scene, original.controller().mObjHolder);
         auto &holder = execution.holder();
         auto &binding = execution.objects();
         for (const auto scene_obj : {SceneObj_StageSwitchContainer, SceneObj_SwitchWatcherHolder,
@@ -1008,7 +903,9 @@ namespace {
         auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20);
         auto scheduler = smgpc::runtime::SceneScheduler{};
         auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
-        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain);
+        auto original = smgpc::test::OriginalSceneControllerFixture(heaps);
+        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain, nullptr, nullptr,
+                                                          &original.scene, original.controller().mObjHolder);
         auto &holder = execution.holder();
         auto &binding = execution.objects();
         for (const auto scene_obj : {SceneObj_StageSwitchContainer, SceneObj_SwitchWatcherHolder,
@@ -1219,8 +1116,9 @@ namespace {
     void test_area_movement_uses_actual_sphere_and_arguments() {
         TVec3f velocity(1, 2, 3);
         require_throws<std::logic_error>([&] { MR::calcAreaMoveVelocity(&velocity, TVec3f(0,0,0)); }, "active scene-owned");
-        auto holder = SceneObjHolder{};
-        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        auto fixture = AreaContainerFixture{};
+        auto& holder = fixture.execution.holder();
+        auto& binding = fixture.execution.objects();
         auto* container = static_cast<AreaObjContainer*>(holder.create(SceneObj_AreaObjContainer));
         auto* manager = container->getManager("AreaMoveSphere");
         require(manager != nullptr && manager->_18 == 0x10, "Area movement requires the actual retail manager");
@@ -1257,10 +1155,7 @@ int main(int argc, char **argv) {
         TestCase{"AreaObj source boundaries are exact", test_area_obj_source_boundaries_are_exact},
         TestCase{"area queries reject missing scene owner", test_area_queries_reject_missing_scene_owner},
         TestCase{"scene holder owns real container and managers", test_scene_holder_owns_real_container_and_managers},
-        TestCase{"retail prefix collision uses first manager", test_retail_prefix_collision_uses_first_manager},
         TestCase{"manager readiness does not fabricate placement support", test_manager_readiness_does_not_fabricate_placement_support},
-        TestCase{"manager lifecycle owned ordered and once", test_manager_lifecycle_is_owned_ordered_and_once},
-        TestCase{"delegated manager postpass runs once", test_delegated_manager_postpass_runs_once},
         TestCase{"CubeCamera manager finalizes priority and reverse query", test_cube_camera_manager_finalizes_priority_and_reverse_query},
         TestCase{"LightArea priority and stable zone identity", test_light_area_priority_and_stable_zone_identity},
         TestCase{"descriptor registry and strict area preflight", test_descriptor_registry_and_strict_area_preflight},

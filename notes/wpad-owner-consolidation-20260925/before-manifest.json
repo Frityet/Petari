@@ -1,0 +1,16 @@
+{
+  "src/app/OriginalGameApplication.cpp": "4846d41a76e24b7adb7f7c0e6fc8917e51b01d329c2a8691d37e5dfc344d0549",
+  "src/runtime/RuntimeContext.cpp": "0281ea0af36e4af876f1d4431e505b76a0446d5217d0d6634fcc24d693a72a2a",
+  "src/Game/System/WPad.cpp": "d2d5f5c2b36f0cb2941d9489e0d2ddba638c5d98bdd036db3a300514c5afd24b",
+  "src/Game/System/WPad.hpp": "f3c5b7b7ea4909d0d5dee07fb51246876cb61280513b6e818ad35554186ec208",
+  "src/Game/System/WPadHolder.hpp": "721476827c06c6393a49fa54362050f820f52cd9fe1ff59bbf8f179a7d69849c",
+  "src/Game/System/WPadPointer.cpp": "5eb140a50a293046af6ca22eee81fc32f3c688b5bef43dce9209b6e89e182bf5",
+  "src/Game/System/WPadPointer.hpp": "70b48f4160a3da493ac7ed7128e59d29ed2a63f589d7ffc465b1129da7d473d2",
+  "src/Game/System/WPadRumble.cpp": "aaf26ce26b9188be8cd475ae20e1dc35605bc394240cdf3d7a1f34aa70470f55",
+  "src/compat/WPadOwnership.cpp": "25fca7e5ed1605ba0f9a4c7fd4957026ed8ac2dfa23a9addebac3e34007a746f",
+  "src/compat/WPadDestruction.cpp": "f8f78b57913c86f1646ae2fa97ccbf027c6b857dc4c74aa8fd633abb980e5f46",
+  "src/compat/OriginalWPadHolder.cpp": "ce82b871be2ea41848f7482348546a5bc9ebcf35ba940d3b4ea9dc355117313e",
+  "src/compat/OriginalWPadSpeaker.cpp": "be565ade0d2c716279d6593a6d6d729a22683cf955f33bd2703e5228c23febf9",
+  "src/compat/RumbleCompat.cpp": "da9619927fa254568105721b3ed7c39596bccb194411dd92cc7a8322cebc22ff",
+  "src/compat/RumbleCompat.hpp": "0807df44355ec132e2a6025d5cdc177d4fc507341df961338494c280f1c0cdbe"
+}

@@ -1,0 +1,70 @@
+{
+  "files": [
+    {
+      "path": "src/compat/WPadDestruction.cpp",
+      "status": "deleted",
+      "destination": [
+        "src/Game/System/WPad.cpp",
+        "src/Game/System/WPadPointer.cpp",
+        "src/Game/System/WPadHolder.cpp"
+      ],
+      "evidence": "Foreign child deletion is now real class destruction; WPadHolder cancels SDK writes before WPadInfoChecker buffers die."
+    },
+    {
+      "path": "src/compat/OriginalWPadHolder.cpp",
+      "status": "deleted",
+      "destination": [
+        "src/Game/System/WPadHolder.cpp"
+      ],
+      "evidence": "Original holder methods consolidated with native callback lifetime and rollback. Existing alternate require_wpad_holder lookup remains a documented dependency."
+    },
+    {
+      "path": "src/compat/OriginalWPadSpeaker.cpp",
+      "status": "deleted",
+      "destination": [
+        "src/Game/Speaker/SpkSystem.cpp",
+        "src/Game/Speaker/SpkSpeakerCtrl.cpp"
+      ],
+      "evidence": "12 connection-control methods extracted verbatim from merged canonical donor. No speaker mixer implementation claimed."
+    },
+    {
+      "path": "src/compat/RumbleCompat.cpp",
+      "status": "deleted",
+      "destination": [],
+      "evidence": "RuntimeContext attachment was sole caller. Production has no RumbleService request callers; original WPadRumble already directly uses WPADControlMotor."
+    },
+    {
+      "path": "src/compat/RumbleCompat.hpp",
+      "status": "deleted",
+      "destination": [],
+      "evidence": "Removed RuntimeContext include and unused actuator attachment; empty legacy rumble event tracing remains outside this bounded batch."
+    },
+    {
+      "path": "src/compat/WPadOwnership.cpp",
+      "status": "remaining-modified",
+      "destination": [
+        "src/Game/System/WPadHolder.cpp",
+        "src/Game/Util/MemoryUtil.cpp"
+      ],
+      "evidence": "Removed private-member access trick, dummy WPad prewarm, duplicate manual child cleanup and redundant callback client scope. Still needed by StarPointerDepthOwnership alternate bootstrap and6 dedicated tests. Native lifecycle now actual class ownership.",
+      "blocking_consumers": [
+        "src/compat/StarPointerDepthOwnership.cpp",
+        "src/runtime/RuntimeContext.cpp",
+        "src/compat/StageSessionState.cpp",
+        "src/compat/OriginalStarPointerDirector.cpp",
+        "src/compat/OriginalStarPointerDepth.cpp",
+        "src/compat/OriginalStarPointerOwnerQueries.cpp"
+      ],
+      "followup": "Remove whole alternate pointer bootstrap and migrate tests to real process-owned WPad data; restore MR heap callbacks to MemoryUtil and canonical holder lookup to GameSystem."
+    },
+    {
+      "path": "src/compat/WPadOwnership.hpp",
+      "status": "remaining-unchanged",
+      "destination": [],
+      "evidence": "Public alternate owner API retained until listed production bootstrap/tests migrate; not renamed or newly wrapped."
+    }
+  ],
+  "deleted_count": 5,
+  "remaining_count": 2,
+  "validation": "Read-only donor extraction checks and git diff --check; no build/test/staging/commit performed. Parent owns source graph regeneration."
+}

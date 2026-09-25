@@ -9,12 +9,15 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include <algorithm>
 #include <cstring>
+#include <aurora/exception.hpp>
+#include <stdexcept>
+#include "Game/Util/JMapInfo.hpp"
 
 namespace {
-    struct AreaObjMgrNameComparator : public std::binary_function< AreaObjMgr*, const char*, bool > {
-        bool operator()(AreaObjMgr* pManager, const char* pName) const {
-            const char* str = strstr(pName, pManager->mName);
-            return str != nullptr && str == pName;
+    struct IsManagerName {
+        bool operator()(const AreaObjMgr* pManager, const char* pName) const {
+            const char* pMatch = strstr(pName, pManager->mName);
+            return pMatch != nullptr && pMatch == pName;
         }
     };
 
@@ -378,8 +381,15 @@ void AreaObjContainer::init(const JMapInfoIter& rIter) {
 }
 
 AreaObjMgr* AreaObjContainer::getManager(const char* pName) const {
-    return *std::find_if(&mManagerArray[0], &mManagerArray[mNumManagers],
-                         std::binder2nd< AreaObjMgrNameComparator, const char* >(AreaObjMgrNameComparator(), pName));
+    if (pName == nullptr) {
+        aurora::throw_host_exception<std::invalid_argument>("AreaObj manager lookup requires a non-null retail name");
+    }
+    const auto found = std::find_if(mManagerArray, mManagerArray + mNumManagers,
+                                  [pName](const AreaObjMgr* manager) { return IsManagerName()(manager, pName); });
+    if (found == mManagerArray + mNumManagers) {
+        aurora::throw_host_exception<std::logic_error>("No complete retail AreaObj manager is installed for the requested name");
+    }
+    return *found;
 }
 
 AreaObj* AreaObjContainer::getAreaObj(const char* pName, const TVec3f& rVec) const {
@@ -388,6 +398,11 @@ AreaObj* AreaObjContainer::getAreaObj(const char* pName, const TVec3f& rVec) con
 
 namespace MR {
     AreaObjContainer* getAreaObjContainer() {
-        return MR::getSceneObj< AreaObjContainer >(SceneObj_AreaObjContainer);
+        auto* holder = MR::getSceneObjHolder();
+        auto* container = holder != nullptr ? static_cast< AreaObjContainer* >(holder->getObj(SceneObj_AreaObjContainer)) : nullptr;
+        if (container == nullptr) {
+            aurora::throw_host_exception<std::logic_error>("AreaObj queries require the active scene-owned retail manager container.");
+        }
+        return container;
     }
 };  // namespace MR

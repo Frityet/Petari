@@ -308,31 +308,6 @@ target("smg-pc-lod-ctrl-real-or-absent-tests")
         realtime_output = true
     })
 
-target("smg-pc-demo-sheet-runtime-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    add_files {
-        "DemoSheetRuntimeTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("demo_sheet_runtime", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
 target("smg-pc-object-name-table-tests")
     set_kind("binary")
     set_default(false)
@@ -354,31 +329,6 @@ target("smg-pc-object-name-table-tests")
         "aurora-vi"
     }
     add_tests("object_name_table", {
-        group = "aurora",
-        rundir = os.projectdir(),
-        realtime_output = true
-    })
-
-target("smg-pc-demo-scene-runtime-tests")
-    set_kind("binary")
-    set_default(false)
-    set_group("tests/aurora")
-    add_files {
-        "DemoSceneRuntimeTests.cpp"
-    }
-    add_deps {
-        "smg-pc-common",
-        "smg-pc-game",
-        "aurora-card",
-        "aurora-dvd",
-        "aurora-gd",
-        "aurora-gx",
-        "aurora-os",
-        "aurora-pad",
-        "aurora-si",
-        "aurora-vi"
-    }
-    add_tests("demo_scene_runtime", {
         group = "aurora",
         rundir = os.projectdir(),
         realtime_output = true
@@ -2598,8 +2548,9 @@ target("smg-pc-original-event-sequence-tests")
     else
         add_ldflags("-Wl,--gc-sections", {force = true})
     end
-    add_files("OriginalEventSequenceTests.cpp", "../src/Game/Player/PlayerEvent.cpp",
-              "../src/compat/HashSortTableCompat.cpp")
+    add_files("OriginalEventSequenceTests.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
     add_tests("original_event_sequence", {
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })

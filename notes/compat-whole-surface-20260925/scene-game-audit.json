@@ -1,0 +1,926 @@
+{
+  "scope": "scene/game ownership review",
+  "review_level": "Ownership and dependency triage; deeper algorithm validation remains required for pending entries. Not a claim that every method matches retail.",
+  "entries": [
+    {
+      "path": "src/compat/AreaObjRuntimeCompat.cpp",
+      "sha256": "84c7393d0f31b70f66e7b69f43bc2fddbb09fca55f2544456cf0b996b074bb72",
+      "lines": 146,
+      "destination": "Game/AreaObj/AreaObjContainer.cpp; MercatorTransformCube.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Replace duplicate manager registry with original 67-row table. Preserve unavailable Mercator method at actual Game owner until recovered.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/DemoCompat.cpp",
+      "sha256": "17796bbaee75c34708975292675a57ebe786b701705614be735ba096a393079a",
+      "lines": 22,
+      "destination": "Game/Demo/DemoDirector.cpp; tests",
+      "disposition": "delete-facade",
+      "evidence": "Four wrappers only forward membership, action counts and actor retirement to DemoSceneRuntime. Replace consumers with original owner queries.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/DemoDirectorOwnership.cpp",
+      "sha256": "22d91b112edb25d4d5b78ab075fcdf87d2b715fa8387e2db7a61d8d4c008a8cb",
+      "lines": 338,
+      "destination": "Game/Demo/DemoDirector.cpp; DemoCastGroup.cpp; Demo*Keeper.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Sidecar owns group children and clears borrowed cast/request pointers; retain retirement semantics in actual destructors before removing external owner.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/DemoDirectorOwnership.hpp",
+      "sha256": "0b9c8ccba21765c65390db3dc65ab65ec38a912a55a3710117ad11f7251536d0",
+      "lines": 44,
+      "destination": "Game/Demo/DemoDirector.cpp; DemoCastGroup.cpp; Demo*Keeper.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Sidecar owns group children and clears borrowed cast/request pointers; retain retirement semantics in actual destructors before removing external owner.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/DemoSceneRuntime.cpp",
+      "sha256": "b14a178b9b25257babaeed1e44cda9f494821a79b8bf8035baab8653debd8180",
+      "lines": 540,
+      "destination": "Game/Demo/DemoDirector.cpp; DemoExecutor.cpp; tests",
+      "disposition": "delete-facade",
+      "evidence": "Parallel archive placement/registration facade over original DemoFunction. Audit production vs fixture consumers and remove manual placement/update path.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/DemoSceneRuntime.hpp",
+      "sha256": "6c13ce9c4efb01ff4115b212d2f3d8eb91f77793aa76b59c87975ebe68b25373",
+      "lines": 194,
+      "destination": "Game/Demo/DemoDirector.cpp; DemoExecutor.cpp; tests",
+      "disposition": "delete-facade",
+      "evidence": "Parallel archive placement/registration facade over original DemoFunction. Audit production vs fixture consumers and remove manual placement/update path.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/DemoSheetRuntime.cpp",
+      "sha256": "91ba7002f5aa97a2a322da4b96ededaf422f4efa590b89a8ec5693105d4f64e7",
+      "lines": 528,
+      "destination": "Game/Demo/DemoTimeKeeper.cpp; Demo*Keeper.cpp; tests",
+      "disposition": "delete-facade",
+      "evidence": "Duplicate parsed sheets, timer, pause, subpart and final-boundary state machine. Original keepers must be sole behavior source.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/DemoSheetRuntime.hpp",
+      "sha256": "9e7a3919bcc9dd8c3fa6c3ea9d7aa1eb4d54ba360a1080dc92c4a462d8e8b932",
+      "lines": 169,
+      "destination": "Game/Demo/DemoTimeKeeper.cpp; Demo*Keeper.cpp; tests",
+      "disposition": "delete-facade",
+      "evidence": "Duplicate parsed sheets, timer, pause, subpart and final-boundary state machine. Original keepers must be sole behavior source.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/DemoStartRequestOwner.cpp",
+      "sha256": "0d7b0701e9fa83a518d310e19c70ef65a84278321b319c7e31a635f4439dfa6f",
+      "lines": 38,
+      "destination": "Game/Demo/DemoStartRequestHolder.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Heap wrapper and deleter for proxy/start-info allocations; canonical holder destructor can own these.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/DemoStartRequestOwner.hpp",
+      "sha256": "affc0617efbd3b373f57d05a5496b1ef486eae0e3713913854a4dcac9f69c1ac",
+      "lines": 30,
+      "destination": "Game/Demo/DemoStartRequestHolder.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Heap wrapper and deleter for proxy/start-info allocations; canonical holder destructor can own these.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/DemoUtilCompat.cpp",
+      "sha256": "f49d528312fe97332ef20d6a0d2fdab66899e04e6ff6181e9ac7a53a786d23a8",
+      "lines": 8,
+      "destination": "Game/Player/MarioAccess.cpp; tests",
+      "disposition": "delete-facade",
+      "evidence": "release_puppetable_demo_control ignores boolean and calls endRemoteDemo(nullptr); remove wrapper after direct original call migration.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/DemoUtilCompat.hpp",
+      "sha256": "a4b6603c59390811d86cbb2e2782d3feaafa0fb4b6760f454a8e28f660305919",
+      "lines": 9,
+      "destination": "Game/Player/MarioAccess.cpp; tests",
+      "disposition": "delete-facade",
+      "evidence": "release_puppetable_demo_control ignores boolean and calls endRemoteDemo(nullptr); remove wrapper after direct original call migration.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/GameDataFunctionCompat.cpp",
+      "sha256": "17c6473ca6d093194b913a2877e82b700567c295e13205216bf27e97607478a2",
+      "lines": 400,
+      "destination": "Game/System/GameDataFunction.cpp; tests",
+      "disposition": "restore-original-owner",
+      "evidence": "Fragmented original GameDataFunction plus thread-local test overrides and missing-operation errors. Restore original user-file/sequence owner and migrate alternate session fixtures.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/GameDataFunctionCompat.hpp",
+      "sha256": "7b68394f5e5fb60fa1153d8d61b067d90441566d077c46a4b7df26e3af3a68e5",
+      "lines": 26,
+      "destination": "Game/System/GameDataFunction.cpp; tests",
+      "disposition": "restore-original-owner",
+      "evidence": "Fragmented original GameDataFunction plus thread-local test overrides and missing-operation errors. Restore original user-file/sequence owner and migrate alternate session fixtures.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/GameDataOwnership.cpp",
+      "sha256": "7226b382ed97b7431d17c4733edf16cb8535818850a9de3cd95a6e5559c39230",
+      "lines": 83,
+      "destination": "Game/System/GameDataHolder.cpp; GameEventFlagTable.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Native teardown manually walks save children and process event table. Place destruction and static ownership at real classes; preserve scene arena retirement.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/GameDataOwnership.hpp",
+      "sha256": "b467e9b582484ccaa32c04790708a1926c03a56bc2ffc150db18e80d78c4cfe3",
+      "lines": 20,
+      "destination": "Game/System/GameDataHolder.cpp; GameEventFlagTable.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Native teardown manually walks save children and process event table. Place destruction and static ownership at real classes; preserve scene arena retirement.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/GameDataSession.cpp",
+      "sha256": "4aa5b6d8a9deb5567b1b834be7ac1245d968dc1825b4bc992b525ab2e0856ada",
+      "lines": 97,
+      "destination": "Game/System/SaveDataHandleSequence.cpp; UserFile.cpp; tests",
+      "disposition": "delete-facade",
+      "evidence": "Alternative selected-file bootstrap synthesizes config and snapshots and publishes thread-local overrides. Original process owns user files already.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/GameDataSession.hpp",
+      "sha256": "9fd568c2c370bf3ee83d03478db157e6988d86fa813b426a6fdf051beecb8ae2",
+      "lines": 42,
+      "destination": "Game/System/SaveDataHandleSequence.cpp; UserFile.cpp; tests",
+      "disposition": "delete-facade",
+      "evidence": "Alternative selected-file bootstrap synthesizes config and snapshots and publishes thread-local overrides. Original process owns user files already.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/GameRuntimeCompat.cpp",
+      "sha256": "0cb80187adabac144f3d6748e4a870bc91b889cadb50dd264a518d9ffb6c6d72",
+      "lines": 55,
+      "destination": "Game/Util/LiveActorUtil.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Original clipping sphere/far/group methods; single native group lifetime capture should attach at ClippingDirector owner.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/GroupCheckManagerCompat.cpp",
+      "sha256": "8c97db2cc14a4fbe890bac5fb4a071fdf3f33e2b237c098b8223e008df6bd3ee",
+      "lines": 257,
+      "destination": "Game/Player/GroupChecker.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "unordered string membership and two-group sidecar replace original group manager; restore original group records and retain only native width/lifetime adaptations.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/GroupCheckManagerCompat.hpp",
+      "sha256": "35971bf1c6250ad152175fc770dd846935b93c1aae73b5aa481e8d547d16058c",
+      "lines": 24,
+      "destination": "Game/Player/GroupChecker.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "unordered string membership and two-group sidecar replace original group manager; restore original group records and retain only native width/lifetime adaptations.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/HashSortTableCompat.cpp",
+      "sha256": "7a4ce2e94466d985e529cec0c2931a404e78442e0f971dbb2b5225bfbc08514c",
+      "lines": 188,
+      "destination": "Game/Util/HashUtil.cpp; MathUtil.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Hash table methods plus unrelated unsigned sorting overload. Native Value width is required; split methods by canonical owner.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/InformationMessageCompat.cpp",
+      "sha256": "e283fc9b9c903caa2559e260d135c19eca68de5ffb0bbf4fedf843184f90d871",
+      "lines": 129,
+      "destination": "Game/Screen/InformationMessage.cpp; GameSceneLayoutHolder.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Alternative global binding captures constructor children; canonical layout holder should own message and rollback/teardown.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/InformationMessageCompat.hpp",
+      "sha256": "ea371ffa479a263a2a1ec42b71b68e6f3cbcce1547b8379bbc98c2af392b117d",
+      "lines": 34,
+      "destination": "Game/Screen/InformationMessage.cpp; GameSceneLayoutHolder.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Alternative global binding captures constructor children; canonical layout holder should own message and rollback/teardown.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/MessageUtilCompat.cpp",
+      "sha256": "ecf6c0669a9cc21d8e77d8a777460a667522213bcd1a31afc4befd48a8b06648",
+      "lines": 39,
+      "destination": "Game/Util/MessageUtil.cpp; Game/System/MessageData.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Direct UTF16 access is necessary when native wchar_t differs. Keep resource-backed conversion at actual message owner and delete extra compat header.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/MessageUtilCompat.hpp",
+      "sha256": "f4179fd90f99e5e138e0b955eb8a73e667067ec3d1d5920d9a74d3cb4e65e9cc",
+      "lines": 16,
+      "destination": "Game/Util/MessageUtil.cpp; Game/System/MessageData.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Direct UTF16 access is necessary when native wchar_t differs. Keep resource-backed conversion at actual message owner and delete extra compat header.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/MtxCompat.cpp",
+      "sha256": "5a5757f78f2f43bd5bc4cd705ec3afed8280fa79bede714c0e24ddea0c9baf0e",
+      "lines": 354,
+      "destination": "Game/Util/MtxUtil.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Extracted matrix/orientation methods and native implementation fragments belong to original MtxUtil. Preserve unfused/fused behavior explicitly.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/NameObjExecuteCompat.cpp",
+      "sha256": "ac792450b7ae8eff2fa4c80dee0244d3b189fdedc8007a4a5814d0ef8afdb272",
+      "lines": 23,
+      "destination": "Game/NameObj/NameObjFinder.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Single find function through alternative registry; original process NameObjHolder lookup can replace it.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/NameObjLifetimeCompat.cpp",
+      "sha256": "bf9ee2e4adb7ca2f04a7b084ba48fbb15d12de70e07a9d29cabeac3f006817b0",
+      "lines": 106,
+      "destination": "Game/NameObj/NameObj.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Entire duplicated NameObj TU. Only constructor registration/rollback and destructor retirement differ; integrate these targeted changes into original owner.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/Nw4rDiagnostics.cpp",
+      "sha256": "c2242cc0ab1e758676a351617f4a3e019a8f8d837600e19ede2d02354e711643",
+      "lines": 19,
+      "destination": "nw4r/db/db_assert.cpp",
+      "disposition": "narrow-library-adaptation",
+      "evidence": "Host exception/reporting boundary for Panic; canonical library owner should provide native implementation, without Game policy.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/Nw4rLayoutRecordsCompat.cpp",
+      "sha256": "034fde335b9184bd0483f544b74d79ba52f20bebba81d7282459fc3578762be3",
+      "lines": 267,
+      "destination": "nw4r/lyt/lyt_pane.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Pane constructors, traversal, animation, matrix and resource access implementations belong to nw4r Pane. Verify native decoded records on import.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/Nw4rLinkListCompat.cpp",
+      "sha256": "c2576368f9c703eab1b4381e45b6be964d8e572f06600f61b11127dc5b2a3beb",
+      "lines": 58,
+      "destination": "nw4r/ut/ut_LinkList.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Complete original intrusive list implementation; canonical source can compile directly.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalAlphaClear.cpp",
+      "sha256": "f393ca3aa11635903bed290d70f38bd7542e5f0f4a5bf81986737c3a721ecc29",
+      "lines": 56,
+      "destination": "Game/Util/DrawUtil.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Original alpha-buffer GX drawing methods; same owner as clear-Z fragment, not a PC policy service.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalClearZBuffer.cpp",
+      "sha256": "b1995be522d03c3005153b54ef3c035b39455f3582c93478fb4d15a0efed368e",
+      "lines": 84,
+      "destination": "Game/Util/DrawUtil.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Original clear-Z texture setup and GX pass; consolidate alongside alpha clear without losing static texture state.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalFurAccess.cpp",
+      "sha256": "f6e9604a4d0e358069c35749eb89e71a4be64d11029ca572b487eede07d093de",
+      "lines": 18,
+      "destination": "Game/Util/LiveActorUtil.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Three original Fur construction entry points; restore to utility owner.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalGCaptureQueries.cpp",
+      "sha256": "bb54394c8d1f8930501510dac9f664a4bf2ed32f37df50aab58bcf4e96245bf3",
+      "lines": 18,
+      "destination": "Game/MapObj/GCapture.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Original presence/state query for GCapture. Do not invent capture state when restoring actor owner.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalGameDiagnostics.cpp",
+      "sha256": "a9074c2eae7ecfbf846dfcc062c167585570d9ef382ff93697a68cadfe7aac0d",
+      "lines": 27,
+      "destination": "Game/Scene/SceneObjHolder.cpp; Game/Util/PlayerUtil.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Debug dependency checks should be local debug assertions or proper owner checks, not a standalone compat API.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalGameDiagnostics.hpp",
+      "sha256": "23fb3bc2bacf7c39196b917ad11bcf53be9b04b31826ed874165b84343d191b1",
+      "lines": 8,
+      "destination": "Game/Scene/SceneObjHolder.cpp; Game/Util/PlayerUtil.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Debug dependency checks should be local debug assertions or proper owner checks, not a standalone compat API.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalGameSystemAccess.cpp",
+      "sha256": "55aa3e02480145a0ecf0216ffc8c53b8694668738961d15e8095e39e9b13be62",
+      "lines": 53,
+      "destination": "Game/Util/SystemUtil.cpp; SceneUtil.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Original process-holder/message/random-seed/audio/layout allocator accessors; split by canonical donor owner.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalJointAccess.cpp",
+      "sha256": "f57eee0838fb5fae1e36e7dbfc2aa349acc18ad141e5826b1408ace5aacbf4c5",
+      "lines": 158,
+      "destination": "Game/Util/JointUtil.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Original joint matrix/name queries; integrate native index/pointer boundary directly into utility owner.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalJutCapture.cpp",
+      "sha256": "443a15f2df14937bb2eee2146a73f39cea7d9561032be91112d2f3353059f2f5",
+      "lines": 12,
+      "destination": "JSystem/JUtility/JUTTexture.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "JUTTexture GX copy-texture method; consolidate with other texture providers.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalLayoutLocale.cpp",
+      "sha256": "f7e7c9982147bc1dfd7f657f505b73abfa340d9eb48d5d3987417e0d5e5f9984",
+      "lines": 100,
+      "destination": "Game/Screen/LayoutManager.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Original language-pane filtering and local BitFlag; resource decoding/native pointer ownership remain in layout owner.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalMapQueries.cpp",
+      "sha256": "68a3b7b3b3a81393c0b0741bdfc5943c577ccdc81187bf15c3d9a4ad11ed48d5",
+      "lines": 296,
+      "destination": "Game/Util/MapUtil.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Original collision director query/sort buffer algorithms; no independent host map representation needed.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalMirrorReflectionUtil.cpp",
+      "sha256": "cc59e1424e9ae5509bac3ca594b58aa3555432fdbd6ef518d5014921922aeee1",
+      "lines": 62,
+      "destination": "Game/Util/LiveActorUtil.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Original mirror/submaterial setup. Consolidate with model/texture utility methods at donor owner.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalMtxGeometry.cpp",
+      "sha256": "5d05af1d3120b68315dae97942ec3f2eeb58bdac84990b40d1dc1294e8ac1a43",
+      "lines": 116,
+      "destination": "Game/Util/MtxUtil.cpp; MathUtil.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Mixed matrix and math methods; split at actual donor method owners while preserving rounding.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalNameObjExecuteHolder.cpp",
+      "sha256": "343ca94a801427ba808a4732b29169713c7ad7c43d82f507bcd6b9f4d5331e38",
+      "lines": 445,
+      "destination": "Game/NameObj/NameObjExecuteHolder.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Full original executor methods with native arena capture, registration guards and teardown. Move necessary changes directly into owner and remove provider fragment.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalPointerVectorQueries.cpp",
+      "sha256": "e64c7dae48b87f38e52bb0953667a60af1a23063f8b917a758082d653f5c4380",
+      "lines": 37,
+      "destination": "Game/Util/MathUtil.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Four original vector/scalar normalization helpers; include in full MathUtil restoration.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalSceneCounterQueries.cpp",
+      "sha256": "aa63fd17f81e17e4af88692fb68dd5525f98b12e733f03131cc257a38847d02e",
+      "lines": 65,
+      "destination": "Game/System/GameDataFunction.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Counter accessors use original data but retain alternate StageSession fallback. Remove fallback after fixtures use process temporary galaxy data.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalSceneDrawUtil.cpp",
+      "sha256": "d2fd020e1221274dad228a2b57d78f15ae2a92dbc8458f6f9be60b9734fecd06",
+      "lines": 31,
+      "destination": "Game/Scene/SceneFunction.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Spin-driver opaque-pass and spider-thread bloom queries use original scene objects. Include with full SceneFunction restoration.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalScreenConfig.cpp",
+      "sha256": "8fe79a62f9584fda01a1ad4686ab19e7fffa37883b81d7b1512c35863d8689c0",
+      "lines": 10,
+      "destination": "Game/Util/SystemUtil.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Original isScreen16Per9 forwarding method; no independent compat behavior.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalStarPointerDepth.cpp",
+      "sha256": "3722771b42325d08f687820e5a826f49c5f86f49930db2eda80617dc5b269807",
+      "lines": 127,
+      "destination": "Game/Screen/StarPointerDirector.cpp; Game/Util/StarPointerUtil.cpp; ScreenUtil.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Mixed depth owner/GX callback and utility fragments. Restore canonical owner and retain native draw-sync token lifetime.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalStarPointerDirector.cpp",
+      "sha256": "a5d24c593477cd248dd421478318006ceaa48eb711210cc78f7c53dfed82aa36",
+      "lines": 201,
+      "destination": "Game/Screen/StarPointerDirector.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Original director methods plus CP932 strings and alternate bootstrap fallback. Canonical process holder must own controller/layout state.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalStarPointerOwnerQueries.cpp",
+      "sha256": "41a3588b2f48231612c355183dbb56b9759db974eef6c69e734c03ea5dbfc7d6",
+      "lines": 658,
+      "destination": "Game/Util/StarPointerUtil.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Original pointer modes/reaction/command/owner queries; consolidate fragmented providers and remove hidden alternate ownership fallbacks.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalSystemConfigAccessors.cpp",
+      "sha256": "cabd684040954cd5216692b6d89405484eef00684b30e603a80056e95170d359",
+      "lines": 205,
+      "destination": "aurora/lib/sc",
+      "disposition": "general-platform",
+      "evidence": "Retail SC field semantics depend only on Wii system configuration. Move to Aurora SC beside its persistence implementation, ensure one provider.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalSystemProductInfo.cpp",
+      "sha256": "dc88d45947a951f8a3858985cf1f5c7add354a7c30a945c481b9feffff23d087",
+      "lines": 137,
+      "destination": "aurora/lib/sc",
+      "disposition": "general-platform",
+      "evidence": "Retail product-area/region parsing is Wii SDK behavior. Keep byte identities and configured product data at SC provider.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalTripodBossQuery.cpp",
+      "sha256": "674c5aadcd5b5813b56f8df72f207875f74def9800f87256487bea45d9e35fe7",
+      "lines": 59,
+      "destination": "Game/Boss/TripodBossAccesser.cpp; TripodBoss.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Mixed accessor/boss joint query and bone-id conversion table; split by original source owner, preserve real boss state.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalVectorOrientation.cpp",
+      "sha256": "e9592a45f1d48a964b90527008f83cd0c93739d828d616005c51df6ffd659674",
+      "lines": 60,
+      "destination": "Game/Util/MathUtil.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Four original vector orientation/angle methods; restore full math owner.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalWPadHolder.cpp",
+      "sha256": "ce82b871be2ea41848f7482348546a5bc9ebcf35ba940d3b4ea9dc355117313e",
+      "lines": 187,
+      "destination": "Game/System/WPadHolder.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Original holder methods with native WPAD callback dispatch and heap/lifetime boundaries; consolidate with actual input owner.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/OriginalWPadSpeaker.cpp",
+      "sha256": "be565ade0d2c716279d6593a6d6d729a22683cf955f33bd2703e5228c23febf9",
+      "lines": 105,
+      "destination": "Game/System/WPadSpeaker.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Original speaker state and callbacks; keep generic Wii speaker service in Aurora.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/PPCArchCompat.cpp",
+      "sha256": "edc5506349ed00a4622b1bd8910156c738b6a7914063082d964b808e12adbc17",
+      "lines": 10,
+      "destination": "aurora/lib/base",
+      "disposition": "general-platform",
+      "evidence": "PPCSync memory-ordering boundary implemented with atomic thread fence. No Game-specific dependency; belongs Wii CPU API provider.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/PlanetMapRuntimeCompat.cpp",
+      "sha256": "40c4b353023bc4b3e4e615ba503e30506ef57664d922dfc6baf45f8d196640a0",
+      "lines": 152,
+      "destination": "Game/Util/LiveActorUtil.cpp; Game/Map/OceanHomeMapCtrl.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Submodel creation/LOD native ownership plus explicit two-name OceanHome unavailable check. Remove name policy via actual OceanHome owner implementation; preserve original submodel resources.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/RumbleCompat.cpp",
+      "sha256": "da9619927fa254568105721b3ed7c39596bccb194411dd92cc7a8322cebc22ff",
+      "lines": 25,
+      "destination": "Game/System/WPadRumble.cpp; aurora WPAD service",
+      "disposition": "delete-facade",
+      "evidence": "Single RumbleActuator adapter forwards WPAD calls; eliminate alternate facade attachment where original WPadRumble already drives WPAD.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/RumbleCompat.hpp",
+      "sha256": "0807df44355ec132e2a6025d5cdc177d4fc507341df961338494c280f1c0cdbe",
+      "lines": 9,
+      "destination": "Game/System/WPadRumble.cpp; aurora WPAD service",
+      "disposition": "delete-facade",
+      "evidence": "Single RumbleActuator adapter forwards WPAD calls; eliminate alternate facade attachment where original WPadRumble already drives WPAD.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/SaveChunkEncoding.cpp",
+      "sha256": "d700ba1ccc5c2d2f413b0f330191054adc951a4e5b8bdd7a7e7ebe3ff881960b",
+      "lines": 253,
+      "destination": "Game/System/BinaryDataChunkHolder.cpp; concrete save chunks",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Chunk signature aware endian conversion, path/galaxy validation and PLAY prefix semantics. Required host width/endian fixes belong in save serialization owners, not Aurora Game schema.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/SaveChunkEncoding.hpp",
+      "sha256": "da9ea7d762d03eda532ba949709e4ed398e3baed722c176675fed04ef7686310",
+      "lines": 22,
+      "destination": "Game/System/BinaryDataChunkHolder.cpp; concrete save chunks",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Chunk signature aware endian conversion, path/galaxy validation and PLAY prefix semantics. Required host width/endian fixes belong in save serialization owners, not Aurora Game schema.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/ScenarioDataParserAccess.cpp",
+      "sha256": "5692b874481291c5a2d9e38fef2a694b316da285af7887b930254f75921df8ef",
+      "lines": 17,
+      "destination": "Game/System/ScenarioDataParser.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Process parser lookup plus alternate ScenarioCatalog fallback. Consolidate at original parser function and migrate isolated fixtures.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/SceneConnectionCompat.cpp",
+      "sha256": "9d641c7de67a872f7924a5243cfa6206756e47700fce25df2d101843395e849e",
+      "lines": 12,
+      "destination": "Game/Scene/SceneFunction.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Native retirement disconnect delegates scheduler and guards missing active owner; integrate with original scene connection functions.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/SceneInitializationCompat.cpp",
+      "sha256": "bd1eb13ea2c170dbd8dc89e7e6467f5f8e34eef436d56b8bebf4c421342b17a9",
+      "lines": 89,
+      "destination": "Game/Scene/SceneFunction.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Original initialization delegates plus native effects/lights/execution binding. Keep boundary hooks in owning scene methods and delete duplicated TU.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/SceneLifetimeCompat.cpp",
+      "sha256": "cca1eee582195e26c39221d18dbd26dc278a8be28b354c299ffaf5b50a7f42d9",
+      "lines": 49,
+      "destination": "Game/Scene/Scene.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Only native lifetime binding/rollback changes are necessary; apply to original Scene source.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/SceneMovementCompat.cpp",
+      "sha256": "a5a22e62eb48eec50b514dcb7d919e077e57e3956b65ad3893de02a744254b36",
+      "lines": 61,
+      "destination": "Game/Scene/SceneFunction.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "CategoryList dispatch forwards native scheduler; consolidate in canonical methods and remove RuntimeContext fallback where real scene executor available.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/SceneMovementOwnerLifetime.cpp",
+      "sha256": "47a67fd1a878f219b9fd740d39aa8f062f197e3f0f7d4dec49b3923c71d9d528",
+      "lines": 8,
+      "destination": "Game/Scene/SceneNameObjMovementController.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Eight-line native destructor for stop-state control belongs in actual class owner.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/SceneNameObjUtilCompat.cpp",
+      "sha256": "e4a45742a92c0b3663cd54393d1b9a684c7c8c598959703dc15b243fa86f3f0c",
+      "lines": 40,
+      "destination": "Game/Util/SystemUtil.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Four original holder iteration/suspend/sync methods; alternate registry fallback can disappear with original process fixtures.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/SceneObjHolderCompat.cpp",
+      "sha256": "2708d8c8fa96cfab173aba81cad842d98e51c747a0c8ad75f107eb52c37c3f22",
+      "lines": 733,
+      "destination": "Game/Scene/SceneObjHolder.cpp; scene/SceneObjHolderRuntime.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Mixed original factory and native transactional adoption. Restore factory to Game; remove per-system shadow ownership as real destructors take over, retain general transaction only if necessary.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/SceneSystemUtilCompat.cpp",
+      "sha256": "12319896baf25cf94610efd59bd977d93381b99d6e910c61da9471a088436782",
+      "lines": 53,
+      "destination": "Game/Util/SystemUtil.cpp; scene/PlacementZoneScope.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Unrelated PAL query and nested placement-zone scope. Split PAL original method and real placement-scope implementation by owner.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/SimpleLayoutCompat.cpp",
+      "sha256": "e0f8cbf63da6d13bee1dae02aae2d5d2c75cb57d5ec0691d14156efd06fb9ca1",
+      "lines": 15,
+      "destination": "Game/Screen/SimpleLayout.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Full original source becomes compilable with named -1 execution enums; use donor directly.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/SphereSelectorRuntimeCompat.cpp",
+      "sha256": "b45a68cd0b9da50bd532650643be7a19249e214980f3573551129f0ac573007b",
+      "lines": 36,
+      "destination": "none",
+      "disposition": "delete-unused",
+      "evidence": "Unused internal getter and an empty namespace; no public provider to retain.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/StageScenarioMetadataResolver.cpp",
+      "sha256": "494d74e838956d05865c29653b34ca669221af4cd46cca0066708b86a55afcbb",
+      "lines": 122,
+      "destination": "Game/System/ScenarioDataParser.cpp; GameAudio/AudStageBgmWrap.cpp; tests",
+      "disposition": "delete-facade",
+      "evidence": "Parallel scenario archive parsing, comet classification and audio bootstrap; actual process scenario/audio owners should be sole source.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/StageScenarioMetadataResolver.hpp",
+      "sha256": "765dc9a27624b069ddbd5ce2b3a1e2c2182ddac32219c5546cb00fa3f5d7db28",
+      "lines": 26,
+      "destination": "Game/System/ScenarioDataParser.cpp; GameAudio/AudStageBgmWrap.cpp; tests",
+      "disposition": "delete-facade",
+      "evidence": "Parallel scenario archive parsing, comet classification and audio bootstrap; actual process scenario/audio owners should be sole source.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/StageSessionGameCompat.cpp",
+      "sha256": "e9e030ff460118e84cdf4ed627a1ee41c2c01d4c32956824c3b51cddfefe145c",
+      "lines": 27,
+      "destination": "Game/Util/SystemUtil.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Restart ID wrappers fallback to parallel StageSessionState. Original temporary galaxy data can supply direct canonical methods.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/StageSessionState.cpp",
+      "sha256": "addefd1e6ffa1d0794c23e8e9c2d1ea2e1f404af196edc5b3e0da85486f30b95",
+      "lines": 144,
+      "destination": "Game/System/GameDataTemporaryInGalaxy.cpp; tests",
+      "disposition": "delete-facade",
+      "evidence": "Shadow scene/stage/scenario metadata and temporary-data bootstrap should be removed after standalone fixtures use actual process owners.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/StageSessionState.hpp",
+      "sha256": "71d73fe60778840b8ecafc21b6b6aa7aee06a4dd93bf6db597215c5b08de6e19",
+      "lines": 96,
+      "destination": "Game/System/GameDataTemporaryInGalaxy.cpp; tests",
+      "disposition": "delete-facade",
+      "evidence": "Shadow scene/stage/scenario metadata and temporary-data bootstrap should be removed after standalone fixtures use actual process owners.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/StarPointerDepthOwnership.cpp",
+      "sha256": "147319c32cc7369c3eab4216d8ffce2264113c6ff8d1c9fbf84b558e2885c7b7",
+      "lines": 274,
+      "destination": "Game/Screen/StarPointerDirector.cpp; Game/System/GameSystemObjHolder.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Alternative input/pointer arena/bootstrap and retirement sidecar. Use process-owned original objects and targeted destructors; retain draw-sync callback cleanup.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/StarPointerDepthOwnership.hpp",
+      "sha256": "6ee446ee2d7bb891b498bcc49546ab28781638a6d91d06fed9d591d3d3a623c6",
+      "lines": 62,
+      "destination": "Game/Screen/StarPointerDirector.cpp; Game/System/GameSystemObjHolder.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Alternative input/pointer arena/bootstrap and retirement sidecar. Use process-owned original objects and targeted destructors; retain draw-sync callback cleanup.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/StarPointerServiceCompat.cpp",
+      "sha256": "6f63f8cd794ffc92e0f49706262ad23c2a1fdf489df532ab2ca63a3736d7ad30",
+      "lines": 129,
+      "destination": "Game/Util/StarPointerUtil.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Pane hit-test facade ignores parameters and target construction fragments. Restore original full pointer algorithms, keep only native pointer identity changes.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/TalkDirectorLifetime.cpp",
+      "sha256": "f871ac115beddef81a1fb9407d11eb0efa297cdd9ef0cbfeda667db51b714822",
+      "lines": 102,
+      "destination": "Game/NPC/TalkDirector.cpp; TalkMessageCtrl.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Non-owning talk controller/balloon references must clear on native retirement; move this responsibility to real owner/destructor.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/TalkDirectorLifetime.hpp",
+      "sha256": "5f7141cd92b055ba32f4bdc85b3092cddeab73655135ba8980c917657bf2932a",
+      "lines": 25,
+      "destination": "Game/NPC/TalkDirector.cpp; TalkMessageCtrl.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Non-owning talk controller/balloon references must clear on native retirement; move this responsibility to real owner/destructor.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/WPadDestruction.cpp",
+      "sha256": "f8f78b57913c86f1646ae2fa97ccbf027c6b857dc4c74aa8fd633abb980e5f46",
+      "lines": 29,
+      "destination": "Game/System/WPad.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Manual deletion of WPad child controllers belongs native WPad destructor; callers must then stop deleting twice.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/WPadOwnership.cpp",
+      "sha256": "25fca7e5ed1605ba0f9a4c7fd4957026ed8ac2dfa23a9addebac3e34007a746f",
+      "lines": 136,
+      "destination": "Game/System/WPadHolder.cpp; WPad.cpp; tests",
+      "disposition": "delete-facade",
+      "evidence": "Alternative input arena and callback-table publication. Original process already owns input; migrate fixtures and eliminate bootstrap.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/WPadOwnership.hpp",
+      "sha256": "af49d33c0615a343a4f0709f770f0ebc377a784d6e3b53821238a514e18d991d",
+      "lines": 34,
+      "destination": "Game/System/WPadHolder.cpp; WPad.cpp; tests",
+      "disposition": "delete-facade",
+      "evidence": "Alternative input arena and callback-table publication. Original process already owns input; migrate fixtures and eliminate bootstrap.",
+      "current_status": "pending",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/XanimeQueryCompat.cpp",
+      "sha256": "bb83d0788c8bdd425b80924df691b60059e44460f31094029ca0c551073a991c",
+      "lines": 42,
+      "destination": "Game/Util/HashUtil.cpp",
+      "disposition": "narrow-game-adaptation",
+      "evidence": "Only case-folded resource hash remains; preserve original ASCII C locale and unsigned CP932 bytes without full duplicated lookup table.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/jaudio/JAIAudible.cpp",
+      "sha256": "ee383b49cc26852a18d05581fd51f4895d90373aab10b0ea823b96167eb5956e",
+      "lines": 3,
+      "destination": "JSystem/JAudio2/JAIAudible.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Original destructor has no native adaptation.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    },
+    {
+      "path": "src/compat/jaudio/JAIAudience.cpp",
+      "sha256": "8001914c66b2ef1c430dac4b9a20de19969e50e5187674757e035550396f3fc8",
+      "lines": 4,
+      "destination": "JSystem/JAudio2/JAIAudience.cpp",
+      "disposition": "restore-original-owner",
+      "evidence": "Original destructor has no native adaptation.",
+      "current_status": "removed",
+      "validation": "See separate batch/build/runtime evidence; classification alone is not validation."
+    }
+  ]
+}

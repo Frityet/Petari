@@ -1,0 +1,4167 @@
+{
+  "audit_date": "2026-09-25",
+  "decomp_revision": "1a126cb5d",
+  "scope_count": 91,
+  "scope_lines": 23222,
+  "policy": "Every src/compat path must be removed. keep-general labels retained semantics only: destinations are canonical SDK/JSystem/MSL/NW4R/Aurora owners, never permanent compat retention. Game-specific policy returns to actual Game owner. Destinations marked by paths may need creation. No blanket rename.",
+  "validation": "Read-only code/donor/caller audit; no build or runtime validation. Scope SHA256 compared at write time. Canonical source transfers are a subsequent separately recorded batch.",
+  "generated_mapping_check": {
+    "entries": 9280,
+    "sorted_unique": true,
+    "generated_equals_source": true,
+    "all_cp932_encodings_match": true
+  },
+  "files": [
+    {
+      "path": "src/compat/AudioFacadeCompat.cpp",
+      "sha256": "8a34488002fe77c464fdbabf08d2b1bbf8245c27ffae9e3cfb918366f40bf9ca",
+      "lines": 876,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/AudioLib/AudBgm.cpp",
+        "src/Game/AudioLib/AudBgmKeeper.cpp",
+        "src/Game/AudioLib/AudBgmMgr.cpp",
+        "src/Game/AudioLib/AudFader.cpp",
+        "src/Game/AudioLib/AudTrackController.cpp",
+        "src/Game/AudioLib/AudBgmRhythmStrategy.cpp",
+        "src/Game/AudioLib/AudWrap.cpp",
+        "src/Game/AudioLib/AudSystem.cpp"
+      ],
+      "evidence": "One file defines eight Game owners; static s_bgm_manager and thread-local audio override mirror RuntimeContext lanes; active track operations and most multi-BGM methods throw. Disabled process returns no BGM voices. This is a Game audio replacement, not a Wii API.",
+      "current_callers": [
+        "src/runtime/RuntimeContext.cpp",
+        "src/Game/Util/SoundUtil.cpp",
+        "tests/OriginalJaiSoundOwnershipTests.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/AudioLib/AudBgm.cpp",
+        "decomp/src/Game/AudioLib/AudBgmMgr.cpp",
+        "decomp/src/Game/AudioLib/AudWrap.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore available original methods owner by owner; retain explicit audio-disabled policy only at Game audio output boundary.",
+        "Eliminate facade global manager and event override as production authority; route native PCM through JAI/JAS output APIs.",
+        "Update runtime facade lifecycle calls and tests; no fabricated sequence/rhythm owner."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "8a34488002fe77c464fdbabf08d2b1bbf8245c27ffae9e3cfb918366f40bf9ca",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 99,
+          "text": "std::string(operation) +"
+        },
+        {
+          "line": 169,
+          "text": "ScopedAudioEventServiceOverride::ScopedAudioEventServiceOverride(smgpc::runtime::AudioEventService &service)"
+        },
+        {
+          "line": 246,
+          "text": "AudFader::AudFader() : mCurrentVolume(1.0F), mFinalVolume(1.0F), mStepVolume(0.0F) {"
+        },
+        {
+          "line": 249,
+          "text": "void AudFader::set(f32 desired_volume, s32 fade_time) {"
+        },
+        {
+          "line": 262,
+          "text": "void AudFader::update() {"
+        },
+        {
+          "line": 274,
+          "text": "AudTrackController::AudTrackController() : mTrackNo(-1), mHandle(nullptr), mFader(), mVolume(1.0F), mAutoMute(false) {"
+        },
+        {
+          "line": 277,
+          "text": "void AudTrackController::start(JAISoundHandle *handle) {"
+        },
+        {
+          "line": 282,
+          "text": "void AudTrackController::stop() {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/AudioFacadeCompat.hpp",
+      "sha256": "75c78950f45efead7e5d92ed57a945628f28da73e2b8076b3350ee8266ed708c",
+      "lines": 29,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/AudioLib/AudBgm.cpp",
+        "src/Game/AudioLib/AudBgmKeeper.cpp",
+        "src/Game/AudioLib/AudBgmMgr.cpp",
+        "src/Game/AudioLib/AudFader.cpp",
+        "src/Game/AudioLib/AudTrackController.cpp",
+        "src/Game/AudioLib/AudBgmRhythmStrategy.cpp",
+        "src/Game/AudioLib/AudWrap.cpp",
+        "src/Game/AudioLib/AudSystem.cpp"
+      ],
+      "evidence": "One file defines eight Game owners; static s_bgm_manager and thread-local audio override mirror RuntimeContext lanes; active track operations and most multi-BGM methods throw. Disabled process returns no BGM voices. This is a Game audio replacement, not a Wii API.",
+      "current_callers": [
+        "src/runtime/RuntimeContext.cpp",
+        "src/Game/Util/SoundUtil.cpp",
+        "tests/OriginalJaiSoundOwnershipTests.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/AudioLib/AudBgm.cpp",
+        "decomp/src/Game/AudioLib/AudBgmMgr.cpp",
+        "decomp/src/Game/AudioLib/AudWrap.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore available original methods owner by owner; retain explicit audio-disabled policy only at Game audio output boundary.",
+        "Eliminate facade global manager and event override as production authority; route native PCM through JAI/JAS output APIs.",
+        "Update runtime facade lifecycle calls and tests; no fabricated sequence/rhythm owner."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "75c78950f45efead7e5d92ed57a945628f28da73e2b8076b3350ee8266ed708c",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/BinaryDataChunkHolderCompat.cpp",
+      "sha256": "0b09c09daec813ff7b6e28714fb0bfa64e93c32d8c0e18317f4e8490f0cc8d07",
+      "lines": 153,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/System/BinaryDataChunkHolder.cpp"
+      ],
+      "evidence": "Whole Game class replacement writes explicit BE32 file/chunk headers and delegates SaveChunkEncoding by signature; validates all chunks before loading. Native wire-endian requirement is real; chunk policy remains Game-specific.",
+      "current_callers": [
+        "src/Game/System/ConfigDataHolder.cpp",
+        "src/Game/System/SysConfigFile.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/System/BinaryDataChunkHolder.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore canonical class owner and preserve necessary BE header accesses.",
+        "Move per-chunk field serialization to respective Game chunk classes; remove SaveChunkEncoding dispatch dependency only after wire compatibility covered."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "0b09c09daec813ff7b6e28714fb0bfa64e93c32d8c0e18317f4e8490f0cc8d07",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 26,
+          "text": "BinaryDataChunkHolder::BinaryDataChunkHolder(u32 bufferSize, int maxChunks)"
+        },
+        {
+          "line": 37,
+          "text": "void BinaryDataChunkHolder::addChunk(BinaryDataChunkBase* pChunk) {"
+        },
+        {
+          "line": 44,
+          "text": "u32 BinaryDataChunkHolder::makeFileBinary(u8* pData, u32 dataSize) {"
+        },
+        {
+          "line": 49,
+          "text": "std::memset(pData, 0, cFileHeaderSize);"
+        },
+        {
+          "line": 55,
+          "text": "std::memset(mData, 0, mBufferSize);"
+        },
+        {
+          "line": 62,
+          "text": "std::memcpy(pData + offset, mData, chunkSize);"
+        },
+        {
+          "line": 68,
+          "text": "bool BinaryDataChunkHolder::loadFromFileBinary(const u8* pData, u32 dataSize) {"
+        },
+        {
+          "line": 113,
+          "text": "void BinaryDataChunkHolder::makeChunkData(BinaryDataChunkHolderChunkData* pData, u32 bufferSize,"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/ConfigDataMiscCompat.cpp",
+      "sha256": "05e5cacf849955b151fa03bc0779bfa6ae5122e13db0d5ca275c394ff2f5bbea",
+      "lines": 106,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/System/ConfigDataMisc.cpp"
+      ],
+      "evidence": "Flags/timestamps/signature duplicate original class; serialize writes one flag byte plus BE64 OSTime and supports older one-byte payload.",
+      "current_callers": [
+        "src/Game/System/ConfigDataHolder.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/System/ConfigDataMisc.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore canonical flag/time methods and keep narrow explicit serialized-endian operations at serialize/deserialize.",
+        "Remove Game/xmake.lua exclusion."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "05e5cacf849955b151fa03bc0779bfa6ae5122e13db0d5ca275c394ff2f5bbea",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 27,
+          "text": "ConfigDataMisc::ConfigDataMisc() : mFlag(cFlagLastLoadedMario), mLastModified() {"
+        },
+        {
+          "line": 31,
+          "text": "bool ConfigDataMisc::isLastLoadedMario() const {"
+        },
+        {
+          "line": 35,
+          "text": "void ConfigDataMisc::setLastLoadedMario(bool lastLoadedMario) {"
+        },
+        {
+          "line": 43,
+          "text": "void ConfigDataMisc::onCompleteEndingMario() {"
+        },
+        {
+          "line": 47,
+          "text": "void ConfigDataMisc::onCompleteEndingLuigi() {"
+        },
+        {
+          "line": 51,
+          "text": "bool ConfigDataMisc::isOnCompleteEndingMario() {"
+        },
+        {
+          "line": 55,
+          "text": "bool ConfigDataMisc::isOnCompleteEndingLuigi() {"
+        },
+        {
+          "line": 59,
+          "text": "OSTime ConfigDataMisc::getLastModified() const {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/Cp932Literal.hpp",
+      "sha256": "e5c5c748631b290daa48d235ebf3ef9c2786a89a11a125ced62452c55ac5d713",
+      "lines": 116,
+      "disposition": "keep-general",
+      "destination": [
+        "aurora/include/aurora/cp932_literal.hpp",
+        "aurora/include/aurora/detail/cp932_table.hpp",
+        "aurora/data/cp932_mapping.tsv"
+      ],
+      "evidence": "Generic consteval UTF8-to-CP932 conversion validates UTF8 scalars, unmappable input, embedded NUL and storage extent. Generated table reviewed against frozen9280-entry TSV: exact sorted unique match and all canonical Python cp932 encodings agree. No Game IDs or actor exceptions.",
+      "current_callers": [
+        "src/Game/NPC/Tico.cpp",
+        "src/Game/System/StorySequenceExecutor.cpp",
+        "tests/Cp932LiteralTests.cpp",
+        "tests/test_cp932_literals.py"
+      ],
+      "donor": [],
+      "deletion_dependencies": [
+        "Promote encoding facility and data to Aurora; update CP932 includes/namespaces and test paths together.",
+        "Preserve frozen mapping SHA25646778ae55afa614d3ece7e4f7160d9f1205626f09a461e6d7a933b57b582d600 and compiler literal semantics."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "e5c5c748631b290daa48d235ebf3ef9c2786a89a11a125ced62452c55ac5d713",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/DisabledAudioBackend.cpp",
+      "sha256": "55704492fb3f13a942b757b79fb8fb15535114f351ae99f03763f3d2313cd087",
+      "lines": 66,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/System/AudSystemWrapper.cpp",
+        "src/Game/System/AudSystemWrapper.hpp"
+      ],
+      "evidence": "Phase state tracks resource request/receipt/initialization and disabled bank completion; consumes actual SMR names and constructs AudSceneMgr through DisabledObjectAudioService. Despite backend naming it depends directly on Game audio owners.",
+      "current_callers": [
+        "src/compat/DisabledAudioSystemWrapper.cpp",
+        "src/compat/AudioFacadeCompat.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/System/AudSystemWrapper.cpp"
+      ],
+      "deletion_dependencies": [
+        "Fold necessary disabled policy and lifetime into actual AudSystemWrapper owner; keep bank policy explicitly disabled.",
+        "Use generic Aurora PCM/device backend for shared output support, never move AudSceneMgr/name-group policy into Aurora."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "55704492fb3f13a942b757b79fb8fb15535114f351ae99f03763f3d2313cd087",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 11,
+          "text": "DisabledAudioBackend::DisabledAudioBackend(JKRHeap& heap) : _owner_heap(heap) {"
+        },
+        {
+          "line": 17,
+          "text": "void DisabledAudioBackend::request_initialize() {"
+        },
+        {
+          "line": 22,
+          "text": "void DisabledAudioBackend::receive_initialize() {"
+        },
+        {
+          "line": 27,
+          "text": "void DisabledAudioBackend::initialize(std::span<const std::uint8_t> baa) {"
+        },
+        {
+          "line": 39,
+          "text": "bool DisabledAudioBackend::initialized() const noexcept { return _phase == Phase::Initialized; }"
+        },
+        {
+          "line": 40,
+          "text": "AudSceneMgr* DisabledAudioBackend::scene_manager() noexcept {"
+        },
+        {
+          "line": 43,
+          "text": "void DisabledAudioBackend::request_banks(BankGroup group) {"
+        },
+        {
+          "line": 50,
+          "text": "bool DisabledAudioBackend::banks_complete(BankGroup group) const noexcept {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/DisabledAudioBackend.hpp",
+      "sha256": "7ea7aad07eb172dc7764e43644cd8691c90c76218d728a472fd0c591cd192101",
+      "lines": 48,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/System/AudSystemWrapper.cpp",
+        "src/Game/System/AudSystemWrapper.hpp"
+      ],
+      "evidence": "Phase state tracks resource request/receipt/initialization and disabled bank completion; consumes actual SMR names and constructs AudSceneMgr through DisabledObjectAudioService. Despite backend naming it depends directly on Game audio owners.",
+      "current_callers": [
+        "src/compat/DisabledAudioSystemWrapper.cpp",
+        "src/compat/AudioFacadeCompat.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/System/AudSystemWrapper.cpp"
+      ],
+      "deletion_dependencies": [
+        "Fold necessary disabled policy and lifetime into actual AudSystemWrapper owner; keep bank policy explicitly disabled.",
+        "Use generic Aurora PCM/device backend for shared output support, never move AudSceneMgr/name-group policy into Aurora."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "7ea7aad07eb172dc7764e43644cd8691c90c76218d728a472fd0c591cd192101",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/DisabledAudioSystemWrapper.cpp",
+      "sha256": "2766c3bdba80eb497132d4bf0cfcf60e12dbce80f606932adb29197bf27eee88",
+      "lines": 110,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/System/AudSystemWrapper.cpp"
+      ],
+      "evidence": "Defines every original wrapper operation around a native disabled backend; loads only SMR names, preserves request/receive worker sequencing, uses heap finalizer destructor. No sequence/chord/speaker hardware is created.",
+      "current_callers": [
+        "src/Game/System/GameSystemObjHolder.cpp",
+        "src/Game/System/GameSystem.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/System/AudSystemWrapper.cpp"
+      ],
+      "deletion_dependencies": [
+        "Integrate the intentional audio-disabled policy in owning Game wrapper and restore available original flow around it.",
+        "Keep async worker join, heap ownership, reset sequencing and sound-name publication intact."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "2766c3bdba80eb497132d4bf0cfcf60e12dbce80f606932adb29197bf27eee88",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 24,
+          "text": "AudSystemWrapper::AudSystemWrapper(JKRSolidHeap* audio_heap, JKRHeap* resource_heap)"
+        },
+        {
+          "line": 33,
+          "text": "smgpc::compat::register_jkr_heap_finalizer(this, retire_wrapper);"
+        },
+        {
+          "line": 37,
+          "text": "smgpc::compat::unregister_jkr_heap_finalizer(this);"
+        },
+        {
+          "line": 41,
+          "text": "void AudSystemWrapper::requestResourceForInitialize() {"
+        },
+        {
+          "line": 44,
+          "text": "MR::loadAsyncToMainRAM(\"/AudioRes/SMR.szs\", nullptr, _8, JKRDvdRipper::ALLOC_DIRECTION_BACKWARD);"
+        },
+        {
+          "line": 47,
+          "text": "void AudSystemWrapper::receiveResourceForInitialize() {"
+        },
+        {
+          "line": 57,
+          "text": "void AudSystemWrapper::createAudioSystem() {"
+        },
+        {
+          "line": 73,
+          "text": "MR::removeFileConsideringLanguage(\"/AudioRes/SMR.szs\");"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/DisabledObjectAudio.cpp",
+      "sha256": "6be64ff85036e39778d4e3cbc5a6930cc5534529d1bb7e93d93b4fbfa506dc61",
+      "lines": 107,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/AudioLib/AudSoundObject.cpp",
+        "src/Game/AudioLib/AudAnmSoundObject.cpp",
+        "src/Game/AudioLib/AudSpeakerWrap.cpp",
+        "src/Game/RhythmLib/AudMeObject.cpp",
+        "src/JSystem/JAudio2/JAUSoundObject.cpp",
+        "src/JSystem/JAudio2/JAUSoundAnimator.cpp"
+      ],
+      "evidence": "Mixed Game+JAU provider: request returns nullptr, no voices fabricated; many Game sound/modifier methods are no-op/false, JAUSoundAnimator lifetime helpers empty; AudAnmSoundObject uses original skip scheduler. Need split at actual ownership.",
+      "current_callers": [
+        "src/Game/Util/SoundUtil.cpp",
+        "src/compat/OriginalObjectSoundState.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/AudioLib/AudSoundObject.cpp",
+        "decomp/src/Game/AudioLib/AudAnmSoundObject.cpp",
+        "decomp/src/JSystem/JAudio2/JAUSoundObject.cpp",
+        "decomp/src/JSystem/JAudio2/JAUSoundAnimator.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore original JAU scheduler/handle owners; centralize intentional disabled sink at shared JAI starter/output boundary.",
+        "Required Game audio disable decisions go in named Game owners; remove dummy modifiers when original behavior available."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "6be64ff85036e39778d4e3cbc5a6930cc5534529d1bb7e93d93b4fbfa506dc61",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 14,
+          "text": "JAISoundHandle* DisabledObjectAudio::request() noexcept {"
+        },
+        {
+          "line": 18,
+          "text": "std::size_t DisabledObjectAudio::declined_requests() noexcept {"
+        },
+        {
+          "line": 24,
+          "text": "JAUSoundObject::JAUSoundObject() : JAUSoundObject(nullptr, 0, nullptr) {}"
+        },
+        {
+          "line": 25,
+          "text": "JAUSoundObject::JAUSoundObject(TVec3f* position, u8 count, JKRHeap* heap)"
+        },
+        {
+          "line": 28,
+          "text": "void JAUSoundObject::process() {}"
+        },
+        {
+          "line": 29,
+          "text": "void JAUSoundObject::dispose() { mIsAllocated = false; }"
+        },
+        {
+          "line": 30,
+          "text": "bool JAUSoundObject::stopOK(JAISoundHandle&) { return true; }"
+        },
+        {
+          "line": 31,
+          "text": "JAISoundHandle* JAUSoundObject::startSound(JAISoundID) { return decline(); }"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/DisabledObjectAudio.hpp",
+      "sha256": "af248d6972b166715d30a9a35b90aa712cef55a14a781d8fe9470900dbd62015",
+      "lines": 15,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/AudioLib/AudSoundObject.cpp",
+        "src/Game/AudioLib/AudAnmSoundObject.cpp",
+        "src/Game/AudioLib/AudSpeakerWrap.cpp",
+        "src/Game/RhythmLib/AudMeObject.cpp",
+        "src/JSystem/JAudio2/JAUSoundObject.cpp",
+        "src/JSystem/JAudio2/JAUSoundAnimator.cpp"
+      ],
+      "evidence": "Mixed Game+JAU provider: request returns nullptr, no voices fabricated; many Game sound/modifier methods are no-op/false, JAUSoundAnimator lifetime helpers empty; AudAnmSoundObject uses original skip scheduler. Need split at actual ownership.",
+      "current_callers": [
+        "src/Game/Util/SoundUtil.cpp",
+        "src/compat/OriginalObjectSoundState.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/AudioLib/AudSoundObject.cpp",
+        "decomp/src/Game/AudioLib/AudAnmSoundObject.cpp",
+        "decomp/src/JSystem/JAudio2/JAUSoundObject.cpp",
+        "decomp/src/JSystem/JAudio2/JAUSoundAnimator.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore original JAU scheduler/handle owners; centralize intentional disabled sink at shared JAI starter/output boundary.",
+        "Required Game audio disable decisions go in named Game owners; remove dummy modifiers when original behavior available."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "af248d6972b166715d30a9a35b90aa712cef55a14a781d8fe9470900dbd62015",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/DisabledObjectAudioService.cpp",
+      "sha256": "ecd1719324ed9ddc80d0dab12613b9ef868613ba9e13619065cc6a47856b2aad",
+      "lines": 200,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/AudioLib/AudSystem.cpp",
+        "src/Game/AudioLib/AudSceneMgr.cpp",
+        "src/Game/System/AudSystemWrapper.cpp"
+      ],
+      "evidence": "aurora::audio namespace hides Game-owned objects: AudSoundObject,AudSceneMgr,AudSystemVolumeController and two AudLimitedSoundInfo; validates sound-name section group counts{14,2,1}; publishes Game singleton converter. Game-specific ownership despite namespace.",
+      "current_callers": [
+        "src/compat/DisabledAudioBackend.cpp",
+        "src/runtime/RuntimeContext.cpp",
+        "src/compat/OriginalSoundUtil.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/AudioLib/AudSystem.cpp",
+        "decomp/src/Game/AudioLib/AudSceneMgr.cpp",
+        "decomp/src/Game/AudioLib/AudSoundNameConverter.cpp"
+      ],
+      "deletion_dependencies": [
+        "Replace active_service lookup with actual Game audio owner; put any temporary disabled owner there.",
+        "Preserve name table byte lifetime, converter allocations and singleton restoration until original teardown owns them."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "ecd1719324ed9ddc80d0dab12613b9ef868613ba9e13619065cc6a47856b2aad",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 100,
+          "text": "DisabledObjectAudioService::DisabledObjectAudioService(std::shared_ptr<smgpc::compat::JkrHeapRuntime> heaps,"
+        },
+        {
+          "line": 107,
+          "text": "DisabledObjectAudioService::DisabledObjectAudioService(JKRHeap& heap, std::vector<std::uint8_t> native_names)"
+        },
+        {
+          "line": 116,
+          "text": "void DisabledObjectAudioService::set_trigger_sound_permitted(bool permitted) {"
+        },
+        {
+          "line": 120,
+          "text": "void DisabledObjectAudioService::set_level_sound_permitted(bool permitted) {"
+        },
+        {
+          "line": 124,
+          "text": "bool DisabledObjectAudioService::is_sound_permitted() const {"
+        },
+        {
+          "line": 127,
+          "text": "void DisabledObjectAudioService::set_sound_volume_setting(s32 volume_set, u32 steps) {"
+        },
+        {
+          "line": 131,
+          "text": "void DisabledObjectAudioService::recover_sound_volume_setting(u32 steps) {"
+        },
+        {
+          "line": 135,
+          "text": "float DisabledObjectAudioService::sound_category_gain(u32 sound_id) const {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/DisabledObjectAudioService.hpp",
+      "sha256": "6e0b7c109b4024d1624a75f2b261a33f402532e1f60ac2e65d862e9c4c42c1cd",
+      "lines": 64,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/AudioLib/AudSystem.cpp",
+        "src/Game/AudioLib/AudSceneMgr.cpp",
+        "src/Game/System/AudSystemWrapper.cpp"
+      ],
+      "evidence": "aurora::audio namespace hides Game-owned objects: AudSoundObject,AudSceneMgr,AudSystemVolumeController and two AudLimitedSoundInfo; validates sound-name section group counts{14,2,1}; publishes Game singleton converter. Game-specific ownership despite namespace.",
+      "current_callers": [
+        "src/compat/DisabledAudioBackend.cpp",
+        "src/runtime/RuntimeContext.cpp",
+        "src/compat/OriginalSoundUtil.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/AudioLib/AudSystem.cpp",
+        "decomp/src/Game/AudioLib/AudSceneMgr.cpp",
+        "decomp/src/Game/AudioLib/AudSoundNameConverter.cpp"
+      ],
+      "deletion_dependencies": [
+        "Replace active_service lookup with actual Game audio owner; put any temporary disabled owner there.",
+        "Preserve name table byte lifetime, converter allocations and singleton restoration until original teardown owns them."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "6e0b7c109b4024d1624a75f2b261a33f402532e1f60ac2e65d862e9c4c42c1cd",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/FileLoaderOwnership.cpp",
+      "sha256": "b969ba1c7991b17e1072b73ab8a77d6a79f2099facdbf70ae72de19aa6151fa0",
+      "lines": 45,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/System/FileLoader.cpp",
+        "src/Game/System/FileLoader.hpp"
+      ],
+      "evidence": "destroy_file_loader manually waits all file entries, forbids self-worker teardown, deletes loader thread/holders/requests and releases singleton; this is FileLoader destruction, not a shared platform API.",
+      "current_callers": [
+        "src/app/OriginalGameApplication.cpp:454"
+      ],
+      "donor": [
+        "decomp/src/Game/System/FileLoader.cpp"
+      ],
+      "deletion_dependencies": [
+        "Implement native lifetime destructor on original FileLoader owner and call it from process teardown.",
+        "Preserve guest execution scope, worker join before queue/heap release, pending-request wait and singleton unpublication."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "b969ba1c7991b17e1072b73ab8a77d6a79f2099facdbf70ae72de19aa6151fa0",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/FileLoaderOwnership.hpp",
+      "sha256": "122a7b1c20f7fec21946d9b2534b0ea2f0fc351870f2616e57728dda539ea43b",
+      "lines": 12,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/System/FileLoader.cpp",
+        "src/Game/System/FileLoader.hpp"
+      ],
+      "evidence": "destroy_file_loader manually waits all file entries, forbids self-worker teardown, deletes loader thread/holders/requests and releases singleton; this is FileLoader destruction, not a shared platform API.",
+      "current_callers": [
+        "src/app/OriginalGameApplication.cpp:454"
+      ],
+      "donor": [
+        "decomp/src/Game/System/FileLoader.cpp"
+      ],
+      "deletion_dependencies": [
+        "Implement native lifetime destructor on original FileLoader owner and call it from process teardown.",
+        "Preserve guest execution scope, worker join before queue/heap release, pending-request wait and singleton unpublication."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "122a7b1c20f7fec21946d9b2534b0ea2f0fc351870f2616e57728dda539ea43b",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/FileUtilCompat.cpp",
+      "sha256": "1e595f37ecb695fb18fc47419495f174cd32eef0d26bca4331fa1e217f022883",
+      "lines": 292,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/Util/FileUtil.cpp",
+        "src/JSystem/JKernel/JKRDecomp.cpp"
+      ],
+      "evidence": "Most MR file naming/async functions are original copies; receiveArchive/getMountedArchiveAndHeap/createAndAddArchive bypass FileLoader archive owner through ArchiveMountService; decompress rejects Yay0 and uses host Yaz0 vector then returns JKR-owned copy.",
+      "current_callers": [
+        "src/compat/OriginalStationedResourceManager.cpp",
+        "src/Game/System/GameSystemStationedArchiveLoader.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/Util/FileUtil.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore canonical MR wrappers and make native mount backing transparent beneath FileLoader/JKRArchive.",
+        "Move compressed-resource decoding to shared JKRDecomp; retain requested heap/signed alignment and completion waits.",
+        "Delete provider and corresponding excluded FileUtil.cpp only after canonical owner active."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "1e595f37ecb695fb18fc47419495f174cd32eef0d26bca4331fa1e217f022883",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 181,
+          "text": "std::memcpy(result, bytes.data(), bytes.size());"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/FunctionAsyncExecutorOwnership.cpp",
+      "sha256": "1f1dbe32cda3cf321ae75796ed0c6aa45ece588f35e9bec7dba2114e137ddd1b",
+      "lines": 25,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/System/FunctionAsyncExecutor.cpp",
+        "src/Game/System/FunctionAsyncExecutor.hpp"
+      ],
+      "evidence": "Manual destroy helper tears down actual executor threads, task holders, main executor and backing heaps under GuestThreadExecutionScope.",
+      "current_callers": [
+        "src/app/OriginalGameApplication.cpp:419"
+      ],
+      "donor": [
+        "decomp/src/Game/System/FunctionAsyncExecutor.cpp"
+      ],
+      "deletion_dependencies": [
+        "Put native teardown in original executor destructor; caller clears owning pointer.",
+        "Maintain cooperative cancellation and queue-before-heap destruction order."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "1f1dbe32cda3cf321ae75796ed0c6aa45ece588f35e9bec7dba2114e137ddd1b",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/FunctionAsyncExecutorOwnership.hpp",
+      "sha256": "f5f98c3ca0518d7f80f19278de0dd55c57e971aea1e3055e70e9cf4f8a5bfc61",
+      "lines": 12,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/System/FunctionAsyncExecutor.cpp",
+        "src/Game/System/FunctionAsyncExecutor.hpp"
+      ],
+      "evidence": "Manual destroy helper tears down actual executor threads, task holders, main executor and backing heaps under GuestThreadExecutionScope.",
+      "current_callers": [
+        "src/app/OriginalGameApplication.cpp:419"
+      ],
+      "donor": [
+        "decomp/src/Game/System/FunctionAsyncExecutor.cpp"
+      ],
+      "deletion_dependencies": [
+        "Put native teardown in original executor destructor; caller clears owning pointer.",
+        "Maintain cooperative cancellation and queue-before-heap destruction order."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "f5f98c3ca0518d7f80f19278de0dd55c57e971aea1e3055e70e9cf4f8a5bfc61",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/JAudioCategoryVolumeOwnership.cpp",
+      "sha256": "eea0d8b8325b4425eb76692e4bc350ba22ddae32aa1f5357434ad45201e881e1",
+      "lines": 86,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/AudioLib/AudSystemVolumeController.cpp",
+        "src/Game/AudioLib/AudSystem.cpp"
+      ],
+      "evidence": "Parallel linked-list native owner stores actual volume controller plus16 category parameter records; uses Game AudParams eight preset table and locates owner by controller pointer.",
+      "current_callers": [
+        "src/runtime/JAudioPlaybackService.cpp",
+        "src/compat/DisabledObjectAudioService.cpp",
+        "src/compat/OriginalAudioVolumeController.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/AudioLib/AudSystemVolumeController.cpp",
+        "decomp/src/Game/AudioLib/AudSystem.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore AudSystem/JAISeMgr category ownership; narrow disabled-output storage lives in Game audio owner if still needed.",
+        "Retain original fade/preset stacking and remove linked-list owner lookup after direct ownership exists."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "eea0d8b8325b4425eb76692e4bc350ba22ddae32aa1f5357434ad45201e881e1",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 13,
+          "text": "JAudioCategoryVolumeOwnership::JAudioCategoryVolumeOwnership()"
+        },
+        {
+          "line": 29,
+          "text": "void JAudioCategoryVolumeOwnership::reset() {"
+        },
+        {
+          "line": 39,
+          "text": "void JAudioCategoryVolumeOwnership::update() {"
+        },
+        {
+          "line": 54,
+          "text": "float JAudioCategoryVolumeOwnership::sound_gain(std::uint32_t sound_id) const {"
+        },
+        {
+          "line": 66,
+          "text": "void JAudioCategoryVolumeOwnership::set_inner(std::int32_t volume_set, std::uint32_t steps) {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/JAudioCategoryVolumeOwnership.hpp",
+      "sha256": "3b8da31501bd41d94b7b4fbf4dca976ef4bc378ddd71b4f2e289dbdf6ba22bd2",
+      "lines": 39,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/AudioLib/AudSystemVolumeController.cpp",
+        "src/Game/AudioLib/AudSystem.cpp"
+      ],
+      "evidence": "Parallel linked-list native owner stores actual volume controller plus16 category parameter records; uses Game AudParams eight preset table and locates owner by controller pointer.",
+      "current_callers": [
+        "src/runtime/JAudioPlaybackService.cpp",
+        "src/compat/DisabledObjectAudioService.cpp",
+        "src/compat/OriginalAudioVolumeController.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/AudioLib/AudSystemVolumeController.cpp",
+        "decomp/src/Game/AudioLib/AudSystem.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore AudSystem/JAISeMgr category ownership; narrow disabled-output storage lives in Game audio owner if still needed.",
+        "Retain original fade/preset stacking and remove linked-list owner lookup after direct ownership exists."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "3b8da31501bd41d94b7b4fbf4dca976ef4bc378ddd71b4f2e289dbdf6ba22bd2",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/JAudioLimitedSoundOwnership.cpp",
+      "sha256": "d1d1b645181bc21317fc7c3cd1774e36d963dc60e31d83498ca028b3ce03b505",
+      "lines": 36,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/AudioLib/AudSystem.cpp"
+      ],
+      "evidence": "Duplicates Game limiter policy with exactly2 original records, no refresh/eviction on duplicate/full registration; backend expected to stop matching ID first.",
+      "current_callers": [
+        "src/runtime/JAudioPlaybackService.hpp",
+        "src/compat/DisabledObjectAudioService.hpp"
+      ],
+      "donor": [
+        "decomp/src/Game/AudioLib/AudSystem.cpp",
+        "decomp/src/Game/AudioLib/AudLimitedSound.cpp"
+      ],
+      "deletion_dependencies": [
+        "Return two-record limiter to original AudSystem fields; preserve stop-before-registration and update ordering.",
+        "Remove wrapper classes and consumers once actual owner authoritative."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "d1d1b645181bc21317fc7c3cd1774e36d963dc60e31d83498ca028b3ce03b505",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 5,
+          "text": "JAudioLimitedSoundOwnership::JAudioLimitedSoundOwnership() {"
+        },
+        {
+          "line": 9,
+          "text": "void JAudioLimitedSoundOwnership::register_sound(JAISoundID sound_id, s32 delay) {"
+        },
+        {
+          "line": 21,
+          "text": "bool JAudioLimitedSoundOwnership::contains(JAISoundID sound_id) const {"
+        },
+        {
+          "line": 28,
+          "text": "void JAudioLimitedSoundOwnership::update() {"
+        },
+        {
+          "line": 32,
+          "text": "void JAudioLimitedSoundOwnership::clear() {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/JAudioLimitedSoundOwnership.hpp",
+      "sha256": "5c8c8a2c9b3adff6369534add516c51752f113420eca46486ae6647fe2e69416",
+      "lines": 22,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/AudioLib/AudSystem.cpp"
+      ],
+      "evidence": "Duplicates Game limiter policy with exactly2 original records, no refresh/eviction on duplicate/full registration; backend expected to stop matching ID first.",
+      "current_callers": [
+        "src/runtime/JAudioPlaybackService.hpp",
+        "src/compat/DisabledObjectAudioService.hpp"
+      ],
+      "donor": [
+        "decomp/src/Game/AudioLib/AudSystem.cpp",
+        "decomp/src/Game/AudioLib/AudLimitedSound.cpp"
+      ],
+      "deletion_dependencies": [
+        "Return two-record limiter to original AudSystem fields; preserve stop-before-registration and update ordering.",
+        "Remove wrapper classes and consumers once actual owner authoritative."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "5c8c8a2c9b3adff6369534add516c51752f113420eca46486ae6647fe2e69416",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/JAudioSoundParameterSemantics.cpp",
+      "sha256": "a44cb1de69f86894b17c0c2eb71ae4a2e3e7b720e58c347ad20a55668970e38e",
+      "lines": 60,
+      "disposition": "needs-investigation",
+      "destination": [
+        "src/Game/AudioLib/AudSoundObject.cpp"
+      ],
+      "evidence": "Two-ID audited table0x0006001a quadratic pitch and0x0006001b identity returns nullopt otherwise. This is a partial game sound modifier implementation and belongs to original modifySe_Kawamura/Takezawa/Gohara, not general compatibility.",
+      "current_callers": [
+        "src/runtime/JAudioPlaybackService.cpp:154",
+        "tests/JAudioPlaybackTests.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/AudioLib/AudSoundObject.cpp"
+      ],
+      "deletion_dependencies": [
+        "Donor has calls but not all modifier definitions: recover missing original modifier bodies through decomp guide, then import.",
+        "Delete allowlist and dispatch real Game methods to JAI parameter API; do not default unknown sound IDs to success."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "a44cb1de69f86894b17c0c2eb71ae4a2e3e7b720e58c347ad20a55668970e38e",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/JAudioSoundParameterSemantics.hpp",
+      "sha256": "482240f9461cd6ae6a4496883e16739536babda4da6f6459fc3b97a55555b980",
+      "lines": 21,
+      "disposition": "needs-investigation",
+      "destination": [
+        "src/Game/AudioLib/AudSoundObject.cpp"
+      ],
+      "evidence": "Two-ID audited table0x0006001a quadratic pitch and0x0006001b identity returns nullopt otherwise. This is a partial game sound modifier implementation and belongs to original modifySe_Kawamura/Takezawa/Gohara, not general compatibility.",
+      "current_callers": [
+        "src/runtime/JAudioPlaybackService.cpp:154",
+        "tests/JAudioPlaybackTests.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/AudioLib/AudSoundObject.cpp"
+      ],
+      "deletion_dependencies": [
+        "Donor has calls but not all modifier definitions: recover missing original modifier bodies through decomp guide, then import.",
+        "Delete allowlist and dispatch real Game methods to JAI parameter API; do not default unknown sound IDs to success."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "482240f9461cd6ae6a4496883e16739536babda4da6f6459fc3b97a55555b980",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/JKRArchiveCompat.cpp",
+      "sha256": "f3a3c3327631b92b1cb63ca86d0cd421438e5472f3451dade8a0130ffaca9586",
+      "lines": 461,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JKernel/JKRArchivePub.cpp",
+        "src/JSystem/JKernel/JKRArchivePri.cpp",
+        "src/JSystem/JKernel/JKRMemArchive.cpp",
+        "src/JSystem/JKernel/JKRFileLoader.cpp"
+      ],
+      "evidence": "RARC BE metadata is materialized into pointer-safe native directories/files/strings; mount reference counts, volume mutex, fixed-buffer ownership and JKR original lookup methods. SDK-wide, no stage identity branches.",
+      "current_callers": [
+        "src/runtime/ArchiveMountService.cpp",
+        "src/Game/System/ResourceHolder.cpp",
+        "src/Game/System/FileLoader.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JKernel/JKRArchivePub.cpp",
+        "decomp/src/JSystem/JKernel/JKRArchivePri.cpp",
+        "decomp/src/JSystem/JKernel/JKRMemArchive.cpp",
+        "decomp/src/JSystem/JKernel/JKRFileLoader.cpp"
+      ],
+      "deletion_dependencies": [
+        "Split by owning JKR classes and retain borrowed byte/native metadata lifetimes and mount reference semantics.",
+        "Preserve endian conversion in SDK boundary and wire into actual canonical JSystem build."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "f3a3c3327631b92b1cb63ca86d0cd421438e5472f3451dade8a0130ffaca9586",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 28,
+          "text": "JKRFileLoader::initializeVolumeList();"
+        },
+        {
+          "line": 47,
+          "text": "JKRFileLoader::JKRFileLoader()"
+        },
+        {
+          "line": 56,
+          "text": "void JKRFileLoader::unmount() {"
+        },
+        {
+          "line": 65,
+          "text": "void* JKRFileLoader::getGlbResource(const char* name, JKRFileLoader* loader) {"
+        },
+        {
+          "line": 74,
+          "text": "void JKRFileLoader::initializeVolumeList() {"
+        },
+        {
+          "line": 78,
+          "text": "std::call_once(loader_mutex_initialized, [] { OSInitMutex(&loader_mutex); });"
+        },
+        {
+          "line": 80,
+          "text": "void JKRFileLoader::prependVolumeList(JSULink<JKRFileLoader>* loader) {"
+        },
+        {
+          "line": 84,
+          "text": "void JKRFileLoader::removeVolumeList(JSULink<JKRFileLoader>* loader) {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/JKRDisposerCompat.cpp",
+      "sha256": "8f7e592620e25bec11fccf38dc57149d920ca185cbbfdf716e90a606346ba1e5",
+      "lines": 16,
+      "disposition": "restore-original-owner",
+      "destination": [
+        "src/JSystem/JKernel/JKRDisposer.cpp"
+      ],
+      "evidence": "Byte-identical to merged donor: constructor registers heap disposer link, destructor removes it.",
+      "current_callers": [
+        "src/JSystem/JParticle/JPAResourceManager.cpp",
+        "src/Game/LiveActor/LiveActor.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JKernel/JKRDisposer.cpp"
+      ],
+      "deletion_dependencies": [
+        "Add canonical source to build and remove compat provider in same change."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "8f7e592620e25bec11fccf38dc57149d920ca185cbbfdf716e90a606346ba1e5",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 4,
+          "text": "JKRDisposer::JKRDisposer() : mLink(this) {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/JKRExpHeapCompat.cpp",
+      "sha256": "e23462197be574603b82760e86db13038764d8d098c7cdad1f6f8789b4303412",
+      "lines": 946,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JKernel/JKRExpHeap.cpp"
+      ],
+      "evidence": "Original free/used block algorithms; native sizeof/alignof block headers, uintptr_t pointer arithmetic and host-retained root selection. No actor-specific thresholds.",
+      "current_callers": [
+        "src/Game/System/HeapMemoryWatcher.cpp",
+        "src/compat/JkrAllocationDomain.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JKernel/JKRExpHeap.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore canonical owner preserving pointer/header alignment changes and explicit boot root owner.",
+        "Link native diagnostics through canonical JUT/OS reporting; audit original-vs-host ABI before dropping any cast."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "e23462197be574603b82760e86db13038764d8d098c7cdad1f6f8789b4303412",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 14,
+          "text": "JKRExpHeap* JKRExpHeap::createRoot(int, bool) {"
+        },
+        {
+          "line": 18,
+          "text": "smgpc::compat::jkr_panic(__FILE__, __LINE__, \"JKR boot requires a retained native expandable root heap\");"
+        },
+        {
+          "line": 23,
+          "text": "JKRExpHeap* JKRExpHeap::create(u32 size, JKRHeap* pParent, bool errorFlag) {"
+        },
+        {
+          "line": 48,
+          "text": "JKRHeap::free(mem, nullptr);"
+        },
+        {
+          "line": 56,
+          "text": "JKRExpHeap* JKRExpHeap::create(void* ptr, u32 size, JKRHeap* pParent, bool errorFlag) {"
+        },
+        {
+          "line": 88,
+          "text": "void JKRExpHeap::do_destroy() {"
+        },
+        {
+          "line": 94,
+          "text": "JKRHeap::free(this, heap);"
+        },
+        {
+          "line": 101,
+          "text": "void* JKRExpHeap::do_alloc(u32 size, int align) {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/JKRFileFinderCompat.cpp",
+      "sha256": "b080bcf47f9093d2781e4947a191bbe5b5b4a1246594b0df3461ccaf331d9f7f",
+      "lines": 47,
+      "disposition": "restore-original-owner",
+      "destination": [
+        "src/JSystem/JKernel/JKRFileFinder.cpp"
+      ],
+      "evidence": "Original archive iteration body with reordered constructor and added empty JKRFileFinder base destructor; preserve native vtable closure.",
+      "current_callers": [
+        "src/Game/System/ResourceHolder.cpp",
+        "src/compat/JKRArchiveCompat.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JKernel/JKRFileFinder.cpp"
+      ],
+      "deletion_dependencies": [
+        "Use canonical body plus explicit native base destructor definition required by header; update build."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "b080bcf47f9093d2781e4947a191bbe5b5b4a1246594b0df3461ccaf331d9f7f",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 4,
+          "text": "JKRFileFinder::JKRFileFinder() {"
+        },
+        {
+          "line": 12,
+          "text": "JKRArcFinder::JKRArcFinder(JKRArchive* pArchive, long firstFileIndex, long nrFiles) {"
+        },
+        {
+          "line": 26,
+          "text": "bool JKRArcFinder::findNextFile() {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/JKRHeapCompat.cpp",
+      "sha256": "a97c3b02c4fa9ee99813f87f648afc3c2b3178880a92885ccf45d218f192fe59",
+      "lines": 338,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JKernel/JKRHeap.cpp"
+      ],
+      "evidence": "Original heap tree/current/system selection and disposer traversal with native provenance/finalizer hooks and parentless root teardown; alloc/free/bulk free jointly govern C++ ownership.",
+      "current_callers": [
+        "src/compat/JkrAllocationDomain.cpp",
+        "src/Game/System/HeapMemoryWatcher.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JKernel/JKRHeap.cpp"
+      ],
+      "deletion_dependencies": [
+        "Consolidate canonical heap with native pointer-width and lifecycle hooks; relocate hook implementations with JKR ownership.",
+        "Do not remove provenance/finalizers while global new or retained GPU resources need them."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "a97c3b02c4fa9ee99813f87f648afc3c2b3178880a92885ccf45d218f192fe59",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 35,
+          "text": "JKRHeap::JKRHeap(void* data, u32 size, JKRHeap* parent, bool error) : JKRDisposer(), mChildTree(this), mDisposerList() {"
+        },
+        {
+          "line": 68,
+          "text": "smgpc::compat::detail::retire_jkr_heap_allocations(this);"
+        },
+        {
+          "line": 83,
+          "text": "JKRHeap* JKRHeap::becomeSystemHeap() {"
+        },
+        {
+          "line": 89,
+          "text": "JKRHeap* JKRHeap::becomeCurrentHeap() {"
+        },
+        {
+          "line": 95,
+          "text": "void JKRHeap::destroy(JKRHeap* pHeap) {"
+        },
+        {
+          "line": 99,
+          "text": "void* JKRHeap::alloc(u32 size, int align, JKRHeap* pHeap) {"
+        },
+        {
+          "line": 111,
+          "text": "void* JKRHeap::alloc(u32 size, int align) {"
+        },
+        {
+          "line": 114,
+          "text": "smgpc::compat::detail::record_jkr_allocation(memory, this, align);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/JKRSolidHeapCompat.cpp",
+      "sha256": "f2e3903cf3ba606de9e29788f96b19bee199e8f2e1c40bd75f8583a272afa097",
+      "lines": 209,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JKernel/JKRSolidHeap.cpp"
+      ],
+      "evidence": "Original head/tail arena allocation with native sizeof(void*) alignment and uintptr_t arithmetic; free is intentionally empty original solid-heap behavior.",
+      "current_callers": [
+        "src/Game/System/HeapMemoryWatcher.cpp",
+        "src/compat/JkrAllocationDomain.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JKernel/JKRSolidHeap.cpp"
+      ],
+      "deletion_dependencies": [
+        "Consolidate canonical source and preserve native alignment/diagnostics.",
+        "Keep disposer/heap provenance integration from base heap."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "f2e3903cf3ba606de9e29788f96b19bee199e8f2e1c40bd75f8583a272afa097",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 6,
+          "text": "JKRSolidHeap* JKRSolidHeap::create(u32 size, JKRHeap* heap, bool useErrorHandler) {"
+        },
+        {
+          "line": 28,
+          "text": "void JKRSolidHeap::do_destroy(void) {"
+        },
+        {
+          "line": 36,
+          "text": "JKRSolidHeap::JKRSolidHeap(void* start, u32 size, JKRHeap* parent, bool useErrorHandler) : JKRHeap(start, size, parent, useErrorHandler) {"
+        },
+        {
+          "line": 47,
+          "text": "void* JKRSolidHeap::do_alloc(u32 size, int alignment) {"
+        },
+        {
+          "line": 65,
+          "text": "void* JKRSolidHeap::allocFromHead(u32 size, int alignment) {"
+        },
+        {
+          "line": 75,
+          "text": "smgpc::compat::jkr_warning_f(\"allocFromHead: cannot alloc memory (0x%x byte).\\n\", totalSize);"
+        },
+        {
+          "line": 84,
+          "text": "void* JKRSolidHeap::allocFromTail(u32 size, int alignment) {"
+        },
+        {
+          "line": 94,
+          "text": "smgpc::compat::jkr_warning_f(\"allocFromTail: cannot alloc memory (0x%x byte).\\n\", totalSize);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/JKRUnitHeapCompat.cpp",
+      "sha256": "3d038dbb8122bffda23c5fe7972542783a3db1e4a24f9cfef9285f4502f8f9dd",
+      "lines": 193,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JKernel/JKRUnitHeap.cpp",
+        "src/Game/System/Overwrite.cpp"
+      ],
+      "evidence": "Implements MSB-first bitmap and best/first-fit runs with native header alignment; do_free comments explicitly match Galaxy Overwrite one-unit-free policy. This game override should not silently become SDK-wide semantics.",
+      "current_callers": [
+        "src/Game/Screen/MessageTagSkipTagProcessor.cpp",
+        "src/Game/System/FunctionAsyncExecutor.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JKernel/JKRUnitHeap.cpp",
+        "decomp/src/Game/System/Overwrite.cpp"
+      ],
+      "deletion_dependencies": [
+        "Put generic unit-heap algorithm in JKernel; put recovered Galaxy-specific Overwrite policy in its original Game owner if donor confirms split.",
+        "Retain native sizeof/alignment; verify zero-count max-block return semantics against donor before declaring exact match."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "medium",
+      "review": "full source read",
+      "reviewed_sha256": "3d038dbb8122bffda23c5fe7972542783a3db1e4a24f9cfef9285f4502f8f9dd",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 26,
+          "text": "u32 JKRUnitHeap::calcHeapSize(u32 unitSize, u32 unitCount, u32 alignment) {"
+        },
+        {
+          "line": 35,
+          "text": "JKRUnitHeap* JKRUnitHeap::create(u32 unitSize, u32 size, u32 alignment, JKRHeap* parent, bool error) {"
+        },
+        {
+          "line": 53,
+          "text": "JKRHeap::free(memory, parent);"
+        },
+        {
+          "line": 61,
+          "text": "JKRUnitHeap::JKRUnitHeap(u8* bitmap, u8* data, u32 unitSize, u32 unitCount, u32,"
+        },
+        {
+          "line": 68,
+          "text": "void JKRUnitHeap::do_destroy() {"
+        },
+        {
+          "line": 71,
+          "text": "JKRHeap::free(this, parent);"
+        },
+        {
+          "line": 74,
+          "text": "void JKRUnitHeap::clearBatArea() {"
+        },
+        {
+          "line": 76,
+          "text": "std::memset(_78, 0xff, _7C - _78);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/JSUListCompat.cpp",
+      "sha256": "1590f545b672b375bc51e52670bb055d07ebe883564c957e3ac37076b40559f0",
+      "lines": 147,
+      "disposition": "restore-original-owner",
+      "destination": [
+        "src/JSystem/JSupport/JSUList.cpp"
+      ],
+      "evidence": "Byte-identical to merged donor JSUPtrLink/JSUPtrList intrusive list implementation.",
+      "current_callers": [
+        "src/JSystem/JKernel/JKRThread.cpp",
+        "src/compat/JKRHeapCompat.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JSupport/JSUList.cpp"
+      ],
+      "deletion_dependencies": [
+        "Enable canonical source and delete compat provider simultaneously."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "1590f545b672b375bc51e52670bb055d07ebe883564c957e3ac37076b40559f0",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 3,
+          "text": "JSUPtrLink::JSUPtrLink(void* pData) {"
+        },
+        {
+          "line": 16,
+          "text": "JSUPtrList::JSUPtrList(bool doInitialize) {"
+        },
+        {
+          "line": 31,
+          "text": "void JSUPtrList::initiate() {"
+        },
+        {
+          "line": 37,
+          "text": "void JSUPtrList::setFirst(JSUPtrLink* pLink) {"
+        },
+        {
+          "line": 46,
+          "text": "bool JSUPtrList::append(JSUPtrLink* pLink) {"
+        },
+        {
+          "line": 69,
+          "text": "bool JSUPtrList::prepend(JSUPtrLink* pLink) {"
+        },
+        {
+          "line": 92,
+          "text": "bool JSUPtrList::insert(JSUPtrLink* pLink_1, JSUPtrLink* pLink_2) {"
+        },
+        {
+          "line": 124,
+          "text": "bool JSUPtrList::remove(JSUPtrLink* pLink) {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/JSUStreamCompat.cpp",
+      "sha256": "8b03e1ef615551446396534338ca4201742f402dcf27a7110ef09fa14d617796",
+      "lines": 152,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JSupport/JSUInputStream.cpp",
+        "src/JSystem/JSupport/JSUOutputStream.cpp",
+        "src/JSystem/JSupport/JSUMemoryStream.cpp"
+      ],
+      "evidence": "SDK memory streams preserve short transfer IO_ERROR/seek contracts and widen seek arithmetic; clamps invalid native spans instead of memory access.",
+      "current_callers": [
+        "src/Game/System/BinaryDataContentAccessor.cpp",
+        "src/Game/System/ConfigDataMisc.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JSupport/JSUInputStream.cpp",
+        "decomp/src/JSystem/JSupport/JSUOutputStream.cpp",
+        "decomp/src/JSystem/JSupport/JSUMemoryStream.cpp"
+      ],
+      "deletion_dependencies": [
+        "Split functions to canonical stream owners, retain safe native width arithmetic and short-read state semantics.",
+        "Coordinate serializer endian changes; raw stream bytes do not implicitly fix scalar byte order."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "8b03e1ef615551446396534338ca4201742f402dcf27a7110ef09fa14d617796",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 29,
+          "text": "s32 JSUInputStream::read(void* destination, s32 length) {"
+        },
+        {
+          "line": 37,
+          "text": "s32 JSUInputStream::skip(s32 amount) {"
+        },
+        {
+          "line": 49,
+          "text": "s32 JSURandomInputStream::skip(s32 amount) {"
+        },
+        {
+          "line": 57,
+          "text": "s32 JSURandomInputStream::seek(s32 offset, JSUStreamSeekFrom whence) {"
+        },
+        {
+          "line": 63,
+          "text": "s32 JSUOutputStream::write(const void* source, s32 length) {"
+        },
+        {
+          "line": 71,
+          "text": "s32 JSUOutputStream::skip(s32 amount, s8 fill) {"
+        },
+        {
+          "line": 82,
+          "text": "s32 JSURandomOutputStream::seek(s32 offset, JSUStreamSeekFrom whence) {"
+        },
+        {
+          "line": 88,
+          "text": "s32 JSURandomOutputStream::getAvailable() const {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/JUTNameTabCompat.cpp",
+      "sha256": "1c79def40146b69aaab99c3b79b45aca77bd7dccd10d9db8397bfeb24dc6de93",
+      "lines": 52,
+      "disposition": "restore-original-owner",
+      "destination": [
+        "src/JSystem/JUtility/JUTNameTab.cpp"
+      ],
+      "evidence": "Same donor algorithm; differences only NULL/nullptr and C/reinterpret casts. Expects native ResNTAB scalar records from loader boundary.",
+      "current_callers": [
+        "src/resource/J3dModelResource.cpp",
+        "src/render/J3dAnimation.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JUtility/JUTNameTab.cpp"
+      ],
+      "deletion_dependencies": [
+        "Copy current donor canonical file and enable it; preserve loaders endian translation."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "1c79def40146b69aaab99c3b79b45aca77bd7dccd10d9db8397bfeb24dc6de93",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 4,
+          "text": "JUTNameTab::JUTNameTab() {"
+        },
+        {
+          "line": 8,
+          "text": "JUTNameTab::JUTNameTab(const ResNTAB* pNameTable) {"
+        },
+        {
+          "line": 12,
+          "text": "void JUTNameTab::setResource(const ResNTAB* pNameTable) {"
+        },
+        {
+          "line": 24,
+          "text": "s32 JUTNameTab::getIndex(const char* pName) const {"
+        },
+        {
+          "line": 38,
+          "text": "const char* JUTNameTab::getName(u16 index) const {"
+        },
+        {
+          "line": 46,
+          "text": "u16 JUTNameTab::calcKeyCode(const char* pName) const {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/JaiStreamPlayback.cpp",
+      "sha256": "fec1e102108b8f9146a191d03d7cd9910cec3ae59a922293a041cfafcafe4ed6",
+      "lines": 133,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/AudioLib/AudSystem.cpp",
+        "src/JSystem/JAudio2/JAIStreamMgr.cpp",
+        "src/JSystem/JAudio2/JAIStreamDataMgr.cpp"
+      ],
+      "evidence": "Owns JAI pools/data/ARAM managers and generic PCM backend, but hardcodes Game AudParams counts3streams/160children and36 blocks*0x2800; source comment anticipates migration to actual AudSystem owner.",
+      "current_callers": [
+        "src/runtime/JAudioPlaybackService.cpp",
+        "tests/OriginalJaiSoundOwnershipTests.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/AudioLib/AudSystem.cpp",
+        "decomp/src/JSystem/JAudio2/JAIStreamMgr.cpp"
+      ],
+      "deletion_dependencies": [
+        "Move Game resource budgets/pool ownership to AudSystem; leave generic stream data/mixer boundary in JSystem/Aurora.",
+        "Preserve original startSound false return despite successful handle attachment and async prepare/finish callbacks."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "fec1e102108b8f9146a191d03d7cd9910cec3ae59a922293a041cfafcafe4ed6",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 25,
+          "text": "JAIStream::newMemPool(3); // AudParams::numFreeStream"
+        },
+        {
+          "line": 26,
+          "text": "JAISoundChild::newMemPool(160); // AudParams::numFreeSoundChild"
+        },
+        {
+          "line": 68,
+          "text": "JaiStreamPlayback::JaiStreamPlayback(aurora::audio::PcmAudioMixer& mixer, Loader loader) {"
+        },
+        {
+          "line": 73,
+          "text": "JAIStream* JaiStreamPlayback::start(const aurora::audio::JAudioSoundMetadata& metadata, JAISoundHandle& handle, bool prepared) {"
+        },
+        {
+          "line": 102,
+          "text": "void JaiStreamPlayback::advance() {"
+        },
+        {
+          "line": 108,
+          "text": "void JaiStreamPlayback::mix() {"
+        },
+        {
+          "line": 113,
+          "text": "void JaiStreamPlayback::reconcile() { _storage->backend.update(); _storage->manager.freeDeadStream_(); }"
+        },
+        {
+          "line": 114,
+          "text": "void JaiStreamPlayback::reset() {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/JaiStreamPlayback.hpp",
+      "sha256": "ee58a23e410b692715f559c3c34d150e5a10e408e58b007803d1b8b575952cfb",
+      "lines": 28,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/AudioLib/AudSystem.cpp",
+        "src/JSystem/JAudio2/JAIStreamMgr.cpp",
+        "src/JSystem/JAudio2/JAIStreamDataMgr.cpp"
+      ],
+      "evidence": "Owns JAI pools/data/ARAM managers and generic PCM backend, but hardcodes Game AudParams counts3streams/160children and36 blocks*0x2800; source comment anticipates migration to actual AudSystem owner.",
+      "current_callers": [
+        "src/runtime/JAudioPlaybackService.cpp",
+        "tests/OriginalJaiSoundOwnershipTests.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/AudioLib/AudSystem.cpp",
+        "decomp/src/JSystem/JAudio2/JAIStreamMgr.cpp"
+      ],
+      "deletion_dependencies": [
+        "Move Game resource budgets/pool ownership to AudSystem; leave generic stream data/mixer boundary in JSystem/Aurora.",
+        "Preserve original startSound false return despite successful handle attachment and async prepare/finish callbacks."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "ee58a23e410b692715f559c3c34d150e5a10e408e58b007803d1b8b575952cfb",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/JkrAllocationDomain.cpp",
+      "sha256": "3cdfed9f651a2e431f9684c37e267dd9a935ebeb55e7ec07244db8f36fdf41c1",
+      "lines": 386,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JKernel/JKRHeapRuntime.cpp",
+        "src/JSystem/JKernel/JKRHeapRuntime.hpp",
+        "src/Game/System/HeapMemoryWatcher.cpp"
+      ],
+      "evidence": "Retained actual JKR root/child heaps, TLS guest routing and shared owner leases; global new dispatch; explicit MEM2 binding. Currently depends on Game MutexHolder<1>/CurrentHeapRestorer and minimum MEM2 reserved prefix0xE00000.",
+      "current_callers": [
+        "src/app/OriginalGameApplication.cpp",
+        "src/runtime/ArchiveMountService.cpp",
+        "src/runtime/SceneScheduler.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JKernel/JKRHeap.cpp",
+        "decomp/src/Game/System/HeapMemoryWatcher.cpp"
+      ],
+      "deletion_dependencies": [
+        "Create canonical JKernel native lifetime owner; remove Game dependency by providing heap lock/current selection at JKR layer.",
+        "Keep Game reserved MEM2 budget in HeapMemoryWatcher configuration, generic arena binding in Aurora.",
+        "Update all allocation scope/domain includes and namespaces; preserve parent retention and callback teardown."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "3cdfed9f651a2e431f9684c37e267dd9a935ebeb55e7ec07244db8f36fdf41c1",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 76,
+          "text": "std::shared_ptr<JkrHeapRuntime> JkrHeapRuntime::create(std::size_t budget) {"
+        },
+        {
+          "line": 81,
+          "text": "JkrHeapRuntime::JkrHeapRuntime(std::size_t budget) : _storage(std::make_unique<Storage>()) {"
+        },
+        {
+          "line": 88,
+          "text": "throw std::bad_alloc();"
+        },
+        {
+          "line": 119,
+          "text": "aurora::unbind_mem2_arena(_storage->mem2);"
+        },
+        {
+          "line": 128,
+          "text": "void JkrHeapRuntime::prepare_mem2_arena(std::size_t budget) {"
+        },
+        {
+          "line": 152,
+          "text": "std::shared_ptr<JkrAllocationDomain> JkrAllocationDomain::create("
+        },
+        {
+          "line": 160,
+          "text": "void JkrAllocationDomain::register_owner(const std::shared_ptr<JkrAllocationDomain>& result) {"
+        },
+        {
+          "line": 169,
+          "text": "std::shared_ptr<JkrAllocationDomain> JkrAllocationDomain::create("
+        }
+      ]
+    },
+    {
+      "path": "src/compat/JkrAllocationDomain.hpp",
+      "sha256": "df5332a9b029cec1e1d285872177f6ebf9751dec8f594854104af5b972cb0d1f",
+      "lines": 92,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JKernel/JKRHeapRuntime.cpp",
+        "src/JSystem/JKernel/JKRHeapRuntime.hpp",
+        "src/Game/System/HeapMemoryWatcher.cpp"
+      ],
+      "evidence": "Retained actual JKR root/child heaps, TLS guest routing and shared owner leases; global new dispatch; explicit MEM2 binding. Currently depends on Game MutexHolder<1>/CurrentHeapRestorer and minimum MEM2 reserved prefix0xE00000.",
+      "current_callers": [
+        "src/app/OriginalGameApplication.cpp",
+        "src/runtime/ArchiveMountService.cpp",
+        "src/runtime/SceneScheduler.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JKernel/JKRHeap.cpp",
+        "decomp/src/Game/System/HeapMemoryWatcher.cpp"
+      ],
+      "deletion_dependencies": [
+        "Create canonical JKernel native lifetime owner; remove Game dependency by providing heap lock/current selection at JKR layer.",
+        "Keep Game reserved MEM2 budget in HeapMemoryWatcher configuration, generic arena binding in Aurora.",
+        "Update all allocation scope/domain includes and namespaces; preserve parent retention and callback teardown."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "df5332a9b029cec1e1d285872177f6ebf9751dec8f594854104af5b972cb0d1f",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/JkrAllocationProvenance.cpp",
+      "sha256": "22bab0e2fb493ce3e8e76e485e4bb2a43e28c29fbc443192f1689e7dda360bb4",
+      "lines": 97,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JKernel/JKRHeapAllocation.cpp",
+        "src/JSystem/JKernel/JKRHeapAllocation.hpp"
+      ],
+      "evidence": "Allocation pointer->actual heap provenance uses malloc-backed2048-bucket map with tail bit; retires bulk-free records; routing interface used by every ordinary/aligned/JKR new/delete.",
+      "current_callers": [
+        "src/compat/JKRHeapCompat.cpp",
+        "src/compat/JkrAllocationDomain.cpp",
+        "src/compat/MetrowerksAlignedNew.cpp"
+      ],
+      "donor": [],
+      "deletion_dependencies": [
+        "Integrate as private JKernel allocation implementation with canonical global new owner.",
+        "Preserve lock release before heap free and static-destruction safety; no Game-specific identifiers."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "22bab0e2fb493ce3e8e76e485e4bb2a43e28c29fbc443192f1689e7dda360bb4",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 48,
+          "text": "throw std::bad_alloc();"
+        },
+        {
+          "line": 59,
+          "text": "std::free(fresh);"
+        },
+        {
+          "line": 75,
+          "text": "std::free(record);"
+        },
+        {
+          "line": 90,
+          "text": "std::free(record);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/JkrAllocationProvenance.hpp",
+      "sha256": "3d218818cd56281a028cb59c57da6875f9a24bbba0821699af51583797ab6f0f",
+      "lines": 10,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JKernel/JKRHeapAllocation.cpp",
+        "src/JSystem/JKernel/JKRHeapAllocation.hpp"
+      ],
+      "evidence": "Allocation pointer->actual heap provenance uses malloc-backed2048-bucket map with tail bit; retires bulk-free records; routing interface used by every ordinary/aligned/JKR new/delete.",
+      "current_callers": [
+        "src/compat/JKRHeapCompat.cpp",
+        "src/compat/JkrAllocationDomain.cpp",
+        "src/compat/MetrowerksAlignedNew.cpp"
+      ],
+      "donor": [],
+      "deletion_dependencies": [
+        "Integrate as private JKernel allocation implementation with canonical global new owner.",
+        "Preserve lock release before heap free and static-destruction safety; no Game-specific identifiers."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "3d218818cd56281a028cb59c57da6875f9a24bbba0821699af51583797ab6f0f",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/JkrAllocationRouting.hpp",
+      "sha256": "5659fd86c0d58f640acbfb8154411c3edb7f0ed22940686eda64c096dba903c1",
+      "lines": 11,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JKernel/JKRHeapAllocation.cpp",
+        "src/JSystem/JKernel/JKRHeapAllocation.hpp"
+      ],
+      "evidence": "Allocation pointer->actual heap provenance uses malloc-backed2048-bucket map with tail bit; retires bulk-free records; routing interface used by every ordinary/aligned/JKR new/delete.",
+      "current_callers": [
+        "src/compat/JKRHeapCompat.cpp",
+        "src/compat/JkrAllocationDomain.cpp",
+        "src/compat/MetrowerksAlignedNew.cpp"
+      ],
+      "donor": [],
+      "deletion_dependencies": [
+        "Integrate as private JKernel allocation implementation with canonical global new owner.",
+        "Preserve lock release before heap free and static-destruction safety; no Game-specific identifiers."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "5659fd86c0d58f640acbfb8154411c3edb7f0ed22940686eda64c096dba903c1",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/JkrDiagnostics.cpp",
+      "sha256": "a9bd75f69b8f4827f4688a1f455d7660a624e1780abfadec8d444299fcad0539",
+      "lines": 39,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JUtility/JUTAssert.cpp",
+        "src/JSystem/JUtility/JUTConsole.cpp"
+      ],
+      "evidence": "Thin OSReport/OSVReport/OSPanic wrappers; panic formats into256-byte buffer. No Game semantics.",
+      "current_callers": [
+        "src/compat/JKRHeapCompat.cpp",
+        "src/compat/JKRExpHeapCompat.cpp",
+        "src/compat/JKRSolidHeapCompat.cpp",
+        "src/compat/JKRUnitHeapCompat.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JUtility/JUTAssert.cpp",
+        "decomp/src/JSystem/JUtility/JUTConsole.cpp"
+      ],
+      "deletion_dependencies": [
+        "Consolidate reporting in existing JUT/OS boundary or use OSReport directly in canonical JKR native diagnostic sections.",
+        "Delete redundant wrappers/header once callers redirected."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "a9bd75f69b8f4827f4688a1f455d7660a624e1780abfadec8d444299fcad0539",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 35,
+          "text": "std::vsnprintf(buffer, sizeof(buffer), format, args);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/JkrDiagnostics.hpp",
+      "sha256": "695c97632d0b59f9314e47667982ef2a6e2f8af7d83288813b6862836385f590",
+      "lines": 11,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JUtility/JUTAssert.cpp",
+        "src/JSystem/JUtility/JUTConsole.cpp"
+      ],
+      "evidence": "Thin OSReport/OSVReport/OSPanic wrappers; panic formats into256-byte buffer. No Game semantics.",
+      "current_callers": [
+        "src/compat/JKRHeapCompat.cpp",
+        "src/compat/JKRExpHeapCompat.cpp",
+        "src/compat/JKRSolidHeapCompat.cpp",
+        "src/compat/JKRUnitHeapCompat.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JUtility/JUTAssert.cpp",
+        "decomp/src/JSystem/JUtility/JUTConsole.cpp"
+      ],
+      "deletion_dependencies": [
+        "Consolidate reporting in existing JUT/OS boundary or use OSReport directly in canonical JKR native diagnostic sections.",
+        "Delete redundant wrappers/header once callers redirected."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "695c97632d0b59f9314e47667982ef2a6e2f8af7d83288813b6862836385f590",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/JkrHeapFinalizer.cpp",
+      "sha256": "dc89df1e9d25336aba46abe00b56dc0b2620762cfcc1830310b40e2fdc92754c",
+      "lines": 103,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JKernel/JKRHeapFinalizer.cpp",
+        "src/JSystem/JKernel/JKRHeapFinalizer.hpp"
+      ],
+      "evidence": "Malloc-backed object/heap callback registry finalizes after original disposers and outside registry lock; supports range retirement and unregister during callbacks. Necessary native resource lifetime boundary.",
+      "current_callers": [
+        "src/runtime/jut/JutTexture.cpp",
+        "src/JSystem/JParticle/JPAResourceManager.cpp",
+        "src/compat/JKRHeapCompat.cpp"
+      ],
+      "donor": [],
+      "deletion_dependencies": [
+        "Consolidate as canonical JKernel heap lifetime extension, preserve callback order and no-registry-lock across GX drain.",
+        "Update includes for SDK native objects and Game owners."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "dc89df1e9d25336aba46abe00b56dc0b2620762cfcc1830310b40e2fdc92754c",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 57,
+          "text": "std::free(removed);"
+        },
+        {
+          "line": 76,
+          "text": "std::free(record);"
+        },
+        {
+          "line": 92,
+          "text": "std::free(removed);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/JkrHeapFinalizer.hpp",
+      "sha256": "1df42be3da0b8bacb175738be75a14caebfd7c4881271c8229b91093bf1aaf0c",
+      "lines": 14,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JKernel/JKRHeapFinalizer.cpp",
+        "src/JSystem/JKernel/JKRHeapFinalizer.hpp"
+      ],
+      "evidence": "Malloc-backed object/heap callback registry finalizes after original disposers and outside registry lock; supports range retirement and unregister during callbacks. Necessary native resource lifetime boundary.",
+      "current_callers": [
+        "src/runtime/jut/JutTexture.cpp",
+        "src/JSystem/JParticle/JPAResourceManager.cpp",
+        "src/compat/JKRHeapCompat.cpp"
+      ],
+      "donor": [],
+      "deletion_dependencies": [
+        "Consolidate as canonical JKernel heap lifetime extension, preserve callback order and no-registry-lock across GX drain.",
+        "Update includes for SDK native objects and Game owners."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "1df42be3da0b8bacb175738be75a14caebfd7c4881271c8229b91093bf1aaf0c",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/LanguageOwnership.hpp",
+      "sha256": "0033345a14bf8b4e9c361610cc7133d54abfa383e84bb5d46b04ccc5caad1256",
+      "lines": 22,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/System/Language.cpp",
+        "src/Game/System/Language.hpp"
+      ],
+      "evidence": "Original region/language tables and MR queries plus active_language fallback when GameSystem absent; standalone MessageHolderOwnership installs it. Original GameSystem mLanguage already authoritative when present.",
+      "current_callers": [
+        "src/runtime/MessageHolderOwnership.cpp",
+        "src/Game/Util/FileUtil.cpp",
+        "tests/LanguageOwnershipTests.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/System/Language.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore original Game language owner; remove standalone global fallback from production queries.",
+        "Adapt resource-only test/setup callers to actual Game language owner or explicit resource language input; delete LanguageOwnership helper after closure."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "0033345a14bf8b4e9c361610cc7133d54abfa383e84bb5d46b04ccc5caad1256",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/MemoryHeapScopeCompat.cpp",
+      "sha256": "06edb1e1edd206650b79e8d9c9986f9f3339fde63ef6b5fd60af0015a800ed20",
+      "lines": 31,
+      "disposition": "restore-original-owner",
+      "destination": [
+        "src/Game/Util/MemoryUtil.cpp"
+      ],
+      "evidence": "Literal original CurrentHeapRestorer/current-heap wrappers; no platform implementation or per-game workaround beyond existing original mutex behavior.",
+      "current_callers": [
+        "src/compat/JkrAllocationDomain.cpp",
+        "src/compat/OriginalStationedResourceManager.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/Util/MemoryUtil.cpp"
+      ],
+      "deletion_dependencies": [
+        "Consolidate canonical MemoryUtil provider, coordinate other partial MemoryUtil definitions to avoid duplicate symbols."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "06edb1e1edd206650b79e8d9c9986f9f3339fde63ef6b5fd60af0015a800ed20",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 7,
+          "text": "CurrentHeapRestorer::CurrentHeapRestorer(JKRHeap* pHeap) {"
+        },
+        {
+          "line": 10,
+          "text": "MR::becomeCurrentHeap(pHeap);"
+        },
+        {
+          "line": 14,
+          "text": "MR::becomeCurrentHeap(_0);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/MemoryUtilCompat.cpp",
+      "sha256": "f01594434ff135bae1684a9cad4f850eb2e4665a1681a87e74b1f250f6026caf",
+      "lines": 58,
+      "disposition": "restore-original-owner",
+      "destination": [
+        "src/Game/Util/MemoryUtil.cpp"
+      ],
+      "evidence": "NewDeleteAllocator,calcCheckSum,copy/fill/zeroMemory duplicate original Game utility surface with host memcpy/null guards; checksum reads native u16 using memcpy (do not conflate with on-disk endian conversion).",
+      "current_callers": [
+        "src/Game/System/BinaryDataChunkHolder.cpp",
+        "src/Game/System/ResourceHolder.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/Util/MemoryUtil.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore functions in original MemoryUtil; retain native unaligned-safe reads where necessary.",
+        "Coordinate all partial providers and save serialization boundary; no direct checksum endian rewrite without caller proof."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "f01594434ff135bae1684a9cad4f850eb2e4665a1681a87e74b1f250f6026caf",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 8,
+          "text": "void* NewDeleteAllocator::alloc(MEMAllocator*, u32 size) {"
+        },
+        {
+          "line": 12,
+          "text": "void NewDeleteAllocator::free(MEMAllocator*, void* pointer) {"
+        },
+        {
+          "line": 28,
+          "text": "std::memcpy(&value, bytes + offset * sizeof(u16), sizeof(value));"
+        },
+        {
+          "line": 42,
+          "text": "std::memcpy(destination, source, size);"
+        },
+        {
+          "line": 52,
+          "text": "std::memset(destination, value, size);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/MetrowerksAlgorithm.hpp",
+      "sha256": "bbbd510aa50364358c5009728e205f845e4ac7e5fd3f364a068e140014fe4a3c",
+      "lines": 13,
+      "disposition": "keep-general",
+      "destination": [
+        "src/MSL_C++/algorithm.hpp"
+      ],
+      "evidence": "Generic std::for_each_array invokes functor with element pointer; used by original DrawBufferHolder/MultiEmitter source, unrelated to gameplay.",
+      "current_callers": [
+        "src/Game/System/DrawBufferHolder.cpp:49",
+        "src/Game/Effect/MultiEmitter.cpp:59"
+      ],
+      "donor": [],
+      "deletion_dependencies": [
+        "Put legacy STL source contract with canonical MSL_C++ compatibility header alongside existing functional.hpp.",
+        "Replace umbrella forced includes with intended SDK header inclusion, then remove compat header."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "bbbd510aa50364358c5009728e205f845e4ac7e5fd3f364a068e140014fe4a3c",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/MetrowerksAlignedNew.cpp",
+      "sha256": "ff68d14a0c89f0f5a064b59081d4c782fbd51c4d37984c5500fc13f9df8ec4d2",
+      "lines": 70,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JKernel/JKRHeap.cpp",
+        "src/JSystem/JKernel/JKRHeapAllocation.cpp"
+      ],
+      "evidence": "Complete ordinary/aligned/nothrow/sized/JKR placement new/delete dispatch to same allocation provenance; negative alignment selects heap tail. Host fallback uses posix_memalign and new_handler policy.",
+      "current_callers": [
+        "src/Game/System/HeapMemoryWatcher.cpp",
+        "src/compat/JkrAllocationDomain.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JKernel/JKRHeap.cpp"
+      ],
+      "deletion_dependencies": [
+        "Consolidate canonical JKernel allocation TU; keep complete overload family and one global provider.",
+        "Do not remove host/guest routing or signed alignment while Game allocations depend on current heap."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "ff68d14a0c89f0f5a064b59081d4c782fbd51c4d37984c5500fc13f9df8ec4d2",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/MetrowerksPrintf.hpp",
+      "sha256": "9c45d18d5ff3fe06370c5a9982d2b47d688d25873f5fbf2e11a85e0afb1aae1b",
+      "lines": 31,
+      "disposition": "keep-general",
+      "destination": [
+        "src/MSL_C/printf.cpp",
+        "src/MSL_C/printf.hpp"
+      ],
+      "evidence": "Generic MSL string-format semantics incl %#s Pascal strings, low-byte wide strings, field-width policy; host numeric conversions forwarded; assembler labels redirect Game stdio declarations before Darwin headers.",
+      "current_callers": [
+        "src/common/xmake.lua:10",
+        "src/Game/xmake.lua:5",
+        "tests/MslPrintfTests.cpp"
+      ],
+      "donor": [
+        "decomp/src/MSL_C/printf.c"
+      ],
+      "deletion_dependencies": [
+        "Move to canonical MSL module and update first-declaration alias include/order.",
+        "Keep formatter implementation outside its own aliases to avoid recursion; retain host va_list/LP64 numeric types."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "9c45d18d5ff3fe06370c5a9982d2b47d688d25873f5fbf2e11a85e0afb1aae1b",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/MetrowerksStdCompat.hpp",
+      "sha256": "bc8be6365f4d71d05b26331ea7492e2afe38d0fca4914feaf9b348f4c9350b5f",
+      "lines": 102,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/MSL_C++/platform.hpp",
+        "src/Game/Util/MathUtil.hpp",
+        "src/Game/LiveActor/HitSensor.cpp",
+        "src/Game/Util/DirectDraw.hpp",
+        "src/revolution/macros.h"
+      ],
+      "evidence": "Mixed forced umbrella includes Game gravity/collision/LiveActor/DirectDraw headers, Game getRandom(long)/clamp overloads, generic math/macros/new contracts, plus global DUMMY macro converting placeholder functions to static. Cannot move blanket header unchanged.",
+      "current_callers": [
+        "src/Game/xmake.lua:5",
+        "tests/xmake.lua:65"
+      ],
+      "donor": [],
+      "deletion_dependencies": [
+        "Separate generic compiler/STL/SDK definitions to their actual headers.",
+        "Place missing includes, LP64 Game overload fixes and placeholder static linkage in owning Game source/header; remove DUMMY global macro.",
+        "Remove forced umbrella flag after include closure verified."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "bc8be6365f4d71d05b26331ea7492e2afe38d0fca4914feaf9b348f4c9350b5f",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 65,
+          "text": "return std::fabs(value);"
+        },
+        {
+          "line": 69,
+          "text": "return std::fabs(value);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/MslPrintfCompat.cpp",
+      "sha256": "3b01e0a263a4abdf5bc770b66a7cc1a9fbe4a93d76695a16d4ff73bea23dc76a",
+      "lines": 650,
+      "disposition": "keep-general",
+      "destination": [
+        "src/MSL_C/printf.cpp",
+        "src/MSL_C/printf.hpp"
+      ],
+      "evidence": "Generic MSL string-format semantics incl %#s Pascal strings, low-byte wide strings, field-width policy; host numeric conversions forwarded; assembler labels redirect Game stdio declarations before Darwin headers.",
+      "current_callers": [
+        "src/common/xmake.lua:10",
+        "src/Game/xmake.lua:5",
+        "tests/MslPrintfTests.cpp"
+      ],
+      "donor": [
+        "decomp/src/MSL_C/printf.c"
+      ],
+      "deletion_dependencies": [
+        "Move to canonical MSL module and update first-declaration alias include/order.",
+        "Keep formatter implementation outside its own aliases to avoid recursion; retain host va_list/LP64 numeric types."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "3b01e0a263a4abdf5bc770b66a7cc1a9fbe4a93d76695a16d4ff73bea23dc76a",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 319,
+          "text": "std::free(data);"
+        },
+        {
+          "line": 339,
+          "text": "std::memcpy(output + copied, source, amount);"
+        },
+        {
+          "line": 355,
+          "text": "return std::snprintf(output, size, specifier, value);"
+        },
+        {
+          "line": 357,
+          "text": "return std::snprintf(output, size, specifier, stars.values[0], value);"
+        },
+        {
+          "line": 359,
+          "text": "return std::snprintf(output, size, specifier, stars.values[0], stars.values[1], value);"
+        },
+        {
+          "line": 551,
+          "text": "std::memcpy(specifier.data, conversion, specifier_size);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/MslPrintfCompat.hpp",
+      "sha256": "e5b3cf375c2f6296366afeda8a73dfaa227fcd8f0bd2255ee82474e52f91cc47",
+      "lines": 11,
+      "disposition": "keep-general",
+      "destination": [
+        "src/MSL_C/printf.cpp",
+        "src/MSL_C/printf.hpp"
+      ],
+      "evidence": "Generic MSL string-format semantics incl %#s Pascal strings, low-byte wide strings, field-width policy; host numeric conversions forwarded; assembler labels redirect Game stdio declarations before Darwin headers.",
+      "current_callers": [
+        "src/common/xmake.lua:10",
+        "src/Game/xmake.lua:5",
+        "tests/MslPrintfTests.cpp"
+      ],
+      "donor": [
+        "decomp/src/MSL_C/printf.c"
+      ],
+      "deletion_dependencies": [
+        "Move to canonical MSL module and update first-declaration alias include/order.",
+        "Keep formatter implementation outside its own aliases to avoid recursion; retain host va_list/LP64 numeric types."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "e5b3cf375c2f6296366afeda8a73dfaa227fcd8f0bd2255ee82474e52f91cc47",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/NandSdkBinding.hpp",
+      "sha256": "5f0ecb8aacdb35762a5edcbc1a82fe0e3a9e7f1cf35c758f4c71506c76ff68e2",
+      "lines": 18,
+      "disposition": "keep-general",
+      "destination": [
+        "aurora/lib/nand.cpp",
+        "aurora/include/aurora/nand.hpp",
+        "src/Game/System/NANDManager.cpp",
+        "src/Game/System/SaveDataHandleSequence.cpp"
+      ],
+      "evidence": "NAND descriptor/read/write/move/check SDK APIs bridge SaveDataService with error translation; file also defines Game NANDManager destructor. SaveDataService read/write includes Game save container translation, so boundary must split.",
+      "current_callers": [
+        "src/Game/System/NANDManagerThread.cpp",
+        "src/runtime/RuntimeContext.cpp:255"
+      ],
+      "donor": [
+        "decomp/src/RVL_SDK/nand",
+        "decomp/src/Game/System/NANDManager.cpp"
+      ],
+      "deletion_dependencies": [
+        "Move generic NAND handles/access/path/space operations to Aurora using injected generic storage owner.",
+        "Keep Game save payload conversion with Game save serializer and NANDManager destructor in its class owner.",
+        "Preserve worker retirement before open file/service teardown; update runtime binding API."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "5f0ecb8aacdb35762a5edcbc1a82fe0e3a9e7f1cf35c758f4c71506c76ff68e2",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/NandSdkCompat.cpp",
+      "sha256": "c9221915029270aea6321fc8396f636754c9882d0e8ef8492b2b234cbf23c98b",
+      "lines": 274,
+      "disposition": "keep-general",
+      "destination": [
+        "aurora/lib/nand.cpp",
+        "aurora/include/aurora/nand.hpp",
+        "src/Game/System/NANDManager.cpp",
+        "src/Game/System/SaveDataHandleSequence.cpp"
+      ],
+      "evidence": "NAND descriptor/read/write/move/check SDK APIs bridge SaveDataService with error translation; file also defines Game NANDManager destructor. SaveDataService read/write includes Game save container translation, so boundary must split.",
+      "current_callers": [
+        "src/Game/System/NANDManagerThread.cpp",
+        "src/runtime/RuntimeContext.cpp:255"
+      ],
+      "donor": [
+        "decomp/src/RVL_SDK/nand",
+        "decomp/src/Game/System/NANDManager.cpp"
+      ],
+      "deletion_dependencies": [
+        "Move generic NAND handles/access/path/space operations to Aurora using injected generic storage owner.",
+        "Keep Game save payload conversion with Game save serializer and NANDManager destructor in its class owner.",
+        "Preserve worker retirement before open file/service teardown; update runtime binding API."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "c9221915029270aea6321fc8396f636754c9882d0e8ef8492b2b234cbf23c98b",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 76,
+          "text": "NandSdkBinding::NandSdkBinding(runtime::SaveDataService& service) : _service(&service) {"
+        },
+        {
+          "line": 87,
+          "text": "std::erase_if(s_files, [this](const auto& entry) { return entry.second.owner == _service; });"
+        },
+        {
+          "line": 98,
+          "text": "std::erase_if(s_files, [owner](const auto& entry) { return entry.second.owner == owner; });"
+        },
+        {
+          "line": 106,
+          "text": "std::memset(banner, 0, sizeof(*banner));"
+        },
+        {
+          "line": 149,
+          "text": "std::memset(info, 0, sizeof(*info));"
+        },
+        {
+          "line": 153,
+          "text": "std::memcpy(info->origPath, normalized.c_str(), normalized.size() + 1);"
+        },
+        {
+          "line": 270,
+          "text": "std::memcpy(path, directory.c_str(), directory.size() + 1);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/NativeJkrDisposer.hpp",
+      "sha256": "d5812afc25e050aee590344a6c4d2b4309ac30ddd663e7c39ed765f7ae2acc0f",
+      "lines": 20,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JKernel/JKRDisposer.hpp"
+      ],
+      "evidence": "Copy/move constructors register fresh disposer identity; assignment leaves link identity unchanged. Prevents intrusive links copying for native JMapInfo backing.",
+      "current_callers": [
+        "src/Game/Util/JMapInfo.hpp:44",
+        "src/Game/Util/JMapInfo.cpp:66"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JKernel/JKRDisposer.cpp"
+      ],
+      "deletion_dependencies": [
+        "Integrate explicit native copy/move registration helper in JKernel owner or narrow JMapInfo special members.",
+        "Update JMapInfo inheritance and remove compat include without copying live links."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "d5812afc25e050aee590344a6c4d2b4309ac30ddd663e7c39ed765f7ae2acc0f",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/NativePcmSound.cpp",
+      "sha256": "85a8aa9a327ec8a27c904df6ee1a1fd5d5fc3b4f03b6c544718ec2413700c7d2",
+      "lines": 102,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JAudio2/JAIPcmSound.cpp",
+        "src/JSystem/JAudio2/JAIPcmSound.hpp"
+      ],
+      "evidence": "Native decoded PCM subclass preserves actual JAISound status/handle/child/fader/lifetime contract; intentionally returns null tracks/tempo and does not masquerade as JAISe or JAISeq.",
+      "current_callers": [
+        "src/runtime/JAudioPlaybackService.cpp",
+        "tests/OriginalJaiSoundOwnershipTests.cpp"
+      ],
+      "donor": [],
+      "deletion_dependencies": [
+        "Integrate as explicit native JAudio backend class with Aurora mixer API; eventually replace with canonical JAISe/JAS output when implemented.",
+        "Preserve release-to-death completion and handle lifetime; do not relabel PCM as unsupported sequence playback."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "85a8aa9a327ec8a27c904df6ee1a1fd5d5fc3b4f03b6c544718ec2413700c7d2",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 9,
+          "text": "NativePcmSound::NativePcmSound(aurora::audio::PcmAudioMixer& mixer, JAISoundID id,"
+        },
+        {
+          "line": 36,
+          "text": "s32 NativePcmSound::getNumChild() const { return static_cast<s32>(_base.layers.size()); }"
+        },
+        {
+          "line": 37,
+          "text": "JAISoundChild* NativePcmSound::getChild(int index) {"
+        },
+        {
+          "line": 45,
+          "text": "void NativePcmSound::releaseChild(int index) {"
+        },
+        {
+          "line": 51,
+          "text": "JASTrack* NativePcmSound::getTrack() { return nullptr; }"
+        },
+        {
+          "line": 52,
+          "text": "JASTrack* NativePcmSound::getChildTrack(int) { return nullptr; }"
+        },
+        {
+          "line": 53,
+          "text": "JAITempoMgr* NativePcmSound::getTempoMgr() { return nullptr; }"
+        },
+        {
+          "line": 54,
+          "text": "bool NativePcmSound::JAISound_tryDie_() {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/NativePcmSound.hpp",
+      "sha256": "c1d2b6cab32e2b857635c62a94686ca5b2f901355af87ac8df5bfc8c5500a4b1",
+      "lines": 37,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JAudio2/JAIPcmSound.cpp",
+        "src/JSystem/JAudio2/JAIPcmSound.hpp"
+      ],
+      "evidence": "Native decoded PCM subclass preserves actual JAISound status/handle/child/fader/lifetime contract; intentionally returns null tracks/tempo and does not masquerade as JAISe or JAISeq.",
+      "current_callers": [
+        "src/runtime/JAudioPlaybackService.cpp",
+        "tests/OriginalJaiSoundOwnershipTests.cpp"
+      ],
+      "donor": [],
+      "deletion_dependencies": [
+        "Integrate as explicit native JAudio backend class with Aurora mixer API; eventually replace with canonical JAISe/JAS output when implemented.",
+        "Preserve release-to-death completion and handle lifetime; do not relabel PCM as unsupported sequence playback."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "c1d2b6cab32e2b857635c62a94686ca5b2f901355af87ac8df5bfc8c5500a4b1",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/Nw4rFontCompat.cpp",
+      "sha256": "dcf5b4a58060a51ba18198aed3135a000068e18d2f40d11e60d4028d6bc5f9b1",
+      "lines": 264,
+      "disposition": "keep-general",
+      "destination": [
+        "src/nw4r/ut/ut_Font.cpp",
+        "src/nw4r/ut/ut_ResFont.cpp",
+        "src/nw4r/ut/ut_ResFontBase.cpp"
+      ],
+      "evidence": "Generic RFNT validated endian decoder uses retained BrfntFont state/generation and original resource identity; maps glyph sheet offsets/metrics to NW4R API. Max64MiB resource bound is generic sanity limit.",
+      "current_callers": [
+        "src/Game/System/GameSystemFontHolder.cpp",
+        "src/nw4r/ut/ut_CharWriter.cpp"
+      ],
+      "donor": [
+        "decomp/src/nw4r/ut/ut_Font.cpp",
+        "decomp/src/nw4r/ut/ut_ResFont.cpp",
+        "decomp/src/nw4r/ut/ut_ResFontBase.cpp"
+      ],
+      "deletion_dependencies": [
+        "Split into existing canonical NW4R owners; preserve host resource lifetime/generation and parser connection.",
+        "Coordinate existing ut_Font.cpp InitReaderFunc to avoid duplicate owner; no Game logic belongs in font SDK."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "dcf5b4a58060a51ba18198aed3135a000068e18d2f40d11e60d4028d6bc5f9b1",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 74,
+          "text": "std::string_view(\"CWDH\"), std::string_view(\"CMAP\"),"
+        },
+        {
+          "line": 75,
+          "text": "std::string_view(\"GLGR\")};"
+        },
+        {
+          "line": 76,
+          "text": "return std::ranges::all_of(font.blocks, [&supported](const auto& block) {"
+        },
+        {
+          "line": 77,
+          "text": "return std::ranges::find(supported, block.magic) != supported.end();"
+        },
+        {
+          "line": 85,
+          "text": "Font::Font() {"
+        },
+        {
+          "line": 92,
+          "text": "std::weak_ptr< const HostFontResourceState > Font::GetHostResourceState() const noexcept {"
+        },
+        {
+          "line": 96,
+          "text": "ResFont::ResFont() = default;"
+        },
+        {
+          "line": 100,
+          "text": "bool ResFont::SetResource(void* pBuffer) {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/OriginalArchiveIndex.cpp",
+      "sha256": "d77a3f81ef53b6b64a3ab0fec470583daa2c183c646ceb30f4dfd0a87c5a4301",
+      "lines": 23,
+      "disposition": "restore-original-owner",
+      "destination": [
+        "src/JSystem/JKernel/JKRArchivePub.cpp",
+        "src/JSystem/JKernel/JKRMemArchive.cpp"
+      ],
+      "evidence": "Two original methods getIdxResource and fetchResource use SDK file cache and mFileDataStart offsets; no Game dependency.",
+      "current_callers": [
+        "src/Game/System/ResourceHolder.cpp",
+        "src/Game/System/LayoutHolder.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JKernel/JKRArchivePub.cpp",
+        "decomp/src/JSystem/JKernel/JKRMemArchive.cpp"
+      ],
+      "deletion_dependencies": [
+        "Combine with JKR archive owner restoration and delete partial provider; maintain converted-entry lifetime during migration."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "d77a3f81ef53b6b64a3ab0fec470583daa2c183c646ceb30f4dfd0a87c5a4301",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 3,
+          "text": "void* JKRArchive::getIdxResource(u32 fileIndex) {"
+        },
+        {
+          "line": 13,
+          "text": "void* JKRMemArchive::fetchResource(SDIFileEntry* pFile, u32* pSize) {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/OriginalAudioVolumeController.cpp",
+      "sha256": "96d9546206de9344b10fbac5a31764bc54fda52a67057153174c85d115117d03",
+      "lines": 67,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/AudioLib/AudSystemVolumeController.cpp"
+      ],
+      "evidence": "Most original controller bodies copied; setSeVolumeSetInner redirects to linked native category owner instead of original AudSystem/JAISeMgr.",
+      "current_callers": [
+        "src/compat/JAudioCategoryVolumeOwnership.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/AudioLib/AudSystemVolumeController.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore canonical controller and actual backend category ownership; remove whole-file exclusion.",
+        "Keep only required temporary disabled-output branch in Game owner until JAISeMgr connected."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "96d9546206de9344b10fbac5a31764bc54fda52a67057153174c85d115117d03",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 5,
+          "text": "AudSystemVolumeController::AudSystemVolumeController(AudSystem* pSystem)"
+        },
+        {
+          "line": 10,
+          "text": "void AudSystemVolumeController::init() {"
+        },
+        {
+          "line": 19,
+          "text": "void AudSystemVolumeController::update() {"
+        },
+        {
+          "line": 23,
+          "text": "void AudSystemVolumeController::setSeVolumeSetTrig(s32 volumeSet, u32 maxSteps) {"
+        },
+        {
+          "line": 29,
+          "text": "void AudSystemVolumeController::recoverSeVolumeSet(u32 maxSteps) {"
+        },
+        {
+          "line": 34,
+          "text": "void AudSystemVolumeController::setSeVolumeSetLevel(s32 volumeSet) {"
+        },
+        {
+          "line": 41,
+          "text": "void AudSystemVolumeController::updateSeVolumeSetLevel() {"
+        },
+        {
+          "line": 52,
+          "text": "void AudSystemVolumeController::setSeVolumeSetInner(s32 volumeSet, u32 maxSteps) {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/OriginalFunctionAsyncUtil.cpp",
+      "sha256": "8475ebe4713ca815fbf910f9e6f82c5030e2ff25607a04eea31715b393d40d62",
+      "lines": 63,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/Util/SystemUtil.cpp",
+        "src/Game/System/FunctionAsyncExecutor.cpp"
+      ],
+      "evidence": "Original MR executor wrappers plus GuestThreadExecutionScope around each access/wait/start/suspend; no replacement executor state.",
+      "current_callers": [
+        "src/Game/System/GameSystemStationedArchiveLoader.cpp",
+        "src/compat/OriginalStationedResourceManager.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/Util/SystemUtil.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore original SystemUtil wrappers and keep host guest gate at actual execution/SDK boundary where possible.",
+        "Preserve scope around OS waits during intermediate migration; consolidate duplicate partial SystemUtil providers."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "8475ebe4713ca815fbf910f9e6f82c5030e2ff25607a04eea31715b393d40d62",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 8,
+          "text": "return MR::getGameSystemObjHolder()->mFunctionAsyncExecutor;"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/OriginalLanguage.cpp",
+      "sha256": "8c5a91bd1c3a4b36b8a32ae1ecbd3a779eac92de628c31c9f916f643fb251691",
+      "lines": 232,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/System/Language.cpp",
+        "src/Game/System/Language.hpp"
+      ],
+      "evidence": "Original region/language tables and MR queries plus active_language fallback when GameSystem absent; standalone MessageHolderOwnership installs it. Original GameSystem mLanguage already authoritative when present.",
+      "current_callers": [
+        "src/runtime/MessageHolderOwnership.cpp",
+        "src/Game/Util/FileUtil.cpp",
+        "tests/LanguageOwnershipTests.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/System/Language.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore original Game language owner; remove standalone global fallback from production queries.",
+        "Adapt resource-only test/setup callers to actual Game language owner or explicit resource language input; delete LanguageOwnership helper after closure."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "8c5a91bd1c3a4b36b8a32ae1ecbd3a779eac92de628c31c9f916f643fb251691",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 155,
+          "text": "return smgpc::compat::LanguageOwnership::require_language();"
+        },
+        {
+          "line": 176,
+          "text": "MR::extractString(prefix, getCurrentLanguagePrefix(), sizeof(prefix) - 1, sizeof(prefix));"
+        },
+        {
+          "line": 213,
+          "text": "LanguageOwnership::LanguageOwnership(std::string_view prefix) : _previous(active_language) {"
+        },
+        {
+          "line": 226,
+          "text": "std::uint32_t LanguageOwnership::require_language() {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/OriginalLayoutResourceUtil.cpp",
+      "sha256": "b0810b8aa08477313b55d292090351854bcfbf60b9551a3850712b34a41ea11c",
+      "lines": 28,
+      "disposition": "restore-original-owner",
+      "destination": [
+        "src/Game/Util/SystemUtil.cpp"
+      ],
+      "evidence": "Five font lookup wrappers use actual GameSystemFontHolder; guarded helper adds no layout behavior. Donor location is SystemUtil, despite filename.",
+      "current_callers": [
+        "src/Game/Screen/LayoutActor.cpp",
+        "src/nw4r/ut/ut_TextWriterBase.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/Util/SystemUtil.cpp:44"
+      ],
+      "deletion_dependencies": [
+        "Restore canonical five methods and remove redundant provider; coordinate other SystemUtil partial definitions."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "b0810b8aa08477313b55d292090351854bcfbf60b9551a3850712b34a41ea11c",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/OriginalObjectSoundState.cpp",
+      "sha256": "cd48bcd76cfbaac3aaf537b99ff148517917464b5e3ab1d45647d007e83b1911",
+      "lines": 213,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/JSystem/JAudio2/JAUSoundAnimation.cpp",
+        "src/JSystem/JAudio2/JAUSoundAnimator.cpp",
+        "src/Game/AudioLib/AudAnmSoundObject.cpp",
+        "src/Game/AudioLib/AudSoundObject.cpp"
+      ],
+      "evidence": "Original scheduler/loop/map-code bodies span SDK+Game classes; only startAnimation resolves native BAS alias before original operations.",
+      "current_callers": [
+        "src/compat/DisabledObjectAudio.cpp",
+        "src/Game/Util/SoundUtil.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JAudio2/JAUSoundAnimator.cpp",
+        "decomp/src/Game/AudioLib/AudAnmSoundObject.cpp",
+        "decomp/src/Game/AudioLib/AudSoundObject.cpp"
+      ],
+      "deletion_dependencies": [
+        "Split bodies to owners; BAS pointer/endian resolution belongs SDK resource boundary.",
+        "Restore original animation lifecycle helpers together with disabled-object audio consolidation."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "cd48bcd76cfbaac3aaf537b99ff148517917464b5e3ab1d45647d007e83b1911",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 5,
+          "text": "u32 JAUSoundAnimation::getStartSoundIndex(f32 time) const {"
+        },
+        {
+          "line": 15,
+          "text": "u32 JAUSoundAnimation::getEndSoundIndex(f32 time) const {"
+        },
+        {
+          "line": 25,
+          "text": "void JAUSoundAnimator::removeAnimation() {"
+        },
+        {
+          "line": 29,
+          "text": "bool JAUSoundAnimator::playsSound(const JAUSoundAnimationSound* pAnimation, const TVec3f& rPos, f32 f1) {"
+        },
+        {
+          "line": 51,
+          "text": "void JAUSoundAnimator::modifySoundParams(JASSoundParams* pParams, const JAUSoundAnimationSound* pAnimation, f32 time) {"
+        },
+        {
+          "line": 70,
+          "text": "void JAUSoundAnimator::startAnimation(const JAUSoundAnimation* pAnimation, bool reversed, f32 loopStartFrame, f32 loopEndFrame) {"
+        },
+        {
+          "line": 92,
+          "text": "void AudAnmSoundObject::update(f32 time) {"
+        },
+        {
+          "line": 100,
+          "text": "void AudAnmSoundObject::skip(f32 time) {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/OriginalParticleResourceLookup.cpp",
+      "sha256": "c3dbc316062e1054df94cbfd2a558a87df85ac853d4dcf21f3befd7bb2c73eae",
+      "lines": 21,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/Util/SystemUtil.cpp",
+        "src/Game/System/GameSystemObjHolder.cpp"
+      ],
+      "evidence": "MR particle-resource lookup returns GameSystem owner when available else runtime ParticleResourceOwnership fallback.",
+      "current_callers": [
+        "src/Game/Effect/EffectSystem.cpp",
+        "src/runtime/ParticleResourceOwnership.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/Util/SystemUtil.cpp:64"
+      ],
+      "deletion_dependencies": [
+        "Restore original Game owner lookup; standalone resource tooling should pass explicit holder instead of globally overriding Game util.",
+        "Coordinate test fixtures that currently lack GameSystem."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "c3dbc316062e1054df94cbfd2a558a87df85ac853d4dcf21f3befd7bb2c73eae",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/OriginalSoundUtil.cpp",
+      "sha256": "1b8294cedecb3d1b799db9d18bd51f9aa0d304a04c1c9412a4f2262bc4de15a8",
+      "lines": 801,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/Util/SoundUtil.cpp"
+      ],
+      "evidence": "Large copy of original SoundUtil with output-control early dispatch to DisabledObjectAudioService for permissions, limiter and volume. Authored sound-name branches are original Game behavior, not compat hacks.",
+      "current_callers": [
+        "src/Game/LiveActor/LiveActor.cpp",
+        "src/Game/NPC/Tico.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/Util/SoundUtil.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore canonical file and route required disabled-output policy through original Game audio owner.",
+        "Do not delete authored SE/BGM ID/name logic as presumed workaround; eliminate parallel service dispatch."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "1b8294cedecb3d1b799db9d18bd51f9aa0d304a04c1c9412a4f2262bc4de15a8",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 44,
+          "text": "return AudWrap::getSystemSeObject()->startSoundParam(id, param2, param3);"
+        },
+        {
+          "line": 48,
+          "text": "return AudWrap::getSystemSeObject()->startLevelSoundParam(pName, param2, param3);"
+        },
+        {
+          "line": 52,
+          "text": "return AudWrap::getSystemSeObject()->startLevelSoundParam(id, param2, param3);"
+        },
+        {
+          "line": 62,
+          "text": "AudWrap::getSystemSeObject()->stopSound(id, param2);"
+        },
+        {
+          "line": 68,
+          "text": "return AudWrap::getAtmosphereSeObject()->startSoundParam(id, param2, param3);"
+        },
+        {
+          "line": 72,
+          "text": "return AudWrap::getAtmosphereSeObject()->startLevelSoundParam(pName, param2, param3);"
+        },
+        {
+          "line": 258,
+          "text": "AudWrap::getSystemMeObject()->startMe(id);"
+        },
+        {
+          "line": 304,
+          "text": "AudWrap::getSystemSeObject()->startSoundParam(id, -1, -1);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/OriginalStationedArchiveUtil.cpp",
+      "sha256": "7ffee47c6ca78dfbf8549c0fe35f05c80060faa2fc35d4e623ce9ba2b4aa0ee7",
+      "lines": 48,
+      "disposition": "restore-original-owner",
+      "destination": [
+        "src/Game/Util/SystemUtil.cpp",
+        "src/Game/Util/MemoryUtil.cpp"
+      ],
+      "evidence": "Original request/wait player archive and heap getters/selection/adjustSize methods; no host-specific substitutions. Busy wait is original.",
+      "current_callers": [
+        "src/Game/System/GameSystemStationedArchiveLoader.cpp",
+        "src/Game/Util/FileUtil.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/Util/SystemUtil.cpp:68",
+        "decomp/src/Game/Util/MemoryUtil.cpp:51"
+      ],
+      "deletion_dependencies": [
+        "Restore methods in canonical split owners and remove partial provider in coordinated utility consolidation."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "7ffee47c6ca78dfbf8549c0fe35f05c80060faa2fc35d4e623ce9ba2b4aa0ee7",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 13,
+          "text": "GameSystemFunction::requestChangeArchivePlayer(isPlayerMario);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/OriginalStationedResourceManager.cpp",
+      "sha256": "36a2a568a80461c9e71f8d082bf8be9dcea63cc74c4b4cc54b46bc70c8b52d0f",
+      "lines": 51,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/System/ResourceHolderManager.cpp"
+      ],
+      "evidence": "Whole manager entry surface delegates to ResourceHolderService; original mResourceArray cleared but not used as authoritative resource catalog. Both current and donor ignore heap argument on createAndAdd/createAndAddLayoutHolder, so that alone is NOT a divergence.",
+      "current_callers": [
+        "src/Game/System/GameSystemObjHolder.cpp",
+        "src/Game/System/GameSystemStationedArchiveLoader.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/System/ResourceHolderManager.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore canonical manager hash/catalog/main-thread construction; integrate only indispensable native backing ownership with original ResourceHolder/LayoutHolder.",
+        "Eliminate parallel global ResourceHolderService after callers no longer depend on retained aliases."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "36a2a568a80461c9e71f8d082bf8be9dcea63cc74c4b4cc54b46bc70c8b52d0f",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 19,
+          "text": "ResourceHolderManager::ResourceHolderManager() { mResourceArray.clear(); }"
+        },
+        {
+          "line": 20,
+          "text": "ResourceHolder* ResourceHolderManager::createAndAdd(const char* name, JKRHeap*) {"
+        },
+        {
+          "line": 23,
+          "text": "ResourceHolder* ResourceHolderManager::createAndAddStationed(const char* name) {"
+        },
+        {
+          "line": 26,
+          "text": "MR::getMountedArchiveAndHeap(name, &archive, &heap);"
+        },
+        {
+          "line": 31,
+          "text": "LayoutHolder* ResourceHolderManager::createAndAddLayoutHolder(const char* name, JKRHeap*) {"
+        },
+        {
+          "line": 34,
+          "text": "LayoutHolder* ResourceHolderManager::createAndAddLayoutHolderStationed(const char* name) {"
+        },
+        {
+          "line": 37,
+          "text": "LayoutHolder* ResourceHolderManager::createAndAddLayoutHolderRawData(const char* name) {"
+        },
+        {
+          "line": 40,
+          "text": "void ResourceHolderManager::removeIfIsEqualHeap(JKRHeap* heap) { resources().remove_for_heap(heap); }"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/ResourceHolderCompat.cpp",
+      "sha256": "8db52865d2557bda51e45c51c5db678f0754418755bfd076013a3a54c7702537",
+      "lines": 415,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/System/ResourceHolder.cpp",
+        "src/Game/System/ResourceHolderManager.cpp",
+        "src/Game/System/LayoutHolder.cpp",
+        "src/JSystem/JKernel/JKRArchivePub.cpp",
+        "src/JSystem/J3DGraphLoader/J3DModelLoader.cpp",
+        "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp"
+      ],
+      "evidence": "ResourceHolderService duplicates manager catalog and resolves file-kind policy; owns converted BAS/BTI/CANM/J3D data and overwrites archive file cache with native payloads. Includes manual Game holder table/destructor cleanup and mutex recovery. General parsers exist elsewhere.",
+      "current_callers": [
+        "src/compat/OriginalStationedResourceManager.cpp",
+        "src/compat/FileUtilCompat.cpp",
+        "src/compat/ModelManagerOwner.cpp",
+        "src/scene/SceneDrawBufferService.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/System/ResourceHolder.cpp",
+        "decomp/src/Game/System/ResourceHolderManager.cpp",
+        "decomp/src/Game/System/LayoutHolder.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore original manager as catalog authority; attach indispensable native retained backing to actual Game holder lifetime.",
+        "Move resource-type endian/pointer decoding into SDK loaders, leave Game resource-kind routing in ResourceHolder.",
+        "Preserve material-before-animation destruction, cache alias restore, mounted archive/heap retention and mutex unwind recovery."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "8db52865d2557bda51e45c51c5db678f0754418755bfd076013a3a54c7702537",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 34,
+          "text": "std::ranges::replace(normalized, '\\\\', '/');"
+        },
+        {
+          "line": 36,
+          "text": "return std::filesystem::path(normalized).lexically_normal();"
+        },
+        {
+          "line": 101,
+          "text": "LayoutArchiveOwner::LayoutArchiveOwner(std::shared_ptr<const runtime::MountedArchive> archive,"
+        },
+        {
+          "line": 121,
+          "text": "nw4r::lyt::TexMap* LayoutArchiveOwner::create_texture(std::string_view name, std::shared_ptr<resource::Mem1ResourceHeap> mem1) const {"
+        },
+        {
+          "line": 189,
+          "text": "ResourceArchiveOwner::ResourceArchiveOwner(std::shared_ptr<const runtime::MountedArchive> mounted,"
+        },
+        {
+          "line": 257,
+          "text": "ResourceHolderService::ResourceHolderService(runtime::DvdFileSystemService& dvd,"
+        },
+        {
+          "line": 272,
+          "text": "ResourceHolder* ResourceHolderService::create_and_add(std::string_view archive_name) {"
+        },
+        {
+          "line": 276,
+          "text": "ResourceHolder* ResourceHolderService::create_and_add(std::string_view archive_name, JKRHeap* heap) {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/ResourceHolderCompat.hpp",
+      "sha256": "2dfeea928d5c6730d969a661fe457ec16b75e60abf2af37e11e6eef2fda6458d",
+      "lines": 85,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/System/ResourceHolder.cpp",
+        "src/Game/System/ResourceHolderManager.cpp",
+        "src/Game/System/LayoutHolder.cpp",
+        "src/JSystem/JKernel/JKRArchivePub.cpp",
+        "src/JSystem/J3DGraphLoader/J3DModelLoader.cpp",
+        "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp"
+      ],
+      "evidence": "ResourceHolderService duplicates manager catalog and resolves file-kind policy; owns converted BAS/BTI/CANM/J3D data and overwrites archive file cache with native payloads. Includes manual Game holder table/destructor cleanup and mutex recovery. General parsers exist elsewhere.",
+      "current_callers": [
+        "src/compat/OriginalStationedResourceManager.cpp",
+        "src/compat/FileUtilCompat.cpp",
+        "src/compat/ModelManagerOwner.cpp",
+        "src/scene/SceneDrawBufferService.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/System/ResourceHolder.cpp",
+        "decomp/src/Game/System/ResourceHolderManager.cpp",
+        "decomp/src/Game/System/LayoutHolder.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore original manager as catalog authority; attach indispensable native retained backing to actual Game holder lifetime.",
+        "Move resource-type endian/pointer decoding into SDK loaders, leave Game resource-kind routing in ResourceHolder.",
+        "Preserve material-before-animation destruction, cache alias restore, mounted archive/heap retention and mutex unwind recovery."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "2dfeea928d5c6730d969a661fe457ec16b75e60abf2af37e11e6eef2fda6458d",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/SceneHeapAccess.cpp",
+      "sha256": "4a0884c57bae8a7b8a52e4439e579a1aa0ebd6a6c7aab4e82d6b088d6ba0aaa9",
+      "lines": 21,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/Util/MemoryUtil.cpp"
+      ],
+      "evidence": "MR getSceneHeapGDDR3 uses actual HeapMemoryWatcher if present, else assumes ResourceHolderService domain heap is JKRSolidHeap. Standalone fallback is parallel ownership.",
+      "current_callers": [
+        "src/compat/OriginalStationedResourceManager.cpp",
+        "src/Game/Util/LiveActorUtil.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/Util/MemoryUtil.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore original heap getter; explicit native tools use their passed domain instead of global Game query fallback.",
+        "Retire fallback only after standalone fixtures use actual owner."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "4a0884c57bae8a7b8a52e4439e579a1aa0ebd6a6c7aab4e82d6b088d6ba0aaa9",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/StageResourceBinding.cpp",
+      "sha256": "b24103f5dad5030f332cc9271fb36f30e1f84908c370127c8a0cf2e5ba5c54ff",
+      "lines": 359,
+      "disposition": "delete-unused",
+      "destination": [
+        "src/Game/Scene/StageDataHolder.cpp",
+        "tests/StageCameraResourceTests.cpp"
+      ],
+      "evidence": "Full recursive start/generalpos/path/zone catalog + BCAM/CANM loader duplicates StageDataHolder. rg across src shows no external constructor/type/require_stage_resources use: production orphan; only four test files instantiate helper.",
+      "current_callers": [
+        "tests/OriginalCollisionPartsOwnerTests.cpp:83",
+        "tests/OriginalNamePosOwnerTests.cpp:66",
+        "tests/OriginalCameraHolderTests.cpp:262",
+        "tests/StageCameraResourceTests.cpp:168"
+      ],
+      "donor": [
+        "decomp/src/Game/Scene/StageDataHolder.cpp"
+      ],
+      "deletion_dependencies": [
+        "Delete production provider without replacement; remove inert fixtures or rewrite resource tests against canonical StageDataHolder/JMap resource owners.",
+        "Check tests include/use closure; public helper tests alone are not evidence production needs this service."
+      ],
+      "action": "Delete unused production provider and migrate tests to original owners.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "b24103f5dad5030f332cc9271fb36f30e1f84908c370127c8a0cf2e5ba5c54ff",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 103,
+          "text": "std::ranges::stable_sort(ordered, [](const auto* left, const auto* right) {"
+        },
+        {
+          "line": 204,
+          "text": "std::snprintf(name, sizeof(name), \"CommonPathPointInfo.%d\", index);"
+        },
+        {
+          "line": 240,
+          "text": "StageResourceBinding::StageResourceBinding(runtime::DvdFileSystemService& dvd,"
+        },
+        {
+          "line": 251,
+          "text": "std::terminate();"
+        },
+        {
+          "line": 256,
+          "text": "void StageResourceBinding::camera_data(void** data, s32* size, s32 zone_id) {"
+        },
+        {
+          "line": 260,
+          "text": "s32 StageResourceBinding::start_count() const {"
+        },
+        {
+          "line": 264,
+          "text": "s32 StageResourceBinding::general_position_count() const {"
+        },
+        {
+          "line": 268,
+          "text": "JMapInfoIter StageResourceBinding::general_position_iter(int index) const {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/StageResourceBinding.hpp",
+      "sha256": "e6d26576d17ed114bfa40535969f240c8b9b6f78aca75e889b05dff248521b99",
+      "lines": 52,
+      "disposition": "delete-unused",
+      "destination": [
+        "src/Game/Scene/StageDataHolder.cpp",
+        "tests/StageCameraResourceTests.cpp"
+      ],
+      "evidence": "Full recursive start/generalpos/path/zone catalog + BCAM/CANM loader duplicates StageDataHolder. rg across src shows no external constructor/type/require_stage_resources use: production orphan; only four test files instantiate helper.",
+      "current_callers": [
+        "tests/OriginalCollisionPartsOwnerTests.cpp:83",
+        "tests/OriginalNamePosOwnerTests.cpp:66",
+        "tests/OriginalCameraHolderTests.cpp:262",
+        "tests/StageCameraResourceTests.cpp:168"
+      ],
+      "donor": [
+        "decomp/src/Game/Scene/StageDataHolder.cpp"
+      ],
+      "deletion_dependencies": [
+        "Delete production provider without replacement; remove inert fixtures or rewrite resource tests against canonical StageDataHolder/JMap resource owners.",
+        "Check tests include/use closure; public helper tests alone are not evidence production needs this service."
+      ],
+      "action": "Delete unused production provider and migrate tests to original owners.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "e6d26576d17ed114bfa40535969f240c8b9b6f78aca75e889b05dff248521b99",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/StorySequencePlatformCompat.cpp",
+      "sha256": "073808c2b361901a0029632d977eef8084482b0081dd563fe19d10b9e24b1859",
+      "lines": 99,
+      "disposition": "restore-original-owner",
+      "destination": [
+        "src/Game/System/GameDataFunction.cpp",
+        "src/Game/System/StorySequenceExecutor.cpp",
+        "src/Game/Util/HashUtil.cpp",
+        "src/Game/Screen/StaffRoll.cpp"
+      ],
+      "evidence": "Unrelated GameData flag wrappers, unsigned-byte hash and hard-fail stubs. Merged donor now fully defines addDynamicDemoSequenceInfo at1222, StaffRoll startInfo306/isPauseOrEnd310/getStaffRoll696; compat still throws.",
+      "current_callers": [
+        "src/Game/System/StorySequenceExecutor.cpp:1116",
+        "src/Game/System/GameDataHolder.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/System/StorySequenceExecutor.cpp:1222",
+        "decomp/src/Game/Screen/StaffRoll.cpp:306",
+        "decomp/src/Game/Screen/StaffRoll.cpp:696",
+        "decomp/src/Game/Util/HashUtil.cpp:171"
+      ],
+      "deletion_dependencies": [
+        "Restore newly available donor methods; retain Wii unsigned-char hashing by explicit byte semantics or module compile flag.",
+        "StaffRoll lookup requires original SceneObj registration/actor closure; do not merely move hard-fail stubs and claim implementation."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "073808c2b361901a0029632d977eef8084482b0081dd563fe19d10b9e24b1859",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 93,
+          "text": "void StaffRoll::startInfo() {"
+        },
+        {
+          "line": 97,
+          "text": "bool StaffRoll::isPauseOrEnd() const {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/SysConfigFileCompat.cpp",
+      "sha256": "3bd637d31f40c079ca43045b9bc1b014692f086c2a2e978b5e84564584243fcf",
+      "lines": 183,
+      "disposition": "narrow-game-adaptation",
+      "destination": [
+        "src/Game/System/SysConfigFile.cpp",
+        "src/Game/System/BinaryDataContentAccessor.cpp"
+      ],
+      "evidence": "Handwritten three-attribute SYSC serializer uses hashes/offsets0,8,16 and initializes mHeaderSerializer to nullptr, replacing the original serializer owner.",
+      "current_callers": [
+        "src/Game/System/GameDataHolder.cpp",
+        "src/Game/System/NANDManager.cpp"
+      ],
+      "donor": [
+        "decomp/src/Game/System/SysConfigFile.cpp",
+        "decomp/src/Game/System/BinaryDataContentAccessor.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore BinaryDataContentHeaderSerializer construction and endian-aware reads/writes; retain actual on-disk schema.",
+        "Remove SysConfigFile build exclusion and duplicate bodies."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 2,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "3bd637d31f40c079ca43045b9bc1b014692f086c2a2e978b5e84564584243fcf",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 90,
+          "text": "SysConfigChunk::SysConfigChunk() : mHeaderSerializer(nullptr) {"
+        },
+        {
+          "line": 95,
+          "text": "u32 SysConfigChunk::makeHeaderHashCode() const {"
+        },
+        {
+          "line": 99,
+          "text": "u32 SysConfigChunk::getSignature() const {"
+        },
+        {
+          "line": 103,
+          "text": "s32 SysConfigChunk::deserialize(const u8* pBuffer, u32 size) {"
+        },
+        {
+          "line": 117,
+          "text": "void SysConfigChunk::initializeData() {"
+        },
+        {
+          "line": 123,
+          "text": "void SysConfigChunk::initHeaderSerializer() {"
+        },
+        {
+          "line": 129,
+          "text": "s32 SysConfigChunk::serialize(u8* pBuffer, u32 size) const {"
+        },
+        {
+          "line": 133,
+          "text": "std::memset(pBuffer, 0, cBinarySize);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/SystemConfigSdkCompat.cpp",
+      "sha256": "cbfbf71e5c01d1597f47526b2b07b3fe5d9f662931b4231dc08fbbdae04fd4b8",
+      "lines": 35,
+      "disposition": "keep-general",
+      "destination": [
+        "aurora/lib/sysconf.cpp",
+        "aurora/include/aurora/sysconf.hpp"
+      ],
+      "evidence": "SC typed getters/replacers forward to existing Aurora SysConf under OS interrupt guard via active runtime SystemConfigService. No Game resource policy in operations.",
+      "current_callers": [
+        "src/Game/System/ConfigDataMisc.cpp",
+        "src/Game/System/Language.cpp",
+        "src/runtime/SystemConfigService.cpp"
+      ],
+      "donor": [
+        "decomp/src/RVL_SDK/sc"
+      ],
+      "deletion_dependencies": [
+        "Provide SDK symbols directly in Aurora with generic SysConf binding owned by runtime service; remove reverse dependency on Game runtime from SDK.",
+        "Retain interrupt/guest synchronization and error returns."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "cbfbf71e5c01d1597f47526b2b07b3fe5d9f662931b4231dc08fbbdae04fd4b8",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 13,
+          "text": "return smgpc::runtime::SystemConfigService::require_active().find_array(data, size, id);"
+        },
+        {
+          "line": 17,
+          "text": "return smgpc::runtime::SystemConfigService::require_active().find_integer(data, id, aurora::SysConf::Type::Byte);"
+        },
+        {
+          "line": 21,
+          "text": "return smgpc::runtime::SystemConfigService::require_active().find_integer(data, id, aurora::SysConf::Type::Byte);"
+        },
+        {
+          "line": 25,
+          "text": "return smgpc::runtime::SystemConfigService::require_active().find_integer(data, id, aurora::SysConf::Type::Long);"
+        },
+        {
+          "line": 29,
+          "text": "return smgpc::runtime::SystemConfigService::require_active().replace_array(data, size, id);"
+        },
+        {
+          "line": 33,
+          "text": "return smgpc::runtime::SystemConfigService::require_active().replace_u8(value, id);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/detail/Cp932Mapping.tsv",
+      "sha256": "46778ae55afa614d3ece7e4f7160d9f1205626f09a461e6d7a933b57b582d600",
+      "lines": 9283,
+      "disposition": "keep-general",
+      "destination": [
+        "aurora/include/aurora/cp932_literal.hpp",
+        "aurora/include/aurora/detail/cp932_table.hpp",
+        "aurora/data/cp932_mapping.tsv"
+      ],
+      "evidence": "Generic consteval UTF8-to-CP932 conversion validates UTF8 scalars, unmappable input, embedded NUL and storage extent. Generated table reviewed against frozen9280-entry TSV: exact sorted unique match and all canonical Python cp932 encodings agree. No Game IDs or actor exceptions.",
+      "current_callers": [
+        "src/Game/NPC/Tico.cpp",
+        "src/Game/System/StorySequenceExecutor.cpp",
+        "tests/Cp932LiteralTests.cpp",
+        "tests/test_cp932_literals.py"
+      ],
+      "donor": [],
+      "deletion_dependencies": [
+        "Promote encoding facility and data to Aurora; update CP932 includes/namespaces and test paths together.",
+        "Preserve frozen mapping SHA25646778ae55afa614d3ece7e4f7160d9f1205626f09a461e6d7a933b57b582d600 and compiler literal semantics."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "generator contract + all mapping entries compared to generated table and canonical codec",
+      "reviewed_sha256": "46778ae55afa614d3ece7e4f7160d9f1205626f09a461e6d7a933b57b582d600",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/detail/Cp932Table.hpp",
+      "sha256": "efea8729a5f23357b223d01c6322b30c919bcf512df945f8ce6a01c358442deb",
+      "lines": 2335,
+      "disposition": "keep-general",
+      "destination": [
+        "aurora/include/aurora/cp932_literal.hpp",
+        "aurora/include/aurora/detail/cp932_table.hpp",
+        "aurora/data/cp932_mapping.tsv"
+      ],
+      "evidence": "Generic consteval UTF8-to-CP932 conversion validates UTF8 scalars, unmappable input, embedded NUL and storage extent. Generated table reviewed against frozen9280-entry TSV: exact sorted unique match and all canonical Python cp932 encodings agree. No Game IDs or actor exceptions.",
+      "current_callers": [
+        "src/Game/NPC/Tico.cpp",
+        "src/Game/System/StorySequenceExecutor.cpp",
+        "tests/Cp932LiteralTests.cpp",
+        "tests/test_cp932_literals.py"
+      ],
+      "donor": [],
+      "deletion_dependencies": [
+        "Promote encoding facility and data to Aurora; update CP932 includes/namespaces and test paths together.",
+        "Preserve frozen mapping SHA25646778ae55afa614d3ece7e4f7160d9f1205626f09a461e6d7a933b57b582d600 and compiler literal semantics."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "generator contract + all mapping entries compared to generated table and canonical codec",
+      "reviewed_sha256": "efea8729a5f23357b223d01c6322b30c919bcf512df945f8ce6a01c358442deb",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/jaudio/JAISound.cpp",
+      "sha256": "6c05c4b9548ff3d60f029568783f372a0c70339dcf4ff94cecb99ee8770e2e4c",
+      "lines": 199,
+      "disposition": "restore-original-owner",
+      "destination": [
+        "src/JSystem/JAudio2/JAISound.cpp"
+      ],
+      "evidence": "Complete original JAISound implementation; donor diff only relocated increasePrepareCount method and native-safe %p/type-safe sound-ID diagnostic.",
+      "current_callers": [
+        "src/compat/NativePcmSound.cpp",
+        "src/compat/jaudio/JAIStream.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JAudio2/JAISound.cpp"
+      ],
+      "deletion_dependencies": [
+        "Use canonical donor plus native pointer diagnostic fix; add canonical build entry and remove provider."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "6c05c4b9548ff3d60f029568783f372a0c70339dcf4ff94cecb99ee8770e2e4c",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 7,
+          "text": "void JAISoundHandle::releaseSound() {"
+        },
+        {
+          "line": 14,
+          "text": "void JAISound::releaseHandle() {"
+        },
+        {
+          "line": 21,
+          "text": "void JAISound::attachHandle(JAISoundHandle* handle) {"
+        },
+        {
+          "line": 32,
+          "text": "s32 JAISoundStatus_::lockWhenPrepared() {"
+        },
+        {
+          "line": 40,
+          "text": "s32 JAISoundStatus_::unlockIfLocked() {"
+        },
+        {
+          "line": 52,
+          "text": "void JAISoundParams::mixOutAll(const JASSoundParams& inParams, JASSoundParams* outParams, f32 param_2) {"
+        },
+        {
+          "line": 60,
+          "text": "JAISound::JAISound() : mParams() {"
+        },
+        {
+          "line": 63,
+          "text": "void JAISound::start_JAISound_(JAISoundID id, const TVec3f* posPtr, JAIAudience* audience) {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/jaudio/JAISoundChild.cpp",
+      "sha256": "50f6da2baee577670e21b4ac1108fc8a9cb0592aaf4ff8b8ce501fe03dccb946",
+      "lines": 16,
+      "disposition": "restore-original-owner",
+      "destination": [
+        "src/JSystem/JAudio2/JAISoundChild.cpp"
+      ],
+      "evidence": "Byte-identical to merged canonical donor; original JAudio handle/parameter/manager semantics.",
+      "current_callers": [
+        "src/compat/jaudio/JAIStream.cpp",
+        "src/compat/DisabledObjectAudio.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JAudio2/JAISoundChild.cpp"
+      ],
+      "deletion_dependencies": [
+        "Enable canonical source and remove compat provider simultaneously."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "50f6da2baee577670e21b4ac1108fc8a9cb0592aaf4ff8b8ce501fe03dccb946",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 4,
+          "text": "void JAISoundChild::init() {"
+        },
+        {
+          "line": 9,
+          "text": "void JAISoundChild::mixOut(JASTrack* track) {"
+        },
+        {
+          "line": 14,
+          "text": "void JAISoundChild::calc() {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/jaudio/JAISoundHandles.cpp",
+      "sha256": "6f291c3d87915c1b0b4e4602f4b5ba8ef3d409b77b05b8a62cedeb31b80fd014",
+      "lines": 45,
+      "disposition": "restore-original-owner",
+      "destination": [
+        "src/JSystem/JAudio2/JAISoundHandles.cpp"
+      ],
+      "evidence": "Byte-identical to merged canonical donor; original JAudio handle/parameter/manager semantics.",
+      "current_callers": [
+        "src/compat/jaudio/JAIStream.cpp",
+        "src/compat/DisabledObjectAudio.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JAudio2/JAISoundHandles.cpp"
+      ],
+      "deletion_dependencies": [
+        "Enable canonical source and remove compat provider simultaneously."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "6f291c3d87915c1b0b4e4602f4b5ba8ef3d409b77b05b8a62cedeb31b80fd014",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 5,
+          "text": "JAISoundHandle* JAISoundHandles::getHandleSoundID(JAISoundID id) {"
+        },
+        {
+          "line": 17,
+          "text": "JAISoundHandle* JAISoundHandles::getFreeHandle() {"
+        },
+        {
+          "line": 27,
+          "text": "JAISoundHandle* JAISoundHandles::getHandleUserData(u32 addr) {"
+        },
+        {
+          "line": 39,
+          "text": "void JAISoundHandles::setPos(const TVec3f& pos) {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/jaudio/JAISoundStarter.cpp",
+      "sha256": "9a9a03ec6abaf424748c26e051de64278efce1ca629dfe0078c5a3cfb998ffa5",
+      "lines": 27,
+      "disposition": "restore-original-owner",
+      "destination": [
+        "src/JSystem/JAudio2/JAISoundStarter.cpp"
+      ],
+      "evidence": "Byte-identical to merged canonical donor; original JAudio handle/parameter/manager semantics.",
+      "current_callers": [
+        "src/compat/jaudio/JAIStream.cpp",
+        "src/compat/DisabledObjectAudio.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JAudio2/JAISoundStarter.cpp"
+      ],
+      "deletion_dependencies": [
+        "Enable canonical source and remove compat provider simultaneously."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "9a9a03ec6abaf424748c26e051de64278efce1ca629dfe0078c5a3cfb998ffa5",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 4,
+          "text": "JAISoundStarter::JAISoundStarter(bool setInstance) : JASGlobalInstance< JAISoundStarter >(setInstance) {"
+        },
+        {
+          "line": 10,
+          "text": "bool JAISoundStarter::startLevelSound(JAISoundID id, JAISoundHandle* handlePtr, const TVec3f* posPtr) {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/jaudio/JAIStream.cpp",
+      "sha256": "eaaa20a8554b7e8ee6722977519495d0e43e7c5e22da6bfa333deadac4511a41",
+      "lines": 273,
+      "disposition": "restore-original-owner",
+      "destination": [
+        "src/JSystem/JAudio2/JAIStream.cpp",
+        "src/JSystem/JAudio2/JAIStreamMgr.cpp"
+      ],
+      "evidence": "Donor difference is uintptr_t instead of truncating u32 ARAM pointer cast (and comment); original state machine and intentionally false startSound return preserved.",
+      "current_callers": [
+        "src/compat/JaiStreamPlayback.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JAudio2/JAIStream.cpp",
+        "decomp/src/JSystem/JAudio2/JAIStreamMgr.cpp"
+      ],
+      "deletion_dependencies": [
+        "Consolidate canonical donor preserving two ARAM pointer-width adaptations and matching existing header types.",
+        "Update build/delete providers as one batch."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "eaaa20a8554b7e8ee6722977519495d0e43e7c5e22da6bfa333deadac4511a41",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 21,
+          "text": "JAIStream::JAIStream(JAIStreamMgr* streamMgr_, JAISoundStrategyMgr< JAIStream >* soundStrategyMgr_) : JSULink< JAIStream >(this) {"
+        },
+        {
+          "line": 35,
+          "text": "void JAIStream::JAIStreamMgr_startID_(JAISoundID id, s32 streamFileEntry, const TVec3f* posPtr, JAIAudience* audience, int category) {"
+        },
+        {
+          "line": 48,
+          "text": "bool JAIStream::prepare_prepareStream_() {"
+        },
+        {
+          "line": 98,
+          "text": "void JAIStream::prepare_() {"
+        },
+        {
+          "line": 126,
+          "text": "void JAIStream::prepare_startStream_() {"
+        },
+        {
+          "line": 134,
+          "text": "void JAIStream::JAIStreamMgr_mixOut_(const JASSoundParams& inParams, JAISoundActivity activity) {"
+        },
+        {
+          "line": 181,
+          "text": "void JAIStream::die_JAIStream_() {"
+        },
+        {
+          "line": 197,
+          "text": "bool JAIStream::JAISound_tryDie_() {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/jaudio/JAIStreamDataMgr.cpp",
+      "sha256": "1d6d67988db7ac3884c17c6fe570cc7bde296d626dff3c673c49cf67e0b93b70",
+      "lines": 7,
+      "disposition": "restore-original-owner",
+      "destination": [
+        "src/JSystem/JAudio2/JAIStreamDataMgr.cpp"
+      ],
+      "evidence": "Byte-identical to merged canonical donor; original JAudio handle/parameter/manager semantics.",
+      "current_callers": [
+        "src/compat/jaudio/JAIStream.cpp",
+        "src/compat/DisabledObjectAudio.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JAudio2/JAIStreamDataMgr.cpp"
+      ],
+      "deletion_dependencies": [
+        "Enable canonical source and remove compat provider simultaneously."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "1d6d67988db7ac3884c17c6fe570cc7bde296d626dff3c673c49cf67e0b93b70",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    },
+    {
+      "path": "src/compat/jaudio/JAIStreamMgr.cpp",
+      "sha256": "3f9b9808196e95175f9a00577a787cebf5243681be3b6cf0ce78f50f5cce24a9",
+      "lines": 118,
+      "disposition": "restore-original-owner",
+      "destination": [
+        "src/JSystem/JAudio2/JAIStream.cpp",
+        "src/JSystem/JAudio2/JAIStreamMgr.cpp"
+      ],
+      "evidence": "Donor difference is uintptr_t instead of truncating u32 ARAM pointer cast (and comment); original state machine and intentionally false startSound return preserved.",
+      "current_callers": [
+        "src/compat/JaiStreamPlayback.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JAudio2/JAIStream.cpp",
+        "decomp/src/JSystem/JAudio2/JAIStreamMgr.cpp"
+      ],
+      "deletion_dependencies": [
+        "Consolidate canonical donor preserving two ARAM pointer-width adaptations and matching existing header types.",
+        "Update build/delete providers as one batch."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "3f9b9808196e95175f9a00577a787cebf5243681be3b6cf0ce78f50f5cce24a9",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 6,
+          "text": "JAIStreamMgr::JAIStreamMgr(bool setInstance) : JASGlobalInstance< JAIStreamMgr >(setInstance) {"
+        },
+        {
+          "line": 15,
+          "text": "bool JAIStreamMgr::startSound(JAISoundID id, JAISoundHandle* handle, const JGeometry::TVec3< f32 >* posPtr) {"
+        },
+        {
+          "line": 49,
+          "text": "void JAIStreamMgr::freeDeadStream_() {"
+        },
+        {
+          "line": 67,
+          "text": "void JAIStreamMgr::calc() {"
+        },
+        {
+          "line": 76,
+          "text": "void JAIStreamMgr::stop() {"
+        },
+        {
+          "line": 83,
+          "text": "void JAIStreamMgr::stop(u32 fadeTime) {"
+        },
+        {
+          "line": 90,
+          "text": "void JAIStreamMgr::stopSoundID(JAISoundID id) {"
+        },
+        {
+          "line": 99,
+          "text": "void JAIStreamMgr::mixOut() {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/jaudio/JASSoundParams.cpp",
+      "sha256": "31355c6e1b4d33ae11c617b71e567587745a3cd22f8e96694313e01c6477f16f",
+      "lines": 9,
+      "disposition": "restore-original-owner",
+      "destination": [
+        "src/JSystem/JAudio2/JASSoundParams.cpp"
+      ],
+      "evidence": "Byte-identical to merged canonical donor; original JAudio handle/parameter/manager semantics.",
+      "current_callers": [
+        "src/compat/jaudio/JAIStream.cpp",
+        "src/compat/DisabledObjectAudio.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JAudio2/JASSoundParams.cpp"
+      ],
+      "deletion_dependencies": [
+        "Enable canonical source and remove compat provider simultaneously."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 1,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "31355c6e1b4d33ae11c617b71e567587745a3cd22f8e96694313e01c6477f16f",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 3,
+          "text": "void JASSoundParams::combine(const JASSoundParams& other1, const JASSoundParams& other2) {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/jaudio/JasAramStreamPlatform.cpp",
+      "sha256": "04ed089b4eb77fc740210740c0ce825cd5413fc8af1c70997f5edff04fd46ae6",
+      "lines": 104,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JAudio2/JASAramStream.cpp"
+      ],
+      "evidence": "Original stream constructor/init/message commands; prepare/cancel hand off to PCM backend; pause/stop encoded original command words use uintptr_t. Generic JAS boundary.",
+      "current_callers": [
+        "src/compat/jaudio/JAIStream.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JAudio2/JASAramStream.cpp"
+      ],
+      "deletion_dependencies": [
+        "Consolidate in canonical JAS stream owner with native output backend injection; keep callback and message-queue contracts.",
+        "Do not replace original prepare/finish states with immediate success."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "04ed089b4eb77fc740210740c0ce825cd5413fc8af1c70997f5edff04fd46ae6",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 4,
+          "text": "JASAramStream::JASAramStream() {"
+        },
+        {
+          "line": 50,
+          "text": "void JASAramStream::init(uintptr_t param_0, u32 param_1, StreamCallback i_callback, void* i_callbackData) {"
+        },
+        {
+          "line": 72,
+          "text": "aurora::audio::JasStreamPcmBackend::active().initialize(*this);"
+        },
+        {
+          "line": 75,
+          "text": "bool JASAramStream::start() {"
+        },
+        {
+          "line": 82,
+          "text": "bool JASAramStream::stop(u16 param_0) {"
+        },
+        {
+          "line": 89,
+          "text": "bool JASAramStream::pause(bool param_0) {"
+        },
+        {
+          "line": 97,
+          "text": "bool JASAramStream::prepare(s32 entry, int channels) {"
+        },
+        {
+          "line": 98,
+          "text": "return aurora::audio::JasStreamPcmBackend::active().prepare(*this, entry, channels);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/jaudio/JasGenericPoolPlatform.cpp",
+      "sha256": "c5b7deb2dbefa2aa03903b828e5cddec4150ae2241ac81fb1f02b8ffc7bf4ce7",
+      "lines": 80,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JAudio2/JASHeapCtrl.cpp",
+        "src/JSystem/JAudio2/JASReport.cpp"
+      ],
+      "evidence": "Original generic free-list pool/JASDram with explicit native fully-returned-pool retirement; JASReport forwards stderr. No actor IDs.",
+      "current_callers": [
+        "src/compat/JaiStreamPlayback.cpp",
+        "src/JSystem/JAudio2/JAIStream.hpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JAudio2/JASHeapCtrl.cpp",
+        "decomp/src/JSystem/JAudio2/JASReport.cpp"
+      ],
+      "deletion_dependencies": [
+        "Restore canonical pool/report owners; keep native retirement extension owned by pool and actual JAS heap initialization.",
+        "Preserve no-live-objects check before pool backing deletion."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "c5b7deb2dbefa2aa03903b828e5cddec4150ae2241ac81fb1f02b8ffc7bf4ce7",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 6,
+          "text": "JASGenericMemPool::JASGenericMemPool() {"
+        },
+        {
+          "line": 22,
+          "text": "void JASGenericMemPool::newMemPool(u32 size, int n) {"
+        },
+        {
+          "line": 33,
+          "text": "void* JASGenericMemPool::alloc(u32 size) {"
+        },
+        {
+          "line": 46,
+          "text": "void JASGenericMemPool::free(void* ptr, u32 param_1) {"
+        },
+        {
+          "line": 78,
+          "text": "std::vfprintf(stderr, format, args);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/jaudio/JasStreamPcmBackend.cpp",
+      "sha256": "10aef6df843440a5ddde67f57498bd21b9f90dc242883ebc9c9aa2abe00860b1",
+      "lines": 165,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JAudio2/JASStreamPcmBackend.cpp",
+        "src/JSystem/JAudio2/JASStreamPcmBackend.hpp",
+        "aurora/lib/j_audio_stream.cpp"
+      ],
+      "evidence": "Generic STRM decoder/mixer bridge for JASAramStream; tracks deferred prepare/finish callbacks and command queue; nonlinear direct-release curves explicitly unsupported. Already uses Aurora mixer/decoder, but direct JAS layout coupling belongs JSystem adapter.",
+      "current_callers": [
+        "src/compat/JaiStreamPlayback.cpp",
+        "src/compat/jaudio/JasAramStreamPlatform.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JAudio2/JASAramStream.cpp"
+      ],
+      "deletion_dependencies": [
+        "Put JAS object/state adaptation beside JASAramStream; shared PCM/STRM implementation stays Aurora.",
+        "Preserve callback ordering after backend stop, no registry lock/callback lifetime errors, six-channel bound."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "10aef6df843440a5ddde67f57498bd21b9f90dc242883ebc9c9aa2abe00860b1",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": [
+        {
+          "line": 34,
+          "text": "std::span(layers).first(entry.recipe->channel_count));"
+        },
+        {
+          "line": 37,
+          "text": "JasStreamPcmBackend::JasStreamPcmBackend(PcmAudioMixer& mixer, StreamLoader loader) {"
+        },
+        {
+          "line": 47,
+          "text": "JasStreamPcmBackend::Binding::Binding(JasStreamPcmBackend& owner) : previous_(active_backend) { active_backend = &owner; }"
+        },
+        {
+          "line": 53,
+          "text": "void JasStreamPcmBackend::initialize(JASAramStream& stream) {"
+        },
+        {
+          "line": 60,
+          "text": "bool JasStreamPcmBackend::prepare(JASAramStream& stream, s32 entry, int) {"
+        },
+        {
+          "line": 81,
+          "text": "bool JasStreamPcmBackend::cancel(JASAramStream& stream) {"
+        },
+        {
+          "line": 86,
+          "text": "void JasStreamPcmBackend::update() {"
+        },
+        {
+          "line": 155,
+          "text": "void JasStreamPcmBackend::shutdown() {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/jaudio/JasStreamPcmBackend.hpp",
+      "sha256": "d79e5ada655cc40ca53ebc93026ae4b4f30901f8fa3b879a1040ccce1575d63f",
+      "lines": 37,
+      "disposition": "keep-general",
+      "destination": [
+        "src/JSystem/JAudio2/JASStreamPcmBackend.cpp",
+        "src/JSystem/JAudio2/JASStreamPcmBackend.hpp",
+        "aurora/lib/j_audio_stream.cpp"
+      ],
+      "evidence": "Generic STRM decoder/mixer bridge for JASAramStream; tracks deferred prepare/finish callbacks and command queue; nonlinear direct-release curves explicitly unsupported. Already uses Aurora mixer/decoder, but direct JAS layout coupling belongs JSystem adapter.",
+      "current_callers": [
+        "src/compat/JaiStreamPlayback.cpp",
+        "src/compat/jaudio/JasAramStreamPlatform.cpp"
+      ],
+      "donor": [
+        "decomp/src/JSystem/JAudio2/JASAramStream.cpp"
+      ],
+      "deletion_dependencies": [
+        "Put JAS object/state adaptation beside JASAramStream; shared PCM/STRM implementation stays Aurora.",
+        "Preserve callback ordering after backend stop, no registry lock/callback lifetime errors, six-channel bound."
+      ],
+      "action": "Restore/consolidate the described behavior in its listed owning module, update build/includes/callers, and delete this compat path.",
+      "priority": 3,
+      "confidence": "high",
+      "review": "full source read",
+      "reviewed_sha256": "d79e5ada655cc40ca53ebc93026ae4b4f30901f8fa3b879a1040ccce1575d63f",
+      "scope_hash_matches": true,
+      "compat_path_final_state": "deleted",
+      "source_symbols": []
+    }
+  ]
+}

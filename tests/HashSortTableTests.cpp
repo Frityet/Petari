@@ -32,6 +32,16 @@ namespace {
         HashSortTable table;
     };
 
+    void test_resource_hash_preserves_wii_bytes() {
+        constexpr char name[] = "\x82\xa0" "A";
+        require(MR::getHashCode(name) == 129955U,
+                "hashing must treat CP932 bytes as unsigned on native signed-char hosts");
+        require(MR::getHashCodeLower(name) == 129987U,
+                "case-insensitive hashing must fold ASCII while preserving CP932 bytes");
+        require(MR::getHashCodeLower("Run") == MR::getHashCodeLower("RUN"),
+                "animation names must retain original C-locale case folding");
+    }
+
     void test_unsigned_buckets_retain_values_after_sort() {
         struct Entry {
             u32 hash;
@@ -53,14 +63,14 @@ namespace {
         require(table.mHasBeenSorted && table.mCurrentLength == entries.size(),
                 "sorting must preserve the number of registered hashes");
         for (const auto& entry : entries) {
-            u32 result = 0;
+            HashSortTable::Value result = 0;
             require(table.search(entry.hash, &result) && result == entry.value,
                     "unsigned sorting must retain the original value for every hash");
             require(table.search(entry.hash, nullptr), "lookup must allow an omitted result pointer");
         }
 
         for (const u32 missing : {0x00000001U, 0x02000000U, 0x7F000020U, 0x80000021U, 0xFF000051U}) {
-            u32 result = 42;
+            HashSortTable::Value result = 42;
             require(!table.search(missing, &result) && result == 0,
                     "an absent hash must reset the result in populated and empty buckets");
         }
@@ -75,7 +85,7 @@ namespace {
         require(table.add(MR::getHashCode("Lower") + MR::getHashCode("Upper"), 51),
                 "a composite hash must be registered through the unsigned overload");
         table.sort();
-        u32 result = 0;
+        HashSortTable::Value result = 0;
         require(table.search("Run", &result) && result == 31, "a rejected duplicate must retain the first payload");
         require(table.search("Lower", "Upper", &result) && result == 51,
                 "composite lookup must resolve the registered pair of names");
@@ -93,9 +103,10 @@ namespace {
 
 int main() {
     try {
+        test_resource_hash_preserves_wii_bytes();
         test_unsigned_buckets_retain_values_after_sort();
         test_duplicate_names_composite_lookup_and_resort();
-        std::cout << "HashSortTable tests passed (2 groups).\n";
+        std::cout << "HashSortTable tests passed (3 groups).\n";
         return 0;
     } catch (const std::exception& error) {
         std::cerr << "HashSortTable tests failed: " << error.what() << '\n';

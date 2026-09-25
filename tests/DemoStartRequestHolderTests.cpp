@@ -3,7 +3,6 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/DemoStartRequestOwner.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "scene/NameObjChildOwner.hpp"
 
@@ -20,10 +19,8 @@
 
 namespace {
 
-    using smgpc::compat::DemoStartRequestOwner;
-
-    static_assert(!std::is_copy_constructible_v<DemoStartRequestOwner>);
-    static_assert(!std::is_move_constructible_v<DemoStartRequestOwner>);
+    static_assert(!std::is_copy_constructible_v<DemoStartRequestHolder>);
+    static_assert(!std::is_move_constructible_v<DemoStartRequestHolder>);
     static_assert(std::is_same_v<decltype(DemoStartInfo::_0), LiveActor*>);
     static_assert(std::is_same_v<decltype(DemoStartInfo::_4), LayoutActor*>);
     static_assert(std::is_same_v<decltype(DemoStartInfo::_8), NerveExecutor*>);
@@ -48,8 +45,7 @@ namespace {
     }
 
     void test_typed_identity_and_copy() {
-        DemoStartRequestOwner owner;
-        auto& holder = owner.get();
+        DemoStartRequestHolder holder;
         require(holder.mNumInfos == 16 && !holder.isExistRequest() &&
                     holder.getCurrentInfo() == nullptr,
                 "new holder must have sixteen free records and no queued request");
@@ -126,8 +122,7 @@ namespace {
     }
 
     void test_ring_wrap_and_capacity() {
-        DemoStartRequestOwner owner;
-        auto& holder = owner.get();
+        DemoStartRequestHolder holder;
         std::array<std::max_align_t, 64> identities{};
         auto requester = [&](std::size_t index) {
             return reinterpret_cast<NameObj*>(&identities[index]);
@@ -167,8 +162,7 @@ namespace {
     }
 
     void test_empty_slot_contract() {
-        DemoStartRequestOwner owner;
-        auto& holder = owner.get();
+        DemoStartRequestHolder holder;
         auto* slot = holder.findEmpty();
         slot->_10 = holder.mProxyObj;
         slot->mDemoName = "metadata-only";
@@ -187,32 +181,32 @@ namespace {
         require(!holder.isExistRequest(), "empty fallback did not leave the queue");
     }
 
-    void test_host_retirement_and_proxy_ownership() {
+    void test_explicit_allocation_and_proxy_ownership() {
         using namespace smgpc::compat;
         const auto before = name_obj_runtime_state_count();
         auto heaps = JkrHeapRuntime::create(1U << 20);
         auto domain = JkrAllocationDomain::create(heaps, 64U << 10);
-        auto owner = std::unique_ptr<DemoStartRequestOwner>{};
+        auto owner = std::unique_ptr<DemoStartRequestHolder>{};
         NameObj borrower("borrowed request owner");
         const auto capture = mark_name_obj_runtime_registrations();
         NameObj* proxy = nullptr;
         {
             JkrAllocationScope game_allocations(domain);
-            // The containing owner must also outlive the arena. Its internal
-            // scope independently protects all original constructor allocations.
+            // This holder is intentionally retained beyond the arena, so the
+            // caller selects host storage for it and its original children.
             {
                 JkrHostAllocationScope host_owner;
-                owner = std::make_unique<DemoStartRequestOwner>();
+                owner = std::make_unique<DemoStartRequestHolder>();
             }
-            DemoStartRequestOwner nested;
-            auto& holder = owner->get();
+            DemoStartRequestHolder nested;
+            auto& holder = *owner;
             proxy = holder.mProxyObj;
-            require(JKRHeap::findFromRoot(&nested.get()) == nullptr &&
-                        JKRHeap::findFromRoot(nested.get().mProxyObj) == nullptr,
-                    "original holder or proxy used the active Game arena");
-            for (auto* slot : nested.get().mStartInfos) {
-                require(JKRHeap::findFromRoot(slot) == nullptr,
-                        "original request storage used the active Game arena");
+            require(JKRHeap::findFromRoot(&nested) == nullptr &&
+                        JKRHeap::findFromRoot(nested.mProxyObj) == &domain->heap(),
+                    "stack holder must allocate its owned proxy in the active Game arena");
+            for (auto* slot : nested.mStartInfos) {
+                require(JKRHeap::findFromRoot(slot) == &domain->heap(),
+                        "original request storage must use the caller-selected Game arena");
             }
             require(name_obj_runtime_owner(proxy) == owner.get(),
                     "construction capture can adopt the independently owned proxy");
@@ -233,8 +227,8 @@ namespace {
             std::memset(overwrite, 0xa5, 32U << 10);
             delete[] overwrite;
         }
-        require(owner->get().getCurrentInfo()->_C == &borrower &&
-                    std::strcmp(owner->get().getCurrentInfo()->mDemoName, "retained request") == 0,
+        require(owner->getCurrentInfo()->_C == &borrower &&
+                    std::strcmp(owner->getCurrentInfo()->mDemoName, "retained request") == 0,
                 "queued request did not survive unrelated Game arena retirement");
         owner.reset();
         require(!has_name_obj_runtime_state(proxy) &&
@@ -250,9 +244,9 @@ int main() {
         test_typed_identity_and_copy();
         test_ring_wrap_and_capacity();
         test_empty_slot_contract();
-        test_host_retirement_and_proxy_ownership();
+        test_explicit_allocation_and_proxy_ownership();
         std::cout << "[ok] original demo request holder: typed identities, FIFO, capacity, "
-                     "slot reuse, and host ownership\n";
+                     "slot reuse, and explicit original-holder ownership\n";
         return 0;
     } catch (const std::exception& error) {
         std::cerr << "[fail] original demo request holder: " << error.what() << '\n';

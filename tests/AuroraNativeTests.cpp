@@ -779,14 +779,14 @@ namespace {
         require_logic_error(
             [&] { (void)MR::tryRegisterDemoCast(&actor, JMapInfoIter(&placement, 0)); },
             "demo-cast registration without a scene-owned DemoDirector runtime must fail explicitly");
-        require(!smgpc::compat::has_registered_demo_cast(&actor),
-                "missing-runtime registration must not retain orphan cast state");
+        require(smgpc::scene::current_scene_obj_holder() == nullptr,
+                "missing-scene registration must not manufacture a SceneObj holder");
 
         require_logic_error(
             [&] { (void)MR::tryRegisterDemoCast(&actor, JMapInfoIter(&placement, 1)); },
             "missing placement metadata must not hide an absent scene-owned DemoDirector runtime");
-        require(!smgpc::compat::has_registered_demo_cast(&actor),
-                "a second missing-runtime registration must not create registry state");
+        require(smgpc::scene::current_scene_obj_holder() == nullptr,
+                "a second missing-scene registration must not manufacture a SceneObj holder");
     }
 
     void test_story_event_spin_entitlement_boundary() {

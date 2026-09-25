@@ -70,10 +70,6 @@ namespace smgpc::compat {
 
 }  // namespace smgpc::compat
 
-// Original constructor body from src/Game/Camera/CameraTargetObj.cpp.
-CameraTargetObj::CameraTargetObj(const char* pName) : NameObj(pName), mCameraWall() {
-}
-
 namespace CameraLocalUtil {
     CameraTargetObj* getTarget(const Camera* pCamera) {
         if (pCamera->mCameraMan->mDirector != nullptr) return pCamera->mCameraMan->mDirector->getTarget();

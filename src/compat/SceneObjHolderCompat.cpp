@@ -85,7 +85,6 @@
 #include "compat/TalkDirectorLifetime.hpp"
 #include "Game/NPC/TalkDirector.hpp"
 #include "Game/NPC/EventDirector.hpp"
-#include "scene/AreaObjRuntime.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 
 #include <algorithm>
@@ -176,7 +175,6 @@ namespace smgpc::scene {
         _demo_director_ownership = std::make_unique<smgpc::compat::DemoDirectorOwnership>();
         _talk_director_lifetime = std::make_unique<smgpc::compat::TalkDirectorLifetime>();
         _image_effect_ownership = std::make_unique<smgpc::compat::ImageEffectOwnership>(holder);
-        _area_obj_runtime = std::make_unique<AreaObjRuntime>();
         _captured_frame_blur_service = std::make_unique<smgpc::compat::CapturedFrameBlurService>();
         if (sCurrentSceneObjHolder != nullptr) {
             aurora::throw_host_exception<std::logic_error>("a SceneObjHolder is already bound to the active scene");
@@ -255,7 +253,6 @@ namespace smgpc::scene {
         // children after both SceneObjs have retired.
         _global_gravity_ownership->reclaim();
         _global_gravity_ownership.reset();
-        _area_obj_runtime.reset();
         _captured_frame_blur_service.reset();
         _effect_system_ownership.reset();
         _scene_messages.reset();
@@ -311,7 +308,6 @@ namespace smgpc::scene {
             }
             ++_next_registration_postpass_index;
         }
-        _area_obj_runtime->init_after_placement();
     }
 
     void SceneObjHolderBinding::acknowledge_scene_postpass(std::span<NameObj *const> objects) {
@@ -320,7 +316,6 @@ namespace smgpc::scene {
         while (_next_registration_postpass_index < _owned_registration_objects.size() &&
                std::ranges::find(objects, _owned_registration_objects[_next_registration_postpass_index]) != objects.end())
             ++_next_registration_postpass_index;
-        _area_obj_runtime->acknowledge_scene_postpass(objects);
     }
 
     void SceneObjHolderBinding::complete_camera_parameters() {
@@ -390,9 +385,6 @@ namespace smgpc::scene {
         binding->_owned_registration_objects.push_back(object);
     }
 
-    AreaObjRuntime *current_area_obj_runtime() noexcept {
-        return sCurrentSceneObjHolderBinding != nullptr ? sCurrentSceneObjHolderBinding->_area_obj_runtime.get() : nullptr;
-    }
 
     smgpc::compat::CapturedFrameBlurService *current_captured_frame_blur_service() noexcept {
         return sCurrentSceneObjHolderBinding != nullptr

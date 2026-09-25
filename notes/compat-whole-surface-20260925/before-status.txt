@@ -1,0 +1,60 @@
+ M .vscode/extensions.json
+ M .vscode/settings.json
+ M aurora
+ M decomp
+ M notes/decomp-upstream-scene-reuse-20260919/README.md
+ M notes/decomp-upstream-scene-reuse-20260919/final-validation.json
+ M notes/decomp-upstream-scene-reuse-20260919/merge-util-libraries.md
+ M notes/decomp-upstream-scene-reuse-20260919/publication.json
+ M notes/gateway-content-inventory-20260919/README.md
+ M notes/gateway-content-inventory-20260919/note-manifest.json
+ M notes/gateway-wakeup-demo-20260912/first-run.log
+ M notes/original-audio-name-owner-20260912/README.md
+ M notes/original-audio-scene-owner-20260919/README.md
+MM notes/original-gateway-chase-20260919/operate_first_catch.py
+A  notes/original-gateway-chase-20260919/sequential-route-offline-replay.json
+AM notes/original-gateway-chase-20260919/sequential-route-validation.json
+AM notes/original-gateway-chase-20260919/sequential-route.md
+AM notes/original-gateway-chase-20260919/test_sequential_route.py
+A  notes/original-gateway-chase-20260919/three-rabbit-route.json
+ M notes/original-sequence-galaxy-move-20260910/README.md
+ M src/compat/CollisionPartsCompat.cpp
+ M src/compat/GlobalGravityOwnership.hpp
+ M src/compat/HitInfoCompat.cpp
+ M src/compat/HitInfoCompat.hpp
+ M src/runtime/RuntimeContext.cpp
+ M src/runtime/RuntimeContext.hpp
+ D src/scene/AuthoredPlacementInstantiator.cpp
+ D src/scene/AuthoredPlacementInstantiator.hpp
+ D src/scene/NameObjLifecycleService.cpp
+ D src/scene/NameObjLifecycleService.hpp
+ D src/scene/SceneExecutionService.cpp
+ D src/scene/SceneExecutionService.hpp
+ D src/scene/StageAuthoredData.cpp
+ D src/scene/StageAuthoredData.hpp
+ M src/scene/StageCollisionService.cpp
+ M src/scene/StageCollisionService.hpp
+ D src/scene/StagePlacementPreflight.cpp
+ D src/scene/StagePlacementPreflight.hpp
+ M src/scene/nameobj/NameObjFactory.cpp
+ M tests/ActorEventCameraTests.cpp
+ D tests/AreaPolygonQueryTests.cpp
+ M tests/AuroraNativeTests.cpp
+ D tests/AuthoredPlacementInstantiatorTests.cpp
+ M tests/CameraViewInterpolatorTests.cpp
+ M tests/CameraViewServiceTests.cpp
+ M tests/CenterScreenBlurRealOrAbsentTests.cpp
+ M tests/GravityRealOrAbsentTests.cpp
+ D tests/LineCollisionQueryTests.cpp
+ M tests/NameObjFactoryPlacementTests.cpp
+ M tests/OriginalCameraDirectorTests.cpp
+ M tests/OriginalCollisionPartsOwnerTests.cpp
+ M tests/OriginalPlayerUtilTests.cpp
+ M tests/OriginalProcessCollisionAreaTests.cpp
+ M tests/OriginalProcessPlayerOwnerTests.cpp
+ M tests/OriginalSphereQueryTests.cpp
+ M tests/SceneObjHolderRealOrAbsentTests.cpp
+ M tests/StageCollisionRegistrationTests.cpp
+ M tests/StageStartCameraTests.cpp
+ M tests/xmake.lua
+?? tests/OriginalProcessMapObjectTests.cpp

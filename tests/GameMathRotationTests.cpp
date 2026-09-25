@@ -1,21 +1,114 @@
-#include "compat/MetrowerksStdCompat.hpp"
-
+#include "Game/System/GameSystem.hpp"
+#include "Game/System/GameSystemObjHolder.hpp"
+#include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/SingletonHolder.hpp"
+#include "Game/Util/SystemUtil.hpp"
 
+#include <array>
 #include <bit>
 #include <cmath>
+#include <cstddef>
 #include <cstdint>
 #include <iostream>
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <type_traits>
 
 namespace {
     void require(bool condition, std::string_view message) {
         if (!condition) {
             throw std::runtime_error(std::string(message));
         }
+    }
+
+    class OriginalMathFixture final {
+    public:
+        OriginalMathFixture() {
+            require(SingletonHolder<GameSystem>::get() == nullptr,
+                    "math fixture requires exclusive original GameSystem ownership");
+            SingletonHolder<GameSystem>::init();
+            auto* system = SingletonHolder<GameSystem>::get();
+            system->mObjHolder = &objects;
+            system->mSceneController = &controller;
+        }
+
+        ~OriginalMathFixture() {
+            auto* system = SingletonHolder<GameSystem>::release();
+            system->mObjHolder = nullptr;
+            system->mSceneController = nullptr;
+            delete system;
+        }
+
+        OriginalMathFixture(const OriginalMathFixture&) = delete;
+        OriginalMathFixture& operator=(const OriginalMathFixture&) = delete;
+
+        // These original data owners are trivially copyable. Create their actual
+        // values without booting the DVD/NAND/archive services in their constructors.
+        // Only the random state and current stage are used by this math fixture.
+        static_assert(std::is_trivially_copyable_v<GameSystemObjHolder>);
+        static_assert(std::is_trivially_copyable_v<GameSystemSceneController>);
+        GameSystemObjHolder objects = std::bit_cast<GameSystemObjHolder>(
+            std::array<std::byte, sizeof(GameSystemObjHolder)>{});
+        GameSystemSceneController controller = std::bit_cast<GameSystemSceneController>(
+            std::array<std::byte, sizeof(GameSystemSceneController)>{});
+    };
+
+    void test_original_random_owner_and_stage_reseed(OriginalMathFixture& fixture) {
+        auto& random = fixture.objects.mRandom;
+        random.mSeed = 0x12345678U;
+        auto reference = JMath::TRandom_fast_(random.mSeed);
+        const auto expected = reference.getRandF();
+        require(MR::getRandom() == expected && random.mSeed == reference.mSeed,
+                "getRandom must consume the actual GameSystemObjHolder random state");
+
+        // An intervening direct user must share the same stream, not a second seed.
+        (void)random.rand();
+        (void)reference.rand();
+        const auto expected_after_direct = reference.getRandF();
+        require(MR::getRandom() == expected_after_direct && random.mSeed == reference.mSeed,
+                "direct holder draws and MathUtil draws must advance one shared stream");
+
+        fixture.controller.mCurrSceneControlInfo.setStage("HeavensDoorGalaxy");
+        MR::setRandomSeedFromStageName();
+        require(random.mSeed == 0x667CAC16U,
+                "stage reseeding must write the original stage-name hash into the actual random owner");
+        reference.mSeed = random.mSeed;
+        std::array<float, 4> first_sequence{};
+        for (auto& sample : first_sequence) {
+            const auto expected_sample = reference.getRandF();
+            sample = MR::getRandom();
+            require(sample == expected_sample && random.mSeed == reference.mSeed,
+                    "stage-seeded MathUtil output must consume the holder sequence");
+        }
+
+        MR::setRandomSeedFromStageName();
+        for (const auto sample : first_sequence) {
+            require(MR::getRandom() == sample,
+                    "reseeding the same stage after consumption must replay its observed sequence");
+        }
+        fixture.controller.mCurrSceneControlInfo.setStage("EggStarGalaxy");
+        MR::setRandomSeedFromStageName();
+        require(random.mSeed == 0x162A21C7U,
+                "a different scene stage must reseed the original holder from its own stage-name hash");
+        reference.mSeed = random.mSeed;
+        const auto changed_stage = MR::getRandom();
+        require(changed_stage == reference.getRandF() && changed_stage != first_sequence.front(),
+                "changing the original scene stage must change the observed random sequence");
+        random.mSeed = 0;
+    }
+
+    void test_original_abs_intrinsics() {
+        require(std::bit_cast<u32>(MR::abs(-0.0F)) == 0U,
+                "float absolute value must clear the sign of negative zero");
+        const auto negative_nan = std::bit_cast<float>(u32{0xFFC12345U});
+        require(std::bit_cast<u32>(MR::abs(negative_nan)) == 0x7FC12345U,
+                "float absolute value must clear the NaN sign while preserving its payload");
+        const auto minimum = std::bit_cast<s32>(u32{0x80000000U});
+        require(MR::abs(minimum) == minimum && MR::abs(s32{-23}) == 23 && MR::abs(s32{0}) == 0,
+                "integer absolute value must retain the original minimum-integer wrap without signed overflow");
     }
 
     bool near(float actual, float expected, float tolerance = 0.00002F) {
@@ -378,7 +471,6 @@ namespace {
     }
 
     void test_near_parallel_angle_table() {
-        MR::initAcosTable();
         // 0.999 selects retail table entry 242, whose ratio is 12737/12750.
         const auto expected = static_cast<float>(std::acos(12737.0 / 12750.0));
         require(near(MR::acosEx(0.999F), expected, 0.0000001F),
@@ -527,6 +619,10 @@ namespace {
 
 int main() {
     try {
+        OriginalMathFixture fixture;
+        MR::initAcosTable();
+        test_original_random_owner_and_stage_reseed(fixture);
+        test_original_abs_intrinsics();
         test_quaternion_world_rotation_and_aliasing();
         test_quaternion_normalization_and_slerp();
         test_quaternion_matrix_assignment();

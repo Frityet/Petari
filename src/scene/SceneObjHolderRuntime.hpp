@@ -27,7 +27,6 @@ namespace smgpc::compat {
 
 namespace smgpc::scene {
 
-    class AreaObjRuntime;
 
     using SceneObjFactoryOverride = NameObj *(*)(int id, void *context);
 
@@ -60,7 +59,6 @@ namespace smgpc::scene {
         friend smgpc::compat::CollisionDirectorOwnership* current_collision_director_ownership() noexcept;
         friend smgpc::compat::ClippingDirectorOwnership* current_clipping_director_ownership() noexcept;
         friend smgpc::compat::EffectSystemOwnership* current_effect_system_ownership() noexcept;
-        friend AreaObjRuntime *current_area_obj_runtime() noexcept;
         friend smgpc::compat::CapturedFrameBlurService *
         current_captured_frame_blur_service() noexcept;
         friend smgpc::compat::GlobalGravityOwnership *
@@ -99,7 +97,6 @@ namespace smgpc::scene {
         void *_factory_context;
         std::unique_ptr<smgpc::compat::GlobalGravityOwnership>
             _global_gravity_ownership;
-        std::unique_ptr<AreaObjRuntime> _area_obj_runtime;
         std::unique_ptr<smgpc::compat::CapturedFrameBlurService>
             _captured_frame_blur_service;
     };

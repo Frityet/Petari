@@ -1,0 +1,116 @@
+--- a/tests/CameraViewInterpolatorTests.cpp
++++ b/tests/CameraViewInterpolatorTests.cpp
+@@ -5,7 +5,7 @@
+ #include "Game/Scene/SceneObjHolder.hpp"
+ #include "camera/OriginalCameraView.hpp"
+ #include "compat/CameraViewRuntime.hpp"
+-#include "compat/DemoSceneRuntime.hpp"
++#include "SceneExecutionFixture.hpp"
+ #include "resource/BcsvTable.hpp"
+ #include "runtime/RuntimeServices.hpp"
+ #include "runtime/SceneScheduler.hpp"
+@@ -225,10 +225,12 @@
+     void test_camera_service_keeps_raw_pose_and_damps_rendered_view() {
+         auto scheduler = smgpc::runtime::SceneScheduler{};
+         const auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
+-        auto dvd = smgpc::runtime::DvdFileSystemService("/");
+-        auto demo = smgpc::compat::DemoSceneRuntime(dvd, {});
+-        auto holder = SceneObjHolder{};
+-        auto scene_binding = smgpc::scene::SceneObjHolderBinding(holder);
++        auto heaps = smgpc::compat::JkrHeapRuntime::create(8U << 20);
++        auto scene = smgpc::test::SceneExecutionFixture(
++            scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 2U << 20));
++        auto& holder = scene.holder();
++        require(holder.create(SceneObj_DemoDirector) != nullptr,
++                "camera service requires the actual scene DemoDirector and DemoSheet resource");
+         require(holder.create(SceneObj_AreaObjContainer) != nullptr,
+                 "the service view test must provide the original repulsive-area query registry");
+         auto collision = smgpc::scene::StageCollisionService{};
+--- a/tests/CameraViewServiceTests.cpp
++++ b/tests/CameraViewServiceTests.cpp
+@@ -5,7 +5,7 @@
+ #include "camera/CameraAnimation.hpp"
+ #include "camera/OriginalAnimationCamera.hpp"
+ #include "camera/OriginalGameCamera.hpp"
+-#include "compat/DemoSceneRuntime.hpp"
++#include "SceneExecutionFixture.hpp"
+ #include "runtime/RuntimeServices.hpp"
+ #include "runtime/SceneScheduler.hpp"
+ #include "scene/SceneObjHolderRuntime.hpp"
+@@ -79,8 +79,13 @@
+     }
+ 
+     struct CameraScene {
+-        CameraScene() : scheduler_binding(scheduler), dvd("/"), demo(dvd, {}),
+-                        scene_binding(holder), target([this] { return target_state; }) {
++        CameraScene() : scheduler_binding(scheduler),
++                        heaps(smgpc::compat::JkrHeapRuntime::create(8U << 20)),
++                        scene(scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 2U << 20)),
++                        target([this] { return target_state; }) {
++            auto& holder = scene.holder();
++            require(holder.create(SceneObj_DemoDirector) != nullptr,
++                    "camera service requires the actual scene DemoDirector and DemoSheet resource");
+             require(holder.create(SceneObj_AreaObjContainer) != nullptr &&
+                         holder.create(SceneObj_PlanetGravityManager) != nullptr,
+                     "camera view integration requires real area and gravity registries");
+@@ -105,10 +110,8 @@
+ 
+         smgpc::runtime::SceneScheduler scheduler;
+         smgpc::runtime::SceneSchedulerBinding scheduler_binding;
+-        smgpc::runtime::DvdFileSystemService dvd;
+-        smgpc::compat::DemoSceneRuntime demo;
+-        SceneObjHolder holder;
+-        smgpc::scene::SceneObjHolderBinding scene_binding;
++        std::shared_ptr<smgpc::compat::JkrHeapRuntime> heaps;
++        smgpc::test::SceneExecutionFixture scene;
+         smgpc::scene::StageCollisionService collision;
+         smgpc::camera::StageCameraTargetState target_state{
+             .ground_position = smgpc::camera::CameraParamVec3{},
+--- a/tests/StageStartCameraTests.cpp
++++ b/tests/StageStartCameraTests.cpp
+@@ -13,7 +13,7 @@
+ #include "camera/StageStartCamera.hpp"
+ #include "compat/ActorRuntimeRegistry.hpp"
+ #include "compat/CameraUtilCompat.hpp"
+-#include "compat/DemoSceneRuntime.hpp"
++#include "SceneExecutionFixture.hpp"
+ #include "resource/BcsvTable.hpp"
+ #include "runtime/RuntimeServices.hpp"
+ #include "runtime/SceneScheduler.hpp"
+@@ -1161,9 +1161,12 @@
+         auto scheduler = smgpc::runtime::SceneScheduler{};
+         const auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
+         auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
+-        auto demo = smgpc::compat::DemoSceneRuntime(dvd, {});
+-        auto event_scene_holder = SceneObjHolder{};
+-        auto event_scene_binding = smgpc::scene::SceneObjHolderBinding(event_scene_holder);
++        auto heaps = smgpc::compat::JkrHeapRuntime::create(8U << 20);
++        auto event_scene = smgpc::test::SceneExecutionFixture(
++            scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 2U << 20));
++        auto& event_scene_holder = event_scene.holder();
++        require(event_scene_holder.create(SceneObj_DemoDirector) != nullptr,
++                "retail camera integration requires the actual scene DemoDirector");
+         require(event_scene_holder.create(SceneObj_AreaObjContainer) != nullptr &&
+                     event_scene_holder.create(SceneObj_PlanetGravityManager) != nullptr,
+                 "the original stage view and matrix target require real area and gravity scene registries");
+--- a/tests/AuroraNativeTests.cpp
++++ b/tests/AuroraNativeTests.cpp
+@@ -742,14 +742,14 @@
+         require_logic_error(
+             [&] { (void)MR::tryRegisterDemoCast(&actor, JMapInfoIter(&placement, 0)); },
+             "demo-cast registration without a scene-owned DemoDirector runtime must fail explicitly");
+-        require(!smgpc::compat::has_registered_demo_cast(&actor),
+-                "missing-runtime registration must not retain orphan cast state");
++        require(smgpc::scene::current_scene_obj_holder() == nullptr,
++                "missing-scene registration must not manufacture a SceneObj holder");
+ 
+         require_logic_error(
+             [&] { (void)MR::tryRegisterDemoCast(&actor, JMapInfoIter(&placement, 1)); },
+             "missing placement metadata must not hide an absent scene-owned DemoDirector runtime");
+-        require(!smgpc::compat::has_registered_demo_cast(&actor),
+-                "a second missing-runtime registration must not create registry state");
++        require(smgpc::scene::current_scene_obj_holder() == nullptr,
++                "a second missing-scene registration must not manufacture a SceneObj holder");
+     }
+ 
+     void test_story_event_spin_entitlement_boundary() {

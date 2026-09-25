@@ -1,0 +1,22 @@
+[
+  {
+    "target": "smg-pc",
+    "build_exit": 0
+  },
+  {
+    "target": "smg-pc-area-obj-real-or-absent-tests",
+    "build_exit": 0
+  },
+  {
+    "target": "smg-pc-game-math-rotation-tests",
+    "build_exit": 0
+  },
+  {
+    "target": "smg-pc-gravity-math-foundation-tests",
+    "build_exit": 0
+  },
+  {
+    "target": "smg-pc-original-scene-execution-owner-tests",
+    "build_exit": 0
+  }
+]

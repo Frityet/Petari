@@ -14,35 +14,10 @@
 #include <stdexcept>
 
 namespace smgpc::compat {
-void destroy_wpad_children(WPad&) noexcept;
 namespace {
 thread_local WPadOwnership* current_wpad_owner = nullptr;
 
-// Explicit instantiation supplies native lifetime access without changing the
-// original private Game declaration or depending on a Wii object layout.
-struct RumbleCallbackTable {
-    using type = WPadRumble***;
-    friend type input_static(RumbleCallbackTable);
-};
-template <typename Tag, typename Tag::type Member> struct InputStaticAccess {
-    friend typename Tag::type input_static(Tag) { return Member; }
-};
-template struct InputStaticAccess<RumbleCallbackTable, &WPadRumble::sInstanceForCallback>;
 
-WPadRumble** rumble_callbacks() { return *input_static(RumbleCallbackTable{}); }
-
-void initialize_input_statics() {
-    // The original constructor lazily allocates a process-wide callback table.
-    // Run it once on the host heap so no scene owns that table's storage. All
-    // scene input objects below still use their retained original JKR heap.
-    static const bool initialized = [] {
-        JkrHostAllocationScope host;
-        WPad pad(0);
-        destroy_wpad_children(pad);
-        return true;
-    }();
-    (void)initialized;
-}
 }
 
 struct WPadOwnership::State {
@@ -52,31 +27,22 @@ struct WPadOwnership::State {
     }
     ~State() {
         JkrAllocationScope game(domain);
-        for (auto* pad : holder->mPad) {
-            destroy_wpad_children(*pad);
-            delete pad;
-        }
-        for (s32 channel = 0; channel < WPAD_MAX_CONTROLLERS; ++channel)
-            delete[] holder->mReadDataInfoArray[channel].mStatusArray;
-        delete[] holder->mReadDataInfoArray;
         delete holder;
     }
-    aurora::WpadClientScope callbacks;
     std::shared_ptr<JkrAllocationDomain> domain;
     WPadHolder* holder = nullptr;
 };
 
 WPadOwnership::WPadOwnership(std::shared_ptr<JkrAllocationDomain> domain) {
     JkrHostAllocationScope host;
-    initialize_input_statics();
     _previous = current_wpad_owner;
     for (std::size_t channel = 0; channel < _previous_rumble.size(); ++channel)
-        _previous_rumble[channel] = rumble_callbacks()[channel];
+        _previous_rumble[channel] = _previous ? _previous->pad(channel).getRumbleInstance() : nullptr;
     try {
         _state = std::make_unique<State>(std::move(domain));
     } catch (...) {
         for (std::size_t channel = 0; channel < _previous_rumble.size(); ++channel)
-            rumble_callbacks()[channel] = _previous_rumble[channel];
+            if (_previous_rumble[channel]) _previous_rumble[channel]->registInstance();
         throw;
     }
     current_wpad_owner = this;
@@ -85,7 +51,6 @@ WPadOwnership::~WPadOwnership() {
     _state.reset();
     current_wpad_owner = _previous;
     for (std::size_t channel = 0; channel < _previous_rumble.size(); ++channel) {
-        rumble_callbacks()[channel] = _previous_rumble[channel];
         if (_previous_rumble[channel]) _previous_rumble[channel]->registInstance();
     }
 }

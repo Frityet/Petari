@@ -1,87 +1,18 @@
 #pragma once
 
-#include "Game/AreaObj/AreaObj.hpp"
-
-#include <revolution/types.h>
-
-#include <memory>
 #include <span>
 #include <string_view>
-#include <vector>
 
-class AreaObjContainer;
 class NameObj;
 
 namespace smgpc::scene {
-
     using AreaObjCreator = NameObj *(*)(const char *);
-    using AreaObjManagerCreator = AreaObjMgr *(*)(s32, const char *);
-    using AreaObjManagerFinalize = void (*)(AreaObjMgr &);
-
-    struct AreaObjManagerDescriptor {
-        std::string_view name;
-        s32 retail_order;
-        s32 capacity;
-        AreaObjManagerCreator creator;
-        AreaObjManagerFinalize finalize = nullptr;
-    };
-
-    // A descriptor is complete only when both halves of the retail placement
-    // route are linked: the actor creator and the manager it enters from
-    // AreaObj::init. Installing a manager alone does not enable its actors.
     struct AreaObjPlacementDescriptor {
         std::string_view object_name;
         AreaObjCreator object_creator = nullptr;
-        std::string_view manager_name;
-        s32 retail_manager_order = -1;
-        s32 manager_capacity = 0;
-        AreaObjManagerCreator manager_creator = nullptr;
-        AreaObjManagerFinalize manager_finalize = nullptr;
     };
-
-    [[nodiscard]] std::span<const AreaObjManagerDescriptor> complete_area_obj_manager_descriptors() noexcept;
     [[nodiscard]] std::span<const AreaObjPlacementDescriptor> complete_area_obj_placement_descriptors() noexcept;
-    [[nodiscard]] const AreaObjPlacementDescriptor *find_complete_area_obj_placement_descriptor(
-        std::string_view object_name) noexcept;
+    [[nodiscard]] const AreaObjPlacementDescriptor *find_complete_area_obj_placement_descriptor(std::string_view object_name) noexcept;
     [[nodiscard]] bool is_area_obj_placement_table(std::string_view table_path) noexcept;
-    [[nodiscard]] bool placement_has_complete_area_obj_runtime(
-        std::string_view object_name, std::string_view table_path,
-        bool factory_supported) noexcept;
-    [[nodiscard]] AreaObjMgr *find_area_obj_manager_by_retail_prefix(
-        std::span<AreaObjMgr *const> managers,
-        std::string_view requested_name) noexcept;
-
-    class AreaObjRuntime final {
-    public:
-        AreaObjRuntime();
-        ~AreaObjRuntime();
-
-        AreaObjRuntime(const AreaObjRuntime &) = delete;
-        AreaObjRuntime &operator=(const AreaObjRuntime &) = delete;
-        AreaObjRuntime(AreaObjRuntime &&) = delete;
-        AreaObjRuntime &operator=(AreaObjRuntime &&) = delete;
-
-        [[nodiscard]] AreaObjMgr *adopt_manager(
-            std::unique_ptr<AreaObjMgr> manager,
-            AreaObjManagerFinalize finalize = nullptr);
-        void adopt_managers(
-            std::vector<std::unique_ptr<AreaObjMgr>> managers,
-            std::vector<AreaObjManagerFinalize> finalizers = {});
-        void init_after_placement();
-        void acknowledge_scene_postpass(std::span<NameObj *const> objects);
-
-    private:
-        struct OwnedManager {
-            std::unique_ptr<AreaObjMgr> manager;
-            AreaObjManagerFinalize finalize = nullptr;
-            bool did_init_after_placement = false;
-            bool did_finalize = false;
-        };
-
-        std::vector<OwnedManager> _owned_managers;
-        bool _did_init_after_placement = false;
-    };
-
-    [[nodiscard]] AreaObjRuntime *current_area_obj_runtime() noexcept;
-
-}  // namespace smgpc::scene
+    [[nodiscard]] bool placement_has_complete_area_obj_runtime(std::string_view object_name, std::string_view table_path, bool factory_supported) noexcept;
+} // namespace smgpc::scene
