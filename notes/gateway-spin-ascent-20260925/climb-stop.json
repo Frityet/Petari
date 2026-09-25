@@ -1,0 +1,5 @@
+{
+  "pid": 56396,
+  "reason": "Rosalina dead after spin tutorial; normal HUD and player control returned; transfer controller writer to crystal approach",
+  "command": "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python /Users/frityet/Projects/petari/notes/gateway-spin-ascent-20260925/climb_tower.py"
+}

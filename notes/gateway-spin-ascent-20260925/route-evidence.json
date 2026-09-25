@@ -1,0 +1,6988 @@
+{
+  "recorded_at_utc": "2026-09-25T20:16:21.999607+00:00",
+  "status": "completed",
+  "source_head_at_launch": "412329362327ef61402a1ebf03e7a4cb3427f038",
+  "terminal": {
+    "exit_code": 0,
+    "completed_frames": 36000,
+    "elapsed_seconds": 630.1477702920092,
+    "timeout_terminated": false,
+    "process_still_exists_after_wait": false,
+    "verified_bounded_completion": true,
+    "binary_sha256": "037dbc1201722dccc734c34e3e39eb1ff750fedde5f1599e0ea54be9854687b8",
+    "binary_sha256_after": "037dbc1201722dccc734c34e3e39eb1ff750fedde5f1599e0ea54be9854687b8",
+    "binary_unchanged": true
+  },
+  "route": "HeavensDoorGalaxy scenario1, fresh isolated save, actual original GameSystem",
+  "completed_catches": [
+    {
+      "label": "bush",
+      "rabbit_id": 1090,
+      "caught_frame": 3300,
+      "tico_id": 1075,
+      "tico_talk_frame": 3560,
+      "completed_frame": 3670
+    },
+    {
+      "label": "pipe",
+      "rabbit_id": 1085,
+      "caught_frame": 4850,
+      "tico_id": 1069,
+      "tico_talk_frame": 5110,
+      "completed_frame": 5220
+    },
+    {
+      "label": "hole",
+      "rabbit_id": 1095,
+      "caught_frame": 9450,
+      "tico_id": 1081,
+      "tico_talk_frame": 9700,
+      "completed_frame": 9940
+    }
+  ],
+  "claims": {
+    "three_authored_catch_groups": true,
+    "rosetta_alive_unhidden_first_sample": 10410,
+    "rosetta_unobstructed_rendered_view_artifact": "spin-tutorial-ui.jpg",
+    "tower_ascent_through_waypoint27": 15580,
+    "tutorial_first_sample": 15700,
+    "tutorial_actor_retirement_first_sample": 18710,
+    "spin_permission_field_directly_traced": false,
+    "ordinary_x_spin_behavior_observed": true,
+    "spin_behavior_evidence": "Parent observed ordinary physical X; trace MarioMagic at33190 and Crystal1013 Break at33200; crystal-x-ui.jpg shows Mario and crystal shards.",
+    "first_crystal_break_sample": 33200,
+    "additional_crystals_break_sample": 35950,
+    "first_launch_driver_appeared_sample": 35960,
+    "first_launch_driver_wait_sample": 35980,
+    "launch_ride_observed": false,
+    "first_grand_star_or_galaxy_finish_observed": false
+  },
+  "input_limits": [
+    "This audit performed no UI/input or game-state writes; parent operated physical X/Return and scripted A.",
+    "Earlier X during talk was not a valid free-action spin check. Earlier Return had no clear visible result, not evidence of broken keyboard input.",
+    "Trace does not contain raw acceleration or the spin-permission field; permission functioning is inferred from subsequent actual spin/cage-break behavior.",
+    "No saved launch-star-revealed image exists; only the driver actor trace is retained for that late milestone."
+  ],
+  "sampling_interval_frames": 10,
+  "source_trace": {
+    "path": "route-actors.jsonl",
+    "bytes": 373390906,
+    "sha256": "4b7d5ef3c84b6425c41f4f956e42ea5420ea6bbbf2a23cf3520d772105b81da0",
+    "complete_records": 3600,
+    "last_frame": 35990,
+    "hash_taken_after_terminal_report": true
+  },
+  "snapshot_extract": {
+    "path": "milestone-snapshots.jsonl.gz",
+    "records": 28,
+    "frames": [
+      80,
+      1400,
+      3300,
+      3670,
+      4850,
+      5220,
+      9450,
+      9940,
+      10110,
+      10410,
+      10970,
+      12490,
+      14550,
+      15580,
+      15700,
+      18700,
+      18710,
+      29460,
+      29590,
+      29600,
+      33190,
+      33200,
+      33250,
+      35940,
+      35950,
+      35960,
+      35980,
+      35990
+    ],
+    "format": "Exact original JSONL records for selected frames, without field reduction or rewriting; not a full-trace compression."
+  },
+  "milestones": [
+    {
+      "frame": 80,
+      "label": "Initial traced actors",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            14469.1162109375,
+            -12786.20703125,
+            6055.416015625
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 3,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610612736,
+            "movement_high_word": 536920064,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 738,
+              "normal": [
+                -0.03009193204343319,
+                -0.9264749884605408,
+                -0.375151127576828
+              ],
+              "prism_index": 4561,
+              "vertices": [
+                [
+                  14613.9150390625,
+                  -12814.14453125,
+                  6096.42138671875
+                ],
+                [
+                  14474.4013671875,
+                  -12800.08203125,
+                  6072.8837890625
+                ],
+                [
+                  14502.462890625,
+                  -12748.541015625,
+                  5943.345703125
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14801.22265625,
+            -8094.75244140625,
+            7460.72119140625
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14732.419921875,
+            -8280.5517578125,
+            7561.1328125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            14856.8193359375,
+            -8643.458984375,
+            7593.45751953125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15356.65625,
+            -8714.5693359375,
+            7597.10791015625
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            14468.5419921875,
+            -12790.37109375,
+            6054.005859375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 3,
+            "type": "N14NrvRunawayTico20RunawayTicoNrvGuide0E"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16820.5,
+            -10518.7177734375,
+            6419.642578125
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13570.0380859375,
+            -10948.6328125,
+            5068.73046875
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 0,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            13515.4384765625,
+            -10082.9228515625,
+            7993.64892578125
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 0,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 1400,
+      "label": "Controller operator binds authored rabbit groups",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            14468.59765625,
+            -12789.9462890625,
+            6054.15087890625
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 1323,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610612736,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 738,
+              "normal": [
+                -0.03009193204343319,
+                -0.9264749884605408,
+                -0.375151127576828
+              ],
+              "prism_index": 4561,
+              "vertices": [
+                [
+                  14613.9150390625,
+                  -12814.14453125,
+                  6096.42138671875
+                ],
+                [
+                  14474.4013671875,
+                  -12800.08203125,
+                  6072.8837890625
+                ],
+                [
+                  14502.462890625,
+                  -12748.541015625,
+                  5943.345703125
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14801.22265625,
+            -8094.75244140625,
+            7460.72119140625
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14732.419921875,
+            -8280.5517578125,
+            7561.1328125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            14856.8193359375,
+            -8643.458984375,
+            7593.45751953125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15356.65625,
+            -8714.5693359375,
+            7597.10791015625
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            14762.4931640625,
+            -12989.0615234375,
+            6211.455078125
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 392,
+            "type": "N14NrvRunawayTico20RunawayTicoNrvGuide1E"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16820.5,
+            -10518.7177734375,
+            6419.642578125
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13570.0380859375,
+            -10948.6328125,
+            5068.73046875
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 0,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            13515.4384765625,
+            -10082.9228515625,
+            7993.64892578125
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 0,
+            "type": "N16NrvRunawayRabbit24RunawayRabbitNrvNoActiveE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 3300,
+      "label": "Bush rabbit first caught sample",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          -0.45715901255607605,
+          0.48523199558258057
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            13794.7763671875,
+            -12332.7763671875,
+            5741.12451171875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 3223,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 536872960,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 738,
+              "normal": [
+                -0.5038433074951172,
+                -0.7172660827636719,
+                -0.4813222289085388
+              ],
+              "prism_index": 5390,
+              "vertices": [
+                [
+                  13760.8759765625,
+                  -12183.552734375,
+                  5708.95703125
+                ],
+                [
+                  13846.9130859375,
+                  -12353.787109375,
+                  5872.576171875
+                ],
+                [
+                  13688.3173828125,
+                  -12213.2529296875,
+                  5829.169921875
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14801.22265625,
+            -8094.75244140625,
+            7460.72119140625
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14732.419921875,
+            -8280.5517578125,
+            7561.1328125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            14856.8193359375,
+            -8643.458984375,
+            7593.45751953125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            13714.4990234375,
+            -12329.1875,
+            5728.64892578125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            14762.4931640625,
+            -12989.0615234375,
+            6211.455078125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 426,
+            "type": "N14NrvRunawayTico20RunawayTicoNrvGuide1E"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16820.5,
+            -10518.7177734375,
+            6419.642578125
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 53,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvHideE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13804.30078125,
+            -12334.7685546875,
+            5741.40087890625
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 8,
+            "type": "N16NrvRunawayRabbit22RunawayRabbitNrvCaughtE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            13515.4384765625,
+            -10082.9228515625,
+            7993.64892578125
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": -1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvHideE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 3670,
+      "label": "Bush Tico conversation complete",
+      "controller": {
+        "hold": 2048,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            13888.7880859375,
+            -12311.2822265625,
+            5765.716796875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 3593,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610612736,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 738,
+              "normal": [
+                -0.5916047096252441,
+                -0.5519396662712097,
+                -0.5876787304878235
+              ],
+              "prism_index": 4506,
+              "vertices": [
+                [
+                  13929.4453125,
+                  -12389.9375,
+                  5808.1240234375
+                ],
+                [
+                  13904.58203125,
+                  -12330.1796875,
+                  5777.029296875
+                ],
+                [
+                  14009.095703125,
+                  -12362.3740234375,
+                  5702.0537109375
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14801.22265625,
+            -8094.75244140625,
+            7460.72119140625
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14732.419921875,
+            -8280.5517578125,
+            7561.1328125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            14856.8193359375,
+            -8643.458984375,
+            7593.45751953125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            13916.83203125,
+            -12522.001953125,
+            5706.703125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 5,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            14762.4931640625,
+            -12989.0615234375,
+            6211.455078125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 426,
+            "type": "N14NrvRunawayTico20RunawayTicoNrvGuide1E"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16820.5,
+            -10518.7177734375,
+            6419.642578125
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 54,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvHideE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            13515.4384765625,
+            -10082.9228515625,
+            7993.64892578125
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": -1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvHideE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 4850,
+      "label": "Pipe rabbit first caught sample",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          -0.4958859980106354,
+          0.44558000564575195
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 4773,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610743808,
+            "movement_high_word": 2211840,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 738,
+              "normal": [
+                0.9559115171432495,
+                0.1536465883255005,
+                -0.25025129318237305
+              ],
+              "prism_index": 6726,
+              "vertices": [
+                [
+                  16717.171875,
+                  -11081.77734375,
+                  6136.84375
+                ],
+                [
+                  16672.046875,
+                  -11039.6181640625,
+                  5990.36474609375
+                ],
+                [
+                  16676.744140625,
+                  -10979.1083984375,
+                  6045.45556640625
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14801.22265625,
+            -8094.75244140625,
+            7460.72119140625
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14732.419921875,
+            -8280.5517578125,
+            7561.1328125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            16758.0703125,
+            -11060.89453125,
+            5995.60302734375
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            13916.83203125,
+            -12522.001953125,
+            5706.703125
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 1176,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            14762.4931640625,
+            -12989.0615234375,
+            6211.455078125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 426,
+            "type": "N14NrvRunawayTico20RunawayTicoNrvGuide1E"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit26RunawayRabbitNrvCaughtTalkE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            13515.4384765625,
+            -10082.9228515625,
+            7993.64892578125
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 1103,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvHideE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 5220,
+      "label": "Pipe Tico conversation complete",
+      "controller": {
+        "hold": 2048,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 5143,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610612736,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 738,
+              "normal": [
+                0.9559115171432495,
+                0.1536465883255005,
+                -0.25025129318237305
+              ],
+              "prism_index": 6726,
+              "vertices": [
+                [
+                  16717.171875,
+                  -11081.77734375,
+                  6136.84375
+                ],
+                [
+                  16672.046875,
+                  -11039.6181640625,
+                  5990.36474609375
+                ],
+                [
+                  16676.744140625,
+                  -10979.1083984375,
+                  6045.45556640625
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14801.22265625,
+            -8094.75244140625,
+            7460.72119140625
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14732.419921875,
+            -8280.5517578125,
+            7561.1328125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            16887.4375,
+            -11113.50390625,
+            6080.80224609375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 6,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            13916.83203125,
+            -12522.001953125,
+            5706.703125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 1183,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            14762.4931640625,
+            -12989.0615234375,
+            6211.455078125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 426,
+            "type": "N14NrvRunawayTico20RunawayTicoNrvGuide1E"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            13515.4384765625,
+            -10082.9228515625,
+            7993.64892578125
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 1104,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvHideE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 9450,
+      "label": "Hole rabbit first caught sample",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          -0.3612839877605438,
+          0.5602840185165405
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            15349.3212890625,
+            -11766.9912109375,
+            8437.16015625
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 9373,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610743808,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 738,
+              "normal": [
+                0.238742396235466,
+                -0.47949081659317017,
+                0.8444467782974243
+              ],
+              "prism_index": 7008,
+              "vertices": [
+                [
+                  15555.5146484375,
+                  -11718.98046875,
+                  8405.8056640625
+                ],
+                [
+                  15251.8388671875,
+                  -11704.2939453125,
+                  8500.0
+                ],
+                [
+                  15401.9755859375,
+                  -11901.5966796875,
+                  8345.521484375
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14801.22265625,
+            -8094.75244140625,
+            7460.72119140625
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14732.419921875,
+            -8280.5517578125,
+            7561.1328125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            16887.4375,
+            -11113.50390625,
+            6080.80224609375
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 4235,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            13916.83203125,
+            -12522.001953125,
+            5706.703125
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 5412,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15298.470703125,
+            -11752.8681640625,
+            8549.33984375
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 426,
+            "type": "N14NrvRunawayTico20RunawayTicoNrvGuide1E"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.58203125,
+            -11714.0107421875,
+            8489.0498046875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 2,
+            "type": "N16NrvRunawayRabbit22RunawayRabbitNrvCaughtE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 9940,
+      "label": "Final Tico conversation complete",
+      "controller": {
+        "hold": 2048,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            15276.2294921875,
+            -11713.302734375,
+            8488.171875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 9863,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610612736,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 738,
+              "normal": [
+                0.23633228242397308,
+                -0.4505596458911896,
+                0.860896646976471
+              ],
+              "prism_index": 7282,
+              "vertices": [
+                [
+                  15285.888671875,
+                  -11514.0419921875,
+                  8590.224609375
+                ],
+                [
+                  15251.83984375,
+                  -11704.294921875,
+                  8500.0009765625
+                ],
+                [
+                  15579.2626953125,
+                  -11592.3837890625,
+                  8468.6875
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14801.22265625,
+            -8094.75244140625,
+            7460.72119140625
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14732.419921875,
+            -8280.5517578125,
+            7561.1328125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            16887.4375,
+            -11113.50390625,
+            6080.80224609375
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 4236,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            13916.83203125,
+            -12522.001953125,
+            5706.703125
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 5413,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 3,
+            "type": "N14NrvRunawayTico22RunawayTicoNrvWhiteOutE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 10110,
+      "label": "Tower crystal1013 appears",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            15276.2294921875,
+            -11713.302734375,
+            8488.171875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 10033,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610612736,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 738,
+              "normal": [
+                0.23633228242397308,
+                -0.4505596458911896,
+                0.860896646976471
+              ],
+              "prism_index": 7282,
+              "vertices": [
+                [
+                  15285.888671875,
+                  -11514.0419921875,
+                  8590.224609375
+                ],
+                [
+                  15251.83984375,
+                  -11704.294921875,
+                  8500.0009765625
+                ],
+                [
+                  15579.2626953125,
+                  -11592.3837890625,
+                  8468.6875
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14801.22265625,
+            -8094.75244140625,
+            7460.72119140625
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14732.419921875,
+            -8280.5517578125,
+            7561.1328125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            16887.4375,
+            -11113.50390625,
+            6080.80224609375
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 4242,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            13916.83203125,
+            -12522.001953125,
+            5706.703125
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 5419,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 10410,
+      "label": "Rosalina alive and unhidden",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            15276.2294921875,
+            -11713.302734375,
+            8488.171875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 10333,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610612736,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 738,
+              "normal": [
+                0.23633228242397308,
+                -0.4505596458911896,
+                0.860896646976471
+              ],
+              "prism_index": 7282,
+              "vertices": [
+                [
+                  15285.888671875,
+                  -11514.0419921875,
+                  8590.224609375
+                ],
+                [
+                  15251.83984375,
+                  -11704.294921875,
+                  8500.0009765625
+                ],
+                [
+                  15579.2626953125,
+                  -11592.3837890625,
+                  8468.6875
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14801.22265625,
+            -8094.75244140625,
+            7460.72119140625
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14732.419921875,
+            -8280.5517578125,
+            7561.1328125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 5,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            16887.4375,
+            -11113.50390625,
+            6080.80224609375
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 4542,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            13916.83203125,
+            -12522.001953125,
+            5706.703125
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 5719,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 10970,
+      "label": "Stair controller begins",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            15344.017578125,
+            -10002.021484375,
+            8664.353515625
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 10893,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610612736,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 738,
+              "normal": [
+                0.22764268517494202,
+                0.34962666034698486,
+                0.9088123440742493
+              ],
+              "prism_index": 5521,
+              "vertices": [
+                [
+                  15362.921875,
+                  -10048.0634765625,
+                  8677.3310546875
+                ],
+                [
+                  15347.3662109375,
+                  -9845.8359375,
+                  8603.4287109375
+                ],
+                [
+                  15118.171875,
+                  -9832.103515625,
+                  8655.5546875
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14801.22265625,
+            -8094.75244140625,
+            7460.72119140625
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 384,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 384,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 384,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14732.419921875,
+            -8280.5517578125,
+            7561.1328125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 565,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            15163.177734375,
+            -9147.6298828125,
+            8321.173828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 386,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15550.478515625,
+            -9749.3623046875,
+            8578.3935546875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 386,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 12490,
+      "label": "Stair waypoint7",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.12122900038957596,
+          0.19936899840831757
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            15796.8291015625,
+            -9109.53125,
+            7960.3525390625
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 12413,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610743808,
+            "movement_high_word": 2146304,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 741,
+              "normal": [
+                0.12673531472682953,
+                0.9424661993980408,
+                0.3093468248844147
+              ],
+              "prism_index": 246,
+              "vertices": [
+                [
+                  15778.4775390625,
+                  -9040.158203125,
+                  7756.51220703125
+                ],
+                [
+                  15673.61328125,
+                  -9074.7216796875,
+                  7904.775390625
+                ],
+                [
+                  15885.41796875,
+                  -9158.078125,
+                  8071.9580078125
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14801.22265625,
+            -8094.75244140625,
+            7460.72119140625
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 1904,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 1904,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 1904,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14732.419921875,
+            -8280.5517578125,
+            7561.1328125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 2085,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            15163.177734375,
+            -9147.6298828125,
+            8321.173828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 1906,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15550.478515625,
+            -9749.3623046875,
+            8578.3935546875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 1906,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 14550,
+      "label": "Stair waypoint21",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.1619569957256317,
+          0.16797100007534027
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            14321.2275390625,
+            -8247.5947265625,
+            6662.3701171875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 14473,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610743808,
+            "movement_high_word": 2146304,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 741,
+              "normal": [
+                0.12673531472682953,
+                0.9424661993980408,
+                0.3093468248844147
+              ],
+              "prism_index": 223,
+              "vertices": [
+                [
+                  13988.8525390625,
+                  -8189.5849609375,
+                  6621.80615234375
+                ],
+                [
+                  14509.5087890625,
+                  -8318.65625,
+                  6801.734375
+                ],
+                [
+                  14200.775390625,
+                  -8152.9228515625,
+                  6423.2880859375
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14801.22265625,
+            -8094.75244140625,
+            7460.72119140625
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 3964,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 3964,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 3964,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14732.419921875,
+            -8280.5517578125,
+            7561.1328125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 4145,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            15163.177734375,
+            -9147.6298828125,
+            8321.173828125
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 3966,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15550.478515625,
+            -9749.3623046875,
+            8578.3935546875
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 3966,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 15580,
+      "label": "Stair waypoint27 reached",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          -0.14059500396251678,
+          0.1862190067768097
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            14203.8408203125,
+            -8271.5703125,
+            7753.29296875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 15503,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610743808,
+            "movement_high_word": 2146304,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 741,
+              "normal": [
+                0.12673531472682953,
+                0.9424661993980408,
+                0.3093468248844147
+              ],
+              "prism_index": 271,
+              "vertices": [
+                [
+                  14206.482421875,
+                  -8248.5791015625,
+                  7682.1640625
+                ],
+                [
+                  14248.1005859375,
+                  -8309.77734375,
+                  7851.560546875
+                ],
+                [
+                  14322.689453125,
+                  -8310.7021484375,
+                  7823.8232421875
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14801.22265625,
+            -8094.75244140625,
+            7460.72119140625
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 4994,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 4994,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 4994,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14732.419921875,
+            -8280.5517578125,
+            7561.1328125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 5175,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            15163.177734375,
+            -9147.6298828125,
+            8321.173828125
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 4996,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15550.478515625,
+            -9749.3623046875,
+            8578.3935546875
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 4996,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 15700,
+      "label": "Tutorial begins: Rosetta repositioned and Tico903 appears",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.21370400488376617,
+          0.3268910050392151
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            14368.75390625,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 15623,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610612736,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 741,
+              "normal": [
+                0.12673531472682953,
+                0.9424661993980408,
+                0.3093468248844147
+              ],
+              "prism_index": 482,
+              "vertices": [
+                [
+                  14393.521484375,
+                  -8366.8017578125,
+                  7965.716796875
+                ],
+                [
+                  14473.3583984375,
+                  -8082.56787109375,
+                  7067.05322265625
+                ],
+                [
+                  14322.6884765625,
+                  -8310.7021484375,
+                  7823.82275390625
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 3,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 5110,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 5110,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 5110,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 5295,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            15163.177734375,
+            -9147.6298828125,
+            8321.173828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 5116,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15550.478515625,
+            -9749.3623046875,
+            8578.3935546875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 5116,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 18700,
+      "label": "Last sample before tutorial actors retire",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            14368.75390625,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 18623,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610612736,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 741,
+              "normal": [
+                0.12673531472682953,
+                0.9424661993980408,
+                0.3093468248844147
+              ],
+              "prism_index": 482,
+              "vertices": [
+                [
+                  14393.521484375,
+                  -8366.8017578125,
+                  7965.716796875
+                ],
+                [
+                  14473.3583984375,
+                  -8082.56787109375,
+                  7067.05322265625
+                ],
+                [
+                  14322.6884765625,
+                  -8310.7021484375,
+                  7823.82275390625
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 3003,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 5110,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 5110,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 5110,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 8295,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            15163.177734375,
+            -9147.6298828125,
+            8321.173828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 8116,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15550.478515625,
+            -9749.3623046875,
+            8578.3935546875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 8116,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 18710,
+      "label": "Rosetta and Tico903 dead; Mario normal state",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            14368.75390625,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 18633,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610612736,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 741,
+              "normal": [
+                0.12673531472682953,
+                0.9424661993980408,
+                0.3093468248844147
+              ],
+              "prism_index": 482,
+              "vertices": [
+                [
+                  14393.521484375,
+                  -8366.8017578125,
+                  7965.716796875
+                ],
+                [
+                  14473.3583984375,
+                  -8082.56787109375,
+                  7067.05322265625
+                ],
+                [
+                  14322.6884765625,
+                  -8310.7021484375,
+                  7823.82275390625
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 3009,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 5112,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 5112,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 5112,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 8301,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            15163.177734375,
+            -9147.6298828125,
+            8321.173828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 8126,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15550.478515625,
+            -9749.3623046875,
+            8578.3935546875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 8126,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 29460,
+      "label": "First crystal-prompt A trigger",
+      "controller": {
+        "hold": 2147485696,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 2048
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            14436.2060546875,
+            -8248.353515625,
+            7587.36376953125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 29383,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 34,
+            "state_type": "9MarioTalk",
+            "movement_low_word": 1681915904,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 741,
+              "normal": [
+                0.12673531472682953,
+                0.9424661993980408,
+                0.3093468248844147
+              ],
+              "prism_index": 480,
+              "vertices": [
+                [
+                  14595.162109375,
+                  -8061.48828125,
+                  6952.9306640625
+                ],
+                [
+                  14393.5224609375,
+                  -8366.7998046875,
+                  7965.7109375
+                ],
+                [
+                  14494.2216796875,
+                  -8420.85546875,
+                  8089.14599609375
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 3009,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 8740,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 8740,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 8740,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 8301,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            15163.177734375,
+            -9147.6298828125,
+            8321.173828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 11754,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15550.478515625,
+            -9749.3623046875,
+            8578.3935546875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 11754,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 29590,
+      "label": "Second crystal-prompt A trigger",
+      "controller": {
+        "hold": 2147485696,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 2048
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            14436.2060546875,
+            -8248.353515625,
+            7587.36376953125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 29513,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 34,
+            "state_type": "9MarioTalk",
+            "movement_low_word": 1681915904,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 741,
+              "normal": [
+                0.12673531472682953,
+                0.9424661993980408,
+                0.3093468248844147
+              ],
+              "prism_index": 480,
+              "vertices": [
+                [
+                  14595.162109375,
+                  -8061.48828125,
+                  6952.9306640625
+                ],
+                [
+                  14393.5224609375,
+                  -8366.7998046875,
+                  7965.7109375
+                ],
+                [
+                  14494.2216796875,
+                  -8420.85546875,
+                  8089.14599609375
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 3009,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 8740,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 8740,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 8740,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 8301,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            15163.177734375,
+            -9147.6298828125,
+            8321.173828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 11754,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15550.478515625,
+            -9749.3623046875,
+            8578.3935546875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 11754,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 29600,
+      "label": "MarioTalk ends",
+      "controller": {
+        "hold": 2048,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            14436.2060546875,
+            -8248.353515625,
+            7587.36376953125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 29523,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610612736,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 741,
+              "normal": [
+                0.12673531472682953,
+                0.9424661993980408,
+                0.3093468248844147
+              ],
+              "prism_index": 480,
+              "vertices": [
+                [
+                  14595.162109375,
+                  -8061.48828125,
+                  6952.9306640625
+                ],
+                [
+                  14393.5224609375,
+                  -8366.7998046875,
+                  7965.7109375
+                ],
+                [
+                  14494.2216796875,
+                  -8420.85546875,
+                  8089.14599609375
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 3009,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 8749,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 8749,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 8749,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 8301,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            15163.177734375,
+            -9147.6298828125,
+            8321.173828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 11763,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15550.478515625,
+            -9749.3623046875,
+            8578.3935546875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 11763,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 33190,
+      "label": "MarioMagic following ordinary X input",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.3051699995994568,
+          0.24063999950885773
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            14982.228515625,
+            -8361.291015625,
+            7707.81494140625
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 33113,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 17,
+            "state_type": "10MarioMagic",
+            "movement_low_word": 1619001344,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 741,
+              "normal": [
+                0.12673531472682953,
+                0.9424661993980408,
+                0.3093468248844147
+              ],
+              "prism_index": 318,
+              "vertices": [
+                [
+                  15227.51171875,
+                  -8091.91845703125,
+                  6786.57470703125
+                ],
+                [
+                  14766.4873046875,
+                  -8513.583984375,
+                  8260.1103515625
+                ],
+                [
+                  14926.1640625,
+                  -8548.2021484375,
+                  8300.162109375
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 3009,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 12339,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 12339,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 12339,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 8301,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            15163.177734375,
+            -9147.6298828125,
+            8321.173828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 15353,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15550.478515625,
+            -9749.3623046875,
+            8578.3935546875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 15353,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 33200,
+      "label": "Crystal1013 Break and hidden",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.2980549931526184,
+          0.2381329983472824
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            14984.9638671875,
+            -8360.7958984375,
+            7705.185546875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 33121,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 17,
+            "state_type": "10MarioMagic",
+            "movement_low_word": 1619001344,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 741,
+              "normal": [
+                0.12673531472682953,
+                0.9424661993980408,
+                0.3093468248844147
+              ],
+              "prism_index": 318,
+              "vertices": [
+                [
+                  15227.51171875,
+                  -8091.91845703125,
+                  6786.57470703125
+                ],
+                [
+                  14766.4873046875,
+                  -8513.583984375,
+                  8260.1103515625
+                ],
+                [
+                  14926.1640625,
+                  -8548.2021484375,
+                  8300.162109375
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 3009,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 4,
+            "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 12347,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 12347,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 8301,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            15163.177734375,
+            -9147.6298828125,
+            8321.173828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 15361,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15550.478515625,
+            -9749.3623046875,
+            8578.3935546875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 15361,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 33250,
+      "label": "Crystal1013 dead",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            15016.8203125,
+            -8365.6171875,
+            7706.81884765625
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 33171,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610612736,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 741,
+              "normal": [
+                0.12673531472682953,
+                0.9424661993980408,
+                0.3093468248844147
+              ],
+              "prism_index": 319,
+              "vertices": [
+                [
+                  15227.51171875,
+                  -8091.91845703125,
+                  6786.57470703125
+                ],
+                [
+                  14926.1640625,
+                  -8548.2021484375,
+                  8300.162109375
+                ],
+                [
+                  15092.42578125,
+                  -8572.849609375,
+                  8307.1376953125
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 3009,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": true,
+          "hidden": true,
+          "nerve": {
+            "step": 51,
+            "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 12397,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 12397,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 8301,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            15163.177734375,
+            -9147.6298828125,
+            8321.173828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 15411,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15550.478515625,
+            -9749.3623046875,
+            8578.3935546875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 15411,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 35940,
+      "label": "Before final crystal-break samples",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            15147.1494140625,
+            -8370.0625,
+            7666.9765625
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 35861,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1619001344,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 741,
+              "normal": [
+                0.12673531472682953,
+                0.9424661993980408,
+                0.3093468248844147
+              ],
+              "prism_index": 320,
+              "vertices": [
+                [
+                  15227.51171875,
+                  -8091.91845703125,
+                  6786.57470703125
+                ],
+                [
+                  15092.4287109375,
+                  -8572.8408203125,
+                  8307.1103515625
+                ],
+                [
+                  15387.185546875,
+                  -8126.5361328125,
+                  6826.6259765625
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 3009,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": true,
+          "hidden": true,
+          "nerve": {
+            "step": 51,
+            "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 15087,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 15087,
+            "type": "N14NrvCrystalCage18CrystalCageNrvWaitE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 8301,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            15163.177734375,
+            -9147.6298828125,
+            8321.173828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 18101,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15550.478515625,
+            -9749.3623046875,
+            8578.3935546875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 18101,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 35950,
+      "label": "Crystals1016 and1020 Break",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            15147.1494140625,
+            -8370.0625,
+            7666.9765625
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 35871,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 17,
+            "state_type": "10MarioMagic",
+            "movement_low_word": 1619001344,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 741,
+              "normal": [
+                0.12673531472682953,
+                0.9424661993980408,
+                0.3093468248844147
+              ],
+              "prism_index": 320,
+              "vertices": [
+                [
+                  15227.51171875,
+                  -8091.91845703125,
+                  6786.57470703125
+                ],
+                [
+                  15092.4287109375,
+                  -8572.8408203125,
+                  8307.1103515625
+                ],
+                [
+                  15387.185546875,
+                  -8126.5361328125,
+                  6826.6259765625
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 0,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 3009,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": true,
+          "hidden": true,
+          "nerve": {
+            "step": 51,
+            "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 3,
+            "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 3,
+            "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 8301,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            15163.177734375,
+            -9147.6298828125,
+            8321.173828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 18111,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15550.478515625,
+            -9749.3623046875,
+            8578.3935546875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 18111,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 35960,
+      "label": "SuperSpinDriver864 appears",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            15147.1494140625,
+            -8370.0625,
+            7666.9765625
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 35879,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 17,
+            "state_type": "10MarioMagic",
+            "movement_low_word": 1610612736,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 741,
+              "normal": [
+                0.12673531472682953,
+                0.9424661993980408,
+                0.3093468248844147
+              ],
+              "prism_index": 320,
+              "vertices": [
+                [
+                  15227.51171875,
+                  -8091.91845703125,
+                  6786.57470703125
+                ],
+                [
+                  15092.4287109375,
+                  -8572.8408203125,
+                  8307.1103515625
+                ],
+                [
+                  15387.185546875,
+                  -8126.5361328125,
+                  6826.6259765625
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": -1,
+            "type": "N18NrvSuperSpinDriver24SuperSpinDriverNrvAppearE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 3009,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": true,
+          "hidden": true,
+          "nerve": {
+            "step": 51,
+            "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 11,
+            "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 11,
+            "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 8301,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            15163.177734375,
+            -9147.6298828125,
+            8321.173828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 18119,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15550.478515625,
+            -9749.3623046875,
+            8578.3935546875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 18119,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 35980,
+      "label": "SuperSpinDriver864 Wait",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            15147.1494140625,
+            -8370.0625,
+            7666.9765625
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 35899,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610612736,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 741,
+              "normal": [
+                0.12673531472682953,
+                0.9424661993980408,
+                0.3093468248844147
+              ],
+              "prism_index": 320,
+              "vertices": [
+                [
+                  15227.51171875,
+                  -8091.91845703125,
+                  6786.57470703125
+                ],
+                [
+                  15092.4287109375,
+                  -8572.8408203125,
+                  8307.1103515625
+                ],
+                [
+                  15387.185546875,
+                  -8126.5361328125,
+                  6826.6259765625
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 8,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 3009,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": true,
+          "hidden": true,
+          "nerve": {
+            "step": 51,
+            "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 31,
+            "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 31,
+            "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 8301,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            15163.177734375,
+            -9147.6298828125,
+            8321.173828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 18139,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15550.478515625,
+            -9749.3623046875,
+            8578.3935546875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 18139,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    },
+    {
+      "frame": 35990,
+      "label": "Final traced sample",
+      "controller": {
+        "hold": 0,
+        "release": 0,
+        "stick": [
+          0.0,
+          0.0
+        ],
+        "trigger": 0
+      },
+      "actors": [
+        {
+          "id": 343,
+          "type": "10MarioActor",
+          "position": [
+            15147.1494140625,
+            -8370.0625,
+            7666.9765625
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 35909,
+            "type": "N13NrvMarioActor17MarioActorNrvWaitE"
+          },
+          "player": {
+            "status": 0,
+            "state_type": "",
+            "movement_low_word": 1610612736,
+            "movement_high_word": 49152,
+            "bound_actor_934": false,
+            "ground_triangle": {
+              "host_id": 741,
+              "normal": [
+                0.12673531472682953,
+                0.9424661993980408,
+                0.3093468248844147
+              ],
+              "prism_index": 320,
+              "vertices": [
+                [
+                  15227.51171875,
+                  -8091.91845703125,
+                  6786.57470703125
+                ],
+                [
+                  15092.4287109375,
+                  -8572.8408203125,
+                  8307.1103515625
+                ],
+                [
+                  15387.185546875,
+                  -8126.5361328125,
+                  6826.6259765625
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "id": 864,
+          "type": "15SuperSpinDriver",
+          "position": [
+            15080.0,
+            -8042.27001953125,
+            7580.0
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 18,
+            "type": "N18NrvSuperSpinDriver22SuperSpinDriverNrvWaitE"
+          }
+        },
+        {
+          "id": 903,
+          "type": "4Tico",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 3009,
+            "type": "N7NrvTico12TicoNrvSpin0E"
+          }
+        },
+        {
+          "id": 1013,
+          "type": "11CrystalCage",
+          "position": [
+            15180.4267578125,
+            -8387.974609375,
+            7718.81201171875
+          ],
+          "dead": true,
+          "hidden": true,
+          "nerve": {
+            "step": 51,
+            "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+          }
+        },
+        {
+          "id": 1016,
+          "type": "11CrystalCage",
+          "position": [
+            15419.6376953125,
+            -8379.283203125,
+            7583.130859375
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 41,
+            "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+          }
+        },
+        {
+          "id": 1020,
+          "type": "11CrystalCage",
+          "position": [
+            15215.4423828125,
+            -8300.3544921875,
+            7426.5458984375
+          ],
+          "dead": false,
+          "hidden": true,
+          "nerve": {
+            "step": 41,
+            "type": "N14NrvCrystalCage19CrystalCageNrvBreakE"
+          }
+        },
+        {
+          "id": 1060,
+          "type": "7Rosetta",
+          "position": [
+            14368.751953125,
+            -8235.76953125,
+            7576.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 8301,
+            "type": "N10NrvRosetta14RosettaNrvDemoE"
+          }
+        },
+        {
+          "id": 1069,
+          "type": "11RunawayTico",
+          "position": [
+            15163.177734375,
+            -9147.6298828125,
+            8321.173828125
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 18149,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1075,
+          "type": "11RunawayTico",
+          "position": [
+            15550.478515625,
+            -9749.3623046875,
+            8578.3935546875
+          ],
+          "dead": false,
+          "hidden": false,
+          "nerve": {
+            "step": 18149,
+            "type": "N7NrvTico11TicoNrvWaitE"
+          }
+        },
+        {
+          "id": 1081,
+          "type": "11RunawayTico",
+          "position": [
+            15303.2744140625,
+            -11697.0419921875,
+            8706.4873046875
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 76,
+            "type": "N14NrvRunawayTico21RunawayTicoNrvWhiteInE"
+          }
+        },
+        {
+          "id": 1085,
+          "type": "13RunawayRabbit",
+          "position": [
+            16685.8515625,
+            -11044.2275390625,
+            6027.65673828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1090,
+          "type": "13RunawayRabbit",
+          "position": [
+            13887.87890625,
+            -12312.130859375,
+            5764.81298828125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        },
+        {
+          "id": 1095,
+          "type": "13RunawayRabbit",
+          "position": [
+            15276.505859375,
+            -11713.857421875,
+            8489.0908203125
+          ],
+          "dead": true,
+          "hidden": false,
+          "nerve": {
+            "step": 1,
+            "type": "N16NrvRunawayRabbit20RunawayRabbitNrvStopE"
+          }
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "route.json",
+      "bytes": 2003,
+      "sha256": "9f51874fa4549eb899b9a633d2b62c428703f4727aa0196718b8abbac85b9ece"
+    },
+    {
+      "path": "route-launch.json",
+      "bytes": 1634,
+      "sha256": "0441e037fdbd1ea80862bd28bd1180d3fc1ccddd363403050b4975132427adb5"
+    },
+    {
+      "path": "route.log",
+      "bytes": 358270,
+      "sha256": "2f8242f800b02eca4ae86d5639c102913388feaa31d0f204c789b766703a5d7b"
+    },
+    {
+      "path": "operator.jsonl",
+      "bytes": 872713,
+      "sha256": "3391076ad2b4a7411f39d12a206bb56599adfee16927615c7f26a4a3c2d316e9"
+    },
+    {
+      "path": "climb.jsonl",
+      "bytes": 556899,
+      "sha256": "8693717fee68feed5f2caefe0874fe2863f2efd42a4042c721b34a7824475b98"
+    },
+    {
+      "path": "crystal-approach.jsonl",
+      "bytes": 193154,
+      "sha256": "bcc5c819a17cb2df23f56a4e589a42a7dad379880598d763f27d7645ec01d457"
+    },
+    {
+      "path": "crystal-approach2.jsonl",
+      "bytes": 116616,
+      "sha256": "24965aaaafc3f8406308bd2cae417fd84cb2ed5482d9cceaefb39e5930b93616"
+    },
+    {
+      "path": "crystal-prompt-input.json",
+      "bytes": 131,
+      "sha256": "0d7dceeb9a71814f4cbe6c6a6c9b73f85074d6a5670d45630c2b1f2daedeba6b"
+    },
+    {
+      "path": "stair-route.json",
+      "bytes": 11748,
+      "sha256": "e4c2e9fed791a6fbfc66b36dc1f3ed1c3bb41b202ee5dc7c0fe47a939ff58f97"
+    },
+    {
+      "path": "route-frame15000.png",
+      "bytes": 14758474,
+      "sha256": "733bfc4ab19d19bd36663bfce1dbb6247dfdbff763e37ebd6d2661e697582601"
+    },
+    {
+      "path": "milestone-snapshots.jsonl.gz",
+      "bytes": 552561,
+      "sha256": "bb60e4d941b0503def3ba4038f343e1a286ea676c7b5aee5f795e08289b357a8"
+    },
+    {
+      "path": "spin-tutorial-ui.jpg",
+      "bytes": 338055,
+      "sha256": "69f8fa83766a89183aa59b6601c8f05f9a184ac5a5438ab02b0f0d64616b94a8"
+    },
+    {
+      "path": "after-tutorial-ui.jpg",
+      "bytes": 466065,
+      "sha256": "31b122ff01df42ddb3a81bcf25e0d71bd97f14b934f00729fa51cd41ce93d0ff"
+    },
+    {
+      "path": "crystal-x-ui.jpg",
+      "bytes": 511725,
+      "sha256": "d264909bd04d9440d0766cd2907923ec4d1c407e28a830de1ea39ea34b86b662"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{"elapsed_seconds": 0, "runner": null, "operator": null, "climber": null}
+{"elapsed_seconds": 20, "runner": null, "operator": null, "climber": null}
+{"elapsed_seconds": 40, "runner": null, "operator": null, "climber": null}
+{"elapsed_seconds": 60, "runner": null, "operator": null, "climber": null}
+{"elapsed_seconds": 80, "runner": null, "operator": null, "climber": null}
+{"elapsed_seconds": 100, "runner": null, "operator": null, "climber": null}
+{"elapsed_seconds": 120, "runner": null, "operator": null, "climber": null}
+{"elapsed_seconds": 140, "runner": null, "operator": null, "climber": null}
+{"elapsed_seconds": 160, "runner": null, "operator": null, "climber": null}
+{"elapsed_seconds": 180, "runner": null, "operator": null, "climber": null}
+{"elapsed_seconds": 200, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": null}}
+{"elapsed_seconds": 220, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": null}}
+{"elapsed_seconds": 240, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": null}}
+{"elapsed_seconds": 260, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": null}}
+{"elapsed_seconds": 280, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": null}}
+{"elapsed_seconds": 300, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": null}}
+{"elapsed_seconds": 320, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": null}}
+{"elapsed_seconds": 340, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": null}}
+{"elapsed_seconds": 360, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": null}}
+{"elapsed_seconds": 380, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": null}}
+{"elapsed_seconds": 400, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": -15}}
+{"elapsed_seconds": 420, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": -15}}
+{"elapsed_seconds": 440, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": -15}}
+{"elapsed_seconds": 460, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": -15}}
+{"elapsed_seconds": 480, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": -15}}
+{"elapsed_seconds": 500, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": -15}}
+{"elapsed_seconds": 520, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": -15}}
+{"elapsed_seconds": 540, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": -15}}
+{"elapsed_seconds": 560, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": -15}}
+{"elapsed_seconds": 580, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": -15}}
+{"elapsed_seconds": 600, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": -15}}
+{"elapsed_seconds": 620, "runner": null, "operator": 0, "climber": {"pid": 56396, "exit": -15}}
+{"runner_exit": 0, "operator_exit": 0, "climber_exit": -15}

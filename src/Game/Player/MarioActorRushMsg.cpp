@@ -83,7 +83,7 @@ HitSensor* MarioActor::getNearestRushTarget(bool myBool) const {
         return nullptr;
     }
 
-    f32 maxRadius = 10000.0f;
+    f32 maxRadius = 100000.0f;
     HitSensor* out = nullptr;
 
     if (!isEnableNerveChange()) {

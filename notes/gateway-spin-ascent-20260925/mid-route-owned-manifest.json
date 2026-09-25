@@ -1,0 +1,21 @@
+{
+  "files": [
+    {
+      "path": "src/Game/MapObj/EarthenPipe.cpp",
+      "before_snapshot": "notes/gateway-spin-ascent-20260925/before/src/Game/MapObj/EarthenPipe.cpp",
+      "before_sha256": "e34d423f0601fe4b61ae579afec8aa0a793ce88fde5024cca16997950e12c6af",
+      "after_sha256": "03f6dba135ef0e60e296d777d83299ebde94a9d8b42b280b52a478d64f346b57",
+      "donor": "decomp/src/Game/MapObj/EarthenPipe.cpp",
+      "scope": "Exact donor behavioral branches/constants only; all native owner/architecture adaptations preserved."
+    },
+    {
+      "path": "src/Game/NPC/NPCActor.cpp",
+      "before_snapshot": "notes/gateway-spin-ascent-20260925/before/src/Game/NPC/NPCActor.cpp",
+      "before_sha256": "b70c5f8521e298384fe3483538df24cf344f62a85604dc057486d1668b0ca1d9",
+      "after_sha256": "01739bf25ef1bb9e5678834832de204d801d55d48cb2194d15f52f68c0b4ac71",
+      "donor": "decomp/src/Game/NPC/NPCActor.cpp",
+      "scope": "Exact donor behavioral branches/constants only; all native owner/architecture adaptations preserved."
+    }
+  ],
+  "validation": "Source comparison and diff whitespace check only; no build/test/runtime from this lane."
+}

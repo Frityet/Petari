@@ -563,7 +563,7 @@ void PowerStar::calcAppearDemoRiseTrans(TVec3f* pOutTrans, f32 a2) const {
 }
 
 void PowerStar::processWait(f32 val) {
-    mRotation.y = MR::repeatDegree(mRotation.y);
+    mRotation.y = MR::repeat(mRotation.y + val, 0.0f, 360.0f);
 
     if (mIsGrandStar) {
         if (MR::changeShowModelFlagSyncNearClipping(this, 250.0f)) {
@@ -630,7 +630,7 @@ void PowerStar::exeAppearDemoMove() {
         TVec3f vec;
         f32 step = getNerveStep() / 120.0f;
         calcAppearDemoRiseTrans(&vec, 300.0f);
-        vec.lerp(mAppearPosition, mPosition, step);
+        mPosition.lerp(vec, mAppearPosition, step);
 
         TVec3f vec2;
         MR::vecKillElement(vec, mGravity, &vec2);
@@ -691,7 +691,7 @@ void PowerStar::exeAppearDemoKoopa() {
 
         mBaseMtx.setTrans(mInitPosition);
 
-        mPowerStarModelObj->kill();
+        mPowerStarModelObj->appear();
 
         MR::requestMovementOn(mPowerStarModelObj);
 
@@ -727,7 +727,7 @@ void PowerStar::exeAppearDemoKoopa() {
         mPosition.set(mAppearPosition);
 
         MR::showModelIfHidden(this);
-        mPowerStarModelObj->appear();
+        mPowerStarModelObj->kill();
 
         MR::endAnimCamera(mPowerStarModelObj, mCameraInfo, MR::isStageKoopaVs3() ? "DemoKoopaGrandStarVs3" : "DemoKoopaGrandStar", 0, true);
         endAppearDemo();

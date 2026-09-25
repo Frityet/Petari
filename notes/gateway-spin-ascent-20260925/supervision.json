@@ -1,0 +1,36 @@
+{
+  "runner_pid": 55867,
+  "operator_pid": 55868,
+  "runner_command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "/Users/frityet/Projects/petari/notes/gateway-spin-ascent-20260925/run_original.py",
+    "route",
+    "36000",
+    "--bundle",
+    "--ignore-restoration",
+    "--input-file",
+    "/Users/frityet/Projects/petari/notes/gateway-spin-ascent-20260925/input.json",
+    "--trace-types",
+    "MarioActor,Rabbit,Tico,Rosetta,EarthenPipe,CrystalCage,HeavensDoorDemoObj,GlobalGravityObj,SpinDriver,Kuribo,KeySwitch,FlipPanel,PowerStar",
+    "--trace-interval",
+    "10",
+    "--screenshot-frame",
+    "15000",
+    "--timeout",
+    "720"
+  ],
+  "operator_command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "/Users/frityet/Projects/petari/notes/gateway-spin-ascent-20260925/operate_first_catch.py",
+    "/Users/frityet/Projects/petari/notes/gateway-spin-ascent-20260925/route-actors.jsonl",
+    "/Users/frityet/Projects/petari/notes/gateway-spin-ascent-20260925/input.json",
+    "--plan",
+    "/Users/frityet/Projects/petari/notes/gateway-spin-ascent-20260925/three-rabbit-route.json",
+    "--start",
+    "1400",
+    "--end",
+    "22000",
+    "--timeout",
+    "430"
+  ]
+}

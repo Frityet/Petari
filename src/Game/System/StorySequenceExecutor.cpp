@@ -504,16 +504,21 @@ void StorySequenceExecutor::update() {
     updateNerve();
 }
 
+namespace {
+    inline bool isDemoSequenceEnd(const StorySequenceExecutorType::DemoSequenceInfo* pInfo) {
+        return pInfo->_0 == 12 || pInfo->_0 == 13;
+    }
+}  // namespace
+
 bool StorySequenceExecutor::isNeedMoviePlayerExecutingEventEnum() const {
     for (s32 i = 0; i < _48.size(); i++) {
-        bool b = _48[i]->_0 == 12 || _48[i]->_0 == 13;
+        const StorySequenceExecutorType::DemoSequenceInfo* pInfo = _48[i];
+        while (!isDemoSequenceEnd(pInfo)) {
+            if (pInfo->_0 == 2) {
+                return true;
+            }
 
-        if (b) {
-            continue;
-        }
-
-        if (_48[i]->_0 == 2) {
-            return true;
+            pInfo++;
         }
     }
 
@@ -522,14 +527,17 @@ bool StorySequenceExecutor::isNeedMoviePlayerExecutingEventEnum() const {
 
 bool StorySequenceExecutor::hasNextDemo() const {
     for (s32 i = 0; i < _48.size(); i++) {
-        bool b = _48[i]->_0 == 12 || _48[i]->_0 == 13;
-
-        if (b) {
-            continue;
+        const StorySequenceExecutorType::DemoSequenceInfo* pInfo = _48[i];
+        if (i == 0) {
+            pInfo++;
         }
 
-        if (_48[i]->_0 == 0) {
-            return true;
+        while (!isDemoSequenceEnd(pInfo)) {
+            if (pInfo->_0 == 0) {
+                return true;
+            }
+
+            pInfo++;
         }
     }
 

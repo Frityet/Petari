@@ -219,7 +219,7 @@ bool EarthenPipe::tryHideDown() {
 bool EarthenPipe::isNerveShowUp() const {
     bool ret;
 
-    if (isNerve(&NrvEarthenPipe::EarthenPipeNrvShowUp::sInstance) || isNerve(&NrvEarthenPipe::EarthenPipeNrvShowUp::sInstance)) {
+    if (isNerve(&NrvEarthenPipe::EarthenPipeNrvWaitToShowUp::sInstance) || isNerve(&NrvEarthenPipe::EarthenPipeNrvShowUp::sInstance)) {
         ret = true;
     } else {
         ret = false;
@@ -414,12 +414,10 @@ bool EarthenPipe::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pRecei
               !MR::isPlayerDead())) {
             return false;
         }
-        TVec3f sensorPos(TVec3f(mTopJointMtx[0][3], mTopJointMtx[1][3], mTopJointMtx[2][3]));
-        TVec3f playerPos(*MR::getPlayerPos());
-        playerPos.sub(sensorPos);
-        TVec3f delta(playerPos);
+        TVec3f diff = *MR::getPlayerPos() - TVec3f(mTopJointMtx[0][3], mTopJointMtx[1][3], mTopJointMtx[2][3]);
+        TVec3f delta = diff;
         MR::vecKillElement(delta, mGravity, &delta);
-        if (MR::isPlayerSwimming() && PSVECMag(playerPos) > 50.0f && playerPos.dot(_98) < -5.0f) {
+        if (!MR::isPlayerSwimming() && delta.length() > 50.0f && diff.dot(_98) < -5.0f) {
             return false;
         }
         mHostActor = MR::getSensorHost(pSender);

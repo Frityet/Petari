@@ -625,8 +625,7 @@ bool NPCActor::turnToPlayer(f32 f1, f32 f2, f32 f3) {
     TVec3f vec2;
     MR::makeAxisFrontUp(&vec1, &vec2, toPlayer, yDir);
     MR::clampVecAngleDeg(&vec2, yDir, f3);
-    // probably a typo
-    return MR::turnQuatYDirRad(&_A0, _A0, vec2, f2 * 0.17453294f) & turned;
+    return MR::turnQuatYDirRad(&_A0, _A0, vec2, f2 * 0.017453292f) & turned;
 }
 
 bool NPCActor::turnToDefault(f32 f1) {
@@ -644,7 +643,7 @@ bool NPCActor::turnToDefault(f32 f1) {
     f32 dot = zDir.dot(zDir2);
     dot = MR::clamp(dot, -1.0f, 1.0f);
 
-    f32 flt = MR::abs((f1 * 0.17453294f) / MR::acos(dot));
+    f32 flt = MR::abs((f1 * 0.017453292f) / MR::acos(dot));
     flt = MR::clamp(flt, 0.0f, 1.0f);
 
     MR::blendQuatUpFront(&_A0, yDir, zDir, flt, flt);

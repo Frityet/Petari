@@ -1,0 +1,60 @@
+[
+  {
+    "path": "operator.jsonl",
+    "sha256": "3391076ad2b4a7411f39d12a206bb56599adfee16927615c7f26a4a3c2d316e9",
+    "size": 872713,
+    "archive": "operator.jsonl.gz",
+    "archive_size": 52548,
+    "archive_sha256": "3f73fbc688d4e9002ad3c2790b6134378fa261f84eaa66c96f23244c645ee0f6"
+  },
+  {
+    "path": "climb.jsonl",
+    "sha256": "8693717fee68feed5f2caefe0874fe2863f2efd42a4042c721b34a7824475b98",
+    "size": 556899,
+    "archive": "climb.jsonl.gz",
+    "archive_size": 31893,
+    "archive_sha256": "8dd32d3321d79a9c6db0a5072e1a19bc2a2cb1e6a124dba186a30cbf56d9b1c6"
+  },
+  {
+    "path": "crystal-approach.jsonl",
+    "sha256": "bcc5c819a17cb2df23f56a4e589a42a7dad379880598d763f27d7645ec01d457",
+    "size": 193154,
+    "archive": "crystal-approach.jsonl.gz",
+    "archive_size": 7507,
+    "archive_sha256": "681368e2d7c356485848af4ce153813d90901efbeeed3b3e72146de8be731139"
+  },
+  {
+    "path": "crystal-approach2.jsonl",
+    "sha256": "24965aaaafc3f8406308bd2cae417fd84cb2ed5482d9cceaefb39e5930b93616",
+    "size": 116616,
+    "archive": "crystal-approach2.jsonl.gz",
+    "archive_size": 11208,
+    "archive_sha256": "44e11b0ca3bab7512e6097189b2c80d8c181dff113670111b3f8ca00208341db"
+  },
+  {
+    "path": "crystal-main-approach.jsonl",
+    "sha256": "b158e41a42522a4529ac6473f8ccad59f62c2cee3e17136a539ecbf98efb1da6",
+    "size": 72630,
+    "archive": "crystal-main-approach.jsonl.gz",
+    "archive_size": 2381,
+    "archive_sha256": "8180e1766acc47dae059a89bdd33fdd2e70efa7ae6bcc7b435499dde282dbeff"
+  },
+  {
+    "path": "after-tutorial-ui.jpg",
+    "mime_type": "image/jpeg",
+    "sha256": "31b122ff01df42ddb3a81bcf25e0d71bd97f14b934f00729fa51cd41ce93d0ff",
+    "size": 466065
+  },
+  {
+    "path": "crystal-x-ui.jpg",
+    "mime_type": "image/jpeg",
+    "sha256": "d264909bd04d9440d0766cd2907923ec4d1c407e28a830de1ea39ea34b86b662",
+    "size": 511725
+  },
+  {
+    "path": "spin-tutorial-ui.jpg",
+    "mime_type": "image/jpeg",
+    "sha256": "69f8fa83766a89183aa59b6601c8f05f9a184ac5a5438ab02b0f0d64616b94a8",
+    "size": 338055
+  }
+]

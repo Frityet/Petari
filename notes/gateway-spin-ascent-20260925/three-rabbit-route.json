@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "binding_frame": 1400,
+  "wait_for_rosetta": true,
+  "scope": "External controller navigation only; authored coordinates select targets and do not change game state. Route completion requires observed catch and Tico dialogue transitions, then visible live Rosetta.",
+  "source": {
+    "authored_waypoints": "notes/original-rabbit-tower-chain-20260919/controller-waypoints.json",
+    "authored_sha256": "af0095298d56212b80061752576e32a057d37d702a44b6328b1c71eaab97be8e",
+    "pipe_top_reference": "notes/gateway-content-inventory-20260919/live-pipe-route.json",
+    "pipe_top_reference_frame": 12290,
+    "pipe_waypoint_rule": "Actual authored56 pipe top plus10 along normalized negative gravity from the reference trace; no previous runtime actor IDs are used."
+  },
+  "route": [
+    {
+      "label": "bush",
+      "waypoint": [
+        13788.189453125,
+        -10760.26171875,
+        4724.10009765625
+      ],
+      "rabbit_spawn": [
+        13569.845703125,
+        -10948.4033203125,
+        5068.82861328125
+      ],
+      "authored_rabbit_id": 7,
+      "authored_appearance_switch": 1113
+    },
+    {
+      "label": "pipe",
+      "waypoint": [
+        12752.091382623,
+        -11284.748468578,
+        6028.967537701
+      ],
+      "rabbit_spawn": [
+        16820.5,
+        -10519.0859375,
+        6419.4697265625
+      ],
+      "authored_rabbit_id": 6,
+      "authored_appearance_switch": 1112
+    },
+    {
+      "label": "hole",
+      "waypoint": [
+        13565.78515625,
+        -10103.4306640625,
+        7954.287109375
+      ],
+      "rabbit_spawn": [
+        13515.6484375,
+        -10082.7099609375,
+        7993.75927734375
+      ],
+      "authored_rabbit_id": 8,
+      "authored_appearance_switch": 1114
+    }
+  ]
+}

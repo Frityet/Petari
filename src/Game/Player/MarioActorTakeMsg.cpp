@@ -52,7 +52,7 @@ bool MarioActor::tryThrow() {
         return false;
     }
 
-    HitSensor* pSensor = _428[_468];  // This is supposed to be _424 but that doesn't make sense
+    HitSensor* pSensor = _428[_468 - 1];
 
     if (releaseThrowMemoSensor()) {
         mMario->mSwim->resetJet();
