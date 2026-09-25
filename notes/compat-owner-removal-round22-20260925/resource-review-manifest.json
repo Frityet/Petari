@@ -1,0 +1,55 @@
+{
+  "kind": "review corrections relative to root mechanical working changes; separate patch retains exact lane deltas",
+  "changes": [
+    {
+      "path": "src/Game/System/ArchiveHolder.cpp",
+      "before_review_sha256": "312ef5c0db4989343195c57427295c16be4f865e6bab7c2c77d2ec6a4296b122",
+      "after_review_sha256": "15a068cf3ce222e7581872942e06b18fad656f8ffb07c9df6a38a2a527f57ab1"
+    },
+    {
+      "path": "src/Game/System/ResourceHolder.cpp",
+      "before_review_sha256": "293c6c75a7dfcf8c405fb81f257ad1dda948c161ad8ddb94bf87fd3509f6babe",
+      "after_review_sha256": "1d8820dc2939fa1c44c47d068f4b4d40cda990c3042e980fa90b83048d2cd6e0"
+    },
+    {
+      "path": "src/resource/J3dMaterialTableData.cpp",
+      "before_review_sha256": "045ee62721085d4622b8b3323040133d0e7a562793163e3bd66656d456d0648b",
+      "after_review_sha256": "83cc609c1e6bfe2411628da834a78d67ad87b96bcd470cfab27329fd6a273508"
+    },
+    {
+      "path": "src/resource/J3dModelResource.hpp",
+      "before_review_sha256": "6067f33ed83f8ff57f8c6acdfed3d3fcfb9a347c056252f4daa212c84d2ab133",
+      "after_review_sha256": "33929c9f22125512d7943e961195b34baf7fb53b2cb8b84b7a188b455f5fd1fc"
+    },
+    {
+      "path": "src/resource/J3dMaterialTableData.hpp",
+      "before_review_sha256": "5d534847474fbb73fabae4de93bec362ad7b9abd31fe62b92364cb971e19686b",
+      "after_review_sha256": "ec293fcb6fe52602fadf6ff21e2a670a5b7e5b957271d236a53ed224806b983b"
+    },
+    {
+      "path": "src/Game/LiveActor/ModelManager.hpp",
+      "before_review_sha256": "17d61c27361ed42ee52ffcff672de24b0c10e45cb9080a35402acbba98279925",
+      "after_review_sha256": "87df67b34624a8983fe9de1ab7dcf7e194d3dde96bebe542c41d0332edec4a37"
+    },
+    {
+      "path": "src/resource/J3dModelResource.hpp",
+      "before_review_sha256": "33929c9f22125512d7943e961195b34baf7fb53b2cb8b84b7a188b455f5fd1fc",
+      "after_review_sha256": "bb5ede75de1aa77d225bd914780b913e97d0625663bfb3b9eaa648def31c1ac7"
+    },
+    {
+      "path": "src/resource/J3dModelResource.cpp",
+      "before_review_sha256": "1002943ffa31dc4b2ad70f38d55be870d7a5c95f7fc1a8491e55d809b4a4175b",
+      "after_review_sha256": "47015e3cdc63e2c0570e3e2ba834b2019c15ce5a97b1840c6d6a820052e2e5b6"
+    },
+    {
+      "path": "src/resource/J3dMaterialTableData.cpp",
+      "before_review_sha256": "83cc609c1e6bfe2411628da834a78d67ad87b96bcd470cfab27329fd6a273508",
+      "after_review_sha256": "bd7e5fc599f2db39cffa318d4a8ff965e6d27b4e323b0c28862856d087017a16"
+    },
+    {
+      "path": "src/Game/System/ResourceHolderManager.cpp",
+      "before_review_sha256": "7eb0041ae6cc44b449b3982936d72429abf0a832d5abd806c49285472d60626e",
+      "after_review_sha256": "c824f65510c72f239e02d96ec544346ec27a2b3b80e94eb658501db0a163dbb7"
+    }
+  ]
+}

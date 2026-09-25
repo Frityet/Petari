@@ -13,10 +13,10 @@
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "JSystem/JUtility/JUTTexture.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "Game/Demo/DemoDirector.hpp"
 #include "Game/Demo/DemoSimpleCastHolder.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 
 #include <dolphin/gx/GXAurora.h>
@@ -57,7 +57,7 @@ namespace {
     struct Probe {
         const CenterScreenBlur* identity = nullptr;
         const void* history_image = nullptr;
-        std::weak_ptr<smgpc::compat::JkrAllocationDomain> domain;
+        std::weak_ptr<JKRHeap> domain;
         std::uint64_t observations = 0;
         bool checked = false;
 
@@ -66,7 +66,7 @@ namespace {
             if (!controller || controller->mSceneInitializeState != SceneInitializeState_End ||
                 controller->getCurrentSceneForExecute() != controller->mScene ||
                 !dynamic_cast<GameScene*>(controller->mScene)) return;
-            const smgpc::compat::JkrHostAllocationScope host;
+            const aurora::allocation::HostAllocationScope host;
             auto* holder = MR::getSceneObjHolder();
             auto* blur = dynamic_cast<CenterScreenBlur*>(holder->getObj(SceneObj_CenterScreenBlur));
             auto* history = MR::getFullScreenBlurTexture();
@@ -75,7 +75,7 @@ namespace {
                     "original initialization constructs the actual blur actor, nerve, player history texture and DemoDirector");
             require(!identity || identity == blur, "ordinary scene frames retain one original blur identity");
             identity = blur;
-            domain = MR::getSceneObjHolder()->nativeAllocationDomain();
+            domain = MR::getSceneObjHolder()->nativeAllocationHeap();
             require(MR::createSceneObj(SceneObj_CenterScreenBlur) == blur &&
                         demo->_20->nativeRegistrationCount(blur) == 1,
                     "the exact actor is unique and registered once with the real original DemoDirector");
@@ -87,7 +87,8 @@ namespace {
             require(observations >= 30, "blur owner survives at least thirty ordinary original scene frames");
             const auto allocation_domain = domain.lock();
             require(allocation_domain != nullptr, "blur checks borrow the actual original scene heap");
-            const smgpc::compat::JkrAllocationScope allocation(allocation_domain);
+            const JKRHeap::CurrentHeapScope allocation(*(allocation_domain));
+            const aurora::allocation::ClientAllocationScope allocationRouting({true, true});
             const J3DSys::ContextScope commands;
             require(AuroraIsFrameActive(), "original process observer executes inside its active GX frame");
             require(system.mObjHolder && system.mObjHolder->mCaptureScreenDirector &&
@@ -159,7 +160,7 @@ int main() {
         };
         require(smgpc::app::run_original_game(configuration, *logger, observer) == 0 && probe.checked,
                 "the actual original process completes the retained blur checks and bounded frame loop");
-        require(probe.identity && !smgpc::compat::has_actor_runtime_state(probe.identity) && probe.domain.expired() &&
+        require(probe.identity && !NameObj::nativeGeneration(probe.identity) && probe.domain.expired() &&
                     probe.history_image && !AuroraHasTextureCopy(probe.history_image),
                 "normal process retirement releases the blur actor, scene heap, history owner and GPU copy");
         verify_absent_owner();

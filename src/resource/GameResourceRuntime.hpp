@@ -1,6 +1,7 @@
 #pragma once
 
-#include "compat/JkrAllocationDomain.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
+#include <aurora/allocation.hpp>
 #include "resource/Mem1ResourceHeap.hpp"
 
 #include <cstddef>
@@ -27,14 +28,16 @@ namespace smgpc::resource {
         GameResourceRuntime(const GameResourceRuntime&) = delete;
         GameResourceRuntime& operator=(const GameResourceRuntime&) = delete;
         [[nodiscard]] static GameResourceRuntime* active() noexcept;
-        [[nodiscard]] std::shared_ptr<compat::JkrAllocationDomain> create_cohort() const;
         [[nodiscard]] const std::shared_ptr<Mem1ResourceHeap>& mem1_heap() const noexcept;
-        [[nodiscard]] const std::shared_ptr<compat::JkrHeapRuntime>& host_heaps() const noexcept;
+        [[nodiscard]] const JKRHeap::Handle& root_heap() const noexcept;
+        void prepare_mem2_arena(std::size_t bytes);
+        [[nodiscard]] const std::shared_ptr<void>& mem2_storage() const noexcept;
         [[nodiscard]] const GameResourceBudget& budget() const noexcept;
 
     private:
         GameResourceBudget _budget;
-        std::shared_ptr<compat::JkrHeapRuntime> _heaps;
+        std::shared_ptr<void> _mem2Storage;
+        JKRHeap::Handle _rootHeap;
         std::shared_ptr<Mem1ResourceHeap> _mem1;
         std::unique_ptr<EmbeddedGameTables> _embedded_tables;
     };

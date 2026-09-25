@@ -3,7 +3,7 @@
 #include "Game/NameObj/NameObj.hpp"
 #include <memory>
 
-namespace smgpc::compat { class JkrAllocationDomain; }
+#include <JSystem/JKernel/JKRHeap.hpp>
 class EffectKeeper;
 class PaneEffectKeeper;
 class MultiEmitter;
@@ -30,7 +30,7 @@ public:
     void unregisterNativeKeeper(EffectKeeper*) noexcept;
     void unregisterNativeKeeper(PaneEffectKeeper*) noexcept;
     void retireNativeEmitter(const MultiEmitter&) const noexcept;
-    std::shared_ptr<smgpc::compat::JkrAllocationDomain> nativeAllocationDomain() const noexcept;
+    JKRHeap::Handle nativeAllocationHeap() const noexcept;
 
     virtual void init(const JMapInfoIter& rIter);
 

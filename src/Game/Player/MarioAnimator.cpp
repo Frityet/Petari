@@ -1,4 +1,3 @@
-#include "resource/TextEncoding.hpp"
 #include "Game/Player/MarioAnimator.hpp"
 #include "Game/Animation/XanimeCore.hpp"
 #include "Game/Animation/XanimePlayer.hpp"
@@ -21,10 +20,11 @@
 #include "Game/Util/ModelUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
-#include "JSystem/JMath/JMATrigonometric.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "JSystem/JMath/JMATrigonometric.hpp"
+#include "resource/TextEncoding.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
+#include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
 #include <cstring>
 #include <stdexcept>
@@ -51,24 +51,25 @@ MarioAnimator::MarioAnimator(MarioActor* actor)
 MarioAnimator::~MarioAnimator() = default;
 
 MarioAnimator* MarioAnimator::createNative(MarioActor* actor) {
-    const smgpc::compat::JkrHostAllocationScope host;
-    const auto owner = smgpc::compat::retain_actor_model(actor);
+    const aurora::allocation::HostAllocationScope host;
+    const auto owner = actor->retainNativeModel();
     if (!owner || owner.get() != actor->mModelManager) {
         aurora::throw_host_exception< std::logic_error >("MarioAnimator requires the actor's actual ModelManager owner");
     }
-    const auto domain = owner->nativeAllocationDomain();
+    const auto heapOwner = owner->nativeAllocationHeap();
     XanimePlayer* previousPlayer = owner->mXanimePlayer;
     try {
         MarioAnimator* original;
         {
-            const smgpc::compat::JkrAllocationScope heap(domain);
+            const JKRHeap::CurrentHeapScope heap(*heapOwner);
+            const aurora::allocation::ClientAllocationScope allocations({true, true});
             original = new MarioAnimator(actor);
         }
         // The model can outlive its actor while render packets still borrow it.
         // Keep the animator matrices and the heap alive through operator delete.
-        auto animator = std::shared_ptr< MarioAnimator >(original, [domain](MarioAnimator* value) {
-            const smgpc::compat::JkrHostAllocationScope host;
-            (void)domain;
+        auto animator = std::shared_ptr< MarioAnimator >(original, [heapOwner](MarioAnimator* value) {
+            const aurora::allocation::HostAllocationScope host;
+            (void)heapOwner;
             delete value;
         });
         owner->retainNativeDependency(animator);
@@ -84,9 +85,9 @@ void MarioAnimator::init() {
     if (gIsLuigi) {
         luigiAnimations = luigiAnimeSwapTable;
     }
-    mNativeResourceTable.reset(new XanimeResourceTable(
-        MR::getResourceHolder(mActor), marioAnimeTable, marioAnimeAuxTable, marioAnimeOfsTable,
-        reinterpret_cast< XanimeBckTable* >(singleAnimeTable), doubleAnimeTable, tripleAnimeTable, quadAnimeTable, luigiAnimations));
+    mNativeResourceTable.reset(new XanimeResourceTable(MR::getResourceHolder(mActor), marioAnimeTable, marioAnimeAuxTable, marioAnimeOfsTable,
+                                                       reinterpret_cast< XanimeBckTable* >(singleAnimeTable), doubleAnimeTable, tripleAnimeTable,
+                                                       quadAnimeTable, luigiAnimations));
     mResourceTable = mNativeResourceTable.get();
 
     _14 = 0;
@@ -1074,35 +1075,35 @@ void MarioAnimator::updateJointRumble() {
     }
 
     {
-    Mario* playerVec = getPlayer();
-    Mario* playerAngle = getPlayer();
-    f32 angle = playerAngle->calcAngleD(playerVec->_368);
-    if (angle <= 5.0f) {
-        goto setIdentity;
-    }
-
-    {
-        TVec3f dir;
-        const TVec3f* airGrav = &getAirGravityVec();
-        Mario* playerVec2 = getPlayer();
-        MR::vecKillElement(playerVec2->_368, *airGrav, &dir);
-        MR::normalizeOrZero(&dir);
-
-        f32 frontDot = getFrontVec().dot(dir);
-        if (frontDot < -0.707f) {
-            hipRot = -hipRot;
-        } else {
-            f32 frontDot2 = getFrontVec().dot(dir);
-            if (frontDot2 > 0.707f) {
-                goto afterSlide;
-            }
-            hipRot = 0.9f * _118;
+        Mario* playerVec = getPlayer();
+        Mario* playerAngle = getPlayer();
+        f32 angle = playerAngle->calcAngleD(playerVec->_368);
+        if (angle <= 5.0f) {
+            goto setIdentity;
         }
-    }
 
-afterSlide:
-    PSMTXRotRad(_AC.toMtxPtr(), 'Z', hipRot);
-    goto afterRotate;
+        {
+            TVec3f dir;
+            const TVec3f* airGrav = &getAirGravityVec();
+            Mario* playerVec2 = getPlayer();
+            MR::vecKillElement(playerVec2->_368, *airGrav, &dir);
+            MR::normalizeOrZero(&dir);
+
+            f32 frontDot = getFrontVec().dot(dir);
+            if (frontDot < -0.707f) {
+                hipRot = -hipRot;
+            } else {
+                f32 frontDot2 = getFrontVec().dot(dir);
+                if (frontDot2 > 0.707f) {
+                    goto afterSlide;
+                }
+                hipRot = 0.9f * _118;
+            }
+        }
+
+    afterSlide:
+        PSMTXRotRad(_AC.toMtxPtr(), 'Z', hipRot);
+        goto afterRotate;
     }
 
 setIdentity:

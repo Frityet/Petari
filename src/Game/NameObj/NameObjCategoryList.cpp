@@ -1,7 +1,6 @@
 #include "Game/NameObj/NameObjCategoryList.hpp"
 #include "Game/Util/Functor.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
 #include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
 #include <algorithm>
@@ -9,7 +8,7 @@
 #include <vector>
 
 struct NameObjCategoryList::CategoryInfo::NativeCallback {
-    std::shared_ptr< smgpc::compat::JkrAllocationDomain > mDomain;
+    JKRHeap::Handle mHeap;
     std::unique_ptr< MR::FunctorBase > mFunctor;
 };
 
@@ -91,7 +90,7 @@ void NameObjCategoryList::execute(int idx) {
 
     struct Entry {
         NameObj* mObject;
-        std::uint64_t mGeneration;
+        u64 mGeneration;
         s16 mExecutorIdx;
     };
     std::vector<Entry> entries;
@@ -101,7 +100,7 @@ void NameObjCategoryList::execute(int idx) {
         entries.reserve(objects.size());
         for (s32 i = 0; i < objects.size(); i++) {
             NameObj* object = objects[i];
-            const auto generation = smgpc::compat::name_obj_runtime_generation(object);
+            const auto generation = NameObj::nativeGeneration(object);
             if (generation != 0) {
                 entries.push_back({object, generation, object->mExecutorIdx});
             }
@@ -114,7 +113,7 @@ void NameObjCategoryList::execute(int idx) {
         if (!*lifetime) {
             return;
         }
-        if (smgpc::compat::name_obj_runtime_generation(entry.mObject) != entry.mGeneration) {
+        if (NameObj::nativeGeneration(entry.mObject) != entry.mGeneration) {
             continue;
         }
         if (entry.mObject->mExecutorIdx != entry.mExecutorIdx) {
@@ -177,19 +176,19 @@ void NameObjCategoryList::registerExecuteBeforeFunction(const MR::FunctorBase& r
     requireNativeCategory(idx);
     const auto lifetime = mNativeLifetime;
     std::shared_ptr< CategoryInfo::NativeCallback > callback;
-    auto domain = smgpc::compat::current_jkr_allocation_domain();
+    auto heap = JKRHeap::retainCurrentNativeLifetime();
     {
         const aurora::allocation::HostAllocationScope host;
         callback = std::make_shared< CategoryInfo::NativeCallback >();
     }
-    callback->mDomain = std::move(domain);
+    callback->mHeap = std::move(heap);
     callback->mFunctor.reset(rFunc.clone(nullptr));
     if (!callback->mFunctor) {
         throw std::bad_alloc();
     }
-    if (!callback->mDomain) {
+    if (!callback->mHeap) {
         if (auto* heap = JKRHeap::findFromRoot(callback->mFunctor.get())) {
-            callback->mDomain = smgpc::compat::JkrAllocationDomain::retain_heap(*heap);
+            callback->mHeap = heap->retainNativeLifetime();
         }
     }
 

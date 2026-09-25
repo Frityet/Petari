@@ -23,8 +23,8 @@
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include "NativeHeapFixture.hpp"
 #include <memory>
 
 #include <aurora/allocation.hpp>
@@ -172,19 +172,20 @@ namespace {
     };
 
     void verify_sensor_messages() {
-        const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
+        const auto domain = MR::getSceneObjHolder()->nativeAllocationHeap();
         require(domain != nullptr, "Sensors require the actual original scene allocation domain");
         auto* checker = static_cast<SensorHitChecker*>(MR::getSceneObjHolder()->getObj(SceneObj_SensorHitChecker));
         require(checker != nullptr, "Original scene owns its SensorHitChecker");
-        const auto actors_before = smgpc::compat::actor_runtime_state_count();
-        const auto names_before = smgpc::compat::name_obj_runtime_state_count();
+        const auto actors_before = NameObj::snapshotNativeObjects().size();
+        const auto names_before = NameObj::snapshotNativeObjects().size();
         const auto sensors_before = checker->mCharacterGroup->mSensorCount;
         std::vector<Receipt> receipts;
         receipts.reserve(32);
         std::array<std::unique_ptr<Receiver>, 4> actors;
         std::array<Receiver*, 4> owners{};
         {
-            const smgpc::compat::JkrAllocationScope game(domain);
+            const JKRHeap::CurrentHeapScope game(*(domain));
+            const aurora::allocation::ClientAllocationScope gameRouting({true, true});
             for (std::size_t i = 0; i < owners.size(); ++i) {
                 actors[i] = std::make_unique<Receiver>("sensor utility probe", receipts);
                 owners[i] = actors[i].get();
@@ -261,8 +262,8 @@ namespace {
                 "All-rejected bound messages still visit every unique sensor");
         for (auto it = actors.rbegin(); it != actors.rend(); ++it) it->reset();
         require(checker->mCharacterGroup->mSensorCount == sensors_before &&
-                    smgpc::compat::actor_runtime_state_count() == actors_before &&
-                    smgpc::compat::name_obj_runtime_state_count() == names_before,
+                    NameObj::snapshotNativeObjects().size() == actors_before &&
+                    NameObj::snapshotNativeObjects().size() == names_before,
                 "Actor retirement releases sensors, group membership, Binder and native ownership");
     }
 

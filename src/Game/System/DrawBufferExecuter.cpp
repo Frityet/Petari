@@ -3,7 +3,6 @@
 #include "Game/LiveActor/ModelManager.hpp"
 #include "Game/System/DrawBuffer.hpp"
 #include "Game/Util/LightUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
 #include <algorithm>
 #include <aurora/exception.hpp>
 #include <memory>
@@ -27,7 +26,7 @@ void DrawBufferExecuter::retainNativeModel(LiveActor* pActor) {
     if (pActor == nullptr || mNativeModel) {
         aurora::throw_host_exception< std::logic_error >("Draw prototype ownership can only be established once");
     }
-    auto owner = smgpc::compat::retain_actor_model(pActor);
+    auto owner = pActor->retainNativeModel();
     if (!owner || owner.get() != pActor->mModelManager || owner->getJ3DModel() != mDrawBuffer->mModel) {
         aurora::throw_host_exception< std::invalid_argument >("Draw executer must retain its actual prototype ModelManager");
     }

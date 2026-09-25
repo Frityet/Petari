@@ -5,7 +5,7 @@
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Camera/CameraPoseParam.hpp"
 #include "camera/CameraDirectorRuntime.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "Game/Camera/CameraAnim.hpp"
@@ -66,8 +66,9 @@ namespace {
         for (unsigned i = 0; i < values.size(); ++i) put32(bytes, 0x64 + i * 4, std::bit_cast<u32>(values[i]));
         return bytes;
     }
-    void shaker_storage(CameraShaker& shaker, const std::shared_ptr<smgpc::compat::JkrAllocationDomain>& domain) {
-        smgpc::compat::JkrAllocationScope game(domain);
+    void shaker_storage(CameraShaker& shaker, const JKRHeap::Handle& domain) {
+        const JKRHeap::CurrentHeapScope game(*(domain));
+        const aurora::allocation::ClientAllocationScope gameRouting({true, true});
         // Invoke the actual constructor helper again to inspect its transient
         // seven-word retail write before createInfinityTask replaces four slots.
         shaker.createSinglyHorizontalTask();
@@ -81,8 +82,8 @@ namespace {
             require(std::bit_cast<u32>(pattern->mDirection.x) == 0x3f7fffff &&
                     std::bit_cast<u32>(pattern->mDirection.y) == 0,
                     "all seven original transient patterns preserve exact retail horizontal normalization");
-            require(JKRHeap::findFromRoot(task) == &domain->heap() &&
-                    JKRHeap::findFromRoot(pattern) == &domain->heap(), "transient shaker allocations belong to actual scene Game storage");
+            require(JKRHeap::findFromRoot(task) == &(*domain) &&
+                    JKRHeap::findFromRoot(pattern) == &(*domain), "transient shaker allocations belong to actual scene Game storage");
         }
         shaker.createInfinityTask();
         for (auto* task : shaker.mInfinityTasks) {
@@ -142,12 +143,13 @@ namespace {
 
     void verify_terminal_camera(smgpc::camera::CameraDirectorRuntime& owner) {
         auto& director = owner.director();
-        const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
+        const auto domain = MR::getSceneObjHolder()->nativeAllocationHeap();
         require(domain != nullptr, "camera checks borrow the actual original scene allocation owner");
-        const smgpc::compat::JkrAllocationScope allocation(domain);
+        const JKRHeap::CurrentHeapScope allocation(*(domain));
+        const aurora::allocation::ClientAllocationScope allocationRouting({true, true});
         const J3DSys::ContextScope commands;
-        require(JKRHeap::findFromRoot(&director) == &domain->heap() &&
-                    JKRHeap::findFromRoot(director.mCameraCreator) == &domain->heap(),
+        require(JKRHeap::findFromRoot(&director) == &(*domain) &&
+                    JKRHeap::findFromRoot(director.mCameraCreator) == &(*domain),
                 "the naturally initialized director and creator belong to the original scene heap");
         shaker_storage(*director.mShaker, domain);
 
@@ -210,7 +212,7 @@ namespace {
 
         u8* data = nullptr;
         {
-            const smgpc::compat::JkrHostAllocationScope host;
+            const aurora::allocation::HostAllocationScope host;
             auto raw = animation();
             data = static_cast<u8*>(owner.retain_animation(raw));
             std::fill(raw.begin(), raw.end(), 0xa5);
@@ -261,7 +263,7 @@ namespace {
     }
 
     struct Probe {
-        std::weak_ptr<smgpc::compat::JkrAllocationDomain> domain;
+        std::weak_ptr<JKRHeap> domain;
         const CameraDirector* identity = nullptr;
         std::uint64_t observed_frames = 0;
         bool original_event_observed = false;
@@ -272,14 +274,14 @@ namespace {
             if (!controller || controller->mSceneInitializeState != SceneInitializeState_End ||
                 controller->getCurrentSceneForExecute() != controller->mScene ||
                 !dynamic_cast<GameScene*>(controller->mScene)) return;
-            const smgpc::compat::JkrHostAllocationScope host;
+            const aurora::allocation::HostAllocationScope host;
             auto* owner = smgpc::camera::current_camera_director_runtime();
             require(owner && owner->ready() && &owner->director() == MR::getCameraDirector(),
                     "normal scene initialization publishes the actual ready CameraDirector");
             auto& director = owner->director();
             require(!identity || identity == &director, "normal frames retain the same original camera owner");
             identity = &director;
-            domain = MR::getSceneObjHolder()->nativeAllocationDomain();
+            domain = MR::getSceneObjHolder()->nativeAllocationHeap();
             require(director.mHolder->getNum() == 45 && director.getCurrentCameraMan() != nullptr,
                     "the original process constructs all 45 camera controllers and a live manager");
             require(&owner->context() == MR::getSceneObjHolder()->getObj(SceneObj_CameraContext),

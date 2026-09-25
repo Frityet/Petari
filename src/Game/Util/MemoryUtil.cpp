@@ -8,16 +8,10 @@
 #include <aurora/exception.hpp>
 
 namespace MR {
-    CurrentHeapRestorer::CurrentHeapRestorer(JKRHeap* pHeap) {
-        OSLockMutex(&JKRHeap::sCurrentHeapMutex);
-        _0 = JKRHeap::sCurrentHeap;
-        MR::becomeCurrentHeap(pHeap);
+    CurrentHeapRestorer::CurrentHeapRestorer(JKRHeap* pHeap) : mCurrentHeap(*pHeap) {
     }
 
-    CurrentHeapRestorer::~CurrentHeapRestorer() {
-        MR::becomeCurrentHeap(_0);
-        OSUnlockMutex(&JKRHeap::sCurrentHeapMutex);
-    }
+    CurrentHeapRestorer::~CurrentHeapRestorer() = default;
 
     void* NewDeleteAllocator::alloc(MEMAllocator* pAllocator, u32 size) {
         return new u8[size];

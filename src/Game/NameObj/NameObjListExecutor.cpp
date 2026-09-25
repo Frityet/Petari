@@ -1,7 +1,8 @@
 #include "Game/NameObj/NameObjListExecutor.hpp"
 #include "Game/NameObj/NameObjExecuteHolder.hpp"
 #include "Game/Scene/SceneFunction.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
+#include <aurora/allocation.hpp>
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -13,11 +14,13 @@
 namespace {
     struct NativeExecutionScope {
         J3DSys::ContextScope mCommands;
-        std::optional<smgpc::compat::JkrAllocationScope> mHeap;
+        std::optional<JKRHeap::CurrentHeapScope> mHeap;
+        std::optional<aurora::allocation::ClientAllocationScope> mRouting;
 
-        explicit NativeExecutionScope(std::shared_ptr< smgpc::compat::JkrAllocationDomain > domain) {
+        explicit NativeExecutionScope(JKRHeap::Handle domain) {
             if (domain) {
-                mHeap.emplace(std::move(domain));
+                mHeap.emplace(*domain);
+                mRouting.emplace(aurora::allocation::RoutingState{true, true});
             }
         }
     };
@@ -36,7 +39,7 @@ NameObjListExecutor::~NameObjListExecutor() {
 }
 
 void NameObjListExecutor::bindNativeExecution(smgpc::runtime::SceneScheduler& scheduler,
-                                             std::shared_ptr< smgpc::compat::JkrAllocationDomain > domain) {
+                                             JKRHeap::Handle domain) {
     if (!domain || !mMovementList || !mCalcAnimList || !mDrawList || !mBufferHolder) {
         aurora::throw_host_exception< std::invalid_argument >("Scene execution requires its initialized original executor and Game domain");
     }
@@ -44,11 +47,12 @@ void NameObjListExecutor::bindNativeExecution(smgpc::runtime::SceneScheduler& sc
         aurora::throw_host_exception< std::logic_error >("Bind the original executor once before scene placement");
     }
 
-    mNativeDomain = std::move(domain);
+    mNativeHeap = std::move(domain);
     try {
         scheduler.attach_execution(*this);
         mNativeScheduler = &scheduler;
-        const smgpc::compat::JkrAllocationScope game(mNativeDomain);
+        const JKRHeap::CurrentHeapScope game(*mNativeHeap);
+        const aurora::allocation::ClientAllocationScope game_routing({true, true});
         mNativeRequirements = static_cast< NameObjExecuteHolder* >(MR::createSceneObj(SceneObj_NameObjExecuteHolder));
         if (!mNativeRequirements) {
             aurora::throw_host_exception< std::logic_error >("Scene initialization did not create its original execution requirement holder");
@@ -139,7 +143,7 @@ void NameObjListExecutor::allocateDrawBufferActorList() {
     if (mNativeRetiring || mNativeInitialized) {
         aurora::throw_host_exception< std::logic_error >("Allocate original execution lists exactly once after placement");
     }
-    const NativeExecutionScope native(mNativeDomain);
+    const NativeExecutionScope native(mNativeHeap);
     mMovementList->allocateBuffer();
     mCalcAnimList->allocateBuffer();
     mDrawList->allocateBuffer();
@@ -200,7 +204,7 @@ void NameObjListExecutor::removeToDraw(NameObj* pObj, int category) {
 }
 
 void NameObjListExecutor::executeMovement(int category) {
-    const NativeExecutionScope native(mNativeDomain);
+    const NativeExecutionScope native(mNativeHeap);
     mMovementList->execute(category);
     if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
         if (category == MR::MovementType_Camera) {
@@ -213,36 +217,36 @@ void NameObjListExecutor::executeMovement(int category) {
 }
 
 void NameObjListExecutor::executeCalcAnim(int category) {
-    const NativeExecutionScope native(mNativeDomain);
+    const NativeExecutionScope native(mNativeHeap);
     mCalcAnimList->execute(category);
 }
 
 void NameObjListExecutor::entryDrawBuffer2D() {
-    const NativeExecutionScope native(mNativeDomain);
+    const NativeExecutionScope native(mNativeHeap);
     mBufferHolder->entry(MR::CameraType_2D);
 }
 
 void NameObjListExecutor::entryDrawBuffer3D() {
-    const NativeExecutionScope native(mNativeDomain);
+    const NativeExecutionScope native(mNativeHeap);
     mBufferHolder->entry(MR::CameraType_3D);
 }
 
 void NameObjListExecutor::entryDrawBufferMirror() {
-    const NativeExecutionScope native(mNativeDomain);
+    const NativeExecutionScope native(mNativeHeap);
     mBufferHolder->entry(MR::CameraType_Mirror);
 }
 
 void NameObjListExecutor::drawOpa(int drawBufferType) {
-    const NativeExecutionScope native(mNativeDomain);
+    const NativeExecutionScope native(mNativeHeap);
     mBufferHolder->drawOpa(drawBufferType);
 }
 
 void NameObjListExecutor::drawXlu(int drawBufferType) {
-    const NativeExecutionScope native(mNativeDomain);
+    const NativeExecutionScope native(mNativeHeap);
     mBufferHolder->drawXlu(drawBufferType);
 }
 
 void NameObjListExecutor::executeDraw(int category) {
-    const NativeExecutionScope native(mNativeDomain);
+    const NativeExecutionScope native(mNativeHeap);
     mDrawList->execute(category);
 }

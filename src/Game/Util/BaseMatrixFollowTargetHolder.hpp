@@ -70,7 +70,7 @@ public:
     void setFollowTargetInfo(LiveActor*, const JMapInfoIter&, const TPos3f*, BaseMatrixFollowValidater*);
     BaseMatrixFollowTarget* findFollowTarget(const JMapLinkInfo*);
     BaseMatrixFollowTarget* findFollowTarget(const BaseMatrixFollower*);
-    void releaseNativeReference(const NameObj*) noexcept;
+    void releaseNativeReference(const NameObj*) noexcept override;
 
     MR::Vector< MR::AssignableArray< BaseMatrixFollowTarget* > > mTargets;  // 0xC
     MR::Vector< MR::AssignableArray< BaseMatrixFollower* > > mFollowers;    // 0x18

@@ -1,3 +1,4 @@
+#include "NativeHeapFixture.hpp"
 #include "OriginalStageResourceProcessFixture.hpp"
 #include "OriginalSceneControllerFixture.hpp"
 #include "SceneExecutionFixture.hpp"
@@ -14,7 +15,7 @@
 #include "Game/Util/Color.hpp"
 #include "Game/Util/LightUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "resource/TextEncoding.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -69,12 +70,12 @@ namespace {
 
     void testOriginalPlayerLightOwnership() {
         using namespace smgpc;
-        const auto heaps = compat::JkrHeapRuntime::create(16U << 20);
+        const auto heaps = smgpc::test::create_native_root_heap(16U << 20);
         test::OriginalSceneControllerFixture original(heaps);
         runtime::SceneScheduler scheduler;
         runtime::SceneSchedulerBinding active(scheduler);
         for (unsigned generation = 0; generation < 8; ++generation) {
-            const auto domain = compat::JkrAllocationDomain::create(heaps, 1U << 20);
+            const auto domain = smgpc::test::create_native_solid_heap(heaps, 1U << 20);
             test::SceneExecutionFixture scene(scheduler, domain,
                                               &original.scene);
             alignas(32) std::array<u8, 4096> commands{};
@@ -85,17 +86,17 @@ namespace {
             MR::createSceneObj(SceneObj_ClippingDirector);
             {
                 LiveActor first("first original player light"), second("second original player light");
-                compat::replace_actor_light_ctrl(&first);
-                compat::replace_actor_light_ctrl(&second);
+                (&first)->initActorLightCtrl();
+                (&second)->initActorLightCtrl();
                 LightFunction::registerPlayerLightCtrl(first.mActorLightCtrl);
                 require(director->_1C == first.mActorLightCtrl &&
                             first.mActorLightCtrl->mRegisteredLightDirector == director,
                         "registration uses the original director's actual borrowed pointer");
                 LightFunction::registerPlayerLightCtrl(second.mActorLightCtrl);
-                compat::replace_actor_light_ctrl(&first);
+                (&first)->initActorLightCtrl();
                 require(director->_1C == second.mActorLightCtrl,
                         "replacing an unregistered controller preserves the active player");
-                compat::replace_actor_light_ctrl(&second);
+                (&second)->initActorLightCtrl();
                 require(!director->_1C, "replacing the registered controller clears its borrowed pointer");
                 LightFunction::registerPlayerLightCtrl(first.mActorLightCtrl);
             }
@@ -173,7 +174,7 @@ namespace {
         first->~LiveActor();
 
         auto *second = new (storage.data()) LiveActor("point-light second generation");
-        require(smgpc::compat::name_obj_runtime_generation(second) !=
+        require(NameObj::nativeGeneration(second) !=
                     firstGeneration,
                 "the ABA fixture must reuse the pointer with a new generation");
         controller.update();
@@ -203,7 +204,7 @@ namespace {
         controller.update();
         require(controller._0 == -1 && controller._C == second &&
                     controller._CGeneration ==
-                        smgpc::compat::name_obj_runtime_generation(second),
+                        NameObj::nativeGeneration(second),
                 "the post-stale fade-in endpoint must track the valid generation");
         requireColor(controller._14->mColor,
                      _GXColor{20U, 80U, 40U, 255U},
@@ -213,7 +214,7 @@ namespace {
         second->~LiveActor();
         auto *third =
             new (storage.data()) LiveActor("point-light third generation");
-        require(smgpc::compat::name_obj_runtime_generation(third) !=
+        require(NameObj::nativeGeneration(third) !=
                     secondGeneration,
                 "the tracked-actor ABA fixture must reuse the pointer with a new generation");
         controller.requestPointLight(

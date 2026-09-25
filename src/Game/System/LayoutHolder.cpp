@@ -3,7 +3,8 @@
 #include "Game/Util/SystemUtil.hpp"
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
+#include <aurora/allocation.hpp>
 #include "resource/RarcArchive.hpp"
 #include "resource/GameResourceRuntime.hpp"
 #include "layout/LytTexMap.hpp"
@@ -31,7 +32,7 @@ namespace {
 };  // namespace
 
 struct LayoutHolder::NativeResources {
-    std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain;
+    JKRHeap::Handle domain;
     std::shared_ptr<const void> archiveLifetime;
     std::shared_ptr<const smgpc::resource::RarcArchive> source;
     std::filesystem::path path;
@@ -43,7 +44,7 @@ LayoutHolder::LayoutHolder(JKRArchive& rArchive) : nw4r::lyt::ResourceAccessor()
         {
             const aurora::allocation::HostAllocationScope host;
             mNativeResources = std::make_shared<NativeResources>();
-            mNativeResources->domain = smgpc::compat::JkrAllocationDomain::retain_heap(*MR::getCurrentHeap());
+            mNativeResources->domain = MR::getCurrentHeap()->retainNativeLifetime();
             mNativeResources->archiveLifetime = rArchive.retainNativeResources();
             mNativeResources->source = rArchive.retainSource();
             mNativeResources->path = rArchive.mLoaderName ? rArchive.mLoaderName : "";
@@ -51,7 +52,8 @@ LayoutHolder::LayoutHolder(JKRArchive& rArchive) : nw4r::lyt::ResourceAccessor()
                 if (const auto* entry = loader->mArchiveHolder->findEntry(&rArchive))
                     mNativeResources->path = entry->mArchiveName;
         }
-        const smgpc::compat::JkrAllocationScope original(mNativeResources->domain);
+        const JKRHeap::CurrentHeapScope original(*(mNativeResources->domain));
+        const aurora::allocation::ClientAllocationScope original_routing({true, true});
         initializeArc();
     } catch (...) {
         destroyNativeResources();
@@ -97,7 +99,7 @@ const std::filesystem::path& LayoutHolder::nativeResourcePath() const {
 }
 
 JKRHeap& LayoutHolder::heap() const noexcept {
-    return mNativeResources->domain->heap();
+    return *mNativeResources->domain;
 }
 
 void* LayoutHolder::GetResource(u32 type, const char* pName, u32* pSize) {

@@ -1,3 +1,4 @@
+#include "NativeHeapFixture.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "OriginalSceneControllerFixture.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
@@ -8,7 +9,7 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "layout/LayoutRuntime.hpp"
 #include <aurora/exception.hpp>
 #include <algorithm>
@@ -30,7 +31,7 @@ struct Object final : NameObj {
         auto* allocation = new unsigned[8];
         require(JKRHeap::findFromRoot(allocation) == expected, "original callback must retain its scene Game heap");
         delete[] allocation;
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         log.push_back(value);
     }
     int id;
@@ -46,9 +47,9 @@ struct VisibilityActor final : LiveActor {
 };
 
 void verify_model_visibility(smgpc::runtime::SceneScheduler& scheduler,
-                             const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps,
+                             const JKRHeap::Handle& heaps,
                              smgpc::test::OriginalSceneControllerFixture& original) {
-    const auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 1U << 20);
+    const auto domain = smgpc::test::create_native_solid_heap(heaps, 1U << 20);
     smgpc::test::SceneExecutionFixture scene(scheduler, domain, &original.scene);
     require(MR::createSceneObj(SceneObj_ClippingDirector) != nullptr,
             "the original LiveActor constructor requires its scene clipping director");
@@ -121,21 +122,21 @@ void verify_model_visibility(smgpc::runtime::SceneScheduler& scheduler,
 int main() {
     try {
         using namespace smgpc;
-        const auto heaps = compat::JkrHeapRuntime::create(16U << 20);
+        const auto heaps = smgpc::test::create_native_root_heap(16U << 20);
         test::OriginalSceneControllerFixture original(heaps);
-        const auto free = heaps->root_heap().getFreeSize();
+        const auto free = (*heaps).getFreeSize();
         NameObj outside("outside the scene NameObjHolder");
-        const auto identities = compat::name_obj_runtime_state_count();
+        const auto identities = NameObj::snapshotNativeObjects().size();
         runtime::SceneScheduler scheduler;
         runtime::SceneSchedulerBinding active(scheduler);
         verify_model_visibility(scheduler, heaps, original);
         for (int generation = 0; generation < 16; ++generation) {
-            auto domain = compat::JkrAllocationDomain::create(heaps, 1U << 20);
-            std::weak_ptr<compat::JkrAllocationDomain> weak = domain;
+            auto domain = smgpc::test::create_native_solid_heap(heaps, 1U << 20);
+            std::weak_ptr<JKRHeap> weak = domain;
             {
                 test::SceneExecutionFixture scene(scheduler, domain, &original.scene);
                 auto* original_holder = &scene.executor().nativeRequirements();
-                require(JKRHeap::findFromRoot(original_holder) == &domain->heap(), "actual requirement holder must use the scene heap");
+                require(JKRHeap::findFromRoot(original_holder) == &(*domain), "actual requirement holder must use the scene heap");
                 require(scene.executor().mBufferHolder != nullptr, "the real executor owns one draw holder");
                 std::vector<int> log;
                 Object a(1, log), b(2, log), c(3, log);
@@ -143,7 +144,7 @@ int main() {
                 require(NameObjFinder::find("scene member a") == &a && !NameObjFinder::find(outside.getName()),
                         "original lookup searches the active scene holder, excluding process-wide identities");
                 for (auto* object : {&a, &b, &c}) {
-                    object->expected = &domain->heap();
+                    object->expected = &(*domain);
                     MR::connectToScene(static_cast<NameObj*>(object), 34, 0, -1, 72);
                 }
                 require(scene.executor().mMovementList->mCategoryInfo[34].mNameObjArr.size() == 0,
@@ -188,7 +189,7 @@ int main() {
                 log.clear();
                 scene.apply_connections();
                 auto victim = std::make_unique<Object>(4, log);
-                victim->expected = &domain->heap();
+                victim->expected = &(*domain);
                 scheduler.connect_name_obj(*victim, 34, -1, -1, -1);
                 scene.apply_connections();
                 a.hook = [&] { victim.reset(); };
@@ -201,34 +202,34 @@ int main() {
                 MR::disconnectToDrawTemporarily(&a);
             }
             domain.reset();
-            require(weak.expired() && !scheduler.allocation_domain(), "scene ownership releases every retained callback domain");
-            require(heaps->root_heap().getFreeSize() == free, "all original executor and requirement allocations reclaim together");
-            require(compat::name_obj_runtime_state_count() == identities, "scene controllers and late NameObjs retire their identities");
+            require(weak.expired() && !scheduler.allocation_heap(), "scene ownership releases every retained callback domain");
+            require((*heaps).getFreeSize() == free, "all original executor and requirement allocations reclaim together");
+            require(NameObj::snapshotNativeObjects().size() == identities, "scene controllers and late NameObjs retire their identities");
         }
         {
-            auto domain = compat::JkrAllocationDomain::create(heaps, 1U << 20);
+            auto domain = smgpc::test::create_native_solid_heap(heaps, 1U << 20);
             test::SceneExecutionFixture scene(scheduler, domain, &original.scene);
             layout::LayoutRuntime native_layout("scheduler-owned layout adaptor", "ownership fixture", 1, 72);
-            const auto before = compat::name_obj_runtime_state_count();
+            const auto before = NameObj::snapshotNativeObjects().size();
             scheduler.register_layout(native_layout, 34, -1, 72);
             auto* adaptor = NameObjFinder::find(native_layout.getName().c_str());
-            require(adaptor && compat::name_obj_runtime_ownership_is_claimed(adaptor),
+            require(adaptor && NameObj::isNativeOwnershipClaimed(adaptor),
                     "the actual layout adaptor is claimed by its retaining scheduler");
             scene.complete_initialization();
             require(NameObjFinder::find(native_layout.getName().c_str()) == adaptor &&
-                        compat::name_obj_runtime_state_count() == before + 1,
+                        NameObj::snapshotNativeObjects().size() == before + 1,
                     "the scheduler retains its own layout adaptor after execution initialization");
             scheduler.unregister_layout(native_layout);
             require(!NameObjFinder::find(native_layout.getName().c_str()) &&
-                        compat::name_obj_runtime_state_count() == before,
+                        NameObj::snapshotNativeObjects().size() == before,
                     "explicit layout unregistration destroys its adaptor and ownership record exactly once");
             scheduler.register_layout(native_layout, 34, -1, 72);
             scheduler.clear();
             require(!NameObjFinder::find(native_layout.getName().c_str()) &&
-                        compat::name_obj_runtime_state_count() == before,
+                        NameObj::snapshotNativeObjects().size() == before,
                     "scheduler clear also retires a protected layout adaptor without stale ownership");
         }
-        require(heaps->root_heap().getFreeSize() == free && compat::name_obj_runtime_state_count() == identities,
+        require((*heaps).getFreeSize() == free && NameObj::snapshotNativeObjects().size() == identities,
                 "layout adaptor teardown retains no scene domain or runtime identities");
         require(NameObjFinder::find(outside.getName()) == nullptr,
                 "the original process holder remains valid after a scene and contains no unregistered object");

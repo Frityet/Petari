@@ -1,13 +1,12 @@
 #pragma once
 
+#include <JSystem/JKernel/JKRHeap.hpp>
 #include <cstdint>
 #include <memory>
 #include <span>
 
 class J3DModelData;
 class J3DMaterialTable;
-
-namespace smgpc::compat { class JkrAllocationDomain; }
 
 namespace smgpc::resource {
     class Mem1ResourceHeap;
@@ -28,12 +27,12 @@ namespace smgpc::resource {
     };
 
     // Retains authored bytes, actual loaded model/table instances, native
-    // metadata and their original allocation domain. SDK returns are borrowed
+    // metadata and their actual original heap. SDK returns are borrowed
     // for the lifetime of the retained resource or an explicit source alias.
     class J3dModelResource final {
     public:
         J3dModelResource(std::span<const std::uint8_t>,
-                         std::shared_ptr<compat::JkrAllocationDomain>,
+                         JKRHeap::Handle,
                          std::shared_ptr<Mem1ResourceHeap>);
         ~J3dModelResource();
         J3dModelResource(const J3dModelResource&) noexcept = default;

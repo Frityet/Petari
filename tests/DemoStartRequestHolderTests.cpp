@@ -2,8 +2,8 @@
 #include "Game/Demo/DemoStartRequestUtil.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include "NativeHeapFixture.hpp"
 
 #include <array>
 #include <cstddef>
@@ -181,32 +181,33 @@ namespace {
     }
 
     void test_explicit_allocation_and_proxy_ownership() {
-        using namespace smgpc::compat;
-        const auto before = name_obj_runtime_state_count();
-        auto heaps = JkrHeapRuntime::create(1U << 20);
-        auto domain = JkrAllocationDomain::create(heaps, 64U << 10);
+
+        const auto before = NameObj::snapshotNativeObjects().size();
+        auto heaps = smgpc::test::create_native_root_heap(1U << 20);
+        auto domain = smgpc::test::create_native_solid_heap(heaps, 64U << 10);
         auto owner = std::unique_ptr<DemoStartRequestHolder>{};
         NameObj borrower("borrowed request owner");
         NameObj* proxy = nullptr;
         {
-            JkrAllocationScope game_allocations(domain);
+            const JKRHeap::CurrentHeapScope game_allocations(*(domain));
+            const aurora::allocation::ClientAllocationScope game_allocationsRouting({true, true});
             // This holder is intentionally retained beyond the arena, so the
             // caller selects host storage for it and its original children.
             {
-                JkrHostAllocationScope host_owner;
+                aurora::allocation::HostAllocationScope host_owner;
                 owner = std::make_unique<DemoStartRequestHolder>();
             }
             DemoStartRequestHolder nested;
             auto& holder = *owner;
             proxy = holder.mProxyObj;
             require(JKRHeap::findFromRoot(&nested) == nullptr &&
-                        JKRHeap::findFromRoot(nested.mProxyObj) == &domain->heap(),
+                        JKRHeap::findFromRoot(nested.mProxyObj) == &(*domain),
                     "stack holder must allocate its owned proxy in the active Game arena");
             for (auto* slot : nested.mStartInfos) {
-                require(JKRHeap::findFromRoot(slot) == &domain->heap(),
+                require(JKRHeap::findFromRoot(slot) == &(*domain),
                         "original request storage must use the caller-selected Game arena");
             }
-            require(name_obj_runtime_ownership_is_claimed(proxy),
+            require(NameObj::isNativeOwnershipClaimed(proxy),
                     "the actual holder claims its retained proxy");
             auto info = DemoStartInfo{};
             info._C = &borrower;
@@ -214,12 +215,13 @@ namespace {
             holder.registerStartDemoInfo(info);
             holder.pushRequest(&borrower, info.mDemoName);
         }
-        require(has_name_obj_runtime_state(proxy),
+        require(NameObj::nativeGeneration(proxy),
                 "the actual holder retains its proxy after nested holder retirement");
         domain.reset();
         {
-            auto reuse = JkrAllocationDomain::create(heaps, 64U << 10);
-            JkrAllocationScope game_allocations(reuse);
+            auto reuse = smgpc::test::create_native_solid_heap(heaps, 64U << 10);
+            const JKRHeap::CurrentHeapScope game_allocations(*(reuse));
+            const aurora::allocation::ClientAllocationScope game_allocationsRouting({true, true});
             auto* overwrite = new unsigned char[32U << 10];
             std::memset(overwrite, 0xa5, 32U << 10);
             delete[] overwrite;
@@ -228,9 +230,9 @@ namespace {
                     std::strcmp(owner->getCurrentInfo()->mDemoName, "retained request") == 0,
                 "queued request did not survive unrelated Game arena retirement");
         owner.reset();
-        require(!has_name_obj_runtime_state(proxy) &&
-                    has_name_obj_runtime_state(&borrower) &&
-                    name_obj_runtime_state_count() == before + 1,
+        require(!NameObj::nativeGeneration(proxy) &&
+                    NameObj::nativeGeneration(&borrower) &&
+                    NameObj::snapshotNativeObjects().size() == before + 1,
                 "owner retirement leaked its proxy or destroyed a borrowed requester");
     }
 

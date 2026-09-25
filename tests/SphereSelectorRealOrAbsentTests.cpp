@@ -1,3 +1,4 @@
+#include "NativeHeapFixture.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "OriginalSceneControllerFixture.hpp"
 #include "Game/LiveActor/LiveActorGroup.hpp"
@@ -60,12 +61,12 @@ namespace {
         require(MR::createSceneObj(SceneObj_SphereSelector) == nullptr,
                 "SceneObj 0x6F must remain absent without a scene-owned holder");
 
-        const auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+        const auto heaps = smgpc::test::create_native_root_heap(16U << 20);
         auto scheduler = smgpc::runtime::SceneScheduler{};
         const auto active_scheduler = smgpc::runtime::SceneSchedulerBinding(scheduler);
         smgpc::test::OriginalSceneControllerFixture original(heaps);
         auto scene = smgpc::test::SceneExecutionFixture(
-            scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 4U << 20),
+            scheduler, smgpc::test::create_native_solid_heap(heaps, 4U << 20),
             &original.scene);
         auto *created = MR::createSceneObj(SceneObj_SphereSelector);
         auto *selector = dynamic_cast<SphereSelector *>(created);

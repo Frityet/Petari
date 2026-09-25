@@ -1,5 +1,6 @@
 #include "Game/Util/SingletonHolder.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
+#include <aurora/allocation.hpp>
 #include <aurora/guest_thread.hpp>
 #include <aurora/exception.hpp>
 #include "RuntimeContext.hpp"
@@ -36,7 +37,7 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Screen/CaptureScreenDirector.hpp"
 #include "Game/Screen/LayoutActor.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "layout/LayoutRuntime.hpp"
 #include "camera/CameraParam.hpp"
 #include "camera/CameraDirectorRuntime.hpp"
@@ -213,7 +214,7 @@ namespace smgpc::runtime {
     RuntimeContext::RuntimeContext(logging::ILogger &logger, render::AuroraWindow &window_service,
                                    resource::GameResourceRuntime &resources)
         : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root),
-          _host_heaps(resources.host_heaps()),
+          _root_heap(resources.root_heap()),
           _rfl(_save_data.nand()),
           _current_stage_name(default_stage_name())
 #ifndef NDEBUG
@@ -235,7 +236,7 @@ namespace smgpc::runtime {
             _system_config = std::make_unique<aurora::SystemConfiguration>(_save_data.nand());
             _save_data.activate_nand();
             aurora::wpad_service().clear();
-            _display = std::make_unique<OriginalDisplayLifetime>(_window_service, _host_heaps, *MR::getSuitableRenderMode());
+            _display = std::make_unique<OriginalDisplayLifetime>(_window_service, _root_heap, *MR::getSuitableRenderMode());
             _capture_screen_director = std::make_unique<CaptureScreenDirector>();
             _logger.info(logging::Category::APP, logging::Message{"Using SMG disc image through Aurora DVD"});
             if (const auto message_archive = _dvd.find_first({
@@ -529,14 +530,16 @@ namespace smgpc::runtime {
 #endif
 
         {
-            const smgpc::compat::JkrAllocationScope game(_scheduler.allocation_domain());
+            const JKRHeap::CurrentHeapScope game(*(_scheduler.allocation_heap()));
+            const aurora::allocation::ClientAllocationScope game_routing({true, true});
             const J3DSys::ContextScope commands;
             _scheduler.begin_frame();
             SceneFunction::movementStopSceneController();
             SceneFunction::executeMovementList();
         }
         {
-            const smgpc::compat::JkrAllocationScope game(_scheduler.allocation_domain());
+            const JKRHeap::CurrentHeapScope game(*(_scheduler.allocation_heap()));
+            const aurora::allocation::ClientAllocationScope game_routing({true, true});
             const J3DSys::ContextScope commands;
             SceneFunction::executeCalcAnimList();
             CategoryList::execute(MR::CalcAnimType_AnimParticleIgnorePause);
@@ -897,7 +900,7 @@ namespace smgpc::runtime {
 
     void RuntimeContext::emit_semantic_trace_event(std::string_view category, std::string_view name, std::string_view detail) {
         // Trace history belongs to the process and outlives the emitting scene.
-        const compat::JkrHostAllocationScope host;
+        const aurora::allocation::HostAllocationScope host;
         if (_is_destroying) {
             return;
         }

@@ -1,7 +1,7 @@
 #include "Game/Util/JMapInfo.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/JMapResource.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "JSystem/JKernel/JKRArchive.hpp"
 #include "resource/RarcArchive.hpp"
@@ -136,15 +136,16 @@ namespace {
         require(find_jmap_resource(first.data()) != nullptr, "owned identity baseline survives optional self alias");
     }
     void test_native_heap_boundary() {
-        using namespace smgpc::compat;
+
         std::optional<smgpc::resource::JMapResource> resource;
         auto raw = fixture();
-        auto runtime = JkrHeapRuntime::create(1024*1024);
-        auto domain = JkrAllocationDomain::create(runtime, 256*1024);
+        auto runtime = smgpc::test::create_native_root_heap(1024*1024);
+        auto domain = smgpc::test::create_native_solid_heap(runtime, 256*1024);
         const char* borrowed;
         bool native_cache;
         {
-            JkrAllocationScope original(domain);
+            const JKRHeap::CurrentHeapScope original(*(domain));
+            const aurora::allocation::ClientAllocationScope originalRouting({true, true});
             resource.emplace(raw);
             borrowed = read(*resource, "name");
             native_cache = JKRHeap::findFromRoot(const_cast<char*>(borrowed)) == nullptr;
@@ -240,26 +241,28 @@ namespace {
                 "direct parser owns the complete original byte image");
     }
     void test_raw_source_heap_retirement() {
-        using namespace smgpc::compat;
-        auto runtime = JkrHeapRuntime::create(1 << 20);
-        auto domain = JkrAllocationDomain::create(runtime, 1 << 18);
+
+        auto runtime = smgpc::test::create_native_root_heap(1 << 20);
+        auto domain = smgpc::test::create_native_solid_heap(runtime, 1 << 18);
         auto raw = std::make_shared<const std::vector<u8>>(fixture());
         std::weak_ptr<const std::vector<u8>> weak = raw;
         std::optional<smgpc::resource::JMapSourceRegistration> registration;
         registration.emplace(smgpc::resource::register_jmap_source(*raw, raw));
         {
-            JkrAllocationScope original(domain);
+            const JKRHeap::CurrentHeapScope original(*(domain));
+            const aurora::allocation::ClientAllocationScope originalRouting({true, true});
             auto* info = new JMapInfo;
             require(info->attach(raw->data()), "actual Game-heap parser attaches retained source");
-            require(JKRHeap::findFromRoot(info) == &domain->heap(), "parser belongs to original heap");
+            require(JKRHeap::findFromRoot(info) == &(*domain), "parser belongs to original heap");
             require(JKRHeap::findFromRoot(const_cast<void*>(info->getData())) == nullptr, "archive source stays host-owned");
         }
         registration.reset(); raw.reset();
         require(!weak.expired(), "Game parser retains source after unpublication");
-        domain->heap().freeAll();
+        (*domain).freeAll();
         require(weak.expired(), "original disposer dispatch releases raw source before arena reuse");
         {
-            JkrAllocationScope original(domain);
+            const JKRHeap::CurrentHeapScope original(*(domain));
+            const aurora::allocation::ClientAllocationScope originalRouting({true, true});
             auto* reused = new JMapInfo;
             require(reused->getData() == nullptr, "reused arena starts with no stale raw identity");
         }

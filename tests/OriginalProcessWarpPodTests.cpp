@@ -12,9 +12,9 @@
 #include "Game/Util/JMapIdInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "resource/TextEncoding.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "resource/TextEncoding.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -67,7 +67,7 @@ struct Probe {
     void initialize() {
         const auto placements = original_placements();
         require(placements.size() == actors.size(), "Exactly two authored WarpPod placements exist");
-        require(MR::getSceneObjHolder()->nativeAllocationDomain() != nullptr, "Actual original scene allocation domain exists");
+        require(MR::getSceneObjHolder()->nativeAllocationHeap() != nullptr, "Actual original scene allocation domain exists");
         group = dynamic_cast<LiveActorGroup*>(NameObjFinder::find(CP932("ワープポッド群")));
         require(group && group->getObjNum() == actors.size(), "Factory constructed both original named-group members");
         for (std::size_t i = 0; i < actors.size(); ++i)
@@ -173,10 +173,10 @@ int main() {
                     probe.initialized_frame < 300,
                 "Actual process completes the pair probe and subsequent normal frames");
         for (auto* actor : probe.actors)
-            require(!smgpc::compat::has_actor_runtime_state(actor) && !smgpc::compat::has_name_obj_runtime_state(actor),
+            require(!NameObj::nativeGeneration(actor) && !NameObj::nativeGeneration(actor),
                     "Normal scene teardown retires both actual actor identities");
-        require(!smgpc::compat::has_name_obj_runtime_state(probe.manager) &&
-                    !smgpc::compat::has_name_obj_runtime_state(probe.group),
+        require(!NameObj::nativeGeneration(probe.manager) &&
+                    !NameObj::nativeGeneration(probe.group),
                 "Normal scene teardown retires the actual manager and named group");
         std::fprintf(stderr, "PASS original-process WarpPod: actual factory pair/group/resources/sensors/path/scheduler and scene retirement; observed_both_timers_advance=%d; post-intro movement and player traversal not tested\n", probe.observed_movement);
         return 0;

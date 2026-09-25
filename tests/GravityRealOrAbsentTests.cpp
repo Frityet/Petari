@@ -1,10 +1,11 @@
+#include "NativeHeapFixture.hpp"
 #include "app/Application.hpp"
 #include "app/OriginalGameApplication.hpp"
 #include "Game/Scene/GameScene.hpp"
 #include "Game/Scene/StageDataHolder.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
 #include <cstdio>
@@ -189,8 +190,8 @@ namespace {
     class GravityScene final {
     public:
         GravityScene()
-            : heaps(smgpc::compat::JkrHeapRuntime::create(32U << 20)), original(heaps),
-              active(scheduler), domain(smgpc::compat::JkrAllocationDomain::create(heaps, 4U << 20)),
+            : heaps(smgpc::test::create_native_root_heap(32U << 20)), original(heaps),
+              active(scheduler), domain(smgpc::test::create_native_solid_heap(heaps, 4U << 20)),
               execution(scheduler, domain,
                         &original.scene),
               manager(static_cast<PlanetGravityManager*>(
@@ -200,17 +201,17 @@ namespace {
 
         }
 
-        std::shared_ptr<smgpc::compat::JkrHeapRuntime> heaps;
+        JKRHeap::Handle heaps;
         smgpc::test::OriginalSceneControllerFixture original;
         smgpc::runtime::SceneScheduler scheduler;
         smgpc::runtime::SceneSchedulerBinding active;
-        std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain;
+        JKRHeap::Handle domain;
         smgpc::test::SceneExecutionFixture execution;
         PlanetGravityManager* manager;
     };
 
     void test_absent_manager_is_explicit() {
-        const auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+        const auto heaps = smgpc::test::create_native_root_heap(16U << 20);
         smgpc::test::OriginalSceneControllerFixture original(heaps);
         smgpc::runtime::SceneScheduler scheduler;
         smgpc::runtime::SceneSchedulerBinding active(scheduler);
@@ -231,7 +232,7 @@ namespace {
             [&] { (void)MR::calcGravityVector(static_cast<const LiveActor*>(nullptr), &destination, nullptr, 0U); },
             "a null actor must not be treated as zero gravity");
 
-        const auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 1U << 20);
+        const auto domain = smgpc::test::create_native_solid_heap(heaps, 1U << 20);
         smgpc::test::SceneExecutionFixture binding(scheduler, domain,
                                                   &original.scene);
         destination.set(3.0F, 4.0F, 5.0F);
@@ -243,11 +244,11 @@ namespace {
     }
 
     void test_real_manager_rules_and_info() {
-        const auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+        const auto heaps = smgpc::test::create_native_root_heap(16U << 20);
         smgpc::test::OriginalSceneControllerFixture original(heaps);
         smgpc::runtime::SceneScheduler scheduler;
         smgpc::runtime::SceneSchedulerBinding active(scheduler);
-        const auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 1U << 20);
+        const auto domain = smgpc::test::create_native_solid_heap(heaps, 1U << 20);
         smgpc::test::SceneExecutionFixture scene(scheduler, domain,
                                                 &original.scene);
         require(MR::createSceneObj(SceneObj_PlanetGravityManager) != nullptr,
@@ -441,7 +442,7 @@ namespace {
                     "controlled creator variants consume real retained SRT and rail rows with original zone provenance");
             {
                 const aurora::allocation::HostAllocationScope host;
-                for (auto* object : smgpc::compat::snapshot_name_obj_runtime_objects()) {
+                for (auto* object : NameObj::snapshotNativeObjects()) {
                     auto* actor = dynamic_cast<GlobalGravityObj*>(object);
                     if (!actor || !actor->mGravityCreator) continue;
                     auto* field = actor->getGravity();
@@ -514,7 +515,7 @@ namespace {
             require(exercised && !MR::getSceneObjHolder(),
                     "actual process retires its original scene and gravity owners");
             for (const auto* identity : identities)
-                require(!smgpc::compat::has_name_obj_runtime_state(identity), "all temporary original actor identities retire");
+                require(!NameObj::nativeGeneration(identity), "all temporary original actor identities retire");
         }
     };
 

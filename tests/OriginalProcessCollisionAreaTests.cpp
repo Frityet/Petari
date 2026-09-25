@@ -20,8 +20,8 @@
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include "NativeHeapFixture.hpp"
 #include "resource/KCollisionResource.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 
@@ -140,15 +140,16 @@ namespace {
         }
 
         void exercise_polygon(const JMapInfoIter& iter) {
-            const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
+            const auto domain = MR::getSceneObjHolder()->nativeAllocationHeap();
             require(domain != nullptr, "Actual original GameScene allocation domain exists");
             const PlacementZoneScope zone(MR::getPlacedZoneId(iter));
-            const auto actors_before = smgpc::compat::actor_runtime_state_count();
+            const auto actors_before = NameObj::snapshotNativeObjects().size();
             std::unique_ptr<AreaPolygon> polygon_owner;
             std::unique_ptr<AreaFormCube> form;
             AreaPolygon* polygon = nullptr;
             {
-                const smgpc::compat::JkrAllocationScope game(domain);
+                const JKRHeap::CurrentHeapScope game(*(domain));
+                const aurora::allocation::ClientAllocationScope gameRouting({true, true});
                 form = std::make_unique<AreaFormCube>(0);
                 form->init(iter);
                 polygon_owner = std::make_unique<AreaPolygon>();
@@ -192,7 +193,8 @@ namespace {
             TVec3f last_start, last_offset;
             for (s32 face = 0; face < 6; ++face) {
                 {
-                    const smgpc::compat::JkrAllocationScope game(domain);
+                    const JKRHeap::CurrentHeapScope game(*(domain));
+                    const aurora::allocation::ClientAllocationScope gameRouting({true, true});
                     polygon->setSurfaceAndSync(face);
                 }
                 require(polygon->mParts == parts && polygon->mKCLFile == file && parts->mServer == server,
@@ -259,8 +261,8 @@ namespace {
             require(parts->_CC && original_zone->mNumParts == zone_count,
                     "Original validation restores the same membership and surface identity");
             polygon_owner.reset();
-            require(!smgpc::compat::has_actor_runtime_state(polygon) &&
-                        smgpc::compat::actor_runtime_state_count() == actors_before &&
+            require(!NameObj::nativeGeneration(polygon) &&
+                        NameObj::snapshotNativeObjects().size() == actors_before &&
                         original_zone->mNumParts + 1 == zone_count &&
                         line_hits(*keeper, only_polygon, last_start, last_offset) == 0,
                     "Actor retirement removes real sensor and collision children, zone membership and original query results");

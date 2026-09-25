@@ -1,5 +1,5 @@
 #include "resource/TextEncoding.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "Game/Scene/StageDataHolder.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
 #include "Game/Scene/PlacementInfoOrdered.hpp"
@@ -609,7 +609,7 @@ void StageDataHolder::createLocalStageDataHolder(const MR::AssignableArray< JMap
                 mStageDataArray[mStageDataHolderCount] = new StageDataHolder(pName, zoneId, loadCommon);
                 // The original parent owns this hierarchy. Exclude the child
                 // from generic SceneObj/NameObj lifetime capture.
-                smgpc::compat::claim_name_obj_runtime_ownership(mStageDataArray[mStageDataHolderCount], this);
+                (mStageDataArray[mStageDataHolderCount])->claimNativeOwnership(this);
                 mStageDataArray[mStageDataHolderCount]->initWithoutIter();
                 mStageDataArray[mStageDataHolderCount]->calcPlacementMtx(iter);
                 mStageDataHolderCount++;

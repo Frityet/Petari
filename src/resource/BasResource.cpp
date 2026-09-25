@@ -1,7 +1,7 @@
 #include <aurora/exception.hpp>
 #include "BasResource.hpp"
 #include "JSystem/JAudio2/JAUSoundAnimator.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <aurora/allocation.hpp>
 
 #include <bit>
 #include <cmath>
@@ -86,16 +86,16 @@ struct BasResource::Storage final : JAUSoundAnimationControl {
 };
 
 BasResource::BasResource(std::span<const std::uint8_t> source, std::shared_ptr<const void> owner) {
-    compat::JkrHostAllocationScope host;
+    aurora::allocation::HostAllocationScope host;
     _storage = std::make_unique<Storage>(source, std::move(owner));
 }
 BasResource::~BasResource() {
-    compat::JkrHostAllocationScope host;
+    aurora::allocation::HostAllocationScope host;
     _storage.reset();
 }
 BasResource::BasResource(BasResource&&) noexcept = default;
 BasResource& BasResource::operator=(BasResource&& other) noexcept {
-    compat::JkrHostAllocationScope host;
+    aurora::allocation::HostAllocationScope host;
     _storage = std::move(other._storage);
     return *this;
 }

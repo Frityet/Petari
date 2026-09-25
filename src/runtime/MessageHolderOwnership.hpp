@@ -6,9 +6,6 @@
 
 class MessageHolder;
 class MessageData;
-namespace smgpc::compat {
-    class JkrHeapRuntime;
-}
 
 namespace smgpc::runtime {
     // The retail scene aliases the persistent game messages. Keep that alias

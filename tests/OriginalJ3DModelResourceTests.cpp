@@ -1,7 +1,7 @@
 #include "resource/J3dModelResource.hpp"
 #include "resource/J3dAllocationIdentity.hpp"
 #include "resource/Mem1ResourceHeap.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "JSystem/J3DGraphAnimator/J3DJoint.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
@@ -31,12 +31,12 @@ namespace aurora { extern AuroraConfig g_config; }
 
 namespace {
     using namespace smgpc::resource;
-    using namespace smgpc::compat;
+
     using Bytes = std::vector<std::uint8_t>;
     using View = std::span<const std::uint8_t>;
     void require(bool condition, const char* message) {
         if (!condition) {
-            JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             throw std::runtime_error(message);
         }
     }
@@ -72,7 +72,7 @@ namespace {
         throw std::runtime_error("fixture block missing");
     }
 
-    void test_sdk_boundary(const std::shared_ptr<JkrHeapRuntime>& runtime) {
+    void test_sdk_boundary(const JKRHeap::Handle& runtime) {
         require(J3DModelLoaderDataBase::load(nullptr, 0) == nullptr &&
                 J3DModelLoaderDataBase::loadBinaryDisplayList(nullptr, 0) == nullptr &&
                 J3DModelLoaderDataBase::loadMaterialTable(nullptr) == nullptr, "original null dispatch");
@@ -80,7 +80,7 @@ namespace {
         rejects([&] { (void)J3DModelLoaderDataBase::load(invalid, 0); });
         rejects([&] { (void)J3DModelLoaderDataBase::loadBinaryDisplayList(invalid, 0); });
         rejects([&] { (void)J3DModelLoaderDataBase::loadMaterialTable(invalid); });
-        auto domain = JkrAllocationDomain::create(runtime, 128 * 1024);
+        auto domain = smgpc::test::create_native_solid_heap(runtime, 128 * 1024);
         for (const auto type : {"bmd1", "bmt2", "test"}) {
             auto bytes = empty_file(type);
             bytes.resize(8); // Unsupported dispatch reads only the two tags.
@@ -92,16 +92,16 @@ namespace {
         auto* actual = table.load_material_table();
         require(actual && actual->getMaterialNum() == 0 && actual->getTexture() && actual->getTexture()->getNum() == 0,
                 "original empty material table owns its actual empty texture object");
-        require(domain->heap().find(actual) == &domain->heap(), "actual table allocation belongs to retained original heap");
+        require((*domain).find(actual) == &(*domain), "actual table allocation belongs to retained original heap");
     }
 
-    void test_alias_lifetime(const std::shared_ptr<JkrHeapRuntime>& runtime) {
+    void test_alias_lifetime(const JKRHeap::Handle& runtime) {
         auto bytes = empty_file("bmt3");
         const void* alias_pointer = bytes.data();
-        std::weak_ptr<JkrAllocationDomain> weak;
+        std::weak_ptr<JKRHeap> weak;
         std::optional<J3dModelSourceRegistration> alias;
         {
-            auto domain = JkrAllocationDomain::create(runtime, 128 * 1024);
+            auto domain = smgpc::test::create_native_solid_heap(runtime, 128 * 1024);
             weak = domain;
             J3dModelResource owner(bytes, domain, {});
             auto corrupted = bytes; corrupted[0] = 0;
@@ -121,13 +121,14 @@ namespace {
         rejects([&] { (void)J3DModelLoaderDataBase::loadMaterialTable(alias_pointer); });
     }
 
-    void test_identity(const std::shared_ptr<JkrHeapRuntime>& runtime) {
-        auto domain = JkrAllocationDomain::create(runtime, 128 * 1024);
+    void test_identity(const JKRHeap::Handle& runtime) {
+        auto domain = smgpc::test::create_native_solid_heap(runtime, 128 * 1024);
         std::optional<J3dAllocationIdentity> first;
         std::optional<J3dAllocationIdentity> second;
         std::uint32_t freed = 0;
         {
-            JkrAllocationScope original(domain);
+            const JKRHeap::CurrentHeapScope original(*(domain));
+            const aurora::allocation::ClientAllocationScope originalRouting({true, true});
             first.emplace(0x120);
             second.emplace(0x80);
             freed = first->address(0);
@@ -171,7 +172,7 @@ namespace {
                     require(std::isfinite(matrices.getAnmMtx(joint)[row][col]), "original full-model joint calculation is finite");
     }
 
-    void test_retail(const std::shared_ptr<JkrHeapRuntime>& runtime, const std::shared_ptr<Mem1ResourceHeap>& mem1) {
+    void test_retail(const JKRHeap::Handle& runtime, const std::shared_ptr<Mem1ResourceHeap>& mem1) {
         const auto* disc_path = std::getenv("SMGPC_REAL_DISC");
         if (!disc_path || !*disc_path) { std::cout << "[skip] complete retail model (set SMGPC_REAL_DISC)\n"; return; }
         require(aurora_dvd_open(disc_path), "retail disc opens");
@@ -191,10 +192,11 @@ namespace {
         bool first_load = true;
         for (const auto flags : {0x01200000U, 0x01201000U, 0x01202000U}) {
             require(j3dSys.getTexture() == nullptr, "retiring the selected model clears its borrowed global texture");
-            auto domain = JkrAllocationDomain::create(runtime, 8 * 1024 * 1024);
+            auto domain = smgpc::test::create_native_solid_heap(runtime, 8 * 1024 * 1024);
             J3dModelResource owner(bytes, domain, mem1);
             auto alias = owner.register_source(bytes);
-            JkrAllocationScope original(domain);
+            const JKRHeap::CurrentHeapScope original(*(domain));
+            const aurora::allocation::ClientAllocationScope originalRouting({true, true});
             alignas(32) std::array<u8, 32> caller_bytes{};
             GDLObj caller;
             GDInitGDLObj(&caller, caller_bytes.data(), caller_bytes.size());
@@ -208,11 +210,11 @@ namespace {
             GDSetCurrent(nullptr);
             first_load = false;
             require(model && model->getModelDataType() == 1, "actual v26 binary model dispatch");
-            require(domain->heap().find(model) == &domain->heap(), "actual model belongs to original heap domain");
+            require((*domain).find(model) == &(*domain), "actual model belongs to original heap domain");
             check_original_model(*model, bytes);
             std::cout << "[resource] complete mario.bdl flags=" << std::hex << flags << std::dec << '\n';
         }
-        auto domain = JkrAllocationDomain::create(runtime, 8 * 1024 * 1024);
+        auto domain = smgpc::test::create_native_solid_heap(runtime, 8 * 1024 * 1024);
         {
             auto a = std::make_unique<J3dModelResource>(bytes, domain, mem1);
             auto b = std::make_unique<J3dModelResource>(bytes, domain, mem1);
@@ -270,7 +272,7 @@ int main() {
         aurora::g_config.mem1Size = 24 * 1024 * 1024;
         OSInit();
         auto mem1 = Mem1ResourceHeap::create(8 * 1024 * 1024);
-        auto runtime = JkrHeapRuntime::create(24 * 1024 * 1024);
+        auto runtime = smgpc::test::create_native_root_heap(24 * 1024 * 1024);
         test_sdk_boundary(runtime);
         test_alias_lifetime(runtime);
         test_identity(runtime);

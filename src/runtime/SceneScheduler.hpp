@@ -19,7 +19,7 @@ class LiveActor;
 class LayoutActor;
 class NameObj;
 class NameObjListExecutor;
-namespace smgpc::compat { class JkrAllocationDomain; }
+#include <JSystem/JKernel/JKRHeap.hpp>
 
 namespace smgpc::layout {
     class LayoutRuntime;
@@ -33,14 +33,14 @@ namespace smgpc::runtime {
     // lease, including when it removes the scene binding during its call.
     class SceneSchedulerAllocationBinding final {
     public:
-        SceneSchedulerAllocationBinding(SceneScheduler&, std::shared_ptr<smgpc::compat::JkrAllocationDomain>);
+        SceneSchedulerAllocationBinding(SceneScheduler&, JKRHeap::Handle);
         ~SceneSchedulerAllocationBinding();
         SceneSchedulerAllocationBinding(const SceneSchedulerAllocationBinding&) = delete;
         SceneSchedulerAllocationBinding& operator=(const SceneSchedulerAllocationBinding&) = delete;
     private:
         SceneScheduler* _scheduler;
-        std::shared_ptr<smgpc::compat::JkrAllocationDomain> _domain;
-        std::shared_ptr<smgpc::compat::JkrAllocationDomain> _previous;
+        JKRHeap::Handle _domain;
+        JKRHeap::Handle _previous;
     };
 
     [[nodiscard]] SceneScheduler *try_active_scene_scheduler();
@@ -247,7 +247,7 @@ namespace smgpc::runtime {
     public:
         SceneScheduler();
         ~SceneScheduler();
-        [[nodiscard]] const std::shared_ptr<smgpc::compat::JkrAllocationDomain>& allocation_domain() const noexcept;
+        [[nodiscard]] const JKRHeap::Handle& allocation_heap() const noexcept;
         void find_actor_light_info(LiveActor &actor);
         void connect_name_obj(NameObj &obj, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type);
         void register_name_obj(NameObj&, s32, s32, s32, s32);
@@ -352,7 +352,7 @@ namespace smgpc::runtime {
         [[nodiscard]] std::vector<Entry> category_entries(s32 category, bool animation) const;
         NameObjListExecutor* _execution = nullptr;
         bool _owns_execution_allocation_binding = false;
-        std::shared_ptr<smgpc::compat::JkrAllocationDomain> _allocation_domain;
+        JKRHeap::Handle _allocation_heap;
         std::vector<Entry> _entries;
         std::unordered_map<smgpc::layout::LayoutRuntime*, std::unique_ptr<NameObj>> _layout_draw_adaptors;
 #ifndef NDEBUG

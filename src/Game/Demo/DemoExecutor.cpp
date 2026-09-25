@@ -246,6 +246,7 @@ void DemoExecutor::end() {
 }
 
 DemoExecutor::~DemoExecutor() {
+    retireNativeLifetime();
     for (auto* controller : mTalkAnimCtrl) {
         delete controller;
     }

@@ -3,13 +3,13 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Scene/Scene.hpp"
 #include "Game/Scene/SceneNameObjListExecutor.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "Game/NameObj/NameObjExecuteHolder.hpp"
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/SingletonHolder.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include <aurora/allocation.hpp>
 #include <algorithm>
 #include <memory>
@@ -20,12 +20,13 @@ namespace smgpc::test {
 // holder, executor and Game arena. No fixture factory or alternate scene is published.
 class SceneExecutionFixture final {
 public:
-    SceneExecutionFixture(runtime::SceneScheduler& scheduler, std::shared_ptr<compat::JkrAllocationDomain> domain,
+    SceneExecutionFixture(runtime::SceneScheduler& scheduler, JKRHeap::Handle domain,
                           Scene* original_scene = nullptr)
         : _scheduler(scheduler), _domain(std::move(domain)), _original_scene(original_scene) {
         try {
             {
-                const compat::JkrAllocationScope game(_domain);
+                const JKRHeap::CurrentHeapScope game(*(_domain));
+                const aurora::allocation::ClientAllocationScope gameRouting({true, true});
                 _holder = std::make_unique<SceneObjHolder>();
                 _executor = std::make_unique<SceneNameObjListExecutor>();
                 _executor->init();
@@ -52,7 +53,7 @@ public:
         const auto previous = controller.mSceneInitializeState;
         controller.setSceneInitializeState(SceneInitializeState_AfterPlacement);
         try {
-            for (auto* object : compat::snapshot_name_obj_runtime_objects()) {
+            for (auto* object : NameObj::snapshotNativeObjects()) {
                 if (!_holder->ownsNativeObject(object) || std::ranges::find(_completed, object) != _completed.end()) continue;
                 {
                     const aurora::allocation::ClientAllocationScope game({true, true});
@@ -90,7 +91,7 @@ public:
     SceneObjHolder& holder() { return *_holder; }
 private:
     runtime::SceneScheduler& _scheduler;
-    std::shared_ptr<compat::JkrAllocationDomain> _domain;
+    JKRHeap::Handle _domain;
     Scene* _original_scene;
     std::unique_ptr<SceneObjHolder> _holder;
     std::unique_ptr<SceneNameObjListExecutor> _executor;

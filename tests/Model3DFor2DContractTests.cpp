@@ -1,8 +1,9 @@
+#include "Game/Util/ClippingUtil.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "RendererService.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "runtime/SceneScheduler.hpp"
 
 #include <aurora/gfx.h>
@@ -52,8 +53,8 @@ namespace {
         model_0x25.makeActorAppeared();
         model_0x24.mPosition.set(1000000.0F, 1000000.0F, 1000000.0F);
         model_0x25.mPosition.set(-1000000.0F, -1000000.0F, -1000000.0F);
-        smgpc::compat::configure_actor_clipping_sphere(&model_0x24, 100.0F, nullptr);
-        smgpc::compat::configure_actor_clipping_sphere(&model_0x25, 100.0F, nullptr);
+        MR::setClippingSphere(&model_0x24, 100.0F, nullptr);
+        MR::setClippingSphere(&model_0x25, 100.0F, nullptr);
         scheduler.register_live_actor_model(model_0x24, -1, -1,
                                             MR::DrawBufferType_Model3DFor2D, -1);
         scheduler.register_live_actor_model(model_0x25, -1, -1,

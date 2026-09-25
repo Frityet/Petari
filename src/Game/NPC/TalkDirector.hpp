@@ -40,7 +40,7 @@ public:
     virtual void movement();
 
     void beginNativeRetirement() noexcept;
-    void releaseNativeReference(const NameObj*) noexcept;
+    void releaseNativeReference(const NameObj*) noexcept override;
 
     bool request(TalkMessageCtrl*, bool);
     bool test(TalkMessageCtrl*, bool, bool);

@@ -9,8 +9,8 @@
 #include "Game/Camera/CameraWaterPlanet.hpp"
 #include "Game/Camera/DotCamParams.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include "NativeHeapFixture.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/JMapResource.hpp"
 #include "resource/RarcArchive.hpp"
@@ -31,26 +31,27 @@
 #include <vector>
 
 namespace {
-using namespace smgpc::compat;
+
 using namespace smgpc::resource;
 
 void require(bool condition, const char* message) {
     if (!condition) {
-        JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         throw std::runtime_error(message);
     }
 }
 
 struct Owners {
-    std::shared_ptr<JkrHeapRuntime> heaps = JkrHeapRuntime::create(16 * 1024 * 1024);
-    std::shared_ptr<JkrAllocationDomain> domain = JkrAllocationDomain::create(heaps, 8 * 1024 * 1024);
-    NameObjRuntimeRegistrationMarker marker = mark_name_obj_runtime_registrations();
+    JKRHeap::Handle heaps = smgpc::test::create_native_root_heap(16 * 1024 * 1024);
+    JKRHeap::Handle domain = smgpc::test::create_native_solid_heap(heaps, 8 * 1024 * 1024);
+    NameObj::NativeRegistrationMarker marker = NameObj::markNativeRegistrations();
     CameraHolder* cameras = nullptr;
     CameraParamChunkHolder* chunks = nullptr;
 
     Owners() {
         try {
-            JkrAllocationScope game(domain);
+            const JKRHeap::CurrentHeapScope game(*(domain));
+            const aurora::allocation::ClientAllocationScope gameRouting({true, true});
             cameras = new CameraHolder("Original controller ownership test");
             chunks = new CameraParamChunkHolder(cameras, "Original parameter ownership test");
         } catch (...) {
@@ -63,7 +64,7 @@ struct Owners {
         const auto in_domain = [](const NameObj* object, const void* context) noexcept {
             return JKRHeap::findFromRoot(const_cast<NameObj*>(object)) == context;
         };
-        while (auto* object = newest_name_obj_runtime_object_since_if(marker, in_domain, &domain->heap())) {
+        while (auto* object = NameObj::newestNativeObjectSince(marker, in_domain, &(*domain))) {
             delete object;
         }
     }
@@ -129,12 +130,13 @@ CameraParamChunk* register_id(Owners& owners, s32 zone, const char* name) {
     CameraParamChunkID id;
     id.mZoneID = zone;
     id.mName = const_cast<char*>(name);
-    JkrAllocationScope game(owners.domain);
-    return owners.chunks->createChunk(id, &owners.domain->heap());
+    const JKRHeap::CurrentHeapScope game(*(owners.domain));
+    const aurora::allocation::ClientAllocationScope gameRouting({true, true});
+    return owners.chunks->createChunk(id, &(*owners.domain));
 }
 
 void test_complete_controller_table() {
-    const auto before = snapshot_name_obj_runtime_objects().size();
+    const auto before = NameObj::snapshotNativeObjects().size();
     {
         Owners owners;
         require(owners.cameras->getNum() == 45, "original holder constructs all 45 controllers");
@@ -146,8 +148,8 @@ void test_complete_controller_table() {
             require(owners.cameras->getIndexOf(camera) == i &&
                     owners.cameras->getIndexOf(owners.cameras->getNameStrOf(i)) == i,
                     "original name and pointer lookups retain complete table order");
-            require(JKRHeap::findFromRoot(camera) == &owners.domain->heap() &&
-                    JKRHeap::findFromRoot(translator) == &owners.domain->heap(),
+            require(JKRHeap::findFromRoot(camera) == &(*owners.domain) &&
+                    JKRHeap::findFromRoot(translator) == &(*owners.domain),
                     "all controllers and translators reside in the actual Game arena");
         }
         require(owners.cameras->getIndexOfDefault() == 0 &&
@@ -161,7 +163,7 @@ void test_complete_controller_table() {
                 owners.cameras->isPublic(owners.cameras->getIndexOf("CAM_TYPE_SUBJECTIVE")),
                 "private and subjective entries keep original table flags");
     }
-    require(snapshot_name_obj_runtime_objects().size() == before,
+    require(NameObj::snapshotNativeObjects().size() == before,
             "typed camera and height-arranger teardown retires host registrations before arena release");
 }
 
@@ -204,7 +206,8 @@ void test_binary_load_and_virtual_translators() {
         DotCamReaderInBin reader(bytes->data());
         for (std::size_t i = 0; i < rows.size(); ++i, reader.nextToChunk()) {
             auto* chunk = chunks[i] = register_id(owners, 0, rows[i].id);
-            JkrAllocationScope game(owners.domain);
+            const JKRHeap::CurrentHeapScope game(*(owners.domain));
+            const aurora::allocation::ClientAllocationScope gameRouting({true, true});
             chunk->load(&reader, owners.cameras);
             require(chunk->mGeneralParam->mNum1 == static_cast<intptr_t>(-3) &&
                     chunk->mGeneralParam->mNum2 == 0x12345678,
@@ -265,7 +268,8 @@ void test_optional_disc_parameters() {
         }
         auto registration = register_jmap_source(bytes, archive);
         {
-            JkrAllocationScope game(owners.domain);
+            const JKRHeap::CurrentHeapScope game(*(owners.domain));
+            const aurora::allocation::ClientAllocationScope gameRouting({true, true});
             DotCamReaderInBin reader(bytes.data());
             owners.chunks->mCameraVersion = reader.mVersion;
             while (reader.hasMoreChunk()) {

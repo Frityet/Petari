@@ -1,6 +1,6 @@
 #include "JSystem/J3DGraphBase/J3DStruct.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "resource/J3dAnimationResource.hpp"
 #include "resource/J3dTransformAnimation.hpp"
 #include "resource/RarcArchive.hpp"
@@ -523,19 +523,20 @@ namespace {
         }
     }
     void heap_domain_test() {
-        using namespace smgpc::compat;
-        auto runtime = JkrHeapRuntime::create(2 * 1024 * 1024);
-        auto domain = JkrAllocationDomain::create(runtime, 256 * 1024);
-        std::weak_ptr<JkrAllocationDomain> weak_domain = domain;
-        std::weak_ptr<JkrHeapRuntime> weak_runtime = runtime;
+
+        auto runtime = smgpc::test::create_native_root_heap(2 * 1024 * 1024);
+        auto domain = smgpc::test::create_native_solid_heap(runtime, 256 * 1024);
+        std::weak_ptr<JKRHeap> weak_domain = domain;
+        std::weak_ptr<JKRHeap> weak_runtime = runtime;
         std::optional<J3dAnimationResource> resource;
         const auto raw = file("bck1", {transform(true)});
         J3DAnmTransform *animation;
         {
-            JkrAllocationScope original(domain);
+            const JKRHeap::CurrentHeapScope original(*(domain));
+            const aurora::allocation::ClientAllocationScope originalRouting({true, true});
             resource.emplace(raw);
             animation = static_cast<J3DAnmTransform *>(resource->load());
-            require(JKRHeap::findFromRoot(animation) == &domain->heap(),
+            require(JKRHeap::findFromRoot(animation) == &(*domain),
                     "actual loader constructs its actual animation in the selected original heap");
             require(JKRHeap::findFromRoot(const_cast<void *>(resource->data())) == nullptr,
                     "retained raw parser bytes remain independent of Game heap allocation");

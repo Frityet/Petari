@@ -1,5 +1,5 @@
 #include "resource/GameResourceRuntime.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "resource/Mem1ResourceHeap.hpp"
 #include "render/RendererService.hpp"
@@ -27,9 +27,9 @@ int main() {
         .host_heap_bytes=2U*1024U*1024U, .cohort_bytes=256U*1024U, .mem1_bytes=4U*1024U*1024U});
     auto heap=resources->mem1_heap();
     const auto available=heap->available_bytes();
-    auto jkr=resources->host_heaps();
+    auto jkr=(*resources);
     std::unique_ptr<JUTTexture> retained;
-    std::shared_ptr<smgpc::compat::JkrAllocationDomain> retired_runtime_domain;
+    JKRHeap::Handle retired_runtime_domain;
     std::size_t retained_capacity=0;
     (void)renderer.begin_frame();
     {
@@ -46,11 +46,12 @@ int main() {
         const auto allocated=heap->available_bytes();
         retained_capacity=allocated;
         {
-            using namespace smgpc::compat;
-            auto domain=JkrAllocationDomain::create(jkr,256U*1024U);
-            auto& original=domain->heap();
+
+            auto domain=smgpc::test::create_native_solid_heap(jkr, 256U*1024U);
+            auto& original=(*domain);
             {
-                JkrAllocationScope scope(domain);
+                const JKRHeap::CurrentHeapScope scope(*(domain));
+                const aurora::allocation::ClientAllocationScope scopeRouting({true, true});
                 auto* texture=new JUTTexture(16,16,GX_TF_RGB565);
                 texture->capture(0,0,GX_TF_RGB565,false,0);
                 new JUTTexture(retained->mTIMG,0); // Borrowed image stays with retained.
@@ -59,14 +60,16 @@ int main() {
             original.freeAll();
             require(heap->available_bytes()==allocated);
             {
-                JkrAllocationScope scope(domain);
+                const JKRHeap::CurrentHeapScope scope(*(domain));
+                const aurora::allocation::ClientAllocationScope scopeRouting({true, true});
                 auto* texture=new JUTTexture(16,16,GX_TF_RGB565);
                 delete texture;
             }
             original.freeAll(); require(heap->available_bytes()==allocated);
             std::size_t head_capacity;
             {
-                JkrAllocationScope scope(domain);
+                const JKRHeap::CurrentHeapScope scope(*(domain));
+                const aurora::allocation::ClientAllocationScope scopeRouting({true, true});
                 new JUTTexture(8,8,GX_TF_I8);
                 head_capacity=heap->available_bytes();
                 auto* tail=new(original.alloc(sizeof(JUTTexture),-int(alignof(JUTTexture)))) JUTTexture(16,16,GX_TF_RGB565);
@@ -75,7 +78,8 @@ int main() {
             original.freeTail(); require(heap->available_bytes()==head_capacity);
             original.freeAll(); require(heap->available_bytes()==allocated);
             {
-                JkrAllocationScope scope(domain);
+                const JKRHeap::CurrentHeapScope scope(*(domain));
+                const aurora::allocation::ClientAllocationScope scopeRouting({true, true});
                 new JUTTexture(16,16,GX_TF_RGB565);
                 bool failed=false;
                 try { new JUTTexture(2048,2048,GX_TF_RGBA8); } catch(const std::bad_alloc&) { failed=true; }
@@ -121,9 +125,10 @@ int main() {
         try { JUTTexture too_large(2048, 2048, GX_TF_RGBA8); }
         catch (const std::bad_alloc&) { capacity_rejected=true; }
         require(capacity_rejected && heap->available_bytes()==allocated);
-        retired_runtime_domain=smgpc::compat::JkrAllocationDomain::create(jkr,128U*1024U);
+        retired_runtime_domain=smgpc::test::create_native_solid_heap(jkr, 128U*1024U);
         {
-            smgpc::compat::JkrAllocationScope scope(retired_runtime_domain);
+            const JKRHeap::CurrentHeapScope scope(*(retired_runtime_domain));
+            const aurora::allocation::ClientAllocationScope scopeRouting({true, true});
             new JUTTexture(8,8,GX_TF_I8);
         }
         std::cout << "JUTTexture: enclosing-constructor unwind and failed allocation restore mapped capacity\n";

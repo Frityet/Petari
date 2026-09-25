@@ -10,7 +10,7 @@ class CameraContext;
 class CameraDirector;
 class SceneObjHolder;
 
-namespace smgpc::compat { class JkrAllocationDomain; }
+#include <JSystem/JKernel/JKRHeap.hpp>
 
 namespace smgpc::camera {
 

@@ -7,12 +7,23 @@
 #include <atomic>
 #include <cstddef>
 #include <cstdint>
+#include <memory>
 
 typedef void (*JKRErrorHandler)(void*, u32, int);
 void JKRDefaultMemoryErrorRoutine(void*, u32, int);
 
 class JKRHeap : public JKRDisposer {
 public:
+    using Handle = std::shared_ptr<JKRHeap>;
+
+    // Actual heaps publish their own native lifetime. Game-owned heaps remain
+    // manually destroyed; native factories may explicitly transfer ownership.
+    Handle retainNativeLifetime();
+    static Handle retainCurrentNativeLifetime();
+    Handle adoptNativeOwnership(std::shared_ptr<void> backing = {});
+    void bindNativeBackingStorage(std::shared_ptr<void> backing);
+    void validateNativeRetirement() const;
+
     // Native callers and original MR heap wrappers share one recursive lock.
     static OSMutex sCurrentHeapMutex;
     class CurrentHeapScope {
@@ -22,7 +33,9 @@ public:
         CurrentHeapScope(const CurrentHeapScope&) = delete;
         CurrentHeapScope& operator=(const CurrentHeapScope&) = delete;
     private:
-        JKRHeap* mPrevious;
+        JKRHeap* mPrevious = nullptr;
+        Handle mSelectedOwner;
+        Handle mPreviousOwner;
     };
 
     // Native resources retire after original disposers, before heap reuse.
@@ -246,7 +259,18 @@ public:
     u8 mAllocMode;       // 0x6A
     u8 mCurrentGroupId;  // 0x6B
 
+protected:
+    // Keep external storage alive through the complete derived destructor and
+    // the parent's deallocation, without locking across disposer callbacks.
+    std::shared_ptr<void> beginNativeRetirement();
+    void validateNativeDestructor() noexcept;
+
 private:
+    std::weak_ptr<JKRHeap> mNativeLifetime;
+    std::shared_ptr<void> mNativeBacking;
+    bool mNativeSharedOwner = false;
+    bool mNativeRetiring = false;
+
     static void recordAllocation(void*, JKRHeap*, int alignment);
     static void retireAllocations(JKRHeap*, bool tailOnly = false) noexcept;
     void finalizeObjects() noexcept;

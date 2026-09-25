@@ -1,6 +1,6 @@
 #include "resource/TextEncoding.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
 #include <stdexcept>
 #include <utility>
@@ -51,7 +51,7 @@
 
 namespace {
     bool isUnclaimedGameSceneChild(const NameObj* pObject, const void*) noexcept {
-        return !smgpc::compat::name_obj_runtime_ownership_is_claimed(pObject);
+        return !NameObj::isNativeOwnershipClaimed(pObject);
     }
 
     CometRetryButton* getCometRetryButton() {
@@ -85,11 +85,11 @@ GameScene::~GameScene() {
     NPCFunction::deleteNPCData();
     MR::onStarPointerSceneOut();
 
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (mNativeChildrenInitialized) {
         mNativeChildrenInitialized = false;
-        const smgpc::compat::NameObjRuntimeRegistrationMarker marker{mNativeChildRegistrationMarker};
-        while (auto* child = smgpc::compat::newest_name_obj_runtime_object_since_if(marker, isUnclaimedGameSceneChild, nullptr)) {
+        const NameObj::NativeRegistrationMarker marker{mNativeChildRegistrationMarker};
+        while (auto* child = NameObj::newestNativeObjectSince(marker, isUnclaimedGameSceneChild, nullptr)) {
             delete child;
         }
     }
@@ -103,7 +103,7 @@ void GameScene::initNativeSceneChildren() {
     if (mNativeChildrenInitialized) {
         aurora::throw_host_exception< std::logic_error >("GameScene children are already initialized");
     }
-    mNativeChildRegistrationMarker = smgpc::compat::mark_name_obj_runtime_registrations().next_registration_order;
+    mNativeChildRegistrationMarker = NameObj::markNativeRegistrations().mNextGeneration;
     mNativeChildrenInitialized = true;
 }
 

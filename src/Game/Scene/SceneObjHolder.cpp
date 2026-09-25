@@ -122,10 +122,10 @@
 
 #include "Game/System/DrawSyncManager.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/JkrAllocationDomain.hpp"
-#include "camera/CameraDirectorRuntime.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
 #include <aurora/allocation.hpp>
+#include "camera/CameraDirectorRuntime.hpp"
 #include <aurora/exception.hpp>
 #include <algorithm>
 #include <stdexcept>
@@ -133,7 +133,7 @@
 #include <vector>
 
 struct SceneObjHolder::NativeResources {
-    std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain;
+    JKRHeap::Handle domain;
     std::unique_ptr<smgpc::camera::CameraDirectorRuntime> camera;
     std::vector<std::unique_ptr<NameObj>> objects;
     std::vector<NameObj*> registrations;
@@ -145,11 +145,11 @@ struct SceneObjHolder::NativeResources {
 
 namespace {
     bool isUnclaimedSceneObject(const NameObj* object, const void*) noexcept {
-        return !smgpc::compat::name_obj_runtime_ownership_is_claimed(object);
+        return !NameObj::isNativeOwnershipClaimed(object);
     }
 
-    void rollbackSceneObjects(smgpc::compat::NameObjRuntimeRegistrationMarker marker) noexcept {
-        while (auto* object = smgpc::compat::newest_name_obj_runtime_object_since_if(marker, isUnclaimedSceneObject, nullptr)) {
+    void rollbackSceneObjects(NameObj::NativeRegistrationMarker marker) noexcept {
+        while (auto* object = NameObj::newestNativeObjectSince(marker, isUnclaimedSceneObject, nullptr)) {
             delete object;
         }
     }
@@ -165,15 +165,16 @@ SceneObjHolder::~SceneObjHolder() {
     retireNativeResources();
 }
 
-void SceneObjHolder::initializeNative(std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain) {
-    const smgpc::compat::JkrHostAllocationScope host;
+void SceneObjHolder::initializeNative(JKRHeap::Handle domain) {
+    const aurora::allocation::HostAllocationScope host;
     if (!domain || mNativeResources || MR::getSceneObjHolder() != this) {
         aurora::throw_host_exception<std::logic_error>("SceneObjHolder initialization requires the actual controller's scene and heap");
     }
     mNativeResources = std::make_unique<NativeResources>();
     mNativeResources->domain = std::move(domain);
     try {
-        const smgpc::compat::JkrAllocationScope game(mNativeResources->domain);
+        const JKRHeap::CurrentHeapScope game(*mNativeResources->domain);
+        const aurora::allocation::ClientAllocationScope game_routing({true, true});
         // Every original LiveActor joins this group, including actors without execution entries.
         if (!dynamic_cast<AllLiveActorGroup*>(create(SceneObj_AllLiveActorGroup))) {
             aurora::throw_host_exception<std::logic_error>("Scene initialization requires the original AllLiveActorGroup");
@@ -184,7 +185,7 @@ void SceneObjHolder::initializeNative(std::shared_ptr<smgpc::compat::JkrAllocati
     }
 }
 
-std::shared_ptr<smgpc::compat::JkrAllocationDomain> SceneObjHolder::nativeAllocationDomain() const {
+JKRHeap::Handle SceneObjHolder::nativeAllocationHeap() const {
     return mNativeResources ? mNativeResources->domain : nullptr;
 }
 
@@ -198,14 +199,14 @@ bool SceneObjHolder::ownsNativeObject(const NameObj* object) const {
 }
 
 void SceneObjHolder::adoptNativeObject(NameObj* object) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (!mNativeResources || mNativeResources->retiring || !object) {
         aurora::throw_host_exception<std::logic_error>("SceneObjHolder adoption requires its live original scene");
     }
     if (ownsNativeObject(object)) {
         return;
     }
-    if (!smgpc::compat::has_name_obj_runtime_state(object) || smgpc::compat::name_obj_runtime_ownership_is_claimed(object)) {
+    if (!NameObj::nativeGeneration(object) || NameObj::isNativeOwnershipClaimed(object)) {
         aurora::throw_host_exception<std::logic_error>("SceneObjHolder children must be registered and unclaimed");
     }
     if (mNativeResources->constructionDepth) {
@@ -213,7 +214,7 @@ void SceneObjHolder::adoptNativeObject(NameObj* object) {
     }
     mNativeResources->objects.reserve(mNativeResources->objects.size() + 1);
     mNativeResources->registrations.reserve(mNativeResources->registrations.size() + 1);
-    smgpc::compat::claim_name_obj_runtime_ownership(object, this);
+    object->claimNativeOwnership(this);
     mNativeResources->objects.emplace_back(object);
     mNativeResources->registrations.push_back(object);
 }
@@ -222,7 +223,7 @@ void SceneObjHolder::prepareNativeRetirement() noexcept {
     if (!mNativeResources) {
         return;
     }
-    DrawSyncManager::retireNativeCallbacks(mNativeResources->domain->heap());
+    DrawSyncManager::retireNativeCallbacks(*mNativeResources->domain);
     if (auto* talk = static_cast<TalkDirector*>(getObj(SceneObj_TalkDirector))) {
         talk->beginNativeRetirement();
     }
@@ -232,7 +233,7 @@ void SceneObjHolder::retireNativeResources() noexcept {
     if (!mNativeResources || mNativeResources->retiring) {
         return;
     }
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     prepareNativeRetirement();
     mNativeResources->retiring = true;
     if (mNativeResources->camera) {
@@ -244,7 +245,7 @@ void SceneObjHolder::retireNativeResources() noexcept {
     // Release actor-owned collision and sensor resources while every SceneObj dependency still lives.
     for (const auto& object : mNativeResources->objects) {
         if (auto* actor = dynamic_cast<LiveActor*>(object.get())) {
-            smgpc::compat::release_actor_runtime_state(actor);
+            actor->releaseNativeResources();
         }
     }
     while (!mNativeResources->objects.empty()) {
@@ -269,7 +270,7 @@ NameObj *SceneObjHolder::create(int id) {
     auto* resources = mNativeResources.get();
     const auto owned_checkpoint = resources->objects.size();
     const auto registrations_checkpoint = resources->registrations.size();
-    const auto marker = smgpc::compat::mark_name_obj_runtime_registrations();
+    const auto marker = NameObj::markNativeRegistrations();
     DrawSyncManager::CallbackRegistration callbacks;
     const auto slot_checkpoint = resources->provisional.size();
     const auto outermost = resources->constructionDepth == 0U;
@@ -283,7 +284,7 @@ NameObj *SceneObjHolder::create(int id) {
         object.reset(newEachObj(id));
         if (object == nullptr) {
             if (resources->provisional.size() != slot_checkpoint ||
-                smgpc::compat::newest_name_obj_runtime_object_since_if(
+                NameObj::newestNativeObjectSince(
                     marker, nullptr, nullptr) != nullptr) {
                 aurora::throw_host_exception<std::logic_error>(
                     "SceneObj factory returned null after creating nested scene objects");
@@ -293,13 +294,13 @@ NameObj *SceneObjHolder::create(int id) {
         }
 
         object->initWithoutIter();
-        smgpc::compat::JkrHostAllocationScope host_metadata;
+        aurora::allocation::HostAllocationScope host_metadata;
         auto registrations =
-            smgpc::compat::snapshot_name_obj_runtime_objects_since(
+            NameObj::snapshotNativeObjectsSince(
                 marker);
         if (std::ranges::count(registrations, object.get()) != 1 ||
             registrations.empty() || registrations.front() != object.get() ||
-            smgpc::compat::name_obj_runtime_ownership_is_claimed(
+            NameObj::isNativeOwnershipClaimed(
                 object.get())) {
             aurora::throw_host_exception<std::logic_error>(
                 "SceneObj construction did not register one leading, unclaimed root");
@@ -319,13 +320,12 @@ NameObj *SceneObjHolder::create(int id) {
 
         if (outermost) {
             registrations =
-                smgpc::compat::snapshot_name_obj_runtime_objects_since(
+                NameObj::snapshotNativeObjectsSince(
                     marker);
             const auto unclaimed_count = static_cast<std::size_t>(
                 std::ranges::count_if(
                     registrations, [](const NameObj *registered) {
-                        return !smgpc::compat::
-                                   name_obj_runtime_ownership_is_claimed(
+                        return !NameObj::isNativeOwnershipClaimed(
                                        registered);
                     }));
             resources->objects.reserve(
@@ -333,9 +333,8 @@ NameObj *SceneObjHolder::create(int id) {
             resources->registrations.reserve(resources->registrations.size() + registrations.size());
 
             for (auto *registered : registrations) {
-                if (!smgpc::compat::
-                         name_obj_runtime_ownership_is_claimed(registered)) {
-                    smgpc::compat::claim_name_obj_runtime_ownership(registered, this);
+                if (!NameObj::isNativeOwnershipClaimed(registered)) {
+                    registered->claimNativeOwnership(this);
                     resources->objects.emplace_back(registered);
                 }
             }
@@ -349,11 +348,11 @@ NameObj *SceneObjHolder::create(int id) {
         return result;
     } catch (...) {
         callbacks.rollback();
-        if (resources->camera && smgpc::compat::name_obj_runtime_object_was_registered_since(
+        if (resources->camera && NameObj::wasNativeRegisteredSince(
                 &resources->camera->director(), marker))
             resources->camera.reset();
         if (object != nullptr &&
-            smgpc::compat::name_obj_runtime_object_was_registered_since(
+            NameObj::wasNativeRegisteredSince(
                 object.get(), marker)) {
             (void)object.release();
         }

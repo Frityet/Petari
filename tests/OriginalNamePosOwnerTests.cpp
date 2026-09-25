@@ -6,8 +6,8 @@
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include "NativeHeapFixture.hpp"
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <cmath>
 #include <cstring>
@@ -22,16 +22,17 @@ bool equal(const TVec3f& a, const TVec3f& b) {
 const NamePosHolder* retired_identity = nullptr;
 void verify() {
     auto* stage = MR::getStageDataHolder();
-    const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
+    const auto domain = MR::getSceneObjHolder()->nativeAllocationHeap();
     require(stage && domain, "Actual GameScene owns the original stage tables and heap");
     NamePosHolder* owner;
     {
-        const smgpc::compat::JkrAllocationScope game(domain);
+        const JKRHeap::CurrentHeapScope game(*(domain));
+        const aurora::allocation::ClientAllocationScope gameRouting({true, true});
         owner = static_cast<NamePosHolder*>(MR::createSceneObj(SceneObj_NamePosHolder));
     }
     require(owner && owner == MR::getNamePosHolder() && owner->mPosNum == stage->getGeneralPosNum() && owner->mPosNum > 0,
             "Original NamePosHolder contains every retail general-position row");
-    require(JKRHeap::findFromRoot(owner->mInfos) == &domain->heap(), "Original position records belong to the actual scene heap");
+    require(JKRHeap::findFromRoot(owner->mInfos) == &(*domain), "Original position records belong to the actual scene heap");
     retired_identity = owner;
     for (s32 index = 0; index < owner->mPosNum; ++index) {
         const auto iter = stage->getGeneralPosInfoFromDataIndex(index);
@@ -46,7 +47,7 @@ void verify() {
                 "Original NamePos records preserve table order and apply authored zone transforms exactly once");
         require(actual.mLinkInfo && actual.mLinkInfo->_0 == link._0 && actual.mLinkInfo->_4 == link._4 && actual.mLinkInfo->_8 == link._8,
                 "Each original position retains its exact authored zone and object link fields");
-        require(JKRHeap::findFromRoot(actual.mLinkInfo) == &domain->heap(), "Original link records retain scene heap ownership");
+        require(JKRHeap::findFromRoot(actual.mLinkInfo) == &(*domain), "Original link records retain scene heap ownership");
         // Named lookups select the first matching row, including duplicate names.
         s32 first = 0;
         while (std::strcmp(owner->mInfos[first].mName, name) != 0) ++first;
@@ -61,7 +62,7 @@ void verify() {
 }
 int main() {
     const int result = smgpc::test::run_stage_resource_process("original-name-pos", verify);
-    if (result == 0 && smgpc::compat::has_name_obj_runtime_state(retired_identity)) {
+    if (result == 0 && NameObj::nativeGeneration(retired_identity)) {
         std::fprintf(stderr, "FAIL original NamePosHolder identity survived normal scene retirement\n");
         return 1;
     }

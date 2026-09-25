@@ -1,6 +1,6 @@
 #include <aurora/exception.hpp>
 #include "runtime/ConsoleNandImport.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <aurora/allocation.hpp>
 #include <algorithm>
 #include <fstream>
 #include <limits>
@@ -33,7 +33,7 @@ namespace smgpc::runtime {
     }
     NandImportResult import_console_nand_directory(
         aurora::NandFileSystem& nand, const std::filesystem::path& directory, NandImportExisting existing) {
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         if (existing != NandImportExisting::Preserve && existing != NandImportExisting::Replace)
             aurora::throw_host_exception<std::invalid_argument>("Unknown console NAND import policy");
         const auto root = std::filesystem::canonical(directory);

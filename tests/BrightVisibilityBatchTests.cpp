@@ -1,5 +1,5 @@
 #include "render/AuroraBrightVisibilityService.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 
 #include <JSystem/JKernel/JKRHeap.hpp>
 
@@ -635,15 +635,16 @@ namespace {
 
     void test_native_capture_storage_survives_game_heap_retirement() {
         auto backend = FakeDepthBackend{};
-        auto heaps = smgpc::compat::JkrHeapRuntime::create(1U << 20);
-        auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 64U << 10);
+        auto heaps = smgpc::test::create_native_root_heap(1U << 20);
+        auto domain = smgpc::test::create_native_solid_heap(heaps, 64U << 10);
         const auto retired = std::weak_ptr(domain);
         std::optional<smgpc::render::AuroraBrightVisibilityService> service;
         const auto source = smgpc::render::allocate_bright_visibility_source_id();
         const auto batch = make_batch(source, -0.5F);
         {
-            const smgpc::compat::JkrAllocationScope game(domain);
-            const auto free_before = domain->heap().getFreeSize();
+            const JKRHeap::CurrentHeapScope game(*(domain));
+            const aurora::allocation::ClientAllocationScope gameRouting({true, true});
+            const auto free_before = (*domain).getFreeSize();
             {
                 // The production constructor owns its native depth backend.
                 smgpc::render::AuroraBrightVisibilityService production;
@@ -651,10 +652,10 @@ namespace {
             service.emplace(backend);
             submit_capture(*service, batch, 0U);
             submit_capture(*service, batch, 1U);
-            require(domain->heap().getFreeSize() == free_before,
+            require((*domain).getFreeSize() == free_before,
                     "native visibility owners, source maps and pending captures consumed the caller Game heap");
             auto* original = new std::uint8_t[16];
-            require(JKRHeap::findFromRoot(original) == &domain->heap(),
+            require(JKRHeap::findFromRoot(original) == &(*domain),
                     "visibility host boundaries failed to restore original caller allocation routing");
             delete[] original;
         }

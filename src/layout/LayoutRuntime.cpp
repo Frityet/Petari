@@ -1,6 +1,6 @@
 #include <aurora/exception.hpp>
 #include "layout/LayoutRuntime.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <aurora/allocation.hpp>
 
 #include <algorithm>
 #include <array>
@@ -19,7 +19,6 @@
 #include "core/RenderTypes.hpp"
 #include "Game/Util/EventUtil.hpp"
 #include "layout/LayoutResourceResolver.hpp"
-#include "Game/System/LayoutHolder.hpp"
 #include "Game/System/LayoutHolder.hpp"
 #include "layout/LytTexMap.hpp"
 #include "layout/Nw4rLayoutRecords.hpp"
@@ -265,7 +264,7 @@ namespace {
 
 smgpc::layout::LayoutRuntime::LayoutRuntime(const char* pName, const char* pLayoutName, u32 animLayerNum, int)
     : mAnimLayerNum(animLayerNum) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     mName = pName;
     mLayoutName = pLayoutName;
     if (animLayerNum == 0U || animLayerNum > mAnimations.size()) {
@@ -284,7 +283,7 @@ smgpc::layout::LayoutRuntime::LayoutRuntime(const char* pName, const char* pLayo
 smgpc::layout::LayoutRuntime::LayoutRuntime(const char* pName, const char* pLayoutName, u32 animLayerNum, int,
                                              std::filesystem::path archivePath)
     : mAnimLayerNum(animLayerNum) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     mName = pName;
     mLayoutName = pLayoutName;
     mArchivePath = std::move(archivePath);
@@ -296,7 +295,7 @@ smgpc::layout::LayoutRuntime::LayoutRuntime(const char* pName, const char* pLayo
 smgpc::layout::LayoutRuntime::LayoutRuntime(const char* pName, const char* pLayoutName, u32 animLayerNum, int,
                                            LayoutHolder& archiveOwner)
     : mAnimLayerNum(animLayerNum), mArchiveOwner(&archiveOwner), mArchiveBorrow(archiveOwner.retainNativeResources()) {
-    const compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     mName = pName;
     mLayoutName = pLayoutName;
     if (!mArchiveOwner || animLayerNum == 0U || animLayerNum > mAnimations.size())
@@ -304,7 +303,7 @@ smgpc::layout::LayoutRuntime::LayoutRuntime(const char* pName, const char* pLayo
 }
 
 smgpc::layout::LayoutRuntime::~LayoutRuntime() {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     mNativeRecords.reset();
 }
 
@@ -381,13 +380,13 @@ const std::optional< std::filesystem::path >& smgpc::layout::LayoutRuntime::getA
 }
 
 smgpc::layout::Nw4rLayoutRecords& smgpc::layout::LayoutRuntime::native_records() {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (!mNativeRecords) mNativeRecords = std::make_unique<Nw4rLayoutRecords>(*this);
     return *mNativeRecords;
 }
 
 void smgpc::layout::LayoutRuntime::draw() {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (mIsDead) return;
     auto& records = native_records();
     records.synchronize();
@@ -399,7 +398,7 @@ void smgpc::layout::LayoutRuntime::draw() {
 }
 
 void smgpc::layout::LayoutRuntime::startAnim(const char* pAnimName, u32 animLayer) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     loadRenderData();
     const auto end = durationFor(pAnimName);
     const auto looping = isLoopingAnim(pAnimName);
@@ -414,7 +413,7 @@ void smgpc::layout::LayoutRuntime::startAnim(const char* pAnimName, u32 animLaye
 }
 
 void smgpc::layout::LayoutRuntime::setAnimFrameAndStop(f32 frame, u32 animLayer) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     auto& anim = animationControl(animLayer);
     anim.frame = frame;
     anim.rate = 0.0f;
@@ -422,32 +421,32 @@ void smgpc::layout::LayoutRuntime::setAnimFrameAndStop(f32 frame, u32 animLayer)
 }
 
 void smgpc::layout::LayoutRuntime::setAnimFrame(f32 frame, u32 animLayer) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     auto& anim = animationControl(animLayer);
     anim.frame = frame;
 }
 
 void smgpc::layout::LayoutRuntime::setAnimRate(f32 rate, u32 animLayer) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     auto& anim = animationControl(animLayer);
     anim.rate = rate;
     anim.stopped = anim.name.empty() || rate == 0.0f;
 }
 
 f32 smgpc::layout::LayoutRuntime::getAnimFrame(u32 animLayer) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     const auto& anim = animationControl(animLayer);
     return anim.frame;
 }
 
 bool smgpc::layout::LayoutRuntime::isAnimStopped(u32 animLayer) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     auto& anim = animationControl(animLayer);
     return anim.name.empty() || anim.stopped;
 }
 
 void smgpc::layout::LayoutRuntime::setPaneScale(std::string_view paneName, f32 x, f32 y) {
-    smgpc::compat::JkrHostAllocationScope host;
+    aurora::allocation::HostAllocationScope host;
     loadRenderData();
     const auto index = paneName.empty() ? std::optional<std::size_t>(0) : find_preferred_pane_index(mBrlytLayout, paneName);
     if (!index || *index >= mBrlytLayout.panes.size())
@@ -458,7 +457,7 @@ void smgpc::layout::LayoutRuntime::setPaneScale(std::string_view paneName, f32 x
 }
 
 void smgpc::layout::LayoutRuntime::setPaneRotation(std::string_view paneName, f32 x, f32 y, f32 z) {
-    smgpc::compat::JkrHostAllocationScope host;
+    aurora::allocation::HostAllocationScope host;
     loadRenderData();
     const auto index = paneName.empty() ? std::optional<std::size_t>(0) : find_preferred_pane_index(mBrlytLayout, paneName);
     if (!index || *index >= mBrlytLayout.panes.size())
@@ -470,7 +469,7 @@ void smgpc::layout::LayoutRuntime::setPaneRotation(std::string_view paneName, f3
 }
 
 void smgpc::layout::LayoutRuntime::setPaneAlpha(std::string_view paneName, f32 alpha) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     loadRenderData();
     if (paneName.empty()) {
         aurora::throw_host_exception<std::invalid_argument>("Setting pane alpha requires a real pane name");
@@ -490,7 +489,7 @@ void smgpc::layout::LayoutRuntime::setPaneAlpha(std::string_view paneName, f32 a
 }
 
 void smgpc::layout::LayoutRuntime::setPaneVisible(std::string_view paneName, bool visible) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     loadRenderData();
     if (paneName.empty()) {
         aurora::throw_host_exception<std::invalid_argument>("Setting pane visibility requires a real pane name");
@@ -509,7 +508,7 @@ void smgpc::layout::LayoutRuntime::setPaneVisible(std::string_view paneName, boo
 }
 
 void smgpc::layout::LayoutRuntime::setPaneVisibleRecursive(std::string_view paneName, bool visible) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     loadRenderData();
     if (paneName.empty()) {
         aurora::throw_host_exception<std::invalid_argument>("Setting recursive pane visibility requires a real pane name");
@@ -544,7 +543,7 @@ void smgpc::layout::LayoutRuntime::setPaneVisibleRecursive(std::string_view pane
 }
 
 bool smgpc::layout::LayoutRuntime::isPaneVisible(std::string_view paneName) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     const_cast< LayoutRuntime* >(this)->loadRenderData();
     if (mIsDead) {
         return false;
@@ -561,7 +560,7 @@ bool smgpc::layout::LayoutRuntime::isPaneVisible(std::string_view paneName) cons
 }
 
 bool smgpc::layout::LayoutRuntime::isPaneLocallyVisible(std::string_view paneName) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     const auto index = paneIndex(paneName);
     if (!index)
         aurora::throw_host_exception<std::runtime_error>("Reading visibility requires a real pane");
@@ -579,7 +578,7 @@ void smgpc::layout::LayoutRuntime::clearPaneFollowPositions() {
 }
 
 void smgpc::layout::LayoutRuntime::setPaneFollowPosition(std::string_view paneName, u32 type, const TVec2f& position) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     const auto index = paneIndex(paneName);
     if (!index)
         aurora::throw_host_exception<std::runtime_error>("Following a position requires a real pane");
@@ -598,7 +597,7 @@ void smgpc::layout::LayoutRuntime::setPaneFollowPosition(std::string_view paneNa
 }
 
 bool smgpc::layout::LayoutRuntime::hasPane(std::string_view paneName) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     const_cast< LayoutRuntime* >(this)->loadRenderData();
     if (paneName.empty()) {
         return !mBrlytLayout.panes.empty();
@@ -608,7 +607,7 @@ bool smgpc::layout::LayoutRuntime::hasPane(std::string_view paneName) const {
 }
 
 std::optional< std::size_t > smgpc::layout::LayoutRuntime::paneIndex(std::string_view paneName) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     const_cast< LayoutRuntime* >(this)->loadRenderData();
     if (paneName.empty()) {
         if (mBrlytLayout.panes.empty()) {
@@ -620,7 +619,7 @@ std::optional< std::size_t > smgpc::layout::LayoutRuntime::paneIndex(std::string
 }
 
 std::optional< smgpc::layout::LayoutRuntime::PaneBounds > smgpc::layout::LayoutRuntime::paneBounds(std::string_view paneName) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     const_cast< LayoutRuntime* >(this)->loadRenderData();
     if (mIsDead) {
         return std::nullopt;
@@ -685,7 +684,7 @@ std::optional< smgpc::layout::LayoutRuntime::PaneBounds > smgpc::layout::LayoutR
 }
 
 std::optional< TVec2f > smgpc::layout::LayoutRuntime::paneScale(std::string_view paneName) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     const_cast< LayoutRuntime* >(this)->loadRenderData();
     if (paneName.empty()) {
         if (mBrlytLayout.panes.empty()) {
@@ -706,7 +705,7 @@ std::optional< TVec2f > smgpc::layout::LayoutRuntime::paneScale(std::string_view
 }
 
 bool smgpc::layout::LayoutRuntime::copyPaneMatrix(std::string_view paneName, Mtx matrix) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (matrix == nullptr) {
         return false;
     }
@@ -750,7 +749,7 @@ bool smgpc::layout::LayoutRuntime::isPointingPane(std::string_view paneName, f32
 }
 
 void smgpc::layout::LayoutRuntime::startPaneAnim(std::string_view paneName, const char* pAnimName, u32 animLayer) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (paneName.empty() || pAnimName == nullptr || pAnimName[0] == '\0') {
         aurora::throw_host_exception<std::logic_error>("Pane animation requires a real pane and BRLAN name");
     }
@@ -773,7 +772,7 @@ void smgpc::layout::LayoutRuntime::startPaneAnim(std::string_view paneName, cons
 }
 
 void smgpc::layout::LayoutRuntime::stopPaneAnim(std::string_view paneName, u32 animLayer) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (paneName.empty()) {
         aurora::throw_host_exception<std::logic_error>("Pane animation requires a real pane name");
     }
@@ -784,7 +783,7 @@ void smgpc::layout::LayoutRuntime::stopPaneAnim(std::string_view paneName, u32 a
 }
 
 void smgpc::layout::LayoutRuntime::setPaneAnimFrame(std::string_view paneName, f32 frame, u32 animLayer) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (paneName.empty()) {
         aurora::throw_host_exception<std::logic_error>("Pane animation requires a real pane name");
     }
@@ -794,7 +793,7 @@ void smgpc::layout::LayoutRuntime::setPaneAnimFrame(std::string_view paneName, f
 }
 
 void smgpc::layout::LayoutRuntime::setPaneAnimRate(std::string_view paneName, f32 rate, u32 animLayer) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (paneName.empty()) {
         aurora::throw_host_exception<std::logic_error>("Pane animation requires a real pane name");
     }
@@ -805,25 +804,25 @@ void smgpc::layout::LayoutRuntime::setPaneAnimRate(std::string_view paneName, f3
 }
 
 f32 smgpc::layout::LayoutRuntime::getPaneAnimFrame(std::string_view paneName, u32 animLayer) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     const auto& anim = const_cast<LayoutRuntime*>(this)->paneAnimation(paneName).animations.at(animLayer);
     return anim.frame;
 }
 
 bool smgpc::layout::LayoutRuntime::isPaneAnimStopped(std::string_view paneName, u32 animLayer) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     const auto& anim = const_cast<LayoutRuntime*>(this)->paneAnimation(paneName).animations.at(animLayer);
     return anim.name.empty() || anim.stopped;
 }
 
 f32 smgpc::layout::LayoutRuntime::getAnimFrameMax(u32 animLayer) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     const auto& anim = animationControl(animLayer);
     return anim.end;
 }
 
 f32 smgpc::layout::LayoutRuntime::getAnimRate(u32 animLayer) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     const auto& anim = animationControl(animLayer);
     return anim.rate;
 }
@@ -833,7 +832,7 @@ bool smgpc::layout::LayoutRuntime::hasActiveAnimation(u32 animLayer) const {
 }
 
 f32 smgpc::layout::LayoutRuntime::getAnimDuration(const char* pAnimName) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (pAnimName == nullptr || pAnimName[0] == '\0') {
         aurora::throw_host_exception<std::logic_error>("Animation duration requires a real BRLAN name");
     }
@@ -843,7 +842,7 @@ f32 smgpc::layout::LayoutRuntime::getAnimDuration(const char* pAnimName) const {
 }
 
 bool smgpc::layout::LayoutRuntime::isAnimLooping(const char* pAnimName) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (pAnimName == nullptr || pAnimName[0] == '\0') {
         aurora::throw_host_exception<std::logic_error>("Animation loop state requires a real BRLAN name");
     }
@@ -853,7 +852,7 @@ bool smgpc::layout::LayoutRuntime::isAnimLooping(const char* pAnimName) const {
 }
 
 bool smgpc::layout::LayoutRuntime::isAnimLooping(u32 animLayer) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     const auto& anim = animationControl(animLayer);
     return anim.looping;
 }
@@ -929,7 +928,7 @@ std::size_t smgpc::layout::LayoutRuntime::debugCommittedPaneFrameCount() const {
 }
 
 std::vector< smgpc::layout::LayoutRuntime::DebugPaneState > smgpc::layout::LayoutRuntime::debugPanes() const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     auto states = std::vector< DebugPaneState >{};
     states.reserve(mBrlytLayout.panes.size());
 
@@ -1008,7 +1007,7 @@ std::vector< smgpc::layout::LayoutRuntime::DebugPaneState > smgpc::layout::Layou
 }
 
 std::vector< smgpc::layout::LayoutRuntime::DebugMaterialState > smgpc::layout::LayoutRuntime::debugMaterials() const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     auto states = std::vector< DebugMaterialState >{};
     states.reserve(mBrlytLayout.materials.size());
 
@@ -1044,7 +1043,7 @@ std::vector< smgpc::layout::LayoutRuntime::DebugMaterialState > smgpc::layout::L
 }
 
 std::vector< smgpc::layout::LayoutRuntime::DebugTextureState > smgpc::layout::LayoutRuntime::debugTextures() const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     auto states = std::vector< DebugTextureState >{};
     states.reserve(mRenderTextures.size());
 
@@ -1068,7 +1067,7 @@ std::vector< smgpc::layout::LayoutRuntime::DebugTextureState > smgpc::layout::La
 #endif
 
 smgpc::layout::LayoutRuntime::AnimationState& smgpc::layout::LayoutRuntime::animation(u32 animLayer) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (animLayer >= mAnimLayerNum) {
         aurora::throw_host_exception<std::out_of_range>("Layout " + mLayoutName + " has no animation layer " + std::to_string(animLayer));
     }
@@ -1076,7 +1075,7 @@ smgpc::layout::LayoutRuntime::AnimationState& smgpc::layout::LayoutRuntime::anim
 }
 
 const smgpc::layout::LayoutRuntime::AnimationState& smgpc::layout::LayoutRuntime::animation(u32 animLayer) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (animLayer >= mAnimLayerNum) {
         aurora::throw_host_exception<std::out_of_range>("Layout " + mLayoutName + " has no animation layer " + std::to_string(animLayer));
     }
@@ -1084,7 +1083,7 @@ const smgpc::layout::LayoutRuntime::AnimationState& smgpc::layout::LayoutRuntime
 }
 
 smgpc::layout::LayoutRuntime::AnimationState& smgpc::layout::LayoutRuntime::animationControl(u32 animLayer) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     auto& control = animation(animLayer);
     // An initialized LayoutAnmPlayer owns its frame controller before any BRLAN
     // starts. A missing layout still has no actual root player to control.
@@ -1099,7 +1098,7 @@ const smgpc::layout::LayoutRuntime::AnimationState& smgpc::layout::LayoutRuntime
 }
 
 smgpc::layout::LayoutRuntime::PaneAnimationState& smgpc::layout::LayoutRuntime::paneAnimation(std::string_view paneName) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     loadRenderData();
     const auto pane_index = find_preferred_pane_index(mBrlytLayout, paneName);
     if (!pane_index.has_value()) {
@@ -1116,7 +1115,7 @@ smgpc::layout::LayoutRuntime::PaneAnimationState& smgpc::layout::LayoutRuntime::
 }
 
 const smgpc::layout::LayoutRuntime::PaneAnimationState* smgpc::layout::LayoutRuntime::findPaneAnimation(std::string_view paneName) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     const_cast< LayoutRuntime* >(this)->loadRenderData();
     const auto pane_index = find_preferred_pane_index(mBrlytLayout, paneName);
     if (!pane_index.has_value()) {
@@ -1190,7 +1189,7 @@ void smgpc::layout::LayoutRuntime::commitAnimationState(const AnimationState& an
 }
 
 void smgpc::layout::LayoutRuntime::loadRenderData() {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (mRenderDataLoaded) {
         return;
     }
@@ -1602,7 +1601,7 @@ aurora::nw4r::lyt::BrlanMaterialFrame smgpc::layout::LayoutRuntime::materialFram
 }
 
 f32 smgpc::layout::LayoutRuntime::durationFor(const char* pAnimName) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (pAnimName == nullptr || pAnimName[0] == '\0') {
         aurora::throw_host_exception<std::logic_error>("Animation duration requires a real BRLAN name");
     }
@@ -1615,7 +1614,7 @@ f32 smgpc::layout::LayoutRuntime::durationFor(const char* pAnimName) const {
 }
 
 bool smgpc::layout::LayoutRuntime::isLoopingAnim(const char* pAnimName) const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (pAnimName == nullptr || pAnimName[0] == '\0') {
         aurora::throw_host_exception<std::logic_error>("Animation loop state requires a real BRLAN name");
     }

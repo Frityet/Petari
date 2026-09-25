@@ -61,7 +61,6 @@ target("smg-pc-game")
     add_files("../layout/**.cpp")
     add_files("../resource/**.cpp")
     add_files("../runtime/**.cpp")
-    add_files("../compat/**.cpp")
     -- Original paired-single helpers make fused and rounded operations explicit.
     add_files("Util/MathUtil.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("Util/LiveActorUtil.cpp", {cxxflags = "-ffp-contract=off"})
@@ -162,7 +161,6 @@ target("smg-pc-game")
     add_headerfiles("../layout/**.hpp")
     add_headerfiles("../resource/**.hpp")
     add_headerfiles("../runtime/**.hpp")
-    add_headerfiles("../compat/**.hpp")
     add_headerfiles {
         "../render/effects/EffectResource.hpp",
         "../render/GXState.hpp",

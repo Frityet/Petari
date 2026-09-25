@@ -14,9 +14,9 @@
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "resource/TextEncoding.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 
 #include <aurora/allocation.hpp>
 #include <algorithm>
@@ -60,10 +60,10 @@ namespace {
 
         void exercise() {
             auto* shadows = MR::getSceneObj<ShadowControllerHolder>(SceneObj_ShadowControllerHolder);
-            require(MR::getSceneObjHolder()->nativeAllocationDomain() && shadows,
+            require(MR::getSceneObjHolder()->nativeAllocationHeap() && shadows,
                     "Actual original scene heap and shadow holder exist");
             holder_identity = shadows;
-            const auto objects = smgpc::compat::snapshot_name_obj_runtime_objects();
+            const auto objects = NameObj::snapshotNativeObjects();
             std::vector<PunchingKinoko*> actors;
             std::vector<GroundChecker*> checkers;
             for (auto* object : objects) {
@@ -166,10 +166,10 @@ int main() {
         };
         require(smgpc::app::run_original_game(configuration, *logger, observer) == 0 && probe.exercised,
                 "OriginalProcess completes read-only placement diagnostic and normal bounded frame loop");
-        require(!smgpc::compat::has_name_obj_runtime_state(probe.holder_identity),
+        require(!NameObj::nativeGeneration(probe.holder_identity),
                 "Normal scene retirement removes the actual shadow holder");
         for (const auto* object : probe.retained_identities)
-            require(!smgpc::compat::has_name_obj_runtime_state(object), "Normal original scene teardown retires every actual actor, GroundChecker and shadow drawer");
+            require(!NameObj::nativeGeneration(object), "Normal original scene teardown retires every actual actor, GroundChecker and shadow drawer");
         std::fprintf(stderr, "PASS original-process PunchingKinoko: all fourteen ordinary factory placements, actual model/sensor/binder/shadow graph, normal frames and scene retirement\n");
         return 0;
     } catch (const std::exception& error) {

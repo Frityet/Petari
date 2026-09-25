@@ -2,7 +2,7 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/HashUtil.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
 #include <algorithm>
 #include <stdexcept>
@@ -62,7 +62,7 @@ void NameObjHolder::removeNativeObject(NameObj* object) noexcept {
 }
 
 std::vector<NameObj*> NameObjHolder::snapshotNativeObjects() const {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     return {mObjArray1.begin(), mObjArray1.end()};
 }
 

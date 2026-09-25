@@ -1,5 +1,5 @@
 #include "layout/LytTexMap.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <aurora/allocation.hpp>
 #include "resource/BtiTextureData.hpp"
 #include "resource/TplTextureData.hpp"
 #include <aurora/exception.hpp>
@@ -23,7 +23,7 @@ namespace smgpc::layout {
 
     nw4r::lyt::TexMap make_tex_map(std::string_view name, std::span<const std::uint8_t> bytes,
                                   std::shared_ptr<resource::Mem1ResourceHeap> heap) {
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         auto lower = std::string(name);
         std::ranges::transform(lower, lower.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
         nw4r::lyt::TexMap result;
@@ -82,13 +82,13 @@ namespace smgpc::layout {
     }
 
     std::string tex_map_name(const nw4r::lyt::TexMap& texture) {
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         if (const auto& resource = texture.GetHostResourceState()) return resource->name;
         return "GX-image-" + std::to_string(reinterpret_cast<std::uintptr_t>(texture.mImage));
     }
 
     resource::DecodedTexture decode_tex_map(const nw4r::lyt::TexMap& texture) {
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         if (!texture.mImage || !texture.mWidth || !texture.mHeight)
             aurora::throw_host_exception<std::invalid_argument>("Layout rendering requires an initialized SDK TexMap image");
         const auto format = static_cast<resource::TplTextureFormat>(texture.GetTexelFormat());

@@ -2,7 +2,7 @@
 #include "Game/Camera/CameraParamString.hpp"
 #include "Game/Camera/DotCamParams.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/JMapResource.hpp"
 #include "resource/RarcArchive.hpp"
@@ -22,12 +22,12 @@
 #include <vector>
 
 namespace {
-using namespace smgpc::compat;
+
 using namespace smgpc::resource;
 
 void require(bool condition, const char* message) {
     if (!condition) {
-        JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         throw std::runtime_error(message);
     }
 }
@@ -138,9 +138,10 @@ void test_id_format_and_temporary_storage() {
 }
 
 void test_id_order_copy_and_scene_allocation() {
-    auto runtime = JkrHeapRuntime::create(1024 * 1024);
-    auto domain = JkrAllocationDomain::create(runtime, 256 * 1024);
-    JkrAllocationScope game(domain);
+    auto runtime = smgpc::test::create_native_root_heap(1024 * 1024);
+    auto domain = smgpc::test::create_native_solid_heap(runtime, 256 * 1024);
+    const JKRHeap::CurrentHeapScope game(*(domain));
+    const aurora::allocation::ClientAllocationScope gameRouting({true, true});
     CameraParamChunkID unnamed, other_unnamed;
     unnamed.mZoneID = -20;
     other_unnamed.mZoneID = 50;
@@ -158,13 +159,13 @@ void test_id_order_copy_and_scene_allocation() {
             "zone and case remain part of named ID identity");
     CameraParamChunkID copy(first);
     require(copy == first && copy.mName != first.mName &&
-                JKRHeap::findFromRoot(copy.mName) == &domain->heap(),
+                JKRHeap::findFromRoot(copy.mName) == &(*domain),
             "persistent copy owns distinct string bytes in the active original scene heap");
     first.createEventID(5, "replacement");
     require(copy.equals(-1, "e:a"), "persistent ID remains stable when the temporary buffer is reused");
     CameraParamChunkID persistent;
     persistent.createOtherID(9, "Default");
-    require(JKRHeap::findFromRoot(persistent.mName) == &domain->heap(),
+    require(JKRHeap::findFromRoot(persistent.mName) == &(*domain),
             "original ID factory allocations use the selected scene heap");
     // These original IDs have no owning-string destructor: the scene arena
     // owns the copied name allocations, exactly as it does for camera chunks.
@@ -215,8 +216,8 @@ void test_binary_fields_and_atomic_vector() {
 }
 
 void test_reader_resource_and_heap_lifetime() {
-    auto runtime = JkrHeapRuntime::create(1024 * 1024);
-    auto domain = JkrAllocationDomain::create(runtime, 256 * 1024);
+    auto runtime = smgpc::test::create_native_root_heap(1024 * 1024);
+    auto domain = smgpc::test::create_native_solid_heap(runtime, 256 * 1024);
     auto bytes = std::make_shared<const std::vector<u8>>(fixture());
     std::weak_ptr<const std::vector<u8>> source = bytes;
     std::optional<JMapSourceRegistration> registration;
@@ -225,9 +226,10 @@ void test_reader_resource_and_heap_lifetime() {
     CameraParamString borrowed;
     std::weak_ptr<JMapInfo::DataCompat> data;
     {
-        JkrAllocationScope game(domain);
+        const JKRHeap::CurrentHeapScope game(*(domain));
+        const aurora::allocation::ClientAllocationScope gameRouting({true, true});
         reader = new DotCamReaderInBin(bytes->data());
-        require(JKRHeap::findFromRoot(reader) == &domain->heap(), "actual DotCam reader belongs to the original scene heap");
+        require(JKRHeap::findFromRoot(reader) == &(*domain), "actual DotCam reader belongs to the original scene heap");
         const char* name = nullptr;
         require(reader->getValueString("id", &name), "original heap reader reads its retained camera name");
         borrowed.setCharPtr(name);
@@ -242,7 +244,7 @@ void test_reader_resource_and_heap_lifetime() {
     delete reader;
     borrowed.setCharPtr(nullptr);
     require(source.expired() && data.expired(), "typed original reader destruction releases the last native resource lease");
-    require(domain->heap().mDisposerList.getNumLinks() == 0,
+    require((*domain).mDisposerList.getNumLinks() == 0,
             "embedded native JMap disposer retires before scene arena destruction");
 }
 

@@ -18,8 +18,8 @@
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include "NativeHeapFixture.hpp"
 #include "resource/TextEncoding.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -65,10 +65,10 @@ struct Probe {
     std::vector<const NameObj*> retained_identities;
 
     void exercise() {
-        require(MR::getSceneObjHolder()->nativeAllocationDomain() != nullptr, "Actual original scene allocation domain exists");
+        require(MR::getSceneObjHolder()->nativeAllocationHeap() != nullptr, "Actual original scene allocation domain exists");
         const auto placements = original_placements();
         std::vector<CrystalCage*> actors;
-        for (auto* object : smgpc::compat::snapshot_name_obj_runtime_objects())
+        for (auto* object : NameObj::snapshotNativeObjects())
             if (auto* actor = dynamic_cast<CrystalCage*>(object)) actors.push_back(actor);
         require(placements.size() == 3 && actors.size() == 3,
                 "Actual Gateway data and ordinary factory create all three authored medium cages");
@@ -200,7 +200,7 @@ int main() {
         require(smgpc::app::run_original_game(configuration, *logger, observer) == 0 && probe.exercised,
                 "OriginalProcess completes the read-only placement diagnostic and normal bounded frame loop");
         for (const auto* object : probe.retained_identities)
-            require(!smgpc::compat::has_name_obj_runtime_state(object), "Normal original scene teardown retires every cage and child model");
+            require(!NameObj::nativeGeneration(object), "Normal original scene teardown retires every cage and child model");
         std::fprintf(stderr, "PASS original-process CrystalCage: three original placements, seven actual owned actors, authored off switches and normal scene retirement\n");
         return 0;
     } catch (const std::exception& error) {

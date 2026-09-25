@@ -7,9 +7,7 @@
 
 class NameObjHolder;
 
-namespace smgpc::compat {
-    class JkrAllocationDomain;
-}
+#include <JSystem/JKernel/JKRHeap.hpp>
 
 namespace smgpc::runtime {
     class SceneScheduler;
@@ -42,7 +40,7 @@ private:
     void initializeNativeExecution();
     void retireNativeExecution() noexcept;
 
-    std::shared_ptr< smgpc::compat::JkrAllocationDomain > mNativeDomain;
+    JKRHeap::Handle mNativeHeap;
     std::unique_ptr< smgpc::runtime::SceneScheduler > mNativeScheduler;
     std::unique_ptr< smgpc::runtime::SceneSchedulerBinding > mNativeSchedulerBinding;
     std::unique_ptr< smgpc::runtime::SceneSchedulerAllocationBinding > mNativeAllocationBinding;

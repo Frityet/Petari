@@ -11,8 +11,8 @@
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include "NativeHeapFixture.hpp"
 #include "resource/TextEncoding.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -65,7 +65,7 @@ struct Probe {
     std::vector<const NameObj*> retained_identities;
 
     void exercise() {
-        require(MR::getSceneObjHolder()->nativeAllocationDomain() != nullptr, "Actual scene allocation domain exists");
+        require(MR::getSceneObjHolder()->nativeAllocationHeap() != nullptr, "Actual scene allocation domain exists");
         const auto placements = original_placements();
         require(placements.size() == 7, "Actual active Gateway stage data has seven standalone StarPiece placements");
         auto* director = MR::getStarPieceDirector();
@@ -76,7 +76,7 @@ struct Probe {
             require(piece != nullptr, "Every original pool member is a real StarPiece");
             pooled.push_back(piece);
         }
-        const auto objects = smgpc::compat::snapshot_name_obj_runtime_objects();
+        const auto objects = NameObj::snapshotNativeObjects();
         for (auto* object : objects)
             if (auto* group = dynamic_cast<StarPieceGroup*>(object))
                 for (s32 i = 0; i < group->mNumPieces; ++i) grouped.push_back(group->mPieces[i]);
@@ -179,7 +179,7 @@ int main() {
         require(smgpc::app::run_original_game(configuration, *logger, observer) == 0 && probe.exercised,
                 "OriginalProcess completes the read-only placement diagnostic and normal bounded frame loop");
         for (const auto* object : probe.retained_identities)
-            require(!smgpc::compat::has_name_obj_runtime_state(object), "Normal original scene teardown retires every standalone piece and the director");
+            require(!NameObj::nativeGeneration(object), "Normal original scene teardown retires every standalone piece and the director");
         std::fprintf(stderr, "PASS original-process StarPiece placement: seven original non-pool placements, actual resource owners and normal scene retirement\n");
         return 0;
     } catch (const std::exception& error) {

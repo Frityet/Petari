@@ -1,3 +1,4 @@
+#include "NativeHeapFixture.hpp"
 #include "Game/System/ResourceHolder.hpp"
 #include "Game/System/ArchiveHolder.hpp"
 #include "Game/System/FileLoader.hpp"
@@ -52,12 +53,12 @@
 namespace aurora { extern AuroraConfig g_config; }
 namespace {
     using namespace smgpc::resource;
-    using namespace smgpc::compat;
+
     using smgpc::test::on_resource_worker;
     using Bytes = std::vector<std::uint8_t>;
     void require(bool condition, const char* message) {
         if (!condition) {
-            JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             std::fprintf(stderr, "[resource-holder] assertion failed: %s\n", message);
             throw std::runtime_error(message);
         }
@@ -178,15 +179,16 @@ namespace {
 
     struct HolderFixture {
         std::shared_ptr<RarcArchive> source;
-        std::shared_ptr<JkrAllocationDomain> domain;
+        JKRHeap::Handle domain;
         std::unique_ptr<ArchiveHolderArchiveEntry> entry;
         std::unique_ptr<ResourceHolder> object;
 
         HolderFixture(std::shared_ptr<RarcArchive> bytes, const char* path,
-                      std::shared_ptr<JkrAllocationDomain> heap)
+                      JKRHeap::Handle heap)
             : source(std::move(bytes)), domain(std::move(heap)) {
-            JkrAllocationScope original(domain);
-            entry = std::make_unique<ArchiveHolderArchiveEntry>(const_cast<u8*>(source->bytes().data()), &domain->heap(), path);
+            const JKRHeap::CurrentHeapScope original(*(domain));
+            const aurora::allocation::ClientAllocationScope originalRouting({true, true});
+            entry = std::make_unique<ArchiveHolderArchiveEntry>(const_cast<u8*>(source->bytes().data()), &(*domain), path);
             object = std::make_unique<ResourceHolder>(*entry->mArchive);
         }
         ResourceHolder& holder() const { return *object; }
@@ -206,11 +208,12 @@ namespace {
         return archive({{"Image.bti", image}, {"View.canm", camera}, {"Key.bck", transform(true)}, {"Sound.bas", Bytes(8)}});
     }
 
-    void test_duplicate_holders(GameResourceRuntime& process, const std::shared_ptr<JkrAllocationDomain>& arena) {
+    void test_duplicate_holders(GameResourceRuntime& process, const JKRHeap::Handle& arena) {
         auto source = duplicate_archive();
-        auto domain = JkrAllocationDomain::create(arena, 1U << 20);
-        JkrAllocationScope original(domain);
-        ArchiveHolderArchiveEntry entry(const_cast<u8*>(source->bytes().data()), &domain->heap(), "/Memory/Duplicates.arc");
+        auto domain = smgpc::test::create_native_solid_heap(arena, 1U << 20);
+        const JKRHeap::CurrentHeapScope original(*(domain));
+        const aurora::allocation::ClientAllocationScope originalRouting({true, true});
+        ArchiveHolderArchiveEntry entry(const_cast<u8*>(source->bytes().data()), &(*domain), "/Memory/Duplicates.arc");
         auto& mounted = *entry.mArchive;
         const auto* raw_image = mounted.getResource("Image.bti");
         const auto* raw_camera = mounted.getResource("View.canm");
@@ -266,7 +269,7 @@ namespace {
         mounted.validateNativeRetirement();
     }
 
-    void test_native_bti(GameResourceRuntime& process, const std::shared_ptr<JkrAllocationDomain>& arena) {
+    void test_native_bti(GameResourceRuntime& process, const JKRHeap::Handle& arena) {
         Bytes bytes(0x2a0);
         bytes[0] = GX_TF_C8; bytes[1] = 1;
         put16(bytes, 2, 16); put16(bytes, 4, 8);
@@ -288,7 +291,7 @@ namespace {
         }
         require(process.mem1_heap()->available_bytes() == available, "SDK BTI objects release their retained mapped storage");
         auto source = archive({{"image.bti", bytes, true}});
-        auto owner = std::make_unique<HolderFixture>(source, "/retained/Texture.arc", JkrAllocationDomain::create(arena, 1U << 20));
+        auto owner = std::make_unique<HolderFixture>(source, "/retained/Texture.arc", smgpc::test::create_native_solid_heap(arena, 1U << 20));
         const auto* entry = source->find_resource("image.bti");
         auto& holder = owner->holder();
         const auto* image = static_cast<const ResTIMG*>(holder.mFileInfoTable->getRes("image.bti"));
@@ -321,7 +324,7 @@ namespace {
         require(process.mem1_heap()->available_bytes() == available, "rejected BTI does not retain mapped allocations");
     }
 
-    void test_original_csv_reader(GameResourceRuntime& process, const std::shared_ptr<JkrAllocationDomain>& arena) {
+    void test_original_csv_reader(GameResourceRuntime& process, const JKRHeap::Handle& arena) {
         // A raw filename deliberately has no recognized table extension. The
         // original parser decides its type; the archive service supplies bounds.
         constexpr std::array fields{"name", "frame", "flag", "value", "vectorX", "vectorY"};
@@ -345,7 +348,7 @@ namespace {
         bytes.push_back(0);
         auto source = archive({{"authored.table", std::move(bytes)}, {"unrelated.raw", {1, 2, 3}}});
         const std::weak_ptr<const RarcArchive> weak_source = source;
-        auto domain = JkrAllocationDomain::create(arena, 1U << 20);
+        auto domain = smgpc::test::create_native_solid_heap(arena, 1U << 20);
         auto owner = std::make_unique<HolderFixture>(source, "/retained/Csv.arc", domain);
         auto& holder = owner->holder();
         require(MR::isExistFileInArc(&holder, "%s.%s", "authored", "table"), "original variadic filename lookup");
@@ -398,15 +401,15 @@ namespace {
                 "parser retirement permits archive unpublication and releases its byte owner");
     }
 
-    void test_original_constructor(GameResourceRuntime& process, const std::shared_ptr<JkrAllocationDomain>& arena) {
+    void test_original_constructor(GameResourceRuntime& process, const JKRHeap::Handle& arena) {
         auto source = archive({{"Key.bck", transform(true)}, {"Full.bca", transform(false), true},
                                {"fixture_root.banmt", control()}, {"Mixed.BCK", {7, 8}, true}, {"raw.pa", {9}, true},
                                {"Empty.bck", {}}});
         const std::weak_ptr<const RarcArchive> weak_source = source;
-        auto domain = JkrAllocationDomain::create(arena, 1U << 20); const std::weak_ptr<JkrAllocationDomain> weak_domain = domain;
+        auto domain = smgpc::test::create_native_solid_heap(arena, 1U << 20); const std::weak_ptr<JKRHeap> weak_domain = domain;
         auto owner = std::make_unique<HolderFixture>(source, "/retained/Fixture.arc", domain);
         auto& h = owner->holder();
-        require(h.mHeap == &domain->heap() && JKRHeap::findFromRoot(&h) == h.mHeap, "actual holder allocated in mounted cohort");
+        require(h.mHeap == &(*domain) && JKRHeap::findFromRoot(&h) == h.mHeap, "actual holder allocated in mounted cohort");
         require(h.mMotionResTable->mCount == 3 && h.mBanmtResTable->mCount == 1 && h.mFileInfoTable->mCount == 2,
                 "original case-sensitive dispatch and recursive counts");
         const auto* empty_info = h.mMotionResTable->findFileInfo("Empty");
@@ -521,13 +524,13 @@ namespace {
         require(process.mem1_heap()->available_bytes() == available, "rejected TPL resources release all native storage");
     }
 
-    void test_original_layout_holder(GameResourceRuntime& process, const std::shared_ptr<JkrAllocationDomain>& arena) {
+    void test_original_layout_holder(GameResourceRuntime& process, const JKRHeap::Handle& arena) {
         Bytes layout(16), animation(16), texture = indexed_tpl(), font(16);
         tag(layout, 0, "RLYT"); put32(layout, 4, 0xFEFF0008);
         tag(animation, 0, "RLAN"); put32(animation, 4, 0xFEFF0008);
         auto source = archive({{"Window.brlyt", layout}, {"Appear.brlan", animation, true},
                                {"Picture.tpl", texture, true}, {"Font.brfnt", font}});
-        auto domain = JkrAllocationDomain::create(arena, 1U << 20);
+        auto domain = smgpc::test::create_native_solid_heap(arena, 1U << 20);
         auto& manager = *SingletonHolder<ResourceHolderManager>::get();
         auto& files = *SingletonHolder<FileLoader>::get();
         // The process observer deliberately routes test scaffolding to host.
@@ -548,14 +551,14 @@ namespace {
         std::vector<Bytes> mounted_bytes;
         auto mount = [&](const char* name, JKRHeap* heap) {
             mounted_bytes.emplace_back(source->bytes().begin(), source->bytes().end());
-            JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             return files.createAndAddArchive(mounted_bytes.back().data(), heap, name);
         };
-        auto* mounted = mount("/Memory/LayoutFixture.arc", &domain->heap());
+        auto* mounted = mount("/Memory/LayoutFixture.arc", &(*domain));
         const std::weak_ptr<const RarcArchive> weak_archive = mounted->retainSource();
         auto* holder = raw_layout("/Memory/LayoutFixture.arc");
         require(holder && holder->mArchive == mounted, "layout holder borrows the original mounted archive identity");
-        require(JKRHeap::findFromRoot(holder) == &domain->heap(), "original layout holder uses its mounted archive heap");
+        require(JKRHeap::findFromRoot(holder) == &(*domain), "original layout holder uses its mounted archive heap");
         auto* stationed = stationed_layout("/Memory/LayoutFixture.arc");
         require(stationed != holder && stationed->mArchive == mounted,
                 "original stationed creation makes a separate holder over the same actual archive");
@@ -582,15 +585,15 @@ namespace {
             holder->nativeResourceSource().resource_data("Picture.tpl"), process.mem1_heap());
         const std::weak_ptr<const nw4r::lyt::HostTextureResourceState> texture_lifetime = texture_copy.GetHostResourceState();
         auto retained = holder->retainNativeResources();
-        rejects([&] { MR::removeResourceAndFileHolderIfIsEqualHeap(&domain->heap()); },
+        rejects([&] { MR::removeResourceAndFileHolderIfIsEqualHeap(&(*domain)); },
                 "live layout borrowers reject the entire original holder/file removal");
-        rejects([&] { files.removeHolderIfIsEqualHeap(&domain->heap()); },
+        rejects([&] { files.removeHolderIfIsEqualHeap(&(*domain)); },
                 "FileLoader rejects archive retirement before its actual holders");
         require(files.receiveArchive("/Memory/LayoutFixture.arc") == mounted &&
                 holder->GetResource('blyt', "Window.brlyt", nullptr) == layout_bytes,
                 "failed retirement leaves the complete original registry and byte identities intact");
         retained.reset();
-        MR::removeResourceAndFileHolderIfIsEqualHeap(&domain->heap());
+        MR::removeResourceAndFileHolderIfIsEqualHeap(&(*domain));
         require(weak_archive.expired() && !files.isMountedArchive("/Memory/LayoutFixture.arc"),
                 "layout retirement releases holders before the actual mounted archive");
         require(!texture_lifetime.expired() && smgpc::layout::decode_tex_map(texture_copy).rgba[0] == 255,
@@ -598,16 +601,16 @@ namespace {
         texture_copy = {};
         require(texture_lifetime.expired() && process.mem1_heap()->available_bytes() == texture_available,
                 "final copied TPL releases all mapped backing");
-        mounted = mount("/Memory/LayoutFixture.arc", &domain->heap());
+        mounted = mount("/Memory/LayoutFixture.arc", &(*domain));
         require(raw_layout("/Memory/LayoutFixture.arc")->mArchive == mounted,
                 "retired layout names may bind to their new actual mount");
-        MR::removeResourceAndFileHolderIfIsEqualHeap(&domain->heap());
+        MR::removeResourceAndFileHolderIfIsEqualHeap(&(*domain));
         rejects([&] { raw_layout("/Memory/Missing.arc"); },
                 "missing original raw layout mounts remain explicit failures");
 
         auto duplicate_source = duplicate_archive();
         mounted_bytes.emplace_back(duplicate_source->bytes().begin(), duplicate_source->bytes().end());
-        auto* duplicate_mount = files.createAndAddArchive(mounted_bytes.back().data(), &domain->heap(), "/Memory/Duplicates.arc");
+        auto* duplicate_mount = files.createAndAddArchive(mounted_bytes.back().data(), &(*domain), "/Memory/Duplicates.arc");
         const auto* raw_image = duplicate_mount->getResource("Image.bti");
         const auto* raw_camera = duplicate_mount->getResource("View.canm");
         auto* first_resource = stationed_resource("/Memory/Duplicates.arc");
@@ -616,24 +619,25 @@ namespace {
                     second_resource->mArchive == duplicate_mount && first_resource->mMotionResTable->getRes("Key") !=
                     second_resource->mMotionResTable->getRes("Key"),
                 "original stationed requests publish distinct native holders over the same actual mounted archive");
-        manager.removeIfIsEqualHeap(&domain->heap());
+        manager.removeIfIsEqualHeap(&(*domain));
         require(duplicate_mount->getResource("Image.bti") == raw_image && duplicate_mount->getResource("View.canm") == raw_camera,
                 "original manager FIFO retirement restores typed overrides before FileLoader removes its archive");
-        files.removeHolderIfIsEqualHeap(&domain->heap());
+        files.removeHolderIfIsEqualHeap(&(*domain));
 
-        auto foreign_domain = JkrAllocationDomain::create(arena, 1U << 20);
-        auto sibling_domain = JkrAllocationDomain::create(arena, 1U << 20);
-        const std::weak_ptr<JkrAllocationDomain> weak_foreign = foreign_domain;
-        auto* foreign_heap = &foreign_domain->heap();
+        auto foreign_domain = smgpc::test::create_native_solid_heap(arena, 1U << 20);
+        auto sibling_domain = smgpc::test::create_native_solid_heap(arena, 1U << 20);
+        const std::weak_ptr<JKRHeap> weak_foreign = foreign_domain;
+        auto* foreign_heap = &(*foreign_domain);
         mount("/Memory/ForeignLayout.arc", foreign_heap);
         auto* foreign = raw_layout("/Memory/ForeignLayout.arc");
         require(JKRHeap::findFromRoot(foreign) == foreign_heap,
                 "a layout on another registered heap resolves its actual owner outside any Game scope");
         mount("/Memory/SiblingLayout.arc", foreign_heap);
         {
-            JkrAllocationScope original(sibling_domain);
+            const JKRHeap::CurrentHeapScope original(*(sibling_domain));
+            const aurora::allocation::ClientAllocationScope originalRouting({true, true});
             auto* other = raw_layout("/Memory/SiblingLayout.arc");
-            require(JKRHeap::findFromRoot(other) == foreign_heap && JKRHeap::sCurrentHeap == &sibling_domain->heap(),
+            require(JKRHeap::findFromRoot(other) == foreign_heap && JKRHeap::sCurrentHeap == &(*sibling_domain),
                     "opening a foreign layout under a sibling scope retains the mounted heap and restores the current heap");
         }
         foreign_domain.reset();
@@ -642,14 +646,14 @@ namespace {
         require(weak_foreign.expired(), "retiring original layouts and archives releases their actual heap owner");
     }
 
-    void test_original_texture_factory(GameResourceRuntime& process, const std::shared_ptr<JkrAllocationDomain>& arena) {
+    void test_original_texture_factory(GameResourceRuntime& process, const JKRHeap::Handle& arena) {
         auto source = duplicate_archive();
-        auto domain = JkrAllocationDomain::create(arena, 1U << 20);
+        auto domain = smgpc::test::create_native_solid_heap(arena, 1U << 20);
         auto& files = *SingletonHolder<FileLoader>::get();
         auto& manager = *SingletonHolder<ResourceHolderManager>::get();
         Bytes bytes(source->bytes().begin(), source->bytes().end());
         const auto available = process.mem1_heap()->available_bytes();
-        auto* mounted = files.createAndAddArchive(bytes.data(), &domain->heap(), "FactoryFixture.arc");
+        auto* mounted = files.createAndAddArchive(bytes.data(), &(*domain), "FactoryFixture.arc");
         auto first = std::unique_ptr<nw4r::lyt::TexMap>(MR::createLytTexMap("FactoryFixture.arc", "Image.bti"));
         auto* holder = manager.createAndAdd("FactoryFixture.arc", nullptr);
         require(holder && holder->mArchive == mounted &&
@@ -670,28 +674,29 @@ namespace {
         {
             // The holder is already published: this cached query does not wait
             // for a main-thread resource task while selecting the fixture heap.
-            JkrAllocationScope original(domain);
+            const JKRHeap::CurrentHeapScope original(*(domain));
+            const aurora::allocation::ClientAllocationScope originalRouting({true, true});
             auto* heap_texture = MR::createLytTexMap("FactoryFixture.arc", "Image.bti");
             auto* heap_copy = new nw4r::lyt::TexMap(copy);
-            require(JKRHeap::findFromRoot(heap_texture) == &domain->heap() &&
-                        JKRHeap::findFromRoot(heap_copy) == &domain->heap(),
+            require(JKRHeap::findFromRoot(heap_texture) == &(*domain) &&
+                        JKRHeap::findFromRoot(heap_copy) == &(*domain),
                     "the original factory and copied TexMap use the caller's current heap");
         }
         first.reset();
-        MR::removeResourceAndFileHolderIfIsEqualHeap(&domain->heap());
+        MR::removeResourceAndFileHolderIfIsEqualHeap(&(*domain));
         require(!files.isMountedArchive("FactoryFixture.arc") && smgpc::layout::decode_tex_map(copy).rgba == expected,
                 "copied texture backing survives original holder and archive retirement independently");
         copy = {};
         require(!lifetime.expired(), "the heap-owned TexMap copy retains its native backing until heap reuse");
-        domain->heap().freeAll();
+        (*domain).freeAll();
         require(lifetime.expired() && process.mem1_heap()->available_bytes() == available,
                 "bulk JKR heap reuse finalizes original and copied TexMaps and releases every mapped texture allocation");
     }
 
-    void test_failure_scope(GameResourceRuntime& process, const std::shared_ptr<JkrAllocationDomain>& arena) {
+    void test_failure_scope(GameResourceRuntime& process, const JKRHeap::Handle& arena) {
         Bytes bad(0x20); tag(bad, 0, "J3D2bdl4"); put32(bad, 8, bad.size());
         auto source = archive({{"bad.bdl", bad}});
-        auto domain = JkrAllocationDomain::create(arena, 1U << 20);
+        auto domain = smgpc::test::create_native_solid_heap(arena, 1U << 20);
         alignas(32) std::array<u8, 64> bytes{}; GDLObj prior{}; GDInitGDLObj(&prior, bytes.data(), bytes.size());
         auto* old_gd = __GDCurrentDL; GDSetCurrent(&prior);
         auto* old_heap = JKRHeap::sCurrentHeap;
@@ -717,13 +722,14 @@ namespace {
         require(valid.holder().mFileInfoTable->mCount == 1, "failed holder never prevents subsequent valid construction");
     }
 
-    void test_original_manager_lifetime(GameResourceRuntime& process, const std::shared_ptr<JkrAllocationDomain>& arena) {
+    void test_original_manager_lifetime(GameResourceRuntime& process, const JKRHeap::Handle& arena) {
         smgpc::runtime::DvdFileSystemService dvd("/");
-        auto temporary_domain = JkrAllocationDomain::create(arena, 1U << 20);
-        const std::weak_ptr<JkrAllocationDomain> weak_temporary = temporary_domain;
+        auto temporary_domain = smgpc::test::create_native_solid_heap(arena, 1U << 20);
+        const std::weak_ptr<JKRHeap> weak_temporary = temporary_domain;
         RarcArchive* cached = nullptr;
         {
-            JkrAllocationScope original(temporary_domain);
+            const JKRHeap::CurrentHeapScope original(*(temporary_domain));
+            const aurora::allocation::ClientAllocationScope originalRouting({true, true});
             cached = &dvd.archive("/ObjectData/InvisibleWall10x10.arc");
             require(JKRHeap::findFromRoot(cached) == nullptr &&
                         JKRHeap::findFromRoot(const_cast<u8*>(cached->bytes().data())) == nullptr,
@@ -737,7 +743,7 @@ namespace {
         require(holder == manager.createAndAdd("InvisibleWall10x10.arc", nullptr),
                 "original basename-hash lookup preserves the already-published holder");
         auto retained = holder->retainNativeResources();
-        rejects([&] { manager.validateHeapRetirement(&holder->heap()); },
+        rejects([&] { manager.validateHeapRetirement(&(*holder)); },
                 "a live model borrower rejects original manager heap retirement");
         require(holder->mArchive->getResSize(holder->mFileInfoTable->getRes("CollisionVersion")) == 7,
                 "rejected retirement leaves the original resource readable");
@@ -746,7 +752,7 @@ namespace {
                 "DVD resource caching remains independent of original holder ownership");
     }
 
-    void test_real_model_and_material(GameResourceRuntime& process, const std::shared_ptr<JkrAllocationDomain>& arena) {
+    void test_real_model_and_material(GameResourceRuntime& process, const JKRHeap::Handle& arena) {
         smgpc::runtime::DvdFileSystemService dvd("/");
         auto& manager = *SingletonHolder<ResourceHolderManager>::get();
         for (const auto& [archive_name, image_name] : std::array{
@@ -792,7 +798,7 @@ namespace {
             auto mixed = archive({{"Model.bdl", Bytes(source.begin(), source.end())}, {"Color.bpk", color(material_name)}});
             // The retail archive's heap is sized for its loaded resources.
             // Synthetic model/material duplicates belong to the test arena.
-            HolderFixture owner(mixed, "Mixed.arc", JkrAllocationDomain::create(arena, 2U << 20));
+            HolderFixture owner(mixed, "Mixed.arc", smgpc::test::create_native_solid_heap(arena, 2U << 20));
             auto& h = owner.holder(); auto* m = static_cast<J3DModelData*>(h.mModelResTable->getRes("Model"));
             std::vector<std::array<float, 16>> initial_effect_matrices(m->getMaterialNum() * 8);
             for (unsigned i = 0; i < m->getMaterialNum(); ++i) for (unsigned j = 0; j < 8; ++j) {
@@ -807,7 +813,8 @@ namespace {
             require(!h.isCreatedAtSameHeap(original) && h.mMaterialBuf != nullptr,
                     "synthetic resources use their bounded test heap and original combined material-animation constructor");
             {
-                JkrAllocationScope game(owner.domain);
+                const JKRHeap::CurrentHeapScope game(*(owner.domain));
+                const aurora::allocation::ClientAllocationScope gameRouting({true, true});
                 ResourceHolder duplicate(*h.mArchive);
                 auto* duplicate_model = static_cast<J3DModelData*>(duplicate.mModelResTable->getRes("Model"));
                 require(duplicate.isCreatedAtSameHeap(&h) && duplicate_model != m &&
@@ -850,7 +857,7 @@ namespace {
             }
         }
         require(process.mem1_heap()->available_bytes() == before, "actual model texture owner releases its mapped MEM1 allocations");
-        std::cout << "resource cohort used=" << original->heap().mSize - original->heap().getTotalFreeSize()
+        std::cout << "resource cohort used=" << (*original).mSize - (*original).getTotalFreeSize()
                   << " MEM1 available=" << process.mem1_heap()->available_bytes() << '\n';
     }
 }
@@ -858,13 +865,13 @@ int main() {
     std::cout << std::unitbuf;
     return smgpc::test::run_stage_resource_process("original-resource-holder", [] {
         auto& process = *GameResourceRuntime::active();
-        const auto scene = MR::getSceneObjHolder()->nativeAllocationDomain();
+        const auto scene = MR::getSceneObjHolder()->nativeAllocationHeap();
         require(scene != nullptr, "the actual GameScene supplies the fixture allocation parent");
         std::unique_ptr<JKRExpHeap, void (*)(JKRExpHeap*)> test_heap(
-            JKRExpHeap::create(4U << 20, &scene->heap(), false),
+            JKRExpHeap::create(4U << 20, &(*scene), false),
             +[](JKRExpHeap* heap) { heap->destroy(); });
         require(test_heap != nullptr, "the bounded holder fixture arena fits within the actual scene heap");
-        const auto arena = JkrAllocationDomain::retain_heap(scene, *test_heap);
+        const auto arena = (*test_heap).retainNativeLifetime();
         test_sdk_tex_map(process); std::cout << "PASS actual SDK TexMap descriptors, GX roundtrip and retained encoded storage\n";
         test_duplicate_holders(process, arena); std::cout << "PASS duplicate J3D/BAS owners and FIFO/reverse BTI/CANM cache retirement\n";
         test_native_bti(process, arena); std::cout << "PASS retained BTI native header, all archive identities, GX payload and JUT consumer\n";

@@ -5,6 +5,7 @@
 
 class ClippingActorInfo;
 class ClippingActorInfoList;
+class ClippingGroupHolder;
 class LiveActor;
 class LodCtrl;
 class ViewGroupCtrl;
@@ -17,6 +18,7 @@ public:
     virtual void movement() override;
 
     void registerActor(LiveActor*);
+    void unregisterNativeActor(LiveActor*, ClippingGroupHolder*) noexcept;
     void initSystemInfo(LiveActor*, const JMapInfoIter&);
     void initViewGroupTable();
     void entryLodCtrl(LodCtrl*, const JMapInfoIter&);

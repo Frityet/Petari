@@ -1,5 +1,5 @@
 #include <MSL_C/stdio.h>
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "Game/System/FileLoader.hpp"
 #include "Game/System/FileRipper.hpp"
 #include "Game/System/HeapMemoryWatcher.hpp"
@@ -40,14 +40,16 @@ void destroy_children(JKRHeap& parent) {
 // GameSystem or replacement file/thread implementation. The outer owner keeps
 // every original heap alive until all file workers and archives have retired.
 struct OriginalFileProcess {
-    std::shared_ptr<smgpc::compat::JkrHeapRuntime> heaps;
+    JKRHeap::Handle heaps;
+    std::shared_ptr<void> mem2;
     JKRErrorHandler old_error = JKRHeap::mErrorHandler;
 
     OriginalFileProcess() {
-        heaps = smgpc::compat::JkrHeapRuntime::create(64U * 1024U * 1024U);
-        heaps->prepare_mem2_arena(64U * 1024U * 1024U);
+        heaps = smgpc::test::create_native_root_heap(64U * 1024U * 1024U);
+        mem2 = smgpc::test::create_native_mem2_storage(64U * 1024U * 1024U);
         const aurora::allocation::ClientAllocationScope allocations({true, true});
         HeapMemoryWatcher::createRootHeap();
+        HeapMemoryWatcher::sRootHeapGDDR3->bindNativeBackingStorage(mem2);
         OSInitMutex(&MR::MutexHolder<0>::sMutex);
         OSInitMutex(&MR::MutexHolder<1>::sMutex);
         OSInitMutex(&MR::MutexHolder<2>::sMutex);
@@ -62,9 +64,9 @@ struct OriginalFileProcess {
         const aurora::allocation::ClientAllocationScope allocations({true, true});
         FileLoader::destroy(SingletonHolder<FileLoader>::get());
         delete SingletonHolder<HeapMemoryWatcher>::release();
-        heaps->root_heap().becomeCurrentHeap();
-        heaps->root_heap().becomeSystemHeap();
-        destroy_children(heaps->root_heap());
+        (*heaps).becomeCurrentHeap();
+        (*heaps).becomeSystemHeap();
+        destroy_children((*heaps));
         HeapMemoryWatcher::sRootHeapGDDR3 = nullptr;
         JKRHeap::mErrorHandler = old_error;
     }

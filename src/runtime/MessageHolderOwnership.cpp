@@ -4,7 +4,7 @@
 #include "Game/System/GameSystemObjHolder.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/JMapInfo.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <aurora/allocation.hpp>
 #include "resource/NativeBmgResource.hpp"
 #include <aurora/exception.hpp>
 
@@ -37,7 +37,7 @@ namespace smgpc::runtime {
     }
     void destroy_message_holder(MessageHolder*& holder) noexcept {
         if (!holder) return;
-        const compat::JkrHostAllocationScope host;
+        const aurora::allocation::HostAllocationScope host;
         holder->destroySceneData();
         delete std::exchange(holder->mGameMessageData, nullptr);
         delete std::exchange(holder->mSystemMessageData, nullptr);

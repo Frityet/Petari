@@ -1,6 +1,6 @@
 #include <aurora/exception.hpp>
 #include "J3dAllocationIdentity.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <aurora/allocation.hpp>
 
 #include <iterator>
 #include <map>
@@ -61,7 +61,7 @@ namespace smgpc::resource {
     };
 
     J3dAllocationIdentity::J3dAllocationIdentity(std::size_t original_extent) : _extent(original_extent) {
-        compat::JkrHostAllocationScope host_allocations;
+        aurora::allocation::HostAllocationScope host_allocations;
         if (original_extent == 0 || original_extent > 0x40000000U) {
             aurora::throw_host_exception<std::length_error>("J3D allocation identity extent is outside its original address range");
         }

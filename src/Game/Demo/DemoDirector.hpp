@@ -16,7 +16,7 @@ public:
     /// @param pName A pointer to the null-terminated name of the object.
     DemoDirector(const char* pName);
     ~DemoDirector() override;
-    void releaseNativeReference(const NameObj*) noexcept;
+    void releaseNativeReference(const NameObj*) noexcept override;
 
     virtual void movement();
 

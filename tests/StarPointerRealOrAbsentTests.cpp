@@ -1,7 +1,7 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Screen/StarPointerTarget.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "runtime/RuntimeServices.hpp"
 
 #include <aurora/wpad.hpp>
@@ -77,7 +77,7 @@ int main() {
                 throw std::runtime_error("disconnected channel retained pointing state");
             }
         }
-        smgpc::compat::release_actor_runtime_state(&actor);
+        (&actor)->releaseNativeResources();
         if (actor.mStarPointerTarget != nullptr || service.has_target(actor)) {
             throw std::runtime_error("actor retirement retained a pointer target");
         }

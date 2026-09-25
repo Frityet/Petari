@@ -1,6 +1,6 @@
 #include <aurora/exception.hpp>
 #include "resource/JMapResource.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <aurora/allocation.hpp>
 #include <algorithm>
 #include <map>
 #include <mutex>
@@ -47,7 +47,7 @@ namespace smgpc::resource {
             : bytes(source.begin(), source.end()), table(std::make_shared<JMapInfo>(JMapInfo::from_bcsv(bytes))) {
         }
         ~Storage() {
-            compat::JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             auto &owners = registry();
             const std::lock_guard lock(owners.mutex);
             const auto entry = owners.tables.find(bytes.data());
@@ -63,7 +63,7 @@ namespace smgpc::resource {
             : owner(std::move(resource)), identity(key), generation(id) {
         }
         ~State() {
-            compat::JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             auto &owners = registry();
             const std::lock_guard lock(owners.mutex);
             const auto entry = owners.tables.find(identity);
@@ -79,7 +79,7 @@ namespace smgpc::resource {
     JMapSourceRegistration register_jmap_source(std::span<const std::uint8_t> bytes,
                                                std::shared_ptr<const void> source_owner,
                                                std::function<std::shared_ptr<const void>()> retain_attachment) {
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         if (bytes.empty() || !source_owner)
             aurora::throw_host_exception<std::invalid_argument>("Deferred JMap source requires a nonempty retained byte range");
         auto source = std::make_shared<DeferredJMap>();
@@ -116,7 +116,7 @@ namespace smgpc::resource {
         }
     }
     JMapResource::JMapResource(std::span<const std::uint8_t> source) {
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         _storage = std::make_shared<Storage>(source);
         auto &owners = registry();
         const std::lock_guard lock(owners.mutex);
@@ -126,7 +126,7 @@ namespace smgpc::resource {
         owners.tables.emplace(_storage->bytes.data(), Registry::Entry{_storage, _storage->table, _storage->generation, 1});
     }
     JMapSourceRegistration JMapResource::register_source(std::span<const std::uint8_t> alias) {
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         if (alias.size() != _storage->bytes.size() || !std::equal(alias.begin(), alias.end(), _storage->bytes.begin()))
             aurora::throw_host_exception<std::invalid_argument>("JMap alias does not match the complete retained source");
         auto &owners = registry();
@@ -160,7 +160,7 @@ namespace smgpc::resource {
         return _storage->bytes;
     }
     std::shared_ptr<const JMapInfo> find_jmap_resource(const void *data) {
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         auto &owners = registry();
         std::shared_ptr<DeferredJMap> deferred;
         {

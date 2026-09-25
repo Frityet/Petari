@@ -1,6 +1,6 @@
 #include <aurora/exception.hpp>
 #include "resource/JpcResource.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <aurora/allocation.hpp>
 #include <JSystem/JParticle/JPABaseShape.hpp>
 #include <JSystem/JParticle/JPAChildShape.hpp>
 #include <JSystem/JParticle/JPADynamicsBlock.hpp>
@@ -177,7 +177,7 @@ Registry& registry() { static Registry value; return value; }
 } // namespace
 
 JpcResource::JpcResource(std::span<const std::uint8_t> source) {
-    compat::JkrHostAllocationScope host;
+    aurora::allocation::HostAllocationScope host;
     require(be32(source, 0) == tag('J','P','A','C') && be32(source, 4) == tag('2','-','1','0'), "expected JPAC2-10");
     range(source, 0, 0x10);
     _source.assign(source.begin(), source.end());
@@ -233,7 +233,7 @@ struct JpcSourceRegistration::State {
     std::shared_ptr<RegisteredSource> source;
     ~State() {
         if (!source) return;
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         auto& owners = registry();
         const std::lock_guard lock(owners.mutex);
         const auto identity = source->source.data();
@@ -247,7 +247,7 @@ JpcSourceRegistration::~JpcSourceRegistration() = default;
 JpcSourceRegistration::JpcSourceRegistration(JpcSourceRegistration&&) noexcept = default;
 JpcSourceRegistration& JpcSourceRegistration::operator=(JpcSourceRegistration&&) noexcept = default;
 JpcSourceRegistration register_jpc_source(std::span<const std::uint8_t> bytes, std::shared_ptr<const void> source_owner) {
-    compat::JkrHostAllocationScope host;
+    aurora::allocation::HostAllocationScope host;
     require(!bytes.empty() && bool(source_owner), "registration requires retained bounded source bytes");
     auto& owners = registry();
     const std::lock_guard lock(owners.mutex);
@@ -270,7 +270,7 @@ JpcSourceRegistration register_jpc_source(std::span<const std::uint8_t> bytes, s
     return JpcSourceRegistration(std::move(state));
 }
 std::shared_ptr<const JpcResource> resolve_jpc_source(const void* identity) {
-    compat::JkrHostAllocationScope host;
+    aurora::allocation::HostAllocationScope host;
     auto& owners = registry();
     const std::lock_guard lock(owners.mutex);
     const auto found = owners.entries.find(identity);

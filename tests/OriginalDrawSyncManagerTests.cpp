@@ -1,6 +1,6 @@
 #include "Game/System/DrawSyncManager.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 
 #include <aurora/aurora.h>
 #include <aurora/guest_thread.hpp>
@@ -30,16 +30,17 @@ struct Callback final : DrawSyncCallback {
 };
 
 struct CallbackOwner {
-    std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain;
+    JKRHeap::Handle domain;
     std::unique_ptr<Callback> callback;
 
-    explicit CallbackOwner(std::shared_ptr<smgpc::compat::JkrAllocationDomain> owner) : domain(std::move(owner)) {
-        const smgpc::compat::JkrAllocationScope allocation(domain);
+    explicit CallbackOwner(JKRHeap::Handle owner) : domain(std::move(owner)) {
+        const JKRHeap::CurrentHeapScope allocation(*(domain));
+        const aurora::allocation::ClientAllocationScope allocationRouting({true, true});
         callback.reset(new Callback);
-        require(domain->heap().find(callback.get()), "callback must belong to its actual JKR heap");
+        require((*domain).find(callback.get()), "callback must belong to its actual JKR heap");
     }
     ~CallbackOwner() {
-        DrawSyncManager::retireNativeCallbacks(domain->heap());
+        DrawSyncManager::retireNativeCallbacks((*domain));
         callback.reset();
     }
 };
@@ -49,19 +50,20 @@ void submit(u16 token) {
     GXSetDrawSync(token);
 }
 
-void verify_retirement(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
-    using namespace smgpc::compat;
-    const auto managerDomain = JkrAllocationDomain::create(heaps, 128U * 1024U);
+void verify_retirement(const JKRHeap::Handle& heaps) {
+
+    const auto managerDomain = smgpc::test::create_native_solid_heap(heaps, 128U * 1024U);
     {
-        const JkrAllocationScope allocation(managerDomain);
+        const JKRHeap::CurrentHeapScope allocation(*(managerDomain));
+        const aurora::allocation::ClientAllocationScope allocationRouting({true, true});
         DrawSyncManager::start(0x300, 15);
     }
     const std::unique_ptr<DrawSyncManager, void (*)(DrawSyncManager*)> owner(
         DrawSyncManager::sInstance, [](DrawSyncManager*) { DrawSyncManager::end(); });
     auto& manager = *DrawSyncManager::sInstance;
-    CallbackOwner scene(JkrAllocationDomain::create(heaps, 64U * 1024U));
-    CallbackOwner process(JkrAllocationDomain::create(heaps, 64U * 1024U));
-    CallbackOwner transient(JkrAllocationDomain::create(heaps, 64U * 1024U));
+    CallbackOwner scene(smgpc::test::create_native_solid_heap(heaps, 64U * 1024U));
+    CallbackOwner process(smgpc::test::create_native_solid_heap(heaps, 64U * 1024U));
+    CallbackOwner transient(smgpc::test::create_native_solid_heap(heaps, 64U * 1024U));
     const auto firstToken = manager.setCallback(2, 1, scene.callback.get());
     const auto secondToken = manager.setCallback(4, 1, process.callback.get());
     require(firstToken == 1 && secondToken == 0xa000, "original low/high token ranges required");
@@ -77,7 +79,7 @@ void verify_retirement(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& hea
     // Retirement must dispatch and acknowledge pending work before it removes
     // the callback range. Otherwise the original breakpoint Fifo cannot drain.
     submit(firstToken);
-    DrawSyncManager::retireNativeCallbacks(scene.domain->heap());
+    DrawSyncManager::retireNativeCallbacks((*scene.domain));
     require(scene.callback->count == 65 && manager.mTokenRanges[2].mCallback == nullptr,
             "pending scene callback must finish before heap registration retirement");
     require(manager.mTokenRanges[4].mCallback == process.callback.get(),
@@ -145,11 +147,11 @@ int main() {
         require(aurora_begin_frame(), "recording frame required");
         {
             const aurora::os::GuestThreadExecutionScope execution;
-            const auto heaps = smgpc::compat::JkrHeapRuntime::create(2U * 1024U * 1024U);
-            const auto freeBytes = heaps->root_heap().getTotalFreeSize();
+            const auto heaps = smgpc::test::create_native_root_heap(2U * 1024U * 1024U);
+            const auto freeBytes = (*heaps).getTotalFreeSize();
             for (unsigned i = 0; i < 3; ++i) {
                 verify_retirement(heaps);
-                require(heaps->root_heap().getTotalFreeSize() == freeBytes,
+                require((*heaps).getTotalFreeSize() == freeBytes,
                         "actual manager and callback heaps must return their full allocations");
                 require(DrawSyncManager::sInstance == nullptr, "original shutdown must clear singleton identity");
             }

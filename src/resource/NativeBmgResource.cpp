@@ -1,6 +1,6 @@
 #include "resource/NativeBmgResource.hpp"
 #include "resource/BmgMessageArchive.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
 #include <aurora/endian.hpp>
 
@@ -136,11 +136,11 @@ struct NativeBmgResource::Storage {
 };
 
 NativeBmgResource::NativeBmgResource(Bytes bmg, Bytes ids) {
-    compat::JkrHostAllocationScope host;
+    aurora::allocation::HostAllocationScope host;
     _storage = std::make_unique<Storage>(bmg, ids);
 }
 NativeBmgResource::~NativeBmgResource() {
-    compat::JkrHostAllocationScope host;
+    aurora::allocation::HostAllocationScope host;
     _storage.reset();
 }
 std::uint8_t* NativeBmgResource::data() const noexcept { return _storage->bytes.data(); }
@@ -162,7 +162,7 @@ std::optional<std::size_t> NativeBmgResource::message_index(const wchar_t* point
 }
 std::unique_ptr<NativeBmgResource> make_native_bmg_resource(
     const void* bmg, std::size_t bmg_size, const void* ids, std::size_t ids_size) {
-    compat::JkrHostAllocationScope host;
+    aurora::allocation::HostAllocationScope host;
     if (!bmg || !ids)
         aurora::throw_host_exception<std::invalid_argument>("Native BMG initialization requires actual message and identifier resources");
     return std::make_unique<NativeBmgResource>(Bytes{static_cast<const std::uint8_t*>(bmg), bmg_size},

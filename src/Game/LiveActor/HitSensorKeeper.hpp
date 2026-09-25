@@ -11,6 +11,7 @@ class HitSensorKeeper {
 public:
     HitSensorKeeper(int);
     ~HitSensorKeeper();
+    void releaseNativeReference(const HitSensor*) noexcept;
 
     HitSensor* add(const char*, u32, u16, f32, LiveActor*, const TVec3f&);
     HitSensor* addPos(const char*, u32, u16, f32, LiveActor*, const TVec3f*, const TVec3f&);

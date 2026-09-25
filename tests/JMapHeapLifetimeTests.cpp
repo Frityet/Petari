@@ -1,6 +1,6 @@
 #include "Game/Util/JMapInfo.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "JSystem/JKernel/JKRDisposer.hpp"
 #include "resource/BcsvTable.hpp"
 
@@ -16,15 +16,15 @@
 #include <vector>
 
 namespace {
-    using smgpc::compat::JkrAllocationDomain;
-    using smgpc::compat::JkrAllocationScope;
-    using smgpc::compat::JkrHeapRuntime;
-    using smgpc::compat::JkrHostAllocationScope;
+
+
+
+
     constexpr auto name = "Native map metadata longer than small string storage";
 
     void require(bool value, const char* message) {
         if (!value) {
-            JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             throw std::runtime_error(message);
         }
     }
@@ -46,9 +46,9 @@ namespace {
     }
 
     struct Heap {
-        std::shared_ptr<JkrHeapRuntime> runtime = JkrHeapRuntime::create(1024 * 1024);
-        std::shared_ptr<JkrAllocationDomain> domain = JkrAllocationDomain::create(runtime, 256 * 1024);
-        JKRHeap& get() const { return domain->heap(); }
+        JKRHeap::Handle runtime = smgpc::test::create_native_root_heap(1024 * 1024);
+        JKRHeap::Handle domain = smgpc::test::create_native_solid_heap(runtime, 256 * 1024);
+        JKRHeap& get() const { return (*domain); }
         u32 count() const { return get().mDisposerList.getNumLinks(); }
     };
 
@@ -76,7 +76,8 @@ namespace {
         NativeValue* first;
         NativeValue* second;
         {
-            JkrAllocationScope original(heap.domain);
+            const JKRHeap::CurrentHeapScope original(*(heap.domain));
+            const aurora::allocation::ClientAllocationScope originalRouting({true, true});
             first = new NativeValue(host);
             second = new NativeValue(std::move(*first));
             require(heap.count() == 2 && registered(heap.get(), first) && registered(heap.get(), second),
@@ -102,7 +103,8 @@ namespace {
         std::weak_ptr<JMapInfo::DataCompat> head_data, tail_data, deleted_data;
         JMapInfo* head;
         {
-            JkrAllocationScope original(heap.domain);
+            const JKRHeap::CurrentHeapScope original(*(heap.domain));
+            const aurora::allocation::ClientAllocationScope originalRouting({true, true});
             head = new JMapInfo(JMapInfo::from_bcsv(bytes));
             auto* removed = new JMapInfo(JMapInfo::from_bcsv(bytes));
             void* tail_storage = heap.get().alloc(sizeof(JMapInfo), -32);
@@ -130,7 +132,8 @@ namespace {
         const auto data = host.mData;
         JMapInfo survivor;
         {
-            JkrAllocationScope original(heap.domain);
+            const JKRHeap::CurrentHeapScope original(*(heap.domain));
+            const aurora::allocation::ClientAllocationScope originalRouting({true, true});
             auto* copied = new JMapInfo(host);
             auto* moved = new JMapInfo(std::move(*copied));
             require(heap.count() == 2 && registered(heap.get(), copied) && registered(heap.get(), moved),
@@ -163,7 +166,8 @@ namespace {
         JMapInfo survivor;
         std::weak_ptr<JMapInfo::DataCompat> parent_data, child_data, path_data, point_data;
         {
-            JkrAllocationScope original(heap.domain);
+            const JKRHeap::CurrentHeapScope original(*(heap.domain));
+            const aurora::allocation::ClientAllocationScope originalRouting({true, true});
             const auto before_table_copy = heap.get().getFreeSize();
             JMapInfo table_copy(table);
             require(heap.get().getFreeSize() == before_table_copy,
@@ -216,7 +220,8 @@ namespace {
         const auto bytes = fixture();
         std::weak_ptr<JMapInfo::DataCompat> data;
         {
-            JkrAllocationScope original(heap.domain);
+            const JKRHeap::CurrentHeapScope original(*(heap.domain));
+            const aurora::allocation::ClientAllocationScope originalRouting({true, true});
             auto* info = new JMapInfo(JMapInfo::from_bcsv(bytes));
             data = info->mData;
             require(heap.count() == 1 && data.use_count() == 1, "only the actual heap parser owns its native metadata");

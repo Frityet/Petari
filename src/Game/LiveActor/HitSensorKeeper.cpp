@@ -1,15 +1,17 @@
 #include "Game/LiveActor/HitSensorKeeper.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/HitSensorInfo.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "Game/Util/HashUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include <algorithm>
 #include <aurora/exception.hpp>
 #include <cstring>
 #include <stdexcept>
+#include <utility>
 
 HitSensorKeeper::HitSensorKeeper(int sensorCount) {
     if (sensorCount < 0) {
-        aurora::throw_host_exception<std::invalid_argument>("HitSensorKeeper capacity must be non-negative");
+        aurora::throw_host_exception< std::invalid_argument >("HitSensorKeeper capacity must be non-negative");
     }
     mSensorCount = sensorCount;
     mSensorInfosSize = 0;
@@ -24,13 +26,38 @@ HitSensorKeeper::HitSensorKeeper(int sensorCount) {
 }
 
 HitSensorKeeper::~HitSensorKeeper() {
-    // Native actor retirement can happen in an attack callback or between
-    // queuing a shared message and its movement phase.
-    smgpc::compat::retire_hit_sensor_borrows(this);
-    for (s32 i = 0; i < mSensorInfosSize; ++i) {
-        delete mSensorInfos[i];
+    auto** infos = std::exchange(mSensorInfos, nullptr);
+    const s32 size = std::exchange(mSensorInfosSize, 0);
+    mTaking = nullptr;
+    mTaken = nullptr;
+    // A callback may retire another actor or keeper. Each actual live borrower
+    // receives the sensor identity before the owned sensor storage is freed.
+    for (s32 i = 0; i < size; ++i) {
+        NameObj::notifyNativeSensorRetirement(infos[i]->mSensor);
     }
-    delete[] mSensorInfos;
+    for (s32 i = 0; i < size; ++i) {
+        delete infos[i];
+    }
+    delete[] infos;
+}
+
+void HitSensorKeeper::releaseNativeReference(const HitSensor* removed) noexcept {
+    if (mTaking == removed) {
+        mTaking = nullptr;
+    }
+    if (mTaken == removed) {
+        mTaken = nullptr;
+    }
+    for (s32 i = 0; i < mSensorInfosSize; ++i) {
+        auto* sensor = mSensorInfos[i]->mSensor;
+        if (sensor->mSensorCount == 0) {
+            continue;
+        }
+        auto* end = sensor->mSensors + sensor->mSensorCount;
+        auto* remaining = std::remove(sensor->mSensors, end, removed);
+        std::fill(remaining, end, nullptr);
+        sensor->mSensorCount = static_cast< u16 >(remaining - sensor->mSensors);
+    }
 }
 
 HitSensor* HitSensorKeeper::add(const char* pName, u32 sensorType, u16 sensorGroupSize, f32 radius, LiveActor* pActor, const TVec3f& a6) {

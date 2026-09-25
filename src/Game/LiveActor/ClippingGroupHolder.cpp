@@ -1,10 +1,9 @@
-#include "resource/TextEncoding.hpp"
 #include "Game/LiveActor/ClippingGroupHolder.hpp"
 #include "Game/LiveActor/ClippingActorInfo.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/JMapIdInfo.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "resource/TextEncoding.hpp"
 #include <memory>
 
 ClippingInfoGroup::ClippingInfoGroup(const char* pGroupName, int count) : NameObj(pGroupName) {
@@ -95,10 +94,10 @@ void ClippingGroupHolder::createAndAdd(ClippingActorInfo* pInfo, const JMapInfoI
 }
 
 ClippingInfoGroup* ClippingGroupHolder::createGroup(ClippingActorInfo* pInfo, const JMapInfoIter& rIter, int count) {
-    auto group = std::make_unique<ClippingInfoGroup>(pInfo->mActor->mName, count);
+    auto group = std::make_unique< ClippingInfoGroup >(pInfo->mActor->mName, count);
     group->setGroupNo(rIter);
     group->mNativeHolder = this;
-    group->mNativeHolderGeneration = smgpc::compat::name_obj_runtime_generation(this);
+    group->mNativeHolderGeneration = NameObj::nativeGeneration(this);
     mInfoGroups[mNumGroups++] = group.get();
     return group.release();
 }
@@ -120,7 +119,7 @@ ClippingInfoGroup* ClippingGroupHolder::findGroup(const JMapInfoIter& rIter) {
 }
 
 ClippingInfoGroup::~ClippingInfoGroup() {
-    if (mNativeHolder && smgpc::compat::name_obj_runtime_generation(mNativeHolder) == mNativeHolderGeneration) {
+    if (mNativeHolder && NameObj::nativeGeneration(mNativeHolder) == mNativeHolderGeneration) {
         for (s32 i = 0; i < mNativeHolder->mNumGroups; ++i) {
             if (mNativeHolder->mInfoGroups[i] == this) {
                 mNativeHolder->mInfoGroups[i] = mNativeHolder->mInfoGroups[--mNativeHolder->mNumGroups];
@@ -133,7 +132,7 @@ ClippingInfoGroup::~ClippingInfoGroup() {
 }
 
 ClippingGroupHolder::~ClippingGroupHolder() {
-    smgpc::compat::retire_clipping_group_holder(*this);
+    retireNativeLifetime();
     for (s32 i = 0; i < mNumGroups; ++i) {
         mInfoGroups[i]->mNativeHolder = nullptr;
     }

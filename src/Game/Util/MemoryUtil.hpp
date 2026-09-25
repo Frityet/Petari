@@ -1,6 +1,7 @@
 #pragma once
 
 #include <revolution/mem.h>
+#include <JSystem/JKernel/JKRHeap.hpp>
 
 class JKRExpHeap;
 class JKRHeap;
@@ -13,7 +14,7 @@ namespace MR {
         ~CurrentHeapRestorer();
 
     private:
-        /* 0x00 */ JKRHeap* _0;
+        JKRHeap::CurrentHeapScope mCurrentHeap;
     };
 
     class NewDeleteAllocator {

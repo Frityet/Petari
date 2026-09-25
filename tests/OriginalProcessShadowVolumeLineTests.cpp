@@ -9,9 +9,9 @@
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include <memory>
 #include "../aurora/lib/dolphin/gx/__gx.h"
 #include "../aurora/lib/gx/fifo.hpp"
@@ -89,18 +89,19 @@ namespace {
         std::vector<const NameObj*> drawer_identities;
 
         void exercise() {
-            const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
+            const auto domain = MR::getSceneObjHolder()->nativeAllocationHeap();
             require(domain != nullptr, "Actual original scene allocation domain exists");
             auto* holder = MR::getSceneObj<ShadowControllerHolder>(SceneObj_ShadowControllerHolder);
             require(holder != nullptr, "Actual original shadow holder exists");
             holder_identity = holder;
             const auto initial_count = holder->_C.size();
             const auto initial_pending = holder->_18.size();
-            const auto initial_actors = smgpc::compat::actor_runtime_state_count();
+            const auto initial_actors = NameObj::snapshotNativeObjects().size();
             std::unique_ptr<LiveActor> from_owner, to_owner, line_owner, single_owner;
             LiveActor *from = nullptr, *to = nullptr, *owner = nullptr, *single = nullptr;
             {
-                const smgpc::compat::JkrAllocationScope game(domain);
+                const JKRHeap::CurrentHeapScope game(*(domain));
+                const aurora::allocation::ClientAllocationScope gameRouting({true, true});
                 from_owner = std::make_unique<LiveActor>("ShadowLineFromProbe");
                 from = from_owner.get();
                 to_owner = std::make_unique<LiveActor>("ShadowLineToProbe");
@@ -120,7 +121,8 @@ namespace {
                 drawer_identities.push_back(sphere);
             }
             {
-                const smgpc::compat::JkrAllocationScope game(domain);
+                const JKRHeap::CurrentHeapScope game(*(domain));
+                const aurora::allocation::ClientAllocationScope gameRouting({true, true});
                 line_owner = std::make_unique<LiveActor>("ShadowLineOwnerProbe");
                 owner = line_owner.get();
                 MR::initShadowController(owner, 4);
@@ -184,10 +186,10 @@ namespace {
                     "Line retirement removes both complete and pending original holder registrations");
             to_owner.reset();
             from_owner.reset();
-            require(holder->_C.size() == initial_count && smgpc::compat::actor_runtime_state_count() == initial_actors,
+            require(holder->_C.size() == initial_count && NameObj::snapshotNativeObjects().size() == initial_actors,
                     "Actor retirement restores original holder membership and actor ownership counts");
             for (const auto* drawer : drawer_identities)
-                require(!smgpc::compat::has_name_obj_runtime_state(drawer), "Actor ownership retires every original drawer registration");
+                require(!NameObj::nativeGeneration(drawer), "Actor ownership retires every original drawer registration");
         }
 
         void after_frame(GameSystem& system, std::uint64_t frame) {
@@ -235,7 +237,7 @@ int main() {
         };
         require(smgpc::app::run_original_game(configuration, *logger, observer) == 0 && probe.exercised,
                 "OriginalProcess completes the actual scene diagnostic and normal bounded frame loop");
-        require(!smgpc::compat::has_name_obj_runtime_state(probe.holder_identity),
+        require(!NameObj::nativeGeneration(probe.holder_identity),
                 "Normal original-process scene retirement removes the real shadow holder");
         std::fprintf(stderr, "PASS original-process ShadowVolumeLine: actual controllers/drawers, programmatic endpoints and defaults, borrowed direction, original command geometry, actor/scene retirement\n");
         return 0;

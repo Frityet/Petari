@@ -1,4 +1,3 @@
-#include "resource/TextEncoding.hpp"
 #include "Game/LiveActor/ClippingActorHolder.hpp"
 #include "Game/LiveActor/ClippingActorInfo.hpp"
 #include "Game/LiveActor/ClippingGroupHolder.hpp"
@@ -6,8 +5,10 @@
 #include "Game/LiveActor/ViewGroupCtrl.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "resource/TextEncoding.hpp"
+#include <aurora/exception.hpp>
 #include <memory>
+#include <stdexcept>
 
 namespace {
     static int sActorNumMax = 2560;
@@ -15,11 +16,11 @@ namespace {
 
 ClippingActorHolder::ClippingActorHolder()
     : NameObj(CP932("クリッピングアクター保持")), _C(0), _10(nullptr), _14(nullptr), _18(nullptr), _1C(nullptr), mViewGroupCtrl(nullptr) {
-    auto active = std::make_unique<ClippingActorInfoList>(::sActorNumMax);
-    auto invalid = std::make_unique<ClippingActorInfoList>(::sActorNumMax);
-    auto dead = std::make_unique<ClippingActorInfoList>(::sActorNumMax);
-    auto grouped = std::make_unique<ClippingActorInfoList>(::sActorNumMax);
-    auto view = std::make_unique<ViewGroupCtrl>();
+    auto active = std::make_unique< ClippingActorInfoList >(::sActorNumMax);
+    auto invalid = std::make_unique< ClippingActorInfoList >(::sActorNumMax);
+    auto dead = std::make_unique< ClippingActorInfoList >(::sActorNumMax);
+    auto grouped = std::make_unique< ClippingActorInfoList >(::sActorNumMax);
+    auto view = std::make_unique< ViewGroupCtrl >();
     _10 = active.release();
     _14 = invalid.release();
     _18 = dead.release();
@@ -36,9 +37,45 @@ void ClippingActorHolder::movement() {
 }
 
 void ClippingActorHolder::registerActor(LiveActor* pActor) {
-    ClippingActorInfo* inf = new ClippingActorInfo(pActor);
-    _18->add(inf);
+    if (_C >= static_cast< u32 >(::sActorNumMax) || _18->_4 >= _18->_0) {
+        aurora::throw_host_exception< std::length_error >("Clipping actor capacity exceeded");
+    }
+    auto info = std::make_unique< ClippingActorInfo >(pActor);
+    _18->add(info.get());
+    info.release();
     _C++;
+}
+
+void ClippingActorHolder::unregisterNativeActor(LiveActor* actor, ClippingGroupHolder* groups) noexcept {
+    ClippingActorInfo* info = nullptr;
+    ClippingActorInfoList* lists[] = {_10, _14, _18, _1C};
+    for (auto* list : lists) {
+        // The donor find() deliberately returns slot zero on a miss. Removal
+        // accepts an absent actor, so use the actual absence-aware query first.
+        if (list != nullptr && list->findOrNone(actor) != nullptr) {
+            info = list->remove(actor);
+            list->mClippingActorList[list->_4] = nullptr;
+            --_C;
+            break;
+        }
+    }
+    if (info == nullptr) {
+        return;
+    }
+    if (groups != nullptr) {
+        for (s32 i = 0; i < groups->mNumGroups; ++i) {
+            auto* group = groups->mInfoGroups[i];
+            for (s32 j = 0; j < group->_10;) {
+                if (group->_14[j] == info) {
+                    group->_14[j] = group->_14[--group->_10];
+                    group->_14[group->_10] = nullptr;
+                } else {
+                    ++j;
+                }
+            }
+        }
+    }
+    delete info;
 }
 
 void ClippingActorHolder::initSystemInfo(LiveActor* pActor, const JMapInfoIter& rIter) {
@@ -171,7 +208,7 @@ ClippingActorInfo* ClippingActorHolder::find(const LiveActor* pActor) const {
 }
 
 ClippingActorHolder::~ClippingActorHolder() {
-    smgpc::compat::retire_clipping_actor_holder(*this);
+    retireNativeLifetime();
     delete _10;
     delete _14;
     delete _18;

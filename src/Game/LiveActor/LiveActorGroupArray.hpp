@@ -14,6 +14,7 @@ public:
     virtual void movement() override;
 
     void sendMsgToGroupMember(u32, HitSensor*, const char*);
+    void releaseNativeSensorReference(const HitSensor*) noexcept override;
 
     /* 0x18 */ JMapIdInfo* mIdInfo;
     /* 0x1C */ u32 mMsg;
@@ -28,6 +29,7 @@ public:
 
     virtual void init(const JMapInfoIter&);
 
+    void releaseNativeReference(const NameObj*) noexcept override;
     LiveActorGroup* getLiveActorGroup(const LiveActor*) const;
     LiveActorGroup* createGroup(const JMapInfoIter&, const char*, s32);
     LiveActorGroup* findGroup(const LiveActor*) const;

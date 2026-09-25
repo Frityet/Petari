@@ -11,8 +11,8 @@
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include "NativeHeapFixture.hpp"
 #include "OriginalStageResourceProcessFixture.hpp"
 #include "OriginalAsyncHeapSelection.hpp"
 #include "resource/GameResourceRuntime.hpp"
@@ -40,7 +40,7 @@ namespace {
 
     void require(bool condition, std::string_view message) {
         if (!condition) {
-            smgpc::compat::JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             throw std::runtime_error(std::string(message));
         }
     }
@@ -270,13 +270,13 @@ namespace {
     }
 
     int test_real_npc_model_sharing(unsigned generation) {
-        const auto registered_before = smgpc::compat::name_obj_runtime_state_count();
-        const auto actors_before = smgpc::compat::actor_runtime_state_count();
-        std::weak_ptr<smgpc::compat::JkrAllocationDomain> retired;
+        const auto registered_before = NameObj::snapshotNativeObjects().size();
+        const auto actors_before = NameObj::snapshotNativeObjects().size();
+        std::weak_ptr<JKRHeap> retired;
         const auto label = std::string("original-joint-controller-") + std::to_string(generation);
         const int result = smgpc::test::run_stage_resource_process(label.c_str(), [&] {
             Globals globals;
-            auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
+            auto domain = MR::getSceneObjHolder()->nativeAllocationHeap();
             require(bool(domain), "the original scene must publish its actual retained heap");
             retired = domain;
             smgpc::test::OriginalAsyncHeapSelection game(domain);
@@ -293,8 +293,8 @@ namespace {
                         first_model->getModelData() == second_model->getModelData() &&
                         first_model->mMtxBuffer != second_model->mMtxBuffer && joint == MR::getJoint(&second, "Body"),
                     "actual NPC owners share resource joints but retain distinct model and matrix storage");
-            require(JKRHeap::findFromRoot(first.mModelManager) == &domain->heap() &&
-                        JKRHeap::findFromRoot(second.mModelManager) == &domain->heap(),
+            require(JKRHeap::findFromRoot(first.mModelManager) == &(*domain) &&
+                        JKRHeap::findFromRoot(second.mModelManager) == &(*domain),
                     "both complete original ModelManagers belong to the retained Game scene heap");
             NpcScaleBinding first_scale(first);
             NpcScaleBinding second_scale(second);
@@ -337,8 +337,8 @@ namespace {
                     "all borrowed callback state clears before typed actor/model retirement");
         });
         require(result == 0 && retired.expired() &&
-                    smgpc::compat::name_obj_runtime_state_count() == registered_before &&
-                    smgpc::compat::actor_runtime_state_count() == actors_before,
+                    NameObj::snapshotNativeObjects().size() == registered_before &&
+                    NameObj::snapshotNativeObjects().size() == actors_before,
                 "actual process retirement releases the NPC registrations and original scene heap");
         return 0;
     }

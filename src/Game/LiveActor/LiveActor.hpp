@@ -3,6 +3,7 @@
 #include "Game/LiveActor/LiveActorFlag.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include <JSystem/JGeometry/TVec.hpp>
+#include <JSystem/JKernel/JKRHeap.hpp>
 #include <memory>
 #include <vector>
 
@@ -12,6 +13,9 @@ class ActorPadAndCameraCtrl;
 class AudAnmSoundObject;
 class Binder;
 class CollisionParts;
+class ClippingActorHolder;
+class ClippingGroupHolder;
+class LodCtrl;
 class EffectKeeper;
 class HitSensor;
 class HitSensorKeeper;
@@ -33,9 +37,16 @@ public:
 
     // Native cleanup uses the inherited destructor slot.
     virtual ~LiveActor();
-    CollisionParts* adoptCollisionParts(std::unique_ptr<CollisionParts>);
+    void releaseNativeResources() noexcept;
+    std::shared_ptr< ModelManager > retainNativeModel() const;
+    void adoptNativeLodCtrl(std::unique_ptr< LodCtrl >);
+    void releaseNativeReference(const NameObj*) noexcept override;
+    void releaseNativeSensorReference(const HitSensor*) noexcept override;
+    CollisionParts* adoptCollisionParts(std::unique_ptr< CollisionParts >);
     void releaseNativeCollisionParts() noexcept;
-    const std::vector<std::unique_ptr<CollisionParts>>& nativeCollisionParts() const noexcept { return mNativeCollisionParts; }
+    const std::vector< std::unique_ptr< CollisionParts > >& nativeCollisionParts() const noexcept {
+        return mNativeCollisionParts;
+    }
 
     /// @brief Intializes the `LiveActor` while being placed into a scene.
     /// @param rIter A reference to an iterator over a `JMapInfo`.
@@ -177,5 +188,12 @@ public:
     /* 0x88 */ ActorPadAndCameraCtrl* mCameraCtrl;
 
 private:
-    std::vector<std::unique_ptr<CollisionParts>> mNativeCollisionParts;
+    void requireNativeResources() const;
+    std::shared_ptr< ModelManager > mNativeModel;
+    JKRHeap::Handle mNativeSoundHeap;
+    std::unique_ptr< LodCtrl > mNativeLodCtrl;
+    ClippingActorHolder* mNativeClippingHolder = nullptr;
+    ClippingGroupHolder* mNativeClippingGroups = nullptr;
+    bool mNativeResourcesReleased = false;
+    std::vector< std::unique_ptr< CollisionParts > > mNativeCollisionParts;
 };

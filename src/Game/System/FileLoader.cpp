@@ -2,7 +2,8 @@
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/StringUtil.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
+#include <aurora/allocation.hpp>
 #include <JSystem/JKernel/JKRExpHeap.hpp>
 #include <aurora/exception.hpp>
 #include <aurora/guest_thread.hpp>
@@ -195,7 +196,7 @@ FileLoader::~FileLoader() {
     }
     if (mArchiveHolder) {
         for (auto* entry : mArchiveHolder->mEntries) {
-            const auto heap = smgpc::compat::JkrAllocationDomain::retain_heap(*entry->mHeap);
+            const auto heap = entry->mHeap->retainNativeLifetime();
             delete entry;
         }
         mArchiveHolder->mEntries.clear();

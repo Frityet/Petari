@@ -1,3 +1,4 @@
+#include "NativeHeapFixture.hpp"
 #include <MSL_C/stdio.h>
 #include "Game/System/DrawSyncManager.hpp"
 #include "Game/System/FileRipper.hpp"
@@ -48,8 +49,8 @@ struct Bootstrap {
     smgpc::runtime::DvdFileSystemService dvd{"/"};
     smgpc::runtime::SaveDataService save;
     std::unique_ptr<aurora::SystemConfiguration> settings;
-    std::shared_ptr<smgpc::compat::JkrAllocationDomain> root;
-    std::shared_ptr<smgpc::compat::JkrAllocationDomain> stationed;
+    JKRHeap::Handle root;
+    JKRHeap::Handle stationed;
 
     void configure_nand() {
         auto pattern = (std::filesystem::temp_directory_path() / "petari-original-startup-nand-XXXXXX").string();
@@ -71,11 +72,10 @@ struct Bootstrap {
 
 void original_main_initialization(Bootstrap& host) {
     const aurora::os::GuestThreadExecutionScope execution;
-    host.resources.host_heaps()->prepare_mem2_arena(64U * 1024U * 1024U);
+    host.resources.prepare_mem2_arena(64U * 1024U * 1024U);
     // Retain the already explicit native JKR root. This does not create a child
     // cohort before HeapMemoryWatcher consumes the original remaining arenas.
-    host.root = smgpc::compat::JkrAllocationDomain::retain_heap(
-        host.resources.host_heaps(), host.resources.host_heaps()->root_heap(), host.resources.host_heaps());
+    host.root = host.resources.root_heap();
     const aurora::allocation::ClientAllocationScope game({true, true});
     checkpoint("OSInitFastCast / DVDInit / VIInit");
     OSInitFastCast();
@@ -83,6 +83,7 @@ void original_main_initialization(Bootstrap& host) {
     VIInit();
     checkpoint("HeapMemoryWatcher::createRootHeap");
     HeapMemoryWatcher::createRootHeap();
+    HeapMemoryWatcher::sRootHeapGDDR3->bindNativeBackingStorage(host.resources.mem2_storage());
     OSInitMutex(&MR::MutexHolder<0>::sMutex);
     OSInitMutex(&MR::MutexHolder<1>::sMutex);
     OSInitMutex(&MR::MutexHolder<2>::sMutex);
@@ -95,7 +96,7 @@ void original_main_initialization(Bootstrap& host) {
     watcher->setCurrentHeapToStationedHeap();
     {
         const aurora::allocation::HostAllocationScope allocations;
-        host.stationed = smgpc::compat::JkrAllocationDomain::retain_heap(host.root, *watcher->mStationedHeapNapa);
+        host.stationed = (*watcher->mStationedHeapNapa).retainNativeLifetime();
     }
     checkpoint("FileRipper::setup");
     FileRipper::setup(0x20000, MR::getStationedHeapNapa());

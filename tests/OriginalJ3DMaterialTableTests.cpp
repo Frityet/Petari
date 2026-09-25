@@ -1,5 +1,5 @@
 #include "resource/J3dMaterialTableData.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "JSystem/J3DGraphAnimator/J3DMaterialAttach.hpp"
 #include "JSystem/J3DGraphBase/J3DMaterial.hpp"
 #include "JSystem/J3DGraphBase/J3DTexture.hpp"
@@ -22,7 +22,7 @@ namespace {
     using View = std::span<const std::uint8_t>;
     using smgpc::resource::J3dMaterialTableData;
     using Mode = J3dMaterialTableData::Mode;
-    using namespace smgpc::compat;
+
     void require(bool value, std::string_view message) {
         if (!value) throw std::runtime_error(std::string(message));
     }
@@ -135,8 +135,8 @@ namespace {
         put32(bytes, 8, static_cast<u32>(bytes.size()));
         return bytes;
     }
-    auto domain(const std::shared_ptr<JkrHeapRuntime>& runtime) {
-        return JkrAllocationDomain::create(runtime, 1 << 18);
+    auto domain(const JKRHeap::Handle& runtime) {
+        return smgpc::test::create_native_solid_heap(runtime, 1 << 18);
     }
     Bytes two_materials() {
         auto bytes = material_fixture();
@@ -149,7 +149,7 @@ namespace {
         throw std::runtime_error(std::string(reason));
     }
 
-    void test_model_and_attach(const std::shared_ptr<JkrHeapRuntime>& runtime) {
+    void test_model_and_attach(const JKRHeap::Handle& runtime) {
         alignas(4) std::byte source_bytes[8]{};
         alignas(4) std::byte destination_bytes[8]{};
         auto* source_order = std::construct_at(reinterpret_cast<J3DTevOrderInfo*>(source_bytes + 1));
@@ -176,8 +176,8 @@ namespace {
                 "normal model retains original maximum-increasing unique count without creating the optional array");
         require(table.mMaterialName && table.mMaterialName->mNameNum == 0,
                 "present empty name resource still constructs an actual name owner");
-        require(JKRHeap::findFromRoot(table.mMaterialNodePointer) == &heap->heap() &&
-                    JKRHeap::findFromRoot(table.mMaterialName) == &heap->heap() &&
+        require(JKRHeap::findFromRoot(table.mMaterialNodePointer) == &(*heap) &&
+                    JKRHeap::findFromRoot(table.mMaterialName) == &(*heap) &&
                     !JKRHeap::findFromRoot(const_cast<ResNTAB*>(table.mMaterialName->mResource)),
                 "actual SDK pointer array and name object use the domain while decoded resource backing uses host storage");
         auto* first = table.mMaterialNodePointer[0];
@@ -186,7 +186,7 @@ namespace {
                     first->mDiffFlag == second->mDiffFlag + 1 && (first->mDiffFlag & 0xC0000000U) == 0,
                 "separate material instances share original shifted remap identities");
         require(first->mpOrigMaterial == nullptr && first->mMaterialMode == 4 && second->mMaterialMode == 1 &&
-                    JKRHeap::findFromRoot(first->mTexGenBlock->getTexMtx(0)) == &heap->heap(),
+                    JKRHeap::findFromRoot(first->mTexGenBlock->getTexMtx(0)) == &(*heap),
                 "original factories retain complete typed values and subordinate domain allocations");
         std::fill(bytes.begin(), bytes.end(), 0xEC);
         heap.reset();
@@ -197,7 +197,7 @@ namespace {
         rejects([&] { (void)data.tex_no_patch_offset(3); }, "patch metadata must enforce the attached count");
     }
 
-    void test_unique(const std::shared_ptr<JkrHeapRuntime>& runtime) {
+    void test_unique(const JKRHeap::Handle& runtime) {
         auto bytes = material_fixture();
         const auto remap = get32(bytes, 0x10);
         put16(bytes, remap, 0); put16(bytes, remap + 2, 1); put16(bytes, remap + 4, 0);
@@ -215,7 +215,7 @@ namespace {
                 "unique identity uses original 0x4C stride before the original right shift, independent of native class size");
     }
 
-    void test_material_table_flags(const std::shared_ptr<JkrHeapRuntime>& runtime) {
+    void test_material_table_flags(const JKRHeap::Handle& runtime) {
         J3dMaterialTableData data(file("bmt3", {material_fixture()}), 0xFFFFFFFF, Mode::MaterialTable, domain(runtime));
         J3DMaterialTable table;
         data.attach_to(table);
@@ -229,7 +229,7 @@ namespace {
                 "fixed original BMT 0x51100000 enables authored indirect state despite arbitrary caller bits");
     }
 
-    void test_binary_selection(const std::shared_ptr<JkrHeapRuntime>& runtime) {
+    void test_binary_selection(const JKRHeap::Handle& runtime) {
         for (u32 flags : {0U, 0x1000U, 0x2000U, 0x3000U}) {
             J3dMaterialTableData data(file("bdl3", {two_materials(), display_list_fixture()}), flags,
                                      Mode::BinaryModel, domain(runtime));
@@ -256,7 +256,7 @@ namespace {
         }
     }
 
-    void test_order_and_aliases(const std::shared_ptr<JkrHeapRuntime>& runtime) {
+    void test_order_and_aliases(const JKRHeap::Handle& runtime) {
         auto first = display_list_fixture();
         auto second = first;
         second[0x80] = 0xE3;
@@ -280,7 +280,7 @@ namespace {
                 "later MAT replaces material fields but preserves the original previously set table lock flag");
     }
 
-    void test_invalid_and_empty(const std::shared_ptr<JkrHeapRuntime>& runtime) {
+    void test_invalid_and_empty(const JKRHeap::Handle& runtime) {
         auto reject_file = [&](Bytes bytes, u32 flags, Mode mode) {
             auto heap = domain(runtime);
             rejects([&] { J3dMaterialTableData data(bytes, flags, mode, heap); }, "invalid material input unexpectedly accepted");
@@ -305,7 +305,7 @@ namespace {
         rejects([&] { J3dMaterialTableData absent(file("bmt3", {}), 0, Mode::MaterialTable, nullptr); },
                 "missing retained SDK heap is not accepted");
         auto failed_heap = domain(runtime);
-        std::weak_ptr<JkrAllocationDomain> weak_failed = failed_heap;
+        std::weak_ptr<JKRHeap> weak_failed = failed_heap;
         try {
             J3dMaterialTableData invalid(file("bmd3", {material_fixture()}), 0x200000, Mode::Model, std::move(failed_heap));
             throw std::logic_error("invalid unique remap unexpectedly accepted");
@@ -313,8 +313,8 @@ namespace {
             require(weak_failed.expired() && std::string_view(error.what()).find("unique material remap") != std::string_view::npos,
                     "validation exception remains valid after releasing its final original domain reference");
         }
-        auto exhausted = JkrAllocationDomain::create(runtime, 512);
-        std::weak_ptr<JkrAllocationDomain> weak_exhausted = exhausted;
+        auto exhausted = smgpc::test::create_native_solid_heap(runtime, 512);
+        std::weak_ptr<JKRHeap> weak_exhausted = exhausted;
         try {
             J3dMaterialTableData incomplete(file("bmd3", {material_fixture()}), 0x51100000, Mode::Model, std::move(exhausted));
             throw std::runtime_error("tiny material domain unexpectedly fit the complete original factory");
@@ -326,12 +326,12 @@ namespace {
 
 int main() {
     try {
-        auto runtime = JkrHeapRuntime::create(4 << 20);
-        const auto initial = runtime->root_heap().getTotalFreeSize();
+        auto runtime = smgpc::test::create_native_root_heap(4 << 20);
+        const auto initial = (*runtime).getTotalFreeSize();
         for (auto test : {test_model_and_attach, test_unique, test_material_table_flags, test_binary_selection,
                           test_order_and_aliases, test_invalid_and_empty}) {
             test(runtime);
-            require(runtime->root_heap().getTotalFreeSize() == initial && runtime->root_heap().check(),
+            require((*runtime).getTotalFreeSize() == initial && (*runtime).check(),
                     "each successful and failed material owner returns its complete domain to the actual root");
         }
         std::cout << "[pass] 6 original J3D material-table groups\n";

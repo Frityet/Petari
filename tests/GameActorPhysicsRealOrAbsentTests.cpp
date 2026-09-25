@@ -1,3 +1,4 @@
+#include "NativeHeapFixture.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/Binder.hpp"
@@ -22,7 +23,7 @@
 #include "OriginalAsyncHeapSelection.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "resource/TextEncoding.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -58,7 +59,7 @@ namespace {
 int main() {
     return smgpc::test::run_stage_resource_process("game-actor-physics", [] {
     auto passed = 0;
-    auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
+    auto domain = MR::getSceneObjHolder()->nativeAllocationHeap();
     require(bool(domain), "actor physics requires the actual original scene heap");
     smgpc::test::OriginalAsyncHeapSelection game(domain);
 

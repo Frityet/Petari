@@ -15,8 +15,8 @@
 #include "Game/Util/MapUtil.hpp"
 #include "Game/Util/NPCUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include "NativeHeapFixture.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Map/CollisionDirector.hpp"
 
@@ -54,7 +54,7 @@ namespace smgpc::tests {
                 player.mUpVec = up;
             }};
             NPCActor* npc_owner = nullptr;
-            for (auto* object : compat::snapshot_name_obj_runtime_objects()) {
+            for (auto* object : NameObj::snapshotNativeObjects()) {
                 auto* candidate = dynamic_cast<NPCActor*>(object);
                 if (candidate && candidate->mMsgCtrl && candidate->mMsgCtrl->mNodeCtrl) {
                     npc_owner = candidate;
@@ -288,9 +288,10 @@ namespace smgpc::tests {
     void verify_original_player_util(MarioActor& actor) {
         require(actor.mMario != nullptr && MR::getMarioHolder()->getMarioActor() == &actor,
                 "player utility checks require the initialized actual MarioHolder owner");
-        const auto owner = MR::getSceneObjHolder()->nativeAllocationDomain();
+        const auto owner = MR::getSceneObjHolder()->nativeAllocationHeap();
         require(owner != nullptr, "player utility checks require the actual original scene allocation owner");
-        const compat::JkrAllocationScope allocation(owner);
+        const JKRHeap::CurrentHeapScope allocation(*(owner));
+        const aurora::allocation::ClientAllocationScope allocationRouting({true, true});
         verify_live_vectors(actor);
         verify_npc_float_uses_actual_player(actor);
         verify_translation(actor);

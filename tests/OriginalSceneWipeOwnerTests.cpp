@@ -1,3 +1,4 @@
+#include "NativeHeapFixture.hpp"
 #include "resource/TextEncoding.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -18,7 +19,7 @@
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "layout/LayoutRuntime.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include <aurora/dvd.h>
@@ -54,23 +55,24 @@ public:
 };
 
 void layout_actor_lifetime(smgpc::runtime::RuntimeContext& runtime) {
-    auto& root_heap = runtime.host_heaps()->root_heap();
+    auto& root_heap = *runtime.root_heap();
     const auto free_before = root_heap.getTotalFreeSize();
-    const auto identities_before = smgpc::compat::name_obj_runtime_state_count();
+    const auto identities_before = NameObj::snapshotNativeObjects().size();
 
     const auto scheduled_before = runtime.scheduler().snapshot().size();
     for (int cycle = 0; cycle < 2; ++cycle) {
         for (const bool scheduled : {false, true}) {
             {
                 smgpc::test::SceneExecutionFixture execution(
-                    runtime.scheduler(), smgpc::compat::JkrAllocationDomain::create(runtime.host_heaps(), 8U << 20));
-                const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
-                const auto identities = smgpc::compat::name_obj_runtime_state_count();
+                    runtime.scheduler(), smgpc::test::create_native_solid_heap(runtime.root_heap(), 8U << 20));
+                const auto domain = MR::getSceneObjHolder()->nativeAllocationHeap();
+                const auto identities = NameObj::snapshotNativeObjects().size();
 
                 const auto scheduled_count = runtime.scheduler().snapshot().size();
                 std::unique_ptr<LayoutActor> actor;
                 {
-                    const smgpc::compat::JkrAllocationScope game(domain);
+                    const JKRHeap::CurrentHeapScope game(*(domain));
+                    const aurora::allocation::ClientAllocationScope gameRouting({true, true});
                     actor = std::make_unique<LayoutActor>("Layout lifetime regression", false);
                     actor->initLayoutManager("SysInfoWindowMini", 1);
                     actor->getLayoutManager()->createAndAddPaneCtrl("SaveIconPosition", 1);
@@ -82,7 +84,8 @@ void layout_actor_lifetime(smgpc::runtime::RuntimeContext& runtime) {
                 nerve.actor = actor.get();
                 const auto free_before_spine = root_heap.getTotalFreeSize();
                 {
-                    const smgpc::compat::JkrAllocationScope game(domain);
+                    const JKRHeap::CurrentHeapScope game(*(domain));
+                    const aurora::allocation::ClientAllocationScope gameRouting({true, true});
                     // Use the original reclaiming heap to observe Spine deletion before scene-arena disposal.
                     const MR::CurrentHeapRestorer root(&root_heap);
                     actor->initNerve(&nerve);
@@ -103,14 +106,14 @@ void layout_actor_lifetime(smgpc::runtime::RuntimeContext& runtime) {
                 actor.reset();
                 require(root_heap.getTotalFreeSize() == free_before_spine,
                         "LayoutActor destruction individually frees its original Spine");
-                require(smgpc::compat::name_obj_runtime_state_count() == identities &&
+                require(NameObj::snapshotNativeObjects().size() == identities &&
                         runtime.scheduler().snapshot().size() == scheduled_count,
                         "destruction retires the layout, manager, panes, identity and scheduling without recursive unregister");
                 runtime.scheduler().execute_movement_category(MR::MovementType_Layout);
                 require(nerve.calls == 1, "retired layout nerves cannot receive another scheduled movement");
             }
             require(root_heap.getTotalFreeSize() == free_before &&
-                    smgpc::compat::name_obj_runtime_state_count() == identities_before &&
+                    NameObj::snapshotNativeObjects().size() == identities_before &&
                     runtime.scheduler().snapshot().size() == scheduled_before,
                     "repeated layout teardown releases the whole scene domain and retains no native identities");
         }
@@ -119,13 +122,13 @@ void layout_actor_lifetime(smgpc::runtime::RuntimeContext& runtime) {
 #endif
 
 void owner(smgpc::runtime::RuntimeContext& runtime) {
-    const auto baseline = smgpc::compat::name_obj_runtime_state_count();
-    std::weak_ptr<smgpc::compat::JkrAllocationDomain> domain;
+    const auto baseline = NameObj::snapshotNativeObjects().size();
+    std::weak_ptr<JKRHeap> domain;
     {
         smgpc::test::SceneExecutionFixture execution(
-            runtime.scheduler(), smgpc::compat::JkrAllocationDomain::create(runtime.host_heaps(), 8U << 20));
+            runtime.scheduler(), smgpc::test::create_native_solid_heap(runtime.root_heap(), 8U << 20));
         auto& binding = execution;
-        domain = MR::getSceneObjHolder()->nativeAllocationDomain();
+        domain = MR::getSceneObjHolder()->nativeAllocationHeap();
         auto* group = dynamic_cast<NameObjGroup*>(MR::createSceneObj(SceneObj_NameObjGroup));
         auto* wipes = dynamic_cast<SceneWipeHolder*>(MR::createSceneObj(SceneObj_SceneWipeHolder));
         require(group && wipes && SceneWipeHolderFunction::getSceneWipeHolder() == wipes &&
@@ -257,7 +260,7 @@ void owner(smgpc::runtime::RuntimeContext& runtime) {
         MR::forceToScreenCinemaFrame(); tick(runtime);
         require(MR::isStopCinemaFrame() && MR::isDead(cinema), "forced Screen executes original final-frame kill");
     }
-    require(domain.expired() && !MR::getSceneObjHolder() && smgpc::compat::name_obj_runtime_state_count() == baseline,
+    require(domain.expired() && !MR::getSceneObjHolder() && NameObj::snapshotNativeObjects().size() == baseline,
             "scene teardown retires all original wipe descendants, memberships, resource owners and Game allocation domain");
 }
 }

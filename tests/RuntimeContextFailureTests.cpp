@@ -1,5 +1,5 @@
 #include "runtime/RuntimeContext.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "Game/Screen/CaptureScreenDirector.hpp"
 #include <aurora/system_config.hpp>
 #include "JSystem/JUtility/JUTVideo.hpp"
@@ -37,9 +37,9 @@ namespace {
             require(runtime && JUTVideo::getManager(), "registration must remain available while startup clients run");
             require(smgpc::runtime::try_active_scene_scheduler() == &runtime->scheduler(),
                     "startup clients must share the real runtime scheduler binding");
-            require(smgpc::compat::has_name_obj_runtime_state(&runtime->capture_screen_director()),
+            require(NameObj::nativeGeneration(&runtime->capture_screen_director()),
                     "failure fixture must reach the actual capture director registration");
-            registered = smgpc::compat::snapshot_name_obj_runtime_objects();
+            registered = NameObj::snapshotNativeObjects();
             throw InjectedLogFailure{};
         }
     };
@@ -57,7 +57,7 @@ int main() {
     smgpc::resource::GameResourceRuntime process({96U * 1024U * 1024U, 32U * 1024U * 1024U, 4U * 1024U * 1024U});
     auto heap = process.mem1_heap();
     const auto capacity = heap->available_bytes();
-    const auto objects = smgpc::compat::name_obj_runtime_state_count();
+    const auto objects = NameObj::snapshotNativeObjects().size();
     FixtureLogger logger;
     auto require_retired = [&](std::size_t expected_capacity) {
         require(smgpc::runtime::RuntimeContext::try_instance() == nullptr, "failed/destroyed runtime remains published");
@@ -65,7 +65,7 @@ int main() {
         require(JUTVideo::getManager() == nullptr, "failed/destroyed runtime retains its JUTVideo owner");
         require(smgpc::runtime::RuntimeContext::try_instance() == nullptr, "failed/destroyed runtime retains its publication");
         require(aurora::SystemConfiguration::active() == nullptr, "failed/destroyed runtime retains console settings owner");
-        require(smgpc::compat::name_obj_runtime_state_count() == objects, "failed/destroyed runtime retains NameObj callbacks");
+        require(NameObj::snapshotNativeObjects().size() == objects, "failed/destroyed runtime retains NameObj callbacks");
         require(heap->available_bytes() == expected_capacity, "failed/destroyed runtime retains mapped texture storage");
     };
 
@@ -88,7 +88,7 @@ int main() {
     require(rejected && !logger.registered.empty(), "logger failure must follow actual capture director registration");
     require_retired(capacity);
     for (auto* object : logger.registered)
-        require(!smgpc::compat::has_name_obj_runtime_state(object), "startup NameObj identity survived unwinding");
+        require(!NameObj::nativeGeneration(object), "startup NameObj identity survived unwinding");
     logger.throw_after_registration = false;
     std::cout << "RuntimeContext: injected logger failure retires the actual capture director before global registration\n";
 }

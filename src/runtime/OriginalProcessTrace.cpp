@@ -25,7 +25,7 @@
 #include "Game/System/WPad.hpp"
 #include "Game/System/WPadHolder.hpp"
 #include "Game/System/WPadStick.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "resource/TextEncoding.hpp"
 #include "Game/NameObj/NameObjHolder.hpp"
 #include <aurora/allocation.hpp>
@@ -97,7 +97,7 @@ namespace smgpc::runtime {
             if (!value || !value->mParts || value->mIdx == 0xFFFFFFFFU) return nullptr;
             return {{"prism_index", value->mIdx},
                     {"host_id", value->mSensor && value->mSensor->mHost
-                        ? compat::name_obj_runtime_generation(value->mSensor->mHost) : 0},
+                        ? NameObj::nativeGeneration(value->mSensor->mHost) : 0},
                     {"normal", vector(value->mNormals[0])},
                     {"vertices", {vector(value->mPos[0]), vector(value->mPos[1]), vector(value->mPos[2])}}};
         }
@@ -111,7 +111,7 @@ namespace smgpc::runtime {
         }
 
         Json actor(const LiveActor& value, const GravityOwners& gravity_owners) {
-            Json result{{"id", compat::name_obj_runtime_generation(&value)},
+            Json result{{"id", NameObj::nativeGeneration(&value)},
                         {"type", typeid(value).name()}, {"position", vector(value.mPosition)},
                         {"rotation", vector(value.mRotation)}, {"velocity", vector(value.mVelocity)},
                         {"gravity", vector(value.mGravity)}, {"dead", value.mFlag.mIsDead},
@@ -286,7 +286,7 @@ namespace smgpc::runtime {
                 for (const auto* object : objects) {
                     if (const auto* owner = dynamic_cast<const GlobalGravityObj*>(object);
                         owner && owner->mGravityCreator && owner->mGravityCreator->getGravity())
-                        gravity_owners.emplace(owner->mGravityCreator->getGravity(), compat::name_obj_runtime_generation(owner));
+                        gravity_owners.emplace(owner->mGravityCreator->getGravity(), NameObj::nativeGeneration(owner));
                 }
                 for (const auto* object : objects) {
                     if (const auto* live = dynamic_cast<const LiveActor*>(object); live && _state->includes(typeid(*live).name()))

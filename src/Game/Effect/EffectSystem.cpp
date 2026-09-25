@@ -1,7 +1,8 @@
 #include "Game/Effect/MultiEmitter.hpp"
 #include "Game/LiveActor/EffectKeeper.hpp"
 #include "Game/Screen/PaneEffectKeeper.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
+#include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
 #include <algorithm>
 #include <stdexcept>
@@ -22,7 +23,7 @@
 #include <JSystem/JParticle/JPAEmitterManager.hpp>
 
 struct EffectSystem::NativeState {
-    std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain;
+    JKRHeap::Handle domain;
     std::shared_ptr<const void> particleResources;
     std::vector<EffectKeeper*> actorKeepers;
     std::vector<PaneEffectKeeper*> layoutKeepers;
@@ -32,9 +33,9 @@ struct EffectSystem::NativeState {
 EffectSystem::EffectSystem(const char* pName, bool createAdaptor)
     : NameObj(pName), mEmitterManager(nullptr), mEmitterHolder(nullptr), mDrawExec(nullptr), mCalcExec(nullptr), mGroupHolder(nullptr), _20(true) {
     {
-        const smgpc::compat::JkrHostAllocationScope host;
+        const aurora::allocation::HostAllocationScope host;
         mNativeState = std::make_unique<NativeState>();
-        mNativeState->domain = smgpc::compat::current_jkr_allocation_domain();
+        mNativeState->domain = JKRHeap::retainCurrentNativeLifetime();
         if (!mNativeState->domain)
             aurora::throw_host_exception<std::logic_error>("EffectSystem requires its actual Game heap");
     }
@@ -51,7 +52,7 @@ EffectSystem::EffectSystem(const char* pName, bool createAdaptor)
 }
 
 EffectSystem::~EffectSystem() {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     retireNativeResources();
     // Executors own their original NameObj adaptors, whose functors borrow
     // these objects. Their callbacks retire before the particle storage.
@@ -64,7 +65,7 @@ EffectSystem::~EffectSystem() {
 }
 
 void EffectSystem::retireNativeResources() noexcept {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (mNativeState->retired)
         return;
     mNativeState->retired = true;
@@ -80,26 +81,26 @@ void EffectSystem::retireNativeResources() noexcept {
 }
 
 void EffectSystem::registerNativeKeeper(EffectKeeper* keeper) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (mNativeState->retired || !mEmitterManager || !mEmitterHolder)
         aurora::throw_host_exception<std::logic_error>("Effect keeper requires an initialized EffectSystem");
     mNativeState->actorKeepers.push_back(keeper);
 }
 
 void EffectSystem::registerNativeKeeper(PaneEffectKeeper* keeper) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (mNativeState->retired || !mEmitterManager || !mEmitterHolder)
         aurora::throw_host_exception<std::logic_error>("Pane effect keeper requires an initialized EffectSystem");
     mNativeState->layoutKeepers.push_back(keeper);
 }
 
 void EffectSystem::unregisterNativeKeeper(EffectKeeper* keeper) noexcept {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     std::erase(mNativeState->actorKeepers, keeper);
 }
 
 void EffectSystem::unregisterNativeKeeper(PaneEffectKeeper* keeper) noexcept {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     std::erase(mNativeState->layoutKeepers, keeper);
 }
 
@@ -121,7 +122,7 @@ void EffectSystem::retireNativeEmitter(const MultiEmitter& multi) const noexcept
     }
 }
 
-std::shared_ptr<smgpc::compat::JkrAllocationDomain> EffectSystem::nativeAllocationDomain() const noexcept {
+JKRHeap::Handle EffectSystem::nativeAllocationHeap() const noexcept {
     return mNativeState->domain;
 }
 

@@ -1,0 +1,95 @@
+{
+  "baseline": "5cce8ba9447d11c149d4bc84dc3898bfca789461",
+  "files": [
+    {
+      "path": "src/Game/NameObj/NameObj.hpp",
+      "before_sha256": "d43087359ad56ce66ef69d66f25833ab2670af05a48a383771a4c87f2e1881c8",
+      "initial_status": "clean",
+      "after_sha256": "4dd886b1658a61e9521810a362f74589937f50150a376abcf08e0fd9ece6ae35"
+    },
+    {
+      "path": "src/Game/NameObj/NameObj.cpp",
+      "before_sha256": "d50371c47a5762c1a537284117e919dac194a28a8ebf532e35dc0a74137cfd24",
+      "initial_status": "clean",
+      "after_sha256": "50f14faf5f5f591c9791d74b1be9da90df71a44dc2939b3fef10d235ba037f64"
+    },
+    {
+      "path": "src/Game/NameObj/NameObjGroup.hpp",
+      "before_sha256": "075e5cbce2bb4860b153656ec48e924a718eacbdd41fccc4039e283a678ac360",
+      "initial_status": "clean",
+      "after_sha256": "11152368a7333df458f2ddedfe2230f3ed5b6820a807f708b82c87d3abbfd09e"
+    },
+    {
+      "path": "src/Game/NameObj/NameObjGroup.cpp",
+      "before_sha256": "1928aeb44663b3d1360e44e8c922ee6c6e8703ae34ef315e6c58f98900edf72f",
+      "initial_status": "clean",
+      "after_sha256": "8f2a814713d718ba783f2bdf3d30574275b6028abd83db97b630882635638084"
+    },
+    {
+      "path": "src/Game/LiveActor/LiveActorGroupArray.hpp",
+      "before_sha256": "db69f327ea36f515002b575edc5dca0dca0c1571997546eb7b812fe0c439d42b",
+      "initial_status": "clean",
+      "after_sha256": "dda4ae256a12dbbfedf1b346b16e7e13ade4f5b1aff82248af7babdbfe361fcb"
+    },
+    {
+      "path": "src/Game/LiveActor/LiveActorGroupArray.cpp",
+      "before_sha256": "3bd8850b794b6fa29c4b70eed57672cf069a26e4a2b738c94bc6509bfada0887",
+      "initial_status": "clean",
+      "after_sha256": "75a76fcb45e2292e296cd10a63b1c6cfc0593136b78c942f0b849bd1eace0f31"
+    },
+    {
+      "path": "src/Game/NPC/TalkDirector.hpp",
+      "before_sha256": "61429317e8b4259fcf79dd59160f927f4ac3e961e3eb0ab9b0e80d8faa37d611",
+      "initial_status": "clean",
+      "after_sha256": "79838b1fa0dd01c49552b052cc57ca12d68f5b71d4602157346be7200f0cc2f2"
+    },
+    {
+      "path": "src/Game/NPC/TalkDirector.cpp",
+      "before_sha256": "fb2a47591dd15ade39b6cd0a4c30a4ce0bb6191857411ec0e560a5c7f218645f",
+      "initial_status": "clean",
+      "after_sha256": "841d96b6183ef61ddc2f61b00daa110ca4ce505992abdf3d81ac1fa7b1698fff"
+    },
+    {
+      "path": "src/Game/Demo/DemoDirector.hpp",
+      "before_sha256": "bab660441dc0921cabdd2b7ab4cf502964c0554fa68adc17c34a90d089a38600",
+      "initial_status": "clean",
+      "after_sha256": "7f12c8bd9608c959b618cfe0904dac1e249bb346958784de9bd97a7460500a37"
+    },
+    {
+      "path": "src/Game/Demo/DemoExecutor.hpp",
+      "before_sha256": "386effcbd3e8123540b2e39cd82c99f1cd78e4787c88752a96e923ff5e6fa424",
+      "initial_status": "clean",
+      "after_sha256": "99fef626429e63d25fab708169b57ade95d8ee845b704702b74f3c0a80e78ceb"
+    },
+    {
+      "path": "src/Game/Util/BaseMatrixFollowTargetHolder.hpp",
+      "before_sha256": "96e1147791a9e760e152f7fb78ca12d87d1fcaa40213f13cadf35b827c0ca8fd",
+      "initial_status": "clean",
+      "after_sha256": "e4e350de9836cb46b7e52e70605cd0ff2238b4e07103d04b13b7e9668e3f993c"
+    },
+    {
+      "path": "src/Game/NameObj/NameObjCategoryList.cpp",
+      "before_sha256": "8ff376c05e74738678af3ba46ef561a7d64e0de1a89e93a7ce9e95ceb92a8a93",
+      "initial_status": "clean",
+      "after_sha256": "3ffd14d159bfc5238eb5591e0bfa45aa5c45b183633eb7d3c95c9671e07ecfae"
+    },
+    {
+      "path": "src/Game/Demo/DemoDirector.cpp",
+      "before_sha256": "a3591c0b21750923b5ff22a579f5e83c676e200ac76186fe4ee4791273ee3871",
+      "initial_status": "clean",
+      "after_sha256": "ce27b0fdd626044a07386025861c5f766553bcb3dde5cf696ad997b835141d2c"
+    },
+    {
+      "path": "src/Game/Demo/DemoExecutor.cpp",
+      "before_sha256": "85d80ce5e9eed876c353254ac4d719e925e01bf504c8942952ffde4bba6d4f15",
+      "initial_status": "clean",
+      "after_sha256": "9560da0c2da411fead0f015679a5ddfd29c7d4cb2774fe674c72526c02ac97e4"
+    },
+    {
+      "path": "src/Game/Util/BaseMatrixFollowTargetHolder.cpp",
+      "before_sha256": "caa26c020116b6ddec9001b5d37d3a41ae048049728963532358d518cd367cfd",
+      "initial_status": "clean",
+      "after_sha256": "b28df1145f87a34d4d114608ce8f3f30864f2ca09b60598608d11ead9d73121b"
+    }
+  ]
+}

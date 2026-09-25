@@ -1,0 +1,424 @@
+{
+  "paths": [
+    {
+      "path": "tests/SceneSchedulerHeapTests.cpp",
+      "before_sha256": "fbb4627590868f1cb8cc3925c213f0d9aa674d60da4dbe2e9794cbdf12c254b1",
+      "after_sha256": "1ac00a81d201adc9fe0cab7105cc0bf7267f7203b34e98f4a72f94fbea345404",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalFurDrawerTests.cpp",
+      "before_sha256": "cde57938df2f566d0ae3877498031df84887a227827cff2370378f06b7f54cb9",
+      "after_sha256": "64641a074cfb042797324b4e08467681e5329944792c2a32a7848763b735e29d",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalScenarioCatalogTests.cpp",
+      "before_sha256": "e12b2f6c0705eec3f1c7d171055decaed342e57d718f4907dc2d1dc7f4f05910",
+      "after_sha256": "acd4d666b061d4121509954ce2c031381d464a2d7245a6028b69d5cc2c6c3a15",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalCameraContextTests.cpp",
+      "before_sha256": "965946eb04dd5453b74727076d26a7ff332a0397d939f84f67958001bbe0ae06",
+      "after_sha256": "e1ff4039b62330398c40be7daf88ed82b763745a07e0fb476a8faa6d07c27770",
+      "change": "modify"
+    },
+    {
+      "path": "tests/GravityRealOrAbsentTests.cpp",
+      "before_sha256": "610e173b8ccf4cee1f94fdd54f85ae14ff875af5b7dcf783b268b9b8c6c6bddb",
+      "after_sha256": "79a623bdf918c37fb44ec8b15a4adb585d4a169e51cc69b073e889340de656a2",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalProcessPlayerOwnerTests.cpp",
+      "before_sha256": "fa9c170b0ccf8d88623d3f4e2f7faa190d5576cf61adb993566e99e7496dd5e3",
+      "after_sha256": "74712743d437a6b69c7652a2f2e684b66ca01c3b92875947299a982ae575d57b",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalGameSystemStartupTests.cpp",
+      "before_sha256": "a24876d2c4d8e21d6e1f618dca5762ac10120b7a3a0d55d116e24f43851e9857",
+      "after_sha256": "7ec129060224e89ce00d04e9cd7f46f71c2ee6a35a9e8a8c61edba83d4ff45fc",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalJ3DMaterialTableTests.cpp",
+      "before_sha256": "b8200708639badc965b9e46b45e1cd07a3553395da7ec4d64c63caaa6469097d",
+      "after_sha256": "76e0cd17ef1f2251f7c232724fddbea2c70c8e5febfb503961ccb94155d58365",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalAsyncHeapSelection.hpp",
+      "before_sha256": "d311060fa952cd5555a5bb1bbe2daf8dc1257cd9f2dba757b6accc8a6b454eb3",
+      "after_sha256": "8f2730578764fec28c1b20af4189152b73fc49309c115b22727b8e1b5416431a",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalProcessStarPiecePlacementTests.cpp",
+      "before_sha256": "546e5c3e2c75c237dfe9fdbc88d76b1cf23b4f5d8e543c98c24c1220c10203c5",
+      "after_sha256": "13e724f540d882381de319bde305a624dcb4f623049ec12c6c3f48ba3a0d944b",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalPlayerUtilTests.cpp",
+      "before_sha256": "d4f0bdd5972fedd4302dbe4e709cff3f3c2d5b4a12edc7248b510f80d5a83465",
+      "after_sha256": "f8f143e5f1cf0535944339c232900a354701e60b64d3363e17d7ddc31d12e3d2",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalActorUtilityTests.cpp",
+      "before_sha256": "18eecb73ee920af4d9659eb16e3162bb4280611987f902292032da956a441b33",
+      "after_sha256": "b0d0046e59692d27cc05c139704cc2d6e93456cc9bb1b704bfa549697e00b922",
+      "change": "modify"
+    },
+    {
+      "path": "tests/NameObjGroupLifetimeTests.cpp",
+      "before_sha256": "1c53e925a0f0fbf41f5507c3d8ed1b8949206c7d7940f1534521b3b5ed0f261b",
+      "after_sha256": "722362caae4dfd6a0074d8640dbf0ca232f40d3b7063e89f987bcc6bc3720b88",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalJMapResourceTests.cpp",
+      "before_sha256": "cede612e5fafd3b8d2085fbb0e3c14e2dc99f3f9ef13ff4184a58260729f1ffd",
+      "after_sha256": "dae1249f9bbc20dd245afda68b86a5389caf5481f7dae377342ccf7e801013de",
+      "change": "modify"
+    },
+    {
+      "path": "tests/ConsoleNandImportTests.cpp",
+      "before_sha256": "448742a6eac4f6b1cc1defc6c5117d4f12218b1fd326af17656e4bf54add7bff",
+      "after_sha256": "870fb32aa3ae8892fbdf0a011fba66f7bf61933f5561910bb58a6bdc81b93f90",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalActorBroadcastTests.cpp",
+      "before_sha256": "dcc455751a3899cbd0f40c1640b47e844879af14da0dcecc64d352c6b0b2fbc7",
+      "after_sha256": "d731c83b99fbcd5615a9fa7feeb79e3c915736b6d83246c742a7311371c03956",
+      "change": "modify"
+    },
+    {
+      "path": "tests/RuntimeEventOwnershipTests.cpp",
+      "before_sha256": "e1bafde6996df33bff6e900f627e7f5d6cbbd13feca4c4391eb05c56f28001f2",
+      "after_sha256": "3806982f19355ae41280083acd761a2cad7ffd1a977a121a1cc692081b5de2de",
+      "change": "modify"
+    },
+    {
+      "path": "tests/JkrHeapFinalizerTests.cpp",
+      "before_sha256": "54c74ed8667a4c423aa93a70ba33d7cfa15d508d3ab967502dcd0bd02afdb5d8",
+      "after_sha256": "b0fed2729b6dcbbead6b2f9f5f2c3c51bd3da464ef76c1fee01ed7895aaaadbf",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalJkrAramTests.cpp",
+      "before_sha256": "5f8a3e6d5edd82a3694014ca57a5cc87ca4c583a625f01cd99e6e4bf57625547",
+      "after_sha256": "30aa807270ae7044c5363bf5a38c4675c63a15dd22bcbd296b4dd4caf6064d9b",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalPointerInputTests.cpp",
+      "before_sha256": "15d6c2d7178b7887fd48c9ec890af56b68763c5207e271c9feead44e8acc80a5",
+      "after_sha256": "38c788e6d2d835410003c5638bf6b045b50d67c6428dda93642923ecc7ebc923",
+      "change": "modify"
+    },
+    {
+      "path": "tests/SceneExecutionFixture.hpp",
+      "before_sha256": "a75768cdaa4ec44711c2011836df991a87ba8115ae29363f126365ba1a95b022",
+      "after_sha256": "d412884d857de5ef7e63580376e56efc913d33f63dbbc229797d42d0509038b8",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalJpaManagerTests.cpp",
+      "before_sha256": "ce00f2899f441c89ab0fa31affe1afb9abf4addaf56782e5eeb1d12c13ea6950",
+      "after_sha256": "b9adad25ca9e63b07a5e873fa25314e94bfe75fd75662dd7200849892a3f99e0",
+      "change": "modify"
+    },
+    {
+      "path": "tests/NPCActorRealOrAbsentTests.cpp",
+      "before_sha256": "584ad35988a65f0bcabb23c884bc63c760a388042ef1e888186d73738f21c011",
+      "after_sha256": "18628bf630c9823b211a16696be1d7a1bacf66496e0597b86ad49b47b92d8101",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalLayoutGroupTests.cpp",
+      "before_sha256": "e0babcb3f28b9ef554ae3c80006639b906d40e4b457455ec098245244d08c72f",
+      "after_sha256": "27179a416311253ad57e944bd5c5d3ae22c85727cd9633a182d321365b516983",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalProcessTrampleJumpTests.cpp",
+      "before_sha256": "51bf8af274035bc2e233ef41166a62362633009be06d66b857b1af187efa9eef",
+      "after_sha256": "8360a3da84ea6c59200d8f3e1d6c0cc478c532cfdcc37be722450bf3f7a6d3f8",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalFileLoaderTests.cpp",
+      "before_sha256": "c4936ce7d87731e85d73818c32cec0241c905cda56a94de22125f17c0ea13e1b",
+      "after_sha256": "0b6ea9ec1cb47c2151e44aad5b0a2898971c99b09404d52686e332ed2f8e7156",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalMessageHolderTests.cpp",
+      "before_sha256": "6c2774283b375fb1d0c4560b0c3307dcbd6bf86a38ba8cb77ec23c5cfe646675",
+      "after_sha256": "0c5798d377cdfd5f9f80609eb0aa78db0dde6beacf428efc1649c14820a0ce5c",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalProcessWarpPodTests.cpp",
+      "before_sha256": "9c1c4a0ae60c51bd801472a863fc6884663ea879357bf4cb54206110267fc042",
+      "after_sha256": "6b498f360e312ede230c3bc1799f08bdf89e6e6fa17a4cf649ea96d1363b4176",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalDrawSyncManagerTests.cpp",
+      "before_sha256": "0c51c11cb5ec46a96e11cb09791a51eade8254ea6c6b9b85e67d2fc35e366766",
+      "after_sha256": "56f1ce4aba545a36882281317948cbc4444270921a8595f7ff8f36082e185ae0",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalSceneWipeOwnerTests.cpp",
+      "before_sha256": "cf21c7a4245e5831ed5305f5a87aaac3d649ca7e268a070db26550146dc8a207",
+      "after_sha256": "b7fe2e1e8d2ee49131f364c63f9fe57142d1901878ac13cb9b9db62e0893ff59",
+      "change": "modify"
+    },
+    {
+      "path": "tests/SphereSelectorRealOrAbsentTests.cpp",
+      "before_sha256": "8fbda1bdb8a4187cebb1c045e54fbb0cf132db6816733e54d9f36e6f6fd27802",
+      "after_sha256": "28ed3b1b4f1cf5935057d0fc1a0596173aafcaf5627e093d3b7f3a966d6b6384",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalSceneControllerFixture.hpp",
+      "before_sha256": "049650ce69e551b9fea7e05ee3fe79acfbd27096a9b665cc823ecc1670868638",
+      "after_sha256": "34ce4ab33cd6fad4b86c0b98a25040be3926af5d3196252c36a38eb0ccd319fa",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalJutVideoTests.cpp",
+      "before_sha256": "f96b8651dd2c9b52f0785ff0057370190bf19f39cfae8c0adcad8cf91a4babe2",
+      "after_sha256": "4f6724a117015756d35ee69ce38ebd35b68f49a822000a6b162fb1e55bc2cd3f",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalSceneExecutionOwnerTests.cpp",
+      "before_sha256": "a6db1df98076340bf341454adcac6511ffd9510c521ab6e72719c21324230aeb",
+      "after_sha256": "13c473f4e65516fb0fe8fbcff7902960a32b232720ab032e1e0b654a1520e21c",
+      "change": "modify"
+    },
+    {
+      "path": "tests/JutTextureOwnershipTests.cpp",
+      "before_sha256": "373c04ff0b0fd7555060234752b1821611512e04c38d5415c65e84b280aba435",
+      "after_sha256": "f842e97320910c8e48a9da37e4c8e4bfbb9715bbbabb59e74f97450e0d14e52b",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalProcessCollisionAreaTests.cpp",
+      "before_sha256": "f7a267568196a6860a6f44cda6efa51c4fb07c693256617077b8dc2ffeae8b3e",
+      "after_sha256": "95db2602ee860cffe85a892bd6a9775eb65b5d0b5c0d74d267b6a7759fd96799",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalProcessPunchingKinokoTests.cpp",
+      "before_sha256": "1f2cb468fb581a50a84b3eada6c496c2ded41b5d9ccd5cd3d135442638580dc1",
+      "after_sha256": "e7c53b68408ec421e935ba4cf41f847ab35a5ff77595f45eaafe4bd0b309eda2",
+      "change": "modify"
+    },
+    {
+      "path": "tests/PointLightRuntimeTests.cpp",
+      "before_sha256": "a6dddc08b5e97abeed31b806144b402461183fd7453b2a9b8d51a02904870ff7",
+      "after_sha256": "c29127114f57143126af07d4c28182687be2f5108207ded1bc9ad6996034ab24",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalResourceHolderTests.cpp",
+      "before_sha256": "7c123054d3b4151c666e14f4b74fe1721df75dfb6214ba8d40acb509f3d11a38",
+      "after_sha256": "01f6bc3a0c1d0b91e768aafc0bbfa5a797031235f46ff933ea24bb0d35e9aaf5",
+      "change": "modify"
+    },
+    {
+      "path": "tests/GxCopyFifoOrderTests.cpp",
+      "before_sha256": "8e1ef2f92d9b04a616f5b748ba296f64530b54c001c7fe23c91c381d27454c0c",
+      "after_sha256": "f019be6e36f174399f8c3af4c0283a1aeb80fdcfd84be1dfd5b252c28ec79347",
+      "change": "modify"
+    },
+    {
+      "path": "tests/JkrExceptionOwnershipTests.cpp",
+      "before_sha256": "a70f347bc6d8f920b07c56ab9c435f437dd86aa501bc98eeb6c2bd8a0162433b",
+      "after_sha256": "fba0b5a450c5f8e1ea15f1b1dbac69059ffd0b26533b768c088fc55e0ff6c076",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalSensorMatrixTests.cpp",
+      "before_sha256": "5c276c546101fceed8a75ad3ce945aa3e5041ed40c5f9d560c3c45308c373f71",
+      "after_sha256": "d018a0a9e4852714e250a2e082316f893bc93a91eb0ee6439dcb21fdbdc3a423",
+      "change": "modify"
+    },
+    {
+      "path": "tests/J3dCommandSchedulingTests.cpp",
+      "before_sha256": "067a7d6f96a453b472c5a851663c5314f3d24658bcd8f1e8fbc1a8675c53de74",
+      "after_sha256": "f864f081c243a3e152e0f380e0c1e51e48d84d41e65ee4451b373a8b0a3feeff",
+      "change": "modify"
+    },
+    {
+      "path": "tests/CenterScreenBlurRealOrAbsentTests.cpp",
+      "before_sha256": "fbec5fcad857a223b0cf6f72429e0dd711816aff6ee77623c4df86262fb9d592",
+      "after_sha256": "972ad009c17b895989a779143a435791b25ca4365eea4693eb9a3b51cae8f955",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalJ3DModelResourceTests.cpp",
+      "before_sha256": "6d8e65d699dfa41b72f69d7fe2e3c53cc9d1a4090731d5556fb957701255eb43",
+      "after_sha256": "9ce3beacc8cba9a58fce0c389c5c39e5b4fc4a45a3d9d175d8bb002239376b88",
+      "change": "modify"
+    },
+    {
+      "path": "tests/JMapHeapLifetimeTests.cpp",
+      "before_sha256": "a3ce2b61cb2f12e06e7785885e50317ff80b5ce9755d698ed444df274fb2fb0e",
+      "after_sha256": "04ebc95968b0a48bd811620bda103f03354cea2ec79fe95de721c69a9ba2830e",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalProcessCrystalCageTests.cpp",
+      "before_sha256": "cf7c67a83756b1498c4c0dc8a980a7ed968bba1157709f9a3205695870c898f8",
+      "after_sha256": "f7b4c5ac25cf6e37a85cf5e8af8737b1c24bf60aac1ae802ea12bfc12bfd84f0",
+      "change": "modify"
+    },
+    {
+      "path": "tests/JkrAllocationDomainTests.cpp",
+      "before_sha256": "fe8cb69b61c9e65228a52d3fddd07b65859a5772765825eec7de9799bbca12b2",
+      "after_sha256": null,
+      "change": "delete"
+    },
+    {
+      "path": "tests/OriginalCameraResourceTests.cpp",
+      "before_sha256": "3701f32c45db7427b95cb645820b333479236949859ba132cb09037a17a09015",
+      "after_sha256": "c84b2e9884b1bd711f0dde8b30cf8d8f74b609364fed3e0f0a9632f1e1c2f867",
+      "change": "modify"
+    },
+    {
+      "path": "tests/TalkRealOrAbsentTests.cpp",
+      "before_sha256": "a9082a727334d2676987793788203193349a6c4ab5d3874e064cc18382b43e02",
+      "after_sha256": "46b43bc6a31ac479b9c448100f3a182ae56922ded5577e29f3267c1c53fcb9e8",
+      "change": "modify"
+    },
+    {
+      "path": "tests/AreaObjRealOrAbsentTests.cpp",
+      "before_sha256": "e7c288f31bf7d836e6aedb1eb44fd95e248fb78e2769494829503251c06909db",
+      "after_sha256": "c5e08a87570c2f3a429895b65c8144124e31431e7a35e80c3c36062e19de937a",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalNpcOrientationTests.cpp",
+      "before_sha256": "a357e01620ecf7ca7311a43396057a76d8743b89553dc48fff8c0790d9a77fa2",
+      "after_sha256": "bffad74fa205a15d70a5b78bf2c766fb998a8007d20ed8c0ba8aed6560b60a0b",
+      "change": "modify"
+    },
+    {
+      "path": "tests/ActorSensorRealOrAbsentTests.cpp",
+      "before_sha256": "4e3a2d495c0391ef6d28a9d21faad43a3a9892d3fe18cfcd810259aef7b45404",
+      "after_sha256": "2eadde7d0942e187453818aa0328ae11bf0daa043078508943bcb6df475ff959",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalSphereQueryFixture.hpp",
+      "before_sha256": "a4fabee008ae403f6d553b7693764116e0c1eb6bd248882c1a7e7f1ef18e841d",
+      "after_sha256": "44db89c09ee074b0872101b2698a2b4d4a4c34026a9f30768e7229b41f9a379c",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalCameraHolderTests.cpp",
+      "before_sha256": "bc7987dec5dc6f73aeac0d180480dc81690985646a1dba86e0e7454555a4a686",
+      "after_sha256": "5633327783319bdb40928ffbf032da4ef2c5d1cc8931910e92eda46133932e66",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalAutoEffectMetadataTests.cpp",
+      "before_sha256": "760040ec5d118c99ccc8504f8ae370c6f1e48ca26b027f0d14588848857a4e26",
+      "after_sha256": "52e780d1dbe7d900bc419524a854a3a26ec418609afd6b5401befabe4fa2c322",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalProcessShadowVolumeLineTests.cpp",
+      "before_sha256": "7c397b53ff42a6fd3963c4201d471a3bf18941bdaa0f453ab9e194068a2a9813",
+      "after_sha256": "863e73b5b4fea88395c890125aa941c6807c0154c1a12af88bd115f20c8cb44a",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalJkrThreadTests.cpp",
+      "before_sha256": "f56da072e07746643cd271d53590b13d10fa9f912aa0f358dd0d13821a56dcd8",
+      "after_sha256": "4534f4c181118432c5b1c450193f2064ea5515e668e9bc53a34936950d0bba06",
+      "change": "modify"
+    },
+    {
+      "path": "tests/GameActorPhysicsRealOrAbsentTests.cpp",
+      "before_sha256": "a28d25cb4be47ea0e3ff8aad4bc0a87b6a4d0721825962f093031fcc1419eebd",
+      "after_sha256": "4b00066be2499d2d78f600d06343c3fdf79de437b72e4128ba42c16d1e8a3ad2",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalNamePosOwnerTests.cpp",
+      "before_sha256": "c6d299ebba940667924e9892457f9919173939c05ce7f082c2102ed735b6b0de",
+      "after_sha256": "cc7bb9e6cd0529f1ed8a6438d90ea6b8d36526367bcefb2b23bbc5a0797526f7",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalCameraDirectorTests.cpp",
+      "before_sha256": "7424b088ea2fb9eaa9748acfe44e3915edaad6a0ce7480e93713f54198d91f62",
+      "after_sha256": "d0438fa65fba59ebf21d715c6214a1a1050ef03ab52099b6f43e648d161a059f",
+      "change": "modify"
+    },
+    {
+      "path": "tests/NameObjFactoryPlacementTests.cpp",
+      "before_sha256": "f5d74f3328fc0d6a075083894f0896b59e6a2045fe0aebc92d893315c238a97c",
+      "after_sha256": "ca85501494074649e03291411ee13ace639e730de382aadbb963a08ff73964d8",
+      "change": "modify"
+    },
+    {
+      "path": "tests/DemoStartRequestHolderTests.cpp",
+      "before_sha256": "9c7f9c1d447e9077b5bf829966ed9ed8282a643696024088a08a9069a83383d8",
+      "after_sha256": "aaf0434fe2e488ee19e37e9dd24d60f8e294fd3e74e7fb96eb9f69dffbfc99af",
+      "change": "modify"
+    },
+    {
+      "path": "tests/BrightVisibilityBatchTests.cpp",
+      "before_sha256": "925525823d886378bb6cf3323fd47412c36b7c2fdaf94d62679b2aa4c28fc728",
+      "after_sha256": "f427e0ca2e94b5db2834785b52e8f3e89c071d2d22463a81aa4f0d365334574f",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalJ3DAnimationResourceTests.cpp",
+      "before_sha256": "17fa48cb4bb724895e22acf8731f1d86e90d38bf473539cda97dd08b477a1fa0",
+      "after_sha256": "46a1ea24caf8b4247826af4c312a00c084e2cb75b657c96e074cb7857d015918",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalJointControllerTests.cpp",
+      "before_sha256": "4c9b7a34676cdfc35249ff5f0b85d56241da9da3c3cfe6feec7d1c89d2dcad22",
+      "after_sha256": "f4fe52486b40611a65770b1dba5b6f97033c2e30514b4699770b8042db89c865",
+      "change": "modify"
+    },
+    {
+      "path": "tests/OriginalCollisionPartsOwnerTests.cpp",
+      "before_sha256": "1ccf3e6e15c53c68a3f65d8e74b910b375f1b625a6702a0eb1e87424654714d4",
+      "after_sha256": "193b6027a219b11054ae06841cedb5c27de0c511d4e7323924c63b8b4004ba3f",
+      "change": "modify"
+    },
+    {
+      "path": "tests/Model3DFor2DContractTests.cpp",
+      "before_sha256": "d89a1357bfd347f06d1c25f8288d5925db8c94d5a5904be9ea50dda18fdc2a12",
+      "after_sha256": "1da0669f761383ba8382afe88a89446e6f06e80833f901a5f2f4c5627e06e898",
+      "change": "modify"
+    },
+    {
+      "path": "tests/NativeHeapFixture.hpp",
+      "before_sha256": null,
+      "after_sha256": "c6f869b65f1feae688fd462e49dfbfe7fc33601807c691bd89f75e6e4c80367d",
+      "change": "create"
+    },
+    {
+      "path": "tests/OriginalJkrHeapLifetimeTests.cpp",
+      "before_sha256": null,
+      "after_sha256": "5d04848e3672c92ee5cf8f9a8b70a47c04600bdc0a83b190fddd1bc5db271a93",
+      "change": "create"
+    }
+  ]
+}

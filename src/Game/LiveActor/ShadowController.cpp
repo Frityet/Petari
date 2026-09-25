@@ -13,7 +13,7 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include <aurora/exception.hpp>
 #include <algorithm>
 #include <stdexcept>
@@ -122,12 +122,12 @@ ShadowController::ShadowController(LiveActor* pActor, const char* pName)
       _67(0), mStartOffset(50.0f), mDropLength(0.0f), _70(0), _71(1), _72(1) {
     MR::createSceneObj(SceneObj_ShadowControllerHolder);
     mNativeHolder = MR::getSceneObj<ShadowControllerHolder>(SceneObj_ShadowControllerHolder);
-    mNativeHolderGeneration = smgpc::compat::name_obj_runtime_generation(mNativeHolder);
+    mNativeHolderGeneration = NameObj::nativeGeneration(mNativeHolder);
     MR::addShadowController(this);
 }
 
 ShadowController::~ShadowController() {
-    if (mNativeHolder && smgpc::compat::name_obj_runtime_generation(mNativeHolder) == mNativeHolderGeneration) {
+    if (mNativeHolder && NameObj::nativeGeneration(mNativeHolder) == mNativeHolderGeneration) {
         // Lines borrow controllers from other actors. Retire those references
         // while the actual holder still provides the live controller set.
         for (auto* controller : mNativeHolder->_C) {
@@ -180,7 +180,7 @@ LiveActor* ShadowController::getHost() const {
 }
 
 void ShadowController::setShadowDrawer(ShadowDrawer* pDrawer) {
-    smgpc::compat::claim_name_obj_runtime_ownership(pDrawer, this);
+    (pDrawer)->claimNativeOwnership(this);
     if (mDrawer != pDrawer) delete mDrawer;
     mDrawer = pDrawer;
     pDrawer->setShadowController(this);

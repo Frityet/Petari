@@ -7,8 +7,8 @@
 #include "SceneExecutionFixture.hpp"
 #include "OriginalSceneControllerFixture.hpp"
 #include "Game/Scene/SceneNameObjMovementController.hpp"
-#include "compat/JkrAllocationDomain.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "NativeHeapFixture.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
@@ -49,8 +49,8 @@ struct CallbackAllocations {
         delete[] values[slot];
         values[slot] = new unsigned[8];
         ++calls[slot];
-        require(scheduler.allocation_domain() &&
-                    JKRHeap::findFromRoot(values[slot]) == &scheduler.allocation_domain()->heap(),
+        require(scheduler.allocation_heap() &&
+                    JKRHeap::findFromRoot(values[slot]) == scheduler.allocation_heap().get(),
                 "original callback allocation must belong to its explicit scene Game heap");
     }
     void release() const {
@@ -89,20 +89,21 @@ struct CallbackActor final : LiveActor {
     std::function<void()> message_hook;
 };
 
-void verify_backend_allocation_routing(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
-    using namespace smgpc::compat;
-    const auto before = heaps->root_heap().getFreeSize();
+void verify_backend_allocation_routing(const JKRHeap::Handle& heaps) {
+
+    const auto before = (*heaps).getFreeSize();
     {
-        auto game = JkrAllocationDomain::create(heaps, 32U << 10);
-        auto nested = JkrAllocationDomain::create(heaps, 32U << 10);
+        auto game = smgpc::test::create_native_solid_heap(heaps, 32U << 10);
+        auto nested = smgpc::test::create_native_solid_heap(heaps, 32U << 10);
         const auto allocate_in = [](JKRHeap* expected) {
             auto* allocation = new unsigned[8];
             require(JKRHeap::findFromRoot(allocation) == expected, "native backend/client scope selects the wrong allocation owner");
             delete[] allocation;
         };
         {
-            JkrAllocationScope outer(game);
-            allocate_in(&game->heap());
+            const JKRHeap::CurrentHeapScope outer(*(game));
+            const aurora::allocation::ClientAllocationScope outerRouting({true, true});
+            allocate_in(&(*game));
             {
                 aurora::allocation::HostAllocationScope backend;
                 allocate_in(nullptr);
@@ -111,45 +112,46 @@ void verify_backend_allocation_routing(const std::shared_ptr<smgpc::compat::JkrH
                     allocate_in(nullptr);
                     {
                         aurora::allocation::ClientAllocationScope callback;
-                        allocate_in(&game->heap());
+                        allocate_in(&(*game));
                     }
                     allocate_in(nullptr);
                 }
                 {
-                    JkrAllocationScope explicit_nested(nested);
-                    allocate_in(&nested->heap());
+                    const JKRHeap::CurrentHeapScope explicit_nested(*(nested));
+                    const aurora::allocation::ClientAllocationScope explicit_nestedRouting({true, true});
+                    allocate_in(&(*nested));
                     aurora::allocation::HostAllocationScope inner_backend;
                     allocate_in(nullptr);
                     aurora::allocation::ClientAllocationScope inner_callback;
-                    allocate_in(&nested->heap());
+                    allocate_in(&(*nested));
                 }
                 allocate_in(nullptr);
-                require(current_jkr_allocation_domain() == game, "nested native calls restore the selected original heap");
+                require(JKRHeap::retainCurrentNativeLifetime() == game, "nested native calls restore the selected original heap");
                 try {
                     aurora::allocation::ClientAllocationScope callback;
-                    allocate_in(&game->heap());
+                    allocate_in(&(*game));
                     throw 91;
                 } catch (int code) {
                     require(code == 91, "native callback exception fixture failed");
                 }
                 allocate_in(nullptr);
             }
-            allocate_in(&game->heap());
+            allocate_in(&(*game));
         }
         allocate_in(nullptr);
     }
-    require(heaps->root_heap().getFreeSize() == before, "nested backend/client routing retains no retired Game domain");
+    require((*heaps).getFreeSize() == before, "nested backend/client routing retains no retired Game domain");
     std::cout << "backend_host_escape=pass nested_client_reentry=pass explicit_nested_domain=pass routing_exception_restore=pass\n";
 }
 
-void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
-    using namespace smgpc::compat;
+void verify_explicit_scene_callbacks(const JKRHeap::Handle& heaps) {
+
     using namespace smgpc::runtime;
-    const auto free_before = heaps->root_heap().getFreeSize();
+    const auto free_before = (*heaps).getFreeSize();
     {
         smgpc::test::OriginalSceneControllerFixture original(heaps);
-        auto game = JkrAllocationDomain::create(heaps, 2U << 20);
-        auto caller = JkrAllocationDomain::create(heaps, 64U << 10);
+        auto game = smgpc::test::create_native_solid_heap(heaps, 2U << 20);
+        auto caller = smgpc::test::create_native_solid_heap(heaps, 64U << 10);
         SceneScheduler scheduler;
         SceneSchedulerBinding active(scheduler);
         SceneSchedulerAllocationBinding scene(scheduler, game);
@@ -161,13 +163,14 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
         execution.executor().registerPreDrawFunction(MR::Functor(static_cast<const CallbackObject*>(&object), &CallbackObject::pre_draw), 72);
         execution.complete_initialization();
         {
-            JkrAllocationScope outer(caller);
+            const JKRHeap::CurrentHeapScope outer(*(caller));
+            const aurora::allocation::ClientAllocationScope outerRouting({true, true});
             scheduler.execute_movement();
             scheduler.execute_calc_anim();
             scheduler.execute_draw_type(72);
-            require(current_jkr_allocation_domain() == caller, "scene callbacks restore their caller's selected heap");
+            require(JKRHeap::retainCurrentNativeLifetime() == caller, "scene callbacks restore their caller's selected heap");
             auto* after = new unsigned[8];
-            require(JKRHeap::findFromRoot(after) == &caller->heap(), "scene callbacks restore the caller's allocation routing");
+            require(JKRHeap::findFromRoot(after) == &(*caller), "scene callbacks restore the caller's allocation routing");
             delete[] after;
         }
         require(object.allocation.calls[0] == 1 && object.allocation.calls[1] == 1 &&
@@ -176,15 +179,16 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
         {
             SceneSchedulerAllocationBinding nested(scheduler, caller);
             scheduler.execute_calc_anim();
-            require(JKRHeap::findFromRoot(object.allocation.values[1]) == &caller->heap(), "nested scene bindings select their own domain");
+            require(JKRHeap::findFromRoot(object.allocation.values[1]) == &(*caller), "nested scene bindings select their own domain");
         }
-        require(scheduler.allocation_domain() == game, "leaving a nested binding restores the previous scene domain");
+        require(scheduler.allocation_heap() == game, "leaving a nested binding restores the previous scene domain");
         object.movement_hook = [&] { scheduler.execute_calc_anim(); throw 73; };
         {
-            JkrAllocationScope outer(caller);
+            const JKRHeap::CurrentHeapScope outer(*(caller));
+            const aurora::allocation::ClientAllocationScope outerRouting({true, true});
             bool caught = false;
             try { scheduler.execute_movement(); } catch (int code) { caught = code == 73; }
-            require(caught && current_jkr_allocation_domain() == caller,
+            require(caught && JKRHeap::retainCurrentNativeLifetime() == caller,
                     "nested callbacks and exceptions restore the caller's original heap");
         }
         object.movement_hook = {};
@@ -205,7 +209,7 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
             for (unsigned i = 0; i < 512; ++i) {
                 auto* created = new NameObj("created from an original movement callback");
                 scheduler.connect_name_obj(*created, 34, 0, -1, -1);
-                JkrHostAllocationScope native;
+                aurora::allocation::HostAllocationScope native;
                 added.emplace_back(created);
             }
             victim.reset();
@@ -217,7 +221,7 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
         scheduler.execute_movement();
         require(victim == nullptr && added.size() == 512 && survivor.allocation.calls[0] == 1,
                 "movement survives host registration reallocation and removal of current and future entries");
-        require(JKRHeap::findFromRoot(added.back().get()) == &game->heap() && JKRHeap::findFromRoot(added.data()) == nullptr,
+        require(JKRHeap::findFromRoot(added.back().get()) == &(*game) && JKRHeap::findFromRoot(added.data()) == nullptr,
                 "new original objects use the scene heap while the fixture's registry remains host owned");
         scheduler.clear();
         added.clear();
@@ -251,7 +255,8 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
         CallbackActor first(scheduler);
         auto second = std::make_unique<CallbackActor>(scheduler);
         for (auto* actor : {&first, second.get()}) {
-            JkrAllocationScope initialization_heap(game);
+            const JKRHeap::CurrentHeapScope initialization_heap(*(game));
+            const aurora::allocation::ClientAllocationScope initialization_heapRouting({true, true});
             actor->initHitSensor(1);
             (void)MR::addHitSensor(actor, "body", actor == &first ? ATYPE_PLAYER : ATYPE_ENEMY, 4U, 10.0F, {});
             actor->makeActorAppeared();
@@ -266,13 +271,15 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
         require(first.allocation.calls[1] == initial_animation_calls + 1, "original actor animation receives the scene domain");
         auto message_victim = std::make_unique<CallbackActor>(scheduler);
         {
-            JkrAllocationScope initialization_heap(game);
+            const JKRHeap::CurrentHeapScope initialization_heap(*(game));
+            const aurora::allocation::ClientAllocationScope initialization_heapRouting({true, true});
             message_victim->makeActorAppeared();
         }
         scheduler.connect_name_obj(*message_victim, 34, -1, -1, -1);
         first.message_hook = [&] { message_victim.reset(); };
         {
-            JkrAllocationScope callback_heap(game);
+            const JKRHeap::CurrentHeapScope callback_heap(*(game));
+            const aurora::allocation::ClientAllocationScope callback_heapRouting({true, true});
             MR::sendMsgToAllLiveActor(0, nullptr);
         }
         require(!message_victim && first.allocation.calls[5] == 1,
@@ -300,16 +307,16 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
                 "native clipping transitions preserve the Game callback allocation scope");
         scheduler.clear();
     }
-    require(heaps->root_heap().getFreeSize() == free_before, "all callback and scene domain allocations retire at scene teardown");
+    require((*heaps).getFreeSize() == free_before, "all callback and scene domain allocations retire at scene teardown");
     {
         smgpc::test::OriginalSceneControllerFixture original(heaps);
         SceneScheduler scheduler;
         SceneSchedulerBinding active(scheduler);
-        auto execution_domain = JkrAllocationDomain::create(heaps, 512U << 10);
+        auto execution_domain = smgpc::test::create_native_solid_heap(heaps, 512U << 10);
         smgpc::test::SceneExecutionFixture execution(scheduler, execution_domain,
                                                   &original.scene);
-        auto domain = JkrAllocationDomain::create(heaps, 64U << 10);
-        std::weak_ptr<JkrAllocationDomain> weak = domain;
+        auto domain = smgpc::test::create_native_solid_heap(heaps, 64U << 10);
+        std::weak_ptr<JKRHeap> weak = domain;
         auto scene = std::make_unique<SceneSchedulerAllocationBinding>(scheduler, domain);
         domain.reset();
         CallbackObject object(scheduler);
@@ -318,28 +325,28 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
             scene.reset();
             require(!weak.expired(), "an executing callback retains the scene heap after its binding is removed");
             auto* value = new unsigned[8];
-            require(JKRHeap::findFromRoot(value) == &weak.lock()->heap(), "remaining callback work still uses its retained domain");
+            require(JKRHeap::findFromRoot(value) == weak.lock().get(), "remaining callback work still uses its retained domain");
             delete[] value;
         };
         scheduler.connect_name_obj(object, 34, -1, -1, -1);
         execution.complete_initialization();
         scheduler.execute_movement();
-        require(weak.expired() && scheduler.allocation_domain() == execution_domain, "the callback's last temporary domain lease releases on return to the execution owner");
+        require(weak.expired() && scheduler.allocation_heap() == execution_domain, "the callback's last temporary domain lease releases on return to the execution owner");
         scheduler.clear();
     }
-    require(heaps->root_heap().getFreeSize() == free_before, "removal of an active scene binding leaves no retained heap");
+    require((*heaps).getFreeSize() == free_before, "removal of an active scene binding leaves no retained heap");
     std::cout << "explicit_scene_heap=pass nested_exception_restoration=pass stable_registration_mutation=pass "
                  "sensor_message_retirement=pass clipping_transitions=pass predraw_draw=pass callback_lease=pass scene_heap_retirement=pass\n";
 }
 
-void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
-    using namespace smgpc::compat;
+void verify_category_execution(const JKRHeap::Handle& heaps) {
+
     using namespace smgpc::runtime;
-    const auto free_before = heaps->root_heap().getFreeSize();
+    const auto free_before = (*heaps).getFreeSize();
     {
         smgpc::test::OriginalSceneControllerFixture original(heaps);
-        auto domain = JkrAllocationDomain::create(heaps, 1U << 20);
-        auto caller = JkrAllocationDomain::create(heaps, 32U << 10);
+        auto domain = smgpc::test::create_native_solid_heap(heaps, 1U << 20);
+        auto caller = smgpc::test::create_native_solid_heap(heaps, 32U << 10);
         SceneScheduler scheduler;
         SceneSchedulerBinding active(scheduler);
         SceneSchedulerAllocationBinding game(scheduler, domain);
@@ -349,7 +356,7 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
         CallbackObject camera(scheduler), clipping(scheduler), platform(scheduler), collision(scheduler), player(scheduler);
         std::vector<unsigned> order;
         const auto record = [&](unsigned event) {
-            JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             order.push_back(event);
         };
         camera.movement_hook = [&] { record(1); };
@@ -366,7 +373,8 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
         scheduler.connect_name_obj(camera, MR::MovementType_Camera, -1, -1, -1);
         execution.complete_initialization();
         {
-            JkrAllocationScope external(caller);
+            const JKRHeap::CurrentHeapScope external(*(caller));
+            const aurora::allocation::ClientAllocationScope externalRouting({true, true});
             scheduler.begin_frame();
             CategoryList::execute(MR::MovementType_Camera);
             CategoryList::execute(MR::MovementType_ClippingDirector);
@@ -375,7 +383,7 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
             CategoryList::execute(MR::CalcAnimType_CollisionMapObj);
             CategoryList::execute(MR::MovementType_CollisionDirector);
             CategoryList::execute(MR::MovementType_Player);
-            require(current_jkr_allocation_domain() == caller, "category callbacks restore the caller's selected heap");
+            require(JKRHeap::retainCurrentNativeLifetime() == caller, "category callbacks restore the caller's selected heap");
         }
         require(order == std::vector<unsigned>({1, 2, 3, 4, 5, 6}), "categories execute exactly the caller's movement/animation interleave");
         const auto trace = scheduler.last_execution_trace();
@@ -427,10 +435,11 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
         scheduler.connect_name_obj(replacement, -1, MR::CalcAnimType_Player, -1, -1);
         execution.apply_connections();
         {
-            JkrAllocationScope external(caller);
+            const JKRHeap::CurrentHeapScope external(*(caller));
+            const aurora::allocation::ClientAllocationScope externalRouting({true, true});
             bool caught = false;
             try { CategoryList::execute(MR::MovementType_Player); } catch (int code) { caught = code == 83; }
-            require(caught && current_jkr_allocation_domain() == caller && j3dSys.mDrawMode == original_mode,
+            require(caught && JKRHeap::retainCurrentNativeLifetime() == caller && j3dSys.mDrawMode == original_mode,
                     "nested category exception restores both heap routing and J3D caller state");
         }
         scheduler.clear();
@@ -438,7 +447,8 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
         MR::getSceneObj<SensorHitChecker>(SceneObj_SensorHitChecker)->initWithoutIter();
         CallbackActor first(scheduler), second(scheduler);
         for (auto* actor : {&first, &second}) {
-            JkrAllocationScope initialization_heap(domain);
+            const JKRHeap::CurrentHeapScope initialization_heap(*(domain));
+            const aurora::allocation::ClientAllocationScope initialization_heapRouting({true, true});
             actor->initHitSensor(1);
             (void)MR::addHitSensor(actor, "body", actor == &first ? ATYPE_PLAYER : ATYPE_ENEMY, 4U, 10.0F, {});
             actor->makeActorAppeared();
@@ -462,7 +472,7 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
         require(sensor->mSensorCount == 0, "the next explicit sensor category publishes the new positions");
         scheduler.clear();
     }
-    require(heaps->root_heap().getFreeSize() == free_before, "category callbacks retain no retired scene arena");
+    require((*heaps).getFreeSize() == free_before, "category callbacks retain no retired scene arena");
     std::cout << "category_interleave=pass category_identity=pass category_exception_restore=pass single_sensor_phase=pass\n";
 }
 }
@@ -486,31 +496,32 @@ public:
 };
 
 int main(int argc, char** argv) {
-    using namespace smgpc::compat;
-    auto heaps = JkrHeapRuntime::create(16U << 20);
+
+    auto heaps = smgpc::test::create_native_root_heap(16U << 20);
     if (argc == 2 && std::string_view(argv[1]) == "--categories-only") {
         verify_category_execution(heaps);
         return 0;
     }
-    auto domain = JkrAllocationDomain::create(heaps, 64U << 10);
+    auto domain = smgpc::test::create_native_solid_heap(heaps, 64U << 10);
     std::vector<NameObj*> snapshot;
     std::vector<smgpc::runtime::SceneSchedulerEntryState> scheduler_snapshot;
     u32 after_object = 0;
     {
         // First-ever registration must also allocate its global hash buckets
         // on the host. Do not prewarm the registry before this scope.
-        JkrAllocationScope scope(domain);
+        const JKRHeap::CurrentHeapScope scope(*(domain));
+        const aurora::allocation::ClientAllocationScope scopeRouting({true, true});
         auto object = std::make_unique<NameObj>("original heap object");
-        if (JKRHeap::findFromRoot(object.get()) != &domain->heap())
+        if (JKRHeap::findFromRoot(object.get()) != &(*domain))
             throw std::runtime_error("Game NameObj did not use the original heap");
         if (JKRHeap::findFromRoot(const_cast<char*>(object->mName)) != nullptr)
             throw std::runtime_error("first NameObj registration used the original heap for its name");
-        after_object = domain->heap().getTotalFreeSize();
+        after_object = (*domain).getTotalFreeSize();
         std::array<char, 512> long_name;
         std::fill(long_name.begin(), long_name.end() - 1, 'n');
         long_name.back() = 0;
         object->setName(long_name.data());
-        snapshot = snapshot_name_obj_runtime_objects();
+        snapshot = NameObj::snapshotNativeObjects();
         if (snapshot.size() != 1 || snapshot[0] != object.get() ||
             JKRHeap::findFromRoot(snapshot.data()) != nullptr ||
             JKRHeap::findFromRoot(const_cast<char*>(object->mName)) != nullptr)
@@ -518,21 +529,22 @@ int main(int argc, char** argv) {
     }
     // JKRSolidHeap keeps the original object's arena allocation until reset.
     // Renaming, snapshots and registry retirement must consume no more space.
-    if (domain->heap().getTotalFreeSize() != after_object)
+    if ((*domain).getTotalFreeSize() != after_object)
         throw std::runtime_error("NameObj metadata consumed additional original heap storage");
     auto original = std::make_unique<smgpc::test::OriginalSceneControllerFixture>(heaps);
     smgpc::runtime::SceneScheduler scheduler;
     smgpc::runtime::SceneSchedulerBinding active(scheduler);
-    auto execution_domain = JkrAllocationDomain::create(heaps, 1U << 20);
+    auto execution_domain = smgpc::test::create_native_solid_heap(heaps, 1U << 20);
     auto execution = std::make_unique<smgpc::test::SceneExecutionFixture>(
         scheduler, execution_domain, &original->scene);
     create_clipping_fixture(scheduler);
     std::vector<std::unique_ptr<NameObj>> objects;
     for (int i = 0; i < 128; ++i)
         objects.push_back(std::make_unique<NameObj>("heap registration fixture"));
-    const auto before = domain->heap().getTotalFreeSize();
+    const auto before = (*domain).getTotalFreeSize();
     {
-        JkrAllocationScope scope(domain);
+        const JKRHeap::CurrentHeapScope scope(*(domain));
+        const aurora::allocation::ClientAllocationScope scopeRouting({true, true});
         for (auto& object : objects)
             scheduler.connect_name_obj(*object, 34, 0, -1, -1);
         execution->complete_initialization();
@@ -547,15 +559,16 @@ int main(int argc, char** argv) {
         for (const auto& state : trace)
             if (JKRHeap::findFromRoot(const_cast<char*>(state.name.data())) != nullptr)
                 throw std::runtime_error("scheduler trace name uses the original Game heap");
-        if (domain->heap().getTotalFreeSize() != before)
+        if ((*domain).getTotalFreeSize() != before)
             throw std::runtime_error("scheduler registration, sorting, tracing or snapshots consumed the Game heap");
     }
     domain.reset();
     // Overwrite a reused arena before reading retained trace strings, so stale
     // arena contents cannot make the ownership check accidentally pass.
     {
-        auto churn = JkrAllocationDomain::create(heaps, 64U << 10);
-        JkrAllocationScope scope(churn);
+        auto churn = smgpc::test::create_native_solid_heap(heaps, 64U << 10);
+        const JKRHeap::CurrentHeapScope scope(*(churn));
+        const aurora::allocation::ClientAllocationScope scopeRouting({true, true});
         auto* bytes = new unsigned char[32U << 10];
         std::memset(bytes, 0xa5, 32U << 10);
         delete[] bytes;
@@ -586,16 +599,17 @@ int main(int argc, char** argv) {
             scheduler.connect_name_obj(*actor, 34, -1, -1, -1);
         }
         (void)MR::createSceneObj(SceneObj_MessageSensorHolder);
-        auto invocation = JkrAllocationDomain::create(heaps, 64U << 10);
+        auto invocation = smgpc::test::create_native_solid_heap(heaps, 64U << 10);
         {
             smgpc::runtime::SceneSchedulerAllocationBinding callback_heap(scheduler, invocation);
-            JkrAllocationScope scope(invocation);
-            const auto free_before = invocation->heap().getTotalFreeSize();
+            const JKRHeap::CurrentHeapScope scope(*(invocation));
+            const aurora::allocation::ClientAllocationScope scopeRouting({true, true});
+            const auto free_before = (*invocation).getTotalFreeSize();
             for (unsigned i = 0; i < 32; ++i) {
                 scheduler.execute_movement();
                 MR::sendMsgToAllLiveActor(0, nullptr);
             }
-            if (invocation->heap().getTotalFreeSize() != free_before)
+            if ((*invocation).getTotalFreeSize() != free_before)
                 throw std::runtime_error("actor/sensor/message scratch metadata consumed the Game arena");
         }
         if (first.movements != 32 || second.movements != 32 || first.messages != 32 || second.messages != 32)
@@ -606,16 +620,17 @@ int main(int argc, char** argv) {
         scheduler.clear();
     }
     {
-        auto invocation = JkrAllocationDomain::create(heaps, 64U << 10);
+        auto invocation = smgpc::test::create_native_solid_heap(heaps, 64U << 10);
         AllocatingNameObj object;
         scheduler.connect_name_obj(object, 34, 0, -1, -1);
         {
             smgpc::runtime::SceneSchedulerAllocationBinding callback_heap(scheduler, invocation);
-            JkrAllocationScope scope(invocation);
+            const JKRHeap::CurrentHeapScope scope(*(invocation));
+            const aurora::allocation::ClientAllocationScope scopeRouting({true, true});
             scheduler.execute_movement();
             scheduler.execute_calc_anim();
-            if (JKRHeap::findFromRoot(object.movement_allocation) != &invocation->heap() ||
-                JKRHeap::findFromRoot(object.animation_allocation) != &invocation->heap())
+            if (JKRHeap::findFromRoot(object.movement_allocation) != &(*invocation) ||
+                JKRHeap::findFromRoot(object.animation_allocation) != &(*invocation))
                 throw std::runtime_error("scheduler metadata scope changed original callback allocation routing");
             delete[] object.movement_allocation;
             delete[] object.animation_allocation;

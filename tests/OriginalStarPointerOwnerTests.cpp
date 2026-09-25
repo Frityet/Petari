@@ -1,6 +1,6 @@
 #include "Game/Util/FileUtil.hpp"
 #include <JSystem/JKernel/JKRArchive.hpp>
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "Game/System/DrawSyncManager.hpp"
 #include "OriginalStageResourceProcessFixture.hpp"
 #include "Game/Util/ScreenUtil.hpp"
@@ -235,11 +235,11 @@ void original_resources() {
 }
 
 int main() {
-    const auto baseline_objects = smgpc::compat::name_obj_runtime_state_count();
+    const auto baseline_objects = NameObj::snapshotNativeObjects().size();
     const int result = smgpc::test::run_stage_resource_process("original-star-pointer-owner", original_resources);
     if (result != 0) return result;
     try {
-        require(!DrawSyncManager::sInstance && smgpc::compat::name_obj_runtime_state_count() == baseline_objects,
+        require(!DrawSyncManager::sInstance && NameObj::snapshotNativeObjects().size() == baseline_objects,
                 "original process shutdown retires pointer descendants and GPU callbacks");
         std::cout << "Original pointer resources, GPU callbacks, layout groups and process ownership passed\n";
         return 0;

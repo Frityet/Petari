@@ -1,4 +1,4 @@
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "Game/System/WPad.hpp"
 #include "Game/System/WPadHolder.hpp"
 #include "Game/System/WPadPointer.hpp"
@@ -20,12 +20,13 @@ void require(bool value, const char* message) {
 void near(float actual, float expected, const char* message) {
     require(std::abs(actual - expected) < 0.00001F, message);
 }
-void message_storage(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
+void message_storage(const JKRHeap::Handle& heaps) {
     smgpc::runtime::MessageService messages;
-    auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 128U << 10);
+    auto domain = smgpc::test::create_native_solid_heap(heaps, 128U << 10);
     const wchar_t* first;
     {
-        smgpc::compat::JkrAllocationScope game(domain);
+        const JKRHeap::CurrentHeapScope game(*(domain));
+        const aurora::allocation::ClientAllocationScope gameRouting({true, true});
         messages.set_message("first", u"Retained Guidance text, longer than any small string buffer\nSecond line");
         first = messages.message_raw_wide("first")->c_str();
         messages.set_message("second", u"Different text");
@@ -44,10 +45,10 @@ void message_storage(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps
 }
 int main() {
     try {
-        auto heaps = smgpc::compat::JkrHeapRuntime::create(4U << 20);
-        const auto free = heaps->root_heap().getFreeSize();
+        auto heaps = smgpc::test::create_native_root_heap(4U << 20);
+        const auto free = (*heaps).getFreeSize();
         message_storage(heaps);
-        require(heaps->root_heap().getFreeSize() == free, "retained-message source domains release all Game storage");
+        require((*heaps).getFreeSize() == free, "retained-message source domains release all Game storage");
         std::cout << "Retained message storage and pointer provenance passed\n";
     } catch (const std::exception& error) {
         std::cerr << error.what() << '\n';

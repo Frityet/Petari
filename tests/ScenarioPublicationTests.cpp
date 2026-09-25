@@ -4,7 +4,7 @@
 #include "Game/System/GalaxyStatusAccessor.hpp"
 #include "Game/Util/FileUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -16,7 +16,7 @@ void require(bool pass, const char* message) { if (!pass) throw std::runtime_err
 
 int main(int argc, char** argv) {
     return smgpc::test::run_stage_resource_generations(argc, argv, "scenario-publication", 2, [](unsigned cycle) {
-        const auto baseline = smgpc::compat::name_obj_runtime_state_count();
+        const auto baseline = NameObj::snapshotNativeObjects().size();
         std::weak_ptr<JMapInfo::DataCompat> map;
         std::weak_ptr<const void> archive_lifetime;
         const auto label = std::string("scenario-publication-") + std::to_string(cycle);
@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
                     "process retirement clears its real system and file-loader singletons");
             require(map.expired() && archive_lifetime.expired(),
                     "actual process heap disposal retires scenario metadata and archive lifetimes");
-            require(smgpc::compat::name_obj_runtime_state_count() == baseline,
+            require(NameObj::snapshotNativeObjects().size() == baseline,
                     "actual process retirement restores the original NameObj registry baseline");
         } catch (const std::exception& error) {
             std::cerr << "FAIL scenario publication: " << error.what() << '\n';

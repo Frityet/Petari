@@ -1,3 +1,4 @@
+#include "NativeHeapFixture.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "OriginalTalkNodeTests.hpp"
 #include "Game/System/MessageHolder.hpp"
@@ -106,11 +107,12 @@ Bytes archive(const Bytes& messages, const Bytes& identifiers) {
 }
 void native_boundary(smgpc::resource::GameResourceRuntime& process, FileLoader& loader) {
     const auto message_bytes = bmg(), identifier_bytes = ids();
-    auto domain = smgpc::compat::JkrAllocationDomain::create(MR::getSceneObjHolder()->nativeAllocationDomain(), 1U << 20);
+    auto domain = smgpc::test::create_native_solid_heap(MR::getSceneObjHolder()->nativeAllocationHeap(), 1U << 20);
     auto raw_archive = archive(message_bytes, identifier_bytes);
-    (void)loader.createAndAddArchive(raw_archive.data(), &domain->heap(), "/NativeMessageFixture.arc");
+    (void)loader.createAndAddArchive(raw_archive.data(), &(*domain), "/NativeMessageFixture.arc");
     {
-        smgpc::compat::JkrAllocationScope heap(domain);
+        const JKRHeap::CurrentHeapScope heap(*(domain));
+        const aurora::allocation::ClientAllocationScope heapRouting({true, true});
         MessageData data("/NativeMessageFixture.arc");
         TalkMessageInfo info;
         require(data.getMessageDirect(&info, "Tagged") && data.findMessageIndex("\x91\xcc") == 2 &&
@@ -142,7 +144,7 @@ void native_boundary(smgpc::resource::GameResourceRuntime& process, FileLoader& 
                     data.isValidBranchNode(0) && !data.isValidBranchNode(1),
                 "original flow methods retain node, branch, sentinel and event-u32 union semantics");
     }
-    loader.removeHolderIfIsEqualHeap(&domain->heap());
+    loader.removeHolderIfIsEqualHeap(&(*domain));
     auto malformed = message_bytes;
     put32(malformed, 0x30, 1);
     rejects([&] { smgpc::resource::NativeBmgResource invalid(malformed, identifier_bytes); },

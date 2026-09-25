@@ -1,16 +1,15 @@
-#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/System/ArchiveHolder.hpp"
 #include "Game/Util.hpp"
 #include "resource/JMapResource.hpp"
 #include "resource/JpcResource.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
 #include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
 #include <cstring>
 #include <stdexcept>
 
 struct ArchiveHolderArchiveEntry::NativeState {
-    std::shared_ptr< smgpc::compat::JkrAllocationDomain > mDomain;
+    JKRHeap::Handle mDomain;
     std::vector< smgpc::resource::JMapSourceRegistration > mTables;
     std::vector< smgpc::resource::JpcSourceRegistration > mParticles;
 };
@@ -24,7 +23,7 @@ ArchiveHolderArchiveEntry::ArchiveHolderArchiveEntry(void* pData, JKRHeap* pHeap
     {
         const aurora::allocation::HostAllocationScope host;
         mNativeState = std::make_unique< NativeState >();
-        mNativeState->mDomain = smgpc::compat::JkrAllocationDomain::retain_heap(*pHeap);
+        mNativeState->mDomain = pHeap->retainNativeLifetime();
         const auto source = archive->retainSource();
         const std::weak_ptr< const void > lifetime = archive->retainNativeResources();
         for (const auto& entry : source->entries()) {
@@ -106,7 +105,7 @@ void ArchiveHolder::removeIfIsEqualHeap(JKRHeap* pHeap) {
 
     for (ArchiveHolderArchiveEntry** i = mEntries.begin(); i != mEntries.end();) {
         if ((*i)->mHeap == pHeap || MR::getHeapNapa((*i)->mHeap) == pHeap || MR::getHeapGDDR3((*i)->mHeap) == pHeap) {
-            const auto heap = smgpc::compat::JkrAllocationDomain::retain_heap(*(*i)->mHeap);
+            const auto heap = (*i)->mHeap->retainNativeLifetime();
             delete *i;
             mEntries.erase(i);
         } else {

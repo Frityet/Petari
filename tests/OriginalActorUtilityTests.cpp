@@ -1,3 +1,4 @@
+#include "NativeHeapFixture.hpp"
 #include <MSL_C/stdio.h>
 #include "OriginalSceneControllerFixture.hpp"
 #include "SceneExecutionFixture.hpp"
@@ -114,11 +115,11 @@ namespace {
     }
 
     void run_gravity_checks() {
-        const auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+        const auto heaps = smgpc::test::create_native_root_heap(16U << 20);
         smgpc::test::OriginalSceneControllerFixture original(heaps);
         smgpc::runtime::SceneScheduler scheduler;
         smgpc::runtime::SceneSchedulerBinding active(scheduler);
-        const auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 1U << 20);
+        const auto domain = smgpc::test::create_native_solid_heap(heaps, 1U << 20);
         smgpc::test::SceneExecutionFixture scene(scheduler, domain,
                                                &original.scene);
         if (!MR::createSceneObj(SceneObj_PlanetGravityManager))

@@ -1,3 +1,4 @@
+#include "NativeHeapFixture.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Map/CollisionParts.hpp"
 #include "OriginalStageResourceProcessFixture.hpp"
@@ -26,7 +27,7 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/FileUtil.hpp"
 #include "JSystem/JKernel/JKRMemArchive.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "Game/System/ResourceHolder.hpp"
 #include "Game/System/ResourceHolderManager.hpp"
 #include "Game/Util/SingletonHolder.hpp"
@@ -208,7 +209,7 @@ namespace {
             auto* stage = MR::getStageDataHolder();
             auto* collision = MR::getCollisionDirector();
             auto* resources = SingletonHolder<ResourceHolderManager>::get();
-            const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
+            const auto domain = MR::getSceneObjHolder()->nativeAllocationHeap();
             require(stage && stage->mZoneID == 0 && collision && resources && domain,
                     "Actual process owns the root stage, collision, resource manager and scene heap");
 
@@ -239,7 +240,7 @@ namespace {
             const auto begin_before = stage->_E4;
             const auto end_before = stage->_E8;
             const auto zone_before = MR::getCurrentPlacementZoneId();
-            const auto actors_before = smgpc::compat::actor_runtime_state_count();
+            const auto actors_before = NameObj::snapshotNativeObjects().size();
             {
                 const PlacementTableRangeBinding range(*stage, wall_table);
                 require(stage->findPlacedStageDataHolder(iter) == stage && MR::getPlacedZoneId(iter) == 0,
@@ -258,7 +259,8 @@ namespace {
                 std::unique_ptr<NameObj> object_owner;
                 InvisiblePolygonObj* actor = nullptr;
                 {
-                    const smgpc::compat::JkrAllocationScope game(domain);
+                    const JKRHeap::CurrentHeapScope game(*(domain));
+                    const aurora::allocation::ClientAllocationScope gameRouting({true, true});
                     const auto creator = NameObjFactory::getCreator("InvisibleWall10x10");
                     require(creator != nullptr, "The retail factory provides the exact wall creator");
                     object_owner.reset(creator("InvisibleWall10x10"));
@@ -314,13 +316,13 @@ namespace {
                 require(!line_query_hits_registered_wall(nullptr, &only_wall) &&
                             !retired_triangle.isValid() && retired_triangle.getHostName() == nullptr &&
                             original_zone->mNumParts + 1 == zone_count &&
-                            !smgpc::compat::has_actor_runtime_state(retired_actor),
+                            !NameObj::nativeGeneration(retired_actor),
                         "Actor retirement removes actual keeper membership, queries and retained Triangle identities");
             }
             require(stage->_E4 == begin_before && stage->_E8 == end_before &&
                         MR::getCurrentPlacementZoneId() == zone_before &&
                         controller->mSceneInitializeState == SceneInitializeState_End &&
-                        smgpc::compat::actor_runtime_state_count() == actors_before,
+                        NameObj::snapshotNativeObjects().size() == actors_before,
                     "Injected row bounds, placement zone, initialization state and actor ownership restore exactly");
             exercised = true;
             std::fprintf(stderr, "[wall-probe] PASS terminal injected FileSelect row: original creator/init, line queries, appearance/death/invalidation/retirement and restored Gateway owners; frame=%llu\n",
@@ -364,7 +366,7 @@ namespace {
         };
         require(smgpc::app::run_original_game(configuration, *logger, observer) == 0 && probe.exercised,
                 "Actual original process completes the terminal wall fixture and bounded frame loop");
-        require(!smgpc::compat::has_actor_runtime_state(probe.retired_actor) &&
+        require(!NameObj::nativeGeneration(probe.retired_actor) &&
                     !probe.retired_triangle.isValid() && probe.retired_triangle.getHostName() == nullptr,
                 "Normal original-process teardown preserves retired wall identities and releases the scene collision owner");
 #endif

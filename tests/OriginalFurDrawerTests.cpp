@@ -1,7 +1,7 @@
 #include "Game/Util/FurDrawer.hpp"
 #include "Game/Util/FurParam.hpp"
 #include "JSystem/JUtility/JUTTexture.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "render/RendererService.hpp"
 
 #include <algorithm>
@@ -78,13 +78,14 @@ int main() {
         smgpc::render::AuroraWindow window({.width = 320, .height = 240, .title = "Original fur texture ownership"});
         smgpc::render::AuroraRenderer renderer(window);
         OSInit();
-        auto runtime = smgpc::compat::JkrHeapRuntime::create(2U * 1024U * 1024U);
-        auto domain = smgpc::compat::JkrAllocationDomain::create(runtime, 256U * 1024U);
+        auto runtime = smgpc::test::create_native_root_heap(2U * 1024U * 1024U);
+        auto domain = smgpc::test::create_native_solid_heap(runtime, 256U * 1024U);
         TextureResource base;
         TextureResource indirect;
         (void)renderer.begin_frame();
         {
-            smgpc::compat::JkrAllocationScope allocation(domain);
+            const JKRHeap::CurrentHeapScope allocation(*(domain));
+            const aurora::allocation::ClientAllocationScope allocationRouting({true, true});
             auto* drawer = new FurDrawer(6, &base.header, &indirect.header);
             require(drawer->mBaseTexture->mTIMG == &base.header && drawer->mLayerCount == 6,
                     "constructor must retain actual base texture and requested layer count");

@@ -223,6 +223,7 @@ void BaseMatrixFollower::update() {
 }
 
 BaseMatrixFollowTargetHolder::~BaseMatrixFollowTargetHolder() {
+    retireNativeLifetime();
     for (s32 i = mFollowers.size(); i > 0; --i) {
         delete mFollowers[i - 1];
     }

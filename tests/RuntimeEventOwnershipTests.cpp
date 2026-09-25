@@ -1,4 +1,4 @@
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "runtime/RuntimeServices.hpp"
 
@@ -27,10 +27,11 @@ int main() {
     };
     auto wipe = runtime::WipeService{};
     {
-        auto heaps = compat::JkrHeapRuntime::create(1U << 20);
-        auto scene = compat::JkrAllocationDomain::create(heaps, 1U << 18);
+        auto heaps = smgpc::test::create_native_root_heap(1U << 20);
+        auto scene = smgpc::test::create_native_solid_heap(heaps, 1U << 18);
         {
-            const auto game = compat::JkrAllocationScope(scene);
+            const const JKRHeap::CurrentHeapScope game(*(scene));
+                const aurora::allocation::ClientAllocationScope gameRouting({true, true});
             wipe.begin_frame(27U);
             wipe.open(names[0], 12);
             wipe.close(names[1], 8);

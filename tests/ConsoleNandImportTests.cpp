@@ -2,7 +2,7 @@
 #include <aurora/system_config.hpp>
 #include "runtime/RuntimeServices.hpp"
 #include "resource/GameResourceRuntime.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include <aurora/aurora.h>
 #include <aurora/sysconf.hpp>
 #include <array>
@@ -64,10 +64,11 @@ namespace {
         const std::array<u8, 2> current_save{7, 8};
         file(directory.path / (title.substr(1) + "/GameData.bin"), dump_save);
         nand.write_file("GameData.bin", current_save, 0x12, 7);
-        auto domain = smgpc::compat::JkrAllocationDomain::create(process.host_heaps(), 4096);
+        auto domain = smgpc::test::create_native_solid_heap(process.root_heap(), 4096);
         smgpc::runtime::NandImportResult result;
         {
-            smgpc::compat::JkrAllocationScope original(domain);
+            const JKRHeap::CurrentHeapScope original(*(domain));
+            const aurora::allocation::ClientAllocationScope originalRouting({true, true});
             result = smgpc::runtime::import_console_nand_directory(nand, directory.path, Policy::Preserve);
         }
         domain.reset();

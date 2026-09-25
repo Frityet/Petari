@@ -5,7 +5,7 @@
 #include "Game/Camera/CameraParamChunkHolder.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <aurora/allocation.hpp>
 
 #include <aurora/exception.hpp>
 
@@ -32,7 +32,7 @@ namespace smgpc::camera {
     }
 
     void *CameraDirectorRuntime::retain_animation(std::span<const std::uint8_t> resource) {
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         auto data = CameraAnimation::from_bytes(resource).native_data();
         _animations.push_back(data);
         return const_cast<std::uint8_t *>(data.bytes().data());

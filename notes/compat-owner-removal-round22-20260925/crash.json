@@ -1,0 +1,316 @@
+{
+  "exception": {
+    "codes": "0x0000000000000001, 0x0000000000000118",
+    "rawCodes": [
+      1,
+      280
+    ],
+    "type": "EXC_BAD_ACCESS",
+    "signal": "SIGSEGV",
+    "subtype": "KERN_INVALID_ADDRESS at 0x0000000000000118"
+  },
+  "faultingThread": 0,
+  "thread": {
+    "threadState": {
+      "x": [
+        {
+          "value": 0
+        },
+        {
+          "value": 497883455808
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 531020873728
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 24
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 512
+        },
+        {
+          "value": 2
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 497884383216
+        },
+        {
+          "value": 497884383200
+        },
+        {
+          "value": 498045004096
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 3730432
+        },
+        {
+          "value": 16022083443683584
+        },
+        {
+          "value": 6614469148,
+          "symbolLocation": 0,
+          "symbol": "pthread_mutex_unlock"
+        },
+        {
+          "value": 4414913648
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 497882200144
+        },
+        {
+          "value": 497883455808
+        },
+        {
+          "value": 497884383184
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 497870439424
+        },
+        {
+          "value": 497870439568
+        }
+      ],
+      "flavor": "ARM_THREAD_STATE64",
+      "lr": {
+        "value": 4375918932
+      },
+      "cpsr": {
+        "value": 536870912
+      },
+      "fp": {
+        "value": 6092788720
+      },
+      "sp": {
+        "value": 6092788704
+      },
+      "esr": {
+        "value": 2449473542,
+        "description": "(Data Abort) byte read Translation fault"
+      },
+      "pc": {
+        "value": 4375918964,
+        "matchesCrashFrame": 1
+      },
+      "far": {
+        "value": 280
+      }
+    },
+    "id": 6672899,
+    "triggered": true,
+    "name": "Main thread",
+    "queue": "com.apple.main-thread",
+    "frames": [
+      {
+        "imageOffset": 1833332,
+        "sourceFile": "DrawBuffer.cpp",
+        "symbol": "DrawBuffer::remove(LiveActor const*)",
+        "symbolLocation": 56,
+        "imageIndex": 0
+      },
+      {
+        "imageOffset": 1894528,
+        "sourceLine": 68,
+        "sourceFile": "DrawBufferExecuter.cpp",
+        "symbol": "DrawBufferExecuter::remove(LiveActor*)",
+        "imageIndex": 0,
+        "symbolLocation": 140
+      },
+      {
+        "imageOffset": 1844520,
+        "sourceLine": 113,
+        "sourceFile": "DrawBufferGroup.cpp",
+        "symbol": "DrawBufferGroup::deactive(LiveActor*, int)",
+        "imageIndex": 0,
+        "symbolLocation": 116
+      },
+      {
+        "imageOffset": 1790600,
+        "sourceLine": 129,
+        "sourceFile": "DrawBufferHolder.cpp",
+        "symbol": "DrawBufferHolder::deactive(LiveActor*, int, int)",
+        "imageIndex": 0,
+        "symbolLocation": 148
+      },
+      {
+        "symbol": "NameObjExecuteInfo::disconnectToDraw(NameObjListExecutor&)",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 2525448,
+        "symbolLocation": 60,
+        "sourceLine": 216,
+        "sourceFile": "NameObjExecuteHolder.cpp"
+      },
+      {
+        "imageOffset": 2525448,
+        "sourceLine": 228,
+        "sourceFile": "NameObjExecuteHolder.cpp",
+        "symbol": "NameObjExecuteInfo::retireNativeRegistration(NameObjListExecutor&)",
+        "imageIndex": 0,
+        "symbolLocation": 264
+      },
+      {
+        "imageOffset": 4496364,
+        "symbol": "smgpc::runtime::SceneScheduler::disconnect_name_obj(NameObj&)",
+        "symbolLocation": 116,
+        "imageIndex": 0
+      },
+      {
+        "imageOffset": 2480268,
+        "sourceFile": "NameObj.cpp",
+        "symbol": "NameObj::~NameObj()",
+        "symbolLocation": 60,
+        "imageIndex": 0
+      },
+      {
+        "symbol": "NPCActor::~NPCActor()",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 2596396,
+        "symbolLocation": 8,
+        "sourceLine": 78,
+        "sourceFile": "NPCActor.hpp"
+      },
+      {
+        "symbol": "Tico::~Tico()",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 2596396,
+        "symbolLocation": 32,
+        "sourceLine": 10,
+        "sourceFile": "Tico.hpp"
+      },
+      {
+        "symbol": "RunawayTico::~RunawayTico()",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 2596396,
+        "symbolLocation": 32,
+        "sourceLine": 7,
+        "sourceFile": "RunawayTico.hpp"
+      },
+      {
+        "symbol": "RunawayTico::~RunawayTico()",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 2596396,
+        "symbolLocation": 32,
+        "sourceLine": 7,
+        "sourceFile": "RunawayTico.hpp"
+      },
+      {
+        "imageOffset": 2596396,
+        "sourceLine": 7,
+        "sourceFile": "RunawayTico.hpp",
+        "symbol": "RunawayTico::~RunawayTico()",
+        "imageIndex": 0,
+        "symbolLocation": 48
+      },
+      {
+        "imageOffset": 2559772,
+        "sourceLine": 93,
+        "sourceFile": "GameScene.cpp",
+        "symbol": "GameScene::~GameScene()",
+        "imageIndex": 0,
+        "symbolLocation": 140
+      },
+      {
+        "symbol": "GameScene::~GameScene()",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 2559916,
+        "symbolLocation": 4,
+        "sourceLine": 82,
+        "sourceFile": "GameScene.cpp"
+      },
+      {
+        "imageOffset": 2559916,
+        "sourceLine": 82,
+        "sourceFile": "GameScene.cpp",
+        "symbol": "GameScene::~GameScene()",
+        "imageIndex": 0,
+        "symbolLocation": 12
+      },
+      {
+        "symbol": "smgpc::app::(anonymous namespace)::OriginalProcess::retire()",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 18428,
+        "symbolLocation": 244,
+        "sourceLine": 419,
+        "sourceFile": "OriginalGameApplication.cpp"
+      },
+      {
+        "symbol": "smgpc::app::(anonymous namespace)::OriginalProcess::~OriginalProcess()",
+        "inline": true,
+        "imageIndex": 0,
+        "imageOffset": 18428,
+        "symbolLocation": 244,
+        "sourceLine": 264,
+        "sourceFile": "OriginalGameApplication.cpp"
+      },
+      {
+        "imageOffset": 18428,
+        "sourceLine": 264,
+        "sourceFile": "OriginalGameApplication.cpp",
+        "symbol": "smgpc::app::(anonymous namespace)::OriginalProcess::~OriginalProcess()",
+        "imageIndex": 0,
+        "symbolLocation": 348
+      },
+      {
+        "imageOffset": 15524,
+        "sourceLine": 553,
+        "sourceFile": "OriginalGameApplication.cpp",
+        "symbol": "smgpc::app::run_original_game(smgpc::app::BootstrapConfiguration const&, smgpc::logging::ILogger&, smgpc::app::OriginalGameDebugObserver)",
+        "imageIndex": 0,
+        "symbolLocation": 5348
+      },
+      {
+        "imageOffset": 6440,
+        "sourceLine": 54,
+        "sourceFile": "main.cpp",
+        "symbol": "aurora_main",
+        "imageIndex": 0,
+        "symbolLocation": 616
+      },
+      {
+        "imageOffset": 204416,
+        "symbol": "start",
+        "symbolLocation": 6688,
+        "imageIndex": 7
+      }
+    ]
+  }
+}

@@ -18,9 +18,9 @@
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/MapUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Map/CollisionDirector.hpp"
 #include "Game/Util/MtxUtil.hpp"
@@ -249,9 +249,10 @@ namespace {
                     "normal original placement initializes the actual Mario, constants, animator, Binder and holder");
             require(!identity || identity == actor, "the original player owner survives every observed scene frame");
             identity = actor;
-            const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
+            const auto domain = MR::getSceneObjHolder()->nativeAllocationHeap();
             require(domain != nullptr, "the actual original scene owns test allocations");
-            const smgpc::compat::JkrAllocationScope allocation(domain);
+            const JKRHeap::CurrentHeapScope allocation(*(domain));
+            const aurora::allocation::ClientAllocationScope allocationRouting({true, true});
             const J3DSys::CommandScope commands;
 
             if (!stack_and_walk) {
@@ -346,7 +347,7 @@ int main() {
         require(smgpc::app::run_original_game(configuration, *logger, observer) == 0 &&
                     probe.stack_and_walk && probe.camera && probe.utilities && probe.recovery_safety,
                 "actual original process reaches every retained player check and normal retirement");
-        require(probe.identity && !smgpc::compat::has_actor_runtime_state(probe.identity),
+        require(probe.identity && !NameObj::nativeGeneration(probe.identity),
                 "ordinary process teardown retires the original player owner");
         std::fprintf(stderr, "PASS original player owner: retained state stack, walking parameters, player utilities, real-demo camera and retirement\n");
         return 0;

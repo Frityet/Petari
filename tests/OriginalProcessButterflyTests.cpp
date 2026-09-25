@@ -17,7 +17,7 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 
 #include <aurora/allocation.hpp>
 #include <array>
@@ -68,7 +68,7 @@ namespace {
 
         void discover() {
             require(original_placement_count() == 3, "Actual Gateway scenario has three Butterfly placements");
-            for (auto* object : smgpc::compat::snapshot_name_obj_runtime_objects())
+            for (auto* object : NameObj::snapshotNativeObjects())
                 if (auto* actor = dynamic_cast<Butterfly*>(object)) actors.push_back(actor);
             require(actors.size() == 3, "Ordinary original placement phase creates all three Butterfly actors");
             auto* director = MR::getStarPieceDirector();
@@ -213,11 +213,11 @@ int main() {
         };
         require(smgpc::app::run_original_game(configuration, *logger, observer) == 0 && probe.samples >= 250,
                 "OriginalProcess completes all ordinary frames and at least 250 observations");
-        require(!smgpc::compat::has_name_obj_runtime_state(probe.director_identity), "Normal scene retirement removes actual Star Piece director");
+        require(!NameObj::nativeGeneration(probe.director_identity), "Normal scene retirement removes actual Star Piece director");
         for (const auto* actor : probe.actors)
-            require(!smgpc::compat::has_name_obj_runtime_state(actor), "Normal original scene teardown retires all three Butterfly actors");
+            require(!NameObj::nativeGeneration(actor), "Normal original scene teardown retires all three Butterfly actors");
         for (const auto* piece : probe.star_piece_identities)
-            require(!smgpc::compat::has_name_obj_runtime_state(piece), "Normal original scene teardown retires all original pool actors");
+            require(!NameObj::nativeGeneration(piece), "Normal original scene teardown retires all original pool actors");
         std::fprintf(stderr, "PASS original-process Butterfly: three ordinary placements, original sensors/models/Star Piece ownership, samples=%zu, successful pointer distances=%zu, full retirement\n",
                      probe.samples, probe.pointer_distance_samples);
         return 0;

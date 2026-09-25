@@ -2,10 +2,11 @@
 
 #include "Game/System/MainLoopFramework.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
+#include "JSystem/JKernel/JKRSolidHeap.hpp"
 #include "JSystem/JUtility/JUTDirectPrint.hpp"
 #include "JSystem/JUtility/JUTVideo.hpp"
 #include "JSystem/JUtility/JUTXfb.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <aurora/allocation.hpp>
 
 #include <aurora/exception.hpp>
 #include <aurora/guest_thread.hpp>
@@ -15,20 +16,23 @@
 
 namespace smgpc::runtime {
     OriginalDisplayLifetime::OriginalDisplayLifetime(render::AuroraWindow& window,
-            std::shared_ptr<compat::JkrHeapRuntime> heaps, const GXRenderModeObj& mode)
+            JKRHeap::Handle heaps, const GXRenderModeObj& mode)
         : _window(window), _mode(mode) {
         const aurora::os::GuestThreadExecutionScope execution;
-        const compat::JkrHostAllocationScope host;
+        const aurora::allocation::HostAllocationScope host;
         if (JUTVideo::getManager() || JUTXfb::getManager() || MainLoopFramework::sManager)
             aurora::throw_host_exception<std::logic_error>("The original display factories already have an owner");
         const std::size_t size = ((std::size_t(mode.fbWidth) + 15) & ~std::size_t(15)) * mode.xfbHeight * 2;
         if (!size)
             aurora::throw_host_exception<std::invalid_argument>("Display buffers require nonzero dimensions");
-        _domain = compat::JkrAllocationDomain::create(std::move(heaps), size * 3 + 128 * 1024);
+        auto* displayHeap = JKRSolidHeap::create(static_cast<u32>(size * 3 + 128 * 1024), heaps.get(), false);
+        if (!displayHeap) throw std::bad_alloc();
+        _heap = displayHeap->adoptNativeOwnership();
         try {
-            const compat::JkrAllocationScope game(_domain);
+            const JKRHeap::CurrentHeapScope game(*_heap);
+            const aurora::allocation::ClientAllocationScope game_routing({true, true});
             if (!JUTDirectPrint::getManager()) _direct = JUTDirectPrint::start();
-            for (auto& buffer : _buffers) buffer = new (&_domain->heap(), 32) u8[size];
+            for (auto& buffer : _buffers) buffer = new (_heap.get(), 32) u8[size];
             _previous_draw_callback = GXSetDrawDoneCallback(nullptr);
             _draw_callback_installed = true;
             _video = JUTVideo::createManager(&_mode);
@@ -44,9 +48,10 @@ namespace smgpc::runtime {
     OriginalDisplayLifetime::~OriginalDisplayLifetime() { retire(); }
 
     void OriginalDisplayLifetime::retire() {
-        if (!_domain) return;
+        if (!_heap) return;
         const aurora::os::GuestThreadExecutionScope execution;
-        const compat::JkrAllocationScope game(_domain);
+        const auto retainedHeap = _heap;
+        const aurora::allocation::ClientAllocationScope game_routing({true, true});
         if (_attached) {
             _window.detach_display(*this);
             _attached = false;
@@ -93,7 +98,8 @@ namespace smgpc::runtime {
 
     void OriginalDisplayLifetime::begin_render(const render::CopyClearState& clear) {
         const aurora::os::GuestThreadExecutionScope execution;
-        const compat::JkrAllocationScope game(_domain);
+        const auto retainedHeap = _heap;
+        const aurora::allocation::ClientAllocationScope game_routing({true, true});
         if (_rendering) aurora::throw_host_exception<std::logic_error>("An original display frame is already open");
         set_copy_clear(clear);
         _main_loop->beginRender();
@@ -102,7 +108,8 @@ namespace smgpc::runtime {
 
     void OriginalDisplayLifetime::end_render() {
         const aurora::os::GuestThreadExecutionScope execution;
-        const compat::JkrAllocationScope game(_domain);
+        const auto retainedHeap = _heap;
+        const aurora::allocation::ClientAllocationScope game_routing({true, true});
         if (!_rendering) return;
         _main_loop->endRender();
         _main_loop->endFrame();

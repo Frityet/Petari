@@ -5,7 +5,7 @@
 #include "JSystem/JKernel/JKRArchive.hpp"
 #include "JSystem/JKernel/JKRDvdFile.hpp"
 #include "JSystem/JSupport/JSUFileStream.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 
 #include <aurora/guest_thread.hpp>
 #include <aurora/allocation.hpp>
@@ -74,7 +74,7 @@ void* release_retiring_callback(void* argument) {
     return nullptr;
 }
 
-void retire_with_allocating_callback(std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
+void retire_with_allocating_callback(JKRHeap::Handle& heaps, std::shared_ptr<void>& mem2) {
     AllocatingCallback state;
     allocatingCallback = &state;
     OSInitMessageQueue(&state.proceed, &state.message, 1);
@@ -94,6 +94,7 @@ void retire_with_allocating_callback(std::shared_ptr<smgpc::compat::JkrHeapRunti
     require(state.entered, "higher-priority DMA callback must start before resume returns");
     OSResumeThread(&release);
     state.retirementStarted = true;
+    mem2.reset();
     heaps.reset();
     require(state.allocated, "callback allocation must finish before the root heap is locked and released");
     require(OSJoinThread(&transfer, nullptr) && OSJoinThread(&release, nullptr),
@@ -192,14 +193,15 @@ void decompression() {
     fetch(yaz, "ABCABCABC!", 10, JKR_COMPRESSION_SZS);
 }
 
-void cycle(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps, bool originalSizes) {
-    using namespace smgpc::compat;
-    auto domain = JkrAllocationDomain::create(heaps, 512U * 1024U);
-    auto* oldSystem = domain->heap().becomeSystemHeap();
+void cycle(const JKRHeap::Handle& heaps, bool originalSizes) {
+
+    auto domain = smgpc::test::create_native_solid_heap(heaps, 512U * 1024U);
+    auto* oldSystem = (*domain).becomeSystemHeap();
     const auto oldCount = JKRThread::sThreadList.getNumLinks();
     JKRAram* manager;
     {
-        const JkrAllocationScope allocation(domain);
+        const JKRHeap::CurrentHeapScope allocation(*(domain));
+        const aurora::allocation::ClientAllocationScope allocationRouting({true, true});
         manager = JKRAram::create(originalSizes ? 0xE00000 : 0x100000, 0xFFFFFFFF, 8, 7, 3);
     }
     require(JKRAram::getManager() == manager && JKRAramStream::getManager() != nullptr && JKRDecomp::getManager() != nullptr,
@@ -232,20 +234,20 @@ int main() {
     try {
         const aurora::os::GuestThreadExecutionScope execution;
         OSInit();
-        auto heaps = smgpc::compat::JkrHeapRuntime::create(2U * 1024U * 1024U);
-        heaps->prepare_mem2_arena(18U * 1024U * 1024U);
-        const auto originalFree = heaps->root_heap().getTotalFreeSize();
+        auto heaps = smgpc::test::create_native_root_heap(2U * 1024U * 1024U);
+        auto mem2 = smgpc::test::create_native_mem2_storage(18U * 1024U * 1024U);
+        const auto originalFree = (*heaps).getTotalFreeSize();
         auto* arenaEnd = OSGetMEM2ArenaHi();
         for (unsigned i = 0; i < 3; ++i) {
             cycle(heaps, false);
-            require(heaps->root_heap().getTotalFreeSize() == originalFree, "ARAM worker cohort must reclaim its full heap");
+            require((*heaps).getTotalFreeSize() == originalFree, "ARAM worker cohort must reclaim its full heap");
         }
         OSSetMEM2ArenaHi(static_cast<u8*>(OSGetMEM2ArenaLo()) + 0xE00000);
         cycle(heaps, true);
         OSSetMEM2ArenaHi(arenaEnd);
         std::array<u32, 1> lengths{};
         ARInit(lengths.data(), lengths.size());
-        retire_with_allocating_callback(heaps);
+        retire_with_allocating_callback(heaps, mem2);
         require(!ARCheckInit() && ARGetStorageAddress() == nullptr,
                 "releasing the MEM2 owner must clear every borrowed ARAM address");
         std::cout << "Original ARAM workers, file streaming, Yaz0/Yay0, real memory transfers and repeated retirement passed\n";

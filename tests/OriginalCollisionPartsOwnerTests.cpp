@@ -1,7 +1,7 @@
 #include "Game/Map/HitInfo.hpp"
 #include "OriginalStageResourceProcessFixture.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include "NativeHeapFixture.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
@@ -45,7 +45,7 @@ namespace {
 
 int main() {
     return smgpc::test::run_stage_resource_process("original-collision-parts-owner", [] {
-        const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
+        const auto domain = MR::getSceneObjHolder()->nativeAllocationHeap();
         auto& holder = *MR::getSceneObjHolder();
         auto* director = static_cast<CollisionDirector*>(holder.getObj(SceneObj_CollisionDirector));
         struct RestorePlacementZone {
@@ -60,16 +60,17 @@ int main() {
         MatrixActor actor;
         Triangle retained;
         {
-            smgpc::compat::JkrAllocationScope game(domain);
+            const JKRHeap::CurrentHeapScope game(*(domain));
+            const aurora::allocation::ClientAllocationScope gameRouting({true, true});
             actor.initHitSensor(1);
             auto* sensor = MR::addHitSensorMapObj(&actor, "body", 8, 0, TVec3f(0, 0, 0));
             actor.initActorCollisionParts("HeavensDoorSmallPlanet", sensor, resource, actor.matrix.toMtxPtr(), false, false);
             auto* parts = actor.mCollisionParts;
             require(parts && !parts->_CC && parts->_CD && !parts->_CE && parts->_0 == nullptr,
                     "original resource-holder init creates a real initially invalid unbound part");
-            require(JKRHeap::findFromRoot(parts) == &domain->heap() &&
-                    JKRHeap::findFromRoot(parts->mServer) == &domain->heap() &&
-                    JKRHeap::findFromRoot(parts->mServer->mapInfo) == &domain->heap(),
+            require(JKRHeap::findFromRoot(parts) == &(*domain) &&
+                    JKRHeap::findFromRoot(parts->mServer) == &(*domain) &&
+                    JKRHeap::findFromRoot(parts->mServer->mapInfo) == &(*domain),
                     "part, server and original map iterator belong to Game allocations");
             const auto zone_members = parts->mZone->mNumParts;
             actor.makeActorAppeared();
@@ -91,14 +92,14 @@ int main() {
                 MR::setBinderExceptSensorType(&bound_actor, &bound_actor.mPosition, 10.0F);
                 auto* filter = dynamic_cast<ClipAreaCollisionFilter*>(bound_actor.mBinder->mCollisionPartsFilter);
                 require(filter && filter->_04 == &bound_actor.mPosition && filter->_08 == 10.0F &&
-                        JKRHeap::findFromRoot(filter) == &domain->heap(),
+                        JKRHeap::findFromRoot(filter) == &(*domain),
                         "original ClipArea filter retains the live center and scene allocation domain");
                 const auto sensor_type = sensor->mType;
                 sensor->mType = ATYPE_CLIP_FIELD_MAP_PARTS;
                 MR::createClipAreaHolder();
                 auto* clip_holder = dynamic_cast<ClipAreaHolder*>(holder.getObj(SceneObj_ClipAreaHolder));
                 require(clip_holder && clip_holder->mIsActive && clip_holder->getObjNum() == 0 &&
-                        JKRHeap::findFromRoot(clip_holder) == &domain->heap(),
+                        JKRHeap::findFromRoot(clip_holder) == &(*domain),
                         "scene factory creates the actual empty active ClipArea holder on the Game heap");
                 require(filter->isInvalidParts(parts),
                         "clip-field collision is excluded outside all live ClipAreas");

@@ -1,8 +1,8 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/HitSensorInfo.hpp"
 #include "Game/LiveActor/HitSensorKeeper.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include "NativeHeapFixture.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/Player/MarioMessenger.hpp"
 #include "Game/NPC/NPCActor.hpp"
@@ -292,18 +292,18 @@ namespace {
 
     void test_keeper_and_original_messenger_game_heap_lifetime() {
         auto& scheduler = *smgpc::runtime::try_active_scene_scheduler();
-        auto domain = scheduler.allocation_domain();
+        auto domain = scheduler.allocation_heap();
         KeeperActor sender, receiver;
         for (auto* actor : {&sender, &receiver}) {
             actor->initHitSensor(1);
             auto* sensor = MR::addHitSensorEnemy(actor, "body", 4, 8, {});
             auto* keeper = actor->mSensorKeeper;
             auto* info = keeper->getNthSensorInfo(0);
-            require(JKRHeap::findFromRoot(keeper) == &domain->heap() &&
-                        JKRHeap::findFromRoot(keeper->mSensorInfos) == &domain->heap() &&
-                        JKRHeap::findFromRoot(info) == &domain->heap() &&
-                        JKRHeap::findFromRoot(sensor) == &domain->heap() &&
-                        JKRHeap::findFromRoot(sensor->mSensors) == &domain->heap(),
+            require(JKRHeap::findFromRoot(keeper) == &(*domain) &&
+                        JKRHeap::findFromRoot(keeper->mSensorInfos) == &(*domain) &&
+                        JKRHeap::findFromRoot(info) == &(*domain) &&
+                        JKRHeap::findFromRoot(sensor) == &(*domain) &&
+                        JKRHeap::findFromRoot(sensor->mSensors) == &(*domain),
                     "all original keeper allocations must remain in the caller's Game arena");
         }
         MarioMessenger messenger(sender.getSensor("body"));
@@ -361,26 +361,27 @@ int main() {
     auto failures = 0;
     for (const auto& test : tests) {
         try {
-            auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
-            const auto root_free = heaps->root_heap().getFreeSize();
-            const auto names = smgpc::compat::name_obj_runtime_state_count();
-            const auto actors = smgpc::compat::actor_runtime_state_count();
+            auto heaps = smgpc::test::create_native_root_heap(16U << 20);
+            const auto root_free = (*heaps).getFreeSize();
+            const auto names = NameObj::snapshotNativeObjects().size();
+            const auto actors = NameObj::snapshotNativeObjects().size();
             {
                 smgpc::test::OriginalSceneControllerFixture original(heaps);
-                auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 4U << 20);
+                auto domain = smgpc::test::create_native_solid_heap(heaps, 4U << 20);
                 smgpc::runtime::SceneScheduler scheduler;
                 smgpc::runtime::SceneSchedulerBinding active(scheduler);
                 smgpc::test::SceneExecutionFixture execution(scheduler, domain,
                                                           &original.scene);
-                smgpc::compat::JkrAllocationScope game(domain);
+                const JKRHeap::CurrentHeapScope game(*(domain));
+                const aurora::allocation::ClientAllocationScope gameRouting({true, true});
                 auto* clipping = static_cast<ClippingDirector*>(MR::createSceneObj(SceneObj_ClippingDirector));
                 scheduler.disconnect_name_obj(*clipping);
                 execution.complete_initialization();
                 test.run();
             }
-            require(heaps->root_heap().getFreeSize() == root_free &&
-                        smgpc::compat::name_obj_runtime_state_count() == names &&
-                        smgpc::compat::actor_runtime_state_count() == actors,
+            require((*heaps).getFreeSize() == root_free &&
+                        NameObj::snapshotNativeObjects().size() == names &&
+                        NameObj::snapshotNativeObjects().size() == actors,
                     "each original scene must retire all registered sensor owners and its Game arenas");
             std::cout << "[ok] " << test.name << '\n';
         } catch (const std::exception& error) {

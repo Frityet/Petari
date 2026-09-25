@@ -1,5 +1,5 @@
 #include "RendererService.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/System/RenderMode.hpp"
 #include <aurora/system_config.hpp>
@@ -130,20 +130,21 @@ namespace {
         intensity.fill(128);
         std::array<smgpc::render::TextureHandle, 3> textures;
         std::array<bool, 3> host_storage{}, unchanged_capacity{}, restored_routing{}, guest_probe{};
-        const auto heaps = smgpc::compat::JkrHeapRuntime::create(4U << 20);
-        const auto root_free = heaps->root_heap().getFreeSize();
-        std::weak_ptr<smgpc::compat::JkrAllocationDomain> retired;
+        const auto heaps = smgpc::test::create_native_root_heap(4U << 20);
+        const auto root_free = (*heaps).getFreeSize();
+        std::weak_ptr<JKRHeap> retired;
         const auto outer_routing = aurora::allocation::routing_state;
         auto *const outer_heap = JKRHeap::getCurrentHeap();
 
         static_cast<void>(renderer.begin_frame());
         const smgpc::render::ScopedAuroraRendererContext context(renderer);
         {
-            const auto game = smgpc::compat::JkrAllocationDomain::create(heaps, 128U << 10);
+            const auto game = smgpc::test::create_native_solid_heap(heaps, 128U << 10);
             retired = game;
-            const smgpc::compat::JkrAllocationScope selected(game);
+            const JKRHeap::CurrentHeapScope selected(*(game));
+            const aurora::allocation::ClientAllocationScope selectedRouting({true, true});
             for (std::size_t api = 0; api < textures.size(); ++api) {
-                const auto before = game->heap().getFreeSize();
+                const auto before = (*game).getFreeSize();
                 const auto routing = aurora::allocation::routing_state;
                 switch (api) {
                 case 0:
@@ -161,17 +162,17 @@ namespace {
                 const auto &texture = textures[api];
                 host_storage[api] = texture.is_valid() && JKRHeap::findFromRoot(texture.texture.get()) == nullptr &&
                                     JKRHeap::findFromRoot(texture.texture->rgba.data()) == nullptr;
-                unchanged_capacity[api] = game->heap().getFreeSize() == before;
+                unchanged_capacity[api] = (*game).getFreeSize() == before;
                 restored_routing[api] = aurora::allocation::routing_state.guest == routing.guest &&
                                         aurora::allocation::routing_state.callbackGuest == routing.callbackGuest &&
-                                        JKRHeap::getCurrentHeap() == &game->heap() &&
-                                        smgpc::compat::current_jkr_allocation_domain() == game;
+                                        JKRHeap::getCurrentHeap() == &(*game) &&
+                                        JKRHeap::retainCurrentNativeLifetime() == game;
                 auto *const probe = new std::uint32_t{0x12345678};
-                guest_probe[api] = JKRHeap::findFromRoot(probe) == &game->heap();
+                guest_probe[api] = JKRHeap::findFromRoot(probe) == &(*game);
                 delete probe;
             }
         }
-        require(retired.expired() && heaps->root_heap().getFreeSize() == root_free,
+        require(retired.expired() && (*heaps).getFreeSize() == root_free,
                 "texture owners must not retain the selected Game heap after it retires");
         require(JKRHeap::getCurrentHeap() == outer_heap &&
                     aurora::allocation::routing_state.guest == outer_routing.guest &&
@@ -189,13 +190,14 @@ namespace {
         // Reuse the retired arena before the first GPU sample, so surviving GPU
         // pixels also depend on retained native source bytes remaining valid.
         {
-            const auto replacement = smgpc::compat::JkrAllocationDomain::create(heaps, 128U << 10);
-            const smgpc::compat::JkrAllocationScope selected(replacement);
+            const auto replacement = smgpc::test::create_native_solid_heap(heaps, 128U << 10);
+            const JKRHeap::CurrentHeapScope selected(*(replacement));
+            const aurora::allocation::ClientAllocationScope selectedRouting({true, true});
             auto *const overwrite = new std::array<std::uint8_t, 64U << 10>;
             overwrite->fill(0xcd);
             delete overwrite;
         }
-        require(heaps->root_heap().getFreeSize() == root_free, "replacement Game heap must retire completely");
+        require((*heaps).getFreeSize() == root_free, "replacement Game heap must retire completely");
         for (std::size_t api = 0; api < textures.size(); ++api) {
             if (api != 0) static_cast<void>(renderer.begin_frame());
             auto quad = full_frame_quad({255, 255, 255, 255}, false);

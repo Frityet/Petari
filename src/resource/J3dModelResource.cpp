@@ -5,7 +5,8 @@
 #include "J3dGeometryData.hpp"
 #include "J3dMaterialTableData.hpp"
 #include "J3dTextureData.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
+#include <aurora/allocation.hpp>
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "JSystem/J3DGraphAnimator/J3DJoint.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
@@ -177,7 +178,7 @@ namespace smgpc::resource {
         }
 
         void validate_display_lists(J3DMaterialTable& table, const J3dMaterialTableData& materials) {
-            compat::JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             struct List { std::uintptr_t start, end; u16 material; };
             struct AlignedDelete {
                 void operator()(std::uint8_t* bytes) const noexcept { ::operator delete[](bytes, std::align_val_t{32}); }
@@ -259,7 +260,7 @@ namespace smgpc::resource {
         }
 
         struct LoadedData {
-            std::shared_ptr<compat::JkrAllocationDomain> domain;
+            JKRHeap::Handle domain;
             std::unique_ptr<J3dJointData> joints;
             std::unique_ptr<J3dGeometryData> geometry;
             std::unique_ptr<J3dMaterialTableData> materials;
@@ -268,10 +269,11 @@ namespace smgpc::resource {
             std::unique_ptr<J3DMaterialTable> table;
             std::unique_ptr<J3DModelData> model;
 
-            explicit LoadedData(std::shared_ptr<compat::JkrAllocationDomain> value) : domain(std::move(value)) {}
+            explicit LoadedData(JKRHeap::Handle value) : domain(std::move(value)) {}
             ~LoadedData() {
-                compat::JkrHostAllocationScope host;
-                compat::JkrAllocationScope original(domain);
+                aurora::allocation::HostAllocationScope host;
+                JKRHeap::CurrentHeapScope original(*(domain));
+                const aurora::allocation::ClientAllocationScope original_routing({true, true});
                 J3DSys::CommandScope commands;
                 const auto* texture = textures ? &textures->texture() : empty_texture.get();
                 if (texture && j3dSys.getTexture() == texture) j3dSys.setTexture(nullptr);
@@ -299,21 +301,21 @@ namespace smgpc::resource {
     }
 
     struct J3dModelResource::Storage {
-        std::shared_ptr<compat::JkrAllocationDomain> domain;
+        JKRHeap::Handle domain;
         std::shared_ptr<Mem1ResourceHeap> mem1;
         std::vector<std::uint8_t> source;
         std::mutex mutex;
         std::uint64_t generation = 0;
         std::vector<std::unique_ptr<LoadedData>> loads;
 
-        Storage(Bytes bytes, std::shared_ptr<compat::JkrAllocationDomain> allocation,
+        Storage(Bytes bytes, JKRHeap::Handle allocation,
                 std::shared_ptr<Mem1ResourceHeap> texture_heap)
             : domain(std::move(allocation)), mem1(std::move(texture_heap)), source(bytes.begin(), bytes.end()) {
-            if (!domain) aurora::throw_host_exception<std::invalid_argument>("J3D model owner requires an original allocation domain");
+            if (!domain) aurora::throw_host_exception<std::invalid_argument>("J3D model owner requires a retained original heap");
             if (source.empty()) aurora::throw_host_exception<std::invalid_argument>("J3D model source is empty");
         }
         ~Storage() {
-            compat::JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             {
                 auto& r = registry();
                 std::lock_guard lock(r.mutex);
@@ -329,14 +331,15 @@ namespace smgpc::resource {
                 result.textures = std::make_unique<J3dTextureData>(texture, mem1);
                 result.textures->attach_to(table);
             } else if (material_table) {
-                compat::JkrAllocationScope original(domain);
+                JKRHeap::CurrentHeapScope original(*(domain));
+                const aurora::allocation::ClientAllocationScope original_routing({true, true});
                 result.empty_texture = std::make_unique<J3DTexture>(0, nullptr);
                 table.mTexture = result.empty_texture.get();
             }
         }
 
         J3DModelData* load_model(std::uint32_t flags, bool binary) {
-            compat::JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             if (read_big<std::uint32_t>(source, 0) != tag('J','3','D','2')) return nullptr;
             const auto type = read_big<std::uint32_t>(source, 4);
             if (!binary && type == tag('b','m','d','2'))
@@ -347,14 +350,15 @@ namespace smgpc::resource {
             const File file(source);
             auto result = std::make_unique<LoadedData>(domain);
             // Typed endian/native-pointer construction components are host
-            // owned. SDK factory allocations enter the retained domain inside
-            // their owner; later SDK finalization uses that same domain.
+            // owned. SDK factory allocations enter the retained heap inside
+            // their owner; later SDK finalization uses that same heap.
             result->joints = std::make_unique<J3dJointData>(source, flags);
             result->geometry = std::make_unique<J3dGeometryData>(source, flags);
             result->materials = std::make_unique<J3dMaterialTableData>(source, flags,
                 binary ? J3dMaterialTableData::Mode::BinaryModel : J3dMaterialTableData::Mode::Model, domain);
             {
-                compat::JkrAllocationScope original(domain);
+                JKRHeap::CurrentHeapScope original(*(domain));
+                const aurora::allocation::ClientAllocationScope original_routing({true, true});
                 result->model = std::make_unique<J3DModelData>();
                 result->model->clear();
             }
@@ -367,7 +371,8 @@ namespace smgpc::resource {
             validate_hierarchy(model, file.single_block(tag('I','N','F','1')));
             validate_shape_matrices(model);
             {
-                compat::JkrAllocationScope original(domain);
+                JKRHeap::CurrentHeapScope original(*(domain));
+                const aurora::allocation::ClientAllocationScope original_routing({true, true});
                 J3DSys::CommandScope commands;
                 if (binary) validate_display_lists(model.mMaterialTable, *result->materials);
                 J3DModelLoader::finalizeNativeModel(model, result->geometry->shape_block(), binary);
@@ -379,14 +384,15 @@ namespace smgpc::resource {
         }
 
         J3DMaterialTable* load_table() {
-            compat::JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             if (read_big<std::uint32_t>(source, 0) != tag('J','3','D','2') || read_big<std::uint32_t>(source, 4) != tag('b','m','t','3')) return nullptr;
             const File file(source);
             auto result = std::make_unique<LoadedData>(domain);
             result->materials = std::make_unique<J3dMaterialTableData>(source, 0x51100000,
                 J3dMaterialTableData::Mode::MaterialTable, domain);
             {
-                compat::JkrAllocationScope original(domain);
+                JKRHeap::CurrentHeapScope original(*(domain));
+                const aurora::allocation::ClientAllocationScope original_routing({true, true});
                 result->table = std::make_unique<J3DMaterialTable>();
                 result->table->clear();
             }
@@ -399,9 +405,9 @@ namespace smgpc::resource {
         }
     };
 
-    J3dModelResource::J3dModelResource(Bytes bytes, std::shared_ptr<compat::JkrAllocationDomain> domain,
+    J3dModelResource::J3dModelResource(Bytes bytes, JKRHeap::Handle domain,
                                      std::shared_ptr<Mem1ResourceHeap> mem1) {
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         _storage = std::make_shared<Storage>(bytes, std::move(domain), std::move(mem1));
         auto& r = registry();
         std::lock_guard lock(r.mutex);
@@ -415,7 +421,7 @@ namespace smgpc::resource {
         std::uint64_t generation;
         State(std::shared_ptr<void> value, const void* key, std::uint64_t id) : owner(std::move(value)), identity(key), generation(id) {}
         ~State() {
-            compat::JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             auto& r = registry();
             std::lock_guard lock(r.mutex);
             const auto found = r.resources.find(identity);
@@ -428,7 +434,7 @@ namespace smgpc::resource {
     J3dModelSourceRegistration::J3dModelSourceRegistration(J3dModelSourceRegistration&&) noexcept = default;
     J3dModelSourceRegistration& J3dModelSourceRegistration::operator=(J3dModelSourceRegistration&&) noexcept = default;
     J3dModelSourceRegistration J3dModelResource::register_source(Bytes bytes) {
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         if (!_storage || bytes.size() != _storage->source.size() || !std::equal(bytes.begin(), bytes.end(), _storage->source.begin()))
             aurora::throw_host_exception<std::invalid_argument>("J3D model alias does not match its complete retained source");
         auto& r = registry();
@@ -464,7 +470,7 @@ namespace smgpc::resource {
     J3DMaterialTable* J3dModelResource::load_material_table() { return load_registered_j3d_material_table(data()); }
     J3DModelData* load_registered_j3d_model(const void* data, std::uint32_t flags, bool binary) {
         if (!data) return nullptr;
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         std::shared_ptr<J3dModelResource::Storage> owner;
         {
             auto& r = registry();
@@ -477,7 +483,7 @@ namespace smgpc::resource {
     }
     J3DMaterialTable* load_registered_j3d_material_table(const void* data) {
         if (!data) return nullptr;
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         std::shared_ptr<J3dModelResource::Storage> owner;
         {
             auto& r = registry();

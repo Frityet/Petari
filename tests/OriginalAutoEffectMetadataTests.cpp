@@ -13,7 +13,7 @@
 #include "JSystem/JKernel/JKRExpHeap.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "JSystem/JKernel/JKRMemArchive.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/JMapResource.hpp"
 
@@ -136,18 +136,18 @@ struct GroupBatch {
 
 namespace {
 struct Backing {
-    std::weak_ptr<smgpc::compat::JkrAllocationDomain> root;
-    std::weak_ptr<smgpc::compat::JkrAllocationDomain> scene;
-    std::weak_ptr<smgpc::compat::JkrAllocationDomain> metadata;
+    std::weak_ptr<JKRHeap> root;
+    std::weak_ptr<JKRHeap> scene;
+    std::weak_ptr<JKRHeap> metadata;
     std::weak_ptr<JMapInfo::DataCompat> effects;
     std::weak_ptr<const void> source;
 };
 
 void verify_authored(Backing& backing) {
     require(JKRHeap::sRootHeap != nullptr, "the original process has created its actual SDK root heap");
-    const auto root = smgpc::compat::JkrAllocationDomain::retain_heap(*JKRHeap::sRootHeap);
+    const auto root = (*JKRHeap::sRootHeap).retainNativeLifetime();
     backing.root = root;
-    const auto scene = MR::getSceneObjHolder()->nativeAllocationDomain();
+    const auto scene = MR::getSceneObjHolder()->nativeAllocationHeap();
     require(scene != nullptr, "the original GameScene has its actual allocation owner");
     backing.scene = scene;
     Coverage coverage;
@@ -197,10 +197,10 @@ void verify_authored(Backing& backing) {
         // Original scene heaps are solid: individual frees are deferred until
         // scene retirement. Use a reclaiming child to verify metadata deletes.
         std::unique_ptr<JKRExpHeap, void (*)(JKRExpHeap*)> metadata_heap(
-            JKRExpHeap::create(1U * 1024U * 1024U, &scene->heap(), false),
+            JKRExpHeap::create(1U * 1024U * 1024U, &(*scene), false),
             +[](JKRExpHeap* heap) { heap->destroy(); });
         require(metadata_heap != nullptr, "the original scene heap has space for the bounded metadata test arena");
-        auto metadata = smgpc::compat::JkrAllocationDomain::retain_heap(scene, *metadata_heap);
+        auto metadata = (*metadata_heap).retainNativeLifetime();
         backing.metadata = metadata;
         const auto metadata_free = metadata_heap->getTotalFreeSize();
         GroupBatch batch;
@@ -215,7 +215,8 @@ void verify_authored(Backing& backing) {
             }
             const int previous_count = batch.holder.mGroups.size();
             {
-                smgpc::compat::JkrAllocationScope scope(metadata);
+                const JKRHeap::CurrentHeapScope scope(*(metadata));
+                const aurora::allocation::ClientAllocationScope scopeRouting({true, true});
                 require(MR::Effect::createAndAddAutoEffectGroup(&batch.holder, name.c_str()),
                         "every authored group constructs through the original registration surface");
             }
@@ -227,27 +228,28 @@ void verify_authored(Backing& backing) {
             require(group->mInfos.size() == rows.size() && group->mInfos.capacity() == rows.size() &&
                         MR::Effect::getAutoEffectNum(name.c_str()) == rows.size(),
                     "group allocation uses the exact case-insensitive authored record count");
-            require(JKRHeap::findFromRoot(group) == &metadata->heap() &&
-                        JKRHeap::findFromRoot(group->mInfos.mArray.mArr) == &metadata->heap(),
+            require(JKRHeap::findFromRoot(group) == &(*metadata) &&
+                        JKRHeap::findFromRoot(group->mInfos.mArray.mArr) == &(*metadata),
                     "original group and pointer array use the native metadata allocation domain");
             for (std::size_t i = 0; i < rows.size(); ++i) {
                 const auto* info = group->mInfos[static_cast<int>(i)];
-                require(JKRHeap::findFromRoot(const_cast<AutoEffectInfo*>(info)) == &metadata->heap(),
+                require(JKRHeap::findFromRoot(const_cast<AutoEffectInfo*>(info)) == &(*metadata),
                         "original metadata records use the same native allocation domain");
                 verify_info(*info, raw, rows[i], &coverage);
             }
             const auto variant = changed_case(name);
-            const auto free_before_lookup = metadata->heap().getFreeSize();
+            const auto free_before_lookup = (*metadata).getFreeSize();
             require(batch.holder.find(variant.c_str()) == group && batch.holder.isExist(variant.c_str()),
                     "case variants retrieve the existing original group");
             {
-                smgpc::compat::JkrAllocationScope scope(metadata);
+                const JKRHeap::CurrentHeapScope scope(*(metadata));
+                const aurora::allocation::ClientAllocationScope scopeRouting({true, true});
                 require(!MR::Effect::createAndAddAutoEffectGroup(&batch.holder, variant.c_str()) &&
                             !MR::Effect::createAndAddAutoEffectGroup(&batch.holder, missing),
                         "duplicate and missing groups do not consume another slot, including at capacity");
             }
             require(batch.holder.find(missing) == nullptr && !batch.holder.isExist(missing) &&
-                        batch.holder.mGroups.size() == previous_count + 1 && metadata->heap().getFreeSize() == free_before_lookup,
+                        batch.holder.mGroups.size() == previous_count + 1 && (*metadata).getFreeSize() == free_before_lookup,
                     "unsuccessful registration leaves original count and storage unchanged");
         }
         require(coverage.rows == raw.entry_count() && full_batches > 0,
@@ -273,7 +275,8 @@ void verify_authored(Backing& backing) {
             std::unique_ptr<AutoEffectInfo> first;
             std::unique_ptr<AutoEffectInfo> second;
             {
-                smgpc::compat::JkrAllocationScope scope(metadata);
+                const JKRHeap::CurrentHeapScope scope(*(metadata));
+                const aurora::allocation::ClientAllocationScope scopeRouting({true, true});
                 first.reset(MR::Effect::createAutoEffect("unused-first-argument", name.c_str()));
                 second.reset(MR::Effect::createAutoEffect("different-unused-first-argument", name.c_str()));
             }

@@ -18,7 +18,7 @@
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/SystemUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "resource/TextEncoding.hpp"
 #include <aurora/allocation.hpp>
 #include <array>
@@ -294,7 +294,7 @@ int main() {
         require(smgpc::app::run_original_game(configuration, *logger, observer) == 0 && probe.exercised,
                 "Actual process completes the placement probe and normal frame loop");
         for (auto* object : probe.retained)
-            require(!smgpc::compat::has_name_obj_runtime_state(object),
+            require(!NameObj::nativeGeneration(object),
                     "Normal original scene retirement releases checked actor and area identities");
         std::fprintf(stderr, "PASS original-process zone transforms: actual raw rows, matrices, actors, switch volumes, rail controls and retirement\n");
         return 0;

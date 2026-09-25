@@ -1,0 +1,83 @@
+{
+  "baseline": "5cce8ba9447d11c149d4bc84dc3898bfca789461",
+  "paths": [
+    {
+      "path": "src/Game/LiveActor/LiveActor.hpp",
+      "existed_before": true,
+      "before_sha256": "090f4aa655c36067ee090d514cbefbda3531f40599e8bd2e65bd90422d3e02a1",
+      "action": "modify",
+      "after_sha256": "f7f6def341a16622ab2382bf14ebf2cf901a8d70cc948f0dd4cb958360775672"
+    },
+    {
+      "path": "src/Game/LiveActor/LiveActor.cpp",
+      "existed_before": true,
+      "before_sha256": "869e3c504a19b7c4f809295cf3db36cf907eb25720789aba9e023e5cf6dc0f83",
+      "action": "modify",
+      "after_sha256": "c0ff12784dd0760c14d5684ef71c0e7a0222c01aef8c179aa30b21ef16379aff"
+    },
+    {
+      "path": "src/Game/LiveActor/HitSensorKeeper.hpp",
+      "existed_before": true,
+      "before_sha256": "a3529540562532d3600cac6541590799b516d635ee89312019215ef83aa4dc7a",
+      "action": "modify",
+      "after_sha256": "b489e217f5f1700c24e610ead454bdf03ce1f45d788bc6c9967a85d22619a57f"
+    },
+    {
+      "path": "src/Game/LiveActor/HitSensorKeeper.cpp",
+      "existed_before": true,
+      "before_sha256": "472c8fa184256174e66d7e17acaaa62817024477427084457b61334fcec22bbd",
+      "action": "modify",
+      "after_sha256": "f0108c5331386eb4b31457a90b7bb3f7e7091eb3ab9bc6bc67cd6ef30130895a"
+    },
+    {
+      "path": "src/Game/LiveActor/ClippingActorHolder.hpp",
+      "existed_before": true,
+      "before_sha256": "10cfb83cd4c075c0a269974ced3d78a57e00568c8ce259560790817d88a018b1",
+      "action": "modify",
+      "after_sha256": "4ed7405589449caeec8b376f4df3090e19acfee373a6844fc458aa6d628bc973"
+    },
+    {
+      "path": "src/Game/LiveActor/ClippingActorHolder.cpp",
+      "existed_before": true,
+      "before_sha256": "5d2877a60d2562922b2532ec007ad057773f71cdb6d3d13d5cadbe35b3b089cc",
+      "action": "modify",
+      "after_sha256": "e1fd0b83059a809453e4a574dbbb844e9efe73085cfac56bbf890cd1bd82cde4"
+    },
+    {
+      "path": "src/Game/LiveActor/ClippingGroupHolder.hpp",
+      "existed_before": true,
+      "before_sha256": "5ad3d8c949c7e76e2345332d0fbce405d3891ac8883bf95d84bc7704420601e4",
+      "action": "unchanged",
+      "after_sha256": "5ad3d8c949c7e76e2345332d0fbce405d3891ac8883bf95d84bc7704420601e4"
+    },
+    {
+      "path": "src/Game/LiveActor/ClippingGroupHolder.cpp",
+      "existed_before": true,
+      "before_sha256": "82ce6e2c22bca1f43aa9a291e2b4354194a4b92f06e02a688282294d147b964a",
+      "action": "modify",
+      "after_sha256": "afcd42d908a299ef3c0e90909ad2200119bc5a7141eb51b6e06948b3b776a92c"
+    },
+    {
+      "path": "src/Game/Util/LiveActorUtil.cpp",
+      "existed_before": true,
+      "before_sha256": "1e049f219bab5d9e69410a76704b833a30667e36e3e602b6a37a1fddb2ad3763",
+      "action": "modify",
+      "after_sha256": "88bbb7b72c9d47fa7640019a02de2f9087fdad96f1b57b22070990e96fa0990b"
+    },
+    {
+      "path": "src/Game/System/DrawBufferExecuter.cpp",
+      "existed_before": true,
+      "before_sha256": "8235cf52e5d4a0cd7f2f9597104135674dfb7169ccd71088e693921e14ebba73",
+      "action": "modify",
+      "after_sha256": "15405501f6a5f9250c992bad7e799efc0b7c411b5f9978797f6821f69cefcf0c"
+    },
+    {
+      "path": "src/Game/Player/MarioAnimator.cpp",
+      "existed_before": true,
+      "before_sha256": "b2ba84e35e2ab866a4da84d6903fe26706808409e0a959e2241ebeb0cbb0ad91",
+      "action": "modify",
+      "after_sha256": "78122b161734b97dea24872d5de41266201ce7eed1fab3bab2a2871a26d901a1"
+    }
+  ],
+  "validation": "Source-only review. No lane builds, tests, git or index operations."
+}

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "NativeHeapFixture.hpp"
 #include "OriginalSceneControllerFixture.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "Game/Map/CollisionCategorizedKeeper.hpp"
@@ -24,8 +25,8 @@ namespace smgpc::test {
 class OriginalSphereQueryFixture {
 public:
     OriginalSphereQueryFixture()
-        : heaps(compat::JkrHeapRuntime::create(32U << 20)), original(heaps),
-          active(scheduler), domain(compat::JkrAllocationDomain::create(heaps, 2U << 20)),
+        : heaps(smgpc::test::create_native_root_heap(32U << 20)), original(heaps),
+          active(scheduler), domain(smgpc::test::create_native_solid_heap(heaps, 2U << 20)),
           scene(scheduler, domain, nullptr, nullptr, &original.scene, original.controller().mObjHolder) {
         auto* director = static_cast<CollisionDirector*>(MR::createSceneObj(SceneObj_CollisionDirector));
         if (!director) throw std::runtime_error("Sphere queries require the actual CollisionDirector");
@@ -105,11 +106,11 @@ public:
         CollisionParts parts;
     };
 
-    std::shared_ptr<compat::JkrHeapRuntime> heaps;
+    JKRHeap::Handle heaps;
     OriginalSceneControllerFixture original;
     runtime::SceneScheduler scheduler;
     runtime::SceneSchedulerBinding active;
-    std::shared_ptr<compat::JkrAllocationDomain> domain;
+    JKRHeap::Handle domain;
     SceneExecutionFixture scene;
     CollisionCategorizedKeeper* keeper;
 };

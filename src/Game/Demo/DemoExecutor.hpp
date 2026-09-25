@@ -54,7 +54,7 @@ public:
     /// @brief Creates a new `DemoExecutor`
     DemoExecutor(const char* pName);
     ~DemoExecutor() override;
-    void releaseNativeReference(const NameObj*) noexcept;
+    void releaseNativeReference(const NameObj*) noexcept override;
 
     virtual void init(const JMapInfoIter& rIter);
     virtual void movement();

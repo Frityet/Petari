@@ -27,6 +27,7 @@ JKRSolidHeap *JKRSolidHeap::create(u32 size, JKRHeap *heap, bool useErrorHandler
 void JKRSolidHeap::do_destroy(void) {
     JKRHeap *parent = getParent();
     if (parent) {
+        const auto backing = beginNativeRetirement();
         this->~JKRSolidHeap();
         JKRFreeToHeap(parent, this);
     }
@@ -40,6 +41,7 @@ JKRSolidHeap::JKRSolidHeap(void *start, u32 size, JKRHeap *parent, bool useError
 }
 
 JKRSolidHeap::~JKRSolidHeap(void) {
+    validateNativeDestructor();
     dispose();
 }
 

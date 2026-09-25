@@ -6,9 +6,9 @@
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/ModelUtil.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModel.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 
 #include <aurora/allocation.hpp>
@@ -156,12 +156,13 @@ namespace {
             const aurora::allocation::HostAllocationScope host;
             // This observation survives scene teardown; keep its vector storage
             // in the host allocation domain before entering the guest scope.
-            for (auto* object : smgpc::compat::snapshot_name_obj_runtime_objects())
+            for (auto* object : NameObj::snapshotNativeObjects())
                 if (auto* actor = dynamic_cast<DemoRabbit*>(object)) actors.push_back(actor);
             require(!actors.empty(), "ordinary authored placement constructed at least one real DemoRabbit");
-            const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
+            const auto domain = MR::getSceneObjHolder()->nativeAllocationHeap();
             require(domain != nullptr, "the ordinary original scene owns all NPC allocations");
-            const smgpc::compat::JkrAllocationScope allocation(domain);
+            const JKRHeap::CurrentHeapScope allocation(*(domain));
+            const aurora::allocation::ClientAllocationScope allocationRouting({true, true});
             const J3DSys::CommandScope commands;
             for (auto* actor : actors) verify_original_npc_cache(*actor);
             exercised = true;
@@ -199,7 +200,7 @@ namespace {
                     probe.exercised && probe.normal_frames >= 30,
                 "original process completes the owner checks and subsequent ordinary frames");
         for (auto* actor : probe.actors)
-            require(!smgpc::compat::has_actor_runtime_state(actor), "normal scene teardown retires each observed NPC");
+            require(!NameObj::nativeGeneration(actor), "normal scene teardown retires each observed NPC");
         std::fprintf(stderr, "[npc-orientation] PASS original 120-frame process and actual NPC retirement\n");
     }
 #endif

@@ -1,6 +1,6 @@
 #include "resource/TplTextureData.hpp"
 #include "resource/TplTexture.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
 #include <cstring>
 #include <map>
@@ -8,7 +8,7 @@
 
 namespace smgpc::resource {
     TplTextureData::TplTextureData(std::span<const std::uint8_t> bytes, std::shared_ptr<Mem1ResourceHeap> heap) {
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         const auto source = read_tpl_palette(bytes);
         if (source.descriptors.empty())
             aurora::throw_host_exception<std::invalid_argument>("Native TPL requires at least one texture descriptor");

@@ -8,7 +8,7 @@
 #include <exception>
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Util/StringUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 
 DemoStartInfo::DemoStartInfo() {
     _0 = nullptr;
@@ -178,7 +178,7 @@ DemoStartRequestHolder::DemoStartRequestHolder()
             mNumInfos = idx + 1;
             mStartInfos[idx] = pInfo;
         }
-        smgpc::compat::claim_name_obj_runtime_ownership(mProxyObj, this);
+        (mProxyObj)->claimNativeOwnership(this);
     } catch (...) {
         delete mProxyObj;
         for (s32 i = 0; i < mNumInfos; i++) {

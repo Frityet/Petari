@@ -14,10 +14,10 @@
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/DemoUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "resource/TextEncoding.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 
 #include <aurora/allocation.hpp>
@@ -86,10 +86,11 @@ namespace {
             auto* emitter = keeper->getEmitter(effect_name);
             require(emitter && !emitter->isValid(), "Original trample emitter exists and is inactive before the injected action");
 
-            const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
+            const auto domain = MR::getSceneObjHolder()->nativeAllocationHeap();
             require(domain != nullptr, "Actual scene owns allocations performed by the original action");
             {
-                const smgpc::compat::JkrAllocationScope allocation(domain);
+                const JKRHeap::CurrentHeapScope allocation(*(domain));
+                const aurora::allocation::ClientAllocationScope allocationRouting({true, true});
                 const J3DSys::CommandScope commands;
                 const auto* table = actor->getConst().getTable();
                 // This intentionally injects one public action. It proves its
@@ -155,8 +156,8 @@ int main() {
         };
         require(smgpc::app::run_original_game(configuration, *logger, observer) == 0 && probe.exercised && probe.followed && probe.action_frame < 2090,
                 "OriginalProcess completes the injected action and at least ten following normal frames");
-        require(!smgpc::compat::has_actor_runtime_state(probe.actor_identity) &&
-                    !smgpc::compat::has_name_obj_runtime_state(probe.effects_identity),
+        require(!NameObj::nativeGeneration(probe.actor_identity) &&
+                    !NameObj::nativeGeneration(probe.effects_identity),
                 "Normal original scene retirement releases the actual player and effect system owners");
         std::fprintf(stderr, "PASS original-process injected trample action: original animation, live particle emission, normal frames and owner retirement\n");
         return 0;

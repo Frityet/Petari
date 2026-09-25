@@ -1,4 +1,3 @@
-#include "resource/TextEncoding.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Animation/BckCtrl.hpp"
 #include "Game/Animation/XanimeCore.hpp"
@@ -33,6 +32,7 @@
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/AreaObjUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/CollisionPartsFilter.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/FurMulti.hpp"
@@ -41,18 +41,17 @@
 #include "Game/Util/MapUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ModelUtil.hpp"
+#include "Game/Util/NerveUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
-#include <JSystem/J3DGraphBase/J3DTexture.hpp>
-#include "Game/Util/CameraUtil.hpp"
-#include "Game/Util/NerveUtil.hpp"
-#include "Game/Util/PlayerUtil.hpp"
 #include "JSystem/J3DGraphBase/J3DMaterial.hpp"
 #include "JSystem/J3DGraphBase/J3DShape.hpp"
 #include "JSystem/JUtility/JUTNameTab.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "resource/TextEncoding.hpp"
+#include <JSystem/J3DGraphBase/J3DTexture.hpp>
 #include <aurora/allocation.hpp>
 #include <cstdio>
 #include <cstring>
@@ -62,7 +61,7 @@ namespace {
     CollisionParts* createCollisionParts(ResourceHolder* pResHolder, const char* pName, HitSensor* pSensor, const TPos3f& rMtx,
                                          MR::CollisionScaleType scaleType, s32 unk) {
         const aurora::allocation::ClientAllocationScope client;
-        auto parts = std::make_unique<CollisionParts>();
+        auto parts = std::make_unique< CollisionParts >();
         parts->initFromResource(pResHolder, pName, pSensor, rMtx, scaleType, unk);
         return pSensor->mHost->adoptCollisionParts(std::move(parts));
     }
@@ -2549,7 +2548,7 @@ namespace MR {
     }
 
     LodCtrl* createLodCtrlNPC(LiveActor* pActor, const JMapInfoIter& rIter) {
-        auto owner = std::make_unique<LodCtrl>(pActor, rIter);
+        auto owner = std::make_unique< LodCtrl >(pActor, rIter);
         LodCtrl* pLod = owner.get();
         pLod->createLodModel(MR::DrawBufferType_NPC, MR::MovementType_NPC, -1);
         pLod->syncMaterialAnimation();
@@ -2557,12 +2556,12 @@ namespace MR {
         pLod->initLightCtrl();
         pLod->offSyncShadowHost();
         pLod->_1B = true;
-        smgpc::compat::adopt_actor_lod_ctrl(pActor, pLod);
-        return owner.release();
+        pActor->adoptNativeLodCtrl(std::move(owner));
+        return pLod;
     }
 
     LodCtrl* createLodCtrlPlanet(LiveActor* pActor, const JMapInfoIter& rIter, f32 farClip, s32 lowModelType) {
-        auto owner = std::make_unique<LodCtrl>(pActor, rIter);
+        auto owner = std::make_unique< LodCtrl >(pActor, rIter);
         LodCtrl* pLod = owner.get();
         pLod->createLodModel(MR::DrawBufferType_PlanetLow, lowModelType, MR::DrawBufferType_Sky);
         pLod->setDistanceToMiddleAndLow(5000.0f, 10000.0f);
@@ -2578,12 +2577,12 @@ namespace MR {
             tryStartAllAnim(pLod->_14, pResName);
         }
 
-        smgpc::compat::adopt_actor_lod_ctrl(pActor, pLod);
-        return owner.release();
+        pActor->adoptNativeLodCtrl(std::move(owner));
+        return pLod;
     }
 
     LodCtrl* createLodCtrlMapObj(LiveActor* pActor, const JMapInfoIter& rIter, f32 farClip) {
-        auto owner = std::make_unique<LodCtrl>(pActor, rIter);
+        auto owner = std::make_unique< LodCtrl >(pActor, rIter);
         LodCtrl* pLod = owner.get();
         pLod->createLodModel(MR::DrawBufferType_MapObj, -1, MR::DrawBufferType_PlanetLow);
         pLod->setDistanceToMiddleAndLow(5000.0f, 10000.0f);
@@ -2599,8 +2598,8 @@ namespace MR {
             tryStartAllAnim(pLod->_14, pResName);
         }
 
-        smgpc::compat::adopt_actor_lod_ctrl(pActor, pLod);
-        return owner.release();
+        pActor->adoptNativeLodCtrl(std::move(owner));
+        return pLod;
     }
 
     Flag* createMapFlag(const char* pName, const char* pInfoName, const TVec3f* pPos, const TVec3f& rRot, f32 a5, f32 a6, f32 a7, s32 a8, s32 a9,

@@ -1,3 +1,4 @@
+#include "NativeHeapFixture.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "OriginalSceneControllerFixture.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
@@ -6,7 +7,7 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Scene/SceneNameObjMovementController.hpp"
 #include "Game/Util/ObjUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include <aurora/exception.hpp>
 #include <iostream>
 #include <memory>
@@ -52,20 +53,20 @@ void derived_group() {
 }
 int main() {
     try {
-        auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+        auto heaps = smgpc::test::create_native_root_heap(16U << 20);
         smgpc::runtime::SceneScheduler scheduler;
         smgpc::runtime::SceneSchedulerBinding scheduler_binding(scheduler);
         smgpc::test::OriginalSceneControllerFixture original(heaps);
-        const auto baseline = smgpc::compat::name_obj_runtime_state_count();
+        const auto baseline = NameObj::snapshotNativeObjects().size();
         for (int cycle = 0; cycle < 32; ++cycle) {
             {
                 smgpc::test::SceneExecutionFixture scene(
-                    scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 1U << 20),
+                    scheduler, smgpc::test::create_native_solid_heap(heaps, 1U << 20),
                     &original.scene);
                 membership(); derived_group();
                 scene.complete_initialization();
             }
-            require(smgpc::compat::name_obj_runtime_state_count() == baseline,
+            require(NameObj::snapshotNativeObjects().size() == baseline,
                     "repeated real group/member ownership returns to the registry baseline");
         }
         std::cout << "Original group membership lifetime passed\n";

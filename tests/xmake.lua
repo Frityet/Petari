@@ -683,7 +683,7 @@ for _, fixture in ipairs {
     {"actor-broadcast", "OriginalActorBroadcastTests.cpp"},
     {"message-holder", "OriginalMessageHolderTests.cpp"},
     {"jkr-heap-finalizer", "JkrHeapFinalizerTests.cpp"},
-    {"jkr-allocation-domain", "JkrAllocationDomainTests.cpp"},
+    {"jkr-heap-lifetime", "OriginalJkrHeapLifetimeTests.cpp"},
     {"jkr-archive", "OriginalJkrArchiveTests.cpp"},
     {"jmap-resource", "OriginalJMapResourceTests.cpp"},
     {"jmap-heap-lifetime", "JMapHeapLifetimeTests.cpp"},

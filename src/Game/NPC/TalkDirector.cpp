@@ -1,6 +1,5 @@
 #include "resource/TextEncoding.hpp"
 #include "Game/NPC/TalkDirector.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
 #include <algorithm>
 #include <exception>
 #include "Game/LiveActor/LiveActor.hpp"
@@ -81,6 +80,8 @@ TalkDirector::TalkDirector(const char* pName)
 }
 
 TalkDirector::~TalkDirector() {
+    beginNativeRetirement();
+    retireNativeLifetime();
 }
 
 void TalkDirector::beginNativeRetirement() noexcept {
@@ -113,7 +114,7 @@ void TalkDirector::releaseNativeReference(const NameObj* object) noexcept {
         // not invent camera, demo or nerve transitions for an active talk.
         bool active = mTalkState && mTalkState->_04 == controller;
         forEachBalloon([&](const TalkBalloon* balloon) {
-            if (smgpc::compat::has_name_obj_runtime_state(balloon) &&
+            if (NameObj::nativeGeneration(balloon) != 0 &&
                 !balloon->mFlag.mIsDead && balloon->mMessageCtrl == controller)
                 active = true;
         });
@@ -133,7 +134,7 @@ void TalkDirector::releaseNativeReference(const NameObj* object) noexcept {
             }
         }
         forEachBalloon([&](TalkBalloon* balloon) {
-            if (smgpc::compat::has_name_obj_runtime_state(balloon) && balloon->mMessageCtrl == controller)
+            if (NameObj::nativeGeneration(balloon) != 0 && balloon->mMessageCtrl == controller)
                 balloon->mMessageCtrl = nullptr;
         });
         return true;

@@ -8,7 +8,7 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/SystemUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 
 #include <algorithm>
 #include <cctype>
@@ -105,14 +105,14 @@ void verify_original_session(std::weak_ptr<JMapInfo::DataCompat>& zone_lifetime)
 }
 
 int main() try {
-    const auto registered_before = smgpc::compat::name_obj_runtime_state_count();
+    const auto registered_before = NameObj::snapshotNativeObjects().size();
     std::weak_ptr<JMapInfo::DataCompat> zone_lifetime;
     const int result = smgpc::test::run_stage_resource_process("original-stage-session", [&] {
         verify_original_session(zone_lifetime);
     });
     if (result != 0) return result;
     require(!SingletonHolder<GameSystem>::get() && zone_lifetime.expired() &&
-                smgpc::compat::name_obj_runtime_state_count() == registered_before,
+                NameObj::snapshotNativeObjects().size() == registered_before,
             "normal original process retirement clears the actual session owners and scenario metadata");
     std::puts("PASS original stage selection, restart ownership, authored zones/comets and normal retirement");
     return 0;

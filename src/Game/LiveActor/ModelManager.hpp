@@ -1,12 +1,9 @@
 #pragma once
 
 #include <JSystem/J3DGraphAnimator/J3DModel.hpp>
+#include <JSystem/JKernel/JKRHeap.hpp>
 #include <revolution/types.h>
 #include <memory>
-
-namespace smgpc::compat {
-    class JkrAllocationDomain;
-}
 
 class BpkPlayer;
 class BrkPlayer;
@@ -28,10 +25,10 @@ public:
     ModelManager();
     ~ModelManager();
 
-    static std::shared_ptr<ModelManager> createNative(std::shared_ptr<smgpc::compat::JkrAllocationDomain>,
+    static std::shared_ptr<ModelManager> createNative(JKRHeap::Handle,
                                                     const char*, const char*, bool);
     void retainNativeDependency(std::shared_ptr<void>);
-    std::shared_ptr<smgpc::compat::JkrAllocationDomain> nativeAllocationDomain() const noexcept;
+    JKRHeap::Handle nativeAllocationHeap() const noexcept;
 
     void update();
     void calcAnim();

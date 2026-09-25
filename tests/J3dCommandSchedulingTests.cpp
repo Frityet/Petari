@@ -1,5 +1,5 @@
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "Game/Util/MutexHolder.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
@@ -98,28 +98,30 @@ namespace {
         OSUnlockMutex(&heap);
     }
 
-    void wait_preserves_context(const std::shared_ptr<smgpc::compat::JkrAllocationDomain>& first,
-                                const std::shared_ptr<smgpc::compat::JkrAllocationDomain>& second) {
+    void wait_preserves_context(const JKRHeap::Handle& first,
+                                const JKRHeap::Handle& second) {
         std::atomic<bool> competing{false}, entered{false}, device_progress{false};
         std::future<void> resource, device;
         GDLObj caller{}, scene_dl{}, resource_dl{};
         GDSetCurrent(&caller);
         j3dSys.mFlags = 0x42;
         {
-            const smgpc::compat::JkrAllocationScope allocation(first);
+            const JKRHeap::CurrentHeapScope allocation(*(first));
+            const aurora::allocation::ClientAllocationScope allocationRouting({true, true});
             const J3DSys::ContextScope scene;
             require_scheduler_enabled();
             GDSetCurrent(&scene_dl);
             j3dSys.mFlags = 0x84;
             {
-                const smgpc::compat::JkrHostAllocationScope host;
+                const aurora::allocation::HostAllocationScope host;
                 resource = std::async(std::launch::async, [&] {
                     const aurora::os::GuestThreadExecutionScope guest;
                     competing.store(true, std::memory_order_release);
-                    const smgpc::compat::JkrAllocationScope allocation(second);
+                    const JKRHeap::CurrentHeapScope allocation(*(second));
+                    const aurora::allocation::ClientAllocationScope allocationRouting({true, true});
                     const J3DSys::ContextScope commands;
                     entered.store(true, std::memory_order_release);
-                    require(JKRHeap::sCurrentHeap == &second->heap(), "Resource owner must select its actual retained heap");
+                    require(JKRHeap::sCurrentHeap == &(*second), "Resource owner must select its actual retained heap");
                     GDSetCurrent(&resource_dl);
                     j3dSys.mFlags = 0x100;
                 });
@@ -142,7 +144,7 @@ namespace {
             device.get();
             require(!entered.load(std::memory_order_acquire), "Waiting resource owner must not overwrite active scene context");
             require(__GDCurrentDL == &scene_dl && j3dSys.mFlags == 0x84 &&
-                        JKRHeap::sCurrentHeap == &first->heap(), "Device wait must preserve active GD, J3D and heap ownership");
+                        JKRHeap::sCurrentHeap == &(*first), "Device wait must preserve active GD, J3D and heap ownership");
         }
         require(resource.wait_for(2s) == std::future_status::ready, "Resource owner must resume after scene retirement");
         resource.get();
@@ -150,7 +152,7 @@ namespace {
         GDSetCurrent(nullptr);
     }
 
-    void heap_before_j3d(const std::shared_ptr<smgpc::compat::JkrAllocationDomain>& domain) {
+    void heap_before_j3d(const JKRHeap::Handle& domain) {
         std::atomic<bool> heap_owned{false}, release_resource{false}, observed_order{false};
         OSThread* scene_thread;
         {
@@ -159,7 +161,8 @@ namespace {
         }
         auto resource = std::async(std::launch::async, [&] {
             const aurora::os::GuestThreadExecutionScope guest;
-            const smgpc::compat::JkrAllocationScope allocation(domain);
+            const JKRHeap::CurrentHeapScope allocation(*(domain));
+            const aurora::allocation::ClientAllocationScope allocationRouting({true, true});
             heap_owned.store(true, std::memory_order_release);
             {
                 const aurora::os::GuestThreadWaitScope wait;
@@ -196,9 +199,9 @@ int main() {
         OSInit();
         original_interrupt_snapshot();
         nested_original_mutex_and_exception();
-        auto runtime = smgpc::compat::JkrHeapRuntime::create(16U << 20);
-        auto first = smgpc::compat::JkrAllocationDomain::create(runtime, 4U << 20);
-        auto second = smgpc::compat::JkrAllocationDomain::create(runtime, 4U << 20);
+        auto runtime = smgpc::test::create_native_root_heap(16U << 20);
+        auto first = smgpc::test::create_native_solid_heap(runtime, 4U << 20);
+        auto second = smgpc::test::create_native_solid_heap(runtime, 4U << 20);
         wait_preserves_context(first, second);
         heap_before_j3d(second);
         std::cout << "PASS J3D device waits, original recursive mutexes, heap lock order, context unwind and static interrupt snapshots\n";

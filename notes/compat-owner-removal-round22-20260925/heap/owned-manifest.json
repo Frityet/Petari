@@ -1,0 +1,11 @@
+{
+  "baseline": "5cce8ba9447d11c149d4bc84dc3898bfca789461",
+  "paths": [
+    "src/JSystem/JKernel/JKRHeap.hpp",
+    "src/JSystem/JKernel/JKRHeap.cpp",
+    "src/JSystem/JKernel/JKRExpHeap.cpp",
+    "src/JSystem/JKernel/JKRSolidHeap.cpp",
+    "src/JSystem/JKernel/JKRUnitHeap.cpp"
+  ],
+  "validation": "Source review only; no build or tests."
+}

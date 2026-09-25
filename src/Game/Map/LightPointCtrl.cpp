@@ -4,7 +4,7 @@
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/Color.hpp"
 #include "Game/Util/MathUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 
 #include <cmath>
 #include <limits>
@@ -60,7 +60,7 @@ namespace {
     }
 
     [[nodiscard]] bool isLiveGeneration(const LiveActor* actor, std::uint64_t generation) noexcept {
-        return actor != nullptr && generation != 0U && smgpc::compat::name_obj_runtime_generation(actor) == generation;
+        return actor != nullptr && generation != 0U && NameObj::nativeGeneration(actor) == generation;
     }
 
 }  // namespace
@@ -120,7 +120,7 @@ void LightPointCtrl::requestPointLight(const LiveActor* pActor, TVec3f position,
         return;
     }
 
-    const auto generation = smgpc::compat::name_obj_runtime_generation(pActor);
+    const auto generation = NameObj::nativeGeneration(pActor);
     if (generation == 0U) {
         return;
     }
@@ -202,7 +202,7 @@ bool LightPointCtrl::tryBlendStart() {
 }
 
 bool LightPointCtrl::isUpdateCandidateActor(const LiveActor* pActor) const {
-    if (pActor == nullptr || smgpc::compat::name_obj_runtime_generation(pActor) == 0U) {
+    if (pActor == nullptr || NameObj::nativeGeneration(pActor) == 0U) {
         return false;
     }
     if (!isLiveGeneration(_10, _10Generation)) {

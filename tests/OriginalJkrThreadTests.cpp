@@ -1,5 +1,5 @@
 #include "JSystem/JKernel/JKRThread.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 
 #include <aurora/guest_thread.hpp>
 
@@ -66,18 +66,19 @@ private:
     Result& mResult;
 };
 
-void exercise(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
-    using namespace smgpc::compat;
-    auto domain = JkrAllocationDomain::create(heaps, 256U * 1024U);
+void exercise(const JKRHeap::Handle& heaps) {
+
+    auto domain = smgpc::test::create_native_solid_heap(heaps, 256U * 1024U);
     const auto originalCount = JKRThread::sThreadList.getNumLinks();
     std::array<int, 4> values{3, 5, 7, 11};
     Result result;
     std::unique_ptr<QueueWorker> worker;
     {
-        const JkrAllocationScope allocation(domain);
-        worker.reset(new QueueWorker(&domain->heap(), result));
+        const JKRHeap::CurrentHeapScope allocation(*(domain));
+        const aurora::allocation::ClientAllocationScope allocationRouting({true, true});
+        worker.reset(new QueueWorker(&(*domain), result));
     }
-    require(worker->mHeap == &domain->heap() && worker->mStackSize == 0x8020,
+    require(worker->mHeap == &(*domain) && worker->mStackSize == 0x8020,
             "original thread must own an aligned stack in the requested heap");
     require(OSIsThreadSuspended(worker->getThreadRecord()), "original thread must start suspended");
     require(JKRThread::searchThread(worker->getThreadRecord()) == worker.get(),
@@ -100,10 +101,11 @@ void exercise(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
     Result cancellation;
     std::unique_ptr<CancelWorker> blocked;
     {
-        const JkrAllocationScope allocation(domain);
+        const JKRHeap::CurrentHeapScope allocation(*(domain));
+        const aurora::allocation::ClientAllocationScope allocationRouting({true, true});
         blocked.reset(new CancelWorker(cancellation));
     }
-    require(blocked->mHeap == &domain->heap(), "implicit constructor must resolve the object's actual heap");
+    require(blocked->mHeap == &(*domain), "implicit constructor must resolve the object's actual heap");
     blocked->resume();
     cancellation.wait();
     oldRecord = blocked->getThreadRecord();
@@ -113,10 +115,11 @@ void exercise(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
 
     std::unique_ptr<JKRThread> suspended;
     {
-        const JkrAllocationScope allocation(domain);
+        const JKRHeap::CurrentHeapScope allocation(*(domain));
+        const aurora::allocation::ClientAllocationScope allocationRouting({true, true});
         suspended.reset(new JKRThread(static_cast<JKRHeap*>(nullptr), 0x8000, 2, 15));
     }
-    require(suspended->mHeap == &domain->heap(), "null explicit heap must select the actual current heap");
+    require(suspended->mHeap == &(*domain), "null explicit heap must select the actual current heap");
     suspended.reset();
     require(JKRThread::sThreadList.getNumLinks() == originalCount,
             "a never-resumed thread must also cancel and unregister during destruction");
@@ -127,11 +130,11 @@ int main() {
     try {
         const aurora::os::GuestThreadExecutionScope execution;
         OSInit();
-        const auto heaps = smgpc::compat::JkrHeapRuntime::create(2U * 1024U * 1024U);
-        const auto originalFree = heaps->root_heap().getTotalFreeSize();
+        const auto heaps = smgpc::test::create_native_root_heap(2U * 1024U * 1024U);
+        const auto originalFree = (*heaps).getTotalFreeSize();
         for (unsigned cycle = 0; cycle < 3; ++cycle) {
             exercise(heaps);
-            require(heaps->root_heap().getTotalFreeSize() == originalFree,
+            require((*heaps).getTotalFreeSize() == originalFree,
                     "thread heap retirement must reclaim every original allocation");
         }
         std::cout << "Original JKRThread queues, pointer delivery, worker allocation, cancellation and three heap retirements passed\n";

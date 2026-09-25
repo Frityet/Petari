@@ -1,0 +1,9 @@
+# Existing heap fixture migration
+
+Migrated existing tests from removed allocation-domain/runtime types to actual JKRHeap::Handle. Fixture-only NativeHeapFixture.hpp directly constructs/adopts actual root and solid heaps, and creates actual Aurora MEM2 storage where required. There is no replacement production runtime class or domain alias. Host allocations use Aurora directly; synchronous client scopes explicitly pair CurrentHeapScope and ClientAllocationScope. Existing no-lock OriginalAsyncHeapSelection retains its actual previous heap until restoration, preserving async waits.
+
+Renamed JkrAllocationDomainTests.cpp to OriginalJkrHeapLifetimeTests.cpp and changed the existing loop entry from jkr-allocation-domain to jkr-heap-lifetime (target smg-pc-original-jkr-heap-lifetime-tests). Its same seven groups/assertions remain; no new cases. Existing OriginalCameraContext cohort uses a real bounded solid child. OriginalFileLoader and startup fixtures attach retained MEM2 storage to the actual GDDR3 heap. The ARAM teardown fixture now releases its MEM2 token explicitly before root release so the same existing allocating-callback assertion continues to exercise callback drain ordering.
+
+Preserved the root agent's prior NameObj/LiveActor fixture edits by snapshotting current files before this migration. Also replaced the two remaining actor-specific old API calls requested by root: Model3DFor2D clipping uses MR::setClippingSphere, and broadcast suspension checks original synchronized flag bit 1. Synthetic compat/Other.hpp strings in source-normalization fixtures are retained as data, not source dependencies.
+
+Static retired-name scan has no old heap/domain/actor compat APIs or includes remaining in fixture code. git diff --check passed for this lane. No fixtures were built or run; no coverage expansion, staging or commits. Exact before-to-after fixture delta is tests-only.patch, including the new helper and rename.

@@ -2,15 +2,23 @@
 #include <atomic>
 #include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
+#include <aurora/guest_thread.hpp>
 #include <aurora/mem2_arena.hpp>
 #include <cstdint>
+#include <cstdio>
 #include <cstdlib>
 #include <limits>
 #include <mutex>
 #include <new>
 #include <stdexcept>
+#include <utility>
 
 namespace {
+    struct CurrentHeapLock {
+        CurrentHeapLock() { OSLockMutex(&JKRHeap::sCurrentHeapMutex); }
+        ~CurrentHeapLock() { OSUnlockMutex(&JKRHeap::sCurrentHeapMutex); }
+    };
+
     // The original virtual methods also lock. Keep that recursive mutex held
     // until native provenance has made the same allocation transition visible.
     struct HeapLock {
@@ -117,14 +125,164 @@ namespace {
     }  // namespace HeapFinalizers
 }  // namespace
 
+JKRHeap::Handle JKRHeap::retainNativeLifetime() {
+    const aurora::allocation::HostAllocationScope host;
+    Handle parent;
+    Handle result;
+    {
+        const CurrentHeapLock lock;
+        if (mNativeRetiring) {
+            aurora::throw_host_exception<std::logic_error>("Cannot retain a retiring JKR heap");
+        }
+        if (auto owner = mNativeLifetime.lock()) {
+            return owner;
+        }
+        if (mNativeSharedOwner) {
+            aurora::throw_host_exception<std::logic_error>("Cannot retain a JKR heap whose shared owner is releasing");
+        }
+        auto* actualParent = getParent();
+        if (!actualParent) {
+            aurora::throw_host_exception<std::logic_error>("A native JKR root requires an explicit lifetime owner");
+        }
+        parent = actualParent->retainNativeLifetime();
+        // Each original manually owned child has its own borrow control block.
+        // The deleter never touches this pointer: raw Game ownership is unchanged.
+        result = Handle(this, [parent](JKRHeap*) mutable {
+            const aurora::allocation::HostAllocationScope host;
+            // Weak observers must not retain the parent after the final borrow.
+            auto releaseParent = std::move(parent);
+        });
+        mNativeLifetime = result;
+    }
+    return result;
+}
+
+JKRHeap::Handle JKRHeap::retainCurrentNativeLifetime() {
+    if (!aurora::allocation::routing_state.callbackGuest) {
+        return {};
+    }
+    const CurrentHeapLock lock;
+    return sCurrentHeap ? sCurrentHeap->retainNativeLifetime() : Handle{};
+}
+
+JKRHeap::Handle JKRHeap::adoptNativeOwnership(std::shared_ptr<void> backing) {
+    const aurora::allocation::HostAllocationScope host;
+    Handle parent;
+    {
+        const CurrentHeapLock lock;
+        if (mNativeRetiring || mNativeSharedOwner || !mNativeLifetime.expired()) {
+            aurora::throw_host_exception<std::logic_error>("A native JKR heap can transfer ownership only before publication");
+        }
+        if (auto* actualParent = getParent()) {
+            parent = actualParent->retainNativeLifetime();
+        } else if (!backing) {
+            aurora::throw_host_exception<std::invalid_argument>("A shared JKR root requires its backing storage owner");
+        }
+        // An observer in the allocation/publication gap must not create a new
+        // manual borrow owner. Control-block allocation occurs outside the lock;
+        // its failure invokes the same complete heap-destruction rollback.
+        mNativeSharedOwner = true;
+    }
+    Handle result(this, [parent, backing](JKRHeap* heap) mutable {
+        const aurora::os::GuestThreadExecutionScope execution;
+        const aurora::allocation::HostAllocationScope host;
+        auto releaseParent = std::move(parent);
+        auto releaseBacking = std::move(backing);
+        {
+            const aurora::allocation::ClientAllocationScope game({true, true});
+            heap->destroy();
+        }
+        // Both captures are empty before weak control-block observers remain.
+        // Their local releases, and any parent/callback teardown, are unlocked.
+    });
+    {
+        const CurrentHeapLock lock;
+        mNativeLifetime = result;
+    }
+    return result;
+}
+
+void JKRHeap::bindNativeBackingStorage(std::shared_ptr<void> backing) {
+    if (!backing) {
+        aurora::throw_host_exception<std::invalid_argument>("A JKR backing binding requires actual storage ownership");
+    }
+    const CurrentHeapLock lock;
+    if (mNativeRetiring || mNativeBacking) {
+        aurora::throw_host_exception<std::logic_error>("A JKR heap backing owner can be bound only once before retirement");
+    }
+    mNativeBacking = std::move(backing);
+}
+
+void JKRHeap::validateNativeRetirement() const {
+    const CurrentHeapLock lock;
+    if (const auto count = mNativeLifetime.use_count(); count != 0) {
+        char message[128];
+        std::snprintf(message, sizeof(message), "Cannot destroy JKR heap %p with %ld retained native handles",
+                      static_cast<const void*>(this), count);
+        aurora::throw_host_exception<std::logic_error>(message);
+    }
+    // A host root may own physically separate arenas through its child tree.
+    // Its process owner must retire those real children before freeing the root.
+    if (sRootHeap == this && mChildTree.getNumChildren() != 0) {
+        aurora::throw_host_exception<std::logic_error>("Cannot destroy a JKR root with live child heaps");
+    }
+    for (auto* child = mChildTree.getFirstChild(); child; child = child->getNextChild()) {
+        child->getObject()->validateNativeRetirement();
+    }
+}
+
+std::shared_ptr<void> JKRHeap::beginNativeRetirement() {
+    const CurrentHeapLock lock;
+    if (mNativeRetiring) {
+        aurora::throw_host_exception<std::logic_error>("A JKR heap cannot recursively retire itself");
+    }
+    validateNativeRetirement();
+    mNativeRetiring = true;
+    return std::move(mNativeBacking);
+}
+
+void JKRHeap::validateNativeDestructor() noexcept {
+    const CurrentHeapLock lock;
+    if (mNativeRetiring) {
+        return;
+    }
+    // Direct/stack destruction cannot postpone storage release beyond the base
+    // destructor. Bound external storage must use the complete destroy() path.
+    if (mNativeBacking) {
+        OSPanic(__FILE__, __LINE__, "A JKR heap with retained external storage requires destroy()");
+    }
+    try {
+        validateNativeRetirement();
+    } catch (const std::exception& error) {
+        OSPanic(__FILE__, __LINE__, "%s", error.what());
+    }
+    mNativeRetiring = true;
+}
+
 JKRHeap::CurrentHeapScope::CurrentHeapScope(JKRHeap &heap) {
+    const aurora::allocation::HostAllocationScope host;
     OSLockMutex(&sCurrentHeapMutex);
-    mPrevious = heap.becomeCurrentHeap();
+    try {
+        mSelectedOwner = heap.retainNativeLifetime();
+        mPrevious = sCurrentHeap;
+        if (mPrevious) {
+            mPreviousOwner = mPrevious->retainNativeLifetime();
+        }
+        heap.becomeCurrentHeap();
+    } catch (...) {
+        OSUnlockMutex(&sCurrentHeapMutex);
+        mPreviousOwner.reset();
+        mSelectedOwner.reset();
+        throw;
+    }
 }
 
 JKRHeap::CurrentHeapScope::~CurrentHeapScope() {
     sCurrentHeap = mPrevious;
     OSUnlockMutex(&sCurrentHeapMutex);
+    const aurora::allocation::HostAllocationScope host;
+    mSelectedOwner.reset();
+    mPreviousOwner.reset();
 }
 
 OSMutex JKRHeap::sCurrentHeapMutex;
@@ -179,6 +337,8 @@ JKRHeap::JKRHeap(void *data, u32 size, JKRHeap *parent, bool error) : JKRDispose
 }
 
 JKRHeap::~JKRHeap() {
+    validateNativeDestructor();
+    const CurrentHeapLock lock;
     retireAllocations(this);
     // Retail keeps its parentless root for process lifetime. A native runtime
     // can release its host arena after all children and resources are gone.
@@ -432,10 +592,6 @@ namespace {
     constexpr std::size_t default_new_alignment = __STDCPP_DEFAULT_NEW_ALIGNMENT__;
     constexpr std::size_t native_heap_size_limit = std::numeric_limits<s32>::max();
 
-    struct CurrentHeapLock {
-        CurrentHeapLock() { OSLockMutex(&JKRHeap::sCurrentHeapMutex); }
-        ~CurrentHeapLock() { OSUnlockMutex(&JKRHeap::sCurrentHeapMutex); }
-    };
 
     void* allocate_native(std::size_t size, std::size_t alignment, bool from_tail, JKRHeap* explicit_heap) {
         if (alignment == 0 || (alignment & (alignment - 1)) != 0) throw std::bad_alloc();

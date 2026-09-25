@@ -5,7 +5,7 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ObjUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 
 #define CATEGORY_KEEPER_NUM 4
 
@@ -16,7 +16,7 @@ CollisionDirector::CollisionDirector() : NameObj(CP932("地形コリジョン"))
 
         for (s32 i = 0; i < CATEGORY_KEEPER_NUM; i++) {
             mCategoryKeeper[i] = new CollisionCategorizedKeeper(i);
-            smgpc::compat::claim_name_obj_runtime_ownership(mCategoryKeeper[i], this);
+            (mCategoryKeeper[i])->claimNativeOwnership(this);
         }
 
         MR::connectToScene(this, MR::MovementType_CollisionDirector, -1, -1, -1);

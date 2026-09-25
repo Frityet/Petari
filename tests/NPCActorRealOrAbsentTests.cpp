@@ -1,3 +1,4 @@
+#include "NativeHeapFixture.hpp"
 #include "Game/Enemy/AnimScaleController.hpp"
 #include "Game/Animation/XanimePlayer.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -19,7 +20,7 @@
 #include "Game/Util/RailUtil.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "Game/Util/HashUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "resource/BcsvTable.hpp"
@@ -51,7 +52,7 @@ namespace MR {
 namespace {
     void require(bool condition, std::string_view message) {
         if (!condition) {
-            const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
+            const auto host_allocations = aurora::allocation::HostAllocationScope{};
             throw std::runtime_error(std::string(message));
         }
     }
@@ -558,9 +559,10 @@ namespace {
         auto resource_runtime = smgpc::resource::GameResourceRuntime{};
         auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
         auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(runtime.scheduler());
-        auto domain = smgpc::compat::JkrAllocationDomain::create(runtime.host_heaps(), 16U << 20);
+        auto domain = smgpc::test::create_native_solid_heap(runtime.root_heap(), 16U << 20);
         auto scene = smgpc::test::SceneExecutionFixture(runtime.scheduler(), domain);
-        const auto game_allocations = smgpc::compat::JkrAllocationScope(domain);
+        const const JKRHeap::CurrentHeapScope game_allocations(*(domain));
+                const aurora::allocation::ClientAllocationScope game_allocationsRouting({true, true});
         testOriginalNPCItemData();
         auto actor = DirectFloatBaseProbe{};
         actor.initModelManagerWithAnm("Tico", "Tico", false);
@@ -647,7 +649,7 @@ int main(int argc, char** argv) {
     ++passed;
 
     {
-        const auto heaps = smgpc::compat::JkrHeapRuntime::create(8U << 20);
+        const auto heaps = smgpc::test::create_native_root_heap(8U << 20);
         smgpc::test::OriginalSceneControllerFixture original(heaps);
         smgpc::runtime::SceneScheduler scheduler;
         smgpc::runtime::SceneSchedulerBinding active(scheduler);

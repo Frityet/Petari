@@ -9,10 +9,10 @@
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/SystemUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/JkrAllocationDomain.hpp"
-#include "runtime/SceneScheduler.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include <JSystem/JKernel/JKRHeap.hpp>
+#include <aurora/allocation.hpp>
+#include "runtime/SceneScheduler.hpp"
 #include <aurora/exception.hpp>
 #include <algorithm>
 #include <memory>
@@ -68,8 +68,8 @@ void Scene::initializeNativeExecution() {
         return;
     }
 
-    const smgpc::compat::JkrHostAllocationScope host;
-    if (mNativeDomain || !mListExecutor || !mSceneObjHolder || !system->mSceneController->mObjHolder) {
+    const aurora::allocation::HostAllocationScope host;
+    if (mNativeHeap || !mListExecutor || !mSceneObjHolder || !system->mSceneController->mObjHolder) {
         aurora::throw_host_exception< std::logic_error >("Scene execution requires the controller's initialized scene and actual holders");
     }
     auto* heap = JKRHeap::findFromRoot(mSceneObjHolder);
@@ -77,15 +77,15 @@ void Scene::initializeNativeExecution() {
         aurora::throw_host_exception< std::logic_error >("Scene execution requires its actual Game heap");
     }
 
-    mNativeDomain = smgpc::compat::JkrAllocationDomain::retain_heap(*heap);
+    mNativeHeap = heap->retainNativeLifetime();
     mNativeNameObjHolder = system->mSceneController->mObjHolder;
     try {
         mNativeScheduler = std::make_unique< smgpc::runtime::SceneScheduler >();
         mNativeSchedulerBinding = std::make_unique< smgpc::runtime::SceneSchedulerBinding >(*mNativeScheduler);
         mNativeAllocationBinding =
-            std::make_unique< smgpc::runtime::SceneSchedulerAllocationBinding >(*mNativeScheduler, mNativeDomain);
-        mSceneObjHolder->initializeNative(mNativeDomain);
-        mListExecutor->bindNativeExecution(*mNativeScheduler, mNativeDomain);
+            std::make_unique< smgpc::runtime::SceneSchedulerAllocationBinding >(*mNativeScheduler, mNativeHeap);
+        mSceneObjHolder->initializeNative(mNativeHeap);
+        mListExecutor->bindNativeExecution(*mNativeScheduler, mNativeHeap);
         if (auto* game = dynamic_cast< GameScene* >(this)) {
             game->initNativeSceneChildren();
         }
@@ -97,35 +97,35 @@ void Scene::initializeNativeExecution() {
 }
 
 void Scene::prepareNativeRetirement() noexcept {
-    if (!mNativeDomain || mNativeRetirementPrepared) {
+    if (!mNativeHeap || mNativeRetirementPrepared) {
         return;
     }
     mNativeRetirementPrepared = true;
-    DrawSyncManager::retireNativeCallbacks(mNativeDomain->heap());
+    DrawSyncManager::retireNativeCallbacks(*mNativeHeap);
     if (mSceneObjHolder) {
         mSceneObjHolder->prepareNativeRetirement();
     }
 }
 
 void Scene::retireNativeExecution() noexcept {
-    if (!mNativeDomain) {
+    if (!mNativeHeap) {
         return;
     }
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (mListExecutor) {
         mListExecutor->prepareNativeRetirement();
     }
     if (mNativeNameObjHolder) {
         const auto holderObjects = mNativeNameObjHolder->snapshotNativeObjects();
-        const auto objects = smgpc::compat::snapshot_name_obj_runtime_objects();
+        const auto objects = NameObj::snapshotNativeObjects();
         for (auto it = objects.rbegin(); it != objects.rend(); ++it) {
             auto* object = *it;
-            if (!smgpc::compat::has_name_obj_runtime_state(object) || mSceneObjHolder->ownsNativeObject(object)) {
+            if (!NameObj::nativeGeneration(object) || mSceneObjHolder->ownsNativeObject(object)) {
                 continue;
             }
             bool belongsToHeap = false;
             for (auto* heap = JKRHeap::findFromRoot(object); heap; heap = heap->getParent()) {
-                if (heap == &mNativeDomain->heap()) {
+                if (heap == mNativeHeap.get()) {
                     belongsToHeap = true;
                     break;
                 }
@@ -140,10 +140,10 @@ void Scene::retireNativeExecution() noexcept {
                 layout->releaseNativeResources();
             }
             if (auto* actor = dynamic_cast< LiveActor* >(object)) {
-                smgpc::compat::release_actor_runtime_state(actor);
+                actor->releaseNativeResources();
             }
             object->detachNativeHolder();
-            smgpc::compat::release_name_obj_runtime_state(object);
+            object->retireNativeLifetime();
         }
         mNativeNameObjHolder = nullptr;
     }
@@ -165,13 +165,14 @@ void Scene::beginNativeFrame() {
 }
 
 void Scene::initializeNativeEffects(u32 particles, u32 emitters) {
-    if (!mNativeDomain || mNativeRetirementPrepared || !mSceneObjHolder) {
+    if (!mNativeHeap || mNativeRetirementPrepared || !mSceneObjHolder) {
         aurora::throw_host_exception< std::logic_error >("Scene effects require the actual controller's initialized scene");
     }
     if (mSceneObjHolder->isExist(SceneObj_EffectSystem)) {
         aurora::throw_host_exception< std::logic_error >("Scene effect system already initialized");
     }
-    const smgpc::compat::JkrAllocationScope game(mNativeDomain);
+    const JKRHeap::CurrentHeapScope game(*mNativeHeap);
+    const aurora::allocation::ClientAllocationScope game_routing({true, true});
     auto* effects = static_cast< EffectSystem* >(mSceneObjHolder->create(SceneObj_EffectSystem));
     effects->entry(MR::getParticleResourceHolder(), particles, emitters);
 }

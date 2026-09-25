@@ -149,7 +149,7 @@ namespace smgpc::runtime {
         [[nodiscard]] std::string_view next_sequence_scene_name() const;
         [[nodiscard]] std::optional<std::filesystem::path> find_layout_archive(std::string_view layout_name) const;
         [[nodiscard]] std::optional<std::filesystem::path> find_object_archive(std::string_view object_name) const;
-        [[nodiscard]] const std::shared_ptr<compat::JkrHeapRuntime>& host_heaps() const noexcept { return _host_heaps; }
+        [[nodiscard]] const JKRHeap::Handle& root_heap() const noexcept { return _root_heap; }
         [[nodiscard]] DvdFileSystemService &dvd();
         [[nodiscard]] const DvdFileSystemService &dvd() const;
         [[nodiscard]] WiiIosService &ios();
@@ -230,7 +230,7 @@ namespace smgpc::runtime {
         render::AuroraWindow &_window_service;
         std::filesystem::path _disc_files_root;
         DvdFileSystemService _dvd;
-        std::shared_ptr<compat::JkrHeapRuntime> _host_heaps;
+        JKRHeap::Handle _root_heap;
         WiiIosService _ios;
         WiiPlatformService _wii_platform;
         std::unique_ptr<OriginalDisplayLifetime> _display;

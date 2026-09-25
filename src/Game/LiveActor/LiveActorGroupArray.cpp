@@ -6,6 +6,7 @@
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
+#include <algorithm>
 #include <cstdio>
 #include <cstring>
 
@@ -123,4 +124,22 @@ LiveActorGroup* LiveActorGroupArray::entry(LiveActor* pActor, const JMapInfoIter
     pGroup->registerActor(pActor);
 
     return pGroup;
+}
+
+void MsgSharedGroup::releaseNativeSensorReference(const HitSensor* sensor) noexcept {
+    if (mSensor == sensor) {
+        mMsg = static_cast< u32 >(-1);
+        mSensor = nullptr;
+        mSensorName = nullptr;
+    }
+}
+
+void LiveActorGroupArray::releaseNativeReference(const NameObj* object) noexcept {
+    if (mGroups.size() == 0) {
+        return;
+    }
+    auto* oldEnd = mGroups.end();
+    auto* newEnd = std::remove_if(mGroups.begin(), oldEnd, [object](const MsgSharedGroup* group) { return group == object; });
+    std::fill(newEnd, oldEnd, nullptr);
+    mGroups.mCount = static_cast< s32 >(newEnd - mGroups.begin());
 }

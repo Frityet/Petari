@@ -219,6 +219,7 @@ void DemoDirector::doDemoEndRequest() {
 }
 
 DemoDirector::~DemoDirector() {
+    retireNativeLifetime();
     auto* requests = mStartRequestHolder;
     auto* simple = _20;
     mStartRequestHolder = nullptr;

@@ -20,7 +20,7 @@
 #include <JSystem/JKernel/JKRArchive.hpp>
 #include "OriginalStageResourceProcessFixture.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <nw4r/lyt/group.h>
 #include <nw4r/lyt/animation.h>
@@ -250,14 +250,15 @@ void materials_and_text(const std::filesystem::path& path) {
     }
 }
 void host_heap_boundary(const std::filesystem::path& path) {
-    auto domain = smgpc::compat::JkrAllocationDomain::create(MR::getSceneObjHolder()->nativeAllocationDomain(), 64U << 10);
+    auto domain = smgpc::test::create_native_solid_heap(MR::getSceneObjHolder()->nativeAllocationHeap(), 64U << 10);
     const auto retired = std::weak_ptr(domain);
     auto archive_path = path;
     std::optional<smgpc::layout::LayoutRuntime> layout;
     std::vector<smgpc::layout::LayoutRuntime::DebugPaneState> published;
     {
-        const smgpc::compat::JkrAllocationScope game(domain);
-        const auto free_before = domain->heap().getFreeSize();
+        const JKRHeap::CurrentHeapScope game(*(domain));
+        const aurora::allocation::ClientAllocationScope gameRouting({true, true});
+        const auto free_before = (*domain).getFreeSize();
         layout.emplace("Native layout owner whose name exceeds string inline storage", "Fixture", 1, 0, std::move(archive_path));
         require(JKRHeap::findFromRoot(const_cast<char*>(layout->getName().data())) == nullptr,
                 "layout constructor retains native strings outside the original caller heap");
@@ -269,10 +270,10 @@ void host_heap_boundary(const std::filesystem::path& path) {
         published = layout->debugPanes();
         require(published.size() == 3 && JKRHeap::findFromRoot(published.data()) == nullptr,
                 "native pane snapshots use host storage even when requested from original Game code");
-        require(domain->heap().getFreeSize() == free_before,
+        require((*domain).getFreeSize() == free_before,
                 "native layout construction, parsing, metadata mutations and snapshots do not consume the caller Game heap");
         auto* original = new u8[16];
-        require(JKRHeap::findFromRoot(original) == &domain->heap(),
+        require(JKRHeap::findFromRoot(original) == &(*domain),
                 "layout host boundaries restore original caller allocation routing on return");
         delete[] original;
     }
@@ -385,7 +386,8 @@ void fly_meter() {
     {
         std::unique_ptr<SubMeterLayout> meter;
         {
-            const smgpc::compat::JkrAllocationScope game(MR::getSceneObjHolder()->nativeAllocationDomain());
+            const JKRHeap::CurrentHeapScope game(*(MR::getSceneObjHolder()->nativeAllocationHeap()));
+            const aurora::allocation::ClientAllocationScope gameRouting({true, true});
             meter = std::make_unique<SubMeterLayout>("Original FlyMeter regression", "FlyMeter");
             meter->initWithoutIter();
         }
@@ -403,15 +405,16 @@ void fly_meter() {
         MR::startAnim(meter.get(), "Wait", 0);
         for (const auto ratio : {1.0F, 0.5F, 0.125F}) {
             {
-                const auto domain = MR::getSceneObjHolder()->nativeAllocationDomain();
-                const smgpc::compat::JkrAllocationScope game(domain);
-                const auto free_before = domain->heap().getFreeSize();
+                const auto domain = MR::getSceneObjHolder()->nativeAllocationHeap();
+                const JKRHeap::CurrentHeapScope game(*(domain));
+                const aurora::allocation::ClientAllocationScope gameRouting({true, true});
+                const auto free_before = (*domain).getFreeSize();
                 meter->setLifeRatio(ratio);
                 require(MR::getPaneAnimFrame(meter.get(), "Count", 0) == 128.0F * (1.0F - ratio) &&
                             MR::isPaneAnimStopped(meter.get(), "Count", 0),
                         "original life ratio selects and stops the authored Count animation frame");
                 meter->draw();
-                require(domain->heap().getFreeSize() == free_before,
+                require((*domain).getFreeSize() == free_before,
                         "original layout animation and first texture/text draw keep all native work outside its Game heap");
             }
         }

@@ -7,7 +7,7 @@
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/SingletonHolder.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include <memory>
 #include <stdexcept>
 
@@ -16,11 +16,12 @@ namespace smgpc::test {
 // Tests publish their real SceneObjHolder and executor through this Scene.
 class OriginalSceneControllerFixture final {
 public:
-    explicit OriginalSceneControllerFixture(const std::shared_ptr<compat::JkrHeapRuntime>& heaps)
-        : domain(compat::JkrAllocationDomain::create(heaps, 1U << 20)), scene("original scene fixture") {
+    explicit OriginalSceneControllerFixture(const JKRHeap::Handle& heaps)
+        : domain(smgpc::test::create_native_solid_heap(heaps, 1U << 20)), scene("original scene fixture") {
         if (SingletonHolder<GameSystem>::get() || SingletonHolder<NameObjRegister>::get())
             throw std::logic_error("Scene test requires exclusive original GameSystem ownership");
-        compat::JkrAllocationScope game(domain);
+        const JKRHeap::CurrentHeapScope game(*(domain));
+        const aurora::allocation::ClientAllocationScope gameRouting({true, true});
         SingletonHolder<GameSystem>::init();
         SingletonHolder<GameSystem>::get()->mSceneController = new GameSystemSceneController();
         SingletonHolder<NameObjRegister>::init();
@@ -43,7 +44,7 @@ public:
         // actual Game arena, after scenes and singleton borrowers are gone.
     }
     GameSystemSceneController& controller() { return *SingletonHolder<GameSystem>::get()->mSceneController; }
-    std::shared_ptr<compat::JkrAllocationDomain> domain;
+    JKRHeap::Handle domain;
     Scene scene;
 };
 }

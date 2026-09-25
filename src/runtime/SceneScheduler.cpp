@@ -12,7 +12,8 @@
 #include "Game/Animation/BrkPlayer.hpp"
 #include "Game/System/ResourceInfo.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
+#include <aurora/allocation.hpp>
 
 #include <algorithm>
 #include <array>
@@ -37,7 +38,6 @@
 #include "Game/Util/DrawUtil.hpp"
 #include "Game/Util/LightUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
 #include "render/BrightVisibilityService.hpp"
 #include "runtime/RuntimeContext.hpp"
 
@@ -49,13 +49,17 @@ namespace smgpc::runtime {
         SceneScheduler *sActiveSceneScheduler = nullptr;
 
         template <typename Callback>
-        decltype(auto) invoke_game_callback(const std::shared_ptr<smgpc::compat::JkrAllocationDomain>& domain,
+        decltype(auto) invoke_game_callback(const JKRHeap::Handle& domain,
                                            Callback&& callback) {
             // Standalone callers may supply an explicit current Game scope.
             // Production scenes publish their own retained execution domain.
-            auto retained = domain ? domain : smgpc::compat::current_jkr_allocation_domain();
-            std::optional<smgpc::compat::JkrAllocationScope> heap;
-            if (retained) heap.emplace(std::move(retained));
+            auto retained = domain ? domain : JKRHeap::retainCurrentNativeLifetime();
+            std::optional<JKRHeap::CurrentHeapScope> heap;
+            std::optional<aurora::allocation::ClientAllocationScope> routing;
+            if (retained) {
+                heap.emplace(*retained);
+                routing.emplace(aurora::allocation::RoutingState{true, true});
+            }
             return std::forward<Callback>(callback)();
         }
 
@@ -73,11 +77,11 @@ namespace smgpc::runtime {
                 : LayoutDrawAdaptorName{resource::encode_cp932(layout.getName())},
                   NameObj(game_name.c_str()), _layout(layout) {}
             void movement() override {
-                smgpc::compat::JkrHostAllocationScope host;
+                aurora::allocation::HostAllocationScope host;
                 _layout.update();
             }
             void draw() const override {
-                smgpc::compat::JkrHostAllocationScope host;
+                aurora::allocation::HostAllocationScope host;
                 _layout.draw();
             }
         private:
@@ -501,26 +505,26 @@ namespace smgpc::runtime {
     SceneScheduler::~SceneScheduler() { clear(); }
 
     SceneSchedulerAllocationBinding::SceneSchedulerAllocationBinding(
-        SceneScheduler& scheduler, std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain)
-        : _scheduler(&scheduler), _domain(std::move(domain)), _previous(scheduler._allocation_domain) {
+        SceneScheduler& scheduler, JKRHeap::Handle domain)
+        : _scheduler(&scheduler), _domain(std::move(domain)), _previous(scheduler._allocation_heap) {
         if (!_domain) aurora::throw_host_exception<std::invalid_argument>("Scene callback allocation requires a retained Game domain");
-        scheduler._allocation_domain = _domain;
+        scheduler._allocation_heap = _domain;
     }
 
     SceneSchedulerAllocationBinding::~SceneSchedulerAllocationBinding() {
-        if (_scheduler->_allocation_domain != _domain) std::terminate();
-        _scheduler->_allocation_domain = std::move(_previous);
+        if (_scheduler->_allocation_heap != _domain) std::terminate();
+        _scheduler->_allocation_heap = std::move(_previous);
     }
 
-    const std::shared_ptr<smgpc::compat::JkrAllocationDomain>& SceneScheduler::allocation_domain() const noexcept {
-        return _allocation_domain;
+    const JKRHeap::Handle& SceneScheduler::allocation_heap() const noexcept {
+        return _allocation_heap;
     }
 
     void SceneScheduler::attach_execution(NameObjListExecutor& executor) {
         if (_execution || !_entries.empty())
             aurora::throw_host_exception<std::logic_error>("Bind the original executor before scene registrations");
-        if (!_allocation_domain) {
-            _allocation_domain = executor.nativeAllocationDomain();
+        if (!_allocation_heap) {
+            _allocation_heap = executor.nativeAllocationHeap();
             _owns_execution_allocation_binding = true;
         }
         _execution = &executor;
@@ -528,7 +532,7 @@ namespace smgpc::runtime {
 
     void SceneScheduler::detach_execution(NameObjListExecutor& executor) noexcept {
         if (_execution != &executor) return;
-        if (_owns_execution_allocation_binding) _allocation_domain.reset();
+        if (_owns_execution_allocation_binding) _allocation_heap.reset();
         _owns_execution_allocation_binding = false;
         _execution = nullptr;
     }
@@ -560,7 +564,8 @@ namespace smgpc::runtime {
         validate(*executor.mMovementList, entry.movement_type);
         validate(*executor.mCalcAnimList, entry.calc_anim_type);
         validate(*executor.mDrawList, entry.draw_type);
-        const smgpc::compat::JkrAllocationScope game(_execution->nativeAllocationDomain());
+        const JKRHeap::CurrentHeapScope game(*(_execution->nativeAllocationHeap()));
+        const aurora::allocation::ClientAllocationScope game_routing({true, true});
         // The original deferred lists allocate from registration counts. A
         // late native registration grows this same typed storage, preserving
         // existing membership and order, before the original queue can add it.
@@ -594,7 +599,7 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::register_name_obj(NameObj& object, s32 movement, s32 animation, s32 buffer, s32 draw) {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         if (const auto found = std::ranges::find(_entries, &object, &Entry::name_obj); found != _entries.end()) {
             if (found->movement_type == movement && found->calc_anim_type == animation &&
                 found->draw_buffer_type == buffer && found->draw_type == draw) return;
@@ -670,13 +675,13 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::register_layout(smgpc::layout::LayoutRuntime& layout, s32 movement, s32 animation, s32 draw) {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         if (find_entry(SceneEntryKind::Layout, &layout)) return;
         auto adaptor = std::make_unique<LayoutDrawAdaptor>(layout);
         auto* object = adaptor.get();
         // Scene-wide raw-child cleanup must not adopt an object retained by
         // this scheduler. NameObj destruction removes this ownership record.
-        smgpc::compat::claim_name_obj_runtime_ownership(object, this);
+        object->claimNativeOwnership(this);
         _layout_draw_adaptors.emplace(&layout, std::move(adaptor));
         try {
             connect_name_obj(*object, movement, animation, -1, draw);
@@ -709,17 +714,17 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::begin_frame() {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
 #ifndef NDEBUG
         _last_execution_trace.clear();
 #endif
     }
 
     void SceneScheduler::execute_movement() {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         J3DSys::ContextScope j3d_scope;
         begin_frame();
-        invoke_game_callback(_allocation_domain, [] { MR::getSceneNameObjMovementController()->movement(); });
+        invoke_game_callback(_allocation_heap, [] { MR::getSceneNameObjMovementController()->movement(); });
         apply_execution_requirements(false, true, true);
         // Host-only scenes still use this aggregate entry. Original GameScene
         // calls categories itself through SceneExecutor, including its separate
@@ -742,7 +747,7 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::execute_movement_category(s32 movement_type) {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         J3DSys::ContextScope j3d_scope;
         if (movement_type < 0)
             aurora::throw_host_exception<std::out_of_range>("Movement category must be nonnegative");
@@ -756,7 +761,7 @@ namespace smgpc::runtime {
         const auto members = category_entries(movement_type, false);
         if (std::ranges::find(members, entry->order, &Entry::order) == members.end()) return;
 
-        invoke_game_callback(_allocation_domain, [&] {
+        invoke_game_callback(_allocation_heap, [&] {
             entry->name_obj->executeMovement();
         });
         if (auto* runtime = RuntimeContext::try_instance(); runtime && movement_type == MR::MovementType_Camera)
@@ -775,7 +780,7 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::execute_calc_anim() {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         J3DSys::ContextScope j3d_scope;
         std::vector<s32> categories;
         for (const auto& entry : sorted_entries_for_calc_anim())
@@ -785,7 +790,7 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::execute_calc_anim_category(s32 calc_anim_type) {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         J3DSys::ContextScope j3d_scope;
         if (calc_anim_type < 0)
             aurora::throw_host_exception<std::out_of_range>("Animation category must be nonnegative");
@@ -800,7 +805,7 @@ namespace smgpc::runtime {
         if (!entry || entry->calc_anim_type != calc_anim_type) return;
         const auto members = category_entries(calc_anim_type, true);
         if (std::ranges::find(members, entry->order, &Entry::order) == members.end()) return;
-        invoke_game_callback(_allocation_domain, [&] {
+        invoke_game_callback(_allocation_heap, [&] {
             switch (entry->kind) {
             case SceneEntryKind::NameObj:
                 entry->name_obj->calcAnim();
@@ -822,17 +827,17 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::entry_draw_buffer(s32 camera_type) {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         if (!_execution || !_execution->mBufferHolder || !_execution->nativeInitialized())
             aurora::throw_host_exception<std::logic_error>("Original category view entry requires allocated scene draw buffers");
         refresh_draw_buffer_activation();
         J3DSys::ContextScope commands;
         // The original SceneExecutor has already selected the view matrix.
-        invoke_game_callback(_allocation_domain, [&] { _execution->mBufferHolder->entry(camera_type); });
+        invoke_game_callback(_allocation_heap, [&] { _execution->mBufferHolder->entry(camera_type); });
     }
 
     void SceneScheduler::execute_calc_view_and_entry() {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         if (!_execution || !_execution->mBufferHolder) return;
         if (!_execution->nativeInitialized())
             aurora::throw_host_exception<std::logic_error>("Scene construction must allocate draw lists before view entry");
@@ -846,7 +851,7 @@ namespace smgpc::runtime {
         TMtx34f mtx;
         mtx.identity();
         PSMTXCopy(mtx, j3dSys.mViewMtx);
-        invoke_game_callback(_allocation_domain, [&] {
+        invoke_game_callback(_allocation_heap, [&] {
             _execution->mBufferHolder->entry(1);
             MR::loadViewMtx();
             _execution->mBufferHolder->entry(0);
@@ -1004,7 +1009,7 @@ namespace smgpc::runtime {
     std::vector<SceneSchedulerRegistration> SceneScheduler::remove_registrations_since(std::size_t marker) {
         auto registrations = std::vector<SceneSchedulerRegistration>{};
         {
-            smgpc::compat::JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             for (auto &entry : _entries) {
                 if (entry.order < marker) {
                     continue;
@@ -1030,12 +1035,12 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::execute_draw_buffer(s32 draw_buffer_type, SceneDrawBufferPass pass) {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         if (!_execution || !_execution->mBufferHolder) return;
         if (!_execution->nativeInitialized()) aurora::throw_host_exception<std::logic_error>("Draw lists have not completed scene construction");
         refresh_draw_buffer_activation();
         J3DSys::ContextScope commands;
-        invoke_game_callback(_allocation_domain, [&] {
+        invoke_game_callback(_allocation_heap, [&] {
             if (pass == SceneDrawBufferPass::Translucent) _execution->drawXlu(draw_buffer_type);
             else _execution->drawOpa(draw_buffer_type);
         });
@@ -1057,7 +1062,7 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::execute_draw_type(s32 draw_type) {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         J3DSys::ContextScope j3d_scope;
         if (!_execution || !_execution->nativeInitialized())
             aurora::throw_host_exception<std::logic_error>("Draw categories require the initialized original executor");
@@ -1066,7 +1071,7 @@ namespace smgpc::runtime {
         auto* list = executor->mDrawList;
         const auto lifetime = list->nativeLifetime();
 #endif
-        invoke_game_callback(_allocation_domain, [&] { executor->executeDraw(draw_type); });
+        invoke_game_callback(_allocation_heap, [&] { executor->executeDraw(draw_type); });
 #ifndef NDEBUG
         // Observe the original list only while its owner and this binding still
         // exist. Callback retirement/replacement never rebuilds membership here.
@@ -1082,7 +1087,7 @@ namespace smgpc::runtime {
     void fill_actor_model_debug_state(SceneSchedulerEntryState&, const LiveActor*);
 
     std::vector<SceneSchedulerEntryState> SceneScheduler::snapshot() const {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         auto states = std::vector<SceneSchedulerEntryState>{};
         states.reserve(_entries.size());
         for (const auto &entry : _entries) {
@@ -1128,7 +1133,7 @@ namespace smgpc::runtime {
     }
 
     std::vector<SceneLayoutRuntimeDebugState> SceneScheduler::debug_layout_runtime_snapshot() const {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         auto states = std::vector<SceneLayoutRuntimeDebugState>{};
         for (const auto &entry : _entries) {
             if (entry.kind != SceneEntryKind::Layout || entry.layout == nullptr) {
@@ -1312,12 +1317,12 @@ namespace smgpc::runtime {
     }
 
     std::vector<SceneScheduler::Entry> SceneScheduler::entries_snapshot() const {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         return _entries;
     }
 
     std::vector<SceneScheduler::Entry> SceneScheduler::category_entries(s32 category, bool animation) const {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         if (!_execution || !_execution->nativeInitialized())
             aurora::throw_host_exception<std::logic_error>("Execute categories after original scene list allocation");
         auto& list = *(animation ? _execution->mCalcAnimList : _execution->mMovementList);
@@ -1336,21 +1341,21 @@ namespace smgpc::runtime {
     }
 
     std::vector<SceneScheduler::Entry> SceneScheduler::sorted_entries_for_movement() {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         auto entries = entries_snapshot();
         std::ranges::stable_sort(entries, [](const Entry& a, const Entry& b) { return movement_category_less(&a, &b); });
         return entries;
     }
 
     std::vector<SceneScheduler::Entry> SceneScheduler::sorted_entries_for_calc_anim() {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         auto entries = entries_snapshot();
         std::ranges::stable_sort(entries, [](const Entry& a, const Entry& b) { return calc_category_less(&a, &b); });
         return entries;
     }
 
     std::vector<SceneScheduler::Entry> SceneScheduler::sorted_entries_for_calc_view_and_entry() {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         auto entries = entries_snapshot();
         std::ranges::stable_sort(entries, [](const Entry& a, const Entry& b) { return calc_view_entry_less(&a, &b); });
         return entries;
@@ -1372,7 +1377,7 @@ namespace smgpc::runtime {
     }
 
     bool SceneScheduler::entry_is_suspended(const Entry &entry) {
-        return smgpc::compat::name_obj_is_suspended(entry.name_obj);
+        return entry.name_obj == nullptr || (entry.name_obj->getFlag() & 1U) != 0;
     }
 
     std::string SceneScheduler::entry_name(const Entry &entry) {
@@ -1411,7 +1416,7 @@ namespace smgpc::runtime {
     void SceneScheduler::push_trace(const Entry &entry, SceneSchedulerPhase phase, SceneDrawBufferPass pass) {
         // Debug history outlives scene arenas. Scope only metadata construction;
         // movement, animation and draw callbacks keep their caller's Game heap.
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         auto state = SceneSchedulerEntryState {
             .kind = entry.kind,
             .phase = phase,

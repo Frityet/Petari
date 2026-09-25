@@ -5,7 +5,7 @@
 
 class LiveActor;
 class NameObjExecuteHolder;
-namespace smgpc::compat { class JkrAllocationDomain; }
+#include <JSystem/JKernel/JKRHeap.hpp>
 namespace smgpc::runtime { class SceneScheduler; }
 
 /// @brief Class that executes NameObjCategoryList instances.
@@ -23,14 +23,14 @@ public:
     virtual void initDrawList() {
     }
 
-    void bindNativeExecution(smgpc::runtime::SceneScheduler&, std::shared_ptr< smgpc::compat::JkrAllocationDomain >);
+    void bindNativeExecution(smgpc::runtime::SceneScheduler&, JKRHeap::Handle);
     void unbindNativeExecution();
     void prepareNativeRetirement();
     NameObjExecuteHolder& nativeRequirements() const;
     bool nativeInitialized() const noexcept { return mNativeInitialized; }
     bool nativeRetiring() const noexcept { return mNativeRetiring; }
     void notifyNativeObjectRetired(NameObj*) noexcept;
-    std::shared_ptr< smgpc::compat::JkrAllocationDomain > nativeAllocationDomain() const noexcept { return mNativeDomain; }
+    JKRHeap::Handle nativeAllocationHeap() const noexcept { return mNativeHeap; }
     void retireNativeDrawBuffers();
 
     void init();
@@ -65,7 +65,7 @@ public:
 
 private:
     smgpc::runtime::SceneScheduler* mNativeScheduler = nullptr;
-    std::shared_ptr< smgpc::compat::JkrAllocationDomain > mNativeDomain;
+    JKRHeap::Handle mNativeHeap;
     NameObjExecuteHolder* mNativeRequirements = nullptr;
     bool mNativeInitialized = false;
     bool mNativeRetiring = false;

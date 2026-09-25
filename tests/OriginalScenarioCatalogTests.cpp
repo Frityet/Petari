@@ -1,7 +1,7 @@
 #include "OriginalStageResourceProcessFixture.hpp"
 #include "resource/BcsvTable.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include "NativeHeapFixture.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/System/FileLoader.hpp"
 #include "Game/System/ScenarioDataParser.hpp"
@@ -105,36 +105,38 @@ void verify_catalog(std::weak_ptr<JMapInfo::DataCompat>& last_map) {
 }
 
 void verify_native_name_and_failed_constructor_lifetimes() {
-    const auto baseline = smgpc::compat::name_obj_runtime_state_count();
-    auto domain = smgpc::compat::JkrAllocationDomain::create(MR::getSceneObjHolder()->nativeAllocationDomain(), 4096);
+    const auto baseline = NameObj::snapshotNativeObjects().size();
+    auto domain = smgpc::test::create_native_solid_heap(MR::getSceneObjHolder()->nativeAllocationHeap(), 4096);
     std::optional<NameObj> object;
     std::vector<NameObj*> snapshot;
     constexpr char changed_name[] = "An explicitly retained original NameObj name longer than a string small buffer";
     {
-        const smgpc::compat::JkrAllocationScope game(domain);
-        const auto marker = smgpc::compat::mark_name_obj_runtime_registrations();
+        const JKRHeap::CurrentHeapScope game(*(domain));
+        const aurora::allocation::ClientAllocationScope gameRouting({true, true});
+        const auto marker = NameObj::markNativeRegistrations();
         object.emplace("Stack-owned NameObj while the actual Game heap is current");
         object->setName(changed_name);
-        snapshot = smgpc::compat::snapshot_name_obj_runtime_objects_since(marker);
+        snapshot = NameObj::snapshotNativeObjectsSince(marker);
     }
     domain.reset();
     require(std::strcmp(object->getName(), changed_name) == 0 && snapshot.size() == 1 && snapshot.front() == &*object,
             "externally owned name bytes and host registration snapshots survive the temporary Game heap");
     object.reset();
-    require(smgpc::compat::name_obj_runtime_state_count() == baseline,
+    require(NameObj::snapshotNativeObjects().size() == baseline,
             "stack object retirement removes precisely its original NameObj registration");
 
-    auto constrained = smgpc::compat::JkrAllocationDomain::create(MR::getSceneObjHolder()->nativeAllocationDomain(), 2048);
+    auto constrained = smgpc::test::create_native_solid_heap(MR::getSceneObjHolder()->nativeAllocationHeap(), 2048);
     const auto archive_count = SingletonHolder<FileLoader>::get()->mArchiveHolder->mEntries.size();
     bool allocation_failed = false;
     try {
-        const smgpc::compat::JkrAllocationScope game(constrained);
+        const JKRHeap::CurrentHeapScope game(*(constrained));
+        const aurora::allocation::ClientAllocationScope gameRouting({true, true});
         auto parser = std::make_unique<ScenarioDataParser>("Constrained original parser construction");
     } catch (const std::bad_alloc&) {
         allocation_failed = true;
     }
     require(allocation_failed, "a constrained actual child heap exercises original parser construction failure");
-    require(smgpc::compat::name_obj_runtime_state_count() == baseline,
+    require(NameObj::snapshotNativeObjects().size() == baseline,
             "failed original parser construction unregisters its NameObj base");
     constrained.reset();
     require(SingletonHolder<FileLoader>::get()->mArchiveHolder->mEntries.size() == archive_count,

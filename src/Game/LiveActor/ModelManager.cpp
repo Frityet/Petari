@@ -14,7 +14,8 @@
 #include "Game/Util/MutexHolder.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
+#include <aurora/allocation.hpp>
 #include <JSystem/J3DGraphAnimator/J3DModel.hpp>
 #include <JSystem/JUtility/JUTNameTab.hpp>
 #include <cstdio>
@@ -46,7 +47,7 @@ namespace {
 }
 
 struct ModelManager::NativeState {
-    std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain;
+    JKRHeap::Handle domain;
     std::shared_ptr<const void> modelResources;
     std::shared_ptr<const void> animationResources;
     std::vector<std::shared_ptr<void>> dependencies;
@@ -67,7 +68,7 @@ ModelManager::ModelManager()
 }
 
 ModelManager::~ModelManager() {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (mNativeState == nullptr) {
         return;
     }
@@ -83,9 +84,9 @@ ModelManager::~ModelManager() {
     mNativeState.reset();
 }
 
-std::shared_ptr<ModelManager> ModelManager::createNative(std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain,
+std::shared_ptr<ModelManager> ModelManager::createNative(JKRHeap::Handle domain,
                                                        const char* model, const char* animation, bool createDL) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (!domain) {
         aurora::throw_host_exception<std::invalid_argument>("A ModelManager requires its actual retained Game heap");
     }
@@ -101,10 +102,10 @@ std::shared_ptr<ModelManager> ModelManager::createNative(std::shared_ptr<smgpc::
     }
     original->mNativeState = std::move(state);
     auto manager = std::shared_ptr<ModelManager>(original, [](ModelManager* value) {
-        const smgpc::compat::JkrHostAllocationScope host;
+        const aurora::allocation::HostAllocationScope host;
         // Keep the object allocation alive through operator delete. Holding
         // this locally also lets weak references outlive the retired heap.
-        const auto domain = value->nativeAllocationDomain();
+        const auto domain = value->nativeAllocationHeap();
         delete value;
     });
     {
@@ -118,14 +119,14 @@ std::shared_ptr<ModelManager> ModelManager::createNative(std::shared_ptr<smgpc::
 }
 
 void ModelManager::retainNativeDependency(std::shared_ptr<void> dependency) {
-    const smgpc::compat::JkrHostAllocationScope host;
+    const aurora::allocation::HostAllocationScope host;
     if (!dependency || !mNativeState) {
         aurora::throw_host_exception<std::invalid_argument>("Model lifetime dependency requires a retained native model");
     }
     mNativeState->dependencies.push_back(std::move(dependency));
 }
 
-std::shared_ptr<smgpc::compat::JkrAllocationDomain> ModelManager::nativeAllocationDomain() const noexcept {
+JKRHeap::Handle ModelManager::nativeAllocationHeap() const noexcept {
     return mNativeState ? mNativeState->domain : nullptr;
 }
 

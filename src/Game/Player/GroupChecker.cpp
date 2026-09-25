@@ -1,6 +1,6 @@
 #include "Game/Player/GroupChecker.hpp"
 #include "Game/Util/HashUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "resource/TextEncoding.hpp"
 #include <memory>
 
@@ -39,9 +39,9 @@ GroupCheckManager::GroupCheckManager(const char* pName) : NameObj(pName), mGroup
     // Register each child with its actual owner; construction can unwind before
     // the manager is complete, so retain local ownership until both exist.
     auto shell = std::make_unique<GroupChecker>(CP932("カメサーチ対象物グループ"), 0x20);
-    smgpc::compat::claim_name_obj_runtime_ownership(shell.get(), this);
+    (shell.get())->claimNativeOwnership(this);
     auto spinning = std::make_unique<GroupChecker>(CP932("スピニングボックス反射グループ"), 0x8);
-    smgpc::compat::claim_name_obj_runtime_ownership(spinning.get(), this);
+    (spinning.get())->claimNativeOwnership(this);
     mGroups[0] = shell.release();
     mGroups[1] = spinning.release();
 }

@@ -43,7 +43,7 @@
 #include "resource/BcsvTable.hpp"
 #include "resource/TplTexture.hpp"
 #include "Game/NPC/DemoRabbit.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "SceneExecutionFixture.hpp"
 
 #include <RVLFaceLib.h>

@@ -1,11 +1,11 @@
 #pragma once
 
+#include <JSystem/JKernel/JKRHeap.hpp>
 #include <cstdint>
 #include <memory>
 #include <span>
 
 class J3DMaterialTable;
-namespace smgpc::compat { class JkrAllocationDomain; }
 
 namespace smgpc::resource {
     // Retained v26 material construction. Uses original material factories and
@@ -16,7 +16,7 @@ namespace smgpc::resource {
 
         J3dMaterialTableData(std::span<const std::uint8_t> complete_file,
                             std::uint32_t flags, Mode mode,
-                            std::shared_ptr<compat::JkrAllocationDomain>);
+                            JKRHeap::Handle);
         ~J3dMaterialTableData();
         J3dMaterialTableData(const J3dMaterialTableData&) = delete;
         J3dMaterialTableData& operator=(const J3dMaterialTableData&) = delete;

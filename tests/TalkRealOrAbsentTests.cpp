@@ -1,6 +1,6 @@
 #include "OriginalStageResourceProcessFixture.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NPC/TalkBalloon.hpp"
 #include "Game/NPC/TalkDirector.hpp"
@@ -31,9 +31,10 @@ void require(bool condition, std::string_view message) {
     if (!condition) throw std::runtime_error(std::string(message));
 }
 void verify_original_talk() {
-    const auto allocation = MR::getSceneObjHolder()->nativeAllocationDomain();
+    const auto allocation = MR::getSceneObjHolder()->nativeAllocationHeap();
     require(allocation != nullptr, "original Talk fixture requires the initialized GameScene heap");
-    const smgpc::compat::JkrAllocationScope game(allocation);
+    const JKRHeap::CurrentHeapScope game(*(allocation));
+    const aurora::allocation::ClientAllocationScope gameRouting({true, true});
     auto* talk = MR::getSceneObj<TalkDirector>(SceneObj_TalkDirector);
     require(talk && talk->mPeekZ && talk->mBalloonHolder && talk->mStateHolder,
             "original process constructs the real TalkDirector and child owners");

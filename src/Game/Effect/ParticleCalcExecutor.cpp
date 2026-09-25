@@ -1,5 +1,5 @@
 #include "Game/LiveActor/LiveActor.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include <utility>
 #include "resource/TextEncoding.hpp"
 #include "Game/Effect/ParticleCalcExecutor.hpp"
@@ -74,7 +74,7 @@ void ParticleCalcExecutor::requestMovementOnPauseIgnore() {
 
 void ParticleCalcExecutor::initMovementAdaptor() {
     _4 = new NameObjAdaptor(CP932("パーティクル"));
-    smgpc::compat::claim_name_obj_runtime_ownership(_4, this);
+    (_4)->claimNativeOwnership(this);
     {
         const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementNormal);
         NameObjAdaptor* pAdaptor = _4;
@@ -82,7 +82,7 @@ void ParticleCalcExecutor::initMovementAdaptor() {
         MR::connectToScene(pAdaptor, -1, 19, -1, -1);
     }
     _8 = new NameObjAdaptor(CP932("ポーズ無効3Dパーティクル"));
-    smgpc::compat::claim_name_obj_runtime_ownership(_8, this);
+    (_8)->claimNativeOwnership(this);
     {
         const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementIgnorePause3D);
         NameObjAdaptor* pAdaptor = _8;
@@ -90,7 +90,7 @@ void ParticleCalcExecutor::initMovementAdaptor() {
         MR::connectToScene(pAdaptor, -1, 20, -1, -1);
     }
     _C = new NameObjAdaptor(CP932("ポーズ無効2Dパーティクル"));
-    smgpc::compat::claim_name_obj_runtime_ownership(_C, this);
+    (_C)->claimNativeOwnership(this);
     {
         const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementIgnorePause2D);
         NameObjAdaptor* pAdaptor = _C;
@@ -98,7 +98,7 @@ void ParticleCalcExecutor::initMovementAdaptor() {
         MR::connectToScene(pAdaptor, -1, 20, -1, -1);
     }
     _10 = new NameObjAdaptor(CP932("更新チェック"));
-    smgpc::compat::claim_name_obj_runtime_ownership(_10, this);
+    (_10)->claimNativeOwnership(this);
     {
         const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementCheckUpdate);
         NameObjAdaptor* pAdaptor = _10;

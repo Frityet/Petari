@@ -1,8 +1,8 @@
-#include <JSystem/JKernel/JKRHeap.hpp>
 #include "J3dMaterialTableData.hpp"
 #include "J3dAllocationIdentity.hpp"
 #include "J3dMaterialBlockData.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
+#include <aurora/allocation.hpp>
 #include "JSystem/J3DGraphAnimator/J3DMaterialAttach.hpp"
 #include "JSystem/J3DGraphBase/J3DMaterial.hpp"
 #include "JSystem/J3DGraphLoader/J3DMaterialFactory.hpp"
@@ -26,7 +26,7 @@ namespace smgpc::resource {
 
         template <typename Error = std::runtime_error>
         [[noreturn]] void fail(const char* message) {
-            compat::JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             throw Error(message);
         }
 
@@ -60,8 +60,8 @@ namespace smgpc::resource {
     }
 
     struct J3dMaterialTableData::Storage {
-        // SDK values die before native backing and the final retained domain.
-        std::shared_ptr<compat::JkrAllocationDomain> domain;
+        // SDK values die before native backing and the final retained heap.
+        JKRHeap::Handle domain;
         std::vector<std::unique_ptr<J3dMaterialBlockData>> blocks;
         std::vector<std::unique_ptr<J3dAllocationIdentity>> identities;
         std::vector<std::unique_ptr<JUTNameTab>> names;
@@ -73,9 +73,9 @@ namespace smgpc::resource {
         const J3DMaterialBlock* material_block = nullptr;
         bool attached = false;
 
-        Storage(Bytes bytes, std::uint32_t flags, Mode mode, std::shared_ptr<compat::JkrAllocationDomain> owner)
+        Storage(Bytes bytes, std::uint32_t flags, Mode mode, JKRHeap::Handle owner)
             : domain(std::move(owner)) {
-            if (!domain) fail<std::invalid_argument>("Original material construction requires a retained JKR domain");
+            if (!domain) fail<std::invalid_argument>("Original material construction requires a retained JKR heap");
             require_range(bytes, 0, 0x20);
             const auto format = u32_at(bytes, 4);
             if (u32_at(bytes, 0) != 0x4A334432U ||
@@ -100,7 +100,8 @@ namespace smgpc::resource {
                     auto block = std::make_unique<J3dMaterialBlockData>(bytes.subspan(cursor, block_size));
                     const auto* retained = block.get();
                     blocks.push_back(std::move(block));
-                    compat::JkrAllocationScope original_allocations(domain);
+                    JKRHeap::CurrentHeapScope original_allocations(*(domain));
+                    const aurora::allocation::ClientAllocationScope original_allocations_routing({true, true});
                     if (type == 0x4D415433U) {
                         if (mode == Mode::MaterialTable) {
                             read_material_table(retained->material(), 0x51100000U);
@@ -125,14 +126,14 @@ namespace smgpc::resource {
             if (offset == nullptr) return nullptr;
             auto name = std::unique_ptr<JUTNameTab>(new JUTNameTab(JSUConvertOffsetToPtr<ResNTAB>(block, offset)));
             auto* result = name.get();
-            compat::JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             names.push_back(std::move(name));
             return result;
         }
         J3DMaterial** create_pointer_array(std::uint16_t count) {
             auto array = std::unique_ptr<J3DMaterial*[]>(new J3DMaterial*[count]);
             auto* result = array.get();
-            compat::JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             pointer_arrays.push_back(std::move(array));
             tex_no_offsets.assign(count, 0);
             return result;
@@ -140,7 +141,7 @@ namespace smgpc::resource {
         J3DMaterial* create_unique_array(std::uint16_t count) {
             auto array = std::unique_ptr<J3DMaterial[]>(new (0x20) J3DMaterial[count]);
             auto* result = array.get();
-            compat::JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             unique_arrays.push_back(std::move(array));
             return result;
         }
@@ -148,7 +149,7 @@ namespace smgpc::resource {
             auto* result = factory.create(existing, type, index, flags);
             if (existing == nullptr) {
                 MaterialAllocation allocation(result, type);
-                compat::JkrHostAllocationScope host;
+                aurora::allocation::HostAllocationScope host;
                 materials.push_back(std::move(allocation));
             }
             return result;
@@ -160,7 +161,7 @@ namespace smgpc::resource {
                 fail("MAT3 unique material remap exceeds the original counted array");
             const auto extent = unique ? std::max<std::size_t>(1, table.mUniqueMatNum * original_material_stride)
                                        : std::max<std::size_t>(16 * (maximum_id + 1), table.mMaterialNum * 4U);
-            compat::JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             auto owner = std::make_unique<J3dAllocationIdentity>(extent);
             auto* result = owner.get();
             identities.push_back(std::move(owner));
@@ -262,12 +263,12 @@ namespace smgpc::resource {
     };
 
     J3dMaterialTableData::J3dMaterialTableData(Bytes bytes, std::uint32_t flags, Mode mode,
-                                           std::shared_ptr<compat::JkrAllocationDomain> domain) {
-        compat::JkrHostAllocationScope host;
+                                           JKRHeap::Handle domain) {
+        aurora::allocation::HostAllocationScope host;
         _storage = std::make_unique<Storage>(bytes, flags, mode, std::move(domain));
     }
     J3dMaterialTableData::~J3dMaterialTableData() {
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         _storage.reset();
     }
     void J3dMaterialTableData::attach_to(J3DMaterialTable& target) {

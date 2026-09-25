@@ -1,4 +1,3 @@
-#include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/System/ResourceHolder.hpp"
 #include "Game/Animation/MaterialAnmBuffer.hpp"
 #include "Game/System/FileLoader.hpp"
@@ -10,7 +9,8 @@
 #include "JSystem/J3DGraphAnimator/J3DMaterialAnm.hpp"
 #include "camera/CameraAnimation.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
+#include <aurora/allocation.hpp>
 #include "resource/BasResource.hpp"
 #include "resource/BtiTextureData.hpp"
 #include "resource/GameResourceRuntime.hpp"
@@ -100,7 +100,7 @@ namespace {
 };  // namespace
 
 struct ResourceHolder::NativeResources {
-    std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain;
+    JKRHeap::Handle domain;
     std::shared_ptr<const void> archiveLifetime;
     std::shared_ptr<const smgpc::resource::RarcArchive> source;
     std::filesystem::path path;
@@ -130,7 +130,7 @@ struct ResourceHolder::NativeResources {
     }
 
     void prepare(JKRArchive& owner, JKRHeap& heap) {
-        domain = smgpc::compat::JkrAllocationDomain::retain_heap(heap);
+        domain = heap.retainNativeLifetime();
         archiveLifetime = owner.retainNativeResources();
         source = owner.retainSource();
         archive = &owner;
@@ -198,7 +198,8 @@ ResourceHolder::ResourceHolder(JKRArchive& rArchive)
             mNativeResources = std::make_shared<NativeResources>();
             mNativeResources->prepare(rArchive, *mHeap);
         }
-        const smgpc::compat::JkrAllocationScope original(mNativeResources->domain);
+        const JKRHeap::CurrentHeapScope original(*(mNativeResources->domain));
+        const aurora::allocation::ClientAllocationScope original_routing({true, true});
         const J3DSys::CommandScope commands;
         const LoadMutexRecovery recovery;
         initializeArc(*mArchive);

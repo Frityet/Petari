@@ -4,7 +4,7 @@
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "Game/System/MainLoopFramework.hpp"
 #include "Game/System/DrawSyncManager.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "render/RendererService.hpp"
 #include "runtime/jut/OriginalDisplayLifetime.hpp"
 
@@ -226,17 +226,18 @@ void exerciseDisplayFrames() {
     smgpc::render::AuroraWindow window(config);
     smgpc::render::AuroraRenderer renderer(window);
     const aurora::os::GuestThreadExecutionScope execution;
-    auto heaps = smgpc::compat::JkrHeapRuntime::create(4U * 1024U * 1024U);
-    const auto freeBytes = heaps->root_heap().getTotalFreeSize();
+    auto heaps = smgpc::test::create_native_root_heap(4U * 1024U * 1024U);
+    const auto freeBytes = (*heaps).getTotalFreeSize();
     GXRenderModeObj mode = GXNtsc480IntDf;
     mode.viTVmode = VI_TVMODE_NTSC_PROG;
     mode.fbWidth = mode.viWidth = 128;
     mode.efbHeight = mode.xfbHeight = mode.viHeight = 96;
     for (unsigned cycle = 0; cycle < 3; ++cycle) {
         {
-            const auto drawSyncDomain = smgpc::compat::JkrAllocationDomain::create(heaps, 128U * 1024U);
+            const auto drawSyncDomain = smgpc::test::create_native_solid_heap(heaps, 128U * 1024U);
             {
-                const smgpc::compat::JkrAllocationScope allocation(drawSyncDomain);
+                const JKRHeap::CurrentHeapScope allocation(*(drawSyncDomain));
+                const aurora::allocation::ClientAllocationScope allocationRouting({true, true});
                 DrawSyncManager::start(0x300, 15);
             }
             const std::unique_ptr<DrawSyncManager, void (*)(DrawSyncManager*)> drawSync(
@@ -272,7 +273,7 @@ void exerciseDisplayFrames() {
                 "native display retirement must clear every owned original factory");
         require(VIGetCurrentFrameBuffer() == nullptr && aurora::vi::scanout_state().black,
                 "VI must stop borrowing retired display storage");
-        require(heaps->root_heap().getTotalFreeSize() == freeBytes,
+        require((*heaps).getTotalFreeSize() == freeBytes,
                 "three actual XFBs, display objects and draw-sync allocations must return to the root heap");
         if (cycle == 1) renderer.end_frame();
     }

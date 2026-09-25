@@ -78,10 +78,12 @@ JKRUnitHeap::JKRUnitHeap(u8 *bitmap, u8 *data, u32 unitSize, u32 unitCount, u32,
     clearBatArea();
 }
 JKRUnitHeap::~JKRUnitHeap() {
+    validateNativeDestructor();
     dispose();
 }
 void JKRUnitHeap::do_destroy() {
     if (auto *parent = getParent()) {
+        const auto backing = beginNativeRetirement();
         this->~JKRUnitHeap();
         JKRHeap::free(this, parent);
     }

@@ -4,7 +4,8 @@
 #include "J3dNameData.hpp"
 #include "J3dNativeBlock.hpp"
 #include "J3dTransformAnimation.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
+#include <aurora/allocation.hpp>
 
 #include <algorithm>
 #include <array>
@@ -616,12 +617,12 @@ namespace smgpc::resource {
             }
         }
         struct LoadedData {
-            std::shared_ptr<compat::JkrAllocationDomain> domain;
+            JKRHeap::Handle domain;
             JUTDataFileHeader file{};
             std::vector<std::unique_ptr<NativeBlock>> blocks;
             std::unique_ptr<J3DAnmBase> animation;
             ~LoadedData() {
-                compat::JkrHostAllocationScope host;
+                aurora::allocation::HostAllocationScope host;
                 animation.reset();
                 blocks.clear();
                 domain.reset();
@@ -703,7 +704,7 @@ namespace smgpc::resource {
                 aurora::throw_host_exception<std::runtime_error>("J3D animation source is empty");
         }
         ~Storage() {
-            compat::JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             {
                 auto &r = registry();
                 std::lock_guard lock(r.mutex);
@@ -714,13 +715,14 @@ namespace smgpc::resource {
             loads.clear();
         }
         J3DAnmBase *load(J3DAnmLoaderDataBaseFlag flag) {
-            auto domain = compat::current_jkr_allocation_domain();
-            compat::JkrHostAllocationScope host;
+            auto domain = JKRHeap::retainCurrentNativeLifetime();
+            aurora::allocation::HostAllocationScope host;
             auto data = std::make_unique<LoadedData>(source);
             data->domain = std::move(domain);
             LoadScope scope(*data);
             if (data->domain) {
-                compat::JkrAllocationScope original(data->domain);
+                JKRHeap::CurrentHeapScope original(*(data->domain));
+                const aurora::allocation::ClientAllocationScope original_routing({true, true});
                 data->animation.reset(detail::load_native_animation(&data->file, flag));
             } else {
                 data->animation.reset(detail::load_native_animation(&data->file, flag));
@@ -734,7 +736,7 @@ namespace smgpc::resource {
         }
     };
     J3dAnimationResource::J3dAnimationResource(std::span<const std::uint8_t> bytes) {
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         _storage = std::make_shared<Storage>(bytes);
         auto &r = registry();
         std::lock_guard lock(r.mutex);
@@ -750,7 +752,7 @@ namespace smgpc::resource {
         State(std::shared_ptr<void> resource, const void *key, std::uint64_t id) : owner(std::move(resource)), identity(key), generation(id) {
         }
         ~State() {
-            compat::JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             auto &r = registry();
             std::lock_guard lock(r.mutex);
             const auto entry = r.resources.find(identity);
@@ -764,7 +766,7 @@ namespace smgpc::resource {
     J3dAnimationSourceRegistration::J3dAnimationSourceRegistration(J3dAnimationSourceRegistration &&) noexcept = default;
     J3dAnimationSourceRegistration &J3dAnimationSourceRegistration::operator=(J3dAnimationSourceRegistration &&) noexcept = default;
     J3dAnimationSourceRegistration J3dAnimationResource::register_source(std::span<const std::uint8_t> alias) {
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         if (!_storage || alias.size() != _storage->source.size() || !std::equal(alias.begin(), alias.end(), _storage->source.begin()))
             aurora::throw_host_exception<std::invalid_argument>("J3D animation alias does not match the complete retained source");
         auto &r = registry();
@@ -802,7 +804,7 @@ namespace smgpc::resource {
         return J3DAnmLoaderDataBase::load(data(), flag);
     }
     J3DAnmBase *load_registered_j3d_animation(const void *data, J3DAnmLoaderDataBaseFlag flag) {
-        compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         if (!data)
             return nullptr;
         std::shared_ptr<J3dAnimationResource::Storage> owner;

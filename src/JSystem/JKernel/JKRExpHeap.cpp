@@ -116,6 +116,7 @@ JKRExpHeap *JKRExpHeap::create(void *ptr, u32 size, JKRHeap *pParent, bool error
 }
 
 void JKRExpHeap::do_destroy() {
+    const auto backing = beginNativeRetirement();
     if (!_6E) {
         JKRHeap *heap = getParent();
 
@@ -234,6 +235,7 @@ JKRExpHeap::CMemBlock *JKRExpHeap::CMemBlock::getHeapBlock(void *ptr) {
 }
 
 JKRExpHeap::~JKRExpHeap() {
+    validateNativeDestructor();
     dispose();
 }
 

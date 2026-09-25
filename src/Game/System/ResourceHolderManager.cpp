@@ -8,7 +8,8 @@
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include "Game/Util/SystemUtil.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
+#include <aurora/allocation.hpp>
 #include <dolphin/gd/GDBase.h>
 #include <aurora/exception.hpp>
 #include <memory>
@@ -39,7 +40,7 @@ ResourceHolderManager::ResourceHolderManager() {
 ResourceHolderManager::~ResourceHolderManager() {
     validateRetirement();
     for (ResourceHolderManagerName2Resource* pIter = mResourceArray.begin(); pIter != mResourceArray.end(); pIter++) {
-        const auto heap = smgpc::compat::JkrAllocationDomain::retain_heap(*pIter->mHeap);
+        const auto heap = pIter->mHeap->retainNativeLifetime();
         delete pIter->mResourceHolder;
         delete pIter->mLayoutHolder;
     }
@@ -129,9 +130,9 @@ void ResourceHolderManager::removeIfIsEqualHeap(JKRHeap* pHeap) {
             continue;
         }
 
-        // Keep the actual allocation domain alive through the holder's final
+        // Keep the actual allocation heap alive through the holder's final
         // delete, after its embedded native backing has released its own token.
-        const auto heap = smgpc::compat::JkrAllocationDomain::retain_heap(*pIter->mHeap);
+        const auto heap = pIter->mHeap->retainNativeLifetime();
         if (pIter->mResourceHolder != nullptr) {
             delete pIter->mResourceHolder;
         }
@@ -230,7 +231,7 @@ void ResourceHolderManager::createLayoutHolder(const char* pParam1, CreateResour
 ResourceHolderManagerName2Resource* ResourceHolderManager::add(const char* pParam1, const CreateResourceHolderArgs& rArgs) {
     // Own newly constructed holders even when the original fixed registry is
     // exhausted. Do not publish a partial entry or leak its native resources.
-    const auto heap = smgpc::compat::JkrAllocationDomain::retain_heap(*rArgs.mHeap);
+    const auto heap = rArgs.mHeap->retainNativeLifetime();
     std::unique_ptr<ResourceHolder> resource(rArgs.mResourceHolder);
     std::unique_ptr<LayoutHolder> layout(rArgs.mLayoutHolder);
     if (mResourceArray.size() == mResourceArray.capacity()) {

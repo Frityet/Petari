@@ -1,3 +1,4 @@
+#include "NativeHeapFixture.hpp"
 #include "OriginalLightFixture.hpp"
 #include "SourceMirrorEncoding.hpp"
 #include "resource/TextEncoding.hpp"
@@ -23,7 +24,7 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/AreaObjUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "resource/GameResourceRuntime.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -74,8 +75,8 @@ namespace {
     }
 
     struct AreaContainerFixture {
-        std::shared_ptr<smgpc::compat::JkrHeapRuntime> heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
-        std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain = smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20);
+        JKRHeap::Handle heaps = smgpc::test::create_native_root_heap(16U << 20);
+        JKRHeap::Handle domain = smgpc::test::create_native_solid_heap(heaps, 8U << 20);
         smgpc::runtime::SceneScheduler scheduler;
         smgpc::runtime::SceneSchedulerBinding scheduler_binding{scheduler};
         smgpc::test::OriginalSceneControllerFixture original{heaps};
@@ -147,7 +148,7 @@ namespace {
     void verify_installed_original_managers(AreaObjContainer &container) {
         auto managers = std::size_t{};
         auto base_managers = std::size_t{};
-        for (auto *object : smgpc::compat::snapshot_name_obj_runtime_objects()) {
+        for (auto *object : NameObj::snapshotNativeObjects()) {
             auto *manager = dynamic_cast<AreaObjMgr *>(object);
             if (manager == nullptr) continue;
             ++managers;
@@ -295,7 +296,7 @@ namespace {
 
     void test_scene_holder_owns_real_container_and_managers() {
         const auto registry_baseline =
-            smgpc::compat::name_obj_runtime_state_count();
+            NameObj::snapshotNativeObjects().size();
         {
             auto fixture = AreaContainerFixture{};
             auto& holder = fixture.execution.holder();
@@ -334,7 +335,7 @@ namespace {
                         MR::getSceneObjHolder()->ownsNativeObject(second_container->getManager("LightArea")),
                     "destroying a scene binding must release container and manager ownership for the next scene");
         }
-        require(smgpc::compat::name_obj_runtime_state_count() ==
+        require(NameObj::snapshotNativeObjects().size() ==
                     registry_baseline,
                 "two AreaObj scene generations must restore the NameObj registry baseline");
     }
@@ -381,10 +382,10 @@ namespace {
     }
 
     void test_generic_effect_areas_use_original_init_and_queries() {
-        const auto baseline = smgpc::compat::name_obj_runtime_state_count();
+        const auto baseline = NameObj::snapshotNativeObjects().size();
         {
-            auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
-            auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20);
+            auto heaps = smgpc::test::create_native_root_heap(16U << 20);
+            auto domain = smgpc::test::create_native_solid_heap(heaps, 8U << 20);
             auto scheduler = smgpc::runtime::SceneScheduler{};
             auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
             auto original = smgpc::test::OriginalSceneControllerFixture(heaps);
@@ -393,7 +394,8 @@ namespace {
             auto &holder = execution.holder();
             auto &binding = execution;
             {
-                const auto game = smgpc::compat::JkrAllocationScope(domain);
+                const const JKRHeap::CurrentHeapScope game(*(domain));
+                const aurora::allocation::ClientAllocationScope gameRouting({true, true});
                 for (const auto id : {SceneObj_StageSwitchContainer, SceneObj_SwitchWatcherHolder,
                                       SceneObj_SleepControllerHolder, SceneObj_AreaObjContainer})
                     require((id == SceneObj_AreaObjContainer ? smgpc::test::create_area_container(holder) : holder.create(id)) != nullptr, "generic area init requires original scene services");
@@ -420,14 +422,16 @@ namespace {
                 rows.push_back(make_generic_effect_area_row(name, args));
                 auto object = std::unique_ptr<NameObj>{};
                 {
-                    const auto game = smgpc::compat::JkrAllocationScope(domain);
+                    const const JKRHeap::CurrentHeapScope game(*(domain));
+                const aurora::allocation::ClientAllocationScope gameRouting({true, true});
                     object = std::make_unique<AreaObj>(form, name);
                 }
                 auto *area = dynamic_cast<AreaObj *>(object.get());
                 require(area != nullptr && typeid(*area) == typeid(AreaObj) && area->mFormType == form,
                         "effect areas use the original generic class and authored form");
                 {
-                    const auto game = smgpc::compat::JkrAllocationScope(domain);
+                    const const JKRHeap::CurrentHeapScope game(*(domain));
+                const aurora::allocation::ClientAllocationScope gameRouting({true, true});
                     object->init(JMapInfoIter(&rows.back(), 0));
                 }
                 require(MR::getAreaObj(manager_name, inside) == area && manager->mArray.size() == 1U,
@@ -451,7 +455,7 @@ namespace {
             }
             binding.init_after_placement();
         }
-        require(smgpc::compat::name_obj_runtime_state_count() == baseline,
+        require(NameObj::snapshotNativeObjects().size() == baseline,
                 "generic effect areas and their scene managers must fully retire");
     }
 

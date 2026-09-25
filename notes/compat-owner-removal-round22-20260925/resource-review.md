@@ -1,0 +1,16 @@
+# Resource heap migration review
+
+Round22 bounded follow-up, 2026-09-25. Reviewed only resource/{J3dModelResource,J3dMaterialTableData,J3dAnimationResource}.{hpp,cpp} and Game/{LiveActor/ModelManager,System/ResourceHolder,System/ResourceHolderManager,System/LayoutHolder,System/ArchiveHolder,System/FileLoader}.{hpp,cpp}. Root had already mechanically migrated those working files. No builds or tests were run.
+
+The migration preserves the relevant ownership and routing edges:
+
+- ModelManager's actual heap handle is declared before its native borrowers/dependencies and its shared deleter retains a local handle across the destructor and operator delete. Partial initialization and shared-control-block allocation failure retain that same owner. Native model initialization inherits caller heap selection and uses only explicit client allocation routing across resource waits; no current-heap mutex was added around the async wait path.
+- ResourceHolder and LayoutHolder native backing retains an actual heap handle before archive/source/typed data. Their synchronous original archive initialization keeps CurrentHeapScope plus explicit ClientAllocationScope. ResourceHolder's command-state and recursive load-mutex recovery remain unchanged. Model data retires before its borrowed material-animation storage.
+- ResourceHolderManager retains each actual heap locally across holder deletion in normal destruction, heap filtering and add failure. Full borrower preflight remains ahead of mutation. FIFO duplicate-holder/cache-override behavior was not changed.
+- ArchiveHolder retains the actual heap while deleting entries; FileLoader does the same in final teardown. Each entry's typed JMap/JPC registrations retire before archive unmount, without rereading a possibly freed fixed file buffer. FileLoader's producer wait and original file-before-archive ordering remain unchanged.
+- J3dModelResource/MaterialTableData actual heap handles precede the SDK objects they own. Model teardown retains current-heap and J3D command scopes while destroying SDK children, and releases the handle after those children. Animation loaded data destroys the SDK animation and decoded blocks before releasing its heap handle. Host backing vectors/control blocks remain host allocated.
+- Aurora HostAllocationScope preserves callbackGuest, so the native animation registry's existing host scope does not erase the caller's retained-heap context when retainCurrentNativeLifetime is consulted. Existing client scopes explicitly restore both client routing flags where the old allocation scope did so.
+
+No concrete semantic lifetime regression was found in this bounded source review. Corrections were limited to duplicate JKRHeap/allocation includes, placing complete JKRHeap includes with other header includes, and obsolete domain terminology in diagnostics/comments. The exact review-only patch and before/after hashes are recorded in resource-review.patch and resource-review-manifest.json; root's earlier mechanical migration is preserved.
+
+All 18 reviewed paths have no remaining compat/domain aliases, old allocation-scope names, old nativeAllocationDomain accessor or removed ->heap() calls. Scoped git diff --check is clean. Source is frozen for the parent's integrated build; this note does not claim runtime validation.

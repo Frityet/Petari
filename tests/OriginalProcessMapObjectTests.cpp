@@ -26,7 +26,7 @@
 #include "Game/Util/ModelUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 
 #include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
@@ -126,7 +126,7 @@ struct Probe {
         auto* collision = MR::getCollisionDirector();
         require(stage && collision, "Actual original stage and collision owners exist");
         std::vector<MapObjActor*> actors;
-        for (auto* object : smgpc::compat::snapshot_name_obj_runtime_objects())
+        for (auto* object : NameObj::snapshotNativeObjects())
             if (auto* actor = dynamic_cast<MapObjActor*>(object); actor && name_index(actor->mObjectName) >= 0) actors.push_back(actor);
         require(actors.size() == 8, "Ordinary factory constructs all eight newly supported authored map objects");
         std::array<unsigned, names.size()> counts{};
@@ -335,9 +335,9 @@ int main(int argc, char** argv) {
         require(smgpc::app::run_original_game(configuration, *logger, observer) == 0 && probe.initialized && probe.observations >= 30,
                 "Original process completes ownership checks and subsequent normal opening frames");
         for (const auto* object : probe.identities)
-            require(!smgpc::compat::has_name_obj_runtime_state(object), "Normal scene retirement removes every observed actor/child/rotator identity");
+            require(!NameObj::nativeGeneration(object), "Normal scene retirement removes every observed actor/child/rotator identity");
         for (const auto& owner : probe.owners) {
-            require(!smgpc::compat::has_actor_runtime_state(owner.actor),
+            require(!NameObj::nativeGeneration(owner.actor),
                     "Normal scene retirement releases actual model and all collision resource owners");
             std::fprintf(stderr, "[map-object-probe] observation=%s samples=%llu clipped=%llu suspended=%llu angle_changes=%llu collision_matrix_changes=%llu\n",
                          names[owner.kind], static_cast<unsigned long long>(owner.samples), static_cast<unsigned long long>(owner.clipped),

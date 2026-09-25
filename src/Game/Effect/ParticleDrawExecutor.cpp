@@ -1,5 +1,5 @@
 #include "Game/LiveActor/LiveActor.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include <utility>
 #include "resource/TextEncoding.hpp"
 #include "Game/Effect/ParticleDrawExecutor.hpp"
@@ -148,24 +148,24 @@ void ParticleDrawExecutor::drawWithViewMtxAfterImageEffect(const TPos3f& rViewMt
 
 void ParticleDrawExecutor::initDrawAdaptor() {
     _4 = new NameObjAdaptor(CP932("3Dパーティクル"));
-    smgpc::compat::claim_name_obj_runtime_ownership(_4, this);
+    (_4)->claimNativeOwnership(this);
     connectToSceneDrawAdaptor(_4, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::draw3D), 71);
     _8 = new NameObjAdaptor(CP932("2Dパーティクル"));
-    smgpc::compat::claim_name_obj_runtime_ownership(_8, this);
+    (_8)->claimNativeOwnership(this);
     connectToSceneDrawAdaptor(_8, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::draw2D), 74);
     _C = new NameObjAdaptor(CP932("インダイレクトパーティクル"));
-    smgpc::compat::claim_name_obj_runtime_ownership(_C, this);
+    (_C)->claimNativeOwnership(this);
     connectToSceneDrawAdaptor(_C, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::drawIndirect), 72);
     _10 = new NameObjAdaptor(CP932("インダイレクト後パーティクル"));
-    smgpc::compat::claim_name_obj_runtime_ownership(_10, this);
+    (_10)->claimNativeOwnership(this);
     connectToSceneDrawAdaptor(_10, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::drawAfterIndirect), 73);
     _14 = new NameObjAdaptor(CP932("2Dモデル用パーティクル"));
-    smgpc::compat::claim_name_obj_runtime_ownership(_14, this);
+    (_14)->claimNativeOwnership(this);
     connectToSceneDrawAdaptor(_14, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::drawFor2DModel), 75);
     _18 = new NameObjAdaptor(CP932("ブルーム用パーティクル"));
-    smgpc::compat::claim_name_obj_runtime_ownership(_18, this);
+    (_18)->claimNativeOwnership(this);
     connectToSceneDrawAdaptor(_18, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::drawForBloomEffect), 76);
     _1C = new NameObjAdaptor(CP932("イメージエフェクト後パーティクル"));
-    smgpc::compat::claim_name_obj_runtime_ownership(_1C, this);
+    (_1C)->claimNativeOwnership(this);
     connectToSceneDrawAdaptor(_1C, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::drawAfterImageEffect), 77);
 }

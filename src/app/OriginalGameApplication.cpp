@@ -33,8 +33,7 @@
 #include "Game/Util/SequenceUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/SystemUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "Game/System/FileLoader.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "Game/System/FunctionAsyncExecutor.hpp"
 #include "Game/Screen/StarPointerDirector.hpp"
 #include "Game/Screen/LayoutActor.hpp"
@@ -273,9 +272,9 @@ public:
         if (SingletonHolder<GameSystem>::get() || SingletonHolder<HeapMemoryWatcher>::get())
             throw std::logic_error("The original process already has an owner");
         startup_phase("Preparing original heap arenas");
-        resources.host_heaps()->prepare_mem2_arena(64U * 1024U * 1024U);
-        root = compat::JkrAllocationDomain::retain_heap(resources.host_heaps(), resources.host_heaps()->root_heap(), resources.host_heaps());
-        marker = compat::mark_name_obj_runtime_registrations();
+        resources.prepare_mem2_arena(64U * 1024U * 1024U);
+        root = resources.root_heap();
+        marker = NameObj::markNativeRegistrations();
         started = true;
         const aurora::allocation::ClientAllocationScope game({true, true});
         startup_phase("Initializing SDK, layout allocator and original heap watcher");
@@ -284,6 +283,7 @@ public:
         initialize_console_language(*settings);
         VIInit();
         HeapMemoryWatcher::createRootHeap();
+        HeapMemoryWatcher::sRootHeapGDDR3->bindNativeBackingStorage(resources.mem2_storage());
         OSInitMutex(&MR::MutexHolder<0>::sMutex);
         OSInitMutex(&MR::MutexHolder<1>::sMutex);
         OSInitMutex(&MR::MutexHolder<2>::sMutex);
@@ -294,7 +294,7 @@ public:
         heaps->setCurrentHeapToStationedHeap();
         {
             const aurora::allocation::HostAllocationScope host;
-            stationed = compat::JkrAllocationDomain::retain_heap(root, *heaps->mStationedHeapNapa);
+            stationed = heaps->mStationedHeapNapa->retainNativeLifetime();
         }
         startup_phase("Initializing original file and exception services");
         FileRipper::setup(0x20000, MR::getStationedHeapNapa());
@@ -424,13 +424,13 @@ private:
         if (objects) delete std::exchange(objects->mStarPointerDirector, nullptr);
         if (DrawSyncManager::sInstance) DrawSyncManager::end();
         // Original heap retirement releases raw Game arrays as arrays. Remove
-        // native sidecars while all borrowed original records are still alive;
+        // native resources while all borrowed original records are still alive;
         // never individually delete an array element through NameObj*.
-        while (auto* object = compat::newest_name_obj_runtime_object_since_if(marker, nullptr, nullptr)) {
+        while (auto* object = NameObj::newestNativeObjectSince(marker, nullptr, nullptr)) {
             if (auto* actor = dynamic_cast<LayoutActor*>(object)) actor->releaseNativeResources();
-            if (auto* actor = dynamic_cast<LiveActor*>(object)) compat::release_actor_runtime_state(actor);
+            if (auto* actor = dynamic_cast<LiveActor*>(object)) actor->releaseNativeResources();
             object->detachNativeHolder();
-            compat::release_name_obj_runtime_state(object);
+            object->retireNativeLifetime();
         }
         // Actor sound resources are retired. Destroy the actual audio owner
         // before its name resources, GameSystem publication and heaps disappear.
@@ -473,7 +473,7 @@ private:
         SingletonHolder<HeapMemoryWatcher>::release();
         stationed.reset();
         root.reset();
-        destroy_child_heaps(resources.host_heaps()->root_heap());
+        destroy_child_heaps(*resources.root_heap());
         HeapMemoryWatcher::sRootHeapGDDR3 = nullptr;
         started = false;
     }
@@ -481,10 +481,10 @@ private:
     resource::GameResourceRuntime resources;
     runtime::SaveDataService save;
     std::unique_ptr<aurora::SystemConfiguration> settings;
-    std::shared_ptr<compat::JkrAllocationDomain> root;
-    std::shared_ptr<compat::JkrAllocationDomain> stationed;
+    JKRHeap::Handle root;
+    JKRHeap::Handle stationed;
     std::optional<StageSelection> stage_selection;
-    compat::NameObjRuntimeRegistrationMarker marker;
+    NameObj::NativeRegistrationMarker marker;
     aurora::WpadShakeGesture shake;
 #ifndef NDEBUG
     OriginalGameDebugObserver debug_observer;

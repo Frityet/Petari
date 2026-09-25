@@ -3,7 +3,7 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "resource/JpcResource.hpp"
 #include "resource/RarcArchive.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "NativeHeapFixture.hpp"
 #include "Game/Effect/ParticleResourceHolder.hpp"
 #include <aurora/aurora.h>
 #include <aurora/dvd.h>
@@ -30,14 +30,15 @@ void verify_jpa(bool ownershipOnly, std::weak_ptr<const smgpc::resource::JpcReso
         assert(holder.mParticleNames->getValue(i, "name", &name));
         assert(holder.getUserIndex(name) == i);
     }
-    auto domain = smgpc::compat::JkrAllocationDomain::create(MR::getSceneObjHolder()->nativeAllocationDomain(), 2U << 20);
-    const std::weak_ptr<smgpc::compat::JkrAllocationDomain> retired = domain;
+    auto domain = smgpc::test::create_native_solid_heap(MR::getSceneObjHolder()->nativeAllocationHeap(), 2U << 20);
+    const std::weak_ptr<JKRHeap> retired = domain;
     backing = manager->mNativeResource;
     assert(manager->mResNum == 3327 && manager->mTexNum == 225);
     size_t functions = 0, frames = 0, particleObservations = 0;
     {
-        smgpc::compat::JkrAllocationScope scope(domain);
-        JPAEmitterManager emitters(32, 4, &domain->heap(), 1, 1);
+        const JKRHeap::CurrentHeapScope scope(*(domain));
+        const aurora::allocation::ClientAllocationScope scopeRouting({true, true});
+        JPAEmitterManager emitters(32, 4, &(*domain), 1, 1);
         emitters.entryResourceManager(manager, 0);
         // Exercise the recovered camera helper directly; drawing remains outside this CPU fixture.
         PSMTXIdentity(emitters.pWd->mPosCamMtx);

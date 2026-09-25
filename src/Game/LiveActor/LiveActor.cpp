@@ -1,57 +1,155 @@
-#include "Game/Screen/StarPointerTarget.hpp"
-#include "Game/LiveActor/EffectKeeper.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/AudioLib/AudAnmSoundObject.hpp"
-#include "Game/Util/MemoryUtil.hpp"
-#include "Game/Util/SoundUtil.hpp"
-#include "Game/System/ResourceHolder.hpp"
-#include "Game/LiveActor/ModelManager.hpp"
 #include "Game/LiveActor/ActorAnimKeeper.hpp"
 #include "Game/LiveActor/ActorPadAndCameraCtrl.hpp"
-#include "Game/Util/ModelUtil.hpp"
-#include "compat/JkrAllocationDomain.hpp"
-#include "JSystem/J3DGraphBase/J3DSys.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
-#include "Game/LiveActor/ShadowController.hpp"
+#include "Game/LiveActor/AllLiveActorGroup.hpp"
 #include "Game/LiveActor/Binder.hpp"
+#include "Game/LiveActor/ClippingActorHolder.hpp"
 #include "Game/LiveActor/ClippingDirector.hpp"
+#include "Game/LiveActor/ClippingGroupHolder.hpp"
+#include "Game/LiveActor/EffectKeeper.hpp"
+#include "Game/LiveActor/LodCtrl.hpp"
+#include "Game/LiveActor/ModelManager.hpp"
+#include "Game/LiveActor/RailRider.hpp"
+#include "Game/LiveActor/ShadowController.hpp"
 #include "Game/NameObj/NameObjExecuteHolder.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Screen/StarPointerTarget.hpp"
+#include "Game/System/ResourceHolder.hpp"
+#include "Game/Util/MemoryUtil.hpp"
+#include "Game/Util/ModelUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/HitSensorKeeper.hpp"
 #include "Game/LiveActor/Spine.hpp"
+#include "Game/Map/CollisionParts.hpp"
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "Game/Map/CollisionParts.hpp"
-#include <aurora/allocation.hpp>
 #include "runtime/RuntimeContext.hpp"
+#include "runtime/SceneScheduler.hpp"
+#include <aurora/allocation.hpp>
+#include <aurora/exception.hpp>
 
 #include <stdexcept>
 #include <string_view>
+#include <utility>
 
 LiveActor::LiveActor(const char* pName)
-    : NameObj(pName), mPosition(0.0F, 0.0F, 0.0F), mRotation(0.0F, 0.0F, 0.0F),
-      mScale(1.0F, 1.0F, 1.0F), mVelocity(0.0F, 0.0F, 0.0F), mGravity(0.0F, -1.0F, 0.0F),
-      mModelManager(nullptr), mAnimKeeper(nullptr), mSpine(nullptr), mSensorKeeper(nullptr), mBinder(nullptr),
-      mRailRider(nullptr), mEffectKeeper(nullptr), mSoundObject(nullptr), mFlag(), mShadowControllerList(nullptr),
-      mCollisionParts(nullptr), mStageSwitchCtrl(nullptr), mStarPointerTarget(nullptr), mActorLightCtrl(nullptr),
-      mCameraCtrl(nullptr) {
-    smgpc::compat::register_actor_runtime_state(this);
+    : NameObj(pName), mPosition(0.0F, 0.0F, 0.0F), mRotation(0.0F, 0.0F, 0.0F), mScale(1.0F, 1.0F, 1.0F), mVelocity(0.0F, 0.0F, 0.0F),
+      mGravity(0.0F, -1.0F, 0.0F), mModelManager(nullptr), mAnimKeeper(nullptr), mSpine(nullptr), mSensorKeeper(nullptr), mBinder(nullptr),
+      mRailRider(nullptr), mEffectKeeper(nullptr), mSoundObject(nullptr), mFlag(), mShadowControllerList(nullptr), mCollisionParts(nullptr),
+      mStageSwitchCtrl(nullptr), mStarPointerTarget(nullptr), mActorLightCtrl(nullptr), mCameraCtrl(nullptr) {
+    if (MR::getSceneObjHolder() != nullptr) {
+        MR::getAllLiveActorGroup()->registerActor(this);
+        auto* director = MR::getClippingDirector();
+        director->registerActor(this);
+        mNativeClippingHolder = director->mActorHolder;
+        mNativeClippingGroups = director->mGroupHolder;
+    }
 }
 
 LiveActor::~LiveActor() {
-    delete mShadowControllerList;
-    mShadowControllerList = nullptr;
-    smgpc::compat::release_actor_runtime_state(this);
-    releaseNativeCollisionParts();
-    delete mSensorKeeper;
-    mSensorKeeper = nullptr;
+    delete std::exchange(mShadowControllerList, nullptr);
+    releaseNativeResources();
+    delete std::exchange(mSensorKeeper, nullptr);
 }
 
-CollisionParts* LiveActor::adoptCollisionParts(std::unique_ptr<CollisionParts> parts) {
+void LiveActor::requireNativeResources() const {
+    if (mNativeResourcesReleased) {
+        aurora::throw_host_exception< std::logic_error >("LiveActor resources have already retired");
+    }
+}
+
+std::shared_ptr< ModelManager > LiveActor::retainNativeModel() const {
+    return mNativeModel;
+}
+
+void LiveActor::adoptNativeLodCtrl(std::unique_ptr< LodCtrl > lod) {
+    requireNativeResources();
+    if (!lod) {
+        aurora::throw_host_exception< std::invalid_argument >("LiveActor LOD ownership requires a real LodCtrl");
+    }
+    if (mNativeLodCtrl) {
+        aurora::throw_host_exception< std::logic_error >("LiveActor already owns a LodCtrl");
+    }
+    mNativeLodCtrl = std::move(lod);
+}
+
+void LiveActor::releaseNativeReference(const NameObj* object) noexcept {
+    if (object == mNativeClippingHolder) {
+        mNativeClippingHolder = nullptr;
+        mNativeClippingGroups = nullptr;
+    } else if (object == mNativeClippingGroups) {
+        mNativeClippingGroups = nullptr;
+    }
+}
+
+void LiveActor::releaseNativeSensorReference(const HitSensor* sensor) noexcept {
+    if (mSensorKeeper != nullptr) {
+        mSensorKeeper->releaseNativeReference(sensor);
+    }
+}
+
+void LiveActor::releaseNativeResources() noexcept {
+    if (std::exchange(mNativeResourcesReleased, true)) {
+        return;
+    }
+
+    auto* clipping = std::exchange(mNativeClippingHolder, nullptr);
+    auto* groups = std::exchange(mNativeClippingGroups, nullptr);
+    if (clipping != nullptr) {
+        clipping->unregisterNativeActor(this, groups);
+    }
+
+    // Publish retirement before child destruction can reenter their host.
+    auto* effects = std::exchange(mEffectKeeper, nullptr);
+    auto* target = std::exchange(mStarPointerTarget, nullptr);
+    auto lod = std::move(mNativeLodCtrl);
+    auto* light = std::exchange(mActorLightCtrl, nullptr);
+    auto* stageSwitch = std::exchange(mStageSwitchCtrl, nullptr);
+    auto* rail = std::exchange(mRailRider, nullptr);
+    auto* spine = std::exchange(mSpine, nullptr);
+    auto* binder = std::exchange(mBinder, nullptr);
+    auto* sound = std::exchange(mSoundObject, nullptr);
+    auto soundHeap = std::move(mNativeSoundHeap);
+    auto* camera = std::exchange(mCameraCtrl, nullptr);
+    auto* animation = std::exchange(mAnimKeeper, nullptr);
+    auto model = std::move(mNativeModel);
+
+    delete effects;
+    releaseNativeCollisionParts();
+    auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+    if (runtime != nullptr) {
+        runtime->star_pointer().unregister_target(*this);
+    }
+    if (auto* scheduler = smgpc::runtime::try_active_scene_scheduler()) {
+        scheduler->disconnect_name_obj(*this);
+    } else if (runtime != nullptr) {
+        runtime->unregister_live_actor_model(*this);
+    }
+    // Draw-buffer removal still reads the original model pointer above.
+    mModelManager = nullptr;
+    delete target;
+
+    lod.reset();
+    delete light;
+    delete stageSwitch;
+    delete rail;
+    delete spine;
+    delete binder;
+    delete sound;
+    soundHeap.reset();
+    delete camera;
+    delete animation;
+    model.reset();
+}
+
+CollisionParts* LiveActor::adoptCollisionParts(std::unique_ptr< CollisionParts > parts) {
     const aurora::allocation::HostAllocationScope host;
     auto* result = parts.get();
     mNativeCollisionParts.push_back(std::move(parts));
@@ -60,7 +158,7 @@ CollisionParts* LiveActor::adoptCollisionParts(std::unique_ptr<CollisionParts> p
 
 void LiveActor::releaseNativeCollisionParts() noexcept {
     mCollisionParts = nullptr;
-    std::vector<std::unique_ptr<CollisionParts>> children;
+    std::vector< std::unique_ptr< CollisionParts > > children;
     children.swap(mNativeCollisionParts);
 }
 
@@ -78,9 +176,13 @@ void LiveActor::movement() {
     if (MR::isCalcGravity(this)) {
         MR::calcGravity(this);
     }
-    if (mSensorKeeper) mSensorKeeper->doObjCol();
-    if (mFlag.mIsDead) return;
-    smgpc::compat::update_actor_nerve(this);
+    if (mSensorKeeper)
+        mSensorKeeper->doObjCol();
+    if (mFlag.mIsDead)
+        return;
+    if (mSpine != nullptr) {
+        mSpine->update();
+    }
 
     if (mFlag.mIsDead) {
         return;
@@ -310,7 +412,9 @@ void LiveActor::calcAndSetBaseMtx() {
 }
 
 void LiveActor::initNerve(const Nerve* pNerve) {
-    smgpc::compat::replace_actor_spine(this, pNerve);
+    requireNativeResources();
+    auto replacement = std::make_unique< Spine >(this, pNerve);
+    delete std::exchange(mSpine, replacement.release());
 }
 
 void LiveActor::setNerve(const Nerve* pNerve) {
@@ -328,74 +432,108 @@ s32 LiveActor::getNerveStep() const {
 }
 
 void LiveActor::initSound(int param1, bool is2D) {
-    const auto domain = smgpc::compat::actor_scene_allocation_domain(this);
-    smgpc::compat::JkrAllocationScope heap(domain);
-    if (!is2D) {
-        mSoundObject = new AudAnmSoundObject(&mPosition, param1, MR::getCurrentHeap());
-    } else {
-        mSoundObject = new AudAnmSoundObject(nullptr, param1, MR::getCurrentHeap());
+    requireNativeResources();
+    auto heapOwner = mNativeModel ? mNativeModel->nativeAllocationHeap() : JKRHeap::retainCurrentNativeLifetime();
+    if (!heapOwner) {
+        aurora::throw_host_exception< std::logic_error >("Actor sound construction requires the original caller's Game heap");
     }
-    smgpc::compat::adopt_actor_sound_object(this, domain);
+    std::unique_ptr< AudAnmSoundObject > replacement;
+    {
+        const JKRHeap::CurrentHeapScope heap(*heapOwner);
+        const aurora::allocation::ClientAllocationScope allocations({true, true});
+        replacement = std::make_unique< AudAnmSoundObject >(is2D ? nullptr : &mPosition, param1, heapOwner.get());
+    }
+    // The previous allocation heap must outlive the old object's final delete.
+    auto previousHeap = std::move(mNativeSoundHeap);
+    mNativeSoundHeap = std::move(heapOwner);
+    delete std::exchange(mSoundObject, replacement.release());
 }
 
 void LiveActor::initModelManagerWithAnm(const char* pModelName, const char* pAnimName, bool a3) {
-    smgpc::compat::initialize_actor_model(this, pModelName, pAnimName, a3);
-    const auto owner = smgpc::compat::retain_actor_model(this);
-    smgpc::compat::JkrAllocationScope heap(owner->nativeAllocationDomain());
-    J3DSys::CommandScope commands;
-
-    MR::getJ3DModel(this)->setBaseScale(mScale);
-    LiveActor::calcAndSetBaseMtx();
-    MR::calcJ3DModel(this);
-
-    mAnimKeeper = ActorAnimKeeper::tryCreate(this);
+    requireNativeResources();
+    if (mNativeModel) {
+        aurora::throw_host_exception< std::logic_error >("Actor model replacement requires scene draw retirement first");
+    }
+    // Resource loading may wait for main-thread work; never hold the current
+    // heap mutex across ModelManager::createNative.
+    const aurora::allocation::HostAllocationScope host;
+    auto owner = ModelManager::createNative(JKRHeap::retainCurrentNativeLifetime(), pModelName, pAnimName, a3);
+    mModelManager = owner.get();
+    mNativeModel = owner;
     try {
-        mCameraCtrl = ActorPadAndCameraCtrl::tryCreate(mModelManager, &mPosition);
+        const auto heapOwner = owner->nativeAllocationHeap();
+        const JKRHeap::CurrentHeapScope heap(*heapOwner);
+        const aurora::allocation::ClientAllocationScope allocations({true, true});
+        J3DSys::CommandScope commands;
+
+        MR::getJ3DModel(this)->setBaseScale(mScale);
+        LiveActor::calcAndSetBaseMtx();
+        MR::calcJ3DModel(this);
+
+        auto animation = std::unique_ptr< ActorAnimKeeper >(ActorAnimKeeper::tryCreate(this));
+        auto camera = std::unique_ptr< ActorPadAndCameraCtrl >(ActorPadAndCameraCtrl::tryCreate(mModelManager, &mPosition));
+        delete std::exchange(mAnimKeeper, animation.release());
+        delete std::exchange(mCameraCtrl, camera.release());
     } catch (...) {
-        delete mAnimKeeper;
-        mAnimKeeper = nullptr;
+        mModelManager = nullptr;
+        mNativeModel.reset();
         throw;
     }
-    smgpc::compat::adopt_actor_animation_helpers(this);
 }
 
 void LiveActor::initEffectKeeper(int effectNum, const char* pEffectName, bool sort) {
-    mEffectKeeper = new EffectKeeper(getName(), MR::getModelResourceHolder(this), effectNum, pEffectName);
-    if (sort) {
-        mEffectKeeper->enableSort();
+    requireNativeResources();
+    auto keeper = std::make_unique< EffectKeeper >(getName(), MR::getModelResourceHolder(this), effectNum, pEffectName);
+    auto* previous = std::exchange(mEffectKeeper, keeper.get());
+    try {
+        if (sort) {
+            keeper->enableSort();
+        }
+        keeper->init(this);
+        if (mBinder != nullptr) {
+            keeper->setBinder(mBinder);
+        }
+    } catch (...) {
+        mEffectKeeper = previous;
+        throw;
     }
-    mEffectKeeper->init(this);
-    if (mBinder != nullptr) {
-        mEffectKeeper->setBinder(mBinder);
-    }
+    keeper.release();
+    delete previous;
 }
 
 void LiveActor::initActorLightCtrl() {
-    smgpc::compat::replace_actor_light_ctrl(this);
+    requireNativeResources();
+    auto replacement = std::make_unique< ActorLightCtrl >(this);
+    delete std::exchange(mActorLightCtrl, replacement.release());
 }
 
 void LiveActor::initHitSensor(int sensorCount) {
-    HitSensorKeeper* keeper = new HitSensorKeeper(sensorCount);
-    delete mSensorKeeper;
-    mSensorKeeper = keeper;
+    requireNativeResources();
+    auto keeper = std::make_unique< HitSensorKeeper >(sensorCount);
+    delete std::exchange(mSensorKeeper, keeper.release());
 }
 
 void LiveActor::initBinder(f32 radius, f32 offset, u32 type) {
-    smgpc::compat::configure_actor_binder(this, radius, offset, type);
+    requireNativeResources();
+    auto replacement = std::make_unique< Binder >(getBaseMtx(), &mPosition, &mGravity, radius, offset, type);
+    auto* previous = std::exchange(mBinder, replacement.release());
     if (mEffectKeeper != nullptr) {
         mEffectKeeper->setBinder(mBinder);
     }
+    delete previous;
     MR::onBind(this);
 }
 
 void LiveActor::initRailRider(const JMapInfoIter& rIter) {
-    smgpc::compat::replace_actor_rail_rider(this, rIter);
+    requireNativeResources();
+    auto replacement = std::make_unique< RailRider >(rIter);
+    delete std::exchange(mRailRider, replacement.release());
 }
 
 void LiveActor::initShadowControllerList(u32 controllerCount) {
-    ShadowControllerList* list = new ShadowControllerList(this, controllerCount);
-    delete mShadowControllerList;
-    mShadowControllerList = list;
+    requireNativeResources();
+    auto list = std::make_unique< ShadowControllerList >(this, controllerCount);
+    delete std::exchange(mShadowControllerList, list.release());
 }
 
 void LiveActor::initActorCollisionParts(const char* pParam1, HitSensor* pParam2, ResourceHolder* pParam3, MtxPtr pParam4, bool param5, bool param6) {
@@ -430,13 +568,16 @@ void LiveActor::initActorCollisionParts(const char* pParam1, HitSensor* pParam2,
     MR::invalidateCollisionParts(this);
 }
 
-
 void LiveActor::initStageSwitch(const JMapInfoIter& rIter) {
-    smgpc::compat::adopt_actor_stage_switch(this, MR::createStageSwitchCtrl(this, rIter));
+    requireNativeResources();
+    auto replacement = std::unique_ptr< StageSwitchCtrl >(MR::createStageSwitchCtrl(this, rIter));
+    delete std::exchange(mStageSwitchCtrl, replacement.release());
 }
 
 void LiveActor::initActorStarPointerTarget(f32 radius, const TVec3f* pTrans, MtxPtr pMtx, TVec3f offset) {
-    mStarPointerTarget = new StarPointerTarget(radius, pTrans, pMtx, offset);
+    requireNativeResources();
+    auto target = std::make_unique< StarPointerTarget >(radius, pTrans, pMtx, offset);
+    delete std::exchange(mStarPointerTarget, target.release());
 }
 
 HitSensor* LiveActor::getSensor(const char* pSensorName) const {

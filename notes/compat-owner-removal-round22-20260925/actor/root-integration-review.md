@@ -1,0 +1,9 @@
+# Bounded root integration review
+
+Read-only review of GameResourceRuntime.hpp/cpp, OriginalGameApplication.cpp, OriginalDisplayLifetime.hpp/cpp and MemoryUtil.hpp/cpp during round22 integration. No build/test execution.
+
+No concrete blocking regression found in the requested source scope. GameResourceRuntime retains the actual root heap and external root storage; MEM2 backing remains retained by the process and is bound to the actual GDDR3 heap before child allocations. The process first stops async/NAND producers and draw callbacks, destroys scene/actor resource owners and audio, then retires original typed archive borrowers before FileLoader. Display/GX/VI shutdown and SDK worker joins precede raw child-heap destruction. The root handle held by GameResourceRuntime remains valid while the redundant process handles are released and child heaps are explicitly destroyed.
+
+OriginalDisplayLifetime retains its actual solid heap through factory construction and each operation. Frame and retirement methods do not hold CurrentHeapScope across GX/VI waits; construction still selects its explicit heap. External framebuffer buffers are invalidated/drained before member heap destruction. MemoryUtil's CurrentHeapRestorer delegates to the actual scope, preserving the original scoped heap selection while gaining actual previous/selected lifetime retention.
+
+Adjacent own-lane finding sent to root: retainCurrentNativeLifetime may return an empty Handle when no client callback heap exists. initSound must diagnose that before dereferencing its selected heap, rather than producing a null reference. ModelManager::createNative already validates its handle. Resolved after root coordination: initSound now explicitly rejects an empty heap handle before entering CurrentHeapScope. Scoped snapshots/manifest were refreshed; no other production changes were made during review.

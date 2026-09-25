@@ -11,8 +11,8 @@
 #include "OriginalStageResourceProcessFixture.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/LiveActor/ClippingDirector.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include "NativeHeapFixture.hpp"
 
 #include <functional>
 #include <iostream>
@@ -23,7 +23,7 @@
 namespace {
     void require(bool condition, const char* message) {
         if (!condition) {
-            smgpc::compat::JkrHostAllocationScope host;
+            aurora::allocation::HostAllocationScope host;
             throw std::runtime_error(message);
         }
     }
@@ -54,21 +54,22 @@ namespace {
     };
 
     void verify_broadcast() {
-        auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+        auto heaps = smgpc::test::create_native_root_heap(16U << 20);
         auto scheduler = smgpc::runtime::SceneScheduler{};
         auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
-        const auto baseline = smgpc::compat::name_obj_runtime_state_count();
+        const auto baseline = NameObj::snapshotNativeObjects().size();
         for (int generation = 0; generation < 2; ++generation) {
-            std::weak_ptr<smgpc::compat::JkrAllocationDomain> retired;
+            std::weak_ptr<JKRHeap> retired;
             auto receipts = std::vector<Receipt>{};
             receipts.reserve(64);
             {
                 smgpc::test::OriginalSceneControllerFixture original(heaps);
-                auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 2U << 20);
+                auto domain = smgpc::test::create_native_solid_heap(heaps, 2U << 20);
                 retired = domain;
                 auto scene = smgpc::test::SceneExecutionFixture(scheduler, domain,
                                                              &original.scene);
-                auto game = smgpc::compat::JkrAllocationScope(domain);
+                const JKRHeap::CurrentHeapScope game(*(domain));
+                const aurora::allocation::ClientAllocationScope gameRouting({true, true});
                 auto* clipping = static_cast<ClippingDirector*>(MR::createSceneObj(SceneObj_ClippingDirector));
                 scheduler.disconnect_name_obj(*clipping);
                 auto* group = MR::getAllLiveActorGroup();
@@ -89,7 +90,7 @@ namespace {
                 require(group->getObjNum() == 5 && group->getActor(0) == &ordinary &&
                             group->getActor(4) == &excluded && scheduler.snapshot().size() == scene_registration_count,
                         "construction registers every actor in order without an execution registration");
-                require(smgpc::compat::name_obj_is_suspended(&suspended),
+                require((suspended.getFlag() & 1) != 0,
                         "the suspended recipient must have the actual synchronized NameObj flag");
 
                 require(MR::createSceneObj(SceneObj_MessageSensorHolder) != nullptr,
@@ -135,7 +136,7 @@ namespace {
                         "removing a future recipient leaves the live group traversable without a stale pointer");
                 ordinary.on_message = nullptr;
             }
-            require(retired.expired() && smgpc::compat::name_obj_runtime_state_count() == baseline &&
+            require(retired.expired() && NameObj::snapshotNativeObjects().size() == baseline &&
                         scheduler.snapshot().empty(),
                     "scene retirement releases its group, actors, registrations and Game heap");
         }
@@ -153,7 +154,8 @@ namespace {
         require(placement != nullptr, "shared message group requires a real placed row and its original stage owner");
         auto receipts = std::vector<Receipt>{};
         receipts.reserve(4);
-        const smgpc::compat::JkrAllocationScope game(MR::getSceneObjHolder()->nativeAllocationDomain());
+        const JKRHeap::CurrentHeapScope game(*(MR::getSceneObjHolder()->nativeAllocationHeap()));
+        const aurora::allocation::ClientAllocationScope gameRouting({true, true});
         Receiver first("first queued recipient", receipts), second("second queued recipient", receipts);
         auto sender = std::make_unique<Receiver>("retiring queued sender", receipts);
         for (auto* actor : {&first, &second, sender.get()}) {

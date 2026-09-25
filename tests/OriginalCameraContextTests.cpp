@@ -1,3 +1,4 @@
+#include "NativeHeapFixture.hpp"
 #include "Game/Camera/CameraContext.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "OriginalSceneControllerFixture.hpp"
@@ -6,7 +7,7 @@
 #include "Game/System/RenderMode.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SystemUtil.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/NameObj/NameObj.hpp"
 #include "resource/GameResourceRuntime.hpp"
 #include <aurora/system_config.hpp>
 #include <aurora/aurora.h>
@@ -132,20 +133,20 @@ int main() {
         smgpc::resource::GameResourceRuntime process;
         aurora::NandFileSystem nand;
         aurora::SystemConfiguration settings(nand);
-        const auto objects = smgpc::compat::name_obj_runtime_state_count();
+        const auto objects = NameObj::snapshotNativeObjects().size();
         for (u8 flag : {0, 1, 2, 255}) {
             require(SCReplaceU8Item(flag, SC_ITEM_ID_IPL_ASPECT_RATIO), "set original SC aspect item");
             const bool wide = flag == 1;
             require(MR::isScreen16Per9() == wide && MR::getScreenWidth() == (wide ? 832 : 608),
                     "original SC accessor controls screen width without a camera pose");
-            smgpc::test::OriginalSceneControllerFixture original(process.host_heaps());
+            smgpc::test::OriginalSceneControllerFixture original(process.root_heap());
             SceneObjHolder holder;
             original.scene.mSceneObjHolder = &holder;
             struct Unpublish {
                 Scene& scene;
                 ~Unpublish() { scene.mSceneObjHolder = nullptr; }
             } unpublish{original.scene};
-            holder.initializeNative(process.create_cohort());
+            holder.initializeNative(smgpc::test::create_native_solid_heap(process.root_heap(), process.budget().cohort_bytes));
             auto& camera = *static_cast<CameraContext*>(holder.create(SceneObj_CameraContext));
             const float aspect = wide ? 16.0f / 9.0f : 4.0f / 3.0f;
             require(camera.getAspect() == aspect && camera.getFovy() == 45.0f &&
@@ -187,7 +188,7 @@ int main() {
             require(camera.getAspect() == new_aspect, "camera queries current console aspect instead of cached initialization");
             check_projection(camera, 8.0f * new_aspect, 8.0f);
         }
-        require(smgpc::compat::name_obj_runtime_state_count() == objects, "original camera NameObj identities retire");
+        require(NameObj::snapshotNativeObjects().size() == objects, "original camera NameObj identities retire");
         std::cout << "PASS original CameraContext and CameraUtil: SC aspect, actual matrix identity, projection, unprojection, clipping, shake, rays, distance and J3D view\n";
     } catch (const std::exception& error) {
         std::cerr << "FAIL " << error.what() << '\n';

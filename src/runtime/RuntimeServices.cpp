@@ -1,7 +1,7 @@
 #include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
 #include "Game/Screen/StarPointerTarget.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
 #include "Game/Util/LiveActorUtil.hpp"
 #include "RuntimeServices.hpp"
 
@@ -20,8 +20,8 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/System/WPadRumbleData.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "compat/JkrAllocationDomain.hpp"
+#include "Game/NameObj/NameObj.hpp"
+#include "render/J3dMatrix.hpp"
 #include "resource/BmgMessageArchive.hpp"
 #include "resource/TextEncoding.hpp"
 
@@ -539,7 +539,7 @@ namespace smgpc::runtime {
     }
 
     smgpc::resource::RarcArchive &DvdFileSystemService::archive_for_path_with_request(const std::filesystem::path &path, std::string_view requested_path) {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         const auto key = archive_cache_key_for_path(path);
         if (auto it = _archives.find(key); it != _archives.end()) {
             _archive_load_trace.push_back(DvdArchiveLoadTrace{
@@ -782,7 +782,7 @@ namespace smgpc::runtime {
     }
 
     void WipeService::force_open(std::string_view name) {
-        const smgpc::compat::JkrHostAllocationScope host;
+        const aurora::allocation::HostAllocationScope host;
         _current_name = name;
         _state = WipeState::Open;
         _remaining_frames = 0;
@@ -791,7 +791,7 @@ namespace smgpc::runtime {
     }
 
     void WipeService::force_close(std::string_view name) {
-        const smgpc::compat::JkrHostAllocationScope host;
+        const aurora::allocation::HostAllocationScope host;
         _current_name = name;
         _state = WipeState::Closed;
         _remaining_frames = 0;
@@ -832,7 +832,7 @@ namespace smgpc::runtime {
     }
 
     void WipeService::start_transition(WipeEventKind kind, WipeState state, std::string_view name, s32 frame_count) {
-        const smgpc::compat::JkrHostAllocationScope host;
+        const aurora::allocation::HostAllocationScope host;
         _current_name = name;
         _duration_frames = normalized_frame_count(frame_count);
         _remaining_frames = _duration_frames;
@@ -841,7 +841,7 @@ namespace smgpc::runtime {
     }
 
     void WipeService::push_event(WipeEventKind kind, std::string_view name, s32 frame_count) {
-        const smgpc::compat::JkrHostAllocationScope host;
+        const aurora::allocation::HostAllocationScope host;
         _events.push_back(WipeEvent{
             .kind = kind,
             .name = std::string(name),
@@ -978,7 +978,7 @@ namespace smgpc::runtime {
     }
 
     bool StarPointerService::is_pointing(const LiveActor &actor, const WpadService &wpad, const std::optional<smgpc::camera::CameraPose> &camera_pose, bool check_z) {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         if (actor.mStarPointerTarget == nullptr) {
             return false;
         }
@@ -1749,12 +1749,12 @@ namespace smgpc::runtime {
     }
 
     void MessageService::set_message(std::string_view tag, std::string_view text) {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         set_message(tag, smgpc::resource::utf16_from_utf8_lossy(text));
     }
 
     void MessageService::set_message(std::string_view tag, std::u16string_view text) {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         _messages[std::string(tag)] = MessageText{
             .raw_utf16 = std::u16string(text),
             .raw_wide = std::wstring(text.begin(), text.end()),
@@ -1766,7 +1766,7 @@ namespace smgpc::runtime {
     }
 
     std::size_t MessageService::load_message_archive(const smgpc::resource::RarcArchive &archive) {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         const auto messages = smgpc::resource::BmgMessageArchive::from_message_archive(archive);
         _message_indices.clear();
         _message_ids_by_index.clear();
@@ -1818,7 +1818,7 @@ namespace smgpc::runtime {
     }
 
     const std::wstring *MessageService::message_raw_wide(std::string_view tag) const {
-        smgpc::compat::JkrHostAllocationScope host;
+        aurora::allocation::HostAllocationScope host;
         if (auto it = _messages.find(std::string(tag)); it != _messages.end()) {
             return &it->second.raw_wide;
         }

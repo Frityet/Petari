@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace smgpc::compat { class JkrAllocationDomain; }
+#include <JSystem/JKernel/JKRHeap.hpp>
 
 #include "Inline.hpp"
 
@@ -145,8 +145,8 @@ public:
     SceneObjHolder(const SceneObjHolder&) = delete;
     SceneObjHolder& operator=(const SceneObjHolder&) = delete;
 
-    void initializeNative(std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain);
-    std::shared_ptr<smgpc::compat::JkrAllocationDomain> nativeAllocationDomain() const;
+    void initializeNative(JKRHeap::Handle domain);
+    JKRHeap::Handle nativeAllocationHeap() const;
     bool ownsNativeObject(const NameObj* object) const;
     void adoptNativeObject(NameObj* object);
     void prepareNativeRetirement() noexcept;
