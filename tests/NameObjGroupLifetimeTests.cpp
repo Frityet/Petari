@@ -7,6 +7,8 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Scene/SceneNameObjMovementController.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Player/GroupChecker.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include <aurora/exception.hpp>
 #include <iostream>
@@ -49,11 +51,23 @@ void derived_group() {
     require(group.getObjNum() == 0 && !group.getObj(0) && !group.getObj(1),
             "original LiveActorGroup direct registrations share actual NameObjGroup retirement");
 }
+void attribute_groups() {
+    auto* manager = static_cast<GroupCheckManager*>(MR::createSceneObj(SceneObj_GroupCheckManager));
+    LiveActor first("Original attribute member"), same_name("Original attribute member"), other("Other attribute member");
+    MR::addToAttributeGroupSearchTurtle(&first);
+    MR::addToAttributeGroupSearchTurtle(&same_name);
+    MR::addToAttributeGroupReflectSpinningBox(&other);
+    for (auto* group : manager->mGroups) group->initAfterPlacement();
+    require(MR::isExistInAttributeGroupSearchTurtle(&first) && MR::isExistInAttributeGroupSearchTurtle(&same_name) &&
+                !MR::isExistInAttributeGroupSearchTurtle(&other) && MR::isExistInAttributeGroupReflectSpinningBox(&other) &&
+                !MR::isExistInAttributeGroupReflectSpinningBox(&first),
+            "canonical decomp helpers preserve name-based membership in the two independent original attribute groups");
+}
 
 }
 int main() {
     try {
-        auto heaps = smgpc::test::create_native_root_heap(16U << 20);
+        auto heaps = smgpc::test::create_native_root_heap(32U << 20);
         smgpc::runtime::SceneScheduler scheduler;
         smgpc::runtime::SceneSchedulerBinding scheduler_binding(scheduler);
         smgpc::test::OriginalSceneControllerFixture original(heaps);
@@ -61,9 +75,13 @@ int main() {
         for (int cycle = 0; cycle < 32; ++cycle) {
             {
                 smgpc::test::SceneExecutionFixture scene(
-                    scheduler, smgpc::test::create_native_solid_heap(heaps, 1U << 20),
+                    scheduler, smgpc::test::create_native_solid_heap(heaps, 8U << 20),
                     &original.scene);
-                membership(); derived_group();
+                const JKRHeap::CurrentHeapScope game(*scene.holder().nativeAllocationHeap());
+                const aurora::allocation::ClientAllocationScope gameRouting({true, true});
+                require(MR::createSceneObj(SceneObj_ClippingDirector),
+                        "the original LiveActor constructor requires the scene's clipping director");
+                membership(); derived_group(); attribute_groups();
                 scene.complete_initialization();
             }
             require(NameObj::snapshotNativeObjects().size() == baseline,

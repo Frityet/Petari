@@ -54,7 +54,7 @@ target("smg-pc-game")
     add_files("Util/MtxUtil.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("System/Overwrite.cpp", {cxxflags = "-ffp-contract=off"})
     add_files({"Util/ActorMovementUtil.cpp", "Util/MapUtil.cpp",
-               "Map/CollisionParts.cpp", "Map/HitInfo.cpp", "Map/KCollision.cpp"},
+               "Map/CollisionParts.cpp", "Map/HitInfo.cpp", "Map/KCollision.cpp", "Map/KCollisionPlus.cpp"},
               {cxxflags = "-ffp-contract=off"})
     add_files({"../JSystem/J3DGraphBase/J3DMaterial.cpp", "../JSystem/J3DGraphBase/J3DMatBlock.cpp",
                "../JSystem/J3DGraphBase/J3DTevs.cpp", "../JSystem/J3DGraphAnimator/J3DMaterialAnm.cpp",

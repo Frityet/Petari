@@ -1,4 +1,5 @@
 #include "Game/Map/KCollision.hpp"
+#include <aurora/ppc_math.hpp>
 
 bool KCollisionServer::isInsideMinMaxInLocalSpace(const V3u& rPoint) const {
     return (rPoint.x & mFile->mXMask) == 0 && (rPoint.y & mFile->mYMask) == 0 && (rPoint.z & mFile->mZMask) == 0;
@@ -46,7 +47,8 @@ bool KCollisionServer::outCheck(const TVec3f* pPosA, const TVec3f* pPosB, V3u* p
 }
 
 void KCollisionServer::objectSpaceToLocalSpace(V3u* pPoint, const TVec3f& rPos) const {
-    pPoint->x = static_cast< s32 >(rPos.x - mFile->mMin.x);
-    pPoint->y = static_cast< s32 >(rPos.y - mFile->mMin.y);
-    pPoint->z = static_cast< s32 >(rPos.z - mFile->mMin.z);
+    // Gekko fctiwz saturates; an out-of-range native float-to-int cast is undefined.
+    pPoint->x = aurora::ppc::truncate_s32(rPos.x - mFile->mMin.x);
+    pPoint->y = aurora::ppc::truncate_s32(rPos.y - mFile->mMin.y);
+    pPoint->z = aurora::ppc::truncate_s32(rPos.z - mFile->mMin.z);
 }

@@ -1,0 +1,12 @@
+PASS actual constructor, init, and geometry
+PASS retained mutable resource lifetime
+PASS JMap attach identity and null semantics
+PASS original octree search and leaf indices
+PASS single root and overlapping unused prefix
+PASS multiple root blocks
+PASS malformed resource boundaries
+PASS absent and out-of-range attributes
+PASS empty original prism array
+PASS incompatible live node/leaf alias is explicit
+PASS generated separate arrays, endian boundary and retirement
+PASS generated invalid geometry and duplicate owners

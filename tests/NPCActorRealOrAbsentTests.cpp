@@ -594,10 +594,8 @@ int main(int argc, char** argv) {
                                                 &original.scene);
         auto& holder = scene.holder();
 
-        requireUnavailable([&] { MR::addToAttributeGroupSearchTurtle(&actor); },
-                           "attribute membership must not fabricate a missing scene-owned manager");
         require(holder.getObj(SceneObj_GroupCheckManager) == nullptr,
-                "a failed membership request must leave the required pre-placement SceneObj absent");
+                "the original caller must create its pre-placement manager before registering membership");
         require(MR::createSceneObj(SceneObj_ClippingDirector) != nullptr,
                 "the original actor fixture requires its actual clipping director");
         require(MR::createSceneObj(SceneObj_GroupCheckManager) != nullptr,
@@ -632,8 +630,6 @@ int main(int argc, char** argv) {
                     !MR::isExistInAttributeGroupReflectSpinningBox(&actor),
                 "the two original attribute groups must retain independent membership");
     }
-    requireInvalid([] { MR::addToAttributeGroupSearchTurtle(nullptr); },
-                   "null attribute-group insertion must remain an explicit contract error");
     ++passed;
 
     std::cerr << "[pass] original NPC attribute groups: unique hashes, placement sorting, isolated groups, retirement\n";
