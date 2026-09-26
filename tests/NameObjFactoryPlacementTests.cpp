@@ -281,7 +281,7 @@ namespace {
                         "Unchanged actor init creates actual CollisionParts and original clipping bounds");
                 auto* parts = actor->mCollisionParts;
                 auto* original_zone = parts->mZone;
-                const auto zone_count = original_zone->mNumParts;
+                const auto zone_count = original_zone->mParts.size();
                 const OnlyWall only_wall(parts);
                 require(line_query_hits_registered_wall(nullptr, &only_wall),
                         "Original CollisionParts registration immediately publishes wall line queries");
@@ -315,7 +315,7 @@ namespace {
                 object_owner.reset();
                 require(!line_query_hits_registered_wall(nullptr, &only_wall) &&
                             !retired_triangle.isValid() && retired_triangle.getHostName() == nullptr &&
-                            original_zone->mNumParts + 1 == zone_count &&
+                            original_zone->mParts.size() + 1 == zone_count &&
                             !NameObj::nativeGeneration(retired_actor),
                         "Actor retirement removes actual keeper membership, queries and retained Triangle identities");
             }

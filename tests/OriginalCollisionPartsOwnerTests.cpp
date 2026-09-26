@@ -72,9 +72,9 @@ int main() {
                     JKRHeap::findFromRoot(parts->mServer) == &(*domain) &&
                     JKRHeap::findFromRoot(parts->mServer->mapInfo) == &(*domain),
                     "part, server and original map iterator belong to Game allocations");
-            const auto zone_members = parts->mZone->mNumParts;
+            const auto zone_members = parts->mZone->mParts.size();
             actor.makeActorAppeared();
-            require(parts->_CC && parts->mZone->mNumParts == zone_members + 1,
+            require(parts->_CC && parts->mZone->mParts.size() == zone_members + 1,
                     "original appearance inserts exactly one real zone member");
 
             Triangle surface;
@@ -176,13 +176,13 @@ int main() {
                     "zone invalidation hides queries while existing original triangle retains its live part");
             MR::validateCollisionParts(&actor);
             MR::validateCollisionParts(&actor);
-            require(parts->mZone->mNumParts == zone_members + 1, "revalidation preserves one original zone entry");
+            require(parts->mZone->mParts.size() == zone_members + 1, "revalidation preserves one original zone entry");
             actor.makeActorDead();
-            require(!parts->_CC && parts->mZone->mNumParts == zone_members, "original death removes zone membership");
+            require(!parts->_CC && parts->mZone->mParts.size() == zone_members, "original death removes zone membership");
             actor.makeActorAppeared();
             auto* zone = parts->mZone;
             actor.releaseNativeCollisionParts();
-            require(actor.mCollisionParts == nullptr && !retained.isValid() && zone->mNumParts == zone_members,
+            require(actor.mCollisionParts == nullptr && !retained.isValid() && zone->mParts.size() == zone_members,
                     "actor retirement removes native part identity");
         }
     });

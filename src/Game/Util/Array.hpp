@@ -242,6 +242,10 @@ namespace MR {
             mArray[index] = rItem;
         }
 
+        void pop_back() {
+            mCount--;
+        }
+
         /// @brief Removes the value at the given position from the container.
         /// @param pIter The pointer to the position where the value should be removed.
         /// @return The pointer to the position of the removed value.

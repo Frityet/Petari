@@ -90,7 +90,7 @@ struct Probe {
                     parts->mHitSensor && parts->mHitSensor->mHost == actor && parts->mKeeperIndex == category && parts->mZone,
                 "Real KCL parts retain their original sensor host, category and zone");
         const auto* zone = parts->mZone;
-        const auto membership = std::count(zone->mPartsArray, zone->mPartsArray + zone->mNumParts, parts);
+        const auto membership = std::count(zone->mParts.begin(), zone->mParts.end(), parts);
         require(parts->_CC == enabled && membership == (enabled ? 1 : 0),
                 "Original enabled state agrees with actual keeper membership");
         bool checked_triangle = false, checked_line = false;
@@ -218,9 +218,9 @@ struct Probe {
                                 "Each real LodCtrl has one original view-group registration");
                         auto* keeper = MR::getCollisionDirector()->getCategoryKeeper(3);
                         CollisionParts* limit = nullptr;
-                        for (s32 zone = 0; zone < keeper->mZoneNum; ++zone)
-                            for (s32 index = 0; index < keeper->mZones[zone]->mNumParts; ++index) {
-                                auto* part = keeper->mZones[zone]->mPartsArray[index];
+                        for (s32 zone = 0; zone < keeper->mZones.size(); ++zone)
+                            for (s32 index = 0; index < keeper->mZones[zone]->mParts.size(); ++index) {
+                                auto* part = keeper->mZones[zone]->mParts[index];
                                 if (part->mHitSensor && part->mHitSensor->mHost == actor) {
                                     require(!limit, "Each ship has exactly one original MoveLimit part");
                                     limit = part;
@@ -228,7 +228,7 @@ struct Probe {
                             }
                         require(limit && limit != actor->mCollisionParts && limit->mZone->mZoneID == zone_id &&
                                     std::count_if(resources.begin(), resources.end(), [](const auto& resource) {
-                                        return resource.resource_name == "MoveLimit" && resource.kcl_size > 0;
+                                        return resource->nativeResourceName() == "MoveLimit" && resource->nativeKclSize() > 0;
                                     }) == 1, "Real MoveLimit KCL retains a separate category-3 part under its authored actor");
                         verify_part(limit, actor, true, 3);
                         ++move_limits;

@@ -27,15 +27,14 @@ public:
     OriginalSphereQueryFixture()
         : heaps(smgpc::test::create_native_root_heap(32U << 20)), original(heaps),
           active(scheduler), domain(smgpc::test::create_native_solid_heap(heaps, 2U << 20)),
-          scene(scheduler, domain, nullptr, nullptr, &original.scene, original.controller().mObjHolder) {
+          game(*domain), scene(scheduler, domain, &original.scene) {
         auto* director = static_cast<CollisionDirector*>(MR::createSceneObj(SceneObj_CollisionDirector));
         if (!director) throw std::runtime_error("Sphere queries require the actual CollisionDirector");
         keeper = director->getCategoryKeeper(0);
         // A pure geometry fixture has one explicit original zone. It does not
         // substitute a GalaxyStatusAccessor or pretend to load a scenario.
-        keeper->mZones[0] = new CollisionZone(0);
-        keeper->mZoneNum = 1;
-        keeper->_A0 = true;
+        keeper->mZones.push_back(new CollisionZone(0));
+        keeper->mZonesInitialized = true;
     }
 
     static std::array<float, 12> matrix(float scale = 1.0f, TVec3f translation = TVec3f(0.0f)) {
@@ -111,6 +110,7 @@ public:
     runtime::SceneScheduler scheduler;
     runtime::SceneSchedulerBinding active;
     JKRHeap::Handle domain;
+    JKRHeap::CurrentHeapScope game;
     SceneExecutionFixture scene;
     CollisionCategorizedKeeper* keeper;
 };

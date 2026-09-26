@@ -234,7 +234,7 @@ int main() {
         excluded_sensor_line(fixture);
         area_original_membership(fixture);
         area_transform_and_contract(fixture);
-        require(fixture.keeper->mZoneCount==0,"All synthetic parts retire from original keeper");
+        require(fixture.keeper->mPartsCount==0,"All synthetic parts retire from original keeper");
         std::cout<<"PASS original map queries: sphere features/translation/thickness/order/filtering/motion, point boundaries/scale/output, segmented fast lines/exclusion/enclosure and retirement\n";
     } catch (const std::exception& error) {
         std::cerr<<"FAIL original sphere queries: "<<error.what()<<'\n';

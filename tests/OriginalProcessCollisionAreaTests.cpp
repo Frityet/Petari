@@ -167,7 +167,7 @@ namespace {
                     "AreaPolygon::init creates real sensor/group, CollisionParts and typed generated KCL");
             require(polygon->nativeCollisionParts().size() == 1,
                     "Actual actor owns exactly one generated collision part");
-            const auto zone_count = parts->mZone->mNumParts;
+            const auto zone_count = parts->mZone->mParts.size();
             auto* original_zone = parts->mZone;
             const OnlyPart only_polygon(parts);
             auto* keeper = MR::getCollisionDirector()->getCategoryKeeper(parts->mKeeperIndex);
@@ -254,16 +254,16 @@ namespace {
                              face, parts->mZone->mZoneID, count, double(fractions[0]));
             }
             polygon->invalidate();
-            require(!parts->_CC && original_zone->mNumParts + 1 == zone_count &&
+            require(!parts->_CC && original_zone->mParts.size() + 1 == zone_count &&
                         line_hits(*keeper, only_polygon, last_start, last_offset) == 0,
                     "Original invalidation removes zone membership and original query results");
             polygon->validate();
-            require(parts->_CC && original_zone->mNumParts == zone_count,
+            require(parts->_CC && original_zone->mParts.size() == zone_count,
                     "Original validation restores the same membership and surface identity");
             polygon_owner.reset();
             require(!NameObj::nativeGeneration(polygon) &&
                         NameObj::snapshotNativeObjects().size() == actors_before &&
-                        original_zone->mNumParts + 1 == zone_count &&
+                        original_zone->mParts.size() + 1 == zone_count &&
                         line_hits(*keeper, only_polygon, last_start, last_offset) == 0,
                     "Actor retirement removes real sensor and collision children, zone membership and original query results");
             require(!smgpc::resource::is_native_kcollision_file(file),
