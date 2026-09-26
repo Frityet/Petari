@@ -7,17 +7,22 @@ class LayoutActor;
 
 class YesNoController : public NerveExecutor {
 public:
-    explicit YesNoController(LayoutActor* pHost);
+    /// @brief Creates a new `YesNoController`.
+    /// @param pHost The pointer to the owning actor instance.
+    YesNoController(LayoutActor* pHost);
     ~YesNoController() override;
 
     void appear();
     void kill();
     void update();
-    [[nodiscard]] bool isSelected() const;
-    [[nodiscard]] bool isSelectedYes() const;
-    [[nodiscard]] bool isDisappearStart() const;
-    void setSE(const char* pCursorSE, const char* pYesSE, const char* pNoSE);
+    bool isSelected() const;
+    bool isSelectedYes() const;
+    bool isDisappearStart() const;
+    void setSE(const char*, const char*, const char*);
     bool trySelect();
+    void emitEffectIfExist(const char*);
+    void deleteEffectIfExist(const char*);
+    void forceDeleteEffectAllIfExist();
     void exeSelecting();
     void exeDecided();
     void exeDisappear();

@@ -12,6 +12,11 @@
 #include "Game/Util/MessageUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include "Game/Screen/SubMeterLayout.hpp"
+#include "Game/Screen/YesNoController.hpp"
+#include "Game/Screen/ButtonPaneController.hpp"
+#include "Game/Effect/MultiEmitter.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/LiveActor/Spine.hpp"
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/Util/LayoutUtil.hpp"
 #include "Game/System/Language.hpp"
@@ -421,6 +426,44 @@ void fly_meter() {
     }
     std::cout << "Actual FlyMeter SubMeterLayout initialization and three rendered life ratios passed\n";
 }
+void yes_no_controller() {
+    const JKRHeap::CurrentHeapScope game(*MR::getSceneObjHolder()->nativeAllocationHeap());
+    const aurora::allocation::ClientAllocationScope gameRouting({true, true});
+    auto layout = std::make_unique<LayoutActor>("Original yes/no effect regression", true);
+    layout->initLayoutManager("SelectButton", 1);
+    MR::createAndAddPaneCtrl(layout.get(), "Left", 1);
+    MR::createAndAddPaneCtrl(layout.get(), "Right", 1);
+    layout->initEffectKeeper(0, nullptr, nullptr);
+    layout->appear();
+    YesNoController controller(layout.get());
+    controller.appear();
+    controller.update();
+    layout->calcAnim();
+
+    auto* right = MR::getEffect(layout.get(), "RightText");
+    auto* left = MR::getEffect(layout.get(), "LeftText");
+    require(right && left, "actual SelectButton archive registers both original cursor effects");
+    controller.mButtonYesPaneCtrl->forceToWait();
+    controller.mButtonNoPaneCtrl->forceToWait();
+    require(controller.mButtonYesPaneCtrl->onPointing(), "original right button accepts focus");
+    // Commit the pending nerve just as the original frame boundary does, without
+    // injecting pointer input into the user's desktop game.
+    controller.mButtonYesPaneCtrl->mSpine->changeNerve();
+    controller.exeSelecting();
+    require(right->isValid() && !left->isValid(), "original selecting nerve emits the right cursor effect");
+
+    controller.mButtonYesPaneCtrl->forceToWait();
+    require(controller.mButtonNoPaneCtrl->onPointing(), "original left button accepts focus");
+    controller.mButtonNoPaneCtrl->mSpine->changeNerve();
+    controller.exeSelecting();
+    require(left->isValid() && !right->isValid(),
+            "original selecting nerve retires the previous effect before emitting the left cursor effect");
+    controller.forceDeleteEffectAllIfExist();
+    require(!right->isValid() && !left->isValid(), "both original cursor effects can be retired");
+    controller.kill();
+    require(!controller._C && !controller.isSelected(), "killing the original controller clears selection activity");
+    std::cout << "Actual SelectButton resources and original yes/no cursor-effect transitions passed\n";
+}
 void unbound_panes() {
     nw4r::lyt::res::Pane resource{};
     resource.scale.x = resource.scale.y = 1; resource.alpha = 255;
@@ -512,7 +555,7 @@ void tags() {
 }
 int main() {
     return smgpc::test::run_stage_resource_process("original-layout-groups", [&] {
-        tags(); unbound_panes(); records(); fly_meter();
+        tags(); unbound_panes(); records(); fly_meter(); yes_no_controller();
         std::cout << "Original typed layout groups, transforms, tag lines and FlyMeter checks passed\n";
     });
 }

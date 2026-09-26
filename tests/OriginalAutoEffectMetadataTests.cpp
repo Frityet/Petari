@@ -125,10 +125,10 @@ struct GroupBatch {
     AutoEffectGroupHolder holder;
     ~GroupBatch() { clear(); }
     void clear() {
-        for (auto* group : holder.mGroups) {
-            delete group;
+        for (s32 i = 0; i < holder.mCount; ++i) {
+            delete holder.mGroups[i];
         }
-        holder.mGroups.clear();
+        holder.mCount = 0;
     }
 };
 }
@@ -203,16 +203,16 @@ void verify_authored(Backing& backing) {
         backing.metadata = metadata;
         const auto metadata_free = metadata_heap->getTotalFreeSize();
         GroupBatch batch;
-        require(batch.holder.mGroups.size() == 0 && batch.holder.mGroups.capacity() == 256,
+        require(batch.holder.mCount == 0 && std::size(batch.holder.mGroups) == 256,
                 "original group holder starts empty with its authored fixed capacity");
         constexpr const char* missing = "__unpublished_metadata_group__";
         require(!groups.contains(missing), "missing lookup fixture is absent from the actual resource");
         for (const auto& [name, rows] : groups) {
-            if (batch.holder.mGroups.size() == batch.holder.mGroups.capacity()) {
+            if (batch.holder.mCount == std::size(batch.holder.mGroups)) {
                 ++full_batches;
                 batch.clear();
             }
-            const int previous_count = batch.holder.mGroups.size();
+            const int previous_count = batch.holder.mCount;
             {
                 const JKRHeap::CurrentHeapScope scope(*(metadata));
                 const aurora::allocation::ClientAllocationScope scopeRouting({true, true});
@@ -222,16 +222,16 @@ void verify_authored(Backing& backing) {
             auto* group = batch.holder.find(name.c_str());
             require(group != nullptr && group->getName() == name.c_str() && batch.holder.isExist(name.c_str()),
                     "registered group preserves its caller-owned name and lookup identity");
-            require(batch.holder.mGroups.size() == previous_count + 1 && batch.holder.mGroups[previous_count] == group,
+            require(batch.holder.mCount == previous_count + 1 && batch.holder.mGroups[previous_count] == group,
                     "group insertion preserves original append order");
-            require(group->mInfos.size() == rows.size() && group->mInfos.capacity() == rows.size() &&
+            require(group->mCount == rows.size() && group->mCapacity == rows.size() &&
                         MR::Effect::getAutoEffectNum(name.c_str()) == rows.size(),
                     "group allocation uses the exact case-insensitive authored record count");
             require(JKRHeap::findFromRoot(group) == &(*metadata) &&
-                        JKRHeap::findFromRoot(group->mInfos.mArray.mArr) == &(*metadata),
+                        JKRHeap::findFromRoot(group->mEffects) == &(*metadata),
                     "original group and pointer array use the native metadata allocation domain");
             for (std::size_t i = 0; i < rows.size(); ++i) {
-                const auto* info = group->mInfos[static_cast<int>(i)];
+                const auto* info = group->mEffects[static_cast<int>(i)];
                 require(JKRHeap::findFromRoot(const_cast<AutoEffectInfo*>(info)) == &(*metadata),
                         "original metadata records use the same native allocation domain");
                 verify_info(*info, raw, rows[i], &coverage);
@@ -248,13 +248,13 @@ void verify_authored(Backing& backing) {
                         "duplicate and missing groups do not consume another slot, including at capacity");
             }
             require(batch.holder.find(missing) == nullptr && !batch.holder.isExist(missing) &&
-                        batch.holder.mGroups.size() == previous_count + 1 && (*metadata).getFreeSize() == free_before_lookup,
+                        batch.holder.mCount == previous_count + 1 && (*metadata).getFreeSize() == free_before_lookup,
                     "unsuccessful registration leaves original count and storage unchanged");
         }
         require(coverage.rows == raw.entry_count() && full_batches > 0,
                 "every authored row is checked while respecting the original fixed group capacity");
         batch.clear();
-        require(batch.holder.mGroups.size() == 0 && batch.holder.mGroups.capacity() == 256,
+        require(batch.holder.mCount == 0 && std::size(batch.holder.mGroups) == 256,
                 "retiring metadata empties the holder without changing its fixed capacity");
 
         AutoEffectInfo reused;
