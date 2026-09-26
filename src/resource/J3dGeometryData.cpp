@@ -1,6 +1,7 @@
 #include <aurora/exception.hpp>
 #include <aurora/gx_array.hpp>
 #include "J3dGeometryData.hpp"
+#include "J3dShapeAllocations.hpp"
 
 #include "J3dNameData.hpp"
 #include "J3dNativeBlock.hpp"
@@ -15,7 +16,6 @@
 #include <algorithm>
 #include <array>
 #include <bit>
-#include <cstdlib>
 #include <cstring>
 #include <stdexcept>
 #include <utility>
@@ -129,23 +129,6 @@ namespace smgpc::resource {
             return result;
         }
 
-        struct ShapeDelete {
-            void operator()(J3DShape* shape) const noexcept {
-                if (shape == nullptr) return;
-                for (std::size_t i = 0; i < shape->mMtxGroupNum; ++i) {
-                    delete shape->mShapeMtx[i];
-                    delete shape->mShapeDraw[i];
-                }
-                delete[] shape->mShapeMtx;
-                delete[] shape->mShapeDraw;
-                delete shape;
-            }
-        };
-
-        struct AlignedDelete {
-            void operator()(u8* pointer) const noexcept { std::free(pointer); }
-        };
-
         bool valid_descriptor_attr(GXAttr attr) {
             return (attr >= GX_VA_PNMTXIDX && attr <= GX_VA_TEX7) || attr == GX_VA_NBT || attr == GX_VA_NULL;
         }
@@ -159,9 +142,10 @@ namespace smgpc::resource {
         std::vector<aurora::gx::ArrayRegistration> vertex_arrays;
         std::unique_ptr<ShapeBlock> shape;
         std::unique_ptr<JUTNameTab> names;
-        std::unique_ptr<u8, AlignedDelete> commands;
-        std::vector<std::unique_ptr<J3DShape, ShapeDelete>> shapes;
-        std::vector<J3DShape*> shape_pointers;
+        J3dShapeAllocations shape_allocations;
+        std::unique_ptr<J3DShape*[]> shape_pointers;
+        std::vector<J3DModelHierarchy> hierarchy;
+        std::uint32_t load_flags = 0;
         std::uint32_t packet_count = 0;
         std::uint32_t vertex_count = 0;
         std::uint32_t normal_count = 0;
@@ -169,23 +153,13 @@ namespace smgpc::resource {
         std::uint32_t texcoord_count = 0;
         bool attached = false;
 
-        Storage(Bytes bytes, std::uint32_t load_flags) {
+        Storage(Bytes bytes, std::uint32_t flags) : load_flags(flags) {
             const auto blocks = find_blocks(bytes);
             checked(blocks.info, 0, 0x18);
             packet_count = u32_at(blocks.info, 0xc);
             vertex_count = u32_at(blocks.info, 0x10);
             load_vertex(blocks);
-            load_shapes(blocks.shape, blocks.info, load_flags);
-        }
-
-        ~Storage() {
-            // The original table can alias command pointers while sorting. Own
-            // the factory's allocation once and invalidate its shared cache.
-            const auto cached = reinterpret_cast<std::uintptr_t>(J3DShape::sOldVcdVatCmd);
-            const auto begin = reinterpret_cast<std::uintptr_t>(commands.get());
-            if (commands && cached >= begin && cached - begin < shape_pointers.size() * J3DShape::kVcdVatDLSize) {
-                J3DShape::resetVcdVatCache();
-            }
+            load_shapes(blocks.shape, blocks.info);
         }
 
         void load_vertex(const Blocks& blocks) {
@@ -307,7 +281,7 @@ namespace smgpc::resource {
             }
         }
 
-        void load_shapes(Bytes block, Bytes info, std::uint32_t flags) {
+        void load_shapes(Bytes block, Bytes info) {
             static_assert(sizeof(J3DShapeInitData) == 40 && sizeof(J3DShapeMtxInitData) == 8 &&
                           sizeof(J3DShapeDrawInitData) == 8 && sizeof(GXVtxDescList) == 8);
             checked(block, 0, 0x2c);
@@ -416,36 +390,21 @@ namespace smgpc::resource {
             // Establish complete, bounded INF coverage before original readShape
             // construction. Retain repeated commands exactly: retail recreates
             // that logical slot, while this owner also retains prior allocations.
-            std::vector<u16> order;
             std::vector<bool> seen(count);
             std::size_t cursor = table_offset(info, 0x14, 4);
             for (;;) {
                 const auto type = u16_at(info, cursor);
                 const auto value = u16_at(info, cursor + 2);
                 cursor += 4;
+                hierarchy.push_back({type, value});
                 if (type == 0) break;
                 if (type == 0x12) {
                     if (value >= count) aurora::throw_host_exception<std::runtime_error>("J3D hierarchy shape index is outside SHP1");
-                    order.push_back(value);
                     seen[value] = true;
                 }
             }
             if (std::find(seen.begin(), seen.end(), false) != seen.end()) {
                 aurora::throw_host_exception<std::runtime_error>("J3D hierarchy leaves an original shape pointer uninitialized");
-            }
-            J3DShapeFactory factory(shape->header());
-            factory.allocVcdVatCmdBuffer(count);
-            commands.reset(factory.mVcdVatCmdBuffer);
-            shapes.reserve(order.size());
-            shape_pointers.resize(count);
-            GXVtxDescList* previous = nullptr;
-            for (const auto index : order) {
-                shapes.emplace_back(factory.create(index, flags, previous));
-                shape_pointers[index] = shapes.back().get();
-                previous = factory.getVtxDescList(index);
-            }
-            if (shape->header().mpNameTable != nullptr) {
-                names = std::make_unique<JUTNameTab>(JSUConvertOffsetToPtr<ResNTAB>(&shape->header(), shape->header().mpNameTable));
             }
         }
     };
@@ -473,9 +432,17 @@ namespace smgpc::resource {
         vertex.mVtxNBTArray = JSUConvertOffsetToPtr<void>(&block, block.mpVtxNBTArray);
         for (std::size_t i = 0; i < 2; ++i) vertex.mVtxColorArray[i] = JSUConvertOffsetToPtr<GXColor>(&block, block.mpVtxColorArray[i]);
         for (std::size_t i = 0; i < 8; ++i) vertex.mVtxTexCoordArray[i] = JSUConvertOffsetToPtr<void>(&block, block.mpVtxTexCoordArray[i]);
-        model.mShapeTable.mShapeNum = storage.shape->header().mShapeNum;
-        model.mShapeTable.mShapeNodePointer = storage.shape_pointers.data();
-        model.mShapeTable.mShapeName = storage.names.get();
+        // readShape only consumes INF hierarchy and SHP metadata. Use an
+        // actual SDK construction context, then retain its published table.
+        J3DModelData construction;
+        construction.setHierarchy(storage.hierarchy.data());
+        J3DModelLoader_v26 loader;
+        loader.mpModelData = &construction;
+        const J3dShapeAllocations::Scope ownership(storage.shape_allocations);
+        loader.readShape(&storage.shape->header(), storage.load_flags);
+        storage.names.reset(construction.mShapeTable.mShapeName);
+        storage.shape_pointers.reset(construction.mShapeTable.mShapeNodePointer);
+        model.mShapeTable = construction.mShapeTable;
         storage.attached = true;
     }
 

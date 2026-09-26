@@ -235,6 +235,9 @@ namespace {
             for (u16 i = 0; i < tree.mJointNum; ++i)
                 require((*domain).find(tree.mJointNodePointer[i]) == &(*domain),
                         "each joint created by the original reader belongs to the retained SDK heap");
+            for (u16 i = 0; i < model->getShapeNum(); ++i)
+                require((*domain).find(model->getShapeNodePointer(i)) == &(*domain),
+                        "each shape created by the original reader belongs to the retained SDK heap");
             check_original_model(*model, bytes);
             const auto mat = block(bytes, "MAT3");
             const auto ids = read32(mat, 0x10);

@@ -6,6 +6,7 @@
 #include "JSystem/JSupport/JSupport.hpp"
 #include "JSystem/JUtility/JUTNameTab.hpp"
 #include "resource/J3dGeometryData.hpp"
+#include "NativeHeapFixture.hpp"
 #include "runtime/RuntimeServices.hpp"
 
 #include <aurora/dvd.h>
@@ -245,6 +246,35 @@ namespace {
         }
     }
 
+    void test_repeated_shape_retirement() {
+        auto bytes = fixture();
+        const auto info = block_offset(bytes, "INF1");
+        // Recreate logical slot 2 after all four slots have been populated.
+        write16(bytes, info + 0x30, 0x12);
+        write16(bytes, info + 0x32, 2);
+        auto heap = smgpc::test::create_native_root_heap(512 * 1024);
+        const auto available = heap->getTotalFreeSize();
+        {
+            J3dGeometryData owner(bytes);
+            J3DModelData model;
+            {
+                const JKRHeap::CurrentHeapScope original(*heap);
+                const aurora::allocation::ClientAllocationScope routing({true, true});
+                owner.attach_to(model);
+            }
+            require(model.getShapeNum() == 4 && model.getShapeNodePointer(2)->getIndex() == 2,
+                    "repeated original hierarchy commands recreate their logical shape slot");
+            for (u16 i = 0; i < model.getShapeNum(); ++i)
+                require(heap->find(model.getShapeNodePointer(i)) == heap.get(),
+                        "original shape reader allocates actual shapes in the selected SDK heap");
+            require(heap->getTotalFreeSize() < available, "original shape allocations consume their retained heap");
+            J3DShape::sOldVcdVatCmd = model.getShapeNodePointer(2)->getVcdVatCmd();
+        }
+        require(heap->getTotalFreeSize() == available && heap->check(),
+                "retirement frees overwritten shapes, visible shapes, names, arrays and command storage");
+        require(J3DShape::sOldVcdVatCmd == nullptr, "retiring repeated shapes invalidates their command cache");
+    }
+
     void test_native_vertices_and_original_finalizers() {
         auto bytes = fixture();
         J3dGeometryData owner(bytes);
@@ -458,11 +488,12 @@ namespace {
 int main() {
     try {
         test_original_factory_and_lifetime();
+        test_repeated_shape_retirement();
         test_native_vertices_and_original_finalizers();
         test_packed_colors_and_absence();
         test_bad_ranges();
         test_optional_real_disc();
-        std::cout << "[pass] 5 original J3D geometry-resource groups\n";
+        std::cout << "[pass] 6 original J3D geometry-resource groups\n";
         return 0;
     } catch (const std::exception& error) {
         std::cerr << "[fail] original J3D geometry resource: " << error.what() << '\n';

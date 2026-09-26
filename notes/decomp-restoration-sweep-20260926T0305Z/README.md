@@ -150,3 +150,19 @@ Implemented and validated:
 - `batch16-audit.log`: zero duplicate strong providers; Game source classifications unchanged.
 
 Remaining model-loader restoration: VTX1 count arithmetic must preserve authored offsets across widened/repacked native arrays; SHP1 ownership must capture every allocation when INF recreates a logical shape slot; full-file loader dispatch must then replace the remaining host orchestration. These boundaries remain explicit work, not a claim that all port implementations have been removed.
+
+
+## Batch 17: original J3D shape reader
+
+Replace the host SHP1 factory loop with the original `J3DModelLoader::readShape`, retaining overwritten allocations through a narrow resource-lifetime capture.
+
+Implemented and validated:
+
+- `J3dGeometryData` delegates shape construction to the donor `J3DModelLoader::readShape`. The host factory loop, previous-descriptor tracking, manual shape-name construction and table initialization were removed.
+- The original reader has two narrow lifetime capture calls: one for its command buffer and one for each created shape. `J3dShapeAllocations` retains every created object, including ones replaced by later INF commands, frees through normal SDK allocation provenance, and invalidates the shared command cache at retirement. The reader's ordering and factory choices remain original.
+- Shape construction uses an actual SDK model context with retained authored INF hierarchy, then transfers its published shape table. The complete model owner selects the retained SDK heap before original joint/shape readers run.
+- `batch17-build.log`: main, geometry-resource, complete-model and Gateway targets build successfully.
+- `batch17-geometry.log`: six groups pass, including real Mario shapes, all matrix classes/caller flags, vertex source lookahead, descriptor/command aliases and source retirement. A new repeated-slot fixture verifies that actual ExpHeap free space is completely restored after destroying both visible and overwritten shapes, names, pointer arrays and commands.
+- `batch17-model.log`: all four complete-model groups pass, with added SDK-heap provenance checks for all real model shapes.
+- `batch17-stage.log`: real Gateway completes 120 frames, nine RailRider placement checks and normal teardown; audio muted.
+- `batch17-audit.log`: zero duplicate strong providers. Vertex-count/source-offset handling and full-file dispatch remain the next J3D restoration work.

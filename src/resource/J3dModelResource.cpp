@@ -368,8 +368,8 @@ namespace smgpc::resource {
                 JKRHeap::CurrentHeapScope original(*(domain));
                 const aurora::allocation::ClientAllocationScope original_routing({true, true});
                 result->joints->attach_to(model);
+                result->geometry->attach_to(model);
             }
-            result->geometry->attach_to(model);
             result->materials->attach_to(model.mMaterialTable);
             attach_textures(file, *result, model.mMaterialTable, false);
             validate_hierarchy(model, file.single_block(tag('I','N','F','1')));

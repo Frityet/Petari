@@ -1,6 +1,6 @@
 # Source-Closeness Audit
 
-Generated: 2026-09-26T04:10:29Z
+Generated: 2026-09-26T04:18:07Z
 Repo root: `/Users/frityet/Projects/petari`
 PC root: `/Users/frityet/Projects/petari`
 
@@ -30,7 +30,7 @@ This is intentionally conservative. Anything not proven exact, compile-only, or 
 
 Audited original game-code files: 3211
 Target surface files: 883
-Compatibility-layer files inventoried separately: 508
+Compatibility-layer files inventoried separately: 510
 Decomp-needed files with root declaration counterparts: 0
 Compile-only files requiring allowlist entries: 375
 
@@ -502,7 +502,7 @@ Files requiring migration or decomp work: 1121
 | --- | ---: |
 | `platform-compat` | 414 |
 | `render-gx-j3d-brlyt` | 26 |
-| `resource-message-font-texture` | 60 |
+| `resource-message-font-texture` | 62 |
 | `scene-sequence` | 6 |
 | `trace-proof` | 2 |
 

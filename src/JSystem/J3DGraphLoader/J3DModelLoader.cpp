@@ -1,5 +1,6 @@
 #include "resource/J3dModelResource.hpp"
 #include "resource/J3dAllocationIdentity.hpp"
+#include "resource/J3dShapeAllocations.hpp"
 #include "JSystem/J3DGraphAnimator/J3DJoint.hpp"
 #include "JSystem/J3DGraphLoader/J3DModelLoader.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
@@ -414,11 +415,13 @@ void J3DModelLoader::readShape(J3DShapeBlock const* i_block, u32 i_flags) {
     }
     shape_table->mShapeNodePointer = new J3DShape*[shape_table->mShapeNum];
     factory.allocVcdVatCmdBuffer(shape_table->mShapeNum);
+    smgpc::resource::J3dShapeAllocations::retain_commands(factory.mVcdVatCmdBuffer, shape_table->mShapeNum * J3DShape::kVcdVatDLSize);
     J3DModelHierarchy const* hierarchy_entry = mpModelData->getHierarchy();
     GXVtxDescList* vtx_desc_list = NULL;
     for (; hierarchy_entry->mType != 0; hierarchy_entry++) {
         if (hierarchy_entry->mType == 0x12) {
-            shape_table->mShapeNodePointer[hierarchy_entry->mValue] = factory.create(hierarchy_entry->mValue, i_flags, vtx_desc_list);
+            shape_table->mShapeNodePointer[hierarchy_entry->mValue] =
+                smgpc::resource::J3dShapeAllocations::retain(factory.create(hierarchy_entry->mValue, i_flags, vtx_desc_list));
             vtx_desc_list = factory.getVtxDescList(hierarchy_entry->mValue);
         }
     }
