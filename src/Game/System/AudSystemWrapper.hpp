@@ -3,7 +3,6 @@
 #include <JSystem/JAudio2/JAUSoundTable.hpp>
 #include <memory>
 #include <revolution/types.h>
-#include <vector>
 
 namespace smgpc::resource {
     class AudioInfoResources;
@@ -22,9 +21,6 @@ class JKRHeap;
 class JKRMemArchive;
 class JKRSolidHeap;
 class JAIStreamMgr;
-namespace aurora::audio {
-    class JAudioSoundArchive;
-}
 
 class AudSystemWrapper {
 public:
@@ -71,12 +67,8 @@ private:
     enum class InitializePhase { Created, Requested, Received, Initialized };
     void releaseResources() noexcept;
 
-    // Bytes precede all original borrowers; destruction releases the converter
-    // and its arrays before the native table and decoded byte storage.
-    std::vector< u8 > mSoundNameBytes;
-    std::vector< u8 > mNativeAudioArchive;
     std::unique_ptr< smgpc::resource::AudioInfoResources > mInfoResources;
-    JAUSoundNameTable mSoundNameTable{false};
+    JAUSoundNameTable* mSoundNameTable = nullptr;
     JAUSoundNameTable* mPreviousNameTable = nullptr;
     AudSoundNameConverter* mPreviousNameConverter = nullptr;
     std::unique_ptr< AudSoundNameConverter > mSoundNameConverter;
@@ -84,7 +76,6 @@ private:
     std::unique_ptr< CSSoundNameConverter > mSpeakerNameConverter;
     AudMeNameConverter* mPreviousMeNameConverter = nullptr;
     CSSoundNameConverter* mPreviousSpeakerNameConverter = nullptr;
-    std::shared_ptr< aurora::audio::JAudioSoundArchive > mAudioArchive;
     InitializePhase mInitializePhase = InitializePhase::Created;
 #endif
 };

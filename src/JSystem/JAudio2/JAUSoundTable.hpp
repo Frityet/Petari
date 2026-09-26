@@ -2,34 +2,36 @@
 
 #include "JSystem/JAudio2/JAISound.hpp"
 #include "JSystem/JAudio2/JASGlobal.hpp"
+#include <aurora/endian.hpp>
 
+// Serialized sound tables retain their Wii byte order and field widths.
 struct JAUSoundTableItem {
     /* 0x00 */ u8 mPriority;
     /* 0x01 */ u8 mVolume;
-    /* 0x02 */ u16 mResourceId;
+    /* 0x02 */ aurora::endian::AlignedBigEndian< u16 > mResourceId;
     /* 0x04 */ u8 _4[0];
 };
 
 struct JAUSoundTableSe {
     /* 0x00 */ u8 mPriority;
     /* 0x01 */ u8 mVolume;
-    /* 0x02 */ u16 mAudibleSw;
-    /* 0x04 */ u16 mSoundSw;
+    /* 0x02 */ aurora::endian::AlignedBigEndian< u16 > mAudibleSw;
+    /* 0x04 */ aurora::endian::AlignedBigEndian< u16 > mSoundSw;
 };
 
 struct JAUSoundTableBgm {
     /* 0x00 */ u8 mPriority;
     /* 0x01 */ u8 mVolume;
-    /* 0x02 */ u16 mResourceId;
-    /* 0x04 */ u16 mChordResId;
-    /* 0x06 */ u16 mSoundSw;
+    /* 0x02 */ aurora::endian::AlignedBigEndian< u16 > mResourceId;
+    /* 0x04 */ aurora::endian::AlignedBigEndian< u16 > mChordResId;
+    /* 0x06 */ aurora::endian::AlignedBigEndian< u16 > mSoundSw;
 };
 
 struct JAUSoundTableStream {
     /* 0x00 */ u8 mPriority;
     /* 0x01 */ u8 mVolume;
-    /* 0x02 */ u16 mChannelCtrl;
-    /* 0x04 */ u32 mStreamFileNameOffset;
+    /* 0x02 */ aurora::endian::AlignedBigEndian< u16 > mChannelCtrl;
+    /* 0x04 */ aurora::endian::AlignedBigEndian< u32 > mStreamFileNameOffset;
 };
 
 template < typename Root, typename Section, typename Group, typename Item >
@@ -46,10 +48,10 @@ struct JAUSoundTable_ {
 
     void init(const void* pData) {
         mData = pData;
-        if (*(u32*)mData != Root::magicNumber()) {
+        if (aurora::endian::read_big< u32 >(mData) != Root::magicNumber()) {
             mData = nullptr;
         } else {
-            mRoot = (Root*)((u8*)mData + *((u32*)mData + 3));
+            mRoot = (Root*)((u8*)mData + aurora::endian::read_big< u32 >((u8*)mData + 12));
         }
     }
 
@@ -97,8 +99,8 @@ struct JAUSoundTableRoot {
     static inline u32 magicNumber() {
         return 'BST ';
     }
-    /* 0x00 */ u32 mSectionNumber;
-    /* 0x04 */ u32 mSectionOffsets[0];
+    /* 0x00 */ aurora::endian::AlignedBigEndian< u32 > mSectionNumber;
+    /* 0x04 */ aurora::endian::AlignedBigEndian< u32 > mSectionOffsets[0];
 };
 
 struct JAUSoundTableSection {
@@ -112,8 +114,8 @@ struct JAUSoundTableSection {
         return mGroupOffsets[index];
     }
 
-    /* 0x00 */ u32 mNumGroups;
-    /* 0x04 */ u32 mGroupOffsets[0];
+    /* 0x00 */ aurora::endian::AlignedBigEndian< u32 > mNumGroups;
+    /* 0x04 */ aurora::endian::AlignedBigEndian< u32 > mGroupOffsets[0];
 };
 
 struct JAUSoundTableGroup {
@@ -137,9 +139,9 @@ struct JAUSoundTableGroup {
         return mItemOffsets[index] & 0xffffff;
     }
 
-    /* 0x00 */ u32 mNumItems;
-    /* 0x04 */ u32 mGlobalOffset;
-    /* 0x08 */ u32 mItemOffsets[0];
+    /* 0x00 */ aurora::endian::AlignedBigEndian< u32 > mNumItems;
+    /* 0x04 */ aurora::endian::AlignedBigEndian< u32 > mGlobalOffset;
+    /* 0x08 */ aurora::endian::AlignedBigEndian< u32 > mItemOffsets[0];
 };
 
 struct JAUSoundTable : public JASGlobalInstance< JAUSoundTable > {
@@ -172,8 +174,8 @@ struct JAUSoundNameTableRoot {
     static inline u32 magicNumber() {
         return 'BSTN';
     }
-    /* 0x00 */ u32 mSectionNumber;
-    /* 0x04 */ u32 mSectionOffsets[0];
+    /* 0x00 */ aurora::endian::AlignedBigEndian< u32 > mSectionNumber;
+    /* 0x04 */ aurora::endian::AlignedBigEndian< u32 > mSectionOffsets[0];
 };
 
 struct JAUSoundNameTableSection {
@@ -187,9 +189,9 @@ struct JAUSoundNameTableSection {
         return mGroupOffsets[index];
     }
 
-    /* 0x00 */ u32 mNumGroups;
-    /* 0x04 */ u32 mGlobalOffset;
-    /* 0x08 */ u32 mGroupOffsets[0];
+    /* 0x00 */ aurora::endian::AlignedBigEndian< u32 > mNumGroups;
+    /* 0x04 */ aurora::endian::AlignedBigEndian< u32 > mGlobalOffset;
+    /* 0x08 */ aurora::endian::AlignedBigEndian< u32 > mGroupOffsets[0];
 };
 
 struct JAUSoundNameTableGroup {
@@ -203,9 +205,9 @@ struct JAUSoundNameTableGroup {
         return mItemOffsets[index];
     }
 
-    /* 0x00 */ u32 mNumItems;
-    /* 0x04 */ u32 mCategoryNameOffset;
-    /* 0x08 */ u32 mItemOffsets[0];
+    /* 0x00 */ aurora::endian::AlignedBigEndian< u32 > mNumItems;
+    /* 0x04 */ aurora::endian::AlignedBigEndian< u32 > mCategoryNameOffset;
+    /* 0x08 */ aurora::endian::AlignedBigEndian< u32 > mItemOffsets[0];
 };
 
 struct JAUSoundNameTable : public JASGlobalInstance< JAUSoundNameTable > {

@@ -25,33 +25,11 @@
 #include <JSystem/JKernel/JKRSolidHeap.hpp>
 #include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
-#include <aurora/j_audio_sound_archive.hpp>
 #include <cstdio>
-#include <dolphin/dvd.h>
-#include <limits>
 #include <new>
 #include <stdexcept>
 
 namespace {
-    std::vector< u8 > readAudioFile(const std::string& path) {
-        const aurora::allocation::HostAllocationScope host;
-        DVDFileInfo file{};
-        if (!DVDOpen(path.c_str(), &file))
-            aurora::throw_host_exception< std::runtime_error >("Cannot open audio resource: " + path);
-        struct CloseFile {
-            DVDFileInfo* file;
-            ~CloseFile() {
-                DVDClose(file);
-            }
-        } close{&file};
-        if (file.length > std::numeric_limits< s32 >::max())
-            aurora::throw_host_exception< std::runtime_error >("Audio resource exceeds the DVD read range: " + path);
-        std::vector< u8 > bytes(file.length);
-        if (DVDReadPrio(&file, bytes.data(), static_cast< s32 >(bytes.size()), 0, 1) != bytes.size())
-            aurora::throw_host_exception< std::runtime_error >("Cannot read complete audio resource: " + path);
-        return bytes;
-    }
-
     void retireWrapper(void* object) noexcept {
         static_cast< AudSystemWrapper* >(object)->~AudSystemWrapper();
     }
@@ -114,30 +92,17 @@ void AudSystemWrapper::createAudioSystem() {
     }
     _2A = true;
     try {
-        const auto size = JKRHeap::getSize(mSmrRes, JKRHeap::findFromRoot(mSmrRes));
-        if (size <= 0) {
-            aurora::throw_host_exception< std::logic_error >("Audio name resource requires a bounded original heap allocation");
-        }
         const aurora::allocation::HostAllocationScope host;
-        mAudioArchive = std::make_shared< aurora::audio::JAudioSoundArchive >(
-            std::span< const u8 >(static_cast< const u8* >(mSmrRes), static_cast< std::size_t >(size)),
-            [](std::string_view name) -> std::vector< u8 > { return readAudioFile("/AudioRes/Waves/" + std::string(name)); });
-        mSoundNameBytes = mAudioArchive->native_sound_name_table();
-        if (mSoundNameBytes.size() < 16) {
-            aurora::throw_host_exception< std::runtime_error >("Audio initialization received no sound-name table");
-        }
-        mSoundNameTable.init(mSoundNameBytes.data());
-        AudSoundNameConverter::validateTable(&mSoundNameTable);
-        createSoundNameConverter();
-
-        mNativeAudioArchive = mAudioArchive->native_runtime_archive();
+        mPreviousNameTable = JAUSoundNameTable::getInstance();
         mInfoResources = std::make_unique< smgpc::resource::AudioInfoResources >(mJaiCordRes, mJaiMeRes, mJaiRemixSeqRes, mSpkRes);
         {
             const MR::CurrentHeapRestorer current(_4);
             const aurora::allocation::ClientAllocationScope game({true, true});
-            mAudSystem = AudNewAudSystem(_4, mNativeAudioArchive.data(), mJaiSeqRes, mJaiCordRes, mJaiMeRes, mJaiRemixSeqRes);
+            mAudSystem = AudNewAudSystem(_4, mSmrRes, mJaiSeqRes, mJaiCordRes, mJaiMeRes, mJaiRemixSeqRes);
         }
+        mSoundNameTable = JAUSoundNameTable::getInstance();
         mAudSystem->setSpeakerResource(mSpkRes);
+        createSoundNameConverter();
         {
             const MR::CurrentHeapRestorer current(JKRHeap::findFromRoot(this));
             const aurora::allocation::ClientAllocationScope game({true, true});
@@ -163,20 +128,13 @@ void AudSystemWrapper::createSoundNameConverter() {
     if (mSoundNameConverter) {
         return;
     }
-    if (mInitializePhase != InitializePhase::Received || mSoundNameBytes.empty()) {
+    if (mInitializePhase != InitializePhase::Received || !mSoundNameTable) {
         aurora::throw_host_exception< std::logic_error >("Audio name publication requires its received sound-name table");
     }
-    AudSoundNameConverter::validateTable(&mSoundNameTable);
+    AudSoundNameConverter::validateTable(mSoundNameTable);
     const MR::CurrentHeapRestorer current(JKRHeap::findFromRoot(this));
     const aurora::allocation::ClientAllocationScope game({true, true});
-    mPreviousNameTable = JAUSoundNameTable::sInstance;
-    JAUSoundNameTable::sInstance = &mSoundNameTable;
-    try {
-        mSoundNameConverter = std::make_unique< AudSoundNameConverter >();
-    } catch (...) {
-        JAUSoundNameTable::sInstance = mPreviousNameTable;
-        throw;
-    }
+    mSoundNameConverter = std::make_unique< AudSoundNameConverter >();
     mPreviousNameConverter = AudSingletonHolder< AudSoundNameConverter >::exchange(mSoundNameConverter.get());
 }
 
@@ -197,19 +155,16 @@ void AudSystemWrapper::releaseResources() noexcept {
     mMeNameConverter.reset();
     mSpeakerNameConverter.reset();
     mInfoResources.reset();
-    mNativeAudioArchive.clear();
-    mAudioArchive.reset();
     if (mSoundNameConverter && AudSingletonHolder< AudSoundNameConverter >::get() == mSoundNameConverter.get()) {
         AudSingletonHolder< AudSoundNameConverter >::exchange(mPreviousNameConverter);
     }
     mSoundNameConverter.reset();
-    if (JAUSoundNameTable::sInstance == &mSoundNameTable) {
+    if (mSoundNameTable && JAUSoundNameTable::sInstance == mSoundNameTable) {
         JAUSoundNameTable::sInstance = mPreviousNameTable;
     }
     mPreviousNameConverter = nullptr;
     mPreviousNameTable = nullptr;
-    mSoundNameTable.init(nullptr);
-    mSoundNameBytes.clear();
+    mSoundNameTable = nullptr;
 }
 
 void AudSystemWrapper::updateRhythm() {

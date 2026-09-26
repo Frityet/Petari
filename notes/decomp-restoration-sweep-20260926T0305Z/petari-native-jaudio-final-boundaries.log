@@ -1,0 +1,3 @@
+[pass] original JAISoundID layout and JAISoundStatus flags/prepare transitions
+[pass] Original BST, BSTN and BSC readers consume unchanged big-endian resources
+[pass] Original stream pool allocation, child ownership and cancellation before preparation

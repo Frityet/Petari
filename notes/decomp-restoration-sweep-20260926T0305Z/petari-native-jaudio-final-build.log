@@ -1,0 +1,25 @@
+[0mchecking for Xcode SDK ... [38;5;2;1m/Applications/Xcode.app (sdk: 27.0, arm64-apple-macos26.0)[0m
+[0mchecking for disc ... [38;5;1;1mno[0m
+[0mchecking for Xcode SDK ... [38;5;2;1m/Applications/Xcode.app (sdk: 27.0, arm64-apple-macos26.0)[0m
+[0m[38;5;2;1m[ 93%]:[0m [38;5;5;1m<aurora-base>[0m [38;5;5;1marchiving.debug libaurora-base.a[0m
+[0m[38;5;2;1m[ 93%]:[0m [38;5;5;1m<aurora-platform>[0m [38;5;5;1marchiving.debug libaurora-platform.a[0m
+[0m[38;5;2;1m[ 93%]:[0m [38;5;5;1m<aurora-os>[0m [38;5;5;1marchiving.debug libaurora-os.a[0m
+[0m[38;5;2;1m[ 93%]:[0m [38;5;5;1m<aurora-card>[0m [38;5;5;1marchiving.debug libaurora-card.a[0m
+[0m[38;5;2;1m[ 93%]:[0m [38;5;5;1m<aurora-ms>[0m [38;5;5;1marchiving.debug libaurora-ms.a[0m
+[0m[38;5;2;1m[ 93%]:[0m [38;5;5;1m<aurora-si>[0m [38;5;5;1marchiving.debug libaurora-si.a[0m
+[0m[38;5;2;1m[ 93%]:[0m [38;5;5;1m<aurora-vi>[0m [38;5;5;1marchiving.debug libaurora-vi.a[0m
+[0m[38;5;2;1m[ 93%]:[0m [38;5;5;1m<aurora-dvd>[0m [38;5;5;1marchiving.debug libaurora-dvd.a[0m
+[0m[38;5;2;1m[ 93%]:[0m [38;5;5;1m<aurora-pad>[0m [38;5;5;1marchiving.debug libaurora-pad.a[0m
+[0m[38;5;2;1m[ 93%]:[0m [38;5;5;1m<aurora-gx>[0m [38;5;5;1marchiving.debug libaurora-gx.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<aurora-core>[0m [38;5;5;1marchiving.debug libaurora-core.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<aurora-gd>[0m [38;5;5;1marchiving.debug libaurora-gd.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-render>[0m [38;5;5;1marchiving.debug libsmg-pc-render.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<aurora-thp>[0m [38;5;5;1marchiving.debug libaurora-thp.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-game>[0m [38;5;5;1marchiving.debug libsmg-pc-game.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-app>[0m [38;5;5;1marchiving.debug libsmg-pc-app.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-original-jai-sound-ownership-tests>[0m [38;5;5;1mlinking.debug smg-pc-original-jai-sound-ownership-tests[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-original-process-sfx-tests>[0m [38;5;5;1mlinking.debug smg-pc-original-process-sfx-tests[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc>[0m [38;5;5;1mlinking.debug smg-pc[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc>[0m [38;5;5;1mgenerating.xcode.debug smg-pc.app[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[38;5;2;1m[100%]:[0m [38;5;2;1mbuild ok, spent 4.909s[0m
