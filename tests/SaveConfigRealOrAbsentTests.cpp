@@ -3,6 +3,7 @@
 #include "Game/System/ConfigDataHolder.hpp"
 #include "Game/System/ConfigDataMisc.hpp"
 #include "Game/System/SysConfigFile.hpp"
+#include "common/BinaryChunkFile.hpp"
 #include "runtime/RuntimeServices.hpp"
 
 #include <algorithm>
@@ -63,7 +64,7 @@ void require_throws(const std::function<void()>& operation, std::string_view mes
 void test_decompiled_sources_are_byte_exact() {
     const auto project = find_project_root();
     constexpr auto sources = std::array{
-        "ConfigDataHolder.cpp", "ConfigDataMii.cpp",
+        "ConfigDataHolder.cpp", "ConfigDataMii.cpp", "BinaryDataChunkHolder.cpp",
         "UserFile.cpp",
     };
     for (const auto* name : sources) {
@@ -135,14 +136,16 @@ void test_sysconfig_uses_proven_retail_chunk() {
     require(loaded.getTimeAnnounced() == 0 && loaded.getTimeSent() == static_cast<OSTime>(0x0102030405060708ULL) &&
                 loaded.getSentBytes() == 0xaabbccddU,
             "retail SYSC data must round-trip through the host compatibility boundary");
-    require_throws<std::invalid_argument>([&] { loaded.loadFromDataBinary(bytes.data(), 51U); },
-                                          "truncated SYSC data must fail explicitly");
+    require(!smgpc::common::has_bounded_binary_chunks(std::span(bytes).first(51)),
+            "the host boundary rejects a truncated SYSC chunk extent");
+    loaded.loadFromDataBinary(bytes.data(), 51U);
+    require(loaded.getTimeSent() == static_cast<OSTime>(0x0102030405060708ULL) && loaded.getSentBytes() == 0xaabbccddU,
+            "the original SysConfigFile ignores a failed load and retains existing data");
 
     auto reject = [&](const auto& malformed) {
         loaded.setTimeSent(37);
         loaded.setSentBytes(41);
-        require_throws<std::invalid_argument>([&] { loaded.loadFromDataBinary(malformed.data(), malformed.size()); },
-                                              "SYSC must reject malformed attribute schemas");
+        loaded.loadFromDataBinary(malformed.data(), malformed.size());
         require(loaded.getTimeAnnounced() == 0 && loaded.getTimeSent() == 37 && loaded.getSentBytes() == 41,
                 "SYSC validates its entire schema before changing any existing values");
     };
@@ -188,8 +191,7 @@ void test_misc_legacy_and_signed_stream_bounds() {
                 misc.isOnCompleteEndingLuigi() && misc.getLastModified() == 0,
             "Legacy one-byte MISC retains flags and defaults the absent timestamp");
     for (u32 size = 2; size < golden.size(); ++size)
-        require(!misc.validateData(golden.data(), size), "MISC rejects partial timestamps");
-    require(!misc.validateData(golden.data(), 0xffffffffU), "MISC rejects sizes outside the signed JSU stream domain");
+        require(misc.deserialize(golden.data(), size) != 0, "MISC rejects partial timestamps");
     require(misc.deserialize(golden.data(), 0xffffffffU) != 0, "Oversized MISC input fails without reading an uninitialized flag");
     require_throws<std::length_error>([&] { misc.serialize(serialized.data(), 0xffffffffU); },
                                       "Oversized MISC output fails instead of producing an empty chunk");
@@ -217,6 +219,93 @@ void test_save_service_is_real_or_absent() {
     std::memcpy(&version, host_view->data() + 4U, sizeof(version));
     require(version == 2U,
             "only the outer PPC-struct ABI is translated for the host; the real payload remains authoritative");
+
+    const auto original = *service.read_file("GameData.bin");
+    const auto file_size = aurora::endian::read_u32(original.data() + 12);
+    const auto first_member = aurora::endian::read_u32(original.data() + 28);
+    auto publish_in_memory = [&](std::vector<u8> candidate) {
+        u16 sum = 0, inverse = 0;
+        for (std::size_t offset = 4; offset + 1 < file_size; offset += 2) {
+            const auto word = aurora::endian::read_u16(candidate.data() + offset);
+            sum += word;
+            inverse += static_cast<u16>(~word);
+        }
+        aurora::endian::write_big(candidate.data(), (u32(sum) << 16) | inverse);
+        service.nand().write_file("GameData.bin", candidate);
+    };
+    auto malformed = original;
+    aurora::endian::write_big(malformed.data() + first_member + 12, u32{0xffffffff});
+    publish_in_memory(malformed);
+    require_throws<std::runtime_error>([&] { static_cast<void>(service.read_nand_file("GameData.bin")); },
+                                      "NAND rejects an out-of-bounds chunk even with a valid outer checksum");
+    auto changed_hash = original;
+    changed_hash[first_member + 8] ^= 1;
+    publish_in_memory(changed_hash);
+    require(service.read_nand_file("GameData.bin").has_value(),
+            "NAND leaves chunk hash handling to the original loader");
+    malformed = original;
+    aurora::endian::write_big(malformed.data() + 12, u32{0xfffffff0});
+    service.nand().write_file("GameData.bin", malformed);
+    require_throws<std::runtime_error>([&] { static_cast<void>(service.read_nand_file("GameData.bin")); },
+                                      "NAND rejects a wrapped outer size before reading its checksum span");
+    service.nand().write_file("GameData.bin", original);
+}
+
+void test_original_chunk_error_continuation() {
+    struct Chunk final : BinaryDataChunkBase {
+        u32 signature, hash;
+        u8 value;
+        s32 status = 0;
+        std::vector<u32>* visits = nullptr;
+        Chunk(u32 signature, u32 hash, u8 value) : signature(signature), hash(hash), value(value) {}
+        u32 getSignature() const override { return signature; }
+        u32 makeHeaderHashCode() const override { return hash; }
+        s32 serialize(u8* bytes, u32 size) const override {
+            require(size >= 1, "chunk fixture output capacity");
+            bytes[0] = value;
+            return 1;
+        }
+        s32 deserialize(const u8* bytes, u32 size) override {
+            require(size == 1, "the original reader passes the precise payload size");
+            value = bytes[0];
+            visits->push_back(signature);
+            return status;
+        }
+        void initializeData() override { value = 0; }
+    };
+    Chunk first(1, 10, 0x11), unknown(99, 99, 0x22), second(2, 20, 0x33), last(3, 30, 0x44);
+    BinaryDataChunkHolder source(32, 4);
+    for (auto* chunk : {&first, &unknown, &second, &last}) source.addChunk(chunk);
+    std::array<u8, 64> bytes{};
+    const auto size = source.makeFileBinary(bytes.data(), bytes.size());
+    require(size == 56 && BinaryDataChunkHolder::calcBinarySize(bytes.data()) == size,
+            "the original serializer packs unaligned thirteen-byte chunks");
+    for (std::size_t length = 0; length < size; ++length)
+        require(!smgpc::common::has_bounded_binary_chunks(std::span(bytes).first(length)),
+                "the host rejects every truncated file extent before original unsized reads");
+    require(smgpc::common::has_bounded_binary_chunks(bytes), "valid file padding is allowed");
+    auto malformed = bytes;
+    aurora::endian::write_big(malformed.data() + 12, u32{0xffffffff});
+    require(!smgpc::common::has_bounded_binary_chunks(malformed), "overflowing chunk lengths are rejected");
+
+    Chunk a(1, 11, 0), b(2, 20, 0), c(3, 30, 0);
+    std::vector<u32> visits;
+    BinaryDataChunkHolder destination(32, 3);
+    for (auto* chunk : {&a, &b, &c}) {
+        chunk->visits = &visits;
+        destination.addChunk(chunk);
+    }
+    require(!destination.loadFromFileBinary(bytes.data(), size) && a.value == 0x11 && b.value == 0x33 && c.value == 0x44 &&
+                visits == std::vector<u32>{1, 2, 3},
+            "hash mismatch still deserializes matching chunks and skips unknown signatures");
+    visits.clear();
+    a.hash = 10;
+    b.status = 2;
+    c.value = 0;
+    require(!destination.loadFromFileBinary(bytes.data(), size) && c.value == 0x44 && visits == std::vector<u32>{1, 2, 3},
+            "deserialize failure is reported after processing later chunks");
+    b.status = 1;
+    require(destination.loadFromFileBinary(bytes.data(), size), "original status one is a successful load");
 }
 }  // namespace
 
@@ -226,6 +315,7 @@ int main() {
     test_sysconfig_uses_proven_retail_chunk();
     test_misc_legacy_and_signed_stream_bounds();
     test_save_service_is_real_or_absent();
-    std::cout << "Save/config real-or-absent tests passed: 5/5\n";
+    test_original_chunk_error_continuation();
+    std::cout << "Save/config real-or-absent tests passed: 6/6\n";
     return 0;
 }

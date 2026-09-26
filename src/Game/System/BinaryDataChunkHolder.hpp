@@ -1,6 +1,8 @@
 #pragma once
 
 #include <revolution/types.h>
+#include <aurora/endian.hpp>
+#include <cstddef>
 
 class BinaryDataChunkBase {
 public:
@@ -9,11 +11,6 @@ public:
     virtual s32 serialize(u8*, u32) const = 0;
     virtual s32 deserialize(const u8*, u32) = 0;
     virtual void initializeData() = 0;
-
-    // Native file loading checks every chunk before mutating any game state.
-    virtual bool validateData(const u8* pData, u32 size) const {
-        return size == 0 || pData != nullptr;
-    }
 };
 
 struct BinaryDataChunkHolderChunkData {
@@ -26,11 +23,14 @@ public:
         return (u8*)this + getDataOffset();
     }
 
-    /* 0x00 */ u32 mSignature;
-    /* 0x04 */ u32 mHash;
-    /* 0x08 */ u32 mChunkSize;
-    /* 0x0C */ void* mData;
+    /* 0x00 */ aurora::endian::BigEndian< u32 > mSignature;
+    /* 0x04 */ aurora::endian::BigEndian< u32 > mHash;
+    /* 0x08 */ aurora::endian::BigEndian< u32 > mChunkSize;
+    /* 0x0C */ u8 mData[];
 };
+
+static_assert(offsetof(BinaryDataChunkHolderChunkData, mData) == 0x0C);
+static_assert(alignof(BinaryDataChunkHolderChunkData) == 1);
 
 class BinaryDataChunkHolder {
 public:

@@ -22,6 +22,7 @@
 #include "Game/System/WPadRumbleData.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "render/J3dMatrix.hpp"
+#include "common/BinaryChunkFile.hpp"
 #include "resource/BmgMessageArchive.hpp"
 #include "resource/TextEncoding.hpp"
 
@@ -1716,7 +1717,7 @@ namespace smgpc::runtime {
         }
 
         const auto aligned_size = align_save_data_size(data_size);
-        if (aligned_size > bytes.size()) {
+        if (data_size > bytes.size() || aligned_size > bytes.size()) {
             return std::nullopt;
         }
 
@@ -1739,6 +1740,14 @@ namespace smgpc::runtime {
             const auto data_offset = read_save_u32(bytes, info_offset + SAVE_DATA_FILE_NAME_SIZE, byte_order);
             if (name.empty() || !file_size.has_value() || data_offset > data_size || *file_size > data_size - data_offset ||
                 decoded.contains(name)) {
+                return std::nullopt;
+            }
+
+            const auto next_offset = file_index + 1 < file_count ?
+                read_save_u32(bytes, info_offset + SAVE_DATA_FILE_INFO_SIZE + SAVE_DATA_FILE_NAME_SIZE, byte_order) : data_size;
+            if (data_offset < SAVE_DATA_HEADER_SIZE + file_count * SAVE_DATA_FILE_INFO_SIZE ||
+                next_offset < data_offset || next_offset > data_size ||
+                !common::has_bounded_binary_chunks(bytes.subspan(data_offset, next_offset - data_offset))) {
                 return std::nullopt;
             }
 

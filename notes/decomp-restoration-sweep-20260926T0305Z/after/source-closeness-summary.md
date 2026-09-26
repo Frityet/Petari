@@ -1,6 +1,6 @@
 # Source-Closeness Audit
 
-Generated: 2026-09-26T03:25:05Z
+Generated: 2026-09-26T03:38:05Z
 Repo root: `/Users/frityet/Projects/petari`
 PC root: `/Users/frityet/Projects/petari`
 
@@ -22,10 +22,10 @@ This is intentionally conservative. Anything not proven exact, compile-only, or 
 
 | Classification | All audited Game files | Target surface files |
 | --- | ---: | ---: |
-| `exact-source` | 1713 | 404 |
+| `exact-source` | 1715 | 406 |
 | `compile-only` | 375 | 59 |
 | `debug-only` | 0 | 0 |
-| `compat-temporary` | 1122 | 419 |
+| `compat-temporary` | 1120 | 417 |
 | `decomp-needed` | 1 | 1 |
 
 Audited original game-code files: 3211
@@ -75,7 +75,7 @@ Files with guarded debug probes or release-facing observer candidates: 36
 
 ## Required Migration
 
-Files requiring migration or decomp work: 1123
+Files requiring migration or decomp work: 1121
 
 - `Camera/CamHeliEffector.cpp`: `compat-temporary`
 - `Camera/CamHeliEffector.hpp`: `compat-temporary`
@@ -294,12 +294,10 @@ Files requiring migration or decomp work: 1123
 - `System/ArchiveHolder.hpp`: `compat-temporary`
 - `System/AudSystemWrapper.cpp`: `compat-temporary`
 - `System/AudSystemWrapper.hpp`: `compat-temporary`
-- `System/BinaryDataChunkHolder.cpp`: `compat-temporary`
 - `System/BinaryDataChunkHolder.hpp`: `compat-temporary`
 - `System/BinaryDataContentAccessor.cpp`: `compat-temporary`
 - `System/BinaryDataContentAccessor.hpp`: `compat-temporary`
 - `System/ConfigDataMisc.cpp`: `compat-temporary`
-- `System/ConfigDataMisc.hpp`: `compat-temporary`
 - `System/DrawBuffer.cpp`: `compat-temporary`
 - `System/DrawBuffer.hpp`: `compat-temporary`
 - `System/DrawBufferExecuter.cpp`: `compat-temporary`

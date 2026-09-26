@@ -101,7 +101,3 @@ void ConfigDataMisc::initializeData() {
     mFlag = FLAG_LAST_LOADED_MARIO;
     mLastModified = 0;
 }
-
-bool ConfigDataMisc::validateData(const u8* pData, u32 size) const {
-    return pData != nullptr && size <= 0x7fffffffU && (size == 1 || size >= 1 + sizeof(OSTime));
-}

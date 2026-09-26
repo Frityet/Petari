@@ -101,9 +101,7 @@ void SysConfigFile::makeDataBinary(u8* pBuffer, u32 size) const {
 }
 
 void SysConfigFile::loadFromDataBinary(const u8* pBuffer, u32 size) {
-    if (!mChunkHolder->loadFromFileBinary(pBuffer, size)) {
-        aurora::throw_host_exception< std::invalid_argument >("SYSC data is not a valid binary chunk file");
-    }
+    mChunkHolder->loadFromFileBinary(pBuffer, size);
 }
 
 s32 SysConfigChunk::serialize(u8* pBuffer, u32 size) const {

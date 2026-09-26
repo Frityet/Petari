@@ -78,7 +78,7 @@ public:
     virtual s32 serialize(u8*, u32) const;
     virtual s32 deserialize(const u8*, u32);
     virtual void initializeData();
-    bool validateData(const u8*, u32) const override;
+    bool validateData(const u8*, u32) const;
 
     s32 setup(const char*, int, int, int, f32*);
     void updateValue(const char*, int, int, f32);

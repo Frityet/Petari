@@ -241,13 +241,13 @@ int main() {
         }
         require(offset == size && path_offset != 0, "Complete original file extent");
         // Corrupt the first SPN1 galaxy block extent after earlier valid chunks.
-        // Validation must reject the whole file before mutating PLAY/FLG1/PCE1.
+        // The original holder applies earlier chunks and reports the later error.
         file[path_offset + 12 + 3] = 0xff;
         file[path_offset + 12 + 4] = 0xff;
         current.followStoryEventByName(smgpc::resource::encode_cp932("ゲーム開始直後").c_str());
         current_file.loadFromGameDataBinary(restore_current.game_name.c_str(), file.data(), size);
-        require(current_file.mIsGameDataCorrupted && current.mPlayerStatus->mStoryProgress == 0,
-                "Malformed later chunks must not partially apply earlier save state");
-        std::cout << "PASS six original chunks, 188 cached flag lookups, 14 story thresholds, Wii bytes and atomic validation\n";
+        require(current_file.mIsGameDataCorrupted && current.mPlayerStatus->mStoryProgress == 15,
+                "The original holder applies PLAY before reporting a malformed later chunk");
+        std::cout << "PASS six original chunks, 188 cached flag lookups, 14 story thresholds, Wii bytes and original error continuation\n";
     });
 }
