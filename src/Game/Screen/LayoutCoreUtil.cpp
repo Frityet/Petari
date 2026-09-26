@@ -38,9 +38,9 @@ namespace LayoutCoreUtil {
         }
 
         if (strncmp(pTextBox->mName, "Inf", 3) == 0) {
-            processor->mIsInf = true;
+            processor->mIsInfo = true;
         } else {
-            processor->mIsInf = false;
+            processor->mIsInfo = false;
         }
 
         pTextBox->mpTagProcessor = processor;

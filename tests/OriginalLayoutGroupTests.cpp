@@ -29,6 +29,7 @@
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <nw4r/lyt/group.h>
 #include <nw4r/lyt/animation.h>
+#include <nw4r/ut/TextWriterBase.h>
 #include <aurora/exception.hpp>
 #include <aurora/dvd.h>
 #include <bit>
@@ -187,6 +188,51 @@ Bytes derived_resource() {
     for (auto& entry : blocks) b.insert(b.end(), entry.begin(), entry.end()); put32(b, 8, b.size());
     return b;
 }
+void original_custom_tag_parameters(nw4r::lyt::TextBox& box, CustomTagProcessor& processor) {
+    nw4r::ut::TextWriterBase<wchar_t> writer;
+    writer.SetFont(*MR::getMenuFontNW4R());
+    writer.SetFontSize(box.mFontSize.width, box.mFontSize.height);
+    writer.SetTagProcessor(&processor);
+    const wchar_t numbers[] = {0x1a, 0x0e06, 0, 0, 0, 0, 2, '/', 0x1a, 0x0e06, 0, 0, 0, 0, 2, 0};
+    LayoutCoreUtil::setTextBoxMessage(&box, numbers);
+    processor.setArgNumber(-123, 2);
+    for (int occurrence = 0; occurrence < 2; ++occurrence) {
+        auto tag = processor.getReplaceTag(box.mTextBuf, 6, 2, occurrence);
+        require(tag.mMessage && tag.getParam32(0) == static_cast<u32>(-123),
+                "original argument lookup writes both matching signed parameters as retained UTF16 words");
+    }
+    require(writer.CalcStringWidth(box.mTextBuf, box.mTextLen) == writer.CalcStringWidth(L"-123/-123", 9),
+            "original tag renderer measures both native signed arguments through its number writer");
+    const wchar_t strings[] = {0x1a, 0x0e07, 0, 0, 0, 0, 3, 0};
+    LayoutCoreUtil::setTextBoxMessage(&box, strings);
+    const wchar_t* argument = L"native pointer";
+    processor.setArgString(argument, 3);
+    require(writer.CalcStringWidth(box.mTextBuf, box.mTextLen) == writer.CalcStringWidth(argument, 14),
+            "original string renderer retains the complete native borrowed pointer");
+    processor.setArgString(nullptr, 3);
+    require(writer.CalcStringWidth(box.mTextBuf, box.mTextLen) == 0,
+            "an unset original string argument contributes no text width");
+
+    processor.initAlpha(0.5f, 1.0f, 2, 3);
+    processor.mAlphaCtrl.mCharCount = 2;
+    require(processor.mAlphaCtrl.alpha() == 0 && !processor.mAlphaCtrl.isEnd(),
+            "original reveal starts behind its authored delay");
+    for (int frame = 0; frame < 3; ++frame) processor.mAlphaCtrl.update();
+    require(processor.mAlphaCtrl.alpha() == 127,
+            "original reveal preserves its half-alpha truncation after the start delay");
+    nw4r::ut::PrintContext<wchar_t> context{&writer, box.mTextBuf, 0, 0, 0};
+    nw4r::ut::Rect rect;
+    processor.exeDisplayGroupWait(&rect, 4, &context);
+    require(processor.mAlphaCtrl.mWaitTime == 0, "measuring an authored wait tag does not advance dialogue state");
+    processor.exeDisplayGroupWait(nullptr, 4, &context);
+    require(processor.mAlphaCtrl.mWaitTime == 4 && processor.mAlphaCtrl.alpha() == 0,
+            "drawing an authored wait tag delays the original reveal controller");
+    for (int frame = 0; frame < 20; ++frame) processor.mAlphaCtrl.update();
+    require(processor.mAlphaCtrl.isEnd() && processor.mAlphaCtrl.mFrame == 13,
+            "original reveal includes authored wait and end delay, then stops advancing");
+    std::cout << "Original custom tag argument rendering and dialogue reveal timing passed\n";
+}
+
 void materials_and_text(const std::filesystem::path& path) {
     for (int cycle = 0; cycle < 16; ++cycle) {
         smgpc::layout::LayoutRuntime runtime("Derived owner", "Fixture", 1, 0, path);
@@ -225,6 +271,7 @@ void materials_and_text(const std::filesystem::path& path) {
         require(frames > 1 && frames < 32, "actual reveal controller completes only after frame progression");
         processor->initAlpha(0, 0, 0, 0);
         require(processor->mAlphaCtrl.isEnd(), "instant reveal uses the actual controller's disabled mode");
+        if (cycle == 0) original_custom_tag_parameters(*box, *processor);
 
         std::weak_ptr<const HostTextureResourceState> retired;
         {
