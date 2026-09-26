@@ -15,12 +15,7 @@ public:
         releaseMe();
     }
 
-    void releaseMe() {
-        if (isMeAttached()) {
-            mMe->mHandle = nullptr;
-            mMe = nullptr;
-        }
-    }
+    void releaseMe();
 
     bool isMeAttached() const {
         return mMe != nullptr;

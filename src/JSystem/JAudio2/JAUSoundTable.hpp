@@ -124,7 +124,7 @@ struct JAUSoundTableGroup {
         if (index >= mNumItems) {
             return -1;
         }
-        return ((u8*)mItemOffsets)[index * 4];
+        return mItemOffsets[index] >> 24;
     }
 
     u32 getItemOffset(int index) const {

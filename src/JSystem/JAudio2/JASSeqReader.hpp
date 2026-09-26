@@ -1,6 +1,7 @@
 #pragma once
 
 #include <revolution/types.h>
+#include <aurora/endian.hpp>
 
 class JASSeqReader {
 public:
@@ -25,7 +26,7 @@ public:
     }
 
     u32 get24(u32 param_0) const {
-        return (*(u32*)(mSeqBuff + param_0 - 1)) & 0xffffff;
+        return (u32(mSeqBuff[param_0]) << 16) | (u32(mSeqBuff[param_0 + 1]) << 8) | mSeqBuff[param_0 + 2];
     }
 
     u32* getBase() {
@@ -38,11 +39,12 @@ public:
         return *(mSeqBuff + param_0);
     }
     u16 get16(u32 param_0) const {
-        return *(u16*)(mSeqBuff + param_0);
+        return aurora::endian::read_big<u16>(mSeqBuff + param_0);
     }
     u32 get32(u32 param_0) const {
-        return *(u32*)(mSeqBuff + param_0);
+        return aurora::endian::read_big<u32>(mSeqBuff + param_0);
     }
+    u32 getOffset() const { return static_cast<u32>(mSeqCursor - mSeqBuff); }
     u8* getCur() {
         return mSeqCursor;
     }
@@ -50,23 +52,14 @@ public:
         return *mSeqCursor++;
     }
     u32 read16() {
-#ifdef __MWERKS__
-        return *((u16*)mSeqCursor)++;
-#else
-        u16* value = (u16*)mSeqCursor;
+        const u32 value = aurora::endian::read_big<u16>(mSeqCursor);
         mSeqCursor += 2;
-        return *value;
-#endif
+        return value;
     }
     u32 read24() {
-        mSeqCursor--;
-#ifdef __MWERKS__
-        return (*((u32*)mSeqCursor)++) & 0x00ffffff;
-#else
-        u32* value = (u32*)mSeqCursor;
-        mSeqCursor += 4;
-        return *value & 0x00ffffff;
-#endif
+        const u32 value = (u32(mSeqCursor[0]) << 16) | (u32(mSeqCursor[1]) << 8) | mSeqCursor[2];
+        mSeqCursor += 3;
+        return value;
     }
     u16 getLoopCount() const {
         if (mNumStacks == 0) {

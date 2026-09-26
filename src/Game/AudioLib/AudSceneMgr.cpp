@@ -5,9 +5,7 @@
 #include "Game/AudioLib/AudWrap.hpp"
 #include "Game/RhythmLib/AudRhythmWrap.hpp"
 #include "Game/Speaker/SpkSystem.hpp"
-#include "Game/System/AudSystemWrapper.hpp"
 #include <JSystem/JAudio2/JAUSectionHeap.hpp>
-#include <cstring>
 
 namespace {
     static const AudSceneSoundInfo cSceneInfo[] = {
@@ -201,18 +199,10 @@ AudSceneMgr::AudSceneMgr(JAUSectionHeap* pSectionHeap)
 }
 
 bool AudSceneMgr::isLoadDoneSystemInit() {
-    if (!mSectionHeap && AudSystemWrapper::isOutputDisabled()) {
-        return true;
-    }
-
     return mSectionHeap->isWaveLoaded(7, 0);
 }
 
 void AudSceneMgr::loadStaticResource() {
-    if (!mSectionHeap && AudSystemWrapper::isOutputDisabled()) {
-        return;
-    }
-
     mSectionHeap->loadWaveArc(0);
     mSectionHeap->loadWaveArc(1);
     mSectionHeap->loadWaveArc(2);
@@ -227,10 +217,6 @@ void AudSceneMgr::loadStaticResource() {
 }
 
 bool AudSceneMgr::isLoadDoneStaticResource() {
-    if (!mSectionHeap && AudSystemWrapper::isOutputDisabled()) {
-        return true;
-    }
-
     bool loadDone = false;
 
     bool isLoaded0 = mSectionHeap->isWaveLoaded(0, 0);
@@ -274,10 +260,8 @@ void AudSceneMgr::loadStageResource(const AudSceneSoundInfo* pSoundInfo) {
         eraseLastBgmWaveSet();
         eraseLastSeWaveSet();
         if (mIsNewPlayerMode) {
-            if (mSectionHeap) {
-                mSectionHeap->eraseWaveArc(34, 2);
-                mSectionHeap->eraseWaveArc(34, 4);
-            }
+            mSectionHeap->eraseWaveArc(34, 2);
+            mSectionHeap->eraseWaveArc(34, 4);
             loadPlayerResource();
         }
 
@@ -295,10 +279,6 @@ void AudSceneMgr::loadStageResource(const AudSceneSoundInfo* pSoundInfo) {
 }
 
 bool AudSceneMgr::isLoadDoneStageResource() {
-    if (!mSectionHeap && AudSystemWrapper::isOutputDisabled()) {
-        return true;
-    }
-
     const s8* bgmWaveSet = ::cBgmWaveSet[mBgmWaveSetId];
     const s8* seWaveSet = ::cSeWaveSet[mSeWaveSetId];
 
@@ -360,10 +340,6 @@ void AudSceneMgr::loadScenarioResource(const AudSceneSoundInfo* pSoundInfo, s32 
 }
 
 bool AudSceneMgr::isLoadDoneScenarioResource() {
-    if (!mSectionHeap && AudSystemWrapper::isOutputDisabled()) {
-        return true;
-    }
-
     if (mSeScenarioWaveSetId < 0) {
         return true;
     }
@@ -384,14 +360,6 @@ bool AudSceneMgr::isLoadDoneScenarioResource() {
 
 void AudSceneMgr::startScene() {
     _4 = 0;
-    if (auto* wrapper = AudSystemWrapper::getCurrent()) {
-        wrapper->setTriggerSePermitted(true);
-        wrapper->setLevelSePermitted(true);
-    }
-    if (AudSystemWrapper::isOutputDisabled()) {
-        _1D = false;
-        return;
-    }
     AudWrap::getSystem()->_82A = false;
     AudWrap::getSystem()->_82B = false;
     AudWrap::getSystem()->_82C = false;
@@ -420,10 +388,6 @@ const AudSceneSoundInfo* AudSceneMgr::findSceneSoundInfo(const char* pSceneName,
 }
 
 void AudSceneMgr::eraseLastBgmWaveSet() {
-    if (!mSectionHeap && AudSystemWrapper::isOutputDisabled()) {
-        return;
-    }
-
     const s8* bgmWaveSet = ::cBgmWaveSet[mBgmWaveSetId];
 
     for (s32 i = 2 - 1; i >= 0; i--) {
@@ -434,10 +398,6 @@ void AudSceneMgr::eraseLastBgmWaveSet() {
 }
 
 void AudSceneMgr::eraseLastSeWaveSet() {
-    if (!mSectionHeap && AudSystemWrapper::isOutputDisabled()) {
-        return;
-    }
-
     const s8* seWaveSet = ::cSeWaveSet[mSeWaveSetId];
 
     for (s32 i = 4 - 1; i >= 0; i--) {
@@ -448,10 +408,6 @@ void AudSceneMgr::eraseLastSeWaveSet() {
 }
 
 void AudSceneMgr::eraseLastSeScenarioWaveSet() {
-    if (!mSectionHeap && AudSystemWrapper::isOutputDisabled()) {
-        return;
-    }
-
     if (mSeScenarioWaveSetId < 0) {
         return;
     }
@@ -466,10 +422,6 @@ void AudSceneMgr::eraseLastSeScenarioWaveSet() {
 }
 
 void AudSceneMgr::loadWaveSet(const s8* pWaveSet, s32 numItems) {
-    if (!mSectionHeap && AudSystemWrapper::isOutputDisabled()) {
-        return;
-    }
-
     for (s32 i = 0; i < numItems; i++) {
         if (pWaveSet[i] >= 0) {
             mSectionHeap->loadWaveArc(pWaveSet[i]);
@@ -486,10 +438,6 @@ void AudSceneMgr::setPlayerModeLuigi() {
 }
 
 bool AudSceneMgr::loadPlayerResource() {
-    if (!mSectionHeap && AudSystemWrapper::isOutputDisabled()) {
-        return true;
-    }
-
     switch (mPlayerMode) {
     case PlayerMode_Mario:
         return mSectionHeap->loadWaveArc(34, 2);
@@ -501,10 +449,6 @@ bool AudSceneMgr::loadPlayerResource() {
 }
 
 bool AudSceneMgr::isPlayerResourceLoaded() {
-    if (!mSectionHeap && AudSystemWrapper::isOutputDisabled()) {
-        return true;
-    }
-
     switch (mPlayerMode) {
     case PlayerMode_Mario:
         return mSectionHeap->isWaveLoaded(34, 1);

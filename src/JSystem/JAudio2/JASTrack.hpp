@@ -47,18 +47,7 @@ struct JASTrack : public JASPoolAllocObject_MultiThreaded< JASTrack > {
         /* 0x4c */ JASTrack* mTrack;
     };
 
-    struct TList : JGadget::TLinkList< JASTrack, -0x248 > {
-        TList() : mCallbackRegistered(false) {
-        }
-        void append(JASTrack*);
-        void seqMain();
-        ~TList() {
-        }
-
-        static s32 cbSeqMain(void*);
-
-        /* 0xC */ bool mCallbackRegistered;
-    };
+    struct TList;
 
     struct MoveParam_ {
         /* 0x00 */ f32 mValue;
@@ -354,3 +343,18 @@ struct JASTrack : public JASPoolAllocObject_MultiThreaded< JASTrack > {
     };
     /* 0x248 */ JGadget::TLinkListNode mNode;
 };
+
+struct JASTrack::TList {
+        typedef JGadget::TLinkList<JASTrack, -static_cast<int>(offsetof(JASTrack, mNode))> TrackList;
+        typedef TrackList::iterator iterator;
+        TList() : mCallbackRegistered() {
+        }
+
+        void append(JASTrack*);
+        void seqMain();
+
+        static s32 cbSeqMain(void*);
+
+        /* 0x0 */ TrackList mTracks;
+        /* 0xC */ bool mCallbackRegistered;
+    };

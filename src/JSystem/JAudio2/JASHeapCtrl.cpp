@@ -201,11 +201,24 @@ u32 JASHeap::getCurOffset() {
     return offset;
 }
 
+// A Wii process never returns through static destructors. Native process
+// retirement must unlink pool slots before the original arena is reclaimed.
+struct JASGenericMemPool::NativeLifetime final : JKRDisposer {
+    JASGenericMemPool* pool;
+    explicit NativeLifetime(JASGenericMemPool* owner) : pool(owner) {}
+    ~NativeLifetime() override {
+        pool->_0 = nullptr;
+        pool->mFreeMemCount = pool->mTotalMemCount = pool->mUsedMemCount = 0;
+        pool->mNativeLifetime = nullptr;
+    }
+};
+
 JASGenericMemPool::JASGenericMemPool() : _0(), mFreeMemCount(), mTotalMemCount(), mUsedMemCount() {
 }
 
 JASGenericMemPool::~JASGenericMemPool() {
     void* pChunk = _0;
+    delete mNativeLifetime;
     while (pChunk != nullptr) {
         void* pNextChunk = *(void**)pChunk;
         delete[] static_cast<u8*>(pChunk);
@@ -216,6 +229,8 @@ JASGenericMemPool::~JASGenericMemPool() {
 JKRSolidHeap* JASDram;
 
 void JASGenericMemPool::newMemPool(u32 size, int n) {
+    if (n > 0 && !mNativeLifetime && JASDram)
+        mNativeLifetime = new (JASDram, 0) NativeLifetime(this);
     void* pChunk;
     for (int i = 0; i < n; i++) {
         pChunk = new (JASDram, static_cast<int>(alignof(void*))) u8[std::max<std::size_t>(size, sizeof(void*))];

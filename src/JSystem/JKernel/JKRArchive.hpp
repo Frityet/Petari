@@ -151,6 +151,8 @@ public:
     [[nodiscard]] SDIDirEntry* findDirectory(const char*, u32) const;
     [[nodiscard]] SDIFileEntry* findIdxResource(u32) const;
 
+    static JKRArchive* mount(const char*, EMountMode, JKRHeap*, EMountDirection);
+    [[nodiscard]] SDIFileEntry* findIdResource(u16) const;
     static u32 sCurrentDirID;
     static JKRArchive* check_mount_already(std::uintptr_t);
     // Distinct from JKRDisposer::mHeap: this owns archive bytes, while the

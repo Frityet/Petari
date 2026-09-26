@@ -1,117 +1,4 @@
 #include "JSystem/JAudio2/JASAramStream.hpp"
-
-#if defined(TARGET_PC)
-#include <aurora/exception.hpp>
-#include <stdexcept>
-
-JASTaskThread* JASAramStream::sLoadThread;
-u8* JASAramStream::sReadBuffer;
-u32 JASAramStream::sBlockSize;
-u32 JASAramStream::sChannelMax;
-
-// Native DSP/ARAM streaming is not implemented. Preserve actual object state,
-// but never accept commands, attach a voice, or publish synthetic callbacks.
-namespace {
-    [[noreturn]] void unavailableAramOutput() {
-        aurora::throw_host_exception<std::logic_error>("JAS ARAM stream output is unavailable on this native backend");
-    }
-}
-
-JASAramStream::JASAramStream() : _0B8(), _0C4(), _0C8(), _114() {
-    mUpdateChannel = nullptr;
-    _0AC = false;
-    _0AD = false;
-    _0AE = 0;
-    _0B0 = 0;
-    _0B4 = 0;
-    _0BC = 0;
-    _0C0 = false;
-    _108 = 0;
-    _10C = 0;
-    mBlock = 0;
-    _118 = 0;
-    _12C = 0;
-    _148 = 0;
-    _14C = 0;
-    mCallback = nullptr;
-    mCallbackData = nullptr;
-    _158 = 0;
-    mChannelNum = 0;
-    mBufCount = 0;
-    _160 = 0;
-    _164 = 0;
-    mLoop = false;
-    mLoopStart = 0;
-    mLoopEnd = 0;
-    mVolume = 1.0f;
-    mPitch = 1.0f;
-    for (int i = 0; i < 6; i++) {
-        mChannels[i] = nullptr;
-        _130[i] = 0;
-        _13C[i] = 0;
-        mChannelVolume[i] = 1.0f;
-        mChannelPan[i] = 0.5f;
-        mChannelFxMix[i] = 0.0f;
-        mChannelDolby[i] = 0.0f;
-    }
-
-    for (int i = 0; i < 6; i++) {
-        _1DC[i] = 0;
-    }
-}
-
-void JASAramStream::init(uintptr_t param_0, u32 param_1, StreamCallback i_callback, void* i_callbackData) {
-    _148 = param_0;
-    _14C = param_1;
-    _0C8 = 0.0f;
-    _0AE = 0;
-    _0AC = false;
-    _0AD = false;
-    _114 = 0;
-    mChannelNum = 0;
-    for (int i = 0; i < 6; i++) {
-        mChannelVolume[i] = 1.0f;
-        mChannelPan[i] = 0.5f;
-        mChannelFxMix[i] = 0.0f;
-        mChannelDolby[i] = 0.0f;
-    }
-
-    mVolume = 1.0f;
-    mPitch = 1.0f;
-    _1DC[0] = 0xffff;
-    mCallback = i_callback;
-    mCallbackData = i_callbackData;
-    OSInitMessageQueue(&_000, _040, 0x10);
-    OSInitMessageQueue(&_020, _080, 4);
-}
-
-u32 JASAramStream::getBlockSamples() const {
-    return _158 == 0 ? (sBlockSize << 4) / 9 : sBlockSize >> 1;
-}
-
-void JASAramStream::initSystem(u32, u32) { unavailableAramOutput(); }
-bool JASAramStream::prepare(s32, int) { return false; }
-bool JASAramStream::start() { return false; }
-bool JASAramStream::stop(u16) { return false; }
-bool JASAramStream::pause(bool) { return false; }
-bool JASAramStream::cancel() { _114 = 1; return false; }
-bool JASAramStream::headerLoad(u32, int) { return false; }
-bool JASAramStream::load() { return false; }
-void JASAramStream::headerLoadTask(void*) { unavailableAramOutput(); }
-void JASAramStream::firstLoadTask(void*) { unavailableAramOutput(); }
-void JASAramStream::loadToAramTask(void*) { unavailableAramOutput(); }
-void JASAramStream::finishTask(void*) { unavailableAramOutput(); }
-void JASAramStream::prepareFinishTask(void*) { unavailableAramOutput(); }
-s32 JASAramStream::channelProcCallback(void*) { unavailableAramOutput(); }
-s32 JASAramStream::dvdErrorCheck(void*) { unavailableAramOutput(); }
-void JASAramStream::channelCallback(u32, JASChannel*, JASDsp::TChannel*, void*) { unavailableAramOutput(); }
-void JASAramStream::updateChannel(u32, JASChannel*, JASDsp::TChannel*) { unavailableAramOutput(); }
-s32 JASAramStream::channelProc() { unavailableAramOutput(); }
-void JASAramStream::channelStart() { unavailableAramOutput(); }
-void JASAramStream::channelStop(u16) { unavailableAramOutput(); }
-
-#else
-#include "JSystem/JAudio2/JASAramStream.hpp"
 #include "JSystem/JAudio2/JASAiCtrl.hpp"
 #include "JSystem/JAudio2/JASChannel.hpp"
 #include "JSystem/JAudio2/JASCriticalSection.hpp"
@@ -230,7 +117,7 @@ bool JASAramStream::prepare(s32 param_0, int param_1) {
     data.stream = this;
     data._4 = _14C;
     data._8 = param_1;
-    if (!sLoadThread->sendCmdMsg(headerLoadTask, &data, 0xc)) {
+    if (!sLoadThread->sendCmdMsg(headerLoadTask, &data, sizeof(TaskData))) {
         JASDriver::rejectCallback(channelProcCallback, this);
         return false;
     }
@@ -299,7 +186,7 @@ void JASAramStream::firstLoadTask(void* i_data) {
 
     if (data->_4 != 0) {
         data->_4--;
-        if (!sLoadThread->sendCmdMsg(firstLoadTask, data, 0xc)) {
+        if (!sLoadThread->sendCmdMsg(firstLoadTask, data, sizeof(TaskData))) {
             UNK_BOOL_B = true;
         }
 
@@ -377,7 +264,7 @@ bool JASAramStream::headerLoad(u32 param_0, int param_1) {
     data.stream = this;
     data._4 = _108 - 1;
     data._8 = param_1;
-    if (!sLoadThread->sendCmdMsg(firstLoadTask, &data, 0xc)) {
+    if (!sLoadThread->sendCmdMsg(firstLoadTask, &data, sizeof(TaskData))) {
         UNK_BOOL_B = true;
         return false;
     }
@@ -700,7 +587,7 @@ void JASAramStream::updateChannel(u32 i_callbackType, JASChannel* i_channel, JAS
 s32 JASAramStream::channelProc() {
     OSMessage msg;
     while (OSReceiveMessage(&_020, &msg, OS_MESSAGE_NOBLOCK)) {
-        switch ((u32)msg) {
+        switch ((uintptr_t)msg) {
         case 4:
             _0AC = true;
             break;
@@ -715,12 +602,12 @@ s32 JASAramStream::channelProc() {
     }
 
     while (OSReceiveMessage(&_000, &msg, OS_MESSAGE_NOBLOCK)) {
-        switch ((u32)msg & 0xff) {
+        switch ((uintptr_t)msg & 0xff) {
         case 0:
             channelStart();
             break;
         case 1:
-            channelStop(JSUHiHalf((u32)msg));
+            channelStop(JSUHiHalf((uintptr_t)msg));
             break;
         case 2:
             _0AE |= 1;
@@ -811,5 +698,3 @@ void JASAramStream::channelStop(u16 i_directRelease) {
         }
     }
 }
-
-#endif

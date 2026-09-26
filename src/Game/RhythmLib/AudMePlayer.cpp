@@ -1,13 +1,3 @@
-#if defined(TARGET_PC)
-#include "Game/RhythmLib/AudMePlayer.hpp"
-
-// ME output is unavailable until the actual rhythm/track graph is initialized.
-// Decline before allocating an AudMe or attaching the caller's handle.
-bool AudMeMgr::startMe(u32, AudMeHandle*, const TVec3f*) {
-    return false;
-}
-
-#else
 #include "Game/RhythmLib/AudMeTrack.hpp"
 
 #include "Game/AudioLib/AudSystem.hpp"
@@ -395,13 +385,12 @@ void AudMePlayingParamsHolder::setResource(void* pRes) {
 
     mNumEntries = numEntries;
 
-    const char** offsets = (const char**)((s32)pRes + namesOff);
-    mParams = (AudMePlayingParams*)((s32)pRes + entryOff);
+    const char** offsets = (const char**)((uintptr_t)pRes + namesOff);
+    mParams = (AudMePlayingParams*)((uintptr_t)pRes + entryOff);
 
     for (u32 i = 0; i < numEntries; i++) {
-        offsets[i] += (s32)pRes;
+        offsets[i] += (uintptr_t)pRes;
     }
 
     mNames = (const char**)offsets;
 }
-#endif

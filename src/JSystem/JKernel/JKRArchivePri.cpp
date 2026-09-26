@@ -299,3 +299,12 @@ std::span<const std::uint8_t> JKRArchive::resource_data(const smgpc::resource::R
     }
     return mArchive->file_data(entry);
 }
+
+JKRArchive::SDIFileEntry* JKRArchive::findIdResource(u16 id) const {
+    if (id == 0xffff || !mInfoBlock) return nullptr;
+    if (id < mInfoBlock->mNrFiles && mFiles[id].mFileID == id && (mFiles[id].mFlag & FILE_FLAG_FILE))
+        return &mFiles[id];
+    for (u32 i = 0; i < mInfoBlock->mNrFiles; ++i)
+        if (mFiles[i].mFileID == id && (mFiles[i].mFlag & FILE_FLAG_FILE)) return &mFiles[i];
+    return nullptr;
+}

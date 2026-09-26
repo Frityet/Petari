@@ -61,8 +61,8 @@ namespace JASDsp {
         /* 0x00A */ u8 _A[0x00C - 0x00A];
         /* 0x00C */ s16 mPauseFlag;
         /* 0x00E */ short _E;
-        /* 0x010 */ u16 _10[1][4];  // array size unknown
-        /* 0x018 */ u8 _18[0x050 - 0x018];
+        /* 0x010 */ u16 _10[6][4];
+        /* 0x018 */ u8 _40[0x050 - 0x040];
         /* 0x050 */ u16 _50;
         /* 0x052 */ u16 _52;
         /* 0x054 */ u16 _54;
@@ -99,10 +99,7 @@ namespace JASDsp {
         /* 0x158 */ u8 _158[0x180 - 0x158];
     };
 
-    void boot(void (*)(void*));
     void releaseHalt(u32);
-    void finishWork(u16);
-    void syncFrame(u32, u32, u32);
     void setDSPMixerLevel(f32);
     f32 getDSPMixerLevel();
     TChannel* getDSPHandle(int);

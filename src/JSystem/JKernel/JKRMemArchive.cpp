@@ -1,3 +1,4 @@
+#include "JSystem/JKernel/JKRDvdRipper.hpp"
 #include "JSystem/JKernel/JKRMemArchive.hpp"
 #include "JSystem/JKernel/JKRDecomp.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
@@ -138,4 +139,28 @@ void *JKRMemArchive::fetchResource(SDIFileEntry *pFile, u32 *pSize) {
     }
 
     return pFile->mFileData;
+}
+
+JKRArchive* JKRArchive::mount(const char* path, EMountMode mode, JKRHeap* heap, EMountDirection direction) {
+    if (mode != MOUNT_MODE_MEM && mode != MOUNT_MODE_DVD)
+        aurora::throw_host_exception<std::invalid_argument>("Native archive mount requires MEM or DVD mode");
+    const auto entry = DVDConvertPathToEntrynum(path);
+    if (entry < 0) return nullptr;
+    if (auto* mounted = check_mount_already(entry)) return mounted;
+    u32 size = 0;
+    void* data = JKRDvdToMainRam(entry, nullptr, EXPAND_SWITCH_UNKNOWN1, 0, heap,
+        direction == MOUNT_DIRECTION_1 ? JKRDvdRipper::ALLOC_DIRECTION_FORWARD : JKRDvdRipper::ALLOC_DIRECTION_BACKWARD,
+        0, nullptr, &size);
+    if (!data) return nullptr;
+    // The native DVD cache shares the bounded RARC resource implementation.
+    // Both modes retain their resource bytes until the mounted volume retires.
+    auto* archive = new (heap, 0) JKRMemArchive;
+    if (!archive->mountFixed({static_cast<const u8*>(data), size}, JKR_MEM_BREAK_FLAG_1)) {
+        delete archive;
+        JKRHeap::free(data, heap);
+        return nullptr;
+    }
+    archive->mEntryNum = entry;
+    archive->mMountMode = mode;
+    return archive;
 }

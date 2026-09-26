@@ -1,4 +1,5 @@
 #pragma once
+#include <aurora/ppc_bitfield.hpp>
 
 #include "JSystem/JAudio2/JASHeapCtrl.hpp"
 #include "JSystem/JAudio2/JASLfo.hpp"
@@ -72,11 +73,7 @@ public:
 
     union MixConfig {
         u16 whole;
-        struct {
-            u8 upper;
-            u8 lower0 : 4;
-            u8 lower1 : 4;
-        } parts;
+        struct { AURORA_PPC_BITFIELD_GROUP(u16, (upper, 8), (lower0, 4), (lower1, 4)) } parts;
     };
 
     JASChannel(Callback, void*);

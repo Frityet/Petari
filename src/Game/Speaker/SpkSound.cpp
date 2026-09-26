@@ -1,20 +1,3 @@
-#if defined(TARGET_PC)
-#include "Game/Speaker/SpkSound.hpp"
-#include "Game/Speaker/SpkSpeakerCtrl.hpp"
-#include "Game/Speaker/SpkSystem.hpp"
-#include <JSystem/JAudio2/JASCriticalSection.hpp>
-#include <JSystem/JAudio2/JASHeapCtrl.hpp>
-
-void SpkSoundHandle::releaseSound() {
-    if (!mSound) {
-        return;
-    }
-
-    mSound->mSoundHandle = nullptr;
-    mSound = nullptr;
-}
-
-#else
 #include "Game/Speaker/SpkSound.hpp"
 #include "Game/Speaker/SpkSpeakerCtrl.hpp"
 #include "Game/Speaker/SpkSystem.hpp"
@@ -348,5 +331,3 @@ void SpkSoundHolder::framework() {
         freeDeadSound(i);
     }
 }
-
-#endif

@@ -137,9 +137,7 @@ public:
     JAUWaveBankTable& getWaveBankTable() {
         return sectionHeapData_.waveBankTable;
     }
-    JAUSoundTable* getSoundTable() NO_INLINE {
-        return sectionHeapData_.soundTable;
-    }
+    JAUSoundTable* getSoundTable();
     JKRHeap* getHeap() {
         if (getOpenSection()->isBuilding() != 0) {
             return mHeap;

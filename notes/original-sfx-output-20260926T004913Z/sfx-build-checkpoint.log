@@ -1,0 +1,71 @@
+[  1%]: <smg-pc-original-process-sfx-tests> cache compiling.debug tests/OriginalProcessSfxTests.cpp
+[  7%]: <smg-pc-game> cache compiling.debug src/Game/AudioLib/AudWrap.cpp
+[  8%]: <smg-pc-game> cache compiling.debug src/Game/AudioLib/AudBgmRhythmStrategy.cpp
+[  8%]: <smg-pc-game> cache compiling.debug src/Game/AudioLib/AudSoundObject.cpp
+[  8%]: <smg-pc-game> cache compiling.debug src/Game/AudioLib/AudSceneMgr.cpp
+[  8%]: <smg-pc-game> cache compiling.debug src/Game/AudioLib/AudMeNameConverter.cpp
+[  8%]: <smg-pc-game> cache compiling.debug src/Game/AudioLib/AudEffector.cpp
+[  8%]: <smg-pc-game> cache compiling.debug src/Game/AudioLib/AudBgm.cpp
+[  8%]: <smg-pc-game> cache compiling.debug src/Game/AudioLib/AudSeStrategy.cpp
+[  9%]: <smg-pc-game> cache compiling.debug src/Game/AudioLib/AudSystem.cpp
+[  9%]: <smg-pc-game> cache compiling.debug src/Game/RhythmLib/AudMePlayer.cpp
+[  9%]: <smg-pc-game> cache compiling.debug src/Game/RhythmLib/AudMeTrack.cpp
+[ 10%]: <smg-pc-game> cache compiling.debug src/Game/RhythmLib/AudRhythmWrap.cpp
+[ 10%]: <smg-pc-game> cache compiling.debug src/Game/RhythmLib/AudRhythmMeSystem.cpp
+[ 10%]: <smg-pc-game> cache compiling.debug src/Game/RhythmLib/AudMeSeqParser.cpp
+[ 10%]: <smg-pc-game> cache compiling.debug src/Game/GameAudio/AudCameraWatcher.cpp
+[ 10%]: <smg-pc-game> cache compiling.debug src/Game/GameAudio/AudEffectDirector.cpp
+[ 42%]: <smg-pc-game> cache compiling.debug src/Game/System/AudSystemWrapper.cpp
+[ 82%]: <smg-pc-game> cache compiling.debug src/runtime/JasAudioDriver.cpp
+[ 85%]: <smg-pc-game> cache compiling.debug src/JSystem/JAudio2/JASAramStream.cpp
+[ 85%]: <smg-pc-game> cache compiling.debug src/JSystem/JAudio2/JASTrack.cpp
+src/JSystem/JAudio2/JASAramStream.cpp:427:29: warning: increment of object of volatile-qualified type 'volatile u32' (aka 'volatile unsigned int') is deprecated [-Wdeprecated-volatile]
+  427 |                         _0C4++;
+      |                             ^
+1 warning generated.
+[ 88%]: <smg-pc-game> cache compiling.debug src/JSystem/JAudio2/JASChannel.cpp
+[ 88%]: <smg-pc-game> cache compiling.debug src/JSystem/JAudio2/JASDSPChannel.cpp
+[ 88%]: <smg-pc-game> cache compiling.debug src/JSystem/JAudio2/JASDriverIF.cpp
+[ 90%]: <smg-pc-game> cache compiling.debug src/JSystem/JAudio2/JASAudioReseter.cpp
+[ 90%]: <smg-pc-game> cache compiling.debug src/JSystem/JAudio2/JAUInitializer.cpp
+[ 90%]: <smg-pc-game> cache compiling.debug src/JSystem/JAudio2/JASDSPInterface.cpp
+src/JSystem/JAudio2/JASTrack.cpp:713:17: warning: using the result of an assignment as a condition without parentheses [-Wparentheses]
+  713 |     for (; next = parent->mParent; parent = next)
+      |            ~~~~~^~~~~~~~~~~~~~~~~
+src/JSystem/JAudio2/JASTrack.cpp:713:17: note: place parentheses around the assignment to silence this warning
+  713 |     for (; next = parent->mParent; parent = next)
+      |                 ^
+      |            (                     )
+src/JSystem/JAudio2/JASTrack.cpp:713:17: note: use '==' to turn this assignment into an equality comparison
+  713 |     for (; next = parent->mParent; parent = next)
+      |                 ^
+      |                 ==
+In file included from src/JSystem/JAudio2/JASTrack.cpp:1:
+In file included from src/JSystem/JAudio2/JASTrack.hpp:11:
+src/JSystem/JGadget/linklist.hpp:18:28: warning: 'iterator<std::bidirectional_iterator_tag, JASTrack, int>' is deprecated [-Wdeprecated-declarations]
+   18 |     class TIterator : std::iterator< Category, T, Distance, Pointer, Reference > {
+      |                            ^
+In file included from src/Game/RhythmLib/AudMeTrack.cpp:1:
+In file included from src/Game/RhythmLib/AudMeTrack.hpp:8:
+src/JSystem/JGadget/linklist.hpp:18:28: warning: 'iterator<std::bidirectional_iterator_tag, AudMeTrack, int>' is deprecated [-Wdeprecated-declarations]
+   18 |     class TIterator : std::iterator< Category, T, Distance, Pointer, Reference > {
+      |                            ^
+src/JSystem/JGadget/linklist.hpp:136:34: note: in instantiation of template class 'JGadget::TIterator<std::bidirectional_iterator_tag, AudMeTrack>' requested here
+  136 |         struct iterator : public TIterator< std::bidirectional_iterator_tag, T >, public TNodeLinkList::iterator {
+      |                                  ^
+src/Game/RhythmLib/AudMeTrack.cpp:812:24: note: in instantiation of member class 'JGadget::TLinkList<AudMeTrack, -552>::iterator' requested here
+  812 |     for (iterator it = begin(); it != end();) {
+      |                        ^
+/opt/homebrew/Cellar/llvm/23.1.1/include/c++/v1/__iterator/iterator.h:23:23: note: 'iterator<std::bidirectional_iterator_tag, AudMeTrack, int>' has been explicitly marked deprecated here
+   23 | struct __attribute__((__deprecated__)) iterator {
+      |                       ^
+1 warning generated.
+src/Game/AudioLib/AudSystem.cpp:60:59: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   60 |     int init_JAS_JAI_(JKRSolidHeap* pHeap) __attribute__((noinline)) {
+      |                                                           ^
+1 warning generated.
+[ 94%]: <smg-pc-game> archiving.debug libsmg-pc-game.a
+[ 94%]: <smg-pc-app> archiving.debug libsmg-pc-app.a
+[ 94%]: <smg-pc-original-process-sfx-tests> linking.debug smg-pc-original-process-sfx-tests
+create ok!
+[100%]: build ok, spent 4.576s

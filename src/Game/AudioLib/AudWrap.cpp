@@ -5,28 +5,10 @@
 #include "Game/AudioLib/AudSoundNameConverter.hpp"
 #include "Game/AudioLib/AudSystem.hpp"
 #include "Game/RhythmLib/AudRhythmWrap.hpp"
-#include "Game/System/AudSystemWrapper.hpp"
-#include <aurora/exception.hpp>
-#include <stdexcept>
-#include <string>
-
-namespace {
-    template < typename T >
-    T* requireOwner(T* owner, const char* name) {
-        if (owner == nullptr) {
-            aurora::throw_host_exception< std::logic_error >(std::string("Audio owner is unavailable: ") + name);
-        }
-        return owner;
-    }
-
-    AudSystemWrapper* getWrapper() {
-        return requireOwner(AudSystemWrapper::getCurrent(), "AudSystemWrapper");
-    }
-}  // namespace
 
 namespace AudWrap {
     AudSystem* getSystem() {
-        return requireOwner(AudSystem::msBasic, "AudSystem");
+        return AudSystem::msBasic;
     }
 
     AudSoundInfo* getSoundInfo() {
@@ -34,11 +16,11 @@ namespace AudWrap {
     }
 
     AudSceneMgr* getSceneMgr() {
-        return requireOwner(getWrapper()->getSceneMgr(), "AudSceneMgr");
+        return getSystem()->mSceneMgr;
     }
 
     AudBgmMgr* getBgmMgr() {
-        return requireOwner(getWrapper()->getBgmMgr(), "AudBgmMgr");
+        return &getSystem()->mBgmMgr;
     }
 
     AudBgm* getStageBgm() {
@@ -66,7 +48,7 @@ namespace AudWrap {
     }
 
     AudSoundObject* getSystemSeObject() {
-        return requireOwner(getWrapper()->getSystemSeObject(), "system sound object");
+        return getSystem()->mSystemSeObject;
     }
 
     AudSoundObject* getAtmosphereSeObject() {
@@ -74,7 +56,7 @@ namespace AudWrap {
     }
 
     AudSoundObjHolder* getSoundObjHolder() {
-        return requireOwner(getWrapper()->getSoundObjHolder(), "AudSoundObjHolder");
+        return getSystem()->mSoundObjHolder;
     }
 
     AudRhythmMeSystem* getRhythmMeSystem() {
@@ -86,7 +68,7 @@ namespace AudWrap {
     }
 
     AudRemixMgr* getRemixMgr() {
-        return requireOwner(getWrapper()->getRemixMgr(), "AudRemixMgr");
+        return getSystem()->mRemixMgr;
     }
 
     AudRemixSequencer* getRemixSequencer() {

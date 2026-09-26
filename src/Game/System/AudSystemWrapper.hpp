@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 
+namespace smgpc::resource { class AudioInfoResources; }
 class AudSystem;
 class AudSceneMgr;
 class AudBgmMgr;
@@ -80,19 +81,14 @@ private:
     // Bytes precede all original borrowers; destruction releases the converter
     // and its arrays before the native table and decoded byte storage.
     std::vector< u8 > mSoundNameBytes;
-    std::vector< u32 > mRemixSequenceWords;
+    std::vector< u8 > mNativeAudioArchive;
+    std::unique_ptr<smgpc::resource::AudioInfoResources> mInfoResources;
     JAUSoundNameTable mSoundNameTable{false};
     JAUSoundNameTable* mPreviousNameTable = nullptr;
     AudSoundNameConverter* mPreviousNameConverter = nullptr;
     std::unique_ptr< AudSoundNameConverter > mSoundNameConverter;
     std::shared_ptr< aurora::audio::PcmAudioMixer > mStreamMixer;
     std::shared_ptr< aurora::audio::JAudioSoundArchive > mStreamArchive;
-    std::unique_ptr< JAIStreamMgr > mStreamMgr;
-    std::unique_ptr< AudSceneMgr > mSceneMgr;
-    std::unique_ptr< AudBgmMgr > mBgmMgr;
-    std::unique_ptr< AudSoundObjHolder > mSoundObjHolder;
-    std::unique_ptr< AudSoundObject > mSystemSeObject;
-    std::unique_ptr< AudRemixMgr > mRemixMgr;
     InitializePhase mInitializePhase = InitializePhase::Created;
     bool mStaticWaveRequested = false;
     bool mStageWaveRequested = false;

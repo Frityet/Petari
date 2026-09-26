@@ -77,6 +77,9 @@ public:
         return mUsedMemCount;
     }
 
+    struct NativeLifetime;
+    NativeLifetime* mNativeLifetime = nullptr;
+
     /* 0x0 */ void* _0;
     /* 0x4 */ u32 mFreeMemCount;
     /* 0x8 */ u32 mTotalMemCount;

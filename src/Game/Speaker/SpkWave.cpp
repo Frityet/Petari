@@ -43,5 +43,5 @@ s16* SpkWave::getWave(s32 wave) const {
 }
 
 WaveData* SpkWave::getWaveData(s32 wave) const {
-    return (WaveData*)((u32)mResource + *(u32*)((u32)mResource + wave * 4 + 8));
+    return (WaveData*)((uintptr_t)mResource + *(u32*)((uintptr_t)mResource + wave * 4 + 8));
 }

@@ -3,9 +3,9 @@
 #include "Game/RhythmLib/AudMeChannelMgr.hpp"
 #include "Game/RhythmLib/AudMeSeqCtrl.hpp"
 #include "Game/RhythmLib/AudMeTrackCallback.hpp"
-#include "JSystem/JAudio2/JASBankTable.hpp"
-#include "JSystem/JAudio2/JASDSPInterface.hpp"
-#include "JSystem/JGadget/linklist.hpp"
+#include <JSystem/JAudio2/JASBankTable.hpp>
+#include <JSystem/JAudio2/JASDSPInterface.hpp>
+#include <JSystem/JGadget/linklist.hpp>
 #include <JSystem/JAudio2/JASHeapCtrl.hpp>
 #include <JSystem/JAudio2/JASOscillator.hpp>
 
@@ -65,21 +65,7 @@ public:
         /* 0x12 */ u8 mNoteRangeStart;
     };
 
-    struct TList : JGadget::TLinkList< AudMeTrack, -384 > {
-        TList() : mCallbackRegistered(false) {
-        }
-
-        ~TList() {
-        }
-
-        static s32 cbSeqMain(s32, s32, void*);
-
-        void append(AudMeTrack*);
-        void seqMain(s32, s32);
-        AudMeTrack* getSameME(AudMeTrack*, u32);
-
-        /* 0xC */ bool mCallbackRegistered;
-    };
+    struct TList;
 
     operator JGadget::TLinkListNode() {
         return mNode;
@@ -299,3 +285,19 @@ public:
     /* 0x16C */ TTrackInfo mTrackInfo;
     /* 0x180 */ JGadget::TLinkListNode mNode;
 };
+
+struct AudMeTrack::TList : JGadget::TLinkList< AudMeTrack, -static_cast<int>(offsetof(AudMeTrack, mNode)) > {
+        TList() : mCallbackRegistered(false) {
+        }
+
+        ~TList() {
+        }
+
+        static s32 cbSeqMain(s32, s32, void*);
+
+        void append(AudMeTrack*);
+        void seqMain(s32, s32);
+        AudMeTrack* getSameME(AudMeTrack*, u32);
+
+        /* 0xC */ bool mCallbackRegistered;
+    };

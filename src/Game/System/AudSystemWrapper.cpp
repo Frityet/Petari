@@ -11,7 +11,11 @@
 #include "Game/Util/FileUtil.hpp"
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
-#include "resource/RemixSequenceResource.hpp"
+#include "resource/AudioInfoResource.hpp"
+#include "runtime/JasAudioDriver.hpp"
+#include "Game/AudioLib/AudSystem.hpp"
+#include "Game/AudioLib/AudMicWrap.hpp"
+#include "Game/RhythmLib/AudRhythmMeSystem.hpp"
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/JKernel/JKRMemArchive.hpp>
 #include <JSystem/JKernel/JKRSolidHeap.hpp>
@@ -72,31 +76,33 @@ bool AudSystemWrapper::isOutputDisabled() {
 }
 
 AudSceneMgr* AudSystemWrapper::getSceneMgr() const noexcept {
-    return mInitializePhase == InitializePhase::Initialized ? mSceneMgr.get() : nullptr;
+    return mInitializePhase == InitializePhase::Initialized ? mAudSystem->mSceneMgr : nullptr;
 }
 
 AudBgmMgr* AudSystemWrapper::getBgmMgr() const noexcept {
-    return mInitializePhase == InitializePhase::Initialized ? mBgmMgr.get() : nullptr;
+    return mInitializePhase == InitializePhase::Initialized ? &mAudSystem->mBgmMgr : nullptr;
 }
 
 AudSoundObject* AudSystemWrapper::getSystemSeObject() const noexcept {
-    return mInitializePhase == InitializePhase::Initialized ? mSystemSeObject.get() : nullptr;
+    return mInitializePhase == InitializePhase::Initialized ? mAudSystem->mSystemSeObject : nullptr;
 }
 
 AudSoundObjHolder* AudSystemWrapper::getSoundObjHolder() const noexcept {
-    return mInitializePhase == InitializePhase::Initialized ? mSoundObjHolder.get() : nullptr;
+    return mInitializePhase == InitializePhase::Initialized ? mAudSystem->mSoundObjHolder : nullptr;
 }
 
 AudRemixMgr* AudSystemWrapper::getRemixMgr() const noexcept {
-    return mInitializePhase == InitializePhase::Initialized ? mRemixMgr.get() : nullptr;
+    return mInitializePhase == InitializePhase::Initialized ? mAudSystem->mRemixMgr : nullptr;
 }
 
 void AudSystemWrapper::setTriggerSePermitted(bool permitted) noexcept {
     mTriggerSePermitted = permitted;
+    if (mAudSystem) mAudSystem->_82B = !permitted;
 }
 
 void AudSystemWrapper::setLevelSePermitted(bool permitted) noexcept {
     mLevelSePermitted = permitted;
+    if (mAudSystem) mAudSystem->_82C = !permitted;
 }
 
 bool AudSystemWrapper::isSePermitted() const noexcept {
@@ -107,10 +113,11 @@ void AudSystemWrapper::requestResourceForInitialize() {
     if (mInitializePhase != InitializePhase::Created) {
         aurora::throw_host_exception< std::logic_error >("Audio initialization was already requested");
     }
-    // Stream metadata and name conversion share the original sound archive.
-    // The absent DSP, rhythm and speaker owners have no bank requests to enqueue.
     MR::loadAsyncToMainRAM("/AudioRes/SMR.szs", nullptr, _8, JKRDvdRipper::ALLOC_DIRECTION_BACKWARD);
     MR::mountAsyncArchive("/AudioRes/Info/JaiRemixSeq.arc", _4);
+    MR::mountAsyncArchive("/AudioRes/Seqs/JaiSeq.arc", _4);
+    MR::mountAsyncArchive("/AudioRes/Info/JaiChord.arc", _4);
+    MR::mountAsyncArchive("/AudioRes/Info/JaiMe.arc", _4);
     mInitializePhase = InitializePhase::Requested;
 }
 
@@ -123,6 +130,9 @@ void AudSystemWrapper::receiveResourceForInitialize() {
     }
     mSmrRes = MR::receiveFile("/AudioRes/SMR.szs");
     mJaiRemixSeqRes = MR::receiveArchive("/AudioRes/Info/JaiRemixSeq.arc");
+    mJaiSeqRes = MR::receiveArchive("/AudioRes/Seqs/JaiSeq.arc");
+    mJaiCordRes = MR::receiveArchive("/AudioRes/Info/JaiChord.arc");
+    mJaiMeRes = MR::receiveArchive("/AudioRes/Info/JaiMe.arc");
     if (!mSmrRes) {
         aurora::throw_host_exception< std::runtime_error >("Audio initialization received no name resource");
     }
@@ -157,17 +167,16 @@ void AudSystemWrapper::createAudioSystem() {
         AudSoundNameConverter::validateTable(&mSoundNameTable);
         createSoundNameConverter();
 
-        const auto* remix = static_cast< const u8* >(mJaiRemixSeqRes->getResource(static_cast< u16 >(0)));
-        const auto remixSize = mJaiRemixSeqRes->getResSize(remix);
-        if (!remix || remixSize == std::numeric_limits< u32 >::max()) {
-            aurora::throw_host_exception< std::runtime_error >("Audio remix archive has no bounded sequence resource");
+        mNativeAudioArchive = mStreamArchive->native_runtime_archive();
+        mInfoResources = std::make_unique<smgpc::resource::AudioInfoResources>(mJaiCordRes, mJaiMeRes, mJaiRemixSeqRes);
+        {
+            const MR::CurrentHeapRestorer current(_4);
+            const aurora::allocation::ClientAllocationScope game({true, true});
+            mAudSystem = AudNewAudSystem(_4, mNativeAudioArchive.data(), mJaiSeqRes, mJaiCordRes, mJaiMeRes, mJaiRemixSeqRes);
         }
-        mRemixSequenceWords = smgpc::resource::decode_remix_sequence({remix, remixSize});
-
         mStreamMixer = std::make_shared< aurora::audio::PcmAudioMixer >();
         mStreamMixer->open_default_playback();
-        mStreamMgr = std::make_unique< JAIStreamMgr >(true);
-        mStreamMgr->bindNativeOutput(mStreamMixer, [archive = mStreamArchive](JAISoundID id) {
+        mAudSystem->getStreamMgr().bindNativeOutput(mStreamMixer, [archive = mStreamArchive](JAISoundID id) {
             const auto metadata = archive->resolve_sound(static_cast< u32 >(id));
             if (metadata.kind != aurora::audio::JAudioSoundKind::Stream)
                 aurora::throw_host_exception< std::invalid_argument >("JAI stream request refers to a non-stream resource");
@@ -178,30 +187,8 @@ void AudSystemWrapper::createAudioSystem() {
             return recipe;
         });
 
-        auto* heap = JKRHeap::findFromRoot(this);
-        const MR::CurrentHeapRestorer current(heap);
-        const aurora::allocation::ClientAllocationScope game({true, true});
-        mSceneMgr = std::make_unique< AudSceneMgr >(nullptr);
-        mBgmMgr = std::make_unique< AudBgmMgr >();
-        mSoundObjHolder = std::make_unique< AudSoundObjHolder >(heap, AudParams::numInspectableSoundObj);
-        // The wrapper's finalizer owns this object. Host object storage keeps
-        // JKRDisposer from destroying it first during bulk heap retirement;
-        // its original constructor still allocates arrays in the selected heap.
-        void* storage;
-        {
-            const aurora::allocation::HostAllocationScope objectStorage;
-            storage = ::operator new(sizeof(AudSoundObject));
-        }
-        try {
-            mSystemSeObject.reset(new (storage) AudSoundObject(nullptr, 10, heap));
-        } catch (...) {
-            ::operator delete(storage);
-            throw;
-        }
-        mRemixMgr = std::make_unique< AudRemixMgr >(_4);
-        mRemixMgr->init();
-        mRemixMgr->setRemixSeqResource(mRemixSequenceWords.data());
         mInitializePhase = InitializePhase::Initialized;
+        AudMicWrap::setMicEnv();
     } catch (...) {
         releaseResources();
         _2A = false;
@@ -235,11 +222,15 @@ void AudSystemWrapper::createSoundNameConverter() {
 
 void AudSystemWrapper::releaseResources() noexcept {
     const aurora::allocation::HostAllocationScope host;
-    mRemixMgr.reset();
-    mSystemSeObject.reset();
-    mSoundObjHolder.reset();
-    mBgmMgr.reset();
-    mStreamMgr.reset();
+    if (mAudSystem) {
+        mAudSystem->stopSync();
+        delete mAudSystem;
+        mAudSystem = nullptr;
+        AudSystem::msBasic = nullptr;
+    }
+    smgpc::audio::shutdown_dsp();
+    mInfoResources.reset();
+    mNativeAudioArchive.clear();
     if (mStreamMixer) {
         mStreamMixer->close_default_playback();
         const auto stats = mStreamMixer->stats();
@@ -249,7 +240,6 @@ void AudSystemWrapper::releaseResources() noexcept {
     }
     mStreamMixer.reset();
     mStreamArchive.reset();
-    mSceneMgr.reset();
     if (mSoundNameConverter && AudSingletonHolder< AudSoundNameConverter >::get() == mSoundNameConverter.get()) {
         AudSingletonHolder< AudSoundNameConverter >::exchange(mPreviousNameConverter);
     }
@@ -261,41 +251,37 @@ void AudSystemWrapper::releaseResources() noexcept {
     mPreviousNameTable = nullptr;
     mSoundNameTable.init(nullptr);
     mSoundNameBytes.clear();
-    mRemixSequenceWords.clear();
 }
 
 void AudSystemWrapper::updateRhythm() {
-    // Stream playback does not provide the sequencer's rhythm owner.
+    if (mAudSystem) mAudSystem->mRhythmMeSystem->rhythmProc();
 }
 
 void AudSystemWrapper::movement() {
     if (mInitializePhase != InitializePhase::Initialized) {
         return;
     }
-    mBgmMgr->movement();
-    mRemixMgr->update();
-    mStreamMgr->calc();
-    mStreamMgr->mixOut();
-    mSoundObjHolder->update();
+    mAudSystem->frameWork();
+    smgpc::audio::advance_dsp(1.0 / 60.0);
 }
 
 void AudSystemWrapper::stopAllSound(u32 frames) {
-    if (mStreamMgr) mStreamMgr->stop(frames);
+    if (mAudSystem) mAudSystem->stop(frames);
 }
 
 bool AudSystemWrapper::isLoadDoneWaveDataAtSystemInit() const {
-    return mInitializePhase == InitializePhase::Initialized && mSceneMgr->isLoadDoneSystemInit();
+    return mInitializePhase == InitializePhase::Initialized && mAudSystem->mSceneMgr->isLoadDoneSystemInit();
 }
 
 void AudSystemWrapper::loadStaticWaveData() {
     if (mInitializePhase == InitializePhase::Initialized) {
-        mSceneMgr->loadStaticResource();
+        mAudSystem->mSceneMgr->loadStaticResource();
         mStaticWaveRequested = true;
     }
 }
 
 bool AudSystemWrapper::isLoadDoneStaticWaveData() const {
-    return mInitializePhase == InitializePhase::Initialized && mStaticWaveRequested && mSceneMgr->isLoadDoneStaticResource();
+    return mInitializePhase == InitializePhase::Initialized && mStaticWaveRequested && mAudSystem->mSceneMgr->isLoadDoneStaticResource();
 }
 
 void AudSystemWrapper::loadStageWaveData(const char* sceneName, const char* stageName, bool isPlayerLuigi) {
@@ -303,28 +289,28 @@ void AudSystemWrapper::loadStageWaveData(const char* sceneName, const char* stag
         return;
     }
     if (isPlayerLuigi) {
-        mSceneMgr->setPlayerModeLuigi();
+        mAudSystem->mSceneMgr->setPlayerModeLuigi();
     } else {
-        mSceneMgr->setPlayerModeMario();
+        mAudSystem->mSceneMgr->setPlayerModeMario();
     }
     mScenarioWaveRequested = false;
-    mSceneMgr->loadStageResource(sceneName, stageName);
+    mAudSystem->mSceneMgr->loadStageResource(sceneName, stageName);
     mStageWaveRequested = true;
 }
 
 bool AudSystemWrapper::isLoadDoneStageWaveData() const {
-    return mInitializePhase == InitializePhase::Initialized && mStageWaveRequested && mSceneMgr->isLoadDoneStageResource();
+    return mInitializePhase == InitializePhase::Initialized && mStageWaveRequested && mAudSystem->mSceneMgr->isLoadDoneStageResource();
 }
 
 void AudSystemWrapper::loadScenarioWaveData(const char* sceneName, const char* stageName, s32 scenarioNo) {
     if (mInitializePhase == InitializePhase::Initialized) {
-        mSceneMgr->loadScenarioResource(sceneName, stageName, scenarioNo);
+        mAudSystem->mSceneMgr->loadScenarioResource(sceneName, stageName, scenarioNo);
         mScenarioWaveRequested = true;
     }
 }
 
 bool AudSystemWrapper::isLoadDoneScenarioWaveData() const {
-    return mInitializePhase == InitializePhase::Initialized && mScenarioWaveRequested && mSceneMgr->isLoadDoneScenarioResource();
+    return mInitializePhase == InitializePhase::Initialized && mScenarioWaveRequested && mAudSystem->mSceneMgr->isLoadDoneScenarioResource();
 }
 
 bool AudSystemWrapper::isPermitToReset() const {

@@ -1,14 +1,3 @@
-#if defined(TARGET_PC)
-#include "JSystem/JAudio2/JASSeqCtrl.hpp"
-
-void JASSeqCtrl::interrupt(JASSeqCtrl::IntrType interrupt) {
-    u32 mask = 1 << interrupt;
-    if (!(_4E & mask))
-        return;
-    _4C |= mask;
-}
-
-#else
 #include "JSystem/JAudio2/JASSeqCtrl.hpp"
 #include "JSystem/JAudio2/JASTrack.hpp"
 
@@ -42,12 +31,12 @@ void JASSeqCtrl::init() {
     _51 = false;
 }
 
-void JASSeqCtrl::start(void *buffer, u32 offset) {
+void JASSeqCtrl::start(void* buffer, u32 offset) {
     mReader.init(buffer);
-    mReader.mSeqCursor = (u8 *)(mReader.mSeqBuff) + offset;
+    mReader.mSeqCursor = (u8*)(mReader.mSeqBuff) + offset;
 }
 
-int JASSeqCtrl::tickProc(JASTrack *track) {
+int JASSeqCtrl::tickProc(JASTrack* track) {
     if (!mReader.mSeqBuff)
         return 0;
     interrupt(JASSeqCtrl::INTRTYPE_VALUE_6);
@@ -87,7 +76,7 @@ void JASSeqCtrl::clrIntrMask(u32 mask) {
 bool JASSeqCtrl::retIntr() {
     if (!mCursorSwap)
         return false;
-    mReader.mSeqCursor = (u8 *)mCursorSwap;
+    mReader.mSeqCursor = (u8*)mCursorSwap;
     mCursorSwap = nullptr;
     return true;
 }
@@ -110,7 +99,7 @@ void JASSeqCtrl::checkIntr() {
         intr = intr * 3 + _48;
         u32 offset = get24(intr);
         mCursorSwap = mReader.mSeqCursor;
-        mReader.mSeqCursor = (u8 *)mReader.mSeqBuff + offset;
+        mReader.mSeqCursor = (u8*)mReader.mSeqBuff + offset;
     }
 }
 
@@ -127,4 +116,3 @@ void JASSeqCtrl::timerProcess() {
         }
     }
 }
-#endif

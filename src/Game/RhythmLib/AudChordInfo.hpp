@@ -12,7 +12,7 @@ struct AudChordData {
 };
 
 struct AudScaleData {
-    void initScaleData(u32 base) NO_INLINE;
+    void initScaleData(uintptr_t base) NO_INLINE;
 
     /* 0x00 */ u8* up;
     /* 0x04 */ u8* down;
@@ -32,7 +32,7 @@ public:
     /* 0x10 */ AudScaleData** mScalePtr;
 };
 
-class AudChordInfo : JASGlobalInstance< AudChordInfo > {
+class AudChordInfo : public JASGlobalInstance< AudChordInfo > {
 public:
     enum ScaleType {
         ScaleType_None = 0,
@@ -126,7 +126,10 @@ public:
     s32 subIndexInScaleNoteList(s32 idx, s32 count, s32& wrapCount);
 
     void initParams();
-    bool isAvailable() const;
+
+    bool isAvailable() const {
+        return mTable.mLoaded && mCurChord != nullptr && mCurScale != nullptr;
+    }
 
     /* 0x00 */ JKRArchive* mArchive;
     /* 0x04 */ AudChordTable mTable;

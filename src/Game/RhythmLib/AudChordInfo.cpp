@@ -1,39 +1,8 @@
-#if defined(TARGET_PC)
-#include "Game/RhythmLib/AudChordInfo.hpp"
-#include <JSystem/JAudio2/JASCriticalSection.hpp>
-#include <aurora/exception.hpp>
-#include <stdexcept>
-
-// The native output path has no chord archive owner. Do not reinterpret the
-// original big-endian, 32-bit CITS relocation table as native pointers.
-bool AudChordInfo::loadChordInfo(s16, bool) {
-    aurora::throw_host_exception< std::logic_error >("Chord resource loading requires the original audio output owner.");
-}
-
-void AudChordInfo::invalidiate() {
-    initParams();
-}
-
-void AudChordInfo::initParams() {
-    JASCriticalSection crit;
-
-    mFlags = 0;
-    mCurChord = nullptr;
-    mCurScale = nullptr;
-    mTableId = -1;
-    _2C = 0;
-
-    for (s32 i = 0; i < NUM_CHORD_NOTES; i++) {
-        mChordNoteList[i] = NULL_NOTE;
-    }
-}
-
-#else
 #include "Game/RhythmLib/AudChordInfo.hpp"
 #include <JSystem/JAudio2/JASCriticalSection.hpp>
 #include <JSystem/JKernel/JKRArchive.hpp>
 
-void AudScaleData::initScaleData(u32 base) {
+void AudScaleData::initScaleData(uintptr_t base) {
     up += base;
     down += base;
 }
@@ -75,18 +44,18 @@ bool AudChordTable::setChordTableResource(void* pRes) {
     mChordCount = *(u16*)(base + 0);
     mScaleCount = *(u16*)(base + 2);
     mChordPtr = (AudChordData**)(base + 4);
-    mScalePtr = (AudScaleData**)(base + 4 + mChordCount * 4);
+    mScalePtr = (AudScaleData**)(base + 4 + mChordCount * sizeof(AudChordData*));
 
     if (!alreadyRelocated) {
         // Relocate chord pointers
         for (s32 i = 0; i < mChordCount; i++) {
-            mChordPtr[i] = (AudChordData*)((u32)pRes + (u32)mChordPtr[i]);
+            mChordPtr[i] = (AudChordData*)((uintptr_t)pRes + (uintptr_t)mChordPtr[i]);
         }
 
         // Relocate scale pointers and init scale data
         for (s32 i = 0; i < mScaleCount; i++) {
-            mScalePtr[i] = (AudScaleData*)((u32)pRes + (u32)mScalePtr[i]);
-            mScalePtr[i]->initScaleData((u32)pRes);
+            mScalePtr[i] = (AudScaleData*)((uintptr_t)pRes + (uintptr_t)mScalePtr[i]);
+            mScalePtr[i]->initScaleData((uintptr_t)pRes);
         }
 
         *initialized = true;
@@ -877,4 +846,3 @@ void AudChordInfo::initParams() {
         mChordNoteList[i] = NULL_NOTE;
     }
 }
-#endif

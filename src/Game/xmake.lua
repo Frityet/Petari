@@ -25,23 +25,7 @@ target("smg-pc-game")
             cxxflags = "-include " .. path.join(os.projectdir(), "src/JSystem/JMath/JMATrigonometric.hpp")
         }
     })
-    -- DSP/rhythm/speaker rendering remains unavailable; actual audio request
-    -- and animation owners are compiled with explicit disabled-output starts.
-    remove_files("AudioLib/AudSeStrategy.cpp")
-    remove_files("AudioLib/OverwriteJAudio.cpp")
-    remove_files("RhythmLib/AudMeChannelMgr.cpp")
-    remove_files("RhythmLib/AudMeSeqCtrl.cpp")
-    remove_files("RhythmLib/AudMeSeqParser.cpp")
-    remove_files("RhythmLib/AudMeSeqReader.cpp")
-    remove_files("RhythmLib/AudMeTrack.cpp")
-    remove_files("RhythmLib/AudMeTrackCallback.cpp")
-    remove_files("RhythmLib/AudRhythmHolder.cpp")
-    remove_files("RhythmLib/AudRhythmSeqParser.cpp")
-    remove_files("RhythmLib/AudRhythmWrap.cpp")
-    remove_files("Speaker/SpkData.cpp")
-    remove_files("Speaker/SpkMixingBuffer.cpp")
-    remove_files("Speaker/SpkTable.cpp")
-    remove_files("Speaker/SpkWave.cpp")
+    -- Original audio owners use JAudio sequencing and the native DSP boundary.
     -- WiiConnect24 is unavailable on the native host; no IOS mail worker exists.
     remove_files("NWC24/NWC24SendThread.cpp")
     add_files({"../nw4r/ut/ut_CharWriter.cpp", "../nw4r/ut/ut_TextWriterBase.cpp",
@@ -144,6 +128,9 @@ target("smg-pc-game")
         "../JSystem/JKernel/JKRArchivePub.cpp",
         "../JSystem/JKernel/JKRArchivePri.cpp",
         "../JSystem/JKernel/JKRMemArchive.cpp",
+        "../JSystem/JKernel/JKRDvdAramRipper.cpp",
+        "../JSystem/JKernel/JKRDvdFile.cpp",
+        "../JSystem/JKernel/JKRDvdRipper.cpp",
     })
     add_files("../JSystem/JKernel/JKRHeap.cpp", "../JSystem/JKernel/JKRExpHeap.cpp",
               "../JSystem/JKernel/JKRSolidHeap.cpp", "../JSystem/JKernel/JKRUnitHeap.cpp")
@@ -151,6 +138,42 @@ target("smg-pc-game")
               "../JSystem/J3DGraphBase/J3DShapeMtx.cpp", "../JSystem/J3DGraphBase/J3DVertex.cpp",
               "../JSystem/J3DGraphLoader/J3DShapeFactory.cpp", "../JSystem/J3DGraphAnimator/J3DMtxBuffer.cpp")
     add_files("../JSystem/JAudio2/JAUSoundTable.cpp", "../JSystem/JGadget/hashcode.cpp")
+    add_files({
+        "../JSystem/JAudio2/JAISe.cpp",
+        "../JSystem/JAudio2/JAISeq.cpp",
+        "../JSystem/JAudio2/JAISeqDataMgr.cpp",
+        "../JSystem/JAudio2/JAISoundInfo.cpp",
+        "../JSystem/JAudio2/JAISoundParams.cpp",
+        "../JSystem/JAudio2/JASBank.cpp",
+        "../JSystem/JAudio2/JASBasicBank.cpp",
+        "../JSystem/JAudio2/JASBasicInst.cpp",
+        "../JSystem/JAudio2/JASBasicWaveBank.cpp",
+        "../JSystem/JAudio2/JASBNKParser.cpp",
+        "../JSystem/JAudio2/JASCallback.cpp",
+        "../JSystem/JAudio2/JASChannel.cpp",
+        "../JSystem/JAudio2/JASDSPChannel.cpp",
+        "../JSystem/JAudio2/JASDriverIF.cpp",
+        "../JSystem/JAudio2/JASDrumSet.cpp",
+        "../JSystem/JAudio2/JASInstRand.cpp",
+        "../JSystem/JAudio2/JASInstSense.cpp",
+        "../JSystem/JAudio2/JASLfo.cpp",
+        "../JSystem/JAudio2/JASOscillator.cpp",
+        "../JSystem/JAudio2/JASRegisterParam.cpp",
+        "../JSystem/JAudio2/JASSeqParser.cpp",
+        "../JSystem/JAudio2/JASSeqReader.cpp",
+        "../JSystem/JAudio2/JASSimpleWaveBank.cpp",
+        "../JSystem/JAudio2/JASVoiceBank.cpp",
+        "../JSystem/JAudio2/JASWSParser.cpp",
+        "../JSystem/JAudio2/JAUAudience.cpp",
+        "../JSystem/JAudio2/JAUAudioArcInterpreter.cpp",
+        "../JSystem/JAudio2/JAUAudioArcLoader.cpp",
+        "../JSystem/JAudio2/JAUBankTable.cpp",
+        "../JSystem/JAudio2/JAUSeqCollection.cpp",
+        "../JSystem/JAudio2/JAUSeqDataBlockMgr.cpp",
+        "../JSystem/JAudio2/JAUSoundMgr.cpp",
+        "../JSystem/JAudio2/JAUStdSoundInfo.cpp",
+        "../JSystem/JAudio2/JAUStreamFileTable.cpp",
+    }, {cxxflags = "-ffp-contract=off"})
     add_files("../JSystem/JUtility/JUTVideo.cpp", "../JSystem/JUtility/JUTXfb.cpp", "../JSystem/JUtility/JUTDirectPrint.cpp", "../JSystem/JUtility/JUTAssert.cpp", "../JSystem/JUtility/JUTConsole.cpp", "../JSystem/JUtility/JUTDbPrint.cpp", "../JSystem/JUtility/JUTFont.cpp", "../JSystem/JUtility/JUTPalette.cpp", "../JSystem/JGadget/linklist.cpp")
     add_files({"../JSystem/JKernel/JKRAram.cpp", "../JSystem/JKernel/JKRAramHeap.cpp",
                "../JSystem/JKernel/JKRAramBlock.cpp", "../JSystem/JKernel/JKRAramPiece.cpp",
@@ -187,3 +210,18 @@ target("smg-pc-game")
         "aurora-vi",
         "aurora-thp"
     }
+
+    add_files({
+        "../JSystem/JAudio2/JASCalc.cpp",
+        "../JSystem/JAudio2/JASResArcLoader.cpp",
+        "../JSystem/JAudio2/JASWaveArcLoader.cpp",
+        "../JSystem/JAudio2/JASTaskThread.cpp",
+        "../JSystem/JAudio2/JASDvdThread.cpp",
+        "../JSystem/JAudio2/JASCmdStack.cpp",
+        "../JSystem/JAudio2/JASAudioReseter.cpp",
+        "../JSystem/JAudio2/JASProbe.cpp",
+    }, {cxxflags = "-ffp-contract=off"})
+
+    add_files("../JSystem/JAudio2/JAUInitializer.cpp")
+
+    add_files("../JSystem/JAudio2/JASDSPInterface.cpp")

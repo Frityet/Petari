@@ -2495,3 +2495,21 @@ target("smg-pc-aurora-vi-scanout-render-tests")
     add_packages("abseil")
     add_deps {"aurora-core", "aurora-card", "aurora-dvd", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
     add_tests("aurora_vi_scanout_render", {group = "aurora", rundir = os.projectdir(), realtime_output = true})
+
+target("smg-pc-original-process-sfx-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/original-process")
+    set_rundir(os.projectdir())
+    add_files("OriginalProcessSfxTests.cpp")
+    add_deps {"smg-pc-app", "aurora-main"}
+    add_tests("original_process_sfx", {group = "original-process", rundir = os.projectdir(), realtime_output = true})
+
+target("smg-pc-original-jas-seq-reader-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("OriginalJasSeqReaderTests.cpp", "../src/JSystem/JAudio2/JASSeqReader.cpp")
+    add_includedirs("../src", "../aurora/include")
+    add_deps("aurora-base")
+    add_tests("original_jas_seq_reader", {group = "aurora", rundir = os.projectdir(), realtime_output = true})
