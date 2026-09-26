@@ -132,3 +132,21 @@ Evidence:
 - `batch15-material.log`: four material-resource groups pass, including all real Mario normal/patched/locked factories.
 - `batch15-stage.log`: real Gateway scenario 1 ran 120 frames, checked 9 original RailRider placements, and exited through normal teardown. Audio was muted; this is bounded integration evidence, not a fresh whole-game playthrough.
 - Audit: zero duplicate strong providers; 6,237 unreviewed provider records. Game file classifications remain 1,715 exact, 375 compile-only, 1,120 compatibility-bearing and one embedded-data-only file.
+
+
+## Batch 16: original J3D joint and matrix readers
+
+Replace the host INF1/JNT1/EVP1/DRW1 construction and field publication with calls to the original loader readers, keeping endian decoding, source bounds and allocation ownership in the resource component.
+
+Implemented and validated:
+
+- The joint resource component now prepares retained native INF1/JNT1/EVP1/DRW1 blocks. `J3DModelLoader::readInformation`, `readJoint`, `readEnvelop` and `readDraw` populate the actual destination model. The host calculator-selection switch, joint creation loop and manual assignment of the model's joint/matrix fields were deleted.
+- Original draw/envelope block order is preserved, including DRW1 before EVP1. Original `readDraw` now performs the envelope subtraction, leading flag scan and important-matrix allocation. Independent input checks still reject unsafe source ranges and cross-table references before construction.
+- Original-created joints, name/pointer arrays, calculator and important-matrix storage have explicit native owners. Full-model attachment enters the retained SDK heap for original allocations; the host ownership vector remains outside that heap.
+- `batch16-build.log`: current main application plus joint-resource, complete-model and Gateway targets build successfully.
+- `batch16-joint.log`: four groups pass. Coverage includes all three matrix calculators, remapped initializer values, absent and short names, source retirement/moves, malformed input, original block-order behavior and real Mario counts (30 joints, 13 envelopes, 48 serialized draw entries, 35 effective draw entries, 22 full-weight entries).
+- `batch16-model.log`: four complete-model groups pass, including new actual heap-provenance checks for the original joint-reader allocations and normal resource/root-heap retirement.
+- `batch16-stage.log`: real Gateway scenario 1 completes 120 frames, nine RailRider checks and normal teardown, with audio muted.
+- `batch16-audit.log`: zero duplicate strong providers; Game source classifications unchanged.
+
+Remaining model-loader restoration: VTX1 count arithmetic must preserve authored offsets across widened/repacked native arrays; SHP1 ownership must capture every allocation when INF recreates a logical shape slot; full-file loader dispatch must then replace the remaining host orchestration. These boundaries remain explicit work, not a claim that all port implementations have been removed.

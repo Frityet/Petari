@@ -364,7 +364,11 @@ namespace smgpc::resource {
             }
             auto& model = *result->model;
             model.mpRawData = source.data();
-            result->joints->attach_to(model);
+            {
+                JKRHeap::CurrentHeapScope original(*(domain));
+                const aurora::allocation::ClientAllocationScope original_routing({true, true});
+                result->joints->attach_to(model);
+            }
             result->geometry->attach_to(model);
             result->materials->attach_to(model.mMaterialTable);
             attach_textures(file, *result, model.mMaterialTable, false);

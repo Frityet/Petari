@@ -227,6 +227,14 @@ namespace {
             first_load = false;
             require(model && model->getModelDataType() == 1, "actual v26 binary model dispatch");
             require((*domain).find(model) == &(*domain), "actual model belongs to original heap domain");
+            const auto& tree = model->mJointTree;
+            require((*domain).find(tree.mBasicMtxCalc) == &(*domain) &&
+                    (*domain).find(tree.mJointNodePointer) == &(*domain) &&
+                    (*domain).find(tree.mWEvlpImportantMtxIdx) == &(*domain),
+                    "original joint readers allocate calculators and matrix/pointer arrays in the retained SDK heap");
+            for (u16 i = 0; i < tree.mJointNum; ++i)
+                require((*domain).find(tree.mJointNodePointer[i]) == &(*domain),
+                        "each joint created by the original reader belongs to the retained SDK heap");
             check_original_model(*model, bytes);
             const auto mat = block(bytes, "MAT3");
             const auto ids = read32(mat, 0x10);
